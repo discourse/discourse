@@ -1,6 +1,7 @@
+import domFromString from "discourse-common/lib/dom-from-string";
 import {
   failedCache,
-  localCache,
+  lookupCache,
   normalize,
   resetFailedCache,
   resetLocalCache,
@@ -21,35 +22,36 @@ export function resetCache() {
 }
 
 function resolveSize(img) {
-  $(img).addClass("size-resolved");
+  img.classList.add("size-resolved");
 
   if (img.width > 0 && img.width === img.height) {
-    $(img).addClass("onebox-avatar");
+    img.classList.add("onebox-avatar");
   }
 }
 
 // Detect square images and apply smaller onebox-avatar class
-function applySquareGenericOnebox($elem) {
-  if (!$elem.hasClass("allowlistedgeneric")) {
+function applySquareGenericOnebox(elem) {
+  if (!elem.classList.contains("allowlistedgeneric")) {
     return;
   }
 
-  let $img = $elem.find(".onebox-body img.thumbnail");
-  let img = $img[0];
+  let img = elem.querySelector(".onebox-body img.thumbnail");
 
   // already resolved... skip
-  if ($img.length !== 1 || $img.hasClass("size-resolved")) {
+  if (!img || img.classList.contains("size-resolved")) {
     return;
   }
 
   if (img.complete) {
     resolveSize(img);
   } else {
-    $img.on("load.onebox", () => {
-      resolveSize(img);
-      $img.off("load.onebox");
-    });
+    img.addEventListener("load", _handleLoadingOneboxImages);
   }
+}
+
+function _handleLoadingOneboxImages() {
+  resolveSize(this);
+  this.removeEventListener("load", _handleLoadingOneboxImages);
 }
 
 function loadNext(ajax) {
@@ -60,7 +62,7 @@ function loadNext(ajax) {
 
   let timeoutMs = 150;
   let removeLoading = true;
-  const { url, refresh, $elem, categoryId, topicId } = loadingQueue.shift();
+  const { url, refresh, elem, categoryId, topicId } = loadingQueue.shift();
 
   // Retrieve the onebox
   return ajax("/onebox", {
@@ -71,20 +73,19 @@ function loadNext(ajax) {
       category_id: categoryId,
       topic_id: topicId,
     },
-    cache: true,
   })
     .then(
-      (html) => {
-        let $html = $(html);
-        setLocalCache(normalize(url), $html);
-        $elem.replaceWith($html);
-        applySquareGenericOnebox($html);
+      (template) => {
+        const node = domFromString(template)[0];
+        setLocalCache(normalize(url), node);
+        elem.replaceWith(node);
+        applySquareGenericOnebox(node);
       },
       (result) => {
-        if (result && result.jqXHR && result.jqXHR.status === 429) {
+        if (result?.jqXHR?.status === 429) {
           timeoutMs = 2000;
           removeLoading = false;
-          loadingQueue.unshift({ url, refresh, $elem, categoryId, topicId });
+          loadingQueue.unshift({ url, refresh, elem, categoryId, topicId });
         } else {
           setFailedCache(normalize(url), true);
         }
@@ -93,13 +94,13 @@ function loadNext(ajax) {
     .finally(() => {
       timeout = later(() => loadNext(ajax), timeoutMs);
       if (removeLoading) {
-        $elem.removeClass(LOADING_ONEBOX_CSS_CLASS);
-        $elem.data("onebox-loaded");
+        elem.classList.remove(LOADING_ONEBOX_CSS_CLASS);
+        elem.dataset.oneboxLoaded = "";
       }
     });
 }
 
-// Perform a lookup of a onebox based an anchor $element.
+// Perform a lookup of a onebox based an anchor element.
 // It will insert a loading indicator and remove it when the loading is complete or fails.
 export function load({
   elem,
@@ -110,13 +111,13 @@ export function load({
   offline = false,
   synchronous = false,
 }) {
-  const $elem = $(elem);
-
   // If the onebox has loaded or is loading, return
-  if ($elem.data("onebox-loaded")) {
+
+  if (elem.dataset.oneboxLoaded) {
     return;
   }
-  if ($elem.hasClass(LOADING_ONEBOX_CSS_CLASS)) {
+
+  if (elem.classList.contains(LOADING_ONEBOX_CSS_CLASS)) {
     return;
   }
 
@@ -125,9 +126,9 @@ export function load({
   // Unless we're forcing a refresh...
   if (!refresh) {
     // If we have it in our cache, return it.
-    const cached = localCache[normalize(url)];
+    const cached = lookupCache(url);
     if (cached) {
-      return cached.prop("outerHTML");
+      return cached;
     }
 
     // If the request failed, don't do anything
@@ -142,10 +143,10 @@ export function load({
   }
 
   // Add the loading CSS class
-  $elem.addClass(LOADING_ONEBOX_CSS_CLASS);
+  elem.classList.add(LOADING_ONEBOX_CSS_CLASS);
 
   // Add to the loading queue
-  loadingQueue.push({ url, refresh, $elem, categoryId, topicId });
+  loadingQueue.push({ url, refresh, elem, categoryId, topicId });
 
   // Load next url in queue
   if (synchronous) {

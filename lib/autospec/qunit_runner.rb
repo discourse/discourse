@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "demon/rails_autospec"
-require 'rbconfig'
+require "chrome_installed_checker"
 
 module Autospec
 
@@ -32,16 +32,14 @@ module Autospec
     # Discourse specific
     reload(%r{^discourse/tests/javascripts/fixtures/.+_fixtures\.js(\.es6)?$})
     reload(%r{^discourse/tests/javascripts/(helpers|mixins)/.+\.js(\.es6)?$})
-    reload("app/assets/javascripts/discoruse/tests/javascripts/test_helper.js")
+    reload("app/assets/javascripts/discoruse/tests/javascripts/test-boot-rails.js")
 
     watch(%r{^plugins/.*/test/.+\.js(\.es6)?$})
 
     require "socket"
 
-    class ChromeNotInstalled < StandardError; end
-
     def initialize
-      ensure_chrome_is_installed
+      ChromeInstalledChecker.run
     end
 
     def start
@@ -117,21 +115,6 @@ module Autospec
 
     private
 
-    def ensure_chrome_is_installed
-      if RbConfig::CONFIG['host_os'][/darwin|mac os/]
-        binary = "/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"
-      elsif system("command -v google-chrome-stable >/dev/null;")
-        binary = "google-chrome-stable"
-      end
-      binary ||= "google-chrome" if system("command -v google-chrome >/dev/null;")
-
-      raise ChromeNotInstalled.new if !binary
-
-      if Gem::Version.new(`\"#{binary}\" --version`.match(/[\d\.]+/)[0]) < Gem::Version.new("59")
-        raise "Chrome 59 or higher is required"
-      end
-    end
-
     def port_available?(port)
       TCPServer.open(port).close
       true
@@ -169,7 +152,7 @@ module Autospec
 
     def try_to_find_module_name(file)
       file, _ = file.split(/:\d+$/)
-      return unless File.exists?(file)
+      return unless File.exist?(file)
       File.open(file, "r").each_line do |line|
         if m = /module\(['"]([^'"]+)/i.match(line)
           return m[1]

@@ -57,7 +57,7 @@ describe TopicViewSerializer do
         expect(json[:image_url]).to end_with(image_upload.url)
       end
 
-      it 'should have thumbnails' do
+      it 'should have thumbnail jobs enqueued' do
         SiteSetting.create_thumbnails = true
 
         Discourse.redis.del(topic.thumbnail_job_redis_key(Topic.thumbnail_sizes))
@@ -72,9 +72,6 @@ describe TopicViewSerializer do
         expect do
           json = serialize_topic(topic, user)
         end.to change { Jobs::GenerateTopicThumbnails.jobs.size }.by(0)
-
-        # Original + Optimized
-        expect(json[:thumbnails].length).to eq(2)
       end
     end
 
@@ -154,6 +151,34 @@ describe TopicViewSerializer do
     end
   end
 
+  describe '#suggested_group_name' do
+    fab!(:pm) { Fabricate(:private_message_post).topic }
+    fab!(:group) { Fabricate(:group) }
+
+    it 'is nil for a regular topic' do
+      json = serialize_topic(topic, user)
+
+      expect(json[:suggested_group_name]).to eq(nil)
+    end
+
+    it 'is nil if user is an allowed user of the private message' do
+      pm.allowed_users << user
+
+      json = serialize_topic(pm, user)
+
+      expect(json[:suggested_group_name]).to eq(nil)
+    end
+
+    it 'returns the right group name if user is part of allowed group in the private message' do
+      pm.allowed_groups << group
+      group.add(user)
+
+      json = serialize_topic(pm, user)
+
+      expect(json[:suggested_group_name]).to eq(group.name)
+    end
+  end
+
   describe 'when tags added to private message topics' do
     fab!(:moderator) { Fabricate(:moderator) }
     fab!(:tag) { Fabricate(:tag) }
@@ -196,8 +221,6 @@ describe TopicViewSerializer do
     fab!(:staff_tag_group) { Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name]) }
 
     before do
-      SiteSetting.tagging_enabled = true
-      hidden_tag.tag_groups << staff_tag_group
       topic.tags << hidden_tag
     end
 
@@ -213,12 +236,11 @@ describe TopicViewSerializer do
   end
 
   describe 'tags order' do
-    fab!(:tag1) { Fabricate(:tag, name: 'ctag', topic_count: 5) }
-    fab!(:tag2) { Fabricate(:tag, name: 'btag', topic_count: 9) }
-    fab!(:tag3) { Fabricate(:tag, name: 'atag', topic_count: 3) }
+    fab!(:tag1) { Fabricate(:tag, name: 'ctag', description: "c description", topic_count: 5) }
+    fab!(:tag2) { Fabricate(:tag, name: 'btag', description: "b description", topic_count: 9) }
+    fab!(:tag3) { Fabricate(:tag, name: 'atag', description: "a description", topic_count: 3) }
 
     before do
-      SiteSetting.tagging_enabled = true
       topic.tags << tag1
       topic.tags << tag2
       topic.tags << tag3
@@ -227,6 +249,7 @@ describe TopicViewSerializer do
     it 'tags are automatically sorted by tag popularity' do
       json = serialize_topic(topic, user)
       expect(json[:tags]).to eq(%w(btag ctag atag))
+      expect(json[:tags_descriptions]).to eq({ btag: "b description", ctag: "c description", atag: "a description" })
     end
 
     it 'tags can be sorted alphabetically' do
@@ -467,7 +490,7 @@ describe TopicViewSerializer do
       end
     end
 
-    context 'Wwhen the slow mode is enabled' do
+    context 'When the slow mode is enabled' do
       before { topic.update!(slow_mode_seconds: 1000) }
 
       it 'returns nil if no user is given' do
@@ -488,6 +511,28 @@ describe TopicViewSerializer do
 
         expect(json[:user_last_posted_at]).to be_present
       end
+    end
+  end
+
+  describe '#requested_group_name' do
+    fab!(:pm) { Fabricate(:private_message_post).topic }
+    fab!(:group) { Fabricate(:group) }
+
+    it 'should return the right group name when PM is a group membership request' do
+      pm.custom_fields[:requested_group_id] = group.id
+      pm.save!
+
+      user = pm.first_post.user
+      group.add_owner(user)
+      json = serialize_topic(pm, user)
+
+      expect(json[:requested_group_name]).to eq(group.name)
+    end
+
+    it 'should not include the attribute for a non group membership request PM' do
+      json = serialize_topic(pm, pm.first_post.user)
+
+      expect(json[:requested_group_name]).to eq(nil)
     end
   end
 end

@@ -60,19 +60,24 @@
     min-height: 35px;
   }
   #modal-alert:empty {
-    display: none;
+    min-height: 0px;
+    padding: 0px;
+    overflow: hidden;
+    display: inline;
   }
   .login-welcome-header {
-    z-index: z("modal", "content");
     display: grid;
     grid-template-columns: auto 1fr;
     grid-template-rows: auto 1fr;
     background: var(--secondary);
+    max-width: 33em;
+    word-break: break-word;
     .login-title {
       margin-bottom: 0;
     }
     .login-subheader {
       align-self: start;
+      grid-row-start: 2;
       margin: 0;
     }
     .waving-hand {
@@ -92,9 +97,6 @@
     }
   }
   .modal-footer {
-    .btn-primary {
-      margin-right: 1.5em;
-    }
     .inline-spinner {
       display: inline-flex;
     }
@@ -117,9 +119,11 @@
 
 // Login Form Styles
 .login-modal:not(.hidden),
-.create-account {
+.create-account,
+.invites-show {
   #login-form,
-  .login-form {
+  .login-form,
+  .invite-form {
     .input-group {
       position: relative;
       display: flex;
@@ -134,13 +138,17 @@
         min-width: 250px;
         box-shadow: none;
         margin-bottom: 0.25em;
+        width: 100%;
       }
       input:focus {
         outline: none;
         border: 1px solid var(--tertiary);
         box-shadow: 0 0 0 2px rgba(var(--tertiary-rgb), 0.25);
       }
-      label.more-info {
+      input:disabled {
+        background-color: var(--primary-low);
+      }
+      span.more-info {
         color: var(--primary-medium);
         min-height: 1.4em; // prevents height increase due to tips
       }
@@ -153,6 +161,7 @@
         left: 1em;
         top: 10px;
         box-shadow: 0 0 0 0px rgba(var(--tertiary-rgb), 0);
+        border-radius: 0.25em;
         transition: 0.2s ease all;
       }
       input:focus + label.alt-placeholder,
@@ -246,7 +255,6 @@
 #login-link,
 #new-account-link {
   cursor: pointer;
-  padding-left: 0;
   text-align: left;
   // the second button can wrap in some locales, and this helps alignment
 }
@@ -257,10 +265,11 @@
     margin-top: 0.5em;
   }
 
-  .create-account-body {
-    max-width: 40em;
+  @media screen and (min-width: 701px) {
+    .create-account-body {
+      max-width: 40em;
+    }
   }
-
   .user-field {
     input[type="text"] {
       margin-bottom: 0;
@@ -288,10 +297,29 @@
 }
 
 .invites-show {
+  display: grid;
+  justify-content: center;
   .two-col {
     position: relative;
-    display: flex;
+    display: grid;
     margin-top: 5px;
+  }
+
+  .invite-form,
+  .invite-success {
+    border-radius: 10px;
+    margin-top: 25px;
+  }
+
+  .invite-form {
+    margin-bottom: 50px;
+    max-width: 33em;
+    .tip {
+      display: block;
+    }
+    .col-image {
+      display: none;
+    }
   }
 
   #login-buttons {
@@ -304,6 +332,7 @@
   .col-image {
     position: relative;
     margin-right: 20px;
+    justify-self: center;
     @media screen and (max-width: 600px) {
       display: none;
     }
@@ -313,9 +342,6 @@
     margin-top: 24px;
     button.btn-primary {
       margin-top: 10px;
-    }
-    label:not(.checkbox-label) {
-      font-weight: bold;
     }
     .controls,
     .input {
@@ -329,7 +355,8 @@
       line-height: $line-height-medium;
     }
     .tip {
-      padding-left: 5px;
+      font-size: var(--font-down-1);
+      margin-bottom: 0.25em;
     }
   }
 }
@@ -361,5 +388,15 @@ button#new-account-link {
     display: inline-block;
     padding: 1em 0.5em 1em 0;
     color: var(--tertiary);
+  }
+}
+
+.invite-error {
+  box-shadow: 0 1px 10px 1px rgba(var(--primary-low-rgb), 1.25);
+  border-radius: 10px;
+  padding: 1em 2.5em 1em 2.5em;
+  .error-image {
+    text-align: center;
+    padding-bottom: 1em;
   }
 }

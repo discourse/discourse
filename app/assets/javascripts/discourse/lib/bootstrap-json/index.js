@@ -1,11 +1,13 @@
 "use strict";
 
-const bent = require("bent");
-const getJSON = bent("json");
+const express = require("express");
+const fetch = require("node-fetch");
 const { encode } = require("html-entities");
 const cleanBaseURL = require("clean-base-url");
 const path = require("path");
-const fs = require("fs");
+const { promises: fs } = require("fs");
+const { JSDOM } = require("jsdom");
+const { shouldLoadPluginTestJs } = require("discourse/lib/plugin-js");
 
 // via https://stackoverflow.com/a/6248722/165668
 function generateUID() {
@@ -16,11 +18,6 @@ function generateUID() {
   return firstPart + secondPart;
 }
 
-const IGNORE_PATHS = [
-  /\/ember-cli-live-reload\.js$/,
-  /\/session\/[^\/]+\/become$/,
-];
-
 function htmlTag(buffer, bootstrap) {
   let classList = "";
   if (bootstrap.html_classes) {
@@ -29,14 +26,27 @@ function htmlTag(buffer, bootstrap) {
   buffer.push(`<html lang="${bootstrap.html_lang}"${classList}>`);
 }
 
-function head(buffer, bootstrap) {
+function head(buffer, bootstrap, headers, baseURL) {
   if (bootstrap.csrf_token) {
     buffer.push(`<meta name="csrf-param" content="authenticity_token">`);
     buffer.push(`<meta name="csrf-token" content="${bootstrap.csrf_token}">`);
   }
-  if (bootstrap.theme_ids) {
+
+  if (bootstrap.theme_id) {
     buffer.push(
-      `<meta name="discourse_theme_ids" content="${bootstrap.theme_ids}">`
+      `<meta name="discourse_theme_id" content="${bootstrap.theme_id}">`
+    );
+  }
+
+  if (bootstrap.theme_color) {
+    buffer.push(`<meta name="theme-color" content="${bootstrap.theme_color}">`);
+  }
+
+  if (bootstrap.authentication_data) {
+    buffer.push(
+      `<meta id="data-authentication" data-authentication-data="${encode(
+        bootstrap.authentication_data
+      )}">`
     );
   }
 
@@ -65,11 +75,21 @@ function head(buffer, bootstrap) {
     if (s.theme_id) {
       attrs.push(`data-theme-id="${s.theme_id}"`);
     }
+    if (s.class) {
+      attrs.push(`class="${s.class}"`);
+    }
     let link = `<link rel="stylesheet" type="text/css" href="${
       s.href
-    }" ${attrs.join(" ")}></script>\n`;
+    }" ${attrs.join(" ")}>`;
     buffer.push(link);
   });
+
+  if (bootstrap.preloaded.currentUser) {
+    let staff = JSON.parse(bootstrap.preloaded.currentUser).staff;
+    if (staff) {
+      buffer.push(`<script src="${baseURL}assets/admin.js"></script>`);
+    }
+  }
 
   bootstrap.plugin_js.forEach((src) =>
     buffer.push(`<script src="${src}"></script>`)
@@ -104,7 +124,9 @@ function bodyFooter(buffer, bootstrap, headers) {
 
   let v = generateUID();
   buffer.push(`
-		<script async type="text/javascript" id="mini-profiler" src="/mini-profiler-resources/includes.js?v=${v}" data-css-url="/mini-profiler-resources/includes.css?v=${v}" data-version="${v}" data-path="/mini-profiler-resources/" data-horizontal-position="left" data-vertical-position="top" data-trivial="false" data-children="false" data-max-traces="20" data-controls="false" data-total-sql-count="false" data-authorized="true" data-toggle-shortcut="alt+p" data-start-hidden="false" data-collapse-results="true" data-html-container="body" data-hidden-custom-fields="x" data-ids="${headers["x-miniprofiler-ids"]}"></script>
+		<script async type="text/javascript" id="mini-profiler" src="/mini-profiler-resources/includes.js?v=${v}" data-css-url="/mini-profiler-resources/includes.css?v=${v}" data-version="${v}" data-path="/mini-profiler-resources/" data-horizontal-position="left" data-vertical-position="top" data-trivial="false" data-children="false" data-max-traces="20" data-controls="false" data-total-sql-count="false" data-authorized="true" data-toggle-shortcut="alt+p" data-start-hidden="false" data-collapse-results="true" data-html-container="body" data-hidden-custom-fields="x" data-ids="${headers.get(
+    "x-miniprofiler-ids"
+  )}"></script>
 	`);
 }
 
@@ -132,99 +154,141 @@ function preloaded(buffer, bootstrap) {
 const BUILDERS = {
   "html-tag": htmlTag,
   "before-script-load": beforeScriptLoad,
-  head: head,
-  body: body,
+  head,
+  body,
   "hidden-login-form": hiddenLoginForm,
-  preloaded: preloaded,
+  preloaded,
   "body-footer": bodyFooter,
   "locale-script": localeScript,
 };
 
-function replaceIn(bootstrap, template, id, headers) {
+function replaceIn(bootstrap, template, id, headers, baseURL) {
   let buffer = [];
-  BUILDERS[id](buffer, bootstrap, headers);
+  BUILDERS[id](buffer, bootstrap, headers, baseURL);
   let contents = buffer.filter((b) => b && b.length > 0).join("\n");
 
   return template.replace(`<bootstrap-content key="${id}">`, contents);
 }
 
-function applyBootstrap(bootstrap, template, headers) {
+function extractPreloadJson(html) {
+  const dom = new JSDOM(html);
+  const dataElement = dom.window.document.querySelector("#data-preloaded");
+
+  if (!dataElement || !dataElement.dataset) {
+    return;
+  }
+
+  return dataElement.dataset.preloaded;
+}
+
+async function applyBootstrap(bootstrap, template, response, baseURL, preload) {
+  bootstrap.preloaded = Object.assign(JSON.parse(preload), bootstrap.preloaded);
+
   Object.keys(BUILDERS).forEach((id) => {
-    template = replaceIn(bootstrap, template, id, headers);
+    template = replaceIn(bootstrap, template, id, response.headers, baseURL);
   });
   return template;
 }
 
-function buildFromBootstrap(assetPath, proxy, baseURL, req, headers) {
-  // eslint-disable-next-line
-  return new Promise((resolve, reject) => {
-    fs.readFile(
-      path.join(process.cwd(), "dist", assetPath),
-      "utf8",
-      (err, template) => {
-        let url = `${proxy}${baseURL}bootstrap.json`;
-        let queryLoc = req.url.indexOf("?");
-        if (queryLoc !== -1) {
-          url += req.url.substr(queryLoc);
-        }
-
-        getJSON(url, null, req.headers)
-          .then((json) => {
-            resolve(applyBootstrap(json.bootstrap, template, headers));
-          })
-          .catch((e) => {
-            reject(
-              `Could not get ${proxy}${baseURL}bootstrap.json\n\n${e.toString()}`
-            );
-          });
-      }
+async function buildFromBootstrap(proxy, baseURL, req, response, preload) {
+  try {
+    const template = await fs.readFile(
+      path.join(process.cwd(), "dist", "index.html"),
+      "utf8"
     );
-  });
+
+    let url = new URL(`${proxy}${baseURL}bootstrap.json`);
+    url.searchParams.append("for_url", req.url);
+
+    const res = await fetch(url, { headers: req.headers });
+    const json = await res.json();
+
+    return applyBootstrap(json.bootstrap, template, response, baseURL, preload);
+  } catch (error) {
+    throw new Error(
+      `Could not get ${proxy}${baseURL}bootstrap.json\n\n${error}`
+    );
+  }
 }
 
-async function handleRequest(assetPath, proxy, baseURL, req, res) {
-  if (assetPath.endsWith("tests/index.html")) {
-    return;
+async function handleRequest(proxy, baseURL, req, res) {
+  const originalHost = req.headers.host;
+  req.headers.host = new URL(proxy).host;
+
+  if (req.headers["Origin"]) {
+    req.headers["Origin"] = req.headers["Origin"]
+      .replace(req.headers.host, originalHost)
+      .replace(/^https/, "http");
   }
 
-  if (assetPath.endsWith("index.html")) {
-    try {
-      // Avoid Ember CLI's proxy if doing a GET, since Discourse depends on some non-XHR
-      // GET requests to work.
-      if (req.method === "GET") {
-        let url = `${proxy}${req.path}`;
+  if (req.headers["Referer"]) {
+    req.headers["Referer"] = req.headers["Referer"]
+      .replace(req.headers.host, originalHost)
+      .replace(/^https/, "http");
+  }
 
-        let queryLoc = req.url.indexOf("?");
-        if (queryLoc !== -1) {
-          url += req.url.substr(queryLoc);
-        }
+  let url = `${proxy}${req.path}`;
+  const queryLoc = req.url.indexOf("?");
+  if (queryLoc !== -1) {
+    url += req.url.substr(queryLoc);
+  }
 
-        req.headers["X-Discourse-Ember-CLI"] = "true";
-        let get = bent("GET", [200, 301, 302, 303, 307, 308, 404, 403, 500]);
-        let response = await get(url, null, req.headers);
-        res.set(response.headers);
-        if (response.headers["x-discourse-bootstrap-required"] === "true") {
-          req.headers["X-Discourse-Asset-Path"] = req.path;
-          let json = await buildFromBootstrap(
-            assetPath,
-            proxy,
-            baseURL,
-            req,
-            response.headers
-          );
-          return res.send(json);
-        }
-        res.status(response.status);
-        res.send(await response.text());
-      }
-    } catch (e) {
-      res.send(`
-                <html>
-                  <h1>Discourse Build Error</h1>
-                  <pre><code>${e.toString()}</code></pre>
-                </html>
-              `);
-    }
+  if (req.method === "GET") {
+    req.headers["X-Discourse-Ember-CLI"] = "true";
+  }
+
+  const response = await fetch(url, {
+    method: req.method,
+    body: /GET|HEAD/.test(req.method) ? null : req.body,
+    headers: req.headers,
+    redirect: "manual",
+  });
+
+  response.headers.forEach((value, header) => {
+    res.set(header, value);
+  });
+  res.set("content-encoding", null);
+
+  const location = response.headers.get("location");
+  if (location) {
+    const newLocation = location.replace(proxy, `http://${originalHost}`);
+    res.set("location", newLocation);
+  }
+
+  const csp = response.headers.get("content-security-policy");
+  if (csp) {
+    const emberCliAdditions = [
+      `http://${originalHost}/assets/`,
+      `http://${originalHost}/ember-cli-live-reload.js`,
+      `http://${originalHost}/_lr/`,
+    ];
+    const newCSP = csp
+      .replace(new RegExp(proxy, "g"), `http://${originalHost}`)
+      .replace(
+        new RegExp("script-src ", "g"),
+        `script-src ${emberCliAdditions.join(" ")} `
+      );
+    res.set("content-security-policy", newCSP);
+  }
+
+  const contentType = response.headers.get("content-type");
+  const isHTML = contentType && contentType.startsWith("text/html");
+  const responseText = await response.text();
+  const preloadJson = isHTML ? extractPreloadJson(responseText) : null;
+
+  if (preloadJson) {
+    const html = await buildFromBootstrap(
+      proxy,
+      baseURL,
+      req,
+      response,
+      extractPreloadJson(responseText)
+    );
+    res.set("content-type", "text/html");
+    res.send(html);
+  } else {
+    res.status(response.status);
+    res.send(responseText);
   }
 }
 
@@ -235,13 +299,20 @@ module.exports = {
     return true;
   },
 
+  contentFor: function (type, config) {
+    if (shouldLoadPluginTestJs() && type === "test-plugin-js") {
+      return `<script src="${config.rootURL}assets/discourse/tests/active-plugins.js"></script>`;
+    } else if (shouldLoadPluginTestJs() && type === "test-plugin-tests-js") {
+      return `<script id="plugin-test-script" src="${config.rootURL}assets/discourse/tests/plugin-tests.js"></script>`;
+    }
+  },
+
   serverMiddleware(config) {
-    let proxy = config.options.proxy;
-    let app = config.app;
-    let options = config.options;
+    const app = config.app;
+    let { proxy, rootURL, baseURL } = config.options;
 
     if (!proxy) {
-      // eslint-disable-next-line
+      // eslint-disable-next-line no-console
       console.error(`
 Discourse can't be run without a \`--proxy\` setting, because it needs a Rails application
 to serve API requests. For example:
@@ -250,31 +321,22 @@ to serve API requests. For example:
       throw "--proxy argument is required";
     }
 
-    let watcher = options.watcher;
+    baseURL = rootURL === "" ? "/" : cleanBaseURL(rootURL || baseURL);
 
-    let baseURL =
-      options.rootURL === ""
-        ? "/"
-        : cleanBaseURL(options.rootURL || options.baseURL);
+    const rawMiddleware = express.raw({ type: () => true, limit: "100mb" });
 
-    app.use(async (req, res, next) => {
+    app.use(rawMiddleware, async (req, res, next) => {
       try {
-        const results = await watcher;
-        if (this.shouldHandleRequest(req, options)) {
-          let assetPath = req.path.slice(baseURL.length);
-          let isFile = false;
-
-          try {
-            isFile = fs
-              .statSync(path.join(results.directory, assetPath))
-              .isFile();
-          } catch (err) {}
-
-          if (!isFile) {
-            assetPath = "index.html";
-          }
-          await handleRequest(assetPath, proxy, baseURL, req, res);
+        if (this.shouldHandleRequest(req)) {
+          await handleRequest(proxy, baseURL, req, res);
         }
+      } catch (error) {
+        res.send(`
+          <html>
+            <h1>Discourse Ember CLI Proxy Error</h1>
+            <pre><code>${error.stack}</code></pre>
+          </html>
+        `);
       } finally {
         if (!res.headersSent) {
           return next();
@@ -283,25 +345,28 @@ to serve API requests. For example:
     });
   },
 
-  shouldHandleRequest(req) {
-    let acceptHeaders = req.headers.accept || [];
-    let hasHTMLHeader = acceptHeaders.indexOf("text/html") !== -1;
-    if (req.method !== "GET") {
-      return false;
-    }
-    if (!hasHTMLHeader) {
+  shouldHandleRequest(request) {
+    if (request.path === "/tests/index.html") {
       return false;
     }
 
-    if (IGNORE_PATHS.some((ip) => ip.test(req.path))) {
+    if (request.get("Accept") && request.get("Accept").includes("text/html")) {
+      return true;
+    }
+
+    const contentType = request.get("Content-Type");
+    if (!contentType) {
       return false;
     }
 
-    if (req.path.endsWith(".json")) {
-      return false;
+    if (
+      contentType.includes("application/x-www-form-urlencoded") ||
+      contentType.includes("multipart/form-data") ||
+      contentType.includes("application/json")
+    ) {
+      return true;
     }
 
-    let baseURLRegexp = new RegExp(`^/`);
-    return baseURLRegexp.test(req.path);
+    return false;
   },
 };

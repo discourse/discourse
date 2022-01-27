@@ -6,6 +6,7 @@ module Reports::PostEdits
   class_methods do
     def report_post_edits(report)
       category_id, include_subcategories = report.add_category_filter
+      editor_username = report.filters['editor']
 
       report.modes = [:table]
 
@@ -89,7 +90,12 @@ module Reports::PostEdits
         end
       end
 
-      builder.where("editor.id > 0 AND editor.id != author.id")
+      if editor_username
+        builder.where("editor.username = ?", editor_username)
+      else
+        builder.where("editor.id > 0 AND editor.id != author.id")
+      end
+
       builder.where("pr.created_at >= :start_date", start_date: report.start_date)
       builder.where("pr.created_at <= :end_date", end_date: report.end_date)
 

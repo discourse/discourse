@@ -121,7 +121,7 @@ describe UserNotifications do
   end
 
   describe '.email_login' do
-    let(:email_token) { user.email_tokens.create!(email: user.email).token }
+    let(:email_token) { Fabricate(:email_token, user: user, scope: EmailToken.scopes[:email_login]).token }
     subject { UserNotifications.email_login(user, email_token: email_token) }
 
     it "generates the right email" do
@@ -591,14 +591,14 @@ describe UserNotifications do
       expect(mail.subject).to include("[PM] ")
     end
 
-    it "includes a list of participants, groups first with member lists" do
+    it "includes a list of participants (except for the destination user), groups first with member lists" do
       group1 = Fabricate(:group, name: "group1")
       group2 = Fabricate(:group, name: "group2")
 
       user1 = Fabricate(:user, username: "one", groups: [group1, group2])
       user2 = Fabricate(:user, username: "two", groups: [group1])
 
-      topic.allowed_users = [user1, user2]
+      topic.allowed_users = [user, user1, user2]
       topic.allowed_groups = [group1, group2]
 
       mail = UserNotifications.user_private_message(
@@ -908,6 +908,20 @@ describe UserNotifications do
     end
   end
 
+  describe "group mentioned email" do
+    include_examples "notification email building" do
+      let(:notification_type) { :group_mentioned }
+      let(:post) { Fabricate(:private_message_post) }
+      let(:user) { post.user }
+      let(:mail_type) { "group_mentioned" }
+      let(:mail_template) { "user_notifications.user_#{notification_type}_pm" }
+
+      include_examples "respect for private_email"
+      include_examples "supports reply by email"
+      include_examples "sets user locale"
+    end
+  end
+
   describe "user replied" do
     include_examples "notification email building" do
       let(:notification_type) { :replied }
@@ -972,11 +986,52 @@ describe UserNotifications do
   end
 
   describe "user invited to a topic" do
+    let(:notification_type) { :invited_to_topic }
+
     include_examples "notification email building" do
-      let(:notification_type) { :invited_to_topic }
       include_examples "respect for private_email"
       include_examples "no reply by email"
       include_examples "sets user locale"
+    end
+
+    context "shows the right name in 'From' field" do
+      let(:inviter) { Fabricate(:user) }
+      let(:invitee) { Fabricate(:user) }
+
+      let(:notification) do
+        Fabricate(:notification,
+          notification_type: Notification.types[:invited_to_topic],
+          user: invitee,
+          topic: post.topic,
+          post_number: post.post_number,
+          data: {
+            topic_title: post.topic.title,
+            display_username: inviter.username,
+            original_user_id: inviter.id,
+            original_username: inviter.username
+          }.to_json
+        )
+      end
+
+      let(:mailer) do
+        UserNotifications.public_send(
+          "user_invited_to_topic",
+          invitee,
+          notification_type: Notification.types[notification.notification_type],
+          notification_data_hash: notification.data_hash,
+          post: notification.post
+        )
+      end
+
+      it "sends the email as the inviter" do
+        SiteSetting.enable_names = false
+
+        expect(mailer.message.to_s).to include("From: #{inviter.username} via #{SiteSetting.title} <#{SiteSetting.notification_email}>")
+      end
+
+      it "sends the email as the inviter" do
+        expect(mailer.message.to_s).to include("From: #{inviter.name} via #{SiteSetting.title} <#{SiteSetting.notification_email}>")
+      end
     end
   end
 

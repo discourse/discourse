@@ -3,6 +3,8 @@
 require 'csv'
 
 class Admin::BadgesController < Admin::AdminController
+  MAX_CSV_LINES = 50_000
+  BATCH_SIZE = 200
 
   def index
     data = {
@@ -52,37 +54,50 @@ class Admin::BadgesController < Admin::AdminController
     end
 
     replace_badge_owners = params[:replace_badge_owners] == 'true'
-    BadgeGranter.revoke_all(badge) if replace_badge_owners
+    ensure_users_have_badge_once = params[:grant_existing_holders] != 'true'
+    if !ensure_users_have_badge_once && !badge.multiple_grant?
+      render_json_error(
+        I18n.t('badges.mass_award.errors.cant_grant_multiple_times', badge_name: badge.display_name),
+        status: 422
+      )
+      return
+    end
 
-    batch_number = 1
     line_number = 1
-    batch = []
-
+    usernames = []
+    emails = []
     File.open(csv_file) do |csv|
-      mode = Email.is_valid?(CSV.parse_line(csv.first).first) ? 'email' : 'username'
-      csv.rewind
-
-      csv.each_line do |email_line|
-        line = CSV.parse_line(email_line).first
+      csv.each_line do |line|
+        line = CSV.parse_line(line).first&.strip
+        line_number += 1
 
         if line.present?
-          batch << line
-          line_number += 1
+          if line.include?('@')
+            emails << line
+          else
+            usernames << line
+          end
         end
 
-        # Split the emails in batches of 200 elements.
-        full_batch = csv.lineno % (BadgeGranter::MAX_ITEMS_FOR_DELTA * batch_number) == 0
-        last_batch_item = full_batch || csv.eof?
-
-        if last_batch_item
-          Jobs.enqueue(:mass_award_badge, users_batch: batch, badge_id: badge.id, mode: mode)
-          batch = []
-          batch_number += 1
+        if emails.size + usernames.size > MAX_CSV_LINES
+          return render_json_error I18n.t('badges.mass_award.errors.too_many_csv_entries', count: MAX_CSV_LINES), status: 400
         end
       end
     end
+    BadgeGranter.revoke_all(badge) if replace_badge_owners
 
-    head :ok
+    results = BadgeGranter.enqueue_mass_grant_for_users(
+      badge,
+      emails: emails,
+      usernames: usernames,
+      ensure_users_have_badge_once: ensure_users_have_badge_once
+    )
+
+    render json: {
+      unmatched_entries: results[:unmatched_entries].first(100),
+      matched_users_count: results[:matched_users_count],
+      unmatched_entries_count: results[:unmatched_entries_count]
+    }, status: :ok
   rescue CSV::MalformedCSVError
     render_json_error I18n.t('badges.mass_award.errors.invalid_csv', line_number: line_number), status: 400
   end
@@ -147,6 +162,7 @@ class Admin::BadgesController < Admin::AdminController
   end
 
   private
+
   def find_badge
     params.require(:id)
     Badge.find(params[:id])

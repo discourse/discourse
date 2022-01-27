@@ -4,7 +4,7 @@ import { h } from "virtual-dom";
 
 createWidget(
   "post-admin-menu-button",
-  jQuery.extend(ButtonClass, { tagName: "li.btn" })
+  Object.assign(ButtonClass, { tagName: "li.btn" })
 );
 
 createWidget("post-admin-menu-button", {
@@ -37,6 +37,15 @@ export function buildManageButtons(attrs, currentUser, siteSettings) {
     });
   }
 
+  if (attrs.canPermanentlyDelete) {
+    contents.push({
+      icon: "trash-alt",
+      className: "popup-menu-button permanently-delete",
+      label: "post.controls.permanently_delete",
+      action: "permanentlyDeletePost",
+    });
+  }
+
   if (!attrs.isWhisper && currentUser.staff) {
     const buttonAtts = {
       action: "togglePostType",
@@ -65,7 +74,7 @@ export function buildManageButtons(attrs, currentUser, siteSettings) {
     });
   }
 
-  if (attrs.canManage && attrs.hidden) {
+  if (currentUser.staff && attrs.hidden) {
     contents.push({
       icon: "far-eye",
       label: "post.controls.unhide",
@@ -74,7 +83,10 @@ export function buildManageButtons(attrs, currentUser, siteSettings) {
     });
   }
 
-  if (currentUser.admin) {
+  if (
+    currentUser.admin ||
+    (siteSettings.moderators_change_post_ownership && currentUser.staff)
+  ) {
     contents.push({
       icon: "user",
       label: "post.controls.change_owner",

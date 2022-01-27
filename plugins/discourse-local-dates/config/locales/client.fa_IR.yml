@@ -11,6 +11,8 @@ fa_IR:
         today: امروز %{time}
         tomorrow: فردا %{time}
         yesterday: دیروز %{time}
+        countdown:
+          passed: تاریخ گذشت
       title: درج تاریخ / ساعت
       create:
         form:
@@ -24,7 +26,7 @@ fa_IR:
           date_title: تاریخ
           time_title: زمان
           format_title: فرمت تاریخ
-          timezone: منطقه ی زمانی
+          timezone: منطقه‌ی زمانی
           until: تا وقتی که...
           recurring:
             every_day: "هر روز"
@@ -35,3 +37,4 @@ fa_IR:
             every_three_months: "هر سه ماه"
             every_six_months: "هر شش ماه"
             every_year: "هر سال"
+      default_title: "رویداد %{site_name}"

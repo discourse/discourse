@@ -64,13 +64,5 @@ export function throwAjaxError(undoCallback) {
 }
 
 export function popupAjaxError(error) {
-  if (error && error._discourse_displayed) {
-    return;
-  }
   bootbox.alert(extractError(error));
-
-  error._discourse_displayed = true;
-
-  // We re-throw in a catch to not swallow the exception
-  throw error;
 }

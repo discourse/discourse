@@ -1,6 +1,7 @@
 {{#unless timeFirst}}
   {{date-input
     date=date
+    placeholder=placeholder
     relativeDate=relativeDate
     onChange=(action "onChangeDate")
     useGlobalPickerContainer=useGlobalPickerContainer
@@ -18,6 +19,7 @@
 {{#if timeFirst}}
   {{date-input
     date=date
+    placeholder=placeholder
     relativeDate=relativeDate
     onChange=(action "onChangeDate")
     useGlobalPickerContainer=useGlobalPickerContainer

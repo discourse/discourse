@@ -135,6 +135,12 @@ table.group-members {
     &.bulk-select-buttons {
       text-align: left;
       width: 20%;
+      .bulk-select-buttons-wrap {
+        display: inline-flex;
+        .btn {
+          margin-right: 0.5em;
+        }
+      }
     }
 
     &.username {
@@ -240,4 +246,37 @@ table.group-category-permissions {
       font-size: 1.25em;
     }
   }
+}
+
+.group-smtp-email-settings,
+.group-imap-email-settings {
+  .groups-form {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    margin-bottom: 0;
+
+    &.groups-form-imap {
+      grid-template-columns: 1fr 1fr 2fr;
+    }
+  }
+
+  background-color: var(--primary-very-low);
+  padding: 1em;
+  margin: 1em 0;
+  border: 1px solid var(--primary-low);
+
+  .group-imap-mailboxes {
+    .combo-box {
+      width: 50%;
+    }
+  }
+}
+
+.group-manage-email-additional-settings-wrapper {
+  margin-top: 1em;
+}
+
+.groups-form .control-group.buttons {
+  margin-bottom: 0px;
+  padding: 1em 0;
 }

@@ -2,8 +2,6 @@ div.poll {
   margin: 1em 0;
   border: 1px solid var(--primary-low);
 
-  @include unselectable;
-
   ul,
   ol {
     margin: 0;
@@ -25,9 +23,14 @@ div.poll {
   }
 
   img {
-    // needed to override internal styles in image-sizing hack
-    max-width: 100% !important;
-    height: auto;
+    // Hacky way to stop images without width/height
+    // from causing abrupt unintended scrolling
+    &:not([width]):not(.emoji),
+    &:not([height]):not(.emoji) {
+      width: 200px !important;
+      height: 200px !important;
+      object-fit: contain;
+    }
   }
 
   .poll-info {
@@ -127,18 +130,24 @@ div.poll {
   }
 
   .pie-chart-legends {
+    display: flex;
+    justify-content: center;
     text-align: center;
     margin-top: 0.5em;
 
     .legend {
-      display: inline-block;
-      margin: 4px 0 4px 14px;
+      align-items: center;
+      cursor: pointer;
+      display: flex;
+      flex-direction: row;
+      margin-left: 1em;
+      font-size: var(--font-down-0);
 
       .swatch {
+        margin-right: 0.5em;
         display: inline-block;
-        width: 24px;
-        height: 12px;
-        margin-right: 4px;
+        height: 16px;
+        width: 16px;
       }
     }
   }
@@ -175,11 +184,5 @@ body.crawler {
     .poll-button {
       display: none;
     }
-  }
-}
-
-.poll-ui-builder {
-  .poll-date input {
-    height: 30px;
   }
 }

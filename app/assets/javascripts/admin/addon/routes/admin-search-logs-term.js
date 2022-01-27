@@ -20,7 +20,7 @@ export default DiscourseRoute.extend({
         search_type: params.searchType,
         term: params.term,
       },
-    }).then((json) => {
+    }).then(async (json) => {
       // Add zero values for missing dates
       if (json.term.data.length > 0) {
         const startDate =
@@ -31,7 +31,9 @@ export default DiscourseRoute.extend({
         json.term.data = fillMissingDates(json.term.data, startDate, endDate);
       }
       if (json.term.search_result) {
-        json.term.search_result = translateResults(json.term.search_result);
+        json.term.search_result = await translateResults(
+          json.term.search_result
+        );
       }
 
       const model = EmberObject.create({ type: "search_log_term" });

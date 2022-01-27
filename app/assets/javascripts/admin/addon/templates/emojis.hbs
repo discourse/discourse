@@ -6,6 +6,7 @@
   {{emoji-uploader
     emojiGroups=emojiGroups
     done=(action "emojiUploaded")
+    id="emoji-uploader"
   }}
 
   <hr>
@@ -16,7 +17,7 @@
         <tr>
           <th>{{i18n "admin.emoji.image"}}</th>
           <th>{{i18n "admin.emoji.name"}}</th>
-          <th>
+          <th colspan="2">
             {{combo-box
               value=filter
               content=sortingGroups
@@ -25,22 +26,21 @@
               onChange=(action "filterGroups")
             }}
           </th>
-          <th></th>
         </tr>
       </thead>
       <tbody>
         {{#each sortedEmojis as |e|}}
           <tr>
-            <th><img class="emoji emoji-custom" src={{e.url}} title={{e.name}} alt={{i18n "admin.emoji.alt"}}></th>
-            <th>:{{e.name}}:</th>
-            <th>{{e.group}}</th>
-            <th>
+            <td><img class="emoji emoji-custom" src={{e.url}} title={{e.name}} alt={{i18n "admin.emoji.alt"}}></td>
+            <td>:{{e.name}}:</td>
+            <td>{{e.group}}</td>
+            <td class="action">
               {{d-button
                 action=(action "destroyEmoji" e)
                 class="btn-danger"
                 icon="far-trash-alt"
               }}
-            </th>
+            </td>
           </tr>
         {{/each}}
       </tbody>

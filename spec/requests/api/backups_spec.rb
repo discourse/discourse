@@ -29,13 +29,14 @@ describe 'backups' do
   after do
     Discourse.redis.flushdb
 
-    @paths&.each { |path| File.delete(path) if File.exists?(path) }
+    @paths&.each { |path| File.delete(path) if File.exist?(path) }
     @paths = nil
   end
 
   path '/admin/backups.json' do
     get 'List backups' do
       tags 'Backups'
+      operationId 'getBackups'
       consumes 'application/json'
       expected_request_schema = nil
 
@@ -53,6 +54,7 @@ describe 'backups' do
 
     post 'Create backup' do
       tags 'Backups'
+      operationId 'createBackup'
       consumes 'application/json'
       expected_request_schema = load_spec_schema('backups_create_request')
       parameter name: :params, in: :body, schema: expected_request_schema
@@ -81,6 +83,7 @@ describe 'backups' do
   path '/admin/backups/{filename}' do
     put 'Send download backup email' do
       tags 'Backups'
+      operationId 'sendDownloadBackupEmail'
       consumes 'application/json'
       expected_request_schema = nil
       parameter name: :filename, in: :path, type: :string, required: true
@@ -100,6 +103,7 @@ describe 'backups' do
 
     get 'Download backup' do
       tags 'Backups'
+      operationId 'downloadBackup'
       consumes 'application/json'
       expected_request_schema = nil
       parameter name: :filename, in: :path, type: :string, required: true

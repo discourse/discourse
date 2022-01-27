@@ -34,7 +34,18 @@ export default {
       app[
         `Discovery${filterCapitalized}CategoryNoneController`
       ] = DiscoverySortableController.extend();
-      if (filter !== "top") {
+
+      if (filter === "top") {
+        app.DiscoveryTopRoute = buildTopicRoute("top", {
+          actions: {
+            willTransition() {
+              User.currentProp("should_be_redirected_to_top", false);
+              User.currentProp("redirected_to_top.reason", null);
+              return this._super(...arguments);
+            },
+          },
+        });
+      } else {
         app[`Discovery${filterCapitalized}Route`] = buildTopicRoute(filter);
       }
 
@@ -44,38 +55,6 @@ export default {
       app[
         `Discovery${filterCapitalized}CategoryNoneRoute`
       ] = buildCategoryRoute(filter, { no_subcategories: true });
-    });
-
-    app.DiscoveryTopRoute = buildTopicRoute("top", {
-      actions: {
-        willTransition() {
-          User.currentProp("should_be_redirected_to_top", false);
-          User.currentProp("redirected_to_top.reason", null);
-          return this._super(...arguments);
-        },
-      },
-    });
-
-    site.get("periods").forEach((period) => {
-      const periodCapitalized = period.capitalize();
-      app[
-        `DiscoveryTop${periodCapitalized}Controller`
-      ] = DiscoverySortableController.extend();
-      app[
-        `DiscoveryTop${periodCapitalized}CategoryController`
-      ] = DiscoverySortableController.extend();
-      app[
-        `DiscoveryTop${periodCapitalized}CategoryNoneController`
-      ] = DiscoverySortableController.extend();
-      app[`DiscoveryTop${periodCapitalized}Route`] = buildTopicRoute(
-        "top/" + period
-      );
-      app[`DiscoveryTop${periodCapitalized}CategoryRoute`] = buildCategoryRoute(
-        "top/" + period
-      );
-      app[
-        `DiscoveryTop${periodCapitalized}CategoryNoneRoute`
-      ] = buildCategoryRoute("top/" + period, { no_subcategories: true });
     });
 
     app["TagsShowCategoryRoute"] = TagShowRoute.extend();

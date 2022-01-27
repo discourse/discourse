@@ -23,7 +23,7 @@
 require "open-uri"
 
 module OpenURI
-  class <<self
+  class << self
     alias_method :open_uri_original, :open_uri
     alias_method :redirectable_cautious?, :redirectable?
 

@@ -14,11 +14,11 @@ module FileStore
     def remove_file(url, _)
       return unless is_relative?(url)
       source = "#{public_dir}#{url}"
-      return unless File.exists?(source)
+      return unless File.exist?(source)
       destination = "#{public_dir}#{url.sub("/uploads/", "/uploads/tombstone/")}"
       dir = Pathname.new(destination).dirname
-      FileUtils.mkdir_p(dir) unless Dir.exists?(dir)
-      FileUtils.remove(destination) if File.exists?(destination)
+      FileUtils.mkdir_p(dir) unless Dir.exist?(dir)
+      FileUtils.remove(destination) if File.exist?(destination)
       FileUtils.move(source, destination, force: true)
       FileUtils.touch(destination)
     end
@@ -37,6 +37,10 @@ module FileStore
 
     def relative_base_url
       File.join(Discourse.base_path, upload_path)
+    end
+
+    def temporary_upload_path(filename)
+      FileStore::BaseStore.temporary_upload_path(filename, folder_prefix: relative_base_url)
     end
 
     def external?
@@ -58,7 +62,7 @@ module FileStore
     end
 
     def purge_tombstone(grace_period)
-      if Dir.exists?(Discourse.store.tombstone_dir)
+      if Dir.exist?(Discourse.store.tombstone_dir)
         Discourse::Utils.execute_command(
           'find', tombstone_dir, '-mtime', "+#{grace_period}", '-type', 'f', '-delete'
         )
@@ -66,12 +70,12 @@ module FileStore
     end
 
     def get_path_for(type, upload_id, sha, extension)
-      File.join("/", upload_path, super(type, upload_id, sha, extension))
+      prefix_path(super(type, upload_id, sha, extension))
     end
 
     def copy_file(file, path)
       dir = Pathname.new(path).dirname
-      FileUtils.mkdir_p(dir) unless Dir.exists?(dir)
+      FileUtils.mkdir_p(dir) unless Dir.exist?(dir)
       # move the file to the right location
       # not using mv, cause permissions are no good on move
       File.open(path, "wb") { |f| f.write(file.read) }
@@ -134,5 +138,8 @@ module FileStore
       puts "#{count} of #{model.count} #{model.name.underscore.pluralize} are missing" if count > 0
     end
 
+    def prefix_path(path)
+      File.join("/", upload_path, path)
+    end
   end
 end

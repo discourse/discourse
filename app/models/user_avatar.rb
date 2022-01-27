@@ -30,6 +30,10 @@ class UserAvatar < ActiveRecord::Base
         email_hash = @@custom_user_gravatar_email_hash[user_id] || user.email_hash
         gravatar_url = "https://#{SiteSetting.gravatar_base_url}/avatar/#{email_hash}.png?s=#{max}&d=404&reset_cache=#{SecureRandom.urlsafe_base64(5)}"
 
+        if SiteSetting.verbose_upload_logging
+          Rails.logger.warn("Verbose Upload Logging: Downloading gravatar from #{gravatar_url}")
+        end
+
         # follow redirects in case gravatar change rules on us
         tempfile = FileHelper.download(
           gravatar_url,
@@ -95,6 +99,10 @@ class UserAvatar < ActiveRecord::Base
   end
 
   def self.import_url_for_user(avatar_url, user, options = nil)
+    if SiteSetting.verbose_upload_logging
+      Rails.logger.warn("Verbose Upload Logging: Downloading sso-avatar from #{avatar_url}")
+    end
+
     tempfile = FileHelper.download(
       avatar_url,
       max_file_size: SiteSetting.max_image_size_kb.kilobytes,

@@ -2,8 +2,8 @@
 <html>
   <head>
     <title>QUnit Test Runner</title>
-    <%= discourse_stylesheet_link_tag(:test_helper, theme_ids: nil) %>
-    <%= discourse_stylesheet_link_tag :wizard, theme_ids: nil %>
+    <%= discourse_stylesheet_link_tag(:test_helper, theme_id: nil) %>
+    <%= discourse_stylesheet_link_tag :wizard, theme_id: nil %>
     <%= preload_script "wizard/test/test_helper" %>
     <%= csrf_meta_tags %>
     <script src="<%= ExtraLocalesController.url("wizard") %>"></script>

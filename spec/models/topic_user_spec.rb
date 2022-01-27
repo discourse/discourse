@@ -226,7 +226,14 @@ describe TopicUser do
         freeze_time tomorrow
 
         Fabricate(:post, topic: topic, user: user)
-        TopicUser.update_last_read(user, topic.id, 2, 1, 0)
+        channel = TopicTrackingState.unread_channel_key(user.id)
+
+        messages = MessageBus.track_publish(channel) do
+          TopicUser.update_last_read(user, topic.id, 2, 1, 0)
+        end
+
+        expect(messages.blank?).to eq(false)
+
         topic_user = TopicUser.get(topic, user)
 
         expect(topic_user.last_read_post_number).to eq(2)
@@ -268,6 +275,20 @@ describe TopicUser do
 
         expect(TopicUser.get(topic, another_user).notification_level)
           .to eq(TopicUser.notification_levels[:regular])
+      end
+
+      it 'should publish the right message_bus message' do
+        TopicUser.update_last_read(user, topic.id, 1, 1, 0)
+
+        Fabricate(:post, topic: topic, user: user)
+
+        channel = PrivateMessageTopicTrackingState.user_channel(user.id)
+
+        messages = MessageBus.track_publish(channel) do
+          TopicUser.update_last_read(user, topic.id, 2, 1, 0)
+        end
+
+        expect(messages.blank?).to eq(false)
       end
 
       describe 'inviting a group' do
@@ -434,7 +455,7 @@ describe TopicUser do
     p2 = Fabricate(:post, user: p1.user, topic: p1.topic, post_number: 2)
     p1.topic.notifier.watch_topic!(p1.user_id)
 
-    DB.exec("UPDATE topic_users set highest_seen_post_number=1, last_read_post_number=0
+    DB.exec("UPDATE topic_users set last_read_post_number=0
                        WHERE topic_id = :topic_id AND user_id = :user_id", topic_id: p1.topic_id, user_id: p1.user_id)
 
     [p1, p2].each do |p|
@@ -445,7 +466,6 @@ describe TopicUser do
 
     tu = TopicUser.find_by(user_id: p1.user_id, topic_id: p1.topic_id)
     expect(tu.last_read_post_number).to eq(p2.post_number)
-    expect(tu.highest_seen_post_number).to eq(2)
 
   end
 

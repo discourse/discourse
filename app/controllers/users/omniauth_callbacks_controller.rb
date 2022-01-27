@@ -28,15 +28,13 @@ class Users::OmniauthCallbacksController < ApplicationController
     authenticator = self.class.find_authenticator(params[:provider])
 
     if session.delete(:auth_reconnect) && authenticator.can_connect_existing_user? && current_user
-      # Save to redis, with a secret token, then redirect to confirmation screen
-      token = SecureRandom.hex
-      Discourse.redis.setex "#{Users::AssociateAccountsController::REDIS_PREFIX}_#{current_user.id}_#{token}", 10.minutes, auth.to_json
-      return redirect_to "#{Discourse.base_path}/associate/#{token}"
+      path = persist_auth_token(auth)
+      return redirect_to path
     else
-      DiscourseEvent.trigger(:before_auth, authenticator, auth)
+      DiscourseEvent.trigger(:before_auth, authenticator, auth, session, cookies, request)
       @auth_result = authenticator.after_authenticate(auth)
       @auth_result.user = nil if @auth_result&.user&.staged # Treat staged users the same as unregistered users
-      DiscourseEvent.trigger(:after_auth, authenticator, @auth_result)
+      DiscourseEvent.trigger(:after_auth, authenticator, @auth_result, session, cookies, request)
     end
 
     preferred_origin = request.env['omniauth.origin']
@@ -76,9 +74,16 @@ class Users::OmniauthCallbacksController < ApplicationController
 
     return render_auth_result_failure if @auth_result.failed?
 
+    client_hash = @auth_result.to_client_hash
+    if authenticator.can_connect_existing_user? &&
+      (SiteSetting.enable_local_logins || Discourse.enabled_authenticators.count > 1)
+      # There is more than one login method, and users are allowed to manage associations themselves
+      client_hash[:associate_url] = persist_auth_token(auth)
+    end
+
     cookies['_bypass_cache'] = true
     cookies[:authentication_data] = {
-      value: @auth_result.to_client_hash.to_json,
+      value: client_hash.to_json,
       path: Discourse.base_path("/")
     }
     redirect_to @origin
@@ -93,8 +98,14 @@ class Users::OmniauthCallbacksController < ApplicationController
   end
 
   def failure
-    error_key = params[:message].to_s.gsub(/[^\w-]/, "") || "generic"
-    flash[:error] = I18n.t("login.omniauth_error.#{error_key}", default: I18n.t("login.omniauth_error.generic"))
+    error_key = params[:message].to_s.gsub(/[^\w-]/, "")
+    error_key = "generic" if error_key.blank?
+
+    flash[:error] = I18n.t(
+      "login.omniauth_error.#{error_key}",
+      default: I18n.t("login.omniauth_error.generic")
+    ).html_safe
+
     render 'failure'
   end
 
@@ -144,9 +155,8 @@ class Users::OmniauthCallbacksController < ApplicationController
         user.update!(password: SecureRandom.hex)
 
         # Ensure there is an active email token
-        unless EmailToken.where(email: user.email, confirmed: true).exists? ||
-          user.email_tokens.active.where(email: user.email).exists?
-          user.email_tokens.create!(email: user.email)
+        if !EmailToken.where(email: user.email, confirmed: true).exists? && !user.email_tokens.active.where(email: user.email).exists?
+          user.email_tokens.create!(email: user.email, scope: EmailToken.scopes[:signup])
         end
 
         user.activate
@@ -161,6 +171,7 @@ class Users::OmniauthCallbacksController < ApplicationController
     elsif Guardian.new(user).can_access_forum? && user.active # log on any account that is active with forum access
       begin
         user.save! if @auth_result.apply_user_attributes!
+        @auth_result.apply_associated_attributes!
       rescue ActiveRecord::RecordInvalid => e
         @auth_result.failed = true
         @auth_result.failed_reason = e.record.errors.full_messages.join(", ")
@@ -180,4 +191,9 @@ class Users::OmniauthCallbacksController < ApplicationController
     end
   end
 
+  def persist_auth_token(auth)
+    secret = SecureRandom.hex
+    secure_session.set "#{Users::AssociateAccountsController.key(secret)}", auth.to_json, expires: 10.minutes
+    "#{Discourse.base_path}/associate/#{secret}"
+  end
 end

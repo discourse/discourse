@@ -1,26 +1,79 @@
-// styles that apply to the "share" popup when sharing a link to a post or topic
+// styles that apply to the "share" modal & popup when sharing a link to a post or topic
+
+.link-share-container,
+.notify-user-input {
+  display: flex;
+  .btn {
+    margin-left: 0.5em;
+  }
+  input,
+  .select-kit {
+    width: 100%;
+    margin-bottom: 0;
+  }
+}
+
+.link-share-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+
+  button {
+    margin-top: 0.5em;
+    margin-right: 0.5em;
+  }
+
+  .sources {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .new-topic {
+    margin-right: 0;
+  }
+
+  .alt-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-left: auto;
+  }
+}
+
+.share-twitter {
+  .d-icon {
+    color: var(--twitter);
+  }
+}
+.share-facebook {
+  .d-icon {
+    color: var(--facebook);
+  }
+}
+
+// post share popup
 
 #share-link {
   position: absolute;
-  left: 20px;
   z-index: z("dropdown");
   box-shadow: shadow("card");
   background-color: var(--secondary);
-  padding: 8px 8px 4px 8px;
-  width: 300px;
+  padding: 0.5em;
+  width: 20em; // scales with user font-size
+  max-width: 100vw; // prevents overflow due to extra large user font-size
   display: none;
   &.visible {
     display: block;
   }
+
   input[type="text"] {
     width: 100%;
   }
 
   .title {
-    margin-bottom: 4px;
+    margin-bottom: 0.5em;
     align-items: center;
     display: flex;
-    justify-content: space-between;
 
     h3 {
       font-size: $font-0;
@@ -30,73 +83,126 @@
     .date {
       font-weight: normal;
       color: var(--primary-med-or-secondary-med);
+      margin-left: 0.5em;
     }
-  }
 
-  .copy-text {
-    display: inline-block;
-    position: absolute;
-    margin: 5px 5px 5px 15px;
-    color: var(--success);
-    opacity: 1;
-    transition: opacity 0.25s;
-    font-size: $font-0;
-    &:not(.success) {
-      opacity: 0;
+    .btn.close {
+      margin-left: auto;
     }
   }
-  .social-link {
-    margin-right: 8px;
-    font-size: $font-up-4;
-    .d-icon {
-      color: var(--tertiary-or-white);
-    }
-    .d-icon-fab-facebook {
-      // Adheres to Facebook brand guidelines
-      color: var(--facebook-or-white);
-    }
-    .d-icon-fab-twitter-square {
-      // Adheres to Twitter brand guidelines
-      color: var(--twitter-or-white);
-    }
-  }
+}
 
-  input[type="text"] {
-    font-size: $font-up-1;
+// topic share modal
+
+.share-topic-modal {
+  form {
     margin-bottom: 0;
   }
 
-  .actions {
+  .invite-users {
     display: flex;
-    align-items: flex-end;
-    margin-top: 8px;
+    flex-direction: column;
+    margin: 1.5em 0 0.25em;
+    width: 100%;
 
-    .sources {
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      flex-direction: row;
-      max-width: 45%;
+    button {
+      margin-top: 0;
+      margin-right: 0;
+    }
+  }
+}
 
-      .social-link {
-        margin-right: 8px;
-      }
+// topic invite modal
+
+.create-invite-modal {
+  form {
+    margin: 0;
+  }
+
+  input {
+    margin-bottom: 0;
+  }
+
+  label {
+    margin-right: 0.5em;
+    .d-icon {
+      color: var(--primary-medium);
+      margin-right: 0.75em;
+    }
+  }
+
+  textarea {
+    margin-bottom: 0;
+  }
+
+  .input-group:not(:last-of-type) {
+    margin-bottom: 1em;
+  }
+  .input-group.input-expires-at,
+  .input-group.input-email,
+  .input-group.invite-max-redemptions {
+    input[type="text"] {
+      width: unset;
+    }
+  }
+
+  .existing-topic,
+  p {
+    // p is for "no topics found"
+    margin-left: 1.75em;
+    margin-top: 0.25em;
+  }
+
+  .input-group.input-email {
+    display: flex;
+    align-items: baseline;
+    label {
+      display: inline;
+    }
+  }
+
+  .invite-email-container {
+    flex: 1 1 auto;
+    #invite-email {
+      width: 100%;
+    }
+  }
+
+  .invite-max-redemptions {
+    label {
+      display: inline;
+    }
+    input {
+      width: 80px;
+    }
+  }
+
+  .invite-custom-message {
+    label {
+      margin-left: 1.75em;
+    }
+  }
+
+  .input-group {
+    textarea#invite-message,
+    &.invite-to-topic input[type="text"],
+    .group-chooser,
+    .user-chooser,
+    .future-date-input-selector,
+    .future-date-input-date-picker,
+    .future-date-input-time-picker {
+      margin-left: 1.75em;
+      width: calc(100% - 1.75em);
     }
 
-    .alt-actions {
-      display: flex;
-      align-items: center;
-      flex: 1;
-      justify-content: flex-end;
-      height: 36px;
+    .future-date-input-date-picker,
+    .future-date-input-time-picker {
+      display: inline-block;
+      margin: 0em 0em 0em 1.75em;
+      width: calc(50% - 2em);
 
-      .close-share {
-        font-size: $font-up-3;
-        color: var(--primary-med-or-secondary-med);
-      }
-
-      .new-topic {
-        margin-right: 16px;
+      input {
+        height: 34px;
       }
     }
   }

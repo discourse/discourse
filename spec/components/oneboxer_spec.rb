@@ -5,7 +5,7 @@ require 'rails_helper'
 describe Oneboxer do
   def response(file)
     file = File.join("spec", "fixtures", "onebox", "#{file}.response")
-    File.exists?(file) ? File.read(file) : ""
+    File.exist?(file) ? File.read(file) : ""
   end
 
   it "returns blank string for an invalid onebox" do
@@ -72,7 +72,7 @@ describe Oneboxer do
       onebox = preview(public_reply.url, user, public_category)
       expect(onebox).to include(public_reply.excerpt)
       expect(onebox).to include(%{data-post="2"})
-      expect(onebox).to include(PrettyText.avatar_img(replier.avatar_template, "tiny"))
+      expect(onebox).to include(PrettyText.avatar_img(replier.avatar_template_url, "tiny"))
 
       short_url = "#{Discourse.base_path}/t/#{public_topic.id}"
       expect(preview(short_url, user, public_category)).to include(public_topic.title)
@@ -80,11 +80,11 @@ describe Oneboxer do
       onebox = preview(public_moderator_action.url, user, public_category)
       expect(onebox).to include(public_moderator_action.excerpt)
       expect(onebox).to include(%{data-post="4"})
-      expect(onebox).to include(PrettyText.avatar_img(staff.avatar_template, "tiny"))
+      expect(onebox).to include(PrettyText.avatar_img(staff.avatar_template_url, "tiny"))
 
       onebox = preview(public_reply.url, user, public_category, public_topic)
       expect(onebox).not_to include(public_topic.title)
-      expect(onebox).to include(replier.avatar_template.sub("{size}", "40"))
+      expect(onebox).to include(replier.avatar_template_url.sub("{size}", "40"))
 
       expect(preview(public_hidden.url, user, public_category)).to match_html(link(public_hidden.url))
       expect(preview(secured_topic.relative_url, user, public_category)).to match_html(link(secured_topic.relative_url))
@@ -175,6 +175,29 @@ describe Oneboxer do
     stub_request(:get, url).to_return(status: 200, body: "", headers: {})
 
     expect(Oneboxer.external_onebox(url)[:onebox]).to be_present
+  end
+
+  it "censors external oneboxes" do
+    Fabricate(:watched_word, action: WatchedWord.actions[:censor], word: "bad word")
+
+    url = 'https://example.com/'
+    stub_request(:any, url).to_return(status: 200, body: <<~HTML, headers: {})
+      <html>
+      <head>
+        <meta property="og:title" content="title with bad word">
+        <meta property="og:description" content="description with bad word">
+      </head>
+      <body>
+        <p>content with bad word</p>
+      </body>
+      <html>
+    HTML
+
+    onebox = Oneboxer.external_onebox(url)
+    expect(onebox[:onebox]).to include('title with')
+    expect(onebox[:onebox]).not_to include('bad word')
+    expect(onebox[:preview]).to include('title with')
+    expect(onebox[:preview]).not_to include('bad word')
   end
 
   it "uses the Onebox custom user agent on specified hosts" do
@@ -285,7 +308,7 @@ describe Oneboxer do
     end
   end
 
-  context 'facebook_app_access_token' do
+  context 'instagram' do
     it 'providing a token should attempt to use new endpoint' do
       url = "https://www.instagram.com/p/CHLkBERAiLa"
       access_token = 'abc123'
@@ -295,7 +318,7 @@ describe Oneboxer do
       stub_request(:head, url)
       stub_request(:get, "https://graph.facebook.com/v9.0/instagram_oembed?url=#{url}&access_token=#{access_token}").to_return(body: response("instagram_new"))
 
-      expect(Oneboxer.preview(url, invalidate_oneboxes: true)).not_to include('instagram-description')
+      expect(Oneboxer.preview(url, invalidate_oneboxes: true)).to include('placeholder-icon image')
     end
 
     it 'unconfigured token should attempt to use old endpoint' do
@@ -303,7 +326,15 @@ describe Oneboxer do
       stub_request(:head, url)
       stub_request(:get, "https://api.instagram.com/oembed/?url=#{url}").to_return(body: response("instagram_old"))
 
-      expect(Oneboxer.preview(url, invalidate_oneboxes: true)).to include('instagram-description')
+      expect(Oneboxer.preview(url, invalidate_oneboxes: true)).to include('placeholder-icon image')
+    end
+
+    it 'renders result using an iframe' do
+      url = "https://www.instagram.com/p/CHLkBERAiLa"
+      stub_request(:head, url)
+      stub_request(:get, "https://api.instagram.com/oembed/?url=#{url}").to_return(body: response("instagram_old"))
+
+      expect(Oneboxer.onebox(url, invalidate_oneboxes: true)).to include('iframe')
     end
   end
 

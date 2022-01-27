@@ -1,3 +1,4 @@
+import { INPUT_DELAY } from "discourse-common/config/environment";
 import EmberObject, { computed, get } from "@ember/object";
 import PluginApiMixin, {
   applyContentPluginApiCallbacks,
@@ -26,9 +27,7 @@ const SELECT_KIT_OPTIONS = Mixin.create({
 });
 
 function isDocumentRTL() {
-  return (
-    window.getComputedStyle(document.querySelector("html")).direction === "rtl"
-  );
+  return document.documentElement.classList.contains("rtl");
 }
 
 export default Component.extend(
@@ -36,6 +35,7 @@ export default Component.extend(
   PluginApiMixin,
   UtilsMixin,
   {
+    tagName: "details",
     pluginApiIdentifiers: ["select-kit"],
     classNames: ["select-kit"],
     classNameBindings: [
@@ -75,7 +75,7 @@ export default Component.extend(
       this.set(
         "selectKit",
         EmberObject.create({
-          uniqueID: guidFor(this),
+          uniqueID: this.attrs?.id?.value || this.attrs?.id || guidFor(this),
           valueProperty: this.valueProperty,
           nameProperty: this.nameProperty,
           labelProperty: this.labelProperty,
@@ -112,11 +112,16 @@ export default Component.extend(
           open: bind(this, this._open),
           highlightNext: bind(this, this._highlightNext),
           highlightPrevious: bind(this, this._highlightPrevious),
+          highlightLast: bind(this, this._highlightLast),
+          highlightFirst: bind(this, this._highlightFirst),
           change: bind(this, this._onChangeWrapper),
           select: bind(this, this.select),
           deselect: bind(this, this.deselect),
           deselectByValue: bind(this, this.deselectByValue),
           append: bind(this, this.append),
+          cancelSearch: bind(this, this._cancelSearch),
+          triggerSearch: bind(this, this.triggerSearch),
+          focusFilter: bind(this, this._focusFilter),
 
           onOpen: bind(this, this._onOpenWrapper),
           onClose: bind(this, this._onCloseWrapper),
@@ -124,14 +129,12 @@ export default Component.extend(
           onClearSelection: bind(this, this._onClearSelection),
           onHover: bind(this, this._onHover),
           onKeydown: bind(this, this._onKeydownWrapper),
+
+          mainElement: bind(this, this._mainElement),
+          headerElement: bind(this, this._headerElement),
+          bodyElement: bind(this, this._bodyElement),
         })
       );
-    },
-
-    click(event) {
-      if (this.selectKit.options.preventsClickPropagation) {
-        event.stopPropagation();
-      }
     },
 
     _modifyComponentForRowWrapper(collection, item) {
@@ -185,10 +188,15 @@ export default Component.extend(
       this.handleDeprecations();
     },
 
+    click(event) {
+      event.preventDefault();
+      event.stopPropagation();
+    },
+
     willDestroyElement() {
       this._super(...arguments);
 
-      this._searchPromise && cancel(this._searchPromise);
+      this._cancelSearch();
 
       if (this.popper) {
         this.popper.destroy();
@@ -199,8 +207,12 @@ export default Component.extend(
     didReceiveAttrs() {
       this._super(...arguments);
 
-      const computedOptions = {};
       Object.keys(this.selectKitOptions).forEach((key) => {
+        if (isPresent(this.options[key])) {
+          this.selectKit.options.set(key, this.options[key]);
+          return;
+        }
+
         const value = this.selectKitOptions[key];
 
         if (
@@ -209,9 +221,9 @@ export default Component.extend(
           key === "componentForCollection"
         ) {
           if (typeof value === "string") {
-            computedOptions[key] = () => value;
+            this.selectKit.options.set(key, () => value);
           } else {
-            computedOptions[key] = bind(this, value);
+            this.selectKit.options.set(key, bind(this, value));
           }
 
           return;
@@ -224,15 +236,13 @@ export default Component.extend(
         ) {
           const computedValue = get(this, value);
           if (typeof computedValue !== "function") {
-            computedOptions[key] = get(this, value);
+            this.selectKit.options.set(key, computedValue);
             return;
           }
         }
-        computedOptions[key] = value;
+
+        this.selectKit.options.set(key, value);
       });
-      this.selectKit.options.setProperties(
-        Object.assign(computedOptions, this.options || {})
-      );
 
       this.selectKit.setProperties({
         hasSelection: !isEmpty(this.value),
@@ -254,33 +264,34 @@ export default Component.extend(
     },
 
     selectKitOptions: {
+      allowAny: false,
       showFullTitle: true,
       none: null,
       translatedNone: null,
       filterable: false,
       autoFilterable: "autoFilterable",
       filterIcon: "search",
-      filterPlaceholder: "filterPlaceholder",
+      filterPlaceholder: null,
       translatedFilterPlaceholder: null,
       icon: null,
       icons: null,
       maximum: null,
       maximumLabel: null,
       minimum: null,
-      minimumLabel: null,
       autoInsertNoneItem: true,
-      clearOnClick: false,
       closeOnChange: true,
       limitMatches: null,
       placement: isDocumentRTL() ? "bottom-end" : "bottom-start",
-      placementStrategy: null,
       filterComponent: "select-kit/select-kit-filter",
       selectedNameComponent: "selected-name",
+      selectedChoiceComponent: "selected-choice",
       castInteger: false,
-      preventsClickPropagation: false,
       focusAfterOnChange: true,
       triggerOnChangeOnTab: true,
       autofocus: false,
+      placementStrategy: null,
+      mobilePlacementStrategy: null,
+      desktopPlacementStrategy: null,
     },
 
     autoFilterable: computed("content.[]", "selectKit.filter", function () {
@@ -289,12 +300,6 @@ export default Component.extend(
         this.options.autoFilterable &&
         this.content.length > 15
       );
-    }),
-
-    filterPlaceholder: computed("options.allowAny", function () {
-      return this.options.allowAny
-        ? "select_kit.filter_placeholder_with_any"
-        : "select_kit.filter_placeholder";
     }),
 
     collections: computed(
@@ -386,11 +391,18 @@ export default Component.extend(
         cancel(this._searchPromise);
       }
 
-      discourseDebounce(this, this._debouncedInput, event.target.value, 200);
+      this.selectKit.set("isLoading", true);
+
+      discourseDebounce(
+        this,
+        this._debouncedInput,
+        event.target.value,
+        INPUT_DELAY
+      );
     },
 
     _debouncedInput(filter) {
-      this.selectKit.setProperties({ filter, isLoading: true });
+      this.selectKit.set("filter", filter);
       this.triggerSearch(filter);
     },
 
@@ -435,8 +447,11 @@ export default Component.extend(
         resolve(items);
       }).finally(() => {
         if (!this.isDestroying && !this.isDestroyed) {
-          if (this.selectKit.options.closeOnChange) {
-            this.selectKit.close();
+          if (
+            this.selectKit.options.closeOnChange ||
+            (isPresent(value) && this.selectKit.options.maximum === 1)
+          ) {
+            this.selectKit.close(event);
           }
 
           if (this.selectKit.options.focusAfterOnChange) {
@@ -503,6 +518,18 @@ export default Component.extend(
 
     _onKeydownWrapper(event) {
       return this._boundaryActionHandler("onKeydown", event);
+    },
+
+    _mainElement() {
+      return document.querySelector(`#${this.selectKit.uniqueID}`);
+    },
+
+    _headerElement() {
+      return this.selectKit.mainElement().querySelector("summary");
+    },
+
+    _bodyElement() {
+      return this.selectKit.mainElement().querySelector(".select-kit-body");
     },
 
     _onHover(value, item) {
@@ -572,15 +599,18 @@ export default Component.extend(
     },
 
     triggerSearch(filter) {
-      if (this._searchPromise) {
-        cancel(this._searchPromise);
-      }
+      this._searchPromise && cancel(this._searchPromise);
+
       this._searchPromise = this._searchWrapper(
         filter || this.selectKit.filter
       );
     },
 
     _searchWrapper(filter) {
+      if (this.isDestroyed || this.isDestroying) {
+        return Promise.resolve([]);
+      }
+
       this.clearErrors();
       this.setProperties({
         mainCollection: [],
@@ -593,6 +623,10 @@ export default Component.extend(
 
       return Promise.resolve(this.search(filter))
         .then((result) => {
+          if (this.isDestroyed || this.isDestroying) {
+            return [];
+          }
+
           content = content.concat(makeArray(result));
           content = this.selectKit.modifyContent(content).filter(Boolean);
 
@@ -620,7 +654,6 @@ export default Component.extend(
           }
 
           const hasNoContent = isEmpty(content);
-
           if (
             this.selectKit.hasSelection &&
             noneItem &&
@@ -635,14 +668,18 @@ export default Component.extend(
             highlighted:
               this.singleSelect && this.value
                 ? this.itemForValue(this.value, this.mainCollection)
+                : isEmpty(this.selectKit.filter)
+                ? null
                 : this.mainCollection.firstObject,
             isLoading: false,
             hasNoContent,
           });
 
           this._safeAfterRender(() => {
-            this.popper && this.popper.update();
-            this._focusFilter();
+            if (this.selectKit.isExpanded) {
+              this.popper && this.popper.update();
+              this._focusFilter();
+            }
           });
         })
         .finally(() => {
@@ -665,17 +702,36 @@ export default Component.extend(
       });
     },
 
-    _scrollToRow(rowItem) {
+    _scrollToRow(rowItem, preventScroll = true) {
       const value = this.getValue(rowItem);
-      const rowContainer = this.element.querySelector(
-        `.select-kit-row[data-value="${value}"]`
+
+      let rowContainer;
+      if (isPresent(value)) {
+        rowContainer = this.element.querySelector(
+          `.select-kit-row[data-value="${value}"]`
+        );
+      } else {
+        rowContainer = this.element.querySelector(".select-kit-row.is-none");
+      }
+
+      rowContainer?.focus({ preventScroll });
+    },
+
+    _highlightLast() {
+      const highlighted = this.mainCollection.objectAt(
+        this.mainCollection.length - 1
       );
+      if (highlighted) {
+        this._scrollToRow(highlighted, false);
+        this.set("selectKit.highlighted", highlighted);
+      }
+    },
 
-      if (rowContainer) {
-        const collectionContainer = rowContainer.parentNode;
-
-        collectionContainer.scrollTop =
-          rowContainer.offsetTop - collectionContainer.offsetTop;
+    _highlightFirst() {
+      const highlighted = this.mainCollection.objectAt(0);
+      if (highlighted) {
+        this._scrollToRow(highlighted, false);
+        this.set("selectKit.highlighted", highlighted);
       }
     },
 
@@ -688,12 +744,16 @@ export default Component.extend(
       if (highlightedIndex < count - 1) {
         highlightedIndex = highlightedIndex + 1;
       } else {
-        highlightedIndex = 0;
+        if (this.selectKit.isFilterExpanded) {
+          this._focusFilter();
+        } else {
+          highlightedIndex = 0;
+        }
       }
 
       const highlighted = this.mainCollection.objectAt(highlightedIndex);
       if (highlighted) {
-        this._scrollToRow(highlighted);
+        this._scrollToRow(highlighted, false);
         this.set("selectKit.highlighted", highlighted);
       }
     },
@@ -707,26 +767,23 @@ export default Component.extend(
       if (highlightedIndex > 0) {
         highlightedIndex = highlightedIndex - 1;
       } else {
-        highlightedIndex = count - 1;
+        if (this.selectKit.isFilterExpanded) {
+          this._focusFilter();
+        } else {
+          highlightedIndex = count - 1;
+        }
       }
 
       const highlighted = this.mainCollection.objectAt(highlightedIndex);
       if (highlighted) {
-        this._scrollToRow(highlighted);
+        this._scrollToRow(highlighted, false);
         this.set("selectKit.highlighted", highlighted);
       }
     },
 
     select(value, item) {
       if (!isPresent(value)) {
-        if (!this.validateSelect(this.selectKit.highlighted)) {
-          return;
-        }
-
-        this.selectKit.change(
-          this.getValue(this.selectKit.highlighted),
-          this.selectKit.highlighted
-        );
+        this._onClearSelection();
       } else {
         const existingItem = this.findValue(this.mainCollection, item);
         if (existingItem) {
@@ -747,7 +804,12 @@ export default Component.extend(
       return this._boundaryActionHandler("onOpen");
     },
 
+    _cancelSearch() {
+      this._searchPromise && cancel(this._searchPromise);
+    },
+
     _onCloseWrapper() {
+      this._cancelSearch();
       this.set("selectKit.highlighted", null);
 
       return this._boundaryActionHandler("onClose");
@@ -766,7 +828,15 @@ export default Component.extend(
         return;
       }
 
+      this.selectKit.mainElement().open = false;
+
       this.clearErrors();
+
+      const inModal = this.element.closest("#discourse-modal");
+      if (inModal && this?.site?.mobileView) {
+        const modalBody = inModal.querySelector(".modal-body");
+        modalBody.style = "";
+      }
 
       this.selectKit.onClose(event);
 
@@ -781,36 +851,29 @@ export default Component.extend(
         return;
       }
 
+      this.selectKit.mainElement().open = true;
       this.clearErrors();
-
       this.selectKit.onOpen(event);
 
       if (!this.popper) {
+        const inModal = this.element.closest("#discourse-modal");
         const anchor = document.querySelector(
           `#${this.selectKit.uniqueID}-header`
         );
         const popper = document.querySelector(
           `#${this.selectKit.uniqueID}-body`
         );
-
-        const inModal = $(this.element).parents("#discourse-modal").length;
-
-        let placementStrategy = this.selectKit.options.placementStrategy;
-        if (!placementStrategy) {
-          placementStrategy = inModal ? "fixed" : "absolute";
-        }
-
-        const verticalOffset = 3;
+        const strategy = this._computePlacementStrategy();
 
         this.popper = createPopper(anchor, popper, {
           eventsEnabled: false,
-          strategy: placementStrategy,
+          strategy,
           placement: this.selectKit.options.placement,
           modifiers: [
             {
               name: "offset",
               options: {
-                offset: [0, verticalOffset],
+                offset: [0, 3],
               },
             },
             {
@@ -820,7 +883,11 @@ export default Component.extend(
               fn({ state }) {
                 if (!inModal) {
                   let { x } = state.elements.reference.getBoundingClientRect();
-                  state.modifiersData.popperOffsets.x = -x + 10;
+                  if (strategy === "fixed") {
+                    state.modifiersData.popperOffsets.x = 0 + 10;
+                  } else {
+                    state.modifiersData.popperOffsets.x = -x + 10;
+                  }
                 }
               },
             },
@@ -854,63 +921,39 @@ export default Component.extend(
               phase: "beforeWrite",
               requires: ["computeStyles"],
               fn: ({ state }) => {
-                state.styles.popper.minWidth = `${state.rects.reference.width}px`;
+                state.styles.popper.minWidth = `${Math.max(
+                  state.rects.reference.width,
+                  220
+                )}px`;
+
+                if (state.rects.reference.width >= 300) {
+                  state.styles.popper.maxWidth = `${state.rects.reference.width}px`;
+                } else {
+                  state.styles.popper.maxWidth = "300px";
+                }
               },
               effect: ({ state }) => {
-                state.elements.popper.style.minWidth = `${state.elements.reference.offsetWidth}px`;
+                state.elements.popper.style.minWidth = `${Math.max(
+                  state.elements.reference.offsetWidth,
+                  220
+                )}px`;
+
+                if (state.elements.reference.offsetWidth >= 300) {
+                  state.elements.popper.style.maxWidth = `${state.elements.reference.offsetWidth}px`;
+                } else {
+                  state.elements.popper.style.maxWidth = "300px";
+                }
               },
             },
             {
-              name: "positionWrapper",
+              name: "modalHeight",
+              enabled: !!(inModal && this.site.mobileView),
               phase: "afterWrite",
-              enabled: true,
-              fn: (data) => {
-                const wrapper = this.element.querySelector(
-                  ".select-kit-wrapper"
-                );
-                if (wrapper) {
-                  let height = this.element.offsetHeight + verticalOffset;
-
-                  const body = this.element.querySelector(".select-kit-body");
-                  if (body) {
-                    height += body.offsetHeight;
-                  }
-
-                  const popperElement = data.state.elements.popper;
-                  const topPlacement =
-                    popperElement &&
-                    popperElement
-                      .getAttribute("data-popper-placement")
-                      .startsWith("top-");
-                  if (topPlacement) {
-                    this.element.classList.remove("is-under");
-                    this.element.classList.add("is-above");
-                  } else {
-                    this.element.classList.remove("is-above");
-                    this.element.classList.add("is-under");
-                  }
-
-                  wrapper.style.width = `${this.element.offsetWidth}px`;
-                  wrapper.style.height = `${height}px`;
-                  if (placementStrategy === "fixed") {
-                    const rects = this.element.getClientRects()[0];
-
-                    if (rects) {
-                      const bodyRects = body && body.getClientRects()[0];
-
-                      wrapper.style.position = "fixed";
-                      wrapper.style.left = `${rects.left}px`;
-                      if (topPlacement && bodyRects) {
-                        wrapper.style.top = `${rects.top - bodyRects.height}px`;
-                      } else {
-                        wrapper.style.top = `${rects.top}px`;
-                      }
-                      if (isDocumentRTL()) {
-                        wrapper.style.right = "unset";
-                      }
-                    }
-                  }
-                }
+              fn: ({ state }) => {
+                const modalBody = inModal.querySelector(".modal-body");
+                modalBody.style = "";
+                modalBody.style.height =
+                  modalBody.clientHeight + state.rects.popper.height + "px";
               },
             },
           ],
@@ -946,17 +989,31 @@ export default Component.extend(
         }
 
         if (highlighted) {
-          this._scrollToRow(highlighted);
+          this._scrollToRow(highlighted, false);
           this.set("selectKit.highlighted", highlighted);
         }
       }
     },
 
     _focusFilter(forceHeader = false) {
+      if (!this.selectKit.mainElement()) {
+        return;
+      }
+
+      if (!this.selectKit.mainElement().open) {
+        const headerContainer = this.getHeader();
+        headerContainer && headerContainer.focus({ preventScroll: true });
+        return;
+      }
+
       this._safeAfterRender(() => {
         const input = this.getFilterInput();
         if (!forceHeader && input) {
           input.focus({ preventScroll: true });
+
+          if (typeof input.selectionStart === "number") {
+            input.selectionStart = input.selectionEnd = input.value.length;
+          }
         } else if (!this.selectKit.options.preventHeaderFocus) {
           const headerContainer = this.getHeader();
           headerContainer && headerContainer.focus({ preventScroll: true });
@@ -978,13 +1035,31 @@ export default Component.extend(
       this._deprecateOptions();
     },
 
+    _computePlacementStrategy() {
+      let placementStrategy = this.selectKit.options.placementStrategy;
+
+      if (placementStrategy) {
+        return placementStrategy;
+      }
+
+      if (this.capabilities?.isIpadOS || this.site?.mobileView) {
+        placementStrategy =
+          this.selectKit.options.mobilePlacementStrategy || "absolute";
+      } else {
+        placementStrategy =
+          this.selectKit.options.desktopPlacementStrategy || "fixed";
+      }
+
+      return placementStrategy;
+    },
+
     _deprecated(text) {
       const discourseSetup = document.getElementById("data-discourse-setup");
       if (
         discourseSetup &&
         discourseSetup.getAttribute("data-environment") === "development"
       ) {
-        deprecated(text, { since: "v2.4.0" });
+        deprecated(text, { since: "v2.4.0", dropFrom: "2.9.0.beta1" });
       }
     },
 

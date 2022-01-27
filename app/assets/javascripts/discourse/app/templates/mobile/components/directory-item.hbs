@@ -1,11 +1,33 @@
 {{user-info user=item.user}}
-{{user-stat value=item.likes_received label="directory.likes_received" icon="heart"}}
-{{user-stat value=item.likes_given label="directory.likes_given" icon="heart"}}
-{{user-stat value=item.topic_count label="directory.topic_count"}}
-{{user-stat value=item.post_count label="directory.post_count"}}
-{{user-stat value=item.topics_entered label="directory.topics_entered"}}
-{{user-stat value=item.posts_read label="directory.posts_read"}}
-{{user-stat value=item.days_visited label="directory.days_visited"}}
+
+{{#each columns as |column|}}
+  {{#if (directory-column-is-user-field column=column)}}
+    {{#if (get item.user.user_fields column.user_field_id)}}
+      <div class="user-stat">
+        <span class="value user-field">
+          {{directory-item-user-field-value item=item column=column}}
+        </span>
+        <span class="label">
+          {{column.name}}
+        </span>
+      </div>
+    {{/if}}
+
+  {{else}}
+    <div class="user-stat">
+      <span class="value">
+        {{directory-item-value item=item column=column}}
+      </span>
+      <span class="label">
+        {{#if column.icon}}
+          {{d-icon column.icon}}
+        {{/if}}
+        {{mobile-directory-item-label item=item column=column}}
+      </span>
+    </div>
+  {{/if}}
+{{/each}}
+
 {{#if showTimeRead}}
   {{user-stat value=item.time_read label="directory.time_read" type="duration"}}
 {{/if}}

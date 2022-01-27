@@ -30,11 +30,13 @@ class WebHookUserSerializer < UserSerializer
     can_change_bio
     can_change_location
     can_change_website
+    can_change_tracking_preferences
     user_api_keys
     group_users
     user_auth_tokens
     user_auth_token_logs
     use_logo_small_as_avatar
+    pending_posts_count
   }.each do |attr|
     define_method("include_#{attr}?") do
       false

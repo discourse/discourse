@@ -11,7 +11,7 @@ const maxMembersToDisplay = 10;
 
 export default Component.extend(CardContentsBase, CleansUp, {
   elementId: "group-card",
-  triggeringLinkClass: "mention-group",
+  mentionSelector: "a.mention-group",
   classNames: ["no-bg", "group-card"],
   classNameBindings: [
     "visible:show",
@@ -41,17 +41,19 @@ export default Component.extend(CardContentsBase, CleansUp, {
   },
 
   _showCallback(username, $target) {
-    this.store
+    this._positionCard($target);
+    this.setProperties({ visible: true, loading: true });
+
+    return this.store
       .find("group", username)
       .then((group) => {
-        this.setProperties({ group, visible: true });
-        this._positionCard($target);
+        this.setProperties({ group });
         if (!group.flair_url && !group.flair_bg_color) {
           group.set("flair_url", "fa-users");
         }
         return group.can_see_members &&
           group.members.length < maxMembersToDisplay
-          ? group.findMembers({ limit: maxMembersToDisplay }, true)
+          ? group.reloadMembers({ limit: maxMembersToDisplay }, true)
           : Promise.resolve();
       })
       .catch(() => this._close())

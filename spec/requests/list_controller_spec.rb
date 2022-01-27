@@ -55,6 +55,12 @@ RSpec.describe ListController do
 
       get "/latest?search="
       expect(response.status).to eq(200)
+
+      get "/latest.json?topic_ids%5B%5D=14583&topic_ids%5B%5D=14584"
+      expect(response.status).to eq(200)
+
+      get "/latest.json?topic_ids=14583%2C14584"
+      expect(response.status).to eq(200)
     end
 
     (Discourse.anonymous_filters - [:categories]).each do |filter|
@@ -136,9 +142,9 @@ RSpec.describe ListController do
   end
 
   describe "filter private messages by tag" do
-    let(:user) { Fabricate(:user) }
-    let(:moderator) { Fabricate(:moderator) }
-    let(:admin) { Fabricate(:admin) }
+    fab!(:user) { Fabricate(:user) }
+    fab!(:moderator) { Fabricate(:moderator) }
+    fab!(:admin) { Fabricate(:admin) }
     let(:tag) { Fabricate(:tag) }
     let(:private_message) { Fabricate(:private_message_topic, user: admin) }
 
@@ -185,7 +191,7 @@ RSpec.describe ListController do
   end
 
   describe '#private_messages_group' do
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
 
     describe 'with personal_messages disabled' do
       let!(:topic) { Fabricate(:private_message_topic, allowed_groups: [group]) }
@@ -410,12 +416,34 @@ RSpec.describe ListController do
       expect(response.media_type).to eq('application/rss+xml')
     end
 
+    it 'errors for invalid periods on top RSS' do
+      get "/top.rss?period=decadely"
+      expect(response.status).to eq(400)
+    end
+
     TopTopic.periods.each do |period|
       it "renders #{period} top RSS" do
-        get "/top/#{period}.rss"
+        get "/top.rss?period=#{period}"
         expect(response.status).to eq(200)
         expect(response.media_type).to eq('application/rss+xml')
       end
+    end
+  end
+
+  describe 'Top' do
+    it 'renders top' do
+      get "/top"
+      expect(response.status).to eq(200)
+    end
+
+    it 'renders top with a period' do
+      get "/top?period=weekly"
+      expect(response.status).to eq(200)
+    end
+
+    it 'errors for invalid periods on top' do
+      get "/top?period=decadely"
+      expect(response.status).to eq(400)
     end
   end
 
@@ -681,10 +709,10 @@ RSpec.describe ListController do
       end
     end
 
-    it "returns 403 error when the user can't see private message" do
+    it "returns 404 when the user can't see private message" do
       sign_in(Fabricate(:user))
       get "/topics/private-messages-unread/#{pm_user.username}.json"
-      expect(response.status).to eq(403)
+      expect(response.status).to eq(404)
     end
 
     it "succeeds when the user can see private messages" do
@@ -700,6 +728,58 @@ RSpec.describe ListController do
       json = response.parsed_body
       expect(json["topic_list"]["topics"].size).to eq(1)
       expect(json["topic_list"]["topics"][0]["id"]).to eq(pm.id)
+    end
+  end
+
+  describe "#private_messages_warnings" do
+    fab!(:target_user) { Fabricate(:user) }
+    fab!(:admin) { Fabricate(:admin) }
+    fab!(:moderator1) { Fabricate(:moderator) }
+    fab!(:moderator2) { Fabricate(:moderator) }
+
+    let(:create_args) do
+      { title: 'you need a warning buddy!',
+        raw: "you did something bad and I'm telling you about it!",
+        is_warning: true,
+        target_usernames: target_user.username,
+        archetype: Archetype.private_message }
+    end
+
+    let(:warning_post) do
+      creator = PostCreator.new(moderator1, create_args)
+      creator.create
+    end
+    let(:warning_topic) { warning_post.topic }
+
+    before do
+      warning_topic
+    end
+
+    it "returns 403 error for unrelated users" do
+      sign_in(Fabricate(:user))
+      get "/topics/private-messages-warnings/#{target_user.username}.json"
+      expect(response.status).to eq(403)
+    end
+
+    it "shows the warning to moderators and admins" do
+      [moderator1, moderator2, admin].each do |viewer|
+        sign_in(viewer)
+        get "/topics/private-messages-warnings/#{target_user.username}.json"
+
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+        expect(json["topic_list"]["topics"].size).to eq(1)
+        expect(json["topic_list"]["topics"][0]["id"]).to eq(warning_topic.id)
+      end
+    end
+
+    it "does not show the warning as applying to the authoring moderator" do
+      sign_in(admin)
+      get "/topics/private-messages-warnings/#{moderator1.username}.json"
+
+      expect(response.status).to eq(200)
+      json = response.parsed_body
+      expect(json["topic_list"]["topics"].size).to eq(0)
     end
   end
 

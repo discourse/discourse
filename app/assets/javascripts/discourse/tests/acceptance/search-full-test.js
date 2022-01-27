@@ -1,5 +1,6 @@
 import {
   acceptance,
+  count,
   exists,
   queryAll,
   selectDate,
@@ -8,16 +9,19 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { skip, test } from "qunit";
+import {
+  SEARCH_TYPE_CATS_TAGS,
+  SEARCH_TYPE_DEFAULT,
+  SEARCH_TYPE_USERS,
+} from "discourse/controllers/full-page-search";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+
+let lastBody;
 
 acceptance("Search - Full Page", function (needs) {
   needs.user();
   needs.settings({ tagging_enabled: true });
   needs.pretender((server, helper) => {
-    server.get("/tags/filter/search", () => {
-      return helper.response({ results: [{ text: "monkey", count: 1 }] });
-    });
-
     server.get("/u/search/users", () => {
       return helper.response({
         users: [
@@ -89,6 +93,11 @@ acceptance("Search - Full Page", function (needs) {
         ],
       });
     });
+
+    server.put("/topics/bulk", (request) => {
+      lastBody = helper.parsePostData(request.requestBody);
+      return helper.response({ topic_ids: [7] });
+    });
   });
 
   test("perform various searches", async function (assert) {
@@ -96,19 +105,20 @@ acceptance("Search - Full Page", function (needs) {
 
     assert.ok($("body.search-page").length, "has body class");
     assert.ok(exists(".search-container"), "has container class");
-    assert.ok(queryAll(".search-query").length > 0);
-    assert.ok(queryAll(".fps-topic").length === 0);
+    assert.ok(exists(".search-query"));
+    assert.ok(!exists(".fps-topic"));
 
     await fillIn(".search-query", "none");
     await click(".search-cta");
 
-    assert.ok(queryAll(".fps-topic").length === 0, "has no results");
-    assert.ok(queryAll(".no-results-suggestion .google-search-form"));
+    assert.ok(!exists(".fps-topic"), "has no results");
+    assert.ok(exists(".no-results-suggestion"));
+    assert.ok(exists(".google-search-form"));
 
     await fillIn(".search-query", "discourse");
     await click(".search-cta");
 
-    assert.ok(queryAll(".fps-topic").length === 1, "has one post");
+    assert.strictEqual(count(".fps-topic"), 1, "has one post");
   });
 
   test("search for personal messages", async function (assert) {
@@ -117,12 +127,15 @@ acceptance("Search - Full Page", function (needs) {
     await fillIn(".search-query", "discourse in:personal");
     await click(".search-cta");
 
-    assert.ok(queryAll(".fps-topic").length === 1, "has one post");
+    assert.strictEqual(count(".fps-topic"), 1, "has one post");
 
-    assert.ok(
-      queryAll(".topic-status .personal_message").length === 1,
+    assert.strictEqual(
+      count(".topic-status .personal_message"),
+      1,
       "shows the right icon"
     );
+
+    assert.strictEqual(count(".search-highlight"), 1, "search highlights work");
   });
 
   test("escape search term", async function (assert) {
@@ -168,7 +181,7 @@ acceptance("Search - Full Page", function (needs) {
         exists('.search-advanced-options span:contains("admin")'),
         'has "admin" pre-populated'
       );
-      assert.equal(
+      assert.strictEqual(
         queryAll(".search-query").val(),
         "none @admin",
         'has updated search term to "none user:admin"'
@@ -193,10 +206,34 @@ acceptance("Search - Full Page", function (needs) {
       exists('.search-advanced-options .badge-category:contains("faq")'),
       'has "faq" populated'
     );
-    assert.equal(
+    assert.strictEqual(
       queryAll(".search-query").val(),
       "none #faq",
       'has updated search term to "none #faq"'
+    );
+  });
+
+  test("update category without slug through advanced search ui", async function (assert) {
+    const categoryChooser = selectKit(
+      ".search-advanced-options .category-chooser"
+    );
+
+    await visit("/search");
+
+    await fillIn(".search-query", "none");
+
+    await categoryChooser.expand();
+    await categoryChooser.fillInFilter("快乐的");
+    await categoryChooser.selectRowByValue(240);
+
+    assert.ok(
+      exists('.search-advanced-options .badge-category:contains("快乐的")'),
+      'has "快乐的" populated'
+    );
+    assert.strictEqual(
+      queryAll(".search-query").val(),
+      "none category:240",
+      'has updated search term to "none category:240"'
     );
   });
 
@@ -209,7 +246,7 @@ acceptance("Search - Full Page", function (needs) {
       exists(".search-advanced-options .in-title:checked"),
       'has "in title" populated'
     );
-    assert.equal(
+    assert.strictEqual(
       queryAll(".search-query").val(),
       "none in:title",
       'has updated search term to "none in:title"'
@@ -232,7 +269,7 @@ acceptance("Search - Full Page", function (needs) {
       exists(".search-advanced-options .in-likes:checked"),
       'has "I liked" populated'
     );
-    assert.equal(
+    assert.strictEqual(
       queryAll(".search-query").val(),
       "none in:likes",
       'has updated search term to "none in:likes"'
@@ -249,7 +286,7 @@ acceptance("Search - Full Page", function (needs) {
       'has "are in my messages" populated'
     );
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".search-query").val(),
       "none in:personal",
       'has updated search term to "none in:personal"'
@@ -273,7 +310,7 @@ acceptance("Search - Full Page", function (needs) {
       "it should check the right checkbox"
     );
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".search-query").val(),
       "none in:seen",
       "it should update the search term"
@@ -296,12 +333,12 @@ acceptance("Search - Full Page", function (needs) {
     await inSelector.expand();
     await inSelector.selectRowByValue("bookmarks");
 
-    assert.equal(
+    assert.strictEqual(
       inSelector.header().label(),
       "I bookmarked",
       'has "I bookmarked" populated'
     );
-    assert.equal(
+    assert.strictEqual(
       queryAll(".search-query").val(),
       "none in:bookmarks",
       'has updated search term to "none in:bookmarks"'
@@ -319,12 +356,12 @@ acceptance("Search - Full Page", function (needs) {
     await statusSelector.expand();
     await statusSelector.selectRowByValue("closed");
 
-    assert.equal(
+    assert.strictEqual(
       statusSelector.header().label(),
       "are closed",
       'has "are closed" populated'
     );
-    assert.equal(
+    assert.strictEqual(
       queryAll(".search-query").val(),
       "none status:closed",
       'has updated search term to "none status:closed"'
@@ -340,7 +377,11 @@ acceptance("Search - Full Page", function (needs) {
 
     await fillIn(".search-query", "status:none");
 
-    assert.equal(statusSelector.header().label(), "any", 'has "any" populated');
+    assert.strictEqual(
+      statusSelector.header().label(),
+      "any",
+      'has "any" populated'
+    );
   });
 
   test("doesn't update in filter header if wrong value entered through searchbox", async function (assert) {
@@ -350,13 +391,17 @@ acceptance("Search - Full Page", function (needs) {
 
     await fillIn(".search-query", "in:none");
 
-    assert.equal(inSelector.header().label(), "any", 'has "any" populated');
+    assert.strictEqual(
+      inSelector.header().label(),
+      "any",
+      'has "any" populated'
+    );
   });
 
   test("update post time through advanced search ui", async function (assert) {
     await visit("/search?expanded=true&q=after:2018-08-22");
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".search-query").val(),
       "after:2018-08-22",
       "it should update the search term correctly"
@@ -365,7 +410,7 @@ acceptance("Search - Full Page", function (needs) {
     await visit("/search");
 
     await fillIn(".search-query", "none");
-    await selectDate("#search-post-date .date-picker", "2016-10-05");
+    await selectDate(".date-picker#search-post-date", "2016-10-05");
 
     const postTimeSelector = selectKit(
       ".search-advanced-options .select-kit#postTime"
@@ -373,13 +418,13 @@ acceptance("Search - Full Page", function (needs) {
     await postTimeSelector.expand();
     await postTimeSelector.selectRowByValue("after");
 
-    assert.equal(
+    assert.strictEqual(
       postTimeSelector.header().label(),
       "after",
       'has "after" populated'
     );
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".search-query").val(),
       "none after:2016-10-05",
       'has updated search term to "none after:2016-10-05"'
@@ -391,12 +436,14 @@ acceptance("Search - Full Page", function (needs) {
     await fillIn(".search-query", "none");
     await fillIn("#search-min-post-count", "5");
 
-    assert.equal(
-      queryAll(".search-advanced-options #search-min-post-count").val(),
+    assert.strictEqual(
+      queryAll(
+        ".search-advanced-additional-options #search-min-post-count"
+      ).val(),
       "5",
       'has "5" populated'
     );
-    assert.equal(
+    assert.strictEqual(
       queryAll(".search-query").val(),
       "none min_posts:5",
       'has updated search term to "none min_posts:5"'
@@ -408,12 +455,14 @@ acceptance("Search - Full Page", function (needs) {
     await fillIn(".search-query", "none");
     await fillIn("#search-max-post-count", "5");
 
-    assert.equal(
-      queryAll(".search-advanced-options #search-max-post-count").val(),
+    assert.strictEqual(
+      queryAll(
+        ".search-advanced-additional-options #search-max-post-count"
+      ).val(),
       "5",
       'has "5" populated'
     );
-    assert.equal(
+    assert.strictEqual(
       queryAll(".search-query").val(),
       "none max_posts:5",
       'has updated search term to "none max_posts:5"'
@@ -429,7 +478,7 @@ acceptance("Search - Full Page", function (needs) {
       'has "I liked" populated'
     );
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".search-query").val(),
       "in:likes",
       'has updated search term to "in:likes"'
@@ -441,5 +490,112 @@ acceptance("Search - Full Page", function (needs) {
       exists(".search-advanced-options .in-likes:checked"),
       "does not populate the likes checkbox"
     );
+  });
+
+  test("all tags checkbox only visible for two or more tags", async function (assert) {
+    await visit("/search?expanded=true");
+
+    const tagSelector = selectKit("#search-with-tags");
+
+    await tagSelector.expand();
+    await tagSelector.selectRowByValue("monkey");
+
+    assert.ok(!visible("input.all-tags"), "all tags checkbox not visible");
+
+    await tagSelector.selectRowByValue("gazelle");
+    assert.ok(visible("input.all-tags"), "all tags checkbox is visible");
+  });
+
+  test("search for users", async function (assert) {
+    await visit("/search");
+
+    const typeSelector = selectKit(".search-bar .select-kit#search-type");
+
+    await fillIn(".search-query", "admin");
+    assert.ok(!exists(".fps-user-item"), "has no user results");
+
+    await typeSelector.expand();
+    await typeSelector.selectRowByValue(SEARCH_TYPE_USERS);
+
+    assert.ok(!exists(".search-filters"), "has no filters");
+
+    await click(".search-cta");
+
+    assert.strictEqual(count(".fps-user-item"), 1, "has one user result");
+
+    await typeSelector.expand();
+    await typeSelector.selectRowByValue(SEARCH_TYPE_DEFAULT);
+
+    assert.ok(
+      exists(".search-filters"),
+      "returning to topic/posts shows filters"
+    );
+    assert.ok(!exists(".fps-user-item"), "has no user results");
+  });
+
+  test("search for categories/tags", async function (assert) {
+    await visit("/search");
+
+    await fillIn(".search-query", "none");
+    const typeSelector = selectKit(".search-bar .select-kit#search-type");
+
+    assert.ok(!exists(".fps-tag-item"), "has no category/tag results");
+
+    await typeSelector.expand();
+    await typeSelector.selectRowByValue(SEARCH_TYPE_CATS_TAGS);
+    await click(".search-cta");
+
+    assert.ok(!exists(".search-filters"), "has no filters");
+    assert.strictEqual(count(".fps-tag-item"), 2, "has two tag results");
+
+    await typeSelector.expand();
+    await typeSelector.selectRowByValue(SEARCH_TYPE_DEFAULT);
+
+    assert.ok(
+      exists(".search-filters"),
+      "returning to topic/posts shows filters"
+    );
+    assert.ok(!exists(".fps-tag-item"), "has no tag results");
+  });
+
+  test("filters expand/collapse as expected", async function (assert) {
+    await visit("/search?expanded=true");
+
+    assert.ok(
+      visible(".search-advanced-options"),
+      "advanced filters are expanded when url query param is included"
+    );
+
+    await fillIn(".search-query", "none");
+    await click(".search-cta");
+
+    assert.notOk(
+      exists(".advanced-filters[open]"),
+      "launching a search collapses advanced filters"
+    );
+
+    await visit("/search");
+
+    assert.notOk(
+      exists(".advanced-filters[open]"),
+      "filters are collapsed when query param is not present"
+    );
+
+    await click(".advanced-filters > summary");
+    assert.ok(
+      visible(".search-advanced-options"),
+      "clicking on element expands filters"
+    );
+  });
+
+  test("bulk operations work", async function (assert) {
+    await visit("/search");
+    await fillIn(".search-query", "discourse");
+    await click(".search-cta");
+    await click(".bulk-select"); // toggle bulk
+    await click(".bulk-select-visible .btn:nth-child(2)"); // select all
+    await click(".bulk-select-btn"); // show bulk actions
+    await click(".topic-bulk-actions-modal .btn:nth-child(2)"); // close topics
+    assert.equal(lastBody["topic_ids[]"], 7);
   });
 });

@@ -5,6 +5,7 @@ class TopicViewDetailsSerializer < ApplicationSerializer
   def self.can_attributes
     [:can_move_posts,
      :can_delete,
+     :can_permanently_delete,
      :can_recover,
      :can_remove_allowed_users,
      :can_invite_to,
@@ -93,7 +94,7 @@ class TopicViewDetailsSerializer < ApplicationSerializer
 
   # NOTE: A Category Group Moderator moving a topic to a different category
   # may result in the 'can_edit?' result changing from `true` to `false`.
-  # Explictly returning a `false` value is required to update the client UI.
+  # Explicitly returning a `false` value is required to update the client UI.
   def can_edit
     scope.can_edit?(object.topic)
   end
@@ -108,6 +109,10 @@ class TopicViewDetailsSerializer < ApplicationSerializer
 
   def include_can_delete?
     scope.can_delete?(object.topic)
+  end
+
+  def include_can_permanently_delete?
+    SiteSetting.can_permanently_delete && object.topic.deleted_at
   end
 
   def include_can_recover?

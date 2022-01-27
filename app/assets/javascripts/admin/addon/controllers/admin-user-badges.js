@@ -49,7 +49,7 @@ export default Controller.extend(GrantBadgeController, {
       let result = {
         badge: badges[0].badge,
         granted_at: lastGranted,
-        badges: badges,
+        badges,
         count: badges.length,
         grouped: true,
       };
@@ -61,7 +61,7 @@ export default Controller.extend(GrantBadgeController, {
   },
 
   actions: {
-    expandGroup: function (userBadge) {
+    expandGroup(userBadge) {
       const model = this.model;
       model.set("expandedBadges", model.get("expandedBadges") || []);
       model.get("expandedBadges").pushObject(userBadge.badge.id);

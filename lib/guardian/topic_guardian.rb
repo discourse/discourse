@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-#mixin for all guardian methods dealing with topic permisions
+#mixin for all guardian methods dealing with topic permissions
 module TopicGuardian
 
   def can_remove_allowed_users?(topic, target_user = nil)
@@ -17,19 +17,22 @@ module TopicGuardian
     return false if anonymous? || topic.nil?
     return true if is_staff?
 
+    is_category_group_moderator?(topic.category)
+  end
+
+  def can_moderate_topic?(topic)
+    return false if anonymous? || topic.nil?
+    return true if is_staff?
+
     can_perform_action_available_to_group_moderators?(topic)
   end
-  alias :can_moderate_topic? :can_review_topic?
 
   def can_create_shared_draft?
     SiteSetting.shared_drafts_enabled? && can_see_shared_draft?
   end
 
   def can_see_shared_draft?
-    return is_admin? if SiteSetting.shared_drafts_min_trust_level.to_s == 'admin'
-    return is_staff? if SiteSetting.shared_drafts_min_trust_level.to_s == 'staff'
-
-    @user.has_trust_level?(SiteSetting.shared_drafts_min_trust_level.to_i)
+    @user.has_trust_level_or_staff?(SiteSetting.shared_drafts_min_trust_level)
   end
 
   def can_create_whisper?
@@ -147,6 +150,16 @@ module TopicGuardian
     !Discourse.static_doc_topic_ids.include?(topic.id)
   end
 
+  def can_permanently_delete_topic?(topic)
+    return false if !SiteSetting.can_permanently_delete
+    return false if !topic
+    return false if topic.posts_count > 0
+    return false if !is_admin? || !can_see_topic?(topic)
+    return false if !topic.deleted_at
+    return false if topic.deleted_by_id == @user.id && topic.deleted_at >= Post::PERMANENT_DELETE_TIMER.ago
+    true
+  end
+
   def can_toggle_topic_visibility?(topic)
     can_moderate?(topic) || can_perform_action_available_to_group_moderators?(topic)
   end
@@ -200,6 +213,7 @@ module TopicGuardian
 
   def can_edit_featured_link?(category_id)
     return false unless SiteSetting.topic_featured_link_enabled
+    return false unless @user.trust_level >= TrustLevel.levels[:basic]
     Category.where(id: category_id || SiteSetting.uncategorized_category_id, topic_featured_link_allowed: true).exists?
   end
 
@@ -245,5 +259,4 @@ module TopicGuardian
   def affected_by_slow_mode?(topic)
     topic&.slow_mode_seconds.to_i > 0 && @user.human? && !is_staff?
   end
-
 end

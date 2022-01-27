@@ -1,7 +1,7 @@
 import Component from "@ember/component";
 import I18n from "I18n";
 import UtilsMixin from "select-kit/mixins/utils";
-import { computed } from "@ember/object";
+import { action, computed } from "@ember/object";
 import discourseComputed from "discourse-common/utils/decorators";
 import { isPresent } from "@ember/utils";
 import layout from "select-kit/templates/components/select-kit/select-kit-filter";
@@ -12,8 +12,7 @@ export default Component.extend(UtilsMixin, {
   classNames: ["select-kit-filter"],
   classNameBindings: ["isExpanded:is-expanded"],
   attributeBindings: ["role"],
-
-  role: "searchbox",
+  tabIndex: -1,
 
   isHidden: computed(
     "selectKit.options.{filterable,allowAny,autoFilterable}",
@@ -31,7 +30,8 @@ export default Component.extend(UtilsMixin, {
 
   @discourseComputed(
     "selectKit.options.filterPlaceholder",
-    "selectKit.options.translatedFilterPlaceholder"
+    "selectKit.options.translatedFilterPlaceholder",
+    "selectKit.options.allowAny"
   )
   placeholder(placeholder, translatedPlaceholder) {
     if (isPresent(translatedPlaceholder)) {
@@ -42,88 +42,83 @@ export default Component.extend(UtilsMixin, {
       return I18n.t(placeholder);
     }
 
-    return "";
+    return I18n.t(
+      this.selectKit.options.allowAny
+        ? "select_kit.filter_placeholder_with_any"
+        : "select_kit.filter_placeholder"
+    );
   },
 
-  actions: {
-    onPaste() {},
+  @action
+  onPaste() {},
 
-    onInput(event) {
-      this.selectKit.onInput(event);
+  @action
+  onInput(event) {
+    this.selectKit.onInput(event);
+    return true;
+  },
+
+  @action
+  onKeyup(event) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    return true;
+  },
+
+  @action
+  onKeydown(event) {
+    if (!this.selectKit.onKeydown(event)) {
+      return false;
+    }
+
+    if (event.key === "Tab" && this.selectKit.isLoading) {
+      this.selectKit.cancelSearch();
+      this.selectKit.close(event);
       return true;
-    },
+    }
 
-    onKeyup(event) {
-      if (event.keyCode === 13 && this.selectKit.enterDisabled) {
-        this.element.querySelector("input").focus();
+    if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
+      return true;
+    }
+
+    if (event.key === "ArrowUp") {
+      this.selectKit.highlightLast();
+      return false;
+    }
+
+    if (event.key === "ArrowDown") {
+      this.selectKit.highlightFirst();
+      return false;
+    }
+
+    if (event.key === "Escape") {
+      this.selectKit.close(event);
+      this.selectKit.headerElement().focus();
+      return false;
+    }
+
+    if (event.key === "Enter" && this.selectKit.highlighted) {
+      this.selectKit.select(
+        this.getValue(this.selectKit.highlighted),
+        this.selectKit.highlighted
+      );
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      return false;
+    }
+
+    if (
+      event.key === "Enter" &&
+      (!this.selectKit.highlighted || this.selectKit.enterDisabled)
+    ) {
+      this.element.querySelector("input").focus();
+      if (this.selectKit.enterDisabled) {
         event.preventDefault();
-        event.stopPropagation();
-        return false;
+        event.stopImmediatePropagation();
       }
-      return true;
-    },
+      return false;
+    }
 
-    onKeydown(event) {
-      if (!this.selectKit.onKeydown(event)) {
-        return false;
-      }
-
-      // Do nothing for left/right arrow
-      if (event.keyCode === 37 || event.keyCode === 39) {
-        return true;
-      }
-
-      // Up arrow
-      if (event.keyCode === 38) {
-        this.selectKit.highlightPrevious();
-        return false;
-      }
-
-      // Down arrow
-      if (event.keyCode === 40) {
-        this.selectKit.highlightNext();
-        return false;
-      }
-
-      // Escape
-      if (event.keyCode === 27) {
-        this.selectKit.close(event);
-        return false;
-      }
-
-      // Enter
-      if (event.keyCode === 13 && this.selectKit.highlighted) {
-        this.selectKit.select(
-          this.getValue(this.selectKit.highlighted),
-          this.selectKit.highlighted
-        );
-        return false;
-      }
-
-      if (
-        event.keyCode === 13 &&
-        (!this.selectKit.highlighted || this.selectKit.enterDisabled)
-      ) {
-        this.element.querySelector("input").focus();
-        if (this.selectKit.enterDisabled) {
-          event.preventDefault();
-          event.stopPropagation();
-        }
-        return false;
-      }
-
-      // Tab
-      if (event.keyCode === 9) {
-        if (this.selectKit.highlighted && this.selectKit.isExpanded) {
-          this.selectKit.select(
-            this.getValue(this.selectKit.highlighted),
-            this.selectKit.highlighted
-          );
-        }
-        this.selectKit.close(event);
-        return;
-      }
-      this.selectKit.set("highlighted", null);
-    },
+    this.selectKit.set("highlighted", null);
   },
 });

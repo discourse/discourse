@@ -18,7 +18,8 @@ describe WizardSerializer do
       json = MultiJson.load(MultiJson.dump(serializer.as_json))
       wjson = json['wizard']
 
-      expect(wjson['current_color_scheme']['primary']).to eq('#222222')
+      expect(wjson['current_color_scheme'][0]['name']).to eq('primary')
+      expect(wjson['current_color_scheme'][0]['hex']).to eq('222222')
     end
 
     it "should provide custom colors correctly" do
@@ -34,7 +35,7 @@ describe WizardSerializer do
       json = MultiJson.load(MultiJson.dump(serializer.as_json))
       wjson = json['wizard']
 
-      expect(wjson['current_color_scheme']['header_background']).to eq('#00FF00')
+      expect(wjson['current_color_scheme'].to_s).to include('{"name"=>"header_background", "hex"=>"00FF00"}')
     end
   end
 

@@ -1,5 +1,6 @@
 import {
   acceptance,
+  count,
   exists,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -39,14 +40,14 @@ acceptance("Signing In", function () {
     await fillIn("#login-account-name", "eviltrout");
     await fillIn("#login-account-password", "not-activated");
     await click(".modal-footer .btn-primary");
-    assert.equal(
+    assert.strictEqual(
       queryAll(".modal-body b").text(),
       "<small>eviltrout@example.com</small>"
     );
     assert.ok(!exists(".modal-body small"), "it escapes the email address");
 
     await click(".modal-footer button.resend");
-    assert.equal(
+    assert.strictEqual(
       queryAll(".modal-body b").text(),
       "<small>current@example.com</small>"
     );
@@ -62,16 +63,22 @@ acceptance("Signing In", function () {
     await fillIn("#login-account-password", "not-activated-edit");
     await click(".modal-footer .btn-primary");
     await click(".modal-footer button.edit-email");
-    assert.equal(queryAll(".activate-new-email").val(), "current@example.com");
-    assert.equal(
-      queryAll(".modal-footer .btn-primary:disabled").length,
+    assert.strictEqual(
+      queryAll(".activate-new-email").val(),
+      "current@example.com"
+    );
+    assert.strictEqual(
+      count(".modal-footer .btn-primary:disabled"),
       1,
       "must change email"
     );
     await fillIn(".activate-new-email", "different@example.com");
-    assert.equal(queryAll(".modal-footer .btn-primary:disabled").length, 0);
+    assert.ok(!exists(".modal-footer .btn-primary:disabled"));
     await click(".modal-footer .btn-primary");
-    assert.equal(queryAll(".modal-body b").text(), "different@example.com");
+    assert.strictEqual(
+      queryAll(".modal-body b").text(),
+      "different@example.com"
+    );
   });
 
   skip("second factor", async function (assert) {

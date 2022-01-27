@@ -4,17 +4,10 @@
 require 'rails_helper'
 
 describe ThemeField do
-  after(:all) do
-    ThemeField.destroy_all
-  end
-
-  before do
-    I18n.locale = :en
-  end
+  fab!(:theme) { Fabricate(:theme) }
 
   describe "scope: find_by_theme_ids" do
     it "returns result in the specified order" do
-      theme = Fabricate(:theme)
       theme2 = Fabricate(:theme)
       theme3 = Fabricate(:theme)
 
@@ -163,7 +156,6 @@ HTML
   end
 
   it "allows importing scss files" do
-    theme = Fabricate(:theme)
     main_field = theme.set_field(target: :common, name: :scss, value: ".class1{color: red}\n@import 'rootfile1';\n@import 'rootfile3';")
     theme.set_field(target: :extra_scss, name: "rootfile1", value: ".class2{color:green}\n@import 'foldername/subfile1';")
     theme.set_field(target: :extra_scss, name: "rootfile2", value: ".class3{color:green} ")
@@ -183,7 +175,6 @@ HTML
   end
 
   it "correctly handles extra JS fields" do
-    theme = Fabricate(:theme)
     js_field = theme.set_field(target: :extra_js, name: "discourse/controllers/discovery.js.es6", value: "import 'discourse/lib/ajax'; console.log('hello from .js.es6');")
     js_2_field = theme.set_field(target: :extra_js, name: "discourse/controllers/discovery-2.js", value: "import 'discourse/lib/ajax'; console.log('hello from .js');")
     hbs_field = theme.set_field(target: :extra_js, name: "discourse/templates/discovery.hbs", value: "{{hello-world}}")
@@ -239,7 +230,6 @@ HTML
   let(:key) { "themes.settings_errors" }
 
   it "forces re-transpilation of theme JS when settings YAML changes" do
-    theme = Fabricate(:theme)
     settings_field = ThemeField.create!(theme: theme, target_id: Theme.targets[:settings], name: "yaml", value: "setting: 5")
 
     html = <<~HTML
@@ -422,6 +412,22 @@ HTML
     it "is rebaked when upload changes" do
       theme_field.update(upload: Fabricate(:upload))
       expect(theme_field.value_baked).to eq(nil)
+    end
+
+    it "clears SVG sprite cache when upload is deleted" do
+      fname = "custom-theme-icon-sprite.svg"
+      sprite = UploadCreator.new(file_from_fixtures(fname), fname, for_theme: true).create_for(-1)
+
+      theme_field.update(upload: sprite)
+      expect(SvgSprite.custom_svg_sprites(theme.id).size).to eq(1)
+
+      theme_field.destroy!
+      expect(SvgSprite.custom_svg_sprites(theme.id).size).to eq(0)
+    end
+
+    it 'crashes gracefully when svg is invalid' do
+      FileStore::LocalStore.any_instance.stubs(:path_for).returns(nil)
+      expect(theme_field.validate_svg_sprite_xml).to match("Error with icons-sprite")
     end
   end
 

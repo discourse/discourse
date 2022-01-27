@@ -43,6 +43,7 @@ pl_PL:
       long_date_without_year_with_linebreak: "D MMM <br/>LT"
       long_date_with_year_with_linebreak: "D MMM 'YY <br/>LT"
       wrap_ago: "%{date} temu"
+      wrap_on: "%{date}"
       tiny:
         half_a_minute: "< 1m"
         less_than_x_seconds:
@@ -159,6 +160,8 @@ pl_PL:
       previous_month: "Poprzedni miesiąc"
       next_month: "Następny miesiąc"
       placeholder: data
+      from_placeholder: "od daty"
+      to_placeholder: "do daty"
     share:
       topic_html: 'Temat: <span class="topic-title">%{topicTitle}</span>'
       post: "post #%{postNumber}"
@@ -169,6 +172,7 @@ pl_PL:
       url: "Skopiuj i udostępnij adres URL"
     action_codes:
       public_topic: "Upublicznij ten temat %{when}"
+      open_topic: "przekonwertowano to na temat %{when}"
       private_topic: "przekształcił(a) ten temat w wiadomość prywatną %{when}"
       split_topic: "podziel ten temat %{when}"
       invited_user: "%{who} został zaproszony %{when}"
@@ -200,6 +204,7 @@ pl_PL:
         disabled: "Ten temat nie jest już banerem. Nie będzie dalej wyświetlany na górze każdej strony."
       forwarded: "przekazano powyższy email"
     topic_admin_menu: "akcje tematu"
+    skip_to_main_content: "Przejdź do głównej zawartości"
     wizard_required: "Witaj na Twoim na nowym forum Discourse! Zacznijmy od <a href='%{url}' data-auto-route='true'>kreatora ustawień</a> ✨"
     emails_are_disabled: "Wszystkie wychodzące wiadomości e-mail zostały globalnie wyłączone przez administratora. Żadne powiadomienia e-mail nie będą wysyłane."
     software_update_prompt:
@@ -227,6 +232,7 @@ pl_PL:
         cn_northwest_1: "Chiny (Ningxia)"
         eu_central_1: "UE (Frankfurt)"
         eu_north_1: "UE (Sztokholm)"
+        eu_south_1: "UE (Mediolan)"
         eu_west_1: "UE (Irlandia)"
         eu_west_2: "UE (Londyn)"
         eu_west_3: "EU (Paryż)"
@@ -246,7 +252,6 @@ pl_PL:
     submit: "Prześlij"
     generic_error: "Przepraszamy, wystąpił błąd."
     generic_error_with_reason: "Wystąpił błąd: %{error}"
-    go_ahead: "Idź dalej"
     sign_up: "Rejestracja"
     log_in: "Logowanie"
     age: "Wiek"
@@ -269,7 +274,6 @@ pl_PL:
     conduct: "Regulamin"
     mobile_view: "Widok mobilny"
     desktop_view: "Wersja komputerowa"
-    you: "Ty"
     or: "lub"
     now: "teraz"
     read_more: "więcej"
@@ -279,7 +283,6 @@ pl_PL:
       few: "%{count} Więcej"
       many: "%{count} Więcej"
       other: "%{count} Więcej"
-    less: "Mniej"
     never: "nigdy"
     every_30_minutes: "co 30 minut"
     every_hour: "co godzinę"
@@ -288,12 +291,13 @@ pl_PL:
     every_month: "co miesiąc"
     every_six_months: "co 6 miesięcy"
     max_of_count: "max z %{count}"
-    alternation: "lub"
     character_count:
       one: "%{count} znak"
       few: "%{count} znaki"
       many: "%{count} znaków"
       other: "%{count} znaków"
+    period_chooser:
+      aria_label: "Filtruj według okresu"
     related_messages:
       title: "Wiadomości powiązane"
       see_all: 'Zobacz <a href="%{path}">wszystkie wiadomości</a> od @%{username} ...'
@@ -321,14 +325,18 @@ pl_PL:
       contact_info: "W sprawach wymagających szybkiej reakcji lub związanych z poprawnym funkcjonowaniem serwisu, prosimy o kontakt: %{contact_info}."
     bookmarked:
       title: "Zakładka"
+      edit_bookmark: "Edytuj zakładkę"
       clear_bookmarks: "Wyczyść zakładki"
       help:
         bookmark: "Kliknij, aby dodać pierwszy post tematu do zakładek"
+        edit_bookmark: "Kliknij, aby edytować zakładkę w tym temacie"
+        edit_bookmark_for_topic: "Kliknij, aby edytować zakładkę dla tego tematu"
         unbookmark: "Kliknij, aby usunąć wszystkie zakładki z tego tematu"
-        unbookmark_with_reminder: "Kliknij, aby usunąć wszystkie zakładki i przypomnienia w tym temacie. Masz przypomnienie ustawione na %{reminder_at} dla tego tematu."
+        unbookmark_with_reminder: "Kliknij, aby usunąć wszystkie zakładki i przypomnienia w tym temacie."
     bookmarks:
       created: "Dodano post do zakładek. %{name}"
       not_bookmarked: "dodaj do zakładek"
+      remove_reminder_keep_bookmark: "Usuń przypomnienie i zachowaj zakładkę"
       created_with_reminder: "Dodano post do zakładek z przypomnieniem %{date}. %{name}"
       remove: "Usuń zakładkę"
       delete: "Usuń zakładkę"
@@ -354,17 +362,29 @@ pl_PL:
     copy_codeblock:
       copied: "skopiowane!"
     drafts:
+      label: "Szkice"
+      label_with_count: "Szkice (%{count})"
       resume: "Kontynuuj"
       remove: "Usuń"
       remove_confirmation: "Czy na pewno chcesz usunąć ten szkic?"
       new_topic: "Nowy szkic tematu"
-      new_private_message: "Nowy szkic wiadomości prywatnej"
+      new_private_message: "Nowy szkic wiadomości osobistej"
       topic_reply: "Szkic odpowiedzi"
       abandon:
         confirm: "Masz projekt w toku dla tego tematu. Co chcesz z nim zrobić?"
         yes_value: "Odrzuć"
         no_value: "Wznów edycję"
+    topic_count_categories:
+      one: "Zobacz %{count} nowy albo zaktualizowany temat"
+      few: "Zobacz %{count} nowe albo zaktualizowane tematy"
+      many: "Zobacz %{count} nowych albo zaktualizowanych tematów"
+      other: "Zobacz %{count} nowych albo zaktualizowanych tematów"
     topic_count_latest:
+      one: "Zobacz %{count} nowy albo zaktualizowany temat"
+      few: "Zobacz %{count} nowe albo zaktualizowane tematy"
+      many: "Zobacz %{count} nowych albo zaktualizowanych tematów"
+      other: "Zobacz %{count} nowych albo zaktualizowanych tematów"
+    topic_count_unseen:
       one: "Zobacz %{count} nowy albo zaktualizowany temat"
       few: "Zobacz %{count} nowe albo zaktualizowane tematy"
       many: "Zobacz %{count} nowych albo zaktualizowanych tematów"
@@ -417,6 +437,7 @@ pl_PL:
         placeholder: "wpisz tutaj tytuł wiadomości, adres URL lub id"
     review:
       order_by: "Segreguj według:"
+      date_filter: "Opublikowane między"
       in_reply_to: "w odpowiedzi na"
       explain:
         why: "wyjaśnij, dlaczego ten element znalazł się w kolejce"
@@ -438,6 +459,7 @@ pl_PL:
         type_bonus:
           name: "bonus typu"
           title: "Niektóre rodzaje przeglądalne mogą otrzymać premię od pracowników, aby nadać im wyższy priorytet."
+      stale_help: "Wiadomość została już zweryfikowana przez <b>%{username}</b>."
       claim_help:
         optional: "Możesz zgłosić roszczenie do tego elementu, aby uniemożliwić innym jego sprawdzenie."
         required: "Musisz przejąć tę pozycję, zanim będziesz mógł/mogła je przejrzeć."
@@ -624,12 +646,14 @@ pl_PL:
       later_today: "Później dzisiaj"
       next_business_day: "Następny dzień roboczy"
       tomorrow: "Jutro"
-      next_week: "Następny tydzień"
       post_local_date: "Data w poście"
       later_this_week: "Później w tym tygodniu"
+      this_weekend: "W ten weekend"
       start_of_next_business_week: "Poniedziałek"
       start_of_next_business_week_alt: "Następny poniedziałek"
+      two_weeks: "Dwa tygodnie"
       next_month: "Następny miesiąc"
+      six_months: "Sześć miesięcy"
       custom: "Niestandardowa data i godzina"
       relative: "Względny czas"
       none: "Żadne nie są potrzebne"
@@ -672,6 +696,12 @@ pl_PL:
         few: "%{count} użytkownicy"
         many: "%{count} użytkowników"
         other: "%{count} użytkowników"
+      edit_columns:
+        title: "Edytuj kolumny katalogu"
+        save: "Zapisz"
+        reset_to_default: "Przywróć ustawienia domyślne"
+      group:
+        all: "wszystkie grupy"
     group_histories:
       actions:
         change_group_setting: "Zmień ustawienia grupy"
@@ -683,11 +713,12 @@ pl_PL:
       member_added: "Dodano"
       member_requested: "Poproszono o"
       add_members:
-        title: "Dodaj członków do %{group_name}"
-        description: "Możesz również wkleić listę oddzieloną przecinkami."
-        usernames: "Wprowadź nazwy użytkowników lub adresy e-mail"
-        input_placeholder: "Nazwy użytkowników lub e-maile"
+        title: "Dodaj użytkowników do %{group_name}"
+        description: "Wpisz listę użytkowników, których chcesz zaprosić do grupy, lub wklej listę oddzieloną przecinkami:"
+        usernames_placeholder: "nazwy użytkowników"
+        usernames_or_emails_placeholder: "nazwy użytkowników lub e-maile"
         notify_users: "Powiadom użytkowników"
+        set_owner: "Ustaw użytkowników jako właścicieli tej grupy"
       requests:
         title: "Prośby"
         reason: "Powód"
@@ -701,7 +732,8 @@ pl_PL:
         title: "Zarządzaj"
         name: "Nazwa"
         full_name: "Pełna nazwa"
-        add_members: "Dodaj członków"
+        add_members: "Dodaj użytkowników"
+        invite_members: "Zaproś"
         delete_member_confirm: "Usunąć '%{username}' z grupy '%{group}'?"
         profile:
           title: Profil
@@ -712,6 +744,27 @@ pl_PL:
         email:
           title: "Email"
           status: "Zsynchronizowane %{old_emails} / %{total_emails} wiadomości e-mail za pośrednictwem IMAP."
+          enable_smtp: "Włącz SMTP"
+          enable_imap: "Włącz IMAP"
+          test_settings: "Testuj ustawienia"
+          save_settings: "Zapisz ustawienia"
+          last_updated: "Ostatnio zaktualizowane:"
+          last_updated_by: "przez"
+          settings_required: "Wszystkie ustawienia są wymagane, wypełnij wszystkie pola przed weryfikacją."
+          smtp_settings_valid: "Ustawienia SMTP są poprawne."
+          smtp_title: "SMTP"
+          smtp_instructions: "Gdy włączysz SMTP dla grupy, wszystkie wychodzące wiadomości e-mail wysyłane ze skrzynki odbiorczej grupy będą wysyłane przy użyciu określonych tutaj ustawień SMTP zamiast serwera pocztowego skonfigurowanego dla innych wiadomości e-mail wysyłanych przez Twoje forum."
+          imap_title: "IMAP"
+          imap_additional_settings: "Dodatkowe ustawienia"
+          imap_instructions: 'Po włączeniu protokołu IMAP dla grupy wiadomości e-mail są synchronizowane między skrzynką odbiorczą grupy a dostarczonym serwerem IMAP i skrzynką pocztową. Protokół SMTP musi być włączony przy użyciu prawidłowych i przetestowanych poświadczeń, zanim będzie można włączyć protokół IMAP. Nazwa użytkownika poczty e-mail i hasło używane do SMTP będą używane do IMAP. Aby uzyskać więcej informacji, zobacz ogłoszenie o funkcji <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588"></a>.'
+          imap_alpha_warning: "Ostrzeżenie: To jest funkcja na etapie alfa. Tylko Gmail jest oficjalnie wspierany. Używaj na własne ryzyko!"
+          imap_settings_valid: "Ustawienia IMAP są prawidłowe."
+          smtp_disable_confirm: "Jeśli wyłączysz SMTP, wszystkie ustawienia SMTP i IMAP zostaną zresetowane, a powiązane funkcje zostaną wyłączone. Jesteś pewien, że chcesz kontynuować?"
+          imap_disable_confirm: "Jeśli wyłączysz IMAP, wszystkie ustawienia IMAP zostaną zresetowane, a powiązane funkcje zostaną wyłączone. Jesteś pewien, że chcesz kontynuować?"
+          imap_mailbox_not_selected: "Musisz wybrać skrzynkę pocztową dla tej konfiguracji IMAP, w przeciwnym razie żadna skrzynka pocztowa nie zostanie zsynchronizowana!"
+          prefill:
+            title: "Wstępne wypełnienie ustawieniami dla:"
+            gmail: "GMail"
           credentials:
             title: "Poświadczenia"
             smtp_server: "Serwer SMTP"
@@ -725,11 +778,11 @@ pl_PL:
           settings:
             title: "Ustawienia"
             allow_unknown_sender_topic_replies: "Zezwalaj na odpowiedzi od nieznanego nadawcy w temacie."
-            allow_unknown_sender_topic_replies_hint: "Zezwalaj nieznanym nadawcom na odpowiadanie w wątku grupowym. Jeśli to ustawienie nie jest włączone, odpowiedzi z adresów e-mail użytkowników spoza grupy lub zaproszonych do tematu utworzą nowy temat."
+            allow_unknown_sender_topic_replies_hint: "Umożliwia nieznanym nadawcom odpowiadanie na tematy grupy. Jeśli ta opcja nie jest włączona, odpowiedzi z adresów e-mail, które nie zostały jeszcze zaproszone do tematu, utworzą nowy temat."
           mailboxes:
             synchronized: "Zsynchronizowana skrzynka pocztowa"
             none_found: "Na tym koncie e-mail nie znaleziono żadnych skrzynek pocztowych."
-            disabled: "wyłączone"
+            disabled: "Wyłączone"
         membership:
           title: Członkostwo
           access: Dostęp
@@ -807,8 +860,6 @@ pl_PL:
         public: "Publiczna"
         private: "Prywatna"
         public_groups: "Publiczne grupy"
-        automatic_group: Grupa automatyczna
-        close_group: Zamknij grupę
         my_groups: "Moje grupy"
         group_type: "Rodzaj grupy"
         is_group_user: "Członek"
@@ -846,6 +897,7 @@ pl_PL:
         owner: "Właściciel"
         primary: "Podstawowy"
         forbidden: "Nie możesz oglądać profili użytkowników."
+        no_filter_matches: "Żaden użytkownik nie pasuje do wyszukiwania."
       topics: "Tematy"
       posts: "Postów"
       mentions: "Wzmianki"
@@ -887,6 +939,11 @@ pl_PL:
       flair_type:
         icon: "Wybierz ikonę"
         image: "Prześlij obraz"
+      default_notifications:
+        modal_title: "Domyślne powiadomienia użytkownika"
+        modal_description: "Czy chciałbyś wprowadzić tę zmianę wstecz? Zmieni to ustawienia %{count} istniejących użytkowników."
+        modal_yes: "Tak"
+        modal_no: "Nie, wprowadź zmianę odtąd, na przyszłość"
     user_action_groups:
       "1": "Polubienia"
       "2": "Otrzymane polubienia"
@@ -916,7 +973,6 @@ pl_PL:
       posts: "Posty"
       topics: "Tematy"
       latest: "Aktualne"
-      toggle_ordering: "przełącz kolejność kontroli"
       subcategories: "Podkategorie"
       muted: "Wyciszone kategorie"
       topic_sentence:
@@ -987,6 +1043,7 @@ pl_PL:
           all: "Wszystkie"
           read: "Przeczytane"
           unread: "Nieprzeczytane"
+          unseen: "Niewidziany"
         ignore_duration_title: "Ignoruj użytkownika"
         ignore_duration_username: "Nazwa użytkownika"
         ignore_duration_when: "Oczekiwanie"
@@ -1030,7 +1087,9 @@ pl_PL:
       use_current_timezone: "Użyj aktualnej strefy czasowej"
       profile_hidden: "Publiczny profil użytkownika jest ukryty."
       expand_profile: "Rozwiń"
+      sr_expand_profile: "Rozwiń szczegóły profilu"
       collapse_profile: "Zwiń"
+      sr_collapse_profile: "Zwiń szczegóły profilu"
       bookmarks: "Zakładki"
       bio: "O mnie"
       timezone: "Strefa czasowa"
@@ -1052,14 +1111,25 @@ pl_PL:
       dismiss_notifications: "Odrzuć wszystkie"
       dismiss_notifications_tooltip: "Oznacz wszystkie powiadomienia jako przeczytane"
       no_messages_title: "Nie masz żadnych wiadomości"
+      no_messages_body: >
+        Potrzebujesz bezpośredniej, osobistej rozmowy z kimś, poza normalnym tokiem rozmowy? Wyślij wiadomość, wybierając awatar i używając przycisku %{icon} wiadomość.<br><br> Jeśli potrzebujesz pomocy, możesz <a href='%{aboutUrl}'>wysłać wiadomość do członka personelu</a>.
       no_bookmarks_title: "Nie masz jeszcze żadnych zakładek"
+      no_bookmarks_body: >
+        Rozpocznij zakładki za pomocą przycisku %{icon} i zostaną one wymienione tutaj w celu ułatwienia odniesienia się do nich w późniejszym czasie. Możesz też zaplanować przypomnienie!
+      no_bookmarks_search: "Nie znaleziono zakładek dla podanego wyszukiwania."
       no_notifications_title: "Nie masz jeszcze żadnych powiadomień"
+      no_notifications_body: >
+        W tym panelu zostaniesz powiadomiony o aktywności bezpośrednio związanej z Tobą, w tym o odpowiedziach na Twoje tematy i posty, gdy ktoś <b>@oznaczy</b> lub zacytuje Cię i odpowie na obserwowane przez Ciebie tematy. Powiadomienia będą również wysyłane na Twój adres e-mail, gdy nie jesteś zalogowany przez jakiś czas. <br><br> Poszukaj %{icon} aby zdecydować, o których konkretnych tematach, kategoriach i tagach chcesz otrzymywać powiadomienia. Więcej informacji znajdziesz w <a href='%{preferencesUrl}'>preferencjach powiadomień</a>.
+      no_notifications_page_title: "Nie masz jeszcze żadnych powiadomień"
+      no_notifications_page_body: >
+        Zostaniesz powiadomiony o działaniach bezpośrednio związanych z Tobą, w tym o odpowiedziach na Twoje tematy i posty, gdy ktoś <b>@oznaczy</b> Ciebie lub cytuje Ciebie, i odpowiada na tematy, które oglądasz. Powiadomienia będą również wysyłane na Twój adres e-mail, gdy nie zalogujesz się przez jakiś czas. <br><br> Poszukaj %{icon} , aby zdecydować, o których konkretnych tematach, kategoriach i tagach chcesz być powiadamiany. Aby dowiedzieć się więcej, zobacz swoje <a href='%{preferencesUrl}'>preferencje powiadomień</a>.
       first_notification: "Twoje pierwsze powiadomienie! Kliknij aby zacząć."
       dynamic_favicon: "Pokazuj liczbę nowych/zaktualizowanych tematów w ikonie przeglądarki."
       skip_new_user_tips:
         description: "Pomiń wskazówki i plakietki dotyczące wprowadzania nowych użytkowników"
         not_first_time: "To nie twój pierwszy raz?"
         skip_link: "Pomiń te wskazówki"
+        read_later: "Przeczytam to później."
       theme_default_on_all_devices: "Ustaw to jako domyślny motyw na wszystkich urządzeniach"
       color_scheme_default_on_all_devices: "Ustaw domyślne schematy kolorów na wszystkich moich urządzeniach"
       color_scheme: "Schemat kolorów"
@@ -1154,17 +1224,32 @@ pl_PL:
         warnings_received: "otrzymanych ostrzeżeń"
         rejected_posts: "odrzucone wpisy"
       messages:
-        all: "Wszystkie"
+        all: "wszystkie skrzynki odbiorcze"
         inbox: "Skrzynka odbiorcza"
+        personal: "Osobista"
+        latest: "Aktualne"
         sent: "Wysłane"
+        unread: "Nieprzeczytane"
+        unread_with_count:
+          one: "Nieprzeczytane (%{count})"
+          few: "Nieprzeczytane (%{count})"
+          many: "Nieprzeczytane (%{count})"
+          other: "Nieprzeczytane (%{count})"
+        new: "Nowe"
+        new_with_count:
+          one: "Nowe (%{count})"
+          few: "Nowe (%{count})"
+          many: "Nowe (%{count})"
+          other: "Nowe (%{count})"
         archive: "Archiwum"
         groups: "Moje grupy"
-        bulk_select: "Zaznacz wiadomości"
         move_to_inbox: "Przenieś do skrzynki odbiorczej"
         move_to_archive: "Archiwum"
         failed_to_move: "Nie udało się przenieść zaznaczonych wiadomości (prawdopodobnie wystąpił problem z Twoim połączeniem)"
-        select_all: "Zaznacz wszystko"
         tags: "Tagi"
+        warnings: "Oficjalne ostrzeżenia"
+        read_more_in_group: "Chcesz przeczytać więcej? Przeglądaj inne wiadomości w %{groupLink}."
+        read_more: "Chcesz przeczytać więcej? Przeglądaj inne wiadomości w <a href='%{basePath}/u/%{username}/messages'>wiadomościach osobistych</a>."
       preferences_nav:
         account: "Konto"
         security: "Bezpieczeństwo"
@@ -1315,6 +1400,7 @@ pl_PL:
         invalid: "Podaj poprawny adres email"
         authenticated: "Twój email został potwierdzony przez %{provider}"
         invite_auth_email_invalid: "Twój e-mail z zaproszeniem nie jest zgodny z e-mailem uwierzytelnionym przez %{provider}"
+        authenticated_by_invite: "Twój e-mail został uwierzytelniony przez zaproszenie"
         frequency_immediately: "Wyślemy powiadomienie jeśli wskazana rzecz nie została jeszcze przez Ciebie przeczytana."
         frequency:
           one: "Otrzymasz e-mail tylko jeśli nie widzieliśmy Cię w ciągu ostatniej minuty."
@@ -1329,6 +1415,7 @@ pl_PL:
         not_connected: "(nie połączony)"
         confirm_modal_title: "Połącz konto %{provider}"
         confirm_description:
+          disconnect: "Twoje istniejące konto %{provider} '%{account_description}' zostanie odłączone."
           account_specific: "Twoje konto %{provider} „%{account_description}” zostanie użyte do uwierzytelnienia."
           generic: "Twoje konto %{provider} zostanie wykorzystane do uwierzytelnienia."
       name:
@@ -1377,7 +1464,6 @@ pl_PL:
         browser_active: '%{browser} | <span class="active">aktywny teraz</span>'
         browser_last_seen: "%{browser} | %{date}"
       last_posted: "Ostatni wpis"
-      last_emailed: "Ostatnio otrzymał(a) email"
       last_seen: "Ostatnio widziano"
       created: "Dołączył"
       log_out: "Wyloguj"
@@ -1417,11 +1503,9 @@ pl_PL:
         every_month: "każdego miesiąca"
         every_six_months: "co 6 miesięcy"
       email_level:
-        title: "Wysyłaj e-mail gdy ktoś mnie cytuje, odpowiada na mój wpis, wywołuje moją @nazwę lub zaprasza mnie do tematu."
         always: "zawsze"
         only_when_away: "tylko kiedy jest daleko"
         never: "nigdy"
-      email_messages_level: "Wyślij e-mail, gdy ktoś napisze mi prywatną wiadomość"
       include_tl0_in_digests: "Dołącz treści od nowych użytkowników w e-mailach podsumowujących."
       email_in_reply_to: "Zawieraj w e-mailach fragment oryginalnych postów z odpowiedzi"
       other_settings: "Inne"
@@ -1506,21 +1590,22 @@ pl_PL:
           edit_title: "Edytuj zaproszenie"
           instructions: "Udostępnij ten link, aby natychmiast przyznać dostęp do tej witryny:"
           copy_link: "skopiuj link"
-          expires_in_time: "Wygasa za %{time}."
-          expired_at_time: "Wygasło o %{time}."
+          expires_in_time: "Wygasa za %{time}"
+          expired_at_time: "Wygasło o %{time}"
           show_advanced: "Pokaż ustawienia zaawansowane"
           hide_advanced: "Ukryj ustawienia zaawansowane"
-          restrict_email: "Ogranicz zaproszenie do jednego adresu e-mail"
-          max_redemptions_allowed: "Maksymalna liczba użytkowników:"
-          add_to_groups: "Dodaj do grup:"
-          invite_to_topic: "Wyślij do tematu przy pierwszym logowaniu:"
-          expires_at: "Wygasa po:"
-          custom_message: "Opcjonalna wiadomość osobista:"
+          restrict: "Ogranicz do"
+          restrict_email: "Ogranicz do e-maila"
+          restrict_domain: "Ogranicz do domeny"
+          email_or_domain_placeholder: "nazwa@example.com lub example.com"
+          max_redemptions_allowed: "Maksymalna liczba użyć"
+          add_to_groups: "Dodaj do grup"
+          invite_to_topic: "Przyjedź na temat"
+          expires_at: "Wygasa po"
+          custom_message: "Opcjonalna wiadomość osobista"
           send_invite_email: "Zapisz i wyślij e-mail"
           save_invite: "Zapisz zaproszenie"
           invite_saved: "Zaproszenie zapisane."
-          invite_copied: "Link z zaproszeniem został skopiowany."
-          blank_email: "Link z zaproszeniem nie został skopiowany. Adres e-mail jest wymagany."
         bulk_invite:
           none: "Brak zaproszeń do wyświetlenia na tej stronie."
           text: "Zaproszenie zbiorcze"
@@ -1615,6 +1700,11 @@ pl_PL:
       title:
         title: "Tytuł"
         none: "(brak)"
+        instructions: "pojawia się po Twojej nazwie użytkownika"
+      flair:
+        title: "Ikona"
+        none: "(brak)"
+        instructions: "ikona wyświetlana obok Twojego zdjęcia profilowego"
       primary_group:
         title: "Główna grupa"
         none: "(brak)"
@@ -1701,6 +1791,8 @@ pl_PL:
       description_time_MF: "Istnieje {replyCount, plural, one {<b>#</b> odpowiedź} few {<b>#</b> odpowiedzi} many {<b>#</b> odpowiedzi} other {<b>#</b> odpowiedzi}} z szacowanym czasem czytania <b>{readingTime, plural, one {# minuty} few {# minut} many {# minut} other {# minut}}</b>."
       enable: "Podsumuj ten temat"
       disable: "Pokaż wszystkie posty"
+      short_label: "Podsumuj"
+      short_title: "Pokaż podsumowanie tego tematu: najciekawsze posty określone przez społeczność"
     deleted_filter:
       enabled_description: "Ten temat posiada usunięte wpisy, które zostały ukryte."
       disabled_description: "Usunięte wpisy w tym temacie są widoczne."
@@ -1728,10 +1820,12 @@ pl_PL:
       disclaimer: "Rejestrując się, wyrażasz zgodę na <a href='%{privacy_link}' target='blank'>politykę prywatności</a> i <a href='%{tos_link}' target='blank'>warunki świadczenia usług</a> ."
       title: "Utwórz swoje konto"
       failed: "Coś poszło nie tak, możliwe, że wybrany adres email jest już zarejestrowany, spróbuj użyć odnośnika przypomnienia hasła"
+      associate: "Masz już konto? <a href='%{associate_link}'>Zaloguj się</a> , aby połączyć swoje konto %{provider}."
     forgot_password:
       title: "Reset hasła"
       action: "Zapomniałem(-łam) hasła"
       invite: "Wpisz swoją nazwę użytkownika lub adres email. Wyślemy do ciebie email z linkiem do zresetowania hasła."
+      invite_no_username: "Wpisz swój adres e-mail, a wyślemy Ci wiadomość e-mail umożliwiającą zresetowanie hasła."
       reset: "Resetuj hasło"
       complete_username: "Jeśli jakieś mamy konto o nazwie użytkownika <b>%{username}</b>, za chwilę zostanie wysłana wiadomość z instrukcją jak ustawić nowe hasło."
       complete_email: "Jeśli jakieś konto użytkownika posiada adres <b>%{email}</b>, za chwilę zostanie wysłana wiadomość z instrukcją jak ustawić nowe hasło."
@@ -1805,21 +1899,27 @@ pl_PL:
       google_oauth2:
         name: "Google"
         title: "przez Google"
+        sr_title: "Zaloguj się przez Google"
       twitter:
         name: "Twitter"
         title: "przez Twitter"
+        sr_title: "Zaloguj się przez Twitter"
       instagram:
         name: "Instagram"
         title: "z Instagramem"
+        sr_title: "Zaloguj się przez Instagram"
       facebook:
         name: "Facebook"
         title: "przez Facebook"
+        sr_title: "Zaloguj się przez facebook"
       github:
         name: "GitHub"
         title: "przez GitHub"
+        sr_title: "Zaloguj się przez GitHub"
       discord:
         name: "Discord"
         title: "z Discordem"
+        sr_title: "Zaloguj się przez Discord"
       second_factor_toggle:
         totp: "Zamiast tego użyj aplikacji uwierzytelniającej"
         backup_code: "Zamiast tego użyj kodu zapasowego"
@@ -1875,10 +1975,16 @@ pl_PL:
         many: "+ %{count} podkategorii"
         other: "+ %{count} podkategorii"
     select_kit:
+      delete_item: "Usuń %{name}"
       filter_by: "Filtruj według: %{name}"
       select_to_filter: "Wybierz wartość do filtrowania"
       default_header_text: Wybierz...
       no_content: Nie znaleziono dopasowań
+      results_count:
+        one: "%{count} wynik"
+        few: "%{count} wyniki"
+        many: "%{count} wyników"
+        other: "%{count} wyników"
       filter_placeholder: Wyszukiwanie...
       filter_placeholder_with_any: Wyszukaj lub utwórz...
       create: "Stwórz: '%{content}'"
@@ -1955,9 +2061,6 @@ pl_PL:
         few: "Wspominając %{group}, powiadomisz <a href='%{group_link}'>%{count} osoby</a> – czy jesteś pewien?"
         many: "Wspominając %{group}, powiadomisz <a href='%{group_link}'>%{count} osób</a> – czy jesteś pewien?"
         other: "Wspominając %{group}, powiadomisz <a href='%{group_link}'>%{count} osób</a> –czy jesteś pewien?"
-      cannot_see_mention:
-        category: "Wspomniałeś/łaś o %{username} lecz nie zostaną oni powiadomieni ponieważ nie mają dostępu do tej kategorii. Dodaj ich do grupy która ma dostęp do tej kategorii."
-        private: "Wspomniałeś/łaś o %{username} lecz nie zostaną powiadomieni ponieważ nie mogą odczytać tej wiadomości . Będziesz musiał ich zaprosić do odczytania tej wiadomości "
       duplicate_link: "Wygląda na to, że Twój link do <b>%{domain}</b> został już wcześniej przesłany w tym wątku przez <b>@%{username}</b> w <a href='%{post_url}'>odpowiedzi przesłanej %{ago}</a> - jesteś pewien, że chcesz go wysłać ponownie?"
       reference_topic_title: "Odpowiedz: %{title}"
       error:
@@ -1997,7 +2100,7 @@ pl_PL:
       create_whisper: "Szept"
       create_shared_draft: "Utwórz udostępniony projekt"
       edit_shared_draft: "Edytuj udostępniony projekt"
-      title: "Lub naciśnij Ctrl+Enter"
+      title: "Lub naciśnij %{modifier}Enter"
       users_placeholder: "Dodaj osobę"
       title_placeholder: "O czym jest ta dyskusja w jednym zwartym zdaniu. "
       title_or_link_placeholder: "Wprowadź tytuł, lub wklej tutaj link"
@@ -2067,7 +2170,7 @@ pl_PL:
           confirm: Zapisano nową wersję roboczą tematu, która zostanie zastąpiona, jeśli utworzysz połączony temat.
         reply_as_new_group_message:
           label: Odpowiedz jako nowa wiadomość grupowa
-          desc: Utwórz nową wiadomość prywatną z tymi samymi adresatami
+          desc: Utwórz nową wiadomość zaczynając od tych samych odbiorców
         reply_as_private_message:
           label: Nowa wiadomość
           desc: Utwórz nową osobistą wiadomość
@@ -2087,6 +2190,8 @@ pl_PL:
           desc: "Odpowiedz bez zmiany ostatniej daty odpowiedzi"
       reload: "Przeładuj"
       ignore: "Ignoruj"
+      image_alt_text:
+        aria_label: Tekst alternatywny dla obrazu
     notifications:
       tooltip:
         regular:
@@ -2125,9 +2230,9 @@ pl_PL:
         other: "<span class='multi-user'>%{username}, %{username2} oraz %{count} innych</span> %{description}"
       liked_consolidated_description:
         one: "polubiono %{count} Twój wpis"
-        few: "polubiłem %{count} twoich postów"
-        many: "polubiłem %{count} twoich postów"
-        other: "polubiono %{count} twoich wpisów"
+        few: "polubił %{count} twoje posty"
+        many: "polubił %{count} twoich postów"
+        other: "polubił %{count} twoich postów"
       liked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
@@ -2147,6 +2252,9 @@ pl_PL:
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - zakończone"
+      dismiss_confirmation:
+        dismiss: "Odrzuć"
+        cancel: "Anuluj"
       group_message_summary:
         one: "%{count} wiadomość w skrzynce odbiorczej %{group_name}"
         few: "%{count} wiadomości w skrzynce odbiorczej %{group_name}"
@@ -2190,20 +2298,10 @@ pl_PL:
         reaction: "nowa reakcja"
         votes_released: "Głos został zwolniony"
     upload_selector:
-      title: "Dodaj obraz"
-      title_with_attachments: "Dodaj obraz lub plik"
-      from_my_computer: "Z mojego urządzenia"
-      from_the_web: "Z Internetu"
-      remote_tip: "link do obrazu"
-      remote_tip_with_attachments: "link do obrazu lub pliku"
-      local_tip: "wybierz obrazy ze swojego urządzenia"
-      local_tip_with_attachments: "wybierz obrazy lub pliki ze swojego urządzenia"
-      hint: "(możesz również przeciągać i upuszczać do edytora, aby przesłać)"
-      hint_for_supported_browsers: "możesz też przeciągać lub wklejać grafiki do edytora"
       uploading: "Wgrywanie"
+      processing: "Przetwarzanie przesłanego pliku"
       select_file: "Wybierz plik"
       default_image_alt_text: Obraz
-      supported_formats: "obsługiwane formaty"
     search:
       sort_by: "Sortuj po"
       relevance: "Trafność"
@@ -2214,13 +2312,16 @@ pl_PL:
       select_all: "Zaznacz wszystkie"
       clear_all: "Wyczyść wszystkie"
       too_short: "Wyszukiwana fraza jest zbyt krótka."
+      open_advanced: "Otwórz wyszukiwanie zaawansowane"
+      clear_search: "Wyczyść wyszukiwanie"
+      sort_or_bulk_actions: "Sortuj lub zbiorczo wybierz wyniki"
       result_count:
         one: "<span>%{count} wynik dla</span><span class='term'>%{term}</span>"
         few: "<span>%{count}%{plus} wyniki dla</span><span class='term'>%{term}</span>"
         many: "<span>%{count}%{plus} wyników dla</span><span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} wyników dla</span><span class='term'>%{term}</span>"
-      title: "szukaj tematów, postów, użytkowników lub kategorii"
-      full_page_title: "szukaj tematów lub postów"
+      title: "Wyszukaj"
+      full_page_title: "Wyszukaj"
       no_results: "Brak wyników wyszukiwania"
       no_more_results: "Nie znaleziono więcej wyników."
       post_format: "#%{post_number} za %{username}"
@@ -2232,16 +2333,40 @@ pl_PL:
       search_google: "Spróbuj wyszukać w Google:"
       search_google_button: "Google"
       search_button: "Szukaj"
+      search_term_label: "wpisz słowo kluczowe wyszukiwania"
+      categories: "Kategorie"
+      tags: "Tagi"
+      in: "w"
+      in_this_topic: "w tym temacie"
+      in_this_topic_tooltip: "przełącz się na przeszukiwanie wszystkich tematów"
+      in_topics_posts: "we wszystkich tematach i postach"
+      enter_hint: "lub naciśnij Enter"
+      in_posts_by: "w postach %{username}"
+      recent: "Ostatnie wyszukiwania"
+      clear_recent: "Wyczyść ostatnie wyszukiwania"
+      type:
+        default: "Tematy/posty"
+        users: "Użytkownicy"
+        categories: "Kategorie"
+        categories_and_tags: "Kategorie/tagi"
       context:
         user: "Szukaj postów @%{username}"
         category: "Szukaj w kategorii #%{category}"
         tag: "Wyszukaj znacznik # %{tag}"
         topic: "Szukaj w tym temacie"
         private_messages: "Wyszukiwanie wiadomości"
+      tips:
+        category_tag: "filtry według kategorii lub tagu"
+        author: "filtry według autora posta"
+        in: "filtruje według metadanych (np. in:title, in:personal, in:pinned)"
+        status: "filtry według statusu tematu"
+        full_search: "uruchamia wyszukiwanie pełnej strony"
+        full_search_key: "%{modifier} + Enter"
       advanced:
-        title: Zaawansowane wyszukiwanie
+        title: Zaawansowane filtry
         posted_by:
           label: Wysłane przez
+          aria_label: Filtruj według autora posta
         in_category:
           label: Skategoryzowane
         in_group:
@@ -2250,6 +2375,7 @@ pl_PL:
           label: Z odnaką
         with_tags:
           label: Otagowane
+          aria_label: Filtruj za pomocą tagów
         filters:
           label: Zwracaj tylko tematy / wpisy...
           title: Dopasowanie tylko w tytule
@@ -2280,19 +2406,26 @@ pl_PL:
             label: Wpisy
           min:
             placeholder: minimum
+            aria_label: filtruj według minimalnej liczby postów
           max:
             placeholder: maksimum
+            aria_label: filtruj według maksymalnej liczby postów
           time:
             label: Opublikowano
+            aria_label: Filtruj według daty opublikowania
             before: przed
             after: po
         views:
           label: Odsłony
         min_views:
           placeholder: minimum
+          aria_label: filtruj według minimalnych wyświetleń
         max_views:
           placeholder: maksimum
-    hamburger_menu: "przejdź do innej listy lub kategorii"
+          aria_label: filtrować według maksymalnych wyświetleń
+        additional_options:
+          label: "Filtruj według liczby postów i wyświetleń tematu"
+    hamburger_menu: "menu"
     new_item: "nowy"
     go_back: "wróć"
     not_logged_in_user: "strona użytkownika z podsumowaniem bieżących działań i ustawień"
@@ -2309,17 +2442,32 @@ pl_PL:
         delete: "Usuń tematy"
         dismiss: "Wyczyść"
         dismiss_read: "Wyczyść nieprzeczytane"
+        dismiss_read_with_selected:
+          one: "Odrzuć %{count} nieprzeczytane"
+          few: "Odrzuć %{count} nieprzeczytane"
+          many: "Odrzuć %{count} nieprzeczytanych"
+          other: "Odrzuć %{count} nieprzeczytanych"
         dismiss_button: "Wyczyść…"
+        dismiss_button_with_selected:
+          one: "Odrzuć (%{count})…"
+          few: "Odrzuć (%{count})…"
+          many: "Odrzuć (%{count})…"
+          other: "Odrzuć (%{count})…"
         dismiss_tooltip: "Wyczyść nowe wpisy lub przestań śledzić tematy"
         also_dismiss_topics: "Przestać śledzić wskazane tematy. Nie chcę, aby pojawiały się w zakładce nieprzeczytane."
         dismiss_new: "Wyczyść nowe"
+        dismiss_new_with_selected:
+          one: "Oddalenie nowe (%{count})"
+          few: "Oddalenie nowe (%{count})"
+          many: "Oddalenie nowe (%{count})"
+          other: "Oddalenie nowe (%{count})"
         toggle: "włącz grupowe zaznaczanie tematów"
         actions: "Operacje grupowe"
-        change_category: "Ustaw kategorię"
+        change_category: "Ustaw kategorię..."
         close_topics: "Zamknij tematy"
         archive_topics: "Zarchiwizuj tematy"
         move_messages_to_inbox: "Przenieś do skrzynki odbiorczej"
-        notification_level: "Powiadomienia"
+        notification_level: "Powiadomienia..."
         change_notification_level: "Zmień poziom powiadomień"
         choose_new_category: "Wybierz nową kategorię dla tematów:"
         selected:
@@ -2345,23 +2493,24 @@ pl_PL:
           other: "Postęp: <strong>%{count}</strong> tematów"
       none:
         unread: "Nie masz nieprzeczytanych tematów."
+        unseen: "Nie masz niewidzianych tematów."
         new: "Nie masz nowych tematów."
         read: "You haven't read any topics yet."
         posted: "Jeszcze nie zamieściłeś/łaś wpisu w żadnym z tematów."
-        ready_to_create: "Gotowy do "
         latest: "Jesteś na biężąco!"
         bookmarks: "Nie posiadasz tematów dodanych do zakładek."
         category: "Nie ma tematów w kategorii %{category}."
         top: "Brak najlepszych tematów."
         educate:
           new: '<p>Twoje nowe tematy pojawią się tutaj. Domyślnie tematy są uważane za nowe i będą pokazywać wskaźnik <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span>, jeśli zostały utworzone w ciągu ostatnich 2 dni.</p><p>Odwiedź swoje <a href="%{userPrefsUrl}">ustawienia</a>, aby to zmienić.</p>'
-          unread: "<p>Twoje nie przeczytane tematy będą pojawiać się tutaj.</p><p>Domyślnie tematy są określane jako nieprzeczytane a ich liczba zostanie wyświetlona<span class=\"badge new-posts badge-notification\">1</span> Jeśli:</p><ul><li>Utworzyłeś/łaś temat</li><li>Odpowiedziałeś/łaś w temacie</li><li>Czytałeś/łaś temat dłużej niż 4 minuty</li></ul><p>Albo ustawiłeś/łaś śledzenie lub obserwowanie tematu przez \U0001F514 na dole każdej dyskusji.</p><p>Odwiedź swoje <a href=\"%{userPrefsUrl}\">ustawienia</a> by to zmienić.</p>"
+          unread: "<p>Twoje nie przeczytane tematy będą pojawiać się tutaj.</p><p>Domyślnie tematy są określane jako nieprzeczytane a ich liczba zostanie wyświetlona<span class=\"badge unread-posts badge-notification\">1</span> Jeśli:</p><ul><li>Utworzyłeś/łaś temat</li><li>Odpowiedziałeś/łaś w temacie</li><li>Czytałeś/łaś temat dłużej niż 4 minuty</li></ul><p>Albo ustawiłeś/łaś śledzenie lub obserwowanie tematu przez \U0001F514 na dole każdej dyskusji.</p><p>Odwiedź swoje <a href=\"%{userPrefsUrl}\">ustawienia</a> by to zmienić.</p>"
       bottom:
         latest: "Nie ma więcej najnowszych tematów."
         posted: "Nie ma więcej tematów w których pisałeś."
         read: "Nie ma więcej przeczytanych tematów."
         new: "Nie ma więcej nowych tematów."
         unread: "Nie ma więcej nieprzeczytanych tematów."
+        unseen: "Nie ma już więcej niewidzianych tematów."
         category: "Nie ma więcej tematów w kategorii %{category}."
         tag: "Nie ma więcej tematów z %{tag}."
         top: "Nie ma już więcej najlepszych tematów."
@@ -2388,13 +2537,6 @@ pl_PL:
       defer:
         help: "Oznacz jako nieprzeczytane"
         title: "Zignoruj"
-      feature_on_profile:
-        help: "Dodaj link do tego tematu na karcie użytkownika i profilu"
-        title: "Funkcja na profilu"
-      remove_from_profile:
-        warning: "Twój profil ma już polecany temat. Jeśli będziesz kontynuować, ten temat zastąpi istniejący."
-        help: "Usuń link do tego tematu w swoim profilu użytkownika"
-        title: "Usuń z profilu"
       list: "Tematy"
       new: "nowy temat"
       unread: "nieprzeczytane"
@@ -2419,21 +2561,11 @@ pl_PL:
       not_found:
         title: "Temat nie został znaleziony"
         description: "Przepraszamy, ale temat nie został znaleziony. Możliwe, że został usunięty przez moderatora?"
-      total_unread_posts:
-        one: "masz %{count} nieprzeczytany wpis w tym temacie"
-        few: "masz %{count} nieprzeczytane wpisy w tym temacie"
-        many: "masz %{count} nieprzeczytanych wpisów w tym temacie"
-        other: "masz %{count} nieprzeczytanych wpisów w tym temacie"
       unread_posts:
         one: "masz %{count} nieprzeczytany wpis w tym temacie"
         few: "masz %{count} nieprzeczytane wpisy w tym temacie"
         many: "masz %{count} nieprzeczytanych wpisów w tym temacie"
         other: "masz %{count} nieprzeczytanych wpisów w tym temacie"
-      new_posts:
-        one: "od Twoich ostatnich odwiedzin pojawił się %{count} nowy wpis"
-        few: "od Twoich ostatnich odwiedzin pojawiły się %{count} nowe wpisy"
-        many: "od Twoich ostatnich odwiedzin pojawiło się %{count} nowych wpisów"
-        other: "od Twoich ostatnich odwiedzin pojawiło się %{count} nowych wpisów"
       likes:
         one: "temat zawiera %{count} lajk"
         few: "temat zawiera %{count} lajki"
@@ -2442,7 +2574,8 @@ pl_PL:
       back_to_list: "Wróć do Listy Tematów"
       options: "Opcje tematu"
       show_links: "pokaż odnośniki z tego tematu"
-      toggle_information: "przełącz szczegóły tematu"
+      collapse_details: "zwiń szczegóły tematu"
+      expand_details: "rozwiń szczegóły tematu"
       read_more_in_category: "Chcesz przeczytać więcej? Przeglądaj inne tematy w %{catLink} lub %{latestLink}."
       read_more: "Chcesz przeczytać więcej? %{catLink} lub %{latestLink}."
       unread_indicator: "Nikt jeszcze nie czytał ostatniego postu w tym temacie."
@@ -2451,7 +2584,7 @@ pl_PL:
       browse_all_categories: Przeglądaj wszystkie kategorie
       browse_all_tags: Przeglądaj wszystkie tagi
       view_latest_topics: pokaż aktualne tematy
-      suggest_create_topic: rozpocząć nową rozmowę?
+      suggest_create_topic: Gotowy na <a href>rozpoczęcie nowej rozmowy?</a>
       jump_reply_up: skocz do wcześniejszej odpowiedzi
       jump_reply_down: skocz do późniejszej odpowiedzi
       deleted: "Temat został usunięty"
@@ -2459,7 +2592,8 @@ pl_PL:
         title: "Tryb powolny"
         select: "Użytkownicy mogą publikować w tym temacie tylko raz na:"
         description: "Aby promować przemyślaną dyskusję w popularnych lub spornych dyskusjach, użytkownicy muszą poczekać przed ponownym opublikowaniem odpowiedzi w tym temacie."
-        save: "Włącz"
+        enable: "Włącz"
+        update: "Aktualizuj"
         enabled_until: "Włączone do:"
         remove: "Wyłącz"
         hours: "Godziny:"
@@ -2490,6 +2624,7 @@ pl_PL:
         time_frame_required: "Wybierz przedział czasowy"
         min_duration: "Czas trwania musi być większy niż 0"
         max_duration: "Czas trwania musi być krótszy niż 20 lat"
+        duration: "Czas trwania"
       auto_update_input:
         none: "Wybierz przedział czasowy"
         now: "Teraz"
@@ -2513,7 +2648,7 @@ pl_PL:
       temp_open:
         title: "Otwórz tymczasowo"
       auto_reopen:
-        title: "Automatycznie otwórz temat"
+        title: "Automatyczne otwieranie tematu"
       temp_close:
         title: "Zamknij tymczasowo"
       auto_close:
@@ -2557,10 +2692,6 @@ pl_PL:
         replies_short: "%{current} / %{total}"
       progress:
         title: postęp tematu
-        go_top: "początek"
-        go_bottom: "koniec"
-        go: "idź"
-        jump_bottom: "Przejdź na koniec"
         jump_prompt: "skocz do..."
         jump_prompt_of:
           one: "z %{count} postu"
@@ -2568,22 +2699,22 @@ pl_PL:
           many: "z %{count} postów"
           other: "z %{count} postów"
         jump_prompt_long: "Skocz do..."
-        jump_bottom_with_number: "skocz do postu %{post_number}"
         jump_prompt_to_date: "do daty"
         jump_prompt_or: "lub"
-        total: w sumie wpisów
-        current: obecny wpis
       notifications:
         title: Ustaw jak często chcesz być powiadamiany o tym temacie
         reasons:
           mailing_list_mode: "Masz włączony tryb powiadomień mailowych, więc będziesz otrzymywał powiadomienia o nowych odpowiedziach w tym temacie za przez e-mail."
           "3_10": "Będziesz otrzymywał powiadomienia, ponieważ temat zawiera obserwowany przez Ciebie tag"
+          "3_10_stale": "Będziesz otrzymywać powiadomienia, ponieważ w przeszłości oglądałeś tag na ten temat."
           "3_6": "Będziesz otrzymywać powiadomienia o każdym nowym wpisie i temacie, ponieważ obserwujesz tę kategorię."
+          "3_6_stale": "Będziesz otrzymywać powiadomienia, ponieważ oglądałeś tę kategorię w przeszłości."
           "3_5": "Będziesz otrzymywać powiadomienia o każdym nowym wpisie, ponieważ włączono automatyczne obserwowanie tego tematu."
           "3_2": "Będziesz otrzymywać powiadomienia o każdym nowym wpisie, ponieważ obserwujesz ten temat."
           "3_1": "Będziesz otrzymywać powiadomienia, ponieważ jesteś autorem tego tematu."
           "3": "Będziesz otrzymywać powiadomienia o każdym nowym wpisie, ponieważ obserwujesz ten temat."
           "2_8": "Widzisz ilość nowych odpowiedzi, ponieważ śledzisz kategorię wątku."
+          "2_8_stale": "Zobaczysz liczbę nowych odpowiedzi, ponieważ śledziłeś tę kategorię w przeszłości."
           "2_4": "Widzisz ilość nowych odpowiedzi, ponieważ wypowiedziałeś/łaś się w tym wątku."
           "2_2": "Widzisz ilość nowych odpowiedzi, ponieważ śledzisz ten wątek."
           "2": 'Zobaczysz liczbę nowych odpowiedzi, ponieważ <a href="%{basePath}/u/%{username}/preferences/notifications">przeczytałeś/łaś ten temat</a>.'
@@ -2623,7 +2754,7 @@ pl_PL:
         open: "Otwórz temat"
         close: "Zamknij temat"
         multi_select: "Wybierz wpisy…"
-        slow_mode: "Ustaw tryb powolny"
+        slow_mode: "Ustaw tryb powolny..."
         timed_update: "Ustaw ważność wątku..."
         pin: "Przypnij temat…"
         unpin: "Odepnij temat…"
@@ -2632,21 +2763,18 @@ pl_PL:
         invisible: "Ustaw jako niewidoczny"
         visible: "Ustaw jako widoczny"
         reset_read: "Zresetuj przeczytane dane"
-        make_public: "Upublicznij temat"
+        make_public: "Utwórz temat publiczny..."
         make_private: "Utwórz osobistą wiadomość"
         reset_bump_date: "Zresetuj datę podbicia"
       feature:
         pin: "Przypnij temat"
         unpin: "Odepnij temat"
         pin_globally: "Przypnij temat globalnie"
-        make_banner: "Ustaw jako baner"
+        make_banner: "Utwórz temat bannerowy"
         remove_banner: "Wyłącz baner"
       reply:
         title: "Odpowiedz"
         help: "zacznij tworzyć odpowiedź do tego tematu"
-      clear_pin:
-        title: "Odepnij"
-        help: "Odepnij ten temat. Przestanie wyświetlać się na początku listy tematów."
       share:
         title: "Udostępnij"
         extended_title: "Udostępnij link"
@@ -2713,7 +2841,7 @@ pl_PL:
         email_or_username_placeholder: "adres email lub nazwa użytkownika"
         action: "Zaproś"
         success: "Wskazany użytkownik został zaproszony do udziału w tej dyskusji."
-        success_group: "Zaprosiliśmy tą grupę do uczestnictwa w tej wiadomości "
+        success_group: "Zaprosiliśmy tę grupę do uczestnictwa w tej wiadomości"
         error: "Przepraszamy, wystąpił błąd w trakcie zapraszania użytkownika(-czki)."
         not_allowed: "Przepraszamy, ten użytkownik nie może zostać zaproszony."
         group_name: "nazwa grupy"
@@ -2851,13 +2979,12 @@ pl_PL:
           few: "Wybrano <b>%{count}</b> wpisy."
           many: "Wybrano <b>%{count}</b> wpisów."
           other: "Wybrano <b>%{count}</b> wpisów."
-      deleted_by_author:
-        one: "(temat wycofany przez autora, zostanie automatycznie usunięty za %{count} godzinę, chyba że zostaną oflagowany)"
-        few: "(temat wycofany przez autora, zostanie automatycznie usunięty za %{count} godzin, chyba że zostaną oflagowany)"
-        many: "(temat wycofany przez autora, zostanie automatycznie usunięty za %{count} godzin, chyba że zostaną oflagowany)"
-        other: "(temat wycofany przez autora, zostanie automatycznie usunięty za %{count} godzin, chyba że zostaną oflagowany)"
+      deleted_by_author_simple: "(temat usunięty przez autora)"
     post:
       quote_reply: "Cytuj"
+      quote_reply_shortcut: "Lub naciśnij q"
+      quote_edit: "Edytuj"
+      quote_edit_shortcut: "Lub naciśnij e"
       quote_share: "Udostępnij"
       edit_reason: "Powód"
       post_number: "wpis %{number}"
@@ -2870,11 +2997,7 @@ pl_PL:
       follow_quote: "idź do cytowanego wpisu"
       show_full: "Pokaż pełny wpis"
       show_hidden: "Wyświetl ignorowaną treść."
-      deleted_by_author:
-        one: "(wpis wycofany przez autora, zostanie automatycznie usunięty za %{count} godzinę, chyba że zostanie oflagowany) "
-        few: "(wpis wycofany przez autora, zostanie automatycznie usunięty za %{count} godziny, chyba że zostanie oflagowany) "
-        many: "(wpis wycofany przez autora, zostanie automatycznie usunięty za %{count} godzin, chyba że zostanie oflagowany) "
-        other: "(wpis wycofany przez autora, zostanie automatycznie usunięty za %{count} godzin, chyba że zostanie oflagowany) "
+      deleted_by_author_simple: "(post usunięty przez autora)"
       collapse: "zawalić się"
       expand_collapse: "rozwiń/zwiń"
       locked: "członek zespołu zablokował edytowanie tego wpisu"
@@ -2885,7 +3008,7 @@ pl_PL:
         other: "pokaż %{count} ukrytych odpowiedzi"
       notice:
         new_user: "%{user} opublikował(a) coś po raz pierwszy - powitajmy tę osobę w naszej społeczności!"
-        returning_user: "Minęło trochę czasu, odkąd widzieliśmy %{user} - jego ostatni wpis był %{time}."
+        returning_user: "Minęło trochę czasu, odkąd widzieliśmy %{user} - ostatni wpis tego użytkownika był %{time}."
       unread: "Nieprzeczytany wpis"
       has_replies:
         one: "%{count} odpowiedź"
@@ -2922,6 +3045,7 @@ pl_PL:
         edit: "Przepraszamy, podczas edytowania twojego wpisu wystąpił błąd. Spróbuj ponownie."
         upload: "Przepraszamy, wystąpił błąd podczas wczytywania Twojego pliku. Proszę, spróbuj ponownie."
         file_too_large: "Przepraszamy, ten plik jest zbyt duży (maksymalny rozmiar to %{max_size_kb}kB). Dlaczego nie przesłać dużego pliku do usługi udostępniania w chmurze, a następnie wkleić link?"
+        file_too_large_humanized: "Przepraszamy, ten plik jest za duży (maksymalny rozmiar to %{max_size}). Dlaczego nie przesłać dużego pliku do usługi udostępniania w chmurze, a następnie wkleić link?"
         too_many_uploads: "Przepraszamy, ale możesz wgrać tylko jeden plik naraz."
         too_many_dragged_and_dropped_files:
           one: "Przepraszamy, możesz przesłać %{count} plik jednocześnie."
@@ -2942,8 +3066,6 @@ pl_PL:
       whisper: "ten wpis jest prywatnym szeptem do moderatorów"
       wiki:
         about: "ten wpis jest częścią wiki"
-      archetypes:
-        save: "Opcje zapisu"
       few_likes_left: "Dziękuję za polubienie! Pozostało Ci tylko parę polubień do wykorzystania dzisiaj"
       controls:
         reply: "zacznij tworzyć odpowiedź na ten wpis"
@@ -2973,6 +3095,8 @@ pl_PL:
             other: "Tak i wszystkie %{count} odpowiedzi"
           just_the_post: "Nie, tylko ten wpis"
         admin: "administracja wpisem (tryb wiki itp)"
+        permanently_delete: "Usuń bezpowrotnie"
+        permanently_delete_confirmation: "Czy na pewno chcesz usunąć ten post? Nie będziesz w stanie go odzyskać."
         wiki: "Włącz tryb Wiki"
         unwiki: "Wyłącz tryb Wiki"
         convert_to_moderator: "Włącz kolor moderatora"
@@ -2980,8 +3104,8 @@ pl_PL:
         rebake: "Odśwież HTML"
         publish_page: "Publikowanie strony"
         unhide: "Wycofaj ukrycie"
-        change_owner: "Zmiana właściciela"
-        grant_badge: "Przyznaj odznakę"
+        change_owner: "Zmień właściciela..."
+        grant_badge: "Przyznaj odznakę..."
         lock_post: "Zablokuj Wpis"
         lock_post_description: "nie pozwalaj postującemu edytować tego wpisu"
         unlock_post: "Odblokuj Wpis"
@@ -2997,8 +3121,8 @@ pl_PL:
         delete_topic_confirm_modal_no: "Nie, zachowaj ten temat"
         delete_topic_error: "Wystąpił błąd podczas usuwania tego wątku"
         delete_topic: "usuń temat"
-        add_post_notice: "Dodaj notatkę personelu"
-        change_post_notice: "Zmień wiadomość personelu"
+        add_post_notice: "Dodaj notatkę personelu..."
+        change_post_notice: "Zmień notatkę personelu..."
         delete_post_notice: "Usuń wiadomość personelu"
         remove_timer: "usuń minutnik"
         edit_timer: "edytuj licznik czasu"
@@ -3077,12 +3201,15 @@ pl_PL:
             button: "HTML"
       bookmarks:
         create: "Utwórz zakładkę"
+        create_for_topic: "Utwórz zakładkę do tematu"
         edit: "Edytuj zakładkę"
+        edit_for_topic: "Edytuj zakładkę dla tematu"
         created: "Utworzono"
         updated: "Zaktualizowane"
         name: "Imię"
         name_placeholder: "Do czego ma służyć ta zakładka?"
         set_reminder: "Przypomnij mi"
+        options: "Opcje"
         actions:
           delete_bookmark:
             name: "Usuń zakładkę"
@@ -3103,7 +3230,6 @@ pl_PL:
         post_number: "%{username}, post #%{post_number}"
         show_all: "Pokaż wszystkie"
     category:
-      can: "może&hellip; "
       none: "(brak kategorii)"
       all: "Wszystkie kategorie"
       choose: "kategoria&hellip;"
@@ -3137,7 +3263,6 @@ pl_PL:
       save_error: Podczas zapisywania tej kategorii wystąpił błąd.
       name: "Nazwa kategorii"
       description: "Opis"
-      topic: "temat kategorii"
       logo: "Grafika z logo kategorii"
       background_image: "Grafika z tłem kategorii"
       badge_colors: "Kolor Etykiety"
@@ -3196,10 +3321,12 @@ pl_PL:
       position_disabled: "Kolejność kategorii będzie uzależniona od aktywności. Aby kontrolować ich kolejność,"
       position_disabled_click: 'włącz statyczną kolejność kategorii'
       minimum_required_tags: "Minimalna liczba tagów wymaganych w temacie:"
+      default_slow_mode: 'Włącz „Tryb powolny” dla nowych tematów w tej kategorii.'
       parent: "Kategoria rodzica"
       num_auto_bump_daily: "Liczba otwartych tematów do automatycznego podbicia każdego dnia"
       navigate_to_first_post_after_read: "Przejdź do pierwszego postu po przeczytaniu tematów"
       notifications:
+        title: "zmień poziom powiadomień dla tej kategorii"
         watching:
           title: "Obserwuj wszystko"
           description: "Będziesz automatycznie obserwować wszystkie tematy w tej kategorii. Zostaniesz powiadomiony o każdym nowym poście w każdym wątku, a liczba nowych odpowiedzi zostanie wyświetlona."
@@ -3345,6 +3472,9 @@ pl_PL:
         title: "Ten temat jest wiadomością prywatną"
         help: "Ten temat jest wiadomością prywatną"
     posts: "Wpisy"
+    pending_posts:
+      label: "Oczekujące"
+      label_with_count: "Oczekujące (%{count})"
     posts_likes_MF: |
       Ten temat ma {count, plural, one {# odpowiedź} few {# odpowiedzi} many {# odpowiedzi} other {# odpowiedzi}} {ratio, select,
         low {z wysokim stosunkiem polubień na post}
@@ -3378,6 +3508,8 @@ pl_PL:
       many: "użytkowników"
       other: "użytkowników"
     category_title: "Kategoria"
+    history_capped_revisions: "Historia, ostatnie 100 wersji"
+    history: "Historia"
     changed_by: "przez %{author}"
     raw_email:
       title: "Email przychodzący"
@@ -3414,6 +3546,10 @@ pl_PL:
           few: "%{count} nieprzeczytane"
           many: "%{count} nieprzeczytanych"
           other: "%{count} nieprzeczytanych"
+      unseen:
+        title: "Niewidziany"
+        lower_title: "niewidziany"
+        help: "nowe tematy i tematy, które aktualnie oglądasz lub śledzisz z nieprzeczytanymi postami"
       new:
         lower_title_with_count:
           one: "%{count} nowy"
@@ -3516,7 +3652,7 @@ pl_PL:
         show_incoming_updated_topics: "%{shortcut} Pokaż zaktualizowane tematy"
         search: "%{shortcut} Wyszukaj"
         help: "%{shortcut} Pokaż skróty klawiszowe"
-        dismiss_new_posts: "%{shortcut} wyczyść listę wpisów"
+        dismiss_new: "%{shortcut} Odrzuć nowe"
         dismiss_topics: "%{shortcut} wyczyść listę tematów"
         log_out: "%{shortcut} Wyloguj"
       composing:
@@ -3564,7 +3700,7 @@ pl_PL:
         insert_url: "%{shortcut} Wstaw zaznaczenie do otwartego edytora"
     badges:
       earned_n_times:
-        one: "Otrzymano tą odznakę %{count} raz"
+        one: "Otrzymano tę odznakę %{count} raz"
         few: "Otrzymano tą odznakę %{count} razy"
         many: "Otrzymano tą odznakę %{count} razy"
         other: "Otrzymano tą odznakę %{count} razy"
@@ -3572,7 +3708,7 @@ pl_PL:
       others_count: "Inni użytkownicy z tą odznaką (%{count})"
       title: Odznaki
       allow_title: "Możesz użyć tej odznaki jako tytułu"
-      multiple_grant: "Możesz zdobyć tą odznakę wiele razy"
+      multiple_grant: "Możesz zdobyć tę odznakę wiele razy"
       badge_count:
         one: "%{count} odznaka"
         few: "%{count} odznak"
@@ -3602,6 +3738,21 @@ pl_PL:
           name: Inne
         posting:
           name: Pisanie
+      favorite_max_reached: "Nie możesz faworyzować więcej odznak."
+      favorite_max_not_reached: "Oznacz tę odznakę jako ulubioną"
+      favorite_count: "%{count}/%{max} odznaki oznaczone jako ulubione"
+    download_calendar:
+      title: "Pobierz kalendarz"
+      save_ics: "Pobierz plik .ics"
+      save_google: "Dodaj do kalendarza Google"
+      remember: "Nie pytaj ponownie"
+      remember_explanation: "(możesz zmienić tę preferencję w swoich ustawieniach użytkownika)"
+      download: "Pobierz"
+      default_calendar: "Domyślny kalendarz"
+      default_calendar_instruction: "Określ, który kalendarz powinien być używany podczas zapisywania dat"
+      add_to_calendar: "Dodaj do kalendarza"
+      google: "Kalendarz Google"
+      ics: "ICS"
     tagging:
       all_tags: "Wszystkie tagi"
       other_tags: "Inne tagi"
@@ -3612,6 +3763,7 @@ pl_PL:
       choose_for_topic: "tagi opcjonalne"
       info: "Informacje"
       default_info: "Ten tag nie jest ograniczony do żadnych kategorii i nie ma synonimów."
+      staff_info: "Aby dodać ograniczenia, umieść ten znacznik w <a href=%{basePath}/tag_groups>grupie znaczników</a>."
       category_restricted: "Ten tag jest ograniczony do kategorii, do których nie masz uprawnień dostępu."
       synonyms: "Synonimy"
       synonyms_description: "W przypadku użycia następujących tagów zostaną one zastąpione przez <b>%{base_tag_name}</b>."
@@ -3625,7 +3777,7 @@ pl_PL:
         few: "Można go używać tylko w tych kategoriach:"
         many: "Można go używać tylko w tych kategoriach:"
         other: "Można go używać tylko w tych kategoriach:"
-      edit_synonyms: "Zarządzaj synonimami"
+      edit_synonyms: "Edytuj synonimy"
       add_synonyms_label: "Dodaj synonimy:"
       add_synonyms: "Dodaj"
       add_synonyms_explanation:
@@ -3648,8 +3800,8 @@ pl_PL:
         few: "Jego %{count} synonimy również zostaną usunięte."
         many: "Jego %{count} synonimów również zostanie usuniętych."
         other: "Jego %{count} synonimów również zostanie usuniętych."
-      rename_tag: "Zmień nazwę taga"
-      rename_instructions: "Wybierz nową nazwę dla tego taga:"
+      edit_tag: "Edytuj nazwę tagu i opis"
+      description: "Opis"
       sort_by: "Sortuj po:"
       sort_by_count: "Liczba"
       sort_by_name: "nazwa"
@@ -3697,23 +3849,33 @@ pl_PL:
           description: "Nie będziesz powiadamiany o niczym dotyczącym nowych tematów z tym tagiem i nie pojawią się na liście aktualnych."
       groups:
         title: "Tagi grup"
-        about: "Dodaj etykiety do grup aby zarządzać nimi łatwiej."
+        about_heading: "Wybierz grupę tagów lub utwórz nową"
+        about_heading_empty: "Aby rozpocząć, utwórz nową grupę tagów"
+        about_description: "Grupy tagów pomagają zarządzać uprawnieniami dla wielu tagów w jednym miejscu."
         new: "Nowa Grupa"
-        tags_label: "Tagi w tej grupie:"
-        parent_tag_label: "Nadrzędny tag:"
-        parent_tag_description: "Tagi z tej grupy nie mogą być wykorzystane, chyba że główny tag jest obecny."
+        new_title: "Utwórz nową grupę"
+        edit_title: "Edytuj grupę tagów"
+        tags_label: "Tagi w tej grupie"
+        parent_tag_label: "Nadrzędny tag"
+        parent_tag_description: "Tagi z tej grupy mogą być użyte tylko wtedy, gdy tag nadrzędny jest obecny."
         one_per_topic_label: "Ogranicz jeden tag na temat z tej grupy"
         new_name: "Nowa grupa tagów"
-        name_placeholder: "Nazwa grupy tagów"
+        name_placeholder: "Nazwa"
         save: "Zapisz"
         delete: "Usuń"
         confirm_delete: "Czy na pewno chcesz usunąć ten tag grupy?"
         everyone_can_use: "Tagi mogą być wykorzystywane przez wszystkich"
         usable_only_by_groups: "Tagi są widoczne dla wszystkich, ale tylko następujące grupy mogą ich używać"
         visible_only_to_groups: "Tagi są widoczne tylko dla następujących grup"
+        cannot_save: "Nie można zapisać grupy tagów. Upewnij się, że istnieje co najmniej jeden tag, nazwa grupy tagów nie jest pusta, a grupa jest wybrana do uprawnień tagów."
+        tags_placeholder: "Wyszukaj lub utwórz tagi"
+        parent_tag_placeholder: "Opcjonalnie"
+        select_groups_placeholder: "Wybierz grupy..."
+        disabled: "Tagowanie jest wyłączone. "
       topics:
         none:
           unread: "Nie masz nieprzeczytanych tematów."
+          unseen: "Nie masz niewidzianych tematów."
           new: "Nie masz nowych tematów."
           read: "Nie przeczytałeś/łaś jeszcze żadnych tematów."
           posted: "Jeszcze nie zamieściłeś/łaś postów w żadnym z tematów."
@@ -3747,6 +3909,33 @@ pl_PL:
         tomorrow: "Do jutra"
         custom: "Niestandardowe"
       set_schedule: "Ustaw harmonogram powiadomień"
+    trust_levels:
+      names:
+        newuser: "nowy"
+        basic: "początkujący"
+        member: "uczestnik"
+        regular: "zwyczajny"
+        leader: "lider"
+      detailed_name: "%{level}: %{name}"
+    pick_files_button:
+      unsupported_file_picked: "Wybrałeś nieobsługiwany plik. Obsługiwane typy plików – %{types}."
+    user_activity:
+      no_activity_title: "Brak aktywności"
+      no_activity_body: "Witaj w naszej społeczności! Jesteś tu zupełnie nowy i nie przyczyniłeś się jeszcze do dyskusji. W pierwszym kroku odwiedź <a href='%{topUrl}'>Popularne</a> lub <a href='%{categoriesUrl}'>Kategorie</a> i zacznij czytać! Kliknij %{heartIcon} dla wpisów, które lubisz lub chcesz dowiedzieć się więcej. Jeśli jeszcze tego nie zrobiłeś, pomóż innym cię poznać, dodając zdjęcie i bio w swoich <a href='%{preferencesUrl}'>preferencjach użytkownika</a>."
+      no_activity_others: "Brak aktywności"
+      no_replies_title: "Nie odpowiedziałeś jeszcze na żadne tematy"
+      no_replies_others: "Brak odpowiedzi."
+      no_drafts_title: "Nie rozpocząłeś żadnych szkiców"
+      no_drafts_body: "Nie jesteś gotowy do opublikowania? Automatycznie zapiszemy nową wersję roboczą i wyświetlimy ją tutaj za każdym razem, gdy zaczniesz pisać temat, odpowiedź lub wiadomość osobistą. Wybierz przycisk anulowania, aby odrzucić lub zapisać wersję roboczą, aby kontynuować później."
+      no_likes_title: "Nie polubiłeś jeszcze żadnych tematów"
+      no_likes_body: "Świetnym sposobem na włączenie się do dyskusji i rozpoczęcie współtworzenia jest rozpoczęcie czytania rozmów, które już miały miejsce, i kliknięcie %{heartIcon} przy postach, które Ci się podobają!"
+      no_likes_others: "Brak polubionych wpisów."
+      no_topics_title: "Nie rozpocząłeś jeszcze żadnych tematów"
+      no_read_topics_title: "Nie przeczytałeś jeszcze żadnych tematów"
+      no_read_topics_body: "Gdy zaczniesz czytać dyskusje, zobaczysz tutaj listę. Aby rozpocząć czytanie, poszukaj tematów, które Cię interesują w <a href='%{topUrl}'>popularnych</a> lub <a href='%{categoriesUrl}'>kategoriach</a> lub wyszukaj według słowa kluczowego %{searchIcon}"
+    no_group_messages_title: "Nie znaleziono wiadomości grupowych"
+    fullscreen_table:
+      expand_btn: "Rozwiń tabelę"
   admin_js:
     type_to_filter: "pisz, aby filtrować…"
     admin:
@@ -3845,6 +4034,7 @@ pl_PL:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Logi wyszukiwania</a>'
             disabled: 'Raport wyszukiwań zyskujących popularność jest wyłączony. Włącz <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">dziennik zapytań wyszukiwarki</a>, aby zbierać dane.'
+          average_chart_label: Średnia
           filters:
             file_extension:
               label: Rozszerzenie pliku
@@ -3854,9 +4044,6 @@ pl_PL:
               label: Kategoria
             include_subcategories:
               label: "Uwzględnij podkategorie"
-      commits:
-        latest_changes: "Ostatnie zmiany: aktualizuj często!"
-        by: "przez"
       groups:
         new:
           title: "Nowa grupa"
@@ -3868,8 +4055,6 @@ pl_PL:
             available: "Nazwa grupy jest dostępna"
             not_available: "Nazwa grupy jest niedostępna"
             blank: "Nazwa grupy nie może być pusta"
-        add_members:
-          as_owner: "Ustaw użytkownika/ów jako właściciel/i tej grupy"
         manage:
           interaction:
             email: Email
@@ -3886,7 +4071,7 @@ pl_PL:
               description: "Administratorzy mogą widzieć wszystkie grupy."
             members_visibility_levels:
               title: "Kto może widzieć członków grupy?"
-              description: "Administratorzy mogą widzieć członków wszystkich grup."
+              description: "Administratorzy widzą członków wszystkich grup. Flair jest widoczny dla wszystkich użytkowników."
             publish_read_state: "Wyświetlaj status przeczytania w grupowych wiadomościach"
           membership:
             automatic: Automatyczne
@@ -3899,6 +4084,7 @@ pl_PL:
               few: "%{count} użytkowników ma nowe domeny e-mail i zostaną dodani do grupy."
               many: "%{count} użytkowników ma nowe domeny e-mail i zostaną dodani do grupy."
               other: "%{count} użytkowników ma nowe domeny e-mail i zostaną dodani do grupy."
+            automatic_membership_associated_groups: "Użytkownicy, którzy są członkami grupy w wymienionej tutaj usłudze, zostaną automatycznie dodani do tej grupy po zalogowaniu się do usługi."
             primary_group: "Automatycznie ustawiaj jako główną grupę"
         name_placeholder: "Nazwa grupy, bez spacji, takie same zasady jak przy nazwie użytkownika"
         primary: "Główna grupa"
@@ -3958,12 +4144,13 @@ pl_PL:
         delete: Usuń bezpowrotnie
         not_shown_again: Ten klucz nie będzie ponownie wyświetlany. Upewnij się, że wykonałeś/łaś kopię, zanim przejdziesz dalej.
         continue: Kontynuuj
-        use_global_key: Klucz globalny (zezwala na wszystkie działania)
         scopes:
           description: |
             Korzystanie z interfejsu API o określonym zakresie umożliwia bardziej szczegółowe dostosowywanie uprawnień.
             Możesz określić, które parametry będą dozwolone. Użyj przecinków, aby oddzielić wiele wartości.
           title: Zakresy
+          read_only: Tylko do odczytu
+          global_description: Klucz API nie ma ograniczeń i wszystkie punkty końcowe są dostępne.
           resource: Zasób
           action: Akcja
           allowed_parameters: Dozwolone parametry
@@ -3971,11 +4158,15 @@ pl_PL:
           any_parameter: (dowolny parametr)
           allowed_urls: Dozwolone adresy URL
           descriptions:
+            global:
+              read: Ogranicz klucz API do punktów końcowych tylko do odczytu.
             topics:
               read: Przeczytaj temat lub konkretny post w nim. Obsługiwany jest również format RSS.
               write: Utwórz nowy temat lub post w istniejącym.
               read_lists: Czytaj listy tematów, takie jak najpopularniejsze, nowe, najnowsze itp. Obsługiwany jest również format RSS.
               wordpress: Niezbędne do działania wtyczki wp-discourse na WordPress.
+            posts:
+              edit: Edytuj dowolny post lub konkretny.
             users:
               bookmarks: Lista zakładek użytkownika. Zwraca przypomnienia o zakładkach podczas korzystania z formatu ICS.
               sync_sso: Zsynchronizuj użytkownika za pomocą DiscourseConnect.
@@ -3985,8 +4176,13 @@ pl_PL:
               log_out: Wyloguj wszystkie sesje użytkownika.
               anonymize: Anonimizuj konta użytkowników.
               delete: Usuń konta użytkowników.
+              list: Uzyskaj listę użytkowników.
             email:
               receive_emails: Połącz ten zakres z odbiorcą poczty w celu przetwarzania przychodzących wiadomości e-mail.
+            badges:
+              update: Zaktualizuj odznakę.
+              delete: Usuń odznakę.
+              list_user_badges: Lista odznak użytkownika.
       web_hooks:
         title: "Webhooki"
         none: "Brak webhooków"
@@ -4050,6 +4246,7 @@ pl_PL:
           details: "Gdy użytkownik otrzymuje odznakę."
         group_user_event:
           name: "Grupowy event użytkownika"
+          details: "Gdy użytkownik jest dodany lub usunięty w grupie."
         like_event:
           name: "Event polubienia postu"
           details: "Gdy użytkownik polubi post."
@@ -4144,12 +4341,12 @@ pl_PL:
             alert: "Link do pobrania tej kopii zapasowej został wysłany do ciebie emailem."
           destroy:
             title: "Usuń kopię zapasową"
-            confirm: "Czy na pewno chcesz zniszczyć tą kopię zapasową?"
+            confirm: "Czy na pewno chcesz zniszczyć tę kopię zapasową?"
           restore:
             is_disabled: "Przywracanie jest zablokowane w ustawieniach."
             label: "Przywróć"
             title: "Przywróć kopię zapasową"
-            confirm: "Czy na pewno chcesz przywrócić tą kopię zapasową?"
+            confirm: "Czy na pewno chcesz przywrócić tę kopię zapasową?"
           rollback:
             label: "Wycofaj"
             title: "Wycofaj bazę danych do poprzedniego poprawnego stanu"
@@ -4177,7 +4374,7 @@ pl_PL:
         title: "Wygląd"
         long_title: "Personalizacja strony"
         preview: "podgląd"
-        explain_preview: "Zobacz tą stronę z włączonym stylem"
+        explain_preview: "Zobacz tę stronę z włączonym stylem"
         save: "Zapisz"
         new: "Nowy"
         new_style: "Nowy styl"
@@ -4202,6 +4399,7 @@ pl_PL:
           theme: "Motyw"
           component: "Składnik"
           components: "Składniki"
+          filter_placeholder: "pisz, aby filtrować…"
           theme_name: "Nazwa motywu"
           component_name: "Nazwa komponentu"
           themes_intro: "Wybierz istniejący motyw lub zainstaluj nowy, by rozpocząć"
@@ -4357,14 +4555,15 @@ pl_PL:
 
               Zdecydowanie zalecamy dodawanie przedrostków do nazw zmiennych, aby uniknąć konfliktów z wtyczkami i/lub silnikiem forum.
           head_tag:
-            text: "</head>"
-            title: "HTML, który zostanie umieszczony przed tagiem </head>"
+            title: "HTML, który zostanie wstawiony przed tagiem head"
           body_tag:
-            text: "</body>"
-            title: "HTML, który zostanie umieszczony przed tagiem </body>"
+            text: "Body"
+            title: "HTML, który zostanie wstawiony przed tagiem body"
           yaml:
             text: "YAML"
             title: "Zdefiniuj ustawienia motywu w formacie YAML"
+          scss_color_variables_warning: 'Używanie podstawowych zmiennych kolorów SCSS w szablonach jest przestarzałe. Zamiast tego użyj niestandardowych właściwości CSS. Zobacz <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">ten przewodnik</a>, aby uzyskać więcej informacji.'
+          scss_warning_inline: "Używanie podstawowych zmiennych kolorów SCSS w motywach jest przestarzałe."
         colors:
           select_base:
             title: "Wybierz podstawową paletę kolorów"
@@ -4542,7 +4741,6 @@ pl_PL:
           details: "Szczegóły"
           previous_value: "Poprzedni"
           new_value: "Nowy"
-          diff: "Różnice"
           show: "Pokaż"
           modal_title: "Szczegóły"
           no_previous: "Nie ma wcześniejszej wartości."
@@ -4637,6 +4835,8 @@ pl_PL:
             post_staff_note_create: "dodaj notatkę personelu"
             post_staff_note_destroy: "zniszcz notatkę personelu"
             delete_group: "usuń grupę"
+            watched_word_create: "dodaj obserwowane słowo"
+            watched_word_destroy: "usuń obserwowane słowo"
         screened_emails:
           title: "Ekranowane emaile"
           description: "Kiedy ktoś próbuje założyć nowe konto, jego adres email zostaje sprawdzony i rejestracja zostaje zablokowana, lub inna akcja jest podejmowana."
@@ -4652,9 +4852,6 @@ pl_PL:
           title: "Ekranowane adresy IP"
           description: 'Adresy IP, które są obserwowane. Użyj opcji "Zezwalaj", aby dodać adresy IP do dozwolonej listy.'
           delete_confirm: "Czy na pewno chcesz usunąć regułę dla %{ip_address}?"
-          roll_up_confirm: "Czy na pewno chcesz zgrupować monitorowane IP w podsieci?"
-          rolled_up_some_subnets: "Pomyślnie zwinięto ban IP dla podsieci: %{subnets}."
-          rolled_up_no_subnet: "Brak pozycji do zwinięcia."
           actions:
             block: "Zablokuj"
             do_nothing: "Zezwól"
@@ -4692,6 +4889,8 @@ pl_PL:
         download: Pobierz
         clear_all: Wyczyść wszystko
         clear_all_confirm: "Czy na pewno chcesz wyczyścić wszystkie obejrzane słowa dla akcji %{action}?"
+        invalid_regex: 'Obserwowane słowo "%{word}" jest nieprawidłowym wyrażeniem regularnym.'
+        regex_warning: '<a href="%{basePath}/admin/site_settings/category/all_results?filter=watched%20words%20regular%20expressions%20">Obserwowane słowa są wyrażeniami regularnymi</a> i nie zawierają w sobie automatycznie granic słów. Jeśli chcesz, aby wyrażenie regularne pasowało do całych słów, dodaj <code>\b</code> na początku i na końcu wyrażenia regularnego.'
         actions:
           block: "Zablokuj"
           censor: "Cenzuruj"
@@ -4699,20 +4898,26 @@ pl_PL:
           flag: "Oflaguj"
           replace: "Zamień"
           tag: "Tag"
+          silence: "Wycisz"
+          link: "Odnośnik"
         action_descriptions:
           block: "Zapobiegaj publikacji postów zawierających te słowa. Użytkownicy zobaczą błąd próbując wysłać taki wpis."
           censor: "Zezwalaj na wysyłanie wpisów zawierających te słowa, ale zamień na znaki ukrywające ocenzurowane słowa."
           require_approval: "Wpisy zawierające te słowa będą wymagały zatwierdzenia przez członka zespołu zarządzającego zanim zostaną opublikowane."
           flag: "Zezwalaj na publikację takich wpisów, ale oflaguj je jako nieodpowiednie, aby moderatorzy mogli przejrzeć ich zawartość."
-          replace: "Zastąp słowa w postach innymi słowami lub linkami"
+          replace: "Zastąp słowa w postach innymi słowami"
+          tag: "Automatycznie otaguj tematy na podstawie pierwszego postu"
+          silence: "Pierwsze posty użytkowników zawierające te słowa będą wymagały zatwierdzenia przez personel, zanim będą widoczne, a użytkownik zostanie automatycznie wyciszony."
+          link: "Zastąp słowa w postach linkami"
         form:
           label: "Zawiera słowo lub frazę"
           placeholder: "Wpisz słowo lub frazę (* to symbol wieloznaczny)"
           placeholder_regexp: "wyrażenie regularne"
-          replacement_label: "Zastąpienie"
-          replacement_placeholder: "example lub https://example.com"
+          replace_label: "Zastąpienie"
+          replace_placeholder: "przykład"
           tag_label: "Tag"
-          tag_placeholder: "tag1,tag2,tag3"
+          link_label: "Odnośnik"
+          link_placeholder: "https://example.com"
           add: "Dodaj"
           success: "Sukces"
           exists: "Już istnieje"
@@ -4720,7 +4925,7 @@ pl_PL:
           upload_successful: "Przesyłanie zakończone sukcesem. Słowa zostały dodane."
         test:
           button_label: "Sprawdź"
-          modal_title: "Przetestuj '%{action}' obserwowanych słów"
+          modal_title: "%{action}: Testuj obserwowane słowa"
           description: "Wpisz tekst poniżej, aby sprawdzić dopasowania z obserwowanymi słowami"
           found_matches: "Znalezione wyniki:"
           no_matches: "Nie znaleziono dopasowań"
@@ -4779,7 +4984,7 @@ pl_PL:
         suspend_reasons:
           not_listening_to_staff: "Nie słuchał opinii personelu"
           consuming_staff_time: "Zużywał nieproporcjonalne ilości czasu personelu"
-          combatative: "Zbyt wojowniczy"
+          combative: "Zbyt wojowniczy"
           in_wrong_place: "W złym miejscu"
           no_constructive_purpose: "Nie ma żadnego konstruktywnego celu dla swoich działań z wyjątkiem tworzenia kłótni wewnątrz społeczności."
           custom: "Niestandardowy..."
@@ -4796,15 +5001,16 @@ pl_PL:
         silence_message_placeholder: "(zostaw puste aby wysłać domyślną wiadomość)"
         suspended_until: "(do %{until})"
         cant_suspend: "Nie można zawiesić tego użytkownika."
-        delete_all_posts: "Usuń wszystkie wpisy"
-        delete_posts_progress: "Usuwanie wpisów..."
         delete_posts_failed: "Podczas usuwania wpisów wystąpił problem."
+        post_edits: "Edycje wpisu"
+        view_edits: "Wyświetl zmiany"
         penalty_post_actions: "Co chcesz zrobić z powiązanym wpisem?"
         penalty_post_delete: "Usuń ten wpis"
         penalty_post_delete_replies: "Usuń wpis + wszelkie odpowiedzi"
         penalty_post_edit: "Edytuj wpis"
         penalty_post_none: "Nic nie rób"
         penalty_count: "Liczba Przewinień"
+        penalty_history: "Historia kar"
         clear_penalty_history:
           title: "Wyczyść Historię Przewinień"
           description: "użytkownicy z karami nie mogą otrzymać TL3"
@@ -4825,6 +5031,7 @@ pl_PL:
         logged_out: "Użytkownik został wylogowany na wszystkich urządzeniach."
         revoke_admin: "Odbierz status administratora"
         grant_admin: "Przyznaj status administratora"
+        grant_admin_success: "Nowy administrator został potwierdzony."
         grant_admin_confirm: "Wysłaliśmy adres email, aby zweryfikować nowego administratora. Zapoznaj się z instrukcjami w nim zawartymi."
         revoke_moderation: "Odbierz status moderatora"
         grant_moderation: "Przyznaj status moderatora"
@@ -4846,20 +5053,36 @@ pl_PL:
         flags_given_count: Dane flagi
         flags_received_count: Otrzymane flagi
         warnings_received_count: Otrzymane ostrzeżenia
+        warnings_list_warning: |
+          Jako moderator możesz nie być w stanie wyświetlić wszystkich tych tematów. W razie potrzeby poproś administratora lub moderatora o przyznanie <b>@moderators</b> do wiadomości.
         flags_given_received_count: "Flagi przyznane / otrzymane"
         approve: "Zatwierdź"
         approved_by: "zatwierdzone przez"
         approve_success: "Użytkownik zatwierdzony i został wysłany email z instrukcjami aktywacji."
         approve_bulk_success: "Sukces! Wszyscy wybrani użytkownicy zostali zatwierdzeni i powiadomieni."
         time_read: "Czas czytania"
+        post_edits_count: "Edycje wpisu"
         anonymize: "Anonimizuj użytkownika"
         anonymize_confirm: "Jesteś pewien, że chcesz anonimizować to konto? Spowoduje to zmianę nazwy użytkownika i adresu e-mail oraz zresetowanie wszystkich informacji o profilu."
         anonymize_yes: "Tak, anonimizuj to konto"
         anonymize_failed: "Wystąpił problem z anonimizacją konta."
         delete: "Usuń użytkownika"
         delete_posts:
+          button: "Usuń wszystkie wpisy"
           progress:
             title: "Postęp usuwania postów"
+            description: "Usuwanie wpisów..."
+          confirmation:
+            title: "Usuń wszystkie posty użytkownika @%{username}"
+            description: |
+              <p>Czy na pewno chcesz usunąć <b>%{post_count}</b> posty użytkownika @%{username}?
+
+              <p><b>Tego nie można cofnąć!</b></p>
+
+              <p>Aby kontynuować, wpisz: <code>%{text}</code></p>
+            text: "usuń posty użytkownika @%{username}"
+            delete: "Usuń posty użytkownika @%{username}"
+            cancel: "Anuluj"
         merge:
           button: "Połącz"
           prompt:
@@ -4942,6 +5165,9 @@ pl_PL:
         trust_level_unlocked_tip: "poziom zaufania jest odblokowany, system może awansować lub degradować tego użytkownika"
         lock_trust_level: "Zablokuj poziom zaufania"
         unlock_trust_level: "Odblokuj poziom zaufania"
+        silenced_count: "Wyciszony"
+        suspended_count: "Zawieszeni"
+        last_six_months: "Ostatnie 6 miesięcy"
         tl3_requirements:
           title: "Wymagania dla osiągnięcia 3. poziomu zaufania"
           table_title:
@@ -5021,6 +5247,7 @@ pl_PL:
           text: "Pole tekstowe"
           confirm: "Potwierdzenie"
           dropdown: "Lista rozwijana"
+          multiselect: "Wielokrotny wybór"
       site_text:
         description: "Możesz dostosować dowolny tekst na swoim forum. Rozpocznij wyszukując poniżej:"
         search: "Znajdź etykietę lub tekst który chcesz zmienić"
@@ -5152,7 +5379,6 @@ pl_PL:
           post_revision: "Gdy użytkownik edytuje lub tworzy wpis"
           trust_level_change: "Gdy zmienia się poziom zaufania użytkownika"
           user_change: "Gdy użytkownik jest edytowany lub tworzony"
-          post_processed: "Wpis jest przetwarzany"
         preview:
           link_text: "Podgląd przyznanych odznak"
           plan_text: "Podgląd zapytania"
@@ -5186,12 +5412,15 @@ pl_PL:
           perform: "Odznaka dla użytkowników"
           upload_csv: Prześlij plik CSV z adresami e-mail lub nazwami użytkowników
           aborted: Proszę przesłać plik CSV zawierający adresy e-mail użytkowników lub ich nazwy
-          success: Twój plik CSV został odebrany, a użytkownicy wkrótce otrzymają swoją odznakę.
+          success: Twój plik CSV został odebrany i %{count} użytkowników wkrótce otrzyma swoją plakietkę.
+          csv_has_unmatched_users: "Następujące wpisy znajdują się w pliku CSV, ale nie można ich dopasować do istniejących użytkowników, dlatego nie otrzymają plakietki:"
+          csv_has_unmatched_users_truncated_list: "W pliku CSV znalazło się %{count} wpisów, które nie mogły być dopasowane do istniejących użytkowników i dlatego nikt nie otrzyma odznaki. Ze względu na dużą liczbę niedopasowanych wpisów, wyświetlane jest tylko pierwsze 100 wpisów:"
           replace_owners: Usuń odznakę od poprzednich właścicieli
+          grant_existing_holders: Przyznaj dodatkowe odznaki obecnym posiadaczom odznak
       emoji:
         title: "Emoji"
-        help: "Dodaj nowe emoji. (PROTIP: przeciągnij i upuść kilka plików na raz)"
         add: "Dodaj nowe Emoji"
+        choose_files: "Wybierz pliki"
         uploading: "Przesyłanie…"
         name: "Nazwa"
         group: "Grupa"
@@ -5201,7 +5430,7 @@ pl_PL:
       embedding:
         get_started: "Jeśli chcesz osadzić Discourse na innej stronie, rozpocznij podając jej host."
         confirm_delete: "Czy na pewno chcesz usunąć ten host?"
-        sample: "Użyj poniższego kodu HTML na swojej stronie, aby osadzić tematy z Discourse. Zastąp <b>REPLACE_ME</b> domyślnym adresem URL strony na której osadzasz."
+        sample: "Wklej następujący kod HTML do swojej strony, aby utworzyć i osadzić tematy discourse. Zastąp <b>REPLACE_ME</b> kanonicznym adresem URL strony, na której go osadzasz."
         title: "Osadzanie"
         host: "Dozwolone hosty"
         class_name: "Nazwa klasy"
@@ -5274,7 +5503,8 @@ pl_PL:
           moderator: "Moderatorzy"
           regular: "Zwykli użytkownicy"
       previews:
-        topic_title: "Temat dyskusji"
-        font_title: "%{font} czcionka"
+        topic_title: "Nagłówek tematu dyskusji"
         share_button: "Udostępnij"
         reply_button: "Odpowiedz"
+        topic_preview: "Podgląd tematu"
+        homepage_preview: "Podgląd strony głównej"

@@ -1,8 +1,4 @@
-import {
-  acceptance,
-  exists,
-  queryAll,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
 import { visit } from "@ember/test-helpers";
 
@@ -12,7 +8,7 @@ acceptance("Topic - Anonymous", function () {
     assert.ok(exists("#topic"), "The topic was rendered");
     assert.ok(exists("#topic .cooked"), "The topic has cooked posts");
     assert.ok(
-      queryAll(".shared-draft-notice").length === 0,
+      !exists(".shared-draft-notice"),
       "no shared draft unless there's a dest category id"
     );
   });

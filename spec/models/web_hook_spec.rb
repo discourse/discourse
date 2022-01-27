@@ -40,7 +40,7 @@ describe WebHook do
     fab!(:post_hook) { Fabricate(:web_hook, payload_url: " https://example.com ") }
     fab!(:topic_hook) { Fabricate(:topic_web_hook) }
 
-    it "removes whitspace from payload_url before saving" do
+    it "removes whitespace from payload_url before saving" do
       expect(post_hook.payload_url).to eq("https://example.com")
     end
 
@@ -197,7 +197,8 @@ describe WebHook do
       expect do
         PostRevisor.new(post, post.topic).revise!(
           post.user,
-          category_id: category.id,
+          { category_id: category.id },
+          { skip_validations: true },
         )
       end.to change { Jobs::EmitWebHookEvent.jobs.length }.by(1)
 
@@ -332,7 +333,7 @@ describe WebHook do
       payload = JSON.parse(job_args["payload"])
       expect(payload["id"]).to eq(user.id)
 
-      email_token = user.email_tokens.create(email: user.email)
+      email_token = Fabricate(:email_token, user: user)
       EmailToken.confirm(email_token.token)
       job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
 
@@ -505,7 +506,7 @@ describe WebHook do
       payload = JSON.parse(job_args["payload"])
       expect(payload["id"]).to eq(reviewable.id)
 
-      reviewable.perform(Discourse.system_user, :reject_user_delete)
+      reviewable.perform(Discourse.system_user, :delete_user)
       job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
 
       expect(job_args["event_name"]).to eq("reviewable_transitioned_to")
@@ -573,24 +574,54 @@ describe WebHook do
       expect(payload["user_id"]).to eq(user.id)
     end
 
-    it 'should enqueue hooks for user likes in a group' do
-      group = Fabricate(:group)
-      Fabricate(:like_web_hook, groups: [group])
-      group_user = Fabricate(:group_user, group: group, user: user)
-      poster = Fabricate(:user)
-      post = Fabricate(:post, user: poster)
-      like = Fabricate(:post_action, post: post, user: user, post_action_type_id: PostActionType.types[:like])
-      now = Time.now
-      freeze_time now
+    context 'like created hooks' do
+      fab!(:like_web_hook) { Fabricate(:like_web_hook) }
+      fab!(:another_user) { Fabricate(:user) }
 
-      DiscourseEvent.trigger(:like_created, like)
+      it 'should pass the group id to the emit webhook job' do
+        group = Fabricate(:group)
+        group_user = Fabricate(:group_user, group: group, user: user)
+        post = Fabricate(:post, user: another_user)
+        like = Fabricate(:post_action, post: post, user: user, post_action_type_id: PostActionType.types[:like])
+        now = Time.now
+        freeze_time now
 
-      job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
-      expect(job_args["event_name"]).to eq("post_liked")
-      expect(job_args["group_ids"]).to eq([group.id])
-      payload = JSON.parse(job_args["payload"])
-      expect(payload["post"]["id"]).to eq(post.id)
-      expect(payload["user"]["id"]).to eq(user.id)
+        DiscourseEvent.trigger(:like_created, like)
+
+        assert_hook_was_queued_with(post, user, group_ids: [group.id])
+      end
+
+      it 'should pass the category id to the emit webhook job' do
+        category = Fabricate(:category)
+        topic.update!(category: category)
+        like = Fabricate(:post_action, post: post, user: another_user, post_action_type_id: PostActionType.types[:like])
+
+        DiscourseEvent.trigger(:like_created, like)
+
+        assert_hook_was_queued_with(post, another_user, category_id: category.id)
+      end
+
+      it 'should pass the tag id to the emit webhook job' do
+        tag = Fabricate(:tag)
+        topic.update!(tags: [tag])
+        like = Fabricate(:post_action, post: post, user: another_user, post_action_type_id: PostActionType.types[:like])
+
+        DiscourseEvent.trigger(:like_created, like)
+
+        assert_hook_was_queued_with(post, another_user, tag_ids: [tag.id])
+      end
+
+      def assert_hook_was_queued_with(post, user, group_ids: nil, category_id: nil, tag_ids: nil)
+        job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
+        expect(job_args["event_name"]).to eq("post_liked")
+        payload = JSON.parse(job_args["payload"])
+        expect(payload["post"]["id"]).to eq(post.id)
+        expect(payload["user"]["id"]).to eq(user.id)
+
+        expect(job_args["category_id"]).to eq(category_id) if category_id
+        expect(job_args["group_ids"]).to contain_exactly(*group_ids) if group_ids
+        expect(job_args["tag_ids"]).to contain_exactly(*tag_ids) if tag_ids
+      end
     end
   end
 end

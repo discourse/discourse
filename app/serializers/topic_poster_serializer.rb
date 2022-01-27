@@ -5,4 +5,5 @@ class TopicPosterSerializer < ApplicationSerializer
 
   has_one :user, serializer: PosterSerializer
   has_one :primary_group, serializer: PrimaryGroupSerializer
+  has_one :flair_group, serializer: FlairGroupSerializer
 end

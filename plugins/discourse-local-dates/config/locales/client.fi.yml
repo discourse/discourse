@@ -13,24 +13,24 @@ fi:
         yesterday: Eilen %{time}
         countdown:
           passed: päivämäärä on mennyt
-      title: Lisää päivämäärä / aika
+      title: Lisää päivämäärä/aika
       create:
         form:
           insert: Lisää
           advanced_mode: Lisäasetukset
           simple_mode: Piilota lisäasetukset
-          format_description: "Muotoilu jota käytetään päivämäärän näyttämiseen käyttäjälle. Aseta Z näyttääksesi siirtymän ja zz aikavyöhykkeen nimeksi."
+          format_description: "Muotoilu, jota käytetään päivämäärän näyttämiseen käyttäjälle. Aseta Z näyttääksesi siirtymän ja zz aikavyöhykkeen nimen."
           timezones_title: Näytettävät aikavyöhykkeet
-          timezones_description: Aikavyöhykkeitä käytetään esikatselussa sekä varana virhetilanteissa.
+          timezones_description: Aikavyöhykkeitä käytetään näytettäessä päivämääriä esikatselussa sekä varana virhetilanteissa.
           recurring_title: Toistuvuus
-          recurring_description: "Määrittele tapahtuman toistuvuus. Voit myös manuaalisesti muokata toistuvuusparametriä, jonka lomake viestiin luo. Käytä näitä avainsanoja: years, quarters, months, weeks, days, hours, minutes, seconds, milliseconds."
-          recurring_none: Ei toistuvuutta
-          invalid_date: Päiväys ei kelpaa. Tarkista päivämäärä ja aika.
+          recurring_description: "Määrittele tapahtuman toistuvuus. Voit myös manuaalisesti muokata toistuvuusparametriä, jonka lomake luo viestiin. Käytä näitä avainsanoja: years, quarters, months, weeks, days, hours, minutes, seconds, milliseconds."
+          recurring_none: Ei toistu
+          invalid_date: Päiväys ei kelpaa, tarkista päivämäärä ja aika
           date_title: Päivämäärä
           time_title: Aika
-          format_title: Päiväysformaatti
+          format_title: Päivämäärän muoto
           timezone: Aikavyöhyke
-          until: Asti
+          until: Asti...
           recurring:
             every_day: "Joka päivä"
             every_week: "Joka viikko"
@@ -38,5 +38,5 @@ fi:
             every_month: "Joka kuukausi"
             every_two_months: "Joka toinen kuukausi"
             every_three_months: "Joka kolmas kuukausi"
-            every_six_months: "Puolen vuoden välein"
+            every_six_months: "Kuuden kuukauden välein"
             every_year: "Kerran vuodessa"

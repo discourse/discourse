@@ -5,6 +5,7 @@ class InviteSerializer < ApplicationSerializer
              :invite_key,
              :link,
              :email,
+             :domain,
              :emailed,
              :max_redemptions_allowed,
              :redemption_count,
@@ -12,7 +13,8 @@ class InviteSerializer < ApplicationSerializer
              :created_at,
              :updated_at,
              :expires_at,
-             :expired
+             :expired,
+             :warnings
 
   has_many :topics, embed: :object, serializer: BasicTopicSerializer
   has_many :groups, embed: :object, serializer: BasicGroupSerializer
@@ -43,5 +45,13 @@ class InviteSerializer < ApplicationSerializer
 
   def expired
     object.expired?
+  end
+
+  def warnings
+    object.warnings(scope)
+  end
+
+  def include_warnings?
+    object.warnings(scope).present?
   end
 end

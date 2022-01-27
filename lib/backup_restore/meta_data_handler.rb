@@ -42,7 +42,7 @@ module BackupRestore
     def extract_metadata
       metadata_path = File.join(@tmp_directory, METADATA_FILE) if @tmp_directory.present?
 
-      if metadata_path.present? && File.exists?(metadata_path)
+      if metadata_path.present? && File.exist?(metadata_path)
         metadata = load_metadata_file(metadata_path)
       elsif @filename =~ /-#{BackupRestore::VERSION_PREFIX}(\d{14})/
         metadata = { version: Regexp.last_match[1].to_i }

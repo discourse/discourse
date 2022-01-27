@@ -66,10 +66,19 @@ class PostMover
     Guardian.new(user).ensure_can_see! topic
     @destination_topic = topic
 
-    moving_all_posts = (@original_topic.posts.pluck(:id).sort == @post_ids.sort)
+    # when a topic contains some posts after moving posts to another topic we shouldn't close it
+    # two types of posts should prevent a topic from closing:
+    #   1. regular posts
+    #   2. almost all whispers
+    # we should only exclude whispers with action_code: 'split_topic'
+    # because we use such whispers as a small-action posts when moving posts to the secret message
+    # (in this case we don't want everyone to see that posts were moved, that's why we use whispers)
+    original_topic_posts_count = @original_topic.posts
+      .where("post_type = ? or (post_type = ? and action_code != 'split_topic')", Post.types[:regular], Post.types[:whisper])
+      .count
+    moving_all_posts = original_topic_posts_count == posts.length
 
     create_temp_table
-    delete_invalid_post_timings
     move_each_post
     create_moderator_post_in_original_topic
     update_statistics
@@ -79,7 +88,7 @@ class PostMover
     update_bookmarks
 
     if moving_all_posts
-      @original_topic.update_status('closed', true, @user)
+      close_topic_and_schedule_deletion
     end
 
     destination_topic.reload
@@ -136,6 +145,7 @@ class PostMover
     update_quotes
     move_first_post_replies
     delete_post_replies
+    delete_invalid_post_timings
     copy_first_post_timings
     move_post_timings
     copy_topic_users
@@ -166,6 +176,10 @@ class PostMover
 
     DiscourseEvent.trigger(:post_moved, new_post, original_topic.id)
 
+    # we don't want to keep the old topic's OP bookmarked when we are
+    # moving it into a new topic
+    Bookmark.where(post_id: post.id).update_all(post_id: new_post.id)
+
     new_post
   end
 
@@ -177,7 +191,8 @@ class PostMover
       post_number: @move_map[post.post_number],
       reply_to_post_number: @move_map[post.reply_to_post_number],
       topic_id: destination_topic.id,
-      sort_order: @move_map[post.post_number]
+      sort_order: @move_map[post.post_number],
+      baked_version: nil
     }
 
     unless @move_map[post.reply_to_post_number]
@@ -308,16 +323,12 @@ class PostMover
   end
 
   def delete_invalid_post_timings
-    DB.exec(<<~SQL, topid_id: destination_topic.id)
+    DB.exec <<~SQL
       DELETE
       FROM post_timings pt
-      WHERE pt.topic_id = :topid_id
-        AND NOT EXISTS(
-          SELECT 1
-          FROM posts p
-          WHERE p.topic_id = pt.topic_id
-            AND p.post_number = pt.post_number
-        )
+      USING moved_posts mp
+      WHERE pt.topic_id = mp.new_topic_id
+        AND pt.post_number = mp.new_post_number
     SQL
   end
 
@@ -342,7 +353,7 @@ class PostMover
     }
 
     DB.exec(<<~SQL, params)
-      INSERT INTO topic_users(user_id, topic_id, posted, last_read_post_number, highest_seen_post_number,
+      INSERT INTO topic_users(user_id, topic_id, posted, last_read_post_number,
                               last_emailed_post_number, first_visited_at, last_visited_at, notification_level,
                               notifications_changed_at, notifications_reason_id)
       SELECT tu.user_id,
@@ -361,12 +372,6 @@ class PostMover
                  AND lr.old_post_number <= tu.last_read_post_number
              )                                           AS last_read_post_number,
              (
-               SELECT MAX(hs.new_post_number)
-               FROM moved_posts hs
-               WHERE hs.old_topic_id = tu.topic_id
-                 AND hs.old_post_number <= tu.highest_seen_post_number
-             )                                           AS highest_seen_post_number,
-             (
                SELECT MAX(le.new_post_number)
                FROM moved_posts le
                WHERE le.old_topic_id = tu.topic_id
@@ -382,7 +387,6 @@ class PostMover
       WHERE tu.topic_id = :old_topic_id
         AND GREATEST(
                 tu.last_read_post_number,
-                tu.highest_seen_post_number,
                 tu.last_emailed_post_number
               ) >= (SELECT MIN(old_post_number) FROM moved_posts)
       ON CONFLICT (topic_id, user_id) DO UPDATE
@@ -399,18 +403,6 @@ class PostMover
                                            GREATEST(topic_users.last_read_post_number,
                                                     excluded.last_read_post_number)
                                          ELSE topic_users.last_read_post_number END,
-            highest_seen_post_number = CASE
-                                         WHEN topic_users.highest_seen_post_number = :old_highest_staff_post_number OR (
-                                             :old_highest_post_number < :old_highest_staff_post_number
-                                             AND topic_users.highest_seen_post_number = :old_highest_post_number
-                                             AND NOT EXISTS(SELECT 1
-                                                            FROM users u
-                                                            WHERE u.id = topic_users.user_id
-                                                              AND (admin OR moderator))
-                                           ) THEN
-                                           GREATEST(topic_users.highest_seen_post_number,
-                                                    excluded.highest_seen_post_number)
-                                         ELSE topic_users.highest_seen_post_number END,
             last_emailed_post_number = CASE
                                          WHEN topic_users.last_emailed_post_number = :old_highest_staff_post_number OR (
                                              :old_highest_post_number < :old_highest_staff_post_number
@@ -431,8 +423,7 @@ class PostMover
   def update_statistics
     destination_topic.update_statistics
     original_topic.update_statistics
-    TopicUser.update_post_action_cache(topic_id: original_topic.id)
-    TopicUser.update_post_action_cache(topic_id: destination_topic.id)
+    TopicUser.update_post_action_cache(topic_id: [original_topic.id, destination_topic.id], post_id: @post_ids)
   end
 
   def update_user_actions
@@ -493,8 +484,6 @@ class PostMover
   end
 
   def update_bookmarks
-    Bookmark.where(post_id: post_ids).update_all(topic_id: @destination_topic.id)
-
     DB.after_commit do
       Jobs.enqueue(:sync_topic_user_bookmarked, topic_id: @original_topic.id)
       Jobs.enqueue(:sync_topic_user_bookmarked, topic_id: @destination_topic.id)
@@ -545,5 +534,18 @@ class PostMover
       :delete_inaccessible_notifications,
       topic_id: topic.id
     )
+  end
+
+  def close_topic_and_schedule_deletion
+    @original_topic.update_status('closed', true, @user)
+
+    days_to_deleting = SiteSetting.delete_merged_stub_topics_after_days
+    if days_to_deleting > 0
+      @original_topic.set_or_create_timer(
+        TopicTimer.types[:delete],
+        days_to_deleting * 24,
+        by_user: @user
+      )
+    end
   end
 end

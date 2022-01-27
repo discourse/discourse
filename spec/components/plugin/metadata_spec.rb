@@ -44,7 +44,6 @@ TEXT
   end
 
   it "correctly detects official vs unofficial plugins" do
-    official("customer-flair")
     official("discourse-adplugin")
     official("discourse-akismet")
     official("discourse-cakeday")

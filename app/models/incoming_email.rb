@@ -109,6 +109,7 @@ end
 #  imap_uid          :integer
 #  imap_sync         :boolean
 #  imap_group_id     :bigint
+#  imap_missing      :boolean          default(FALSE), not null
 #  created_via       :integer          default(0), not null
 #
 # Indexes

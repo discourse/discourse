@@ -12,27 +12,8 @@ body {
 .ios-device {
   textarea {
     background-color: var(--secondary);
-    font-size: $font-size-ios-input;
+    font-size: var(--font-size-ios-input);
     -webkit-tap-highlight-color: transparent;
-  }
-
-  input {
-    &[type="text"],
-    &[type="password"],
-    &[type="datetime"],
-    &[type="datetime-local"],
-    &[type="date"],
-    &[type="month"],
-    &[type="time"],
-    &[type="week"],
-    &[type="number"],
-    &[type="email"],
-    &[type="url"],
-    &[type="search"],
-    &[type="tel"],
-    &[type="color"] {
-      font-size: $font-size-ios-input;
-    }
   }
 
   input#reply-title {
@@ -54,10 +35,6 @@ blockquote {
 }
 
 // Common classes
-.wrap {
-  padding: 0 10px;
-}
-
 .boxed {
   .contents {
     padding: 10px 0 0 0;
@@ -72,11 +49,7 @@ blockquote {
   margin: 0;
   padding: 0;
   list-style: none;
-  overflow: visible;
   position: relative;
-  border: 1px solid var(--primary-medium);
-  // Prevents the dropdowns from collapsing while content loads, so they look more like placeholders and less like dark 2px lines
-  min-height: 37px;
 
   a {
     color: var(--primary);
@@ -86,22 +59,22 @@ blockquote {
     }
   }
 
-  > li > a {
+  > li > a.expander {
     display: flex;
     align-items: center;
-    padding: 8px 10px;
-    height: 100%;
-    box-sizing: border-box;
-  }
+    @include form-item-sizing;
+    border-color: var(--primary-medium);
+    max-width: 100%;
+    .selection {
+      @include ellipsis;
+      max-width: 120px;
+    }
 
-  .expander .selection {
-    @include ellipsis;
-  }
-
-  .expander > .d-icon {
-    &:last-of-type {
-      margin-left: auto;
-      margin-right: 0;
+    > .d-icon {
+      &:last-of-type {
+        margin-left: auto;
+        margin-right: 0;
+      }
     }
   }
 
@@ -144,7 +117,7 @@ blockquote {
 // Special elements
 
 #main-outlet {
-  padding-top: 0.25em;
+  padding-top: 1.25em;
 }
 
 #main {

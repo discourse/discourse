@@ -1,6 +1,6 @@
 import KeyValueStore from "discourse/lib/key-value-store";
 import RestAdapter from "discourse/adapters/rest";
-import Store from "discourse/models/store";
+import Store from "discourse/services/store";
 import TopicListAdapter from "discourse/adapters/topic-list";
 import TopicTrackingState from "discourse/models/topic-tracking-state";
 import { buildResolver } from "discourse-common/resolver";

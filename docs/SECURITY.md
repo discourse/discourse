@@ -12,7 +12,7 @@ For a list of recent security commits, check [our GitHub commits prefixed with S
 
 Discourse uses the PBKDF2 algorithm to encrypt salted passwords. This algorithm is blessed by NIST. Security experts on the web [tend to agree that PBKDF2 is a secure choice](https://security.stackexchange.com/questions/4781/do-any-security-experts-recommend-bcrypt-for-password-storage).
 
-**options you can customise in your production.rb file**
+**options you can customize in your production.rb file**
 
 - `pbkdf2_algorithm`: the hashing algorithm used (default "sha256")
 - `pbkdf2_iterations`: the number of iterations to run (default 64000)
@@ -29,7 +29,7 @@ There are 3 main scenarios we protect against:
 
 3. **CSP is on by default** for [all Discourse installations](https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243) as of Discourse 2.2. It can be switched off in the site settings, but it is default on.
 
-On the server side we run a allowlist based sanitizer, implemented using the [Sanitize gem](https://github.com/rgrove/sanitize). See the [relevant Discourse code](https://github.com/discourse/discourse/blob/master/lib/pretty_text.rb).
+On the server side we run a allowlist based sanitizer, implemented using the [Sanitize gem](https://github.com/rgrove/sanitize). See the [relevant Discourse code](https://github.com/discourse/discourse/blob/main/lib/pretty_text.rb).
 
 In addition, titles and all other places where non-admins can enter code are protected either using the Handlebars library or standard Rails XSS protection.
 
@@ -43,7 +43,7 @@ Discourse extends the built-in Rails CSRF protection in the following ways:
 
 2. API calls using the secret API bypass CSRF checks.
 
-3. Certain pages are "cachable", we do not render the CSRF token (`<meta name='csrf-token' ...`) on any cachable pages. Instead when users are about to perform the first non GET request they retrieve the token just in time via `GET session/csrf`
+3. Certain pages are "cacheable", we do not render the CSRF token (`<meta name='csrf-token' ...`) on any cacheable pages. Instead when users are about to perform the first non GET request they retrieve the token just in time via `GET session/csrf`
 
 ### DDOS
 
@@ -53,4 +53,4 @@ If you install via our recommended Docker image in our [install guide][ig], ngin
 
 We strongly recommend that the various Discourse processes (web server, sidekiq) run under a non-elevated account. This is handled automatically if you install via our recommended Docker image -- see [our install guide][ig] for details.
 
-[ig]: https://github.com/discourse/discourse/blob/master/docs/INSTALL.md
+[ig]: https://github.com/discourse/discourse/blob/main/docs/INSTALL.md

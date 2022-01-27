@@ -1,4 +1,4 @@
-import Controller, { inject } from "@ember/controller";
+import Controller, { inject as controller } from "@ember/controller";
 import AdminDashboard from "admin/models/admin-dashboard";
 import I18n from "I18n";
 import PeriodComputationMixin from "admin/mixins/period-computation";
@@ -18,7 +18,7 @@ function staticReport(reportType) {
 export default Controller.extend(PeriodComputationMixin, {
   isLoading: false,
   dashboardFetchedAt: null,
-  exceptionController: inject("exception"),
+  exceptionController: controller("exception"),
   logSearchQueriesEnabled: setting("log_search_queries"),
 
   @discourseComputed("siteSettings.dashboard_general_tab_activity_metrics")

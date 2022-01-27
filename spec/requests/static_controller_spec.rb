@@ -277,6 +277,62 @@ describe StaticController do
         expect(response.body).to include("<title>FAQ - Discourse</title>")
       end
     end
+
+    context "plugin api extensions" do
+      after do
+        Rails.application.reload_routes!
+        StaticController::CUSTOM_PAGES.clear
+      end
+
+      it "adds new topic-backed pages" do
+        routes = Proc.new do
+          get "contact" => "static#show", id: "contact"
+        end
+        Discourse::Application.routes.send(:eval_block, routes)
+
+        topic_id = Fabricate(:post, cooked: "contact info").topic_id
+        SiteSetting.setting(:test_contact_topic_id, topic_id)
+
+        Plugin::Instance.new.add_topic_static_page("contact", topic_id: "test_contact_topic_id")
+
+        get "/contact"
+
+        expect(response.status).to eq(200)
+        expect(response.body).to include("contact info")
+      end
+
+      it "replaces existing topic-backed pages" do
+        topic_id = Fabricate(:post, cooked: "Regular FAQ").topic_id
+        SiteSetting.setting(:test_faq_topic_id, topic_id)
+        polish_topic_id = Fabricate(:post, cooked: "Polish FAQ").topic_id
+        SiteSetting.setting(:test_polish_faq_topic_id, polish_topic_id)
+
+        Plugin::Instance.new.add_topic_static_page("faq") do
+          current_user&.locale == "pl" ? "test_polish_faq_topic_id" : "test_faq_topic_id"
+        end
+
+        get "/faq"
+
+        expect(response.status).to eq(200)
+        expect(response.body).to include("Regular FAQ")
+
+        sign_in(Fabricate(:user, locale: "pl"))
+        get "/faq"
+
+        expect(response.status).to eq(200)
+        expect(response.body).to include("Polish FAQ")
+      end
+    end
+
+    it "does not pollute SiteSetting.title (regression)" do
+      SiteSetting.title = "test"
+      SiteSetting.short_site_description = "something"
+
+      expect do
+        get "/login"
+        get "/login"
+      end.to_not change { SiteSetting.title }
+    end
   end
 
   describe '#enter' do

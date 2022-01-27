@@ -13,16 +13,22 @@ InviteRedeemer = Struct.new(:invite, :email, :username, :name, :password, :user_
 
   # extracted from User cause it is very specific to invites
   def self.create_user_from_invite(email:, invite:, username: nil, name: nil, password: nil, user_custom_fields: nil, ip_address: nil, session: nil, email_token: nil)
-    user = User.where(staged: true).with_email(email.strip.downcase).first
-    user.unstage! if user
-
-    user ||= User.new
-
-    if username && UsernameValidator.new(username).valid_format? && User.username_available?(username)
+    if username && UsernameValidator.new(username).valid_format? && User.username_available?(username, email)
       available_username = username
     else
       available_username = UserNameSuggester.suggest(email)
     end
+
+    if email.present? && invite.domain.present?
+      username, domain = email.split('@')
+      if domain.present? && invite.domain != domain
+        raise ActiveRecord::RecordNotSaved.new(I18n.t('invite.domain_not_allowed'))
+      end
+    end
+
+    user = User.where(staged: true).with_email(email.strip.downcase).first
+    user.unstage! if user
+    user ||= User.new
 
     user.attributes = {
       email: email,
@@ -75,7 +81,7 @@ InviteRedeemer = Struct.new(:invite, :email, :username, :name, :password, :user_
     authenticator.finish
 
     if invite.emailed_status != Invite.emailed_status_types[:not_required] && email == invite.email && invite.email_token.present? && email_token == invite.email_token
-      user.email_tokens.create!(email: user.email)
+      user.email_tokens.create!(email: user.email, scope: EmailToken.scopes[:signup])
       user.activate
     end
 

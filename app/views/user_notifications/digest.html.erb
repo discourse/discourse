@@ -5,7 +5,7 @@
 </span>
 
 <%- if I18n.t('user_notifications.digest.custom.html.header').present? %>
-  <table class="digest-header logo-header" dir="<%= rtl? ? 'rtl' : 'ltr' %>" style="width:100%;border-spacing:0;padding:0;">
+  <table class="digest-header logo-header" dir="<%= rtl? ? 'rtl' : 'ltr' %>" style="width:100%;min-width:100%;border-spacing:0;padding:0;">
     <tr>
       <td style="padding:0;">
         <%= raw(t 'user_notifications.digest.custom.html.header') %>
@@ -13,7 +13,7 @@
     </tr>
   </table>
 <%- else %>
-<table class="digest-header text-header with-dir" style="background-color:#<%= @header_bgcolor -%>;width:100%;">
+<table class="digest-header text-header with-dir" style="background-color:#<%= @header_bgcolor -%>;width:100%;min-width:100%;">
   <tr>
     <td align="center" style="text-align: center;padding: 20px 0; font-family:Arial,sans-serif;">
 
@@ -54,7 +54,7 @@
 
 
 
-<table class="header-stats with-dir" style="table-layout:fixed;margin:10px 0 20px 0;padding:0;vertical-align:top;width:100%">
+<table class="header-stats with-dir" style="table-layout:fixed;margin:10px 0 20px 0;padding:0;vertical-align:top;width:100%;min-width:100%;">
 <tbody>
   <tr class="header-stat-count">
     <%- @counts.each do |count| -%>

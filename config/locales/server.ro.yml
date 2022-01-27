@@ -96,7 +96,8 @@ ro:
       record_invalid: ! "Validarea a eşuat: %{errors}"
       restrict_dependent_destroy:
         one: "Înregistrarea nu poate fi ştearsă pentru că există %{record} (de) înregistrări dependente"
-        many: "Înregistrarea nu poate fi ştearsă pentru că există %{record} (de) înregistrări dependente"
+        few: "Înregistrarea nu poate fi ştearsă pentru că există %{record} (de) înregistrări dependente"
+        other: "Înregistrarea nu poate fi ştearsă pentru că există %{record} (de) înregistrări dependente"
       too_long:
         one: este prea lung (maximum un caracter)
         few: este prea lung (maximum %{count} caractere)
@@ -279,7 +280,6 @@ ro:
               no_user_selected: "Trebuie selectat un nume de utilizator valid."
             featured_link:
               invalid: "e invalid. URL-ul trebuie să includă http:// sau https://."
-              invalid_category: "nu poate fi editat în această categorie."
         user:
           attributes:
             password:
@@ -335,16 +335,8 @@ ro:
       topic_exists_no_oldest: "Nu poți șterge categoria fiindcă numărul subiectelor este de %{count}."
     uncategorized_description: "Subiecte care nu au nevoie de o categorie, sau care nu se potrivesc în nicio categorie deja existentă."
   trust_levels:
-    newuser:
-      title: "utilizator nou"
-    basic:
-      title: "utilizator simplu"
-    member:
-      title: "membru"
-    regular:
-      title: "utilizator frecvent"
-    leader:
-      title: "lider"
+    admin: "Admin"
+    staff: "Membrii echipei"
     change_failed_explanation: "Ai încercat să retrogradezi utilizatorul %{user_name} la nivelul '%{new_trust_level}'. Însă nivelul este deja '%{current_trust_level}'. %{user_name} va rămâne la '%{current_trust_level}' - dacă dorești să retrogradezi utilizatorul, trebuie să îi blochezi întâi nivelul de încredere."
   rate_limiter:
     by_type:
@@ -510,13 +502,6 @@ ro:
       title: "Apreciere"
       description: "Apreciază această postare"
       short_description: "Apreciază această postare"
-  user_activity:
-    no_bookmarks:
-      self: "Nu ai link-uri de postări salvate; link-urile salvate îți permit revenirea la postări specifice"
-      others: "Nu există semne de carte."
-    no_likes_given:
-      self: "Nu ai apreciat nicio postare."
-      others: "Nu există postări apreciate."
   topic_flag_types:
     spam:
       title: "Spam"
@@ -541,7 +526,6 @@ ro:
         make: "Acest subiect este de acum un banner. Va apărea în susul fiecărei pagini până când opțiunea va fi anulată de către utilizator."
         remove: "Acest subiect nu mai este un banner. Nu va mai apărea în susul fiecărei pagini."
   unsubscribed:
-    description: "Setările de email pentru <b>%{email}</b>au fost actualizate. Pentru a schimba setările de email, <a href='%{url}'>du-te la setări.</a>"
     topic_description: "Pentru a te abona din nou la %{link}, folosește controlul de notificări din partea dreaptă-jos a subiectului"
   unsubscribe:
     title: "Dezabonare"
@@ -786,6 +770,18 @@ ro:
     top_uploads:
       labels:
         filename: Numele fișierului
+    top_users_by_likes_received:
+      labels:
+        user: Utilizatori
+        qtt_like: Aprecieri primite
+    top_users_by_likes_received_from_inferior_trust_level:
+      labels:
+        user: Utilizatori
+        qtt_like: Aprecieri primite
+    top_users_by_likes_received_from_a_variety_of_people:
+      labels:
+        user: Utilizatori
+        qtt_like: Aprecieri primite
   dashboard:
     rails_env_warning: "Serverul funcționează în modul %{env}."
     host_names_warning: "Fișierul config/database.yml folosește numele implicit al localhost. Actualizează pentru a folosi numele de gazdă al site-ului."
@@ -800,6 +796,7 @@ ro:
     poll_pop3_timeout: "Conexiunea la serverul POP3 a dat time-out. Mailurile primite nu au putut fi accesate. Te rugăm să verifici <a href='%{base_path}/admin/site_settings/category/email'>setările POP3</a> și furnizorul de servicii."
     poll_pop3_auth_error: "Conexiunea la serverul POP3 a eșuat cu o eroare de autentificare. Te rugăm să verifici <a href='%{base_path}/admin/site_settings/category/email'>setările POP3</a>."
   site_settings:
+    disabled: "dezactivat"
     censored_words: "Cuvintele vor fi înlocuite automat cu &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "șterge automat toate postările ascunse care stau ascunse mai mult de 30 de zile."
     allow_user_locale: "Permite utilizatorilor să-și aleagă singuri limba pentru interfață"
@@ -845,7 +842,6 @@ ro:
     force_https: "Forțează site-ul să folosească exclusiv HTTPS. ATENȚIE: NU activa această opțiune până nu ai verificat dacă HTTPS este configurat în întregime și funcționează absolut peste tot. Ai verificat, de asemenea, dacă și CND-ul, toate autentificările cu cont pe rețele de socializaer și toate logo-urile și dependențele externe sunt compatibile cu HTTPS?"
     summary_score_threshold: "Scorul minim necesar pentru ca o postare să fie inclusă în 'Rezumă acest subiect'"
     summary_percent_filter: "Când un utilizator face click pe 'Rezumatul acestui subiect', arată primele % de postări"
-    enable_personal_messages: "Acordă nivelul de încredere 1 (configurabil via nivel minim de încredere pentru trimiterea de mesaje) utilizatorilor, pentru a le permite să creeze și să răspundă la mesaje. Atenție: echipa poate oricând să trimită mesaje, indiferent de setări."
     enable_long_polling: "Bus-ul de mesaje folosit pentru notificări poate utiliza long polling."
     long_polling_base_url: "URL de bază folosit pentru long polling (atunci când un CDN servește conținut dinamic, asigură-te că setezi asta pe origin pull) ex: http://origin.site.com"
     long_polling_interval: "Durata cât serverul va trebui să aștepte înainte de a răspunde clienților atunci când nu există date de trimis (exclusiv utilizatori autentificați)"
@@ -861,7 +857,6 @@ ro:
     traditional_markdown_linebreaks: "Folosește întreruperi de rând tradiționale în Markdown, ceea ce necesită două spații pentru un capăt de rând. "
     post_undo_action_window_mins: "Numărul de minute în care utilizatorii pot anula acțiunile recente asupra unei postări (aprecieri, marcări cu marcaje de avertizare, etc)."
     must_approve_users: "Personalul trebuie să aprobe toate conturile utilizatorilor noi înainte ca ei să aibă aces în site."
-    pending_users_reminder_delay: "Notifică moderatorii dacă noii utilizatori sunt în așteptarea aprobării de mai mult de atâtea ore. Setează la -1 pentru a dezactiva notificările."
     maximum_session_age: "Utilizatorul va rămâne autentificat pentru n ore de la ultima vizită"
     cors_origins: "Origini permise pentru interogările inter-origini (CORS). Fiecare origine trebuie să includă http:// sau https://. Variabila env DISCOURSE_ENABLE_CORS trebuie setată pe true pentru a activa CORS."
     use_admin_ip_allowlist: "Adminii se pot autentifica numai dacă au o adresă IP definită în lista de IP-uri verificate (Admin > Rapoarte > IP-uri verificate) "
@@ -897,7 +892,6 @@ ro:
     enable_signup_cta: "Arată o notificare către utilizatorii anonimi care revin prin care să le ceri să se înscrie pentru a avea un cont pe site."
     google_oauth2_client_id: "ID client al aplicației tale Google."
     google_oauth2_client_secret: "Secret client al aplicației tale Google."
-    allow_restore: "Bifează-l doar dacă dorești să restaurezi un fișier de backup. Atenție, restaurarea poate șterge/înlocui TOATE datele din site!"
     maximum_backups: "Maximul de fișiere backup păstrate. Fișierele backup vechi sunt șterse automat"
     automatic_backups_enabled: "Rulează automat operațiuni de backup după cum este definit la frecvența de backup"
     s3_backup_bucket: "Containerul (bucket) de la distanță care ține backupurile. ATENȚIE: Asgură-te că e un container privat."
@@ -1008,7 +1002,6 @@ ro:
     topic_view_duration_hours: "Contorizează încă o vizualizare a unui subiect nou o singură dată per IP/Utilizator la fiecare N ore."
     user_profile_view_duration_hours: "Contorizează câte vizualizare de profil utilizator o singură dată per IP/Utilizator la fiecare N ore"
     levenshtein_distance_spammer_emails: "Când se face detectarea spam pe bază de potrivire cu un set de criterii, care este diferența de numere de caractere care încă mai permite o potrivire aproximativă (fuzzy match)."
-    max_new_accounts_per_registration_ip: "Dacă există deja (n) conturi cu nivelul de încredere 0 de la acest IP (și nici unul nu este un membru al echipei sau la NÎ2 sau mai mare), blochează acceptarea de noi înregistrări de la acest IP."
     min_ban_entries_for_roll_up: "Când apeși pe butonul Consolidare, dacă există cel puțin (N) înregistrări, se va crea o nouă înregistrare de subrețea blocată"
     max_age_unmatched_emails: "șterge înregistrările emailurilor verificate, care nu corespund, după (N) zile."
     max_age_unmatched_ips: "șterge adresele de IP verificate, care nu corespund, după (N) zile."
@@ -1178,7 +1171,6 @@ ro:
     unknown_error: "Există o problema legată de contul tău. Te rugăm contactează administratorul site-ului."
     timeout_expired: "Autentificarea în cont a expirat, te rugăm să încerci din să te autentifici din nou."
   original_poster: "Creatorul unui subiect"
-  most_posts: "Cele mai multe postări"
   most_recent_poster: "Cel mai recent autor"
   frequent_poster: "Autor prodigios"
   redirected_to_top_reasons:
@@ -1534,6 +1526,26 @@ ro:
         %{respond_instructions}
     user_group_mentioned:
       subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm:
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm_group:
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1943,7 +1955,6 @@ ro:
             label: "Numele comunității tale"
             placeholder: "Bârlogul Mariei"
           site_description:
-            label: "Descrie-ți comunitatea într-o singură frază scurtă"
             placeholder: "Un loc în care Maria și prietenii stau la taifas despre chestii mișto"
       introduction:
         title: "Introducere"
@@ -1975,12 +1986,22 @@ ro:
             label: "Mesaje automate"
       corporate:
         title: "Organizație"
-      colors:
-        title: "Culori"
-      fonts:
+      styling:
         fields:
-          font_preview:
+          styling_preview:
             label: "Previzualizează"
+          homepage_style:
+            choices:
+              latest:
+                label: "Subiecte recente"
+              categories_only:
+                label: "Numai categorii"
+              categories_with_featured_topics:
+                label: "Categorii cu subiecte promovate"
+              categories_and_latest_topics:
+                label: "Categorii și subiecte recente"
+              categories_and_top_topics:
+                label: "Categorii și discuții în top"
       logos:
         title: "Logo-uri"
         fields:
@@ -1991,21 +2012,6 @@ ro:
         fields:
           large_icon:
             label: "Iconiță mare"
-      homepage:
-        title: "Pagina principală"
-        fields:
-          homepage_style:
-            choices:
-              latest:
-                label: "Subiecte recente"
-              categories_only:
-                label: "Numai categorii"
-              categories_with_featured_topics:
-                label: "Categorii cu discuții promovate"
-              categories_and_latest_topics:
-                label: "Categorii și cele mai noi discuții"
-              categories_and_top_topics:
-                label: "Categorii și discuții de top"
       invites:
         title: "Invită membrii echipei"
         description: "Aproape ai încheiat ! Hai să invităm câțiva prieteni să te ajute <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>cu demararea comunității </a> prin discuții și răspunsuri interesante."
@@ -2039,8 +2045,6 @@ ro:
         description: "Restabilește postarea pentru astfel încât toți utilizatorii să o poată vedea."
       agree_and_hide:
         title: "Ascunde postarea"
-      delete_spammer:
-        title: "Șterge spammer"
       delete_single:
         title: "Șterge"
       disagree_and_restore:
@@ -2056,8 +2060,7 @@ ro:
           title: "Şterge utilizatorul"
       reject:
         title: "Respingere"
-      delete_user:
-        title: "Şterge utilizatorul"
+  fallback_username: "utilizatori"
   activemodel:
     errors:
       <<: *errors

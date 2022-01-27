@@ -102,26 +102,23 @@ describe Admin::ThemesController do
 
     context 'when theme allowlist mode is enabled' do
       before do
-        GlobalSetting.reset_allowed_theme_ids!
-        global_setting :allowed_theme_repos, "https://github.com/discourse/discourse-brand-header"
-      end
-
-      after do
-        GlobalSetting.reset_allowed_theme_ids!
+        global_setting :allowed_theme_repos, "https://github.com/discourse/discourse-brand-header.git"
       end
 
       it "allows allowlisted imports" do
-        RemoteTheme.stubs(:import_theme)
+        expect(Theme.allowed_remote_theme_ids.length).to eq(0)
+
         post "/admin/themes/import.json", params: {
-          remote: '    https://github.com/discourse/discourse-brand-header       '
+          remote: '    https://github.com/discourse/discourse-brand-header.git       '
         }
 
+        expect(Theme.allowed_remote_theme_ids.length).to eq(1)
         expect(response.status).to eq(201)
       end
 
       it "prevents adding disallowed themes" do
         RemoteTheme.stubs(:import_theme)
-        remote = '    https://bad.com/discourse/discourse-brand-header       '
+        remote = '    https://bad.com/discourse/discourse-brand-header.git       '
 
         post "/admin/themes/import.json", params: { remote: remote }
 
@@ -138,7 +135,7 @@ describe Admin::ThemesController do
     it 'can import a theme from Git' do
       RemoteTheme.stubs(:import_theme)
       post "/admin/themes/import.json", params: {
-        remote: '    https://github.com/discourse/discourse-brand-header       '
+        remote: '    https://github.com/discourse/discourse-brand-header.git       '
       }
 
       expect(response.status).to eq(201)
@@ -152,6 +149,7 @@ describe Admin::ThemesController do
 
       expect(json["theme"]["name"]).to eq("Sam's Simple Theme")
       expect(json["theme"]["theme_fields"].length).to eq(2)
+      expect(json["theme"]["auto_update"]).to eq(false)
       expect(UserHistory.where(action: UserHistory.actions[:change_theme]).count).to eq(1)
     end
 
@@ -166,6 +164,7 @@ describe Admin::ThemesController do
 
       expect(json["theme"]["name"]).to eq("Header Icons")
       expect(json["theme"]["theme_fields"].length).to eq(5)
+      expect(json["theme"]["auto_update"]).to eq(false)
       expect(UserHistory.where(action: UserHistory.actions[:change_theme]).count).to eq(1)
     end
 
@@ -222,6 +221,7 @@ describe Admin::ThemesController do
       expect(json["theme"]["name"]).to eq("Header Icons")
       expect(json["theme"]["id"]).not_to eq(existing_theme.id)
       expect(json["theme"]["theme_fields"].length).to eq(5)
+      expect(json["theme"]["auto_update"]).to eq(false)
       expect(UserHistory.where(action: UserHistory.actions[:change_theme]).count).to eq(1)
     end
   end
@@ -311,12 +311,7 @@ describe Admin::ThemesController do
 
     context 'when theme allowlist mode is enabled' do
       before do
-        GlobalSetting.reset_allowed_theme_ids!
         global_setting :allowed_theme_repos, "  https://magic.com/repo.git, https://x.com/git"
-      end
-
-      after do
-        GlobalSetting.reset_allowed_theme_ids!
       end
 
       it 'unconditionally bans theme_fields from updating' do

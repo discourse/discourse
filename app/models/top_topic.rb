@@ -45,6 +45,17 @@ class TopTopic < ActiveRecord::Base
                                    all: 6)
   end
 
+  def self.score_column_for_period(period)
+    TopTopic.validate_period(period)
+    "#{period}_score"
+  end
+
+  def self.validate_period(period)
+    if period.blank? || !periods.include?(period.to_sym)
+      raise Discourse::InvalidParameters.new("Invalid period. Valid periods are #{periods.join(", ")}")
+    end
+  end
+
   private
 
   def self.sort_orders

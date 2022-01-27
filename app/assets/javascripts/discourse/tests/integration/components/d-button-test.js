@@ -7,6 +7,7 @@ import {
   query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
+import { triggerKeyEvent } from "@ember/test-helpers";
 import I18n from "I18n";
 import hbs from "htmlbars-inline-precompile";
 
@@ -18,14 +19,11 @@ discourseModule("Integration | Component | d-button", function (hooks) {
 
     test(assert) {
       assert.ok(
-        queryAll("button.btn.btn-icon.no-text").length,
+        exists("button.btn.btn-icon.no-text"),
         "it has all the classes"
       );
-      assert.ok(
-        queryAll("button .d-icon.d-icon-plus").length,
-        "it has the icon"
-      );
-      assert.equal(
+      assert.ok(exists("button .d-icon.d-icon-plus"), "it has the icon");
+      assert.strictEqual(
         queryAll("button").attr("tabindex"),
         "3",
         "it has the tabindex"
@@ -37,18 +35,9 @@ discourseModule("Integration | Component | d-button", function (hooks) {
     template: hbs`{{d-button icon="plus" label="topic.create"}}`,
 
     test(assert) {
-      assert.ok(
-        queryAll("button.btn.btn-icon-text").length,
-        "it has all the classes"
-      );
-      assert.ok(
-        queryAll("button .d-icon.d-icon-plus").length,
-        "it has the icon"
-      );
-      assert.ok(
-        queryAll("button span.d-button-label").length,
-        "it has the label"
-      );
+      assert.ok(exists("button.btn.btn-icon-text"), "it has all the classes");
+      assert.ok(exists("button .d-icon.d-icon-plus"), "it has the icon");
+      assert.ok(exists("button span.d-button-label"), "it has the label");
     },
   });
 
@@ -56,14 +45,8 @@ discourseModule("Integration | Component | d-button", function (hooks) {
     template: hbs`{{d-button label="topic.create"}}`,
 
     test(assert) {
-      assert.ok(
-        queryAll("button.btn.btn-text").length,
-        "it has all the classes"
-      );
-      assert.ok(
-        queryAll("button span.d-button-label").length,
-        "it has the label"
-      );
+      assert.ok(exists("button.btn.btn-text"), "it has all the classes");
+      assert.ok(exists("button span.d-button-label"), "it has the label");
     },
   });
 
@@ -80,7 +63,7 @@ discourseModule("Integration | Component | d-button", function (hooks) {
 
     test(assert) {
       assert.ok(
-        queryAll("button.btn-link:not(.btn)").length,
+        exists("button.btn-link:not(.btn)"),
         "it has the right classes"
       );
     },
@@ -95,22 +78,22 @@ discourseModule("Integration | Component | d-button", function (hooks) {
 
     test(assert) {
       assert.ok(
-        queryAll("button.is-loading .loading-icon").length,
+        exists("button.is-loading .loading-icon"),
         "it has a spinner showing"
       );
       assert.ok(
-        queryAll("button[disabled]").length,
+        exists("button[disabled]"),
         "while loading the button is disabled"
       );
 
       this.set("isLoading", false);
 
       assert.notOk(
-        queryAll("button .loading-icon").length,
+        exists("button .loading-icon"),
         "it doesn't have a spinner showing"
       );
       assert.ok(
-        queryAll("button:not([disabled])").length,
+        exists("button:not([disabled])"),
         "while not loading the button is enabled"
       );
     },
@@ -124,14 +107,11 @@ discourseModule("Integration | Component | d-button", function (hooks) {
     },
 
     test(assert) {
-      assert.ok(queryAll("button[disabled]").length, "the button is disabled");
+      assert.ok(exists("button[disabled]"), "the button is disabled");
 
       this.set("disabled", false);
 
-      assert.ok(
-        queryAll("button:not([disabled])").length,
-        "the button is enabled"
-      );
+      assert.ok(exists("button:not([disabled])"), "the button is enabled");
     },
   });
 
@@ -145,8 +125,8 @@ discourseModule("Integration | Component | d-button", function (hooks) {
     test(assert) {
       this.set("ariaLabel", "test.fooAriaLabel");
 
-      assert.equal(
-        queryAll("button")[0].getAttribute("aria-label"),
+      assert.strictEqual(
+        query("button").getAttribute("aria-label"),
         I18n.t("test.fooAriaLabel")
       );
 
@@ -155,7 +135,7 @@ discourseModule("Integration | Component | d-button", function (hooks) {
         translatedAriaLabel: "bar",
       });
 
-      assert.equal(queryAll("button")[0].getAttribute("aria-label"), "bar");
+      assert.strictEqual(query("button").getAttribute("aria-label"), "bar");
     },
   });
 
@@ -168,8 +148,8 @@ discourseModule("Integration | Component | d-button", function (hooks) {
 
     test(assert) {
       this.set("title", "test.fooTitle");
-      assert.equal(
-        queryAll("button")[0].getAttribute("title"),
+      assert.strictEqual(
+        query("button").getAttribute("title"),
         I18n.t("test.fooTitle")
       );
 
@@ -178,7 +158,7 @@ discourseModule("Integration | Component | d-button", function (hooks) {
         translatedTitle: "bar",
       });
 
-      assert.equal(queryAll("button")[0].getAttribute("title"), "bar");
+      assert.strictEqual(query("button").getAttribute("title"), "bar");
     },
   });
 
@@ -192,7 +172,7 @@ discourseModule("Integration | Component | d-button", function (hooks) {
     test(assert) {
       this.set("label", "test.fooLabel");
 
-      assert.equal(
+      assert.strictEqual(
         queryAll("button .d-button-label").text(),
         I18n.t("test.fooLabel")
       );
@@ -202,7 +182,7 @@ discourseModule("Integration | Component | d-button", function (hooks) {
         translatedLabel: "bar",
       });
 
-      assert.equal(queryAll("button .d-button-label").text(), "bar");
+      assert.strictEqual(queryAll("button .d-button-label").text(), "bar");
     },
   });
 
@@ -210,19 +190,22 @@ discourseModule("Integration | Component | d-button", function (hooks) {
     template: hbs`{{d-button ariaExpanded=ariaExpanded}}`,
 
     test(assert) {
-      assert.equal(query("button").ariaExpanded, null);
+      assert.strictEqual(query("button").getAttribute("aria-expanded"), null);
 
       this.set("ariaExpanded", true);
-      assert.equal(query("button").getAttribute("aria-expanded"), "true");
+      assert.strictEqual(query("button").getAttribute("aria-expanded"), "true");
 
       this.set("ariaExpanded", false);
-      assert.equal(query("button").getAttribute("aria-expanded"), "false");
+      assert.strictEqual(
+        query("button").getAttribute("aria-expanded"),
+        "false"
+      );
 
       this.set("ariaExpanded", "false");
-      assert.equal(query("button").getAttribute("aria-expanded"), null);
+      assert.strictEqual(query("button").getAttribute("aria-expanded"), null);
 
       this.set("ariaExpanded", "true");
-      assert.equal(query("button").getAttribute("aria-expanded"), null);
+      assert.strictEqual(query("button").getAttribute("aria-expanded"), null);
     },
   });
 
@@ -231,7 +214,55 @@ discourseModule("Integration | Component | d-button", function (hooks) {
 
     test(assert) {
       this.set("ariaControls", "foo-bar");
-      assert.equal(query("button").getAttribute("aria-controls"), "foo-bar");
+      assert.strictEqual(
+        query("button").getAttribute("aria-controls"),
+        "foo-bar"
+      );
+    },
+  });
+
+  componentTest("onKeyDown callback", {
+    template: hbs`{{d-button action=action onKeyDown=onKeyDown}}`,
+
+    beforeEach() {
+      this.set("foo", null);
+      this.set("onKeyDown", () => {
+        this.set("foo", "bar");
+      });
+      this.set("action", () => {
+        this.set("foo", "baz");
+      });
+    },
+
+    async test(assert) {
+      await triggerKeyEvent(".btn", "keydown", 32);
+
+      assert.strictEqual(this.foo, "bar");
+
+      await triggerKeyEvent(".btn", "keydown", 13);
+
+      assert.strictEqual(this.foo, "bar");
+    },
+  });
+
+  componentTest("press Enter", {
+    template: hbs`{{d-button action=action}}`,
+
+    beforeEach() {
+      this.set("foo", null);
+      this.set("action", () => {
+        this.set("foo", "bar");
+      });
+    },
+
+    async test(assert) {
+      await triggerKeyEvent(".btn", "keydown", 32);
+
+      assert.strictEqual(this.foo, null);
+
+      await triggerKeyEvent(".btn", "keydown", 13);
+
+      assert.strictEqual(this.foo, "bar");
     },
   });
 });

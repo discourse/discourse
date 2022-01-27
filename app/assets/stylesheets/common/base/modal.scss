@@ -12,10 +12,11 @@
 }
 
 .modal-inner-container {
+  --modal-max-width: 47em; // set in ems to scale with user font-size
   box-sizing: border-box;
   flex: 0 1 auto;
   margin: 0 auto;
-  max-width: 700px;
+  max-width: var(--modal-max-width);
   background-color: var(--secondary);
   box-shadow: shadow("modal");
 
@@ -273,7 +274,7 @@
 
   pre code {
     white-space: pre-wrap;
-    max-width: 700px;
+    max-width: var(--modal-max-width);
   }
 }
 
@@ -364,7 +365,7 @@
   }
   .incoming-email-content {
     height: 300px;
-    max-width: 700px;
+    max-width: 100%;
     width: 90vw; // forcing textarea wider
     textarea,
     .incoming-email-html-part {
@@ -372,6 +373,7 @@
       border: none;
       border-top: 1px solid var(--primary-low);
       padding-top: 10px;
+      width: 100%;
     }
     textarea {
       font-family: monospace;
@@ -427,7 +429,8 @@
 }
 
 .change-timestamp {
-  max-width: 420px;
+  width: 28em; // scales with user font-size
+  max-width: 90vw; // prevents overflow due to extra large user font-size
 }
 
 .change-timestamp {
@@ -477,10 +480,14 @@
   }
   .modal-body {
     overflow-y: visible;
-    #post-jump,
-    .date-picker {
+    #post-jump {
       margin: 0;
       width: 100px;
+    }
+
+    .date-picker {
+      margin: 0;
+      width: 180px;
     }
 
     .input-hint-text {
@@ -491,8 +498,13 @@
       color: var(--primary-medium);
     }
 
-    .jump-to-date-control .input-hint-text {
-      margin-left: 0;
+    .jump-to-date-control {
+      display: flex;
+      align-items: center;
+      .input-hint-text {
+        margin-left: 0;
+        margin-right: 0.5em;
+      }
     }
 
     .separator {
@@ -622,7 +634,9 @@
           &.single-tab {
             background: none;
             color: var(--primary);
-            padding: 4px 0;
+            padding: 0;
+            font-size: var(--font-up-3);
+            font-weight: bold;
           }
         }
       }
@@ -829,117 +843,16 @@
   }
 }
 
-.create-invite-modal,
-.share-topic-modal {
+.group-add-members-modal {
   .input-group {
-    margin-bottom: 1em;
+    margin-bottom: 0.5em;
 
     &:last-child {
       margin-bottom: 0;
     }
-
-    input[type="text"] {
-      width: 100%;
-    }
   }
 
-  .invite-type {
-    input[type="checkbox"] {
-      display: inline;
-      vertical-align: middle;
-      margin-top: -1px;
-    }
-
-    label {
-      display: inline-block;
-    }
-  }
-
-  .group-chooser,
-  .user-chooser,
-  .future-date-input-selector {
-    width: 100%;
-  }
-
-  .input-group input[type="text"],
-  .input-group .btn,
-  .user-chooser .select-kit-header,
-  .future-date-input .select-kit-header {
-    height: 34px;
-  }
-
-  .input-group .btn {
-    vertical-align: top;
-  }
-
-  .invite-input-with-button {
-    display: flex;
-
-    .btn {
-      margin-left: 3px;
-    }
-  }
-
-  .future-date-input {
-    .date-picker-wrapper {
-      input {
-        margin: 0;
-      }
-    }
-
-    .control-group:nth-child(2),
-    .control-group:nth-child(3) {
-      display: inline-block;
-      margin-bottom: 0;
-      width: 49%;
-
-      input {
-        margin-bottom: 0;
-        width: 150px;
-      }
-    }
-  }
-
-  .invite-max-redemptions {
-    label {
-      display: inline;
-    }
-
-    input {
-      width: 80px;
-    }
-  }
-
-  .show-advanced {
-    margin-left: auto;
-    margin-right: 0;
-  }
-}
-
-.share-topic-modal {
-  .sources {
-    align-items: center;
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: row;
-    margin-bottom: 1em;
-
-    .social-link {
-      font-size: $font-up-6;
-      margin-right: 8px;
-    }
-
-    .btn-primary {
-      border-radius: 4px;
-      height: calc(#{$font-up-6} - 4px);
-      margin-bottom: 2px;
-      margin-right: 8px;
-      padding-left: 8px;
-      padding-right: 8px;
-
-      .d-icon {
-        font-size: $font-up-3;
-      }
-    }
+  .user-chooser {
+    width: calc(100%);
   }
 }

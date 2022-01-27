@@ -20,7 +20,11 @@ module("Unit | Model | nav-item", function (hooks) {
     assert.expect(4);
 
     function href(text, opts, expected, label) {
-      assert.equal(NavItem.fromText(text, opts).get("href"), expected, label);
+      assert.strictEqual(
+        NavItem.fromText(text, opts).get("href"),
+        expected,
+        label
+      );
     }
 
     href("latest", {}, "/latest", "latest");
@@ -37,13 +41,17 @@ module("Unit | Model | nav-item", function (hooks) {
   test("count", function (assert) {
     const navItem = createStore().createRecord("nav-item", { name: "new" });
 
-    assert.equal(navItem.get("count"), 0, "it has no count by default");
+    assert.strictEqual(navItem.get("count"), 0, "it has no count by default");
 
     const tracker = navItem.get("topicTrackingState");
-    tracker.states["t1"] = { topic_id: 1, last_read_post_number: null };
+    tracker.modifyState("t1", {
+      topic_id: 1,
+      last_read_post_number: null,
+      created_in_new_period: true,
+    });
     tracker.incrementMessageCount();
 
-    assert.equal(
+    assert.strictEqual(
       navItem.get("count"),
       1,
       "it updates when a new message arrives"

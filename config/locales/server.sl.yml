@@ -57,7 +57,6 @@ sl:
       maximum_staged_user_per_email_reached: "Dosegli največje število prirejenih uporabnikov na e-sporočilo."
       no_subject: "(ni naslova)"
       no_body: "(ni vsebine)"
-      missing_attachment: "(priponka %{filename} manjka)"
   errors: &errors
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
@@ -281,7 +280,7 @@ sl:
               cannot_be_zero: "mora biti večje od 0."
               exceeds_maximum: "ne sme biti daljše od 20 let."
       <<: *errors
-  uncategorized_category_name: "Neuvrščeno"
+  uncategorized_category_name: "Nerazvrščeno"
   staff_category_name: "Osebje"
   staff_category_description: "Privatna kategorija za diskusije osebja foruma. Teme so vidne samo administratorjem in moderatorjem."
   discourse_welcome_topic:
@@ -327,28 +326,21 @@ sl:
     replace_paragraph: "(Zamenjajte ta prvi odstavek s kratkim opisom vaše nove kategorije. Ta opis se bo pojavil v izbiri kategorije, tako da poskrbite, da je krajši od 200 znakov.)"
     post_template: "%{replace_paragraph}\n\nUporabite naslednje odstavke za daljši opis and za določitev pravil in vodil te kategorije:\n\n- Zakaj naj uporabniku uporabljajo to kategorijo? Čemu je namenjena?\n\n- Kako se razlikuje od ostalih kategorij, ki jih že imamo?\n\n- Katere teme sodijo v to kategorijo?\n\n- Ali potrebujemo to kategorijo? Ali jo lahko združimo z drugo kategorijo ali podkategorijo?\n"
     errors:
+      uncategorized_parent: "Nerazvrščeno ne more imeti nadrejene kategorije"
       description_incomplete: "Objava z opisom kategorije mora vsebovati vsaj en odstavek."
       permission_conflict: "Vsaka skupina, ki ima dostop do podkategorije, mora imeti dostop tudi do nadrejen kategorije. Naslednje skupine imajo dostop do ene od podkategorij, nimajo pa dostopa do nadrejene kategorije: %{group_names}."
       disallowed_topic_tags: "Ta tema vsebuje oznake, ki niso dovoljene na tej kategoriji: '%{tags}'"
     cannot_delete:
-      uncategorized: "Ta kategorija je posebna. Namenjena je za shranjevanje tem, ki nimajo kategorije. Zato ne more biti izbrisana."
+      uncategorized: "Ta kategorija je posebna. Namenjena je shranjevanju tem, ki nimajo kategorije, zato ne more biti izbrisana."
       topic_exists:
         one: "Ne moremo odstraniti to kategorijo ker ima %{count} temo. Najstarejša tema je %{topic_link}."
         two: "Ne moremo odstraniti to kategorijo ker ima %{count} temi. Najstarejša tema je %{topic_link}."
         few: "Ne moremo odstraniti to kategorijo ker ima %{count} teme. Najstarejša tema je %{topic_link}."
         other: "Ne moremo odstraniti to kategorijo ker ima %{count} tem. Najstarejša tema je %{topic_link}."
-    uncategorized_description: "Teme, ki ne potrebujejo kategorijo ali ne sodijo v nobeno obstoječo kategorijo."
+    uncategorized_description: "Teme, ki ne potrebujejo kategorije ali ne sodijo v nobeno obstoječo kategorijo."
   trust_levels:
-    newuser:
-      title: "nov uporabnik"
-    basic:
-      title: "uporabnik"
-    member:
-      title: "član"
-    regular:
-      title: "redni uporabnik"
-    leader:
-      title: "vodja"
+    admin: "Admin"
+    staff: "Osebje"
   post:
     has_likes:
       one: "%{count} všeček"
@@ -563,17 +555,6 @@ sl:
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: "Zaznamek"
-  user_activity:
-    no_default:
-      self: "Nimate nobene aktivnosti."
-    no_bookmarks:
-      self: "Nimate zaznamkov na prispevkih; dodajte zaznamek na prispevek, da jih lahko hitreje najdete."
-    no_likes_given:
-      self: "Niste všečkali noben prispevek."
-    no_replies:
-      self: "Nisi odgovoril na noben prispevek."
-    no_drafts:
-      self: "Nimate nobenih osnutkov; začnite pisati odgovor v katerokoli temo in se bo sam shranil kot nov osnutek."
   topic_flag_types:
     spam:
       title: "Neželeno"
@@ -605,7 +586,6 @@ sl:
         remove: "Ta tema ni več na oglasnem traku. Ne bo se več pojavljala na vrhu strani."
   unsubscribed:
     title: "Nastavitve e-pošte spremenjene!"
-    description: "nastavitve e-pošte za <b>%{email}</b> so bile spremenjene. Za spremembo vaših nastavitev e-pošte <a href='%{url}'>obiščite svoje uporabniške nastavitve</a>."
   unsubscribe:
     title: "Odjavi"
     mute_topic: "Utišaj vsa obvestila za to temo, %{link}"
@@ -729,10 +709,24 @@ sl:
     top_uploads:
       labels:
         filename: Ime datoteke
+    top_users_by_likes_received:
+      labels:
+        user: Uporabnik
+        qtt_like: Všečkov prejetih
+    top_users_by_likes_received_from_inferior_trust_level:
+      labels:
+        user: Uporabnik
+        qtt_like: Všečkov prejetih
+    top_users_by_likes_received_from_a_variety_of_people:
+      labels:
+        user: Uporabnik
+        qtt_like: Všečkov prejetih
   dashboard:
     s3_cdn_warning: 'Strežnik je konfiguriran za nalaganje datotek v S3, vendar hkrati ni konfiguriran tudi S3 CDN. To lahko privede do visokih stroškov uporabe S3 in počasnejšega delovanja strani. Če želite izvedeti več, glejte <a href="https://meta.discourse.org/t/-/148916" target="_blank">"Using Object Storage for Uploads"</a>.'
     out_of_date_themes: "Posodobitve so na voljo za naslednje prilagoditve:"
   site_settings:
+    disabled: "onemogočeno"
+    allow_uncategorized_topics: "Dovoli ustvarjanje tem brez kategorije. OPOZORILO: Če obstajajo nerazvrščene teme, jih morate ponovno razvrstiti, preden izklopite to nastavitev."
     send_welcome_message: "Pošlji sporočilo z dobrodošlico in kratkimi uvodnimi navodili vsem novim uporabnikom."
     auth_skip_create_confirm: Pri prijavi s pomočjo zunanjega overjanja preskočite pojavno okno za ustvarjanje računa. Priporočena uporaba skupaj z auth_overrides_email, auth_overrides_username in auth_overrides_name.
     auth_immediately: "Samodejno preusmeri na zunanji sistem za prijavo brez interakcije uporabnika. To začne veljati šele, ko je login_required vklopljen in ko obstaja samo en način zunanje overitve"
@@ -742,6 +736,7 @@ sl:
     min_trust_level_to_allow_ignore: "Najmanjša raven zaupanja, potrebna za prezrtje uporabnikov"
     enable_filtered_replies_view: 'Gumb "(n) odgovorov" strne vse druge objave in prikaže samo trenutno objavo in njene odgovore.'
     dark_mode_none: "Brez"
+    suppress_uncategorized_badge: "Ne prikaži značke za nerazvrščene teme na seznamih tem."
     skip_auto_delete_reply_likes: "Pri samodejnem brisanju starih odgovorov preskočite brisanje objav s tem ali večjim številom všečkov."
     default_other_skip_new_user_tips: "Preskoči namige in značke za nove uporabnike."
     shared_drafts_min_trust_level: "Uporabnikom omogočite ogled in urejanje osnutkov v skupni rabi."
@@ -915,17 +910,6 @@ sl:
       max_new_accounts_per_registration_ip: "Nove registracije uporabnika niso več dovoljene z vašega IP naslova (dosežena je omejitev regitracij). Kontaktirajte člana osebja foruma."
     destroy_reasons:
       unused_staged_user: "Neuporabljen prirejen uporabnik"
-  reviewables_reminder:
-    submitted:
-      one: "Predmeti so bili poslani pred %{count} uros. [Preglejte jih](%{base_path}/review)."
-      two: "Predmeti so bili poslani pred%{count} urama. [Preglejte jih](%{base_path}/review)."
-      few: "Predmeti so bili poslani pred %{count} urami. [Preglejte jih](%{base_path}/review)."
-      other: "Predmeti so bili poslani pred %{count} urami. [Preglejte jih](%{base_path}/review)."
-    subject_template:
-      one: "%{count} predmet za potrditev"
-      two: "%{count} predmeta za potrditev"
-      few: "%{count} predmeti za potrditev"
-      other: "%{count} predmetov za potrditev"
   invite_mailer:
     subject_template: "%{inviter_name} vas je povabil da sodelujete v '%{topic_title}' na %{site_domain_name}"
     text_body_template: |
@@ -1069,49 +1053,15 @@ sl:
     backup_succeeded:
       title: "Varnostna kopija uspela"
       subject_template: "Varnostna kopija uspela"
-      text_body_template: |
-        Varnostna kopija uspešno narejena.
-
-        Pojdite v [Admin > Varnostne kopije](%{base_url}/admin/backups) za prenos vaše nove varnostne kopije.
-
-        Tukaj je dnevnik:
-
-        ``` text
-        %{logs}
-        ```
     backup_failed:
       title: "Varnostna kopija ni uspela"
       subject_template: "Varnostna kopija ni uspela"
-      text_body_template: |
-        Varnostna kopija ni uspela.
-
-        Tukaj je dnevnik:
-
-        ``` text
-        %{logs}
-        ```
     restore_succeeded:
       title: "Obnovitev iz varnostne kopije uspela"
       subject_template: "Obnovitev iz varnostne kopije uspela"
-      text_body_template: |
-        Obnovitev iz varnostne kopije uspela.
-
-        Tukaj je dnevnik:
-
-        ``` text
-        %{logs}
-        ```
     restore_failed:
       title: "Obnovitev iz varnostne kopije ni uspela"
       subject_template: "Obnovitev iz varnostne kopije ni uspela"
-      text_body_template: |
-        Obnovitev iz varnostne kopije ni uspela.
-
-        Tukaj je dnevnik:
-
-        ``` text
-        %{logs}
-        ```
     bulk_invite_succeeded:
       title: "Množično povabilo je uspelo"
       subject_template: "Množično povabilo uporabnikov je uspelo"
@@ -1537,6 +1487,26 @@ sl:
         %{context}
 
         %{respond_instructions}
+    user_group_mentioned_pm:
+      subject_template: "[%{email_prefix}] [ZS] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm_group:
+      subject_template: "[%{email_prefix}] [ZS] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_posted:
       title: "Uporabnik je objavil"
       subject_template: "[%{email_prefix}] %{topic_title}"
@@ -1579,7 +1549,13 @@ sl:
     account_suspended:
       title: "Suspendiran račun"
       subject_template: "[%{email_prefix}] Vaš uporabniški račun je bil suspendiran"
+    account_suspended_forever:
+      title: "Suspendiran račun"
+      subject_template: "[%{email_prefix}] Vaš uporabniški račun je bil suspendiran"
     account_silenced:
+      title: "Utišan račun"
+      subject_template: "[%{email_prefix}] Vaš uporabniški račun je bil utišan"
+    account_silenced_forever:
       title: "Utišan račun"
       subject_template: "[%{email_prefix}] Vaš uporabniški račun je bil utišan"
     account_exists:
@@ -2042,10 +2018,8 @@ sl:
             label: "Ime skupnosti"
             placeholder: "Mikijev klub"
           site_description:
-            label: "Opiši vašo skupnost v enem kratkem stavku"
             placeholder: "Prostor kjer Miki debatira s svojimi prijatelji o zanimivih zadevah "
           short_site_description:
-            label: "Opišite vašo skupnost v nekaj besedah"
             placeholder: "Najboljši klub"
       privacy:
         title: "Dostopnost"
@@ -2062,14 +2036,10 @@ sl:
             placeholder: "name@example.com"
       corporate:
         title: "Organizacija"
-      colors:
-        title: "Barve"
-      fonts:
+      styling:
         fields:
-          font_preview:
+          styling_preview:
             label: "Predogled"
-      homepage:
-        fields:
           homepage_style:
             choices:
               categories_only:
@@ -2115,16 +2085,6 @@ sl:
       high: "Visoka"
     missing_version: "Podati morate verzijo parametra"
     conflict: "Prišlo je do konflikta, ki to preprečuje. "
-    reasons:
-      post_count: "Prvih nekaj prispevkov od vsakega uporabnika mora biti odobrenih s strani osebja. Glej `approve_post_count`."
-      trust_level: "Uporabniki na nizkih nivojih zaupanja rabijo odobritev prispevka s strani osebja.Glej `approve_unless_trust_level`."
-      new_topics_unless_trust_level: "Uporabniki na nizkih nivojih zaupanja potrebujejo odobritev teme s strani osebja. Glej `approve_new_topics_unless_trust_level`."
-      fast_typer: "Nov uporabnik je svoj prvi prispevek natipkal sumljivo hitro zato sumimo bota ali spammerja. Glej `min_first_post_typing_time`."
-      auto_silence_regexp: "Nov uporabnik katerega prvi prispevek ustreza `auto_silence_first_post_regex` nastavitvi."
-      staged: "Nove teme in prispevki prirejenih uporabnikov morajo biti odobreni s strani osebja. Glej `approve_unless_staged`."
-      category: "Prispevki v tej kategoriji zahtevajo odobritev s strani osebja. Glej nastavitve kategorije."
-      must_approve_users: "Vsi novi uporabniki morajo biti odobreni s strani osebja. Glej `must_approve_users`."
-      invite_only: "Vsi novi uporavbniki morajo biti povabljeni. Glej `invite_only`."
     actions:
       agree:
         title: "Strinjam se..."
@@ -2143,10 +2103,6 @@ sl:
       agree_and_hide:
         title: "Skrij prispevek"
         description: "Skrij prispevek in samodejno pošlji zasebno sporočilo uporabniku, kjer ga prosiš, da naj spremenijo prispevek."
-      delete_spammer:
-        title: "Izbriši spamerja"
-        description: "Izbriši uporabnika in vse njihove prispevke in teme."
-        confirm: "Ali ste prepričani, da hočete izbrisati vse uporabnikove prispevke, teme in blokirati njegovo IP naslov in e-naslove?"
       delete_single:
         title: "Izbriši"
       delete:
@@ -2191,9 +2147,8 @@ sl:
       reject:
         title: "Zavrni"
       delete_user:
-        title: "Izbriši uporabnika"
-        confirm: "Ali ste prepričani, da hočete izbrisati uporabnika? To bo izbrisalo vse njihove prispevke in blokiralo njihov e-naslov in IP naslov."
         reason: "Izbriši preko vrste za pregled"
+  fallback_username: "uporabnik"
   activemodel:
     errors:
       <<: *errors

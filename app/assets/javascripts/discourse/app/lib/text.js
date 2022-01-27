@@ -21,7 +21,8 @@ function getOpts(opts) {
       customEmojiTranslation: context.site.custom_emoji_translation,
       siteSettings: context.siteSettings,
       formatUsername,
-      watchedWordsReplacements: context.site.watched_words_replace,
+      watchedWordsReplace: context.site.watched_words_replace,
+      watchedWordsLink: context.site.watched_words_link,
     },
     opts
   );
@@ -46,6 +47,13 @@ export function generateCookFunction(options) {
   return loadMarkdownIt().then(() => {
     const prettyText = createPrettyText(options);
     return (text) => prettyText.cook(text);
+  });
+}
+
+export function generateLinkifyFunction(options) {
+  return loadMarkdownIt().then(() => {
+    const prettyText = createPrettyText(options);
+    return prettyText.opts.engine.linkify;
   });
 }
 
@@ -108,4 +116,54 @@ export function emojiUrlFor(code) {
   if (opts) {
     return buildEmojiUrl(code, opts);
   }
+}
+
+function encode(str) {
+  return str.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+}
+
+function traverse(element, callback) {
+  if (callback(element)) {
+    element.childNodes.forEach((child) => traverse(child, callback));
+  }
+}
+
+export function excerpt(cooked, length) {
+  let result = "";
+  let resultLength = 0;
+
+  const div = document.createElement("div");
+  div.innerHTML = cooked;
+  traverse(div, (element) => {
+    if (resultLength >= length) {
+      return;
+    }
+
+    if (element.nodeType === Node.TEXT_NODE) {
+      if (resultLength + element.textContent.length > length) {
+        const text = element.textContent.substr(0, length - resultLength);
+        result += encode(text);
+        result += "&hellip;";
+        resultLength += text.length;
+      } else {
+        result += encode(element.textContent);
+        resultLength += element.textContent.length;
+      }
+    } else if (element.tagName === "A") {
+      element.innerHTML = element.innerText;
+      result += element.outerHTML;
+      resultLength += element.innerText.length;
+    } else if (element.tagName === "IMG") {
+      if (element.classList.contains("emoji")) {
+        result += element.outerHTML;
+      } else {
+        result += "[image]";
+        resultLength += "[image]".length;
+      }
+    } else {
+      return true;
+    }
+  });
+
+  return result;
 }

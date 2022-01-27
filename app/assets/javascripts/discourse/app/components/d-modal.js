@@ -1,9 +1,7 @@
-import { computed } from "@ember/object";
 import Component from "@ember/component";
 import I18n from "I18n";
-import afterTransition from "discourse/lib/after-transition";
-import { next } from "@ember/runloop";
-import { on } from "discourse-common/utils/decorators";
+import { next, schedule } from "@ember/runloop";
+import discourseComputed, { bind, on } from "discourse-common/utils/decorators";
 
 export default Component.extend({
   classNameBindings: [
@@ -19,8 +17,10 @@ export default Component.extend({
     "role",
     "ariaLabelledby:aria-labelledby",
   ],
+  submitOnEnter: true,
   dismissable: true,
   title: null,
+  titleAriaElementId: null,
   subtitle: null,
   role: "dialog",
   headerClass: null,
@@ -41,35 +41,41 @@ export default Component.extend({
   // Inform screenreaders of the modal
   "aria-modal": "true",
 
-  ariaLabelledby: computed("title", function () {
-    return this.title ? "discourse-modal-title" : null;
-  }),
+  @discourseComputed("title", "titleAriaElementId")
+  ariaLabelledby(title, titleAriaElementId) {
+    if (titleAriaElementId) {
+      return titleAriaElementId;
+    }
+    if (title) {
+      return "discourse-modal-title";
+    }
+
+    return;
+  },
 
   @on("didInsertElement")
   setUp() {
-    $("html").on("keyup.discourse-modal", (e) => {
-      //only respond to events when the modal is visible
-      if (!this.element.classList.contains("hidden")) {
-        if (e.which === 27 && this.dismissable) {
-          next(() => this.attrs.closeModal("initiatedByESC"));
-        }
-
-        if (e.which === 13 && this.triggerClickOnEnter(e)) {
-          next(() => $(".modal-footer .btn-primary").click());
-        }
-      }
-    });
-
     this.appEvents.on("modal:body-shown", this, "_modalBodyShown");
+    document.documentElement.addEventListener(
+      "keydown",
+      this._handleModalEvents
+    );
   },
 
   @on("willDestroyElement")
   cleanUp() {
-    $("html").off("keyup.discourse-modal");
     this.appEvents.off("modal:body-shown", this, "_modalBodyShown");
+    document.documentElement.removeEventListener(
+      "keydown",
+      this._handleModalEvents
+    );
   },
 
   triggerClickOnEnter(e) {
+    if (!this.submitOnEnter) {
+      return false;
+    }
+
     // skip when in a form or a textarea element
     if (
       e.target.closest("form") ||
@@ -124,6 +130,10 @@ export default Component.extend({
       this.set("subtitle", null);
     }
 
+    if ("submitOnEnter" in data) {
+      this.set("submitOnEnter", data.submitOnEnter);
+    }
+
     if ("dismissable" in data) {
       this.set("dismissable", data.dismissable);
     } else {
@@ -132,22 +142,75 @@ export default Component.extend({
 
     this.set("headerClass", data.headerClass || null);
 
-    if (this.element && data.autoFocus) {
-      let focusTarget = this.element.querySelector(
-        ".modal-body input[autofocus]"
-      );
+    schedule("afterRender", () => {
+      this._trapTab();
+    });
+  },
 
-      if (!focusTarget && !this.site.mobileView) {
-        focusTarget = this.element.querySelector(
-          ".modal-body input, .modal-body button, .modal-footer input, .modal-footer button"
-        );
+  @bind
+  _handleModalEvents(event) {
+    if (this.element.classList.contains("hidden")) {
+      return;
+    }
 
-        if (!focusTarget) {
-          focusTarget = this.element.querySelector(".modal-header button");
-        }
+    if (event.key === "Escape" && this.dismissable) {
+      next(() => this.attrs.closeModal("initiatedByESC"));
+    }
+    if (event.key === "Enter" && this.triggerClickOnEnter(event)) {
+      this.element?.querySelector(".modal-footer .btn-primary")?.click();
+    }
+    if (event.key === "Tab") {
+      this._trapTab(event);
+    }
+  },
+
+  _trapTab(event) {
+    if (this.element.classList.contains("hidden")) {
+      return true;
+    }
+
+    const innerContainer = this.element.querySelector(".modal-inner-container");
+    if (!innerContainer) {
+      return;
+    }
+
+    let focusableElements =
+      '[autofocus], a, input, select, textarea, summary, [tabindex]:not([tabindex="-1"])';
+
+    if (!event) {
+      // on first trap we don't allow to focus modal-close
+      // and apply manual focus only if we don't have any autofocus element
+      const autofocusedElement = innerContainer.querySelector("[autofocus]");
+      if (
+        !autofocusedElement ||
+        document.activeElement !== autofocusedElement
+      ) {
+        innerContainer
+          .querySelectorAll(focusableElements + ", button:not(.modal-close)")[0]
+          ?.focus();
       }
-      if (focusTarget) {
-        afterTransition(() => focusTarget.focus());
+
+      return;
+    }
+
+    focusableElements = focusableElements + ", button:enabled";
+    const firstFocusableElement = innerContainer.querySelectorAll(
+      focusableElements
+    )?.[0];
+    const focusableContent = innerContainer.querySelectorAll(focusableElements);
+    const lastFocusableElement = focusableContent[focusableContent.length - 1];
+
+    if (event.shiftKey) {
+      if (document.activeElement === firstFocusableElement) {
+        lastFocusableElement?.focus();
+        event.preventDefault();
+      }
+    } else {
+      if (document.activeElement === lastFocusableElement) {
+        (
+          innerContainer.querySelector(".modal-close") || firstFocusableElement
+        )?.focus();
+        event.preventDefault();
       }
     }
   },

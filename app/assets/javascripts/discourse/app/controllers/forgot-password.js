@@ -15,7 +15,15 @@ export default Controller.extend(ModalFunctionality, {
 
   @discourseComputed("accountEmailOrUsername", "disabled")
   submitDisabled(accountEmailOrUsername, disabled) {
-    return isEmpty((accountEmailOrUsername || "").trim()) || disabled;
+    if (disabled) {
+      return true;
+    }
+
+    if (this.siteSettings.hide_email_address_taken) {
+      return (accountEmailOrUsername || "").indexOf("@") === -1;
+    } else {
+      return isEmpty((accountEmailOrUsername || "").trim());
+    }
   },
 
   onShow() {
@@ -54,14 +62,23 @@ export default Controller.extend(ModalFunctionality, {
           const accountEmailOrUsername = escapeExpression(
             this.accountEmailOrUsername
           );
-          const isEmail = accountEmailOrUsername.match(/@/);
-          let key = `forgot_password.complete_${
-            isEmail ? "email" : "username"
-          }`;
-          let extraClass;
 
-          if (data.user_found === true) {
-            key += "_found";
+          let key = "forgot_password.complete";
+          key += accountEmailOrUsername.match(/@/) ? "_email" : "_username";
+
+          if (data.user_found === false) {
+            key += "_not_found";
+
+            this.flash(
+              I18n.t(key, {
+                email: accountEmailOrUsername,
+                username: accountEmailOrUsername,
+              }),
+              "error"
+            );
+          } else {
+            key += data.user_found ? "_found" : "";
+
             this.set("accountEmailOrUsername", "");
             this.set(
               "offerHelp",
@@ -70,19 +87,7 @@ export default Controller.extend(ModalFunctionality, {
                 username: accountEmailOrUsername,
               })
             );
-          } else {
-            if (data.user_found === false) {
-              key += "_not_found";
-              extraClass = "error";
-            }
-
-            this.flash(
-              I18n.t(key, {
-                email: accountEmailOrUsername,
-                username: accountEmailOrUsername,
-              }),
-              extraClass
-            );
+            this.set("helpSeen", !data.user_found);
           }
         })
         .catch((e) => {

@@ -9,4 +9,4 @@ fi:
     discourse_narrative_bot:
       welcome_post_type:
         new_user_track: "Aloita alkeiskurssi kaikkien uusien käyttäjien kanssa"
-        welcome_message: "Lähetä kaikille uusille käyttäjille tervetuloviesti, jossa on pikaopas palstan käyttöön"
+        welcome_message: "Lähetä kaikille uusille käyttäjille tervetuloviesti, jossa on pika-aloitusopas palstan käyttöön"

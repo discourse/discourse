@@ -57,7 +57,6 @@ export default class PostCooked {
 
     this._insertQuoteControls($cookedDiv);
     this._showLinkCounts($cookedDiv);
-    this._fixImageSizes($cookedDiv);
     this._applySearchHighlight($cookedDiv);
 
     this._decorateAndAdopt(cookedDiv);
@@ -90,49 +89,32 @@ export default class PostCooked {
     }
   }
 
-  _fixImageSizes($html) {
-    if (!this.decoratorHelper || !this.decoratorHelper.widget) {
-      return;
-    }
-    let siteSettings = this.decoratorHelper.widget.siteSettings;
-
-    if (siteSettings.disable_image_size_calculations) {
-      return;
-    }
-
-    const maxImageWidth = siteSettings.max_image_width;
-    const maxImageHeight = siteSettings.max_image_height;
-
-    let maxWindowWidth;
-    $html.find("img:not(.avatar)").each((idx, img) => {
-      // deferring work only for posts with images
-      // we got to use screen here, cause nothing is rendered yet.
-      // long term we may want to allow for weird margins that are enforced, instead of hardcoding at 70/20
-      maxWindowWidth =
-        maxWindowWidth || $(window).width() - (this.attrs.mobileView ? 20 : 70);
-      if (maxImageWidth < maxWindowWidth) {
-        maxWindowWidth = maxImageWidth;
-      }
-
-      const aspect = img.height / img.width;
-      if (img.width > maxWindowWidth) {
-        img.width = maxWindowWidth;
-        img.height = parseInt(maxWindowWidth * aspect, 10);
-      }
-
-      // very unlikely but lets fix this too
-      if (img.height > maxImageHeight) {
-        img.height = maxImageHeight;
-        img.width = parseInt(maxWindowWidth / aspect, 10);
-      }
-    });
-  }
-
   _showLinkCounts($html) {
     const linkCounts = this.attrs.linkCounts;
     if (!linkCounts) {
       return;
     }
+
+    // find the best <a> element in each onebox and display link counts only
+    // for that one (the best element is the most significant one to the
+    // viewer)
+    const bestElements = new Map();
+    $html[0].querySelectorAll("aside.onebox").forEach((onebox) => {
+      // look in headings first
+      for (let i = 1; i <= 6; ++i) {
+        const hLinks = onebox.querySelectorAll(`h${i} a[href]`);
+        if (hLinks.length > 0) {
+          bestElements.set(onebox, hLinks[0]);
+          return;
+        }
+      }
+
+      // use the header otherwise
+      const hLinks = onebox.querySelectorAll("header a[href]");
+      if (hLinks.length > 0) {
+        bestElements.set(onebox, hLinks[0]);
+      }
+    });
 
     linkCounts.forEach((lc) => {
       if (!lc.clicks || lc.clicks < 1) {
@@ -155,14 +137,21 @@ export default class PostCooked {
           valid = href.split("?")[0] === lc.url;
         }
 
-        // don't display badge counts on category badge & oneboxes (unless when explicitely stated)
+        // don't display badge counts on category badge & oneboxes (unless when explicitly stated)
         if (valid && isValidLink($link)) {
-          const title = I18n.t("topic_map.clicks", { count: lc.clicks });
-          $link.append(
-            ` <span class='badge badge-notification clicks' title='${title}'>${number(
-              lc.clicks
-            )}</span>`
-          );
+          const $onebox = $link.closest(".onebox");
+          if (
+            $onebox.length === 0 ||
+            !bestElements.has($onebox[0]) ||
+            bestElements.get($onebox[0]) === $link[0]
+          ) {
+            const title = I18n.t("topic_map.clicks", { count: lc.clicks });
+            $link.append(
+              ` <span class='badge badge-notification clicks' title='${title}'>${number(
+                lc.clicks
+              )}</span>`
+            );
+          }
         }
       });
     });
@@ -174,7 +163,7 @@ export default class PostCooked {
     }
 
     this.expanding = true;
-
+    const blockQuote = $aside[0].querySelector("blockquote");
     $aside.data("expanded", !$aside.data("expanded"));
 
     const finished = () => (this.expanding = false);
@@ -182,14 +171,13 @@ export default class PostCooked {
     if ($aside.data("expanded")) {
       this._updateQuoteElements($aside, "chevron-up");
       // Show expanded quote
-      const $blockQuote = $("> blockquote", $aside);
-      $aside.data("original-contents", $blockQuote.html());
+      $aside.data("original-contents", blockQuote.innerHTML);
 
       const originalText =
-        $blockQuote.text().trim() ||
-        $("> blockquote", this.attrs.cooked).text().trim();
+        blockQuote.textContent.trim() ||
+        this.attrs.cooked.querySelector("blockquote").textContent.trim();
 
-      $blockQuote.html(spinnerHTML);
+      blockQuote.innerHTML = spinnerHTML;
 
       let topicId = this.attrs.topicId;
       if ($aside.data("topic")) {
@@ -216,26 +204,24 @@ export default class PostCooked {
           highlightHTML(div, originalText, {
             matchCase: true,
           });
-          $blockQuote.showHtml(div, "fast", finished);
+
+          blockQuote.innerHTML = "";
+          blockQuote.appendChild(div);
+          finished();
         })
         .catch((e) => {
           if ([403, 404].includes(e.jqXHR.status)) {
             const icon = e.jqXHR.status === 403 ? "lock" : "far-trash-alt";
-            $blockQuote.showHtml(
-              $(`<div class='expanded-quote'>${iconHTML(icon)}</div>`),
-              "fast",
-              finished
-            );
+            blockQuote.innerHTML = `<div class='expanded-quote icon-only'>${iconHTML(
+              icon
+            )}</div>`;
           }
         });
     } else {
       // Hide expanded quote
       this._updateQuoteElements($aside, "chevron-down");
-      $("blockquote", $aside).showHtml(
-        $aside.data("original-contents"),
-        "fast",
-        finished
-      );
+      blockQuote.innerHTML = $aside.data("original-contents");
+      finished();
     }
     return false;
   }

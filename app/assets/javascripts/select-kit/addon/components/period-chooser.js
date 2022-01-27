@@ -1,5 +1,6 @@
 import { oneWay, readOnly } from "@ember/object/computed";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
+import I18n from "I18n";
 
 export default DropdownSelectBoxComponent.extend({
   classNames: ["period-chooser"],
@@ -18,7 +19,9 @@ export default DropdownSelectBoxComponent.extend({
     filterable: false,
     autoFilterable: false,
     fullDay: "fullDay",
+    customStyle: true,
     headerComponent: "period-chooser/period-chooser-header",
+    headerAriaLabel: I18n.t("period_chooser.aria_label"),
   },
 
   actions: {

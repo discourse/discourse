@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+# rubocop:disable Discourse/OnlyTopLevelMultisiteSpecs
 
 require 'rails_helper'
 require_relative 'shared_context_for_backup_restore'
@@ -98,7 +99,7 @@ describe BackupRestore::UploadsRestorer do
     let!(:multisite) { { name: "multisite", value: true } }
     let!(:no_multisite) { { name: "multisite", value: false } }
     let!(:source_db_name) { { name: "db_name", value: "foo" } }
-    let!(:base_url) { { name: "base_url", value: "https://www.example.com/forum" } }
+    let!(:base_url) { { name: "base_url", value: "https://test.localhost/forum" } }
     let!(:no_cdn_url)  { { name: "cdn_url", value: nil } }
     let!(:cdn_url)  { { name: "cdn_url", value: "https://some-cdn.example.com" } }
     let(:target_site_name) { target_site_type == multisite ? "second" : "default" }
@@ -186,7 +187,7 @@ describe BackupRestore::UploadsRestorer do
         expect_remap(
           target_site_name: target_site_name,
           metadata: [source_site_type, base_url],
-          from: "https://www.example.com/forum",
+          from: "https://test.localhost/forum",
           to: "http://localhost"
         )
       end

@@ -1,43 +1,33 @@
-{{#d-modal-body rawTitle=title}}
+{{#d-modal-body rawTitle=rawTitle}}
   <form class="form-vertical group-add-members">
-    <div class="control-group">
-      <label class="control-label">
-        {{i18n "groups.add_members.usernames"}}
-      </label>
-      <p class="description">
-        {{i18n "groups.add_members.description"}}
-      </p>
+    <p>{{i18n "groups.add_members.description"}}</p>
 
+    <div class="input-group">
       {{email-group-user-chooser
-        class="input-xxlarge"
         value=usernamesAndEmails
-        id="group-add-members-user-selector"
-        onChange=(action (mut usernamesAndEmails))
+        onChange=(action "setUsernamesAndEmails")
         options=(hash
-          allowEmails=true
-          filterPlaceholder="groups.add_members.input_placeholder"
+          allowEmails=currentUser.can_invite_to_forum
+          filterPlaceholder=(if currentUser.can_invite_to_forum
+                             "groups.add_members.usernames_or_emails_placeholder"
+                             "groups.add_members.usernames_placeholder"
+                            )
         )
       }}
     </div>
 
     {{#if model.can_admin_group}}
-      <div class="control-group group-add-members-make-owner">
+      <div class="input-group">
         <label>
-          {{input type="checkbox"
-              class="inline"
-              checked=setAsOwner
-              disabled=emailsPresent}}
-          {{i18n "admin.groups.add_members.as_owner"}}
+          {{input id="set-owner" type="checkbox" checked=setOwner disabled=emails}}
+          {{i18n "groups.add_members.set_owner"}}
         </label>
       </div>
     {{/if}}
 
-    <div class="control-group group-add-members-notify-users">
+    <div class="input-group">
       <label>
-        {{input type="checkbox"
-            class="inline"
-            checked=notifyUsers
-            disabled=notifyUsersDisabled}}
+        {{input type="checkbox" checked=notifyUsers disabled=(and (not usernames) emails)}}
         {{i18n "groups.add_members.notify_users"}}
       </label>
     </div>
@@ -48,6 +38,6 @@
   {{d-button action=(action "addMembers")
       class="add btn-primary"
       icon="plus"
-      disabled=disableAddButton
+      disabled=(or loading (not usernamesAndEmails))
       label="groups.add"}}
 </div>

@@ -84,9 +84,20 @@ describe Promotion do
         expect(job["args"][0]["message_type"]).to eq("welcome_tl1_user")
       end
 
-      it "does not not send when the user already has the tl1 badge when recalculcating" do
+      it "does not not send when the user already has the tl1 badge when recalculating" do
         SiteSetting.send_tl1_welcome_message = true
         BadgeGranter.grant(Badge.find(1), user)
+        stat = user.user_stat
+        stat.topics_entered = SiteSetting.tl1_requires_topics_entered
+        stat.posts_read_count = SiteSetting.tl1_requires_read_posts
+        stat.time_read = SiteSetting.tl1_requires_time_spent_mins * 60
+        Promotion.recalculate(user)
+        expect(Jobs::SendSystemMessage.jobs.length).to eq(0)
+      end
+
+      it "does not not send when the tl1 badge is disabled" do
+        SiteSetting.send_tl1_welcome_message = true
+        Badge.find(1).update!(enabled: false)
         stat = user.user_stat
         stat.topics_entered = SiteSetting.tl1_requires_topics_entered
         stat.posts_read_count = SiteSetting.tl1_requires_read_posts

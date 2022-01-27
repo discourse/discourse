@@ -1,20 +1,19 @@
-import QUnit, { module } from "qunit";
+import QUnit, { module, skip, test } from "qunit";
 import MessageBus from "message-bus-client";
 import {
   clearCache as clearOutletCache,
   resetExtraClasses,
 } from "discourse/lib/plugin-connectors";
-import { clearRewrites, setURLContainer } from "discourse/lib/url";
+import { clearRewrites } from "discourse/lib/url";
 import {
   currentSettings,
   mergeSettings,
 } from "discourse/tests/helpers/site-settings";
 import { forceMobile, resetMobile } from "discourse/lib/mobile";
-import { getApplication, getContext } from "@ember/test-helpers";
-import { getOwner, setDefaultOwner } from "discourse-common/lib/get-owner";
+import { getApplication, getContext, settled } from "@ember/test-helpers";
+import { getOwner } from "discourse-common/lib/get-owner";
 import { later, run } from "@ember/runloop";
-import { moduleFor, setupApplicationTest } from "ember-qunit";
-import HeaderComponent from "discourse/components/site-header";
+import { setupApplicationTest } from "ember-qunit";
 import { Promise } from "rsvp";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
@@ -22,10 +21,10 @@ import { _clearSnapshots } from "select-kit/components/composer-actions";
 import { clearHTMLCache } from "discourse/helpers/custom-html";
 import createStore from "discourse/tests/helpers/create-store";
 import deprecated from "discourse-common/lib/deprecated";
-import { flushMap } from "discourse/models/store";
+import { flushMap } from "discourse/services/store";
 import { initSearchData } from "discourse/widgets/search-menu";
+import { resetPostMenuExtraButtons } from "discourse/widgets/post-menu";
 import { isEmpty } from "@ember/utils";
-import { mapRoutes } from "discourse/mapping-router";
 import { resetCustomPostMessageCallbacks } from "discourse/controllers/topic";
 import { resetDecorators } from "discourse/widgets/widget";
 import { resetCache as resetOneboxCache } from "pretty-text/oneboxer";
@@ -34,22 +33,45 @@ import { resetDecorators as resetPostCookedDecorators } from "discourse/widgets/
 import { resetTopicTitleDecorators } from "discourse/components/topic-title";
 import { resetUsernameDecorators } from "discourse/helpers/decorate-username-selector";
 import { resetWidgetCleanCallbacks } from "discourse/components/mount-widget";
+import { resetUserSearchCache } from "discourse/lib/user-search";
+import { resetCardClickListenerSelector } from "discourse/mixins/card-contents-base";
+import { resetComposerCustomizations } from "discourse/models/composer";
+import { resetQuickSearchRandomTips } from "discourse/widgets/search-menu-results";
 import sessionFixtures from "discourse/tests/fixtures/session-fixtures";
 import { setTopicList } from "discourse/lib/topic-list-tracker";
 import sinon from "sinon";
 import siteFixtures from "discourse/tests/fixtures/site-fixtures";
 import { clearResolverOptions } from "discourse-common/resolver";
-import { clearCustomNavItemHref } from "discourse/models/nav-item";
+import { clearNavItems } from "discourse/models/nav-item";
 import {
   cleanUpComposerUploadHandler,
   cleanUpComposerUploadMarkdownResolver,
-  cleanUpComposerUploadProcessor,
+  cleanUpComposerUploadPreProcessor,
 } from "discourse/components/composer-editor";
+import { resetLastEditNotificationClick } from "discourse/models/post-stream";
+import { clearAuthMethods } from "discourse/models/login-method";
+import { clearTopicFooterDropdowns } from "discourse/lib/register-topic-footer-dropdown";
+import { clearTopicFooterButtons } from "discourse/lib/register-topic-footer-button";
+import { clearDesktopNotificationHandlers } from "discourse/lib/desktop-notifications";
+import {
+  clearPresenceCallbacks,
+  setTestPresence,
+} from "discourse/lib/user-presence";
 
 const LEGACY_ENV = !setupApplicationTest;
 
 export function currentUser() {
   return User.create(sessionFixtures["/session/current.json"].current_user);
+}
+
+let _initialized = new Set();
+
+export function testsInitialized() {
+  _initialized.add(QUnit.config.current.testId);
+}
+
+export function testsTornDown() {
+  _initialized.delete(QUnit.config.current.testId);
 }
 
 export function updateCurrentUser(properties) {
@@ -76,10 +98,23 @@ export function fakeTime(timeString, timezone = null, advanceTime = false) {
   });
 }
 
+export function withFrozenTime(timeString, timezone, callback) {
+  const clock = fakeTime(timeString, timezone, false);
+  try {
+    callback();
+  } finally {
+    clock.restore();
+  }
+}
+
 let _pretenderCallbacks = {};
 
 export function resetSite(siteSettings, extras) {
-  let siteAttrs = $.extend({}, siteFixtures["site.json"].site, extras || {});
+  let siteAttrs = Object.assign(
+    {},
+    siteFixtures["site.json"].site,
+    extras || {}
+  );
   siteAttrs.store = createStore();
   siteAttrs.siteSettings = siteSettings;
   return Site.resetCurrent(Site.create(siteAttrs));
@@ -92,18 +127,56 @@ export function applyPretender(name, server, helper) {
   }
 }
 
-export function controllerModule(name, args = {}) {
-  moduleFor(name, name, {
-    setup() {
-      this.registry.register("router:main", mapRoutes());
-      let controller = this.subject();
-      controller.siteSettings = currentSettings();
-      if (args.setupController) {
-        args.setupController(controller);
-      }
-    },
-    needs: args.needs,
-  });
+// Add clean up code here to run after every test
+function testCleanup(container, app) {
+  if (_initialized.has(QUnit.config.current.testId)) {
+    if (!app) {
+      app = getApplication();
+    }
+    app._runInitializer("instanceInitializers", (_, initializer) => {
+      initializer.teardown?.();
+    });
+
+    app._runInitializer("initializers", (_, initializer) => {
+      initializer.teardown?.(container);
+    });
+  }
+
+  flushMap();
+  localStorage.clear();
+  User.resetCurrent();
+  resetExtraClasses();
+  clearOutletCache();
+  clearHTMLCache();
+  clearRewrites();
+  initSearchData();
+  resetDecorators();
+  resetPostCookedDecorators();
+  resetPluginOutletDecorators();
+  resetTopicTitleDecorators();
+  resetUsernameDecorators();
+  resetOneboxCache();
+  resetCustomPostMessageCallbacks();
+  resetUserSearchCache();
+  resetCardClickListenerSelector();
+  resetComposerCustomizations();
+  resetQuickSearchRandomTips();
+  resetPostMenuExtraButtons();
+  clearNavItems();
+  setTopicList(null);
+  _clearSnapshots();
+  cleanUpComposerUploadHandler();
+  cleanUpComposerUploadMarkdownResolver();
+  cleanUpComposerUploadPreProcessor();
+  clearTopicFooterDropdowns();
+  clearTopicFooterButtons();
+  clearDesktopNotificationHandlers();
+  resetLastEditNotificationClick();
+  clearAuthMethods();
+  setTestPresence(true);
+  if (!LEGACY_ENV) {
+    clearPresenceCallbacks();
+  }
 }
 
 export function discourseModule(name, options) {
@@ -121,6 +194,7 @@ export function discourseModule(name, options) {
         this.siteSettings = currentSettings();
         clearResolverOptions();
       });
+      hooks.afterEach(() => testCleanup(this.container));
 
       this.getController = function (controllerName, properties) {
         let controller = this.container.lookup(`controller:${controllerName}`);
@@ -146,14 +220,11 @@ export function discourseModule(name, options) {
     beforeEach() {
       this.container = getOwner(this);
       this.siteSettings = currentSettings();
-      if (options && options.beforeEach) {
-        options.beforeEach.call(this);
-      }
+      options?.beforeEach?.call(this);
     },
     afterEach() {
-      if (options && options.afterEach) {
-        options.afterEach.call(this);
-      }
+      options?.afterEach?.call(this);
+      testCleanup(this.container);
     },
   });
 }
@@ -179,7 +250,7 @@ export function acceptance(name, optionsOrCallback) {
   } else if (typeof optionsOrCallback === "object") {
     deprecated(
       `${name}: The second parameter to \`acceptance\` should be a function that encloses your tests.`,
-      { since: "2.6.0" }
+      { since: "2.6.0", dropFrom: "2.9.0.beta1" }
     );
     options = optionsOrCallback;
   }
@@ -195,9 +266,6 @@ export function acceptance(name, optionsOrCallback) {
   const setup = {
     beforeEach() {
       resetMobile();
-
-      // For now don't do scrolling stuff in Test Mode
-      HeaderComponent.reopen({ examineDockHeader: function () {} });
 
       resetExtraClasses();
       if (mobileView) {
@@ -219,9 +287,7 @@ export function acceptance(name, optionsOrCallback) {
       clearOutletCache();
       clearHTMLCache();
 
-      if (siteChanges) {
-        resetSite(currentSettings(), siteChanges);
-      }
+      resetSite(currentSettings(), siteChanges);
 
       if (LEGACY_ENV) {
         getApplication().__registeredObjects__ = false;
@@ -234,8 +300,6 @@ export function acceptance(name, optionsOrCallback) {
         });
       }
 
-      setURLContainer(this.container);
-      setDefaultOwner(this.container);
       if (!this.owner) {
         this.owner = this.container;
       }
@@ -246,39 +310,10 @@ export function acceptance(name, optionsOrCallback) {
     },
 
     afterEach() {
+      resetMobile();
       let app = getApplication();
-      if (options && options.afterEach) {
-        options.afterEach.call(this);
-      }
-      flushMap();
-      localStorage.clear();
-      User.resetCurrent();
-      resetSite(currentSettings());
-      resetExtraClasses();
-      clearOutletCache();
-      clearHTMLCache();
-      clearRewrites();
-      initSearchData();
-      resetDecorators();
-      resetPostCookedDecorators();
-      resetPluginOutletDecorators();
-      resetTopicTitleDecorators();
-      resetUsernameDecorators();
-      resetOneboxCache();
-      resetCustomPostMessageCallbacks();
-      clearCustomNavItemHref();
-      setTopicList(null);
-      _clearSnapshots();
-      setURLContainer(null);
-      setDefaultOwner(null);
-      cleanUpComposerUploadHandler();
-      cleanUpComposerUploadProcessor();
-      cleanUpComposerUploadMarkdownResolver();
-      app._runInitializer("instanceInitializers", (initName, initializer) => {
-        if (initializer && initializer.teardown) {
-          initializer.teardown(this.container);
-        }
-      });
+      options?.afterEach?.call(this);
+      testCleanup(this.container, app);
 
       if (LEGACY_ENV) {
         app.__registeredObjects__ = false;
@@ -359,9 +394,9 @@ export function controllerFor(controller, model) {
 
 export function fixture(selector) {
   if (selector) {
-    return $("#qunit-fixture").find(selector);
+    return document.querySelector(`#qunit-fixture ${selector}`);
   }
-  return $("#qunit-fixture");
+  return document.querySelector("#qunit-fixture");
 }
 
 QUnit.assert.not = function (actual, message) {
@@ -452,5 +487,77 @@ export function exists(selector) {
 export function publishToMessageBus(channelPath, ...args) {
   MessageBus.callbacks
     .filterBy("channel", channelPath)
-    .map((c) => c.func(...args));
+    .forEach((c) => c.func(...args));
+}
+
+export async function selectText(selector, endOffset = null) {
+  const range = document.createRange();
+  let node;
+
+  if (typeof selector === "string") {
+    node = document.querySelector(selector);
+  } else {
+    node = selector;
+  }
+
+  range.selectNodeContents(node);
+
+  if (endOffset) {
+    range.setEnd(node, endOffset);
+  }
+
+  const performSelection = () => {
+    const selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+  };
+
+  if (LEGACY_ENV) {
+    // In the Ember CLI environment, the settled() helper seems to take care of waiting
+    // for this event to fire. In legacy, we need to do it manually.
+    let callback;
+    const selectEventFiredPromise = new Promise((resolve) => {
+      callback = resolve;
+      document.addEventListener("selectionchange", callback);
+    });
+
+    performSelection();
+
+    try {
+      await selectEventFiredPromise;
+    } finally {
+      document.removeEventListener("selectionchange", callback);
+    }
+  } else {
+    performSelection();
+  }
+
+  await settled();
+}
+
+export function conditionalTest(name, condition, testCase) {
+  if (condition) {
+    test(name, testCase);
+  } else {
+    skip(name, testCase);
+  }
+}
+
+export function chromeTest(name, testCase) {
+  conditionalTest(name, navigator.userAgent.includes("Chrome"), testCase);
+}
+
+export function firefoxTest(name, testCase) {
+  conditionalTest(name, navigator.userAgent.includes("Firefox"), testCase);
+}
+
+export function createFile(name, type = "image/png", blobData = null) {
+  // the blob content doesn't matter at all, just want it to be random-ish
+  blobData = blobData || (Math.random() + 1).toString(36).substring(2);
+  const blob = new Blob([blobData]);
+  const file = new File([blob], name, {
+    type,
+    lastModified: new Date().getTime(),
+  });
+  return file;
 }

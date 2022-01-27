@@ -1,9 +1,12 @@
-{{combo-box
-  id=field.id
+{{component
+  componentName
   class=fieldClass
   value=field.value
   content=field.choices
   nameProperty="label"
   tabindex="9"
-  onChange=(action (mut field.value))
+  onChange=(action "onChangeValue")
+  options=(hash
+    translatedNone=false
+  )
 }}

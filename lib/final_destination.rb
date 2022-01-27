@@ -30,7 +30,7 @@ class FinalDestination
 
   DEFAULT_USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Safari/605.1.15"
 
-  attr_reader :status, :cookie, :status_code, :ignored
+  attr_reader :status, :cookie, :status_code, :content_type, :ignored
 
   def initialize(url, opts = nil)
     @url = url
@@ -63,7 +63,8 @@ class FinalDestination
     end
 
     @status = :ready
-    @http_verb = @force_get_hosts.any? { |host| hostname_matches?(host) } ? :get : :head
+    @follow_canonical = @opts[:follow_canonical]
+    @http_verb = http_verb(@force_get_hosts, @follow_canonical)
     @cookie = nil
     @limited_ips = []
     @verbose = @opts[:verbose] || false
@@ -75,6 +76,14 @@ class FinalDestination
 
   def self.connection_timeout
     20
+  end
+
+  def http_verb(force_get_hosts, follow_canonical)
+    if follow_canonical || force_get_hosts.any? { |host| hostname_matches?(host) }
+      :get
+    else
+      :head
+    end
   end
 
   def timeout
@@ -89,6 +98,7 @@ class FinalDestination
     result = {
       "User-Agent" => @user_agent,
       "Accept" => "*/*",
+      "Accept-Language" => "*",
       "Host" => @uri.hostname
     }
 
@@ -214,9 +224,22 @@ class FinalDestination
         end
       end
 
+      if @follow_canonical
+        next_url = fetch_canonical_url(response.body)
+
+        if next_url.to_s.present? && next_url != @uri
+          @follow_canonical = false
+          @uri = next_url
+          @http_verb = http_verb(@force_get_hosts, @follow_canonical)
+
+          return resolve
+        end
+      end
+
+      @content_type = response.headers['Content-Type'] if response.headers.has_key?('Content-Type')
       @status = :resolved
       return @uri
-    when 400, 405, 406, 409, 500, 501
+    when 103, 400, 405, 406, 409, 500, 501
       response_status, small_headers = small_get(request_headers)
 
       if response_status == 200
@@ -456,4 +479,19 @@ class FinalDestination
     end
   end
 
+  def fetch_canonical_url(body)
+    return if body.blank?
+
+    canonical_element = Nokogiri::HTML5(body).at("link[rel='canonical']")
+    return if canonical_element.nil?
+    canonical_uri = uri(canonical_element['href'])
+    return if canonical_uri.blank?
+
+    return canonical_uri if canonical_uri.host.present?
+    parts = [@uri.host, canonical_uri.to_s]
+    complete_url = canonical_uri.to_s.starts_with?('/') ? parts.join('') : parts.join('/')
+    complete_url = "#{@uri.scheme}://#{complete_url}" if @uri.scheme
+
+    uri(complete_url)
+  end
 end

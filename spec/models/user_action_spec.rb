@@ -3,6 +3,7 @@
 require 'rails_helper'
 
 describe UserAction do
+  fab!(:coding_horror) { Fabricate(:coding_horror) }
 
   before do
     UserActionManager.enable
@@ -35,15 +36,18 @@ describe UserAction do
       }.merge(opts))
     end
 
-    describe "integration" do
-      before do
-        # Create some test data using a helper
-        log_test_action
-        log_test_action(action_type: UserAction::GOT_PRIVATE_MESSAGE)
-        log_test_action(action_type: UserAction::NEW_TOPIC, target_topic_id: public_topic.id, target_post_id: public_post.id)
-        log_test_action(action_type: UserAction::BOOKMARK)
+    it "allows publishing when group is deleted" do
+      public_topic.category.update!(read_restricted: true)
+
+      m = MessageBus.track_publish("/u/#{user.username_lower}") do
+        log_test_action(target_topic_id: public_topic.id, target_post_id: public_post.id)
       end
 
+      expect(m[0].group_ids).to eq([Group::AUTO_GROUPS[:admins]])
+      expect(m[0].user_ids).to eq([user.id])
+    end
+
+    describe "integration" do
       def stats_for_user(viewer = nil)
         UserAction.stats(user.id, Guardian.new(viewer)).map { |r| r.action_type.to_i }.sort
       end
@@ -53,6 +57,12 @@ describe UserAction do
       end
 
       it 'includes the events correctly' do
+        # Create some test data using a helper
+        log_test_action
+        log_test_action(action_type: UserAction::GOT_PRIVATE_MESSAGE)
+        log_test_action(action_type: UserAction::NEW_TOPIC, target_topic_id: public_topic.id, target_post_id: public_post.id)
+        log_test_action(action_type: UserAction::BOOKMARK)
+
         Jobs.run_immediately!
         PostActionNotifier.enable
 
@@ -82,7 +92,7 @@ describe UserAction do
         expect(stream).to eq([])
 
         group = Fabricate(:group)
-        u = Fabricate(:coding_horror)
+        u = coding_horror
         group.add(u)
 
         category.set_permissions(group => :full)
@@ -158,7 +168,7 @@ describe UserAction do
 
     fab!(:post) { Fabricate(:post) }
     let(:likee) { post.user }
-    fab!(:liker) { Fabricate(:coding_horror) }
+    fab!(:liker) { coding_horror }
 
     def likee_stream
       UserAction.stream(user_id: likee.id, guardian: Guardian.new)
@@ -248,7 +258,7 @@ describe UserAction do
 
     describe 'when another user posts on the topic' do
       before do
-        @other_user = Fabricate(:coding_horror)
+        @other_user = coding_horror
         @mentioned = Fabricate(:admin)
 
         @response = PostCreator.new(@other_user, reply_to_post_number: 1, topic_id: @post.topic_id, raw: "perhaps @#{@mentioned.username} knows how this works?").create

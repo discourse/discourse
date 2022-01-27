@@ -7,6 +7,7 @@ class NotificationSerializer < ApplicationSerializer
              :external_id,
              :notification_type,
              :read,
+             :high_priority,
              :created_at,
              :post_number,
              :topic_id,

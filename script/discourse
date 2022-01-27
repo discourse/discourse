@@ -4,7 +4,11 @@
 require "thor"
 
 class DiscourseCLI < Thor
-  desc "remap [--global,--regex] FROM TO", "Remap a string sequence accross all tables"
+  def self.exit_on_failure?
+    true
+  end
+
+  desc "remap [--global,--regex] FROM TO", "Remap a string sequence across all tables"
   long_desc <<-LONGDESC
     Replace a string sequence FROM with TO across all tables.
 
@@ -34,9 +38,9 @@ class DiscourseCLI < Thor
     require 'db_helper'
 
     if options[:regex]
-      puts "Rewriting all occurences of #{from} to #{to} using regexp_replace"
+      puts "Rewriting all occurrences of #{from} to #{to} using regexp_replace"
     else
-      puts "Rewriting all occurences of #{from} to #{to}"
+      puts "Rewriting all occurrences of #{from} to #{to}"
     end
     puts "THIS TASK WILL REWRITE DATA, ARE YOU SURE (type YES)"
     puts "WILL RUN ON ALL #{RailsMultisite::ConnectionManagement.all_dbs.length} DBS" if options[:global]

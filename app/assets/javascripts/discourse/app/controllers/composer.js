@@ -1,5 +1,5 @@
 import Composer, { SAVE_ICONS, SAVE_LABELS } from "discourse/models/composer";
-import Controller, { inject } from "@ember/controller";
+import Controller, { inject as controller } from "@ember/controller";
 import EmberObject, { action, computed } from "@ember/object";
 import { alias, and, or, reads } from "@ember/object/computed";
 import {
@@ -93,7 +93,7 @@ export function addPopupMenuOptionsCallback(callback) {
 }
 
 export default Controller.extend({
-  topicController: inject("topic"),
+  topicController: controller("topic"),
   router: service(),
 
   checkedMessages: false,
@@ -101,8 +101,10 @@ export default Controller.extend({
   showEditReason: false,
   editReason: null,
   scopedCategoryId: null,
+  prioritizedCategoryId: null,
   lastValidatedAt: null,
   isUploading: false,
+  isProcessingUpload: false,
   topic: null,
   linkLookup: null,
   showPreview: true,
@@ -190,10 +192,13 @@ export default Controller.extend({
 
   @discourseComputed("model.canEditTitle", "model.creatingPrivateMessage")
   canEditTags(canEditTitle, creatingPrivateMessage) {
+    if (creatingPrivateMessage && (this.site.mobileView || !this.isStaffUser)) {
+      return false;
+    }
+
     return (
       this.site.can_tag_topics &&
       canEditTitle &&
-      !creatingPrivateMessage &&
       (!this.get("model.topic.isPrivateMessage") || this.site.can_tag_pms)
     );
   },
@@ -238,13 +243,22 @@ export default Controller.extend({
     return SAVE_ICONS[modelAction];
   },
 
+  // Note we update when some other attributes like tag/category change to allow
+  // text customizations to use those.
   @discourseComputed(
     "model.action",
     "isWhispering",
     "model.editConflict",
-    "model.privateMessage"
+    "model.privateMessage",
+    "model.tags",
+    "model.category"
   )
   saveLabel(modelAction, isWhispering, editConflict, privateMessage) {
+    let result = this.model.customizationFor("saveLabel");
+    if (result) {
+      return result;
+    }
+
     if (editConflict) {
       return "composer.overwrite_edit";
     } else if (isWhispering) {
@@ -282,6 +296,11 @@ export default Controller.extend({
     return option;
   },
 
+  @discourseComputed("model.requiredCategoryMissing", "model.replyLength")
+  disableTextarea(requiredCategoryMissing, replyLength) {
+    return requiredCategoryMissing && replyLength === 0;
+  },
+
   @discourseComputed("model.composeState", "model.creatingTopic", "model.post")
   popupMenuOptions(composeState) {
     if (composeState === "open" || composeState === "fullscreen") {
@@ -297,6 +316,28 @@ export default Controller.extend({
           };
         })
       );
+
+      if (this.site.mobileView) {
+        options.push(
+          this._setupPopupMenuOption(() => {
+            return {
+              action: "applyUnorderedList",
+              icon: "list-ul",
+              label: "composer.ulist_title",
+            };
+          })
+        );
+
+        options.push(
+          this._setupPopupMenuOption(() => {
+            return {
+              action: "applyOrderedList",
+              icon: "list-ol",
+              label: "composer.olist_title",
+            };
+          })
+        );
+      }
 
       options.push(
         this._setupPopupMenuOption(() => {
@@ -455,7 +496,12 @@ export default Controller.extend({
       $links.each((idx, l) => {
         const href = l.href;
         if (href && href.length) {
-          // skip links in quotes
+          // skip links added by watched words
+          if (l.dataset.word !== undefined) {
+            return true;
+          }
+
+          // skip links in quotes and oneboxes
           for (let element = l; element; element = element.parentElement) {
             if (
               element.tagName === "DIV" &&
@@ -470,16 +516,24 @@ export default Controller.extend({
             ) {
               return true;
             }
+
+            if (
+              element.tagName === "ASIDE" &&
+              element.classList.contains("onebox") &&
+              href !== element.dataset["onebox-src"]
+            ) {
+              return true;
+            }
           }
 
-          const [warn, info] = linkLookup.check(post, href);
+          const [linkWarn, linkInfo] = linkLookup.check(post, href);
 
-          if (warn) {
+          if (linkWarn && !this.get("isWhispering")) {
             const body = I18n.t("composer.duplicate_link", {
-              domain: info.domain,
-              username: info.username,
-              post_url: topic.urlForPostNumber(info.post_number),
-              ago: shortDate(info.posted_at),
+              domain: linkInfo.domain,
+              username: linkInfo.username,
+              post_url: topic.urlForPostNumber(linkInfo.post_number),
+              ago: shortDate(linkInfo.posted_at),
             });
             this.appEvents.trigger("composer-messages:create", {
               extraClass: "custom-body",
@@ -577,7 +631,11 @@ export default Controller.extend({
     },
 
     save(ignore, event) {
-      this.save(false, { jump: !(event && event.shiftKey) });
+      this.save(false, {
+        jump:
+          !(event?.shiftKey && this.get("model.replyingToTopic")) &&
+          !this.skipJumpOnSave,
+      });
     },
 
     displayEditReason() {
@@ -610,17 +668,19 @@ export default Controller.extend({
         groups.forEach((group) => {
           let body;
           const groupLink = getURL(`/g/${group.name}/members`);
+          const maxMentions = parseInt(group.max_mentions, 10);
+          const userCount = parseInt(group.user_count, 10);
 
-          if (group.max_mentions < group.user_count) {
+          if (maxMentions < userCount) {
             body = I18n.t("composer.group_mentioned_limit", {
               group: `@${group.name}`,
-              count: group.max_mentions,
+              count: maxMentions,
               group_link: groupLink,
             });
           } else if (group.user_count > 0) {
             body = I18n.t("composer.group_mentioned", {
               group: `@${group.name}`,
-              count: group.user_count,
+              count: userCount,
               group_link: groupLink,
             });
           }
@@ -638,22 +698,40 @@ export default Controller.extend({
 
     cannotSeeMention(mentions) {
       mentions.forEach((mention) => {
-        const translation = this.get("model.topic.isPrivateMessage")
-          ? "composer.cannot_see_mention.private"
-          : "composer.cannot_see_mention.category";
-        const body = I18n.t(translation, {
-          username: `@${mention.name}`,
-        });
         this.appEvents.trigger("composer-messages:create", {
           extraClass: "custom-body",
           templateName: "custom-body",
-          body,
+          body: I18n.t(`composer.cannot_see_mention.${mention.reason}`, {
+            username: mention.name,
+          }),
         });
       });
     },
+
+    hereMention(count) {
+      this.appEvents.trigger("composer-messages:create", {
+        extraClass: "custom-body",
+        templateName: "custom-body",
+        body: I18n.t("composer.here_mention", {
+          here: this.siteSettings.here_mention,
+          count,
+        }),
+      });
+    },
+
+    applyUnorderedList() {
+      this.toolbarEvent.applyList("* ", "list_item");
+    },
+
+    applyOrderedList() {
+      this.toolbarEvent.applyList(
+        (i) => (!i ? "1. " : `${parseInt(i, 10) + 1}. `),
+        "list_item"
+      );
+    },
   },
 
-  disableSubmit: or("model.loading", "isUploading"),
+  disableSubmit: or("model.loading", "isUploading", "isProcessingUpload"),
 
   save(force, options = {}) {
     if (this.disableSubmit) {
@@ -710,7 +788,10 @@ export default Controller.extend({
     composer.set("disableDrafts", true);
 
     // for now handle a very narrow use case
-    // if we are replying to a topic AND not on the topic pop the window up
+    // if we are replying to a topic
+    // AND are on on a different topic
+    // AND topic is open (or we are staff)
+    // --> pop the window up
     if (!force && composer.replyingToTopic) {
       const currentTopic = this.topicModel;
 
@@ -719,7 +800,10 @@ export default Controller.extend({
         return;
       }
 
-      if (currentTopic.id !== composer.get("topic.id")) {
+      if (
+        currentTopic.id !== composer.get("topic.id") &&
+        (this.isStaffUser || !currentTopic.closed)
+      ) {
         const message =
           "<h1>" + I18n.t("composer.posting_not_on_topic") + "</h1>";
 
@@ -763,14 +847,15 @@ export default Controller.extend({
 
     // TODO: This should not happen in model
     const imageSizes = {};
-    $("#reply-control .d-editor-preview img").each((i, e) => {
-      const $img = $(e);
-      const src = $img.prop("src");
+    document
+      .querySelectorAll("#reply-control .d-editor-preview img")
+      .forEach((e) => {
+        const src = e.src;
 
-      if (src && src.length) {
-        imageSizes[src] = { width: $img.width(), height: $img.height() };
-      }
-    });
+        if (src && src.length) {
+          imageSizes[src] = { width: e.naturalWidth, height: e.naturalHeight };
+        }
+      });
 
     const promise = composer
       .save({ imageSizes, editReason: this.editReason })
@@ -807,7 +892,11 @@ export default Controller.extend({
 
         if (result.responseJson.action === "create_post") {
           this.appEvents.trigger("composer:created-post");
-          this.appEvents.trigger("post:highlight", result.payload.post_number);
+          this.appEvents.trigger(
+            "post:highlight",
+            result.payload.post_number,
+            options
+          );
         }
 
         if (this.get("model.draftKey") === Composer.NEW_TOPIC_KEY) {
@@ -868,15 +957,23 @@ export default Controller.extend({
   },
 
   /**
-   Open the composer view
+    Open the composer view
 
-   @method open
-   @param {Object} opts Options for creating a post
-   @param {String} opts.action The action we're performing: edit, reply or createTopic
-   @param {Post} [opts.post] The post we're replying to
-   @param {Topic} [opts.topic] The topic we're replying to
-   @param {String} [opts.quote] If we're opening a reply from a quote, the quote we're making
-   **/
+    @method open
+    @param {Object} opts Options for creating a post
+      @param {String} opts.action The action we're performing: edit, reply, createTopic, createSharedDraft, privateMessage
+      @param {String} opts.draftKey
+      @param {Post} [opts.post] The post we're replying to
+      @param {Topic} [opts.topic] The topic we're replying to
+      @param {String} [opts.quote] If we're opening a reply from a quote, the quote we're making
+      @param {Boolean} [opts.ignoreIfChanged]
+      @param {Boolean} [opts.disableScopedCategory]
+      @param {Number} [opts.categoryId] Sets `scopedCategoryId` and `categoryId` on the Composer model
+      @param {Number} [opts.prioritizedCategoryId]
+      @param {String} [opts.draftSequence]
+      @param {Boolean} [opts.skipDraftCheck]
+      @param {Boolean} [opts.skipJumpOnSave] Option to skip navigating to the post when saved in this composer session
+  **/
   open(opts) {
     opts = opts || {};
 
@@ -898,14 +995,27 @@ export default Controller.extend({
       showEditReason: false,
       editReason: null,
       scopedCategoryId: null,
+      prioritizedCategoryId: null,
       skipAutoSave: true,
     });
+
+    this.set("skipJumpOnSave", !!opts.skipJumpOnSave);
 
     // Scope the categories drop down to the category we opened the composer with.
     if (opts.categoryId && !opts.disableScopedCategory) {
       const category = this.site.categories.findBy("id", opts.categoryId);
       if (category) {
         this.set("scopedCategoryId", opts.categoryId);
+      }
+    }
+
+    if (opts.prioritizedCategoryId) {
+      const category = this.site.categories.findBy(
+        "id",
+        opts.prioritizedCategoryId
+      );
+      if (category) {
+        this.set("prioritizedCategoryId", opts.prioritizedCategoryId);
       }
     }
 
@@ -1137,11 +1247,11 @@ export default Controller.extend({
 
     let promise = new Promise((resolve, reject) => {
       if (this.get("model.hasMetaData") || this.get("model.replyDirty")) {
-        const controller = showModal("discard-draft", {
+        const modal = showModal("discard-draft", {
           model: this.model,
           modalClass: "discard-draft-modal",
         });
-        controller.setProperties({
+        modal.setProperties({
           onDestroyDraft: () => {
             this.destroyDraft()
               .then(() => {
@@ -1154,9 +1264,6 @@ export default Controller.extend({
           },
           onSaveDraft: () => {
             this._saveDraft();
-            if (this.model.draftKey === Composer.NEW_TOPIC_KEY) {
-              this.currentUser.set("has_topic_draft", true);
-            }
             this.model.clearState();
             this.close();
             resolve();
@@ -1207,10 +1314,12 @@ export default Controller.extend({
           );
         }
       } else {
-        this._saveDraftPromise = model.saveDraft().finally(() => {
-          this._lastDraftSaved = Date.now();
-          this._saveDraftPromise = null;
-        });
+        this._saveDraftPromise = model
+          .saveDraft(this.currentUser)
+          .finally(() => {
+            this._lastDraftSaved = Date.now();
+            this._saveDraftPromise = null;
+          });
       }
     }
   },
@@ -1290,6 +1399,7 @@ export default Controller.extend({
 
     const elem = document.querySelector("html");
     elem.classList.remove("fullscreen-composer");
+    elem.classList.remove("composer-open");
 
     document.activeElement && document.activeElement.blur();
     this.setProperties({ model: null, lastValidatedAt: null });
@@ -1307,5 +1417,9 @@ export default Controller.extend({
   @discourseComputed("model.composeState")
   visible(state) {
     return state && state !== "closed";
+  },
+
+  clearLastValidatedAt() {
+    this.set("lastValidatedAt", null);
   },
 });

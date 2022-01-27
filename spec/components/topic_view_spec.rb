@@ -3,8 +3,7 @@
 require 'rails_helper'
 require 'topic_view'
 
-describe TopicView do
-
+RSpec.describe TopicView do
   fab!(:user) { Fabricate(:user) }
   fab!(:moderator) { Fabricate(:moderator) }
   fab!(:admin) { Fabricate(:admin) }
@@ -14,6 +13,23 @@ describe TopicView do
   fab!(:anonymous) { Fabricate(:anonymous) }
 
   let(:topic_view) { TopicView.new(topic.id, evil_trout) }
+
+  context "preload" do
+    it "allows preloading of data" do
+      preloaded_topic_view = nil
+      preloader = lambda do |view|
+        preloaded_topic_view = view
+      end
+
+      TopicView.on_preload(&preloader)
+
+      expect(preloaded_topic_view).to eq(nil)
+      topic_view
+      expect(preloaded_topic_view).to eq(topic_view)
+
+      TopicView.cancel_preload(&preloader)
+    end
+  end
 
   it "raises a not found error if the topic doesn't exist" do
     expect { TopicView.new(1231232, evil_trout) }.to raise_error(Discourse::NotFound)
@@ -202,7 +218,6 @@ describe TopicView do
       PostActionCreator.like(moderator, p2)
       best = TopicView.new(topic.id, nil, best: 99, only_moderator_liked: true)
       expect(best.posts.count).to eq(1)
-
     end
 
     it "raises NotLoggedIn if the user isn't logged in and is trying to view a private message" do
@@ -393,20 +408,41 @@ describe TopicView do
       end
     end
 
-    context "#first_post_bookmark_reminder_at" do
+    context "#bookmarks" do
       let!(:user) { Fabricate(:user) }
       let!(:bookmark1) { Fabricate(:bookmark_next_business_day_reminder, post: topic.first_post, user: user) }
+      let!(:bookmark2) { Fabricate(:bookmark_next_business_day_reminder, post: topic.posts[1], user: user) }
 
       it "gets the first post bookmark reminder at for the user" do
-        expect(TopicView.new(topic.id, user).first_post_bookmark_reminder_at).to eq_time(bookmark1.reminder_at)
+        topic_view = TopicView.new(topic.id, user)
+
+        first, second = topic_view.bookmarks.sort_by(&:id)
+        expect(first[:post_id]).to eq(bookmark1.post_id)
+        expect(first[:reminder_at]).to eq_time(bookmark1.reminder_at)
+        expect(second[:post_id]).to eq(bookmark2.post_id)
+        expect(second[:reminder_at]).to eq_time(bookmark2.reminder_at)
       end
 
       context "when the topic is deleted" do
-        it "gets the first post bookmark reminder at for the user" do
+        it "returns []" do
           topic_view = TopicView.new(topic, user)
           PostDestroyer.new(Fabricate(:admin), topic.first_post).destroy
           topic.reload
-          expect(topic_view.first_post_bookmark_reminder_at).to eq_time(bookmark1.reminder_at)
+
+          expect(topic_view.bookmarks).to eq([])
+        end
+      end
+
+      context "when one of the posts is deleted" do
+        it "does not return that post's bookmark" do
+          topic_view = TopicView.new(topic, user)
+          PostDestroyer.new(Fabricate(:admin), topic.posts.second).destroy
+          topic.reload
+
+          expect(topic_view.bookmarks.length).to eq(1)
+          first = topic_view.bookmarks.first
+          expect(first[:post_id]).to eq(bookmark1.post_id)
+          expect(first[:reminder_at]).to eq_time(bookmark1.reminder_at)
         end
       end
     end
@@ -436,7 +472,6 @@ describe TopicView do
         expect(recent_posts.first.created_at).to be > recent_posts.last.created_at
       end
     end
-
   end
 
   context 'whispers' do
@@ -560,7 +595,6 @@ describe TopicView do
     end
 
     describe "filter_posts_near" do
-
       def topic_view_near(post, show_deleted = false)
         TopicView.new(topic.id, evil_trout, post_number: post.post_number, show_deleted: show_deleted)
       end
@@ -771,13 +805,13 @@ describe TopicView do
   end
 
   describe '#filtered_post_stream' do
-    let!(:post) { Fabricate(:post, topic: topic, user: first_poster) }
-    let!(:post2) { Fabricate(:post, topic: topic, user: evil_trout) }
+    let!(:post) { Fabricate(:post, topic: topic, user: first_poster, created_at: 18.hours.ago) }
+    let!(:post2) { Fabricate(:post, topic: topic, user: evil_trout, created_at: 6.hours.ago) }
     let!(:post3) { Fabricate(:post, topic: topic, user: first_poster) }
 
     it 'should return the right columns' do
       expect(topic_view.filtered_post_stream).to eq([
-        [post.id, 0],
+        [post.id, 1],
         [post2.id, 0],
         [post3.id, 0]
       ])
@@ -785,19 +819,12 @@ describe TopicView do
 
     describe 'for mega topics' do
       it 'should return the right columns' do
-        begin
-          original_const = TopicView::MEGA_TOPIC_POSTS_COUNT
-          TopicView.send(:remove_const, "MEGA_TOPIC_POSTS_COUNT")
-          TopicView.const_set("MEGA_TOPIC_POSTS_COUNT", 2)
-
+        stub_const(TopicView, "MEGA_TOPIC_POSTS_COUNT", 2) do
           expect(topic_view.filtered_post_stream).to eq([
             post.id,
             post2.id,
             post3.id
           ])
-        ensure
-          TopicView.send(:remove_const, "MEGA_TOPIC_POSTS_COUNT")
-          TopicView.const_set("MEGA_TOPIC_POSTS_COUNT", original_const)
         end
       end
     end
@@ -812,7 +839,7 @@ describe TopicView do
     end
   end
 
-  describe '#first_post_id and #last_post_id' do
+  describe '#last_post_id' do
     let!(:p3) { Fabricate(:post, topic: topic) }
     let!(:p2) { Fabricate(:post, topic: topic) }
     let!(:p1) { Fabricate(:post, topic: topic) }
@@ -824,7 +851,6 @@ describe TopicView do
     end
 
     it 'should return the right id' do
-      expect(topic_view.first_post_id).to eq(p1.id)
       expect(topic_view.last_post_id).to eq(p3.id)
     end
   end
@@ -903,6 +929,100 @@ describe TopicView do
 
       topic_view = TopicView.new(topic.id, admin)
       expect(topic_view.show_read_indicator?).to be_falsey
+    end
+  end
+
+  describe '#reviewable_counts' do
+    it 'exclude posts queued because the category needs approval' do
+      category = Fabricate.build(:category, user: admin)
+      category.custom_fields[Category::REQUIRE_TOPIC_APPROVAL] = true
+      category.save!
+      manager = NewPostManager.new(
+        user,
+        raw: 'to the handler I say enqueue me!',
+        title: 'this is the title of the queued post',
+        category: category.id
+      )
+      result = manager.perform
+      reviewable = result.reviewable
+      reviewable.perform(admin, :approve_post)
+
+      topic_view = TopicView.new(reviewable.topic, admin)
+
+      expect(topic_view.reviewable_counts).to be_empty
+    end
+
+    it 'include posts queued for other reasons' do
+      Fabricate(:watched_word, word: "darn", action: WatchedWord.actions[:require_approval])
+      manager = NewPostManager.new(
+        user,
+        raw: 'this is darn new post content',
+        title: 'this is the title of the queued post'
+      )
+      result = manager.perform
+      reviewable = result.reviewable
+      reviewable.perform(admin, :approve_post)
+
+      topic_view = TopicView.new(reviewable.topic, admin)
+
+      expect(topic_view.reviewable_counts.keys).to contain_exactly(reviewable.target_id)
+    end
+  end
+
+  describe '.apply_custom_default_scope' do
+    fab!(:post) { Fabricate(:post, topic: topic, created_at: 2.hours.ago) }
+    fab!(:post_2) { Fabricate(:post, topic: topic, created_at: 1.hour.ago) }
+
+    after do
+      TopicView.reset_custom_default_scopes
+    end
+
+    it 'allows a custom default scope to be configured' do
+      topic_view = TopicView.new(topic, admin)
+
+      expect(topic_view.filtered_post_ids).to eq([post.id, post_2.id])
+
+      TopicView.apply_custom_default_scope do |scope, _|
+        scope.unscope(:order).order("posts.created_at DESC")
+      end
+
+      topic_view = TopicView.new(topic, admin)
+
+      expect(topic_view.filtered_post_ids).to eq([post_2.id, post.id])
+    end
+  end
+
+  describe "#queued_posts_enabled?" do
+    subject(:topic_view) { described_class.new(topic, user) }
+
+    let(:topic) { Fabricate.build(:topic) }
+    let(:user) { Fabricate.build(:user, id: 1) }
+    let(:category) { topic.category }
+
+    before do
+      NewPostManager.stubs(:queue_enabled?).returns(queue_enabled)
+    end
+
+    context "when queue is enabled globally" do
+      let(:queue_enabled) { true }
+
+      it { is_expected.to be_queued_posts_enabled }
+    end
+
+    context "when queue is not enabled globally" do
+      let(:queue_enabled) { false }
+
+      context "when category is moderated" do
+        before do
+          category.custom_fields[Category::REQUIRE_REPLY_APPROVAL] = true
+        end
+
+        it { is_expected.to be_queued_posts_enabled }
+      end
+
+      context "when category is not moderated" do
+        it { is_expected.not_to be_queued_posts_enabled }
+      end
     end
   end
 end

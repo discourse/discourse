@@ -11,7 +11,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 import getURL from "discourse-common/lib/get-url";
 import { htmlSafe } from "@ember/template";
 import { iconHTML } from "discourse-common/lib/icon-library";
-import { popupAjaxError } from "discourse/lib/ajax-error";
+import { extractError, popupAjaxError } from "discourse/lib/ajax-error";
 import { inject as service } from "@ember/service";
 import showModal from "discourse/lib/show-modal";
 
@@ -121,6 +121,11 @@ export default Controller.extend(CanCheckEmails, {
     }
   },
 
+  @discourseComputed("model.username")
+  postEditsByEditorFilter(username) {
+    return { editor: username };
+  },
+
   groupAdded(added) {
     this.model
       .groupAdded(added)
@@ -213,8 +218,15 @@ export default Controller.extend(CanCheckEmails, {
     grantAdmin() {
       return this.model
         .grantAdmin()
-        .then(() => {
-          bootbox.alert(I18n.t("admin.user.grant_admin_confirm"));
+        .then((result) => {
+          if (result.email_confirmation_required) {
+            bootbox.alert(I18n.t("admin.user.grant_admin_confirm"));
+          } else {
+            const controller = showModal("grant-admin-second-factor", {
+              model: this.model,
+            });
+            controller.setResult(result);
+          }
         })
         .catch(popupAjaxError);
     },
@@ -266,73 +278,6 @@ export default Controller.extend(CanCheckEmails, {
     },
     silence() {
       return this.model.silence();
-    },
-    deleteAllPosts() {
-      let deletedPosts = 0;
-      let deletedPercentage = 0;
-      const user = this.model;
-      const message = I18n.messageFormat(
-        "admin.user.delete_all_posts_confirm_MF",
-        {
-          POSTS: user.get("post_count"),
-          TOPICS: user.get("topic_count"),
-        }
-      );
-
-      const performDelete = (progressModal) => {
-        this.model
-          .deleteAllPosts()
-          .then(({ posts_deleted }) => {
-            if (posts_deleted === 0) {
-              user.set("post_count", 0);
-              progressModal.send("closeModal");
-            } else {
-              deletedPosts += posts_deleted;
-              deletedPercentage = Math.floor(
-                (deletedPosts * 100) / user.get("post_count")
-              );
-              progressModal.setProperties({
-                deletedPercentage: deletedPercentage,
-              });
-              performDelete(progressModal);
-            }
-          })
-          .catch((e) => {
-            progressModal.send("closeModal");
-            let error;
-            AdminUser.find(user.get("id")).then((u) => user.setProperties(u));
-            if (e.jqXHR.responseJSON && e.jqXHR.responseJSON.errors) {
-              error = e.jqXHR.responseJSON.errors[0];
-            }
-            error = error || I18n.t("admin.user.delete_posts_failed");
-            bootbox.alert(error);
-          });
-      };
-
-      const buttons = [
-        {
-          label: I18n.t("composer.cancel"),
-          class: "d-modal-cancel",
-          link: true,
-        },
-        {
-          icon: iconHTML("exclamation-triangle"),
-          label: I18n.t("admin.user.delete_all_posts"),
-          class: "btn btn-danger",
-          callback: () => {
-            const progressModal = openProgressModal();
-            performDelete(progressModal);
-          },
-        },
-      ];
-
-      const openProgressModal = () => {
-        return showModal("admin-delete-user-posts-progress", {
-          admin: true,
-        });
-      };
-
-      bootbox.dialog(message, buttons, { classes: "delete-all-posts" });
     },
 
     anonymize() {
@@ -620,6 +565,51 @@ export default Controller.extend(CanCheckEmails, {
           this.set("ssoLastPayload", result.payload);
         }
       });
+    },
+
+    showDeletePostsConfirmation() {
+      showModal("admin-delete-posts-confirmation", {
+        admin: true,
+        model: this.model,
+      });
+    },
+
+    deleteAllPosts() {
+      let deletedPosts = 0;
+      let deletedPercentage = 0;
+      const user = this.model;
+
+      const performDelete = (progressModal) => {
+        this.model
+          .deleteAllPosts()
+          .then(({ posts_deleted }) => {
+            if (posts_deleted === 0) {
+              user.set("post_count", 0);
+              progressModal.send("closeModal");
+            } else {
+              deletedPosts += posts_deleted;
+              deletedPercentage = Math.floor(
+                (deletedPosts * 100) / user.get("post_count")
+              );
+              progressModal.setProperties({
+                deletedPercentage,
+              });
+              performDelete(progressModal);
+            }
+          })
+          .catch((e) => {
+            progressModal.send("closeModal");
+            let error;
+            AdminUser.find(user.get("id")).then((u) => user.setProperties(u));
+            error = extractError(e) || I18n.t("admin.user.delete_posts_failed");
+            bootbox.alert(error);
+          });
+      };
+
+      const progressModal = showModal("admin-delete-user-posts-progress", {
+        admin: true,
+      });
+      performDelete(progressModal);
     },
   },
 });

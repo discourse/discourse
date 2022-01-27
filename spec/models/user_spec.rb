@@ -3,11 +3,15 @@
 require 'rails_helper'
 
 describe User do
-  let(:user) { Fabricate(:user) }
+  fab!(:group) { Fabricate(:group) }
+
+  let(:user) { Fabricate(:user, last_seen_at: 1.day.ago) }
 
   def user_error_message(*keys)
     I18n.t(:"activerecord.errors.models.user.attributes.#{keys.join('.')}")
   end
+
+  it { is_expected.to have_many(:pending_posts).class_name('ReviewableQueuedPost').with_foreign_key(:created_by_id) }
 
   context 'validations' do
     describe '#username' do
@@ -26,7 +30,6 @@ describe User do
 
       describe 'when group with a same name already exists' do
         it 'should not be valid' do
-          group = Fabricate(:group)
           new_user = Fabricate.build(:user, username: group.name.upcase)
 
           expect(new_user).to_not be_valid
@@ -150,9 +153,11 @@ describe User do
   end
 
   context '.enqueue_welcome_message' do
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
 
     it 'enqueues the system message' do
+      SiteSetting.send_welcome_message = true
+
       expect_enqueued_with(job: :send_system_message, args: { user_id: user.id, message_type: 'welcome_user' }) do
         user.enqueue_welcome_message('welcome_user')
       end
@@ -168,8 +173,8 @@ describe User do
   end
 
   context 'enqueue_staff_welcome_message' do
-    let!(:first_admin) { Fabricate(:admin) }
-    let(:user) { Fabricate(:user) }
+    fab!(:first_admin) { Fabricate(:admin) }
+    fab!(:user) { Fabricate(:user) }
 
     it 'enqueues message for admin' do
       expect {
@@ -232,7 +237,7 @@ describe User do
       reviewable = ReviewableUser.find_by(target: user)
       expect(reviewable).to be_blank
 
-      EmailToken.confirm(user.email_tokens.first.token)
+      EmailToken.confirm(Fabricate(:email_token, user: user).token)
       expect(user.reload.active).to eq(true)
       reviewable = ReviewableUser.find_by(target: user)
       expect(reviewable).to be_present
@@ -257,7 +262,7 @@ describe User do
   end
 
   describe 'bookmark' do
-    before do
+    before_all do
       @post = Fabricate(:post)
     end
 
@@ -282,7 +287,7 @@ describe User do
   end
 
   describe 'delete posts in batches' do
-    before do
+    before_all do
       @post1 = Fabricate(:post)
       @user = @post1.user
       @post2 = Fabricate(:post, topic: @post1.topic, user: @user)
@@ -482,7 +487,7 @@ describe User do
   end
 
   describe 'email_hash' do
-    before do
+    before_all do
       @user = Fabricate(:user)
     end
 
@@ -553,14 +558,14 @@ describe User do
   end
 
   describe 'username format' do
+    fab!(:user) { Fabricate(:user) }
+
     def assert_bad(username)
-      user = Fabricate(:user)
       user.username = username
       expect(user.valid?).to eq(false)
     end
 
     def assert_good(username)
-      user = Fabricate(:user)
       user.username = username
       expect(user.valid?).to eq(true)
     end
@@ -648,7 +653,7 @@ describe User do
   end
 
   describe 'username uniqueness' do
-    before do
+    before_all do
       @user = Fabricate.build(:user)
       @user.save!
       @codinghorror = Fabricate.build(:coding_horror)
@@ -679,7 +684,7 @@ describe User do
       expect(User.username_available?('tESt')).to eq(false)
     end
 
-    it 'returns true when reserved username is explicity allowed' do
+    it 'returns true when reserved username is explicitly allowed' do
       SiteSetting.reserved_usernames = 'test|donkey'
 
       expect(User.username_available?(
@@ -727,7 +732,7 @@ describe User do
       expect(User.reserved_username?('test')).to eq(true)
     end
 
-    it 'should not allow usernames matched against an expession' do
+    it 'should not allow usernames matched against an expression' do
       SiteSetting.reserved_usernames = "test)|*admin*|foo*|*bar|abc.def|löwe|ka\u0308fer"
 
       expect(User.reserved_username?('test')).to eq(false)
@@ -874,7 +879,7 @@ describe User do
       expect(@user.active).to eq(false)
       expect(@user.confirm_password?("ilovepasta")).to eq(true)
 
-      email_token = @user.email_tokens.create(email: 'pasta@delicious.com')
+      email_token = Fabricate(:email_token, user: @user, email: 'pasta@delicious.com')
 
       UserAuthToken.generate!(user_id: @user.id)
 
@@ -890,7 +895,7 @@ describe User do
   end
 
   describe "previous_visit_at" do
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
     let!(:first_visit_date) { Time.zone.now }
     let!(:second_visit_date) { 2.hours.from_now }
     let!(:third_visit_date) { 5.hours.from_now }
@@ -930,7 +935,7 @@ describe User do
   end
 
   describe "update_last_seen!" do
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
     let!(:first_visit_date) { Time.zone.now }
     let!(:second_visit_date) { 2.hours.from_now }
 
@@ -1071,7 +1076,7 @@ describe User do
 
     context 'when email has been confirmed' do
       it 'should return true' do
-        token = user.email_tokens.find_by(email: user.email)
+        token = Fabricate(:email_token, user: user)
         EmailToken.confirm(token.token)
         expect(user.email_confirmed?).to eq(true)
       end
@@ -1088,10 +1093,10 @@ describe User do
 
   describe "flag_linked_posts_as_spam" do
     fab!(:user) { Fabricate(:user) }
-    let!(:admin) { Fabricate(:admin) }
-    let!(:post) { PostCreator.new(user, title: "this topic contains spam", raw: "this post has a link: http://discourse.org").create }
-    let!(:another_post) { PostCreator.new(user, title: "this topic also contains spam", raw: "this post has a link: http://discourse.org/asdfa").create }
-    let!(:post_without_link) { PostCreator.new(user, title: "this topic shouldn't be spam", raw: "this post has no links in it.").create }
+    fab!(:admin) { Fabricate(:admin) }
+    fab!(:post) { PostCreator.new(user, title: "this topic contains spam", raw: "this post has a link: http://discourse.org").create }
+    fab!(:another_post) { PostCreator.new(user, title: "this topic also contains spam", raw: "this post has a link: http://discourse.org/asdfa").create }
+    fab!(:post_without_link) { PostCreator.new(user, title: "this topic shouldn't be spam", raw: "this post has no links in it.").create }
 
     it "has flagged all the user's posts as spam" do
       user.flag_linked_posts_as_spam
@@ -1362,7 +1367,7 @@ describe User do
 
   describe "update_posts_read!" do
     context "with a UserVisit record" do
-      let!(:user) { Fabricate(:user) }
+      fab!(:user) { Fabricate(:user) }
       let!(:now) { Time.zone.now }
       before { user.update_last_seen!(now) }
       after do
@@ -1386,14 +1391,13 @@ describe User do
   end
 
   describe "primary_group_id" do
-    let!(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
 
     it "has no primary_group_id by default" do
       expect(user.primary_group_id).to eq(nil)
     end
 
     context "when the user has a group" do
-      let!(:group) { Fabricate(:group) }
 
       before do
         group.usernames = user.username
@@ -1466,12 +1470,12 @@ describe User do
   end
 
   describe "#purge_unactivated" do
-    let!(:user) { Fabricate(:user) }
-    let!(:unactivated) { Fabricate(:user, active: false) }
-    let!(:unactivated_old) { Fabricate(:user, active: false, created_at: 1.month.ago) }
-    let!(:unactivated_old_with_system_pm) { Fabricate(:user, active: false, created_at: 2.months.ago) }
-    let!(:unactivated_old_with_human_pm) { Fabricate(:user, active: false, created_at: 2.months.ago) }
-    let!(:unactivated_old_with_post) { Fabricate(:user, active: false, created_at: 1.month.ago) }
+    fab!(:user) { Fabricate(:user) }
+    fab!(:unactivated) { Fabricate(:user, active: false) }
+    fab!(:unactivated_old) { Fabricate(:user, active: false, created_at: 1.month.ago) }
+    fab!(:unactivated_old_with_system_pm) { Fabricate(:user, active: false, created_at: 2.months.ago) }
+    fab!(:unactivated_old_with_human_pm) { Fabricate(:user, active: false, created_at: 2.months.ago) }
+    fab!(:unactivated_old_with_post) { Fabricate(:user, active: false, created_at: 1.month.ago) }
 
     before do
       PostCreator.new(Discourse.system_user,
@@ -1536,7 +1540,7 @@ describe User do
 
   describe "automatic group membership" do
 
-    let!(:group) {
+    fab!(:group) {
       Fabricate(:group,
                 automatic_membership_email_domains: "bar.com|wat.com",
                 grant_trust_level: 1,
@@ -1547,14 +1551,14 @@ describe User do
 
     it "doesn't automatically add staged users" do
       staged_user = Fabricate(:user, active: true, staged: true, email: "wat@wat.com")
-      EmailToken.confirm(staged_user.email_tokens.last.token)
+      EmailToken.confirm(Fabricate(:email_token, user: staged_user).token)
       group.reload
       expect(group.users.include?(staged_user)).to eq(false)
     end
 
     it "is automatically added to a group when the email matches" do
       user = Fabricate(:user, active: true, email: "foo@bar.com")
-      EmailToken.confirm(user.email_tokens.last.token)
+      EmailToken.confirm(Fabricate(:email_token, user: user).token)
       group.reload
       expect(group.users.include?(user)).to eq(true)
 
@@ -1583,7 +1587,7 @@ describe User do
 
       user.password_required!
       user.save!
-      EmailToken.confirm(user.email_tokens.last.token)
+      EmailToken.confirm(Fabricate(:email_token, user: user).token)
       user.reload
 
       expect(user.title).to eq("bars and wats")
@@ -1595,10 +1599,9 @@ describe User do
 
   describe 'staff info' do
     fab!(:user) { Fabricate(:user) }
+    fab!(:moderator) { Fabricate(:moderator) }
 
     describe "#number_of_flags_given" do
-      fab!(:moderator) { Fabricate(:moderator) }
-
       it "doesn't count disagreed flags" do
         post_agreed = Fabricate(:post)
         PostActionCreator.inappropriate(user, post_agreed).reviewable.perform(moderator, :agree_and_keep)
@@ -1614,8 +1617,6 @@ describe User do
     end
 
     describe "number_of_deleted_posts" do
-      fab!(:moderator) { Fabricate(:moderator) }
-
       it "counts all the posts" do
         # at least 1 "unchanged" post
         Fabricate(:post, user: user)
@@ -1645,6 +1646,20 @@ describe User do
         Fabricate(:reviewable_queued_post, created_by: user, status: Reviewable.statuses[:approved])
 
         expect(user.number_of_rejected_posts).to eq(0)
+      end
+    end
+
+    describe '#number_of_flagged_posts' do
+      it 'counts flagged posts from the user' do
+        Fabricate(:reviewable_flagged_post, target_created_by: user)
+
+        expect(user.number_of_flagged_posts).to eq(1)
+      end
+
+      it 'ignores flagged posts from another user' do
+        Fabricate(:reviewable_flagged_post, target_created_by: Fabricate(:user))
+
+        expect(user.number_of_flagged_posts).to eq(0)
       end
     end
   end
@@ -1823,7 +1838,7 @@ describe User do
   describe ".clear_global_notice_if_needed" do
 
     fab!(:user) { Fabricate(:user) }
-    let(:admin) { Fabricate(:admin) }
+    fab!(:admin) { Fabricate(:admin) }
 
     before do
       SiteSetting.has_login_hint = true
@@ -1901,9 +1916,21 @@ describe User do
 
       expect(message.data[:unread_notifications]).to eq(1)
       # NOTE: because of deprecation this will be equal to unread_high_priority_notifications,
-      #       to be remonved in 2.5
+      #       to be removed in 2.5
       expect(message.data[:unread_private_messages]).to eq(2)
       expect(message.data[:unread_high_priority_notifications]).to eq(2)
+    end
+
+    it "does not publish to the /notification channel for users who have not been seen in > 30 days" do
+      notification = Fabricate(:notification, user: user)
+      notification2 = Fabricate(:notification, user: user, read: true)
+      user.update(last_seen_at: 31.days.ago)
+
+      message = MessageBus.track_publish("/notification/#{user.id}") do
+        user.publish_notifications_state
+      end.first
+
+      expect(message).to eq(nil)
     end
   end
 
@@ -1993,8 +2020,8 @@ describe User do
     end
 
     it "triggers an event" do
-      event = DiscourseEvent.track_events { user.unstage! }.first
-      expect(event[:event_name]).to eq(:user_unstaged)
+      event = DiscourseEvent.track(:user_unstaged) { user.unstage! }
+      expect(event).to be_present
       expect(event[:params].first).to eq(user)
     end
   end
@@ -2140,21 +2167,29 @@ describe User do
 
   end
 
-  describe '#match_title_to_primary_group_changes' do
-    let(:primary_group_a) { Fabricate(:group, title: 'A', users: [user]) }
-    let(:primary_group_b) { Fabricate(:group, title: 'B', users: [user]) }
+  describe '#match_primary_group_changes' do
+    let(:group_a) { Fabricate(:group, title: 'A', users: [user]) }
+    let(:group_b) { Fabricate(:group, title: 'B', users: [user]) }
 
     it "updates user's title only when it is blank or matches the previous primary group" do
-      expect { user.update(primary_group: primary_group_a) }.to change { user.reload.title }.from(nil).to('A')
-      expect { user.update(primary_group: primary_group_b) }.to change { user.reload.title }.from('A').to('B')
+      expect { user.update(primary_group: group_a) }.to change { user.reload.title }.from(nil).to('A')
+      expect { user.update(primary_group: group_b) }.to change { user.reload.title }.from('A').to('B')
 
       user.update(title: 'Different')
-      expect { user.update(primary_group: primary_group_a) }.to_not change { user.reload.title }
+      expect { user.update(primary_group: group_a) }.to_not change { user.reload.title }
+    end
+
+    it "updates user's title only when it is blank or matches the previous primary group" do
+      expect { user.update(primary_group: group_a) }.to change { user.reload.flair_group }.from(nil).to(group_a)
+      expect { user.update(primary_group: group_b) }.to change { user.reload.flair_group }.from(group_a).to(group_b)
+
+      user.update(flair_group: group_a)
+      expect { user.update(primary_group: group_a) }.to_not change { user.reload.flair_group }
     end
   end
 
   describe '#title=' do
-    let(:badge) { Fabricate(:badge, name: 'Badge', allow_title: false) }
+    fab!(:badge) { Fabricate(:badge, name: 'Badge', allow_title: false) }
 
     it 'sets badge_granted_title correctly' do
       BadgeGranter.grant(badge, user)
@@ -2199,10 +2234,10 @@ describe User do
   end
 
   describe '#next_best_title' do
-    let(:group_a) { Fabricate(:group, title: 'Group A') }
-    let(:group_b) { Fabricate(:group, title: 'Group B') }
-    let(:group_c) { Fabricate(:group, title: 'Group C') }
-    let(:badge) { Fabricate(:badge, name: 'Badge', allow_title: true) }
+    fab!(:group_a) { Fabricate(:group, title: 'Group A') }
+    fab!(:group_b) { Fabricate(:group, title: 'Group B') }
+    fab!(:group_c) { Fabricate(:group, title: 'Group C') }
+    fab!(:badge) { Fabricate(:badge, name: 'Badge', allow_title: true) }
 
     it 'only includes groups with title' do
       group_a.add(user)
@@ -2359,7 +2394,7 @@ describe User do
           expect(User.system_avatar_template("बहुत")).to match(%r|/letter_avatar_proxy/v\d/letter/%E0%A4%AC/ea5d25/{size}.png|)
         end
 
-        it "substitues {username} with the URL encoded username" do
+        it "substitutes {username} with the URL encoded username" do
           SiteSetting.external_system_avatars_url = "https://{hostname}/{username}.png"
           expect(User.system_avatar_template("बहुत")).to eq("https://#{Discourse.current_hostname}/%E0%A4%AC%E0%A4%B9%E0%A5%81%E0%A4%A4.png")
         end
@@ -2411,9 +2446,9 @@ describe User do
   end
 
   describe 'Granting admin or moderator status' do
-    it 'approves the associated reviewable when granting admin status' do
-      reviewable_user = Fabricate(:reviewable_user)
+    fab!(:reviewable_user) { Fabricate(:reviewable_user) }
 
+    it 'approves the associated reviewable when granting admin status' do
       reviewable_user.target.grant_admin!
 
       expect(reviewable_user.reload.status).to eq Reviewable.statuses[:approved]
@@ -2429,8 +2464,6 @@ describe User do
     end
 
     it 'approves the associated reviewable when granting moderator status' do
-      reviewable_user = Fabricate(:reviewable_user)
-
       reviewable_user.target.grant_moderation!
 
       expect(reviewable_user.reload.status).to eq Reviewable.statuses[:approved]
@@ -2561,6 +2594,32 @@ describe User do
       invite.trash!
 
       expect(user.invited_by).to eq(invite.invited_by)
+    end
+  end
+
+  describe "#username_equals_to?" do
+    [
+      ["returns true for equal usernames", "john", "john", true],
+      ["returns false for different usernames", "john", "bill", false],
+      ["considers usernames that are different only in case as equal", "john", "JoHN", true]
+    ].each do |testcase_name, current_username, another_username, is_equal|
+      it "#{testcase_name}" do
+        user = Fabricate(:user, username: current_username)
+        result = user.username_equals_to?(another_username)
+
+        expect(result).to be(is_equal)
+      end
+    end
+
+    it "considers usernames that are equal after unicode normalization as equal" do
+      SiteSetting.unicode_usernames = true
+
+      raw = "Lo\u0308we" # Löwe, u0308 stands for ¨, so o\u0308 adds up to ö
+      normalized = "l\u00F6we" # Löwe normilized, \u00F6 stands for ö
+      user = Fabricate(:user, username: normalized)
+      result = user.username_equals_to?(raw)
+
+      expect(result).to be(true)
     end
   end
 end

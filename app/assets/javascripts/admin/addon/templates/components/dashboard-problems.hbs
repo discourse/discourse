@@ -9,10 +9,22 @@
 
     <div class="section-body">
       {{#conditional-loading-section isLoading=loadingProblems}}
-        <div class="problem-messages">
+        {{#if highPriorityProblems.length}}
+          <div class="problem-messages priority-high">
+            <ul>
+              {{#each highPriorityProblems as |problem|}}
+                <li class={{concat "dashboard-problem " "priority-" problem.priority}}>
+                  {{d-icon "exclamation-triangle"}} {{html-safe problem.message}}
+                </li>
+              {{/each}}
+            </ul>
+          </div>
+        {{/if}}
+
+        <div class="problem-messages priority-low">
           <ul>
-            {{#each problems as |problem|}}
-              <li>{{html-safe problem}}</li>
+            {{#each lowPriorityProblems as |problem|}}
+              <li class={{concat "dashboard-problem " "priority-" problem.priority}}>{{html-safe problem.message}}</li>
             {{/each}}
           </ul>
         </div>

@@ -29,6 +29,7 @@ describe DiscourseNarrativeBot::NewUserNarrative do
   fab!(:reset_trigger) { DiscourseNarrativeBot::TrackSelector.reset_trigger }
 
   before do
+    stub_image_size
     Jobs.run_immediately!
     SiteSetting.discourse_narrative_bot_enabled = true
   end
@@ -637,7 +638,7 @@ describe DiscourseNarrativeBot::NewUserNarrative do
       end
     end
 
-    describe 'fomatting tutorial' do
+    describe 'formatting tutorial' do
       before do
         narrative.set_data(user, state: :tutorial_formatting, topic_id: topic.id)
       end

@@ -6,5 +6,5 @@
 
 uk:
   site_settings:
-    styleguide_enabled: "Увімкнути шлях `/styleguide`, щоб спростити стилізацію Discourse"
+    styleguide_enabled: 'Увімкнути шлях `/styleguide`, щоб спростити стилізацію Discourse'
     styleguide_admin_only: "Обмежує видимість керування стилем лише адміністраторами"

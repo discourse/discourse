@@ -14,21 +14,15 @@ end
 
 require 'rubygems'
 require 'rbtrace'
-
 require 'pry'
 require 'pry-byebug'
 require 'pry-rails'
-
-# Loading more in this block will cause your tests to run faster. However,
-# if you change any configuration or code from libraries loaded here, you'll
-# need to restart spork for it take effect.
 require 'fabrication'
 require 'mocha/api'
 require 'certified'
 require 'webmock/rspec'
 
 class RspecErrorTracker
-
   def self.last_exception=(ex)
     @ex = ex
   end
@@ -44,7 +38,11 @@ class RspecErrorTracker
   def call(env)
     begin
       @app.call(env)
-    rescue => e
+
+    # This is a little repetitive, but since WebMock::NetConnectNotAllowedError
+    # and also Mocha::ExpectationError inherit from Exception instead of StandardError
+    # they do not get captured by the rescue => e shorthand :(
+    rescue WebMock::NetConnectNotAllowedError, Mocha::ExpectationError, StandardError => e
       RspecErrorTracker.last_exception = e
       raise e
     end
@@ -74,10 +72,15 @@ end
 # in spec/support/ and its subdirectories.
 Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
 Dir[Rails.root.join("spec/fabricators/*.rb")].each { |f| require f }
+require_relative './helpers/redis_snapshot_helper'
 
 # Require plugin helpers at plugin/[plugin]/spec/plugin_helper.rb (includes symlinked plugins).
 if ENV['LOAD_PLUGINS'] == "1"
   Dir[Rails.root.join("plugins/*/spec/plugin_helper.rb")].each do |f|
+    require f
+  end
+
+  Dir[Rails.root.join("plugins/*/spec/fabricators/**/*.rb")].each do |f|
     require f
   end
 end
@@ -97,7 +100,7 @@ module TestSetup
   # This is run before each test and before each before_all block
   def self.test_setup(x = nil)
     # TODO not sure about this, we could use a mock redis implementation here:
-    #   this gives us really clean "flush" semantics, howere the side-effect is that
+    #   this gives us really clean "flush" semantics, however the side-effect is that
     #   we are no longer using a clean redis implementation, a preferable solution may
     #   be simply flushing before tests, trouble is that redis may be reused with dev
     #   so that would mean the dev would act weird
@@ -145,6 +148,8 @@ module TestSetup
 
     # Don't queue badge grant in test mode
     BadgeGranter.disable_queue
+
+    OmniAuth.config.test_mode = false
   end
 end
 
@@ -173,6 +178,7 @@ end
 RSpec.configure do |config|
   config.fail_fast = ENV['RSPEC_FAIL_FAST'] == "1"
   config.silence_filter_announcements = ENV['RSPEC_SILENCE_FILTER_ANNOUNCEMENTS'] == "1"
+  config.extend RedisSnapshotHelper
   config.include Helpers
   config.include MessageBus
   config.include RSpecHtmlMatchers
@@ -181,6 +187,8 @@ RSpec.configure do |config|
   config.include SiteSettingsHelpers
   config.include SidekiqHelpers
   config.include UploadsHelpers
+  config.include OneboxHelpers
+  config.include FastImageHelpers
   config.mock_framework = :mocha
   config.order = 'random'
   config.infer_spec_type_from_file_location!
@@ -225,6 +233,12 @@ RSpec.configure do |config|
     SiteSetting.provider = TestLocalProcessProvider.new
 
     WebMock.disable_net_connect!
+
+    if ENV['ELEVATED_UPLOADS_ID']
+      DB.exec "SELECT setval('uploads_id_seq', 10000)"
+    else
+      DB.exec "SELECT setval('uploads_id_seq', 1)"
+    end
   end
 
   class TestLocalProcessProvider < SiteSettings::LocalProcessProvider
@@ -284,6 +298,10 @@ RSpec.configure do |config|
     # This allows DB.transaction_open? to work in tests. See lib/mini_sql_multisite_connection.rb
     DB.test_transaction = ActiveRecord::Base.connection.current_transaction
   end
+
+  # Match the request hostname to the value in `database.yml`
+  config.before(:all, type: [:request, :multisite]) { host! "test.localhost" }
+  config.before(:each, type: [:request, :multisite]) { host! "test.localhost" }
 
   config.before(:each, type: :multisite) do
     Rails.configuration.multisite = true # rubocop:disable Discourse/NoDirectMultisiteManipulation
@@ -401,7 +419,7 @@ end
 
 def file_from_fixtures(filename, directory = "images")
   SpecSecureRandom.value ||= SecureRandom.hex
-  FileUtils.mkdir_p(file_from_fixtures_tmp_folder) unless Dir.exists?(file_from_fixtures_tmp_folder)
+  FileUtils.mkdir_p(file_from_fixtures_tmp_folder) unless Dir.exist?(file_from_fixtures_tmp_folder)
   tmp_file_path = File.join(file_from_fixtures_tmp_folder, SecureRandom.hex << filename)
   FileUtils.cp("#{Rails.root}/spec/fixtures/#{directory}/#{filename}", tmp_file_path)
   File.new(tmp_file_path)
@@ -447,6 +465,44 @@ def track_log_messages(level: nil)
   logger.messages
 ensure
   Rails.logger = old_logger
+end
+
+# this takes a string and returns a copy where 2 different
+# characters are swapped.
+# e.g.
+#   swap_2_different_characters("abc") => "bac"
+#   swap_2_different_characters("aac") => "caa"
+def swap_2_different_characters(str)
+  swap1 = 0
+  swap2 = str.split("").find_index { |c| c != str[swap1] }
+  # if the string is made up of 1 character
+  return str if !swap2
+  str = str.dup
+  str[swap1], str[swap2] = str[swap2], str[swap1]
+  str
+end
+
+def create_request_env(path: nil)
+  env = Rails.application.env_config.dup
+  env.merge!(Rack::MockRequest.env_for(path)) if path
+  env
+end
+
+def create_auth_cookie(token:, user_id: nil, trust_level: nil, issued_at: Time.zone.now)
+  request = ActionDispatch::Request.new(create_request_env)
+  data = {
+    token: token,
+    user_id: user_id,
+    trust_level: trust_level,
+    issued_at: issued_at.to_i
+  }
+  cookie = request.cookie_jar.encrypted["_t"] = { value: data }
+  cookie[:value]
+end
+
+def decrypt_auth_cookie(cookie)
+  request = ActionDispatch::Request.new(create_request_env.merge("HTTP_COOKIE" => "_t=#{cookie}"))
+  request.cookie_jar.encrypted["_t"]
 end
 
 class SpecSecureRandom

@@ -1,11 +1,15 @@
 import {
   acceptance,
+  count,
   exists,
+  fakeTime,
+  query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit } from "@ember/test-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { test } from "qunit";
+import I18n from "I18n";
 
 acceptance("Admin - Suspend User", function (needs) {
   needs.user();
@@ -31,38 +35,39 @@ acceptance("Admin - Suspend User", function (needs) {
     await visit("/admin/users/1234/regular");
     await click(".suspend-user");
 
-    assert.equal(queryAll(".suspend-user-modal:visible").length, 1);
+    assert.strictEqual(count(".suspend-user-modal:visible"), 1);
 
     await click(".d-modal-cancel");
 
-    assert.equal(queryAll(".suspend-user-modal:visible").length, 0);
+    assert.ok(!exists(".suspend-user-modal:visible"));
   });
 
   test("suspend a user - cancel with input", async function (assert) {
     await visit("/admin/users/1234/regular");
     await click(".suspend-user");
 
-    assert.equal(queryAll(".suspend-user-modal:visible").length, 1);
+    assert.strictEqual(count(".suspend-user-modal:visible"), 1);
 
     await fillIn("input.suspend-reason", "for breaking the rules");
     await fillIn(".suspend-message", "this is an email reason why");
 
     await click(".d-modal-cancel");
 
-    assert.equal(queryAll(".bootbox.modal:visible").length, 1);
+    assert.strictEqual(count(".bootbox.modal:visible"), 1);
 
     await click(".modal-footer .btn-default");
-    assert.equal(queryAll(".suspend-user-modal:visible").length, 1);
-    assert.equal(
-      queryAll(".suspend-message")[0].value,
+    assert.strictEqual(count(".suspend-user-modal:visible"), 1);
+    assert.strictEqual(
+      query(".suspend-message").value,
       "this is an email reason why"
     );
 
     await click(".d-modal-cancel");
-    assert.equal(queryAll(".bootbox.modal:visible").length, 1);
-    assert.equal(queryAll(".suspend-user-modal:visible").length, 0);
+    assert.strictEqual(count(".bootbox.modal:visible"), 1);
+    assert.ok(!exists(".suspend-user-modal:visible"));
+
     await click(".modal-footer .btn-primary");
-    assert.equal(queryAll(".bootbox.modal:visible").length, 0);
+    assert.ok(!exists(".bootbox.modal:visible"));
   });
 
   test("suspend, then unsuspend a user", async function (assert) {
@@ -76,8 +81,8 @@ acceptance("Admin - Suspend User", function (needs) {
 
     await click(".suspend-user");
 
-    assert.equal(
-      queryAll(".perform-suspend[disabled]").length,
+    assert.strictEqual(
+      count(".perform-suspend[disabled]"),
       1,
       "disabled by default"
     );
@@ -88,19 +93,58 @@ acceptance("Admin - Suspend User", function (needs) {
     await fillIn("input.suspend-reason", "for breaking the rules");
     await fillIn(".suspend-message", "this is an email reason why");
 
-    assert.equal(
-      queryAll(".perform-suspend[disabled]").length,
-      0,
-      "no longer disabled"
-    );
+    assert.ok(!exists(".perform-suspend[disabled]"), "no longer disabled");
 
     await click(".perform-suspend");
 
-    assert.equal(queryAll(".suspend-user-modal:visible").length, 0);
+    assert.ok(!exists(".suspend-user-modal:visible"));
     assert.ok(exists(".suspension-info"));
 
     await click(".unsuspend-user");
 
     assert.ok(!exists(".suspension-info"));
+  });
+});
+
+acceptance("Admin - Suspend User - timeframe choosing", function (needs) {
+  let clock = null;
+  needs.user();
+
+  needs.hooks.beforeEach(() => {
+    const timezone = moment.tz.guess();
+    clock = fakeTime("2100-05-03T08:00:00", timezone, true); // Monday morning
+  });
+
+  needs.hooks.afterEach(() => {
+    clock.restore();
+  });
+
+  test("shows correct timeframe options", async function (assert) {
+    await visit("/admin/users/1234/regular");
+    await click(".suspend-user");
+    await click(".future-date-input-selector-header");
+
+    const options = Array.from(
+      queryAll(`ul.select-kit-collection li span.name`).map((_, x) =>
+        x.innerText.trim()
+      )
+    );
+
+    const expected = [
+      I18n.t("topic.auto_update_input.later_today"),
+      I18n.t("topic.auto_update_input.tomorrow"),
+      I18n.t("topic.auto_update_input.next_week"),
+      I18n.t("topic.auto_update_input.two_weeks"),
+      I18n.t("topic.auto_update_input.next_month"),
+      I18n.t("topic.auto_update_input.two_months"),
+      I18n.t("topic.auto_update_input.three_months"),
+      I18n.t("topic.auto_update_input.four_months"),
+      I18n.t("topic.auto_update_input.six_months"),
+      I18n.t("topic.auto_update_input.one_year"),
+      I18n.t("topic.auto_update_input.forever"),
+      I18n.t("topic.auto_update_input.pick_date_and_time"),
+    ];
+
+    assert.deepEqual(options, expected, "options are correct");
   });
 });

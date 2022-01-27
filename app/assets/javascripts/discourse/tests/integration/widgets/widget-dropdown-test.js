@@ -4,6 +4,7 @@ import componentTest, {
 import {
   discourseModule,
   exists,
+  query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "I18n";
@@ -17,6 +18,7 @@ const DEFAULT_CONTENT = {
     "separator",
     { id: 3, translatedLabel: "With icon", icon: "times" },
     { id: 4, html: "<b>baz</b>" },
+    { id: 5, translatedLabel: "Disabled", disabled: true },
   ],
   label: "foo",
 };
@@ -26,7 +28,7 @@ async function clickRowById(id) {
 }
 
 function rowById(id) {
-  return queryAll(`#my-dropdown .widget-dropdown-item.item-${id}`)[0];
+  return query(`#my-dropdown .widget-dropdown-item.item-${id}`);
 }
 
 async function toggle() {
@@ -40,11 +42,11 @@ function headerLabel() {
 }
 
 function header() {
-  return queryAll("#my-dropdown .widget-dropdown-header")[0];
+  return query("#my-dropdown .widget-dropdown-header");
 }
 
 function body() {
-  return queryAll("#my-dropdown .widget-dropdown-body")[0];
+  return query("#my-dropdown .widget-dropdown-body");
 }
 
 const TEMPLATE = hbs`
@@ -93,7 +95,7 @@ discourseModule(
       },
 
       test(assert) {
-        assert.equal(headerLabel(), "FooBaz");
+        assert.strictEqual(headerLabel(), "FooBaz");
       },
     });
 
@@ -113,7 +115,7 @@ discourseModule(
       },
 
       test(assert) {
-        assert.equal(headerLabel(), this.translatedLabel);
+        assert.strictEqual(headerLabel(), this.translatedLabel);
       },
     });
 
@@ -126,9 +128,9 @@ discourseModule(
 
       async test(assert) {
         await toggle();
-        assert.equal(rowById(1).dataset.id, 1, "it creates rows");
-        assert.equal(rowById(2).dataset.id, 2, "it creates rows");
-        assert.equal(rowById(3).dataset.id, 3, "it creates rows");
+        assert.strictEqual(rowById(1).dataset.id, "1", "it creates rows");
+        assert.strictEqual(rowById(2).dataset.id, "2", "it creates rows");
+        assert.strictEqual(rowById(3).dataset.id, "3", "it creates rows");
       },
     });
 
@@ -149,18 +151,15 @@ discourseModule(
       beforeEach() {
         this.setProperties(DEFAULT_CONTENT);
 
-        this.set(
-          "onChange",
-          (item) => (queryAll("#test")[0].innerText = item.id)
-        );
+        this.set("onChange", (item) => (query("#test").innerText = item.id));
       },
 
       async test(assert) {
         await toggle();
         await clickRowById(2);
-        assert.equal(
+        assert.strictEqual(
           queryAll("#test").text(),
-          2,
+          "2",
           "it calls the onChange actions"
         );
       },
@@ -177,7 +176,7 @@ discourseModule(
         assert.ok(exists("#my-dropdown.closed"));
         assert.ok(!exists("#my-dropdown .widget-dropdown-body"));
         await toggle();
-        assert.equal(rowById(2).innerText.trim(), "FooBar");
+        assert.strictEqual(rowById(2).innerText.trim(), "FooBar");
         assert.ok(exists("#my-dropdown.opened"));
         assert.ok(exists("#my-dropdown .widget-dropdown-body"));
         await toggle();
@@ -221,7 +220,7 @@ discourseModule(
 
       async test(assert) {
         await toggle();
-        assert.equal(rowById(2).innerText.trim(), "FooBar");
+        assert.strictEqual(rowById(2).innerText.trim(), "FooBar");
       },
     });
 
@@ -241,7 +240,7 @@ discourseModule(
 
       async test(assert) {
         await toggle();
-        assert.equal(rowById(1).innerText.trim(), "FooBaz");
+        assert.strictEqual(rowById(1).innerText.trim(), "FooBaz");
       },
     });
 
@@ -267,7 +266,10 @@ discourseModule(
 
       async test(assert) {
         await toggle();
-        assert.equal(rowById(4).innerHTML.trim(), "<span><b>baz</b></span>");
+        assert.strictEqual(
+          rowById(4).innerHTML.trim(),
+          "<span><b>baz</b></span>"
+        );
       },
     });
 
@@ -344,6 +346,37 @@ discourseModule(
         assert.ok(
           exists("#my-dropdown .widget-dropdown-header .d-icon-caret-down")
         );
+      },
+    });
+
+    componentTest("disabled widget", {
+      template: TEMPLATE,
+
+      beforeEach() {
+        this.setProperties(DEFAULT_CONTENT);
+        this.set("options", { disabled: true });
+      },
+
+      test(assert) {
+        assert.ok(exists("#my-dropdown.disabled"));
+      },
+
+      async test(assert) {
+        await toggle();
+        assert.strictEqual(rowById(1), null, "it does not display options");
+      },
+    });
+
+    componentTest("disabled item", {
+      template: TEMPLATE,
+
+      beforeEach() {
+        this.setProperties(DEFAULT_CONTENT);
+      },
+
+      async test(assert) {
+        await toggle();
+        assert.ok(exists(".widget-dropdown-item.item-5.disabled"));
       },
     });
   }

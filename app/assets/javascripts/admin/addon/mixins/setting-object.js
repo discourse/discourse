@@ -50,7 +50,7 @@ export default Mixin.create({
     const vals = [],
       translateNames = this.translate_names;
 
-    validValues.forEach((v) => {
+    (validValues || []).forEach((v) => {
       if (v.name && v.name.length > 0 && translateNames) {
         vals.addObject({ name: I18n.t(v.name), value: v.value });
       } else {

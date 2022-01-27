@@ -1,6 +1,7 @@
 import DiscourseRoute from "discourse/routes/discourse";
 import I18n from "I18n";
 import User from "discourse/models/user";
+import { action } from "@ember/object";
 
 export default DiscourseRoute.extend({
   titleToken() {
@@ -10,14 +11,14 @@ export default DiscourseRoute.extend({
     }
   },
 
-  actions: {
-    undoRevokeApiKey(key) {
-      key.undoRevoke();
-    },
+  @action
+  undoRevokeApiKey(key) {
+    key.undoRevoke();
+  },
 
-    revokeApiKey(key) {
-      key.revoke();
-    },
+  @action
+  revokeApiKey(key) {
+    key.revoke();
   },
 
   beforeModel() {
@@ -69,6 +70,15 @@ export default DiscourseRoute.extend({
     this.messageBus.subscribe(`/u/${user.username_lower}`, (data) =>
       user.loadUserAction(data)
     );
+    this.messageBus.subscribe(`/u/${user.username_lower}/counters`, (data) => {
+      user.setProperties(data);
+      Object.entries(data).forEach(([key, value]) =>
+        this.appEvents.trigger(
+          `count-updated:${user.username_lower}:${key}`,
+          value
+        )
+      );
+    });
   },
 
   deactivate() {
@@ -76,6 +86,7 @@ export default DiscourseRoute.extend({
 
     const user = this.modelFor("user");
     this.messageBus.unsubscribe(`/u/${user.username_lower}`);
+    this.messageBus.unsubscribe(`/u/${user.username_lower}/counters`);
 
     // Remove the search context
     this.searchService.set("searchContext", null);

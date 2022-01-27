@@ -11,3 +11,21 @@ class DoNotDisturbTiming < ActiveRecord::Base
     end
   end
 end
+
+# == Schema Information
+#
+# Table name: do_not_disturb_timings
+#
+#  id        :bigint           not null, primary key
+#  user_id   :integer          not null
+#  starts_at :datetime         not null
+#  ends_at   :datetime         not null
+#  scheduled :boolean          default(FALSE)
+#
+# Indexes
+#
+#  index_do_not_disturb_timings_on_ends_at    (ends_at)
+#  index_do_not_disturb_timings_on_scheduled  (scheduled)
+#  index_do_not_disturb_timings_on_starts_at  (starts_at)
+#  index_do_not_disturb_timings_on_user_id    (user_id)
+#

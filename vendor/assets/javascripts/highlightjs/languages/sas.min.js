@@ -1,5 +1,5 @@
 hljs.registerLanguage("sas",(()=>{"use strict";return e=>({name:"SAS",
-aliases:["sas","SAS"],case_insensitive:!0,keywords:{
+case_insensitive:!0,keywords:{
 literal:"null missing _all_ _automatic_ _character_ _infile_ _n_ _name_ _null_ _numeric_ _user_ _webout_",
 meta:"do if then else end until while abort array attrib by call cards cards4 catname continue datalines datalines4 delete delim delimiter display dm drop endsas error file filename footnote format goto in infile informat input keep label leave length libname link list lostcard merge missing modify options output out page put redirect remove rename replace retain return select set skip startsas stop title update waitsas where window x systask add and alter as cascade check create delete describe distinct drop foreign from group having index insert into in key like message modify msgtype not null on or order primary references reset restrict select set table unique update validate view where"
 },contains:[{className:"keyword",begin:/^\s*(proc [\w\d_]+|data|run|quit)[\s;]/

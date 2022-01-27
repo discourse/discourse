@@ -3,12 +3,15 @@
 require "mini_mime"
 
 class UploadsController < ApplicationController
+  include ExternalUploadHelpers
+
   requires_login except: [:show, :show_short, :show_secure]
 
   skip_before_action :preload_json, :check_xhr, :redirect_to_login_if_required, only: [:show, :show_short, :show_secure]
   protect_from_forgery except: :show
 
   before_action :is_asset_path, :apply_cdn_headers, only: [:show, :show_short, :show_secure]
+  before_action :external_store_check, only: [:show_secure]
 
   SECURE_REDIRECT_GRACE_SECONDS = 5
 
@@ -16,10 +19,14 @@ class UploadsController < ApplicationController
     # capture current user for block later on
     me = current_user
 
+    params.permit(:type, :upload_type)
+    if params[:type].blank? && params[:upload_type].blank?
+      raise Discourse::InvalidParameters
+    end
     # 50 characters ought to be enough for the upload type
-    type = params.require(:type).parameterize(separator: "_")[0..50]
+    type = (params[:upload_type].presence || params[:type].presence).parameterize(separator: "_")[0..50]
 
-    if type == "avatar" && !me.admin? && (SiteSetting.discourse_connect_overrides_avatar || !SiteSetting.allow_uploaded_avatars)
+    if type == "avatar" && !me.admin? && (SiteSetting.discourse_connect_overrides_avatar || !TrustLevelAndStaffAndDisabledSetting.matches?(SiteSetting.allow_uploaded_avatars, me))
       return render json: failed_json, status: 422
     end
 
@@ -121,7 +128,6 @@ class UploadsController < ApplicationController
   def show_secure
     # do not serve uploads requested via XHR to prevent XSS
     return xhr_not_allowed if request.xhr?
-    return render_404 if !Discourse.store.external?
 
     path_with_ext = "#{params[:path]}.#{params[:extension]}"
 
@@ -185,16 +191,31 @@ class UploadsController < ApplicationController
 
   protected
 
+  def validate_before_create_multipart(file_name:, file_size:, upload_type:)
+    validate_file_size(file_name: file_name, file_size: file_size)
+  end
+
+  def validate_before_create_direct_upload(file_name:, file_size:, upload_type:)
+    validate_file_size(file_name: file_name, file_size: file_size)
+  end
+
+  def validate_file_size(file_name:, file_size:)
+    if file_size_too_big?(file_name, file_size)
+      raise ExternalUploadValidationError.new(
+        I18n.t(
+          "upload.attachments.too_large_humanized",
+          max_size: ActiveSupport::NumberHelper.number_to_human_size(SiteSetting.max_attachment_size_kb.kilobytes)
+        )
+      )
+    end
+  end
+
   def force_download?
     params[:dl] == "1"
   end
 
   def xhr_not_allowed
     raise Discourse::InvalidParameters.new("XHR not allowed")
-  end
-
-  def render_404
-    raise Discourse::NotFound
   end
 
   def self.serialize_upload(data)
@@ -252,6 +273,13 @@ class UploadsController < ApplicationController
 
   private
 
+  # We can pre-emptively check size for attachments, but not for images
+  # as they may be further reduced in size by UploadCreator (at this point
+  # they may have already been reduced in size by preprocessors)
+  def file_size_too_big?(file_name, file_size)
+    !FileHelper.is_supported_image?(file_name) && file_size >= SiteSetting.max_attachment_size_kb.kilobytes
+  end
+
   def send_file_local_upload(upload)
     opts = {
       filename: upload.original_filename,
@@ -270,4 +298,12 @@ class UploadsController < ApplicationController
     send_file(file_path, opts)
   end
 
+  def create_direct_multipart_upload
+    begin
+      yield
+    rescue Aws::S3::Errors::ServiceError => err
+      message = debug_upload_error(err, I18n.t("upload.create_multipart_failure", additional_detail: err.message))
+      raise ExternalUploadHelpers::ExternalUploadValidationError.new(message)
+    end
+  end
 end

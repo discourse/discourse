@@ -96,7 +96,7 @@ export default Controller.extend({
             (proceed) => {
               if (proceed) {
                 ajax("/tags/unused", { type: "DELETE" })
-                  .then(() => this.send("refresh"))
+                  .then(() => this.send("triggerRefresh"))
                   .catch(popupAjaxError);
               }
             }

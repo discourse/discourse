@@ -1,5 +1,5 @@
 <div class="composer-controls">
-  {{plugin-outlet name="before-composer-toggles"}}
+  {{plugin-outlet name="before-composer-toggles" tagName="span" connectorTagName="div"}}
 
   {{#if site.mobileView}}
     {{d-button
@@ -7,8 +7,8 @@
       icon="bars"
       action=toggleToolbar
       title=toggleToolbarTitle
-      ariaLabel=toggleToolbarTitle
       preventFocus=true
+      tabindex=-1
     }}
   {{/if}}
 
@@ -17,16 +17,16 @@
     icon=toggleIcon
     action=toggleComposer
     title=toggleTitle
-    ariaLabel=toggleTitle
+    tabindex=-1
   }}
 
-  {{#unless site.mobileView}}
+  {{#if showFullScreenButton}}
     {{d-button
       class="btn-flat toggle-fullscreen btn-mini-toggle"
       icon=fullscreenIcon
       action=toggleFullscreen
       title=fullscreenTitle
-      ariaLabel=fullscreenTitle
+      tabindex=-1
     }}
-  {{/unless}}
+  {{/if}}
 </div>

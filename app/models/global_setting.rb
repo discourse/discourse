@@ -238,23 +238,6 @@ class GlobalSetting
       end
   end
 
-  # test only
-  def self.reset_allowed_theme_ids!
-    @allowed_theme_ids = nil
-  end
-
-  def self.allowed_theme_ids
-    return nil if allowed_theme_repos.blank?
-
-    @allowed_theme_ids ||= begin
-      urls = allowed_theme_repos.split(",").map(&:strip)
-      Theme
-        .joins(:remote_theme)
-        .where('remote_themes.remote_url in (?)', urls)
-        .pluck(:id)
-    end
-  end
-
   def self.add_default(name, default)
     unless self.respond_to? name
       define_singleton_method(name) do
@@ -284,7 +267,7 @@ class GlobalSetting
   class FileProvider < BaseProvider
     attr_reader :data
     def self.from(file)
-      if File.exists?(file)
+      if File.exist?(file)
         parse(file)
       end
     end

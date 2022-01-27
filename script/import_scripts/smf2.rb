@@ -303,7 +303,7 @@ class ImportScripts::Smf2 < ImportScripts::Base
 
     [ filename, "#{attachment_id}_#{file_hash}", legacy_name ]
       .map { |name| File.join(options.smfroot, 'attachments', name) }
-      .detect { |file| File.exists?(file) }
+      .detect { |file| File.exist?(file) }
   end
 
   def decode_entities(*args)
@@ -558,7 +558,7 @@ class ImportScripts::Smf2 < ImportScripts::Base
 
     def read_smf_settings
       settings = File.join(self.smfroot, 'Settings.php')
-      IO.readlines(settings).each do |line|
+      File.readlines(settings).each do |line|
         next unless m = /\$([a-z_]+)\s*=\s*['"](.+?)['"]\s*;\s*((#|\/\/).*)?$/.match(line)
         case m[1]
         when 'db_server' then self.host ||= m[2]

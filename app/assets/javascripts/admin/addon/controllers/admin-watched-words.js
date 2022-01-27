@@ -1,71 +1,58 @@
 import Controller from "@ember/controller";
-import EmberObject from "@ember/object";
+import EmberObject, { action } from "@ember/object";
 import { INPUT_DELAY } from "discourse-common/config/environment";
-import { alias } from "@ember/object/computed";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { isEmpty } from "@ember/utils";
 import { observes } from "discourse-common/utils/decorators";
 
 export default Controller.extend({
   filter: null,
-  filtered: false,
   showWords: false,
-  disableShowWords: alias("filtered"),
-  regularExpressions: null,
 
-  filterContentNow() {
-    if (!!isEmpty(this.allWatchedWords)) {
+  _filterContent() {
+    if (isEmpty(this.allWatchedWords)) {
       return;
     }
 
-    let filter;
-    if (this.filter) {
-      filter = this.filter.toLowerCase();
-    }
-
-    if (filter === undefined || filter.length < 1) {
+    if (!this.filter) {
       this.set("model", this.allWatchedWords);
       return;
     }
 
-    const matchesByAction = [];
+    const filter = this.filter.toLowerCase();
+    const model = [];
 
     this.allWatchedWords.forEach((wordsForAction) => {
       const wordRecords = wordsForAction.words.filter((wordRecord) => {
         return wordRecord.word.indexOf(filter) > -1;
       });
-      matchesByAction.pushObject(
+
+      model.pushObject(
         EmberObject.create({
           nameKey: wordsForAction.nameKey,
           name: wordsForAction.name,
           words: wordRecords,
-          count: wordRecords.length,
         })
       );
     });
-
-    this.set("model", matchesByAction);
+    this.set("model", model);
   },
 
   @observes("filter")
   filterContent() {
-    discourseDebounce(
-      this,
-      function () {
-        this.filterContentNow();
-        this.set("filtered", !isEmpty(this.filter));
-      },
-      INPUT_DELAY
-    );
+    discourseDebounce(this, this._filterContent, INPUT_DELAY);
   },
 
-  actions: {
-    clearFilter() {
-      this.setProperties({ filter: "" });
-    },
+  @action
+  clearFilter() {
+    this.set("filter", "");
+  },
 
-    toggleMenu() {
-      $(".admin-detail").toggleClass("mobile-closed mobile-open");
-    },
+  @action
+  toggleMenu() {
+    const adminDetail = document.querySelector(".admin-detail");
+    ["mobile-closed", "mobile-open"].forEach((state) => {
+      adminDetail.classList.toggle(state);
+    });
   },
 });

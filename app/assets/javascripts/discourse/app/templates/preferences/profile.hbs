@@ -47,8 +47,11 @@
     <div class="control-group pref-profile-bg">
       <label class="control-label">{{i18n "user.change_profile_background.title"}}</label>
       <div class="controls">
-        {{image-uploader imageUrl=model.profile_background_upload_url
-          type="profile_background"}}
+        {{uppy-image-uploader
+          imageUrl=model.profile_background_upload_url
+          type="profile_background"
+          id="profile-background-uploader"
+        }}
       </div>
       <div class="instructions">
         {{i18n "user.change_profile_background.instructions"}}
@@ -59,8 +62,11 @@
     <div class="control-group pref-profile-bg">
       <label class="control-label">{{i18n "user.change_card_background.title"}}</label>
       <div class="controls">
-        {{image-uploader imageUrl=model.card_background_upload_url
-          type="card_background"}}
+        {{uppy-image-uploader
+          imageUrl=model.card_background_upload_url
+          type="card_background"
+          id="profile-card-background-uploader"
+        }}
       </div>
       <div class="instructions">
         {{i18n "user.change_card_background.instructions"}}
@@ -96,12 +102,30 @@
   </div>
 {{/if}}
 
-{{plugin-outlet name="user-preferences-profile" args=(hash model=model save=(action "save"))}}
+{{#if canChangeDefaultCalendar }}
+  <div class="control-group">
+    <label class="control-label">{{i18n "download_calendar.default_calendar"}}</label>
+    <div>
+      {{combo-box
+        valueProperty="value"
+        content=calendarOptions
+        value=model.user_option.default_calendar
+        id="user-default-calendar"
+        onChange=(action (mut model.user_option.default_calendar))
+      }}
+    </div>
+    <div class="instructions">
+      {{i18n "download_calendar.default_calendar_instruction"}}
+    </div>
+  </div>
+{{/if}}
 
-{{plugin-outlet name="user-custom-preferences" args=(hash model=model)}}
+{{plugin-outlet name="user-preferences-profile" tagName="span" connectorTagName="div" args=(hash model=model save=(action "save"))}}
+
+{{plugin-outlet name="user-custom-preferences" tagName="span" connectorTagName="div" args=(hash model=model)}}
 
 <br>
 
-{{plugin-outlet name="user-custom-controls" args=(hash model=model)}}
+{{plugin-outlet name="user-custom-controls" tagName="span" connectorTagName="div" args=(hash model=model)}}
 
 {{save-controls model=model action=(action "save") saved=saved}}

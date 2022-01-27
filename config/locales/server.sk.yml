@@ -102,7 +102,9 @@ sk:
       record_invalid: ! "Validácia zlyhala s chybami: %{errors}"
       restrict_dependent_destroy:
         one: "Nedá sa zmazať záznam pretože existuje %{record} závislých záznamov"
+        few: "Záznam nemôže byť zmazaný z dôvodu zavislosti na zázname: %{record} "
         many: "Záznam nemôže byť zmazaný z dôvodu zavislosti na zázname: %{record} "
+        other: "Záznam nemôže byť zmazaný z dôvodu zavislosti na zázname: %{record} "
       too_long:
         one: príliš dlhé (maximálne %{count} znak)
         few: príliiš dlhé (maximum je %{count} znaky)
@@ -332,16 +334,8 @@ sk:
       topic_exists_no_oldest: "Nemôžete vymazať túto kategóriu pretože obsahuje %{count} tém."
     uncategorized_description: "Témy, ktoré nepotrebujú kategóriu, alebo sa do žiadnej existujúcej nehodia."
   trust_levels:
-    newuser:
-      title: "nový používateľ"
-    basic:
-      title: "základný používateľ"
-    member:
-      title: "člen"
-    regular:
-      title: "bežný"
-    leader:
-      title: "vodca"
+    admin: "Administrácia"
+    staff: "Zamestnanci"
     change_failed_explanation: "Pokúsili ste sa znížiť úroveň %{user_name} na '%{new_trust_level}'. Ale jeho/jej aktuálna úroveň už je '%{current_trust_level}'. %{user_name} zostane na úrovni '%{current_trust_level}' - Ak chcete znížiť úroveň používateľa, najskôr uzamknite úroveň"
   post:
     image_placeholder:
@@ -527,9 +521,6 @@ sk:
       title: "Páči sa mi"
       description: "Páči sa mi tento príspevok"
       short_description: "Páči sa mi tento príspevok"
-  user_activity:
-    no_default:
-      others: "Žiadna aktivita"
   topic_flag_types:
     spam:
       title: "Spam"
@@ -765,6 +756,18 @@ sk:
     top_uploads:
       labels:
         filename: Názov súboru
+    top_users_by_likes_received:
+      labels:
+        user: Používateľ
+        qtt_like: Obdržaných 'páči sa mi'
+    top_users_by_likes_received_from_inferior_trust_level:
+      labels:
+        user: Používateľ
+        qtt_like: Obdržaných 'páči sa mi'
+    top_users_by_likes_received_from_a_variety_of_people:
+      labels:
+        user: Používateľ
+        qtt_like: Obdržaných 'páči sa mi'
   dashboard:
     rails_env_warning: "Váš server beží v %{env} móde"
     host_names_warning: "Váš súbor config/database.yml používa lokálne meno hostiteľa. Aktualizujte ho menom Vašej stránky."
@@ -773,6 +776,7 @@ sk:
     memory_warning: "Váš server beží s menej než 1 GB pamäte. Odporúča sa minimálne 1GB. "
     subfolder_ends_in_slash: "Vaše nastavenie podadresára je chybné, DISCOURSE_RELATIVE_URL_ROOT je ukončené lomítkom."
   site_settings:
+    disabled: "vypnuté"
     censored_words: "Slová, ktoré budu automatický nahradené znakmi &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Automatické zmazanie príspevkov, ktoré ostali skryté viac ako 30 dní"
     allow_user_locale: "Povoliť používateľom zvoliť si vlastný jazyk"
@@ -821,7 +825,6 @@ sk:
     tl4_additional_likes_per_day_multiplier: "Zvýšiť počet páči sa mi na deň pre úroveň dôvery 4 (vedúci) vynásobením týmto číslom"
     traditional_markdown_linebreaks: "V Markdown použiť tradičné oddeľovače riadkov, čo vyžaduje dve koncové medzery ako oddeľovač riadku."
     post_undo_action_window_mins: "Počet minút počas ktorých môžu používatelia zrušiť poslednú akciu na príspevku (\"Páči sa\", označenie, atď..)."
-    pending_users_reminder_delay: "Upozorni moderátora ak nový používateľ čaká na schválenie dlhšie ako tento počet hodín. Nastavte -1 pre vypnutie upozornenia."
     cors_origins: "Povoľ prameňom/origins použitie cross-origin dotazov (CORS). Každý prameň/origin musí obsahovať http:// alebo https://. Aby ste umožnili CORS, systémové premenná DISCOURSE_ENABLE_CORS musí byť nastavená na true."
     use_admin_ip_allowlist: "Správcovia sa môťu prihlásiť iba pokiaľ pristupujú z adresy uvedenej v zozname kontrolovaných IP adries (Admin > Logs > Screened Ips)"
     top_menu: "Určuje, ktoré položky sa zobrazia na navigácií na domovskej stránke a v akom poradí. Napríklad posledné|neprečítané|kategórie|naj|prečítané|záložky"
@@ -853,7 +856,6 @@ sk:
     enable_signup_cta: "Zobraz oznámenie pre navrátilých anonymných používateľov s výzvou na registráciu účtu. "
     google_oauth2_client_id: "Client ID Vašej Google aplikácie."
     google_oauth2_client_secret: "Client secret Vašej Google aplikácie."
-    allow_restore: "Umožniť obnovu, ktorá nahradí VŠETKY data na stránkach! Ponechajte prázdne okrem prípadu ak chcete obnoviť zo zálohy."
     maximum_backups: "Maximálny počet záloh udržiavaných na disku. Staršie zálohy budu automaticky vymazané"
     automatic_backups_enabled: "Spustiť automatické zálohy podľa nastavenia intervalu záloh"
     s3_backup_bucket: "Vzdialený S3 bucket na uloženie záloh. VAROVANIE: Uistite sa, že ide o súkromný S3 bucket."
@@ -946,7 +948,6 @@ sk:
     topic_view_duration_hours: "Započítaj nové pozretie témy raz za IP/používateľa každých N hodín."
     user_profile_view_duration_hours: "Započítaj nové pozretie používateľského profilu raz za IP/používateľa každých N hodín."
     levenshtein_distance_spammer_emails: "Počet rozdielnych znakov, ktoré stále umožnia fuzzy zhodu, keď sa hľadájú emaily od spammerov."
-    max_new_accounts_per_registration_ip: "Neakceptovať ďalšie prihlásenia z IP adresy v prípade, ak už existuje (n) účtov s úrovňou dôvery 0 z danej IP adresy (a žiadny nie je zamestnancec alebo s úrovňou dôvery 2 a vyššou)."
     min_ban_entries_for_roll_up: "Ak existuje minimálne (N) položiek a kliknete na Zrolovať, vytvorí sa nový obmedzujúci záznam podsiete."
     max_age_unmatched_emails: "Zmazať nevyskytujúce sa kontrolované emailové adresy po (N) dňoch."
     max_age_unmatched_ips: "Zmazať nevyskytujúce sa kontrolované IP adresy po (N) dňoch."
@@ -1052,7 +1053,6 @@ sk:
       topic: "Výsledky"
       user: "Používatelia"
   original_poster: "Pôvodný autor"
-  most_posts: "Najviac príspevkov"
   most_recent_poster: "Najaktuálnejší prispievateľ"
   frequent_poster: "Častý prispievateľ"
   redirected_to_top_reasons:
@@ -1302,115 +1302,6 @@ sk:
     Upravte prvý príspevok v téme pre zmenu obsahu %{page_name} stránky.
   guidelines_topic:
     title: "FAQ/Pravidlá"
-    body: |2
-
-      <a name="civilized"></a>
-
-      ## [Toto je civilizované miesto na verejnú diskusiu](#civilized)
-
-      Prosím, správajte sa k tomuto diskusnému fóru s rovnakým rešpektom ako k verejnému parku. Aj my sme spoločným zdrojom komunity – miesto, kde sa prostredníctvom neutíchajúcej diskusie delíme o zručnosti, vedomosti a záujmy.
-
-      Tieto pravidlá nie sú presne dané a nemenné, sú to len usmernenia, ktoré majú pomôcť úsudku členov našej komunity a udržať toto miesto na civilizovanú verejnú diskusiu čisté a prehľadné.
-
-      <a name="improve"></a>
-
-      ## [Zlepšujte diskusiu](#improve)
-
-      Pomôžte nám tu vytvoriť skvelé miesto na diskusiu tým, že sa vždy budete snažiť diskusiu posunúť k lepšiemu, aj keď len o málo. Ak si nie ste istí, či váš príspevok niečím prispeje k diskusii, premyslite si, čo chcete povedať a skúste to neskôr.
-
-      Záleží nám na témach, o ktorých sa tu diskutuje, a chceme, aby ste sa správali tak, že na nich záleží aj vám. Rešpektujte témy a ľudí, ktorí o nich diskutujú, a to aj v prípade, že s niečím, čo niekto povedal, nesúhlasíte.
-
-      Jedným zo spôsobov zlepšenia diskusie je objavovanie tých, ktoré prebiehajú. Skôr, než odpoviete alebo vytvoríte vlastnú tému, prezrite si témy, ktoré tu už sú, a budete mať lepšiu šancu nájsť iných ľudí s rovnakými záujmami.
-
-      <a name="agreeable"></a>
-
-      ## [Buďte milí, aj keď nesúhlasíte](#agreeable)
-
-      Možno budete chcieť s ničím vyjadriť svoj nesúhlas. To je v poriadku. Ale majte na pamäti, že máte kritizovať myšlienky, nie ľudí. Prosím, vyhýbajte sa:
-
-      * nadávkam
-
-      * útokom ad hominem
-
-      * odpovediam na tón príspevku a nie na jeho obsah
-
-      * neuváženému oponovaniu
-
-      Namiesto toho ponúknite podložené protiargumenty, ktoré konverzáciu posunú dopredu.
-
-      <a name="participate"></a>
-
-      ## [Na vašej účasti záleží](#participate)
-
-      Konverzácie, ktoré tu máme, udávajú tón pre nových členov. Pomôžte nám ovplyvniť budúcnosť tejto komunity tým, že sa zapojíte do diskusií, ktoré robia toto fórum zaujímavým, a vyhnete sa tým, ktoré nie.
-
-      V diskusii sú k dispozícii nástroje, ktoré umožňujú, aby komunita spoločne vybrala najlepšie (a najhoršie) príspevky: záložky, tlačidlá „Páči sa mi“, nahlásenie nevhodných príspevkov, odpovede, úprava príspevkov a tak ďalej. Používajte tieto nástroje na zlepšenie vlastného zážitku, ale aj zážitku ostatných.
-
-      Zanechajme komunitu lepšiu, než sme ju našli.
-
-      <a name="flag-problems"></a>
-
-      ## [Ak uvidíte problém, nahláste ho.](#flag-problems)
-
-      Moderátori diskusií majú špeciálne právomoci – sú za toto fórum zodpovední. No vy tiež. S vašou pomocou môžu byť moderátori v komunite sprostredkovateľmi, nie len správcami či políciou.
-
-      Ak si všimnete zlé správanie, nereagujte naň. Odpoveď zlé správanie podporuje tým, že ho prijme za rovnocenné, a navyše vám berie energiu a ostatným čas. Jednoducho ho nahláste. Ak takéto správanie nahlásia viacerí, budú proti nemu podniknuté kroky, či už automaticky alebo zásahom moderátora.
-
-      Aby bolo možné komunitu udržať, moderátori si vyhradzujú právo kedykoľvek a z akéhokoľvek dôvodu vymazať akýkoľvek obsah alebo účet. Moderátori nekontrolujú nové príspevky. Moderátori a prevádzkovatelia webovej lokality nenesú žiadnu zodpovednosť za akýkoľvek obsah pridaný komunitou.
-
-      <a name="be-civil"></a>
-
-      ## [Stále buďte zdvorilí](#be-civil)
-
-      Nič nenarúša zdravú diskusiu tak ako hrubosť.
-
-      * Buďte zdvorilí. Nepridávajte nič, čo môže rozumný človek považovať za urážlivé, hanlivé, alebo za prejav nenávisti.
-
-      * Zachovávajte slušnosť. Nepridávajte nič nemravné či so sexuálnym podtónom.
-
-      * Navzájom sa rešpektujte. Nikoho neobťažujte, nekritizujte, nenapodobňujte a nezverejňujte ich súkromné informácie.
-
-      * Rešpektujte naše fórum. Neuverejňujte spam ani inak fórum úmyselne nepoškodzujte.
-
-      Toto nie sú konkrétne výrazy s presnou definíciou – no vyhýbajte sa všetkému, čo takto môže čo i len pôsobiť. Ak si nie ste istí, opýtajte sa sami seba, ako by ste sa cítili, keby váš príspevok uverejnili na titulnej strane New York Times.
-
-      Toto je verejné fórum a vyhľadávače naše diskusie indexujú. Používajte taký jazyk, prepojenia a obrázky, ktoré budú prístupné pre vašu rodinu a priateľov.
-
-      <a name="keep-tidy"></a>
-
-      ## [Udržujte poriadok](#keep-tidy)
-
-      Usilujte sa umiestniť veci na správne miesto, aby sme mohli stráviť diskutovaním viac času než upratovaním. Preto:
-
-      * Nezačínajte novú tému v nesprávnej kategórii.
-
-      * Neuverejňujte rovnaké veci vo viacerých témach.
-
-      * Neuverejňujte odpovede bez obsahu.
-
-      * Neodkláňajte tému tým, že ju v strede zmeníte.
-
-      * Príspevky nepodpisujte – ku každému príspevku sú pripojené informácie z vášho profilu.
-
-      Nepridávajte príspevky s textom „+1“ či „súhlasím“. Radšej použite tlačidlo „Páči sa mi“. Nemeňte príliš smerovanie existujúcej témy, radšej použite možnosť odpovedať prostredníctvom súvisiacej témy.
-
-      <a name="stealing"></a>
-
-      ## [Uverejňujte len vlastné veci](#stealing)
-
-      Bez povolenia nesmiete uverejňovať nič digitálne, čo patrí niekomu inému. Nesmiete uverejňovať opis a metódy krádeže duševného vlastníctva niekoho iného (softvéru, videí, audio nahrávok, obrázkov) alebo iného porušenia zákona, či na ne odkazovať.
-
-      <a name="power"></a>
-
-      ## [Poháňané Vami](#power)
-
-      Túto webovú lokalitu spravuje [priateľský kolektív adminov a moderátorov](%{base_path}/about) spolu s *vami*, komunitou. Ak máte akékoľvek otázky o tom, ako by to tu malo fungovať, otvorte novú tému v kategórii [O tejto stránke](%{base_path}/c/site-feedback) a môžeme o tom podiskutovať! Ak sa vyskytne kritická alebo naliehavá záležitosť, ktorú nie je možné vyriešiť metatémou alebo nahlásením, kontaktujte nás prostredníctvom stránky [O fóre](%{base_path}/about).
-
-      <a name="tos"></a>
-
-      ## [Podmienky používania](#tos)
-
-      Áno, právne záležitosti sú nudné, no my musíme chrániť seba a následne aj vás a vaše údaje proti „tým zlým“. Máme [Podmienky používania](%{base_path}/tos), ktoré opisujú vaše (a naše) správanie a práva súvisiace s obsahom, súkromím a právnymi predpismi. Aby ste mohli túto službu využívať, musíte súhlasiť s našimi [Podmienkami používania](%{base_path}/tos).
   tos_topic:
     title: "Podmienky používania"
   privacy_topic:
@@ -1519,14 +1410,10 @@ sk:
             placeholder: "https://www.example.com/contact-us"
       corporate:
         title: "Organizácia"
-      colors:
-        title: "Farby"
-      fonts:
+      styling:
         fields:
-          font_preview:
+          styling_preview:
             label: "Ukážka"
-      homepage:
-        fields:
           homepage_style:
             choices:
               categories_only:
@@ -1554,8 +1441,6 @@ sk:
         title: "Suspendovaný užívateľ"
       agree_and_silence:
         title: "Tichý užívateľ"
-      delete_spammer:
-        title: "Zmazať spammera"
       delete_single:
         title: "Odstrániť"
       disagree:
@@ -1567,8 +1452,7 @@ sk:
           title: "Odstrániť používateľa"
       reject:
         title: "Zamietnuť"
-      delete_user:
-        title: "Odstrániť používateľa"
+  fallback_username: "používateľ"
   activemodel:
     errors:
       <<: *errors

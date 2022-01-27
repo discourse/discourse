@@ -14,6 +14,7 @@ describe 'private messages' do
 
     get 'Get a list of private messages for a user' do
       tags 'Private Messages'
+      operationId 'listUserPrivateMessages'
       parameter name: :username, in: :path, schema: { type: :string }
 
       produces 'application/json'
@@ -40,7 +41,7 @@ describe 'private messages' do
             type: :object,
             properties: {
               can_create_topic: { type: :boolean },
-              draft: { type: :string, nullable: true },
+              draft: { type: [:string, :null] },
               draft_key: { type: :string },
               draft_sequence: { type: :integer },
               per_page: { type: :integer },
@@ -56,7 +57,7 @@ describe 'private messages' do
                     posts_count: { type: :integer },
                     reply_count: { type: :integer },
                     highest_post_number: { type: :integer },
-                    image_url: { type: :string, nullable: true },
+                    image_url: { type: [:string, :null] },
                     created_at: { type: :string },
                     last_posted_at: { type: :string },
                     bumped: { type: :boolean },
@@ -64,10 +65,9 @@ describe 'private messages' do
                     archetype: { type: :string },
                     unseen: { type: :boolean },
                     last_read_post_number: { type: :integer },
-                    unread: { type: :integer },
-                    new_posts: { type: :integer },
+                    unread_posts: { type: :integer },
                     pinned: { type: :boolean },
-                    unpinned: { type: :string, nullable: true },
+                    unpinned: { type: [:string, :null] },
                     visible: { type: :boolean },
                     closed: { type: :boolean },
                     archived: { type: :boolean },
@@ -78,9 +78,9 @@ describe 'private messages' do
                     like_count: { type: :integer },
                     has_summary: { type: :boolean },
                     last_poster_username: { type: :string },
-                    category_id: { type: :string, nullable: true },
+                    category_id: { type: [:string, :null] },
                     pinned_globally: { type: :boolean },
-                    featured_link: { type: :string, nullable: true },
+                    featured_link: { type: [:string, :null] },
                     allowed_user_count: { type: :integer },
                     posters: {
                       type: :array,
@@ -90,7 +90,7 @@ describe 'private messages' do
                           extras: { type: :string },
                           description: { type: :string },
                           user_id: { type: :integer },
-                          primary_group_id: { type: :string, nullable: true },
+                          primary_group_id: { type: [:string, :null] },
                         }
                       },
                     },
@@ -100,9 +100,9 @@ describe 'private messages' do
                         type: :object,
                         properties: {
                           extras: { type: :string },
-                          description: { type: :string, nullable: true },
+                          description: { type: [:string, :null] },
                           user_id: { type: :integer },
-                          primary_group_id: { type: :string, nullable: true },
+                          primary_group_id: { type: [:string, :null] },
                         }
                       },
                     },
@@ -124,6 +124,7 @@ describe 'private messages' do
 
     get 'Get a list of private messages sent for a user' do
       tags 'Private Messages'
+      operationId 'getUserSentPrivateMessages'
       parameter name: :username, in: :path, schema: { type: :string }
 
       produces 'application/json'
@@ -136,7 +137,7 @@ describe 'private messages' do
               properties: {
                 id: { type: :integer },
                 username: { type: :string },
-                name: { type: :string, nullable: true },
+                name: { type: [:string, :null] },
                 avatar_template: { type: :string },
               }
             },
@@ -150,7 +151,7 @@ describe 'private messages' do
             type: :object,
             properties: {
               can_create_topic: { type: :boolean },
-              draft: { type: :string, nullable: true },
+              draft: { type: [:string, :null] },
               draft_key: { type: :string },
               draft_sequence: { type: :integer },
               per_page: { type: :integer },
@@ -166,7 +167,7 @@ describe 'private messages' do
                     posts_count: { type: :integer },
                     reply_count: { type: :integer },
                     highest_post_number: { type: :integer },
-                    image_url: { type: :string, nullable: true },
+                    image_url: { type: [:string, :null] },
                     created_at: { type: :string },
                     last_posted_at: { type: :string },
                     bumped: { type: :boolean },
@@ -174,10 +175,9 @@ describe 'private messages' do
                     archetype: { type: :string },
                     unseen: { type: :boolean },
                     last_read_post_number: { type: :integer },
-                    unread: { type: :integer },
-                    new_posts: { type: :integer },
+                    unread_posts: { type: :integer },
                     pinned: { type: :boolean },
-                    unpinned: { type: :string, nullable: true },
+                    unpinned: { type: [:string, :null] },
                     visible: { type: :boolean },
                     closed: { type: :boolean },
                     archived: { type: :boolean },
@@ -188,9 +188,9 @@ describe 'private messages' do
                     like_count: { type: :integer },
                     has_summary: { type: :boolean },
                     last_poster_username: { type: :string },
-                    category_id: { type: :string, nullable: true },
+                    category_id: { type: [:string, :null] },
                     pinned_globally: { type: :boolean },
-                    featured_link: { type: :string, nullable: true },
+                    featured_link: { type: [:string, :null] },
                     allowed_user_count: { type: :integer },
                     posters: {
                       type: :array,
@@ -200,7 +200,7 @@ describe 'private messages' do
                           extras: { type: :string },
                           description: { type: :string },
                           user_id: { type: :integer },
-                          primary_group_id: { type: :string, nullable: true },
+                          primary_group_id: { type: [:string, :null] },
                         }
                       },
                     },

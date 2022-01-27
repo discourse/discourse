@@ -40,7 +40,7 @@ class RemoteTheme < ActiveRecord::Base
 
     existing = true
     if theme.blank?
-      theme = Theme.new(user_id: user&.id || -1, name: theme_info["name"])
+      theme = Theme.new(user_id: user&.id || -1, name: theme_info["name"], auto_update: false)
       existing = false
     end
 
@@ -110,6 +110,10 @@ class RemoteTheme < ActiveRecord::Base
 
   def self.unreachable_themes
     self.joined_remotes.where("last_error_text IS NOT NULL").pluck("themes.name", "themes.id")
+  end
+
+  def out_of_date?
+    commits_behind > 0 || remote_version != local_version
   end
 
   def update_remote_version

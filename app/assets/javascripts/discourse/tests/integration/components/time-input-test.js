@@ -24,7 +24,7 @@ discourseModule("Integration | Component | time-input", function (hooks) {
     },
 
     test(assert) {
-      assert.equal(this.subject.header().name(), "14:58");
+      assert.strictEqual(this.subject.header().name(), "14:58");
     },
   });
 
@@ -38,7 +38,7 @@ discourseModule("Integration | Component | time-input", function (hooks) {
     async test(assert) {
       await this.subject.expand();
       await this.subject.selectRowByIndex(3);
-      assert.equal(this.subject.header().name(), "14:58");
+      assert.strictEqual(this.subject.header().name(), "14:58");
     },
   });
 
@@ -53,7 +53,7 @@ discourseModule("Integration | Component | time-input", function (hooks) {
     async test(assert) {
       await this.subject.expand();
       await this.subject.selectRowByIndex(3);
-      assert.equal(this.subject.header().name(), "00:45");
+      assert.strictEqual(this.subject.header().name(), "00:45");
     },
   });
 });

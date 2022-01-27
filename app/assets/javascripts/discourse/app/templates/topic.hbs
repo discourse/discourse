@@ -11,7 +11,7 @@
     {{shared-draft-controls topic=model}}
   {{/if}}
 
-  {{plugin-outlet name="topic-above-post-stream" args=(hash model=model editFirstPost=(action "editFirstPost"))}}
+  {{plugin-outlet name="topic-above-post-stream" tagName="span" connectorTagName="div" args=(hash model=model editFirstPost=(action "editFirstPost"))}}
 
   {{#if model.postStream.loaded}}
     {{#if model.postStream.firstPostPresent}}
@@ -42,11 +42,11 @@
               }}
             {{/if}}
 
-            {{plugin-outlet name="edit-topic" args=(hash model=model buffered=buffered)}}
+            {{plugin-outlet name="edit-topic" tagName="span" connectorTagName="div" args=(hash model=model buffered=buffered)}}
 
             <div class="edit-controls">
-              {{d-button action=(action "finishedEditingTopic") class="btn-primary submit-edit" icon="check"}}
-              {{d-button action=(action "cancelEditingTopic") class="btn-default cancel-edit" icon="times"}}
+              {{d-button action=(action "finishedEditingTopic") class="btn-primary submit-edit" icon="check" ariaLabel="composer.save_edit"}}
+              {{d-button action=(action "cancelEditingTopic") class="btn-default cancel-edit" icon="times" ariaLabel="composer.cancel"}}
 
               {{#if canRemoveTopicFeaturedLink}}
                 <a href {{action "removeFeaturedLink"}} class="remove-featured-link" title={{i18n "composer.remove_featured_link"}}>
@@ -69,7 +69,7 @@
                   tagName=""
                 }}
               {{else}}
-                {{private-message-glyph shouldShow=model.isPrivateMessage  tagName=""}}
+                {{private-message-glyph shouldShow=model.isPrivateMessage tagName=""}}
               {{/if}}
             {{/unless}}
 
@@ -130,9 +130,11 @@
         }}
       </div>
 
-      {{plugin-outlet name="above-timeline" tagName=""}}
+      {{plugin-outlet name="above-timeline" connectorTagName="div"}}
 
       {{#topic-navigation class="topic-navigation" topic=model jumpToDate=(action "jumpToDate") jumpToIndex=(action "jumpToIndex") as |info|}}
+        {{plugin-outlet name="topic-navigation" connectorTagName="div" args=(hash topic=model)}}
+
         {{#if info.renderTimeline}}
           {{topic-timeline
             topic=model
@@ -148,6 +150,7 @@
             jumpToPostPrompt=(action "jumpToPostPrompt")
             jumpToIndex=(action "jumpToIndex")
             replyToPost=(action "replyToPost")
+            showSummary=(action "showSummary")
             toggleMultiSelect=(action "toggleMultiSelect")
             showTopicSlowModeUpdate=(route-action "showTopicSlowModeUpdate")
             deleteTopic=(action "deleteTopic")
@@ -167,7 +170,7 @@
             topic=model
             expanded=info.topicProgressExpanded
             jumpToPost=(action "jumpToPost")}}
-            {{plugin-outlet name="before-topic-progress" args=(hash model=model jumpToPost=(action "jumpToPost"))}}
+            {{plugin-outlet name="before-topic-progress" tagName="span" connectorTagName="div" args=(hash model=model jumpToPost=(action "jumpToPost"))}}
             {{topic-admin-menu-button
               topic=model
               openUpwards="true"
@@ -195,7 +198,7 @@
           <div class="posts-wrapper">
             {{conditional-loading-spinner condition=model.postStream.loadingAbove}}
 
-            {{plugin-outlet name="topic-above-posts" args=(hash model=model)}}
+            {{plugin-outlet name="topic-above-posts" tagName="span" connectorTagName="div" args=(hash model=model)}}
 
             {{#unless model.postStream.loadingFilter}}
               {{scrolling-post-stream
@@ -208,12 +211,15 @@
                 gaps=model.postStream.gaps
                 showReadIndicator=model.show_read_indicator
                 streamFilters=model.postStream.streamFilters
+                lastReadPostNumber=userLastReadPostNumber
+                highestPostNumber=highestPostNumber
                 showFlags=(action "showPostFlags")
                 editPost=(action "editPost")
                 showHistory=(route-action "showHistory")
                 showLogin=(route-action "showLogin")
                 showRawEmail=(route-action "showRawEmail")
                 deletePost=(action "deletePost")
+                permanentlyDeletePost=(action "permanentlyDeletePost")
                 recoverPost=(action "recoverPost")
                 expandHidden=(action "expandHidden")
                 toggleBookmark=(action "toggleBookmark")
@@ -338,7 +344,7 @@
         {{signup-cta}}
       {{else}}
         {{#if currentUser}}
-          {{plugin-outlet name="topic-above-footer-buttons" args=(hash model=model)}}
+          {{plugin-outlet name="topic-above-footer-buttons" tagName="span" connectorTagName="div" args=(hash model=model)}}
 
           {{topic-footer-buttons
             topic=model
@@ -368,7 +374,7 @@
         {{/if}}
       {{/if}}
 
-      {{plugin-outlet name="topic-above-suggested" args=(hash model=model)}}
+      {{plugin-outlet name="topic-above-suggested" tagName="span" connectorTagName="div" args=(hash model=model)}}
       <div class="{{if model.relatedMessages.length "related-messages-wrapper"}} {{if model.suggestedTopics.length "suggested-topics-wrapper"}}">
         {{#if model.relatedMessages.length}}
           {{related-messages topic=model}}
@@ -402,5 +408,12 @@
 
   {{share-popup topic=model replyAsNewTopic=(action "replyAsNewTopic")}}
 
-  {{quote-button quoteState=quoteState selectText=(action "selectText") topic=model composerVisible=composer.visible}}
+  {{quote-button
+    quoteState=quoteState
+    selectText=(action "selectText")
+    editPost=(action "editPost")
+    topic=model
+    composerVisible=composer.visible
+
+  }}
 {{/discourse-topic}}

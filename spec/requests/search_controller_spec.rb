@@ -231,6 +231,13 @@ describe SearchController do
       expect(SearchLog.where(term: 'wookie')).to be_blank
     end
 
+    it "doesn't log when filtering by exclude_topics" do
+      SiteSetting.log_search_queries = true
+      get "/search/query.json", params: { term: 'boop', type_filter: 'exclude_topics' }
+      expect(response.status).to eq(200)
+      expect(SearchLog.where(term: 'boop')).to be_blank
+    end
+
     it "does not raise 500 with an empty term" do
       get "/search/query.json", params: { term: "in:first", type_filter: "topic", search_for_id: true }
       expect(response.status).to eq(200)
@@ -534,7 +541,7 @@ describe SearchController do
       expect(data["posts"][3]["id"]).to eq(very_low_priority_post.id)
     end
 
-    it "doesn't sort posts with search piority when query with order" do
+    it "doesn't sort posts with search priority when query with order" do
       get "/search.json", params: { q: 'status:open order:latest Priority Post' }
       expect(response.status).to eq(200)
       data = response.parsed_body
@@ -601,7 +608,7 @@ describe SearchController do
       SearchLog.clear_debounce_cache!
     end
 
-    it "doesn't work wthout the necessary parameters" do
+    it "doesn't work without the necessary parameters" do
       post "/search/click.json"
       expect(response.status).to eq(400)
     end

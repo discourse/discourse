@@ -34,9 +34,9 @@ describe BackupRestore::MetaDataHandler do
     end
 
     it "raises an exception when the metadata file contains invalid JSON" do
-      currupt_metadata = '{"version":20160329101122'
+      corrupt_metadata = '{"version":20160329101122'
 
-      with_metadata_file(currupt_metadata) do |dir|
+      with_metadata_file(corrupt_metadata) do |dir|
         expect { validate_metadata(backup_filename, dir) }
           .to raise_error(BackupRestore::MetaDataError)
       end

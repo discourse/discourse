@@ -1,11 +1,14 @@
 <td>{{user-info user=item.user}}</td>
-<td>{{number item.likes_received}}</td>
-<td>{{number item.likes_given}}</td>
-<td>{{number item.topic_count}}</td>
-<td>{{number item.post_count}}</td>
-<td>{{number item.topics_entered}}</td>
-<td>{{number item.posts_read}}</td>
-<td>{{number item.days_visited}}</td>
+{{#each columns as |column|}}
+  <td>
+    {{#if (directory-column-is-user-field column=column)}}
+      {{directory-item-user-field-value item=item column=column}}
+    {{else}}
+      {{directory-item-value item=item column=column}}
+    {{/if}}
+  </td>
+{{/each}}
+
 {{#if showTimeRead}}
   <td><span class="time-read">{{format-duration item.time_read}}</span></td>
 {{/if}}

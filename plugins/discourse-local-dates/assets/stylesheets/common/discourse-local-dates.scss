@@ -1,4 +1,8 @@
 .discourse-local-date {
+  > * {
+    pointer-events: none;
+  }
+
   &.cooked-date {
     color: var(--primary);
     cursor: pointer;
@@ -35,6 +39,12 @@
         background: var(--tertiary-low);
       }
     }
+  }
+
+  .download-calendar {
+    text-align: right;
+    cursor: pointer;
+    margin-top: 0.5em;
   }
 }
 
@@ -301,7 +311,8 @@
 
 html:not(.mobile-view) {
   .fixed-modal .discourse-local-dates-create-modal.modal-body {
-    width: 600px;
+    width: 40em; // using ems to scale with user font size
+    max-width: 100vw; // avoids overflow if someone has extreme font-sizes impacting width
     max-height: 400px !important;
   }
 }

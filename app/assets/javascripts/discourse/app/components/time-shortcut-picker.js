@@ -32,10 +32,6 @@ const BINDINGS = {
     handler: "selectShortcut",
     args: [TIME_SHORTCUT_TYPES.TOMORROW],
   },
-  "n w": {
-    handler: "selectShortcut",
-    args: [TIME_SHORTCUT_TYPES.NEXT_WEEK],
-  },
   "n b w": {
     handler: "selectShortcut",
     args: [TIME_SHORTCUT_TYPES.START_OF_NEXT_BUSINESS_WEEK],
@@ -71,6 +67,8 @@ export default Component.extend({
   customDate: null,
   customTime: null,
 
+  _itsatrap: null,
+
   defaultCustomReminderTime: `0${START_OF_DAY_HOUR}:00`,
 
   @on("init")
@@ -81,6 +79,7 @@ export default Component.extend({
       additionalOptionsToShow: this.additionalOptionsToShow || [],
       hiddenOptions: this.hiddenOptions || [],
       customOptions: this.customOptions || [],
+      customLabels: this.customLabels || {},
     });
 
     if (this.prefilledDatetime) {
@@ -105,7 +104,8 @@ export default Component.extend({
 
   willDestroyElement() {
     this._super(...arguments);
-    this.mousetrap.unbind(Object.keys(BINDINGS));
+
+    this._itsatrap.unbind(Object.keys(BINDINGS));
   },
 
   parsePrefilledDatetime() {
@@ -147,7 +147,7 @@ export default Component.extend({
 
   _bindKeyboardShortcuts() {
     Object.keys(BINDINGS).forEach((shortcut) => {
-      this.mousetrap.bind(shortcut, () => {
+      this._itsatrap.bind(shortcut, () => {
         let binding = BINDINGS[shortcut];
         this.send(binding.handler, ...binding.args);
         return false;
@@ -171,9 +171,16 @@ export default Component.extend({
     "additionalOptionsToShow",
     "hiddenOptions",
     "customOptions",
+    "customLabels",
     "userTimezone"
   )
-  options(additionalOptionsToShow, hiddenOptions, customOptions, userTimezone) {
+  options(
+    additionalOptionsToShow,
+    hiddenOptions,
+    customOptions,
+    customLabels,
+    userTimezone
+  ) {
     this._loadLastUsedCustomDatetime();
 
     let options = defaultShortcutOptions(userTimezone);
@@ -226,6 +233,12 @@ export default Component.extend({
         }
       });
     }
+
+    options.forEach((option) => {
+      if (customLabels[option.id]) {
+        option.label = customLabels[option.id];
+      }
+    });
 
     return options;
   },

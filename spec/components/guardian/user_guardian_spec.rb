@@ -273,7 +273,7 @@ describe UserGuardian do
         expect(guardian.can_delete_user?(user)).to eq(true)
       end
 
-      it "is allowed when user created multiple posts in PMs to themself" do
+      it "is allowed when user created multiple posts in PMs to themselves" do
         topic = Fabricate(:private_message_topic, user: user, topic_allowed_users: [
           Fabricate.build(:topic_allowed_user, user: user)
         ])
@@ -453,6 +453,56 @@ describe UserGuardian do
       guardian = Guardian.new(trust_level_1)
       SiteSetting.min_trust_level_to_allow_user_card_background = 2
       expect(guardian.can_upload_user_card_background?(trust_level_1)).to eq(false)
+    end
+  end
+
+  describe "#can_change_tracking_preferences?" do
+    let(:staged_user) { Fabricate(:staged) }
+    let(:admin_user) { Fabricate(:admin) }
+
+    it "is true for normal TL0 user" do
+      expect(Guardian.new(user).can_change_tracking_preferences?(user)).to eq(true)
+    end
+
+    it "is true for admin user" do
+      expect(Guardian.new(admin_user).can_change_tracking_preferences?(admin_user)).to eq(true)
+    end
+
+    context "allow_changing_staged_user_tracking is false" do
+      before { SiteSetting.allow_changing_staged_user_tracking = false }
+
+      it "is false to staged user" do
+        expect(Guardian.new(staged_user).can_change_tracking_preferences?(staged_user)).to eq(false)
+      end
+
+      it "is false for staged user as admin user" do
+        expect(Guardian.new(admin_user).can_change_tracking_preferences?(staged_user)).to eq(false)
+      end
+    end
+
+    context "allow_changing_staged_user_tracking is true" do
+      before { SiteSetting.allow_changing_staged_user_tracking = true }
+
+      it "is true to staged user" do
+        expect(Guardian.new(staged_user).can_change_tracking_preferences?(staged_user)).to eq(true)
+      end
+
+      it "is true for staged user as admin user" do
+        expect(Guardian.new(admin_user).can_change_tracking_preferences?(staged_user)).to eq(true)
+      end
+    end
+  end
+
+  describe "#can_upload_external?" do
+    after { Discourse.redis.flushdb }
+
+    it "is true by default" do
+      expect(Guardian.new(user).can_upload_external?).to eq(true)
+    end
+
+    it "is false if the user has been banned from external uploads for a time period" do
+      ExternalUploadManager.ban_user_from_external_uploads!(user: user)
+      expect(Guardian.new(user).can_upload_external?).to eq(false)
     end
   end
 end

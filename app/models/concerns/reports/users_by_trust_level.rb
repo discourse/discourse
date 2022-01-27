@@ -24,7 +24,7 @@ module Reports::UsersByTrustLevel
       ]
 
       User.real.group('trust_level').count.sort.each do |level, count|
-        key = TrustLevel.levels[level.to_i]
+        key = TrustLevel.levels.key(level.to_i)
         url = Proc.new { |k| "/admin/users/list/#{k}" }
         report.data << { url: url.call(key), key: key, x: level.to_i, y: count }
       end

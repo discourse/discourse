@@ -41,29 +41,6 @@
   .btn.pull-right {
     margin-right: 10px;
   }
-  .future-date-input {
-    input {
-      margin: 0;
-    }
-    .alert-info {
-      margin: 0 -15px -15px -15px;
-    }
-    .btn-clear {
-      display: none;
-    }
-    .topic-timer-info {
-      border: none;
-      padding: 0;
-      h3 {
-        font-weight: normal;
-        font-size: $font-up-1;
-      }
-    }
-
-    input[disabled] {
-      background: var(--primary-low);
-    }
-  }
   .pika-single {
     position: absolute !important; /* inline JS styles */
   }
@@ -72,12 +49,5 @@
     .topic-timer-info {
       border-top: 0;
     }
-  }
-}
-
-// mobile styles
-.mobile-view .edit-topic-timer-modal {
-  .select-kit.combo-box {
-    flex: 1 0 0px;
   }
 }

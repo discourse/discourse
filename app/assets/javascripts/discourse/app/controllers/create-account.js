@@ -140,16 +140,19 @@ export default Controller.extend(
       "serverAccountEmail",
       "serverEmailValidation",
       "accountEmail",
-      "rejectedEmails.[]"
+      "rejectedEmails.[]",
+      "forceValidationReason"
     )
     emailValidation(
       serverAccountEmail,
       serverEmailValidation,
       email,
-      rejectedEmails
+      rejectedEmails,
+      forceValidationReason
     ) {
       const failedAttrs = {
         failed: true,
+        ok: false,
         element: document.querySelector("#new-account-email"),
       };
 
@@ -162,6 +165,9 @@ export default Controller.extend(
         return EmberObject.create(
           Object.assign(failedAttrs, {
             message: I18n.t("user.email.required"),
+            reason: forceValidationReason
+              ? I18n.t("user.email.required")
+              : null,
           })
         );
       }
@@ -205,6 +211,10 @@ export default Controller.extend(
 
       return User.checkEmail(this.accountEmail)
         .then((result) => {
+          if (this.isDestroying || this.isDestroyed) {
+            return;
+          }
+
           if (result.failed) {
             this.setProperties({
               serverAccountEmail: this.accountEmail,
@@ -237,7 +247,7 @@ export default Controller.extend(
       "authOptions.email",
       "authOptions.email_valid"
     )
-    emailValidated() {
+    emailDisabled() {
       return (
         this.get("authOptions.email") === this.accountEmail &&
         this.get("authOptions.email_valid")
@@ -254,7 +264,7 @@ export default Controller.extend(
     },
 
     @observes("emailValidation", "accountEmail")
-    prefillUsername: function () {
+    prefillUsername() {
       if (this.prefilledUsername) {
         // If username field has been filled automatically, and email field just changed,
         // then remove the username.
@@ -268,7 +278,7 @@ export default Controller.extend(
         (isEmpty(this.accountUsername) || this.get("authOptions.email"))
       ) {
         // If email is valid and username has not been entered yet,
-        // or email and username were filled automatically by 3rd parth auth,
+        // or email and username were filled automatically by 3rd party auth,
         // then look for a registered username that matches the email.
         discourseDebounce(this, this.fetchExistingUsername, 500);
       }
@@ -289,6 +299,10 @@ export default Controller.extend(
 
       this._hpPromise = ajax("/session/hp.json")
         .then((json) => {
+          if (this.isDestroying || this.isDestroyed) {
+            return;
+          }
+
           this._challengeDate = new Date();
           // remove 30 seconds for jitter, make sure this works for at least
           // 30 seconds so we don't have hard loops
@@ -346,6 +360,10 @@ export default Controller.extend(
       this.set("formSubmitted", true);
       return User.createAccount(attrs).then(
         (result) => {
+          if (this.isDestroying || this.isDestroyed) {
+            return;
+          }
+
           this.set("isDeveloper", false);
           if (result.success) {
             // invalidate honeypot
@@ -407,6 +425,17 @@ export default Controller.extend(
       }
     },
 
+    @discourseComputed("authOptions.associate_url", "authOptions.auth_provider")
+    associateHtml(url, provider) {
+      if (!url) {
+        return;
+      }
+      return I18n.t("create_account.associate", {
+        associate_link: url,
+        provider: I18n.t(`login.${provider}.name`),
+      });
+    },
+
     actions: {
       externalLogin(provider) {
         this.login.send("externalLogin", provider, { signup: true });
@@ -415,6 +444,7 @@ export default Controller.extend(
       createAccount() {
         this.clearFlash();
 
+        this.set("forceValidationReason", true);
         const validation = [
           this.emailValidation,
           this.usernameValidation,
@@ -424,23 +454,22 @@ export default Controller.extend(
         ].find((v) => v.failed);
 
         if (validation) {
-          if (validation.message) {
-            this.flash(validation.message, "error");
-          }
-
           const element = validation.element;
-          if (element.tagName === "DIV") {
-            if (element.scrollIntoView) {
-              element.scrollIntoView();
+          if (element) {
+            if (element.tagName === "DIV") {
+              if (element.scrollIntoView) {
+                element.scrollIntoView();
+              }
+              element.click();
+            } else {
+              element.focus();
             }
-            element.click();
-          } else {
-            element.focus();
           }
 
           return;
         }
 
+        this.set("forceValidationReason", false);
         this.performAccountCreation();
       },
     },

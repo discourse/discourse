@@ -18,7 +18,7 @@ fr:
         title: "Les votes sont <strong>publics</strong>."
       results:
         groups:
-          title: "Vous devez être membre du groupe %{groups} pour voter à ce sondage."
+          title: "Vous devez être membre du groupe %{groups} pour participer à ce sondage."
         vote:
           title: "Les résultats sont affichés après le <strong>vote</strong>."
         closed:
@@ -43,6 +43,9 @@ fr:
       show-results:
         title: "Afficher les résultats du sondage"
         label: "Afficher les résultats"
+      remove-vote:
+        title: "Supprimer votre vote"
+        label: "Supprimer le vote"
       hide-results:
         title: "Retourner au vote"
         label: "Afficher le sondage"
@@ -55,11 +58,11 @@ fr:
       open:
         title: "Ouvrir le sondage"
         label: "Ouvrir"
-        confirm: "Êtes-vous sûr de vouloir ouvrir ce sondage ?"
+        confirm: "Voulez-vous vraiment ouvrir ce sondage ?"
       close:
         title: "Fermer le sondage"
         label: "Fermer"
-        confirm: "Êtes-vous sûr de vouloir fermer ce sondage ?"
+        confirm: "Voulez-vous vraiment fermer ce sondage ?"
       automatic_close:
         closes_in: "Se termine dans <strong>%{timeLeft}</strong>."
         age: "Fermé <strong>%{age}</strong>"
@@ -69,10 +72,10 @@ fr:
         breakdown: "Détails"
         percentage: "Pourcentage"
         count: "Nombre"
-      error_while_toggling_status: "Désolé, il y a eu une erreur lors du changement de statut de ce sondage."
-      error_while_casting_votes: "Désolé, il y a eu une erreur lors de l'envoi de vos votes."
-      error_while_fetching_voters: "Désolé, il y a eu une erreur lors de l'affichage des votants."
-      error_while_exporting_results: "Désolé, une erreur est survenue lors de l'exportation des résultats du sondage."
+      error_while_toggling_status: "Nous sommes désolés, une erreur s'est produite lors du changement de statut de ce sondage."
+      error_while_casting_votes: "Nous sommes désolés, une erreur s'est produite lors de l'envoi de vos votes."
+      error_while_fetching_voters: "Nous sommes désolés, une erreur s'est produite lors de l'affichage des votants."
+      error_while_exporting_results: "Nous sommes désolés, une erreur s'est produite lors de l'exportation des résultats du sondage."
       ui_builder:
         title: Créer un sondage
         insert: Insérer le sondage
@@ -81,8 +84,8 @@ fr:
           options_max_count: Saisissez au plus %{count} réponses possibles.
           invalid_min_value: Cette valeur doit être supérieure à 1.
           invalid_max_value: Cette valeur doit être supérieure à 1, mais inférieure ou égale au nombre de réponses possibles.
-          invalid_values: La valeur minimum doit être plus petite que la valeur maximum.
-          min_step_value: Le valeur minimum du pas est 1
+          invalid_values: La valeur minimale doit être plus petite que la valeur maximale.
+          min_step_value: Le valeur minimale du pas est de 1
         poll_type:
           label: Type
           regular: Choix unique
@@ -101,8 +104,8 @@ fr:
           bar: Barre
           pie: Circulaire
         poll_config:
-          max: Nb. Max. de Réponses
-          min: Nb. Min. de Réponses
+          max: Nombre maximal de choix
+          min: Nombre minimal de choix
           step: Pas
         poll_public:
           label: Afficher les votants

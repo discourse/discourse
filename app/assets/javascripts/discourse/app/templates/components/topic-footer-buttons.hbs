@@ -22,21 +22,36 @@
     {{topic-footer-mobile-dropdown topic=topic content=dropdownButtons}}
   {{/if}}
 
-  {{#each inlineButtons as |button|}}
-    {{d-button
-      id=(concat "topic-footer-button-" button.id)
-      class=(concat "btn-default topic-footer-button " button.classNames)
-      action=button.action
-      icon=button.icon
-      translatedLabel=button.label
-      translatedTitle=button.title
-      translatedAriaLabel=button.ariaLabel
-      disabled=button.disabled}}
+  {{#each inlineActionables as |actionable|}}
+    {{#if (eq actionable.type "inline-button")}}
+      {{d-button
+        id=(concat "topic-footer-button-" actionable.id)
+        class=(concat "btn-default topic-footer-button " actionable.classNames)
+        action=actionable.action
+        icon=actionable.icon
+        translatedLabel=actionable.label
+        translatedTitle=actionable.title
+        translatedAriaLabel=actionable.ariaLabel
+        disabled=actionable.disabled
+      }}
+    {{else}}
+      {{dropdown-select-box
+        id=(concat "topic-footer-dropdown-" actionable.id)
+        value=actionable.value
+        class=(concat "topic-footer-dropdown " actionable.classNames)
+        content=actionable.content
+        onChange=(action actionable.action)
+        options=(hash
+          icon=actionable.icon
+          none=actionable.noneItem
+          disabled=actionable.disabled
+        )
+      }}
+    {{/if}}
   {{/each}}
 
   {{plugin-outlet name="topic-footer-main-buttons-before-create"
                   args=(hash topic=topic)
-                  tagName=""
                   connectorTagName="span"}}
 
   {{#if topic.details.can_create_post}}
@@ -49,7 +64,6 @@
 
   {{plugin-outlet name="after-topic-footer-main-buttons"
                   args=(hash topic=topic)
-                  tagName=""
                   connectorTagName="span"}}
 </div>
 
@@ -64,5 +78,4 @@
 
 {{plugin-outlet name="after-topic-footer-buttons"
                 args=(hash topic=topic)
-                tagName=""
                 connectorTagName="span"}}

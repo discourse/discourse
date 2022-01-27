@@ -1,9 +1,10 @@
+import { action } from "@ember/object";
 import Controller from "@ember/controller";
 import discourseComputed from "discourse-common/utils/decorators";
 
 export default Controller.extend({
   @discourseComputed
-  adminRoutes: function () {
+  adminRoutes() {
     return this.model
       .map((p) => {
         if (p.get("enabled")) {
@@ -13,13 +14,11 @@ export default Controller.extend({
       .compact();
   },
 
-  actions: {
-    clearFilter() {
-      this.setProperties({ filter: "", onlyOverridden: false });
-    },
-
-    toggleMenu() {
-      $(".admin-detail").toggleClass("mobile-closed mobile-open");
-    },
+  @action
+  toggleMenu() {
+    const adminDetail = document.querySelector(".admin-detail");
+    ["mobile-closed", "mobile-open"].forEach((state) => {
+      adminDetail.classList.toggle(state);
+    });
   },
 });

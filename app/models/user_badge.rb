@@ -7,12 +7,23 @@ class UserBadge < ActiveRecord::Base
   belongs_to :notification, dependent: :destroy
   belongs_to :post
 
+  BOOLEAN_ATTRIBUTES = %w(is_favorite)
+
   scope :grouped_with_count, -> {
     group(:badge_id, :user_id)
-      .select(UserBadge.attribute_names.map { |x| "MAX(user_badges.#{x}) AS #{x}" },
-              'COUNT(*) AS "count"')
+      .select_for_grouping
       .order('MAX(featured_rank) ASC')
       .includes(:user, :granted_by, { badge: :badge_type }, post: :topic)
+  }
+
+  scope :select_for_grouping, -> {
+    select(
+      UserBadge.attribute_names.map do |name|
+        operation = BOOLEAN_ATTRIBUTES.include?(name) ? "BOOL_OR" : "MAX"
+        "#{operation}(user_badges.#{name}) AS #{name}"
+      end,
+      'COUNT(*) AS "count"'
+    )
   }
 
   scope :for_enabled_badges, -> { where('user_badges.badge_id IN (SELECT id FROM badges WHERE enabled)') }
@@ -62,6 +73,7 @@ class UserBadge < ActiveRecord::Base
             PARTITION BY user_badges.user_id -- Do a separate rank for each user
             ORDER BY BOOL_OR(badges.enabled) DESC, -- Disabled badges last
                     MAX(featured_tl_badge.user_id) NULLS LAST, -- Best tl badge first
+                    BOOL_OR(user_badges.is_favorite) DESC NULLS LAST, -- Favorite badges next
                     CASE WHEN user_badges.badge_id IN (1,2,3,4) THEN 1 ELSE 0 END ASC, -- Non-featured tl badges last
                     MAX(badges.badge_type_id) ASC,
                     MAX(badges.grant_count) ASC,
@@ -102,6 +114,7 @@ end
 #  seq             :integer          default(0), not null
 #  featured_rank   :integer
 #  created_at      :datetime         not null
+#  is_favorite     :boolean
 #
 # Indexes
 #

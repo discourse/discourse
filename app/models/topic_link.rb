@@ -85,11 +85,17 @@ class TopicLink < ActiveRecord::Base
               FROM topic_links l
               LEFT JOIN topics t ON t.id = l.link_topic_id
               LEFT JOIN categories AS c ON c.id = t.category_id
+              /*left_join*/
               /*where*/
               ORDER BY reflection ASC, clicks DESC")
 
     builder.where('t.deleted_at IS NULL')
     builder.where("COALESCE(t.archetype, 'regular') <> :archetype", archetype: Archetype.private_message)
+
+    if guardian.authenticated?
+      builder.left_join("topic_users AS tu ON (t.id = tu.topic_id AND tu.user_id = #{guardian.user.id.to_i})")
+      builder.where('COALESCE(tu.notification_level,1) > :muted', muted: TopicUser.notification_levels[:muted])
+    end
 
     # not certain if pluck is right, cause it may interfere with caching
     builder.where('l.post_id in (:post_ids)', post_ids: posts.map(&:id))
@@ -108,7 +114,7 @@ class TopicLink < ActiveRecord::Base
   end
 
   def self.extract_from(post)
-    return if post.blank? || post.whisper? || post.user_id.blank?
+    return if post.blank? || post.whisper? || post.user_id.blank? || post.deleted_at.present?
 
     current_urls = []
     reflected_ids = []
@@ -386,7 +392,7 @@ end
 #  topic_id      :integer          not null
 #  post_id       :integer
 #  user_id       :integer          not null
-#  url           :string(500)      not null
+#  url           :string           not null
 #  domain        :string(100)      not null
 #  internal      :boolean          default(FALSE), not null
 #  link_topic_id :integer

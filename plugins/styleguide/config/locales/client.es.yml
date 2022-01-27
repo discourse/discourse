@@ -46,7 +46,7 @@ es:
         categories_list:
           title: "Lista de categorías"
         topic_link:
-          title: "Tema de enlace"
+          title: "Enlace al tema"
         topic_list_item:
           title: "Elemento de la lista de temas"
         topic_statuses:
@@ -58,7 +58,7 @@ es:
         footer_message:
           title: "Mensaje de pie de página"
         signup_cta:
-          title: "CTA de registro"
+          title: "Llamada a la acción para registrarse"
         topic_timer_info:
           title: "Temporizadores de temas"
         topic_footer_buttons:
@@ -76,11 +76,11 @@ es:
         post_menu:
           title: "Menú de la publicación"
         modal:
-          title: "Ventana modal"
+          title: "Modal"
           header: "Título de la ventana modal"
           footer: "Pie de página de la ventana modal"
         user_about:
-          title: "Caja de acerca de usuario"
+          title: "Caja de Acerca del usuario"
         header_icons:
           title: "Iconos de encabezado"
         spinners:

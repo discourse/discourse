@@ -146,4 +146,24 @@ describe FileStore::LocalStore do
     expect(store.external?).to eq(false)
   end
 
+  describe "#get_path_for" do
+    it "returns the correct path" do
+      expect(store.get_path_for("original", upload.id, upload.sha1, ".#{upload.extension}"))
+        .to match(%r|/#{upload_path}/original/.+#{upload.sha1}\.png|)
+    end
+  end
+
+  describe "#get_path_for_upload" do
+    it "returns the correct path" do
+      expect(store.get_path_for_upload(upload))
+        .to match(%r|/#{upload_path}/original/.+#{upload.sha1}\.png|)
+    end
+  end
+
+  describe "#get_path_for_optimized_image" do
+    it "returns the correct path" do
+      expect(store.get_path_for_optimized_image(optimized_image))
+        .to match(%r|/#{upload_path}/optimized/.+#{optimized_image.upload.sha1}_#{OptimizedImage::VERSION}_100x200\.png|)
+    end
+  end
 end

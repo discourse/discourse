@@ -19,7 +19,7 @@ def gather_uploads_for_all_sites
 end
 
 def file_exists?(path)
-  File.exists?(path) && File.size(path) > 0
+  File.exist?(path) && File.size(path) > 0
 rescue
   false
 end
@@ -46,7 +46,7 @@ def gather_uploads
         `cp --link '#{source}' '#{destination}'`
       end
 
-      # ensure file has been succesfuly copied over
+      # ensure file has been successfully copied over
       raise unless file_exists?(destination)
 
       # remap links in db
@@ -188,7 +188,7 @@ def clean_up_uploads
   Upload.find_each do |upload|
     path = File.join(public_directory, upload.url)
 
-    if !File.exists?(path)
+    if !File.exist?(path)
       upload.destroy!
       putc "#"
     else
@@ -200,7 +200,7 @@ def clean_up_uploads
   OptimizedImage.find_each do |optimized_image|
     path = File.join(public_directory, optimized_image.url)
 
-    if !File.exists?(path)
+    if !File.exist?(path)
       optimized_image.destroy!
       putc "#"
     else
@@ -326,9 +326,9 @@ def regenerate_missing_optimized
       thumbnail = "#{public_directory}#{optimized_image.url}"
       original = "#{public_directory}#{upload.url}"
 
-      if !File.exists?(thumbnail) || File.size(thumbnail) <= 0
+      if !File.exist?(thumbnail) || File.size(thumbnail) <= 0
         # make sure the original image exists locally
-        if (!File.exists?(original) || File.size(original) <= 0) && upload.origin.present?
+        if (!File.exist?(original) || File.size(original) <= 0) && upload.origin.present?
           # try to fix it by redownloading it
           begin
             downloaded = FileHelper.download(
@@ -346,7 +346,7 @@ def regenerate_missing_optimized
           end
         end
 
-        if File.exists?(original) && File.size(original) > 0
+        if File.exist?(original) && File.size(original) > 0
           FileUtils.mkdir_p(File.dirname(thumbnail))
           OptimizedImage.resize(original, thumbnail, optimized_image.width, optimized_image.height)
           putc "#"
@@ -1006,25 +1006,37 @@ def fix_missing_s3
     verification_status: Upload.verification_statuses[:invalid_etag]
   ).pluck(:id)
   ids.each do |id|
-    upload = Upload.find(id)
+    upload = Upload.find_by(id: id)
+    next if !upload
 
     tempfile = nil
+    downloaded_from = nil
 
     begin
       tempfile = FileHelper.download(upload.url, max_file_size: 30.megabyte, tmp_file_name: "#{SecureRandom.hex}.#{upload.extension}")
+      downloaded_from = upload.url
     rescue => e
-      puts "Failed to download #{upload.url} #{e}"
+      if upload.origin.present?
+        begin
+          tempfile = FileHelper.download(upload.origin, max_file_size: 30.megabyte, tmp_file_name: "#{SecureRandom.hex}.#{upload.extension}")
+          downloaded_from = upload.origin
+        rescue => e
+          puts "Failed to download #{upload.origin} #{e}"
+        end
+      else
+        puts "Failed to download #{upload.url} #{e}"
+      end
     end
 
     if tempfile
-      puts "Successfully downloaded upload id: #{upload.id} - #{upload.url} fixing upload"
+      puts "Successfully downloaded upload id: #{upload.id} - #{downloaded_from} fixing upload"
 
       fixed_upload = nil
       fix_error = nil
       Upload.transaction do
         begin
           upload.update_column(:sha1, SecureRandom.hex)
-          fixed_upload = UploadCreator.new(tempfile, "temp.#{upload.extension}").create_for(Discourse.system_user.id)
+          fixed_upload = UploadCreator.new(tempfile, "temp.#{upload.extension}", skip_validations: true).create_for(Discourse.system_user.id)
         rescue => fix_error
           # invalid extension is the most common issue
         end
@@ -1036,15 +1048,25 @@ def fix_missing_s3
       else
         # we do not fix sha, it may be wrong for arbitrary reasons, if we correct it
         # we may end up breaking posts
-        upload.update!(etag: fixed_upload.etag, url: fixed_upload.url, verification_status: Upload.verification_statuses[:unchecked])
+        save_error = nil
+        begin
+          upload.assign_attributes(etag: fixed_upload.etag, url: fixed_upload.url, verification_status: Upload.verification_statuses[:unchecked])
+          upload.save!(validate: false)
+        rescue => save_error
+          # url might be null
+        end
 
-        OptimizedImage.where(upload_id: upload.id).destroy_all
-        rebake_ids = PostUpload.where(upload_id: upload.id).pluck(:post_id)
+        if save_error
+          puts "Failed to save upload #{save_error}"
+        else
+          OptimizedImage.where(upload_id: upload.id).destroy_all
+          rebake_ids = PostUpload.where(upload_id: upload.id).pluck(:post_id)
 
-        if rebake_ids.present?
-          Post.where(id: rebake_ids).each do |post|
-            puts "rebake post #{post.id}"
-            post.rebake!
+          if rebake_ids.present?
+            Post.where(id: rebake_ids).each do |post|
+              puts "rebake post #{post.id}"
+              post.rebake!
+            end
           end
         end
       end

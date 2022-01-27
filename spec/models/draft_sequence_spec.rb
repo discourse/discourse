@@ -15,6 +15,13 @@ describe DraftSequence do
       user.id = -99999
       2.times { expect(DraftSequence.next!(user, 'test')).to eq(0) }
     end
+
+    it 'updates draft count' do
+      Draft.create!(user: user, draft_key: 'test', data: {})
+      expect(user.reload.user_stat.draft_count).to eq(1)
+      expect(DraftSequence.next!(user, 'test')).to eq 1
+      expect(user.reload.user_stat.draft_count).to eq(0)
+    end
   end
 
   describe '.current' do

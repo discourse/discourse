@@ -3,10 +3,10 @@
 require 'rails_helper'
 
 describe Report do
-  let(:user) { Fabricate(:user) }  # id: 3
-  let(:c0) { Fabricate(:category, user: user) }  # id: 3
+  let(:user) { Fabricate(:user) }
+  let(:c0) { Fabricate(:category, user: user) }
   let(:c1) { Fabricate(:category, parent_category: c0, user: user) }  # id: 2
-  let(:c2) { Fabricate(:category, user: user) }  # id: 4
+  let(:c2) { Fabricate(:category, user: user) }
 
   shared_examples 'no data' do
     context "with no data" do
@@ -224,7 +224,7 @@ describe Report do
         end
 
         it 'returns a report with data' do
-          # expected number of recoords
+          # expected number of records
           expect(report.data.count).to eq 4
 
           # sorts the data from oldest to latest dates
@@ -352,6 +352,8 @@ describe Report do
         expect(report.data.find { |d| d[:x] == TrustLevel[0] }[:y]).to eq 3
         expect(report.data.find { |d| d[:x] == TrustLevel[2] }[:y]).to eq 2
         expect(report.data.find { |d| d[:x] == TrustLevel[4] }[:y]).to eq 1
+
+        expect(report.data.find { |d| d[:x] == TrustLevel[0] }[:url]).to eq '/admin/users/list/newuser'
       end
     end
   end
@@ -576,6 +578,37 @@ describe Report do
         expect(row[:topic_id]).to eq(post.topic.id)
       end
     end
+
+    context "with editor filter" do
+      fab!(:posts) { Fabricate.times(3, :post) }
+
+      fab!(:editor_with_two_edits) do
+        Fabricate(:user).tap do |user|
+          2.times do |i|
+            posts[i].revise(user, { raw: "edit #{i + 1}" })
+          end
+        end
+      end
+
+      fab!(:editor_with_one_edit) do
+        Fabricate(:user).tap do |user|
+          posts.last.revise(user, { raw: "edit 3" })
+        end
+      end
+
+      let(:report_with_one_edit) do
+        Report.find('post_edits', { filters: { 'editor' => editor_with_one_edit.username } })
+      end
+
+      let(:report_with_two_edits) do
+        Report.find('post_edits', { filters: { 'editor' => editor_with_two_edits.username } })
+      end
+
+      it "returns a report for a given editor" do
+        expect(report_with_one_edit.data.count).to be(1)
+        expect(report_with_two_edits.data.count).to be(2)
+      end
+    end
   end
 
   describe 'moderator activity' do
@@ -724,7 +757,7 @@ describe Report do
             post.revise(sam, raw: 'updated body')
           end
 
-          it "doesn't count a revison on your own post" do
+          it "doesn't count a revision on your own post" do
             expect(report.data[0][:revision_count]).to eq(1)
             expect(report.data[0][:username]).to eq('sam')
           end
@@ -1289,6 +1322,110 @@ describe Report do
 
         expect(report.data.length).to eq(1)
         expect(report.data[0][:extension]).to eq("jpg")
+      end
+    end
+  end
+
+  describe 'top_users_by_likes_received' do
+    let(:report) { Report.find('top_users_by_likes_received') }
+
+    include_examples 'no data'
+
+    context 'with data' do
+      before do
+        user_1 = Fabricate(:user, username: "jonah")
+        user_2 = Fabricate(:user, username: "jake")
+        user_3 = Fabricate(:user, username: "john")
+
+        3.times { UserAction.create!(user_id: user_1.id, action_type: UserAction::WAS_LIKED) }
+        9.times { UserAction.create!(user_id: user_2.id, action_type: UserAction::WAS_LIKED) }
+        6.times { UserAction.create!(user_id: user_3.id, action_type: UserAction::WAS_LIKED) }
+      end
+
+      it "with category filtering" do
+        report = Report.find('top_users_by_likes_received')
+
+        expect(report.data.length).to eq(3)
+        expect(report.data[0][:username]).to eq("jake")
+        expect(report.data[1][:username]).to eq("john")
+        expect(report.data[2][:username]).to eq("jonah")
+      end
+    end
+  end
+
+  describe 'top_users_by_likes_received_from_a_variety_of_people' do
+    let(:report) { Report.find('top_users_by_likes_received_from_a_variety_of_people') }
+
+    include_examples 'no data'
+
+    context 'with data' do
+      before do
+        user_1 = Fabricate(:user, username: "jonah")
+        user_2 = Fabricate(:user, username: "jake")
+        user_3 = Fabricate(:user, username: "john")
+        user_4 = Fabricate(:user, username: "joseph")
+        user_5 = Fabricate(:user, username: "joanne")
+        user_6 = Fabricate(:user, username: "jerome")
+
+        topic_1 = Fabricate(:topic, user: user_1)
+        topic_2 = Fabricate(:topic, user: user_2)
+        topic_3 = Fabricate(:topic, user: user_3)
+
+        post_1 = Fabricate(:post, topic: topic_1, user: user_1)
+        post_2 = Fabricate(:post, topic: topic_2, user: user_2)
+        post_3 = Fabricate(:post, topic: topic_3, user: user_3)
+
+        3.times { UserAction.create!(user_id: user_4.id, target_post_id: post_1.id, action_type: UserAction::LIKE) }
+        6.times { UserAction.create!(user_id: user_5.id, target_post_id: post_2.id, action_type: UserAction::LIKE) }
+        9.times { UserAction.create!(user_id: user_6.id, target_post_id: post_3.id, action_type: UserAction::LIKE) }
+
+      end
+
+      it "with category filtering" do
+        report = Report.find('top_users_by_likes_received_from_a_variety_of_people')
+
+        expect(report.data.length).to eq(3)
+        expect(report.data[0][:username]).to eq("jonah")
+        expect(report.data[1][:username]).to eq("jake")
+        expect(report.data[2][:username]).to eq("john")
+      end
+    end
+  end
+
+  describe 'top_users_by_likes_received_from_inferior_trust_level' do
+    let(:report) { Report.find('top_users_by_likes_received_from_inferior_trust_level') }
+
+    include_examples 'no data'
+
+    context 'with data' do
+      before do
+        user_1 = Fabricate(:user, username: "jonah", trust_level: 2)
+        user_2 = Fabricate(:user, username: "jake", trust_level: 2)
+        user_3 = Fabricate(:user, username: "john", trust_level: 2)
+        user_4 = Fabricate(:user, username: "joseph", trust_level: 1)
+        user_5 = Fabricate(:user, username: "joanne", trust_level: 1)
+        user_6 = Fabricate(:user, username: "jerome", trust_level: 2)
+
+        topic_1 = Fabricate(:topic, user: user_1)
+        topic_2 = Fabricate(:topic, user: user_2)
+        topic_3 = Fabricate(:topic, user: user_3)
+
+        post_1 = Fabricate(:post, topic: topic_1, user: user_1)
+        post_2 = Fabricate(:post, topic: topic_2, user: user_2)
+        post_3 = Fabricate(:post, topic: topic_3, user: user_3)
+
+        3.times { UserAction.create!(user_id: user_4.id, target_post_id: post_1.id, action_type: UserAction::LIKE) }
+        6.times { UserAction.create!(user_id: user_5.id, target_post_id: post_2.id, action_type: UserAction::LIKE) }
+        9.times { UserAction.create!(user_id: user_6.id, target_post_id: post_3.id, action_type: UserAction::LIKE) }
+
+      end
+
+      it "with category filtering" do
+        report = Report.find('top_users_by_likes_received_from_inferior_trust_level')
+
+        expect(report.data.length).to eq(2)
+        expect(report.data[0][:username]).to eq("jake")
+        expect(report.data[1][:username]).to eq("jonah")
       end
     end
   end

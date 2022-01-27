@@ -53,6 +53,8 @@ $avatar_width: 120px;
 .user-card {
   // badges
   .badge-section {
+    display: flex;
+    align-items: flex-start;
     flex-wrap: wrap;
     .user-card-badge-link,
     .more-user-badges {
@@ -61,8 +63,7 @@ $avatar_width: 120px;
       max-width: 50%; // for text ellipsis
       padding: 2px 0;
       box-sizing: border-box;
-      &:nth-child(1),
-      &:nth-child(3) {
+      &:nth-child(odd) {
         padding-right: 4px;
       }
       a {

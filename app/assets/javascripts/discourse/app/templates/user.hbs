@@ -1,4 +1,4 @@
-{{plugin-outlet name="above-user-profile" tagName="" args=(hash model=model)}}
+{{plugin-outlet name="above-user-profile" connectorTagName="div" args=(hash model=model)}}
 <div class="container {{if viewingSelf "viewing-self"}} {{if model.profile_hidden "profile-hidden"}} {{primaryGroup}}">
   {{#d-section class="user-main"}}
     <section class="{{if collapsedInfo "collapsed-info"}} about {{if hasProfileBackgroundUrl "has-background" "no-background"}}" >
@@ -38,7 +38,11 @@
               </div>
             {{/if}}
             {{#if model.warnings_received_count}}
-              <div><span class="warnings-received">{{model.warnings_received_count}}</span>{{i18n "user.staff_counters.warnings_received"}}</div>
+              <div>
+                {{#link-to "userPrivateMessages.warnings" model}}
+                  <span class="warnings-received">{{model.warnings_received_count}}</span>{{i18n "user.staff_counters.warnings_received"}}
+                {{/link-to}}
+              </div>
             {{/if}}
           </div>
         {{/if}}
@@ -70,7 +74,6 @@
                 <li><a href={{model.adminPath}} class="btn btn-default">{{d-icon "wrench"}}<span class="d-button-label">{{i18n "admin.user.show_admin_profile"}}</span></a></li>
               {{/if}}
               {{plugin-outlet name="user-profile-controls"
-                              tagName=""
                               connectorTagName="li"
                               args=(hash model=model)}}
 
@@ -78,6 +81,7 @@
                 <li>
                   {{d-button
                     ariaExpanded=collapsedInfoState.isExpanded
+                    ariaLabel=collapsedInfoState.ariaLabel
                     ariaControls="collapsed-info-panel"
                     class="btn-default"
                     label=(concat "user." collapsedInfoState.label)
@@ -99,7 +103,7 @@
               {{#if model.title}}
                 <h3>{{model.title}}</h3>
               {{/if}}
-              {{plugin-outlet name="user-post-names" args=(hash model=model)}}
+              {{plugin-outlet name="user-post-names" tagName="span" connectorTagName="div" args=(hash model=model)}}
             </div>
 
             {{#if showFeaturedTopic}}
@@ -122,7 +126,7 @@
                   {{/if}}
                 </div>
               {{/if}}
-              {{plugin-outlet name="user-location-and-website" args=(hash model=model)}}
+              {{plugin-outlet name="user-location-and-website" tagName="span" connectorTagName="div" args=(hash model=model)}}
             </h3>
 
             <div class='bio'>
@@ -155,18 +159,24 @@
                   {{#if uf.value}}
                     <div class="public-user-field {{uf.field.dasherized_name}}">
                       <span class="user-field-name">{{uf.field.name}}</span>:
-                      <span class="user-field-value">{{uf.value}}</span>
+                      <span class="user-field-value">
+                        {{#each uf.value as |v|}} {{! some values are arrays }}
+                          <span class="user-field-value-list-item">{{v}}</span>
+                        {{else }}
+                          {{uf.value}}
+                        {{/each}}
+                      </span>
                     </div>
                   {{/if}}
                 {{/each}}
 
-                {{plugin-outlet name="user-profile-public-fields"
+                {{plugin-outlet name="user-profile-public-fields" tagName="span" connectorTagName="div"
                                 args=(hash publicUserFields=publicUserFields
                                       model=model)}}
               </div>
             {{/if}}
 
-            {{plugin-outlet name="user-profile-primary" args=(hash model=model)}}
+            {{plugin-outlet name="user-profile-primary" tagName="span" connectorTagName="div" args=(hash model=model)}}
           </div>
         </div>
         {{#unless collapsedInfo}}
@@ -219,7 +229,7 @@
                 <div class='pull-right'>{{d-button action=(action "adminDelete") icon="exclamation-triangle" label="user.admin_delete" class="btn-danger"}}</div>
               {{/if}}
             </dl>
-            {{plugin-outlet name="user-profile-secondary" args=(hash model=model)}}
+            {{plugin-outlet name="user-profile-secondary" tagName="span" connectorTagName="div" args=(hash model=model)}}
           </div>
         {{/unless}}
       </div>
@@ -247,7 +257,7 @@
           {{#if showBadges}}
             <li class="badges">{{#link-to 'user.badges'}}{{d-icon "certificate"}}{{i18n 'badges.title'}}{{/link-to}}</li>
           {{/if}}
-          {{plugin-outlet name="user-main-nav" tagName='' connectorTagName='li' args=(hash model=model)}}
+          {{plugin-outlet name="user-main-nav" tagName="span" connectorTagName="div" tagName='' connectorTagName='li' args=(hash model=model)}}
           {{#if model.can_edit}}
             <li class="preferences">{{#link-to 'preferences'}}{{d-icon "cog"}}{{i18n 'user.preferences'}}{{/link-to}}</li>
           {{/if}}

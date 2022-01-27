@@ -1,75 +1,100 @@
 import {
   acceptance,
-  queryAll,
+  count,
+  exists,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, visit } from "@ember/test-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { test } from "qunit";
+import Site from "discourse/models/site";
 
 acceptance("Managing Group Membership", function (needs) {
   needs.user();
+  needs.pretender((server, helper) => {
+    server.get("/associated_groups", () =>
+      helper.response({
+        associated_groups: [
+          {
+            id: 123,
+            name: "test-group",
+            provider_name: "google_oauth2",
+            label: "google_oauth2:test-group",
+          },
+        ],
+      })
+    );
+  });
 
   test("As an admin", async function (assert) {
     updateCurrentUser({ can_create_group: true });
 
     await visit("/g/alternative-group/manage/membership");
 
-    assert.ok(
-      queryAll('label[for="automatic_membership"]').length === 1,
+    assert.strictEqual(
+      count('label[for="automatic_membership"]'),
+      1,
       "it should display automatic membership label"
     );
 
-    assert.ok(
-      queryAll(".groups-form-primary-group").length === 1,
+    assert.strictEqual(
+      count(".groups-form-primary-group"),
+      1,
       "it should display set as primary group checkbox"
     );
 
-    assert.ok(
-      queryAll(".groups-form-grant-trust-level").length === 1,
+    assert.strictEqual(
+      count(".groups-form-grant-trust-level"),
+      1,
       "it should display grant trust level selector"
     );
 
-    assert.ok(
-      queryAll(".group-form-public-admission").length === 1,
+    assert.strictEqual(
+      count(".group-form-public-admission"),
+      1,
       "it should display group public admission input"
     );
 
-    assert.ok(
-      queryAll(".group-form-public-exit").length === 1,
+    assert.strictEqual(
+      count(".group-form-public-exit"),
+      1,
       "it should display group public exit input"
     );
 
-    assert.ok(
-      queryAll(".group-form-allow-membership-requests").length === 1,
+    assert.strictEqual(
+      count(".group-form-allow-membership-requests"),
+      1,
       "it should display group allow_membership_request input"
     );
 
-    assert.ok(
-      queryAll(".group-form-allow-membership-requests[disabled]").length === 1,
+    assert.strictEqual(
+      count(".group-form-allow-membership-requests[disabled]"),
+      1,
       "it should disable group allow_membership_request input"
     );
 
-    assert.ok(
-      queryAll(".group-flair-inputs").length === 1,
+    assert.strictEqual(
+      count(".group-flair-inputs"),
+      1,
       "it should display avatar flair inputs"
     );
 
     await click(".group-form-public-admission");
     await click(".group-form-allow-membership-requests");
 
-    assert.ok(
-      queryAll(".group-form-public-admission[disabled]").length === 1,
+    assert.strictEqual(
+      count(".group-form-public-admission[disabled]"),
+      1,
       "it should disable group public admission input"
     );
 
     assert.ok(
-      queryAll(".group-form-public-exit[disabled]").length === 0,
+      !exists(".group-form-public-exit[disabled]"),
       "it should not disable group public exit input"
     );
 
-    assert.equal(
-      queryAll(".group-form-membership-request-template").length,
+    assert.strictEqual(
+      count(".group-form-membership-request-template"),
       1,
       "it should display the membership request template field"
     );
@@ -79,9 +104,39 @@ acceptance("Managing Group Membership", function (needs) {
     );
     await emailDomains.expand();
     await emailDomains.fillInFilter("foo.com");
-    await emailDomains.keyboard("enter");
+    await emailDomains.selectRowByValue("foo.com");
 
-    assert.equal(emailDomains.header().value(), "foo.com");
+    assert.strictEqual(emailDomains.header().value(), "foo.com");
+  });
+
+  test("As an admin on a site that can associate groups", async function (assert) {
+    let site = Site.current();
+    site.set("can_associate_groups", true);
+    updateCurrentUser({ can_create_group: true });
+
+    await visit("/g/alternative-group/manage/membership");
+
+    const associatedGroups = selectKit(
+      ".group-form-automatic-membership-associated-groups"
+    );
+    await associatedGroups.expand();
+    await associatedGroups.selectRowByName("google_oauth2:test-group");
+    await associatedGroups.keyboard("enter");
+
+    assert.equal(associatedGroups.header().name(), "google_oauth2:test-group");
+  });
+
+  test("As an admin on a site that can't associate groups", async function (assert) {
+    let site = Site.current();
+    site.set("can_associate_groups", false);
+    updateCurrentUser({ can_create_group: true });
+
+    await visit("/g/alternative-group/manage/membership");
+
+    assert.ok(
+      !exists('label[for="automatic_membership_associated_groups"]'),
+      "it should not display associated groups automatic membership label"
+    );
   });
 
   test("As a group owner", async function (assert) {
@@ -90,42 +145,51 @@ acceptance("Managing Group Membership", function (needs) {
     await visit("/g/discourse/manage/membership");
 
     assert.ok(
-      queryAll('label[for="automatic_membership"]').length === 0,
+      !exists('label[for="automatic_membership"]'),
       "it should not display automatic membership label"
     );
 
     assert.ok(
-      queryAll(".groups-form-automatic-membership-retroactive").length === 0,
+      !exists('label[for="automatic_membership_associated_groups"]'),
+      "it should not display associated groups automatic membership label"
+    );
+
+    assert.ok(
+      !exists(".groups-form-automatic-membership-retroactive"),
       "it should not display automatic membership retroactive checkbox"
     );
 
     assert.ok(
-      queryAll(".groups-form-primary-group").length === 0,
+      !exists(".groups-form-primary-group"),
       "it should not display set as primary group checkbox"
     );
 
     assert.ok(
-      queryAll(".groups-form-grant-trust-level").length === 0,
+      !exists(".groups-form-grant-trust-level"),
       "it should not display grant trust level selector"
     );
 
-    assert.ok(
-      queryAll(".group-form-public-admission").length === 1,
+    assert.strictEqual(
+      count(".group-form-public-admission"),
+      1,
       "it should display group public admission input"
     );
 
-    assert.ok(
-      queryAll(".group-form-public-exit").length === 1,
+    assert.strictEqual(
+      count(".group-form-public-exit"),
+      1,
       "it should display group public exit input"
     );
 
-    assert.ok(
-      queryAll(".group-form-allow-membership-requests").length === 1,
+    assert.strictEqual(
+      count(".group-form-allow-membership-requests"),
+      1,
       "it should display group allow_membership_request input"
     );
 
-    assert.ok(
-      queryAll(".group-form-allow-membership-requests[disabled]").length === 1,
+    assert.strictEqual(
+      count(".group-form-allow-membership-requests[disabled]"),
+      1,
       "it should disable group allow_membership_request input"
     );
   });

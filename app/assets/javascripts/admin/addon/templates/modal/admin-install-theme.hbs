@@ -78,7 +78,10 @@
           {{#if showPublicKey}}
             <div class="public-key">
               <div class="label">{{i18n "admin.customize.theme.public_key"}}</div>
-              {{textarea readonly=true value=publicKey}}
+              <div class="public-key-text-wrapper">
+                {{textarea class="public-key-value" readonly=true value=publicKey}}
+                {{copy-button selector="textarea.public-key-value"}}
+              </div>
             </div>
           {{else}}
             {{#if privateChecked}}

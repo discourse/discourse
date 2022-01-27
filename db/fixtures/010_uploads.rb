@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 {
-  -1 => "d-logo-sketch.png", # Old version
-  -2 => "d-logo-sketch-small.png", # Old version
-  -3 => "default-favicon.ico", # No longer used
-  -4 => "default-apple-touch-icon.png", # No longer used
+  -1 => "d-logo-sketch.png", # Old version.
+  -2 => "d-logo-sketch-small.png", # Old version.
+  -3 => "default-favicon.ico", # No longer used.
+  -4 => "default-apple-touch-icon.png", # No longer used. id of `-4` is now reserved for internal plugin usage.
   -5 => "discourse-logo-sketch.png",
   -6 => "discourse-logo-sketch-small.png",
 }.each do |id, filename|

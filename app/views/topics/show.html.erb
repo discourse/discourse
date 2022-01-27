@@ -53,29 +53,27 @@
             <%
               post_custom_fields = @topic_view.post_custom_fields[post.id] || {}
               who_username = post_custom_fields["action_code_who"] || ""
+              small_action_href = post_custom_fields["action_code_path"] || ""
               if post.action_code
             %>
-              <%= t("js.action_codes.#{post.action_code}", when: "", who: who_username).html_safe %>
+              <%= t("js.action_codes.#{post.action_code}", when: "", who: who_username, href: small_action_href).html_safe %>
             <% end %>
           </span>
 
           <link itemprop="mainEntityOfPage" href="<%= post.topic.url %>">
 
           <% if post.image_url %>
-            <link itemprop="image" href="<%= Discourse.base_url %><%= post.image_url %>">
+            <link itemprop="image" href="<%= post.image_url %>">
           <% end %>
 
           <span class="crawler-post-infos">
-            <% if post.updated_at > post.created_at %>
-              <meta itemprop='datePublished' content='<%= post.created_at.to_formatted_s(:iso8601) %>'>
-              <time itemprop='dateModified' datetime='<%= post.updated_at.to_formatted_s(:iso8601) %>' class='post-time'>
-                <%= l post.updated_at, format: :long %>
-              </time>
-            <% else %>
               <time itemprop='datePublished' datetime='<%= post.created_at.to_formatted_s(:iso8601) %>' class='post-time'>
                 <%= l post.created_at, format: :long %>
               </time>
-              <meta itemprop='dateModified' content='<%= post.updated_at.to_formatted_s(:iso8601) %>'>
+            <% if post.version > 1 %>
+              <meta itemprop='dateModified' content='<%= post.last_version_at.to_formatted_s(:iso8601) %>'>
+            <% else %>
+              <meta itemprop='dateModified' content='<%= post.created_at.to_formatted_s(:iso8601) %>'>
             <% end %>
           <span itemprop='position'>#<%= post.post_number %></span>
           </span>

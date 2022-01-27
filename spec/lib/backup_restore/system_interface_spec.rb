@@ -168,45 +168,17 @@ describe BackupRestore::SystemInterface do
         subject.wait_for_sidekiq
       end
     end
+  end
 
-    describe "flush_redis" do
-      context "Sidekiq" do
-        after { Sidekiq.unpause! }
+  describe "#flush_redis" do
+    context "Sidekiq" do
+      after { Sidekiq.unpause! }
 
-        it "doesn't unpause Sidekiq" do
-          Sidekiq.pause!
-          subject.flush_redis
+      it "doesn't unpause Sidekiq" do
+        Sidekiq.pause!
+        subject.flush_redis
 
-          expect(Sidekiq.paused?).to eq(true)
-        end
-      end
-
-      it "removes only keys from the current site in a multisite", type: :multisite do
-        test_multisite_connection("default") do
-          Discourse.redis.set("foo", "default-foo")
-          Discourse.redis.set("bar", "default-bar")
-
-          expect(Discourse.redis.get("foo")).to eq("default-foo")
-          expect(Discourse.redis.get("bar")).to eq("default-bar")
-        end
-
-        test_multisite_connection("second") do
-          Discourse.redis.set("foo", "second-foo")
-          Discourse.redis.set("bar", "second-bar")
-
-          expect(Discourse.redis.get("foo")).to eq("second-foo")
-          expect(Discourse.redis.get("bar")).to eq("second-bar")
-
-          subject.flush_redis
-
-          expect(Discourse.redis.get("foo")).to be_nil
-          expect(Discourse.redis.get("bar")).to be_nil
-        end
-
-        test_multisite_connection("default") do
-          expect(Discourse.redis.get("foo")).to eq("default-foo")
-          expect(Discourse.redis.get("bar")).to eq("default-bar")
-        end
+        expect(Sidekiq.paused?).to eq(true)
       end
     end
   end

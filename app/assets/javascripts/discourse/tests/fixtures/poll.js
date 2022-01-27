@@ -234,7 +234,8 @@ export default {
       { id: 8, count: 0, hidden: false, can_act: true }
     ],
     chunk_size: 20,
-    bookmarked: false
+    bookmarked: false,
+    bookmarks: [],
   },
   "/t/14.json": {
     post_stream: {
@@ -390,7 +391,8 @@ export default {
       { id: 8, count: 0, hidden: false, can_act: true }
     ],
     chunk_size: 20,
-    bookmarked: false
+    bookmarked: false,
+    bookmarks: [],
   },
   "/t/15.json": {
     post_stream: {
@@ -543,7 +545,8 @@ export default {
       { id: 8, count: 0, hidden: false, can_act: true }
     ],
     chunk_size: 20,
-    bookmarked: false
+    bookmarked: false,
+    bookmarks: [],
   },
   "/t/topic_with_pie_chart_poll.json": {
     post_stream: {
@@ -571,9 +574,10 @@ export default {
           topic_slug: "14-the-title-must-be-longer-i-guess",
           display_username: "",
           primary_group_name: "Team",
-          primary_group_flair_url: null,
-          primary_group_flair_bg_color: "",
-          primary_group_flair_color: "",
+          flair_name: null,
+          flair_url: null,
+          flair_bg_color: "",
+          flair_color: "",
           version: 1,
           can_edit: false,
           can_delete: false,
@@ -690,6 +694,7 @@ export default {
     ],
     chunk_size: 20,
     bookmarked: false,
+    bookmarks: [],
     topic_timer: null,
     message_bus_last_id: 1,
     participant_count: 1,
@@ -711,9 +716,10 @@ export default {
           avatar_template: "/user_avatar/localhost/markvanlan/{size}/11_2.png",
           post_count: 1,
           primary_group_name: "Team",
-          primary_group_flair_url: null,
-          primary_group_flair_color: "",
-          primary_group_flair_bg_color: ""
+          flair_name: null,
+          flair_url: null,
+          flair_color: "",
+          flair_bg_color: ""
         }
       ],
       created_by: {

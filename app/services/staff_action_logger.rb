@@ -444,13 +444,19 @@ class StaffActionLogger
     ))
   end
 
-  def log_category_settings_change(category, category_params, old_permissions = nil)
+  def log_category_settings_change(category, category_params, old_permissions: nil, old_custom_fields: nil)
     validate_category(category)
 
     changed_attributes = category.previous_changes.slice(*category_params.keys)
 
     if !old_permissions.empty? && (old_permissions != category_params[:permissions])
       changed_attributes.merge!(permissions: [old_permissions.to_json, category_params[:permissions].to_json])
+    end
+
+    if old_custom_fields && category_params[:custom_fields]
+      category_params[:custom_fields].each do |key, value|
+        changed_attributes["custom_fields[#{key}]"] = [old_custom_fields[key], value]
+      end
     end
 
     changed_attributes.each do |key, value|
@@ -803,6 +809,28 @@ class StaffActionLogger
     )
   end
 
+  def log_watched_words_creation(watched_word)
+    raise Discourse::InvalidParameters.new(:watched_word) unless watched_word
+
+    UserHistory.create!(
+      action: UserHistory.actions[:watched_word_create],
+      acting_user_id: @admin.id,
+      details: watched_word.action_log_details,
+      context: WatchedWord.actions[watched_word.action]
+    )
+  end
+
+  def log_watched_words_deletion(watched_word)
+    raise Discourse::InvalidParameters.new(:watched_word) unless watched_word
+
+    UserHistory.create!(
+      action: UserHistory.actions[:watched_word_destroy],
+      acting_user_id: @admin.id,
+      details: watched_word.action_log_details,
+      context: WatchedWord.actions[watched_word.action]
+    )
+  end
+
   private
 
   def get_changes(changes)
@@ -829,5 +857,4 @@ class StaffActionLogger
   def validate_category(category)
     raise Discourse::InvalidParameters.new(:category) unless category && category.is_a?(Category)
   end
-
 end

@@ -73,41 +73,36 @@ export default {
             );
 
             if (staleIndex === -1) {
-              // this gets a bit tricky, unread pms are bumped to front
+              // high priority and unread notifications are first
               let insertPosition = 0;
-              if (lastNotification.notification_type !== 6) {
-                insertPosition = oldNotifications.findIndex(
-                  (n) => n.notification_type !== 6 || n.read
+
+              if (!lastNotification.high_priority || lastNotification.read) {
+                const nextPosition = oldNotifications.findIndex(
+                  (n) => !n.high_priority || n.read
                 );
-                insertPosition =
-                  insertPosition === -1
-                    ? oldNotifications.length - 1
-                    : insertPosition;
+
+                if (nextPosition !== -1) {
+                  insertPosition = nextPosition;
+                }
               }
+
               oldNotifications.insertAt(
                 insertPosition,
                 EmberObject.create(lastNotification)
               );
             }
 
-            for (let idx = 0; idx < data.recent.length; idx++) {
-              let old;
-              while ((old = oldNotifications[idx])) {
-                const info = data.recent[idx];
-
-                if (old.get("id") !== info[0]) {
-                  oldNotifications.removeAt(idx);
-                } else {
-                  if (old.get("read") !== info[1]) {
-                    old.set("read", info[1]);
-                  }
-                  break;
+            // remove stale notifications and update existing ones
+            const read = Object.fromEntries(data.recent);
+            const newNotifications = oldNotifications
+              .map((notification) => {
+                if (read[notification.id] !== undefined) {
+                  notification.set("read", read[notification.id]);
+                  return notification;
                 }
-              }
-              if (!old) {
-                break;
-              }
-            }
+              })
+              .filter(Boolean);
+            stale.results.set("content", newNotifications);
           }
         },
         user.notification_channel_position

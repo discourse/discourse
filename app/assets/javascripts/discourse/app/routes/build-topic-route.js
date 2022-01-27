@@ -12,6 +12,7 @@ import { deepEqual } from "discourse-common/lib/object";
 import { defaultHomepage } from "discourse/lib/utilities";
 import { isEmpty } from "@ember/utils";
 import { inject as service } from "@ember/service";
+import { action } from "@ember/object";
 
 // A helper to build a topic route for a filter
 function filterQueryParams(params, defaultParams) {
@@ -130,9 +131,7 @@ export default function (filter, extras) {
         const topicOpts = {
           model,
           category: null,
-          period:
-            model.get("for_period") ||
-            (filter.indexOf("top/") >= 0 ? filter.split("/")[1] : ""),
+          period: model.get("for_period") || model.get("params.period"),
           selected: [],
           expandAllPinned: false,
           expandGloballyPinned: true,
@@ -153,9 +152,14 @@ export default function (filter, extras) {
         });
       },
 
-      actions: {
-        changeSort,
-        resetParams,
+      @action
+      changeSort(sortBy) {
+        changeSort.call(this, sortBy);
+      },
+
+      @action
+      resetParams(skipParams = []) {
+        resetParams.call(this, skipParams);
       },
     },
     extras

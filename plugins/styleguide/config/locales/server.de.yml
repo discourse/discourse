@@ -6,5 +6,5 @@
 
 de:
   site_settings:
-    styleguide_enabled: "Aktiviere den „/styleguide“-Pfad, um die Gestaltung deines Discourse zu erleichtern."
+    styleguide_enabled: 'Aktiviere den „/styleguide“-Pfad, um die Gestaltung deines Discourse zu erleichtern.'
     styleguide_admin_only: "Beschränkt die Sichtbarkeit des Styleguides auf Administratoren"

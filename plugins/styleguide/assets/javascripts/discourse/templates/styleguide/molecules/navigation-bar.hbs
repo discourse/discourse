@@ -9,3 +9,15 @@
     {{/each}}
   {{/mobile-nav}}
 {{/styleguide-example}}
+
+{{#styleguide-example title="group page navigation-bar"}}
+  {{#mobile-nav class="group-nav" desktopClass="nav nav-pills"}}
+    <li class="group-dropdown">
+      {{group-dropdown groups=dummy.groupNames value="staff"}}
+    </li>
+
+    {{#each dummy.navItems as |ni|}}
+      <li><a href={{ni.href}} class={{if ni.styleGuideActive "active"}}>{{ni.displayName}}</a></li>
+    {{/each}}
+  {{/mobile-nav}}
+{{/styleguide-example}}

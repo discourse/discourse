@@ -1,4 +1,4 @@
-import Controller, { inject } from "@ember/controller";
+import Controller, { inject as controller } from "@ember/controller";
 import { alias, equal } from "@ember/object/computed";
 import { mergeTopic, movePosts } from "discourse/models/topic";
 import DiscourseURL from "discourse/lib/url";
@@ -41,7 +41,7 @@ export default Controller.extend(ModalFunctionality, {
     ];
   },
 
-  topicController: inject("topic"),
+  topicController: controller("topic"),
   selectedPostsCount: alias("topicController.selectedPostsCount"),
   selectedAllPosts: alias("topicController.selectedAllPosts"),
   selectedPosts: alias("topicController.selectedPosts"),

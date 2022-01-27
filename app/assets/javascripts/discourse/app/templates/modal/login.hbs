@@ -1,5 +1,5 @@
 {{#login-modal loginName=loginName loginPassword=loginPassword secondFactorToken=secondFactorToken action=(action "login")}}
-  {{plugin-outlet name="login-before-modal-body" tagName=""}}
+  {{plugin-outlet name="login-before-modal-body" connectorTagName="div"}}
   {{#d-modal-body class=modalBodyClasses}}
 
     {{#if canLoginLocal}}
@@ -11,18 +11,18 @@
         <form id="login-form" method="post">
           <div id="credentials" class={{credentialsClass}}>
             <div class="input-group">
-              {{input value=loginName type="email" id="login-account-name" class=(value-entered loginName) autocomplete="username" autocorrect="off" autocapitalize="off" disabled=showSecondFactor autofocus="autofocus"}}
+              {{input value=loginName type="email" id="login-account-name" class=(value-entered loginName) autocomplete="username" autocorrect="off" autocapitalize="off" disabled=showSecondFactor autofocus="autofocus" tabindex="1"}}
               <label class="alt-placeholder" for="login-account-name">{{i18n "login.email_placeholder"}}</label>
               {{#if showLoginWithEmailLink}}
-                <a href class={{if loginName "" "no-login-filled"}} id="email-login-link" {{action (unless processingEmailLink "emailLogin")}}>
+                <a href class={{if loginName "" "no-login-filled"}} tabindex="3"  id="email-login-link" {{action (unless processingEmailLink "emailLogin")}}>
                   {{i18n "email_login.login_link"}}
                 </a>
               {{/if}}
             </div>
             <div class="input-group">
-              {{input value=loginPassword type="password" class=(value-entered loginPassword) id="login-account-password" autocomplete="current-password" maxlength="200" capsLockOn=capsLockOn disabled=disableLoginFields}}
+              {{input value=loginPassword type="password" class=(value-entered loginPassword) id="login-account-password" autocomplete="current-password" maxlength="200" capsLockOn=capsLockOn disabled=disableLoginFields tabindex="1"}}
               <label class="alt-placeholder" for="login-account-password">{{i18n "login.password"}}</label>
-              <a href id="forgot-password-link" {{action "forgotPassword"}}>{{i18n "forgot_password.action"}}</a>
+              <a href id="forgot-password-link" tabindex="3" {{action "forgotPassword"}}>{{i18n "forgot_password.action"}}</a>
               <div class="caps-lock-warning {{unless capsLockOn "hidden"}}">{{d-icon "exclamation-triangle"}} {{i18n "login.caps_lock_warning"}}</div>
             </div>
           </div>
@@ -57,7 +57,8 @@
                 icon="unlock"
                 label=loginButtonLabel
                 disabled=loginDisabled
-                class="btn btn-large btn-primary"}}
+                class="btn btn-large btn-primary"
+                tabindex="2"}}
             {{/unless}}
 
             {{#if showSignupLink}}
@@ -65,7 +66,8 @@
                 class="btn-large"
                 id="new-account-link"
                 action=(action "createAccount")
-                label="create_account.title"}}
+                label="create_account.title"
+                tabindex="3"}}
             {{/if}}
           {{/if}}
           {{conditional-loading-spinner condition=showSpinner size="small"}}
@@ -88,7 +90,7 @@
     {{/if}}
   {{/d-modal-body}}
 
-  {{plugin-outlet name="login-after-modal-footer" tagName=""}}
+  {{plugin-outlet name="login-after-modal-footer" connectorTagName="div"}}
 
   <div class={{alertClass}} id="login-alert">{{alert}}</div>
 {{/login-modal}}

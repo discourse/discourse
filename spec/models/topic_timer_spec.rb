@@ -48,44 +48,6 @@ RSpec.describe TopicTimer, type: :model do
       end
     end
 
-    describe "#typed_job_scheduled?" do
-      let(:scheduled_jobs) { Sidekiq::ScheduledSet.new }
-
-      after do
-        scheduled_jobs.clear
-      end
-
-      it "returns true if the job is scheduled" do
-        Sidekiq::Testing.disable! do
-          scheduled_jobs.clear
-          Jobs.enqueue_at(3.hours.from_now, :close_topic, topic_timer_id: topic_timer.id)
-          expect(topic_timer.typed_job_scheduled?).to eq(true)
-        end
-      end
-
-      it "returns false if the job is not already scheduled" do
-        Sidekiq::Testing.disable! do
-          scheduled_jobs.clear
-          expect(topic_timer.typed_job_scheduled?).to eq(false)
-        end
-      end
-
-      it "returns true if the toggle_topic_closed job is scheduled for close,open,silent_close types" do
-        Sidekiq::Testing.disable! do
-          scheduled_jobs.clear
-          topic_timer1 = Fabricate(:topic_timer, status_type: TopicTimer.types[:close])
-          Jobs.enqueue_at(3.hours.from_now, :toggle_topic_closed, topic_timer_id: topic_timer1.id)
-          topic_timer2 = Fabricate(:topic_timer, status_type: TopicTimer.types[:open])
-          Jobs.enqueue_at(3.hours.from_now, :toggle_topic_closed, topic_timer_id: topic_timer2.id)
-          topic_timer3 = Fabricate(:topic_timer, status_type: TopicTimer.types[:silent_close])
-          Jobs.enqueue_at(3.hours.from_now, :toggle_topic_closed, topic_timer_id: topic_timer3.id)
-          expect(topic_timer1.typed_job_scheduled?).to eq(true)
-          expect(topic_timer2.typed_job_scheduled?).to eq(true)
-          expect(topic_timer3.typed_job_scheduled?).to eq(true)
-        end
-      end
-    end
-
     describe '#execute_at' do
       describe 'when #execute_at is greater than #created_at' do
         it 'should be valid' do
@@ -146,35 +108,8 @@ RSpec.describe TopicTimer, type: :model do
     describe 'when #execute_at and #user_id are not changed' do
       it 'should not schedule another to update topic' do
         Jobs.expects(:enqueue_at).never
-        Jobs.expects(:cancel_scheduled_job).never
 
         topic_timer.update!(topic: Fabricate(:topic))
-      end
-    end
-
-    describe 'when #execute_at value is changed' do
-      it 'reschedules the job' do
-        Jobs.expects(:cancel_scheduled_job).with(
-          :toggle_topic_closed, topic_timer_id: topic_timer.id
-        )
-        Jobs.expects(:cancel_scheduled_job).with(
-          :close_topic, topic_timer_id: topic_timer.id
-        )
-
-        topic_timer.update!(execute_at: 3.days.from_now, created_at: Time.zone.now)
-      end
-    end
-
-    describe 'when user is changed' do
-      it 'should update the job' do
-        Jobs.expects(:cancel_scheduled_job).with(
-          :toggle_topic_closed, topic_timer_id: topic_timer.id
-        )
-        Jobs.expects(:cancel_scheduled_job).with(
-          :close_topic, topic_timer_id: topic_timer.id
-        )
-
-        topic_timer.update!(user: admin)
       end
     end
 

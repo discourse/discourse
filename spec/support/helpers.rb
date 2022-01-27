@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+GIT_INITIAL_BRANCH_SUPPORTED = Gem::Version.new(`git --version`.match(/[\d\.]+/)[0]) >= Gem::Version.new("2.28.0")
+
 module Helpers
   extend ActiveSupport::Concern
 
@@ -14,8 +16,9 @@ module Helpers
   end
 
   def log_in_user(user)
+    cookie_jar = ActionDispatch::Request.new(request.env).cookie_jar
     provider = Discourse.current_user_provider.new(request.env)
-    provider.log_on_user(user, session, cookies)
+    provider.log_on_user(user, session, cookie_jar)
     provider
   end
 
@@ -57,11 +60,6 @@ module Helpers
     post
   end
 
-  def generate_username(length = 10)
-    range = [*'a'..'z']
-    Array.new(length) { range.sample }.join
-  end
-
   def stub_guardian(user)
     guardian = Guardian.new(user)
     yield(guardian) if block_given?
@@ -79,14 +77,6 @@ module Helpers
 
     on_fail&.call
     expect(result).to eq(true)
-  end
-
-  def fill_email(mail, from, to, body = nil, subject = nil, cc = nil)
-    result = mail.gsub("FROM", from).gsub("TO", to)
-    result.gsub!(/Hey.*/m, body)  if body
-    result.sub!(/We .*/, subject) if subject
-    result.sub!("CC", cc.presence || "")
-    result
   end
 
   def email(email_name)
@@ -169,7 +159,7 @@ module Helpers
 
   def setup_git_repo(files)
     repo_dir = Dir.mktmpdir
-    `cd #{repo_dir} && git init .`
+    `cd #{repo_dir} && git init . #{"--initial-branch=main" if GIT_INITIAL_BRANCH_SUPPORTED}`
     `cd #{repo_dir} && git config user.email 'someone@cool.com'`
     `cd #{repo_dir} && git config user.name 'The Cool One'`
     `cd #{repo_dir} && git config commit.gpgsign 'false'`
@@ -180,5 +170,15 @@ module Helpers
     end
     `cd #{repo_dir} && git commit -am 'first commit'`
     repo_dir
+  end
+
+  def stub_const(target, const, value)
+    old = target.const_get(const)
+    target.send(:remove_const, const)
+    target.const_set(const, value)
+    yield
+  ensure
+    target.send(:remove_const, const)
+    target.const_set(const, old)
   end
 end

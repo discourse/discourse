@@ -20,12 +20,11 @@ function updateCache(term, results) {
 
 function searchTags(term, categories, limit) {
   return new Promise((resolve) => {
-    const clearPromise = later(
-      () => {
-        resolve(CANCELLED_STATUS);
-      },
-      isTesting() ? 50 : 5000
-    );
+    let clearPromise = isTesting()
+      ? null
+      : later(() => {
+          resolve(CANCELLED_STATUS);
+        }, 5000);
 
     const debouncedSearch = (q, cats, resultFunc) => {
       discourseDebounce(
@@ -33,8 +32,7 @@ function searchTags(term, categories, limit) {
         function () {
           oldSearch = $.ajax(getURL("/tags/filter/search"), {
             type: "GET",
-            cache: true,
-            data: { limit: limit, q },
+            data: { limit, q },
           });
 
           let returnVal = CANCELLED_STATUS;
@@ -44,15 +42,10 @@ function searchTags(term, categories, limit) {
               const categoryNames = cats.map((c) => c.model.get("name"));
 
               const tags = r.results.map((tag) => {
-                const tagName = tag.text;
-
-                return {
-                  name: tagName,
-                  text: categoryNames.includes(tagName)
-                    ? `${tagName}${TAG_HASHTAG_POSTFIX}`
-                    : tagName,
-                  count: tag.count,
-                };
+                tag.text = categoryNames.includes(tag.text)
+                  ? `${tag.text}${TAG_HASHTAG_POSTFIX}`
+                  : tag.text;
+                return tag;
               });
 
               returnVal = cats.concat(tags);

@@ -11,23 +11,10 @@
 
 .ignored-user-list-item {
   border: 1px solid var(--primary-medium);
-  border-radius: 5px;
   padding: 0;
   display: flex;
   align-items: center;
   margin-right: 10px;
-}
-
-.remove-ignored-user {
-  display: flex;
-  flex: 1 0 0px;
-  align-items: center;
-  justify-content: center;
-  box-sizing: border-box;
-  border-radius: 0 0.25em 0.25em 0;
-  padding-top: 0;
-  padding-bottom: 0;
-  height: 100%;
 }
 
 .ignored-user-name {

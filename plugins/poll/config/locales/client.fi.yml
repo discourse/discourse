@@ -18,11 +18,11 @@ fi:
         title: "Äänet ovat <strong>julkisia</strong>."
       results:
         groups:
-          title: "Täytyy olla ryhmien %{groups} jäsen, jotta voi äänestää tässä äänestyksessä."
+          title: "Sinun täytyy olla ryhmien %{groups} jäsen, jotta voit äänestää tässä kyselyssä."
         vote:
-          title: "Tulokset näytetään <strong>äänestyksen jälkeen</strong>."
+          title: "Tulokset näytetään <strong>kyselyn jälkeen</strong>."
         closed:
-          title: "Tulokset näytetään äänestyksen <strong>sulkeuduttua</strong>."
+          title: "Tulokset näytetään kyselyn <strong>sulkeuduttua</strong>."
         staff:
           title: "Tulokset näytetään vain <strong>henkilökunnan</strong> jäsenille."
       multiple:
@@ -41,7 +41,7 @@ fi:
         title: "Antakaa äänenne"
         label: "Äänestä nyt!"
       show-results:
-        title: "Näytä äänestystulos"
+        title: "Näytä kyselyn tulos"
         label: "Näytä tulokset"
       hide-results:
         title: "Palaa äänestysvalintaasi"
@@ -50,32 +50,32 @@ fi:
         title: "Lajittele äänet käyttäjäkentän perusteella"
         label: "Näytä erittely"
       export-results:
-        title: "Vie äänestystulos"
+        title: "Vie kyselyn tulos"
         label: "Vie"
       open:
-        title: "Avaa äänestys"
+        title: "Avaa kysely"
         label: "Avaa"
-        confirm: "Avataanko äänestys?"
+        confirm: "Avataanko kysely?"
       close:
-        title: "Sulje äänestys"
+        title: "Sulje kysely"
         label: "Sulje"
-        confirm: "Suljetaanko äänestys?"
+        confirm: "Suljetaanko kysely?"
       automatic_close:
         closes_in: "Sulkeutuu <strong>%{timeLeft}</strong> kuluttua"
         age: "Sulkeutui <strong>%{age}</strong>"
       breakdown:
-        title: "Äänestystulokset"
+        title: "Kyselyn tulokset"
         votes: "%{count} ääntä"
         breakdown: "Erittely"
         percentage: "Prosenttiosuus"
-        count: "Määrä"
-      error_while_toggling_status: "Pahoittelut, äänestyksen tilaa muutettaessa tapahtui virhe."
-      error_while_casting_votes: "Pahoittelut, ääntä annettaessa tapahtui virhe."
-      error_while_fetching_voters: "Pahoittelut, äänestäneiden näyttämisessä tapahtui virhe."
-      error_while_exporting_results: "Pahoittelut, äänestystuloksen vienti epäonnistui."
+        count: "Lukumäärä"
+      error_while_toggling_status: "Kyselyn tilaa muutettaessa tapahtui virhe."
+      error_while_casting_votes: "Ääntä annettaessa tapahtui virhe."
+      error_while_fetching_voters: "Äänestäneiden näyttämisessä tapahtui virhe."
+      error_while_exporting_results: "Kyselyn tuloksen vienti epäonnistui."
       ui_builder:
-        title: Luo äänestys
-        insert: Lisää äänestys
+        title: Luo kysely
+        insert: Lisää kysely
         help:
           options_min_count: Syötä vähintään 1 vaihtoehto.
           options_max_count: Syötä enintään %{count} vaihtoehtoa.
@@ -92,7 +92,7 @@ fi:
           label: Näytä tulokset...
           always: Aina näkyvissä
           vote: Vasta äänestämisen jälkeen
-          closed: Kun äänestys on suljettu
+          closed: Kun kysely on suljettu
           staff: Vain henkilökunnalle
         poll_groups:
           label: Rajoita äänestys näihin ryhmiin
@@ -112,6 +112,6 @@ fi:
           label: Valittavat vaihtoehdot (yksi per rivi)
           add: Lisää vaihtoehto
         automatic_close:
-          label: Sulje äänestys ajastetusti
+          label: Sulje kysely automaattisesti
         show_advanced: "Näytä lisäasetukset"
         hide_advanced: "Piilota lisäasetukset"

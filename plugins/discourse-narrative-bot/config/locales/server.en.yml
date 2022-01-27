@@ -48,7 +48,7 @@ en:
         one: "I only have %{count} die. [Shameful](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), I know!"
         other: "I only have %{count} dice. [Shameful](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), I know!"
       out_of_range: |-
-        Did you know that [the maximum number of sides](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) for a mathematically fair die is 120?
+        Did you know that [the maximum number of sides](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) for a mathematically fair dice is 120?
       results: |-
         > :game_die: %{results}
 
@@ -225,7 +225,7 @@ en:
           - or, push the <kbd><b>B</b></kbd> or <kbd><i>I</i></kbd> buttons in the editor
 
         reply: |-
-          Great job! HTML and BBCode also work for formatting – to learn more, [try this tutorial](http://commonmark.org/help) :nerd:
+          Great job! HTML and BBCode also work for formatting – to learn more, [try this tutorial](https://commonmark.org/help) :nerd:
         not_found: |-
           Aww, I didn’t find any formatting in your reply. :pencil2:
 
@@ -293,11 +293,11 @@ en:
 
       flag:
         instructions: |-
-          We like our discussions friendly, and we need your help to [keep things civilized](%{guidelines_url}). If you see a problem, please flag to privately let the author, or [our helpful staff](%{about_url}), know about it.
+          We like our discussions friendly, and we need your help to [keep things civilized](%{guidelines_url}). If you see a problem, please flag to privately let the author or [our helpful staff](%{about_url}) know about it. There are many reasons you might want to flag a post, ranging from an innocuous topic-splitting suggestion to a clear-cut community standards violation. If you select **Something Else**, you'll start a private message discussion with the moderators where you can ask further questions.
 
           > :imp: I wrote something nasty here
 
-          I guess you know what to do. Go ahead and **flag this post** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> as inappropriate!
+          Go ahead and **flag this post** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> and select **It's Inappropriate** as the reason!
         reply: |-
           [Our staff](%{base_uri}/groups/staff) will be privately notified about your flag. If enough community members flag a post, it will also be automatically hidden as a precaution. (Since I didn’t actually write a nasty post :angel:, I’ve gone ahead and removed the flag for now.)
         not_found: |-

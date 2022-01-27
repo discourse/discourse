@@ -62,7 +62,7 @@ te:
       record_invalid: ! "సరిజూత విఫలమైంది: %{errors}"
       restrict_dependent_destroy:
         one: "రికార్డు తొలగించలేము. ఎందుకంటే ఆధారిత %{record} ఉంది"
-        many: "రికార్డు తొలగించలేము. ఎందుకంటే ఆధారిత %{record} ఉంది"
+        other: "రికార్డు తొలగించలేము. ఎందుకంటే ఆధారిత %{record} ఉంది"
       too_long:
         one: ఇది చాలా పొడుగు (గరిష్ట పరిమితి ఒక అక్షరం)
         other: ఇది చాలా పొడుగు. (గరిష్ట పరిమితి %{count} అక్షరాలు)
@@ -196,16 +196,8 @@ te:
       has_subcategories: "ఈ వర్గాన్ని తొలగించలేరు. ఎందుకంటే దీనికి ఉప వర్గాలు ఉన్నాయి."
       topic_exists_no_oldest: "ఈ వర్గాన్ని తొలగించలేరు. ఎందుకంటే దీనిలో %{count} విషయాలు ఉన్నాయి."
   trust_levels:
-    newuser:
-      title: "కొత్త సభ్యుడు"
-    basic:
-      title: "ప్రాథమిక సభ్యుడు"
-    member:
-      title: "మెంబరు"
-    regular:
-      title: "రెగ్యులర్"
-    leader:
-      title: "లీడర్"
+    admin: "అధికారి"
+    staff: "సిబ్బంది"
   rate_limiter:
     hours:
       one: "ఒక గంట"
@@ -531,6 +523,18 @@ te:
     top_uploads:
       labels:
         filename: దస్త్రం పేరు
+    top_users_by_likes_received:
+      labels:
+        user: సభ్యుడు
+        qtt_like: అందుకున్న ఇష్టాలు
+    top_users_by_likes_received_from_inferior_trust_level:
+      labels:
+        user: సభ్యుడు
+        qtt_like: అందుకున్న ఇష్టాలు
+    top_users_by_likes_received_from_a_variety_of_people:
+      labels:
+        user: సభ్యుడు
+        qtt_like: అందుకున్న ఇష్టాలు
   dashboard:
     rails_env_warning: "మీ సర్వరు %(env) రీతిలో నడుస్తోంది"
     host_names_warning: "మీ config/database.yml దస్త్రం అప్రమేయ లోకల్ హోస్ట్ వాడుతున్నది. దాన్ని మీ సైటు పేరుకు మార్చగలరు. "
@@ -591,7 +595,6 @@ te:
       topic: "ఫలితాలు"
       user: "సభ్యులు"
   original_poster: "మూల టపా రచయిత"
-  most_posts: "అధిక టపాలు"
   most_recent_poster: "ఇటీవలి పోస్టర్"
   frequent_poster: "తరచూ వచ్చే పోస్టర్"
   publish_page:
@@ -744,9 +747,7 @@ te:
             placeholder: "name@example.com"
       corporate:
         title: "సంస్థ"
-      colors:
-        title: "రంగులు"
-      homepage:
+      styling:
         fields:
           homepage_style:
             choices:
@@ -757,8 +758,6 @@ te:
     actions:
       agree_and_suspend:
         title: "సభ్యుడిని సస్పెండు చేయి"
-      delete_spammer:
-        title: "స్పామరును తొలగించు"
       delete_single:
         title: "తొలగించు"
       disagree:
@@ -770,8 +769,7 @@ te:
           title: "సభ్యుడిని తొలగించు"
       reject:
         title: "తిరస్కరించు"
-      delete_user:
-        title: "సభ్యుడిని తొలగించు"
+  fallback_username: "సభ్యుడు"
   activemodel:
     errors:
       <<: *errors

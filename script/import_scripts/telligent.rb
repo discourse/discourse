@@ -598,8 +598,7 @@ class ImportScripts::Telligent < ImportScripts::Base
     # Mark all imported messages as read
     DB.exec(<<~SQL)
       UPDATE topic_users tu
-      SET last_read_post_number = t.highest_post_number,
-          highest_seen_post_number = t.highest_post_number
+      SET last_read_post_number = t.highest_post_number
       FROM topics t
         JOIN topic_custom_fields tcf ON t.id = tcf.topic_id
       WHERE tu.topic_id = t.id

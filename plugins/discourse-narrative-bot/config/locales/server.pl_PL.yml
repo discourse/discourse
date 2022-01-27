@@ -217,7 +217,7 @@ pl_PL:
 
           - lub, naciśnij przycisk <kbd><b>B</b></kbd> lub <kbd><i>I</i></kbd> w edytorze
         reply: |-
-          Dobra robota! BBCode i HTML również pracują nad formatowaniem - aby dowiedzieć się więcej [rozpocznij ten tutorial](http://commonmark.org/help) :nerd:
+          Dobra robota! BBCode i HTML również pracują nad formatowaniem - aby dowiedzieć się więcej [rozpocznij ten tutorial](https://commonmark.org/help) :nerd:
         not_found: |-
           Uuu, nie znalazłem żadnego formatowania tekstu w odpowiedzi. :pencil2:
 
@@ -281,11 +281,11 @@ pl_PL:
           (https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
       flag:
         instructions: |-
-          Chcielibyśmy, aby dyskusja na forum przebiegała pokojowo i potrzebujemy Twojej pomocy, aby [utrzymać ją na poziomie](%{guidelines_url}). Jeśli zauważysz problem, prosimy o zaznaczenie flagi w celu poinformowania autora lub [naszego pomocnego zespołu](%{about_url}).
+          Lubimy, gdy nasze dyskusje są przyjazne i potrzebujemy Twojej pomocy, aby [zachować cywilizowane wypowiedzi](%{guidelines_url}). Jeśli zauważysz problem, zgłoś go w prywatnej wiadomości autorowi lub [naszemu pomocnemu personelowi](%{about_url}). Istnieje wiele powodów, dla których chcesz oznaczyć post, począwszy od nieszkodliwej sugestii dotyczącej podziału tematów aż po wyraźne naruszenie standardów społeczności. Jeśli wybierzesz **coś innego**, rozpoczniesz prywatną dyskusję z moderatorami, gdzie możesz zadawać dodatkowe pytania.
 
-          > :imp: napisałem tutaj coś brzydkiego
+          > :imp: napisałem tutaj coś nieprzyjemnego
 
-          Wiesz co robić. Śmiało, **oflaguj ten post** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> jako nieodpowiedni!
+          Idąc dalej, **oflaguj ten post** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> i wybierz **to niewłaściwe** jako powód!
         reply: |-
           [Nasz zespół](%{base_uri}/groups/staff) zostanie prywatnie poinformowany o Twojej fladze. W przypadku, gdy wystarczająca liczba członków społeczności oflaguje ten sam wpis, zostanie on automatycznie ukryty ze względów ostrożności (Jako żę tak naprawdę nie napisałem niczego nieodpowiedniego :angel:, po prostu usunąłem flagę ze swojego wpisu),
         not_found: |-

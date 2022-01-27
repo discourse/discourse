@@ -1,9 +1,9 @@
 import Component from "@ember/component";
 export default Component.extend({
-  classNameBindings: [":social-link"],
+  tagName: "",
 
   actions: {
-    share: function (source) {
+    share(source) {
       this.action(source);
     },
   },

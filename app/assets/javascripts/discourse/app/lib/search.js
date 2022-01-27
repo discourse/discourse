@@ -1,6 +1,7 @@
 import Category from "discourse/models/category";
 import EmberObject from "@ember/object";
 import I18n from "I18n";
+import { Promise } from "rsvp";
 import Post from "discourse/models/post";
 import Topic from "discourse/models/topic";
 import User from "discourse/models/user";
@@ -14,6 +15,13 @@ import { isEmpty } from "@ember/utils";
 import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
 import { userPath } from "discourse/lib/url";
 import userSearch from "discourse/lib/user-search";
+
+const translateResultsCallbacks = [];
+const MAX_RECENT_SEARCHES = 5; // should match backend constant with the same name
+
+export function addSearchResultsCallback(callback) {
+  translateResultsCallbacks.push(callback);
+}
 
 export function translateResults(results, opts) {
   opts = opts || {};
@@ -48,7 +56,7 @@ export function translateResults(results, opts) {
 
   results.categories = results.categories
     .map(function (category) {
-      return Category.list().findBy("id", category.id);
+      return Category.list().findBy("id", category.id || category.model.id);
     })
     .compact();
 
@@ -84,9 +92,19 @@ export function translateResults(results, opts) {
     })
     .compact();
 
-  results.resultTypes = [];
+  return translateResultsCallbacks
+    .reduce(
+      (promise, callback) => promise.then((r) => callback(r)),
+      Promise.resolve(results)
+    )
+    .then((results_) => {
+      translateGroupedSearchResults(results_, opts);
+      return EmberObject.create(results_);
+    });
+}
 
-  // TODO: consider refactoring front end to take a better structure
+function translateGroupedSearchResults(results, opts) {
+  results.resultTypes = [];
   const groupedSearchResult = results.grouped_search_result;
   if (groupedSearchResult) {
     [
@@ -100,11 +118,8 @@ export function translateResults(results, opts) {
       const name = pair[1];
       if (results[name].length > 0) {
         const componentName =
-          opts.searchContext &&
-          opts.searchContext.type === "topic" &&
-          type === "topic"
-            ? "post"
-            : type;
+          opts.searchContext && type === "topic" ? "post" : type;
+
         const result = {
           results: results[name],
           componentName: `search-result-${componentName}`,
@@ -121,15 +136,6 @@ export function translateResults(results, opts) {
       }
     });
   }
-
-  const noResults = !!(
-    !results.topics.length &&
-    !results.posts.length &&
-    !results.users.length &&
-    !results.categories.length
-  );
-
-  return noResults ? null : EmberObject.create(results);
 }
 
 export function searchForTerm(term, opts) {
@@ -138,7 +144,7 @@ export function searchForTerm(term, opts) {
   }
 
   // Only include the data we have
-  const data = { term: term };
+  const data = { term };
   if (opts.typeFilter) {
     data.type_filter = opts.typeFilter;
   }
@@ -157,12 +163,9 @@ export function searchForTerm(term, opts) {
     };
   }
 
-  let promise = ajax("/search/query", { data: data });
-
-  promise.then((results) => {
-    return translateResults(results, opts);
-  });
-
+  let ajaxPromise = ajax("/search/query", { data });
+  const promise = ajaxPromise.then((res) => translateResults(res, opts));
+  promise.abort = ajaxPromise.abort;
   return promise;
 }
 
@@ -201,53 +204,43 @@ export function isValidSearchTerm(searchTerm, siteSettings) {
   }
 }
 
-export function applySearchAutocomplete(
-  $input,
-  siteSettings,
-  appEvents,
-  options
-) {
-  const afterComplete = function () {
-    if (appEvents) {
-      appEvents.trigger("search-autocomplete:after-complete");
-    }
-  };
-
+export function applySearchAutocomplete($input, siteSettings) {
   $input.autocomplete(
-    deepMerge(
-      {
-        template: findRawTemplate("category-tag-autocomplete"),
-        key: "#",
-        width: "100%",
-        treatAsTextarea: true,
-        autoSelectFirstSuggestion: false,
-        transformComplete(obj) {
-          return obj.text;
-        },
-        dataSource(term) {
-          return searchCategoryTag(term, siteSettings);
-        },
-        afterComplete,
-      },
-      options
-    )
+    deepMerge({
+      template: findRawTemplate("category-tag-autocomplete"),
+      key: "#",
+      width: "100%",
+      treatAsTextarea: true,
+      autoSelectFirstSuggestion: false,
+      transformComplete: (obj) => obj.text,
+      dataSource: (term) => searchCategoryTag(term, siteSettings),
+    })
   );
 
   if (siteSettings.enable_mentions) {
     $input.autocomplete(
-      deepMerge(
-        {
-          template: findRawTemplate("user-selector-autocomplete"),
-          key: "@",
-          width: "100%",
-          treatAsTextarea: true,
-          autoSelectFirstSuggestion: false,
-          transformComplete: (v) => v.username || v.name,
-          dataSource: (term) => userSearch({ term, includeGroups: true }),
-          afterComplete,
-        },
-        options
-      )
+      deepMerge({
+        template: findRawTemplate("user-selector-autocomplete"),
+        key: "@",
+        width: "100%",
+        treatAsTextarea: true,
+        autoSelectFirstSuggestion: false,
+        transformComplete: (v) => v.username || v.name,
+        dataSource: (term) => userSearch({ term, includeGroups: true }),
+      })
     );
   }
+}
+
+export function updateRecentSearches(currentUser, term) {
+  let recentSearches = Object.assign(currentUser.recent_searches || []);
+
+  if (recentSearches.includes(term)) {
+    recentSearches = recentSearches.without(term);
+  } else if (recentSearches.length === MAX_RECENT_SEARCHES) {
+    recentSearches.popObject();
+  }
+
+  recentSearches.unshiftObject(term);
+  currentUser.set("recent_searches", recentSearches);
 }

@@ -13,7 +13,7 @@ module SeedData
     def create(site_setting_names: nil, include_welcome_topics: true)
       I18n.with_locale(@locale) do
         topics(site_setting_names, include_welcome_topics).each do |params|
-          create_topic(params)
+          create_topic(**params)
         end
       end
     end
@@ -23,7 +23,7 @@ module SeedData
         topics(site_setting_names).each do |params|
           params.except!(:category, :after_create)
           params[:skip_changed] = skip_changed
-          update_topic(params)
+          update_topic(**params)
         end
       end
     end

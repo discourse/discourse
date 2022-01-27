@@ -143,6 +143,11 @@ module Imap
       end
 
       def list_mailboxes(attr_filter = nil)
+        # Lists all the mailboxes but just returns the names.
+        list_mailboxes_with_attributes(attr_filter).map(&:name)
+      end
+
+      def list_mailboxes_with_attributes(attr_filter = nil)
         # Basically, list all mailboxes in the root of the server.
         # ref: https://tools.ietf.org/html/rfc3501#section-6.3.8
         imap.list('', '*').reject do |m|
@@ -162,9 +167,13 @@ module Imap
           else
             true
           end
-        end.map do |m|
-          m.name
         end
+      end
+
+      def filter_mailboxes(mailboxes)
+        # we do not want to filter out any mailboxes for generic providers,
+        # because we do not know what they are ahead of time
+        mailboxes
       end
 
       def archive(uid)
@@ -227,7 +236,7 @@ module Imap
           trashed_email_uids = find_uids_by_message_ids(message_ids)
           if trashed_email_uids.any?
             trashed_emails = emails(trashed_email_uids, ["UID", "ENVELOPE"]).map do |e|
-              BasicMail.new(message_id: Email.message_id_clean(e['ENVELOPE'].message_id), uid: e['UID'])
+              BasicMail.new(message_id: Email::MessageIdService.message_id_clean(e['ENVELOPE'].message_id), uid: e['UID'])
             end
           end
         end
@@ -244,7 +253,7 @@ module Imap
           spam_email_uids = find_uids_by_message_ids(message_ids)
           if spam_email_uids.any?
             spam_emails = emails(spam_email_uids, ["UID", "ENVELOPE"]).map do |e|
-              BasicMail.new(message_id: Email.message_id_clean(e['ENVELOPE'].message_id), uid: e['UID'])
+              BasicMail.new(message_id: Email::MessageIdService.message_id_clean(e['ENVELOPE'].message_id), uid: e['UID'])
             end
           end
         end
@@ -257,7 +266,7 @@ module Imap
 
       def find_uids_by_message_ids(message_ids)
         header_message_id_terms = message_ids.map do |msgid|
-          "HEADER Message-ID '#{Email.message_id_rfc_format(msgid)}'"
+          "HEADER Message-ID '#{Email::MessageIdService.message_id_rfc_format(msgid)}'"
         end
 
         # OR clauses are written in Polish notation...so the query looks like this:

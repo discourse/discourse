@@ -12,52 +12,13 @@ require 'net/pop'
 #   # or for specific host preset
 #   EmailSettingsValidator.validate_imap(**{ username: "test@gmail.com", password: "test" }.merge(Email.gmail_imap_settings))
 #
-# rescue *EmailSettingsValidator::FRIENDLY_EXCEPTIONS => err
-#   EmailSettingsValidator.friendly_exception_message(err)
+# rescue *EmailSettingsExceptionHandler::EXPECTED_EXCEPTIONS => err
+#   EmailSettingsExceptionHandler.friendly_exception_message(err, host)
 # end
 class EmailSettingsValidator
-  EXPECTED_EXCEPTIONS = [
-    Net::POPAuthenticationError,
-    Net::IMAP::NoResponseError,
-    Net::SMTPAuthenticationError,
-    Net::SMTPServerBusy,
-    Net::SMTPSyntaxError,
-    Net::SMTPFatalError,
-    Net::SMTPUnknownError,
-    Net::OpenTimeout,
-    Net::ReadTimeout,
-    SocketError,
-    Errno::ECONNREFUSED
-  ]
-
-  def self.friendly_exception_message(exception)
-    case exception
-    when Net::POPAuthenticationError
-      I18n.t("email_settings.pop3_authentication_error")
-    when Net::IMAP::NoResponseError
-
-      # Most of IMAP's errors are lumped under the NoResponseError, including invalid
-      # credentials errors, because it is raised when a "NO" response is
-      # raised from the IMAP server https://datatracker.ietf.org/doc/html/rfc3501#section-7.1.2
-      #
-      # Generally, it should be fairly safe to just return the error message as is.
-      if exception.message.match(/Invalid credentials/)
-        I18n.t("email_settings.imap_authentication_error")
-      else
-        I18n.t("email_settings.imap_no_response_error", message: exception.message.gsub(" (Failure)", ""))
-      end
-    when Net::SMTPAuthenticationError
-      I18n.t("email_settings.smtp_authentication_error")
-    when Net::SMTPServerBusy
-      I18n.t("email_settings.smtp_server_busy_error")
-    when Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError
-      I18n.t("email_settings.smtp_unhandled_error", message: exception.message)
-    when SocketError, Errno::ECONNREFUSED
-      I18n.t("email_settings.connection_error")
-    when Net::OpenTimeout, Net::ReadTimeout
-      I18n.t("email_settings.timeout_error")
-    else
-      I18n.t("email_settings.unhandled_error", message: exception.message)
+  def self.validate_as_user(user, protocol, **kwargs)
+    DistributedMutex.synchronize("validate_#{protocol}_#{user.id}", validity: 10) do
+      self.public_send("validate_#{protocol}", **kwargs)
     end
   end
 
@@ -74,7 +35,7 @@ class EmailSettingsValidator
     password:,
     ssl: SiteSetting.pop3_polling_ssl,
     openssl_verify: SiteSetting.pop3_polling_openssl_verify,
-    debug: false
+    debug: Rails.env.development?
   )
     begin
       pop3 = Net::POP3.new(host, port)
@@ -113,22 +74,37 @@ class EmailSettingsValidator
   def self.validate_smtp(
     host:,
     port:,
-    domain:,
     username:,
     password:,
+    domain: nil,
     authentication: GlobalSetting.smtp_authentication,
     enable_starttls_auto: GlobalSetting.smtp_enable_start_tls,
     enable_tls: GlobalSetting.smtp_force_tls,
     openssl_verify_mode: GlobalSetting.smtp_openssl_verify_mode,
-    debug: false
+    debug: Rails.env.development?
   )
     begin
+      port, enable_tls, enable_starttls_auto = provider_specific_ssl_overrides(
+        host, port, enable_tls, enable_starttls_auto
+      )
+
       if enable_tls && enable_starttls_auto
         raise ArgumentError, "TLS and STARTTLS are mutually exclusive"
       end
 
       if ![:plain, :login, :cram_md5].include?(authentication.to_sym)
         raise ArgumentError, "Invalid authentication method. Must be plain, login, or cram_md5."
+      end
+
+      if domain.blank?
+        if Rails.env.development?
+          domain = "localhost"
+        else
+
+          # Because we are using the SMTP settings here to send emails,
+          # the domain should just be the TLD of the host.
+          domain = MiniSuffix.domain(host)
+        end
       end
 
       smtp = Net::SMTP.new(host, port)
@@ -150,6 +126,9 @@ class EmailSettingsValidator
       smtp.enable_starttls_auto(ssl_context) if enable_starttls_auto
       smtp.enable_tls(ssl_context) if enable_tls
 
+      smtp.open_timeout = 5
+      smtp.read_timeout = 5
+
       smtp.start(domain, username, password, authentication.to_sym)
       smtp.finish
     rescue => err
@@ -168,7 +147,7 @@ class EmailSettingsValidator
     port:,
     username:,
     password:,
-    open_timeout: 10,
+    open_timeout: 5,
     ssl: true,
     debug: false
   )
@@ -187,5 +166,21 @@ class EmailSettingsValidator
       Rails.logger.warn("[EmailSettingsValidator] Error encountered when validating email settings: #{err.message} #{err.backtrace.join("\n")}")
     end
     raise err
+  end
+
+  def self.provider_specific_ssl_overrides(host, port, enable_tls, enable_starttls_auto)
+    # Gmail acts weirdly if you do not use the correct combinations of
+    # TLS settings based on the port, we clean these up here for the user.
+    if host == "smtp.gmail.com"
+      if port.to_i == 587
+        enable_starttls_auto = true
+        enable_tls = false
+      elsif port.to_i == 465
+        enable_starttls_auto = false
+        enable_tls = true
+      end
+    end
+
+    [port, enable_tls, enable_starttls_auto]
   end
 end

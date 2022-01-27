@@ -95,6 +95,8 @@ $quote-share-maxwidth: 150px;
     margin: 30px 0 10px;
     line-height: $line-height-medium;
     a.anchor {
+      opacity: 0;
+      transition: opacity 0.25s;
       &:before {
         content: svg-uri(
           '<svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 512 512" fill="#{$primary-medium}"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96 0-59.27-59.26-59.27-155.7 0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757 0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037 0 0 1-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482 0 0 1 20.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96 0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454 0 0 0 20.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037 0 0 0-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639 0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"></path></svg>'
@@ -103,48 +105,39 @@ $quote-share-maxwidth: 150px;
         margin-left: -20px;
         padding-right: 4px;
         position: absolute;
-        opacity: 0;
-        transition: opacity 0.25s;
-      }
-      &:hover {
-        // show when hovering where icon should be
-        &:before {
-          opacity: 1;
-        }
       }
     }
-    &:hover {
-      // show when hovering header
-      a.anchor {
-        &:before {
-          opacity: 1;
-        }
-      }
+
+    // show when hovering where icon should be
+    // show when hovering header
+    .discourse-no-touch & a.anchor:hover,
+    .discourse-no-touch &:hover a.anchor {
+      opacity: 1;
     }
   }
 
   h1 {
-    font-size: $font-up-3;
+    font-size: var(--font-up-3-rem);
   }
 
   h2 {
-    font-size: $font-up-2;
+    font-size: var(--font-up-2-rem);
   }
 
   h3 {
-    font-size: $font-up-1;
+    font-size: var(--font-up-1-rem);
   }
 
   h4 {
-    font-size: $font-0;
+    font-size: var(--font-0-rem);
   }
 
   h5 {
-    font-size: $font-down-1;
+    font-size: var(--font-down-1-rem);
   }
 
   h6 {
-    font-size: $font-down-2;
+    font-size: var(--font-down-2-rem);
   }
 
   a {
@@ -195,17 +188,17 @@ $quote-share-maxwidth: 150px;
   sup sup {
     top: 0;
   }
+
+  img:not(.thumbnail):not(.ytp-thumbnail-image):not(.emoji) {
+    max-width: 100%;
+    height: auto;
+  }
 }
 
 // add staff color
 .moderator {
   .regular > .cooked {
     background-color: var(--highlight-low-or-medium);
-    padding: 10px;
-    img:not(.thumbnail) {
-      max-width: 100%;
-      height: auto;
-    }
   }
   .clearfix > .topic-meta-data > .names {
     span.user-title {
@@ -231,6 +224,206 @@ $quote-share-maxwidth: 150px;
     display: flex;
     flex: 0 0 auto;
     align-items: center;
+  }
+}
+
+nav.post-controls {
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--primary-low-mid);
+
+  .actions {
+    display: inline-flex;
+    text-align: right;
+    margin-left: auto;
+
+    // Some buttons can be doubled up, like likes or flags
+    .double-button {
+      display: inline-flex;
+      flex: 0 1 auto;
+      align-items: center;
+      white-space: nowrap;
+      button {
+        // It looks really confusing when one half a double button has an inner shadow on click.
+        &:active {
+          box-shadow: none;
+        }
+        &.my-likes,
+        &.read-indicator,
+        &.regular-likes {
+          // Like count on posts
+          .d-icon {
+            color: var(--primary-low-mid);
+            padding-left: 0.45em;
+          }
+        }
+        &.has-like {
+          // Like button after I've liked
+          .d-icon {
+            color: var(--love);
+          }
+        }
+        &[disabled] {
+          // Disabled like button
+          cursor: not-allowed;
+        }
+        &.button-count {
+          // Like count button
+          height: 100%; // sometimes the font might be shorter than the icon
+          &:not(.my-likes) {
+            padding-right: 0;
+          }
+          + .toggle-like {
+            // Like button when like count is present
+            padding-left: 0.45em;
+          }
+        }
+      }
+    }
+    a,
+    button {
+      color: var(--primary-low-mid-or-secondary-high);
+      .d-icon {
+        opacity: 1;
+      }
+      display: inline-block;
+    }
+
+    button {
+      flex: 0 1 auto;
+      font-size: var(--font-up-1);
+      padding: 8px 10px;
+      vertical-align: top;
+      background: transparent;
+      border: none;
+      &.d-hover,
+      &:focus,
+      &:active {
+        outline: none;
+        background: var(--primary-low);
+        color: var(--primary);
+      }
+      &.hidden {
+        display: none;
+      }
+      &.admin {
+        position: relative;
+      }
+      &.delete.d-hover,
+      &.delete:hover,
+      &.delete:focus {
+        background: var(--danger);
+        color: var(--secondary);
+        .d-icon {
+          color: var(--secondary);
+        }
+      }
+      &.bookmarked .d-icon {
+        color: var(--tertiary);
+      }
+      &.create {
+        margin-right: 0;
+        color: var(--primary-high-or-secondary-low);
+        .d-icon {
+          color: var(--primary-high-or-secondary-low);
+        }
+      }
+    }
+  }
+
+  .show-replies {
+    font-size: var(--font-up-1);
+    font-size: inherit;
+    padding: 10px;
+    color: var(--primary-medium);
+    &:hover,
+    &:focus {
+      outline: none;
+      color: var(--primary);
+      background: var(--primary-low);
+    }
+    .d-icon {
+      font-size: var(--font-down-1);
+    }
+    .d-button-label + .d-icon {
+      margin-left: 0.45em;
+      margin-right: 0;
+    }
+  }
+}
+
+.deleted {
+  .regular > .cooked {
+    background-color: var(--danger-low-mid);
+  }
+  .topic-meta-data:not(.embedded-reply) {
+    color: var(--danger);
+
+    .post-info a,
+    a {
+      color: currentColor;
+    }
+
+    .d-icon {
+      color: currentColor;
+    }
+  }
+  nav.post-controls {
+    color: var(--danger);
+
+    .show-replies,
+    button.reply.create {
+      color: var(--danger);
+      .d-icon {
+        color: var(--danger);
+      }
+    }
+    .widget-button {
+      &:hover {
+        color: currentColor;
+        background: var(--danger-low);
+        .d-icon {
+          color: currentColor;
+        }
+      }
+      &.fade-out {
+        opacity: 1;
+      }
+    }
+    .d-icon {
+      color: var(--danger);
+    }
+  }
+  .post-action {
+    color: var(--danger);
+  }
+}
+
+@keyframes heartBump {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.5);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.has-like .d-icon.heart-animation {
+  animation: heartBump 0.4s;
+}
+
+@keyframes slideout {
+  from {
+    max-height: 60px;
+  }
+
+  to {
+    max-height: 9999px;
   }
 }
 
@@ -261,15 +454,17 @@ aside.quote {
   // blockquote is docked within aside for content
   blockquote {
     margin-top: 0;
-  }
-}
-
-blockquote {
-  // due to #image-sizing-hack large images and lightboxes extend past the
-  // limits blockquotes. Since #image-sizing-hack is inline, we need to use
-  // !important here otherwise it won't work.
-  img {
-    max-width: 100% !important;
+    .expanded-quote {
+      overflow: hidden;
+      animation: slideout 1s ease-in-out;
+      &.icon-only {
+        text-align: center;
+        font-size: var(--font-up-4);
+        padding-top: 0.5em;
+        padding-bottom: 0.5em;
+        color: var(--primary-medium);
+      }
+    }
   }
 }
 
@@ -340,9 +535,46 @@ blockquote {
   z-index: z("dropdown");
   opacity: 0.9;
   background-color: var(--secondary-high);
+  flex-direction: column;
+
+  &.animated {
+    transition: top 0.1s linear, left 0.1s linear;
+  }
 
   &.visible {
-    display: inline-flex;
+    display: flex;
+  }
+
+  &.fast-editing {
+    opacity: 1;
+  }
+
+  .buttons {
+    display: flex;
+  }
+
+  .extra {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .fast-edit-container {
+    display: flex;
+    padding: 0.5em;
+    padding-top: 0;
+    flex-direction: column;
+    align-items: flex-start;
+
+    #fast-edit-input {
+      margin: 0;
+      width: 300px;
+      height: 90px;
+    }
+
+    .save-fast-edit {
+      margin-top: 0.5em;
+    }
   }
 
   .btn,
@@ -350,6 +582,13 @@ blockquote {
   .d-icon,
   .btn:hover .d-icon {
     color: var(--secondary-or-primary);
+  }
+
+  .btn-primary,
+  .btn-primary:hover,
+  .btn-primary .d-icon,
+  .btn-primary:hover .d-icon {
+    color: var(--secondary);
   }
 
   .insert-quote + .quote-sharing {
@@ -395,6 +634,7 @@ blockquote {
   }
 }
 
+.post-avatar,
 .topic-avatar,
 .user-card-avatar {
   position: relative;
@@ -461,7 +701,7 @@ blockquote {
   td {
     vertical-align: top;
     padding: 1px;
-    word-wrap: anywhere;
+    word-break: break-all;
   }
 
   .topic-links {
@@ -627,9 +867,6 @@ blockquote {
     font-size: $font-down-2;
   }
 }
-.topic-avatar .poster-avatar-extra {
-  display: none;
-}
 
 .map {
   &:first-of-type {
@@ -650,6 +887,10 @@ blockquote {
   // a deeply nested blockquote, and so on.. you get the idea.
   .cooked {
     overflow: hidden;
+
+    .button-wrapper {
+      display: none;
+    }
   }
   .group-request {
     border-top: 1px solid var(--primary-low);
@@ -862,7 +1103,7 @@ blockquote > *:last-child {
     }
   }
 
-  .small-action.deleted {
+  &.deleted {
     background-color: var(--danger-low-mid);
   }
 
@@ -921,6 +1162,29 @@ blockquote > *:last-child {
     &:last-of-type {
       margin-left: auto;
       order: 8;
+    }
+  }
+
+  &.topic-post-visited {
+    border-top: none;
+
+    + .small-action {
+      border-top: none;
+    }
+
+    .topic-post-visited-line {
+      text-align: center;
+      border-bottom: 1px solid var(--danger-medium);
+      line-height: 0.1em;
+      margin: 1rem 0px;
+      width: 100%;
+
+      .topic-post-visited-message {
+        background-color: var(--secondary);
+        color: var(--danger-medium);
+        font-size: $font-down-1;
+        padding: 0 8px;
+      }
     }
   }
 }
@@ -1170,7 +1434,8 @@ a.mention-group {
     display: flex;
     flex-wrap: wrap;
     align-items: stretch; // aligns items by making them the same height
-    button {
+    button,
+    details {
       margin-right: 0.54em;
     }
     > * {
@@ -1178,7 +1443,7 @@ a.mention-group {
     }
     .topic-admin-menu-button-container {
       display: inline-flex;
-      > span {
+      .topic-admin-menu-button {
         display: flex; // to make this button match siblings behavior, all of its parents need to be flex
       }
     }
@@ -1318,5 +1583,58 @@ a.mention-group {
     // need to keep the image hidden but clickable
     // so the user can resume animation
     opacity: 0;
+  }
+}
+
+.open-popup-link {
+  position: sticky;
+  left: 0.5rem;
+  top: 0.5rem;
+  opacity: 0%;
+  white-space: nowrap;
+  display: block;
+}
+
+.fullscreen-table-wrapper {
+  transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+  display: block;
+}
+
+.expand-table-icon {
+  margin-right: 4px;
+}
+
+.fullscreen-table-modal .modal-inner-container {
+  width: max-content;
+  max-width: 90%;
+  margin: 0 auto;
+  padding: 10px;
+
+  .modal-body {
+    padding-top: 0;
+  }
+
+  thead {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: var(--secondary);
+  }
+
+  tbody {
+    overflow-x: hidden;
+  }
+
+  td {
+    padding: 0.5rem;
+  }
+}
+
+html.discourse-no-touch .fullscreen-table-wrapper:hover {
+  border-radius: 5px;
+  box-shadow: 0 2px 5px 0 rgba(var(--always-black-rgb), 0.1),
+    0 2px 10px 0 rgba(var(--always-black-rgb), 0.1);
+  .open-popup-link {
+    opacity: 100%;
   }
 }

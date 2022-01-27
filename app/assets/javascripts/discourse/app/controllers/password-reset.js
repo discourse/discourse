@@ -121,7 +121,7 @@ export default Controller.extend(PasswordValidation, {
           this.setProperties({
             securityKeyRequired: true,
             password: null,
-            errorMessage: errorMessage,
+            errorMessage,
           });
         }
       );

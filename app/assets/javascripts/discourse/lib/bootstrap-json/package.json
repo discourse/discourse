@@ -9,5 +9,10 @@
       "history-support-middleware",
       "proxy-server-middleware"
     ]
+  },
+  "engines": {
+    "node": "12.* || 14.* || >= 16",
+    "npm": "please-use-yarn",
+    "yarn": ">= 1.21.1"
   }
 }

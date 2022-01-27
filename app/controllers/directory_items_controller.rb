@@ -9,7 +9,7 @@ class DirectoryItemsController < ApplicationController
     period = params.require(:period)
     period_type = DirectoryItem.period_types[period.to_sym]
     raise Discourse::InvalidAccess.new(:period_type) unless period_type
-    result = DirectoryItem.where(period_type: period_type).includes(:user)
+    result = DirectoryItem.where(period_type: period_type).includes(user: :user_custom_fields)
 
     if params[:group]
       group = Group.find_by(name: params[:group])
@@ -26,12 +26,22 @@ class DirectoryItemsController < ApplicationController
       result = result.references(:user).where.not(users: { username: params[:exclude_usernames].split(",") })
     end
 
-    order = params[:order] || DirectoryItem.headings.first
+    order = params[:order] || DirectoryColumn.automatic_column_names.first
     dir = params[:asc] ? 'ASC' : 'DESC'
-    if DirectoryItem.headings.include?(order.to_sym)
+    active_directory_column_names = DirectoryColumn.active_column_names
+    if active_directory_column_names.include?(order.to_sym)
       result = result.order("directory_items.#{order} #{dir}, directory_items.id")
     elsif params[:order] === 'username'
       result = result.order("users.#{order} #{dir}, directory_items.id")
+    else
+      # Ordering by user field value
+      user_field = UserField.find_by(name: params[:order])
+      if user_field
+        result = result
+          .joins(:user)
+          .joins("LEFT OUTER JOIN user_custom_fields ON user_custom_fields.user_id = users.id AND user_custom_fields.name = 'user_field_#{user_field.id}'")
+          .order("user_custom_fields.name = 'user_field_#{user_field.id}' ASC, user_custom_fields.value #{dir}")
+      end
     end
 
     if period_type == DirectoryItem.period_types[:all]
@@ -65,7 +75,7 @@ class DirectoryItemsController < ApplicationController
     result_count = result.count
     result = result.limit(PAGE_SIZE).offset(PAGE_SIZE * page).to_a
 
-    more_params = params.slice(:period, :order, :asc).permit!
+    more_params = params.slice(:period, :order, :asc, :group, :user_field_ids).permit!
     more_params[:page] = page + 1
     load_more_uri = URI.parse(directory_items_path(more_params))
     load_more_directory_items_json = "#{load_more_uri.path}.json?#{load_more_uri.query}"
@@ -84,7 +94,25 @@ class DirectoryItemsController < ApplicationController
     end
 
     last_updated_at = DirectoryItem.last_updated_at(period_type)
-    render_json_dump(directory_items: serialize_data(result, DirectoryItemSerializer),
+
+    serializer_opts = {}
+    if params[:user_field_ids]
+      serializer_opts[:user_custom_field_map] = {}
+
+      user_field_ids = params[:user_field_ids]&.split("|")&.map(&:to_i)
+      user_field_ids.each do |user_field_id|
+        serializer_opts[:user_custom_field_map]["#{User::USER_FIELD_PREFIX}#{user_field_id}"] = user_field_id
+      end
+    end
+
+    if params[:plugin_column_ids]
+      serializer_opts[:plugin_column_ids] = params[:plugin_column_ids]&.split("|")&.map(&:to_i)
+    end
+
+    serializer_opts[:attributes] = active_directory_column_names
+
+    serialized = serialize_data(result, DirectoryItemSerializer, serializer_opts)
+    render_json_dump(directory_items: serialized,
                      meta: {
                         last_updated_at: last_updated_at,
                         total_rows_directory_items: result_count,

@@ -42,7 +42,7 @@ module Imap
       if @status[:uid_validity] != @group.imap_uid_validity
         # If UID validity changes, the whole mailbox must be synchronized (all
         # emails are considered new and will be associated to existent topics
-        # in Email::Reciever by matching Message-Ids).
+        # in Email::Receiver by matching Message-Ids).
         ImapSyncLog.warn("UIDVALIDITY = #{@status[:uid_validity]} does not match expected #{@group.imap_uid_validity}, invalidating IMAP cache and resyncing emails for mailbox #{@group.imap_mailbox_name}", @group)
         @group.imap_last_uid = 0
       end
@@ -138,10 +138,10 @@ module Imap
         else
           # try finding email by message-id instead, we may be able to set the uid etc.
           incoming_email = IncomingEmail.where(
-            message_id: Email.message_id_clean(email['ENVELOPE'].message_id),
+            message_id: Email::MessageIdService.message_id_clean(email['ENVELOPE'].message_id),
             imap_uid: nil,
             imap_uid_validity: nil
-          ).where("to_addresses LIKE '%#{@group.email_username}%'").first
+          ).where("to_addresses LIKE ?", "%#{@group.email_username}%").first
 
           if incoming_email
             incoming_email.update(

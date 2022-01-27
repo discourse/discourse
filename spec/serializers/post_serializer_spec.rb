@@ -45,7 +45,8 @@ describe PostSerializer do
     it "should not allow user to flag post and notify non human user" do
       post.update!(user: Discourse.system_user)
 
-      serializer = PostSerializer.new(post,
+      serializer = PostSerializer.new(
+        post,
         scope: Guardian.new(actor),
         root: false
       )
@@ -245,13 +246,16 @@ describe PostSerializer do
         it "returns the reminder_at for the bookmark" do
           expect(serialized.as_json[:bookmark_reminder_at]).to eq(bookmark.reminder_at.iso8601)
         end
+      end
+    end
 
-        context "if topic_view is blank" do
-          let(:topic_view) { nil }
+    context "when the post bookmark is for_topic" do
+      let!(:bookmark) { Fabricate(:bookmark_next_business_day_reminder, user: current_user, post: post, for_topic: true) }
 
-          it "the bookmarked attribute will be false" do
-            expect(serialized.as_json[:bookmarked]).to eq(false)
-          end
+      context "bookmarks with reminders" do
+        it "returns false, because we do not want to mark the post as bookmarked, because the bookmark is for the topic" do
+          expect(serialized.as_json[:bookmarked]).to eq(false)
+          expect(serialized.as_json[:bookmark_reminder_at]).to eq(nil)
         end
       end
     end
@@ -276,6 +280,16 @@ describe PostSerializer do
       expect(serialized_post_for_user(nil)[:group_moderator]).to eq(true)
     end
 
+  end
+
+  context "post with small action" do
+    fab!(:post) { Fabricate(:small_action, action_code: "public_topic") }
+
+    it "returns `action_code` based on `login_required` site setting" do
+      expect(serialized_post_for_user(nil)[:action_code]).to eq("public_topic")
+      SiteSetting.login_required = true
+      expect(serialized_post_for_user(nil)[:action_code]).to eq("open_topic")
+    end
   end
 
   def serialized_post(u)

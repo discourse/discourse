@@ -681,35 +681,15 @@ RSpec.describe InlineUploads do
 
       it "should correct markdown references" do
         md = <<~MD
-        This is a [some reference] somethign
+        This is a [some reference] something
 
         [some reference]: https:#{upload.url}
         MD
 
         expect(InlineUploads.process(md)).to eq(<<~MD)
-        This is a [some reference] somethign
+        This is a [some reference] something
 
         [some reference]: #{Discourse.base_url}#{upload.short_path}
-        MD
-      end
-
-      it "should correct image URLs in multisite", type: :multisite do
-        md = <<~MD
-        https:#{upload2.url} https:#{upload2.url}
-        #{URI.join(SiteSetting.s3_cdn_url, URI.parse(upload2.url).path).to_s}
-
-        <img src="#{upload.url}" alt="some image">
-        <img src="#{URI.join(SiteSetting.s3_cdn_url, URI.parse(upload2.url).path).to_s}" alt="some image">
-        <img src="#{upload3.url}">
-        MD
-
-        expect(InlineUploads.process(md)).to eq(<<~MD)
-        #{Discourse.base_url}#{upload2.short_path} #{Discourse.base_url}#{upload2.short_path}
-        #{Discourse.base_url}#{upload2.short_path}
-
-        ![some image](#{upload.short_url})
-        ![some image](#{upload2.short_url})
-        ![](#{upload3.short_url})
         MD
       end
     end

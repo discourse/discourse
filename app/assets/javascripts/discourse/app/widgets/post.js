@@ -57,6 +57,8 @@ export function avatarImg(wanted, attrs) {
       height: size,
       src: getURLWithCDN(url),
       title,
+      "aria-label": title,
+      loading: "lazy",
     },
     className,
   };
@@ -184,18 +186,19 @@ createWidget("post-avatar", {
       });
     }
 
-    const result = [body];
+    const postAvatarBody = [body];
 
-    if (attrs.primary_group_flair_url || attrs.primary_group_flair_bg_color) {
-      result.push(this.attach("avatar-flair", attrs));
+    if (attrs.flair_url || attrs.flair_bg_color) {
+      postAvatarBody.push(this.attach("avatar-flair", attrs));
     } else {
       const autoFlairAttrs = autoGroupFlairForUser(this.site, attrs);
+
       if (autoFlairAttrs) {
-        result.push(this.attach("avatar-flair", autoFlairAttrs));
+        postAvatarBody.push(this.attach("avatar-flair", autoFlairAttrs));
       }
     }
 
-    result.push(h("div.poster-avatar-extra"));
+    const result = [h("div.post-avatar", postAvatarBody)];
 
     if (this.settings.displayPosterName) {
       result.push(this.attach("post-avatar-user-info", attrs));
@@ -246,6 +249,13 @@ function showReplyTab(attrs, siteSettings) {
 
 createWidget("post-meta-data", {
   tagName: "div.topic-meta-data",
+
+  buildAttributes() {
+    return {
+      role: "heading",
+      "aria-level": "2",
+    };
+  },
 
   settings: {
     displayPosterName: true,
@@ -379,8 +389,20 @@ createWidget("post-group-request", {
 createWidget("post-contents", {
   buildKey: (attrs) => `post-contents-${attrs.id}`,
 
-  defaultState() {
-    return { expandedFirstPost: false, repliesBelow: [] };
+  defaultState(attrs) {
+    const defaultState = {
+      expandedFirstPost: false,
+      repliesBelow: [],
+    };
+
+    if (this.siteSettings.enable_filtered_replies_view) {
+      const topicController = this.register.lookup("controller:topic");
+
+      defaultState.filteredRepliesShown =
+        topicController.replies_to_post_number === attrs.post_number.toString();
+    }
+
+    return defaultState;
   },
 
   buildClasses(attrs) {
@@ -462,9 +484,11 @@ createWidget("post-contents", {
     ) {
       controller.send("cancelFilter", currentFilterPostNumber);
       this.state.filteredRepliesShown = false;
+      return Promise.resolve();
     } else {
       this.state.filteredRepliesShown = true;
-      post
+
+      return post
         .get("topic.postStream")
         .filterReplies(post.post_number, post.id)
         .then(() => {
@@ -491,7 +515,16 @@ createWidget("post-contents", {
       .then((posts) => {
         this.state.repliesBelow = posts.map((p) => {
           let result = transformWithCallbacks(p);
-          result.shareUrl = `${topicUrl}/${p.post_number}`;
+
+          // these would conflict with computed properties with identical names
+          // in the post model if we kept them.
+          delete result.new_user;
+          delete result.deleted;
+          delete result.shareUrl;
+          delete result.firstPost;
+          delete result.usernameUrl;
+
+          result.customShare = `${topicUrl}/${p.post_number}`;
           result.asPost = this.store.createRecord("post", result);
           return result;
         });
@@ -693,7 +726,17 @@ createWidget("post-article", {
         .then((posts) => {
           this.state.repliesAbove = posts.map((p) => {
             let result = transformWithCallbacks(p);
-            result.shareUrl = `${topicUrl}/${p.post_number}`;
+
+            // We don't want to overwrite CPs - we are doing something a bit weird
+            // here by creating a post object from a transformed post. They aren't
+            // 100% the same.
+            delete result.new_user;
+            delete result.deleted;
+            delete result.shareUrl;
+            delete result.firstPost;
+            delete result.usernameUrl;
+
+            result.customShare = `${topicUrl}/${p.post_number}`;
             result.asPost = this.store.createRecord("post", result);
             return result;
           });
@@ -728,7 +771,7 @@ export default createWidget("post", {
     }
     const classNames = ["topic-post", "clearfix"];
 
-    if (attrs.id === -1 || attrs.isSaving) {
+    if (attrs.id === -1 || attrs.isSaving || attrs.staged) {
       classNames.push("staged");
     }
     if (attrs.selected) {
@@ -736,6 +779,9 @@ export default createWidget("post", {
     }
     if (attrs.topicOwner) {
       classNames.push("topic-owner");
+    }
+    if (this.currentUser && attrs.user_id === this.currentUser.id) {
+      classNames.push("current-user-post");
     }
     if (attrs.groupModerator) {
       classNames.push("category-moderator");

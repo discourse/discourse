@@ -5,19 +5,36 @@
 
 {{#if canReplace}}
   <div class="watched-word-input">
-    <label for="watched-replacement">{{i18n "admin.watched_words.form.replacement_label"}}</label>
-    {{text-field id="watched-replacement" value=replacement disabled=formSubmitted class="watched-word-input-replace" autocorrect="off" autocapitalize="off" placeholderKey="admin.watched_words.form.replacement_placeholder"}}
+    <label for="watched-replacement">{{i18n "admin.watched_words.form.replace_label"}}</label>
+    {{text-field id="watched-replacement" value=replacement disabled=formSubmitted class="watched-word-input-field" autocorrect="off" autocapitalize="off" placeholderKey="admin.watched_words.form.replace_placeholder"}}
   </div>
 {{/if}}
 
 {{#if canTag}}
   <div class="watched-word-input">
     <label for="watched-tag">{{i18n "admin.watched_words.form.tag_label"}}</label>
-    {{text-field id="watched-tag" value=replacement disabled=formSubmitted class="watched-word-input" autocorrect="off" autocapitalize="off" placeholderKey="admin.watched_words.form.tag_placeholder"}}
+    {{tag-chooser
+      id="watched-tag"
+      class="watched-word-input-field"
+      tags=selectedTags
+      onChange=(action "changeSelectedTags")
+      everyTag=true
+      options=(hash
+        allowAny=true
+        disabled=formSubmitted
+      )
+    }}
   </div>
 {{/if}}
 
-{{d-button class="btn-default" action=(action "submit") disabled=formSubmitted label="admin.watched_words.form.add"}}
+{{#if canLink}}
+  <div class="watched-word-input">
+    <label for="watched-replacement">{{i18n "admin.watched_words.form.link_label"}}</label>
+    {{text-field id="watched-replacement" value=replacement disabled=formSubmitted class="watched-word-input-field" autocorrect="off" autocapitalize="off" placeholderKey="admin.watched_words.form.link_placeholder"}}
+  </div>
+{{/if}}
+
+{{d-button class="btn btn-primary" action=(action "submit") disabled=formSubmitted label="admin.watched_words.form.add"}}
 
 {{#if showMessage}}
   <span class="success-message">{{message}}</span>

@@ -156,6 +156,17 @@ module PrettyText
     end
   end
 
+  # Acceptable options:
+  #
+  #  disable_emojis    - Disables the emoji markdown engine.
+  #  features          - A hash where the key is the markdown feature name and the value is a boolean to enable/disable the markdown feature.
+  #                      The hash is merged into the default features set in pretty-text.js which can be used to add new features or disable existing features.
+  #  features_override - An array of markdown feature names to override the default markdown feature set. Currently used by plugins to customize what features should be enabled
+  #                      when rendering markdown.
+  #  markdown_it_rules - An array of markdown rule names which will be applied to the markdown-it engine. Currently used by plugins to customize what markdown-it rules should be
+  #                      enabled when rendering markdown.
+  #  topic_id          - Topic id for the post being cooked.
+  #  user_id           - User id for the post being cooked.
   def self.markdown(text, opts = {})
     # we use the exact same markdown converter as the client
     # TODO: use the same extensions on both client and server (in particular the template for mentions)
@@ -175,6 +186,8 @@ module PrettyText
         __paths = #{paths_json};
         __optInput.getURL = __getURL;
         #{"__optInput.features = #{opts[:features].to_json};" if opts[:features]}
+        #{"__optInput.featuresOverride = #{opts[:features_override].to_json};" if opts[:features_override]}
+        #{"__optInput.markdownItRules = #{opts[:markdown_it_rules].to_json};" if opts[:markdown_it_rules]}
         __optInput.getCurrentUser = __getCurrentUser;
         __optInput.lookupAvatar = __lookupAvatar;
         __optInput.lookupPrimaryUserGroup = __lookupPrimaryUserGroup;
@@ -186,11 +199,12 @@ module PrettyText
         __optInput.emojiUnicodeReplacer = __emojiUnicodeReplacer;
         __optInput.lookupUploadUrls = __lookupUploadUrls;
         __optInput.censoredRegexp = #{WordWatcher.word_matcher_regexp(:censor)&.source.to_json};
-        __optInput.watchedWordsReplacements = #{WordWatcher.word_matcher_regexps(:replace).to_json};
+        __optInput.watchedWordsReplace = #{WordWatcher.word_matcher_regexps(:replace).to_json};
+        __optInput.watchedWordsLink = #{WordWatcher.word_matcher_regexps(:link).to_json};
       JS
 
-      if opts[:topicId]
-        buffer << "__optInput.topicId = #{opts[:topicId].to_i};\n"
+      if opts[:topic_id]
+        buffer << "__optInput.topicId = #{opts[:topic_id].to_i};\n"
       end
 
       if opts[:user_id]
@@ -278,10 +292,6 @@ module PrettyText
 
   def self.cook(text, opts = {})
     options = opts.dup
-
-    # we have a minor inconsistency
-    options[:topicId] = opts[:topic_id]
-
     working_text = text.dup
 
     sanitized = markdown(working_text, options)
@@ -355,8 +365,14 @@ module PrettyText
     links = []
     doc = Nokogiri::HTML5.fragment(html)
 
-    # remove href inside quotes & elided part
-    doc.css("aside.quote a, .elided a").each { |a| a["href"] = "" }
+    # extract onebox links
+    doc.css("aside.onebox[data-onebox-src]").each { |onebox| links << DetectedLink.new(onebox["data-onebox-src"], false) }
+
+    # remove href inside quotes & oneboxes & elided part
+    doc.css("aside.quote a, aside.onebox a, .elided a").remove
+
+    # remove hotlinked images
+    doc.css("a.onebox > img").each { |img| img.parent.remove }
 
     # extract all links
     doc.css("a").each do |a|

@@ -1,0 +1,22 @@
+{{#owner.profile_image}}
+  <a href="{{owner.link}}" target="_blank" rel="noopener">
+    <img alt="{{owner.display_name}}" src="{{owner.profile_image}}" class="thumbnail onebox-avatar">
+  </a>
+{{/owner.profile_image}}
+
+<h4>
+  <a href="{{link}}" target="_blank" rel="noopener">{{{title}}}</a>
+</h4>
+
+<div class="tags">
+  <strong>{{tags}}</strong>
+</div>
+
+<div class="date">
+  {{#is_question}}asked by{{/is_question}}
+  {{#is_answer}}answered by{{/is_answer}}
+  <a href="{{owner.link}}" target="_blank" rel="noopener">
+    {{owner.display_name}}
+  </a>
+  on <a href="{{link}}" target="_blank" rel="noopener">{{creation_date}}</a>
+</div>

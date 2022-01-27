@@ -44,13 +44,13 @@ describe UserAuthenticator do
   context "#finish" do
     fab!(:group) { Fabricate(:group, automatic_membership_email_domains: "discourse.org") }
 
-    it "confirms email and adds the user to appropraite groups based on email" do
+    it "confirms email and adds the user to appropriate groups based on email" do
       user = Fabricate(:user, email: "user53@discourse.org")
       expect(group.usernames).not_to include(user.username)
 
       authentication = github_auth(true)
 
-      UserAuthenticator.new(user, authentication: authentication).finish
+      UserAuthenticator.new(user, { authentication: authentication }).finish
       expect(user.email_confirmed?).to be_truthy
       expect(group.usernames).to include(user.username)
     end
@@ -60,7 +60,7 @@ describe UserAuthenticator do
 
       authentication = github_auth(false)
 
-      UserAuthenticator.new(user, authentication: authentication).finish
+      UserAuthenticator.new(user, { authentication: authentication }).finish
       expect(user.email_confirmed?).to be_falsey
       expect(group.usernames).not_to include(user.username)
     end
@@ -70,7 +70,7 @@ describe UserAuthenticator do
 
       authentication = github_auth(true)
 
-      UserAuthenticator.new(user, authentication: authentication).finish
+      UserAuthenticator.new(user, { authentication: authentication }).finish
       expect(user.email_confirmed?).to be_falsey
       expect(group.usernames).not_to include(user.username)
     end

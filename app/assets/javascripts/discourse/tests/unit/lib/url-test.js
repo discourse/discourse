@@ -1,4 +1,8 @@
-import DiscourseURL, { prefixProtocol, userPath } from "discourse/lib/url";
+import DiscourseURL, {
+  getCategoryAndTagUrl,
+  prefixProtocol,
+  userPath,
+} from "discourse/lib/url";
 import { module, test } from "qunit";
 import User from "discourse/models/user";
 import { logIn } from "discourse/tests/helpers/qunit-helpers";
@@ -58,14 +62,14 @@ module("Unit | Utility | url", function () {
   });
 
   test("userPath", function (assert) {
-    assert.equal(userPath(), "/u");
-    assert.equal(userPath("eviltrout"), "/u/eviltrout");
+    assert.strictEqual(userPath(), "/u");
+    assert.strictEqual(userPath("eviltrout"), "/u/eviltrout");
   });
 
   test("userPath with prefix", function (assert) {
     setPrefix("/forum");
-    assert.equal(userPath(), "/forum/u");
-    assert.equal(userPath("eviltrout"), "/forum/u/eviltrout");
+    assert.strictEqual(userPath(), "/forum/u");
+    assert.strictEqual(userPath("eviltrout"), "/forum/u/eviltrout");
   });
 
   test("routeTo with prefix", async function (assert) {
@@ -73,6 +77,11 @@ module("Unit | Utility | url", function () {
     logIn();
     const user = User.current();
 
+    sinon.stub(DiscourseURL, "router").get(() => {
+      return {
+        currentURL: "/forum",
+      };
+    });
     sinon.stub(DiscourseURL, "handleURL");
     DiscourseURL.routeTo("/my/messages");
     assert.ok(
@@ -82,18 +91,55 @@ module("Unit | Utility | url", function () {
   });
 
   test("prefixProtocol", async function (assert) {
-    assert.equal(
+    assert.strictEqual(
       prefixProtocol("mailto:mr-beaver@aol.com"),
       "mailto:mr-beaver@aol.com"
     );
-    assert.equal(prefixProtocol("discourse.org"), "https://discourse.org");
-    assert.equal(
+    assert.strictEqual(
+      prefixProtocol("discourse.org"),
+      "https://discourse.org"
+    );
+    assert.strictEqual(
       prefixProtocol("www.discourse.org"),
       "https://www.discourse.org"
     );
-    assert.equal(
+    assert.strictEqual(
       prefixProtocol("www.discourse.org/mailto:foo"),
       "https://www.discourse.org/mailto:foo"
+    );
+  });
+
+  test("getCategoryAndTagUrl", function (assert) {
+    assert.strictEqual(
+      getCategoryAndTagUrl(
+        { path: "/c/foo/1", default_list_filter: "all" },
+        true
+      ),
+      "/c/foo/1"
+    );
+
+    assert.strictEqual(
+      getCategoryAndTagUrl(
+        { path: "/c/foo/1", default_list_filter: "all" },
+        false
+      ),
+      "/c/foo/1/none"
+    );
+
+    assert.strictEqual(
+      getCategoryAndTagUrl(
+        { path: "/c/foo/1", default_list_filter: "none" },
+        true
+      ),
+      "/c/foo/1/all"
+    );
+
+    assert.strictEqual(
+      getCategoryAndTagUrl(
+        { path: "/c/foo/1", default_list_filter: "none" },
+        false
+      ),
+      "/c/foo/1"
     );
   });
 

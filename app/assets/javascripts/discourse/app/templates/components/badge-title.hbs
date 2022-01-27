@@ -1,33 +1,36 @@
-<section class="user-content">
-  <form class="form-horizontal">
-
-    <div class="control-group">
-      <div class="controls">
-        <h3>{{i18n "badges.select_badge_for_title"}}</h3>
+<div class="badge-title">
+  <section class="user-content">
+    <form class="form-horizontal">
+      <div class="control-group">
+        <div class="controls">
+          <h3>{{i18n "badges.select_badge_for_title"}}</h3>
+        </div>
       </div>
-    </div>
 
-    <div class="control-group">
-      <div class="controls">
-        {{combo-box
-          value=selectedUserBadgeId
-          nameProperty="badge.name"
-          content=selectableUserBadges
-          onChange=(action (mut selectedUserBadgeId))
-        }}
+      <div class="control-group">
+        <div class="controls">
+          {{combo-box
+            value=_selectedUserBadgeId
+            nameProperty="badge.name"
+            content=selectableUserBadges
+            onChange=(action (mut _selectedUserBadgeId))
+          }}
+        </div>
       </div>
-    </div>
 
-    <div class="control-group">
-      <div class="controls">
-        {{d-button
-          class="btn-primary"
-          action=(action "save")
-          disabled=saving
-          label=(if saving "saving" "save")}}
-        {{#if saved}}{{i18n "saved"}}{{/if}}
+      <div class="control-group">
+        <div class="controls">
+          {{d-button
+            class="btn-primary"
+            action=(action "saveBadgeTitle")
+            disabled=_isSaving
+            label=(if _isSaving "saving" "save")
+          }}
+          {{#if _isSaved}}
+            <span>{{i18n "saved"}}</span>
+          {{/if}}
+        </div>
       </div>
-    </div>
-
-  </form>
-</section>
+    </form>
+  </section>
+</div>

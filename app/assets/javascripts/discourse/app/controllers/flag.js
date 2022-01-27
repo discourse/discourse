@@ -1,3 +1,4 @@
+import { schedule } from "@ember/runloop";
 import ActionSummary from "discourse/models/action-summary";
 import Controller from "@ember/controller";
 import EmberObject from "@ember/object";
@@ -6,7 +7,7 @@ import { MAX_MESSAGE_LENGTH } from "discourse/models/post-action-type";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { Promise } from "rsvp";
 import User from "discourse/models/user";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed, { bind } from "discourse-common/utils/decorators";
 import { not } from "@ember/object/computed";
 import optionalService from "discourse/lib/optional-service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -52,6 +53,17 @@ export default Controller.extend(ModalFunctionality, {
     };
   },
 
+  @bind
+  keyDown(event) {
+    // CTRL+ENTER or CMD+ENTER
+    if (event.key === "Enter" && (event.ctrlKey || event.metaKey)) {
+      if (this.submitEnabled) {
+        this.send("createFlag");
+        return false;
+      }
+    }
+  },
+
   clientSuspend(performAction) {
     this._penalize("showSuspendModal", performAction);
   },
@@ -85,6 +97,16 @@ export default Controller.extend(ModalFunctionality, {
         this.set("spammerDetails", result);
       });
     }
+
+    schedule("afterRender", () => {
+      const element = document.querySelector(".flag-modal");
+      element.addEventListener("keydown", this.keyDown);
+    });
+  },
+
+  onClose() {
+    const element = document.querySelector(".flag-modal");
+    element.removeEventListener("keydown", this.keyDown);
   },
 
   @discourseComputed("spammerDetails.canDelete", "selected.name_key")
@@ -158,6 +180,13 @@ export default Controller.extend(ModalFunctionality, {
   },
 
   submitDisabled: not("submitEnabled"),
+  cantFlagForReview: not("notifyModeratorsFlag"),
+
+  @discourseComputed("flagsAvailable")
+  notifyModeratorsFlag(flagsAvailable) {
+    const notifyModeratorsID = 7;
+    return flagsAvailable.find((f) => f.id === notifyModeratorsID);
+  },
 
   // Staff accounts can "take action"
   @discourseComputed("flagTopic", "selected.is_custom_flag")
@@ -229,8 +258,9 @@ export default Controller.extend(ModalFunctionality, {
       let params = this.get("selected.is_custom_flag")
         ? { message: this.message }
         : {};
+
       if (opts) {
-        params = $.extend(params, opts);
+        params = Object.assign(params, opts);
       }
 
       this.appEvents.trigger(
@@ -245,6 +275,10 @@ export default Controller.extend(ModalFunctionality, {
       postAction
         .act(this.model, params)
         .then(() => {
+          if (this.isDestroying || this.isDestroyed) {
+            return;
+          }
+
           if (!params.skipClose) {
             this.send("closeModal");
           }
@@ -256,7 +290,9 @@ export default Controller.extend(ModalFunctionality, {
           });
         })
         .catch((error) => {
-          this.send("closeModal");
+          if (!this.isDestroying && !this.isDestroyed) {
+            this.send("closeModal");
+          }
           popupAjaxError(error);
         });
     },
@@ -267,12 +303,7 @@ export default Controller.extend(ModalFunctionality, {
     },
 
     flagForReview() {
-      const notifyModeratorsID = 7;
-      const notifyModerators = this.flagsAvailable.find(
-        (f) => f.id === notifyModeratorsID
-      );
-      this.set("selected", notifyModerators);
-
+      this.set("selected", this.get("notifyModeratorsFlag"));
       this.send("createFlag", { queue_for_review: true });
       this.set("model.hidden", true);
     },

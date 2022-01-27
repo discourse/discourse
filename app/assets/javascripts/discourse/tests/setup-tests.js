@@ -2,16 +2,19 @@ import {
   applyPretender,
   exists,
   resetSite,
+  testsInitialized,
+  testsTornDown,
 } from "discourse/tests/helpers/qunit-helpers";
-import createPretender, {
+import pretender, {
   applyDefaultHandlers,
   pretenderHelpers,
+  resetPretender,
 } from "discourse/tests/helpers/create-pretender";
 import {
   currentSettings,
   resetSettings,
 } from "discourse/tests/helpers/site-settings";
-import { getOwner, setDefaultOwner } from "discourse-common/lib/get-owner";
+import { setDefaultOwner } from "discourse-common/lib/get-owner";
 import { setApplication, setResolver } from "@ember/test-helpers";
 import { setupS3CDN, setupURL } from "discourse-common/lib/get-url";
 import Application from "../app";
@@ -24,13 +27,15 @@ import Session from "discourse/models/session";
 import User from "discourse/models/user";
 import bootbox from "bootbox";
 import { buildResolver } from "discourse-common/resolver";
-import { clearAppEventsCache } from "discourse/services/app-events";
 import { createHelperContext } from "discourse-common/lib/helpers";
 import deprecated from "discourse-common/lib/deprecated";
-import { flushMap } from "discourse/models/store";
+import { flushMap } from "discourse/services/store";
 import { registerObjects } from "discourse/pre-initializers/inject-discourse-objects";
-import { setupApplicationTest } from "ember-qunit";
 import sinon from "sinon";
+import { run } from "@ember/runloop";
+import { isLegacyEmber } from "discourse-common/config/environment";
+import { disableCloaking } from "discourse/widgets/post-stream";
+import { clearState as clearPresenceState } from "discourse/tests/helpers/presence-pretender";
 
 const Plugin = $.fn.modal;
 const Modal = Plugin.Constructor;
@@ -39,7 +44,7 @@ function AcceptanceModal(option, _relatedTarget) {
   return this.each(function () {
     let $this = $(this);
     let data = $this.data("bs.modal");
-    let options = $.extend(
+    let options = Object.assign(
       {},
       Modal.DEFAULTS,
       $this.data(),
@@ -63,31 +68,125 @@ let app;
 let started = false;
 
 function createApplication(config, settings) {
+  if (app) {
+    run(app, "destroy");
+  }
+
   app = Application.create(config);
   setApplication(app);
   setResolver(buildResolver("discourse").create({ namespace: app }));
 
+  // Modern Ember only sets up a container when the ApplicationInstance
+  // is booted. We have legacy code which relies on having access to a container
+  // before boot (e.g. during pre-initializers)
+  //
+  // This hack sets up a container early, then stubs the container setup method
+  // so that Ember will use the same container instance when it boots the ApplicationInstance
+  //
+  // Note that this hack is not required in production because we use the default `autoboot` flag,
+  // which triggers the internal `_globalsMode` flag, which sets up an ApplicationInstance immediately when
+  // an Application is initialized (via the `_buildDeprecatedInstance` method).
+  //
+  // In the future, we should move away from relying on the `container` before the ApplicationInstance
+  // is booted, and then remove this hack.
   let container = app.__registry__.container();
   app.__container__ = container;
   setDefaultOwner(container);
+  sinon
+    .stub(Object.getPrototypeOf(app.__registry__), "container")
+    .callsFake((opts) => {
+      container.owner = opts.owner;
+      container.registry = opts.owner.__registry__;
+      return container;
+    });
 
   if (!started) {
+    app.instanceInitializer({
+      name: "test-helper",
+      initialize: testsInitialized,
+      teardown: testsTornDown,
+    });
+
     app.start();
     started = true;
   }
 
   app.SiteSettings = settings;
-  registerObjects(container, app);
+  registerObjects(app);
   return app;
 }
 
-function setupTestsCommon(application, container, config) {
-  QUnit.config.hidepassed = true;
-
-  // Let's customize QUnit options a bit
-  QUnit.config.urlConfig = QUnit.config.urlConfig.filter(
-    (c) => ["dockcontainer", "nocontainer"].indexOf(c.id) === -1
+function setupToolbar() {
+  // Most default toolbar items aren't useful for Discourse
+  QUnit.config.urlConfig = QUnit.config.urlConfig.reject((c) =>
+    [
+      "noglobals",
+      "notrycatch",
+      "nolint",
+      "devmode",
+      "dockcontainer",
+      "nocontainer",
+    ].includes(c.id)
   );
+
+  QUnit.config.urlConfig.push({
+    id: "qunit_skip_core",
+    label: "Skip Core",
+    value: "1",
+  });
+
+  QUnit.config.urlConfig.push({
+    id: "qunit_skip_plugins",
+    label: "Skip Plugins",
+    value: "1",
+  });
+
+  const pluginNames = new Set();
+
+  Object.keys(requirejs.entries).forEach((moduleName) => {
+    const found = moduleName.match(/\/plugins\/([\w-]+)\//);
+    if (found && moduleName.match(/\-test/)) {
+      pluginNames.add(found[1]);
+    }
+  });
+
+  QUnit.config.urlConfig.push({
+    id: "qunit_single_plugin",
+    label: "Plugin",
+    value: Array.from(pluginNames),
+  });
+}
+
+function reportMemoryUsageAfterTests() {
+  QUnit.done(() => {
+    const usageBytes = performance.memory?.usedJSHeapSize;
+    let result;
+    if (usageBytes) {
+      result = `${(usageBytes / Math.pow(2, 30)).toFixed(3)}GB`;
+    } else {
+      result = "(performance.memory api unavailable)";
+    }
+
+    writeSummaryLine(`Used JS Heap Size: ${result}`);
+  });
+}
+
+function writeSummaryLine(message) {
+  // eslint-disable-next-line no-console
+  console.log(`\n${message}\n`);
+  if (window.Testem) {
+    window.Testem.useCustomAdapter(function (socket) {
+      socket.emit("test-metadata", "summary-line", {
+        message,
+      });
+    });
+  }
+}
+
+function setupTestsCommon(application, container, config) {
+  disableCloaking();
+
+  QUnit.config.hidepassed = true;
 
   application.rootElement = "#ember-testing";
   application.setupForTesting();
@@ -177,8 +276,7 @@ function setupTestsCommon(application, container, config) {
       setupS3CDN(null, null);
     }
 
-    server = createPretender;
-    server.handlers = [];
+    server = pretender;
     applyDefaultHandlers(server);
 
     server.prepareBody = function (body) {
@@ -226,6 +324,7 @@ function setupTestsCommon(application, container, config) {
       siteSettings: settings,
       capabilities: {},
       site,
+      registry: app.__registry__,
     });
 
     PreloadStore.reset();
@@ -240,58 +339,75 @@ function setupTestsCommon(application, container, config) {
 
   QUnit.testDone(function () {
     sinon.restore();
+    resetPretender();
+    clearPresenceState();
 
     // Destroy any modals
     $(".modal-backdrop").remove();
     flushMap();
 
-    if (!setupApplicationTest) {
-      // ensures any event not removed is not leaking between tests
-      // most likely in intialisers, other places (controller, component...)
-      // should be fixed in code
-      clearAppEventsCache(getOwner(this));
-    }
-
     MessageBus.unsubscribe("*");
     server = null;
   });
-
-  // Load ES6 tests
-  function getUrlParameter(name) {
-    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-    let regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
-    let results = regex.exec(location.search);
-    return results === null
-      ? ""
-      : decodeURIComponent(results[1].replace(/\+/g, " "));
-  }
-
-  let skipCore = getUrlParameter("qunit_skip_core") === "1";
-  let pluginPath = getUrlParameter("qunit_single_plugin")
-    ? "/" + getUrlParameter("qunit_single_plugin") + "/"
-    : "/plugins/";
 
   if (getUrlParameter("qunit_disable_auto_start") === "1") {
     QUnit.config.autostart = false;
   }
 
-  Object.keys(requirejs.entries).forEach(function (entry) {
-    let isTest = /\-test/.test(entry);
-    let regex = new RegExp(pluginPath);
-    let isPlugin = regex.test(entry);
+  let skipCore =
+    getUrlParameter("qunit_single_plugin") ||
+    getUrlParameter("qunit_skip_core") === "1";
 
-    if (!isTest) {
-      return;
+  let singlePlugin = getUrlParameter("qunit_single_plugin");
+  let skipPlugins = !singlePlugin && getUrlParameter("qunit_skip_plugins");
+
+  if (skipCore && !getUrlParameter("qunit_skip_core")) {
+    replaceUrlParameter("qunit_skip_core", "1");
+  }
+
+  if (!skipPlugins && getUrlParameter("qunit_skip_plugins")) {
+    replaceUrlParameter("qunit_skip_plugins", null);
+  }
+
+  const shouldLoadModule = (name) => {
+    if (!/\-test/.test(name)) {
+      return false;
     }
 
-    if (!skipCore || isPlugin) {
-      require(entry, null, null, true);
+    const isPlugin = name.match(/\/plugins\//);
+    const isCore = !isPlugin;
+    const pluginName = name.match(/\/plugins\/([\w-]+)\//)?.[1];
+
+    if (skipCore && isCore) {
+      return false;
+    } else if (skipPlugins && isPlugin) {
+      return false;
+    } else if (singlePlugin && singlePlugin !== pluginName) {
+      return false;
     }
-  });
+    return true;
+  };
+
+  if (isLegacyEmber()) {
+    Object.keys(requirejs.entries).forEach(function (entry) {
+      if (shouldLoadModule(entry)) {
+        require(entry, null, null, true);
+      }
+    });
+  } else {
+    // Ember CLI
+    const emberCliTestLoader = require("ember-cli-test-loader/test-support/index");
+    emberCliTestLoader.addModuleExcludeMatcher(
+      (name) => !shouldLoadModule(name)
+    );
+  }
 
   // forces 0 as duration for all jquery animations
+  // eslint-disable-next-line no-undef
   jQuery.fx.off = true;
 
+  setupToolbar();
+  reportMemoryUsageAfterTests();
   setApplication(application);
   setDefaultOwner(application.__container__);
   resetSite();
@@ -302,6 +418,11 @@ export function setupTestsLegacy(application) {
   setResolver(buildResolver("discourse").create({ namespace: app }));
   setupTestsCommon(application, app.__container__);
 
+  app.instanceInitializer({
+    name: "test-helper",
+    initialize: testsInitialized,
+    teardown: testsTornDown,
+  });
   app.SiteSettings = currentSettings();
   app.start();
 }
@@ -310,4 +431,32 @@ export default function setupTests(config) {
   let settings = resetSettings();
   app = createApplication(config, settings);
   setupTestsCommon(app, app.__container__, config);
+  sinon.restore();
+}
+
+function getUrlParameter(name) {
+  const queryParams = new URLSearchParams(window.location.search);
+  return queryParams.get(name);
+}
+
+function replaceUrlParameter(name, value) {
+  const queryParams = new URLSearchParams(window.location.search);
+  if (value === null) {
+    queryParams.delete(name);
+  } else {
+    queryParams.set(name, value);
+  }
+  history.replaceState(null, null, "?" + queryParams.toString());
+
+  QUnit.begin(() => {
+    QUnit.config[name] = value;
+    const formElement = document.querySelector(
+      `#qunit-testrunner-toolbar [name=${name}]`
+    );
+    if (formElement?.type === "checkbox") {
+      formElement.checked = !!value;
+    } else if (formElement) {
+      formElement.value = value;
+    }
+  });
 }

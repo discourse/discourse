@@ -76,12 +76,6 @@ describe Discourse do
       opts = Discourse.asset_filter_options(:js, req)
       expect(opts[:path]).to eq("/hello")
     end
-
-    it "overwrites the path if the asset path is present" do
-      req = stub(fullpath: "/bootstrap.json", headers: { "HTTP_X_DISCOURSE_ASSET_PATH" => "/hello" })
-      opts = Discourse.asset_filter_options(:js, req)
-      expect(opts[:path]).to eq("/hello")
-    end
   end
 
   context 'plugins' do
@@ -104,6 +98,7 @@ describe Discourse do
     after do
       Discourse.plugins.delete plugin1
       Discourse.plugins.delete plugin2
+      DiscoursePluginRegistry.reset!
     end
 
     before do

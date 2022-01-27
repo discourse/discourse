@@ -127,18 +127,15 @@ te:
     tos: "సేవా నిబంధనలు"
     mobile_view: "చర సందర్శనం"
     desktop_view: "డెస్క్ టాప్ సందర్శనం"
-    you: "మీరు"
     or: "లేదా"
     now: "ఇప్పుడే"
     read_more: "మరింత చదువు"
     more: "మరింత"
-    less: "తక్కువ"
     never: "ఎప్పటికీ వద్దు"
     every_hour: "ప్రతి గంట"
     daily: "ప్రతిరోజూ"
     weekly: "ప్రతీవారం"
     max_of_count: "%{count} గరిష్టం"
-    alternation: "లేదా"
     character_count:
       one: "%{count} అక్షరం"
       other: "%{count} అక్షరాలు"
@@ -232,7 +229,7 @@ te:
         other: "రోజులు"
     time_shortcut:
       tomorrow: "రేపు"
-      next_week: "వచ్చే వారం"
+      this_weekend: "ఈ వారాంతం"
       next_month: "వచ్చే నెల"
     user_action:
       user_posted_topic: "<a href='%{topicUrl}'>విషయాన్ని</a> <a href='%{userUrl}'>%{user}</a> రాసారు "
@@ -258,12 +255,15 @@ te:
       days_visited_long: "దర్శించిన రోజులు"
       posts_read: "చదివిన"
       posts_read_long: "చదివిన టపాలు"
+      edit_columns:
+        save: "భద్రపరచు"
     groups:
       requests:
         reason: "కారణం"
       manage:
         name: "పేరు"
         full_name: "పూర్తి పేరు"
+        invite_members: "ఆహ్వానించు"
         delete_member_confirm: " '%{group}' గుంపు నుండి '%{username}' ను తొలగించాలా?"
         profile:
           title: ప్రవర
@@ -271,6 +271,7 @@ te:
           posting: రాస్తున్నారు
         email:
           title: "ఈమెయిల్"
+          last_updated_by: "నుండి"
           credentials:
             username: "వాడుకరి పేరు"
             password: "సంకేతపదం"
@@ -328,6 +329,8 @@ te:
           title: "గమనిస్తున్నారు"
         muted:
           title: "నిశ్శబ్దం"
+      default_notifications:
+        modal_yes: "అవును"
     user_action_groups:
       "1": "ఇచ్చిన ఇష్టాలు "
       "2": "వచ్చిన ఇష్టాలు"
@@ -352,7 +355,6 @@ te:
       posts: "టపాలు"
       topics: "విషయాలు"
       latest: "తాజా"
-      toggle_ordering: "వరుస నియంత్రణను అటుఇటుచేయి"
       subcategories: "ఉప వర్గాలు"
       topic_stat_unit:
         week: "వారం"
@@ -437,9 +439,11 @@ te:
         suspensions: "సస్పెన్షన్లు"
         warnings_received: "హెచ్చరికలు"
       messages:
-        all: "అన్నీ"
         inbox: "ఇన్ బాక్స్"
+        latest: "తాజా"
         sent: "పంపిన"
+        unread: "చదవని"
+        new: "కొత్త"
         tags: "ట్యాగులు"
       preferences_nav:
         account: "ఖాతా"
@@ -524,7 +528,6 @@ te:
       auth_tokens:
         details: "వివరాలు"
       last_posted: "చివరి టపా"
-      last_emailed: "చివరగా ఈమెయిల్ చేసింది"
       last_seen: "చూసినది"
       created: "చేరినది"
       log_out: "లాగవుట్"
@@ -716,6 +719,8 @@ te:
       categories_only: "వర్గాలు మాత్రమే"
     conditional_loading_section:
       loading: లోడవుతోంది...
+    select_kit:
+      delete_item: "%{name} తొలగించు"
     emoji_picker:
       flags: కేతనాలు
     composer:
@@ -733,7 +738,6 @@ te:
       reply_here: "ఇక్కడ జవాబివ్వు"
       reply: "జవాబు"
       cancel: "రద్దుచేయి"
-      title: "లేదా కంట్రోల్ + ఎంటర్ నొక్కు"
       users_placeholder: "ఒక సభ్యుడిని కలుపు"
       title_placeholder: "ఈ చర్చ దేనిగురించో ఒక లైనులో చెప్పండి?"
       edit_reason_placeholder: "మీరెందుకు సవరిస్తున్నారు?"
@@ -769,22 +773,25 @@ te:
           label: "కొత్త విషయం"
     notifications:
       none: "ఈ సమయంలో ప్రకటనలు చూపలేకున్నాము."
+      dismiss_confirmation:
+        cancel: "రద్దుచేయి"
       titles:
         watching_first_post: "కొత్త విషయం"
     upload_selector:
-      title: "ఒక బొమ్మ కలుపు"
-      title_with_attachments: "ఒక బొమ్మ లేదా దస్త్రం కలుపు"
-      from_my_computer: "నా పరికరం నుండి"
-      from_the_web: "జాలం నుండి"
-      remote_tip: "బొమ్మకు లంకె"
       uploading: "ఎగుమతవుతోంది"
       default_image_alt_text: బొమ్మ
     search:
-      title: "విషయాలు, టపాలు, సభ్యులు లేదా వర్గాలు వెతుకు"
+      title: "వెతుకు"
+      full_page_title: "వెతుకు"
       no_results: "ఎటువంటి ఫలితాలు దొరకలేదు."
       post_format: "%{username} నుండి #%{post_number}"
       search_google_button: "గూగుల్"
       search_button: "వెతుకు"
+      categories: "వర్గాలు"
+      tags: "ట్యాగులు"
+      type:
+        users: "వాడుకరులు"
+        categories: "వర్గాలు"
       context:
         user: "@%{username} యొక్క విషయాలు వెతుకు"
         topic: "ఈ విషయంలో వెతుకు"
@@ -796,7 +803,6 @@ te:
             label: టపాలు
         views:
           label: చూపులు
-    hamburger_menu: "మరో విషయాల జాబితాకు లేదా వర్గానికి వెళ్లు"
     new_item: "కొత్త"
     go_back: "వెనక్కు మరలు"
     not_logged_in_user: "సభ్యుని ప్రస్తుత కలాపాల మరియు అభిరూపాల సారాంశ పుట"
@@ -810,7 +816,6 @@ te:
         actions: "బహుళ చర్యలు"
         close_topics: "విషయాలు మూయు"
         archive_topics: "విషయాలు కట్టకట్టు"
-        notification_level: "ప్రకటనలు"
         choose_new_category: "విషయం కొరకు కొత్త వర్గం ఎంచుకొండి:"
         selected:
           one: "మీరు <b>%{count}</b> విషయం ఎంచుకున్నారు."
@@ -860,22 +865,15 @@ te:
       not_found:
         title: "విషయం కనిపించలేదు"
         description: "క్షమించాలి. ఆ విషయం మేము కనుగొనలేకున్నాము. బహుశా నిర్వాహకులు దాన్ని తొలగించారేమో?"
-      total_unread_posts:
+      unread_posts:
         one: "మీకు ఈ విషయంలో %{count} చదవని టపా ఉంది"
         other: "మీకు ఈ విషయంలో %{count} చదవని టపాలు ఉన్నాయి"
-      unread_posts:
-        one: "మీకు ఈ విషయంలో %{count} చదవని పాత టపా ఉంది"
-        other: "మీకు ఈ విషయంలో %{count} చదవని పాత టపాలు ఉన్నాయి"
-      new_posts:
-        one: "మీరు చివరసారి చదివాక ఈ విషయంలో %{count} కొత్త టపా వచ్చింది"
-        other: "మీరు చివరసారి చదివాక ఈ విషయంలో %{count} కొత్త టపాలు వచ్చాయి"
       likes:
         one: "ఈ విషయానికి %{count} ఇష్టం ఉంది"
         other: "ఈ విషయానికి %{count} ఇష్టాలు ఉన్నాయి"
       back_to_list: "విషయాల జాబితాకు మరలు"
       options: "విషయపు ఐచ్చికాలు"
       show_links: "ఈ విషయంలో లంకెలు చూపు"
-      toggle_information: "విషయపు వివరాలు అటుఇటుచేయి"
       read_more_in_category: "మరింత చదవాలనుకుంటున్నారా? %{catLink} లేదా %{latestLink} లో ఇతర విషయాలు చూడు."
       read_more: "మరిన్ని చదవాలనుకుంటున్నారా? %{catLink} లేదా %{latestLink}."
       browse_all_categories: అన్ని వర్గాలూ జల్లించు
@@ -884,7 +882,7 @@ te:
       jump_reply_down: తరువాతి జవాబుకు వెళ్లు
       deleted: "ఈ విషయం తొలగించబడింది"
       slow_mode_update:
-        save: "చేతనం"
+        enable: "చేతనం"
         remove: "అచేతనం"
       auto_update_input:
         tomorrow: "రేపు"
@@ -903,13 +901,7 @@ te:
         replies_short: "%{current} / %{total}"
       progress:
         title: విషయపు పురోగతి
-        go_top: "అగ్ర"
-        go_bottom: "అడుగు"
-        go: "వెళ్లు"
-        jump_bottom_with_number: "%{post_number} టపాకు వళ్లు"
         jump_prompt_or: "లేదా"
-        total: అన్ని టపాలు
-        current: ప్రస్తుత టపా
       notifications:
         reasons:
           "3_6": "మీకు ప్రకటనలు వస్తాయి, ఎందుకంటే మీరు ఈ వర్గాంపై కన్నేసారు"
@@ -949,14 +941,10 @@ te:
         pin: "విషయం గుచ్చు"
         unpin: "విషయం అగ్గుచ్చు"
         pin_globally: "సార్వత్రికంగా విషయాన్ని గుచ్చు"
-        make_banner: "బ్యానరు విషయం"
         remove_banner: "బ్యానరు విషయం తొలగించు"
       reply:
         title: "జవాబు"
         help: "ఈ విషయానికి జవాబివ్వుట ప్రారంభించు"
-      clear_pin:
-        title: "గుచ్చు శుభ్రపరుచు"
-        help: "ఈ విషయపు గుచ్చు స్థితి శుభ్రపరుచు. తద్వారా అది ఇహ అగ్ర భాగాన కనిపించదు"
       share:
         title: "పంచు"
         help: "ఈ విషయపులంకెను పంచు"
@@ -1018,6 +1006,7 @@ te:
           one: మీరు <b>%{count}</b> టపా ఎంచుకున్నారు
           other: "మీరు <b>%{count}</b> టపాలు ఎంచుకున్నారు"
     post:
+      quote_edit: "సవరించు"
       quote_share: "పంచు"
       edit_reason: "కారణం:"
       post_number: "టపా %{number}"
@@ -1025,9 +1014,6 @@ te:
       continue_discussion: "%{postLink} నుండి చర్చ కొనసాగుతుంది;"
       follow_quote: "కోటెడ్ టపాకు వెళ్లు"
       show_full: "పూర్తి టపా చూపు"
-      deleted_by_author:
-        one: " (టపా రచయిత ద్వారా తొలగింపబడింది , స్వతస్సిధ్దంగా తొలగింపబ[ది %{count} కాకపోతే సమయం కేతనించలేదు)"
-        other: "(టపా రచయిత ద్వారా ఉపసంహరించబడింది , స్వతసిధ్ధంగా తొలగించబడతాయి %{count} కాకపోతే సమయం కేతనించలేదు)"
       expand_collapse: "పెంచు/తుంచు"
       unread: "టపా చదవనిది"
       errors:
@@ -1039,8 +1025,6 @@ te:
         attachment_upload_not_allowed_for_new_user: "క్షమించాలి. కొత్త సభ్యులు జోడింపులు ఎగుమతి చేయలేరు."
         attachment_download_requires_login: "క్షమించాలి. జోడింపులు దిగుమతి చేసుకోవడానికి మీరు లాగిన్ అయి ఉండాలి."
       via_email: "ఈ టపా ఈమెయిల్ ద్వారా వచ్చింది"
-      archetypes:
-        save: "భద్రపరుచు ఐచ్చికాలు"
       controls:
         reply: "ఈ టపాకు జవాబు రాయుట మొదలుపెట్టండి"
         like: "ఈ టపాను ఇష్టపడు"
@@ -1063,7 +1047,6 @@ te:
         revert_to_regular: "సిబ్బంది రంగు తొలగించు"
         rebake: "హెచే టీ యం యల్ పునర్నిర్మించు"
         unhide: "చూపు"
-        grant_badge: "బ్యాడ్జి ఇవ్వు"
         delete_topic: "విషయం తొలగించు"
       actions:
         people:
@@ -1093,8 +1076,8 @@ te:
       bookmarks:
         created: "సృష్టించిన"
         name: "పేరు"
+        options: "ఎంపికలు"
     category:
-      can: "can&hellip;"
       none: "(ఏ వర్గం లేదు)"
       edit: "సవరించు"
       view: "ఈ వర్గంలోని విషయాలు చూడు"
@@ -1110,7 +1093,6 @@ te:
       save_error: ఈ వర్గం భద్రపరిచేప్పుడు దోషం
       name: "వర్గం పేరు"
       description: "వివరణ"
-      topic: "వర్గం విషయం"
       logo: "వర్గం లోగో బొమ్మ"
       background_image: "వర్గం వెనుతలపు బొమ్మ"
       badge_colors: "బ్యాడ్జి రంగులు"
@@ -1210,6 +1192,8 @@ te:
       unlisted:
         help: "ఈ విషయం జాబితాలనుండి తొలగించబడింది. ఇహ కేవలం నేరు లంకె ద్వారా మాత్రమే చూడగలరు."
     posts: "టపాలు"
+    pending_posts:
+      label: "పెండింగు"
     original_post: "మూల టపా"
     views: "చూపులు"
     replies: "జవాబులు"
@@ -1247,6 +1231,9 @@ te:
           one: "%{count} చదవనవి"
           other: "%{count} చదవనవి"
       new:
+        lower_title_with_count:
+          one: "%{count} కొత్త"
+          other: "%{count} కొత్త"
         lower_title: "కొత్త"
         title: "కొత్త"
         help: "గత కొద్ది రోజులలో సృష్టించిన టపాలు"
@@ -1295,7 +1282,6 @@ te:
         user_profile_menu: "%{shortcut} యూజర్ మెనూ తెరువు"
         show_incoming_updated_topics: "%{shortcut} నవీకరించిన విషయాలను చూపించండి"
         help: "%{shortcut} కీ బోర్డ్ సహాయాన్ని తెరువు"
-        dismiss_new_posts: "%{shortcut} తీసివేసిన కొత్త/టపాలు"
         dismiss_topics: "%{shortcut} తీసివేసిన విషయాలు"
       actions:
         title: "చర్యలు"
@@ -1328,9 +1314,12 @@ te:
           name: ఇతర
         posting:
           name: రాస్తున్నారు
+    download_calendar:
+      download: "దిగుమతి"
     tagging:
       tags: "ట్యాగులు"
       add_synonyms: "కలుపు"
+      description: "వివరణ"
       sort_by_name: "పేరు"
       cancel_delete_unused: "రద్దుచేయి"
       filters:
@@ -1346,6 +1335,7 @@ te:
         muted:
           title: "నిశ్శబ్దం"
       groups:
+        name_placeholder: "పేరు"
         save: "భద్రపరచు"
         delete: "తొలగించు"
       topics:
@@ -1362,6 +1352,13 @@ te:
     do_not_disturb:
       options:
         custom: "అనురూప"
+    trust_levels:
+      names:
+        newuser: "కొత్త సభ్యుడు"
+        basic: "ప్రాథమిక సభ్యుడు"
+        member: "మెంబరు"
+        regular: "రెగ్యులర్"
+        leader: "లీడర్"
   admin_js:
     type_to_filter: "జల్లించుటకు రాయి..."
     admin:
@@ -1412,9 +1409,6 @@ te:
               label: సమూహం
             category:
               label: వర్గం
-      commits:
-        latest_changes: "తాజా మార్పులు: దయచేసి తరచూ ఉన్నతీకరించండి!"
-        by: "నుండి"
       groups:
         manage:
           interaction:
@@ -1566,12 +1560,8 @@ te:
             text: "హెడర్"
           footer:
             text: "ఫుటరు"
-          head_tag:
-            text: "</head>"
-            title: "</head> కొస ముందు ఉంచే హెచ్ టీ యం యల్"
           body_tag:
-            text: "</body>"
-            title: "</body> కొస ముందు ఉంచే హెచ్ టీ యం యల్"
+            text: "శరీరం"
         colors:
           title: "రంగులు"
           copy_name_prefix: "దీనికి నకలు"
@@ -1679,7 +1669,6 @@ te:
           details: "వివరాలు"
           previous_value: "గత"
           new_value: "కొత్త"
-          diff: "తేడా"
           show: "చూపు"
           modal_title: "వివరాలు"
           no_previous: "గత విలువ లేదు"
@@ -1710,8 +1699,6 @@ te:
         screened_ips:
           title: "స్క్రీన్ చేసిన ఐపీలు"
           delete_confirm: "మీరు నిజంగా %{ip_address} కు ఈ నియమాన్ని తొలగించాలనుకుంటున్నారా? "
-          rolled_up_some_subnets: "IP నిషేధిత ప్రవేశాలు ఈ సబ్‌నెట్స్‌కు విజయవంతంగా చేర్చారు: %{subnets}."
-          rolled_up_no_subnet: "రోల్ అప్ చేయుటకు ఏమీ లేదు."
           actions:
             block: "ఖండం"
             do_nothing: "అనుమతించు"
@@ -1781,7 +1768,6 @@ te:
         suspend_reason: "కారణం"
         suspended_by: "సస్పెండు చేసినవారు"
         silence_reason: "కారణం"
-        delete_all_posts: "అన్ని టపాలూ తొలగించు"
         moderator: "నిర్వాహకుడు?"
         admin: "అధికారి?"
         suspended: "సస్పెండయ్యాడా? "
@@ -1816,6 +1802,10 @@ te:
         approve_bulk_success: "విజయవంతం! ఎంచుకున్న వినియోగదారులందరినీ ఆమోదించారు మరియు ప్రకటన చేశారు."
         time_read: "చదువు సమయం"
         delete: "సభ్యుడిని తొలగించు"
+        delete_posts:
+          button: "అన్ని టపాలూ తొలగించు"
+          confirmation:
+            cancel: "రద్దుచేయి"
         merge:
           prompt:
             cancel: "రద్దుచేయి"
@@ -1844,6 +1834,7 @@ te:
         trust_level_unlocked_tip: "నమ్మకపు స్థాయి బంధింపబడలేదు, వ్యవస్థ వినియోగదారుని ప్రోత్సాహించవచ్చు లేదా స్థాయి తగ్గించవచ్చు"
         lock_trust_level: "నమ్మకపు స్థాయి ని బంధించు"
         unlock_trust_level: "నమ్మకపు స్థాయిని వదిలేయి"
+        suspended_count: "సస్పెడయ్యాడు"
         tl3_requirements:
           title: "నమ్మకపు స్థాయి 3 అవసరాలు"
           value_heading: "విలువ"

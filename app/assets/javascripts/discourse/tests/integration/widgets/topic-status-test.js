@@ -1,10 +1,8 @@
 import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
-import {
-  discourseModule,
-  queryAll,
-} from "discourse/tests/helpers/qunit-helpers";
+import { discourseModule, exists } from "discourse/tests/helpers/qunit-helpers";
+import { click } from "@ember/test-helpers";
 import TopicStatusIcons from "discourse/helpers/topic-status-icons";
 import hbs from "htmlbars-inline-precompile";
 
@@ -22,7 +20,7 @@ discourseModule(
         });
       },
       test(assert) {
-        assert.ok(queryAll(".topic-status .d-icon-lock").length);
+        assert.ok(exists(".topic-status .d-icon-lock"));
       },
     });
 
@@ -42,7 +40,42 @@ discourseModule(
         });
       },
       test(assert) {
-        assert.ok(queryAll(".topic-status .d-icon-far-check-square").length);
+        assert.ok(exists(".topic-status .d-icon-far-check-square"));
+      },
+    });
+
+    componentTest("toggling pin status", {
+      template: hbs`{{mount-widget widget="topic-status" args=args}}`,
+      beforeEach(store) {
+        this.set("args", {
+          topic: store.createRecord("topic", { closed: true, pinned: true }),
+        });
+      },
+      async test(assert) {
+        assert.ok(exists(".topic-statuses .pinned"), "pinned icon is shown");
+        assert.ok(
+          !exists(".topic-statuses .unpinned"),
+          "unpinned icon is not shown"
+        );
+
+        await click(".topic-statuses .pin-toggle-button");
+
+        assert.ok(
+          !exists(".topic-statuses .pinned"),
+          "pinned icon is not shown"
+        );
+        assert.ok(
+          exists(".topic-statuses .unpinned"),
+          "unpinned icon is shown"
+        );
+
+        await click(".topic-statuses .pin-toggle-button");
+
+        assert.ok(exists(".topic-statuses .pinned"), "pinned icon is shown");
+        assert.ok(
+          !exists(".topic-statuses .unpinned"),
+          "unpinned icon is not shown"
+        );
       },
     });
   }

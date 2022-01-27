@@ -7,7 +7,7 @@ export default RestModel.extend({
   canToggle: or("can_undo", "can_act"),
 
   // Remove it
-  removeAction: function () {
+  removeAction() {
     this.setProperties({
       acted: false,
       count: this.count - 1,

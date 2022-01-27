@@ -91,16 +91,16 @@ describe EmailCook do
     long = plaintext(<<~LONG_EMAIL)
       Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
-          this is indended by 4 spaces
-       this is indended by 1 space
+          this is intended by 4 spaces
+       this is intended by 1 space
       no indentation, but lots       of spaces
     LONG_EMAIL
 
     long_cooked = (+<<~LONG_COOKED).strip!
       Lorem ipsum dolor sit amet, consectetur adipiscing elit.
       <br>
-      <br>#{nbsp}#{nbsp}#{nbsp}#{nbsp}this is indended by 4 spaces
-      <br> this is indended by 1 space
+      <br>#{nbsp}#{nbsp}#{nbsp}#{nbsp}this is intended by 4 spaces
+      <br> this is intended by 1 space
       <br>no indentation, but lots       of spaces
       <br>
     LONG_COOKED

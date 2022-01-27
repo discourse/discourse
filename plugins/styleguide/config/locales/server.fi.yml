@@ -6,5 +6,5 @@
 
 fi:
   site_settings:
-    styleguide_enabled: "Ota käyttöön `/ styleguide` -polku, joka auttaa Discoursen tyylimuotoilussa"
+    styleguide_enabled: 'Ota käyttöön `/styleguide`-polku, joka auttaa Discoursen tyylimuotoilussa'
     styleguide_admin_only: "Rajoittaa tyylioppaan näkyvyyden ylläpitäjille"

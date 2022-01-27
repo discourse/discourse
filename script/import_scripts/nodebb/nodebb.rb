@@ -180,7 +180,7 @@ class ImportScripts::NodeBB < ImportScripts::Base
     if is_external
       # download external image
       begin
-        string_io = open(picture, read_timeout: 5)
+        string_io = uri.open(read_timeout: 5)
       rescue Net::ReadTimeout
         puts "timeout downloading avatar for user #{imported_user.id}"
         return nil
@@ -216,7 +216,7 @@ class ImportScripts::NodeBB < ImportScripts::Base
       filepath = File.join(ATTACHMENT_DIR, picture)
       filename = File.basename(picture)
 
-      unless File.exists?(filepath)
+      unless File.exist?(filepath)
         puts "Avatar file doesn't exist: #{filepath}"
         return nil
       end
@@ -246,7 +246,7 @@ class ImportScripts::NodeBB < ImportScripts::Base
 
     if is_external
       begin
-        string_io = open(picture, read_timeout: 5)
+        string_io = uri.open(read_timeout: 5)
       rescue Net::ReadTimeout
         return nil
       end
@@ -276,7 +276,7 @@ class ImportScripts::NodeBB < ImportScripts::Base
       filepath = File.join(ATTACHMENT_DIR, picture)
       filename = File.basename(picture)
 
-      unless File.exists?(filepath)
+      unless File.exist?(filepath)
         puts "Background file doesn't exist: #{filepath}"
         return nil
       end
@@ -481,7 +481,7 @@ class ImportScripts::NodeBB < ImportScripts::Base
 
         # if file exists
         # upload attachment and return html for it
-        if File.exists?(filepath)
+        if File.exist?(filepath)
           filename = File.basename(filepath)
           upload = create_upload(post.user_id, filepath, filename)
 

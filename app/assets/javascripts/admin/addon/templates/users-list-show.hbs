@@ -16,21 +16,21 @@
 </div>
 
 <div class="username controls">
-  {{text-field value=listFilter placeholder=searchHint}}
+  {{text-field value=listFilter placeholder=searchHint title=searchHint}}
 </div>
 
-{{#load-more selector=".users-list tr" action=(action "loadMore")}}
+{{#load-more class="users-list-container" selector=".users-list tr" action=(action "loadMore")}}
   {{#if model}}
     <table class="table users-list grid">
       <thead>
-        {{table-header-toggle field="username" labelKey="username" order=order asc=asc}}
-        {{table-header-toggle field="email" labelKey="email" order=order asc=asc}}
-        {{table-header-toggle field="last_emailed" labelKey="admin.users.last_emailed" order=order asc=asc}}
-        {{table-header-toggle field="seen" labelKey="last_seen" order=order asc=asc}}
-        {{table-header-toggle field="topics_viewed" labelKey="admin.user.topics_entered" order=order asc=asc}}
-        {{table-header-toggle field="posts_read" labelKey="admin.user.posts_read_count" order=order asc=asc}}
-        {{table-header-toggle field="read_time" labelKey="admin.user.time_read" order=order asc=asc}}
-        {{table-header-toggle field="created" labelKey="created" order=order asc=asc}}
+        {{table-header-toggle field="username" labelKey="username" order=order asc=asc automatic=true}}
+        {{table-header-toggle  class=(if showEmails "" "hidden") field="email" labelKey="email" order=order asc=asc automatic=true}}
+        {{table-header-toggle field="last_emailed" labelKey="admin.users.last_emailed" order=order asc=asc automatic=true}}
+        {{table-header-toggle field="seen" labelKey="last_seen" order=order asc=asc automatic=true}}
+        {{table-header-toggle field="topics_viewed" labelKey="admin.user.topics_entered" order=order asc=asc automatic=true}}
+        {{table-header-toggle field="posts_read" labelKey="admin.user.posts_read_count" order=order asc=asc automatic=true}}
+        {{table-header-toggle field="read_time" labelKey="admin.user.time_read" order=order asc=asc automatic=true}}
+        {{table-header-toggle field="created" labelKey="created" order=order asc=asc automatic=true}}
         {{#if siteSettings.must_approve_users}}
           <th>{{i18n "admin.users.approved"}}</th>
         {{/if}}
@@ -48,14 +48,23 @@
                 {{d-icon "far-envelope" title="user.staged" }}
               {{/if}}
             </td>
-            <td class="email">
+            <td class="email {{if showEmails "" "hidden"}}">
               {{~user.email~}}
             </td>
-            <td class="last-emailed">
-              <div class="label">{{i18n "admin.users.last_emailed"}}</div>
-              <div>{{format-duration user.last_emailed_age}}</div>
-            </td>
-            <td class="last-seen">
+
+            {{#if user.last_emailed_at}}
+              <td class="last-emailed" title={{raw-date user.last_emailed_at}}>
+                <div class="label">{{i18n "admin.users.last_emailed"}}</div>
+                <div>{{format-duration user.last_emailed_age}}</div>
+              </td>
+            {{else}}
+              <td class="last-emailed">
+                <div class="label">{{i18n "admin.users.last_emailed"}}</div>
+                <div>{{format-duration user.last_emailed_age}}</div>
+              </td>
+            {{/if}}
+
+            <td class="last-seen" title={{raw-date user.last_seen_at}}>
               <div class="label">{{i18n "last_seen"}}</div>
               <div>{{format-duration user.last_seen_age}}</div>
             </td>
@@ -72,7 +81,7 @@
               <div>{{format-duration user.time_read}}</div>
             </td>
 
-            <td class="created">
+            <td class="created" title={{raw-date user.created_at}}>
               <div class="label">{{i18n "created"}}</div>
               <div>{{format-duration user.created_at_age}}</div>
             </td>
@@ -91,14 +100,13 @@
               {{#if user.second_factor_enabled}}
                 {{d-icon "lock" title="admin.user.second_factor_enabled" }}
               {{/if}}
-              {{plugin-outlet name="admin-users-list-icon" tagName="" args=(hash user=user query=query)}}
+              {{plugin-outlet name="admin-users-list-icon" connectorTagName="div" args=(hash user=user query=query)}}
             </td>
           </tr>
         {{/each}}
       </tbody>
     </table>
     {{conditional-loading-spinner condition=refreshing}}
-
   {{else}}
     <p>{{i18n "search.no_results"}}</p>
   {{/if}}

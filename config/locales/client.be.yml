@@ -95,7 +95,6 @@ be:
     submit: "Адправіць"
     generic_error: "Выбачайце, здарылася памылка."
     generic_error_with_reason: "Паўстала памылка: %{error}"
-    go_ahead: "Далей"
     sign_up: "Рэгістрацыя"
     log_in: "Увайсці"
     age: "Узрост"
@@ -117,12 +116,10 @@ be:
     rules: "Правілы"
     mobile_view: "Выгляд для мабільнага"
     desktop_view: "Выгляд для настольнага кампутара"
-    you: "Вы"
     or: "або"
     now: "толькі што"
     read_more: "чытаць далей"
     more: "больш"
-    less: "меньш"
     never: "ніколі"
     every_30_minutes: "кожныя 30 хвілін"
     every_hour: "кожную гадзіну"
@@ -131,7 +128,6 @@ be:
     every_month: "кожны месяц"
     every_six_months: "кожныя паўгады"
     max_of_count: "Не больш за %{count}"
-    alternation: "або"
     character_count:
       one: "%{Count} сімвал"
       few: "%{Count} сімвалы"
@@ -173,6 +169,7 @@ be:
         never: "ніколі"
       search: "Пошук"
     drafts:
+      label: "Чарнавікі"
       remove: "выдаліць"
     preview: "папярэдні прагляд"
     cancel: "адмена"
@@ -290,6 +287,10 @@ be:
         few: " %{Count} карыстальнікі"
         many: " %{Count} карыстальнікаў"
         other: " %{Count} карыстальнікаў"
+      edit_columns:
+        save: "Захаваць"
+      group:
+        all: "усе групы"
     group_histories:
       actions:
         change_group_setting: "Змяніць наладкі групы"
@@ -302,7 +303,6 @@ be:
       manage:
         name: "Імя"
         full_name: "поўнае Імя"
-        add_members: "Дадаць удзельнікаў"
         delete_member_confirm: "Выдаліць '%{username}' з групы '%{group}'?"
         profile:
           title: Профіль
@@ -310,13 +310,14 @@ be:
           posting: апублікаванне
         email:
           title: "Электронная пошта"
+          last_updated_by: "ад"
           credentials:
             username: "Імя карыстальніка"
             password: "Пароль"
           settings:
             title: "Налады"
           mailboxes:
-            disabled: "адключана"
+            disabled: "Адключана"
         membership:
           access: доступ
         categories:
@@ -377,6 +378,8 @@ be:
           title: "Cачыць"
         muted:
           title: "ігнараваць"
+      default_notifications:
+        modal_yes: "Так"
     user_action_groups:
       "1": "упадабаныя"
       "2": "атрыманыя перавагі"
@@ -402,7 +405,6 @@ be:
       posts: "Паведамленні"
       topics: "Тэмы"
       latest: "Апошнія"
-      toggle_ordering: "паказаць"
       subcategories: "Падкатэгорыі"
       topic_stat_unit:
         week: "тыдзень"
@@ -477,14 +479,15 @@ be:
       api_approved: "Адобрана:"
       theme: "тэма"
       messages:
-        all: "усе"
         inbox: "ўваходныя"
+        latest: "Апошнія"
         sent: "адпраўлена"
+        unread: "Непрачытаныя"
+        new: "Новая"
         archive: "архіў"
         groups: "Мае Групы"
         move_to_inbox: "Перамясціць у тэчцы Уваходныя"
         move_to_archive: "архіў"
-        select_all: "выбраць усе"
         tags: "Тэгі"
       preferences_nav:
         account: "Аккаўнт"
@@ -568,7 +571,6 @@ be:
         details: "дэталі"
         log_out_all: "Выйсці паўсюль"
       last_posted: "Апошняе паведамленне"
-      last_emailed: "Апошні электронны ліст"
       last_seen: "заўважаны апошні раз"
       created: "Далучыўся (лася)"
       log_out: "Выйсці"
@@ -794,6 +796,7 @@ be:
     conditional_loading_section:
       loading: Загрузка ...
     select_kit:
+      delete_item: "Выдаліць %{name}"
       filter_placeholder_with_any: Знайсці альбо стварыць...
     date_time_picker:
       from: ад
@@ -817,7 +820,6 @@ be:
       cancel: "Адмяніць"
       create_topic: "Стварыць Тэму"
       create_pm: "паведамленне"
-      title: "Or press Ctrl Enter"
       users_placeholder: "дадаць карыстальніка"
       title_placeholder: "Пра што гэта абмеркаванне, у адным кароткім сказе?"
       title_or_link_placeholder: "Увядзіце загаловак, альбо ўстаўце спасылку тут"
@@ -861,6 +863,8 @@ be:
           label: "Стварыць новую тэму"
       ignore: "ігнараваць"
     notifications:
+      dismiss_confirmation:
+        cancel: "Адмяніць"
       popup:
         mentioned: '% {Імя карыстальніка} згадаў вас у "% {} тэме" -% {SITE_TITLE}'
         group_mentioned: '% {Імя карыстальніка} згадаў вас у "% {} тэме" -% {SITE_TITLE}'
@@ -875,10 +879,6 @@ be:
       titles:
         watching_first_post: "новая тэма"
     upload_selector:
-      title: "дадаць малюнак"
-      title_with_attachments: "Дадаць малюнак або файл"
-      from_my_computer: "З майго прылады"
-      from_the_web: "з інтэрнэту"
       uploading: "загрузка"
       select_file: "выбраць файл"
       default_image_alt_text: малюнак
@@ -886,17 +886,21 @@ be:
       sort_by: "сартаваць па"
       latest_post: "апошняе паведамленне"
       select_all: "выбраць усе"
-      title: "пошук тэмаў, пастоў, юзераў альбо катэгорыяў"
-      full_page_title: "пошук тэмаў альбо пастоў"
+      title: "Пошук"
+      full_page_title: "Пошук"
       no_results: "Нічога не знойдзена."
       results_page: "Вынікі пошуку для '%{term}'"
       search_google_button: "Google"
       search_button: "Пошук"
+      categories: "Катэгорыі"
+      tags: "Цэтлікі"
+      type:
+        users: "Карыстальнікі"
+        categories: "Катэгорыі"
       context:
         topic: "Пошук у гэтай тэме"
         private_messages: "Пошук паведамленняў"
       advanced:
-        title: пашыраны пошук
         posted_by:
           label: апублікавана
         in_group:
@@ -909,7 +913,6 @@ be:
             after: пасля
         views:
           label: прагляды
-    hamburger_menu: "перайсці да іншага пераліку або катэгорыі тым"
     new_item: "новы"
     go_back: "вярнуцца назад"
     not_logged_in_user: "старонка карыстальніка з вынікам бягучай дзейнасці і наладамі"
@@ -927,7 +930,6 @@ be:
         close_topics: "Закрыць тэму"
         archive_topics: "Заархіваваныя тэмы"
         move_messages_to_inbox: "Перамясціць у тэчцы Уваходныя"
-        notification_level: "Натыфікацыі"
       none:
         unread: "У вас няма непрачытаных тэм."
         new: "У вас няма новых тэм."
@@ -972,7 +974,6 @@ be:
       back_to_list: "Вярнуцца да спісу тым"
       options: "Налады тэмы"
       show_links: "паказаць спасылкі ў гэтай тэме"
-      toggle_information: "паказаць"
       read_more_in_category: "Хочаце пачытаць яшчэ? Глядзіце іншыя тэмы ў %{catLink} або %{latestLink}."
       read_more: "Хочаце пачытаць яшчэ? %{CatLink} або %{latestLink}."
       browse_all_categories: Паглядзець усе катэгорыі
@@ -981,7 +982,7 @@ be:
       jump_reply_down: перайсці да больш позняй адказы
       deleted: "Тэма была выдаленая"
       slow_mode_update:
-        save: "Уключыць"
+        enable: "Уключыць"
         remove: "Адключыць"
       topic_status_update:
         when: "калі:"
@@ -995,13 +996,7 @@ be:
         back: "Назад"
       progress:
         title: прасоўванне па тэме
-        go_top: "топ"
-        go_bottom: "кнопка"
-        jump_bottom: "перайсці да апошняга паведамлення"
-        jump_bottom_with_number: "перайсці да паведамлення %{post_number}"
         jump_prompt_or: "або"
-        total: усяго паведамленняў
-        current: бягучы паведамленне
       notifications:
         reasons:
           "3_6": "Вы будзеце атрымліваць апавяшчэнні, таму што вы сочыце за гэтай катэгорыяй."
@@ -1045,13 +1040,9 @@ be:
       feature:
         pin: "Замацаваць тэму"
         unpin: "Адмацаваць тэму"
-        make_banner: "Тэма-баннер"
       reply:
         title: "Адказаць"
         help: "пачаць складаць адказ на гэтую тэму"
-      clear_pin:
-        title: "распушчае мацаваньне"
-        help: "Адмяніць замацаванне гэтай тэмы, каб яна больш не з'яўлялася ў пачатку Вашага пераліку тэм"
       share:
         title: "Падзяліцца тэмай"
         help: "Распаўсюдзіць спасылку на гэтую тэму"
@@ -1090,17 +1081,15 @@ be:
         title: "Змяніць метку часу"
         action: "змяніць метку часу"
     post:
+      quote_edit: "Рэдагаваць"
       quote_share: "Падзяліцца тэмай"
       errors:
         upload: "Выбачайце, пры загрузцы гэтага файла адбылася памылка. Калі ласка, паспрабуйце яшчэ раз."
         upload_not_authorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."
-      archetypes:
-        save: "Захаваць налады"
       controls:
         like: "упадабаць гэты пост"
         edit_action: "Рэдагаваць"
         more: "Болей"
-        grant_badge: "даць Значок"
         delete_topic: "выдаліць тэму"
       actions:
         people:
@@ -1127,8 +1116,8 @@ be:
       bookmarks:
         created: "створаны"
         name: "Імя"
+        options: "Налады"
     category:
-      can: "можа&hellip;"
       none: "(па-за катэгорыямі)"
       all: "Усе катэгорыі"
       choose: "Абраць"
@@ -1145,7 +1134,6 @@ be:
       save_error: У выпадку захавання катэгорыі адбылася памылка.
       name: "Назва катэгорыі"
       description: "апісанне"
-      topic: "тэма катэгорыі"
       badge_colors: "колеру значка"
       background_color: "колер фону"
       foreground_color: "колер тэксту"
@@ -1212,6 +1200,8 @@ be:
       pinned:
         title: "замацаваныя"
     posts: "паведамленні"
+    pending_posts:
+      label: "чакаецца"
     original_post: "першы паведамленне"
     views: "прагляды"
     replies: "адказы"
@@ -1318,10 +1308,13 @@ be:
           name: іншае
         posting:
           name: апублікаванне
+    download_calendar:
+      download: "спампаваць"
     tagging:
       tags: "тэгі"
       choose_for_topic: "дадатковыя тэгі"
       add_synonyms: "дадаць"
+      description: "апісанне"
       sort_by: "Сартаваць па:"
       sort_by_count: "падлічваць"
       sort_by_name: "Імя"
@@ -1337,6 +1330,7 @@ be:
           title: "ігнараваць"
       groups:
         new: "Новая група"
+        name_placeholder: "Імя"
         save: "Захаваць"
         delete: "выдаліць"
       topics:
@@ -1350,6 +1344,17 @@ be:
     footer_nav:
       back: "Назад"
       share: "Падзяліцца"
+    trust_levels:
+      names:
+        newuser: "новы карыстальнік"
+        basic: "асноўны карыстальнік"
+        member: "член"
+        regular: "рэгулярны"
+        leader: "лідэр"
+    user_activity:
+      no_activity_others: "Няма актыўнасці."
+      no_replies_others: "Няма адказаў."
+      no_likes_others: "Не спадабалася паведамленні."
   admin_js:
     admin:
       moderator: "Мадэратар"
@@ -1409,9 +1414,6 @@ be:
               label: Група
             category:
               label: катэгорыя
-      commits:
-        latest_changes: "Апошнія змены: абнаўленне Вашу копію часта!"
-        by: "ад"
       groups:
         new:
           title: "Новая група"
@@ -1560,8 +1562,8 @@ be:
           add: "Дадаць"
           header:
             text: "Header"
-          head_tag:
-            text: "<"
+          body_tag:
+            text: "цела"
         colors:
           title: "<......"
           copy_name_prefix: "капіяваць з"
@@ -1753,7 +1755,7 @@ be:
         suspend_reason: "прычына"
         silence_reason: "прычына"
         silence_modal_title: "Silence Карыстальнік"
-        delete_all_posts: "прычына..."
+        post_edits: "паведамленне рэдагуе"
         silenced: "глушыцелем?"
         moderator: "Мадэратар?"
         admin: "Адмін?"
@@ -1786,9 +1788,14 @@ be:
         approve_success: "Карыстальнік адобраны і яму адпраўлен ліст з інструкцыямі для актывацыі."
         approve_bulk_success: "Поспех! Ўсіх выбраных карыстальнікаў было прынята і паведамлена пра гэта."
         time_read: "час чытання"
+        post_edits_count: "паведамленне рэдагуе"
         anonymize: "ананімны карыстальнік"
         anonymize_yes: "Так, схаваць гэты рахунак"
         delete: "выдаліць карыстальніка"
+        delete_posts:
+          button: "прычына..."
+          confirmation:
+            cancel: "Адмяніць"
         merge:
           prompt:
             cancel: "адмяніць"
@@ -1813,6 +1820,8 @@ be:
         suspend_modal_title: "прыпыніць карыстальніка"
         trust_level_2_users: "Карыстальнікі з Узроўнем даверу 2"
         trust_level_3_requirements: "Патрабаванні для Узроўня даверу 3"
+        silenced_count: "глушыцелем"
+        suspended_count: "падвешаны"
         tl3_requirements:
           title: "Патрабаванні для Узроўня даверу 3"
           table_title:

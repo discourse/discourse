@@ -69,6 +69,12 @@ describe ApplicationHelper do
 
         expect(link).to eq(preload_link("https://s3cdn.com/assets/application.js"))
       end
+
+      it "gives s3 cdn but without brotli/gzip extensions for theme tests assets" do
+        helper.request.env["HTTP_ACCEPT_ENCODING"] = 'gzip, br'
+        link = helper.preload_script('discourse/tests/theme_qunit_ember_jquery')
+        expect(link).to eq(preload_link("https://s3cdn.com/assets/discourse/tests/theme_qunit_ember_jquery.js"))
+      end
     end
   end
 
@@ -89,7 +95,7 @@ describe ApplicationHelper do
           user_id: -1,
           color_scheme_id: ColorScheme.find_by(base_scheme_id: "Dark").id
         )
-        helper.request.env[:resolved_theme_ids] = [dark_theme.id]
+        helper.request.env[:resolved_theme_id] = dark_theme.id
       end
       context "on desktop" do
         before do
@@ -126,6 +132,59 @@ describe ApplicationHelper do
             expect(helper.application_logo_url).to eq(SiteSetting.site_mobile_logo_dark_url)
           end
         end
+      end
+    end
+  end
+
+  describe "application_logo_dark_url" do
+    context "when dark theme is not present" do
+      context "when dark logo is not present" do
+        it "should return nothing" do
+          expect(helper.application_logo_dark_url.present?).to eq(false)
+        end
+      end
+    end
+
+    context "when dark theme is present" do
+      before do
+        dark_theme = Theme.create(
+          name: "Dark",
+          user_id: -1,
+          color_scheme_id: ColorScheme.find_by(base_scheme_id: "Dark").id
+        )
+      end
+
+      context "when dark logo is not present" do
+        it "should return nothing" do
+          expect(helper.application_logo_dark_url.present?).to eq(false)
+        end
+      end
+
+      context "when dark logo is present" do
+        before do
+          SiteSetting.logo_dark = Fabricate(:upload, url: '/images/logo-dark.png')
+        end
+
+        it "should return correct url" do
+          expect(helper.application_logo_dark_url).to eq(SiteSetting.site_logo_dark_url)
+        end
+      end
+    end
+
+    context "when dark theme is present and selected" do
+      before do
+        dark_theme = Theme.create(
+          name: "Dark",
+          user_id: -1,
+          color_scheme_id: ColorScheme.find_by(base_scheme_id: "Dark").id
+        )
+        helper.request.env[:resolved_theme_id] = dark_theme.id
+        SiteSetting.logo_dark = Fabricate(:upload, url: '/images/logo-dark.png')
+      end
+
+      it "should return nothing" do
+        expect(helper.application_logo_url).to eq(SiteSetting.site_logo_dark_url)
+        expect(helper.application_logo_dark_url.present?).to eq(false)
       end
     end
   end
@@ -406,7 +465,7 @@ describe ApplicationHelper do
     end
 
     it 'returns two color scheme link tags when dark mode is enabled' do
-      SiteSetting.default_dark_mode_color_scheme_id = ColorScheme.where(name: "Dark").pluck(:id).first
+      SiteSetting.default_dark_mode_color_scheme_id = ColorScheme.where(name: "Dark").pluck_first(:id)
       cs_stylesheets = helper.discourse_color_scheme_stylesheets
 
       expect(cs_stylesheets).to include("(prefers-color-scheme: dark)")
@@ -462,7 +521,7 @@ describe ApplicationHelper do
         helper.request.env[Auth::DefaultCurrentUserProvider::CURRENT_USER_KEY] = user
         @new_cs = Fabricate(:color_scheme, name: 'Custom Color Scheme')
 
-        SiteSetting.default_dark_mode_color_scheme_id = ColorScheme.where(name: "Dark").pluck(:id).first
+        SiteSetting.default_dark_mode_color_scheme_id = ColorScheme.where(name: "Dark").pluck_first(:id)
       end
 
       it "returns no dark scheme stylesheet when user has disabled that option" do
@@ -509,7 +568,7 @@ describe ApplicationHelper do
         user_id: -1,
         color_scheme_id: ColorScheme.find_by(base_scheme_id: "Dark").id
       )
-      helper.request.env[:resolved_theme_ids] = [dark_theme.id]
+      helper.request.env[:resolved_theme_id] = dark_theme.id
 
       expect(helper.dark_color_scheme?).to eq(true)
     end

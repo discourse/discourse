@@ -61,25 +61,4 @@ describe SiteSettings::LocalProcessProvider do
   it "returns the correct site name" do
     expect(provider.current_site).to eq("default")
   end
-
-  describe "multisite", type: :multisite do
-    it "loads the correct settings" do
-      test_multisite_connection("default") { provider.save("test", "bla-default", 2) }
-      test_multisite_connection("second") { provider.save("test", "bla-second", 2) }
-
-      test_multisite_connection("default") do
-        expect_same_setting(provider.find("test"), setting("test", "bla-default", 2))
-      end
-
-      test_multisite_connection("second") do
-        expect_same_setting(provider.find("test"), setting("test", "bla-second", 2))
-      end
-    end
-
-    it "returns the correct site name" do
-      test_multisite_connection("second") do
-        expect(provider.current_site).to eq("second")
-      end
-    end
-  end
 end

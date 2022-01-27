@@ -1,4 +1,5 @@
-import AppEvents from "discourse/services/app-events";
+import EmberObject from "@ember/object";
+import Evented from "@ember/object/evented";
 import { isTesting } from "discourse-common/config/environment";
 
 let _skipUpdate;
@@ -16,84 +17,68 @@ export function configureEyeline(opts) {
 
 configureEyeline();
 
-//  Track visible elements on the screen.
-const Eyeline = function Eyeline(selector) {
-  this.selector = selector;
-  this.appEvents = AppEvents.create();
-};
-
-Eyeline.prototype.on = function (name, cb) {
-  this.appEvents.on(name, cb);
-};
-
-Eyeline.prototype.off = function (name, cb) {
-  this.appEvents.off(name, cb);
-};
-
-Eyeline.prototype.update = function () {
-  if (_skipUpdate) {
-    return;
-  }
-
-  const docViewTop = _rootElement
-    ? $(_rootElement).scrollTop()
-    : $(window).scrollTop();
-  const windowHeight = _rootElement
-    ? $(_rootElement).height()
-    : $(window).height();
-  const docViewBottom = docViewTop + windowHeight;
-  const $elements = $(this.selector);
-  const bottomOffset = _rootElement
-    ? $elements.last().position()
-    : $elements.last().offset();
-
-  let atBottom = false;
-  if (bottomOffset) {
-    atBottom =
-      bottomOffset.top <= docViewBottom && bottomOffset.top >= docViewTop;
-  }
-
-  let { appEvents } = this;
-  return $elements.each((i, elem) => {
-    const $elem = $(elem),
-      elemTop = _rootElement ? $elem.position().top : $elem.offset().top,
-      elemBottom = elemTop + $elem.height();
-
-    let markSeen = false;
-
-    // Make sure the element is visible
-    if (!$elem.is(":visible")) {
-      return true;
+// Track visible elements on the screen.
+export default EmberObject.extend(Evented, {
+  update() {
+    if (_skipUpdate) {
+      return;
     }
 
-    // It's seen if...
-    // ...the element is vertically within the top and botom
-    if (elemTop <= docViewBottom && elemTop >= docViewTop) {
-      markSeen = true;
-    }
+    const docViewTop = _rootElement
+      ? $(_rootElement).scrollTop()
+      : $(window).scrollTop();
+    const windowHeight = _rootElement
+      ? $(_rootElement).height()
+      : $(window).height();
+    const docViewBottom = docViewTop + windowHeight;
+    const $elements = $(this.selector);
+    const bottomOffset = _rootElement
+      ? $elements.last().position()
+      : $elements.last().offset();
+    const atBottom =
+      bottomOffset &&
+      bottomOffset.top <= docViewBottom &&
+      bottomOffset.top >= docViewTop;
 
-    // ...the element top is above the top and the bottom is below the bottom (large elements)
-    if (elemTop <= docViewTop && elemBottom >= docViewBottom) {
-      markSeen = true;
-    }
+    return $elements.each((i, elem) => {
+      const $elem = $(elem);
+      const elemTop = _rootElement ? $elem.position().top : $elem.offset().top;
+      const elemBottom = elemTop + $elem.height();
+      let markSeen = false;
 
-    // ...we're at the bottom and the bottom of the element is visible (large bottom elements)
-    if (atBottom && elemBottom >= docViewTop) {
-      markSeen = true;
-    }
+      // Make sure the element is visible
+      if (!$elem.is(":visible")) {
+        return true;
+      }
 
-    if (!markSeen) {
-      return true;
-    }
+      // It's seen if...
+      // ...the element is vertically within the top and bottom
+      if (elemTop <= docViewBottom && elemTop >= docViewTop) {
+        markSeen = true;
+      }
 
-    // If you hit the bottom we mark all the elements as seen. Otherwise, just the first one
-    if (!atBottom) {
-      return false;
-    }
-    if (i === $elements.length - 1) {
-      return appEvents.trigger("sawBottom", { detail: $elem });
-    }
-  });
-};
+      // ...the element top is above the top and the bottom is below the bottom (large elements)
+      if (elemTop <= docViewTop && elemBottom >= docViewBottom) {
+        markSeen = true;
+      }
 
-export default Eyeline;
+      // ...we're at the bottom and the bottom of the element is visible (large bottom elements)
+      if (atBottom && elemBottom >= docViewTop) {
+        markSeen = true;
+      }
+
+      if (!markSeen) {
+        return true;
+      }
+
+      // If you hit the bottom we mark all the elements as seen. Otherwise, just the first one
+      if (!atBottom) {
+        return false;
+      }
+
+      if (i === $elements.length - 1) {
+        return this.trigger("sawBottom", { detail: $elem });
+      }
+    });
+  },
+});

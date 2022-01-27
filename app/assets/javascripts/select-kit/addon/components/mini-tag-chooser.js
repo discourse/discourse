@@ -1,15 +1,12 @@
 import { empty, or } from "@ember/object/computed";
-import ComboBox from "select-kit/components/combo-box";
-import { ERRORS_COLLECTION } from "select-kit/components/select-kit";
+import MultiSelectComponent from "select-kit/components/multi-select";
 import I18n from "I18n";
 import TagsMixin from "select-kit/mixins/tags";
 import { computed } from "@ember/object";
 import { makeArray } from "discourse-common/lib/helpers";
-
-const SELECTED_TAGS_COLLECTION = "MINI_TAG_CHOOSER_SELECTED_TAGS";
 import { setting } from "discourse/lib/computed";
 
-export default ComboBox.extend(TagsMixin, {
+export default MultiSelectComponent.extend(TagsMixin, {
   pluginApiIdentifiers: ["mini-tag-chooser"],
   attributeBindings: ["selectKit.options.categoryId:category-id"],
   classNames: ["mini-tag-chooser"],
@@ -17,20 +14,8 @@ export default ComboBox.extend(TagsMixin, {
   noTags: empty("value"),
   maxTagSearchResults: setting("max_tag_search_results"),
   maxTagsPerTopic: setting("max_tags_per_topic"),
-  highlightedTag: null,
-  singleSelect: false,
-
-  collections: computed(
-    "mainCollection.[]",
-    "errorsCollection.[]",
-    "highlightedTag",
-    function () {
-      return this._super(...arguments);
-    }
-  ),
 
   selectKitOptions: {
-    headerComponent: "mini-tag-chooser/mini-tag-chooser-header",
     fullWidthOnMobile: true,
     filterable: true,
     caretDownIcon: "caretIcon",
@@ -38,9 +23,8 @@ export default ComboBox.extend(TagsMixin, {
     termMatchesForbidden: false,
     categoryId: null,
     everyTag: false,
-    none: "tagging.choose_for_topic",
     closeOnChange: false,
-    maximum: "maximumSelectedTags",
+    maximum: "maxTagsPerTopic",
     autoInsertNoneItem: false,
   },
 
@@ -52,81 +36,31 @@ export default ComboBox.extend(TagsMixin, {
     return "tag-row";
   },
 
-  modifyComponentForCollection(collection) {
-    if (collection === SELECTED_TAGS_COLLECTION) {
-      return "mini-tag-chooser/selected-collection";
-    }
-  },
-
-  modifyContentForCollection(collection) {
-    if (collection === SELECTED_TAGS_COLLECTION) {
-      return {
-        selectedTags: this.value,
-        highlightedTag: this.highlightedTag,
-      };
+  modifyNoSelection() {
+    if (this.selectKit.options.minimum > 0) {
+      return this.defaultItem(
+        null,
+        I18n.t("tagging.choose_for_topic_required", {
+          count: this.selectKit.options.minimum,
+        })
+      );
+    } else {
+      return this.defaultItem(null, I18n.t("tagging.choose_for_topic"));
     }
   },
 
   allowAnyTag: or("allowCreate", "site.can_create_tag"),
 
-  maximumSelectedTags: computed(function () {
-    return parseInt(
-      this.options.limit ||
-        this.selectKit.options.maximum ||
-        this.maxTagsPerTopic,
-      10
-    );
-  }),
-
-  modifyNoSelection() {
-    if (
-      this.selectKit.options.minimum ||
-      this.selectKit.options.requiredTagGroups
-    ) {
-      const minimum = parseInt(this.selectKit.options.minimum, 10);
-      if (minimum > 0) {
-        return this.defaultItem(
-          null,
-          I18n.t("select_kit.min_content_not_reached", { count: minimum })
-        );
-      }
-    }
-
-    return this._super(...arguments);
-  },
-
-  init() {
-    this._super(...arguments);
-
-    this.insertAfterCollection(ERRORS_COLLECTION, SELECTED_TAGS_COLLECTION);
-  },
-
-  caretIcon: computed("value.[]", function () {
+  caretIcon: computed("value.[]", "content.[]", function () {
     const maximum = this.selectKit.options.maximum;
     return maximum && makeArray(this.value).length >= parseInt(maximum, 10)
       ? null
       : "plus";
   }),
 
-  modifySelection(content) {
-    const minimum = this.selectKit.options.minimum;
-    if (minimum && makeArray(this.value).length < parseInt(minimum, 10)) {
-      const key =
-        this.selectKit.options.minimumLabel ||
-        "select_kit.min_content_not_reached";
-      const label = I18n.t(key, { count: this.selectKit.options.minimum });
-      content.title = content.name = content.label = label;
-    } else {
-      content.name = content.value = makeArray(this.value).join(",");
-      content.title = content.label = makeArray(this.value).join(", ");
-
-      if (content.label.length > 32) {
-        content.label = `${content.label.slice(0, 32)}...`;
-      }
-    }
-
-    return content;
-  },
+  content: computed("value.[]", function () {
+    return makeArray(this.value).map((x) => this.defaultItem(x, x));
+  }),
 
   search(filter) {
     const data = {
@@ -147,6 +81,10 @@ export default ComboBox.extend(TagsMixin, {
   },
 
   _transformJson(context, json) {
+    if (context.isDestroyed || context.isDestroying) {
+      return [];
+    }
+
     let results = json.results;
 
     context.setProperties({
@@ -158,79 +96,6 @@ export default ComboBox.extend(TagsMixin, {
       results = results.sort((a, b) => a.text.localeCompare(b.text));
     }
 
-    results = results
-      .filter((r) => !makeArray(context.tags).includes(r.id))
-      .map((result) => {
-        return { id: result.text, name: result.text, count: result.count };
-      });
-
-    return results;
-  },
-
-  select(value) {
-    this._reset();
-
-    if (!this.validateSelect(value)) {
-      return;
-    }
-
-    const tags = [...new Set(makeArray(this.value).concat(value))];
-    this.selectKit.change(tags, tags);
-  },
-
-  deselect(value) {
-    this._reset();
-
-    const tags = [...new Set(makeArray(this.value).removeObject(value))];
-    this.selectKit.change(tags, tags);
-  },
-
-  _reset() {
-    this.clearErrors();
-    this.set("highlightedTag", null);
-  },
-
-  _onKeydown(event) {
-    const value = makeArray(this.value);
-
-    if (event.keyCode === 8) {
-      if (!this.selectKit.filter) {
-        this._onBackspace(this.value, this.highlightedTag);
-      }
-    } else if (event.keyCode === 37) {
-      if (this.highlightedTag) {
-        const index = value.indexOf(this.highlightedTag);
-        const highlightedTag = value[index - 1]
-          ? value[index - 1]
-          : value.lastObject;
-        this.set("highlightedTag", highlightedTag);
-      } else {
-        this.set("highlightedTag", value.lastObject);
-      }
-    } else if (event.keyCode === 39) {
-      if (this.highlightedTag) {
-        const index = value.indexOf(this.highlightedTag);
-        const highlightedTag = value[index + 1]
-          ? value[index + 1]
-          : value.firstObject;
-        this.set("highlightedTag", highlightedTag);
-      } else {
-        this.set("highlightedTag", value.firstObject);
-      }
-    } else {
-      this.set("highlightedTag", null);
-    }
-
-    return true;
-  },
-
-  _onBackspace(value, highlightedTag) {
-    if (value && value.length) {
-      if (!highlightedTag) {
-        this.set("highlightedTag", value.lastObject);
-      } else {
-        this.deselect(highlightedTag);
-      }
-    }
+    return results.filter((r) => !makeArray(context.tags).includes(r.id));
   },
 });

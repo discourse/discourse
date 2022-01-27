@@ -4,11 +4,12 @@ import { Promise } from "rsvp";
 import Topic from "discourse/models/topic";
 import User from "discourse/models/user";
 import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse-common/utils/decorators";
 
 const UserBadge = EmberObject.extend({
   @discourseComputed
-  postUrl: function () {
+  postUrl() {
     if (this.topic_title) {
       return "/t/-/" + this.topic_id + "/" + this.post_number;
     }
@@ -19,10 +20,21 @@ const UserBadge = EmberObject.extend({
       type: "DELETE",
     });
   },
+
+  favorite() {
+    this.toggleProperty("is_favorite");
+    return ajax(`/user_badges/${this.id}/toggle_favorite`, {
+      type: "PUT",
+    }).catch((e) => {
+      // something went wrong, switch the UI back:
+      this.toggleProperty("is_favorite");
+      popupAjaxError(e);
+    });
+  },
 });
 
 UserBadge.reopenClass({
-  createFromJson: function (json) {
+  createFromJson(json) {
     // Create User objects.
     if (json.users === undefined) {
       json.users = [];
@@ -98,7 +110,7 @@ UserBadge.reopenClass({
     @param {Object} options
     @returns {Promise} a promise that resolves to an array of `UserBadge`.
   **/
-  findByUsername: function (username, options) {
+  findByUsername(username, options) {
     if (!username) {
       return Promise.resolve([]);
     }
@@ -118,7 +130,7 @@ UserBadge.reopenClass({
     @param {String} badgeId
     @returns {Promise} a promise that resolves to an array of `UserBadge`.
   **/
-  findByBadgeId: function (badgeId, options) {
+  findByBadgeId(badgeId, options) {
     if (!options) {
       options = {};
     }
@@ -139,13 +151,13 @@ UserBadge.reopenClass({
     @param {String} username username of the user to be granted the badge.
     @returns {Promise} a promise that resolves to an instance of `UserBadge`.
   **/
-  grant: function (badgeId, username, reason) {
+  grant(badgeId, username, reason) {
     return ajax("/user_badges", {
       type: "POST",
       data: {
-        username: username,
+        username,
         badge_id: badgeId,
-        reason: reason,
+        reason,
       },
     }).then(function (json) {
       return UserBadge.createFromJson(json);

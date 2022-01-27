@@ -12,18 +12,18 @@ acceptance("Groups", function () {
   test("Browsing Groups", async function (assert) {
     await visit("/g?username=eviltrout");
 
-    assert.equal(count(".group-box"), 1, "it displays user's groups");
+    assert.strictEqual(count(".group-box"), 1, "it displays user's groups");
 
     await visit("/g");
 
-    assert.equal(count(".group-box"), 2, "it displays visible groups");
-    assert.equal(
-      queryAll(".group-index-join").length,
+    assert.strictEqual(count(".group-box"), 2, "it displays visible groups");
+    assert.strictEqual(
+      count(".group-index-join"),
       1,
       "it shows button to join group"
     );
-    assert.equal(
-      queryAll(".group-index-request").length,
+    assert.strictEqual(
+      count(".group-index-request"),
       1,
       "it shows button to request for group membership"
     );
@@ -42,7 +42,7 @@ acceptance("Groups", function () {
 
     await click("a[href='/g/discourse/members']");
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".group-info-name").text().trim(),
       "Awesome Team",
       "it displays the group page"

@@ -6,7 +6,7 @@ import {
 import I18n from "I18n";
 
 module("Unit | Utility | search", function () {
-  test("unescapesEmojisInBlurbs", function (assert) {
+  test("unescapesEmojisInBlurbs", async function (assert) {
     const source = {
       posts: [
         {
@@ -28,7 +28,7 @@ module("Unit | Utility | search", function () {
       grouped_search_result: false,
     };
 
-    const results = translateResults(source);
+    const results = await translateResults(source);
     const blurb = results.posts[0].get("blurb");
 
     assert.ok(blurb.indexOf("thinking.png"));
@@ -37,26 +37,26 @@ module("Unit | Utility | search", function () {
   });
 
   test("searchContextDescription", function (assert) {
-    assert.equal(
+    assert.strictEqual(
       searchContextDescription("topic"),
       I18n.t("search.context.topic")
     );
-    assert.equal(
+    assert.strictEqual(
       searchContextDescription("user", "silvio.dante"),
       I18n.t("search.context.user", { username: "silvio.dante" })
     );
-    assert.equal(
+    assert.strictEqual(
       searchContextDescription("category", "staff"),
       I18n.t("search.context.category", { category: "staff" })
     );
-    assert.equal(
+    assert.strictEqual(
       searchContextDescription("tag", "important"),
       I18n.t("search.context.tag", { tag: "important" })
     );
-    assert.equal(
+    assert.strictEqual(
       searchContextDescription("private_messages"),
       I18n.t("search.context.private_messages")
     );
-    assert.equal(searchContextDescription("bad_type"), null);
+    assert.strictEqual(searchContextDescription("bad_type"), undefined);
   });
 });

@@ -6,5 +6,5 @@
 
 he:
   site_settings:
-    styleguide_enabled: "להפעיל נתיב `‎/styleguide` כדי לסייע בעיצוב של Discourse"
+    styleguide_enabled: 'להפעיל נתיב `‎/styleguide` כדי לסייע בעיצוב של Discourse'
     styleguide_admin_only: "מגביל את חשיפת מדריך הסגנון למנהלים"

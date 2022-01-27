@@ -1,0 +1,33 @@
+<div class="github-row">
+  <div class="github-icon-container" title="Commit">
+    <svg width="60" height="60" class="github-icon" viewBox="0 0 14 16" version="1.1" aria-hidden="true"><path fill-rule="evenodd" d="M10.86 7c-.45-1.72-2-3-3.86-3-1.86 0-3.41 1.28-3.86 3H0v2h3.14c.45 1.72 2 3 3.86 3 1.86 0 3.41-1.28 3.86-3H14V7h-3.14zM7 10.2c-1.22 0-2.2-.98-2.2-2.2 0-1.22.98-2.2 2.2-2.2 1.22 0 2.2.98 2.2 2.2 0 1.22-.98 2.2-2.2 2.2z"></path></svg>
+  </div>
+
+  <div class="github-info-container">
+    <h4>
+      <a href="{{html_url}}" target="_blank" rel="noopener">{{title}}</a>
+    </h4>
+
+    <div class="github-info">
+      <div class="date">
+        committed <span class="discourse-local-date" data-format="ll" data-date="{{committed_at_date}}" data-time="{{committed_at_time}}" data-timezone="UTC">{{committed_at}}</span>
+      </div>
+
+      <div class="user">
+        <a href="{{author.html_url}}" target="_blank" rel="noopener">
+          <img alt="{{author.login}}" src="{{author.avatar_url}}" class="onebox-avatar-inline" width="20" height="20">
+          {{author.login}}
+        </a>
+      </div>
+
+      <div class="lines" title="changed {{files.length}} files with {{stats.additions}} additions and {{stats.deletions}} deletions">
+        <a href="{{html_url}}" target="_blank" rel="noopener">
+          <span class="added">+{{stats.additions}}</span>
+          <span class="removed">-{{stats.deletions}}</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+{{> github/github_body}}

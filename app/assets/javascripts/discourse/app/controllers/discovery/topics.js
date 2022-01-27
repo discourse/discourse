@@ -1,12 +1,4 @@
-import {
-  alias,
-  empty,
-  equal,
-  gt,
-  not,
-  notEmpty,
-  readOnly,
-} from "@ember/object/computed";
+import { alias, empty, equal, gt, not, readOnly } from "@ember/object/computed";
 import BulkTopicSelection from "discourse/mixins/bulk-topic-selection";
 import DiscoveryController from "discourse/controllers/discovery";
 import I18n from "I18n";
@@ -18,8 +10,8 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { endWith } from "discourse/lib/computed";
 import { routeAction } from "discourse/helpers/route-action";
 import { inject as service } from "@ember/service";
-import showModal from "discourse/lib/show-modal";
 import { userPath } from "discourse/lib/url";
+import { action } from "@ember/object";
 
 const controllerOpts = {
   discovery: controller(),
@@ -38,6 +30,30 @@ const controllerOpts = {
 
   order: readOnly("model.params.order"),
   ascending: readOnly("model.params.ascending"),
+
+  selected: null,
+
+  // Remove these actions which are defined in `DiscoveryController`
+  // We want them to bubble in DiscoveryTopicsController
+  @action
+  loadingBegan() {
+    return true;
+  },
+
+  @action
+  loadingComplete() {
+    return true;
+  },
+
+  @discourseComputed("model.filter", "model.topics.length")
+  showDismissRead(filter, topicsLength) {
+    return this._isFilterPage(filter, "unread") && topicsLength > 0;
+  },
+
+  @discourseComputed("model.filter", "model.topics.length")
+  showResetNew(filter, topicsLength) {
+    return this._isFilterPage(filter, "new") && topicsLength > 0;
+  },
 
   actions: {
     changeSort() {
@@ -63,14 +79,14 @@ const controllerOpts = {
       this.send("resetParams", options.skipResettingParams);
 
       // Don't refresh if we're still loading
-      if (this.get("discovery.loading")) {
+      if (this.discovery.loading) {
         return;
       }
 
       // If we `send('loading')` here, due to returning true it bubbles up to the
       // router and ember throws an error due to missing `handlerInfos`.
       // Lesson learned: Don't call `loading` yourself.
-      this.set("discovery.loading", true);
+      this.discovery.loadingBegan();
 
       this.topicTrackingState.resetTracking();
 
@@ -98,16 +114,19 @@ const controllerOpts = {
         (this.router.currentRoute.queryParams["f"] ||
           this.router.currentRoute.queryParams["filter"]) === "tracked";
 
-      Topic.resetNew(this.category, !this.noSubcategories, tracked).then(() =>
+      let topicIds = this.selected
+        ? this.selected.map((topic) => topic.id)
+        : null;
+
+      Topic.resetNew(this.category, !this.noSubcategories, {
+        tracked,
+        topicIds,
+      }).then(() =>
         this.send(
           "refresh",
           tracked ? { skipResettingParams: ["filter", "f"] } : {}
         )
       );
-    },
-
-    dismissReadPosts() {
-      showModal("dismiss-read", { title: "topics.bulk.dismiss_read" });
     },
   },
 
@@ -122,37 +141,11 @@ const controllerOpts = {
     this.send("loadingComplete");
   },
 
-  isFilterPage: function (filter, filterType) {
-    if (!filter) {
-      return false;
-    }
-    return filter.match(new RegExp(filterType + "$", "gi")) ? true : false;
-  },
-
-  @discourseComputed("model.filter", "model.topics.length")
-  showDismissRead(filter, topicsLength) {
-    return this.isFilterPage(filter, "unread") && topicsLength > 0;
-  },
-
-  @discourseComputed("model.filter", "model.topics.length")
-  showResetNew(filter, topicsLength) {
-    return this.isFilterPage(filter, "new") && topicsLength > 0;
-  },
-
-  @discourseComputed("model.filter", "model.topics.length")
-  showDismissAtTop(filter, topicsLength) {
-    return (
-      (this.isFilterPage(filter, "new") ||
-        this.isFilterPage(filter, "unread")) &&
-      topicsLength >= 15
-    );
-  },
-
   hasTopics: gt("model.topics.length", 0),
   allLoaded: empty("model.more_topics_url"),
   latest: endWith("model.filter", "latest"),
   new: endWith("model.filter", "new"),
-  top: notEmpty("period"),
+  top: endWith("model.filter", "top"),
   yearly: equal("period", "yearly"),
   quarterly: equal("period", "quarterly"),
   monthly: equal("period", "monthly"),
@@ -199,7 +192,7 @@ const controllerOpts = {
 
     return I18n.t("topics.none.educate." + tab, {
       userPrefsUrl: userPath(
-        `${this.currentUser.get("username_lower")}/preferences`
+        `${this.currentUser.get("username_lower")}/preferences/notifications`
       ),
     });
   },

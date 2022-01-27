@@ -91,6 +91,28 @@ describe PostAction do
       expect(topic.message_archived?(mod)).to eq(true)
     end
 
+    context "category group moderators" do
+      fab!(:group_user) { Fabricate(:group_user) }
+      let(:group) { group_user.group }
+
+      before do
+        SiteSetting.enable_category_group_moderation = true
+        group.update!(messageable_level: Group::ALIAS_LEVELS[:nobody])
+        post.topic.category.update!(reviewable_by_group_id: group.id)
+      end
+
+      it "notifies via pm" do
+        result = PostActionCreator.notify_moderators(
+          codinghorror,
+          post,
+          "this is my special long message"
+        )
+
+        readable_by_groups = result.reviewable_score.meta_topic.topic_allowed_groups.map(&:group_id)
+        expect(readable_by_groups).to include(group.id)
+      end
+    end
+
   end
 
   describe "update_counters" do
@@ -253,7 +275,7 @@ describe PostAction do
       admin4 = Fabricate(:admin)
       PostActionCreator.like(admin4, post)
 
-      # first happend within the same day, no need to notify
+      # first happened within the same day, no need to notify
       expect(Notification.where(post_number: 1, topic_id: post.topic_id).count)
         .to eq(2)
     end
@@ -419,7 +441,7 @@ describe PostAction do
       end.to_not change { Notification.count }
     end
 
-    it "should generate a notification if liker is an admin irregardles of \
+    it "should generate a notification if liker is an admin irregardless of \
       muting" do
 
       MutedUser.create!(user_id: post.user.id, muted_user_id: admin.id)
@@ -470,7 +492,7 @@ describe PostAction do
     it "shouldn't change given_likes unless likes are given or removed" do
       freeze_time(Time.zone.now)
 
-      PostActionCreator.like(codinghorror, Fabricate(:post))
+      PostActionCreator.like(codinghorror, post)
       expect(value_for(codinghorror.id, Date.today)).to eq(1)
 
       PostActionType.types.each do |type_name, type_id|
@@ -491,20 +513,17 @@ describe PostAction do
   describe 'flagging' do
 
     it 'does not allow you to flag stuff twice, even if the reason is different' do
-      post = Fabricate(:post)
       expect(PostActionCreator.spam(eviltrout, post)).to be_success
       expect(PostActionCreator.off_topic(eviltrout, post)).to be_failed
     end
 
     it 'allows you to flag stuff again if your previous flag was removed' do
-      post = Fabricate(:post)
       PostActionCreator.spam(eviltrout, post)
       PostActionDestroyer.destroy(eviltrout, post, :spam)
       expect(PostActionCreator.spam(eviltrout, post)).to be_success
     end
 
     it 'should update counts when you clear flags' do
-      post = Fabricate(:post)
       reviewable = PostActionCreator.spam(eviltrout, post).reviewable
 
       expect(post.reload.spam_count).to eq(1)
@@ -663,7 +682,7 @@ describe PostAction do
       expect(result.reviewable.payload['targets_topic']).to eq(false)
     end
 
-    it "will unhide the post when a moderator undos the flag on which s/he took action" do
+    it "will unhide the post when a moderator undoes the flag on which s/he took action" do
       Discourse.stubs(:site_contact_user).returns(admin)
 
       post = create_post
@@ -831,16 +850,11 @@ describe PostAction do
     end
 
     it "should raise the right errors when it fails to create a post" do
-      begin
-        group = Group[:moderators]
-        messageable_level = group.messageable_level
-        group.update!(messageable_level: Group::ALIAS_LEVELS[:nobody])
+      user = Fabricate(:user)
+      UserSilencer.new(user, Discourse.system_user).silence
 
-        result = PostActionCreator.notify_moderators(Fabricate(:user), post, 'testing')
-        expect(result).to be_failed
-      ensure
-        group.update!(messageable_level: messageable_level)
-      end
+      result = PostActionCreator.notify_moderators(user, post, 'testing')
+      expect(result).to be_failed
     end
 
     it "should succeed even with low max title length" do
@@ -857,7 +871,6 @@ describe PostAction do
   describe ".lookup_for" do
     it "returns the correct map" do
       user = Fabricate(:user)
-      post = Fabricate(:post)
       post_action = PostActionCreator.create(user, post, :bookmark).post_action
       map = PostAction.lookup_for(user, [post.topic], post_action.post_action_type_id)
 
@@ -881,8 +894,8 @@ describe PostAction do
 
     it "should create a notification in the related topic" do
       Jobs.run_immediately!
-      post = Fabricate(:post)
       user = Fabricate(:user)
+      stub_image_size
       result = PostActionCreator.create(user, post, :spam, message: "WAT")
       topic = result.post_action.related_post.topic
       reviewable = result.reviewable
@@ -897,7 +910,6 @@ describe PostAction do
 
     skip "should not add a moderator post when post is flagged via private message" do
       Jobs.run_immediately!
-      post = Fabricate(:post)
       user = Fabricate(:user)
       result = PostActionCreator.create(user, post, :notify_user, message: "WAT")
       action = result.post_action
@@ -968,8 +980,6 @@ describe PostAction do
   end
 
   describe "triggers Discourse events" do
-    fab!(:post) { Fabricate(:post) }
-
     it 'triggers a flag_created event' do
       event = DiscourseEvent.track(:flag_created) { PostActionCreator.spam(eviltrout, post) }
       expect(event).to be_present

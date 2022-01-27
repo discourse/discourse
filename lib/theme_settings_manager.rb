@@ -22,7 +22,7 @@ class ThemeSettingsManager
   end
 
   def value
-    has_record? ? db_record.value : @default
+    has_record? ? db_record.value : default
   end
 
   def type_name
@@ -35,6 +35,10 @@ class ThemeSettingsManager
 
   def description
     @opts[:description] # Old method of specifying description. Is now overridden by locale file
+  end
+
+  def requests_refresh?
+    @opts[:refresh]
   end
 
   def value=(new_value)
@@ -174,9 +178,48 @@ class ThemeSettingsManager
 
   class Upload < self
     def value
-      val = super
-      Discourse.store.cdn_url(val)
+      cdn_url(super)
     end
 
+    def default
+      upload_id = default_upload_id
+      return if upload_id.blank?
+
+      cdn_url(upload_id)
+    end
+
+    def value=(new_value)
+      if new_value.present?
+        if new_value == default
+          new_value = default_upload_id
+        else
+          upload = ::Upload.find_by(url: new_value)
+          new_value = upload.id if upload.present?
+        end
+      end
+
+      super(new_value)
+    end
+
+    private
+
+    def cdn_url(upload_id)
+      return if upload_id.blank?
+
+      upload = ::Upload.find_by_id(upload_id.to_i)
+      return if upload.blank?
+
+      Discourse.store.cdn_url(upload.url)
+    end
+
+    def default_upload_id
+      theme_field = theme.theme_fields.find_by(
+        name: @default,
+        type_id: ThemeField.types[:theme_upload_var]
+      )
+      return if theme_field.blank?
+
+      theme_field.upload_id
+    end
   end
 end

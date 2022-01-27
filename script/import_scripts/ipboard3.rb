@@ -87,7 +87,7 @@ class ImportScripts::IPBoard3 < ImportScripts::Base
               new_user.update(suspended_at: DateTime.now, suspended_till: 100.years.from_now)
             elsif u["pp_main_photo"].present?
               path = File.join(UPLOADS_DIR, u["pp_main_photo"])
-              if File.exists?(path)
+              if File.exist?(path)
                 begin
                   upload = create_upload(new_user.id, path, File.basename(path))
                   if upload.persisted?
@@ -390,7 +390,7 @@ class ImportScripts::IPBoard3 < ImportScripts::Base
     markdown.gsub!(/\[attachment=(\d+):.+\]/) do
       if a = mysql_query("SELECT attach_file, attach_location FROM attachments WHERE attach_id = #{$1}").first
         path = File.join(UPLOADS_DIR, a["attach_location"])
-        if File.exists?(path)
+        if File.exist?(path)
           begin
             upload = create_upload(user_id, path, a["attach_file"])
             return html_for_upload(upload, a["attach_file"]) if upload.persisted?

@@ -11,7 +11,12 @@ export default {
         likes_given: 7725,
         topics_entered: 11453,
         topic_count: 184,
-        post_count: 12263
+        post_count: 12263,
+        user: {
+          user_fields: {
+            3: "Blue"
+          }
+        }
       },
       {
         id: 1,

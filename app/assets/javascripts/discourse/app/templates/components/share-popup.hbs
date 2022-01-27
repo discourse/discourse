@@ -4,13 +4,21 @@
   {{#if date}}
     <span class="date">{{displayDate}}</span>
   {{/if}}
+
+  {{d-button
+    action=(action "close")
+    class="btn btn-flat close"
+    icon="times"
+    aria-label="share.close"
+    title="share.close"
+  }}
 </div>
 
-<div>
-  <input type="text" aria-label={{i18n "share.url"}}>
+<div class="link-share-container">
+  <input class="share-link-input" type="text" aria-label={{i18n "share.url"}}> {{copy-button selector="input.share-link-input"}}
 </div>
 
-<div class="actions">
+<div class="link-share-actions">
   <div class="sources">
     {{#each sources as |s|}}
       {{share-source source=s title=model.title action=(action "share")}}
@@ -19,27 +27,26 @@
 
   <div class="alt-actions">
     {{#if topic.details.can_reply_as_new_topic}}
-      <div class="reply-as-new-topic">
-        {{#if topic.isPrivateMessage}}
-          <a href class="new-topic" {{action "replyAsNewTopic"}} aria-label={{i18n "post.reply_as_new_private_message"}} title={{i18n "post.reply_as_new_private_message"}}>
-            {{d-icon "plus"}}
-            {{i18n "user.new_private_message"}}
-          </a>
-        {{else}}
-          <a href class="new-topic" {{action "replyAsNewTopic"}} aria-label={{i18n "post.reply_as_new_topic"}} title={{i18n "post.reply_as_new_topic"}}>
-            {{d-icon "plus"}}
-            {{i18n "topic.create"}}
-          </a>
-        {{/if}}
-      </div>
+      {{#if topic.isPrivateMessage}}
+        {{d-button
+          action=(action "replyAsNewTopic")
+          class="btn btn-default new-topic"
+          icon="plus"
+          aria-label="post.reply_as_new_private_message"
+          title="post.reply_as_new_private_message"
+          label="user.new_private_message"
+        }}
+      {{else}}
+        {{d-button
+          action=(action "replyAsNewTopic")
+          class="btn btn-default new-topic"
+          icon="plus"
+          aria-label="post.reply_as_new_topic"
+          title="post.reply_as_new_topic"
+          label="topic.create"
+        }}
+      {{/if}}
     {{/if}}
 
-    {{d-button
-      action=(action "close")
-      class="btn btn-flat close"
-      icon="times"
-      aria-label="share.close"
-      title="share.close"
-    }}
   </div>
 </div>

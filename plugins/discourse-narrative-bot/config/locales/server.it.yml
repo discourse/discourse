@@ -25,13 +25,14 @@ it:
       long_description: |
         Questo distintivo è assegnato al completamento del tutorial interattivo per utenti avanzati. Hai imparato gli strumenti avanzati di discussione — e ora sei un diplomato!
   discourse_narrative_bot:
+    bio: "Ciao, non sono una persona reale. Sono un bot che ti può insegnare a usare questo sito. Per interagire con me inviami un messaggio o menzionami per nome."
     tl2_promotion_message:
       subject_template: "Ora che sei stato promosso, è il momento di conoscere alcune funzionalità avanzate!"
       text_body_template: |
         Rispondi a questo messaggio con `@%{discobot_username} %{reset_trigger}` per saperne di più su quello che puoi fare.
     timeout:
       message: |-
-        Hey @%{username}, sto solo controllando perché è da un po' che non ti sento.
+        Ciao @%{username}, sto solo controllando perché è da un po' che non ti sento.
 
         - Per continuare, rispondimi in qualsiasi momento.
 
@@ -41,20 +42,20 @@ it:
 
         Se preferisci non continuare, va bene lo stesso. Io sono un robot. Non ferirai i miei sentimenti. :sob:
     dice:
-      trigger: "tira"
+      trigger: "tira il dado"
       invalid: |-
         Mi dispiace, è matematicamente impossibile lanciare quella combinazione di dadi. :confounded:
       not_enough_dice:
         one: "Ho solo %{count} dado. [Shameful](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), lo so!"
         other: "Ho solo %{count} dadi. [Shameful](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), lo so!"
       out_of_range: |-
-        Lo sapevi che [il numero massimo di lati](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) per essere matematicamente bilanciato è 120?
+        Lo sapevi che [il numero massimo di lati](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) per avere un dado matematicamente ben bilanciato è 120?
       results: |-
         > :game_die: %{results}
     quote:
       trigger: "cita"
       "1":
-        quote: "E' nel mezzo delle difficoltà che nascono le opportunità"
+        quote: "Nel mezzo delle difficoltà nascono le opportunità"
         author: "Albert Einstein"
       "2":
         quote: "Non vale la pena avere la libertà se non si ha la libertà di sbagliare."
@@ -88,8 +89,8 @@ it:
     magic_8_ball:
       trigger: "fortuna"
       answers:
-        "1": "E' certo"
-        "2": "E' decisamente così"
+        "1": "È certo"
+        "2": "È decisamente così"
         "3": "Senza alcun dubbio"
         "4": "Sì, senza dubbio"
         "5": "Ci puoi contare"
@@ -98,7 +99,7 @@ it:
         "8": "Le prospettive sono buone"
         "9": "Sì"
         "10": "I segni indicano di sì"
-        "11": "E' difficile rispondere, prova di nuovo"
+        "11": "Risposta confusa, prova di nuovo"
         "12": "Rifai la domanda più tardi"
         "13": "Meglio non risponderti adesso"
         "14": "Ora non lo posso prevedere"
@@ -112,7 +113,7 @@ it:
         > :crystal_ball: %{result}
     track_selector:
       reset_trigger: "avvia"
-      skip_trigger: "salta"
+      skip_trigger: "ignora"
       help_trigger: "mostra la guida"
       random_mention:
         reply: |-
@@ -131,11 +132,12 @@ it:
 
           `@%{discobot_username} %{magic_8_ball_trigger}`
           > :crystal_ball: Ci puoi contare
+        discobot_disabled: Mi hai disabilitato nelle tue preferenze. Devi attivare i suggerimenti per l'onboarding dei nuovi utenti per interagire con me.
       do_not_understand:
         first_response: |-
-          Hey, grazie per la risposta!
+          Ciao, grazie per la risposta!
 
-          Sfortunatamente, essendo un robot mal programmato, non l'ho capita bene. :frowning:
+          Sfortunatamente, essendo un robot mal programmato, non ho capito bene. :frowning:
         track_response: Puoi provare di nuovo, o se vuoi saltare questo passaggio, dimmi `%{skip_trigger}`. Altrimenti per ricominciare, dimmi `%{reset_trigger}`.
         second_response: |-
           Oh, scusa. Non ho ancora capito. :anguished:
@@ -144,9 +146,9 @@ it:
 
           Nel frattempo io me ne starò in disparte.
     new_user_narrative:
-      reset_trigger: "lezione"
+      reset_trigger: "tutorial"
       title: "Certificato di completamento del training per nuovi utenti"
-      cert_title: "In riconoscimento del successo nel completamento del tutorial come nuovo utente"
+      cert_title: "Per aver brillantemente superato il tutorial per nuovi utenti"
       hello:
         title: "Saluti!"
         message: |-
@@ -154,20 +156,20 @@ it:
 
           - Io sono solo un robot, ma [il nostro amichevole staff](%{base_uri}/about) è qui per aiutarti se hai bisogno di contattare qualcuno.
 
-          - Per ragioni di sicurezza, limitiamo temporaneamente ciò che i nuovi utenti possono fare. Potrai ottenere nuove abilità (e [distintivi](%{base_uri}/badges)) appena ti conosceremo meglio.
+          - Per ragioni di sicurezza, limitiamo temporaneamente ciò che i nuovi utenti possono fare. Potrai ottenere [nuove abilità](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) (e [distintivi](%{base_uri}/badges)) appena ti conosceremo meglio.
 
           - Noi crediamo in una [comunità dal comportamento civile](%{base_uri}/guidelines) in ogni momento.
       onebox:
         instructions: |-
-          Poi, potresti condividere con me uno di questi collegamenti? Rispondi con **un collegamento per linea**, e verrà automaticamente espanso in un sommario molto figo.
+          Poi, potresti condividere con me uno di questi collegamenti? Rispondi con **un collegamento per linea**, e verrà automaticamente espanso in un sommario molto elegante.
 
-          Per copiare un collegamento, su piattaforma mobile basta toccare e tenere premuto, oppure fare un click con il tasto destro del vostro dispositivo di puntamento:
+          Per copiare un collegamento, su piattaforma mobile basta toccare e tenere premuto, oppure fare un click con il tasto destro del dispositivo di puntamento:
 
           <https://en.wikipedia.org/wiki/Inherently_funny_word>
           <https://en.wikipedia.org/wiki/Death_by_coconut>
           <https://en.wikipedia.org/wiki/Calculator_spelling>
         reply: |-
-          Fantastico! Funziona per la maggior parte dei <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> collegamenti. Ricorda, deve essere su una riga _da solo_, senza niente né davanti né dietro.
+          Fantastico! Funziona per la maggior parte dei <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> collegamenti. Ricorda, deve essere su una riga da solo senza niente che segua o preceda
         not_found: |-
           Mi dispiace, non riesco a trovare il collegamento nella tua risposta! :cry:
 
@@ -184,13 +186,13 @@ it:
 
           Puoi **rispondere con un'immagine?** Qualsiasi immagine andrà bene! Trascinala e rilasciala, premi il pulsante carica, oppure copiala e incollala.
         reply: |-
-          Bell'immagine – Ho premuto il pulsante mi piace :heart: per farti sapere quanto l'ho apprezzata :heart_eyes:
+          Bella immagine: ho premuto il pulsante mi piace :heart: per farti sapere quanto l'ho apprezzata :heart_eyes:
         like_not_found: |-
           Hai dimenticato di mettere Mi piace :heart: al mio [messaggio?](%{url}) :crying_cat_face:
         not_found: |-
           Sembra che tu non abbia caricato un'immagine così ho scelto una foto che sono _sicuro_ ti piacerà.
 
-          `%{image_url}`
+          <%{image_url}>
 
           Prova a caricare questa nel prossimo messaggio, o incolla il link su una riga da sola!
       likes:
@@ -212,7 +214,7 @@ it:
 
           - oppure premi i pulsanti <kbd><b>G</b></kbd> o <kbd><i>I</i></kbd> sull'editor
         reply: |-
-          Ottimo lavoro! Anche HTML e BBCode funzionano per la formattazione – per saperne di più [prova questo tutorial](http://commonmark.org/help) :nerd:
+          Ottimo lavoro! Anche HTML e BBCode funzionano per la formattazione – per saperne di più [prova questo tutorial](https://commonmark.org/help) :nerd:
         not_found: |-
           Acc! Non ho trovato nessuna formattazione nella tua risposta. :pencil2:
 
@@ -264,7 +266,7 @@ it:
           (Se sei su un dispositvo mobile, puoi anche inviare emoji direttamente dalla tastiera.)
       mention:
         instructions: |-
-          A volte potresti voler richiedere l'attenzione di una persona, anche se non stai rispondendo direttamente ad essa. Digita `@` poi completa il suo username per menzionarla.
+          A volte potresti voler richiamare l'attenzione di una persona, anche se non stai rispondendo direttamente ad essa. Digita `@` poi completa il suo nome utente per menzionarla.
 
           Puoi menzionare **`@%{discobot_username}`** nella tua risposta?
         reply: |-
@@ -272,18 +274,18 @@ it:
         not_found: |-
           Non vedo il mio nome da nessuna parte qui :frowning: Puoi provare a menzionarmi di nuovo come `@%{discobot_username}`?
 
-          (E sì, il mio username inizia con _disco_, come nella mania dance degli anni 70. Io [amo la vita notturna!](https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
+          (E sì, il mio username inizia con _disco_, come ai tempi della dance mania degli anni 70. Io [amo la vita notturna!](https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
       flag:
         instructions: |-
-          Ci piacciono le discussioni amichevoli e abbiamo bisogno del tuo aiuto per [mantenere le cose civili](%{guidelines_url}). Se noti un problema, per favore segnalalo, affinché l'autore, o il [nostro staff](%{about_url}) lo vengano a sapere.
+          Ci piacciono le nostre discussioni amichevoli e abbiamo bisogno del tuo aiuto per [mantenere questo forum un posto civile](%{guidelines_url}). Se riscontri un problema, segnalalo per farlo sapere in privato all'autore o al [nostro staff](%{about_url}). Ci sono molte ragioni per cui potresti decidere di segnalare un messaggio, che vanno da un semplice suggerimento di suddivisione degli argomenti, fino alle più serie segnalazioni di evidenti violazioni degli standard della comunità. Se selezioni **Qualcos'altro**, avvierai una discussione con messaggi privati con i moderatori dove potrai porre ulteriori domande.
 
           > :imp: Ho scritto qualcosa di brutto qui
 
-          Penso che tu sappia cosa fare. Va avanti e **segnala questo messaggio** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> come inappropriato!
+          Vai avanti e **segnala questo post** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> e seleziona **Contenuto inappropriato** come motivo!
         reply: |-
           [Il nostro staff](%{base_uri}/groups/staff) verrà notificato privatamente della tua segnalazione. Se abbastanza membri della comunità segnalano un messaggio, quest'ultimo verrà automaticamente nascosto per precauzione. (Dal momento che non ho scritto veramente qualcosa di brutto :angel:, ho rimosso la segnalazione per ora.)
         not_found: |-
-          Oh no, il mio brutto messaggio non e' ancora stato segnalato come inappropriato. :worried: Puoi contrassegnarlo come inappropriato usando il pulsante **segnala** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Non dimenticare di usare il pulsante 'mostra altro' <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> per rivelare gli altri pulsanti.
+          Oh no, il mio brutto messaggio non è ancora stato segnalato come inappropriato. :worried: Puoi contrassegnarlo come inappropriato usando il pulsante **segnala** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Non dimenticare di usare il pulsante 'mostra altro' <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> per rivelare gli altri pulsanti.
       search:
         instructions: |-
           _psst_ … Ho nascosto una sorpresa in questo argomento. Se sei pronto alla sfida, **seleziona l'icona cerca** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> in alto a destra &#8599; per trovarla.
@@ -296,29 +298,29 @@ it:
 
           Hai notato che sei tornato all'inizio dell'argomento? Dai da mangiare a questo povero capibara affamato **rispondendo con la emoji %{search_answer}** e tornerai automaticamente in fondo alla discussione.
         reply: |-
-          Hey l'hai trovato :tada:
+          Ehi, l'hai trovato :tada:
 
           - Per ricerche più dettagliate, vai alla [pagina di ricerca](%{search_url}).
 
-          - Per saltare ovunque in una discussione lunga, prova i controlli temporali sulla destra (e in fondo, su mobile).
+          - Per saltare ovunque in una discussione lunga, prova i controlli della timeline dell'argomento sulla destra (e in fondo, su dispositivi mobili).
 
           - Se hai una :keyboard: fisica, premi <kbd>?</kbd> per visualizzare delle comode scorciatoie da tastiera.
         not_found: |-
-          Hmm… sembra che tu abbia qualche problema. Mi dispiace. Hai cercato <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> il termine **capi&#8203;bara**?
+          Uhm… sembra che tu abbia qualche problema. Mi dispiace. Hai cercato <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> il termine **capi&#8203;bara**?
       end:
         message: |-
           Grazie per avermi seguito finora @%{username}! Ho fatto questo certificato per te, penso che te lo sia guadagnato:
 
           %{certificate}
 
-          E' tutto per ora! Controlla [**gli argomenti delle nostre ultime discussioni**](%{base_uri}/latest) o [**le categorie di discussione**](%{base_uri}/categories). :sunglasses:
+          Per ora è tutto! Controlla [**gli argomenti delle nostre ultime discussioni**](%{base_uri}/latest) o [**le categorie di discussione**](%{base_uri}/categories). :sunglasses:
 
-          (Se vuoi parlare con me ancora per imparare altro, inviami un messaggio o menzionami scrivendo `@%{discobot_username}` quando vuoi!)
+          (Se vuoi parlare ancora con me per imparare altre cose, inviami un messaggio o menzionami scrivendo `@%{discobot_username}` quando vuoi!)
       certificate:
         alt: "Attestato di Merito"
     advanced_user_narrative:
-      reset_trigger: "lezione avanzata"
-      cert_title: "In riconoscimento del completamento con successo del tutorial utente avanzato"
+      reset_trigger: "tutorial avanzato"
+      cert_title: "Per aver brillantemente superato il tutorial per utenti avanzati"
       title: ":arrow_up: Funzioni utente avanzato"
       start_message: |-
         Come utente _avanzato_, hai già visitato [la pagina delle preferenze](%{base_uri}my/preferences) @%{username}? Ci sono molti modi per personalizzare la tua esperienza, ad esempio selezionando un tema scuro o uno chiaro.
@@ -333,20 +335,20 @@ it:
         not_found: |-
           Sembra che tu non abbia ancora modificato il [messaggio](%{url}) che ho creato per te. Puoi provare di nuovo?
 
-          Usa il pulsante <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-pencil.png" width="16" height="16"> per far apparire l'editor.
+          Usa l'icona <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-pencil.png" width="16" height="16"> per far apparire l'editor.
         reply: |-
           Ottimo lavoro!
 
           Nota che le modifiche fatte dopo 5 minuti verranno mostrate come revisioni pubbliche, e una piccola icona a forma di matita apparirà in alto a destra sul messaggio con il conteggio delle modifiche fatte.
       delete:
         instructions: |-
-          Se vuoi annullare un tuo messaggio, puoi eliminarlo.
+          Se vuoi rimuovere un messaggio che hai creato, puoi eliminarlo.
 
-          Va' avanti ed **elimina** uno dei tuoi messaggi precedenti usando il pulsante <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> **elimina**. Non cancellare il primo messaggio però!
+          Vai avanti ed **elimina** uno dei tuoi messaggi precedenti usando il pulsante <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> **elimina**. Non cancellare il primo messaggio però!
         not_found: |-
           Non vedo ancora nessun messaggio cancellato! Ricorda che il pulsante <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> "mostra altro" rivelerà il pulsante <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> elimina.
         reply: |-
-          Whoa! :boom:
+          Wow! :boom:
 
           Per preservare la continuità delle discussioni, le cancellazioni non sono immediate, dunque i messaggi saranno rimossi dopo un certo periodo di tempo.
       recover:
@@ -358,16 +360,16 @@ it:
         not_found: |-
           Stai avendo problemi? Ricorda che il pulsante <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> "mostra altro" rivelerà il pulsante <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> ripristina.
         reply: |-
-          Pfff, questa è fatta! Grazie per averlo sistemato :wink:
+          Fiuuu, questa è fatta! Grazie per averlo sistemato :wink:
 
-          Ti faccio notare che hai solo %{deletion_after}ore di tempo per ripristinare un messaggio.
+          Ti faccio notare che hai solo %{deletion_after} ore di tempo per ripristinare un messaggio.
       category_hashtag:
         instructions: |-
           Lo sapevi che è possibile fare riferimento a categorie ed etichette in un messaggio? Per esempio, hai visto la categoria %{category}?
 
           Digita `#` nel mezzo di una frase e seleziona una categoria o un'etichetta.
         not_found: |-
-          Hmm, non vedo nessuna categoria nel tuo messaggio. Nota che `#` non può essere il primo carattere di una riga. Puoi copiare questo nella tua prossima risposta?
+          Uhm, non vedo nessuna categoria nel tuo messaggio. Nota che `#` non può essere il primo carattere di una riga. Puoi copiare questo nella tua prossima risposta?
 
           ```text
           Posso creare un collegamento ad una categoria digitando #
@@ -378,7 +380,7 @@ it:
         instructions: |-
           Ogni argomento ha un livello di notifica. Parte da 'Normale', il che significa che riceverai una notifica quando qualcuno parlerà direttamente con te.
 
-          Per impostazione predefinita, il livello di notifica per un messaggio privato è impostato al livello più alto 'In osservazione', il che significa che riceverai una notifica ad ogni nuovo messaggio. Ma puoi sovrascrivere il livello di notifica per _ogni_ argomento su 'In osservazione', 'Seguito' o 'Silenziato'.
+          Per impostazione predefinita, il livello di notifica per un messaggio privato è impostato al livello più alto 'In osservazione', il che significa che riceverai una notifica ad ogni nuova risposta. Ma puoi modificare il livello di notifica per _ogni_ argomento scegliendo una delle opzioni 'In osservazione', 'Seguito' o 'Silenziato'.
 
           Prova a modificare il livello di notifica per questo argomento. In fondo alla discussione, troverai un pulsante che ti mostrerà che questo argomento è **In osservazione** . Puoi modificare il livello di notifica a **Seguito**?
         not_found: |-
@@ -386,14 +388,14 @@ it:
         reply: |-
           Lavoro impressionante! Spero tu non abbia silenziato questo argomento dato che a volte posso essere un po' loquace :grin:.
 
-          Nota che quando rispondi ad un argomento, o leggi un argomento per più di qualche minuto, verrà automaticamente impostato il livello di notifica a 'seguito'. Puoi modificare queste impostazioni sulle [tue preferenze utente](%{base_uri}/my/preferences).
+          Nota che quando rispondi ad un argomento, o leggi un argomento per più di qualche minuto, verrà automaticamente impostato il livello di notifica 'seguito'. Puoi modificare queste impostazioni sulle [tue preferenze utente](%{base_uri}/my/preferences).
       poll:
         instructions: |-
-          Lo sapevi che puoi aggiungere un sondaggio in ogni messaggio? Prova ad usare il pulsante <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> opzioni nell'editor per **creare un sondaggio**.
+          Lo sapevi che puoi aggiungere un sondaggio in ogni messaggio? Prova ad usare il pulsante <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> a ingranaggio nell'editor per **creare un sondaggio**.
         not_found: |-
           Ooops! Non c'è nessun sondaggio nella tua risposta.
 
-          Usa l'icona <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16">a ingranaggio nell'editor, oppure copia e incolla questo sondaggio nella tua prossima risposta:
+          Usa l'icona <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> a ingranaggio nell'editor, oppure copia e incolla questo sondaggio nella tua prossima risposta:
 
           ```text
           [poll]
@@ -402,7 +404,7 @@ it:
           [/poll]
           ```
         reply: |-
-          Ei, bel sondaggio! Sono un buon insegnante?
+          Ehi, bel sondaggio! Sono o non sono un buon insegnante?
 
           [poll]
           * :+1:
@@ -412,17 +414,17 @@ it:
         instructions: |-
           Qualche volta potresti voler **nascondere dei dettagli** nelle tue risposte:
 
-          - Quando si stanno discutento punti della trama di un film o di uno show televisivo che potrebbero essere considerati degli spoiler.
+          - Quando si stanno discutendo punti della trama di un film o di uno show televisivo che potrebbero essere considerati degli spoiler.
 
           - Quando il tuo messaggio necessita di molti dettagli opzionali che potrebbero intralciare la lettura se letti tutti in una volta.
 
           [details=Seleziona qui per vedere come funziona!]
-          1. Clicca il pulsante <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> rotella nell'editor.
+          1. Clicca il pulsante <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> a ingranaggio nell'editor.
           2. Seleziona "Nascondi Dettagli".
           3. Inserisci un riassunto dei dettagli.
           [/details]
 
-          Riesci ad usare il pulsante <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> rotella nell'editor per aggiungere una sezione dettagli nella tua prossima risposta?
+          Riesci ad usare il pulsante <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> a ingranaggio nell'editor per aggiungere una sezione dettagli nella tua prossima risposta?
         not_found: |-
           Hai problemi a creare un widget con dei dettagli? Prova a includere quanto segue nella prossima risposta:
 
@@ -435,12 +437,12 @@ it:
           Ottimo lavoro — la tua attenzione per i _dettagli_ è ammirevole!
       end:
         message: |-
-          Hai davvero affrontato tutto ciò da _utente avanzato_ :bow:
+          Hai davvero affrontato tutto ciò come avrebbe fatto un _utente avanzato_ :bow:
 
           %{certificate}
 
           Questo è quanto.
 
-          Arrivederci per adesso! Se desideri parlare di nuovo con me mandami un messaggio in qualsiasi momento :sunglasses:
+          Arrivederci per adesso! Se desideri parlare di nuovo con me, mandami un messaggio in qualsiasi momento :sunglasses:
       certificate:
         alt: "Attestato di Merito per Utente Avanzato"

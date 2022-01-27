@@ -32,7 +32,7 @@ describe Admin::ReportsController do
       end
 
       context "invalid params" do
-        context "inexisting report" do
+        context "nonexistent report" do
           it "returns not found reports" do
             get "/admin/reports/bulk.json", params: {
               reports: {

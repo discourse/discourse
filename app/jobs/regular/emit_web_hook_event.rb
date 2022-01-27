@@ -4,9 +4,12 @@ require 'excon'
 
 module Jobs
   class EmitWebHookEvent < ::Jobs::Base
+    sidekiq_options queue: 'low'
+
     PING_EVENT = 'ping'
     MAX_RETRY_COUNT = 4
     RETRY_BACKOFF = 5
+    REQUEST_TIMEOUT = 20
 
     def execute(args)
       @arguments = args
@@ -41,7 +44,14 @@ module Jobs
 
     def send_webhook!
       uri = URI(@web_hook.payload_url.strip)
-      conn = Excon.new(uri.to_s, ssl_verify_peer: @web_hook.verify_certificate, retry_limit: 0)
+      conn = Excon.new(
+        uri.to_s,
+        ssl_verify_peer: @web_hook.verify_certificate,
+        retry_limit: 0,
+        write_timeout: REQUEST_TIMEOUT,
+        read_timeout: REQUEST_TIMEOUT,
+        connect_timeout: REQUEST_TIMEOUT
+      )
 
       web_hook_body = build_webhook_body
       web_hook_event = create_webhook_event(web_hook_body)

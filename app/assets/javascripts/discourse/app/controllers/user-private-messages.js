@@ -1,61 +1,62 @@
 import Controller, { inject as controller } from "@ember/controller";
 import { action } from "@ember/object";
 import { alias, and, equal } from "@ember/object/computed";
-import I18n from "I18n";
-import Topic from "discourse/models/topic";
-import bootbox from "bootbox";
 import discourseComputed from "discourse-common/utils/decorators";
+import { VIEW_NAME_WARNINGS } from "discourse/routes/user-private-messages-warnings";
+import I18n from "I18n";
+
+export const PERSONAL_INBOX = "__personal_inbox__";
 
 export default Controller.extend({
-  userTopicsList: controller("user-topics-list"),
   user: controller(),
 
   pmView: false,
   viewingSelf: alias("user.viewingSelf"),
-  isGroup: equal("pmView", "groups"),
+  isGroup: equal("pmView", "group"),
+  isPersonal: equal("pmView", "user"),
+  group: null,
+  groupFilter: alias("group.name"),
   currentPath: alias("router._router.currentPath"),
-  selected: alias("userTopicsList.selected"),
-  bulkSelectEnabled: alias("userTopicsList.bulkSelectEnabled"),
-  showToggleBulkSelect: true,
   pmTaggingEnabled: alias("site.can_tag_pms"),
   tagId: null,
 
   showNewPM: and("user.viewingSelf", "currentUser.can_send_private_messages"),
 
-  @discourseComputed("selected.[]", "bulkSelectEnabled")
-  hasSelection(selected, bulkSelectEnabled) {
-    return bulkSelectEnabled && selected && selected.length > 0;
+  @discourseComputed("viewingSelf", "pmView", "currentUser.admin")
+  showWarningsWarning(viewingSelf, pmView, isAdmin) {
+    return pmView === VIEW_NAME_WARNINGS && !viewingSelf && !isAdmin;
   },
 
-  bulkOperation(operation) {
-    const selected = this.selected;
-    let params = { type: operation };
-    if (this.isGroup) {
-      params.group = this.groupFilter;
-    }
+  @discourseComputed(
+    "pmTopicTrackingState.newIncoming.[]",
+    "pmTopicTrackingState.statesModificationCounter",
+    "group"
+  )
+  newLinkText() {
+    return this._linkText("new");
+  },
 
-    Topic.bulkOperation(selected, params).then(
-      () => {
-        const model = this.get("userTopicsList.model");
-        const topics = model.get("topics");
-        topics.removeObjects(selected);
-        selected.clear();
-        model.loadMore();
-      },
-      () => {
-        bootbox.alert(I18n.t("user.messages.failed_to_move"));
-      }
-    );
+  @discourseComputed(
+    "pmTopicTrackingState.newIncoming.[]",
+    "pmTopicTrackingState.statesModificationCounter",
+    "group"
+  )
+  unreadLinkText() {
+    return this._linkText("unread");
+  },
+
+  _linkText(type) {
+    const count = this.pmTopicTrackingState?.lookupCount(type) || 0;
+
+    if (count === 0) {
+      return I18n.t(`user.messages.${type}`);
+    } else {
+      return I18n.t(`user.messages.${type}_with_count`, { count });
+    }
   },
 
   @action
   changeGroupNotificationLevel(notificationLevel) {
     this.group.setNotification(notificationLevel, this.get("user.model.id"));
-  },
-
-  @action
-  toggleBulkSelect() {
-    this.selected.clear();
-    this.toggleProperty("bulkSelectEnabled");
   },
 });

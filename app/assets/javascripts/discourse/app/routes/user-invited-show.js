@@ -1,5 +1,6 @@
 import DiscourseRoute from "discourse/routes/discourse";
 import Invite from "discourse/models/invite";
+import { action } from "@ember/object";
 
 export default DiscourseRoute.extend({
   model(params) {
@@ -11,6 +12,9 @@ export default DiscourseRoute.extend({
     if (!model.can_see_invite_details) {
       this.replaceWith("userInvited.show", "redeemed");
     }
+    this.controllerFor("user.invited").setProperties({
+      invitesCount: model.counts,
+    });
   },
 
   setupController(controller, model) {
@@ -23,9 +27,8 @@ export default DiscourseRoute.extend({
     });
   },
 
-  actions: {
-    triggerRefresh() {
-      this.refresh();
-    },
+  @action
+  triggerRefresh() {
+    this.refresh();
   },
 });

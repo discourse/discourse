@@ -1,11 +1,11 @@
-{{#d-modal-body title="history" maxHeight="70%"}}
+{{#d-modal-body title=modalTitleKey maxHeight="70%"}}
   <div id="revision">
     <div id="revision-details">
       {{d-icon "pencil-alt"}}
       {{#link-to "user" model.username}}
         {{bound-avatar-template model.avatar_template "small"}} {{model.username}}
       {{/link-to}}
-      {{plugin-outlet name="revision-user-details-after" noTags=true args=(hash model=model)}}
+      {{plugin-outlet name="revision-user-details-after" args=(hash model=model)}}
       <span class="date">{{bound-date model.created_at}}</span>
       {{#if model.edit_reason}}
         &mdash; <span class="edit-reason">{{model.edit_reason}}</span>
@@ -26,27 +26,30 @@
         {{/if}}
       {{/unless}}
     </div>
-
-    <div id="display-modes">
-      {{d-button action=(action "displayInline")
-          icon="far-square"
-          label="post.revisions.displays.inline.button"
-          title="post.revisions.displays.inline.title"
-          class=inlineClass}}
-      {{#unless site.mobileView}}
-        {{d-button action=(action "displaySideBySide")
-            icon="columns"
-            label="post.revisions.displays.side_by_side.button"
-            title="post.revisions.displays.side_by_side.title"
-            class=sideBySideClass}}
-
-        {{d-button action=(action "displaySideBySideMarkdown")
-            icon="columns"
-            label="post.revisions.displays.side_by_side_markdown.button"
-            title="post.revisions.displays.side_by_side_markdown.title"
-            class=sideBySideMarkdownClass}}
-      {{/unless}}
-    </div>
+    {{#unless site.mobileView}}
+      <div id="display-modes">
+        <ul class="nav nav-pills">
+          <li>
+            <a href class={{inlineClass}} {{action "displayInline"}} title={{i18n "post.revisions.displays.inline.title"}}>
+              {{d-icon "far-square"}}
+              {{i18n "post.revisions.displays.inline.button"}}
+            </a>
+          </li>
+          <li>
+            <a href class={{sideBySideClass}} {{action "displaySideBySide"}} title={{i18n "post.revisions.displays.side_by_side.title"}}>
+              {{d-icon "columns"}}
+              {{i18n "post.revisions.displays.side_by_side.button"}}
+            </a>
+          </li>
+          <li>
+            <a href class={{sideBySideMarkdownClass}} {{action "displaySideBySideMarkdown"}} title={{i18n "post.revisions.displays.side_by_side_markdown.title"}}>
+              {{d-icon "columns"}}
+              {{i18n "post.revisions.displays.side_by_side_markdown.button"}}
+            </a>
+          </li>
+        </ul>
+      </div>
+    {{/unless}}
   </div>
   <div id="revisions" data-post-id={{model.post_id}} class={{hiddenClasses}}>
     {{#if model.title_changes}}
@@ -81,12 +84,12 @@
       <div class="row">
         {{i18n "tagging.changed"}}
         {{#each previousTagChanges as |t|}}
-          {{discourse-tag t}}
+          {{discourse-tag t.name style=(if t.deleted "diff-del")}}
         {{/each}}
         &rarr;
         &nbsp;
         {{#each currentTagChanges as |t|}}
-          {{discourse-tag t}}
+          {{discourse-tag t.name style=(if t.inserted "diff-ins")}}
         {{/each}}
       </div>
     {{/if}}
@@ -98,7 +101,7 @@
       </div>
     {{/if}}
 
-    {{plugin-outlet name="post-revisions" args=(hash model=model)}}
+    {{plugin-outlet name="post-revisions" tagName="span" connectorTagName="div" args=(hash model=model)}}
 
     {{#links-redirect class="row"}}
       {{html-safe bodyDiff}}

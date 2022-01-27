@@ -5,3 +5,6 @@
 # https://translate.discourse.org/
 
 lv:
+  site_settings:
+    presence_enabled: "Vai rādīt lietotājus, kuri pašlaik atbild uz pašreizējo tēmu vai rediģē pašreizējo ziņu?"
+    presence_max_users_shown: "Parādīts maksimālais lietotāju skaits."

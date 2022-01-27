@@ -98,7 +98,9 @@ cs:
       record_invalid: ! "Ověření selhalo: %{errors}"
       restrict_dependent_destroy:
         one: "Nelze odstranit záznam, protože závisející %{record} existuje"
+        few: "Nelze smazat záznam protože na něm závisí %{record}."
         many: "Nelze smazat záznam protože na něm závisí %{record}."
+        other: "Nelze smazat záznam protože na něm závisí %{record}."
       too_long:
         one: je příliš dlouhý ( maximálně %{count} znak)
         few: je to příliš dlouhé (maximálně %{count} znaků)
@@ -307,7 +309,6 @@ cs:
               target_user_not_found: "Jeden z uživatelů, kterým posíláte tuto zprávu, nebyl nalezen."
             featured_link:
               invalid: "je neplatná. URL adresa by měla obsahovat http:// nebo https://."
-              invalid_category: "nelze upravit v této kategorii."
         user:
           attributes:
             password:
@@ -387,16 +388,8 @@ cs:
       topic_exists_no_oldest: "Kategorii nelze smazat protože počet příspěvků je %{count}."
     uncategorized_description: "Témata bez kategorií, případně která nepasují do stávajících kategorií."
   trust_levels:
-    newuser:
-      title: "nový uživatel"
-    basic:
-      title: "základní uživatel"
-    member:
-      title: "člen"
-    regular:
-      title: "pravidelný uživatel"
-    leader:
-      title: "vůdce"
+    admin: "Administrace"
+    staff: "Redakce"
     change_failed_explanation: "Pokusili jste se snížit důvěryhodnost uživatele %{user_name} na '%{new_trust_level}'. Nicméně jeho aktuální důvěryhodnost už je '%{current_trust_level}'. Uživatel %{user_name} zůstane na úrovni '%{current_trust_level}'. Pokud chcete snížit důvěryhodnost uživatele, zamkněte nejdříve důvěryhodnost."
   post:
     image_placeholder:
@@ -576,14 +569,6 @@ cs:
       title: "To se mi líbí"
       description: "Tento příspěvek se mi líbí"
       short_description: "Tento příspěvek se mi líbí"
-  user_activity:
-    no_bookmarks:
-      self: "Nemáte žádné záložky; záložky vám umožňují rychle odkazovat na konkrétní příspěvky."
-      others: "Žádné záložky."
-    no_likes_given:
-      self: "Zatím se ti nelíbil žádný příspěvek."
-    no_replies:
-      others: "Žádné odpovědi."
   topic_flag_types:
     spam:
       title: "Spam"
@@ -824,6 +809,18 @@ cs:
     top_uploads:
       labels:
         filename: Název souboru
+    top_users_by_likes_received:
+      labels:
+        user: Uživatel
+        qtt_like: Obdržených 'líbí se'
+    top_users_by_likes_received_from_inferior_trust_level:
+      labels:
+        user: Uživatel
+        qtt_like: Obdržených 'líbí se'
+    top_users_by_likes_received_from_a_variety_of_people:
+      labels:
+        user: Uživatel
+        qtt_like: Obdržených 'líbí se'
   dashboard:
     rails_env_warning: "Váš server běží v módu %{env}."
     host_names_warning: "Vaše konfigurace v souboru config/database.yml používá 'localhost' jako jméno hostitele. Změňte toto nastavení na doménu vašeho webu."
@@ -885,7 +882,6 @@ cs:
       user: "Uživatelé"
     results_page: "Výsledky hledání pro '%{term}'"
   original_poster: "Autor tématu"
-  most_posts: "Více příspěvků"
   most_recent_poster: "Poslední přispěvatel"
   frequent_poster: "Častý přispěvatel"
   redirected_to_top_reasons:
@@ -1138,25 +1134,10 @@ cs:
             placeholder: "https://www.example.com/contact-us"
       corporate:
         title: "Organizace"
-      colors:
-        title: "Barvy"
-      fonts:
+      styling:
         fields:
-          font_preview:
+          styling_preview:
             label: "Náhled"
-      logos:
-        title: "Loga"
-        fields:
-          logo:
-            label: "Primární loga"
-      icons:
-        title: "Ikony"
-        fields:
-          large_icon:
-            label: "Velká ikona"
-      homepage:
-        title: "Domovská stránka"
-        fields:
           homepage_style:
             choices:
               latest:
@@ -1169,6 +1150,16 @@ cs:
                 label: "Kategorie a nejnovější témata"
               categories_and_top_topics:
                 label: "Kategorie a populární témata"
+      logos:
+        title: "Loga"
+        fields:
+          logo:
+            label: "Primární loga"
+      icons:
+        title: "Ikony"
+        fields:
+          large_icon:
+            label: "Velká ikona"
       invites:
         title: "Pozvi redakci"
       finished:
@@ -1206,8 +1197,6 @@ cs:
       agree_and_hide:
         title: "Schovat příspěvek"
         description: "Schovat tento příspěvek a automaticky poslat uživateli zprávu, aby ho urychleně upravil."
-      delete_spammer:
-        title: "Odstranit spamera"
       delete_single:
         title: "Smazat"
       disagree_and_restore:
@@ -1223,8 +1212,7 @@ cs:
           title: "Smazat uživatele"
       reject:
         title: "Odmítnout"
-      delete_user:
-        title: "Smazat uživatele"
+  fallback_username: "uživatel"
   activemodel:
     errors:
       <<: *errors

@@ -7,7 +7,7 @@
   opacity: 1;
 }
 
-.discourse-no-touch {
+html.discourse-no-touch {
   .btn-default,
   .btn-icon {
     &.btn-default {
@@ -37,271 +37,310 @@
   }
 }
 
-.nav-pills > li > a:not(.active):hover {
-  background: var(--tertiary-low);
-  color: var(--primary);
-}
+html {
+  // html parent adds some additional specificity to override core styles
+  .nav-pills > li > a:not(.active):hover {
+    background: var(--tertiary-low);
+    color: var(--primary);
+  }
 
-// Composer
+  // Composer
 
-#reply-control .reply-to .reply-details .d-icon {
-  opacity: 1;
-  color: var(--primary-low-mid);
-}
-
-.d-editor-button-bar {
-  .btn-icon.btn-default .d-icon {
+  #reply-control .reply-to .reply-details .d-icon {
+    opacity: 1;
     color: var(--primary-low-mid);
-    .discourse-no-touch & {
-      &:hover {
-        color: var(--secondary);
+  }
+
+  .d-editor-button-bar {
+    .btn-icon.btn-default .d-icon {
+      color: var(--primary-low-mid);
+      .discourse-no-touch & {
+        &:hover {
+          color: var(--secondary);
+        }
       }
     }
   }
-}
 
-// Site header
+  // Site header
 
-.menu-panel li a.widget-link:hover,
-.menu-panel li a.widget-link:focus,
-.menu-panel li.heading a.widget-link:hover,
-.menu-panel li.heading a.widget-link:focus {
-  color: var(--primary);
-  background-color: var(--highlight-medium);
-  .d-icon {
+  .menu-panel li a.widget-link:hover,
+  .menu-panel li a.widget-link:focus,
+  .menu-panel li.heading a.widget-link:hover,
+  .menu-panel li.heading a.widget-link:focus {
     color: var(--primary);
-  }
-}
-
-.menu-panel .panel-body-bottom .btn:hover {
-  .d-icon {
-    color: var(--primary);
-  }
-}
-
-.d-header-icons .d-icon {
-  color: var(--primary-low-mid);
-}
-
-.d-header-icons .icon:hover .d-icon,
-.d-header-icons .icon:focus .d-icon {
-  color: var(--primary-high);
-}
-
-.d-header-icons .unread-notifications {
-  background: var(--tertiary);
-}
-
-// Topic list
-
-table th {
-  color: var(--primary-medium);
-}
-
-.coldmap {
-  &-high {
-    color: #6c77cc !important;
+    background-color: var(--highlight-medium);
+    .d-icon {
+      color: var(--primary);
+    }
   }
 
-  &-med {
-    color: #548eaa !important;
+  div.menu-links-header button:hover,
+  div.menu-links-header button:focus {
+    background: var(--tertiary-high);
   }
 
-  &-low {
-    color: #32a1a5 !important;
+  .menu-panel .panel-body-bottom .btn:hover {
+    .d-icon {
+      color: var(--primary);
+    }
   }
-}
 
-.heatmap-high,
-.heatmap-high a {
-  color: #dc3249 !important;
-}
-.heatmap-med,
-.heatmap-med a {
-  color: #ae5b54 !important;
-}
-.heatmap-low,
-.heatmap-low a {
-  color: #8f6d5b !important;
-}
-
-.badge-notification {
-  background: var(--primary-medium);
-}
-
-.badge-notification.new-posts,
-.badge-notification.unread-posts {
-  background: var(--tertiary);
-}
-.select-kit.dropdown-select-box.period-chooser
-  .period-chooser-header
-  h2.selected-name
-  .top-date-string,
-.select-kit.dropdown-select-box.period-chooser
-  .period-chooser-row
-  .top-date-string {
-  color: var(--primary-high);
-}
-
-// Posts
-
-.discourse-no-touch .topic-body .actions .fade-out {
-  opacity: 1;
-}
-
-.topic-body .reply-to-tab {
-  color: var(--primary-medium);
-  .d-icon {
+  .d-header-icons .d-icon {
     color: var(--primary-low-mid);
   }
-}
 
-.timeline-container .topic-timeline {
-  .timeline-scrollarea {
-    border-color: var(--primary-low-mid);
+  .d-header-icons .icon:hover .d-icon,
+  .d-header-icons .icon:focus .d-icon {
+    color: var(--primary-high);
   }
-  .timeline-handle {
-    background: var(--primary-low-mid);
+
+  .d-header-icons .unread-notifications {
+    background: var(--tertiary);
   }
-}
 
-.topic-map h4 {
-  color: var(--primary);
-}
+  // Topic list
 
-.quote-controls,
-.quote-controls .d-icon {
-  color: var(--primary-medium);
-}
-
-blockquote {
-  a,
-  a:visited {
-    color: var(--tertiary);
+  table th {
+    color: var(--primary-medium);
   }
-}
-.meta .d-icon + .filename,
-.meta .informations {
-  color: var(--secondary);
-}
 
-#topic-footer-buttons .bookmark.bookmarked:hover .d-icon-bookmark {
-  color: var(--secondary);
-}
+  .coldmap {
+    &-high {
+      color: #6c77cc !important;
+    }
 
-.gap {
-  color: var(--primary-medium);
-}
+    &-med {
+      color: #548eaa !important;
+    }
 
-.badge-notification.clicks {
-  color: var(--primary-high);
-}
+    &-low {
+      color: #32a1a5 !important;
+    }
+  }
 
-.topic-map {
-  background: transparent;
-}
+  .heatmap-high,
+  .heatmap-high a {
+    color: #dc3249 !important;
+  }
+  .heatmap-med,
+  .heatmap-med a {
+    color: #ae5b54 !important;
+  }
+  .heatmap-low,
+  .heatmap-low a {
+    color: #8f6d5b !important;
+  }
 
-// Post controls
+  .badge-notification {
+    background: var(--primary-medium);
+  }
 
-nav.post-controls {
-  // this is a bit tedious
-  a,
-  button {
+  .badge-notification.unread-posts {
+    background: var(--tertiary);
+  }
+  .select-kit.dropdown-select-box.period-chooser
+    .period-chooser-header
+    h2.selected-name
+    .top-date-string,
+  .select-kit.dropdown-select-box.period-chooser
+    .period-chooser-row
+    .top-date-string {
+    color: var(--primary-high);
+  }
+
+  // Posts
+
+  .discourse-no-touch .topic-body .actions .fade-out {
+    opacity: 1;
+  }
+
+  .topic-body .reply-to-tab {
     color: var(--primary-medium);
     .d-icon {
       color: var(--primary-low-mid);
     }
-    .discourse-no-touch & {
-      &:hover {
-        color: var(--secondary);
-        background: var(--primary-medium);
-        .d-icon {
-          color: var(--secondary);
-        }
-      }
+  }
+
+  .timeline-container .topic-timeline {
+    .timeline-scrollarea {
+      border-color: var(--primary-low-mid);
     }
-    &:focus {
-      background: var(--primary-medium);
+    .timeline-handle {
+      background: var(--primary-low-mid);
     }
   }
-  .discourse-no-touch & {
-    .double-button:hover {
-      button {
-        background: var(--primary-medium);
-        color: var(--secondary);
-        .d-icon {
-          color: var(--secondary);
+
+  .topic-map h4 {
+    color: var(--primary);
+  }
+
+  .quote-controls,
+  .quote-controls .d-icon {
+    color: var(--primary-medium);
+  }
+
+  blockquote {
+    a,
+    a:visited {
+      color: var(--tertiary);
+    }
+  }
+  .meta .d-icon + .filename,
+  .meta .informations {
+    color: var(--secondary);
+  }
+
+  #topic-footer-buttons .bookmark.bookmarked:hover .d-icon-bookmark {
+    color: var(--secondary);
+  }
+
+  .gap {
+    color: var(--primary-medium);
+  }
+
+  .badge-notification.clicks {
+    color: var(--primary-high);
+  }
+
+  .topic-map {
+    background: transparent;
+  }
+
+  // Post controls
+
+  .topic-admin-menu-button-container,
+  .timeline-controls {
+    .btn .d-icon {
+      // admin wrenches
+      color: var(--primary-medium);
+    }
+  }
+
+  nav.post-controls {
+    .actions {
+      .double-button {
+        &:hover {
+          button {
+            background: var(--primary-medium);
+            color: var(--secondary);
+            .d-icon {
+              color: var(--secondary);
+            }
+            &.has-like {
+              .d-icon {
+                color: var(--love-low);
+              }
+            }
+          }
         }
-        &.has-like {
+        button {
+          &.like {
+            // Like button with 0 likes
+            &.d-hover {
+              background: var(--love-low);
+              .d-icon {
+                color: var(--love-low);
+              }
+            }
+          }
+          &.has-like {
+            // Like button after I've liked
+            .d-icon {
+              color: var(--love);
+            }
+            &.d-hover {
+              background: var(--primary-medium);
+              .d-icon {
+                color: var(--secondary);
+              }
+            }
+          }
+
+          &.button-count {
+            &.d-hover {
+              background: var(--primary-medium);
+              color: var(--secondary);
+            }
+            + .toggle-like {
+              &.d-hover {
+                background: var(--primary-medium);
+                color: var(--secondary);
+              }
+            }
+          }
+        }
+      }
+      button.create {
+        color: var(--primary-high-or-secondary-low);
+
+        .d-icon {
+          color: var(--primary-high-or-secondary-low);
+        }
+      }
+      button {
+        &.d-hover,
+        &:focus,
+        &:active {
+          background: var(--primary-medium);
+          color: var(--secondary);
           .d-icon {
             color: var(--secondary);
           }
         }
+
+        &.delete.d-hover,
+        &.delete:hover,
+        &.delete:focus {
+          background: var(--danger);
+          color: var(--secondary);
+          .d-icon {
+            color: var(--secondary);
+          }
+        }
+        &.bookmark {
+          &.bookmarked {
+            .d-icon {
+              color: var(--tertiary);
+            }
+            &.d-hover {
+              .d-icon {
+                color: var(--tertiary-medium);
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .show-replies {
+      color: var(--primary-medium);
+      &:hover,
+      &:focus {
+        color: var(--secondary);
+        background: var(--primary-medium);
+        .d-icon {
+          color: var(--secondary);
+        }
       }
     }
   }
-  button.bookmark.bookmarked.d-hover .d-icon {
-    color: var(--secondary);
+
+  // Categories
+
+  .list-cell,
+  .table-heading,
+  .category-list td,
+  .category-list th {
+    color: var(--primary-medium);
   }
-  .double-button button.button-count + .toggle-like.d-hover {
-    background: var(--primary-medium);
-    .d-icon {
-      color: var(--love-low);
-    }
-  }
-  .discourse-no-touch & {
-    .double-button button.button-count.d-hover {
+
+  // Admin
+
+  .admin-controls {
+    .nav-pills > li > a:not(.active):hover {
       background: var(--primary-medium);
       color: var(--secondary);
     }
-  }
-  button.create {
-    .d-icon {
-      color: var(--primary-low-mid);
-    }
-    &.d-hover {
-      color: var(--secondary);
-      .d-icon {
-        color: var(--secondary);
-      }
-    }
-  }
-  .actions a,
-  .actions button {
-    color: var(--primary-medium);
-  }
-}
-
-nav.post-controls
-  .actions
-  .double-button
-  button.button-count
-  + .toggle-like.d-hover {
-  background: var(--primary-medium);
-}
-
-.topic-admin-menu-button-container,
-.timeline-controls {
-  .btn .d-icon {
-    // admin wrenches
-    color: var(--primary-medium);
-  }
-}
-
-// Categories
-
-.list-cell,
-.table-heading,
-.category-list td,
-.category-list th {
-  color: var(--primary-medium);
-}
-
-// Admin
-
-.admin-controls {
-  .nav-pills > li > a:not(.active):hover {
-    background: var(--primary-medium);
-    color: var(--secondary);
   }
 }

@@ -1,6 +1,6 @@
 import CategoryList from "discourse/models/category-list";
 import DiscourseRoute from "discourse/routes/discourse";
-import EmberObject from "@ember/object";
+import EmberObject, { action } from "@ember/object";
 import I18n from "I18n";
 import OpenComposer from "discourse/mixins/open-composer";
 import PreloadStore from "discourse/lib/preload-store";
@@ -11,6 +11,8 @@ import { defaultHomepage } from "discourse/lib/utilities";
 import { hash } from "rsvp";
 import { next } from "@ember/runloop";
 import showModal from "discourse/lib/show-modal";
+import getURL from "discourse-common/lib/get-url";
+import Session from "discourse/models/session";
 
 const DiscoveryCategoriesRoute = DiscourseRoute.extend(OpenComposer, {
   renderTemplate() {
@@ -41,7 +43,34 @@ const DiscoveryCategoriesRoute = DiscourseRoute.extend(OpenComposer, {
       return model;
     });
   },
+  _loadBefore(store) {
+    return function (topic_ids, storeInSession) {
+      // refresh dupes
+      this.topics.removeObjects(
+        this.topics.filter((topic) => topic_ids.indexOf(topic.id) >= 0)
+      );
 
+      const url = `${getURL("/")}latest.json?topic_ids=${topic_ids.join(",")}`;
+
+      return ajax({ url, data: this.params }).then((result) => {
+        const topicIds = new Set();
+        this.topics.forEach((topic) => topicIds.add(topic.id));
+
+        let i = 0;
+        TopicList.topicsFrom(store, result).forEach((topic) => {
+          if (!topicIds.has(topic.id)) {
+            topic.set("highlight", true);
+            this.topics.insertAt(i, topic);
+            i++;
+          }
+        });
+
+        if (storeInSession) {
+          Session.currentProp("topicList", this);
+        }
+      });
+    };
+  },
   _findCategoriesAndTopics(filter) {
     return hash({
       wrappedCategoriesList: PreloadStore.getAndRemove("categories_list"),
@@ -50,6 +79,7 @@ const DiscoveryCategoriesRoute = DiscourseRoute.extend(OpenComposer, {
       let { wrappedCategoriesList, topicsList } = response;
       let categoriesList =
         wrappedCategoriesList && wrappedCategoriesList.category_list;
+      let store = this.store;
 
       if (categoriesList && topicsList) {
         if (topicsList.topic_list && topicsList.topic_list.top_tags) {
@@ -64,6 +94,7 @@ const DiscoveryCategoriesRoute = DiscourseRoute.extend(OpenComposer, {
           topics: TopicList.topicsFrom(this.store, topicsList),
           can_create_category: categoriesList.can_create_category,
           can_create_topic: categoriesList.can_create_topic,
+          loadBefore: this._loadBefore(store),
         });
       }
       // Otherwise, return the ajax result
@@ -77,6 +108,7 @@ const DiscoveryCategoriesRoute = DiscourseRoute.extend(OpenComposer, {
           topics: TopicList.topicsFrom(this.store, result),
           can_create_category: result.category_list.can_create_category,
           can_create_topic: result.category_list.can_create_topic,
+          loadBefore: this._loadBefore(store),
         });
       });
     });
@@ -98,31 +130,34 @@ const DiscoveryCategoriesRoute = DiscourseRoute.extend(OpenComposer, {
     });
   },
 
-  actions: {
-    triggerRefresh() {
-      this.refresh();
-    },
+  @action
+  triggerRefresh() {
+    this.refresh();
+  },
 
-    createCategory() {
-      this.transitionTo("newCategory");
-    },
+  @action
+  createCategory() {
+    this.transitionTo("newCategory");
+  },
 
-    reorderCategories() {
-      showModal("reorderCategories");
-    },
+  @action
+  reorderCategories() {
+    showModal("reorderCategories");
+  },
 
-    createTopic() {
-      if (this.get("currentUser.has_topic_draft")) {
-        this.openTopicDraft();
-      } else {
-        this.openComposer(this.controllerFor("discovery/categories"));
-      }
-    },
+  @action
+  createTopic() {
+    if (this.get("currentUser.has_topic_draft")) {
+      this.openTopicDraft();
+    } else {
+      this.openComposer(this.controllerFor("discovery/categories"));
+    }
+  },
 
-    didTransition() {
-      next(() => this.controllerFor("application").set("showFooter", true));
-      return true;
-    },
+  @action
+  didTransition() {
+    next(() => this.controllerFor("application").set("showFooter", true));
+    return true;
   },
 });
 

@@ -1,6 +1,5 @@
 import PreloadStore from "discourse/lib/preload-store";
 
-/*jshint maxlen:10000000 */
 PreloadStore.store("site", {
   default_archetype: "regular",
   notification_types: {
@@ -16,6 +15,13 @@ PreloadStore.store("site", {
     moved_post: 10,
   },
   post_types: { regular: 1, moderator_action: 2 },
+  trust_levels: {
+    newuser: 0,
+    basic: 1,
+    member: 2,
+    regular: 3,
+    leader: 4,
+  },
   groups: [
     { id: 0, name: "everyone" },
     { id: 1, name: "admins" },
@@ -33,6 +39,7 @@ PreloadStore.store("site", {
     "latest",
     "unread",
     "new",
+    "top",
     "starred",
     "read",
     "posted",
@@ -348,13 +355,6 @@ PreloadStore.store("site", {
       id: 7,
       is_custom_flag: true,
     },
-  ],
-  trust_levels: [
-    { id: 0, name: "new user" },
-    { id: 1, name: "basic user" },
-    { id: 2, name: "member" },
-    { id: 3, name: "regular" },
-    { id: 4, name: "leader" },
   ],
   archetypes: [{ id: "regular", name: "Regular Topic", options: [] }],
 });

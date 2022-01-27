@@ -21,7 +21,7 @@
           <% if post.hidden %>
             <%= t('flagging.user_must_edit').html_safe %>
           <% else %>
-            <%= post.cooked.html_safe %>
+            <%= PrettyText.format_for_email(post.cooked, post).html_safe %>
           <% end %>
           <p><%= link_to t('read_full_topic'), post_url %></p>
         ]]></description>

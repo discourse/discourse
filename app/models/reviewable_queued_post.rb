@@ -7,6 +7,8 @@ class ReviewableQueuedPost < Reviewable
     DiscourseEvent.trigger(:queued_post_created, self)
   end
 
+  after_commit :compute_user_stats, only: %i[create update]
+
   def build_actions(actions, guardian, args)
 
     unless approved?
@@ -33,12 +35,7 @@ class ReviewableQueuedPost < Reviewable
     end
 
     if pending? && guardian.can_delete_user?(created_by)
-      actions.add(:delete_user) do |action|
-        action.icon = 'trash-alt'
-        action.button_class = 'btn-danger'
-        action.label = 'reviewables.actions.delete_user.title'
-        action.confirm_message = 'reviewables.actions.delete_user.confirm'
-      end
+      delete_user_actions(actions)
     end
 
     actions.add(:delete) if guardian.can_delete?(self)
@@ -83,8 +80,10 @@ class ReviewableQueuedPost < Reviewable
       return create_result(:failure) { |r| r.errors = creator.errors }
     end
 
-    payload['created_post_id'] = created_post.id
-    payload['created_topic_id'] = created_post.topic_id unless topic_id
+    self.target = created_post
+    if topic_id.nil?
+      self.topic_id = created_post.topic_id
+    end
     save
 
     UserSilencer.unsilence(created_by, performed_by) if created_by.silenced?
@@ -131,24 +130,45 @@ class ReviewableQueuedPost < Reviewable
   end
 
   def perform_delete_user(performed_by, args)
-    delete_options = {
-      context: I18n.t('reviewables.actions.delete_user.reason'),
-      delete_posts: true,
-      block_urls: true,
-      block_email: true,
-      block_ip: true,
-      delete_as_spammer: true
-    }
+    delete_user(performed_by, delete_opts)
+  end
+
+  def perform_delete_user_block(performed_by, args)
+    delete_options = delete_opts
 
     if Rails.env.production?
       delete_options.merge!(block_email: true, block_ip: true)
     end
 
+    delete_user(performed_by, delete_options)
+  end
+
+  private
+
+  def delete_user(performed_by, delete_options)
     reviewable_ids = Reviewable.where(created_by: created_by).pluck(:id)
     UserDestroyer.new(performed_by).destroy(created_by, delete_options)
     create_result(:success) { |r| r.remove_reviewable_ids = reviewable_ids }
   end
 
+  def delete_opts
+    {
+      context: I18n.t('reviewables.actions.delete_user.reason'),
+      delete_posts: true,
+      block_urls: true,
+      delete_as_spammer: true
+    }
+  end
+
+  def compute_user_stats
+    return unless status_changed_from_or_to_pending?
+    created_by.user_stat.update_pending_posts
+  end
+
+  def status_changed_from_or_to_pending?
+    saved_change_to_id?(from: nil) && pending? ||
+      saved_change_to_status?(from: self.class.statuses[:pending])
+  end
 end
 
 # == Schema Information
@@ -173,6 +193,8 @@ end
 #  latest_score            :datetime
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
+#  force_review            :boolean          default(FALSE), not null
+#  reject_reason           :text
 #
 # Indexes
 #

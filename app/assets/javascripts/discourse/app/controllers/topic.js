@@ -1,12 +1,13 @@
+import Category from "discourse/models/category";
 import Controller, { inject as controller } from "@ember/controller";
 import DiscourseURL, { userPath } from "discourse/lib/url";
 import { alias, and, not, or } from "@ember/object/computed";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import { isEmpty, isPresent } from "@ember/utils";
 import { later, next, schedule } from "@ember/runloop";
-import { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
+import Bookmark, { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
 import Composer from "discourse/models/composer";
-import EmberObject from "@ember/object";
+import EmberObject, { action } from "@ember/object";
 import I18n from "I18n";
 import Post from "discourse/models/post";
 import { Promise } from "rsvp";
@@ -18,14 +19,13 @@ import bootbox from "bootbox";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
 import { buildQuote } from "discourse/lib/quote";
 import { deepMerge } from "discourse-common/lib/object";
-import discourseDebounce from "discourse-common/lib/debounce";
 import { escapeExpression } from "discourse/lib/utilities";
 import { extractLinkMeta } from "discourse/lib/render-topic-featured-link";
-import isElementInViewport from "discourse/lib/is-element-in-viewport";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { inject as service } from "@ember/service";
 import showModal from "discourse/lib/show-modal";
 import { spinnerHTML } from "discourse/helpers/loading-spinner";
+import { openBookmarkModal } from "discourse/controllers/bookmark";
 
 let customPostMessageCallbacks = {};
 
@@ -68,6 +68,8 @@ export default Controller.extend(bufferedProperty("model"), {
   filter: null,
   quoteState: null,
   currentPostId: null,
+  userLastReadPostNumber: null,
+  highestPostNumber: null,
 
   init() {
     this._super(...arguments);
@@ -100,7 +102,17 @@ export default Controller.extend(bufferedProperty("model"), {
   ),
 
   updateQueryParams() {
-    this.setProperties(this.get("model.postStream.streamFilters"));
+    const filters = this.get("model.postStream.streamFilters");
+
+    if (Object.keys(filters).length > 0) {
+      this.setProperties(filters);
+    } else {
+      this.setProperties({
+        username_filters: null,
+        filter: null,
+        replies_to_post_number: null,
+      });
+    }
   },
 
   @observes("model.title", "category")
@@ -152,10 +164,12 @@ export default Controller.extend(bufferedProperty("model"), {
   showCategoryChooser: not("model.isPrivateMessage"),
 
   gotoInbox(name) {
-    let url = userPath(this.get("currentUser.username_lower") + "/messages");
+    let url = userPath(`${this.get("currentUser.username_lower")}/messages`);
+
     if (name) {
-      url = url + "/group/" + name;
+      url = `${url}/group/${name}`;
     }
+
     DiscourseURL.routeTo(url);
   },
 
@@ -166,6 +180,10 @@ export default Controller.extend(bufferedProperty("model"), {
 
   @discourseComputed("model.isPrivateMessage", "model.category.id")
   canEditTopicFeaturedLink(isPrivateMessage, categoryId) {
+    if (this.currentUser && this.currentUser.trust_level === 0) {
+      return false;
+    }
+
     if (!this.siteSettings.topic_featured_link_enabled || isPrivateMessage) {
       return false;
     }
@@ -193,26 +211,40 @@ export default Controller.extend(bufferedProperty("model"), {
     );
   },
 
-  @discourseComputed("model.category")
-  minimumRequiredTags(category) {
-    return category && category.minimum_required_tags > 0
-      ? category.minimum_required_tags
-      : null;
+  @discourseComputed("buffered.category_id")
+  minimumRequiredTags(categoryId) {
+    return Category.findById(categoryId)?.minimumRequiredTags || 0;
   },
 
   _removeDeleteOnOwnerReplyBookmarks() {
+    // the user has already navigated away from the topic. the PostCreator
+    // in rails already handles deleting the bookmarks that need to be
+    // based on auto_delete_preference; this is mainly used to clean up
+    // the in-memory post stream and topic model
+    if (!this.model) {
+      return;
+    }
+
     const posts = this.get("model.postStream.posts");
     if (posts) {
       posts
         .filter(
-          (p) =>
-            p.bookmarked &&
-            p.bookmark_auto_delete_preference ===
+          (post) =>
+            post.bookmarked &&
+            post.bookmark_auto_delete_preference ===
               AUTO_DELETE_PREFERENCES.ON_OWNER_REPLY
         )
-        .forEach((p) => {
-          p.clearBookmark();
+        .forEach((post) => {
+          post.clearBookmark();
+          this.model.removeBookmark(post.bookmark_id);
         });
+    }
+    const forTopicBookmark = this.model.bookmarks.findBy("for_topic", true);
+    if (
+      forTopicBookmark?.auto_delete_preference ===
+      AUTO_DELETE_PREFERENCES.ON_OWNER_REPLY
+    ) {
+      this.model.removeBookmark(forTopicBookmark.id);
     }
   },
 
@@ -571,9 +603,9 @@ export default Controller.extend(bufferedProperty("model"), {
       post.get("post_number") === 1 ? this.recoverTopic() : post.recover();
     },
 
-    deletePost(post) {
+    deletePost(post, opts) {
       if (post.get("post_number") === 1) {
-        return this.deleteTopic();
+        return this.deleteTopic(opts);
       } else if (!post.can_delete) {
         return false;
       }
@@ -587,7 +619,7 @@ export default Controller.extend(bufferedProperty("model"), {
         ajax(`/posts/${post.id}/reply-ids.json`).then((replies) => {
           if (replies.length === 0) {
             return post
-              .destroy(user)
+              .destroy(user, opts)
               .then(refresh)
               .catch((error) => {
                 popupAjaxError(error);
@@ -606,7 +638,7 @@ export default Controller.extend(bufferedProperty("model"), {
             label: I18n.t("post.controls.delete_replies.just_the_post"),
             callback() {
               post
-                .destroy(user)
+                .destroy(user, opts)
                 .then(refresh)
                 .catch((error) => {
                   popupAjaxError(error);
@@ -661,13 +693,26 @@ export default Controller.extend(bufferedProperty("model"), {
         });
       } else {
         return post
-          .destroy(user)
+          .destroy(user, opts)
           .then(refresh)
           .catch((error) => {
             popupAjaxError(error);
             post.undoDeleteState();
           });
       }
+    },
+
+    permanentlyDeletePost(post) {
+      return bootbox.confirm(
+        I18n.t("post.controls.permanently_delete_confirmation"),
+        I18n.t("no_value"),
+        I18n.t("yes_value"),
+        (result) => {
+          if (result) {
+            this.send("deletePost", post, { force_destroy: true });
+          }
+        }
+      );
     },
 
     editPost(post) {
@@ -713,9 +758,20 @@ export default Controller.extend(bufferedProperty("model"), {
       if (!this.currentUser) {
         return bootbox.alert(I18n.t("bookmarks.not_bookmarked"));
       } else if (post) {
-        return this._togglePostBookmark(post);
+        const bookmarkForPost = this.model.bookmarks.find(
+          (bookmark) => bookmark.post_id === post.id && !bookmark.for_topic
+        );
+        return this._modifyPostBookmark(
+          bookmarkForPost ||
+            Bookmark.create({
+              post_id: post.id,
+              topic_id: post.topic_id,
+              for_topic: false,
+            }),
+          post
+        );
       } else {
-        return this._toggleTopicBookmark(this.model).then((changedIds) => {
+        return this._toggleTopicLevelBookmark().then((changedIds) => {
           if (!changedIds) {
             return;
           }
@@ -949,10 +1005,6 @@ export default Controller.extend(bufferedProperty("model"), {
       });
     },
 
-    recoverTopic() {
-      this.model.recover();
-    },
-
     makeBanner() {
       this.model.makeBanner();
     },
@@ -1036,7 +1088,8 @@ export default Controller.extend(bufferedProperty("model"), {
         options = {
           action: Composer.CREATE_TOPIC,
           draftKey: post.topic.draft_key,
-          categoryId: this.get("model.category.id"),
+          topicCategoryId: this.get("model.category.id"),
+          prioritizedCategoryId: this.get("model.category.id"),
         };
       }
 
@@ -1182,104 +1235,117 @@ export default Controller.extend(bufferedProperty("model"), {
     }
   },
 
-  _togglePostBookmark(post) {
-    return new Promise((resolve) => {
-      let modalController = showModal("bookmark", {
-        model: {
-          postId: post.id,
-          id: post.bookmark_id,
-          reminderAt: post.bookmark_reminder_at,
-          autoDeletePreference: post.bookmark_auto_delete_preference,
-          name: post.bookmark_name,
-        },
-        title: post.bookmark_id
-          ? "post.bookmarks.edit"
-          : "post.bookmarks.create",
-        modalClass: "bookmark-with-reminder",
-      });
-      modalController.setProperties({
-        onCloseWithoutSaving: () => {
-          resolve({ closedWithoutSaving: true });
-          post.appEvents.trigger("post-stream:refresh", { id: post.id });
-        },
-        afterSave: (savedData) => {
-          post.createBookmark(savedData);
-          resolve({ closedWithoutSaving: false });
-        },
-        afterDelete: (topicBookmarked) => {
-          post.deleteBookmark(topicBookmarked);
-        },
-      });
+  _modifyTopicBookmark(bookmark) {
+    return openBookmarkModal(bookmark, {
+      onAfterSave: (savedData) => {
+        this._syncBookmarks(savedData);
+        this.model.set("bookmarking", false);
+        this.model.set("bookmarked", true);
+        this.model.incrementProperty("bookmarksWereChanged");
+        this.appEvents.trigger(
+          "bookmarks:changed",
+          savedData,
+          bookmark.attachedTo()
+        );
+
+        // TODO (martin) (2022-02-01) Remove these old bookmark events, replaced by bookmarks:changed.
+        this.appEvents.trigger("topic:bookmark-toggled");
+      },
+      onAfterDelete: (topicBookmarked, bookmarkId) => {
+        this.model.removeBookmark(bookmarkId);
+      },
     });
   },
 
-  _toggleTopicBookmark() {
+  _modifyPostBookmark(bookmark, post) {
+    return openBookmarkModal(bookmark, {
+      onCloseWithoutSaving: () => {
+        post.appEvents.trigger("post-stream:refresh", {
+          id: bookmark.post_id,
+        });
+      },
+      onAfterSave: (savedData) => {
+        this._syncBookmarks(savedData);
+        this.model.set("bookmarking", false);
+        post.createBookmark(savedData);
+        this.model.afterPostBookmarked(post, savedData);
+        return [post.id];
+      },
+      onAfterDelete: (topicBookmarked, bookmarkId) => {
+        this.model.removeBookmark(bookmarkId);
+        post.deleteBookmark(topicBookmarked);
+      },
+    });
+  },
+
+  _syncBookmarks(data) {
+    if (!this.model.bookmarks) {
+      this.model.set("bookmarks", []);
+    }
+
+    const bookmark = this.model.bookmarks.findBy("id", data.id);
+    if (!bookmark) {
+      this.model.bookmarks.pushObject(Bookmark.create(data));
+    } else {
+      bookmark.reminder_at = data.reminder_at;
+      bookmark.name = data.name;
+      bookmark.auto_delete_preference = data.auto_delete_preference;
+    }
+  },
+
+  async _toggleTopicLevelBookmark() {
     if (this.model.bookmarking) {
       return Promise.resolve();
     }
-    this.model.set("bookmarking", true);
-    const bookmark = !this.model.bookmarked;
-    let posts = this.model.postStream.posts;
 
-    return this.model.firstPost().then((firstPost) => {
-      const toggleBookmarkOnServer = () => {
-        if (bookmark) {
-          return this._togglePostBookmark(firstPost).then((opts) => {
-            this.model.set("bookmarking", false);
-            if (opts && opts.closedWithoutSaving) {
-              return;
-            }
-            return this.model.afterTopicBookmarked(firstPost);
-          });
-        } else {
-          return this.model
-            .deleteBookmark()
-            .then(() => {
-              this.model.toggleProperty("bookmarked");
-              this.model.set("bookmark_reminder_at", null);
-              let clearedBookmarkProps = {
-                bookmarked: false,
-                bookmark_id: null,
-                bookmark_name: null,
-                bookmark_reminder_at: null,
-              };
-              if (posts) {
-                const updated = [];
-                posts.forEach((post) => {
-                  if (post.bookmarked) {
-                    post.setProperties(clearedBookmarkProps);
-                    updated.push(post.id);
-                  }
-                });
-                firstPost.setProperties(clearedBookmarkProps);
-                return updated;
-              }
-            })
-            .catch(popupAjaxError)
-            .finally(() => this.model.set("bookmarking", false));
-        }
-      };
+    if (this.model.bookmarkCount > 1) {
+      return this._maybeClearAllBookmarks();
+    }
 
-      const unbookmarkedPosts = [];
-      if (!bookmark && posts) {
-        posts.forEach(
-          (post) => post.bookmarked && unbookmarkedPosts.push(post)
-        );
+    if (this.model.bookmarkCount === 1) {
+      const forTopicBookmark = this.model.bookmarks.findBy("for_topic", true);
+      if (forTopicBookmark) {
+        return this._modifyTopicBookmark(forTopicBookmark);
+      } else {
+        const bookmark = this.model.bookmarks[0];
+        const post = await this.model.postById(bookmark.post_id);
+        return this._modifyPostBookmark(bookmark, post);
       }
+    }
 
-      return new Promise((resolve) => {
-        if (unbookmarkedPosts.length > 1) {
-          bootbox.confirm(
-            I18n.t("bookmarks.confirm_clear"),
-            I18n.t("no_value"),
-            I18n.t("yes_value"),
-            (confirmed) =>
-              confirmed ? toggleBookmarkOnServer().then(resolve) : resolve()
-          );
-        } else {
-          toggleBookmarkOnServer().then(resolve);
+    if (this.model.bookmarkCount === 0) {
+      const firstPost = await this.model.firstPost();
+      return this._modifyTopicBookmark(
+        Bookmark.create({
+          post_id: firstPost.id,
+          topic_id: this.model.id,
+          for_topic: true,
+        })
+      );
+    }
+  },
+
+  _maybeClearAllBookmarks() {
+    return new Promise((resolve) => {
+      bootbox.confirm(
+        I18n.t("bookmarks.confirm_clear"),
+        I18n.t("no_value"),
+        I18n.t("yes_value"),
+        (confirmed) => {
+          if (confirmed) {
+            return this.model
+              .deleteBookmarks()
+              .then(() => resolve(this.model.clearBookmarks()))
+              .catch(popupAjaxError)
+              .finally(() => {
+                this.model.set("bookmarking", false);
+              });
+          } else {
+            this.model.set("bookmarking", false);
+            resolve();
+          }
         }
-      });
+      );
     });
   },
 
@@ -1417,17 +1483,18 @@ export default Controller.extend(bufferedProperty("model"), {
     return spinnerHTML;
   },
 
+  @action
   recoverTopic() {
     this.model.recover();
   },
 
-  deleteTopic() {
+  deleteTopic(opts) {
     if (
       this.model.views > this.siteSettings.min_topic_views_for_delete_confirm
     ) {
       this.deleteTopicModal();
     } else {
-      this.model.destroy(this.currentUser);
+      this.model.destroy(this.currentUser, opts);
     }
   },
 
@@ -1538,6 +1605,12 @@ export default Controller.extend(bufferedProperty("model"), {
               .then(() => refresh({ id: data.id, refreshLikes: true }));
             break;
           }
+          case "liked": {
+            postStream
+              .triggerLikedPost(data.id, data.likes_count)
+              .then(() => refresh({ id: data.id, refreshLikes: true }));
+            break;
+          }
           case "revised":
           case "rebaked": {
             postStream
@@ -1604,49 +1677,8 @@ export default Controller.extend(bufferedProperty("model"), {
             }
           }
         }
-
-        // scroll to bottom is very specific to new posts from discobot
-        // hence the -2 check (dicobot id). We can shift all this code
-        // to discobot plugin longer term
-        if (
-          topic.get("isPrivateMessage") &&
-          this.currentUser &&
-          this.currentUser.get("id") !== data.user_id &&
-          data.user_id === -2 &&
-          data.type === "created"
-        ) {
-          const postNumber = data.post_number;
-          const notInPostStream =
-            topic.get("highest_post_number") <= postNumber;
-          const postNumberDifference = postNumber - topic.get("currentPost");
-
-          if (
-            notInPostStream &&
-            postNumberDifference > 0 &&
-            postNumberDifference < 7
-          ) {
-            this._scrollToPost(data.post_number);
-          }
-        }
       },
       this.get("model.message_bus_last_id")
-    );
-  },
-
-  _scrollToPost(postNumber) {
-    discourseDebounce(
-      this,
-      function () {
-        const $post = $(`.topic-post article#post_${postNumber}`);
-
-        if ($post.length === 0 || isElementInViewport($post)) {
-          return;
-        }
-
-        $("html, body").animate({ scrollTop: $post.offset().top }, 1000);
-      },
-      postNumber,
-      500
     );
   },
 

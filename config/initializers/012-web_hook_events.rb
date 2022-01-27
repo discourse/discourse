@@ -27,10 +27,17 @@ end
 
 DiscourseEvent.on(:post_edited) do |post, topic_changed|
   unless post.topic&.trashed?
-    WebHook.enqueue_post_hooks(:post_edited, post)
 
+    # if we are editing the OP and the topic is changed, do not send
+    # the post_edited event -- this event is sent separately because
+    # when we update the OP in the UI we send two API calls in this order:
+    #
+    # PUT /t/topic-name
+    # PUT /post/243552
     if post.is_first_post? && topic_changed
       WebHook.enqueue_topic_hooks(:topic_edited, post.topic)
+    else
+      WebHook.enqueue_post_hooks(:post_edited, post)
     end
   end
 end
@@ -110,5 +117,12 @@ end
 DiscourseEvent.on(:like_created) do |post_action|
   user = post_action.user
   group_ids = user.groups.map(&:id)
-  WebHook.enqueue_object_hooks(:like, post_action, :post_liked, WebHookLikeSerializer, group_ids: group_ids)
+  topic = Topic.includes(:tags).joins(:posts).find_by(posts: { id: post_action.post_id })
+  category_id = topic&.category_id
+  tag_ids = topic&.tag_ids
+
+  WebHook.enqueue_object_hooks(:like,
+    post_action, :post_liked, WebHookLikeSerializer,
+    group_ids: group_ids, category_id: category_id, tag_ids: tag_ids
+  )
 end

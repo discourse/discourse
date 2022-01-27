@@ -2,8 +2,10 @@ import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
 import {
+  count,
   discourseModule,
-  queryAll,
+  exists,
+  query,
 } from "discourse/tests/helpers/qunit-helpers";
 import EmberObject from "@ember/object";
 import hbs from "htmlbars-inline-precompile";
@@ -46,7 +48,7 @@ discourseModule(
         pretender.put("/notifications/mark-read", (request) => {
           ++requests;
 
-          assert.equal(
+          assert.strictEqual(
             request.requestBody,
             `id=${this.args.id}`,
             "it sets correct request parameters"
@@ -59,19 +61,19 @@ discourseModule(
           ];
         });
 
-        assert.equal(queryAll("li.read").length, 0);
+        assert.ok(!exists("li.read"));
 
         $(document).trigger(
           $.Event("mouseup", {
-            target: queryAll("li")[0],
+            target: query("li"),
             button: 1,
             which: 2,
           })
         );
         await settled();
 
-        assert.equal(queryAll("li.read").length, 1);
-        assert.equal(requests, 1);
+        assert.strictEqual(count("li.read"), 1);
+        assert.strictEqual(requests, 1);
       },
     });
   }

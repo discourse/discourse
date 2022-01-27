@@ -151,37 +151,14 @@
   }
   button {
     margin-left: auto;
-    display: flex;
   }
   margin: 0 0 1em 0;
   a.filter {
-    display: inline-flex;
-    align-items: center;
-    margin-bottom: 0.25em;
-    background-color: var(--primary-low);
-    padding: 3px 10px;
-    color: var(--primary);
-    &:hover {
-      color: var(--primary);
-      background-color: var(--primary-low);
-    }
     .label {
       font-weight: bold;
     }
     .d-icon {
-      margin-left: 6px;
-    }
-  }
-}
-
-.admin-logs-table {
-  input.ember-text-field {
-    padding: 1px 4px;
-  }
-  .btn {
-    padding: 2px 8px;
-    .fa {
-      margin-right: 2px;
+      margin-left: 0.5em;
     }
   }
 }
@@ -190,43 +167,19 @@
   display: block;
 }
 
-.screened-ip-address-form {
-  margin-left: 6px;
-  .combobox {
-    width: 130px;
-  }
-}
-
 .screened-ip-controls {
   display: flex;
   flex-wrap: wrap;
-  input {
-    flex: 1 1 auto;
-    margin: 0 0.25em 0.25em;
-  }
-  b {
-    margin: 0 0.25em;
-  }
-  .select-kit {
-    margin: 0 0.25em 0.25em 0.25em;
-    flex: 1 1 auto;
-  }
-  .filter-screened-ip-address,
   .screened-ip-address-form {
-    margin: 0 -0.25em 1em;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-  }
-  @media screen and (min-width: 800px) {
-    .screened-ip-address-form {
+    .combobox {
+      width: 140px;
+    }
+    @media screen and (min-width: 900px) {
       margin-left: auto;
     }
-  }
-  button {
-    display: flex;
-    white-space: nowrap;
-    margin: 0 0.25em 0.25em;
+    @media screen and (max-width: 899px) {
+      margin-top: 1em;
+    }
   }
 }
 
@@ -238,17 +191,10 @@ table.screened-ip-addresses {
       width: 80%;
     }
   }
-  td.action {
-    display: flex;
-    align-items: baseline;
-    .d-icon-check {
-      color: var(--success);
-    }
-    .d-icon-ban {
-      color: var(--danger);
-    }
-    .d-icon {
-      margin-right: 0.25em;
+  td.actions {
+    text-align: right;
+    .cancel-action {
+      margin-left: 0.5em;
     }
   }
 }
@@ -330,9 +276,33 @@ table.screened-ip-addresses {
   width: 250px;
   margin-bottom: 1em;
   vertical-align: top;
+}
+
+.watched-words-link {
+  .watched-word-box {
+    min-width: 100%;
+  }
+}
+
+.watched-words-replace,
+.watched-words-tag {
+  .watched-word-box {
+    min-width: calc(50% - 5px);
+  }
+}
+
+.watched-word-box,
+.watched-words-test-modal {
   .replacement {
     white-space: pre;
-    background-color: var(--tertiary-low);
+    background: var(--tertiary-low);
+  }
+
+  .tag {
+    background: var(--primary-low);
+    font-size: $font-down-1;
+    margin-right: 0.1em;
+    padding: 0.5em;
   }
 }
 
@@ -343,6 +313,7 @@ table.screened-ip-addresses {
 .watched-words-list {
   margin-top: 20px;
   display: inline-block;
+  width: 100%;
 }
 
 .watched-word {
@@ -352,10 +323,10 @@ table.screened-ip-addresses {
   .d-icon {
     margin-right: 0.25em;
     color: var(--primary-medium);
-  }
 
-  &:hover .d-icon {
-    color: var(--danger);
+    &:hover {
+      color: var(--danger);
+    }
   }
 }
 
@@ -371,6 +342,11 @@ table.screened-ip-addresses {
   .watched-word-form {
     margin-bottom: 1em;
   }
+
+  .watched-word-controls .btn {
+    margin-bottom: 0.25em;
+    margin-right: 0.25em;
+  }
 }
 
 .watched-words-test-modal p {
@@ -381,12 +357,18 @@ table.screened-ip-addresses {
   label {
     display: inline-block;
     min-width: 150px;
+    padding-top: 4px;
+    vertical-align: top;
   }
   input.watched-word-input-field {
     min-width: 300px;
   }
-  input.watched-word-input-replace {
-    min-width: 260px;
+  .select-kit.multi-select.watched-word-input-field {
+    width: 300px;
+  }
+
+  + .btn-primary {
+    margin-top: 1em;
   }
 }
 

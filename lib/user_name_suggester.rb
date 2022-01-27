@@ -2,12 +2,16 @@
 
 module UserNameSuggester
   GENERIC_NAMES = ['i', 'me', 'info', 'support', 'admin', 'webmaster', 'hello', 'mail', 'office', 'contact', 'team']
+  LAST_RESORT_USERNAME = "user"
 
-  def self.suggest(name_or_email, allowed_username = nil)
-    return unless name_or_email.present?
+  def self.suggest(*input,  current_username: nil)
+    name = input.find do |item|
+      parsed_name = parse_name_from_email(item)
+      break parsed_name if sanitize_username(parsed_name).present?
+    end
 
-    name = parse_name_from_email(name_or_email)
-    find_available_username_based_on(name, allowed_username)
+    name = fix_username(name)
+    find_available_username_based_on(name, current_username)
   end
 
   def self.parse_name_from_email(name_or_email)
@@ -21,21 +25,20 @@ module UserNameSuggester
     name
   end
 
-  def self.find_available_username_based_on(name, allowed_username = nil)
-    name = fix_username(name)
+  def self.find_available_username_based_on(name, current_username = nil)
     offset = nil
     i = 1
 
     attempt = name
     normalized_attempt = User.normalize_username(attempt)
 
-    original_allowed_username = allowed_username
-    allowed_username = User.normalize_username(allowed_username) if allowed_username
+    original_allowed_username = current_username
+    current_username = User.normalize_username(current_username) if current_username
 
     until (
-      normalized_attempt == allowed_username ||
-      User.username_available?(attempt) ||
-      i > 100
+      normalized_attempt == current_username ||
+        User.username_available?(attempt) ||
+        i > 100
     )
 
       if offset.nil?
@@ -53,7 +56,7 @@ module UserNameSuggester
           params = {
             count: count + 10,
             name: normalized,
-            allowed_normalized: allowed_username || ''
+            allowed_normalized: current_username || ''
           }
 
           # increasing the search space a bit to allow for some extra noise
@@ -87,22 +90,27 @@ module UserNameSuggester
       i += 1
     end
 
-    until normalized_attempt == allowed_username || User.username_available?(attempt) || i > 200
+    until normalized_attempt == current_username || User.username_available?(attempt) || i > 200
       attempt = SecureRandom.hex[1..SiteSetting.max_username_length]
       normalized_attempt = User.normalize_username(attempt)
       i += 1
     end
 
-    if allowed_username == normalized_attempt
+    if current_username == normalized_attempt
       original_allowed_username
     else
       attempt
     end
-
   end
 
   def self.fix_username(name)
-    rightsize_username(sanitize_username(name))
+    fixed_username = sanitize_username(name)
+    if fixed_username.empty?
+      fixed_username << sanitize_username(I18n.t('fallback_username'))
+      fixed_username << LAST_RESORT_USERNAME if fixed_username.empty?
+    end
+
+    rightsize_username(fixed_username)
   end
 
   def self.sanitize_username(name)

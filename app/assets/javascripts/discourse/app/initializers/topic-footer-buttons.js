@@ -1,5 +1,4 @@
 import I18n from "I18n";
-import { formattedReminderTime } from "discourse/lib/bookmark";
 import { registerTopicFooterButton } from "discourse/lib/register-topic-footer-button";
 import showModal from "discourse/lib/show-modal";
 
@@ -12,11 +11,10 @@ const DEFER_PRIORITY = 500;
 export default {
   name: "topic-footer-buttons",
 
-  initialize(container) {
-    const currentUser = container.lookup("current-user:main");
+  initialize() {
     registerTopicFooterButton({
       id: "share-and-invite",
-      icon: "link",
+      icon: "d-topic-share",
       priority: SHARE_PRIORITY,
       label() {
         if (!this.get("topic.isPrivateMessage") || this.site.mobileView) {
@@ -25,7 +23,9 @@ export default {
       },
       title: "topic.share.help",
       action() {
-        const controller = showModal("share-topic");
+        const controller = showModal("share-topic", {
+          model: this.topic.category,
+        });
         controller.setProperties({
           allowInvites: this.canInviteTo && !this.inviteDisabled,
           topic: this.topic,
@@ -66,40 +66,49 @@ export default {
     });
 
     registerTopicFooterButton({
-      dependentKeys: ["topic.bookmarked"],
+      dependentKeys: ["topic.bookmarked", "topic.bookmarksWereChanged"],
       id: "bookmark",
       icon() {
-        if (this.get("topic.bookmark_reminder_at")) {
+        if (this.topic.bookmarks.some((bookmark) => bookmark.reminder_at)) {
           return "discourse-bookmark-clock";
         }
         return "bookmark";
       },
       priority: BOOKMARK_PRIORITY,
       classNames() {
-        const bookmarked = this.get("topic.bookmarked");
-        return bookmarked ? ["bookmark", "bookmarked"] : ["bookmark"];
+        return this.topic.bookmarked
+          ? ["bookmark", "bookmarked"]
+          : ["bookmark"];
       },
       label() {
-        if (!this.get("topic.isPrivateMessage") || this.site.mobileView) {
-          const bookmarked = this.get("topic.bookmarked");
-          return bookmarked ? "bookmarked.clear_bookmarks" : "bookmarked.title";
+        if (!this.topic.isPrivateMessage || this.site.mobileView) {
+          if (this.topic.bookmarkCount === 0) {
+            return "bookmarked.title";
+          } else if (this.topic.bookmarkCount === 1) {
+            return "bookmarked.edit_bookmark";
+          } else {
+            return "bookmarked.clear_bookmarks";
+          }
         }
       },
       translatedTitle() {
-        const bookmarked = this.get("topic.bookmarked");
-        const bookmark_reminder_at = this.get("topic.bookmark_reminder_at");
-        if (bookmarked) {
-          if (bookmark_reminder_at) {
-            return I18n.t("bookmarked.help.unbookmark_with_reminder", {
-              reminder_at: formattedReminderTime(
-                bookmark_reminder_at,
-                currentUser.resolvedTimezone(currentUser)
-              ),
-            });
+        if (this.topic.bookmarkCount === 0) {
+          return I18n.t("bookmarked.help.bookmark");
+        } else if (this.topic.bookmarkCount === 1) {
+          if (
+            this.topic.bookmarks.filter((bookmark) => bookmark.for_topic).length
+          ) {
+            return I18n.t("bookmarked.help.edit_bookmark_for_topic");
+          } else {
+            return I18n.t("bookmarked.help.edit_bookmark");
           }
+        } else if (
+          this.topic.bookmarks.some((bookmark) => bookmark.reminder_at)
+        ) {
+          return I18n.t("bookmarked.help.unbookmark_with_reminder");
+        } else {
           return I18n.t("bookmarked.help.unbookmark");
         }
-        return I18n.t("bookmarked.help.bookmark");
       },
       action: "toggleBookmark",
       dropdown() {

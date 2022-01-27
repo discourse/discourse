@@ -3,70 +3,104 @@ import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
 import { isBlank } from "@ember/utils";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { get } from "@ember/object";
+import { action, get } from "@ember/object";
+import { equal } from "@ember/object/computed";
 import showModal from "discourse/lib/show-modal";
+import { ajax } from "discourse/lib/ajax";
 
 export default Controller.extend({
-  userModes: [
-    { id: "all", name: I18n.t("admin.api.all_users") },
-    { id: "single", name: I18n.t("admin.api.single_user") },
-  ],
-  useGlobalKey: false,
+  userModes: null,
+  scopeModes: null,
+  globalScopes: null,
   scopes: null,
 
-  @discourseComputed("userMode")
-  showUserSelector(mode) {
-    return mode === "single";
+  init() {
+    this._super(...arguments);
+
+    this.set("userModes", [
+      { id: "all", name: I18n.t("admin.api.all_users") },
+      { id: "single", name: I18n.t("admin.api.single_user") },
+    ]);
+
+    this.set("scopeModes", [
+      { id: "granular", name: I18n.t("admin.api.scopes.granular") },
+      { id: "read_only", name: I18n.t("admin.api.scopes.read_only") },
+      { id: "global", name: I18n.t("admin.api.scopes.global") },
+    ]);
+
+    this._loadScopes();
   },
 
-  @discourseComputed("model.description", "model.username", "userMode")
-  saveDisabled(description, username, userMode) {
-    if (isBlank(description)) {
+  showUserSelector: equal("userMode", "single"),
+
+  @discourseComputed("model.{description,username}", "showUserSelector")
+  saveDisabled(model, showUserSelector) {
+    if (isBlank(model.description)) {
       return true;
     }
-    if (userMode === "single" && isBlank(username)) {
+    if (showUserSelector && isBlank(model.username)) {
       return true;
     }
     return false;
   },
 
-  actions: {
-    updateUsername(selected) {
-      this.set("model.username", get(selected, "firstObject"));
-    },
+  @action
+  updateUsername(selected) {
+    this.set("model.username", get(selected, "firstObject"));
+  },
 
-    changeUserMode(value) {
-      if (value === "all") {
-        this.model.set("username", null);
-      }
-      this.set("userMode", value);
-    },
+  @action
+  changeUserMode(userMode) {
+    if (userMode === "all") {
+      this.model.set("username", null);
+    }
+    this.set("userMode", userMode);
+  },
 
-    save() {
-      if (!this.useGlobalKey) {
-        const selectedScopes = Object.values(this.scopes)
-          .flat()
-          .filter((action) => {
-            return action.selected;
-          });
+  @action
+  changeScopeMode(scopeMode) {
+    this.set("scopeMode", scopeMode);
+  },
 
-        this.model.set("scopes", selectedScopes);
-      }
+  @action
+  save() {
+    if (this.scopeMode === "granular") {
+      const selectedScopes = Object.values(this.scopes)
+        .flat()
+        .filterBy("selected");
 
-      this.model.save().catch(popupAjaxError);
-    },
+      this.model.set("scopes", selectedScopes);
+    } else if (this.scopeMode === "read_only") {
+      this.model.set("scopes", [this.globalScopes.findBy("key", "read")]);
+    } else if (this.scopeMode === "all") {
+      this.model.set("scopes", null);
+    }
 
-    continue() {
-      this.transitionToRoute("adminApiKeys.show", this.model.id);
-    },
+    return this.model.save().catch(popupAjaxError);
+  },
 
-    showURLs(urls) {
-      return showModal("admin-api-key-urls", {
-        admin: true,
-        model: {
-          urls,
-        },
-      });
-    },
+  @action
+  continue() {
+    this.transitionToRoute("adminApiKeys.show", this.model.id);
+  },
+
+  @action
+  showURLs(urls) {
+    return showModal("admin-api-key-urls", {
+      admin: true,
+      model: { urls },
+    });
+  },
+
+  _loadScopes() {
+    return ajax("/admin/api/keys/scopes.json")
+      .then((data) => {
+        // remove global scopes because there is a different dropdown
+        this.set("globalScopes", data.scopes.global);
+        delete data.scopes.global;
+
+        this.set("scopes", data.scopes);
+      })
+      .catch(popupAjaxError);
   },
 });

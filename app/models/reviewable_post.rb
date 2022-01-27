@@ -109,3 +109,39 @@ class ReviewablePost < Reviewable
     end
   end
 end
+
+# == Schema Information
+#
+# Table name: reviewables
+#
+#  id                      :bigint           not null, primary key
+#  type                    :string           not null
+#  status                  :integer          default(0), not null
+#  created_by_id           :integer          not null
+#  reviewable_by_moderator :boolean          default(FALSE), not null
+#  reviewable_by_group_id  :integer
+#  category_id             :integer
+#  topic_id                :integer
+#  score                   :float            default(0.0), not null
+#  potential_spam          :boolean          default(FALSE), not null
+#  target_id               :integer
+#  target_type             :string
+#  target_created_by_id    :integer
+#  payload                 :json
+#  version                 :integer          default(0), not null
+#  latest_score            :datetime
+#  created_at              :datetime         not null
+#  updated_at              :datetime         not null
+#  force_review            :boolean          default(FALSE), not null
+#  reject_reason           :text
+#
+# Indexes
+#
+#  index_reviewables_on_reviewable_by_group_id                 (reviewable_by_group_id)
+#  index_reviewables_on_status_and_created_at                  (status,created_at)
+#  index_reviewables_on_status_and_score                       (status,score)
+#  index_reviewables_on_status_and_type                        (status,type)
+#  index_reviewables_on_target_id_where_post_type_eq_post      (target_id) WHERE ((target_type)::text = 'Post'::text)
+#  index_reviewables_on_topic_id_and_status_and_created_by_id  (topic_id,status,created_by_id)
+#  index_reviewables_on_type_and_target_id                     (type,target_id) UNIQUE
+#

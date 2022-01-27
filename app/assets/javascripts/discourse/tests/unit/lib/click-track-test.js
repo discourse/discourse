@@ -6,11 +6,12 @@ import User from "discourse/models/user";
 import { later } from "@ember/runloop";
 import pretender from "discourse/tests/helpers/create-pretender";
 import sinon from "sinon";
+import { setPrefix } from "discourse-common/lib/get-url";
 
 const track = ClickTrack.trackClick;
 
 function generateClickEventOn(selector) {
-  return $.Event("click", { currentTarget: fixture(selector).first() });
+  return $.Event("click", { currentTarget: fixture(selector) });
 }
 
 module("Unit | Utility | click-track", function (hooks) {
@@ -26,8 +27,7 @@ module("Unit | Utility | click-track", function (hooks) {
 
     sessionStorage.clear();
 
-    fixture().html(
-      `<div id="topic" data-topic-id="1337">
+    fixture().innerHTML = `<div id="topic" data-topic-id="1337">
         <article data-post-id="42" data-user-id="3141">
           <a href="http://www.google.com">google.com</a>
           <a class="lightbox back" href="http://www.google.fr">google.fr</a>
@@ -47,9 +47,11 @@ module("Unit | Utility | click-track", function (hooks) {
             <a href="https://discuss.domain.com/t/welcome-to-meta-discourse-org/1/30">foo</a>
             <a href="https://google.com">bar</a>
           </aside>
+          <a class="prefix-url" href="/forum/thing">prefix link</a>
+          <a class="abs-prefix-url" href="${window.location.origin}/forum/thing">prefix link</a>
+          <a class="diff-prefix-url" href="/thing">diff prefix link</a>
         </article>
-      </div>`
-    );
+      </div>`;
   });
 
   skip("tracks internal URLs", async function (assert) {
@@ -83,6 +85,37 @@ module("Unit | Utility | click-track", function (hooks) {
         "http://discuss.domain.com/uploads/default/1234/1532357280.txt"
       )
     );
+  });
+
+  test("routes to internal urls", async function (assert) {
+    setPrefix("/forum");
+    pretender.post("/clicks/track", () => [200, {}, ""]);
+    await track(generateClickEventOn(".prefix-url"), null, {
+      returnPromise: true,
+    });
+    assert.ok(DiscourseURL.routeTo.calledWith("/forum/thing"));
+  });
+
+  test("routes to absolute internal urls", async function (assert) {
+    setPrefix("/forum");
+    pretender.post("/clicks/track", () => [200, {}, ""]);
+    await track(generateClickEventOn(".abs-prefix-url"), null, {
+      returnPromise: true,
+    });
+    assert.ok(
+      DiscourseURL.routeTo.calledWith(window.location.origin + "/forum/thing")
+    );
+  });
+
+  test("redirects to internal urls with a different prefix", async function (assert) {
+    setPrefix("/forum");
+    sinon.stub(DiscourseURL, "redirectAbsolute");
+
+    pretender.post("/clicks/track", () => [200, {}, ""]);
+    await track(generateClickEventOn(".diff-prefix-url"), null, {
+      returnPromise: true,
+    });
+    assert.ok(DiscourseURL.redirectAbsolute.calledWith("/thing"));
   });
 
   skip("tracks external URLs", async function (assert) {
@@ -154,11 +187,11 @@ module("Unit | Utility | click-track", function (hooks) {
 
     assert.notOk(track(generateClickEventOn("a")));
 
-    let $link = fixture("a").first();
-    assert.ok($link.hasClass("no-href"));
-    assert.equal($link.data("href"), "http://www.google.com/");
-    assert.blank($link.attr("href"));
-    assert.ok($link.data("auto-route"));
+    let link = fixture("a");
+    assert.ok(link.classList.contains("no-href"));
+    assert.strictEqual(link.dataset.href, "http://www.google.com/");
+    assert.blank(link.getAttribute("href"));
+    assert.ok(link.dataset.autoRoute);
     assert.ok(window.open.calledWith("http://www.google.com/", "_blank"));
   });
 
@@ -171,15 +204,18 @@ module("Unit | Utility | click-track", function (hooks) {
 
     const done = assert.async();
     later(() => {
-      assert.equal(fixture("a").attr("href"), "http://www.google.com");
+      assert.strictEqual(
+        fixture("a").getAttribute("href"),
+        "http://www.google.com"
+      );
       done();
     });
   });
 
   function badgeClickCount(assert, id, expected) {
-    track(generateClickEventOn("#" + id));
-    let $badge = $("span.badge", fixture("#" + id).first());
-    assert.equal(parseInt($badge.html(), 10), expected);
+    track(generateClickEventOn(`#${id}`));
+    const badge = fixture(`#${id}`).querySelector("span.badge");
+    assert.strictEqual(parseInt(badge.innerHTML, 10), expected);
   }
 
   test("does not update badge clicks on my own link", async function (assert) {

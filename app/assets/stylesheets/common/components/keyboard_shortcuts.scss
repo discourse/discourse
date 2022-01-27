@@ -15,6 +15,10 @@
   box-shadow: -3px 0 0 var(--danger);
 }
 
+.tabLoc:focus {
+  outline: none;
+}
+
 .latest .featured-topic {
   padding-left: 4px;
 }

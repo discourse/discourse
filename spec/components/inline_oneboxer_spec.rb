@@ -116,7 +116,7 @@ describe InlineOneboxer do
       expect(onebox[:title]).to eq("Hello 🍕 with an emoji")
     end
 
-    it "will append the post number post auther's username to the title" do
+    it "will append the post number post author's username to the title" do
       topic = Fabricate(:topic, title: "Inline oneboxer")
       Fabricate(:post, topic: topic) # OP
       Fabricate(:post, topic: topic)
@@ -149,12 +149,6 @@ describe InlineOneboxer do
 
     it "will not crawl domains that aren't allowlisted" do
       SiteSetting.enable_inline_onebox_on_all_domains = false
-      onebox = InlineOneboxer.lookup("https://eviltrout.com", skip_cache: true)
-      expect(onebox).to be_blank
-    end
-
-    it "will not crawl domains that are blocked" do
-      SiteSetting.blocked_onebox_domains = "eviltrout.com"
       onebox = InlineOneboxer.lookup("https://eviltrout.com", skip_cache: true)
       expect(onebox).to be_blank
     end
@@ -204,6 +198,38 @@ describe InlineOneboxer do
       expect(onebox[:title]).to eq("Evil Trout's Blog")
     end
 
-  end
+    describe "lookups for blocked domains in the hostname" do
+      shared_examples "blocks the domain" do |setting, domain_to_test|
+        it "does not retrieve title" do
+          SiteSetting.blocked_onebox_domains = setting
 
+          onebox = InlineOneboxer.lookup(domain_to_test, skip_cache: true)
+
+          expect(onebox).to be_blank
+        end
+      end
+
+      shared_examples "does not fulfil blocked domain" do |setting, domain_to_test|
+        it "retrieves title" do
+          SiteSetting.blocked_onebox_domains = setting
+
+          onebox = InlineOneboxer.lookup(domain_to_test, skip_cache: true)
+
+          expect(onebox).to be_present
+        end
+      end
+
+      include_examples "blocks the domain", "api.cat.org|kitten.cloud", "https://api.cat.org"
+      include_examples "blocks the domain", "api.cat.org|kitten.cloud", "http://kitten.cloud"
+
+      include_examples "blocks the domain", "kitten.cloud", "http://cat.kitten.cloud"
+
+      include_examples "blocks the domain", "api.cat.org", "https://api.cat.org/subdirectory/moar"
+      include_examples "blocks the domain", "kitten.cloud", "https://cat.kitten.cloud/subd"
+
+      include_examples "does not fulfil blocked domain", "kitten.cloud", "https://cat.2kitten.cloud"
+      include_examples "does not fulfil blocked domain", "kitten.cloud", "https://cat.kitten.cloud9"
+      include_examples "does not fulfil blocked domain", "api.cat.org", "https://api-cat.org"
+    end
+  end
 end

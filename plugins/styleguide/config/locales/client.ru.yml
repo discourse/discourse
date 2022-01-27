@@ -58,7 +58,7 @@ ru:
         footer_message:
           title: "Содержимое нижнего колонтитула"
         signup_cta:
-          title: "CTA"
+          title: "Кнопка регистрации (CTA)"
         topic_timer_info:
           title: "Таймеры темы"
         topic_footer_buttons:
@@ -85,3 +85,5 @@ ru:
           title: "Значки заголовков"
         spinners:
           title: "Спиннеры"
+        empty_state:
+          title: "Пустое состояние"

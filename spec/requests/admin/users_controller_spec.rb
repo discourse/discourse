@@ -2,10 +2,12 @@
 
 require 'rails_helper'
 require 'discourse_ip_info'
+require 'rotp'
 
 RSpec.describe Admin::UsersController do
   fab!(:admin) { Fabricate(:admin) }
   fab!(:user) { Fabricate(:user) }
+  fab!(:coding_horror) { Fabricate(:coding_horror) }
 
   it 'is a subclass of AdminController' do
     expect(Admin::UsersController < Admin::AdminController).to eq(true)
@@ -32,7 +34,7 @@ RSpec.describe Admin::UsersController do
         end
       end
 
-      it "logs only 1 enty" do
+      it "logs only 1 entry" do
         expect do
           get "/admin/users/list.json", params: { show_emails: "true" }
         end.to change { UserHistory.where(action: UserHistory.actions[:check_email], acting_user_id: admin.id).count }.by(1)
@@ -98,7 +100,7 @@ RSpec.describe Admin::UsersController do
 
     let(:evil_trout) { Fabricate(:evil_trout) }
 
-    it "does nothing without uesrs" do
+    it "does nothing without users" do
       put "/admin/users/approve-bulk.json"
       evil_trout.reload
       expect(response.status).to eq(200)
@@ -327,10 +329,18 @@ RSpec.describe Admin::UsersController do
       another_admin.reload
       expect(another_admin.admin).to eq(false)
     end
+
+    it 'returns detailed user schema' do
+      put "/admin/users/#{another_admin.id}/revoke_admin.json"
+      expect(response.parsed_body['can_be_merged']).to eq(true)
+      expect(response.parsed_body['can_be_deleted']).to eq(true)
+      expect(response.parsed_body['can_be_anonymized']).to eq(true)
+      expect(response.parsed_body['can_delete_all_posts']).to eq(true)
+    end
   end
 
   describe '#grant_admin' do
-    fab!(:another_user) { Fabricate(:coding_horror) }
+    fab!(:another_user) { coding_horror }
 
     after do
       Discourse.redis.flushdb
@@ -353,6 +363,27 @@ RSpec.describe Admin::UsersController do
       put "/admin/users/#{another_user.id}/grant_admin.json"
       expect(response.status).to eq(200)
       expect(AdminConfirmation.exists_for?(another_user.id)).to eq(true)
+    end
+
+    it 'asks user for second factor if it is enabled' do
+      user_second_factor = Fabricate(:user_second_factor_totp, user: admin)
+
+      put "/admin/users/#{another_user.id}/grant_admin.json"
+
+      expect(response.parsed_body["failed"]).to eq("FAILED")
+      expect(another_user.reload.admin).to eq(false)
+    end
+
+    it 'grants admin if second factor is correct' do
+      user_second_factor = Fabricate(:user_second_factor_totp, user: admin)
+
+      put "/admin/users/#{another_user.id}/grant_admin.json", params: {
+        second_factor_token: ROTP::TOTP.new(user_second_factor.data).now,
+        second_factor_method: UserSecondFactor.methods[:totp]
+      }
+
+      expect(response.parsed_body["success"]).to eq("OK")
+      expect(another_user.reload.admin).to eq(true)
     end
   end
 
@@ -432,7 +463,10 @@ RSpec.describe Admin::UsersController do
   end
 
   describe '#trust_level' do
-    fab!(:another_user) { Fabricate(:coding_horror, created_at: 1.month.ago) }
+    fab!(:another_user) {
+      coding_horror.update!(created_at: 1.month.ago)
+      coding_horror
+    }
 
     it "raises an error when the user doesn't have permission" do
       sign_in(user)
@@ -479,7 +513,7 @@ RSpec.describe Admin::UsersController do
   end
 
   describe '#grant_moderation' do
-    fab!(:another_user) { Fabricate(:coding_horror) }
+    fab!(:another_user) { coding_horror }
 
     it "raises an error when the user doesn't have permission" do
       sign_in(user)
@@ -505,6 +539,12 @@ RSpec.describe Admin::UsersController do
       another_user.reload
       expect(another_user.moderator).to eq(true)
     end
+
+    it 'returns detailed user schema' do
+      put "/admin/users/#{another_user.id}/grant_moderation.json"
+      expect(response.parsed_body['can_be_merged']).to eq(false)
+      expect(response.parsed_body['can_be_anonymized']).to eq(false)
+    end
   end
 
   describe '#revoke_moderation' do
@@ -524,11 +564,17 @@ RSpec.describe Admin::UsersController do
       moderator.reload
       expect(moderator.moderator).to eq(false)
     end
+
+    it 'returns detailed user schema' do
+      put "/admin/users/#{moderator.id}/revoke_moderation.json"
+      expect(response.parsed_body['can_be_merged']).to eq(true)
+      expect(response.parsed_body['can_be_anonymized']).to eq(true)
+    end
   end
 
   describe '#primary_group' do
     fab!(:group) { Fabricate(:group) }
-    fab!(:another_user) { Fabricate(:coding_horror) }
+    fab!(:another_user) { coding_horror }
     fab!(:another_group) { Fabricate(:group, title: 'New') }
 
     it "raises an error when the user doesn't have permission" do
@@ -626,10 +672,16 @@ RSpec.describe Admin::UsersController do
       let!(:post) { Fabricate(:post, topic: topic, user: delete_me) }
 
       it "returns an api response that the user can't be deleted because it has posts" do
+        post_count = delete_me.posts.joins(:topic).count
+        delete_me_topic = Fabricate(:topic)
+        Fabricate(:post, topic: delete_me_topic, user: delete_me)
+        PostDestroyer.new(admin, delete_me_topic.first_post, context: "Deleted by admin").destroy
+
         delete "/admin/users/#{delete_me.id}.json"
         expect(response.status).to eq(403)
         json = response.parsed_body
         expect(json['deleted']).to eq(false)
+        expect(json['message']).to eq(I18n.t("user.cannot_delete_has_posts", username: delete_me.username, count: post_count))
       end
 
       it "doesn't return an error if delete_posts == true" do
@@ -638,6 +690,16 @@ RSpec.describe Admin::UsersController do
         expect(Post.where(id: post.id).count).to eq(0)
         expect(Topic.where(id: topic.id).count).to eq(0)
         expect(User.where(id: delete_me.id).count).to eq(0)
+      end
+
+      context "user has reviewable flagged post which was handled" do
+        let!(:reviewable) { Fabricate(:reviewable_flagged_post, created_by: admin, target_created_by: delete_me, target: post, topic: topic, status: 4) }
+
+        it "deletes the user record" do
+          delete "/admin/users/#{delete_me.id}.json", params: { delete_posts: true, delete_as_spammer: true }
+          expect(response.status).to eq(200)
+          expect(User.where(id: delete_me.id).count).to eq(0)
+        end
       end
     end
 
@@ -860,7 +922,7 @@ RSpec.describe Admin::UsersController do
   end
 
   describe '#sync_sso' do
-    let(:sso) { SingleSignOn.new }
+    let(:sso) { DiscourseConnectBase.new }
     let(:sso_secret) { "sso secret" }
 
     before do
@@ -880,7 +942,7 @@ RSpec.describe Admin::UsersController do
       sso.email = "bob@bob.com"
       sso.external_id = "1"
 
-      user = DiscourseSingleSignOn.parse(sso.payload, secure_session: read_secure_session).lookup_or_create_user
+      user = DiscourseConnect.parse(sso.payload, secure_session: read_secure_session).lookup_or_create_user
 
       sso.name = "Bill"
       sso.username = "Hokli$$!!"

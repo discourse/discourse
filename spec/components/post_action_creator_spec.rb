@@ -3,6 +3,7 @@
 require 'rails_helper'
 
 describe PostActionCreator do
+  fab!(:admin) { Fabricate(:admin) }
   fab!(:user) { Fabricate(:user) }
   fab!(:post) { Fabricate(:post) }
   let(:like_type_id) { PostActionType.types[:like] }
@@ -79,6 +80,16 @@ describe PostActionCreator do
       expect(notification_data['display_username']).to eq(user.username)
       expect(notification_data['username2']).to eq(nil)
     end
+
+    it 'does not create a notification if silent mode is enabled' do
+      PostActionNotifier.enable
+
+      expect(
+        PostActionCreator.new(user, post, like_type_id, silent: true).perform.success
+      ).to eq(true)
+
+      expect(Notification.where(notification_type: Notification.types[:liked]).exists?).to eq(false)
+    end
   end
 
   context "flags" do
@@ -147,8 +158,6 @@ describe PostActionCreator do
       end
 
       describe "When the post was already reviewed by staff" do
-        fab!(:admin) { Fabricate(:admin) }
-
         before { reviewable.perform(admin, :ignore) }
 
         it "fails because the post was recently reviewed" do
@@ -178,7 +187,7 @@ describe PostActionCreator do
           expect(reviewable.reviewable_scores.select(&:pending?).count).to eq(1)
         end
 
-        it "succesfully flags the post if it was reviewed more than 24 hours ago" do
+        it "successfully flags the post if it was reviewed more than 24 hours ago" do
           reviewable.update!(updated_at: 25.hours.ago)
           post.last_version_at = 30.hours.ago
 
@@ -188,7 +197,7 @@ describe PostActionCreator do
           expect(result.reviewable).to be_present
         end
 
-        it "succesfully flags the post if it was edited after being reviewed" do
+        it "successfully flags the post if it was edited after being reviewed" do
           reviewable.update!(updated_at: 10.minutes.ago)
           post.last_version_at = 1.minute.ago
 
@@ -221,7 +230,6 @@ describe PostActionCreator do
   end
 
   context "queue_for_review" do
-    fab!(:admin) { Fabricate(:admin) }
 
     it 'fails if the user is not a staff member' do
       creator = PostActionCreator.new(

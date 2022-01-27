@@ -1,4 +1,4 @@
-{{#d-modal-body class="flag-modal-body" title=title}}
+{{#d-modal-body class="flag-modal-body" title=title submitOnEnter=false}}
   <form>
     {{#flag-selection nameKey=selected.name_key flags=flagsAvailable as |f|}}
       {{flag-action-type
@@ -12,6 +12,8 @@
       }}
     {{/flag-selection}}
   </form>
+
+  {{plugin-outlet name="flag-modal-bottom" connectorTagName="div" args=(hash post=model)}}
 {{/d-modal-body}}
 
 <div class="modal-footer">
@@ -44,6 +46,7 @@
     {{d-button
       class="btn-danger"
       action=(action "flagForReview")
+      disabled=cantFlagForReview
       icon="exclamation-triangle"
       label="flagging.flag_for_review"
     }}

@@ -65,11 +65,15 @@ sup img.emoji {
     background: var(--secondary);
 
     .section {
-      margin-bottom: 1em;
+      margin: 0 0 1em;
 
       .trash-recent {
         background: none;
         font-size: $font-down-1;
+
+        &:hover .d-icon {
+          color: var(--danger-hover);
+        }
       }
     }
 
@@ -95,6 +99,11 @@ sup img.emoji {
 
     .results {
       padding: 0.25em 0;
+
+      &:empty {
+        display: none;
+      }
+
       img.emoji {
         padding: 0.5em;
       }
@@ -123,6 +132,22 @@ sup img.emoji {
       &:hover .emoji,
       &.current .emoji {
         filter: grayscale(0);
+      }
+    }
+  }
+
+  &.has-filter {
+    .emojis-container {
+      visibility: hidden;
+      height: 0px;
+      overflow: hidden;
+    }
+
+    .emoji-picker-category-buttons {
+      pointer-events: none;
+      opacity: 0.5;
+      .category-button.current .emoji {
+        filter: grayscale(100%);
       }
     }
   }

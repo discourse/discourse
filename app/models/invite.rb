@@ -15,11 +15,10 @@ class Invite < ActiveRecord::Base
   }
 
   BULK_INVITE_EMAIL_LIMIT = 200
+  DOMAIN_REGEX = /\A(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)+([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])\z/
 
   rate_limit :limit_invites_per_day
 
-  belongs_to :user
-  belongs_to :topic
   belongs_to :invited_by, class_name: 'User'
 
   has_many :invited_users
@@ -32,7 +31,8 @@ class Invite < ActiveRecord::Base
   validates_presence_of :invited_by_id
   validates :email, email: true, allow_blank: true
   validate :ensure_max_redemptions_allowed
-  validate :user_doesnt_already_exist
+  validate :valid_domain, if: :will_save_change_to_domain?
+  validate :user_doesnt_already_exist, if: :will_save_change_to_email?
 
   before_create do
     self.invite_key ||= SecureRandom.base58(10)
@@ -62,12 +62,7 @@ class Invite < ActiveRecord::Base
 
     if user && user.id != self.invited_users&.first&.user_id
       @email_already_exists = true
-      errors.add(:base, I18n.t(
-        "invite.user_exists",
-        email: email,
-        username: user.username,
-        base_path: Discourse.base_path
-      ))
+      errors.add(:base, user_exists_error_msg(email, user.username))
     end
   end
 
@@ -106,12 +101,7 @@ class Invite < ActiveRecord::Base
     email = Email.downcase(opts[:email]) if opts[:email].present?
 
     if user = find_user_by_email(email)
-      raise UserExists.new(I18n.t(
-        "invite.user_exists",
-        email: email,
-        username: user.username,
-        base_path: Discourse.base_path
-      ))
+      raise UserExists.new(new.user_exists_error_msg(email, user.username))
     end
 
     if email.present?
@@ -145,7 +135,7 @@ class Invite < ActiveRecord::Base
         emailed_status: emailed_status
       )
     else
-      create_args = opts.slice(:email, :moderator, :custom_message, :max_redemptions_allowed)
+      create_args = opts.slice(:email, :domain, :moderator, :custom_message, :max_redemptions_allowed)
       create_args[:invited_by] = invited_by
       create_args[:email] = email
       create_args[:emailed_status] = emailed_status
@@ -238,17 +228,32 @@ class Invite < ActiveRecord::Base
   end
 
   def self.invalidate_for_email(email)
-    i = Invite.find_by(email: Email.downcase(email))
-    if i
-      i.invalidated_at = Time.zone.now
-      i.save
-    end
-    i
+    invite = Invite.find_by(email: Email.downcase(email))
+    invite.update!(invalidated_at: Time.zone.now) if invite
+
+    invite
   end
 
   def resend_invite
     self.update_columns(updated_at: Time.zone.now, invalidated_at: nil, expires_at: SiteSetting.invite_expiry_days.days.from_now)
     Jobs.enqueue(:invite_email, invite_id: self.id)
+  end
+
+  def warnings(guardian)
+    @warnings ||= begin
+      warnings = []
+
+      topic = self.topics.first
+      if topic&.read_restricted_category?
+        topic_groups = topic.category.groups
+        if (self.groups & topic_groups).blank?
+          editable_topic_groups = topic_groups.filter { |g| guardian.can_edit_group?(g) }
+          warnings << I18n.t("invite.requires_groups", groups: editable_topic_groups.pluck(:name).join(", "))
+        end
+      end
+
+      warnings
+    end
   end
 
   def limit_invites_per_day
@@ -271,6 +276,26 @@ class Invite < ActiveRecord::Base
       end
     end
   end
+
+  def valid_domain
+    return if self.domain.blank?
+
+    self.domain.downcase!
+
+    if self.domain !~ Invite::DOMAIN_REGEX
+      self.errors.add(:base, I18n.t('invite.domain_not_allowed'))
+    end
+  end
+
+  def user_exists_error_msg(email, username)
+    sanitized_email = CGI.escapeHTML(email)
+    sanitized_username = CGI.escapeHTML(username)
+
+    I18n.t(
+      "invite.user_exists",
+      email: sanitized_email, username: sanitized_username, base_path: Discourse.base_path
+    )
+  end
 end
 
 # == Schema Information
@@ -292,6 +317,8 @@ end
 #  max_redemptions_allowed :integer          default(1), not null
 #  redemption_count        :integer          default(0), not null
 #  expires_at              :datetime         not null
+#  email_token             :string
+#  domain                  :string
 #
 # Indexes
 #

@@ -3,6 +3,8 @@ import componentTest, {
 } from "discourse/tests/helpers/component-test";
 import {
   discourseModule,
+  exists,
+  query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import DiscourseURL from "discourse/lib/url";
@@ -20,12 +22,12 @@ discourseModule(
       template: hbs`{{mount-widget widget="user-menu"}}`,
 
       test(assert) {
-        assert.ok(queryAll(".user-menu").length);
-        assert.ok(queryAll(".user-preferences-link").length);
-        assert.ok(queryAll(".user-notifications-link").length);
-        assert.ok(queryAll(".user-bookmarks-link").length);
-        assert.ok(queryAll(".quick-access-panel").length);
-        assert.ok(queryAll(".notifications-dismiss").length);
+        assert.ok(exists(".user-menu"));
+        assert.ok(exists(".user-preferences-link"));
+        assert.ok(exists(".user-notifications-link"));
+        assert.ok(exists(".user-bookmarks-link"));
+        assert.ok(exists(".quick-access-panel"));
+        assert.ok(exists(".notifications-dismiss"));
       },
     });
 
@@ -35,25 +37,25 @@ discourseModule(
       async test(assert) {
         const $links = queryAll(".quick-access-panel li a");
 
-        assert.equal($links.length, 5);
-        assert.ok($links[0].href.includes("/t/a-slug/123"));
+        assert.strictEqual($links.length, 6);
+        assert.ok($links[1].href.includes("/t/a-slug/123"));
 
         assert.ok(
-          $links[1].href.includes(
+          $links[2].href.includes(
             "/u/eviltrout/notifications/likes-received?acting_username=aquaman"
           )
         );
 
-        assert.equal(
-          $links[1].text,
+        assert.strictEqual(
+          $links[2].text,
           `aquaman ${I18n.t("notifications.liked_consolidated_description", {
             count: 5,
           })}`
         );
 
-        assert.ok($links[2].href.includes("/u/test2/messages/group/test"));
+        assert.ok($links[3].href.includes("/u/test2/messages/group/test"));
         assert.ok(
-          $links[2].innerHTML.includes(
+          $links[3].innerHTML.includes(
             I18n.t("notifications.group_message_summary", {
               count: 5,
               group_name: "test",
@@ -61,16 +63,16 @@ discourseModule(
           )
         );
 
-        assert.ok($links[3].href.includes("/u/test1"));
+        assert.ok($links[4].href.includes("/u/test1"));
         assert.ok(
-          $links[3].innerHTML.includes(
+          $links[4].innerHTML.includes(
             I18n.t("notifications.invitee_accepted", { username: "test1" })
           )
         );
 
-        assert.ok($links[4].href.includes("/g/test"));
+        assert.ok($links[5].href.includes("/g/test"));
         assert.ok(
-          $links[4].innerHTML.includes(
+          $links[5].innerHTML.includes(
             I18n.t("notifications.membership_request_accepted", {
               group_name: "test",
             })
@@ -98,7 +100,7 @@ discourseModule(
       async test(assert) {
         await click(".user-preferences-link");
 
-        assert.ok(queryAll(".logout").length);
+        assert.ok(exists(".logout"));
 
         await click(".logout button");
         assert.ok(this.loggedOut);
@@ -112,7 +114,7 @@ discourseModule(
       },
 
       test(assert) {
-        assert.ok(!queryAll(".user-pms-link").length);
+        assert.ok(!exists(".user-pms-link"));
       },
     });
 
@@ -127,7 +129,7 @@ discourseModule(
         assert.ok(userPmsLink);
         await click(".user-pms-link");
 
-        const message = queryAll(".quick-access-panel li a")[0];
+        const message = query(".quick-access-panel li a");
         assert.ok(message);
 
         assert.ok(
@@ -158,7 +160,7 @@ discourseModule(
       async test(assert) {
         await click(".user-bookmarks-link");
 
-        const bookmark = queryAll(".quick-access-panel li a")[0];
+        const bookmark = query(".quick-access-panel li a");
         assert.ok(bookmark);
 
         assert.ok(bookmark.href.includes("/t/yelling-topic-title/119"));
@@ -195,7 +197,7 @@ discourseModule(
 
       async test(assert) {
         await click(".user-preferences-link");
-        assert.ok(queryAll(".enable-anonymous").length);
+        assert.ok(exists(".enable-anonymous"));
 
         await click(".enable-anonymous");
         assert.ok(this.anonymous);
@@ -211,7 +213,7 @@ discourseModule(
 
       async test(assert) {
         await click(".user-preferences-link");
-        assert.ok(!queryAll(".enable-anonymous").length);
+        assert.ok(!exists(".enable-anonymous"));
       },
     });
 
@@ -229,7 +231,7 @@ discourseModule(
 
       async test(assert) {
         await click(".user-preferences-link");
-        assert.ok(queryAll(".disable-anonymous").length);
+        assert.ok(exists(".disable-anonymous"));
 
         await click(".disable-anonymous");
         assert.notOk(this.anonymous);

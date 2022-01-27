@@ -13,7 +13,7 @@ discourseModule("Unit | Utility | emoji", function () {
         this.siteSettings[key] = value;
       }
 
-      assert.equal(emojiUnescape(input), expected, description);
+      assert.strictEqual(emojiUnescape(input), expected, description);
 
       for (const [key, value] of Object.entries(originalSettings)) {
         this.siteSettings[key] = value;
@@ -132,10 +132,10 @@ discourseModule("Unit | Utility | emoji", function () {
 
   test("Emoji search", function (assert) {
     // able to find an alias
-    assert.equal(emojiSearch("+1").length, 1);
+    assert.strictEqual(emojiSearch("+1").length, 1);
 
     // able to find middle of line search
-    assert.equal(emojiSearch("check", { maxResults: 3 }).length, 3);
+    assert.strictEqual(emojiSearch("check", { maxResults: 3 }).length, 3);
 
     // appends diversity
     assert.deepEqual(emojiSearch("woman_artist", { diversity: 5 }), [
@@ -149,5 +149,13 @@ discourseModule("Unit | Utility | emoji", function () {
     assert.deepEqual(emojiSearch("green_apple", { diversity: 3 }), [
       "green_apple",
     ]);
+  });
+
+  test("search does not return duplicated results", function (assert) {
+    const matches = emojiSearch("bow").filter(
+      (emoji) => emoji === "bowing_man"
+    );
+
+    assert.deepEqual(matches, ["bowing_man"]);
   });
 });

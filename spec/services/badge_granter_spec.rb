@@ -205,6 +205,21 @@ describe BadgeGranter do
         BadgeGranter.backfill(Badge.find(Badge::FirstLike))
       }.to_not change { Notification.where(user_id: user.id).count }
     end
+
+    it 'does not grant sharing badges to deleted users' do
+      post = Fabricate(:post)
+      incoming_links = Fabricate.times(25, :incoming_link, post: post, user: user)
+      user_id = user.id
+      user.destroy!
+
+      nice_share = Badge.find(Badge::NiceShare)
+      first_share = Badge.find(Badge::FirstShare)
+
+      BadgeGranter.backfill(nice_share)
+      BadgeGranter.backfill(first_share)
+
+      expect(UserBadge.where(user_id: user_id).count).to eq(0)
+    end
   end
 
   describe 'grant' do
@@ -391,7 +406,7 @@ describe BadgeGranter do
       expect(UserBadge.where(user_id: user.id, badge_id: Badge::Autobiographer).count).to eq(1)
     end
 
-    it "grants read guidlines" do
+    it "grants read guidelines" do
       user.user_stat.read_faq = Time.now
       user.user_stat.save
 
@@ -484,6 +499,114 @@ describe BadgeGranter do
     it 'is using user locales when set and allowed' do
       SiteSetting.allow_user_locale = true
       expect(BadgeGranter.notification_locale('pl_PL')).to eq('pl_PL')
+    end
+  end
+
+  describe '.mass_grant' do
+    it 'raises an error if the count argument is less than 1' do
+      expect do
+        BadgeGranter.mass_grant(badge, user, count: 0)
+      end.to raise_error(ArgumentError, "count can't be less than 1")
+    end
+
+    it 'grants the badge to the user as many times as the count argument' do
+      BadgeGranter.mass_grant(badge, user, count: 10)
+      sequence = UserBadge.where(badge: badge, user: user).pluck(:seq).sort
+      expect(sequence).to eq((0...10).to_a)
+
+      BadgeGranter.mass_grant(badge, user, count: 10)
+      sequence = UserBadge.where(badge: badge, user: user).pluck(:seq).sort
+      expect(sequence).to eq((0...20).to_a)
+    end
+  end
+
+  describe '.enqueue_mass_grant_for_users' do
+    before { Jobs.run_immediately! }
+
+    it 'returns a list of the entries that could not be matched to any users' do
+      results = BadgeGranter.enqueue_mass_grant_for_users(
+        badge,
+        emails: ['fakeemail@discourse.invalid', user.email],
+        usernames: [user.username, 'fakeusername'],
+      )
+      expect(results[:unmatched_entries]).to contain_exactly(
+        'fakeemail@discourse.invalid',
+        'fakeusername'
+      )
+      expect(results[:matched_users_count]).to eq(1)
+      expect(results[:unmatched_entries_count]).to eq(2)
+    end
+
+    context 'when ensure_users_have_badge_once is true' do
+      it 'ensures each user has the badge at least once and does not grant the badge multiple times to one user' do
+        BadgeGranter.grant(badge, user)
+        user_without_badge = Fabricate(:user)
+
+        Notification.destroy_all
+        results = BadgeGranter.enqueue_mass_grant_for_users(
+          badge,
+          usernames: [
+            user.username,
+            user.username,
+            user_without_badge.username,
+            user_without_badge.username
+          ],
+          ensure_users_have_badge_once: true
+        )
+        expect(results[:unmatched_entries]).to eq([])
+        expect(results[:matched_users_count]).to eq(2)
+        expect(results[:unmatched_entries_count]).to eq(0)
+
+        sequence = UserBadge.where(user: user, badge: badge).pluck(:seq)
+        expect(sequence).to contain_exactly(0)
+        # no new badge/notification because user already had the badge
+        # before enqueue_mass_grant_for_users was called
+        expect(user.reload.notifications.size).to eq(0)
+
+        sequence = UserBadge.where(user: user_without_badge, badge: badge)
+        expect(sequence.pluck(:seq)).to contain_exactly(0)
+        notifications = user_without_badge.reload.notifications
+        expect(notifications.size).to eq(1)
+        expect(sequence.first.notification_id).to eq(notifications.first.id)
+        expect(notifications.first.notification_type).to eq(Notification.types[:granted_badge])
+      end
+    end
+
+    context 'when ensure_users_have_badge_once is false' do
+      it 'grants the badge to the users as many times as they appear in the emails and usernames arguments' do
+        badge.update!(multiple_grant: true)
+        user_without_badge = Fabricate(:user)
+        user_with_badge = Fabricate(:user).tap { |u| BadgeGranter.grant(badge, u) }
+
+        Notification.destroy_all
+        emails = [user_with_badge.email.titlecase, user_without_badge.email.titlecase] * 20
+        usernames = [user_with_badge.username.titlecase, user_without_badge.username.titlecase] * 20
+
+        results = BadgeGranter.enqueue_mass_grant_for_users(
+          badge,
+          emails: emails,
+          usernames: usernames,
+          ensure_users_have_badge_once: false
+        )
+        expect(results[:unmatched_entries]).to eq([])
+        expect(results[:matched_users_count]).to eq(2)
+        expect(results[:unmatched_entries_count]).to eq(0)
+
+        sequence = UserBadge.where(user: user_with_badge, badge: badge).pluck(:seq)
+        expect(sequence.size).to eq(40 + 1)
+        expect(sequence.sort).to eq((0...(40 + 1)).to_a)
+        sequence = UserBadge.where(user: user_without_badge, badge: badge).pluck(:seq)
+        expect(sequence.size).to eq(40)
+        expect(sequence.sort).to eq((0...40).to_a)
+
+        # each user gets 1 notification no matter how many times
+        # they're repeated in the file.
+        [user_without_badge, user_with_badge].each do |u|
+          notifications = u.reload.notifications
+          expect(notifications.size).to eq(1)
+          expect(notifications.map(&:notification_type).uniq).to contain_exactly(Notification.types[:granted_badge])
+        end
+      end
     end
   end
 end

@@ -5,7 +5,12 @@
         <div class="title">
           <a href="<%= path "/" %>">
             <%- if application_logo_url.present? %>
-              <img src="<%= application_logo_url %>" alt="<%= SiteSetting.title %>" id="site-logo">
+              <picture>
+                <%- if application_logo_dark_url.present? %>
+                  <source srcset="<%= application_logo_dark_url %>" media="(prefers-color-scheme: dark)" />
+                <%- end %>
+                <img src="<%= application_logo_url %>" alt="<%= SiteSetting.title %>" id="site-logo" />
+              </picture>
             <%- else %>
               <h2 id='site-text-logo'><%= SiteSetting.title %></h2>
             <%- end %>

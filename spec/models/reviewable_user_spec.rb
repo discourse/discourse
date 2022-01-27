@@ -17,35 +17,35 @@ RSpec.describe ReviewableUser, type: :model do
     it "returns correct actions in the pending state" do
       actions = reviewable.actions_for(Guardian.new(moderator))
       expect(actions.has?(:approve_user)).to eq(true)
-      expect(actions.has?(:reject_user_delete)).to eq(true)
-      expect(actions.has?(:reject_user_block)).to eq(true)
+      expect(actions.has?(:delete_user)).to eq(true)
+      expect(actions.has?(:delete_user_block)).to eq(true)
     end
 
     it "doesn't return anything in the approved state" do
       reviewable.status = Reviewable.statuses[:approved]
       actions = reviewable.actions_for(Guardian.new(moderator))
       expect(actions.has?(:approve_user)).to eq(false)
-      expect(actions.has?(:reject_user_delete)).to eq(false)
+      expect(actions.has?(:delete_user_block)).to eq(false)
     end
 
     it 'can delete a user without a giving a rejection reason if the user was a spammer' do
       reviewable.reviewable_scores.build(user: admin, reason: 'suspect_user')
 
-      assert_require_reject_reason(:reject_user_delete, false)
+      assert_require_reject_reason(:delete_user, false)
     end
 
     it 'requires a rejection reason to delete a user' do
-      assert_require_reject_reason(:reject_user_delete, true)
+      assert_require_reject_reason(:delete_user, true)
     end
 
     it 'can delete and block a user without giving a rejection reason if the user was a spammer' do
       reviewable.reviewable_scores.build(user: admin, reason: 'suspect_user')
 
-      assert_require_reject_reason(:reject_user_block, false)
+      assert_require_reject_reason(:delete_user, false)
     end
 
     it 'requires a rejection reason to delete and block a user' do
-      assert_require_reject_reason(:reject_user_block, true)
+      assert_require_reject_reason(:delete_user_block, true)
     end
 
     def assert_require_reject_reason(id, expected)
@@ -95,7 +95,7 @@ RSpec.describe ReviewableUser, type: :model do
       end
 
       it "allows us to reject a user" do
-        result = reviewable.perform(moderator, :reject_user_delete, reject_reason: "reject reason")
+        result = reviewable.perform(moderator, :delete_user, reject_reason: "reject reason")
         expect(result.success?).to eq(true)
 
         expect(reviewable.pending?).to eq(false)
@@ -114,7 +114,7 @@ RSpec.describe ReviewableUser, type: :model do
         email = reviewable.target.email
         ip = reviewable.target.ip_address
 
-        result = reviewable.perform(moderator, :reject_user_block, reject_reason: "reject reason")
+        result = reviewable.perform(moderator, :delete_user_block, reject_reason: "reject reason")
         expect(result.success?).to eq(true)
 
         expect(reviewable.pending?).to eq(false)
@@ -132,18 +132,18 @@ RSpec.describe ReviewableUser, type: :model do
       it "is not sending email to the user about rejection" do
         SiteSetting.must_approve_users = true
         Jobs::CriticalUserEmail.any_instance.expects(:execute).never
-        reviewable.perform(moderator, :reject_user_block, reject_reason: "reject reason")
+        reviewable.perform(moderator, :delete_user_block, reject_reason: "reject reason")
       end
 
-      it "optionaly sends email with reject reason" do
+      it "optionally sends email with reject reason" do
         SiteSetting.must_approve_users = true
         Jobs::CriticalUserEmail.any_instance.expects(:execute).with(type: :signup_after_reject, user_id: reviewable.target_id, reject_reason: "reject reason").once
-        reviewable.perform(moderator, :reject_user_block, reject_reason: "reject reason", send_email: true)
+        reviewable.perform(moderator, :delete_user_block, reject_reason: "reject reason", send_email: true)
       end
 
       it "allows us to reject a user who has posts" do
         Fabricate(:post, user: reviewable.target)
-        result = reviewable.perform(moderator, :reject_user_delete)
+        result = reviewable.perform(moderator, :delete_user)
         expect(result.success?).to eq(true)
 
         expect(reviewable.pending?).to eq(false)
@@ -158,7 +158,7 @@ RSpec.describe ReviewableUser, type: :model do
       it "allows us to reject a user who has been deleted" do
         reviewable.target.destroy!
         reviewable.reload
-        result = reviewable.perform(moderator, :reject_user_delete)
+        result = reviewable.perform(moderator, :delete_user)
         expect(result.success?).to eq(true)
         expect(reviewable.rejected?).to eq(true)
         expect(reviewable.target).to be_blank

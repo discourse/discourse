@@ -84,6 +84,10 @@ module UserGuardian
     can_merge_user?(source_user) && !target_user.nil?
   end
 
+  def can_see_warnings?(user)
+    user && (is_me?(user) || is_staff?)
+  end
+
   def can_reset_bounce_score?(user)
     user && is_staff?
   end
@@ -123,6 +127,11 @@ module UserGuardian
     end
 
     true
+  end
+
+  def can_see_user_actions?(user, action_types)
+    return true if !@user.anonymous? && (@user.id == user.id || is_admin?)
+    (action_types & UserAction.private_types).empty?
   end
 
   def allowed_user_field_ids(user)
@@ -172,7 +181,15 @@ module UserGuardian
     (is_me?(user) && user.has_trust_level?(SiteSetting.min_trust_level_to_allow_user_card_background.to_i)) || is_staff?
   end
 
+  def can_upload_external?
+    !ExternalUploadManager.user_banned?(user)
+  end
+
   def can_delete_sso_record?(user)
     SiteSetting.enable_discourse_connect && user && is_admin?
+  end
+
+  def can_change_tracking_preferences?(user)
+    (SiteSetting.allow_changing_staged_user_tracking || !user.staged) && can_edit_user?(user)
   end
 end

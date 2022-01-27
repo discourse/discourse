@@ -1,4 +1,7 @@
 (function () {
+  if (window.unsupportedBrowser) {
+    throw "Unsupported browser detected";
+  }
   // TODO: These are needed to load plugins because @ember has its own loader.
   // We should find a nicer way to do this.
   const EMBER_MODULES = {
@@ -165,6 +168,12 @@
 
   define("I18n", ["exports"], function (exports) {
     return I18n;
+  });
+
+  define("htmlbars-inline-precompile", ["exports"], function (exports) {
+    exports.default = function tag(strings) {
+      return Ember.Handlebars.compile(strings[0]);
+    };
   });
   window.__widget_helpers = require("discourse-widget-hbs/helpers").default;
 

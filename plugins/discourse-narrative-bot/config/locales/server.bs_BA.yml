@@ -169,7 +169,7 @@ bs_BA:
         instructions: |-
           Možete li napraviti neke riječi ** bold ** ili _italic_ u vašem odgovoru? - upišite `** bold **` ili `_italic_` - ili pritisnite gumbe <kbd><b>B</b></kbd> ili <kbd><i>I</i></kbd> u editoru
         reply: |-
-          Odličan posao! HTML i BBCode također rade za formatiranje - da biste saznali više, [probajte ovaj vodič] (http://commonmark.org/help): nerd:
+          Odličan posao! HTML i BBCode također rade za formatiranje - da biste saznali više, [probajte ovaj vodič] (https://commonmark.org/help): nerd:
         not_found: |-
           Aww, nisam pronašao nikakvo formatiranje u vašem odgovoru. : pencil2: Možete li pokušati ponovo? Koristite tipke <kbd><b>B</b></kbd> podebljano ili <kbd><i>I</i></kbd> kurziv u uređivaču ako zapnete.
       quoting:
@@ -201,8 +201,6 @@ bs_BA:
         not_found: |-
           Ne vidim svoje ime tamo negdje: namršteno: Možete li pokušati spomenuti mene kao `@ %{discobot_username}` opet? (I da, moje korisničko ime je napisano _disco_, kao u plesnoj ludosti sedamdesetih godina. Ja [volim noćni život!] (Https://www.youtube.com/watch?v=B_wGI3_sGf8): plesač :)
       flag:
-        instructions: |-
-          Mi volimo naše diskusije prijateljske, i potrebna nam je vaša pomoć da [održimo civilizovane stvari] (%{guidelines_url}). Ako vidite problem, označite da privatno pustite autora, ili [naše korisno osoblje] (%{about_url}), da znate za njega. Napisao sam nešto ružno ovdje, pretpostavljam da znaš šta da radiš. Naprijed i ** označite ovaj post ** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> kao neprikladno!
         reply: |-
           [Naše osoblje] (%{base_uri} / grupe / osoblje) će biti privatno obaviješteno o vašoj zastavi. Ako dovoljan broj članova zajednice označi post, on će se automatski sakriti kao mjera opreza. (Budući da nisam napisao gadan post: angel:, otišao sam naprijed i uklonio zastavu za sada.)
         not_found: |-

@@ -59,11 +59,14 @@ class UserCardSerializer < BasicUserSerializer
              :recent_time_read,
              :primary_group_id,
              :primary_group_name,
-             :primary_group_flair_url,
-             :primary_group_flair_bg_color,
-             :primary_group_flair_color,
+             :flair_group_id,
+             :flair_name,
+             :flair_url,
+             :flair_bg_color,
+             :flair_color,
              :featured_topic,
-             :timezone
+             :timezone,
+             :pending_posts_count
 
   untrusted_attributes :bio_excerpt,
                        :website,
@@ -74,6 +77,13 @@ class UserCardSerializer < BasicUserSerializer
   staff_attributes :staged
 
   has_many :featured_user_badges, embed: :ids, serializer: UserBadgeSerializer, root: :user_badges
+
+  delegate :user_stat, to: :object, private: true
+  delegate :pending_posts_count, to: :user_stat
+
+  def include_pending_posts_count?
+    scope.is_me?(object) || scope.is_staff?
+  end
 
   def include_email?
     (object.id && object.id == scope.user.try(:id)) ||
@@ -103,10 +113,6 @@ class UserCardSerializer < BasicUserSerializer
 
     return if uri.nil? || uri.host.nil?
     uri.host.sub(/^www\./, '') + uri.path
-  end
-
-  def include_website_name
-    website.present?
   end
 
   def ignored
@@ -181,19 +187,23 @@ class UserCardSerializer < BasicUserSerializer
   end
 
   def primary_group_name
-    object.primary_group.try(:name)
+    object.primary_group&.name
   end
 
-  def primary_group_flair_url
-    object.try(:primary_group).try(:flair_url)
+  def flair_name
+    object.flair_group&.name
   end
 
-  def primary_group_flair_bg_color
-    object.try(:primary_group).try(:flair_bg_color)
+  def flair_url
+    object.flair_group&.flair_url
   end
 
-  def primary_group_flair_color
-    object.try(:primary_group).try(:flair_color)
+  def flair_bg_color
+    object.flair_group&.flair_bg_color
+  end
+
+  def flair_color
+    object.flair_group&.flair_color
   end
 
   def featured_topic

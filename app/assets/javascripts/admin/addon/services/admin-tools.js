@@ -1,8 +1,4 @@
 import AdminUser from "admin/models/admin-user";
-// A service that can act as a bridge between the front end Discourse application
-// and the admin application. Use this if you need front end code to access admin
-// modules. Inject it optionally, and if it exists go to town!
-
 import I18n from "I18n";
 import { Promise } from "rsvp";
 import Service from "@ember/service";
@@ -12,14 +8,10 @@ import { getOwner } from "discourse-common/lib/get-owner";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import showModal from "discourse/lib/show-modal";
 
+// A service that can act as a bridge between the front end Discourse application
+// and the admin application. Use this if you need front end code to access admin
+// modules. Inject it optionally, and if it exists go to town!
 export default Service.extend({
-  init() {
-    this._super(...arguments);
-
-    // TODO: Make `siteSettings` a service that can be injected
-    this.siteSettings = getOwner(this).lookup("site-settings:main");
-  },
-
   showActionLogs(target, filters) {
     const controller = getOwner(target).lookup(
       "controller:adminLogs.staffActionLogs"
@@ -48,7 +40,6 @@ export default Service.extend({
 
   _showControlModal(type, user, opts) {
     opts = opts || {};
-
     let controller = showModal(`admin-${type}-user`, {
       admin: true,
       modalClass: `${type}-user-modal`,
@@ -65,6 +56,8 @@ export default Service.extend({
         before: opts.before,
         successCallback: opts.successCallback,
       });
+
+      controller.finishedSetup();
     });
   },
 

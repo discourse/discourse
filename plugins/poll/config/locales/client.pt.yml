@@ -43,6 +43,9 @@ pt:
       show-results:
         title: "Exibir os resultados da sondagem"
         label: "Mostrar resultados"
+      remove-vote:
+        title: "Remova o seu voto"
+        label: "Remover voto"
       hide-results:
         title: "Voltar para os seus votos"
         label: "Mostrar voto"
@@ -78,6 +81,9 @@ pt:
         insert: Inserir Sondagem
         help:
           options_min_count: Insira pelo menos uma opção.
+          options_max_count: Insira no máximo %{count} opções.
+          invalid_min_value: O valor mínimo deve ser pelo menos 1.
+          invalid_max_value: O valor máximo deve ser pelo menos 1, mas menor ou igual ao número de opções.
           invalid_values: O valor mínimo deve ser menor que o valor máximo.
           min_step_value: O valor mínimo é 1
         poll_type:
@@ -86,17 +92,28 @@ pt:
           multiple: Escolha Múltipla
           number: Classificação Numérica
         poll_result:
+          label: Mostrar Resultados...
           always: Sempre visível
+          vote: Somente após a votação
+          closed: Quando a enquete for fechada
           staff: Apenas Pessoal
+        poll_groups:
+          label: Limitar a votação a estes grupos
         poll_chart_type:
+          label: Gráfico de resultados
           bar: Barras
           pie: Circular
         poll_config:
+          max: Máximo de Escolhas
+          min: Mínimo de Escolhas
           step: Passo
         poll_public:
           label: Mostrar quem votou
         poll_title:
           label: Título (opcional)
+        poll_options:
+          label: Opções (uma por linha)
+          add: Adicionar alternativa
         automatic_close:
           label: Fechar sondagem automaticamente
         show_advanced: "Mostrar Opções Avançadas"

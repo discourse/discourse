@@ -42,7 +42,7 @@ describe Jobs do
         end
         expect(jobs.length).to eq(2)
 
-        # Failed transation
+        # Failed transaction
         ActiveRecord::Base.transaction do
           Jobs.enqueue(:process_post, post_id: 1)
           raise ActiveRecord::Rollback

@@ -2,8 +2,10 @@ import { classify, dasherize } from "@ember/string";
 import deprecated from "discourse-common/lib/deprecated";
 import { findHelper } from "discourse-common/lib/helpers";
 import { get } from "@ember/object";
+import SuffixTrie from "discourse-common/lib/suffix-trie";
 
 let _options = {};
+let moduleSuffixTrie = null;
 
 export function setResolverOption(name, value) {
   _options[name] = value;
@@ -34,6 +36,18 @@ function parseName(fullName) {
   };
 }
 
+function lookupModuleBySuffix(suffix) {
+  if (!moduleSuffixTrie) {
+    moduleSuffixTrie = new SuffixTrie("/");
+    Object.keys(requirejs.entries).forEach((name) => {
+      if (!name.includes("/templates/")) {
+        moduleSuffixTrie.add(name);
+      }
+    });
+  }
+  return moduleSuffixTrie.withSuffix(suffix, 1)[0];
+}
+
 export function buildResolver(baseName) {
   return Ember.DefaultResolver.extend({
     parseName,
@@ -51,7 +65,7 @@ export function buildResolver(baseName) {
       if (fullName === "app-events:main") {
         deprecated(
           "`app-events:main` has been replaced with `service:app-events`",
-          { since: "2.4.0" }
+          { since: "2.4.0", dropFrom: "2.9.0.beta1" }
         );
         return "service:app-events";
       }
@@ -107,13 +121,7 @@ export function buildResolver(baseName) {
       // If we end with the name we want, use it. This allows us to define components within plugins.
       const suffix = parsedName.type + "s/" + parsedName.fullNameWithoutType,
         dashed = dasherize(suffix),
-        moduleName = Object.keys(requirejs.entries).find(function (e) {
-          return (
-            e.indexOf("/templates/") === -1 &&
-            (e.indexOf(suffix, e.length - suffix.length) !== -1 ||
-              e.indexOf(dashed, e.length - dashed.length) !== -1)
-          );
-        });
+        moduleName = lookupModuleBySuffix(dashed);
 
       let module;
       if (moduleName) {
@@ -158,6 +166,10 @@ export function buildResolver(baseName) {
     },
 
     resolveService(parsedName) {
+      return this.customResolve(parsedName) || this._super(parsedName);
+    },
+
+    resolveRawView(parsedName) {
       return this.customResolve(parsedName) || this._super(parsedName);
     },
 

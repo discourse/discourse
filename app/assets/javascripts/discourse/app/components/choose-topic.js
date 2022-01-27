@@ -1,9 +1,10 @@
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
+import { action } from "@ember/object";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { isEmpty } from "@ember/utils";
-import { next, schedule } from "@ember/runloop";
 import { searchForTerm } from "discourse/lib/search";
+import { INPUT_DELAY } from "discourse-common/config/environment";
 
 export default Component.extend({
   loading: null,
@@ -25,7 +26,7 @@ export default Component.extend({
 
     if (this.loadOnInit && !isEmpty(this.additionalFilters)) {
       searchForTerm(this.additionalFilters, {}).then((results) => {
-        if (results && results.posts && results.posts.length > 0) {
+        if (results?.posts?.length > 0) {
           this.set(
             "topics",
             results.posts
@@ -41,18 +42,18 @@ export default Component.extend({
 
   didInsertElement() {
     this._super(...arguments);
-    schedule("afterRender", () => {
-      $("#choose-topic-title").keydown((e) => {
-        if (e.keyCode === 13) {
-          return false;
-        }
-      });
-    });
+
+    document
+      .getElementById("choose-topic-title")
+      .addEventListener("keydown", this._handleEnter);
   },
 
   willDestroyElement() {
     this._super(...arguments);
-    $("#choose-topic-title").off("keydown");
+
+    document
+      .getElementById("choose-topic-title")
+      .removeEventListener("keydown", this._handleEnter);
   },
 
   @observes("topicTitle")
@@ -68,7 +69,7 @@ export default Component.extend({
       oldTopicTitle: this.topicTitle,
     });
 
-    this.search(this.topicTitle);
+    this.searchDebounced(this.topicTitle);
   },
 
   @discourseComputed("label")
@@ -85,59 +86,63 @@ export default Component.extend({
     this.set("loading", false);
   },
 
-  search(title) {
-    discourseDebounce(
-      this,
-      function () {
-        if (!this.element || this.isDestroying || this.isDestroyed) {
-          return;
-        }
-
-        if (isEmpty(title) && isEmpty(this.additionalFilters)) {
-          this.setProperties({ topics: null, loading: false });
-          return;
-        }
-
-        const currentTopicId = this.currentTopicId;
-        const titleWithFilters = `${title} ${this.additionalFilters}`;
-        let searchParams = {};
-
-        if (!isEmpty(title)) {
-          searchParams.typeFilter = "topic";
-          searchParams.restrictToArchetype = "regular";
-          searchParams.searchForId = true;
-        }
-
-        searchForTerm(titleWithFilters, searchParams).then((results) => {
-          if (results && results.posts && results.posts.length > 0) {
-            this.set(
-              "topics",
-              results.posts
-                .mapBy("topic")
-                .filter((t) => t.id !== currentTopicId)
-            );
-            if (this.topics.length === 1) {
-              this.send("chooseTopic", this.topics[0]);
-            }
-          } else {
-            this.setProperties({ topics: null, loading: false });
-          }
-        });
-      },
-      title,
-      300
-    );
+  searchDebounced(title) {
+    discourseDebounce(this, this.search, title, INPUT_DELAY);
   },
 
-  actions: {
-    chooseTopic(topic) {
-      this.set("selectedTopicId", topic.id);
-      next(() => {
-        document.getElementById(`choose-topic-${topic.id}`).checked = true;
-      });
-      if (this.topicChangedCallback) {
-        this.topicChangedCallback(topic);
+  search(title) {
+    if (!this.element || this.isDestroying || this.isDestroyed) {
+      return;
+    }
+
+    if (isEmpty(title) && isEmpty(this.additionalFilters)) {
+      this.setProperties({ topics: null, loading: false });
+      this.onSearchEmptied?.();
+      return;
+    }
+
+    const currentTopicId = this.currentTopicId;
+    const titleWithFilters = `${title} ${this.additionalFilters}`;
+    const searchParams = {};
+
+    if (!isEmpty(title)) {
+      searchParams.typeFilter = "topic";
+      searchParams.restrictToArchetype = "regular";
+      searchParams.searchForId = true;
+    }
+
+    searchForTerm(titleWithFilters, searchParams).then((results) => {
+      // search term changed after the request was fired but before we
+      // got a response, ignore results.
+      if (title !== this.topicTitle) {
+        return;
       }
-    },
+      if (results?.posts?.length > 0) {
+        this.set(
+          "topics",
+          results.posts.mapBy("topic").filter((t) => t.id !== currentTopicId)
+        );
+        if (this.topics.length === 1) {
+          this.send("chooseTopic", this.topics[0]);
+        }
+      } else {
+        this.setProperties({ topics: null, loading: false });
+      }
+    });
+  },
+
+  @action
+  chooseTopic(topic) {
+    this.set("selectedTopicId", topic.id);
+
+    if (this.topicChangedCallback) {
+      this.topicChangedCallback(topic);
+    }
+  },
+
+  _handleEnter(event) {
+    if (event.key === "Enter") {
+      event.preventDefault();
+    }
   },
 });

@@ -21,9 +21,12 @@
   @extend %nav;
   @extend .clearfix;
 
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+
   > li {
     display: flex;
-    float: left;
     margin-right: 0.5em;
 
     > a {
@@ -36,7 +39,7 @@
       min-height: 30px;
       display: flex;
       align-items: center;
-      transition: background 0.15s;
+      transition: background-color 0.2s, color 0.2s;
 
       .d-icon {
         margin-right: 5px;
@@ -66,12 +69,10 @@
 .nav-stacked {
   @extend %nav;
   padding: 0;
-  overflow: hidden;
   background: var(--primary-low);
 
   li {
-    border-bottom: 1px solid var(--primary-low);
-    position: relative;
+    border-bottom: 1px solid var(--primary-low-mid-or-secondary-high);
 
     &:last-of-type {
       border-bottom: 0;
@@ -84,22 +85,26 @@
 
   a {
     margin: 0;
-    padding: 13px;
+    padding: 0.75em;
     font-size: $font-up-1;
     line-height: $line-height-small;
     cursor: pointer;
     color: var(--primary);
+    @include ellipsis;
 
     &.active {
       color: var(--secondary);
       background-color: var(--quaternary);
+      position: relative;
+
+      --arrow-thickness: 8px;
 
       &::after {
-        left: 90%;
-        top: 33%;
-        content: " ";
         position: absolute;
-        border: 8px solid transparent;
+        right: 0;
+        top: calc(50% - var(--arrow-thickness));
+        content: " ";
+        border: var(--arrow-thickness) solid transparent;
         border-left-color: var(--secondary);
       }
     }

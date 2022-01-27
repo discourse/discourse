@@ -68,6 +68,7 @@ class DiscoursePluginRegistry
   define_register :vendored_core_pretty_text, Set
   define_register :seedfu_filter, Set
   define_register :demon_processes, Set
+  define_register :groups_callback_for_users_search_controller_action, Hash
 
   define_filtered_register :staff_user_custom_fields
   define_filtered_register :public_user_custom_fields
@@ -76,6 +77,7 @@ class DiscoursePluginRegistry
   define_filtered_register :staff_editable_user_custom_fields
 
   define_filtered_register :editable_group_custom_fields
+  define_filtered_register :group_params
 
   define_filtered_register :topic_thumbnail_sizes
 
@@ -85,6 +87,13 @@ class DiscoursePluginRegistry
 
   define_filtered_register :permitted_bulk_action_parameters
   define_filtered_register :reviewable_params
+  define_filtered_register :reviewable_score_links
+
+  define_filtered_register :presence_channel_prefixes
+
+  define_filtered_register :push_notification_filters
+
+  define_filtered_register :notification_consolidation_plans
 
   def self.register_auth_provider(auth_provider)
     self.auth_providers << auth_provider
@@ -227,4 +236,11 @@ class DiscoursePluginRegistry
     end
   end
 
+  def self.reset_register!(register_name)
+    found_register = @@register_names.detect { |name| name == register_name }
+
+    if found_register
+      instance_variable_set(:"@#{found_register}", nil)
+    end
+  end
 end

@@ -95,7 +95,7 @@ a.loading-onebox {
 
 aside.onebox {
   border: 5px solid var(--primary-low);
-  margin-bottom: 1em;
+  margin: 1em 0;
   padding: 1em;
   font-size: $font-0;
   background: var(--secondary);
@@ -290,7 +290,12 @@ aside.onebox {
       }
     }
 
-    .instagram-video-icon {
+    .image-wrapper {
+      display: block;
+      position: relative;
+    }
+
+    .video-icon {
       &:before {
         opacity: 0.8;
         // ideally, the SVG used here should be in HTML and reference the SVG sprite
@@ -505,6 +510,55 @@ pre.onebox code {
     color: var(--secondary) !important;
     padding: 2px 4px !important;
   }
+
+  .emoji {
+    max-height: 15px;
+    margin: 0.2em;
+    min-width: 15px;
+  }
+}
+
+.onebox.githubactions {
+  h4 {
+    margin-top: 5px;
+    margin-bottom: 5px;
+  }
+
+  .github-row {
+    display: flex;
+  }
+
+  .github-icon-container {
+    display: flex;
+    align-items: flex-start;
+    margin-right: 5px;
+  }
+
+  .github-icon {
+    fill: var(--primary-medium);
+    width: var(--font-up-3);
+    height: var(--font-up-3);
+  }
+
+  .github-icon-success {
+    fill: var(--success);
+  }
+
+  .github-icon-failure {
+    fill: var(--danger);
+  }
+
+  .github-icon-pending {
+    fill: #dbab0a;
+  }
+
+  .github-info {
+    color: var(--primary-high);
+  }
+
+  .github-run-number {
+    color: var(--primary-medium);
+  }
 }
 
 //Onebox - Github - Pull request
@@ -549,21 +603,30 @@ aside.onebox.twitterstatus .onebox-body {
 
 // thumbnail, oddly, ONLY applies to twitter avatar
 .onebox.twitterstatus {
-  .thumbnail {
-    width: 48px;
-    height: 48px;
+  .thumbnail,
+  .thumbnail.onebox-avatar {
+    width: 36px;
+    height: 36px;
+    margin-right: 12px;
   }
+  .twitter-screen-name {
+    font-size: var(--font-down-1);
+  }
+
+  .tweet .tweet-description {
+    white-space: pre-line;
+  }
+
   p,
   .tweet {
-    white-space: pre-line;
-    padding-top: 3px;
-    margin-left: 70px;
+    clear: left;
+    padding: 1em 0;
 
     .quoted {
       border: 1px solid var(--primary-low);
-      padding: 0px 14px 0px 12px;
+      padding: 0.5em 1em;
+      margin-top: 1em;
       white-space: normal;
-      margin-top: 15px;
 
       .quoted-link {
         color: inherit;
@@ -571,7 +634,8 @@ aside.onebox.twitterstatus .onebox-body {
 
       .quoted-title {
         font-weight: bold;
-        margin: 5px 2px;
+        margin: 0.5em 0;
+        padding: 0;
 
         span {
           font-weight: lighter;
@@ -584,8 +648,27 @@ aside.onebox.twitterstatus .onebox-body {
       }
     }
   }
+
   .date {
-    clear: left;
+    display: flex;
+    line-height: $line-height-small;
+
+    .timestamp {
+      color: var(--primary-medium);
+    }
+  }
+
+  .like,
+  .retweet {
+    align-items: center;
+    color: var(--primary-medium);
+    display: flex;
+    margin-left: 0.75em;
+
+    svg {
+      fill: currentColor;
+      margin-right: 0.25em;
+    }
   }
 }
 
@@ -599,7 +682,7 @@ aside.onebox.twitterstatus .onebox-body {
     color: #fff;
     background-color: rgba(0, 0, 0, 0.6);
     @include ellipsis;
-    max-width: 690px;
+    max-width: 100%;
     padding: 5px 0;
 
     .inner-box {
@@ -635,11 +718,9 @@ aside.onebox.stackexchange .onebox-body {
   color: var(--primary-med-or-secondary-med);
 }
 
-.onebox.xkcd .onebox-body {
-  img {
-    max-width: 100% !important;
-    float: none !important;
-  }
+aside.onebox.xkcd .onebox-body img {
+  float: none;
+  max-height: unset;
 }
 
 // pdf onebox
@@ -732,18 +813,6 @@ aside.onebox.stackexchange .onebox-body {
   }
 }
 
-.onebox.twitterstatus {
-  .like,
-  .retweet {
-    color: var(--primary-med-or-secondary-med);
-    padding-left: 10px;
-    svg {
-      fill: currentColor;
-      vertical-align: middle;
-    }
-  }
-}
-
 // mobile specific style
 .mobile-view article.onebox-body {
   border-top: none;
@@ -802,6 +871,14 @@ aside.onebox.stackexchange .onebox-body {
     justify-content: center;
     align-items: center;
 
+    &.image {
+      &:before {
+        opacity: 0.8;
+        content: svg-uri(
+          '<svg width="128px" height="128px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="grey" d="M464 448H48c-26.51 0-48-21.49-48-48V112c0-26.51 21.49-48 48-48h416c26.51 0 48 21.49 48 48v288c0 26.51-21.49 48-48 48zM112 120c-30.928 0-56 25.072-56 56s25.072 56 56 56 56-25.072 56-56-25.072-56-56-56zM64 384h384V272l-87.515-87.515c-4.686-4.686-12.284-4.686-16.971 0L208 320l-55.515-55.515c-4.686-4.686-12.284-4.686-16.971 0L64 336v48z"></path></svg>'
+        );
+      }
+    }
     &.video {
       &:before {
         opacity: 0.8;

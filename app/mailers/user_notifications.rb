@@ -153,13 +153,22 @@ class UserNotifications < ActionMailer::Base
 
     return unless user_history = opts[:user_history]
 
-    build_email(
-      user.email,
-      template: "user_notifications.account_silenced",
-      locale: user_locale(user),
-      reason: user_history.details,
-      silenced_till: I18n.l(user.silenced_till, format: :long)
-    )
+    if user.silenced_forever?
+      build_email(
+        user.email,
+        template: "user_notifications.account_silenced_forever",
+        locale: user_locale(user),
+        reason: user_history.details
+      )
+    else
+      build_email(
+        user.email,
+        template: "user_notifications.account_silenced",
+        locale: user_locale(user),
+        reason: user_history.details,
+        silenced_till: I18n.l(user.silenced_till, format: :long)
+      )
+    end
   end
 
   def account_suspended(user, opts = nil)
@@ -167,13 +176,22 @@ class UserNotifications < ActionMailer::Base
 
     return unless user_history = opts[:user_history]
 
-    build_email(
-      user.email,
-      template: "user_notifications.account_suspended",
-      locale: user_locale(user),
-      reason: user_history.details,
-      suspended_till: I18n.l(user.suspended_till, format: :long)
-    )
+    if user.suspended_forever?
+      build_email(
+        user.email,
+        template: "user_notifications.account_suspended_forever",
+        locale: user_locale(user),
+        reason: user_history.details
+      )
+    else
+      build_email(
+        user.email,
+        template: "user_notifications.account_suspended",
+        locale: user_locale(user),
+        reason: user_history.details,
+        suspended_till: I18n.l(user.suspended_till, format: :long)
+      )
+    end
   end
 
   def account_exists(user, opts = {})
@@ -422,7 +440,7 @@ class UserNotifications < ActionMailer::Base
     user_name = notification_data[:original_username]
 
     if post && SiteSetting.enable_names && SiteSetting.display_name_on_email_from
-      name = User.where(id: post.user_id).pluck_first(:name)
+      name = User.where(id: notification_data[:original_user_id] || post.user_id).pluck_first(:name)
       user_name = name unless name.blank?
     end
 
@@ -520,9 +538,11 @@ class UserNotifications < ActionMailer::Base
       show_tags_in_subject = tags.any? ? tags.join(" ") : nil
     end
 
+    group = post.topic.allowed_groups&.first
+
     if post.topic.private_message?
       subject_pm =
-        if opts[:show_group_in_subject] && group = post.topic.allowed_groups&.first
+        if opts[:show_group_in_subject] && group.present?
           if group.full_name
             "[#{group.full_name}] "
           else
@@ -540,6 +560,8 @@ class UserNotifications < ActionMailer::Base
       end
 
       post.topic.allowed_users.each do |u|
+        next if u.id == user.id
+
         if SiteSetting.prioritize_username_in_ux?
           participant_list.push "[#{u.username}](#{Discourse.base_url}/u/#{u.username_lower})"
         else
@@ -616,7 +638,7 @@ class UserNotifications < ActionMailer::Base
         message = email_post_markdown(post) + (reached_limit ? "\n\n#{I18n.t "user_notifications.reached_limit", count: SiteSetting.max_emails_per_day_per_user}" : "")
       end
 
-      first_footer_classes = "hilight"
+      first_footer_classes = "highlight"
       if (allow_reply_by_email && user.staged) || (user.suspended? || user.staged?)
         first_footer_classes = ""
       end
@@ -630,7 +652,8 @@ class UserNotifications < ActionMailer::Base
                     post: post,
                     in_reply_to_post: in_reply_to_post,
                     classes: Rtl.new(user).css_class,
-                    first_footer_classes: first_footer_classes
+                    first_footer_classes: first_footer_classes,
+                    reply_above_line: false
           }
         )
       end

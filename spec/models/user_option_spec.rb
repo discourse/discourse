@@ -125,7 +125,7 @@ describe UserOption do
             end
 
             after do
-              $redis.flushdb
+              Discourse.redis.flushdb
             end
 
             it "should have a reason for the first visit" do
@@ -165,5 +165,29 @@ describe UserOption do
 
     end
 
+  end
+
+  describe '.user_tzinfo' do
+    fab!(:user) { Fabricate(:user) }
+
+    context 'user with valid timezone given' do
+      before do
+        user.user_option.update(timezone: 'Europe/Paris')
+      end
+
+      it 'returns the expect timezone' do
+        expect(UserOption.user_tzinfo(user.id)).to eq(ActiveSupport::TimeZone.find_tzinfo('Europe/Paris'))
+      end
+    end
+
+    context 'user with invalid timezone given' do
+      before do
+        user.user_option.update(timezone: 'Catopia/Catcity')
+      end
+
+      it 'fallbacks to UTC' do
+        expect(UserOption.user_tzinfo(user.id)).to eq(ActiveSupport::TimeZone.find_tzinfo('UTC'))
+      end
+    end
   end
 end

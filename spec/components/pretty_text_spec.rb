@@ -4,6 +4,8 @@ require 'rails_helper'
 require 'pretty_text'
 
 describe PrettyText do
+  fab!(:user) { Fabricate(:user) }
+  fab!(:post) { Fabricate(:post) }
 
   before do
     SiteSetting.enable_markdown_typographer = false
@@ -23,7 +25,6 @@ describe PrettyText do
 
     describe "with avatar" do
       let(:default_avatar) { "//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/{size}.png" }
-      fab!(:user) { Fabricate(:user) }
 
       before do
         User.stubs(:default_template).returns(default_avatar)
@@ -159,13 +160,13 @@ describe PrettyText do
 
           html = <<~HTML
             <blockquote>
-            <p>This is a quote with a regular emoji <img src="https://emoji.cdn.com/twitter/upside_down_face.png?v=9" title=":upside_down_face:" class="emoji" alt=":upside_down_face:"></p>
+            <p>This is a quote with a regular emoji <img src="https://emoji.cdn.com/twitter/upside_down_face.png?v=#{Emoji::EMOJI_VERSION}" title=":upside_down_face:" class="emoji" alt=":upside_down_face:"></p>
             </blockquote>
             <blockquote>
-            <p>This is a quote with an emoji shortcut <img src="https://emoji.cdn.com/twitter/slight_smile.png?v=9" title=":slight_smile:" class="emoji" alt=":slight_smile:"></p>
+            <p>This is a quote with an emoji shortcut <img src="https://emoji.cdn.com/twitter/slight_smile.png?v=#{Emoji::EMOJI_VERSION}" title=":slight_smile:" class="emoji" alt=":slight_smile:"></p>
             </blockquote>
             <blockquote>
-            <p>This is a quote with a Unicode emoji <img src="https://emoji.cdn.com/twitter/sunglasses.png?v=9" title=":sunglasses:" class="emoji" alt=":sunglasses:"></p>
+            <p>This is a quote with a Unicode emoji <img src="https://emoji.cdn.com/twitter/sunglasses.png?v=#{Emoji::EMOJI_VERSION}" title=":sunglasses:" class="emoji" alt=":sunglasses:"></p>
             </blockquote>
           HTML
 
@@ -180,13 +181,13 @@ describe PrettyText do
 
           html = <<~HTML
             <blockquote>
-            <p>This is a quote with a regular emoji <img src="https://emoji.cdn.com/twitter/upside_down_face.png?v=9" title=":upside_down_face:" class="emoji" alt=":upside_down_face:"></p>
+            <p>This is a quote with a regular emoji <img src="https://emoji.cdn.com/twitter/upside_down_face.png?v=#{Emoji::EMOJI_VERSION}" title=":upside_down_face:" class="emoji" alt=":upside_down_face:"></p>
             </blockquote>
             <blockquote>
-            <p>This is a quote with an emoji shortcut <img src="https://emoji.cdn.com/twitter/slight_smile.png?v=9" title=":slight_smile:" class="emoji" alt=":slight_smile:"></p>
+            <p>This is a quote with an emoji shortcut <img src="https://emoji.cdn.com/twitter/slight_smile.png?v=#{Emoji::EMOJI_VERSION}" title=":slight_smile:" class="emoji" alt=":slight_smile:"></p>
             </blockquote>
             <blockquote>
-            <p>This is a quote with a Unicode emoji <img src="https://emoji.cdn.com/twitter/sunglasses.png?v=9" title=":sunglasses:" class="emoji" alt=":sunglasses:"></p>
+            <p>This is a quote with a Unicode emoji <img src="https://emoji.cdn.com/twitter/sunglasses.png?v=#{Emoji::EMOJI_VERSION}" title=":sunglasses:" class="emoji" alt=":sunglasses:"></p>
             </blockquote>
           HTML
 
@@ -349,8 +350,6 @@ describe PrettyText do
     end
 
     describe "with letter avatar" do
-      fab!(:user) { Fabricate(:user) }
-
       context "subfolder" do
         it "should have correct avatar url" do
           set_subfolder "/forum"
@@ -455,8 +454,6 @@ describe PrettyText do
       end
 
       it 'should not convert mentions to links' do
-        _user = Fabricate(:user)
-
         expect(PrettyText.cook('hi @user')).to eq('<p>hi @user</p>')
       end
     end
@@ -769,7 +766,7 @@ describe PrettyText do
     context "emojis" do
       it "should remove broken emoji" do
         html = <<~EOS
-          <img src=\"//localhost:3000/images/emoji/twitter/bike.png?v=9\" title=\":bike:\" class=\"emoji\" alt=\":bike:\"> <img src=\"//localhost:3000/images/emoji/twitter/cat.png?v=9\" title=\":cat:\" class=\"emoji\" alt=\":cat:\"> <img src=\"//localhost:3000/images/emoji/twitter/discourse.png?v=9\" title=\":discourse:\" class=\"emoji\" alt=\":discourse:\">
+          <img src=\"//localhost:3000/images/emoji/twitter/bike.png?v=#{Emoji::EMOJI_VERSION}\" title=\":bike:\" class=\"emoji\" alt=\":bike:\"> <img src=\"//localhost:3000/images/emoji/twitter/cat.png?v=#{Emoji::EMOJI_VERSION}\" title=\":cat:\" class=\"emoji\" alt=\":cat:\"> <img src=\"//localhost:3000/images/emoji/twitter/discourse.png?v=#{Emoji::EMOJI_VERSION}\" title=\":discourse:\" class=\"emoji\" alt=\":discourse:\">
         EOS
         expect(PrettyText.excerpt(html, 7)).to eq(":bike: &hellip;")
         expect(PrettyText.excerpt(html, 8)).to eq(":bike: &hellip;")
@@ -839,6 +836,20 @@ describe PrettyText do
       expect(extract_urls("<aside class=\"quote\" data-topic=\"321\">aside</aside>")).to eq(["/t/321"])
     end
 
+    it "does not extract links from hotlinked images" do
+      html = <<~HTML
+        <p>
+        <a href="https://example.com">example</a>
+
+        <a href="https://images.pexels.com/photos/1525041/pexels-photo-1525041.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=1260&amp;h=750&amp;dpr=2" target="_blank" rel="noopener" class="onebox">
+        <img src="https://images.pexels.com/photos/1525041/pexels-photo-1525041.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=1260&amp;h=750&amp;dpr=2" width="690" height="459">
+        </a>
+        </p>
+      HTML
+
+      expect(extract_urls(html)).to eq(["https://example.com"])
+    end
+
     it "should lazyYT videos" do
       expect(extract_urls("<div class=\"lazyYT\" data-youtube-id=\"yXEuEUQIP3Q\" data-youtube-title=\"Mister Rogers defending PBS to the US Senate\" data-width=\"480\" data-height=\"270\" data-parameters=\"feature=oembed&amp;wmode=opaque\"></div>")).to eq(["https://www.youtube.com/watch?v=yXEuEUQIP3Q"])
     end
@@ -868,6 +879,22 @@ describe PrettyText do
       ].sort)
     end
 
+    it "should not extract links inside oneboxes" do
+      onebox = <<~EOF
+        <aside class="onebox twitterstatus" data-onebox-src="https://twitter.com/EDBPostgres/status/1402528437441634306">
+          <header class="source">
+            <a href="https://twitter.com/EDBPostgres/status/1402528437441634306" target="_blank" rel="noopener">twitter.com</a>
+            <a href="https://twitter.com/EDBPostgres/status/1402528437441634306" target="_blank" rel="noopener">twitter.com</a>
+          </header>
+          <article class="onebox-body">
+            <div class="tweet">Example URL: <a target="_blank" href="https://example.com" rel="noopener">example.com</a></div>
+          </article>
+        </aside>
+      EOF
+
+      expect(PrettyText.extract_links(onebox).map(&:url)).to contain_exactly("https://twitter.com/EDBPostgres/status/1402528437441634306")
+    end
+
     it "should not preserve tags in code blocks" do
       expect(PrettyText.excerpt("<pre><code class='handlebars'>&lt;h3&gt;Hours&lt;/h3&gt;</code></pre>", 100)).to eq("&lt;h3&gt;Hours&lt;/h3&gt;")
     end
@@ -887,18 +914,24 @@ describe PrettyText do
       expect(post.excerpt).to eq("hello <a href=\"https://site.com\" rel=\"noopener nofollow ugc\">site</a>")
     end
 
+    it "handles div excerpt at the beginning of a post" do
+      expect(PrettyText.excerpt("<div class='excerpt'>hi</div> test", 100)).to eq('hi')
+    end
+
     it "handles span excerpt at the beginning of a post" do
       expect(PrettyText.excerpt("<span class='excerpt'>hi</span> test", 100)).to eq('hi')
-      post = Fabricate(:post, raw: "<span class='excerpt'>hi</span> test")
-      expect(post.excerpt).to eq("hi")
+    end
+
+    it "ignores max excerpt length if a div excerpt is specified" do
+      two_hundred = "123456789 " * 20 + "."
+      text = two_hundred + "<div class='excerpt'>#{two_hundred}</div>" + two_hundred
+      expect(PrettyText.excerpt(text, 100)).to eq(two_hundred)
     end
 
     it "ignores max excerpt length if a span excerpt is specified" do
       two_hundred = "123456789 " * 20 + "."
       text = two_hundred + "<span class='excerpt'>#{two_hundred}</span>" + two_hundred
       expect(PrettyText.excerpt(text, 100)).to eq(two_hundred)
-      post = Fabricate(:post, raw: text)
-      expect(post.excerpt).to eq(two_hundred)
     end
 
     it "unescapes html entities when we want text entities" do
@@ -1005,7 +1038,6 @@ describe PrettyText do
 
   describe 'format_for_email' do
     let(:base_url) { "http://baseurl.net" }
-    fab!(:post) { Fabricate(:post) }
 
     before do
       Discourse.stubs(:base_url).returns(base_url)
@@ -1393,7 +1425,7 @@ HTML
     expect(cooked.split("img").length - 1).to eq(3)
   end
 
-  it "handles emoji boundries correctly" do
+  it "handles emoji boundaries correctly" do
     expect(PrettyText.cook(",:)")).to include("emoji")
     expect(PrettyText.cook(":-)\n")).to include("emoji")
     expect(PrettyText.cook("a :)")).to include("emoji")
@@ -1402,7 +1434,7 @@ HTML
   end
 
   describe "censoring" do
-    after(:all) { Discourse.redis.flushdb }
+    after { Discourse.redis.flushdb }
 
     def expect_cooked_match(raw, expected_cooked)
       expect(PrettyText.cook(raw)).to eq(expected_cooked)
@@ -1486,8 +1518,8 @@ HTML
     end
   end
 
-  describe "watched words - replace" do
-    after(:all) { Discourse.redis.flushdb }
+  describe "watched words - replace & link" do
+    after { Discourse.redis.flushdb }
 
     it "replaces words with other words" do
       Fabricate(:watched_word, action: WatchedWord.actions[:replace], word: "dolor sit*", replacement: "something else")
@@ -1503,10 +1535,14 @@ HTML
       expect(PrettyText.cook("Lorem ipsum dolor sittt amet")).to match_html(<<~HTML)
         <p>Lorem ipsum something else amet</p>
       HTML
+
+      expect(PrettyText.cook("Lorem ipsum xdolor sit amet")).to match_html(<<~HTML)
+        <p>Lorem ipsum xdolor sit amet</p>
+      HTML
     end
 
     it "replaces words with links" do
-      Fabricate(:watched_word, action: WatchedWord.actions[:replace], word: "meta", replacement: "https://meta.discourse.org")
+      Fabricate(:watched_word, action: WatchedWord.actions[:link], word: "meta", replacement: "https://meta.discourse.org")
 
       expect(PrettyText.cook("Meta is a Discourse forum")).to match_html(<<~HTML)
         <p>
@@ -1528,15 +1564,45 @@ HTML
       expect(PrettyText.cook("f.o")).to match_html("<p>test</p>")
     end
 
-    it "supports overlapping words" do
-      Fabricate(:watched_word, action: WatchedWord.actions[:replace], word: "discourse", replacement: "https://discourse.org")
-      Fabricate(:watched_word, action: WatchedWord.actions[:replace], word: "is", replacement: "https://example.com")
+    it "does not replace hashtags and mentions" do
+      Fabricate(:user, username: "test")
+      category = Fabricate(:category, slug: "test")
+      Fabricate(:watched_word, action: WatchedWord.actions[:replace], word: "test", replacement: "discourse")
 
-      expect(PrettyText.cook("Meta is a Discourse forum")).to match_html(<<~HTML)
+      expect(PrettyText.cook("@test #test test")).to match_html(<<~HTML)
         <p>
-          Meta
-          <a href="https://example.com" rel="noopener nofollow ugc">is</a>
-          a
+          <a class="mention" href="/u/test">@test</a>
+          <a class="hashtag" href="/c/test/#{category.id}">#<span>test</span></a>
+          discourse
+        </p>
+      HTML
+    end
+
+    it "does not replace hashtags and mentions when watched words are regular expressions" do
+      SiteSetting.watched_words_regular_expressions = true
+
+      Fabricate(:user, username: "test")
+      category = Fabricate(:category, slug: "test")
+      Fabricate(:watched_word, action: WatchedWord.actions[:replace], word: "es", replacement: "discourse")
+
+      expect(PrettyText.cook("@test #test test")).to match_html(<<~HTML)
+        <p>
+          <a class="mention" href="/u/test">@test</a>
+          <a class="hashtag" href="/c/test/#{category.id}">#<span>test</span></a>
+          tdiscourset
+        </p>
+      HTML
+    end
+
+    it "supports overlapping words" do
+      Fabricate(:watched_word, action: WatchedWord.actions[:link], word: "meta", replacement: "https://meta.discourse.org")
+      Fabricate(:watched_word, action: WatchedWord.actions[:replace], word: "iz", replacement: "is")
+      Fabricate(:watched_word, action: WatchedWord.actions[:link], word: "discourse", replacement: "https://discourse.org")
+
+      expect(PrettyText.cook("Meta iz a Discourse forum")).to match_html(<<~HTML)
+        <p>
+          <a href="https://meta.discourse.org" rel="noopener nofollow ugc">Meta</a>
+          is a
           <a href="https://discourse.org" rel="noopener nofollow ugc">Discourse</a>
           forum
         </p>
@@ -1592,7 +1658,7 @@ HTML
   end
 
   it "can onebox local topics" do
-    op = Fabricate(:post)
+    op = post
     reply = Fabricate(:post, topic_id: op.topic_id)
 
     url = Discourse.base_url + reply.url
@@ -1887,7 +1953,7 @@ HTML
     HTML
   end
 
-  it "has a proper data whitlist on div" do
+  it "has a proper data whitelist on div" do
     cooked = PrettyText.cook("<div data-theme-a='a'>test</div>")
     expect(cooked).to include("data-theme-a")
   end
@@ -2019,5 +2085,33 @@ HTML
     HTML
 
     expect(cooked).to match_html(html)
+  end
+
+  context "customizing markdown-it rules" do
+    it 'customizes the markdown-it rules correctly' do
+      cooked = PrettyText.cook('This is some text **bold**', markdown_it_rules: [])
+
+      expect(cooked).to eq("<p>This is some text **bold**</p>")
+
+      cooked = PrettyText.cook('This is some text **bold**', markdown_it_rules: ["emphasis"])
+
+      expect(cooked).to eq("<p>This is some text <strong>bold</strong></p>")
+    end
+  end
+
+  context "enabling/disabling features" do
+    it "allows features to be overriden" do
+      cooked = PrettyText.cook(':grin: @mention', features_override: [])
+
+      expect(cooked).to eq("<p>:grin: @mention</p>")
+
+      cooked = PrettyText.cook(':grin: @mention', features_override: ["emoji"])
+
+      expect(cooked).to eq("<p><img src=\"/images/emoji/twitter/grin.png?v=#{Emoji::EMOJI_VERSION}\" title=\":grin:\" class=\"emoji\" alt=\":grin:\"> @mention</p>")
+
+      cooked = PrettyText.cook(':grin: @mention', features_override: ["mentions", "text-post-process"])
+
+      expect(cooked).to eq("<p>:grin: <span class=\"mention\">@mention</span></p>")
+    end
   end
 end

@@ -1,6 +1,7 @@
 import {
   acceptance,
   count,
+  exists,
   queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -17,17 +18,17 @@ acceptance("Group Members - Anonymous", function () {
       count(".avatar-flair .d-icon-adjust") === 1,
       "it displays the group's avatar flair"
     );
-    assert.ok(count(".group-members tr") > 0, "it lists group members");
+    assert.ok(exists(".group-members tr"), "it lists group members");
 
     assert.ok(
-      count(".group-member-dropdown") === 0,
+      !exists(".group-member-dropdown"),
       "it does not allow anon user to manage group members"
     );
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".group-username-filter").attr("placeholder"),
       I18n.t("groups.members.filter_placeholder"),
-      "it should display the right filter placehodler"
+      "it should display the right filter placeholder"
     );
   });
 });
@@ -47,8 +48,8 @@ acceptance("Group Members", function (needs) {
     await visit("/g/discourse");
     await click(".group-members-add");
 
-    assert.equal(
-      queryAll("#group-add-members-user-selector").length,
+    assert.strictEqual(
+      count(".user-chooser"),
       1,
       "it should display the add members modal"
     );
@@ -58,21 +59,21 @@ acceptance("Group Members", function (needs) {
     await visit("/g/discourse");
 
     assert.ok(
-      count(".group-member-dropdown") > 0,
+      exists(".group-member-dropdown"),
       "it allows admin user to manage group members"
     );
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".group-username-filter").attr("placeholder"),
       I18n.t("groups.members.filter_placeholder_admin"),
-      "it should display the right filter placehodler"
+      "it should display the right filter placeholder"
     );
   });
 
   test("Shows bulk actions", async function (assert) {
     await visit("/g/discourse");
 
-    assert.ok(count("button.bulk-select") > 0);
+    assert.ok(exists("button.bulk-select"));
     await click("button.bulk-select");
 
     await click(queryAll("input.bulk-select")[0]);

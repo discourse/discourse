@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg xmlns="http://www.w3.org/2000/svg">
+  <symbol id="custom-icon" viewBox="0 0 512 512">
+    <g>
+      <g>
+        <path d="M425.199,223.957c-13.303-13.303-34.961-13.303-48.205-0.06l-86.861,85.086V34.133C290.133,15.309,274.824,0,256,0"/>
+      </g>
+    </g>
+  </symbol>
+</svg>

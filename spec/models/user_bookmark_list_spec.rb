@@ -9,7 +9,8 @@ RSpec.describe UserBookmarkList do
 
   before do
     22.times do
-      Fabricate(:bookmark, user: user)
+      bookmark = Fabricate(:bookmark, user: user)
+      Fabricate(:topic_user, topic: bookmark.topic, user: user)
     end
   end
 

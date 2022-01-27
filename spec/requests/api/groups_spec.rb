@@ -13,6 +13,7 @@ describe 'groups' do
   path '/admin/groups.json' do
     post 'Creates a group' do
       tags 'Groups'
+      operationId 'createGroup'
       consumes 'application/json'
       parameter name: :group, in: :body, schema: {
         type: :object,
@@ -39,25 +40,25 @@ describe 'groups' do
                 mentionable_level: { type: :integer },
                 messageable_level: { type: :integer },
                 visibility_level: { type: :integer },
-                automatic_membership_email_domains: { type: :string, nullable: true },
+                automatic_membership_email_domains: { type: [:string, :null] },
                 automatic_membership_retroactive: { type: :boolean },
                 primary_group: { type: :boolean },
-                title: { type: :string, nullable: true },
-                grant_trust_level: { type: :string, nullable: true },
-                incoming_email: { type: :string, nullable: true },
+                title: { type: [:string, :null] },
+                grant_trust_level: { type: [:string, :null] },
+                incoming_email: { type: [:string, :null] },
                 has_messages: { type: :boolean },
-                flair_url: { type: :string, nullable: true },
-                flair_bg_color: { type: :string, nullable: true },
-                flair_color: { type: :string, nullable: true },
-                bio_raw: { type: :string, nullable: true },
-                bio_cooked: { type: :string, nullable: true },
-                bio_excerpt: { type: :string, nullable: true },
+                flair_url: { type: [:string, :null] },
+                flair_bg_color: { type: [:string, :null] },
+                flair_color: { type: [:string, :null] },
+                bio_raw: { type: [:string, :null] },
+                bio_cooked: { type: [:string, :null] },
+                bio_excerpt: { type: [:string, :null] },
                 public_admission: { type: :boolean },
                 public_exit: { type: :boolean },
                 allow_membership_requests: { type: :boolean },
-                full_name: { type: :string, nullable: true },
+                full_name: { type: [:string, :null] },
                 default_notification_level: { type: :integer },
-                membership_request_template: { type: :string, nullable: true },
+                membership_request_template: { type: [:string, :null] },
                 membership_visibility_level: { type: :integer },
                 can_see_members: { type: :boolean },
                 publish_read_state: { type: :boolean },
@@ -78,6 +79,7 @@ describe 'groups' do
   path '/admin/groups/{id}.json' do
     delete 'Delete a group' do
       tags 'Groups'
+      operationId 'deleteGroup'
       consumes 'application/json'
       parameter name: :id, in: :path, type: :integer
       expected_request_schema = nil
@@ -99,6 +101,7 @@ describe 'groups' do
   path '/groups/{id}.json' do
     put 'Update a group' do
       tags 'Groups'
+      operationId 'updateGroup'
       consumes 'application/json'
       parameter name: :id, in: :path, type: :integer
       parameter name: :group, in: :body, schema: {
@@ -125,13 +128,12 @@ describe 'groups' do
         run_test!
       end
     end
-  end
 
-  path '/groups/{name}.json' do
     get 'Get a group' do
       tags 'Groups'
+      operationId 'getGroup'
       consumes 'application/json'
-      parameter name: :name, in: :path, type: :string
+      parameter name: :id, in: :path, type: :string, example: 'name', description: "Use group name instead of id"
       expected_request_schema = nil
 
       produces 'application/json'
@@ -139,29 +141,7 @@ describe 'groups' do
         expected_response_schema = load_spec_schema('group_response')
         schema expected_response_schema
 
-        let(:name) { Fabricate(:group).name }
-
-        it_behaves_like "a JSON endpoint", 200 do
-          let(:expected_response_schema) { expected_response_schema }
-          let(:expected_request_schema) { expected_request_schema }
-        end
-      end
-    end
-  end
-
-  path '/groups/{name}/members.json' do
-    get 'List group members' do
-      tags 'Groups'
-      consumes 'application/json'
-      parameter name: :name, in: :path, type: :string
-      expected_request_schema = nil
-
-      produces 'application/json'
-      response '200', 'success response' do
-        expected_response_schema = load_spec_schema('group_members_response')
-        schema expected_response_schema
-
-        let(:name) { Fabricate(:group).name }
+        let(:id) { Fabricate(:group).name }
 
         it_behaves_like "a JSON endpoint", 200 do
           let(:expected_response_schema) { expected_response_schema }
@@ -172,8 +152,30 @@ describe 'groups' do
   end
 
   path '/groups/{id}/members.json' do
+    get 'List group members' do
+      tags 'Groups'
+      operationId 'listGroupMembers'
+      consumes 'application/json'
+      parameter name: :id, in: :path, type: :string, example: 'name', description: "Use group name instead of id"
+      expected_request_schema = nil
+
+      produces 'application/json'
+      response '200', 'success response' do
+        expected_response_schema = load_spec_schema('group_members_response')
+        schema expected_response_schema
+
+        let(:id) { Fabricate(:group).name }
+
+        it_behaves_like "a JSON endpoint", 200 do
+          let(:expected_response_schema) { expected_response_schema }
+          let(:expected_request_schema) { expected_request_schema }
+        end
+      end
+    end
+
     put 'Add group members' do
       tags 'Groups'
+      operationId 'addGroupMembers'
       consumes 'application/json'
       parameter name: :id, in: :path, type: :integer
       expected_request_schema = load_spec_schema('group_add_members_request')
@@ -199,6 +201,7 @@ describe 'groups' do
 
     delete 'Remove group members' do
       tags 'Groups'
+      operationId 'removeGroupMembers'
       consumes 'application/json'
       parameter name: :id, in: :path, type: :integer
       expected_request_schema = load_spec_schema('group_remove_members_request')
@@ -226,6 +229,7 @@ describe 'groups' do
   path '/groups.json' do
     get 'List groups' do
       tags 'Groups'
+      operationId 'listGroups'
       consumes 'application/json'
       expected_request_schema = nil
 

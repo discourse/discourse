@@ -1,6 +1,7 @@
 import { click, visit } from "@ember/test-helpers";
 import {
   acceptance,
+  count,
   exists,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -29,24 +30,40 @@ acceptance("Share and Invite modal", function (needs) {
       "it shows the topic sharing url"
     );
 
-    assert.ok(queryAll(".social-link").length > 1, "it shows social sources");
-
+    assert.ok(count("button[class*='share-']") > 1, "it shows social sources");
     assert.ok(
-      exists(".btn-primary[aria-label='Notify']"),
+      exists(".link-share-actions .notify"),
       "it shows the notify button"
     );
 
     assert.ok(
-      exists(".btn-primary[aria-label='Invite']"),
+      exists(".link-share-actions .invite"),
       "it shows the invite button"
     );
   });
 
   test("Post date link", async function (assert) {
-    await visit("/t/internationalization-localization/280");
+    await visit("/t/short-topic-with-two-posts/54077");
     await click("#post_2 .post-info.post-date a");
 
     assert.ok(exists("#share-link"), "it shows the share modal");
+  });
+
+  test("Share topic in a restricted category", async function (assert) {
+    await visit("/t/topic-in-restricted-group/2481");
+
+    assert.ok(
+      exists("#topic-footer-button-share-and-invite"),
+      "the button exists"
+    );
+
+    await click("#topic-footer-button-share-and-invite");
+
+    assert.ok(exists(".share-topic-modal"), "it shows the modal");
+    assert.ok(
+      exists("#modal-alert.alert-warning"),
+      "it shows restricted warning"
+    );
   });
 });
 

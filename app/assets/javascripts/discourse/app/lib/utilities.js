@@ -1,11 +1,21 @@
 import getURL, { getURLWithCDN } from "discourse-common/lib/get-url";
 import Handlebars from "handlebars";
+import I18n from "I18n";
 import { deepMerge } from "discourse-common/lib/object";
 import { escape } from "pretty-text/sanitizer";
 import { helperContext } from "discourse-common/lib/helpers";
 import toMarkdown from "discourse/lib/to-markdown";
+import deprecated from "discourse-common/lib/deprecated";
 
 let _defaultHomepage;
+
+export function splitString(str, separator = ",") {
+  if (typeof str === "string") {
+    return str.split(separator).filter(Boolean);
+  } else {
+    return [];
+  }
+}
 
 export function translateSize(size) {
   switch (size) {
@@ -86,13 +96,11 @@ export function avatarImg(options, customGetURL) {
     title = ` title='${escaped}' aria-label='${escaped}'`;
   }
 
-  return `<img alt='' width='${size}' height='${size}' src='${path}' class='${classes}'${title}>`;
+  return `<img loading='lazy' alt='' width='${size}' height='${size}' src='${path}' class='${classes}'${title}>`;
 }
 
 export function tinyAvatar(avatarTemplate, options) {
-  return avatarImg(
-    deepMerge({ avatarTemplate: avatarTemplate, size: "tiny" }, options)
-  );
+  return avatarImg(deepMerge({ avatarTemplate, size: "tiny" }, options));
 }
 
 export function postUrl(slug, topicId, postNumber) {
@@ -126,12 +134,19 @@ export function highlightPost(postNumber) {
     element.removeEventListener("animationend", removeHighlighted);
   };
   element.addEventListener("animationend", removeHighlighted);
+  container.querySelector(".tabLoc").focus();
 }
 
 export function emailValid(email) {
   // see:  http://stackoverflow.com/questions/46155/validate-email-address-in-javascript
   const re = /^[a-zA-Z0-9!#$%&'*+\/=?\^_`{|}~\-]+(?:\.[a-zA-Z0-9!#$%&'\*+\/=?\^_`{|}~\-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9\-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9\-]*[a-zA-Z0-9])?$/;
   return re.test(email);
+}
+
+export function hostnameValid(hostname) {
+  // see:  https://stackoverflow.com/questions/106179/regular-expression-to-match-dns-hostname-or-ip-address
+  const re = /^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)+([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$/;
+  return hostname && re.test(hostname);
 }
 
 export function extractDomainFromUrl(url) {
@@ -160,6 +175,7 @@ export function selectedText() {
       range.setEndBefore($postMenuArea);
     }
 
+    const $oneboxTest = $ancestor.closest("aside.onebox[data-onebox-src]");
     const $codeBlockTest = $ancestor.parents("pre");
     if ($codeBlockTest.length) {
       const $code = $("<code>");
@@ -172,10 +188,20 @@ export function selectedText() {
       } else {
         $div.append($code);
       }
+    } else if ($oneboxTest.length) {
+      // This is a partial quote from a onebox.
+      // Treat it as though the entire onebox was quoted.
+      const oneboxUrl = $($oneboxTest).data("onebox-src");
+      $div.append(oneboxUrl);
     } else {
       $div.append(range.cloneContents());
     }
   }
+
+  $div.find("aside.onebox[data-onebox-src]").each(function () {
+    const oneboxUrl = $(this).data("onebox-src");
+    $(this).replaceWith(oneboxUrl);
+  });
 
   return toMarkdown($div.html());
 }
@@ -199,29 +225,12 @@ export function caretRowCol(el) {
       return sum + row.length + 1;
     }, 0);
 
-  return { rowNum: rowNum, colNum: colNum };
+  return { rowNum, colNum };
 }
 
 // Determine the position of the caret in an element
 export function caretPosition(el) {
-  let r, rc, re;
-  if (el.selectionStart) {
-    return el.selectionStart;
-  }
-  if (document.selection) {
-    el.focus();
-    r = document.selection.createRange();
-    if (!r) {
-      return 0;
-    }
-
-    re = el.createTextRange();
-    rc = re.duplicate();
-    re.moveToBookmark(r.getBookmark());
-    rc.setEndPoint("EndToStart", re);
-    return rc.text.length;
-  }
-  return 0;
+  return el?.selectionStart || 0;
 }
 
 // Set the caret's position
@@ -305,10 +314,6 @@ export function isAppleDevice() {
 
 let iPadDetected = undefined;
 
-export function iOSWithVisualViewport() {
-  return isAppleDevice() && window.visualViewport !== undefined;
-}
-
 export function isiPad() {
   if (iPadDetected === undefined) {
     iPadDetected =
@@ -319,16 +324,15 @@ export function isiPad() {
 }
 
 export function safariHacksDisabled() {
-  if (iOSWithVisualViewport()) {
-    return false;
-  }
+  deprecated(
+    "`safariHacksDisabled()` is deprecated, it now always returns `false`",
+    {
+      since: "2.8.0.beta8",
+      dropFrom: "2.9.0.beta1",
+    }
+  );
 
-  let pref = localStorage.getItem("safari-hacks-disabled");
-  let result = false;
-  if (pref !== null) {
-    result = pref === "true";
-  }
-  return result;
+  return false;
 }
 
 const toArray = (items) => {
@@ -452,26 +456,48 @@ const CODE_BLOCKS_REGEX = /^(    |\t).*|`[^`]+`|^```[^]*?^```|\[code\][^]*?\[\/c
 //                               |         |          |                  |
 //                               |         |          |       code blocks between [code]
 //                               |         |          |
-//                               |         |          +--- code blocks between three backquote
+//                               |         |          +--- code blocks between three backticks
 //                               |         |
-//                               |         +----- inline code between backquotes
+//                               |         +----- inline code between backticks
 //                               |
 //                               +------- paragraphs starting with 4 spaces or tab
 
-export function inCodeBlock(text, pos) {
-  let result = false;
+const OPEN_CODE_BLOCKS_REGEX = /`[^`]+|^```[^]*?|\[code\][^]*?/gm;
 
-  let match;
-  while ((match = CODE_BLOCKS_REGEX.exec(text)) !== null) {
-    const begin = match.index;
-    const end = match.index + match[0].length;
-    if (begin <= pos && pos <= end) {
-      result = true;
+export function inCodeBlock(text, pos) {
+  let end = 0;
+  for (const match of text.matchAll(CODE_BLOCKS_REGEX)) {
+    end = match.index + match[0].length;
+    if (match.index <= pos && pos <= end) {
+      return true;
     }
   }
 
-  return result;
+  // Character at position `pos` can be in a code block that is unfinished.
+  // To check this case, we look for any open code blocks after the last closed
+  // code block.
+  const lastOpenBlock = text.substr(end).search(OPEN_CODE_BLOCKS_REGEX);
+  return lastOpenBlock !== -1 && pos >= end + lastOpenBlock;
 }
 
+export function translateModKey(string) {
+  const { isApple } = helperContext().capabilities;
+  // Apple device users are used to glyphs for shortcut keys
+  if (isApple) {
+    string = string
+      .replace("Shift", "\u21E7")
+      .replace("Meta", "\u2318")
+      .replace("Alt", "\u2325")
+      .replace(/\+/g, "");
+  } else {
+    string = string
+      .replace("Shift", I18n.t("shortcut_modifier_key.shift"))
+      .replace("Ctrl", I18n.t("shortcut_modifier_key.ctrl"))
+      .replace("Meta", I18n.t("shortcut_modifier_key.ctrl"))
+      .replace("Alt", I18n.t("shortcut_modifier_key.alt"));
+  }
+
+  return string;
+}
 // This prevents a mini racer crash
 export default {};

@@ -3,6 +3,10 @@
 class CategoryTag < ActiveRecord::Base
   belongs_to :category
   belongs_to :tag
+
+  after_commit do
+    Site.clear_cache
+  end
 end
 
 # == Schema Information

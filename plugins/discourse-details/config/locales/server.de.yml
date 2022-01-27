@@ -6,6 +6,6 @@
 
 de:
   site_settings:
-    details_enabled: 'Schließe die Möglichkeit ein, einem Beitrag erweiterbare Details hinzuzufügen. Diese Funktion findest Du im Popup-Menü der Symbolleiste des Composers. Du musst alle Beiträge mit „rake posts:rebake“ neu backen, wenn du diese Einstellung änderst.'
+    details_enabled: 'Biete die Möglichkeit an, erweiterbare Details zu einem Beitrag hinzuzufügen. Diese Funktion findest du im Toolbar-Pop-up-Menü des Editors. Du musst alle Beiträge mit „rake posts:rebake“ neu generieren, wenn du diese Einstellung änderst.'
   details:
     excerpt_details: "(klicke, um weitere Details zu sehen)"

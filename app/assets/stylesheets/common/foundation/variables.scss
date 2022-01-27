@@ -9,7 +9,6 @@ $small-width: 800px !default;
 $medium-width: 995px !default;
 $large-width: 1110px !default;
 
-$input-padding: 4px 10px;
 $topic-body-width: 690px;
 $topic-body-width-padding: 11px;
 $topic-avatar-width: 45px;
@@ -50,7 +49,7 @@ $base-font-size-larger: var(--base-font-size-larger) !default;
 $base-font-size-largest: var(--base-font-size-largest) !default;
 $heading-font-family: var(--heading-font-family) !default;
 
-// Font-size defintions, multiplier ^ (step / interval)
+// Font-size definitions, multiplier ^ (step / interval)
 $font-up-6: var(--font-up-6) !default;
 $font-up-5: var(--font-up-5) !default;
 $font-up-4: var(--font-up-4) !default;
@@ -64,8 +63,6 @@ $font-down-3: var(--font-down-3) !default;
 $font-down-4: var(--font-down-4) !default;
 $font-down-5: var(--font-down-5) !default;
 $font-down-6: var(--font-down-6) !default;
-
-$font-size-ios-input: var(--font-size-ios-input) !default;
 
 // Common line-heights
 $line-height-small: var(--line-height-small) !default;

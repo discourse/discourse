@@ -1,30 +1,21 @@
-import EmberObject, { get } from "@ember/object";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import Service from "@ember/service";
+import discourseComputed from "discourse-common/utils/decorators";
 
-export default EmberObject.extend({
+export default Service.extend({
   searchContextEnabled: false, // checkbox to scope search
   searchContext: null,
-  term: null,
   highlightTerm: null,
-
-  @observes("term")
-  _sethighlightTerm() {
-    this.set("highlightTerm", this.term);
-  },
 
   @discourseComputed("searchContext")
   contextType: {
     get(searchContext) {
-      if (searchContext) {
-        return get(searchContext, "type");
-      }
+      return searchContext?.type;
     },
+
     set(value, searchContext) {
-      // a bit hacky, consider cleaning this up, need to work through all observers though
-      const context = $.extend({}, searchContext);
-      context.type = value;
-      this.set("searchContext", context);
-      return this.get("searchContext.type");
+      this.set("searchContext", { ...searchContext, type: value });
+
+      return value;
     },
   },
 });

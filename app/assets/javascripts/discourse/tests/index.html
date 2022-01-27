@@ -26,6 +26,17 @@
         -o-transition: none !important;
         transition: none !important;
       }
+      #ember-testing {
+        background-color: white;
+      }
+      #qunit-fixture {
+        position: absolute;
+        top: -10000px;
+        left: -10000px;
+        width: 1000px;
+        height: 1000px;
+      }
+
     </style>
 
     <script src="{{rootURL}}assets/test-i18n.js"></script>
@@ -39,8 +50,14 @@
     <script src="{{rootURL}}assets/test-support.js"></script>
     <script src="{{rootURL}}assets/discourse.js"></script>
     <script src="{{rootURL}}assets/discourse-markdown.js"></script>
+    {{content-for "test-plugin-js"}}
     <script src="{{rootURL}}assets/admin.js"></script>
-    <script src="{{rootURL}}assets/tests.js"></script>
+    <script src="{{rootURL}}assets/test-helpers.js"></script>
+    <script src="{{rootURL}}assets/core-tests.js"></script>
+    {{content-for "test-plugin-tests-js"}}
+    <script>
+      require('discourse/tests/test-boot-ember-cli');
+    </script>
     <script src="{{rootURL}}assets/scripts/discourse-boot.js"></script>
 
     {{content-for "body-footer"}}

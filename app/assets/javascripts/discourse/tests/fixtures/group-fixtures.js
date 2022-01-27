@@ -48,10 +48,42 @@ export default {
       messageable: true,
       can_see_members: true,
       has_messages: true,
-      message_count: 2
+      message_count: 2,
+      imap_mailboxes: [
+        "All Mail",
+        "Important"
+      ]
     },
     extras: {
       visible_group_names: ["discourse"]
+    }
+  },
+  "/groups/support.json": {
+    group: {
+      id: 55,
+      automatic: false,
+      name: "support",
+      full_name: "Awesome Support",
+      user_count: 8,
+      alias_level: 99,
+      visible: true,
+      public_admission: true,
+      public_exit: false,
+      flair_url: "fa-adjust",
+      is_group_owner: true,
+      mentionable: true,
+      messageable: true,
+      can_see_members: true,
+      has_messages: true,
+      message_count: 2,
+      default_notification_level: 2,
+      imap_mailboxes: [
+        "All Mail",
+        "Important"
+      ]
+    },
+    extras: {
+      visible_group_names: ["support"]
     }
   },
   "/topics/groups/discourse.json": {
@@ -1285,6 +1317,7 @@ export default {
       user_count: 8,
       alias_level: 99,
       visible: true,
+      has_messages: true,
       public_admission: true,
       public_exit: false,
       flair_url: "fa-adjust",
@@ -1292,7 +1325,8 @@ export default {
       mentionable: true,
       messageable: true,
       can_see_members: true,
-      can_admin_group: true
+      can_admin_group: true,
+      default_notification_level: 0,
     },
     extras: {
       visible_group_names: ["alternative-group"]

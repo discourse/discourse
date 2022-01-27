@@ -51,6 +51,15 @@ describe Badge do
     expect(b.grant_count).to eq(1)
   end
 
+  it 'sanitizes the description' do
+    xss = "<b onmouseover=alert('Wufff!')>click me!</b><script>alert('TEST');</script>"
+    badge = Fabricate(:badge)
+
+    badge.update!(description: xss)
+
+    expect(badge.description).to eq("<b>click me!</b>alert('TEST');")
+  end
+
   describe '#manually_grantable?' do
     fab!(:badge) { Fabricate(:badge, name: 'Test Badge') }
     subject { badge.manually_grantable? }
@@ -211,6 +220,20 @@ describe Badge do
       TopicLinkClick.create_from(url: "https://www.discourse.org/", post_id: post.id, topic_id: post.topic.id, ip: "192.168.0.101")
       BadgeGranter.backfill(popular_link_badge)
       expect(UserBadge.where(user_id: post.user.id, badge_id: Badge::PopularLink).count).to eq(0)
+    end
+  end
+
+  context "#seed" do
+
+    let(:regular_badge) do
+      Badge.find(Badge::Regular)
+    end
+
+    it "`allow_title` is not updated for existing records" do
+      regular_badge.update(allow_title: false)
+      SeedFu.seed
+      regular_badge.reload
+      expect(regular_badge.allow_title).to eq(false)
     end
   end
 end

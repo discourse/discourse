@@ -8,9 +8,7 @@ import { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { convertIconClass } from "discourse-common/lib/icon-library";
 import discourseDebounce from "discourse-common/lib/debounce";
-import { escapeExpression } from "discourse/lib/utilities";
 import getURL from "discourse-common/lib/get-url";
-import { htmlSafe } from "@ember/template";
 
 export default Component.extend({
   classNames: ["group-flair-inputs"],
@@ -39,6 +37,10 @@ export default Component.extend({
   },
 
   _loadIcon() {
+    if (!this.model.flair_icon) {
+      return;
+    }
+
     const icon = convertIconClass(this.model.flair_icon),
       c = "#svg-sprites",
       h = "ajax-icon-holder",
@@ -67,44 +69,8 @@ export default Component.extend({
   },
 
   @discourseComputed("model.flair_url")
-  flairImageUrl(flairURL) {
-    return flairURL && flairURL.match(/\//) ? flairURL : null;
-  },
-
-  @discourseComputed(
-    "model.flair_url",
-    "flairPreviewImage",
-    "model.flairBackgroundHexColor",
-    "model.flairHexColor"
-  )
-  flairPreviewStyle(
-    flairURL,
-    flairPreviewImage,
-    flairBackgroundHexColor,
-    flairHexColor
-  ) {
-    let style = "";
-
-    if (flairPreviewImage) {
-      style += `background-image: url(${escapeExpression(flairURL)});`;
-    }
-
-    if (flairBackgroundHexColor) {
-      style += `background-color: #${flairBackgroundHexColor};`;
-    }
-
-    if (flairHexColor) {
-      style += `color: #${flairHexColor};`;
-    }
-
-    return htmlSafe(style);
-  },
-
-  @discourseComputed("model.flairBackgroundHexColor")
-  flairPreviewClasses(flairBackgroundHexColor) {
-    if (flairBackgroundHexColor) {
-      return "rounded";
-    }
+  flairImageUrl(flairUrl) {
+    return flairUrl && flairUrl.includes("/") ? flairUrl : null;
   },
 
   @discourseComputed("flairPreviewImage")

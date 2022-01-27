@@ -1,0 +1,33 @@
+$flair-size: 18px;
+
+.select-kit.flair-chooser {
+  .select-kit-header,
+  .flair-row {
+    .avatar-flair {
+      align-items: center;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: $flair-size $flair-size;
+      display: flex;
+      justify-content: center;
+      margin-right: 5px;
+      height: $flair-size;
+      width: $flair-size;
+
+      &.rounded {
+        background-size: ($flair-size / 1.4) ($flair-size / 1.4);
+        border-radius: 50%;
+      }
+
+      .d-icon {
+        display: block;
+        height: ($flair-size / 1.8);
+        width: ($flair-size / 1.8);
+      }
+    }
+
+    span {
+      white-space: nowrap;
+    }
+  }
+}

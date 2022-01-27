@@ -1,4 +1,8 @@
-import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import {
+  acceptance,
+  exists,
+  queryAll,
+} from "discourse/tests/helpers/qunit-helpers";
 import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
 import DiscourseURL from "discourse/lib/url";
 import I18n from "I18n";
@@ -10,20 +14,22 @@ acceptance("Category New", function (needs) {
 
   test("Creating a new category", async function (assert) {
     await visit("/new-category");
+
     assert.ok(queryAll(".badge-category"));
+    assert.notOk(exists(".category-breadcrumb"));
 
     await fillIn("input.category-name", "testing");
-    assert.equal(queryAll(".badge-category").text(), "testing");
+    assert.strictEqual(queryAll(".badge-category").text(), "testing");
 
     await click("#save-category");
 
-    assert.equal(
+    assert.strictEqual(
       currentURL(),
       "/c/testing/edit/general",
       "it transitions to the category edit route"
     );
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".edit-category-title h2").text(),
       I18n.t("category.edit_dialog_title", {
         categoryName: "testing",

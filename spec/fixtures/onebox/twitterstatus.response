@@ -1,0 +1,2814 @@
+<!DOCTYPE html>
+<html lang="en" data-scribe-reduced-action-queue="true">
+  <head>
+
+
+
+
+
+
+
+    <meta charset="utf-8">
+
+    <noscript><meta http-equiv="refresh" content="0; URL=https://mobile.twitter.com/i/nojs_router?path=%2Fvyki_e%2Fstatus%2F363116819147538433"></noscript>
+
+
+
+  <script id="bouncer_terminate_iframe" nonce="KXwIjaJlN1QIxC47iHrsvQ==">
+    if (window.top != window) {
+  window.top.postMessage({'bouncer': true, 'event': 'complete'}, '*');
+}
+  </script>
+  <script id="swift_action_queue" nonce="KXwIjaJlN1QIxC47iHrsvQ==">
+    (function(){function m(a){a||(a=window.event);if(!a)return!1;a.timestamp=(new Date).getTime();!a.target&&a.srcElement&&(a.target=a.srcElement);if(document.documentElement.getAttribute("data-scribe-reduced-action-queue")){var b=a.target;while(b&&b!=document
+.body){if(b.tagName=="A")return;b=b.parentNode}}r("all",s(a));if(!q(a)){r("direct",a);return!0}document.addEventListener||(a=s(a));a.preventDefault=a.stopPropagation=a.stopImmediatePropagation=function(){};if(i){f.push(a);r("captured",a)}else r("ignored",a
+);return!1}function n($){p();for(var a=0,b;b=f[a];a++){var d=$(b.target),e=d.closest("a")[0];if(b.type=="click"&&e){var g=$.data(e,"events"),i=g&&g.click,j=!e.hostname.match(c)||!e.href.match(/#$/);if(!i&&j){window.location=e.href;continue}}d.trigger($.event
+.fix(b))}window.swiftActionQueue.wasFlushed=!0}function o(){for(var a in j){if(a=="all")continue;var b=j[a];for(var c=0;c<b.length;c++)console.log("actionQueue",u(b[c]))}}function p(){clearTimeout(g);for(var a=0,b;b=e[a];a++)document["on"+b]=null}function q
+(a){if(!a.target)return!1;var b=a.target,e=(b.tagName||"").toLowerCase();if(a.metaKey)return!1;if(a.shiftKey&&e=="a")return!1;if(b.hostname&&!b.hostname.match(c))return!1;if(a.type.match(d)&&w(b))return!1;if(e=="label"){var f=b.getAttribute("for");if(f){var g=
+document.getElementById(f);if(g&&v(g))return!1}else for(var i=0,j;j=b.childNodes[i];i++)if(v(j))return!1}return!0}function r(a,b){b.bucket=a;j[a].push(b)}function s(a){var b={};for(var c in a)b[c]=a[c];return b}function t(a){while(a&&a!=document.body){if(a
+.tagName=="A")return a;a=a.parentNode}}function u(b){var c=[];b.bucket&&c.push("["+b.bucket+"]");c.push(b.type);var d=b.target,e=t(d),f="",g,i,j=b.timestamp&&b.timestamp-a;if(b.type==="click"&&e){g=e.className.trim().replace(/\s+/g,".");i=e.id.trim();f=/[^#]$/
+.test(e.href)?" ("+e.href+")":"";d='"'+e.innerText.replace(/\n+/g," ").trim()+'"'}else{g=d.className.trim().replace(/\s+/g,".");i=d.id.trim();d=d.tagName.toLowerCase();b.keyCode&&(d=String.fromCharCode(b.keyCode)+" : "+d)}c.push(d+f+(i&&"#"+i)+(!i&&g?"."+g
+:""));j&&c.push(j);return c.join(" ")}function v(a){var b=(a.tagName||"").toLowerCase();return b=="input"&&a.getAttribute("type")=="checkbox"}function w(a){var b=(a.tagName||"").toLowerCase();return b=="textarea"||b=="input"&&a.getAttribute("type")=="text"||
+a.getAttribute("contenteditable")=="true"}var a=(new Date).getTime(),b=1e4,c=/^([^\.]+\.)*twitter\.com$/,d=/^key/,e=["click","keydown","keypress","keyup"],f=[],g=null,i=!0,j={captured:[],ignored:[],direct:[],all:[]};for(var k=0,l;l=e[k];k++)document["on"+l
+]=m;g=setTimeout(function(){i=!1},b);window.swiftActionQueue={buckets:j,flush:n,logActions:o,wasFlushed:!1}})();
+  </script>
+  <script id="composition_state" nonce="KXwIjaJlN1QIxC47iHrsvQ==">
+    (function(){function a(a){a.target.setAttribute("data-in-composition","true")}function b(a){a.target.removeAttribute("data-in-composition")}if(document.addEventListener){document.addEventListener("compositionstart",a,!1);document.addEventListener("compositionend"
+,b,!1)}})();
+  </script>
+  <script id="load_js" nonce="KXwIjaJlN1QIxC47iHrsvQ==">
+    /*! loadJS: load a JS file asynchronously. [c]2014 @scottjehl, Filament Group, Inc. (Based on http://goo.gl/REQGQ by Paul Irish). Licensed MIT */(function(a){var b=function(b,c){"use strict";var d=a.document.getElementsByTagName("script")[0],e=a.document.createElement
+("script");e.src=b;e.async=!0;d.parentNode.insertBefore(e,d);c&&typeof c=="function"&&(e.onload=c);return e};typeof module!="undefined"?module.exports=b:a.loadJS=b})(typeof global!="undefined"?global:this);
+  </script>
+
+    <link rel="stylesheet" href="https://abs.twimg.com/a/1467966468/css/t1/twitter_core.bundle.css">
+  <link rel="stylesheet" href="https://abs.twimg.com/a/1467966468/css/t1/twitter_more_1.bundle.css">
+  <link rel="stylesheet" href="https://abs.twimg.com/a/1467966468/css/t1/twitter_more_2.bundle.css">
+
+    <link rel="dns-prefetch" href="https://pbs.twimg.com">
+    <link rel="dns-prefetch" href="https://t.co">
+      <link rel="preload" href="https://abs.twimg.com/c/swift/en/init.314a9707f177773430c9b565030e9ea5b8638c96.js" as="script">
+      <link rel="preload" href="https://abs.twimg.com/c/swift/en/bundle/timeline.20389bc2f54407a5eb508e248a2a7a64457c0609.js" as="script">
+      <link rel="preload" href="https://abs.twimg.com/c/swift/en/bundle/boot.c09735539d966801edba73cbc8a86a0042072a93.js" as="script">
+
+      <title>Vyki Englert on Twitter: &quot;I&#39;m a sucker for pledges.  @Peers Pledge #sharingeconomy http://t.co/T4Sc47KAzh&quot;</title>
+      <meta name="robots" content="NOODP">
+
+
+
+
+<meta name="msapplication-TileImage" content="//abs.twimg.com/favicons/win8-tile-144.png"/>
+<meta name="msapplication-TileColor" content="#00aced"/>
+
+
+<link rel="mask-icon" sizes="any" href="https://abs.twimg.com/a/1467966468/img/t1/favicon.svg" color="#55acee">
+
+<link href="//abs.twimg.com/favicons/favicon.ico" rel="shortcut icon" type="image/x-icon">
+
+<link rel="manifest" href="/manifest.json">
+
+
+  <meta name="swift-page-name" id="swift-page-name" content="permalink">
+
+    <link rel="canonical" href="https://twitter.com/vyki_e/status/363116819147538433">
+  <link rel="alternate" hreflang="x-default" href="https://twitter.com/vyki_e/status/363116819147538433">
+  <link rel="alternate" hreflang="fr" href="https://twitter.com/vyki_e/status/363116819147538433?lang=fr"><link rel="alternate" hreflang="en" href="https://twitter.com/vyki_e/status/363116819147538433?lang=en"><link rel="alternate" hreflang="ar" href="https://twitter.com/vyki_e/status/363116819147538433?lang=ar"><link rel="alternate" hreflang="ja" href="https://twitter.com/vyki_e/status/363116819147538433?lang=ja"><link rel="alternate" hreflang="es" href="https://twitter.com/vyki_e/status/363116819147538433?lang=es"><link rel="alternate" hreflang="de" href="https://twitter.com/vyki_e/status/363116819147538433?lang=de"><link rel="alternate" hreflang="it" href="https://twitter.com/vyki_e/status/363116819147538433?lang=it"><link rel="alternate" hreflang="id" href="https://twitter.com/vyki_e/status/363116819147538433?lang=id"><link rel="alternate" hreflang="pt" href="https://twitter.com/vyki_e/status/363116819147538433?lang=pt"><link rel="alternate" hreflang="ko" href="https://twitter.com/vyki_e/status/363116819147538433?lang=ko"><link rel="alternate" hreflang="tr" href="https://twitter.com/vyki_e/status/363116819147538433?lang=tr"><link rel="alternate" hreflang="ru" href="https://twitter.com/vyki_e/status/363116819147538433?lang=ru"><link rel="alternate" hreflang="nl" href="https://twitter.com/vyki_e/status/363116819147538433?lang=nl"><link rel="alternate" hreflang="fil" href="https://twitter.com/vyki_e/status/363116819147538433?lang=fil"><link rel="alternate" hreflang="ms" href="https://twitter.com/vyki_e/status/363116819147538433?lang=ms"><link rel="alternate" hreflang="zh-tw" href="https://twitter.com/vyki_e/status/363116819147538433?lang=zh-tw"><link rel="alternate" hreflang="zh-cn" href="https://twitter.com/vyki_e/status/363116819147538433?lang=zh-cn"><link rel="alternate" hreflang="hi" href="https://twitter.com/vyki_e/status/363116819147538433?lang=hi"><link rel="alternate" hreflang="no" href="https://twitter.com/vyki_e/status/363116819147538433?lang=no"><link rel="alternate" hreflang="sv" href="https://twitter.com/vyki_e/status/363116819147538433?lang=sv"><link rel="alternate" hreflang="fi" href="https://twitter.com/vyki_e/status/363116819147538433?lang=fi"><link rel="alternate" hreflang="da" href="https://twitter.com/vyki_e/status/363116819147538433?lang=da"><link rel="alternate" hreflang="pl" href="https://twitter.com/vyki_e/status/363116819147538433?lang=pl"><link rel="alternate" hreflang="hu" href="https://twitter.com/vyki_e/status/363116819147538433?lang=hu"><link rel="alternate" hreflang="fa" href="https://twitter.com/vyki_e/status/363116819147538433?lang=fa"><link rel="alternate" hreflang="he" href="https://twitter.com/vyki_e/status/363116819147538433?lang=he"><link rel="alternate" hreflang="ur" href="https://twitter.com/vyki_e/status/363116819147538433?lang=ur"><link rel="alternate" hreflang="th" href="https://twitter.com/vyki_e/status/363116819147538433?lang=th"><link rel="alternate" hreflang="uk" href="https://twitter.com/vyki_e/status/363116819147538433?lang=uk"><link rel="alternate" hreflang="ca" href="https://twitter.com/vyki_e/status/363116819147538433?lang=ca"><link rel="alternate" hreflang="ga" href="https://twitter.com/vyki_e/status/363116819147538433?lang=ga"><link rel="alternate" hreflang="el" href="https://twitter.com/vyki_e/status/363116819147538433?lang=el"><link rel="alternate" hreflang="eu" href="https://twitter.com/vyki_e/status/363116819147538433?lang=eu"><link rel="alternate" hreflang="cs" href="https://twitter.com/vyki_e/status/363116819147538433?lang=cs"><link rel="alternate" hreflang="gl" href="https://twitter.com/vyki_e/status/363116819147538433?lang=gl"><link rel="alternate" hreflang="ro" href="https://twitter.com/vyki_e/status/363116819147538433?lang=ro"><link rel="alternate" hreflang="hr" href="https://twitter.com/vyki_e/status/363116819147538433?lang=hr"><link rel="alternate" hreflang="en-gb" href="https://twitter.com/vyki_e/status/363116819147538433?lang=en-gb"><link rel="alternate" hreflang="vi" href="https://twitter.com/vyki_e/status/363116819147538433?lang=vi"><link rel="alternate" hreflang="bn" href="https://twitter.com/vyki_e/status/363116819147538433?lang=bn"><link rel="alternate" hreflang="bg" href="https://twitter.com/vyki_e/status/363116819147538433?lang=bg"><link rel="alternate" hreflang="sr" href="https://twitter.com/vyki_e/status/363116819147538433?lang=sr"><link rel="alternate" hreflang="sk" href="https://twitter.com/vyki_e/status/363116819147538433?lang=sk"><link rel="alternate" hreflang="gu" href="https://twitter.com/vyki_e/status/363116819147538433?lang=gu"><link rel="alternate" hreflang="mr" href="https://twitter.com/vyki_e/status/363116819147538433?lang=mr"><link rel="alternate" hreflang="ta" href="https://twitter.com/vyki_e/status/363116819147538433?lang=ta"><link rel="alternate" hreflang="kn" href="https://twitter.com/vyki_e/status/363116819147538433?lang=kn">
+
+    <link rel="alternate" type="application/json+oembed" href="https://publish.twitter.com/oembed?url=https://twitter.com/vyki_e/status/363116819147538433" title="Vyki Englert on Twitter: &quot;I&#39;m a sucker for pledges.  @Peers Pledge #sharingeconomy http://t.co/T4Sc47KAzh&quot;">
+
+
+  <link rel="alternate" media="handheld, only screen and (max-width: 640px)" href="https://mobile.twitter.com/vyki_e/status/363116819147538433">
+
+      <link rel="alternate" href="android-app://com.twitter.android/twitter/tweet?status_id=363116819147538433&amp;ref_src=twsrc%5Egoogle%7Ctwcamp%5Eandroidseo%7Ctwgr%5Estatus%7Ctwterm%5E363116819147538433">
+
+<link rel="search" type="application/opensearchdescription+xml" href="/opensearch.xml" title="Twitter">
+
+    <link id="async-css-placeholder">
+
+        <meta  property="og:type" content="article">
+        <meta  property="og:url" content="https://twitter.com/vyki_e/status/363116819147538433">
+        <meta  property="og:title" content="Vyki Englert on Twitter">
+        <meta  property="og:image" content="https://pbs.twimg.com/profile_images/732349210264133632/RTNgZLrm_400x400.jpg">
+        <meta  property="og:description" content="“I&#39;m a sucker for pledges.  @Peers Pledge #sharingeconomy http://t.co/T4Sc47KAzh”">
+        <meta  property="og:site_name" content="Twitter">
+        <meta  property="fb:app_id" content="2231777543">
+      <input type="hidden" id="init-data" class="json-data" value="{&quot;keyboardShortcuts&quot;:[{&quot;name&quot;:&quot;Actions&quot;,&quot;description&quot;:&quot;Shortcuts for common actions.&quot;,&quot;shortcuts&quot;:[{&quot;keys&quot;:[&quot;Enter&quot;],&quot;description&quot;:&quot;Open Tweet details&quot;},{&quot;keys&quot;:[&quot;o&quot;],&quot;description&quot;:&quot;Expand photo&quot;},{&quot;keys&quot;:[&quot;\/&quot;],&quot;description&quot;:&quot;Search&quot;}]},{&quot;name&quot;:&quot;Navigation&quot;,&quot;description&quot;:&quot;Shortcuts for navigating between items in timelines.&quot;,&quot;shortcuts&quot;:[{&quot;keys&quot;:[&quot;?&quot;],&quot;description&quot;:&quot;This menu&quot;},{&quot;keys&quot;:[&quot;j&quot;],&quot;description&quot;:&quot;Next Tweet&quot;},{&quot;keys&quot;:[&quot;k&quot;],&quot;description&quot;:&quot;Previous Tweet&quot;},{&quot;keys&quot;:[&quot;Space&quot;],&quot;description&quot;:&quot;Page down&quot;},{&quot;keys&quot;:[&quot;.&quot;],&quot;description&quot;:&quot;Load new Tweets&quot;}]},{&quot;name&quot;:&quot;Timelines&quot;,&quot;description&quot;:&quot;Shortcuts for navigating to different timelines or pages.&quot;,&quot;shortcuts&quot;:[{&quot;keys&quot;:[&quot;g&quot;,&quot;u&quot;],&quot;description&quot;:&quot;Go to user\u2026&quot;}]}],&quot;jsInitDelay&quot;:0,&quot;hasKenburnEffectOnSingleImage&quot;:false,&quot;composeIgnoreAttachmentText&quot;:false,&quot;baseFoucClass&quot;:&quot;swift-loading&quot;,&quot;bodyFoucClassNames&quot;:&quot;swift-loading&quot;,&quot;macawSwift&quot;:true,&quot;assetsBasePath&quot;:&quot;https:\/\/abs.twimg.com\/a\/1467966468\/&quot;,&quot;assetVersionKey&quot;:&quot;f28314&quot;,&quot;environment&quot;:&quot;production&quot;,&quot;formAuthenticityToken&quot;:&quot;0ca3d94aff5192efa7e34ae4eae60d07f5babd38&quot;,&quot;loggedIn&quot;:false,&quot;softUserLoggedIn&quot;:false,&quot;screenName&quot;:null,&quot;fullName&quot;:null,&quot;userId&quot;:null,&quot;guestId&quot;:&quot;142926596918437608&quot;,&quot;allowAdsPersonalization&quot;:true,&quot;scribeBufferSize&quot;:3,&quot;pageName&quot;:&quot;permalink&quot;,&quot;sectionName&quot;:&quot;permalink&quot;,&quot;scribeParameters&quot;:{},&quot;recaptchaApiUrl&quot;:&quot;https:\/\/www.google.com\/recaptcha\/api\/js\/recaptcha_ajax.js&quot;,&quot;internalReferer&quot;:null,&quot;geoEnabled&quot;:false,&quot;typeaheadData&quot;:{&quot;accounts&quot;:{&quot;enabled&quot;:true,&quot;localQueriesEnabled&quot;:false,&quot;remoteQueriesEnabled&quot;:true,&quot;limit&quot;:6},&quot;trendLocations&quot;:{&quot;enabled&quot;:true},&quot;dmConversations&quot;:{&quot;enabled&quot;:false},&quot;savedSearches&quot;:{&quot;enabled&quot;:false,&quot;items&quot;:[]},&quot;dmAccounts&quot;:{&quot;enabled&quot;:false,&quot;localQueriesEnabled&quot;:false,&quot;remoteQueriesEnabled&quot;:false,&quot;onlyDMable&quot;:true},&quot;mediaTagAccounts&quot;:{&quot;enabled&quot;:false,&quot;localQueriesEnabled&quot;:true,&quot;remoteQueriesEnabled&quot;:false,&quot;onlyShowUsersWithCanMediaTag&quot;:false,&quot;currentUserId&quot;:-1},&quot;selectedUsers&quot;:{&quot;enabled&quot;:false},&quot;prefillUsers&quot;:{&quot;enabled&quot;:false},&quot;topics&quot;:{&quot;enabled&quot;:true,&quot;localQueriesEnabled&quot;:false,&quot;remoteQueriesEnabled&quot;:true,&quot;prefetchLimit&quot;:500,&quot;limit&quot;:4},&quot;concierge&quot;:{&quot;enabled&quot;:false,&quot;localQueriesEnabled&quot;:false,&quot;remoteQueriesEnabled&quot;:false,&quot;prefetchLimit&quot;:500,&quot;limit&quot;:6},&quot;recentSearches&quot;:{&quot;enabled&quot;:false},&quot;hashtags&quot;:{&quot;enabled&quot;:false,&quot;localQueriesEnabled&quot;:false,&quot;remoteQueriesEnabled&quot;:true,&quot;prefetchLimit&quot;:500},&quot;useIndexedDB&quot;:false,&quot;showSearchAccountSocialContext&quot;:false,&quot;showDebugInfo&quot;:false,&quot;useThrottle&quot;:true,&quot;accountsOnTop&quot;:false,&quot;remoteDebounceInterval&quot;:300,&quot;remoteThrottleInterval&quot;:300,&quot;tweetContextEnabled&quot;:false,&quot;fullNameMatchingInCompose&quot;:true,&quot;topicsWithFiltersEnabled&quot;:false},&quot;dm&quot;:{&quot;notifications&quot;:false,&quot;usePushForNotifications&quot;:false,&quot;participant_max&quot;:50,&quot;video_gif_render&quot;:true,&quot;video_gif_upload&quot;:true,&quot;twitter_video_player&quot;:true,&quot;typing_indicators_publish&quot;:false,&quot;poll_options&quot;:{&quot;foreground_poll_interval&quot;:3000,&quot;burst_poll_interval&quot;:3000,&quot;burst_poll_duration&quot;:300000,&quot;max_poll_interval&quot;:60000}},&quot;whitelistedVideoUser&quot;:false,&quot;autoplayDisabled&quot;:false,&quot;pushStatePageLimit&quot;:500000,&quot;routes&quot;:{&quot;profile&quot;:&quot;\/&quot;},&quot;pushState&quot;:true,&quot;viewContainer&quot;:&quot;#page-container&quot;,&quot;dragAndDropPhotoUpload&quot;:true,&quot;href&quot;:&quot;\/vyki_e\/status\/363116819147538433&quot;,&quot;searchPathWithQuery&quot;:&quot;\/search?q=query&amp;src=typd&quot;,&quot;timelineCardsGallery&quot;:true,&quot;composeAltText&quot;:false,&quot;deciders&quot;:{&quot;bulkUnfollowEnabled&quot;:true,&quot;custom_timeline_curation&quot;:false,&quot;moment_maker_enabled&quot;:false,&quot;disable_profile_popup&quot;:false,&quot;native_notifications&quot;:true,&quot;dm_polling_frequency_in_seconds&quot;:3000,&quot;enable_media_tag_prefetch&quot;:true,&quot;foundMediaTrendingEnabled&quot;:false,&quot;enableMacawNymizerConversionLanding&quot;:false,&quot;hqImageUploads&quot;:false,&quot;largeHeaderImageUpload&quot;:true,&quot;live_pipeline_consume&quot;:false,&quot;mqImageUploads&quot;:false,&quot;partnerIdSyncEnabled&quot;:true,&quot;sruMediaCategory&quot;:true,&quot;photoSruGifLimitMb&quot;:15,&quot;promoted_video_logging_enabled&quot;:true,&quot;pushState&quot;:true,&quot;scribeReducedActionQueue&quot;:true,&quot;smartInfiniteScroll&quot;:false,&quot;useHtml5Webcam&quot;:true,&quot;hideLeadingMentions&quot;:false,&quot;hideLeadingMentionsWithTooltip&quot;:true,&quot;web_perftown_stats&quot;:true,&quot;web_perftown_ttft&quot;:true,&quot;web_sru_stats&quot;:false,&quot;web_upload_direct&quot;:true,&quot;web_upload_video&quot;:true,&quot;web_upload_video_advanced&quot;:false,&quot;upload_video_size&quot;:500,&quot;defaultVideoDuration&quot;:45,&quot;maxVideoDuration&quot;:140,&quot;internationalShippingEnabled&quot;:true,&quot;useV2EndpointsEnabled&quot;:true,&quot;useVmapVariants&quot;:false,&quot;autoplayPreviewPreroll&quot;:true,&quot;moments_lohp_enabled&quot;:true,&quot;momentsExperienceEnabled&quot;:false,&quot;enableNativePush&quot;:false,&quot;installNativePush&quot;:false,&quot;autoSubscribeNativePush&quot;:false,&quot;stickersInteractivity&quot;:true,&quot;stickersInteractivityDuringLoading&quot;:true,&quot;stickersExperience&quot;:true,&quot;dynamic_video_ads_include_long_videos&quot;:true,&quot;push_state_size&quot;:1000,&quot;canBeSoftUser&quot;:false,&quot;isInSoftExperiment&quot;:false},&quot;experiments&quot;:{},&quot;toasts_dm&quot;:false,&quot;toasts_spoonbill&quot;:false,&quot;toasts_timeline&quot;:false,&quot;toasts_dm_poll_scale&quot;:60,&quot;defaultNotificationIcon&quot;:&quot;https:\/\/abs.twimg.com\/a\/1467966468\/img\/t1\/mobile\/wp7_app_icon.png&quot;,&quot;uploadDomain&quot;:&quot;upload.twitter.com&quot;,&quot;promptbirdData&quot;:{&quot;promptbirdEnabled&quot;:false,&quot;immediateTriggers&quot;:[&quot;PullToRefresh&quot;,&quot;Navigate&quot;],&quot;format&quot;:null},&quot;passwordResetAdvancedLoginForm&quot;:true,&quot;skipAutoSignupDialog&quot;:true,&quot;shouldReplaceSignupWithLogin&quot;:true,&quot;hashflagBaseUrl&quot;:&quot;https:\/\/abs.twimg.com\/hashflags\/&quot;,&quot;activeHashflags&quot;:{&quot;المسافر&quot;:&quot;AlMosafer\/travel.png&quot;,&quot;سفرة_الصيف&quot;:&quot;AlMosafer\/travel.png&quot;,&quot;whitejersey&quot;:&quot;TDF2016\/WhiteJersey.png&quot;,&quot;bacphysique&quot;:&quot;baccalaureat_emoji\/baccalaureat_emoji.png&quot;,&quot;togetherstronger&quot;:&quot;EurosFootball2016\/Wales.png&quot;,&quot;ger&quot;:&quot;EurosFootball2016\/Germany.png&quot;,&quot;meinestimme&quot;:&quot;USElections2016\/ivoted.png&quot;,&quot;bacst2s&quot;:&quot;baccalaureat_emoji\/baccalaureat_emoji.png&quot;,&quot;اقترعت&quot;:&quot;USElections2016\/ivoted.png&quot;,&quot;immerwiederoesterreich&quot;:&quot;EurosFootball2016\/Austria.png&quot;,&quot;一站到底&quot;:&quot;JSBCI\/JSBCI_emoji.png&quot;,&quot;bacpro&quot;:&quot;baccalaureat_emoji\/baccalaureat_emoji.png&quot;,&quot;سافر_الحين_وادفع_بعدين&quot;:&quot;AlMosafer\/travel.png&quot;,&quot;tdf&quot;:&quot;TDF2016\/TDF.png&quot;,&quot;bacstmg&quot;:&quot;baccalaureat_emoji\/baccalaureat_emoji.png&quot;,&quot;maillotjaunelcl&quot;:&quot;TDF2016\/YellowJersey.png&quot;,&quot;periscope&quot;:&quot;Periscope\/Periscope.png&quot;,&quot;bethefastest&quot;:&quot;EmojiVirgin\/EmojiVirgin.png&quot;,&quot;jederfuerjeden&quot;:&quot;EurosFootball2016\/Germany.png&quot;,&quot;abfabmovie&quot;:&quot;AbFabMovie\/AbFabMovie.png&quot;,&quot;yoenunvw&quot;:&quot;Volkswagen\/YoEnUnVW.png&quot;,&quot;lovetwitter&quot;:&quot;LoveTwitter\/LoveTwitter.png&quot;,&quot;ifoodnomengão&quot;:&quot;iFoodBrazil\/flamengo.png&quot;,&quot;badisbred&quot;:&quot;AnimalKingdom_Deliver\/BadisBred.png&quot;,&quot;arabianoud&quot;:&quot;ArabianOud\/incense_burner.png&quot;,&quot;عطور_عربية&quot;:&quot;ArabianOud\/incense_burner.png&quot;,&quot;admis&quot;:&quot;baccalaureat_emoji\/baccalaureat_emoji.png&quot;,&quot;weareamerica&quot;:&quot;AdCouncilEmoji\/AdCouncilEmoji_Original.png&quot;,&quot;cervantes400&quot;:&quot;CervantesEmoji\/cervantes-emoji.png&quot;,&quot;maillotapoiscarrefour&quot;:&quot;TDF2016\/PolkaDotJersey.png&quot;,&quot;hovotato&quot;:&quot;USElections2016\/ivoted.png&quot;,&quot;seleçãoeuro&quot;:&quot;EuroNoSporTV\/EuroNoSporTV.png&quot;,&quot;япроголосовал(а)&quot;:&quot;USElections2016\/ivoted.png&quot;,&quot;bastilleday&quot;:&quot;BastilleDay2016\/BastilleDay.png&quot;,&quot;sienteelsabor&quot;:&quot;CocaCola\/SienteElSabor.png&quot;,&quot;bacfrançais&quot;:&quot;baccalaureat_emoji\/baccalaureat_emoji.png&quot;,&quot;gawa&quot;:&quot;EurosFootball2016\/NorthernIreland.png&quot;,&quot;احساس&quot;:&quot;ArabianOud\/incense_burner.png&quot;,&quot;hun&quot;:&quot;EurosFootball2016\/Hungary.png&quot;,&quot;مضاوي&quot;:&quot;ArabianOud\/incense_burner.png&quot;,&quot;bacsti2d&quot;:&quot;baccalaureat_emoji\/baccalaureat_emoji.png&quot;,&quot;wimbledon&quot;:&quot;Wimbledon2016\/Wimbledon.png&quot;,&quot;yellowjersey&quot;:&quot;TDF2016\/YellowJersey.png&quot;,&quot;vivelamannschaft&quot;:&quot;Mercedes\/Mercedes.png&quot;,&quot;maillotapois&quot;:&quot;TDF2016\/PolkaDotJersey.png&quot;,&quot;bacanglais&quot;:&quot;baccalaureat_emoji\/baccalaureat_emoji.png&quot;,&quot;1of11million&quot;:&quot;EurosFootball2016\/Portugal.png&quot;,&quot;jaivoté&quot;:&quot;USElections2016\/ivoted.png&quot;,&quot;fetenationale&quot;:&quot;BastilleDay2016\/BastilleDay.png&quot;,&quot;golive&quot;:&quot;goLIVE2016\/goLIVE.png&quot;,&quot;zoella&quot;:&quot;ZoellaEmoji\/Zoella.png&quot;,&quot;everycharactermatters&quot;:&quot;EveryCharacterMatters\/EveryCharacterMatters.png&quot;,&quot;bachistoiregeographie&quot;:&quot;baccalaureat_emoji\/baccalaureat_emoji.png&quot;,&quot;whosstillstanding&quot;:&quot;JSBCI\/JSBCI_emoji.png&quot;,&quot;我已投票&quot;:&quot;USElections2016\/ivoted.png&quot;,&quot;euro2016&quot;:&quot;EurosFootball2016\/trophy.png&quot;,&quot;bacsvt&quot;:&quot;baccalaureat_emoji\/baccalaureat_emoji.png&quot;,&quot;twitterstaryarasky&quot;:&quot;TwitterstarYarasky\/TwitterstarYarasky.png&quot;,&quot;fazerdiferente&quot;:&quot;TIM\/emoji_tim_final_3.png&quot;,&quot;tousenfrance&quot;:&quot;EurosFootball2016\/Belgium.png&quot;,&quot;400cervantes&quot;:&quot;CervantesEmoji\/cervantes-emoji.png&quot;,&quot;directpr&quot;:&quot;BastilleDay2016\/BastilleDay.png&quot;,&quot;bacsthr&quot;:&quot;baccalaureat_emoji\/baccalaureat_emoji.png&quot;,&quot;maillotblanc&quot;:&quot;TDF2016\/WhiteJersey.png&quot;,&quot;jaimonbac&quot;:&quot;baccalaureat_emoji\/baccalaureat_emoji.png&quot;,&quot;isl&quot;:&quot;EurosFootball2016\/Iceland.png&quot;,&quot;bizbittidemedenbitmez&quot;:&quot;EurosFootball2016\/Turkey.png&quot;,&quot;ceskarepre&quot;:&quot;EurosFootball2016\/CzechRepublic.png&quot;,&quot;sui&quot;:&quot;EurosFootball2016\/Switzerland.png&quot;,&quot;svk&quot;:&quot;EurosFootball2016\/Slovakia.png&quot;,&quot;تطبيق_المسافر_للحجوزات&quot;:&quot;AlMosafer\/travel.png&quot;,&quot;bactmd&quot;:&quot;baccalaureat_emoji\/baccalaureat_emoji.png&quot;,&quot;투표했어요&quot;:&quot;USElections2016\/ivoted.png&quot;,&quot;euronosportv&quot;:&quot;EuroNoSporTV\/EuroNoSporTV.png&quot;,&quot;allezlasuisse&quot;:&quot;EurosFootball2016\/Switzerland.png&quot;,&quot;timchef&quot;:&quot;TIMChef\/emoji_masterchef.png&quot;,&quot;rumoaorio&quot;:&quot;100Days\/100Days.png&quot;,&quot;однакоманда&quot;:&quot;EurosFootball2016\/Russia.png&quot;,&quot;nir&quot;:&quot;EurosFootball2016\/NorthernIreland.png&quot;,&quot;aut&quot;:&quot;EurosFootball2016\/Austria.png&quot;,&quot;bachistoire&quot;:&quot;baccalaureat_emoji\/baccalaureat_emoji.png&quot;,&quot;وودي&quot;:&quot;ArabianOud\/incense_burner.png&quot;,&quot;csakegyutt&quot;:&quot;EurosFootball2016\/Hungary.png&quot;,&quot;goingsolo&quot;:&quot;ZoellaEmoji\/Zoella.png&quot;,&quot;تطبيق_المسافر&quot;:&quot;AlMosafer\/travel.png&quot;,&quot;tdf2016&quot;:&quot;TDF2016\/TDF.png&quot;,&quot;bacphilo&quot;:&quot;baccalaureat_emoji\/baccalaureat_emoji.png&quot;,&quot;bacphysiquechimie&quot;:&quot;baccalaureat_emoji\/baccalaureat_emoji.png&quot;,&quot;твоязбірна&quot;:&quot;EurosFootball2016\/Ukraine.png&quot;,&quot;eng&quot;:&quot;EurosFootball2016\/England.png&quot;,&quot;14juillet2016&quot;:&quot;BastilleDay2016\/BastilleDay.png&quot;,&quot;chamaolimpica&quot;:&quot;OlympicTorch_Emoji\/OlympicTorch.png&quot;,&quot;presidentduterte&quot;:&quot;PresidentDuterte\/PHVoteDuterte.png&quot;,&quot;ivoted&quot;:&quot;USElections2016\/ivoted.png&quot;,&quot;rus&quot;:&quot;EurosFootball2016\/Russia.png&quot;,&quot;olympicflame&quot;:&quot;OlympicTorch_Emoji\/OlympicTorch.png&quot;,&quot;ifoodnomengao&quot;:&quot;iFoodBrazil\/flamengo.png&quot;,&quot;alb&quot;:&quot;EurosFootball2016\/Albania.png&quot;,&quot;thequeue&quot;:&quot;Wimbledon2016\/TheQueue.png&quot;,&quot;rou&quot;:&quot;EurosFootball2016\/Romania.png&quot;,&quot;badmoms&quot;:&quot;Universal_BadMoms_Emoji\/BadMoms.png&quot;,&quot;greenjersey&quot;:&quot;TDF2016\/GreenJersey.png&quot;,&quot;صقر&quot;:&quot;ArabianOud\/incense_burner.png&quot;,&quot;bacallemand&quot;:&quot;baccalaureat_emoji\/baccalaureat_emoji.png&quot;,&quot;polkadotjersey&quot;:&quot;TDF2016\/PolkaDotJersey.png&quot;,&quot;الفارس&quot;:&quot;ArabianOud\/incense_burner.png&quot;,&quot;bumotoako&quot;:&quot;USElections2016\/ivoted.png&quot;,&quot;twittersparkle&quot;:&quot;TwitterSparkle\/TwitterSparkle.png&quot;,&quot;maillotvertskoda&quot;:&quot;TDF2016\/GreenJersey.png&quot;,&quot;ita&quot;:&quot;EurosFootball2016\/Italy.png&quot;,&quot;vivoazzurro&quot;:&quot;EurosFootball2016\/Italy.png&quot;,&quot;resultatsbac&quot;:&quot;baccalaureat_emoji\/baccalaureat_emoji.png&quot;,&quot;bacitalien&quot;:&quot;baccalaureat_emoji\/baccalaureat_emoji.png&quot;,&quot;لمسة&quot;:&quot;ArabianOud\/incense_burner.png&quot;,&quot;سناب_المسافر_دايما_مسافر&quot;:&quot;AlMosafer\/travel.png&quot;,&quot;maillotblanckrys&quot;:&quot;TDF2016\/WhiteJersey.png&quot;,&quot;origin&quot;:&quot;StateOfOrigin\/Origin.png&quot;,&quot;bacfrancais&quot;:&quot;baccalaureat_emoji\/baccalaureat_emoji.png&quot;,&quot;bachotellerie&quot;:&quot;baccalaureat_emoji\/baccalaureat_emoji.png&quot;,&quot;thehill&quot;:&quot;Wimbledon2016\/TheHill.png&quot;,&quot;hairomania&quot;:&quot;EurosFootball2016\/Romania.png&quot;,&quot;admise&quot;:&quot;baccalaureat_emoji\/baccalaureat_emoji.png&quot;,&quot;yarasky&quot;:&quot;TwitterstarYarasky\/TwitterstarYarasky.png&quot;,&quot;maillotvert&quot;:&quot;TDF2016\/GreenJersey.png&quot;,&quot;yovote&quot;:&quot;USElections2016\/ivoted.png&quot;,&quot;qlder&quot;:&quot;StateOfOrigin\/QLDER.png&quot;,&quot;رسالة&quot;:&quot;ArabianOud\/incense_burner.png&quot;,&quot;energia&quot;:&quot;JBalvinNew\/JBalvinNew.png&quot;,&quot;انا_المسافر&quot;:&quot;AlMosafer\/travel.png&quot;,&quot;rumboario&quot;:&quot;100Days\/100Days.png&quot;,&quot;girlonlinegoingsolo&quot;:&quot;ZoellaEmoji\/Zoella.png&quot;,&quot;blackhistorymonth&quot;:&quot;BlackHistoryMonth\/BlackHistoryMonth.png&quot;,&quot;overdadeirosabor&quot;:&quot;Hellmanns\/emoji_hellmans.png&quot;,&quot;baces&quot;:&quot;baccalaureat_emoji\/baccalaureat_emoji.png&quot;,&quot;bacmaths&quot;:&quot;baccalaureat_emoji\/baccalaureat_emoji.png&quot;,&quot;سافر_بالتقسيط&quot;:&quot;AlMosafer\/travel.png&quot;,&quot;とと姉ちゃん&quot;:&quot;NHKMorningDrama\/NHKMorningDrama.png&quot;,&quot;yovoté&quot;:&quot;USElections2016\/ivoted.png&quot;,&quot;14juillet&quot;:&quot;BastilleDay2016\/BastilleDay.png&quot;,&quot;togetherforengland&quot;:&quot;EurosFootball2016\/England.png&quot;,&quot;łączynaspolska&quot;:&quot;EurosFootball2016\/Poland.png&quot;,&quot;zoesugg&quot;:&quot;ZoellaEmoji\/Zoella.png&quot;,&quot;bachôtellerie&quot;:&quot;baccalaureat_emoji\/baccalaureat_emoji.png&quot;,&quot;bacs&quot;:&quot;baccalaureat_emoji\/baccalaureat_emoji.png&quot;,&quot;bacstav&quot;:&quot;baccalaureat_emoji\/baccalaureat_emoji.png&quot;,&quot;nowyoucan&quot;:&quot;SkyNow\/SKYNowYouCan.png&quot;,&quot;tur&quot;:&quot;EurosFootball2016\/Turkey.png&quot;,&quot;bhm&quot;:&quot;BlackHistoryMonth\/BlackHistoryMonth.png&quot;,&quot;roadtorio&quot;:&quot;100Days\/100Days.png&quot;,&quot;bacses&quot;:&quot;baccalaureat_emoji\/baccalaureat_emoji.png&quot;,&quot;bacstl&quot;:&quot;baccalaureat_emoji\/baccalaureat_emoji.png&quot;,&quot;wal&quot;:&quot;EurosFootball2016\/Wales.png&quot;,&quot;bacespagnol&quot;:&quot;baccalaureat_emoji\/baccalaureat_emoji.png&quot;,&quot;bel&quot;:&quot;EurosFootball2016\/Belgium.png&quot;,&quot;bacstd2a&quot;:&quot;baccalaureat_emoji\/baccalaureat_emoji.png&quot;,&quot;fiersdetrebleus&quot;:&quot;EurosFootball2016\/France.png&quot;,&quot;cze&quot;:&quot;EurosFootball2016\/CzechRepublic.png&quot;,&quot;blacklivesmatter&quot;:&quot;BlackHistoryMonth\/BlackHistoryMonth.png&quot;,&quot;pol&quot;:&quot;EurosFootball2016\/Poland.png&quot;,&quot;العربية_للعود&quot;:&quot;ArabianOud\/incense_burner.png&quot;,&quot;résultatsbac&quot;:&quot;baccalaureat_emoji\/baccalaureat_emoji.png&quot;,&quot;budiponosan&quot;:&quot;EurosFootball2016\/Croatia.png&quot;,&quot;fandimespolu&quot;:&quot;EurosFootball2016\/Slovakia.png&quot;,&quot;thisbudsforyou&quot;:&quot;Bud_Emoji\/Bud.png&quot;,&quot;icaucused&quot;:&quot;USElections2016\/ivoted.png&quot;,&quot;ukr&quot;:&quot;EurosFootball2016\/Ukraine.png&quot;,&quot;esp&quot;:&quot;EurosFootball2016\/Spain.png&quot;,&quot;makethefuture&quot;:&quot;Shell_Emoji\/ShellLightbulb.png&quot;,&quot;cro&quot;:&quot;EurosFootball2016\/Croatia.png&quot;,&quot;irl&quot;:&quot;EurosFootball2016\/ROIreland.png&quot;,&quot;lovehasnolabels&quot;:&quot;AdCouncilEmoji\/AdCouncilEmoji_Original.png&quot;,&quot;vamosespaña&quot;:&quot;EurosFootball2016\/Spain.png&quot;,&quot;bacl&quot;:&quot;baccalaureat_emoji\/baccalaureat_emoji.png&quot;,&quot;uptheblues&quot;:&quot;StateOfOrigin\/UpTheBlues.png&quot;,&quot;sharkweek&quot;:&quot;SharkWeekEmoji\/SharkWeek_Original.png&quot;,&quot;por&quot;:&quot;EurosFootball2016\/Portugal.png&quot;,&quot;swe&quot;:&quot;EurosFootball2016\/Sweden.png&quot;,&quot;bac2016&quot;:&quot;baccalaureat_emoji\/baccalaureat_emoji.png&quot;,&quot;maillotjaune&quot;:&quot;TDF2016\/YellowJersey.png&quot;,&quot;fra&quot;:&quot;EurosFootball2016\/France.png&quot;,&quot;ufc200&quot;:&quot;UFC200\/UFC200.png&quot;,&quot;coybig&quot;:&quot;EurosFootball2016\/ROIreland.png&quot;},&quot;tweetId&quot;:&quot;363116819147538433&quot;,&quot;profile_id&quot;:1087064150,&quot;endpoint&quot;:&quot;\/i\/vyki_e\/conversation\/363116819147538433&quot;,&quot;overlayCapable&quot;:false,&quot;finagleTraceId&quot;:&quot;00b1ca1d00abbeb2&quot;,&quot;isThreaded&quot;:true,&quot;inOverlay&quot;:true,&quot;trendsCacheKey&quot;:null,&quot;decider_personalized_trends&quot;:false,&quot;trendsEndpoint&quot;:&quot;\/i\/trends&quot;,&quot;initialState&quot;:{&quot;title&quot;:&quot;Vyki Englert on Twitter: \&quot;I&#39;m a sucker for pledges.  @Peers Pledge #sharingeconomy http:\/\/t.co\/T4Sc47KAzh\&quot;&quot;,&quot;section&quot;:null,&quot;module&quot;:&quot;app\/pages\/permalink&quot;,&quot;cache_ttl&quot;:300,&quot;body_class_names&quot;:&quot;three-col logged-out user-style-vyki_e PermalinkPage&quot;,&quot;doc_class_names&quot;:&quot;route-permalink&quot;,&quot;route_name&quot;:&quot;permalink&quot;,&quot;page_container_class_names&quot;:&quot;AppContent wrapper wrapper-permalink&quot;,&quot;ttft_navigation&quot;:false}}">
+
+
+
+    <input type="hidden" class="swift-boot-module" value="app/pages/permalink">
+  <input type="hidden" id="swift-module-path" value="https://abs.twimg.com/c/swift/en">
+
+
+    <script src="https://abs.twimg.com/c/swift/en/init.314a9707f177773430c9b565030e9ea5b8638c96.js" async></script>
+
+  </head>
+  <body class="three-col logged-out user-style-vyki_e PermalinkPage"
+data-fouc-class-names="swift-loading"
+ dir="ltr">
+      <script id="swift_loading_indicator" nonce="KXwIjaJlN1QIxC47iHrsvQ==">
+        document.body.className=document.body.className+" "+document.body.getAttribute("data-fouc-class-names");
+      </script>
+
+
+
+
+
+
+
+
+
+
+    <div id="doc" data-at-shortcutkeys="{&quot;Enter&quot;:&quot;Open Tweet details&quot;,&quot;o&quot;:&quot;Expand photo&quot;,&quot;/&quot;:&quot;Search&quot;,&quot;?&quot;:&quot;This menu&quot;,&quot;j&quot;:&quot;Next Tweet&quot;,&quot;k&quot;:&quot;Previous Tweet&quot;,&quot;Space&quot;:&quot;Page down&quot;,&quot;.&quot;:&quot;Load new Tweets&quot;,&quot;gu&quot;:&quot;Go to user\u2026&quot;}" class="route-permalink">
+        <div class="topbar js-topbar">
+
+
+  <div class="global-nav global-nav--newLoggedOut" data-section-term="top_nav">
+    <div class="global-nav-inner">
+      <div class="container">
+
+
+<ul class="nav js-global-actions" role="navigation" id="global-actions">
+  <li id="global-nav-home" class="home" data-global-action="home">
+    <a class="js-nav js-tooltip js-dynamic-tooltip" data-placement="bottom" href="/" data-component-context="home_nav" data-nav="home">
+      <span class="Icon Icon--bird Icon--large"></span>
+      <span class="text">Home</span>
+    </a>
+  </li>
+    <li id="global-nav-about" class="about" data-global-action="about">
+      <a class="js-tooltip js-dynamic-tooltip" data-placement="bottom" href="/about" target="_blank" data-component-context="about_nav" data-nav="about">
+        <span class="text">About</span>
+      </a>
+    </li>
+</ul>
+<div class="pull-right">
+    <div role="search">
+  <form class="t1-form form-search js-search-form" action="/search" id="global-nav-search">
+    <label class="visuallyhidden" for="search-query">Search query</label>
+    <input class="search-input" type="text" id="search-query" placeholder="Search Twitter" name="q" autocomplete="off" spellcheck="false">
+    <span class="search-icon js-search-action">
+      <button type="submit" class="Icon Icon--search nav-search">
+        <span class="visuallyhidden">Search Twitter</span>
+      </button>
+    </span>
+
+
+
+<div role="listbox" class="dropdown-menu typeahead">
+  <div aria-hidden="true" class="dropdown-caret">
+    <div class="caret-outer"></div>
+    <div class="caret-inner"></div>
+  </div>
+  <div role="presentation" class="dropdown-inner js-typeahead-results">
+    <div role="presentation" class="typeahead-saved-searches">
+  <h3 id="saved-searches-heading" class="typeahead-category-title saved-searches-title">Saved searches</h3>
+  <ul role="presentation" class="typeahead-items saved-searches-list">
+
+    <li role="presentation" class="typeahead-item typeahead-saved-search-item">
+      <span class="Icon Icon--close" aria-hidden="true"><span class="visuallyhidden">Remove</span></span>
+      <a role="option" aria-describedby="saved-searches-heading" class="js-nav" href="" data-search-query="" data-query-source="" data-ds="saved_search" tabindex="-1"></a>
+    </li>
+  </ul>
+</div>
+
+    <ul role="presentation" class="typeahead-items typeahead-topics">
+
+  <li role="presentation" class="typeahead-item typeahead-topic-item">
+    <a role="option" class="js-nav" href="" data-search-query="" data-query-source="typeahead_click" data-ds="topics" tabindex="-1"></a>
+  </li>
+</ul>
+
+
+
+<ul role="presentation" class="typeahead-items typeahead-accounts js-typeahead-accounts">
+
+  <li role="presentation" data-user-id="" data-user-screenname="" data-remote="true" data-score="" class="typeahead-item typeahead-account-item js-selectable">
+
+    <a role="option" class="js-nav" data-query-source="typeahead_click" data-search-query="" data-ds="account">
+      <img class="avatar size32" alt="">
+      <span class="typeahead-user-item-info">
+        <span class="fullname"></span>
+        <span class="js-verified hidden"><span class="Icon Icon--verified Icon--small">
+  <span class="u-hiddenVisually">Verified account</span>
+</span></span>
+        <span class="username"><s>@</s><b></b></span>
+      </span>
+    </a>
+  </li>
+  <li role="presentation" class="js-selectable typeahead-accounts-shortcut js-shortcut"><a role="option" class="js-nav" href="" data-search-query="" data-query-source="typeahead_click" data-shortcut="true" data-ds="account_search"></a></li>
+</ul>
+
+    <ul role="presentation" class="typeahead-items typeahead-trend-locations-list">
+
+  <li role="presentation" class="typeahead-item typeahead-trend-locations-item"><a role="option" class="js-nav" href="" data-ds="trend_location" data-search-query="" tabindex="-1"></a></li>
+</ul>
+    <div role="presentation" class="typeahead-user-select">
+  <div role="presentation" class="typeahead-empty-suggestions">
+    Suggested users
+  </div>
+  <ul role="presentation" class="typeahead-items typeahead-selected js-typeahead-selected">
+
+    <li role="presentation" data-user-id="" data-user-screenname="" data-remote="true" data-score="" class="typeahead-item typeahead-selected-item js-selectable">
+
+      <a role="option" class="js-nav" data-query-source="typeahead_click" data-search-query="" data-ds="account">
+        <img class="avatar size32" alt="">
+        <span class="typeahead-user-item-info">
+          <span class="select-status deselect-user js-deselect-user Icon Icon--check"></span>
+          <span class="select-status select-disabled Icon Icon--unfollow"></span>
+          <span class="fullname"></span>
+          <span class="js-verified hidden"><span class="Icon Icon--verified Icon--small">
+  <span class="u-hiddenVisually">Verified account</span>
+</span></span>
+          <span class="username"><s>@</s><b></b></span>
+        </span>
+      </a>
+    </li>
+    <li role="presentation" class="typeahead-selected-end"></li>
+  </ul>
+
+  <ul role="presentation" class="typeahead-items typeahead-accounts js-typeahead-accounts">
+
+    <li role="presentation" data-user-id="" data-user-screenname="" data-remote="true" data-score="" class="typeahead-item typeahead-account-item js-selectable">
+
+      <a role="option" class="js-nav" data-query-source="typeahead_click" data-search-query="" data-ds="account">
+        <img class="avatar size32" alt="">
+        <span class="typeahead-user-item-info">
+          <span class="select-status deselect-user js-deselect-user Icon Icon--check"></span>
+          <span class="select-status select-disabled Icon Icon--unfollow"></span>
+          <span class="fullname"></span>
+          <span class="js-verified hidden"><span class="Icon Icon--verified Icon--small">
+  <span class="u-hiddenVisually">Verified account</span>
+</span></span>
+          <span class="username"><s>@</s><b></b></span>
+        </span>
+      </a>
+    </li>
+    <li role="presentation" class="typeahead-accounts-end"></li>
+  </ul>
+</div>
+
+    <div role="presentation" class="typeahead-dm-conversations">
+  <ul role="presentation" class="typeahead-items typeahead-dm-conversation-items">
+    <li role="presentation" class="typeahead-item typeahead-dm-conversation-item">
+      <a role="option" tabindex="-1"></a>
+    </li>
+  </ul>
+</div>
+  </div>
+</div>
+
+  </form>
+</div>
+
+
+  <ul class="nav secondary-nav language-dropdown">
+    <li class="dropdown js-language-dropdown">
+      <a href="#supported_languages" class="dropdown-toggle js-dropdown-toggle">
+        <small>Language:</small> <span class="js-current-language">English</span> <b class="caret"></b>
+      </a>
+      <div class="dropdown-menu">
+        <div class="dropdown-caret right">
+          <span class="caret-outer"> </span>
+          <span class="caret-inner"></span>
+        </div>
+        <ul id="supported_languages">
+            <li><a href="?lang=id" data-lang-code="id" title="Indonesian" class="js-language-link js-tooltip">Bahasa Indonesia</a></li>
+            <li><a href="?lang=msa" data-lang-code="msa" title="Malay" class="js-language-link js-tooltip">Bahasa Melayu</a></li>
+            <li><a href="?lang=ca" data-lang-code="ca" title="Catalan" class="js-language-link js-tooltip">Català</a></li>
+            <li><a href="?lang=cs" data-lang-code="cs" title="Czech" class="js-language-link js-tooltip">Čeština</a></li>
+            <li><a href="?lang=da" data-lang-code="da" title="Danish" class="js-language-link js-tooltip">Dansk</a></li>
+            <li><a href="?lang=de" data-lang-code="de" title="German" class="js-language-link js-tooltip">Deutsch</a></li>
+            <li><a href="?lang=en-gb" data-lang-code="en-gb" title="British English" class="js-language-link js-tooltip">English UK</a></li>
+            <li><a href="?lang=es" data-lang-code="es" title="Spanish" class="js-language-link js-tooltip">Español</a></li>
+            <li><a href="?lang=fil" data-lang-code="fil" title="Filipino" class="js-language-link js-tooltip">Filipino</a></li>
+            <li><a href="?lang=fr" data-lang-code="fr" title="French" class="js-language-link js-tooltip">Français</a></li>
+            <li><a href="?lang=hr" data-lang-code="hr" title="Croatian" class="js-language-link js-tooltip">Hrvatski</a></li>
+            <li><a href="?lang=it" data-lang-code="it" title="Italian" class="js-language-link js-tooltip">Italiano</a></li>
+            <li><a href="?lang=hu" data-lang-code="hu" title="Hungarian" class="js-language-link js-tooltip">Magyar</a></li>
+            <li><a href="?lang=nl" data-lang-code="nl" title="Dutch" class="js-language-link js-tooltip">Nederlands</a></li>
+            <li><a href="?lang=no" data-lang-code="no" title="Norwegian" class="js-language-link js-tooltip">Norsk</a></li>
+            <li><a href="?lang=pl" data-lang-code="pl" title="Polish" class="js-language-link js-tooltip">Polski</a></li>
+            <li><a href="?lang=pt" data-lang-code="pt" title="Portuguese" class="js-language-link js-tooltip">Português</a></li>
+            <li><a href="?lang=ro" data-lang-code="ro" title="Romanian" class="js-language-link js-tooltip">Română</a></li>
+            <li><a href="?lang=sk" data-lang-code="sk" title="Slovak" class="js-language-link js-tooltip">Slovenčina</a></li>
+            <li><a href="?lang=fi" data-lang-code="fi" title="Finnish" class="js-language-link js-tooltip">Suomi</a></li>
+            <li><a href="?lang=sv" data-lang-code="sv" title="Swedish" class="js-language-link js-tooltip">Svenska</a></li>
+            <li><a href="?lang=vi" data-lang-code="vi" title="Vietnamese" class="js-language-link js-tooltip">Tiếng Việt</a></li>
+            <li><a href="?lang=tr" data-lang-code="tr" title="Turkish" class="js-language-link js-tooltip">Türkçe</a></li>
+            <li><a href="?lang=el" data-lang-code="el" title="Greek" class="js-language-link js-tooltip">Ελληνικά</a></li>
+            <li><a href="?lang=bg" data-lang-code="bg" title="Bulgarian" class="js-language-link js-tooltip">Български език</a></li>
+            <li><a href="?lang=ru" data-lang-code="ru" title="Russian" class="js-language-link js-tooltip">Русский</a></li>
+            <li><a href="?lang=sr" data-lang-code="sr" title="Serbian" class="js-language-link js-tooltip">Српски</a></li>
+            <li><a href="?lang=uk" data-lang-code="uk" title="Ukrainian" class="js-language-link js-tooltip">Українська мова</a></li>
+            <li><a href="?lang=he" data-lang-code="he" title="Hebrew" class="js-language-link js-tooltip">עִבְרִית</a></li>
+            <li><a href="?lang=ar" data-lang-code="ar" title="Arabic" class="js-language-link js-tooltip">العربية</a></li>
+            <li><a href="?lang=fa" data-lang-code="fa" title="Persian" class="js-language-link js-tooltip">فارسی</a></li>
+            <li><a href="?lang=mr" data-lang-code="mr" title="Marathi" class="js-language-link js-tooltip">मराठी</a></li>
+            <li><a href="?lang=hi" data-lang-code="hi" title="Hindi" class="js-language-link js-tooltip">हिन्दी</a></li>
+            <li><a href="?lang=bn" data-lang-code="bn" title="Bengali" class="js-language-link js-tooltip">বাংলা</a></li>
+            <li><a href="?lang=gu" data-lang-code="gu" title="Gujarati" class="js-language-link js-tooltip">ગુજરાતી</a></li>
+            <li><a href="?lang=ta" data-lang-code="ta" title="Tamil" class="js-language-link js-tooltip">தமிழ்</a></li>
+            <li><a href="?lang=kn" data-lang-code="kn" title="Kannada" class="js-language-link js-tooltip">ಕನ್ನಡ</a></li>
+            <li><a href="?lang=th" data-lang-code="th" title="Thai" class="js-language-link js-tooltip">ภาษาไทย</a></li>
+            <li><a href="?lang=ko" data-lang-code="ko" title="Korean" class="js-language-link js-tooltip">한국어</a></li>
+            <li><a href="?lang=ja" data-lang-code="ja" title="Japanese" class="js-language-link js-tooltip">日本語</a></li>
+            <li><a href="?lang=zh-cn" data-lang-code="zh-cn" title="Simplified Chinese" class="js-language-link js-tooltip">简体中文</a></li>
+            <li><a href="?lang=zh-tw" data-lang-code="zh-tw" title="Traditional Chinese" class="js-language-link js-tooltip">繁體中文</a></li>
+        </ul>
+      </div>
+      <div class="js-front-language">
+        <form action="/sessions/change_locale" class="t1-form language" method="POST">
+          <input type="hidden" name="lang"> <input type="hidden" name="redirect">
+          <input type="hidden" name="authenticity_token" value="0ca3d94aff5192efa7e34ae4eae60d07f5babd38">
+        </form>
+      </div>
+    </li>
+  </ul>
+
+    <ul class="nav secondary-nav session-dropdown" id="session">
+      <li class="dropdown js-session">
+          <a href="/login" class="dropdown-toggle js-dropdown-toggle dropdown-signin" id="signin-link" data-nav="login">
+            <small>Have an account?</small> <span class="emphasize"> Log in</span><span class="caret"></span>
+          </a>
+          <div class="dropdown-menu dropdown-form" id="signin-dropdown">
+            <div class="dropdown-caret right"> <span class="caret-outer"></span> <span class="caret-inner"></span> </div>
+            <div class="signin-dialog-body">
+              <div>Have an account?</div>
+              <form action="https://twitter.com/sessions" class="LoginForm js-front-signin" method="post"
+  data-component="login_callout"
+  data-element="form"
+>
+  <div class="LoginForm-input LoginForm-username">
+    <input
+      type="text"
+      class="text-input email-input js-signin-email"
+      name="session[username_or_email]"
+      autocomplete="username"
+      placeholder="Phone, email or username"
+    />
+  </div>
+
+  <div class="LoginForm-input LoginForm-password">
+    <input type="password" class="text-input" name="session[password]" placeholder="Password" autocomplete="current-password">
+  </div>
+
+  <div class="LoginForm-rememberForgot">
+    <label>
+      <input type="checkbox" value="1" name="remember_me" checked="checked">
+      <span>Remember me</span>
+    </label>
+    <span class="separator">&middot;</span>
+    <a class="forgot" href="/account/begin_password_reset">Forgot password?</a>
+  </div>
+
+  <input type="submit" class="submit btn primary-btn js-submit" value="Log in">
+
+    <input type="hidden" name="return_to_ssl" value="true">
+
+  <input type="hidden" name="scribe_log">
+  <input type="hidden" name="redirect_after_login" value="/vyki_e/status/363116819147538433">
+  <input type="hidden" value="0ca3d94aff5192efa7e34ae4eae60d07f5babd38" name="authenticity_token">
+</form>
+
+              <hr>
+              <div class="signup SignupForm">
+                <div class="SignupForm-header">New to Twitter?</div>
+                <a href="https://twitter.com/signup" role="button" class="SignupForm-submit u-block u-textCenter js-signup btn"
+                  data-component="signup_callout"
+                  data-element="dropdown"
+                  >Sign up
+                </a>
+              </div>
+            </div>
+          </div>
+      </li>
+    </ul>
+</div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+        <div id="page-outer">
+          <div id="page-container" class="AppContent wrapper wrapper-permalink">
+
+
+<a class="PermalinkProfile-overlay js-nav" href="/vyki_e">
+  <span class="visuallyhidden">vyki_e's profile</span>
+</a>
+<div class="PermalinkProfile-background without-banner">
+  <div class="ProfileCanopy ProfileCanopy--withNav ProfileCanopy--large">
+  <div class="ProfileCanopy-inner">
+
+    <div class="ProfileCanopy-header u-bgUserColor">
+    <div class="ProfileCanopy-headerBg">
+      <img alt=""
+        src="https://pbs.twimg.com/profile_banners/1087064150/1424315468/1500x500"
+
+      >
+    </div>
+
+  <div class="AppContainer">
+
+    <div class="ProfileCanopy-avatar">
+      <div class="ProfileAvatar">
+    <a class="ProfileAvatar-container u-block js-tooltip profile-picture"
+        href="https://pbs.twimg.com/profile_images/732349210264133632/RTNgZLrm.jpg"
+        title="Vyki Englert"
+        data-resolved-url-large="https://pbs.twimg.com/profile_images/732349210264133632/RTNgZLrm.jpg"
+        data-url="https://pbs.twimg.com/profile_images/732349210264133632/RTNgZLrm.jpg"
+        target="_blank">
+      <img class="ProfileAvatar-image " src="https://pbs.twimg.com/profile_images/732349210264133632/RTNgZLrm_400x400.jpg" alt="Vyki Englert">
+    </a>
+</div>
+
+    </div>
+
+
+    <div class="ProfileCanopy-headerPromptAnchor"></div>
+  </div>
+
+</div>
+
+
+    <div class="ProfileCanopy-navBar">
+
+      <div class="AppContainer">
+        <div class="Grid Grid--withGutter">
+          <div class="Grid-cell u-size1of3 u-lg-size1of4">
+            <div class="ProfileCanopy-card" role="presentation">
+              <div class="ProfileCardMini">
+  <a class="ProfileCardMini-avatar profile-picture js-tooltip"
+     href="https://pbs.twimg.com/profile_images/732349210264133632/RTNgZLrm.jpg"
+     title="Vyki Englert"
+     data-resolved-url-large="https://pbs.twimg.com/profile_images/732349210264133632/RTNgZLrm.jpg"
+     data-url="https://pbs.twimg.com/profile_images/732349210264133632/RTNgZLrm.jpg"
+     target="_blank">
+    <img class="ProfileCardMini-avatarImage" alt="Vyki Englert" src="https://pbs.twimg.com/profile_images/732349210264133632/RTNgZLrm_normal.jpg" >
+  </a>
+  <div class="ProfileCardMini-details">
+    <div class="ProfileNameTruncated">
+  <div class="u-textTruncate u-inlineBlock">
+    <a class="ProfileNameTruncated-link u-textInheritColor js-nav js-action-profile-name" href="/vyki_e"  data-aria-label-part>
+      Vyki Englert
+    </a>
+  </div>
+</div>
+    <div class="ProfileCardMini-screenname">
+      <a href="/vyki_e" class="ProfileCardMini-screennameLink u-linkComplex js-nav u-dir" dir="ltr">@<span class="u-linkComplex-target">vyki_e</span></a>
+    </div>
+  </div>
+</div>
+
+            </div>
+          </div>
+
+          <div class="Grid-cell u-size2of3 u-lg-size3of4">
+            <div class="ProfileCanopy-nav">
+
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+    <div class="ProfileHeading">
+  <div class="ProfileHeading-spacer"></div>
+</div>
+
+
+  <div class="AppContainer">
+    <div class="Grid Grid--withGutter">
+      <div class="Grid-cell u-size1of3 u-lg-size1of4">
+        <div class="Grid Grid--withGutter">
+          <div class="Grid-cell">
+            <div class="ProfileSidebar ProfileSidebar--withLeftAlignment">
+  <div class="ProfileHeaderCard">
+  <h1 class="ProfileHeaderCard-name">
+    <a href="/vyki_e"
+       class="ProfileHeaderCard-nameLink u-textInheritColor js-nav
+">Vyki Englert</a>
+  </h1>
+
+  <h2 class="ProfileHeaderCard-screenname u-inlineBlock u-dir" dir="ltr">
+    <a class="ProfileHeaderCard-screennameLink u-linkComplex js-nav" href="/vyki_e">@<span class="u-linkComplex-target">vyki_e</span></a>
+  </h2>
+
+    <p class="ProfileHeaderCard-bio u-dir"
+
+      dir="ltr">Rides bikes, writes code, likes maps. <a href="/CompilerLA" class="tweet-url twitter-atreply pretty-link" dir="ltr" data-mentioned-user-id="0" rel="nofollow" ><s>@</s><b>CompilerLA</b></a> / <a href="/CityGrows" class="tweet-url twitter-atreply pretty-link" dir="ltr" data-mentioned-user-id="0" rel="nofollow" ><s>@</s><b>CityGrows</b></a> / Brigade Captain <a href="/HackforLA" class="tweet-url twitter-atreply pretty-link" dir="ltr" data-mentioned-user-id="0" rel="nofollow" ><s>@</s><b>HackforLA</b></a></p>
+
+
+
+
+    <div class="ProfileHeaderCard-joinDate">
+      <span class="Icon Icon--calendar Icon--small"></span>
+      <span class="ProfileHeaderCard-joinDateText js-tooltip u-dir" dir="ltr" title="11:53 AM - 13 Jan 2013">Joined January 2013</span>
+    </div>
+
+      <div class="ProfileHeaderCard-birthdate u-hidden">
+        <span class="Icon Icon--balloon Icon--medium"></span>
+        <span class="ProfileHeaderCard-birthdateText u-dir" dir="ltr">
+</span>
+      </div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+</div>
+
+          </div>
+        </div>
+      </div>
+      <div class="Grid-cell u-size2of3 u-lg-size3of4">
+        <div class="Grid Grid--withGutter">
+          <div class="Grid-cell u-lg-size2of3" data-test-selector="ProfileTimeline">
+              <div class="ProfileHeading">
+  <div class="ProfileHeading-spacer"></div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+          </div>
+          <div class="Grid-cell u-size1of3">
+            <div class="Grid Grid--withGutter">
+              <div class="Grid-cell">
+                <div class="ProfileSidebar ProfileSidebar--withRightAlignment">
+                  <div class="MoveableModule">
+
+<div class="SidebarCommonModules">
+
+
+
+
+
+
+  <div class="Footer module roaming-module
+            Footer--slim
+            ">
+  <div class="flex-module">
+    <div class="flex-module-inner js-items-container">
+      <ul class="u-cf">
+        <li class="Footer-item Footer-copyright copyright">&copy; 2016 Twitter</li>
+        <li class="Footer-item"><a class="Footer-link" href="/about">About</a></li>
+        <li class="Footer-item"><a class="Footer-link" href="//support.twitter.com">Help</a></li>
+        <li class="Footer-item"><a class="Footer-link" href="/tos">Terms</a></li>
+        <li class="Footer-item"><a class="Footer-link" href="/privacy">Privacy</a></li>
+        <li class="Footer-item"><a class="Footer-link" href="//support.twitter.com/articles/20170514">Cookies</a></li>
+        <li class="Footer-item"><a class="Footer-link" href="//support.twitter.com/articles/20170451">Ads info</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+</div>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<style id="user-style-vyki_e">
+
+
+
+
+
+  a,
+  a:hover,
+  a:focus,
+  a:active {
+    color: #4E99D1;
+  }
+
+  .u-textUserColor,
+  .u-textUserColorHover:hover,
+  .u-textUserColorHover:focus {
+    color: #4E99D1 !important;
+  }
+
+  .u-borderUserColor,
+  .u-borderUserColorHover:hover,
+  .u-borderUserColorHover:focus {
+    border-color: #4E99D1 !important;
+  }
+
+  .u-bgUserColor,
+  .u-bgUserColorHover:hover,
+  .u-bgUserColorHover:focus {
+    background-color: #4E99D1 !important;
+  }
+
+
+  .u-dropdownUserColor > li:hover,
+  .u-dropdownUserColor > li:focus,
+  .u-dropdownUserColor > li > button:hover,
+  .u-dropdownUserColor > li > button:focus {
+    color: #fff !important;
+    background-color: #4E99D1 !important;
+  }
+
+  .u-boxShadowInsetUserColorHover:hover,
+  .u-boxShadowInsetUserColorHover:focus {
+    box-shadow: inset 0 0 0 5px #4E99D1 !important;
+  }
+
+
+
+  .u-textUserColorLight {
+    color: #B8D6EC !important;
+  }
+
+  .u-borderUserColorLight,
+  .u-borderUserColorLightFocus:focus,
+  .u-borderUserColorLightHover:hover,
+  .u-borderUserColorLightHover:focus {
+    border-color: #B8D6EC !important;
+  }
+
+  .u-bgUserColorLight {
+    background-color: #B8D6EC !important;
+  }
+
+
+  .u-boxShadowUserColorLighterFocus:focus {
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.05), inset 0 1px 2px rgba(78,153,209,0.25) !important;
+  }
+
+
+  .u-textUserColorLightest {
+    color: #EDF4FA !important;
+  }
+
+  .u-borderUserColorLightest {
+    border-color: #EDF4FA !important;
+  }
+
+  .u-bgUserColorLightest {
+    background-color: #EDF4FA !important;
+  }
+
+
+  .u-textUserColorLighter {
+    color: #D2E5F3 !important;
+  }
+
+  .u-borderUserColorLighter {
+    border-color: #D2E5F3 !important;
+  }
+
+  .u-bgUserColorLighter {
+    background-color: #D2E5F3 !important;
+  }
+
+
+  .u-bgUserColorDarkHover:hover {
+    background-color: #3E7AA7 !important;
+  }
+
+  .u-borderUserColorDark {
+    border-color: #3E7AA7 !important;
+  }
+
+
+  .u-bgUserColorDarkerActive:active {
+    background-color: #2E5B7D !important;
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+a,
+.btn-link,
+.btn-link:focus,
+.icon-btn,
+
+
+
+.pretty-link b,
+.pretty-link:hover s,
+.pretty-link:hover b,
+.pretty-link:focus s,
+.pretty-link:focus b,
+/* Account Group */
+.metadata a:hover,
+.metadata a:focus,
+
+.account-group:hover .fullname,
+.account-group:focus .fullname,
+.account-summary:focus .fullname,
+
+.message .message-text a,
+.stats a strong,
+.plain-btn:hover,
+.plain-btn:focus,
+.dropdown.open .user-dropdown.plain-btn,
+.open > .plain-btn,
+#global-actions .new:before,
+.module .list-link:hover,
+.module .list-link:focus,
+
+.stats a:hover,
+.stats a:hover strong,
+.stats a:focus,
+.stats a:focus strong,
+
+.find-friends-sources li:hover .source,
+
+
+
+
+
+.stream-item a:hover .fullname,
+.stream-item a:focus .fullname,
+
+.stream-item .view-all-supplements:hover,
+.stream-item .view-all-supplements:focus,
+
+.tweet .time a:hover,
+.tweet .time a:focus,
+.tweet .details.with-icn b,
+.tweet .details.with-icn .Icon,
+.tweet .tweet-geo-text a:hover,
+
+.stream-item:hover .original-tweet .details b,
+.stream-item .original-tweet.focus .details b,
+.stream-item.open .original-tweet .details b,
+
+.client-and-actions a:hover,
+.client-and-actions a:focus,
+
+.dismiss-btn:hover b,
+
+.tweet .context .pretty-link:hover s,
+.tweet .context .pretty-link:hover b,
+.tweet .context .pretty-link:focus s,
+.tweet .context .pretty-link:focus b,
+
+.list .username a:hover,
+.list .username a:focus,
+.list-membership-container .create-a-list,
+.list-membership-container .create-a-list:hover,
+
+
+
+.card .list-details a:hover,
+.card .list-details a:focus,
+.card .card-body:hover .attribution,
+.card .card-body .attribution:focus,
+.new-tweets-bar,
+.onebox .soccer ul.ticker a:hover,
+.onebox .soccer ul.ticker a:focus,
+
+
+
+.remove-background-btn,
+
+
+
+.stream-item-activity-notification .latest-tweet .tweet-row a:hover,
+.stream-item-activity-notification .latest-tweet .tweet-row a:focus,
+.stream-item-activity-notification .latest-tweet .tweet-row a:hover b,
+.stream-item-activity-notification .latest-tweet .tweet-row a:focus b {
+    color: #4E99D1;
+}
+
+
+
+
+  /* hover state for found media items */
+  .FoundMediaSearch--keyboard .FoundMediaSearch-focusable.is-focused {
+    border-color: #4E99D1;
+  }
+
+  /* hover state for photo select button*/
+  .photo-selector:hover .btn,
+  .icon-btn:hover,
+  .icon-btn:active,
+  .icon-btn.active,
+  .icon-btn.enabled {
+    border-color: #4E99D1;
+    border-color: rgba(78,153,209,.5);
+    color: #4E99D1;
+  }
+
+  /* hover state for photo select button*/
+  .photo-selector:hover .btn,
+  .icon-btn:hover {
+    background-image: linear-gradient(rgba(255,255,255,0), rgba(78,153,209,.1));
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#00FFFFFF', endColorstr='#194E99D1'); /* IE8-9 */
+  }
+
+  .icon-btn.disabled,
+  .icon-btn.disabled:hover,
+  .icon-btn[disabled],
+  .icon-btn[aria-disabled=true] {
+    color: #4E99D1;
+  }
+
+  /* tweet-btn can have primary-btn class as well so the following rules ensure that the correct background color is applied */
+  .tweet-btn,
+  .tweet-btn:focus {
+    background-color: #4E99D1;
+    background: rgba(78,153,209,.8);
+  }
+
+  .tweet-btn:hover,
+  .tweet-btn:active,
+  .tweet-btn.active {
+    background-color: #4E99D1;
+  }
+
+  .tweet-btn.btn.disabled,
+  .tweet-btn.btn.disabled:hover,
+  .tweet-btn.btn[disabled],
+  .tweet-btn.btn[aria-disabled=true] {
+    background: #4E99D1;
+  }
+
+  .btn:focus,
+  .btn.focus,
+  .Button:focus {
+    box-shadow:
+      0 0 0 1px #fff,
+      0 0 0 3px rgba(78, 153, 209, 0.5);
+  }
+
+  .selected-stream-item:focus {
+    box-shadow: 0 0 0 3px rgba(78, 153, 209, 0.5);
+  }
+
+  /* highlighting when navigate through timeline stream table view with j & k. */
+  .js-navigable-stream.stream-table-view .selected-stream-item[tabindex="-1"]:focus {
+    outline: 3px solid rgba(78, 153, 209, 0.5) !important;
+  }
+
+  /* box-shadow does not work with table tr element */
+  .js-navigable-stream.stream-table-view .selected-stream-item:focus {
+    box-shadow: none;
+  }
+
+  /**
+   * 1. Bring actionable tweet to top when active to ensure border
+   *    highlighting wraps entire tweet. Value must be at least at if not
+   *    higher than the z-index value of ProfileHeading to ensure first
+   *    tweet in timeline receives border on all four sides.
+   *    NOTE: z-index should be 2 to avoid conflicts with .ProfileCanopy and .ProfileCard-avatarLink
+   */
+
+  .js-stream-item.is-selected:focus .ProfileCard,
+  .QuoteTweet:hover,
+  .QuoteTweet:focus,
+  .QuoteTweet:active,
+  .activity-user-profile-content:hover,
+  .activity-user-profile-content:focus,
+  .activity-user-profile-content:active {
+    border-color: rgba(78, 153, 209, 0.5);
+    z-index: 2; /* 1 */
+  }
+
+  .global-dm-nav.new.with-count .dm-new {
+    background: #fff;
+  }
+
+  .global-dm-nav.new.with-count .dm-new .count-inner {
+    background: #4E99D1;
+  }
+
+  .global-nav .people .count .count-inner {
+    background: #4E99D1;
+  }
+
+  .dropdown-menu li > a:hover,
+  .dropdown-menu li > a:focus,
+  .dropdown-menu .dropdown-link:hover,
+  .dropdown-menu .dropdown-link:focus,
+  .dropdown-menu .dropdown-link.is-focused,
+  .dropdown-menu li:hover .dropdown-link,
+  .dropdown-menu li:focus .dropdown-link,
+  .dropdown-menu .typeahead-recent-search-item.selected,
+  .dropdown-menu .typeahead-saved-search-item.selected,
+  .dropdown-menu .selected a,
+  .dropdown-menu .dropdown-link.selected {
+    background-color: #4E99D1 !important;
+  }
+
+/* give tweet boxes 10% of the users link color as background */
+.home-tweet-box,
+.LiveVideo-tweetBox,
+.RetweetDialog-commentBox,
+.WebToast-box--altColor {
+  background-color: #EDF4FA;
+}
+
+.top-timeline-tweetbox .timeline-tweet-box .tweet-form.condensed .tweet-box {
+  color: #4E99D1;
+}
+/* give tweet box containers an outline using the users link color */
+.RichEditor {
+  border-color: #D2E5F3;
+}
+
+input:focus,
+textarea:focus,
+div[contenteditable="true"]:focus,
+div[contenteditable="true"].fake-focus {
+  border-color: #94C1E3;
+  box-shadow: inset 0 0 0 1px rgba(78, 153, 209, 0.7);
+}
+
+.tweet-box textarea:focus,
+.tweet-box input[type=text],
+.currently-dragging .tweet-form.is-droppable .tweet-drag-help,
+.tweet-box[contenteditable="true"]:focus,
+.RichEditor.is-fakeFocus {
+  border-color: #B8D6EC;
+  box-shadow: none;
+}
+
+
+
+
+s,
+.pretty-link:hover s,
+.pretty-link:focus s,
+.stream-item-activity-notification .latest-tweet .tweet-row a:hover s,
+.stream-item-activity-notification .latest-tweet .tweet-row a:focus s {
+    color: #4E99D1;
+}
+
+
+
+.vellip,
+.vellip:before,
+.vellip:after,
+.conversation-module > li:after,
+.conversation-module > li:before,
+.ThreadedConversation-tweet ~ .ThreadedConversation-tweet:before,
+.ThreadedConversation-tweet:after,
+.ThreadedConversation-viewOther:before,
+.ThreadedConversation-unavailableTweet:before,
+.ThreadedConversation-unavailableTweet:after {
+    background-color: #94C1E3;
+}
+
+
+
+
+.tweet .sm-reply,
+.tweet .sm-rt,
+.tweet .sm-fav,
+.tweet .sm-image,
+.tweet .sm-video,
+.tweet .sm-audio,
+.tweet .sm-geo,
+.tweet .sm-in,
+.tweet .sm-trash,
+.tweet .sm-more,
+.tweet .sm-page,
+.tweet .sm-embed,
+.tweet .sm-summary,
+.tweet .sm-chat,
+
+.timelines-navigation .active .profile-nav-icon,
+.timelines-navigation .profile-nav-icon:hover,
+.timelines-navigation .profile-nav-link:focus .profile-nav-icon,
+
+.sm-top-tweet,
+
+.metadata a.tweet-geo-text:hover .sm-geo {
+    background-color: #4E99D1;
+}
+
+.enhanced-mini-profile .mini-profile .profile-summary {
+  background-image: url(https://pbs.twimg.com/profile_banners/1087064150/1424315468/mobile);
+}
+
+.wrapper-profile .profile-card.profile-header .profile-header-inner {
+  background-image: url(https://pbs.twimg.com/profile_banners/1087064150/1424315468/web);
+}
+
+  #global-tweet-dialog .modal-header {
+    border-bottom: solid 1px rgba(78, 153, 209, .25);
+  }
+
+  #global-tweet-dialog .modal-tweet-form-container {
+    background-color: #4E99D1;
+    background: rgba(78, 153, 209, .1);
+  }
+
+  .inline-reply-tweetbox {
+    background-color: #EDF4FA;
+  }
+
+</style>
+
+
+<style id="user-style-vyki_e-header-img" class="js-user-style-header-img">
+
+    body.user-style-vyki_e .enhanced-mini-profile .mini-profile .profile-summary {
+      background-image: url(https://pbs.twimg.com/profile_banners/1087064150/1424315468/web);
+    }
+
+    body.user-style-vyki_e .wrapper-profile .profile-card.profile-header .profile-header-inner {
+      background-image: url(https://pbs.twimg.com/profile_banners/1087064150/1424315468/web);
+    }
+
+    .DashboardProfileCard-bg {
+      background-image: url(https://pbs.twimg.com/profile_banners/1087064150/1424315468/600x200);
+    }
+
+    body.user-style-vyki_e .profile-canopy .bg-img {
+      background-image: url(https://pbs.twimg.com/profile_banners/1087064150/1424315468/web_retina);
+    }
+
+</style>
+
+
+
+
+          </div>
+        </div>
+
+    </div>
+    <div class="alert-messages hidden" id="message-drawer">
+    <div class="message ">
+  <div class="message-inside">
+    <span class="message-text"></span>
+      <a role="button" class="Icon Icon--close Icon--medium dismiss" href="#">
+        <span class="visuallyhidden">Dismiss</span>
+      </a>
+  </div>
+</div>
+</div>
+
+
+
+
+<div class="gallery-overlay"></div>
+<div class="Gallery">
+  <div class="Gallery-closeTarget"></div>
+  <div class="Gallery-content">
+    <button type="button" class="modal-btn modal-close js-close">
+  <span class="Icon Icon--close Icon--large">
+    <span class="visuallyhidden">Close</span>
+  </span>
+</button>
+
+    <div class="Gallery-media"></div>
+    <div class="GalleryNav GalleryNav--prev">
+      <span class="GalleryNav-handle GalleryNav-handle--prev">
+        <span class="Icon Icon--caretLeft Icon--large">
+          <span class="u-hiddenVisually">
+            Previous
+          </span>
+        </span>
+      </span>
+    </div>
+    <div class="GalleryNav GalleryNav--next">
+      <span class="GalleryNav-handle GalleryNav-handle--next">
+        <span class="Icon Icon--caretRight Icon--large">
+          <span class="u-hiddenVisually">
+            Next
+          </span>
+        </span>
+      </span>
+    </div>
+    <div class="GalleryTweet"></div>
+  </div>
+</div>
+
+
+
+<div class="modal-overlay"></div>
+
+<div id="profile-hover-container"></div>
+
+
+
+<div id="goto-user-dialog" class="modal-container">
+  <div class="modal modal-small draggable">
+    <div class="modal-content">
+      <button type="button" class="modal-btn modal-close js-close">
+  <span class="Icon Icon--close Icon--medium">
+    <span class="visuallyhidden">Close</span>
+  </span>
+</button>
+
+
+      <div class="modal-header">
+        <h3 class="modal-title">Go to a person's profile</h3>
+      </div>
+
+      <div class="modal-body">
+        <div class="modal-inner">
+          <form class="t1-form goto-user-form">
+            <input class="input-block username-input" type="text" placeholder="Start typing a name to jump to a profile" aria-label="User">
+
+
+
+<div role="listbox" class="dropdown-menu typeahead">
+  <div aria-hidden="true" class="dropdown-caret">
+    <div class="caret-outer"></div>
+    <div class="caret-inner"></div>
+  </div>
+  <div role="presentation" class="dropdown-inner js-typeahead-results">
+    <div role="presentation" class="typeahead-saved-searches">
+  <h3 id="saved-searches-heading" class="typeahead-category-title saved-searches-title">Saved searches</h3>
+  <ul role="presentation" class="typeahead-items saved-searches-list">
+
+    <li role="presentation" class="typeahead-item typeahead-saved-search-item">
+      <span class="Icon Icon--close" aria-hidden="true"><span class="visuallyhidden">Remove</span></span>
+      <a role="option" aria-describedby="saved-searches-heading" class="js-nav" href="" data-search-query="" data-query-source="" data-ds="saved_search" tabindex="-1"></a>
+    </li>
+  </ul>
+</div>
+
+    <ul role="presentation" class="typeahead-items typeahead-topics">
+
+  <li role="presentation" class="typeahead-item typeahead-topic-item">
+    <a role="option" class="js-nav" href="" data-search-query="" data-query-source="typeahead_click" data-ds="topics" tabindex="-1"></a>
+  </li>
+</ul>
+
+
+
+<ul role="presentation" class="typeahead-items typeahead-accounts js-typeahead-accounts">
+
+  <li role="presentation" data-user-id="" data-user-screenname="" data-remote="true" data-score="" class="typeahead-item typeahead-account-item js-selectable">
+
+    <a role="option" class="js-nav" data-query-source="typeahead_click" data-search-query="" data-ds="account">
+      <img class="avatar size32" alt="">
+      <span class="typeahead-user-item-info">
+        <span class="fullname"></span>
+        <span class="js-verified hidden"><span class="Icon Icon--verified Icon--small">
+  <span class="u-hiddenVisually">Verified account</span>
+</span></span>
+        <span class="username"><s>@</s><b></b></span>
+      </span>
+    </a>
+  </li>
+  <li role="presentation" class="js-selectable typeahead-accounts-shortcut js-shortcut"><a role="option" class="js-nav" href="" data-search-query="" data-query-source="typeahead_click" data-shortcut="true" data-ds="account_search"></a></li>
+</ul>
+
+    <ul role="presentation" class="typeahead-items typeahead-trend-locations-list">
+
+  <li role="presentation" class="typeahead-item typeahead-trend-locations-item"><a role="option" class="js-nav" href="" data-ds="trend_location" data-search-query="" tabindex="-1"></a></li>
+</ul>
+    <div role="presentation" class="typeahead-user-select">
+  <div role="presentation" class="typeahead-empty-suggestions">
+    Suggested users
+  </div>
+  <ul role="presentation" class="typeahead-items typeahead-selected js-typeahead-selected">
+
+    <li role="presentation" data-user-id="" data-user-screenname="" data-remote="true" data-score="" class="typeahead-item typeahead-selected-item js-selectable">
+
+      <a role="option" class="js-nav" data-query-source="typeahead_click" data-search-query="" data-ds="account">
+        <img class="avatar size32" alt="">
+        <span class="typeahead-user-item-info">
+          <span class="select-status deselect-user js-deselect-user Icon Icon--check"></span>
+          <span class="select-status select-disabled Icon Icon--unfollow"></span>
+          <span class="fullname"></span>
+          <span class="js-verified hidden"><span class="Icon Icon--verified Icon--small">
+  <span class="u-hiddenVisually">Verified account</span>
+</span></span>
+          <span class="username"><s>@</s><b></b></span>
+        </span>
+      </a>
+    </li>
+    <li role="presentation" class="typeahead-selected-end"></li>
+  </ul>
+
+  <ul role="presentation" class="typeahead-items typeahead-accounts js-typeahead-accounts">
+
+    <li role="presentation" data-user-id="" data-user-screenname="" data-remote="true" data-score="" class="typeahead-item typeahead-account-item js-selectable">
+
+      <a role="option" class="js-nav" data-query-source="typeahead_click" data-search-query="" data-ds="account">
+        <img class="avatar size32" alt="">
+        <span class="typeahead-user-item-info">
+          <span class="select-status deselect-user js-deselect-user Icon Icon--check"></span>
+          <span class="select-status select-disabled Icon Icon--unfollow"></span>
+          <span class="fullname"></span>
+          <span class="js-verified hidden"><span class="Icon Icon--verified Icon--small">
+  <span class="u-hiddenVisually">Verified account</span>
+</span></span>
+          <span class="username"><s>@</s><b></b></span>
+        </span>
+      </a>
+    </li>
+    <li role="presentation" class="typeahead-accounts-end"></li>
+  </ul>
+</div>
+
+    <div role="presentation" class="typeahead-dm-conversations">
+  <ul role="presentation" class="typeahead-items typeahead-dm-conversation-items">
+    <li role="presentation" class="typeahead-item typeahead-dm-conversation-item">
+      <a role="option" tabindex="-1"></a>
+    </li>
+  </ul>
+</div>
+  </div>
+</div>
+
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+  <div id="retweet-tweet-dialog" class="RetweetDialog modal-container">
+  <div class="close-modal-background-target"></div>
+  <div class="RetweetDialog-modal modal draggable">
+    <div class="modal-content">
+      <button type="button" class="modal-btn modal-close js-close">
+  <span class="Icon Icon--close Icon--medium">
+    <span class="visuallyhidden">Close</span>
+  </span>
+</button>
+
+
+      <div class="modal-header">
+        <h3 class="modal-title">Retweet this to your followers?</h3>
+      </div>
+
+      <form class="t1-form tweet-form condensed RetweetDialog-tweetForm isWithoutComment" data-condensed-text="Add a comment...">
+        <div class="RetweetDialog-commentBox">
+          <span class="visuallyhidden" id="-label">Optional comment for Retweet</span>
+          <div class="tweet-content">
+            <div class="RichEditor">
+
+  <div class="RichEditor-mozillaCursorWorkaround">&nbsp;</div>
+  <div class="RichEditor-scrollContainer">
+
+
+
+            <div aria-labelledby="-label" id="" class="tweet-box rich-editor"
+              contenteditable="true" spellcheck="true" role="textbox" aria-multiline="true"></div>
+
+    <div class="RichEditor-pictographs" aria-hidden="true"></div>
+  </div>
+  <div class="RichEditor-mozillaCursorWorkaround">&nbsp;</div>
+</div>
+
+          </div>
+
+
+
+<div role="listbox" class="dropdown-menu typeahead">
+  <div aria-hidden="true" class="dropdown-caret">
+    <div class="caret-outer"></div>
+    <div class="caret-inner"></div>
+  </div>
+  <div role="presentation" class="dropdown-inner js-typeahead-results">
+    <div role="presentation" class="typeahead-saved-searches">
+  <h3 id="saved-searches-heading" class="typeahead-category-title saved-searches-title">Saved searches</h3>
+  <ul role="presentation" class="typeahead-items saved-searches-list">
+
+    <li role="presentation" class="typeahead-item typeahead-saved-search-item">
+      <span class="Icon Icon--close" aria-hidden="true"><span class="visuallyhidden">Remove</span></span>
+      <a role="option" aria-describedby="saved-searches-heading" class="js-nav" href="" data-search-query="" data-query-source="" data-ds="saved_search" tabindex="-1"></a>
+    </li>
+  </ul>
+</div>
+
+    <ul role="presentation" class="typeahead-items typeahead-topics">
+
+  <li role="presentation" class="typeahead-item typeahead-topic-item">
+    <a role="option" class="js-nav" href="" data-search-query="" data-query-source="typeahead_click" data-ds="topics" tabindex="-1"></a>
+  </li>
+</ul>
+
+
+
+<ul role="presentation" class="typeahead-items typeahead-accounts js-typeahead-accounts">
+
+  <li role="presentation" data-user-id="" data-user-screenname="" data-remote="true" data-score="" class="typeahead-item typeahead-account-item js-selectable">
+
+    <a role="option" class="js-nav" data-query-source="typeahead_click" data-search-query="" data-ds="account">
+      <img class="avatar size32" alt="">
+      <span class="typeahead-user-item-info">
+        <span class="fullname"></span>
+        <span class="js-verified hidden"><span class="Icon Icon--verified Icon--small">
+  <span class="u-hiddenVisually">Verified account</span>
+</span></span>
+        <span class="username"><s>@</s><b></b></span>
+      </span>
+    </a>
+  </li>
+  <li role="presentation" class="js-selectable typeahead-accounts-shortcut js-shortcut"><a role="option" class="js-nav" href="" data-search-query="" data-query-source="typeahead_click" data-shortcut="true" data-ds="account_search"></a></li>
+</ul>
+
+    <ul role="presentation" class="typeahead-items typeahead-trend-locations-list">
+
+  <li role="presentation" class="typeahead-item typeahead-trend-locations-item"><a role="option" class="js-nav" href="" data-ds="trend_location" data-search-query="" tabindex="-1"></a></li>
+</ul>
+    <div role="presentation" class="typeahead-user-select">
+  <div role="presentation" class="typeahead-empty-suggestions">
+    Suggested users
+  </div>
+  <ul role="presentation" class="typeahead-items typeahead-selected js-typeahead-selected">
+
+    <li role="presentation" data-user-id="" data-user-screenname="" data-remote="true" data-score="" class="typeahead-item typeahead-selected-item js-selectable">
+
+      <a role="option" class="js-nav" data-query-source="typeahead_click" data-search-query="" data-ds="account">
+        <img class="avatar size32" alt="">
+        <span class="typeahead-user-item-info">
+          <span class="select-status deselect-user js-deselect-user Icon Icon--check"></span>
+          <span class="select-status select-disabled Icon Icon--unfollow"></span>
+          <span class="fullname"></span>
+          <span class="js-verified hidden"><span class="Icon Icon--verified Icon--small">
+  <span class="u-hiddenVisually">Verified account</span>
+</span></span>
+          <span class="username"><s>@</s><b></b></span>
+        </span>
+      </a>
+    </li>
+    <li role="presentation" class="typeahead-selected-end"></li>
+  </ul>
+
+  <ul role="presentation" class="typeahead-items typeahead-accounts js-typeahead-accounts">
+
+    <li role="presentation" data-user-id="" data-user-screenname="" data-remote="true" data-score="" class="typeahead-item typeahead-account-item js-selectable">
+
+      <a role="option" class="js-nav" data-query-source="typeahead_click" data-search-query="" data-ds="account">
+        <img class="avatar size32" alt="">
+        <span class="typeahead-user-item-info">
+          <span class="select-status deselect-user js-deselect-user Icon Icon--check"></span>
+          <span class="select-status select-disabled Icon Icon--unfollow"></span>
+          <span class="fullname"></span>
+          <span class="js-verified hidden"><span class="Icon Icon--verified Icon--small">
+  <span class="u-hiddenVisually">Verified account</span>
+</span></span>
+          <span class="username"><s>@</s><b></b></span>
+        </span>
+      </a>
+    </li>
+    <li role="presentation" class="typeahead-accounts-end"></li>
+  </ul>
+</div>
+
+    <div role="presentation" class="typeahead-dm-conversations">
+  <ul role="presentation" class="typeahead-items typeahead-dm-conversation-items">
+    <li role="presentation" class="typeahead-item typeahead-dm-conversation-item">
+      <a role="option" tabindex="-1"></a>
+    </li>
+  </ul>
+</div>
+  </div>
+</div>
+
+        </div>
+
+        <div class="RetweetDialog-footer u-cf">
+          <div class="tweet-loading">
+  <div class="spinner-bigger"></div>
+</div>
+
+          <div class="RetweetDialog-tweet modal-body modal-tweet tweet"></div>
+          <div class="tweet-button">
+            <span class="spinner"></span>
+            <span class="RetweetDialog-counter tweet-counter">140</span>
+            <button class="btn primary-btn retweet-action" type="button">
+              <span class="RetweetDialog-retweetActionLabel">
+                <span class="Icon Icon--retweet"></span>
+                Retweet
+              </span>
+              <span class="RetweetDialog-tweetActionLabel">
+                <span class="Icon Icon--tweet"></span>
+                Tweet
+              </span>
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+  <div id="delete-tweet-dialog" class="modal-container">
+  <div class="close-modal-background-target"></div>
+  <div class="modal draggable">
+    <div class="modal-content">
+      <button type="button" class="modal-btn modal-close js-close">
+  <span class="Icon Icon--close Icon--medium">
+    <span class="visuallyhidden">Close</span>
+  </span>
+</button>
+
+
+      <div class="modal-header">
+        <h3 class="modal-title">Are you sure you want to delete this Tweet?</h3>
+      </div>
+
+      <div class="tweet-loading">
+  <div class="spinner-bigger"></div>
+</div>
+
+      <div class="modal-body modal-tweet"></div>
+
+      <div class="modal-footer">
+        <button class="btn cancel-action js-close">Cancel</button>
+        <button class="btn primary-btn delete-action">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <div id="quick-promote-dialog" class="QuickPromoteDialog modal-container">
+  <div class="close-modal-background-target"></div>
+  <div class="modal draggable">
+    <div class="modal-content">
+      <button type="button" class="modal-btn modal-close js-close">
+  <span class="Icon Icon--close Icon--large">
+    <span class="visuallyhidden">Close</span>
+  </span>
+</button>
+
+      <div class="modal-header">
+        <h3 class="modal-title">Promote this Tweet</h3>
+      </div>
+      <div class="modal-body">
+        <div class="quick-promote-view-container">
+          <div class="media">
+            <iframe
+              class="quick-promote-iframe js-initial-focus"
+              scrolling="no"
+              frameborder="0"
+              src="">
+            </iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div id="block-user-dialog" class="modal-container">
+  <div class="close-modal-background-target"></div>
+  <div class="modal draggable">
+    <div class="modal-content">
+      <button type="button" class="modal-btn modal-close js-close">
+  <span class="Icon Icon--close Icon--medium">
+    <span class="visuallyhidden">Close</span>
+  </span>
+</button>
+
+
+      <div class="modal-header">
+        <h3 class="modal-title">Block</h3>
+      </div>
+
+      <div class="tweet-loading">
+  <div class="spinner-bigger"></div>
+</div>
+
+      <div class="modal-body modal-tweet"></div>
+
+      <div class="modal-footer">
+        <button class="btn cancel-action js-close">Cancel</button>
+        <button class="btn primary-btn block-action">Block</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+     <div id="geo-disabled-dropdown">
+      <div tabindex="-1">
+  <div class="dropdown-caret">
+    <span class="caret-outer"></span>
+    <span class="caret-inner"></span>
+  </div>
+  <ul>
+    <li class="geo-not-enabled-yet">
+      <h2>Add a location to your Tweets</h2>
+      <p>
+        When you tweet with a location, Twitter stores that location.&#32;
+        You can switch location on/off before each Tweet and always have the option to delete your location history.
+        <a href="http://support.twitter.com/forums/26810/entries/78525" target="_blank">Learn more</a>
+      </p>
+      <div>
+        <button type="button" class="geo-turn-on btn primary-btn">Turn location on</button>
+        <button type="button" class="geo-not-now btn-link">Not now</button>
+      </div>
+    </li>
+  </ul>
+</div>
+
+    </div>
+
+  <div id="geo-enabled-dropdown">
+    <div tabindex="-1">
+  <div class="dropdown-caret">
+    <span class="caret-outer"></span>
+    <span class="caret-inner"></span>
+  </div>
+  <div>
+    <div class="geo-query-location">
+      <input class="GeoSearch-queryInput" type="text" autocomplete="off" placeholder="Search for a neighborhood or city">
+      <span class="Icon Icon--search"></span>
+    </div>
+    <div class="geo-dropdown-status"></div>
+    <ul class="GeoSearch-dropdownMenu"></ul>
+  </div>
+</div>
+
+  </div>
+
+
+  <div id="profile_popup" class="modal-container ProfilePopupContainer--bellbird">
+  <div class="close-modal-background-target"></div>
+  <div class="modal modal-small draggable">
+    <div class="modal-content clearfix">
+      <button type="button" class="modal-btn modal-close js-close">
+  <span class="Icon Icon--close Icon--medium">
+    <span class="visuallyhidden">Close</span>
+  </span>
+</button>
+
+      <div class="modal-header">
+        <h3 class="modal-title">Profile summary</h3>
+      </div>
+
+      <div class="modal-body profile-modal">
+
+      </div>
+
+      <div class="loading">
+        <span class="spinner-bigger"></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <div id="list-membership-dialog" class="modal-container">
+  <div class="close-modal-background-target"></div>
+  <div class="modal modal-small draggable">
+    <div class="modal-content">
+      <button type="button" class="modal-btn modal-close js-close">
+  <span class="Icon Icon--close Icon--medium">
+    <span class="visuallyhidden">Close</span>
+  </span>
+</button>
+
+      <div class="modal-header">
+        <h3 class="modal-title">Your lists</h3>
+      </div>
+      <div class="modal-body">
+        <div class="list-membership-content"></div>
+        <span class="spinner lists-spinner" title="Loading&hellip;"></span>
+      </div>
+    </div>
+  </div>
+</div>
+  <div id="list-operations-dialog" class="modal-container">
+  <div class="close-modal-background-target"></div>
+  <div class="modal modal-medium draggable">
+    <div class="modal-content">
+      <button type="button" class="modal-btn modal-close js-close">
+  <span class="Icon Icon--close Icon--medium">
+    <span class="visuallyhidden">Close</span>
+  </span>
+</button>
+
+      <div class="modal-header">
+        <h3 class="modal-title">Create a new list</h3>
+      </div>
+      <div class="modal-body">
+
+<div class="list-editor">
+  <div class="field">
+    <label class="t1-label" for="list-name">List name</label>
+    <input id="list-name" type="text" class="text" name="name" value="" />
+  </div>
+  <hr/>
+
+  <div class="field">
+    <label class="t1-label" for="list-description">Description</label>
+    <textarea id="list-description" name="description"></textarea>
+    <span class="help-text">Under 100 characters, optional</span>
+  </div>
+  <hr/>
+
+  <fieldset class="field">
+    <legend class="t1-legend">Privacy</legend>
+    <div class="options">
+      <label class="t1-label" for="list-public-radio">
+        <input class="radio" type="radio" name="mode" id="list-public-radio" value="public" checked="checked"  />
+        <b>Public</b> &middot; Anyone can follow this list
+      </label>
+      <label class="t1-label" for="list-private-radio">
+        <input class="radio" type="radio" name="mode" id="list-private-radio" value="private"  />
+        <b>Private</b> &middot; Only you can access this list
+      </label>
+    </div>
+  </fieldset>
+  <hr/>
+
+  <div class="list-editor-save">
+    <button type="button" class="btn btn-primary update-list-button" data-list-id="">Save list</button>
+  </div>
+
+</div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="activity-popup-dialog" class="modal-container">
+  <div class="close-modal-background-target"></div>
+  <div class="modal draggable">
+    <div class="modal-content clearfix">
+      <button type="button" class="modal-btn modal-close js-close">
+  <span class="Icon Icon--close Icon--medium">
+    <span class="visuallyhidden">Close</span>
+  </span>
+</button>
+
+
+      <div class="modal-header">
+        <h3 class="modal-title"></h3>
+      </div>
+
+      <div class="modal-body">
+        <div class="reply-users-header">
+  Your reply includes the people in this conversation up to this point. <a href="https://support.twitter.com/articles/14023">Learn more</a>
+</div>
+
+        <div class="tweet-loading">
+  <div class="spinner-bigger"></div>
+</div>
+
+        <div class="activity-tweet modal-tweet clearfix"></div>
+        <div class="loading">
+          <span class="spinner-bigger"></span>
+        </div>
+        <div class="activity-content clearfix"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+<div id="copy-link-to-tweet-dialog" class="modal-container">
+  <div class="close-modal-background-target"></div>
+  <div class="modal modal-medium draggable">
+    <div class="modal-content">
+      <button type="button" class="modal-btn modal-close js-close">
+  <span class="Icon Icon--close Icon--medium">
+    <span class="visuallyhidden">Close</span>
+  </span>
+</button>
+
+      <div class="modal-header">
+        <h3 class="modal-title">Copy link to Tweet</h3>
+      </div>
+      <div class="modal-body">
+        <div class="copy-link-to-tweet-container">
+          <label class="t1-label">
+            <p class="copy-link-to-tweet-instructions">The URL of this tweet is below. Copy it to easily share with friends.</p>
+            <textarea class="link-to-tweet-destination js-initial-focus u-dir" dir="ltr" readonly></textarea>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div id="embed-tweet-dialog" class="modal-container">
+  <div class="close-modal-background-target"></div>
+  <div class="modal modal-medium draggable">
+    <div class="modal-content">
+      <button type="button" class="modal-btn modal-close js-close">
+  <span class="Icon Icon--close Icon--medium">
+    <span class="visuallyhidden">Close</span>
+  </span>
+</button>
+
+      <div class="modal-header">
+        <h3 class="modal-title embed-tweet-title">Embed this Tweet</h3>
+        <h3 class="modal-title embed-video-title">Embed this Video</h3>
+      </div>
+      <div class="modal-body">
+        <div class="embed-code-container">
+  <p class="embed-tweet-instructions">Add this Tweet to your website by copying the code below. <a href="//dev.twitter.com/docs/embedded-tweets">Learn more</a></p>
+  <p class="embed-video-instructions">Add this video to your website by copying the code below. <a href="//dev.twitter.com/docs/embedded-tweets">Learn more</a></p>
+  <form class="t1-form">
+
+    <div class="embed-destination-wrapper">
+      <div class="embed-overlay embed-overlay-spinner"><div class="embed-overlay-content"></div></div>
+      <div class="embed-overlay embed-overlay-error">
+        <p class="embed-overlay-content">Hmm, there was a problem reaching the server. <button type="button" class="btn-link retry-embed">Try again?</button></p>
+      </div>
+      <textarea class="embed-destination js-initial-focus"></textarea>
+      <div class="embed-options">
+        <div class="embed-include-parent-tweet">
+          <label class="t1-label" for="include-parent-tweet">
+            <input type="checkbox" id="include-parent-tweet" class="include-parent-tweet" checked>
+            Include parent Tweet
+          </label>
+        </div>
+        <div class="embed-include-card">
+          <label class="t1-label" for="include-card">
+            <input type="checkbox" id="include-card" class="include-card" checked>
+            Include media
+          </label>
+        </div>
+      </div>
+    </div>
+  </form>
+  <div class="embed-preview">
+    <h3>Preview</h3>
+  </div>
+</div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+  <div id="login-dialog" class="LoginDialog modal-container u-textCenter">
+  <div class="close-modal-background-target"></div>
+  <div class="modal modal-large draggable">
+    <div class="LoginDialog-content modal-content">
+      <button type="button" class="modal-btn modal-close js-close">
+  <span class="Icon Icon--close Icon--medium">
+    <span class="visuallyhidden">Close</span>
+  </span>
+</button>
+
+      <div class="modal-header">
+        <h3 class="modal-title">Log in to Twitter</h3>
+      </div>
+      <div class="LoginDialog-body modal-body">
+        <div class="LoginDialog-bird">
+          <span class="Icon Icon--bird Icon--large"></span>
+        </div>
+        <div class="LoginDialog-form">
+<form action="https://twitter.com/sessions" class="LoginForm js-front-signin" method="post"
+  data-component="dialog"
+  data-element="login"
+>
+  <div class="LoginForm-input LoginForm-username">
+    <input
+      type="text"
+      class="text-input email-input js-signin-email"
+      name="session[username_or_email]"
+      autocomplete="username"
+      placeholder="Phone, email or username"
+    />
+  </div>
+
+  <div class="LoginForm-input LoginForm-password">
+    <input type="password" class="text-input" name="session[password]" placeholder="Password" autocomplete="current-password">
+  </div>
+
+  <div class="LoginForm-rememberForgot">
+    <label>
+      <input type="checkbox" value="1" name="remember_me" checked="checked">
+      <span>Remember me</span>
+    </label>
+    <span class="separator">&middot;</span>
+    <a class="forgot" href="/account/begin_password_reset">Forgot password?</a>
+  </div>
+
+  <input type="submit" class="submit btn primary-btn js-submit" value="Log in">
+
+    <input type="hidden" name="return_to_ssl" value="true">
+
+  <input type="hidden" name="scribe_log">
+  <input type="hidden" name="redirect_after_login" value="/vyki_e/status/363116819147538433">
+  <input type="hidden" value="0ca3d94aff5192efa7e34ae4eae60d07f5babd38" name="authenticity_token">
+</form>
+        </div>
+      </div>
+      <div class="LoginDialog-footer modal-footer u-textCenter">
+        Don't have an account? <a class="LoginDialog-signupLink" href="https://twitter.com/signup">Sign up &raquo;</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <div id="signup-dialog" class="SignupDialog modal-container u-textCenter">
+  <div class="close-modal-background-target"></div>
+  <div class="modal modal-large draggable">
+    <div class="SignupDialog-content modal-content">
+      <button type="button" class="modal-btn modal-close js-close">
+  <span class="Icon Icon--close Icon--medium">
+    <span class="visuallyhidden">Close</span>
+  </span>
+</button>
+
+      <div class="modal-header">
+        <h3 class="modal-title">Sign up for Twitter</h3>
+      </div>
+      <div class="SignupDialog-body modal-body">
+        <div class="SignupDialog-icon">
+          <span class="Icon Icon--bird Icon--extraLarge"></span>
+        </div>
+        <h2 class="SignupDialog-heading">Not on Twitter? Sign up, tune into the things you care about, and get updates as they happen.</h2>
+        <div class="SignupDialog-form">
+  <div class="signup SignupForm
+    ">
+    <a href="https://twitter.com/signup" role="button" class="SignupForm-submit u-block u-textCenter js-signup btn primary-btn"
+    data-component="dialog"
+    data-element="signup"
+    >Sign up</a>
+  </div>
+        </div>
+      </div>
+      <div class="SignupDialog-footer modal-footer u-textCenter">
+        Have an account? <a class="SignupDialog-signinLink" href="/login">Log in &raquo;</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <div id="sms-codes-dialog" class="modal-container">
+  <div class="close-modal-background-target"></div>
+  <div class="modal modal-medium draggable">
+    <div class="modal-content">
+      <button type="button" class="modal-btn modal-close js-close">
+  <span class="Icon Icon--close Icon--medium">
+    <span class="visuallyhidden">Close</span>
+  </span>
+</button>
+
+      <div class="modal-header">
+        <h3 class="modal-title">Two-way (sending and receiving) short codes:</h3>
+      </div>
+      <div class="modal-body">
+
+<table id="sms_codes" cellpadding="0" cellspacing="0">
+  <thead>
+    <tr>
+      <th>Country</th>
+      <th>Code</th>
+      <th>For customers of</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>United States</td>
+      <td>40404</td>
+      <td>(any)</td>
+    </tr>
+    <tr>
+      <td>Canada</td>
+      <td>21212</td>
+      <td>(any)</td>
+    </tr>
+    <tr>
+      <td>United Kingdom</td>
+      <td>86444</td>
+      <td>Vodafone, Orange, 3, O2</td>
+    </tr>
+    <tr>
+      <td>Brazil</td>
+      <td>40404</td>
+      <td>Nextel, TIM</td>
+    </tr>
+    <tr>
+      <td>Haiti</td>
+      <td>40404</td>
+      <td>Digicel, Voila</td>
+    </tr>
+    <tr>
+      <td>Ireland</td>
+      <td>51210</td>
+      <td>Vodafone, O2</td>
+    </tr>
+    <tr>
+      <td>India</td>
+      <td>53000</td>
+      <td>Bharti Airtel, Videocon, Reliance</td>
+    </tr>
+    <tr>
+      <td>Indonesia</td>
+      <td>89887</td>
+      <td>AXIS, 3, Telkomsel, Indosat, XL Axiata</td>
+    </tr>
+    <tr>
+      <td rowspan="2">Italy</td>
+      <td>4880804</td>
+      <td>Wind</td>
+    </tr>
+    <tr>
+      <td>3424486444</td>
+      <td>Vodafone</td>
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr>
+      <td colspan="3">
+        &raquo; <a class="js-initial-focus" target="_blank" href="http://support.twitter.com/articles/14226-how-to-find-your-twitter-short-code-or-long-code">See SMS short codes for other countries</a>
+      </td>
+    </tr>
+  </tfoot>
+</table>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div id="leadgen-confirm-dialog" class="modal-container">
+  <div class="close-modal-background-target"></div>
+  <div class="modal draggable">
+    <div class="modal-content">
+      <button type="button" class="modal-btn modal-close js-close">
+  <span class="Icon Icon--close Icon--medium">
+    <span class="visuallyhidden">Close</span>
+  </span>
+</button>
+
+      <div class="modal-header">
+        <h3 class="modal-title">Confirmation</h3>
+      </div>
+      <div class="modal-body">
+        <div class="leadgen-card-container">
+          <div class="media">
+            <iframe
+              class="cards2-promotion-iframe"
+              scrolling="no"
+              frameborder="0"
+              src="">
+            </iframe>
+          </div>
+        </div>
+        <div class="js-macaw-cards-iframe-container" data-card-name="promotion">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div id="auth-webview-dialog" class="AuthWebViewDialog modal-container">
+  <div class="close-modal-background-target"></div>
+  <div class="modal draggable">
+    <div class="modal-content">
+      <button type="button" class="modal-btn modal-close js-close">
+  <span class="Icon Icon--close Icon--large">
+    <span class="visuallyhidden">Close</span>
+  </span>
+</button>
+
+      <div class="modal-header">
+        <h3 class="modal-title">&nbsp;</h3>
+      </div>
+      <div class="modal-body">
+        <div class="auth-webview-view-container">
+          <div class="media">
+            <iframe
+              class="auth-webview-card-iframe js-initial-focus"
+              scrolling="no"
+              frameborder="0"
+              width="590px"
+              height="500px"
+              src="">
+            </iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div id="promptbird-modal-prompt" class="modal-container">
+  <div class="close-modal-background-target"></div>
+  <div class="modal">
+
+    <button type="button" class="modal-btn js-promptDismiss modal-close js-close">
+      <span class="Icon Icon--close Icon--medium">
+        <span class="visuallyhidden">Close</span>
+      </span>
+    </button>
+    <div class="modal-content"></div>
+  </div>
+</div>
+
+
+   <div id="payment-order-detail-dialog" class="PaymentOrderDialog modal-container">
+  <div class="close-modal-background-target"></div>
+  <div class="modal draggable">
+    <div class="modal-content">
+      <button type="button" class="modal-btn modal-close js-close">
+  <span class="Icon Icon--close Icon--large">
+    <span class="visuallyhidden">Close</span>
+  </span>
+</button>
+
+      <div class="modal-header">
+        <h3 class="modal-title">Buy Now</h3>
+      </div>
+      <div class="modal-body">
+        <div class="alert">
+          <h4>Hmm... Something went wrong. Please try again.</h4>
+        </div>
+        <div class="spinner-bigger"></div>
+        <div class="PaymentOrderDialog-orderDetails"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+<div id="create-custom-timeline-dialog" class="modal-container"></div>
+<div id="edit-custom-timeline-dialog" class="modal-container"></div>
+<div id="curate-dialog" class="modal-container"></div>
+<div id="media-edit-dialog" class="modal-container"></div>
+
+
+      <div class="PermalinkOverlay PermalinkOverlay-with-background load-at-boot" id="permalink-overlay">
+  <button class="PermalinkOverlay-next PermalinkOverlay-button u-posFixed js-next" type="button">
+    <span class="Icon Icon--caretLeft Icon--large"></span>
+    <span class="u-hiddenVisually">Next Tweet from user</span>
+  </button>
+  <div class="PermalinkOverlay-modal">
+    <div class="PermalinkOverlay-spinnerContainer u-hidden">
+      <div class="PermalinkOverlay-spinner"></div>
+    </div>
+    <div class="PermalinkOverlay-content">
+      <div class="PermalinkOverlay-body"
+          data-background-path="/vyki_e"
+>
+            <div class="permalink-container permalink-container--withArrows">
+  <div class="PermalinkProfile-dismiss">
+    <span class="Icon Icon--close Icon--large"></span>
+  </div>
+
+  <div role="main" class="permalink light-inline-actions  stream-uncapped original-permalink-page">
+
+<div class="TweetArrows">
+    <a href="/vyki_e/status/575780485156077568" class="TweetArrow-previous js-nav">
+      <span class="visuallyhidden">Previous Tweet</span>
+      <span class="Icon Icon--caretLeft"></span>
+    </a>
+</div>
+
+
+
+
+  <div class="permalink-inner permalink-tweet-container">
+
+
+    <div class="tweet permalink-tweet js-actionable-user js-actionable-tweet js-original-tweet
+
+
+
+
+          no-replies
+          js-initial-focus
+"
+        data-associated-tweet-id="363116819147538433"
+
+data-tweet-id="363116819147538433"
+data-item-id="363116819147538433"
+data-permalink-path="/vyki_e/status/363116819147538433"
+
+
+
+
+
+
+
+
+  data-screen-name="vyki_e" data-name="Vyki Englert" data-user-id="1087064150"
+  data-you-follow="false"
+  data-follows-you="false"
+  data-you-block="false"
+ data-mentions="peers"
+
+
+
+
+
+
+
+
+data-disclosure-type=""
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        tabindex="0"
+      >
+
+
+        <div class="content clearfix">
+          <div class="permalink-header">
+
+
+
+    <div class="follow-bar">
+      <div class="user-actions btn-group not-following  " data-user-id="1087064150"
+    data-screen-name="vyki_e" data-name="Vyki Englert" data-protected="false">
+
+
+
+
+
+
+  <button class="user-actions-follow-button js-follow-btn follow-button btn" type="button">
+  <span class="button-text follow-text">
+     <span class="Icon Icon--follow"></span> Follow
+
+  </span>
+  <span class="button-text following-text">
+     Following
+
+  </span>
+  <span class="button-text unfollow-text">
+     Unfollow
+
+  </span>
+  <span class="button-text blocked-text">Blocked</span>
+  <span class="button-text unblock-text">Unblock</span>
+  <span class="button-text pending-text">Pending</span>
+  <span class="button-text cancel-text">Cancel</span>
+</button>
+
+
+
+</div>
+
+    </div>
+
+
+              <a  class="account-group js-account-group js-action-profile js-user-profile-link js-nav" href="/vyki_e" data-user-id="1087064150">
+    <img class="avatar js-action-profile-avatar" src="https://pbs.twimg.com/profile_images/732349210264133632/RTNgZLrm_bigger.jpg" alt="">
+    <strong class="fullname js-action-profile-name show-popup-with-id" data-aria-label-part>Vyki Englert</strong>
+    <span>&rlm;</span><span class="username js-action-profile-name" data-aria-label-part><s>@</s><b>vyki_e</b></span>
+
+  </a>
+
+
+            <small class="time">
+  <a href="/vyki_e/status/363116819147538433" class="tweet-timestamp js-permalink js-nav js-tooltip" title="6:59 PM - 1 Aug 2013" ><span class="_timestamp js-short-timestamp " data-aria-label-part="last" data-time="1375408770" data-time-ms="1375408770000" data-long-form="true">1 Aug 2013</span></a>
+</small>
+
+          </div>
+        </div>
+
+
+        <div class="js-tweet-text-container">
+  <p class="TweetTextSize TweetTextSize--26px js-tweet-text tweet-text" lang="en" data-aria-label-part="0">I&#39;m a sucker for pledges.  <a href="/peers" class="twitter-atreply pretty-link js-nav" dir="ltr" data-mentioned-user-id="1428357889" ><s>@</s><b>Peers</b></a> Pledge <a href="/hashtag/sharingeconomy?src=hash" data-query-source="hashtag_click" class="twitter-hashtag pretty-link js-nav" dir="ltr" ><s>#</s><b>sharingeconomy</b></a> <a href="http://t.co/T4Sc47KAzh" rel="nofollow" dir="ltr" data-expanded-url="http://www.peers.org/action/peers-pledgea/" class="twitter-timeline-link" target="_blank" title="http://www.peers.org/action/peers-pledgea/" ><span class="tco-ellipsis"></span><span class="invisible">http://www.</span><span class="js-display-url">peers.org/action/peers-p</span><span class="invisible">ledgea/</span><span class="tco-ellipsis"><span class="invisible">&nbsp;</span>…</span></a></p>
+</div>
+
+
+
+
+
+
+      <div class="js-tweet-details-fixer tweet-details-fixer">
+
+  <div class="js-machine-translated-tweet-container"></div>
+  <div class="js-tweet-stats-container tweet-stats-container">
+  </div>
+
+  <div class="client-and-actions">
+  <span class="metadata">
+    <span>6:59 PM - 1 Aug 2013</span>
+  </span>
+</div>
+
+
+</div>
+
+
+
+      <div class="stream-item-footer">
+
+
+
+
+
+              <div class="ProfileTweet-actionCountList u-hiddenVisually">
+
+    <span class="ProfileTweet-action--reply u-hiddenVisually"></span>
+    <span class="ProfileTweet-action--retweet u-hiddenVisually">
+
+      <span class="ProfileTweet-actionCount" aria-hidden="true" data-tweet-stat-count="0">
+        <span class="ProfileTweet-actionCountForAria" >0 retweets</span>
+      </span>
+    </span>
+    <span class="ProfileTweet-action--favorite u-hiddenVisually">
+      <span class="ProfileTweet-actionCount" aria-hidden="true" data-tweet-stat-count="0">
+        <span class="ProfileTweet-actionCountForAria" >0 likes</span>
+      </span>
+    </span>
+  </div>
+
+    <div class="ProfileTweet-actionList js-actions" role="group" aria-label="Tweet actions">
+        <div class="ProfileTweet-action ProfileTweet-action--reply">
+  <button class="ProfileTweet-actionButton u-textUserColorHover js-actionButton js-actionReply"
+    data-modal="ProfileTweet-reply"
+    type="button">
+    <div class="IconContainer js-tooltip" title="Reply">
+      <span class="Icon Icon--reply"></span>
+      <span class="u-hiddenVisually">Reply</span>
+    </div>
+  </button>
+</div>
+        <div class="ProfileTweet-action ProfileTweet-action--retweet js-toggleState js-toggleRt">
+  <button class="ProfileTweet-actionButton  js-actionButton js-actionRetweet"
+
+    data-modal="ProfileTweet-retweet"
+    type="button">
+    <div class="IconContainer js-tooltip" title="Retweet">
+      <span class="Icon Icon--retweet"></span>
+      <span class="u-hiddenVisually">Retweet</span>
+    </div>
+      <div class="IconTextContainer">
+        <span class="ProfileTweet-actionCount ProfileTweet-actionCount--isZero">
+          <span class="ProfileTweet-actionCountForPresentation" aria-hidden="true"></span>
+        </span>
+      </div>
+  </button><button class="ProfileTweet-actionButtonUndo js-actionButton js-actionRetweet" data-modal="ProfileTweet-retweet" type="button">
+    <div class="IconContainer js-tooltip" title="Undo retweet">
+      <span class="Icon Icon--retweet"></span>
+      <span class="u-hiddenVisually">Retweeted</span>
+    </div>
+      <div class="IconTextContainer">
+        <span class="ProfileTweet-actionCount ProfileTweet-actionCount--isZero">
+          <span class="ProfileTweet-actionCountForPresentation" aria-hidden="true"></span>
+        </span>
+      </div>
+  </button>
+</div>
+
+      <div class="ProfileTweet-action ProfileTweet-action--favorite js-toggleState">
+  <button class="ProfileTweet-actionButton js-actionButton js-actionFavorite" type="button">
+    <div class="IconContainer js-tooltip" title="Like">
+      <div class="HeartAnimationContainer">
+        <div class="HeartAnimation"></div>
+      </div>
+      <span class="u-hiddenVisually">Like</span>
+    </div>
+      <div class="IconTextContainer">
+        <span class="ProfileTweet-actionCount ProfileTweet-actionCount--isZero">
+          <span class="ProfileTweet-actionCountForPresentation" aria-hidden="true"></span>
+        </span>
+      </div>
+  </button><button class="ProfileTweet-actionButtonUndo u-linkClean js-actionButton js-actionFavorite" type="button">
+    <div class="IconContainer js-tooltip" title="Undo like">
+      <div class="HeartAnimationContainer">
+        <div class="HeartAnimation"></div>
+      </div>
+      <span class="u-hiddenVisually">Liked</span>
+    </div>
+      <div class="IconTextContainer">
+        <span class="ProfileTweet-actionCount ProfileTweet-actionCount--isZero">
+          <span class="ProfileTweet-actionCountForPresentation" aria-hidden="true"></span>
+        </span>
+      </div>
+  </button>
+</div>
+
+
+
+
+        <div class="ProfileTweet-action ProfileTweet-action--more js-more-ProfileTweet-actions">
+    <div class="dropdown">
+  <button class="ProfileTweet-actionButton u-textUserColorHover dropdown-toggle js-dropdown-toggle" type="button">
+      <div class="IconContainer js-tooltip" title="More">
+        <span class="Icon Icon--dots"></span>
+        <span class="u-hiddenVisually">More</span>
+      </div>
+  </button>
+  <div class="dropdown-menu">
+  <div class="dropdown-caret">
+    <div class="caret-outer"></div>
+    <div class="caret-inner"></div>
+  </div>
+  <ul>
+
+      <li class="copy-link-to-tweet js-actionCopyLinkToTweet">
+        <button type="button" class="dropdown-link">Copy link to Tweet</button>
+      </li>
+      <li class="embed-link js-actionEmbedTweet" data-nav="embed_tweet">
+        <button type="button" class="dropdown-link">Embed Tweet</button>
+      </li>
+  </ul>
+</div>
+
+</div>
+
+  </div>
+
+    </div>
+
+      </div>
+
+      <div class="permalink-footer">
+
+      </div>
+    </div>
+
+  </div>
+
+
+
+
+<div class="replies-to  hidden permalink-inner permalink-replies" data-component-context="replies">
+    <div class="tweets-wrapper">
+      <div id="descendants" class="ThreadedDescendants">
+          <div class="stream-container  "
+    data-max-position="" data-min-position=""
+    >
+
+    <div class="stream">
+        <ol class="stream-items js-navigable-stream" id="stream-items-id">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        </ol>
+        <div class="stream-footer ">
+  <div class='timeline-end  '>
+    <div class="stream-end">
+  <div class="stream-end-inner">
+      <span class="Icon Icon--large Icon--logo"></span>
+
+    <p class="empty-text">
+
+
+    </p>
+
+          <p><button type='button' class='btn-link back-to-top hidden'>Back to top &uarr;</button></p>
+
+  </div>
+</div>
+
+    <div class="stream-loading">
+  <div class="stream-end-inner">
+    <span class="spinner" title="Loading..."></span>
+  </div>
+</div>
+
+  </div>
+</div>
+<div class="stream-fail-container">
+    <div class="js-stream-whale-end stream-whale-end stream-placeholder centered-placeholder">
+  <div class="stream-end-inner">
+    <h2 class="title">Loading seems to be taking a while.</h2>
+    <p>
+      Twitter may be over capacity or experiencing a momentary hiccup. <a role="button" href="#" class="try-again-after-whale">Try again</a> or visit <a target="_blank" href="http://status.twitter.com">Twitter Status</a> for more information.
+    </p>
+  </div>
+</div>
+</div>
+
+      <ol class="hidden-replies-container"></ol>
+    </div>
+  </div>
+
+      </div>
+    </div>
+</div>
+
+
+
+
+  </div>
+
+
+  <div class="stream-container suggested-tweet-stream-container dismissible-container ">
+    <div class="stream suggested-tweet-stream permalink-replies">
+      <h3 class="promoted-heading">Promoted Tweet</h3>
+      <ol class="stream-items suggested-tweet-stream-items js-navigable-stream" id="suggested-stream-items-id">
+
+
+
+
+
+  <div class="tweet js-stream-tweet js-actionable-tweet js-profile-popup-actionable
+       original-tweet js-original-tweet
+
+       promoted-tweet pixel-promoted-tweet has-cards  has-content
+"
+
+data-tweet-id="708322579254267906"
+data-item-id="708322579254267906"
+data-permalink-path="/EnquetesOnline/status/708322579254267906"
+
+
+
+
+
+
+
+
+  data-screen-name="EnquetesOnline" data-name="EnqueteVergelijk" data-user-id="3832036337"
+  data-you-follow="false"
+  data-follows-you="false"
+  data-you-block="false"
+
+
+
+
+
+
+
+
+data-impression-id="2d21a58718bcb645"
+data-disclosure-type="promoted"
+  data-promoted="true"
+   data-advertiser-id="3832036337"
+ data-impression-cookie="[&quot;708322579254267906&quot;,&quot;2d21a58718bcb645&quot;,&quot;promoted&quot;,&quot;&quot;,[],&quot;3832036337&quot;]"
+
+
+
+ data-has-cards="true"
+
+
+
+
+
+
+
+
+ data-component-context="conversation-suggestions"
+
+
+    >
+
+
+    <div class="context">
+
+
+    </div>
+
+    <div class="content">
+
+
+
+      <div class="stream-item-header">
+          <a data-impression-cookie="[&quot;3832036337&quot;,&quot;2d21a58718bcb645&quot;,&quot;promoted&quot;,&quot;&quot;,[],&quot;3832036337&quot;]" class="account-group js-account-group js-action-profile js-user-profile-link js-nav" href="/EnquetesOnline" data-user-id="3832036337">
+    <img class="avatar js-action-profile-avatar" src="https://pbs.twimg.com/profile_images/682161235798929409/WrtoYroK_bigger.png" alt="">
+    <strong class="fullname js-action-profile-name show-popup-with-id" data-aria-label-part>EnqueteVergelijk</strong>
+    <span>&rlm;</span><span class="username js-action-profile-name" data-aria-label-part><s>@</s><b>EnquetesOnline</b></span>
+
+  </a>
+
+        <small class="time">
+  <a href="/EnquetesOnline/status/708322579254267906" class="tweet-timestamp js-permalink js-nav js-tooltip" title="8:03 AM - 11 Mar 2016" data-send-impression-cookie><span class="_timestamp js-short-timestamp " data-aria-label-part="last" data-time="1457712237" data-time-ms="1457712237000" data-long-form="true">Mar 11</span></a>
+</small>
+
+
+
+      </div>
+
+
+        <div class="js-tweet-text-container">
+  <p class="TweetTextSize  js-tweet-text tweet-text" lang="nl" data-aria-label-part="0">Extra geld nodig voor komend weekeinde? Verdien tot €75 extra per week met betaalde enquêtes <a href="https://t.co/7URysZPCIG" rel="nofollow" dir="ltr" data-expanded-url="http://bit.ly/1T2Fhr3" class="twitter-timeline-link" target="_blank" title="http://bit.ly/1T2Fhr3" ><span class="tco-ellipsis"></span><span class="invisible">http://</span><span class="js-display-url">bit.ly/1T2Fhr3</span><span class="invisible"></span><span class="tco-ellipsis"><span class="invisible">&nbsp;</span></span></a><a href="https://t.co/fKtcerUzWC" class="twitter-timeline-link u-hidden" data-pre-embedded="true" dir="ltr" >pic.twitter.com/fKtcerUzWC</a></p>
+</div>
+
+
+
+
+
+            <div class="AdaptiveMedia
+      allow-expansion
+
+
+      is-generic-video
+
+      has-autoplayable-media"
+    >
+    <div class="AdaptiveMedia-container
+        js-adaptive-media-container
+        "
+      >
+        <div class="AdaptiveMedia-video">
+  <div class="AdaptiveMedia-videoContainer">
+      <div class="PlayableMedia PlayableMedia--gif">
+
+  <div
+    class="PlayableMedia-player
+
+      "
+    data-playable-media-url=""
+      data-border-top-left-radius=""
+      data-border-top-right-radius=""
+      data-border-bottom-left-radius=""
+      data-border-bottom-right-radius=""
+    style="padding-bottom: 49.80237154150198%; background-image:url('https://pbs.twimg.com/tweet_video_thumb/CdR3k4RWoAEPONJ.jpg')">
+  </div>
+
+
+
+</div>
+
+  </div>
+</div>
+
+    </div>
+  </div>
+
+
+
+
+
+
+
+      <div class="stream-item-footer">
+
+        <div class="ProfileTweet-actionCountList u-hiddenVisually">
+
+    <span class="ProfileTweet-action--reply u-hiddenVisually"></span>
+    <span class="ProfileTweet-action--retweet u-hiddenVisually">
+
+      <span class="ProfileTweet-actionCount"  data-tweet-stat-count="59">
+        <span class="ProfileTweet-actionCountForAria" data-aria-label-part>59 retweets</span>
+      </span>
+    </span>
+    <span class="ProfileTweet-action--favorite u-hiddenVisually">
+      <span class="ProfileTweet-actionCount"  data-tweet-stat-count="334">
+        <span class="ProfileTweet-actionCountForAria" data-aria-label-part>334 likes</span>
+      </span>
+    </span>
+  </div>
+
+    <div class="ProfileTweet-actionList js-actions" role="group" aria-label="Tweet actions">
+        <div class="ProfileTweet-action ProfileTweet-action--reply">
+  <button class="ProfileTweet-actionButton u-textUserColorHover js-actionButton js-actionReply"
+    data-modal="ProfileTweet-reply"
+    type="button">
+    <div class="IconContainer js-tooltip" title="Reply">
+      <span class="Icon Icon--reply"></span>
+      <span class="u-hiddenVisually">Reply</span>
+    </div>
+  </button>
+</div>
+        <div class="ProfileTweet-action ProfileTweet-action--retweet js-toggleState js-toggleRt">
+  <button class="ProfileTweet-actionButton  js-actionButton js-actionRetweet"
+
+    data-modal="ProfileTweet-retweet"
+    type="button">
+    <div class="IconContainer js-tooltip" title="Retweet">
+      <span class="Icon Icon--retweet"></span>
+      <span class="u-hiddenVisually">Retweet</span>
+    </div>
+      <div class="IconTextContainer">
+        <span class="ProfileTweet-actionCount">
+          <span class="ProfileTweet-actionCountForPresentation" aria-hidden="true">59</span>
+        </span>
+      </div>
+  </button><button class="ProfileTweet-actionButtonUndo js-actionButton js-actionRetweet" data-modal="ProfileTweet-retweet" type="button">
+    <div class="IconContainer js-tooltip" title="Undo retweet">
+      <span class="Icon Icon--retweet"></span>
+      <span class="u-hiddenVisually">Retweeted</span>
+    </div>
+      <div class="IconTextContainer">
+        <span class="ProfileTweet-actionCount">
+          <span class="ProfileTweet-actionCountForPresentation" aria-hidden="true">59</span>
+        </span>
+      </div>
+  </button>
+</div>
+
+      <div class="ProfileTweet-action ProfileTweet-action--favorite js-toggleState">
+  <button class="ProfileTweet-actionButton js-actionButton js-actionFavorite" type="button">
+    <div class="IconContainer js-tooltip" title="Like">
+      <div class="HeartAnimationContainer">
+        <div class="HeartAnimation"></div>
+      </div>
+      <span class="u-hiddenVisually">Like</span>
+    </div>
+      <div class="IconTextContainer">
+        <span class="ProfileTweet-actionCount">
+          <span class="ProfileTweet-actionCountForPresentation" aria-hidden="true">334</span>
+        </span>
+      </div>
+  </button><button class="ProfileTweet-actionButtonUndo u-linkClean js-actionButton js-actionFavorite" type="button">
+    <div class="IconContainer js-tooltip" title="Undo like">
+      <div class="HeartAnimationContainer">
+        <div class="HeartAnimation"></div>
+      </div>
+      <span class="u-hiddenVisually">Liked</span>
+    </div>
+      <div class="IconTextContainer">
+        <span class="ProfileTweet-actionCount">
+          <span class="ProfileTweet-actionCountForPresentation" aria-hidden="true">334</span>
+        </span>
+      </div>
+  </button>
+</div>
+
+
+
+
+        <div class="ProfileTweet-action ProfileTweet-action--more js-more-ProfileTweet-actions">
+    <div class="dropdown">
+  <button class="ProfileTweet-actionButton u-textUserColorHover dropdown-toggle js-dropdown-toggle" type="button">
+      <div class="IconContainer js-tooltip" title="More">
+        <span class="Icon Icon--dots"></span>
+        <span class="u-hiddenVisually">More</span>
+      </div>
+  </button>
+  <div class="dropdown-menu">
+  <div class="dropdown-caret">
+    <div class="caret-outer"></div>
+    <div class="caret-inner"></div>
+  </div>
+  <ul>
+
+      <li class="copy-link-to-tweet js-actionCopyLinkToTweet">
+        <button type="button" class="dropdown-link">Copy link to Tweet</button>
+      </li>
+      <li class="embed-link js-actionEmbedTweet" data-nav="embed_tweet">
+        <button type="button" class="dropdown-link">Embed Tweet</button>
+      </li>
+        <li class="ads-info-link js-actionOpenAdsInfoPage">
+          <button type="button" class="dropdown-link">Ads info</button>
+        </li>
+  </ul>
+</div>
+
+</div>
+
+  </div>
+
+    </div>
+
+</div>
+
+      <div class="context">
+  <span class="metadata with-icn js-disclosure js-tooltip" title="">
+      <span class="Icon Icon--promoted"></span>
+<a href="/EnquetesOnline"
+   class="js-action-profile-promoted js-user-profile-link js-promoted-badge"
+   data-user-id="3832036337"
+   data-impression-cookie="[&quot;708322579254267906&quot;,&quot;2d21a58718bcb645&quot;,&quot;promoted&quot;,&quot;&quot;,[],&quot;3832036337&quot;]"
+>Promoted</a>
+
+  </span>
+
+      <button type="button" class="btn-link dismiss-btn js-action-dismiss">
+        <span class="Icon Icon--close Icon--smallest"></span>
+        <span>Dismiss</span>
+      </button>
+</div>
+
+
+
+
+
+
+
+
+    </div>
+  </div>
+
+
+      </ol>
+    </div>
+   </div>
+
+    <div class="Trends module trends hidden
+            Trends--wide
+            ">
+  <div class="trends-inner">
+    <div class="flex-module trends-container ">
+  <div class="flex-module-header">
+
+    <h3><span class="trend-location js-trend-location">false</span></h3>
+  </div>
+  <div class="flex-module-inner">
+    <ul class="trend-items js-trends">
+    </ul>
+  </div>
+</div>
+  </div>
+</div>
+
+
+  <div class="permalink-footer">
+      <div class="Footer module roaming-module
+            Footer--slim
+            ">
+  <div class="flex-module">
+    <div class="flex-module-inner js-items-container">
+      <ul class="u-cf">
+        <li class="Footer-item Footer-copyright copyright">&copy; 2016 Twitter</li>
+        <li class="Footer-item"><a class="Footer-link" href="/about">About</a></li>
+        <li class="Footer-item"><a class="Footer-link" href="//support.twitter.com">Help</a></li>
+        <li class="Footer-item"><a class="Footer-link" href="/tos">Terms</a></li>
+        <li class="Footer-item"><a class="Footer-link" href="/privacy">Privacy</a></li>
+        <li class="Footer-item"><a class="Footer-link" href="//support.twitter.com/articles/20170514">Cookies</a></li>
+        <li class="Footer-item"><a class="Footer-link" href="//support.twitter.com/articles/20170451">Ads info</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+  </div>
+</div>
+
+
+      </div>
+    </div>
+  </div>
+</div>
+
+    <div class="hidden" id="hidden-content">
+  <iframe aria-hidden="true" class="tweet-post-iframe" name="tweet-post-iframe"></iframe>
+  <iframe aria-hidden="true" class="dm-post-iframe" name="dm-post-iframe"></iframe>
+
+</div>
+
+
+    <div id="spoonbill-outer"></div>
+  </body>
+</html>
+

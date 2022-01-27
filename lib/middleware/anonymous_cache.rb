@@ -29,7 +29,7 @@ module Middleware
         method << "|#{k}=#\{h.#{v}}"
       end
       method << "\"\nend"
-      eval(method)
+      eval(method) # rubocop:disable Security/Eval
       @@compiled = true
     end
 
@@ -49,9 +49,9 @@ module Middleware
       ACCEPT_ENCODING  = "HTTP_ACCEPT_ENCODING"
       DISCOURSE_RENDER = "HTTP_DISCOURSE_RENDER"
 
-      def initialize(env)
+      def initialize(env, request = nil)
         @env = env
-        @request = Rack::Request.new(@env)
+        @request = request || Rack::Request.new(@env)
       end
 
       def blocked_crawler?
@@ -132,9 +132,9 @@ module Middleware
 
       def theme_ids
         ids, _ = @request.cookies['theme_ids']&.split('|')
-        ids = ids&.split(",")&.map(&:to_i)
-        if ids && Guardian.new.allow_themes?(ids)
-          Theme.transform_ids(ids)
+        id = ids&.split(",")&.map(&:to_i)&.first
+        if id && Guardian.new.allow_themes?([id])
+          Theme.transform_ids(id)
         else
           []
         end
@@ -171,6 +171,7 @@ module Middleware
       def force_anonymous!
         @env[Auth::DefaultCurrentUserProvider::USER_API_KEY] = nil
         @env['HTTP_COOKIE'] = nil
+        @env['HTTP_DISCOURSE_LOGGED_IN'] = nil
         @env['rack.request.cookie.hash'] = {}
         @env['rack.request.cookie.string'] = ''
         @env['_bypass_cache'] = nil

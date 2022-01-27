@@ -33,16 +33,21 @@ describe QunitController do
 
     context "non-admin users on production" do
       before do
+        # We need to call sign_in before stubbing the method because SessionController#become
+        # checks for the current env when the file is loaded.
+        # We need to make sure become is called once before stubbing, or the method
+        # wont'be available for future tests if this one runs first.
+        sign_in(Fabricate(:user))
         Rails.env.stubs(:production?).returns(true)
       end
 
-      it "anons cannot see the page" do
+      it "regular users cannot see the page" do
         get '/theme-qunit'
         expect(response.status).to eq(404)
       end
 
-      it "regular users cannot see the page" do
-        sign_in(Fabricate(:user))
+      it "anons cannot see the page" do
+        sign_out
         get '/theme-qunit'
         expect(response.status).to eq(404)
       end
@@ -93,18 +98,13 @@ describe QunitController do
         expect(response.body).to include("/stylesheets/desktop_")
         expect(response.body).to include("/stylesheets/test_helper_")
         expect(response.body).to include("/assets/locales/en.js")
-        expect(response.body).to include("/assets/discourse/tests/theme_qunit_ember_jquery.js")
-        expect(response.body).to include("/assets/vendor.js")
-        expect(response.body).to include("/assets/discourse/tests/theme_qunit_vendor.js")
-        expect(response.body).to include("/assets/pretty-text-bundle.js")
+        expect(response.body).to include("/test-support")
+        expect(response.body).to include("/test-helpers")
         expect(response.body).to include("/assets/markdown-it-bundle.js")
         expect(response.body).to include("/assets/application.js")
         expect(response.body).to include("/assets/admin.js")
-        expect(response.body).to include("/assets/discourse/tests/theme_qunit_helper.js")
         expect(response.body).to match(/\/theme-javascripts\/\h{40}\.js/)
         expect(response.body).to include("/theme-javascripts/tests/#{theme.id}-")
-        expect(response.body).to include("/assets/discourse/tests/test_starter.js")
-        expect(response.body).to include("/extra-locales/admin")
       end
     end
   end

@@ -1,29 +1,29 @@
 <div class="staff-action-logs-controls">
   {{#if filtersExists}}
     <div class="staff-action-logs-filters">
-      <a href {{action "clearAllFilters"}} class="clear-filters filter">
+      <a href {{action "clearAllFilters"}} class="clear-filters filter btn">
         <span class="label">{{i18n "admin.logs.staff_actions.clear_filters"}}</span>
       </a>
       {{#if actionFilter}}
-        <a href {{action "clearFilter" "actionFilter"}} class="filter">
+        <a href {{action "clearFilter" "actionFilter"}} class="filter btn">
           <span class="label">{{i18n "admin.logs.action"}}</span>: {{actionFilter}}
           {{d-icon "times-circle"}}
         </a>
       {{/if}}
       {{#if filters.acting_user}}
-        <a href {{action "clearFilter" "acting_user"}} class="filter">
+        <a href {{action "clearFilter" "acting_user"}} class="filter btn">
           <span class="label">{{i18n "admin.logs.staff_actions.staff_user"}}</span>: {{filters.acting_user}}
           {{d-icon "times-circle"}}
         </a>
       {{/if}}
       {{#if filters.target_user}}
-        <a href {{action "clearFilter" "target_user"}} class="filter">
+        <a href {{action "clearFilter" "target_user"}} class="filter btn">
           <span class="label">{{i18n "admin.logs.staff_actions.target_user"}}</span>: {{filters.target_user}}
           {{d-icon "times-circle"}}
         </a>
       {{/if}}
       {{#if filters.subject}}
-        <a href {{action "clearFilter" "subject"}} class="filter">
+        <a href {{action "clearFilter" "subject"}} class="filter btn">
           <span class="label">{{i18n "admin.logs.staff_actions.subject"}}</span>: {{filters.subject}}
           {{d-icon "times-circle"}}
         </a>
@@ -62,8 +62,10 @@
               <td class="staff-users">
                 <div class="staff-user">
                   {{#if item.acting_user}}
-                    {{#link-to "adminUser" item.acting_user}}{{avatar item.acting_user imageSize="tiny"}}{{/link-to}}
-                    <a href {{action "filterByStaffUser" item.acting_user}}>{{item.acting_user.username}}</a>
+                    {{#link-to "adminUser" item.acting_user}}
+                      {{avatar item.acting_user imageSize="tiny"}}
+                      {{item.acting_user.username}}
+                    {{/link-to}}
                   {{else}}
                     <span class="deleted-user" title={{i18n "admin.user.deleted"}}>
                       {{d-icon "far-trash-alt"}}

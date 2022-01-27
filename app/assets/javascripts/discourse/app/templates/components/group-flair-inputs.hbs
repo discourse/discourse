@@ -21,11 +21,12 @@
       onChange=(action (mut model.flair_icon))
     }}
   {{else if flairPreviewImage}}
-    {{image-uploader
+    {{uppy-image-uploader
       imageUrl=flairImageUrl
       onUploadDone=(action "setFlairImage")
       onUploadDeleted=(action "removeFlairImage")
       type="group_flair"
+      id="group-flair-uploader"
       class="no-repeat contain-image"}}
     <div class="control-instructions">
       {{i18n "groups.flair_upload_description"}}
@@ -61,12 +62,13 @@
       <img width="45" height="45" src={{demoAvatarUrl}} class="avatar actor" alt="" role="presentation">
     </div>
 
-    {{#if flairPreviewImage}}
-      <div class="avatar-flair demo {{flairPreviewClasses}}" style={{flairPreviewStyle}}></div>
-    {{else if flairPreviewIcon}}
-      <div class="avatar-flair demo {{flairPreviewClasses}}" style={{flairPreviewStyle}} role="presentation">
-        {{d-icon flairPreviewIconUrl}}
-      </div>
+    {{#if (or model.flair_icon flairImageUrl model.flairBackgroundHexColor)}}
+      {{avatar-flair
+        flairName=model.name
+        flairUrl=(if flairPreviewIcon model.flair_icon (if flairPreviewImage flairImageUrl ""))
+        flairBgColor=model.flairBackgroundHexColor
+        flairColor=model.flairHexColor
+      }}
     {{/if}}
   </div>
 </div>

@@ -6,5 +6,5 @@
 
 ro:
   site_settings:
-    styleguide_enabled: "Activează o cale `/styleguide` pentru a ajuta la personalizarea Discourse"
+    styleguide_enabled: 'Activează o cale `/styleguide` pentru a ajuta la personalizarea Discourse'
     styleguide_admin_only: "Limitează vizibilitatea ghidului de stil la administratori"

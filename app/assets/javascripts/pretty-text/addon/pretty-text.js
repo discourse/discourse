@@ -3,12 +3,16 @@ import {
   setup as setupIt,
 } from "pretty-text/engines/discourse-markdown-it";
 import { deepMerge } from "discourse-common/lib/object";
+import deprecated from "discourse-common/lib/deprecated";
 
 export function registerOption() {
-  // TODO next major version deprecate this
-  // if (window.console) {
-  //   window.console.log("registerOption is deprecated");
-  // }
+  deprecated(
+    "`registerOption() from `pretty-text` is deprecated. Use `helper.registerOptions()` instead.",
+    {
+      since: "2.8.0.beta9",
+      dropFrom: "2.9.0.beta1",
+    }
+  );
 }
 
 export function buildOptions(state) {
@@ -29,25 +33,16 @@ export function buildOptions(state) {
     emojiUnicodeReplacer,
     lookupUploadUrls,
     previewing,
-    linkify,
     censoredRegexp,
     disableEmojis,
     customEmojiTranslation,
-    watchedWordsReplacements,
+    watchedWordsReplace,
+    watchedWordsLink,
+    featuresOverride,
+    markdownItRules,
   } = state;
 
-  let features = {
-    "bold-italics": true,
-    "auto-link": true,
-    mentions: true,
-    bbcode: true,
-    quote: true,
-    html: true,
-    "category-hashtag": true,
-    onebox: true,
-    linkify: linkify !== false,
-    newline: !siteSettings.traditional_markdown_linebreaks,
-  };
+  let features = {};
 
   if (state.features) {
     features = deepMerge(features, state.features);
@@ -79,11 +74,12 @@ export function buildOptions(state) {
       ? siteSettings.allowed_iframes.split("|")
       : [],
     markdownIt: true,
-    injectLineNumbersToPreview:
-      siteSettings.enable_advanced_editor_preview_sync,
     previewing,
     disableEmojis,
-    watchedWordsReplacements,
+    watchedWordsReplace,
+    watchedWordsLink,
+    featuresOverride,
+    markdownItRules,
   };
 
   // note, this will mutate options due to the way the API is designed

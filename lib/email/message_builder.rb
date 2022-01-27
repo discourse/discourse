@@ -140,7 +140,8 @@ module Email
         subject: subject,
         body: body,
         charset: 'UTF-8',
-        from: from_value
+        from: from_value,
+        cc: @opts[:cc]
       }
 
       args[:delivery_method_options] = @opts[:delivery_method_options] if @opts[:delivery_method_options]
@@ -161,11 +162,24 @@ module Email
       # please, don't send us automatic responses...
       result['X-Auto-Response-Suppress'] = 'All'
 
-      if allow_reply_by_email? && !@opts[:use_from_address_for_reply_to]
-        result[ALLOW_REPLY_BY_EMAIL_HEADER] = true
-        result['Reply-To'] = reply_by_email_address
-      else
+      if !allow_reply_by_email?
+        # This will end up being the notification_email, which is a
+        # noreply address.
         result['Reply-To'] = from_value
+      else
+
+        # The only reason we use from address for reply to is for group
+        # SMTP emails, where the person will be replying to the group's
+        # email_username.
+        if !@opts[:use_from_address_for_reply_to]
+          result[ALLOW_REPLY_BY_EMAIL_HEADER] = true
+          result['Reply-To'] = reply_by_email_address
+        else
+          # No point in adding a reply-to header if it is going to be identical
+          # to the from address/alias. If the from option is not present, then
+          # the default reply-to address is used.
+          result['Reply-To'] = from_value if from_value != alias_email(@opts[:from])
+        end
       end
 
       result.merge(MessageBuilder.custom_headers(SiteSetting.email_custom_headers))

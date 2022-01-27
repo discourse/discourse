@@ -12,6 +12,7 @@ class UserSearch
     @topic_allowed_users = opts[:topic_allowed_users]
     @searching_user = opts[:searching_user]
     @include_staged_users = opts[:include_staged_users] || false
+    @last_seen_users = opts[:last_seen_users] || false
     @limit = opts[:limit] || 20
     @groups = opts[:groups]
 
@@ -68,7 +69,7 @@ class UserSearch
     if @term.present?
       exact_matches = scoped_users.where(username_lower: @term)
 
-      # don't polute mentions with users who haven't shown up in over a year
+      # don't pollute mentions with users who haven't shown up in over a year
       exact_matches = exact_matches.where('last_seen_at > ?', 1.year.ago) if @topic_id || @category_id
 
       exact_matches
@@ -82,7 +83,7 @@ class UserSearch
     # 2. in topic
     if @topic_id
       in_topic = filtered_by_term_users
-        .where('users.id IN (SELECT user_id FROM posts WHERE topic_id = ? AND post_type = ?)', @topic_id, Post.types[:regular])
+        .where('users.id IN (SELECT user_id FROM posts WHERE topic_id = ? AND post_type = ? AND deleted_at IS NULL)', @topic_id, Post.types[:regular])
 
       if @searching_user.present?
         in_topic = in_topic.where('users.id <> ?', @searching_user.id)
@@ -156,6 +157,15 @@ class UserSearch
     # 4. global matches
     if @term.present?
       filtered_by_term_users
+        .order('last_seen_at DESC NULLS LAST')
+        .limit(@limit - users.size)
+        .pluck(:id)
+        .each { |id| users << id }
+    end
+
+    # 5. last seen users (for search auto-suggestions)
+    if @last_seen_users
+      scoped_users
         .order('last_seen_at DESC NULLS LAST')
         .limit(@limit - users.size)
         .pluck(:id)

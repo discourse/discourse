@@ -6,13 +6,13 @@ development:
   pool: 5
   timeout: 5000
   checkout_timeout: <%= ENV['CHECKOUT_TIMEOUT'] || 5 %>
-  advisory_locks: false # Disable until https://github.com/rails/rails/issues/40029 has beeen resolved.
+  advisory_locks: false # Disable until https://github.com/rails/rails/issues/40029 has been resolved.
   host_names:
     ### Don't include the port number here. Change the "port" site setting instead, at /admin/site_settings.
     ### If you change this setting you will need to
     ###   - restart sidekiq if you change this setting
     ###   - rebake all to posts using: `RAILS_ENV=production bundle exec rake posts:rebake`
-    - "localhost"
+    - "<%= ENV['DISCOURSE_HOSTNAME'] || 'localhost' %>"
   variables: <%= ENV.filter { |k,v| k.start_with? 'DISCOURSE_DB_VARIABLES_' }
                     .transform_keys { |k| k.slice(('DISCOURSE_DB_VARIABLES_'.length)..).downcase }
                     .to_json %>
@@ -40,7 +40,7 @@ test:
   min_messages: warning
   pool: 5
   timeout: 5000
-  advisory_locks: false # Disable until https://github.com/rails/rails/issues/40029 has beeen resolved.
+  advisory_locks: false # Disable until https://github.com/rails/rails/issues/40029 has been resolved.
   host_names:
     - test.localhost
 

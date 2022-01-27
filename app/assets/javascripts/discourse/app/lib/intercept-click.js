@@ -2,7 +2,8 @@ import DiscourseURL from "discourse/lib/url";
 
 export function wantsNewWindow(e) {
   return (
-    e.isDefaultPrevented() ||
+    e.defaultPrevented ||
+    (e.isDefaultPrevented && e.isDefaultPrevented()) ||
     e.shiftKey ||
     e.metaKey ||
     e.ctrlKey ||

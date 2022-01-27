@@ -9,49 +9,112 @@ hu:
     poll:
       voters:
         one: "szavazó"
-        other: "szavazók"
+        other: "szavazó"
       total_votes:
         one: "összes szavazat"
         other: "összes szavazat"
       average_rating: "Átlagos értékelés: <strong>%{average}</strong>."
+      public:
+        title: "A szavazatok <strong>nyilvánosak</strong>."
+      results:
+        groups:
+          title: "A szavazáshoz a(z) %{groups} tagjának kell lennie."
+        vote:
+          title: "Az eredmények a <strong>szavazat leadásakor</strong> lesznek megjelenítve."
+        closed:
+          title: "Az eredmények a <strong>szavazás lezárásakor</strong> lesznek megjelenítve."
+        staff:
+          title: "Az eredményeket csak a <strong>stábtagok</strong> láthatják."
+      multiple:
+        help:
+          at_least_min_options:
+            one: "Legalább <strong>%{count}</strong> lehetőséget válasszon."
+            other: "Legalább <strong>%{count}</strong> lehetőséget válasszon."
+          up_to_max_options:
+            one: "Legfeljebb <strong>%{count}</strong> lehetőséget válasszon."
+            other: "Legfeljebb <strong>%{count}</strong> lehetőséget válasszon."
+          x_options:
+            one: "Válasszon <strong>%{count}</strong> lehetőséget."
+            other: "Válasszon <strong>%{count}</strong> lehetőséget."
+          between_min_and_max_options: "Válasszon legalább <strong>%{min}</strong>, de legfeljebb <strong>%{max}</strong> lehetőséget."
       cast-votes:
-        title: "Szavazatod leadása"
-        label: "Szavazz!"
+        title: "Szavazat leadása"
+        label: "Szavazzon most!"
       show-results:
         title: "Eredmények megjelenítése"
-        label: "Eredmények mutatása"
+        label: "Eredmények megjelenítése"
+      remove-vote:
+        title: "Saját szavazat eltávolítása"
+        label: "Szavazat eltávolítása"
       hide-results:
-        title: "Vissza a szavazataidhoz"
+        title: "Vissza a szavazataihoz"
         label: "Szavazás megjelenítése"
+      group-results:
+        title: "Szavazatok csoportosítása felhasználói mező szerint"
+        label: "Bontás megjelenítése"
       export-results:
+        title: "Eredmények exportálása"
         label: "Exportálás"
       open:
-        title: "A szavazás megnyitása"
+        title: "Szavazás megnyitása"
         label: "Megnyitás"
-        confirm: "Biztosan megnyitod ezt a szavazást?"
+        confirm: "Biztos, hogy megnyitja ezt a szavazást?"
       close:
-        title: "A szavazás lezárása"
-        label: "Bezárás"
-        confirm: "Biztosan lezárod ezt a szavazást?"
+        title: "Szavazás lezárása"
+        label: "Lezárás"
+        confirm: "Biztos, hogy lezárja ezt a szavazást?"
+      automatic_close:
+        closes_in: "<strong>%{timeLeft}</strong> múlva zárul le."
+        age: "Lezárva: <strong>%{age}</strong>"
       breakdown:
+        title: "Szavazás eredménye"
+        votes: "%{count} szavazat"
+        breakdown: "Bontás"
+        percentage: "Százalék"
         count: "Számláló"
-      error_while_toggling_status: "Elnézést, a szavazat állapotának vizsgálatakor hiba lépett fel."
-      error_while_casting_votes: "Sajnáljuk, hiba történt a szavazatod elküldésekor."
-      error_while_fetching_voters: "Elnézést, a szavazatok kiírásakor hiba lépett fel."
+      error_while_toggling_status: "Sajnáljuk, hiba történt a szavazás állapotának átváltásakor."
+      error_while_casting_votes: "Sajnáljuk, hiba történt a szavazata leadásakor."
+      error_while_fetching_voters: "Sajnáljuk, hiba történt a szavazók megjelenítésekor."
+      error_while_exporting_results: "Sajnáljuk, hiba történt az szavazás eredményének exportálásakor."
       ui_builder:
-        title: Szavazás felépítése
+        title: Szavazás összeállítása
         insert: Szavazás beillesztése
         help:
+          options_min_count: Adjon meg legalább 1 lehetőséget.
+          options_max_count: Adjon meg legfeljebb %{count} lehetőséget.
+          invalid_min_value: A minimális értéknek legalább 1-nek kell lennie.
+          invalid_max_value: A maximális értéknek legalább 1-nek kell lennie, de legfeljebb a lehetősége számával egyezhet meg.
           invalid_values: A minimum értéknek alacsonyabbnak kell lennie a maximum értéknél.
-          min_step_value: A lépés minimális értéke 1
+          min_step_value: A léptetés minimális értéke 1
         poll_type:
           label: Típus
-          regular: Egyszerű választás
-          multiple: Többszörös Választás
-          number: Értékelés Számokkal
+          regular: Egyetlen választás
+          multiple: Többválasztós
+          number: Számszerű értékelés
+        poll_result:
+          label: Eredmények megjelenítése…
+          always: Mindig látható
+          vote: Csak szavazás után
+          closed: Ha a szavazás lezárult
+          staff: Csak a stáb
+        poll_groups:
+          label: Szavazás ezen csoportokra korlátozása
+        poll_chart_type:
+          label: Eredménydiagram
+          bar: Oszlop
+          pie: Kör
         poll_config:
+          max: Max. választási lehetőségek
+          min: Min. választási lehetőségek
           step: Lépés
         poll_public:
-          label: Mutasd, ki szavazott
+          label: Szavazók megjelenítése
+        poll_title:
+          label: Cím (nem kötelező)
+        poll_options:
+          label: Lehetőségek (soronként egy)
+          add: Lehetőség hozzáadása
         automatic_close:
           label: Szavazás automatikus lezárása
+        show_advanced: "Speciális beállítások megjelenítése"
+        hide_advanced: "Speciális beállítások elrejtése"

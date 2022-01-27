@@ -4,7 +4,6 @@ import {
   laterToday,
   nextBusinessWeekStart,
   nextMonth,
-  nextWeek,
   now,
   tomorrow,
 } from "discourse/lib/time-utils";
@@ -13,7 +12,6 @@ import I18n from "I18n";
 export const TIME_SHORTCUT_TYPES = {
   LATER_TODAY: "later_today",
   TOMORROW: "tomorrow",
-  NEXT_WEEK: "next_week",
   NEXT_MONTH: "next_month",
   CUSTOM: "custom",
   RELATIVE: "relative",
@@ -62,13 +60,6 @@ export function defaultShortcutOptions(timezone) {
       timeFormatted: nextBusinessWeekStart(timezone).format(
         I18n.t("dates.long_no_year")
       ),
-    },
-    {
-      icon: "far-clock",
-      id: TIME_SHORTCUT_TYPES.NEXT_WEEK,
-      label: "time_shortcut.next_week",
-      time: nextWeek(timezone),
-      timeFormatted: nextWeek(timezone).format(I18n.t("dates.long_no_year")),
     },
     {
       icon: "far-calendar-plus",

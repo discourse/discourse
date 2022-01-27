@@ -49,8 +49,11 @@ export default Component.extend({
       if (this.element) {
         const linkInput = this.element.querySelector("#share-link input");
         linkInput.value = this.link;
-        linkInput.setSelectionRange(0, this.link.length);
-        linkInput.focus();
+        if (!this.site.mobileView) {
+          // if the input is auto-focused on mobile, iOS requires two taps of the copy button
+          linkInput.setSelectionRange(0, this.link.length);
+          linkInput.focus();
+        }
       }
     }, 200);
   },
@@ -153,7 +156,7 @@ export default Component.extend({
       return;
     }
 
-    if (event.keyCode === 27) {
+    if (event.key === "Escape") {
       this.send("close");
     }
   },

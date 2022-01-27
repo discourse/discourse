@@ -77,17 +77,18 @@ class UrlHelper
   end
 
   def self.cook_url(url, secure: false, local: nil)
+    is_secure = SiteSetting.secure_media && secure
     local = is_local(url) if local.nil?
     return url if !local
 
-    url = secure ? secure_proxy_without_cdn(url) : absolute_without_cdn(url)
+    url = is_secure ? secure_proxy_without_cdn(url) : absolute_without_cdn(url)
 
     # we always want secure media to come from
     # Discourse.base_url_no_prefix/secure-media-uploads
     # to avoid asset_host mixups
-    return schemaless(url) if secure
+    return schemaless(url) if is_secure
 
-    # PERF: avoid parsing url excpet for extreme conditions
+    # PERF: avoid parsing url except for extreme conditions
     # this is a hot path used on home page
     filename = url
     if url.include?("?")

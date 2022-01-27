@@ -25,17 +25,19 @@
         {{i18n "user.preferences_nav.notifications"}}
       {{/link-to}}
     </li>
-    <li class="indent nav-categories">
-      {{#link-to "preferences.categories"}}
-        {{i18n "user.preferences_nav.categories"}}
-      {{/link-to}}
-    </li>
+    {{#if model.can_change_tracking_preferences}}
+      <li class="indent nav-categories">
+        {{#link-to "preferences.categories"}}
+          {{i18n "user.preferences_nav.categories"}}
+        {{/link-to}}
+      </li>
+    {{/if}}
     <li class="indent nav-users">
       {{#link-to "preferences.users"}}
         {{i18n "user.preferences_nav.users"}}
       {{/link-to}}
     </li>
-    {{#if siteSettings.tagging_enabled}}
+    {{#if (and model.can_change_tracking_preferences siteSettings.tagging_enabled)}}
       <li class="indent nav-tags">
         {{#link-to "preferences.tags"}}
           {{i18n "user.preferences_nav.tags"}}
@@ -48,7 +50,7 @@
       {{/link-to}}
     </li>
 
-    {{plugin-outlet name="user-preferences-nav-under-interface" args=(hash model=model)}}
+    {{plugin-outlet name="user-preferences-nav-under-interface" tagName="span" connectorTagName="div" args=(hash model=model)}}
 
     {{#if model.userApiKeys}}
       <li class="nav-apps">
@@ -57,12 +59,12 @@
         {{/link-to}}
       </li>
     {{/if}}
-    {{plugin-outlet name="user-preferences-nav" connectorTagName="li" args=(hash model=model)}}
+    {{plugin-outlet name="user-preferences-nav" tagName="span" connectorTagName="li" args=(hash model=model)}}
   {{/mobile-nav}}
 {{/d-section}}
 
 <section class="user-content user-preferences">
-  {{plugin-outlet name="above-user-preferences" args=(hash model=model)}}
+  {{plugin-outlet name="above-user-preferences" tagName="span" connectorTagName="div" args=(hash model=model)}}
 
   <form class="form-vertical">
     {{outlet}}

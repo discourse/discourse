@@ -8,7 +8,7 @@ zh_CN:
   js:
     poll:
       voters:
-        other: "投票者"
+        other: "投票人"
       total_votes:
         other: "总票数"
       average_rating: "平均评分：<strong>%{average}</strong>。"
@@ -16,95 +16,98 @@ zh_CN:
         title: "投票为<strong>公开</strong>。"
       results:
         groups:
-          title: "你需要成为 %{groups} 的一员才能投票。"
+          title: "您需要成为 %{groups} 的成员才能在此投票中投票。"
         vote:
-          title: "结果将显示在<strong>投票</strong>上。"
+          title: "结果将在<strong>投票</strong>上显示。"
         closed:
-          title: "结果将显示一次<strong>关闭</strong>。"
+          title: "结果将在<strong>关闭</strong>后显示。"
         staff:
-          title: "结果仅显示给<strong>管理</strong>成员。"
+          title: "结果仅向<strong>管理人员</strong>成员显示。"
       multiple:
         help:
           at_least_min_options:
-            other: "至少选择<strong>%{count}</strong>个选项。"
+            other: "至少选择 <strong>%{count}</strong> 个选项。"
           up_to_max_options:
             other: "最多选择 <strong>%{count}</strong> 个选项。"
           x_options:
             other: "选择 <strong>%{count}</strong> 个选项。"
-          between_min_and_max_options: "选择<strong>%{min}</strong>到<strong>%{max}</strong>个选项。"
+          between_min_and_max_options: "选择 <strong>%{min}</strong> 到 <strong>%{max}</strong> 个选项。"
       cast-votes:
-        title: "投你的票"
-        label: "现在投票！"
+        title: "投票"
+        label: "立即投票！"
       show-results:
         title: "显示投票结果"
         label: "显示结果"
+      remove-vote:
+        title: "移除您的投票"
+        label: "移除投票"
       hide-results:
-        title: "返回到你的投票"
+        title: "回到您的投票"
         label: "显示投票"
       group-results:
-        title: "按用户字段分组投票"
-        label: "显示错误"
+        title: "按用户字段将投票分组"
+        label: "显示细分"
       export-results:
-        title: "到处投票结果"
+        title: "导出投票结果"
         label: "导出"
       open:
-        title: "开启投票"
-        label: "开启"
-        confirm: "你确定要开启这个投票么？"
+        title: "打开投票"
+        label: "打开"
+        confirm: "确定要打开此投票吗？"
       close:
         title: "关闭投票"
         label: "关闭"
-        confirm: "你确定要关闭这个投票？"
+        confirm: "确定要关闭此投票吗？"
       automatic_close:
-        closes_in: "于<strong>%{timeLeft}</strong>关闭。"
-        age: "<strong>%{age}</strong>关闭"
+        closes_in: "在 <strong>%{timeLeft}</strong>后关闭。"
+        age: "已关闭 <strong>%{age}</strong>"
       breakdown:
         title: "投票结果"
         votes: "%{count} 票"
-        breakdown: "故障"
+        breakdown: "细分"
         percentage: "百分比"
         count: "计数"
-      error_while_toggling_status: "对不起，改变投票状态时出错了。"
-      error_while_casting_votes: "对不起，投票时出错了。"
-      error_while_fetching_voters: "对不起，显示投票者时出错了。"
+      error_while_toggling_status: "抱歉，切换此投票的状态时出错。"
+      error_while_casting_votes: "抱歉，投票时出错。"
+      error_while_fetching_voters: "抱歉，显示投票人时出错。"
       error_while_exporting_results: "抱歉，导出投票结果时出错。"
       ui_builder:
-        title: 创建投票
+        title: 构建投票
         insert: 插入投票
         help:
-          options_min_count: 输入至少 1 个选项。
+          options_min_count: 至少输入 1 个选项。
           options_max_count: 最多输入 %{count} 个选项。
-          invalid_min_value: 最小值必须至少为1。
-          invalid_max_value: 最大值必须至少是1，但小于或等于选项的数量。
+          invalid_min_value: 最小值必须至少为 1。
+          invalid_max_value: 最大值必须至少为 1，但小于或等于选项数。
           invalid_values: 最小值必须小于最大值。
-          min_step_value: 最小步长为1
+          min_step_value: 最小步长值为 1
         poll_type:
           label: 类型
           regular: 单选
           multiple: 多选
-          number: 评分
+          number: 分数
         poll_result:
-          label: 显示结果...
-          always: 总是可见
+          label: 显示结果…
+          always: 始终可见
           vote: 只在投票后
-          closed: 当投票被关闭
+          closed: 当投票被关闭后
           staff: 仅管理人员
         poll_groups:
-          label: 限制这些群组的投票
+          label: 将投票限制为这些群组
         poll_chart_type:
           label: 结果图表
-          bar: 条形
-          pie: 饼状
+          bar: 条形图
+          pie: 饼图
         poll_config:
           max: 最大选择
           min: 最小选择
-          step: 梯级
+          step: 步骤
         poll_public:
           label: 显示投票人
         poll_title:
-          label: 标题(可选)
+          label: 标题（可选）
         poll_options:
-          label: 选项(每行一个)
+          label: 选项（每行一个）
           add: 添加选项
         automatic_close:
           label: 自动关闭投票

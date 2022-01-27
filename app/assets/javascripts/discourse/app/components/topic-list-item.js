@@ -144,8 +144,8 @@ export default Component.extend({
       classes.push("unseen-topic");
     }
 
-    if (topic.get("displayNewPosts")) {
-      classes.push("new-posts");
+    if (topic.unread_posts) {
+      classes.push("unread-posts");
     }
 
     ["liked", "archived", "bookmarked", "pinned", "closed"].forEach((name) => {
@@ -161,16 +161,16 @@ export default Component.extend({
     return classes.join(" ");
   },
 
-  hasLikes: function () {
+  hasLikes() {
     return this.get("topic.like_count") > 0;
   },
 
-  hasOpLikes: function () {
+  hasOpLikes() {
     return this.get("topic.op_like_count") > 0;
   },
 
   @discourseComputed
-  expandPinned: function () {
+  expandPinned() {
     const pinned = this.get("topic.pinned");
     if (!pinned) {
       return false;
@@ -195,11 +195,6 @@ export default Component.extend({
     }
 
     return false;
-  },
-
-  @discourseComputed("expandPinned", "hideMobileAvatar")
-  showMobileAvatar(expandPinned, hideMobileAvatar) {
-    return !(hideMobileAvatar || expandPinned);
   },
 
   showEntrance,

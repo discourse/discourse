@@ -42,7 +42,7 @@ Discourse::Application.configure do
 
   config.handlebars.precompile = true
 
-  # we recommend you use mailcatcher https://github.com/sj26/mailcatcher
+  # we recommend you use mailhog https://github.com/mailhog/MailHog
   config.action_mailer.smtp_settings = { address: "localhost", port: 1025 }
 
   config.action_mailer.raise_delivery_errors = true
@@ -84,7 +84,7 @@ Discourse::Application.configure do
     config.developer_emails = emails.split(",").map(&:downcase).map(&:strip)
   end
 
-  if defined?(Rails::Server) || defined?(Puma) || defined?(Unicorn)
+  if ENV["DISCOURSE_SKIP_CSS_WATCHER"] != "1" && (defined?(Rails::Server) || defined?(Puma) || defined?(Unicorn))
     require 'stylesheet/watcher'
     STDERR.puts "Starting CSS change watcher"
     @watcher = Stylesheet::Watcher.watch

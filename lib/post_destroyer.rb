@@ -43,7 +43,10 @@ class PostDestroyer
     reply_ids = post.reply_ids(Guardian.new(performed_by), only_replies_to_single_post: false)
     replies = Post.where(id: reply_ids.map { |r| r[:id] })
     PostDestroyer.new(performed_by, post, reviewable: reviewable).destroy
-    replies.each { |reply| PostDestroyer.new(performed_by, reply, defer_flags: defer_reply_flags).destroy }
+
+    options = { defer_flags: defer_reply_flags }
+    options.merge!({ reviewable: reviewable, notify_responders: true, parent_post: post }) if SiteSetting.notify_users_after_responses_deleted_on_flagged_post
+    replies.each { |reply| PostDestroyer.new(performed_by, reply, options).destroy }
   end
 
   def initialize(user, post, opts = {})
@@ -55,7 +58,7 @@ class PostDestroyer
 
   def destroy
     payload = WebHook.generate_payload(:post, @post) if WebHook.active_web_hooks(:post).exists?
-    topic = @post.topic
+    topic = Topic.with_deleted.find_by(id: @post.topic_id)
     is_first_post = @post.is_first_post? && topic
     has_topic_web_hooks = is_first_post && WebHook.active_web_hooks(:topic).exists?
 
@@ -76,9 +79,10 @@ class PostDestroyer
 
     DiscourseEvent.trigger(:post_destroyed, @post, @opts, @user)
     WebHook.enqueue_post_hooks(:post_destroyed, @post, payload)
+    Jobs.enqueue(:sync_topic_user_bookmarked, topic_id: topic.id) if topic
 
     if is_first_post
-      UserProfile.remove_featured_topic_from_all_profiles(@topic)
+      UserProfile.remove_featured_topic_from_all_profiles(topic)
       UserActionManager.topic_destroyed(topic)
       DiscourseEvent.trigger(:topic_destroyed, topic, @user)
       WebHook.enqueue_topic_hooks(:topic_destroyed, topic, topic_payload) if has_topic_web_hooks
@@ -95,8 +99,11 @@ class PostDestroyer
     topic.update_column(:user_id, Discourse::SYSTEM_USER_ID) if !topic.user_id
     topic.recover!(@user) if @post.is_first_post?
     topic.update_statistics
+
     UserActionManager.post_created(@post)
     DiscourseEvent.trigger(:post_recovered, @post, @opts, @user)
+    Jobs.enqueue(:sync_topic_user_bookmarked, topic_id: topic.id) if topic
+
     if @post.is_first_post?
       UserActionManager.topic_created(topic)
       DiscourseEvent.trigger(:topic_recovered, topic, @user)
@@ -168,13 +175,15 @@ class PostDestroyer
         permanent? ? @post.topic.destroy! : @post.topic.trash!(@user)
         PublishedPage.unpublish!(@user, @post.topic) if @post.topic.published_page
       end
+      TopicLink.where(link_post_id: @post.id).destroy_all
       update_associated_category_latest_topic
       update_user_counts
       TopicUser.update_post_action_cache(post_id: @post.id)
 
       DB.after_commit do
         if @opts[:reviewable]
-          notify_deletion(@opts[:reviewable])
+          notify_deletion(@opts[:reviewable], { notify_responders: @opts[:notify_responders], parent_post: @opts[:parent_post] })
+          ignore(@post.reviewable_flag) if @post.reviewable_flag && SiteSetting.notify_users_after_responses_deleted_on_flagged_post
         elsif reviewable = @post.reviewable_flag
           @opts[:defer_flags] ? ignore(reviewable) : agree(reviewable)
         end
@@ -196,11 +205,12 @@ class PostDestroyer
     I18n.with_locale(SiteSetting.default_locale) do
 
       # don't call revise from within transaction, high risk of deadlock
-      key = @post.is_first_post? ? 'js.topic.deleted_by_author' : 'js.post.deleted_by_author'
+      key = @post.is_first_post? ? 'js.topic.deleted_by_author_simple' : 'js.post.deleted_by_author_simple'
       @post.revise(@user,
-        { raw: I18n.t(key, count: delete_removed_posts_after) },
+        { raw: I18n.t(key) },
         force_new_version: true,
-        deleting_post: true
+        deleting_post: true,
+        skip_validations: true
       )
 
       Post.transaction do
@@ -309,21 +319,24 @@ class PostDestroyer
     reviewable.transition_to(:ignored, @user)
   end
 
-  def notify_deletion(reviewable)
+  def notify_deletion(reviewable, options = {})
     return if @post.user.blank?
 
     allowed_user = @user.human? && @user.staff?
     return unless allowed_user && rs = reviewable.reviewable_scores.order('created_at DESC').first
 
+    notify_responders = options[:notify_responders]
+
     Jobs.enqueue(
       :send_system_message,
       user_id: @post.user_id,
-      message_type: :flags_agreed_and_post_deleted,
+      message_type: notify_responders ? :flags_agreed_and_post_deleted_for_responders : :flags_agreed_and_post_deleted,
       message_options: {
-        flagged_post_raw_content: @post.raw,
-        url: @post.url,
+        flagged_post_raw_content: notify_responders ? options[:parent_post].raw : @post.raw,
+        flagged_post_response_raw_content: @post.raw,
+        url: notify_responders ? options[:parent_post].url : @post.url,
         flag_reason: I18n.t(
-          "flag_reasons.#{PostActionType.types[rs.reviewable_score_type]}",
+          "flag_reasons#{".responder" if notify_responders}.#{PostActionType.types[rs.reviewable_score_type]}",
           locale: SiteSetting.default_locale,
           base_path: Discourse.base_path
         )

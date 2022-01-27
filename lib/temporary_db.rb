@@ -24,7 +24,7 @@ class TemporaryDb
     end
     if !@pg_bin_path
       bin_path = "/Applications/Postgres.app/Contents/Versions/latest/bin"
-      if File.exists?("#{bin_path}/pg_ctl")
+      if File.exist?("#{bin_path}/pg_ctl")
         @pg_bin_path = bin_path
       end
     end
@@ -97,6 +97,28 @@ class TemporaryDb
   def stop
     @started = false
     `#{pg_ctl_path} -D '#{PG_TEMP_PATH}' stop`
+  end
+
+  def with_env(&block)
+    old_host = ENV["PGHOST"]
+    old_user = ENV["PGUSER"]
+    old_port = ENV["PGPORT"]
+    old_dev_db = ENV["DISCOURSE_DEV_DB"]
+    old_rails_db = ENV["RAILS_DB"]
+
+    ENV["PGHOST"] = "localhost"
+    ENV["PGUSER"] = "discourse"
+    ENV["PGPORT"] = pg_port.to_s
+    ENV["DISCOURSE_DEV_DB"] = "discourse"
+    ENV["RAILS_DB"] = "discourse"
+
+    yield
+  ensure
+    ENV["PGHOST"] = old_host
+    ENV["PGUSER"] = old_user
+    ENV["PGPORT"] = old_port
+    ENV["DISCOURSE_DEV_DB"] = old_dev_db
+    ENV["RAILS_DB"] = old_rails_db
   end
 
   def remove

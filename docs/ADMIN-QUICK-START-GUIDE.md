@@ -42,7 +42,7 @@ Email is required for new account signups and notifications. **Test your email t
 
 - You got the test email? Great! **Read that email closely**, it has important email deliverability tips.
 - You didn't get the test email? This means your users probably aren't getting any signup or notification emails either.
-- Email deliverability can be hard. Read [**Email Service Configuration**](https://github.com/discourse/discourse/blob/master/docs/INSTALL-email.md).
+- Email deliverability can be hard. Read [**Email Service Configuration**](https://github.com/discourse/discourse/blob/main/docs/INSTALL-email.md).
 
 If you'd like to enable *replying* to topics via email, [see this howto](https://meta.discourse.org/t/set-up-reply-via-email-support/14003).
 
@@ -117,7 +117,7 @@ The invite area on your profile page also includes advanced Staff methods of [se
 
 - One CPU and 1GB of memory, with swap, is the minimum for a basic Discourse community. As your community grows you may need more memory or CPU resources.
 
-- [Our Docker container install](https://github.com/discourse/discourse/blob/master/docs/INSTALL.md) is the only one we officially support. It guarantees easy updates, and all recommended optimizations from the Discourse team.
+- [Our Docker container install](https://github.com/discourse/discourse/blob/main/docs/INSTALL.md) is the only one we officially support. It guarantees easy updates, and all recommended optimizations from the Discourse team.
 
 - You should get an email notification when new versions of Discourse are released. To update your instance via our easy one click upgrade process, visit [/admin/upgrade](/admin/upgrade).
 
@@ -129,7 +129,7 @@ The invite area on your profile page also includes advanced Staff methods of [se
    - [Import and Export your data](https://meta.discourse.org/t/move-your-discourse-instance-to-a-different-server/15721)
    - [Change the domain name](https://meta.discourse.org/t/how-do-i-change-the-domain-name/16098)
    - [Multiple Discourse instances on the same server](https://meta.discourse.org/t/multisite-configuration-with-docker/14084)
-   - [Import old content from vBulletin, PHPbb, Vanilla, Drupal, BBPress, etc](https://github.com/discourse/discourse/tree/master/script/import_scripts)
+   - [Import old content from vBulletin, PHPbb, Vanilla, Drupal, BBPress, etc](https://github.com/discourse/discourse/tree/main/script/import_scripts)
    - A firewall on your server? [Configure firewall](https://meta.discourse.org/t/configure-a-firewall-for-discourse/20584).
    - A user friendly [offline page when rebuilding or upgrading?](https://meta.discourse.org/t/adding-an-offline-page-when-rebuilding/45238)
    - Embed Discourse [in your WordPress install](https://github.com/discourse/wp-discourse), or [on your static HTML site](https://meta.discourse.org/t/embedding-discourse-comments-via-javascript/31963)
@@ -140,4 +140,4 @@ For more assistance on configuring and running your Discourse forum, see [meta.d
 
 ----
 
-Have suggestions to improve or update this guide? Submit a [pull request](https://github.com/discourse/discourse/blob/master/docs/ADMIN-QUICK-START-GUIDE.md).
+Have suggestions to improve or update this guide? Submit a [pull request](https://github.com/discourse/discourse/blob/main/docs/ADMIN-QUICK-START-GUIDE.md).

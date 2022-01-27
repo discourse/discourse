@@ -3,6 +3,7 @@ import componentTest, {
 } from "discourse/tests/helpers/component-test";
 import {
   discourseModule,
+  exists,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "I18n";
@@ -17,7 +18,7 @@ discourseModule("Integration | Component | text-field", function (hooks) {
     template: hbs`{{text-field}}`,
 
     test(assert) {
-      assert.ok(queryAll("input[type=text]").length);
+      assert.ok(exists("input[type=text]"));
     },
   });
 
@@ -29,8 +30,8 @@ discourseModule("Integration | Component | text-field", function (hooks) {
     },
 
     test(assert) {
-      assert.ok(queryAll("input[type=text]").length);
-      assert.equal(
+      assert.ok(exists("input[type=text]"));
+      assert.strictEqual(
         queryAll("input").prop("placeholder"),
         "placeholder.i18n.key"
       );
@@ -44,7 +45,7 @@ discourseModule("Integration | Component | text-field", function (hooks) {
     },
 
     test(assert) {
-      assert.equal(queryAll("input").attr("dir"), "rtl");
+      assert.strictEqual(queryAll("input").attr("dir"), "rtl");
     },
   });
 
@@ -55,7 +56,7 @@ discourseModule("Integration | Component | text-field", function (hooks) {
     },
 
     test(assert) {
-      assert.equal(queryAll("input").attr("dir"), "ltr");
+      assert.strictEqual(queryAll("input").attr("dir"), "ltr");
     },
   });
 
@@ -75,7 +76,7 @@ discourseModule("Integration | Component | text-field", function (hooks) {
       assert.ok(!this.called);
       await fillIn(".tf-test", "new text");
       assert.ok(this.called);
-      assert.equal(this.newValue, "new text");
+      assert.strictEqual(this.newValue, "new text");
     },
   });
 
@@ -95,7 +96,7 @@ discourseModule("Integration | Component | text-field", function (hooks) {
       assert.ok(!this.called);
       await fillIn(".tf-test", "no longer old");
       assert.ok(this.called);
-      assert.equal(this.newValue, "no longer old");
+      assert.strictEqual(this.newValue, "no longer old");
     },
   });
 });

@@ -13,7 +13,7 @@ discourseModule("Integration | Component | badge-title", function (hooks) {
 
   componentTest("badge title", {
     template: hbs`
-      {{badge-title selectableUserBadges=selectableUserBadges user=user}}
+      {{badge-title selectableUserBadges=selectableUserBadges}}
     `,
 
     beforeEach() {
@@ -40,7 +40,7 @@ discourseModule("Integration | Component | badge-title", function (hooks) {
       await this.subject.expand();
       await this.subject.selectRowByValue(42);
       await click(".btn");
-      assert.equal(this.currentUser.title, "Test");
+      assert.strictEqual(this.currentUser.title, "Test");
     },
   });
 });

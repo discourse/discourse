@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <style>
+    html, body {
+        padding: 0;
+        margin:0
+    }
+    </style>
+</head>
+<body>
+    <form id="b" accept-charset="utf-8" action="/s" method="GET" role="search">
+        <a href="/">
+            <img id="c" src="https://images-na.ssl-images-amazon.com/images/G/01/error/logo._TTD_.png" alt="Amazon.com">
+        </a>
+        <div id="e">
+            <input id="f" name="field-keywords" placeholder="Search">
+            <input id="g" type="submit" value="Go">
+        </div>
+    </form>
+    <div id="h">
+        <div>
+            <a href="/">
+                <img src="https://images-na.ssl-images-amazon.com/images/G/01/error/title._TTD_.png" alt="Sorry! We couldn&#39;t find that page. Try searching or go to Amazon&#39;s home page.">
+            </a>
+        </div>
+        <a href="/dogsofamazon" target="_blank">
+            <img id="d" alt="Dogs of Amazon">
+            <script>
+            document.getElementById("d").src = "https://images-na.ssl-images-amazon.com/images/G/01/error/" + (Math.floor(Math.random() * 200) + 1) + "._TTD_.jpg";
+            </script>
+        </a>
+    </div>
+</body>
+</html>

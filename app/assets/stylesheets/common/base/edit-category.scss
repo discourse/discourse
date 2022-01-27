@@ -9,7 +9,7 @@ div.edit-category {
   grid-column-gap: 1.5em;
   grid-template-areas: "header header" "sidebar content" "sidebar warning" "sidebar footer";
 
-  .edit-category-title {
+  .edit-category-title-bar {
     grid-area: header;
     grid-column: 1 / span 2;
     display: flex;
@@ -17,6 +17,11 @@ div.edit-category {
     align-self: start;
     background-color: var(--primary-very-low);
     padding: 20px;
+
+    .category-back {
+      height: 2em;
+      align-self: flex-end;
+    }
   }
 
   .edit-category-nav {
@@ -153,7 +158,8 @@ div.edit-category {
     padding: 0 1.5em 2em 0;
   }
 
-  .category-topic-auto-close-hours {
+  .category-topic-auto-close-hours,
+  .category-default-slow-mode-seconds {
     width: 200px;
   }
 }

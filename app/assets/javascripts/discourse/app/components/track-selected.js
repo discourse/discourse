@@ -5,7 +5,7 @@ export default Component.extend({
   tagName: "span",
 
   @observes("selected")
-  selectionChanged: function () {
+  selectionChanged() {
     const selected = this.selected;
     const list = this.selectedList;
     const id = this.selectedId;

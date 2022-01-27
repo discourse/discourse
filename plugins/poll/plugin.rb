@@ -4,38 +4,25 @@
 # about: Official poll plugin for Discourse
 # version: 1.0
 # authors: Vikhyat Korrapati (vikhyat), Régis Hanol (zogstrip)
-# url: https://github.com/discourse/discourse/tree/master/plugins/poll
+# url: https://github.com/discourse/discourse/tree/main/plugins/poll
+# transpile_js: true
 
 register_asset "stylesheets/common/poll.scss"
-register_asset "stylesheets/common/poll-ui-builder.scss"
-register_asset "stylesheets/common/poll-breakdown.scss"
 register_asset "stylesheets/desktop/poll.scss", :desktop
-register_asset "stylesheets/desktop/poll-ui-builder.scss", :desktop
 register_asset "stylesheets/mobile/poll.scss", :mobile
+register_asset "stylesheets/common/poll-ui-builder.scss"
+register_asset "stylesheets/desktop/poll-ui-builder.scss", :desktop
+register_asset "stylesheets/common/poll-breakdown.scss"
 
 register_svg_icon "far fa-check-square"
 
 enabled_site_setting :poll_enabled
-hide_plugin if self.respond_to?(:hide_plugin)
-
-PLUGIN_NAME ||= "discourse_poll"
-DATA_PREFIX ||= "data-poll-"
+hide_plugin
 
 after_initialize do
-
-  [
-    "../app/models/poll_vote",
-    "../app/models/poll_option",
-    "../app/models/poll",
-    "../app/serializers/poll_option_serializer",
-    "../app/serializers/poll_serializer",
-    "../lib/polls_validator",
-    "../lib/polls_updater",
-    "../lib/post_validator",
-    "../jobs/regular/close_poll",
-  ].each { |path| require File.expand_path(path, __FILE__) }
-
   module ::DiscoursePoll
+    PLUGIN_NAME ||= "discourse_poll"
+    DATA_PREFIX ||= "data-poll-"
     HAS_POLLS ||= "has_polls"
     DEFAULT_POLL_NAME ||= "poll"
 
@@ -43,442 +30,37 @@ after_initialize do
       engine_name PLUGIN_NAME
       isolate_namespace DiscoursePoll
     end
+
+    class Error < StandardError; end
   end
 
-  class DiscoursePoll::Poll
-    class << self
-
-      def vote(post_id, poll_name, options, user)
-        Poll.transaction do
-          post = Post.find_by(id: post_id)
-
-          # post must not be deleted
-          if post.nil? || post.trashed?
-            raise StandardError.new I18n.t("poll.post_is_deleted")
-          end
-
-          # topic must not be archived
-          if post.topic&.archived
-            raise StandardError.new I18n.t("poll.topic_must_be_open_to_vote")
-          end
-
-          # user must be allowed to post in topic
-          guardian = Guardian.new(user)
-          if !guardian.can_create_post?(post.topic)
-            raise StandardError.new I18n.t("poll.user_cant_post_in_topic")
-          end
-
-          poll = Poll.includes(:poll_options).find_by(post_id: post_id, name: poll_name)
-
-          raise StandardError.new I18n.t("poll.no_poll_with_this_name", name: poll_name) unless poll
-          raise StandardError.new I18n.t("poll.poll_must_be_open_to_vote") if poll.is_closed?
-
-          if poll.groups
-            poll_groups = poll.groups.split(",").map(&:downcase)
-            user_groups = user.groups.map { |g| g.name.downcase }
-            if (poll_groups & user_groups).empty?
-              raise StandardError.new I18n.t("js.poll.results.groups.title", groups: poll.groups)
-            end
-          end
-
-          # remove options that aren't available in the poll
-          available_options = poll.poll_options.map { |o| o.digest }.to_set
-          options.select! { |o| available_options.include?(o) }
-
-          self.validate_votes!(poll, options)
-          raise StandardError.new I18n.t("poll.requires_at_least_1_valid_option") if options.empty?
-
-          new_option_ids = poll.poll_options.each_with_object([]) do |option, obj|
-            obj << option.id if options.include?(option.digest)
-          end
-
-          old_option_ids = poll.poll_options.each_with_object([]) do |option, obj|
-            if option.poll_votes.where(user_id: user.id).exists?
-              obj << option.id
-            end
-          end
-
-          # remove non-selected votes
-          PollVote
-            .where(poll: poll, user: user)
-            .where.not(poll_option_id: new_option_ids)
-            .delete_all
-
-          # create missing votes
-          (new_option_ids - old_option_ids).each do |option_id|
-            PollVote.create!(poll: poll, user: user, poll_option_id: option_id)
-          end
-
-          poll.reload
-
-          serialized_poll = PollSerializer.new(poll, root: false, scope: guardian).as_json
-          payload = { post_id: post_id, polls: [serialized_poll] }
-
-          post.publish_message!("/polls/#{post.topic_id}", payload)
-
-          [serialized_poll, options]
-        end
-      end
-
-      def validate_votes!(poll, options)
-        num_of_options = options.length
-
-        if poll.multiple?
-          if num_of_options < poll.min
-            raise StandardError.new(I18n.t(
-              "poll.min_vote_per_user",
-              count: poll.min
-            ))
-          elsif num_of_options > poll.max
-            raise StandardError.new(I18n.t(
-              "poll.max_vote_per_user",
-              count: poll.max
-            ))
-          end
-        elsif num_of_options > 1
-          raise StandardError.new(I18n.t("poll.one_vote_per_user"))
-        end
-      end
-
-      def toggle_status(post_id, poll_name, status, user, raise_errors = true)
-        Poll.transaction do
-          post = Post.find_by(id: post_id)
-          guardian = Guardian.new(user)
-
-          # post must not be deleted
-          if post.nil? || post.trashed?
-            raise StandardError.new I18n.t("poll.post_is_deleted") if raise_errors
-            return
-          end
-
-          # topic must not be archived
-          if post.topic&.archived
-            raise StandardError.new I18n.t("poll.topic_must_be_open_to_toggle_status") if raise_errors
-            return
-          end
-
-          # either staff member or OP
-          unless post.user_id == user&.id || user&.staff?
-            raise StandardError.new I18n.t("poll.only_staff_or_op_can_toggle_status") if raise_errors
-            return
-          end
-
-          poll = Poll.find_by(post_id: post_id, name: poll_name)
-
-          if !poll
-            raise StandardError.new I18n.t("poll.no_poll_with_this_name", name: poll_name) if raise_errors
-            return
-          end
-
-          poll.status = status
-          poll.save!
-
-          serialized_poll = PollSerializer.new(poll, root: false, scope: guardian).as_json
-          payload = { post_id: post_id, polls: [serialized_poll] }
-
-          post.publish_message!("/polls/#{post.topic_id}", payload)
-
-          serialized_poll
-        end
-      end
-
-      def serialized_voters(poll, opts = {})
-        limit = (opts["limit"] || 25).to_i
-        limit = 0  if limit < 0
-        limit = 50 if limit > 50
-
-        page = (opts["page"] || 1).to_i
-        page = 1 if page < 1
-
-        offset = (page - 1) * limit
-
-        option_digest = opts["option_id"].to_s
-
-        if poll.number?
-          user_ids = PollVote
-            .where(poll: poll)
-            .group(:user_id)
-            .order("MIN(created_at)")
-            .offset(offset)
-            .limit(limit)
-            .pluck(:user_id)
-
-          result = User.where(id: user_ids).map { |u| UserNameSerializer.new(u).serializable_hash }
-        elsif option_digest.present?
-          poll_option = PollOption.find_by(poll: poll, digest: option_digest)
-
-          raise Discourse::InvalidParameters.new(:option_id) unless poll_option
-
-          user_ids = PollVote
-            .where(poll: poll, poll_option: poll_option)
-            .group(:user_id)
-            .order("MIN(created_at)")
-            .offset(offset)
-            .limit(limit)
-            .pluck(:user_id)
-
-          user_hashes = User.where(id: user_ids).map { |u| UserNameSerializer.new(u).serializable_hash }
-
-          result = { option_digest => user_hashes }
-        else
-          votes = DB.query <<~SQL
-            SELECT digest, user_id
-              FROM (
-                SELECT digest
-                     , user_id
-                     , ROW_NUMBER() OVER (PARTITION BY poll_option_id ORDER BY pv.created_at) AS row
-                  FROM poll_votes pv
-                  JOIN poll_options po ON pv.poll_option_id = po.id
-                 WHERE pv.poll_id = #{poll.id}
-                   AND po.poll_id = #{poll.id}
-              ) v
-              WHERE row BETWEEN #{offset} AND #{offset + limit}
-          SQL
-
-          user_ids = votes.map(&:user_id).uniq
-
-          user_hashes = User
-            .where(id: user_ids)
-            .map { |u| [u.id, UserNameSerializer.new(u).serializable_hash] }
-            .to_h
-
-          result = {}
-          votes.each do |v|
-            result[v.digest] ||= []
-            result[v.digest] << user_hashes[v.user_id]
-          end
-        end
-
-        result
-      end
-
-      def voters(post_id, poll_name, user, opts = {})
-        post = Post.find_by(id: post_id)
-        raise Discourse::InvalidParameters.new(:post_id) unless post
-
-        poll = Poll.find_by(post_id: post_id, name: poll_name)
-        raise Discourse::InvalidParameters.new(:poll_name) unless poll&.can_see_voters?(user)
-
-        serialized_voters(poll, opts)
-      end
-
-      def transform_for_user_field_override(custom_user_field)
-        existing_field = UserField.find_by(name: custom_user_field)
-        existing_field ? "user_field_#{existing_field.id}" : custom_user_field
-      end
-
-      def grouped_poll_results(post_id, poll_name, user_field_name, user)
-        post = Post.find_by(id: post_id)
-        raise Discourse::InvalidParameters.new(:post_id) unless post
-
-        poll = Poll.includes(:poll_options).includes(:poll_votes).find_by(post_id: post_id, name: poll_name)
-        raise Discourse::InvalidParameters.new(:poll_name) unless poll
-
-        raise Discourse::InvalidParameters.new(:user_field_name) unless SiteSetting.poll_groupable_user_fields.split('|').include?(user_field_name)
-
-        poll_votes = poll.poll_votes
-
-        poll_options = {}
-        poll.poll_options.each do |option|
-          poll_options[option.id.to_s] = { html: option.html, digest: option.digest }
-        end
-
-        user_ids = poll_votes.map(&:user_id).uniq
-        user_fields = UserCustomField.where(user_id: user_ids, name: transform_for_user_field_override(user_field_name))
-
-        user_field_map = {}
-        user_fields.each do |f|
-          # Build hash, so we can quickly look up field values for each user.
-          user_field_map[f.user_id] = f.value
-        end
-
-        votes_with_field = poll_votes.map do |vote|
-          v = vote.attributes
-          v[:field_value] = user_field_map[vote.user_id]
-          v
-        end
-
-        chart_data = []
-        votes_with_field.group_by { |vote| vote[:field_value] }.each do |field_answer, votes|
-          grouped_selected_options = {}
-
-          # Create all the options with 0 votes. This ensures all the charts will have the same order of options, and same colors per option.
-          poll_options.each do |id, option|
-            grouped_selected_options[id] = {
-              digest: option[:digest],
-              html: option[:html],
-              votes: 0
-            }
-          end
-
-          # Now go back and update the vote counts. Using hashes so we dont have n^2
-          votes.group_by { |v| v["poll_option_id"] }.each do |option_id, votes_for_option|
-            grouped_selected_options[option_id.to_s][:votes] = votes_for_option.length
-          end
-
-          group_label = field_answer ? field_answer.titleize : I18n.t("poll.user_field.no_data")
-          chart_data << { group: group_label, options: grouped_selected_options.values }
-        end
-        chart_data
-      end
-
-      def schedule_jobs(post)
-        Poll.where(post: post).find_each do |poll|
-          job_args = {
-            post_id: post.id,
-            poll_name: poll.name
-          }
-
-          Jobs.cancel_scheduled_job(:close_poll, job_args)
-
-          if poll.open? && poll.close_at && poll.close_at > Time.zone.now
-            Jobs.enqueue_at(poll.close_at, :close_poll, job_args)
-          end
-        end
-      end
-
-      def create!(post_id, poll)
-        close_at = begin
-          Time.zone.parse(poll["close"] || '')
-        rescue ArgumentError
-        end
-
-        created_poll = Poll.create!(
-          post_id: post_id,
-          name: poll["name"].presence || "poll",
-          close_at: close_at,
-          type: poll["type"].presence || "regular",
-          status: poll["status"].presence || "open",
-          visibility: poll["public"] == "true" ? "everyone" : "secret",
-          title: poll["title"],
-          results: poll["results"].presence || "always",
-          min: poll["min"],
-          max: poll["max"],
-          step: poll["step"],
-          chart_type: poll["charttype"] || "bar",
-          groups: poll["groups"]
-        )
-
-        poll["options"].each do |option|
-          PollOption.create!(
-            poll: created_poll,
-            digest: option["id"].presence,
-            html: option["html"].presence&.strip
-          )
-        end
-      end
-
-      def extract(raw, topic_id, user_id = nil)
-        # TODO: we should fix the callback mess so that the cooked version is available
-        # in the validators instead of cooking twice
-        cooked = PrettyText.cook(raw, topic_id: topic_id, user_id: user_id)
-
-        Nokogiri::HTML5(cooked).css("div.poll").map do |p|
-          poll = { "options" => [], "name" => DiscoursePoll::DEFAULT_POLL_NAME }
-
-          # attributes
-          p.attributes.values.each do |attribute|
-            if attribute.name.start_with?(DATA_PREFIX)
-              poll[attribute.name[DATA_PREFIX.length..-1]] = CGI.escapeHTML(attribute.value || "")
-            end
-          end
-
-          # options
-          p.css("li[#{DATA_PREFIX}option-id]").each do |o|
-            option_id = o.attributes[DATA_PREFIX + "option-id"].value.to_s
-            poll["options"] << { "id" => option_id, "html" => o.inner_html.strip }
-          end
-
-          # title
-          title_element = p.css(".poll-title").first
-          if title_element
-            poll["title"] = title_element.inner_html.strip
-          end
-
-          poll
-        end
-      end
-    end
-  end
-
-  class DiscoursePoll::PollsController < ::ApplicationController
-    requires_plugin PLUGIN_NAME
-
-    before_action :ensure_logged_in, except: [:voters, :grouped_poll_results]
-
-    def vote
-      post_id   = params.require(:post_id)
-      poll_name = params.require(:poll_name)
-      options   = params.require(:options)
-
-      begin
-        poll, options = DiscoursePoll::Poll.vote(post_id, poll_name, options, current_user)
-        render json: { poll: poll, vote: options }
-      rescue StandardError => e
-        render_json_error e.message
-      end
-    end
-
-    def toggle_status
-      post_id   = params.require(:post_id)
-      poll_name = params.require(:poll_name)
-      status    = params.require(:status)
-
-      begin
-        poll = DiscoursePoll::Poll.toggle_status(post_id, poll_name, status, current_user)
-        render json: { poll: poll }
-      rescue StandardError => e
-        render_json_error e.message
-      end
-    end
-
-    def voters
-      post_id   = params.require(:post_id)
-      poll_name = params.require(:poll_name)
-
-      opts = params.permit(:limit, :page, :option_id)
-
-      begin
-        render json: { voters: DiscoursePoll::Poll.voters(post_id, poll_name, current_user, opts) }
-      rescue StandardError => e
-        render_json_error e.message
-      end
-    end
-
-    def grouped_poll_results
-      post_id   = params.require(:post_id)
-      poll_name = params.require(:poll_name)
-      user_field_name = params.require(:user_field_name)
-
-      begin
-        render json: {
-          grouped_results: DiscoursePoll::Poll.grouped_poll_results(post_id, poll_name, user_field_name, current_user)
-        }
-      rescue StandardError => e
-        render_json_error e.message
-      end
-    end
-
-    def groupable_user_fields
-      render json: {
-        fields: SiteSetting.poll_groupable_user_fields.split('|').map do |field|
-          { name: field.humanize.capitalize, value: field }
-        end
-      }
-    end
-  end
+  require_relative "app/controllers/polls_controller.rb"
+  require_relative "app/models/poll_option.rb"
+  require_relative "app/models/poll_vote.rb"
+  require_relative "app/models/poll.rb"
+  require_relative "app/serializers/poll_option_serializer.rb"
+  require_relative "app/serializers/poll_serializer.rb"
+  require_relative "jobs/regular/close_poll.rb"
+  require_relative "lib/poll.rb"
+  require_relative "lib/polls_updater.rb"
+  require_relative "lib/polls_validator.rb"
+  require_relative "lib/post_validator.rb"
 
   DiscoursePoll::Engine.routes.draw do
     put "/vote" => "polls#vote"
+    delete "/vote" => "polls#remove_vote"
     put "/toggle_status" => "polls#toggle_status"
     get "/voters" => 'polls#voters'
     get "/grouped_poll_results" => 'polls#grouped_poll_results'
-    get "/groupable_user_fields" => 'polls#groupable_user_fields'
   end
 
   Discourse::Application.routes.append do
     mount ::DiscoursePoll::Engine, at: "/polls"
   end
+
+  allow_new_queued_post_payload_attribute("is_poll")
+  register_post_custom_field_type(DiscoursePoll::HAS_POLLS, :boolean)
+  topic_view_post_custom_fields_allowlister { [DiscoursePoll::HAS_POLLS] }
 
   reloadable_patch do
     Post.class_eval do
@@ -488,6 +70,7 @@ after_initialize do
 
       after_save do
         polls = self.extracted_polls
+        self.extracted_polls = nil
         next if polls.blank? || !polls.is_a?(Hash)
         post = self
 
@@ -527,8 +110,6 @@ after_initialize do
     true
   end
 
-  allow_new_queued_post_payload_attribute("is_poll")
-
   NewPostManager.add_handler(1) do |manager|
     post = Post.new(raw: manager.args[:raw])
 
@@ -536,7 +117,7 @@ after_initialize do
       result = NewPostResult.new(:poll, false)
 
       post.errors.full_messages.each do |message|
-        result.errors[:base] << message
+        result.add_error(message)
       end
 
       result
@@ -579,19 +160,16 @@ after_initialize do
     guardian = Guardian.new(user)
     DiscoursePoll::Poll.schedule_jobs(post)
 
-    unless post.is_first_post?
-      polls = ActiveModel::ArraySerializer.new(post.polls, each_serializer: PollSerializer, root: false, scope: guardian).as_json
-      post.publish_message!("/polls/#{post.topic_id}", post_id: post.id, polls: polls)
-    end
+    next if post.is_first_post?
+    next if post.custom_fields[DiscoursePoll::HAS_POLLS].blank?
+
+    polls = ActiveModel::ArraySerializer.new(post.polls, each_serializer: PollSerializer, root: false, scope: guardian).as_json
+    post.publish_message!("/polls/#{post.topic_id}", post_id: post.id, polls: polls)
   end
 
   on(:merging_users) do |source_user, target_user|
     PollVote.where(user_id: source_user.id).update_all(user_id: target_user.id)
   end
-
-  register_post_custom_field_type(DiscoursePoll::HAS_POLLS, :boolean)
-
-  topic_view_post_custom_fields_allowlister { [DiscoursePoll::HAS_POLLS] }
 
   add_to_class(:topic_view, :polls) do
     @polls ||= begin

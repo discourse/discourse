@@ -56,17 +56,6 @@ RSpec.describe Users::AssociateAccountsController do
       expect(data["provider_name"]).to eq("google_oauth2")
       expect(data["account_description"]).to eq("someemail@test.com")
 
-      # Request as different user, should not work
-      sign_in(user2)
-      get "#{uri.path}.json"
-      expect(response.status).to eq(404)
-
-      # Back to first user
-      sign_in(user)
-      get "#{uri.path}.json"
-      data = response.parsed_body
-      expect(data["provider_name"]).to eq("google_oauth2")
-
       # Make the connection
       events = DiscourseEvent.track_events { post "#{uri.path}.json" }
       expect(events.any? { |e| e[:event_name] == :before_auth }).to eq(true)
@@ -80,12 +69,46 @@ RSpec.describe Users::AssociateAccountsController do
       expect(response.status).to eq(404)
     end
 
-    it "returns the correct response for non-existant tokens" do
+    it 'should only work within the current session' do
+      sign_in(user)
+
+      post "/auth/google_oauth2?reconnect=true"
+      expect(response.status).to eq(302)
+      expect(session[:auth_reconnect]).to eq(true)
+
+      OmniAuth.config.mock_auth[:google_oauth2].uid = "123456"
+      get "/auth/google_oauth2/callback.json"
+      expect(response.status).to eq(302)
+
+      expect(session[:current_user_id]).to eq(user.id) # Still logged in
+      expect(UserAssociatedAccount.count).to eq(0) # Reconnect has not yet happened
+
+      uri = URI.parse(response.redirect_url)
+      get "#{uri.path}.json"
+      data = response.parsed_body
+      expect(data["provider_name"]).to eq("google_oauth2")
+      expect(data["account_description"]).to eq("someemail@test.com")
+
+      cookies.delete "_forum_session"
+
+      get "#{uri.path}.json"
+      expect(response.status).to eq(404)
+    end
+
+    it "returns the correct response for non-existent tokens" do
+      sign_in(user)
+
       get "/associate/12345678901234567890123456789012.json"
       expect(response.status).to eq(404)
 
       get "/associate/shorttoken.json"
       expect(response.status).to eq(404)
+    end
+
+    it "requires login" do
+      # XHR should 403
+      get "/associate/#{SecureRandom.hex}.json"
+      expect(response.status).to eq(403)
     end
   end
 end

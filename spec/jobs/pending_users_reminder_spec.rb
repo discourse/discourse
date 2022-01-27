@@ -21,29 +21,30 @@ describe Jobs::PendingUsersReminder do
         Group.refresh_automatic_group!(:moderators)
       end
 
-      it "sends a message if user was created more than pending_users_reminder_delay hours ago" do
-        SiteSetting.pending_users_reminder_delay = 8
-        Fabricate(:user, created_at: 9.hours.ago)
+      it "sends a message if user was created more than pending_users_reminder_delay minutes ago" do
+        SiteSetting.pending_users_reminder_delay_minutes = 8
+        Fabricate(:user, created_at: 9.minutes.ago)
         PostCreator.expects(:create).once
         Jobs::PendingUsersReminder.new.execute({})
       end
 
-      it "doesn't send a message if user was created less than pending_users_reminder_delay hours ago" do
-        SiteSetting.pending_users_reminder_delay = 8
-        Fabricate(:user, created_at: 2.hours.ago)
+      it "doesn't send a message if user was created less than pending_users_reminder_delay minutes ago" do
+        SiteSetting.pending_users_reminder_delay_minutes = 8
+        Fabricate(:user, created_at: 2.minutes.ago)
         PostCreator.expects(:create).never
         Jobs::PendingUsersReminder.new.execute({})
       end
 
       it "doesn't send a message if pending_users_reminder_delay is -1" do
-        SiteSetting.pending_users_reminder_delay = -1
+        SiteSetting.pending_users_reminder_delay_minutes = -1
+        Fabricate(:user, created_at: 24.hours.ago)
         PostCreator.expects(:create).never
         Jobs::PendingUsersReminder.new.execute({})
       end
 
       it "sets the correct pending user count in the notification" do
-        SiteSetting.pending_users_reminder_delay = 8
-        Fabricate(:user, created_at: 9.hours.ago)
+        SiteSetting.pending_users_reminder_delay_minutes = 8
+        Fabricate(:user, created_at: 9.minutes.ago)
         PostCreator.expects(:create).with(Discourse.system_user, has_entries(title: '1 user waiting for approval'))
         Jobs::PendingUsersReminder.new.execute({})
       end

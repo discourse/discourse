@@ -28,6 +28,7 @@ id:
       time_with_zone: "HH:mm (z)"
       time_short_day: "ddd, HH: mm"
       timeline_date: "MMM YYYY"
+      long_no_year: "MMM D, j:mm a"
       long_no_year_no_time: "MMM D"
       full_no_year_no_time: "MMMM Do"
       long_with_year: "MMM D, YYYY h:mm a"
@@ -39,6 +40,7 @@ id:
       long_date_without_year_with_linebreak: "MMM D <br/>LT"
       long_date_with_year_with_linebreak: "MMM D, 'YY <br/>LT"
       wrap_ago: "%{date} yang lalu"
+      wrap_on: "pada %{date}"
       tiny:
         half_a_minute: "< 1m"
         less_than_x_seconds:
@@ -92,6 +94,8 @@ id:
       previous_month: "Bulan Lalu"
       next_month: "Bulan Depan"
       placeholder: tanggal
+      from_placeholder: "dari tanggal"
+      to_placeholder: "sampai saat ini"
     share:
       topic_html: 'Topik: <span class="topic-title">%{topicTitle}</span>'
       post: "post #%{postNumber}"
@@ -133,9 +137,11 @@ id:
         disabled: "Hilangkan spanduk ini %{when}. Spanduk tidak akan lagi tampil pada bagian teratas di tiap halaman."
       forwarded: "meneruskan email di atas"
     topic_admin_menu: "tindakan topik"
+    skip_to_main_content: "Lewati ke konten utama"
     wizard_required: "Selamat datang di Discourse baru Anda! Mari kita mulai dengan <a href='%{url}' data-auto-route='true'>wizard pengaturan</a> ✨"
     emails_are_disabled: "Semua surel yang keluar telah dinonaktifkan oleh administrator. Tidak ada pemberitahuan email yang akan dikirimkan."
     software_update_prompt:
+      message: "Kami telah memperbarui situs ini, <span>silakan refresh</span>, atau Anda mungkin mengalami perilaku yang tidak terduga."
       dismiss: "Bubar"
     bootstrap_mode_enabled:
       other: "Untuk lebih memudahkan peluncuran situs baru Anda, Anda berada di mode bootstrap. Semua pengguna baru akan mendapat level 1 dan mendapat ringkasan email harian diaktifkan. Hal ini akan otomatis dimatikan ketika pengguna %{count} sudah ikut."
@@ -147,6 +153,7 @@ id:
       regions:
         ap_northeast_1: "Asia Pacific (Tokyo)"
         ap_northeast_2: "Asia Pacific (Seoul)"
+        ap_east_1: "Asia Pasifik (Hong Kong)"
         ap_south_1: "Asia Pasifik (Mumbai)"
         ap_southeast_1: "Asia Pacific (Singapore)"
         ap_southeast_2: "Asia Pacific (Sydney)"
@@ -155,6 +162,7 @@ id:
         cn_northwest_1: "Cina (Ningxia)"
         eu_central_1: "EU (Frankfurt)"
         eu_north_1: "EU (Stockholm)"
+        eu_south_1: "Uni Eropa (Milan)"
         eu_west_1: "EU (Ireland)"
         eu_west_2: "Eropa (London)"
         eu_west_3: "EU (Paris)"
@@ -165,6 +173,7 @@ id:
         us_gov_west_1: "AWS GovCloud (US-West)"
         us_west_1: "US West (N. California)"
         us_west_2: "US West (Oregon)"
+    clear_input: "Hapus masukan"
     edit: "Ubah judul dan kategori topik ini"
     expand: "Perluas"
     not_implemented: "Maaf, fitur ini belum diimplementasikan."
@@ -173,7 +182,6 @@ id:
     submit: "Kirimkan"
     generic_error: "Maaf, terjadi kesalahan."
     generic_error_with_reason: "Terjadi kesalahan: %{error}"
-    go_ahead: "Lanjutkan"
     sign_up: "Daftar"
     log_in: "Masuk"
     age: "Umur"
@@ -193,12 +201,10 @@ id:
     conduct: "Kode Etik"
     mobile_view: "Tampilan Mobile"
     desktop_view: "Tampilan Desktop"
-    you: "Anda"
     or: "atau"
     now: "baru saja"
     read_more: "baca selengkapnya"
     more: "Selengkapnya"
-    less: "Lebih Singkat"
     never: "tidak pernah"
     every_30_minutes: "setiap 30 menit"
     every_hour: "setiap jam"
@@ -207,9 +213,10 @@ id:
     every_month: "setiap bulan"
     every_six_months: "setiap enam bulan"
     max_of_count: "maksimal dari %{count}"
-    alternation: "atau"
     character_count:
       other: "%{count} karakter"
+    period_chooser:
+      aria_label: "Filter berdasarkan periode"
     related_messages:
       title: "Pesan Terkait"
       see_all: 'Lihat <a href="%{path}">semua pesan</a> dari @ %{username} ...'
@@ -225,6 +232,9 @@ id:
       moderators: "Moderator"
       stat:
         all_time: "Sepanjang Waktu"
+        last_day: "24 jam terakhir"
+        last_7_days: "7 hari terakhir"
+        last_30_days: "30 hari terakhir"
       like_count: "Suka"
       topic_count: "Topik"
       post_count: "Pos"
@@ -234,6 +244,7 @@ id:
       contact_info: "Pada kegiatan dari sebuah isu kritikal atau penting terjadi pada situs ini, silahkan kontak kami di %{contact_info}."
     bookmarked:
       title: "Penandaan"
+      edit_bookmark: "Edit Bookmark"
       clear_bookmarks: "Bersihkan Penandaan"
       help:
         bookmark: "Klik untuk membuat penandaan pos pertama di topik ini"
@@ -241,6 +252,7 @@ id:
     bookmarks:
       not_bookmarked: "tandai pos ini"
       remove: "Hilangkan penandaan"
+      delete: "Hapus Bookmark"
       confirm_clear: "Yakin ingin menghapus semua penandaan Anda dari topik ini?"
       save: "Simpan"
       no_timezone: 'Anda belum menetapkan zona waktu. Anda tidak akan dapat mengatur pengingat. Tetapkan satu <a href="%{basePath}/my/preferences/profile">di profil Anda</a> .'
@@ -256,12 +268,19 @@ id:
     copy_codeblock:
       copied: "disalin!"
     drafts:
+      label: "Konsep"
       resume: "Lanjut"
       remove: "Hapus"
       new_topic: "Konsep topik baru"
-      new_private_message: "Konsep pesan pribadi baru"
       topic_reply: "Balasan konsep"
+      abandon:
+        yes_value: "Batalkan"
+        no_value: "Lanjut menyunting"
+    topic_count_categories:
+      other: "Lihat %{count} topik baru atau diperbarui"
     topic_count_latest:
+      other: "Lihat %{count} topik baru atau diperbarui"
+    topic_count_unseen:
       other: "Lihat %{count} topik baru atau diperbarui"
     topic_count_unread:
       other: "Lihat %{count} topik belum dibaca"
@@ -276,6 +295,7 @@ id:
     upload: "Unggah"
     uploading: "Mengunggah..."
     uploading_filename: "Sedang mengunggah %{filename}..."
+    processing_filename: "Memproses: %{filename}..."
     clipboard: "clipboard"
     uploaded: "Sudah Diunggah!"
     pasting: "Menempelkan..."
@@ -304,6 +324,7 @@ id:
         placeholder: "ketikkan judul pesan, url atau id di sini"
     review:
       order_by: "Urutkan berdasarkan"
+      date_filter: "Diposting antara"
       in_reply_to: "sebagai balasan"
       explain:
         formula: "Rumus"
@@ -389,6 +410,7 @@ id:
         priority:
           title: "Prioritas Minimum"
           any: "(apa saja)"
+          low: "Rendah"
           medium: "Sedang"
           high: "Tinggi"
       conversation:
@@ -425,6 +447,8 @@ id:
           title: "Tulisan Antre"
         reviewable_user:
           title: "Pengguna"
+        reviewable_post:
+          title: "Postingan"
       approval:
         title: "Pesan Membutuhkan Persetujuan"
         description: "Kami telah menerima posting baru Anda, tetapi diperlukan persetujuan dari moderator sebelum posting tersebut tampil. Mohon kesabarannya. Terima kasih!"
@@ -432,15 +456,34 @@ id:
           other: "Anda memiliki <strong>%{count}</strong> pos sedang menunggu."
         ok: "OK"
       example_username: "username"
+      reject_reason:
+        title: "Mengapa Anda menolak pengguna ini?"
+        send_email: "Kirim surel penolakan"
+    relative_time_picker:
+      minutes:
+        other: "menit"
+      hours:
+        other: "jam"
+      days:
+        other: "hari"
+      months:
+        other: "bulan"
+      years:
+        other: "tahun"
+      relative: "Relatif"
     time_shortcut:
       later_today: "Nanti hari ini"
       next_business_day: "Hari kerja berikutnya"
       tomorrow: "Besok"
-      next_week: "Minggu depan"
+      later_this_week: "Nanti pekan ini"
+      this_weekend: "Akhir pekan ini"
       start_of_next_business_week: "Senin"
       start_of_next_business_week_alt: "Senin Depan"
+      two_weeks: "Dua pekan"
       next_month: "Bulan depan"
+      six_months: "Enam bulan"
       custom: "Tanggal dan waktu tersuai"
+      none: "Tidak dibutuhkan"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> memposting <a href='%{topicUrl}'>topik</a>"
       you_posted_topic: "<a href='%{userUrl}'>Anda</a> memposting <a href='%{topicUrl}'>the topic</a>"
@@ -476,6 +519,10 @@ id:
       last_updated: "Terakhir Diperbarui:"
       total_rows:
         other: "%{count} pengguna"
+      edit_columns:
+        save: "Simpan"
+      group:
+        all: "semua grup"
     group_histories:
       actions:
         change_group_setting: "Ubah pengaturan grup"
@@ -487,7 +534,8 @@ id:
       member_added: "Ditambahkan"
       member_requested: "Diminta pada"
       add_members:
-        title: "Tambahkan anggota ke %{group_name}"
+        usernames_placeholder: "nama Pengguna"
+        usernames_or_emails_placeholder: "nama pengguna atau email"
         notify_users: "Beritahu pengguna"
       requests:
         title: "Permintaan"
@@ -500,7 +548,8 @@ id:
         title: "Mengelola"
         name: "Nama"
         full_name: "Nama Lengkap"
-        add_members: "Menambahkan Anggota"
+        add_members: "Tambahkan pengguna"
+        invite_members: "Undang"
         delete_member_confirm: "Hapus '%{username}' dari grup '%{group}'?"
         profile:
           title: Profil
@@ -510,24 +559,41 @@ id:
           notification: Pemberitahuan
         email:
           title: "Email"
+          enable_smtp: "Aktifkan SMTP"
+          enable_imap: "Aktifkan IMAP"
+          save_settings: "Simpan Pengaturan"
+          last_updated: "Terakhir diperbarui:"
+          last_updated_by: "oleh"
+          smtp_settings_valid: "Pengaturan SMTP valid."
+          smtp_title: "SMTP"
+          imap_title: "IMAP"
+          imap_additional_settings: "Pengaturan Tambahan"
+          imap_settings_valid: "Pengaturan IMAP valid."
+          prefill:
+            gmail: "GMail"
           credentials:
+            title: "Kredensial"
             smtp_server: "Server SMTP"
             smtp_port: "Port SMTP"
+            smtp_ssl: "Gunakan SSL untuk SMTP"
             imap_server: "Server IMAP"
             imap_port: "Port IMAP"
+            imap_ssl: "Gunakan SSL untuk IMAP"
             username: "Nama Pengguna"
             password: "Kata Sandi"
           settings:
             title: "Pengaturan"
           mailboxes:
-            disabled: "dinonaktifkan"
+            disabled: "Dinonaktifkan"
         membership:
           title: Keanggotaan
           access: Mengakses
         categories:
           title: Kategori
+          long_title: "Notifikasi default kategori"
         tags:
           title: Label
+          long_title: "Notifikasi default tag"
         logs:
           title: "Log"
           when: "Ketika"
@@ -537,6 +603,8 @@ id:
           details: "Detil"
           from: "Dari"
           to: "Kepada"
+      permissions:
+        title: "Izin"
       public_admission: "Izinkan pengguna untuk bergabung dengan grup secara bebas (Membutuhkan grup yang dapat dilihat oleh umum)"
       public_exit: "Izinkan pengguna untuk meninggalkan grup dengan bebas"
       empty:
@@ -578,8 +646,6 @@ id:
         public: "Umum"
         private: "Pribadi"
         public_groups: "Grup Umum"
-        automatic_group: Grup Otomatis
-        close_group: Tutup Grup
         my_groups: "Grupku"
         group_type: "Tipe Grup"
         is_group_user: "Anggota"
@@ -597,8 +663,18 @@ id:
         make_owner_description: "Jadikan <b>%{username}</b> sebagai pemilik grup ini"
         remove_owner: "Hapus sebagai Pemilik"
         remove_owner_description: "Hapus <b>%{username}</b> sebagai pemilik grup ini"
+        remove_primary: "Hapus sebagai Utama"
+        remove_members: "Hapus Anggota"
+        remove_members_description: "Hapus pengguna yang dipilih dari grup ini"
+        make_owners: "Jadikan Pemilik"
+        remove_owners: "Hapus Pemilik"
+        make_all_primary: "Jadikan Semua Utama"
+        remove_all_primary: "Hapus sebagai Utama"
+        remove_all_primary_description: "Hapus grup ini sebagai utama"
         owner: "Pemilik"
+        primary: "Utama"
         forbidden: "Anda tidak diizinkan melihat anggota."
+        no_filter_matches: "Tidak ada anggota yang cocok dengan pencarian itu."
       topics: "Topik-topik"
       posts: "Pos"
       mentions: "Balasan-balasan"
@@ -633,6 +709,8 @@ id:
       flair_color_placeholder: "(Opsional) Nilai warna dalam Hex"
       flair_preview_icon: "Pratinjau Ikon"
       flair_preview_image: "Pratinjau Gambar"
+      default_notifications:
+        modal_yes: "Ya"
     user_action_groups:
       "1": "Likes Diberikan"
       "2": "Likes Diterima"
@@ -662,7 +740,6 @@ id:
       posts: "Post"
       topics: "Topik"
       latest: "Terbaru"
-      toggle_ordering: "beralih memesan kontrol"
       subcategories: "Subkategori"
       topic_sentence:
         other: "%{count} topik"
@@ -706,23 +783,36 @@ id:
       private_messages: "Messages"
       user_notifications:
         filters:
+          filter_by: "Filter Menurut"
           all: "Semua"
           read: "Dibaca"
           unread: "Belum dibaca"
+        ignore_duration_title: "Abaikan Pengguna"
         ignore_duration_username: "Nama Pengguna"
         ignore_duration_when: "Durasi:"
         ignore_duration_save: "Abaikan"
+        ignore_duration_time_frame_required: "Silakan pilih kerangka waktu"
         ignore_no_users: "Anda tidak memiliki pengguna yang diabaikan."
         ignore_option: "Diabaikan"
         add_ignored_user: "Tambahkan..."
         mute_option: "Bisukan"
         normal_option: "normal"
       notification_schedule:
+        title: "Jadwal Notifikasi"
+        label: "Aktifkan jadwal notifikasi khusus"
+        midnight: "Tengah malam"
         none: "Tidak ada"
         monday: "Senin"
+        tuesday: "Selasa"
+        wednesday: "Rabu"
+        thursday: "Kamis"
+        friday: "Jumat"
+        saturday: "Sabtu"
+        sunday: "Minggu"
         to: "kepada"
       activity_stream: "Activity"
       read: "baca"
+      read_help: "Topik yang baru saja dibaca"
       preferences: "Preferensi"
       feature_topic_on_profile:
         open_search: "Pilih Topik Baru"
@@ -732,6 +822,7 @@ id:
         clear:
           title: "Bersihkan"
           warning: "Yakin ingin menghapus topik unggulan Anda?"
+      use_current_timezone: "Gunakan Zona Waktu Saat Ini"
       profile_hidden: "Profil publik pengguna ini disembunyikan."
       expand_profile: "Perluas"
       collapse_profile: "Persempit"
@@ -754,7 +845,23 @@ id:
       dismiss_notifications: "Bubarkan Semua"
       dismiss_notifications_tooltip: "Tandai semua notifikasi belum dibaca telah dibaca"
       first_notification: "Notifikasi pertama Anda! Pilih untuk memulai."
+      skip_new_user_tips:
+        not_first_time: "Bukan pertama kali?"
+        skip_link: "Lewati tips ini"
+        read_later: "Aku akan membacanya nanti."
       theme_default_on_all_devices: "Jadikan ini tema default di semua perangkat saya"
+      color_scheme_default_on_all_devices: "Setel skema warna default di semua perangkat saya"
+      color_scheme: "Skema warna"
+      color_schemes:
+        default_description: "Default tema"
+        disable_dark_scheme: "Sama seperti reguler"
+        dark_instructions: "Anda dapat melihat pratinjau skema warna mode gelap dengan mengaktifkan mode gelap perangkat Anda."
+        undo: "Reset"
+        regular: "Umum"
+        dark: "Mode gelap"
+        default_dark_scheme: "(bawaan situs)"
+      dark_mode: "Mode Gelap"
+      dark_mode_enable: "Aktifkan skema warna mode gelap otomatis"
       text_size_default_on_all_devices: "Jadikan ini ukuran teks default di semua perangkat saya"
       allow_private_messages: "Izinkan pengguna lain mengirimi saya pesan pribadi"
       external_links_in_new_tab: "Buka semua link eksternal ke dalam tab baru"
@@ -814,16 +921,18 @@ id:
         suspensions: "penangguhan"
         warnings_received: "peringatan"
       messages:
-        all: "Semua"
         inbox: "Kotak Masuk"
+        latest: "Terbaru"
         sent: "Mengirim"
+        unread: "Belum dibaca"
+        new: "Baru"
+        new_with_count:
+          other: "Baru (%{count})"
         archive: "Arsip"
         groups: "Kelompok Saya"
-        bulk_select: "Pilih Pesan"
         move_to_inbox: "Pindah ke Kotak Masuk"
         move_to_archive: "Arsip"
         failed_to_move: "Gagal memindahkan pesan terpilih (mungkin internet kamu putus ?)"
-        select_all: "Pilih Semua"
         tags: "Label"
       preferences_nav:
         account: "Akun"
@@ -934,7 +1043,6 @@ id:
         not_you: "Bukan Anda?"
         secure_account: "Amankan Akun saya"
       last_posted: "Tulisan Terakhir"
-      last_emailed: "Terakhir Surel Dikirimkan"
       last_seen: "Seen"
       created: "Joined"
       log_out: "Keluar"
@@ -966,7 +1074,6 @@ id:
         always: "selalu"
         only_when_away: "hanya ketika pergi"
         never: "tidak pernah"
-      email_messages_level: "Kirimkan saya surel bila seseorang mengirimkan pesan kepada saya"
       other_settings: "Lainnya"
       categories_settings: "Kategori"
       new_topic_duration:
@@ -1060,6 +1167,8 @@ id:
         title: "Gambar Profil"
       title:
         title: "Judul"
+        none: "(kosong)"
+      flair:
         none: "(kosong)"
       primary_group:
         none: "(kosong)"
@@ -1208,6 +1317,7 @@ id:
       topic_count:
         other: "%{count} topik dalam kategori ini"
     select_kit:
+      delete_item: "Hapus %{name}"
       default_header_text: Pilih...
       no_content: Tidak ditemukan yang cocok
       filter_placeholder: Cari...
@@ -1250,7 +1360,6 @@ id:
       create_pm: "Pesan"
       create_shared_draft: "Buat Konsep Bersama"
       edit_shared_draft: "Sunting Konsep Bersama"
-      title: "Atau tekan Ctrl+Enter"
       users_placeholder: "Tambahkan pengguna"
       title_placeholder: "Tentang apa diskusi ini dalam satu kalimat pendek?"
       title_or_link_placeholder: "Ketik judul, atau tempel tautan disini"
@@ -1312,6 +1421,9 @@ id:
         other: "menyukai %{count} dari tulisan Anda"
       invitee_accepted: "<span>%{username}</span> menerima undangan Anda"
       granted_badge: "Mendapatkan &#39;%{description}&#39;"
+      dismiss_confirmation:
+        dismiss: "Bubar"
+        cancel: "Batal"
       titles:
         mentioned: "disebut"
         replied: "balasan baru"
@@ -1325,20 +1437,21 @@ id:
         post_approved: "tulisan disetujui"
         membership_request_consolidated: "permintaan keanggotaan baru"
     upload_selector:
-      title: "Tambahkan gambar"
-      title_with_attachments: "Tambahkan gambar atau berkas"
-      from_my_computer: "Dari perangkat saya"
-      from_the_web: "Dari web"
       uploading: "Mengunggah"
       select_file: "Pilih Berkas"
       default_image_alt_text: gambar
     search:
       most_liked: "Paling Disukai"
       select_all: "Pilih Semua"
-      title: "mencari topik, artikel, pengguna, atau kategori"
-      full_page_title: "cari topik atau artikel"
+      title: "Cari"
+      full_page_title: "Cari"
       search_google_button: "Google"
       search_button: "Cari"
+      categories: "Kategori"
+      tags: "Label"
+      type:
+        users: "Pengguna"
+        categories: "Kategori"
       advanced:
         posted_by:
           label: Dibuat oleh
@@ -1351,7 +1464,6 @@ id:
         select_all: "Pilih Semua"
         dismiss: "Bubar"
         move_messages_to_inbox: "Pindah ke Kotak Masuk"
-        notification_level: "Pemberitahuan"
         choose_new_tags: "Silahkan pilih tag baru untuk topik-topik ini:"
       none:
         new: "Anda tidak memiliki topik baru"
@@ -1378,8 +1490,6 @@ id:
         title: "Gagal membuka topik"
       not_found:
         title: "Tidak ada topik"
-      new_posts:
-        other: "ada %{count} posting baru di topik ini sejak terakhir Anda mengunjunginya"
       back_to_list: "Kembali ke Daftar Topik"
       options: "Opsi Topik"
       show_links: "tampilkan pranala dalam topik ini"
@@ -1387,15 +1497,20 @@ id:
       view_latest_topics: lihat topik terbaru
       jump_reply_up: lompat ke balasan sebelumnya
       slow_mode_update:
-        save: "Aktifkan"
+        enable: "Aktifkan"
         remove: "Nonaktifkan"
       topic_status_update:
         when: "Ketika:"
+        duration: "Durasi"
       auto_update_input:
         later_today: "Nanti hari ini"
         tomorrow: "Besok"
+        later_this_week: "Nanti pekan ini"
+        this_weekend: "Akhir pekan ini"
         next_week: "Minggu depan"
+        two_weeks: "Dua pekan"
         next_month: "Bulan depan"
+        six_months: "Enam bulan"
       progress:
         jump_prompt_or: "atau"
       notifications:
@@ -1449,6 +1564,7 @@ id:
       change_owner:
         placeholder: "username pemilik yang baru"
     post:
+      quote_edit: "Ubah"
       edit_reason: "Alasan:"
       collapse: "persempit"
       expand_collapse: "perluas/tutup"
@@ -1457,6 +1573,8 @@ id:
       errors:
         image_upload_not_allowed_for_new_user: "Maaf, pengguna baru belum diperbolehkan mengunggah gambar."
         attachment_upload_not_allowed_for_new_user: "Maaf, pengguna baru belum diperbolehkan mengunggah lampiran."
+      cancel_composer:
+        discard: "Batalkan"
       controls:
         edit_action: "Ubah"
         more: "Selengkapnya"
@@ -1466,6 +1584,7 @@ id:
       bookmarks:
         created: "Dibuat"
         name: "Nama"
+        options: "Pilihan"
     category:
       edit: "Ubah"
       settings: "Pengaturan"
@@ -1514,6 +1633,9 @@ id:
       locked_and_archived:
         help: "Topik ini telah ditutup dan diarsip; tidak lagi menerima jawaban baru dan tidak dapat dirubah lagi"
     posts: "Pos"
+    pending_posts:
+      label: "Tertunda"
+      label_with_count: "Tertunda (%{count})"
     replies: "Balasan"
     activity: "Aktifitas"
     likes: "Suka"
@@ -1595,6 +1717,7 @@ id:
         muted:
           title: "Bisukan"
       groups:
+        name_placeholder: "Nama"
         save: "Simpan"
         delete: "Hapus"
       topics:
@@ -1602,6 +1725,13 @@ id:
           new: "Anda tidak memiliki topik baru"
     footer_nav:
       dismiss: "Bubar"
+    trust_levels:
+      names:
+        newuser: "pengguna baru"
+        basic: "pengguna standar"
+        member: "anggota"
+        regular: "umum"
+        leader: "pemimpin"
   admin_js:
     type_to_filter: "ketik untuk memfilter..."
     admin:
@@ -1630,6 +1760,7 @@ id:
           all: "Semua"
           trending_search:
             disabled: 'Laporan pencarian sedang tren dinonaktifkan. Aktifkan <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">kueri penelusuran log</a> untuk mengumpulkan data.'
+          average_chart_label: Rata-rata
           filters:
             category:
               label: Kategori
@@ -1705,11 +1836,14 @@ id:
           settings: "Pengaturan"
           collapse: Persempit
           upload: "Unggah"
+          discard: "Batalkan"
           direct_install_tip: "Apakah Anda yakin ingin memasang <strong>%{name}</strong> dari repositori yang tercantum di bawah ini?"
           about_theme: "Tentang"
           enable: "Aktifkan"
           disable: "Nonaktifkan"
           add: "Menambahkan"
+          body_tag:
+            text: "Konten"
         colors:
           undo: "batalkan perintah"
           revert: "dibalik"
@@ -1813,6 +1947,9 @@ id:
         approve: "Terima"
         time_read: "Waktu Baca"
         delete: "Hapus Pengguna"
+        delete_posts:
+          confirmation:
+            cancel: "Batal"
         merge:
           prompt:
             cancel: "Batal"
@@ -1821,6 +1958,7 @@ id:
         delete_and_block: "Hapus dan <b>block</b> email dan alamat IP ini"
         tl3_requirements:
           visits: "mengunjungi"
+          days: "hari"
           topics_viewed: "Topik dilihat"
           posts_read: "Tulisan dilihat"
           likes_given: "Likes Diberikan"
@@ -1872,6 +2010,7 @@ id:
         edit: "ubah"
       permalink:
         topic_title: "Topik"
+        post_title: "Postingan"
         category_title: "Kategori"
         form:
           label: "Baru:"

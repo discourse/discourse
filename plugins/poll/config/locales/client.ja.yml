@@ -11,7 +11,7 @@ ja:
         other: "投票者数"
       total_votes:
         other: "合計得票数"
-      average_rating: "平均評価: <strong>%{average}</strong>."
+      average_rating: "平均評価: <strong>%{average}</strong>。"
       public:
         title: "投票は<strong>公開</strong>されています。"
       results:
@@ -20,30 +20,30 @@ ja:
         vote:
           title: "結果は<strong>投票</strong>したとき表示されます。"
         closed:
-          title: "結果は<strong>クローズ</strong>したとき表示されます。"
+          title: "結果は投票が<strong>クローズ</strong>になると表示されます。"
         staff:
-          title: "結果は <strong>スタッフ</strong> メンバーにのみ表示されます。"
+          title: "結果は<strong>スタッフ</strong>メンバーにのみ表示されます。"
       multiple:
         help:
           at_least_min_options:
-            other: "少なくとも <strong>%{count}</strong> オプションを選択してください。"
+            other: "少なくともオプションを <strong>%{count}</strong> 個を選択してください。"
           up_to_max_options:
-            other: "オプションを <strong>%{count}</strong> まで選択します。"
+            other: "オプションを <strong>%{count}</strong> 個まで選択してください。"
           x_options:
-            other: "<strong>%{count}</strong> オプションを選択します。"
-          between_min_and_max_options: "<strong>%{min}</strong> と <strong>%{max}</strong> のオプションを選択します。"
+            other: "オプションを <strong>%{count}</strong> 個選択してください。"
+          between_min_and_max_options: "<strong>%{min}</strong>～<strong>%{max}</strong> 個のオプションを選択してください。"
       cast-votes:
         title: "投票する"
-        label: "投票する"
+        label: "今すぐ投票！"
       show-results:
-        title: "投票結果を表示"
-        label: "結果を表示"
+        title: "投票結果を表示する"
+        label: "結果を表示する"
       hide-results:
-        title: "投票に戻る"
-        label: "投票を表示"
+        title: "自分の投票に戻る"
+        label: "投票を表示する"
       group-results:
-        title: "ユーザーフィールドごとに投票をグループ化"
-        label: "内訳を表示"
+        title: "ユーザーフィールド別に投票をグループ化"
+        label: "内訳を表示する"
       export-results:
         title: "投票結果をエクスポートする"
         label: "エクスポート"
@@ -53,43 +53,60 @@ ja:
         confirm: "この投票をオープンにしてもよろしいですか？"
       close:
         title: "投票をクローズする"
-        label: "投票をクローズする"
+        label: "クローズ"
         confirm: "この投票をクローズしてもよろしいですか？"
       automatic_close:
-        closes_in: "<strong>%{timeLeft}</strong>でクローズ"
-        age: "クローズ<strong>%{age}</strong>"
+        closes_in: "<strong>%{timeLeft}</strong> でクローズします。"
+        age: "<strong>%{age}</strong> にクローズ"
       breakdown:
         title: "投票結果"
+        votes: "%{count} 票"
         breakdown: "内訳"
         percentage: "割合"
-        count: "カウント"
-      error_while_toggling_status: "申し訳ありませんが、この投票のステータスを切り替える際にエラーが発生しました。"
-      error_while_casting_votes: "申し訳ありませんが、投票の際にエラーが発生しました。"
-      error_while_fetching_voters: "申し訳ありませんが、有権者を表示する際にエラーが発生しました。"
-      error_while_exporting_results: "申し訳ありませんが、投票結果のエクスポート中にエラーが発生しました。"
+        count: "票数"
+      error_while_toggling_status: "この投票のステータスを切り替える際にエラーが発生しました。"
+      error_while_casting_votes: "投票の際にエラーが発生しました。"
+      error_while_fetching_voters: "投票者を表示する際にエラーが発生しました。"
+      error_while_exporting_results: "投票結果のエクスポート中にエラーが発生しました。"
       ui_builder:
         title: 投票を作成
         insert: 投票の挿入
         help:
-          options_min_count: 少なくとも1つのオプションを入力してください.
+          options_min_count: 少なくとも1つのオプションを入力してください。
+          options_max_count: オプションを %{count} 個まで入力してください。
+          invalid_min_value: 最小値は少なくとも 1 である必要があります。
+          invalid_max_value: 最大値は少なくとも 1 である必要がありますが、オプションの数以下である必要があります。
           invalid_values: 最小値は最大値より小さくなければなりません。
-          min_step_value: 最小ステップ単位は 1 です
+          min_step_value: 最小ステップの値は 1 です
         poll_type:
           label: タイプ
-          regular: 一つだけ選択
+          regular: 単一選択
           multiple: 複数選択
-          number: 数字で評価
+          number: 数字評価
         poll_result:
-          always: 常に表示する
+          label: 結果を表示する...
+          always: 常に表示
+          vote: 投票後のみ
+          closed: 投票がクローズされたとき
           staff: スタッフのみ
+        poll_groups:
+          label: 次のグループに投票を制限する
         poll_chart_type:
-          bar: バー
-          pie: パイ
+          label: 結果グラフ
+          bar: 棒
+          pie: 円グラフ
         poll_config:
+          max: 最大選択肢数
+          min: 最小選択肢数
           step: 間隔
         poll_public:
-          label: 誰が投票したか表示する
+          label: 投票者を表示する
         poll_title:
           label: タイトル (オプション)
+        poll_options:
+          label: オプション (1 行に 1 つ)
+          add: オプションを追加
         automatic_close:
-          label: 投票を自動的に終了する
+          label: 投票を自動的にクローズする
+        show_advanced: "高度なオプションを表示"
+        hide_advanced: "高度なオプションを非表示"

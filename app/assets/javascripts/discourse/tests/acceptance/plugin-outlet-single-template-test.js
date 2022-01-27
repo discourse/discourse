@@ -1,4 +1,8 @@
-import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import {
+  acceptance,
+  count,
+  queryAll,
+} from "discourse/tests/helpers/qunit-helpers";
 import hbs from "htmlbars-inline-precompile";
 import { test } from "qunit";
 import { visit } from "@ember/test-helpers";
@@ -19,11 +23,12 @@ acceptance("Plugin Outlet - Single Template", function (needs) {
 
   test("Renders a template into the outlet", async function (assert) {
     await visit("/u/eviltrout");
-    assert.ok(
-      queryAll(".user-profile-primary-outlet.hello").length === 1,
+    assert.strictEqual(
+      count(".user-profile-primary-outlet.hello"),
+      1,
       "it has class names"
     );
-    assert.equal(
+    assert.strictEqual(
       queryAll(".hello-username").text(),
       "eviltrout",
       "it renders into the outlet"

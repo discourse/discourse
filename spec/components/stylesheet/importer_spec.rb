@@ -11,19 +11,16 @@ describe Stylesheet::Importer do
 
   context "#category_backgrounds" do
     it "applies CDN to background category images" do
-      expect(compile_css("mobile")).to_not include("body.category-")
-      expect(compile_css("desktop")).to_not include("body.category-")
+      expect(compile_css("color_definitions")).to_not include("body.category-")
 
       background = Fabricate(:upload)
       parent_category = Fabricate(:category)
       category = Fabricate(:category, parent_category_id: parent_category.id, uploaded_background: background)
 
-      expect(compile_css("mobile")).to include("body.category-#{parent_category.slug}-#{category.slug}{background-image:url(#{background.url})}")
-      expect(compile_css("desktop")).to include("body.category-#{parent_category.slug}-#{category.slug}{background-image:url(#{background.url})}")
+      expect(compile_css("color_definitions")).to include("body.category-#{parent_category.slug}-#{category.slug}{background-image:url(#{background.url})}")
 
       GlobalSetting.stubs(:cdn_url).returns("//awesome.cdn")
-      expect(compile_css("mobile")).to include("body.category-#{parent_category.slug}-#{category.slug}{background-image:url(//awesome.cdn#{background.url})}")
-      expect(compile_css("desktop")).to include("body.category-#{parent_category.slug}-#{category.slug}{background-image:url(//awesome.cdn#{background.url})}")
+      expect(compile_css("color_definitions")).to include("body.category-#{parent_category.slug}-#{category.slug}{background-image:url(//awesome.cdn#{background.url})}")
     end
 
     it "applies S3 CDN to background category images" do
@@ -36,8 +33,7 @@ describe Stylesheet::Importer do
       background = Fabricate(:upload_s3)
       category = Fabricate(:category, uploaded_background: background)
 
-      expect(compile_css("mobile")).to include("body.category-#{category.slug}{background-image:url(https://s3.cdn/original")
-      expect(compile_css("desktop")).to include("body.category-#{category.slug}{background-image:url(https://s3.cdn/original")
+      expect(compile_css("color_definitions")).to include("body.category-#{category.slug}{background-image:url(https://s3.cdn/original")
     end
 
   end
@@ -45,8 +41,7 @@ describe Stylesheet::Importer do
   context "#font" do
     it "includes font variable" do
       default_font = ":root{--font-family: Arial, sans-serif}"
-      expect(compile_css("desktop")).to include(default_font)
-      expect(compile_css("mobile")).to include(default_font)
+      expect(compile_css("color_definitions")).to include(default_font)
       expect(compile_css("embed")).to include(default_font)
       expect(compile_css("publish")).to include(default_font)
     end
@@ -58,9 +53,16 @@ describe Stylesheet::Importer do
       SiteSetting.base_font = base_font[:key]
       SiteSetting.heading_font = heading_font[:key]
 
-      expect(compile_css("desktop"))
+      expect(compile_css("color_definitions"))
         .to include(":root{--font-family: #{base_font[:stack]}}")
         .and include(":root{--heading-font-family: #{heading_font[:stack]}}")
+
+      set_cdn_url("http://cdn.localhost")
+
+      # uses CDN and includes cache-breaking param
+      expect(compile_css("color_definitions"))
+        .to include("http://cdn.localhost/fonts/#{base_font[:variants][0][:filename]}?v=#{DiscourseFonts::VERSION}")
+        .and include("http://cdn.localhost/fonts/#{heading_font[:variants][0][:filename]}?v=#{DiscourseFonts::VERSION}")
     end
 
     it "includes all fonts in wizard" do

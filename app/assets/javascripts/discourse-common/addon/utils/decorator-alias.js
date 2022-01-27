@@ -11,7 +11,7 @@ export default function decoratorAlias(fn, errorMessage) {
           enumerable: desc.enumerable,
           configurable: desc.configurable,
           writable: desc.writable,
-          initializer: function () {
+          initializer() {
             let value = extractValue(desc);
             return fn.apply(null, params.concat(value));
           },

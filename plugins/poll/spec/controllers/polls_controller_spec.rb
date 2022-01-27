@@ -13,7 +13,6 @@ describe ::DiscoursePoll::PollsController do
   let(:public_poll_on_close) { Fabricate(:post, topic: topic, user: user, raw: "[poll public=true results=on_close]\n- A\n- B\n[/poll]") }
 
   describe "#vote" do
-
     it "works" do
       channel = "/polls/#{poll.topic_id}"
 
@@ -118,6 +117,24 @@ describe ::DiscoursePoll::PollsController do
       expect(json["poll"]["options"][1]["votes"]).to eq(1)
     end
 
+    it "supports removing votes" do
+      put :vote, params: {
+        post_id: poll.id, poll_name: "poll", options: ["5c24fc1df56d764b550ceae1b9319125"]
+      }, format: :json
+
+      expect(response.status).to eq(200)
+
+      delete :remove_vote, params: {
+        post_id: poll.id, poll_name: "poll"
+      }, format: :json
+
+      expect(response.status).to eq(200)
+      json = response.parsed_body
+      expect(json["poll"]["voters"]).to eq(0)
+      expect(json["poll"]["options"][0]["votes"]).to eq(0)
+      expect(json["poll"]["options"][1]["votes"]).to eq(0)
+    end
+
     it "works on closed topics" do
       topic.update_attribute(:closed, true)
 
@@ -218,7 +235,6 @@ describe ::DiscoursePoll::PollsController do
   end
 
   describe "#toggle_status" do
-
     it "works for OP" do
       channel = "/polls/#{poll.topic_id}"
 
@@ -264,11 +280,9 @@ describe ::DiscoursePoll::PollsController do
       json = response.parsed_body
       expect(json["errors"][0]).to eq(I18n.t("poll.post_is_deleted"))
     end
-
   end
 
   describe "#voters" do
-
     let(:first) { "5c24fc1df56d764b550ceae1b9319125" }
     let(:second) { "e89dec30bbd9bf50fabf6a05b4324edf" }
 
@@ -333,7 +347,7 @@ describe ::DiscoursePoll::PollsController do
         poll_name: "poll", post_id: public_poll_on_vote.id
       }, format: :json
 
-      expect(response.status).to eq(422)
+      expect(response.status).to eq(400)
 
       put :vote, params: {
         post_id: public_poll_on_vote.id, poll_name: "poll", options: [second]
@@ -364,7 +378,7 @@ describe ::DiscoursePoll::PollsController do
         poll_name: "poll", post_id: public_poll_on_close.id
       }, format: :json
 
-      expect(response.status).to eq(422)
+      expect(response.status).to eq(400)
 
       put :toggle_status, params: {
         post_id: public_poll_on_close.id, poll_name: "poll", status: "closed"
@@ -382,7 +396,5 @@ describe ::DiscoursePoll::PollsController do
 
       expect(json["voters"][first].size).to eq(1)
     end
-
   end
-
 end

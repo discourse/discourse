@@ -1,5 +1,4 @@
-{{d-editor
-  tabindex="4"
+{{#d-editor
   value=composer.reply
   placeholder=replyPlaceholder
   previewUpdated=(action "previewUpdated")
@@ -8,6 +7,7 @@
   importQuote=(action "importQuote")
   showUploadModal=showUploadModal
   togglePreview=(action "togglePreview")
+  processPreview=processPreview
   validation=validation
   loading=composer.loading
   forcePreview=forcePreview
@@ -17,8 +17,15 @@
   onPopupMenuAction=onPopupMenuAction
   popupMenuOptions=popupMenuOptions
   disabled=disableTextarea
-  outletArgs=(hash composer=composer editorType="composer")}}
+  outletArgs=(hash composer=composer editorType="composer")
+}}
+  {{yield}}
+{{/d-editor}}
 
-{{#if site.mobileView}}
-  <input type="file" id="mobile-uploader" multiple>
+{{#if allowUpload}}
+  {{#if acceptsAllFormats}}
+    <input type="file" id="file-uploader" multiple>
+  {{else}}
+    <input type="file" id="file-uploader" accept={{acceptedFormats}} multiple>
+  {{/if}}
 {{/if}}

@@ -3,6 +3,8 @@
 require 'rails_helper'
 
 describe Post do
+  fab!(:coding_horror) { Fabricate(:coding_horror) }
+
   before { Oneboxer.stubs :onebox }
 
   let(:upload_path) { Discourse.store.upload_path }
@@ -195,7 +197,7 @@ describe Post do
 
   describe 'flagging helpers' do
     fab!(:post) { Fabricate(:post) }
-    fab!(:user) { Fabricate(:coding_horror) }
+    fab!(:user) { coding_horror }
     fab!(:admin) { Fabricate(:admin) }
 
     it 'is_flagged? is accurate' do
@@ -692,7 +694,7 @@ describe Post do
 
     end
 
-    describe 'ninja editing & edit windows' do
+    describe 'grace period editing & edit windows' do
 
       before { SiteSetting.editing_grace_period = 1.minute.to_i }
 
@@ -700,7 +702,7 @@ describe Post do
         revised_at = post.updated_at + 2.minutes
         new_revised_at = revised_at + 2.minutes
 
-        # ninja edit
+        # grace period edit
         post.revise(post.user, { raw: 'updated body' }, revised_at: post.updated_at + 10.seconds)
         post.reload
         expect(post.version).to eq(1)
@@ -736,7 +738,7 @@ describe Post do
     end
 
     describe 'rate limiter' do
-      let(:changed_by) { Fabricate(:coding_horror) }
+      let(:changed_by) { coding_horror }
 
       it "triggers a rate limiter" do
         EditRateLimiter.any_instance.expects(:performed!)
@@ -745,7 +747,7 @@ describe Post do
     end
 
     describe 'with a new body' do
-      let(:changed_by) { Fabricate(:coding_horror) }
+      let(:changed_by) { coding_horror }
       let!(:result) { post.revise(changed_by, raw: 'updated body') }
 
       it 'acts correctly' do
@@ -760,7 +762,7 @@ describe Post do
 
       context 'second poster posts again quickly' do
 
-        it 'is a ninja edit, because the second poster posted again quickly' do
+        it 'is a grace period edit, because the second poster posted again quickly' do
           SiteSetting.editing_grace_period = 1.minute.to_i
           post.revise(changed_by, { raw: 'yet another updated body' }, revised_at: post.updated_at + 10.seconds)
           post.reload
@@ -836,7 +838,7 @@ describe Post do
     describe 'a new reply' do
 
       fab!(:topic) { Fabricate(:topic) }
-      let(:other_user) { Fabricate(:coding_horror) }
+      let(:other_user) { coding_horror }
       let(:reply_text) { "[quote=\"Evil Trout, post:1\"]\nhello\n[/quote]\nHmmm!" }
       let!(:post) { PostCreator.new(topic.user, raw: Fabricate.build(:post).raw, topic_id: topic.id).create }
       let!(:reply) { PostCreator.new(other_user, raw: reply_text, topic_id: topic.id, reply_to_post_number: post.post_number).create }
@@ -1232,7 +1234,6 @@ describe Post do
 
   describe "#set_owner" do
     fab!(:post) { Fabricate(:post) }
-    fab!(:coding_horror) { Fabricate(:coding_horror) }
 
     it "will change owner of a post correctly" do
       post.set_owner(coding_horror, Discourse.system_user)
@@ -1481,6 +1482,8 @@ describe Post do
       end
 
       before do
+        Jobs.run_immediately!
+
         setup_s3
         SiteSetting.authorized_extensions = "pdf|png|jpg|csv"
         SiteSetting.secure_media = true
@@ -1713,6 +1716,17 @@ describe Post do
       post.each_upload_url { |src, _, _| urls << src }
       expect(urls).to be_empty
     end
+
+    it "skip S3 cdn urls with different path" do
+      setup_s3
+      SiteSetting.Upload.stubs(:s3_cdn_url).returns("https://cdn.example.com/site1")
+
+      urls = []
+      raw = "<img src='https://cdn.example.com/site1/original/1X/bc68acbc8c022726e69f980e00d6811212r.jpg' /><img src='https://cdn.example.com/site2/original/1X/bc68acbc8c022726e69f980e00d68112128.jpg' />"
+      post = Fabricate(:post, raw: raw)
+      post.each_upload_url { |src, _, _| urls << src }
+      expect(urls).to contain_exactly("https://cdn.example.com/site1/original/1X/bc68acbc8c022726e69f980e00d6811212r.jpg")
+    end
   end
 
   describe "#publish_changes_to_client!" do
@@ -1736,8 +1750,28 @@ describe Post do
         version: post.version
       }
 
-      MessageBus.expects(:publish).with("/topic/#{topic.id}", message, user_ids: [user1.id, user2.id, user3.id]).once
+      MessageBus.expects(:publish).once.with("/topic/#{topic.id}", message, is_a(Hash)) do |_, _, options|
+        options[:user_ids].sort == [user1.id, user2.id, user3.id].sort
+      end
       post.publish_change_to_clients!(:created)
+    end
+  end
+
+  describe "#cannot_permanently_delete_reason" do
+    fab!(:post) { Fabricate(:post) }
+    fab!(:admin) { Fabricate(:admin) }
+
+    before do
+      freeze_time
+      PostDestroyer.new(admin, post).destroy
+    end
+
+    it 'returns error message if same admin and time did not pass' do
+      expect(post.cannot_permanently_delete_reason(admin)).to eq(I18n.t('post.cannot_permanently_delete.wait_or_different_admin', time_left: RateLimiter.time_left(Post::PERMANENT_DELETE_TIMER.to_i)))
+    end
+
+    it 'returns nothing if different admin' do
+      expect(post.cannot_permanently_delete_reason(Fabricate(:admin))).to eq(nil)
     end
   end
 end

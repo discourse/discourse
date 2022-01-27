@@ -122,7 +122,7 @@
               <div class="modes">
                 {{#each displayedModes as |displayedMode|}}
                   {{d-button
-                    action=(action "changeMode")
+                    action=(action "onChangeMode")
                     actionParam=displayedMode.mode
                     class=displayedMode.cssClass
                     icon=displayedMode.icon}}
@@ -131,12 +131,18 @@
             {{/if}}
 
             {{#if isChartMode}}
+              {{#if model.average}}
+                <span class="average-chart">
+                  {{i18n "admin.dashboard.reports.average_chart_label"}}
+                </span>
+              {{/if}}
               <div class="chart-groupings">
                 {{#each chartGroupings as |chartGrouping|}}
                   {{d-button
                     label=chartGrouping.label
                     action=(action "changeGrouping" chartGrouping.id)
                     class=chartGrouping.class
+                    disabled=chartGrouping.disabled
                   }}
                 {{/each}}
               </div>

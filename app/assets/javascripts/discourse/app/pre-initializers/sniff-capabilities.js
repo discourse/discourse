@@ -1,62 +1,55 @@
-/*global safari:true*/
+// Initializes an object that lets us know about browser's capabilities
 
-// Initializes an object that lets us know about our capabilities.
+const APPLE_NAVIGATOR_PLATFORMS = /iPhone|iPod|iPad|Macintosh|MacIntel/;
+
+const APPLE_USERAGENTDATA_PLATFORM = /macOS/;
+
 export default {
   name: "sniff-capabilities",
-  initialize(container, application) {
-    const $html = $("html"),
-      touch = navigator.maxTouchPoints > 1 || "ontouchstart" in window,
-      caps = { touch };
 
-    // Store the touch ability in our capabilities object
-    $html.addClass(
-      touch ? "touch discourse-touch" : "no-touch discourse-no-touch"
-    );
+  initialize(_, app) {
+    const html = document.querySelector("html");
+    const touch = navigator.maxTouchPoints > 1 || "ontouchstart" in window;
+    const ua = navigator.userAgent;
+    const caps = { touch };
 
-    // Detect Devices
-    if (navigator) {
-      const ua = navigator.userAgent;
-      if (ua) {
-        caps.isAndroid = ua.indexOf("Android") !== -1;
-        caps.isWinphone = ua.indexOf("Windows Phone") !== -1;
-
-        caps.isOpera = !!window.opera || ua.indexOf(" OPR/") >= 0;
-        caps.isFirefox = typeof InstallTrigger !== "undefined";
-        caps.isSafari =
-          Object.prototype.toString
-            .call(window.HTMLElement)
-            .indexOf("Constructor") > 0 ||
-          (function (p) {
-            return p.toString() === "[object SafariRemoteNotification]";
-          })(!window["safari"] || safari.pushNotification);
-        caps.isChrome = !!window.chrome && !caps.isOpera;
-
-        caps.canPasteImages = caps.isChrome || caps.isFirefox;
-      }
-
-      caps.isIpadOS =
-        ua.indexOf("Mac OS") !== -1 &&
-        !/iPhone|iPod/.test(navigator.userAgent) &&
-        touch;
-
-      caps.isIOS =
-        (/iPhone|iPod/.test(navigator.userAgent) || caps.isIpadOS) &&
-        !window.MSStream;
-
-      caps.hasContactPicker =
-        "contacts" in navigator && "ContactsManager" in window;
-
-      caps.canVibrate = "vibrate" in navigator && !caps.isFirefox; // Remove Firefox condition when https://arewefenixyet.com/ lands
+    if (touch) {
+      html.classList.add("touch", "discourse-touch");
+    } else {
+      html.classList.add("no-touch", "discourse-no-touch");
     }
 
-    // We consider high res a device with 1280 horizontal pixels. High DPI tablets like
-    // iPads should report as 1024.
-    caps.highRes = window.screen.width >= 1280;
+    caps.isAndroid = ua.includes("Android");
+    caps.isWinphone = ua.includes("Windows Phone");
+    caps.isOpera = !!window.opera || ua.includes(" OPR/");
+    caps.isFirefox = typeof InstallTrigger !== "undefined";
+    caps.isChrome = !!window.chrome && !caps.isOpera;
+    caps.isSafari =
+      /Constructor/.test(window.HTMLElement) ||
+      window.safari?.pushNotification.toString() ===
+        "[object SafariRemoteNotification]";
+    caps.isIpadOS = ua.includes("Mac OS") && !/iPhone|iPod/.test(ua) && touch;
+    caps.isIOS =
+      (/iPhone|iPod/.test(navigator.userAgent) || caps.isIpadOS) &&
+      !window.MSStream;
+
+    caps.isApple =
+      APPLE_NAVIGATOR_PLATFORMS.test(navigator.platform) ||
+      (navigator.userAgentData &&
+        APPLE_USERAGENTDATA_PLATFORM.test(navigator.userAgentData.platform));
+
+    caps.hasContactPicker =
+      "contacts" in navigator && "ContactsManager" in window;
+    caps.canVibrate = "vibrate" in navigator;
+    caps.isPwa =
+      window.matchMedia("(display-mode: standalone)").matches ||
+      window.navigator.standalone ||
+      document.referrer.includes("android-app://");
 
     // Inject it
-    application.register("capabilities:main", caps, { instantiate: false });
-    application.inject("view", "capabilities", "capabilities:main");
-    application.inject("controller", "capabilities", "capabilities:main");
-    application.inject("component", "capabilities", "capabilities:main");
+    app.register("capabilities:main", caps, { instantiate: false });
+    app.inject("view", "capabilities", "capabilities:main");
+    app.inject("controller", "capabilities", "capabilities:main");
+    app.inject("component", "capabilities", "capabilities:main");
   },
 };

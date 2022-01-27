@@ -1,26 +1,21 @@
 import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
-import { alias } from "@ember/object/computed";
-import { next } from "@ember/runloop";
+import { reads } from "@ember/object/computed";
+import { action } from "@ember/object";
 
 export default Controller.extend(ModalFunctionality, {
   model: null,
   postNumber: null,
   postDate: null,
-  filteredPostsCount: alias("topic.postStream.filteredPostsCount"),
+  filteredPostsCount: reads("topic.postStream.filteredPostsCount"),
 
-  onShow() {
-    next(() => $("#post-jump").focus());
-  },
-
-  actions: {
-    jump() {
-      if (this.postNumber) {
-        this._jumpToIndex(this.filteredPostsCount, this.postNumber);
-      } else if (this.postDate) {
-        this._jumpToDate(this.postDate);
-      }
-    },
+  @action
+  jump() {
+    if (this.postNumber) {
+      this._jumpToIndex(this.filteredPostsCount, this.postNumber);
+    } else if (this.postDate) {
+      this._jumpToDate(this.postDate);
+    }
   },
 
   _jumpToIndex(postsCounts, postNumber) {

@@ -1,7 +1,6 @@
-<a href {{action "share" source}} title={{source.title}} aria-label={{source.title}}>
-  {{#if source.icon}}
-    {{d-icon source.icon}}
-  {{else}}
-    {{html-safe source.htmlIcon}}
-  {{/if}}
-</a>
+{{d-button
+  action=(action "share" source)
+  class=(concat "btn-default share-" source.id)
+  translatedTitle=source.title
+  icon=(if source.icon source.icon source.htmlIcon)
+ }}

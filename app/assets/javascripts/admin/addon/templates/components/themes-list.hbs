@@ -15,6 +15,17 @@
 </div>
 
 <div class="themes-list-container">
+  {{#if showFilter}}
+    <div class="themes-list-filter themes-list-item">
+      {{input
+        class="filter-input"
+        placeholder=(i18n "admin.customize.theme.filter_placeholder")
+        autocomplete="discourse"
+        value=(mut filterTerm)
+      }}
+      {{d-icon "search"}}
+    </div>
+  {{/if}}
   {{#if hasThemes}}
     {{#if hasActiveThemes}}
       {{#each activeThemes as |theme|}}

@@ -1,4 +1,4 @@
-{{plugin-outlet name="before-group-container" args=(hash group=model)}}
+{{plugin-outlet name="before-group-container" tagName="span" connectorTagName="div" args=(hash group=model)}}
 
 <div class="container group {{model.name}}">
   {{#if showTooltip}}
@@ -9,16 +9,16 @@
 
   <div class="group-details-container">
     <div class="group-info">
-      {{#if model.flair_url}}
-        <div class="group-avatar-flair">
+      <div class="group-avatar-flair">
+        {{#if (or model.flair_icon model.flair_url model.flair_bg_color)}}
           {{avatar-flair
-            flairURL=model.flair_url
+            flairName=model.name
+            flairUrl=(or model.flair_icon model.flair_url)
             flairBgColor=model.flair_bg_color
             flairColor=model.flair_color
-            groupName=model.name
           }}
-        </div>
-      {{/if}}
+        {{/if}}
+      </div>
 
       <div class="group-info-names">
         <span class="group-info-name">{{groupName}}</span>
@@ -62,7 +62,7 @@
         {{/if}}
       </div>
 
-      {{plugin-outlet name="group-details-after" args=(hash model=model)}}
+      {{plugin-outlet name="group-details-after" tagName="span" connectorTagName="div" args=(hash model=model)}}
     </div>
 
     {{#if model.bio_cooked}}

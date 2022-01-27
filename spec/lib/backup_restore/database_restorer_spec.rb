@@ -7,55 +7,8 @@ describe BackupRestore::DatabaseRestorer do
   include_context "shared stuff"
 
   let(:current_db) { RailsMultisite::ConnectionManagement.current_db }
+
   subject { BackupRestore::DatabaseRestorer.new(logger, current_db) }
-
-  def expect_create_readonly_functions
-    Migration::BaseDropper.expects(:create_readonly_function).at_least_once
-  end
-
-  def expect_table_move
-    BackupRestore.expects(:move_tables_between_schemas).with("public", "backup").once
-  end
-
-  def expect_psql(output_lines: ["output from psql"], exit_status: 0, stub_thread: false)
-    status = mock("psql status")
-    status.expects(:exitstatus).returns(exit_status).once
-    Process.expects(:last_status).returns(status).once
-
-    if stub_thread
-      thread = mock("thread")
-      thread.stubs(:join)
-      Thread.stubs(:new).returns(thread)
-    end
-
-    output_lines << nil
-    psql_io = mock("psql")
-    psql_io.expects(:readline).returns(*output_lines).times(output_lines.size)
-    IO.expects(:popen).yields(psql_io).once
-  end
-
-  def expect_db_migrate
-    Discourse::Utils.expects(:execute_command).with do |env, *command, **options|
-      env["SKIP_POST_DEPLOYMENT_MIGRATIONS"] == "0" &&
-        env["SKIP_OPTIMIZE_ICONS"] == "1" &&
-        env["DISABLE_TRANSLATION_OVERRIDES"] == "1" &&
-        command == ["rake", "db:migrate"] &&
-        options[:chdir] == Rails.root
-    end.once
-  end
-
-  def expect_db_reconnect
-    RailsMultisite::ConnectionManagement.expects(:establish_connection).once
-  end
-
-  def execute_stubbed_restore(stub_readonly_functions: true, stub_psql: true, stub_migrate: true,
-                              dump_file_path: "foo.sql")
-    expect_table_move
-    expect_create_readonly_functions if stub_readonly_functions
-    expect_psql if stub_psql
-    expect_db_migrate if stub_migrate
-    subject.restore(dump_file_path)
-  end
 
   describe "#restore" do
     it "executes everything in the correct order" do
@@ -173,12 +126,6 @@ describe BackupRestore::DatabaseRestorer do
     end
 
     context "database connection" do
-      it 'reconnects to the correct database', type: :multisite do
-        RailsMultisite::ConnectionManagement.establish_connection(db: 'second')
-        execute_stubbed_restore
-        expect(RailsMultisite::ConnectionManagement.current_db).to eq('second')
-      end
-
       it 'it is not erroring for non-multisite' do
         expect { execute_stubbed_restore }.not_to raise_error
       end
@@ -200,7 +147,9 @@ describe BackupRestore::DatabaseRestorer do
 
   context "readonly functions" do
     before do
-      Migration::SafeMigrate.stubs(:post_migration_path).returns("spec/fixtures/db/post_migrate/drop_column")
+      BackupRestore::DatabaseRestorer.stubs(:core_migration_files).returns(
+        Dir[Rails.root.join("spec/fixtures/db/post_migrate/drop_column/**/*.rb")]
+      )
     end
 
     it "doesn't try to drop function when no functions have been created" do

@@ -7,14 +7,14 @@ import UserDraft from "discourse/models/user-draft";
 module("Unit | Model | user-draft", function () {
   test("stream", function (assert) {
     const user = User.create({ id: 1, username: "eviltrout" });
-    const stream = user.get("userDraftsStream");
+    const stream = user.userDraftsStream;
     assert.present(stream, "a user has a drafts stream by default");
-    assert.equal(
-      stream.get("itemsLoaded"),
+    assert.strictEqual(
+      stream.content.length,
       0,
       "no items are loaded by default"
     );
-    assert.blank(stream.get("content"), "no content by default");
+    assert.blank(stream.content, "no content by default");
   });
 
   test("draft", function (assert) {
@@ -28,9 +28,9 @@ module("Unit | Model | user-draft", function () {
       }),
     ];
 
-    assert.equal(drafts.length, 2, "drafts count is right");
-    assert.equal(
-      drafts[1].get("draftType"),
+    assert.strictEqual(drafts.length, 2, "drafts count is right");
+    assert.strictEqual(
+      drafts[1].draftType,
       I18n.t("drafts.new_topic"),
       "loads correct draftType label"
     );

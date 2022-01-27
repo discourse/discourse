@@ -7,9 +7,16 @@ class Site
   cattr_accessor :preloaded_category_custom_fields
   self.preloaded_category_custom_fields = Set.new
 
+  def self.add_categories_callbacks(&block)
+    categories_callbacks << block
+  end
+
+  def self.categories_callbacks
+    @categories_callbacks ||= []
+  end
+
   def initialize(guardian)
     @guardian = guardian
-    Category.preload_custom_fields(categories, preloaded_category_custom_fields) if preloaded_category_custom_fields.present?
   end
 
   def site_setting
@@ -21,28 +28,63 @@ class Site
   end
 
   def trust_levels
-    TrustLevel.all
+    TrustLevel.levels
   end
 
   def user_fields
-    UserField.order(:position).all
+    UserField.includes(:user_field_options).order(:position).all
+  end
+
+  def self.categories_cache_key
+    "site_categories_#{Discourse.git_version}"
+  end
+
+  def self.clear_cache
+    Discourse.cache.delete(categories_cache_key)
+  end
+
+  def self.all_categories_cache
+    # Categories do not change often so there is no need for us to run the
+    # same query and spend time creating ActiveRecord objects for every requests.
+    #
+    # Do note that any new association added to the eager loading needs a
+    # corresponding ActiveRecord callback to clear the categories cache.
+    Discourse.cache.fetch(categories_cache_key, expires_in: 30.minutes) do
+      categories = Category
+        .includes(:uploaded_logo, :uploaded_background, :tags, :tag_groups, :required_tag_group)
+        .joins('LEFT JOIN topics t on t.id = categories.topic_id')
+        .select('categories.*, t.slug topic_slug')
+        .order(:position)
+        .to_a
+
+      if preloaded_category_custom_fields.present?
+        Category.preload_custom_fields(
+          categories,
+          preloaded_category_custom_fields
+        )
+      end
+
+      ActiveModel::ArraySerializer.new(
+        categories,
+        each_serializer: SiteCategorySerializer
+      ).as_json
+    end
   end
 
   def categories
     @categories ||= begin
-      categories = Category
-        .includes(:uploaded_logo, :uploaded_background, :tags, :tag_groups)
-        .secured(@guardian)
-        .joins('LEFT JOIN topics t on t.id = categories.topic_id')
-        .select('categories.*, t.slug topic_slug')
-        .order(:position)
+      categories = []
 
-      categories = categories.to_a
+      self.class.all_categories_cache.each do |category|
+        if @guardian.can_see_serialized_category?(category_id: category[:id], read_restricted: category[:read_restricted])
+          categories << category
+        end
+      end
 
       with_children = Set.new
       categories.each do |c|
-        if c.parent_category_id
-          with_children << c.parent_category_id
+        if c[:parent_category_id]
+          with_children << c[:parent_category_id]
         end
       end
 
@@ -59,19 +101,32 @@ class Site
       default_notification_level = CategoryUser.default_notification_level
 
       categories.each do |category|
-        category.notification_level = notification_levels[category.id] || default_notification_level
-        category.permission = CategoryGroup.permission_types[:full] if allowed_topic_create&.include?(category.id) || @guardian.is_admin?
-        category.has_children = with_children.include?(category.id)
-        by_id[category.id] = category
+        category[:notification_level] = notification_levels[category[:id]] || default_notification_level
+        category[:permission] = CategoryGroup.permission_types[:full] if allowed_topic_create&.include?(category[:id]) || @guardian.is_admin?
+        category[:has_children] = with_children.include?(category[:id])
+
+        category[:can_edit] = @guardian.can_edit_serialized_category?(
+          category_id: category[:id],
+          read_restricted: category[:read_restricted]
+        )
+
+        by_id[category[:id]] = category
       end
 
-      categories.reject! { |c| c.parent_category_id && !by_id[c.parent_category_id] }
+      categories.reject! { |c| c[:parent_category_id] && !by_id[c[:parent_category_id]] }
+
+      self.class.categories_callbacks.each do |callback|
+        callback.call(categories)
+      end
+
       categories
     end
   end
 
   def groups
-    Group.visible_groups(@guardian.user, "name ASC", include_everyone: true)
+    Group
+      .visible_groups(@guardian.user, "name ASC", include_everyone: true)
+      .includes(:flair_upload)
   end
 
   def archetypes
@@ -83,12 +138,11 @@ class Site
   end
 
   def self.json_for(guardian)
-
     if guardian.anonymous? && SiteSetting.login_required
       return {
         periods: TopTopic.periods.map(&:to_s),
         filters: Discourse.filters.map(&:to_s),
-        user_fields: UserField.all.map do |userfield|
+        user_fields: UserField.includes(:user_field_options).order(:position).all.map do |userfield|
           UserFieldSerializer.new(userfield, root: false, scope: guardian)
         end,
         auth_providers: Discourse.enabled_auth_providers.map do |provider|
@@ -107,7 +161,6 @@ class Site
       if cached_json && seq == cached_seq.to_i && Discourse.git_version == cached_version
         return cached_json
       end
-
     end
 
     site = Site.new(guardian)

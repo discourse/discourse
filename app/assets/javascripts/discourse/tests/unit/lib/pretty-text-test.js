@@ -3,7 +3,7 @@ import {
   applyCachedInlineOnebox,
   deleteCachedInlineOnebox,
 } from "pretty-text/inline-oneboxer";
-import { module, skip, test } from "qunit";
+import QUnit, { module, skip, test } from "qunit";
 import Post from "discourse/models/post";
 import { buildQuote } from "discourse/lib/quote";
 import { deepMerge } from "discourse-common/lib/object";
@@ -701,6 +701,16 @@ eviltrout</p>
     );
   });
 
+  test("Heading anchors are valid", function (assert) {
+    assert.cooked(
+      "# One\n\n# 1\n\n# $$",
+      '<h1><a name="one-1" class="anchor" href="#one-1"></a>One</h1>\n' +
+        '<h1><a name="h-1-2" class="anchor" href="#h-1-2"></a>1</h1>\n' +
+        '<h1><a name="h-3" class="anchor" href="#h-3"></a>$$</h1>',
+      "It will bold the heading"
+    );
+  });
+
   test("bold and italics", function (assert) {
     assert.cooked(
       'a "**hello**"',
@@ -1001,7 +1011,7 @@ eviltrout</p>
       "[test.pdf|attachment](upload://o8iobpLcW3WSFvVH7YQmyGlKmGM.pdf)",
       {
         siteSettings: { secure_media: false },
-        lookupUploadUrls: lookupUploadUrls,
+        lookupUploadUrls,
       },
       `<p><a class="attachment" href="/uploads/short-url/blah">test.pdf</a></p>`,
       "It returns the correct attachment link HTML when the URL is mapped without secure media"
@@ -1023,7 +1033,7 @@ eviltrout</p>
       "[test.pdf|attachment](upload://o8iobpLcW3WSFvVH7YQmyGlKmGM.pdf)",
       {
         siteSettings: { secure_media: true },
-        lookupUploadUrls: lookupUploadUrls,
+        lookupUploadUrls,
       },
       `<p><a class="attachment" href="/secure-media-uploads/original/3X/c/b/o8iobpLcW3WSFvVH7YQmyGlKmGM.pdf">test.pdf</a></p>`,
       "It returns the correct attachment link HTML when the URL is mapped with secure media"
@@ -1057,7 +1067,7 @@ eviltrout</p>
       "![baby shark|video](upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp4)",
       {
         siteSettings: { secure_media: true },
-        lookupUploadUrls: lookupUploadUrls,
+        lookupUploadUrls,
       },
       `<p><div class="video-container">
     <video width="100%" height="100%" preload="metadata" controls>
@@ -1094,7 +1104,7 @@ eviltrout</p>
       "![baby shark|audio](upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp3)",
       {
         siteSettings: { secure_media: true },
-        lookupUploadUrls: lookupUploadUrls,
+        lookupUploadUrls,
       },
       `<p><audio preload="metadata" controls>
     <source src="/secure-media-uploads/original/3X/c/b/test.mp3">
@@ -1268,7 +1278,7 @@ eviltrout</p>
     });
 
     function formatQuote(val, expected, text, opts) {
-      assert.equal(buildQuote(post, val, opts), expected, text);
+      assert.strictEqual(buildQuote(post, val, opts), expected, text);
     }
 
     formatQuote(undefined, "", "empty string for undefined content");
@@ -1334,7 +1344,7 @@ eviltrout</p>
       '[quote="sam, post:1, topic:1, full:true"]\nhello\n[/quote]'
     );
 
-    assert.equal(
+    assert.strictEqual(
       quote,
       '[quote="eviltrout, post:1, topic:2"]\n[quote="sam, post:1, topic:1, full:true"]\nhello\n[/quote]\n[/quote]\n\n',
       "allows quoting a quote"
@@ -1447,7 +1457,7 @@ var bar = 'bar';
     const result = new PrettyText(defaultOpts).cook(
       '[quote="EvilTrout, post:123, topic:456, full:true"]\nhello\n[/quote]\n*Test*'
     );
-    assert.equal(
+    assert.strictEqual(
       result,
       `<aside class=\"quote no-group\" data-username=\"EvilTrout\" data-post=\"123\" data-topic=\"456\" data-full=\"true\">
 <div class=\"title\">
@@ -1480,6 +1490,45 @@ var bar = 'bar';
 </tbody>
 </table>
 </div>`
+    );
+  });
+
+  test("customizing markdown-it rules", function (assert) {
+    assert.cookedOptions(
+      "**bold**",
+      { markdownItRules: [] },
+      "<p>**bold**</p>",
+      "does not apply bold markdown when rule is not enabled"
+    );
+
+    assert.cookedOptions(
+      "**bold**",
+      { markdownItRules: ["emphasis"] },
+      "<p><strong>bold</strong></p>",
+      "applies bold markdown when rule is enabled"
+    );
+  });
+
+  test("features override", function (assert) {
+    assert.cookedOptions(
+      ":grin: @sam",
+      { featuresOverride: [] },
+      "<p>:grin: @sam</p>",
+      "does not cook emojis when Discourse markdown engines are disabled"
+    );
+
+    assert.cookedOptions(
+      ":grin: @sam",
+      { featuresOverride: ["emoji"] },
+      `<p><img src="/images/emoji/google_classic/grin.png?v=${v}" title=":grin:" class="emoji" alt=":grin:"> @sam</p>`,
+      "cooks emojis when only the emoji markdown engine is enabled"
+    );
+
+    assert.cookedOptions(
+      ":grin: @sam",
+      { featuresOverride: ["mentions", "text-post-process"] },
+      `<p>:grin: <span class="mention">@sam</span></p>`,
+      "cooks mentions when only the mentions markdown engine is enabled"
     );
   });
 
@@ -1602,7 +1651,7 @@ var bar = 'bar';
     assert.cookedOptions(" -->asd", enabledTypographer, "<p>–&gt;asd</p>");
   });
 
-  test("default typhographic replacements", function (assert) {
+  test("default typographic replacements", function (assert) {
     const enabledTypographer = {
       siteSettings: { enable_markdown_typographer: true },
     };
@@ -1628,7 +1677,7 @@ var bar = 'bar';
     assert.cookedOptions("(pa) (PA)", enabledTypographer, "<p>¶ ¶</p>");
   });
 
-  test("default typhographic replacements - dashes", function (assert) {
+  test("default typographic replacements - dashes", function (assert) {
     const enabledTypographer = {
       siteSettings: { enable_markdown_typographer: true },
     };
@@ -1663,7 +1712,7 @@ var bar = 'bar';
     );
   });
 
-  test("disabled typhographic replacements", function (assert) {
+  test("disabled typographic replacements", function (assert) {
     const enabledTypographer = {
       siteSettings: { enable_markdown_typographer: true },
     };
@@ -1675,17 +1724,30 @@ var bar = 'bar';
 
   test("watched words replace", function (assert) {
     const opts = {
-      watchedWordsReplacements: { fun: "times" },
+      watchedWordsReplace: { "(?:\\W|^)(fun)(?=\\W|$)": "times" },
     };
 
-    assert.cookedOptions("test fun", opts, "<p>test times</p>");
+    assert.cookedOptions("test fun funny", opts, "<p>test times funny</p>");
+    assert.cookedOptions("constructor", opts, "<p>constructor</p>");
+  });
+
+  test("watched words link", function (assert) {
+    const opts = {
+      watchedWordsLink: { "(?:\\W|^)(fun)(?=\\W|$)": "https://discourse.org" },
+    };
+
+    assert.cookedOptions(
+      "test fun funny",
+      opts,
+      '<p>test <a href="https://discourse.org">fun</a> funny</p>'
+    );
   });
 
   test("watched words replace with bad regex", function (assert) {
     const maxMatches = 100; // same limit as MD watched-words-replace plugin
     const opts = {
       siteSettings: { watched_words_regular_expressions: true },
-      watchedWordsReplacements: { "\\bu?\\b": "you" },
+      watchedWordsReplace: { "(\\bu?\\b)": "you" },
     };
 
     assert.cookedOptions(

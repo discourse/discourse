@@ -50,7 +50,7 @@ export default EmberObject.extend({
 
     this.set("loading", true);
 
-    return ajax(this.url, { cache: false })
+    return ajax(this.url)
       .then((result) => {
         if (result) {
           const posts = result.map((post) => UserAction.create(post));

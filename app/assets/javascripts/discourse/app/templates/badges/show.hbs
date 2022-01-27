@@ -28,7 +28,7 @@
 
     {{#if canSelectTitle}}
       <div class="badge-set-title {{if hiddenSetTitle "hidden" ""}}">
-        {{badge-title selectableUserBadges=selectableUserBadges user=user}}
+        {{badge-title selectableUserBadges=selectableUserBadges}}
         {{d-button class="btn-default close-btn" action=(action "toggleSetUserTitle") label="close"}}
       </div>
     {{/if}}
@@ -51,7 +51,7 @@
 
       {{#unless canLoadMore}}
         {{#if canShowOthers}}
-          <div class="clearfix">
+          <div>
             <a id="show-others-with-badge-link" href={{model.url}} class="btn btn-default">{{i18n "badges.others_count" count=othersCount}}</a>
           </div>
         {{/if}}

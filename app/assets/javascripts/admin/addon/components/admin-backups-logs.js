@@ -33,7 +33,7 @@ export default Component.extend({
     }
   },
 
-  _updateFormattedLogsFunc: function () {
+  _updateFormattedLogsFunc() {
     const logs = this.logs;
     if (logs.length === 0) {
       return;
@@ -48,7 +48,7 @@ export default Component.extend({
     }
     // update the formatted logs & cache index
     this.setProperties({
-      formattedLogs: formattedLogs,
+      formattedLogs,
       index: logs.length,
     });
     // force rerender

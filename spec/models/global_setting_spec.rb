@@ -54,7 +54,7 @@ describe GlobalSetting do
 
   describe '.add_default' do
     after do
-      class <<GlobalSetting; remove_method :foo_bar_foo; end
+      class << GlobalSetting; remove_method :foo_bar_foo; end
     end
 
     it "can correctly add defaults" do

@@ -116,6 +116,25 @@ describe EmbedController do
         expect(response.body).to match("data-referer=\"https://example.com/evil-trout\"")
       end
 
+      it "returns a list of topics if the top_period is not valid" do
+        topic1 = Fabricate(:topic)
+        topic2 = Fabricate(:topic)
+        good_topic = Fabricate(:topic, like_count: 1000, posts_count: 100)
+        TopTopic.refresh!
+        TopicQuery.any_instance.expects(:list_top_for).never
+
+        get '/embed/topics?discourse_embed_id=de-1234&top_period=decadely', headers: {
+          'REFERER' => 'https://example.com/evil-trout'
+        }
+        expect(response.status).to eq(200)
+        expect(response.headers['X-Frame-Options']).to be_nil
+        expect(response.body).to match("data-embed-id=\"de-1234\"")
+        expect(response.body).to match("data-topic-id=\"#{good_topic.id}\"")
+        expect(response.body).to match("data-topic-id=\"#{topic1.id}\"")
+        expect(response.body).to match("data-topic-id=\"#{topic2.id}\"")
+        expect(response.body).to match("data-referer=\"https://example.com/evil-trout\"")
+      end
+
       it "wraps the list in a custom class" do
         topic = Fabricate(:topic)
         get '/embed/topics?discourse_embed_id=de-1234&embed_class=my-special-class', headers: {
@@ -150,9 +169,9 @@ describe EmbedController do
       Jobs.run_immediately!
     end
 
-    it "raises an error with no referer" do
+    it "doesn't raises an error with no referer" do
       get '/embed/comments', params: { embed_url: embed_url }
-      expect(response.body).to match(I18n.t('embed.error'))
+      expect(response.body).not_to match(I18n.t('embed.error'))
     end
 
     it "includes CSS from embedded_scss field" do
@@ -210,6 +229,14 @@ describe EmbedController do
 
         expect(response.body).to match(I18n.t('embed.continue'))
         expect(response.body).to match(post.cooked)
+        expect(response.body).to match("<span class='replies'>1 reply</span>")
+
+        small_action = Fabricate(:small_action, topic: topic_embed.topic)
+
+        get '/embed/comments', params: { embed_url: embed_url }, headers: headers
+
+        expect(response.body).not_to match("post-#{small_action.id}")
+        expect(response.body).to match("<span class='replies'>1 reply</span>")
       end
 
       it "provides the topic retriever with the discourse username when provided" do
@@ -265,14 +292,6 @@ describe EmbedController do
           headers: { 'REFERER' => "https://example.com/some-other-path" }
 
         expect(response.body).to match('class="example"')
-      end
-
-      it "doesn't work with a made up host" do
-        get '/embed/comments',
-          params: { embed_url: embed_url },
-          headers: { 'REFERER' => "http://codinghorror.com/invalid-url" }
-
-        expect(response.body).to match(I18n.t('embed.error'))
       end
     end
 

@@ -17,6 +17,7 @@ describe 'tags' do
 
     get 'Get a list of tag groups' do
       tags 'Tags'
+      operationId 'listTagGroups'
 
       produces 'application/json'
       response '200', 'tags' do
@@ -59,6 +60,7 @@ describe 'tags' do
 
     post 'Creates a tag group' do
       tags 'Tags'
+      operationId 'createTagGroup'
       consumes 'application/json'
       expected_request_schema = load_spec_schema('tag_group_create_request')
 
@@ -85,6 +87,7 @@ describe 'tags' do
 
     get 'Get a single tag group' do
       tags 'Tags'
+      operationId 'getTagGroup'
       consumes 'application/json'
       parameter name: :id, in: :path, schema: { type: :string }
 
@@ -127,6 +130,7 @@ describe 'tags' do
 
     put 'Update tag group' do
       tags 'Tags'
+      operationId 'updateTagGroup'
       consumes 'application/json'
       parameter name: :id, in: :path, schema: { type: :string }
       parameter name: :put_body, in: :body, schema: {
@@ -177,6 +181,7 @@ describe 'tags' do
 
     get 'Get a list of tags' do
       tags 'Tags'
+      operationId 'listTags'
 
       produces 'application/json'
       response '200', 'notifications' do
@@ -190,7 +195,7 @@ describe 'tags' do
                 text: { type: :string },
                 count: { type: :integer },
                 pm_count: { type: :integer },
-                target_tag: { type: :string, nullable: true },
+                target_tag: { type: [:string, :null] },
               }
             },
           },
@@ -215,6 +220,7 @@ describe 'tags' do
 
     get 'Get a specific tag' do
       tags 'Tags'
+      operationId 'getTag'
       parameter name: :name, in: :path, schema: { type: :string }
 
       produces 'application/json'
@@ -227,7 +233,7 @@ describe 'tags' do
               properties: {
                 id: { type: :integer },
                 username: { type: :string },
-                name: { type: :string, nullable: true },
+                name: { type: [:string, :null] },
                 avatar_template: { type: :string },
               }
             },
@@ -241,7 +247,7 @@ describe 'tags' do
             type: :object,
             properties: {
               can_create_topic: { type: :boolean },
-              draft: { type: :string, nullable: true },
+              draft: { type: [:string, :null] },
               draft_key: { type: :string },
               draft_sequence: { type: :integer },
               per_page: { type: :integer },
@@ -269,7 +275,7 @@ describe 'tags' do
                     posts_count: { type: :integer },
                     reply_count: { type: :integer },
                     highest_post_number: { type: :integer },
-                    image_url: { type: :string, nullable: true },
+                    image_url: { type: [:string, :null] },
                     created_at: { type: :string },
                     last_posted_at: { type: :string },
                     bumped: { type: :boolean },
@@ -277,10 +283,9 @@ describe 'tags' do
                     archetype: { type: :string },
                     unseen: { type: :boolean },
                     last_read_post_number: { type: :integer },
-                    unread: { type: :integer },
-                    new_posts: { type: :integer },
+                    unread_posts: { type: :integer },
                     pinned: { type: :boolean },
-                    unpinned: { type: :string, nullable: true },
+                    unpinned: { type: [:string, :null] },
                     visible: { type: :boolean },
                     closed: { type: :boolean },
                     archived: { type: :boolean },
@@ -298,7 +303,7 @@ describe 'tags' do
                     last_poster_username: { type: :string },
                     category_id: { type: :integer },
                     pinned_globally: { type: :boolean },
-                    featured_link: { type: :string, nullable: true },
+                    featured_link: { type: [:string, :null] },
                     posters: {
                       type: :array,
                       items: {
@@ -307,7 +312,7 @@ describe 'tags' do
                           extras: { type: :string },
                           description: { type: :string },
                           user_id: { type: :integer },
-                          primary_group_id: { type: :string, nullable: true },
+                          primary_group_id: { type: [:string, :null] },
                         }
                       },
                     },

@@ -57,6 +57,7 @@ class UserSerializer < UserCardSerializer
                      :can_change_bio,
                      :can_change_location,
                      :can_change_website,
+                     :can_change_tracking_preferences,
                      :user_api_keys,
                      :user_auth_tokens,
                      :user_notification_schedule,
@@ -130,6 +131,10 @@ class UserSerializer < UserCardSerializer
 
   def can_change_website
     !(SiteSetting.enable_discourse_connect && SiteSetting.discourse_connect_overrides_website)
+  end
+
+  def can_change_tracking_preferences
+    scope.can_change_tracking_preferences?(object)
   end
 
   def user_api_keys

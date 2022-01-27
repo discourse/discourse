@@ -14,75 +14,81 @@
 
   .groups-header-filters-name,
   .groups-header-filters-type {
-    margin-right: 5px;
-    margin-bottom: 0.5em;
+    margin: 0 0.5em 0.5em 0;
   }
 
   &:last-child {
     margin-right: auto;
   }
+
+  .select-kit-header {
+    height: 100%;
+  }
 }
 
 .groups-boxes {
+  display: grid;
+  grid-gap: 1em;
+  grid-template-columns: repeat(4, 1fr);
   margin: 1em 0;
   width: 100%;
-  @supports (display: grid) {
-    display: grid;
-    grid-template-columns: repeat(4, 24%);
-    grid-column-gap: 1.333%;
-    grid-row-gap: 1em;
-    @include breakpoint("tablet") {
-      grid-template-columns: repeat(3, 32%);
-      grid-column-gap: 2%;
-    }
-    @include breakpoint("mobile-large") {
-      grid-template-columns: 100%;
-    }
+
+  @include breakpoint("medium") {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @include breakpoint("mobile-extra-large") {
+    grid-template-columns: repeat(2, 1fr);
   }
 
   .group-box {
-    @include breakpoint("mobile-large") {
-      margin: 0;
-    }
     display: flex;
     box-sizing: border-box;
     cursor: pointer;
     border: 1px solid var(--primary-low);
     color: var(--primary);
+
     .discourse-no-touch & {
       transition: all 0.25s;
+
       &:hover {
         box-shadow: shadow("card");
       }
     }
+
     .group-membership {
       color: var(--primary-medium);
       margin-top: auto;
       padding-top: 1em;
+
       .is-group-owner,
       .is-group-member {
         color: var(--success);
       }
     }
+
     .group-box-inner {
       padding: 1em;
       width: 100%;
       display: flex;
       flex-direction: column;
       box-sizing: border-box;
+      min-height: 8em;
+
       .group-info-wrapper {
+        align-items: center;
         display: flex;
-        overflow: hidden;
         flex: 0 1 auto;
+        margin-bottom: 0.25em;
+        min-height: 40px;
+        overflow: hidden;
+
         .group-avatar-flair {
-          margin-top: 0.2em;
-          margin-right: 8px;
-          flex: 0 0 auto;
+          margin-right: 0.5em;
         }
+
         .group-info {
-          flex: 1 0 auto;
-          margin-bottom: 1em;
-          width: 70%;
+          flex: 1 1 auto;
 
           span {
             width: 100%;
@@ -91,6 +97,7 @@
           }
         }
       }
+
       .group-user-count {
         display: flex;
         align-items: center;

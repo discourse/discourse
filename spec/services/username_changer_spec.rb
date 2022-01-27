@@ -12,9 +12,10 @@ describe UsernameChanger do
 
     context 'success' do
       let!(:old_username) { user.username }
-      let(:new_username) { "#{user.username}1234" }
 
       it 'should change the username' do
+        new_username = "#{user.username}1234"
+
         events = DiscourseEvent.track_events {
           @result = UsernameChanger.change(user, new_username)
         }.last(2)
@@ -33,6 +34,17 @@ describe UsernameChanger do
         user.reload
         expect(user.username).to eq(new_username)
         expect(user.username_lower).to eq(new_username.downcase)
+      end
+
+      it 'do nothing if the new username is the same' do
+        new_username = user.username
+
+        events = DiscourseEvent.track_events {
+          @result = UsernameChanger.change(user, new_username)
+        }
+
+        expect(@result).to eq(false)
+        expect(events.count).to be_zero
       end
     end
 
@@ -107,6 +119,7 @@ describe UsernameChanger do
       end
 
       def create_post_and_change_username(args = {}, &block)
+        stub_image_size
         post = create_post(args.merge(topic_id: topic.id))
 
         args.delete(:revisions)&.each do |revision|
@@ -322,7 +335,7 @@ describe UsernameChanger do
 
       context 'quotes' do
         let(:quoted_post) { create_post(user: user, topic: topic, post_number: 1, raw: "quoted post") }
-        let(:avatar_url) { user.avatar_template.gsub("{size}", "40") }
+        let(:avatar_url) { user.avatar_template_url.gsub("{size}", "40") }
 
         it 'replaces the username in quote tags and updates avatar' do
           post = create_post_and_change_username(raw: <<~RAW)
@@ -366,7 +379,7 @@ describe UsernameChanger do
             <aside class="quote no-group" data-username="bar" data-post="1" data-topic="#{quoted_post.topic.id}">
             <div class="title">
             <div class="quote-controls"></div>
-            <img alt='' width="20" height="20" src="#{avatar_url}" class="avatar"> bar:</div>
+            <img loading="lazy" alt='' width="20" height="20" src="#{avatar_url}" class="avatar"> bar:</div>
             <blockquote>
             <p>quoted post</p>
             </blockquote>
@@ -374,7 +387,7 @@ describe UsernameChanger do
             <aside class="quote no-group" data-username="bar">
             <div class="title">
             <div class="quote-controls"></div>
-            <img alt="" width="20" height="20" src="#{avatar_url}" class="avatar"> bar:</div>
+            <img loading="lazy" alt="" width="20" height="20" src="#{avatar_url}" class="avatar"> bar:</div>
             <blockquote>
             <p>quoted post</p>
             </blockquote>
@@ -382,7 +395,7 @@ describe UsernameChanger do
             <aside class="quote no-group" data-username="bar" data-post="1" data-topic="#{quoted_post.topic.id}">
             <div class="title">
             <div class="quote-controls"></div>
-            <img alt="" width="20" height="20" src="#{avatar_url}" class="avatar"> bar:</div>
+            <img loading="lazy" alt="" width="20" height="20" src="#{avatar_url}" class="avatar"> bar:</div>
             <blockquote>
             <p>quoted post</p>
             </blockquote>
@@ -417,7 +430,7 @@ describe UsernameChanger do
               <aside class="quote no-group" data-username="bar" data-post="1" data-topic="#{quoted_post.topic.id}">
               <div class="title">
               <div class="quote-controls"></div>
-              <img alt='' width="20" height="20" src="#{avatar_url}" class="avatar"> bar:</div>
+              <img loading="lazy" alt='' width="20" height="20" src="#{avatar_url}" class="avatar"> bar:</div>
               <blockquote>
               <p>quoted</p>
               </blockquote>
@@ -447,7 +460,7 @@ describe UsernameChanger do
         end
 
         def user_avatar_url(u)
-          u.avatar_template.gsub("{size}", "40")
+          u.avatar_template_url.gsub("{size}", "40")
         end
 
         it 'updates avatar for linked topics and posts' do
@@ -459,7 +472,7 @@ describe UsernameChanger do
             <aside class="quote" data-post="#{quoted_post.post_number}" data-topic="#{quoted_post.topic.id}">
               <div class="title">
                 <div class="quote-controls"></div>
-                <img alt="" width="20" height="20" src="#{avatar_url}" class="avatar">
+                <img loading="lazy" alt="" width="20" height="20" src="#{avatar_url}" class="avatar">
                 <a href="#{protocol_relative_url(quoted_post.full_url)}">#{quoted_post.topic.title}</a>
               </div>
               <blockquote>
@@ -470,7 +483,7 @@ describe UsernameChanger do
             <aside class="quote" data-post="#{quoted_post.post_number}" data-topic="#{quoted_post.topic.id}">
               <div class="title">
                 <div class="quote-controls"></div>
-                <img alt="" width="20" height="20" src="#{avatar_url}" class="avatar">
+                <img loading="lazy" alt="" width="20" height="20" src="#{avatar_url}" class="avatar">
                 <a href="#{protocol_relative_url(quoted_post.topic.url)}">#{quoted_post.topic.title}</a>
               </div>
               <blockquote>
@@ -489,7 +502,7 @@ describe UsernameChanger do
             <aside class="quote" data-post="#{quoted_post.post_number}" data-topic="#{quoted_post.topic.id}">
               <div class="title">
                 <div class="quote-controls"></div>
-                <img alt="" width="20" height="20" src="#{avatar_url}" class="avatar">
+                <img loading="lazy" alt="" width="20" height="20" src="#{avatar_url}" class="avatar">
                 <a href="#{protocol_relative_url(quoted_post.full_url)}">#{quoted_post.topic.title}</a>
               </div>
               <blockquote>
@@ -500,7 +513,7 @@ describe UsernameChanger do
             <aside class="quote" data-post="#{another_quoted_post.post_number}" data-topic="#{another_quoted_post.topic.id}">
               <div class="title">
                 <div class="quote-controls"></div>
-                <img alt="" width="20" height="20" src="#{user_avatar_url(evil_trout)}" class="avatar">
+                <img loading="lazy" alt="" width="20" height="20" src="#{user_avatar_url(evil_trout)}" class="avatar">
                 <a href="#{protocol_relative_url(another_quoted_post.full_url)}">#{another_quoted_post.topic.title}</a>
               </div>
               <blockquote>
@@ -586,6 +599,72 @@ describe UsernameChanger do
         expect(notification_data(n08)).to eq(username_and_something_else("another_user"))
         expect(notification_data(n09)).to eq(username_and_something_else("bob"))
         expect(notification_data(n10)).to eq(username_and_something_else("another_user"))
+      end
+    end
+  end
+
+  describe '#override' do
+    common_test_cases = [
+      [
+        "overrides the username if a new name is different",
+        "john", "bill", "bill", false
+      ],
+      [
+        "does not change the username if a new name is the same",
+        "john", "john", "john", false
+      ],
+      [
+        "overrides the username if a new name has different case",
+        "john", "JoHN", "JoHN", false
+      ]
+    ]
+
+    context "unicode_usernames is off" do
+      before do
+        SiteSetting.unicode_usernames = false
+      end
+
+      [
+        *common_test_cases,
+        [
+          "does not change the username if a new name after unicode normalization is the same",
+          "john", "john¥¥", "john"
+        ],
+      ].each do |testcase_name, current, new, overrode|
+        it "#{testcase_name}" do
+          user = Fabricate(:user, username: current)
+          UsernameChanger.override(user, new)
+          expect(user.username).to eq(overrode)
+        end
+      end
+
+      it "overrides the username with username suggestions in case the username is already taken" do
+        user = Fabricate(:user, username: "bill")
+        Fabricate(:user, username: "john")
+
+        UsernameChanger.override(user, "john")
+
+        expect(user.username).to eq("john1")
+      end
+    end
+
+    context "unicode_usernames is on" do
+      before do
+        SiteSetting.unicode_usernames = true
+      end
+
+      [
+        *common_test_cases,
+        [
+          "overrides the username if a new name after unicode normalization is different only in case",
+          "lo\u0308we", "L\u00F6wee", "L\u00F6wee"
+        ],
+      ].each do |testcase_name, current, new, overrode|
+        it "#{testcase_name}" do
+          user = Fabricate(:user, username: current)
+          UsernameChanger.override(user, new)
+          expect(user.username).to eq(overrode)
+        end
       end
     end
   end

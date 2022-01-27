@@ -162,14 +162,53 @@ describe DiscourseTagging do
           expect(sorted_tag_names(tags)).to contain_exactly(tag2.name)
         end
 
-        it "let's staff ignore the requirement" do
+        it "lets staff ignore the requirement" do
+          tags = DiscourseTagging.filter_allowed_tags(Guardian.new(admin),
+            for_input: true,
+            category: category,
+            limit: 5
+          ).to_a
+
+          expect(sorted_tag_names(tags)).to eq(sorted_tag_names([tag1, tag2, tag3]))
+        end
+
+      end
+
+      context 'with many required tags in a tag group' do
+        fab!(:tag4) { Fabricate(:tag, name: "T4") }
+        fab!(:tag5) { Fabricate(:tag, name: "T5") }
+        fab!(:tag6) { Fabricate(:tag, name: "T6") }
+        fab!(:tag7) { Fabricate(:tag, name: "T7") }
+        fab!(:tag_group) { Fabricate(:tag_group, tags: [tag1, tag2, tag4, tag5, tag6, tag7]) }
+        fab!(:category) { Fabricate(:category, required_tag_group: tag_group, min_tags_from_required_group: 1) }
+
+        it "returns required tags for staff by default" do
+          tags = DiscourseTagging.filter_allowed_tags(Guardian.new(admin),
+            for_input: true,
+            category: category
+          ).to_a
+          expect(sorted_tag_names(tags)).to eq(sorted_tag_names([tag1, tag2, tag4, tag5, tag6, tag7]))
+        end
+
+        it "ignores required tags for staff when searching using a term" do
           tags = DiscourseTagging.filter_allowed_tags(Guardian.new(admin),
             for_input: true,
             category: category,
             term: 'fun'
           ).to_a
+
           expect(sorted_tag_names(tags)).to eq(sorted_tag_names([tag1, tag2, tag3]))
         end
+
+        it "returns required tags for nonstaff and overrides limit" do
+          tags = DiscourseTagging.filter_allowed_tags(Guardian.new(user),
+            for_input: true,
+            limit: 5,
+            category: category
+          ).to_a
+          expect(sorted_tag_names(tags)).to eq(sorted_tag_names([tag1, tag2, tag4, tag5, tag6, tag7]))
+        end
+
       end
 
       context 'empty term' do
@@ -342,6 +381,18 @@ describe DiscourseTagging do
       result = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(admin), [other_tag.name])
       expect(result).to eq(false)
       expect(topic.tags.pluck(:name)).to be_blank
+    end
+
+    it 'can remove tags and keep existent ones' do
+      tag1 = Fabricate(:tag)
+      tag2 = Fabricate(:tag)
+      topic = Fabricate(:topic, tags: [tag1, tag2])
+      Fabricate(:category, allowed_tags: [tag1.name])
+
+      result = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(admin), [tag1.name])
+
+      expect(result).to eq(true)
+      expect(topic.reload.tags.pluck(:name)).to eq([tag1.name])
     end
 
     context 'respects category minimum_required_tags setting' do

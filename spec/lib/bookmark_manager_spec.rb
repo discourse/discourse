@@ -5,7 +5,6 @@ require 'rails_helper'
 RSpec.describe BookmarkManager do
   let(:user) { Fabricate(:user) }
 
-  let(:reminder_type) { 'tomorrow' }
   let(:reminder_at) { 1.day.from_now }
   fab!(:post) { Fabricate(:post) }
   let(:name) { 'Check this out!' }
@@ -21,6 +20,27 @@ RSpec.describe BookmarkManager do
       expect(bookmark.topic_id).to eq(post.topic_id)
     end
 
+    it "allows creating a bookmark for the topic and for the first post" do
+      subject.create(post_id: post.id, name: name, for_topic: true)
+      bookmark = Bookmark.find_by(user: user, post_id: post.id, for_topic: true)
+
+      expect(bookmark.post_id).to eq(post.id)
+      expect(bookmark.topic_id).to eq(post.topic_id)
+      expect(bookmark.for_topic).to eq(true)
+
+      subject.create(post_id: post.id, name: name)
+      bookmark = Bookmark.find_by(user: user, post_id: post.id, for_topic: false)
+
+      expect(bookmark.post_id).to eq(post.id)
+      expect(bookmark.topic_id).to eq(post.topic_id)
+      expect(bookmark.for_topic).to eq(false)
+    end
+
+    it "errors when creating a for_topic bookmark for a post that is not the first one" do
+      subject.create(post_id: Fabricate(:post, topic: post.topic).id, name: name, for_topic: true)
+      expect(subject.errors.full_messages).to include(I18n.t("bookmarks.errors.for_topic_must_use_first_post"))
+    end
+
     it "when topic is deleted it raises invalid access from guardian check" do
       post.topic.trash!
       expect { subject.create(post_id: post.id, name: name) }.to raise_error(Discourse::InvalidAccess)
@@ -32,7 +52,7 @@ RSpec.describe BookmarkManager do
     end
 
     it "updates the topic user bookmarked column to true if any post is bookmarked" do
-      subject.create(post_id: post.id, name: name, reminder_type: reminder_type, reminder_at: reminder_at)
+      subject.create(post_id: post.id, name: name, reminder_at: reminder_at)
       tu = TopicUser.find_by(user: user)
       expect(tu.bookmarked).to eq(true)
       tu.update(bookmarked: false)
@@ -41,14 +61,13 @@ RSpec.describe BookmarkManager do
       expect(tu.bookmarked).to eq(true)
     end
 
-    context "when a reminder time + type is provided" do
+    context "when a reminder time is provided" do
       it "saves the values correctly" do
-        subject.create(post_id: post.id, name: name, reminder_type: reminder_type, reminder_at: reminder_at)
+        subject.create(post_id: post.id, name: name, reminder_at: reminder_at)
         bookmark = Bookmark.find_by(user: user)
 
         expect(bookmark.reminder_at).to eq_time(reminder_at)
         expect(bookmark.reminder_set_at).not_to eq(nil)
-        expect(bookmark.reminder_type).to eq(Bookmark.reminder_types[:tomorrow])
       end
     end
 
@@ -65,7 +84,7 @@ RSpec.describe BookmarkManager do
 
     context "when the bookmark already exists for the user & post" do
       before do
-        Bookmark.create(post: post, user: user, topic: post.topic)
+        Bookmark.create(post: post, user: user)
       end
 
       it "adds an error to the manager" do
@@ -81,21 +100,11 @@ RSpec.describe BookmarkManager do
       end
     end
 
-    context "when the reminder time is not provided when it needs to be" do
-      let(:reminder_at) { nil }
-      it "adds an error to the manager" do
-        subject.create(post_id: post.id, name: name, reminder_type: reminder_type, reminder_at: reminder_at)
-        expect(subject.errors.full_messages).to include(
-          "Reminder at " + I18n.t("bookmarks.errors.time_must_be_provided")
-        )
-      end
-    end
-
     context "when the reminder time is in the past" do
       let(:reminder_at) { 10.days.ago }
 
       it "adds an error to the manager" do
-        subject.create(post_id: post.id, name: name, reminder_type: reminder_type, reminder_at: reminder_at)
+        subject.create(post_id: post.id, name: name, reminder_at: reminder_at)
         expect(subject.errors.full_messages).to include(I18n.t("bookmarks.errors.cannot_set_past_reminder"))
       end
     end
@@ -104,12 +113,12 @@ RSpec.describe BookmarkManager do
       let(:reminder_at) { 11.years.from_now }
 
       it "adds an error to the manager" do
-        subject.create(post_id: post.id, name: name, reminder_type: reminder_type, reminder_at: reminder_at)
+        subject.create(post_id: post.id, name: name, reminder_at: reminder_at)
         expect(subject.errors.full_messages).to include(I18n.t("bookmarks.errors.cannot_set_reminder_in_distant_future"))
       end
     end
 
-    context "when the post is inaccessable for the user" do
+    context "when the post is inaccessible for the user" do
       before do
         post.trash!
       end
@@ -118,7 +127,7 @@ RSpec.describe BookmarkManager do
       end
     end
 
-    context "when the topic is inaccessable for the user" do
+    context "when the topic is inaccessible for the user" do
       before do
         post.topic.update(category: Fabricate(:private_category, group: Fabricate(:group)))
       end
@@ -169,25 +178,22 @@ RSpec.describe BookmarkManager do
     let!(:bookmark) { Fabricate(:bookmark_next_business_day_reminder, user: user, post: post, name: "Old name") }
     let(:new_name) { "Some new name" }
     let(:new_reminder_at) { 10.days.from_now }
-    let(:new_reminder_type) { Bookmark.reminder_types[:custom] }
     let(:options) { {} }
 
     def update_bookmark
       subject.update(
         bookmark_id: bookmark.id,
         name: new_name,
-        reminder_type: new_reminder_type,
         reminder_at: new_reminder_at,
         options: options
       )
     end
 
-    it "saves the time and new reminder type and new name sucessfully" do
+    it "saves the time and new name successfully" do
       update_bookmark
       bookmark.reload
       expect(bookmark.name).to eq(new_name)
       expect(bookmark.reminder_at).to eq_time(new_reminder_at)
-      expect(bookmark.reminder_type).to eq(new_reminder_type)
     end
 
     context "when options are provided" do
@@ -197,15 +203,6 @@ RSpec.describe BookmarkManager do
         update_bookmark
         bookmark.reload
         expect(bookmark.auto_delete_preference).to eq(1)
-      end
-    end
-
-    context "if the new reminder type is a string" do
-      let(:new_reminder_type) { "custom" }
-      it "is parsed" do
-        update_bookmark
-        bookmark.reload
-        expect(bookmark.reminder_type).to eq(Bookmark.reminder_types[:custom])
       end
     end
 
@@ -228,19 +225,19 @@ RSpec.describe BookmarkManager do
 
   describe ".destroy_for_topic" do
     let!(:topic) { Fabricate(:topic) }
-    let!(:bookmark1) { Fabricate(:bookmark, topic: topic, post: Fabricate(:post, topic: topic), user: user) }
-    let!(:bookmark2) { Fabricate(:bookmark, topic: topic, post: Fabricate(:post, topic: topic), user: user) }
+    let!(:bookmark1) { Fabricate(:bookmark, post: Fabricate(:post, topic: topic), user: user) }
+    let!(:bookmark2) { Fabricate(:bookmark, post: Fabricate(:post, topic: topic), user: user) }
 
     it "destroys all bookmarks for the topic for the specified user" do
       subject.destroy_for_topic(topic)
-      expect(Bookmark.where(user: user, topic: topic).length).to eq(0)
+      expect(Bookmark.for_user_in_topic(user.id, topic.id).length).to eq(0)
     end
 
     it "does not destroy any other user's topic bookmarks" do
       user2 = Fabricate(:user)
-      Fabricate(:bookmark, topic: topic, post: Fabricate(:post, topic: topic), user: user2)
+      Fabricate(:bookmark, post: Fabricate(:post, topic: topic), user: user2)
       subject.destroy_for_topic(topic)
-      expect(Bookmark.where(user: user2, topic: topic).length).to eq(1)
+      expect(Bookmark.for_user_in_topic(user2.id, topic.id).length).to eq(1)
     end
 
     it "updates the topic user bookmarked column to false" do

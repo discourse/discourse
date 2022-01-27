@@ -73,7 +73,7 @@ export default Controller.extend(ModalFunctionality, {
           name: this.model.username_lower,
         },
         pubKeyCredParams: this.supported_algorithms.map((alg) => {
-          return { type: "public-key", alg: alg };
+          return { type: "public-key", alg };
         }),
         excludeCredentials: this.existing_active_credential_ids.map(
           (credentialId) => {
@@ -87,7 +87,7 @@ export default Controller.extend(ModalFunctionality, {
         attestation: "none",
         authenticatorSelection: {
           // see https://chromium.googlesource.com/chromium/src/+/master/content/browser/webauth/uv_preferred.md for why
-          // default value of preferred is not necesarrily what we want, it limits webauthn to only devices that support
+          // default value of preferred is not necessarily what we want, it limits webauthn to only devices that support
           // user verification, which usually requires entering a PIN
           userVerification: "discouraged",
         },

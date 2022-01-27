@@ -8,8 +8,8 @@ module Jobs
       UserNotificationSchedule.enabled.includes(:user).each do |schedule|
         begin
           schedule.create_do_not_disturb_timings
-        rescue
-          Rails.logger.warn("Failed to process user_notification_schedule with ID #{schedule.id}")
+        rescue => e
+          Discourse.warn_exception(e, message: "Failed to process user_notification_schedule with ID #{schedule.id}")
         end
       end
     end

@@ -1,4 +1,9 @@
 <div id='main' class=<%= classes %>>
+  <%- if reply_above_line.present? %>
+  <div class="reply-above-line">
+    <%= t('user_notifications.reply_above_line') %>
+  </div>
+  <% end %>
 
   <div class='header-instructions'>%{header_instructions}</div>
 

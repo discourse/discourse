@@ -46,11 +46,10 @@ createWidget("topic-header-participant", {
   },
 
   click(e) {
-    const $target = $(e.target);
     this.appEvents.trigger(
       `topic-header:trigger-${this.attrs.type}-card`,
       this.attrs.username,
-      $target
+      e.target
     );
     e.preventDefault();
   },
@@ -126,6 +125,18 @@ export default createWidget("header-topic-info", {
         const parentCategory = category.get("parentCategory");
         const categories = [];
         if (parentCategory) {
+          if (
+            this.siteSettings.max_category_nesting > 2 &&
+            !this.site.mobileView
+          ) {
+            const grandParentCategory = parentCategory.get("parentCategory");
+            if (grandParentCategory) {
+              categories.push(
+                this.attach("category-link", { category: grandParentCategory })
+              );
+            }
+          }
+
           categories.push(
             this.attach("category-link", { category: parentCategory })
           );

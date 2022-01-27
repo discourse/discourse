@@ -14,6 +14,7 @@ import DiscourseRoute from "discourse/routes/discourse";
 import I18n from "I18n";
 import PermissionType from "discourse/models/permission-type";
 import TopicList from "discourse/models/topic-list";
+import { action } from "@ember/object";
 
 // A helper function to create a category route with parameters
 export default (filterArg, params) => {
@@ -55,7 +56,8 @@ export default (filterArg, params) => {
       if (
         (!params || params.no_subcategories === undefined) &&
         category.default_list_filter === "none" &&
-        filterArg === "default"
+        filterArg === "default" &&
+        modelParams
       ) {
         return this.replaceWith("discovery.categoryNone", {
           category,
@@ -148,13 +150,12 @@ export default (filterArg, params) => {
         category = model.category,
         canCreateTopic = topics.get("can_create_topic"),
         canCreateTopicOnCategory =
-          canCreateTopic && category.get("permission") === PermissionType.FULL,
-        filter = this.filter(category);
+          canCreateTopic && category.get("permission") === PermissionType.FULL;
 
       this.controllerFor("navigation/category").setProperties({
-        canCreateTopicOnCategory: canCreateTopicOnCategory,
+        canCreateTopicOnCategory,
         cannotCreateTopicOnCategory: !canCreateTopicOnCategory,
-        canCreateTopic: canCreateTopic,
+        canCreateTopic,
       });
 
       let topicOpts = {
@@ -162,12 +163,12 @@ export default (filterArg, params) => {
         category,
         period:
           topics.get("for_period") ||
-          (filter.indexOf("/") > 0 ? filter.split("/")[1] : ""),
+          (model.modelParams && model.modelParams.period),
         selected: [],
         noSubcategories: params && !!params.no_subcategories,
         expandAllPinned: true,
-        canCreateTopic: canCreateTopic,
-        canCreateTopicOnCategory: canCreateTopicOnCategory,
+        canCreateTopic,
+        canCreateTopicOnCategory,
       };
 
       const p = category.get("params");
@@ -193,6 +194,8 @@ export default (filterArg, params) => {
           outlet: "header-list-container",
           model: this._categoryList,
         });
+      } else {
+        this.disconnectOutlet({ outlet: "header-list-container" });
       }
       this.render("discovery/topics", {
         controller: "discovery/topics",
@@ -202,20 +205,29 @@ export default (filterArg, params) => {
 
     deactivate() {
       this._super(...arguments);
+
+      this.controllerFor("composer").set("prioritizedCategoryId", null);
       this.searchService.set("searchContext", null);
     },
 
-    actions: {
-      setNotification(notification_level) {
-        this.currentModel.setNotification(notification_level);
-      },
+    @action
+    setNotification(notification_level) {
+      this.currentModel.setNotification(notification_level);
+    },
 
-      triggerRefresh() {
-        this.refresh();
-      },
+    @action
+    triggerRefresh() {
+      this.refresh();
+    },
 
-      changeSort,
-      resetParams,
+    @action
+    changeSort(sortBy) {
+      changeSort.call(this, sortBy);
+    },
+
+    @action
+    resetParams(skipParams = []) {
+      resetParams.call(this, skipParams);
     },
   });
 };

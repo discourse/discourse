@@ -118,7 +118,7 @@ class UserMerger
                                                "x.post_number = y.post_number"])
     sql = <<~SQL
       UPDATE post_timings AS t
-      SET msecs = t.msecs + s.msecs
+      SET msecs = LEAST(t.msecs::bigint + s.msecs, 2^31 - 1)
       FROM post_timings AS s
       WHERE t.user_id = :target_user_id AND s.user_id = :source_user_id
             AND t.topic_id = s.topic_id AND t.post_number = s.post_number
@@ -363,7 +363,9 @@ class UserMerger
 
     update_user_id(:user_custom_fields, conditions: "x.name = y.name")
 
-    update_user_id(:user_emails, conditions: "x.email = y.email OR y.primary = false", updates: '"primary" = false')
+    if @target_user.human?
+      update_user_id(:user_emails, conditions: "x.email = y.email OR y.primary = false", updates: '"primary" = false')
+    end
 
     UserExport.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
 

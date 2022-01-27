@@ -3,9 +3,7 @@
 require 'rails_helper'
 
 describe Upload do
-
   let(:upload) { build(:upload) }
-
   let(:user_id) { 1 }
 
   let(:image_filename) { "logo.png" }
@@ -20,8 +18,34 @@ describe Upload do
   let(:attachment_path) { __FILE__ }
   let(:attachment) { File.new(attachment_path) }
 
-  context ".create_thumbnail!" do
+  describe '.with_no_non_post_relations' do
+    it "does not find non-post related uploads" do
+      post_upload = Fabricate(:upload)
+      post = Fabricate(:post, raw: "<img src='#{post_upload.url}'>")
+      post.link_post_uploads
 
+      badge_upload = Fabricate(:upload)
+      Fabricate(:badge, image_upload: badge_upload)
+
+      avatar_upload = Fabricate(:upload)
+      Fabricate(:user, uploaded_avatar: avatar_upload)
+
+      site_setting_upload = Fabricate(:upload)
+      SiteSetting.create!(
+        name: "logo",
+        data_type: SiteSettings::TypeSupervisor.types[:upload],
+        value: site_setting_upload.id
+      )
+
+      upload_ids = Upload
+        .by_users
+        .with_no_non_post_relations
+        .pluck(:id)
+      expect(upload_ids).to eq([post_upload.id])
+    end
+  end
+
+  context ".create_thumbnail!" do
     it "does not create a thumbnail when disabled" do
       SiteSetting.create_thumbnails = false
       OptimizedImage.expects(:create_for).never
@@ -363,25 +387,29 @@ describe Upload do
       expect(upload.secure).to eq(false)
     end
 
-    it 'marks a local attachment as secure if secure media enabled' do
-      SiteSetting.authorized_extensions = "pdf"
-      upload.update!(original_filename: "small.pdf", extension: "pdf", secure: false, access_control_post: Fabricate(:private_message_post))
-      enable_secure_media
+    context "local attachment" do
+      before do
+        SiteSetting.authorized_extensions = "pdf"
+      end
 
-      expect { upload.update_secure_status }
-        .to change { upload.secure }
+      let(:upload) { Fabricate(:upload, original_filename: "small.pdf", extension: "pdf", secure: true) }
 
-      expect(upload.secure).to eq(true)
-    end
+      it 'marks a local attachment as secure if secure media enabled' do
+        upload.update!(secure: false, access_control_post: Fabricate(:private_message_post))
+        enable_secure_media
 
-    it 'marks a local attachment as not secure if secure media enabled' do
-      SiteSetting.authorized_extensions = "pdf"
-      upload.update!(original_filename: "small.pdf", extension: "pdf", secure: true)
+        expect { upload.update_secure_status }
+          .to change { upload.secure }
 
-      expect { upload.update_secure_status }
-        .to change { upload.secure }
+        expect(upload.secure).to eq(true)
+      end
 
-      expect(upload.secure).to eq(false)
+      it 'marks a local attachment as not secure if secure media enabled' do
+        expect { upload.update_secure_status }
+          .to change { upload.secure }
+
+        expect(upload.secure).to eq(false)
+      end
     end
 
     it 'does not change secure status of a non-attachment when prevent_anons_from_downloading_files is enabled by itself' do
@@ -438,7 +466,7 @@ describe Upload do
 
       it 'does not mark an upload whose origin matches a regular emoji as secure (sometimes emojis are downloaded in pull_hotlinked_images)' do
         SiteSetting.login_required = true
-        falafel = Emoji.all.find { |e| e.url == '/images/emoji/twitter/falafel.png?v=9' }
+        falafel = Emoji.all.find { |e| e.url == "/images/emoji/twitter/falafel.png?v=#{Emoji::EMOJI_VERSION}" }
         upload.update!(secure: false, origin: "http://localhost:3000#{falafel.url}")
         upload.update_secure_status
         expect(upload.reload.secure).to eq(false)
@@ -449,6 +477,14 @@ describe Upload do
         upload.update!(secure: false, origin: "http://localhost:3000/images/emoji/test.png")
         upload.update_secure_status
         expect(upload.reload.secure).to eq(false)
+      end
+
+      it "does not throw an error if the object storage provider does not support ACLs" do
+        FileStore::S3Store.any_instance.stubs(:update_upload_ACL).raises(
+          Aws::S3::Errors::NotImplemented.new("A header you provided implies functionality that is not implemented", "")
+        )
+        upload.update!(secure: true, access_control_post: Fabricate(:private_message_post))
+        expect { upload.update_secure_status }.not_to raise_error
       end
     end
   end

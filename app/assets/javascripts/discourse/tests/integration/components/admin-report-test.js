@@ -2,6 +2,7 @@ import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
 import {
+  count,
   discourseModule,
   exists,
   queryAll,
@@ -21,19 +22,19 @@ discourseModule("Integration | Component | admin-report", function (hooks) {
 
       assert.ok(exists(".admin-report.signups", "it defaults to table mode"));
 
-      assert.equal(
+      assert.strictEqual(
         queryAll(".header .item.report").text().trim(),
         "Signups",
         "it has a title"
       );
 
-      assert.equal(
+      assert.strictEqual(
         queryAll(".header .info").attr("data-tooltip"),
         "New account registrations for this period",
         "it has a description"
       );
 
-      assert.equal(
+      assert.strictEqual(
         queryAll(".admin-report-table thead tr th:first-child .title")
           .text()
           .trim(),
@@ -41,7 +42,7 @@ discourseModule("Integration | Component | admin-report", function (hooks) {
         "it has col headers"
       );
 
-      assert.equal(
+      assert.strictEqual(
         queryAll(".admin-report-table thead tr th:nth-child(2) .title")
           .text()
           .trim(),
@@ -49,7 +50,7 @@ discourseModule("Integration | Component | admin-report", function (hooks) {
         "it has col headers"
       );
 
-      assert.equal(
+      assert.strictEqual(
         queryAll(".admin-report-table tbody tr:nth-child(1) td:nth-child(1)")
           .text()
           .trim(),
@@ -57,7 +58,7 @@ discourseModule("Integration | Component | admin-report", function (hooks) {
         "it has rows"
       );
 
-      assert.equal(
+      assert.strictEqual(
         queryAll(".admin-report-table tbody tr:nth-child(1) td:nth-child(2)")
           .text()
           .trim(),
@@ -69,7 +70,7 @@ discourseModule("Integration | Component | admin-report", function (hooks) {
 
       await click(".admin-report-table-header.y .sort-btn");
 
-      assert.equal(
+      assert.strictEqual(
         queryAll(".admin-report-table tbody tr:nth-child(1) td:nth-child(2)")
           .text()
           .trim(),
@@ -93,8 +94,8 @@ discourseModule("Integration | Component | admin-report", function (hooks) {
 
     test(assert) {
       assert.ok(exists(".pagination"), "it paginates the results");
-      assert.equal(
-        queryAll(".pagination button").length,
+      assert.strictEqual(
+        count(".pagination button"),
         3,
         "it creates the correct number of pages"
       );
@@ -161,6 +162,17 @@ discourseModule("Integration | Component | admin-report", function (hooks) {
       assert.ok(
         exists(".alert-error.rate-limited"),
         "it displays a rate limited error"
+      );
+    },
+  });
+
+  componentTest("post edits", {
+    template: hbs`{{admin-report dataSourceName='post_edits'}}`,
+
+    test(assert) {
+      assert.ok(
+        exists(".admin-report.post-edits"),
+        "it displays the post edits report"
       );
     },
   });

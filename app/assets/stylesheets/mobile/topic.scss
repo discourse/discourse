@@ -13,7 +13,6 @@
 }
 
 #topic-title {
-  margin: 0 60px 10px 0;
   h1 {
     font-size: $font-up-3;
     line-height: $line-height-medium;
@@ -30,26 +29,6 @@
 
 .progress-back-container {
   top: -100%; // above parent container + some extra space
-}
-
-#topic-progress-wrapper {
-  position: fixed;
-  right: 10px; // match 10px padding on .wrap
-  bottom: 0;
-  z-index: z("timeline");
-  &:not(.docked) {
-    margin-bottom: env(safe-area-inset-bottom);
-  }
-  html.rtl & {
-    /**
-     * This should be the other way around, but it has to be "wrong" here
-     * because our RTL CSS is generated using the `rtlit` gem which flips
-     * left to right and right to left, so this will be corrected when it
-     * goes through rtlit.
-     */
-    left: unset;
-    right: 1em;
-  }
 }
 
 #topic-progress-expanded {
@@ -93,49 +72,6 @@
   }
 }
 
-#topic-progress {
-  position: relative;
-  &.hidden {
-    display: none;
-  }
-  background-color: var(--secondary);
-  color: var(--tertiary);
-  border: 1px solid var(--tertiary-low);
-  width: 145px;
-  height: 42px;
-
-  /* as a big ol' click target, don't let text inside be selected */
-  @include unselectable;
-
-  .nums {
-    position: relative;
-    top: 12px;
-    width: 100%;
-    text-align: center;
-    z-index: z("base");
-  }
-  h4 {
-    display: inline;
-    font-size: $font-up-2;
-    line-height: $line-height-small;
-  }
-  .d-icon {
-    position: absolute;
-    right: 8px;
-    bottom: 9px;
-    z-index: z("base");
-  }
-  .bg {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 0;
-    border-right: 1px solid var(--tertiary-low);
-    background-color: var(--tertiary-low);
-    transition: width 0.75s;
-  }
-}
-
 .topic-error {
   padding: 18px;
   width: 90%;
@@ -150,14 +86,6 @@
     margin-left: auto;
     margin-right: auto;
   }
-}
-
-#topic-progress-wrapper.docked {
-  position: absolute;
-}
-
-.topic-post:last-of-type {
-  padding-bottom: 40px;
 }
 
 sup sup,
@@ -187,8 +115,10 @@ sub sub {
 .topic-timeline {
   .start-date,
   .now-date {
-    font-size: $font-up-1;
-    padding: 5px;
+    padding: 0.5em 0;
+  }
+  .timeline-scrollarea-wrapper .timeline-date-wrapper {
+    @include ellipsis;
   }
   .topic-category {
     margin-bottom: 0.5rem;

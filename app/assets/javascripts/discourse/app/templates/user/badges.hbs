@@ -1,9 +1,20 @@
-{{#d-section pageClass="user-badges" class="user-content user-badges-list"}}
-  {{#each sortedBadges as |ub|}}
-    {{badge-card
-      badge=ub.badge
-      count=ub.count
-      username=username
-      filterUser="true"}}
-  {{/each}}
+{{#d-section pageClass="user-badges" class="user-content"}}
+  <p class="favorite-count">
+    {{i18n "badges.favorite_count" count=this.favoriteBadges.length max=siteSettings.max_favorite_badges}}
+  </p>
+
+  <div class="badge-group-list">
+    {{#each sortedBadges as |ub|}}
+      {{badge-card
+        badge=ub.badge
+        count=ub.count
+        canFavorite=ub.can_favorite
+        isFavorite=ub.is_favorite
+        username=username
+        canFavoriteMoreBadges=canFavoriteMoreBadges
+        onFavoriteClick=(action "favorite" ub)
+        filterUser="true"
+      }}
+    {{/each}}
+  </div>
 {{/d-section}}

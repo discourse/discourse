@@ -49,36 +49,6 @@ describe UserActionsController do
         .to eq(user.username)
     end
 
-    it 'renders help text if provided for self' do
-      logged_in = sign_in(Fabricate(:user))
-
-      get "/user_actions.json", params: {
-        filter: UserAction::LIKE,
-        username: logged_in.username,
-        no_results_help_key: "user_activity.no_bookmarks"
-      }
-
-      expect(response.status).to eq(200)
-      parsed = response.parsed_body
-
-      expect(parsed["no_results_help"]).to eq(I18n.t("user_activity.no_bookmarks.self"))
-    end
-
-    it 'renders help text for others' do
-      user = Fabricate(:user)
-
-      get "/user_actions.json", params: {
-        filter: UserAction::LIKE,
-        username: user.username,
-        no_results_help_key: "user_activity.no_bookmarks"
-      }
-
-      expect(response.status).to eq(200)
-      parsed = response.parsed_body
-
-      expect(parsed["no_results_help"]).to eq(I18n.t("user_activity.no_bookmarks.others"))
-    end
-
     context 'hidden profiles' do
       fab!(:post) { Fabricate(:post) }
 
@@ -99,5 +69,54 @@ describe UserActionsController do
       end
     end
 
+    context "other users' activity" do
+      fab!(:another_user) { Fabricate(:user) }
+
+      UserAction.private_types.each do |action_type|
+        action_name = UserAction.types.key(action_type)
+        it "anonymous users cannot list other users' actions of type: #{action_name}" do
+          list_and_check(action_type, 404)
+        end
+      end
+
+      UserAction.private_types.each do |action_type|
+        fab!(:user) { Fabricate(:user) }
+        action_name = UserAction.types.key(action_type)
+
+        it "logged in users cannot list other users' actions of type: #{action_name}" do
+          sign_in(user)
+          list_and_check(action_type, 404)
+        end
+      end
+
+      UserAction.private_types.each do |action_type|
+        fab!(:moderator) { Fabricate(:moderator) }
+        action_name = UserAction.types.key(action_type)
+
+        it "moderators cannot list other users' actions of type: #{action_name}" do
+          sign_in(moderator)
+          list_and_check(action_type, 404)
+        end
+      end
+
+      UserAction.private_types.each do |action_type|
+        fab!(:admin) { Fabricate(:admin) }
+        action_name = UserAction.types.key(action_type)
+
+        it "admins can list other users' actions of type: #{action_name}" do
+          sign_in(admin)
+          list_and_check(action_type, 200)
+        end
+      end
+
+      def list_and_check(action_type, expected_response)
+        get "/user_actions.json", params: {
+          filter: action_type,
+          username: another_user.username
+        }
+
+        expect(response.status).to eq(expected_response)
+      end
+    end
   end
 end

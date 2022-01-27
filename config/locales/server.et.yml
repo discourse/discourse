@@ -97,7 +97,7 @@ et:
       record_invalid: ! "Valideerimine ebaõnnestus: %{errors}"
       restrict_dependent_destroy:
         one: "Kirjet ei saa kustutada, kuna leiti seotud kirje %{record}"
-        many: "Kirjet ei saa kustutada, kuna leiti seotud kirje %{record}"
+        other: "Kirjet ei saa kustutada, kuna leiti seotud kirje %{record}"
       too_long:
         one: on liiga pikk (maksimum on %{count} tähemärk)
         other: on liiga pikk (maksimum on %{count} tähemärki)
@@ -129,9 +129,6 @@ et:
     backup_file_should_be_tar_gz: "Varukoopia peab olema .tar.gz arhiivifail."
     not_enough_space_on_disk: "Varukoopia üleslaadimiseks pole piisavalt kettaruumi."
     invalid_filename: "Varundusfaili nimi sisaldab keelatud sümboleid. Lubatud sümbolid on a-z 0-9 . - _."
-    location:
-      local: "Kohalik"
-      s3: "Amazon S3"
   not_logged_in: "Selleks peate olema sisse logitud."
   not_found: "Päritud URLi või ressurssi ei leitud."
   invalid_access: "Päritud ressursi vaatamiseks puuduvad õigused."
@@ -258,7 +255,6 @@ et:
               no_user_selected: "Pead valima sobiva kasutaja."
             featured_link:
               invalid: "on vigane. URL peab sisaldama http:// või https://."
-              invalid_category: "ei saa selles foorumis redigeerida."
         user:
           attributes:
             password:
@@ -321,16 +317,8 @@ et:
       topic_exists_no_oldest: "Seda foorumit ei saa kustutada, kuna teemade arv on %{count}."
     uncategorized_description: "Teemad, mis ei vaja või mida ei saa liigitada ühegi olemasoleva foorumi alla."
   trust_levels:
-    newuser:
-      title: "uus kasutaja"
-    basic:
-      title: "baaskasutaja"
-    member:
-      title: "liige"
-    regular:
-      title: "tavaline"
-    leader:
-      title: "juht"
+    admin: "Admin"
+    staff: "Meeskond"
     change_failed_explanation: "Üritasid alandada %{user_name} tasemele '%{new_trust_level}'. Samas on tal juba tase'%{current_trust_level}'. %{user_name} jääb tasemele '%{current_trust_level}' - kui soovid alandada kasutaja taset, siis lukusta kõigepealt usaldustase."
   post:
     image_placeholder:
@@ -493,17 +481,6 @@ et:
       title: "Laigi"
       description: "Laigi seda postitust"
       short_description: "Laigi seda postitust"
-  user_activity:
-    no_default:
-      others: "Tegevusi pole."
-    no_bookmarks:
-      self: "Sul pole järjehoidjatesse lisatud postitusi; järjehoidjad võimaldavad kiiresti konkreetsetele postitustele viidata."
-      others: "Järjehoidjad puuduvad."
-    no_likes_given:
-      self: "Sa pole oma meeldimist ühelegi postitusele andnud."
-      others: "Meeldimisega postitusi veel pole."
-    no_replies:
-      others: "Vastuseid pole."
   topic_flag_types:
     spam:
       title: "Spämm"
@@ -747,9 +724,22 @@ et:
       labels:
         filename: Faili nimi
         author: Autor
+    top_users_by_likes_received:
+      labels:
+        user: Kasutaja
+        qtt_like: Meeldimisi saadud
+    top_users_by_likes_received_from_inferior_trust_level:
+      labels:
+        user: Kasutaja
+        qtt_like: Meeldimisi saadud
+    top_users_by_likes_received_from_a_variety_of_people:
+      labels:
+        user: Kasutaja
+        qtt_like: Meeldimisi saadud
   dashboard:
     host_names_warning: "Sinu config/database.yml fail kasutab vaikimisi hostinime localhost. Kirjuta sinna oma saidi hostinimi."
   site_settings:
+    disabled: "välja lülitatud"
     min_post_length: "Lühim lubatud postituse pikkus"
     max_post_length: "Maksimaalne lubatud postituse pikkus tähemärkides"
     min_topic_title_length: "Lühim lubatud teema pealkirja pikkus tähemärkides"
@@ -782,7 +772,6 @@ et:
       category: "Liigid"
       user: "Kasutajad"
   original_poster: "Esialgne postitaja"
-  most_posts: "Enamus postitusi"
   most_recent_poster: "Viimane postitaja"
   frequent_poster: "Tihedam postitaja"
   publish_page:
@@ -918,6 +907,7 @@ et:
       description: Olnud aktiivne kasutaja vähemalt aasta, postitanud vähemalt ühe korra
     nice_post:
       name: Mõnus vastus
+      description: Kogus vastusele 10 like'i
     good_post:
       name: Hea vastus
       description: Kogus vastusele 25 like'i
@@ -1042,7 +1032,6 @@ et:
             label: "Sinu kogukonna nimi"
             placeholder: "Jane ajaviitenurgake"
           site_description:
-            label: "Kirjelda oma kogukonda ühe lühikese lausega"
             placeholder: "Koht Janele ja tema sõpradele lahedate arutelude jaoks"
       introduction:
         title: "Sissejuhatus"
@@ -1072,25 +1061,10 @@ et:
             label: "Automaatsed sõnumid"
       corporate:
         title: "Organisatsioon"
-      colors:
-        title: "Värvid"
-      fonts:
+      styling:
         fields:
-          font_preview:
+          styling_preview:
             label: "Eelvaade"
-      logos:
-        title: "Logod"
-        fields:
-          logo:
-            label: "Peamine logo"
-      icons:
-        title: "Ikoonid"
-        fields:
-          large_icon:
-            label: "Suur ikoon"
-      homepage:
-        title: "Avaleht"
-        fields:
           homepage_style:
             choices:
               latest:
@@ -1101,6 +1075,16 @@ et:
                 label: "Foorumid esiletõstetud teemadega"
               categories_and_latest_topics:
                 label: "Foorumid ja viimased teemad"
+      logos:
+        title: "Logod"
+        fields:
+          logo:
+            label: "Peamine logo"
+      icons:
+        title: "Ikoonid"
+        fields:
+          large_icon:
+            label: "Suur ikoon"
       invites:
         title: "Kutsu meeskonda"
       finished:
@@ -1132,8 +1116,6 @@ et:
         title: "Vaigista kasutaja"
       agree_and_hide:
         title: "Peida postitus"
-      delete_spammer:
-        title: "Kustuta spämmija"
       delete_single:
         title: "Kustuta"
       disagree:
@@ -1149,8 +1131,7 @@ et:
           title: "Kustuta kasutaja"
       reject:
         title: "Lükka tagasi"
-      delete_user:
-        title: "Kustuta kasutaja"
+  fallback_username: "kasutaja"
   activemodel:
     errors:
       <<: *errors

@@ -9,6 +9,7 @@ describe 'topics' do
   path '/t/{id}/posts.json' do
     get 'Get specific posts from a topic' do
       tags 'Topics'
+      operationId 'getSpecificPostsFromTopic'
       consumes 'application/json'
       parameter name: 'Api-Key', in: :header, type: :string, required: true
       parameter name: 'Api-Username', in: :header, type: :string, required: true
@@ -33,7 +34,7 @@ describe 'topics' do
                   type: :object,
                   properties: {
                     id: { type: :integer },
-                    name: { type: :string, nullable: true },
+                    name: { type: [:string, :null] },
                     username: { type: :string },
                     avatar_template: { type: :string },
                     created_at: { type: :string },
@@ -42,7 +43,7 @@ describe 'topics' do
                     post_type: { type: :integer },
                     updated_at: { type: :string },
                     reply_count: { type: :integer },
-                    reply_to_post_number: { type: :string, nullable: true },
+                    reply_to_post_number: { type: [:string, :null] },
                     quote_count: { type: :integer },
                     incoming_link_count: { type: :integer },
                     reads: { type: :integer },
@@ -51,18 +52,19 @@ describe 'topics' do
                     yours: { type: :boolean },
                     topic_id: { type: :integer },
                     topic_slug: { type: :string },
-                    display_username: { type: :string, nullable: true },
-                    primary_group_name: { type: :string, nullable: true },
-                    primary_group_flair_url: { type: :string, nullable: true },
-                    primary_group_flair_bg_color: { type: :string, nullable: true },
-                    primary_group_flair_color: { type: :string, nullable: true },
+                    display_username: { type: [:string, :null] },
+                    primary_group_name: { type: [:string, :null] },
+                    flair_name: { type: [:string, :null] },
+                    flair_url: { type: [:string, :null] },
+                    flair_bg_color: { type: [:string, :null] },
+                    flair_color: { type: [:string, :null] },
                     version: { type: :integer },
                     can_edit: { type: :boolean },
                     can_delete: { type: :boolean },
                     can_recover: { type: :boolean },
                     can_wiki: { type: :boolean },
                     read: { type: :boolean },
-                    user_title: { type: :string, nullable: true },
+                    user_title: { type: [:string, :null] },
                     actions_summary: {
                       type: :array,
                       items: {
@@ -79,9 +81,9 @@ describe 'topics' do
                     user_id: { type: :integer },
                     hidden: { type: :boolean },
                     trust_level: { type: :integer },
-                    deleted_at: { type: :string, nullable: true },
+                    deleted_at: { type: [:string, :null] },
                     user_deleted: { type: :boolean },
-                    edit_reason: { type: :string, nullable: true },
+                    edit_reason: { type: [:string, :null] },
                     can_view_edit_history: { type: :boolean },
                     wiki: { type: :boolean },
                     reviewable_id: { type: :integer },
@@ -106,6 +108,7 @@ describe 'topics' do
   path '/t/{id}.json' do
     get 'Get a single topic' do
       tags 'Topics'
+      operationId 'getTopic'
       consumes 'application/json'
       parameter name: 'Api-Key', in: :header, type: :string, required: true
       parameter name: 'Api-Username', in: :header, type: :string, required: true
@@ -133,7 +136,7 @@ describe 'topics' do
                     post_type: { type: :integer },
                     updated_at: { type: :string },
                     reply_count: { type: :integer },
-                    reply_to_post_number: { type: :string, nullable: true },
+                    reply_to_post_number: { type: [:string, :null] },
                     quote_count: { type: :integer },
                     incoming_link_count: { type: :integer },
                     reads: { type: :integer },
@@ -143,10 +146,11 @@ describe 'topics' do
                     topic_id: { type: :integer },
                     topic_slug: { type: :string },
                     display_username: { type: :string },
-                    primary_group_name: { type: :string, nullable: true },
-                    primary_group_flair_url: { type: :string, nullable: true },
-                    primary_group_flair_bg_color: { type: :string, nullable: true },
-                    primary_group_flair_color: { type: :string, nullable: true },
+                    primary_group_name: { type: [:string, :null] },
+                    flair_name: { type: [:string, :null] },
+                    flair_url: { type: [:string, :null] },
+                    flair_bg_color: { type: [:string, :null] },
+                    flair_color: { type: [:string, :null] },
                     version: { type: :integer },
                     can_edit: { type: :boolean },
                     can_delete: { type: :boolean },
@@ -165,7 +169,7 @@ describe 'topics' do
                       },
                     },
                     read: { type: :boolean },
-                    user_title: { type: :string, nullable: true },
+                    user_title: { type: [:string, :null] },
                     actions_summary: {
                       type: :array,
                       items: {
@@ -182,9 +186,9 @@ describe 'topics' do
                     user_id: { type: :integer },
                     hidden: { type: :boolean },
                     trust_level: { type: :integer },
-                    deleted_at: { type: :string, nullable: true },
+                    deleted_at: { type: [:string, :null] },
                     user_deleted: { type: :boolean },
-                    edit_reason: { type: :string, nullable: true },
+                    edit_reason: { type: [:string, :null] },
                     can_view_edit_history: { type: :boolean },
                     wiki: { type: :boolean },
                     reviewable_id: { type: :integer },
@@ -217,16 +221,15 @@ describe 'topics' do
                 posts_count: { type: :integer },
                 reply_count: { type: :integer },
                 highest_post_number: { type: :integer },
-                image_url: { type: :string, nullable: true },
+                image_url: { type: [:string, :null] },
                 created_at: { type: :string },
-                last_posted_at: { type: :string, nullable: true },
+                last_posted_at: { type: [:string, :null] },
                 bumped: { type: :boolean },
                 bumped_at: { type: :string },
                 archetype: { type: :string },
                 unseen: { type: :boolean },
                 last_read_post_number: { type: :integer },
-                unread: { type: :integer },
-                new_posts: { type: :integer },
+                unread_posts: { type: :integer },
                 pinned: { type: :boolean },
                 unpinned: { type: :boolean },
                 visible: { type: :boolean },
@@ -238,13 +241,13 @@ describe 'topics' do
                 like_count: { type: :integer },
                 views: { type: :integer },
                 category_id: { type: :integer },
-                featured_link: { type: :string, nullable: true },
+                featured_link: { type: [:string, :null] },
                 posters: {
                   type: :array,
                   items: {
                     type: :object,
                     properties: {
-                      extras: { type: :string, nullable: true },
+                      extras: { type: [:string, :null] },
                       description: { type: :string },
                       user: {
                         type: :object,
@@ -269,7 +272,7 @@ describe 'topics' do
           views: { type: :integer },
           reply_count: { type: :integer },
           like_count: { type: :integer },
-          last_posted_at: { type: :string, nullable: true },
+          last_posted_at: { type: [:string, :null] },
           visible: { type: :boolean },
           closed: { type: :boolean },
           archived: { type: :boolean },
@@ -277,22 +280,22 @@ describe 'topics' do
           archetype: { type: :string },
           slug: { type: :string },
           category_id: { type: :integer },
-          word_count: { type: :integer, nullable: true },
-          deleted_at: { type: :string, nullable: true },
+          word_count: { type: [:integer, :null] },
+          deleted_at: { type: [:string, :null] },
           user_id: { type: :integer },
-          featured_link: { type: :string, nullable: true },
+          featured_link: { type: [:string, :null] },
           pinned_globally: { type: :boolean },
-          pinned_at: { type: :string, nullable: true },
-          pinned_until: { type: :string, nullable: true },
-          image_url: { type: :string, nullable: true },
-          draft: { type: :string, nullable: true },
+          pinned_at: { type: [:string, :null] },
+          pinned_until: { type: [:string, :null] },
+          image_url: { type: [:string, :null] },
+          draft: { type: [:string, :null] },
           draft_key: { type: :string },
           draft_sequence: { type: :integer },
-          unpinned: { type: :string, nullable: true },
+          unpinned: { type: [:string, :null] },
           pinned: { type: :boolean },
           current_post_number: { type: :integer },
-          highest_post_number: { type: :integer, nullable: true },
-          deleted_by: { type: :string, nullable: true },
+          highest_post_number: { type: [:integer, :null] },
+          deleted_by: { type: [:string, :null] },
           has_deleted: { type: :boolean },
           actions_summary: {
             type: :array,
@@ -308,11 +311,11 @@ describe 'topics' do
           },
           chunk_size: { type: :integer },
           bookmarked: { type: :boolean },
-          topic_timer: { type: :string, nullable: true },
+          topic_timer: { type: [:string, :null] },
           message_bus_last_id: { type: :integer },
           participant_count: { type: :integer },
           show_read_indicator: { type: :boolean },
-          thumbnails: { type: :string, nullable: true },
+          thumbnails: { type: [:string, :null] },
           details: {
             type: :object,
             properties: {
@@ -337,10 +340,11 @@ describe 'topics' do
                     name: { type: :string },
                     avatar_template: { type: :string },
                     post_count: { type: :integer },
-                    primary_group_name: { type: :string, nullable: true },
-                    primary_group_flair_url: { type: :string, nullable: true },
-                    primary_group_flair_color: { type: :string, nullable: true },
-                    primary_group_flair_bg_color: { type: :string, nullable: true },
+                    primary_group_name: { type: [:string, :null] },
+                    flair_name: { type: [:string, :null] },
+                    flair_url: { type: [:string, :null] },
+                    flair_color: { type: [:string, :null] },
+                    flair_bg_color: { type: [:string, :null] },
                   }
                 },
               },
@@ -373,6 +377,7 @@ describe 'topics' do
 
     delete 'Remove a topic' do
       tags 'Topics'
+      operationId 'removeTopic'
       consumes 'application/json'
       parameter name: 'Api-Key', in: :header, type: :string, required: true
       parameter name: 'Api-Username', in: :header, type: :string, required: true
@@ -390,6 +395,7 @@ describe 'topics' do
   path '/t/-/{id}.json' do
     put 'Update a topic' do
       tags 'Topics'
+      operationId 'updateTopic'
       consumes 'application/json'
       parameter name: 'Api-Key', in: :header, type: :string, required: true
       parameter name: 'Api-Username', in: :header, type: :string, required: true
@@ -438,6 +444,7 @@ describe 'topics' do
   path '/t/{id}/invite.json' do
     post 'Invite to topic' do
       tags 'Topics', 'Invites'
+      operationId 'inviteToTopic'
       consumes 'application/json'
       parameter name: 'Api-Key', in: :header, type: :string, required: true
       parameter name: 'Api-Username', in: :header, type: :string, required: true
@@ -480,6 +487,7 @@ describe 'topics' do
   path '/t/{id}/bookmark.json' do
     put 'Bookmark topic' do
       tags 'Topics'
+      operationId 'bookmarkTopic'
       consumes 'application/json'
       parameter name: 'Api-Key', in: :header, type: :string, required: true
       parameter name: 'Api-Username', in: :header, type: :string, required: true
@@ -499,6 +507,7 @@ describe 'topics' do
   path '/t/{id}/status.json' do
     put 'Update the status of a topic' do
       tags 'Topics'
+      operationId 'updateTopicStatus'
       consumes 'application/json'
       parameter name: 'Api-Key', in: :header, type: :string, required: true
       parameter name: 'Api-Username', in: :header, type: :string, required: true
@@ -527,7 +536,7 @@ describe 'topics' do
       response '200', 'topic updated' do
         schema type: :object, properties: {
           success: { type: :string, example: "OK" },
-          topic_status_update: { type: :string, nullable: true },
+          topic_status_update: { type: [:string, :null] },
         }
 
         let(:request_body) { { status: 'closed', enabled: 'true' } }
@@ -541,6 +550,7 @@ describe 'topics' do
   path '/latest.json' do
     get 'Get the latest topics' do
       tags 'Topics'
+      operationId 'listLatestTopics'
       consumes 'application/json'
       parameter name: 'Api-Key', in: :header, type: :string, required: true
       parameter name: 'Api-Username', in: :header, type: :string, required: true
@@ -565,7 +575,7 @@ describe 'topics' do
               properties: {
                 id: { type: :integer },
                 username: { type: :string },
-                name: { type: :string, nullable: true },
+                name: { type: [:string, :null] },
                 avatar_template: { type: :string },
               }
             },
@@ -579,7 +589,7 @@ describe 'topics' do
             type: :object,
             properties: {
               can_create_topic: { type: :boolean },
-              draft: { type: :string, nullable: true },
+              draft: { type: [:string, :null] },
               draft_key: { type: :string },
               draft_sequence: { type: :integer },
               per_page: { type: :integer },
@@ -603,10 +613,9 @@ describe 'topics' do
                     archetype: { type: :string },
                     unseen: { type: :boolean },
                     last_read_post_number: { type: :integer },
-                    unread: { type: :integer },
-                    new_posts: { type: :integer },
+                    unread_posts: { type: :integer },
                     pinned: { type: :boolean },
-                    unpinned: { type: :string, nullable: true },
+                    unpinned: { type: [:string, :null] },
                     visible: { type: :boolean },
                     closed: { type: :boolean },
                     archived: { type: :boolean },
@@ -620,7 +629,7 @@ describe 'topics' do
                     category_id: { type: :integer },
                     op_like_count: { type: :integer },
                     pinned_globally: { type: :boolean },
-                    featured_link: { type: :string, nullable: true },
+                    featured_link: { type: [:string, :null] },
                     posters: {
                       type: :array,
                       items: {
@@ -629,7 +638,7 @@ describe 'topics' do
                           extras: { type: :string },
                           description: { type: :string },
                           user_id: { type: :integer },
-                          primary_group_id: { type: :string, nullable: true },
+                          primary_group_id: { type: [:string, :null] },
                         }
                       },
                     },
@@ -649,112 +658,15 @@ describe 'topics' do
   end
 
   path '/top.json' do
-    get 'Get the top topics' do
+    get 'Get the top topics filtered by period' do
       tags 'Topics'
-      consumes 'application/json'
-      parameter name: 'Api-Key', in: :header, type: :string, required: true
-      parameter name: 'Api-Username', in: :header, type: :string, required: true
-
-      produces 'application/json'
-      response '200', 'topic updated' do
-        schema type: :object, properties: {
-          users: {
-            type: :array,
-            items: {
-              type: :object,
-              properties: {
-                id: { type: :integer },
-                username: { type: :string },
-                name: { type: :string },
-                avatar_template: { type: :string },
-              }
-            },
-          },
-          primary_groups: {
-            type: :array,
-            items: {
-            },
-          },
-          topic_list: {
-            type: :object,
-            properties: {
-              can_create_topic: { type: :boolean },
-              draft: { type: :string, nullable: true },
-              draft_key: { type: :string },
-              draft_sequence: { type: :integer },
-              for_period: { type: :string },
-              per_page: { type: :integer },
-              topics: {
-                type: :array,
-                items: {
-                  type: :object,
-                  properties: {
-                    id: { type: :integer },
-                    title: { type: :string },
-                    fancy_title: { type: :string },
-                    slug: { type: :string },
-                    posts_count: { type: :integer },
-                    reply_count: { type: :integer },
-                    highest_post_number: { type: :integer },
-                    image_url: { type: :string, nullable: true },
-                    created_at: { type: :string },
-                    last_posted_at: { type: :string },
-                    bumped: { type: :boolean },
-                    bumped_at: { type: :string },
-                    archetype: { type: :string },
-                    unseen: { type: :boolean },
-                    last_read_post_number: { type: :integer },
-                    unread: { type: :integer },
-                    new_posts: { type: :integer },
-                    pinned: { type: :boolean },
-                    unpinned: { type: :boolean },
-                    visible: { type: :boolean },
-                    closed: { type: :boolean },
-                    archived: { type: :boolean },
-                    notification_level: { type: :integer },
-                    bookmarked: { type: :boolean },
-                    liked: { type: :boolean },
-                    views: { type: :integer },
-                    like_count: { type: :integer },
-                    has_summary: { type: :boolean },
-                    last_poster_username: { type: :string },
-                    category_id: { type: :integer },
-                    op_like_count: { type: :integer },
-                    pinned_globally: { type: :boolean },
-                    featured_link: { type: :string, nullable: true },
-                    posters: {
-                      type: :array,
-                      items: {
-                        type: :object,
-                        properties: {
-                          extras: { type: :string, nullable: true },
-                          description: { type: :string },
-                          user_id: { type: :integer },
-                          primary_group_id: { type: :string, nullable: true },
-                        }
-                      },
-                    },
-                  }
-                },
-              },
-            }
-          },
-        }
-
-        run_test!
-      end
-    end
-  end
-
-  path '/top/{flag}.json' do
-    get 'Get the top topics filtered by a flag' do
-      tags 'Topics'
+      operationId 'listTopTopics'
       consumes 'application/json'
       parameter name: 'Api-Key', in: :header, type: :string, required: true
       parameter name: 'Api-Username', in: :header, type: :string, required: true
       parameter(
-        name: :flag,
-        in: :path,
+        name: :period,
+        in: :query,
         type: :string,
         description: 'Enum: `all`, `yearly`, `quarterly`, `monthly`, `weekly`, `daily`')
 
@@ -782,7 +694,7 @@ describe 'topics' do
             type: :object,
             properties: {
               can_create_topic: { type: :boolean },
-              draft: { type: :string, nullable: true },
+              draft: { type: [:string, :null] },
               draft_key: { type: :string },
               draft_sequence: { type: :integer },
               for_period: { type: :string },
@@ -799,7 +711,7 @@ describe 'topics' do
                     posts_count: { type: :integer },
                     reply_count: { type: :integer },
                     highest_post_number: { type: :integer },
-                    image_url: { type: :string, nullable: true },
+                    image_url: { type: [:string, :null] },
                     created_at: { type: :string },
                     last_posted_at: { type: :string },
                     bumped: { type: :boolean },
@@ -807,8 +719,7 @@ describe 'topics' do
                     archetype: { type: :string },
                     unseen: { type: :boolean },
                     last_read_post_number: { type: :integer },
-                    unread: { type: :integer },
-                    new_posts: { type: :integer },
+                    unread_posts: { type: :integer },
                     pinned: { type: :boolean },
                     unpinned: { type: :boolean },
                     visible: { type: :boolean },
@@ -824,16 +735,16 @@ describe 'topics' do
                     category_id: { type: :integer },
                     op_like_count: { type: :integer },
                     pinned_globally: { type: :boolean },
-                    featured_link: { type: :string, nullable: true },
+                    featured_link: { type: [:string, :null] },
                     posters: {
                       type: :array,
                       items: {
                         type: :object,
                         properties: {
-                          extras: { type: :string, nullable: true },
+                          extras: { type: [:string, :null] },
                           description: { type: :string },
                           user_id: { type: :integer },
-                          primary_group_id: { type: :string, nullable: true },
+                          primary_group_id: { type: [:string, :null] },
                         }
                       },
                     },
@@ -844,7 +755,7 @@ describe 'topics' do
           },
         }
 
-        let(:flag) { 'all' }
+        let(:period) { 'all' }
 
         run_test!
       end
@@ -854,6 +765,7 @@ describe 'topics' do
   path '/t/{id}/notifications.json' do
     post 'Set notification level' do
       tags 'Topics'
+      operationId 'setNotificationLevel'
       consumes 'application/json'
       parameter name: 'Api-Key', in: :header, type: :string, required: true
       parameter name: 'Api-Username', in: :header, type: :string, required: true
@@ -886,6 +798,7 @@ describe 'topics' do
   path '/t/{id}/change-timestamp.json' do
     put 'Update topic timestamp' do
       tags 'Topics'
+      operationId 'updateTopicTimestamp'
       consumes 'application/json'
       parameter name: 'Api-Key', in: :header, type: :string, required: true
       parameter name: 'Api-Username', in: :header, type: :string, required: true
@@ -919,6 +832,7 @@ describe 'topics' do
   path '/t/{id}/timer.json' do
     post 'Create topic timer' do
       tags 'Topics'
+      operationId 'createTopicTimer'
       consumes 'application/json'
       parameter name: 'Api-Key', in: :header, type: :string, required: true
       parameter name: 'Api-Username', in: :header, type: :string, required: true
@@ -948,10 +862,10 @@ describe 'topics' do
         schema type: :object, properties: {
           success: { type: :string, example: "OK" },
           execute_at: { type: :string },
-          duration: { type: :string, nullable: true },
+          duration: { type: [:string, :null] },
           based_on_last_post: { type: :boolean },
           closed: { type: :boolean },
-          category_id: { type: :string, nullable: true },
+          category_id: { type: [:string, :null] },
         }
 
         let(:request_body) { { time: Time.current + 1.day, status_type: 'close' } }

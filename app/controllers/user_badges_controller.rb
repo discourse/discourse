@@ -1,14 +1,16 @@
 # frozen_string_literal: true
 
 class UserBadgesController < ApplicationController
+  MAX_BADGES = 96 # This was limited in PR#2360 to make it divisible by 8
+
   before_action :ensure_badges_enabled
 
   def index
     params.permit [:granted_before, :offset, :username]
 
     badge = fetch_badge_from_params
-    user_badges = badge.user_badges.order('granted_at DESC, id DESC').limit(96)
-    user_badges = user_badges.includes(:user, :granted_by, badge: :badge_type, post: :topic, user: :primary_group)
+    user_badges = badge.user_badges.order('granted_at DESC, id DESC').limit(MAX_BADGES)
+    user_badges = user_badges.includes(:user, :granted_by, badge: :badge_type, post: :topic, user: [:primary_group, :flair_group])
 
     grant_count = nil
 
@@ -37,15 +39,18 @@ class UserBadgesController < ApplicationController
     user_badges = user.user_badges
 
     if params[:grouped]
-      user_badges = user_badges.group(:badge_id)
-        .select(UserBadge.attribute_names.map { |x| "MAX(#{x}) AS #{x}" }, 'COUNT(*) AS "count"')
+      user_badges = user_badges.group(:badge_id).select_for_grouping
     end
 
     user_badges = user_badges.includes(badge: [:badge_grouping, :badge_type, :image_upload])
       .includes(post: :topic)
       .includes(:granted_by)
 
-    render_serialized(user_badges, DetailedUserBadgeSerializer, root: :user_badges)
+    render_serialized(
+      user_badges,
+      DetailedUserBadgeSerializer,
+      root: :user_badges,
+    )
   end
 
   def create
@@ -91,6 +96,25 @@ class UserBadgesController < ApplicationController
     render json: success_json
   end
 
+  def toggle_favorite
+    params.require(:user_badge_id)
+    user_badge = UserBadge.find(params[:user_badge_id])
+    user_badges = user_badge.user.user_badges
+
+    unless can_favorite_badge?(user_badge)
+      return render json: failed_json, status: 403
+    end
+
+    if !user_badge.is_favorite && user_badges.select(:badge_id).distinct.where(is_favorite: true).count >= SiteSetting.max_favorite_badges
+      return render json: failed_json, status: 400
+    end
+
+    UserBadge
+      .where(user_id: user_badge.user_id, badge_id: user_badge.badge_id)
+      .update_all(is_favorite: !user_badge.is_favorite)
+    UserBadge.update_featured_ranks!(user_badge.user_id)
+  end
+
   private
 
   # Get the badge from either the badge name or id specified in the params.
@@ -112,6 +136,10 @@ class UserBadgesController < ApplicationController
   def can_assign_badge_to_user?(user)
     master_api_call = current_user.nil? && is_api?
     master_api_call || guardian.can_grant_badges?(user)
+  end
+
+  def can_favorite_badge?(user_badge)
+    current_user == user_badge.user && !(1..4).include?(user_badge.badge_id)
   end
 
   def ensure_badges_enabled

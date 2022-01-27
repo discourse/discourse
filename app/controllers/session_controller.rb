@@ -25,7 +25,7 @@ class SessionController < ApplicationController
     cookies.delete(:destination_url)
 
     if SiteSetting.enable_discourse_connect?
-      sso = DiscourseSingleSignOn.generate_sso(return_path, secure_session: secure_session)
+      sso = DiscourseConnect.generate_sso(return_path, secure_session: secure_session)
       if SiteSetting.verbose_discourse_connect_logging
         Rails.logger.warn("Verbose SSO log: Started SSO process\n\n#{sso.diagnostics}")
       end
@@ -42,11 +42,11 @@ class SessionController < ApplicationController
           params.require(:sso)
           payload = request.query_string
         end
-        sso = SingleSignOnProvider.parse(payload)
-      rescue SingleSignOnProvider::BlankSecret
+        sso = DiscourseConnectProvider.parse(payload)
+      rescue DiscourseConnectProvider::BlankSecret
         render plain: I18n.t("discourse_connect.missing_secret"), status: 400
         return
-      rescue SingleSignOnProvider::ParseError => e
+      rescue DiscourseConnectProvider::ParseError => e
         if SiteSetting.verbose_discourse_connect_logging
           Rails.logger.warn("Verbose SSO log: Signature parse error\n\n#{e.message}\n\n#{sso&.diagnostics}")
         end
@@ -144,8 +144,8 @@ class SessionController < ApplicationController
     params.require(:sig)
 
     begin
-      sso = DiscourseSingleSignOn.parse(request.query_string, secure_session: secure_session)
-    rescue DiscourseSingleSignOn::ParseError => e
+      sso = DiscourseConnect.parse(request.query_string, secure_session: secure_session)
+    rescue DiscourseConnect::ParseError => e
       if SiteSetting.verbose_discourse_connect_logging
         Rails.logger.warn("Verbose SSO log: Signature parse error\n\n#{e.message}\n\n#{sso&.diagnostics}")
       end
@@ -156,7 +156,7 @@ class SessionController < ApplicationController
 
     if !sso.nonce_valid?
       if SiteSetting.verbose_discourse_connect_logging
-        Rails.logger.warn("Verbose SSO log: Nonce has already expired\n\n#{sso.diagnostics}")
+        Rails.logger.warn("Verbose SSO log: #{sso.nonce_error}\n\n#{sso.diagnostics}")
       end
       return render_sso_error(text: I18n.t("discourse_connect.timeout_expired"), status: 419)
     end
@@ -248,7 +248,7 @@ class SessionController < ApplicationController
         #{e.record.errors.to_h}
 
         Attributes:
-        #{e.record.attributes.slice(*SingleSignOn::ACCESSORS.map(&:to_s))}
+        #{e.record.attributes.slice(*DiscourseConnectBase::ACCESSORS.map(&:to_s))}
 
         SSO Diagnostics:
         #{sso.diagnostics}
@@ -267,7 +267,7 @@ class SessionController < ApplicationController
       end
 
       render_sso_error(text: text || I18n.t("discourse_connect.unknown_error"), status: 500)
-    rescue DiscourseSingleSignOn::BlankExternalId
+    rescue DiscourseConnect::BlankExternalId
       render_sso_error(text: I18n.t("discourse_connect.blank_id_error"), status: 500)
     rescue Invite::ValidationFailed => e
       render_sso_error(text: e.message, status: 400)
@@ -339,7 +339,7 @@ class SessionController < ApplicationController
 
   def email_login_info
     token = params[:token]
-    matched_token = EmailToken.confirmable(token)
+    matched_token = EmailToken.confirmable(token, scope: EmailToken.scopes[:email_login])
     user = matched_token&.user
 
     check_local_login_allowed(user: user, check_login_via_email: true)
@@ -377,7 +377,7 @@ class SessionController < ApplicationController
 
   def email_login
     token = params[:token]
-    matched_token = EmailToken.confirmable(token)
+    matched_token = EmailToken.confirmable(token, scope: EmailToken.scopes[:email_login])
     user = matched_token&.user
 
     check_local_login_allowed(user: user, check_login_via_email: true)
@@ -388,7 +388,7 @@ class SessionController < ApplicationController
       return render(json: @second_factor_failure_payload)
     end
 
-    if user = EmailToken.confirm(token)
+    if user = EmailToken.confirm(token, scope: EmailToken.scopes[:email_login])
       if login_not_approved_for?(user)
         return render json: login_not_approved
       elsif payload = login_error_check(user)
@@ -434,27 +434,24 @@ class SessionController < ApplicationController
     RateLimiter.new(nil, "forgot-password-hr-#{request.remote_ip}", 6, 1.hour).performed!
     RateLimiter.new(nil, "forgot-password-min-#{request.remote_ip}", 3, 1.minute).performed!
 
-    user = User.find_by_username_or_email(normalized_login_param)
+    user = if SiteSetting.hide_email_address_taken && !current_user&.staff?
+      raise Discourse::InvalidParameters.new(:login) if EmailValidator.email_regex !~ normalized_login_param
+      User.real.where(staged: false).find_by_email(Email.downcase(normalized_login_param))
+    else
+      User.real.where(staged: false).find_by_username_or_email(normalized_login_param)
+    end
 
     if user
       RateLimiter.new(nil, "forgot-password-login-day-#{user.username}", 6, 1.day).performed!
+      email_token = user.email_tokens.create!(email: user.email, scope: EmailToken.scopes[:password_reset])
+      Jobs.enqueue(:critical_user_email, type: :forgot_password, user_id: user.id, email_token: email_token.token)
     else
       RateLimiter.new(nil, "forgot-password-login-hour-#{normalized_login_param}", 5, 1.hour).performed!
     end
 
-    user_presence = user.present? && user.human? && !user.staged
-    if user_presence
-      email_token = user.email_tokens.create(email: user.email)
-      Jobs.enqueue(:critical_user_email, type: :forgot_password, user_id: user.id, email_token: email_token.token)
-    end
-
     json = success_json
-    unless SiteSetting.hide_email_address_taken
-      json[:user_found] = user_presence
-    end
-
+    json[:user_found] = user.present? if !SiteSetting.hide_email_address_taken
     render json: json
-
   rescue RateLimiter::LimitExceeded
     render_json_error(I18n.t("rate_limiter.slow_down"))
   end
@@ -589,13 +586,8 @@ class SessionController < ApplicationController
   end
 
   def failed_to_login(user)
-    message = user.suspend_reason ? "login.suspended_with_reason" : "login.suspended"
-
     {
-      error: I18n.t(message,
-        date: I18n.l(user.suspended_till, format: :date_only),
-        reason: Rack::Utils.escape_html(user.suspend_reason)
-      ),
+      error: user.suspended_message,
       reason: 'suspended'
     }
   end

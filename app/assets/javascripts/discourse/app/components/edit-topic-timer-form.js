@@ -14,9 +14,14 @@ import I18n from "I18n";
 import { action } from "@ember/object";
 import Component from "@ember/component";
 import { isEmpty } from "@ember/utils";
-import { now, startOfDay, thisWeekend } from "discourse/lib/time-utils";
+import {
+  MOMENT_MONDAY,
+  now,
+  startOfDay,
+  thisWeekend,
+} from "discourse/lib/time-utils";
 import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
-import Mousetrap from "mousetrap";
+import ItsATrap from "@discourse/itsatrap";
 
 export default Component.extend({
   statusType: readOnly("topicTimer.status_type"),
@@ -38,12 +43,13 @@ export default Component.extend({
     "autoCloseAfterLastPost"
   ),
   duration: null,
+  _itsatrap: null,
 
   init() {
     this._super(...arguments);
 
     KeyboardShortcuts.pause();
-    this._mousetrap = new Mousetrap();
+    this.set("_itsatrap", new ItsATrap());
 
     this.set("duration", this.initialDuration);
   },
@@ -60,7 +66,9 @@ export default Component.extend({
 
   willDestroyElement() {
     this._super(...arguments);
-    this._mousetrap.reset();
+
+    this._itsatrap.destroy();
+    this.set("_itsatrap", null);
     KeyboardShortcuts.unpause();
   },
 
@@ -82,22 +90,22 @@ export default Component.extend({
       {
         icon: "bed",
         id: "this_weekend",
-        label: "topic.auto_update_input.this_weekend",
+        label: "time_shortcut.this_weekend",
         time: thisWeekend(),
         timeFormatKey: "dates.time_short_day",
       },
       {
         icon: "far-clock",
         id: "two_weeks",
-        label: "topic.auto_update_input.two_weeks",
-        time: startOfDay(now().add(2, "weeks")),
+        label: "time_shortcut.two_weeks",
+        time: startOfDay(now().add(2, "weeks").day(MOMENT_MONDAY)),
         timeFormatKey: "dates.long_no_year",
       },
       {
         icon: "far-calendar-plus",
         id: "six_months",
-        label: "topic.auto_update_input.six_months",
-        time: startOfDay(now().add(6, "months")),
+        label: "time_shortcut.six_months",
+        time: startOfDay(now().add(6, "months").startOf("month")),
         timeFormatKey: "dates.long_no_year",
       },
     ];
@@ -105,7 +113,7 @@ export default Component.extend({
 
   @discourseComputed
   hiddenTimeShortcutOptions() {
-    return ["none", "start_of_next_business_week"];
+    return ["none"];
   },
 
   isCustom: equal("timerType", "custom"),

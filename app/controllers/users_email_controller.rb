@@ -80,7 +80,7 @@ class UsersEmailController < ApplicationController
     rate_limit_second_factor!(@user)
 
     if !@error
-      # this is needed becase the form posts this field as JSON and it can be a
+      # this is needed because the form posts this field as JSON and it can be a
       # hash when authenticating security key.
       if params[:second_factor_method].to_i == UserSecondFactor.methods[:security_key]
         begin
@@ -200,17 +200,17 @@ class UsersEmailController < ApplicationController
   def load_change_request(type)
     expires_now
 
-    @token = EmailToken.confirmable(params[:token])
+    token = EmailToken.confirmable(params[:token], scope: EmailToken.scopes[:email_update])
 
-    if @token
+    if token
       if type == :old
-        @change_request = @token.user&.email_change_requests.where(old_email_token_id: @token.id).first
+        @change_request = token.user&.email_change_requests.where(old_email_token_id: token.id).first
       elsif type == :new
-        @change_request = @token.user&.email_change_requests.where(new_email_token_id: @token.id).first
+        @change_request = token.user&.email_change_requests.where(new_email_token_id: token.id).first
       end
     end
 
-    @user = @token&.user
+    @user = token&.user
 
     if (!@user || !@change_request)
       @error = I18n.t("change_email.already_done")

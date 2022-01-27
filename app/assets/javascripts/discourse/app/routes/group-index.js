@@ -20,12 +20,19 @@ export default DiscourseRoute.extend({
       showing: "members",
     });
 
-    controller.findMembers(true);
+    controller.reloadMembers(true);
   },
 
   @action
   showAddMembersModal() {
     showModal("group-add-members", { model: this.modelFor("group") });
+  },
+
+  @action
+  showInviteModal() {
+    const model = this.modelFor("group");
+    const controller = showModal("create-invite");
+    controller.buffered.set("groupIds", [model.id]);
   },
 
   @action

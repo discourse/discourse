@@ -1,9 +1,10 @@
-<div class="software-update-prompt {{if showPrompt "require-software-refresh"}}">
-  <div class="wrap">
-    <div class="update-prompt-main-content" aria-live="polite">
-      <span role="button" onclick={{action "refreshPage"}} class="update-prompt-message">{{d-icon "redo"}} {{html-safe (i18n "software_update_prompt.message")}}</span>
-      <span class="update-prompt-dismiss"><span aria-label={{i18n "software_update_prompt.dismiss"}} role="button" onclick={{action "dismiss"}}>{{d-icon "times"}}</span></span>
+{{#if showPrompt}}
+  <div class="software-update-prompt{{if animatePrompt " require-software-refresh"}}">
+    <div class="wrap">
+      <div class="update-prompt-main-content" aria-live="polite">
+        <span role="button" onclick={{action "refreshPage"}} class="update-prompt-message">{{d-icon "redo"}} {{html-safe (i18n "software_update_prompt.message")}}</span>
+        <span class="update-prompt-dismiss"><span aria-label={{i18n "software_update_prompt.dismiss"}} role="button" onclick={{action "dismiss"}}>{{d-icon "times"}}</span></span>
+      </div>
     </div>
   </div>
-</div>
-
+{{/if}}

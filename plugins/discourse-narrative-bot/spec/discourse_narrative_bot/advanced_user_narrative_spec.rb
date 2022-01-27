@@ -26,6 +26,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
   fab!(:reset_trigger) { DiscourseNarrativeBot::TrackSelector.reset_trigger }
 
   before do
+    stub_image_size
     Jobs.run_immediately!
     SiteSetting.discourse_narrative_bot_enabled = true
   end
@@ -330,7 +331,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
 
           post = Post.last
 
-          expect(post.raw).to eq(I18n.t('js.post.deleted_by_author', count: 1))
+          expect(post.raw).to eq(I18n.t('js.post.deleted_by_author_simple'))
 
           PostDestroyer.destroy_stubs
 
@@ -756,5 +757,21 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
     }.to change { Topic.count }
     expect(Topic.last.title).to eq(I18n.t("discourse_narrative_bot.tl2_promotion_message.subject_template"))
     expect(Topic.last.topic_users.map(&:user_id).sort).to eq([DiscourseNarrativeBot::Base.new.discobot_user.id, recipient.id])
+  end
+
+  it "invites to advanced training using the user's effective locale" do
+    SiteSetting.allow_user_locale = true
+    recipient = Fabricate(:user, locale: "de")
+
+    TranslationOverride.upsert!("de", 'discourse_narrative_bot.tl2_promotion_message.subject_template', 'german title')
+    TranslationOverride.upsert!("de", 'discourse_narrative_bot.tl2_promotion_message.text_body_template', 'german body')
+
+    expect {
+      DiscourseEvent.trigger(:system_message_sent, post: Post.last, message_type: 'tl2_promotion_message')
+    }.to change { Topic.count }
+
+    topic = Topic.last
+    expect(topic.title).to eq("german title")
+    expect(topic.first_post.raw).to eq("german body")
   end
 end

@@ -12,6 +12,7 @@ tr_TR:
     discourse_narrative_bot_disable_public_replies: "Discourse Hikaye Botu tarafından verilen cevapları devre dışı bırak"
     discourse_narrative_bot_welcome_post_type: "Forum Anlatı Botunun göndermesi gereken karşılama gönderisinin türü"
     discourse_narrative_bot_welcome_post_delay: "Söylem Anlatı Botu karşılama gönderisini göndermeden önce (n) saniye bekleyin."
+    discourse_narrative_bot_skip_tutorials: "Pas geçilecek Discourse Bot eğitimleri"
   badges:
     certified:
       name: Sertifikalı
@@ -24,25 +25,33 @@ tr_TR:
       long_description: |
         Bu rozet, interaktif ileri kullanıcı eğitiminin başarılı tamamlanmasının ardından verilir. Gelişmiş tartışma araçlarına hakim oldunuz - ve şimdi tamamen lisanslısınız!
   discourse_narrative_bot:
+    bio: "Merhaba, ben gerçek bir insan değilim. Ben size bu siteyi öğretebilecek bir botum. Benimle etkileşim kurmak için bana bir ileti gönderin veya adımı kullanarak benden söz edin."
+    tl2_promotion_message:
+      subject_template: "Artık güvenlik seviyeniz arttığına göre, bazı gelişmiş özellikler hakkında bilgi edinmenin zamanı geldi!"
+      text_body_template: |
+        Neler yapabileceğinize dair daha fazla bilgi edinmek için bu iletiyi `@%{discobot_username} %{reset_trigger}` kullanarak yanıtlayın.
     timeout:
       message: |-
-        Merhaba @ %{username}, uzun süredir sizden haber alamadık.
+        Merhaba @%{username}, uzun süredir sizden haber alamadık.
 
         - Devam etmek için bana istediğiniz zaman cevap verin.
 
-        - Bu adımı atlamak istiyorsanız, &quot;%{skip_trigger}&quot; komutunu girin.
+        - Bu adımı atlamak istiyorsanız, `%{skip_trigger}` komutunu girin.
 
-        - Baştan başlamak için &quot;%{reset_trigger}&quot; komutunu girin
+        - Baştan başlamak için `%{reset_trigger}` komutunu girin.
 
-        . Eğer istemiyorsanız, bu benim için  sorun değil. Ben bir robotum. Hislerime zarar vermeyeceksiniz. : Sob:
+        Eğer istemiyorsanız, bu benim için sorun değil. Ben bir robotum. Hislerime zarar vermeyeceksiniz. :sob:
     dice:
       trigger: "yuvarla"
       invalid: |-
         Üzgünüm, bu zar kombinasyonunu tutturmak matematiksel olarak imkansız. :confounded:
+      not_enough_dice:
+        one: "Sadece %{count} zarım var. Biliyorum [Shameful](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php)!"
+        other: "Sadece %{count} zarım var. Biliyorum [Shameful](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php)!"
       out_of_range: |-
         (https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) Matematiksel olarak bir zarın en fazla 120 yüzeyi olabildiğini biliyor muydunuz?
       results: |-
-        &gt;: game_die: %{results}
+        > :game_die: %{results}
     quote:
       trigger: "alıntıla"
       "1":
@@ -70,7 +79,7 @@ tr_TR:
         quote: "Her gün seni korkutan bir şey yap."
         author: "Eleanor Roosevelt"
       "9":
-        quote: "Onları kabul etme cesareti varsa, hatalar daima affedilebilirdir."
+        quote: "Onları kabul etme cesareti varsa, hatalar daima affedilebilir."
         author: "Bruce Lee"
       "10":
         quote: "İnsan zihni ne olursa olsun düşünebilir ve inanabilir, başarabilir."
@@ -101,7 +110,7 @@ tr_TR:
         "19": "Görünüm o kadar iyi değil"
         "20": "Çok şüpheli"
       result: |-
-        &gt;: crystal_ball: %{result}
+        > :crystal_ball: %{result}
     track_selector:
       reset_trigger: "başla"
       skip_trigger: "atla"
@@ -109,20 +118,27 @@ tr_TR:
       random_mention:
         reply: |-
           Selam! Neler yapabileceğimi öğrenmek için `@ %{discobot_username} %{help_trigger}` komutunu girin.
+        tracks: |-
+          Şu an için aşağıdakileri nasıl yapacağımı biliyorum:
+
+          `@%{discobot_username} %{reset_trigger} {name-of-tutorial}`
+          > Kişisel bir iletiyle yalnızca sizin için etkileşimli bir eğitim başlatır. `{name-of-tutorial}` şunlardan biri olabilir: `%{tracks}`.
         bot_actions: |-
-          @ @ %{discobot_username} %{dice_trigger} 2d6`
-          &gt;: game_die: 3, 6
-          `@ %{discobot_username} %{quote_trigger}`
+          `@%{discobot_username} %{dice_trigger} 2d6`
+          > :game_die: 3, 6
+
+          `@%{discobot_username} %{quote_trigger}`
           %{quote_sample}
 
-          ` @%{discobot_username}%{magic_8_ball_trigger}`
-          > :crystal_ball: You may rely on it
+          `@%{discobot_username} %{magic_8_ball_trigger}`
+          > :crystal_ball: Ona güvenebilirsiniz
+        discobot_disabled: Tercihlerinde beni devre dışı bıraktın. Benimle iletişim kurmak için yeni kullanıcı alıştırma ipuçlarına izin vermen gerekiyor.
       do_not_understand:
         first_response: |-
           Hey, cevabın için teşekkürler!
 
           Ne yazık ki, kötü programlanmış bir bot olarak bunu tam olarak anlayamıyorum. :frowning:
-        track_response: Tekrar deneyebilirsiniz veya bu adımı atlamak istiyorsanız, &quot;%{skip_trigger}&quot; komutunu girin. Aksi takdirde, baştan başlamak için &quot;%{reset_trigger}&quot; komutunu girin.
+        track_response: Tekrar deneyebilirsiniz veya bu adımı atlamak istiyorsanız, "%{skip_trigger}" komutunu girin. Aksi takdirde, baştan başlamak için "%{reset_trigger}" komutunu girin.
         second_response: |-
           Ah, üzgünüm. Hala anlamıyorum. :anguished:
           Ben sadece bir botum, ama gerçek bir kişiye ulaşmak istiyorsanız, [iletişim sayfamıza bakın] (%{base_path} / about).
@@ -135,13 +151,13 @@ tr_TR:
       hello:
         title: "Selamlar!"
         message: |-
-          %{title}&#39;a katıldığınız için teşekkür ederiz.
+          %{title} topluluğuna katıldığın için teşekkür ederiz!
 
-          - Ben sadece bir robotum, ama [cana yakın personelimiz] (%{base_uri} / about) bir kişiye ulaşmanız gerektiğinde size yardımcı olmak için burada.
+          - Ben sadece bir robotum, ama gerçek birine ulaşmak istersen [cana yakın personelimiz](%{base_uri}/about) sana yardımcı olmak için her zaman burada.
 
-          - Güvenlik nedeniyle, yeni kullanıcıların yapabileceklerini geçici olarak sınırlandırıyoruz. Sizi tanıdıkça [yeni yetenekler] (https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) (ve [rozetler] (%{base_uri} / rozetleri) kazanacaksınız.
+          - Güvenlik nedeniyle, yeni kullanıcıların yapabileceklerini geçici olarak sınırlandırıyoruz. Seni tanıdıkça [yeni yetenekler](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) (ve [rozetler](%{base_uri}/badges)) edinmeni sağlayacağız.
 
-          - Her zaman [medeni topluluk davranışına] (%{base_uri} / yönergeleri) inanıyoruz.
+          - Her ne olursa olsun doğru yöntemin [medeni topluluk davranışları](%{base_uri}/guidelines) sergilemek olduğuna inanıyoruz.
       onebox:
         instructions: |-
           Sonrasında bu bağlantılardan birini benimle paylaşabilir misiniz? **herhangi bir bağlantıyı tek başına** yanıtladığınızda, kutucuk açıklama ekleyebilmeniz için otomatik olarak genişler.
@@ -159,29 +175,43 @@ tr_TR:
 
           <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
 
-          Devam etmek istiyorsanız :heart: butonuna basın.
+          Devam etmek istiyorsanız (kim istemez ki) :heart: butonuna basın.
 
           **Bir resim ile cevap verebilir misiniz?** Herhangi bir resim yeterli! Sürükleyip bırakın, yükle düğmesine basın veya kopyalayıp yapıştırın.
         reply: |-
-          Şık resim -  :heart: :heart_eyes:
+          Şık resim - Ne kadar beğendiğimi :heart_eyes: sana anlatabilmek için :heart: düğmesini kullandım
         like_not_found: |-
           Beğenmeyi unuttun mu? :heart: [post?] (%{url}) :crying_cat_face:
+        not_found: |-
+          Görünüşe göre bir resim yüklememişsin, bu yüzden ben senin beğeneceğinden _emin olduğum_ bir resim seçtim.
+
+          <%{image_url}>
+
+          Bunu yüklemeyi veya bağlantıyı tek başına bir satıra yapıştırmayı deneyin!
       likes:
+        instructions: |-
+          İşte bir tek boynuzlu at resmi:
+
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
+
+          Beğendiğinizi (kim beğenmez ki!) anlamam için bu gönderinin altındaki :heart: düğmesini tıklayın.
+        reply: |-
+          Gönderimi beğendiğiniz için teşekkürler!
         not_found: |-
           Beğenmeyi unuttun mu? :heart: [post?] (%{url}) :crying_cat_face:
       formatting:
         instructions: |-
           Yanıtınızda bazı kelimeleri **kalın** veya _italic_ yapabilir misiniz?
 
-          - `**kalın** &#39;veya` _italic_` yazın
+          - `**kalın**` veya `_italic_` yazın
 
           - veya düzenleyicideki <kbd><b>B</b></kbd> veya <kbd><i>I</i></kbd> butonlarına basın
         reply: |-
-          Güzel! HTML ve BBCode da bu biçim için çalışır. - daha fazla bilgi edinmek için [bu eğitimi deneyin] (http://commonmark.org/help): nerd:
+          Güzel! HTML ve BBCode da bu biçim için çalışır - daha fazla bilgi edinmek için [bu eğitimi deneyin] (https://commonmark.org/help) :nerd:.
         not_found: |-
-          Aww, yanıtınızda biçimlendirme bulamadım. :pencil2:
+          Ooo, yanıtınızda biçimlendirme bulamadım. :pencil2:
 
-          Tekrar deneyebilir misin? Eğer takılırsanız editörü italik veya <kbd><i>I</i></kbd> kalın butonlarını<kbd><b>B</b></kbd> kullanın.
+          Tekrar deneyebilir misin? Eğer takılırsanız editördeki kalın <kbd><b>B</b></kbd> veya italik <kbd><i>I</i></kbd> düğmelerini kullanın.
       quoting:
         instructions: |-
           Cevap verirken beni alıntılamayı deneyebilir misiniz, aksi takdirde hangi bölüme cevap verdiğinizi anlayamıyorum.
@@ -192,7 +222,7 @@ tr_TR:
           >
           >Bazı insanların kelimelerle bir yolu vardır, diğer insanlar ... ah, ah, yolu yok.
 
-          Alıntılayacağınız metinin üzerine gelin. Sonrasında seçiminizin üzerine gelerek **Alıntı** butonuna veya bu yazının altındaki **Yanıtla** butonuna basın. Daha sonra neden o metni alıntıladığınız hakkında bir iki kelime yazın, çünkü merak ediyorum :thinking:
+          Alıntılayacağınız metinin &uarr; üzerine gelin. Sonrasında seçiminizin üzerine gelerek **Alıntı** butonuna veya bu yazının altındaki **Yanıtla** butonuna basın. Daha sonra neden o metni alıntıladığınız hakkında bir iki kelime yazın, çünkü merak ediyorum :thinking:
         reply: |-
           Güzel iş, benim en favori alıntımı aldınız! :left_speech_bubble:
         not_found: |-
@@ -201,9 +231,11 @@ tr_TR:
           Yazımdaki herhangi bir metni seçtiğinizde <kbd>**Alıntı**</kbd> butonu görünür veya seçilen herhangi bir metinle **Yanıtla** tuşuna da basabilirsiniz! Tekrar dener misin?
       bookmark:
         instructions: |-
-          Daha fazla bilgi edinmek istiyorsanız aşağıdan seç<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> ve ** bu özel ileti yi yer im lerine ekle<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **. Bunu yaparsanız, gelecekte bir :gift: kazanabilirsiniz!
+          Daha fazla bilgi edinmek istiyorsanız aşağıdan <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> ikonuna tıklayın ve **bu özel iletiyi yer imlerine <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> ekleyin**. Bunu yaparsanız, gelecekte bir :gift: kazanabilirsiniz!
+        reply: |-
+          Mükemmel! Artık istediğiniz zaman doğrudan [profilinizdeki yer imleri sekmesinden](%{bookmark_url}) özel sohbetimize geri dönüş yolunu kolayca bulabilirsiniz. Sağ üstteki &#8599; profil resminizi seçmeniz yeterli
         not_found: |-
-          Ah, bu konuda hiçbir yer işareti görmüyorum. Her gönderinin altındaki yer işaretlerini gördünüz mü? <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">Ek eylemleri ortaya çıkarmak için daha fazla göster seçeneğini kullanın.
+          Ah, bu konuda hiçbir yer imi görmüyorum. Her gönderinin altındaki yer imlerini gördünüz mü? <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">Ek eylemleri ortaya çıkarmak için daha fazla göster seçeneğini kullanın.
       emoji:
         instructions: |-
           Yanıtlarımda küçük resimler kullandığımı görmüş olabilirsiniz :blue_car: :dash: bunlara [emoji] denir (https://en.wikipedia.org/wiki/Emoji). Yanıtınıza **bir emoji** ekleyebilir misiniz? Bunlardan herhangi biri işe yarayacaktır:
@@ -215,53 +247,54 @@ tr_TR:
         reply: |-
           Bu :sparkles: _emojitastic!_ :sparkles:
         not_found: |-
-          Hata! Cevabınızda Emoji görmüyorum? Oh hayır! :sob: İki nokta üst üste yazmayı deneyin <kbd>:</kbd> emoji seçiciyi getirmek için, istediğiniz ilk harfleri yazın, örneğin: :kuş: `Veya emoji butonuna basın. <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16">(Mobil bir cihazdaysanız Emoji&#39;yi doğrudan klavyenizden de girebilirsiniz.)
+          Uuups! Cevabınızda emoji görmüyorum? Oh hayır! :sob:
+
+          Emoji seçiciyi açmak için iki nokta üst üste yazmayı deneyin <kbd>:</kbd>, istediğiniz ilk harfleri yazın, örneğin: `:bird:`
+
+          Veya emoji butonuna basın. <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> (Mobil bir cihazdaysanız Emojiyi doğrudan klavyenizden de girebilirsiniz.)
       mention:
         instructions: |-
           Bazen birine doğrudan cevap vermiyor olsanız bile, dikkatini çekmek isteyebilirsiniz. `@` Yazın ve ardından kişilerden bahsetmek için kullanıcı adlarını yazın. Cevabınızda **`@ @ %{discobot_username}` ** dan bahsedebilir misiniz?
         reply: |-
           _Birisi adımı söyledi mi?_ :raised_hand: Bunu yaptığına inanıyorum! :wave: İşte buradayım! Benden bahsettiğiniz için teşekkürler. :ok_hand:
         not_found: |-
-          İsmimi orada hiçbir yerde göremiyorum :frowing: Beni tekrar `@%{discobot_username}` yazarak etiketlemeyi deneyebilir misin?
+          İsmimi orada hiçbir yerde göremiyorum :frowning: Beni tekrar `@%{discobot_username}` yazarak etiketlemeyi deneyebilir misin?
 
-          (Ve evet, kullanıcı adım 1970&#39;ler dans çılgınlığında olduğu gibi _disco_ olarak yazılmıştır. [Gece hayatını seviyorum!] (Https://www.youtube.com/watch?v=B_wGI3_sGf8): dansçı :)
+          (Ve evet, kullanıcı adım 1970ler dans çılgınlığında olduğu gibi _disco_ olarak yazılmıştır. [Gece hayatını seviyorum!](https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
       flag:
         instructions: |-
-          Dostça tartışmayı seviyoruz ve [fikirlerimizi geliştirmek] için yardımınıza ihtiyacımız var. Bir sorun görürseniz, lütfen yazarın veya [yardımcı moderatörümüz] (%{guidelines_url}) 'in %{about_url} bundan özel olarak bildirim almasına izin vermek için işaretleyin.
+          Tartışmalarımızı arkadaşça yapmayı seviyoruz ve [işleri medeni tutmak](%{guidelines_url}) için yardımınıza ihtiyacımız var. Bir sorun görürseniz, yazara veya [moderatörelere](%{about_url}) özel olarak bildirmek için lütfen sorunlu olarak işaretleyin. Bir gönderiyi sorunlu olarak işaretlemek isteyebileceğiniz, zararsız bir konu ayırma önerisinden net bir topluluk standartları ihlaline kadar birçok neden vardır. **Başka Bir Şey**'i seçerseniz, moderatörlerle daha fazla soru sorabileceğiniz özel bir mesajlaşma başlatırsınız.
 
-          >:imp: Buraya kötü bir şey yazdım
+          > :imp: Burada kötü bir şey yazdım
 
-          Sanırım ne yapacağını biliyorsun. Devam edin ve bu yayını *uygunsuz olarak* <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> işaretleyin!
+          Hadi **bu gönderiyi sorunlu olarak işaretleyin** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> ve neden olarak **Uygunsuz**'u seçin!
         reply: |-
-          [Moderatörümüz] (%{base_uri}/grup/moderatör) raporunuz hakkında özel olarak bilgilendirilecektir. Yeterli topluluk üyesi bir gönderiyi işaretlerse, önlem olarak otomatik olarak gizlenir. (Aslında kötü bir yazı yazmadığım için :melek:, devam ettim ve şu an için bu raporu kaldırdım.)
+          [Moderatörümüz] (%{base_uri}/grup/staff) raporunuz hakkında özel olarak bilgilendirilecektir. Yeterli topluluk üyesi bir gönderiyi işaretlerse, önlem olarak otomatik olarak gizlenir. (Aslında kötü bir yazı yazmadığım için :angel:, devam ettim ve şu an için bu raporu kaldırdım.)
+        not_found: |-
+          Aa hayır, nahoş paylaşımım henüz uygunsuz olarak işaretlenmedi. :worried: <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> kullanarak uygunsuz olarak işaretleyebilir misiniz? Her gönderi için daha fazla eylem görmek için daha fazla göster düğmesini <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> kullanabileceğinizi unutmayın.
       search:
         instructions: |-
-          _psst_ … Bu konuda bir sürprizim var. Eğer meydan okumaya hazırsanız, **arama simgesini seçin** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> sağ üstte ↗ arayın.
+          _psst_ … Bu konuda bir sürprizim var. Eğer meydan okumaya hazırsanız, **arama simgesini seçin** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> sağ üstte &#8599; arayın.
 
-          Bu konuda &quot;capy bara&quot; terimini aramayı deneyin
+          Bu konuda "capy&#8203;bara" terimini aramayı deneyin
         hidden_message: |-
-          Bu kapibarayı özledin mi? :wink:
+          Bu kapibarayı nasıl gözden kaçırırsın? :wink:
 
           <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
 
-          Şimdi işin başında olduğunuzu fark ettiniz mi? Bu zavallı aç kapibara&#39;yı **%{search_answer}` emoji** ile yanıtlayın.
+          Şimdi işin başında olduğunu fark ettin mi? **`%{search_answer}` emoji ile yanıtlayarak** bu zavallı aç kapibarayı doyurun. Sonrasında otomatik olarak sona gönderileceksiniz.
         reply: |-
-          Yeey, buldunuz! :tada:
+          Heey, buldunuz! :tada:
 
-          - Daha ayrıntılı aramalar için [tam arama sayfası] &#39;na gidin (%{search_url}).
+          - Daha ayrıntılı aramalar için [tam arama sayfasına](%{search_url}) gidin.
 
-          - Uzun bir tartışmada herhangi bir yere atlamak için, sağdaki (ve altta, mobilde) konu zaman çizelgesi denetimlerini deneyin.
+          - Uzun bir tartışmada herhangi bir yere atlamak için, sağdaki (ve mobilde altta) konu zaman çizelgesi denetimlerini deneyin.
 
           - Fiziksel :keyboard: varsa, kullanışlı klavye kısayollarımızı görüntülemek için. <kbd>?</kbd> tuşuna basın.
         not_found: |-
-          Hmm… sorun yaşıyormuşsunuz gibi görünüyor. Bunun için üzgünüm. Aradın mı <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> ** capy bara ** terimi için?
+          Hmm… Galiba sorun yaşıyorsunuz. Bunun için üzgünüm. **capy&#8203;bara ** terimi için <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> arma yaptınız mı?
       end:
-        message: |-
-          Bana takıldığın için teşekkürler @%{username}!  Sanırım bunu hakettin:
-
-          %{certificate}
-
-          Şimdilik hepsi bu! [**en son tartışma konularımız**] (%{base_uri}/en son) veya [**tartışma kategorileri**] (%{base_uri}/kategoriler) bölümüne göz atın. :sunglasses: (Daha fazla bilgi edinmek için benimle tekrar konuşmak isterseniz, istediğiniz zaman &quot;@%{discobot_username}&quot; etiketini kullanmanız yeterli!)
+        message: "Bana takıldığın için teşekkürler @%{username}! Sanırım bunu hakettin:\n\n%{certificate}\n\nŞimdilik hepsi bu! [**en son tartışma konularımız**] (%{base_uri}/latest) veya [**tartışma kategorileri**] (%{base_uri}/categories) bölümüne göz at. :sunglasses: \n\n(Daha fazla bilgi edinmek için benimle tekrar konuşmak istersen, istediğin zaman `@%{discobot_username}` etiketini kullanman yeterli!)"
       certificate:
         alt: "Başarı Belgesi"
     advanced_user_narrative:
@@ -277,9 +310,9 @@ tr_TR:
 
           Kendi adınıza oluşturduğum gönderiyi **düzenleyerek** başlayabilir misiniz?
         not_found: |-
-          Görünüşe göre sizin için oluşturduğum [gönderiyi] (%{url}) düzenlemediniz. Tekrar dener misin?
+          Görünüşe göre sizin için oluşturduğum [post](%{url}) düzenlemediniz. Tekrar dener misin?
 
-          Editörü kullanmak <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-pencil.png" width="16" height="16">  için editör simgesine tıklayın.
+          Editörü kullanmak <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-pencil.png" width="16" height="16"> için editör simgesine tıklayın.
         reply: |-
           Harika iş!
 
@@ -301,26 +334,20 @@ tr_TR:
           Oh hayır! Görünüşe göre, sizin için yeni oluşturduğum yeni bir gönderiyi yanlışlıkla sildim. Bana bir iyilik yapıp <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> **silme işlemini geri alır mısın?**
         not_found: |-
           Sorun yaşıyorsanız <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> daha fazla göster butonuna <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> basıp silmeyi geri alma seçeneğini seçin.
-        reply: |-
-          Vay be, bu çok yakındı! Düzelttiğiniz için teşekkürler :wink: Bir gönderiyi silmeyi geri almak için yalnızca %{deletion_after} saatiniz olduğunu unutmayın.
+        reply: "Vay be, bu çok yakındı! Düzelttiğiniz için teşekkürler :wink: \n\nBir gönderiyi silmeyi geri almak için yalnızca belirli süreniz (%{deletion_after} saatiniz) olduğunu unutmayın."
       category_hashtag:
         instructions: |-
           Gönderinizdeki kategorilere ve etiketlere başvurabileceğinizi biliyor muydunuz?
 
           Örneğin, %{category} kategorisini gördünüz mü? Cümlenin ortasına `#` yazın ve herhangi bir kategori veya etiket seçin.
-        not_found: |-
-          Hmm, Hiçbir yerde bir kategori göremiyorum. &quot;#&quot; Karakterinin ilk karakter olamayacağını unutmayın. Bunu bir sonraki cevabınıza kopyalayabilir misiniz?
-
-          ```metin # # &#39;&#39;
-          ile kategori bağlantısı oluşturabilirim
-          ```
+        not_found: "Hmm, hiçbir yerde bir kategori göremiyorum. `#` Karakterinin ilk karakter olamayacağını unutmayın. Bunu bir sonraki cevabınıza kopyalayabilir misiniz?\n\n```text \n# ile kategori bağlantısı oluşturabilirim\n```"
         reply: |-
-          Mükemmel! Unutmayın, eğer etiketler etkin ise bu iki kategoride de çalışacak. (_ ve _)
+          Mükemmel! Unutmayın, eğer etiketler etkin ise bu kategorilerde _ve_ etiketlerde çalışacak.
       change_topic_notification_level:
         instructions: |-
-          Her konunun bir bildirim seviyesi vardır. &#39;Normal&#39; seviyesi ile başlar, yani normalde yalnızca birileri doğrudan sizinle konuştuğunda bilgilendirilirsiniz.
+          Her konunun bir bildirim seviyesi vardır. 'Normal' seviyesi ile başlar, yani normalde yalnızca birileri doğrudan sizinle konuştuğunda bilgilendirilirsiniz.
 
-          Varsayılan olarak, özel bir iletinin bildirim düzeyi en yüksek &#39;izleme&#39; düzeyine ayarlanır, yani her yeni yanıt size bildirilir. Ancak _any_ topic için bildirim düzeyini &#39;izlemek&#39;, &#39;izlemek&#39; veya &#39;yoksaymak&#39; seçeneğini ile geçersiz kılabilirsiniz.
+          Varsayılan olarak, özel bir iletinin bildirim düzeyi en yüksek 'izleme' düzeyine ayarlanır, yani her yeni yanıt size bildirilir. Ancak _any_ topic için bildirim düzeyini 'izlemek', 'izlemek' veya 'yoksaymak' seçeneğini ile geçersiz kılabilirsiniz.
 
           Bu konuyla ilgili bildirim düzeyini değiştirmeyi deneyelim. Konunun altında, bu konuyu **izlediğinizi** gösteren bir buton bulacaksınız. Bildirim seviyesini **takip etme** olarak değiştirebilir misiniz?
         not_found: |-
@@ -328,41 +355,39 @@ tr_TR:
         reply: |-
           Mükemmel iş! Umarım gevezelik yapabileceğim için bu konuyu susturmadın :grin:.
 
-          Bir konuyu yanıtladığınızda veya bir konuyu birkaç dakikadan uzun bir süre okuduğunuzda, konunun otomatik olarak &#39;izleme&#39; bildirim düzeyine ayarlandığını unutmayın. Bunu [kullanıcı tercihleriniz] &#39;de değiştirebilirsiniz (%{base_uri}/profilim/tercihler).
+          Bir konuyu yanıtladığınızda veya bir konuyu birkaç dakikadan uzun bir süre okuduğunuzda, konunun otomatik olarak 'izleme' bildirim düzeyine ayarlandığını unutmayın. Bunu [kullanıcı tercihlerinizde](%{base_uri}/profilim/tercihler) değiştirebilirsiniz.
       poll:
         instructions: |-
           Herhangi bir gönderiye anket ekleyebileceğinizi biliyor muydunuz? **Anket oluştur** seçeneğini kullanmayı deneyin. <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16">
         not_found: |-
           Tüh! Cevabınızda hiç anket yok.
-          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> Çark simgesini kullanın veya bu anketi kopyalayıp bir sonraki yanıtınıza yapıştırın:
-          ``text
-          [anket]
-          *  :kedi:
-          * :köpek:
-          [/anket]
+
+          Çark simgesini <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> kullanın veya bu anketi kopyalayıp bir sonraki yanıtınıza yapıştırın:
+
+          ```text
+          [poll]
+          * :cat:
+          * :dog:
+          [/poll]
           ```
         reply: |-
           Hey, güzel anket! Size yardımcı olabildim mi?
 
-          [anket]
+          [poll]
           * :+1:
           * :-1:
-          [/anket]
+          [/poll]
       details:
-        instructions: |-
-          Bazen yanıtlarınızda **ayrıntıları gizlemek** isteyebilirsiniz:
-
-          - Bir film veya TV şovunun spoiler olarak kabul edilecek noktalarını tartışırken.
-
-          - İseğe bağlı ayrıntıya ihtiyaç duyduğunda. [details = Nasıl çalıştığını görmek için bunu seçin!] 1. <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> düzenleyicide. 2. &quot;Ayrıntıları Gizle&quot; yi seçin. 3. Ayrıntılar özetini düzenleyin ve içeriğinizi ekleyin. [/ayrıntılar] <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> bir sonraki cevabınıza ayrıntılar bölümüne eklemeye ne dersiniz?
+        instructions: "Bazen yanıtlarınızda **ayrıntıları gizlemek** isteyebilirsiniz:\n\n- Bir film veya TV şovunun spoiler olarak kabul edilecek noktalarını tartışırken.\n\n- Gönderiniz bir kerede okumak için çok fazla detay içerdiğinde.\n\n[details=Nasıl çalıştığını görmek için bunu seçin!] \n1. Düzenleyicide <img src=\"%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png\" width=\"16\" height=\"16\"> çark işaretini seçin. \n2. \"Ayrıntıları Gizle\" seçeneğini seçin. \n3. Ayrıntılar özetini düzenleyin ve içeriğinizi ekleyin. \n[/details] \n \nBir sonraki cevabınızda ayrıntılar bölümünebir şeyler eklemek için çarkı kullanmaya <img src=\"%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png\" width=\"16\" height=\"16\"> ne dersiniz?"
         not_found: |-
-          Ayrıntılar widget&#39;ı oluştururken sorun mu yaşıyorsunuz? Bir sonraki yanıtınıza aşağıdakileri eklemeyi deneyin:
-          ```metin
-          [ayrıntılar = Ayrıntılar için beni seç]
+          Ayrıntılar widgetını oluştururken sorun mu yaşıyorsunuz? Bir sonraki yanıtınıza aşağıdakileri eklemeyi deneyin:
+
+          ```text
+          [details=Ayrıntılar için beni seç]
           İşte ayrıntılar
-          [/ayrıntılar]```
+          [/details]```
         reply: |-
-          Harika iş - _detail_&#39;e gösterdiğiniz ilgi takdire şayan!
+          Harika iş - _detaylara_ gösterdiğiniz ilgi takdire şayan!
       end:
         message: |-
           Bunu ileri düzey bir kullanıcı gibi alevlendirdiniz :bow:
@@ -370,6 +395,6 @@ tr_TR:
           %{certificate}
 
           Sizin için sahip olduğum tek şey bu.
-          Şimdilik hoşçakal! Benimle tekrar konuşmak isterseniz, istediğiniz zaman bana bir mesaj gönderin :sunglasses:
+          Şimdilik hoşçakal! Benimle tekrar konuşmak isterseniz, istediğiniz zaman bana bir ileti gönderin :sunglasses:
       certificate:
         alt: "İleri Kullanıcı İzlemesi Başarı Sertifikası"

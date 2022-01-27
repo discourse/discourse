@@ -4,10 +4,12 @@
 # about: Uses the lazyYT plugin to lazy load Youtube videos
 # version: 1.0.1
 # authors: Arpit Jalan
-# url: https://github.com/discourse/discourse/tree/master/plugins/lazy-yt
+# url: https://github.com/discourse/discourse/tree/main/plugins/lazy-yt
 # transpile_js: true
 
 hide_plugin if self.respond_to?(:hide_plugin)
+
+require "onebox"
 
 # stylesheet
 register_asset "stylesheets/lazyYT.css"

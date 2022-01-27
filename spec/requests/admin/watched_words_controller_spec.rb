@@ -24,6 +24,7 @@ RSpec.describe Admin::WatchedWordsController do
 
       expect(response.status).to eq(200)
       expect(WatchedWord.find_by(id: watched_word.id)).to eq(nil)
+      expect(UserHistory.where(action: UserHistory.actions[:watched_word_destroy]).count).to eq(1)
     end
   end
 
@@ -47,6 +48,7 @@ RSpec.describe Admin::WatchedWordsController do
         )
 
         expect(WatchedWord.pluck(:action).uniq).to eq([WatchedWord.actions[:flag]])
+        expect(UserHistory.where(action: UserHistory.actions[:watched_word_create]).count).to eq(6)
       end
 
       it 'creates the words from the file' do
@@ -64,6 +66,7 @@ RSpec.describe Admin::WatchedWordsController do
         )
 
         expect(WatchedWord.pluck(:action).uniq).to eq([WatchedWord.actions[:tag]])
+        expect(UserHistory.where(action: UserHistory.actions[:watched_word_create]).count).to eq(2)
       end
     end
   end
@@ -129,6 +132,7 @@ RSpec.describe Admin::WatchedWordsController do
         delete "/admin/customize/watched_words/action/block.json"
         expect(response.status).to eq(200)
         expect(WatchedWord.pluck(:word)).not_to include(word.word)
+        expect(UserHistory.where(action: UserHistory.actions[:watched_word_destroy]).count).to eq(1)
       end
 
       it "doesn't delete words of multiple actions in one call" do
@@ -140,6 +144,7 @@ RSpec.describe Admin::WatchedWordsController do
         all_words = WatchedWord.pluck(:word)
         expect(all_words).to include(block_word.word)
         expect(all_words).not_to include(flag_word.word)
+        expect(UserHistory.where(action: UserHistory.actions[:watched_word_destroy]).count).to eq(1)
       end
     end
   end

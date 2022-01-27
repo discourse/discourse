@@ -1,7 +1,7 @@
 import EmberObject, { computed, get, getProperties } from "@ember/object";
 import cookie, { removeCookie } from "discourse/lib/cookie";
 import { defaultHomepage, escapeExpression } from "discourse/lib/utilities";
-import { equal, gt, or } from "@ember/object/computed";
+import { equal, filterBy, gt, or } from "@ember/object/computed";
 import getURL, { getURLWithCDN } from "discourse-common/lib/get-url";
 import { A } from "@ember/array";
 import Badge from "discourse/models/badge";
@@ -37,7 +37,7 @@ export const SECOND_FACTOR_METHODS = {
   SECURITY_KEY: 3,
 };
 
-const isForever = (dt) => moment().diff(dt, "years") < -500;
+const isForever = (dt) => moment().diff(dt, "years") < -100;
 
 let userFields = [
   "bio_raw",
@@ -59,6 +59,7 @@ let userFields = [
   "watching_first_post_tags",
   "date_of_birth",
   "primary_group_id",
+  "flair_group_id",
   "user_notification_schedule",
 ];
 
@@ -96,6 +97,7 @@ let userOptionFields = [
   "title_count_mode",
   "timezone",
   "skip_new_user_tips",
+  "default_calendar",
 ];
 
 export function addSaveableUserOptionField(fieldName) {
@@ -229,7 +231,7 @@ const User = RestModel.extend({
     const allowedUsers = details && details.get("allowed_users");
     const groups = details && details.get("allowed_groups");
 
-    // directly targetted so go to inbox
+    // directly targeted so go to inbox
     if (!groups || (allowedUsers && allowedUsers.findBy("id", userId))) {
       return userPath(`${username}/messages`);
     } else {
@@ -380,7 +382,7 @@ const User = RestModel.extend({
     // TODO: We can remove this when migrated fully to rest model.
     this.set("isSaving", true);
     return ajax(userPath(`${this.username_lower}.json`), {
-      data: data,
+      data,
       type: "PUT",
     })
       .then((result) => {
@@ -427,7 +429,7 @@ const User = RestModel.extend({
   changePassword() {
     return ajax("/session/forgot_password", {
       dataType: "json",
-      data: { login: this.username },
+      data: { login: this.email || this.username },
       type: "POST",
     });
   },
@@ -524,27 +526,23 @@ const User = RestModel.extend({
 
   loadUserAction(id) {
     const stream = this.stream;
-    return ajax(`/user_actions/${id}.json`, { cache: "false" }).then(
-      (result) => {
-        if (result && result.user_action) {
-          const ua = result.user_action;
+    return ajax(`/user_actions/${id}.json`).then((result) => {
+      if (result && result.user_action) {
+        const ua = result.user_action;
 
-          if (
-            (this.get("stream.filter") || ua.action_type) !== ua.action_type
-          ) {
-            return;
-          }
-          if (!this.get("stream.filter") && !this.inAllStream(ua)) {
-            return;
-          }
-
-          ua.title = emojiUnescape(escapeExpression(ua.title));
-          const action = UserAction.collapseStream([UserAction.create(ua)]);
-          stream.set("itemsLoaded", stream.get("itemsLoaded") + 1);
-          stream.get("content").insertAt(0, action[0]);
+        if ((this.get("stream.filter") || ua.action_type) !== ua.action_type) {
+          return;
         }
+        if (!this.get("stream.filter") && !this.inAllStream(ua)) {
+          return;
+        }
+
+        ua.title = emojiUnescape(escapeExpression(ua.title));
+        const action = UserAction.collapseStream([UserAction.create(ua)]);
+        stream.set("itemsLoaded", stream.get("itemsLoaded") + 1);
+        stream.get("content").insertAt(0, action[0]);
       }
-    );
+    });
   },
 
   inAllStream(ua) {
@@ -564,6 +562,8 @@ const User = RestModel.extend({
       return !group.automatic || group.name === "moderators";
     });
   },
+
+  groupsWithMessages: filterBy("groups", "has_messages", true),
 
   @discourseComputed("filteredGroups", "numGroupsToDisplay")
   displayGroups(filteredGroups, numGroupsToDisplay) {
@@ -761,7 +761,7 @@ const User = RestModel.extend({
     return !this.siteSettings.enable_discourse_connect && canDeleteAccount;
   },
 
-  delete: function () {
+  delete() {
     if (this.can_delete_account) {
       return ajax(userPath(this.username + ".json"), {
         type: "DELETE",
@@ -867,7 +867,7 @@ const User = RestModel.extend({
 
   @discourseComputed("groups.@each.title", "badges.[]")
   availableTitles() {
-    let titles = [];
+    const titles = [];
 
     (this.groups || []).forEach((group) => {
       if (get(group, "title")) {
@@ -890,6 +890,27 @@ const User = RestModel.extend({
           id: title,
         };
       });
+  },
+
+  @discourseComputed("groups.[]")
+  availableFlairs() {
+    const flairs = [];
+
+    if (this.groups) {
+      this.groups.forEach((group) => {
+        if (group.flair_url) {
+          flairs.push({
+            id: group.id,
+            name: group.name,
+            url: group.flair_url,
+            bgColor: group.flair_bg_color,
+            color: group.flair_color,
+          });
+        }
+      });
+    }
+
+    return flairs;
   },
 
   @discourseComputed("user_option.text_size_seq", "user_option.text_size")
@@ -1016,7 +1037,7 @@ User.reopenClass(Singleton, {
 
   // Find a `User` for a given username.
   findByUsername(username, options) {
-    const user = User.create({ username: username });
+    const user = User.create({ username });
     return user.findDetails(options);
   },
 
@@ -1049,6 +1070,14 @@ User.reopenClass(Singleton, {
 
   checkEmail(email) {
     return ajax(userPath("check_email"), { data: { email } });
+  },
+
+  loadRecentSearches() {
+    return ajax(`/u/recent-searches`);
+  },
+
+  resetRecentSearches() {
+    return ajax(`/u/recent-searches`, { type: "DELETE" });
   },
 
   groupStats(stats) {
@@ -1104,6 +1133,7 @@ User.reopenClass(Singleton, {
 
 if (typeof Discourse !== "undefined") {
   let warned = false;
+  // eslint-disable-next-line no-undef
   Object.defineProperty(Discourse, "User", {
     get() {
       if (!warned) {

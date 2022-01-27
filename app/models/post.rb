@@ -25,6 +25,9 @@ class Post < ActiveRecord::Base
   # Version 2 15-12-2017, introduces CommonMark and a huge number of onebox fixes
   BAKED_VERSION = 2
 
+  # Time between the delete and permanent delete of a post
+  PERMANENT_DELETE_TIMER = 5.minutes
+
   rate_limit
   rate_limit :limit_posts_per_day
 
@@ -43,6 +46,9 @@ class Post < ActiveRecord::Base
   has_many :uploads, through: :post_uploads
 
   has_one :post_stat
+
+  # When we are ready we can add as: :bookmarkable here to use the
+  # polymorphic association.
   has_many :bookmarks
 
   has_one :incoming_email
@@ -81,9 +87,13 @@ class Post < ActiveRecord::Base
 
   register_custom_field_type(NOTICE, :json)
 
-  scope :private_posts_for_user, ->(user) {
-    where("posts.topic_id IN (#{Topic::PRIVATE_MESSAGES_SQL})", user_id: user.id)
-  }
+  scope :private_posts_for_user, ->(user) do
+    where(
+      "topics.id IN (#{Topic::PRIVATE_MESSAGES_SQL_USER})
+      OR topics.id IN (#{Topic::PRIVATE_MESSAGES_SQL_GROUP})",
+      user_id: user.id
+    )
+  end
 
   scope :by_newest, -> { order('created_at DESC, id DESC') }
   scope :by_post_number, -> { order('post_number ASC') }
@@ -732,12 +742,11 @@ class Post < ActiveRecord::Base
   before_save do
     self.last_editor_id ||= user_id
 
-    if !new_record? && will_save_change_to_raw?
-      self.cooked = cook(raw, topic_id: topic_id)
+    if will_save_change_to_raw?
+      self.cooked = cook(raw, topic_id: topic_id) if !new_record?
+      self.baked_at = Time.zone.now
+      self.baked_version = BAKED_VERSION
     end
-
-    self.baked_at = Time.zone.now
-    self.baked_version = BAKED_VERSION
   end
 
   def advance_draft_sequence
@@ -960,7 +969,7 @@ class Post < ActiveRecord::Base
 
   def update_uploads_secure_status(source:)
     if Discourse.store.external?
-      self.uploads.each { |upload| upload.update_secure_status(source: source) }
+      Jobs.enqueue(:update_post_uploads_secure_status, post_id: self.id, source: source)
     end
   end
 
@@ -1087,7 +1096,15 @@ class Post < ActiveRecord::Base
   end
 
   def image_url
-    image_upload&.url
+    raw_url = image_upload&.url
+    UrlHelper.cook_url(raw_url, secure: image_upload&.secure?, local: true) if raw_url
+  end
+
+  def cannot_permanently_delete_reason(user)
+    if self.deleted_by_id == user&.id && self.deleted_at >= Post::PERMANENT_DELETE_TIMER.ago
+      time_left = RateLimiter.time_left(Post::PERMANENT_DELETE_TIMER.to_i - Time.zone.now.to_i + self.deleted_at.to_i)
+      I18n.t('post.cannot_permanently_delete.wait_or_different_admin', time_left: time_left)
+    end
   end
 
   private

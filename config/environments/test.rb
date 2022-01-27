@@ -12,7 +12,7 @@ Discourse::Application.configure do
   # Configure static asset server for tests with Cache-Control for performance
   config.public_file_server.enabled = true
 
-  # don't consider reqs local so we can properly handle exceptions like we do in prd
+  # don't consider reqs local so we can properly handle exceptions like we do in prod
   config.consider_all_requests_local = false
 
   # disable caching
@@ -65,7 +65,6 @@ Discourse::Application.configure do
       s.set_regardless_of_locale(:min_post_length, 5)
       s.set_regardless_of_locale(:min_first_post_length, 5)
       s.set_regardless_of_locale(:min_personal_message_post_length, 10)
-      s.set_regardless_of_locale(:crawl_images, false)
       s.set_regardless_of_locale(:download_remote_images_to_local, false)
       s.set_regardless_of_locale(:unique_posts_mins, 0)
       s.set_regardless_of_locale(:max_consecutive_replies, 0)

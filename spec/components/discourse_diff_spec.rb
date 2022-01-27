@@ -107,6 +107,11 @@ describe DiscourseDiff do
       expect(DiscourseDiff.new(before, after).side_by_side_html).to eq("<div class=\"revision-content\"><p><del>&#39;</del></p></div><div class=\"revision-content\"><p></p></div>")
     end
 
+    it "escapes attribute values" do
+      before = "<p data-attr='Some \"quoted\" string'></p>"
+      after = "<p data-attr='Some \"quoted\" string'></p>"
+      expect(DiscourseDiff.new(before, after).side_by_side_html).to eq("<div class=\"revision-content\"><p data-attr=\"Some &quot;quoted&quot; string\"></p></div><div class=\"revision-content\"><p data-attr=\"Some &quot;quoted&quot; string\"></p></div>")
+    end
   end
 
   describe "side_by_side_markdown" do

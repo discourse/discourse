@@ -165,7 +165,7 @@ describe PrettyText do
     MD
 
     expect(cooked).to include(<<~HTML)
-      <div class="poll-title">What’s your favorite <em>berry</em>? <img src="/images/emoji/twitter/wink.png?v=9" title=":wink:" class="emoji" alt=":wink:"> <a href="https://google.com/" rel="noopener nofollow ugc">https://google.com/</a>
+      <div class="poll-title">What’s your favorite <em>berry</em>? <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji" alt=":wink:"> <a href="https://google.com/" rel="noopener nofollow ugc">https://google.com/</a>
       </div>
     HTML
   end
@@ -185,7 +185,7 @@ describe PrettyText do
     MD
 
     expect(cooked).to include(<<~HTML)
-      <div class="poll-title">What’s your favorite <em>berry</em>? <img src="/images/emoji/twitter/wink.png?v=9" title=":wink:" class="emoji" alt=":wink:"> <a href="https://google.com/" rel="noopener nofollow ugc">https://google.com/</a>
+      <div class="poll-title">What’s your favorite <em>berry</em>? <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji" alt=":wink:"> <a href="https://google.com/" rel="noopener nofollow ugc">https://google.com/</a>
       </div>
     HTML
 

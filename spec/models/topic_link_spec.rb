@@ -58,8 +58,8 @@ describe TopicLink do
       TopicLink.extract_from(post)
 
       # we have a special rule for images title where we pull them out of the filename
-      expect(topic.topic_links.where(url: png).pluck(:title).first).to eq(png_title)
-      expect(topic.topic_links.where(url: non_png).pluck(:title).first).to eq("amazing")
+      expect(topic.topic_links.where(url: png).pluck_first(:title)).to eq(png_title)
+      expect(topic.topic_links.where(url: non_png).pluck_first(:title)).to eq("amazing")
 
       expect(topic.topic_links.pluck(:url)).to contain_exactly(
         png,
@@ -107,6 +107,7 @@ describe TopicLink do
       fab!(:other_topic) do
         Fabricate(:topic, user: user)
       end
+      fab!(:moderator) { Fabricate(:moderator) }
 
       let(:post) do
         other_topic.posts.create(user: user, raw: "some content")
@@ -184,6 +185,57 @@ describe TopicLink do
         expect(reflection.link_topic_id).to eq(topic.id)
         expect(reflection.link_post_id).to eq(linked_post.id)
         expect(reflection.user_id).to eq(link.user_id)
+      end
+
+      it "doesn't work for a deleted post" do
+        post
+        url = "http://#{test_uri.host}/t/#{other_topic.slug}/#{other_topic.id}"
+
+        topic.posts.create(user: user, raw: 'initial post')
+        linked_post = topic.posts.create(user: user, raw: "Link to another topic: #{url}")
+        TopicLink.extract_from(linked_post)
+        expect(other_topic.reload.topic_links.where(link_post_id: linked_post.id).count).to eq(1)
+
+        PostDestroyer.new(moderator, linked_post).destroy
+        TopicLink.extract_from(linked_post)
+        expect(other_topic.reload.topic_links.where(link_post_id: linked_post.id)).to be_blank
+
+      end
+
+      it 'truncates long links' do
+        SiteSetting.slug_generation_method = 'encoded'
+        long_title = "Καλημερα σε ολους και ολες" * 9 # 234 chars, but the encoded slug will be 1224 chars in length
+        other_topic = Fabricate(:topic, user: user, title: long_title)
+        expect(other_topic.slug.length).to be > TopicLink.max_url_length
+        other_topic.posts.create(user: user, raw: 'initial post')
+        other_topic_url = "http://#{test_uri.host}/t/#{other_topic.slug}/#{other_topic.id}"
+
+        post_with_link = topic.posts.create(user: user, raw: "Link to another topic: #{other_topic_url}")
+        TopicLink.extract_from(post_with_link)
+        topic.reload
+        link = topic.topic_links.first
+
+        expect(link.url.length).to eq(TopicLink.max_url_length)
+      end
+
+      it 'does not truncate reflection links' do
+        SiteSetting.slug_generation_method = 'encoded'
+        long_title = "Καλημερα σε ολους και ολες" * 9 # 234 chars, but the encoded slug will be 1224 chars in length
+        topic = Fabricate(:topic, user: user, title: long_title)
+        expect(topic.slug.length).to be > TopicLink.max_url_length
+        topic_url = "http://#{test_uri.host}/t/#{topic.slug}/#{topic.id}"
+
+        other_topic = Fabricate(:topic, user: user)
+        other_topic.posts.create(user: user, raw: 'initial post')
+        other_topic_url = "http://#{test_uri.host}/t/#{other_topic.slug}/#{other_topic.id}"
+
+        post_with_link = topic.posts.create(user: user, raw: "Link to another topic: #{other_topic_url}")
+        expect { TopicLink.extract_from(post_with_link) }.to_not raise_error
+
+        other_topic.reload
+        reflection_link = other_topic.topic_links.first
+        expect(reflection_link.url.length).to be > (TopicLink.max_url_length)
+        expect(reflection_link.url).to eq(topic_url)
       end
     end
 
@@ -419,6 +471,22 @@ describe TopicLink do
         TopicLink.extract_from(post)
 
         expect(TopicLink.topic_map(Guardian.new, post.topic_id).count).to eq(0)
+      end
+
+      it 'secures internal links correctly' do
+        other_topic = Fabricate(:topic)
+        other_user = Fabricate(:user)
+
+        url = "http://#{test_uri.host}/t/topic-slug/#{other_topic.id}"
+        post = Fabricate(:post, raw: "hello test topic #{url}")
+        TopicLink.extract_from(post)
+        TopicLinkClick.create!(topic_link: post.topic.topic_links.first, ip_address: '192.168.1.1')
+
+        expect(TopicLink.counts_for(Guardian.new(other_user), post.topic, [post]).length).to eq(1)
+
+        TopicUser.change(other_user.id, other_topic.id, notification_level: TopicUser.notification_levels[:muted])
+
+        expect(TopicLink.counts_for(Guardian.new(other_user), post.topic, [post]).length).to eq(0)
       end
     end
 

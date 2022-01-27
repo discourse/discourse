@@ -69,3 +69,14 @@ export function setupS3CDN(configS3BaseUrl, configS3CDN) {
   S3BaseUrl = configS3BaseUrl;
   S3CDN = configS3CDN;
 }
+
+// We can use this to identify when navigating on the same host but outside of the
+// prefix directory. For example from `/forum` to `/about-us` which is not discourse
+export function samePrefix(url) {
+  if (baseUri === undefined) {
+    setPrefix($('meta[name="discourse-base-uri"]').attr("content") || "");
+  }
+  let origin = window.location.origin;
+  let cmp = url[0] === "/" ? baseUri || "/" : origin + baseUri || origin;
+  return url.indexOf(cmp) === 0;
+}

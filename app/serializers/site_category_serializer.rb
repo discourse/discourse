@@ -32,5 +32,4 @@ class SiteCategorySerializer < BasicCategorySerializer
   def required_tag_group_name
     object.required_tag_group&.name
   end
-
 end

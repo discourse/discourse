@@ -154,7 +154,7 @@ sw:
 
           -au, bonyeza vitufe vya <kbd><b>B</b></kbd> au <kbd><i>I</i></kbd> kwenye sehemu ya kuandika
         reply: |-
-          Kazi nzuri! HTML na BBCode zinaumbiza - kujifunza zaidi, [jaribu fundisho hili] (http://commonmark.org/help) :nerd:
+          Kazi nzuri! HTML na BBCode zinaumbiza - kujifunza zaidi, [jaribu fundisho hili] (https://commonmark.org/help) :nerd:
         not_found: |-
           Sijaona mtindo kwenye jibu lako. :pencil2:
 
@@ -214,12 +214,6 @@ sw:
 
           (Ndio, jina langu ni _disco_, kama miziki ya miaka ya 1970. Ni[napenda kusherehekea!] (https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
       flag:
-        instructions: |-
-          Tunapenda majadiliano yetu yawe ya kirafiki, na tunahitaji msaada wako [kuhakikisha kuwa vitu vipo kistaarabu au kiungwana](%{guidelines_url}). Kama ukiona tatizo lolote, tafadhali bonyeza bendera pembeni ya hiyo taarifa kumtujulisha mwandishi, au [wasaidizi wetu](%{about_url}), kujua kuhusiana na hilo tatizo.
-
-          > :imp: Nimeandika kitu ambacho hakifai
-
-          Nadhani unajua chakufanya, **Bonyeza hiyo bendera**<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> kuashiria kuwa kuna tatizo na ujumbe uliosoma!
         reply: |-
           [Wasaidizi](%{base_uri}/vikundi/wasaidizi) watajulishwa kwa ujumbe binafsi kuhusiana na bendera. Kama watumiaji wengi wakibonyeza bendera. Itafichwa hapo hapo kama tahadhari. (Kwa vile mimi sijaandikagi taarifa mbaya au chafu :angel:, Nimeitoa bendera kwa sasa.)
       search:

@@ -9,7 +9,7 @@
 
   <div class="control-group bookmark-name-wrap">
     {{input id="bookmark-name" value=model.name name="bookmark-name" class="bookmark-name" enter=(action "saveAndClose") placeholder=(i18n "post.bookmarks.name_placeholder") maxlength="100"}}
-    {{d-button icon="cog" action=(action "toggleOptionsPanel") class="bookmark-options-button"}}
+    {{d-button icon="cog" action=(action "toggleOptionsPanel") class="bookmark-options-button" ariaLabel="post.bookmarks.options"}}
   </div>
 
   <div class="bookmark-options-panel">
@@ -39,21 +39,21 @@
         prefilledDatetime=prefilledDatetime
         onTimeSelected=(action "onTimeSelected")
         customOptions=customTimeShortcutOptions
+        hiddenOptions=hiddenTimeShortcutOptions
+        customLabels=customTimeShortcutLabels
         additionalOptionsToShow=additionalTimeShortcutOptions
-        mousetrap=_mousetrap
+        _itsatrap=_itsatrap
       }}
     {{else}}
       <div class="alert alert-info">{{html-safe (i18n "bookmarks.no_timezone" basePath=(base-path))}}</div>
     {{/if}}
   </div>
 
-  <div class="control-group">
+  <div class="modal-footer control-group">
     {{d-button id="save-bookmark" label="bookmarks.save" class="btn-primary" action=(action "saveAndClose")}}
     {{d-modal-cancel close=(action "closeWithoutSavingBookmark")}}
     {{#if showDelete}}
-      <div class="pull-right">
-        {{d-button id="delete-bookmark" icon="trash-alt" class="btn-danger" action=(action "delete")}}
-      </div>
+      {{d-button id="delete-bookmark" icon="trash-alt" class="delete-bookmark btn-danger" action=(action "delete")}}
     {{/if}}
   </div>
 {{/conditional-loading-spinner}}

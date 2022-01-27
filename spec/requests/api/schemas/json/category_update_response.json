@@ -173,6 +173,12 @@
         "allow_unlimited_owner_edits_on_first_post": {
           "type": "boolean"
         },
+        "default_slow_mode_seconds": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
         "group_permissions": {
           "type": "array",
           "items": [
@@ -211,12 +217,6 @@
         },
         "can_delete": {
           "type": "boolean"
-        },
-        "cannot_delete_reason": {
-          "type": [
-            "string",
-            "null"
-          ]
         },
         "allow_badges": {
           "type": "boolean"
@@ -277,13 +277,13 @@
         "auto_close_hours",
         "auto_close_based_on_last_post",
         "allow_unlimited_owner_edits_on_first_post",
+        "default_slow_mode_seconds",
         "group_permissions",
         "email_in",
         "email_in_allow_strangers",
         "mailinglist_mirror",
         "all_topics_wiki",
         "can_delete",
-        "cannot_delete_reason",
         "allow_badges",
         "topic_featured_link_allowed",
         "search_priority",

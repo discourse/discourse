@@ -72,7 +72,7 @@ end
 
 shared_examples 'action requires login' do |method, url, params = {}|
   it 'raises an exception when not logged in' do
-    self.public_send(method, url, params)
+    self.public_send(method, url, **params)
     expect(response.status).to eq(403)
   end
 end
@@ -81,6 +81,8 @@ describe PostsController do
   fab!(:admin) { Fabricate(:admin) }
   fab!(:moderator) { Fabricate(:moderator) }
   fab!(:user) { Fabricate(:user) }
+  fab!(:user_trust_level_0) { Fabricate(:trust_level_0) }
+  fab!(:user_trust_level_1) { Fabricate(:trust_level_1) }
   fab!(:category) { Fabricate(:category) }
   fab!(:topic) { Fabricate(:topic) }
   fab!(:post_by_user) { Fabricate(:post, user: user) }
@@ -221,6 +223,65 @@ describe PostsController do
         destroyer.expects(:destroy)
 
         delete "/posts/#{post.id}.json"
+      end
+
+      context "permanently destroy" do
+        let!(:post) { Fabricate(:post, topic_id: topic.id, post_number: 3) }
+
+        before do
+          SiteSetting.can_permanently_delete = true
+        end
+
+        it "does not work for a post that was not deleted yet" do
+          sign_in(admin)
+
+          delete "/posts/#{post.id}.json", params: { force_destroy: true }
+          expect(response.status).to eq(403)
+        end
+
+        it "needs some time to pass to permanently delete a topic" do
+          sign_in(admin)
+
+          delete "/posts/#{post.id}.json"
+          expect(response.status).to eq(200)
+          expect(post.reload.deleted_by_id).to eq(admin.id)
+
+          delete "/posts/#{post.id}.json", params: { force_destroy: true }
+          expect(response.status).to eq(403)
+
+          post.update!(deleted_at: 10.minutes.ago)
+
+          delete "/posts/#{post.id}.json", params: { force_destroy: true }
+          expect(response.status).to eq(200)
+          expect { post.reload }.to raise_error(ActiveRecord::RecordNotFound)
+        end
+
+        it "needs two users to permanently delete a topic" do
+          sign_in(admin)
+
+          delete "/posts/#{post.id}.json"
+          expect(response.status).to eq(200)
+          expect(post.reload.deleted_by_id).to eq(admin.id)
+
+          sign_in(Fabricate(:admin))
+
+          delete "/posts/#{post.id}.json", params: { force_destroy: true }
+          expect(response.status).to eq(200)
+          expect { post.reload }.to raise_error(ActiveRecord::RecordNotFound)
+        end
+
+        it "moderators cannot permanently delete topics" do
+          sign_in(admin)
+
+          delete "/posts/#{post.id}.json"
+          expect(response.status).to eq(200)
+          expect(post.reload.deleted_by_id).to eq(admin.id)
+
+          sign_in(moderator)
+
+          delete "/posts/#{post.id}.json", params: { force_destroy: true }
+          expect(response.status).to eq(403)
+        end
       end
     end
   end
@@ -415,10 +476,11 @@ describe PostsController do
       end
 
       it "updates post's raw attribute" do
-        put "/posts/#{post.id}.json", params: update_params
+        put "/posts/#{post.id}.json", params: { post: { raw: 'edited body   ' } }
 
         expect(response.status).to eq(200)
-        expect(post.reload.raw).to eq(update_params[:post][:raw])
+        expect(response.parsed_body['post']['raw']).to eq('edited body')
+        expect(post.reload.raw).to eq('edited body')
       end
 
       it "extracts links from the new body" do
@@ -561,7 +623,7 @@ describe PostsController do
 
   describe "#destroy_bookmark" do
     fab!(:post) { Fabricate(:post) }
-    fab!(:bookmark) { Fabricate(:bookmark, user: user, post: post, topic: post.topic) }
+    fab!(:bookmark) { Fabricate(:bookmark, user: user, post: post) }
 
     before do
       sign_in(user)
@@ -575,9 +637,9 @@ describe PostsController do
 
     context "when the user still has bookmarks in the topic" do
       before do
-        Fabricate(:bookmark, user: user, post: Fabricate(:post, topic: post.topic), topic: post.topic)
+        Fabricate(:bookmark, user: user, post: Fabricate(:post, topic: post.topic))
       end
-      it "marks topic_bookmaked as true" do
+      it "marks topic_bookmarked as true" do
         delete "/posts/#{post.id}/bookmark.json"
         expect(response.parsed_body['topic_bookmarked']).to eq(true)
       end
@@ -907,6 +969,28 @@ describe PostsController do
         expect(user).to be_silenced
       end
 
+      it 'silences correctly based on silence watched words' do
+        SiteSetting.watched_words_regular_expressions = true
+        WatchedWord.create!(action: WatchedWord.actions[:silence], word: 'I love candy')
+        WatchedWord.create!(action: WatchedWord.actions[:silence], word: 'i eat s[1-5]')
+
+        post "/posts.json", params: {
+          raw: 'this is the test content',
+          title: 'when I eat s3 sometimes when not looking'
+        }
+
+        expect(response.status).to eq(200)
+        parsed = response.parsed_body
+
+        expect(parsed["action"]).to eq("enqueued")
+        reviewable = ReviewableQueuedPost.find_by(created_by: user)
+        score = reviewable.reviewable_scores.first
+        expect(score.reason).to eq('auto_silence_regex')
+
+        user.reload
+        expect(user).to be_silenced
+      end
+
       it "can send a message to a group" do
         group = Group.create(name: 'test_group', messageable_level: Group::ALIAS_LEVELS[:nobody])
         user1 = user
@@ -966,7 +1050,7 @@ describe PostsController do
 
       it "returns the nested post with a param" do
         post "/posts.json", params: {
-          raw: 'this is the test content',
+          raw: 'this is the test content  ',
           title: 'this is the test title for the topic',
           nested_post: true
         }
@@ -974,6 +1058,7 @@ describe PostsController do
         expect(response.status).to eq(200)
         parsed = response.parsed_body
         expect(parsed['post']).to be_present
+        expect(parsed['post']['raw']).to eq('this is the test content')
         expect(parsed['post']['cooked']).to be_present
       end
 
@@ -1433,6 +1518,58 @@ describe PostsController do
       end
     end
 
+    describe "featured links" do
+      it "allows to create topics with featured links" do
+        sign_in(user_trust_level_1)
+
+        post "/posts.json", params: {
+          title: "this is the test title for the topic",
+          raw: "this is the test content",
+          featured_link: "https://discourse.org"
+        }
+
+        expect(response.status).to eq(200)
+      end
+
+      it "doesn't allow TL0 users to create topics with featured links" do
+        sign_in(user_trust_level_0)
+
+        post "/posts.json", params: {
+          title: "this is the test title for the topic",
+          raw: "this is the test content",
+          featured_link: "https://discourse.org"
+        }
+
+        expect(response.status).to eq(422)
+      end
+
+      it "doesn't allow to create topics with featured links if featured links are disabled in settings" do
+        SiteSetting.topic_featured_link_enabled = false
+        sign_in(user_trust_level_1)
+
+        post "/posts.json", params: {
+          title: "this is the test title for the topic",
+          raw: "this is the test content",
+          featured_link: "https://discourse.org"
+        }
+
+        expect(response.status).to eq(422)
+      end
+
+      it "doesn't allow to create topics with featured links in the category with forbidden feature links" do
+        category = Fabricate(:category, topic_featured_link_allowed: false)
+        sign_in(user_trust_level_1)
+
+        post "/posts.json", params: {
+          title: "this is the test title for the topic",
+          raw: "this is the test content",
+          featured_link: "https://discourse.org",
+          category: category.id
+        }
+
+        expect(response.status).to eq(422)
+      end
+    end
   end
 
   describe '#revisions' do
@@ -1751,6 +1888,16 @@ describe PostsController do
       expect(response.status).to eq(200)
       expect(response.body).to eq("123456789")
     end
+
+    it "can show whole topics" do
+      topic = Fabricate(:topic)
+      post = Fabricate(:post, topic: topic, post_number: 1, raw: "123456789")
+      post_2 = Fabricate(:post, topic: topic, post_number: 2, raw: "abcdefghij")
+      post.save
+      get "/raw/#{topic.id}"
+      expect(response.status).to eq(200)
+      expect(response.body).to include("123456789", "abcdefghij")
+    end
   end
 
   describe '#short_link' do
@@ -1903,7 +2050,7 @@ describe PostsController do
   end
 
   describe '#cooked' do
-    it 'returns the cooked conent' do
+    it 'returns the cooked content' do
       post = Fabricate(:post, cooked: "WAt")
       get "/posts/#{post.id}/cooked.json"
 
@@ -2015,6 +2162,101 @@ describe PostsController do
         put "/posts/#{public_post.id}/notice.json", params: { notice: "Hello" }
 
         expect(response.status).to eq(404)
+      end
+    end
+  end
+
+  describe "#pending" do
+    subject(:request) { get "/posts/#{user.username}/pending.json" }
+
+    context "when user is not logged in" do
+      it_behaves_like "action requires login", :get, "/posts/system/pending.json"
+    end
+
+    context "when user is logged in" do
+      let(:pending_posts) { response.parsed_body["pending_posts"] }
+
+      before { sign_in(current_user) }
+
+      context "when current user is the same as user" do
+        let(:current_user) { user }
+
+        context "when there are existing pending posts" do
+          let!(:owner_pending_posts) { Fabricate.times(2, :reviewable_queued_post, created_by: user) }
+          let!(:other_pending_post) { Fabricate(:reviewable_queued_post) }
+          let(:expected_keys) do
+            %w[
+          avatar_template
+          category_id
+          created_at
+          created_by_id
+          name
+          raw_text
+          title
+          topic_id
+          topic_url
+          username
+            ]
+          end
+
+          it "returns user's pending posts" do
+            request
+            expect(pending_posts).to all include "id" => be_in(owner_pending_posts.map(&:id))
+            expect(pending_posts).to all include(*expected_keys)
+          end
+        end
+
+        context "when there aren't any pending posts" do
+          it "returns an empty array" do
+            request
+            expect(pending_posts).to be_empty
+          end
+        end
+      end
+
+      context "when current user is a staff member" do
+        let(:current_user) { moderator }
+
+        context "when there are existing pending posts" do
+          let!(:owner_pending_posts) { Fabricate.times(2, :reviewable_queued_post, created_by: user) }
+          let!(:other_pending_post) { Fabricate(:reviewable_queued_post) }
+          let(:expected_keys) do
+            %w[
+          avatar_template
+          category_id
+          created_at
+          created_by_id
+          name
+          raw_text
+          title
+          topic_id
+          topic_url
+          username
+            ]
+          end
+
+          it "returns user's pending posts" do
+            request
+            expect(pending_posts).to all include "id" => be_in(owner_pending_posts.map(&:id))
+            expect(pending_posts).to all include(*expected_keys)
+          end
+        end
+
+        context "when there aren't any pending posts" do
+          it "returns an empty array" do
+            request
+            expect(pending_posts).to be_empty
+          end
+        end
+      end
+
+      context "when current user is another user" do
+        let(:current_user) { Fabricate(:user) }
+
+        it "does not allow access" do
+          request
+          expect(response).to have_http_status :not_found
+        end
       end
     end
   end

@@ -1,5 +1,5 @@
 {{#unless skipHeader}}
-  <thead>
+  <thead class="topic-list-header">
     {{raw "topic-list-header"
       canBulkSelect=canBulkSelect
       toggleInTitle=toggleInTitle
@@ -11,7 +11,9 @@
       ascending=ascending
       sortable=sortable
       listTitle=listTitle
-      bulkSelectEnabled=bulkSelectEnabled}}
+      bulkSelectEnabled=bulkSelectEnabled
+      canDoBulkActions=canDoBulkActions
+    }}
   </thead>
 {{/unless}}
 
@@ -24,17 +26,15 @@
     lastVisitedTopic=lastVisitedTopic
     discoveryList=discoveryList
     hideCategory=hideCategory)
-  tagName=""
-  connectorTagName=""}}
+ }}
 
-<tbody>
+<tbody class="topic-list-body">
   {{#each filteredTopics as |topic|}}
     {{topic-list-item topic=topic
                       bulkSelectEnabled=bulkSelectEnabled
                       showTopicPostBadges=showTopicPostBadges
                       hideCategory=hideCategory
                       showPosters=showPosters
-                      hideMobileAvatar=hideMobileAvatar
                       showLikes=showLikes
                       showOpLikes=showOpLikes
                       expandGloballyPinned=expandGloballyPinned
@@ -55,5 +55,4 @@
     lastVisitedTopic=lastVisitedTopic
     discoveryList=discoveryList
     hideCategory=hideCategory)
-  tagName=""
-  connectorTagName=""}}
+ }}

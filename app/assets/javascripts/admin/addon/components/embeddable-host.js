@@ -12,8 +12,19 @@ export default Component.extend(bufferedProperty("host"), {
   editToggled: false,
   tagName: "tr",
   categoryId: null,
+  category: null,
 
   editing: or("host.isNew", "editToggled"),
+
+  init() {
+    this._super(...arguments);
+
+    const host = this.host;
+    const categoryId = host.category_id || this.site.uncategorized_category_id;
+    const category = Category.findById(categoryId);
+
+    host.set("category", category);
+  },
 
   @discourseComputed("buffered.host", "host.isSaving")
   cantSave(host, isSaving) {

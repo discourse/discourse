@@ -38,6 +38,10 @@ export function decorateWidget(widgetName, cb) {
 }
 
 export function traverseCustomWidgets(tree, callback) {
+  if (!tree) {
+    return;
+  }
+
   if (tree.__type === "CustomWidget") {
     callback(tree);
   }
@@ -144,17 +148,12 @@ export default class Widget {
     this.appEvents = register.lookup("service:app-events");
     this.keyValueStore = register.lookup("key-value-store:main");
 
-    this.init(this.attrs);
+    // We can inject services into widgets by passing a `services` parameter on creation
+    (this.services || []).forEach((s) => {
+      this[s] = register.lookup(`service:${s}`);
+    });
 
-    // Helps debug widgets
-    if (!isProduction()) {
-      const ds = this.defaultState(attrs);
-      if (typeof ds !== "object") {
-        throw new Error(`defaultState must return an object`);
-      } else if (Object.keys(ds).length > 0 && !this.key) {
-        throw new Error(`you need a key when using state in ${this.name}`);
-      }
-    }
+    this.init(this.attrs);
 
     if (this.name) {
       const custom = _customSettings[this.name];
@@ -186,7 +185,15 @@ export default class Widget {
     if (prev && prev.key && prev.key === this.key) {
       this.state = prev.state;
     } else {
+      // Helps debug widgets
       this.state = this.defaultState(this.attrs, this.state);
+      if (!isProduction()) {
+        if (typeof this.state !== "object") {
+          throw new Error(`defaultState must return an object`);
+        } else if (Object.keys(this.state).length > 0 && !this.key) {
+          throw new Error(`you need a key when using state in ${this.name}`);
+        }
+      }
     }
 
     // Sometimes we pass state down from the parent

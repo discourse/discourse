@@ -1,5 +1,5 @@
 import { set } from "@ember/object";
-import { click, fillIn } from "@ember/test-helpers";
+import { click } from "@ember/test-helpers";
 import User from "discourse/models/user";
 import componentTest, {
   setupRenderingTest,
@@ -7,7 +7,8 @@ import componentTest, {
 import pretender from "discourse/tests/helpers/create-pretender";
 import {
   discourseModule,
-  queryAll,
+  exists,
+  query,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import hbs from "htmlbars-inline-precompile";
@@ -43,12 +44,12 @@ discourseModule("Integration | Component | invite-panel", function (hooks) {
     async test(assert) {
       const input = selectKit(".invite-user-input");
       await input.expand();
-      await fillIn(".invite-user-input .filter-input", "eviltrout@example.com");
+      await input.fillInFilter("eviltrout@example.com");
       await input.selectRowByValue("eviltrout@example.com");
-      assert.ok(queryAll(".send-invite:disabled").length === 0);
+      assert.ok(!exists(".send-invite:disabled"));
       await click(".generate-invite-link");
-      assert.equal(
-        find(".invite-link-input")[0].value,
+      assert.strictEqual(
+        query(".invite-link-input").value,
         "http://example.com/invites/92c297e886a0ca03089a109ccd6be155"
       );
     },

@@ -10,7 +10,6 @@
 </div>
 
 <%- content_for(:no_ember_head) do %>
-  <%= preload_script "ember_jquery" %>
   <%= preload_script "vendor" %>
   <%= render_google_universal_analytics_code %>
   <%= tag.meta id: 'data-activate-account', data: { path: path('/session/hp') } %>

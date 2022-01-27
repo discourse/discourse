@@ -47,7 +47,7 @@ class InvitedUserRecordSerializer < BasicUserSerializer
     ((Time.now - object.created_at) / 60 / 60 / 24).ceil
   end
 
-  def include_days_since_created
+  def include_days_since_created?
     can_see_invite_details?
   end
 

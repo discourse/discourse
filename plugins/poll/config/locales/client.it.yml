@@ -28,7 +28,7 @@ it:
       multiple:
         help:
           at_least_min_options:
-            one: "Scegli almeno un&#39;opzione <strong>%{count}</strong> ."
+            one: "Scegli almeno <strong>%{count}</strong> opzione."
             other: "Scegli almeno <strong>%{count}</strong> opzioni."
           up_to_max_options:
             one: "Scegli fino a <strong>%{count}</strong> opzione."
@@ -39,19 +39,22 @@ it:
           between_min_and_max_options: "Scegli tra <strong>%{min}</strong> e <strong>%{max}</strong> opzioni."
       cast-votes:
         title: "Vota"
-        label: "Vota!"
+        label: "Vota ora!"
       show-results:
         title: "Visualizza i risultati del sondaggio"
         label: "Mostra i risultati"
+      remove-vote:
+        title: "Annulla il tuo voto"
+        label: "Annulla voto"
       hide-results:
-        title: "Torna ai tuoi voti"
+        title: "Torna ai sondaggi"
         label: "Mostra voto"
       group-results:
         title: "Voti raggruppati per campo utente"
         label: "Mostra la suddivisione"
       export-results:
         title: "Esporta i risultati del sondaggio"
-        label: "Esportare"
+        label: "Esporta"
       open:
         title: "Apri il sondaggio"
         label: "Apri"
@@ -61,7 +64,7 @@ it:
         label: "Chiudi"
         confirm: "Sicuro di voler chiudere questo sondaggio?"
       automatic_close:
-        closes_in: "Chiude in <strong>%{timeLeft}</strong>."
+        closes_in: "Chiude tra <strong>%{timeLeft}</strong>."
         age: "Chiuso <strong>%{age}</strong>"
       breakdown:
         title: "Risultati del sondaggio"
@@ -69,7 +72,7 @@ it:
         breakdown: "Ripartizione"
         percentage: "Percentuale"
         count: "Conteggio"
-      error_while_toggling_status: "Spiacenti, si è verificato un errore nel commutare lo stato di questo sondaggio."
+      error_while_toggling_status: "Spiacenti, si è verificato un errore nel cambiamento di stato di questo sondaggio."
       error_while_casting_votes: "Spiacenti, si è verificato un errore nella votazione."
       error_while_fetching_voters: "Spiacenti, si è verificato un errore nel visualizzare i votanti."
       error_while_exporting_results: "Spiacenti, si è verificato un errore durante l'esportazione dei risultati del sondaggio."
@@ -77,30 +80,39 @@ it:
         title: Crea Sondaggio
         insert: Inserisci Sondaggio
         help:
-          options_min_count: Inserisci almeno una opzione.
+          options_min_count: Inserisci almeno un'opzione.
           options_max_count: Inserisci al massimo %{count} opzioni.
           invalid_min_value: Il valore minimo deve essere almeno 1.
           invalid_max_value: Il valore massimo deve essere almeno 1, ma inferiore o uguale al numero di opzioni.
           invalid_values: Il valore minimo deve essere minore del valore massimo.
-          min_step_value: Il valore minimo di un passo è 1
+          min_step_value: Il valore di intervallo minimo è 1
         poll_type:
           label: Tipo
           regular: Scelta Singola
           multiple: Scelta Multipla
           number: Votazione Numerica
         poll_result:
+          label: Mostra i risultati...
           always: Sempre visibile
+          vote: Solo dopo la votazione
+          closed: Quando il sondaggio è chiuso
           staff: Solo staff
+        poll_groups:
+          label: Limita il voto a questi gruppi
         poll_chart_type:
+          label: Grafico dei risultati
           bar: Barra
           pie: Torta
         poll_config:
-          step: Passo
+          max: Numero max di scelte
+          min: Numero min di scelte
+          step: Intervallo
         poll_public:
           label: Mostra i votanti
         poll_title:
           label: Titolo (facoltativo)
         poll_options:
+          label: Opzioni (una per riga)
           add: Aggiungi opzione
         automatic_close:
           label: Chiudi sondaggio automaticamente

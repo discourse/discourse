@@ -52,14 +52,14 @@ function initializeAutoGroupFlair(site) {
     "trust_level_3",
     "trust_level_4",
   ].forEach((groupName) => {
-    const group = site.groups.findBy("name", groupName);
+    const group = site.groups?.findBy("name", groupName);
     if (group && group.flair_url) {
       _noAutoFlair = false;
       _autoGroupFlair[groupName] = {
-        primary_group_flair_url: group.flair_url,
-        primary_group_flair_bg_color: group.flair_bg_color,
-        primary_group_flair_color: group.flair_color,
-        primary_group_name: group.name.replace(/_/g, " "),
+        flair_name: group.name.replace(/_/g, " "),
+        flair_url: group.flair_url,
+        flair_bg_color: group.flair_bg_color,
+        flair_color: group.flair_color,
       };
     }
   });

@@ -42,14 +42,10 @@ const ScreenedIpAddress = EmberObject.extend({
 ScreenedIpAddress.reopenClass({
   findAll(filter) {
     return ajax("/admin/logs/screened_ip_addresses.json", {
-      data: { filter: filter },
+      data: { filter },
     }).then((screened_ips) =>
       screened_ips.map((b) => ScreenedIpAddress.create(b))
     );
-  },
-
-  rollUp() {
-    return ajax("/admin/logs/screened_ip_addresses/roll_up", { type: "POST" });
   },
 });
 

@@ -11,13 +11,13 @@ import { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
 import Component from "@ember/component";
 import I18n from "I18n";
 import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
-import Mousetrap from "mousetrap";
+import ItsATrap from "@discourse/itsatrap";
 import { Promise } from "rsvp";
 import { TIME_SHORTCUT_TYPES } from "discourse/lib/time-shortcut";
 import { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import bootbox from "bootbox";
-import discourseComputed, { on } from "discourse-common/utils/decorators";
+import discourseComputed, { bind, on } from "discourse-common/utils/decorators";
 import { formattedReminderTime } from "discourse/lib/bookmark";
 import { and, notEmpty } from "@ember/object/computed";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -37,6 +37,7 @@ export default Component.extend({
   _savingBookmarkManually: null,
   _saving: null,
   _deleting: null,
+  _itsatrap: null,
   postDetectedLocalDate: null,
   postDetectedLocalTime: null,
   postDetectedLocalTimezone: null,
@@ -44,7 +45,6 @@ export default Component.extend({
   userTimezone: null,
   showOptions: null,
   model: null,
-
   afterSave: null,
 
   @on("init")
@@ -62,9 +62,10 @@ export default Component.extend({
       prefilledDatetime: null,
       userTimezone: this.currentUser.resolvedTimezone(this.currentUser),
       showOptions: false,
+      _itsatrap: new ItsATrap(),
     });
 
-    this.registerOnCloseHandler(this._onModalClose.bind(this));
+    this.registerOnCloseHandler(this._onModalClose);
 
     this._loadBookmarkOptions();
     this._bindKeyboardShortcuts();
@@ -123,9 +124,8 @@ export default Component.extend({
   _bindKeyboardShortcuts() {
     KeyboardShortcuts.pause();
 
-    this._mousetrap = new Mousetrap();
     Object.keys(BOOKMARK_BINDINGS).forEach((shortcut) => {
-      this._mousetrap.bind(shortcut, () => {
+      this._itsatrap.bind(shortcut, () => {
         let binding = BOOKMARK_BINDINGS[shortcut];
         this.send(binding.handler);
         return false;
@@ -167,25 +167,13 @@ export default Component.extend({
 
     localStorage.bookmarkDeleteOption = this.autoDeletePreference;
 
-    let reminderType;
-    if (this.selectedReminderType === TIME_SHORTCUT_TYPES.NONE) {
-      reminderType = null;
-    } else if (
-      this.selectedReminderType === TIME_SHORTCUT_TYPES.LAST_CUSTOM ||
-      this.selectedReminderType === TIME_SHORTCUT_TYPES.POST_LOCAL_DATE
-    ) {
-      reminderType = TIME_SHORTCUT_TYPES.CUSTOM;
-    } else {
-      reminderType = this.selectedReminderType;
-    }
-
     const data = {
-      reminder_type: reminderType,
       reminder_at: reminderAtISO,
       name: this.model.name,
       post_id: this.model.postId,
       id: this.model.id,
       auto_delete_preference: this.autoDeletePreference,
+      for_topic: this.model.forTopic,
     };
 
     if (this.editingExistingBookmark) {
@@ -207,11 +195,13 @@ export default Component.extend({
       return;
     }
     this.afterSave({
-      reminderAt: reminderAtISO,
-      reminderType: this.selectedReminderType,
-      autoDeletePreference: this.autoDeletePreference,
+      reminder_at: reminderAtISO,
+      for_topic: this.model.forTopic,
+      auto_delete_preference: this.autoDeletePreference,
+      post_id: this.model.postId,
       id: this.model.id || response.id,
       name: this.model.name,
+      topic_id: this.model.topicId,
     });
   },
 
@@ -220,7 +210,7 @@ export default Component.extend({
       type: "DELETE",
     }).then((response) => {
       if (this.afterDelete) {
-        this.afterDelete(response.topic_bookmarked);
+        this.afterDelete(response.topic_bookmarked, this.model.id);
       }
     });
   },
@@ -249,12 +239,15 @@ export default Component.extend({
     }
   },
 
-  _onModalClose(initiatedByCloseButton) {
+  @bind
+  _onModalClose(closeOpts) {
     // we want to close without saving if the user already saved
     // manually or deleted the bookmark, as well as when the modal
     // is just closed with the X button
     this._closeWithoutSaving =
-      this._closeWithoutSaving || initiatedByCloseButton;
+      this._closeWithoutSaving ||
+      closeOpts.initiatedByCloseButton ||
+      closeOpts.initiatedByESC;
 
     if (!this._closeWithoutSaving && !this._savingBookmarkManually) {
       this._saveBookmark().catch((e) => this._handleSaveError(e));
@@ -266,7 +259,9 @@ export default Component.extend({
 
   willDestroyElement() {
     this._super(...arguments);
-    this._mousetrap.reset();
+
+    this._itsatrap?.destroy();
+    this.set("_itsatrap", null);
     KeyboardShortcuts.unpause();
   },
 
@@ -274,7 +269,7 @@ export default Component.extend({
   showDelete: notEmpty("model.id"),
   userHasTimezoneSet: notEmpty("userTimezone"),
   editingExistingBookmark: and("model", "model.id"),
-  existingBookmarkHasReminder: and("model", "model.reminderAt"),
+  existingBookmarkHasReminder: and("model", "model.id", "model.reminderAt"),
 
   @discourseComputed("postDetectedLocalDate", "postDetectedLocalTime")
   showPostLocalDate(postDetectedLocalDate, postDetectedLocalTime) {
@@ -308,7 +303,7 @@ export default Component.extend({
       customOptions.push({
         icon: "globe-americas",
         id: TIME_SHORTCUT_TYPES.POST_LOCAL_DATE,
-        label: "bookmarks.reminders.post_local_date",
+        label: "time_shortcut.post_local_date",
         time: this._postLocalDate(),
         timeFormatted: this._postLocalDate().format(
           I18n.t("dates.long_no_year")
@@ -318,6 +313,32 @@ export default Component.extend({
     }
 
     return customOptions;
+  },
+
+  @discourseComputed("existingBookmarkHasReminder")
+  customTimeShortcutLabels(existingBookmarkHasReminder) {
+    const labels = {};
+    if (existingBookmarkHasReminder) {
+      labels[TIME_SHORTCUT_TYPES.NONE] =
+        "bookmarks.remove_reminder_keep_bookmark";
+    }
+    return labels;
+  },
+
+  @discourseComputed("editingExistingBookmark", "existingBookmarkHasReminder")
+  hiddenTimeShortcutOptions(
+    editingExistingBookmark,
+    existingBookmarkHasReminder
+  ) {
+    if (!editingExistingBookmark) {
+      return [];
+    }
+
+    if (!existingBookmarkHasReminder) {
+      return [TIME_SHORTCUT_TYPES.NONE];
+    }
+
+    return [];
   },
 
   @discourseComputed()

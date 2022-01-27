@@ -141,6 +141,9 @@ export function mapRoutes() {
     this.route("unknown", { path: "*path" });
   });
 }
+export function teardownRouter(routerClass) {
+  routerClass.dslCallbacks.splice(0, routerClass.dslCallbacks.length);
+}
 
 export function registerRouter(registry) {
   registry.unregister("router:main");

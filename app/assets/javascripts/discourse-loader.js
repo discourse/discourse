@@ -34,6 +34,8 @@ var define, requirejs;
         inject: Ember.inject.controller,
       },
       "@ember/debug": {
+        assert: Ember.assert,
+        runInDebug: Ember.runInDebug,
         warn: Ember.warn,
       },
       "@ember/object": {

@@ -9,19 +9,30 @@
       }}
     {{/if}}
 
-    <div class="group-members-manage">
-      {{#if canManageGroup}}
-        {{d-button icon="plus"
+    {{#if canManageGroup}}
+      <div class="group-members-manage">
+        {{d-button
+          icon="plus"
           action=(route-action "showAddMembersModal")
           label="groups.manage.add_members"
-        class="btn-default group-members-add"}}
-      {{/if}}
-    </div>
+          class="btn-default group-members-add"
+        }}
+
+        {{#if currentUser.can_invite_to_forum}}
+          {{d-button
+            icon="plus"
+            action=(route-action "showInviteModal")
+            label="groups.manage.invite_members"
+            class="btn-default group-members-add"
+          }}
+        {{/if}}
+      </div>
+    {{/if}}
   </div>
 
   {{#if hasMembers}}
     {{#load-more selector=".group-members tr" action=(action "loadMore")}}
-      <table class="group-members">
+      <table class={{if isBulk "group-members sticky-header" "group-members"}}>
         <thead>
           <tr>
             <th class="bulk-select">
@@ -31,24 +42,25 @@
             </th>
             {{#if isBulk}}
               <th class="bulk-select-buttons">
-                {{d-button action=(action "bulkSelectAll") label="topics.bulk.select_all"}}
-                {{d-button action=(action "bulkClearAll") label="topics.bulk.clear_all"}}
+                <span class="bulk-select-buttons-wrap">
+                  {{#if bulkSelection}}
+                    {{group-member-dropdown
+                      bulkSelection=bulkSelection
+                      canAdminGroup=model.can_admin_group
+                      onChange=(action "actOnSelection" bulkSelection)
+                    }}
+                  {{/if}}
+                  {{d-button action=(action "bulkSelectAll") label="topics.bulk.select_all"}}
+                  {{d-button action=(action "bulkClearAll") label="topics.bulk.clear_all"}}
+                </span>
               </th>
             {{/if}}
-            {{table-header-toggle order=order asc=asc field="username_lower" labelKey="username" class="username"}}
+            {{table-header-toggle order=order asc=asc field="username_lower" labelKey="username" class="username" automatic=true}}
             <th class="group-owner"></th>
-            {{table-header-toggle order=order asc=asc field="added_at" labelKey="groups.member_added"}}
-            {{table-header-toggle order=order asc=asc field="last_posted_at" labelKey="last_post"}}
-            {{table-header-toggle order=order asc=asc field="last_seen_at" labelKey="last_seen"}}
-            <th>
-              {{#if isBulk}}
-                {{group-member-dropdown
-                  bulkSelection=bulkSelection
-                  canAdminGroup=model.can_admin_group
-                  onChange=(action "actOnSelection" bulkSelection)
-                }}
-              {{/if}}
-            </th>
+            {{table-header-toggle order=order asc=asc field="added_at" labelKey="groups.member_added" automatic=true}}
+            {{table-header-toggle order=order asc=asc field="last_posted_at" labelKey="last_post" automatic=true}}
+            {{table-header-toggle order=order asc=asc field="last_seen_at" labelKey="last_seen" automatic=true}}
+            <th></th>
           </tr>
         </thead>
 
@@ -100,13 +112,9 @@
     {{/load-more}}
 
     {{conditional-loading-spinner condition=loading}}
-  {{else if model.can_see_members}}
-    <br>
-
-    <div>{{i18n "groups.empty.members"}}</div>
   {{else}}
     <br>
 
-    <div>{{i18n "groups.members.forbidden"}}</div>
+    <div>{{i18n emptyMessageKey}}</div>
   {{/if}}
 </section>

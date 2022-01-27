@@ -6,11 +6,13 @@
 
 nb_NO:
   site_settings:
+    discourse_narrative_bot_enabled: "Aktiver Discourse Narrativ Bot (discobot)"
     disable_discourse_narrative_bot_welcome_post: "Deaktiver velkomstinnlegget fra Discourse Fortellerbot"
     discourse_narrative_bot_ignored_usernames: "Brukernavn som Discourse Fortellerbot skal ignorere"
     discourse_narrative_bot_disable_public_replies: "Deaktiver åpne svar fra Discourse Fortellerbot"
     discourse_narrative_bot_welcome_post_type: "Type velkomstinnlegg som Discourse Fortellerbot skal sende ut"
     discourse_narrative_bot_welcome_post_delay: "Vent (n) sekunder før Discourse Fortellerbot sender ut velkomstinnlegg."
+    discourse_narrative_bot_skip_tutorials: "Diskurv narrative bot-veiledninger å hoppe over"
   badges:
     certified:
       name: Sertifisert
@@ -23,6 +25,11 @@ nb_NO:
       long_description: |
         Dette merket er tildelt ved fullførelse av den interaktive opplæringen for avanserte brukere. Du har mestret de avanserte verktøyene for diskusjoner — og er nå fullstendig lisensiert!
   discourse_narrative_bot:
+    bio: "Hei, jeg er ikke en ekte person. Jeg er en Robot som kan lære deg om denne siden. For å samhandle med meg, send meg en melding eller nevne meg ved navn."
+    tl2_promotion_message:
+      subject_template: "Nå som du har blitt promotert, er det på tide å lære om noen avanserte funksjoner!"
+      text_body_template: |
+        Svar på denne meldingen med `@%{discobot_username} %{reset_trigger}-` for å finne ut mer om hva du kan gjøre.
     timeout:
       message: |-
         Hei @%{username}, jeg bare sjekker opp på deg fordi jeg har ikke hørt fra deg på en stund.
@@ -38,6 +45,9 @@ nb_NO:
       trigger: "rull"
       invalid: |-
         Jeg beklager, det er matematisk umulig å rulle den kombinasjonen av terninger. :confounded:
+      not_enough_dice:
+        one: "Jeg har bare %{count} terninger. Jeg vet det er [Shameful] (https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php)!"
+        other: "Jeg har bare %{count} terninger. Jeg vet det er [flaut] (https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php)!"
       out_of_range: |-
         Visste du at [maksimalt antall sider](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) på en matematisk rettferdig terning er 120?
       results: |-
@@ -89,7 +99,7 @@ nb_NO:
         "8": "Utsiktene er gode"
         "9": "Ja"
         "10": "Ting taler i favør av ja"
-        "11": "Reply hazy, try again"
+        "11": "Svar uklart, prøv på nytt"
         "12": "Spør igjen senere"
         "13": "Best å ikke fortelle deg det nå"
         "14": "Kan ikke spå nå"
@@ -108,6 +118,21 @@ nb_NO:
       random_mention:
         reply: |-
           Hei! Finn ut hva jeg kan gjøre, si `@%{discobot_username} %{help_trigger}`.
+        tracks: |-
+          Jeg vet for tiden hvordan du skal gjøre følgende:
+
+          `@%{discobot_username} %{reset_trigger} {name-of-tutorial}`
+          > Starter en interaktiv veiledning for deg, i en personlig melding. ` kan{name-of-tutorial}` være én av: `%{tracks}`.
+        bot_actions: |-
+          `@%{discobot_username} %{dice_trigger} 2d6`
+          > :game_die: 3, 6
+
+          `@%{discobot_username} %{quote_trigger}`
+          %{quote_sample}
+
+          `@%{discobot_username} %{magic_8_ball_trigger}`
+          > :crystal_ball: Du kan stole på den
+        discobot_disabled: Du har deaktivert meg i dine preferanser. Du må tillate nye Onboarding-tips å kommunisere med meg.
       do_not_understand:
         first_response: |-
           Hei, takk for svaret!
@@ -121,8 +146,28 @@ nb_NO:
 
           I mellomtiden skal jeg ikke plage deg mer.
     new_user_narrative:
+      reset_trigger: "opplæringen"
+      title: "Sertifikat for ny brukers veiledningsfullføring"
       cert_title: "Som bevis for vellykket gjennomføring av introduksjonen for nye brukere"
+      hello:
+        title: "Heisann!"
+        message: |-
+          Takk for at du ble med i %{title}og velkommen!
+
+          - Jeg er bare en robot, men [våre vennlige ansatte](%{base_uri}/about) er også her for å hjelpe hvis du må nå en person.
+
+          - Av sikkerhetshensyn begrenser vi midlertidig hva nye brukere kan gjøre. Du får [nye evner](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) (og [badges](%{base_uri}/badges)) da vi blir kjent med deg.
+
+          - Vi tror på [sivilt samfunns oppførsel til enhver tid (%{base_uri}/retningslinjer).
       onebox:
+        instructions: |-
+          Neste, kan du dele en av disse lenkene med meg? Svar med **en lenke på en linje selv**, og den vil automatisk utvide til å inkludere en ny sammendrag.
+
+          For å kopiere kobling, trykk og hold på mobil, eller høyreklikk på din pekende enhet:
+
+          <https://en.wikipedia.org/wiki/Inherently_funny_word>
+          <https://en.wikipedia.org/wiki/Death_by_coconut>
+          <https://en.wikipedia.org/wiki/Calculator_spelling>
         reply: |-
           Kult! Dette fungerer for de aller fleste <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> lenkene. Bare husk at de må ha en linje _helt for seg selv_ når du limer dem inn, uten noe annet foran eller bak.
         not_found: |-
@@ -144,7 +189,21 @@ nb_NO:
           Et flott bilde - jeg trykket på :heart: knappen så du også skal få vite at jeg satte stor pris på det :heart_eyes:
         like_not_found: |-
           Glemte du å trykke :heart:? Liker du ikke [innlegget mitt?](%{url}) :crying_cat_face:
+        not_found: |-
+          Det ser ut til at du ikke lastet opp et bilde, så jeg har valgt et bilde som jeg er _sikker på at du vil like.
+
+          <%{image_url}>
+
+          Prøv å laste opp den neste, eller lim inn lenken på en linje for seg selv!
       likes:
+        instructions: |-
+          Her er et bilde av en enhjørning:
+
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
+
+          Hvis du liker det (og hvem ikke!), Fortsett og trykk på :heart: som under dette innlegget for å gi meg beskjed.
+        reply: |-
+          Takk for at du liker innlegget mitt!
         not_found: |-
           Glemte du å trykke :heart:? Liker du ikke [innlegget mitt?](%{url}) :crying_cat_face:
       formatting:
@@ -155,7 +214,7 @@ nb_NO:
 
           - eller trykk på <kbd><b>F</b></kbd> eller <kbd><i>K</i></kbd> knappene i redigeringsfeltet
         reply: |-
-          Godt jobbet! HTML og BBCode kan også brukes til formatering av tekst - for å lære mer om formatering, [prøv denne manualen](http://commonmark.org/help):nerd:
+          Godt jobbet! HTML og BBCode kan også brukes til formatering av tekst - for å lære mer om formatering, [prøv denne manualen](https://commonmark.org/help):nerd:
         not_found: |-
           Uff, jeg fant ingen formatering i svaret ditt. :pencil2:
 
@@ -182,6 +241,8 @@ nb_NO:
       bookmark:
         instructions: |-
           Hvis du ønsker å lære mer, velg <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> under og <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **bokmerke denne personlige meldingen**. Hvis du gjør dette, venter det kanskje en :gift: på deg i fremtiden!
+        reply: |-
+          Utmerket! Nå kan du enkelt finne din vei tilbake til vår private samtale når som helst, rett fra [bokmerkene fanen på din profil](%{bookmark_url}). Bare velg profilbildet ditt øverst til høyre &#8599;
         not_found: |-
           Øh, jeg ser ingen bokmerker noe sted i dette emnet. Fant du bokmerket under hvert innlegg? Bruk "vis mer" <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> knappen for å vise flere handlinger ved behov.
       emoji:
@@ -216,15 +277,26 @@ nb_NO:
           (Og ja, brukernavnet mitt er stavet _disco_, som i 1970s farsott på dansegulvet. Jeg er en stor [fan av nattelivet!](https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
       flag:
         instructions: |-
-          Vi liker å holde diskusjonene våre vennlige, og vi trenger din hjelp til å [holde ting sivilisert](%{guidelines_url}). Hvis du oppdager et problem, vær grei og flagg innlegget slik at enten den som skrev det eller [vår hjelpsomme stab](%{about_url}) blir klar over det.
-          > :imp: jeg skrev noe utrivelig her!
+          Vi liker våre diskusjoner vennlig, og vi trenger din hjelp til [hold sivilised] (%{guidelines_url}). Hvis du ser et problem, vennligst flagg for privat la forfatteren eller [vår hjelpsomme ansatte] (%{about_url}) vite om det. Det er mange grunner til at du kanskje vil flagge en post, alt fra en uhyggelig emarkerende sak til et tydelig-kuttende samfunnsstandarder brudd. Hvis du velger **Noe Else**, vil du starte en privat meldingsdiskusjon med moderatorer der du kan stille ytterligere spørsmål.
 
-          Jeg tror du vet hva du bør gjøre. Prøv å **flagge dette innlegget**<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> som upassende
+          > :imp: jeg skrev noe stygt her,
+
+          Gå videre og **marker innlegget** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> og velg **Det er upassende ** som grunn!
+        reply: |-
+          [Our staff](%{base_uri}/groups/staff) vil bli varslet privat om ditt flagg. Hvis nok medlemmer markerer et innlegg, vil det automatisk bli skjult som en forholdsregler. (Jeg skrev faktisk ikke et stygt innlegg :angel:, jeg har gått foran og fjernet flagget for nå)
+        not_found: |-
+          Å nei, det ekkel innlegget mitt har ikke blitt markert som upassende ennå. :worried: Kan du markere det som upassende ved å bruke ** flagget ** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Ikke glem å bruke Vis mer knapp <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> å avsløre flere handlinger for hvert innlegg.
       search:
         instructions: |-
           _psst_ ... jeg har gjemt en overraskelse et sted i dette emnet. Hvis du tar utfordringen, **trykk på søkeikonet** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> øverst til høyre &#8599; for å lete etter den.
 
           Prøv å søke etter ordet "capy&#8203;bara" i dette emnet
+        hidden_message: |-
+          Hvordan gikk du glipp av denne capybara? :wink:
+
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
+
+          Ble du lagt merke til at du nå er tilbake i begynnelsen? Mat denne fattige sulten kapybara ved å **svare på `%{search_answer}` emoji** så blir du automatisk sendt til slutten.
         reply: |-
           Hurra! Du fant den :tada:
 
@@ -235,11 +307,25 @@ nb_NO:
           - Hvis du har et fysisk :keyboard:, trykk <kbd>?</kbd> på det for å få en oversikt over hendige tastatursnarveier.
         not_found: |-
           Hmm... det ser ut som du kanskje har trøbbel. Beklager så mye! Brukte du <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> for å søke etter **capy&#8203;bara**?
+      end:
+        message: |-
+          Takk for at du holder fast ved meg @%{username}! Jeg lagde dette til deg, jeg tror du har tjent det:
+
+          %{certificate}
+
+          Det er alt for nå! Sjekk ut [** våre siste diskusjonsemner **] (%{base_uri}/ siste) eller [** diskusjonskategorier **] (%{base_uri}/ kategorier). :sunglasses:
+
+          (Hvis du vil snakke med meg igjen for å lære mer, er det bare å sende en melding eller nevne "@%{discobot_username}" når som helst!)
       certificate:
         alt: "Bevis for Utmerkelse"
     advanced_user_narrative:
+      reset_trigger: "avansert veiledning"
       cert_title: "Som vitnesbyrd på bestått gjennomgang av den avanserte brukeropplæringen"
       title: ":arrow_up: Avanserte brukerfunksjoner"
+      start_message: |-
+        Som _avansert_ bruker, har du besøkt [innstillingssiden din] (%{base_uri}/ min / innstillinger) ennå @%{username}? Det er mange måter å tilpasse opplevelsen din, for eksempel å velge et mørkt eller lyst tema.
+
+        Men jeg går bort, la oss begynne!
       edit:
         bot_created_post_raw: "@%{discobot_username} er overlegent den kuleste bot-en jeg vet om :wink:"
         instructions: |-
@@ -273,6 +359,10 @@ nb_NO:
           Kan du gjøre meg en tjeneste og <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> **gjenopprette** det?
         not_found: |-
           Fikk du trøbbel? Husk at <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> "vis mer" vil vise knappen <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> "genopprett"
+        reply: |-
+          Phew, det var nært en! Takk for at du fikset :wink:
+
+          Gjør oppmerksom på at du bare har %{deletion_after} timer(r) til å fjerne et innlegg.
       category_hashtag:
         instructions: |-
           Visste du at du kan ha referanser til kategorier og stikkord i innlegget ditt? For eksempel, har du sett %{category} kategorien?
@@ -295,6 +385,10 @@ nb_NO:
           La oss prøve å endre varslingsnivået på dette emnet. I bunnen av emnet vil du finne en knapp som viser at du **følger** dette emnet. Kan du endre varslingsnivået til **overvåker**?
         not_found: |-
           Det ser ut til at du fremdeles følger :eyes: dette emnet! Hvis du har problemer med å finne knappen så er den helt i bunnen av dette emnet under de andre knappene.
+        reply: |-
+          Fantastisk arbeid! Jeg håper du ikke dempe dette emnet, siden jeg kan være litt pratativ til ganger :grin:.
+
+          Merk at når du svarer på et emne, eller les et emne i mer enn noen få minutter, det blir automatisk satt til et varslingsnivå for 'sporing'. Du kan endre dette i [dine brukerinnstillinger](%{base_uri}/my/preferanser).
       poll:
         instructions: |-
           Visste du at du enkelt kan legge til en avstemning i et innlegg? Prøv å trykke på <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> tannhjulet i redigeringsverktøyet og **lag en avstemning**.

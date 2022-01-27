@@ -1,7 +1,11 @@
 # frozen_string_literal: true
 
 class WatchedWordSerializer < ApplicationSerializer
-  attributes :id, :word, :replacement, :action
+  attributes :id, :word, :regexp, :replacement, :action
+
+  def regexp
+    WordWatcher.word_to_regexp(word, whole: true)
+  end
 
   def action
     WatchedWord.actions[object.action]

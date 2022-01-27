@@ -1,4 +1,3 @@
-/*jshint maxlen:10000000 */
 export default {
   "/topics/private-messages/eviltrout.json": {
     users: [
@@ -38,8 +37,7 @@ export default {
           bumped_at: "2019-07-26T01:29:24.177Z",
           unseen: false,
           last_read_post_number: 2,
-          unread: 0,
-          new_posts: 0,
+          unread_posts: 0,
           pinned: false,
           unpinned: null,
           visible: true,
@@ -47,6 +45,7 @@ export default {
           archived: false,
           notification_level: 3,
           bookmarked: false,
+          bookmarks: [],
           liked: false,
           views: 5,
           like_count: 0,

@@ -13,32 +13,44 @@ lv:
     formats:
       short: "%d-%m-%Y"
       short_no_year: "%B %-d"
+      date_only: "%B %-d, %Y"
+      long: "%B %-d, %Y, %l:%M%P"
       no_day: "%Y %B"
   date:
     month_names:
     - null
-    - January
-    - February
-    - March
-    - April
-    - May
-    - June
-    - July
-    - August
-    - September
-    - October
-    - November
-    - December
+    - Janvāris
+    - Februāris
+    - Marts
+    - Aprīlis
+    - Maijs
+    - jūnijs
+    - Jūlijs
+    - augusts
+    - Septembris
+    - Oktobris
+    - Novembris
+    - Decembris
+    <<: *datetime_formats
+  time:
+    am: "am"
+    pm: "pm"
     <<: *datetime_formats
   title: "Discourse"
   topics: "Tēmas"
   posts: "raksti"
   views: "skatījumi"
   loading: "Ielāde"
+  powered_by_html: 'Powered by <a href="https://www.discourse.org">Discourse</a>, vislabāk skatāms ar iespējotu JavaScript'
   sign_up: "Reģistrēties"
   log_in: "Ienākt"
   submit: "Iesniegt"
+  purge_reason: "Automātiski izdzēsts kā pamests, deaktivizēts konts"
+  disable_remote_images_download_reason: "Attālu lejupielāde tika atspējota, jo nebija pietiekami daudz vietas diskā."
   anonymous: "Anonīmi"
+  remove_posts_deleted_by_author: "Izdzēsis autors"
+  redirect_warning: "Mēs nevarējām pārbaudīt, vai jūsu izvēlētā saite tiešām tika ievietota forumā. Ja tomēr vēlaties turpināt, atlasiet zemāk esošo saiti."
+  on_another_topic: "Par citu tēmu"
   inline_oneboxer:
     topic_page_title_post_number_by_user: "#%{post_number} - %{username}"
   emails:
@@ -112,12 +124,8 @@ lv:
       <<: *errors
   staff_category_name: "Personāls"
   trust_levels:
-    newuser:
-      title: "jauns lietotājs"
-    member:
-      title: "biedrs"
-    regular:
-      title: "regulārs"
+    admin: "Administrators"
+    staff: "Personāls"
   rate_limiter:
     hours:
       zero: "%{count} stundas"
@@ -351,7 +359,20 @@ lv:
     top_uploads:
       labels:
         filename: Faila nosaukums
+    top_users_by_likes_received:
+      labels:
+        user: Lietotājs
+        qtt_like: Saņemtās atzinības
+    top_users_by_likes_received_from_inferior_trust_level:
+      labels:
+        user: Lietotājs
+        qtt_like: Saņemtās atzinības
+    top_users_by_likes_received_from_a_variety_of_people:
+      labels:
+        user: Lietotājs
+        qtt_like: Saņemtās atzinības
   site_settings:
+    disabled: "atslēgt"
     dark_mode_none: "Nav"
     embed_truncate: "Saīsināt iegultos ierakstus."
     embed_post_limit: "Maksimālais iegulto ierakstu skaits."
@@ -431,12 +452,10 @@ lv:
             placeholder: "vards@piemers.com"
       corporate:
         title: "Organizācija"
-      fonts:
+      styling:
         fields:
-          font_preview:
+          styling_preview:
             label: "Priekšskatījums"
-      homepage:
-        fields:
           homepage_style:
             choices:
               categories_only:
@@ -445,6 +464,8 @@ lv:
                 label: "Sadaļas un to labākās tēmas"
               categories_and_latest_topics:
                 label: "Sadaļas un jaunākās tēmas"
+              categories_and_top_topics:
+                label: "Kategorijas un populārākās tēmas"
   joined: "Pievienojās"
   discourse_push_notifications:
     popup:
@@ -458,8 +479,6 @@ lv:
     actions:
       agree_and_suspend:
         title: "Apturētie lietotāji"
-      delete_spammer:
-        title: "Izdzēst spamotāju"
       delete_single:
         title: "Dzēst"
       disagree:
@@ -473,10 +492,7 @@ lv:
           title: "Dzēst lietotāju."
       reject:
         title: "Noraidīt"
-      delete_user:
-        title: "Dzēst lietotāju."
-  time:
-    <<: *datetime_formats
+  fallback_username: "lietotājs"
   activemodel:
     errors:
       <<: *errors

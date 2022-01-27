@@ -14,8 +14,8 @@ class BookmarksController < ApplicationController
     bookmark = bookmark_manager.create(
       post_id: params[:post_id],
       name: params[:name],
-      reminder_type: params[:reminder_type],
       reminder_at: params[:reminder_at],
+      for_topic: params[:for_topic] == "true",
       options: {
         auto_delete_preference: params[:auto_delete_preference] || 0
       }
@@ -41,7 +41,6 @@ class BookmarksController < ApplicationController
     bookmark_manager.update(
       bookmark_id: params[:id],
       name: params[:name],
-      reminder_type: params[:reminder_type],
       reminder_at: params[:reminder_at],
       options: {
         auto_delete_preference: params[:auto_delete_preference] || 0

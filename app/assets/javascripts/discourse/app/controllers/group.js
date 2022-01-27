@@ -87,9 +87,13 @@ export default Controller.extend({
     return defaultTabs;
   },
 
-  @discourseComputed("model.is_group_user")
-  showMessages(isGroupUser) {
+  @discourseComputed("model.has_messages", "model.is_group_user")
+  showMessages(hasMessages, isGroupUser) {
     if (!this.siteSettings.enable_personal_messages) {
+      return false;
+    }
+
+    if (!hasMessages) {
       return false;
     }
 
@@ -99,21 +103,6 @@ export default Controller.extend({
   @discourseComputed("model.displayName", "model.full_name")
   groupName(displayName, fullName) {
     return (fullName || displayName).capitalize();
-  },
-
-  @discourseComputed(
-    "model.name",
-    "model.flair_url",
-    "model.flair_bg_color",
-    "model.flair_color"
-  )
-  avatarFlairAttributes(groupName, flairURL, flairBgColor, flairColor) {
-    return {
-      primary_group_flair_url: flairURL,
-      primary_group_flair_bg_color: flairBgColor,
-      primary_group_flair_color: flairColor,
-      primary_group_name: groupName,
-    };
   },
 
   @discourseComputed("model.messageable")

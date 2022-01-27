@@ -121,7 +121,7 @@ sw:
       ip_address_already_screened: "tayari ipo ndani ya kanuni iliyopo"
       restrict_dependent_destroy:
         one: "Hauwezi kufuta kumbukumbu kwa sababu %{record}inayoitegemea ipo"
-        many: "Hauwezi kufuta kumbukumbu kwa sababu %{record} inayoitegemea ipo"
+        other: "Hauwezi kufuta kumbukumbu kwa sababu %{record} inayoitegemea ipo"
       other_than: "lazima iwe nyingine zaidi ya %{count}"
     template:
       body: ! "Matatizo yametokea kwenye sehemu zifuatazo:"
@@ -291,7 +291,6 @@ sw:
               target_user_not_found: "Mtumiaji mmoja unaejaribu kumtumia ujumbe hajapatikana."
             featured_link:
               invalid: "ni batili. Anwani inahitaji kuwa na http:// or https://."
-              invalid_category: "haiwezi kufanyiwa uhariri kwenye kategoria hii."
         user:
           attributes:
             password:
@@ -356,16 +355,8 @@ sw:
       topic_exists_no_oldest: "Hauwezi kufuta kategoria hii kwa sababu ina idadi ya mada %{count}."
     uncategorized_description: "Mada ambazo hazina kategoria, au haziwezi kuwekwa kwenye kategoria zingine."
   trust_levels:
-    newuser:
-      title: "mtumiaji mpya"
-    basic:
-      title: "mtumiaji wa kawaida"
-    member:
-      title: "mwanachama"
-    regular:
-      title: "kawaida"
-    leader:
-      title: "kiongozi"
+    admin: "Kiongozi"
+    staff: "Wasaidizi"
     change_failed_explanation: "Ulijaribu kumshusha daraja %{user_name} kwenda '%{new_trust_level}'. Lakini kiwango chake cha uaminifu tayari ni '%{current_trust_level}'. %{user_name} atabaki kwenye '%{current_trust_level}' - kama unataka kumshusha daraja loki kiwango cha uaminifu kwanza."
   post:
     image_placeholder:
@@ -489,18 +480,6 @@ sw:
       title: "Penda"
       description: "Penda chapisho hili"
       short_description: "Penda chapisho hili"
-  user_activity:
-    no_default:
-      self: "Bado hauna shughuli."
-      others: "Hakuna shughuli."
-    no_bookmarks:
-      others: "Hakuna mialamisho."
-    no_likes_given:
-      self: "Haujapenda machapisho yoyote."
-      others: "Hakuna machapisho yaliyopendwa."
-    no_replies:
-      self: "Haujajibu machapisho yoyote."
-      others: "Hakuna majibu."
   topic_flag_types:
     spam:
       title: "Barua Taka"
@@ -763,6 +742,18 @@ sw:
     top_uploads:
       labels:
         filename: Jina la faili
+    top_users_by_likes_received:
+      labels:
+        user: Mtumiaji
+        qtt_like: Umepokea Likes
+    top_users_by_likes_received_from_inferior_trust_level:
+      labels:
+        user: Mtumiaji
+        qtt_like: Umepokea Likes
+    top_users_by_likes_received_from_a_variety_of_people:
+      labels:
+        user: Mtumiaji
+        qtt_like: Umepokea Likes
   dashboard:
     rails_env_warning: "Seva inafanyakazi ndani ya %{env} halitumizi."
     host_names_warning: "Fili lako la config/database.yml linatumia localhost hostname. Sasisha ili itumie hostname ya tovuti yako."
@@ -772,6 +763,7 @@ sw:
     missing_mailgun_api_key: "Seva imesanidiwa kutuma barua pepe kwa kutumia Mailgun lakini haujaweka ufunguo wa Mailgun unaotumika kuthibitisha ujumbe."
     force_https_warning: "Tovuti yako inatumia SSL. Lakini `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https` haijaruhusiwa kwenye mipangilio ya tovuti yako."
   site_settings:
+    disabled: "imezuiwa"
     censored_words: "Maneno ambayo yatabadilishwa kuwa &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Futa machapisho yote ambayo yatakuwa yamefichwa baada ya siku 30."
     allow_user_locale: "Waruhusu watumiaji wachague lugha ya kutumia au kuwasiliana"
@@ -806,12 +798,10 @@ sw:
     allowed_inline_onebox_domains: "Orodha za anwani za mtandao ambazo zitawekwa kwenye boxi kama zikiunganishwa bila kichwa cha habari"
     summary_score_threshold: "Alama ya chini ambayo mada inahitaji kabla ya kuwekwa ndani ya 'Fupisha Hii Mada' "
     summary_percent_filter: "Mtumiaji akibonyeza 'Fupisha Hii Mada', onyesha % machapisho ya juu"
-    enable_personal_messages: "Ruhusu watumiaji wenye kiwango cha 1 cha uaminifu (inasanidiwa kwa kupitia kiwango cha chini cha uaminifu kutuma ujumbe) kutuma ujumbe wa barua pepe. Wasaidizi wataweza kutuma ujumbe mda kila wakati."
     enable_system_message_replies: "Waruhusu watumiaji wajibu ujumbe wa mfumo,hata kama ujumbe binafsi umezuiliwa."
     notify_mods_when_user_silenced: "Kama mtumiaji akinyamazishwa, tuma ujumbe kwa wasimamizi wote."
     markdown_linkify_tlds: "Orodha ya vikoa vya hali ya juu ambavyo otomatikali ni viungo."
     post_undo_action_window_mins: "Dakika watumiaji wanaruhusiwa kutendua vitendo vya hivi karibuni kwenye chapisho (kupenda, bendera, etc)."
-    pending_users_reminder_delay: "Wajulishe wasimamizi kama watumiaji wapya wamekuwa wanasubiria kibali kwa mda zaidi ya masaa haya. Seti -1 kusitisha taarifa."
     maximum_session_age: "mtumiaji ataendelea kuwa ndani kwa masaa n toka mara ya mwisho alipotembelea"
     site_contact_username: "Jina la msaidizi lililo sahihi litakalotuma ujumbe otomatikali. Kama ikiachwa wazi chaguo-msingi la akaunti ya mfumo litatumika."
     send_welcome_message: "Watumie watumiaji wapya ujumbe wa kuwakaribisha na muongozo mfupi wa kuanzia."
@@ -834,7 +824,6 @@ sw:
     google_oauth2_client_id: "Utambulisho wa Mtumiaji kwa ajili ya Programu-timizi ya Google"
     google_oauth2_client_secret: "Siri ya Mtumiaji kwa ajili ya Programu-timizi ya Google"
     enable_backups: "Ruhusu wasimamizi watengeneze machelezo ya jamii"
-    allow_restore: "ruhusu urejeshaji, itabadilisha taarifa zote za tovuti! Acha iwe hapana, badilisha kama unataka kurejesha chelezo"
     maximum_backups: "Kiwango cha juu cha chelezo kutunza kwenye diski. Machelezo ya mda yatafutwa otomatikali"
     backup_frequency: "idadi ya siku kati ya machelezo."
     rate_limit_create_topic: "Baada ya kutengeneza mada, watumiaji wasubiri sekunde (n) kabla ya kutengeneza mada nyingine."
@@ -908,10 +897,8 @@ sw:
     allowed_spam_host_domains: "Orodha ya vikoa vilivyotengwa kutoka kwenye majaribio ya komputa mwenyeji ya barua taka. Watumiaji wapya hawatazuiliwa kutengeneza machapisho yenye viungo kwenda kwenye vikoa hivi."
     topic_view_duration_hours: "Hesabu utembezi wa mada mpya mara moja kuendana na anwani ya mtandao/Mtumiaji kila baada ya masaa N"
     user_profile_view_duration_hours: "Hesabu utembezi wa mada mpya mara moja kuendana na anwani ya mtandao/Mtumiaji kila baada ya masaa N"
-    max_new_accounts_per_registration_ip: "Kama kuna akaunti 0 zenye kiwango (n) cha uaminifu kutoka kwenye anwani hii ya mtandao (na hakuna hata mmoja ambaye ni msaidizi or kwenye kiwango cha 2 cha uaminifu au zaidi), kataa usajili kutoka kwenye anwani hiyo."
     num_hours_to_close_topic: "Mda wa masaa kusitisha mada ili kuingilia."
     auto_silence_fast_typers_max_trust_level: "Kiwango cha juu cha uaminifu kunyamazisha wanaochapa haraka sana otomatikali"
-    auto_silence_first_post_regex: "Taarifa zilizo ndani ya mabano hazitapewa kipaumbele kama herufi ni kubwa au ndogo, kama zikipitishwa zitasababisha chapisho la kwanza linyamazishwe na lisubirishwe. Mfano raging|a[bc]a , itasababisha machapisho yote yenye raging au aba au aca yamazishwe mara ya kwanza. Kanuni hii inatokea kwenye chapisho la kwanza tu."
     reply_by_email_enabled: "Ruhusu majibu ya mada kupitia barua pepe."
     delete_all_posts_max: "Kiwango cha juu cha machapisho yanayoweza kufutwa mara moja na kitufe cha Futa Machapisho Yote. Kama mtumiaji ana namba fulani ya machapisho, machapisho hayawezi kufutwa mara moja na mtumiaji hawezi kufutwa. "
     digest_topics: "Kiwango cha juu cha mada maarufu kuonyeshwa kwenye muhtasari wa barua pepe."
@@ -995,7 +982,6 @@ sw:
     no_email: "Hakuna barua pepe iliyoandikwa. Tafadhali wasiliana na msimamizi wa tovuti."
     email_error: "Akaunti haijaweza kusajiliwa na barua pepe<b>%{email}</b>Tafadhali wasiliana na msimamizi wa tovuti."
   original_poster: "Muandishi wa Kwanza"
-  most_posts: "Machapisho Mengi"
   most_recent_poster: "Mwandishi wa hivi karibuni"
   frequent_poster: "Mwandishi wa mara kwa mara"
   redirected_to_top_reasons:
@@ -1583,6 +1569,26 @@ sw:
         %{context}
 
         %{respond_instructions}
+    user_group_mentioned_pm:
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm_group:
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_posted:
       title: "Mtumiaji Amechapisha"
       subject_template: "[%{email_prefix}] %{topic_title}"
@@ -1624,7 +1630,13 @@ sw:
     account_suspended:
       title: "Akaunti Imesimamishwa"
       subject_template: "[%{email_prefix}] Akaunti yako imesimamishwa"
+    account_suspended_forever:
+      title: "Akaunti Imesimamishwa"
+      subject_template: "[%{email_prefix}] Akaunti yako imesimamishwa"
     account_silenced:
+      title: "Akaunti imenyamazishwa"
+      subject_template: "[%{email_prefix}] Akaunti yako imenyamazishwa"
+    account_silenced_forever:
       title: "Akaunti imenyamazishwa"
       subject_template: "[%{email_prefix}] Akaunti yako imenyamazishwa"
     account_exists:
@@ -1815,100 +1827,6 @@ sw:
     Hariri chapisho la kwanza la mada hii kubadilisha maandishi ya ukurasa %{page_name}.
   guidelines_topic:
     title: "Maswali ya Mara kwa Mara/Muongozo"
-    body: |
-      <a name="civilized"></a>##
-
-      [Hii ni Sehemu ya Kistaarabu kwa ajili ya Majadiliano ya Umma](#ustaarabu)
-
-      Tafadhali onyesha heshima kama unavyojiheshimu ukiwa kwenye jumuiya ya watu wengi. Sisi pia ni raslimali ya jumuiya &mdash; sehemu ya kusambaza ujuzi, maarifa na vivutio kupitia majadiliano yanayoendelea.
-
-      Kanuni hizi sio ngumu na ni za haraka, ni miongozo kusaidia maamuzi ya kibinadamu kwenye jumuiya na kuweka mazingira kuwa mazuri kwa ajili ya majadiliano ya kistaarabu ya discourse.
-
-      <a name="improve"></a>
-
-      ##[Boresha Mazungumzo](#boresha)
-
-      Tusaidie kuhahikisha hii ni sehemu nzuri kwa ajili ya mazungumzo kwa kujitahidi kuboresha mazungumzo, kwa njia moja au nyingine, hata kama ni kidogo sana. Kama hauna uhakika kuwa chapisho lako linaongeza kitu chochote, fikiria vizuri na jaribu tena kuchapisha.
-
-      Mada zinazozungumzwa hapa ni muhimu kwetu sisi, na tunataka na wewe ufanye kuwa ni muhimu kwako pia. Heshimu mada na watu wanajadiliana, hata kama haukubaliani na wanachokisema.
-
-      Njia moja ya kuboresha mazungumzo ni kugundua yale ambayo tayari yanaendelea. Tumia mda kupitia mada hapa kabla ya kujibu au kuanzisha za kwako, na utakuwa na fursa za kukutana na wale ambao wanavutiwa na vitu sawa na wewe.
-
-      <a name="agreeable"></a>
-
-      ## [Kubali, hata kama Unakataa](#kubali)
-
-      Unaweza kutaka kujibu kwa kukataa. Hiyo ni sawa. Kumbuka _kuchambua mawazo, sio watu_. Tafadhali epuka:
-
-      *Kuita watu-majina
-      *kushambulia tabia, rangi, jinsia, urefu, ufupi, umbo na vinginevyo
-      * Kujibu kuendana na toni badala ya maandishi yaliondikwa
-      *Kujibu bila kufikiria kwa sababu ya hasira
-
-      Badala yake andika majibu yenye busara, hekima na heshima ambayo yataboresha mazungumzo.
-
-      <a name="participate"></a>
-
-      ##[Ushirikiano Wako ni Muhimu](#shiriki)
-
-      Mazungumzo tunayoyafanya hapa ndio yatakayoonwa na mtumiaji mpya. Tusaidie kuathiri siku za baadae za jumuiya yetu, kwa kuchagua kushiriki kwenye majadiliano ambayo yanafanya jumuiya iwe sehemu ya kuvuita &mdash; na epuka na zile mbaya.
-
-      Discourse inatoa vifaa vinavyosaidia jumuiya kujua ushiriki mzuri sana (na mbaya): mialamisho, upendo, bendera, majibu, uhariri, na vinginevyo. Tumia vifaa hivi kuboresha uzoefu wako na wa wengine. Tuiache jumuiya yetu ikiwa vizuri zaidi ya tulivyoikuta.
-
-      <a name="flag-problems"></a>
-
-      ## [Ukiona tatizo, Ripoti kwa kubonyeza Bendera](#ripoti-matatizo)
-
-      Wasimamizi wana mamlaka ya kipekee; kama wewe, wana wajibu wa jumuiya hii. Kwa msaada, wasimamizi wanaweza kuwa wasahalisha wa jumuiya, sio tu mapolisi na walinzi.
-
-      Ukiona kitu kibaya kimeandikwa, usijibu. Itaendeleza tabia mbaya, itatumia nguzu yako na kupoteza mda wa kila mtu._Bonyeza tu Bendera_. Kama bendera nyingi zitabonyezwa, kitendo kitafanyika, kama sio otomatikali, msimamizi ataingilia kati.
-
-      Ili kuhakikisha jumuiya ipo vizuri, wasimamizi wana uwezo wa kuondoa au kufuta maandishi na akaunti ya mtumiaji mda wowote. Wasimamizi hawahakiki machapisho mapya; wasimamizi na wasaidizi wa tovuti hawana majukumu yoyote juu ya maandishi yanayochapishwa na wanajumuiya.
-
-      <a name="be-civil"></a>
-
-      ## [Kuwa Mstaarabu Mda Wote] (#kuwa-mstaarabu)
-
-      Hakuna kitu kinachoharibu mazungumzo yenye afya kama jeuri:
-
-      Kuwa mstaarabu. Usichapishe kitu chochote ambacho mtumiaji mwenye akili timamu atakiona kuwa kina matusi, kukejeli, kukera au kuchochea matatizo.
-      * Usichapishe vitu vichafu au ngono
-      * Jiheshimu na heshimu wengine. Usisumbue au kusababisha huzuni, usijifanye kuwa mtu mwingine, au kuchapisha kwa umma taarifa binafsi za watu wengine.
-      *Heshimu jumuiya yetu. Usichapishe taarifa taka au kuchafua jumuiya .
-
-      Haya siyo maneno pekee na maelezo yake &mdash; epuka _kuonyesha_ kitu chochote kinachoendana na hivi. Kama hauna uhakika, jiulize ungejisikiaje kama chapisho lako likitokea kwenye ukurasa wa kwanza wa gazeti. Hakikisha lugha, viungo, na picha ni safi kuonwa na familia na marafiki.
-
-      <a name="keep-tidy"></a>
-
-      ## [Hakikisha ni Maridadi](#hakikisha-maridadi)
-
-      Jitahidi kuweka vitu sehemu vinavyotakiwa kuwepo, ili tuweze kutumia mda mwingi tukijadiliana badala ya kusafisha. Kwa hiyo:
-
-      Usikosee na kuanzisha mada kwenye kategoria nyingine badala ya kategoria sawa.
-      *Usiandike chapisho moja kwenye mada nyingi.
-      *Usichapishe majibu ambayo hayana maneno.
-      *Usibadilishe mada kwa kuibadilisha katikati.
-      *Usiweke sahihi kwenye machapisho yako &mdash; kila chapisho lina taarifa zako za umbo ambazo zimeambatanishwa.
-
-      Badala ya kuchapisha "+1" au "Nimekubali", tumia kitufe cha upendo. Badala ya kuifanya mada iende njia nyingine kabisa, tumia Jibu kama Kiungo cha Mada.
-
-      <a name="stealing"></a>
-
-      ## [Chapisha Vitu Vyako tu](#kuiba)
-
-      Hautachapisha kitu chochote abacho kina milikiwa na mtu mwingine bila ruhusa yake. Hautachapisha maelezo ya, kiungo kwenda, au njia ya kuiba haki za uvumbuzi (programu, filamu, sauti, picha), au kuvunja sheria yoyote nyingine.
-
-      <a name="power"></a>
-
-      ## [Inaendeshwa na Wewe](#endeshwa)
-
-      Tovuti hii inaendeshwa na [wasaidizi binafsi](%{base_path}/kuhusu) na *wewe*, jumuiya. Kama una swali lolote kuhusu jinsi vitu vinavyofanya kazi hapa, tengeneza mada mpya ndani ya [kategoria ya maoni ya tovuti](%{base_path}/c/tovuti-maoni) na tutajadiliana! Kama kuna kitu cha wasiwasi au muhimu sana ambacho kinahitaji ufumbuzi wa haraka sana, hakiwezi kujibiwa kwa kubonyeza bendera au mada, wasiliana nasi kupitia [ukurasa wa wasaidizi](%{base_path}/kuhusu).
-
-      <a name="tos"></a>
-
-      ## [Sheria na Masharti](#tos)
-
-      Ndio, sheria hinikiza, ila inabidi tujilinde &ndash; na watumiaji wenye tabia mbaya. Tuna [Sheria na Masharti](%{base_path}/tos) yanayoelezea tabia yako (na yetu) na haki za maandishi, faragha, na sheria. Kutumia huduma hizi, inabidi ukubaliane na [TOS](%{base_path}/tos) zetu.
   tos_topic:
     title: "Masharti ya Huduma"
   privacy_topic:
@@ -2116,7 +2034,6 @@ sw:
             label: "Jina la Jumuia"
             placeholder: "Sehemu ya Jeni ya Kuburudika"
           site_description:
-            label: "Elezea jamii yako ndani ya sentensi moja"
             placeholder: "Sehemu ya Jeni na marafiki zake kujadili vitu vizuri"
       introduction:
         title: "Utambulisho"
@@ -2150,26 +2067,10 @@ sw:
             description: "Ujumbe wote wa kibinafsi utatumwa kutoka kwa mtumiaji huyu, kama ripoti za onyo na ilani ya umalizaji wa chelezo."
       corporate:
         title: "Shirika"
-      colors:
-        title: "Rangi"
-      fonts:
+      styling:
         fields:
-          font_preview:
+          styling_preview:
             label: "Kihakiki"
-      logos:
-        title: "Nembo"
-        fields:
-          logo:
-            label: "Nembo Msingi"
-      icons:
-        title: "Ikoni"
-        fields:
-          large_icon:
-            label: "Ikoni Kubwa"
-      homepage:
-        description: "Tunakushauri uonyeshe mada za hivi karibuni kwenye ukurasa wa kwanza, lakini unaweza kuonyesha kategoria (vikundi vya mada) kwenye ukurasa wa kwanza kama ungependelea."
-        title: "Ukurasa mkuu"
-        fields:
           homepage_style:
             choices:
               latest:
@@ -2182,6 +2083,16 @@ sw:
                 label: "Kategoria na Mada za Hivi Karibuni"
               categories_and_top_topics:
                 label: "Kategoria na Mada za Juu"
+      logos:
+        title: "Nembo"
+        fields:
+          logo:
+            label: "Nembo Msingi"
+      icons:
+        title: "Ikoni"
+        fields:
+          large_icon:
+            label: "Ikoni Kubwa"
       invites:
         title: "Alika Wasaidizi"
         description: "Una karibia kumaliza! Karibisha watu kadhaa kusaidia <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>kuanzisha majadiliano</a>na mada nzuri na majibu kufanya jumuiya yako ianze."
@@ -2218,8 +2129,6 @@ sw:
       agree_and_hide:
         title: "Ficha Chapisho"
         description: "Ficha chapisho hili na otomatikali mtumie mtumiaji ujumbe wa kumwambia afanye uhariri."
-      delete_spammer:
-        title: "Futa Muandishi wa Taka"
       delete_single:
         title: "Futa"
       disagree_and_restore:
@@ -2235,8 +2144,7 @@ sw:
           title: "Futa Mtumiaji"
       reject:
         title: "Kataa"
-      delete_user:
-        title: "Futa Mtumiaji"
+  fallback_username: "Mtumiaji"
   activemodel:
     errors:
       <<: *errors

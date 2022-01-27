@@ -4,7 +4,8 @@ require 'rails_helper'
 require 'csv'
 
 describe Jobs::ExportUserArchive do
-  let(:user) { Fabricate(:user, username: "john_doe") }
+  fab!(:user) { Fabricate(:user, username: "john_doe") }
+  fab!(:user2) { Fabricate(:user) }
   let(:extra) { {} }
   let(:job) {
     j = Jobs::ExportUserArchive.new
@@ -14,10 +15,10 @@ describe Jobs::ExportUserArchive do
   }
   let(:component) { raise 'component not set' }
 
-  let(:admin) { Fabricate(:admin) }
-  let(:category) { Fabricate(:category_with_definition) }
-  let(:subcategory) { Fabricate(:category_with_definition, parent_category_id: category.id) }
-  let(:topic) { Fabricate(:topic, category: category) }
+  fab!(:admin) { Fabricate(:admin) }
+  fab!(:category) { Fabricate(:category_with_definition) }
+  fab!(:subcategory) { Fabricate(:category_with_definition, parent_category_id: category.id) }
+  fab!(:topic) { Fabricate(:topic, category: category) }
   let(:post) { Fabricate(:post, user: user, topic: topic) }
 
   def make_component_csv
@@ -42,10 +43,12 @@ describe Jobs::ExportUserArchive do
       user.user_profile.website = 'https://doe.example.com/john'
       user.user_profile.save
       # force a UserAuthTokenLog entry
-      Discourse.current_user_provider.new({
+      env = create_request_env.merge(
         'HTTP_USER_AGENT' => 'MyWebBrowser',
         'REQUEST_PATH' => '/some_path/456852',
-      }).log_on_user(user, {}, {})
+      )
+      cookie_jar = ActionDispatch::Request.new(env).cookie_jar
+      Discourse.current_user_provider.new(env).log_on_user(user, {}, cookie_jar)
 
       # force a nonstandard post action
       PostAction.new(user: user, post: post, post_action_type_id: 5).save
@@ -109,7 +112,6 @@ describe Jobs::ExportUserArchive do
 
   context 'user_archive posts' do
     let(:component) { 'user_archive' }
-    let(:user2) { Fabricate(:user) }
     let(:subsubcategory) { Fabricate(:category_with_definition, parent_category_id: subcategory.id) }
     let(:subsubtopic) { Fabricate(:topic, category: subsubcategory) }
     let(:subsubpost) { Fabricate(:post, user: user, topic: subsubtopic) }
@@ -159,7 +161,7 @@ describe Jobs::ExportUserArchive do
     it 'can export a post from a deleted category' do
       cat2 = Fabricate(:category)
       topic2 = Fabricate(:topic, category: cat2, user: user)
-      post2 = Fabricate(:post, topic: topic2, user: user)
+      _post2 = Fabricate(:post, topic: topic2, user: user)
 
       cat2_id = cat2.id
       cat2.destroy!
@@ -182,7 +184,7 @@ describe Jobs::ExportUserArchive do
     end
 
     it 'properly includes the profile fields' do
-      serializer = job.preferences_export
+      _serializer = job.preferences_export
       # puts MultiJson.dump(serializer, indent: 4)
       output = make_component_json
       payload = output['user']
@@ -198,14 +200,16 @@ describe Jobs::ExportUserArchive do
     let(:component) { 'auth_tokens' }
 
     before do
-      Discourse.current_user_provider.new({
+      env = create_request_env.merge(
         'HTTP_USER_AGENT' => 'MyWebBrowser',
         'REQUEST_PATH' => '/some_path/456852',
-      }).log_on_user(user, {}, {})
+      )
+      cookie_jar = ActionDispatch::Request.new(env).cookie_jar
+      Discourse.current_user_provider.new(env).log_on_user(user, {}, cookie_jar)
     end
 
     it 'properly includes session records' do
-      data, csv_out = make_component_csv
+      data, _csv_out = make_component_csv
       expect(data.length).to eq(1)
 
       expect(data[0]['user_agent']).to eq('MyWebBrowser')
@@ -214,7 +218,7 @@ describe Jobs::ExportUserArchive do
     context 'auth token logs' do
       let(:component) { 'auth_token_logs' }
       it 'includes details such as the path' do
-        data, csv_out = make_component_csv
+        data, _csv_out = make_component_csv
         expect(data.length).to eq(1)
 
         expect(data[0]['action']).to eq('generate')
@@ -240,7 +244,7 @@ describe Jobs::ExportUserArchive do
       BadgeGranter.grant(badge3, user, post_id: Fabricate(:post).id)
       BadgeGranter.grant(badge3, user, post_id: Fabricate(:post).id)
 
-      data, csv_out = make_component_csv
+      data, _csv_out = make_component_csv
       expect(data.length).to eq(6)
 
       expect(data[0]['badge_id']).to eq(badge1.id.to_s)
@@ -264,7 +268,6 @@ describe Jobs::ExportUserArchive do
     let(:post3) { Fabricate(:post) }
     let(:message) { Fabricate(:private_message_topic) }
     let(:post4) { Fabricate(:post, topic: message) }
-    let(:reminder_type) { Bookmark.reminder_types[:tomorrow] }
     let(:reminder_at) { 1.day.from_now }
 
     it 'properly includes bookmark records' do
@@ -274,9 +277,9 @@ describe Jobs::ExportUserArchive do
       update1_at = now + 1.hours
       bkmk1.update(name: 'great food recipe', updated_at: update1_at)
 
-      manager.create(post_id: post2.id, name: name, reminder_type: :tomorrow, reminder_at: reminder_at, options: { auto_delete_preference: Bookmark.auto_delete_preferences[:when_reminder_sent] })
+      manager.create(post_id: post2.id, name: name, reminder_at: reminder_at, options: { auto_delete_preference: Bookmark.auto_delete_preferences[:when_reminder_sent] })
       twelve_hr_ago = freeze_time now - 12.hours
-      pending_reminder = manager.create(post_id: post3.id, name: name, reminder_type: :later_today, reminder_at: now - 8.hours)
+      pending_reminder = manager.create(post_id: post3.id, name: name, reminder_at: now - 8.hours)
       freeze_time now
 
       tau_record = message.topic_allowed_users.create!(user_id: user.id)
@@ -285,7 +288,7 @@ describe Jobs::ExportUserArchive do
 
       BookmarkReminderNotificationHandler.send_notification(pending_reminder)
 
-      data, csv_out = make_component_csv
+      data, _csv_out = make_component_csv
 
       expect(data.length).to eq(4)
 
@@ -296,7 +299,6 @@ describe Jobs::ExportUserArchive do
       expect(DateTime.parse(data[0]['updated_at'])).to eq(DateTime.parse(update1_at.to_s))
 
       expect(data[1]['name']).to eq(name)
-      expect(data[1]['reminder_type']).to eq('tomorrow')
       expect(DateTime.parse(data[1]['reminder_at'])).to eq(DateTime.parse(reminder_at.to_s))
       expect(data[1]['auto_delete_preference']).to eq('when_reminder_sent')
 
@@ -329,7 +331,7 @@ describe Jobs::ExportUserArchive do
           .category_users
           .where(category_id: category_id)
           .first_or_initialize
-          .update!(last_seen_at: reset_at)
+          .update!(last_seen_at: reset_at, notification_level: NotificationLevels.all[:regular])
       end
 
       # Set Watching First Post on announcements, Tracking on subcategory, Muted on deleted, nothing on subsubcategory
@@ -341,7 +343,7 @@ describe Jobs::ExportUserArchive do
     end
 
     it 'correctly exports the CategoryUser table' do
-      data, csv_out = make_component_csv
+      data, _csv_out = make_component_csv
 
       expect(data.find { |r| r['category_id'] == category.id }).to be_nil
       expect(data.length).to eq(4)
@@ -353,7 +355,7 @@ describe Jobs::ExportUserArchive do
 
       expect(data[1][:category_id]).to eq(subsubcategory.id.to_s)
       expect(data[1][:category_names]).to eq("#{category.name}|#{subcategory.name}|#{subsubcategory.name}")
-      expect(data[1][:notification_level]).to eq('') # empty string, not 'normal'
+      expect(data[1][:notification_level]).to eq('regular')
       expect(DateTime.parse(data[1][:dismiss_new_timestamp])).to eq(reset_at)
 
       expect(data[2][:category_id]).to eq(announcements.id.to_s)
@@ -376,10 +378,11 @@ describe Jobs::ExportUserArchive do
       PostActionCreator.spam(user, post3)
       PostActionDestroyer.destroy(user, post3, :spam)
       PostActionCreator.inappropriate(user, post3)
+
       result3 = PostActionCreator.off_topic(user, post4)
       result3.reviewable.perform(admin, :agree_and_keep)
 
-      data, csv_out = make_component_csv
+      data, _csv_out = make_component_csv
       expect(data.length).to eq(4)
       data.sort_by! { |row| row['post_id'].to_i }
 
@@ -411,7 +414,7 @@ describe Jobs::ExportUserArchive do
       PostActionDestroyer.destroy(user, post3, :like)
       post3.destroy!
 
-      data, csv_out = make_component_csv
+      data, _csv_out = make_component_csv
       expect(data.length).to eq(2)
       data.sort_by! { |row| row['post_id'].to_i }
 
@@ -450,7 +453,6 @@ describe Jobs::ExportUserArchive do
 
   context 'visits' do
     let(:component) { 'visits' }
-    let(:user2) { Fabricate(:user) }
 
     it 'correctly exports the UserVisit table' do
       freeze_time '2017-03-01 12:00'
@@ -461,7 +463,7 @@ describe Jobs::ExportUserArchive do
       UserVisit.create(user_id: user.id, visited_at: 1.year.ago, posts_read: 4, mobile: false, time_read: 40)
       UserVisit.create(user_id: user2.id, visited_at: 1.minute.ago, posts_read: 1, mobile: false, time_read: 50)
 
-      data, csv_out = make_component_csv
+      data, _csv_out = make_component_csv
 
       # user2's data is not mixed in
       expect(data.length).to eq(4)

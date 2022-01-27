@@ -4,7 +4,8 @@
 # about: Introduces staff to Discourse
 # version: 1.0
 # authors: Nick Sahler, Alan Tan
-# url: https://github.com/discourse/discourse/tree/master/plugins/discourse-narrative-bot
+# url: https://github.com/discourse/discourse/tree/main/plugins/discourse-narrative-bot
+# transpile_js: true
 
 enabled_site_setting :discourse_narrative_bot_enabled
 hide_plugin if self.respond_to?(:hide_plugin)
@@ -97,7 +98,11 @@ after_initialize do
           raise Discourse::InvalidParameters.new("#{key} must be present") unless params[key]&.present?
         end
 
-        rate_limiter = RateLimiter.new(current_user, 'svg_certificate', 3, 1.minute)
+        if params[:user_id].to_i != current_user.id
+          rate_limiter = RateLimiter.new(current_user, 'svg_certificate', 3, 1.minute)
+        else
+          rate_limiter = RateLimiter.new(current_user, 'svg_certificate_self', 30, 10.minutes)
+        end
         rate_limiter.performed! unless current_user.staff?
 
         user = User.find_by(id: params[:user_id])
@@ -192,7 +197,7 @@ after_initialize do
     return if topic_id.blank? || data[:track] != DiscourseNarrativeBot::NewUserNarrative.to_s
 
     topic_user = topic_users.find_by(topic_id: topic_id)
-    return if topic_user.present? && (topic_user.last_read_post_number.present? || topic_user.highest_seen_post_number.present?)
+    return if topic_user.present? && topic_user.last_read_post_number.present?
 
     topic = Topic.find_by(id: topic_id)
     return if topic.blank?
@@ -300,15 +305,17 @@ after_initialize do
   )
 
   self.on(:system_message_sent) do |args|
-    if args[:message_type] == 'tl2_promotion_message' && SiteSetting.discourse_narrative_bot_enabled
+    next if !SiteSetting.discourse_narrative_bot_enabled
+    next if args[:message_type] != 'tl2_promotion_message'
 
+    recipient = args[:post].topic.topic_users.where.not(user_id: args[:post].user_id).last&.user
+    recipient ||= Discourse.site_contact_user if args[:post].user == Discourse.site_contact_user
+    next if recipient.nil?
+
+    I18n.with_locale(recipient.effective_locale) do
       raw = I18n.t("discourse_narrative_bot.tl2_promotion_message.text_body_template",
-                  discobot_username: ::DiscourseNarrativeBot::Base.new.discobot_username,
-                  reset_trigger: "#{::DiscourseNarrativeBot::TrackSelector.reset_trigger} #{::DiscourseNarrativeBot::AdvancedUserNarrative.reset_trigger}")
-
-      recipient = args[:post].topic.topic_users.where.not(user_id: args[:post].user_id).last&.user
-      recipient ||= Discourse.site_contact_user if args[:post].user == Discourse.site_contact_user
-      return if recipient.nil?
+                   discobot_username: ::DiscourseNarrativeBot::Base.new.discobot_username,
+                   reset_trigger: "#{::DiscourseNarrativeBot::TrackSelector.reset_trigger} #{::DiscourseNarrativeBot::AdvancedUserNarrative.reset_trigger}")
 
       PostCreator.create!(
         ::DiscourseNarrativeBot::Base.new.discobot_user,

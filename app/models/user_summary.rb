@@ -25,12 +25,7 @@ class UserSummary
   end
 
   def replies
-    Post
-      .joins(:topic)
-      .includes(:topic)
-      .secured(@guardian)
-      .merge(Topic.listable_topics.visible.secured(@guardian))
-      .where(user: @user)
+    post_query
       .where('post_number > 1')
       .order('posts.like_count DESC, posts.created_at DESC')
       .limit(MAX_SUMMARY_RESULTS)
@@ -45,6 +40,7 @@ class UserSummary
       .merge(Topic.listable_topics.visible.secured(@guardian))
       .where(user: @user)
       .where(internal: false, reflection: false, quote: false)
+      .where('clicks > 0')
       .order('clicks DESC, topic_links.created_at DESC')
       .limit(MAX_SUMMARY_RESULTS)
   end
@@ -88,13 +84,8 @@ class UserSummary
   def most_replied_to_users
     replied_users = {}
 
-    Post
-      .joins(:topic)
+    post_query
       .joins('JOIN posts replies ON posts.topic_id = replies.topic_id AND posts.reply_to_post_number = replies.post_number')
-      .includes(:topic)
-      .secured(@guardian)
-      .merge(Topic.listable_topics.visible.secured(@guardian))
-      .where(user: @user)
       .where('replies.user_id <> ?', @user.id)
       .group('replies.user_id')
       .order('COUNT(*) DESC')
@@ -135,13 +126,7 @@ class UserSummary
   end
 
   def top_categories
-    post_count_query = Post
-      .joins(:topic)
-      .includes(:topic)
-      .secured(@guardian)
-      .merge(Topic.listable_topics.visible.secured(@guardian))
-      .where(user: @user)
-      .group('topics.category_id')
+    post_count_query = post_query.group('topics.category_id')
 
     top_categories = {}
 
@@ -198,12 +183,26 @@ protected
 
       if lookup_hash.present?
         primary_group = lookup.primary_groups[user_id]
+        flair_group = lookup.flair_groups[user_id]
 
         UserWithCount.new(
-          lookup_hash.attributes.merge(count: user_hash[user_id], primary_group: primary_group)
+          lookup_hash.attributes.merge(
+            count: user_hash[user_id],
+            primary_group: primary_group,
+            flair_group: flair_group
+          )
         )
       end
     end.compact.sort_by { |u| -u[:count] }
+  end
+
+  def post_query
+    Post
+      .joins(:topic)
+      .includes(:topic)
+      .where('posts.post_type IN (?)', Topic.visible_post_types(@guardian&.user, include_moderator_actions: false))
+      .merge(Topic.listable_topics.visible.secured(@guardian))
+      .where(user: @user)
   end
 
 end

@@ -83,6 +83,7 @@ class BulkImport::PhpBB < BulkImport::Base
       u = {
         imported_id: row["user_id"],
         username: normalize_text(row["username"]),
+        email: row["user_email"],
         created_at: Time.zone.at(row["user_regdate"].to_i),
         last_seen_at: row["user_lastvisit"] == 0 ? Time.zone.at(row["user_regdate"].to_i) : Time.zone.at(row["user_lastvisit"].to_i),
         trust_level: row["user_posts"] == 0 ? TrustLevel[0] : TrustLevel[1],

@@ -23,7 +23,7 @@ class TestSocialcastApi < Minitest::Test
     @socialcast = SocialcastApi.new @domain, @username, @password
   end
 
-  def test_intialize
+  def test_initialize
     assert_equal @domain, @socialcast.domain
     assert_equal @username, @socialcast.username
     assert_equal @password, @socialcast.password

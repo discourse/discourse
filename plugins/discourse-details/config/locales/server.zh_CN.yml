@@ -6,6 +6,6 @@
 
 zh_CN:
   site_settings:
-    details_enabled: '为帖子启用“添加可展开的详细信息”功能。此功能可在编辑器的工具栏弹出菜单中找到。如果你修改了这个设置，你必须使用“rake posts:rebake”重制所有帖子。'
+    details_enabled: '包括向帖子添加可扩展详细信息的功能。此功能可以在编辑器的工具栏弹出菜单中找到。如果您更改此设置，则必须使用 "rake posts:rebake" 重新发布所有帖子。'
   details:
-    excerpt_details: "（点击显示详情）"
+    excerpt_details: "（点击了解更多详细信息）"

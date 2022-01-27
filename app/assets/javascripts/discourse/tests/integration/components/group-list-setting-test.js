@@ -49,7 +49,7 @@ discourseModule(
       async test(assert) {
         const subject = selectKit(".list-setting");
 
-        assert.equal(
+        assert.strictEqual(
           subject.header().value(),
           "1",
           "it selects the setting's value"
@@ -58,7 +58,7 @@ discourseModule(
         await subject.expand();
         await subject.selectRowByValue("2");
 
-        assert.equal(
+        assert.strictEqual(
           subject.header().value(),
           "1,2",
           "it allows to select a setting from the list of choices"

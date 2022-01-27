@@ -15,7 +15,7 @@ if (Rails.env.development? || Rails.env.test?)
       'position_in_factory' => "before",
       'show_indexes' => "true",
       'simple_indexes' => "false",
-      'model_dir' => ["app/models"] + Dir.glob("plugins/**/app/models"),
+      'model_dir' => ["app/models"] + Dir.glob("plugins/*/app/models"),
       'include_version' => "false",
       'require' => "",
       'exclude_tests' => "true",

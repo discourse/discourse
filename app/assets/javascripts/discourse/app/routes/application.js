@@ -58,11 +58,6 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
       this.documentTitle.setTitle(tokens.join(" - "));
     },
 
-    // We need an empty method here for Ember to fire the action properly on all routes.
-    willTransition() {
-      this._super(...arguments);
-    },
-
     postWasEnqueued(details) {
       showModal("post-enqueued", {
         model: details,
@@ -94,13 +89,7 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
     },
 
     error(err, transition) {
-      let xhr = {};
-      if (err.jqXHR) {
-        xhr = err.jqXHR;
-      }
-
-      const xhrOrErr = err.jqXHR ? xhr : err;
-
+      const xhrOrErr = err.jqXHR ? err.jqXHR : err;
       const exceptionController = this.controllerFor("exception");
 
       const c = window.console;
@@ -143,11 +132,8 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
       showModal("not-activated", { title: "log_in" }).setProperties(props);
     },
 
-    showUploadSelector(toolbarEvent) {
-      showModal("uploadSelector").setProperties({
-        toolbarEvent,
-        imageUrl: null,
-      });
+    showUploadSelector() {
+      document.getElementById("file-uploader").click();
     },
 
     showKeyboardShortcutsHelp() {
@@ -179,11 +165,20 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
         const controller = getOwner(this).lookup(
           `controller:${controllerName}`
         );
-        if (controller && controller.onClose) {
-          controller.onClose({
-            initiatedByCloseButton: initiatedBy === "initiatedByCloseButton",
-            initiatedByClickOut: initiatedBy === "initiatedByClickOut",
+
+        if (controller) {
+          this.appEvents.trigger("modal:closed", {
+            name: controllerName,
+            controller,
           });
+
+          if (controller.onClose) {
+            controller.onClose({
+              initiatedByCloseButton: initiatedBy === "initiatedByCloseButton",
+              initiatedByClickOut: initiatedBy === "initiatedByClickOut",
+              initiatedByESC: initiatedBy === "initiatedByESC",
+            });
+          }
         }
         modalController.set("name", null);
       }
@@ -268,19 +263,26 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
       const returnPath = encodeURIComponent(window.location.pathname);
       window.location = getURL("/session/sso?return_path=" + returnPath);
     } else {
-      this._autoLogin("createAccount", "create-account", { signup: true });
+      this._autoLogin("createAccount", "create-account", {
+        signup: true,
+        titleAriaElementId: "create-account-title",
+      });
     }
   },
 
-  _autoLogin(modal, modalClass, { notAuto = null, signup = false } = {}) {
+  _autoLogin(
+    modal,
+    modalClass,
+    { notAuto = null, signup = false, titleAriaElementId = null } = {}
+  ) {
     const methods = findAll();
 
     if (!this.siteSettings.enable_local_logins && methods.length === 1) {
       this.controllerFor("login").send("externalLogin", methods[0], {
-        signup: signup,
+        signup,
       });
     } else {
-      showModal(modal);
+      showModal(modal, { titleAriaElementId });
       this.controllerFor("modal").set("modalClass", modalClass);
       if (notAuto) {
         notAuto();

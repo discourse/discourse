@@ -15,14 +15,6 @@ EMOJI_IMAGES_PATH ||= "public/images/emoji"
 
 EMOJI_ORDERING_URL ||= "http://www.unicode.org/emoji/charts/emoji-ordering.html"
 
-# Format is search pattern => associated emojis
-# eg: "cry" => [ "sob" ]
-# for a "cry" query should return: cry and sob
-SEARCH_ALIASES ||= {
-  "sad" => [ "frowning_face", "slightly_frowning_face", "sob", "crying_cat_face", "cry" ],
-  "cry" => [ "sob" ]
-}
-
 # emoji aliases are actually created as images
 # eg: "right_anger_bubble" => [ "anger_right" ]
 # your app will physically have right_anger_bubble.png and anger_right.png
@@ -124,7 +116,7 @@ EMOJI_ALIASES ||= {
   "nerd_face" => [ "nerd" ],
   "hugs" => [ "hugging", "hugging_face" ],
   "roll_eyes" => [ "rolling_eyes", "face_with_rolling_eyes" ],
-  "slightly_frowning_face" => [ "slight_frown" ],
+  "slightly_frowning_face" => [ "frowning", "slight_frown" ],
   "frowning_face" => [ "frowning2", "white_frowning_face" ],
   "zipper_mouth_face" => [ "zipper_mouth" ],
   "face_with_head_bandage" => [ "head_bandage" ],
@@ -213,7 +205,9 @@ EMOJI_ALIASES ||= {
   "new_moon" => [ "moon" ],
   "oncoming_automobile" => [ "car", "automobile" ],
   "fleur_de_lis" => [ "fleur-de-lis" ],
-  "face_vomiting" => [ "puke" ]
+  "face_vomiting" => [ "puke" ],
+  "smile" => [ "grinning_face_with_smiling_eyes" ],
+  "frowning_with_open_mouth" => ["frowning_face_with_open_mouth"],
 }
 
 EMOJI_GROUPS ||= [
@@ -274,20 +268,43 @@ EMOJI_SETS ||= {
   "windows" => "win10",
 }
 
-EMOJI_DB_REPO ||= "git@github.com:jjaffeux/emoji-db.git"
+EMOJI_DB_REPO ||= "git@github.com:xfalcox/emoji-db.git"
 
 EMOJI_DB_REPO_PATH ||= File.join("tmp", "emoji-db")
 
 GENERATED_PATH ||= File.join(EMOJI_DB_REPO_PATH, "generated")
 
+def search_aliases(emojis)
+  # Format is search pattern => associated emojis
+  # eg: "cry" => [ "sob" ]
+  # for a "cry" query should return: cry and sob
+  @aliases ||= begin
+    aliases = {
+      "sad" => [ "frowning_face", "slightly_frowning_face", "sob", "crying_cat_face", "cry" ],
+      "cry" => [ "sob" ]
+    }
+
+    emojis.each do |_, config|
+      next if config["search_aliases"].blank?
+      config["search_aliases"].each do |name|
+        aliases[name] ||= []
+        aliases[name] << config["name"]
+      end
+    end
+
+    aliases.map { |_, names| names.uniq! }
+    aliases
+  end
+end
+
 desc "update emoji images"
 task "emoji:update" do
   copy_emoji_db
 
-  json_db = open(File.join(GENERATED_PATH, "db.json")).read
+  json_db = File.read(File.join(GENERATED_PATH, "db.json"))
   db = JSON.parse(json_db)
 
-  write_db_json(db["emojis"], db["translations"])
+  write_db_json(db["emojis"], db["translations"], search_aliases(db["emojis"]))
   fix_incomplete_sets(db["emojis"])
   write_aliases
   groups = generate_emoji_groups(db["emojis"], db["sections"])
@@ -315,12 +332,14 @@ def optimize_images(images)
 end
 
 def copy_emoji_db
-  `rm -rf tmp/emoji-db && git clone #{EMOJI_DB_REPO} tmp/emoji-db`
+  `rm -rf tmp/emoji-db && git clone -b unicodeorg-as-source-of-truth --depth 1 #{EMOJI_DB_REPO} tmp/emoji-db`
 
   path = "#{EMOJI_IMAGES_PATH}/**/*"
   confirm_overwrite(path)
   puts "Cleaning emoji folder..."
-  FileUtils.rm_rf(Dir.glob(path))
+  emoji_assets = Dir.glob(path)
+  emoji_assets.delete_if { |x| x == "#{EMOJI_IMAGES_PATH}/emoji_one" }
+  FileUtils.rm_rf(emoji_assets)
 
   EMOJI_SETS.each do |set_name, set_destination|
     origin = File.join(GENERATED_PATH, set_name)
@@ -350,7 +369,7 @@ end
 def generate_emoji_groups(keywords, sections)
   puts "Generating groups..."
 
-  list = open(EMOJI_ORDERING_URL).read
+  list = URI.parse(EMOJI_ORDERING_URL).read
   doc = Nokogiri::HTML5(list)
   table = doc.css("table")[0]
 
@@ -396,7 +415,7 @@ def write_aliases
   end
 end
 
-def write_db_json(emojis, translations)
+def write_db_json(emojis, translations, search_aliases)
   puts "Writing #{EMOJI_DB_PATH}..."
 
   confirm_overwrite(EMOJI_DB_PATH)
@@ -425,7 +444,7 @@ def write_db_json(emojis, translations)
     "emojis" => emojis_without_tones,
     "tonableEmojis" => emoji_with_tones,
     "aliases" => EMOJI_ALIASES,
-    "searchAliases" => SEARCH_ALIASES,
+    "searchAliases" => search_aliases,
     "translations" => translations
   }
 
@@ -494,12 +513,12 @@ class TestEmojiUpdate < MiniTest::Test
   end
 
   def test_groups_js_es6_creation
-    assert File.exists?(EMOJI_GROUPS_PATH)
+    assert File.exist?(EMOJI_GROUPS_PATH)
     assert File.size?(EMOJI_GROUPS_PATH)
   end
 
   def test_db_json_creation
-    assert File.exists?(EMOJI_DB_PATH)
+    assert File.exist?(EMOJI_DB_PATH)
     assert File.size?(EMOJI_DB_PATH)
   end
 
@@ -519,12 +538,12 @@ class TestEmojiUpdate < MiniTest::Test
 
   def test_scales
     original_image = image_path("apple", "blonde_woman")
-    assert File.exists?(original_image)
+    assert File.exist?(original_image)
     assert File.size?(original_image)
 
     (2..6).each do |scale|
       image = image_path("apple", "blonde_woman/#{scale}")
-      assert File.exists?(image)
+      assert File.exist?(image)
       assert File.size?(image)
     end
   end

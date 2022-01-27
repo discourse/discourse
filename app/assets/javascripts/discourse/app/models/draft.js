@@ -5,17 +5,14 @@ const Draft = EmberObject.extend();
 
 Draft.reopenClass({
   clear(key, sequence) {
-    return ajax("/draft.json", {
+    return ajax(`/drafts/${key}.json`, {
       type: "DELETE",
       data: { draft_key: key, sequence },
     });
   },
 
   get(key) {
-    return ajax("/draft.json", {
-      data: { draft_key: key },
-      dataType: "json",
-    });
+    return ajax(`/drafts/${key}.json`);
   },
 
   getLocal(key, current) {
@@ -25,7 +22,7 @@ Draft.reopenClass({
 
   save(key, sequence, data, clientId, { forceSave = false } = {}) {
     data = typeof data === "string" ? data : JSON.stringify(data);
-    return ajax("/draft.json", {
+    return ajax("/drafts.json", {
       type: "POST",
       data: {
         draft_key: key,
@@ -34,6 +31,7 @@ Draft.reopenClass({
         owner: clientId,
         force_save: forceSave,
       },
+      ignoreUnsent: false,
     });
   },
 });

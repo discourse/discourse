@@ -713,7 +713,7 @@ describe NewPostManager do
   end
 
   context "private message via email" do
-    it "doesn't enqueue authentiation results failure" do
+    it "doesn't enqueue authentication results failure" do
       manager = NewPostManager.new(
         topic.user,
         raw: 'this is emailed content',

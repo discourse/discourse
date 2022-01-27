@@ -1,17 +1,17 @@
 # frozen_string_literal: true
 
 class UserActionsController < ApplicationController
-
   def index
     params.require(:username)
     params.permit(:filter, :offset, :acting_username, :limit)
 
     user = fetch_user_from_params(include_inactive: current_user.try(:staff?) || (current_user && SiteSetting.show_inactive_accounts))
-    raise Discourse::NotFound unless guardian.can_see_profile?(user)
-
     offset = [0, params[:offset].to_i].max
     action_types = (params[:filter] || "").split(",").map(&:to_i)
     limit = params.fetch(:limit, 30).to_i
+
+    raise Discourse::NotFound unless guardian.can_see_profile?(user)
+    raise Discourse::NotFound unless guardian.can_see_user_actions?(user, action_types)
 
     opts = {
       user_id: user.id,
@@ -25,20 +25,7 @@ class UserActionsController < ApplicationController
     }
 
     stream = UserAction.stream(opts).to_a
-    if stream.empty? && (help_key = params['no_results_help_key'])
-      if user.id == guardian.user.try(:id)
-        help_key += ".self"
-      else
-        help_key += ".others"
-      end
-      render json: {
-        user_action: [],
-        no_results_help: I18n.t(help_key)
-      }
-    else
-      render_serialized(stream, UserActionSerializer, root: 'user_actions')
-    end
-
+    render_serialized(stream, UserActionSerializer, root: 'user_actions')
   end
 
   def show

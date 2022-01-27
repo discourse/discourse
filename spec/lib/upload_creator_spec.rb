@@ -114,6 +114,21 @@ RSpec.describe UploadCreator do
       end
     end
 
+    context "when image is too big" do
+      let(:filename) { 'logo.png' }
+      let(:file) { file_from_fixtures(filename) }
+
+      it "adds an error to the upload" do
+        SiteSetting.max_image_size_kb = 1
+        upload = UploadCreator.new(
+          file, filename, force_optimize: true
+        ).create_for(Discourse.system_user.id)
+        expect(upload.errors.full_messages.first).to eq(
+          "#{I18n.t("upload.images.too_large_humanized", max_size: "1 KB")}"
+        )
+      end
+    end
+
     describe 'pngquant' do
       let(:filename) { "pngquant.png" }
       let(:file) { file_from_fixtures(filename) }
@@ -504,6 +519,49 @@ RSpec.describe UploadCreator do
         expect(FastImage.size(Discourse.store.path_for(upload))).to eq([320, 320])
       end
     end
+
+    describe 'skip validations' do
+      let(:filename) { "small.pdf" }
+      let(:file) { file_from_fixtures(filename, "pdf") }
+
+      before do
+        SiteSetting.authorized_extensions = 'png|jpg'
+      end
+
+      it 'creates upload when skip_validations is true' do
+        upload = UploadCreator.new(file, filename,
+          skip_validations: true
+        ).create_for(user.id)
+
+        expect(upload.persisted?).to eq(true)
+        expect(upload.original_filename).to eq(filename)
+      end
+
+      it 'does not create upload when skip_validations is false' do
+        upload = UploadCreator.new(file, filename,
+          skip_validations: false
+        ).create_for(user.id)
+
+        expect(upload.persisted?).to eq(false)
+      end
+    end
+  end
+
+  describe '#convert_favicon_to_png!' do
+    let(:filename) { "smallest.ico" }
+    let(:file) { file_from_fixtures(filename, "images") }
+
+    before do
+      SiteSetting.authorized_extensions = 'png|jpg|ico'
+    end
+
+    it 'converts to png' do
+      upload = UploadCreator.new(file, filename).create_for(user.id)
+
+      expect(upload.persisted?).to eq(true)
+      expect(upload.extension).to eq('png')
+    end
+
   end
 
   describe '#clean_svg!' do
@@ -520,10 +578,10 @@ RSpec.describe UploadCreator do
             <path id="pathdef" d="m0 0h100v100h-77z" stroke="#000" />
           </defs>
           <g>
-            <use id="valid-use" x="123" xlink:href="#pathdef" />
+            <use id="valid-use" x="123" href="#pathdef" />
           </g>
           <use id="invalid-use1" href="https://svg.example.com/evil.svg" />
-          <use id="invalid-use2" xlink:href="data:image/svg+xml;base64,#{b64}" />
+          <use id="invalid-use2" href="data:image/svg+xml;base64,#{b64}" />
         </svg>
       XML
       file.rewind
@@ -544,17 +602,50 @@ RSpec.describe UploadCreator do
     end
   end
 
-  describe "svg sizing" do
-    let(:svg_filename) { "pencil.svg" }
-    let(:svg_file) { file_from_fixtures(svg_filename) }
+  describe "svg sizes expressed in units other than pixels" do
+    let(:tiny_svg_filename) { "tiny.svg" }
+    let(:tiny_svg_file) { file_from_fixtures(tiny_svg_filename) }
 
-    it "should handle units in width and height" do
-      upload = UploadCreator.new(svg_file, svg_filename,
+    let(:massive_svg_filename) { "massive.svg" }
+    let(:massive_svg_file) { file_from_fixtures(massive_svg_filename) }
+
+    let(:zero_sized_svg_filename) { "zero_sized.svg" }
+    let(:zero_sized_svg_file) { file_from_fixtures(zero_sized_svg_filename) }
+
+    it "should be viewable when a dimension is a fraction of a unit" do
+      upload = UploadCreator.new(tiny_svg_file, tiny_svg_filename,
         force_optimize: true,
       ).create_for(user.id)
 
-      expect(upload.width).to be > 100
-      expect(upload.height).to be > 100
+      expect(upload.width).to be > 50
+      expect(upload.height).to be > 50
+
+      expect(upload.thumbnail_width).to be <= SiteSetting.max_image_width
+      expect(upload.thumbnail_height).to be <= SiteSetting.max_image_height
+    end
+
+    it "should not be larger than the maximum thumbnail size" do
+      upload = UploadCreator.new(massive_svg_file, massive_svg_filename,
+        force_optimize: true,
+      ).create_for(user.id)
+
+      expect(upload.width).to be > 50
+      expect(upload.height).to be > 50
+
+      expect(upload.thumbnail_width).to be <= SiteSetting.max_image_width
+      expect(upload.thumbnail_height).to be <= SiteSetting.max_image_height
+    end
+
+    it "should handle zero dimension files" do
+      upload = UploadCreator.new(zero_sized_svg_file, zero_sized_svg_filename,
+        force_optimize: true,
+      ).create_for(user.id)
+
+      expect(upload.width).to be > 50
+      expect(upload.height).to be > 50
+
+      expect(upload.thumbnail_width).to be <= SiteSetting.max_image_width
+      expect(upload.thumbnail_height).to be <= SiteSetting.max_image_height
     end
   end
 
@@ -571,6 +662,32 @@ RSpec.describe UploadCreator do
         creator.extract_image_info!
         expect(creator.should_downsize?).to eq(false)
       end
+    end
+  end
+
+  describe 'before_upload_creation event' do
+    let(:filename) { "logo.jpg" }
+    let(:file) { file_from_fixtures(filename) }
+
+    before do
+      setup_s3
+      stub_s3_store
+    end
+
+    it 'does not save the upload if an event added errors to the upload' do
+      error = 'This upload is invalid'
+
+      event = Proc.new do |file, is_image, upload|
+        upload.errors.add(:base, error)
+      end
+
+      DiscourseEvent.on(:before_upload_creation, &event)
+
+      created_upload = UploadCreator.new(file, filename).create_for(user.id)
+
+      expect(created_upload.persisted?).to eq(false)
+      expect(created_upload.errors).to contain_exactly(error)
+      DiscourseEvent.off(:before_upload_creation, &event)
     end
   end
 end

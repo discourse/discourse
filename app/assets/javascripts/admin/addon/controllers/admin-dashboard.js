@@ -1,4 +1,4 @@
-import Controller, { inject } from "@ember/controller";
+import Controller, { inject as controller } from "@ember/controller";
 import AdminDashboard from "admin/models/admin-dashboard";
 import VersionCheck from "admin/models/version-check";
 import { computed } from "@ember/object";
@@ -10,12 +10,17 @@ const PROBLEMS_CHECK_MINUTES = 1;
 export default Controller.extend({
   isLoading: false,
   dashboardFetchedAt: null,
-  exceptionController: inject("exception"),
+  exceptionController: controller("exception"),
   showVersionChecks: setting("version_checks"),
 
-  @discourseComputed("problems.length")
-  foundProblems(problemsLength) {
-    return this.currentUser.get("admin") && (problemsLength || 0) > 0;
+  @discourseComputed(
+    "lowPriorityProblems.length",
+    "highPriorityProblems.length"
+  )
+  foundProblems(lowPriorityProblemsLength, highPriorityProblemsLength) {
+    const problemsLength =
+      lowPriorityProblemsLength + highPriorityProblemsLength;
+    return this.currentUser.admin && problemsLength > 0;
   },
 
   visibleTabs: computed("siteSettings.dashboard_visible_tabs", function () {
@@ -92,7 +97,16 @@ export default Controller.extend({
     });
 
     AdminDashboard.fetchProblems()
-      .then((model) => this.set("problems", model.problems))
+      .then((model) => {
+        this.set(
+          "highPriorityProblems",
+          model.problems.filterBy("priority", "high")
+        );
+        this.set(
+          "lowPriorityProblems",
+          model.problems.filterBy("priority", "low")
+        );
+      })
       .finally(() => this.set("loadingProblems", false));
   },
 

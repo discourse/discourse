@@ -46,6 +46,9 @@ class Report
   include Reports::ModeratorWarningPrivateMessages
   include Reports::ProfileViews
   include Reports::TopUploads
+  include Reports::TopUsersByLikesReceived
+  include Reports::TopUsersByLikesReceivedFromInferiorTrustLevel
+  include Reports::TopUsersByLikesReceivedFromAVarietyOfPeople
 
   attr_accessor :type, :data, :total, :prev30Days, :start_date,
                 :end_date, :labels, :prev_period, :facets, :limit, :average,
@@ -107,7 +110,7 @@ class Report
   def add_filter(name, options = {})
     if options[:type].blank?
       options[:type] = name
-      Discourse.deprecate("#{name} filter should define a `:type` option. Temporarily setting type to #{name}.")
+      Discourse.deprecate("#{name} filter should define a `:type` option. Temporarily setting type to #{name}.", drop_from: '2.9.0')
     end
 
     available_filters[name] = options

@@ -41,12 +41,14 @@ class CurrentUserSerializer < BasicUserSerializer
              :dismissed_banner_key,
              :is_anonymous,
              :reviewable_count,
-             :read_faq,
+             :read_faq?,
              :automatically_unpin_topics,
              :mailing_list_mode,
+             :treat_as_new_topic_start_date,
              :previous_visit_at,
              :seen_notification_id,
              :primary_group_id,
+             :flair_group_id,
              :can_create_topic,
              :can_create_group,
              :link_posting_access,
@@ -63,11 +65,17 @@ class CurrentUserSerializer < BasicUserSerializer
              :do_not_disturb_until,
              :has_topic_draft,
              :can_review,
+             :draft_count,
+             :default_calendar,
+             :pending_posts_count
+
+  delegate :user_stat, to: :object, private: true
+  delegate :any_posts, :draft_count, :pending_posts_count, :read_faq?, to: :user_stat
 
   def groups
     owned_group_ids = GroupUser.where(user_id: id, owner: true).pluck(:group_id).to_set
-    object.visible_groups.pluck(:id, :name).map do |id, name|
-      group = { id: id, name: name }
+    object.visible_groups.pluck(:id, :name, :has_messages).map do |id, name, has_messages|
+      group = { id: id, name: name, has_messages: has_messages }
       group[:owner] = true if owned_group_ids.include?(id)
       group
     end
@@ -87,14 +95,6 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def include_can_create_group?
     scope.can_create_group?
-  end
-
-  def read_faq
-    object.user_stat.read_faq?
-  end
-
-  def any_posts
-    object.user_stat.any_posts
   end
 
   def hide_profile_and_presence
@@ -135,6 +135,10 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def timezone
     object.user_option.timezone
+  end
+
+  def default_calendar
+    object.user_option.default_calendar
   end
 
   def can_send_private_email_messages
@@ -276,6 +280,10 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def mailing_list_mode
     object.user_option.mailing_list_mode
+  end
+
+  def treat_as_new_topic_start_date
+    object.user_option.treat_as_new_topic_start_date
   end
 
   def skip_new_user_tips

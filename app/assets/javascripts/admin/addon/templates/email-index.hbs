@@ -16,21 +16,24 @@
 
 <form>
   <div class="admin-controls">
-    {{#if sendingEmail}}
-      <div class="controls">{{i18n "admin.email.sending_test"}}</div>
-    {{else}}
-      <div class="controls">
-        {{text-field value=testEmailAddress placeholderKey="admin.email.test_email_address"}}
+    <div class="controls">
+      <div class="inline-form">
+        {{#if sendingEmail}}
+          {{i18n "admin.email.sending_test"}}
+        {{else}}
+          {{text-field value=testEmailAddress placeholderKey="admin.email.test_email_address"}}
+          {{d-button
+            class="btn-primary"
+            action=(action "sendTestEmail")
+            disabled=sendTestEmailDisabled
+            label="admin.email.send_test"
+            type="submit"
+          }}
+          {{#if sentTestEmailMessage}}
+            <span class="result-message">{{sentTestEmailMessage}}</span>
+          {{/if}}
+        {{/if}}
       </div>
-      <div class="controls">
-        {{d-button
-          class="btn-primary"
-          action=(action "sendTestEmail")
-          disabled=sendTestEmailDisabled
-          label="admin.email.send_test"
-          type="submit"}}
-        {{#if sentTestEmailMessage}}<span class="result-message">{{sentTestEmailMessage}}</span>{{/if}}
-      </div>
-    {{/if}}
+    </div>
   </div>
 </form>

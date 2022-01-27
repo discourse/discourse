@@ -66,10 +66,19 @@ export default Component.extend({
     "aliasLevelOptions.firstObject.value"
   ),
 
-  defaultNotificationLevel: or(
+  @discourseComputed(
     "model.default_notification_level",
     "watchingNotificationLevel"
-  ),
+  )
+  defaultNotificationLevel(
+    defaultNotificationLevel,
+    watchingNotificationLevel
+  ) {
+    if (Object.values(NotificationLevels).includes(defaultNotificationLevel)) {
+      return defaultNotificationLevel;
+    }
+    return watchingNotificationLevel;
+  },
 
   @discourseComputed(
     "siteSettings.email_in",
@@ -87,5 +96,12 @@ export default Component.extend({
   )
   canAdminGroup(isCreated, canAdmin, canCreate) {
     return (!isCreated && canCreate) || (isCreated && canAdmin);
+  },
+
+  @discourseComputed("membersVisibilityLevel")
+  membersVisibilityPrivate(membersVisibilityLevel) {
+    return (
+      membersVisibilityLevel !== this.visibilityLevelOptions.firstObject.value
+    );
   },
 });

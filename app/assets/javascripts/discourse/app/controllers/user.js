@@ -1,4 +1,4 @@
-import Controller, { inject } from "@ember/controller";
+import Controller, { inject as controller } from "@ember/controller";
 import EmberObject, { computed, set } from "@ember/object";
 import { and, equal, gt, not, or } from "@ember/object/computed";
 import CanCheckEmails from "discourse/mixins/can-check-emails";
@@ -15,7 +15,7 @@ import { inject as service } from "@ember/service";
 
 export default Controller.extend(CanCheckEmails, {
   router: service(),
-  userNotifications: inject("user-notifications"),
+  userNotifications: controller("user-notifications"),
   adminTools: optionalService(),
 
   @discourseComputed("model.username")
@@ -61,6 +61,9 @@ export default Controller.extend(CanCheckEmails, {
       isExpanded: !this.collapsedInfo,
       icon: this.collapsedInfo ? "angle-double-down" : "angle-double-up",
       label: this.collapsedInfo ? "expand_profile" : "collapse_profile",
+      ariaLabel: this.collapsedInfo
+        ? "user.sr_expand_profile"
+        : "user.sr_collapse_profile",
       action: this.collapsedInfo ? "expandProfile" : "collapseProfile",
     };
   }),
@@ -230,14 +233,14 @@ export default Controller.extend(CanCheckEmails, {
             `${iconHTML("exclamation-triangle")} ` +
             I18n.t("admin.user.delete_and_block"),
           class: "btn btn-danger",
-          callback: function () {
+          callback() {
             performDestroy(true);
           },
         },
         {
           label: I18n.t("admin.user.delete_dont_block"),
           class: "btn btn-primary",
-          callback: function () {
+          callback() {
             performDestroy(false);
           },
         },

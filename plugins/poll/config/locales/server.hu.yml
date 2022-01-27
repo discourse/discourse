@@ -6,24 +6,51 @@
 
 hu:
   site_settings:
-    poll_enabled: "Engedélyezve vannak a szavazások?"
-    poll_maximum_options: "Maximum megszavazható tétel a szavazásokban."
-    poll_edit_window_mins: "Percek száma miután még lehet szerkeszteni a bejegyzést."
-    poll_minimum_trust_level_to_create: "Legkisebb szükséges bizalmi szint meghatározása szavazások létrehozásához."
+    poll_enabled: "Engedélyezi a szavazásokat?"
+    poll_maximum_options: "Szavazási lehetőségek legnagyobb száma a szavazásoknál."
+    poll_edit_window_mins: "A bejegyzés létrehozása után hány percig lehet szerkeszteni a bejegyzést."
+    poll_minimum_trust_level_to_create: "Adja meg a szavazások létrehozásához szükséges legkisebb bizalmi szintet."
+    poll_groupable_user_fields: "A szavazási eredmények csoportosítására és szűrésére használható felhasználói mezőnevek halmaza."
+    poll_export_data_explorer_query_id: "A szavazás eredményeinek exportálásához használandó adatfelfedező lekérdezés azonosítója (0 a letiltáshoz)."
   poll:
+    poll: "szavazás"
+    invalid_argument: "Érvénytelen „%{value}” érték az „%{argument}” argumentumhoz."
+    multiple_polls_without_name: "Több szavazás is névtelen. Használja a „<code>name</code>” attribútumot, hogy egyedileg azonosítsa a szavazásokat."
+    multiple_polls_with_same_name: "Több szavazás is ugyanazt a nevet használja: <strong>%{name}</strong>. Használja a „<code>name</code>” attribútumot, hogy egyedileg azonosítsa a szavazásokat."
+    default_poll_must_have_at_least_1_option: "A szavazásnak legalább 1 lehetőséget kell tartalmaznia."
+    named_poll_must_have_at_least_1_option: "A(z) <strong>%{name}</strong> szavazásnak legalább 1 lehetőséget kell tartalmaznia."
     default_poll_must_have_less_options:
-      one: "Szavazásnak kevesebb, mint %{count} lehetőséget kell tartalmaznia."
-      other: "Szavazásnak legalább %{count} lehetőséget kell tartalmaznia."
+      one: "A szavazások legfeljebb %{count} lehetőséget tartalmazhatnak."
+      other: "A szavazások legfeljebb %{count} lehetőséget tartalmazhatnak."
     named_poll_must_have_less_options:
-      one: "<strong>%{name}</strong> nevű szavazásnak kevesebb mint %{count} változót kell tartalmaznia"
-      other: "<strong>%{name}</strong> nevű szavazásnak kevesebb mint %{count}válaszható lehetőséget kell tartalmaznia."
-    default_poll_must_have_different_options: "A szavazásnak több különböző megszavazható tételt kell tartalmaznia."
-    named_poll_must_have_different_options: "A <strong>%[name]</strong> nevű szavazásnak több különböző megszavazható tételt kell tartalmaznia."
-    requires_at_least_1_valid_option: "Ki kell választanod legalább 1 érvényes lehetőséget."
-    topic_must_be_open_to_vote: "A témának nyítottnak kell hogy legyen hogy szavazni lehessen."
-    poll_must_be_open_to_vote: "A szavazásnak engedélyezve kell lennie ahhoz, hogy a felhasználok tudjanak szavazni."
-    topic_must_be_open_to_toggle_status: "A témának nyitottnak kell lennie hogy bekapcsolni lehessen a státuszt."
-    only_staff_or_op_can_toggle_status: "Csak egy staff tag vagy az eredeti posztoló tudja bekapcsolni a szavazás státuszát."
-    insufficient_rights_to_create: "Nem tudsz szavazást létrehozni."
+      one: "A(z) <strong>%{name}</strong> szavazásnak kevesebb mint %{count} lehetőséget kell tartalmaznia."
+      other: "A(z) <strong>%{name}</strong> szavazásnak kevesebb mint %{count} lehetőséget kell tartalmaznia."
+    default_poll_must_have_different_options: "A szavazásoknak különböző lehetőségeket kell tartalmazniuk."
+    named_poll_must_have_different_options: "A(z) <strong>%{name}</strong> szavazásnak különböző lehetőségeket kell tartalmaznia."
+    default_poll_must_not_have_any_empty_options: "A szavazás nem tartalmazhat üres lehetőségeket."
+    named_poll_must_not_have_any_empty_options: "A(z) <strong>%{name}</strong> szavazásnak nem lehetnek üres lehetőségei."
+    default_poll_with_multiple_choices_has_invalid_parameters: "A többválasztós szavazás érvénytelen paraméterekkel rendelkezik."
+    named_poll_with_multiple_choices_has_invalid_parameters: "A(z) <strong>%{name}</strong> többválasztós szavazás érvénytelen paraméterekkel rendelkezik."
+    requires_at_least_1_valid_option: "Legalább 1 érvényes lehetőséget kell kiválasztania."
+    edit_window_expired:
+      cannot_edit_default_poll_with_votes: "%{minutes} perc után nem lehet módosítani a szavazást."
+      cannot_edit_named_poll_with_votes: "Az első %{minutes} perc után nem módosíthatja a(z) <strong>${name}</strong> szavazás nevét."
+    no_poll_with_this_name: "Ehhez a bejegyzéshez nem tartozik <strong>%{name}</strong> nevű szavazás."
+    post_is_deleted: "Nem végezhet műveletet törölt bejegyzésen."
+    user_cant_post_in_topic: "Nem szavazhat, mert nem tehet bejegyzést ebben a témában."
+    topic_must_be_open_to_vote: "A témának nyitottnak kell lennie, hogy szavazni lehessen."
+    poll_must_be_open_to_vote: "A szavazásnak nyitottnak kell lennie ahhoz, hogy szavazni lehessen."
+    one_vote_per_user: "Csak 1 szavazat engedélyezett ennél a szavazásnál."
+    max_vote_per_user:
+      one: Csak %{count} szavazat engedélyezett ennél a szavazásnál.
+      other: Legfeljebb %{count} szavazat engedélyezett ennél a szavazásnál.
+    min_vote_per_user:
+      one: Legalább %{count} szavazat szükséges ennél a szavazásnál.
+      other: Legalább %{count} szavazat szükséges ennél a szavazásnál.
+    topic_must_be_open_to_toggle_status: "A témának nyitottnak kell lennie ahhoz, hogy átváltsa az állapotát."
+    only_staff_or_op_can_toggle_status: "Csak egy stábtag vagy az eredeti szerző tudja átváltani a szavazás állapotát."
+    insufficient_rights_to_create: "Nem hozhat létre szavazásokat."
     email:
-      link_to_poll: "Kattints a szavazás megtekintéséhez."
+      link_to_poll: "Kattintson ide a szavazás megtekintéséhez."
+    user_field:
+      no_data: "Nincs adat"

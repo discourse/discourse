@@ -24,7 +24,7 @@ es:
         closed:
           title: "Los resultados se mostrarán una vez que la encuesta esté <strong>cerrada</strong>."
         staff:
-          title: "Los resultados solo se muestran a miembros del <strong>staff</strong>."
+          title: "Los resultados solo se muestran a miembros del <strong>equipo</strong>."
       multiple:
         help:
           at_least_min_options:
@@ -43,6 +43,9 @@ es:
       show-results:
         title: "Mostrar los resultados de la encuesta"
         label: "Mostrar resultados"
+      remove-vote:
+        title: "Retirar tu voto"
+        label: "Retirar voto"
       hide-results:
         title: "Volver a tus votos"
         label: "Mostrar votos"
@@ -68,7 +71,7 @@ es:
         votes: "%{count} votos"
         breakdown: "Desglose"
         percentage: "Porcentaje"
-        count: "Contar"
+        count: "Cantidad"
       error_while_toggling_status: "Lo sentimos, se ha producido un error al cambiar el estado de esta encuesta."
       error_while_casting_votes: "Lo sentimos, se ha producido un error al emitir tus votos."
       error_while_fetching_voters: "Lo sentimos, se produjo un error al mostrar los votantes."
@@ -93,7 +96,7 @@ es:
           always: Siempre visible
           vote: Solo después de votar
           closed: Cuando se cierre la encuesta
-          staff: Solo staff
+          staff: Solo personal
         poll_groups:
           label: Solo permitir votar a estos grupos
         poll_chart_type:
@@ -113,5 +116,5 @@ es:
           add: Añadir opción
         automatic_close:
           label: Cerrar encuesta automáticamente
-        show_advanced: "Ver opciones avanzadas"
+        show_advanced: "Mostrar opciones avanzadas"
         hide_advanced: "Ocultar opciones avanzadas"

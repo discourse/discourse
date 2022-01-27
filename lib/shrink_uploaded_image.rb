@@ -12,6 +12,20 @@ class ShrinkUploadedImage
   end
 
   def perform
+    # Neither #dup or #clone provide a complete copy
+    original_upload = Upload.find_by(id: upload.id)
+    unless original_upload
+      log "Upload is missing"
+      return false
+    end
+
+    posts = Post.unscoped.joins(:post_uploads).where(post_uploads: { upload_id: original_upload.id }).uniq.sort_by(&:created_at)
+
+    if posts.empty?
+      log "Upload not used in any posts"
+      return false
+    end
+
     OptimizedImage.downsize(path, path, "#{@max_pixels}@", filename: upload.original_filename)
     sha1 = Upload.generate_digest(path)
 
@@ -24,13 +38,6 @@ class ShrinkUploadedImage
 
     if !w || !h
       log "Invalid image dimensions after resizing"
-      return false
-    end
-
-    # Neither #dup or #clone provide a complete copy
-    original_upload = Upload.find_by(id: upload.id)
-    unless original_upload
-      log "Upload is missing"
       return false
     end
 
@@ -49,7 +56,7 @@ class ShrinkUploadedImage
       filesize: File.size(path)
     }
 
-    if upload.filesize > upload.filesize_was
+    if upload.filesize >= upload.filesize_was
       log "No filesize reduction"
       return false
     end
@@ -67,21 +74,16 @@ class ShrinkUploadedImage
 
     log "base62: #{original_upload.base62_sha1} -> #{Upload.base62_sha1(sha1)}"
     log "sha: #{original_upload.sha1} -> #{sha1}"
-    log "(an exisiting upload)" if existing_upload
+    log "(an existing upload)" if existing_upload
 
     success = true
-    posts = Post.unscoped.joins(:post_uploads).where(post_uploads: { upload_id: original_upload.id }).uniq.sort_by(&:created_at)
 
     posts.each do |post|
       transform_post(post, original_upload, upload)
 
-      if post.custom_fields[Post::DOWNLOADED_IMAGES].present?
-        downloaded_images = JSON.parse(post.custom_fields[Post::DOWNLOADED_IMAGES])
-      end
-
       if post.raw_changed?
         log "Updating post"
-      elsif downloaded_images&.has_value?(original_upload.id)
+      elsif post.downloaded_images.has_value?(original_upload.id)
         log "A hotlinked, unreferenced image"
       elsif post.raw.include?(upload.short_url)
         log "Already processed"
@@ -101,32 +103,6 @@ class ShrinkUploadedImage
       end
 
       log "#{Discourse.base_url}/p/#{post.id}"
-    end
-
-    if posts.empty?
-      log "Upload not used in any posts"
-
-      if User.where(uploaded_avatar_id: original_upload.id).exists?
-        log "Used as a User avatar"
-      elsif UserAvatar.where(gravatar_upload_id: original_upload.id).exists?
-        log "Used as a UserAvatar gravatar"
-      elsif UserAvatar.where(custom_upload_id: original_upload.id).exists?
-        log "Used as a UserAvatar custom upload"
-      elsif UserProfile.where(profile_background_upload_id: original_upload.id).exists?
-        log "Used as a UserProfile profile background"
-      elsif UserProfile.where(card_background_upload_id: original_upload.id).exists?
-        log "Used as a UserProfile card background"
-      elsif Category.where(uploaded_logo_id: original_upload.id).exists?
-        log "Used as a Category logo"
-      elsif Category.where(uploaded_background_id: original_upload.id).exists?
-        log "Used as a Category background"
-      elsif CustomEmoji.where(upload_id: original_upload.id).exists?
-        log "Used as a CustomEmoji"
-      elsif ThemeField.where(upload_id: original_upload.id).exists?
-        log "Used as a ThemeField"
-      else
-        success = false
-      end
     end
 
     unless success
@@ -161,16 +137,6 @@ class ShrinkUploadedImage
         PostUpload.where(upload_id: original_upload.id).update_all(upload_id: upload.id)
       rescue ActiveRecord::RecordNotUnique, PG::UniqueViolation
       end
-
-      User.where(uploaded_avatar_id: original_upload.id).update_all(uploaded_avatar_id: upload.id)
-      UserAvatar.where(gravatar_upload_id: original_upload.id).update_all(gravatar_upload_id: upload.id)
-      UserAvatar.where(custom_upload_id: original_upload.id).update_all(custom_upload_id: upload.id)
-      UserProfile.where(profile_background_upload_id: original_upload.id).update_all(profile_background_upload_id: upload.id)
-      UserProfile.where(card_background_upload_id: original_upload.id).update_all(card_background_upload_id: upload.id)
-      Category.where(uploaded_logo_id: original_upload.id).update_all(uploaded_logo_id: upload.id)
-      Category.where(uploaded_background_id: original_upload.id).update_all(uploaded_background_id: upload.id)
-      CustomEmoji.where(upload_id: original_upload.id).update_all(upload_id: upload.id)
-      ThemeField.where(upload_id: original_upload.id).update_all(upload_id: upload.id)
     else
       upload.optimized_images.each(&:destroy!)
     end
@@ -192,14 +158,12 @@ class ShrinkUploadedImage
           )
         end
 
-        if existing_upload && post.custom_fields[Post::DOWNLOADED_IMAGES].present?
-          downloaded_images = JSON.parse(post.custom_fields[Post::DOWNLOADED_IMAGES])
-
-          downloaded_images.transform_values! do |upload_id|
+        if existing_upload && post.downloaded_images.present?
+          downloaded_images = post.downloaded_images.transform_values do |upload_id|
             upload_id == original_upload.id ? upload.id : upload_id
           end
 
-          post.custom_fields[Post::DOWNLOADED_IMAGES] = downloaded_images.to_json if downloaded_images.present?
+          post.custom_fields[Post::DOWNLOADED_IMAGES] = downloaded_images
           post.save_custom_fields
         end
 

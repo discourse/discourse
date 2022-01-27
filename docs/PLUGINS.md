@@ -3,7 +3,7 @@
 
 If you just want to get some plugins for your Discourse instance, check out [the plugin category](https://meta.discourse.org/c/plugin) at meta. This is the most up to date place for plugin discussion and listing.
 
-If you want to be safe, use only plugins on this list of [Official Plugins](https://github.com/discourse/discourse/blob/master/lib/plugin/metadata.rb): 
+If you want to be safe, use only plugins on this list of [Official Plugins](https://github.com/discourse/discourse/blob/main/lib/plugin/metadata.rb): 
 
 ### Discourse Plugin Tutorials
 
@@ -24,4 +24,3 @@ If you want to be safe, use only plugins on this list of [Official Plugins](http
 - [Manipulating text in the composer](https://meta.discourse.org/t/plugin-tutorial-1-how-to-manipulate-the-text-in-the-composer/10925)
  
 - [Display plugin outlet locations](https://meta.discourse.org/t/plugin-outlet-locations/29589)
-

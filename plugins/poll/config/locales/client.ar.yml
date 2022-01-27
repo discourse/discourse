@@ -8,73 +8,133 @@ ar:
   js:
     poll:
       voters:
-        zero: "لا أحد صوّت"
-        one: "واحد صوّت"
-        two: "إثنان صوّتا"
-        few: "صوّتوا"
-        many: "صوّتوا"
-        other: "الناخبين"
+        zero: "ناخب"
+        one: "ناخب واحد"
+        two: "ناخبان"
+        few: "ناخبين"
+        many: "ناخبًا"
+        other: "ناخب"
       total_votes:
-        zero: "لم يصوت أحد"
-        one: "صوت واحد"
-        two: "صوتان"
-        few: "مجموعة من الأصوات"
-        many: "العديد من الأصوات"
-        other: "مجموع الأصوات"
-      average_rating: "متوسّط التقييمات: <strong>%{average}</strong>."
+        zero: "صوت إجمالي"
+        one: "صوت واحد إجمالي"
+        two: "صوتان إجماليان"
+        few: "أصوات إجمالية"
+        many: "صوتًا إجماليًا"
+        other: "صوت إجمالي"
+      average_rating: "متوسط التقييمات: <strong>%{average}</strong>."
       public:
-        title: "تظهر الأصوات <strong>للعموم</strong>."
+        title: "تكون الأصوات <strong>مرئية للعامة</strong>."
       results:
         groups:
-          title: "عليك أن تكون عضوًا في %{groups} لتُصوّت على هذا الاستطلاع."
+          title: "عليك أن تكون عضوًا في %{groups} للتصويت على استطلاع الرأي هذا."
         vote:
-          title: "تظهر النتائج بعد <strong>التصويت</strong>."
+          title: "ستظهر النتائج بعد <strong>التصويت</strong>."
         closed:
-          title: "تظهر النتائج ما إن <strong>يُغلق الاستطلاع</strong>."
+          title: "ستظهر النتائج بعد <strong>إغلاق الاستطلاع</strong>."
         staff:
-          title: "تظهر النتائج لأعضاء <strong>طاقم الموقع</strong> فقط."
+          title: "تظهر النتائج لأعضاء <strong>فريق العمل</strong> فقط."
+      multiple:
+        help:
+          at_least_min_options:
+            zero: "حدِّد <strong>%{count} </strong> خيار على الأقل."
+            one: "حدِّد خيارًا واحدًا (<strong>%{count} </strong>) على الأقل."
+            two: "حدِّد خيارَين (<strong>%{count} </strong>) على الأقل."
+            few: "حدِّد <strong>%{count}</strong> خيارات على الأقل."
+            many: "حدِّد <strong>%{count}</strong> خيارًا على الأقل."
+            other: "حدِّد <strong>%{count}</strong> خيار على الأقل."
+          up_to_max_options:
+            zero: "حدِّد <strong>%{count}</strong> خيار كحد أقصى."
+            one: "حدِّد خيارًا واحدًا (<strong>%{count}</strong>) كحد أقصى."
+            two: "حدِّد خيارَين (<strong>%{count}</strong>) كحد أقصى."
+            few: "حدِّد <strong>%{count}</strong> خيارات كحد أقصى."
+            many: "حدِّد <strong>%{count}</strong> خيارًا كحد أقصى."
+            other: "حدِّد <strong>%{count}</strong> خيار كحد أقصى."
+          x_options:
+            zero: "حدِّد <strong>%{count}</strong> خيار."
+            one: "حدِّد خيارًا واحدًا (<strong>%{count}</strong>)."
+            two: "حدِّد خيارَين (<strong>%{count}</strong>)."
+            few: "حدِّد <strong>%{count}</strong> خيارات."
+            many: "حدِّد <strong>%{count}</strong> خيارًا."
+            other: "حدِّد <strong>%{count}</strong> خيار."
+          between_min_and_max_options: "حدِّد من بين <strong>%{min} </strong> إلى <strong>%{max} </strong> خيار."
       cast-votes:
-        title: "أدلِ بصوتك"
-        label: "صوّت اﻵن!"
+        title: "الإدلاء بصوتك"
+        label: "صوِّت اﻵن!"
       show-results:
-        title: "اعرض نتائج الاستطلاع"
-        label: "اعرض النتائج"
+        title: "عرض نتائج استطلاع الرأي"
+        label: "عرض النتائج"
+      remove-vote:
+        title: "إزالة تصويتك"
+        label: "إزالة التصويت"
       hide-results:
-        title: "ارجع إلى أصواتك"
+        title: "العودة إلى تصويتاتك"
+        label: "إظهار التصويت"
       group-results:
-        title: "جمّع الأصوات حسب حقل المستخدم"
+        title: "تجميع الأصوات حسب حقل المستخدم"
+        label: "عرض التفاصيل"
       export-results:
+        title: "تصدير نتائج الاستطلاع"
         label: "تصدير"
       open:
-        title: "افتح الاستطلاع"
-        label: "افتح"
-        confirm: "أمتأكد من فتح هذا الاستطلاع؟"
+        title: "فتح استطلاع الرأي"
+        label: "فتح"
+        confirm: "هل تريد بالتأكيد فتح استطلاع الرأي هذا؟"
       close:
-        title: "أغلِق الاستطلاع"
-        label: "أغلِق"
-        confirm: "أمتأكد من إغلاق هذا الاستطلاع؟"
+        title: "إغلاق الاستطلاع"
+        label: "إغلاق"
+        confirm: "هل تريد بالتأكيد إغلاق استطلاع الرأي هذا؟"
       automatic_close:
-        closes_in: "يُغلق الاستطلاع <strong>%{timeLeft}</strong>."
-        age: "أُغلق الاستطلاع <strong>%{age}</strong>."
+        closes_in: "سيتم الإغلاق بعد <strong>%{timeLeft}</strong>."
+        age: "تم الإغلاق منذ <strong>%{age}</strong>."
       breakdown:
-        title: "نتائج الاستطلاع"
-        count: "العد"
-      error_while_toggling_status: "معذرةً، حدث عُطل أثناء تبديل حالة هذا الاستطلاع."
-      error_while_casting_votes: "عذرا، حدث خطأ عند الإدلاء بأصواتكم."
-      error_while_fetching_voters: "عذرا، حدث خطأ في عرض الناخبين."
-      error_while_exporting_results: "معذرةً، حدث عُطل أثناء تصدير نتائج الاستطلاع"
+        title: "نتائج استطلاع الرأي"
+        votes: "%{count} صوت"
+        breakdown: "التفاصيل"
+        percentage: "النسبة المئوية"
+        count: "العدد"
+      error_while_toggling_status: "عذرًا، حدث خطأ أدى إلى تبديل حالة استطلاع الرأي هذا."
+      error_while_casting_votes: "عذرًا، حدث خطأ في الإدلاء بأصواتك."
+      error_while_fetching_voters: "عذرًا، حدث خطأ في عرض الناخبين."
+      error_while_exporting_results: "عذرًا، حدث خطأ في أثناء تصدير نتائج استطلاع الرأي هذا."
       ui_builder:
-        title: افتح استطلاعًا
-        insert: أدرِج استطلاعًا
+        title: إنشاء استطلاع رأي
+        insert: إدراج استطلاع رأي
         help:
-          invalid_values: يجب أن تكون القيمة الدّنيا أصغر من القيمة العليا.
-          min_step_value: قيمة الخطوة الدنيا هي 1
+          options_min_count: يُرجى إدخال {1} خيار على الأقل.
+          options_max_count: أدخِل %{count} خيار على الأكثر.
+          invalid_min_value: يجب أن تكون أدنى قيمة هي 1 على الأقل.
+          invalid_max_value: يجب أن تكون أقصى قيمة هي 1 على الأقل، لكنها أقل من أو تساوي عدد الخيارات.
+          invalid_values: يجب أن يكون الحد الأدنى للقيمة أصغر من الحد الأقصى للقيمة.
+          min_step_value: الحد الأدنى لقيمة المسافة هو 1
         poll_type:
           label: النوع
-          regular: اختيار من متعدّد
-          multiple: اختيارات من متعدّد
-          number: تقييم عددي
+          regular: اختيار فردي
+          multiple: اختيارات متعددة
+          number: التقييم بالأرقام
+        poll_result:
+          label: عرض النتائج...
+          always: مرئية دائمًا
+          vote: بعد التصويت فقط
+          closed: عند إغلاق الاستطلاع
+          staff: لفريق العمل فقط
+        poll_groups:
+          label: تقييد التصويت على هذه المجموعات
+        poll_chart_type:
+          label: مخطط النتيجة
+          bar: شريط
+          pie: دائرة
         poll_config:
-          step: الخطوة
+          max: الحد الأقصى للخيارات
+          min: الحد الأدنى للخيارات
+          step: المسافة
         poll_public:
-          label: اعرض أسماء المصوّتين
+          label: عرض أسماء المصوِّتين
+        poll_title:
+          label: العنوان (اختياري)
+        poll_options:
+          label: الخيارات (واحد لكل سطر)
+          add: إضافة خيار
+        automatic_close:
+          label: إغلاق الاستطلاع تلقائيًا
+        show_advanced: "إظهار الخيارات المتقدمة"
+        hide_advanced: "إخفاء الخيارات المتقدمة"

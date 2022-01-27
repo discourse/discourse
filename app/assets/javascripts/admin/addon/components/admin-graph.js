@@ -24,17 +24,19 @@ export default Component.extend({
 
     const config = {
       type: this.type,
-      data: data,
+      data,
       options: {
         responsive: true,
-        tooltips: {
-          callbacks: {
-            title: (context) =>
-              moment(context[0].xLabel, "YYYY-MM-DD").format("LL"),
+        plugins: {
+          tooltip: {
+            callbacks: {
+              title: (context) =>
+                moment(context[0].label, "YYYY-MM-DD").format("LL"),
+            },
           },
         },
         scales: {
-          yAxes: [
+          y: [
             {
               display: true,
               ticks: {

@@ -4,14 +4,17 @@ on:
   pull_request:
   push:
     branches:
-      - master
       - main
+
+concurrency:
+  group: linting-${{ format('{0}-{1}', github.head_ref || github.run_number, github.job) }}
+  cancel-in-progress: true
 
 jobs:
   build:
     name: run
     runs-on: ubuntu-latest
-    container: discourse/discourse_test:release
+    container: discourse/discourse_test:slim
     timeout-minutes: 30
 
     steps:
@@ -34,6 +37,7 @@ jobs:
 
       - name: Setup gems
         run: |
+          gem install bundler --conservative -v $(awk '/BUNDLED WITH/ { getline; gsub(/ /,""); print $0 }' Gemfile.lock)
           bundle config --local path vendor/bundle
           bundle config --local deployment true
           bundle config --local without development
@@ -62,11 +66,11 @@ jobs:
 
       - name: ESLint (core)
         if: ${{ always() }}
-        run: yarn eslint --ext .js,.js.es6 --no-error-on-unmatched-pattern app/assets/javascripts
+        run: yarn eslint app/assets/javascripts
 
       - name: ESLint (core plugins)
         if: ${{ always() }}
-        run: yarn eslint --ext .js,.js.es6 --no-error-on-unmatched-pattern plugins/**/{test,assets}/javascripts
+        run: yarn eslint plugins
 
       - name: Prettier
         if: ${{ always() }}
@@ -74,9 +78,9 @@ jobs:
           yarn prettier -v
           yarn prettier --list-different \
             "app/assets/stylesheets/**/*.scss" \
-            "app/assets/javascripts/**/*.{js,es6}" \
+            "app/assets/javascripts/**/*.js" \
             "plugins/**/assets/stylesheets/**/*.scss" \
-            "plugins/**/assets/javascripts/**/*.{js,es6}"
+            "plugins/**/assets/javascripts/**/*.js"
 
       - name: Ember template lint
         if: ${{ always() }}

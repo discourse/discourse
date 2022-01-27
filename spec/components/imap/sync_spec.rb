@@ -2,7 +2,6 @@
 
 require 'rails_helper'
 require 'imap/sync'
-require_relative 'imap_helper'
 
 describe Imap::Sync do
 
@@ -20,8 +19,8 @@ describe Imap::Sync do
       :group,
       imap_server: 'imap.gmail.com',
       imap_port: 993,
-      email_username: 'discourse@example.com',
-      email_password: 'discourse@example.com',
+      email_username: 'groupemailusername@example.com',
+      email_password: 'password',
       imap_mailbox_name: '[Gmail]/All Mail'
     )
   end
@@ -530,7 +529,7 @@ describe Imap::Sync do
 
   end
 
-  context 'invaidated previous sync' do
+  context 'invalidated previous sync' do
     let(:subject) { 'Testing email post' }
 
     let(:first_from) { 'john@free.fr' }

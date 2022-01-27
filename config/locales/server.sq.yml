@@ -87,7 +87,7 @@ sq:
       record_invalid: ! "Verifikimi dështoj: %{errors}"
       restrict_dependent_destroy:
         one: "Cannot delete record because a dependent %{record} exists"
-        many: "Cannot delete record because dependent %{record} exist"
+        other: "Cannot delete record because dependent %{record} exist"
       other_than: "must be other than %{count}"
     template:
       body: ! "There were problems with the following fields:"
@@ -221,16 +221,8 @@ sq:
       has_subcategories: "Nuk e fshini dot këtë kategori sepse ajo ka nënkategori. "
       topic_exists_no_oldest: "Nuk e fshini dot këtë kategori sepse numri i temave është %{count}."
   trust_levels:
-    newuser:
-      title: "anëtar i ri"
-    basic:
-      title: "anëtar i thjeshtë"
-    member:
-      title: "anëtarë"
-    regular:
-      title: "i zakonshëm"
-    leader:
-      title: "udhëheqës"
+    admin: "Admin"
+    staff: "Stafi"
     change_failed_explanation: "You attempted to demote %{user_name} to '%{new_trust_level}'. However their trust level is already '%{current_trust_level}'. %{user_name} will remain at '%{current_trust_level}' - if you wish to demote user lock trust level first"
   rate_limiter:
     hours:
@@ -592,6 +584,18 @@ sq:
     top_uploads:
       labels:
         filename: Filename
+    top_users_by_likes_received:
+      labels:
+        user: User
+        qtt_like: Pëlqime të marra
+    top_users_by_likes_received_from_inferior_trust_level:
+      labels:
+        user: User
+        qtt_like: Pëlqime të marra
+    top_users_by_likes_received_from_a_variety_of_people:
+      labels:
+        user: User
+        qtt_like: Pëlqime të marra
   dashboard:
     rails_env_warning: "Your server is running in %{env} mode."
     host_names_warning: "Your config/database.yml file is using the default localhost hostname. Update it to use your site's hostname."
@@ -675,7 +679,6 @@ sq:
     allow_new_registrations: "Allow new user registrations. Uncheck this to prevent anyone from creating a new account."
     google_oauth2_client_id: "Client ID of your Google application."
     google_oauth2_client_secret: "Client secret of your Google application."
-    allow_restore: "Allow restore, which can replace ALL site data! Leave false unless you plan to restore a backup"
     maximum_backups: "The maximum amount of backups to keep on disk. Older backups are automatically deleted"
     s3_backup_bucket: "The remote bucket to hold backups. WARNING: Make sure it is a private bucket."
     active_user_rate_limit_secs: "How frequently we update the 'last_seen_at' field, in seconds"
@@ -756,7 +759,6 @@ sq:
     privacy_policy_url: "If you have a Privacy Policy document hosted elsewhere that you want to use, provide the full URL here."
     allowed_spam_host_domains: "A list of domains excluded from spam host testing. New users will never be restricted from creating posts with links to these domains."
     levenshtein_distance_spammer_emails: "When matching spammer emails, number of characters difference that will still allow a fuzzy match."
-    max_new_accounts_per_registration_ip: "If there are already (n) trust level 0 accounts from this IP (and none is a staff member or at TL2 or higher), stop accepting new signups from that IP."
     min_ban_entries_for_roll_up: "When clicking the Roll up button, will create a new subnet ban entry if there are at least (N) entries."
     max_age_unmatched_emails: "Delete unmatched screened email entries after (N) days."
     max_age_unmatched_ips: "Delete unmatched screened IP entries after (N) days."
@@ -837,7 +839,6 @@ sq:
       topic: "Results"
       user: "Users"
   original_poster: "Postuesi fillestar"
-  most_posts: "Most Posts"
   most_recent_poster: "Postuesi i përgjigjes së fundit"
   frequent_poster: "Postues i shpeshtë"
   redirected_to_top_reasons:
@@ -1082,6 +1083,24 @@ sq:
 
         %{respond_instructions}
     user_group_mentioned:
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm:
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm_group:
       text_body_template: |
         %{header_instructions}
 
@@ -1383,14 +1402,10 @@ sq:
             placeholder: "emri@adresa.com"
       corporate:
         title: "Organizata"
-      colors:
-        title: "Ngjyrat"
-      fonts:
+      styling:
         fields:
-          font_preview:
+          styling_preview:
             label: "Parashikimi"
-      homepage:
-        fields:
           homepage_style:
             choices:
               categories_only:
@@ -1412,8 +1427,6 @@ sq:
     actions:
       agree_and_suspend:
         title: "Pezullo anëtarin"
-      delete_spammer:
-        title: "Elimino Spammer"
       delete_single:
         title: "Fshij"
       disagree:
@@ -1425,8 +1438,7 @@ sq:
           title: "Fshij Anëtarin"
       reject:
         title: "Refuzo"
-      delete_user:
-        title: "Fshij Anëtarin"
+  fallback_username: "përdorues"
   activemodel:
     errors:
       <<: *errors

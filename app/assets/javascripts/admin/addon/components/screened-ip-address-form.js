@@ -17,7 +17,7 @@ import { schedule } from "@ember/runloop";
 **/
 
 export default Component.extend({
-  classNames: ["screened-ip-address-form"],
+  classNames: ["screened-ip-address-form", "inline-form"],
   formSubmitted: false,
   actionName: "block",
 
@@ -83,7 +83,7 @@ export default Component.extend({
   _init() {
     schedule("afterRender", () => {
       $(this.element.querySelector(".ip-address-input")).keydown((e) => {
-        if (e.keyCode === 13) {
+        if (e.key === "Enter") {
           this.send("submit");
         }
       });

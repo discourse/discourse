@@ -1,10 +1,12 @@
 {{list-setting
   value=settingValue
   settingName=setting.setting
-  allowAny=allowAny
   choices=settingChoices
   onChange=(action "onChangeListSetting")
   onChangeChoices=(action "onChangeChoices")
+  options=(hash
+    allowAny=allowAny
+  )
 }}
 
 {{setting-validation-message message=validationMessage}}

@@ -9,6 +9,7 @@ import I18n from "I18n";
 import PreloadStore from "discourse/lib/preload-store";
 import { ajax } from "discourse/lib/ajax";
 import { escapeExpression } from "discourse/lib/utilities";
+import { action } from "@ember/object";
 
 export default DiscourseRoute.extend({
   queryParams: {
@@ -52,11 +53,11 @@ export default DiscourseRoute.extend({
       } else {
         return null;
       }
-    }).then((results) => {
+    }).then(async (results) => {
       const grouped_search_result = results
         ? results.grouped_search_result
         : {};
-      const model = (results && translateResults(results)) || {
+      const model = (results && (await translateResults(results))) || {
         grouped_search_result,
       };
       setTransient("lastSearch", { searchKey, model }, 5);
@@ -64,10 +65,9 @@ export default DiscourseRoute.extend({
     });
   },
 
-  actions: {
-    didTransition() {
-      this.controllerFor("full-page-search")._showFooter();
-      return true;
-    },
+  @action
+  didTransition() {
+    this.controllerFor("full-page-search")._showFooter();
+    return true;
   },
 });

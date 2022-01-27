@@ -1,26 +1,26 @@
 import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit } from "@ember/test-helpers";
 import I18n from "I18n";
-import { test } from "qunit";
+import { skip, test } from "qunit";
 
 acceptance("Composer - Edit conflict", function (needs) {
   needs.user();
 
   let lastBody;
   needs.pretender((server, helper) => {
-    server.post("/draft.json", (request) => {
+    server.post("/drafts.json", (request) => {
       lastBody = request.requestBody;
       return helper.response({ success: true });
     });
   });
 
-  test("Edit a post that causes an edit conflict", async function (assert) {
+  skip("Edit a post that causes an edit conflict", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click(".topic-post:nth-of-type(1) button.show-more-actions");
     await click(".topic-post:nth-of-type(1) button.edit");
     await fillIn(".d-editor-input", "this will 409");
     await click("#reply-control button.create");
-    assert.equal(
+    assert.strictEqual(
       queryAll("#reply-control button.create").text().trim(),
       I18n.t("composer.overwrite_edit"),
       "it shows the overwrite button"

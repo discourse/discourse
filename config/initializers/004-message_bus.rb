@@ -30,7 +30,8 @@ def setup_message_bus_env(env)
     extra_headers = {
       "Access-Control-Allow-Origin" => Discourse.base_url_no_prefix,
       "Access-Control-Allow-Methods" => "GET, POST",
-      "Access-Control-Allow-Headers" => "X-SILENCE-LOGGER, X-Shared-Session-Key, Dont-Chunk, Discourse-Present"
+      "Access-Control-Allow-Headers" => "X-SILENCE-LOGGER, X-Shared-Session-Key, Dont-Chunk, Discourse-Present",
+      "Access-Control-Max-Age" => "7200",
     }
 
     user = nil
@@ -42,8 +43,9 @@ def setup_message_bus_env(env)
         extra_headers['Set-Cookie'] = '_t=del; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT'
       end
     rescue => e
-      Discourse.warn_exception(e, message: "Unexpected error in Message Bus")
+      Discourse.warn_exception(e, message: "Unexpected error in Message Bus", env: env)
     end
+
     user_id = user && user.id
 
     raise Discourse::InvalidAccess if !user_id && SiteSetting.login_required
@@ -66,7 +68,6 @@ def setup_message_bus_env(env)
       group_ids: group_ids,
       is_admin: is_admin,
       site_id: RailsMultisite::ConnectionManagement.current_db
-
     }
     env["__mb"] = hash
   end
@@ -115,11 +116,18 @@ if Rails.env == "test"
 else
   MessageBus.redis_config = GlobalSetting.message_bus_redis_config
 end
-MessageBus.reliable_pub_sub.max_backlog_size = GlobalSetting.message_bus_max_backlog_size
 
-MessageBus.long_polling_enabled = SiteSetting.enable_long_polling
-MessageBus.long_polling_interval = SiteSetting.long_polling_interval
-MessageBus.cache_assets = !Rails.env.development?
+MessageBus.backend_instance.max_backlog_size = GlobalSetting.message_bus_max_backlog_size
+
+if SiteSetting.table_exists? && SiteSetting.where(name: ['enable_long_polling', 'long_polling_interval']).exists?
+  Discourse.deprecate("enable_long_polling/long_polling_interval have switched from site settings to global settings. Remove the override from the Site Settings UI, and use a config file or environment variables to set the global settings.", drop_from: '2.9.0')
+
+  MessageBus.long_polling_enabled = SiteSetting.enable_long_polling
+  MessageBus.long_polling_interval = SiteSetting.long_polling_interval
+else
+  MessageBus.long_polling_enabled = GlobalSetting.enable_long_polling.nil? ? true : GlobalSetting.enable_long_polling
+  MessageBus.long_polling_interval = GlobalSetting.long_polling_interval || 25000
+end
 
 if Rails.env == "test" || $0 =~ /rake$/
   # disable keepalive in testing

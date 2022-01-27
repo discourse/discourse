@@ -1,4 +1,4 @@
-import Controller, { inject } from "@ember/controller";
+import Controller, { inject as controller } from "@ember/controller";
 import DiscourseURL from "discourse/lib/url";
 import I18n from "I18n";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
@@ -9,7 +9,7 @@ import { next } from "@ember/runloop";
 
 // Modal related to changing the timestamp of posts
 export default Controller.extend(ModalFunctionality, {
-  topicController: inject("topic"),
+  topicController: controller("topic"),
   saving: false,
   date: "",
   time: "",
@@ -54,7 +54,7 @@ export default Controller.extend(ModalFunctionality, {
           next(() => DiscourseURL.routeTo(topic.url));
         })
         .catch(() =>
-          this.flash(I18n.t("topic.change_timestamp.error"), "alert-error")
+          this.flash(I18n.t("topic.change_timestamp.error"), "error")
         )
         .finally(() => this.set("saving", false));
 

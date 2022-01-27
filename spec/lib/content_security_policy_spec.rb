@@ -19,9 +19,9 @@ describe ContentSecurityPolicy do
   end
 
   describe 'base-uri' do
-    it 'is set to none' do
+    it 'is set to self' do
       base_uri = parse(policy)['base-uri']
-      expect(base_uri).to eq(["'none'"])
+      expect(base_uri).to eq(["'self'"])
     end
   end
 
@@ -29,6 +29,18 @@ describe ContentSecurityPolicy do
     it 'is set to none' do
       object_srcs = parse(policy)['object-src']
       expect(object_srcs).to eq(["'none'"])
+    end
+  end
+
+  describe 'upgrade-insecure-requests' do
+    it 'is not included when force_https is off' do
+      SiteSetting.force_https = false
+      expect(parse(policy)['upgrade-insecure-requests']).to eq(nil)
+    end
+
+    it 'is included when force_https is on' do
+      SiteSetting.force_https = true
+      expect(parse(policy)['upgrade-insecure-requests']).to eq([])
     end
   end
 
@@ -155,6 +167,12 @@ describe ContentSecurityPolicy do
     end
   end
 
+  describe 'manifest-src' do
+    it 'is set to self' do
+      expect(parse(policy)['manifest-src']).to eq(["'self'"])
+    end
+  end
+
   describe 'frame-ancestors' do
     context 'with content_security_policy_frame_ancestors enabled' do
       before do
@@ -188,26 +206,54 @@ describe ContentSecurityPolicy do
     end
   end
 
-  it 'can be extended by plugins' do
-    plugin = Class.new(Plugin::Instance) do
-      attr_accessor :enabled
-      def enabled?
-        @enabled
+  context 'with a plugin' do
+    let(:plugin_class) do
+      Class.new(Plugin::Instance) do
+        attr_accessor :enabled
+        def enabled?
+          @enabled
+        end
       end
-    end.new(nil, "#{Rails.root}/spec/fixtures/plugins/csp_extension/plugin.rb")
+    end
 
-    plugin.activate!
-    Discourse.plugins << plugin
+    it 'can extend script-src, object-src, manifest-src' do
+      plugin = plugin_class.new(nil, "#{Rails.root}/spec/fixtures/plugins/csp_extension/plugin.rb")
 
-    plugin.enabled = true
-    expect(parse(policy)['script-src']).to include('https://from-plugin.com')
-    expect(parse(policy)['object-src']).to include('https://test-stripping.com')
-    expect(parse(policy)['object-src']).to_not include("'none'")
+      plugin.activate!
+      Discourse.plugins << plugin
 
-    plugin.enabled = false
-    expect(parse(policy)['script-src']).to_not include('https://from-plugin.com')
+      plugin.enabled = true
+      expect(parse(policy)['script-src']).to include('https://from-plugin.com')
+      expect(parse(policy)['object-src']).to include('https://test-stripping.com')
+      expect(parse(policy)['object-src']).to_not include("'none'")
+      expect(parse(policy)['manifest-src']).to include("'self'")
+      expect(parse(policy)['manifest-src']).to include('https://manifest-src.com')
 
-    Discourse.plugins.pop
+      plugin.enabled = false
+      expect(parse(policy)['script-src']).to_not include('https://from-plugin.com')
+      expect(parse(policy)['manifest-src']).to_not include('https://manifest-src.com')
+
+      Discourse.plugins.delete plugin
+      DiscoursePluginRegistry.reset!
+    end
+
+    it 'can extend frame_ancestors' do
+      SiteSetting.content_security_policy_frame_ancestors = true
+      plugin = plugin_class.new(nil, "#{Rails.root}/spec/fixtures/plugins/csp_extension/plugin.rb")
+
+      plugin.activate!
+      Discourse.plugins << plugin
+
+      plugin.enabled = true
+      expect(parse(policy)['frame-ancestors']).to include("'self'")
+      expect(parse(policy)['frame-ancestors']).to include('https://frame-ancestors-plugin.ext')
+
+      plugin.enabled = false
+      expect(parse(policy)['frame-ancestors']).to_not include('https://frame-ancestors-plugin.ext')
+
+      Discourse.plugins.delete plugin
+      DiscoursePluginRegistry.reset!
+    end
   end
 
   it 'only includes unsafe-inline for qunit paths' do
@@ -230,7 +276,7 @@ describe ContentSecurityPolicy do
     }
 
     def theme_policy
-      policy([theme.id])
+      policy(theme.id)
     end
 
     it 'can be extended by themes' do
@@ -259,13 +305,23 @@ describe ContentSecurityPolicy do
       theme.theme_modifier_set.csp_extensions = ["script-src: https://from-theme-flag.script", "worker-src: from-theme-flag.worker"]
       theme.save!
 
+      child_theme = Fabricate(:theme, component: true)
+      theme.add_relative_theme!(:child, child_theme)
+      child_theme.theme_modifier_set.csp_extensions = ["script-src: https://child-theme-flag.script", "worker-src: child-theme-flag.worker"]
+      child_theme.save!
+
       expect(parse(theme_policy)['script-src']).to include('https://from-theme-flag.script')
+      expect(parse(theme_policy)['script-src']).to include('https://child-theme-flag.script')
       expect(parse(theme_policy)['worker-src']).to include('from-theme-flag.worker')
+      expect(parse(theme_policy)['worker-src']).to include('child-theme-flag.worker')
 
       theme.destroy!
+      child_theme.destroy!
 
       expect(parse(theme_policy)['script-src']).to_not include('https://from-theme-flag.script')
       expect(parse(theme_policy)['worker-src']).to_not include('from-theme-flag.worker')
+      expect(parse(theme_policy)['worker-src']).to_not include('from-theme-flag.worker')
+      expect(parse(theme_policy)['worker-src']).to_not include('child-theme-flag.worker')
     end
 
     it 'is extended automatically when themes reference external scripts' do
@@ -308,7 +364,7 @@ describe ContentSecurityPolicy do
     end.to_h
   end
 
-  def policy(theme_ids = [], path_info: "/")
-    ContentSecurityPolicy.policy(theme_ids, path_info: path_info)
+  def policy(theme_id = nil, path_info: "/")
+    ContentSecurityPolicy.policy(theme_id, path_info: path_info)
   end
 end

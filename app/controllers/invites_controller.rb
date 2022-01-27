@@ -12,7 +12,7 @@ class InvitesController < ApplicationController
 
   before_action :ensure_invites_allowed, only: [:show, :perform_accept_invitation]
   before_action :ensure_new_registrations_allowed, only: [:show, :perform_accept_invitation]
-  before_action :ensure_not_logged_in, only: [:show, :perform_accept_invitation]
+  before_action :ensure_not_logged_in, only: :perform_accept_invitation
 
   def show
     expires_now
@@ -21,27 +21,75 @@ class InvitesController < ApplicationController
 
     invite = Invite.find_by(invite_key: params[:id])
     if invite.present? && invite.redeemable?
+      if current_user
+        added_to_group = false
+
+        if invite.groups.present?
+          invite_by_guardian = Guardian.new(invite.invited_by)
+          new_group_ids = invite.groups.pluck(:id) - current_user.group_users.pluck(:group_id)
+          new_group_ids.each do |id|
+            if group = Group.find_by(id: id)
+              if invite_by_guardian.can_edit_group?(group)
+                group.add(current_user)
+                added_to_group = true
+              end
+            end
+          end
+        end
+
+        create_topic_invite_notifications(invite, current_user)
+
+        if topic = invite.topics.first
+          new_guardian = Guardian.new(current_user)
+          return redirect_to(topic.url) if new_guardian.can_see?(topic)
+        elsif added_to_group
+          return redirect_to(path("/"))
+        end
+
+        return ensure_not_logged_in
+      end
+
       email = Email.obfuscate(invite.email)
 
       # Show email if the user already authenticated their email
+      different_external_email = false
       if session[:authentication]
         auth_result = Auth::Result.from_session_data(session[:authentication], user: nil)
         if invite.email == auth_result.email
           email = invite.email
+        else
+          different_external_email = true
         end
       end
 
+      email_verified_by_link = invite.email_token.present? && params[:t] == invite.email_token
+      if email_verified_by_link
+        email = invite.email
+      end
+
       hidden_email = email != invite.email
+
+      if hidden_email || invite.email.nil?
+        username = ""
+      else
+        username = UserNameSuggester.suggest(invite.email)
+      end
 
       info = {
         invited_by: UserNameSerializer.new(invite.invited_by, scope: guardian, root: false),
         email: email,
         hidden_email: hidden_email,
-        username: hidden_email ? '' : UserNameSuggester.suggest(invite.email),
-        is_invite_link: invite.is_invite_link?
+        username: username,
+        is_invite_link: invite.is_invite_link?,
+        email_verified_by_link: email_verified_by_link
       }
 
+      if different_external_email
+        info[:different_external_email] = true
+      end
+
       if staged_user = User.where(staged: true).with_email(invite.email).first
+        info[:username] = staged_user.username
         info[:user_fields] = staged_user.user_fields
       end
 
@@ -86,6 +134,7 @@ class InvitesController < ApplicationController
     begin
       invite = Invite.generate(current_user,
         email: params[:email],
+        domain: params[:domain],
         skip_email: params[:skip_email],
         invited_by: current_user,
         custom_message: params[:custom_message],
@@ -96,7 +145,7 @@ class InvitesController < ApplicationController
       )
 
       if invite.present?
-        render_serialized(invite, InviteSerializer, scope: guardian, root: nil, show_emails: params.has_key?(:email))
+        render_serialized(invite, InviteSerializer, scope: guardian, root: nil, show_emails: params.has_key?(:email), show_warnings: true)
       else
         render json: failed_json, status: 422
       end
@@ -115,7 +164,7 @@ class InvitesController < ApplicationController
 
     guardian.ensure_can_invite_to_forum!(nil)
 
-    render_serialized(invite, InviteSerializer, scope: guardian, root: nil, show_emails: params.has_key?(:email))
+    render_serialized(invite, InviteSerializer, scope: guardian, root: nil, show_emails: params.has_key?(:email), show_warnings: true)
   end
 
   def update
@@ -151,7 +200,10 @@ class InvitesController < ApplicationController
 
         if new_email
           if Invite.where.not(id: invite.id).find_by(email: new_email.downcase, invited_by_id: current_user.id)&.redeemable?
-            return render_json_error(I18n.t("invite.invite_exists", email: new_email), status: 409)
+            return render_json_error(
+              I18n.t("invite.invite_exists", email: CGI.escapeHTML(new_email)),
+              status: 409
+            )
           end
         end
 
@@ -161,6 +213,17 @@ class InvitesController < ApplicationController
           else
             Invite.emailed_status_types[:not_required]
           end
+        end
+
+        invite.domain = nil if invite.email.present?
+      end
+
+      if params.has_key?(:domain)
+        invite.domain = params[:domain]
+
+        if invite.domain.present?
+          invite.email = nil
+          invite.emailed_status = Invite.emailed_status_types[:not_required]
         end
       end
 
@@ -188,7 +251,7 @@ class InvitesController < ApplicationController
       Jobs.enqueue(:invite_email, invite_id: invite.id, invite_to_topic: params[:invite_to_topic])
     end
 
-    render_serialized(invite, InviteSerializer, scope: guardian, root: nil, show_emails: params.has_key?(:email))
+    render_serialized(invite, InviteSerializer, scope: guardian, root: nil, show_emails: params.has_key?(:email), show_warnings: true)
   end
 
   def destroy
@@ -241,19 +304,29 @@ class InvitesController < ApplicationController
       log_on_user(user) if user.active? && user.guardian.can_access_forum?
       user.update_timezone_if_missing(params[:timezone])
       post_process_invite(user)
+      create_topic_invite_notifications(invite, user)
 
       topic = invite.topics.first
       response = {}
 
-      if user.present? && user.active? && user.guardian.can_access_forum?
-        response[:redirect_to] = topic.present? ? path(topic.relative_url) : path("/")
-      elsif user.present?
-        response[:message] = if user.active?
-          I18n.t('activation.approval_required')
+      if user.present?
+        if user.active? && user.guardian.can_access_forum?
+          if user.guardian.can_see?(topic)
+            response[:redirect_to] = path(topic.relative_url)
+          else
+            response[:redirect_to] = path("/")
+          end
         else
-          I18n.t('invite.confirm_email')
+          response[:message] = if user.active?
+            I18n.t('activation.approval_required')
+          else
+            I18n.t('invite.confirm_email')
+          end
+
+          if user.guardian.can_see?(topic)
+            cookies[:destination_url] = path(topic.relative_url)
+          end
         end
-        cookies[:destination_url] = path(topic.relative_url) if topic.present?
       end
 
       render json: success_json.merge(response)
@@ -288,12 +361,8 @@ class InvitesController < ApplicationController
   def resend_all_invites
     guardian.ensure_can_resend_all_invites!(current_user)
 
-    Invite
-      .left_outer_joins(:invited_users)
-      .where(invited_by: current_user)
+    Invite.pending(current_user)
       .where('invites.email IS NOT NULL')
-      .where('invited_users.user_id IS NULL')
-      .group('invites.id')
       .find_each { |invite| invite.resend_invite }
 
     render json: success_json
@@ -372,19 +441,32 @@ class InvitesController < ApplicationController
     Group.refresh_automatic_groups!(:admins, :moderators, :staff) if user.staff?
 
     if user.has_password?
-      send_activation_email(user) unless user.active
+      if !user.active
+        email_token = user.email_tokens.create!(email: user.email, scope: EmailToken.scopes[:signup])
+        EmailToken.enqueue_signup_email(email_token)
+      end
     elsif !SiteSetting.enable_discourse_connect && SiteSetting.enable_local_logins
       Jobs.enqueue(:invite_password_instructions_email, username: user.username)
     end
   end
 
-  def send_activation_email(user)
-    email_token = user.email_tokens.create!(email: user.email)
+  def create_topic_invite_notifications(invite, user)
+    invite.topics.each do |topic|
+      if user.guardian.can_see?(topic)
+        last_notification = user.notifications
+          .where(notification_type: Notification.types[:invited_to_topic])
+          .where(topic_id: topic.id)
+          .where(post_number: 1)
+          .where('created_at > ?', 1.hour.ago)
 
-    Jobs.enqueue(:critical_user_email,
-                 type: :signup,
-                 user_id: user.id,
-                 email_token: email_token.token
-    )
+        if !last_notification.exists?
+          topic.create_invite_notification!(
+            user,
+            Notification.types[:invited_to_topic],
+            invite.invited_by.username
+          )
+        end
+      end
+    end
   end
 end

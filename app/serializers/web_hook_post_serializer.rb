@@ -28,9 +28,9 @@ class WebHookPostSerializer < PostSerializer
     actions_summary
     can_view_edit_history
     yours
-    primary_group_flair_url
-    primary_group_flair_bg_color
-    primary_group_flair_color
+    flair_url
+    flair_bg_color
+    flair_color
     notice
   }.each do |attr|
     define_method("include_#{attr}?") do

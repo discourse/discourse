@@ -6,7 +6,7 @@ export default function handleDescriptor(target, key, desc, params = []) {
     enumerable: desc.enumerable,
     configurable: desc.configurable,
     writeable: desc.writeable,
-    initializer: function () {
+    initializer() {
       let computedDescriptor;
 
       if (desc.writable) {

@@ -13,7 +13,7 @@ export default Controller.extend(ModalFunctionality, {
       if (!this.ignoredUntil || !this.ignoredUsername) {
         this.flash(
           I18n.t("user.user_notifications.ignore_duration_time_frame_required"),
-          "alert-error"
+          "error"
         );
         return;
       }

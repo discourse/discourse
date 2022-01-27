@@ -18,9 +18,7 @@ task 'assets:precompile:before' do
   # is recompiled
   Emoji.clear_cache
 
-  if !`which uglifyjs`.empty? && !ENV['SKIP_NODE_UGLIFY']
-    $node_uglify = true
-  end
+  $node_compress = `which terser`.present? && !ENV['SKIP_NODE_UGLIFY']
 
   unless ENV['USE_SPROCKETS_UGLIFY']
     $bypass_sprockets_uglify = true
@@ -36,6 +34,14 @@ task 'assets:precompile:before' do
 
   require 'sprockets'
   require 'digest/sha1'
+
+  if ENV['EMBER_CLI_PROD_ASSETS']
+    # Remove the assets that Ember CLI will handle for us
+    Rails.configuration.assets.precompile.reject! do |asset|
+      asset.is_a?(String) &&
+        (%w(application.js admin.js ember_jquery.js pretty-text-bundle.js start-discourse.js vendor.js).include?(asset))
+    end
+  end
 end
 
 task 'assets:precompile:css' => 'environment' do
@@ -45,13 +51,13 @@ task 'assets:precompile:css' => 'environment' do
     STDERR.puts "Start compiling CSS: #{Time.zone.now}"
 
     RailsMultisite::ConnectionManagement.each_connection do |db|
-      next if ENV["PRECOMPILE_SHARED_MULTISITE_CSS"] == "1" && db != "default"
-
-      # css will get precompiled during first request if tables do not exist.
+      # CSS will get precompiled during first request if tables do not exist.
       if ActiveRecord::Base.connection.table_exists?(Theme.table_name)
-        STDERR.puts "Compiling css for #{db} #{Time.zone.now}"
+        STDERR.puts "-------------"
+        STDERR.puts "Compiling CSS for #{db} #{Time.zone.now}"
         begin
-          Stylesheet::Manager.precompile_css
+          Stylesheet::Manager.precompile_css if db == "default"
+          Stylesheet::Manager.precompile_theme_css
         rescue PG::UndefinedColumn, ActiveModel::MissingAttributeError, NoMethodError => e
           STDERR.puts "#{e.class} #{e.message}: #{e.backtrace.join("\n")}"
           STDERR.puts "Skipping precompilation of CSS cause schema is old, you are precompiling prior to running migrations."
@@ -65,7 +71,12 @@ end
 
 task 'assets:flush_sw' => 'environment' do
   begin
-    # Pending due to test failures.
+    hostname = Discourse.current_hostname
+    default_port = SiteSetting.force_https? ? 443 : 80
+    port = SiteSetting.port.to_i > 0 ? SiteSetting.port : default_port
+    STDERR.puts "Flushing service worker script"
+    `curl -s -m 1 --resolve '#{hostname}:#{port}:127.0.0.1' #{Discourse.base_url}/service-worker.js > /dev/null`
+    STDERR.puts "done"
   rescue
     STDERR.puts "Warning: unable to flush service worker script"
   end
@@ -97,11 +108,8 @@ def compress_node(from, to)
   source_map_url = cdn_path "/assets/#{to}.map"
   base_source_map = assets_path + assets_additional_path
 
-  # TODO: Remove uglifyjs when base image only includes terser
-  js_compressor = `which terser`.empty? ? 'uglifyjs' : 'terser'
-
   cmd = <<~EOS
-    #{js_compressor} '#{assets_path}/#{from}' -m -c -o '#{to_path}' --source-map "base='#{base_source_map}',root='#{source_map_root}',url='#{source_map_url}'"
+    terser '#{assets_path}/#{from}' -m -c -o '#{to_path}' --source-map "base='#{base_source_map}',root='#{source_map_root}',url='#{source_map_url}'"
   EOS
 
   STDERR.puts cmd
@@ -163,7 +171,7 @@ def max_compress?(path, locales)
 end
 
 def compress(from, to)
-  if $node_uglify
+  if $node_compress
     compress_node(from, to)
   else
     compress_ruby(from, to)
@@ -171,15 +179,25 @@ def compress(from, to)
 end
 
 def concurrent?
-  executor = Concurrent::FixedThreadPool.new(Concurrent.processor_count)
-
   if ENV["SPROCKETS_CONCURRENT"] == "1"
     concurrent_compressors = []
+    executor = Concurrent::FixedThreadPool.new(Concurrent.processor_count)
     yield(Proc.new { |&block| concurrent_compressors << Concurrent::Future.execute(executor: executor) { block.call } })
     concurrent_compressors.each(&:wait!)
   else
     yield(Proc.new { |&block| block.call })
   end
+end
+
+def current_timestamp
+  Process.clock_gettime(Process::CLOCK_MONOTONIC)
+end
+
+def log_task_duration(task_description, &task)
+  task_start = current_timestamp
+  task.call
+  STDERR.puts "Done '#{task_description}' : #{(current_timestamp - task_start).round(2)} secs"
+  STDERR.puts
 end
 
 def geolite_dbs
@@ -215,7 +233,86 @@ def copy_maxmind(from_path, to_path)
   end
 end
 
+def copy_ember_cli_assets
+  ember_dir = "app/assets/javascripts/discourse"
+  ember_cli_assets = "#{ember_dir}/dist/assets/"
+  assets = {}
+  files = {}
+
+  log_task_duration('ember build -prod') {
+    unless system("yarn --cwd #{ember_dir} run ember build -prod")
+      STDERR.puts "Error running ember build"
+      exit 1
+    end
+  }
+
+  # Copy assets and generate manifest data
+  log_task_duration('Copy assets and generate manifest data') {
+    Dir["#{ember_cli_assets}**/*"].each do |f|
+      if File.file?(f)
+        rel_file = f.sub(ember_cli_assets, "")
+        file_digest = Digest::SHA384.digest(File.read(f))
+        digest = if f =~ /\-([a-f0-9]+)\./
+          Regexp.last_match[1]
+        else
+          Digest.hexencode(file_digest)[0...32]
+        end
+
+        dest = "public/assets"
+        dest_sub = dest
+        if rel_file =~ /^([a-z\-\_]+)\//
+          dest_sub = "#{dest}/#{Regexp.last_match[1]}"
+        end
+
+        FileUtils.mkdir_p(dest_sub) unless Dir.exist?(dest_sub)
+        log_file = File.basename(rel_file).sub("-#{digest}", "")
+
+        # We need a few hacks here to move what Ember uses to what Rails wants
+        case log_file
+        when "discourse.js"
+          log_file = "application.js"
+          rel_file.sub!(/^discourse/, "application")
+        when "test-support.js"
+          log_file = "discourse/tests/test-support-rails.js"
+          rel_file = "discourse/tests/test-support-rails-#{digest}.js"
+        when "test-helpers.js"
+          log_file = "discourse/tests/test-helpers-rails.js"
+          rel_file = "discourse/tests/test-helpers-rails-#{digest}.js"
+        end
+
+        res = FileUtils.cp(f, "#{dest}/#{rel_file}")
+
+        assets[log_file] = rel_file
+        files[rel_file] = {
+          "logical_path" => log_file,
+          "mtime" => File.mtime(f).iso8601(9),
+          "size" => File.size(f),
+          "digest" => digest,
+          "integrity" => "sha384-#{Base64.encode64(file_digest).chomp}"
+        }
+      end
+    end
+  }
+
+  # Update manifest file
+  log_task_duration('Update manifest file') {
+    manifest_result = Dir["public/assets/.sprockets-manifest-*.json"]
+    if manifest_result && manifest_result.size == 1
+      json = JSON.parse(File.read(manifest_result[0]))
+      json['files'].merge!(files)
+      json['assets'].merge!(assets)
+      File.write(manifest_result[0], json.to_json)
+    end
+  }
+end
+
+task 'test_ember_cli_copy' do
+  copy_ember_cli_assets
+end
+
 task 'assets:precompile' => 'assets:precompile:before' do
+
+  copy_ember_cli_assets if ENV['EMBER_CLI_PROD_ASSETS']
 
   refresh_days = GlobalSetting.refresh_maxmind_db_during_precompile_days
 
@@ -258,49 +355,48 @@ task 'assets:precompile' => 'assets:precompile:before' do
 
   if $bypass_sprockets_uglify
     puts "Compressing Javascript and Generating Source Maps"
-    startAll = Process.clock_gettime(Process::CLOCK_MONOTONIC)
     manifest = Sprockets::Manifest.new(assets_path)
+
     locales = Set.new(["en"])
 
     RailsMultisite::ConnectionManagement.each_connection do |db|
       locales.add(SiteSetting.default_locale)
     end
 
-    concurrent? do |proc|
-      manifest.files
-        .select { |k, v| k =~ /\.js$/ }
-        .each do |file, info|
+    log_task_duration('Done compressing all JS files') {
+      concurrent? do |proc|
+        manifest.files
+          .select { |k, v| k =~ /\.js$/ }
+          .each do |file, info|
 
-        path = "#{assets_path}/#{file}"
-          _file = (d = File.dirname(file)) == "." ? "_#{file}" : "#{d}/_#{File.basename(file)}"
-          _path = "#{assets_path}/#{_file}"
-          max_compress = max_compress?(info["logical_path"], locales)
-          if File.exists?(_path)
-            STDERR.puts "Skipping: #{file} already compressed"
-          else
-            proc.call do
-              start = Process.clock_gettime(Process::CLOCK_MONOTONIC)
-              STDERR.puts "#{start} Compressing: #{file}"
+          path = "#{assets_path}/#{file}"
+            _file = (d = File.dirname(file)) == "." ? "_#{file}" : "#{d}/_#{File.basename(file)}"
+            _path = "#{assets_path}/#{_file}"
+            max_compress = max_compress?(info["logical_path"], locales)
+            if File.exist?(_path)
+              STDERR.puts "Skipping: #{file} already compressed"
+            elsif file.include? "discourse/tests"
+              STDERR.puts "Skipping: #{file}"
+            else
+              proc.call do
+                log_task_duration(file) {
+                  STDERR.puts "Compressing: #{file}"
 
-              if max_compress
-                FileUtils.mv(path, _path)
-                compress(_file, file)
+                  if max_compress
+                    FileUtils.mv(path, _path)
+                    compress(_file, file)
+                  end
+
+                  info["size"] = File.size(path)
+                  info["mtime"] = File.mtime(path).iso8601
+                  gzip(path)
+                  brotli(path, max_compress)
+                }
               end
-
-              info["size"] = File.size(path)
-              info["mtime"] = File.mtime(path).iso8601
-              gzip(path)
-              brotli(path, max_compress)
-
-              STDERR.puts "Done compressing #{file} : #{(Process.clock_gettime(Process::CLOCK_MONOTONIC) - start).round(2)} secs"
-              STDERR.puts
             end
-          end
+        end
       end
-    end
-
-    STDERR.puts "Done compressing all JS files : #{(Process.clock_gettime(Process::CLOCK_MONOTONIC) - startAll).round(2)} secs"
-    STDERR.puts
+    }
 
     # protected
     manifest.send :save

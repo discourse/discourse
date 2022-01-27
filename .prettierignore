@@ -1,6 +1,8 @@
 app/assets/stylesheets/vendor/
 plugins/**/assets/stylesheets/vendor/
 plugins/**/assets/javascripts/vendor/
+plugins/**/config/locales/**/*.yml
+plugins/**/config/*.yml
 package.json
 config/locales/**/*.yml
 !config/locales/**/*.en*.yml
@@ -20,7 +22,7 @@ lib/highlight_js/
 plugins/**/lib/javascripts/locale
 public/
 vendor/
-app/assets/javascripts/discourse/tests/test_helper.js
+app/assets/javascripts/discourse/tests/test-boot-rails.js
 app/assets/javascripts/discourse/tests/fixtures
 node_modules/
 dist/

@@ -8,7 +8,7 @@ export default Controller.extend({
       const tagGroups = this.tagGroups.model;
       tagGroups.pushObject(this.model);
 
-      this.transitionToRoute("tagGroups.edit", this.model);
+      this.transitionToRoute("tagGroups.index");
     },
   },
 });

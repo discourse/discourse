@@ -1,6 +1,6 @@
 import Application from "@ember/application";
 import { isLegacyEmber } from "discourse-common/config/environment";
-import { registerRouter } from "discourse/mapping-router";
+import { registerRouter, teardownRouter } from "discourse/mapping-router";
 
 let originalBuildInstance;
 
@@ -9,8 +9,9 @@ export default {
   after: "inject-discourse-objects",
 
   initialize(container, app) {
-    let router = registerRouter(app);
-    container.registry.register("router:main", router);
+    let routerClass = registerRouter(app);
+    container.registry.register("router:main", routerClass);
+    this.routerClass = routerClass;
 
     if (isLegacyEmber()) {
       // HACK to fix: https://github.com/emberjs/ember.js/issues/10310
@@ -22,5 +23,9 @@ export default {
         return originalBuildInstance.apply(this);
       };
     }
+  },
+
+  teardown() {
+    teardownRouter(this.routerClass);
   },
 };

@@ -1,1 +1,9 @@
-{{d-icon "times"}} {{word.word}} {{#if word.replacement}}&rarr; <span class="replacement">{{word.replacement}}</span>{{/if}}
+<span role="button" onclick={{action "deleteWord"}} class="delete-word-record">{{d-icon "times"}}</span> {{word.word}}
+{{#if (or isReplace isLink)}}
+  &rarr; <span class="replacement">{{word.replacement}}</span>
+{{else if isTag}}
+  &rarr;
+  {{#each tags as |tag|}}
+    <span class="tag">{{tag}}</span>
+  {{/each}}
+{{/if}}

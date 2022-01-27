@@ -118,6 +118,7 @@ class BulkImport::VBulletin < BulkImport::Base
         imported_id: row[0],
         username: normalize_text(row[1]),
         name: normalize_text(row[1]),
+        email: row[2],
         created_at: Time.zone.at(row[3]),
         date_of_birth: parse_birthday(row[4]),
         primary_group_id: group_id_from_imported_id(row[6]),
@@ -530,7 +531,7 @@ class BulkImport::VBulletin < BulkImport::Base
     real_filename = db_filename
     real_filename.prepend SecureRandom.hex if real_filename[0] == '.'
 
-    unless File.exists?(filename)
+    unless File.exist?(filename)
       puts "Attachment file #{row.inspect} doesn't exist"
       return nil
     end
@@ -600,7 +601,7 @@ class BulkImport::VBulletin < BulkImport::Base
   end
 
   def import_avatars
-    if AVATAR_DIR && File.exists?(AVATAR_DIR)
+    if AVATAR_DIR && File.exist?(AVATAR_DIR)
       puts "", "importing user avatars"
 
       RateLimiter.disable
@@ -619,7 +620,7 @@ class BulkImport::VBulletin < BulkImport::Base
         # raise "User not found for id #{user_id}" if user.blank?
 
         photo_real_filename = File.join(AVATAR_DIR, item)
-        puts "#{photo_real_filename} not found" unless File.exists?(photo_real_filename)
+        puts "#{photo_real_filename} not found" unless File.exist?(photo_real_filename)
 
         upload = create_upload(u.id, photo_real_filename, File.basename(photo_real_filename))
         count += 1

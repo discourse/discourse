@@ -1,0 +1,67 @@
+<div class="group-smtp-email-settings">
+  <form class="groups-form form-horizontal">
+    <div>
+      <div class="control-group">
+        <label for="username">{{i18n "groups.manage.email.credentials.username"}}</label>
+        {{input type="text" name="username" value=form.email_username tabindex="1" onChange=(action "resetSettingsValid")}}
+      </div>
+
+      <div class="control-group">
+        <label for="smtp_server">{{i18n "groups.manage.email.credentials.smtp_server"}}</label>
+        {{input type="text" name="smtp_server" value=form.smtp_server tabindex="3" onChange=(action "resetSettingsValid")}}
+      </div>
+
+      <label for="enable_ssl">
+        {{input type="checkbox" checked=form.smtp_ssl id="enable_ssl" tabindex="5" onChange=(action "resetSettingsValid")}}
+        {{i18n "groups.manage.email.credentials.smtp_ssl"}}
+      </label>
+    </div>
+
+    <div>
+      <div class="control-group">
+        <label for="password">{{i18n "groups.manage.email.credentials.password"}}</label>
+        {{input type="password" name="password" value=form.email_password tabindex="2" onChange=(action "resetSettingsValid")}}
+      </div>
+
+      <div class="control-group">
+        <label for="smtp_port">{{i18n "groups.manage.email.credentials.smtp_port"}}</label>
+        {{input type="text" name="smtp_port" value=form.smtp_port tabindex="4" onChange=(action "resetSettingsValid" form.smtp_port)}}
+      </div>
+    </div>
+  </form>
+
+  <div class="control-group">
+    <div class="group-smtp-prefill-options">
+      {{i18n "groups.manage.email.prefill.title"}} <a id="prefill_smtp_gmail" href {{action "prefillSettings" "gmail"}}>{{i18n "groups.manage.email.prefill.gmail"}}</a>
+    </div>
+  </div>
+
+  <div class="control-group buttons">
+    {{d-button
+    disabled=(or missingSettings testingSettings)
+    class="btn-primary test-smtp-settings"
+    action=(action "testSmtpSettings")
+    icon="cog"
+    label="groups.manage.email.test_settings"
+    tabindex="6"
+    title="groups.manage.email.settings_required"
+    }}
+
+    {{conditional-loading-spinner size="small" condition=testingSettings}}
+
+    {{#if smtpSettingsValid}}
+      <span class="smtp-settings-ok">
+        {{d-icon "check-circle"}} {{i18n "groups.manage.email.smtp_settings_valid"}}
+      </span>
+    {{/if}}
+  </div>
+
+  {{#if group.smtp_updated_at}}
+    <div class="group-email-last-updated-details for-smtp">
+      <small>
+        {{i18n "groups.manage.email.last_updated"}} <strong>{{format-date group.smtp_updated_at leaveAgo="true"}}</strong>
+        {{i18n "groups.manage.email.last_updated_by"}} {{#link-to "user" group.smtp_updated_by.username}}{{group.smtp_updated_by.username}}{{/link-to}}
+      </small>
+    </div>
+  {{/if}}
+</div>

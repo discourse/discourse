@@ -14,7 +14,7 @@ acceptance("Opengraph Tag Updater", function (needs) {
     await click("#toggle-hamburger-menu");
     await click("a.about-link");
 
-    assert.equal(
+    assert.strictEqual(
       document
         .querySelector("meta[property='og:title']")
         .getAttribute("content"),

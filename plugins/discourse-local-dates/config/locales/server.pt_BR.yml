@@ -6,7 +6,7 @@
 
 pt_BR:
   site_settings:
-    discourse_local_dates_enabled: "Habilitar o recurso discourse-local-dates. Isto adicionará suporte às datas de fuso horário local em postagens usando o elemento [date]."
-    discourse_local_dates_default_formats: "Formatos de data e hora usados ​​com frequência, veja: <a target='_blank' rel='noopener' href='https://momentjs.com/docs/#/parsing/string-format/'>momentjs string format</a>"
-    discourse_local_dates_default_timezones: "Lista padrão de fusos horários, precisa ser uma válida<a target='_blank' rel='noopener' href='https://en.wikipedia.org/wiki/List_of_tz_database_time_zones'>TZ</a>"
+    discourse_local_dates_enabled: "Ative o recurso discourse-local-dates. Isso adicionará suporte para datas com reconhecimento de fuso horário local nas postagens com o elemento [date]."
+    discourse_local_dates_default_formats: "Formatos de data e hora usados ​​com frequência, acsse: <a target='_blank' rel='noopener' href='https://momentjs.com/docs/#/parsing/string-format/'>formato de linha moment.js</a>"
+    discourse_local_dates_default_timezones: "Lista padrão de fusos horários, precisa ser um <a target='_blank' rel='noopener' href='https://en.wikipedia.org/wiki/List_of_tz_database_time_zones'>fuso horário</a> válido"
     discourse_local_dates_email_format: "Formato usado para exibir a data em e-mails."

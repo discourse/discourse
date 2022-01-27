@@ -4,9 +4,18 @@ require 'method_profiler'
 require 'middleware/anonymous_cache'
 
 class Middleware::RequestTracker
-
   @@detailed_request_loggers = nil
   @@ip_skipper = nil
+
+  # You can add exceptions to our app rate limiter in the app.yml ENV section.
+  # example:
+  #
+  # env:
+  #   DISCOURSE_MAX_REQS_PER_IP_EXCEPTIONS: >-
+  #     14.15.16.32/27
+  #     216.148.1.2
+  #
+  STATIC_IP_SKIPPER = ENV['DISCOURSE_MAX_REQS_PER_IP_EXCEPTIONS']&.split&.map { |ip| IPAddr.new(ip) }
 
   # register callbacks for detailed request loggers called on every request
   # example:
@@ -46,6 +55,10 @@ class Middleware::RequestTracker
     @@ip_skipper = blk
   end
 
+  def self.ip_skipper
+    @@ip_skipper
+  end
+
   def initialize(app, settings = {})
     @app = app
   end
@@ -82,23 +95,25 @@ class Middleware::RequestTracker
     end
   end
 
-  def self.get_data(env, result, timing)
+  def self.get_data(env, result, timing, request = nil)
     status, headers = result
     status = status.to_i
 
-    helper = Middleware::AnonymousCache::Helper.new(env)
-    request = Rack::Request.new(env)
+    request ||= Rack::Request.new(env)
+    helper = Middleware::AnonymousCache::Helper.new(env, request)
 
     env_track_view = env["HTTP_DISCOURSE_TRACK_VIEW"]
     track_view = status == 200
     track_view &&= env_track_view != "0" && env_track_view != "false"
     track_view &&= env_track_view || (request.get? && !request.xhr? && headers["Content-Type"] =~ /text\/html/)
     track_view = !!track_view
+    has_auth_cookie = Auth::DefaultCurrentUserProvider.find_v0_auth_cookie(request).present?
+    has_auth_cookie ||= Auth::DefaultCurrentUserProvider.find_v1_auth_cookie(env).present?
 
     h = {
       status: status,
       is_crawler: helper.is_crawler?,
-      has_auth_cookie: helper.has_auth_cookie?,
+      has_auth_cookie: has_auth_cookie,
       is_background: !!(request.path =~ /^\/message-bus\// || request.path =~ /\/topics\/timings/),
       is_mobile: helper.is_mobile?,
       track_view: track_view,
@@ -122,9 +137,9 @@ class Middleware::RequestTracker
     h
   end
 
-  def log_request_info(env, result, info)
+  def log_request_info(env, result, info, request = nil)
     # we got to skip this on error ... its just logging
-    data = self.class.get_data(env, result, info) rescue nil
+    data = self.class.get_data(env, result, info, request) rescue nil
 
     if data
       if result && (headers = result[1])
@@ -155,7 +170,7 @@ class Middleware::RequestTracker
 
   def call(env)
     result = nil
-    log_request = true
+    info = nil
 
     # doing this as early as possible so we have an
     # accurate counter
@@ -163,14 +178,20 @@ class Middleware::RequestTracker
 
     request = Rack::Request.new(env)
 
-    if available_in = rate_limit(request)
-      return [
-        429,
-        { "Retry-After" => available_in.to_s },
-        ["Slow down, too many requests from this IP address"]
-      ]
+    cookie = find_auth_cookie(env)
+    if error_details = rate_limit(request, cookie)
+      available_in, error_code = error_details
+      message = <<~TEXT
+        Slow down, too many requests from this IP address.
+        Please retry again in #{available_in} seconds.
+        Error code: #{error_code}.
+      TEXT
+      headers = {
+        "Retry-After" => available_in.to_s,
+        "Discourse-Rate-Limit-Error-Code" => error_code
+      }
+      return [429, headers, [message]]
     end
-
     env["discourse.request_tracker"] = self
 
     MethodProfiler.start
@@ -212,92 +233,8 @@ class Middleware::RequestTracker
         end
       end
     end
-    log_request_info(env, result, info) unless !log_request || env["discourse.request_tracker.skip"]
-  end
-
-  def is_private_ip?(ip)
-    ip = IPAddr.new(ip) rescue nil
-    !!(ip && (ip.private? || ip.loopback?))
-  end
-
-  def rate_limit(request)
-    if (
-      GlobalSetting.max_reqs_per_ip_mode == "block" ||
-      GlobalSetting.max_reqs_per_ip_mode == "warn" ||
-      GlobalSetting.max_reqs_per_ip_mode == "warn+block"
-    )
-
-      ip = request.ip
-
-      if !GlobalSetting.max_reqs_rate_limit_on_private
-        return false if is_private_ip?(ip)
-      end
-
-      return false if @@ip_skipper&.call(ip)
-
-      limiter10 = RateLimiter.new(
-        nil,
-        "global_ip_limit_10_#{ip}",
-        GlobalSetting.max_reqs_per_ip_per_10_seconds,
-        10,
-        global: true,
-        aggressive: true
-      )
-
-      limiter60 = RateLimiter.new(
-        nil,
-        "global_ip_limit_60_#{ip}",
-        GlobalSetting.max_reqs_per_ip_per_minute,
-        60,
-        global: true,
-        aggressive: true
-      )
-
-      limiter_assets10 = RateLimiter.new(
-        nil,
-        "global_ip_limit_10_assets_#{ip}",
-        GlobalSetting.max_asset_reqs_per_ip_per_10_seconds,
-        10,
-        global: true
-      )
-
-      request.env['DISCOURSE_RATE_LIMITERS'] = [limiter10, limiter60]
-      request.env['DISCOURSE_ASSET_RATE_LIMITERS'] = [limiter_assets10]
-
-      warn = GlobalSetting.max_reqs_per_ip_mode == "warn" || GlobalSetting.max_reqs_per_ip_mode == "warn+block"
-
-      if !limiter_assets10.can_perform?
-        if warn
-          Discourse.warn("Global asset IP rate limit exceeded for #{ip}: 10 second rate limit", uri: request.env["REQUEST_URI"])
-        end
-
-        if GlobalSetting.max_reqs_per_ip_mode != "warn"
-          return limiter_assets10.seconds_to_wait(Time.now.to_i)
-        else
-          return false
-        end
-      end
-
-      begin
-        type = 10
-        limiter10.performed!
-
-        type = 60
-        limiter60.performed!
-
-        false
-      rescue RateLimiter::LimitExceeded => e
-        if warn
-          Discourse.warn("Global IP rate limit exceeded for #{ip}: #{type} second rate limit", uri: request.env["REQUEST_URI"])
-          if GlobalSetting.max_reqs_per_ip_mode != "warn"
-            e.available_in
-          else
-            false
-          end
-        else
-          e.available_in
-        end
-      end
+    if !env["discourse.request_tracker.skip"]
+      log_request_info(env, result, info, request)
     end
   end
 
@@ -305,6 +242,110 @@ class Middleware::RequestTracker
     Scheduler::Defer.later("Track view") do
       unless Discourse.pg_readonly_mode?
         self.class.log_request(data)
+      end
+    end
+  end
+
+  def find_auth_cookie(env)
+    min_allowed_timestamp = Time.now.to_i - (UserAuthToken::ROTATE_TIME_MINS + 1) * 60
+    cookie = Auth::DefaultCurrentUserProvider.find_v1_auth_cookie(env)
+    if cookie && cookie[:issued_at] >= min_allowed_timestamp
+      cookie
+    end
+  end
+
+  def is_private_ip?(ip)
+    ip = IPAddr.new(ip)
+    !!(ip && (ip.private? || ip.loopback?))
+  rescue IPAddr::AddressFamilyError, IPAddr::InvalidAddressError
+    false
+  end
+
+  def rate_limit(request, cookie)
+    warn = GlobalSetting.max_reqs_per_ip_mode == "warn" ||
+      GlobalSetting.max_reqs_per_ip_mode == "warn+block"
+    block = GlobalSetting.max_reqs_per_ip_mode == "block" ||
+      GlobalSetting.max_reqs_per_ip_mode == "warn+block"
+
+    return if !block && !warn
+
+    ip = request.ip
+
+    if !GlobalSetting.max_reqs_rate_limit_on_private
+      return if is_private_ip?(ip)
+    end
+
+    return if @@ip_skipper&.call(ip)
+    return if STATIC_IP_SKIPPER&.any? { |entry| entry.include?(ip) }
+
+    ip_or_id = ip
+    limit_on_id = false
+    if cookie && cookie[:user_id] && cookie[:trust_level] && cookie[:trust_level] >= GlobalSetting.skip_per_ip_rate_limit_trust_level
+      ip_or_id = cookie[:user_id]
+      limit_on_id = true
+    end
+
+    limiter10 = RateLimiter.new(
+      nil,
+      "global_ip_limit_10_#{ip_or_id}",
+      GlobalSetting.max_reqs_per_ip_per_10_seconds,
+      10,
+      global: !limit_on_id,
+      aggressive: true,
+      error_code: limit_on_id ? "id_10_secs_limit" : "ip_10_secs_limit"
+    )
+
+    limiter60 = RateLimiter.new(
+      nil,
+      "global_ip_limit_60_#{ip_or_id}",
+      GlobalSetting.max_reqs_per_ip_per_minute,
+      60,
+      global: !limit_on_id,
+      error_code: limit_on_id ? "id_60_secs_limit" : "ip_60_secs_limit",
+      aggressive: true
+    )
+
+    limiter_assets10 = RateLimiter.new(
+      nil,
+      "global_ip_limit_10_assets_#{ip_or_id}",
+      GlobalSetting.max_asset_reqs_per_ip_per_10_seconds,
+      10,
+      error_code: limit_on_id ? "id_assets_10_secs_limit" : "ip_assets_10_secs_limit",
+      global: !limit_on_id
+    )
+
+    request.env['DISCOURSE_RATE_LIMITERS'] = [limiter10, limiter60]
+    request.env['DISCOURSE_ASSET_RATE_LIMITERS'] = [limiter_assets10]
+
+    if !limiter_assets10.can_perform?
+      if warn
+        Discourse.warn("Global asset IP rate limit exceeded for #{ip}: 10 second rate limit", uri: request.env["REQUEST_URI"])
+      end
+
+      if block
+        return [
+          limiter_assets10.seconds_to_wait(Time.now.to_i),
+          limiter_assets10.error_code
+        ]
+      end
+    end
+
+    begin
+      type = 10
+      limiter10.performed!
+
+      type = 60
+      limiter60.performed!
+
+      nil
+    rescue RateLimiter::LimitExceeded => e
+      if warn
+        Discourse.warn("Global IP rate limit exceeded for #{ip}: #{type} second rate limit", uri: request.env["REQUEST_URI"])
+      end
+      if block
+        [e.available_in, e.error_code]
+      else
+        nil
       end
     end
   end

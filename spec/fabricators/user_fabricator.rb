@@ -87,6 +87,14 @@ Fabricator(:leader, from: :user) do
   trust_level TrustLevel[3]
 end
 
+Fabricator(:trust_level_0, from: :user) do
+  trust_level TrustLevel[0]
+end
+
+Fabricator(:trust_level_1, from: :user) do
+  trust_level TrustLevel[1]
+end
+
 Fabricator(:trust_level_4, from: :user) do
   name 'Leader McElderson'
   username { sequence(:username) { |i| "tl4#{i}" } }

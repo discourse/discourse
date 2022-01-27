@@ -4,6 +4,7 @@ class StylesheetCache < ActiveRecord::Base
   self.table_name = 'stylesheet_cache'
 
   MAX_TO_KEEP = 50
+  CLEANUP_AFTER_DAYS = 150
 
   def self.add(target, digest, content, source_map, max_to_keep: nil)
     max_to_keep ||= MAX_TO_KEEP
@@ -40,6 +41,10 @@ class StylesheetCache < ActiveRecord::Base
     if Rails.env.development? && old_logger
       ActiveRecord::Base.logger = old_logger
     end
+  end
+
+  def self.clean_up
+    StylesheetCache.where('created_at < ?', CLEANUP_AFTER_DAYS.days.ago).delete_all
   end
 
 end

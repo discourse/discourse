@@ -5,6 +5,7 @@ require 'rails_helper'
 
 describe Search do
   fab!(:admin) { Fabricate(:admin) }
+  fab!(:topic) { Fabricate(:topic) }
 
   before do
     SearchIndexer.enable
@@ -135,7 +136,7 @@ describe Search do
     expect(search.term).to eq('a b c okaylength')
   end
 
-  context 'query sanitizaton' do
+  context 'query sanitization' do
     let!(:post) { Fabricate(:post, raw: 'hello world') }
 
     it 'escapes backslash' do
@@ -671,7 +672,6 @@ describe Search do
       end
 
       it 'displays multiple results within a topic' do
-        topic = Fabricate(:topic)
         topic2 = Fabricate(:topic)
 
         new_post('this is the other post I am posting', topic2, created_at: 6.minutes.ago)
@@ -1086,7 +1086,6 @@ describe Search do
     it 'can use tag as a search context' do
       tag = Fabricate(:tag, name: 'important-stuff')
 
-      topic = Fabricate(:topic)
       topic_no_tag = Fabricate(:topic)
       Fabricate(:topic_tag, tag: tag, topic: topic)
 
@@ -1107,7 +1106,7 @@ describe Search do
     it 'splits English / Chinese and filter out stop words' do
       SiteSetting.default_locale = 'zh_CN'
       data = Search.prepare_data(sentence).split(' ')
-      expect(data).to eq(["Discourse", "中国", "基础", "设施", "基础设施", "网络", "正在", "组装"])
+      expect(data).to eq(["Discourse", "中国", "基础设施", "网络", "正在", "组装"])
     end
 
     it 'splits for indexing and filter out stop words' do
@@ -1119,12 +1118,6 @@ describe Search do
     it 'splits English / Traditional Chinese and filter out stop words' do
       SiteSetting.default_locale = 'zh_TW'
       data = Search.prepare_data(sentence_t).split(' ')
-      expect(data).to eq(["Discourse", "太平", "平山", "太平山", "森林", "遊樂區"])
-    end
-
-    it 'splits for indexing and filter out stop words' do
-      SiteSetting.default_locale = 'zh_TW'
-      data = Search.prepare_data(sentence_t, :index).split(' ')
       expect(data).to eq(["Discourse", "太平山", "森林", "遊樂區"])
     end
 
@@ -1157,7 +1150,6 @@ describe Search do
   describe 'Advanced search' do
 
     it 'supports pinned' do
-      topic = Fabricate(:topic)
       Fabricate(:post, raw: 'hi this is a test 123 123', topic: topic)
       _post = Fabricate(:post, raw: 'boom boom shake the room', topic: topic)
 
@@ -1168,7 +1160,6 @@ describe Search do
     end
 
     it 'supports wiki' do
-      topic = Fabricate(:topic)
       topic_2 = Fabricate(:topic)
       post = Fabricate(:post, raw: 'this is a test 248', wiki: true, topic: topic)
       Fabricate(:post, raw: 'this is a test 248', wiki: false, topic: topic_2)
@@ -1179,7 +1170,6 @@ describe Search do
     end
 
     it 'supports searching for posts that the user has seen/unseen' do
-      topic = Fabricate(:topic)
       topic_2 = Fabricate(:topic)
       post = Fabricate(:post, raw: 'logan is longan', topic: topic)
       post_2 = Fabricate(:post, raw: 'longan is logan', topic: topic_2)
@@ -1237,7 +1227,6 @@ describe Search do
     end
 
     it 'supports in:first, user:, @username' do
-      topic = Fabricate(:topic)
       post_1 = Fabricate(:post, raw: 'hi this is a test 123 123', topic: topic)
       post_2 = Fabricate(:post, raw: 'boom boom shake the room test', topic: topic)
 
@@ -1446,7 +1435,7 @@ describe Search do
         raw: 'Relevant Relevant Topic'
       )
 
-      latest_irelevant_topic_post = Fabricate(:post,
+      latest_irrelevant_topic_post = Fabricate(:post,
         topic: latest_topic,
         created_at: today,
         raw: 'Not Relevant'
@@ -1455,14 +1444,14 @@ describe Search do
       # Expecting the default results
       expect(Search.execute('Topic').posts.map(&:id)).to eq([
         old_relevant_topic_post.id,
-        latest_irelevant_topic_post.id,
+        latest_irrelevant_topic_post.id,
         category.topic.first_post.id
       ])
 
       # Expecting the ordered by topic creation results
       expect(Search.execute('Topic order:latest_topic').posts.map(&:id)).to eq([
         category.topic.first_post.id,
-        latest_irelevant_topic_post.id,
+        latest_irrelevant_topic_post.id,
         old_relevant_topic_post.id
       ])
     end
@@ -1615,7 +1604,6 @@ describe Search do
       end
 
       it 'can find posts with non-latin tag' do
-        topic = Fabricate(:topic)
         topic.tags = [Fabricate(:tag, name: 'さようなら')]
         post = Fabricate(:post, raw: 'Testing post', topic: topic)
 
@@ -1623,7 +1611,6 @@ describe Search do
       end
 
       it 'can find posts with thai tag' do
-        topic = Fabricate(:topic)
         topic.tags = [Fabricate(:tag, name: 'เรซิ่น')]
         post = Fabricate(:post, raw: 'Testing post', topic: topic)
 
@@ -1707,7 +1694,7 @@ describe Search do
       expect(ts_query).to include("baz")
     end
 
-    it 'esacpes the term correctly' do
+    it 'escapes the term correctly' do
       expect(Search.ts_query(term: 'Title with trailing backslash\\'))
         .to eq("TO_TSQUERY('english', '''Title with trailing backslash\\\\\\\\'':*')")
 
@@ -1841,7 +1828,7 @@ describe Search do
       Fabricate(:post, raw: '場サアマネ織企ういかせ竹域ヱイマ穂基ホ神3予読ずねいぱ松査ス禁多サウ提懸イふ引小43改こょドめ。深とつぐ主思料農ぞかル者杯検める活分えほづぼ白犠')
     end
 
-    it('does not include superflous spaces in blurbs') do
+    it('does not include superfluous spaces in blurbs') do
 
       results = Search.execute('ういかせ竹域', type_filter: 'topic')
       expect(results.posts.length).to eq(1)
@@ -1959,6 +1946,35 @@ describe Search do
       end
 
       expect(Search.new("advanced order:chars").execute.posts).to eq([post0, post1])
+    end
+  end
+
+  context 'exclude_topics filter' do
+    before { SiteSetting.tagging_enabled = true }
+    let!(:user) { Fabricate(:user) }
+    fab!(:group) { Fabricate(:group, name: 'bruce-world-fans') }
+    fab!(:topic) { Fabricate(:topic, title: 'Bruce topic not a result') }
+
+    it 'works' do
+      category = Fabricate(:category_with_definition, name: 'bruceland', user: user)
+      tag = Fabricate(:tag, name: 'brucealicious')
+
+      result = Search.execute('bruce', type_filter: 'exclude_topics')
+
+      expect(result.users.map(&:id)).to contain_exactly(user.id)
+
+      expect(result.categories.map(&:id)).to contain_exactly(category.id)
+
+      expect(result.groups.map(&:id)).to contain_exactly(group.id)
+
+      expect(result.tags.map(&:id)).to contain_exactly(tag.id)
+
+      expect(result.posts.length).to eq(0)
+    end
+
+    it 'does not fail when parsed term is empty' do
+      result = Search.execute('#cat ', type_filter: 'exclude_topics')
+      expect(result.categories.length).to eq(0)
     end
   end
 end

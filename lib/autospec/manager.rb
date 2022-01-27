@@ -227,7 +227,7 @@ class Autospec::Manager
         file, line = line.split(' ')
         file = reverse_symlink(file)
         file = file.sub(Rails.root.to_s + "/", "")
-        # process_change can aquire a mutex and block
+        # process_change can acquire a mutex and block
         # the acceptor
         Thread.new do
           if file =~ /(es6|js)$/
@@ -295,7 +295,7 @@ class Autospec::Manager
             if spec == file && line
               with_line = spec + ":" << line.to_s
             end
-            if File.exists?(spec) || Dir.exists?(spec)
+            if File.exist?(spec) || Dir.exist?(spec)
               if with_line != spec
                 specs << [file, spec, runner]
               end

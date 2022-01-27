@@ -37,7 +37,7 @@ RSpec.describe Admin::BackupsController do
   after do
     Discourse.redis.flushdb
 
-    @paths&.each { |path| File.delete(path) if File.exists?(path) }
+    @paths&.each { |path| File.delete(path) if File.exist?(path) }
     @paths = nil
   end
 
@@ -133,14 +133,14 @@ RSpec.describe Admin::BackupsController do
       begin
         path = backup_path(backup_filename)
         create_backup_files(backup_filename)
-        expect(File.exists?(path)).to eq(true)
+        expect(File.exist?(path)).to eq(true)
 
         expect do
           delete "/admin/backups/#{backup_filename}.json"
         end.to change { UserHistory.where(action: UserHistory.actions[:backup_destroy]).count }.by(1)
 
         expect(response.status).to eq(200)
-        expect(File.exists?(path)).to eq(false)
+        expect(File.exist?(path)).to eq(false)
       end
     end
 
@@ -234,10 +234,10 @@ RSpec.describe Admin::BackupsController do
 
     describe "when filename is valid" do
       it "should upload the file successfully" do
+        freeze_time
         described_class.any_instance.expects(:has_enough_space_on_disk?).returns(true)
 
         filename = 'test_Site-0123456789.tar.gz'
-        @paths = [backup_path(File.join('tmp', 'test', "#{filename}.part1"))]
 
         post "/admin/backups/upload.json", params: {
           resumableFilename: filename,
@@ -248,9 +248,100 @@ RSpec.describe Admin::BackupsController do
           resumableCurrentChunkSize: '1',
           file: fixture_file_upload(Tempfile.new)
         }
+        expect_job_enqueued(job: :backup_chunks_merger, args: {
+          filename: filename, identifier: 'test', chunks: 1
+        }, at: 5.seconds.from_now)
 
         expect(response.status).to eq(200)
         expect(response.body).to eq("")
+      end
+    end
+
+    describe "completing an upload by enqueuing backup_chunks_merger" do
+      let(:filename) { 'test_Site-0123456789.tar.gz' }
+
+      it "works with a single chunk" do
+        freeze_time
+        described_class.any_instance.expects(:has_enough_space_on_disk?).returns(true)
+
+        # 2MB file, 2MB chunks = 1x 2MB chunk
+        post "/admin/backups/upload.json", params: {
+          resumableFilename: filename,
+          resumableTotalSize: '2097152',
+          resumableIdentifier: 'test',
+          resumableChunkNumber: '1',
+          resumableChunkSize: '2097152',
+          resumableCurrentChunkSize: '2097152',
+          file: fixture_file_upload(Tempfile.new)
+        }
+        expect_job_enqueued(job: :backup_chunks_merger, args: {
+          filename: filename, identifier: 'test', chunks: 1
+        }, at: 5.seconds.from_now)
+      end
+
+      it "works with multiple chunks when the final chunk is chunk_size + remainder" do
+        freeze_time
+        described_class.any_instance.expects(:has_enough_space_on_disk?).twice.returns(true)
+
+        # 5MB file, 2MB chunks = 1x 2MB chunk + 1x 3MB chunk with resumable.js
+        post "/admin/backups/upload.json", params: {
+          resumableFilename: filename,
+          resumableTotalSize: '5242880',
+          resumableIdentifier: 'test',
+          resumableChunkNumber: '1',
+          resumableChunkSize: '2097152',
+          resumableCurrentChunkSize: '2097152',
+          file: fixture_file_upload(Tempfile.new)
+        }
+        post "/admin/backups/upload.json", params: {
+          resumableFilename: filename,
+          resumableTotalSize: '5242880',
+          resumableIdentifier: 'test',
+          resumableChunkNumber: '2',
+          resumableChunkSize: '2097152',
+          resumableCurrentChunkSize: '3145728',
+          file: fixture_file_upload(Tempfile.new)
+        }
+        expect_job_enqueued(job: :backup_chunks_merger, args: {
+          filename: filename, identifier: 'test', chunks: 2
+        }, at: 5.seconds.from_now)
+      end
+
+      it "works with multiple chunks when the final chunk is just the remaninder" do
+        freeze_time
+        described_class.any_instance.expects(:has_enough_space_on_disk?).times(3).returns(true)
+
+        # 5MB file, 2MB chunks = 2x 2MB chunk + 1x 1MB chunk with uppy.js
+        post "/admin/backups/upload.json", params: {
+          resumableFilename: filename,
+          resumableTotalSize: '5242880',
+          resumableIdentifier: 'test',
+          resumableChunkNumber: '1',
+          resumableChunkSize: '2097152',
+          resumableCurrentChunkSize: '2097152',
+          file: fixture_file_upload(Tempfile.new)
+        }
+        post "/admin/backups/upload.json", params: {
+          resumableFilename: filename,
+          resumableTotalSize: '5242880',
+          resumableIdentifier: 'test',
+          resumableChunkNumber: '2',
+          resumableChunkSize: '2097152',
+          resumableCurrentChunkSize: '2097152',
+          file: fixture_file_upload(Tempfile.new)
+        }
+        post "/admin/backups/upload.json", params: {
+          resumableFilename: filename,
+          resumableTotalSize: '5242880',
+          resumableIdentifier: 'test',
+          resumableChunkNumber: '3',
+          resumableChunkSize: '2097152',
+          resumableCurrentChunkSize: '1048576',
+          file: fixture_file_upload(Tempfile.new)
+        }
+        expect_job_enqueued(job: :backup_chunks_merger, args: {
+          filename: filename, identifier: 'test', chunks: 3
+        }, at: 5.seconds.from_now)
       end
     end
   end
@@ -323,6 +414,122 @@ RSpec.describe Admin::BackupsController do
       put "/admin/backups/#{backup_filename}.json"
 
       expect(response).to be_not_found
+    end
+  end
+
+  describe "S3 multipart uploads" do
+    let(:upload_type) { "backup" }
+    let(:test_bucket_prefix) { "test_#{ENV['TEST_ENV_NUMBER'].presence || '0'}" }
+    let(:backup_file_exists_response) { { status: 404 } }
+    let(:mock_multipart_upload_id) { "ibZBv_75gd9r8lH_gqXatLdxMVpAlj6CFTR.OwyF3953YdwbcQnMA2BLGn8Lx12fQNICtMw5KyteFeHw.Sjng--" }
+
+    before do
+      setup_s3
+      SiteSetting.enable_direct_s3_uploads = true
+      SiteSetting.s3_backup_bucket = "s3-backup-bucket"
+      SiteSetting.backup_location = BackupLocationSiteSetting::S3
+      stub_request(:head, "https://s3-backup-bucket.s3.us-west-1.amazonaws.com/").to_return(status: 200, body: "", headers: {})
+      stub_request(:head, "https://s3-backup-bucket.s3.us-west-1.amazonaws.com/default/test.tar.gz").to_return(
+        backup_file_exists_response
+      )
+    end
+
+    context "when the user is not admin" do
+      before do
+        admin.update(admin: false)
+      end
+
+      it "errors with invalid access error" do
+        post "/admin/backups/create-multipart.json", params: {
+          file_name: "test.tar.gz",
+          upload_type: upload_type,
+          file_size: 4098
+        }
+        expect(response.status).to eq(404)
+      end
+    end
+
+    context "when the user is admin" do
+      def stub_create_multipart_backup_request
+        BackupRestore::S3BackupStore.any_instance.stubs(:temporary_upload_path).returns(
+          "temp/default/#{test_bucket_prefix}/28fccf8259bbe75b873a2bd2564b778c/2u98j832nx93272x947823.gz"
+        )
+        create_multipart_result = <<~BODY
+        <?xml version=\"1.0\" encoding=\"UTF-8\"?>\n
+        <InitiateMultipartUploadResult>
+           <Bucket>s3-backup-bucket</Bucket>
+           <Key>temp/default/#{test_bucket_prefix}/28fccf8259bbe75b873a2bd2564b778c/2u98j832nx93272x947823.gz</Key>
+           <UploadId>#{mock_multipart_upload_id}</UploadId>
+        </InitiateMultipartUploadResult>
+        BODY
+        stub_request(:post, "https://s3-backup-bucket.s3.us-west-1.amazonaws.com/temp/default/#{test_bucket_prefix}/28fccf8259bbe75b873a2bd2564b778c/2u98j832nx93272x947823.gz?uploads").
+          to_return(status: 200, body: create_multipart_result)
+      end
+
+      it "creates the multipart upload" do
+        stub_create_multipart_backup_request
+        post "/admin/backups/create-multipart.json", params: {
+          file_name: "test.tar.gz",
+          upload_type: upload_type,
+          file_size: 4098
+        }
+        expect(response.status).to eq(200)
+        result = response.parsed_body
+
+        external_upload_stub = ExternalUploadStub.where(
+          unique_identifier: result["unique_identifier"],
+          original_filename: "test.tar.gz",
+          created_by: admin,
+          upload_type: upload_type,
+          key: result["key"],
+          multipart: true
+        )
+        expect(external_upload_stub.exists?).to eq(true)
+      end
+
+      context "when backup of same filename already exists" do
+        let(:backup_file_exists_response) { { status: 200, body: "" } }
+
+        it "throws an error" do
+          post "/admin/backups/create-multipart.json", params: {
+            file_name: "test.tar.gz",
+            upload_type: upload_type,
+            file_size: 4098
+          }
+          expect(response.status).to eq(422)
+          expect(response.parsed_body["errors"]).to include(
+            I18n.t("backup.file_exists")
+          )
+        end
+      end
+
+      context "when filename is invalid" do
+        it "throws an error" do
+          post "/admin/backups/create-multipart.json", params: {
+            file_name: "blah $$##.tar.gz",
+            upload_type: upload_type,
+            file_size: 4098
+          }
+          expect(response.status).to eq(422)
+          expect(response.parsed_body["errors"]).to include(
+            I18n.t("backup.invalid_filename")
+          )
+        end
+      end
+
+      context "when extension is invalid" do
+        it "throws an error" do
+          post "/admin/backups/create-multipart.json", params: {
+            file_name: "test.png",
+            upload_type: upload_type,
+            file_size: 4098
+          }
+          expect(response.status).to eq(422)
+          expect(response.parsed_body["errors"]).to include(
+            I18n.t("backup.backup_file_should_be_tar_gz")
+          )
+        end
+      end
     end
   end
 end

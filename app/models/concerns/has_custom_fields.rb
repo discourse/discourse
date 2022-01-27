@@ -64,6 +64,8 @@ module HasCustomFields
     has_many :_custom_fields, dependent: :destroy, class_name: "#{name}CustomField"
     after_save :save_custom_fields
 
+    # TODO (martin) Post 2.8 release, change to attr_reader because this is
+    # set by set_preloaded_custom_fields
     attr_accessor :preloaded_custom_fields
 
     def custom_fields_fk
@@ -114,7 +116,7 @@ module HasCustomFields
 
         objects.each do |obj|
           map[obj.id] = obj
-          obj.preloaded_custom_fields = empty.dup
+          obj.set_preloaded_custom_fields(empty.dup)
         end
 
         fk = (name.underscore << "_id")
@@ -142,6 +144,11 @@ module HasCustomFields
     super
   end
 
+  def on_custom_fields_change
+    # Callback when custom fields have changed
+    # Override in model
+  end
+
   def custom_fields_preloaded?
     !!@preloaded_custom_fields
   end
@@ -155,9 +162,11 @@ module HasCustomFields
     @custom_fields_orig = nil
   end
 
+  class NotPreloadedError < StandardError; end
   class PreloadedProxy
-    def initialize(preloaded)
+    def initialize(preloaded, klass_with_custom_fields)
       @preloaded = preloaded
+      @klass_with_custom_fields = klass_with_custom_fields
     end
 
     def [](key)
@@ -165,14 +174,23 @@ module HasCustomFields
         @preloaded[key]
       else
         # for now you can not mix preload an non preload, it better just to fail
-        raise StandardError, "Attempted to access the non preloaded custom field '#{key}'. This is disallowed to prevent N+1 queries."
+        raise NotPreloadedError, "Attempted to access the non preloaded custom field '#{key}' on the '#{@klass_with_custom_fields}' class. This is disallowed to prevent N+1 queries."
       end
     end
   end
 
+  def set_preloaded_custom_fields(custom_fields)
+    @preloaded_custom_fields = custom_fields
+
+    # we have to clear this otherwise the fields are cached inside the
+    # already existing proxy and no new ones are added, so when we check
+    # for custom_fields[KEY] an error is likely to occur
+    @preloaded_proxy = nil
+  end
+
   def custom_fields
     if @preloaded_custom_fields
-      return @preloaded_proxy ||= PreloadedProxy.new(@preloaded_custom_fields)
+      return @preloaded_proxy ||= PreloadedProxy.new(@preloaded_custom_fields, self.class.to_s)
     end
 
     @custom_fields ||= refresh_custom_fields_from_db.dup
@@ -197,8 +215,11 @@ module HasCustomFields
       if row_count == 0
         _custom_fields.create!(name: k, value: v)
       end
+
       custom_fields[k.to_s] = v # We normalize custom_fields as strings
     end
+
+    on_custom_fields_change
   end
 
   def save_custom_fields(force = false)
@@ -225,10 +246,10 @@ module HasCustomFields
             t = {}
             self.class.append_custom_field(t, f.name, f.value)
 
-            if dup[f.name] != t[f.name]
-              f.destroy!
-            else
+            if dup.has_key?(f.name) && dup[f.name] == t[f.name]
               dup.delete(f.name)
+            else
+              f.destroy!
             end
           end
         end
@@ -253,11 +274,12 @@ module HasCustomFields
         end
       end
 
+      on_custom_fields_change
       refresh_custom_fields_from_db
     end
   end
 
-  # We support unique indexes on certain fields. In the event two concurrenct processes attempt to
+  # We support unique indexes on certain fields. In the event two concurrent processes attempt to
   # update the same custom field we should catch the error and perform an update instead.
   def create_singular(name, value, field_type = nil)
     write_value = value.is_a?(Hash) || field_type == :json ? value.to_json : value

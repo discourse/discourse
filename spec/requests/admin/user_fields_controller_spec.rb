@@ -124,6 +124,21 @@ describe Admin::UserFieldsController do
         user_field.reload
         expect(user_field.user_field_options.size).to eq(2)
       end
+
+      it "removes directory column record if not public" do
+        next_position = DirectoryColumn.maximum("position") + 1
+        DirectoryColumn.create(
+          user_field_id: user_field.id,
+          enabled: false,
+          type: DirectoryColumn.types[:user_field],
+          position: next_position
+        )
+        expect {
+          put "/admin/customize/user_fields/#{user_field.id}.json", params: {
+            user_field: { show_on_profile: false, show_on_user_card: false, searchable: true }
+          }
+        }.to change { DirectoryColumn.count }.by(-1)
+      end
     end
   end
 end

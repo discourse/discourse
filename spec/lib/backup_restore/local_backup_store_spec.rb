@@ -5,17 +5,14 @@ require 'backup_restore/local_backup_store'
 require_relative 'shared_examples_for_backup_store'
 
 describe BackupRestore::LocalBackupStore do
-  before(:all) do
+  before do
     @root_directory = Dir.mktmpdir
     @paths = []
-  end
-
-  after(:all) do
-    FileUtils.remove_dir(@root_directory, true)
-  end
-
-  before do
     SiteSetting.backup_location = BackupLocationSiteSetting::LOCAL
+  end
+
+  after do
+    FileUtils.remove_dir(@root_directory, true)
   end
 
   subject(:store) { BackupRestore::BackupStore.create(root_directory: @root_directory) }
@@ -39,16 +36,16 @@ describe BackupRestore::LocalBackupStore do
   end
 
   def remove_backups
-    @paths.each { |path| File.delete(path) if File.exists?(path) }
+    @paths.each { |path| File.delete(path) if File.exist?(path) }
     @paths.clear
   end
 
   def create_file(db_name:, filename:, last_modified:, size_in_bytes:)
     path = File.join(@root_directory, db_name)
-    Dir.mkdir(path) unless Dir.exists?(path)
+    Dir.mkdir(path) unless Dir.exist?(path)
 
     path = File.join(path, filename)
-    return if File.exists?(path)
+    return if File.exist?(path)
 
     @paths << path
     FileUtils.touch(path)

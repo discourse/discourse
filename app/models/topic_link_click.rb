@@ -78,7 +78,7 @@ class TopicLinkClick < ActiveRecord::Base
     # Find the forum topic link
     link = link.where(post_id: args[:post_id]) if args[:post_id].present?
 
-    # If we don't have a post, just find the first occurance of the link
+    # If we don't have a post, just find the first occurrence of the link
     link = link.where(topic_id: args[:topic_id]) if args[:topic_id].present?
     link = link.first
 
@@ -128,5 +128,5 @@ end
 #
 # Indexes
 #
-#  index_forum_thread_link_clicks_on_forum_thread_link_id  (topic_link_id)
+#  by_link  (topic_link_id)
 #

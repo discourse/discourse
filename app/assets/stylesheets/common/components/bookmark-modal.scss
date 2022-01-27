@@ -3,6 +3,15 @@
     box-sizing: border-box;
     min-width: 310px;
   }
+  .modal-footer {
+    margin: 0;
+    border-top: 0;
+    padding: 10px 0;
+
+    .delete-bookmark {
+      margin-left: auto;
+    }
+  }
   .modal-body {
     width: 375px;
     box-sizing: border-box;
@@ -42,7 +51,7 @@
     margin-left: 0.5em;
     margin-bottom: 0.5em;
     background: transparent;
-    padding-right: 6px;
+    padding: 6px;
   }
 
   .bookmark-options-panel {

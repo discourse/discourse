@@ -100,27 +100,31 @@ module("Unit | Utility | i18n", function (hooks) {
   });
 
   test("defaults", function (assert) {
-    assert.equal(I18n.defaultLocale, "en", "it has English as default locale");
+    assert.strictEqual(
+      I18n.defaultLocale,
+      "en",
+      "it has English as default locale"
+    );
     assert.ok(I18n.pluralizationRules["en"], "it has English pluralizer");
   });
 
   test("translations", function (assert) {
-    assert.equal(
+    assert.strictEqual(
       I18n.t("topic.reply.title"),
       "Répondre",
       "uses locale translations when they exist"
     );
-    assert.equal(
+    assert.strictEqual(
       I18n.t("topic.reply.help"),
       "begin composing a reply to this topic",
       "fallbacks to English translations"
     );
-    assert.equal(
+    assert.strictEqual(
       I18n.t("hello.world"),
       "Hello World!",
-      "doesn't break if a key is overriden in a locale"
+      "doesn't break if a key is overridden in a locale"
     );
-    assert.equal(I18n.t("hello.universe"), "", "allows empty strings");
+    assert.strictEqual(I18n.t("hello.universe"), "", "allows empty strings");
   });
 
   test("extra translations", function (assert) {
@@ -176,19 +180,19 @@ module("Unit | Utility | i18n", function (hooks) {
       return "other";
     };
 
-    assert.equal(
+    assert.strictEqual(
       I18n.t("admin.dashboard.title"),
       "Raporty",
       "it uses extra translations when they exists"
     );
 
-    assert.equal(
+    assert.strictEqual(
       I18n.t("admin.web_hooks.events.incoming", { count: 2 }),
       "Istnieją 2 nowe wydarzenia.",
       "it uses pluralized extra translation when it exists"
     );
 
-    assert.equal(
+    assert.strictEqual(
       I18n.t("admin.dashboard.backup_count", { count: 2 }),
       "2 backups",
       "it falls back to English and uses extra translations when they exists"
@@ -196,28 +200,52 @@ module("Unit | Utility | i18n", function (hooks) {
   });
 
   test("pluralizations", function (assert) {
-    assert.equal(I18n.t("character_count", { count: 0 }), "0 ZERO");
-    assert.equal(I18n.t("character_count", { count: 1 }), "1 ONE");
-    assert.equal(I18n.t("character_count", { count: 2 }), "2 TWO");
-    assert.equal(I18n.t("character_count", { count: 3 }), "3 FEW");
-    assert.equal(I18n.t("character_count", { count: 10 }), "10 MANY");
-    assert.equal(I18n.t("character_count", { count: 100 }), "100 OTHER");
+    assert.strictEqual(I18n.t("character_count", { count: 0 }), "0 ZERO");
+    assert.strictEqual(I18n.t("character_count", { count: 1 }), "1 ONE");
+    assert.strictEqual(I18n.t("character_count", { count: 2 }), "2 TWO");
+    assert.strictEqual(I18n.t("character_count", { count: 3 }), "3 FEW");
+    assert.strictEqual(I18n.t("character_count", { count: 10 }), "10 MANY");
+    assert.strictEqual(I18n.t("character_count", { count: 100 }), "100 OTHER");
 
-    assert.equal(I18n.t("word_count", { count: 0 }), "0 words");
-    assert.equal(I18n.t("word_count", { count: 1 }), "1 word");
-    assert.equal(I18n.t("word_count", { count: 2 }), "2 words");
-    assert.equal(I18n.t("word_count", { count: 3 }), "3 words");
-    assert.equal(I18n.t("word_count", { count: 10 }), "10 words");
-    assert.equal(I18n.t("word_count", { count: 100 }), "100 words");
+    assert.strictEqual(I18n.t("word_count", { count: 0 }), "0 words");
+    assert.strictEqual(I18n.t("word_count", { count: 1 }), "1 word");
+    assert.strictEqual(I18n.t("word_count", { count: 2 }), "2 words");
+    assert.strictEqual(I18n.t("word_count", { count: 3 }), "3 words");
+    assert.strictEqual(I18n.t("word_count", { count: 10 }), "10 words");
+    assert.strictEqual(I18n.t("word_count", { count: 100 }), "100 words");
+  });
+
+  test("adds the count to the missing translation strings", function (assert) {
+    assert.strictEqual(
+      I18n.t("invalid_i18n_string", { count: 1 }),
+      `[fr.invalid_i18n_string count=1]`
+    );
+
+    assert.strictEqual(
+      I18n.t("character_count", { count: "0" }),
+      `[fr.character_count count="0"]`
+    );
+
+    assert.strictEqual(
+      I18n.t("character_count", { count: null }),
+      `[fr.character_count count=null]`
+    );
+
+    assert.strictEqual(
+      I18n.t("character_count", { count: undefined }),
+      `[fr.character_count count=undefined]`
+    );
+
+    assert.strictEqual(I18n.t("character_count"), "[fr.character_count]");
   });
 
   test("fallback", function (assert) {
-    assert.equal(
+    assert.strictEqual(
       I18n.t("days", { count: 1 }),
       "1 day",
       "uses fallback locale for missing plural key"
     );
-    assert.equal(
+    assert.strictEqual(
       I18n.t("days", { count: 200 }),
       "200 jours",
       "uses existing French plural key"
@@ -226,17 +254,17 @@ module("Unit | Utility | i18n", function (hooks) {
     I18n.locale = "fr_FOO";
     I18n.fallbackLocale = "fr";
 
-    assert.equal(
+    assert.strictEqual(
       I18n.t("topic.reply.title"),
       "Foo",
       "uses locale translations when they exist"
     );
-    assert.equal(
+    assert.strictEqual(
       I18n.t("topic.share.title"),
       "Partager",
       "falls back to fallbackLocale translations when they exist"
     );
-    assert.equal(
+    assert.strictEqual(
       I18n.t("topic.reply.help"),
       "begin composing a reply to this topic",
       "falls back to English translations"
@@ -244,7 +272,7 @@ module("Unit | Utility | i18n", function (hooks) {
   });
 
   test("Dollar signs are properly escaped", function (assert) {
-    assert.equal(
+    assert.strictEqual(
       I18n.t("dollar_sign", {
         description: "$& $&",
       }),

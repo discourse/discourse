@@ -61,7 +61,7 @@ module BadgeQueries
       SELECT i.user_id, MIN(i.id) i_id
       FROM incoming_links i
       JOIN badge_posts p on p.id = i.post_id
-      WHERE i.user_id IS NOT NULL
+      JOIN users u on u.id = i.user_id
       GROUP BY i.user_id
     ) as views
     JOIN incoming_links i2 ON i2.id = views.i_id
@@ -93,7 +93,7 @@ module BadgeQueries
     JOIN post_actions pa1 on pa1.id = x.id
   SQL
 
-  # Incorrect, but good enough - (earlies post edited vs first edit)
+  # Incorrect, but good enough - (earliest post edited vs first edit)
   Editor = <<~SQL
     SELECT p.user_id, min(p.id) post_id, min(p.created_at) granted_at
     FROM badge_posts p
@@ -196,9 +196,9 @@ module BadgeQueries
         SELECT i.user_id, MIN(i.id) i_id
         FROM incoming_links i
         JOIN badge_posts p on p.id = i.post_id
-        WHERE i.user_id IS NOT NULL
+        JOIN users u on u.id = i.user_id
         GROUP BY i.user_id,i.post_id
-        HAVING COUNT(*) > #{count}
+        HAVING COUNT(*) >= #{count}
       ) as views
       JOIN incoming_links i2 ON i2.id = views.i_id
     SQL

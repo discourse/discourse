@@ -28,6 +28,8 @@ class PostsController < ApplicationController
     :user_posts_feed
   ]
 
+  MARKDOWN_TOPIC_PAGE_SIZE ||= 100
+
   def markdown_id
     markdown Post.find(params[:id].to_i)
   end
@@ -36,8 +38,23 @@ class PostsController < ApplicationController
     if params[:revision].present?
       post_revision = find_post_revision_from_topic_id
       render plain: post_revision.modifications[:raw].last
+    elsif params[:post_number].present?
+      markdown Post.find_by(topic_id: params[:topic_id].to_i, post_number: params[:post_number].to_i)
     else
-      markdown Post.find_by(topic_id: params[:topic_id].to_i, post_number: (params[:post_number] || 1).to_i)
+      opts = params.slice(:page)
+      opts[:limit] = MARKDOWN_TOPIC_PAGE_SIZE
+      topic_view = TopicView.new(params[:topic_id], current_user, opts)
+      content = topic_view.posts.map do |p|
+        <<~HEREDOC
+          #{p.user.username} | #{p.updated_at} | ##{p.post_number}
+
+          #{p.raw}
+
+          -------------------------
+
+        HEREDOC
+      end
+      render plain: content.join
     end
   end
 
@@ -61,7 +78,7 @@ class PostsController < ApplicationController
         .where('posts.id <= ?', last_post_id)
         .where('posts.id > ?', last_post_id - 50)
         .includes(topic: :category)
-        .includes(user: :primary_group)
+        .includes(user: [:primary_group, :flair_group])
         .includes(:reply_to_user)
         .limit(50)
       rss_description = I18n.t("rss_description.private_posts")
@@ -71,7 +88,7 @@ class PostsController < ApplicationController
         .where('posts.id <= ?', last_post_id)
         .where('posts.id > ?', last_post_id - 50)
         .includes(topic: :category)
-        .includes(user: :primary_group)
+        .includes(user: [:primary_group, :flair_group])
         .includes(:reply_to_user)
         .limit(50)
       rss_description = I18n.t("rss_description.posts")
@@ -247,7 +264,7 @@ class PostsController < ApplicationController
     return render_json_error(post) if post.errors.present?
     return render_json_error(topic) if topic.errors.present?
 
-    post_serializer = PostSerializer.new(post, scope: guardian, root: false)
+    post_serializer = PostSerializer.new(post, scope: guardian, root: false, add_raw: true)
     post_serializer.draft_sequence = DraftSequence.current(current_user, topic.draft_key)
     link_counts = TopicLink.counts_for(guardian, topic, [post])
     post_serializer.single_post_link_counts = link_counts[post.id] if link_counts.present?
@@ -303,14 +320,24 @@ class PostsController < ApplicationController
 
   def destroy
     post = find_post_from_params
-    guardian.ensure_can_delete!(post)
+
+    force_destroy = false
+    if params[:force_destroy].present?
+      if !guardian.can_permanently_delete?(post)
+        return render_json_error post.cannot_permanently_delete_reason(current_user), status: 403
+      end
+
+      force_destroy = true
+    else
+      guardian.ensure_can_delete!(post)
+    end
 
     unless guardian.can_moderate_topic?(post.topic)
       RateLimiter.new(current_user, "delete_post_per_min", SiteSetting.max_post_deletions_per_minute, 1.minute).performed!
       RateLimiter.new(current_user, "delete_post_per_day", SiteSetting.max_post_deletions_per_day, 1.day).performed!
     end
 
-    destroyer = PostDestroyer.new(current_user, post, context: params[:context])
+    destroyer = PostDestroyer.new(current_user, post, context: params[:context], force_destroy: force_destroy)
     destroyer.destroy
 
     render body: nil
@@ -555,6 +582,11 @@ class PostsController < ApplicationController
   end
 
   def flagged_posts
+    Discourse.deprecate(
+      'PostsController#flagged_posts is deprecated. Please use /review instead.',
+      since: '2.8.0.beta4', drop_from: '2.9'
+    )
+
     params.permit(:offset, :limit)
     guardian.ensure_can_see_flagged_posts!
 
@@ -581,6 +613,14 @@ class PostsController < ApplicationController
     posts = user_posts(guardian, user.id, offset: offset, limit: limit).where.not(deleted_at: nil)
 
     render_serialized(posts, AdminUserActionSerializer)
+  end
+
+  def pending
+    params.require(:username)
+    user = fetch_user_from_params
+    raise Discourse::NotFound unless guardian.can_edit_user?(user)
+
+    render_serialized(user.pending_posts.order(created_at: :desc), PendingPostSerializer, root: :pending_posts)
   end
 
   protected
@@ -761,7 +801,7 @@ class PostsController < ApplicationController
     result[:referrer] = request.env["HTTP_REFERER"]
 
     if recipients = result[:target_usernames]
-      Discourse.deprecate("`target_usernames` is deprecated, use `target_recipients` instead.", output_in_test: true)
+      Discourse.deprecate("`target_usernames` is deprecated, use `target_recipients` instead.", output_in_test: true, drop_from: '2.9.0')
     else
       recipients = result[:target_recipients]
     end

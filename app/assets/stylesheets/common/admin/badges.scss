@@ -80,15 +80,7 @@
       width: 350px;
     }
   }
-  .form-horizontal {
-    .radios {
-      display: flex;
-
-      .radio-label {
-        margin-right: 1.5em;
-      }
-    }
-
+  .current-badge {
     .ace-wrapper {
       position: relative;
       height: 270px;
@@ -134,6 +126,18 @@
 .award-badge {
   margin: 15px 0 0 15px;
   float: left;
+  max-width: 70%;
+
+  .bulk-award-status-icon {
+    margin-right: 3px;
+
+    &.success {
+      color: var(--success);
+    }
+    &.failure {
+      color: var(--danger);
+    }
+  }
 
   .badge-preview {
     min-height: 110px;

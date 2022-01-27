@@ -12,7 +12,7 @@ export default Controller.extend({
 
   @discourseComputed("model")
   fontClasses(model) {
-    const fontsStep = model.steps.findBy("id", "fonts");
+    const fontsStep = model.steps.findBy("id", "styling");
     if (!fontsStep) {
       return [];
     }

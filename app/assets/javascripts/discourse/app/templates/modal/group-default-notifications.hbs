@@ -1,0 +1,8 @@
+{{#d-modal-body title="groups.default_notifications.modal_title"}}
+  {{i18n "groups.default_notifications.modal_description" count=model.count}}
+{{/d-modal-body}}
+
+<div class="modal-footer">
+  {{d-button action=(action "updateExistingUsers") class="btn-primary" label="groups.default_notifications.modal_yes"}}
+  {{d-button action=(action "cancel") label="groups.default_notifications.modal_no"}}
+</div>

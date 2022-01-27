@@ -4,6 +4,25 @@ class TopicView
   MEGA_TOPIC_POSTS_COUNT = 10000
   MIN_POST_READ_TIME = 4.0
 
+  def self.on_preload(&blk)
+    (@preload ||= Set.new) << blk
+  end
+
+  def self.cancel_preload(&blk)
+    if @preload
+      @preload.delete blk
+      if @preload.length == 0
+        @preload = nil
+      end
+    end
+  end
+
+  def self.preload(topic_view)
+    if @preload
+      @preload.each { |preload| preload.call(topic_view) }
+    end
+  end
+
   attr_reader(
     :topic,
     :posts,
@@ -16,6 +35,7 @@ class TopicView
     :personal_message,
     :can_review_topic
   )
+  alias queued_posts_enabled? queued_posts_enabled
 
   attr_accessor(
     :draft,
@@ -26,6 +46,9 @@ class TopicView
     :post_number
   )
 
+  delegate :category, to: :topic, allow_nil: true, private: true
+  delegate :require_reply_approval?, to: :category, prefix: true, allow_nil: true, private: true
+
   def self.print_chunk_size
     1000
   end
@@ -35,7 +58,7 @@ class TopicView
   end
 
   def self.default_post_custom_fields
-    @default_post_custom_fields ||= [Post::NOTICE, "action_code_who"]
+    @default_post_custom_fields ||= [Post::NOTICE, "action_code_who", "action_code_path"]
   end
 
   def self.post_custom_fields_allowlisters
@@ -46,8 +69,8 @@ class TopicView
     post_custom_fields_allowlisters << block
   end
 
-  def self.allowed_post_custom_fields(user)
-    wpcf = default_post_custom_fields + post_custom_fields_allowlisters.map { |w| w.call(user) }
+  def self.allowed_post_custom_fields(user, topic)
+    wpcf = default_post_custom_fields + post_custom_fields_allowlisters.map { |w| w.call(user, topic) }
     wpcf.flatten.uniq
   end
 
@@ -60,6 +83,25 @@ class TopicView
     @custom_filters || {}
   end
 
+  # Configure a default scope to be applied to @filtered_posts.
+  # The registered block is called with @filtered_posts and an instance of
+  # `TopicView`.
+  #
+  # This API should be considered experimental until it is exposed in
+  # `Plugin::Instance`.
+  def self.apply_custom_default_scope(&block)
+    custom_default_scopes << block
+  end
+
+  def self.custom_default_scopes
+    @custom_default_scopes ||= []
+  end
+
+  # For testing
+  def self.reset_custom_default_scopes
+    @custom_default_scopes = nil
+  end
+
   def initialize(topic_or_topic_id, user = nil, options = {})
     @topic = find_topic(topic_or_topic_id)
     @user = user
@@ -68,7 +110,6 @@ class TopicView
     check_and_raise_exceptions(options[:skip_staff_action])
 
     @message_bus_last_id = MessageBus.last_id("/topic/#{@topic.id}")
-    @print = options[:print].present?
 
     options.each do |key, value|
       self.instance_variable_set("@#{key}".to_sym, value)
@@ -90,10 +131,7 @@ class TopicView
     @page = @page.to_i > 1 ? @page.to_i : calculate_page
 
     setup_filtered_posts
-
-    @initial_load = true
-    @index_reverse = false
-
+    @filtered_posts = apply_default_scope(@filtered_posts)
     filter_posts(options)
 
     if @posts && !@skip_custom_fields
@@ -101,16 +139,18 @@ class TopicView
         @user_custom_fields = User.custom_fields_for_ids(@posts.pluck(:user_id), added_fields)
       end
 
-      if (allowed_fields = TopicView.allowed_post_custom_fields(@user)).present?
+      if (allowed_fields = TopicView.allowed_post_custom_fields(@user, @topic)).present?
         @post_custom_fields = Post.custom_fields_for_ids(@posts.pluck(:id), allowed_fields)
       end
     end
+
+    TopicView.preload(self)
 
     @draft_key = @topic.draft_key
     @draft_sequence = DraftSequence.current(@user, @draft_key)
 
     @can_review_topic = @guardian.can_review_topic?(@topic)
-    @queued_posts_enabled = NewPostManager.queue_enabled?
+    @queued_posts_enabled = NewPostManager.queue_enabled? || category_require_reply_approval?
     @personal_message = @topic.private_message?
   end
 
@@ -143,7 +183,7 @@ class TopicView
       if is_mega_topic?
         nil
       else
-        Gaps.new(filtered_post_ids, unfiltered_posts.order(:sort_order).pluck(:id))
+        Gaps.new(filtered_post_ids, apply_default_scope(unfiltered_posts).pluck(:id))
       end
     end
   end
@@ -265,16 +305,19 @@ class TopicView
   end
 
   def filter_posts(opts = {})
-    return filter_posts_near(opts[:post_number].to_i) if opts[:post_number].present?
-    return filter_posts_by_ids(opts[:post_ids]) if opts[:post_ids].present?
-
-    if opts[:filter_post_number].present?
-      return filter_posts_by_post_number(opts[:filter_post_number], opts[:asc])
+    if opts[:post_number].present?
+      filter_posts_near(opts[:post_number].to_i)
+    elsif opts[:post_ids].present?
+      filter_posts_by_ids(opts[:post_ids])
+    elsif opts[:filter_post_number].present?
+      # Only used for megatopics where we do not load the entire post stream
+      filter_posts_by_post_number(opts[:filter_post_number], opts[:asc])
+    elsif opts[:best].present?
+      # Only used for wordpress
+      filter_best(opts[:best], opts)
+    else
+      filter_posts_paged(@page)
     end
-
-    return filter_best(opts[:best], opts) if opts[:best].present?
-
-    filter_posts_paged(@page)
   end
 
   def primary_group_names
@@ -295,31 +338,24 @@ class TopicView
     @group_names = result
   end
 
-  # Find the sort order for a post in the topic
-  def sort_order_for_post_number(post_number)
-    posts = Post.where(topic_id: @topic.id, post_number: post_number).with_deleted
-    posts = filter_post_types(posts)
-    posts.select(:sort_order).first.try(:sort_order)
-  end
-
   # Filter to all posts near a particular post number
   def filter_posts_near(post_number)
     posts_before = (@limit.to_f / 4).floor
     posts_before = 1 if posts_before.zero?
     sort_order = get_sort_order(post_number)
 
-    before_post_ids = @filtered_posts.order(sort_order: :desc)
+    before_post_ids = @filtered_posts.reverse_order
       .where("posts.sort_order < ?", sort_order)
       .limit(posts_before)
       .pluck(:id)
 
-    post_ids = before_post_ids + @filtered_posts.order(sort_order: :asc)
+    post_ids = before_post_ids + @filtered_posts
       .where("posts.sort_order >= ?", sort_order)
       .limit(@limit - before_post_ids.length)
       .pluck(:id)
 
     if post_ids.length < @limit
-      post_ids = post_ids + @filtered_posts.order(sort_order: :desc)
+      post_ids = post_ids + @filtered_posts.reverse_order
         .where("posts.sort_order < ?", sort_order)
         .offset(before_post_ids.length)
         .limit(@limit - post_ids.length)
@@ -336,8 +372,8 @@ class TopicView
     # Sometimes we don't care about the OP, for example when embedding comments
     min = 1 if min == 0 && @exclude_first
 
-    @posts = filter_posts_by_ids(
-      @filtered_posts.order(:sort_order)
+    filter_posts_by_ids(
+      @filtered_posts
         .offset(min)
         .limit(@limit)
         .pluck(:id)
@@ -371,16 +407,14 @@ class TopicView
 
   def has_bookmarks?
     return false if @user.blank?
-    @topic.bookmarks.exists?(user_id: @user.id)
+    return false if @topic.trashed?
+    bookmarks.any?
   end
 
-  def first_post_bookmark_reminder_at
-    @first_post_bookmark_reminder_at ||= \
-      begin
-        first_post = @topic.posts.with_deleted.find_by(post_number: 1)
-        return if !first_post
-        first_post.bookmarks.where(user: @user).pluck_first(:reminder_at)
-      end
+  def bookmarks
+    @bookmarks ||= @topic.bookmarks.where(user: @user).joins(:topic).select(
+      :id, :post_id, "topics.id AS topic_id", :for_topic, :reminder_at, :name, :auto_delete_preference
+    )
   end
 
   MAX_PARTICIPANTS = 24
@@ -442,11 +476,18 @@ class TopicView
     end
   end
 
+  def topic_allowed_group_ids
+    @topic_allowed_group_ids ||= begin
+      @topic.allowed_groups.map(&:id)
+    end
+  end
+
   def group_allowed_user_ids
     return @group_allowed_user_ids unless @group_allowed_user_ids.nil?
 
-    group_ids = @topic.allowed_groups.map(&:id)
-    @group_allowed_user_ids = Set.new(GroupUser.where(group_id: group_ids).pluck('distinct user_id'))
+    @group_allowed_user_ids = GroupUser
+      .where(group_id: topic_allowed_group_ids)
+      .pluck('distinct user_id')
   end
 
   def category_group_moderator_user_ids
@@ -488,7 +529,8 @@ class TopicView
           reviewable_scores s ON reviewable_id = r.id
         WHERE
           r.target_id IN (:post_ids) AND
-          r.target_type = 'Post'
+          r.target_type = 'Post' AND
+          COALESCE(s.reason, '') != 'category'
         GROUP BY
           target_id
       SQL
@@ -536,12 +578,6 @@ class TopicView
     @link_counts ||= TopicLink.counts_for(@guardian, @topic, posts)
   end
 
-  # Are we the initial page load? If so, we can return extra information like
-  # user post counts, etc.
-  def initial_load?
-    @initial_load
-  end
-
   def pm_params
     @pm_params ||= TopicQuery.new(@user).get_pm_params(topic)
   end
@@ -572,7 +608,7 @@ class TopicView
   end
 
   def recent_posts
-    @filtered_posts.by_newest.with_user.first(25)
+    @filtered_posts.unscope(:order).by_newest.with_user.first(25)
   end
 
   # Returns an array of [id, days_ago] tuples.
@@ -580,12 +616,10 @@ class TopicView
   def filtered_post_stream
     @filtered_post_stream ||= begin
       posts = @filtered_posts
-        .order(:sort_order)
-
       columns = [:id]
 
       if !is_mega_topic?
-        columns << 'EXTRACT(DAYS FROM CURRENT_TIMESTAMP - posts.created_at)::INT AS days_ago'
+        columns << '(EXTRACT(EPOCH FROM CURRENT_TIMESTAMP - posts.created_at) / 86400)::INT AS days_ago'
       end
 
       posts.pluck(*columns)
@@ -621,12 +655,8 @@ class TopicView
     @is_mega_topic ||= (@topic.posts_count >= MEGA_TOPIC_POSTS_COUNT)
   end
 
-  def first_post_id
-    @filtered_posts.order(sort_order: :asc).pluck_first(:id)
-  end
-
   def last_post_id
-    @filtered_posts.order(sort_order: :desc).pluck_first(:id)
+    @filtered_posts.reverse_order.pluck_first(:id)
   end
 
   def current_post_number
@@ -698,6 +728,7 @@ class TopicView
     return posts.where(post_type: Post.types[:regular]) if @only_regular
 
     visible_types = Topic.visible_post_types(@user)
+
     if @user.present?
       posts.where("posts.user_id = ? OR post_type IN (?)", @user.id, visible_types)
     else
@@ -710,26 +741,29 @@ class TopicView
 
     posts =
       if asc
-        @filtered_posts
-          .where("sort_order > ?", sort_order)
-          .order(sort_order: :asc)
+        @filtered_posts.where("sort_order > ?", sort_order)
       else
-        @filtered_posts
-          .where("sort_order < ?", sort_order)
-          .order(sort_order: :desc)
+        @filtered_posts.reverse_order.where("sort_order < ?", sort_order)
       end
 
     posts = posts.limit(@limit) if !@skip_limit
     filter_posts_by_ids(posts.pluck(:id))
 
-    @posts = @posts.unscope(:order).order(sort_order: :desc) if !asc
+    @posts = @posts.reverse_order if !asc
   end
 
   def filter_posts_by_ids(post_ids)
-    # TODO: Sort might be off
     @posts = Post.where(id: post_ids, topic_id: @topic.id)
-      .includes({ user: :primary_group }, :reply_to_user, :deleted_by, :incoming_email, :topic)
-      .order('sort_order')
+      .includes(
+        { user: :primary_group },
+        :reply_to_user,
+        :deleted_by,
+        :incoming_email,
+        :topic,
+        :image_upload
+      )
+
+    @posts = apply_default_scope(@posts)
     @posts = filter_post_types(@posts)
     @posts = @posts.with_deleted if @guardian.can_see_deleted_posts?(@topic.category)
     @posts
@@ -753,26 +787,38 @@ class TopicView
     result
   end
 
+  def apply_default_scope(scope)
+    scope = scope.order(sort_order: :asc)
+
+    self.class.custom_default_scopes.each do |block|
+      scope = block.call(scope, self)
+    end
+
+    scope
+  end
+
   def setup_filtered_posts
     # Certain filters might leave gaps between posts. If that's true, we can return a gap structure
     @contains_gaps = false
     @filtered_posts = unfiltered_posts
 
-    sql = <<~SQL
+    if @user
+      sql = <<~SQL
         SELECT ignored_user_id
         FROM ignored_users as ig
-        JOIN users as u ON u.id = ig.ignored_user_id
+        INNER JOIN users as u ON u.id = ig.ignored_user_id
         WHERE ig.user_id = :current_user_id
           AND ig.ignored_user_id <> :current_user_id
           AND NOT u.admin
           AND NOT u.moderator
-    SQL
+      SQL
 
-    ignored_user_ids = DB.query_single(sql, current_user_id: @user&.id)
+      ignored_user_ids = DB.query_single(sql, current_user_id: @user.id)
 
-    if ignored_user_ids.present?
-      @filtered_posts = @filtered_posts.where.not("user_id IN (?) AND id <> ?", ignored_user_ids, first_post_id)
-      @contains_gaps = true
+      if ignored_user_ids.present?
+        @filtered_posts = @filtered_posts.where.not("user_id IN (?) AND posts.post_number != 1", ignored_user_ids)
+        @contains_gaps = true
+      end
     end
 
     # Filters
@@ -854,7 +900,6 @@ class TopicView
 
       @contains_gaps = true
     end
-
   end
 
   def check_and_raise_exceptions(skip_staff_action)

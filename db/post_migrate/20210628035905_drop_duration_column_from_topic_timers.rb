@@ -1,0 +1,17 @@
+# frozen_string_literal: true
+
+class DropDurationColumnFromTopicTimers < ActiveRecord::Migration[6.1]
+  DROPPED_COLUMNS ||= {
+    topic_timers: %i{duration}
+  }
+
+  def up
+    DROPPED_COLUMNS.each do |table, columns|
+      Migration::ColumnDropper.execute_drop(table, columns)
+    end
+  end
+
+  def down
+    add_column :topic_timers, :duration, :string
+  end
+end

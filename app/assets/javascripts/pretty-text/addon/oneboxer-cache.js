@@ -24,6 +24,5 @@ export function normalize(url) {
 }
 
 export function lookupCache(url) {
-  const cached = localCache[normalize(url)];
-  return cached && cached.prop("outerHTML");
+  return localCache[normalize(url)]?.outerHTML;
 }

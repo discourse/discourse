@@ -1,6 +1,6 @@
 export default function (element) {
-  if (element instanceof jQuery) {
-    element = element[0];
+  if (!element) {
+    return;
   }
 
   const $window = $(window),

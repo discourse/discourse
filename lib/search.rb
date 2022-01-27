@@ -33,7 +33,7 @@ class Search
   end
 
   def self.facets
-    %w(topic category user private_messages tags all_topics)
+    %w(topic category user private_messages tags all_topics exclude_topics)
   end
 
   def self.ts_config(locale = SiteSetting.default_locale)
@@ -69,19 +69,17 @@ class Search
       SiteSetting.search_tokenize_chinese_japanese_korean
   end
 
-  def self.prepare_data(search_data, purpose = :query)
-    purpose ||= :query
-
+  def self.prepare_data(search_data, purpose = nil)
     data = search_data.dup
     data.force_encoding("UTF-8")
+
     if purpose != :topic
       # TODO cppjieba_rb is designed for chinese, we need something else for Japanese
-      # Korean appears to be safe cause words are already space seperated
+      # Korean appears to be safe cause words are already space separated
       # For Japanese we should investigate using kakasi
       if segment_cjk?
         require 'cppjieba_rb' unless defined? CppjiebaRb
-        mode = (purpose == :query ? :query : :mix)
-        data = CppjiebaRb.segment(search_data, mode: mode)
+        data = CppjiebaRb.segment(search_data, mode: :mix)
 
         # TODO: we still want to tokenize here but the current stopword list is too wide
         # in cppjieba leading to words such as volume to be skipped. PG already has an English
@@ -93,7 +91,6 @@ class Search
         end
 
         data = data.join(' ')
-
       else
         data.squish!
       end
@@ -230,7 +227,7 @@ class Search
   end
 
   def limit
-    if @opts[:type_filter].present?
+    if @opts[:type_filter].present? && @opts[:type_filter] != "exclude_topics"
       Search.per_filter + 1
     else
       Search.per_facet + 1
@@ -255,9 +252,9 @@ class Search
 
   # Query a term
   def execute(readonly_mode: Discourse.readonly_mode?)
-    if SiteSetting.log_search_queries? && @opts[:search_type].present? && !readonly_mode
+    if log_query?(readonly_mode)
       status, search_log_id = SearchLog.log(
-        term: @term,
+        term: @clean_term,
         search_type: @opts[:search_type],
         ip_address: @opts[:ip_address],
         user_id: @opts[:user_id]
@@ -452,7 +449,7 @@ class Search
     posts.where("posts.user_id = #{@guardian.user.id}") if @guardian.user
   end
 
-  advanced_filter(/^in:created$/i) do |posts|
+  advanced_filter(/^in:(created|mine)$/i) do |posts|
     posts.where(user_id: @guardian.user.id, post_number: 1) if @guardian.user
   end
 
@@ -511,12 +508,7 @@ class Search
     category_ids = Category.where('slug ilike ? OR name ilike ? OR id = ?',
                                   match, match, match.to_i).pluck(:id)
     if category_ids.present?
-
-      unless exact
-        category_ids +=
-          Category.where('parent_category_id = ?', category_ids.first).pluck(:id)
-      end
-
+      category_ids += Category.subcategory_ids(category_ids.first) unless exact
       @category_filter_matched ||= true
       posts.where("topics.category_id IN (?)", category_ids)
     else
@@ -525,44 +517,31 @@ class Search
   end
 
   advanced_filter(/^\#([\p{L}\p{M}0-9\-:=]+)$/i) do |posts, match|
-
-    exact = true
-
     category_slug, subcategory_slug = match.to_s.split(":")
     next unless category_slug
 
-    if subcategory_slug
-
-      category_id, _ = DB.query_single(<<~SQL, category_slug.downcase, subcategory_slug.downcase)
-        SELECT sub.id
-        FROM categories sub
-        JOIN categories c ON sub.parent_category_id = c.id
-        WHERE LOWER(c.slug)  = ? AND LOWER(sub.slug) = ?
-        ORDER BY c.id
-        LIMIT 1
-      SQL
-
+    exact = true
+    if category_slug[0] == "="
+      category_slug = category_slug[1..-1]
     else
-      # main category
-      if category_slug[0] == "="
-        category_slug = category_slug[1..-1]
-      else
-        exact = false
-      end
+      exact = false
+    end
 
-      category_id = Category.where("lower(slug) = ?", category_slug.downcase)
+    category_id = if subcategory_slug
+      Category
+        .where('lower(slug) = ?', subcategory_slug.downcase)
+        .where(parent_category_id: Category.where('lower(slug) = ?', category_slug.downcase).select(:id))
+        .pluck_first(:id)
+    else
+      Category
+        .where('lower(slug) = ?', category_slug.downcase)
         .order('case when parent_category_id is null then 0 else 1 end')
-        .pluck(:id)
-        .first
+        .pluck_first(:id)
     end
 
     if category_id
       category_ids = [category_id]
-
-      unless exact
-        category_ids +=
-          Category.where('parent_category_id = ?', category_id).pluck(:id)
-      end
+      category_ids += Category.subcategory_ids(category_id) if !exact
 
       @category_filter_matched ||= true
       posts.where("topics.category_id IN (?)", category_ids)
@@ -780,11 +759,11 @@ class Search
       # calling protected methods
       send("#{@results.type_filter}_search")
     else
-      unless @search_context
-        user_search if @term.present?
-        category_search if @term.present?
-        tags_search if @term.present?
-        groups_search if @term.present?
+      if @term.present? && !@search_context
+        user_search
+        category_search
+        tags_search
+        groups_search
       end
       topic_search
     end
@@ -854,6 +833,10 @@ class Search
       .order("last_posted_at DESC")
       .limit(limit)
 
+    if !SiteSetting.enable_listing_suspended_users_on_search && !@guardian.user&.admin
+      users = users.where(suspended_at: nil)
+    end
+
     users_custom_data_query = DB.query(<<~SQL, user_ids: users.pluck(:id), term: "%#{@original_term.downcase}%")
       SELECT user_custom_fields.user_id, user_fields.name, user_custom_fields.value FROM user_custom_fields
       INNER JOIN user_fields ON user_fields.id = REPLACE(user_custom_fields.name, 'user_field_', '')::INTEGER AND user_fields.searchable IS TRUE
@@ -880,13 +863,13 @@ class Search
     groups = Group
       .visible_groups(@guardian.user, "name ASC", include_everyone: false)
       .where("name ILIKE :term OR full_name ILIKE :term", term: "%#{@term}%")
+      .limit(limit)
 
     groups.each { |group| @results.add(group) }
   end
 
   def tags_search
     return unless SiteSetting.tagging_enabled
-
     tags = Tag.includes(:tag_search_data)
       .where("tag_search_data.search_data @@ #{ts_query}")
       .references(:tag_search_data)
@@ -900,17 +883,29 @@ class Search
     end
   end
 
+  def exclude_topics_search
+    if @term.present?
+      user_search
+      category_search
+      tags_search
+      groups_search
+    end
+  end
+
   PHRASE_MATCH_REGEXP_PATTERN = '"([^"]+)"'
 
   def posts_query(limit, type_filter: nil, aggregate_search: false)
     posts = Post.where(post_type: Topic.visible_post_types(@guardian.user))
       .joins(:post_search_data, :topic)
-      .joins("LEFT JOIN categories ON categories.id = topics.category_id")
+
+    if type_filter != "private_messages"
+      posts = posts.joins("LEFT JOIN categories ON categories.id = topics.category_id")
+    end
 
     is_topic_search = @search_context.present? && @search_context.is_a?(Topic)
     posts = posts.where("topics.visible") unless is_topic_search
 
-    if type_filter === "private_messages" || (is_topic_search && @search_context.private_message?)
+    if type_filter == "private_messages" || (is_topic_search && @search_context.private_message?)
       posts = posts
         .where(
           "topics.archetype = ? AND post_search_data.private_message",
@@ -920,7 +915,7 @@ class Search
       unless @guardian.is_admin?
         posts = posts.private_posts_for_user(@guardian.user)
       end
-    elsif type_filter === "all_topics"
+    elsif type_filter == "all_topics"
       private_posts = posts
         .where(
           "topics.archetype = ? AND post_search_data.private_message",
@@ -983,7 +978,7 @@ class Search
     posts =
       if @search_context.present?
         if @search_context.is_a?(User)
-          if type_filter === "private_messages"
+          if type_filter == "private_messages"
             if @guardian.is_admin? && !@search_all_pms
               posts.private_posts_for_user(@search_context)
             else
@@ -999,7 +994,7 @@ class Search
             .push(@search_context.id)
 
           posts.where("topics.category_id in (?)", category_ids)
-        elsif @search_context.is_a?(Topic)
+        elsif is_topic_search
           posts.where("topics.id = #{@search_context.id}")
             .order("posts.post_number #{@order == :latest ? "DESC" : ""}")
         elsif @search_context.is_a?(Tag)
@@ -1037,7 +1032,7 @@ class Search
       else
         posts = posts.order("posts.like_count DESC")
       end
-    else
+    elsif !is_topic_search
       rank = <<~SQL
       TS_RANK_CD(
         post_search_data.search_data,
@@ -1046,57 +1041,61 @@ class Search
       )
       SQL
 
-      category_search_priority = <<~SQL
-      (
-        CASE categories.search_priority
-        WHEN #{Searchable::PRIORITIES[:very_high]}
-        THEN 3
-        WHEN #{Searchable::PRIORITIES[:very_low]}
-        THEN 1
-        ELSE 2
-        END
-      )
-      SQL
-
-      category_priority_weights = <<~SQL
-      (
-        CASE categories.search_priority
-        WHEN #{Searchable::PRIORITIES[:low]}
-        THEN #{SiteSetting.category_search_priority_low_weight}
-        WHEN #{Searchable::PRIORITIES[:high]}
-        THEN #{SiteSetting.category_search_priority_high_weight}
-        ELSE
-          CASE WHEN topics.closed
-          THEN 0.9
-          ELSE 1
+      if type_filter != "private_messages"
+        category_search_priority = <<~SQL
+        (
+          CASE categories.search_priority
+          WHEN #{Searchable::PRIORITIES[:very_high]}
+          THEN 3
+          WHEN #{Searchable::PRIORITIES[:very_low]}
+          THEN 1
+          ELSE 2
           END
-        END
-      )
-      SQL
+        )
+        SQL
 
-      data_ranking =
-        if @term.blank?
-          "(#{category_priority_weights})"
-        else
-          "(#{rank} * #{category_priority_weights})"
-        end
+        category_priority_weights = <<~SQL
+        (
+          CASE categories.search_priority
+          WHEN #{Searchable::PRIORITIES[:low]}
+          THEN #{SiteSetting.category_search_priority_low_weight}
+          WHEN #{Searchable::PRIORITIES[:high]}
+          THEN #{SiteSetting.category_search_priority_high_weight}
+          ELSE
+            CASE WHEN topics.closed
+            THEN 0.9
+            ELSE 1
+            END
+          END
+        )
+        SQL
 
-      posts =
-        if aggregate_search
-          posts.order("MAX(#{category_search_priority}) DESC", "MAX(#{data_ranking}) DESC")
-        else
-          posts.order("#{category_search_priority} DESC", "#{data_ranking} DESC")
-        end
+        data_ranking =
+          if @term.blank?
+            "(#{category_priority_weights})"
+          else
+            "(#{rank} * #{category_priority_weights})"
+          end
+
+        posts =
+          if aggregate_search
+            posts.order("MAX(#{category_search_priority}) DESC", "MAX(#{data_ranking}) DESC")
+          else
+            posts.order("#{category_search_priority} DESC", "#{data_ranking} DESC")
+          end
+      end
 
       posts = posts.order("topics.bumped_at DESC")
     end
 
-    posts =
-      if secure_category_ids.present?
-        posts.where("(categories.id IS NULL) OR (NOT categories.read_restricted) OR (categories.id IN (?))", secure_category_ids).references(:categories)
-      else
-        posts.where("(categories.id IS NULL) OR (NOT categories.read_restricted)").references(:categories)
-      end
+    if type_filter != "private_messages"
+      posts =
+        if secure_category_ids.present?
+          posts.where("(categories.id IS NULL) OR (NOT categories.read_restricted) OR (categories.id IN (?))", secure_category_ids).references(:categories)
+        else
+          posts.where("(categories.id IS NULL) OR (NOT categories.read_restricted)").references(:categories)
+        end
+    end
 
     if @order
       advanced_order = Search.advanced_orders&.fetch(@order, nil)
@@ -1299,4 +1298,10 @@ class Search
     end
   end
 
+  def log_query?(readonly_mode)
+    SiteSetting.log_search_queries? &&
+    @opts[:search_type].present? &&
+    !readonly_mode &&
+    @opts[:type_filter] != "exclude_topics"
+  end
 end

@@ -52,7 +52,6 @@ export default EmberObject.extend(ValidState, {
       response.responseJSON.errors.forEach((err) =>
         this.fieldError(err.field, err.description)
       );
-      throw new Error(response);
     });
   },
 });

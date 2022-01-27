@@ -5,7 +5,7 @@ require 'rails_helper'
 describe About do
 
   describe 'stats cache' do
-    include_examples 'stats cachable'
+    include_examples 'stats cacheable'
   end
 
   describe "#category_moderators" do

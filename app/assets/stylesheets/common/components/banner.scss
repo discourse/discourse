@@ -7,6 +7,8 @@
   background: var(--tertiary-low);
   color: var(--primary);
   z-index: z("base") + 1;
+  margin-bottom: 1em;
+  max-height: 250px;
   overflow: auto;
 
   &.overlay {

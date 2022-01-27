@@ -4,7 +4,7 @@ import { Promise } from "rsvp";
 import User from "discourse/models/user";
 import { ajax } from "discourse/lib/ajax";
 import bootbox from "bootbox";
-import getURL from "discourse-common/lib/get-url";
+import getURL, { samePrefix } from "discourse-common/lib/get-url";
 import { isTesting } from "discourse-common/config/environment";
 import { later } from "@ember/runloop";
 import { selectedText } from "discourse/lib/utilities";
@@ -71,7 +71,7 @@ export function openLinkInNewTab(link) {
 }
 
 export default {
-  trackClick(e, siteSettings) {
+  trackClick(e, siteSettings, { returnPromise = false } = {}) {
     // right clicks are not tracked
     if (e.which === 3) {
       return true;
@@ -162,17 +162,17 @@ export default {
         openLinkInNewTab($link[0]);
       } else {
         trackPromise.finally(() => {
-          if (DiscourseURL.isInternal(href)) {
+          if (DiscourseURL.isInternal(href) && samePrefix(href)) {
             DiscourseURL.routeTo(href);
           } else {
-            DiscourseURL.redirectTo(href);
+            DiscourseURL.redirectAbsolute(href);
           }
         });
       }
 
-      return false;
+      return returnPromise ? trackPromise : false;
     }
 
-    return true;
+    return returnPromise ? trackPromise : true;
   },
 };

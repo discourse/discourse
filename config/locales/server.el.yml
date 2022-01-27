@@ -94,7 +94,6 @@ el:
       maximum_staged_user_per_email_reached: "Φτάστηκε ο μέγιστος αριθμός σταδιακών χρηστών που δημιουργούνται ανά email."
       no_subject: "(χωρίς θέμα)"
       no_body: "(χωρίς σώμα)"
-      missing_attachment: "(Λείπει το συνημμένο %{filename})"
       errors:
         empty_email_error: "Συμβαίνει όταν το ακατέργαστο μήνυμα που λάβαμε ήταν κενό."
         no_message_id_error: "Συμβαίνει όταν το email δεν έχει επικεφαλίδα 'Message-Id' ."
@@ -148,7 +147,7 @@ el:
       ip_address_already_screened: "περιλαμβάνεται ήδη σε έναν υπάρχοντα κανόνα"
       restrict_dependent_destroy:
         one: "Η εγγραφή δεν μπορεί να σβηστεί γιατί υπάρχει μια εξαρτημένη %{record} "
-        many: "Η εγγραφή δεν μπορεί να σβηστεί γιατί υπάρχουν εξαρτημένες %{record} "
+        other: "Η εγγραφή δεν μπορεί να σβηστεί γιατί υπάρχουν εξαρτημένες %{record} "
       too_long:
         one: είναι πολύ μεγάλο (μέγιστο %{count} χαρακτήρας)
         other: είναι πολύ μεγάλο (μέγιστο %{count} χαρακτήρες)
@@ -204,9 +203,6 @@ el:
     not_enough_space_on_disk: "Δεν υπάρχει αρκετός χώρος στο δίσκο για να ανεβάσεις αυτό το αντίγραφο ασφαλείας."
     invalid_filename: "Το αντίγραφο ασφαλείας περιέχει μη έγκυρους χαρακτήρες. Οι έγκυροι χαρακτήρες είναι a-z 0-9 .- _."
     file_exists: "Το αρχείο που προσπαθείτε να επιφορτώσετε υπάρχει ήδη."
-    location:
-      local: "Τοπική"
-      s3: "Amazon S3"
   invalid_params: "Παρείχατε μη έγκυρες παραμέτρους στο αίτημα: %{message}"
   not_logged_in: "Χρειάζεται να είσαι συνδεδεμένος για να το κάνεις αυτό."
   not_found: "Η ζητούμενη διεύθυνση URL δεν βρέθηκε."
@@ -220,7 +216,6 @@ el:
   email_template_cant_be_modified: "Δεν είναι δυνατή η τροποποίηση αυτού του προτύπου email"
   invalid_whisper_access: "Είτε τα μηνύματα προσωπικού δεν είναι ενεργοποιημένα είτε δεν έχετε πρόσβαση για να δημιουργήσετε τέτοιες αναρτήσεις"
   not_in_group:
-    title_category: "Πρέπει να είστε σε μια ομάδα για να δείτε αυτήν την κατηγορία."
     request_membership: "Αίτηση συμμετοχής"
     join_group: "Συμμετοχή στην Ομάδα"
   deleted_topic: "Ουπς! Αυτό το θέμα έχει διαγραφεί και δεν είναι πλέον διαθέσιμο."
@@ -390,7 +385,6 @@ el:
               reply_by_email_disabled: "Η απάντηση μέσω email έχει απενεργοποιηθεί."
             featured_link:
               invalid: "δεν είναι έγκυρο. To URL πρέπει να συμπεριλαμβάνει http:// ή https://."
-              invalid_category: "δεν μπορεί να δεχτεί επεξεργασία σε αυτή την κατηγορία."
         user:
           attributes:
             password:
@@ -468,16 +462,8 @@ el:
       topic_exists_no_oldest: "Δεν είναι δυνατή η διαγραφή αυτής της κατηγορίας, διότι ο αριθμός νημάτων είναι %{count}."
     uncategorized_description: "Νήματα που δεν χρειάζονται κατηγορία ή που δεν ταιριάζουν σε καμία άλλη από τις υπάρχουσες κατηγορίες."
   trust_levels:
-    newuser:
-      title: "νέος χρήστης"
-    basic:
-      title: "αρχάριος"
-    member:
-      title: "μέλος"
-    regular:
-      title: "τακτικός"
-    leader:
-      title: "αρχηγός"
+    admin: "Διαχειριστής"
+    staff: "Συνεργάτες"
     change_failed_explanation: "Προσπάθησες να υποβιβάσεις τον %{user_name} σε '%{new_trust_level}'. Ωστόσο το επίπεδο εμπιστοσύνης τους είναι ήδη '%{current_trust_level}'. Ο/Η %{user_name} θα παραμείνει στο '%{current_trust_level}' - εάν επιθυμείς ακόμα να υποβιβάσεις το επίπεδο εμπιστοσύνης του χρήστη, κλείδωσε πρώτα το επίπεδο εμπιστοσύνης "
   post:
     image_placeholder:
@@ -627,19 +613,6 @@ el:
       title: "Σας αρέσει"
       description: "Μου αρέσει η ανάρτηση"
       short_description: "Μου αρέσει η ανάρτηση"
-  user_activity:
-    no_default:
-      self: "Δεν έχετε ακόμη καμία δραστηριότητα."
-      others: "Χωρίς δραστηριότητα."
-    no_bookmarks:
-      self: "Δεν έχετε σελιδοδείκτες. Οι σελιδοδείκτες σας επιτρέπουν να ανατρέξετε γρήγορα σε συγκεκριμένες αναρτήσεις."
-      others: "Κανένας σελιδοδείκτης."
-    no_likes_given:
-      self: "Δεν σου αρέσει καμία ανάρτηση."
-      others: "Καμία αρεστή ανάρτηση."
-    no_replies:
-      self: "Δεν έχεις απαντήσει σε καμία ανάρτηση."
-      others: "Χωρίς απαντήσεις."
   topic_flag_types:
     spam:
       title: "Ανεπιθύμητα"
@@ -910,6 +883,18 @@ el:
     top_uploads:
       labels:
         filename: Όνομα αρχείου
+    top_users_by_likes_received:
+      labels:
+        user: Χρήστης
+        qtt_like: Μου αρέσει που λήφθησαν
+    top_users_by_likes_received_from_inferior_trust_level:
+      labels:
+        user: Χρήστης
+        qtt_like: Μου αρέσει που λήφθησαν
+    top_users_by_likes_received_from_a_variety_of_people:
+      labels:
+        user: Χρήστης
+        qtt_like: Μου αρέσει που λήφθησαν
   dashboard:
     rails_env_warning: "Ο διακομιστής σας τρέχει στη %{env} λειτουργία."
     host_names_warning: "Το αρχείο config/database.yml χρησιμοποιεί ως hostname το localhost . Ενημερώστε το, ώστε να χρησιμοποεί το όνομα του site σας."
@@ -923,6 +908,7 @@ el:
     poll_pop3_timeout: "Το χρονικό όριο σύνδεσης με τον διακομιστή POP3 έληξε. Τα εισερχόμενα email δεν μπορούν να ανακτηθούν. Παρακαλώ ελέγξτε τις <a href='%{base_path}/admin/site_settings/category/email'>POP3 ρυθμίσεις σας</a> και τον πάροχο υπηρεσιών."
     poll_pop3_auth_error: "Υπήρξε σφάλμα ελεχγου ταυτότητας κατά την σύνδεση με τον διακομιστή POP3. Παρακαλώ όπως ελέξετε τις <a href='%{base_path}/admin/site_settings/category/email'> POP3 ρυθμίσεις σας.</a> "
   site_settings:
+    disabled: "απενεργοποιημένα"
     censored_words: "Αυτόματη αντικατάσταση λέξεων θα γίνεται με &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Διάγραψε αυτόματα όποιες κρυμμένες αναρτήσεις μένουν κρυφές για πάνω από 30 ημέρες. "
     allow_user_locale: "Επίτρεψε στους χρήστες να επιλέγουν την γλώσσα που επιθυμούν. "
@@ -972,7 +958,6 @@ el:
     force_https: "Αναγκάζει το site σας να χρησιμοποιεί μόνο HTTPS. ΠΡΟΣΟΧΗ: Μην το ενεργοποιήσετε, μέχρι να επαληθεύσετε ότι το HTTPS είναι πλήρως εγκατεστημένο και λειτουργεί απολύτως παντού! Ελέγξατε το CDN σας, όλες τις κοινωνικές συνδέσεις και τα εξωτερικά σας λογότυπα / εξαρτήσεις για να βεβαιωθείτε ότι είναι όλα συμβατά με HTTPS;"
     summary_score_threshold: "Η ελάχιστη βαθμολογία που απαιτείται από μια ανάρτηση για να συμπεριληφθεί στο «Συνοψίστε αυτό το θέμα»"
     summary_percent_filter: "Όταν ο χρήστης επιλέξει «Συνοψίστε αυτό το θέμα», δείξε το κορυφαίο % των αναρτήσεων"
-    enable_personal_messages: "Επίτρεψε στους χρήστες επιπέδου εμπιστοσύνης 1 (ρυθμιζόμενο μέσω min trust level to send messages) να δημιουργήσουν μηνύματα και να απαντήσουν σε μηνύματα. Σημειώστε ότι οι συνεργάτες μπορούν πάντα να στέλνουν μηνύματα."
     enable_long_polling: "Η αρτηρία μηνυμάτων που χρησιμοποιείτε για ειδοποιήσεις μπορεί να χρησιμοποιήσει μακρυά μέθοδο εξέτασης."
     long_polling_base_url: "Base URL που χρησιμοποιείτε για μακρύ ψήφισμα (όταν ένα CDN εξυπηρετεί δυναμικό περιεχόμενο, βεβαιωθείτε ότι το ορίσατε σε έλξη προέλευσης ) π.χ.: http://origin.site.com"
     long_polling_interval: "Χρονικό διάστημα που ο διακομιστής θα πρέπει να περιμένει πριν απαντήσει στους πελάτες όταν δεν υπάρχουν δεδομένα για την αποστολή (μόνο συνδεδεμένοι χρήστες )"
@@ -991,7 +976,6 @@ el:
     notify_mods_when_user_silenced: "Αν ένας χρήστης σιγηθεί αυτόματα, στείλε ένα μήνυμα σε όλους τους συντονιστές."
     traditional_markdown_linebreaks: "Χρήση παραδοσιακών αλλαγών γραμμών στη Markdown, η οποία απαιτεί δύο κενά διαστήματα για μια αλλαγή γραμμής."
     post_undo_action_window_mins: "Αριθμός των λεπτών όπου οι χρήστες δικαιούνται να αναιρέσουν πρόσφατες ενέργειες πάνω σε ένα θέμα (μου αρέσει, επισήμανση, κτλ) "
-    pending_users_reminder_delay: "Ειδοποίηση των συντονιστών αν υπάρχουν νέοι χρήστες που περιμένουν για αποδοχή του λογαριασμού τους για μεγαλύτερο απο αυτό το χρονικό διάστημα. Όρισέ το στο -1 για να απενεργοποιηθούν οι ειδοποιήσεις."
     maximum_session_age: "Ο χρήστης θα παραμείνει συνδεδεμένος για n ώρες από την τελευταία του επίσκεψη"
     cors_origins: "Επιτρεπόμενες πηγές για αιτήσεις πολλαπλής προέλευσης (cross-origin requests, CORS). Η κάθε προέλευση πρέπει να περιέχει http:// or https://. Η env μεταβλητή DISCOURSE_ENABLE_CORS πρέπει να οριστεί σε αληθινή για να ενεργοποιηθεί το CORS."
     use_admin_ip_allowlist: "Οι διαχειριστές μπορούν να συνδέονται μόνο αν βρίσκονται σε μια διευθυνση IP καθορισμένη στη λίστα Screened IPs (Admin > Logs > Screened Ips)."
@@ -1018,7 +1002,6 @@ el:
     enable_whispers: "Επιτρέπεται στο προσωπικό η ιδιωτική επικοινωνία μεταξύ νημάτων"
     blocked_email_domains: "Μία λίστα με διευθύνσεις email τις οποίες οι χρήστες δεν μπορούν να χρησιμοποιήσουν για να δημιουργήσουν λογαριασμό. Πχ: mailinator.com|trashmail.net"
     allowed_email_domains: "Μία λίστα με διευθύνσεις email τις οποίες οι χρήστες ΘΑ ΠΡΕΠΕΙ να χρησιμοποιήσουν για να δημιουργήσουν λογαριασμό. ΠΡΟΣΟΧΗ: οι χρήστες με διευθύνσεις email οι οποίες δεν βρίσκονται σε αυτή τη λίστα δεν θα μπορούν να δημιουργήσουν λογαριασμό."
-    hide_email_address_taken: "Μην ενημερώνεις του χρήστες ότι υπάρχει λογαριασμός χρήστη με αυτήν την διεύθυνση email κατά την εγγραφή και στην φόρμα επαναφοράς κωδικού."
     log_out_strict: "Όταν αποσυνδεθείτε, ΟΛΕΣ οι δραστηριότητες σας σε ΟΛΕΣ τις συσκευές θα αποσυνδεθούν"
     new_version_emails: "Αποστολή email στην contact_email διεύθυνση όταν μια νέα έκδοση του Discourse είναι διαθέσιμη."
     invite_expiry_days: "Για πόσο καιρό οι κύριες προσκλήσεις ισχύουν, σε μέρες "
@@ -1035,7 +1018,6 @@ el:
     enable_signup_cta: "Δείξε μια ανακοίνωση στους ανώνυμους χρήστες που επιστρέφουν, η οποία να τους παροτρύνει να δημιουργήσουν λογαριασμό."
     google_oauth2_client_id: "Client ID της Google εφαρμογής σας."
     google_oauth2_client_secret: "Μυστικό πελάτη της Google εφαρμογής σας. "
-    allow_restore: "Επίτρεψε επαναφορά, η οποία μπορεί να αντικαταστήσει ΟΛΑ τα δεδομένα του ιστότοπου! Αφήστε απενεργοποιημένο, εκτός αν σχεδιάζετε να επαναφέρετε αντίγραφο ασφαλείας"
     maximum_backups: "Το μέγιστο ποσό αντιγράφων ασφαλείας το οποία θα διατηρηθούν στο δίσκο. Παλαιότερα αντίγραφα ασφαλείας διαγράφονται αυτόματα"
     automatic_backups_enabled: "Πάρε αυτόματα αντίγραφα ασφαλείας όπως ορίζεται στη συχνότητα αντιγράφων ασφαλείας"
     s3_backup_bucket: "Απομακρυσμένος αποθηκευτικός χώρος για τα αντίγραφα ασφαλείας. ΠΡΟΕΙΔΟΠΟΙΗΣΗ: Βεβαιωθείτε οτι ο χώρος είναι προσωπικός."
@@ -1154,7 +1136,6 @@ el:
     topic_view_duration_hours: "Μετρήστε μια νέα προβολή νήματος μία φορά ανά IP/User κάθε N ώρες"
     user_profile_view_duration_hours: "Μετρήστε μια νέα προβολή προφίλ χρήστη μία φορά ανά IP/User κάθε N ώρες"
     levenshtein_distance_spammer_emails: "Στην αντιστοίχιση διευθύνσεων email των σπάμερ, η διαφορά στον αριθμό των χαρακτήρων η οποία θα επιτρέπει μια ασαφή αντιστοίχιση."
-    max_new_accounts_per_registration_ip: "Αν ήδη υπάρχουν (n) λογαριασμοί επιπέδου εμπιστοσύνης 0 από αυτή την IP διεύθυνση (και κανείς από αυτούς δεν είναι συνεργάτης ή τουλάχιστον στο ΕΕ2), σταμάτα να αποδέχεσαι νέες εγγραφές από αυτή την IP διεύθυνση. "
     min_ban_entries_for_roll_up: "Το πάτημα του πλήκτρου Κύλιση προς τα πάνω, θα δημιουργήσει μία απαγόρευση εισαγωγής νέου υποδικτύου αν υπάρχουν τουλάχιστον (Ν) εισαγωγές. "
     max_age_unmatched_emails: "Διαγράψτε τις αταίριαστες ελεγχόμενες εγγραφές email μετά από (N) μέρες."
     max_age_unmatched_ips: "Διαγράψτε τις αταίριαστες ελεγχόμενες εγγραφές IP μετά από (N) μέρες."
@@ -1164,7 +1145,6 @@ el:
     min_first_post_typing_time: "Ελάχιστος χρόνος σε χιλιοστά του δευτερολέπτου που ένας χρήστης θα πρέπει να πληκτρολογεί κατά τη διάρκεια της πρώτης ανάρτησης, εάν το όριο δεν επιτευχθεί τότε η ανάρτηση αυτόματα εισέρχεται στην ουρά αυτών που απαιτούν έγκριση. Θέτοντας τον ίσο με 0 απενεργοποιείται το όριο (δεν συνιστάται) "
     auto_silence_fast_typers_on_first_post: "Αυτόματη σίγηση των χρηστών που δεν πληρούν το κριτήριο min_first_post_typing_time"
     auto_silence_fast_typers_max_trust_level: "Μέγιστο επίπεδο εμπιστοσύνης για την αυτόματη σίγηση σε περίπτωση γρήγορης πληκτρολόγησης"
-    auto_silence_first_post_regex: "Case insensitive regex το οποίο αν ισχύσει θα προκαλέσει την σιγή και την αποστολή για έλεγχο της πρώτης ανάρτησης ενός χρήστη. Παράδειγμα: raging|a[bc]a , θα προκαλέσει όλες τις αναρτήσεις που περιέχουν raging ή aba ή aca να σιγηθούν. Ισχύει μόνο για την πρώτη ανάρτηση."
     reply_by_email_enabled: "Ενεργοποίηση απάντησης στα νήματα μέσω email."
     reply_by_email_address: "Πρότυπο για την απάντηση μέσω email της διεύθυνσης email εισερχομένων μηνυμάτων, για παράδειγμα: %%{reply_key}@reply.example.com or replies+%%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "Λίστα εναλλακτικών προτύπων για την απάντηση μέσω email της διεύθυνσης email εισερχομένων μηνυμάτων, πχ: %%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
@@ -1345,7 +1325,6 @@ el:
     no_email: "Δεν καταχωρήθηκε διεύθυνση email. Παρακαλούμε επικοινωνήστε με την διαχείριση."
     email_error: "Ένας λογαριασμός δεν μπόρεσε να καταχωρηθεί με την διεύθυνση email <b>%{email}</b>. Παρακαλούμε επικοινωνήστε με την διαχείριση."
   original_poster: "Αρχικός Αναρτητής"
-  most_posts: "Περισσότερες Αναρτήσεις"
   most_recent_poster: "Πιο Πρόσφατος Αναρτητής"
   frequent_poster: "Συχνός Αναρτητής"
   redirected_to_top_reasons:
@@ -1999,6 +1978,28 @@ el:
         %{context}
 
         %{respond_instructions}
+    user_group_mentioned_pm:
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      text_body_template: |2
+
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm_group:
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      text_body_template: |2
+
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_posted:
       title: "Ανάρτηση Χρήστη"
       subject_template: "[%{email_prefix}] %{topic_title}"
@@ -2044,7 +2045,13 @@ el:
     account_suspended:
       title: "Χρήστης σε Αποβολη"
       subject_template: "[%{email_prefix}] Ο λογαριασμός σου είναι σε κατάσταση αποβολής"
+    account_suspended_forever:
+      title: "Χρήστης σε Αποβολη"
+      subject_template: "[%{email_prefix}] Ο λογαριασμός σου είναι σε κατάσταση αποβολής"
     account_silenced:
+      title: "Λογαριασμός σε Σίγαση"
+      subject_template: "[%{email_prefix}] Ο λογαριασμός σας είναι σε σίγαση"
+    account_silenced_forever:
       title: "Λογαριασμός σε Σίγαση"
       subject_template: "[%{email_prefix}] Ο λογαριασμός σας είναι σε σίγαση"
     account_exists:
@@ -2230,117 +2237,6 @@ el:
     Επεξεργαστείτε την πρώτη ανάρτηση σε αυτό το νήμα για να αλλάξετε τα περιεχόμενα της σελίδας %{page_name}.
   guidelines_topic:
     title: "Συχνές Ερωτήσεις/Οδηγίες"
-    body: |2
-
-      <a name="civilized"></a>
-
-      ## [Αυτός είναι ένας πολιτισμένος χώρος για δημόσιες συζητήσεις](#civilized)
-
-      Παρακαλούμε σεβαστείτε τον χώρο στον οποίο βρίσκεστε και συμπεριφερθείτε πολιτισμένα, σαν να βρίσκεστε σε κάποιο δημόσιο πάρκο ή άλλο δημόσιο χώρο στον οποίο μπορείτε να επικοινωνήσετε πολιτισμένα με τους συνανθρώπους σας.
-
-      Ο οδηγός αυτός έχει σκοπό να σας ενθαρρύνει σε πολιτισμένες συζητήσεις ώστε να παραμένει το επίπεδο της κοινότητας υψηλό.
-
-      <a name="improve"></a>
-
-      ## [Βελτιώστε την Συζήτηση](#improve)
-
-      Βοηθήστε μας να κάνουμε τον χώρο αυτό ένα υπέροχο μέρος για να περνάμε καλά και να ανταλλάσουμε απόψεις. συμβάλλωντας με οποιοδήποτε τρόπο, έστω και μικρό, στην βελτίωση των συζητήσεων. Συνεισφέρετε όσο μπορείτε πιο θετικά σε αυτές και μην μειώνετε τις απόψεις των άλλων.
-
-      Τα θέματα που συζητούνται σε αυτήν την κοινότητα, έχουν αξία σε εμας καθώς και στα μέλη της κοινότητας που συμμετέχουν και θα θέλαμε να συμπεριφερθείτε ανάλογα όταν συμμετέχετε και εσείς σε αυτά. Να σέβεστε λοιπόν τα θέματα στα οποία συμμετέχετε καθώς και τους ανθρώπους που συμμετέχουν σε αυτά, ακόμα και αν διαφωνείτε.
-
-      Σεβαστείτε την διαφορετικότητα των συνανθρώπων σας και αν δεν συμφωνείτε με τα θέματα τα οποία συζητούνται, προτιμήστε να ξεκινήστε ένα δικό σας.
-
-      One way to improve the discussion is by discovering ones that are already happening. Spend time browsing the topics here before replying or starting your own, and you’ll have a better chance of meeting others who share your interests.
-
-      <a name="agreeable"></a>
-
-      ## [Συμφωνήστε, ακόμα και όταν διαφωνείτε](#agreeable)
-
-      Πιθανώς να νοιώθετε την αναγκη να διαφωνήσετε και αυτό είναι λογικό. Θυμηθείτε όμως, να διαφωνείτε με τις ιδέες και όχι με τους ανθρώπους που τις εκφράζουν. Αποφύγετε:
-
-      * Προσωπικούς χαρακτηρισμούς
-
-      * Προσωπικές επιθέσεις
-
-      * Την απάντηση στον "τόνο" του μηνύματος αντί του περιεχομένου
-
-      * Την απάντηση σε απόψεις, λόγω του μέλους που τις εκφράζει
-
-      Αντ' αυτού, επικοινωνήστε θετικά με απόψεις που βοηθούν την βελτίωση μια συζήτησης.
-
-      <a name="participate"></a>
-
-      ## [Your Participation Counts](#participate)
-
-      The conversations we have here set the tone for every new arrival. Help us influence the future of this community by choosing to engage in discussions that make this forum an interesting place to be &mdash; and avoiding those that do not.
-
-      Discourse provides tools that enable the community to collectively identify the best (and worst) contributions: bookmarks, likes, flags, replies, edits, and so forth. Use these tools to improve your own experience, and everyone else’s, too.
-
-      Let’s leave our community better than we found it.
-
-      <a name="flag-problems"></a>
-
-      ## [If You See a Problem, Flag It](#flag-problems)
-
-      Moderators have special authority; they are responsible for this forum. But so are you. With your help, moderators can be community facilitators, not just janitors or police.
-
-      When you see bad behavior, don’t reply. It encourages the bad behavior by acknowledging it, consumes your energy, and wastes everyone’s time. _Just flag it_. If enough flags accrue, action will be taken, either automatically or by moderator intervention.
-
-      In order to maintain our community, moderators reserve the right to remove any content and any user account for any reason at any time. Moderators do not preview new posts; the moderators and site operators take no responsibility for any content posted by the community.
-
-      <a name="be-civil"></a>
-
-      ## [Always Be Civil](#be-civil)
-
-      Nothing sabotages a healthy conversation like rudeness:
-
-      * Be civil. Don’t post anything that a reasonable person would consider offensive, abusive, or hate speech.
-
-      * Keep it clean. Don’t post anything obscene or sexually explicit.
-
-      * Respect each other. Don’t harass or grief anyone, impersonate people, or expose their private information.
-
-      * Respect our forum. Don’t post spam or otherwise vandalize the forum.
-
-      These are not concrete terms with precise definitions &mdash; avoid even the _appearance_ of any of these things. If you’re unsure, ask yourself how you would feel if your post was featured on the front page of the New York Times.
-
-      This is a public forum, and search engines index these discussions. Keep the language, links, and images safe for family and friends.
-
-      <a name="keep-tidy"></a>
-
-      ## [Keep It Tidy](#keep-tidy)
-
-      Make the effort to put things in the right place, so that we can spend more time discussing and less cleaning up. So:
-
-      * Don’t start a topic in the wrong category.
-
-      * Don’t cross-post the same thing in multiple topics.
-
-      * Don’t post no-content replies.
-
-      * Don’t divert a topic by changing it midstream.
-
-      * Don’t sign your posts &mdash; every post has your profile information attached to it.
-
-      Rather than posting “+1” or “Agreed”, use the Like button. Rather than taking an existing topic in a radically different direction, use Reply as a Linked Topic.
-
-      <a name="stealing"></a>
-
-      ## [Post Only Your Own Stuff](#stealing)
-
-      You may not post anything digital that belongs to someone else without permission. You may not post descriptions of, links to, or methods for stealing someone’s intellectual property (software, video, audio, images), or for breaking any other law.
-
-      <a name="power"></a>
-
-      ## [Powered by You](#power)
-
-      This site is operated by your [friendly local staff](%{base_path}/about) and *you*, the community. If you have any further questions about how things should work here, open a new topic in the [site feedback category](%{base_path}/c/site-feedback) and let's discuss! If there's a critical or urgent issue that can't be handled by a meta topic or flag, contact us via the [staff page](%{base_path}/about).
-
-      <a name="tos"></a>
-
-      ## [Terms of Service](#tos)
-
-      Yes, legalese is boring, but we must protect ourselves &ndash; and by extension, you and your data &ndash; against unfriendly folks. We have a [Terms of Service](%{base_path}/tos) describing your (and our) behavior and rights related to content, privacy, and laws. To use this service, you must agree to abide by our [TOS](%{base_path}/tos).
   tos_topic:
     title: "Όροι Χρήσης"
   privacy_topic:
@@ -2655,7 +2551,6 @@ el:
             label: "Το όνομα της κοινότητάς σου"
             placeholder: "Το μέρος που συχνάζει η Jane"
           site_description:
-            label: "Περίγραψε την κοινότητά σου σε μια σύντομη πρόταση"
             placeholder: "Ένα μέρος για την Jane και τις φίλες της να συζητήσουν ωραία θέματα"
       introduction:
         title: "Εισαγωγή"
@@ -2689,26 +2584,10 @@ el:
             description: "Όλα τα αυτοματοποιημένα συστημικά μηνύματα, όπως οι προειδοποιήσεις σημάνσεων και η ειδοποίηση ολοκλήρωσης των αντιγράφων ασφαλείας, θα στέλνονται από αυτόν τον χρήστη."
       corporate:
         title: "Οργάνωση"
-      colors:
-        title: "Χρώματα"
-      fonts:
+      styling:
         fields:
-          font_preview:
+          styling_preview:
             label: "Προεπισκόπηση"
-      logos:
-        title: "Λογότυπα"
-        fields:
-          logo:
-            label: "Κυρίως Λογότυπο"
-      icons:
-        title: "Εικονίδια"
-        fields:
-          large_icon:
-            label: "Μεγάλο εικονίδιο"
-      homepage:
-        description: "Σου προτείνουμε να εμφανίζονται τα τελευταία νήματα στην αρχική σου σελίδα, αλλά μπορείς επίσης να επιλέξεις να εμφανίζονται κατηγορίες (ομάδες ή νήματα) στην αρχική σου σελίδα, εάν το προτιμάς."
-        title: "Αρχική Σελίδα"
-        fields:
           homepage_style:
             choices:
               latest:
@@ -2721,6 +2600,16 @@ el:
                 label: "Κατηγορίες και Τελευταία Νήματα"
               categories_and_top_topics:
                 label: "Κατηγορίες και κορυφαία θέματα"
+      logos:
+        title: "Λογότυπα"
+        fields:
+          logo:
+            label: "Κυρίως Λογότυπο"
+      icons:
+        title: "Εικονίδια"
+        fields:
+          large_icon:
+            label: "Μεγάλο εικονίδιο"
       invites:
         title: "Πρόσκληση Συνεργάτη"
         description: "Έχεις σχεδόν τελειώσει! Ας προσκαλέσουμε μερικούς χρήστες να <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>συμμετάσχουν στις συζητήσεις</a> με ενδιαφέροντα νήματα και αναρτήσεις ώστε να ξεκινήσει να λειτουργεί η κοινότητα. "
@@ -2763,8 +2652,6 @@ el:
         description: "Επαναφορά της ανάρτησης ώστε όλοι οι χρήστες να μπορούν να το δουν."
       agree_and_hide:
         description: "Κρύψε αυτή την ανάρτηση και αυτόματα στείλε στον χρήστη ένα μήνυμα που θα τους προτρέπει να το επεξεργαστούν."
-      delete_spammer:
-        title: "Διαγραφή ανεπιθύμητου χρήστη"
       delete_single:
         title: "Σβήσιμο"
       disagree_and_restore:
@@ -2780,8 +2667,7 @@ el:
           title: "Διαγραφή Χρήστη"
       reject:
         title: "Απόρριψη"
-      delete_user:
-        title: "Διαγραφή Χρήστη"
+  fallback_username: "χρήστης"
   activemodel:
     errors:
       <<: *errors

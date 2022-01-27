@@ -1,8 +1,9 @@
 # frozen_string_literal: true
+# rubocop:disable Discourse/OnlyTopLevelMultisiteSpecs
 
 shared_context "backups" do
   before { create_backups }
-  after(:all) { remove_backups }
+  after { remove_backups }
 
   # default backup files
   let(:backup1) { BackupFile.new(filename: "b.tar.gz", size: 17, last_modified: Time.parse("2018-09-13T15:10:00Z")) }
@@ -173,7 +174,7 @@ shared_examples "backup store" do
           destination_path = File.join(path, File.basename(filename))
           store.download_file(filename, destination_path)
 
-          expect(File.exists?(destination_path)).to eq(true)
+          expect(File.exist?(destination_path)).to eq(true)
           expect(File.size(destination_path)).to eq(backup1.size)
         end
       end
@@ -266,7 +267,7 @@ shared_examples "remote backup store" do
         expect(url).to match(upload_url_regex("default", filename, multisite: false))
       end
 
-      it "raises an exeption when a file with same filename exists" do
+      it "raises an exception when a file with same filename exists" do
         expect { store.generate_upload_url(backup1.filename) }
           .to raise_exception(BackupRestore::BackupStore::BackupFileExists)
       end

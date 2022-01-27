@@ -5,3 +5,6 @@
 # https://translate.discourse.org/
 
 bg:
+  site_settings:
+    styleguide_enabled: 'Активирайте пътя `/styleguide`, за да подпомогнете стилизирането на Discourse'
+    styleguide_admin_only: "Ограничава видимостта на ръководството за стил до администратори"

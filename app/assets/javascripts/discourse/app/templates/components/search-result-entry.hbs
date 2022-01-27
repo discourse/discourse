@@ -1,66 +1,64 @@
-<div class="fps-result">
-  <div class="author">
-    <a href={{post.userPath}} data-user-card={{post.username}}>
-      {{avatar post imageSize="large"}}
-    </a>
-  </div>
+<div class="author">
+  <a href={{post.userPath}} data-user-card={{post.username}}>
+    {{avatar post imageSize="large"}}
+  </a>
+</div>
 
-  <div class="fps-topic">
-    <div class="topic">
-      {{#if bulkSelectEnabled}}
-        {{track-selected selectedList=selected selectedId=post.topic class="bulk-select"}}
-      {{/if}}
+<div class="fps-topic">
+  <div class="topic">
+    {{#if bulkSelectEnabled}}
+      {{track-selected selectedList=selected selectedId=post.topic class="bulk-select"}}
+    {{/if}}
 
-      <a href={{post.url}} {{action "logClick" post.topic_id}} class="search-link">
-        {{raw "topic-status" topic=post.topic showPrivateMessageIcon=true}}
-        <span class="topic-title">
-          {{#if post.useTopicTitleHeadline}}
-            {{html-safe post.topicTitleHeadline}}
-          {{else}}
-            {{#highlight-search highlight=q}}
-              {{html-safe post.topic.fancyTitle}}
-            {{/highlight-search}}
-          {{/if}}
-        </span>
-      </a>
-
-      <div class="search-category">
-        {{#if post.topic.category.parentCategory}}
-          {{category-link post.topic.category.parentCategory}}
-        {{/if}}
-        {{category-link post.topic.category hideParent=true}}
-        {{#if post.topic}}
-          {{discourse-tags post.topic}}
-        {{/if}}
-        {{plugin-outlet name="full-page-search-category" args=(hash post=post)}}
-      </div>
-    </div>
-
-    <div class="blurb container">
-      <span class="date">
-        {{format-date post.created_at format="tiny"}}
-        {{#if post.blurb}}
-          <span class="separator">-</span>
-        {{/if}}
-      </span>
-
-      {{#if post.blurb}}
-        {{#if siteSettings.use_pg_headlines_for_excerpt}}
-          {{html-safe post.blurb}}
+    <a href={{post.url}} {{action "logClick" post.topic_id}} class="search-link" role="heading" aria-level="2">
+      {{raw "topic-status" topic=post.topic showPrivateMessageIcon=true}}
+      <span class="topic-title">
+        {{#if post.useTopicTitleHeadline}}
+          {{html-safe post.topicTitleHeadline}}
         {{else}}
           {{#highlight-search highlight=highlightQuery}}
-            {{html-safe post.blurb}}
+            {{html-safe post.topic.fancyTitle}}
           {{/highlight-search}}
         {{/if}}
-      {{/if}}
-    </div>
+      </span>
+    </a>
 
-    {{#if showLikeCount}}
-      {{#if post.like_count}}
-        <span class="like-count">
-          <span class="value">{{post.like_count}}</span> {{d-icon "heart"}}
-        </span>
+    <div class="search-category">
+      {{#if post.topic.category.parentCategory}}
+        {{category-link post.topic.category.parentCategory}}
+      {{/if}}
+      {{category-link post.topic.category hideParent=true}}
+      {{#if post.topic}}
+        {{discourse-tags post.topic}}
+      {{/if}}
+      {{plugin-outlet name="full-page-search-category" tagName="span" connectorTagName="div" args=(hash post=post)}}
+    </div>
+  </div>
+
+  <div class="blurb container">
+    <span class="date">
+      {{format-date post.created_at format="tiny"}}
+      {{#if post.blurb}}
+        <span class="separator">-</span>
+      {{/if}}
+    </span>
+
+    {{#if post.blurb}}
+      {{#if siteSettings.use_pg_headlines_for_excerpt}}
+        {{html-safe post.blurb}}
+      {{else}}
+        {{#highlight-search highlight=highlightQuery}}
+          {{html-safe post.blurb}}
+        {{/highlight-search}}
       {{/if}}
     {{/if}}
   </div>
+
+  {{#if showLikeCount}}
+    {{#if post.like_count}}
+      <span class="like-count">
+        <span class="value">{{post.like_count}}</span> {{d-icon "heart"}}
+      </span>
+    {{/if}}
+  {{/if}}
 </div>

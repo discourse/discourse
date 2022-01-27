@@ -48,10 +48,18 @@ th:
   disable_remote_images_download_reason: "ไม่สามารถดาวน์โหลดรูปได้เนื่องจากพื้นที่ไม่เพียงพอ"
   anonymous: "ไม่ระบุชื่อ"
   remove_posts_deleted_by_author: "ถูกลบโดยผู้โพส"
+  on_another_topic: "ในหัวข้ออื่น"
   inline_oneboxer:
     topic_page_title_post_number_by_user: "#%{post_number} โดย %{username}"
+  themes:
+    import_error:
+      unpack_failed: "แตกไฟล์ไม่สำเร็จ"
+      file_too_big: "ไฟล์ที่ไม่ถูกบีบอัดมีขนาดใหญ่เกินไป"
+    settings_errors:
+      invalid_yaml: "YAML ที่ให้มาไม่ถูกต้อง"
   emails:
     incoming:
+      default_subject: "หัวข้อนี้ต้องมีชื่อเรื่อง"
       errors:
         inactive_user_error: "เกิดขึ้นเมื่อผู้ส่งยังไม่มีการใช้งาน"
   errors: &errors
@@ -110,10 +118,8 @@ th:
   category:
     topic_prefix: "เกี่ยวกับหมวด %{category}"
   trust_levels:
-    member:
-      title: "สมาชิก"
-    regular:
-      title: "ทั่วไป"
+    admin: "ผู้ดูแลระบบ"
+    staff: "ทีมงาน"
   rate_limiter:
     hours:
       other: "%{count} ชั่วโมง"
@@ -272,7 +278,20 @@ th:
     top_uploads:
       labels:
         filename: ชื่อไฟล์
+    top_users_by_likes_received:
+      labels:
+        user: ผู้ใช้
+        qtt_like: ได้รับการชอบ
+    top_users_by_likes_received_from_inferior_trust_level:
+      labels:
+        user: ผู้ใช้
+        qtt_like: ได้รับการชอบ
+    top_users_by_likes_received_from_a_variety_of_people:
+      labels:
+        user: ผู้ใช้
+        qtt_like: ได้รับการชอบ
   site_settings:
+    disabled: "ปิดใช้งานแล้ว"
     dark_mode_none: "ไม่มี"
   search:
     within_post: "#%{post_number} ด้วย %{username}"
@@ -356,6 +375,24 @@ th:
 
         %{respond_instructions}
     user_group_mentioned:
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm:
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm_group:
       text_body_template: |
         %{header_instructions}
 
@@ -458,14 +495,10 @@ th:
             placeholder: "name@example.com"
       corporate:
         title: "องค์กร"
-      colors:
-        title: "สี"
-      fonts:
+      styling:
         fields:
-          font_preview:
+          styling_preview:
             label: "แสดงตัวอย่าง"
-      homepage:
-        fields:
           homepage_style:
             choices:
               categories_only:
@@ -500,8 +533,6 @@ th:
       medium: "ปานกลาง"
       high: "สูง"
     actions:
-      delete_spammer:
-        title: "ลบสแปมเมอร์"
       delete_single:
         title: "ลบ"
       disagree:
@@ -515,8 +546,7 @@ th:
           title: "ลบผู้ใช้"
       reject:
         title: "ละทิ้ง"
-      delete_user:
-        title: "ลบผู้ใช้"
+  fallback_username: "ผู้ใช้"
   activemodel:
     errors:
       <<: *errors

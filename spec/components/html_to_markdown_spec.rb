@@ -38,9 +38,9 @@ describe HtmlToMarkdown do
     HTML
 
     markdown = <<~MD
-       Let me see if it happens by answering your message through Thunderbird.
+      Let me see if it happens by answering your message through Thunderbird.
 
-       Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1
+      Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1 Long sentence 1
     MD
 
     expect(html_to_markdown(html)).to eq(markdown.strip)
@@ -70,13 +70,15 @@ describe HtmlToMarkdown do
     html = <<~HTML
       <aside class="quote no-group">
       <blockquote>
-      <p>hello.</p>
+      <p>Hello,<br>is it me you're looking for?</p>
       </blockquote>
+      <br>
       </aside>
     HTML
 
     markdown = <<~MD
-      > hello.
+      > Hello,
+      > is it me you're looking for?
     MD
 
     expect(html_to_markdown(html)).to eq(markdown.strip)
@@ -149,7 +151,7 @@ describe HtmlToMarkdown do
     expect(html_to_markdown(%Q{<img src="foo.bar">})).to eq("")
   end
 
-  it "keeps <img> with src='cid:' whith 'keep_cid_imgs'" do
+  it "keeps <img> with src='cid:' with 'keep_cid_imgs'" do
     expect(html_to_markdown(HTML_WITH_CID_IMG, keep_cid_imgs: true)).to eq(HTML_WITH_CID_IMG)
   end
 
@@ -391,7 +393,7 @@ describe HtmlToMarkdown do
 
   end
 
-  it "supoorts <table>" do
+  it "supports <table>" do
     html = <<~HTML
       <table>
         <thead>

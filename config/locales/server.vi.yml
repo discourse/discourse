@@ -69,6 +69,7 @@ vi:
       file_too_big: "Tệp chưa được nén quá lớn."
       unknown_file_type: "Tệp bạn tải lên dường như không phải là một Discourse theme hợp lệ."
     settings_errors:
+      invalid_yaml: "YAML được cung cấp không hợp lệ."
       name_too_long: "Có một cài đặt có tên quá dài. Chiều dài tối đa là 255"
       default_value_missing: "Cài đặt `%{name}'không có giá trị mặc định"
       number_value_not_valid_min_max: "Nó phải nằm trong khoảng từ %{min} đến %{max}."
@@ -88,7 +89,6 @@ vi:
       maximum_staged_user_per_email_reached: "Đạt số lượng thành viên theo giai đoạn tối đa được tạo trên mỗi email."
       no_subject: "(không chủ đề)"
       no_body: "(không ai)"
-      missing_attachment: "(Thiếu tệp đính kèm %{filename})"
       errors:
         empty_email_error: "Xảy ra khi hệ thống nhận được một thư rỗng."
         no_message_id_error: "Xảy ra khi thư không có phần 'Message-Id'."
@@ -129,8 +129,7 @@ vi:
       odd: phải là số lẻ
       record_invalid: ! "Xác nhận thất bại: %{errors}"
       restrict_dependent_destroy:
-        one: "Không thể xóa bản ghi bởi vì một bản ghi %{record} phụ thuộc đang tồn tại"
-        many: "Không thể xóa bản ghi bởi vì %{record} phụ thuộc tồn tại"
+        other: "Không thể xóa bản ghi bởi vì %{record} phụ thuộc tồn tại"
       too_long:
         other: quá dài (tối đa %{count} ký tự)
       too_short:
@@ -168,6 +167,7 @@ vi:
   read_only_mode_enabled: "Trang web đang ở chế độ chỉ đọc. Tất cả các tương tác đã bị tắt."
   not_in_group:
     join_group: "Tham gia nhóm"
+  deleted_topic: "Ôi! Chủ đề này đã bị xóa và không còn khả dụng nữa."
   reading_time: "Thời gian đọc"
   likes: "Lượt Thích"
   too_many_replies:
@@ -202,6 +202,8 @@ vi:
   user_is_suspended: "Người dùng đang bị treo không được phép đăng bài."
   topic_not_found: "Có gì đó đã sai. Có lẽ chủ đề này đã bị đóng hoặc bị xóa trong khi bạn đang xem?"
   not_accepting_pms: "Xin lỗi, %{username} hiện không chấp nhận tin nhắn."
+  removed_direct_reply_full_quotes: "Đã tự động xóa trích dẫn của toàn bộ bài viết trước đó."
+  watched_words_auto_tag: "Chủ đề được gắn thẻ tự động"
   just_posted_that: "rất giống với những gì bạn đã viết gần đây"
   invalid_characters: "chứa các kí tự không hợp lệ"
   next_page: "trang sau →"
@@ -225,6 +227,7 @@ vi:
     user_topics: "Chủ đề mới của @%{username}"
     tag: "Những chủ đề được gắn thẻ"
   too_late_to_edit: "Bài đăng đã được tạo từ rất lâu. Nó không thể được chỉnh sửa hoặc xóa nữa."
+  edit_conflict: "Bài đăng đó đã được chỉnh sửa bởi một người dùng khác và các thay đổi của bạn không thể lưu được nữa."
   revert_version_same: "Phiên bản hiện tại giống với phiên bản mà bạn muốn hoàn nguyên."
   excerpt_image: "hình ảnh"
   bookmarks:
@@ -260,6 +263,26 @@ vi:
   education:
     until_posts:
       other: "%{count} bài đăng"
+    "new-topic": |
+      Chào mừng bạn đến với %{site_name} &mdash; **cảm ơn vì đã bắt đầu một cuộc trò chuyện mới! **
+
+      - Tiêu đề có nghe thú vị nếu bạn đọc to không? Đó có phải là một bản tóm tắt hay không?
+
+      - Ai sẽ quan tâm đến điều này? Tại sao nó lại quan trọng? Bạn muốn loại phản hồi nào?
+
+      - Bao gồm các từ thường được sử dụng trong chủ đề của bạn để những người khác có thể *tìm thấy* nó. Để nhóm chủ đề của bạn với các chủ đề liên quan, hãy chọn một dang mục (hoặc thẻ).
+
+      Để biết thêm, [xem hướng dẫn cộng đồng của chúng tôi](%{base_path}/guidelines). Bảng điều khiển này sẽ chỉ xuất hiện cho %{education_posts_text} đầu tiên của bạn.
+    "new-reply": |
+      Chào mừng bạn đến với %{site_name} &mdash; **cảm ơn bạn đã đóng góp!**
+
+      - Hãy tử tế với các thành viên trong cộng đồng của bạn.
+
+      - Câu trả lời của bạn có cải thiện cuộc trò chuyện không?
+
+      - Phê bình mang tính xây dựng được hoan nghênh, nhưng chỉ trích *ý tưởng*, không phải con người.
+
+      Để biết thêm, [xem nguyên tắc cộng đồng của chúng tôi](%{base_path}/guidelines). Bảng điều khiển này sẽ chỉ xuất hiện cho %{education_posts_text} đầu tiên của bạn.
   activerecord:
     attributes:
       category:
@@ -284,7 +307,6 @@ vi:
               unable_to_update: "Đã xảy ra lỗi khi cập nhật chủ đề đó."
             featured_link:
               invalid: "là không hợp lệ. URL nên bao gồm http://hoặc https://."
-              invalid_category: "không thể chỉnh sửa trong thể loại này."
         user:
           attributes:
             password:
@@ -399,16 +421,8 @@ vi:
       topic_exists_no_oldest: "Không thể xoá chuyên mục này vì nó có %{count} chủ để."
     uncategorized_description: "Chủ đề không cần chuyên mục, hoặc không phù hợp với bất kỳ chuyên mục nào hiện có."
   trust_levels:
-    newuser:
-      title: "thành viên mới"
-    basic:
-      title: "thành viên cơ bản"
-    member:
-      title: "thành viên"
-    regular:
-      title: "thường xuyên"
-    leader:
-      title: "người khởi xướng"
+    admin: "Quản trị"
+    staff: "Nhân viên"
     change_failed_explanation: "Bạn đã cố gắng để giảm hạng %{user_name} xuống '%{new_trust_level}'. Tuy nhiên cấp độ tin cậy hiện tại của họ đã là '%{current_trust_level}'. %{user_name} sẽ được giữ lại ở cấp độ '%{current_trust_level}' - nếu bạn muốn giảm hạng thành viên, trước tiên hãy khóa cấp độ tin cậy"
   post:
     image_placeholder:
@@ -417,6 +431,7 @@ vi:
     slow_down: "Bạn đã thực hiện hành động này quá nhiều lần, vui lòng thử lại sau."
     too_many_requests: "Bạn đã thực hiện hành động này quá nhiều lần. Vui lòng đợi %{time_left} trước khi thử lại."
     by_type:
+      first_day_replies_per_day: "Chúng tôi đánh giá cao sự nhiệt tình của bạn, hãy duy trì nó! Điều đó có nghĩa là, vì sự an toàn của cộng đồng của chúng tôi, bạn đã đạt đến số lượng câu trả lời tối đa mà người dùng mới có thể tạo vào ngày đầu tiên của họ. Vui lòng đợi %{time_left} và bạn sẽ có thể tạo thêm câu trả lời."
       live_post_counts: "Bạn đang yêu cầu số lượng bài đăng trực tiếp quá nhanh. Vui lòng đợi %{time_left} trước khi thử lại."
       unsubscribe_via_email: "Bạn đã đạt đến số lượng người hủy đăng ký tối đa qua email. Vui lòng đợi %{time_left} trước khi thử lại."
     hours:
@@ -530,9 +545,6 @@ vi:
       title: "Thích"
       description: "Thích bài viết này"
       short_description: "Thích bài viết này"
-  user_activity:
-    no_bookmarks:
-      self: "Bạn không có bài viết nào được đánh dấu; dấu trang cho phép bạn nhanh chóng tham khảo các bài viết cụ thể."
   topic_flag_types:
     spam:
       title: "Rác"
@@ -558,7 +570,6 @@ vi:
         remove: "Chủ đề này không còn là một banner. Nó sẽ không hiện ở đầu mọi trang nữa."
   unsubscribed:
     title: "Đã cập nhật tùy chọn email!"
-    description: "tùy chọn email cho <b>%{email}</b> đã được cập nhật. Để thay đổi cài đặt email của bạn <a href='%{url}'>hãy truy cập tùy chọn người dùng của bạn</a>."
   unsubscribe:
     title: "Hủy đăng ký"
     log_out: "Đăng Xuất"
@@ -640,7 +651,7 @@ vi:
       yaxis: "Ngày"
       description: "Số lượng người dùng đã tăng Mức độ tin cậy của họ trong khoảng thời gian này."
     consolidated_page_views:
-      title: "Số lượt xem hợp nhất"
+      title: "Số lần xem trang tổng hợp"
       xaxis:
         page_view_crawler: "Trình thu thập thông tin"
         page_view_anon: "Người dùng ẩn danh"
@@ -834,6 +845,18 @@ vi:
       labels:
         filename: Tên tập tin
         author: Tác giả
+    top_users_by_likes_received:
+      labels:
+        user: Người dùng
+        qtt_like: Likes Đã Nhận
+    top_users_by_likes_received_from_inferior_trust_level:
+      labels:
+        user: Người dùng
+        qtt_like: Likes Đã Nhận
+    top_users_by_likes_received_from_a_variety_of_people:
+      labels:
+        user: Người dùng
+        qtt_like: Likes Đã Nhận
   dashboard:
     rails_env_warning: "Máy chủ của bạn đang chạy trong chế độ %{env}."
     host_names_warning: "Cài đặt của bạn config/database.yml đang sử dụng hostname mặc định. Cập nhật lại để sử dụng hostname của bạn"
@@ -851,6 +874,7 @@ vi:
     out_of_date_themes: "Các bản cập nhật có sẵn cho các chủ đề sau:"
     unreachable_themes: "Chúng tôi không thể kiểm tra cập nhật về các chủ đề sau:"
   site_settings:
+    disabled: "khóa"
     censored_words: "Từ sẽ tự động thay thế bằng &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Tự động ẩn bất kỳ bài viết ở ẩn hơn 30 ngày."
     allow_user_locale: "Cho phép thành viên chọn ngôn ngữ của riêng trong thiết lập giao diện."
@@ -864,7 +888,10 @@ vi:
     min_personal_message_title_length: "Chiều dài tối thiểu cho phép theo số kí tự của một thông điệp"
     min_search_term_length: "Số kí tự tối thiểu trong từ khóa tìm kiếm."
     search_tokenize_chinese_japanese_korean: "Bắt buộc tìm kiếm tách từ Chinese/Japanese/Korean ngay cả trên các site không phải là CJK"
+    search_recent_posts_size: "Có bao nhiêu bài đăng gần đây để giữ trong chỉ mục"
     log_search_queries: "Ghi nhật ký các truy vấn tìm kiếm do người dùng thực hiện"
+    search_query_log_max_size: "Số lượng truy vấn tìm kiếm tối đa cần lưu giữ"
+    search_query_log_max_retention_days: "Khoảng thời gian tối đa để giữ các truy vấn tìm kiếm, tính bằng ngày."
     allow_uncategorized_topics: "Cho phép các chủ đề được tạo ra mà không gán chuyên mục. LƯU Ý: Nếu có bất kỳ chủ đề nào chưa gán chuyên mục, bạn phải phân loại chúng trước khi thay đổi."
     allow_duplicate_topic_titles: "Cho phép các chủ đề trùng tiêu đề."
     unique_posts_mins: "Trong bao nhiêu phút người sử dụng có thể viết bài khác với nội dung giống nhau"
@@ -904,8 +931,8 @@ vi:
     tl3_additional_likes_per_day_multiplier: "Tăng giới hạn thích mỗi ngày cho mức độ tin tưởng 3 (bình thường) bằng cách nhân với số này"
     tl4_additional_likes_per_day_multiplier: "Tăng giới hạn thích mỗi ngày cho mức độ tin tưởng 4 (dẫn đầu) bằng cách nhân với số này"
     traditional_markdown_linebreaks: "Sử dụng ngắt dòng truyền thống trong Markdown, đòi hỏi hai khoảng trống kế tiếp cho một ngắt dòng."
+    markdown_typographer_quotation_marks: "Danh sách các cặp thay thế dấu ngoặc kép và dấu ngoặc đơn"
     post_undo_action_window_mins: "Số phút thành viên được phép làm lại các hành động gần đây với bài viết (like, đánh dấu...)."
-    pending_users_reminder_delay: "Thông báo cho quản trị viên nếu thành viên mới đã chờ duyệt lâu hơn số giờ được thiết lập ở đây, đặt là -1 để tắt thông báo."
     cors_origins: "Cho phép CORS (Cross-Origin Requests). Mỗi nguyên gốc phải kèm theo http:// hoặc https://. Biến env DISCOURSE_ENABLE_CORS phải được đặt là 'true' để bật CORS."
     use_admin_ip_allowlist: "Admin chỉ có thể đăng nhập nếu có địa chỉ IP được định nghĩa trước trong danh sách Screened IPs (Admin > Logs > Screened Ips)."
     invalidate_inactive_admin_email_after_days: "Các tài khoản quản trị viên chưa truy cập trang web trong số ngày này sẽ cần xác thực lại địa chỉ email của họ trước khi đăng nhập. Đặt thành 0 để tắt."
@@ -940,7 +967,6 @@ vi:
     enable_signup_cta: "Hiện thông báo với thành viên ẩn danh khi họ quay lại để yêu cầu họ đăng ký tài khoản."
     google_oauth2_client_id: "Client ID ứng dụng Google của bạn."
     google_oauth2_client_secret: "Client secret ứng dụng Google của bạn."
-    allow_restore: "Cho phép phục hồi, nó có thể thay thế TẤT CẢ dữ liệu trang web! Bỏ chọn, trừ khi bạn có kế hoạch phục hồi một bản sao lưu"
     maximum_backups: "Số bản sao lưu tối đa lưu trong đĩa cứng. Những bản sao lưu cũ sẽ được xóa tự động"
     automatic_backups_enabled: "Chạy sao lưu tự động như cấu hình trong tần số sao lưu"
     s3_backup_bucket: "Địa chỉ tách biệt lưu trữ backup. LƯU Ý: đây phải là địa chỉ được giành riêng."
@@ -1028,6 +1054,7 @@ vi:
     authorized_extensions: "Danh sách định dạng file cho phép tải lên (sử dụng '*' để cho phép tất cả loại tập tin)"
     max_similar_results: "Số lượng chủ đề tương tự hiển thị phía trên bộ soạn thảo khi soạn chủ đề mới, so sánh dựa trên tiêu đề và nội dung."
     title_prettify: "Ngăn chặn lỗi chính tả và sai sót phổ biến trong tiêu đề, bao gồm tất cả là chữ hoa, ký tự đầu tiên là chữ thường, sử dụng quá nhiều ! và ?, thêm . ở cuối..."
+    automatic_topic_heat_values: 'Tự động cập nhật cài đặt "lượt xem chủ đề nổi bật" và "lượt thích chủ đề nổi bật" dựa trên hoạt động của trang web.'
     topic_views_heat_low: "Sau bao nhiêu lượt xem thì số lượt xem sẽ nổi bật một chút."
     topic_views_heat_medium: "Sau bao nhiêu lượt xem thì số lượt xem sẽ nổi bật vừa phải."
     topic_views_heat_high: "Sau bao nhiêu lượt xem thì số lượt xem sẽ rất nổi bật."
@@ -1047,7 +1074,6 @@ vi:
     topic_view_duration_hours: "Đếm lượt xem chủ đề mới một lần cho mỗi IP/User trong N giờ"
     user_profile_view_duration_hours: "Đếm lượt xem hồ sơ mới một lần cho mỗi IP/User trong N giờ"
     levenshtein_distance_spammer_emails: "Khi phù hợp với thư rác, số ký tự khác biệt vẫn sẽ cho phép khả năng chính xác mờ."
-    max_new_accounts_per_registration_ip: "Nếu đã có (n) tài khoản với độ tin cậy mức 0 từ IP này (không phải là BQT, mức TL2 hoặc cao hơn), ngừng chấp nhận đăng ký mới từ IP này."
     min_ban_entries_for_roll_up: "Khi click vào nút cuộn lên, sẽ tạo ra một entry subnet cấm mới nếu có ít nhất (N) entry."
     max_age_unmatched_emails: "Xóa các email hiển thị không khớp sau (N) ngày."
     max_age_unmatched_ips: "Xóa các IP hiển thị không khớp sau (N) ngày."
@@ -1073,6 +1099,7 @@ vi:
     pop3_polling_username: "Tên truy cập của tài khoản POP3 để poll email."
     pop3_polling_password: "Mật khẩu của tài khoản POP3 để poll email."
     email_in_min_trust: "Bậc tin tưởng tối thiểu cho phép một thành viên gửi chủ đề mới qua email."
+    imap_polling_period_mins: "Khoảng thời gian tính bằng phút giữa việc kiểm tra tài khoản IMAP cho email."
     imap_polling_old_emails: "Số lượng email cũ tối đa (đã xử lý) được cập nhật mỗi khi hộp IMAP được thăm dò (0 cho tất cả)."
     imap_polling_new_emails: "Số lượng email mới (chưa xử lý) tối đa được cập nhật mỗi khi hộp IMAP được thăm dò ý kiến."
     email_prefix: "Nhãn [label] sử dụng trong tiêu đề email, mặc định được đặt là 'title'."
@@ -1180,7 +1207,6 @@ vi:
     unknown_error: "Đã có vấn đề xảy ra với tài khoản của bạn, xin hãy liên hệ với BQT."
     timeout_expired: "Đăng nhập tài khoản hết hạn, xin hãy thử đăng nhập lại."
   original_poster: "Người viết gốc"
-  most_posts: "Bài viết Phỏ biến"
   most_recent_poster: "Người Gửi Mới Đây"
   frequent_poster: "Người Gửi Thường Xuyên"
   redirected_to_top_reasons:
@@ -1311,11 +1337,6 @@ vi:
       inactive_user: "Người dùng không hoạt động"
     email_in_spam_header: "Email đầu tiên của người dùng đã bị gắn cờ là spam"
     already_silenced: "Người dùng đã bị tắt tiếng bởi %{staff} %{time_ago}."
-  reviewables_reminder:
-    submitted:
-      other: "Các mục đã được gửi hơn %{count} giờ trước. [Vui lòng xem lại chúng](%{base_path}/review)."
-    subject_template:
-      other: "%{count} mục cần được xem xét"
   unsubscribe_mailer:
     title: "Hủy đăng ký gửi thư"
     subject_template: "Xác nhận bạn không còn muốn nhận email cập nhật từ %{site_title}"
@@ -1373,35 +1394,8 @@ vi:
       Chúng tôi đã gửi liên kết tải xuống này đến địa chỉ email đã được xác thực của bạn vì lý do bảo mật.
 
       (Nếu bạn *không* yêu cầu tải xuống này, bạn nên thực sự lo lắng - ai đó có quyền truy cập quản trị vào trang web của bạn.)
-  new_version_mailer:
-    text_body_template: |
-      Hoan hô, đã có phiên bản mới của [Discourse](https://www.discourse.org)!
-
-      Phiên bản của bạn: %{installed_version}
-      Phiên bản mới: **%{new_version}**
-
-      - Nâng cấp dễ dàng bằng cách sử dụng ** [nâng cấp trình duyệt bằng một cú nhấp chuột] (%{base_url}/admin/upgrade) **
-
-      - Xem có gì mới trong [ghi chú phát hành](https://meta.discourse.org/tag/release-notes) hoặc xem [bản thay đổi thô của GitHub](https://github.com/discourse/discourse/commits/master)
-
-      - Truy cập [meta.discourse.org](https://meta.discourse.org) để biết tin tức, thảo luận và hỗ trợ cho Discourse
   new_version_mailer_with_notes:
     subject_template: "[%{email_prefix}] có bản cập nhật"
-    text_body_template: |
-      Hoan hô, đã có phiên bản mới của [Discourse](https://www.discourse.org)
-
-      Phiên bản của bạn: %{installed_version}
-      Phiên bản mới: **%{new_version}**
-
-      - Nâng cấp bằng cách sử dụng dễ dàng **[nâng cấp trình duyệt bằng một cú nhấp chuột](%{base_url}/admin/upgrade)**
-
-      - Xem có gì mới trong [ghi chú phát hành](https://meta.discourse.org/tag/release-notes) hoặc xem [bản thay đổi thô của GitHub](https://github.com/discourse/discourse/commits/master)
-
-      - Truy cập [meta.discourse.org](https://meta.discourse.org) để biết tin tức, thảo luận và hỗ trợ cho Discourse
-
-      ### Ghi chú phát hành
-
-      %{notes}
   flag_reasons:
     off_topic: "Bài viết của bạn được đánh dấu là **off-topic**: cộng đồng cảm thấy nó không phù hợp cho chủ đề này, được xác định bởi tiêu đề và bài viết đầu tiên."
     inappropriate: "Bài viết của bạn được đánh dấu là **inappropriate**: cộng đồng cảm thấy đó là sự xúc phạm, lăng mạ, hoặc vi phạm [nội quy diễn đàn](%{base_path}/guidelines)."
@@ -1451,31 +1445,17 @@ vi:
         Với quyền lực lớn đi kèm với trách nhiệm lớn. Nếu bạn chưa quen với việc kiểm duyệt, vui lòng tham khảo [Hướng dẫn kiểm duyệt](https://meta.discourse.org/t/discourse-moderation-guide/63116).
     welcome_invite:
       subject_template: "Chào mừng đến với %{site_name}!"
+    tl2_promotion_message:
+      subject_template: "Chúc mừng bạn đã thăng cấp mức độ tin cậy!"
     backup_succeeded:
       subject_template: "Sản sao lưu hoàn tất thành công"
     backup_failed:
       subject_template: "Sao lưu lỗi."
     restore_succeeded:
       subject_template: "Phục hồi thành công"
-      text_body_template: |
-        Khôi phục thành công.
-
-        Đây là nhật ký:
-
-        ``` text
-        %{logs}
-        ```
     restore_failed:
       title: "Khôi phục không thành công"
       subject_template: "Phục hồi thất bại."
-      text_body_template: |
-        Khôi phục không thành công.
-
-        Đây là nhật ký:
-
-        ``` text
-        %{logs}
-        ```
     bulk_invite_succeeded:
       title: "Mời hàng loạt thành công"
       subject_template: "Mời thành viên hàng loạt đã được thực hiện thành công"
@@ -1582,6 +1562,14 @@ vi:
     download_remote_images_disabled:
       subject_template: "Download ảnh từ xa đã bị vô hiệu"
       text_body_template: "Thiết lập `download_remote_images_to_local` đã bị vô hiệu do khoảng trống ổ cứng `download_remote_images_threshold` đã đạt mức giới hạn."
+    dashboard_problems:
+      subject_template: "Lời khuyên mới trên bảng điều khiển trang web của bạn"
+      text_body_template: |
+        Chúng tôi có một số lời khuyên & đề xuất mới cho bạn dựa trên cài đặt trang web hiện tại của bạn.
+
+        [Truy cập bảng điều khiển trang web của bạn](%{base_url}/admin) để xem nó.
+
+        Nếu không có gì hiển thị trên bảng điều khiển của bạn, một nhân viên khác có thể đã thực hiện theo lời khuyên này. Bạn có thể tìm thấy danh sách các hành động của nhân viên trong [Nhật ký hành động của nhân viên](%{base_url}/admin/logs/staff_action_logs) của bạn.
     new_user_of_the_month:
       title: "Bạn là thành viên mới của tháng!"
       subject_template: "Bạn là một thành viên mới của tháng!"
@@ -1808,6 +1796,8 @@ vi:
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">cấp</a> lời mời, nhắn tin nhóm, nhiều lượt thích hơn
     regular:
       name: Thường xuyên
+      long_description: |
+        Huy hiệu này được cấp khi bạn đạt đến cấp độ tin cậy 3. Cảm ơn bạn đã trở thành thành viên thường xuyên của cộng đồng chúng tôi trong khoảng thời gian vài tháng. Giờ đây, bạn là một trong những độc giả tích cực nhất và là người đóng góp đáng tin cậy giúp cộng đồng của chúng ta trở nên tuyệt vời. Giờ đây, bạn có thể phân loại lại và đổi tên các chủ đề, tận dụng các cờ spam mạnh mẽ hơn, truy cập khu vực tiếp khách riêng và bạn cũng sẽ nhận được nhiều lượt thích hơn mỗi ngày.
     leader:
       name: Lãnh đạo
     welcome:
@@ -1946,6 +1936,9 @@ vi:
       name: Đề cập đầu tiên
     new_user_of_the_month:
       name: "Thành viên mới của tháng"
+    aficionado:
+      long_description: |
+        Huy hiệu này được cấp cho chuyến thăm 100 ngày liên tục. Đó là hơn ba tháng!
   admin_login:
     success: "Gửi mail lỗi"
     email_input: "Email quản trị"
@@ -1983,14 +1976,10 @@ vi:
       corporate:
         title: "Công ty"
         description: "Thông tin này sẽ được nhập vào <a href='%{base_path}/tos' target='blank'>Điều khoản dịch vụ</a> của bạn, đây là một chủ đề bạn có thể chỉnh sửa trong danh mục Nhân viên. Nếu bạn không có một công ty, hãy bỏ qua bước này ngay bây giờ."
-      colors:
-        title: "Màu sắc"
-      fonts:
+      styling:
         fields:
-          font_preview:
+          styling_preview:
             label: "Xem trước"
-      homepage:
-        fields:
           homepage_style:
             choices:
               categories_only:
@@ -2030,15 +2019,17 @@ vi:
       medium: "Trung bình"
       high: "Cao"
     conflict: "Đã có xung đột cập nhật ngăn bạn làm điều đó."
-    reasons:
-      contains_media: "Bài đăng này bao gồm phương tiện được nhúng. Xem `review_media_unless_trust_level`."
     actions:
+      agree_and_keep:
+        title: "Giữ bài viết"
+        description: "Đồng ý với cờ và giữ nguyên bài viết."
+      agree_and_keep_hidden:
+        title: "Giữ bài đăng ẩn"
+        description: "Đồng ý với cờ và để bài viết ẩn."
       agree_and_suspend:
         title: "Tạm khóa Thành viên"
       agree_and_silence:
         title: "Người dùng im lặng"
-      delete_spammer:
-        title: "Xóa người Spam"
       delete_single:
         title: "Xóa"
       disagree:
@@ -2052,8 +2043,8 @@ vi:
           title: "Xóa tài khoản"
       reject:
         title: "Từ chối"
-      delete_user:
-        title: "Xóa tài khoản"
+      reject_and_keep_deleted:
+        title: "Giữ bài đăng bị xóa"
   old_keys_reminder:
     body: |
       Xin chào! Đây là lời nhắc bảo mật hàng năm thường xuyên từ phiên bản Discourse của bạn.
@@ -2063,6 +2054,7 @@ vi:
       %{keys}
 
       Không cần thực hiện hành động nào vào lúc này, tuy nhiên, đây được coi là phương pháp bảo mật tốt để chu kỳ tất cả các thông tin quan trọng của bạn vài năm một lần.
+  fallback_username: "người dùng"
   activemodel:
     errors:
       <<: *errors

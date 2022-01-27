@@ -7,7 +7,7 @@
   display: inline-flex;
   align-items: center;
   background-color: var(--secondary);
-  margin: 0 0 3px;
+  margin: 4px 0 0;
 
   img {
     height: 16px;
@@ -121,12 +121,9 @@
 }
 
 .badge-card {
-  position: relative;
-  display: inline-block;
   background-color: var(--primary-very-low);
   border: 1px solid var(--primary-low);
-  margin-bottom: 2vh;
-  transition: box-shadow 0.25s;
+  position: relative;
 
   .check-display {
     position: absolute;
@@ -143,11 +140,16 @@
     font-size: $font-up-2;
   }
 
+  .favorite-btn {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+  }
+
   .badge-contents {
     display: flex;
-    min-height: 128px;
-    height: 100%;
-    padding: 0 10%;
+    min-height: 8em;
+    padding: 0 1.5em;
 
     .badge-link {
       color: var(--primary);
@@ -155,19 +157,20 @@
 
     .badge-icon {
       display: flex;
-      flex: 0 0 auto;
-      width: 1.23em;
-      margin-right: 5%;
+      flex-shrink: 0;
+      margin-right: 1.5em;
       align-items: center;
       justify-content: center;
-      font-size: 3.5em;
-      a {
-        width: 100%;
+      width: 64px;
+
+      svg {
+        font-size: 3.5em;
       }
+
       img {
         width: 100%;
-        max-width: 65px;
-        max-height: 80px;
+        max-width: 64px;
+        max-height: 64px;
       }
 
       &.badge-type-gold .fa {
@@ -187,11 +190,8 @@
       display: flex;
       flex: 1 1 auto;
       align-items: center;
-      padding: 1em 1.5em 1em 0;
+      padding: 1em 0;
       color: var(--primary);
-      @media screen and (max-width: 600px) {
-        padding-right: 0;
-      }
 
       h3 {
         margin-bottom: 0.25em;
@@ -203,38 +203,15 @@
     }
   }
 
-  &.medium {
-    flex: 0 0 auto;
-    width: 32%;
-    margin-right: 1.63%;
-    @media screen and (min-width: 851px) {
-      &:nth-of-type(3n) {
-        margin-right: 0;
-      }
-    }
-    @include breakpoint(medium) {
-      width: 48.5%;
-      &:nth-of-type(2n) {
-        margin-right: 0;
-      }
-    }
-    @include breakpoint(mobile-extra-large) {
-      flex: 0 0 100%;
-    }
-    &:hover {
-      box-shadow: shadow("card");
-    }
-    &:active {
-      box-shadow: none;
-    }
-  }
   &.large {
     width: 100%;
     align-self: flex-start;
+
     @media screen and (min-width: 767px) {
       max-width: calc(#{$large-width} / 2);
       margin-right: 1.5em;
     }
+
     .badge-contents {
       padding: 0 5%;
       h3 {
@@ -267,15 +244,21 @@
 }
 
 .badge-group-list {
+  display: grid;
+  grid: auto-flow / repeat(3, 1fr);
+  grid-gap: 1em;
+  width: 100%;
   margin-bottom: 1.5em;
-  display: flex;
-  flex-wrap: wrap;
+
   @include breakpoint(medium) {
-    justify-content: space-between;
+    grid: auto-flow / repeat(2, 1fr);
+  }
+
+  @include breakpoint(mobile-extra-large) {
+    grid: auto-flow / 1fr;
   }
 
   .title {
-    width: 100%;
     font-size: $font-up-1;
   }
 }

@@ -1,14 +1,10 @@
 import Mixin from "@ember/object/mixin";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { cancel, later } from "@ember/runloop";
+import { isTesting } from "discourse-common/config/environment";
 
-const helper = {
-  offset() {
-    const mainOffset = $("#main").offset();
-    const offsetTop = mainOffset ? mainOffset.top : 0;
-    return (window.pageYOffset || $("html").scrollTop()) - offsetTop;
-  },
-};
+const INITIAL_DELAY_MS = isTesting() ? 0 : 50;
+const DEBOUNCE_MS = isTesting() ? 0 : 5;
 
 export default Mixin.create({
   queueDockCheck: null,
@@ -18,7 +14,11 @@ export default Mixin.create({
   init() {
     this._super(...arguments);
     this.queueDockCheck = () => {
-      this._queuedTimer = discourseDebounce(this, this.safeDockCheck, 5);
+      this._queuedTimer = discourseDebounce(
+        this,
+        this.safeDockCheck,
+        DEBOUNCE_MS
+      );
     };
   },
 
@@ -26,17 +26,19 @@ export default Mixin.create({
     if (this.isDestroyed || this.isDestroying) {
       return;
     }
-    this.dockCheck(helper);
+    this.dockCheck();
   },
 
   didInsertElement() {
     this._super(...arguments);
 
-    $(window).bind("scroll.discourse-dock", this.queueDockCheck);
-    $(document).bind("touchmove.discourse-dock", this.queueDockCheck);
+    window.addEventListener("scroll", this.queueDockCheck, { passive: true });
+    document.addEventListener("touchmove", this.queueDockCheck, {
+      passive: true,
+    });
 
     // dockCheck might happen too early on full page refresh
-    this._initialTimer = later(this, this.safeDockCheck, 50);
+    this._initialTimer = later(this, this.safeDockCheck, INITIAL_DELAY_MS);
   },
 
   willDestroyElement() {
@@ -47,7 +49,7 @@ export default Mixin.create({
     }
 
     cancel(this._initialTimer);
-    $(window).unbind("scroll.discourse-dock", this.queueDockCheck);
-    $(document).unbind("touchmove.discourse-dock", this.queueDockCheck);
+    window.removeEventListener("scroll", this.queueDockCheck);
+    document.removeEventListener("touchmove", this.queueDockCheck);
   },
 });

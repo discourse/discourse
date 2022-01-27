@@ -1,3 +1,5 @@
+import { bind } from "discourse-common/utils/decorators";
+import discourseDebounce from "discourse-common/lib/debounce";
 import { isAppWebview } from "discourse/lib/utilities";
 import { later, run, schedule, throttle } from "@ember/runloop";
 import {
@@ -6,9 +8,10 @@ import {
 } from "discourse/lib/topic-list-tracker";
 import Composer from "discourse/models/composer";
 import DiscourseURL from "discourse/lib/url";
+import domUtils from "discourse-common/utils/dom-utils";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import { ajax } from "discourse/lib/ajax";
-import { minimumOffset } from "discourse/lib/offset-calculator";
+import { headerOffset } from "discourse/lib/offset-calculator";
 
 const DEFAULT_BINDINGS = {
   "!": { postAction: "showFlags" },
@@ -29,7 +32,7 @@ const DEFAULT_BINDINGS = {
   "command+]": { handler: "webviewKeyboardForward", anonymous: true },
   "mod+p": { handler: "printTopic", anonymous: true },
   d: { postAction: "deletePost" },
-  e: { postAction: "editPost" },
+  e: { handler: "editPost" },
   end: { handler: "goToLastPost", anonymous: true },
   "command+down": { handler: "goToLastPost", anonymous: true },
   f: { handler: "toggleBookmarkTopic" },
@@ -86,9 +89,9 @@ const DEFAULT_BINDINGS = {
   t: { postAction: "replyAsNewTopic" },
   u: { handler: "goBack", anonymous: true },
   "x r": {
-    click: "#dismiss-new,#dismiss-new-top,#dismiss-posts,#dismiss-posts-top",
-  }, // dismiss new/posts
-  "x t": { click: "#dismiss-topics,#dismiss-topics-top" }, // dismiss topics
+    click: "#dismiss-new-bottom,#dismiss-new-top",
+  }, // dismiss new
+  "x t": { click: "#dismiss-topics-bottom,#dismiss-topics-top" }, // dismiss topics
 };
 
 const animationDuration = 100;
@@ -100,17 +103,24 @@ function preventKeyboardEvent(event) {
 
 export default {
   init(keyTrapper, container) {
+    // Sometimes the keyboard shortcut initializer is not torn down. This makes sure
+    // we clear any previous test state.
+    if (this.keyTrapper) {
+      this.keyTrapper.destroy();
+      this.keyTrapper = null;
+    }
+
     this.keyTrapper = new keyTrapper();
     this.container = container;
     this._stopCallback();
 
-    this.searchService = this.container.lookup("search-service:main");
+    this.searchService = this.container.lookup("service:search");
     this.appEvents = this.container.lookup("service:app-events");
     this.currentUser = this.container.lookup("current-user:main");
-    let siteSettings = this.container.lookup("site-settings:main");
+    this.siteSettings = this.container.lookup("site-settings:main");
 
     // Disable the shortcut if private messages are disabled
-    if (!siteSettings.enable_personal_messages) {
+    if (!this.siteSettings.enable_personal_messages) {
       delete DEFAULT_BINDINGS["g m"];
     }
   },
@@ -122,10 +132,8 @@ export default {
   },
 
   teardown() {
-    if (this.keyTrapper) {
-      this.keyTrapper.reset();
-      this.keyTrapper = null;
-    }
+    this.keyTrapper?.destroy();
+    this.keyTrapper = null;
     this.container = null;
   },
 
@@ -173,7 +181,6 @@ export default {
       this.keyTrapper.paused = true;
       return;
     }
-
     combinations.forEach((combo) => this.keyTrapper.unbind(combo));
   },
 
@@ -207,7 +214,7 @@ export default {
    **/
   addShortcut(shortcut, callback, opts = {}) {
     // we trim but leave whitespace between characters, as shortcuts
-    // like `z z` are valid for Mousetrap
+    // like `z z` are valid for ItsATrap
     shortcut = shortcut.trim();
     let newBinding = Object.assign({ handler: callback }, opts);
     this.bindKey(shortcut, newBinding);
@@ -263,9 +270,25 @@ export default {
   },
 
   quoteReply() {
+    if (this.isPostTextSelected()) {
+      this.appEvents.trigger("quote-button:quote");
+      return false;
+    }
+
     this.sendToSelectedPost("replyToPost");
     // lazy but should work for now
     later(() => $(".d-editor .quote").click(), 500);
+
+    return false;
+  },
+
+  editPost() {
+    if (this.siteSettings.enable_fast_edit && this.isPostTextSelected()) {
+      this.appEvents.trigger("quote-button:edit");
+      return false;
+    } else {
+      this.sendToSelectedPost("editPost");
+    }
 
     return false;
   },
@@ -491,6 +514,11 @@ export default {
     }
   },
 
+  isPostTextSelected() {
+    const topicController = this.container.lookup("controller:topic");
+    return !!topicController?.get("quoteState")?.postId;
+  },
+
   sendToSelectedPost(action, elem) {
     // TODO: We should keep track of the post without a CSS class
     const selectedPost =
@@ -536,20 +564,21 @@ export default {
   _bindToClick(selector, binding) {
     binding = binding.split(",");
     this.keyTrapper.bind(binding, function (e) {
-      const $sel = $(selector);
+      const selection = document.querySelector(selector);
 
       // Special case: We're binding to enter.
-      if (e && e.keyCode === 13) {
+      if (e && e.key === "Enter") {
         // Binding to enter should only be effective when there is something
         // to select.
-        if ($sel.length === 0) {
+        if (!selection) {
           return;
         }
 
         // If effective, prevent default.
         e.preventDefault();
       }
-      $sel.click();
+
+      selection?.click();
     });
   },
 
@@ -588,7 +617,7 @@ export default {
     // Discard selection if it is not in viewport, so users can combine
     // keyboard shortcuts with mouse scrolling.
     if ($selected.length !== 0 && !fast) {
-      const offset = minimumOffset();
+      const offset = headerOffset();
       const beginScreen = $(window).scrollTop() - offset;
       const endScreen = beginScreen + window.innerHeight + offset;
       const beginArticle = $selected.offset().top;
@@ -601,7 +630,7 @@ export default {
     // If still nothing is selected, select the first post that is
     // visible and cancel move operation.
     if (!$selected || $selected.length === 0) {
-      const offset = minimumOffset();
+      const offset = headerOffset();
       $selected = $articles
         .toArray()
         .find((article) =>
@@ -616,32 +645,32 @@ export default {
     }
 
     const index = $articles.index($selected);
-    let $article = $articles.eq(index);
+    let article = $articles.eq(index)[0];
 
     // Try doing a page scroll in the context of current post.
-    if (!fast && direction !== 0 && $article.length > 0) {
+    if (!fast && direction !== 0 && article) {
       // The beginning of first article is the beginning of the page.
       const beginArticle =
-        $article.is(".topic-post") && $article.find("#post_1").length
+        article.classList.contains("topic-post") &&
+        article.querySelector("#post_1")
           ? 0
-          : $article.offset().top;
-      const endArticle =
-        $article.offset().top + $article[0].getBoundingClientRect().height;
+          : domUtils.offset(article).top;
+      const endArticle = domUtils.offset(article).top + article.offsetHeight;
 
-      const beginScreen = $(window).scrollTop();
+      const beginScreen = window.scrollY;
       const endScreen = beginScreen + window.innerHeight;
 
       if (direction < 0 && beginScreen > beginArticle) {
         return this._scrollTo(
           Math.max(
-            beginScreen - window.innerHeight + 3 * minimumOffset(), // page up
-            beginArticle - minimumOffset() // beginning of article
+            beginScreen - window.innerHeight + 3 * headerOffset(), // page up
+            beginArticle - headerOffset() // beginning of article
           )
         );
-      } else if (direction > 0 && endScreen < endArticle - minimumOffset()) {
+      } else if (direction > 0 && endScreen < endArticle - headerOffset()) {
         return this._scrollTo(
           Math.min(
-            endScreen - 3 * minimumOffset(), // page down
+            endScreen - 3 * headerOffset(), // page down
             endArticle - window.innerHeight // end of article
           )
         );
@@ -658,75 +687,70 @@ export default {
       }
     }
 
-    $article = $articles.eq(index + direction);
-    if ($article.length > 0) {
-      $articles.removeClass("selected");
-      $article.addClass("selected");
-
-      const articleRect = $article[0].getBoundingClientRect();
-      if (!fast && direction < 0 && articleRect.height > window.innerHeight) {
-        // Scrolling to the last "page" of the previous post if post has multiple
-        // "pages" (if its height does not fit in the screen).
-        return this._scrollTo(
-          $article.offset().top + articleRect.height - window.innerHeight
-        );
-      } else if ($article.is(".topic-post")) {
-        return this._scrollTo(
-          $article.find("#post_1").length > 0
-            ? 0
-            : $article.offset().top - minimumOffset(),
-          () => $("a.tabLoc", $article).focus()
-        );
-      }
-
-      // Otherwise scroll through the suggested topic list.
-      this._scrollList($article, direction);
+    article = $articles.eq(index + direction)[0];
+    if (!article) {
+      return;
     }
-  },
 
-  _scrollTo(scrollTop, complete) {
-    $("html, body")
-      .stop(true, true)
-      .animate({ scrollTop }, { duration: animationDuration, complete });
-  },
+    $articles.removeClass("selected");
+    article.classList.add("selected");
 
-  _scrollList($article) {
-    // Try to keep the article on screen
-    const pos = $article.offset();
-    const height = $article.height();
-    const headerHeight = $("header.d-header").height();
-    const scrollTop = $(window).scrollTop();
-    const windowHeight = $(window).height();
+    this.appEvents.trigger("keyboard:move-selection", {
+      articles: $articles.get(),
+      selectedArticle: article,
+    });
 
-    // skip if completely on screen
+    const articleTop = domUtils.offset(article).top,
+      articleTopPosition = articleTop - headerOffset();
+    if (!fast && direction < 0 && article.offsetHeight > window.innerHeight) {
+      // Scrolling to the last "page" of the previous post if post has multiple
+      // "pages" (if its height does not fit in the screen).
+      return this._scrollTo(
+        articleTop + article.offsetHeight - window.innerHeight
+      );
+    } else if (article.classList.contains("topic-post")) {
+      return this._scrollTo(
+        article.querySelector("#post_1") ? 0 : articleTopPosition,
+        { focusTabLoc: true }
+      );
+    }
+
+    // Otherwise scroll through the topic list.
     if (
-      pos.top - headerHeight > scrollTop &&
-      pos.top + height < scrollTop + windowHeight
+      articleTopPosition > window.pageYOffset &&
+      articleTop + article.offsetHeight <
+        window.pageYOffset + window.innerHeight
     ) {
       return;
     }
 
-    let scrollPos = pos.top + height / 2 - windowHeight * 0.5;
-    if (height > windowHeight - headerHeight) {
-      scrollPos = pos.top - headerHeight;
-    }
-    if (scrollPos < 0) {
-      scrollPos = 0;
-    }
+    const scrollRatio = direction > 0 ? 0.2 : 0.7;
+    this._scrollTo(articleTopPosition - window.innerHeight * scrollRatio);
+  },
 
-    if (this._scrollAnimation) {
-      this._scrollAnimation.stop();
+  _scrollTo(scrollTop, opts = {}) {
+    window.scrollTo({
+      top: scrollTop,
+      behavior: "smooth",
+    });
+
+    if (opts.focusTabLoc) {
+      window.addEventListener("scroll", this._onScrollEnds, { passive: true });
     }
-    this._scrollAnimation = $("html, body").animate(
-      { scrollTop: scrollPos + "px" },
-      animationDuration
-    );
+  },
+
+  @bind
+  _onScrollEnds() {
+    window.removeEventListener("scroll", this._onScrollEnds, { passive: true });
+    discourseDebounce(this, this._onScrollEndsCallback, animationDuration);
+  },
+
+  _onScrollEndsCallback() {
+    document.querySelector(".topic-post.selected a.tabLoc")?.focus();
   },
 
   categoriesTopicsList() {
-    const setting = this.container.lookup("site-settings:main")
-      .desktop_category_page_style;
-    switch (setting) {
+    switch (this.siteSettings.desktop_category_page_style) {
       case "categories_with_featured_topics":
         return $(".latest .featured-topic");
       case "categories_and_latest_topics":

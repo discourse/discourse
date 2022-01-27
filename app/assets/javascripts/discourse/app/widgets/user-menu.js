@@ -1,6 +1,7 @@
 import { later } from "@ember/runloop";
 import { createWidget } from "discourse/widgets/widget";
 import { h } from "virtual-dom";
+import showModal from "discourse/lib/show-modal";
 
 const UserMenuAction = {
   QUICK_ACCESS: "quickAccess",
@@ -249,7 +250,18 @@ export default createWidget("user-menu", {
   },
 
   dismissNotifications() {
-    return this.state.markRead();
+    const unreadHighPriorityNotifications = this.currentUser.get(
+      "unread_high_priority_notifications"
+    );
+
+    if (unreadHighPriorityNotifications > 0) {
+      return showModal("dismiss-notification-confirmation").setProperties({
+        count: unreadHighPriorityNotifications,
+        dismissNotifications: () => this.state.markRead(),
+      });
+    } else {
+      return this.state.markRead();
+    }
   },
 
   itemsLoaded({ hasUnread, markRead }) {
@@ -265,21 +277,24 @@ export default createWidget("user-menu", {
   },
 
   clickOutsideMobile(e) {
-    const $centeredElement = $(document.elementFromPoint(e.clientX, e.clientY));
-    if (
-      $centeredElement.parents(".panel").length &&
-      !$centeredElement.hasClass("header-cloak")
-    ) {
+    const centeredElement = document.elementFromPoint(e.clientX, e.clientY);
+    const parents = document
+      .elementsFromPoint(e.clientX, e.clientY)
+      .some((ele) => ele.classList.contains("panel"));
+    if (!centeredElement.classList.contains("header-cloak") && parents) {
       this.sendWidgetAction("toggleUserMenu");
     } else {
-      const $window = $(window);
-      const windowWidth = $window.width();
-      const $panel = $(".menu-panel");
-      $panel.addClass("animate");
-      $panel.css("right", -windowWidth);
-      const $headerCloak = $(".header-cloak");
-      $headerCloak.addClass("animate");
-      $headerCloak.css("opacity", 0);
+      const windowWidth = document.body.offsetWidth;
+      const panel = document.querySelector(".menu-panel");
+      panel.classList.add("animate");
+      let offsetDirection =
+        document.querySelector("html").classList["direction"] === "rtl"
+          ? -1
+          : 1;
+      panel.style.setProperty("--offset", `${offsetDirection * windowWidth}px`);
+      const headerCloak = document.querySelector(".header-cloak");
+      headerCloak.classList.add("animate");
+      headerCloak.style.setProperty("--opacity", 0);
       later(() => this.sendWidgetAction("toggleUserMenu"), 200);
     }
   },

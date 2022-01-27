@@ -2,13 +2,13 @@ import {
   acceptance,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import { currentRouteName, visit } from "@ember/test-helpers";
+import { currentURL, visit } from "@ember/test-helpers";
 import DiscoveryFixtures from "discourse/tests/fixtures/discovery-fixtures";
 import { test } from "qunit";
 
 acceptance("Redirect to Top", function (needs) {
   needs.pretender((server, helper) => {
-    server.get("/top/weekly.json", () => {
+    server.get("/top.json?period=weekly", () => {
       return helper.response(DiscoveryFixtures["/latest.json"]);
     });
     server.get("/top/monthly.json", () => {
@@ -30,9 +30,9 @@ acceptance("Redirect to Top", function (needs) {
     });
 
     await visit("/categories");
-    assert.equal(
-      currentRouteName(),
-      "discovery.topWeekly",
+    assert.strictEqual(
+      currentURL(),
+      "/top?period=weekly",
       "it works for categories"
     );
   });
@@ -47,9 +47,9 @@ acceptance("Redirect to Top", function (needs) {
     });
 
     await visit("/latest");
-    assert.equal(
-      currentRouteName(),
-      "discovery.topMonthly",
+    assert.strictEqual(
+      currentURL(),
+      "/top?period=monthly",
       "it works for latest"
     );
   });
@@ -64,6 +64,6 @@ acceptance("Redirect to Top", function (needs) {
     });
 
     await visit("/");
-    assert.equal(currentRouteName(), "discovery.topAll", "it works for root");
+    assert.strictEqual(currentURL(), "/top?period=all", "it works for root");
   });
 });

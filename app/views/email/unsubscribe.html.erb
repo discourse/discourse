@@ -37,7 +37,7 @@
           <p>
           <label>
             <%= check_box_tag 'unwatch_category' %>
-            <%= t('unsubscribe.unwatch_category', category: category_badge(@topic.category)).html_safe %>
+            <%= t('unsubscribe.unwatch_category', category: category_badge(@topic.category, show_uncategorized: true)).html_safe %>
           </label>
           </p>
         <% end %>

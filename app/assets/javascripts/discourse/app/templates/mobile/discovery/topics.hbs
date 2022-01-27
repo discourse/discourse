@@ -1,23 +1,5 @@
-{{#if showDismissAtTop}}
-  <div class="row dismiss-container-top">
-    {{#if showDismissRead}}
-      {{d-button
-        class="btn-default dismiss-read"
-        id="dismiss-topics-top"
-        action=(action "dismissReadPosts")
-        title="topics.bulk.dismiss_tooltip"
-        label="topics.bulk.dismiss_button"}}
-    {{/if}}
-    {{#if showResetNew}}
-      {{d-button
-        class="btn-default dismiss-read"
-        id="dismiss-new-top"
-        action=(action "resetNew")
-        icon="check"
-        label="topics.bulk.dismiss_new"}}
-    {{/if}}
-  </div>
-{{/if}}
+{{topic-dismiss-buttons position="top" selectedTopics=selected
+model=model showResetNew=showResetNew showDismissRead=showDismissRead resetNew=(action "resetNew")}}
 
 {{#discovery-topics-list model=model refresh=(action "refresh") incomingCount=topicTrackingState.incomingCount as |discoveryTopicList|}}
   {{#if top}}
@@ -51,26 +33,14 @@
 <footer class="topic-list-bottom">
   {{conditional-loading-spinner condition=model.loadingMore}}
   {{#if allLoaded}}
-    {{#if showDismissRead}}
-      {{d-button
-        class="btn-default dismiss-read"
-        id="dismiss-topics"
-        action=(action "dismissReadPosts")
-        title="topics.bulk.dismiss_tooltip"
-        label="topics.bulk.dismiss_button"}}
-    {{/if}}
-    {{#if showResetNew}}
-      {{d-button
-        class="btn-default dismiss-read"
-        id="dismiss-new"
-        action=(action "resetNew")
-        icon="check"
-        label="topics.bulk.dismiss_new"}}
-    {{/if}}
+    {{topic-dismiss-buttons position="bottom" selectedTopics=selected
+    model=model showResetNew=showResetNew showDismissRead=showDismissRead resetNew=(action "resetNew")}}
 
     {{#footer-message education=footerEducation message=footerMessage}}
       {{#if latest}}
-        {{#if canCreateTopicOnCategory}}<a href {{action "createTopic"}}>{{i18n "topic.suggest_create_topic"}}</a>{{/if}}
+        {{#if canCreateTopicOnCategory}}
+          {{discourse-linked-text action=(route-action "createTopic") text="topic.suggest_create_topic"}}
+        {{/if}}
       {{else if top}}
         {{#link-to "discovery.categories"}}{{i18n "topic.browse_all_categories"}}{{/link-to}}, {{#link-to "discovery.latest"}}{{i18n "topic.view_latest_topics"}}{{/link-to}} {{i18n "or"}} {{i18n "filters.top.other_periods"}}
         {{top-period-buttons period=period action=(action "changePeriod")}}

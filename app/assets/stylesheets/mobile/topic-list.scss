@@ -27,7 +27,7 @@
     display: flex;
     flex-wrap: wrap;
     width: 100%;
-    margin: 0.5em 0 0;
+    margin: 0;
 
     button {
       &.select-kit-header {
@@ -88,19 +88,18 @@
   margin-left: 0;
 }
 
-ol.category-breadcrumb {
-  margin: 0 -3px 5px -3px;
-  display: flex;
-  flex-wrap: wrap;
-  flex: 1 1 100%;
-  li.select-kit {
+.category-breadcrumb {
+  width: 100%;
+  gap: 0.5em;
+  li {
     flex: 1 1 33%;
-    margin: 0 3px 5px 3px;
-    .select-kit-header .selected-name {
-      max-width: 80vw;
-      .badge-wrapper {
-        max-width: 100%;
-      }
+    margin: 0;
+    details {
+      width: 100%;
+    }
+    .name,
+    .category-name {
+      @include ellipsis;
     }
   }
 }
@@ -113,8 +112,7 @@ ol.category-breadcrumb {
     margin-left: 55px;
   }
 
-  th,
-  td {
+  .topic-list-data {
     padding: 7px 0;
     max-width: 300px;
   }
@@ -123,6 +121,7 @@ ol.category-breadcrumb {
     line-height: $line-height-medium;
     position: relative;
     z-index: z("base") + 1; // Intentionally overlapping category to create bigger tap target
+    font-size: var(--font-up-1);
     a.title {
       color: var(--primary);
       padding: 0.5em 0 1.2em 0;
@@ -156,7 +155,6 @@ ol.category-breadcrumb {
   }
 
   .category-topic-link td.num .badge-notification {
-    &.new-posts,
     &.unread-posts {
       color: var(--secondary);
     }
@@ -164,7 +162,7 @@ ol.category-breadcrumb {
 
   .topic-item-stats {
     position: relative;
-    margin-top: 0.25em;
+    margin-top: 0.5em;
     z-index: z("base");
     .category,
     .num,
@@ -231,7 +229,6 @@ ol.category-breadcrumb {
   }
 
   .posts {
-    width: 10%;
     vertical-align: top;
   }
 
@@ -374,7 +371,7 @@ tr.category-topic-link {
   padding: 0.5em 0 0.25em;
   border-top: 1px solid var(--primary-low) !important;
   border-bottom: 1px solid var(--primary-low) !important;
-  margin-bottom: 2em;
+  margin: 1em 0 2em;
 }
 
 .category-box {
@@ -436,9 +433,12 @@ td .main-link {
   }
 }
 .topic-list {
-  .num.posts-map button {
+  .num.posts-map {
     font-size: $font-up-2;
     padding: 0;
+    button {
+      padding: 0;
+    }
   }
   .num.activity a {
     padding: 0;

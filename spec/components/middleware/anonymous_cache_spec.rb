@@ -6,7 +6,7 @@ describe Middleware::AnonymousCache do
   let(:middleware) { Middleware::AnonymousCache.new(lambda { |_| [200, {}, []] }) }
 
   def env(opts = {})
-    Rack::MockRequest.env_for("http://test.com/path?bla=1").merge(opts)
+    create_request_env(path: "http://test.com/path?bla=1").merge(opts)
   end
 
   describe Middleware::AnonymousCache::Helper do
@@ -14,7 +14,7 @@ describe Middleware::AnonymousCache do
       Middleware::AnonymousCache::Helper.new(env(opts))
     end
 
-    context "cachable?" do
+    context "cacheable?" do
       it "true by default" do
         expect(new_helper.cacheable?).to eq(true)
       end
@@ -23,8 +23,15 @@ describe Middleware::AnonymousCache do
         expect(new_helper("ANON_CACHE_DURATION" => 10, "REQUEST_METHOD" => "POST").cacheable?).to eq(false)
       end
 
-      it "is false if it has an auth cookie" do
-        expect(new_helper("HTTP_COOKIE" => "jack=1; _t=#{"1" * 32}; jill=2").cacheable?).to eq(false)
+      it "is false if it has a valid auth cookie" do
+        cookie = create_auth_cookie(token: SecureRandom.hex)
+        expect(new_helper("HTTP_COOKIE" => "jack=1; _t=#{cookie}; jill=2").cacheable?).to eq(false)
+      end
+
+      it "is true if it has an invalid auth cookie" do
+        cookie = create_auth_cookie(token: SecureRandom.hex, issued_at: 5.minutes.ago)
+        cookie = swap_2_different_characters(cookie)
+        expect(new_helper("HTTP_COOKIE" => "jack=1; _t=#{cookie}; jill=2").cacheable?).to eq(true)
       end
 
       it "is false for srv/status routes" do
@@ -142,14 +149,15 @@ describe Middleware::AnonymousCache do
 
       global_setting :background_requests_max_queue_length, "0.5"
 
-      env = {
-        "HTTP_COOKIE" => "_t=#{SecureRandom.hex}",
+      cookie = create_auth_cookie(token: SecureRandom.hex)
+      env = create_request_env.merge(
+        "HTTP_COOKIE" => "_t=#{cookie}",
         "HOST" => "site.com",
         "REQUEST_METHOD" => "GET",
         "REQUEST_URI" => "/somewhere/rainbow",
         "REQUEST_QUEUE_SECONDS" => 2.1,
         "rack.input" => StringIO.new
-      }
+      )
 
       # non background ... long request
       env["REQUEST_QUEUE_SECONDS"] = 2
@@ -178,10 +186,6 @@ describe Middleware::AnonymousCache do
       RateLimiter.enable
     end
 
-    after do
-      RateLimiter.disable
-    end
-
     it 'will revert to anonymous once we reach the limit' do
 
       RateLimiter.clear_all!
@@ -190,7 +194,7 @@ describe Middleware::AnonymousCache do
 
       app = Middleware::AnonymousCache.new(
         lambda do |env|
-          is_anon = env["HTTP_COOKIE"].nil?
+          is_anon = env["HTTP_COOKIE"].nil? && env["HTTP_DISCOURSE_LOGGED_IN"].nil?
           [200, {}, ["ok"]]
         end
       )
@@ -198,14 +202,16 @@ describe Middleware::AnonymousCache do
       global_setting :force_anonymous_min_per_10_seconds, 2
       global_setting :force_anonymous_min_queue_seconds, 1
 
-      env = {
-        "HTTP_COOKIE" => "_t=#{SecureRandom.hex}",
+      cookie = create_auth_cookie(token: SecureRandom.hex)
+      env = create_request_env.merge(
+        "HTTP_COOKIE" => "_t=#{cookie}",
+        "HTTP_DISCOURSE_LOGGED_IN" => "true",
         "HOST" => "site.com",
         "REQUEST_METHOD" => "GET",
         "REQUEST_URI" => "/somewhere/rainbow",
         "REQUEST_QUEUE_SECONDS" => 2.1,
         "rack.input" => StringIO.new
-      }
+      )
 
       is_anon = false
       app.call(env.dup)

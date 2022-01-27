@@ -256,7 +256,7 @@ class DiscourseDiff
     USELESS_TAGS = %w{html body}
     def start_element(name, attributes = [])
       return if USELESS_TAGS.include?(name)
-      attrs = attributes.map { |a| " #{a[0]}=\"#{a[1]}\"" }.join
+      attrs = attributes.map { |a| " #{a[0]}=\"#{CGI::escapeHTML(a[1])}\"" }.join
       @tokens << "<#{name}#{attrs}>"
     end
 

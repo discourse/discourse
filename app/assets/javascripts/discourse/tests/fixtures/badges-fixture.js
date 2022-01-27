@@ -1719,13 +1719,14 @@ export default {
       {
         id: 2,
         name: "Only image",
-        image_url: "/assets/some-image.png",
+        image_url: "/images/avatar.png?2",
       },
       {
         id: 3,
         name: "Both image and icon",
         icon: "fa-rocket",
-        image_url: "/assets/some-image.png",
+        image_url: "/images/avatar.png?3",
+        multiple_grant: true,
       },
     ]
   }

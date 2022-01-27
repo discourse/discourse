@@ -216,7 +216,7 @@ describe Admin::EmailController do
         post "/admin/email/handle_mail.json", params: { email: email('cc') }
       end
       expect(response.status).to eq(200)
-      expect(response.body).to eq("warning: the email parameter is deprecated. all POST requests to this route should be sent with a base64 strict encoded encoded_email parameter instead. email has been received and is queued for processing")
+      expect(response.body).to eq("warning: the email parameter is deprecated. all POST requests to this route should be sent with a base64 strict encoded email_encoded parameter instead. email has been received and is queued for processing")
     end
 
     it 'should enqueue the right job, decoding the raw email param' do

@@ -8,7 +8,7 @@ import Topic from "discourse/models/topic";
 import { alias } from "@ember/object/computed";
 import bootbox from "bootbox";
 import { queryParams } from "discourse/controllers/discovery-sortable";
-import showModal from "discourse/lib/show-modal";
+import { endWith } from "discourse/lib/computed";
 
 export default Controller.extend(BulkTopicSelection, FilterModeMixin, {
   application: controller(),
@@ -28,6 +28,8 @@ export default Controller.extend(BulkTopicSelection, FilterModeMixin, {
   max_posts: null,
   q: null,
   showInfo: false,
+  top: endWith("list.filter", "top"),
+  period: alias("list.for_period"),
 
   @discourseComputed(
     "canCreateTopic",
@@ -93,48 +95,31 @@ export default Controller.extend(BulkTopicSelection, FilterModeMixin, {
     }
   },
 
-  isFilterPage: function (filter, filterType) {
-    if (!filter) {
-      return false;
-    }
-    return filter.match(new RegExp(filterType + "$", "gi")) ? true : false;
-  },
-
   @discourseComputed("list.filter", "list.topics.length")
   showDismissRead(filter, topicsLength) {
-    return this.isFilterPage(filter, "unread") && topicsLength > 0;
+    return this._isFilterPage(filter, "unread") && topicsLength > 0;
   },
 
   @discourseComputed("list.filter", "list.topics.length")
   showResetNew(filter, topicsLength) {
-    return this.isFilterPage(filter, "new") && topicsLength > 0;
-  },
-
-  @discourseComputed("list.filter", "list.topics.length")
-  showDismissAtTop(filter, topicsLength) {
-    return (
-      (this.isFilterPage(filter, "new") ||
-        this.isFilterPage(filter, "unread")) &&
-      topicsLength >= 15
-    );
+    return this._isFilterPage(filter, "new") && topicsLength > 0;
   },
 
   actions: {
-    dismissReadPosts() {
-      showModal("dismiss-read", { title: "topics.bulk.dismiss_read" });
-    },
-
     resetNew() {
       const tracked =
         (this.router.currentRoute.queryParams["f"] ||
           this.router.currentRoute.queryParams["filter"]) === "tracked";
 
-      Topic.resetNew(
-        this.category,
-        !this.noSubcategories,
+      let topicIds = this.selected
+        ? this.selected.map((topic) => topic.id)
+        : null;
+
+      Topic.resetNew(this.category, !this.noSubcategories, {
         tracked,
-        this.tag
-      ).then(() =>
+        tag: this.tag,
+        topicIds,
+      }).then(() =>
         this.send(
           "refresh",
           tracked ? { skipResettingParams: ["filter", "f"] } : {}
@@ -149,8 +134,30 @@ export default Controller.extend(BulkTopicSelection, FilterModeMixin, {
         this.setProperties({ order, ascending: false });
       }
 
+      let params = { order, ascending: this.ascending };
+      if (this.period) {
+        params.period = this.period;
+      }
+
       this.transitionToRoute({
-        queryParams: { order, ascending: this.ascending },
+        queryParams: params,
+      });
+    },
+
+    changePeriod(p) {
+      this.set("period", p);
+
+      let params = { period: this.period };
+
+      if (!(this.order === "default" && this.ascending === false)) {
+        params = Object.assign(params, {
+          order: this.order,
+          ascending: this.ascending,
+        });
+      }
+
+      this.transitionToRoute({
+        queryParams: params,
       });
     },
 

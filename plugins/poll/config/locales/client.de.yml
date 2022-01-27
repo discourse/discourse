@@ -24,7 +24,7 @@ de:
         closed:
           title: "Ergebnisse werden angezeigt, sobald die Abstimmung <strong>beendet</strong> ist."
         staff:
-          title: "Ergebnisse werden nur <strong>Teammitgliedern</strong> angezeigt."
+          title: "Ergebnisse werden nur <strong>Team-Mitgliedern</strong> angezeigt."
       multiple:
         help:
           at_least_min_options:
@@ -43,11 +43,14 @@ de:
       show-results:
         title: "Das Ergebnis der Umfrage anzeigen"
         label: "Ergebnisse anzeigen"
+      remove-vote:
+        title: "Entferne deine Stimme"
+        label: "Stimme entfernen"
       hide-results:
         title: "Zurück zur Umfrage"
         label: "Umfrage anzeigen"
       group-results:
-        title: "Stimmen anhand von Benutzerdaten gruppieren"
+        title: "Stimmen anhand von Benutzerfeld gruppieren"
         label: "Aufschlüsselung anzeigen"
       export-results:
         title: "Ergebnisse der Umfrage exportieren"
@@ -70,15 +73,15 @@ de:
         percentage: "Prozentsatz"
         count: "Anzahl"
       error_while_toggling_status: "Leider ist beim Umschalten des Status dieser Umfrage ein Fehler aufgetreten."
-      error_while_casting_votes: "Leider ist beim Abgeben deiner Stimme ein Fehler aufgetreten."
+      error_while_casting_votes: "Leider ist beim Abgeben deiner Stimmen ein Fehler aufgetreten."
       error_while_fetching_voters: "Leider ist beim Anzeigen der Teilnehmer ein Fehler aufgetreten."
       error_while_exporting_results: "Leider ist beim Exportieren der Umfrageergebnisse ein Fehler aufgetreten."
       ui_builder:
         title: Umfrage erstellen
         insert: Umfrage einfügen
         help:
-          options_min_count: Geben Sie mindestens 1 Option ein.
-          options_max_count: Geben Sie höchstens %{count} Optionen ein.
+          options_min_count: Gib mindestens eine Option ein.
+          options_max_count: Gib maximal %{count} Optionen ein.
           invalid_min_value: Der Mindestwert muss mindestens 1 betragen.
           invalid_max_value: Der Maximalwert muss mindestens 1 betragen, aber kleiner oder gleich der Anzahl der Optionen sein.
           invalid_values: Der Mindestwert muss kleiner als der Höchstwert sein.
@@ -89,11 +92,11 @@ de:
           multiple: Mehrfachauswahl
           number: Bewertung
         poll_result:
-          label: Ergebnisse anzeigen...
+          label: Ergebnisse anzeigen …
           always: Immer sichtbar
           vote: Nur nach Stimmabgabe
           closed: Wenn die Umfrage geschlossen ist
-          staff: Nur Teammitglieder
+          staff: Nur Team-Mitglieder
         poll_groups:
           label: Abstimmung auf diese Gruppen beschränken
         poll_chart_type:

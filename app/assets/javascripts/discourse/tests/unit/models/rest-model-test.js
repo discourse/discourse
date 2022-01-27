@@ -16,13 +16,13 @@ module("Unit | Model | rest-model", function () {
     });
 
     let g = Grape.create({ store, percent: 0.4 });
-    assert.equal(g.get("inverse"), 0.6, "it runs `munge` on `create`");
+    assert.strictEqual(g.get("inverse"), 0.6, "it runs `munge` on `create`");
   });
 
   test("update", async function (assert) {
     const store = createStore();
     const widget = await store.find("widget", 123);
-    assert.equal(widget.get("name"), "Trout Lure");
+    assert.strictEqual(widget.get("name"), "Trout Lure");
     assert.ok(!widget.get("isSaving"), "it is not saving");
 
     const spyBeforeUpdate = sinon.spy(widget, "beforeUpdate");
@@ -34,10 +34,10 @@ module("Unit | Model | rest-model", function () {
     const result = await promise;
     assert.ok(spyAfterUpdate.calledOn(widget));
     assert.ok(!widget.get("isSaving"), "it is no longer saving");
-    assert.equal(widget.get("name"), "new name");
+    assert.strictEqual(widget.get("name"), "new name");
 
     assert.ok(result.target, "it has a reference to the record");
-    assert.equal(result.target.name, widget.get("name"));
+    assert.strictEqual(result.target.name, widget.get("name"));
   });
 
   test("updating simultaneously", async function (assert) {
@@ -50,7 +50,7 @@ module("Unit | Model | rest-model", function () {
     const secondPromise = widget.update({ name: "new name" });
 
     firstPromise.then(function () {
-      assert.ok(true, "the first promise succeeeds");
+      assert.ok(true, "the first promise succeeds");
     });
 
     secondPromise.catch(function () {
@@ -81,7 +81,7 @@ module("Unit | Model | rest-model", function () {
     assert.ok(!widget.get("isNew"), "it is no longer new");
 
     assert.ok(result.target, "it has a reference to the record");
-    assert.equal(result.target.name, widget.get("name"));
+    assert.strictEqual(result.target.name, widget.get("name"));
   });
 
   test("creating simultaneously", function (assert) {
@@ -93,7 +93,7 @@ module("Unit | Model | rest-model", function () {
     const firstPromise = widget.save({ name: "Evil Widget" });
     const secondPromise = widget.save({ name: "Evil Widget" });
     firstPromise.then(function () {
-      assert.ok(true, "the first promise succeeeds");
+      assert.ok(true, "the first promise succeeds");
     });
 
     secondPromise.catch(function () {
@@ -127,18 +127,18 @@ module("Unit | Model | rest-model", function () {
     //Create
     const widget = store.createRecord("my-widget");
     await widget.save({ name: "Evil Widget" });
-    assert.equal(widget.id, 100, "it saved a new record successully");
-    assert.equal(widget.get("name"), "Evil Widget");
+    assert.strictEqual(widget.id, 100, "it saved a new record successfully");
+    assert.strictEqual(widget.get("name"), "Evil Widget");
 
     // Update
     await widget.update({ name: "new name" });
-    assert.equal(widget.get("name"), "new name");
+    assert.strictEqual(widget.get("name"), "new name");
 
     // Destroy
     await widget.destroyRecord();
 
     // Lookup
     const foundWidget = await store.find("my-widget", 123);
-    assert.equal(foundWidget.name, "Trout Lure");
+    assert.strictEqual(foundWidget.name, "Trout Lure");
   });
 });

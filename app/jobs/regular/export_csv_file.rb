@@ -56,7 +56,7 @@ module Jobs
       dirname = "#{UserExport.base_directory}/#{filename}"
 
       # ensure directory exists
-      FileUtils.mkdir_p(dirname) unless Dir.exists?(dirname)
+      FileUtils.mkdir_p(dirname) unless Dir.exist?(dirname)
 
       # Generate a compressed CSV file
       begin
@@ -317,7 +317,11 @@ module Jobs
 
     def add_group_names(user, user_info_array)
       group_names = user.groups.map { |g| g.name }.join(";")
-      user_info_array << escape_comma(group_names) if group_names.present?
+      if group_names.present?
+        user_info_array << escape_comma(group_names)
+      else
+        user_info_array << nil
+      end
       user_info_array
     end
 

@@ -9,5 +9,5 @@ ja:
     details:
       title: 詳細を隠す
     composer:
-      details_title: サマリー
-      details_text: "この文字は表示されません。"
+      details_title: 要約
+      details_text: "このテキストは表示されません"

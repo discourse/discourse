@@ -25,7 +25,7 @@
   }
 
   .nav-pills {
-    margin-bottom: 1em;
+    margin: 0 0 1em;
   }
 
   .reviewable-container {
@@ -120,18 +120,6 @@
 
     .category-chooser {
       width: 100%;
-    }
-
-    .d-date-time-input-range {
-      width: inherit;
-      border: none;
-      padding: 0;
-      flex-direction: column;
-
-      .d-date-input {
-        flex: 1 1 auto;
-        border: 1px solid var(--primary-medium);
-      }
     }
   }
 }
@@ -274,6 +262,10 @@
     }
   }
   padding-bottom: 1em;
+}
+
+.reviewable-stale {
+  opacity: 0.7;
 }
 
 .blur-images {
@@ -460,11 +452,6 @@
       display: block;
       font-size: $font-up-2;
       margin-right: 0.75em;
-    }
-    .topic-statuses {
-      &:empty {
-        display: none;
-      }
     }
   }
 }

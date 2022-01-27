@@ -1,5 +1,6 @@
 export function findOrResetCachedTopicList(session, filter) {
   const lastTopicList = session.get("topicList");
+
   if (lastTopicList && lastTopicList.filter === filter) {
     return lastTopicList;
   } else {

@@ -9,8 +9,9 @@ class ApplicationController < ActionController::Base
   include GlobalPath
   include Hijack
   include ReadOnlyHeader
+  include VaryHeader
 
-  attr_reader :theme_ids
+  attr_reader :theme_id
 
   serialization_scope :guardian
 
@@ -28,6 +29,7 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  before_action :rate_limit_crawlers
   before_action :check_readonly_mode
   before_action :handle_theme
   before_action :set_current_user_for_logs
@@ -40,12 +42,14 @@ class ApplicationController < ActionController::Base
   before_action :redirect_to_login_if_required
   before_action :block_if_requires_login
   before_action :preload_json
-  before_action :add_noindex_header, if: -> { is_feed_request? || !SiteSetting.allow_index_in_robots_txt }
   before_action :check_xhr
   after_action  :add_readonly_header
   after_action  :perform_refresh_session
   after_action  :dont_cache_page
   after_action  :conditionally_allow_site_embedding
+  after_action  :ensure_vary_header
+  after_action  :add_noindex_header, if: -> { is_feed_request? || !SiteSetting.allow_index_in_robots_txt }
+  after_action  :add_noindex_header_to_non_canonical, if: -> { request.get? && !(request.format && request.format.json?) && !request.xhr? }
 
   HONEYPOT_KEY ||= 'HONEYPOT_KEY'
   CHALLENGE_KEY ||= 'CHALLENGE_KEY'
@@ -115,23 +119,9 @@ class ApplicationController < ActionController::Base
 
   class RenderEmpty < StandardError; end
   class PluginDisabled < StandardError; end
-  class EmberCLIHijacked < StandardError; end
-
-  def catch_ember_cli_hijack
-    yield
-  rescue ActionView::Template::Error => ex
-    raise ex unless ex.cause.is_a?(EmberCLIHijacked)
-    send_ember_cli_bootstrap
-  end
 
   rescue_from RenderEmpty do
-    catch_ember_cli_hijack do
-      with_resolved_locale { render 'default/empty' }
-    end
-  end
-
-  rescue_from EmberCLIHijacked do
-    send_ember_cli_bootstrap
+    with_resolved_locale { render 'default/empty' }
   end
 
   rescue_from ArgumentError do |e|
@@ -186,13 +176,21 @@ class ApplicationController < ActionController::Base
   rescue_from RateLimiter::LimitExceeded do |e|
     retry_time_in_seconds = e&.available_in
 
+    response_headers = {
+      'Retry-After': retry_time_in_seconds.to_s
+    }
+
+    if e&.error_code
+      response_headers['Discourse-Rate-Limit-Error-Code'] = e.error_code
+    end
+
     with_resolved_locale do
       render_json_error(
         e.description,
         type: :rate_limit,
         status: 429,
         extras: { wait_seconds: retry_time_in_seconds },
-        headers: { 'Retry-After': retry_time_in_seconds.to_s }
+        headers: response_headers
       )
     end
   end
@@ -299,7 +297,7 @@ class ApplicationController < ActionController::Base
       with_resolved_locale(check_current_user: false) do
         # Include error in HTML format for topics#show.
         if (request.params[:controller] == 'topics' && request.params[:action] == 'show') || (request.params[:controller] == 'categories' && request.params[:action] == 'find_by_slug')
-          opts[:extras] = { html: build_not_found_page(error_page_opts) }
+          opts[:extras] = { html: build_not_found_page(error_page_opts), group: error_page_opts[:group] }
         end
       end
 
@@ -312,21 +310,15 @@ class ApplicationController < ActionController::Base
       rescue Discourse::InvalidAccess
         return render plain: message, status: status_code
       end
-      catch_ember_cli_hijack do
-        with_resolved_locale do
-          error_page_opts[:layout] = opts[:include_ember] ? 'application' : 'no_ember'
-          render html: build_not_found_page(error_page_opts)
-        end
+      with_resolved_locale do
+        error_page_opts[:layout] = opts[:include_ember] ? 'application' : 'no_ember'
+        render html: build_not_found_page(error_page_opts)
       end
     end
   end
 
-  def send_ember_cli_bootstrap
-    head 200, content_type: "text/html", "X-Discourse-Bootstrap-Required": true
-  end
-
   # If a controller requires a plugin, it will raise an exception if that plugin is
-  # disabled. This allows plugins to be disabled programatically.
+  # disabled. This allows plugins to be disabled programmatically.
   def self.requires_plugin(plugin_name)
     before_action do
       raise PluginDisabled.new if Discourse.disabled_plugin_names.include?(plugin_name)
@@ -399,7 +391,7 @@ class ApplicationController < ActionController::Base
     @preloaded ||= {}
     # I dislike that there is a gsub as opposed to a gsub!
     #  but we can not be mucking with user input, I wonder if there is a way
-    #  to inject this safty deeper in the library or even in AM serializer
+    #  to inject this safety deeper in the library or even in AM serializer
     @preloaded[key] = json.gsub("</", "<\\/")
   end
 
@@ -446,35 +438,34 @@ class ApplicationController < ActionController::Base
     resolve_safe_mode
     return if request.env[NO_CUSTOM]
 
-    theme_ids = []
+    theme_id = nil
 
-    if preview_theme_id = request[:preview_theme_id]&.to_i
-      ids = [preview_theme_id]
-      theme_ids = ids if guardian.allow_themes?(ids, include_preview: true)
+    if (preview_theme_id = request[:preview_theme_id]&.to_i) &&
+      guardian.allow_themes?([preview_theme_id], include_preview: true)
+
+      theme_id = preview_theme_id
     end
 
     user_option = current_user&.user_option
 
-    if theme_ids.blank?
+    if theme_id.blank?
       ids, seq = cookies[:theme_ids]&.split("|")
-      ids = ids&.split(",")&.map(&:to_i)
-      if ids.present? && seq && seq.to_i == user_option&.theme_key_seq.to_i
-        theme_ids = ids if guardian.allow_themes?(ids)
+      id = ids&.split(",")&.map(&:to_i)&.first
+      if id.present? && seq && seq.to_i == user_option&.theme_key_seq.to_i
+        theme_id = id if guardian.allow_themes?([id])
       end
     end
 
-    if theme_ids.blank?
+    if theme_id.blank?
       ids = user_option&.theme_ids || []
-      theme_ids = ids if guardian.allow_themes?(ids)
+      theme_id = ids.first if guardian.allow_themes?(ids)
     end
 
-    if theme_ids.blank? && SiteSetting.default_theme_id != -1
-      if guardian.allow_themes?([SiteSetting.default_theme_id])
-        theme_ids << SiteSetting.default_theme_id
-      end
+    if theme_id.blank? && SiteSetting.default_theme_id != -1 && guardian.allow_themes?([SiteSetting.default_theme_id])
+      theme_id = SiteSetting.default_theme_id
     end
 
-    @theme_ids = request.env[:resolved_theme_ids] = theme_ids
+    @theme_id = request.env[:resolved_theme_id] = theme_id
   end
 
   def guardian
@@ -533,11 +524,16 @@ class ApplicationController < ActionController::Base
     opts ||= {}
     user = if params[:username]
       username_lower = params[:username].downcase.chomp('.json')
-      find_opts = { username_lower: username_lower }
-      find_opts[:active] = true unless opts[:include_inactive] || current_user.try(:staff?)
-      result = User
-      (result = result.includes(*eager_load)) if !eager_load.empty?
-      result.find_by(find_opts)
+
+      if current_user && current_user.username_lower == username_lower
+        current_user
+      else
+        find_opts = { username_lower: username_lower }
+        find_opts[:active] = true unless opts[:include_inactive] || current_user.try(:staff?)
+        result = User
+        (result = result.includes(*eager_load)) if !eager_load.empty?
+        result.find_by(find_opts)
+      end
     elsif params[:external_id]
       external_id = params[:external_id].chomp('.json')
       if provider_name = params[:external_provider]
@@ -608,7 +604,9 @@ class ApplicationController < ActionController::Base
   def preload_current_user_data
     store_preloaded("currentUser", MultiJson.dump(CurrentUserSerializer.new(current_user, scope: guardian, root: false)))
     report = TopicTrackingState.report(current_user)
-    serializer = ActiveModel::ArraySerializer.new(report, each_serializer: TopicTrackingStateSerializer)
+    serializer = ActiveModel::ArraySerializer.new(
+      report, each_serializer: TopicTrackingStateSerializer, scope: guardian
+    )
     store_preloaded("topicTrackingStates", MultiJson.dump(serializer))
   end
 
@@ -616,10 +614,10 @@ class ApplicationController < ActionController::Base
     target = view_context.mobile_view? ? :mobile : :desktop
 
     data =
-      if @theme_ids.present?
+      if @theme_id.present?
         {
-         top: Theme.lookup_field(@theme_ids, target, "after_header"),
-         footer: Theme.lookup_field(@theme_ids, target, "footer")
+         top: Theme.lookup_field(@theme_id, target, "after_header"),
+         footer: Theme.lookup_field(@theme_id, target, "footer")
         }
       else
         {}
@@ -821,7 +819,11 @@ class ApplicationController < ActionController::Base
 
     if !current_user && SiteSetting.login_required?
       flash.keep
-      redirect_to_login
+      if (request.format && request.format.json?) || request.xhr? || !request.get?
+        ensure_logged_in
+      else
+        redirect_to_login
+      end
       return
     end
 
@@ -894,6 +896,13 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def add_noindex_header_to_non_canonical
+    canonical = (@canonical_url || @default_canonical)
+    if canonical.present? && canonical != request.url && !SiteSetting.allow_indexing_non_canonical_urls
+      response.headers['X-Robots-Tag'] ||= 'noindex'
+    end
+  end
+
   protected
 
   def honeypot_value
@@ -918,15 +927,41 @@ class ApplicationController < ActionController::Base
   # returns an array of integers given a param key
   # returns nil if key is not found
   def param_to_integer_list(key, delimiter = ',')
-    if params[key]
+    case params[key]
+    when String
       params[key].split(delimiter).map(&:to_i)
+    when Array
+      params[key].map(&:to_i)
     end
   end
 
   def activated_themes_json
-    ids = @theme_ids&.compact
-    return "{}" if ids.blank?
-    ids = Theme.transform_ids(ids)
+    id = @theme_id
+    return "{}" if id.blank?
+    ids = Theme.transform_ids(id)
     Theme.where(id: ids).pluck(:id, :name).to_h.to_json
+  end
+
+  def rate_limit_crawlers
+    return if current_user.present?
+    return if SiteSetting.slow_down_crawler_user_agents.blank?
+
+    user_agent = request.user_agent&.downcase
+    return if user_agent.blank?
+
+    SiteSetting.slow_down_crawler_user_agents.downcase.split("|").each do |crawler|
+      if user_agent.include?(crawler)
+        key = "#{crawler}_crawler_rate_limit"
+        limiter = RateLimiter.new(
+          nil,
+          key,
+          1,
+          SiteSetting.slow_down_crawler_rate,
+          error_code: key
+        )
+        limiter.performed!
+        break
+      end
+    end
   end
 end

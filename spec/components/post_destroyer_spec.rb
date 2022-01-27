@@ -10,13 +10,12 @@ describe PostDestroyer do
 
   fab!(:moderator) { Fabricate(:moderator) }
   fab!(:admin) { Fabricate(:admin) }
+  fab!(:coding_horror) { Fabricate(:coding_horror) }
   let(:post) { create_post }
 
   describe "destroy_old_hidden_posts" do
 
     it "destroys posts that have been hidden for 30 days" do
-      Fabricate(:admin)
-
       now = Time.now
 
       freeze_time(now - 60.days)
@@ -63,7 +62,6 @@ describe PostDestroyer do
 
     it 'destroys stubs for deleted by user posts' do
       SiteSetting.delete_removed_posts_after = 24
-      Fabricate(:admin)
       topic = post.topic
       reply1 = create_post(topic: topic)
       reply2 = create_post(topic: topic)
@@ -95,7 +93,7 @@ describe PostDestroyer do
 
       # flag the post, it should not nuke the stub anymore
       topic.recover!
-      reviewable = PostActionCreator.spam(Fabricate(:coding_horror), reply1).reviewable
+      reviewable = PostActionCreator.spam(coding_horror, reply1).reviewable
 
       PostDestroyer.destroy_stubs
 
@@ -111,7 +109,6 @@ describe PostDestroyer do
     end
 
     it 'uses the delete_removed_posts_after site setting' do
-      Fabricate(:admin)
       topic = post.topic
       reply1 = create_post(topic: topic)
       reply2 = create_post(topic: topic)
@@ -147,7 +144,6 @@ describe PostDestroyer do
     end
 
     it "deletes posts immediately if delete_removed_posts_after is 0" do
-      Fabricate(:admin)
       topic = post.topic
       reply1 = create_post(topic: topic)
 
@@ -184,7 +180,7 @@ describe PostDestroyer do
       post = Fabricate(:post)
       UserDestroyer.new(Discourse.system_user).destroy(post.user, delete_posts: true)
 
-      expect { PostDestroyer.new(Fabricate(:admin), post.reload).recover }
+      expect { PostDestroyer.new(admin, post.reload).recover }
         .to change { post.reload.user_id }.to(Discourse.system_user.id)
         .and change { post.topic.user_id }.to(Discourse.system_user.id)
     end
@@ -240,6 +236,13 @@ describe PostDestroyer do
 
           expect(UserAction.where(target_topic_id: post.topic_id, action_type: UserAction::NEW_TOPIC).count).to eq(1)
           expect(UserAction.where(target_topic_id: post.topic_id, action_type: UserAction::REPLY).count).to eq(1)
+        end
+
+        it "runs the SyncTopicUserBookmarked for the topic that the post is in so topic_users.bookmarked is correct" do
+          PostDestroyer.new(@user, @reply).destroy
+          expect_enqueued_with(job: :sync_topic_user_bookmarked, args: { topic_id: @reply.topic_id  }) do
+            PostDestroyer.new(@user, @reply.reload).recover
+          end
         end
       end
 
@@ -319,7 +322,7 @@ describe PostDestroyer do
   end
 
   describe "recovery and post actions" do
-    fab!(:codinghorror) { Fabricate(:coding_horror) }
+    fab!(:codinghorror) { coding_horror }
     let!(:like) { PostActionCreator.like(codinghorror, post).post_action }
     let!(:another_like) { PostActionCreator.like(moderator, post).post_action }
 
@@ -381,7 +384,7 @@ describe PostDestroyer do
         expect(post2.deleted_at).to be_blank
         expect(post2.deleted_by).to be_blank
         expect(post2.user_deleted).to eq(true)
-        expect(post2.raw).to eq(I18n.t('js.topic.deleted_by_author', count: 24))
+        expect(post2.raw).to eq(I18n.t('js.topic.deleted_by_author_simple'))
         expect(post2.version).to eq(2)
         expect(called).to eq(1)
         expect(user_stat.reload.post_count).to eq(0)
@@ -430,7 +433,7 @@ describe PostDestroyer do
       expect(user2.user_stat.topic_count).to eq(0)
       expect(user2.user_stat.post_count).to eq(1)
 
-      PostDestroyer.new(Fabricate(:admin), post).destroy
+      PostDestroyer.new(admin, post).destroy
       user1.reload
       user2.reload
       expect(user1.user_stat.topic_count).to eq(0)
@@ -462,7 +465,25 @@ describe PostDestroyer do
       expect(post.deleted_at).to eq(nil)
       expect(post.user_deleted).to eq(true)
 
-      expect(post.raw).to eq(I18n.t('js.post.deleted_by_author', count: 1))
+      expect(post.raw).to eq(I18n.t('js.post.deleted_by_author_simple'))
+    end
+
+    it "runs the SyncTopicUserBookmarked for the topic that the post is in so topic_users.bookmarked is correct" do
+      post2 = create_post
+      PostDestroyer.new(post2.user, post2).destroy
+      expect_job_enqueued(job: :sync_topic_user_bookmarked, args: { topic_id: post2.topic_id })
+    end
+
+    it "skips post revise validations when post is marked for deletion by the author" do
+      SiteSetting.min_first_post_length = 100
+      post = create_post(raw: "this is a long post what passes the min_first_post_length validation " * 3)
+      PostDestroyer.new(post.user, post).destroy
+      post.reload
+      expect(post.errors).to be_blank
+      expect(post.revisions.count).to eq(1)
+      expect(post.raw).to eq(I18n.t("js.topic.deleted_by_author_simple"))
+      expect(post.user_deleted).to eq(true)
+      expect(post.topic.closed).to eq(true)
     end
 
     context "as a moderator" do
@@ -624,7 +645,7 @@ describe PostDestroyer do
     fab!(:user) { Fabricate(:user) }
     let!(:post) { create_post(user: user) }
     let(:topic) { post.topic }
-    fab!(:second_user) { Fabricate(:coding_horror) }
+    fab!(:second_user) { coding_horror }
     let!(:second_post) { create_post(topic: topic, user: second_user) }
 
     before do
@@ -654,10 +675,6 @@ describe PostDestroyer do
 
       it "sets the second user's last_read_post_number back to 1" do
         expect(topic_user.last_read_post_number).to eq(1)
-      end
-
-      it "sets the second user's last_read_post_number back to 1" do
-        expect(topic_user.highest_seen_post_number).to eq(1)
       end
     end
   end
@@ -761,7 +778,7 @@ describe PostDestroyer do
 
   describe 'after delete' do
 
-    fab!(:coding_horror) { Fabricate(:coding_horror) }
+    fab!(:coding_horror) { coding_horror }
     fab!(:post) { Fabricate(:post, raw: "Hello @CodingHorror") }
 
     it "should feature the users again (in case they've changed)" do
@@ -827,7 +844,7 @@ describe PostDestroyer do
       user = Fabricate(:evil_trout)
       post = create_post(raw: 'Hello @eviltrout')
       expect {
-        PostDestroyer.new(Fabricate(:moderator), post).destroy
+        PostDestroyer.new(moderator, post).destroy
       }.to change(user.notifications, :count).by(-1)
     end
   end
@@ -914,7 +931,7 @@ describe PostDestroyer do
   end
 
   describe "user actions" do
-    let(:codinghorror) { Fabricate(:coding_horror) }
+    let(:codinghorror) { coding_horror }
     let(:second_post) { Fabricate(:post, topic_id: post.topic_id) }
 
     def create_user_action(action_type)
@@ -951,6 +968,43 @@ describe PostDestroyer do
     it 'should destroy the topic links when the user destroys the post' do
       PostDestroyer.new(second_post.user, second_post.reload).destroy
       expect(topic.topic_links.count).to eq(0)
+    end
+  end
+
+  describe 'internal links' do
+    fab!(:topic)  { Fabricate(:topic) }
+    let!(:second_post) { Fabricate(:post, topic: topic) }
+    fab!(:other_topic)  { Fabricate(:topic) }
+    let!(:other_post) { Fabricate(:post, topic: other_topic) }
+    fab!(:user) { Fabricate(:user) }
+    let!(:base_url) { URI.parse(Discourse.base_url) }
+    let!(:guardian) { Guardian.new }
+    let!(:url) { "http://#{base_url.host}/t/#{other_topic.slug}/#{other_topic.id}/#{other_post.post_number}" }
+
+    it 'should destroy internal links when user deletes own post' do
+      new_post = Post.create!(user: user, topic: topic, raw: "Link to other topic:\n\n#{url}\n")
+      TopicLink.extract_from(new_post)
+
+      link_counts = TopicLink.counts_for(guardian, other_topic.reload, [other_post])
+      expect(link_counts.count).to eq(1)
+
+      PostDestroyer.new(user, new_post).destroy
+
+      updated_link_counts = TopicLink.counts_for(guardian, other_topic.reload, [other_post])
+      expect(updated_link_counts.count).to eq(0)
+    end
+
+    it 'should destroy internal links when moderator deletes post' do
+      new_post = Post.create!(user: user, topic: topic, raw: "Link to other topic:\n\n#{url}\n")
+      TopicLink.extract_from(new_post)
+      link_counts = TopicLink.counts_for(guardian, other_topic.reload, [other_post])
+      expect(link_counts.count).to eq(1)
+
+      PostDestroyer.new(moderator, new_post).destroy
+      TopicLink.extract_from(new_post)
+      updated_link_counts = TopicLink.counts_for(guardian, other_topic, [other_post])
+
+      expect(updated_link_counts.count).to eq(0)
     end
   end
 

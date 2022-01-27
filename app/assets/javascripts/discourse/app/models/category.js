@@ -43,6 +43,19 @@ const Category = RestModel.extend({
     }
   },
 
+  @discourseComputed(
+    "required_tag_groups",
+    "min_tags_from_required_group",
+    "minimum_required_tags"
+  )
+  minimumRequiredTags() {
+    if (this.required_tag_groups) {
+      return this.min_tags_from_required_group;
+    } else {
+      return this.minimum_required_tags > 0 ? this.minimum_required_tags : null;
+    }
+  },
+
   @discourseComputed
   availablePermissions() {
     return [
@@ -183,6 +196,11 @@ const Category = RestModel.extend({
     return topicCount;
   },
 
+  @discourseComputed("default_slow_mode_seconds")
+  defaultSlowModeMinutes(seconds) {
+    return seconds ? seconds / 60 : null;
+  },
+
   save() {
     const id = this.id;
     const url = id ? `/categories/${id}` : "/categories";
@@ -199,6 +217,7 @@ const Category = RestModel.extend({
         auto_close_based_on_last_post: this.get(
           "auto_close_based_on_last_post"
         ),
+        default_slow_mode_seconds: this.default_slow_mode_seconds,
         position: this.position,
         email_in: this.email_in,
         email_in_allow_strangers: this.email_in_allow_strangers,
@@ -212,12 +231,19 @@ const Category = RestModel.extend({
         all_topics_wiki: this.all_topics_wiki,
         allow_unlimited_owner_edits_on_first_post: this
           .allow_unlimited_owner_edits_on_first_post,
-        allowed_tags: this.allowed_tags,
-        allowed_tag_groups: this.allowed_tag_groups,
+        allowed_tags:
+          this.allowed_tags && this.allowed_tags.length > 0
+            ? this.allowed_tags
+            : null,
+        allowed_tag_groups:
+          this.allowed_tag_groups && this.allowed_tag_groups.length > 0
+            ? this.allowed_tag_groups
+            : null,
         allow_global_tags: this.allow_global_tags,
-        required_tag_group_name: this.required_tag_groups
-          ? this.required_tag_groups[0]
-          : null,
+        required_tag_group_name:
+          this.required_tag_groups && this.required_tag_groups.length > 0
+            ? this.required_tag_groups[0]
+            : null,
         min_tags_from_required_group: this.min_tags_from_required_group,
         sort_order: this.sort_order,
         sort_ascending: this.sort_ascending,
@@ -432,7 +458,7 @@ Category.reopenClass({
 
   findBySlugPathWithID(slugPathWithID) {
     let parts = slugPathWithID.split("/").filter(Boolean);
-    // slugs found by star/glob pathing in emeber do not automatically url decode - ensure that these are decoded
+    // slugs found by star/glob pathing in ember do not automatically url decode - ensure that these are decoded
     if (this.slugEncoded()) {
       parts = parts.map((urlPart) => decodeURI(urlPart));
     }

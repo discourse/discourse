@@ -1,6 +1,7 @@
 import {
   acceptance,
   exists,
+  query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
@@ -26,7 +27,7 @@ acceptance("Composer - Hyperlink", function (needs) {
     await fillIn(".modal-body .link-text", "Google");
     await click(".modal-footer button.btn-primary");
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".d-editor-input").val(),
       "This is a link to [Google](https://google.com)",
       "adds link with url and text, prepends 'https://'"
@@ -44,7 +45,7 @@ acceptance("Composer - Hyperlink", function (needs) {
     await fillIn(".modal-body .link-text", "Google");
     await click(".modal-footer button.btn-danger");
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".d-editor-input").val(),
       "Reset textarea contents.",
       "doesn’t insert anything after cancelling"
@@ -55,7 +56,7 @@ acceptance("Composer - Hyperlink", function (needs) {
       "modal dismissed after cancelling"
     );
 
-    const textarea = queryAll("#reply-control .d-editor-input")[0];
+    const textarea = query("#reply-control .d-editor-input");
     textarea.selectionStart = 0;
     textarea.selectionEnd = 6;
     await click(".d-editor button.link");
@@ -63,7 +64,7 @@ acceptance("Composer - Hyperlink", function (needs) {
     await fillIn(".modal-body .link-url", "somelink.com");
     await click(".modal-footer button.btn-primary");
 
-    assert.equal(
+    assert.strictEqual(
       queryAll(".d-editor-input").val(),
       "[Reset](https://somelink.com) textarea contents.",
       "adds link to a selected text"

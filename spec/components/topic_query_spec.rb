@@ -5,11 +5,15 @@ require 'topic_view'
 
 describe TopicQuery do
 
-  # TODO: this let! here has impact on all tests
-  #  it indeed happens first, but is not obvious later in the tests we depend on the user being
-  #  created so early otherwise finding new topics does not work
-  #  we should remove the let! here and use freeze time to communicate how the clock moves
-  let!(:user) { Fabricate(:user) }
+  # TODO:
+  #   This fab! here has impact on all tests.
+  #
+  #   It happens first, but is not obvious later in the tests that we depend on
+  #   the user being created so early otherwise finding new topics does not
+  #   work.
+  #
+  #   We should use be more explicit in communicating how the clock moves
+  fab!(:user) { Fabricate(:user) }
 
   fab!(:creator) { Fabricate(:user) }
   let(:topic_query) { TopicQuery.new(user) }
@@ -62,7 +66,7 @@ describe TopicQuery do
     end
   end
 
-  context "list_topics_by" do
+  context "#list_topics_by" do
 
     it "allows users to view their own invisible topics" do
       _topic = Fabricate(:topic, user: user)
@@ -74,7 +78,7 @@ describe TopicQuery do
 
   end
 
-  context "prioritize_pinned_topics" do
+  context "#prioritize_pinned_topics" do
     it "does the pagination correctly" do
       num_topics = 15
       per_page = 3
@@ -96,6 +100,63 @@ describe TopicQuery do
         per_page: per_page,
         page: 1)
       ).to eq(topics[per_page...num_topics])
+    end
+
+    it "orders globally pinned topics by pinned_at rather than bumped_at" do
+      pinned1 = Fabricate(
+        :topic,
+        bumped_at: 3.hour.ago,
+        pinned_at: 1.hours.ago,
+        pinned_until: 10.days.from_now,
+        pinned_globally: true
+      )
+      pinned2 = Fabricate(
+        :topic,
+        bumped_at: 2.hour.ago,
+        pinned_at: 4.hours.ago,
+        pinned_until: 10.days.from_now,
+        pinned_globally: true
+      )
+      unpinned1 = Fabricate(:topic, bumped_at: 2.hour.ago)
+      unpinned2 = Fabricate(:topic, bumped_at: 3.hour.ago)
+
+      topic_query = TopicQuery.new(user)
+      results = topic_query.send(:default_results)
+
+      expected_order = [pinned1, pinned2, unpinned1, unpinned2].map(&:id)
+      expect(topic_query
+        .prioritize_pinned_topics(results, per_page: 10, page: 0)
+        .pluck(:id)
+      ).to eq(expected_order)
+    end
+
+    it "orders pinned topics within a category by pinned_at rather than bumped_at" do
+      cat = Fabricate(:category)
+      pinned1 = Fabricate(
+        :topic,
+        category: cat,
+        bumped_at: 3.hour.ago,
+        pinned_at: 1.hours.ago,
+        pinned_until: 10.days.from_now,
+      )
+      pinned2 = Fabricate(
+        :topic,
+        category: cat,
+        bumped_at: 2.hour.ago,
+        pinned_at: 4.hours.ago,
+        pinned_until: 10.days.from_now,
+      )
+      unpinned1 = Fabricate(:topic, category: cat, bumped_at: 2.hour.ago)
+      unpinned2 = Fabricate(:topic, category: cat, bumped_at: 3.hour.ago)
+
+      topic_query = TopicQuery.new(user)
+      results = topic_query.send(:default_results)
+
+      expected_order = [pinned1, pinned2, unpinned1, unpinned2].map(&:id)
+      expect(topic_query
+        .prioritize_pinned_topics(results, per_page: 10, page: 0, category_id: cat.id)
+        .pluck(:id)
+      ).to eq(expected_order)
     end
   end
 
@@ -211,33 +272,100 @@ describe TopicQuery do
       let!(:subcategory) { Fabricate(:category_with_definition, parent_category_id: category.id) }
       let(:subsubcategory) { Fabricate(:category_with_definition, parent_category_id: subcategory.id) }
 
+      # Not used in assertions but fabricated to ensure we're not leaking topics
+      # across categories
+      let!(:_category) { Fabricate(:category_with_definition) }
+      let!(:_subcategory) { Fabricate(:category_with_definition, parent_category_id: _category.id) }
+
       it "works with subcategories" do
-        expect(TopicQuery.new(moderator, category: category.id).list_latest.topics.size).to eq(1)
-        expect(TopicQuery.new(moderator, category: subcategory.id).list_latest.topics.size).to eq(1)
-        expect(TopicQuery.new(moderator, category: category.id, no_subcategories: true).list_latest.topics.size).to eq(1)
+        expect(
+          TopicQuery
+            .new(moderator, category: category.id)
+            .list_latest.topics
+        ).to contain_exactly(category.topic)
+
+        expect(
+          TopicQuery
+            .new(moderator, category: subcategory.id)
+            .list_latest.topics
+        ).to contain_exactly(subcategory.topic)
+
+        expect(
+          TopicQuery
+            .new(moderator, category: category.id, no_subcategories: true)
+            .list_latest.topics
+        ).to contain_exactly(category.topic)
       end
 
       it "shows a subcategory definition topic in its parent list with the right site setting" do
         SiteSetting.show_category_definitions_in_topic_lists = true
-        expect(TopicQuery.new(moderator, category: category.id).list_latest.topics.size).to eq(2)
+
+        expect(
+          TopicQuery
+            .new(moderator, category: category.id)
+            .list_latest.topics
+        ).to contain_exactly(category.topic, subcategory.topic)
       end
 
       it "works with subsubcategories" do
         SiteSetting.max_category_nesting = 3
 
-        Fabricate(:topic, category: category)
-        Fabricate(:topic, category: subcategory)
-        Fabricate(:topic, category: subsubcategory)
+        category_topic = Fabricate(:topic, category: category)
+        subcategory_topic = Fabricate(:topic, category: subcategory)
+        subsubcategory_topic = Fabricate(:topic, category: subsubcategory)
 
         SiteSetting.max_category_nesting = 2
-        expect(TopicQuery.new(moderator, category: category.id).list_latest.topics.size).to eq(3)
-        expect(TopicQuery.new(moderator, category: subcategory.id).list_latest.topics.size).to eq(3)
-        expect(TopicQuery.new(moderator, category: subsubcategory.id).list_latest.topics.size).to eq(2)
+
+        expect(
+          TopicQuery
+            .new(moderator, category: category.id)
+            .list_latest.topics
+        ).to contain_exactly(category.topic, category_topic, subcategory_topic)
+
+        expect(
+          TopicQuery
+            .new(moderator, category: subcategory.id)
+            .list_latest.topics
+        ).to contain_exactly(
+          subcategory.topic,
+          subcategory_topic,
+          subsubcategory_topic
+        )
+
+        expect(
+          TopicQuery
+            .new(moderator, category: subsubcategory.id)
+            .list_latest.topics
+        ).to contain_exactly(subsubcategory.topic, subsubcategory_topic)
 
         SiteSetting.max_category_nesting = 3
-        expect(TopicQuery.new(moderator, category: category.id).list_latest.topics.size).to eq(4)
-        expect(TopicQuery.new(moderator, category: subcategory.id).list_latest.topics.size).to eq(3)
-        expect(TopicQuery.new(moderator, category: subsubcategory.id).list_latest.topics.size).to eq(2)
+
+        expect(
+          TopicQuery
+            .new(moderator, category: category.id)
+            .list_latest.topics
+        ).to contain_exactly(
+          category.topic,
+          category_topic,
+          subcategory_topic,
+          subsubcategory_topic
+        )
+
+        expect(
+          TopicQuery
+            .new(moderator, category: subcategory.id)
+            .list_latest.topics
+        ).to contain_exactly(
+          subcategory.topic,
+          subcategory_topic,
+          subsubcategory_topic
+        )
+
+        expect(
+          TopicQuery
+            .new(moderator, category: subsubcategory.id)
+            .list_latest.topics
+        ).to contain_exactly(subsubcategory.topic, subsubcategory_topic)
       end
     end
   end
@@ -258,6 +386,11 @@ describe TopicQuery do
       fab!(:tagged_topic4) { Fabricate(:topic, tags: [uppercase_tag]) }
       fab!(:no_tags_topic) { Fabricate(:topic) }
       let(:synonym) { Fabricate(:tag, target_tag: tag, name: 'synonym') }
+
+      it "excludes a tag if desired" do
+        topics = TopicQuery.new(moderator, exclude_tag: tag.name).list_latest.topics
+        expect(topics.any? { |t| t.tags.include?(tag) }).to eq(false)
+      end
 
       it "returns topics with the tag when filtered to it" do
         expect(TopicQuery.new(moderator, tags: tag.name).list_latest.topics)
@@ -352,6 +485,24 @@ describe TopicQuery do
       expect(topic_query.list_latest.topics.map(&:id)).not_to include(topic.id)
       TopTopic.create!(topic: topic, all_score: 1)
       expect(topic_query.list_top_for(:all).topics.map(&:id)).not_to include(topic.id)
+    end
+  end
+
+  context "#list_top_for" do
+    it "lists top for the week" do
+      Fabricate(:topic, like_count: 1000, posts_count: 100)
+      TopTopic.refresh!
+      expect(topic_query.list_top_for(:weekly).topics.count).to eq(1)
+    end
+
+    it "only allows periods defined by TopTopic.periods" do
+      expect { topic_query.list_top_for(:all) }.not_to raise_error
+      expect { topic_query.list_top_for(:yearly) }.not_to raise_error
+      expect { topic_query.list_top_for(:quarterly) }.not_to raise_error
+      expect { topic_query.list_top_for(:monthly) }.not_to raise_error
+      expect { topic_query.list_top_for(:weekly) }.not_to raise_error
+      expect { topic_query.list_top_for(:daily) }.not_to raise_error
+      expect { topic_query.list_top_for("some bad input") }.to raise_error(Discourse::InvalidParameters)
     end
   end
 
@@ -598,7 +749,7 @@ describe TopicQuery do
 
     end
 
-    context 'after clearring a pinned topic' do
+    context 'after clearing a pinned topic' do
       before do
         pinned_topic.clear_pin_for(user)
       end
@@ -632,6 +783,17 @@ describe TopicQuery do
         category.update!(sort_order: 'created', sort_ascending: true)
         topic_ids = TopicQuery.new(user, category: category.id).list_latest.topics.map(&:id)
         expect(topic_ids - [topic_category.id]).to eq([topic_in_cat1.id, topic_in_cat2.id])
+      end
+
+      it "should apply default sort order to latest and unseen filters only" do
+        category.update!(sort_order: 'created', sort_ascending: true)
+
+        topic1 = Fabricate(:topic, category: category, like_count: 1000, posts_count: 100, created_at: 1.day.ago)
+        topic2 = Fabricate(:topic, category: category, like_count: 5200, posts_count: 500, created_at: 1.hour.ago)
+        TopTopic.refresh!
+
+        topic_ids = TopicQuery.new(user, category: category.id).list_top_for(:monthly).topics.map(&:id)
+        expect(topic_ids).to eq([topic2.id, topic1.id])
       end
 
       it "ignores invalid order value" do
@@ -712,7 +874,7 @@ describe TopicQuery do
 
   end
 
-  context 'list_new' do
+  context '#list_new' do
 
     context 'without a new topic' do
       it "has no new topics" do
@@ -789,7 +951,7 @@ describe TopicQuery do
 
   end
 
-  context 'list_posted' do
+  context '#list_posted' do
     let(:topics) { topic_query.list_posted.topics }
 
     it "returns blank when there are no posted topics" do
@@ -843,7 +1005,58 @@ describe TopicQuery do
     end
   end
 
-  context 'list_related_for do' do
+  context '#list_unseen' do
+    it "returns an empty list when there aren't topics" do
+      expect(topic_query.list_unseen.topics).to be_blank
+    end
+
+    it "doesn't return topics that were bumped last time before user joined the forum" do
+      user.first_seen_at = 10.minutes.ago
+      create_topic_with_three_posts(bumped_at: 15.minutes.ago)
+
+      expect(topic_query.list_unseen.topics).to be_blank
+    end
+
+    it "returns only topics that contain unseen posts" do
+      user.first_seen_at = 10.minutes.ago
+      topic_with_unseen_posts = create_topic_with_three_posts(bumped_at: 5.minutes.ago)
+      read_to_post(topic_with_unseen_posts, user, 1)
+
+      fully_read_topic = create_topic_with_three_posts(bumped_at: 5.minutes.ago)
+      read_to_the_end(fully_read_topic, user)
+
+      expect(topic_query.list_unseen.topics).to eq([topic_with_unseen_posts])
+    end
+
+    it "ignores staff posts if user is not staff" do
+      user.first_seen_at = 10.minutes.ago
+      topic = create_topic_with_three_posts(bumped_at: 5.minutes.ago)
+      read_to_the_end(topic, user)
+      create_post(topic: topic, post_type: Post.types[:whisper])
+
+      expect(topic_query.list_unseen.topics).to be_blank
+    end
+
+    def create_topic_with_three_posts(bumped_at:)
+      topic = Fabricate(:topic, bumped_at: bumped_at)
+      Fabricate(:post, topic: topic)
+      Fabricate(:post, topic: topic)
+      Fabricate(:post, topic: topic)
+      topic.highest_staff_post_number = 3
+      topic.highest_post_number = 3
+      topic
+    end
+
+    def read_to_post(topic, user, post_number)
+      TopicUser.update_last_read(user, topic.id, post_number, 0, 0)
+    end
+
+    def read_to_the_end(topic, user)
+      read_to_post topic, user, topic.highest_post_number
+    end
+  end
+
+  context '#list_related_for' do
 
     let(:user) do
       Fabricate(:admin)
@@ -926,7 +1139,7 @@ describe TopicQuery do
       let!(:archived_topic) { Fabricate(:topic, user: creator, archived: true) }
       let!(:invisible_topic) { Fabricate(:topic, user: creator, visible: false) }
 
-      it "should omit the closed/archived/invisbiel topics from suggested" do
+      it "should omit the closed/archived/invisible topics from suggested" do
         expect(TopicQuery.new.list_suggested_for(topic).topics).to eq([regular_topic])
       end
     end
@@ -1049,7 +1262,6 @@ describe TopicQuery do
 
             expect(TopicQuery.new(user, tags: [tag.name]).list_private_messages_tag(user).topics).to eq([private_message])
           end
-
         end
       end
 
@@ -1158,7 +1370,7 @@ describe TopicQuery do
       expect(topics).to contain_exactly(topic1, topic2, topic6)
     end
 
-    it 'should retun the right list for users in the same group' do
+    it 'should return the right list for users in the same group' do
       topics = TopicQuery.new(user).list_group_topics(group).topics
 
       expect(topics).to contain_exactly(topic1, topic2, topic3, topic6)
@@ -1172,75 +1384,6 @@ describe TopicQuery do
       topics = TopicQuery.new(user3).list_group_topics(group).topics
 
       expect(topics).to contain_exactly(topic1, topic2, topic6)
-    end
-  end
-
-  describe '#list_private_messages_group' do
-    fab!(:group) { Fabricate(:group) }
-
-    let!(:group_message) do
-      Fabricate(:private_message_topic,
-        allowed_groups: [group],
-        topic_allowed_users: [
-          Fabricate.build(:topic_allowed_user, user: Fabricate(:user)),
-        ]
-      )
-    end
-
-    before do
-      group.add(creator)
-    end
-
-    it 'should return the right list for a group user' do
-      topics = TopicQuery.new(nil, group_name: group.name)
-        .list_private_messages_group(creator)
-        .topics
-
-      expect(topics).to contain_exactly(group_message)
-    end
-
-    it 'should return the right list for an admin not part of the group' do
-      group.update!(name: group.name.capitalize)
-
-      topics = TopicQuery.new(nil, group_name: group.name.upcase)
-        .list_private_messages_group(Fabricate(:admin))
-        .topics
-
-      expect(topics).to contain_exactly(group_message)
-    end
-
-    it "should not allow a moderator not part of the group to view the group's messages" do
-      topics = TopicQuery.new(nil, group_name: group.name)
-        .list_private_messages_group(Fabricate(:moderator))
-        .topics
-
-      expect(topics).to eq([])
-    end
-
-    it "should not allow a user not part of the group to view the group's messages" do
-      topics = TopicQuery.new(nil, group_name: group.name)
-        .list_private_messages_group(Fabricate(:user))
-        .topics
-
-      expect(topics).to eq([])
-    end
-
-    context "Calculating minimum unread count for a topic" do
-      before { group.update!(publish_read_state: true) }
-
-      let(:listed_message) do
-        TopicQuery.new(nil, group_name: group.name)
-          .list_private_messages_group(creator)
-          .topics.first
-      end
-
-      it 'returns the last read post number' do
-        topic_group = TopicGroup.create!(
-          topic: group_message, group: group, last_read_post_number: 10
-        )
-
-        expect(listed_message.last_read_post_number).to eq(topic_group.last_read_post_number)
-      end
     end
   end
 
@@ -1329,18 +1472,6 @@ describe TopicQuery do
         expect(TopicQuery.new(admin).list_latest.topics).not_to include(partially_read) # Check we set up the topic/category correctly
         expect(TopicQuery.new(admin).list_unread.topics).to include(partially_read)
       end
-    end
-  end
-
-  describe '#list_private_messages' do
-    it "includes topics with moderator posts" do
-      private_message_topic = Fabricate(:private_message_post, user: user).topic
-
-      expect(TopicQuery.new(user).list_private_messages(user).topics).to be_empty
-
-      private_message_topic.add_moderator_post(admin, "Thank you for your flag")
-
-      expect(TopicQuery.new(user).list_private_messages(user).topics).to eq([private_message_topic])
     end
   end
 end

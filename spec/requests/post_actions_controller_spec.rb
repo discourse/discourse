@@ -3,8 +3,11 @@
 require 'rails_helper'
 
 RSpec.describe PostActionsController do
+  fab!(:user) { Fabricate(:user) }
+  fab!(:coding_horror) { Fabricate(:coding_horror) }
+
   describe '#destroy' do
-    fab!(:post) { Fabricate(:post, user: Fabricate(:coding_horror)) }
+    fab!(:post) { Fabricate(:post, user: coding_horror) }
 
     it 'requires you to be logged in' do
       delete "/post_actions/#{post.id}.json"
@@ -12,8 +15,6 @@ RSpec.describe PostActionsController do
     end
 
     context 'logged in' do
-      fab!(:user) { Fabricate(:user) }
-
       before do
         sign_in(user)
       end
@@ -81,8 +82,8 @@ RSpec.describe PostActionsController do
     end
 
     it 'fails when the user does not have permission to see the post' do
-      sign_in(Fabricate(:user))
-      pm = Fabricate(:private_message_post, user: Fabricate(:coding_horror))
+      sign_in(user)
+      pm = Fabricate(:private_message_post, user: coding_horror)
 
       post "/post_actions.json", params: {
         id: pm.id,
@@ -93,7 +94,7 @@ RSpec.describe PostActionsController do
     end
 
     it 'fails when the user tries to notify user that has disabled PM' do
-      sign_in(Fabricate(:user))
+      sign_in(user)
       user2 = Fabricate(:user)
 
       post = Fabricate(:post, user: user2)
@@ -115,7 +116,7 @@ RSpec.describe PostActionsController do
 
     describe 'as a moderator' do
       fab!(:user) { Fabricate(:moderator) }
-      fab!(:post_1) { Fabricate(:post, user: Fabricate(:coding_horror)) }
+      fab!(:post_1) { Fabricate(:post, user: coding_horror) }
 
       before do
         sign_in(user)

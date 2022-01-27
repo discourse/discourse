@@ -51,7 +51,7 @@ acceptance("Admin - Badges - Show", function (needs) {
     );
     assert.ok(exists(".icon-picker"), "icon picker is visible");
     assert.ok(!exists(".image-uploader"), "image uploader is not visible");
-    assert.equal(query(".icon-picker").textContent.trim(), "fa-rocket");
+    assert.strictEqual(query(".icon-picker").textContent.trim(), "fa-rocket");
   });
 
   test("existing badge that has an image URL", async function (assert) {
@@ -67,9 +67,7 @@ acceptance("Admin - Badges - Show", function (needs) {
     assert.ok(!exists(".icon-picker"), "icon picker is not visible");
     assert.ok(exists(".image-uploader"), "image uploader is visible");
     assert.ok(
-      query(".image-uploader a.lightbox").href.endsWith(
-        "/assets/some-image.png"
-      ),
+      query(".image-uploader a.lightbox").href.endsWith("/images/avatar.png?2"),
       "image uploader shows the right image"
     );
   });
@@ -87,15 +85,13 @@ acceptance("Admin - Badges - Show", function (needs) {
     assert.ok(!exists(".icon-picker"), "icon picker is not visible");
     assert.ok(exists(".image-uploader"), "image uploader is visible");
     assert.ok(
-      query(".image-uploader a.lightbox").href.endsWith(
-        "/assets/some-image.png"
-      ),
+      query(".image-uploader a.lightbox").href.endsWith("/images/avatar.png?3"),
       "image uploader shows the right image"
     );
 
     await click("input#badge-icon");
     assert.ok(exists(".icon-picker"), "icon picker is becomes visible");
-    assert.ok(!exists(".image-uploader"), "image uploader bcomes hidden");
-    assert.equal(query(".icon-picker").textContent.trim(), "fa-rocket");
+    assert.ok(!exists(".image-uploader"), "image uploader becomes hidden");
+    assert.strictEqual(query(".icon-picker").textContent.trim(), "fa-rocket");
   });
 });

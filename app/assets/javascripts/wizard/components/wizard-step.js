@@ -5,27 +5,16 @@ import getUrl from "discourse-common/lib/get-url";
 import { htmlSafe } from "@ember/template";
 import { schedule } from "@ember/runloop";
 
-jQuery.fn.wiggle = function (times, duration) {
-  if (times > 0) {
-    this.animate(
-      {
-        marginLeft: times-- % 2 === 0 ? -15 : 15,
-      },
-      duration,
-      0,
-      () => this.wiggle(times, duration)
-    );
-  } else {
-    this.animate({ marginLeft: 0 }, duration, 0);
-  }
-  return this;
-};
-
 const alreadyWarned = {};
 
 export default Component.extend({
   classNames: ["wizard-step"],
   saving: null,
+
+  init() {
+    this._super(...arguments);
+    this.set("stylingDropdown", {});
+  },
 
   didInsertElement() {
     this._super(...arguments);
@@ -73,8 +62,8 @@ export default Component.extend({
     this.autoFocus();
   },
 
-  keyPress(key) {
-    if (key.keyCode === 13) {
+  keyPress(event) {
+    if (event.key === "Enter") {
       if (this.showDoneButton) {
         this.send("quit");
       } else {
@@ -96,6 +85,11 @@ export default Component.extend({
     return htmlSafe(`width: ${ratio * 200}px`);
   },
 
+  @discourseComputed("step.fields")
+  includeSidebar(fields) {
+    return !!fields.findBy("show_in_sidebar");
+  },
+
   autoFocus() {
     schedule("afterRender", () => {
       const $invalid = $(
@@ -110,24 +104,21 @@ export default Component.extend({
     });
   },
 
-  animateInvalidFields() {
-    schedule("afterRender", () =>
-      $(".invalid input[type=text], .invalid textarea").wiggle(2, 100)
-    );
-  },
-
   advance() {
     this.set("saving", true);
     this.step
       .save()
       .then((response) => this.goNext(response))
-      .catch(() => this.animateInvalidFields())
       .finally(() => this.set("saving", false));
   },
 
   actions: {
     quit() {
       document.location = getUrl("/");
+    },
+
+    stylingDropdownChanged(id, value) {
+      this.set("stylingDropdown", { id, value });
     },
 
     exitEarly() {
@@ -140,10 +131,8 @@ export default Component.extend({
         step
           .save()
           .then(() => this.send("quit"))
-          .catch(() => this.animateInvalidFields())
           .finally(() => this.set("saving", false));
       } else {
-        this.animateInvalidFields();
         this.autoFocus();
       }
     },
@@ -184,7 +173,6 @@ export default Component.extend({
       if (step.get("valid")) {
         this.advance();
       } else {
-        this.animateInvalidFields();
         this.autoFocus();
       }
     },

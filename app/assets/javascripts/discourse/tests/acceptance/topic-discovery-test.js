@@ -2,13 +2,14 @@ import {
   acceptance,
   exists,
   publishToMessageBus,
+  query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import DiscourseURL from "discourse/lib/url";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import sinon from "sinon";
 import { test } from "qunit";
-import { visit } from "@ember/test-helpers";
+import { click, currentURL, visit } from "@ember/test-helpers";
 
 acceptance("Topic Discovery", function (needs) {
   needs.settings({
@@ -21,10 +22,16 @@ acceptance("Topic Discovery", function (needs) {
     assert.ok(exists(".topic-list"), "The list of topics was rendered");
     assert.ok(exists(".topic-list .topic-list-item"), "has topics");
 
-    assert.equal(
+    assert.strictEqual(
       queryAll("a[data-user-card=eviltrout] img.avatar").attr("title"),
       "Evil Trout - Most Posts",
       "it shows user's full name in avatar title"
+    );
+
+    assert.strictEqual(
+      queryAll("a[data-user-card=eviltrout] img.avatar").attr("loading"),
+      "lazy",
+      "it adds loading=`lazy` to topic list avatars"
     );
 
     await visit("/c/bug");
@@ -124,8 +131,51 @@ acceptance("Topic Discovery", function (needs) {
     await periodChooser.selectRowByValue("yearly");
 
     assert.ok(
-      DiscourseURL.routeTo.calledWith("/top/yearly?f=foo&d=bar"),
+      DiscourseURL.routeTo.calledWith("/top?f=foo&d=bar&period=yearly"),
       "it keeps the query params"
     );
+  });
+
+  test("switching between tabs", async function (assert) {
+    await visit("/latest");
+    assert.strictEqual(
+      query(".topic-list-body .topic-list-item:first-of-type").dataset.topicId,
+      "11557",
+      "shows the correct latest topics"
+    );
+
+    await click(".navigation-container a[href='/top']");
+    assert.strictEqual(currentURL(), "/top", "switches to top");
+
+    assert.deepEqual(
+      query(".topic-list-body .topic-list-item:first-of-type").dataset.topicId,
+      "13088",
+      "shows the correct top topics"
+    );
+
+    await click(".navigation-container a[href='/categories']");
+    assert.strictEqual(currentURL(), "/categories", "switches to categories");
+  });
+
+  test("refreshing tabs", async function (assert) {
+    const assertShowingLatest = () => {
+      assert.strictEqual(currentURL(), "/latest", "stays on latest");
+      const el = query(".topic-list-body .topic-list-item:first-of-type");
+      assert.strictEqual(el.closest(".hidden"), null, "topic list is visible");
+      assert.strictEqual(
+        el.dataset.topicId,
+        "11557",
+        "shows the correct topic"
+      );
+    };
+
+    await visit("/latest");
+    assertShowingLatest();
+
+    await click(".navigation-container a[href='/latest']");
+    assertShowingLatest();
+
+    await click("#site-logo");
+    assertShowingLatest();
   });
 });

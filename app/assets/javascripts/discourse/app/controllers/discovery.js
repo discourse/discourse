@@ -1,8 +1,8 @@
 import Controller, { inject as controller } from "@ember/controller";
 import { alias, equal, not } from "@ember/object/computed";
+import { action } from "@ember/object";
 import Category from "discourse/models/category";
 import DiscourseURL from "discourse/lib/url";
-import { observes } from "discourse-common/utils/decorators";
 import { inject as service } from "@ember/service";
 
 export default Controller.extend({
@@ -14,7 +14,6 @@ export default Controller.extend({
     "router.currentRouteName",
     "discovery.categories"
   ),
-
   loading: false,
 
   category: alias("navigationCategory.category"),
@@ -22,8 +21,15 @@ export default Controller.extend({
 
   loadedAllItems: not("discoveryTopics.model.canLoadMore"),
 
-  @observes("loadedAllItems")
-  _showFooter: function () {
+  @action
+  loadingBegan() {
+    this.set("loading", true);
+    this.set("application.showFooter", false);
+  },
+
+  @action
+  loadingComplete() {
+    this.set("loading", false);
     this.set("application.showFooter", this.loadedAllItems);
   },
 
@@ -37,9 +43,10 @@ export default Controller.extend({
       }/l`;
     }
 
-    url += "/top/" + period;
+    url += "/top";
 
-    const queryParams = this.router.currentRoute.queryParams;
+    let queryParams = this.router.currentRoute.queryParams;
+    queryParams.period = period;
     if (Object.keys(queryParams).length) {
       url =
         `${url}?` +

@@ -1,9 +1,9 @@
+/* global Pikaday:true */
 import discourseComputed, { on } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import I18n from "I18n";
 import { Promise } from "rsvp";
 import { action } from "@ember/object";
-/* global Pikaday:true */
 import loadScript from "discourse/lib/load-script";
 import { schedule } from "@ember/runloop";
 
@@ -144,9 +144,16 @@ export default Component.extend({
     }
   },
 
-  @discourseComputed()
-  placeholder() {
-    return I18n.t("dates.placeholder");
+  @discourseComputed("_placeholder")
+  placeholder: {
+    get(_placeholder) {
+      return _placeholder || I18n.t("dates.placeholder");
+    },
+
+    set(value) {
+      this.set("_placeholder", value);
+      return value;
+    },
   },
 
   _opts() {

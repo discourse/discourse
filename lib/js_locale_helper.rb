@@ -4,7 +4,6 @@ module JsLocaleHelper
 
   def self.plugin_client_files(locale_str)
     files = Dir["#{Rails.root}/plugins/*/config/locales/client*.#{locale_str}.yml"]
-    files += DiscourseDev.client_locale_files(locale_str) if Rails.env.development?
     I18n::Backend::DiscourseI18n.sort_locale_files(files)
   end
 
@@ -161,24 +160,44 @@ module JsLocaleHelper
     result
   end
 
-  def self.output_client_overrides(locale)
-    translations = (I18n.overrides_by_locale(locale) || {}).select { |k, _| k[/^(admin_js|js)\./] }
-    return "" if translations.blank?
+  def self.output_client_overrides(main_locale)
+    all_overrides = {}
+    has_overrides = false
 
-    message_formats = {}
+    I18n.fallbacks[main_locale].each do |locale|
+      overrides = all_overrides[locale] = TranslationOverride
+        .where(locale: locale)
+        .where("translation_key LIKE 'js.%' OR translation_key LIKE 'admin_js.%'")
+        .pluck(:translation_key, :value, :compiled_js)
 
-    translations.delete_if do |key, value|
-      if key.to_s.end_with?("_MF")
-        message_formats[key] = value
-      end
+      has_overrides ||= overrides.present?
     end
 
-    message_formats = message_formats.map { |k, v| "#{k.inspect}: #{v}" }.join(", ")
+    return "" if !has_overrides
 
-    <<~JS
-      I18n._mfOverrides = {#{message_formats}};
-      I18n._overrides = #{translations.to_json};
-    JS
+    result = +"I18n._overrides = {};"
+    existing_keys = Set.new
+    message_formats = []
+
+    all_overrides.each do |locale, overrides|
+      translations = {}
+
+      overrides.each do |key, value, compiled_js|
+        next if existing_keys.include?(key)
+        existing_keys << key
+
+        if key.end_with?("_MF")
+          message_formats << "#{key.inspect}: #{compiled_js}"
+        else
+          translations[key] = value
+        end
+      end
+
+      result << "I18n._overrides['#{locale}'] = #{translations.to_json};" if translations.present?
+    end
+
+    result << "I18n._mfOverrides = {#{message_formats.join(", ")}};"
+    result
   end
 
   def self.output_extra_locales(bundle, locale)
@@ -242,7 +261,7 @@ module JsLocaleHelper
       return locale_data if locale_data
     end
 
-    # English should alyways work
+    # English should always work
     ["en", File.join(path, "en.js")] if fallback_to_english
   end
 

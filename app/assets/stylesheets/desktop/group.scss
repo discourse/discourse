@@ -1,48 +1,17 @@
-.group-nav {
-  .group-dropdown {
-    margin-right: 10px;
-  }
-}
-
-.group-navigation {
-  width: 15%;
-  background-color: transparent;
-
-  li {
-    border: none;
-
-    a {
-      color: var(--primary-med-or-secondary-high);
-      padding: 8px 0;
-
-      &.active {
-        background-color: transparent;
-        font-weight: bold;
-        color: var(--primary);
-
-        &:after {
-          display: none;
-        }
-      }
-    }
-  }
-}
-
 .group-activity-outlet,
 .group-messages-outlet,
 .group-manage-outlet {
   width: 85%;
 }
 
-.group-manage {
-  .form-horizontal {
-    button {
-      float: none;
-    }
-  }
-}
-
 .groups-form.groups-notifications-form {
   width: 500px;
   max-width: 100%;
+}
+
+.group-smtp-email-settings,
+.group-imap-email-settings {
+  .group-email-last-updated-details {
+    text-align: right;
+  }
 }

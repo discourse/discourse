@@ -27,7 +27,7 @@
   <td><div class="label">{{i18n "admin.embedding.host"}}</div>{{host.host}}</td>
   <td><div class="label">{{i18n "admin.embedding.class_name"}}</div>{{host.class_name}}</td>
   <td><div class="label">{{i18n "admin.embedding.allowed_paths"}}</div>{{host.allowed_paths}}</td>
-  <td><div class="label">{{i18n "admin.embedding.category"}}</div>{{category-badge host.category}}</td>
+  <td><div class="label">{{i18n "admin.embedding.category"}}</div>{{category-badge host.category allowUncategorized=true}}</td>
   <td class="controls">
     {{d-button icon="pencil-alt" action=(action "edit")}}
     {{d-button icon="far-trash-alt" action=(action "delete") class="btn-danger"}}

@@ -33,7 +33,7 @@ describe ONPDiff do
       expect(ONPDiff.new("abc", "acd").short_diff).to eq([["a", :common], ["b", :delete], ["c", :common], ["d", :add]])
     end
 
-    it "returns an array with sequencially similar operations merged" do
+    it "returns an array with sequentially similar operations merged" do
       expect(ONPDiff.new("abcd", "abef").short_diff).to eq([["ab", :common], ["ef", :add], ["cd", :delete]])
     end
 

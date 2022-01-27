@@ -27,11 +27,6 @@ function censorTree(state, censor) {
 }
 
 export function setup(helper) {
-  helper.registerOptions((opts, siteSettings) => {
-    opts.watchedWordsRegularExpressions =
-      siteSettings.watched_words_regular_expressions;
-  });
-
   helper.registerPlugin((md) => {
     const censoredRegexp = md.options.discourse.censoredRegexp;
 

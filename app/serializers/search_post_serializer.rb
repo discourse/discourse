@@ -21,6 +21,10 @@ class SearchPostSerializer < BasicPostSerializer
     options[:result].blurb(object)
   end
 
+  def include_blurb?
+    options[:result].present?
+  end
+
   def include_cooked?
     false
   end

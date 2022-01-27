@@ -1,13 +1,9 @@
-const {
-  A: emberArray,
-  Helper,
-  assert,
-  computed,
-  get,
-  getOwner,
-  run,
-  runInDebug,
-} = Ember;
+import { A } from "@ember/array";
+import Helper from "@ember/component/helper";
+import { computed, get } from "@ember/object";
+import { getOwner } from "@ember/application";
+import { run } from "@ember/runloop";
+import { assert, runInDebug } from "@ember/debug";
 
 function getCurrentRouteInfos(router) {
   let routerLib = router._routerMicrolib || router.router;
@@ -15,12 +11,12 @@ function getCurrentRouteInfos(router) {
 }
 
 function getRoutes(router) {
-  return emberArray(getCurrentRouteInfos(router)).mapBy("_route").reverse();
+  return A(getCurrentRouteInfos(router)).mapBy("_route").reverse();
 }
 
 function getRouteWithAction(router, actionName) {
   let action;
-  let handler = emberArray(getRoutes(router)).find((route) => {
+  let handler = A(getRoutes(router)).find((route) => {
     let actions = route.actions || route._actions;
     action = actions[actionName];
 

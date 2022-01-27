@@ -340,7 +340,12 @@ describe Email::Receiver do
       expect { process(:like) }.to raise_error(Email::Receiver::InvalidPostAction)
     end
 
-    it "works" do
+    it "creates a new reply post" do
+      handler_calls = 0
+      handler = proc { |_| handler_calls += 1 }
+
+      DiscourseEvent.on(:topic_created, &handler)
+
       expect { process(:text_reply) }.to change { topic.posts.count }
       expect(topic.posts.last.raw).to eq("This is a text reply :)\n\nEmail parsing should not break because of a UTF-8 character: ’")
       expect(topic.posts.last.via_email).to eq(true)
@@ -348,6 +353,9 @@ describe Email::Receiver do
 
       expect { process(:html_reply) }.to change { topic.posts.count }
       expect(topic.posts.last.raw).to eq("This is a **HTML** reply ;)")
+
+      DiscourseEvent.off(:topic_created, &handler)
+      expect(handler_calls).to eq(0)
     end
 
     it "stores the created_via source against the incoming email" do
@@ -412,9 +420,24 @@ describe Email::Receiver do
       expect(topic.posts.last.raw).to eq("This will not include the previous discussion that is present in this email.")
     end
 
+    it "removes the trnaslated 'Previous Replies' marker" do
+      expect { process(:previous_replies_de) }.to change { topic.posts.count }
+      expect(topic.posts.last.raw).to eq("This will not include the previous discussion that is present in this email.")
+    end
+
+    it "removes the 'type reply above' marker" do
+      expect { process(:reply_above) }.to change { topic.posts.count }
+      expect(topic.posts.last.raw).to eq("This will not include the previous discussion that is present in this email.")
+    end
+
+    it "removes the translated 'Previous Replies' marker" do
+      expect { process(:reply_above_de) }.to change { topic.posts.count }
+      expect(topic.posts.last.raw).to eq("This will not include the previous discussion that is present in this email.")
+    end
+
     it "handles multiple paragraphs" do
       expect { process(:paragraphs) }.to change { topic.posts.count }
-      expect(topic.posts.last.raw).to eq("Do you like liquorice?\n\nI really like them. One could even say that I am *addicted* to liquorice. Anf if\nyou can mix it up with some anise, then I'm in heaven ;)")
+      expect(topic.posts.last.raw).to eq("Do you like liquorice?\n\nI really like them. One could even say that I am *addicted* to liquorice. And if\nyou can mix it up with some anise, then I'm in heaven ;)")
     end
 
     it "handles invalid from header" do
@@ -854,6 +877,57 @@ describe Email::Receiver do
       expect(Topic.last.ordered_posts[-1].post_type).to eq(Post.types[:moderator_action])
     end
 
+    describe "reply-to header" do
+      before do
+        SiteSetting.block_auto_generated_emails = false
+      end
+
+      it "extracts address and uses it for comparison" do
+        expect { process(:reply_to_whitespaces) }.to change(Topic, :count).by(1)
+        user = User.last
+        incoming = IncomingEmail.find_by(message_id: "TXULO4v6YU0TzeL2buFAJNU2MK21c7t4@example.com")
+        topic = incoming.topic
+        expect(incoming.from_address).to eq("johndoe@example.com")
+        expect(user.email).to eq("johndoe@example.com")
+      end
+
+      it "handles emails where there is a Reply-To address, using that instead of the from address, if X-Original-From is present" do
+        expect { process(:reply_to_different_to_from) }.to change(Topic, :count).by(1)
+        user = User.last
+        incoming = IncomingEmail.find_by(message_id: "3848c3m98r439c348mc349@test.mailinglist.com")
+        topic = incoming.topic
+        expect(incoming.from_address).to eq("arthurmorgan@reddeadtest.com")
+        expect(user.email).to eq("arthurmorgan@reddeadtest.com")
+      end
+
+      it "allows for quotes around the display name of the Reply-To address" do
+        expect { process(:reply_to_different_to_from_quoted_display_name) }.to change(Topic, :count).by(1)
+        user = User.last
+        incoming = IncomingEmail.find_by(message_id: "3848c3m98r439c348mc349@test.mailinglist.com")
+        topic = incoming.topic
+        expect(incoming.from_address).to eq("johnmarston@reddeadtest.com")
+        expect(user.email).to eq("johnmarston@reddeadtest.com")
+      end
+
+      it "does not use the reply-to address if an X-Original-From header is not present" do
+        expect { process(:reply_to_different_to_from_no_x_original) }.to change(Topic, :count).by(1)
+        user = User.last
+        incoming = IncomingEmail.find_by(message_id: "3848c3m98r439c348mc349@test.mailinglist.com")
+        topic = incoming.topic
+        expect(incoming.from_address).to eq("westernsupport@test.mailinglist.com")
+        expect(user.email).to eq("westernsupport@test.mailinglist.com")
+      end
+
+      it "does not use the reply-to address if the X-Original-From header is different from the reply-to address" do
+        expect { process(:reply_to_different_to_from_x_original_different) }.to change(Topic, :count).by(1)
+        user = User.last
+        incoming = IncomingEmail.find_by(message_id: "3848c3m98r439c348mc349@test.mailinglist.com")
+        topic = incoming.topic
+        expect(incoming.from_address).to eq("westernsupport@test.mailinglist.com")
+        expect(user.email).to eq("westernsupport@test.mailinglist.com")
+      end
+    end
+
     describe "when 'find_related_post_with_key' is disabled" do
       before do
         SiteSetting.find_related_post_with_key = false
@@ -880,6 +954,52 @@ describe Email::Receiver do
         expect { process(:email_reply_3) }.to change { topic.posts.count }.by(1)
         ordered_posts[1..-1].each(&:trash!)
         expect { process(:email_reply_4) }.to change { topic.posts.count }.by(1)
+      end
+
+      describe "replying with various message-id formats" do
+        let!(:topic) do
+          process(:email_reply_1)
+          Topic.last
+        end
+        let!(:post) { Fabricate(:post, topic: topic) }
+
+        def process_mail_with_message_id(message_id)
+          mail_string = <<~REPLY
+          Return-Path: <two@foo.com>
+          From: Two <two@foo.com>
+          To: one@foo.com
+          Subject: RE: Testing email threading
+          Date: Fri, 15 Jan 2016 00:12:43 +0100
+          Message-ID: <44@foo.bar.mail>
+          In-Reply-To: <#{message_id}>
+          Mime-Version: 1.0
+          Content-Type: text/plain
+          Content-Transfer-Encoding: 7bit
+
+          This is email reply testing with Message-ID formats.
+          REPLY
+          Email::Receiver.new(mail_string).process!
+        end
+
+        it "posts a reply using a message-id in the format topic/TOPIC_ID/POST_ID@HOST" do
+          expect { process_mail_with_message_id("topic/#{topic.id}/#{post.id}@test.localhost") }.to change { Post.count }.by(1)
+          expect(topic.reload.posts.last.raw).to include("This is email reply testing with Message-ID formats")
+        end
+
+        it "posts a reply using a message-id in the format topic/TOPIC_ID@HOST" do
+          expect { process_mail_with_message_id("topic/#{topic.id}@test.localhost") }.to change { Post.count }.by(1)
+          expect(topic.reload.posts.last.raw).to include("This is email reply testing with Message-ID formats")
+        end
+
+        it "posts a reply using a message-id in the format topic/TOPIC_ID/POST_ID.RANDOM_SUFFIX@HOST" do
+          expect { process_mail_with_message_id("topic/#{topic.id}/#{post.id}.rjc3yr79834y@test.localhost") }.to change { Post.count }.by(1)
+          expect(topic.reload.posts.last.raw).to include("This is email reply testing with Message-ID formats")
+        end
+
+        it "posts a reply using a message-id in the format topic/TOPIC_ID.RANDOM_SUFFIX@HOST" do
+          expect { process_mail_with_message_id("topic/#{topic.id}/#{post.id}.x3487nxy877843x@test.localhost") }.to change { Post.count }.by(1)
+          expect(topic.reload.posts.last.raw).to include("This is email reply testing with Message-ID formats")
+        end
       end
     end
 
@@ -968,6 +1088,233 @@ describe Email::Receiver do
       include_examples "creates topic with forwarded message as quote", :group, "team@bar.com|meat@bar.com"
     end
 
+    context "when a reply is sent to a group's email_username" do
+      let!(:topic) do
+        group.update(email_username: "team@somesmtpaddress.com")
+        process(:email_reply_1)
+        Topic.last
+      end
+
+      it "does not invite the group email_username as a staged user" do
+        process(:email_reply_to_group_email_username)
+        expect(User.find_by_email("team@somesmtpaddress.com")).to eq(nil)
+      end
+
+      it "creates the reply when the sender and referenced messsage id are known" do
+        expect { process(:email_reply_to_group_email_username) }.to change { topic.posts.count }.by(1).and change { Topic.count }.by(0)
+      end
+    end
+
+    context "when a group forwards an email to its inbox" do
+      before do
+        group.update!(
+          email_username: "team@somesmtpaddress.com",
+          incoming_email: "team@somesmtpaddress.com|support+team@bar.com",
+          smtp_server: "smtp.test.com",
+          smtp_port: 587,
+          smtp_ssl: true,
+          smtp_enabled: true
+        )
+      end
+
+      it "does not use the team's address as the from_address; it uses the original sender address" do
+        process(:forwarded_by_group_to_inbox)
+        topic = Topic.last
+        expect(topic.incoming_email.first.to_addresses).to include("support+team@bar.com")
+        expect(topic.incoming_email.first.from_address).to eq("fred@bedrock.com")
+      end
+
+      context "with forwarded emails behaviour set to create replies" do
+        before do
+          SiteSetting.forwarded_emails_behaviour = "create_replies"
+        end
+
+        it "does not use the team's address as the from_address; it uses the original sender address" do
+          process(:forwarded_by_group_to_inbox)
+          topic = Topic.last
+          expect(topic.incoming_email.first.to_addresses).to include("support+team@bar.com")
+          expect(topic.incoming_email.first.from_address).to eq("fred@bedrock.com")
+        end
+
+        it "does not say the email was forwarded by the original sender, it says the email is forwarded by the group" do
+          expect { process(:forwarded_by_group_to_inbox) }.to change { User.where(staged: true).count }.by(4)
+          topic = Topic.last
+          forwarded_small_post = topic.ordered_posts.last
+          expect(forwarded_small_post.action_code).to eq("forwarded")
+          expect(forwarded_small_post.user).to eq(User.find_by_email("team@somesmtpaddress.com"))
+        end
+
+        it "keeps track of the cc addresses of the forwarded email and creates staged users for them" do
+          expect { process(:forwarded_by_group_to_inbox) }.to change { User.where(staged: true).count }.by(4)
+          topic = Topic.last
+          cc_user1 = User.find_by_email("terry@ccland.com")
+          cc_user2 = User.find_by_email("don@ccland.com")
+          fred_user = User.find_by_email("fred@bedrock.com")
+          team_user = User.find_by_email("team@somesmtpaddress.com")
+          expect(topic.incoming_email.first.cc_addresses).to eq("terry@ccland.com;don@ccland.com")
+          expect(topic.topic_allowed_users.pluck(:user_id)).to match_array([
+            fred_user.id, team_user.id, cc_user1.id, cc_user2.id
+          ])
+        end
+
+        it "keeps track of the cc addresses of the final forwarded email as well" do
+          expect { process(:forwarded_by_group_to_inbox_double_cc) }.to change { User.where(staged: true).count }.by(5)
+          topic = Topic.last
+          cc_user1 = User.find_by_email("terry@ccland.com")
+          cc_user2 = User.find_by_email("don@ccland.com")
+          fred_user = User.find_by_email("fred@bedrock.com")
+          team_user = User.find_by_email("team@somesmtpaddress.com")
+          someother_user = User.find_by_email("someotherparty@test.com")
+          expect(topic.incoming_email.first.cc_addresses).to eq("someotherparty@test.com;terry@ccland.com;don@ccland.com")
+          expect(topic.topic_allowed_users.pluck(:user_id)).to match_array([
+            fred_user.id, team_user.id, someother_user.id, cc_user1.id, cc_user2.id
+          ])
+        end
+
+        context "when staged user for the team email already exists" do
+          let!(:staged_team_user) do
+            User.create!(
+              email: "team@somesmtpaddress.com",
+              username: UserNameSuggester.suggest("team@somesmtpaddress.com"),
+              name: "team teamson",
+              staged: true
+            )
+          end
+
+          it "uses that and does not create another staged user" do
+            expect { process(:forwarded_by_group_to_inbox) }.to change { User.where(staged: true).count }.by(3)
+            topic = Topic.last
+            forwarded_small_post = topic.ordered_posts.last
+            expect(forwarded_small_post.action_code).to eq("forwarded")
+            expect(forwarded_small_post.user).to eq(staged_team_user)
+          end
+        end
+      end
+    end
+
+    context "emailing a group by email_username and following reply flow" do
+      let!(:original_inbound_email_topic) do
+        group.update!(
+          email_username: "team@somesmtpaddress.com",
+          incoming_email: "team@somesmtpaddress.com|suppor+team@bar.com",
+          smtp_server: "smtp.test.com",
+          smtp_port: 587,
+          smtp_ssl: true,
+          smtp_enabled: true
+        )
+        process(:email_to_group_email_username_1)
+        Topic.last
+      end
+      fab!(:user_in_group) do
+        u = Fabricate(:user)
+        Fabricate(:group_user, user: u, group: group)
+        u
+      end
+
+      before do
+        NotificationEmailer.enable
+        SiteSetting.disallow_reply_by_email_after_days = 10000
+        Jobs.run_immediately!
+        Email::MessageIdService.stubs(:random_suffix).returns("blah123")
+      end
+
+      def reply_as_group_user
+        group_post = PostCreator.create(
+          user_in_group,
+          raw: "Thanks for your request. Please try to restart.",
+          topic_id: original_inbound_email_topic.id
+        )
+        email_log = EmailLog.last
+        [email_log, group_post]
+      end
+
+      it "the inbound processed email creates an incoming email and topic record correctly, and adds the group to the topic" do
+        incoming = IncomingEmail.find_by(topic: original_inbound_email_topic)
+        user = User.find_by_email("two@foo.com")
+        expect(original_inbound_email_topic.topic_allowed_users.first.user_id).to eq(user.id)
+        expect(original_inbound_email_topic.topic_allowed_groups.first.group_id).to eq(group.id)
+        expect(incoming.to_addresses).to eq("team@somesmtpaddress.com")
+        expect(incoming.from_address).to eq("two@foo.com")
+        expect(incoming.message_id).to eq("u4w8c9r4y984yh98r3h69873@foo.bar.mail")
+      end
+
+      it "creates an EmailLog when someone from the group replies, and does not create an IncomingEmail record for the reply" do
+        email_log, group_post = reply_as_group_user
+        expect(email_log.message_id).to eq("topic/#{original_inbound_email_topic.id}/#{group_post.id}.blah123@test.localhost")
+        expect(email_log.to_address).to eq("two@foo.com")
+        expect(email_log.email_type).to eq("user_private_message")
+        expect(email_log.post_id).to eq(group_post.id)
+        expect(IncomingEmail.exists?(post_id: group_post.id)).to eq(false)
+      end
+
+      it "processes a reply from the OP user to the group SMTP username, linking the reply_to_post_number correctly by
+      matching in_reply_to to the email log" do
+        email_log, group_post = reply_as_group_user
+
+        reply_email = email(:email_to_group_email_username_2)
+        reply_email.gsub!("MESSAGE_ID_REPLY_TO", email_log.message_id)
+        expect do
+          Email::Receiver.new(reply_email).process!
+        end.to change { Topic.count }.by(0).and change { Post.count }.by(1)
+
+        reply_post = Post.last
+        expect(reply_post.reply_to_user).to eq(user_in_group)
+        expect(reply_post.reply_to_post_number).to eq(group_post.post_number)
+      end
+
+      it "processes the reply from the user as a brand new topic if they have replied from a different address (e.g. auto forward) and allow_unknown_sender_topic_replies is disabled" do
+        email_log, group_post = reply_as_group_user
+
+        reply_email = email(:email_to_group_email_username_2_as_unknown_sender)
+        reply_email.gsub!("MESSAGE_ID_REPLY_TO", email_log.message_id)
+        expect do
+          Email::Receiver.new(reply_email).process!
+        end.to change { Topic.count }.by(1).and change { Post.count }.by(1)
+
+        reply_post = Post.last
+        expect(reply_post.topic_id).not_to eq(original_inbound_email_topic.id)
+      end
+
+      it "processes the reply from the user as a reply if they have replied from a different address (e.g. auto forward) and allow_unknown_sender_topic_replies is enabled" do
+        group.update!(allow_unknown_sender_topic_replies: true)
+        email_log, group_post = reply_as_group_user
+
+        reply_email = email(:email_to_group_email_username_2_as_unknown_sender)
+        reply_email.gsub!("MESSAGE_ID_REPLY_TO", email_log.message_id)
+        expect do
+          Email::Receiver.new(reply_email).process!
+        end.to change { Topic.count }.by(0).and change { Post.count }.by(1)
+
+        reply_post = Post.last
+        expect(reply_post.topic_id).to eq(original_inbound_email_topic.id)
+      end
+
+      it "creates a new topic with a reference back to the original if replying to a too old topic" do
+        SiteSetting.disallow_reply_by_email_after_days = 2
+        email_log, group_post = reply_as_group_user
+
+        group_post.update(created_at: 10.days.ago)
+        group_post.topic.update(created_at: 10.days.ago)
+
+        reply_email = email(:email_to_group_email_username_2)
+        reply_email.gsub!("MESSAGE_ID_REPLY_TO", email_log.message_id)
+        expect do
+          Email::Receiver.new(reply_email).process!
+        end.to change { Topic.count }.by(1).and change { Post.count }.by(1)
+
+        reply_post = Post.last
+        new_topic = Topic.last
+
+        expect(reply_post.topic).to eq(new_topic)
+        expect(reply_post.raw).to include(
+          I18n.t(
+            "emails.incoming.continuing_old_discussion",
+            url: group_post.topic.url, title: group_post.topic.title, count: SiteSetting.disallow_reply_by_email_after_days
+          )
+        )
+      end
+    end
+
     context "when message sent to a group has no key and find_related_post_with_key is enabled" do
       let!(:topic) do
         process(:email_reply_1)
@@ -1025,6 +1372,14 @@ describe Email::Receiver do
     end
 
     it "works" do
+      handler_calls = 0
+      handler = proc { |topic|
+        expect(topic.incoming_email_addresses).to contain_exactly("discourse@bar.com", "category@foo.com")
+        handler_calls += 1
+      }
+
+      DiscourseEvent.on(:topic_created, &handler)
+
       user = Fabricate(:user, email: "existing@bar.com", trust_level: SiteSetting.email_in_min_trust)
       group = Fabricate(:group)
 
@@ -1041,6 +1396,9 @@ describe Email::Receiver do
 
       # allows new user to create a topic
       expect { process(:new_user) }.to change(Topic, :count)
+
+      DiscourseEvent.off(:topic_created, &handler)
+      expect(handler_calls).to eq(1)
     end
 
     it "creates visible topic for ham" do
@@ -1167,7 +1525,7 @@ describe Email::Receiver do
       SiteSetting.alternative_reply_by_email_addresses = nil
     end
 
-    it "it maches nothing if there is not reply_by_email_address" do
+    it "it matches nothing if there is not reply_by_email_address" do
       expect(Email::Receiver.reply_by_email_address_regex).to eq(/$a/)
     end
 
@@ -1366,7 +1724,7 @@ describe Email::Receiver do
           SiteSetting.forwarded_emails_behaviour = "create_replies"
         end
 
-        context "when a reply contains a forwareded email" do
+        context "when a reply contains a forwarded email" do
           include_examples "does not create staged users", :reply_and_forwarded
         end
 
@@ -1731,5 +2089,13 @@ describe Email::Receiver do
       expect { post_2 }.to change { Topic.count }.by(0).and change { Post.where(post_type: Post.types[:regular]).count }.by(1)
       expect { receive(email_3) }.to change { Topic.count }.by(0).and change { Post.where(post_type: Post.types[:regular]).count }.by(1)
     end
+  end
+
+  it 'fixes valid addresses in embedded emails' do
+    Fabricate(:group, incoming_email: "group-fwd@example.com")
+    process(:long_embedded_email_headers)
+    incoming_email = IncomingEmail.find_by(message_id: "example1@mail.gmail.com")
+    expect(incoming_email.cc_addresses).to include("a@example.com")
+    expect(incoming_email.cc_addresses).to include("c@example.com")
   end
 end

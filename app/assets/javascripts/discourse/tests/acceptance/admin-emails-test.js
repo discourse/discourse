@@ -32,8 +32,8 @@ acceptance("Admin - Emails", function (needs) {
     await fillIn("textarea.email-body", EMAIL.trim());
     await click(".email-advanced-test button");
 
-    assert.equal(queryAll(".text pre").text(), "Hello, this is a test!");
-    assert.equal(
+    assert.strictEqual(queryAll(".text pre").text(), "Hello, this is a test!");
+    assert.strictEqual(
       queryAll(".elided pre").text(),
       "---\n\nThis part should be elided."
     );

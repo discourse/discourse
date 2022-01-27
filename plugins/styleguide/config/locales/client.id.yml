@@ -7,10 +7,43 @@
 id:
   js:
     styleguide:
+      title: "Styleguide"
+      welcome: "Untuk memulai, pilih bagian dari menu di sebelah kiri."
+      categories:
+        atoms: Atom
+        molecules: Molekul
+        organisms: Organisme
       sections:
+        typography:
+          title: "Tipografi"
+          example: "Selamat datang di Discourse"
+          paragraph: "Lorem ipsum dolor duduk amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut tenaga kerja et dolore magna aliqua. Ut Enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea komodo consequat. Duis aute irure dolor di reprehenderit di voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt anim id est laborum."
+        date_time_inputs:
+          title: "Masukan Tanggal/Waktu"
+        font_scale:
+          title: "Sistem Font"
+        colors:
+          title: "Warna"
+        icons:
+          title: "Ikon"
+          full_list: "Lihat daftar lengkap Font Awesome Icons"
+        input_fields:
+          title: "Bidang Masukan"
+        buttons:
+          title: "Tombol"
+        dropdowns:
+          title: "Dropdown"
         categories:
           title: "Kategori"
         navigation:
           title: "Navigasi"
+        categories_list:
+          title: "Daftar Kategori"
+        topic_link:
+          title: "Tautan Topik"
+        topic_list:
+          title: "Daftar Topik"
+        post:
+          title: "Postingan"
         suggested_topics:
           title: "Topik Yang Disarankan"

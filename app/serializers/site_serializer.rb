@@ -6,13 +6,13 @@ class SiteSerializer < ApplicationSerializer
     :default_archetype,
     :notification_types,
     :post_types,
+    :trust_levels,
     :groups,
     :filters,
     :periods,
     :top_menu_items,
     :anonymous_top_menu_items,
     :uncategorized_category_id, # this is hidden so putting it here
-    :disabled_plugins,
     :user_field_max_length,
     :post_action_types,
     :topic_flag_types,
@@ -21,6 +21,7 @@ class SiteSerializer < ApplicationSerializer
     :can_tag_pms,
     :tags_filter_regexp,
     :top_tags,
+    :can_associate_groups,
     :wizard_required,
     :topic_featured_link_allowed_category_ids,
     :user_themes,
@@ -29,11 +30,11 @@ class SiteSerializer < ApplicationSerializer
     :censored_regexp,
     :shared_drafts_category_id,
     :custom_emoji_translation,
-    :watched_words_replace
+    :watched_words_replace,
+    :watched_words_link,
+    :categories
   )
 
-  has_many :categories, serializer: SiteCategorySerializer, embed: :objects
-  has_many :trust_levels, embed: :objects
   has_many :archetypes, embed: :objects, serializer: ArchetypeSerializer
   has_many :user_fields, embed: :objects, serializer: UserFieldSerializer
   has_many :auth_providers, embed: :objects, serializer: AuthProviderSerializer
@@ -42,7 +43,7 @@ class SiteSerializer < ApplicationSerializer
     cache_fragment("user_themes") do
       Theme.where('id = :default OR user_selectable',
                     default: SiteSetting.default_theme_id)
-        .order(:name)
+        .order("lower(name)")
         .pluck(:id, :name, :color_scheme_id)
         .map { |id, n, cs| { theme_id: id, name: n, default: id == SiteSetting.default_theme_id, color_scheme_id: cs } }
         .as_json
@@ -51,7 +52,7 @@ class SiteSerializer < ApplicationSerializer
 
   def user_color_schemes
     cache_fragment("user_color_schemes") do
-      schemes = ColorScheme.where('user_selectable').order(:name)
+      schemes = ColorScheme.includes(:color_scheme_colors).where('user_selectable').order(:name)
       ActiveModel::ArraySerializer.new(schemes, each_serializer: ColorSchemeSelectableSerializer).as_json
     end
   end
@@ -118,10 +119,6 @@ class SiteSerializer < ApplicationSerializer
     SiteSetting.uncategorized_category_id
   end
 
-  def disabled_plugins
-    Discourse.disabled_plugin_names
-  end
-
   def user_field_max_length
     UserField.max_length
   end
@@ -136,6 +133,14 @@ class SiteSerializer < ApplicationSerializer
 
   def can_tag_pms
     scope.can_tag_pms?
+  end
+
+  def can_associate_groups
+    scope.can_associate_groups?
+  end
+
+  def include_can_associate_groups?
+    scope.is_admin?
   end
 
   def include_tags_filter_regexp?
@@ -188,6 +193,14 @@ class SiteSerializer < ApplicationSerializer
 
   def watched_words_replace
     WordWatcher.word_matcher_regexps(:replace)
+  end
+
+  def watched_words_link
+    WordWatcher.word_matcher_regexps(:link)
+  end
+
+  def categories
+    object.categories.map { |c| c.to_h }
   end
 
   private

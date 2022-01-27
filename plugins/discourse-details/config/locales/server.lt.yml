@@ -5,3 +5,7 @@
 # https://translate.discourse.org/
 
 lt:
+  site_settings:
+    details_enabled: 'Įtraukite galimybę prie įrašo pridėti išplečiamųjų detalių. Šią funkciją galima rasti autoriaus įrankių juostos iššokančiame meniu. Jei pakeisite šį nustatymą, turite perrašyti visus įrašus naudodami „rake posts: rebake“.'
+  details:
+    excerpt_details: "(spustelėkite, jei norite gauti daugiau informacijos)"

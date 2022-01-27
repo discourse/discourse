@@ -7,7 +7,7 @@
 pt_BR:
   js:
     styleguide:
-      title: "Styleguide"
+      title: "Guia de estilo"
       welcome: "Para começar, escolha uma seção no menu à esquerda."
       categories:
         atoms: Átomos
@@ -16,21 +16,74 @@ pt_BR:
       sections:
         typography:
           title: "Tipografia"
-          example: "Bem-vindo ao Discourse"
+          example: "Boas-vindas ao Discourse"
           paragraph: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+        date_time_inputs:
+          title: "Entradas de data/hora"
+        font_scale:
+          title: "Sistema da fonte"
         colors:
           title: "Cores"
         icons:
           title: "Ícones"
+          full_list: "Exibir a lista completa de ícones incríveis de fonte"
+        input_fields:
+          title: "Campos de entrada"
+        buttons:
+          title: "Botões"
+        dropdowns:
+          title: "Menus suspensos"
         categories:
           title: "Categorias"
+        bread_crumbs:
+          title: "Navegação estrutural"
         navigation:
           title: "Navegação"
+        navigation_bar:
+          title: "Barra de navegação"
+        navigation_stacked:
+          title: "Navegação empilhada"
         categories_list:
           title: "Lista de categorias"
+        topic_link:
+          title: "Link de tópico"
+        topic_list_item:
+          title: "Item de lista de tópicos"
+        topic_statuses:
+          title: "Status do tópico"
+        topic_list:
+          title: "Lista de tópicos"
+        basic_topic_list:
+          title: "Lista de tópicos básicos"
+        footer_message:
+          title: "Mensagem de rodapé"
+        signup_cta:
+          title: "CTA de cadastro"
         topic_timer_info:
-          title: "Temporizadores de Tópico"
+          title: "Timers de tópico"
+        topic_footer_buttons:
+          title: "Botões no rodapé do tópico"
+        topic_notifications:
+          title: "Notificações de tópico"
         post:
-          title: "Mensagem"
+          title: "Postagem"
+        topic_map:
+          title: "Mapa do tópico"
+        site_header:
+          title: "Cabeçalho do site"
         suggested_topics:
-          title: "Tópicos Sugeridos"
+          title: "Tópicos sugeridos"
+        post_menu:
+          title: "Menu de postagem"
+        modal:
+          title: "Modal"
+          header: "Título do modal"
+          footer: "Rodapé do modal"
+        user_about:
+          title: "Caixa Sobre do(a) usuário(a)"
+        header_icons:
+          title: "Ícones no cabeçalho"
+        spinners:
+          title: "Controle giratório"
+        empty_state:
+          title: "Estado vazio"

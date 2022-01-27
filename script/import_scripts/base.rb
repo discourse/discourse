@@ -430,7 +430,7 @@ class ImportScripts::Base
         # make sure categories don't go more than 2 levels deep
         if params[:parent_category_id]
           top = Category.find_by_id(params[:parent_category_id])
-          top = top.parent_category while top && !top.parent_category.nil?
+          top = top.parent_category while (top&.height_of_ancestors || -1) + 1 >= SiteSetting.max_category_nesting
           params[:parent_category_id] = top.id if top
         end
 
@@ -747,7 +747,7 @@ class ImportScripts::Base
 
     puts "", "Updating user digest_attempted_at..."
 
-    DB.exec("UPDATE user_stats SET digest_attempted_at = now() WHERE digest_attempted_at IS NULL")
+    DB.exec("UPDATE user_stats SET digest_attempted_at = now() - random() * interval '1 week' WHERE digest_attempted_at IS NULL")
   end
 
   # scripts that are able to import last_seen_at from the source data should override this method
@@ -762,8 +762,8 @@ class ImportScripts::Base
     puts "", "Updating topic users"
 
     DB.exec <<~SQL
-      INSERT INTO topic_users (user_id, topic_id, posted, last_read_post_number, highest_seen_post_number, first_visited_at, last_visited_at, total_msecs_viewed)
-           SELECT user_id, topic_id, 't' , MAX(post_number), MAX(post_number), MIN(created_at), MAX(created_at), COUNT(id) * 5000
+      INSERT INTO topic_users (user_id, topic_id, posted, last_read_post_number, first_visited_at, last_visited_at, total_msecs_viewed)
+           SELECT user_id, topic_id, 't' , MAX(post_number), MIN(created_at), MAX(created_at), COUNT(id) * 5000
              FROM posts
             WHERE user_id > 0
          GROUP BY user_id, topic_id

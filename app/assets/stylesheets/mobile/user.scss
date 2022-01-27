@@ -4,8 +4,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: auto auto auto;
-  grid-row-gap: 20px;
-  grid-column-gap: 16px;
+  grid-gap: 16px;
   .user-primary-navigation {
     grid-column-start: 1;
     grid-row-start: 1;
@@ -23,6 +22,7 @@
   }
   .user-additional-controls {
     grid-column-start: 1;
+    grid-column-end: 3;
     grid-row-start: 2;
   }
   .user-content,
@@ -30,10 +30,54 @@
     grid-row-start: 3;
     grid-column-start: 1;
   }
+
+  // specific to messages
+
+  .user-messages {
+    grid-row-start: 2;
+    grid-column-start: 1;
+    grid-column-end: 3;
+
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+
+    + .user-additional-controls {
+      grid-row-start: 2;
+      grid-column-start: 1;
+    }
+  }
+
+  .inboxes-controls {
+    display: flex;
+  }
+
+  .new-private-message {
+    grid-row-start: 1;
+    grid-column-start: 2;
+  }
+
+  .group-notifications-button {
+    margin-left: 8px;
+
+    .select-kit-header {
+      .selected-name .name {
+        display: none;
+      }
+    }
+  }
+}
+
+.user-messages-page {
+  .paginated-topics-list {
+    margin-top: 0;
+  }
+  .show-mores {
+    margin-top: 0.5em;
+  }
 }
 
 .user-main {
-  margin-top: 12px;
   padding-bottom: 60px; // slightly taller than .footer-nav
 
   .user-content {
@@ -167,12 +211,15 @@
       flex: 1 1 25%;
       margin-left: auto;
 
+      .btn {
+        margin-bottom: 16px;
+      }
+
       ul {
         margin: 0;
         display: flex;
         flex: 1 1 auto;
         flex-wrap: wrap;
-        margin-left: -1em;
         li,
         > span {
           display: flex;
@@ -190,6 +237,10 @@
             }
           }
         }
+      }
+
+      > ul {
+        margin-left: -1em; // negates left button margin, for alignment
       }
 
       .user-profile-controls-outlet {
@@ -224,6 +275,7 @@
 
 .user-main .collapsed-info.about .details {
   display: flex;
+  margin-bottom: 16px;
   .user-profile-avatar {
     margin: 0;
     flex: 0 0 auto;
@@ -236,10 +288,6 @@
   .user-profile-names {
     text-align: left;
   }
-}
-
-.form-horizontal .control-group.category {
-  margin-top: 18px;
 }
 
 .paginated-topics-list {
@@ -260,10 +308,6 @@
 
 .badge-card.medium {
   width: 100%;
-}
-
-.user-badges {
-  margin-bottom: 2em;
 }
 
 .user-preferences {
@@ -311,12 +355,25 @@
     width: 100%;
   }
 
-  .admin-controls {
+  .user-additional-controls {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
     flex-wrap: wrap;
-    .pull-right {
-      flex: 1 1 100%;
-      font-size: $font-down-1;
-      padding: 5px 0;
+    .user-invite-search {
+      width: 100%;
+    }
+    .user-invite-buttons {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      .btn {
+        margin-bottom: 0.5em;
+      }
+      .btn:not(:last-of-type) {
+        margin-right: 0.5em;
+      }
     }
   }
 
@@ -365,6 +422,10 @@
       grid-column-start: 3;
       grid-column-end: -1;
       order: 4;
+    }
+
+    td.invite-actions {
+      display: flex;
     }
   }
 

@@ -1,19 +1,9 @@
 # frozen_string_literal: true
-# rubocop:disable Style/GlobalVars
 
 require 'cache'
 require 'open3'
-require_dependency 'route_format'
 require_dependency 'plugin/instance'
-require_dependency 'auth/default_current_user_provider'
 require_dependency 'version'
-require 'digest/sha1'
-
-# Prevents errors with reloading dev with conditional includes
-if Rails.env.development?
-  require_dependency 'file_store/s3_store'
-  require_dependency 'file_store/local_store'
-end
 
 module Discourse
   DB_POST_MIGRATE_PATH ||= "db/post_migrate"
@@ -48,6 +38,49 @@ module Discourse
       logs.join("\n")
     end
 
+    def self.logs_markdown(logs, user:, filename: 'log.txt')
+      # Reserve 250 characters for the rest of the text
+      max_logs_length = SiteSetting.max_post_length - 250
+      pretty_logs = Discourse::Utils.pretty_logs(logs)
+
+      # If logs are short, try to inline them
+      if pretty_logs.size < max_logs_length
+        return <<~TEXT
+        ```text
+        #{pretty_logs}
+        ```
+        TEXT
+      end
+
+      # Try to create an upload for the logs
+      upload = Dir.mktmpdir do |dir|
+        File.write(File.join(dir, filename), pretty_logs)
+        zipfile = Compression::Zip.new.compress(dir, filename)
+        File.open(zipfile) do |file|
+          UploadCreator.new(
+            file,
+            File.basename(zipfile),
+            type: 'backup_logs',
+            for_export: 'true'
+          ).create_for(user.id)
+        end
+      end
+
+      if upload.persisted?
+        return UploadMarkdown.new(upload).attachment_markdown
+      else
+        Rails.logger.warn("Failed to upload the backup logs file: #{upload.errors.full_messages}")
+      end
+
+      # If logs are long and upload cannot be created, show trimmed logs
+      <<~TEXT
+      ```text
+      ...
+      #{pretty_logs.last(max_logs_length)}
+      ```
+      TEXT
+    end
+
     def self.atomic_write_file(destination, contents)
       begin
         return if File.read(destination) == contents
@@ -62,7 +95,7 @@ module Discourse
         fd.fsync()
       end
 
-      File.rename(temp_destination, destination)
+      FileUtils.mv(temp_destination, destination)
 
       nil
     end
@@ -76,7 +109,7 @@ module Discourse
       FileUtils.mkdir_p(File.join(Rails.root, 'tmp'))
       temp_destination = File.join(Rails.root, 'tmp', SecureRandom.hex)
       execute_command('ln', '-s', source, temp_destination)
-      File.rename(temp_destination, destination)
+      FileUtils.mv(temp_destination, destination)
 
       nil
     end
@@ -208,7 +241,7 @@ module Discourse
   class ScssError < StandardError; end
 
   def self.filters
-    @filters ||= [:latest, :unread, :new, :top, :read, :posted, :bookmarks]
+    @filters ||= [:latest, :unread, :new, :unseen, :top, :read, :posted, :bookmarks]
   end
 
   def self.anonymous_filters
@@ -303,11 +336,6 @@ module Discourse
 
     path = request.fullpath
     result[:path] = path if path.present?
-
-    # When we bootstrap using the JSON method, we want to be able to filter assets on
-    # the path we're bootstrapping for.
-    asset_path = request.headers["HTTP_X_DISCOURSE_ASSET_PATH"]
-    result[:path] = asset_path if asset_path.present?
 
     result
   end
@@ -623,49 +651,33 @@ module Discourse
     end
   end
 
-  def self.ensure_version_file_loaded
-    unless @version_file_loaded
-      version_file = "#{Rails.root}/config/version.rb"
-      require version_file if File.exists?(version_file)
-      @version_file_loaded = true
+  def self.git_version
+    @git_version ||= begin
+      git_cmd = 'git rev-parse HEAD'
+      self.try_git(git_cmd, Discourse::VERSION::STRING)
     end
   end
 
-  def self.git_version
-    ensure_version_file_loaded
-    $git_version ||=
-      begin
-        git_cmd = 'git rev-parse HEAD'
-        self.try_git(git_cmd, Discourse::VERSION::STRING)
-      end # rubocop:disable Style/GlobalVars
-  end
-
   def self.git_branch
-    ensure_version_file_loaded
-    $git_branch ||=
-      begin
-        git_cmd = 'git rev-parse --abbrev-ref HEAD'
-        self.try_git(git_cmd, 'unknown')
-      end
+    @git_branch ||= begin
+      git_cmd = 'git rev-parse --abbrev-ref HEAD'
+      self.try_git(git_cmd, 'unknown')
+    end
   end
 
   def self.full_version
-    ensure_version_file_loaded
-    $full_version ||=
-      begin
-        git_cmd = 'git describe --dirty --match "v[0-9]*"'
-        self.try_git(git_cmd, 'unknown')
-      end
+    @full_version ||= begin
+      git_cmd = 'git describe --dirty --match "v[0-9]*" 2> /dev/null'
+      self.try_git(git_cmd, 'unknown')
+    end
   end
 
   def self.last_commit_date
-    ensure_version_file_loaded
-    $last_commit_date ||=
-      begin
-        git_cmd = 'git log -1 --format="%ct"'
-        seconds = self.try_git(git_cmd, nil)
-        seconds.nil? ? nil : DateTime.strptime(seconds, '%s')
-      end
+    @last_commit_date ||= begin
+      git_cmd = 'git log -1 --format="%ct"'
+      seconds = self.try_git(git_cmd, nil)
+      seconds.nil? ? nil : DateTime.strptime(seconds, '%s')
+    end
   end
 
   def self.try_git(git_cmd, default_value)
@@ -749,6 +761,17 @@ module Discourse
 
     DiscourseJsProcessor::Transpiler.reset_context if defined? DiscourseJsProcessor::Transpiler
     JsLocaleHelper.reset_context if defined? JsLocaleHelper
+
+    # warm up v8 after fork, that way we do not fork a v8 context
+    # it may cause issues if bg threads in a v8 isolate randomly stop
+    # working due to fork
+    begin
+      # Skip warmup in development mode - it makes boot take ~2s longer
+      PrettyText.cook("warm up **pretty text**") if !Rails.env.development?
+    rescue => e
+      Rails.logger.error("Failed to warm up pretty text: #{e}")
+    end
+
     nil
   end
 
@@ -848,7 +871,7 @@ module Discourse
     digest = Digest::MD5.hexdigest(warning)
     redis_key = "deprecate-notice-#{digest}"
 
-    if !Discourse.redis.without_namespace.get(redis_key)
+    if Rails.logger && !Discourse.redis.without_namespace.get(redis_key)
       Rails.logger.warn(warning)
       begin
         Discourse.redis.without_namespace.setex(redis_key, 3600, "x")
@@ -920,9 +943,9 @@ module Discourse
 
     schema_cache = ActiveRecord::Base.connection.schema_cache
 
-    # load up schema cache for all multisite assuming all dbs have
-    # an identical schema
     RailsMultisite::ConnectionManagement.safe_each_connection do
+      # load up schema cache for all multisite assuming all dbs have
+      # an identical schema
       dup_cache = schema_cache.dup
       # this line is not really needed, but just in case the
       # underlying implementation changes lets give it a shot
@@ -935,6 +958,16 @@ module Discourse
       Search.prepare_data("test")
 
       JsLocaleHelper.load_translations(SiteSetting.default_locale)
+      Site.json_for(Guardian.new)
+      SvgSprite.preload
+
+      begin
+        SiteSetting.client_settings_json
+      rescue => e
+        # Rescue from Redis related errors so that we can still boot the
+        # application even if Redis is down.
+        warn_exception(e, message: "Error while preloading client settings json")
+      end
     end
 
     [
@@ -954,15 +987,16 @@ module Discourse
       },
       Thread.new {
         LetterAvatar.image_magick_version
+      },
+      Thread.new {
+        SvgSprite.core_svgs
       }
     ].each(&:join)
   ensure
     @preloaded_rails = true
   end
 
-  def self.redis
-    $redis
-  end
+  mattr_accessor :redis
 
   def self.is_parallel_test?
     ENV['RAILS_ENV'] == "test" && ENV['TEST_ENV_NUMBER']
@@ -985,6 +1019,8 @@ module Discourse
     headers['Access-Control-Allow-Methods'] = CDN_REQUEST_METHODS.join(", ")
     headers
   end
-end
 
-# rubocop:enable Style/GlobalVars
+  def self.allow_dev_populate?
+    Rails.env.development? || ENV["ALLOW_DEV_POPULATE"] == "1"
+  end
+end

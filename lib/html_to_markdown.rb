@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "nokogumbo"
 require "securerandom"
 
 class HtmlToMarkdown
@@ -54,7 +53,7 @@ class HtmlToMarkdown
       doc.css("br.#{klass}").each do |br|
         parent = br.parent
 
-        if parent.description.block?
+        if block?(parent)
           br.remove_class(klass)
         else
           before, after = parent.children.slice_when { |n| n == br }.to_a
@@ -195,7 +194,7 @@ class HtmlToMarkdown
   BLOCKS ||= %w{div tr}
   BLOCKS.each do |tag|
     define_method("visit_#{tag}") do |node|
-      prefix = node.previous_element&.description&.block? ? "" : "\n"
+      prefix = block?(node.previous_element) ? "" : "\n"
       "#{prefix}#{traverse(node)}\n"
     end
   end
@@ -284,7 +283,7 @@ class HtmlToMarkdown
   LISTS ||= %w{ul ol}
   LISTS.each do |tag|
     define_method("visit_#{tag}") do |node|
-      prefix = node.previous_element&.description&.block? ? "" : "\n"
+      prefix = block?(node.previous_element) ? "" : "\n"
       suffix = node.ancestors("ul, ol, li").size > 0 ? "" : "\n"
       "#{prefix}#{traverse(node)}#{suffix}"
     end
@@ -359,4 +358,9 @@ class HtmlToMarkdown
     node.text
   end
 
+  HTML5_BLOCK_ELEMENTS ||= %w[article aside details dialog figcaption figure footer header main nav section]
+  def block?(node)
+    return false if !node
+    node.description&.block? || HTML5_BLOCK_ELEMENTS.include?(node.name)
+  end
 end

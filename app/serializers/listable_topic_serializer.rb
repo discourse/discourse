@@ -14,6 +14,7 @@ class ListableTopicSerializer < BasicTopicSerializer
              :last_read_post_number,
              :unread,
              :new_posts,
+             :unread_posts,
              :pinned,
              :unpinned,
              :excerpt,
@@ -115,15 +116,24 @@ class ListableTopicSerializer < BasicTopicSerializer
 
   alias :include_last_read_post_number? :has_user_data
 
+  # TODO: For backwards compatibility with themes,
+  #       Remove once Discourse 2.8 is released
   def unread
-    unread_helper.unread_posts
+    0
   end
   alias :include_unread? :has_user_data
 
+  # TODO: For backwards compatibility with themes,
+  #       Remove once Discourse 2.8 is released
   def new_posts
-    unread_helper.new_posts
+    unread_helper.unread_posts
   end
   alias :include_new_posts? :has_user_data
+
+  def unread_posts
+    unread_helper.unread_posts
+  end
+  alias :include_unread_posts? :has_user_data
 
   def include_excerpt?
     pinned || SiteSetting.always_include_topic_excerpts || theme_modifier_helper.serialize_topic_excerpts

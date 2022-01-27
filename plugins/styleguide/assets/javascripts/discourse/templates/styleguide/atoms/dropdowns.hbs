@@ -47,12 +47,11 @@
 {{/styleguide-example}}
 
 {{#styleguide-example title="dropdown-select-box"}}
-  {{dropdown-select-box content=dummy.options onChange=(action "dummy")}}
+  {{dropdown-select-box content=dummy.options title="Something" onChange=(action "dummy")}}
 {{/styleguide-example}}
 
 {{#styleguide-example title="future-date-input-selector"}}
   {{future-date-input-selector
-    minimumResultsForSearch=-1
     statusType="open"
     input=dummy.topicTimerUpdateDate
     includeWeekend=true
@@ -62,7 +61,7 @@
 {{/styleguide-example}}
 
 {{#styleguide-example title="multi-select"}}
-  {{multi-select content=dummy.options options=(hash none="test.none") onChange=(action "dummy")}}
+  {{multi-select content=dummy.options onChange=(action "dummy")}}
 {{/styleguide-example}}
 
 {{#styleguide-example title="admin group-chooser"}}
@@ -75,4 +74,8 @@
 
 {{#styleguide-example title="list-setting with colors"}}
   {{list-setting settingValue=dummy.colors nameProperty="color" onChange=(action "dummy")}}
+{{/styleguide-example}}
+
+{{#styleguide-example title="user-notifications-dropdown"}}
+  {{user-notifications-dropdown user=currentUser value="changeToNormal"}}
 {{/styleguide-example}}

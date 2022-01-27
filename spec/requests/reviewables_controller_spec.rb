@@ -105,7 +105,7 @@ describe ReviewablesController do
 
       it "raises an error with an invalid type" do
         get "/review.json?type=ReviewableMadeUp"
-        expect(response.code).to eq("500")
+        expect(response.code).to eq("400")
       end
 
       it "supports filtering by status" do
@@ -135,7 +135,7 @@ describe ReviewablesController do
 
       it "raises an error with an invalid status" do
         get "/review.json?status=xyz"
-        expect(response.code).to eq("500")
+        expect(response.code).to eq("400")
       end
 
       it "supports filtering by category_id" do
@@ -182,10 +182,10 @@ describe ReviewablesController do
         user.activate
         reviewable = ReviewableUser.find_by(target: user)
 
-        put "/review/#{reviewable.id}/perform/reject_user_delete.json?version=0"
+        put "/review/#{reviewable.id}/perform/delete_user.json?version=0"
         expect(response.code).to eq("200")
 
-        put "/review/#{reviewable.id}/perform/reject_user_delete.json?version=0&index=2"
+        put "/review/#{reviewable.id}/perform/delete_user.json?version=0&index=2"
         expect(response.code).to eq("404")
         json = response.parsed_body
 
@@ -357,7 +357,7 @@ describe ReviewablesController do
         expect(response.code).to eq("404")
       end
 
-      it "validates the presenece of an action" do
+      it "validates the presence of an action" do
         put "/review/#{reviewable.id}/perform/nope.json?version=#{reviewable.version}"
         expect(response.code).to eq("403")
       end

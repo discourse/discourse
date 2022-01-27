@@ -6,6 +6,8 @@
     {{/if}}
 
     {{#if user.canSuspend}}
+      {{admin-penalty-history user=user}}
+
       <div class="until-controls">
         <label>
           {{future-date-input

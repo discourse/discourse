@@ -8,10 +8,6 @@ class ApiKeyScope < ActiveRecord::Base
     def list_actions
       actions = %w[list#category_feed]
 
-      TopTopic.periods.each do |p|
-        actions.concat(["list#category_top_#{p}", "list#top_#{p}", "list#top_#{p}_feed"])
-      end
-
       %i[latest unread new top].each { |f| actions.concat(["list#category_#{f}", "list##{f}"]) }
 
       actions
@@ -21,6 +17,9 @@ class ApiKeyScope < ActiveRecord::Base
       return @default_mappings unless @default_mappings.nil?
 
       mappings = {
+        global: {
+          read: { methods: %i[get] }
+        },
         topics: {
           write: { actions: %w[posts#create], params: %i[topic_id] },
           read: {
@@ -33,6 +32,22 @@ class ApiKeyScope < ActiveRecord::Base
           },
           wordpress: { actions: %w[topics#wordpress], params: %i[topic_id] }
         },
+        posts: {
+          edit: { actions: %w[posts#update], params: %i[id] }
+        },
+        uploads: {
+          create: {
+            actions: %w[
+              uploads#create
+              uploads#generate_presigned_put
+              uploads#complete_external_upload
+              uploads#create_multipart
+              uploads#batch_presign_multipart_parts
+              uploads#abort_multipart
+              uploads#complete_multipart
+            ]
+          }
+        },
         users: {
           bookmarks: { actions: %w[users#bookmarks], params: %i[username] },
           sync_sso: { actions: %w[admin/users#sync_sso], params: %i[sso sig] },
@@ -42,18 +57,23 @@ class ApiKeyScope < ActiveRecord::Base
           log_out: { actions: %w[admin/users#log_out] },
           anonymize: { actions: %w[admin/users#anonymize] },
           delete: { actions: %w[admin/users#destroy] },
+          list: { actions: %w[admin/users#index] },
         },
         email: {
           receive_emails: { actions: %w[admin/email#handle_mail] }
+        },
+        badges: {
+          create: { actions: %w[admin/badges#create] },
+          show: { actions: %w[badges#show] },
+          update: { actions: %w[admin/badges#update] },
+          delete: { actions: %w[admin/badges#destroy] },
+          list_user_badges: { actions: %w[user_badges#username], params: %i[username] },
+          assign_badge_to_user: { actions: %w[user_badges#create], params: %i[username] },
+          revoke_badge_from_user: { actions: %w[user_badges#destroy] },
         }
       }
 
-      mappings.each_value do |resource_actions|
-        resource_actions.each_value do |action_data|
-          action_data[:urls] = find_urls(action_data[:actions])
-        end
-      end
-
+      parse_resources!(mappings)
       @default_mappings = mappings
     end
 
@@ -62,31 +82,52 @@ class ApiKeyScope < ActiveRecord::Base
       return default_mappings if plugin_mappings.empty?
 
       default_mappings.deep_dup.tap do |mappings|
-
-        plugin_mappings.each do |resource|
-          resource.each_value do |resource_actions|
-            resource_actions.each_value do |action_data|
-              action_data[:urls] = find_urls(action_data[:actions])
-            end
-          end
-
-          mappings.deep_merge!(resource)
+        plugin_mappings.each do |plugin_mapping|
+          parse_resources!(plugin_mapping)
+          mappings.deep_merge!(plugin_mapping)
         end
       end
     end
 
-    def find_urls(actions)
-      Rails.application.routes.routes.reduce([]) do |memo, route|
-        defaults = route.defaults
-        action = "#{defaults[:controller].to_s}##{defaults[:action]}"
-        path = route.path.spec.to_s.gsub(/\(\.:format\)/, '')
-        api_supported_path = path.end_with?('.rss') || route.path.requirements[:format]&.match?('json')
-        excluded_paths = %w[/new-topic /new-message /exception]
-
-        memo.tap do |m|
-          m << path if actions.include?(action) && api_supported_path && !excluded_paths.include?(path)
+    def parse_resources!(mappings)
+      mappings.each_value do |resource_actions|
+        resource_actions.each_value do |action_data|
+          action_data[:urls] = find_urls(actions: action_data[:actions], methods: action_data[:methods])
         end
       end
+    end
+
+    def find_urls(actions:, methods:)
+      urls = []
+
+      if actions.present?
+        routes = Rails.application.routes.routes.to_a
+        Rails::Engine.descendants.each do |engine|
+          next if engine == Rails::Application # abstract engine, can't call routes on it
+          next if engine == Discourse::Application # equiv. to Rails.application
+          routes.concat(engine.routes.routes.to_a)
+        end
+
+        routes.each do |route|
+          defaults = route.defaults
+          action = "#{defaults[:controller].to_s}##{defaults[:action]}"
+          path = route.path.spec.to_s.gsub(/\(\.:format\)/, '')
+          api_supported_path = path.end_with?('.rss') || route.path.requirements[:format]&.match?('json')
+          excluded_paths = %w[/new-topic /new-message /exception]
+
+          if actions.include?(action) && api_supported_path && !excluded_paths.include?(path)
+            urls << "#{path} (#{route.verb})"
+          end
+        end
+      end
+
+      if methods.present?
+        methods.each do |method|
+          urls << "* (#{method})"
+        end
+      end
+
+      urls
     end
   end
 

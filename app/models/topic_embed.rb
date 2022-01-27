@@ -27,14 +27,14 @@ class TopicEmbed < ActiveRecord::Base
   end
 
   # Import an article from a source (RSS/Atom/Other)
-  def self.import(user, url, title, contents)
+  def self.import(user, url, title, contents, category_id: nil, cook_method: nil, tags: nil)
     return unless url =~ /^https?\:\/\//
 
-    if SiteSetting.embed_truncate
+    if SiteSetting.embed_truncate && cook_method.nil?
       contents = first_paragraph_from(contents)
     end
     contents ||= ''
-    contents = +contents << imported_from_html(url)
+    contents = contents.dup << imported_from_html(url)
 
     url = normalize_url(url)
 
@@ -47,7 +47,7 @@ class TopicEmbed < ActiveRecord::Base
       Topic.transaction do
         eh = EmbeddableHost.record_for_url(url)
 
-        cook_method = if SiteSetting.embed_support_markdown
+        cook_method ||= if SiteSetting.embed_support_markdown
           Post.cook_methods[:regular]
         else
           Post.cook_methods[:raw_html]
@@ -58,7 +58,8 @@ class TopicEmbed < ActiveRecord::Base
           raw: absolutize_urls(url, contents),
           skip_validations: true,
           cook_method: cook_method,
-          category: eh.try(:category_id)
+          category: category_id || eh.try(:category_id),
+          tags: SiteSetting.tagging_enabled ? tags : nil,
         }
         if SiteSetting.embed_unlisted?
           create_args[:visible] = false
@@ -112,11 +113,12 @@ class TopicEmbed < ActiveRecord::Base
     fd = FinalDestination.new(
       url,
       validate_uri: true,
-      max_redirects: 5
+      max_redirects: 5,
+      follow_canonical: true,
     )
 
-    url = fd.resolve
-    return if url.blank?
+    uri = fd.resolve
+    return if uri.blank?
 
     opts = {
       tags: %w[div p code pre h1 h2 h3 b em i strong a img ul li ol blockquote],
@@ -130,7 +132,7 @@ class TopicEmbed < ActiveRecord::Base
 
     response = FetchResponse.new
     begin
-      html = open(url, allow_redirections: :safe).read
+      html = uri.read(allow_redirections: :safe)
     rescue OpenURI::HTTPError, Net::OpenTimeout
       return
     end
@@ -159,12 +161,8 @@ class TopicEmbed < ActiveRecord::Base
       src = node[url_param]
       unless (src.nil? || src.empty?)
         begin
-          uri = URI.parse(UrlHelper.escape_uri(src))
-          unless uri.host
-            uri.scheme = original_uri.scheme
-            uri.host = original_uri.host
-            node[url_param] = uri.to_s
-          end
+          # convert URL to absolute form
+          node[url_param] = URI.join(url, UrlHelper.escape_uri(src)).to_s
         rescue URI::Error, Addressable::URI::InvalidURIError
           # If there is a mistyped URL, just do nothing
         end
@@ -209,17 +207,25 @@ class TopicEmbed < ActiveRecord::Base
 
     fragment = Nokogiri::HTML5.fragment("<div>#{contents}</div>")
     fragment.css('a').each do |a|
-      href = a['href']
-      if href.present? && href.start_with?('/')
-        a['href'] = "#{prefix}/#{href.sub(/^\/+/, '')}"
+      if a['href'].present?
+        begin
+          a['href'] = URI.join(prefix, a['href']).to_s
+        rescue URI::InvalidURIError
+          # NOOP, URL is malformed
+        end
       end
     end
+
     fragment.css('img').each do |a|
-      src = a['src']
-      if src.present? && src.start_with?('/')
-        a['src'] = "#{prefix}/#{src.sub(/^\/+/, '')}"
+      if a['src'].present?
+        begin
+          a['src'] = URI.join(prefix, a['src']).to_s
+        rescue URI::InvalidURIError
+          # NOOP, URL is malformed
+        end
       end
     end
+
     fragment.at('div').inner_html
   end
 
@@ -240,7 +246,7 @@ class TopicEmbed < ActiveRecord::Base
     end
     return result unless result.blank?
 
-    # If there is no first paragaph, return the first div (onebox)
+    # If there is no first paragraph, return the first div (onebox)
     doc.css('div').first.to_s
   end
 
@@ -253,10 +259,6 @@ class TopicEmbed < ActiveRecord::Base
       body << TopicEmbed.imported_from_html(url)
       body
     end
-  end
-
-  def self.open(uri, **kwargs)
-    URI.open(uri, **kwargs)
   end
 end
 

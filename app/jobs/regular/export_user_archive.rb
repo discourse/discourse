@@ -31,7 +31,7 @@ module Jobs
       auth_tokens: ['id', 'auth_token_hash', 'prev_auth_token_hash', 'auth_token_seen', 'client_ip', 'user_agent', 'seen_at', 'rotated_at', 'created_at', 'updated_at'],
       auth_token_logs: ['id', 'action', 'user_auth_token_id', 'client_ip', 'auth_token_hash', 'created_at', 'path', 'user_agent'],
       badges: ['badge_id', 'badge_name', 'granted_at', 'post_id', 'seq', 'granted_manually', 'notification_id', 'featured_rank'],
-      bookmarks: ['post_id', 'topic_id', 'post_number', 'link', 'name', 'created_at', 'updated_at', 'reminder_type', 'reminder_at', 'reminder_last_sent_at', 'reminder_set_at', 'auto_delete_preference'],
+      bookmarks: ['post_id', 'topic_id', 'post_number', 'link', 'name', 'created_at', 'updated_at', 'reminder_at', 'reminder_last_sent_at', 'reminder_set_at', 'auto_delete_preference'],
       category_preferences: ['category_id', 'category_names', 'notification_level', 'dismiss_new_timestamp'],
       flags: ['id', 'post_id', 'flag_type', 'created_at', 'updated_at', 'deleted_at', 'deleted_by', 'related_post_id', 'targets_topic', 'was_take_action'],
       likes: ['id', 'post_id', 'topic_id', 'post_number', 'created_at', 'updated_at', 'deleted_at', 'deleted_by'],
@@ -70,7 +70,7 @@ module Jobs
       dirname = "#{UserExport.base_directory}/#{filename}"
 
       # ensure directory exists
-      FileUtils.mkdir_p(dirname) unless Dir.exists?(dirname)
+      FileUtils.mkdir_p(dirname) unless Dir.exist?(dirname)
 
       # Generate a compressed CSV file
       zip_filename = nil
@@ -248,7 +248,6 @@ module Jobs
           bkmk.name,
           bkmk.created_at,
           bkmk.updated_at,
-          Bookmark.reminder_types[bkmk.reminder_type],
           bkmk.reminder_at,
           bkmk.reminder_last_sent_at,
           bkmk.reminder_set_at,
@@ -280,6 +279,7 @@ module Jobs
         .with_deleted
         .where(user_id: @current_user.id)
         .where(post_action_type_id: PostActionType.flag_types.values)
+        .order(:created_at)
         .each do |pa|
         yield [
           pa.id,
@@ -303,6 +303,7 @@ module Jobs
         .with_deleted
         .where(user_id: @current_user.id)
         .where(post_action_type_id: PostActionType.types[:like])
+        .order(:created_at)
         .each do |pa|
         post = Post.with_deleted.find_by(id: pa.post_id)
         yield [
@@ -332,6 +333,7 @@ module Jobs
         .with_deleted
         .where(user_id: @current_user.id)
         .where.not(post_action_type_id: PostActionType.flag_types.values + [PostActionType.types[:like], PostActionType.types[:bookmark]])
+        .order(:created_at)
         .each do |pa|
         yield [
           pa.id,
@@ -352,6 +354,7 @@ module Jobs
       # Most Reviewable fields staff-private, but post content needs to be exported.
       ReviewableQueuedPost
         .where(created_by: @current_user.id)
+        .order(:created_at)
         .each do |rev|
 
         yield [

@@ -7,6 +7,9 @@ require 'topic_subtype'
 describe PostCreator do
 
   fab!(:user) { Fabricate(:user) }
+  fab!(:admin) { Fabricate(:admin) }
+  fab!(:coding_horror) { Fabricate(:coding_horror) }
+  fab!(:evil_trout) { Fabricate(:evil_trout) }
   let(:topic) { Fabricate(:topic, user: user) }
 
   context "new topic" do
@@ -117,7 +120,6 @@ describe PostCreator do
       end
 
       it "does not notify on system messages" do
-        admin = Fabricate(:admin)
         messages = MessageBus.track_publish do
           p = PostCreator.create(admin, basic_topic_params.merge(post_type: Post.types[:moderator_action]))
           PostCreator.create(admin, basic_topic_params.merge(topic_id: p.topic_id, post_type: Post.types[:moderator_action]))
@@ -166,7 +168,10 @@ describe PostCreator do
             "/latest",
             "/latest",
             "/topic/#{created_post.topic_id}",
-            "/topic/#{created_post.topic_id}"
+            "/topic/#{created_post.topic_id}",
+            "/user",
+            "/user",
+            "/user"
           ].sort
         )
 
@@ -195,7 +200,10 @@ describe PostCreator do
         user_action = messages.find { |m| m.channel == "/u/#{p.user.username}" }
         expect(user_action).not_to eq(nil)
 
-        expect(messages.filter { |m| m.channel != "/distributed_hash" }.length).to eq(5)
+        draft_count = messages.find { |m| m.channel == "/user" }
+        expect(draft_count).not_to eq(nil)
+
+        expect(messages.filter { |m| m.channel != "/distributed_hash" }.length).to eq(7)
       end
 
       it 'extracts links from the post' do
@@ -282,12 +290,14 @@ describe PostCreator do
       it 'creates post stats' do
         Draft.set(user, Draft::NEW_TOPIC, 0, "test")
         Draft.set(user, Draft::NEW_TOPIC, 0, "test1")
+        expect(user.user_stat.draft_count).to eq(1)
 
         begin
           PostCreator.track_post_stats = true
           post = creator.create
           expect(post.post_stat.typing_duration_msecs).to eq(0)
           expect(post.post_stat.drafts_saved).to eq(2)
+          expect(user.reload.user_stat.draft_count).to eq(0)
         ensure
           PostCreator.track_post_stats = false
         end
@@ -503,11 +513,19 @@ describe PostCreator do
             end
 
             context "without regular expressions" do
-              it "works" do
+              it "works with many tags" do
                 Fabricate(:watched_word, action: WatchedWord.actions[:tag], word: "HELLO", replacement: "greetings , hey")
 
                 @post = creator.create
                 expect(@post.topic.tags.map(&:name)).to match_array(['greetings', 'hey'])
+              end
+
+              it "works with overlapping words" do
+                Fabricate(:watched_word, action: WatchedWord.actions[:tag], word: "art", replacement: "about-art")
+                Fabricate(:watched_word, action: WatchedWord.actions[:tag], word: "artist*", replacement: "about-artists")
+
+                post = PostCreator.new(user, title: "hello world topic", raw: "this is topic abour artists", archetype_id: 1).create
+                expect(post.topic.tags.map(&:name)).to match_array(['about-artists'])
               end
 
               it "does not treat as regular expressions" do
@@ -675,7 +693,7 @@ describe PostCreator do
         SiteSetting.unique_posts_mins = 10
       end
 
-      it "fails for dupe post accross topic" do
+      it "fails for dupe post across topic" do
         first = create_post(raw: "this is a test #{SecureRandom.hex}")
         second = create_post(raw: "this is a test #{SecureRandom.hex}")
 
@@ -770,13 +788,13 @@ describe PostCreator do
 
     context "when the user has bookmarks with auto_delete_preference on_owner_reply" do
       before do
-        Fabricate(:bookmark, topic: topic, user: user, auto_delete_preference: Bookmark.auto_delete_preferences[:on_owner_reply])
-        Fabricate(:bookmark, topic: topic, user: user, auto_delete_preference: Bookmark.auto_delete_preferences[:on_owner_reply])
+        Fabricate(:bookmark, user: user, post: Fabricate(:post, topic: topic), auto_delete_preference: Bookmark.auto_delete_preferences[:on_owner_reply])
+        Fabricate(:bookmark, user: user, post: Fabricate(:post, topic: topic), auto_delete_preference: Bookmark.auto_delete_preferences[:on_owner_reply])
         TopicUser.create!(topic: topic, user: user, bookmarked: true)
       end
 
       it "deletes the bookmarks, but not the ones without an auto_delete_preference" do
-        Fabricate(:bookmark, topic: topic, user: user)
+        Fabricate(:bookmark, post: Fabricate(:post, topic: topic), user: user)
         Fabricate(:bookmark, user: user)
         creator.create
         expect(Bookmark.where(user: user).count).to eq(2)
@@ -794,7 +812,7 @@ describe PostCreator do
     context "topic stats" do
       before do
         PostCreator.new(
-          Fabricate(:coding_horror),
+          coding_horror,
           raw: 'first post in topic',
           topic_id: topic.id,
           created_at: Time.zone.now - 24.hours
@@ -848,7 +866,6 @@ describe PostCreator do
       end
 
       it 'creates the topic if the user is a staff member' do
-        admin = Fabricate(:admin)
         post_creator = PostCreator.new(admin, raw: 'test reply', topic_id: topic.id, reply_to_post_number: 4)
         TopicUser.create!(user: admin, topic: topic, last_posted_at: 10.minutes.ago)
 
@@ -900,7 +917,7 @@ describe PostCreator do
 
   # integration test ... minimise db work
   context 'private message' do
-    let(:target_user1) { Fabricate(:coding_horror) }
+    let(:target_user1) { coding_horror }
     fab!(:target_user2) { Fabricate(:moderator) }
     fab!(:unrelated_user) { Fabricate(:user) }
     let(:post) do
@@ -943,7 +960,6 @@ describe PostCreator do
       UserArchivedMessage.create(user_id: target_user2.id, topic_id: post.topic_id)
 
       # if an admin replies they should be added to the allowed user list
-      admin = Fabricate(:admin)
       PostCreator.create!(admin,
         raw: 'hi there welcome topic, I am a mod',
         topic_id: post.topic_id
@@ -1005,7 +1021,7 @@ describe PostCreator do
   end
 
   context "warnings" do
-    let(:target_user1) { Fabricate(:coding_horror) }
+    let(:target_user1) { coding_horror }
     fab!(:target_user2) { Fabricate(:moderator) }
     let(:base_args) do
       { title: 'you need a warning buddy!',
@@ -1046,8 +1062,6 @@ describe PostCreator do
     it 'closes private messages that have more than N posts' do
       SiteSetting.auto_close_messages_post_count = 2
 
-      admin = Fabricate(:admin)
-
       post1 = create_post(archetype: Archetype.private_message,
                           target_usernames: [admin.username])
 
@@ -1086,7 +1100,7 @@ describe PostCreator do
   end
 
   context 'private message to group' do
-    let(:target_user1) { Fabricate(:coding_horror) }
+    let(:target_user1) { coding_horror }
     fab!(:target_user2) { Fabricate(:moderator) }
     let(:group) do
       g = Fabricate.build(:group, messageable_level: Group::ALIAS_LEVELS[:everyone])
@@ -1118,6 +1132,26 @@ describe PostCreator do
 
       expect(target_user1.notifications.count).to eq(1)
       expect(target_user2.notifications.count).to eq(1)
+
+      GroupArchivedMessage.create!(group: group, topic: post.topic)
+
+      message = MessageBus.track_publish(
+        PrivateMessageTopicTrackingState.group_channel(group.id)
+      ) do
+        PostCreator.create!(user,
+          raw: "this is a reply to the group message",
+          topic_id: post.topic_id
+        )
+      end.first
+
+      expect(message.data["message_type"]).to eq(
+        PrivateMessageTopicTrackingState::GROUP_ARCHIVE_MESSAGE_TYPE
+      )
+
+      expect(message.data["payload"]["acting_user_id"]).to eq(user.id)
+
+      expect(GroupArchivedMessage.exists?(group: group, topic: post.topic))
+        .to eq(false)
     end
   end
 
@@ -1254,7 +1288,7 @@ describe PostCreator do
       DiscourseEvent.off(:topic_created, &@increase_topics)
     end
 
-    it "fires boths event when creating a topic" do
+    it "fires both event when creating a topic" do
       pc = PostCreator.new(user, raw: 'this is the new content for my topic', title: 'this is my new topic title')
       _post = pc.create
       expect(@posts_created).to eq(1)
@@ -1287,7 +1321,6 @@ describe PostCreator do
     it "automatically watches topic based on preference" do
       user.user_option.notification_level_when_replying = 3
 
-      admin = Fabricate(:admin)
       topic = PostCreator.create(admin,
                                  title: "this is the title of a topic created by an admin for watching notification",
                                  raw: "this is the content of a topic created by an admin for keeping a watching notification state on a topic ;)"
@@ -1304,7 +1337,6 @@ describe PostCreator do
     it "topic notification level remains tracking based on preference" do
       user.user_option.notification_level_when_replying = 2
 
-      admin = Fabricate(:admin)
       topic = PostCreator.create(admin,
                                  title: "this is the title of a topic created by an admin for tracking notification",
                                  raw: "this is the content of a topic created by an admin for keeping a tracking notification state on a topic ;)"
@@ -1321,7 +1353,6 @@ describe PostCreator do
     it "topic notification level is normal based on preference" do
       user.user_option.notification_level_when_replying = 1
 
-      admin = Fabricate(:admin)
       topic = PostCreator.create(admin,
                                  title: "this is the title of a topic created by an admin for tracking notification",
                                  raw: "this is the content of a topic created by an admin for keeping a tracking notification state on a topic ;)"
@@ -1338,7 +1369,6 @@ describe PostCreator do
     it "user preferences for notification level when replying doesn't affect PMs" do
       user.user_option.update!(notification_level_when_replying: 1)
 
-      admin = Fabricate(:admin)
       pm = Fabricate(:private_message_topic, user: admin)
 
       pm.invite(admin, user.username)
@@ -1446,7 +1476,7 @@ describe PostCreator do
   end
 
   context "private message to a muted user" do
-    fab!(:muted_me) { Fabricate(:evil_trout) }
+    fab!(:muted_me) { evil_trout }
     fab!(:another_user) { Fabricate(:user) }
 
     it 'should fail' do
@@ -1487,7 +1517,7 @@ describe PostCreator do
   end
 
   context "private message to an ignored user" do
-    fab!(:ignorer) { Fabricate(:evil_trout) }
+    fab!(:ignorer) { evil_trout }
     fab!(:another_user) { Fabricate(:user) }
 
     context "when post author is ignored" do
@@ -1529,7 +1559,7 @@ describe PostCreator do
   end
 
   context "private message to user in allow list" do
-    fab!(:sender) { Fabricate(:evil_trout) }
+    fab!(:sender) { evil_trout }
     fab!(:allowed_user) { Fabricate(:user) }
 
     context "when post author is allowed" do
@@ -1575,7 +1605,7 @@ describe PostCreator do
   end
 
   context "private message to user not in allow list" do
-    fab!(:sender) { Fabricate(:evil_trout) }
+    fab!(:sender) { evil_trout }
     fab!(:allowed_user) { Fabricate(:user) }
     fab!(:not_allowed_user) { Fabricate(:user) }
 
@@ -1636,7 +1666,7 @@ describe PostCreator do
   end
 
   context "private message to multiple users and one is not allowed" do
-    fab!(:sender) { Fabricate(:evil_trout) }
+    fab!(:sender) { evil_trout }
     fab!(:allowed_user) { Fabricate(:user) }
     fab!(:not_allowed_user) { Fabricate(:user) }
 
@@ -1664,8 +1694,8 @@ describe PostCreator do
   end
 
   context "private message recipients limit (max_allowed_message_recipients) reached" do
-    fab!(:target_user1) { Fabricate(:coding_horror) }
-    fab!(:target_user2) { Fabricate(:evil_trout) }
+    fab!(:target_user1) { coding_horror }
+    fab!(:target_user2) { evil_trout }
     fab!(:target_user3) { Fabricate(:walter_white) }
 
     before do

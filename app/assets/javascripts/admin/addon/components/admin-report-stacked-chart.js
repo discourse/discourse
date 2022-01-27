@@ -1,31 +1,25 @@
+import Report from "admin/models/report";
 import Component from "@ember/component";
 import discourseDebounce from "discourse-common/lib/debounce";
 import loadScript from "discourse/lib/load-script";
 import { makeArray } from "discourse-common/lib/helpers";
 import { number } from "discourse/lib/formatter";
 import { schedule } from "@ember/runloop";
+import { bind } from "discourse-common/utils/decorators";
 
 export default Component.extend({
   classNames: ["admin-report-chart", "admin-report-stacked-chart"],
 
-  init() {
-    this._super(...arguments);
-
-    this.resizeHandler = () =>
-      discourseDebounce(this, this._scheduleChartRendering, 500);
-  },
-
   didInsertElement() {
     this._super(...arguments);
 
-    $(window).on("resize.chart", this.resizeHandler);
+    window.addEventListener("resize", this._resizeHandler);
   },
 
   willDestroyElement() {
     this._super(...arguments);
 
-    $(window).off("resize.chart", this.resizeHandler);
-
+    window.removeEventListener("resize", this._resizeHandler);
     this._resetChart();
   },
 
@@ -33,6 +27,11 @@ export default Component.extend({
     this._super(...arguments);
 
     discourseDebounce(this, this._scheduleChartRendering, 100);
+  },
+
+  @bind
+  _resizeHandler() {
+    discourseDebounce(this, this._scheduleChartRendering, 500);
   },
 
   _scheduleChartRendering() {
@@ -63,7 +62,7 @@ export default Component.extend({
         return {
           label: cd.label,
           stack: "pageviews-stack",
-          data: cd.data.map((d) => Math.round(parseFloat(d.y))),
+          data: Report.collapse(model, cd.data),
           backgroundColor: cd.color,
         };
       }),
@@ -88,21 +87,24 @@ export default Component.extend({
         animation: {
           duration: 0,
         },
-        tooltips: {
-          mode: "index",
-          intersect: false,
-          callbacks: {
-            beforeFooter: (tooltipItem) => {
-              let total = 0;
-              tooltipItem.forEach(
-                (item) => (total += parseInt(item.yLabel || 0, 10))
-              );
-              return `= ${total}`;
+        plugins: {
+          tooltip: {
+            mode: "index",
+            intersect: false,
+            callbacks: {
+              beforeFooter: (tooltipItem) => {
+                let total = 0;
+                tooltipItem.forEach(
+                  (item) => (total += parseInt(item.parsed.y || 0, 10))
+                );
+                return `= ${total}`;
+              },
+              title: (tooltipItem) =>
+                moment(tooltipItem[0].label, "YYYY-MM-DD").format("LL"),
             },
-            title: (tooltipItem) =>
-              moment(tooltipItem[0].xLabel, "YYYY-MM-DD").format("LL"),
           },
         },
+
         layout: {
           padding: {
             left: 0,
@@ -112,16 +114,11 @@ export default Component.extend({
           },
         },
         scales: {
-          yAxes: [
+          y: [
             {
               stacked: true,
               display: true,
               ticks: {
-                userCallback: (label) => {
-                  if (Math.floor(label) === label) {
-                    return label;
-                  }
-                },
                 callback: (label) => number(label),
                 sampleSize: 5,
                 maxRotation: 25,
@@ -129,15 +126,13 @@ export default Component.extend({
               },
             },
           ],
-          xAxes: [
+          x: [
             {
               display: true,
               gridLines: { display: false },
               type: "time",
-              offset: true,
               time: {
-                parser: "YYYY-MM-DD",
-                minUnit: "day",
+                unit: Report.unitForDatapoints(data.labels.length),
               },
               ticks: {
                 sampleSize: 5,
@@ -152,9 +147,7 @@ export default Component.extend({
   },
 
   _resetChart() {
-    if (this._chart) {
-      this._chart.destroy();
-      this._chart = null;
-    }
+    this._chart?.destroy();
+    this._chart = null;
   },
 });

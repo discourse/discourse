@@ -1,8 +1,6 @@
-<a href="https://www.discourse.org/"><img src=
-"https://user-images.githubusercontent.com/1681963/52239617-e2683480-289c-11e9-922b-5da55472e5b4.png"
- width="300px"></a>
-
-
+<a href="https://www.discourse.org/">
+  <img src="images/discourse-readme-logo.png" width="300px">
+</a>
 
 Discourse is the 100% open source discussion platform built for the next decade of the Internet. Use it as a:
 
@@ -14,10 +12,9 @@ To learn more about the philosophy and goals of the project, [visit **discourse.
 
 ## Screenshots
 
-
+ 
 <a href="https://bbs.boingboing.net"><img alt="Boing Boing" src="https://user-images.githubusercontent.com/1681963/52239245-04ad8280-289c-11e9-9c88-8c173d4a0422.png" width="720px"></a>
 <a href="https://twittercommunity.com/"><img src="https://user-images.githubusercontent.com/1681963/52239250-04ad8280-289c-11e9-9e42-574f6eaab9d7.png" width="720px"></a>
-<a href="https://discuss.atom.io/"><img src="https://user-images.githubusercontent.com/1681963/89088039-6735f080-d364-11ea-93a6-5629ea8738fe.png" width="720px"></a>
 <a href="https://forums.gearboxsoftware.com/"><img src="https://user-images.githubusercontent.com/1681963/89088042-68ffb400-d364-11ea-93be-161ea04d8b29.png" width="720px"></a>
 
 
@@ -66,11 +63,11 @@ Discourse supports the **latest, stable releases** of all major browsers and pla
 - [Redis](https://redis.io/) &mdash; We use Redis as a cache and for transient data.
 - [BrowserStack](https://www.browserstack.com/) &mdash; We use BrowserStack to test on real devices and browsers.
 
-Plus *lots* of Ruby Gems, a complete list of which is at [/master/Gemfile](https://github.com/discourse/discourse/blob/master/Gemfile).
+Plus *lots* of Ruby Gems, a complete list of which is at [/main/Gemfile](https://github.com/discourse/discourse/blob/main/Gemfile).
 
 ## Contributing
 
-[![Build Status](https://github.com/discourse/discourse/workflows/CI/badge.svg)](https://github.com/discourse/discourse/actions)
+[![Build Status](https://github.com/discourse/discourse/actions/workflows/tests.yml/badge.svg)](https://github.com/discourse/discourse/actions)
 
 Discourse is **100% free** and **open source**. We encourage and support an active, healthy community that
 accepts contributions from the public &ndash; including you!
@@ -80,7 +77,7 @@ Before contributing to Discourse:
 1. Please read the complete mission statements on [**discourse.org**](https://www.discourse.org). Yes we actually believe this stuff; you should too.
 2. Read and sign the [**Electronic Discourse Forums Contribution License Agreement**](https://www.discourse.org/cla).
 3. Dig into [**CONTRIBUTING.MD**](CONTRIBUTING.md), which covers submitting bugs, requesting new features, preparing your code for a pull request, etc.
-4. Always strive to collaborate [with mutual respect](https://github.com/discourse/discourse/blob/master/docs/code-of-conduct.md).
+4. Always strive to collaborate [with mutual respect](https://github.com/discourse/discourse/blob/main/docs/code-of-conduct.md).
 5. Not sure what to work on? [**We've got some ideas.**](https://meta.discourse.org/t/so-you-want-to-help-out-with-discourse/3823)
 
 
@@ -88,7 +85,7 @@ We look forward to seeing your pull requests!
 
 ## Security
 
-We take security very seriously at Discourse; all our code is 100% open source and peer reviewed. Please read [our security guide](https://github.com/discourse/discourse/blob/master/docs/SECURITY.md) for an overview of security measures in Discourse, or if you wish to report a security issue.
+We take security very seriously at Discourse; all our code is 100% open source and peer reviewed. Please read [our security guide](https://github.com/discourse/discourse/blob/main/docs/SECURITY.md) for an overview of security measures in Discourse, or if you wish to report a security issue.
 
 ## The Discourse Team
 

@@ -29,9 +29,6 @@ module Stylesheet
         file += File.read path
 
         case asset.to_s
-        when "desktop", "mobile"
-          file += importer.category_backgrounds
-          file += importer.font
         when "embed", "publish"
           file += importer.font
         when "wizard"
@@ -39,6 +36,8 @@ module Stylesheet
         when Stylesheet::Manager::COLOR_SCHEME_STYLESHEET
           file += importer.import_color_definitions
           file += importer.import_wcag_overrides
+          file += importer.category_backgrounds
+          file += importer.font
         end
       end
 

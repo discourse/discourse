@@ -20,6 +20,7 @@
   #revision {
     display: flex;
     justify-content: space-between;
+    padding-bottom: 0.5em;
   }
 
   #revisions {
@@ -28,6 +29,14 @@
       margin-top: 10px;
     }
   }
+  #display-modes {
+    .nav {
+      margin: 0;
+      padding: 0;
+      border: none;
+    }
+  }
+
   img {
     max-width: 670px;
     height: auto;

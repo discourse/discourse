@@ -4,6 +4,7 @@ import Draft from "discourse/models/draft";
 import { isEmpty } from "@ember/utils";
 import { isTesting } from "discourse-common/config/environment";
 import { schedule } from "@ember/runloop";
+import { action } from "@ember/object";
 
 // This route is used for retrieving a topic based on params
 export default DiscourseRoute.extend({
@@ -32,6 +33,14 @@ export default DiscourseRoute.extend({
         params._loading_error = true;
         return params;
       });
+  },
+
+  afterModel() {
+    const topic = this.modelFor("topic");
+
+    if (topic.isPrivateMessage && topic.suggested_topics) {
+      this.pmTopicTrackingState.startTracking();
+    }
   },
 
   deactivate() {
@@ -69,6 +78,8 @@ export default DiscourseRoute.extend({
       "model.currentPost": closest,
       enteredIndex: topic.postStream.progressIndexOfPost(closestPost),
       enteredAt: Date.now().toString(),
+      userLastReadPostNumber: topic.last_read_post_number,
+      highestPostNumber: topic.highest_post_number,
     });
 
     this.appEvents.trigger("page:topic-loaded", topic);
@@ -104,16 +115,12 @@ export default DiscourseRoute.extend({
     }
   },
 
-  actions: {
-    willTransition() {
-      this.controllerFor("topic").set(
-        "previousURL",
-        document.location.pathname
-      );
+  @action
+  willTransition() {
+    this.controllerFor("topic").set("previousURL", document.location.pathname);
 
-      // NOTE: omitting this return can break the back button when transitioning quickly between
-      // topics and the latest page.
-      return true;
-    },
+    // NOTE: omitting this return can break the back button when transitioning quickly between
+    // topics and the latest page.
+    return true;
   },
 });
