@@ -937,6 +937,11 @@ posting:
   autohighlight_all_code:
     client: true
     default: false
+  custom_wrap_tags:
+    default: ""
+    type: list
+    client: true
+    list_type: compact
   highlighted_languages:
     default: "apache|bash|cs|cpp|css|coffeescript|diff|xml|http|ini|json|java|javascript|makefile|markdown|nginx|objectivec|ruby|perl|php|python|sql|handlebars"
     choices: "HighlightJs.languages"
