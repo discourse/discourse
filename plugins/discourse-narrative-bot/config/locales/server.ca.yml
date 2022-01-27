@@ -191,7 +191,7 @@ ca:
 
           - o premeu els botons <kbd><b>B</b></kbd> o <kbd><i>I</i></kbd> de l'editor.
         reply: |-
-          Bona feina! HTML i BBCode també funcionen per a formatar. Per a saber-ne més, proveu [aquest tutorial](http://commonmark.org/help) :nerd:
+          Bona feina! HTML i BBCode també funcionen per a formatar. Per a saber-ne més, proveu [aquest tutorial](https://commonmark.org/help) :nerd:
         not_found: |-
           Ai, no s'ha trobat cap formatació en la vostra resposta. :pencil2:
 

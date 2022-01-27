@@ -406,7 +406,7 @@ export default Controller.extend({
     },
 
     selectAll() {
-      this.selected.addObjects(this.get("model.posts")).mapBy("topic");
+      this.selected.addObjects(this.get("model.posts").mapBy("topic"));
 
       // Doing this the proper way is a HUGE pain,
       // we can hack this to work by observing each on the array

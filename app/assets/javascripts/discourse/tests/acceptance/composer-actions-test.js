@@ -13,7 +13,7 @@ import { Promise } from "rsvp";
 import { _clearSnapshots } from "select-kit/components/composer-actions";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import sinon from "sinon";
-import { test } from "qunit";
+import { skip, test } from "qunit";
 import { toggleCheckDraftPopup } from "discourse/controllers/composer";
 
 acceptance("Composer Actions", function (needs) {
@@ -35,7 +35,7 @@ acceptance("Composer Actions", function (needs) {
     assert.ok(queryAll(".d-editor-input").val(), "this is the reply");
   });
 
-  test("replying to post", async function (assert) {
+  skip("replying to post", async function (assert) {
     const composerActions = selectKit(".composer-actions");
 
     await visit("/t/internationalization-localization/280");
@@ -76,7 +76,7 @@ acceptance("Composer Actions", function (needs) {
     );
   });
 
-  test("replying to post - reply_to_topic", async function (assert) {
+  skip("replying to post - reply_to_topic", async function (assert) {
     const composerActions = selectKit(".composer-actions");
 
     await visit("/t/internationalization-localization/280");
@@ -103,7 +103,7 @@ acceptance("Composer Actions", function (needs) {
     );
   });
 
-  test("replying to post - toggle_whisper", async function (assert) {
+  skip("replying to post - toggle_whisper", async function (assert) {
     const composerActions = selectKit(".composer-actions");
 
     await visit("/t/internationalization-localization/280");
@@ -214,15 +214,15 @@ acceptance("Composer Actions", function (needs) {
     const composerActions = selectKit(".composer-actions");
     const quote = "Life is like riding a bicycle.";
 
-    await visit("/t/internationalization-localization/280");
-    await click("article#post_3 button.reply");
+    await visit("/t/short-topic-with-two-posts/54077");
+    await click("article#post_2 button.reply");
     await fillIn(".d-editor-input", quote);
     await composerActions.expand();
     await composerActions.selectRowByValue("reply_to_topic");
 
     assert.strictEqual(
       queryAll(".action-title").text().trim(),
-      "Internationalization / localization"
+      "Short topic with two posts"
     );
     assert.strictEqual(queryAll(".d-editor-input").val(), quote);
 
@@ -250,7 +250,7 @@ acceptance("Composer Actions", function (needs) {
     assert.ok(exists(".action-title img.avatar"));
     assert.strictEqual(
       queryAll(".action-title .user-link").text().trim(),
-      "codinghorror"
+      "tms"
     );
     assert.strictEqual(queryAll(".d-editor-input").val(), quote);
     assert.strictEqual(
@@ -309,8 +309,8 @@ acceptance("Composer Actions", function (needs) {
   test("replying to post - toggle_topic_bump", async function (assert) {
     const composerActions = selectKit(".composer-actions");
 
-    await visit("/t/internationalization-localization/280");
-    await click("article#post_3 button.reply");
+    await visit("/t/short-topic-with-two-posts/54077");
+    await click("article#post_2 button.reply");
 
     assert.ok(
       !exists(".composer-actions svg.d-icon-anchor"),
@@ -352,8 +352,8 @@ acceptance("Composer Actions", function (needs) {
   test("replying to post - whisper and no bump", async function (assert) {
     const composerActions = selectKit(".composer-actions");
 
-    await visit("/t/internationalization-localization/280");
-    await click("article#post_3 button.reply");
+    await visit("/t/short-topic-with-two-posts/54077");
+    await click("article#post_2 button.reply");
 
     assert.ok(
       !exists(".composer-actions svg.d-icon-far-eye-slash"),
@@ -405,7 +405,7 @@ acceptance("Composer Actions", function (needs) {
     );
   });
 
-  test("replying to post as TL3 user", async function (assert) {
+  skip("replying to post as TL3 user", async function (assert) {
     const composerActions = selectKit(".composer-actions");
 
     updateCurrentUser({ moderator: false, admin: false, trust_level: 3 });

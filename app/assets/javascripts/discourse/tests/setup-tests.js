@@ -2,6 +2,8 @@ import {
   applyPretender,
   exists,
   resetSite,
+  testsInitialized,
+  testsTornDown,
 } from "discourse/tests/helpers/qunit-helpers";
 import pretender, {
   applyDefaultHandlers,
@@ -32,6 +34,7 @@ import { registerObjects } from "discourse/pre-initializers/inject-discourse-obj
 import sinon from "sinon";
 import { run } from "@ember/runloop";
 import { isLegacyEmber } from "discourse-common/config/environment";
+import { disableCloaking } from "discourse/widgets/post-stream";
 import { clearState as clearPresenceState } from "discourse/tests/helpers/presence-pretender";
 
 const Plugin = $.fn.modal;
@@ -98,6 +101,12 @@ function createApplication(config, settings) {
     });
 
   if (!started) {
+    app.instanceInitializer({
+      name: "test-helper",
+      initialize: testsInitialized,
+      teardown: testsTornDown,
+    });
+
     app.start();
     started = true;
   }
@@ -175,6 +184,8 @@ function writeSummaryLine(message) {
 }
 
 function setupTestsCommon(application, container, config) {
+  disableCloaking();
+
   QUnit.config.hidepassed = true;
 
   application.rootElement = "#ember-testing";
@@ -407,6 +418,11 @@ export function setupTestsLegacy(application) {
   setResolver(buildResolver("discourse").create({ namespace: app }));
   setupTestsCommon(application, app.__container__);
 
+  app.instanceInitializer({
+    name: "test-helper",
+    initialize: testsInitialized,
+    teardown: testsTornDown,
+  });
   app.SiteSettings = currentSettings();
   app.start();
 }

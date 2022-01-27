@@ -171,7 +171,7 @@ class Admin::EmailController < Admin::AdminController
     # TODO: 2022-05-01 Remove this route once all sites have migrated over
     # to using the new email_encoded param.
     if deprecated_email_param_used
-      render plain: "warning: the email parameter is deprecated. all POST requests to this route should be sent with a base64 strict encoded encoded_email parameter instead. email has been received and is queued for processing"
+      render plain: "warning: the email parameter is deprecated. all POST requests to this route should be sent with a base64 strict encoded email_encoded parameter instead. email has been received and is queued for processing"
     else
       render plain: "email has been received and is queued for processing"
     end

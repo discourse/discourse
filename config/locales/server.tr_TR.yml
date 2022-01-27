@@ -239,6 +239,7 @@ tr_TR:
       discourse_connect_enabled: "DiscourseConnect etkinleştirildiğinden davetler devre dışı bırakıldı."
       invalid_access: "İstenilen kaynağı görüntüleyebilmeniz için izniniz yok."
     requires_groups: "Davet kaydedildi. Belirtilen konuya erişim vermek için aşağıdaki gruplardan birini ekleyin: %{groups}."
+    domain_not_allowed: "E-postanız bu daveti değerlendirmek için kullanılamaz."
   bulk_invite:
     file_should_be_csv: "Yüklenen dosya csv formatında olmalıdır."
     max_rows: "İlk olarak %{max_bulk_invites} davetiyeleri gönderildi. Dosyayı daha küçük parçalara bölmeyi deneyin."
@@ -390,7 +391,7 @@ tr_TR:
   bookmarks:
     errors:
       already_bookmarked_post: "Aynı gönderiyi iki kez işaretleyemezsiniz."
-      too_many: "Maalesef %{limit} adetten fazla yer işareti ekleyemezsiniz; var olanlardan bazılarını kaldırmak için <a href='%{user_bookmarks_url}'>%{user_bookmarks_url}</a> adresini ziyaret edin."
+      too_many: "Ne yazık ki %{limit} adetten fazla yer imi ekleyemezsiniz; var olanlardan bazılarını kaldırmak için <a href='%{user_bookmarks_url}'>%{user_bookmarks_url}</a> adresini ziyaret edin."
       cannot_set_past_reminder: "Geçmişte bir yer imi anımsatıcısı ayarlayamazsınız."
       cannot_set_reminder_in_distant_future: "10 yıldan uzun bir gelecek için bir yer imi hatırlatıcısı ayarlayamazsınız."
       time_must_be_provided: "tüm hatırlatıcılar için zaman belirtilmelidir"
@@ -671,7 +672,7 @@ tr_TR:
       topics_per_day: "Günlük izin verilen maksimum yeni konu sayısına ulaştınız. %{time_left} sonra daha fazla yeni konu oluşturabilirsiniz."
       pms_per_day: "Günlük izin verilen maksimum gönderi sayısına ulaştınız. %{time_left} sonra daha fazla yeni gönderi oluşturabilirsiniz."
       create_like: "Vaaay! Epey beğeni dağıttınız! Bugün için maksimum günlük beğeni sayısına ulaştınız, ancak güven düzeyleri kazandıkça daha fazla günlük beğeni kullanabileceksiniz. %{time_left} sonra tekrar beğeni verebileceksiniz."
-      create_bookmark: "Maksimum günlük yer işareti sayısına ulaştınız. %{time_left} sonra daha fazla yer imi oluşturabilirsiniz."
+      create_bookmark: "Maksimum günlük yer imi sayısına ulaştınız. %{time_left} sonra daha fazla yer imi oluşturabilirsiniz."
       edit_post: "Maksimum günlük düzenleme sayısına ulaştınız. %{time_left} sonra daha fazla düzenleme yapabilirsiniz."
       live_post_counts: "Çok hızlı bir şekilde canlı yayın sayımı istiyorsunuz. Lütfen yeniden denemeden önce %{time_left} bekleyin."
       unsubscribe_via_email: "E-postayla maksimum abonelik iptali sayısına ulaştınız. Lütfen yeniden denemeden önce %{time_left} bekleyin."
@@ -766,7 +767,7 @@ tr_TR:
     success_unapproved: "Parolanızı başarıyla değiştirdiniz."
   email_login:
     invalid_token: "Maalesef, bu e-posta bağlantısı çok eski. Oturum Aç butonuna tıklayın ve yeni bir bağlantı almak için 'Parolamı unuttum' seçeneğini kullanın."
-    title: "Eposta girişi"
+    title: "E-posta girişi"
   user_auth_tokens:
     browser:
       chrome: "Google Chrome"
@@ -801,19 +802,19 @@ tr_TR:
     confirmed: "E-posta adresiniz güncellendi."
     please_continue: "%{site_name} adresine gitmeyi sürdürün"
     error: "E-posta adresiniz değiştirilirken bir hata oluştu. Bu adres zaten kullanımda olabilir."
-    doesnt_exist: "Bu eposta adresi hesabınızla ilişkilendirilmemiş."
+    doesnt_exist: "Bu e-posta adresi hesabınızla ilişkilendirilmemiş."
     error_staged: "E-posta adresiniz değiştirilirken bir hata oluştu. Bu adres zaten başka bir kullanıcı tarafından kullanımdadır."
     already_done: "Üzgünüz, bu doğrulama bağlantısı geçerli değil. E-posta adresiniz değiştirilmiş olabilir mi?"
     confirm: "Onayla"
     max_secondary_emails_error: "İzin verilen maksimum ikincil e-posta sınırına ulaştınız."
     authorizing_new:
       title: "Yeni e-postanı onayla"
-      description: "Lütfen eposta adresinizin şu şekilde değiştirilmesini isteğinizi onaylayın:"
-      description_add: "Lütfen alternatif bir eposta adresi eklemek isteğinizi onaylayın:"
+      description: "Lütfen e-posta adresinizin şu şekilde değiştirilmesi isteğinizi onaylayın:"
+      description_add: "Lütfen alternatif bir e-posta adresi ekleme isteğinizi onaylayın:"
     authorizing_old:
       title: "E posta adresini değiştir"
       description: "Lütfen e-posta adresİ değişikliğini onayla"
-      description_add: "Lütfen alternatif bir eposta adresi eklemek isteğinizi onaylayın:"
+      description_add: "Lütfen alternatif bir e-posta adresi ekleme isteğinizi onaylayın:"
       old_email: "Eski e-posta: %{email}"
       new_email: "Yeni e-posta: %{email}"
       almost_done_title: "Yeni e-posta adresini onaylama"
@@ -954,7 +955,7 @@ tr_TR:
     mute_topic: "Bu konuya ait tüm bildirimleri sustur, %{link}"
     unwatch_category: "%{category} içerisindeki tüm konuları gözlemeyi durdur"
     mailing_list_mode: "Duyuru listesi modunu kapat"
-    all: "Bana %{sitename} epostalarını gönderme"
+    all: "Bana %{sitename} adresinden herhangi bir e-posta gönderme"
     different_user_description: "E-posta gönderdiğimizden farklı bir kullanıcıyla giriş yapmışsınız. Lütfen çıkış yapın veya anonim moduna geçip yeniden deneyin."
     not_found_description: "Maalesef, bu aboneliği iptal etemedik. E-postanızdaki bağlantının süresi dolmuş olabilir."
     log_out: "Çıkış"
@@ -1124,7 +1125,7 @@ tr_TR:
       title: "İmlenenler"
       xaxis: "Gün"
       yaxis: "Yeni imlenenlerin sayısı"
-      description: "Yer işareti konmuş yeni konu ve gönderi sayısı."
+      description: "Yer imlerine eklenmiş yeni konu ve gönderi sayısı."
     users_by_trust_level:
       title: "Güven Düzeyine ait Kullanıcı Sayısı"
       xaxis: "Güven Düzeyi"
@@ -1563,7 +1564,7 @@ tr_TR:
     auto_approve_email_domains: "E-posta adresleri bu listedeki alan adlarından olan kullanıcılar otomatik olarak onaylanacaktır."
     hide_email_address_taken: "Kullanıcılara kayıt sırasında yada şifremi unuttum akışı sırasında belirli bir e-posta adresiyle bir hesabın bulunduğunu bildirmeyin. 'Unutulan parola' istekleri için tam e-posta gerektir."
     log_out_strict: "Çıkış yapılırken, kullanıcının tüm cihazlardaki TÜM seanslarını sonlandır"
-    version_checks: "Sürüm güncellemeleri için Discourse Hub'a ping atın ve <a href='%{base_path}/admin' target='_blank'>/ admin</a> kontrol panelinde yeni sürüm iletilerini gösterin"
+    version_checks: "Sürüm güncellemeleri için Discourse Hub'a ping atın ve <a href='%{base_path}/admin' target='_blank'>/ admin</a> denetim panelinde yeni sürüm iletilerini gösterin"
     new_version_emails: "Discourse'un yeni sürümü çıktığında contact_email adresine e-posta gönder."
     invite_expiry_days: "Kullanıcı davet anahtarlarının geçerlilik süresi, gün olarak"
     invite_only: "Tüm yeni kullanıcılar, güvenilir kullanıcılar veya yetkili tarafından açıkça davet edilmelidir. Herkese açık kayıt devre dışı."
@@ -2073,6 +2074,7 @@ tr_TR:
       invalid_css_color: "Geçersiz renk. Bir renk adı veya hex değer girin."
       invalid_email: "Geçersiz e-posta adresi."
       invalid_username: "Bu kullanıcı adı ile bir kullanıcı bulunmuyor."
+      valid_username: "Bu kullanıcı adına sahip bir kullanıcı var."
       invalid_group: "Bu isme sahip bir grup yok."
       invalid_integer_min_max: "Değer %{min} ile %{max} arasında olmalı."
       invalid_integer_min: "Değer %{min} ya da daha fazla olmalı."
@@ -2115,6 +2117,7 @@ tr_TR:
         leading_trailing_slash: "Normal ifade eğik çizgi ile başlamamalı ve bitmemelidir."
       unicode_usernames_avatars: "Dahili sistem avatarları Unicode kullanıcı adlarını desteklemez."
       list_value_count: "Liste tam olarak %{count} değerleri içermelidir."
+      google_oauth2_hd_groups: "Bu ayarı etkinleştirmeden önce 'google oauth2 hd'yi ayarlamalısınız."
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.örnek.com"
@@ -2412,6 +2415,8 @@ tr_TR:
     one: "Bu konu, çok sayıda topluluk bayrağı nedeniyle geçici olarak en az %{count} saat kapalı."
     other: "Bu konu, çok sayıda topluluk raporu nedeniyle geçici olarak en az %{count} saat kapalı."
   system_messages:
+    reviewables_reminder:
+      subject_template: "Gözden geçirme kuyruğunda bekleyen öğeler var"
     private_topic_title: "Konu # %{id}"
     contents_hidden: "İçeriğini görmek için lütfen gönderiyi ziyaret edin."
     post_hidden:
@@ -2945,7 +2950,7 @@ tr_TR:
     queued_posts_reminder:
       title: "Kuyruğa Alınan Gönderi Hatırlatıcısı"
       subject_template:
-        one: "%{count} mesaj incelenmesini bekliyor"
+        one: "%{count} ileti incelenmeyi bekliyor"
         other: "Gözden geçirilmeyi bekleyen %{count} gönderi var"
       text_body_template: |
         Merhaba,
@@ -2973,11 +2978,11 @@ tr_TR:
       title: "Aboneliği İptal Et"
       description: "Bu e-postalarla ilgilenmiyor musunuz? Sorun değil! Aşağıya tıklayarak aboneliğinizi hemen iptal edebilirsiniz:"
     reply_by_email: "Yanıtlamak için [konuyu ziyaret edin](%{base_url}%{url}) veya bu e-postaya cevap verin."
-    reply_by_email_pm: "[Mesaja Git](%{base_url}%{url}) veya %{participants} kişisini yanıtlamak için bu e-postayı yanıtlayın."
+    reply_by_email_pm: "[İletiye Git](%{base_url}%{url}) veya %{participants} kişisini yanıtlamak için bu e-postayı yanıtlayın."
     only_reply_by_email: "Yanıt için bu e-postayı yanıtlayın."
     only_reply_by_email_pm: "%{participants} kişisini/kişilerini yanıtlamak için bu e-postayı yanıtlayın."
     visit_link_to_respond: "Yanıtlamak için [konuyu ziyaret edin](%{base_url}%{url})."
-    visit_link_to_respond_pm: "%{participants} kişisini/kişilerini yanıtlamak için [Mesaja Git](%{base_url}%{url})."
+    visit_link_to_respond_pm: "%{participants} kişisini/kişilerini yanıtlamak için [iletiye Git](%{base_url}%{url})."
     reply_above_line: "## Lütfen yanıtınızı bu satırın üzerine yazın. ##"
     posted_by: "%{post_date} tarihinde %{username} tarafından gönderildi"
     pm_participants: "Katılımcılar: %{participants}"
@@ -2991,11 +2996,11 @@ tr_TR:
 
       >%{site_title} -- %{site_description}
 
-      Mesaja katılmak için aşağıdaki bağlantıya tıklayın:
+      İletiye katılmak için aşağıdaki bağlantıya tıklayın:
 
       %{topic_url}
     invited_to_private_message_body: |
-      %{username} sizi bir mesaja davet etti.
+      %{username} sizi bir iletiye davet etti.
 
       >**[%{topic_title}](%{topic_url})**
 
@@ -3005,7 +3010,7 @@ tr_TR:
 
       >%{site_title} -- %{site_description}
 
-      Mesaja katılmak için aşağıdaki bağlantıya tıklayın:
+      İletiye katılmak için aşağıdaki bağlantıya tıklayın:
 
       %{topic_url}
     invited_to_topic_body: |
@@ -3024,7 +3029,7 @@ tr_TR:
       %{topic_url}
     user_invited_to_private_message_pm_group:
       title: "Kullanıcı PM Grubuna Davet Edildi"
-      subject_template: "[%{email_prefix}] %{username} %{group_name} tarafından bir mesaja '%{topic_title}' davet edildi."
+      subject_template: "[%{email_prefix}] %{username} %{group_name} tarafından bir iletiye '%{topic_title}' davet edildi."
       text_body_template: |
         %{header_instructions}
 
@@ -3033,7 +3038,7 @@ tr_TR:
         %{respond_instructions}
     user_invited_to_private_message_pm:
       title: "Kullanıcı PM'ye Davet Edildi"
-      subject_template: "[%{email_prefix}] %{username} seni bir mesaja davet etti'%{topic_title}'"
+      subject_template: "[%{email_prefix}] %{username} sizi bir iletiye davet etti'%{topic_title}'"
       text_body_template: |
         %{header_instructions}
 
@@ -3042,7 +3047,7 @@ tr_TR:
         %{respond_instructions}
     user_invited_to_private_message_pm_staged:
       title: "Kullanıcı PM'ye Davet Edildi"
-      subject_template: "[%{email_prefix}] %{username} seni bir mesaja davet etti'%{topic_title}'"
+      subject_template: "[%{email_prefix}] %{username} sizi bir iletiye davet etti'%{topic_title}'"
       text_body_template: |
         %{header_instructions}
 
@@ -3343,7 +3348,7 @@ tr_TR:
       title: "Eski E-postaya Bildir (Ekle)"
       subject_template: "[%{email_prefix}] Yeni bir e-posta adresi eklendi"
       text_body_template: |
-        Bu, %{site_name} sitesine bir e-posta adresinin eklendiğini bildirmek için gönderilen otomatik bir mesajdır. Bir yanlışlık olduğunu düşünüyorsanız lütfen site yöneticisine başvurun.
+        Bu, %{site_name} sitesine bir e-posta adresinizin eklendiğini bildirmek için gönderilen otomatik bir iletidir. Bir yanlışlık olduğunu düşünüyorsanız lütfen site yöneticisine başvurun.
 
         Eklediğiniz e-posta adresi:
 
@@ -3377,7 +3382,7 @@ tr_TR:
       text_body_template: |
         Merhaba,
 
-        Bu, %{site_name} ortamındaki [yayınınızın] (%{base_url}%{post_url}) onaylandığını bilgisini vermek için gönderilmiş otomatik bir mesajdır.
+        Bu, %{site_name} ortamındaki [yayınınızın] (%{base_url}%{post_url}) onaylandığını bilgisini vermek için gönderilmiş otomatik bir iletidir.
   page_forbidden:
     title: "Oops! O sayfa özel."
   site_setting_missing: "`%{name}' ayarının belirtilmesi gerek."
@@ -3414,6 +3419,7 @@ tr_TR:
     create_multipart_failure: "Harici depoda çok parçalı yükleme oluşturulamadı."
     abort_multipart_failure: "Harici depoda çok parçalı yükleme iptal edilmedi."
     complete_multipart_failure: "Harici depoda çok parçalı yükleme tamamlanamadı."
+    external_upload_not_found: "Yükleme harici depoda bulunamadı. %{additional_detail}"
     cannot_promote_failure: "Yükleme tamamlanamıyor, zaten tamamlanmış veya daha önce başarısız olmuş olabilir."
     attachments:
       too_large: "Üzgünüz, yüklemeye çalıştığınız dosya çok büyük (en fazla %{max_size_kb}KB olabilir)."
@@ -3515,17 +3521,17 @@ tr_TR:
         Bu rozet, bir wiki yayınını ilk kez düzenlediğinizde verilir.
     basic_user:
       name: Acemi
-      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Verilen</a> tüm temel topluluk işlevleri
+      description: Tüm temel topluluk işlevlerine erişim <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">mevcut</a>
       long_description: |
-        Bu rozet, güven düzeyi 1'e ulaştığınızda verilir. Topluluğumuzun ne hakkında olduğunu öğrenmek için etrafta dolaşıp birkaç konu okuduğunuz için teşekkür ederiz. Yeni kullanıcı kısıtlamaları kaldırıldı; size kişisel mesajlaşma, işaretleme, wiki düzenleme ve birden fazla resim ve bağlantı gönderme yeteneği gibi tüm temel topluluk yetenekleri verildi.
+        Bu rozet, güven düzeyi 1'e ulaştığınızda verilir. Topluluğumuzun ne hakkında olduğunu öğrenmek için etrafta dolaşıp birkaç konu okuduğunuz için teşekkür ederiz. Yeni kullanıcı kısıtlamaları kaldırıldı; size kişisel iletileşme, bayraklama, viki düzenleme ve birden fazla resim ve bağlantı gönderme yeteneği gibi tüm temel topluluk yetenekleri verildi.
     member:
       name: Üye
-      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Verilen</a> davetiyeler, grup mesajları, daha fazla beğeni
+      description: Davetiyeler, grup iletileri, daha fazla beğeni <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">hakkı verildi</a>
       long_description: |
-        Bu rozet, güven düzeyi 2'ye ulaştığınızda verilir. Topluluğumuza gerçekten katılmak için birkaç hafta boyunca katıldığınız için teşekkür ederiz. Artık kullanıcı sayfanızdan veya tek tek konulardan davetiyeler gönderebilir, grup kişisel mesajları oluşturabilir ve her gün daha fazla beğeniye sahip olabilirsiniz.
+        Bu rozet, güven düzeyi 2'ye ulaştığınızda verilir. Topluluğumuza gerçekten katılmak için birkaç hafta boyunca katıldığınız için teşekkür ederiz. Artık kullanıcı sayfanızdan veya tek tek konulardan davetiyeler gönderebilir, grup kişisel iletileri oluşturabilir ve her gün daha fazla beğeniye sahip olabilirsiniz.
     regular:
       name: Müdavim
-      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Erişim verildi</a> yeniden kategorize etmek, yeniden adlandırmak, takip edilen bağlantılar, viki, daha fazla beğeni
+      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Şunlara erişim verildi:</a> Yeniden kategorize etme, yeniden adlandırma, takip edilen bağlantılar, viki, daha fazla beğeni
       long_description: |
         Bu rozet güven düzeyi 3'e ulaştığınızda verilir. Birkaç ay içinde topluluğumuzun düzenli bir parçası olduğunuz için teşekkür ederiz. Artık en etkin okuyuculardan birisiniz ve topluluğumuzu mükemmel kılan güvenilir bir katkıda bulunuyorsunuz. Artık konuları yeniden kategorize edebilir ve yeniden adlandırabilir, daha güçlü istenemeyen ileti bayraklarından yararlanabilir, özel bir salon alanına erişebilir ve ayrıca bir gün içinde çok daha fazla beğeni alabilirsiniz.
     leader:
@@ -3534,7 +3540,7 @@ tr_TR:
       long_description: |
         Bu rozet, güven düzeyi 4'e ulaştığınızda verilir. Bu toplulukta personel tarafından seçilen bir lidersiniz ve buradaki eylemleriniz ve sözlerinizde topluluğun geri kalanı için olumlu bir örnek belirlediniz. Tüm yayınları düzenleme, sabitleme, kapatma, listeleme, arşivleme, bölme ve birleştirme gibi ortak konu denetleyicisi eylemleri gerçekleştirebilirsiniz.
     welcome:
-      name: Hoş geldiniz
+      name: Hoş Geldin
       description: İlk beğeni alma
       long_description: |
         Bu rozet, bir yayında ilk beğeninizi aldığınızda verilir. Tebrikler, diğer topluluk üyelerinizin ilginç, havalı veya kullanışlı bulduğu bir şey yayınladınız!
@@ -3660,17 +3666,17 @@ tr_TR:
         Bu rozet, paylaştığınız bir bağlantı 1000 tıklama aldığında verilir. Vaov! Gerekli ayrıntıları ve bilgileri ekleyerek konuşmayı önemli ölçüde geliştiren bir bağlantı yayınladınız. Harika iş!
     appreciated:
       name: Takdire Layık
-      description: 20 gönderine 1 beğeni aldın
+      description: 20 gönderinize 1 beğeni aldınız
       long_description: |
         Bu rozet 20 farklı gönderide en az bir beğeni kazandığınız için verilmiştir. Topluluk olarak tartışmalara olan katkınızı takdir ediyoruz!
     respected:
       name: Saygın
-      description: 100 gönderine 2 beğeni aldın
+      description: 100 gönderinize 2 beğeni aldınız
       long_description: |
         Bu rozet 100 farklı gönderide en az 2 beğeni kazandığınız için verilmiştir. Katkılarınız forum için çok değerli.
     admired:
       name: Takdir Edilen
-      description: 300 gönderine 5 beğeni aldın
+      description: 300 gönderinize 5 beğeni aldınız
       long_description: |
         Bu rozet farklı 300 gönderide en az 5 beğeni kazandığınız için verilmiştir. Süper! Tartışmalara olan katkınız muazzam.
     out_of_love:
@@ -3707,7 +3713,7 @@ tr_TR:
       name: İlk Emoji
       description: Bir gönderide emoji kullanma
       long_description: |
-        Bu rozet, gönderinize ilk kez bir emoji eklediğinizde verilir :thumbsup:. Emoji, mesajlarınızda mutluluktan :smiley: üzüntüden :anguished: öfkeden :angry: ve her duyguyu :sunglasses: iletmenize yardımcı olur. Yüzlerce seçenek arasından seçim yapmak için düzenleyicide a: (iki nokta üst üste) yazmanız veya emoji araç çubuğu düğmesine basmanız yeterlidir :ok_hand:
+        Bu rozet, gönderinize ilk kez bir emoji eklediğinizde verilir :thumbsup:. Emoji, iletilerinizde mutluluktan :smiley: üzüntüden :anguished: öfkeden :angry: ve her duyguyu :sunglasses: iletmenize yardımcı olur. Yüzlerce seçenek arasından seçim yapmak için düzenleyicide a: (iki nokta üst üste) yazmanız veya emoji araç çubuğu düğmesine basmanız yeterlidir :ok_hand:
     first_mention:
       name: İlk Bahsetme
       description: Bir gönderide bir kullanıcıdan bahsetti
@@ -3815,8 +3821,10 @@ tr_TR:
             label: "Topluluğunuzun adı"
             placeholder: "Ali'nin Yeri"
           site_description:
+            label: "Topluluğunuzu kısa bir cümleyle tanımlayın (arama sonuçlarında ve sosyal medyada kullanılır)"
             placeholder: "Ali ve arkadaşlarının ilginç şeyleri tartışabilecekleri bir yer"
           short_site_description:
+            label: "Topluluğunuzu birkaç kelimeyle tanımlayın (ana sayfa başlığı için kullanılır)"
             placeholder: "Şimdiye kadarki en iyi topluluk"
       introduction:
         title: "Tanıtım"
@@ -3861,7 +3869,7 @@ tr_TR:
             description: "Siz veya kuruluşunuz için genel iletişim web sayfası. <a href='%{base_path}/about' target='_blank'>Sizin hakkımda sayfanızda gösterilecek</a> ."
           site_contact:
             label: "Otomatik İletiler"
-            description: "Raporlanma uyarısı ve yedekleme tamamlama bildirimleri gibi tüm otomatik Discourse kişisel mesajları bu kullanıcıdan gönderilecektir."
+            description: "Raporlanma uyarısı ve yedekleme tamamlama bildirimleri gibi tüm otomatik Discourse kişisel iletileri bu kullanıcıdan gönderilecektir."
       corporate:
         title: "Organizasyon"
         description: "Bu bilgiler, Görevli kategorisinde düzenleyebileceğiniz bir konu olan <a href='%{base_path}/tos' target='blank'>Hizmet Şartlarınıza</a> girilecektir. Bir şirketiniz yoksa şimdilik bu adımı atlamaktan çekinmeyin."
@@ -3941,7 +3949,7 @@ tr_TR:
       quoted: '%{username} "%{topic}" içinde alıntı yaptı %{site_title}'
       replied: '%{username} size "%{topic}" içinde yanıtladı - %{site_title}'
       posted: '"%{topic}" ile yayınlanan %{username} - %{site_title}'
-      private_message: '%{username} size "%{topic}" - özel bir mesaj gönderdi - %{site_title}'
+      private_message: '%{username} size "%{topic}" - özel bir ileti gönderdi - %{site_title}'
       linked: '%{username} "%{topic}" adresinden gönderinize bağlandı - %{site_title}'
       watching_first_post: '%{username} "%{topic}" adlı yeni bir konu oluşturdu - %{site_title}'
       confirm_title: "Bildirimler etkin - %{site_title}"
@@ -3976,7 +3984,11 @@ tr_TR:
     missing_version: "Bir sürüm parametresi sağlamalısınız"
     conflict: "Bunu yapmanı önleyen bir güncelleme çatışması oldu."
     reasons:
+      post_count: "Her kullanıcının ilk birkaç gönderisi görevli tarafından onaylanmalıdır. Bkz. %{link}."
+      trust_level: "Düşük güven düzeylerindeki kullanıcıların yanıtları personel tarafından onaylanmalıdır. Bkz. %{link}."
       new_topics_unless_trust_level: "Düşük güven düzeylerindeki kullanıcıların konuları personel tarafından onaylanmalıdır. Bkz. %{link}."
+      fast_typer: "Yeni kullanıcı, ilk gönderisini şüpheli bir şekilde hızlı yazdı. Şüpheli bot veya spam gönderici davranışı. Bkz. %{link}"
+      auto_silence_regex: "İlk gönderisi %{link} ayarıyla eşleşen yeni kullanıcı."
       watched_word: "Bu gönderi bir İzlenen Sözcük içeriyordu. Bkz %{link}."
       staged: "Aşamalı kullanıcılar için yeni konular ve gönderiler personel tarafından onaylanmalıdır. Bkz. %{link}."
       category: "Bu kategorideki gönderiler, personel tarafından manuel onay gerektirir. Bkz. %{link}."
@@ -3984,6 +3996,7 @@ tr_TR:
       invite_only: "Tüm yeni kullanıcılar davet edilmelidir. Bkz. %{link}."
       email_auth_res_enqueue: "Bu e-posta DMARC kontrolünde başarısız oldu, büyük olasılıkla kimden geldiği belli değil. Daha fazla bilgi için satır e-posta başlıklarına bakın."
       email_spam: "Bu e-posta, %{link} adresinde tanımlanan başlık tarafından spam olarak işaretlendi."
+      suspect_user: "Bu yeni kullanıcı, herhangi bir konuyu veya gönderiyi okumadan profil bilgilerini girdi. Bu spam gönderici olabileceklerinin güçlü bir işareti. Bkz. %{link}"
       contains_media: "Bu yazı gömülü medya içerir. Bkz. %{link}."
       queued_by_staff: "Bir görevli bu gönderinin incelenmesi gerektiğini düşünüyor. Bu yapılana kadar gizlenmiş halde kalacak."
       links:
@@ -4009,7 +4022,7 @@ tr_TR:
         description: "Tüm kullanıcılar tarafından görülebilmesi için gönderiyi geri yükle."
       agree_and_hide:
         title: "Gönderiyi Gizle"
-        description: "Bu gönderiyi sakla ve kullanıcıya otomatik olarak uyarı mesajı gönder."
+        description: "Bu gönderiyi sakla ve kullanıcıya otomatik olarak uyarı iletisi gönder."
       delete_single:
         title: "Sil"
       delete:

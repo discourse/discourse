@@ -154,7 +154,7 @@ sw:
 
           -au, bonyeza vitufe vya <kbd><b>B</b></kbd> au <kbd><i>I</i></kbd> kwenye sehemu ya kuandika
         reply: |-
-          Kazi nzuri! HTML na BBCode zinaumbiza - kujifunza zaidi, [jaribu fundisho hili] (http://commonmark.org/help) :nerd:
+          Kazi nzuri! HTML na BBCode zinaumbiza - kujifunza zaidi, [jaribu fundisho hili] (https://commonmark.org/help) :nerd:
         not_found: |-
           Sijaona mtindo kwenye jibu lako. :pencil2:
 

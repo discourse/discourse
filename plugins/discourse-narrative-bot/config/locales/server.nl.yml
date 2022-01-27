@@ -115,7 +115,7 @@ nl:
           Bedankt voor het liken van mijn bericht!
       formatting:
         reply: |-
-          Uitstekend werk! HTML en BBCode werken ook voor de opmaak – om meer te leren, [probeer deze handleiding](http://commonmark.org/help) :nerd:
+          Uitstekend werk! HTML en BBCode werken ook voor de opmaak – om meer te leren, [probeer deze handleiding](https://commonmark.org/help) :nerd:
         not_found: |-
           Oh, ik vond geen opmaak in uw antwoord. :pencil2:
 

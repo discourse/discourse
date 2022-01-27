@@ -214,7 +214,7 @@ pt:
 
           - ou, pressione os botões <kbd><b>B</b></kbd> ou <kbd><i>I</i></kbd> no editor
         reply: |-
-          Ótimo trabalho! HTML e BBCode também funcionam para formatação — para saber mais, [experimente este tutorial] (http://commonmark.org/help) :nerd:
+          Ótimo trabalho! HTML e BBCode também funcionam para formatação — para saber mais, [experimente este tutorial] (https://commonmark.org/help) :nerd:
         not_found: |-
           Aww, eu não encontrei nenhuma formatação em sua resposta. :pencil2:
 

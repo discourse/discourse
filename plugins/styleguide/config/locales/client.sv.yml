@@ -85,3 +85,5 @@ sv:
           title: "Rubrikikoner"
         spinners:
           title: "Spinnare"
+        empty_state:
+          title: "Tomt tillstånd"

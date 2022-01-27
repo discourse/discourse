@@ -67,7 +67,7 @@ Plus *lots* of Ruby Gems, a complete list of which is at [/main/Gemfile](https:/
 
 ## Contributing
 
-[![Build Status](https://github.com/discourse/discourse/workflows/CI/badge.svg)](https://github.com/discourse/discourse/actions)
+[![Build Status](https://github.com/discourse/discourse/actions/workflows/tests.yml/badge.svg)](https://github.com/discourse/discourse/actions)
 
 Discourse is **100% free** and **open source**. We encourage and support an active, healthy community that
 accepts contributions from the public &ndash; including you!

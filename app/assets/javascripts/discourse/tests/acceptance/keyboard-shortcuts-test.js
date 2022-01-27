@@ -13,6 +13,7 @@ acceptance("Keyboard Shortcuts - Anonymous Users", function (needs) {
   needs.pretender((server, helper) => {
     server.get("/t/27331/4.json", () => helper.response({}));
     server.get("/t/27331.json", () => helper.response({}));
+    server.get("/t/27331/last.json", () => helper.response({}));
 
     // No suggested topics exist.
     server.get("/t/9/last.json", () => helper.response({}));

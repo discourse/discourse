@@ -1,0 +1,11 @@
+<%
+  DiscoursePluginRegistry.javascripts.each { |js| require_asset(js) }
+  DiscoursePluginRegistry.handlebars.each { |hb| require_asset(hb) }
+  DiscoursePluginRegistry.each_globbed_asset do |f|
+    if File.directory?(f)
+      depend_on(f)
+    else
+      require_asset(f)
+    end
+  end
+%>

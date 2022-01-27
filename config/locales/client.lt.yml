@@ -4778,7 +4778,6 @@ lt:
           grant_existing_holders: Suteikite papildomų ženklelių esamiems ženklelių savininkams
       emoji:
         title: "Šypsenėlės"
-        help: "Pridėkite naujų jaustukų, kurie bus prieinami visiems. Vilkite ir numeskite kelis failus vienu metu neįvesdami pavadinimo, kad sukurtumėte jaustukus naudodami jų failų pavadinimus."
         add: "Pridėti Naują Šypsenėlę"
         uploading: "Įkeliama..."
         name: "Vardas"

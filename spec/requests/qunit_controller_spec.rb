@@ -98,16 +98,13 @@ describe QunitController do
         expect(response.body).to include("/stylesheets/desktop_")
         expect(response.body).to include("/stylesheets/test_helper_")
         expect(response.body).to include("/assets/locales/en.js")
-        expect(response.body).to include("/assets/discourse/tests/theme_qunit_ember_jquery.js")
-        expect(response.body).to include("/assets/discourse/tests/theme_qunit_vendor.js")
-        expect(response.body).to include("/assets/discourse/tests/theme_qunit_tests_vendor.js")
+        expect(response.body).to include("/test-support")
+        expect(response.body).to include("/test-helpers")
         expect(response.body).to include("/assets/markdown-it-bundle.js")
         expect(response.body).to include("/assets/application.js")
         expect(response.body).to include("/assets/admin.js")
-        expect(response.body).to include("/assets/discourse/tests/theme_qunit_helper.js")
         expect(response.body).to match(/\/theme-javascripts\/\h{40}\.js/)
         expect(response.body).to include("/theme-javascripts/tests/#{theme.id}-")
-        expect(response.body).to include("/assets/discourse/tests/test_starter.js")
       end
     end
   end

@@ -5,6 +5,7 @@
     </span>
     <div class="input">
       {{input
+        id="emoji-name"
         name="name"
         placeholderKey="admin.emoji.name"
         value=(readonly name)
@@ -19,6 +20,7 @@
     <div class="input">
       {{combo-box
         name="group"
+        id="emoji-group-selector"
         value=group
         content=newEmojiGroups
         onChange=(action "createEmojiGroup")
@@ -32,21 +34,13 @@
   </div>
   <div class="control-group">
     <div class="input">
-      <label class="btn btn-default btn-primary {{if addDisabled "disabled"}}">
-        {{#if uploading}}
-          {{d-icon "spinner" class="loading-icon"}}
-          <span>{{i18n "admin.emoji.uploading"}} {{uploadProgress}}%</span>
-        {{else}}
-          {{d-icon "plus"}}
-          <span>{{i18n "admin.emoji.add"}}</span>
-        {{/if}}
-        <input
-          class="hidden-upload-field"
-          disabled={{addDisabled}}
-          type="file"
-          multiple="true"
-          accept=".png,.gif">
-      </label>
+      <input
+        class="hidden-upload-field"
+        disabled={{uploading}}
+        type="file"
+        multiple="true"
+        accept=".png,.gif">
+      {{d-button class="btn-primary" computedLabel=buttonLabel icon="plus" action=(action "chooseFiles") disabled=uploading}}
     </div>
   </div>
 </div>

@@ -5,7 +5,7 @@ import {
   selectText,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
-import { test } from "qunit";
+import { skip, test } from "qunit";
 import postFixtures from "discourse/tests/fixtures/post";
 import { cloneJSON } from "discourse-common/lib/object";
 
@@ -62,7 +62,7 @@ acceptance("Fast Edit", function (needs) {
     assert.notOk(exists("#fast-edit-input"), "fast editor is closed");
   });
 
-  test("Opens full composer for multi-line selection", async function (assert) {
+  skip("Opens full composer for multi-line selection", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
     const textNode = query("#post_2 .cooked");

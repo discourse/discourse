@@ -85,3 +85,5 @@ ru:
           title: "Значки заголовков"
         spinners:
           title: "Спиннеры"
+        empty_state:
+          title: "Пустое состояние"

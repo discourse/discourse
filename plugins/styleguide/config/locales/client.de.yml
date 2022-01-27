@@ -85,3 +85,5 @@ de:
           title: "Header-Symbole"
         spinners:
           title: "Spinner"
+        empty_state:
+          title: "Leerer Zustand"

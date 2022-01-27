@@ -100,6 +100,9 @@
         },
         "chat_invitation": {
           "type": "integer"
+        },
+        "chat_group_mention": {
+          "type": "integer"
         }
       },
       "required": [
@@ -131,7 +134,10 @@
         "votes_released",
         "event_reminder",
         "event_invitation",
-        "chat_mention"
+        "chat_mention",
+        "chat_message",
+        "chat_invitation",
+        "chat_group_mention"
       ]
     },
     "post_types": {
