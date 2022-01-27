@@ -1,5 +1,6 @@
 import {
   MOMENT_MONDAY,
+  MOMENT_SUNDAY,
   laterThisWeek,
   laterToday,
   nextBusinessWeekStart,
@@ -51,7 +52,8 @@ export function defaultShortcutOptions(timezone) {
       icon: "briefcase",
       id: TIME_SHORTCUT_TYPES.START_OF_NEXT_BUSINESS_WEEK,
       label:
-        now(timezone).day() === MOMENT_MONDAY
+        now(timezone).day() === MOMENT_MONDAY ||
+        now(timezone).day() === MOMENT_SUNDAY
           ? "time_shortcut.start_of_next_business_week_alt"
           : "time_shortcut.start_of_next_business_week",
       time: nextBusinessWeekStart(timezone),

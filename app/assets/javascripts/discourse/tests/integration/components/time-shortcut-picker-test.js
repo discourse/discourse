@@ -160,6 +160,52 @@ discourseModule(
       },
     });
 
+    componentTest("shows 'Next Monday' instead of 'Monday' on Sundays", {
+      template,
+
+      beforeEach() {
+        const sunday = "2100-01-24T08:00:00";
+        this.clock = fakeTime(sunday, this.currentUser._timezone, true);
+      },
+
+      async test(assert) {
+        assert.equal(
+          query("#tap_tile_start_of_next_business_week .tap-tile-title")
+            .innerText,
+          "Next Monday"
+        );
+
+        assert.equal(
+          query("div#tap_tile_start_of_next_business_week div.tap-tile-date")
+            .innerText,
+          "Feb 1, 8:00 am"
+        );
+      },
+    });
+
+    componentTest("shows 'Next Monday' instead of 'Monday' on Mondays", {
+      template,
+
+      beforeEach() {
+        const monday = "2100-01-25T08:00:00";
+        this.clock = fakeTime(monday, this.currentUser._timezone, true);
+      },
+
+      async test(assert) {
+        assert.equal(
+          query("#tap_tile_start_of_next_business_week .tap-tile-title")
+            .innerText,
+          "Next Monday"
+        );
+
+        assert.equal(
+          query("div#tap_tile_start_of_next_business_week div.tap-tile-date")
+            .innerText,
+          "Feb 1, 8:00 am"
+        );
+      },
+    });
+
     componentTest(
       "the 'Next Month' option points to the first day of the next month",
       {
