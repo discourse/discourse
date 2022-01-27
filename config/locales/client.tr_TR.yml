@@ -210,7 +210,7 @@ tr_TR:
     sign_up: "Kayıt Ol"
     log_in: "Giriş Yap"
     age: "Yaş"
-    joined: "Katıldı"
+    joined: "Katılma Tarihi"
     admin_title: "Yönetici"
     show_more: "daha fazla göster"
     show_help: "seçenekler"
@@ -1356,7 +1356,7 @@ tr_TR:
         browser_last_seen: "%{browser} | %{date}"
       last_posted: "Son Gönderi"
       last_seen: "Görüldü"
-      created: "Katıldı"
+      created: "Katılma Tarihi"
       log_out: "Oturumu Kapat"
       location: "Lokasyon"
       website: "Web Sitesi"
@@ -1683,7 +1683,7 @@ tr_TR:
     trust_level: "Güven Düzeyi"
     search_hint: "kullanıcı adı, e-posta veya IP adresi"
     create_account:
-      header_title: "Hoşgeldiniz!"
+      header_title: "Hoş geldiniz!"
       subheader_title: "Haydi, hesabınızı oluşturalım"
       disclaimer: "Kayıt olarak <a href='%{privacy_link}' target='blank'>Gizlilik İlkeleri</a>'ni ve <a href='%{tos_link}' target='blank'>Hizmet Şartları</a>'nı kabul etmiş olursunuz."
       title: "Yeni Hesap Oluştur"
@@ -3837,6 +3837,8 @@ tr_TR:
           any_parameter: (herhangi bir parametre)
           allowed_urls: İzin verilen URL'ler
           descriptions:
+            global:
+              read: API anahtarını salt okunur uç noktalarla sınırlandırın.
             topics:
               read: Bir konuyu veya içinde belirli bir gönderiyi okuyun. RSS de desteklenir.
               write: Yeni bir konu oluşturun veya mevcut bir konuya yazın.
@@ -3856,6 +3858,14 @@ tr_TR:
               list: Kullanıcıların listesini alın.
             email:
               receive_emails: Gelen e-postaları işlemek için bu kapsamı posta alıcısıyla birleştirin.
+            badges:
+              create: Yeni bir rozet oluşturun.
+              show: Bir rozet hakkında bilgi edinin.
+              update: Bir rozeti güncelleyin.
+              delete: Bir rozeti silin.
+              list_user_badges: Kullanıcı rozetlerini listeleyin.
+              assign_badge_to_user: Kullanıcıya bir rozet atayın.
+              revoke_badge_from_user: Kullanıcıdan bir rozeti iptal edin.
       web_hooks:
         title: "Web Kancaları"
         none: "Şu anda bir web kancası yok."
@@ -5076,6 +5086,7 @@ tr_TR:
       emoji:
         title: "Emoji"
         add: "Yeni Emoji Ekle"
+        choose_files: "Dosyaları Seçin"
         uploading: "Yükleniyor..."
         name: "Ad"
         group: "Grup"
