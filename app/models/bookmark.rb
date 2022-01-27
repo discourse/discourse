@@ -4,8 +4,10 @@ class Bookmark < ActiveRecord::Base
   # these columns were here for a very short amount of time,
   # hence the very short ignore time
   self.ignored_columns = [
-    "bookmarkable_id", # TODO (martin) 2022-01-12 remove
-    "bookmarkable_type" # TODO (martin) 2022-01-12 remove
+    "bookmarkable_id", # TODO 2022-04-01 remove
+    "bookmarkable_type", # TODO 2022-04-01 remove
+    "topic_id", # TODO 2022-04-01: remove
+    "reminder_type" # TODO 2021-04-01: remove
   ]
 
   belongs_to :user

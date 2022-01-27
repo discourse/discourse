@@ -128,6 +128,7 @@ sv:
       url: "Kopiera och dela URL"
     action_codes:
       public_topic: "gjorde det här ämnet publikt %{when}"
+      open_topic: "konverterade detta till ett ämne %{when}"
       private_topic: "gjorde det här ämnet till ett personligt meddelande %{when}"
       split_topic: "splitta det här ämnet %{when}"
       invited_user: "bjöd in %{who} %{when}"
@@ -172,6 +173,7 @@ sv:
     themes:
       default_description: "Standard"
       broken_theme_alert: "Din sida kanske inte fungerar på grund av att tema/komponent %{theme} innehåller fel. Avaktivera det/den från %{path}."
+    broken_decorator_alert: "Inlägg kanske inte visas korrekt eftersom en av dekorationerna för inläggsinnehåll skapade ett fel på din webbplats . Kontrollera webbläsarens utvecklarverktyg för mer information."
     s3:
       regions:
         ap_northeast_1: "Asien Stillahavsområdet (Tokyo)"
@@ -1393,11 +1395,11 @@ sv:
         every_month: "varje månad"
         every_six_months: "varje halvår"
       email_level:
-        title: "Sänd mig e-post när någon citerar mig, besvarar mitt inlägg, nämner mitt @användarnamn eller bjuder in mig till ett ämne."
+        title: "E-posta mig när jag blir citerad, besvarad, mitt @användarnamn nämns eller när det finns ny aktivitet i mina bevakade kategorier, taggar eller ämnen"
         always: "alltid"
         only_when_away: "bara när jag är borta"
         never: "aldrig"
-      email_messages_level: "Sänd mig e-post när någon skickar mig ett meddelande"
+      email_messages_level: "E-posta mig när jag får ett personligt meddelande"
       include_tl0_in_digests: "Inkludera innehåll från nya användare i sammanfattningen som skickas via e-post"
       email_in_reply_to: "Inkludera ett utdrag av inlägg som svarats på i e-postmeddelanden"
       other_settings: "Övrigt"
@@ -1915,8 +1917,10 @@ sv:
         one: "Genom att nämna %{group}, så kommer du att avisera <a href='%{group_link}'>%{count} person</a> – är du säker?"
         other: "Genom att nämna %{group}, så kommer du att avisera <a href='%{group_link}'>%{count} medlemmar</a> – är du säker?"
       cannot_see_mention:
-        category: "Du nämnde %{username}, men hen kommer inte att få någon avisering för hen har inte tillgång till denna kategori. Du måste lägga till hen till en grupp som har tillgång till den här kategorin."
-        private: "Du nämnde %{username}, men hen kommer inte få någon avisering eftersom hen inte kan se detta personliga meddelande. Du måste bjuda in hen till detta PM."
+        category: "Du nämnde @%{username} men de kommer inte att meddelas eftersom de inte har tillgång till denna kategori. Du måste lägga till dem i en grupp som har tillgång till denna kategori."
+        private: "Du nämnde @%{username} men de kommer inte att meddelas eftersom de inte kan se detta personliga meddelande. Du måste bjuda in dem till detta personliga meddelande."
+        muted_topic: "Du nämnde @%{username} men de kommer inte att meddelas eftersom de tystade detta ämne."
+        not_allowed: "Du nämnde @%{username} men de kommer inte att meddelas eftersom de inte var inbjudna till detta ämne."
       here_mention:
         one: "Genom att nämna <b>@%{here}</b>kommer du att meddela %{count} användare – är du säker?"
         other: "Genom att nämna <b>@%{here}</b>kommer du att meddela %{count} användare – är du säker?"
@@ -2506,20 +2510,13 @@ sv:
         replies_short: "%{current} / %{total}"
       progress:
         title: ämnesförlopp
-        go_top: "toppen"
-        go_bottom: "botten"
-        go: "gå"
-        jump_bottom: "hoppa till sista inlägget"
         jump_prompt: "hoppa till..."
         jump_prompt_of:
           one: "av %{count} inlägg"
           other: "av %{count} inlägg"
         jump_prompt_long: "Hoppa till..."
-        jump_bottom_with_number: "hoppa till inlägg %{post_number}"
         jump_prompt_to_date: "till datum"
         jump_prompt_or: "eller"
-        total: antal inlägg
-        current: nuvarande inlägg
       notifications:
         title: ändra hur ofta du får aviseringar om det här ämnet
         reasons:
@@ -4569,9 +4566,6 @@ sv:
           title: "Granskade IP-adresser"
           description: 'IP-adresser som är under bevakning. Använd "Tillåt" för att vitlista IP-adresser.'
           delete_confirm: "Är du säker på att du vill ta bort regeln för %{ip_address}?"
-          roll_up_confirm: "Är du säker på att du vill rulla upp vanligen undersökta IP-adresser i delnät?"
-          rolled_up_some_subnets: "Framgångsrikt rullat upp förbjudna IP-poster till de här delnäten: %{subnets}."
-          rolled_up_no_subnet: "Det fanns inget att rulla upp."
           actions:
             block: "Blockera"
             do_nothing: "Tillåt"
@@ -5127,8 +5121,9 @@ sv:
           grant_existing_holders: Utfärda ytterligare utmärkelser till befintliga utmärkelseinnehavare
       emoji:
         title: "Emoji"
-        help: "Lägg till nya emoji som kommer att vara tillgängliga för alla. Dra och släpp flera filer samtidigt utan att ange ett namn för att skapa emojis med deras filnamn."
+        help: "Lägg till ny emoji som kommer att vara tillgänglig för alla. Dra och släpp flera filer samtidigt utan att ange ett namn för att skapa emojis med deras filnamn. Den valda gruppen kommer att användas för alla filer som läggs till samtidigt. Du kan också klicka på \"Lägg till ny emoji\" för att öppna filväljaren."
         add: "Lägg till ny emoji"
+        choose_files: "Välj filer"
         uploading: "Laddar upp..."
         name: "Namn"
         group: "Grupp"

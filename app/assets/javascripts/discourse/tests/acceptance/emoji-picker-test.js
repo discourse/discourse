@@ -1,6 +1,7 @@
 import {
   acceptance,
   exists,
+  query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit } from "@ember/test-helpers";
@@ -26,6 +27,15 @@ acceptance("EmojiPicker", function (needs) {
 
     await click("button.emoji.btn");
     assert.notOk(exists(".emoji-picker.opened"), "it closes the picker");
+  });
+
+  test("filters emoji", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await click("#topic-footer-buttons .btn.create");
+    await click("button.emoji.btn");
+    await fillIn(".emoji-picker input.filter", "guitar");
+
+    assert.strictEqual(query(`.emoji-picker .results img`).title, "guitar");
   });
 
   test("emoji picker triggers event when picking emoji", async function (assert) {
@@ -125,6 +135,35 @@ acceptance("EmojiPicker", function (needs) {
       true,
       "it puts the last used emoji in first"
     );
+  });
+
+  test("updates the recent list when selecting from it (after you close re-open it or select other emoji)", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await click("#topic-footer-buttons .btn.create");
+    await click("button.emoji.btn");
+    await click(`.emoji-picker-emoji-area img.emoji[title="sunglasses"]`);
+    await click(`.emoji-picker-emoji-area img.emoji[title="grinning"]`);
+
+    let recent = queryAll(".section.recent .section-group img.emoji");
+    assert.strictEqual(recent[0].title, "grinning");
+    assert.strictEqual(recent[1].title, "sunglasses");
+
+    await click(
+      `.section[data-section="recent"] .section-group img.emoji[title="sunglasses"]`
+    );
+
+    // The order is still the same
+    recent = queryAll(".section.recent .section-group img.emoji");
+    assert.strictEqual(recent[0].title, "grinning");
+    assert.strictEqual(recent[1].title, "sunglasses");
+
+    await click("button.emoji.btn");
+    await click("button.emoji.btn");
+
+    // but updates when you re-open
+    recent = queryAll(".section.recent .section-group img.emoji");
+    assert.strictEqual(recent[0].title, "sunglasses");
+    assert.strictEqual(recent[1].title, "grinning");
   });
 
   test("emoji picker persists state", async function (assert) {

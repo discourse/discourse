@@ -3986,7 +3986,9 @@ RSpec.describe TopicsController do
 
       describe 'when topic id is invalid' do
         it 'should return the right response' do
-          post "/t/999/invite.json", params: {
+          id = topic.id
+          topic.destroy!
+          post "/t/#{id}/invite.json", params: {
             email: user.email
           }
 

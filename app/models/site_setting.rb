@@ -15,7 +15,7 @@ class SiteSetting < ActiveRecord::Base
 
   load_settings(File.join(Rails.root, 'config', 'site_settings.yml'))
 
-  unless Rails.env.test? && ENV['LOAD_PLUGINS'] != "1"
+  if GlobalSetting.load_plugins?
     Dir[File.join(Rails.root, "plugins", "*", "config", "settings.yml")].each do |file|
       load_settings(file, plugin: file.split("/")[-3])
     end

@@ -251,7 +251,7 @@ class PresenceChannel
   # installations, this is the same Redis server as `Discourse.redis`.
   def self.redis
     if MessageBus.backend == :redis
-      MessageBus.reliable_pub_sub.send(:pub_redis) # TODO: avoid a private API?
+      MessageBus.backend_instance.send(:pub_redis) # TODO: avoid a private API?
     elsif Rails.env.test?
       Discourse.redis.without_namespace
     else
@@ -408,7 +408,7 @@ class PresenceChannel
 
     # TODO: Avoid using private MessageBus methods here
     encoded_channel_name = MessageBus.send(:encode_channel_name, message_bus_channel_name)
-    MessageBus.reliable_pub_sub.send(:backlog_id_key, encoded_channel_name)
+    MessageBus.backend_instance.send(:backlog_id_key, encoded_channel_name)
   end
 
   def redis_keys

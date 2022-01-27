@@ -229,7 +229,7 @@ sv:
 
       <p>Annars ber vi dig att <a href="%{base_url}/password-reset">återställa lösenordet</a>.</p>
     not_found_template_link: |
-      <p>Inbjudan till <a href="%{base_url}">%{site_name}</a> kan inte längre lösas in. Be personen som bjöd in dig att skicka en ny inbjudan till dig.</p>l
+      <p>Denna inbjudan till <a href="%{base_url}">%{site_name}</a> kan inte längre lösas in. Be personen som bjöd in dig att skicka en ny inbjudan till dig.</p>
     user_exists: "Det finns inget behov av att bjuda in <b>%{email}</b>: De har <a href='%{base_path}/u/%{username}/summary'>redan ett konto!</a>"
     invite_exists: "Du har redan bjudit in <b>%{email}</b>."
     invalid_email: "%{email} är inte en giltig e-postadress."
@@ -2589,19 +2589,25 @@ sv:
       title: "Svar borttaget från flaggat inlägg av personal"
       subject_template: "Svar borttaget från flaggat inlägg av personal"
       text_body_template: |
-        Hejsan,
+        Hej,
 
-        Detta är ett automatiskt meddelande från %{site_name} för att informera dig om att ett [inlägg](%{base_url}%{url}) som du svarade på togs bort.
+        Detta är ett automatiskt meddelande från %{site_name} att låta dig veta att en [post](%{base_url}%{url}) du svarade på togs bort.
 
         %{flag_reason}
 
-        Detta inlägg flaggades av forumet och personalen valde att radera det.
+        Det här inlägget flaggades av gemenskapen och personalen valde att ta bort det.
 
         ``` markdown
         %{flagged_post_raw_content}
         ```
 
-        För mer detaljerad förklaring av orsaken vänligen studera våra [forumriktlinjer](%{base_url}/guidelines).
+        där du svarade följande
+
+        ``` markdown
+        %{flagged_post_response_raw_content}
+        ```
+
+        För mer information om orsaken till borttagningen, läs våra [riktlinjer för communityn](%{base_url}/riktlinjer).
     usage_tips:
       text_body_template: |
         För att få ett par tips och förslag hur du kommer igång som ny användare, [gå till detta blogginlägg](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).

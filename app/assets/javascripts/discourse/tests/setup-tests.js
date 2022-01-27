@@ -2,6 +2,8 @@ import {
   applyPretender,
   exists,
   resetSite,
+  testsInitialized,
+  testsTornDown,
 } from "discourse/tests/helpers/qunit-helpers";
 import pretender, {
   applyDefaultHandlers,
@@ -32,6 +34,7 @@ import { registerObjects } from "discourse/pre-initializers/inject-discourse-obj
 import sinon from "sinon";
 import { run } from "@ember/runloop";
 import { isLegacyEmber } from "discourse-common/config/environment";
+import { disableCloaking } from "discourse/widgets/post-stream";
 import { clearState as clearPresenceState } from "discourse/tests/helpers/presence-pretender";
 
 const Plugin = $.fn.modal;
@@ -73,11 +76,37 @@ function createApplication(config, settings) {
   setApplication(app);
   setResolver(buildResolver("discourse").create({ namespace: app }));
 
+  // Modern Ember only sets up a container when the ApplicationInstance
+  // is booted. We have legacy code which relies on having access to a container
+  // before boot (e.g. during pre-initializers)
+  //
+  // This hack sets up a container early, then stubs the container setup method
+  // so that Ember will use the same container instance when it boots the ApplicationInstance
+  //
+  // Note that this hack is not required in production because we use the default `autoboot` flag,
+  // which triggers the internal `_globalsMode` flag, which sets up an ApplicationInstance immediately when
+  // an Application is initialized (via the `_buildDeprecatedInstance` method).
+  //
+  // In the future, we should move away from relying on the `container` before the ApplicationInstance
+  // is booted, and then remove this hack.
   let container = app.__registry__.container();
   app.__container__ = container;
   setDefaultOwner(container);
+  sinon
+    .stub(Object.getPrototypeOf(app.__registry__), "container")
+    .callsFake((opts) => {
+      container.owner = opts.owner;
+      container.registry = opts.owner.__registry__;
+      return container;
+    });
 
   if (!started) {
+    app.instanceInitializer({
+      name: "test-helper",
+      initialize: testsInitialized,
+      teardown: testsTornDown,
+    });
+
     app.start();
     started = true;
   }
@@ -155,6 +184,8 @@ function writeSummaryLine(message) {
 }
 
 function setupTestsCommon(application, container, config) {
+  disableCloaking();
+
   QUnit.config.hidepassed = true;
 
   application.rootElement = "#ember-testing";
@@ -387,6 +418,11 @@ export function setupTestsLegacy(application) {
   setResolver(buildResolver("discourse").create({ namespace: app }));
   setupTestsCommon(application, app.__container__);
 
+  app.instanceInitializer({
+    name: "test-helper",
+    initialize: testsInitialized,
+    teardown: testsTornDown,
+  });
   app.SiteSettings = currentSettings();
   app.start();
 }
@@ -395,6 +431,7 @@ export default function setupTests(config) {
   let settings = resetSettings();
   app = createApplication(config, settings);
   setupTestsCommon(app, app.__container__, config);
+  sinon.restore();
 }
 
 function getUrlParameter(name) {

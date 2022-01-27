@@ -128,6 +128,7 @@ it:
       url: "Copia e condividi l'URL"
     action_codes:
       public_topic: "ha reso questo argomento pubblico %{when}"
+      open_topic: "Convertito in un argomento %{when}"
       private_topic: "ha reso questo argomento un messaggio personale %{when}"
       split_topic: "ha separato questo argomento %{when}"
       invited_user: "ha invitato %{who} %{when}"
@@ -1391,11 +1392,9 @@ it:
         every_month: "ogni mese"
         every_six_months: "ogni sei mesi"
       email_level:
-        title: "Inviami una email quando qualcuno mi cita, risponde ad un mio messaggio, menziona il mio @nomeutente, o mi invita in un argomento."
         always: "sempre"
         only_when_away: "solo quando non collegato"
         never: "mai"
-      email_messages_level: "Inviami una email quando qualcuno mi manda un messaggio"
       include_tl0_in_digests: "Includi contenuti dei nuovi utenti nelle email riepilogative"
       email_in_reply_to: "Nelle email includi un estratto delle risposte al messaggio"
       other_settings: "Altro"
@@ -1899,8 +1898,10 @@ it:
         one: "Menzionando %{group}, una notifica sarà inviata a <a href='%{group_link}'>%{count} persona</a>. Vuoi procedere?"
         other: "Menzionando %{group}, saranno inviate notifiche a <a href='%{group_link}'>%{count} persone</a>. Vuoi procedere?"
       cannot_see_mention:
-        category: "Hai menzionato %{username} ma non riceverà notifiche perché non ha accesso a questa categoria. Dovrai aggiungerlo ad un gruppo che ha accesso a questa categoria."
-        private: "Hai menzionato %{username} ma non riceverà notifiche perché non ha accesso a questo messaggio personale. Dovrai invitarlo a questo MP."
+        category: "Hai menzionato %{username} ma non riceverà alcuna notifica perché non ha accesso a questa categoria. Dovrai aggiungerlo ad un gruppo che ha accesso a questa categoria."
+        private: "Hai menzionato %{username} ma non riceverà alcuna notifica perché non ha accesso a questo messaggio privato. Dovrai invitarlo a questo messaggio privato."
+        muted_topic: "Hai menzionato @%{username} ma non riceverà alcuna notifica perché ha silenziato questo argomento."
+        not_allowed: "Hai menzionato @%{username} ma non riceverà alcuna notifica perché ha silenziato questo argomento."
       here_mention:
         one: "Menzionando <b>@%{here}</b>, verrà inviata una notifica a %{count} utente – confermi?"
         other: "Menzionando <b>@%{here}</b>, verrà inviata una notifica a %{count} utenti – confermi?"
@@ -2470,20 +2471,13 @@ it:
         replies_short: "%{current} / %{total}"
       progress:
         title: Avanzamento lettura argomento
-        go_top: "alto"
-        go_bottom: "basso"
-        go: "vai"
-        jump_bottom: "salta all'ultimo messaggio"
         jump_prompt: "vai a..."
         jump_prompt_of:
           one: "di %{count} messaggio"
           other: "di %{count} messaggi"
         jump_prompt_long: "Vai a..."
-        jump_bottom_with_number: "Vai al messaggio %{post_number}"
         jump_prompt_to_date: "ad oggi"
         jump_prompt_or: "o"
-        total: totale messaggi
-        current: messaggio corrente
       notifications:
         title: cambia la frequenza con cui sarai avvertito su questo argomento
         reasons:
@@ -4500,9 +4494,6 @@ it:
           title: "IP scansionati"
           description: 'Indirizzi IP in osservazione. Usa "Permetti" per aggiungerli alla lista di indirizzi consentiti.'
           delete_confirm: "Vuoi rimuovere la regola per %{ip_address}?"
-          roll_up_confirm: "Vuoi raggruppare gli indirizzi IP scansionati normalmente?"
-          rolled_up_some_subnets: "Gli elenchi di indirizzi IP interdetti sono stati raggruppati correttamente: %{subnets}."
-          rolled_up_no_subnet: "Non c'era nulla da raggruppare."
           actions:
             block: "Blocca"
             do_nothing: "Permetti"
@@ -5048,7 +5039,6 @@ it:
           grant_existing_holders: Assegna distintivi aggiuntivi ai titolari di distintivi già esistenti
       emoji:
         title: "Emoji"
-        help: "Aggiungi nuove emoji che saranno disponibili per tutti. Trascina e rilascia più file contemporaneamente senza inserire un nome per creare emoji utilizzando i nomi dei file."
         add: "Aggiungi Nuovo Emoji"
         uploading: "In caricamento..."
         name: "Nome"

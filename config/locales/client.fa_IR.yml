@@ -1299,11 +1299,9 @@ fa_IR:
         every_month: "هر ماه"
         every_six_months: "هر شش ماه"
       email_level:
-        title: "وقتی کسی نوشته‌های مرا نقل‌قول کرد، به من پاسخ داد، به @نام‌کاربری من اشاره کرد، یا مرا به موضوعی دعوت کرد، یک ایمیل برایم بفرست."
         always: "همیشه"
         only_when_away: "فقط وقتی نیستم"
         never: "هیچوقت"
-      email_messages_level: "وقتی کسی به من پیام خصوصی فرستاد، ایمیل بفرست"
       include_tl0_in_digests: "محتوای ایجاد شده توسط کاربران جدید در ایمیل خلاصه قرار گیرد."
       email_in_reply_to: "خلاصه‌ی پاسخ‌ها را در ایمیل قرار بده."
       other_settings: "موارد دیگر"
@@ -1794,9 +1792,6 @@ fa_IR:
       group_mentioned:
         one: "با اشاره به %{group}، به <a href='%{group_link}'>%{count} نفر</a> اطلاعیه ارسال می‌شود. مطمئن هستید؟"
         other: "با اشاره به %{group}، به <a href='%{group_link}'>%{count} نفر</a> اطلاعیه ارسال می‌شود. مطمئن هستید؟"
-      cannot_see_mention:
-        category: "شما به %{username} اشاره کردید ولی ایشان به دلیل نداشتن دسترسی به این دسته‌بندی، مطلع نخواهند شد. برای دسترسی باید آن‌ها را به گروهی که به این دسته‌بندی دسترسی دارند اضافه کنید."
-        private: "شما به %{username} اشاره کردید ولی به دلیل نداشتن دسترسی به این پیام خصوصی مطلع نخواهند شد. برای دسترسی باید آن‌ها را به این پیام خصوصی دعوت کنید."
       duplicate_link: "به نظر می‌رسد پیوند شما به <b>%{domain}</b> قبلاً در یک مبحث توسط <b>@ %{username}</b> در <a href='%{post_url}'>پاسخ به %{ago} ارسال شده است</a> - مطمئن هستید که می خواهید دوباره آن را بفرستید؟"
       reference_topic_title: "پاسخ: %{title}"
       error:
@@ -2276,20 +2271,13 @@ fa_IR:
         replies_short: "%{current} از %{total}"
       progress:
         title: پیشرفت موضوع
-        go_top: "بالا"
-        go_bottom: "پایین"
-        go: "برو"
-        jump_bottom: "پرش به آخرین نوشته"
         jump_prompt: "پرش به..."
         jump_prompt_of:
           one: "از %{count} نوشته"
           other: "از %{count} نوشته"
         jump_prompt_long: "برو به ..."
-        jump_bottom_with_number: "رفتن به نوشته ی %{post_number}"
         jump_prompt_to_date: "تا تاریخ"
         jump_prompt_or: "یا"
-        total: همه نوشته‌ها
-        current: نوشته‌ی کنونی
       notifications:
         title: بازه زمانی آگاه‌سازی از این موضوع را تغییر دهید
         reasons:
@@ -3818,9 +3806,6 @@ fa_IR:
         screened_ips:
           title: "نمایش IP ها"
           delete_confirm: "آیا از حذف قانون وضع شده برای {ip_address}% اطمینان دارید؟"
-          roll_up_confirm: "آیا مطمئن هستید که می خواهید IP مشاهده شده به زیر شبکه بازگشت داده شوند ؟"
-          rolled_up_some_subnets: "با موفقیت IP مسدود شده بازگشت داده شد به ورودی های این زیر شبکه: %{subnets}."
-          rolled_up_no_subnet: "هیچ چیز برای جمع کردن وجود ندارد."
           actions:
             block: "بستن"
             do_nothing: "اجازه دادن"
@@ -4212,6 +4197,7 @@ fa_IR:
       emoji:
         title: "شکلک"
         add: "افزودن شکلک جدید"
+        choose_files: "انتخاب پرونده"
         uploading: "در حال بار گذاری ..."
         name: "نام"
         group: "گروه"

@@ -214,7 +214,7 @@ es:
 
           - o, presiona los botones <kbd><b>B</b></kbd> o <kbd><i>I</i></kbd> en el editor
         reply: |-
-          Buen trabajo! HTML y BBCode también funcionan para darle formato al texto – aprende más en [este tutorial](http://commonmark.org/help) :nerd:
+          ¡Buen trabajo! También puedes usar HTML y BBCode para darle formato al texto – aprende más en [esta guía](https://commonmark.org/help) :nerd:
         not_found: |-
           Aww, no encontré ningún texto con formato en tu respuesta. :pencil2:
 

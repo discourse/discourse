@@ -4,7 +4,7 @@ import {
   count,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import { test } from "qunit";
+import { skip } from "qunit";
 
 acceptance("Post - History", function (needs) {
   needs.user();
@@ -51,7 +51,7 @@ acceptance("Post - History", function (needs) {
     });
   });
 
-  test("Shows highlighted tag changes", async function (assert) {
+  skip("Shows highlighted tag changes", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click("article[data-post-id='419'] .edits button");
     assert.equal(count(".discourse-tag"), 4);

@@ -258,15 +258,27 @@ export default Component.extend({
     ];
   },
 
-  _generateDateMarkup(config, options, isRange) {
-    let text = `[date=${config.date}`;
+  _generateDateMarkup(fromDateTime, options, isRange, toDateTime) {
+    let text = ``;
 
-    if (config.time) {
-      text += ` time=${config.time}`;
+    if (isRange) {
+      let from = [fromDateTime.date, fromDateTime.time]
+        .filter((element) => !isEmpty(element))
+        .join("T");
+      let to = [toDateTime.date, toDateTime.time]
+        .filter((element) => !isEmpty(element))
+        .join("T");
+      text += `[date-range from=${from} to=${to}`;
+    } else {
+      text += `[date=${fromDateTime.date}`;
     }
 
-    if (config.format && config.format.length) {
-      text += ` format="${config.format}"`;
+    if (fromDateTime.time && !isRange) {
+      text += ` time=${fromDateTime.time}`;
+    }
+
+    if (fromDateTime.format && fromDateTime.format.length) {
+      text += ` format="${fromDateTime.format}"`;
     }
 
     if (options.timezone) {
@@ -298,11 +310,15 @@ export default Component.extend({
     let text;
 
     if (isValid && config.from) {
-      text = this._generateDateMarkup(config.from, options, isRange);
-
       if (config.to && config.to.range) {
-        text += ` → `;
-        text += this._generateDateMarkup(config.to, options, isRange);
+        text = this._generateDateMarkup(
+          config.from,
+          options,
+          isRange,
+          config.to
+        );
+      } else {
+        text = this._generateDateMarkup(config.from, options, isRange);
       }
     }
 

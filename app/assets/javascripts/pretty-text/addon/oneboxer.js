@@ -76,7 +76,7 @@ function loadNext(ajax) {
   })
     .then(
       (template) => {
-        const node = domFromString(template);
+        const node = domFromString(template)[0];
         setLocalCache(normalize(url), node);
         elem.replaceWith(node);
         applySquareGenericOnebox(node);

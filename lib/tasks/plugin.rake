@@ -109,6 +109,13 @@ end
 
 desc 'pull compatible plugin versions for all plugins'
 task 'plugin:pull_compatible_all' do |t|
+  if GlobalSetting.load_plugins?
+    STDERR.puts <<~TEXT
+      WARNING: Plugins were activated before running `rake plugin:pull_compatible_all`
+        You should prefix this command with LOAD_PLUGINS=0
+    TEXT
+  end
+
   # Loop through each directory
   plugins = Dir.glob(File.expand_path('plugins/*')).select { |f| File.directory? f }
   # run plugin:pull_compatible
@@ -187,7 +194,7 @@ desc 'run plugin qunit tests'
 task 'plugin:qunit', [:plugin, :timeout] do |t, args|
   args.with_defaults(plugin: "*")
 
-  rake = `which rake`.strip
+  rake = "#{Rails.root}/bin/rake"
 
   cmd = 'LOAD_PLUGINS=1 '
   cmd += 'QUNIT_SKIP_CORE=1 '
@@ -202,7 +209,8 @@ task 'plugin:qunit', [:plugin, :timeout] do |t, args|
   cmd += "#{rake} qunit:test"
   cmd += "[#{args[:timeout]}]" if args[:timeout]
 
-  sh cmd
+  system cmd
+  exit $?.exitstatus
 end
 
 desc 'run all migrations of a plugin'

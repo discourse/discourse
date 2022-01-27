@@ -1335,11 +1335,9 @@ ja:
         every_month: "毎月"
         every_six_months: "6 か月毎"
       email_level:
-        title: "誰かが自分の投稿を引用またはそれに返信したとき、@ユーザー名で自分をメンションしたとき、または自分をトピックに招待したときにメールでその通知を受け取る"
         always: "常時"
         only_when_away: "離れている時のみ"
         never: "通知しない"
-      email_messages_level: "メッセージを受け取ったときにメールで通知を受け取る"
       include_tl0_in_digests: "要約メールに新規ユーザーのコンテンツを含める"
       email_in_reply_to: "メールに投稿への返信の抜粋を含める"
       other_settings: "その他"
@@ -1835,9 +1833,6 @@ ja:
         other: "<b>警告！</b> <a href='%{group_link}'>%{group}</a> をメンションしましたが、このグループのメンバー数は、管理者がメンション数制限として設定した %{count} 人を超えています。そのため誰にも通知されません。"
       group_mentioned:
         other: "%{group} をメンションすると、<a href='%{group_link}'>%{count} 人</a> へ通知されます。よろしいですか？"
-      cannot_see_mention:
-        category: "%{username} をメンションしましたが、このカテゴリへのアクセス権がないため通知されません。このカテゴリにアクセスできるグループに追加してください。"
-        private: "%{username} をメンションしましたが、この個人メッセージを見ることができないため通知されません。この個人メッセージに招待してください。"
       here_mention:
         other: "<b>@%{here}</b> をメンションして %{count} 人のユーザーに通知しようとしています。よろしいですか？"
       duplicate_link: "<b>%{domain}</b> へのリンクは、すでに <b>@%{username}</b> が <a href='%{post_url}'>%{ago}</a> 前に投稿しています。もう一度投稿してもよろしいですか？"
@@ -2371,19 +2366,12 @@ ja:
         replies_short: "%{current} / %{total}"
       progress:
         title: トピックの進捗
-        go_top: "上"
-        go_bottom: "下"
-        go: "移動"
-        jump_bottom: "最後の投稿へジャンプ"
         jump_prompt: "ジャンプ..."
         jump_prompt_of:
           other: "/ %{count} の投稿"
         jump_prompt_long: "ジャンプ..."
-        jump_bottom_with_number: "%{post_number} 番へジャンプ"
         jump_prompt_to_date: "日付"
         jump_prompt_or: "または"
-        total: 全投稿
-        current: 現在の投稿
       notifications:
         title: このトピックに関する通知頻度の変更
         reasons:
@@ -4308,9 +4296,6 @@ ja:
           title: "スクリーン対象 IP"
           description: 'ウォッチ中の IP アドレスです。IP アドレスのホワイトリストに追加するには "許可" を使用します。'
           delete_confirm: "%{ip_address} のルールを削除してもよろしいですか？"
-          roll_up_confirm: "共通スクリーン対象 IP アドレスをサブネットにロールアップしてもよろしいですか？"
-          rolled_up_some_subnets: "IP ブロックエントリを次のサブネットにロールアップしました: %{subnets}。"
-          rolled_up_no_subnet: "ロールアップするものがありません。"
           actions:
             block: "ブロック"
             do_nothing: "許可"

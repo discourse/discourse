@@ -150,4 +150,12 @@ discourseModule("Unit | Utility | emoji", function () {
       "green_apple",
     ]);
   });
+
+  test("search does not return duplicated results", function (assert) {
+    const matches = emojiSearch("bow").filter(
+      (emoji) => emoji === "bowing_man"
+    );
+
+    assert.deepEqual(matches, ["bowing_man"]);
+  });
 });

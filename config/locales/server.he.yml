@@ -208,7 +208,7 @@ he:
       default_categories_already_selected: "לא ניתן לבחור קטגוריה שנעשה בה שימוש ברשימה אחרת."
       default_tags_already_selected: "לא ניתן לבחור תגית שנעשה בה שימוש ברשימה אחרת"
       s3_upload_bucket_is_required: "לא ניתן להפעיל העלאות ל־S3 ללא ‚s3_upload_bucket’."
-      enable_s3_uploads_is_required: "אי אפשר להגדיר מאגר ל־S3 אלמלא הפעלת העלאות ל־S3."
+      enable_s3_uploads_is_required: "אי אפשר להפעיל את השימוש במאגר S3 אלמלא הפעלת העלאות ל־S3."
       page_publishing_requirements: "לא ניתן להפעיל פרסום עמודים אם מדיה מאובטחת פעילה."
       s3_backup_requires_s3_settings: "לא ניתן להשתמש ב־S3 כמיקום לגיבוי אלמלא סיפקת את ‚%{setting_name}’."
       s3_bucket_reused: "אין לך אפשרות להשתמש באותו הדלי עבור ‚s3_upload_bucket’ וגם ‚s3_backup_bucket’. נא לבחור בדלי שונה או להשתמש בנתיב שונה לכל דלי."
@@ -245,7 +245,7 @@ he:
 
       <p>אם לא אז נא <a href="%{base_url}/password-reset">לאפס ססמה</a>.</p>
     not_found_template_link: |
-      <p>לא ניתן עוד לממש את ההזמנה שנשלח אל <a href="%{base_url}">%{site_name}</a>. נא לבקש מיוזם או יוזמת ההזמנה לשלוח לך הזמנה חדשה.</p>
+      <p>לא ניתן עוד לממש את ההזמנה הזאת שנשלחה אל <a href="%{base_url}">%{site_name}</a>. נא לבקש מיוזם או יוזמת ההזמנה לשלוח לך הזמנה חדשה.</p>
     user_exists: "אין צורך להזמין את <b>%{email}</b>, כבר <a href='%{base_path}/u/%{username}/summary'>קיים חשבון לכתובת זו!</a>"
     invite_exists: "כבר הזמנת את <b>%{email}</b>."
     invalid_email: "%{email} אינה כתובת דוא״ל תקפה."
@@ -921,7 +921,7 @@ he:
     continue_button: "להמשיך אל %{site_name}"
     welcome_to: "ברוך בואך אל %{site_name}!"
     approval_required: "על מפקח לאשר את החשבון החדש שלך ידנית בטרם תתאפשר גישתך לפורום. כאשר חשבונך יאושר תישלח אליך הודעה בדוא״ל!"
-    missing_session: "אנחנו לא יכולים לזהות אם חשבונכם נוצר, אנא וודאו שיש לכם עוגיות (cookies) מאופשרות."
+    missing_session: "לא הצלחנו לזהות אם חשבונך נוצר, נא לוודא שהעוגיות (cookies) פעילות אצלך."
     activated: "מצטערים, חשבון זה כבר הופעל."
     admin_confirm:
       title: "אישור חשבון ניהול"
@@ -1068,7 +1068,7 @@ he:
     authorize: "אישור"
     read: "קריאה"
     read_write: "קריאה/כתיבה"
-    description: '"%{application_name}" מבקשת את הגישה הבאה לחשבון שלכם:'
+    description: '„%{application_name}” מבקשת את הגישה הבאה לחשבון שלך:'
     instructions: 'הרגע יצרנו מפתח משתמש API חדש עבורך לטובת שימוש עם „%{application_name}”, נא להדביק את המפתח הבא ליישום שלך:'
     otp_description: 'לאפשר ל־„%{application_name}” לגשת לאתר הזה?'
     otp_confirmation:
@@ -1435,11 +1435,12 @@ he:
         qtt_like: לייקים שהתקבלו
       description: "10 המשתמשים המובילים שקיבלו לייקים ממגוון רחב של אנשים."
   dashboard:
+    group_email_credentials_warning: 'הייתה תקלה בפרטי הגישה לדוא״ל לקבוצה <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. לא תישלחנה הודעות מתיבת הדואר הנכנס של הקבוצה עד לטיפול בבעיה הזאת. %{error}'
     rails_env_warning: "השרת שלך רץ במצב %{env}."
-    host_names_warning: "הקובץ config/database.yml אצלכם משתמש בכתובת ברירת המחדל - localhost. עדכנו אותה להשתמש בכתובת של השרת שלכם."
+    host_names_warning: "הקובץ config/database.yml אצלך משתמש בכתובת ברירת המחדל - localhost. נא לעדכן אותה להשתמש בכתובת השרת שלך."
     sidekiq_warning: 'Sidekiq לא רץ. משימות רבות, כמו שליחת דוא״ל, מבוצעות אסינכרונית באמצעות Sidekiq. אנא לוודא שלפחות תהליך אחד של Sidekiq רץ. <a href="https://github.com/mperham/sidekiq" target="_blank">כאן יש מידע נוסף על Sidekiq</a>.'
     queue_size_warning: "מספר העבודות בתור הוא %{queue_size}, שהוא גבוה. זה עלול להצביע על בעיה עם תהליך(י) Sidekiq, או שייתכן שאתם צריכים יותר Sidekiq workers."
-    memory_warning: "בשרת שלכם יש פחות מ 1 גיגה זיכרון בסך הכל. מומלץ לפחות 1 גיגה זיכרון."
+    memory_warning: "בשרת שלך יש פחות מגיגה זיכרון בסך הכול. מומלץ לפחות גיגה של זיכרון."
     google_oauth2_config_warning: 'השרת מוגדר לאפשר הרשמה דרך OAuth2 עם Google‏ (enable_google_oauth2_logins), אך לא הוגדרו ערכים למזהה לקוח ולסוד לקוח. יש לגשת אל <a href="%{base_path}/admin/site_settings">הגדרות האתר</a> ולעדכן את ההגדרות. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">מדריך זה יסביר לך כיצד</a>.'
     facebook_config_warning: 'השרת מוגדר לאפשר הרשמה דרך פייסבוק (enable_facebook_logins), אך לא הוגדרו ערכים למזהה יישום ולסוד. יש לגשת אל <a href="%{base_path}/admin/site_settings">הגדרות האתר</a> ולעדכן את ההגדרות. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">מדריך זה יסביר לך כיצד</a>.'
     twitter_config_warning: 'השרת מוגדר לאפשר הרשמה דרך טוויטר (enable_twitter_logins), אך לא הוגדרו ערכים למפתח ולסוד. יש לגשת אל <a href="%{base_path}/admin/site_settings">הגדרות האתר</a> ולעדכן את ההגדרות. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">מדריך זה יסביר לך כיצד</a>.'
@@ -1458,7 +1459,7 @@ he:
     missing_mailgun_api_key: "השרת מוגדר לשלוח דוא״ל דרך Mailgun אך לא סיפקת מפתח API שישמש לאימות ההודעות דרך ההתליה."
     bad_favicon_url: "טעינת סמל האתר נכשלה. נא לבדוק את הגדרות סמל האתר שלך תחת <a href='%{base_path}/admin/site_settings'>הגדרות האתר</a>."
     poll_pop3_timeout: "החיבור לשרת ה־POP3 התנתק. אין אפשרות לשלוף דוא״ל נכנס. נא לבדוק את <a href='%{base_path}/admin/site_settings/category/email'> הגדרות ה־POP3</a> ואת ספק השירות שלך."
-    poll_pop3_auth_error: "החיבור לשרת POP3 נכשל בשל שגיאת הזדהות. אנא בדקו את <a href='%{base_path}/admin/site_settings/category/email'> הגדרות ה-POP3 </a> שלכם."
+    poll_pop3_auth_error: "החיבור לשרת POP3 נכשל עקב שגיאת הזדהות. נא לבדוק את <a href='%{base_path}/admin/site_settings/category/email'>הגדרות ה־POP3</a> שלך."
     force_https_warning: "האתר שלך משתמש ב־SSL. אך `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` לא מופעל עדיין בהגדרות האתר שלך."
     out_of_date_themes: "יש עדכונים זמינים לערכות העיצוב הבאות:"
     unreachable_themes: "לא הצלחתי לבדוק אם יש עדכונים לערכות העיצוב הבאות:"
@@ -1485,7 +1486,7 @@ he:
     max_emojis_in_title: "מספר האמוג׳ים המרבי בכותרת נושא"
     min_search_term_length: "מספר התווים המינמלי התקין כאורך מונח לחיפוש"
     search_tokenize_chinese_japanese_korean: "אלצו את החיפוש לנתח סינית/יפנית/קוריאנית גם באתרים שאינם בשפות אלו"
-    search_prefer_recent_posts: "אם חיפוש בפורום הגדול שלכם איטי, אופציה זו מנסה לאנדקס קודם כל את הפוסטים החדשים יותר"
+    search_prefer_recent_posts: "אם חיפוש בפורום הגדול שלך אטי, אפשרות זו מנסה לסדר במפתח את הפוסטים החדשים יותר בהתחלה"
     search_recent_posts_size: "כמה פוסטים חדשים לשמור באינדקס"
     log_search_queries: "רישום שאילתות חיפוש שמתבצעות על ידי משתמשים"
     search_query_log_max_size: "מספר מקסימלי של שאילתות חיפוש לשימור"
@@ -1661,8 +1662,8 @@ he:
     invite_expiry_days: "מה התוקף מפתחות הזמנת משתמשים, בימים"
     invite_only: "כל המשתמשים החדשים חייבים לקבל הזמנה ממשתמשים מהימנים או חברי סגל. הרשמה ציבורית סגורה."
     login_required: "לדרוש אימות כדי לקרוא תוכן באתר הזה, לאסור על גישה אלמונית."
-    min_username_length: "אורך שמות משתמשים מינימלי בתווים. אזהרה: אם למשתמשים קיימים או קבוצות כבר יש שם קצר יותר, האתר שלכם ישבר!"
-    max_username_length: "אורך שמות משתמשים מקסימלי בתווים. אזהרה: אם למשתמשים קיימים או קבוצות כבר יש שמות ארוכים יותר, האתר שלכם ישבר!"
+    min_username_length: "אורך שמות משתמשים מזערי בתווים. אזהרה: אם למשתמשים קיימים או קבוצות כבר יש שם קצר יותר, האתר שלך יפגע!"
+    max_username_length: "אורך שמות משתמשים מרבי בתווים. אזהרה: אם למשתמשים קיימים או קבוצות כבר יש שמות ארוכים יותר, האתר שלך יפגע!"
     unicode_usernames: "לאפשר לשמות משתמשים וקבוצות להכיל תווים ומספרים ביוניקוד."
     allowed_unicode_username_characters: "ביטויים רגולריים שנועדו לאפשר תווי יוניקוד מסוימים בשמות משתמשים. אותיות ASCII ומספרים תמיד יורשו ואין צורך לכלול אותם ברשימת ההיתר."
     reserved_usernames: "שמות משתמשים שלא מותרת הרשמה אליהם. סימון ה wildcard - * ניתן לשימוש כדי להתאים כל תו, 0 פעמים או יותר."
@@ -1760,7 +1761,7 @@ he:
     limit_suggested_to_category: "להציג רק נושאים מהקטגוריה הנוכחית ברשימת הנושאים המומלצים."
     suggested_topics_max_days_old: "נושאים מוצעים לא אמורים להיות בני יותר מ־n ימים."
     suggested_topics_unread_max_days_old: "הנושאים המוצעים שטרם נקראו לא אמורים להיות בני יותר מ־n ימים."
-    clean_up_uploads: "הסירו העלאות יתומות וללא הפניה כדי למנוע אירוח בלתי חוקי של חומר. אזהרה: אתם עלולי לרצות לגבות את תיקיית ה-/uploads שלכם לפנו שתאפשרו הגדרה זו."
+    clean_up_uploads: "להסיר העלאות יתומות שאין אליהן אף הפניה כדי למנוע אחסון בלתי חוקי. אזהרה: כדאי לגבות את תיקיית ה־‎/uploads שלך לפני הפעלת ההגדרה הזאת."
     clean_orphan_uploads_grace_period_hours: "תקופת חסד (בשעות) לפני שהעלאות יתומות מוסרות."
     purge_deleted_uploads_grace_period_days: "תקופת חסד (בימים) לפני שהעלאה שהוסרה תמחק."
     purge_unactivated_users_grace_period_days: "תקופת חסד (בימים) בטרם מחיקת משתמש שלא הפעיל את חשבונו. יש להגדיר ל־0 כדי לא למחוק משתמשים בלתי מופעלים."
@@ -1886,9 +1887,9 @@ he:
     topic_post_like_heat_low: "לאחר שהיחס בין לייקים למספר הפוסטים גבוה מערך זה, שדה ספירת הפוסטים מודגש קלות."
     topic_post_like_heat_medium: "לאחר שהיחס בין לייקים לפוסטים חוצה את היחס הזה, שדה ספירת הפוסטים מודגש קלות."
     topic_post_like_heat_high: "לאחר שהיחס בין לייקים למספר הפוסטים גבוה מערך זה, שדה ספירת הפוסטים מודגש באופן חזק."
-    faq_url: "אם יש לכם שאלות ותשובות נפוצות שמאורחות במקום אחר ואתם רוצים להשתמש בהן, ספקו את ה URL המלא כאן."
-    tos_url: "אם יש לכם מסמך תנאי שימוש מאורח במקום אחר שהייתם רוצים להשתמש בו, ספקו את ה URL המלא כאן."
-    privacy_policy_url: "אם יש לכם מסמך הצהרת פרטיות שמאוחסן במקום אחר ובו אתם מעוניינים להשתמש, ספקו URL מלא כאן."
+    faq_url: "אם סעיף השאלות והתשובות המיועד שלך מתארח במקום אחר, כאן יש לספק את הכתובת המלאה אליו."
+    tos_url: "אם מסמך תנאי השירות המיועד שלך מתארח במקום אחר, כאן יש לספק את הכתובת המלאה אליו."
+    privacy_policy_url: "אם מסמך מדיניות הפרטיות המיועד שלך מתארח במקום אחר, כאן יש לספק את הכתובת המלאה אליו."
     log_anonymizer_details: "האם להשאיר את פרטי המשתמש ביומן לאחר שזהותו טושטשה. כדי לעמוד בהגבלות ה־GDPR יש לכבות את האפשרות הזאת."
     newuser_spam_host_threshold: "מספר הפעמים שמשתמשים חדשים יכולים לקשר לאותו מחשב במסגרת `newuser_spam_host_threshold` הפרסומים שלהם לפני שייחשבו ספאם."
     allowed_spam_host_domains: "רשימה של שמות תחום (domains) שיוחרגו מבדיקת הספאם. משתמשים חדשים לעולם לא יוגבלו ביצירת פוסטים חדשים עם קישורים לשמות תחום אלו."
@@ -1972,7 +1973,7 @@ he:
     imap_polling_new_emails: "מספר הודעות הדוא״ל החדשות המרבי (שלא עובדו) שיעודכנו עם כל תשאול של תיבת ה־IMAP."
     imap_batch_import_email: "המספר המזערי של הודעות דוא״ל חדשות שתפעלנה מצב ייבוא (משביתה התראות על פוסטים)."
     email_prefix: "ה[תווית] שתשמש כנושא של מיילים. אם לא יוגדר, ברירת המחדל תכוון ל'כותרת' אם לא יוגדר אחרת."
-    email_site_title: "הכותרת של האתר שתשמש כשם השולח של דוא\"ל מהאתר. במידה ולא יוגדר ערך, תכוון ברירת המחדל ל\"כותרת\". אם ה\"כותרת\" שלכם מכילה תוים שאינם מותרים לשימוש במחרוזות \"שם השולח\" בדוא\"ל, השתמשו בהגדרה זו."
+    email_site_title: "כותרת האתר שתשמש כשם המוען להודעות דוא״ל שנשלחות מהאתר. ברירת המחדל היא ‚כותרת’ אם לא הוגדר אחרת. אם ה‚כותרת’ שלך מכילה תווים שאסור להשתמש בהם במחרוזות מוען דוא״ל, יש להשתמש בהגדרה זו."
     find_related_post_with_key: "יש להשתמש ב‚מפתח תגובה’ (reply key) אך ורק כדי למצוא את הפוסטים שלהן התקבלו תגובות. אזהרה: השבתה מאפשרת למשתמש להתחזות באמצעות כתובת דוא״ל."
     minimum_topics_similar: "כמה נושאים צריכים להתקיים לפני שנושאים דומים יוצגו בעת חיפוש נושא חדש."
     relative_date_duration: "מספר הימים לאחר פרסום בהם תאריך הפוסט מופיע כתאריך יחסי (7 ימים) לעומת תאריך רגיל (20 בפברואר)."
@@ -2076,7 +2077,7 @@ he:
     secure_media: 'מגביל גישה לכל ההעלאות (תמונות, סרטונים, שמע, טקסט, קובצי PDF, ארכיוני zip ועוד). אם מופעלת האפשרות „דרישת כניסה”, רק משתמשים שנכנסו למערכת יכולים לגשת להעלאות. אחרת, הגישה תוגבל רק להעלאות מסוגי מדיה בהודעות פרטיות ובקטגוריות פרטיות. אזהרה: מדובר בהגדרה מסובכת שדורשת הבנה עמוקה בניהול המערכת. יש לעיין ב<a target="_blank" href="https://meta.discourse.org/t/secure-media-uploads/140017">נושא המדיה המאובטחת ב־Meta</a> לקבלת פרטים נוספים.'
     secure_media_allow_embed_images_in_emails: "מאפשר להטמיע תמונות מאובטחות שבדרך כלל יידחסו אם הגודל שלהן קטן מההגדרה ‚secure media max email embed image size kb’ (גודל תמונה מרבי להטמעה כמדיה מאובטחת בקילובתים)."
     secure_media_max_email_embed_image_size_kb: "גודל החיתוך לתמונות מאובטחות שיוטמעו בהודעות דוא״ל אם ההגדרה ‚secure media allow embed in emails’ (לאפשר הטמעת מדיה מאובטחת בהודעות דוא״ל) פעילה. אם ההגדרה הזאת אינה פעולה להגדרה זו אין שום משמעות."
-    slug_generation_method: "בחרו צורת ייצור slug. צורה של 'encoded' תגרום למחרוזות עם קידוד אחוזים. 'none' ינטרל slug לחלוטין."
+    slug_generation_method: "נא לבחור שיטת יצירת כתובת מופשטת. ‚מוצפן’ ייצר מחרוזת עם קידוד באחוזים, ‚ללא’ ישבית את הכתובת המופשטת לחלוטין."
     enable_emoji: "הפעלת אמוג׳י"
     enable_emoji_shortcuts: "חייכנים נפוצים כגון ‎:) :p :(‎ יומרו לאמוג׳ים"
     emoji_set: "איך בא לך את האמוג׳י שלך?"
@@ -2177,6 +2178,7 @@ he:
     share_quote_buttons: "קביעת הפריטים שיופיעו בווידג׳ט שיתוף הציטוטים ובאיזה סדר."
     share_quote_visibility: "קביעה מתי להציג כפתורי שיתוף ציטוטים: אף פעם למשתמשים אלמוניים בלבד או לכל המשתמשים. "
     create_revision_on_bulk_topic_moves: "יצירת מהדורה לפוסטים הראשונים כאשר הנושאים מועברים לקטגוריה חדשה במרוכז."
+    allow_changing_staged_user_tracking: "לאפשר שינוי העדפות של קטגוריית המשתמשים המבוימים ותגיות על ידי ההנהלה."
     errors:
       invalid_css_color: "צבע שגוי. נא למלא את שם הצבע או ערך הקסדצימלי."
       invalid_email: "כתובת דוא״ל שגויה."
@@ -2199,7 +2201,7 @@ he:
       pop3_polling_host_is_empty: "עליכם לקבוע 'שרת תשאול pop3' לפני שתאפשרו תשאול POP3."
       pop3_polling_username_is_empty: "עליכם לקבוע 'שם-משתמש לתשאול pop3' לפני שתאפשרו תשאול POP3."
       pop3_polling_password_is_empty: "עליכם לקבוע 'סיסמת תשאול pop3' לפני שתאפשרו תשאול POP3."
-      pop3_polling_authentication_failed: "אימות POP3 נכשל. אנא וודאו את הרשאות ה pop3 שלכם."
+      pop3_polling_authentication_failed: "אימות POP3 נכשל. נא לאמת את פרטי הגישה שלך ל־pop3."
       reply_by_email_address_is_empty: "חובה להגדיר ‚מענה לפי כתובת דוא״ל’ בטרם הפעלת תגובה בדוא״ל."
       email_polling_disabled: "עליכם לאפשר ידני או תשאול POP3 לפני שתאפשרו מענה באמצעות מייל."
       user_locale_not_enabled: "לפני שתוכלו להפעיל אפשרות זאת, יש לאפשר \"הגדרות מקומיות מותאמות משתמש/ת\""
@@ -2479,6 +2481,7 @@ he:
       fixed_primary_email: "כתובת דוא״ל קבועה למשתמשים מבוימים"
       same_ip_address: "אותה כתובת ה־IP (%{ip_address}) כמו משתמשים אחרים"
       inactive_user: "משתמש בלתי פעיל"
+      reviewable_reject_auto: "לטפל אוטומטית בתור לביקורת"
       reviewable_reject: "משתמש לסקירה נדחה"
     email_in_spam_header: "כתובת הדוא״ל הראשונה של המשתמש סומנה כזבל"
     already_silenced: "המשתמש כבר הושתק על ידי %{staff} %{time_ago}."
@@ -2568,7 +2571,7 @@ he:
       %{invite_link}
   invite_password_instructions:
     title: "הנחיות סיסמה למוזמנים"
-    subject_template: "צרו סיסמה עבור חשבון ה-%{site_name} שלכם."
+    subject_template: "הגדרת סיסמה לחשבון שלך ב־%{site_name}"
     text_body_template: |
       תודה שקיבלת את ההזמנה לאתר %{site_name} -- ברוך בואך!
 
@@ -2645,7 +2648,7 @@ he:
 
       %{notes}
   flag_reasons:
-    off_topic: "הפוסט שלכם סומן כ **מחוץ לנושא**: הקהילה מרגישה שהוא לא מתאים לנושא, כפי שמוגדר על ידי הכותרת והפוסט הראשון. "
+    off_topic: "הפוסט שלך סומן כ**מחוץ לנושא**: הקהילה מרגישה שהוא לא מתאים לנושא, כפי שמוגדר על ידי הכותרת והפוסט הראשון."
     inappropriate: "התגובה שלך סומנה כ**לא מתאימה**: הקהילה מרגישה שהיא פוגענית או הפרה של [הנחיות הקהילה](%{base_path}/guidelines)"
     spam: "הפוסט שלך סומן כ**ספאם**: הקהילה מרגישה שזה פרסומת, דבר שהוא קידום מכירות באופיו במקום להיות שימושי או רלוונטי לנושא. "
     notify_moderators: "הפוסט שלך סומן בדגל **לתשומת לב מפקח**: הקהילה מרגישה שמשהו בפוסט דורש התערבות ידנית של צוות האתר. "
@@ -2754,17 +2757,23 @@ he:
       text_body_template: |
         שלום רב,
 
-        זאת הודעה אוטומטית מהאתר %{site_name} כדי ליידע אותך ש[פוסט](%{base_url}%{url}) שהגבת אליו הוסר.
+        זאת הודעה אוטומטית מהאתר %{site_name} שנועדה ליידע אותך ש[פוסט](%{base_url}%{url}), אליו הגבת, הוסר.
 
         %{flag_reason}
 
-        הפוסט הזה סומן על ידי הקהילה ואחד או אחת מחברי הסגל בחרו להסיר אותו.
+        הפוסט הזה סומן על ידי הקהילה ואחד או אחת מחברי הסגל החליטו להסיר אותו.
 
         ``` markdown
         %{flagged_post_raw_content}
         ```
 
-        למידע נוסף על סיבת ההסרה, כדאי לעיין ב[הנחיות הקהילה](%{base_url}/guidelines) שלנו.
+        שעל כך הגבת
+
+        ``` markdown
+        %{flagged_post_response_raw_content}
+        ```
+
+        לפרטים נוספים על סיבת ההסרה, נא לעיין ב[הנחיות הקהילה](%{base_url}/guidelines).
     usage_tips:
       text_body_template: |
         לעצות זריזות איך כדאי להתחיל להשתמש במערכת, ניתן [לקרוא את הפוסט הזה בבלוג](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
@@ -2862,7 +2871,7 @@ he:
     bulk_invite_succeeded:
       title: "הזמנה קבוצתית הצליחה"
       subject_template: "ההזמנה הקבוצתית עובדה בהצלחה"
-      text_body_template: "ההזמנה המרוכזת שלכם עובדה, %{sent} הזמנות נשלחו."
+      text_body_template: "ההזמנה המרוכזת שלך עובדה, %{sent} הזמנות נשלחו."
     bulk_invite_failed:
       title: "הזמנה קבוצתית נכשלה"
       subject_template: "ההזמנה המרוכזת עובדה עם שגיאות"
@@ -3530,7 +3539,7 @@ he:
       follow_topic: "עיקבו אחרי נושא זה"
       join_the_discussion: "קראו עוד"
       popular_posts: "פוסטים פופולאריים"
-      more_new: "חדש בשבילכם"
+      more_new: "חדש בשבילך"
       subject_template: "[%{email_prefix}] סיכום"
       unsubscribe: "סיכום זה נשלח ממערכת %{site_link} כאשר לא נרשמת פעילות במשך זה מה. ניתן לשנות את %{email_preferences_link} או %{unsubscribe_link} כדי לבטל את המינוי. "
       your_email_settings: "הגדרות הדוא״ל שלך"
@@ -3587,7 +3596,7 @@ he:
         %{base_url}/u/password-reset/%{email_token}
     confirm_new_email:
       title: "אישור מייל חדש"
-      subject_template: "[%{email_prefix}] אשרו את כתובת המייל החדשה שלכם"
+      subject_template: "[%{email_prefix}] נא לאשר את כתובת הדוא״ל החדשה שלך"
       text_body_template: |
         לחיצה על הקישור %{site_name} תאשר את כתובת הדוא״ל החדשה שלך:
 
@@ -3605,7 +3614,7 @@ he:
         החלפת כתובת הדוא״ל הוגשה על ידי הנהלת האתר. אם לא ביקשת לערוך שינוי שכזה, נא ליצור קשר עם [הנהלת האתר](%{base_url}/about).
     confirm_old_email:
       title: "אישור מייל ישן"
-      subject_template: "[%{email_prefix}] אשרו את כתובת המייל הנוכחית שלכם"
+      subject_template: "[%{email_prefix}] נא לאשר את כתובת הדוא״ל הנוכחית שלך"
       text_body_template: |
         לפני שנוכל להחליף את כתובת הדוא״ל שלך, עלינו לאשר שיש לך שליטה
         בחשבון הדוא״ל הנוכחי. לאחר השלמת השלב הזה, נבקש ממך לאשר
@@ -3616,7 +3625,7 @@ he:
         %{base_url}/u/confirm-old-email/%{email_token}
     confirm_old_email_add:
       title: "אישור דוא״ל ישן (הוספה)"
-      subject_template: "[%{email_prefix}] אשרו את כתובת המייל הנוכחית שלכם"
+      subject_template: "[%{email_prefix}] נא לאשר את כתובת הדוא״ל הנוכחית שלך"
       text_body_template: |
         לפני שיתאפשר לנו להוסיף כתובת דוא״ל חדשה, עלינו לאמת את שליטתך על כתובת הדוא״ל
         הנוכחית. לאחר השלמת השלב הזה, נבקש ממך לאשר את כתובת הדוא״ל החדשה.
@@ -4726,7 +4735,7 @@ he:
         description: "הבעת הסכמה עם הדגל והשתקת המשתמש."
       agree_and_restore:
         title: "שחזור פוסט"
-        description: "שחזור הפוסט כדי שכל המשתמשים יוכלו לצפות בו."
+        description: "יש לשחזר את הפוסט כדי שכל המשתמשים יוכלו לצפות בו."
       agree_and_hide:
         title: "הסתרת פוסט"
         description: "הסתרת הפוסט הזה ושליחת הודעה אוטומטית למשתמש שמפצירה בו לערוך אותו."
@@ -4750,7 +4759,7 @@ he:
         confirm: "למחוק גם את התגובות לפוסט?"
       disagree_and_restore:
         title: "לסרב ולשחזר פוסט"
-        description: "שחזור הפוסט כדי שכל המשתמשים יוכלו לצפות בו."
+        description: "לשחזר את הפוסט כדי שכל המשתמשים יוכלו לצפות בו."
       disagree:
         title: "אי קבלה"
       ignore:

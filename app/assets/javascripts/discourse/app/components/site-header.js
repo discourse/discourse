@@ -7,6 +7,7 @@ import Docking from "discourse/mixins/docking";
 import MountWidget from "discourse/components/mount-widget";
 import ItsATrap from "@discourse/itsatrap";
 import RerenderOnDoNotDisturbChange from "discourse/mixins/rerender-on-do-not-disturb-change";
+import { headerOffset } from "discourse/lib/offset-calculator";
 import { observes } from "discourse-common/utils/decorators";
 import { topicTitleDecorators } from "discourse/components/topic-title";
 
@@ -437,15 +438,6 @@ const SiteHeaderComponent = MountWidget.extend(
 export default SiteHeaderComponent.extend({
   classNames: ["d-header-wrap"],
 });
-
-export function headerOffset() {
-  return (
-    parseInt(
-      document.documentElement.style.getPropertyValue("--header-offset"),
-      10
-    ) || 0
-  );
-}
 
 export function headerTop() {
   const header = document.querySelector("header.d-header");

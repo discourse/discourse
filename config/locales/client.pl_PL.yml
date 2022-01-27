@@ -172,6 +172,7 @@ pl_PL:
       url: "Skopiuj i udostępnij adres URL"
     action_codes:
       public_topic: "Upublicznij ten temat %{when}"
+      open_topic: "przekonwertowano to na temat %{when}"
       private_topic: "przekształcił(a) ten temat w wiadomość prywatną %{when}"
       split_topic: "podziel ten temat %{when}"
       invited_user: "%{who} został zaproszony %{when}"
@@ -1502,11 +1503,9 @@ pl_PL:
         every_month: "każdego miesiąca"
         every_six_months: "co 6 miesięcy"
       email_level:
-        title: "Wysyłaj e-mail gdy ktoś mnie cytuje, odpowiada na mój wpis, wywołuje moją @nazwę lub zaprasza mnie do tematu."
         always: "zawsze"
         only_when_away: "tylko kiedy jest daleko"
         never: "nigdy"
-      email_messages_level: "Wyślij e-mail, gdy ktoś napisze mi prywatną wiadomość"
       include_tl0_in_digests: "Dołącz treści od nowych użytkowników w e-mailach podsumowujących."
       email_in_reply_to: "Zawieraj w e-mailach fragment oryginalnych postów z odpowiedzi"
       other_settings: "Inne"
@@ -1595,8 +1594,13 @@ pl_PL:
           expired_at_time: "Wygasło o %{time}"
           show_advanced: "Pokaż ustawienia zaawansowane"
           hide_advanced: "Ukryj ustawienia zaawansowane"
+          restrict: "Ogranicz do"
+          restrict_email: "Ogranicz do e-maila"
+          restrict_domain: "Ogranicz do domeny"
+          email_or_domain_placeholder: "nazwa@example.com lub example.com"
           max_redemptions_allowed: "Maksymalna liczba użyć"
           add_to_groups: "Dodaj do grup"
+          invite_to_topic: "Przyjedź na temat"
           expires_at: "Wygasa po"
           custom_message: "Opcjonalna wiadomość osobista"
           send_invite_email: "Zapisz i wyślij e-mail"
@@ -2057,9 +2061,6 @@ pl_PL:
         few: "Wspominając %{group}, powiadomisz <a href='%{group_link}'>%{count} osoby</a> – czy jesteś pewien?"
         many: "Wspominając %{group}, powiadomisz <a href='%{group_link}'>%{count} osób</a> – czy jesteś pewien?"
         other: "Wspominając %{group}, powiadomisz <a href='%{group_link}'>%{count} osób</a> –czy jesteś pewien?"
-      cannot_see_mention:
-        category: "Wspomniałeś/łaś o %{username} lecz nie zostaną oni powiadomieni ponieważ nie mają dostępu do tej kategorii. Dodaj ich do grupy która ma dostęp do tej kategorii."
-        private: "Wspomniałeś/łaś o %{username} lecz nie zostaną powiadomieni ponieważ nie mogą odczytać tej wiadomości . Będziesz musiał ich zaprosić do odczytania tej wiadomości "
       duplicate_link: "Wygląda na to, że Twój link do <b>%{domain}</b> został już wcześniej przesłany w tym wątku przez <b>@%{username}</b> w <a href='%{post_url}'>odpowiedzi przesłanej %{ago}</a> - jesteś pewien, że chcesz go wysłać ponownie?"
       reference_topic_title: "Odpowiedz: %{title}"
       error:
@@ -2691,10 +2692,6 @@ pl_PL:
         replies_short: "%{current} / %{total}"
       progress:
         title: postęp tematu
-        go_top: "początek"
-        go_bottom: "koniec"
-        go: "idź"
-        jump_bottom: "Przejdź na koniec"
         jump_prompt: "skocz do..."
         jump_prompt_of:
           one: "z %{count} postu"
@@ -2702,11 +2699,8 @@ pl_PL:
           many: "z %{count} postów"
           other: "z %{count} postów"
         jump_prompt_long: "Skocz do..."
-        jump_bottom_with_number: "skocz do postu %{post_number}"
         jump_prompt_to_date: "do daty"
         jump_prompt_or: "lub"
-        total: w sumie wpisów
-        current: obecny wpis
       notifications:
         title: Ustaw jak często chcesz być powiadamiany o tym temacie
         reasons:
@@ -3806,6 +3800,7 @@ pl_PL:
         few: "Jego %{count} synonimy również zostaną usunięte."
         many: "Jego %{count} synonimów również zostanie usuniętych."
         other: "Jego %{count} synonimów również zostanie usuniętych."
+      edit_tag: "Edytuj nazwę tagu i opis"
       description: "Opis"
       sort_by: "Sortuj po:"
       sort_by_count: "Liczba"
@@ -4184,6 +4179,10 @@ pl_PL:
               list: Uzyskaj listę użytkowników.
             email:
               receive_emails: Połącz ten zakres z odbiorcą poczty w celu przetwarzania przychodzących wiadomości e-mail.
+            badges:
+              update: Zaktualizuj odznakę.
+              delete: Usuń odznakę.
+              list_user_badges: Lista odznak użytkownika.
       web_hooks:
         title: "Webhooki"
         none: "Brak webhooków"
@@ -4853,9 +4852,6 @@ pl_PL:
           title: "Ekranowane adresy IP"
           description: 'Adresy IP, które są obserwowane. Użyj opcji "Zezwalaj", aby dodać adresy IP do dozwolonej listy.'
           delete_confirm: "Czy na pewno chcesz usunąć regułę dla %{ip_address}?"
-          roll_up_confirm: "Czy na pewno chcesz zgrupować monitorowane IP w podsieci?"
-          rolled_up_some_subnets: "Pomyślnie zwinięto ban IP dla podsieci: %{subnets}."
-          rolled_up_no_subnet: "Brak pozycji do zwinięcia."
           actions:
             block: "Zablokuj"
             do_nothing: "Zezwól"
@@ -5423,8 +5419,8 @@ pl_PL:
           grant_existing_holders: Przyznaj dodatkowe odznaki obecnym posiadaczom odznak
       emoji:
         title: "Emoji"
-        help: "Dodaj nowe emoji, które będą dostępne dla wszystkich. Przeciągnij i upuść wiele plików jednocześnie, bez wpisywania nazwy, aby utworzyć emotikony za pomocą ich nazw plików."
         add: "Dodaj nowe Emoji"
+        choose_files: "Wybierz pliki"
         uploading: "Przesyłanie…"
         name: "Nazwa"
         group: "Grupa"

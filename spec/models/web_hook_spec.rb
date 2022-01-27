@@ -574,24 +574,54 @@ describe WebHook do
       expect(payload["user_id"]).to eq(user.id)
     end
 
-    it 'should enqueue hooks for user likes in a group' do
-      group = Fabricate(:group)
-      Fabricate(:like_web_hook, groups: [group])
-      group_user = Fabricate(:group_user, group: group, user: user)
-      poster = Fabricate(:user)
-      post = Fabricate(:post, user: poster)
-      like = Fabricate(:post_action, post: post, user: user, post_action_type_id: PostActionType.types[:like])
-      now = Time.now
-      freeze_time now
+    context 'like created hooks' do
+      fab!(:like_web_hook) { Fabricate(:like_web_hook) }
+      fab!(:another_user) { Fabricate(:user) }
 
-      DiscourseEvent.trigger(:like_created, like)
+      it 'should pass the group id to the emit webhook job' do
+        group = Fabricate(:group)
+        group_user = Fabricate(:group_user, group: group, user: user)
+        post = Fabricate(:post, user: another_user)
+        like = Fabricate(:post_action, post: post, user: user, post_action_type_id: PostActionType.types[:like])
+        now = Time.now
+        freeze_time now
 
-      job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
-      expect(job_args["event_name"]).to eq("post_liked")
-      expect(job_args["group_ids"]).to eq([group.id])
-      payload = JSON.parse(job_args["payload"])
-      expect(payload["post"]["id"]).to eq(post.id)
-      expect(payload["user"]["id"]).to eq(user.id)
+        DiscourseEvent.trigger(:like_created, like)
+
+        assert_hook_was_queued_with(post, user, group_ids: [group.id])
+      end
+
+      it 'should pass the category id to the emit webhook job' do
+        category = Fabricate(:category)
+        topic.update!(category: category)
+        like = Fabricate(:post_action, post: post, user: another_user, post_action_type_id: PostActionType.types[:like])
+
+        DiscourseEvent.trigger(:like_created, like)
+
+        assert_hook_was_queued_with(post, another_user, category_id: category.id)
+      end
+
+      it 'should pass the tag id to the emit webhook job' do
+        tag = Fabricate(:tag)
+        topic.update!(tags: [tag])
+        like = Fabricate(:post_action, post: post, user: another_user, post_action_type_id: PostActionType.types[:like])
+
+        DiscourseEvent.trigger(:like_created, like)
+
+        assert_hook_was_queued_with(post, another_user, tag_ids: [tag.id])
+      end
+
+      def assert_hook_was_queued_with(post, user, group_ids: nil, category_id: nil, tag_ids: nil)
+        job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
+        expect(job_args["event_name"]).to eq("post_liked")
+        payload = JSON.parse(job_args["payload"])
+        expect(payload["post"]["id"]).to eq(post.id)
+        expect(payload["user"]["id"]).to eq(user.id)
+
+        expect(job_args["category_id"]).to eq(category_id) if category_id
+        expect(job_args["group_ids"]).to contain_exactly(*group_ids) if group_ids
+        expect(job_args["tag_ids"]).to contain_exactly(*tag_ids) if tag_ids
+      end
     end
   end
 end

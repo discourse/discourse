@@ -145,6 +145,7 @@ en:
 
     action_codes:
       public_topic: "made this topic public %{when}"
+      open_topic: "converted this to a topic %{when}"
       private_topic: "made this topic a personal message %{when}"
       split_topic: "split this topic %{when}"
       invited_user: "invited %{who} %{when}"
@@ -2109,8 +2110,10 @@ en:
         one: "By mentioning %{group}, you are about to notify <a href='%{group_link}'>%{count} person</a> – are you sure?"
         other: "By mentioning %{group}, you are about to notify <a href='%{group_link}'>%{count} people</a> – are you sure?"
       cannot_see_mention:
-        category: "You mentioned %{username} but they won't be notified because they do not have access to this category. You will need to add them to a group that has access to this category."
-        private: "You mentioned %{username} but they won't be notified because they are unable to see this personal message. You will need to invite them to this PM."
+        category: "You mentioned @%{username} but they won't be notified because they do not have access to this category. You will need to add them to a group that has access to this category."
+        private: "You mentioned @%{username} but they won't be notified because they are unable to see this personal message. You will need to invite them to this personal message."
+        muted_topic: "You mentioned @%{username} but they won't be notified because they muted this topic."
+        not_allowed: "You mentioned @%{username} but they won't be notified because they were not invited to this topic."
       here_mention:
         one: "By mentioning <b>@%{here}</b>, you are about to notify %{count} user – are you sure?"
         other: "By mentioning <b>@%{here}</b>, you are about to notify %{count} users – are you sure?"
@@ -4905,9 +4908,6 @@ en:
           title: "Screened IPs"
           description: 'IP addresses that are being watched. Use "Allow" to allowlist IP addresses.'
           delete_confirm: "Are you sure you want to remove the rule for %{ip_address}?"
-          roll_up_confirm: "Are you sure you want to roll up commonly screened IP addresses into subnets?"
-          rolled_up_some_subnets: "Successfully rolled up IP ban entries to these subnets: %{subnets}."
-          rolled_up_no_subnet: "There was nothing to roll up."
           actions:
             block: "Block"
             do_nothing: "Allow"
@@ -5481,8 +5481,9 @@ en:
 
       emoji:
         title: "Emoji"
-        help: "Add new emoji that will be available to everyone. Drag and drop multiple files at once without entering a name to create emojis using their file names."
+        help: "Add new emoji that will be available to everyone. Drag and drop multiple files at once without entering a name to create emojis using their file names. The selected group will be used for all files that are added at the same time. You can also click 'Add New Emoji' to open the file picker."
         add: "Add New Emoji"
+        choose_files: "Choose Files"
         uploading: "Uploading..."
         name: "Name"
         group: "Group"

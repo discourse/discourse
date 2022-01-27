@@ -64,9 +64,6 @@ sr:
       load_from_remote: "Došlo je do greške prilikom učitavanja poruke."
     site_settings:
       default_categories_already_selected: "Ne možete izabrati kategoriju koja se koristi u drugoj listi."
-  invite:
-    not_found_template_link: |
-      <p>Pozivnica za <a href="%{base_url}">%{site_name}</a> je istekla. Molimo vas da pitate osobu koja vam je poslala pozivnicu da posalje novu.</p>
   bulk_invite:
     file_should_be_csv: "Izabrani fajl bi trebalo biti u csv formatu."
   topic_invite:

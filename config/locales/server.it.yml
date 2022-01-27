@@ -2544,7 +2544,6 @@ it:
     flags_agreed_and_post_deleted_for_responders:
       title: "Risposta rimossa dal messaggio segnalato da parte dello staff"
       subject_template: "Risposta rimossa dal messaggio segnalato da parte dello staff"
-      text_body_template: "Ciao,\n\nQuesto è un messaggio automatico generato da %{site_name} per informarti che [un messaggio](%{base_url}%{url}) al quale avevi risposto è stato rimosso. \n\n%{flag_reason}\n\nIl messaggio è stato segnalato dalla comunità quindi un membro dello staff ha deciso di rimuoverlo. \n \n```markdown\n%{flagged_post_raw_content}\n```\n\nPer ulteriori dettagli sul motivo della cancellazione, consulta le [linee guida della comunità](%{base_url}/guidelines).\n"
     usage_tips:
       text_body_template: |
         Per leggere alcuni veloci suggerimenti su come iniziare se sei un nuovo utente [dai una lettura a questo articolo](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/)

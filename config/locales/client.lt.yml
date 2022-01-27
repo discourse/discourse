@@ -1368,10 +1368,8 @@ lt:
         every_month: "kiekvieną mėnesį"
         every_six_months: "kas šešis mėnesius"
       email_level:
-        title: "Atsiųskite man el. laišką, jei kažkas mane cituoja, atsako į mano įrašą, pakviečia į temą ar pamini mane."
         always: "visada"
         never: "niekada"
-      email_messages_level: "Atsiųskite man el. laišką jei kažkas man parašo"
       include_tl0_in_digests: "Įtraukti turinį iš naujų vartotojų taip pat į elektroninių laiškų užklausas."
       email_in_reply_to: "Įtraukti atsakytų įrašų ištraukas taip pat į mano elektroninį paštą"
       other_settings: "Kita"
@@ -1830,8 +1828,6 @@ lt:
       similar_topics: "Jūsų tema panaši į..."
       drafts_offline: "juodraščiai ne ryšio zonoje"
       edit_conflict: "redaguoti konfliktą"
-      cannot_see_mention:
-        category: "Paminėjote %{username} bet jiems nebus pranešta, nes jie neturi prieigos prie šios kategorijos. Turėsite juos pridėti prie grupės, kuri turi prieigą prie šios kategorijos."
       reference_topic_title: "RE: %{title}"
       error:
         title_missing: "Antraštė turi būti užpildyta"
@@ -2376,17 +2372,10 @@ lt:
         replies_short: "%{current} / %{total}"
       progress:
         title: temos progresas
-        go_top: "eiti į viršų"
-        go_bottom: "eiti į apačią"
-        go: "eiti"
-        jump_bottom: "Pereiti į sekantį įrašą"
         jump_prompt: "peršokti į..."
         jump_prompt_long: "Peršokti į..."
-        jump_bottom_with_number: "pereiti į įrašą %{post_number}"
         jump_prompt_to_date: "iki šiol"
         jump_prompt_or: "arba"
-        total: visi įrašai
-        current: Dabartinis įrašas
       notifications:
         title: keisti, kaip dažnai jums bus pranešama apie šią temą
         reasons:
@@ -4281,9 +4270,6 @@ lt:
           title: "Tikrinti IP adresai"
           description: 'Stebimi IP adresai. Norėdami leisti IP adresus, naudokite „Leisti“.'
           delete_confirm: "Ar tikrai norite ištrinti taisyklę IP adresui %{ip_address}?"
-          roll_up_confirm: "Ar tikrai nori sujungti/kaupti dažnus IP adresus į atskirą tinklą"
-          rolled_up_some_subnets: "Blokuoti IP sekmingai sujungti/sukaupti į atskirą tinklą: %{subnets}."
-          rolled_up_no_subnet: "Nėra nieko ką sujungti/sukaupti"
           actions:
             block: "Blokuoti"
             do_nothing: "Leisti"
@@ -4792,7 +4778,6 @@ lt:
           grant_existing_holders: Suteikite papildomų ženklelių esamiems ženklelių savininkams
       emoji:
         title: "Šypsenėlės"
-        help: "Pridėkite naujų jaustukų, kurie bus prieinami visiems. Vilkite ir numeskite kelis failus vienu metu neįvesdami pavadinimo, kad sukurtumėte jaustukus naudodami jų failų pavadinimus."
         add: "Pridėti Naują Šypsenėlę"
         uploading: "Įkeliama..."
         name: "Vardas"

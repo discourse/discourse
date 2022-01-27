@@ -537,6 +537,10 @@ aside.quote {
   background-color: var(--secondary-high);
   flex-direction: column;
 
+  &.animated {
+    transition: top 0.1s linear, left 0.1s linear;
+  }
+
   &.visible {
     display: flex;
   }

@@ -40,7 +40,7 @@ module("Unit | Utility | link-mentions", function () {
         <span class="mention">@valid_group</span>
         <span class="mention">@mentionable_group</span>
       </div>
-    `);
+    `)[0];
     await linkSeenMentions(root);
 
     // Ember.Test.registerWaiter is not available here, so we are implementing

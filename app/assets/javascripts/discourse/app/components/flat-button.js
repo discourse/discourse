@@ -14,7 +14,15 @@ export default Component.extend({
     }
   },
 
+  keyDown(event) {
+    if (event.key === "Enter") {
+      this.action?.();
+      return false;
+    }
+  },
+
   click() {
-    return this.attrs.action();
+    this.action?.();
+    return false;
   },
 });

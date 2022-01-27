@@ -1,6 +1,6 @@
 import Docking from "discourse/mixins/docking";
 import MountWidget from "discourse/components/mount-widget";
-import { headerOffset } from "discourse/components/site-header";
+import { headerOffset } from "discourse/lib/offset-calculator";
 import { next } from "@ember/runloop";
 import { observes } from "discourse-common/utils/decorators";
 import optionalService from "discourse/lib/optional-service";

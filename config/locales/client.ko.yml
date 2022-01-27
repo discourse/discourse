@@ -149,6 +149,7 @@ ko:
     themes:
       default_description: "기본"
       broken_theme_alert: "테마 / %{theme} 구성 요소에 오류가있어 사이트가 작동하지 않을 수 있습니다. %{path}에서 비활성화 하십시오."
+    broken_decorator_alert: "사이트의 게시물 콘텐츠 데코레이터 중 하나에서 오류가 발생하여 게시물이 올바르게 표시되지 않을 수 있습니다. 자세한 내용은 브라우저 개발자 도구를 확인하세요."
     s3:
       regions:
         ap_northeast_1: "아시아 태평양 (도쿄)"
@@ -1331,11 +1332,10 @@ ko:
         every_month: "매달"
         every_six_months: "6개월마다"
       email_level:
-        title: "누군가가 나를 인용하거나, 내 게시물에 댓글을 달거나, 내 @username 을 언급하거나, 글에 나를 초대 할 때 이메일을 보냅니다."
         always: "항상 알림 받기"
         only_when_away: "방문이 없을때 알림 받기"
         never: "알림 받지 않음"
-      email_messages_level: "누군가 나에게 메시지를 보내면 나에게 이메일 보내기"
+      email_messages_level: "개인 메시지를 받으면 이메일을 보내주세요"
       include_tl0_in_digests: "신규 사용자가 작성한 내용도 요약 메일에 포함시키기"
       email_in_reply_to: "이메일에 댓글 내용을 발췌해서 포함"
       other_settings: "기타"
@@ -1420,6 +1420,10 @@ ko:
           expired_at_time: "%{time}에 만료됨"
           show_advanced: "고급 옵션 표시"
           hide_advanced: "고급 옵션 숨기기"
+          restrict: "다음으로 제한"
+          restrict_email: "이메일로 제한"
+          restrict_domain: "도메인으로 제한"
+          email_or_domain_placeholder: "name@example.com 또는 example.com"
           max_redemptions_allowed: "최대 사용"
           add_to_groups: "그룹에 추가"
           expires_at: "다음 후 만료"
@@ -1615,6 +1619,7 @@ ko:
       title: "비밀번호 재설정"
       action: "비밀번호를 잊어버렸습니다."
       invite: "사용자명 또는 이메일 주소를 입력하면 비밀번호 재설정 이메일을 보내드립니다."
+      invite_no_username: "이메일 주소를 입력하면 비밀번호 재설정 이메일이 전송됩니다."
       reset: "비밀번호 재설정"
       complete_username: "계정의 사용자명이 <b>%{username}</b>와 일치하면 곧 비밀번호 재설정 방법에 대한 지침이 포함 된 이메일을 받게됩니다."
       complete_email: "<b>%{email}</b>이 계정의 이메일과 일치하면, 비밀번호를 재설정하는 방법에 대한 지침이 포함 된 이메일을 받게됩니다."
@@ -1823,9 +1828,6 @@ ko:
         other: "<b>경고!</b> <a href='%{group_link}'>%{group}</a>을 언급했지만 이 그룹에는 관리자가 구성한 멘션 제한인 %{count}명의 사용자보다 많은 회원이 있습니다. 아무도 알림을 받지 않습니다."
       group_mentioned:
         other: "%{group}을 언급하면, <a href='%{group_link}'>%{count}명</a>의 회원에게 알림이 전송됩니다. 그렇게 하시겠습니까?"
-      cannot_see_mention:
-        category: "%{username}에게 멘션을 썼지만, 해당 사용자가 이 카테고리에 접근할 수 없기 때문에 알림이 가지 않습니다. 이 카테고리에 접근할 수 있는 그룹에 해당 멤버가 추가되어야 합니다."
-        private: "%{username}에게 멘션을 썼지만, 해당 사용자가 개인 메시지를 볼 수 없기 때문에 알림이 가지 않습니다. 이 개인 메시지에 해당 사용자를 초대해야 합니다."
       duplicate_link: "이 글에는 이미<b>%{domain}</b>의 링크가 <b>@%{username}</b>님이 <a href='%{post_url}'>%{ago}</a>에 쓴 게시글에 포함되어 있습니다. 그래도 다시 작성하시겠습니까?"
       reference_topic_title: "RE : %{title}"
       error:
@@ -2072,6 +2074,8 @@ ko:
       in_topics_posts: "모든 글과 댓글에서"
       enter_hint: "또는 Enter 키를 누르십시오."
       in_posts_by: "%{username}님의 글에서"
+      browser_tip: "%{modifier} + f"
+      browser_tip_description: "다시 기본 브라우저 검색 사용"
       recent: "최근 검색"
       clear_recent: "최근 검색 지우기"
       type:
@@ -2380,19 +2384,12 @@ ko:
         replies_short: "%{current} / %{total}"
       progress:
         title: 진행 중인 주제
-        go_top: "맨 위"
-        go_bottom: "맨 아래"
-        go: "이동"
-        jump_bottom: "마지막 게시물로 이동"
         jump_prompt: "이동..."
         jump_prompt_of:
           other: "번째, %{count}개 중"
         jump_prompt_long: "이동..."
-        jump_bottom_with_number: "%{post_number}로 이동"
         jump_prompt_to_date: "현재까지"
         jump_prompt_or: "또는"
-        total: 총 게시물
-        current: 현재 글
       notifications:
         title: 이 글에 대한 알림을 받는 빈도 변경
         reasons:
@@ -3645,6 +3642,7 @@ ko:
         no_description: (설명 없음)
         all_api_keys: 모든 API 키
         user_mode: 사용자 레벨
+        scope_mode: 범위
         impersonate_all_users: 모든 사용자를 가장
         single_user: "단일 사용자"
         user_placeholder: 사용자 이름을 입력하십시오
@@ -3671,6 +3669,8 @@ ko:
           any_parameter: (모든 매개 변수)
           allowed_urls: 허용된 URL
           descriptions:
+            global:
+              read: API 키를 읽기 전용 엔드포인트로 제한합니다.
             topics:
               read: 글 또는 특정 게시물을 읽으십시오. RSS도 지원됩니다.
               write: 새 글 또는 기존 글에 댓글을 작성합니다.
@@ -3692,6 +3692,7 @@ ko:
               receive_emails: 이 범위를 메일 수신자와 결합하여 수신 이메일을 처리하십시오.
             badges:
               create: 새 배지를 만들기
+              show: 배지에 대한 정보를 얻습니다.
               update: 배지 업데이트
               delete: 배지 삭제
               list_user_badges: 사용자 배지 리스트
@@ -4358,9 +4359,6 @@ ko:
           title: "노출된 IP들"
           description: '감시 중인 IP 주소입니다. IP 주소를 허용하려면 "허용"을 사용하십시오.'
           delete_confirm: "%{ip_address}를 규칙에 의해 삭제할까요?"
-          roll_up_confirm: "화면에 표시되는 IP 주소를 subnet으로 바꾸시겠습니까?"
-          rolled_up_some_subnets: "다음의 subnet들의 IP 주소들을 차단하였습니다: %{subnets}."
-          rolled_up_no_subnet: "There was nothing to roll up."
           actions:
             block: "블락"
             do_nothing: "허용"
@@ -4909,8 +4907,9 @@ ko:
           grant_existing_holders: 기존 배지 소지자에게 추가 배지 부여
       emoji:
         title: "이모티콘"
-        help: "모든 사람이 사용할 수 있는 새 이모티콘을 추가합니다.이름을 입력하지 않고 여러 파일을 한 번에 끌어다 놓아 파일 이름을 사용하여 이모티콘을 만들 수 있습니다."
+        help: "모든 사람이 사용할 수 있는 새 그림 이모티콘을 추가하세요.이름을 입력하지 않고 여러 파일을 한 번에 드래그 앤 드롭하여 파일 이름으로 이모티콘을 만들 수 있습니다.선택한 그룹은 동시에 추가되는 모든 파일에 사용됩니다. '새 이모티콘 추가'를 클릭하여 파일 선택기를 열 수도 있습니다."
         add: "새 이모티콘 추가"
+        choose_files: "파일 선택"
         uploading: "업로드 중..."
         name: "이름"
         group: "그룹"

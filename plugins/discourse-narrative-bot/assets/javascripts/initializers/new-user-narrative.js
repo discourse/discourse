@@ -1,6 +1,6 @@
 import { ajax } from "discourse/lib/ajax";
 import discourseDebounce from "discourse-common/lib/debounce";
-import { headerOffset } from "discourse/components/site-header";
+import { headerOffset } from "discourse/lib/offset-calculator";
 import isElementInViewport from "discourse/lib/is-element-in-viewport";
 import { withPluginApi } from "discourse/lib/plugin-api";
 

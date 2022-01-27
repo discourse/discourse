@@ -70,6 +70,8 @@
     grid-template-columns: auto 1fr;
     grid-template-rows: auto 1fr;
     background: var(--secondary);
+    max-width: 33em;
+    word-break: break-word;
     .login-title {
       margin-bottom: 0;
     }
@@ -136,6 +138,7 @@
         min-width: 250px;
         box-shadow: none;
         margin-bottom: 0.25em;
+        width: 100%;
       }
       input:focus {
         outline: none;
@@ -309,8 +312,8 @@
   }
 
   .invite-form {
-    padding-left: 20px;
     margin-bottom: 50px;
+    max-width: 33em;
     .tip {
       display: block;
     }
@@ -385,5 +388,15 @@ button#new-account-link {
     display: inline-block;
     padding: 1em 0.5em 1em 0;
     color: var(--tertiary);
+  }
+}
+
+.invite-error {
+  box-shadow: 0 1px 10px 1px rgba(var(--primary-low-rgb), 1.25);
+  border-radius: 10px;
+  padding: 1em 2.5em 1em 2.5em;
+  .error-image {
+    text-align: center;
+    padding-bottom: 1em;
   }
 }

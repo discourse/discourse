@@ -25,8 +25,8 @@ export default {
     document.addEventListener("discourse-error", this.handleDiscourseError);
   },
 
-  cleanup() {
-    document.removeEventListener(this.handleDiscourseError);
+  teardown() {
+    document.removeEventListener("discourse-error", this.handleDiscourseError);
     delete this.currentUser;
   },
 

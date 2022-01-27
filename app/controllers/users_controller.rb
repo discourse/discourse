@@ -477,7 +477,7 @@ class UsersController < ApplicationController
     usernames = params[:usernames] if params[:usernames].present?
     usernames = [params[:username]] if params[:username].present?
 
-    raise Discourse::InvalidParameters.new(:usernames) if !usernames.kind_of?(Array)
+    raise Discourse::InvalidParameters.new(:usernames) if !usernames.kind_of?(Array) || usernames.size > 20
 
     groups = Group.where(name: usernames).pluck(:name)
     mentionable_groups =
@@ -496,15 +496,53 @@ class UsersController < ApplicationController
     usernames -= groups
     usernames.each(&:downcase!)
 
-    cannot_see = []
+    users = User
+      .where(staged: false, username_lower: usernames)
+      .index_by(&:username_lower)
+
+    cannot_see = {}
     here_count = nil
 
     topic_id = params[:topic_id]
     if topic_id.present? && topic = Topic.find_by(id: topic_id)
+      topic_muted_by = TopicUser
+        .where(topic: topic)
+        .where(user_id: users.values.map(&:id))
+        .where(notification_level: TopicUser.notification_levels[:muted])
+        .pluck(:user_id)
+        .to_set
+
+      if topic.private_message?
+        topic_allowed_user_ids = TopicAllowedUser
+          .where(topic: topic)
+          .where(user_id: users.values.map(&:id))
+          .pluck(:user_id)
+          .to_set
+
+        topic_allowed_group_ids = TopicAllowedGroup
+          .where(topic: topic)
+          .pluck(:group_id)
+          .to_set
+      end
+
       usernames.each do |username|
-        if !Guardian.new(User.find_by_username(username)).can_see?(topic)
-          cannot_see.push(username)
+        user = users[username]
+        next if user.blank?
+
+        cannot_see_reason = nil
+        if !user.guardian.can_see?(topic)
+          cannot_see_reason = topic.private_message? ? :private : :category
+        elsif topic_muted_by.include?(user.id)
+          cannot_see_reason = :muted_topic
+        elsif topic.private_message? && !topic_allowed_user_ids.include?(user.id) && !user.group_ids.any? { |group_id| topic_allowed_group_ids.include?(group_id) }
+          cannot_see_reason = :not_allowed
         end
+
+        if !guardian.is_staff? && cannot_see_reason.present? && cannot_see_reason != :private && cannot_see_reason != :category
+          cannot_see_reason = nil # do not leak private information
+        end
+
+        cannot_see[username] = cannot_see_reason if cannot_see_reason.present?
       end
 
       if usernames.include?(SiteSetting.here_mention) && guardian.can_mention_here?
@@ -512,12 +550,8 @@ class UsersController < ApplicationController
       end
     end
 
-    result = User.where(staged: false)
-      .where(username_lower: usernames)
-      .pluck(:username_lower)
-
     render json: {
-      valid: result,
+      valid: users.keys,
       valid_groups: groups,
       mentionable_groups: mentionable_groups,
       cannot_see: cannot_see,

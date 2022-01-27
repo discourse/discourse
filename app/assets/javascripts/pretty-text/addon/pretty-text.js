@@ -38,6 +38,8 @@ export function buildOptions(state) {
     customEmojiTranslation,
     watchedWordsReplace,
     watchedWordsLink,
+    featuresOverride,
+    markdownItRules,
   } = state;
 
   let features = {};
@@ -76,6 +78,8 @@ export function buildOptions(state) {
     disableEmojis,
     watchedWordsReplace,
     watchedWordsLink,
+    featuresOverride,
+    markdownItRules,
   };
 
   // note, this will mutate options due to the way the API is designed

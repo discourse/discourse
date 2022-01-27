@@ -117,5 +117,12 @@ end
 DiscourseEvent.on(:like_created) do |post_action|
   user = post_action.user
   group_ids = user.groups.map(&:id)
-  WebHook.enqueue_object_hooks(:like, post_action, :post_liked, WebHookLikeSerializer, group_ids: group_ids)
+  topic = Topic.includes(:tags).joins(:posts).find_by(posts: { id: post_action.post_id })
+  category_id = topic&.category_id
+  tag_ids = topic&.tag_ids
+
+  WebHook.enqueue_object_hooks(:like,
+    post_action, :post_liked, WebHookLikeSerializer,
+    group_ids: group_ids, category_id: category_id, tag_ids: tag_ids
+  )
 end
