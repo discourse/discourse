@@ -62,7 +62,7 @@ const TIMEFRAMES = [
     format: "MMM D",
     enabled: (opts) => {
       const now = opts.now.clone();
-      return opts.now.endOf("month").diff(now, "days") >= 7;
+      return opts.now.endOf("month").diff(now, "days") >= 8;
     },
     when: (time, timeOfDay) =>
       time.add(1, "month").startOf("month").hour(timeOfDay).minute(0),

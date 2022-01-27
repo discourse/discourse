@@ -142,17 +142,17 @@ module("Unit | Lib | timeframes-builder", function (hooks) {
     assert.not(timeframes.includes("later_this_week"));
   });
 
-  test("outputs 'Next Month' if it is in more than 7 days from now", function (assert) {
+  test("outputs 'Next Month' if it is in more than 8 days from now", function (assert) {
     const timezone = moment.tz.guess();
-    this.clock = fakeTime("2100-01-24", timezone, true);
+    this.clock = fakeTime("2100-01-23", timezone, true);
     const timeframes = buildTimeframes(buildOptions(moment())).mapBy("id");
 
     assert.ok(timeframes.includes("next_month"));
   });
 
-  test("doesn't output 'Next Month' if it is in 7 or fewer days from now", function (assert) {
+  test("doesn't output 'Next Month' if it is in 8 or fewer days from now", function (assert) {
     const timezone = moment.tz.guess();
-    this.clock = fakeTime("2100-01-25", timezone, true);
+    this.clock = fakeTime("2100-01-24", timezone, true);
     const timeframes = buildTimeframes(buildOptions(moment())).mapBy("id");
 
     assert.not(timeframes.includes("next_month"));
