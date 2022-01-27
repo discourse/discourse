@@ -5,7 +5,6 @@ export default Component.extend({
   fixed: false,
   submitOnEnter: true,
   dismissable: true,
-  autoFocus: true,
 
   didInsertElement() {
     this._super(...arguments);
@@ -53,8 +52,7 @@ export default Component.extend({
         "rawSubtitle",
         "submitOnEnter",
         "dismissable",
-        "headerClass",
-        "autoFocus"
+        "headerClass"
       )
     );
   },

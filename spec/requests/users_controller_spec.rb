@@ -3075,19 +3075,6 @@ describe UsersController do
 
       expect(user1.email_tokens.first.email).to eq(user1.email)
     end
-
-    it "can destroy associated email tokens" do
-      new_email = 'new.n.cool@example.com'
-      updater = EmailUpdater.new(guardian: user.guardian, user: user)
-
-      expect { updater.change_to(new_email) }
-        .to change { user.email_tokens.count }.by(1)
-
-      expect { delete "/u/#{user.username}/preferences/email.json", params: { email: new_email } }
-        .to change { user.email_tokens.count }.by(-1)
-
-      expect(user.email_tokens.first.email).to eq(user.email)
-    end
   end
 
   describe '#is_local_username' do
@@ -3710,16 +3697,6 @@ describe UsersController do
 
       expect(response.status).to eq(200)
       expect(response.body).to include(user1.username)
-    end
-
-    it "should not be able to view a private user profile" do
-      user1.user_profile.update!(bio_raw: "Hello world!")
-      user1.user_option.update!(hide_profile_and_presence: true)
-
-      get "/u/#{user1.username}"
-
-      expect(response.status).to eq(200)
-      expect(response.body).not_to include("Hello world!")
     end
 
     it "should not be able to view a private user profile" do

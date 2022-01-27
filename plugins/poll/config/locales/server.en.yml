@@ -55,14 +55,6 @@ en:
       one: A minimum of %{count} vote is required for this poll.
       other: A minimum of %{count} votes is required for this poll.
 
-    one_vote_per_user: "Only 1 vote is allowed for this poll."
-    max_vote_per_user:
-      one: Only %{count} vote is allowed for this poll.
-      other: A maximum of %{count} votes is allowed for this poll.
-    min_vote_per_user:
-      one: A minimum of %{count} vote is required for this poll.
-      other: A minimum of %{count} votes is required for this poll.
-
     topic_must_be_open_to_toggle_status: "The topic must be open to toggle status."
     only_staff_or_op_can_toggle_status: "Only a staff member or the original poster can toggle a poll status."
 
