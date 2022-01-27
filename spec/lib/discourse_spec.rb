@@ -141,7 +141,7 @@ describe Discourse do
             'pluginauth'
           end
 
-          def enabled
+          def enabled?
             true
           end
         end
