@@ -160,11 +160,11 @@ discourseModule(
       },
     });
 
-    componentTest("shows 'Next Month' if it is in 7 days or more from now", {
+    componentTest("shows 'Next Month' if it is in more than 8 days from now", {
       template,
 
       beforeEach() {
-        this.clock = fakeTime("2100-01-24", this.currentUser._timezone, true);
+        this.clock = fakeTime("2100-01-23", this.currentUser._timezone, true);
       },
 
       test(assert) {
@@ -173,12 +173,12 @@ discourseModule(
     });
 
     componentTest(
-      "does not show 'Next Month' if it is in 7 or less days from now",
+      "does not show 'Next Month' if it is in 8 or less days from now",
       {
         template,
 
         beforeEach() {
-          this.clock = fakeTime("2100-01-25", this.currentUser._timezone, true);
+          this.clock = fakeTime("2100-01-24", this.currentUser._timezone, true);
         },
 
         test(assert) {
