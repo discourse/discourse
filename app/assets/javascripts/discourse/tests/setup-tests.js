@@ -347,7 +347,7 @@ function setupTestsCommon(application, container, config) {
       e.remove()
     );
     document.body.removeAttribute("class");
-    let html = document.getElementsByTagName("html")[0];
+    let html = document.documentElement;
     html.removeAttribute("class");
     html.removeAttribute("style");
     let testing = document.getElementById("ember-testing");
