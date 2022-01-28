@@ -32,7 +32,8 @@ class SiteSerializer < ApplicationSerializer
     :custom_emoji_translation,
     :watched_words_replace,
     :watched_words_link,
-    :categories
+    :categories,
+    :markdown_additional_options
   )
 
   has_many :archetypes, embed: :objects, serializer: ArchetypeSerializer
@@ -201,6 +202,10 @@ class SiteSerializer < ApplicationSerializer
 
   def categories
     object.categories.map { |c| c.to_h }
+  end
+
+  def markdown_additional_options
+    Site.markdown_additional_options
   end
 
   private
