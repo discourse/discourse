@@ -120,11 +120,11 @@ class SearchIndexer
       a_weight: topic_title,
       b_weight: category_name,
       c_weight: topic_tags,
-      # The tsvector resulted from parsing a string can be with 10% longer
-      # than the original string. Since there is no way to estimate the length
-      # of the expected tsvector, we limit the input to ~90% of the maximum
+      # The tsvector resulted from parsing a string can be double the size of
+      # the original string. Since there is no way to estimate the length of
+      # the expected tsvector, we limit the input to ~50% of the maximum
       # length of a tsvector (1_048_576 bytes).
-      d_weight: scrub_html_for_search(cooked)[0..900_000]
+      d_weight: scrub_html_for_search(cooked)[0..600_000]
     ) do |params|
       params["private_message"] = private_message
     end
