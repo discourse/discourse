@@ -334,7 +334,7 @@ export function setup(helper) {
           md.options.discourse.emojiUnicodeReplacer,
           md.options.discourse.features.emojiShortcuts,
           md.options.discourse.features.inlineEmoji,
-          md.options.discourse.customEmojiTranslation
+          md.options.discourse.siteMarkdownContext.custom_emoji_translation
         )
       )
     );

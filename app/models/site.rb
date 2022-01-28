@@ -14,12 +14,12 @@ class Site
   # be namespaced to the plugin adding them.
   #
   # ```
-  # Site.markdown_additional_options["chat"] = { limited_pretty_text_markdown_rules: [] }
+  # Site.additional_markdown_context["chat"] = { limited_pretty_text_markdown_rules: [] }
   # ```
   #
   # These are passed down to markdown rules on opts.discourse.additionalOptions.
-  cattr_accessor :markdown_additional_options
-  self.markdown_additional_options = {}
+  cattr_accessor :additional_markdown_context
+  self.additional_markdown_context = {}
 
   def self.add_categories_callbacks(&block)
     categories_callbacks << block
@@ -197,6 +197,15 @@ class Site
     # publishing forces the sequence up
     # the cache is validated based on the sequence
     MessageBus.publish(SITE_JSON_CHANNEL, '')
+  end
+
+  def self.mardown_context
+    {
+      custom_emoji_translation: Plugin::CustomEmoji.translations,
+      censored_regexp: WordWatcher.word_matcher_regexp(:censor)&.source,
+      watched_words_replace: WordWatcher.word_matcher_regexps(:replace),
+      watched_words_link: WordWatcher.word_matcher_regexps(:link)
+    }.merge(self.additional_markdown_context)
   end
 
 end

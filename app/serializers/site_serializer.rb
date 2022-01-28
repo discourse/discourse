@@ -27,13 +27,9 @@ class SiteSerializer < ApplicationSerializer
     :user_themes,
     :user_color_schemes,
     :default_dark_color_scheme,
-    :censored_regexp,
     :shared_drafts_category_id,
-    :custom_emoji_translation,
-    :watched_words_replace,
-    :watched_words_link,
     :categories,
-    :markdown_additional_options
+    :markdown_context
   )
 
   has_many :archetypes, embed: :objects, serializer: ArchetypeSerializer
@@ -176,14 +172,6 @@ class SiteSerializer < ApplicationSerializer
     scope.topic_featured_link_allowed_category_ids
   end
 
-  def censored_regexp
-    WordWatcher.word_matcher_regexp(:censor)&.source
-  end
-
-  def custom_emoji_translation
-    Plugin::CustomEmoji.translations
-  end
-
   def shared_drafts_category_id
     SiteSetting.shared_drafts_category.to_i
   end
@@ -192,20 +180,12 @@ class SiteSerializer < ApplicationSerializer
     scope.can_see_shared_draft? && SiteSetting.shared_drafts_enabled?
   end
 
-  def watched_words_replace
-    WordWatcher.word_matcher_regexps(:replace)
-  end
-
-  def watched_words_link
-    WordWatcher.word_matcher_regexps(:link)
-  end
-
   def categories
     object.categories.map { |c| c.to_h }
   end
 
-  def markdown_additional_options
-    Site.markdown_additional_options
+  def markdown_context
+    object.class.markdown_context
   end
 
   private

@@ -45,28 +45,28 @@ export function setup(helper) {
   helper.registerPlugin((md) => {
     const matchers = [];
 
-    if (md.options.discourse.watchedWordsReplace) {
-      Object.entries(md.options.discourse.watchedWordsReplace).map(
-        ([word, replacement]) => {
-          matchers.push({
-            pattern: new RegExp(word, "gi"),
-            replacement,
-            link: false,
-          });
-        }
-      );
+    if (md.options.discourse.siteMarkdownContext.watched_words_replace) {
+      Object.entries(
+        md.options.discourse.siteMarkdownContext.watched_words_replace
+      ).map(([word, replacement]) => {
+        matchers.push({
+          pattern: new RegExp(word, "gi"),
+          replacement,
+          link: false,
+        });
+      });
     }
 
-    if (md.options.discourse.watchedWordsLink) {
-      Object.entries(md.options.discourse.watchedWordsLink).map(
-        ([word, replacement]) => {
-          matchers.push({
-            pattern: new RegExp(word, "gi"),
-            replacement,
-            link: true,
-          });
-        }
-      );
+    if (md.options.discourse.siteMarkdownContext.watched_words_link) {
+      Object.entries(
+        md.options.discourse.siteMarkdownContext.watched_words_link
+      ).map(([word, replacement]) => {
+        matchers.push({
+          pattern: new RegExp(word, "gi"),
+          replacement,
+          link: true,
+        });
+      });
     }
 
     if (matchers.length === 0) {

@@ -195,13 +195,9 @@ module PrettyText
         __optInput.getTopicInfo = __getTopicInfo;
         __optInput.categoryHashtagLookup = __categoryLookup;
         __optInput.customEmoji = #{custom_emoji.to_json};
-        __optInput.customEmojiTranslation = #{Plugin::CustomEmoji.translations.to_json};
         __optInput.emojiUnicodeReplacer = __emojiUnicodeReplacer;
         __optInput.lookupUploadUrls = __lookupUploadUrls;
-        __optInput.censoredRegexp = #{WordWatcher.word_matcher_regexp(:censor)&.source.to_json};
-        __optInput.watchedWordsReplace = #{WordWatcher.word_matcher_regexps(:replace).to_json};
-        __optInput.watchedWordsLink = #{WordWatcher.word_matcher_regexps(:link).to_json};
-        __optInput.additionalOptions = #{Site.markdown_additional_options.to_json};
+        __optInput.siteMarkdownContext = #{Site.markdown_context.to_json};
       JS
 
       if opts[:topic_id]

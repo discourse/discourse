@@ -33,14 +33,10 @@ export function buildOptions(state) {
     emojiUnicodeReplacer,
     lookupUploadUrls,
     previewing,
-    censoredRegexp,
     disableEmojis,
-    customEmojiTranslation,
-    watchedWordsReplace,
-    watchedWordsLink,
     featuresOverride,
     markdownItRules,
-    additionalOptions,
+    siteMarkdownContext,
   } = state;
 
   let features = {};
@@ -66,8 +62,6 @@ export function buildOptions(state) {
     formatUsername,
     emojiUnicodeReplacer,
     lookupUploadUrls,
-    censoredRegexp,
-    customEmojiTranslation,
     allowedHrefSchemes: siteSettings.allowed_href_schemes
       ? siteSettings.allowed_href_schemes.split("|")
       : null,
@@ -77,11 +71,9 @@ export function buildOptions(state) {
     markdownIt: true,
     previewing,
     disableEmojis,
-    watchedWordsReplace,
-    watchedWordsLink,
     featuresOverride,
     markdownItRules,
-    additionalOptions,
+    siteMarkdownContext,
   };
 
   // note, this will mutate options due to the way the API is designed

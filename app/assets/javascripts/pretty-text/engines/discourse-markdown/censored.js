@@ -28,7 +28,8 @@ function censorTree(state, censor) {
 
 export function setup(helper) {
   helper.registerPlugin((md) => {
-    const censoredRegexp = md.options.discourse.censoredRegexp;
+    const censoredRegexp =
+      md.options.discourse.siteMarkdownContext.censored_regexp;
 
     if (censoredRegexp) {
       const replacement = String.fromCharCode(9632);
