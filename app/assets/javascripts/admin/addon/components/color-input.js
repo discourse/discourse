@@ -20,6 +20,10 @@ export default Component.extend({
     return this.onlyHex ? 6 : null;
   }),
 
+  normalizedHexValue: computed("hexValue", function () {
+    return this.normalize(this.hexValue);
+  }),
+
   normalize(color) {
     if (this._valid(color)) {
       if (!color.startsWith("#")) {

@@ -4,4 +4,4 @@
   maxlength=maxlength
   input=(action "onHexInput" value="target.value")
 }}
-<input class="picker" type="color" value="#{{this.hexValue}}" {{on "input" this.onPickerInput}}>
+<input class="picker" type="color" value={{normalizedHexValue}} {{on "input" this.onPickerInput}}>
