@@ -463,59 +463,6 @@ class Admin::UsersController < Admin::AdminController
     end
   end
 
-  def sync_account
-    authenticator = Users::OmniauthCallbacksController.find_authenticator(params[:provider])
-
-    auth_params = params.slice(:provider, :uid, :credentials, :info, :extra)
-    auth_params[:info] ||= {}
-    auth_params[:credentials] ||= {}
-    auth_params[:extra] ||= {}
-
-    auth_result = authenticator.after_authenticate(auth_params)
-
-    # TODO: UsersController#create starts with a lot of validations.
-    # Why are these not validators of the User model?
-
-    if params[:user].present?
-      params[:user].require(:email)
-
-      user_params = params[:user].permit(
-        :username,
-        :password,
-        :email,
-        :name,
-        :date_of_birth,
-        :title,
-        :locale,
-        :primary_group_id,
-      )
-
-      user = User.find_by_email(user_params[:email])
-      if user
-        user.active = false
-        user.unstage!
-      end
-      user ||= User.new
-      user.assign_attributes(user_params)
-      user.password = SecureRandom.hex if user.password.blank?
-      if user.approved? || EmailValidator.can_auto_approve_user?(user.email)
-        ReviewableUser.set_approved_fields!(user, current_user)
-      end
-
-      if user.save
-        authenticator.after_create_account(user, auth_result)
-      end
-    end
-
-    response = { auth_result: auth_result.to_client_hash }
-    if user
-      user_serializer = UserSerializer.new(user, scope: guardian, root: 'user')
-      response = user_serializer.as_json.merge(response)
-    end
-
-    render json: response
-  end
-
   def delete_other_accounts_with_same_ip
     params.require(:ip)
     params.require(:exclude)

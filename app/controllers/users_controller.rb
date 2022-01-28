@@ -691,6 +691,18 @@ class UsersController < ApplicationController
       user.custom_fields = fields
     end
 
+    # Handle associated accounts
+    associations = []
+    if params[:external_ids]&.is_a?(ActionController::Parameters) && current_user&.admin? && is_api?
+      params[:external_ids].each do |provider_name, provider_uid|
+        authenticator = Discourse.enabled_authenticators.find { |a| a.name == provider_name }
+        raise Discourse::InvalidParameters.new(:external_ids) if !authenticator&.is_managed?
+
+        association = UserAssociatedAccount.find_or_initialize_by(provider_name: provider_name, provider_uid: provider_uid)
+        associations << association
+      end
+    end
+
     authentication = UserAuthenticator.new(user, session)
 
     if !authentication.has_authenticator? && !SiteSetting.enable_local_logins && !(current_user&.admin? && is_api?)
@@ -709,11 +721,12 @@ class UsersController < ApplicationController
 
     # just assign a password if we have an authenticator and no password
     # this is the case for Twitter
-    user.password = SecureRandom.hex if user.password.blank? && authentication.has_authenticator?
+    user.password = SecureRandom.hex if user.password.blank? && (authentication.has_authenticator? || associations.present?)
 
     if user.save
       authentication.finish
       activation.finish
+      associations.each { |a| a.update!(user: user) }
       user.update_timezone_if_missing(params[:timezone])
 
       secure_session[HONEYPOT_KEY] = nil
