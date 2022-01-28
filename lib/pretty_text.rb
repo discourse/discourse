@@ -201,6 +201,7 @@ module PrettyText
         __optInput.censoredRegexp = #{WordWatcher.word_matcher_regexp(:censor)&.source.to_json};
         __optInput.watchedWordsReplace = #{WordWatcher.word_matcher_regexps(:replace).to_json};
         __optInput.watchedWordsLink = #{WordWatcher.word_matcher_regexps(:link).to_json};
+        __optInput.additionalOptions = #{Site.markdown_additional_options.to_json};
       JS
 
       if opts[:topic_id]

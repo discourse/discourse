@@ -239,6 +239,7 @@ tr_TR:
       discourse_connect_enabled: "DiscourseConnect etkinleştirildiğinden davetler devre dışı bırakıldı."
       invalid_access: "İstenilen kaynağı görüntüleyebilmeniz için izniniz yok."
     requires_groups: "Davet kaydedildi. Belirtilen konuya erişim vermek için aşağıdaki gruplardan birini ekleyin: %{groups}."
+    domain_not_allowed: "E-postanız bu daveti değerlendirmek için kullanılamaz."
   bulk_invite:
     file_should_be_csv: "Yüklenen dosya csv formatında olmalıdır."
     max_rows: "İlk olarak %{max_bulk_invites} davetiyeleri gönderildi. Dosyayı daha küçük parçalara bölmeyi deneyin."
@@ -2415,7 +2416,7 @@ tr_TR:
     other: "Bu konu, çok sayıda topluluk raporu nedeniyle geçici olarak en az %{count} saat kapalı."
   system_messages:
     reviewables_reminder:
-      subject_template: "İnceleme kuyruğunda gözden geçirilmesi gereken öğeler var"
+      subject_template: "Gözden geçirme kuyruğunda bekleyen öğeler var"
     private_topic_title: "Konu # %{id}"
     contents_hidden: "İçeriğini görmek için lütfen gönderiyi ziyaret edin."
     post_hidden:
@@ -3520,7 +3521,7 @@ tr_TR:
         Bu rozet, bir wiki yayınını ilk kez düzenlediğinizde verilir.
     basic_user:
       name: Acemi
-      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Verilen</a> tüm temel topluluk işlevleri
+      description: Tüm temel topluluk işlevlerine erişim <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">mevcut</a>
       long_description: |
         Bu rozet, güven düzeyi 1'e ulaştığınızda verilir. Topluluğumuzun ne hakkında olduğunu öğrenmek için etrafta dolaşıp birkaç konu okuduğunuz için teşekkür ederiz. Yeni kullanıcı kısıtlamaları kaldırıldı; size kişisel iletileşme, bayraklama, viki düzenleme ve birden fazla resim ve bağlantı gönderme yeteneği gibi tüm temel topluluk yetenekleri verildi.
     member:
@@ -3530,7 +3531,7 @@ tr_TR:
         Bu rozet, güven düzeyi 2'ye ulaştığınızda verilir. Topluluğumuza gerçekten katılmak için birkaç hafta boyunca katıldığınız için teşekkür ederiz. Artık kullanıcı sayfanızdan veya tek tek konulardan davetiyeler gönderebilir, grup kişisel iletileri oluşturabilir ve her gün daha fazla beğeniye sahip olabilirsiniz.
     regular:
       name: Müdavim
-      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Erişim verildi</a> yeniden kategorize etmek, yeniden adlandırmak, takip edilen bağlantılar, viki, daha fazla beğeni
+      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Şunlara erişim verildi:</a> Yeniden kategorize etme, yeniden adlandırma, takip edilen bağlantılar, viki, daha fazla beğeni
       long_description: |
         Bu rozet güven düzeyi 3'e ulaştığınızda verilir. Birkaç ay içinde topluluğumuzun düzenli bir parçası olduğunuz için teşekkür ederiz. Artık en etkin okuyuculardan birisiniz ve topluluğumuzu mükemmel kılan güvenilir bir katkıda bulunuyorsunuz. Artık konuları yeniden kategorize edebilir ve yeniden adlandırabilir, daha güçlü istenemeyen ileti bayraklarından yararlanabilir, özel bir salon alanına erişebilir ve ayrıca bir gün içinde çok daha fazla beğeni alabilirsiniz.
     leader:
@@ -3539,7 +3540,7 @@ tr_TR:
       long_description: |
         Bu rozet, güven düzeyi 4'e ulaştığınızda verilir. Bu toplulukta personel tarafından seçilen bir lidersiniz ve buradaki eylemleriniz ve sözlerinizde topluluğun geri kalanı için olumlu bir örnek belirlediniz. Tüm yayınları düzenleme, sabitleme, kapatma, listeleme, arşivleme, bölme ve birleştirme gibi ortak konu denetleyicisi eylemleri gerçekleştirebilirsiniz.
     welcome:
-      name: Hoş geldiniz
+      name: Hoş Geldin
       description: İlk beğeni alma
       long_description: |
         Bu rozet, bir yayında ilk beğeninizi aldığınızda verilir. Tebrikler, diğer topluluk üyelerinizin ilginç, havalı veya kullanışlı bulduğu bir şey yayınladınız!
@@ -3665,17 +3666,17 @@ tr_TR:
         Bu rozet, paylaştığınız bir bağlantı 1000 tıklama aldığında verilir. Vaov! Gerekli ayrıntıları ve bilgileri ekleyerek konuşmayı önemli ölçüde geliştiren bir bağlantı yayınladınız. Harika iş!
     appreciated:
       name: Takdire Layık
-      description: 20 gönderine 1 beğeni aldın
+      description: 20 gönderinize 1 beğeni aldınız
       long_description: |
         Bu rozet 20 farklı gönderide en az bir beğeni kazandığınız için verilmiştir. Topluluk olarak tartışmalara olan katkınızı takdir ediyoruz!
     respected:
       name: Saygın
-      description: 100 gönderine 2 beğeni aldın
+      description: 100 gönderinize 2 beğeni aldınız
       long_description: |
         Bu rozet 100 farklı gönderide en az 2 beğeni kazandığınız için verilmiştir. Katkılarınız forum için çok değerli.
     admired:
       name: Takdir Edilen
-      description: 300 gönderine 5 beğeni aldın
+      description: 300 gönderinize 5 beğeni aldınız
       long_description: |
         Bu rozet farklı 300 gönderide en az 5 beğeni kazandığınız için verilmiştir. Süper! Tartışmalara olan katkınız muazzam.
     out_of_love:

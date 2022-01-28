@@ -342,8 +342,20 @@ function setupTestsCommon(application, container, config) {
     resetPretender();
     clearPresenceState();
 
-    // Destroy any modals
-    $(".modal-backdrop").remove();
+    // Clean up the DOM. Some tests might leave extra classes or elements behind.
+    Array.from(document.getElementsByClassName("modal-backdrop")).forEach((e) =>
+      e.remove()
+    );
+    document.body.removeAttribute("class");
+    let html = document.documentElement;
+    html.removeAttribute("class");
+    html.removeAttribute("style");
+    let testing = document.getElementById("ember-testing");
+    testing.removeAttribute("class");
+    testing.removeAttribute("style");
+    let testContainer = document.getElementById("ember-testing-container");
+    testContainer.scrollTop = 0;
+
     flushMap();
 
     MessageBus.unsubscribe("*");
