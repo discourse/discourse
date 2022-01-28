@@ -86,26 +86,27 @@ export default Component.extend({
 
   @discourseComputed()
   customTimeShortcutOptions() {
+    const timezone = this.currentUser.resolvedTimezone(this.currentUser);
     return [
       {
         icon: "bed",
         id: "this_weekend",
         label: "time_shortcut.this_weekend",
-        time: thisWeekend(),
+        time: thisWeekend(timezone),
         timeFormatKey: "dates.time_short_day",
       },
       {
         icon: "far-clock",
         id: "two_weeks",
         label: "time_shortcut.two_weeks",
-        time: startOfDay(now().add(2, "weeks").day(MOMENT_MONDAY)),
+        time: startOfDay(now(timezone).add(2, "weeks").day(MOMENT_MONDAY)),
         timeFormatKey: "dates.long_no_year",
       },
       {
         icon: "far-calendar-plus",
         id: "six_months",
         label: "time_shortcut.six_months",
-        time: startOfDay(now().add(6, "months").startOf("month")),
+        time: startOfDay(now(timezone).add(6, "months").startOf("month")),
         timeFormatKey: "dates.long_no_year",
       },
     ];
