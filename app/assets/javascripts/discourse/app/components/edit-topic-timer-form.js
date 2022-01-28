@@ -14,12 +14,7 @@ import I18n from "I18n";
 import { action } from "@ember/object";
 import Component from "@ember/component";
 import { isEmpty } from "@ember/utils";
-import {
-  MOMENT_MONDAY,
-  now,
-  startOfDay,
-  thisWeekend,
-} from "discourse/lib/time-utils";
+import { MOMENT_MONDAY, now, startOfDay } from "discourse/lib/time-utils";
 import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
 import { TIME_SHORTCUT_TYPES } from "discourse/lib/time-shortcut";
 import ItsATrap from "@discourse/itsatrap";
@@ -88,13 +83,6 @@ export default Component.extend({
   @discourseComputed()
   customTimeShortcutOptions() {
     return [
-      {
-        icon: "bed",
-        id: "this_weekend",
-        label: "time_shortcut.this_weekend",
-        time: thisWeekend(),
-        timeFormatKey: "dates.time_short_day",
-      },
       {
         icon: "far-clock",
         id: "two_weeks",

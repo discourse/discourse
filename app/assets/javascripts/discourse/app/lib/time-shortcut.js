@@ -6,6 +6,7 @@ import {
   nextBusinessWeekStart,
   nextMonth,
   now,
+  thisWeekend,
   tomorrow,
 } from "discourse/lib/time-utils";
 import I18n from "I18n";
@@ -13,6 +14,7 @@ import I18n from "I18n";
 export const TIME_SHORTCUT_TYPES = {
   LATER_TODAY: "later_today",
   TOMORROW: "tomorrow",
+  THIS_WEEKEND: "this_weekend",
   NEXT_MONTH: "next_month",
   CUSTOM: "custom",
   RELATIVE: "relative",
@@ -45,6 +47,15 @@ export function defaultShortcutOptions(timezone) {
       label: "time_shortcut.later_this_week",
       time: laterThisWeek(timezone),
       timeFormatted: laterThisWeek(timezone).format(
+        I18n.t("dates.time_short_day")
+      ),
+    },
+    {
+      icon: "bed",
+      id: TIME_SHORTCUT_TYPES.THIS_WEEKEND,
+      label: "time_shortcut.this_weekend",
+      time: thisWeekend(timezone),
+      timeFormatted: thisWeekend(timezone).format(
         I18n.t("dates.time_short_day")
       ),
     },
