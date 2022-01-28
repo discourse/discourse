@@ -104,7 +104,6 @@ module.exports = function (defaults) {
   // For example: our very specific version of bootstrap-modal.
   app.import(vendorJs + "bootbox.js");
   app.import(vendorJs + "bootstrap-modal.js");
-  app.import(vendorJs + "jquery.ui.widget.js");
   app.import(vendorJs + "caret_position.js");
   app.import("node_modules/ember-source/dist/ember-template-compiler.js", {
     type: "test",
