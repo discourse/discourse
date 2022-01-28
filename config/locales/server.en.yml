@@ -366,8 +366,8 @@ en:
   too_many_links:
     one: "Sorry, new users can only put one link in a post."
     other: "Sorry, new users can only put %{count} links in a post."
-  contains_blocked_word: "Your post contains a word that's not allowed: %{word}"
-  contains_blocked_words: "Your post contains multiple words that aren't allowed: %{words}"
+  contains_blocked_word: "Sorry, you can't post the word '%{word}'; it's not allowed."
+  contains_blocked_words: "Sorry, you can't post that. Not allowed: %{words}."
 
   spamming_host: "Sorry you cannot post a link to that host."
   user_is_suspended: "Suspended users are not allowed to post."
