@@ -135,7 +135,7 @@ module ApplicationHelper
     path
   end
 
-  def preload_vendor_scripts
+  def preload_vendor_scripts(defer = true)
     scripts = ["vendor"]
 
     if ENV["EMBER_CLI_PROD_ASSETS"] != "0"
@@ -147,19 +147,20 @@ module ApplicationHelper
     end
 
     scripts.map do |name|
-      preload_script(name)
+      preload_script(name, defer)
     end.join("\n").html_safe
   end
 
-  def preload_script(script)
+  def preload_script(script, defer = true)
     path = script_asset_path(script)
-    preload_script_url(path)
+    preload_script_url(path, defer)
   end
 
-  def preload_script_url(url)
+  def preload_script_url(url, defer = true)
+    defer_attribute = defer ? ' defer' : ''
     <<~HTML.html_safe
       <link rel="preload" href="#{url}" as="script">
-      <script src="#{url}"></script>
+      <script#{defer_attribute} src="#{url}"></script>
     HTML
   end
 
