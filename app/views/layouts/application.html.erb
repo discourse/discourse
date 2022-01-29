@@ -116,11 +116,11 @@
 
     <div class="hidden" id="data-preloaded" data-preloaded="<%= preloaded_json %>"></div>
 
-    <script src="<%= script_asset_path "start-discourse" %>"></script>
+    <script defer src="<%= script_asset_path "start-discourse" %>"></script>
 
     <%= yield :data %>
 
-    <script src="<%= script_asset_path "browser-update" %>"></script>
+    <script defer src="<%= script_asset_path "browser-update" %>"></script>
 
     <%- unless customization_disabled? %>
       <%= theme_lookup("body_tag") %>
