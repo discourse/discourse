@@ -23,13 +23,13 @@
 
     <link rel="preload" href="<%= script_asset_path "start-discourse" %>" as="script">
     <link rel="preload" href="<%= script_asset_path "browser-update" %>" as="script">
-    <%= preload_script 'browser-detect' %>
+    <%= preload_script('browser-detect', false) %>
 
-    <%= preload_script "locales/#{I18n.locale}" %>
+    <%= preload_script("locales/#{I18n.locale}", false) %>
     <%- if ExtraLocalesController.client_overrides_exist? %>
-      <%= preload_script_url ExtraLocalesController.url('overrides') %>
+      <%= preload_script_url(ExtraLocalesController.url('overrides'), false) %>
     <%- end %>
-    <%= preload_vendor_scripts %>
+    <%= preload_vendor_scripts(false) %>
     <%= preload_script "application" %>
     <%- Discourse.find_plugin_js_assets(include_official: allow_plugins?, include_unofficial: allow_third_party_plugins?, request: request).each do |file| %>
       <%= preload_script file %>
