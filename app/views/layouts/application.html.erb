@@ -72,6 +72,7 @@
     <%- end -%>
 
     <%= render_google_tag_manager_body_code %>
+    <% if !@topic_view %>
     <noscript data-path="<%= request.env['PATH_INFO'] %>">
       <%= render partial: 'header' %>
       <div id="main-outlet" class="wrap" role="main">
@@ -93,6 +94,7 @@
         <p><%= t 'powered_by_html' %></p>
       </footer>
     </noscript>
+    <% end %>
 
     <%- unless customization_disabled? %>
       <%= theme_lookup("header") %>
@@ -104,6 +106,34 @@
 
     <section id='main'>
     </section>
+
+    <% if @topic_view %>
+      <section id='main-placeholder'>
+        <div class='d-header-wrap'>
+          <%= render partial: 'header' %>
+        </div>
+        <div class='wrap'>
+          <!-- preload-content: -->
+          <%= yield %>
+          <!-- :preload-content -->
+        </div>
+      </section>
+
+      <noscript data-path="<%= request.env['PATH_INFO'] %>">
+        <footer class="noscript-footer-nav">
+          <nav itemscope itemtype='http://schema.org/SiteNavigationElement'>
+            <a href='<%= path "/" %>'><%= t 'home_title' %></a>
+            <%= link_to t('js.filters.categories.title'), path("/categories") %>
+            <%= link_to t('guidelines_topic.title'), path("/guidelines") %>
+            <%= link_to t('tos_topic.title'), path("/tos") %>
+            <%= link_to t('privacy_topic.title'), path("/privacy") %>
+          </nav>
+        </footer>
+        <footer id='noscript-footer'>
+          <p><%= t 'powered_by_html' %></p>
+        </footer>
+      </noscript>
+    <% end %>
 
     <% unless current_user %>
       <form id='hidden-login-form' method="post" action="<%=main_app.login_path%>" style="display: none;">

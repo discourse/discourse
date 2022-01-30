@@ -83,6 +83,10 @@ const Discourse = Application.extend({
     });
   },
 
+  ready() {
+    document.getElementById("main-placeholder")?.remove();
+  },
+
   _registerPluginCode(version, code) {
     _pluginCallbacks.push({ version, code });
   },
