@@ -60,7 +60,7 @@ module RetrieveTitle
     encoding = nil
 
     fd.get do |_response, chunk, uri|
-      if (uri.present? && InlineOneboxer.domain_is_blocked?(uri.hostname))
+      if (uri.present? && Onebox::DomainChecker.is_blocked?(uri.hostname))
         throw :done
       end
 
