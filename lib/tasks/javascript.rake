@@ -341,7 +341,7 @@ task 'javascript:update' => 'clean_up' do
     end
 
     if f[:uglify]
-      File.write(dest, Uglifier.new.compile(File.read(src)))
+      File.write(dest, Uglifier.new(harmony: true).compile(File.read(src)))
     else
       FileUtils.cp_r(src, dest)
     end
