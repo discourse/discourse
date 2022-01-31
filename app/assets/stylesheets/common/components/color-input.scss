@@ -20,4 +20,12 @@
     cursor: pointer;
     margin-bottom: 0;
   }
+  // Reset webkit/blink default style
+  input[type="color"]::-webkit-color-swatch-wrapper {
+    padding: 0;
+  }
+  input[type="color"]::-webkit-color-swatch {
+    border: none;
+    border-radius: 0; // Reset webkit specific style
+  }
 }
