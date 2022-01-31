@@ -2068,8 +2068,18 @@ describe SessionController do
         post "/session/forgot_password.json",
           params: { login: user.username }
 
-        expect(response.status).to eq(200)
+        expect(response.status).to eq(400)
         expect(Jobs::CriticalUserEmail.jobs.size).to eq(0)
+      end
+
+      it 'allows for username when staff' do
+        sign_in(Fabricate(:admin))
+
+        post "/session/forgot_password.json",
+          params: { login: user.username }
+
+        expect(response.status).to eq(200)
+        expect(Jobs::CriticalUserEmail.jobs.size).to eq(1)
       end
 
       it 'allows for email' do

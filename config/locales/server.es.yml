@@ -228,6 +228,8 @@ es:
       <p>Si te acuerdas de tu contraseña puedes <a href="%{base_url}/login">iniciar sesión</a>.</p>
 
       <p>Si no, <a href="%{base_url}/password-reset">restablece tu contraseña</a>.</p>
+    not_found_template_link: |
+      <p>Esta invitación a <a href="%{base_url}">%{site_name}</a> ya no se puede usar. Por favor, pídele a la persona que te invitó que te vuelva a enviar una nueva invitación.</p>
     user_exists: "No hay necesidad de invitar a <b>%{email}</b>, <a href='%{base_path}/u/%{username}/summary'>¡ya tienen una cuenta!</a>"
     invite_exists: "Ya has invitado a <b>%{email}</b>."
     invalid_email: "%{email} no es un correo electrónico válido."
@@ -1942,7 +1944,7 @@ es:
     suppress_uncategorized_badge: "No mostrar la etiqueta de los temas sin categoría en la lista de temas."
     header_dropdown_category_count: "Cantidad de categorías que se pueden mostrar en el menú desplegable del encabezado."
     permalink_normalizations: "Aplicar la siguiente expresión regular antes de hacer coincidir los permalinks, por ejemplo: /(topic.*)\\?.*/\\1 despojará las cadenas de consulta de las rutas de los temas. El formato es regex+string usa \\1 etc. para acceder a capturas"
-    global_notice: "Mostrar un mensaje global de URGENCIA o EMERGENCIA que no se pueda ocultar para todos los visitantes. Deja este campo en blanco para ocultarlo (se permite HTML)."
+    global_notice: "Mostrar a todos los visitantes un mensaje global para URGENCIAS o EMERGENCIAS que no se pueda ocultar. Deja este campo en blanco para quitarlo (puedes usar HTML)."
     disable_system_edit_notifications: "Desactivar editar notificaciones por el usuario del sistema cuando «download_remote_images_to_local» este activo."
     disable_category_edit_notifications: "Desactivar que se manden notificaciones al cambiar la categoría de los temas."
     disable_tags_edit_notifications: "No mandar notificaciones al cambiar las etiquetas de los temas."
@@ -4434,7 +4436,7 @@ es:
           color_scheme:
             label: "Paleta de colores"
           body_font:
-            label: "Fuente del cuerpo"
+            label: "Tipo de letra para textos"
           heading_font:
             label: "Tipo de letra para encabezados"
           styling_preview:

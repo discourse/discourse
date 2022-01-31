@@ -836,6 +836,20 @@ describe PrettyText do
       expect(extract_urls("<aside class=\"quote\" data-topic=\"321\">aside</aside>")).to eq(["/t/321"])
     end
 
+    it "does not extract links from hotlinked images" do
+      html = <<~HTML
+        <p>
+        <a href="https://example.com">example</a>
+
+        <a href="https://images.pexels.com/photos/1525041/pexels-photo-1525041.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=1260&amp;h=750&amp;dpr=2" target="_blank" rel="noopener" class="onebox">
+        <img src="https://images.pexels.com/photos/1525041/pexels-photo-1525041.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=1260&amp;h=750&amp;dpr=2" width="690" height="459">
+        </a>
+        </p>
+      HTML
+
+      expect(extract_urls(html)).to eq(["https://example.com"])
+    end
+
     it "should lazyYT videos" do
       expect(extract_urls("<div class=\"lazyYT\" data-youtube-id=\"yXEuEUQIP3Q\" data-youtube-title=\"Mister Rogers defending PBS to the US Senate\" data-width=\"480\" data-height=\"270\" data-parameters=\"feature=oembed&amp;wmode=opaque\"></div>")).to eq(["https://www.youtube.com/watch?v=yXEuEUQIP3Q"])
     end

@@ -429,7 +429,7 @@ const User = RestModel.extend({
   changePassword() {
     return ajax("/session/forgot_password", {
       dataType: "json",
-      data: { login: this.username },
+      data: { login: this.email || this.username },
       type: "POST",
     });
   },

@@ -13,7 +13,7 @@ import { forceMobile, resetMobile } from "discourse/lib/mobile";
 import { getApplication, getContext, settled } from "@ember/test-helpers";
 import { getOwner } from "discourse-common/lib/get-owner";
 import { later, run } from "@ember/runloop";
-import { moduleFor, setupApplicationTest } from "ember-qunit";
+import { setupApplicationTest } from "ember-qunit";
 import { Promise } from "rsvp";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
@@ -25,7 +25,6 @@ import { flushMap } from "discourse/services/store";
 import { initSearchData } from "discourse/widgets/search-menu";
 import { resetPostMenuExtraButtons } from "discourse/widgets/post-menu";
 import { isEmpty } from "@ember/utils";
-import { mapRoutes } from "discourse/mapping-router";
 import { resetCustomPostMessageCallbacks } from "discourse/controllers/topic";
 import { resetDecorators } from "discourse/widgets/widget";
 import { resetCache as resetOneboxCache } from "pretty-text/oneboxer";
@@ -63,6 +62,16 @@ const LEGACY_ENV = !setupApplicationTest;
 
 export function currentUser() {
   return User.create(sessionFixtures["/session/current.json"].current_user);
+}
+
+let _initialized = new Set();
+
+export function testsInitialized() {
+  _initialized.add(QUnit.config.current.testId);
+}
+
+export function testsTornDown() {
+  _initialized.delete(QUnit.config.current.testId);
 }
 
 export function updateCurrentUser(properties) {
@@ -118,18 +127,56 @@ export function applyPretender(name, server, helper) {
   }
 }
 
-export function controllerModule(name, args = {}) {
-  moduleFor(name, name, {
-    setup() {
-      this.registry.register("router:main", mapRoutes());
-      let controller = this.subject();
-      controller.siteSettings = currentSettings();
-      if (args.setupController) {
-        args.setupController(controller);
-      }
-    },
-    needs: args.needs,
-  });
+// Add clean up code here to run after every test
+function testCleanup(container, app) {
+  if (_initialized.has(QUnit.config.current.testId)) {
+    if (!app) {
+      app = getApplication();
+    }
+    app._runInitializer("instanceInitializers", (_, initializer) => {
+      initializer.teardown?.();
+    });
+
+    app._runInitializer("initializers", (_, initializer) => {
+      initializer.teardown?.(container);
+    });
+  }
+
+  flushMap();
+  localStorage.clear();
+  User.resetCurrent();
+  resetExtraClasses();
+  clearOutletCache();
+  clearHTMLCache();
+  clearRewrites();
+  initSearchData();
+  resetDecorators();
+  resetPostCookedDecorators();
+  resetPluginOutletDecorators();
+  resetTopicTitleDecorators();
+  resetUsernameDecorators();
+  resetOneboxCache();
+  resetCustomPostMessageCallbacks();
+  resetUserSearchCache();
+  resetCardClickListenerSelector();
+  resetComposerCustomizations();
+  resetQuickSearchRandomTips();
+  resetPostMenuExtraButtons();
+  clearNavItems();
+  setTopicList(null);
+  _clearSnapshots();
+  cleanUpComposerUploadHandler();
+  cleanUpComposerUploadMarkdownResolver();
+  cleanUpComposerUploadPreProcessor();
+  clearTopicFooterDropdowns();
+  clearTopicFooterButtons();
+  clearDesktopNotificationHandlers();
+  resetLastEditNotificationClick();
+  clearAuthMethods();
+  setTestPresence(true);
+  if (!LEGACY_ENV) {
+    clearPresenceCallbacks();
+  }
 }
 
 export function discourseModule(name, options) {
@@ -147,6 +194,7 @@ export function discourseModule(name, options) {
         this.siteSettings = currentSettings();
         clearResolverOptions();
       });
+      hooks.afterEach(() => testCleanup(this.container));
 
       this.getController = function (controllerName, properties) {
         let controller = this.container.lookup(`controller:${controllerName}`);
@@ -172,14 +220,11 @@ export function discourseModule(name, options) {
     beforeEach() {
       this.container = getOwner(this);
       this.siteSettings = currentSettings();
-      if (options && options.beforeEach) {
-        options.beforeEach.call(this);
-      }
+      options?.beforeEach?.call(this);
     },
     afterEach() {
-      if (options && options.afterEach) {
-        options.afterEach.call(this);
-      }
+      options?.afterEach?.call(this);
+      testCleanup(this.container);
     },
   });
 }
@@ -267,52 +312,8 @@ export function acceptance(name, optionsOrCallback) {
     afterEach() {
       resetMobile();
       let app = getApplication();
-      if (options && options.afterEach) {
-        options.afterEach.call(this);
-      }
-      flushMap();
-      localStorage.clear();
-      User.resetCurrent();
-      resetExtraClasses();
-      clearOutletCache();
-      clearHTMLCache();
-      clearRewrites();
-      initSearchData();
-      resetDecorators();
-      resetPostCookedDecorators();
-      resetPluginOutletDecorators();
-      resetTopicTitleDecorators();
-      resetUsernameDecorators();
-      resetOneboxCache();
-      resetCustomPostMessageCallbacks();
-      resetUserSearchCache();
-      resetCardClickListenerSelector();
-      resetComposerCustomizations();
-      resetQuickSearchRandomTips();
-      resetPostMenuExtraButtons();
-      clearNavItems();
-      setTopicList(null);
-      _clearSnapshots();
-      cleanUpComposerUploadHandler();
-      cleanUpComposerUploadMarkdownResolver();
-      cleanUpComposerUploadPreProcessor();
-      clearTopicFooterDropdowns();
-      clearTopicFooterButtons();
-      clearDesktopNotificationHandlers();
-      resetLastEditNotificationClick();
-      clearAuthMethods();
-      setTestPresence(true);
-      if (!LEGACY_ENV) {
-        clearPresenceCallbacks();
-      }
-
-      app._runInitializer("instanceInitializers", (_, initializer) => {
-        initializer.teardown?.();
-      });
-
-      app._runInitializer("initializers", (_, initializer) => {
-        initializer.teardown?.(this.container);
-      });
+      options?.afterEach?.call(this);
+      testCleanup(this.container, app);
 
       if (LEGACY_ENV) {
         app.__registeredObjects__ = false;

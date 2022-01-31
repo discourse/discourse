@@ -43,6 +43,9 @@ pt_BR:
       show-results:
         title: "Mostrar o resultado da enquete"
         label: "Mostrar resultados"
+      remove-vote:
+        title: "Remover seu voto"
+        label: "Remover voto"
       hide-results:
         title: "Voltar para os seus votos"
         label: "Mostrar voto"

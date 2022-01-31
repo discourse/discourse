@@ -51,7 +51,6 @@ class InlineOneboxer
 
     always_allow = SiteSetting.enable_inline_onebox_on_all_domains
     allowed_domains = SiteSetting.allowed_inline_onebox_domains&.split('|') unless always_allow
-    blocked_domains = SiteSetting.blocked_onebox_domains&.split('|')
 
     if always_allow || allowed_domains
       uri = begin
@@ -62,7 +61,7 @@ class InlineOneboxer
       if uri.present? &&
         uri.hostname.present? &&
         (always_allow || allowed_domains.include?(uri.hostname)) &&
-        !blocked_domains.include?(uri.hostname)
+        !domain_is_blocked?(uri.hostname)
         title = RetrieveTitle.crawl(url)
         title = nil if title && title.length < MIN_TITLE_LENGTH
         return onebox_for(url, title, opts)
@@ -73,6 +72,12 @@ class InlineOneboxer
   end
 
   private
+
+  def self.domain_is_blocked?(hostname)
+    SiteSetting.blocked_onebox_domains&.split('|').any? do |blocked|
+      hostname == blocked || hostname.end_with?(".#{blocked}")
+    end
+  end
 
   def self.onebox_for(url, title, opts)
     title = title && Emoji.gsub_emoji_to_unicode(title)

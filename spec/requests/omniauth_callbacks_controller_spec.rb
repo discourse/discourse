@@ -411,6 +411,20 @@ RSpec.describe Users::OmniauthCallbacksController do
         expect(user.confirm_password?("securepassword")).to eq(false)
       end
 
+      it "should work if the user has no email_tokens, and an invite" do
+        # Confirming existing email_tokens has a side effect of redeeming invites.
+        # Pretend we don't have any email_tokens
+        user.email_tokens.destroy_all
+
+        invite = Fabricate(:invite, invited_by: Fabricate(:admin))
+        invite.update_column(:email, user.email) # (avoid validation)
+
+        get "/auth/google_oauth2/callback.json"
+        expect(response.status).to eq(302)
+
+        expect(invite.reload.invalidated_at).not_to eq(nil)
+      end
+
       it "should update name/username/email when SiteSetting.auth_overrides_* are enabled" do
         SiteSetting.email_editable = false
         SiteSetting.auth_overrides_email = true

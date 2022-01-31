@@ -7,7 +7,6 @@ import { createWidget } from "discourse/widgets/widget";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { h } from "virtual-dom";
 import { iconNode } from "discourse-common/lib/icon-library";
-import { isTesting } from "discourse-common/config/environment";
 import transformPost from "discourse/lib/transform-post";
 
 let transformCallbacks = null;
@@ -25,19 +24,23 @@ export function addPostTransformCallback(callback) {
   transformCallbacks.push(callback);
 }
 
-const CLOAKING_ENABLED = !isTesting();
+let _enabled = true;
 const DAY = 1000 * 60 * 60 * 24;
 
 const _dontCloak = {};
 let _cloaked = {};
 let _heights = {};
 
+export function disableCloaking() {
+  _enabled = false;
+}
+
 export function preventCloak(postId) {
   _dontCloak[postId] = true;
 }
 
 export function cloak(post, component) {
-  if (!CLOAKING_ENABLED || _cloaked[post.id] || _dontCloak[post.id]) {
+  if (!_enabled || _cloaked[post.id] || _dontCloak[post.id]) {
     return;
   }
 
@@ -50,7 +53,7 @@ export function cloak(post, component) {
 }
 
 export function uncloak(post, component) {
-  if (!CLOAKING_ENABLED || !_cloaked[post.id]) {
+  if (!_enabled || !_cloaked[post.id]) {
     return;
   }
   _cloaked[post.id] = null;
