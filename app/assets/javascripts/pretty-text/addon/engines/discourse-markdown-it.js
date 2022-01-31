@@ -19,7 +19,13 @@ function deprecate(feature, name) {
   };
 }
 
-function createHelper(
+// We have some custom extensions and extension points for markdown-it, including
+// the helper (passed in via setup) that has registerOptions, registerPlugin etc.
+// as well as our postProcessText rule to replace text with a regex.
+//
+// Take a look at https://meta.discourse.org/t/developers-guide-to-markdown-extensions/66023
+// for more detailed information.
+function _createHelper(
   featureName,
   opts,
   optionCallbacks,
@@ -60,7 +66,7 @@ function createHelper(
     pluginCallbacks.push([featureName, callback]);
   };
 
-  helper.buildCustomMarkdownEngine = (callback) => {
+  helper.requestCustomMarkdownCookFunction = (callback) => {
     customMarkdownEngineCallbacks.push([featureName, callback]);
   };
 
@@ -103,21 +109,26 @@ class Ruler {
 }
 
 // block bb code ruler for parsing of quotes / code / polls
-function setupBlockBBCode(md) {
+function _setupBlockBBCode(md) {
   md.block.bbcode = { ruler: new Ruler() };
 }
 
-function setupInlineBBCode(md) {
+// inline bbcode ruler for parsing of spoiler tags, discourse-chart etc
+function _setupInlineBBCode(md) {
   md.inline.bbcode = { ruler: new Ruler() };
 }
 
-function setupTextPostProcessRuler(md) {
+// rule for text replacement via regex, used for @mentions, category hashtags, etc.
+function _setupTextPostProcessRuler(md) {
   const TextPostProcessRuler = requirejs(
     "pretty-text/engines/discourse-markdown/text-post-process"
   ).TextPostProcessRuler;
   md.core.textPostProcess = { ruler: new TextPostProcessRuler() };
 }
 
+// hoists html_raw tokens out of the render flow and replaces them
+// with a GUID. this GUID is then replaced with the final raw HTML
+// content in unhoistForCooked
 function renderHoisted(tokens, idx, options) {
   const content = tokens[idx].content;
   if (content && content.length > 0) {
@@ -129,34 +140,21 @@ function renderHoisted(tokens, idx, options) {
   }
 }
 
-function setupUrlDecoding(md) {
+function _setupUrlDecoding(md) {
   // this fixed a subtle issue where %20 is decoded as space in
   // automatic urls
   md.utils.lib.mdurl.decode.defaultChars = ";/?:@&=+$,# ";
 }
 
-function setupHoister(md) {
+// html_raw tokens, funnily enough, render raw HTML via renderHoisted and
+// unhoistForCooked
+function _setupHoister(md) {
   md.renderer.rules.html_raw = renderHoisted;
 }
 
-export function extractDataAttribute(str) {
-  let sep = str.indexOf("=");
-  if (sep === -1) {
-    return null;
-  }
-
-  const key = `data-${str.substr(0, sep)}`.toLowerCase();
-  if (!/^[A-Za-z]+[\w\-\:\.]*$/.test(key)) {
-    return null;
-  }
-
-  const value = str.substr(sep + 1);
-  return [key, value];
-}
-
-// videoHTML and audioHTML follow the same HTML syntax
+// _videoHTML and _audioHTML follow the same HTML syntax
 // as oneboxer.rb when dealing with these formats
-function videoHTML(token) {
+function _videoHTML(token) {
   const src = token.attrGet("src");
   const origSrc = token.attrGet("data-orig-src");
   const dataOrigSrcAttr = origSrc !== null ? `data-orig-src="${origSrc}"` : "";
@@ -168,7 +166,7 @@ function videoHTML(token) {
   </div>`;
 }
 
-function audioHTML(token) {
+function _audioHTML(token) {
   const src = token.attrGet("src");
   const origSrc = token.attrGet("data-orig-src");
   const dataOrigSrcAttr = origSrc !== null ? `data-orig-src="${origSrc}"` : "";
@@ -179,7 +177,7 @@ function audioHTML(token) {
 }
 
 const IMG_SIZE_REGEX = /^([1-9]+[0-9]*)x([1-9]+[0-9]*)(\s*,\s*(x?)([1-9][0-9]{0,2}?)([%x]?))?$/;
-function renderImageOrPlayableMedia(tokens, idx, options, env, slf) {
+function _renderImageOrPlayableMedia(tokens, idx, options, env, slf) {
   const token = tokens[idx];
   const alt = slf.renderInlineAsText(token.children, options, env);
   const split = alt.split("|");
@@ -197,10 +195,10 @@ function renderImageOrPlayableMedia(tokens, idx, options, env, slf) {
         <span class="placeholder-icon video"></span>
       </div>`;
     } else {
-      return videoHTML(token);
+      return _videoHTML(token);
     }
   } else if (split[1] === "audio") {
-    return audioHTML(token);
+    return _audioHTML(token);
   }
 
   // parsing ![myimage|500x300]() or ![myimage|75%]() or ![myimage|500x300, 75%]
@@ -261,11 +259,11 @@ function renderImageOrPlayableMedia(tokens, idx, options, env, slf) {
 // we have taken over the ![]() syntax in markdown to
 // be able to render a video or audio URL as well as the
 // image using |video and |audio in the text inside []
-function setupImageAndPlayableMediaRenderer(md) {
-  md.renderer.rules.image = renderImageOrPlayableMedia;
+function _setupImageAndPlayableMediaRenderer(md) {
+  md.renderer.rules.image = _renderImageOrPlayableMedia;
 }
 
-function renderAttachment(tokens, idx, options, env, slf) {
+function _renderAttachment(tokens, idx, options, env, slf) {
   const linkToken = tokens[idx];
   const textToken = tokens[idx + 1];
 
@@ -289,8 +287,154 @@ function renderAttachment(tokens, idx, options, env, slf) {
   return slf.renderToken(tokens, idx, options);
 }
 
-function setupAttachments(md) {
-  md.renderer.rules.link_open = renderAttachment;
+function _setupAttachments(md) {
+  md.renderer.rules.link_open = _renderAttachment;
+}
+
+function _buildCustomMarkdownCookFunction(engineOpts, defaultEngineOpts) {
+  // everything except the engine for opts can just point to the other
+  // opts references, they do not change and we don't need to worry about
+  // mutating them. note that this may need to be updated when additional
+  // opts are added to the pipeline
+  const newOpts = {};
+  newOpts.allowListed = defaultEngineOpts.allowListed;
+  newOpts.pluginCallbacks = defaultEngineOpts.pluginCallbacks;
+  newOpts.sanitizer = defaultEngineOpts.sanitizer;
+  newOpts.discourse = {};
+  const featureConfig = cloneJSON(defaultEngineOpts.discourse.features);
+
+  // everything from the discourse part of defaultEngineOpts can be cloned except
+  // the features, because these can be a limited subset and we don't want to
+  // change the original object reference
+  for (const [key, value] of Object.entries(defaultEngineOpts.discourse)) {
+    if (key !== "features") {
+      newOpts.discourse[key] = value;
+    }
+  }
+
+  if (engineOpts.featuresOverride !== undefined) {
+    _overrideMarkdownFeatures(featureConfig, engineOpts.featuresOverride);
+  }
+  newOpts.discourse.features = featureConfig;
+
+  const markdownitOpts = {
+    discourse: newOpts.discourse,
+    html: defaultEngineOpts.engine.options.html,
+    breaks: defaultEngineOpts.engine.options.breaks,
+    xhtmlOut: defaultEngineOpts.engine.options.xhtmlOut,
+    linkify: defaultEngineOpts.engine.options.linkify,
+    typographer: defaultEngineOpts.engine.options.typographer,
+  };
+  newOpts.engine = _createMarkdownItEngineWithOpts(
+    markdownitOpts,
+    engineOpts.markdownItRules
+  );
+
+  // we have to do this to make sure plugin callbacks, allow list, and helper
+  // functions are all set up correctly for the new engine
+  _setupMarkdownEngine(newOpts, featureConfig);
+
+  // we don't need the whole engine as a consumer, just a cook function
+  // will do
+  return function customRenderFn(contentToRender) {
+    return newOpts.discourse
+      .sanitizer(newOpts.engine.render(contentToRender))
+      .trim();
+  };
+}
+
+function _createMarkdownItEngineWithOpts(markdownitOpts, ruleOverrides) {
+  if (ruleOverrides !== undefined) {
+    // Preset for "zero", https://github.com/markdown-it/markdown-it/blob/master/lib/presets/zero.js
+    return window.markdownit("zero", markdownitOpts).enable(ruleOverrides);
+  }
+  return window.markdownit(markdownitOpts);
+}
+
+function _overrideMarkdownFeatures(features, featureOverrides) {
+  if (featureOverrides !== undefined) {
+    Object.keys(features).forEach((feature) => {
+      features[feature] = featureOverrides.includes(feature);
+    });
+  }
+}
+
+function _setupMarkdownEngine(opts, featureConfig) {
+  const quotation_marks =
+    opts.discourse.limitedSiteSettings.markdownTypographerQuotationMarks;
+  if (quotation_marks) {
+    opts.engine.options.quotes = quotation_marks.split("|");
+  }
+
+  opts.engine.linkify.tlds(
+    (opts.discourse.limitedSiteSettings.markdownLinkifyTlds || "").split("|")
+  );
+
+  _setupUrlDecoding(opts.engine);
+  _setupHoister(opts.engine);
+  _setupImageAndPlayableMediaRenderer(opts.engine);
+  _setupAttachments(opts.engine);
+  _setupBlockBBCode(opts.engine);
+  _setupInlineBBCode(opts.engine);
+  _setupTextPostProcessRuler(opts.engine);
+
+  opts.pluginCallbacks.forEach(([feature, callback]) => {
+    if (featureConfig[feature]) {
+      opts.engine.use(callback);
+    }
+  });
+
+  // top level markdown it notifier
+  opts.markdownIt = true;
+  opts.setup = true;
+
+  if (!opts.discourse.sanitizer || !opts.sanitizer) {
+    const allowLister = new AllowLister(opts.discourse);
+
+    opts.allowListed.forEach(([feature, info]) => {
+      allowLister.allowListFeature(feature, info);
+    });
+
+    opts.sanitizer = opts.discourse.sanitizer = !!opts.discourse.sanitize
+      ? (a) => sanitize(a, allowLister)
+      : (a) => a;
+  }
+}
+
+function _unhoistForCooked(hoisted, cooked) {
+  const keys = Object.keys(hoisted);
+  if (keys.length) {
+    let found = true;
+
+    const unhoist = function (key) {
+      cooked = cooked.replace(new RegExp(key, "g"), function () {
+        found = true;
+        return hoisted[key];
+      });
+    };
+
+    while (found) {
+      found = false;
+      keys.forEach(unhoist);
+    }
+  }
+
+  return cooked;
+}
+
+export function extractDataAttribute(str) {
+  let sep = str.indexOf("=");
+  if (sep === -1) {
+    return null;
+  }
+
+  const key = `data-${str.substr(0, sep)}`.toLowerCase();
+  if (!/^[A-Za-z]+[\w\-\:\.]*$/.test(key)) {
+    return null;
+  }
+
+  const value = str.substr(sep + 1);
+  return [key, value];
 }
 
 let Helpers;
@@ -319,6 +463,9 @@ export function setup(opts, siteSettings, state) {
   let features = [];
   let allowListed = [];
 
+  // all of the modules under discourse-markdown or markdown-it
+  // directories are considered additional markdown "features" which
+  // may define their own rules
   Object.keys(require._eak_seen).forEach((entry) => {
     if (check.test(entry)) {
       const module = requirejs(entry);
@@ -332,10 +479,10 @@ export function setup(opts, siteSettings, state) {
 
   features
     .sort((a, b) => a.priority - b.priority)
-    .forEach((f) => {
-      f.setup(
-        createHelper(
-          f.id,
+    .forEach((markdownFeature) => {
+      markdownFeature.setup(
+        _createHelper(
+          markdownFeature.id,
           opts,
           optionCallbacks,
           pluginCallbacks,
@@ -361,10 +508,8 @@ export function setup(opts, siteSettings, state) {
     }
   });
 
-  if (opts.featuresOverride) {
-    Object.keys(opts.features).forEach((feature) => {
-      opts.features[feature] = opts.featuresOverride.includes(feature);
-    });
+  if (opts.featuresOverride !== undefined) {
+    _overrideMarkdownFeatures(opts.features, opts.featuresOverride);
   }
 
   let copy = {};
@@ -400,159 +545,33 @@ export function setup(opts, siteSettings, state) {
     typographer: opts.discourse.limitedSiteSettings.enableMarkdownTypographer,
   };
 
-  if (opts.discourse.markdownItRules !== undefined) {
-    opts.engine = zeroRuleMarkdownEngine(
-      markdownitOpts,
-      opts.discourse.markdownItRules
-    );
-  } else {
-    opts.engine = window.markdownit(markdownitOpts);
-  }
+  opts.engine = _createMarkdownItEngineWithOpts(
+    markdownitOpts,
+    opts.discourse.markdownItRules
+  );
 
   opts.pluginCallbacks = pluginCallbacks;
   opts.allowListed = allowListed;
 
-  setupMarkdownEngine(opts, opts.discourse.features);
+  _setupMarkdownEngine(opts, opts.discourse.features);
 
   customMarkdownEngineCallbacks.forEach(([, callback]) => {
-    callback((engineOpts, afterBuild) =>
-      afterBuild(buildCustomMarkdownEngine(engineOpts, opts))
+    callback(opts, (engineOpts, afterBuild) =>
+      afterBuild(_buildCustomMarkdownCookFunction(engineOpts, opts))
     );
   });
-}
-
-function buildCustomMarkdownEngine(engineOpts, defaultEngineOpts) {
-  engineOpts.featuresOverride = engineOpts.featuresOverride || [];
-  engineOpts.markdownItRules = engineOpts.markdownItRules || [];
-
-  // everything except the engine for opts can just point to the other
-  // opts references, they do not change and we don't need to worry about
-  // mutating them
-  const newOpts = {};
-  newOpts.allowListed = defaultEngineOpts.allowListed;
-  newOpts.pluginCallbacks = defaultEngineOpts.pluginCallbacks;
-  newOpts.sanitizer = defaultEngineOpts.sanitizer;
-  newOpts.discourse = {};
-  const featureConfig = cloneJSON(defaultEngineOpts.discourse.features);
-
-  // everything from the discourse part of defaultEngineOpts can be cloned except
-  // the features, because these can be a limited subset and we
-  // don't want to change the original object reference
-  for (const [key, value] of Object.entries(defaultEngineOpts.discourse)) {
-    if (key !== "features") {
-      newOpts.discourse[key] = value;
-    }
-  }
-
-  Object.keys(featureConfig).forEach((feature) => {
-    featureConfig[feature] = engineOpts.featuresOverride.includes(feature);
-  });
-  newOpts.discourse.features = featureConfig;
-
-  const markdownitOpts = {
-    discourse: newOpts.discourse,
-    html: defaultEngineOpts.engine.options.html,
-    breaks: defaultEngineOpts.engine.options.breaks,
-    xhtmlOut: defaultEngineOpts.engine.options.xhtmlOut,
-    linkify: defaultEngineOpts.engine.options.linkify,
-    typographer: defaultEngineOpts.engine.options.typographer,
-  };
-  if (engineOpts.markdownItRules.length > 0) {
-    newOpts.engine = zeroRuleMarkdownEngine(
-      markdownitOpts,
-      engineOpts.markdownItRules
-    );
-  } else {
-    newOpts.engine = window.markdownit(markdownitOpts);
-  }
-
-  // we have to do this again to make sure plugin callbacks
-  // are run etc.
-  setupMarkdownEngine(newOpts, featureConfig);
-
-  // we don't need the whole engine as a consumer, just a cook function
-  // will do
-  return function customRenderFn(contentToRender) {
-    return newOpts.discourse
-      .sanitizer(newOpts.engine.render(contentToRender))
-      .trim();
-  };
-}
-
-function setupMarkdownEngine(opts, featureConfig) {
-  const quotation_marks =
-    opts.discourse.limitedSiteSettings.markdownTypographerQuotationMarks;
-  if (quotation_marks) {
-    opts.engine.options.quotes = quotation_marks.split("|");
-  }
-
-  opts.engine.linkify.tlds(
-    (opts.discourse.limitedSiteSettings.markdownLinkifyTlds || "").split("|")
-  );
-
-  setupUrlDecoding(opts.engine);
-  setupHoister(opts.engine);
-  setupImageAndPlayableMediaRenderer(opts.engine);
-  setupAttachments(opts.engine);
-  setupBlockBBCode(opts.engine);
-  setupInlineBBCode(opts.engine);
-  setupTextPostProcessRuler(opts.engine);
-
-  opts.pluginCallbacks.forEach(([feature, callback]) => {
-    if (featureConfig[feature]) {
-      opts.engine.use(callback);
-    }
-  });
-
-  // top level markdown it notifier
-  opts.markdownIt = true;
-  opts.setup = true;
-
-  if (!opts.discourse.sanitizer || !opts.sanitizer) {
-    const allowLister = new AllowLister(opts.discourse);
-
-    opts.allowListed.forEach(([feature, info]) => {
-      allowLister.allowListFeature(feature, info);
-    });
-
-    opts.sanitizer = opts.discourse.sanitizer = !!opts.discourse.sanitize
-      ? (a) => sanitize(a, allowLister)
-      : (a) => a;
-  }
-}
-
-function zeroRuleMarkdownEngine(markdownitOpts, markdownItRuleSubset) {
-  // Preset for "zero", https://github.com/markdown-it/markdown-it/blob/master/lib/presets/zero.js
-  return window.markdownit("zero", markdownitOpts).enable(markdownItRuleSubset);
 }
 
 export function cook(raw, opts) {
   // we still have to hoist html_raw nodes so they bypass the allowlister
   // this is the case for oneboxes
   let hoisted = {};
-
   opts.discourse.hoisted = hoisted;
 
   const rendered = opts.engine.render(raw);
   let cooked = opts.discourse.sanitizer(rendered).trim();
-
-  const keys = Object.keys(hoisted);
-  if (keys.length) {
-    let found = true;
-
-    const unhoist = function (key) {
-      cooked = cooked.replace(new RegExp(key, "g"), function () {
-        found = true;
-        return hoisted[key];
-      });
-    };
-
-    while (found) {
-      found = false;
-      keys.forEach(unhoist);
-    }
-  }
-
+  cooked = _unhoistForCooked(hoisted, cooked);
   delete opts.discourse.hoisted;
+
   return cooked;
 }
