@@ -86,6 +86,8 @@ module ImportScripts::Mbox
             end
           end
 
+          from_email = from_email.sub(/^(.*)=/, '') if @settings.elide_equals_in_addresses
+
           body, elided, format = receiver.select_body
           reply_message_ids = extract_reply_message_ids(parsed_email)
 
