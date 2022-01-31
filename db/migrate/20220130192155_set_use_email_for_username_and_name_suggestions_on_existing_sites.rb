@@ -9,7 +9,7 @@ class SetUseEmailForUsernameAndNameSuggestionsOnExistingSites < ActiveRecord::Mi
       LIMIT 1
     SQL
 
-    # keep tagging disabled for existing sites
+    # make setting enabled for existing sites
     if result.first['created_at'].to_datetime < 1.hour.ago
       execute <<~SQL
         INSERT INTO site_settings(name, data_type, value, created_at, updated_at)
