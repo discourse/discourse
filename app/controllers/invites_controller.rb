@@ -230,7 +230,7 @@ class InvitesController < ApplicationController
       if params[:send_email]
         if invite.emailed_status != Invite.emailed_status_types[:pending]
           begin
-            eateLimiter.new(current_user, "resend-invite-per-hour", 10, 1.hour).performed!
+            RateLimiter.new(current_user, "resend-invite-per-hour", 10, 1.hour).performed!
           rescue RateLimiter::LimitExceeded
             return render_json_error(I18n.t("rate_limiter.slow_down"))
           end
