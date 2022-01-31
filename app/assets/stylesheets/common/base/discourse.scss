@@ -230,6 +230,14 @@ input {
   }
 }
 
+input[type="search"] {
+  &::-webkit-search-cancel-button,
+  &::-webkit-search-decoration {
+    -webkit-appearance: none;
+    appearance: none;
+  }
+}
+
 // Fixes Safari height inconsistency
 ::-webkit-datetime-edit {
   display: inline;
