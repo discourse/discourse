@@ -110,7 +110,6 @@ describe RetrieveTitle do
       stub_request(:get, "https://wikipedia.com/amazing")
         .to_return(status: 200, body: "<html><title>very amazing</title>", headers: {})
 
-      IPSocket.stubs(:getaddress).returns('100.2.3.4')
       expect(RetrieveTitle.crawl("http://foobar.com/amazing")).to eq(nil)
     end
 
@@ -126,7 +125,6 @@ describe RetrieveTitle do
       stub_request(:get, "https://cat.com/meow")
         .to_return(status: 200, body: "<html><title>very amazing</title>", headers: {})
 
-      IPSocket.stubs(:getaddress).returns('100.2.3.4')
       expect(RetrieveTitle.crawl("http://foobar.com/amazing")).to eq("very amazing")
     end
   end
