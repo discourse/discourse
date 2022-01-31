@@ -30,7 +30,7 @@ function _createHelper(
   opts,
   optionCallbacks,
   pluginCallbacks,
-  customMarkdownEngineCallbacks,
+  customMarkdownCookFnCallbacks,
   getOptions,
   allowListed
 ) {
@@ -67,7 +67,7 @@ function _createHelper(
   };
 
   helper.requestCustomMarkdownCookFunction = (callback) => {
-    customMarkdownEngineCallbacks.push([featureName, callback]);
+    customMarkdownCookFnCallbacks.push([featureName, callback]);
   };
 
   return helper;
@@ -452,7 +452,7 @@ export function setup(opts, siteSettings, state) {
 
   let optionCallbacks = [];
   let pluginCallbacks = [];
-  let customMarkdownEngineCallbacks = [];
+  let customMarkdownCookFnCallbacks = [];
 
   // ideally I would like to change the top level API a bit, but in the mean time this will do
   let getOptions = {
@@ -486,7 +486,7 @@ export function setup(opts, siteSettings, state) {
           opts,
           optionCallbacks,
           pluginCallbacks,
-          customMarkdownEngineCallbacks,
+          customMarkdownCookFnCallbacks,
           getOptions,
           allowListed
         )
@@ -555,7 +555,7 @@ export function setup(opts, siteSettings, state) {
 
   _setupMarkdownEngine(opts, opts.discourse.features);
 
-  customMarkdownEngineCallbacks.forEach(([, callback]) => {
+  customMarkdownCookFnCallbacks.forEach(([, callback]) => {
     callback(opts, (engineOpts, afterBuild) =>
       afterBuild(_buildCustomMarkdownCookFunction(engineOpts, opts))
     );

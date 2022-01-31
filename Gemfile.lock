@@ -201,12 +201,13 @@ GEM
       uri_template (~> 0.7)
     jwt (2.3.0)
     kgio (2.11.4)
-    libv8-node (16.10.0.0)
-    libv8-node (16.10.0.0-aarch64-linux)
-    libv8-node (16.10.0.0-arm64-darwin)
-    libv8-node (16.10.0.0-x86_64-darwin)
-    libv8-node (16.10.0.0-x86_64-darwin-19)
-    libv8-node (16.10.0.0-x86_64-linux)
+    libv8-node (15.14.0.1)
+    libv8-node (15.14.0.1-aarch64-linux)
+    libv8-node (15.14.0.1-arm64-darwin-20)
+    libv8-node (15.14.0.1-x86_64-darwin-18)
+    libv8-node (15.14.0.1-x86_64-darwin-19)
+    libv8-node (15.14.0.1-x86_64-darwin-20)
+    libv8-node (15.14.0.1-x86_64-linux)
     listen (3.7.1)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
@@ -232,8 +233,8 @@ GEM
     method_source (1.0.0)
     mini_mime (1.1.2)
     mini_portile2 (2.6.1)
-    mini_racer (0.6.1)
-      libv8-node (~> 16.10.0.0)
+    mini_racer (0.4.0)
+      libv8-node (~> 15.14.0.0)
     mini_scheduler (0.13.0)
       sidekiq (>= 4.2.3)
     mini_sql (1.1.3)
@@ -548,7 +549,7 @@ DEPENDENCIES
   memory_profiler
   message_bus
   mini_mime
-  mini_racer
+  mini_racer (= 0.4.0)
   mini_scheduler
   mini_sql
   mini_suffix
