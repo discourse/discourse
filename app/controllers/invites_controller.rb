@@ -230,7 +230,7 @@ class InvitesController < ApplicationController
       if params[:send_email]
         if invite.emailed_status != Invite.emailed_status_types[:pending]
           begin
-            RateLimiter.new(current_user, "resend-invite-per-hour", 10, 1.hour).performed!
+            eateLimiter.new(current_user, "resend-invite-per-hour", 10, 1.hour).performed!
           rescue RateLimiter::LimitExceeded
             return render_json_error(I18n.t("rate_limiter.slow_down"))
           end
@@ -360,6 +360,12 @@ class InvitesController < ApplicationController
 
   def resend_all_invites
     guardian.ensure_can_resend_all_invites!(current_user)
+
+    begin
+      RateLimiter.new(current_user, "bulk-reinvite-per-hour", 1, 1.day).performed!
+    rescue
+      return render_json_error(I18n.t("rate_limiter.slow_down"))
+    end
 
     Invite.pending(current_user)
       .where('invites.email IS NOT NULL')
