@@ -1,5 +1,6 @@
 import {
   MOMENT_MONDAY,
+  MOMENT_SUNDAY,
   laterThisWeek,
   laterToday,
   nextBusinessWeekStart,
@@ -30,7 +31,6 @@ export function defaultShortcutOptions(timezone) {
       label: "time_shortcut.later_today",
       time: laterToday(timezone),
       timeFormatted: laterToday(timezone).format(I18n.t("dates.time")),
-      hidden: true,
     },
     {
       icon: "far-sun",
@@ -47,13 +47,13 @@ export function defaultShortcutOptions(timezone) {
       timeFormatted: laterThisWeek(timezone).format(
         I18n.t("dates.time_short_day")
       ),
-      hidden: true,
     },
     {
       icon: "briefcase",
       id: TIME_SHORTCUT_TYPES.START_OF_NEXT_BUSINESS_WEEK,
       label:
-        now(timezone).day() === MOMENT_MONDAY
+        now(timezone).day() === MOMENT_MONDAY ||
+        now(timezone).day() === MOMENT_SUNDAY
           ? "time_shortcut.start_of_next_business_week_alt"
           : "time_shortcut.start_of_next_business_week",
       time: nextBusinessWeekStart(timezone),
