@@ -25,7 +25,7 @@ discourseModule(
         unbind: () => {},
       };
 
-      this.set('itsatrap', itsatrapStub);
+      this.set("itsatrap", itsatrapStub);
     });
 
     hooks.afterEach(function () {
