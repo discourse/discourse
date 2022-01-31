@@ -88,9 +88,11 @@
               {{topic-dismiss-buttons position="bottom" selectedTopics=selected
               model=model showResetNew=showResetNew showDismissRead=showDismissRead resetNew=(action "resetNew")}}
 
-              {{#footer-message education=footerEducation message=footerMessage}}
-                {{#link-to "tags"}} {{i18n "topic.browse_all_tags"}}{{/link-to}} {{i18n "or"}} {{#link-to "discovery.latest"}}{{i18n "topic.view_latest_topics"}}{{/link-to}}.
-              {{/footer-message}}
+              {{#unless list.canLoadMore}}
+                {{#footer-message education=footerEducation message=footerMessage}}
+                  {{#link-to "tags"}} {{i18n "topic.browse_all_tags"}}{{/link-to}} {{i18n "or"}} {{#link-to "discovery.latest"}}{{i18n "topic.view_latest_topics"}}{{/link-to}}.
+                {{/footer-message}}
+              {{/unless}}
             </footer>
           {{/unless}}
 
