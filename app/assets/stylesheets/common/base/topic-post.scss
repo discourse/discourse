@@ -881,8 +881,14 @@ aside.quote {
   }
 }
 
+.topic-post .row {
+  align-items: flex-start;
+  display: flex;
+}
+
 .topic-body {
   .row {
+    align-items: flex-start;
     display: flex;
   }
 
