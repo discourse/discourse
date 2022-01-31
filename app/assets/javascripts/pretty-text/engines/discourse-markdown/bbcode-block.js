@@ -212,10 +212,7 @@ function applyBBCode(state, startLine, endLine, silent, md) {
 
   let ruleInfo = md.block.bbcode.ruler.getRuleForTag(info.tag);
   if (!ruleInfo) {
-    ruleInfo = md.block.bbcodedatchatboi.ruler.getRuleForTag(info.tag);
-    if (!ruleInfo) {
-      return false;
-    }
+    return false;
   }
 
   rule = ruleInfo.rule;
