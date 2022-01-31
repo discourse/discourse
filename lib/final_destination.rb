@@ -44,9 +44,9 @@ class FinalDestination
     @opts[:max_redirects] ||= 5
     @opts[:lookup_ip] ||= lambda { |host| FinalDestination.lookup_ip(host) }
 
-    @ignored = @opts[:ignore_hostnames] || []
     @limit = @opts[:max_redirects]
 
+    @ignored = []
     if @limit > 0
       ignore_redirects = [Discourse.base_url_no_prefix]
 
