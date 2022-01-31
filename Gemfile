@@ -123,7 +123,7 @@ gem 'sidekiq'
 gem 'mini_scheduler'
 
 gem 'execjs', require: false
-gem 'mini_racer', '0.4.0'
+gem 'mini_racer'
 
 gem 'highline', require: false
 
