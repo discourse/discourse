@@ -15,7 +15,7 @@ import {
   slugify,
   toAsciiPrintable,
 } from "discourse/lib/utilities";
-import { skip, test } from "qunit";
+import { test } from "qunit";
 import Handlebars from "handlebars";
 import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
 
@@ -281,22 +281,5 @@ discourseModule("Unit | Utilities", function () {
         }
       }
     });
-  });
-
-  skip("inCodeBlock - runs fast", function (assert) {
-    const phrase = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
-    const text = `${phrase}\n\n\`\`\`\n${phrase}\n\`\`\`\n\n${phrase}\n\n\`${phrase}\n${phrase}\n\n${phrase}\n\n[code]\n${phrase}\n[/code]\n\n${phrase}\n\n    ${phrase}\n\n\`${phrase}\`\n\n${phrase}`;
-
-    let time = Number.MAX_VALUE;
-    for (let i = 0; i < 10; ++i) {
-      const start = performance.now();
-      inCodeBlock(text, text.length);
-      const end = performance.now();
-      time = Math.min(time, end - start);
-    }
-
-    // This runs in 'keyUp' event handler so it should run as fast as
-    // possible. It should take less than 1ms for the test text.
-    assert.ok(time < 10);
   });
 });

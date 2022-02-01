@@ -16,8 +16,6 @@ discourseModule("Integration | Component | value-list", function (hooks) {
   componentTest("adding a value", {
     template: hbs`{{value-list values=values}}`,
 
-    skip: true,
-
     beforeEach() {
       this.set("values", "vinkas\nosama");
     },
@@ -131,8 +129,6 @@ discourseModule("Integration | Component | value-list", function (hooks) {
     beforeEach() {
       this.set("values", "vinkas|osama");
     },
-
-    skip: true,
 
     async test(assert) {
       await selectKit().expand();

@@ -12,7 +12,7 @@ import {
 import { forceMobile, resetMobile } from "discourse/lib/mobile";
 import { getApplication, getContext, settled } from "@ember/test-helpers";
 import { getOwner } from "discourse-common/lib/get-owner";
-import { later, run } from "@ember/runloop";
+import { run } from "@ember/runloop";
 import { setupApplicationTest } from "ember-qunit";
 import { Promise } from "rsvp";
 import Site from "discourse/models/site";
@@ -433,16 +433,6 @@ QUnit.assert.containsInstance = function (collection, klass, message) {
     message,
   });
 };
-
-export function waitFor(assert, callback, timeout) {
-  timeout = timeout || 500;
-
-  const done = assert.async();
-  later(() => {
-    callback();
-    done();
-  }, timeout);
-}
 
 export async function selectDate(selector, date) {
   return new Promise((resolve) => {

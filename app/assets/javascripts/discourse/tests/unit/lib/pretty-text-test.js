@@ -3,7 +3,7 @@ import {
   applyCachedInlineOnebox,
   deleteCachedInlineOnebox,
 } from "pretty-text/inline-oneboxer";
-import QUnit, { module, skip, test } from "qunit";
+import QUnit, { module, test } from "qunit";
 import Post from "discourse/models/post";
 import { buildQuote } from "discourse/lib/quote";
 import { deepMerge } from "discourse-common/lib/object";
@@ -54,20 +54,6 @@ QUnit.assert.cookedPara = function (input, expected, message) {
 };
 
 module("Unit | Utility | pretty-text", function () {
-  skip("Pending Engine fixes and spec fixes", function (assert) {
-    assert.cooked(
-      "Derpy: http://derp.com?_test_=1",
-      '<p>Derpy: <a href=https://derp.com?_test_=1"http://derp.com?_test_=1">http://derp.com?_test_=1</a></p>',
-      "works with underscores in urls"
-    );
-
-    assert.cooked(
-      "**a*_b**",
-      "<p><strong>a*_b</strong></p>",
-      "allows for characters within bold"
-    );
-  });
-
   test("buildOptions", function (assert) {
     assert.ok(
       buildOptions({ siteSettings: { enable_emoji: true } }).discourse.features

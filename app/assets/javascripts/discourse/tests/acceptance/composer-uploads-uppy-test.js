@@ -9,7 +9,8 @@ import bootbox from "bootbox";
 import { authorizedExtensions } from "discourse/lib/uploads";
 import { click, fillIn, visit } from "@ember/test-helpers";
 import I18n from "I18n";
-import { skip, test } from "qunit";
+import { test } from "qunit";
+import { Promise } from "rsvp";
 
 function pretender(server, helper) {
   server.post("/uploads/lookup-urls", () => {
@@ -132,28 +133,17 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
     appEvents.trigger("composer:add-files", [jsonFile]);
   });
 
-  // TODO: Had to comment this out for now; it works fine in Ember CLI but lagging
-  // UI updates sink it for the old Ember for some reason. Will re-enable
-  // when we make Ember CLI the primary.
-
-  skip("cancelling uploads clears the placeholders out", async function (assert) {
+  test("cancelling uploads clears the placeholders out", async function (assert) {
     await visit("/");
     await click("#create-topic");
     await fillIn(".d-editor-input", "The image:\n");
+
+    const image = createFile("avatar.png");
+    const image2 = createFile("avatar2.png");
+
     const appEvents = loggedInUser().appEvents;
-    const done = assert.async();
-
-    appEvents.on("composer:uploads-cancelled", () => {
-      assert.strictEqual(
-        query(".d-editor-input").value,
-        "The image:\n",
-        "it should clear the cancelled placeholders"
-      );
-      done();
-    });
-
     let uploadStarted = 0;
-    appEvents.on("composer:upload-started", async () => {
+    appEvents.on("composer:upload-started", () => {
       uploadStarted++;
 
       if (uploadStarted === 2) {
@@ -164,14 +154,21 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
         );
       }
     });
-
-    appEvents.on("composer:uploads-preprocessing-complete", async () => {
-      await click("#cancel-file-upload");
+    appEvents.on("composer:uploads-cancelled", () => {
+      assert.strictEqual(
+        query(".d-editor-input").value,
+        "The image:\n",
+        "it should clear the cancelled placeholders"
+      );
     });
 
-    const image = createFile("avatar.png");
-    const image2 = createFile("avatar2.png");
-    appEvents.trigger("composer:add-files", [image, image2]);
+    await new Promise(function (resolve) {
+      appEvents.on("composer:uploads-preprocessing-complete", function () {
+        resolve();
+      });
+      appEvents.trigger("composer:add-files", [image, image2]);
+    });
+    await click("#cancel-file-upload");
   });
 
   test("should insert a newline before and after an image when pasting in the end of the line", async function (assert) {

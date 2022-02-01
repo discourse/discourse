@@ -5,10 +5,9 @@ import {
   queryAll,
   selectDate,
   visible,
-  waitFor,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
-import { skip, test } from "qunit";
+import { click, fillIn, visit } from "@ember/test-helpers";
+import { test } from "qunit";
 import {
   SEARCH_TYPE_CATS_TAGS,
   SEARCH_TYPE_DEFAULT,
@@ -148,45 +147,6 @@ acceptance("Search - Full Page", function (needs) {
       ),
       "it escapes search term"
     );
-  });
-
-  skip("update username through advanced search ui", async function (assert) {
-    await visit("/search");
-    await fillIn(".search-query", "none");
-    await fillIn(".search-advanced-options .user-selector", "admin");
-    await click(".search-advanced-options .user-selector");
-    await triggerKeyEvent(
-      ".search-advanced-options .user-selector",
-      "keydown",
-      8
-    );
-
-    waitFor(assert, async () => {
-      assert.ok(
-        visible(".search-advanced-options .autocomplete"),
-        '"autocomplete" popup is visible'
-      );
-      assert.ok(
-        exists(
-          '.search-advanced-options .autocomplete ul li a span.username:contains("admin")'
-        ),
-        '"autocomplete" popup has an entry for "admin"'
-      );
-
-      await click(
-        ".search-advanced-options .autocomplete ul li a:nth-of-type(1)"
-      );
-
-      assert.ok(
-        exists('.search-advanced-options span:contains("admin")'),
-        'has "admin" pre-populated'
-      );
-      assert.strictEqual(
-        queryAll(".search-query").val(),
-        "none @admin",
-        'has updated search term to "none user:admin"'
-      );
-    });
   });
 
   test("update category through advanced search ui", async function (assert) {
