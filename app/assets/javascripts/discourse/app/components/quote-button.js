@@ -191,22 +191,25 @@ export default Component.extend(KeyEnterEscape, {
         "_canEditPost",
         this.topic.postStream.findLoadedPost(postId)?.can_edit
       );
-      const regexp = new RegExp(regexSafeStr(quoteState.buffer), "gi");
-      const matches = cooked.innerHTML.match(regexp);
 
-      if (
-        quoteState.buffer.length < 1 ||
-        quoteState.buffer.includes("|") || // tables are too complex
-        quoteState.buffer.match(/\n/g) || // linebreaks are too complex
-        matches?.length > 1 // duplicates are too complex
-      ) {
-        this.set("_isFastEditable", false);
-        this.set("_fastEditInitalSelection", null);
-        this.set("_fastEditNewSelection", null);
-      } else if (matches?.length === 1) {
-        this.set("_isFastEditable", true);
-        this.set("_fastEditInitalSelection", quoteState.buffer);
-        this.set("_fastEditNewSelection", quoteState.buffer);
+      if (this._canEditPost) {
+        const regexp = new RegExp(regexSafeStr(quoteState.buffer), "gi");
+        const matches = cooked.innerHTML.match(regexp);
+
+        if (
+          quoteState.buffer.length < 1 ||
+          quoteState.buffer.includes("|") || // tables are too complex
+          quoteState.buffer.match(/\n/g) || // linebreaks are too complex
+          matches?.length > 1 // duplicates are too complex
+        ) {
+          this.set("_isFastEditable", false);
+          this.set("_fastEditInitalSelection", null);
+          this.set("_fastEditNewSelection", null);
+        } else if (matches?.length === 1) {
+          this.set("_isFastEditable", true);
+          this.set("_fastEditInitalSelection", quoteState.buffer);
+          this.set("_fastEditNewSelection", quoteState.buffer);
+        }
       }
     }
 
