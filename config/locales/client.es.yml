@@ -173,6 +173,7 @@ es:
     themes:
       default_description: "Por defecto"
       broken_theme_alert: "Tu sitio puede que no funcione porque el tema / componente %{theme} tiene errores. Desactívalo en %{path}."
+    broken_decorator_alert: "Puede que las publicaciones no se muestren correctamente porque uno de los decoradores de contenido de publicaciones de tu sitio está causando errores. Revisa la consola de desarrollo del navegador para más información."
     s3:
       regions:
         ap_northeast_1: "Asia-Pacífico (Tokio)"
@@ -3071,7 +3072,7 @@ es:
       default_list_filter: "Filtro de lista por defecto:"
       allow_badges_label: "Permitir que se concedan insignias en esta categoría"
       edit_permissions: "Editar permisos"
-      reviewable_by_group: "Además del personal, el contenido de esta categoría también puede ser revisado por:"
+      reviewable_by_group: "Además del personal, los siguientes grupos también pueden revisar el contenido de esta categoría:"
       review_group_name: "nombre del grupo"
       require_topic_approval: "Requiere aprobación del moderador para todos los temas nuevos"
       require_reply_approval: "Requiere aprobación del moderador para todas las respuestas nuevas"

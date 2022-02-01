@@ -272,8 +272,6 @@ lt:
   no_attachments_allowed: "Atsiprašome, bet nauji vartotojai negali įkelti priedų pranešimuose."
   no_links_allowed: "Atsiprašome, bet nauji vartotojai negali įkelti nuorodų į pranešimus."
   links_require_trust: "Atsiprašome, negalite įtraukti nuorodų į savo įrašus."
-  contains_blocked_word: "Jūsų įraše yra neleistinas žodis: %{word}"
-  contains_blocked_words: "Jūsų įraše yra keli neleidžiami žodžiai: %{words}"
   user_is_suspended: "Sustabdyti vartotojai negali rašyti pranešimų."
   topic_not_found: "Kažkas nepavyko. Galbūt ši tema buvo uždaryta arba ištrinta, kol į ją žiūrėjote?"
   not_accepting_pms: "Atsiprašome, %{username} šiuo metu nepriima pranešimų."

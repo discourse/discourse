@@ -316,8 +316,6 @@ zh_CN:
   links_require_trust: "抱歉，您的帖子中不能包含链接。"
   too_many_links:
     other: "抱歉，新用户在一个帖子中仅能发布 %{count} 个链接。"
-  contains_blocked_word: "您的帖子中包含一个不被允许的字词：%{word}"
-  contains_blocked_words: "您的帖子中包含多个不被允许的字词：%{words}"
   spamming_host: "抱歉，您不能发布指向该主机的链接。"
   user_is_suspended: "被封禁的用户不允许发帖。"
   topic_not_found: "出了点问题。或许此话题在您查看时已被关闭或删除。"

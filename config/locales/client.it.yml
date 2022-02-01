@@ -3026,7 +3026,7 @@ it:
       default_list_filter: "Filtro predefinito della lista:"
       allow_badges_label: "Permetti l'assegnazione di distintivi in questa categoria"
       edit_permissions: "Modifica Permessi"
-      reviewable_by_group: "Oltre allo staff, i contenuti di questa categoria possono essere esaminati da:"
+      reviewable_by_group: "Oltre che dal personale, i contenuti di questa categoria possono essere revisionati anche da:"
       review_group_name: "nome gruppo"
       require_topic_approval: "Richiedi l'approvazione di un moderatore per tutti i nuovi argomenti"
       require_reply_approval: "Richiedi l'approvazione di un moderatore per tutte le nuove risposte"

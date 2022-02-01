@@ -2953,7 +2953,6 @@ fr:
       default_list_filter: "Filtre de liste par défaut :"
       allow_badges_label: "Autoriser les badges à être accordés dans cette catégorie"
       edit_permissions: "Modifier les permissions"
-      reviewable_by_group: "En plus des responsables, le contenu de cette catégorie peut également être examiné par :"
       review_group_name: "nom du groupe"
       require_topic_approval: "Nécessiter l'approbation pour chaque nouveau sujet"
       require_reply_approval: "Nécessiter l'approbation pour chaque nouvelle réponse"

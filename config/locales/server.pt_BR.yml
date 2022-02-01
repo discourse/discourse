@@ -338,8 +338,6 @@ pt_BR:
   too_many_links:
     one: "Desculpe, usuários(as) novos(as) podem inserir apenas %{count} link em uma postagem."
     other: "Desculpe, usuários(as) novos(as) podem inserir apenas %{count} links em uma postagem."
-  contains_blocked_word: "Sua postagem contém uma palavra que não é permitida: %{word}"
-  contains_blocked_words: "Sua postagem contém várias palavras que não são permitidas: %{words}"
   spamming_host: "Desculpe, você não pode postar um link para esse host."
   user_is_suspended: "Usuários(as) suspensos(as) não têm permissão para postar."
   topic_not_found: "Ocorreu um erro. Talvez este tópico tenha sido fechado ou removido enquanto você estava visualizando."

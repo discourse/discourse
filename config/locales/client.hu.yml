@@ -2834,6 +2834,7 @@ hu:
       default_view: "Alapértelmezett témakörök"
       allow_badges_label: "Kitűzök elnyerésének engedélyezése ebben a kategóriában"
       edit_permissions: "Jogok szerkesztése"
+      reviewable_by_group: "Az ebbe a kategóriába tartozó tartalmakat a stábon kívül a következők is jóváhagyhatják:"
       review_group_name: "csoport neve"
       this_year: "ez az év"
       position: "Kategóriák oldalon elfoglalt pozíció:"

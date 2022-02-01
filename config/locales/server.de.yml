@@ -338,8 +338,8 @@ de:
   too_many_links:
     one: "Entschuldige, neue Benutzer können Beiträgen höchstens einen Link hinzufügen."
     other: "Entschuldige, neue Benutzer können Beiträgen höchstens %{count} Links hinzufügen."
-  contains_blocked_word: "Dein Beitrag enthält ein nicht erlaubtes Wort: %{word}"
-  contains_blocked_words: "Dein Beitrag enthält mehrere Wörter, die nicht erlaubt sind: %{words}"
+  contains_blocked_word: "Tut mir leid, du kannst das Wort '%{word}' nicht posten; es ist nicht erlaubt."
+  contains_blocked_words: "Sorry, das kannst du nicht posten. Nicht erlaubt: %{words}."
   spamming_host: "Entschuldige, leider kannst du keinen Link zu diesem Host posten."
   user_is_suspended: "Gesperrte Benutzer dürfen keine Beiträge schreiben."
   topic_not_found: "Etwas ist schiefgelaufen. Wurde das Thema eventuell geschlossen oder gelöscht, während du es angeschaut hast?"
