@@ -26,7 +26,7 @@ DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scriptable::AUTO_RESPON
     next if tuples.blank?
 
     tuples.each do |tuple|
-      if post.raw.match(/\b#{tuple['key']}\b/)
+      if post.raw.match(/\b#{tuple['key']}\b/i)
         answers.add(tuple)
       end
     end

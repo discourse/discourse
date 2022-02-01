@@ -66,7 +66,7 @@ describe 'AutoResponder' do
 
     context 'post contains two keywords' do
       it 'creates an answer with both answers' do
-        post = create_post(topic: topic, raw: 'this is a post with foo and bar')
+        post = create_post(topic: topic, raw: 'this is a post with FOO and bar')
         automation.trigger!('post' => post)
 
         expect(topic.reload.posts.last.raw).to eq("this is foo\n\nthis is bar")
