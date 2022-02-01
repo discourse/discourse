@@ -1,5 +1,4 @@
 import ComboBoxComponent from "select-kit/components/combo-box";
-import { computed } from "@ember/object";
 
 export default ComboBoxComponent.extend({
   pluginApiIdentifiers: ["timezone-input"],
@@ -10,17 +9,17 @@ export default ComboBoxComponent.extend({
     allowAny: false,
   },
 
-  nameProperty: computed(function () {
+  get nameProperty() {
     return this.isLocalized() ? "name" : null;
-  }),
+  },
 
-  valueProperty: computed(function () {
+  get valueProperty() {
     return this.isLocalized() ? "value" : null;
-  }),
+  },
 
-  content: computed(function () {
+  get content() {
     return this.isLocalized() ? moment.tz.localizedNames() : moment.tz.names();
-  }),
+  },
 
   isLocalized() {
     return (
