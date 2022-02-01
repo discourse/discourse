@@ -9,7 +9,6 @@ import {
   thisWeekend,
   tomorrow,
 } from "discourse/lib/time-utils";
-import I18n from "I18n";
 
 export const TIME_SHORTCUT_TYPES = {
   LATER_TODAY: "later_today",
@@ -32,32 +31,28 @@ export function defaultShortcutOptions(timezone) {
       id: TIME_SHORTCUT_TYPES.LATER_TODAY,
       label: "time_shortcut.later_today",
       time: laterToday(timezone),
-      timeFormatted: laterToday(timezone).format(I18n.t("dates.time")),
+      timeFormatKey: "dates.time",
     },
     {
       icon: "far-sun",
       id: TIME_SHORTCUT_TYPES.TOMORROW,
       label: "time_shortcut.tomorrow",
       time: tomorrow(timezone),
-      timeFormatted: tomorrow(timezone).format(I18n.t("dates.time_short_day")),
+      timeFormatKey: "dates.time_short_day",
     },
     {
       icon: "angle-double-right",
       id: TIME_SHORTCUT_TYPES.LATER_THIS_WEEK,
       label: "time_shortcut.later_this_week",
       time: laterThisWeek(timezone),
-      timeFormatted: laterThisWeek(timezone).format(
-        I18n.t("dates.time_short_day")
-      ),
+      timeFormatKey: "dates.time_short_day",
     },
     {
       icon: "bed",
       id: TIME_SHORTCUT_TYPES.THIS_WEEKEND,
       label: "time_shortcut.this_weekend",
       time: thisWeekend(timezone),
-      timeFormatted: thisWeekend(timezone).format(
-        I18n.t("dates.time_short_day")
-      ),
+      timeFormatKey: "dates.time_short_day",
     },
     {
       icon: "briefcase",
@@ -68,16 +63,14 @@ export function defaultShortcutOptions(timezone) {
           ? "time_shortcut.start_of_next_business_week_alt"
           : "time_shortcut.start_of_next_business_week",
       time: nextBusinessWeekStart(timezone),
-      timeFormatted: nextBusinessWeekStart(timezone).format(
-        I18n.t("dates.long_no_year")
-      ),
+      timeFormatKey: "dates.long_no_year",
     },
     {
       icon: "far-calendar-plus",
       id: TIME_SHORTCUT_TYPES.NEXT_MONTH,
       label: "time_shortcut.next_month",
       time: nextMonth(timezone),
-      timeFormatted: nextMonth(timezone).format(I18n.t("dates.long_no_year")),
+      timeFormatKey: "dates.long_no_year",
     },
   ];
 }
@@ -89,7 +82,6 @@ export function specialShortcutOptions() {
       id: TIME_SHORTCUT_TYPES.LAST_CUSTOM,
       label: "time_shortcut.last_custom",
       time: null,
-      timeFormatted: null,
       hidden: true,
     },
     {
@@ -97,7 +89,6 @@ export function specialShortcutOptions() {
       id: TIME_SHORTCUT_TYPES.CUSTOM,
       label: "time_shortcut.custom",
       time: null,
-      timeFormatted: null,
       isCustomTimeShortcut: true,
     },
     {
@@ -105,7 +96,6 @@ export function specialShortcutOptions() {
       id: TIME_SHORTCUT_TYPES.NONE,
       label: "time_shortcut.none",
       time: null,
-      timeFormatted: null,
     },
   ];
 }

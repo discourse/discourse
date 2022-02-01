@@ -297,9 +297,7 @@ export default Component.extend({
         id: TIME_SHORTCUT_TYPES.POST_LOCAL_DATE,
         label: "time_shortcut.post_local_date",
         time: this._postLocalDate(),
-        timeFormatted: this._postLocalDate().format(
-          I18n.t("dates.long_no_year")
-        ),
+        timeFormatKey: "dates.long_no_year",
         hidden: false,
       });
     }
