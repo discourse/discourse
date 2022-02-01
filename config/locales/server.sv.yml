@@ -338,8 +338,6 @@ sv:
   too_many_links:
     one: "Tyvärr kan nya användare bara ha en länk i ett inlägg."
     other: "Tyvärr kan nya användare bara ha %{count} länkar i ett inlägg."
-  contains_blocked_word: "Ditt inlägg innehåller ett ord som inte är tillåtet: %{word}"
-  contains_blocked_words: "Ditt inlägg innehåller flera ord som inte är tillåtna: %{words}"
   spamming_host: "Tyvärr kan du inte publicera en länk till den värden."
   user_is_suspended: "Avstängda användare har inte tillåtelse att göra inlägg"
   topic_not_found: "Något har gått fel. Kanske har ämnet stängts eller raderats medan du tittade på det?"

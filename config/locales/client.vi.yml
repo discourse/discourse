@@ -2724,7 +2724,6 @@ vi:
       default_list_filter: "Bộ lọc danh sách mặc định:"
       allow_badges_label: "Cho phép thưởng huy hiệu trong chuyên mục này"
       edit_permissions: "Sửa quyền"
-      reviewable_by_group: "Ngoài nhân viên, nội dung trong danh mục này cũng có thể được kiểm duyệt bởi:"
       review_group_name: "Nhóm tên"
       require_topic_approval: "Yêu cầu người kiểm duyệt phê duyệt tất cả các chủ đề mới"
       require_reply_approval: "Yêu cầu người kiểm duyệt phê duyệt tất cả các câu trả lời mới"

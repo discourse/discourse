@@ -3074,7 +3074,6 @@ sv:
       default_list_filter: "Standardlistfilter:"
       allow_badges_label: "Tillåt utmärkelser i den här kategorin"
       edit_permissions: "Redigera behörigheter"
-      reviewable_by_group: "Förutom av personal kan innehåll i denna kategori också granskas av:"
       review_group_name: "gruppnamn"
       require_topic_approval: "Kräv att en moderator godkänner alla nya ämnen"
       require_reply_approval: "Kräv att en moderator godkänner alla nya svar"

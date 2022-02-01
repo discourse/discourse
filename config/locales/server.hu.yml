@@ -221,7 +221,6 @@ hu:
   too_many_links:
     one: "Sajnáljuk, de az új felhasználók csak egy hivatkozást tehetnek egy bejegyzésbe."
     other: "Sajnáljuk, de az új felhasználók csak %{count} hivatkozást tehetnek egy bejegyzésbe."
-  contains_blocked_word: "A bejegyzésed egy olyan szót tartalmaz, amely nem megengedett: %{word}"
   user_is_suspended: "A felfüggesztett felhasználók nem hozhatnak létre új bejegyzést."
   topic_not_found: "Valami hiba történt. Esetleg lezárták vagy törölték ezt a témát, míg megnézte?"
   create_pm_on_existing_topic: "Sajnáljuk, nem hozhatsz létre PM-et egy meglévő témakörben."

@@ -2918,7 +2918,6 @@ ko:
       default_list_filter: "목록 기본 필터:"
       allow_badges_label: "배지가 이 카테고리에서 주어질 수 있도록 허용"
       edit_permissions: "권한 수정"
-      reviewable_by_group: "이 카테고리의 콘텐츠는 관리자 외에도 다음과 같은 방법으로 검토할 수 있습니다."
       review_group_name: "그룹명"
       require_topic_approval: "모든 새 글에 대한 관리자 승인 필요"
       require_reply_approval: "모든 새 댓글의 관리자 승인 필요"

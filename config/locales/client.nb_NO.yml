@@ -2910,7 +2910,6 @@ nb_NO:
       default_list_filter: "Standard listefilter:"
       allow_badges_label: "Tillat merker å bli tildelt i denne kategorien"
       edit_permissions: "Rediger tillatelser"
-      reviewable_by_group: "I tillegg til de ansatte, kan innholdet i denne kategorien også gjennomgås ved å:"
       review_group_name: "gruppenavn"
       require_topic_approval: "Krev godkjennelse fra moderator for alle nye emner"
       require_reply_approval: "Krev godkjennelse fra moderator for alle nye svar"

@@ -778,7 +778,7 @@ tr_TR:
       title:
         one: "Gruplar"
         other: "Gruplar"
-      activity: "Aktivite"
+      activity: "Etkinlik"
       members:
         title: "Üyeler"
         filter_placeholder_admin: "kullanıcı adı veya e-posta"
@@ -971,7 +971,7 @@ tr_TR:
         saturday: "Cumartesi"
         sunday: "Pazar"
         to: "kime"
-      activity_stream: "Hareketler"
+      activity_stream: "Etkinlik"
       read: "Okunmuş"
       read_help: "Son okunan konular"
       preferences: "Tercihler"
@@ -1058,12 +1058,12 @@ tr_TR:
       suspended_permanently: "Bu kullanıcı beklemeye alındı."
       suspended_reason: "Sebep: "
       github_profile: "Github"
-      email_activity_summary: "Aktivite özeti"
+      email_activity_summary: "Etkinlik Özeti"
       mailing_list_mode:
         label: "Gönderi listesi modu"
         enabled: "Gönderi listesi modunu etkinleştir"
         instructions: |
-          Bu ayar aktivite özetini geçersiz kılar.<br />
+          Bu ayar etkinlik özetini geçersiz kılar.<br />
           Sessize alınmış konular ve kategoriler bu e-postalarda yer almaz.
         individual: "Her yeni gönderi için bir e-posta gönder"
         individual_no_echo: "Kendi gönderilerim haricindeki her gönderi için e-posta gönder"
@@ -2255,7 +2255,7 @@ tr_TR:
     hamburger_menu: "menü"
     new_item: "yeni"
     go_back: "geri dön"
-    not_logged_in_user: "güncel aktivitelerin ve tercihlerin özetinin bulunduğu kullanıcı sayfası"
+    not_logged_in_user: "güncel etkinliğin ve tercihlerin özetinin bulunduğu kullanıcı sayfası"
     current_user: "kendi kullanıcı sayfana git"
     view_all: "tümünü görüntüle %{tab}"
     topics:
@@ -2318,7 +2318,7 @@ tr_TR:
         top: "Popüler bir konu yok."
         educate:
           new: '<p>Yeni konularınız burada görünecektir. Varsayılan olarak, konular yeni kabul edilir ve son 2 gün içinde oluşturulmuşlarsa <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> göstergesi gösterilir.</p><p>Bunu değiştirmek için <a href="%{userPrefsUrl}"> tercihinizi</a> ziyaret edin.</p>'
-          unread: '<p>Okunmamış konularınız burada görünür.</p><p>Konular varsayılan olarak okunmamış sayılır ve aşağıdaki durumlarda okunmamış ileti sayısı <span class="badge unread-posts badge-notification">1</span> gösterilir: </p><ul><li>Konuyu siz oluşturmuşsanız</li><li>Konuyu yanıtlamışsanız</li><li>Konuyu 4 dakikadan fazla okumuşsanız</li></ul><p>Konuyu her konunun altında bulunan bildirim kontrol alanından Gözleniyor veya Takip Ediliyor olarak seçmişseniz.</p><p><a href="%{userPrefsUrl}">Tercihler</a> sayfanızdan bunu değiştirebilirsiniz.</p>'
+          unread: '<p>Okunmamış konularınız burada görünür.</p><p>Konular varsayılan olarak okunmamış sayılır ve aşağıdaki durumlarda okunmamış ileti sayısı <span class="badge unread-posts badge-notification">1</span> gösterilir: </p><ul><li>Konuyu siz oluşturmuşsanız</li><li>Konuyu yanıtlamışsanız</li><li>Konuyu 4 dakikadan fazla okumuşsanız</li></ul><p>Konuyu her konunun altında bulunan bildirim denetim alanından İzleniyor veya Takip Ediliyor olarak seçmişseniz.</p><p><a href="%{userPrefsUrl}">Tercihler</a> sayfanızdan bu ayarları değiştirebilirsiniz.</p>'
       bottom:
         latest: "Daha fazla güncel konu yok."
         posted: "Daha fazla gönderilmiş konu yok."
@@ -3053,7 +3053,7 @@ tr_TR:
       default_list_filter: "Varsayılan Liste Filtresi:"
       allow_badges_label: "Bu kategoride rozetle ödüllendirilmesine izin ver"
       edit_permissions: "İzinleri Düzenle"
-      reviewable_by_group: "Personele ek olarak, bu kategorideki içerik şu kişiler tarafından da incelenebilir:"
+      reviewable_by_group: "Personele ek olarak, bu kategorideki içerik şu kişiler tarafından da gözden geçirilebilir:"
       review_group_name: "grup adı"
       require_topic_approval: "Tüm yeni konular moderatör onayını gerektirir"
       require_reply_approval: "Tüm yeni yanıtlar moderatör onayı gerektirir"
@@ -3099,7 +3099,7 @@ tr_TR:
         op_likes: "Orijinal Gönderi Beğenileri"
         views: "Görüntüleme"
         posts: "Gönderiler"
-        activity: "Aktivite"
+        activity: "Etkinlik"
         posters: "Posterler"
         category: "Kategori"
         created: "Oluşturulan"
@@ -3222,7 +3222,7 @@ tr_TR:
     views_long:
       one: "bu konu %{count} defa görüntülendi"
       other: "bu konu %{number} defa görüntülendi"
-    activity: "Aktivite"
+    activity: "Etkinlik"
     likes: "Beğeni"
     likes_lowercase:
       one: "beğeni"
@@ -3611,8 +3611,8 @@ tr_TR:
     pick_files_button:
       unsupported_file_picked: "Desteklenmeyen bir dosya seçtiniz. Desteklenen dosya türleri şunlardır– %{types}."
     user_activity:
-      no_activity_title: "Henüz aktivite yok"
-      no_activity_others: "Aktivite yok."
+      no_activity_title: "Henüz etkinlik yok"
+      no_activity_others: "Etkinlik yok."
       no_replies_title: "Henüz hiçbir konuyu yanıtlamadınız."
       no_replies_others: "Yanıt yok."
       no_drafts_title: "Hiç taslak başlatmadınız"
@@ -3680,7 +3680,7 @@ tr_TR:
         community_health: Topluluk sağlığı
         moderators_activity: Moderatörlerin etkinliği
         whats_new_in_discourse: Discourse'daki yenilikler neler?
-        activity_metrics: Aktivite Ölçütleri
+        activity_metrics: Etkinlik Ölçütleri
         all_reports: "Tüm raporlar"
         general_tab: "Genel"
         moderation_tab: "Moderasyon"
@@ -4718,7 +4718,7 @@ tr_TR:
         flags_received_none: "Bu kullanıcı herhangi bir bayrak almadı."
         reputation: İtibar
         permissions: İzinler
-        activity: Aktivite
+        activity: Etkinlik
         like_count: Verilen / Alınan Beğeniler
         last_100_days: "son 100 günde"
         private_topics_count: Özel Konular

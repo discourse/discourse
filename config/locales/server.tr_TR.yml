@@ -335,8 +335,8 @@ tr_TR:
   too_many_links:
     one: "Üzgünüz, yeni kullanıcılar bir gönderiye sadece %{count} bağlantı ekleyebilirler."
     other: "Üzgünüz, yeni kullanıcılar bir gönderiye sadece %{count} bağlantı ekleyebilirler."
-  contains_blocked_word: "Gönderiniz izin verilmeyen bir sözcük içeriyor: %{word}"
-  contains_blocked_words: "Gönderiniz izin verilmeyen birden çok sözcük içeriyor: %{words}"
+  contains_blocked_word: "Üzgünüz, '%{word}' kelimesini kullanamazsınız; yasaklı."
+  contains_blocked_words: "Üzgünüm, bunu yayınlayamazsınız. Yasak kelimeler: %{words}."
   spamming_host: "Üzgünüz bu sunucuya bağlantı veremezsiniz."
   user_is_suspended: "Uzaklaştırılmış kullanıcılar gönderi yapamazlar."
   topic_not_found: "Bir şeyler ters gitti. Muhtemelen siz konuya bakarken bu konu kapatıldı ya da silindi."
@@ -1025,7 +1025,7 @@ tr_TR:
         score: Skor
       description: "Yetkililerin raporlarına verdiği yanıtın oranına göre sıralanan kullanıcıların listesi (Kabul edilmemişten kabul edilmişe doğru)."
     moderators_activity:
-      title: "Moderatör Aktivitesi"
+      title: "Moderatör Etkinliği"
       labels:
         moderator: Moderatör
         flag_count: Raporlar yeniden görüntülendi
@@ -2070,6 +2070,7 @@ tr_TR:
     share_quote_buttons: "Alıntı paylaşım widget'ında hangi öğelerin görüneceğini ve hangi sırayla görüneceklerini belirleyin."
     share_quote_visibility: "Alıntı paylaşma düğmelerinin ne zaman gösterileceğini belirleyin: asla, yalnızca anonim kullanıcılara veya tüm kullanıcılara. "
     create_revision_on_bulk_topic_moves: "Konular toplu olarak yeni bir kategoriye taşındığında ilk gönderiler için revizyon oluştur."
+    use_email_for_username_and_name_suggestions: "Kullanıcı adları ve ad önerileri için e-posta adreslerinin ilk kısmını kullanın. Ama unutmayın bu yaklaşım, insanların e-posta adreslerinin tamamını tahmin etmelerini kolaylaştırır (çünkü insanların büyük bir kısmı \"gmail.com\" gibi ortak hizmetleri paylaşır)."
     errors:
       invalid_css_color: "Geçersiz renk. Bir renk adı veya hex değer girin."
       invalid_email: "Geçersiz e-posta adresi."

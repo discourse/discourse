@@ -85,3 +85,5 @@ es:
           title: "Iconos de encabezado"
         spinners:
           title: "Indicadores de carga"
+        empty_state:
+          title: "En caso de vacío"

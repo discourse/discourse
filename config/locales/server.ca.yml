@@ -262,8 +262,6 @@ ca:
   too_many_links:
     one: "Els usuaris nous només poden incloure un enllaç en una publicació."
     other: "Els usuaris nous només poden incloure %{count} enllaços en una publicació."
-  contains_blocked_word: "La vostra publicació té una paraula que no és permesa: %{word}"
-  contains_blocked_words: "La vostra publicació conté diverses paraules no admeses: %{words}"
   spamming_host: "No podeu publicar un enllaç a aquest amfitrió."
   user_is_suspended: "Els usuaris suspesos no tenen permís per a publicar."
   topic_not_found: "Alguna cosa ha fallat. Potser el tema ha estat tancat o suprimit mentre el consultàveu."

@@ -167,7 +167,6 @@ sw:
   no_attachments_allowed: "Samahani watumiaji wapya hawawezi kuambatanisha picha, sauti, video au dokument kwenye machapisho."
   no_links_allowed: "Samahani watumiaji wapya hawawezi kuweka viungo kwenye machapisho."
   links_require_trust: "Samahani, hauwezi kuweka viungo kwenye machapisho yako."
-  contains_blocked_word: "Chapisho lako lina neno lisiloruhusiwa: %{word}"
   spamming_host: "Samahani hauwezi kuchapisha kiungo kwenye computer hiyo."
   user_is_suspended: "Watumiaji waliosimamishwa hawaruhusiwi kuchapisha."
   topic_not_found: "Kuna tatizo limetokea. Labda hii mada ilifungwa au kufutwa ukiwa unaangalia?"
