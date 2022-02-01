@@ -4,22 +4,27 @@ import { computed } from "@ember/object";
 export default ComboBoxComponent.extend({
   pluginApiIdentifiers: ["timezone-input"],
   classNames: ["timezone-input"],
-  nameProperty: null,
-  valueProperty: null,
 
   selectKitOptions: {
     filterable: true,
     allowAny: false,
   },
 
-  content: computed(function () {
-    if (
-      moment.locale() !== "en" &&
-      typeof moment.tz.localizedNames === "function"
-    ) {
-      return moment.tz.localizedNames().mapBy("value");
-    } else {
-      return moment.tz.names();
-    }
+  nameProperty: computed(function () {
+    return this.isLocalized() ? "name" : null;
   }),
+
+  valueProperty: computed(function () {
+    return this.isLocalized() ? "value" : null;
+  }),
+
+  content: computed(function () {
+    return this.isLocalized() ? moment.tz.localizedNames() : moment.tz.names();
+  }),
+
+  isLocalized() {
+    return (
+      moment.locale() !== "en" && typeof moment.tz.localizedNames === "function"
+    );
+  },
 });

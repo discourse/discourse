@@ -111,6 +111,11 @@
   resolved "https://registry.yarnpkg.com/@discourse/itsatrap/-/itsatrap-2.0.10.tgz#c7e750eeb32b54e769e952c4ecc472213eb1385a"
   integrity sha512-Jn1gdiyHMGUsmUfLFf4Q7VnTAv0l7NePbegU6pKhKHEmbzV3FosGxq30fTOYgVyTS1bxqGjlA6LvQttJpv3ROw==
 
+"@discourse/moment-timezone-names-translations@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@discourse/moment-timezone-names-translations/-/moment-timezone-names-translations-1.0.0.tgz#b22344456513d37c81baf384a41487b539b91534"
+  integrity sha512-4xr1QWQ0nzmFa2ZXQgWZA+dtE/BU2ePA+qkJWPFzNpq4ZnQi8MmMMAS2285t3rc2ySMBQqYaAArmcSUiufUgRA==
+
 "@ember-data/rfc395-data@^0.0.4":
   version "0.0.4"
   resolved "https://registry.yarnpkg.com/@ember-data/rfc395-data/-/rfc395-data-0.0.4.tgz#ecb86efdf5d7733a76ff14ea651a1b0ed1f8a843"
@@ -2964,10 +2969,6 @@ module-deps@^6.2.3:
     subarg "^1.0.0"
     through2 "^2.0.0"
     xtend "^4.0.0"
-
-"moment-timezone-names-translations@https://github.com/discourse/moment-timezone-names-translations":
-  version "0.0.0"
-  resolved "https://github.com/discourse/moment-timezone-names-translations#5f576fc6355d8e636783bfb7b0214a5d74a5399d"
 
 moment-timezone@0.5.31:
   version "0.5.31"
