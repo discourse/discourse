@@ -4,7 +4,6 @@ import buildTimeframes from "discourse/lib/timeframes-builder";
 
 const DEFAULT_OPTIONS = {
   includeWeekend: null,
-  includeMidFuture: true,
   includeFarFuture: null,
   includeDateTime: null,
   canScheduleNow: false,
