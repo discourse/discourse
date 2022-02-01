@@ -13,7 +13,7 @@ import { Promise } from "rsvp";
 import { _clearSnapshots } from "select-kit/components/composer-actions";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import sinon from "sinon";
-import { skip, test } from "qunit";
+import { test } from "qunit";
 import { toggleCheckDraftPopup } from "discourse/controllers/composer";
 
 acceptance("Composer Actions", function (needs) {
@@ -35,7 +35,7 @@ acceptance("Composer Actions", function (needs) {
     assert.ok(queryAll(".d-editor-input").val(), "this is the reply");
   });
 
-  skip("replying to post", async function (assert) {
+  test("replying to post", async function (assert) {
     const composerActions = selectKit(".composer-actions");
 
     await visit("/t/internationalization-localization/280");
@@ -76,7 +76,7 @@ acceptance("Composer Actions", function (needs) {
     );
   });
 
-  skip("replying to post - reply_to_topic", async function (assert) {
+  test("replying to post - reply_to_topic", async function (assert) {
     const composerActions = selectKit(".composer-actions");
 
     await visit("/t/internationalization-localization/280");
@@ -103,7 +103,7 @@ acceptance("Composer Actions", function (needs) {
     );
   });
 
-  skip("replying to post - toggle_whisper", async function (assert) {
+  test("replying to post - toggle_whisper", async function (assert) {
     const composerActions = selectKit(".composer-actions");
 
     await visit("/t/internationalization-localization/280");
@@ -405,7 +405,7 @@ acceptance("Composer Actions", function (needs) {
     );
   });
 
-  skip("replying to post as TL3 user", async function (assert) {
+  test("replying to post as TL3 user", async function (assert) {
     const composerActions = selectKit(".composer-actions");
 
     updateCurrentUser({ moderator: false, admin: false, trust_level: 3 });

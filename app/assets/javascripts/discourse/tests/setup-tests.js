@@ -269,11 +269,11 @@ function setupTestsCommon(application, container, config) {
 
     const cdn = setupData ? setupData.cdn : null;
     const baseUri = setupData ? setupData.baseUri : "";
-    setupURL(cdn, "http://localhost:3000", baseUri);
+    setupURL(cdn, "http://localhost:3000", baseUri, { snapshot: true });
     if (setupData && setupData.s3BaseUrl) {
-      setupS3CDN(setupData.s3BaseUrl, setupData.s3Cdn);
+      setupS3CDN(setupData.s3BaseUrl, setupData.s3Cdn, { snapshot: true });
     } else {
-      setupS3CDN(null, null);
+      setupS3CDN(null, null, { snapshot: true });
     }
 
     server = pretender;
