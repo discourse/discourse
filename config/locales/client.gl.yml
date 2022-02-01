@@ -2859,7 +2859,6 @@ gl:
       default_list_filter: "Filtro de listaxe predeterminado:"
       allow_badges_label: "Permitir adxudicar insignias nesta categoría"
       edit_permissions: "Editar permisos"
-      reviewable_by_group: "Ademais do equipo, o contido desta categoría tamén pode ser revisado por:"
       review_group_name: "nome do grupo"
       require_topic_approval: "Require a aprobación de todos os temas novos polo moderador"
       require_reply_approval: "Require a aprobación de todas as respostas novas polo moderador"

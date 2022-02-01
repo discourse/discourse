@@ -233,7 +233,6 @@ zh_TW:
   links_require_trust: "抱歉，您不能在貼文中插入連結"
   too_many_links:
     other: "抱歉，新使用者只能在貼文中放置 %{count} 個連結。"
-  contains_blocked_word: "您的貼文包含被禁用的文字：%{word}"
   spamming_host: "抱歉，你不能張貼該網站之連結。"
   user_is_suspended: "被停權的使用者無法張貼貼文。"
   topic_not_found: "出現問題。也許這個話題被關閉或刪除。"
@@ -1128,7 +1127,6 @@ zh_TW:
     show_pinned_excerpt_mobile: "在行動版置頂主題顯示摘要。"
     show_pinned_excerpt_desktop: "在桌面版置頂主題顯示摘要。"
     post_onebox_maxlength: "展開連結預覽後的 Discourse 貼文最大字數限制。"
-    blocked_onebox_domains: "不會展開成連結預覽的網域列表。"
     allowed_inline_onebox_domains: "如果連結未包含 title，會被展開成連結預覽的網域白名單。"
     max_oneboxes_per_post: "貼文中允許的連結預覽數量上限。"
     logo: "網站左上角的Logo圖片，圖片高為120、寬高比大於3：1的寬矩形比例。 如果沒有設定 Logo，將顯示網站標題。"

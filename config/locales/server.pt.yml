@@ -319,8 +319,6 @@ pt:
   too_many_links:
     one: "Pedimos desculpa, novos utilizadores podem colocar apenas %{count} hiperligação numa mensagem."
     other: "Pedimos desculpa, novos utilizadores podem colocar apenas %{count} hiperligações numa mensagem."
-  contains_blocked_word: "Sua postagem contém uma palavra que não é permitida: %{word}"
-  contains_blocked_words: "Sua postagem contém algumas palavras que não são permitidas: %{words}"
   spamming_host: "Pedimos desculpa, não pode colocar uma hiperligação para esse servidor."
   user_is_suspended: "Utilizadores suspensos não têm permissão para publicar."
   topic_not_found: "Algo de errado ocorreu. Talvez este tópico tenha sido fechado ou eliminado enquanto olhava para ele?"
@@ -1006,7 +1004,6 @@ pt:
     show_pinned_excerpt_mobile: "Mostrar excerto em publicações afixadas na vista móvel."
     show_pinned_excerpt_desktop: "Mostar excerto em publicações afixadas na vista de desktop."
     post_onebox_maxlength: "Tamanho máximo de uma mensagem Discourse de caixa única, em caracteres."
-    blocked_onebox_domains: "Uma lista de domínios para a qual nunca serão geradas pré-visualizações."
     max_oneboxes_per_post: "Número máximo de pré-visualizações numa publicação."
     manifest_screenshots: "Capturas de tela que mostrem os recursos e a funcionalidade da instância na página de incentivo à instalação. Todas as imagens devem ser envios locais e das mesmas dimensões."
     notification_email: "Para: endereço de email usado ao enviar emails essenciais do sistema. O domínio especificado aqui deverá ter SPF, DKIM e registos PTR inversos configurados corretamente para a chegada do email."

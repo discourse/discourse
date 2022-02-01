@@ -317,8 +317,6 @@ gl:
   too_many_links:
     one: "Sentímolo, mais os novos usuarios só poden poñer unha ligazón nunha publicación."
     other: "Sentímolo, mais os novos usuarios só poden poñer %{count} ligazóns nunha publicación."
-  contains_blocked_word: "A súa publicación contén unha palabra que non está permitida: %{word}"
-  contains_blocked_words: "A súa publicación contén varias palabras que non están permitidas: %{words}"
   spamming_host: "Sentímolo, non pode publicar unha ligazón a ese servidor."
   user_is_suspended: "Aos usuarios suspendidos non se lles permite publicar."
   topic_not_found: "Algo foi mal. Talvez este tema se pechou ou se eliminou mentres o estaba a consultar?"
@@ -1372,7 +1370,6 @@ gl:
     show_pinned_excerpt_mobile: "Mostrar o extracto de temas pegados na vista móbil."
     show_pinned_excerpt_desktop: "Mostrar o extracto de temas pegados na vista de escritorio."
     post_onebox_maxlength: "Lonxitude máxima en caracteres dunha publicación de Discourse en formato caixa (onebox)."
-    blocked_onebox_domains: "Unha listaxe de dominios que nunca se mostrarán en formato onebox."
     allowed_inline_onebox_domains: "Unha listaxe de dominios que se mostrarán en formato onebox en miniatura se son ligados sen un título"
     enable_inline_onebox_on_all_domains: "Ignorar o axuste do sitio inline_onebox_domain_whitelist e permitir incluír onebox en todos os dominios."
     force_custom_user_agent_hosts: "Hosts que se utilizarán para o axente de usuario personalizado de onebox en todas as solicitudes (especialmente útil para hosts que limitan o acceso por axente de usuario)."

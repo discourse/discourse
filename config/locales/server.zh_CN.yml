@@ -316,8 +316,6 @@ zh_CN:
   links_require_trust: "抱歉，您的帖子中不能包含链接。"
   too_many_links:
     other: "抱歉，新用户在一个帖子中仅能发布 %{count} 个链接。"
-  contains_blocked_word: "您的帖子中包含一个不被允许的字词：%{word}"
-  contains_blocked_words: "您的帖子中包含多个不被允许的字词：%{words}"
   spamming_host: "抱歉，您不能发布指向该主机的链接。"
   user_is_suspended: "被封禁的用户不允许发帖。"
   topic_not_found: "出了点问题。或许此话题在您查看时已被关闭或删除。"
@@ -1388,7 +1386,6 @@ zh_CN:
     show_pinned_excerpt_mobile: "在移动视图中显示置顶话题的摘录。"
     show_pinned_excerpt_desktop: "在桌面视图中显示置顶话题的摘录。"
     post_onebox_maxlength: "Onebox Discourse 帖子的最大长度（以字符为单位）。"
-    blocked_onebox_domains: "永远不会进行 Onebox 处理的网域列表。"
     allowed_inline_onebox_domains: "如果在没有标题的情况下链接，将以微型形式进行 Onebox 处理的网域列表"
     enable_inline_onebox_on_all_domains: "忽略 inline_onebox_domain_allowlist 站点设置并在所有网域上允许内联 Onebox。"
     force_custom_user_agent_hosts: "对所有请求使用自定义 Onebox 用户代理的主机。（对于限制用户代理访问的主机特别有用）。"

@@ -337,8 +337,8 @@ it:
   too_many_links:
     one: "Spiacenti, i nuovi utenti possono inserire al massimo un link in un messaggio."
     other: "Spiacenti, i nuovi utenti possono inserire al massimo %{count} link in un messaggio."
-  contains_blocked_word: "Il tuo messaggio contiene una parola non consentita: %{word}"
-  contains_blocked_words: "Il tuo messaggio contiene parole non consentite: %{words}"
+  contains_blocked_word: "Purtroppo non è consentito pubblicare la parola '%{word}'."
+  contains_blocked_words: "Purtroppo non puoi pubblicare questo messaggio. Parole non consentite: %{words}."
   spamming_host: "Spiacenti, non puoi inserire un collegamento verso quell'host."
   user_is_suspended: "Agli utenti sospesi non è permesso creare messaggi."
   topic_not_found: "Quancosa non ha funzionato. Forse questo argomento è stato chiuso o cancellato mentre lo leggevi."
@@ -1440,7 +1440,6 @@ it:
     show_pinned_excerpt_mobile: "Mostra estratti sugli argomenti appuntati nella visualizzazione in mobilità."
     show_pinned_excerpt_desktop: "Mostra estratti sugli argomenti appuntati nella vista desktop."
     post_onebox_maxlength: "Lunghezza massima in caratteri di un messaggio Discourse in Onebox."
-    blocked_onebox_domains: "Un elenco di domini che non saranno mai trasformati in onebox."
     allowed_inline_onebox_domains: "Un elenco di domini che saranno trasformati in onebox in forma di miniatura se collegati senza un titolo"
     enable_inline_onebox_on_all_domains: "Ignora l'impostazione del sito inline_onebox_domain_allowlist e consenti onebox in linea per tutti i domini."
     force_custom_user_agent_hosts: "Host per i quali utilizzare l'user agent onebox personalizzato su tutte le richieste. (Particolarmente utile per gli host che limitano l'accesso con user agent)."

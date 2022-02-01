@@ -338,8 +338,6 @@ es:
   too_many_links:
     one: "Lo sentimos, los usuarios nuevos solo pueden poner un enlace en una publicación."
     other: "Lo sentimos, los usuarios nuevos solo pueden poner %{count} enlaces en una publicación."
-  contains_blocked_word: "Tu publicación contiene una palabra que no está permitida: %{word}"
-  contains_blocked_words: "Tu publicación contiene varias palabras que no están permitidas: %{words}"
   spamming_host: "Lo sentimos, no puedes publicar un enlace a esa web."
   user_is_suspended: "A los usuarios suspendidos no se les permite publicar."
   topic_not_found: "Algo salió mal. ¿Tal vez este tema se cerró o eliminó mientras estabas lo estabas mirando?"
@@ -486,6 +484,7 @@ es:
       Puedes editar tu anterior respuesta para añadir una cita. Para ello, selecciona el texto que quieras citar y pulsa el botón <b>citar respuesta</b> que aparecerá.
 
       Es más fácil leer temas que tengan menos respuestas (aunque más profundas), que tener que leer muchas respuestas individuales.
+    dominating_topic: Has publicado más del %{percent} % de las respuestas, ¿hay alguien más de quien te gustaría saber?
     get_a_room: Has respondido a @%{reply_username} %{count} veces, ¿sabías que también puedes enviarle un mensaje personal directamente?
     too_many_replies: |
       ### Has llegado al límite de respuestas en este tema
@@ -1337,6 +1336,7 @@ es:
       labels:
         user: Usuario
         qtt_like: Me gusta recibidos
+      description: "Los 10 usuarios que más me gusta han recibido."
     top_users_by_likes_received_from_inferior_trust_level:
       title: "Usuarios que más «me gusta» han recibido de usuarios con niveles de confianza bajos"
       labels:
@@ -1349,7 +1349,9 @@ es:
       labels:
         user: Usuario
         qtt_like: Me gusta recibidos
+      description: "Los 10 usuarios que han recibido más me gusta de numerosas personas distintas."
   dashboard:
+    group_email_credentials_warning: 'Hay un problema con las credenciales del correo electrónico del grupo <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. No se enviarán mensajes desde la bandeja de entrada del grupo hasta que se solucione el problema. %{error}'
     rails_env_warning: "Tu servidor está funcionando en modo de %{env}."
     host_names_warning: "Tu archivo config/database.yml está utilizando el hostname localhost predeterminado. Actualízalo para usar el hostname de tu sitio."
     sidekiq_warning: 'Sidekiq no está funcionando. Muchas tareas, tal como el envío de correos electrónicos, se están ejecutando de forma desincronizada por sidekiq. Asegúrate de que por lo menos un proceso de sidekiq está funcionando. <a href="https://github.com/mperham/sidekiq" target="_blank">Puedes obtener más información sobre Sidekiq aquí</a>.'
@@ -1441,7 +1443,6 @@ es:
     show_pinned_excerpt_mobile: "Mostrar extracto de temas anclados en la vista móvil."
     show_pinned_excerpt_desktop: "Mostrar extracto de temas anclados en la vista de escritorio."
     post_onebox_maxlength: "Extensión máxima en caracteres de una publicación de Discourse en formato onebox."
-    blocked_onebox_domains: "Una lista de dominios que nunca será oneboxed."
     allowed_inline_onebox_domains: "Una lista de dominios que serán oneboxed en forma de miniatura si están vinculados sin título"
     enable_inline_onebox_on_all_domains: "Ignorar el ajuste del sitio inline_onebox_domain_allowlist y permitir inline onebox en todos los dominios."
     force_custom_user_agent_hosts: "Hosts que se utilizará para el agente usuario personalizado de onebox en todas las solicitudes. (Especialmente útil para hosts que limitan el acceso por usuario agente)."
@@ -2541,6 +2542,9 @@ es:
   system_messages:
     reviewables_reminder:
       subject_template: "Hay elementos pendientes en la cola de revisión"
+      text_body_template:
+        one: "Hay %{mentions} elemento recibido hace más de %{count} hora. [Por favor, revísalo](%{base_url}/review)."
+        other: "Hay %{mentions} elementos recibidos hace más de %{count} horas. [Por favor, revísalos](%{base_url}/review)."
     private_topic_title: "Tema #%{id}"
     contents_hidden: "Visita la publicación para ver su contenido."
     post_hidden:
@@ -2623,6 +2627,26 @@ es:
     flags_agreed_and_post_deleted_for_responders:
       title: "Respuesta a un mensaje denunciado eliminada por el personal"
       subject_template: "Respuesta a un mensaje denunciado eliminada por el personal"
+      text_body_template: |
+        Hola,
+
+        Esto es un mensaje automático enviado desde %{site_name} para hacerte saber que una [publicación](%{base_url}%{url}) a la que has respondido ha sido eliminada.
+
+        %{flag_reason}
+
+        La publicación fue denunciada por la comunidad y un miembro del equipo decidió eliminarla.
+
+        ```markdown
+        %{flagged_post_raw_content}
+        ```
+
+        Esta era tu respuesta:
+
+        ```markdown
+        %{flagged_post_response_raw_content}
+        ```
+
+        Para más detalles sobre el motivo del borrado, consulta las [directrices de la comunidad](%{base_url}/guidelines).
     usage_tips:
       text_body_template: |
         Si quieres unos consejos para empezar, [echa un vistazo a esta entrada de blog](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
