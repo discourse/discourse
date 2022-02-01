@@ -1,5 +1,6 @@
 import {
   LATER_TODAY_CUTOFF_HOUR,
+  MOMENT_FRIDAY,
   MOMENT_THURSDAY,
   START_OF_DAY_HOUR,
   laterToday,
@@ -282,6 +283,10 @@ export default Component.extend({
 
     if (now(this.userTimezone).day() >= MOMENT_THURSDAY) {
       this._hideOption(options, TIME_SHORTCUT_TYPES.LATER_THIS_WEEK);
+    }
+
+    if (now(this.userTimezone).day() >= MOMENT_FRIDAY) {
+      this._hideOption(options, TIME_SHORTCUT_TYPES.THIS_WEEKEND);
     }
   },
 

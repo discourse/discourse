@@ -6,6 +6,7 @@ export const LATER_TODAY_MAX_HOUR = 18;
 export const MOMENT_SUNDAY = 0;
 export const MOMENT_MONDAY = 1;
 export const MOMENT_THURSDAY = 4;
+export const MOMENT_FRIDAY = 5;
 export const MOMENT_SATURDAY = 6;
 
 export function now(timezone) {
