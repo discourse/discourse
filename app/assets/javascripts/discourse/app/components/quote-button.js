@@ -5,6 +5,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import {
   postUrl,
   selectedElement,
+  selectedRange,
   selectedText,
   setCaretPosition,
   translateModKey,
@@ -164,10 +165,14 @@ export default Component.extend(KeyEnterEscape, {
     const cooked =
       $selectedElement.find(".cooked")[0] ||
       $selectedElement.closest(".cooked")[0];
-    const postBody = toMarkdown(cooked.innerHTML);
 
+    // computing markdown takes a lot of time on long posts
+    // this code attempts to compute it only when we can't fast track
     let opts = {
-      full: _selectedText === postBody,
+      full:
+        selectedRange().startOffset > 0
+          ? false
+          : _selectedText === toMarkdown(cooked.innerHTML),
     };
 
     for (
