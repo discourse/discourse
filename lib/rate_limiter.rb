@@ -37,7 +37,7 @@ class RateLimiter
     "#{RateLimiter.key_prefix}:#{@user && @user.id}:#{type}"
   end
 
-  def initialize(user, type, max, secs, global: false, aggressive: false, error_code: nil)
+  def initialize(user, type, max, secs, global: false, aggressive: false, error_code: nil, staff_limit: { max: nil, secs: nil })
     @user = user
     @type = type
     @key = build_key(type)
@@ -46,6 +46,7 @@ class RateLimiter
     @global = global
     @aggressive = aggressive
     @error_code = error_code
+    @staff_limit = staff_limit
   end
 
   def clear!
@@ -113,14 +114,22 @@ class RateLimiter
   end
 
   def performed!(raise_error: true)
-    return true if rate_unlimited?
+    return true if rate_unlimited? && @staff_limit[:max].nil?
     now = Time.now.to_i
-
-    if ((max || 0) <= 0) || rate_limiter_allowed?(now)
-      raise RateLimiter::LimitExceeded.new(seconds_to_wait(now), @type, @error_code) if raise_error
-      false
+    if @user&.staff? && @staff_limit[:max].present?
+      if ((@staff_limit[:max] || 0) <= 0) || rate_limiter_allowed?(now)
+        raise RateLimiter::LimitExceeded.new(seconds_to_wait(now), @type, @error_code) if raise_error
+        false
+      else
+        true
+      end
     else
-      true
+      if ((max || 0) <= 0) || rate_limiter_allowed?(now)
+        raise RateLimiter::LimitExceeded.new(seconds_to_wait(now), @type, @error_code) if raise_error
+        false
+      else
+        true
+      end
     end
   rescue Redis::CommandError => e
     if e.message =~ /READONLY/
@@ -142,7 +151,11 @@ class RateLimiter
   end
 
   def remaining
-    return @max if @user && @user.staff?
+    if @user && @user.staff? && @staff_limit[:max].present?
+      return @staff_limit[:max]
+    elsif @user && @user.staff?
+      return @max
+    end
 
     arr = redis.lrange(prefixed_key, 0, @max) || []
     t0 = Time.now.to_i
@@ -153,7 +166,8 @@ class RateLimiter
   private
 
   def rate_limiter_allowed?(now)
-
+    secs_limit = @staff_limit[:secs] || @secs
+    max_limit = @staff_limit[:max] || @max
     lua, lua_sha = nil
     if @aggressive
       lua = PERFORM_LUA_AGGRESSIVE
@@ -163,7 +177,7 @@ class RateLimiter
       lua_sha = PERFORM_LUA_SHA
     end
 
-    eval_lua(lua, lua_sha, [prefixed_key], [now, @secs, @max]) == 0
+    eval_lua(lua, lua_sha, [prefixed_key], [now, secs_limit, max_limit]) == 0
   end
 
   def prefixed_key
