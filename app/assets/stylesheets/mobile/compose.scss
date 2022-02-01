@@ -85,8 +85,10 @@
     margin-bottom: 6px;
   }
 
-  .category-input {
+  .category-input,
+  .with-tags .category-input {
     margin-bottom: 6px;
+    max-width: calc(50% - 3px);
   }
 
   .submit-panel {
@@ -189,6 +191,7 @@
 
     .mini-tag-chooser {
       margin: 0 0 6px 6px;
+      max-width: calc(50% - 3px);
     }
 
     .selected-name {
