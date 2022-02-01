@@ -686,7 +686,6 @@ users:
     default: 2000
     hidden: true
   use_email_for_username_and_name_suggestions:
-    hidden: true
     default: false
 
 groups:
