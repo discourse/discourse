@@ -191,9 +191,8 @@ export default Component.extend(KeyEnterEscape, {
         "_canEditPost",
         this.topic.postStream.findLoadedPost(postId)?.can_edit
       );
-
       const regexp = new RegExp(regexSafeStr(quoteState.buffer), "gi");
-      const matches = postBody.match(regexp);
+      const matches = cooked.innerHTML.match(regexp);
 
       if (
         quoteState.buffer.length < 1 ||
