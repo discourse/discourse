@@ -10,18 +10,18 @@ export default ComboBoxComponent.extend({
   },
 
   get nameProperty() {
-    return this.isLocalized() ? "name" : null;
+    return this.isLocalized ? "name" : null;
   },
 
   get valueProperty() {
-    return this.isLocalized() ? "value" : null;
+    return this.isLocalized ? "value" : null;
   },
 
   get content() {
-    return this.isLocalized() ? moment.tz.localizedNames() : moment.tz.names();
+    return this.isLocalized ? moment.tz.localizedNames() : moment.tz.names();
   },
 
-  isLocalized() {
+  get isLocalized() {
     return (
       moment.locale() !== "en" && typeof moment.tz.localizedNames === "function"
     );
