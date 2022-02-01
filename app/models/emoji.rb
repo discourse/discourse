@@ -54,6 +54,10 @@ class Emoji
     is_toned = name.match?(/.+:t[1-6]/)
     normalized_name = name.gsub(/(.+):t[1-6]/, '\1')
 
+    Emoji.aliases.each do |original, aliases|
+      normalized_name = original if aliases.include?(normalized_name)
+    end
+
     Emoji.all.detect do |e|
       e.name == normalized_name &&
       (!is_toned || (is_toned && e.tonable))

@@ -85,6 +85,11 @@ describe Emoji do
       expect(Emoji.exists?("blonde_woman:t0")).to be(false)
       expect(Emoji.exists?("blonde_woman:t")).to be(false)
     end
+
+    it 'returns true when emoji is an alias' do
+      expect(Emoji.exists?(":thumbsup:")).to be(true)
+      expect(Emoji.exists?("thumbsup")).to be(true)
+    end
   end
 
   describe '.codes_to_img' do
