@@ -213,13 +213,8 @@ export default Component.extend({
       });
     }
 
-    options.forEach((option) => {
-      if (customLabels[option.id]) {
-        option.label = customLabels[option.id];
-      }
-    });
+    this._applyCustomLabels(options, customLabels);
     this._formatTime(options);
-
     return options;
   },
 
@@ -267,6 +262,14 @@ export default Component.extend({
     if (this.onTimeSelected) {
       this.onTimeSelected(type, dateTime);
     }
+  },
+
+  _applyCustomLabels(options, customLabels) {
+    options.forEach((option) => {
+      if (customLabels[option.id]) {
+        option.label = customLabels[option.id];
+      }
+    });
   },
 
   _formatTime(options) {
