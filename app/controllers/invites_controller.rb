@@ -362,7 +362,7 @@ class InvitesController < ApplicationController
     guardian.ensure_can_resend_all_invites!(current_user)
 
     begin
-      RateLimiter.new(current_user, "bulk-reinvite-per-hour", 1, 1.day).performed!
+      RateLimiter.new(current_user, "bulk-reinvite-per-hour", 1, 1.day, staff_limit: { max: 3, secs: 1.day }).performed!
     rescue
       return render_json_error(I18n.t("rate_limiter.slow_down"))
     end
