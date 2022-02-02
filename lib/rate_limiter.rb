@@ -48,7 +48,6 @@ class RateLimiter
     @error_code = error_code
     @staff_limit = staff_limit
 
-    
     if @user && @user.staff? && @staff_limit[:max].present?
       @max = @staff_limit[:max]
       @secs = @staff_limit[:secs]
