@@ -69,9 +69,9 @@ export default Component.extend({
         futureIndex = this.collection.length - 1;
       }
 
-      const shiftedEmoji = this.collection[index];
+      const shiftedValue = this.collection[index];
       this.collection.removeAt(index);
-      this.collection.insertAt(futureIndex, shiftedEmoji);
+      this.collection.insertAt(futureIndex, shiftedValue);
 
       this._saveValues();
     },
