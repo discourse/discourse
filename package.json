@@ -43,7 +43,7 @@
     "@arkweid/lefthook": "^0.7.2",
     "@mixer/parallel-prettier": "^2.0.1",
     "browserify": "^17.0.0",
-    "chrome-launcher": "^0.12.0",
+    "chrome-launcher": "^0.14.2",
     "chrome-remote-interface": "^0.25",
     "lodash-cli": "https://github.com/lodash-archive/lodash-cli.git",
     "pretender": "^3.4.7",
