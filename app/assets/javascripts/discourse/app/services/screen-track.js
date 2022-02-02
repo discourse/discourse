@@ -2,6 +2,11 @@ import Service, { inject as service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { bind } from "discourse-common/utils/decorators";
 import { isTesting } from "discourse-common/config/environment";
+import {
+  deleteHighestReadCache,
+  getHighestReadCache,
+  setHighestReadCache,
+} from "discourse/lib/topic-list-tracker";
 
 // We use this class to track how long posts in a topic are on the screen.
 const PAUSE_UNLESS_SCROLLED = 1000 * 60 * 3;
@@ -128,7 +133,17 @@ export default class ScreenTrack extends Service {
       this._consolidatedTimings.push({ timings, topicTime, topicId });
     }
 
+    const highestRead = parseInt(Object.keys(timings).lastObject, 10);
+    const cachedHighestRead = this.highestReadFromCache(topicId);
+    if (!cachedHighestRead || cachedHighestRead < highestRead) {
+      setHighestReadCache(topicId, highestRead);
+    }
+
     return this._consolidatedTimings;
+  }
+
+  highestReadFromCache(topicId) {
+    return getHighestReadCache(topicId);
   }
 
   sendNextConsolidatedTiming() {
@@ -172,6 +187,14 @@ export default class ScreenTrack extends Service {
         if (topicController) {
           const postNumbers = Object.keys(timings).map((v) => parseInt(v, 10));
           topicController.readPosts(topicId, postNumbers);
+
+          const cachedHighestRead = this.highestReadFromCache(topicId);
+          if (
+            cachedHighestRead &&
+            cachedHighestRead <= postNumbers.lastObject
+          ) {
+            deleteHighestReadCache(topicId);
+          }
         }
         this.appEvents.trigger("topic:timings-sent", data);
       })
