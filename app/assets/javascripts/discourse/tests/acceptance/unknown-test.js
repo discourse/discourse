@@ -1,6 +1,6 @@
 import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 import { click, currentURL, visit } from "@ember/test-helpers";
-import { skip, test } from "qunit";
+import { test } from "qunit";
 
 acceptance("Category 404", function (needs) {
   needs.pretender((server, helper) => {
@@ -12,7 +12,7 @@ acceptance("Category 404", function (needs) {
       });
     });
   });
-  skip("Navigating to a bad category link does not break the router", async function (assert) {
+  test("Navigating to a bad category link does not break the router", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
     await click('[data-for-test="category-404"]');
