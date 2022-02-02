@@ -532,7 +532,12 @@ describe PrettyText do
       expect(PrettyText.cook("```cpp\ncpp\n```")).to match_html("<pre><code class='lang-cpp'>cpp\n</code></pre>")
       expect(PrettyText.cook("```\ncpp\n```")).to match_html("<pre><code class='lang-auto'>cpp\n</code></pre>")
       expect(PrettyText.cook("```text\ncpp\n```")).to match_html("<pre><code class='lang-nohighlight'>cpp\n</code></pre>")
-
+      expect(PrettyText.cook("```custom\ncustom content\n```")).to match_html("<pre data-wrap='custom'><code class='lang-nohighlight'>custom content\n</code></pre>")
+      expect(PrettyText.cook("```custom foo=bar\ncustom content\n```")).to match_html("<pre data-foo='bar' data-wrap='custom'><code class='lang-nohighlight'>custom content</code></pre>")
+      expect(PrettyText.cook("```INVALID a=1\n```")).to match_html("<pre data-a='1' data-wrap='INVALID'><code class='lang-nohighlight'>\n</code></pre>")
+      expect(PrettyText.cook("```INVALID a=1, foo=bar , baz=2\n```")).to match_html("<pre data-a='1' data-foo='bar' data-baz='2' data-wrap='INVALID'><code class='lang-nohighlight'>\n</code></pre>")
+      expect(PrettyText.cook("```text\n```")).to match_html("<pre><code class='lang-nohighlight'>\n</code></pre>")
+      expect(PrettyText.cook("```auto\n```")).to match_html("<pre><code class='lang-auto'>\n</code></pre>")
     end
 
     it 'indents code correctly' do

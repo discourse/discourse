@@ -205,6 +205,7 @@ export const DEFAULT_LIST = [
   "p[lang]",
   "picture",
   "pre",
+  "pre[data-*]",
   "s",
   "small",
   "span[lang]",

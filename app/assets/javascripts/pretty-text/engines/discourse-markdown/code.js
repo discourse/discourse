@@ -1,35 +1,58 @@
 // we need a custom renderer for code blocks cause we have a slightly non compliant
 // format with special handling for text and so on
-
 const TEXT_CODE_CLASSES = ["text", "pre", "plain"];
 
 function render(tokens, idx, options, env, slf, md) {
-  let token = tokens[idx],
-    info = token.info ? md.utils.unescapeAll(token.info) : "",
-    langName = md.options.discourse.defaultCodeLang,
-    className,
-    escapedContent = md.utils.escapeHtml(token.content);
+  const token = tokens[idx];
+  let tokenInfoAttributes = {};
+  const escapedContent = md.utils.escapeHtml(token.content);
 
-  if (info) {
-    // strip off any additional languages
-    info = info.trim().split(/\s+/g)[0];
+  let tag;
+  if (token.info) {
+    let attributes;
+    [tag, ...attributes] = token.info.trim().split(" ").filter(Boolean);
+
+    (attributes || [])
+      .join("")
+      .split(",")
+      .forEach((potentialPair) => {
+        const [key, value] = potentialPair.trim().split("=");
+
+        // invalid pairs would get caught here and not used, eg `foo=`
+        if (key && value) {
+          tokenInfoAttributes[key] = value;
+        }
+      });
   }
 
-  const acceptableCodeClasses = md.options.discourse.acceptableCodeClasses;
-  if (
-    acceptableCodeClasses &&
-    info &&
-    acceptableCodeClasses.indexOf(info) !== -1
-  ) {
-    langName = info;
+  tag = tag || md.options.discourse.defaultCodeLang;
+
+  let className;
+  if (/^[a-z]*$/i.test(tag)) {
+    const acceptableCodeClasses =
+      md.options.discourse.acceptableCodeClasses || [];
+
+    if (TEXT_CODE_CLASSES.indexOf(tag) > -1) {
+      className = "lang-nohighlight";
+    } else if (acceptableCodeClasses.indexOf(tag) > -1) {
+      className = `lang-${tag}`;
+    } else {
+      className = "lang-nohighlight";
+      tokenInfoAttributes["wrap"] = tag;
+    }
   }
 
-  className =
-    TEXT_CODE_CLASSES.indexOf(info) !== -1
-      ? "lang-nohighlight"
-      : "lang-" + langName;
+  const dataAttributes = Object.keys(tokenInfoAttributes)
+    .map((key) => {
+      const value = md.utils.escapeHtml(tokenInfoAttributes[key]);
+      key = md.utils.escapeHtml(key);
+      return `data-${key}="${value}"`;
+    })
+    .join(" ");
 
-  return `<pre><code class="${className}">${escapedContent}</code></pre>\n`;
+  return `<pre${dataAttributes ? ` ${dataAttributes}` : ""}><code${
+    className ? ` class="${className}"` : ""
+  }>${escapedContent}</code></pre>`;
 }
 
 export function setup(helper) {
