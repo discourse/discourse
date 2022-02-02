@@ -205,7 +205,7 @@ export default Component.extend({
 
   @computed("currentUserTimezone")
   formatedCurrentUserTimezone(timezone) {
-    return timezone.replace("_", " ").replace("Etc/", "").split("/");
+    return timezone.replace("_", " ").replace("Etc/", "").replace("/", ", ");
   },
 
   @computed("formats")
@@ -398,8 +398,10 @@ export default Component.extend({
     return new Promise((resolve) => {
       loadScript("/javascripts/pikaday.js").then(() => {
         const options = {
-          field: this.$(`.fake-input`)[0],
-          container: this.$(`#picker-container-${this.elementId}`)[0],
+          field: this.element.querySelector(".fake-input"),
+          container: this.element.querySelector(
+            `#picker-container-${this.elementId}`
+          ),
           bound: false,
           format: "YYYY-MM-DD",
           reposition: false,

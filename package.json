@@ -7,6 +7,7 @@
   "license": "GPL-2.0-only",
   "dependencies": {
     "@discourse/itsatrap": "^2.0.10",
+    "@discourse/moment-timezone-names-translations": "^1.0.0",
     "@fortawesome/fontawesome-free": "5.11.2",
     "@highlightjs/cdn-assets": "^10.7.0",
     "@json-editor/json-editor": "^2.6.1",
@@ -30,7 +31,6 @@
     "markdown-it": "10.0.0",
     "moment": "2.29.1",
     "moment-timezone": "0.5.31",
-    "moment-timezone-names-translations": "https://github.com/discourse/moment-timezone-names-translations",
     "pikaday": "1.8.0",
     "workbox-cacheable-response": "^4.3.1",
     "workbox-core": "^4.3.1",
