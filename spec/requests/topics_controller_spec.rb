@@ -326,6 +326,21 @@ RSpec.describe TopicsController do
           expect(result['success']).to eq(false)
           expect(result['url']).to be_blank
         end
+
+        it 'returns plugin validation error' do
+          # stub here is to simulate validation added by plugin which would be triggered when post is moved
+          PostCreator.any_instance.stubs(:skip_validations?).returns(false)
+
+          p1.update_columns(raw: "i", cooked: "")
+          post "/t/#{topic.id}/move-posts.json", params: {
+            post_ids: [p1.id],
+            destination_topic_id: dest_topic.id
+          }
+
+          expect(response.status).to eq(422)
+          result = response.parsed_body
+          expect(result['errors']).to eq(["Body is too short (minimum is 5 characters) and Body seems unclear, is it a complete sentence?"])
+        end
       end
     end
 
