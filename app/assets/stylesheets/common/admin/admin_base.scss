@@ -856,6 +856,11 @@ table#user-badges {
       @include value-btn;
       margin-right: 0.25em;
     }
+
+    .shift-up-value-btn,
+    .shift-down-value-btn {
+      margin-inline: 0.25em;
+    }
   }
   .values {
     margin-bottom: 0.5em;
