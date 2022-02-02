@@ -1261,7 +1261,7 @@ class User < ActiveRecord::Base
   end
 
   def set_random_avatar
-    if SiteSetting.selectable_avatars_enabled?
+    unless SiteSetting.selectable_avatars_enabled == "none"
       if upload = SiteSetting.selectable_avatars.sample
         update_column(:uploaded_avatar_id, upload.id)
         UserAvatar.create!(user_id: id, custom_upload_id: upload.id)

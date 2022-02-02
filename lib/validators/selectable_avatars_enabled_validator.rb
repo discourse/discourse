@@ -6,7 +6,7 @@ class SelectableAvatarsEnabledValidator
   end
 
   def valid_value?(value)
-    value == "f" || SiteSetting.selectable_avatars.size > 1
+    value == "none" || SiteSetting.selectable_avatars.size > 1
   end
 
   def error_message

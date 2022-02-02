@@ -1244,7 +1244,7 @@ class UsersController < ApplicationController
       return render json: failed_json, status: 422
     end
 
-    unless SiteSetting.selectable_avatars_enabled
+    if SiteSetting.selectable_avatars_enabled == "none"
       return render json: failed_json, status: 422
     end
 
