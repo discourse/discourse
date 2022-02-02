@@ -114,7 +114,6 @@ class Guardian
 
   def is_developer?
     @user &&
-    is_admin? &&
     (
       Rails.env.development? ||
       Developer.user_ids.include?(@user.id) ||
