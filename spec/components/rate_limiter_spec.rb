@@ -203,7 +203,7 @@ describe RateLimiter do
           freeze_time 10.seconds.from_now
           expect { staff_rate_limiter.performed! }.to raise_error do |error|
             expect(error).to be_a(RateLimiter::LimitExceeded)
-            expect(error).to having_attributes(available_in: 30)
+            expect(error).to having_attributes(available_in: 70)
           end
         end
 
