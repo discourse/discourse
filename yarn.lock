@@ -581,30 +581,6 @@ bl@^4.0.3:
     inherits "^2.0.4"
     readable-stream "^3.4.0"
 
-blueimp-canvas-to-blob@3:
-  version "3.28.0"
-  resolved "https://registry.yarnpkg.com/blueimp-canvas-to-blob/-/blueimp-canvas-to-blob-3.28.0.tgz#c8ab4dc6bb08774a7f273798cdf94b0776adf6c8"
-  integrity sha512-5q+YHzgGsuHQ01iouGgJaPJXod2AzTxJXmVv90PpGrRxU7G7IqgPqWXz+PBmt3520jKKi6irWbNV87DicEa7wg==
-
-blueimp-file-upload@10.13.0:
-  version "10.13.0"
-  resolved "https://registry.yarnpkg.com/blueimp-file-upload/-/blueimp-file-upload-10.13.0.tgz#3994d1606caa44197e4aa29d7f7e1cdd6f521568"
-  integrity sha512-N0yIt/5oR0ZioBaj6u8YuCRSp+1doaJOnNJHIYHBHZdrcWfjfc9Xq03nzodkSdbQIRfWwNin5rexUwY203V35g==
-  optionalDependencies:
-    blueimp-canvas-to-blob "3"
-    blueimp-load-image "3"
-    blueimp-tmpl "3"
-
-blueimp-load-image@3:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/blueimp-load-image/-/blueimp-load-image-3.0.0.tgz#d71c39440a7d2f1a83e3e86a625e329116a51705"
-  integrity sha512-Q9rFbd4ZUNvzSFmRXx9MoG0RwWwJeMjjEUbG7WIOJgUg22Jgkow0wL5b35B6qwiBscxACW9OHdrP5s2vQ3x8DQ==
-
-blueimp-tmpl@3:
-  version "3.19.0"
-  resolved "https://registry.yarnpkg.com/blueimp-tmpl/-/blueimp-tmpl-3.19.0.tgz#1160f79c4ce55bd82d25cfa3df7db116f8d1df62"
-  integrity sha512-v8/Vge6U3uwlAjO9TxeHoYl77C1GJDZBN45pUp+39WyHU/VRzYbnGDhRNYvcT6Lh8jihVsXNZttnDpnYVA4m9w==
-
 bn.js@^4.0.0, bn.js@^4.1.0, bn.js@^4.11.9:
   version "4.12.0"
   resolved "https://registry.yarnpkg.com/bn.js/-/bn.js-4.12.0.tgz#775b3f278efbb9718eec7361f483fb36fbbfea88"

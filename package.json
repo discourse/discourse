@@ -18,7 +18,6 @@
     "@uppy/utils": "^4.0.3",
     "@uppy/xhr-upload": "^2.0.4",
     "ace-builds": "1.4.13",
-    "blueimp-file-upload": "10.13.0",
     "bootbox": "3.2.0",
     "bootstrap": "v3.4.1",
     "chart.js": "3.5.1",
