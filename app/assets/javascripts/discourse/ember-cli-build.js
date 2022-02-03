@@ -110,11 +110,6 @@ module.exports = function (defaults) {
   });
   app.import(discourseRoot + "/app/assets/javascripts/polyfills.js");
 
-  app.import(
-    discourseRoot +
-      "/app/assets/javascripts/discourse/public/assets/scripts/module-shims.js"
-  );
-
   const mergedTree = mergeTrees([
     discourseScss(`${discourseRoot}/app/assets/stylesheets`, "testem.scss"),
     createI18nTree(discourseRoot, vendorJs),
