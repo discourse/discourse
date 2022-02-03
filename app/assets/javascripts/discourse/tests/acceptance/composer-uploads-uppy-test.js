@@ -316,7 +316,7 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
     appEvents.trigger("composer:add-files", image);
   });
 
-  test("should place cursor properly after inserting a placeholder", async function (assert) {
+  skip("should place cursor properly after inserting a placeholder", async function (assert) {
     const appEvents = loggedInUser().appEvents;
     const done = assert.async();
 
