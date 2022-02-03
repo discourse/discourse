@@ -402,6 +402,12 @@ describe FinalDestination do
         expect(final.status).to eq(:resolved)
       end
     end
+
+    it 'raises Timeout::Error' do
+      stub_request(:head, "https://eviltrout.com/this/is/an/image").to_return(lambda { |request| sleep 5; image_response })
+      final = FinalDestination.new("https://eviltrout.com/this/is/an/image", opts.merge({ timeout: 0.0000001 }))
+      expect { final.resolve }.to raise_error(Timeout::Error)
+    end
   end
 
   describe '.get' do

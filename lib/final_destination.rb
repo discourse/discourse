@@ -203,13 +203,15 @@ class FinalDestination
     middlewares = Excon.defaults[:middlewares]
     middlewares << Excon::Middleware::Decompress if @http_verb == :get
 
-    response = Excon.public_send(@http_verb,
-      @uri.to_s,
-      read_timeout: timeout,
-      connect_timeout: timeout,
-      headers: headers,
-      middlewares: middlewares
-    )
+    response = Timeout::timeout(timeout) {
+      Excon.public_send(@http_verb,
+                        @uri.to_s,
+                        read_timeout: timeout,
+                        connect_timeout: timeout,
+                        headers: headers,
+                        middlewares: middlewares
+                       )
+    }
 
     location = nil
     response_headers = nil
