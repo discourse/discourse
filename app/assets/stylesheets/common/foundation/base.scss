@@ -167,13 +167,15 @@ input[type="submit"] {
     display: flex;
   }
 
-  > input[type="text"] {
+  > input[type="text"],
+  > input[type="search"] {
     display: inline-flex;
     flex: 1;
   }
 
   > .select-kit,
   > input[type="text"],
+  > input[type="search"],
   > label,
   > .btn,
   > .d-date-input {
