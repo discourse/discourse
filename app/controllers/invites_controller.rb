@@ -363,8 +363,7 @@ class InvitesController < ApplicationController
 
     begin
       RateLimiter.new(current_user, "bulk-reinvite-per-day", 1, 1.day, apply_limit_to_staff: true).performed!
-        expect(response.error).to be_a(RateLimiter::LimitExceeded)
-    rescue
+    rescue RateLimiter::LimitExceeded
       return render_json_error(I18n.t("rate_limiter.slow_down"))
     end
 
