@@ -409,7 +409,7 @@ GEM
     rubocop-discourse (2.5.0)
       rubocop (>= 1.1.0)
       rubocop-rspec (>= 2.0.0)
-    rubocop-rspec (2.7.0)
+    rubocop-rspec (2.8.0)
       rubocop (~> 1.19)
     ruby-prof (1.4.3)
     ruby-progressbar (1.11.0)
