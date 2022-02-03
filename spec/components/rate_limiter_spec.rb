@@ -194,7 +194,7 @@ describe RateLimiter do
           user.moderator = true
           expect { rate_limiter.performed! }.not_to raise_error
         end
-        
+
         it "applies max / secs to staff when apply_limit_to_staff flag is true" do
           5.times { apply_staff_rate_limiter.performed! }
           freeze_time 10.seconds.from_now
