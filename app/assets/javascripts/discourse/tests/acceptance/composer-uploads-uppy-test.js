@@ -9,7 +9,7 @@ import bootbox from "bootbox";
 import { authorizedExtensions } from "discourse/lib/uploads";
 import { click, fillIn, visit } from "@ember/test-helpers";
 import I18n from "I18n";
-import { test } from "qunit";
+import { skip, test } from "qunit";
 import { Promise } from "rsvp";
 
 function pretender(server, helper) {
@@ -311,7 +311,7 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
     appEvents.trigger("composer:add-files", image);
   });
 
-  test("should place cursor properly after inserting a placeholder", async function (assert) {
+  skip("should place cursor properly after inserting a placeholder", async function (assert) {
     const appEvents = loggedInUser().appEvents;
     const done = assert.async();
 
