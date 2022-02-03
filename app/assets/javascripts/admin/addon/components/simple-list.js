@@ -61,7 +61,7 @@ export default Component.extend({
     this.collection.removeAt(index);
     this.collection.insertAt(futureIndex, shiftedValue);
 
-    this._saveValues();
+    this._onChange();
   },
 
   _onChange() {
