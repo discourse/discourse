@@ -62,8 +62,8 @@ class DistributedMemoizer
 
     unique = SecureRandom.hex
 
-    result = redis.multi do
-      redis.setex(redis_lock_key, MAX_WAIT, unique)
+    result = redis.multi do |transaction|
+      transaction.setex(redis_lock_key, MAX_WAIT, unique)
     end
 
     redis.unwatch
