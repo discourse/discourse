@@ -477,7 +477,7 @@ GEM
       jwt (~> 2.0)
     xorcist (1.1.2)
     yaml-lint (0.0.10)
-    zeitwerk (2.5.3)
+    zeitwerk (2.5.4)
 
 PLATFORMS
   aarch64-linux
