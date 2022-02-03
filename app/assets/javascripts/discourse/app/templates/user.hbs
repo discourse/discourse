@@ -179,6 +179,7 @@
             {{plugin-outlet name="user-profile-primary" tagName="span" connectorTagName="div" args=(hash model=model)}}
           </div>
         </div>
+        {{plugin-outlet name="user-profile-above-collapsed-info" connectorTagName="div" args=(hash model=model collapsedInfo=collapsedInfo)}}
         {{#unless collapsedInfo}}
           <div class='secondary' id='collapsed-info-panel'>
             <dl>
