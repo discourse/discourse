@@ -197,6 +197,10 @@ class UserUpdater
         update_allowed_pm_users(attributes[:allowed_pm_usernames])
       end
 
+      if attributes.key?(:user_associated_accounts)
+        updated_associated_accounts(attributes[:user_associated_accounts])
+      end
+
       name_changed = user.name_changed?
       if (saved = (!save_options || user.user_option.save) && (user_notification_schedule.nil? || user_notification_schedule.save) && user_profile.save && user.save) &&
          (name_changed && old_user_name.casecmp(attributes.fetch(:name)) != 0)
@@ -262,6 +266,17 @@ class UserUpdater
         WHERE id in (:desired_ids)
         ON CONFLICT DO NOTHING
       SQL
+    end
+  end
+
+  def updated_associated_accounts(associations)
+    associations.each do |association|
+      user_associated_account = UserAssociatedAccount.find_or_initialize_by(user_id: user.id, provider_name: association[:provider_name])
+      if association[:provider_uid].present?
+        user_associated_account.update!(provider_uid: association[:provider_uid])
+      else
+        user_associated_account.destroy!
+      end
     end
   end
 
