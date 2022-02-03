@@ -81,7 +81,7 @@ class DistributedMutex
     now = redis.time[0]
     expire_time = now + validity
 
-    redis.synchronize do
+    @mutex.synchronize do
       redis.unwatch
       redis.watch key
 
@@ -106,7 +106,7 @@ class DistributedMutex
   end
 
   def unlock(expire_time)
-    redis.synchronize do
+    @mutex.synchronize do
       redis.unwatch
       redis.watch key
       current_expire_time = redis.get key
