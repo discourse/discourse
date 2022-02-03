@@ -907,15 +907,15 @@ describe InvitesController do
 
       freeze_time
 
-      user = Fabricate(:admin)
-      new_invite = Fabricate(:invite, invited_by: user)
-      expired_invite = Fabricate(:invite, invited_by: user)
+      admin = Fabricate(:admin)
+      new_invite = Fabricate(:invite, invited_by: admin)
+      expired_invite = Fabricate(:invite, invited_by: admin)
       expired_invite.update!(expires_at: 2.days.ago)
-      redeemed_invite = Fabricate(:invite, invited_by: user)
+      redeemed_invite = Fabricate(:invite, invited_by: admin)
       Fabricate(:invited_user, invite: redeemed_invite, user: Fabricate(:user))
       redeemed_invite.update!(expires_at: 5.days.ago)
 
-      sign_in(user)
+      sign_in(admin)
       post '/invites/reinvite-all'
 
       expect(response.status).to eq(200)
@@ -950,6 +950,15 @@ describe InvitesController do
         sign_in(admin)
         post '/invites/upload_csv.json', params: { file: file, name: 'discourse.csv' }
         expect(response.status).to eq(200)
+        expect(Jobs::BulkInvite.jobs.size).to eq(1)
+      end
+
+      it 'limits admins when bulk inviting' do
+        sign_in(admin)
+        post '/invites/upload_csv.json', params: { file: file, name: 'discourse.csv' }
+        expect(response.status).to eq(200)
+        post '/invites/upload_csv.json', params: { file: file, name: 'discourse.csv' }
+        expect(response.status).to eq(422)
         expect(Jobs::BulkInvite.jobs.size).to eq(1)
       end
 
