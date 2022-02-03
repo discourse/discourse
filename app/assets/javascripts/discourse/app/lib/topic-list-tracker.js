@@ -9,7 +9,7 @@ export function setTopicList(incomingModel) {
   model?.topics?.forEach((topic) => {
     let highestReadFromCache = highestReadCache[topic.id];
     if (
-      highestReadCache &&
+      highestReadFromCache &&
       highestReadFromCache >= topic.last_read_post_number
     ) {
       let count = Math.max(topic.highest_post_number - highestReadFromCache, 0);
