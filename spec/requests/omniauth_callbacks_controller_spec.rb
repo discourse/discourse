@@ -241,7 +241,8 @@ RSpec.describe Users::OmniauthCallbacksController do
         expect(data["associate_url"]).to eq(nil)
       end
 
-      it 'does not use email for username suggestions by default' do
+      it 'does not use email for username suggestions if disabled in settings' do
+        SiteSetting.use_email_for_username_and_name_suggestions = false
         username = ""
         name = ""
         email = "billmailbox@test.com"
