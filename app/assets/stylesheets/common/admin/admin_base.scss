@@ -859,7 +859,15 @@ table#user-badges {
 
     .shift-up-value-btn,
     .shift-down-value-btn {
+      display: none;
       margin-inline: 0.25em;
+    }
+
+    &:hover {
+      .shift-up-value-btn,
+      .shift-down-value-btn {
+        display: block;
+      }
     }
   }
   .values {
