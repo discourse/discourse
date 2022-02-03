@@ -37,7 +37,7 @@ class RateLimiter
     "#{RateLimiter.key_prefix}:#{@user && @user.id}:#{type}"
   end
 
-  def initialize(user, type, max, secs, global: false, aggressive: false, error_code: nil, staff_limit: { max: nil, secs: nil })
+  def initialize(user, type, max, secs, global: false, aggressive: false, error_code: nil, apply_limit_to_staff: false, staff_limit: { max: nil, secs: nil })
     @user = user
     @type = type
     @key = build_key(type)
@@ -46,9 +46,11 @@ class RateLimiter
     @global = global
     @aggressive = aggressive
     @error_code = error_code
+    @apply_limit_to_staff = apply_limit_to_staff
     @staff_limit = staff_limit
 
-    if @user && @user.staff? && @staff_limit[:max].present?
+    # override the default values if staff user, and staff specific max is passed
+    if @user&.staff? && !@apply_limit_to_staff && @staff_limit[:max].present?
       @max = @staff_limit[:max]
       @secs = @staff_limit[:secs]
     end
@@ -197,7 +199,7 @@ class RateLimiter
   end
 
   def rate_unlimited?
-    !!(RateLimiter.disabled? || (@user && @user.staff? && @staff_limit[:max].nil?))
+    !!(RateLimiter.disabled? || (@user&.staff? && !@apply_limit_to_staff && @staff_limit[:max].nil?))
   end
 
   def eval_lua(lua, sha, keys, args)

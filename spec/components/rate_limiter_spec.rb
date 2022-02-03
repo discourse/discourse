@@ -8,6 +8,7 @@ describe RateLimiter do
   fab!(:user) { Fabricate(:user) }
   fab!(:admin) { Fabricate(:admin) }
   let(:rate_limiter) { RateLimiter.new(user, "peppermint-butler", 2, 60) }
+  let(:apply_staff_rate_limiter) { RateLimiter.new(admin, "peppermint-servant", 5, 40, apply_limit_to_staff: true) }
   let(:staff_rate_limiter) { RateLimiter.new(user, "peppermind-servant", 5, 40, staff_limit: { max: 10, secs: 80 }) }
   let(:admin_staff_rate_limiter) { RateLimiter.new(admin, "peppermind-servant", 5, 40, staff_limit: { max: 10, secs: 80 }) }
 
@@ -193,13 +194,22 @@ describe RateLimiter do
           user.moderator = true
           expect { rate_limiter.performed! }.not_to raise_error
         end
+        
+        it "applies max / secs to staff when apply_limit_to_staff flag is true" do
+          5.times { apply_staff_rate_limiter.performed! }
+          freeze_time 10.seconds.from_now
+          expect { apply_staff_rate_limiter.performed! }.to raise_error do |error|
+            expect(error).to be_a(RateLimiter::LimitExceeded)
+            expect(error).to having_attributes(available_in: 30)
+          end
+        end
 
-        it "applies staff_limit to staff when values are passed" do
+        it "applies staff_limit max when present for staff" do
           expect(admin_staff_rate_limiter.can_perform?).to eq(true)
           expect(admin_staff_rate_limiter.remaining).to eq(10)
         end
 
-        it "applies the staff_limit secs when present for staff" do
+        it "applies staff_limit secs when present for staff" do
           10.times { admin_staff_rate_limiter.performed! }
           freeze_time 10.seconds.from_now
           expect { admin_staff_rate_limiter.performed! }.to raise_error do |error|

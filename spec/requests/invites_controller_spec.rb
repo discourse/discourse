@@ -953,6 +953,15 @@ describe InvitesController do
         expect(Jobs::BulkInvite.jobs.size).to eq(1)
       end
 
+      it 'limits admins when bulk inviting' do
+        sign_in(admin)
+        post '/invites/upload_csv.json', params: { file: file, name: 'discourse.csv' }
+        expect(response.status).to eq(200)
+        post '/invites/upload_csv.json', params: { file: file, name: 'discourse.csv' }
+        expect(response.status).to eq(422)
+        expect(Jobs::BulkInvite.jobs.size).to eq(1)
+      end
+
       it 'allows admin to bulk invite when DiscourseConnect enabled' do
         SiteSetting.discourse_connect_url = "https://example.com"
         SiteSetting.enable_discourse_connect = true
