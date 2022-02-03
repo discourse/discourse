@@ -1628,7 +1628,7 @@ en:
     allowed_iframes: "A list of iframe src domain prefixes that discourse can safely allow in posts"
     allowed_crawler_user_agents: "User agents of web crawlers that should be allowed to access the site. WARNING! SETTING THIS WILL DISALLOW ALL CRAWLERS NOT LISTED HERE!"
     blocked_crawler_user_agents: "Unique case insensitive word in the user agent string identifying web crawlers that should not be allowed to access the site. Does not apply if allowlist is defined."
-    slow_down_crawler_user_agents: "User agents of web crawlers that should be rate limited as configured in the \"slow down crawler rate\" setting. Each value must be at least 3 characters long."
+    slow_down_crawler_user_agents: 'User agents of web crawlers that should be rate limited as configured in the "slow down crawler rate" setting. Each value must be at least 3 characters long.'
     slow_down_crawler_rate: "If slow_down_crawler_user_agents is specified this rate will apply to all the crawlers (number of seconds delay between requests)"
     content_security_policy: "Enable Content-Security-Policy"
     content_security_policy_report_only: "Enable Content-Security-Policy-Report-Only"
@@ -2186,7 +2186,7 @@ en:
     display_name_on_posts: "Show a user's full name on their posts in addition to their @username."
     show_time_gap_days: "If two posts are made this many days apart, display the time gap in the topic."
     short_progress_text_threshold: "After the number of posts in a topic goes above this number, the progress bar will only show the current post number. If you change the progress bar's width, you may need to change this value."
-    default_code_lang: "Default programming language syntax highlighting applied to GitHub code blocks (auto, nohighlight, ruby, python etc.)"
+    default_code_lang: "Default programming language syntax highlighting applied to code blocks (auto, nohighlight, ruby, python etc.)"
     warn_reviving_old_topic_age: "When someone starts replying to a topic where the last reply is older than this many days, a warning will be displayed. Disable by setting to 0."
     autohighlight_all_code: "Force apply code highlighting to all preformatted code blocks even when they didn't explicitly specify the language."
     highlighted_languages: "Included syntax highlighting rules. (Warning: including too many languages may impact performance) see: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> for a demo"
