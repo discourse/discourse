@@ -51,7 +51,6 @@ class ApiKeyScope < ActiveRecord::Base
         users: {
           bookmarks: { actions: %w[users#bookmarks], params: %i[username] },
           sync_sso: { actions: %w[admin/users#sync_sso], params: %i[sso sig] },
-          sync_account: { actions: %w[admin/users#sync_account], params: %i[provider uid user credentials info extra] },
           show: { actions: %w[users#show], params: %i[username external_id external_provider] },
           check_emails: { actions: %w[users#check_emails], params: %i[username] },
           update: { actions: %w[users#update], params: %i[username] },

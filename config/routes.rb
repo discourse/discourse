@@ -151,7 +151,6 @@ Discourse::Application.routes.draw do
       get 'users/:id/:username/tl3_requirements' => 'users#show'
 
       post "users/sync_sso" => "users#sync_sso", constraints: AdminConstraint.new
-      post "users/sync_account" => "users#sync_account", constraints: AdminConstraint.new
 
       resources :impersonate, constraints: AdminConstraint.new
 
