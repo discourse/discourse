@@ -172,6 +172,7 @@ pl_PL:
       url: "Skopiuj i udostępnij adres URL"
     action_codes:
       public_topic: "Upublicznij ten temat %{when}"
+      open_topic: "przekonwertowano to na temat %{when}"
       private_topic: "przekształcił(a) ten temat w wiadomość prywatną %{when}"
       split_topic: "podziel ten temat %{when}"
       invited_user: "%{who} został zaproszony %{when}"
@@ -218,6 +219,7 @@ pl_PL:
     themes:
       default_description: "Domyślny"
       broken_theme_alert: "Twoja strona może nie działać, bo motyw / komponent %{theme} zawiera błędy. Wyłącz go w %{path}."
+    broken_decorator_alert: "Posty mogą nie wyświetlać się poprawnie, ponieważ jeden z dekoratorów treści postów w Twojej witrynie zgłosił błąd. Sprawdź narzędzia programistyczne przeglądarki, aby uzyskać więcej informacji."
     s3:
       regions:
         ap_northeast_1: "Azja i Pacyfik (Tokio)"
@@ -1249,6 +1251,8 @@ pl_PL:
         warnings: "Oficjalne ostrzeżenia"
         read_more_in_group: "Chcesz przeczytać więcej? Przeglądaj inne wiadomości w %{groupLink}."
         read_more: "Chcesz przeczytać więcej? Przeglądaj inne wiadomości w <a href='%{basePath}/u/%{username}/messages'>wiadomościach osobistych</a>."
+        read_more_group_pm_MF: "Masz do zobaczenia { UNREAD, plural, =0 {} one { <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># nieprzeczytaną wiadomość</a> } few { <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># nieprzeczytane wiadomości</a> } many { <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># nieprzeczytanych wiadomości</a> } other { <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># nieprzeczytanych wiadomości</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{i } false {} other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># nową</a> wiadomość } few {} many {} other { {BOTH, select, true{i } false {are } other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># nowych</a> wiadomości} }lub przeglądaj inne wiadomości w {groupLink}"
+        read_more_personal_pm_MF: "Masz do zobaczenia { UNREAD, plural, =0 {} one { <a href='{basePath}/u/{username}/messages/unread'># nieprzeczytaną wiadomość</a> } few { <a href='{basePath}/u/{username}/messages/unread'># nieprzeczytane wiadomości</a> } many { <a href='{basePath}/u/{username}/messages/unread'># nieprzeczytanych wiadomości</a> } other { <a href='{basePath}/u/{username}/messages/unread'># nieprzeczytanych</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{i } false {} other{}} <a href='{basePath}/u/{username}/messages/new'># nową</a> wiadomość} few {} many {} other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/u/{username}/messages/new'># nowych</a> wiadomości} } lub przeglądaj inne <a href='{basePath}/u/{username}/messages'>wiadomości osobiste</a>"
       preferences_nav:
         account: "Konto"
         security: "Bezpieczeństwo"
@@ -1502,9 +1506,11 @@ pl_PL:
         every_month: "każdego miesiąca"
         every_six_months: "co 6 miesięcy"
       email_level:
+        title: "Wyślij do mnie e-maila, gdy jestem cytowany, odpowiadam, pojawia się moja @nazwa_użytkownika lub gdy pojawia się nowa aktywność w moich obserwowanych kategoriach, tagach lub tematach"
         always: "zawsze"
         only_when_away: "tylko kiedy jest daleko"
         never: "nigdy"
+      email_messages_level: "Wyślij do mnie e-mail, gdy otrzymam wiadomość osobistą"
       include_tl0_in_digests: "Dołącz treści od nowych użytkowników w e-mailach podsumowujących."
       email_in_reply_to: "Zawieraj w e-mailach fragment oryginalnych postów z odpowiedzi"
       other_settings: "Inne"
@@ -1593,8 +1599,13 @@ pl_PL:
           expired_at_time: "Wygasło o %{time}"
           show_advanced: "Pokaż ustawienia zaawansowane"
           hide_advanced: "Ukryj ustawienia zaawansowane"
+          restrict: "Ogranicz do"
+          restrict_email: "Ogranicz do e-maila"
+          restrict_domain: "Ogranicz do domeny"
+          email_or_domain_placeholder: "nazwa@example.com lub example.com"
           max_redemptions_allowed: "Maksymalna liczba użyć"
           add_to_groups: "Dodaj do grup"
+          invite_to_topic: "Przyjedź na temat"
           expires_at: "Wygasa po"
           custom_message: "Opcjonalna wiadomość osobista"
           send_invite_email: "Zapisz i wyślij e-mail"
@@ -2055,6 +2066,16 @@ pl_PL:
         few: "Wspominając %{group}, powiadomisz <a href='%{group_link}'>%{count} osoby</a> – czy jesteś pewien?"
         many: "Wspominając %{group}, powiadomisz <a href='%{group_link}'>%{count} osób</a> – czy jesteś pewien?"
         other: "Wspominając %{group}, powiadomisz <a href='%{group_link}'>%{count} osób</a> –czy jesteś pewien?"
+      cannot_see_mention:
+        category: "Wspomniano o @%{username}, lecz nie zostannie on powiadomiony, ponieważ nie ma dostępu do tej kategorii. Będziesz musiał dodać go do grupy, która ma dostęp do tej kategorii."
+        private: "Wspomniano o @%{username}, lecz nie zostannie on powiadomiony, ponieważ nie może zobaczyć tej wiadomości osobistej. Będziesz musiał zaprosić go do tej wiadomości osobistej."
+        muted_topic: "Wspomniałeś o @%{username}, lecz nie zostanie on powiadomiony, ponieważ wyciszył ten temat."
+        not_allowed: "Wspomniałeś o @%{username}, lecz nie zostanie on powiadomiony, ponieważ nie został zaproszony do tego tematu."
+      here_mention:
+        one: "Wspominając <b>@%{here}</b>, masz zamiar powiadomić %{count} użytkownika – czy jesteś pewien?"
+        few: "Wspominając <b>@%{here}</b>, masz zamiar powiadomić %{count} użytkowników – czy jesteś pewien?"
+        many: "Wspominając <b>@%{here}</b>, masz zamiar powiadomić %{count} użytkowników – czy jesteś pewien?"
+        other: "Wspominając <b>@%{here}</b>, masz zamiar powiadomić %{count} użytkowników – czy jesteś pewien?"
       duplicate_link: "Wygląda na to, że Twój link do <b>%{domain}</b> został już wcześniej przesłany w tym wątku przez <b>@%{username}</b> w <a href='%{post_url}'>odpowiedzi przesłanej %{ago}</a> - jesteś pewien, że chcesz go wysłać ponownie?"
       reference_topic_title: "Odpowiedz: %{title}"
       error:
@@ -2247,6 +2268,11 @@ pl_PL:
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - zakończone"
       dismiss_confirmation:
+        body:
+          one: "Jesteś pewny? Masz %{count} ważne powiadomienie."
+          few: "Jesteś pewny? Masz %{count} ważne powiadomienia."
+          many: "Jesteś pewny? Masz %{count} ważnych powiadomień."
+          other: "Jesteś pewny? Masz %{count} ważnych powiadomień."
         dismiss: "Odrzuć"
         cancel: "Anuluj"
       group_message_summary:
@@ -2336,6 +2362,8 @@ pl_PL:
       in_topics_posts: "we wszystkich tematach i postach"
       enter_hint: "lub naciśnij Enter"
       in_posts_by: "w postach %{username}"
+      browser_tip: "%{modifier} + f"
+      browser_tip_description: "ponownie, aby użyć natywnego wyszukiwania w przeglądarce"
       recent: "Ostatnie wyszukiwania"
       clear_recent: "Wyczyść ostatnie wyszukiwania"
       type:
@@ -2775,6 +2803,11 @@ pl_PL:
         help: "udostępnij odnośnik do tego tematu"
         instructions: "Udostępnij link do tego tematu:"
         copied: "Link do tematu skopiowany."
+        restricted_groups:
+          one: "Widoczne tylko dla członków grupy: %{groupNames}"
+          few: "Widoczne tylko dla członków grup: %{groupNames}"
+          many: "Widoczne tylko dla członków grup: %{groupNames}"
+          other: "Widoczne tylko dla członków grup: %{groupNames}"
         notify_users:
           title: "Powiadom"
           instructions: "Powiadom następujących użytkowników o tym temacie:"
@@ -3305,7 +3338,7 @@ pl_PL:
       default_list_filter: "Domyślny filtr listy:"
       allow_badges_label: "Włącz przyznawanie odznak na podstawie aktywności w tej kategorii"
       edit_permissions: "Edytuj uprawnienia"
-      reviewable_by_group: "Oprócz personelu, treści w tej kategorii mogą być również przeglądane przez:"
+      reviewable_by_group: "Oprócz personelu, treści w tej kategorii mogą również przeglądać:"
       review_group_name: "nazwa grupy"
       require_topic_approval: "Wymagaj zatwierdzenia moderatora dla wszystkich nowych tematów"
       require_reply_approval: "Wymagaj zatwierdzenia moderatora dla wszystkich nowych odpowiedzi"
@@ -3692,6 +3725,7 @@ pl_PL:
         title: "Menu wyszukiwania"
         prev_next: "%{shortcut} Przesuń zaznaczenie w górę i w dół"
         insert_url: "%{shortcut} Wstaw zaznaczenie do otwartego edytora"
+        full_page_search: "%{shortcut} Uruchamia wyszukiwanie na całej stronie"
     badges:
       earned_n_times:
         one: "Otrzymano tę odznakę %{count} raz"
@@ -3755,12 +3789,18 @@ pl_PL:
       changed: "zmienione tagi:"
       tags: "Tagi"
       choose_for_topic: "tagi opcjonalne"
+      choose_for_topic_required:
+        one: "wybierz co najmniej %{count} tag..."
+        few: "wybierz co najmniej %{count} tagi..."
+        many: "wybierz co najmniej %{count} tagów..."
+        other: "wybierz co najmniej %{count} tagów..."
       info: "Informacje"
       default_info: "Ten tag nie jest ograniczony do żadnych kategorii i nie ma synonimów."
       staff_info: "Aby dodać ograniczenia, umieść ten znacznik w <a href=%{basePath}/tag_groups>grupie znaczników</a>."
       category_restricted: "Ten tag jest ograniczony do kategorii, do których nie masz uprawnień dostępu."
       synonyms: "Synonimy"
       synonyms_description: "W przypadku użycia następujących tagów zostaną one zastąpione przez <b>%{base_tag_name}</b>."
+      save: "Zapisz nazwę i opis tagu"
       tag_groups_info:
         one: 'Ten tag należy do grupy "%{tag_groups}”.'
         few: "Ten tag należy do następujących grup: %{tag_groups}."
@@ -3794,6 +3834,7 @@ pl_PL:
         few: "Jego %{count} synonimy również zostaną usunięte."
         many: "Jego %{count} synonimów również zostanie usuniętych."
         other: "Jego %{count} synonimów również zostanie usuniętych."
+      edit_tag: "Edytuj nazwę tagu i opis"
       description: "Opis"
       sort_by: "Sortuj po:"
       sort_by_count: "Liczba"
@@ -4127,6 +4168,7 @@ pl_PL:
         no_description: (brak opisu)
         all_api_keys: Wszystkie klucze API
         user_mode: Poziom użytkownika
+        scope_mode: Zakres
         impersonate_all_users: Podszywanie się pod dowolnego użytkownika
         single_user: "Pojedynczy użytkownik"
         user_placeholder: Wprowadź nazwę użytkownika
@@ -4143,6 +4185,7 @@ pl_PL:
             Możesz określić, które parametry będą dozwolone. Użyj przecinków, aby oddzielić wiele wartości.
           title: Zakresy
           read_only: Tylko do odczytu
+          global: Globalny
           global_description: Klucz API nie ma ograniczeń i wszystkie punkty końcowe są dostępne.
           resource: Zasób
           action: Akcja
@@ -4160,6 +4203,8 @@ pl_PL:
               wordpress: Niezbędne do działania wtyczki wp-discourse na WordPress.
             posts:
               edit: Edytuj dowolny post lub konkretny.
+            uploads:
+              create: Prześlij nowy plik lub zainicjuj pojedyncze lub wieloczęściowe bezpośrednie wysyłanie do zewnętrznego magazynu.
             users:
               bookmarks: Lista zakładek użytkownika. Zwraca przypomnienia o zakładkach podczas korzystania z formatu ICS.
               sync_sso: Zsynchronizuj użytkownika za pomocą DiscourseConnect.
@@ -4172,6 +4217,14 @@ pl_PL:
               list: Uzyskaj listę użytkowników.
             email:
               receive_emails: Połącz ten zakres z odbiorcą poczty w celu przetwarzania przychodzących wiadomości e-mail.
+            badges:
+              create: Utwórz nową odznakę.
+              show: Uzyskaj informacje o odznace.
+              update: Zaktualizuj odznakę.
+              delete: Usuń odznakę.
+              list_user_badges: Lista odznak użytkownika.
+              assign_badge_to_user: Przypisz odznakę użytkownikowi.
+              revoke_badge_from_user: Odbierz odznakę użytkownikowi.
       web_hooks:
         title: "Webhooki"
         none: "Brak webhooków"
@@ -4544,6 +4597,7 @@ pl_PL:
 
               Zdecydowanie zalecamy dodawanie przedrostków do nazw zmiennych, aby uniknąć konfliktów z wtyczkami i/lub silnikiem forum.
           head_tag:
+            text: "Nagłówek"
             title: "HTML, który zostanie wstawiony przed tagiem head"
           body_tag:
             text: "Body"
@@ -5408,8 +5462,9 @@ pl_PL:
           grant_existing_holders: Przyznaj dodatkowe odznaki obecnym posiadaczom odznak
       emoji:
         title: "Emoji"
-        help: "Dodaj nowe emoji, które będą dostępne dla wszystkich. Przeciągnij i upuść wiele plików jednocześnie, bez wpisywania nazwy, aby utworzyć emotikony za pomocą ich nazw plików."
+        help: "Dodaj nowe emotikony, które będą dostępne dla wszystkich. Przeciągnij i upuść wiele plików jednocześnie bez wprowadzania nazwy, aby utworzyć emotikony za pomocą ich nazw plików. Wybrana grupa zostanie użyta dla wszystkich plików, które są dodawane w tym samym czasie. Możesz także kliknąć przycisk „Dodaj nową emotikonę”, aby otworzyć selektor plików."
         add: "Dodaj nowe Emoji"
+        choose_files: "Wybierz pliki"
         uploading: "Przesyłanie…"
         name: "Nazwa"
         group: "Grupa"

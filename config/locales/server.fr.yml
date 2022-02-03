@@ -331,8 +331,6 @@ fr:
   too_many_links:
     one: "Nous sommes désolés, les nouveaux utilisateurs ne peuvent insérer qu'un seul lien par message."
     other: "Nous sommes désolés, les nouveaux utilisateurs ne peuvent insérer que %{count} liens par message."
-  contains_blocked_word: "Votre message contient un mot qui n'est pas permis : %{word}"
-  contains_blocked_words: "Votre message contient plusieurs mots qui ne sont pas permis : %{words}"
   spamming_host: "Désolé, vous ne pouvez pas insérer de lien vers ce domaine."
   user_is_suspended: "Les utilisateurs suspendus ne sont pas autorisés à publier des messages."
   topic_not_found: "Une erreur est survenue. Peut-être que ce sujet a été fermé ou supprimé pendant que vous le regardiez ?"

@@ -7,6 +7,7 @@ const cleanBaseURL = require("clean-base-url");
 const path = require("path");
 const { promises: fs } = require("fs");
 const { JSDOM } = require("jsdom");
+const { shouldLoadPluginTestJs } = require("discourse/lib/plugin-js");
 
 // via https://stackoverflow.com/a/6248722/165668
 function generateUID() {
@@ -296,6 +297,14 @@ module.exports = {
 
   isDevelopingAddon() {
     return true;
+  },
+
+  contentFor: function (type, config) {
+    if (shouldLoadPluginTestJs() && type === "test-plugin-js") {
+      return `<script src="${config.rootURL}assets/discourse/tests/active-plugins.js"></script>`;
+    } else if (shouldLoadPluginTestJs() && type === "test-plugin-tests-js") {
+      return `<script id="plugin-test-script" src="${config.rootURL}assets/discourse/tests/plugin-tests.js"></script>`;
+    }
   },
 
   serverMiddleware(config) {

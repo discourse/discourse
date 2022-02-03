@@ -228,6 +228,8 @@ sv:
       <p>Om du kommer ihåg ditt lösenord kan du <a href="%{base_url}/login">logga in</a>.</p>
 
       <p>Annars ber vi dig att <a href="%{base_url}/password-reset">återställa lösenordet</a>.</p>
+    not_found_template_link: |
+      <p>Denna inbjudan till <a href="%{base_url}">%{site_name}</a> kan inte längre lösas in. Be personen som bjöd in dig att skicka en ny inbjudan till dig.</p>
     user_exists: "Det finns inget behov av att bjuda in <b>%{email}</b>: De har <a href='%{base_path}/u/%{username}/summary'>redan ett konto!</a>"
     invite_exists: "Du har redan bjudit in <b>%{email}</b>."
     invalid_email: "%{email} är inte en giltig e-postadress."
@@ -336,8 +338,6 @@ sv:
   too_many_links:
     one: "Tyvärr kan nya användare bara ha en länk i ett inlägg."
     other: "Tyvärr kan nya användare bara ha %{count} länkar i ett inlägg."
-  contains_blocked_word: "Ditt inlägg innehåller ett ord som inte är tillåtet: %{word}"
-  contains_blocked_words: "Ditt inlägg innehåller flera ord som inte är tillåtna: %{words}"
   spamming_host: "Tyvärr kan du inte publicera en länk till den värden."
   user_is_suspended: "Avstängda användare har inte tillåtelse att göra inlägg"
   topic_not_found: "Något har gått fel. Kanske har ämnet stängts eller raderats medan du tittade på det?"
@@ -2586,6 +2586,26 @@ sv:
     flags_agreed_and_post_deleted_for_responders:
       title: "Svar borttaget från flaggat inlägg av personal"
       subject_template: "Svar borttaget från flaggat inlägg av personal"
+      text_body_template: |
+        Hej,
+
+        Detta är ett automatiskt meddelande från %{site_name} att låta dig veta att en [post](%{base_url}%{url}) du svarade på togs bort.
+
+        %{flag_reason}
+
+        Det här inlägget flaggades av gemenskapen och personalen valde att ta bort det.
+
+        ``` markdown
+        %{flagged_post_raw_content}
+        ```
+
+        där du svarade följande
+
+        ``` markdown
+        %{flagged_post_response_raw_content}
+        ```
+
+        För mer information om orsaken till borttagningen, läs våra [riktlinjer för communityn](%{base_url}/riktlinjer).
     usage_tips:
       text_body_template: |
         För att få ett par tips och förslag hur du kommer igång som ny användare, [gå till detta blogginlägg](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).

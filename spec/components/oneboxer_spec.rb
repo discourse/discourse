@@ -160,28 +160,54 @@ describe Oneboxer do
     end
   end
 
-  it "does not crawl blocklisted URLs" do
-    SiteSetting.blocked_onebox_domains = "git.*.com|bitbucket.com"
-    url = 'https://github.com/discourse/discourse/commit/21b562852885f883be43032e03c709241e8e6d4f'
-    stub_request(:head, 'https://discourse.org/').to_return(status: 302, body: "", headers: { location: url })
+  context ".external_onebox" do
+    html = <<~HTML
+      <html>
+      <head>
+        <meta property="og:title" content="Cats">
+        <meta property="og:description" content="Meow">
+      </head>
+      <body>
+         <p>body</p>
+      </body>
+      <html>
+    HTML
 
-    expect(Oneboxer.external_onebox(url)[:onebox]).to be_empty
-    expect(Oneboxer.external_onebox('https://discourse.org/')[:onebox]).to be_empty
-  end
+    context "blacklisted domains" do
 
-  it "does not consider ignore_redirects domains as blocklisted" do
-    url = 'https://store.steampowered.com/app/271590/Grand_Theft_Auto_V/'
-    stub_request(:head, url).to_return(status: 200, body: "", headers: {})
-    stub_request(:get, url).to_return(status: 200, body: "", headers: {})
+      it "does not return a onebox if redirect uri final destination is in blacklist" do
+        SiteSetting.blocked_onebox_domains = "kitten.com"
 
-    expect(Oneboxer.external_onebox(url)[:onebox]).to be_present
-  end
+        stub_request(:get, "http://cat.com/meow").to_return(status: 301, body: "", headers: { "location" => "https://kitten.com" })
+        stub_request(:head, "http://cat.com/meow").to_return(status: 301, body: "", headers: { "location" => "https://kitten.com" })
 
-  it "censors external oneboxes" do
-    Fabricate(:watched_word, action: WatchedWord.actions[:censor], word: "bad word")
+        stub_request(:get, "https://kitten.com").to_return(status: 200, body: html, headers: {})
+        stub_request(:head, "https://kitten.com").to_return(status: 200, body: "", headers: {})
 
-    url = 'https://example.com/'
-    stub_request(:any, url).to_return(status: 200, body: <<~HTML, headers: {})
+        expect(Oneboxer.external_onebox("http://cat.com/meow")[:onebox]).to be_empty
+        expect(Oneboxer.external_onebox("https://kitten.com")[:onebox]).to be_empty
+      end
+
+      it "returns onebox if 'midway redirect' is blocked but final redirect uri is not blocked" do
+        SiteSetting.blocked_onebox_domains = "middle.com"
+
+        stub_request(:get, "https://cat.com/start").to_return(status: 301, body: "a", headers: { "location" => "https://middle.com/midway" })
+        stub_request(:head, "https://cat.com/start").to_return(status: 301, body: "a", headers: { "location" => "https://middle.com/midway" })
+
+        stub_request(:head, "https://middle.com/midway").to_return(status: 301, body: "b", headers: { "location" => "https://cat.com/end" })
+
+        stub_request(:get, "https://cat.com/end").to_return(status: 200, body: html)
+        stub_request(:head, "https://cat.com/end").to_return(status: 200, body: "", headers: {})
+
+        expect(Oneboxer.external_onebox("https://cat.com/start")[:onebox]).to be_present
+      end
+    end
+
+    it "censors external oneboxes" do
+      Fabricate(:watched_word, action: WatchedWord.actions[:censor], word: "bad word")
+
+      url = 'https://example.com/'
+      stub_request(:any, url).to_return(status: 200, body: <<~HTML, headers: {})
       <html>
       <head>
         <meta property="og:title" content="title with bad word">
@@ -191,13 +217,23 @@ describe Oneboxer do
         <p>content with bad word</p>
       </body>
       <html>
-    HTML
+      HTML
 
-    onebox = Oneboxer.external_onebox(url)
-    expect(onebox[:onebox]).to include('title with')
-    expect(onebox[:onebox]).not_to include('bad word')
-    expect(onebox[:preview]).to include('title with')
-    expect(onebox[:preview]).not_to include('bad word')
+      onebox = Oneboxer.external_onebox(url)
+      expect(onebox[:onebox]).to include('title with')
+      expect(onebox[:onebox]).not_to include('bad word')
+      expect(onebox[:preview]).to include('title with')
+      expect(onebox[:preview]).not_to include('bad word')
+    end
+
+    it "returns onebox" do
+      SiteSetting.blocked_onebox_domains = "not.me"
+
+      stub_request(:get, "https://its.me").to_return(status: 200, body: html)
+      stub_request(:head, "https://its.me").to_return(status: 200, body: "", headers: {})
+
+      expect(Oneboxer.external_onebox("https://its.me")[:onebox]).to be_present
+    end
   end
 
   it "uses the Onebox custom user agent on specified hosts" do

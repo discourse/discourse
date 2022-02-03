@@ -11,6 +11,4 @@ export const PUBLIC_JS_VERSIONS = {
   "jquery.magnific-popup.min.js":
     "magnific-popup/1.1.0/jquery.magnific-popup.min.js",
   "pikaday.js": "pikaday/1.8.0/pikaday.js",
-  "spectrum.js": "spectrum-colorpicker/1.8.0/spectrum.js",
-  "spectrum.css": "spectrum-colorpicker/1.8.0/spectrum.css",
 };

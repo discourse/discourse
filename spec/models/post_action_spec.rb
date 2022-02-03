@@ -456,6 +456,16 @@ describe PostAction do
       expect(notification.notification_type).to eq(Notification.types[:liked])
     end
 
+    it 'should not increase topic like count when liking a whisper' do
+      SiteSetting.set(:enable_whispers, true)
+      post.revise(admin, post_type: Post.types[:whisper])
+
+      PostActionCreator.like(admin, post)
+
+      expect(post.reload.like_count).to eq(1)
+      expect(post.topic.like_count).to eq(0)
+    end
+
     it 'should increase the `like_count` and `like_score` when a user likes something' do
       freeze_time Date.today
 

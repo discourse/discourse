@@ -328,7 +328,7 @@ class SearchIndexer
         end
       end
 
-      document.css("img[class='emoji']").each do |node|
+      document.css("img.emoji").each do |node|
         node.remove_attribute("alt")
       end
 

@@ -331,8 +331,6 @@ fi:
   too_many_links:
     one: "Uudet käyttäjät voivat lisätä vain yhden linkin viestiin."
     other: "Uudet käyttäjät voivat lisätä vain %{count} linkkiä viestiin."
-  contains_blocked_word: "Viestissäsi on kielletty sana: %{word}"
-  contains_blocked_words: "Viestissäsi on kiellettyjä sanoja: %{words}"
   spamming_host: "Et voi lisätä linkkiä tähän isäntään."
   user_is_suspended: "Hyllytetyt käyttäjät eivät saa luoda viestejä."
   topic_not_found: "Jokin on mennyt pieleen. Ehkä tämä ketju on suljettu tai poistettu sillä välin, kun katselit sitä?"

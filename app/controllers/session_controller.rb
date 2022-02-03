@@ -434,32 +434,24 @@ class SessionController < ApplicationController
     RateLimiter.new(nil, "forgot-password-hr-#{request.remote_ip}", 6, 1.hour).performed!
     RateLimiter.new(nil, "forgot-password-min-#{request.remote_ip}", 3, 1.minute).performed!
 
-    if SiteSetting.hide_email_address_taken
-      user = User.find_by_email(Email.downcase(normalized_login_param))
+    user = if SiteSetting.hide_email_address_taken && !current_user&.staff?
+      raise Discourse::InvalidParameters.new(:login) if EmailValidator.email_regex !~ normalized_login_param
+      User.real.where(staged: false).find_by_email(Email.downcase(normalized_login_param))
     else
-      user = User.find_by_username_or_email(normalized_login_param)
+      User.real.where(staged: false).find_by_username_or_email(normalized_login_param)
     end
 
     if user
       RateLimiter.new(nil, "forgot-password-login-day-#{user.username}", 6, 1.day).performed!
+      email_token = user.email_tokens.create!(email: user.email, scope: EmailToken.scopes[:password_reset])
+      Jobs.enqueue(:critical_user_email, type: :forgot_password, user_id: user.id, email_token: email_token.token)
     else
       RateLimiter.new(nil, "forgot-password-login-hour-#{normalized_login_param}", 5, 1.hour).performed!
     end
 
-    user_presence = user.present? && user.human? && !user.staged
-    if user_presence
-      email_token = user.email_tokens.create!(email: user.email, scope: EmailToken.scopes[:password_reset])
-      Jobs.enqueue(:critical_user_email, type: :forgot_password, user_id: user.id, email_token: email_token.token)
-    end
-
     json = success_json
-
-    if !SiteSetting.hide_email_address_taken
-      json[:user_found] = user_presence
-    end
-
+    json[:user_found] = user.present? if !SiteSetting.hide_email_address_taken
     render json: json
-
   rescue RateLimiter::LimitExceeded
     render_json_error(I18n.t("rate_limiter.slow_down"))
   end

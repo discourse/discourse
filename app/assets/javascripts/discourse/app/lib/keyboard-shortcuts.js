@@ -103,6 +103,13 @@ function preventKeyboardEvent(event) {
 
 export default {
   init(keyTrapper, container) {
+    // Sometimes the keyboard shortcut initializer is not torn down. This makes sure
+    // we clear any previous test state.
+    if (this.keyTrapper) {
+      this.keyTrapper.destroy();
+      this.keyTrapper = null;
+    }
+
     this.keyTrapper = new keyTrapper();
     this.container = container;
     this._stopCallback();
@@ -174,7 +181,6 @@ export default {
       this.keyTrapper.paused = true;
       return;
     }
-
     combinations.forEach((combo) => this.keyTrapper.unbind(combo));
   },
 

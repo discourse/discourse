@@ -5,7 +5,7 @@ import { getOwner } from "discourse-common/lib/get-owner";
 
 export default Component.extend({
   classNameBindings: [":popup-tip", "good", "bad", "lastShownAt::hide"],
-  attributeBindings: ["role"],
+  attributeBindings: ["role", "ariaLabel"],
   rerenderTriggers: ["validation.reason"],
   tipReason: null,
   lastShownAt: or("shownAt", "validation.lastShownAt"),
@@ -17,6 +17,11 @@ export default Component.extend({
     if (bad) {
       return "alert";
     }
+  },
+
+  @discourseComputed("validation.reason")
+  ariaLabel(reason) {
+    return reason?.replace(/(<([^>]+)>)/gi, "");
   },
 
   click() {

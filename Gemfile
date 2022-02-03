@@ -105,9 +105,7 @@ gem 'omniauth-oauth2', require: false
 
 gem 'omniauth-google-oauth2'
 
-# Pinning oj until https://github.com/ohler55/oj/issues/699 is resolved.
-# Segfaults and stuck processes after upgrading.
-gem 'oj', '3.13.2'
+gem 'oj'
 
 gem 'pg'
 gem 'mini_sql'
@@ -134,6 +132,14 @@ gem 'cbor', require: false
 gem 'cose', require: false
 gem 'addressable'
 gem 'json_schemer'
+
+if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new("3.1")
+  # net-smtp, net-imap and net-pop were removed from default gems in Ruby 3.1
+  gem "net-smtp", "~> 0.2.1", require: false
+  gem "net-imap", "~> 0.2.1", require: false
+  gem "net-pop", "~> 0.1.1", require: false
+  gem "digest", "3.0.0", require: false
+end
 
 # Gems used only for assets and not required in production environments by default.
 # Allow everywhere for now cause we are allowing asset debugging in production

@@ -17,7 +17,7 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import I18n from "I18n";
-import { skip, test } from "qunit";
+import { test } from "qunit";
 import { Promise } from "rsvp";
 import sinon from "sinon";
 
@@ -43,7 +43,7 @@ acceptance("Composer", function (needs) {
     });
   });
 
-  skip("Tests the Composer controls", async function (assert) {
+  test("Tests the Composer controls", async function (assert) {
     await visit("/");
     assert.ok(exists("#create-topic"), "the create button is visible");
 
@@ -58,13 +58,13 @@ acceptance("Composer", function (needs) {
       "body errors are hidden by default"
     );
 
-    await click("a.toggle-preview");
+    await click(".toggle-preview");
     assert.ok(
       !exists(".d-editor-preview:visible"),
       "clicking the toggle hides the preview"
     );
 
-    await click("a.toggle-preview");
+    await click(".toggle-preview");
     assert.ok(
       exists(".d-editor-preview:visible"),
       "clicking the toggle shows the preview again"
@@ -116,9 +116,9 @@ acceptance("Composer", function (needs) {
     );
 
     await click("#reply-control a.cancel");
-    assert.ok(exists(".bootbox.modal"), "it pops up a confirmation dialog");
+    assert.ok(exists(".d-modal"), "it pops up a confirmation dialog");
 
-    await click(".modal-footer a:nth-of-type(2)");
+    await click(".modal-footer .discard-draft");
     assert.ok(!exists(".bootbox.modal"), "the confirmation can be cancelled");
   });
 
@@ -384,24 +384,6 @@ acceptance("Composer", function (needs) {
     await visit("/t/internationalization-localization/280");
 
     assert.strictEqual(count(".topic-post.staged"), 0);
-  });
-
-  skip("Editing a post can rollback to old content", async function (assert) {
-    await visit("/t/internationalization-localization/280");
-    await click(".topic-post:nth-of-type(1) button.show-more-actions");
-    await click(".topic-post:nth-of-type(1) button.edit");
-
-    await fillIn(".d-editor-input", "this will 409");
-    await fillIn("#reply-title", "This is the new text for the title");
-    await click("#reply-control button.create");
-
-    assert.ok(!exists(".topic-post.staged"));
-    assert.strictEqual(
-      query(".topic-post .cooked").innerText,
-      "Any plans to support localization of UI elements, so that I (for example) could set up a completely German speaking forum?"
-    );
-
-    await click(".bootbox.modal .btn-primary");
   });
 
   test("Composer can switch between edits", async function (assert) {
@@ -834,7 +816,7 @@ acceptance("Composer", function (needs) {
     );
   });
 
-  skip("Shows duplicate_link notice", async function (assert) {
+  test("Shows duplicate_link notice", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-buttons .create");
 

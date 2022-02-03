@@ -5,11 +5,8 @@
 
 require 'openssl'
 require 'xorcist'
-require 'xorcist/refinements'
 
 class Pbkdf2
-  using Xorcist::Refinements
-
   def self.hash_password(password, salt, iterations, algorithm = "sha256")
 
     h = OpenSSL::Digest.new(algorithm)
@@ -18,7 +15,7 @@ class Pbkdf2
 
     2.upto(iterations) do
       u = prf(h, password, u)
-      ret.xor!(u)
+      Xorcist.xor!(ret, u)
     end
 
     ret.bytes.map { |b| ("0" + b.to_s(16))[-2..-1] }.join("")

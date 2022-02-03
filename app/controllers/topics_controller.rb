@@ -839,7 +839,7 @@ class TopicsController < ApplicationController
 
     destination_topic = move_posts_to_destination(topic)
     render_topic_changes(destination_topic)
-  rescue ActiveRecord::RecordInvalid => ex
+  rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotSaved => ex
     render_json_error(ex)
   end
 

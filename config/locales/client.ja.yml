@@ -2886,7 +2886,6 @@ ja:
       default_list_filter: "デフォルトのリストのフィルタ:"
       allow_badges_label: "このカテゴリでバッジの付与を許可する"
       edit_permissions: "権限を編集"
-      reviewable_by_group: "このカテゴリのコンテンツはスタッフのほか、次のユーザーもレビューできる:"
       review_group_name: "グループ名"
       require_topic_approval: "すべての新しいトピックにモデレーターの承認を必要とする"
       require_reply_approval: "すべての新しい返信にモデレーターの承認を必要とする"

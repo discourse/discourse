@@ -317,8 +317,6 @@ gl:
   too_many_links:
     one: "Sentímolo, mais os novos usuarios só poden poñer unha ligazón nunha publicación."
     other: "Sentímolo, mais os novos usuarios só poden poñer %{count} ligazóns nunha publicación."
-  contains_blocked_word: "A súa publicación contén unha palabra que non está permitida: %{word}"
-  contains_blocked_words: "A súa publicación contén varias palabras que non están permitidas: %{words}"
   spamming_host: "Sentímolo, non pode publicar unha ligazón a ese servidor."
   user_is_suspended: "Aos usuarios suspendidos non se lles permite publicar."
   topic_not_found: "Algo foi mal. Talvez este tema se pechou ou se eliminou mentres o estaba a consultar?"

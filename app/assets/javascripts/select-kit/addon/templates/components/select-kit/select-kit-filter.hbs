@@ -4,7 +4,7 @@
     tabindex=0
     class="filter-input"
     placeholder=placeholder
-    autocomplete="discourse"
+    autocomplete="off"
     autocorrect="off"
     autocapitalize="off"
     name="filter-input-search"
@@ -14,6 +14,7 @@
     paste=(action "onPaste")
     keyDown=(action "onKeydown")
     keyUp=(action "onKeyup")
+    type="search"
   }}
 
   {{#if selectKit.options.filterIcon}}

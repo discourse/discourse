@@ -821,7 +821,6 @@ export default Component.extend(TextareaTextManipulation, {
         applyList: (head, exampleKey, opts) =>
           this._applyList(selected, head, exampleKey, opts),
         addText: (text) => this._addText(selected, text),
-        replaceText: (text) => this._addText({ pre: "", post: "" }, text),
         getText: () => this.value,
         toggleDirection: () => this._toggleDirection(),
       };

@@ -14,6 +14,7 @@ module.exports = function (defaults) {
   let discourseRoot = resolve("../../../..");
   let vendorJs = discourseRoot + "/vendor/assets/javascripts/";
 
+  const isProduction = EmberApp.env().includes("production");
   let app = new EmberApp(defaults, {
     autoRun: false,
     "ember-qunit": {
@@ -37,18 +38,82 @@ module.exports = function (defaults) {
       // We don't use SRI in Rails. Disable here to match:
       enabled: false,
     },
+
+    "ember-cli-terser": {
+      enabled: isProduction,
+      exclude: [
+        "**/test-*.js",
+        "**/core-tests*.js",
+        "**/highlightjs/*",
+        "**/javascripts/*",
+      ],
+    },
+
+    // We need to build tests in prod for theme tests
+    tests: true,
   });
+
+  // Patching a private method is not great, but there's no other way for us to tell
+  // Ember CLI that we want the tests alone in a package without helpers/fixtures, since
+  // we re-use those in the theme tests.
+  app._defaultPackager.packageApplicationTests = function (tree) {
+    let appTestTrees = []
+      .concat(
+        this.packageEmberCliInternalFiles(),
+        this.packageTestApplicationConfig(),
+        tree
+      )
+      .filter(Boolean);
+
+    appTestTrees = mergeTrees(appTestTrees, {
+      overwrite: true,
+      annotation: "TreeMerger (appTestTrees)",
+    });
+
+    let tests = concat(appTestTrees, {
+      inputFiles: [
+        "**/tests/acceptance/*.js",
+        "**/tests/integration/*.js",
+        "**/tests/integration/**/*.js",
+        "**/tests/unit/*.js",
+        "**/tests/unit/**/*.js",
+      ],
+      headerFiles: ["vendor/ember-cli/tests-prefix.js"],
+      footerFiles: ["vendor/ember-cli/app-config.js"],
+      outputFile: "/assets/core-tests.js",
+      annotation: "Concat: Core Tests",
+      sourceMapConfig: false,
+    });
+
+    let testHelpers = concat(appTestTrees, {
+      inputFiles: [
+        "**/tests/test-boot-ember-cli.js",
+        "**/tests/helpers/**/*.js",
+        "**/tests/fixtures/**/*.js",
+        "**/tests/setup-tests.js",
+      ],
+      outputFile: "/assets/test-helpers.js",
+      annotation: "Concat: Test Helpers",
+      sourceMapConfig: false,
+    });
+
+    return mergeTrees([tests, testHelpers]);
+  };
 
   // WARNING: We should only import scripts here if they are not in NPM.
   // For example: our very specific version of bootstrap-modal.
   app.import(vendorJs + "bootbox.js");
   app.import(vendorJs + "bootstrap-modal.js");
-  app.import(vendorJs + "jquery.ui.widget.js");
   app.import(vendorJs + "caret_position.js");
   app.import("node_modules/ember-source/dist/ember-template-compiler.js", {
     type: "test",
   });
   app.import(discourseRoot + "/app/assets/javascripts/polyfills.js");
+
+  app.import(
+    discourseRoot +
+      "/app/assets/javascripts/discourse/public/assets/scripts/module-shims.js"
+  );
 
   const mergedTree = mergeTrees([
     discourseScss(`${discourseRoot}/app/assets/stylesheets`, "testem.scss"),
@@ -70,7 +135,6 @@ module.exports = function (defaults) {
     }),
   ]);
 
-  const isProduction = EmberApp.env().includes("production");
   if (isProduction) {
     return new AssetRev(mergedTree, {
       exclude: [

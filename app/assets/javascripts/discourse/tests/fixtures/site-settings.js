@@ -64,7 +64,19 @@ export default {
         secret: false,
         type: "upload",
         plugin: "discourse-logo"
-      }
+      },
+      {
+        category: "onebox",
+        default: "",
+        description:
+          "A list of domains that will never be oneboxed e.g. wikipedia.org\n(Wildcard symbols * ? not supported)",
+        placeholder: null,
+        preview: null,
+        secret: false,
+        setting: "blocked_onebox_domains",
+        type: "host_list",
+        value: "",
+      },
     ],
     diags: {
       last_message_processed: null

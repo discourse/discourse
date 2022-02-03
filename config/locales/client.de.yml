@@ -128,7 +128,7 @@ de:
       url: "URL kopieren und teilen"
     action_codes:
       public_topic: "hat dieses Thema öffentlich gemacht, %{when}"
-      open_topic: "hat dies in ein Thema %{when} umgewandelt"
+      open_topic: "hat dies in ein Thema umgewandelt, %{when}"
       private_topic: "hat dieses Thema in eine Nachricht umgewandelt, %{when}"
       split_topic: "hat dieses Thema aufgeteilt, %{when}"
       invited_user: "hat %{who} eingeladen, %{when}"
@@ -398,7 +398,7 @@ de:
         type_bonus:
           name: "Bonustyp"
           title: "Bestimmte überprüfbare Typen können vom Team mit einem Bonus ausgestattet werden, damit sie höher priorisiert sind."
-      stale_help: "Diese Überprüfung wurde von <b>%{username}</b>gelöst."
+      stale_help: "Diese Überprüfung wurde von <b>%{username}</b> gelöst."
       claim_help:
         optional: "Du kannst dieses Element reservieren, damit andere es nicht überprüfen."
         required: "Du musst Elemente reservieren, bevor du sie überprüfen kannst."
@@ -5121,8 +5121,9 @@ de:
           grant_existing_holders: Gewähre weiteren Abzeichen an bestehende Abzeicheninhaber
       emoji:
         title: "Emoji"
-        help: "Füge neue Emoji hinzu, die dann für alle verfügbar sind. Ziehe mehrere Dateien auf einmal per Drag & Drop, ohne einen Namen einzugeben, um Emojis mit ihren Dateinamen zu erstellen."
+        help: "Füge neue Emojis hinzu, die für alle verfügbar sind. Ziehe mehrere Dateien gleichzeitig per Drag & Drop, ohne einen Namen einzugeben, um Emojis mit ihren Dateinamen zu erstellen. Die ausgewählte Gruppe wird für alle Dateien verwendet, die gleichzeitig hinzugefügt werden. Du kannst auch auf „Neues Emoji hinzufügen“ klicken, um die Dateiauswahl zu öffnen."
         add: "Neues Emoji hinzufügen"
+        choose_files: "Wähle Dateien"
         uploading: "Wird hochgeladen …"
         name: "Name"
         group: "Gruppe"

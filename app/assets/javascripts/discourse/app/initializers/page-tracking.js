@@ -3,7 +3,6 @@ import {
   resetPageTracking,
   startPageTracking,
 } from "discourse/lib/page-tracker";
-import { cleanDOM } from "discourse/lib/clean-dom";
 import { viewTrackingRequired } from "discourse/lib/ajax";
 
 export default {
@@ -13,11 +12,7 @@ export default {
   initialize(container) {
     // Tell our AJAX system to track a page transition
     const router = container.lookup("router:main");
-
     router.on("routeWillChange", viewTrackingRequired);
-    router.on("routeDidChange", (transition) => {
-      cleanDOM(container, { skipMiniProfilerPageTransition: !transition.from });
-    });
 
     let appEvents = container.lookup("service:app-events");
     let documentTitle = container.lookup("service:document-title");

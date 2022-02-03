@@ -214,7 +214,7 @@ sv:
 
           - eller, tryck på knappen <kbd><b>B</b></kbd> eller <kbd><i>I</i></kbd> i redigeraren
         reply: |-
-          Bra jobbat! HTML eller BBCode fungerar också för formatering – för att lära dig mer, [testa denna handledning](http://commonmark.org/help) :nerd:
+          Bra jobbat! HTML eller BBCode fungerar också för formatering – för att lära dig mer, [testa denna handledning](https://commonmark.org/help) :nerd:
         not_found: |-
           Äsch, jag kunde inte hitta någon formatering i ditt svar. :pencil2:
 

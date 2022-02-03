@@ -319,8 +319,6 @@ pt:
   too_many_links:
     one: "Pedimos desculpa, novos utilizadores podem colocar apenas %{count} hiperligação numa mensagem."
     other: "Pedimos desculpa, novos utilizadores podem colocar apenas %{count} hiperligações numa mensagem."
-  contains_blocked_word: "Sua postagem contém uma palavra que não é permitida: %{word}"
-  contains_blocked_words: "Sua postagem contém algumas palavras que não são permitidas: %{words}"
   spamming_host: "Pedimos desculpa, não pode colocar uma hiperligação para esse servidor."
   user_is_suspended: "Utilizadores suspensos não têm permissão para publicar."
   topic_not_found: "Algo de errado ocorreu. Talvez este tópico tenha sido fechado ou eliminado enquanto olhava para ele?"

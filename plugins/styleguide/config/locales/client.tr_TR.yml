@@ -56,7 +56,7 @@ tr_TR:
         basic_topic_list:
           title: "Temel Konu Listesi"
         footer_message:
-          title: "Altbilgi Mesajı"
+          title: "Altbilgi İletisi"
         signup_cta:
           title: "CTA'ya kaydolun"
         topic_timer_info:
@@ -85,3 +85,5 @@ tr_TR:
           title: "Başlık Simgeleri"
         spinners:
           title: "Spinners"
+        empty_state:
+          title: "Boş Durum"

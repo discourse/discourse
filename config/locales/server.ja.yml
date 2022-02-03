@@ -312,8 +312,6 @@ ja:
   links_require_trust: "投稿にリンクを含めることはできません。"
   too_many_links:
     other: "新規ユーザーは投稿につき %{count} 件のリンクしか追加できません。"
-  contains_blocked_word: "投稿に許可されていない言葉が含まれています: %{word}"
-  contains_blocked_words: "投稿に許可されていない語が複数含まれています: %{words}"
   spamming_host: "このホストへのリンクを投稿できません。"
   user_is_suspended: "凍結中のユーザーは投稿できません。"
   topic_not_found: "問題が発生しました。トピックがクローズしたか、閲覧中に削除された可能性があります。"

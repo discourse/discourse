@@ -337,8 +337,8 @@ it:
   too_many_links:
     one: "Spiacenti, i nuovi utenti possono inserire al massimo un link in un messaggio."
     other: "Spiacenti, i nuovi utenti possono inserire al massimo %{count} link in un messaggio."
-  contains_blocked_word: "Il tuo messaggio contiene una parola non consentita: %{word}"
-  contains_blocked_words: "Il tuo messaggio contiene parole non consentite: %{words}"
+  contains_blocked_word: "Purtroppo non è consentito pubblicare la parola '%{word}'."
+  contains_blocked_words: "Purtroppo non puoi pubblicare questo messaggio. Parole non consentite: %{words}."
   spamming_host: "Spiacenti, non puoi inserire un collegamento verso quell'host."
   user_is_suspended: "Agli utenti sospesi non è permesso creare messaggi."
   topic_not_found: "Quancosa non ha funzionato. Forse questo argomento è stato chiuso o cancellato mentre lo leggevi."

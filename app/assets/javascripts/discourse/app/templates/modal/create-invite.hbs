@@ -2,7 +2,7 @@
   <div id="modal-alert" role="alert" class="alert alert-{{flashClass}}">
     {{#if flashLink}}
       <div class="input-group invite-link">
-        <label for="invite-link">{{flashText}} {{i18n "user.invited.invite.instructions"}}</label>
+        <label for="invite-link">{{html-safe flashText}} {{i18n "user.invited.invite.instructions"}}</label>
         <div class="link-share-container">
           {{input
             name="invite-link"
@@ -14,7 +14,7 @@
         </div>
       </div>
     {{else}}
-      {{flashText}}
+      {{html-safe flashText}}
     {{/if}}
   </div>
 {{/if}}

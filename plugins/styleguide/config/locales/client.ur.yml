@@ -85,3 +85,5 @@ ur:
           title: "ہیڈر آئیکن"
         spinners:
           title: "اسپنرز"
+        empty_state:
+          title: "خالی حالت"

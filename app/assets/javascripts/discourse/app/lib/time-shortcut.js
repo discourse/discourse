@@ -1,10 +1,12 @@
 import {
   MOMENT_MONDAY,
+  MOMENT_SUNDAY,
   laterThisWeek,
   laterToday,
   nextBusinessWeekStart,
   nextMonth,
   now,
+  thisWeekend,
   tomorrow,
 } from "discourse/lib/time-utils";
 import I18n from "I18n";
@@ -12,6 +14,7 @@ import I18n from "I18n";
 export const TIME_SHORTCUT_TYPES = {
   LATER_TODAY: "later_today",
   TOMORROW: "tomorrow",
+  THIS_WEEKEND: "this_weekend",
   NEXT_MONTH: "next_month",
   CUSTOM: "custom",
   RELATIVE: "relative",
@@ -30,7 +33,6 @@ export function defaultShortcutOptions(timezone) {
       label: "time_shortcut.later_today",
       time: laterToday(timezone),
       timeFormatted: laterToday(timezone).format(I18n.t("dates.time")),
-      hidden: true,
     },
     {
       icon: "far-sun",
@@ -47,13 +49,22 @@ export function defaultShortcutOptions(timezone) {
       timeFormatted: laterThisWeek(timezone).format(
         I18n.t("dates.time_short_day")
       ),
-      hidden: true,
+    },
+    {
+      icon: "bed",
+      id: TIME_SHORTCUT_TYPES.THIS_WEEKEND,
+      label: "time_shortcut.this_weekend",
+      time: thisWeekend(timezone),
+      timeFormatted: thisWeekend(timezone).format(
+        I18n.t("dates.time_short_day")
+      ),
     },
     {
       icon: "briefcase",
       id: TIME_SHORTCUT_TYPES.START_OF_NEXT_BUSINESS_WEEK,
       label:
-        now(timezone).day() === MOMENT_MONDAY
+        now(timezone).day() === MOMENT_MONDAY ||
+        now(timezone).day() === MOMENT_SUNDAY
           ? "time_shortcut.start_of_next_business_week_alt"
           : "time_shortcut.start_of_next_business_week",
       time: nextBusinessWeekStart(timezone),

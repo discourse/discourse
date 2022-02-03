@@ -207,9 +207,13 @@ export function selectedText() {
 }
 
 export function selectedElement() {
+  return selectedRange()?.commonAncestorContainer;
+}
+
+export function selectedRange() {
   const selection = window.getSelection();
   if (selection.rangeCount > 0) {
-    return selection.getRangeAt(0).commonAncestorContainer;
+    return selection.getRangeAt(0);
   }
 }
 
