@@ -25,6 +25,7 @@ import QUnit from "qunit";
 import { ScrollingDOMMethods } from "discourse/mixins/scrolling";
 import Session from "discourse/models/session";
 import User from "discourse/models/user";
+import Site from "discourse/models/site";
 import bootbox from "bootbox";
 import { buildResolver } from "discourse-common/resolver";
 import { createHelperContext } from "discourse-common/lib/helpers";
@@ -319,15 +320,28 @@ function setupTestsCommon(application, container, config) {
       session.highlightJsPath = setupData.highlightJsPath;
     }
     User.resetCurrent();
-    let site = resetSite(settings);
+
     createHelperContext({
-      siteSettings: settings,
+      get siteSettings() {
+        if (isLegacyEmber() && container.isDestroyed) {
+          return settings;
+        } else {
+          return container.lookup("site-settings:main");
+        }
+      },
       capabilities: {},
-      site,
+      get site() {
+        if (isLegacyEmber() && container.isDestroyed) {
+          return Site.current();
+        } else {
+          return container.lookup("site:main") || Site.current();
+        }
+      },
       registry: app.__registry__,
     });
 
     PreloadStore.reset();
+    resetSite(settings);
 
     sinon.stub(ScrollingDOMMethods, "screenNotFull");
     sinon.stub(ScrollingDOMMethods, "bindOnScroll");

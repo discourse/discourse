@@ -4,7 +4,7 @@ import TextField from "discourse/components/text-field";
 import { applySearchAutocomplete } from "discourse/lib/search";
 
 export default TextField.extend({
-  autocomplete: "discourse-search",
+  autocomplete: "off",
 
   @discourseComputed("searchService.searchContextEnabled")
   placeholder(searchContextEnabled) {
