@@ -1,18 +1,15 @@
 import { Promise } from "rsvp";
 let model, currentTopicId;
 
-let highestReadCache = {};
+let highestReadCache = new Map();
 
 export function setTopicList(incomingModel) {
   model = incomingModel;
 
   model?.topics?.forEach((topic) => {
-    let highestReadFromCache = highestReadCache[topic.id];
-    if (
-      highestReadFromCache &&
-      highestReadFromCache >= topic.last_read_post_number
-    ) {
-      let count = Math.max(topic.highest_post_number - highestReadFromCache, 0);
+    let highestRead = getHighestReadCache(topic.id);
+    if (highestRead && highestRead >= topic.last_read_post_number) {
+      let count = Math.max(topic.highest_post_number - highestRead, 0);
       topic.setProperties({
         unread_posts: count,
         new_posts: count,
@@ -32,19 +29,19 @@ export function previousTopicUrl() {
 }
 
 export function setHighestReadCache(topicId, postNumber) {
-  highestReadCache[topicId] = postNumber;
+  highestReadCache.set(topicId, postNumber);
 }
 
 export function getHighestReadCache(topicId) {
-  return highestReadCache[topicId];
+  return highestReadCache.get(topicId);
 }
 
 export function deleteHighestReadCache(topicId) {
-  delete highestReadCache[topicId];
+  highestReadCache.delete(topicId);
 }
 
 export function resetHighestReadCache() {
-  highestReadCache = {};
+  highestReadCache.clear();
 }
 
 function urlAt(delta) {
