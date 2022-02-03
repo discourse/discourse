@@ -5,6 +5,7 @@ import TopicListAdapter from "discourse/adapters/topic-list";
 import TopicTrackingState from "discourse/models/topic-tracking-state";
 import { buildResolver } from "discourse-common/resolver";
 import { currentSettings } from "discourse/tests/helpers/site-settings";
+import Site from "discourse/models/site";
 
 const CatAdapter = RestAdapter.extend({
   primaryKey: "cat_id",
@@ -12,6 +13,10 @@ const CatAdapter = RestAdapter.extend({
 
 export default function (customLookup = () => {}) {
   const resolver = buildResolver("discourse").create();
+
+  // Normally this would happen in inject-discourse-objects.
+  // However, `create-store` is used by unit tests which do not init the application.
+  Site.current();
 
   return Store.create({
     register: {
