@@ -538,6 +538,7 @@ describe PrettyText do
       expect(PrettyText.cook("```INVALID a=1, foo=bar , baz=2\n```")).to match_html("<pre data-a='1' data-foo='bar' data-baz='2' data-wrap='INVALID'><code class='lang-nohighlight'>\n</code></pre>")
       expect(PrettyText.cook("```text\n```")).to match_html("<pre><code class='lang-nohighlight'>\n</code></pre>")
       expect(PrettyText.cook("```auto\n```")).to match_html("<pre><code class='lang-auto'>\n</code></pre>")
+      expect(PrettyText.cook("```ruby startline=3 $%@#\n```")).to match_html("<pre data-startline='3'><code class='lang-ruby'>\n</code></pre>")
     end
 
     it 'indents code correctly' do
