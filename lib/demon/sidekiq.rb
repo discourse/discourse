@@ -31,7 +31,7 @@ class Demon::Sidekiq < ::Demon::Base
     # trouble, if STDOUT is closed in our process all sort of weird
     # will ensue, resetting the logger ensures it will reinit correctly
     # parent process is in charge of the file anyway.
-    Sidekiq.logger = nil
+    Sidekiq.logger = Sidekiq::Logger.new(STDERR, level: Logger::WARN)
     cli = Sidekiq::CLI.instance
 
     # Unicorn uses USR1 to indicate that log files have been rotated
