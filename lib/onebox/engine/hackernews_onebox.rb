@@ -11,6 +11,7 @@ module Onebox
 
       matches_regexp(REGEX)
 
+      # This is their official API: https://blog.ycombinator.com/hacker-news-api/
       def url
         "https://hacker-news.firebaseio.com/v0/item/#{match[:item_id]}.json"
       end
@@ -29,7 +30,8 @@ module Onebox
           link: @url,
           title: Onebox::Helpers.truncate(raw['title'], 80),
           favicon: 'https://news.ycombinator.com/y18.gif',
-          timestamp: Time.at(raw['time']).strftime("%-l:%M %p - %-d %b %Y")
+          timestamp: Time.at(raw['time']).strftime("%-l:%M %p - %-d %b %Y"),
+          author: raw['by']
         }
 
         data['description'] = html_entities.decode(Onebox::Helpers.truncate(raw['text'], 400)) if raw['text']
