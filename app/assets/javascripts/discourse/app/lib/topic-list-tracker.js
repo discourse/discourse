@@ -43,6 +43,10 @@ export function deleteHighestReadCache(topicId) {
   delete highestReadCache[topicId];
 }
 
+export function resetHighestReadCache() {
+  highestReadCache = {};
+}
+
 function urlAt(delta) {
   if (!model || !model.topics) {
     return Promise.resolve(null);
