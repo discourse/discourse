@@ -2349,7 +2349,7 @@ uncategorized:
     hidden: true
 
   allow_bulk_invite:
-    default: false
+    default: true
     client: true
 
   max_bulk_invites:
