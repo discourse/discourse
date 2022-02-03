@@ -2,49 +2,63 @@
 // format with special handling for text and so on
 const TEXT_CODE_CLASSES = ["text", "pre", "plain"];
 
+function extractTokenInfo(info, md) {
+  if (!info) {
+    return;
+  }
+
+  info = md.utils.unescapeAll(info).trim();
+
+  const matches = info.match(/(^\s*\S*)\s*(.*)/i);
+  if (!matches) {
+    return;
+  }
+
+  // ensure the token has only valid chars
+  if (!/^\w*$/i.test(matches[1])) {
+    return;
+  }
+
+  const extractedData = { tag: matches[1].trim(), attributes: {} };
+
+  if (matches[2]?.length) {
+    matches[2].split(",").forEach((potentialPair) => {
+      const [key, value] = potentialPair.trim().split(/\s+/g)[0].split("=");
+
+      // invalid pairs would get caught here and not used, eg `foo=`
+      if (key && value) {
+        extractedData.attributes[key] = value;
+      }
+    });
+  }
+
+  return extractedData;
+}
+
 function render(tokens, idx, options, env, slf, md) {
   const token = tokens[idx];
-  let tokenInfoAttributes = {};
   const escapedContent = md.utils.escapeHtml(token.content);
-
-  let tag;
-  if (token.info) {
-    let attributes;
-    [tag, ...attributes] = token.info.trim().split(" ").filter(Boolean);
-
-    (attributes || [])
-      .join("")
-      .split(",")
-      .forEach((potentialPair) => {
-        const [key, value] = potentialPair.trim().split("=");
-
-        // invalid pairs would get caught here and not used, eg `foo=`
-        if (key && value) {
-          tokenInfoAttributes[key] = value;
-        }
-      });
-  }
-
-  tag = tag || md.options.discourse.defaultCodeLang;
+  const tokenInfo = extractTokenInfo(token.info, md);
+  const tag = tokenInfo?.tag || md.options.discourse.defaultCodeLang;
+  const attributes = tokenInfo?.attributes || {};
 
   let className;
-  if (/^[a-z]*$/i.test(tag)) {
-    const acceptableCodeClasses =
-      md.options.discourse.acceptableCodeClasses || [];
 
-    if (TEXT_CODE_CLASSES.indexOf(tag) > -1) {
-      className = "lang-nohighlight";
-    } else if (acceptableCodeClasses.indexOf(tag) > -1) {
-      className = `lang-${tag}`;
-    } else {
-      className = "lang-nohighlight";
-      tokenInfoAttributes["wrap"] = tag;
-    }
+  const acceptableCodeClasses =
+    md.options.discourse.acceptableCodeClasses || [];
+
+  if (TEXT_CODE_CLASSES.indexOf(tag) > -1) {
+    className = "lang-nohighlight";
+  } else if (acceptableCodeClasses.indexOf(tag) > -1) {
+    className = `lang-${tag}`;
+  } else {
+    className = "lang-nohighlight";
+    attributes["wrap"] = tag;
   }
 
-  const dataAttributes = Object.keys(tokenInfoAttributes)
+  const dataAttributes = Object.keys(attributes)
     .map((key) => {
-      const value = md.utils.escapeHtml(tokenInfoAttributes[key]);
+      const value = md.utils.escapeHtml(attributes[key]);
       key = md.utils.escapeHtml(key);
       return `data-${key}="${value}"`;
     })
@@ -52,7 +66,7 @@ function render(tokens, idx, options, env, slf, md) {
 
   return `<pre${dataAttributes ? ` ${dataAttributes}` : ""}><code${
     className ? ` class="${className}"` : ""
-  }>${escapedContent}</code></pre>`;
+  }>${escapedContent}</code></pre>\n`;
 }
 
 export function setup(helper) {
