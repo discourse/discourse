@@ -25,7 +25,7 @@ function deprecate(feature, name) {
 //
 // Take a look at https://meta.discourse.org/t/developers-guide-to-markdown-extensions/66023
 // for more detailed information.
-function _createHelper(
+function createHelper(
   featureName,
   opts,
   optionCallbacks,
@@ -66,7 +66,7 @@ function _createHelper(
     pluginCallbacks.push([featureName, callback]);
   };
 
-  helper.requestCustomMarkdownCookFunction = (callback) => {
+  helper.buildCookFunction = (callback) => {
     customMarkdownCookFnCallbacks.push([featureName, callback]);
   };
 
@@ -109,17 +109,17 @@ class Ruler {
 }
 
 // block bb code ruler for parsing of quotes / code / polls
-function _setupBlockBBCode(md) {
+function setupBlockBBCode(md) {
   md.block.bbcode = { ruler: new Ruler() };
 }
 
 // inline bbcode ruler for parsing of spoiler tags, discourse-chart etc
-function _setupInlineBBCode(md) {
+function setupInlineBBCode(md) {
   md.inline.bbcode = { ruler: new Ruler() };
 }
 
 // rule for text replacement via regex, used for @mentions, category hashtags, etc.
-function _setupTextPostProcessRuler(md) {
+function setupTextPostProcessRuler(md) {
   const TextPostProcessRuler = requirejs(
     "pretty-text/engines/discourse-markdown/text-post-process"
   ).TextPostProcessRuler;
@@ -140,7 +140,7 @@ function renderHoisted(tokens, idx, options) {
   }
 }
 
-function _setupUrlDecoding(md) {
+function setupUrlDecoding(md) {
   // this fixed a subtle issue where %20 is decoded as space in
   // automatic urls
   md.utils.lib.mdurl.decode.defaultChars = ";/?:@&=+$,# ";
@@ -148,13 +148,13 @@ function _setupUrlDecoding(md) {
 
 // html_raw tokens, funnily enough, render raw HTML via renderHoisted and
 // unhoistForCooked
-function _setupHoister(md) {
+function setupHoister(md) {
   md.renderer.rules.html_raw = renderHoisted;
 }
 
-// _videoHTML and _audioHTML follow the same HTML syntax
+// videoHTML and audioHTML follow the same HTML syntax
 // as oneboxer.rb when dealing with these formats
-function _videoHTML(token) {
+function videoHTML(token) {
   const src = token.attrGet("src");
   const origSrc = token.attrGet("data-orig-src");
   const dataOrigSrcAttr = origSrc !== null ? `data-orig-src="${origSrc}"` : "";
@@ -166,7 +166,7 @@ function _videoHTML(token) {
   </div>`;
 }
 
-function _audioHTML(token) {
+function audioHTML(token) {
   const src = token.attrGet("src");
   const origSrc = token.attrGet("data-orig-src");
   const dataOrigSrcAttr = origSrc !== null ? `data-orig-src="${origSrc}"` : "";
@@ -177,7 +177,7 @@ function _audioHTML(token) {
 }
 
 const IMG_SIZE_REGEX = /^([1-9]+[0-9]*)x([1-9]+[0-9]*)(\s*,\s*(x?)([1-9][0-9]{0,2}?)([%x]?))?$/;
-function _renderImageOrPlayableMedia(tokens, idx, options, env, slf) {
+function renderImageOrPlayableMedia(tokens, idx, options, env, slf) {
   const token = tokens[idx];
   const alt = slf.renderInlineAsText(token.children, options, env);
   const split = alt.split("|");
@@ -195,10 +195,10 @@ function _renderImageOrPlayableMedia(tokens, idx, options, env, slf) {
         <span class="placeholder-icon video"></span>
       </div>`;
     } else {
-      return _videoHTML(token);
+      return videoHTML(token);
     }
   } else if (split[1] === "audio") {
-    return _audioHTML(token);
+    return audioHTML(token);
   }
 
   // parsing ![myimage|500x300]() or ![myimage|75%]() or ![myimage|500x300, 75%]
@@ -259,11 +259,11 @@ function _renderImageOrPlayableMedia(tokens, idx, options, env, slf) {
 // we have taken over the ![]() syntax in markdown to
 // be able to render a video or audio URL as well as the
 // image using |video and |audio in the text inside []
-function _setupImageAndPlayableMediaRenderer(md) {
-  md.renderer.rules.image = _renderImageOrPlayableMedia;
+function setupImageAndPlayableMediaRenderer(md) {
+  md.renderer.rules.image = renderImageOrPlayableMedia;
 }
 
-function _renderAttachment(tokens, idx, options, env, slf) {
+function renderAttachment(tokens, idx, options, env, slf) {
   const linkToken = tokens[idx];
   const textToken = tokens[idx + 1];
 
@@ -287,11 +287,11 @@ function _renderAttachment(tokens, idx, options, env, slf) {
   return slf.renderToken(tokens, idx, options);
 }
 
-function _setupAttachments(md) {
-  md.renderer.rules.link_open = _renderAttachment;
+function setupAttachments(md) {
+  md.renderer.rules.link_open = renderAttachment;
 }
 
-function _buildCustomMarkdownCookFunction(engineOpts, defaultEngineOpts) {
+function buildCustomMarkdownCookFunction(engineOpts, defaultEngineOpts) {
   // everything except the engine for opts can just point to the other
   // opts references, they do not change and we don't need to worry about
   // mutating them. note that this may need to be updated when additional
@@ -313,7 +313,7 @@ function _buildCustomMarkdownCookFunction(engineOpts, defaultEngineOpts) {
   }
 
   if (engineOpts.featuresOverride !== undefined) {
-    _overrideMarkdownFeatures(featureConfig, engineOpts.featuresOverride);
+    overrideMarkdownFeatures(featureConfig, engineOpts.featuresOverride);
   }
   newOpts.discourse.features = featureConfig;
 
@@ -325,14 +325,14 @@ function _buildCustomMarkdownCookFunction(engineOpts, defaultEngineOpts) {
     linkify: defaultEngineOpts.engine.options.linkify,
     typographer: defaultEngineOpts.engine.options.typographer,
   };
-  newOpts.engine = _createMarkdownItEngineWithOpts(
+  newOpts.engine = createMarkdownItEngineWithOpts(
     markdownitOpts,
     engineOpts.markdownItRules
   );
 
   // we have to do this to make sure plugin callbacks, allow list, and helper
   // functions are all set up correctly for the new engine
-  _setupMarkdownEngine(newOpts, featureConfig);
+  setupMarkdownEngine(newOpts, featureConfig);
 
   // we don't need the whole engine as a consumer, just a cook function
   // will do
@@ -343,7 +343,7 @@ function _buildCustomMarkdownCookFunction(engineOpts, defaultEngineOpts) {
   };
 }
 
-function _createMarkdownItEngineWithOpts(markdownitOpts, ruleOverrides) {
+function createMarkdownItEngineWithOpts(markdownitOpts, ruleOverrides) {
   if (ruleOverrides !== undefined) {
     // Preset for "zero", https://github.com/markdown-it/markdown-it/blob/master/lib/presets/zero.js
     return window.markdownit("zero", markdownitOpts).enable(ruleOverrides);
@@ -351,7 +351,7 @@ function _createMarkdownItEngineWithOpts(markdownitOpts, ruleOverrides) {
   return window.markdownit(markdownitOpts);
 }
 
-function _overrideMarkdownFeatures(features, featureOverrides) {
+function overrideMarkdownFeatures(features, featureOverrides) {
   if (featureOverrides !== undefined) {
     Object.keys(features).forEach((feature) => {
       features[feature] = featureOverrides.includes(feature);
@@ -359,7 +359,7 @@ function _overrideMarkdownFeatures(features, featureOverrides) {
   }
 }
 
-function _setupMarkdownEngine(opts, featureConfig) {
+function setupMarkdownEngine(opts, featureConfig) {
   const quotation_marks =
     opts.discourse.limitedSiteSettings.markdownTypographerQuotationMarks;
   if (quotation_marks) {
@@ -370,13 +370,13 @@ function _setupMarkdownEngine(opts, featureConfig) {
     (opts.discourse.limitedSiteSettings.markdownLinkifyTlds || "").split("|")
   );
 
-  _setupUrlDecoding(opts.engine);
-  _setupHoister(opts.engine);
-  _setupImageAndPlayableMediaRenderer(opts.engine);
-  _setupAttachments(opts.engine);
-  _setupBlockBBCode(opts.engine);
-  _setupInlineBBCode(opts.engine);
-  _setupTextPostProcessRuler(opts.engine);
+  setupUrlDecoding(opts.engine);
+  setupHoister(opts.engine);
+  setupImageAndPlayableMediaRenderer(opts.engine);
+  setupAttachments(opts.engine);
+  setupBlockBBCode(opts.engine);
+  setupInlineBBCode(opts.engine);
+  setupTextPostProcessRuler(opts.engine);
 
   opts.pluginCallbacks.forEach(([feature, callback]) => {
     if (featureConfig[feature]) {
@@ -401,7 +401,7 @@ function _setupMarkdownEngine(opts, featureConfig) {
   }
 }
 
-function _unhoistForCooked(hoisted, cooked) {
+function unhoistForCooked(hoisted, cooked) {
   const keys = Object.keys(hoisted);
   if (keys.length) {
     let found = true;
@@ -481,7 +481,7 @@ export function setup(opts, siteSettings, state) {
     .sort((a, b) => a.priority - b.priority)
     .forEach((markdownFeature) => {
       markdownFeature.setup(
-        _createHelper(
+        createHelper(
           markdownFeature.id,
           opts,
           optionCallbacks,
@@ -509,7 +509,7 @@ export function setup(opts, siteSettings, state) {
   });
 
   if (opts.featuresOverride !== undefined) {
-    _overrideMarkdownFeatures(opts.features, opts.featuresOverride);
+    overrideMarkdownFeatures(opts.features, opts.featuresOverride);
   }
 
   let copy = {};
@@ -545,7 +545,7 @@ export function setup(opts, siteSettings, state) {
     typographer: opts.discourse.limitedSiteSettings.enableMarkdownTypographer,
   };
 
-  opts.engine = _createMarkdownItEngineWithOpts(
+  opts.engine = createMarkdownItEngineWithOpts(
     markdownitOpts,
     opts.discourse.markdownItRules
   );
@@ -553,11 +553,11 @@ export function setup(opts, siteSettings, state) {
   opts.pluginCallbacks = pluginCallbacks;
   opts.allowListed = allowListed;
 
-  _setupMarkdownEngine(opts, opts.discourse.features);
+  setupMarkdownEngine(opts, opts.discourse.features);
 
   customMarkdownCookFnCallbacks.forEach(([, callback]) => {
     callback(opts, (engineOpts, afterBuild) =>
-      afterBuild(_buildCustomMarkdownCookFunction(engineOpts, opts))
+      afterBuild(buildCustomMarkdownCookFunction(engineOpts, opts))
     );
   });
 }
@@ -570,7 +570,7 @@ export function cook(raw, opts) {
 
   const rendered = opts.engine.render(raw);
   let cooked = opts.discourse.sanitizer(rendered).trim();
-  cooked = _unhoistForCooked(hoisted, cooked);
+  cooked = unhoistForCooked(hoisted, cooked);
   delete opts.discourse.hoisted;
 
   return cooked;
