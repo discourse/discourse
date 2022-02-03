@@ -70,7 +70,7 @@
                 {{/if}}
 
                 <div class="input username-input input-group">
-                  {{input value=accountUsername class=(value-entered accountUsername) id="new-account-username" name="username" maxlength=maxUsernameLength autocomplete="discourse"}}
+                  {{input value=accountUsername class=(value-entered accountUsername) id="new-account-username" name="username" maxlength=maxUsernameLength autocomplete="off"}}
                   <label class="alt-placeholder" for="new-account-username">
                     {{i18n "user.username.title"}}
                     <span class="required">*</span>
