@@ -81,7 +81,7 @@ if Sidekiq.server?
   end
 end
 
-Sidekiq.logger.level = Logger::WARN
+Sidekiq.logger = Sidekiq::Logger.new(STDERR, level: Logger::WARN)
 
 class SidekiqLogsterReporter < Sidekiq::ExceptionHandler::Logger
   def call(ex, context = {})
