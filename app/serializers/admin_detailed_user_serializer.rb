@@ -42,6 +42,7 @@ class AdminDetailedUserSerializer < AdminUserSerializer
   has_one :silenced_by, serializer: BasicUserSerializer, embed: :objects
   has_one :tl3_requirements, serializer: TrustLevel3RequirementsSerializer, embed: :objects
   has_many :groups, embed: :object, serializer: BasicGroupSerializer
+  has_many :user_associated_accounts, serializer: UserAssociatedAccountSerializer, embed: :objects
 
   def second_factor_enabled
     object.totp_enabled? || object.security_keys_enabled?
