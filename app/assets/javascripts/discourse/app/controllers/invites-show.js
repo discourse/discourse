@@ -100,9 +100,19 @@ export default Controller.extend(
       );
     },
 
-    @discourseComputed("externalAuthsOnly", "discourseConnectEnabled")
-    showSocialLoginAvailable(externalAuthsOnly, discourseConnectEnabled) {
-      return !externalAuthsOnly && !discourseConnectEnabled;
+    @discourseComputed(
+      "externalAuthsEnabled",
+      "externalAuthsOnly",
+      "discourseConnectEnabled"
+    )
+    showSocialLoginAvailable(
+      externalAuthsEnabled,
+      externalAuthsOnly,
+      discourseConnectEnabled
+    ) {
+      return (
+        externalAuthsEnabled && !externalAuthsOnly && !discourseConnectEnabled
+      );
     },
 
     @discourseComputed(
