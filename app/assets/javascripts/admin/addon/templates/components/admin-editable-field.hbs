@@ -1,7 +1,7 @@
 <div class="field">{{i18n name}}</div>
 <div class="value">
   {{#if editing}}
-    {{text-field value=buffer autofocus="autofocus" autocomplete="discourse"}}
+    {{text-field value=buffer autofocus="autofocus" autocomplete="off"}}
   {{else}}
     <a href {{action "edit"}} class="inline-editable-field">
       <span>{{value}}</span>
