@@ -835,7 +835,7 @@ module Discourse
       # logster
       Rails.logger.add_with_opts(
         ::Logger::Severity::WARN,
-        "#{message} : #{e}",
+        "#{message} : #{e.class.name} : #{e}",
         "discourse-exception",
         backtrace: e.backtrace.join("\n"),
         env: env
