@@ -486,6 +486,31 @@
           ]
         }
       ]
+    },
+    "user_associated_accounts": {
+      "type": "array",
+      "items": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "id": {
+              "type": "integer"
+            },
+            "provider_name": {
+              "type": "string"
+            },
+            "provider_uid": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "id",
+            "provider_name",
+            "provider_uid"
+          ]
+        }
+      ]
     }
   },
   "required": [
@@ -547,6 +572,7 @@
     "approved_by",
     "suspended_by",
     "silenced_by",
-    "groups"
+    "groups",
+    "user_associated_accounts"
   ]
 }
