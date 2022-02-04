@@ -1325,7 +1325,6 @@ nl:
     show_pinned_excerpt_mobile: "Fragment tonen bij vastgemaakte topics in mobiele weergave."
     show_pinned_excerpt_desktop: "Fragment tonen bij vastgemaakte topics in desktopweergave."
     post_onebox_maxlength: "Maximale lengte van een 'oneboxed Discourse'-bericht in tekens."
-    blocked_onebox_domains: "Een lijst van domeinen die nooit in een onebox worden omgezet."
     allowed_inline_onebox_domains: "Een lijst van domeinen die in een onebox als miniatuur worden omgezet wanneer gekoppeld zonder titel"
     enable_inline_onebox_on_all_domains: "Website-instelling inline_onebox_domain_allowlist negeren en inline onebox op alle domeinen toestaan."
     force_custom_user_agent_hosts: "Hosts waarvoor bij alle aanvragen de aangepaste onebox-useragent wordt gebruikt. (Met name handig voor hosts die toegang beperken via de useragent)."

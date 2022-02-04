@@ -31,6 +31,7 @@ pl_PL:
           format_title: Format daty
           timezone: Strefa czasowa
           until: Do…
+          current_timezone: "Aktualna strefa czasowa:"
           recurring:
             every_day: "Codziennie"
             every_week: "Co tydzień"

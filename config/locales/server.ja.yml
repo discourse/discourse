@@ -1365,7 +1365,6 @@ ja:
     show_pinned_excerpt_mobile: "モバイルビューで固定トピックの抜粋を表示する。"
     show_pinned_excerpt_desktop: "デスクトップビューで固定トピックの抜粋を表示する。"
     post_onebox_maxlength: "Discourse OneBox 投稿の最大文字数。"
-    blocked_onebox_domains: "ワンボックス化されないドメインのリスト。"
     allowed_inline_onebox_domains: "タイトルなしでリンクされた場合、ミニチュア形式でワンボックス化されるドメインのリスト"
     enable_inline_onebox_on_all_domains: "inline_onebox_domain_allowlist サイト設定を無視し、すべてのドメインでインラインのワンボックスを許可する。"
     force_custom_user_agent_hosts: "すべてのリクエストでカスタムワンボックスユーザーエージェントを使用するホスト (特にユーザーエージェントごとにアクセスを制限するホストで役立ちます)。"
