@@ -134,21 +134,21 @@ createWidget("reply-to-tab", {
 
   html(attrs, state) {
     const icon = state.loading ? h("div.spinner.small") : iconNode("share");
-    const nameFirst =
-      this.siteSettings.display_name_on_posts && prioritizeNameInUx(attrs.name);
+    const name =
+      this.siteSettings.display_name_on_posts &&
+      prioritizeNameInUx(attrs.replyToName)
+        ? attrs.replyToName
+        : attrs.replyToUsername;
 
     return [
       icon,
       " ",
       avatarImg("small", {
         template: attrs.replyToAvatarTemplate,
-        username: attrs.replyToUsername,
+        username: name,
       }),
       " ",
-      h(
-        "span",
-        formatUsername(nameFirst ? attrs.replyToName : attrs.replyToUsername)
-      ),
+      h("span", formatUsername(name)),
     ];
   },
 
