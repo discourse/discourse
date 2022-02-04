@@ -559,7 +559,7 @@ describe PrettyText do
     it "strips out unicode bidirectional (bidi) override characters and replaces with a highlighted span" do
       code = <<~MD
          X
-         ```js
+         ```auto
          var isAdmin = false;
          /*‮ begin admin only */⁦ if (isAdmin) ⁩ ⁦ {
          console.log("You are an admin.");
