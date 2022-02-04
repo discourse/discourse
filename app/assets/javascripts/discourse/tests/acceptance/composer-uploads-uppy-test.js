@@ -2,12 +2,13 @@ import {
   acceptance,
   createFile,
   loggedInUser,
+  paste,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import bootbox from "bootbox";
 import { authorizedExtensions } from "discourse/lib/uploads";
-import { click, fillIn, visit } from "@ember/test-helpers";
+import { click, fillIn, settled, visit } from "@ember/test-helpers";
 import I18n from "I18n";
 import { skip, test } from "qunit";
 
@@ -52,6 +53,7 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
   needs.pretender(pretender);
   needs.settings({
     simultaneous_uploads: 2,
+    enable_rich_text_paste: true,
   });
 
   test("should insert the Uploading placeholder then the complete image placeholder", async function (assert) {
@@ -312,6 +314,40 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
 
     const image = createFile("avatar.png");
     appEvents.trigger("composer:add-files", image);
+  });
+
+  test("should be able to paste a table with files and not upload the files", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+    const appEvents = loggedInUser().appEvents;
+    const done = assert.async();
+
+    let uppyEventFired = false;
+
+    appEvents.on("composer:upload-started", () => {
+      uppyEventFired = true;
+    });
+
+    let element = query(".d-editor");
+    let inputElement = query(".d-editor-input");
+    inputElement.focus();
+    await paste(element, "\ta\tb\n1\t2\t3", {
+      types: ["text/plain", "Files"],
+      files: [createFile("avatar.png")],
+    });
+    await settled();
+
+    assert.strictEqual(
+      inputElement.value,
+      "||a|b|\n|---|---|---|\n|1|2|3|\n",
+      "only the plain text table is pasted"
+    );
+    assert.strictEqual(
+      uppyEventFired,
+      false,
+      "uppy does not start uploading the file"
+    );
+    done();
   });
 });
 

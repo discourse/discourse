@@ -100,6 +100,7 @@ export function cleanUpComposerUploadMarkdownResolver() {
 export default Component.extend(ComposerUploadUppy, {
   classNameBindings: ["showToolbar:toolbar-visible", ":wmd-controls"],
 
+  editorClass: ".d-editor",
   fileUploadElementId: "file-uploader",
   mobileFileUploaderId: "mobile-file-upload",
   eventPrefix: "composer",

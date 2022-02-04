@@ -1,4 +1,5 @@
 import QUnit, { module, skip, test } from "qunit";
+import { deepMerge } from "discourse-common/lib/object";
 import MessageBus from "message-bus-client";
 import {
   clearCache as clearOutletCache,
@@ -560,4 +561,12 @@ export function createFile(name, type = "image/png", blobData = null) {
     lastModified: new Date().getTime(),
   });
   return file;
+}
+
+export async function paste(element, text, otherClipboardData = {}) {
+  let e = new Event("paste", { cancelable: true });
+  e.clipboardData = deepMerge({ getData: () => text }, otherClipboardData);
+  element.dispatchEvent(e);
+  await settled();
+  return e;
 }

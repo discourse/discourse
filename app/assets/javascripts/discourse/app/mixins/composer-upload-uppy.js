@@ -64,7 +64,7 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
       this.fileInputEventListener
     );
 
-    this.element.removeEventListener("paste", this.pasteEventListener);
+    this.editorEl?.removeEventListener("paste", this.pasteEventListener);
 
     this.appEvents.off(`${this.eventPrefix}:add-files`, this._addFiles);
     this.appEvents.off(
@@ -92,6 +92,7 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
     this.set("inProgressUploads", []);
     this.placeholders = {};
     this._preProcessorStatus = {};
+    this.editorEl = this.element.querySelector(this.editorClass);
     this.fileInputEl = document.getElementById(this.fileUploadElementId);
     const isPrivateMessage = this.get("composerModel.privateMessage");
 
@@ -106,7 +107,7 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
       this.fileInputEl,
       this._addFiles
     );
-    this.element.addEventListener("paste", this.pasteEventListener);
+    this.editorEl.addEventListener("paste", this.pasteEventListener);
 
     this._uppyInstance = new Uppy({
       id: this.uppyId,
@@ -520,12 +521,12 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
       return;
     }
 
-    const { canUpload } = clipboardHelpers(event, {
+    const { canUpload, canPasteHtml, types } = clipboardHelpers(event, {
       siteSettings: this.siteSettings,
       canUpload: true,
     });
 
-    if (!canUpload) {
+    if (!canUpload || canPasteHtml || types.includes("text/plain")) {
       return;
     }
 
