@@ -77,7 +77,7 @@ export function sanitize(text, allowLister) {
             (forAttr.indexOf("*") !== -1 || forAttr.indexOf(value) !== -1)) ||
           (name.indexOf("data-html-") === -1 &&
             name.indexOf("data-") === 0 &&
-            forTag["data-*"]) ||
+            Object.keys(forTag).find((k) => k.match(/data-.*-?\*/))) ||
           (tag === "a" &&
             name === "href" &&
             hrefAllowed(value, extraHrefMatchers)) ||

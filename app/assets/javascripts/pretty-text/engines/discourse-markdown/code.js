@@ -15,7 +15,7 @@ function extractTokenInfo(info, md) {
   }
 
   // ensure the token has only valid chars
-  if (!/^\w*$/i.test(matches[1])) {
+  if (!/^[\w+-]*$/i.test(matches[1])) {
     return;
   }
 
@@ -60,7 +60,7 @@ function render(tokens, idx, options, env, slf, md) {
     .map((key) => {
       const value = md.utils.escapeHtml(attributes[key]);
       key = md.utils.escapeHtml(key);
-      return `data-${key}="${value}"`;
+      return `data-code-${key}="${value}"`;
     })
     .join(" ");
 
@@ -77,6 +77,8 @@ export function setup(helper) {
       .filter(Boolean)
       .concat(["auto", "nohighlight"]);
   });
+
+  helper.allowList(["pre[data-code-*]"]);
 
   helper.allowList({
     custom(tag, name, value) {
