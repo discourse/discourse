@@ -35,14 +35,14 @@ class AdminDetailedUserSerializer < AdminUserSerializer
              :second_factor_enabled,
              :can_disable_second_factor,
              :can_delete_sso_record,
-             :api_key_count
+             :api_key_count,
+             :external_ids
 
   has_one :approved_by, serializer: BasicUserSerializer, embed: :objects
   has_one :suspended_by, serializer: BasicUserSerializer, embed: :objects
   has_one :silenced_by, serializer: BasicUserSerializer, embed: :objects
   has_one :tl3_requirements, serializer: TrustLevel3RequirementsSerializer, embed: :objects
   has_many :groups, embed: :object, serializer: BasicGroupSerializer
-  has_many :user_associated_accounts, serializer: UserAssociatedAccountSerializer, embed: :objects
 
   def second_factor_enabled
     object.totp_enabled? || object.security_keys_enabled?
@@ -144,6 +144,16 @@ class AdminDetailedUserSerializer < AdminUserSerializer
 
   def api_key_count
     object.api_keys.active.count
+  end
+
+  def external_ids
+    external_ids = {}
+
+    object.user_associated_accounts.map do |user_associated_account|
+      external_ids[user_associated_account.provider_name] = user_associated_account.provider_uid
+    end
+
+    external_ids
   end
 
   def can_delete_sso_record

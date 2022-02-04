@@ -54,9 +54,8 @@ RSpec.describe Admin::UsersController do
 
         get "/admin/users/#{user.id}.json"
         expect(response.status).to eq(200)
-        expect(response.parsed_body['user_associated_accounts'].size).to eq(1)
-        expect(response.parsed_body['user_associated_accounts'][0]['provider_name']).to eq('pluginauth')
-        expect(response.parsed_body['user_associated_accounts'][0]['provider_uid']).to eq('pluginauth_uid')
+        expect(response.parsed_body['external_ids'].size).to eq(1)
+        expect(response.parsed_body['external_ids']['pluginauth']).to eq('pluginauth_uid')
       end
     end
 
