@@ -2938,7 +2938,6 @@ zh_CN:
       default_list_filter: "默认列表筛选器："
       allow_badges_label: "允许在此类别中授予徽章"
       edit_permissions: "编辑权限"
-      reviewable_by_group: "除管理人员外，此类别中的内容还可以由以下群组审核："
       review_group_name: "群组名称"
       require_topic_approval: "所有新话题都需要版主审批"
       require_reply_approval: "所有新回复都需要版主审批"
@@ -4098,7 +4097,7 @@ zh_CN:
 
               强烈建议为属性名称添加前缀以避免与插件和/或核心冲突。
           head_tag:
-            text: "头像"
+            text: "<head>标签"
             title: "将在 </head> tag 前插入的 HTML"
           body_tag:
             text: "正文"

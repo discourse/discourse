@@ -85,3 +85,5 @@ pl_PL:
           title: "Ikony nagłówka"
         spinners:
           title: "Ładowanie"
+        empty_state:
+          title: "Pusty stan"

@@ -335,8 +335,8 @@ tr_TR:
   too_many_links:
     one: "Üzgünüz, yeni kullanıcılar bir gönderiye sadece %{count} bağlantı ekleyebilirler."
     other: "Üzgünüz, yeni kullanıcılar bir gönderiye sadece %{count} bağlantı ekleyebilirler."
-  contains_blocked_word: "Gönderiniz izin verilmeyen bir sözcük içeriyor: %{word}"
-  contains_blocked_words: "Gönderiniz izin verilmeyen birden çok sözcük içeriyor: %{words}"
+  contains_blocked_word: "Üzgünüz, '%{word}' kelimesini kullanamazsınız; yasaklı."
+  contains_blocked_words: "Üzgünüm, bunu yayınlayamazsınız. Yasak kelimeler: %{words}."
   spamming_host: "Üzgünüz bu sunucuya bağlantı veremezsiniz."
   user_is_suspended: "Uzaklaştırılmış kullanıcılar gönderi yapamazlar."
   topic_not_found: "Bir şeyler ters gitti. Muhtemelen siz konuya bakarken bu konu kapatıldı ya da silindi."
@@ -1025,7 +1025,7 @@ tr_TR:
         score: Skor
       description: "Yetkililerin raporlarına verdiği yanıtın oranına göre sıralanan kullanıcıların listesi (Kabul edilmemişten kabul edilmişe doğru)."
     moderators_activity:
-      title: "Moderatör Aktivitesi"
+      title: "Moderatör Etkinliği"
       labels:
         moderator: Moderatör
         flag_count: Raporlar yeniden görüntülendi
@@ -1371,6 +1371,7 @@ tr_TR:
     unreachable_themes: "Aşağıdaki temalar için güncellemeleri kontrol edemedik:"
     watched_word_regexp_error: "İzlenen %{action} sözcükleri için düzenli ifade geçersiz. Lütfen <a href='%{base_path}/admin/logs/watched_words'>İzlenen Sözcük ayarlarınızı</a> kontrol edin veya 'izlenen sözcük düzenli ifadeleri' site ayarını devre dışı bırakın."
   site_settings:
+    allow_bulk_invite: "CSV dosyası yükleyerek toplu davete izin ver"
     disabled: "devredışı"
     display_local_time_in_user_card: "Kullanıcı kartı açıkken yerel saati kullanıcının saat dilimine göre görüntüle."
     censored_words: "otomatik olarak &#9632;&#9632;&#9632;&#9632; ile değiştirilecek sözcükler"
@@ -1435,7 +1436,6 @@ tr_TR:
     show_pinned_excerpt_mobile: "Mobil görünümünde başa tutturulmuş konuların özetini göster."
     show_pinned_excerpt_desktop: "Masaüstü görünümünde başa tutturulmuş konuların özetini göster."
     post_onebox_maxlength: "Kutulanmış bir Discourse gönderisinin en fazla karakter uzunluğu"
-    blocked_onebox_domains: "Asla yayınlanmayacak alanların listesi."
     allowed_inline_onebox_domains: "Başlıksız bağlanırsa minyatür formda yayınlanacak alanların listesi"
     enable_inline_onebox_on_all_domains: "İnline_onebox_domain_whitelist site ayarını yok say ve tüm alan adlarında inline onebox'a izin ver."
     force_custom_user_agent_hosts: "Tüm isteklerde özel onebox kullanıcı aracısını kullanacak ana makineler. (Özellikle kullanıcı aracısıyla erişimi sınırlayan ana bilgisayarlar için kullanışlıdır)."
@@ -2070,6 +2070,7 @@ tr_TR:
     share_quote_buttons: "Alıntı paylaşım widget'ında hangi öğelerin görüneceğini ve hangi sırayla görüneceklerini belirleyin."
     share_quote_visibility: "Alıntı paylaşma düğmelerinin ne zaman gösterileceğini belirleyin: asla, yalnızca anonim kullanıcılara veya tüm kullanıcılara. "
     create_revision_on_bulk_topic_moves: "Konular toplu olarak yeni bir kategoriye taşındığında ilk gönderiler için revizyon oluştur."
+    use_email_for_username_and_name_suggestions: "Kullanıcı adları ve ad önerileri için e-posta adreslerinin ilk kısmını kullanın. Ama unutmayın bu yaklaşım, insanların e-posta adreslerinin tamamını tahmin etmelerini kolaylaştırır (çünkü insanların büyük bir kısmı \"gmail.com\" gibi ortak hizmetleri paylaşır)."
     errors:
       invalid_css_color: "Geçersiz renk. Bir renk adı veya hex değer girin."
       invalid_email: "Geçersiz e-posta adresi."
@@ -2089,6 +2090,7 @@ tr_TR:
       invalid_json: "Geçersiz JSON."
       invalid_reply_by_email_address: "Değer '%{reply_key}' içermeli ve bildiri e-postasından farklı olmalı."
       invalid_alternative_reply_by_email_addresses: "Tüm değerler '%{reply_key}' içermeli ve bildirim e-postasından farklı olmalıdır."
+      invalid_domain_hostname: "* ya da ? karakteri içermemeli."
       pop3_polling_host_is_empty: "POP3 sorgulamasını etkinleştirmeden önce bir 'pop3 polling host' ayarlamanız gerekir."
       pop3_polling_username_is_empty: "POP3 sorgulamasını etkinleştirmeden önce bir 'pop3 polling username' ayarlamanız gerekir."
       pop3_polling_password_is_empty: "POP3 sorgulamasını etkinleştirmeden önce bir 'pop3 polling password' ayarlamanız gerekir."
@@ -2496,6 +2498,8 @@ tr_TR:
         ```
 
         Ayrıntılar için lütfen [topluluk yönergelerimizi](%{base_url}/guidelines) inceleyin.
+    flags_agreed_and_post_deleted_for_responders:
+      title: "Yanıt, personel tarafından işaretlenen gönderiden kaldırıldı"
     usage_tips:
       text_body_template: |
         Yeni bir kullanıcı olarak başlamak için birkaç küçük ipucu, [bu blog gönderisini inceleyin](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).

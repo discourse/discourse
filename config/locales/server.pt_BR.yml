@@ -338,8 +338,6 @@ pt_BR:
   too_many_links:
     one: "Desculpe, usuários(as) novos(as) podem inserir apenas %{count} link em uma postagem."
     other: "Desculpe, usuários(as) novos(as) podem inserir apenas %{count} links em uma postagem."
-  contains_blocked_word: "Sua postagem contém uma palavra que não é permitida: %{word}"
-  contains_blocked_words: "Sua postagem contém várias palavras que não são permitidas: %{words}"
   spamming_host: "Desculpe, você não pode postar um link para esse host."
   user_is_suspended: "Usuários(as) suspensos(as) não têm permissão para postar."
   topic_not_found: "Ocorreu um erro. Talvez este tópico tenha sido fechado ou removido enquanto você estava visualizando."
@@ -1445,7 +1443,6 @@ pt_BR:
     show_pinned_excerpt_mobile: "Mostre trecho de tópicos fixados na visualização para dispositivos móveis."
     show_pinned_excerpt_desktop: "Mostrar trecho de tópicos fixados na visualização para desktop."
     post_onebox_maxlength: "Tamanho máximo para uma postagem do Discourse no Onebox."
-    blocked_onebox_domains: "Uma lista de domínios que nunca serão transformados em Onebox."
     allowed_inline_onebox_domains: "Uma lista de domínios que serão colocados em miniatura no Onebox se forem vinculados sem um título"
     enable_inline_onebox_on_all_domains: "Ignore a configuração do site inline_onebox_domain_whitelist e permita inclusões de Onebox em todos os domínios."
     force_custom_user_agent_hosts: "Hosts para os quais usar um agente do(a) usuário(a) do Onebox em todos os pedidos. (Especialmente útil para hosts que limitam acesso do agente do(a) usuário(a).)"

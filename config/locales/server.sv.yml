@@ -338,8 +338,8 @@ sv:
   too_many_links:
     one: "Tyvärr kan nya användare bara ha en länk i ett inlägg."
     other: "Tyvärr kan nya användare bara ha %{count} länkar i ett inlägg."
-  contains_blocked_word: "Ditt inlägg innehåller ett ord som inte är tillåtet: %{word}"
-  contains_blocked_words: "Ditt inlägg innehåller flera ord som inte är tillåtna: %{words}"
+  contains_blocked_word: "Tyvärr, du kan inte använda ordet '%{word}'; det är inte tillåtet."
+  contains_blocked_words: "Tyvärr, du kan inte skriva det. Ej tillåtet: %{words}."
   spamming_host: "Tyvärr kan du inte publicera en länk till den värden."
   user_is_suspended: "Avstängda användare har inte tillåtelse att göra inlägg"
   topic_not_found: "Något har gått fel. Kanske har ämnet stängts eller raderats medan du tittade på det?"
@@ -1425,7 +1425,6 @@ sv:
     show_pinned_excerpt_mobile: "Visa utdrag för fästa ämnen i mobilen."
     show_pinned_excerpt_desktop: "Visa utdrag för fästa ämnen på datorn."
     post_onebox_maxlength: "Maximal teckenlängd för ett Discourse-inlägg i onebox."
-    blocked_onebox_domains: "En lista över domäner som aldrig placeras i onebox."
     allowed_inline_onebox_domains: "En lista över domäner som placeras i onebox i miniatyrform om de länkas utan en rubrik"
     enable_inline_onebox_on_all_domains: "Ignorera webbplatsinställningen inline_onebox_domain_allowlist och tillåt infogad onebox på alla domäner."
     force_custom_user_agent_hosts: "Värdar för vilka anpassad användaragent för onebox ska användas vid alla förfrågningar. (särskilt användbart för värdar som begränsar åtkomst av användaragent)."
@@ -2077,6 +2076,7 @@ sv:
     share_quote_visibility: "Avgör när du ska visa citatdelningsknappar: aldrig, endast till anonyma användare eller för alla användare. "
     create_revision_on_bulk_topic_moves: "Skapa ny version av första inlägg när ämnen flyttas till en ny kategori i bulk."
     allow_changing_staged_user_tracking: "Tillåt att aviseringsinställningar för en arrangerad användares kategori och tagg kan ändras av en administratörsanvändare."
+    use_email_for_username_and_name_suggestions: "Använd den första delen av e-postadresser för användarnamn och namnförslag. Observera att detta gör det lättare för allmänheten att gissa användares fullständiga e-postadresser (eftersom en stor del av människor delar gemensamma tjänster som `gmail.com`)."
     errors:
       invalid_css_color: "Ogiltig färg. Ange ett färgnamn eller ett hexvärde."
       invalid_email: "Felaktig e-postadress."

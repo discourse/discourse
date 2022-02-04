@@ -31,6 +31,7 @@ ru:
           format_title: Формат даты
           timezone: Часовой пояс
           until: По...
+          current_timezone: "Текущий часовой пояс:"
           recurring:
             every_day: "Каждый день"
             every_week: "Каждую неделю"

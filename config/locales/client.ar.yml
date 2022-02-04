@@ -3597,7 +3597,6 @@ ar:
       default_list_filter: "تصفية القائمة الافتراضية:"
       allow_badges_label: "السماح بمنح الشارات في هذه الفئة"
       edit_permissions: "تعديل الأذونات"
-      reviewable_by_group: "بالإضافة إلى فريق العمل، يمكن أيضًا مراجعة المحتوى في هذه الفئة بواسطة:"
       review_group_name: "اسم المجموعة"
       require_topic_approval: "طلب موافقة المشرف على جميع الموضوعات الجديدة"
       require_reply_approval: "طلب موافقة المشرف على جميع الردود الجديدة"

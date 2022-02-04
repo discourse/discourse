@@ -331,8 +331,6 @@ fr:
   too_many_links:
     one: "Nous sommes désolés, les nouveaux utilisateurs ne peuvent insérer qu'un seul lien par message."
     other: "Nous sommes désolés, les nouveaux utilisateurs ne peuvent insérer que %{count} liens par message."
-  contains_blocked_word: "Votre message contient un mot qui n'est pas permis : %{word}"
-  contains_blocked_words: "Votre message contient plusieurs mots qui ne sont pas permis : %{words}"
   spamming_host: "Désolé, vous ne pouvez pas insérer de lien vers ce domaine."
   user_is_suspended: "Les utilisateurs suspendus ne sont pas autorisés à publier des messages."
   topic_not_found: "Une erreur est survenue. Peut-être que ce sujet a été fermé ou supprimé pendant que vous le regardiez ?"
@@ -1417,7 +1415,6 @@ fr:
     show_pinned_excerpt_mobile: "Afficher les extraits des sujets épinglés en vue mobile."
     show_pinned_excerpt_desktop: "Afficher les extraits des sujets épinglés en vue bureau."
     post_onebox_maxlength: "Longueur maximale en nombre de caractères d'un message Discourse intégré comme Onebox."
-    blocked_onebox_domains: "Une liste de domaines qui ne seront jamais transformés en Onebox."
     allowed_inline_onebox_domains: "Une liste de domaines qui seront transformés en Onebox s'ils ont été insérés sans titre"
     enable_inline_onebox_on_all_domains: "Ignorer le paramètre « inline_onebox_domain_allowlist » et permettre des Onebox en ligne pour tous les domaines."
     force_custom_user_agent_hosts: "Domaines pour lesquels utiliser un agent utilisateur personnalisé pour les requêtes de Onebox. (Cela est utile pour les domaines limitant les accès par agent utilisateur.)"

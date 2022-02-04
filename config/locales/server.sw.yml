@@ -167,7 +167,6 @@ sw:
   no_attachments_allowed: "Samahani watumiaji wapya hawawezi kuambatanisha picha, sauti, video au dokument kwenye machapisho."
   no_links_allowed: "Samahani watumiaji wapya hawawezi kuweka viungo kwenye machapisho."
   links_require_trust: "Samahani, hauwezi kuweka viungo kwenye machapisho yako."
-  contains_blocked_word: "Chapisho lako lina neno lisiloruhusiwa: %{word}"
   spamming_host: "Samahani hauwezi kuchapisha kiungo kwenye computer hiyo."
   user_is_suspended: "Watumiaji waliosimamishwa hawaruhusiwi kuchapisha."
   topic_not_found: "Kuna tatizo limetokea. Labda hii mada ilifungwa au kufutwa ukiwa unaangalia?"
@@ -794,7 +793,6 @@ sw:
     max_image_width: "Kiwango cha juu cha upana wa kijipicha za picha kwenye chapisho"
     max_image_height: "Kiwango cha juu cha urefu wa kijipicha za picha kwenye chapisho"
     add_rel_nofollow_to_user_content: 'Ongeza rel nofollow kwenye maandishi yote mtumiaji aliyotoa, isipokuwa viungo vya ndani (pamoja na kikoa baba). Ukibadilisha hii, lazima urebake machapisho yote na: "rake machapishi:rebake"'
-    blocked_onebox_domains: "Orodha ya anwani za mitandao ambazo hazijawekwa kwenye boxi."
     allowed_inline_onebox_domains: "Orodha za anwani za mtandao ambazo zitawekwa kwenye boxi kama zikiunganishwa bila kichwa cha habari"
     summary_score_threshold: "Alama ya chini ambayo mada inahitaji kabla ya kuwekwa ndani ya 'Fupisha Hii Mada' "
     summary_percent_filter: "Mtumiaji akibonyeza 'Fupisha Hii Mada', onyesha % machapisho ya juu"
