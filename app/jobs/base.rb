@@ -298,7 +298,7 @@ module Jobs
     if ::Jobs.run_later?
       hash = {
         'class' => klass,
-        'args' => [opts]
+        'args' => [opts.deep_stringify_keys]
       }
 
       if delay = opts.delete(:delay_for)
