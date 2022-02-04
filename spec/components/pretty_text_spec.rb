@@ -539,6 +539,9 @@ describe PrettyText do
       expect(PrettyText.cook("```text\n```")).to match_html("<pre><code class='lang-nohighlight'>\n</code></pre>")
       expect(PrettyText.cook("```auto\n```")).to match_html("<pre><code class='lang-auto'>\n</code></pre>")
       expect(PrettyText.cook("```ruby startline=3 $%@#\n```")).to match_html("<pre data-startline='3'><code class='lang-ruby'>\n</code></pre>")
+      expect(PrettyText.cook("```mermaid a_-你=17\n```")).to match_html("<pre data-a_-='17' data-wrap='mermaid'><code class='lang-nohighlight'>\n</code></pre>")
+      expect(PrettyText.cook("```mermaid foo=<script>alert(document.cookie)</script>\n```")).to match_html("<pre data-foo='&lt;script&gt;alert(document.cookie)&lt;/script&gt;' data-wrap='mermaid'><code class='lang-nohighlight'>\n</code></pre>")
+      expect(PrettyText.cook("```mermaid foo=‮ begin admin o\n```")).to match_html("<pre data-wrap='mermaid'><code class='lang-nohighlight'>\n</code></pre>")
     end
 
     it 'indents code correctly' do

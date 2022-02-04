@@ -7,7 +7,7 @@ function extractTokenInfo(info, md) {
     return;
   }
 
-  info = md.utils.unescapeAll(info).trim();
+  info = md.utils.unescapeAll(info.replace(/[^\x00-\x7F]/g, "")).trim();
 
   const matches = info.match(/(^\s*\S*)\s*(.*)/i);
   if (!matches) {
