@@ -19,6 +19,7 @@ class DistributedMutex
     @using_global_redis = true if !redis
     @redis = redis || Discourse.redis
     @mutex = Mutex.new
+    @lock_monitor = Monitor.new
     @validity = validity
   end
 
@@ -81,7 +82,7 @@ class DistributedMutex
     now = redis.time[0]
     expire_time = now + validity
 
-    @mutex.synchronize do
+    @lock_monitor.synchronize do
       redis.unwatch
       redis.watch key
 
@@ -106,7 +107,7 @@ class DistributedMutex
   end
 
   def unlock(expire_time)
-    @mutex.synchronize do
+    @lock_monitor.synchronize do
       redis.unwatch
       redis.watch key
       current_expire_time = redis.get key
