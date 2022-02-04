@@ -297,8 +297,7 @@ module Jobs
 
     if ::Jobs.run_later?
       hash = {
-        'class' => klass,
-        'args' => [opts.deep_stringify_keys]
+        'class' => klass
       }
 
       if delay = opts.delete(:delay_for)
@@ -310,6 +309,8 @@ module Jobs
       if queue = opts.delete(:queue)
         hash['queue'] = queue
       end
+
+      hash['args'] = [opts.deep_stringify_keys]
 
       DB.after_commit { klass.client_push(hash) }
     else
