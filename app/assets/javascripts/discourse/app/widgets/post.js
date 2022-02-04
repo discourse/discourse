@@ -145,7 +145,10 @@ createWidget("reply-to-tab", {
         username: attrs.replyToUsername,
       }),
       " ",
-      h("span", nameFirst ? attrs.replyToName : attrs.replyToUsername),
+      h(
+        "span",
+        formatUsername(nameFirst ? attrs.replyToName : attrs.replyToUsername)
+      ),
     ];
   },
 
