@@ -477,7 +477,7 @@ export default Component.extend(TextareaTextManipulation, {
       key: "#",
       afterComplete: (value) => {
         this.set("value", value);
-        return this._focusTextArea();
+        schedule("afterRender", this, this._focusTextArea);
       },
       transformComplete: (obj) => {
         return obj.text;
@@ -504,7 +504,7 @@ export default Component.extend(TextareaTextManipulation, {
       key: ":",
       afterComplete: (text) => {
         this.set("value", text);
-        this._focusTextArea();
+        schedule("afterRender", this, this._focusTextArea);
       },
 
       onKeyUp: (text, cp) => {

@@ -25,18 +25,16 @@ export default Mixin.create({
 
   // ensures textarea scroll position is correct
   _focusTextArea() {
-    schedule("afterRender", () => {
-      if (!this.element || this.isDestroying || this.isDestroyed) {
-        return;
-      }
+    if (!this.element || this.isDestroying || this.isDestroyed) {
+      return;
+    }
 
-      if (!this._textarea) {
-        return;
-      }
+    if (!this._textarea) {
+      return;
+    }
 
-      this._textarea.blur();
-      this._textarea.focus();
-    });
+    this._textarea.blur();
+    this._textarea.focus();
   },
 
   _insertBlock(text) {
@@ -171,7 +169,7 @@ export default Mixin.create({
     this._$textarea.prop("selectionStart", (pre + text).length + 2);
     this._$textarea.prop("selectionEnd", (pre + text).length + 2);
 
-    this._focusTextArea();
+    schedule("afterRender", this, this._focusTextArea);
   },
 
   _addText(sel, text, options) {

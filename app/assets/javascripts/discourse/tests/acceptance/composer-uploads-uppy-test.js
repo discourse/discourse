@@ -10,7 +10,7 @@ import bootbox from "bootbox";
 import { authorizedExtensions } from "discourse/lib/uploads";
 import { click, fillIn, settled, visit } from "@ember/test-helpers";
 import I18n from "I18n";
-import { test } from "qunit";
+import { skip, test } from "qunit";
 import { Promise } from "rsvp";
 
 function pretender(server, helper) {
@@ -306,6 +306,30 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
         query(".d-editor-input").value,
         "The image:\n![avatar.PNG|690x320](upload://yoj8pf9DdIeHRRULyw7i57GAYdz.jpeg)\n"
       );
+      done();
+    });
+
+    const image = createFile("avatar.png");
+    appEvents.trigger("composer:add-files", image);
+  });
+
+  skip("should place cursor properly after inserting a placeholder", async function (assert) {
+    const appEvents = loggedInUser().appEvents;
+    const done = assert.async();
+
+    await visit("/");
+    await click("#create-topic");
+    await fillIn(".d-editor-input", "The image:\ntext after image");
+    const input = query(".d-editor-input");
+    input.selectionStart = 10;
+    input.selectionEnd = 10;
+
+    appEvents.on("composer:all-uploads-complete", () => {
+      // after uploading we have this in the textarea:
+      // "The image:\n![avatar.PNG|690x320](upload://yoj8pf9DdIeHRRULyw7i57GAYdz.jpeg)\ntext after image"
+      // cursor should be just before "text after image":
+      assert.equal(input.selectionStart, 76);
+      assert.equal(input.selectionEnd, 76);
       done();
     });
 
