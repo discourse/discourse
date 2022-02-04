@@ -7,7 +7,7 @@ function extractTokenInfo(info, md) {
     return;
   }
 
-  info = md.utils.unescapeAll(info.replace(/[^\x00-\x7F]/g, "")).trim();
+  info = info.trim();
 
   const matches = info.match(/(^\s*\S*)\s*(.*)/i);
   if (!matches) {
@@ -15,21 +15,27 @@ function extractTokenInfo(info, md) {
   }
 
   // ensure the token has only valid chars
+  // c++, strucuted-text and p91, are all valid
   if (!/^[\w+-]*$/i.test(matches[1])) {
     return;
   }
 
-  const extractedData = { tag: matches[1].trim(), attributes: {} };
+  const ASCII_REGEX = /[^\x00-\x7F]/;
+  const tag = md.utils.unescapeAll(matches[1].replace(ASCII_REGEX, ""));
+  const extractedData = { tag, attributes: {} };
 
   if (matches[2]?.length) {
-    matches[2].split(",").forEach((potentialPair) => {
-      const [key, value] = potentialPair.trim().split(/\s+/g)[0].split("=");
+    md.utils
+      .unescapeAll(matches[2].replace(ASCII_REGEX, ""))
+      .split(",")
+      .forEach((potentialPair) => {
+        const [key, value] = potentialPair.trim().split(/\s+/g)[0].split("=");
 
-      // invalid pairs would get caught here and not used, eg `foo=`
-      if (key && value) {
-        extractedData.attributes[key] = value;
-      }
-    });
+        // invalid pairs would get caught here and not used, eg `foo=`
+        if (key && value) {
+          extractedData.attributes[key] = value;
+        }
+      });
   }
 
   return extractedData;
