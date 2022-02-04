@@ -71,6 +71,30 @@ describe 'users' do
         end
       end
     end
+
+    put 'Update a user' do
+      tags 'Users'
+      operationId 'updateUser'
+      consumes 'application/json'
+
+      parameter name: 'Api-Key', in: :header, type: :string, required: true
+      parameter name: 'Api-Username', in: :header, type: :string, required: true
+      expected_request_schema = load_spec_schema('user_update_request')
+      parameter name: :params, in: :body, schema: expected_request_schema
+
+      produces 'application/json'
+      response '200', 'user updated' do
+        expected_response_schema = load_spec_schema('user_update_response')
+        schema expected_response_schema
+
+        let(:params) { { 'name' => 'user' } }
+
+        it_behaves_like "a JSON endpoint", 200 do
+          let(:expected_response_schema) { expected_response_schema }
+          let(:expected_request_schema) { expected_request_schema }
+        end
+      end
+    end
   end
 
   path '/u/by-external/{external_id}.json' do

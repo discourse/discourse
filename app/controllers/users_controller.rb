@@ -643,6 +643,7 @@ class UsersController < ApplicationController
     params.require(:username)
     params.require(:invite_code) if SiteSetting.require_invite_code
     params.permit(:user_fields)
+    params.permit(:external_ids)
 
     unless SiteSetting.allow_new_registrations
       return fail_with("login.new_registrations_disabled")
