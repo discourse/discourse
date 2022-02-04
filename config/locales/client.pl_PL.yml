@@ -1609,6 +1609,7 @@ pl_PL:
           expires_at: "Wygasa po"
           custom_message: "Opcjonalna wiadomość osobista"
           send_invite_email: "Zapisz i wyślij e-mail"
+          send_invite_email_instructions: "Ogranicz zaproszenie do emaila, aby wysłać email z zaproszeniem"
           save_invite: "Zapisz zaproszenie"
           invite_saved: "Zaproszenie zapisane."
         bulk_invite:
@@ -4184,6 +4185,7 @@ pl_PL:
             Korzystanie z interfejsu API o określonym zakresie umożliwia bardziej szczegółowe dostosowywanie uprawnień.
             Możesz określić, które parametry będą dozwolone. Użyj przecinków, aby oddzielić wiele wartości.
           title: Zakresy
+          granular: Ograniczony
           read_only: Tylko do odczytu
           global: Globalny
           global_description: Klucz API nie ma ograniczeń i wszystkie punkty końcowe są dostępne.

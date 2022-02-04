@@ -1415,7 +1415,6 @@ fi:
     show_pinned_excerpt_mobile: "Näytä katkelma kiinnitetyistä ketjuista mobiilinäkymässä."
     show_pinned_excerpt_desktop: "Näytä katkelma kiinnitetyistä ketjuista työpöytänäkymässä."
     post_onebox_maxlength: "Discourse-viestin Onebox-esikatselun merkkien maksimimäärä."
-    blocked_onebox_domains: "Verkko-osoitteet, joista ei luoda Onebox-esikatselua."
     allowed_inline_onebox_domains: "Verkko-osoitteet, joista luodaan minimoitu Onebox-esikatselu, jos niihin linkitetään määrittämättä otsikkoa."
     enable_inline_onebox_on_all_domains: "Ohita inline_onebox_domain_whitelist-asetus ja salli Onebox-esikatselut kaikista verkko-osoitteista."
     force_custom_user_agent_hosts: "Isännät, joille käytetään mukautettua onebox-käyttäjäagenttia kaikissa pyynnöissä. (Erityisen hyödyllinen isännille, jotka rajoittavat käyttäjäagentin pääsyä)."

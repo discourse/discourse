@@ -1440,7 +1440,6 @@ it:
     show_pinned_excerpt_mobile: "Mostra estratti sugli argomenti appuntati nella visualizzazione in mobilità."
     show_pinned_excerpt_desktop: "Mostra estratti sugli argomenti appuntati nella vista desktop."
     post_onebox_maxlength: "Lunghezza massima in caratteri di un messaggio Discourse in Onebox."
-    blocked_onebox_domains: "Un elenco di domini che non saranno mai trasformati in onebox."
     allowed_inline_onebox_domains: "Un elenco di domini che saranno trasformati in onebox in forma di miniatura se collegati senza un titolo"
     enable_inline_onebox_on_all_domains: "Ignora l'impostazione del sito inline_onebox_domain_allowlist e consenti onebox in linea per tutti i domini."
     force_custom_user_agent_hosts: "Host per i quali utilizzare l'user agent onebox personalizzato su tutte le richieste. (Particolarmente utile per gli host che limitano l'accesso con user agent)."

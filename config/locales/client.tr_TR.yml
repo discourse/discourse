@@ -1693,6 +1693,7 @@ tr_TR:
       title: "Parola Sıfırlama"
       action: "Parolamı unuttum"
       invite: "Kullanıcı adınızı veya e-posta adresinizi girin, size bir parola sıfırlama e-postası gönderelim."
+      invite_no_username: "E-posta adresinizi girin, size bir şifre sıfırlama e-postası göndereceğiz."
       reset: "Parola Sıfırlama"
       complete_username: "<b>%{username}</b> kullanıcı adı ile eşleşen bir hesap bulunması durumunda, kısa bir süre içerisinde parolanızı nasıl sıfırlayacağınızı açıklayan bir e-posta alacaksınız."
       complete_email: "<b>%{email}</b> adresi ile eşleşen bir hesap bulunması durumunda, kısa bir süre içerisinde parolanızı nasıl sıfırlayacağınızı açıklayan bir e-posta alacaksınız."
@@ -2031,6 +2032,8 @@ tr_TR:
           desc: "Son yanıt tarihini değiştirmeden yanıtla"
       reload: "Yeniden Yükle"
       ignore: "Yoksay"
+      image_alt_text:
+        aria_label: Resim için alternatif metin
     notifications:
       tooltip:
         regular:
@@ -2169,6 +2172,7 @@ tr_TR:
       enter_hint: "veya Enter tuşuna basın"
       in_posts_by: "@%{username} kullancısına ait gönderilerde"
       browser_tip: "%{modifier} + f"
+      browser_tip_description: "yeniden yerel tarayıcı aramasını kullanmak için"
       recent: "Son Aramalar"
       clear_recent: "Son Aramaları Temizle"
       type:
@@ -2808,6 +2812,7 @@ tr_TR:
         edit: "Üzgünüz, gönderiniz düzenlenirken bir hata oluştu. Lütfen yeniden deneyin."
         upload: "Üzgünüz, dosya yüklenirken bir hata oluştu. Lütfen yeniden deneyin."
         file_too_large: "Üzgünüz, bu dosya çok büyük (en fazla %{max_size_kb}kb). Neden paylaşımını bir bulut sağlayıcısına yükleyip bağlantısını paylaşmıyorsun ?"
+        file_too_large_humanized: "Üzgünüz, bu dosya çok büyük (en fazla %{max_size} olabilir). Neden dosyanı bir bulut sağlayıcısına yükleyip bağlantısını paylaşmıyorsun?"
         too_many_uploads: "Üzgünüz, aynı anda yalnızca tek dosya yüklenebilir."
         too_many_dragged_and_dropped_files:
           one: "Üzgünüz, tek seferde yalnızca %{count} dosya yükleyebilirsin."
@@ -3830,6 +3835,7 @@ tr_TR:
             Kapsamları kullanırken, bir API anahtarını yalnızca belirli bir endpoint grubuyla kullanılacak şekilde kısıtlayabilirsiniz. Hangi parametrelere izin verileceğini de tanımlayabilirsiniz. Birden çok değer kullanacaksanız bunları ayırmak için virgül kullanın.
           title: Kapsamlar
           read_only: Salt okunur
+          global_description: API anahtarında herhangi bir kısıtlama yok ve tüm uç noktalar erişilebilir durumda.
           resource: Kaynak
           action: Eylem
           allowed_parameters: İzin Verilen Parametreler

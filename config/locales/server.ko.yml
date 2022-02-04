@@ -1382,7 +1382,6 @@ ko:
     show_pinned_excerpt_mobile: "모바일 뷰에서 고정 토픽의 발췌 내용을 보여주기"
     show_pinned_excerpt_desktop: "데스크톱 뷰에서 고정 토픽의 발췌 내용을 보여주기"
     post_onebox_maxlength: "onebox가 적용된 Discourse 글에 허용되는 최대 글자수"
-    blocked_onebox_domains: "원박스화에서 제외 할 도메인 목록입니다."
     allowed_inline_onebox_domains: "제목없이 링크 된 경우 미니어처 형식으로 oneboxed 될 도메인 목록"
     enable_inline_onebox_on_all_domains: "inline_onebox_domain_whitelist 사이트 설정을 무시하고 모든 도메인에서 인라인 onebox를 허용하십시오."
     force_custom_user_agent_hosts: "모든 요청에서 사용자 정의 onebox 사용자 에이전트를 사용할 호스트. (특히 사용자 에이전트의 액세스를 제한하는 호스트에 유용합니다)."

@@ -1233,7 +1233,6 @@ ca:
     show_pinned_excerpt_mobile: "Mostra l'extracte en els temes afixats en la vista per a mòbils."
     show_pinned_excerpt_desktop: "Mostra l'extracte en els temes afixats en la vista d'escriptori."
     post_onebox_maxlength: "Longitud màxima en caràcters d'una publicació en onebox de Discourse."
-    blocked_onebox_domains: "Llista de dominis que no es posaran mai en onebox."
     allowed_inline_onebox_domains: "Llista de dominis que es mostraran en miniatura 'onebox' si s'enllacen sense títol"
     max_oneboxes_per_post: "Nombre màxim de onebox en una publicació"
     logo: "La imatge del logotip a la part superior esquerra del vostre lloc web. Utilitzeu una imatge rectangular ampla amb una alçada de 120 i una relació d'aspecte superior a 3: 1. Si es deixa en blanc, es mostrarà el text del títol del lloc web."

@@ -1357,7 +1357,6 @@ da:
     show_pinned_excerpt_mobile: "Vis uddrag af fastgjorte emner på mobilen."
     show_pinned_excerpt_desktop: "Vis uddrag af fastgjorte emner i desktop visning"
     post_onebox_maxlength: "Max længde af Discourse indlæg i tegn"
-    blocked_onebox_domains: "En liste af domæner som aldrig vil blive onebox'et."
     allowed_inline_onebox_domains: "En liste over domæner, der vil blive onebox'et i miniatureform, hvis de linkes uden en titel"
     enable_inline_onebox_on_all_domains: "Ignorer webstedsindstilling for inline_onebox_domain_allowlist, og tillad indlejret onebox på alle domæner."
     max_oneboxes_per_post: "Maksimalt antal onebox-forekomster i et opslag."

@@ -28,6 +28,7 @@ fa_IR:
           format_title: فرمت تاریخ
           timezone: منطقه‌ی زمانی
           until: تا وقتی که...
+          current_timezone: "منطقه‌ زمانی فعلی:"
           recurring:
             every_day: "هر روز"
             every_week: "هر هفته"
