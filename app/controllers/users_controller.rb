@@ -1535,7 +1535,7 @@ class UsersController < ApplicationController
 
     Jobs.enqueue(
       :critical_user_email,
-      type: :account_second_factor_disabled,
+      type: "account_second_factor_disabled",
       user_id: current_user.id
     )
 
