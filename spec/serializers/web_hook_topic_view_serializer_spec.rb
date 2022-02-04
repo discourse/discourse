@@ -52,6 +52,7 @@ RSpec.describe WebHookTopicViewSerializer do
       tags
       tags_descriptions
       thumbnails
+      external_id
     }
 
     keys = serializer.as_json.keys
