@@ -191,6 +191,7 @@ $quote-share-maxwidth: 150px;
 
   img:not(.thumbnail):not(.ytp-thumbnail-image):not(.emoji) {
     max-width: 100%;
+    height: auto;
   }
 }
 
