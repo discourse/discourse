@@ -24,7 +24,7 @@ class EmailUpdater
 
     if existing_user = User.find_by_email(email)
       if SiteSetting.hide_email_address_taken
-        Jobs.enqueue(:critical_user_email, type: :account_exists, user_id: existing_user.id)
+        Jobs.enqueue(:critical_user_email, type: "account_exists", user_id: existing_user.id)
       else
         error_message = +'change_email.error'
         error_message << '_staged' if existing_user.staged?
