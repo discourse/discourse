@@ -45,6 +45,17 @@ describe TopicViewSerializer do
     end
   end
 
+  describe '#external_id' do
+    describe 'when a topic has an external_id' do
+      before { topic.update!(external_id: '42-asdf') }
+
+      it 'should return the external_id' do
+        json = serialize_topic(topic, user)
+        expect(json[:external_id]).to eq('42-asdf')
+      end
+    end
+  end
+
   describe '#image_url' do
     fab!(:image_upload) { Fabricate(:image_upload, width: 5000, height: 5000) }
 

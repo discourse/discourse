@@ -1792,6 +1792,22 @@ RSpec.describe TopicsController do
     end
   end
 
+  describe '#show_by_external_id' do
+    before_all do
+      Fabricate(:topic, external_id: 'asdf')
+    end
+
+    it 'returns 301 when found' do
+      get "/t/external_id/asdf.json"
+      expect(response.status).to eq(301)
+    end
+
+    it 'returns 404 when not found' do
+      get "/t/external_id/fdsa.json"
+      expect(response.status).to eq(404)
+    end
+  end
+
   describe '#show' do
     use_redis_snapshotting
 

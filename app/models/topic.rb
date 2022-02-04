@@ -195,6 +195,8 @@ class Topic < ActiveRecord::Base
     end
   end
 
+  validates :external_id, allow_nil: true, uniqueness: true, length: { maximum: 50 }, format: { with: /\A[\w-]+\z/ }
+
   before_validation do
     self.title = TextCleaner.clean_title(TextSentinel.title_sentinel(title).text) if errors[:title].empty?
     self.featured_link = self.featured_link.strip.presence if self.featured_link
