@@ -59,6 +59,22 @@ export default Component.extend({
     selectChoice(choice) {
       this._addValue(choice);
     },
+
+    shift(operation, index) {
+      let futureIndex = index + operation;
+
+      if (futureIndex > this.collection.length - 1) {
+        futureIndex = 0;
+      } else if (futureIndex < 0) {
+        futureIndex = this.collection.length - 1;
+      }
+
+      const shiftedValue = this.collection[index];
+      this.collection.removeAt(index);
+      this.collection.insertAt(futureIndex, shiftedValue);
+
+      this._saveValues();
+    },
   },
 
   _addValue(value) {
@@ -97,6 +113,11 @@ export default Component.extend({
     }
 
     this.set("values", this.collection.join(this.inputDelimiter || "\n"));
+  },
+
+  @discourseComputed("collection")
+  showUpDownButtons(collection) {
+    return collection.length - 1 ? true : false;
   },
 
   _splitValues(values, delimiter) {
