@@ -134,6 +134,8 @@ createWidget("reply-to-tab", {
 
   html(attrs, state) {
     const icon = state.loading ? h("div.spinner.small") : iconNode("share");
+    const nameFirst =
+      this.siteSettings.display_name_on_posts && prioritizeNameInUx(attrs.name);
 
     return [
       icon,
@@ -143,7 +145,7 @@ createWidget("reply-to-tab", {
         username: attrs.replyToUsername,
       }),
       " ",
-      h("span", formatUsername(attrs.replyToUsername)),
+      h("span", nameFirst ? attrs.replyToName : attrs.replyToUsername),
     ];
   },
 
