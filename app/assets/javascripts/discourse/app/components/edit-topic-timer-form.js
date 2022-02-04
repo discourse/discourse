@@ -14,9 +14,11 @@ import I18n from "I18n";
 import { action } from "@ember/object";
 import Component from "@ember/component";
 import { isEmpty } from "@ember/utils";
-import { MOMENT_MONDAY, now, startOfDay } from "discourse/lib/time-utils";
 import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
-import { TIME_SHORTCUT_TYPES } from "discourse/lib/time-shortcut";
+import {
+  TIME_SHORTCUT_TYPES,
+  timeShortcuts,
+} from "discourse/lib/time-shortcut";
 import ItsATrap from "@discourse/itsatrap";
 
 export default Component.extend({
@@ -83,22 +85,8 @@ export default Component.extend({
   @discourseComputed()
   customTimeShortcutOptions() {
     const timezone = this.currentUser.resolvedTimezone(this.currentUser);
-    return [
-      {
-        icon: "far-clock",
-        id: "two_weeks",
-        label: "time_shortcut.two_weeks",
-        time: startOfDay(now(timezone).add(2, "weeks").day(MOMENT_MONDAY)),
-        timeFormatKey: "dates.long_no_year",
-      },
-      {
-        icon: "far-calendar-plus",
-        id: "six_months",
-        label: "time_shortcut.six_months",
-        time: startOfDay(now(timezone).add(6, "months").startOf("month")),
-        timeFormatKey: "dates.long_no_year",
-      },
-    ];
+    const shortcuts = timeShortcuts(timezone);
+    return [shortcuts.twoWeeks(), shortcuts.sixMonths()];
   },
 
   @discourseComputed

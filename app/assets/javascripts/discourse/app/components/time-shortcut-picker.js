@@ -9,7 +9,7 @@ import {
 } from "discourse/lib/time-utils";
 import {
   TIME_SHORTCUT_TYPES,
-  defaultShortcutOptions,
+  defaultTimeShortcuts,
   specialShortcutOptions,
 } from "discourse/lib/time-shortcut";
 import discourseComputed, {
@@ -177,7 +177,7 @@ export default Component.extend({
   options(hiddenOptions, customOptions, customLabels, userTimezone) {
     this._loadLastUsedCustomDatetime();
 
-    let options = defaultShortcutOptions(userTimezone);
+    let options = defaultTimeShortcuts(userTimezone);
     this._hideDynamicOptions(options);
     options = options.concat(customOptions);
 
