@@ -37,7 +37,7 @@ describe PrettyText do
           <aside class="quote no-group" data-username="EvilTrout" data-post="2" data-topic="#{topic.id}">
           <div class="title">
           <div class="quote-controls"></div>
-          <a href="http://test.localhost/t/this-is-a-test-topic/#{topic.id}/2">This is a test topic <img width="20" height="20" src="/images/emoji/twitter/slight_smile.png?v=#{Emoji::EMOJI_VERSION}" title="slight_smile" alt="slight_smile" class="emoji"></a>
+          <a href="http://test.localhost/t/this-is-a-test-topic/#{topic.id}/2">This is a test topic <img width="20" height="20" src="/images/emoji/twitter/slight_smile.png?v=#{Emoji::EMOJI_VERSION}" title="slight_smile" class="emoji" alt=":slight_smile:"></a>
           </div>
           <blockquote>
           <p>ddd</p>
@@ -755,10 +755,10 @@ describe PrettyText do
       end
 
       it "should strip images, but keep emojis when option is set" do
-        emoji_image = "<img src='/images/emoji/twitter/heart.png?v=#{Emoji::EMOJI_VERSION}' title=':heart:' class='emoji' alt='heart'>"
+        emoji_image = "<img src='/images/emoji/twitter/heart.png?v=#{Emoji::EMOJI_VERSION}' title=':heart:' class='emoji' alt=':heart:'>"
         html = "<img src='http://cnn.com/a.gif'> Hello world #{emoji_image}"
 
-        expect(PrettyText.excerpt(html, 100, strip_images: true)).to eq("Hello world heart")
+        expect(PrettyText.excerpt(html, 100, strip_images: true)).to eq("Hello world :heart:")
         expect(PrettyText.excerpt(html, 100, strip_images: true, keep_emoji_images: true)).to match_html("Hello world #{emoji_image}")
       end
     end
@@ -939,7 +939,7 @@ describe PrettyText do
     end
 
     it "should have an option to preserve emoji images" do
-      emoji_image = "<img src='/images/emoji/twitter/heart.png?v=#{Emoji::EMOJI_VERSION}' title=':heart:' class='emoji' alt='heart'>"
+      emoji_image = "<img src='/images/emoji/twitter/heart.png?v=#{Emoji::EMOJI_VERSION}' title=':heart:' class='emoji' alt=':heart:'>"
       expect(PrettyText.excerpt(emoji_image, 100, keep_emoji_images: true)).to match_html(emoji_image)
     end
 
