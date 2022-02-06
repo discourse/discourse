@@ -8,6 +8,8 @@ require 'url_helper'
 
 # Determine the final endpoint for a Web URI, following redirects
 class FinalDestination
+  MAX_TIME = 10
+  MAX_SIZE = 1_048_576 # 1024 * 1024
 
   def self.clear_https_cache!(domain)
     key = redis_https_key(domain)
@@ -203,12 +205,21 @@ class FinalDestination
     middlewares = Excon.defaults[:middlewares]
     middlewares << Excon::Middleware::Decompress if @http_verb == :get
 
+    time = Time.now
+    body = +""
+    request_validator = lambda do |chunk, _remaining_bytes, _total_bytes|
+      body << chunk
+      raise Excon::Errors::ExpectationFailed.new('response size too big') if body.bytesize > MAX_SIZE
+      raise Excon::Errors::ExpectationFailed.new('connect timeout reached') if Time.now - time > MAX_TIME
+    end
+
     response = Excon.public_send(@http_verb,
       @uri.to_s,
       read_timeout: timeout,
       connect_timeout: timeout,
       headers: headers,
-      middlewares: middlewares
+      middlewares: middlewares,
+      response_block: request_validator
     )
 
     location = nil
@@ -220,12 +231,12 @@ class FinalDestination
       # Cache body of successful `get` requests
       if @http_verb == :get
         if Oneboxer.cache_response_body?(@uri)
-          Oneboxer.cache_response_body(@uri.to_s, response.body)
+          Oneboxer.cache_response_body(@uri.to_s, body)
         end
       end
 
       if @follow_canonical
-        next_url = fetch_canonical_url(response.body)
+        next_url = fetch_canonical_url(body)
 
         if next_url.to_s.present? && next_url != @uri
           @follow_canonical = false

@@ -49,6 +49,13 @@ describe FinalDestination do
     }
   end
 
+  let(:body_response) do
+    {
+      status: 200,
+      body: "<body>test</body>"
+    }
+  end
+
   def canonical_follow(from, dest)
     stub_request(:get, from).to_return(
       status: 200,
@@ -180,6 +187,20 @@ describe FinalDestination do
         expect(final.redirected?).to eq(false)
         expect(final.status).to eq(:resolved)
       end
+    end
+
+    it 'raises error when response is too big' do
+      stub_const(described_class, "MAX_SIZE", 1) do
+        stub_request(:get, "https://codinghorror.com/blog").to_return(body_response)
+        final = FinalDestination.new('https://codinghorror.com/blog', opts.merge(follow_canonical: true))
+        expect { final.resolve }.to raise_error(Excon::Errors::ExpectationFailed, "response size too big")
+      end
+    end
+
+    it 'raises error when response is too slow' do
+      stub_request(:get, "https://codinghorror.com/blog").to_return(lambda { |request| freeze_time(11.seconds.from_now) ; body_response })
+      final = FinalDestination.new('https://codinghorror.com/blog', opts.merge(follow_canonical: true))
+      expect { final.resolve }.to raise_error(Excon::Errors::ExpectationFailed, "connect timeout reached")
     end
 
     context 'follows canonical links' do
