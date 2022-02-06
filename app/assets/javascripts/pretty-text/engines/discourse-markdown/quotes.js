@@ -127,6 +127,7 @@ const rule = {
               emojiCDNUrl: options.emojiCDNUrl,
               enableEmojiShortcuts: options.enableEmojiShortcuts,
               inlineEmoji: options.inlineEmoji,
+              lazy: true,
             });
           }
 
