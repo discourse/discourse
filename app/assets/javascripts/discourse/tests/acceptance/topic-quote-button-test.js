@@ -13,9 +13,9 @@ import { test } from "qunit";
 acceptance("Topic - Quote button - logged in", function (needs) {
   needs.user();
   needs.settings({
-    shy_name_on_posts: false,
+    display_name_on_posts: false,
     prioritize_username_in_ux: true,
-    are_quote_visibility: "anonymous",
+    share_quote_visibility: "anonymous",
     share_quote_buttons: "twitter|email",
   });
   chromeTest(
