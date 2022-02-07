@@ -824,7 +824,6 @@ describe PostsController do
         expect(response.status).to eq(200)
 
         new_topic = Topic.last
-        puts new_topic.inspect
 
         expect(new_topic.external_id).to eq('external_id')
       end
