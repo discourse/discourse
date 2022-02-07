@@ -138,7 +138,7 @@ module ApplicationHelper
   def preload_vendor_scripts
     scripts = ["vendor"]
 
-    if ENV["EMBER_CLI_PROD_ASSETS"] != "0"
+    if ENV["EMBER_CLI_PROD_ASSETS"] == "1"
       @@vendor_chunks ||= begin
         all_assets = ActionController::Base.helpers.assets_manifest.assets
         all_assets.keys.filter_map { |name| name[/\A(chunk\..*)\.js\z/, 1] }
