@@ -1,7 +1,9 @@
 import * as ajaxlib from "discourse/lib/ajax";
+import EmberObject from "@ember/object";
+import pretender from "discourse/tests/helpers/create-pretender";
 import { module, test } from "qunit";
 import Group from "discourse/models/group";
-import User from "discourse/models/user";
+import User, { addSaveableUserOptionField } from "discourse/models/user";
 import sinon from "sinon";
 
 module("Unit | Model | user", function () {
@@ -123,5 +125,55 @@ module("Unit | Model | user", function () {
 
     assert.deepEqual(user.calculateMutedIds(0, 1, "muted_category_ids"), [1]);
     assert.deepEqual(user.calculateMutedIds(1, 1, "muted_category_ids"), []);
+  });
+
+  test("saving user options", function (assert) {
+    let user = User.create({
+      username: "chuck",
+      user_option: EmberObject.create({}),
+    });
+    User.resetCurrent(user);
+    pretender.put("/u/chuck.json", () => {
+      return [
+        200,
+        { "Content-Type": "application/json" },
+        { success: true, user },
+      ];
+    });
+    let spy = sinon.spy(ajaxlib, "ajax");
+
+    user.user_option.set("mailing_list_mode", true);
+    user.save("mailing_list_mode");
+
+    assert.ok(
+      spy.calledWith("/u/chuck.json", {
+        data: { mailing_list_mode: true },
+        type: "PUT",
+      }),
+      "sends a PUT request to update the specified user option"
+    );
+
+    user.user_option.set("text_size", "smallest");
+    user.save("text_size");
+
+    assert.ok(
+      spy.calledWith("/u/chuck.json", {
+        data: { text_size: "smallest" },
+        type: "PUT",
+      }),
+      "is able to save a different user_option on a subsequent request"
+    );
+
+    addSaveableUserOptionField("some_other_field");
+    user.user_option.set("some_other_field", "testdata");
+    user.save("some_other_field");
+
+    assert.ok(
+      spy.calledWith("/u/chuck.json", {
+        data: { some_other_field: "testdata" },
+        type: "PUT",
+      }),
+      "is able to save a user option field added via addSaveableUserOptionField"
+    );
   });
 });

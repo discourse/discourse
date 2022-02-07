@@ -334,13 +334,16 @@ const User = RestModel.extend({
       userFields.filter((uf) => !fields || fields.indexOf(uf) !== -1)
     );
 
+    let filteredUserOptionFields = [];
     if (fields) {
-      userOptionFields = userOptionFields.filter(
+      filteredUserOptionFields = userOptionFields.filter(
         (uo) => fields.indexOf(uo) !== -1
       );
+    } else {
+      filteredUserOptionFields = userOptionFields;
     }
 
-    userOptionFields.forEach((s) => {
+    filteredUserOptionFields.forEach((s) => {
       data[s] = this.get(`user_option.${s}`);
     });
 
