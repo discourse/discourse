@@ -1,6 +1,6 @@
 {{#each categories as |c|}}
   {{plugin-outlet name="category-box-before-each-box" args=(hash category=c)}}
-  <div style={{unless noCategoryStyle (border-color c.color)}} data-category-id={{c.id}} data-notification-level={{c.notificationLevelString}} data-url={{c.url}} class="category category-box category-box-{{c.slug}} {{if c.isMuted "muted"}} {{if noCategoryStyle "no-category-boxes-style"}}">
+  <div style={{unless noCategoryStyle (concat (border-color c.color) (category-color-variable c.color))}} data-category-id={{c.id}} data-notification-level={{c.notificationLevelString}} data-url={{c.url}} class="category category-box category-box-{{c.slug}} {{if c.isMuted "muted"}} {{if noCategoryStyle "no-category-boxes-style"}}">
     <div class="category-box-inner">
       {{#unless c.isMuted}}
         <div class="category-logo">

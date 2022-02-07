@@ -4,12 +4,12 @@ require 'rails_helper'
 require 'new_post_manager'
 
 describe NewPostManager do
-
+  fab!(:user) { Fabricate(:user) }
   fab!(:topic) { Fabricate(:topic) }
 
   context "default action" do
     it "creates the post by default" do
-      manager = NewPostManager.new(topic.user, raw: 'this is a new post', topic_id: topic.id)
+      manager = NewPostManager.new(user, raw: 'this is a new post', topic_id: topic.id)
       result = manager.perform
 
       expect(result.action).to eq(:create_post)
@@ -25,7 +25,7 @@ describe NewPostManager do
     it "doesn't enqueue private messages" do
       SiteSetting.approve_unless_trust_level = 4
 
-      manager = NewPostManager.new(topic.user,
+      manager = NewPostManager.new(user,
                                    raw: 'this is a new post',
                                    title: 'this is a new title',
                                    archetype: Archetype.private_message,
@@ -40,7 +40,7 @@ describe NewPostManager do
       expect(result.post).to be_a(Post)
 
       # It doesn't enqueue replies to the private message either
-      manager = NewPostManager.new(topic.user,
+      manager = NewPostManager.new(user,
                                    raw: 'this is a new reply',
                                    topic_id: result.post.topic_id)
 
@@ -56,7 +56,7 @@ describe NewPostManager do
   end
 
   context "default handler" do
-    let(:manager) { NewPostManager.new(topic.user, raw: 'this is new post content', topic_id: topic.id) }
+    let(:manager) { NewPostManager.new(user, raw: 'this is new post content', topic_id: topic.id) }
 
     context 'with the settings zeroed out' do
       before do
@@ -126,8 +126,9 @@ describe NewPostManager do
     context 'with a high approval post count, but TL2' do
       before do
         SiteSetting.approve_post_count = 100
-        topic.user.trust_level = 2
+        user.update!(trust_level: 2)
       end
+
       it "will return an enqueue result" do
         result = NewPostManager.default_handler(manager)
         expect(result).to be_nil
@@ -188,8 +189,9 @@ describe NewPostManager do
     context 'with staged moderation setting enabled' do
       before do
         SiteSetting.approve_unless_staged = true
-        topic.user.staged = true
+        user.update!(staged: true)
       end
+
       it "will return an enqueue result" do
         result = NewPostManager.default_handler(manager)
         expect(NewPostManager.queue_enabled?).to eq(true)
@@ -209,17 +211,17 @@ describe NewPostManager do
     end
 
     context 'with a fast typer' do
-      let(:user) { manager.user }
-
       before do
         user.update!(trust_level: 0)
       end
 
       it "adds the silence reason in the system locale" do
         manager = build_manager_with('this is new post content')
+
         I18n.with_locale(:fr) do # Simulate french user
           result = NewPostManager.default_handler(manager)
         end
+
         expect(user.silenced?).to eq(true)
         expect(user.silence_reason).to eq(I18n.t("user.new_user_typed_too_fast", locale: :en))
       end
@@ -235,12 +237,11 @@ describe NewPostManager do
       end
 
       def build_manager_with(raw)
-        NewPostManager.new(topic.user, raw: raw, topic_id: topic.id, first_post_checks: true)
+        NewPostManager.new(user, raw: raw, topic_id: topic.id, first_post_checks: true)
       end
     end
 
     context 'with media' do
-      let(:user) { manager.user }
       let(:manager_opts) do
         {
           raw: 'this is new post content', topic_id: topic.id, first_post_checks: false,
@@ -258,7 +259,7 @@ describe NewPostManager do
 
       it 'queues the post for review because if it contains embedded media.' do
         SiteSetting.review_media_unless_trust_level = 1
-        manager = NewPostManager.new(topic.user, manager_opts)
+        manager = NewPostManager.new(user, manager_opts)
 
         result = NewPostManager.default_handler(manager)
 
@@ -268,7 +269,7 @@ describe NewPostManager do
 
       it 'does not enqueue the post if the poster is a trusted user' do
         SiteSetting.review_media_unless_trust_level = 0
-        manager = NewPostManager.new(topic.user, manager_opts)
+        manager = NewPostManager.new(user, manager_opts)
 
         result = NewPostManager.default_handler(manager)
 
@@ -278,7 +279,7 @@ describe NewPostManager do
   end
 
   context "new topic handler" do
-    let(:manager) { NewPostManager.new(topic.user, raw: 'this is new topic content', title: 'new topic title') }
+    let(:manager) { NewPostManager.new(user, raw: 'this is new topic content', title: 'new topic title') }
     context 'with a high trust level setting for new topics' do
       before do
         SiteSetting.approve_new_topics_unless_trust_level = 4
@@ -351,7 +352,7 @@ describe NewPostManager do
     end
 
     it "calls custom handlers" do
-      manager = NewPostManager.new(topic.user, raw: 'this post increases counter', topic_id: topic.id)
+      manager = NewPostManager.new(user, raw: 'this post increases counter', topic_id: topic.id)
 
       result = manager.perform
 
@@ -409,7 +410,7 @@ describe NewPostManager do
     end
 
     it "if nothing returns a result it creates a post" do
-      manager = NewPostManager.new(topic.user, raw: 'this is a new post', topic_id: topic.id)
+      manager = NewPostManager.new(user, raw: 'this is a new post', topic_id: topic.id)
 
       result = manager.perform
 

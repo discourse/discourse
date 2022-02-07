@@ -68,7 +68,7 @@ describe TopicConverter do
         expect(private_message.user.user_stat.post_count).to eq(0)
         private_message.convert_to_public_topic(admin)
         expect(private_message.reload.user.user_stat.topic_count).to eq(1)
-        expect(private_message.user.user_stat.post_count).to eq(1)
+        expect(private_message.user.user_stat.post_count).to eq(0)
         expect(topic_user.reload.notification_level).to eq(TopicUser.notification_levels[:watching])
       end
 

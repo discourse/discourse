@@ -1099,26 +1099,85 @@ describe Search do
 
   end
 
-  describe 'Chinese search' do
-    let(:sentence) { 'Discourse中国的基础设施网络正在组装' }
-    let(:sentence_t) { 'Discourse太平山森林遊樂區' }
+  context 'Japanese search' do
+    let!(:topic) { Fabricate(:topic) }
+    let!(:post) { Fabricate(:post, topic: topic, raw: 'This is some japanese text 日本が大好きです。') }
+    let!(:topic_2) { Fabricate(:topic, title: '日本の話題、 more japanese text') }
+    let!(:post_2) { Fabricate(:post, topic: topic_2) }
 
-    it 'splits English / Chinese and filter out stop words' do
+    describe '.prepare_data' do
+      it 'removes punctuations' do
+        SiteSetting.search_tokenize_japanese = true
+
+        expect(Search.prepare_data(post.raw)).to eq("This is some japanese text 日本 が 大好き です")
+      end
+    end
+
+    describe '.execute' do
+      before do
+        @old_default = SiteSetting.defaults.get(:min_search_term_length)
+        SiteSetting.defaults.set_regardless_of_locale(:min_search_term_length, 1)
+        SiteSetting.refresh!
+      end
+
+      after do
+        SiteSetting.defaults.set_regardless_of_locale(:min_search_term_length, @old_default)
+        SiteSetting.refresh!
+      end
+
+      it 'finds posts containing Japanese text if tokenization is forced' do
+        SiteSetting.search_tokenize_japanese = true
+
+        expect(Search.execute('日本').posts.map(&:id)).to eq([post_2.id, post.id])
+        expect(Search.execute('日').posts.map(&:id)).to eq([post_2.id, post.id])
+      end
+
+      it "find posts containing search term when site's locale is set to Japanese" do
+        SiteSetting.default_locale = 'ja'
+
+        expect(Search.execute('日本').posts.map(&:id)).to eq([post_2.id, post.id])
+        expect(Search.execute('日').posts.map(&:id)).to eq([post_2.id, post.id])
+      end
+
+      it 'does not include superfluous spaces in blurbs' do
+        SiteSetting.default_locale = 'ja'
+
+        post.update!(raw: '場サアマネ織企ういかせ竹域ヱイマ穂基ホ神3予読ずねいぱ松査ス禁多サウ提懸イふ引小43改こょドめ。深とつぐ主思料農ぞかル者杯検める活分えほづぼ白犠')
+
+        results = Search.execute('ういかせ竹域', type_filter: 'topic')
+
+        expect(results.posts.length).to eq(1)
+        expect(results.blurb(results.posts.first)).to include('ういかせ竹域')
+      end
+    end
+  end
+
+  describe 'Chinese search' do
+    let(:sentence) { 'Discourse is a software company 中国的基础设施网络正在组装。' }
+    let(:sentence_t) { 'Discourse is a software company 太平山森林遊樂區。' }
+
+    it 'splits English / Chinese and filter out Chinese stop words' do
       SiteSetting.default_locale = 'zh_CN'
-      data = Search.prepare_data(sentence).split(' ')
-      expect(data).to eq(["Discourse", "中国", "基础设施", "网络", "正在", "组装"])
+      data = Search.prepare_data(sentence)
+      expect(data).to eq("Discourse is a software company 中国 基础设施 网络 正在 组装")
     end
 
     it 'splits for indexing and filter out stop words' do
       SiteSetting.default_locale = 'zh_CN'
-      data = Search.prepare_data(sentence, :index).split(' ')
-      expect(data).to eq(["Discourse", "中国", "基础设施", "网络", "正在", "组装"])
+      data = Search.prepare_data(sentence, :index)
+      expect(data).to eq("Discourse is a software company 中国 基础设施 网络 正在 组装")
     end
 
     it 'splits English / Traditional Chinese and filter out stop words' do
       SiteSetting.default_locale = 'zh_TW'
-      data = Search.prepare_data(sentence_t).split(' ')
-      expect(data).to eq(["Discourse", "太平山", "森林", "遊樂區"])
+      data = Search.prepare_data(sentence_t)
+      expect(data).to eq("Discourse is a software company 太平山 森林 遊樂區")
+    end
+
+    it 'does not split strings beginning with numeric chars into different segments' do
+      SiteSetting.default_locale = 'zh_TW'
+      data = Search.prepare_data("#{sentence} 123abc")
+      expect(data).to eq("Discourse is a software company 中国 基础设施 网络 正在 组装 123abc")
     end
 
     it 'finds chinese topic based on title' do
@@ -1126,6 +1185,7 @@ describe Search do
 
       SiteSetting.default_locale = 'zh_TW'
       SiteSetting.min_search_term_length = 1
+
       topic = Fabricate(:topic, title: 'My Title Discourse社區指南')
       post = Fabricate(:post, topic: topic)
 
@@ -1136,14 +1196,23 @@ describe Search do
     it 'finds chinese topic based on title if tokenization is forced' do
       skip("skipped until pg app installs the db correctly") if RbConfig::CONFIG["arch"] =~ /darwin/
 
-      SiteSetting.search_tokenize_chinese_japanese_korean = true
-      SiteSetting.min_search_term_length = 1
+      begin
+        SiteSetting.search_tokenize_chinese = true
+        default_min_search_term_length = SiteSetting.defaults.get(:min_search_term_length)
+        SiteSetting.defaults.set_regardless_of_locale(:min_search_term_length, 1)
+        SiteSetting.refresh!
 
-      topic = Fabricate(:topic, title: 'My Title Discourse社區指南')
-      post = Fabricate(:post, topic: topic)
+        topic = Fabricate(:topic, title: 'My Title Discourse社區指南')
+        post = Fabricate(:post, topic: topic)
 
-      expect(Search.execute('社區指南').posts.first.id).to eq(post.id)
-      expect(Search.execute('指南').posts.first.id).to eq(post.id)
+        expect(Search.execute('社區指南').posts.first.id).to eq(post.id)
+        expect(Search.execute('指南').posts.first.id).to eq(post.id)
+      ensure
+        if default_min_search_term_length
+          SiteSetting.defaults.set_regardless_of_locale(:min_search_term_length, default_min_search_term_length)
+          SiteSetting.refresh!
+        end
+      end
     end
   end
 
@@ -1816,27 +1885,6 @@ describe Search do
       results = Search.execute('สวัสดี', type_filter: 'topic')
       expect(results.posts.length).to eq(1)
     end
-  end
-
-  context 'CJK segmentation' do
-    before do
-      SiteSetting.search_tokenize_chinese_japanese_korean = true
-      SiteSetting.min_search_term_length = 1
-    end
-
-    let!(:post1) do
-      Fabricate(:post, raw: '場サアマネ織企ういかせ竹域ヱイマ穂基ホ神3予読ずねいぱ松査ス禁多サウ提懸イふ引小43改こょドめ。深とつぐ主思料農ぞかル者杯検める活分えほづぼ白犠')
-    end
-
-    it('does not include superfluous spaces in blurbs') do
-
-      results = Search.execute('ういかせ竹域', type_filter: 'topic')
-      expect(results.posts.length).to eq(1)
-
-      expect(results.blurb(results.posts.first)).to include('ういかせ竹域')
-
-    end
-
   end
 
   context 'include_diacritics' do

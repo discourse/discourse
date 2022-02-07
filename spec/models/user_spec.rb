@@ -287,28 +287,31 @@ describe User do
   end
 
   describe 'delete posts in batches' do
-    before_all do
-      @post1 = Fabricate(:post)
-      @user = @post1.user
-      @post2 = Fabricate(:post, topic: @post1.topic, user: @user)
-      @post3 = Fabricate(:post, user: @user)
-      @posts = [@post1, @post2, @post3]
-      @guardian = Guardian.new(Fabricate(:admin))
-      Fabricate(:reviewable_queued_post, created_by: @user)
-    end
+    fab!(:post1) { Fabricate(:post) }
+    fab!(:user) { post1.user }
+    fab!(:post2) { Fabricate(:post, topic: post1.topic, user: user) }
+    fab!(:post3) { Fabricate(:post, user: user) }
+    fab!(:posts) { [post1, post2, post3] }
+    fab!(:post_ids) { [post1.id, post2.id, post3.id] }
+    fab!(:guardian) { Guardian.new(Fabricate(:admin)) }
+    fab!(:reviewable_queued_post) { Fabricate(:reviewable_queued_post, created_by: user) }
 
     it 'deletes only one batch of posts' do
-      deleted_posts = @user.delete_posts_in_batches(@guardian, 1)
-      expect(Post.where(id: @posts.map(&:id)).count).to eq(2)
+      post2
+      deleted_posts = user.delete_posts_in_batches(guardian, 1)
+      expect(Post.where(id: post_ids).count).to eq(2)
       expect(deleted_posts.length).to eq(1)
-      expect(deleted_posts[0]).to eq(@post2)
+      expect(deleted_posts[0]).to eq(post2)
     end
 
     it 'correctly deletes posts and topics' do
-      @user.delete_posts_in_batches(@guardian, 20)
-      expect(Post.where(id: @posts.map(&:id))).to be_empty
-      expect(Reviewable.where(created_by: @user).count).to eq(0)
-      @posts.each do |p|
+      posts
+      user.delete_posts_in_batches(guardian, 20)
+
+      expect(Post.where(id: post_ids)).to be_empty
+      expect(Reviewable.where(created_by: user).count).to eq(0)
+
+      posts.each do |p|
         if p.is_first_post?
           expect(Topic.find_by(id: p.topic_id)).to be_nil
         end
@@ -319,10 +322,10 @@ describe User do
       invalid_guardian = Guardian.new(Fabricate(:user))
 
       expect do
-        @user.delete_posts_in_batches(invalid_guardian)
+        user.delete_posts_in_batches(invalid_guardian)
       end.to raise_error Discourse::InvalidAccess
 
-      @posts.each do |p|
+      posts.each do |p|
         p.reload
         expect(p).to be_present
         expect(p.topic).to be_present

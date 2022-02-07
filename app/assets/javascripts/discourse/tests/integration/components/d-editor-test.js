@@ -5,6 +5,7 @@ import componentTest, {
 import {
   discourseModule,
   exists,
+  paste,
   query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -821,14 +822,6 @@ third line`
       );
     }
   );
-
-  async function paste(element, text) {
-    let e = new Event("paste", { cancelable: true });
-    e.clipboardData = { getData: () => text };
-    element.dispatchEvent(e);
-    await settled();
-    return e;
-  }
 
   componentTest("paste table", {
     template: hbs`{{d-editor value=value composerEvents=true}}`,

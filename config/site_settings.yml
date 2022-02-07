@@ -584,7 +584,7 @@ users:
     client: true
     default: true
   invite_expiry_days:
-    default: 30
+    default: 90
     client: true
     max: 36500
   invites_per_page:
@@ -2034,7 +2034,12 @@ search:
       zh_TW: 1
       ko: 1
       ja: 1
-  search_tokenize_chinese_japanese_korean: false
+  search_tokenize_chinese:
+    default: false
+    validator: "SearchTokenizeChineseValidator"
+  search_tokenize_japanese:
+    default: false
+    validator: "SearchTokenizeJapaneseValidator"
   search_prefer_recent_posts: false
   search_recent_posts_size:
     default: 1000000
@@ -2346,6 +2351,10 @@ uncategorized:
   always_include_topic_excerpts:
     default: false
     hidden: true
+
+  allow_bulk_invite:
+    default: true
+    client: true
 
   max_bulk_invites:
     default: 50000

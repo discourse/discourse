@@ -713,6 +713,7 @@ class GroupsController < ApplicationController
             :imap_updated_at,
             :email_username,
             :email_password,
+            :email_from_alias,
             :primary_group,
             :visibility_level,
             :members_visibility_level,

@@ -110,7 +110,8 @@ class Group < ActiveRecord::Base
     "imap_port",
     "imap_ssl",
     "email_username",
-    "email_password"
+    "email_password",
+    "email_from_alias"
   ]
 
   ALIAS_LEVELS = {
@@ -288,6 +289,10 @@ class Group < ActiveRecord::Base
     else
       [ALIAS_LEVELS[:everyone]]
     end
+  end
+
+  def smtp_from_address
+    self.email_from_alias.present? ? self.email_from_alias : self.email_username
   end
 
   def downcase_incoming_email
@@ -708,7 +713,9 @@ class Group < ActiveRecord::Base
 
   def self.find_by_email(email)
     self.where(
-      "email_username = :email OR string_to_array(incoming_email, '|') @> ARRAY[:email]",
+      "email_username = :email OR
+        string_to_array(incoming_email, '|') @> ARRAY[:email] OR
+        email_from_alias = :email",
       email: Email.downcase(email)
     ).first
   end
@@ -1128,6 +1135,7 @@ end
 #  imap_enabled                       :boolean          default(FALSE)
 #  imap_updated_at                    :datetime
 #  imap_updated_by_id                 :integer
+#  email_from_alias                   :string
 #
 # Indexes
 #

@@ -59,11 +59,11 @@ class NotificationEmailer
       notification_type = Notification.types[notification.notification_type]
 
       hash = {
-        type: type,
+        type: type.to_s,
         user_id: notification.user_id,
         notification_id: notification.id,
         notification_data_hash: notification.data_hash,
-        notification_type: notification_type,
+        notification_type: notification_type.to_s,
       }
 
       hash[:post_id] = post_id if post_id > 0 && notification_type != :post_approved

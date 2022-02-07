@@ -106,7 +106,7 @@ class UserOption < ActiveRecord::Base
     Discourse.redis.expire(key, delay)
 
     # delay the update
-    Jobs.enqueue_in(delay / 2, :update_top_redirection, user_id: self.user_id, redirected_at: Time.zone.now)
+    Jobs.enqueue_in(delay / 2, :update_top_redirection, user_id: self.user_id, redirected_at: Time.zone.now.to_s)
   end
 
   def should_be_redirected_to_top

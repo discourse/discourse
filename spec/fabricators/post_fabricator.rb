@@ -5,6 +5,11 @@ Fabricator(:post) do
   topic { |attrs| Fabricate(:topic, user: attrs[:user]) }
   raw "Hello world"
   post_type Post.types[:regular]
+
+  # Fabrication bypasses PostCreator, for performance reasons, where the counts are updated so we have to handle this manually here.
+  after_save do |post, _transients|
+    UserStatCountUpdater.increment!(post)
+  end
 end
 
 Fabricator(:post_with_long_raw_content, from: :post) do

@@ -179,12 +179,6 @@ export default Component.extend({
 
     let options = defaultShortcutOptions(userTimezone);
     this._hideDynamicOptions(options);
-
-    customOptions.forEach((opt) => {
-      if (!opt.timeFormatted && opt.time) {
-        opt.timeFormatted = opt.time.format(I18n.t(opt.timeFormatKey));
-      }
-    });
     options = options.concat(customOptions);
 
     options.sort((a, b) => {
@@ -205,9 +199,7 @@ export default Component.extend({
         TIME_SHORTCUT_TYPES.LAST_CUSTOM
       );
       lastCustom.time = this.parsedLastCustomDatetime;
-      lastCustom.timeFormatted = this.parsedLastCustomDatetime.format(
-        I18n.t("dates.long_no_year")
-      );
+      lastCustom.timeFormatKey = "dates.long_no_year";
       lastCustom.hidden = false;
     }
 
@@ -221,12 +213,8 @@ export default Component.extend({
       });
     }
 
-    options.forEach((option) => {
-      if (customLabels[option.id]) {
-        option.label = customLabels[option.id];
-      }
-    });
-
+    this._applyCustomLabels(options, customLabels);
+    this._formatTime(options);
     return options;
   },
 
@@ -274,6 +262,22 @@ export default Component.extend({
     if (this.onTimeSelected) {
       this.onTimeSelected(type, dateTime);
     }
+  },
+
+  _applyCustomLabels(options, customLabels) {
+    options.forEach((option) => {
+      if (customLabels[option.id]) {
+        option.label = customLabels[option.id];
+      }
+    });
+  },
+
+  _formatTime(options) {
+    options.forEach((option) => {
+      if (option.time && option.timeFormatKey) {
+        option.timeFormatted = option.time.format(I18n.t(option.timeFormatKey));
+      }
+    });
   },
 
   _hideDynamicOptions(options) {

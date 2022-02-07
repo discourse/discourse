@@ -10,7 +10,7 @@ module Jobs
       users = target_user_ids
 
       users.each do |user_id|
-        ::Jobs.enqueue(:user_email, type: :digest, user_id: user_id)
+        ::Jobs.enqueue(:user_email, type: "digest", user_id: user_id)
       end
     end
 

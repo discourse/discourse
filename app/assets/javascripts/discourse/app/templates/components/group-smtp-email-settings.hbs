@@ -8,11 +8,11 @@
 
       <div class="control-group">
         <label for="smtp_server">{{i18n "groups.manage.email.credentials.smtp_server"}}</label>
-        {{input type="text" name="smtp_server" value=form.smtp_server tabindex="3" onChange=(action "resetSettingsValid")}}
+        {{input type="text" name="smtp_server" value=form.smtp_server tabindex="4" onChange=(action "resetSettingsValid")}}
       </div>
 
       <label for="enable_ssl">
-        {{input type="checkbox" checked=form.smtp_ssl id="enable_ssl" tabindex="5" onChange=(action "resetSettingsValid")}}
+        {{input type="checkbox" checked=form.smtp_ssl id="enable_ssl" tabindex="6" onChange=(action "resetSettingsValid")}}
         {{i18n "groups.manage.email.credentials.smtp_ssl"}}
       </label>
     </div>
@@ -25,7 +25,15 @@
 
       <div class="control-group">
         <label for="smtp_port">{{i18n "groups.manage.email.credentials.smtp_port"}}</label>
-        {{input type="text" name="smtp_port" value=form.smtp_port tabindex="4" onChange=(action "resetSettingsValid" form.smtp_port)}}
+        {{input type="text" name="smtp_port" value=form.smtp_port tabindex="5" onChange=(action "resetSettingsValid" form.smtp_port)}}
+      </div>
+    </div>
+
+    <div>
+      <div class="control-group">
+        <label for="from_alias">{{i18n "groups.manage.email.settings.from_alias"}}</label>
+        {{input type="text" name="from_alias" id="from_alias" value=form.email_from_alias onChange=(action "resetSettingsValid") tabindex="3"}}
+        <p>{{i18n "groups.manage.email.settings.from_alias_hint"}}</p>
       </div>
     </div>
   </form>
@@ -43,7 +51,7 @@
     action=(action "testSmtpSettings")
     icon="cog"
     label="groups.manage.email.test_settings"
-    tabindex="6"
+    tabindex="7"
     title="groups.manage.email.settings_required"
     }}
 

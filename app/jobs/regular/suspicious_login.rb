@@ -13,7 +13,7 @@ module Jobs
                           client_ip: args[:client_ip])
 
         ::Jobs.enqueue(:critical_user_email,
-                     type: :suspicious_login,
+                     type: "suspicious_login",
                      user_id: args[:user_id],
                      client_ip: args[:client_ip],
                      user_agent: args[:user_agent])

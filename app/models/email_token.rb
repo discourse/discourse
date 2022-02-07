@@ -95,7 +95,7 @@ class EmailToken < ActiveRecord::Base
   def self.enqueue_signup_email(email_token, to_address: nil)
     Jobs.enqueue(
       :critical_user_email,
-      type: :signup,
+      type: "signup",
       user_id: email_token.user_id,
       email_token: email_token.token,
       to_address: to_address

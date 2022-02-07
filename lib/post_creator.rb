@@ -599,15 +599,10 @@ class PostCreator
     @user.create_user_stat if @user.user_stat.nil?
 
     if @user.user_stat.first_post_created_at.nil?
-      @user.user_stat.first_post_created_at = @post.created_at
+      @user.user_stat.update!(first_post_created_at: @post.created_at)
     end
 
-    unless @post.topic.private_message?
-      @user.user_stat.post_count += 1 if @post.post_type == Post.types[:regular] && !@post.is_first_post?
-      @user.user_stat.topic_count += 1 if @post.is_first_post?
-    end
-
-    @user.user_stat.save!
+    UserStatCountUpdater.increment!(@post)
 
     if !@topic.private_message? && @post.post_type != Post.types[:whisper]
       @user.update(last_posted_at: @post.created_at)

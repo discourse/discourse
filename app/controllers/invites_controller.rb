@@ -361,6 +361,12 @@ class InvitesController < ApplicationController
   def resend_all_invites
     guardian.ensure_can_resend_all_invites!(current_user)
 
+    begin
+      RateLimiter.new(current_user, "bulk-reinvite-per-day", 1, 1.day, apply_limit_to_staff: true).performed!
+    rescue RateLimiter::LimitExceeded
+      return render_json_error(I18n.t("rate_limiter.slow_down"))
+    end
+
     Invite.pending(current_user)
       .where('invites.email IS NOT NULL')
       .find_each { |invite| invite.resend_invite }
