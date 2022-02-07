@@ -23,7 +23,7 @@ class QunitController < ApplicationController
 
     @is_proxied = is_ember_cli_proxy?
     @legacy_ember = if Rails.env.production?
-      ENV['EMBER_CLI_PROD_ASSETS'] == "0"
+      ENV['EMBER_CLI_PROD_ASSETS'] != "1"
     else
       !@is_proxied
     end

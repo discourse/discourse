@@ -180,7 +180,7 @@ module Discourse
       discourse/tests/test_starter.js
     }
 
-    if ENV['EMBER_CLI_PROD_ASSETS'] == "0"
+    if ENV['EMBER_CLI_PROD_ASSETS'] != "1"
       config.assets.precompile += %w{
         discourse/tests/test-support-rails.js
         discourse/tests/test-helpers-rails.js
