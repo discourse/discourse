@@ -163,6 +163,10 @@ export default Component.extend(PanEvents, {
   },
 
   panStart(e) {
+    if (e.originalEvent.target.classList.contains("docked")) {
+      return;
+    }
+
     e.originalEvent.preventDefault();
     const center = e.center;
     const $centeredElement = $(document.elementFromPoint(center.x, center.y));
