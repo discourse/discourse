@@ -199,7 +199,7 @@ export default class ScreenTrack extends Service {
         this.appEvents.trigger("topic:timings-sent", data);
       })
       .catch((e) => {
-        if (ALLOWED_AJAX_FAILURES.indexOf(e.jqXHR.status) > -1) {
+        if (e.jqXHR && ALLOWED_AJAX_FAILURES.indexOf(e.jqXHR.status) > -1) {
           const delay = AJAX_FAILURE_DELAYS[this._ajaxFailures];
           this._ajaxFailures += 1;
 
@@ -210,7 +210,7 @@ export default class ScreenTrack extends Service {
           }
         }
 
-        if (window.console && window.console.warn) {
+        if (window.console && window.console.warn && e.jqXHR) {
           window.console.warn(
             `Failed to update topic times for topic ${topicId} due to ${e.jqXHR.status} error`
           );
