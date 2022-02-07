@@ -13,10 +13,11 @@ import { test } from "qunit";
 acceptance("Topic - Quote button - logged in", function (needs) {
   needs.user();
   needs.settings({
-    share_quote_visibility: "anonymous",
+    shy_name_on_posts: false,
+    prioritize_username_in_ux: true,
+    are_quote_visibility: "anonymous",
     share_quote_buttons: "twitter|email",
   });
-
   chromeTest(
     "Does not show the quote share buttons by default",
     async function (assert) {
