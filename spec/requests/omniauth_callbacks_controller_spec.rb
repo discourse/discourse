@@ -241,6 +241,32 @@ RSpec.describe Users::OmniauthCallbacksController do
         expect(data["associate_url"]).to eq(nil)
       end
 
+      it 'does not use email for username suggestions if disabled in settings' do
+        SiteSetting.use_email_for_username_and_name_suggestions = false
+        username = ""
+        name = ""
+        email = "billmailbox@test.com"
+        mock_auth(email, username, name)
+
+        get "/auth/google_oauth2/callback.json"
+        data = JSON.parse(cookies[:authentication_data])
+
+        expect(data["username"]).to eq("user1") # not "billmailbox" that can be extracted from email
+      end
+
+      it 'uses email for username suggestions if enabled in settings' do
+        SiteSetting.use_email_for_username_and_name_suggestions = true
+        username = ""
+        name = ""
+        email = "billmailbox@test.com"
+        mock_auth(email, username, name)
+
+        get "/auth/google_oauth2/callback.json"
+        data = JSON.parse(cookies[:authentication_data])
+
+        expect(data["username"]).to eq("billmailbox")
+      end
+
       describe 'when site is invite_only' do
         before do
           SiteSetting.invite_only = true
