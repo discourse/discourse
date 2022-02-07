@@ -70,7 +70,6 @@
     grid-template-columns: auto 1fr;
     grid-template-rows: auto 1fr;
     background: var(--secondary);
-    z-index: z("header");
     max-width: 33em;
     word-break: break-word;
     .login-title {
