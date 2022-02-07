@@ -105,6 +105,10 @@ class TopicViewSerializer < ApplicationSerializer
     is_warning
   end
 
+  def include_external_id?
+    external_id
+  end
+
   def draft
     object.draft
   end

@@ -814,6 +814,21 @@ describe PostsController do
         expect(post_1.topic.user.notifications.count).to eq(1)
       end
 
+      it 'allows to create posts with an external_id' do
+        post "/posts.json", params: {
+          raw: 'this is the test content',
+          title: "this is some post",
+          external_id: 'external_id'
+        }, headers: { HTTP_API_USERNAME: user.username, HTTP_API_KEY: master_key }
+
+        expect(response.status).to eq(200)
+
+        new_topic = Topic.last
+        puts new_topic.inspect
+
+        expect(new_topic.external_id).to eq('external_id')
+      end
+
       it 'prevents whispers for regular users' do
         post_1 = Fabricate(:post)
         user_key = ApiKey.create!(user: user).key

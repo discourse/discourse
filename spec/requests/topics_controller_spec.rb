@@ -1793,19 +1793,31 @@ RSpec.describe TopicsController do
   end
 
   describe '#show_by_external_id' do
-    before_all do
-      Fabricate(:topic, external_id: 'asdf')
-    end
+    fab!(:private_topic) { Fabricate(:private_message_topic, external_id: 'private') }
+    fab!(:topic) { Fabricate(:topic, external_id: 'asdf') }
 
     it 'returns 301 when found' do
       get "/t/external_id/asdf.json"
       expect(response.status).to eq(301)
+      expect(response).to redirect_to(topic.relative_url + ".json?page=")
     end
 
-    it 'returns 404 when not found' do
+    it 'returns right response when not found' do
       get "/t/external_id/fdsa.json"
-      expect(response.status).to eq(404)
+      expect(response.status).to eq(403)
     end
+
+    describe 'when topic is not allowed' do
+      it 'should return the right response' do
+        sign_in(user)
+
+        get "/t/external_id/private.json"
+
+        expect(response.status).to eq(403)
+        expect(response.body).to include(I18n.t('invalid_access'))
+      end
+    end
+
   end
 
   describe '#show' do

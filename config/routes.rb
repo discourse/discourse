@@ -809,7 +809,7 @@ Discourse::Application.routes.draw do
 
     # Topic routes
     get "t/id_for/:slug" => "topics#id_for_slug"
-    get "t/external_id/:external_id" => "topics#show_by_external_id", format: :json
+    get "t/external_id/:external_id" => "topics#show_by_external_id", format: :json, constrains: { external_id: /\A[\w-]+\z/ }
     get "t/:slug/:topic_id/print" => "topics#show", format: :html, print: true, constraints: { topic_id: /\d+/ }
     get "t/:slug/:topic_id/wordpress" => "topics#wordpress", constraints: { topic_id: /\d+/ }
     get "t/:topic_id/wordpress" => "topics#wordpress", constraints: { topic_id: /\d+/ }

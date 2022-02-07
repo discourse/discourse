@@ -11,6 +11,8 @@ class Topic < ActiveRecord::Base
   include LimitedEdit
   extend Forwardable
 
+  EXTERNAL_ID_MAX_LENGTH = 50
+
   self.ignored_columns = [
     "avg_time", # TODO(2021-01-04): remove
     "image_url" # TODO(2021-06-01): remove
@@ -195,7 +197,7 @@ class Topic < ActiveRecord::Base
     end
   end
 
-  validates :external_id, allow_nil: true, uniqueness: true, length: { maximum: 50 }, format: { with: /\A[\w-]+\z/ }
+  validates :external_id, allow_nil: true, uniqueness: { case_sensitive: false }, length: { maximum: EXTERNAL_ID_MAX_LENGTH }, format: { with: /\A[\w-]+\z/ }
 
   before_validation do
     self.title = TextCleaner.clean_title(TextSentinel.title_sentinel(title).text) if errors[:title].empty?
