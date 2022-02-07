@@ -1,7 +1,7 @@
 import EmberObject from "@ember/object";
+import User from "discourse/models/user";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import sinon from "sinon";
-import * as ajaxlib from "discourse/lib/ajax";
 import pretender from "discourse/tests/helpers/create-pretender";
 import {
   acceptance,
@@ -158,17 +158,14 @@ acceptance("User - Saving user options", function (needs) {
         { success: true, user: {} },
       ];
     });
-    let spy = sinon.spy(ajaxlib, "ajax");
+    let spy = sinon.spy(User.current(), "_saveUserData");
 
     await visit("/u/eviltrout/preferences/emails");
     await click(".pref-mailing-list-mode input[type='checkbox']");
     await click(".save-changes");
 
     assert.ok(
-      spy.calledWithMatch("/u/eviltrout.json", {
-        data: { mailing_list_mode: true },
-        type: "PUT",
-      }),
+      spy.calledWithMatch({ mailing_list_mode: true }),
       "sends a PUT request to update the specified user option"
     );
 
@@ -177,10 +174,7 @@ acceptance("User - Saving user options", function (needs) {
     await click(".save-changes");
 
     assert.ok(
-      spy.calledWithMatch("/u/eviltrout.json", {
-        data: { email_messages_level: 2 },
-        type: "PUT",
-      }),
+      spy.calledWithMatch({ email_messages_level: 2 }),
       "is able to save a different user_option on a subsequent request"
     );
   });

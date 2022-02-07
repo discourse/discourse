@@ -382,6 +382,10 @@ const User = RestModel.extend({
       }
     });
 
+    return this._saveUserData(data, updatedState);
+  },
+
+  _saveUserData(data, updatedState) {
     // TODO: We can remove this when migrated fully to rest model.
     this.set("isSaving", true);
     return ajax(userPath(`${this.username_lower}.json`), {
