@@ -21,7 +21,7 @@ acceptance("Composer Actions", function (needs) {
   needs.settings({
     prioritize_username_in_ux: true,
     display_name_on_post: false,
-    enable_whispers: true
+    enable_whispers: true,
   });
   needs.site({ can_tag_topics: true });
 
