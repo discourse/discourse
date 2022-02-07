@@ -3,7 +3,6 @@
 require 'rails_helper'
 
 describe EmbeddableHost do
-
   it "trims http" do
     eh = EmbeddableHost.new(host: 'http://example.com')
     expect(eh).to be_valid
@@ -147,6 +146,18 @@ describe EmbeddableHost do
       host.destroy
 
       expect(SiteSetting.embed_post_limit).to eq(SiteSetting.defaults[:embed_post_limit])
+    end
+  end
+
+  describe '.record_for_url' do
+    fab!(:embeddable_host) { Fabricate(:embeddable_host) }
+
+    it 'returns the right record if given URL matches host' do
+      expect(EmbeddableHost.record_for_url("https://#{embeddable_host.host}")).to eq(embeddable_host)
+    end
+
+    it 'returns false if URL is malformed' do
+      expect(EmbeddableHost.record_for_url("@@@@@")).to eq(false)
     end
   end
 end
