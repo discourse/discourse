@@ -6,8 +6,12 @@ export function buildQuote(post, contents, opts = {}) {
     return "";
   }
 
+  const name = opts.displayName
+    ? opts.name || post.name
+    : opts.username || post.username;
+
   const params = [
-    opts.username || post.username,
+    name,
     `post:${opts.post || post.post_number}`,
     `topic:${opts.topic || post.topic_id}`,
   ];
