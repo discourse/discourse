@@ -18,7 +18,11 @@ import { toggleCheckDraftPopup } from "discourse/controllers/composer";
 
 acceptance("Composer Actions", function (needs) {
   needs.user();
-  needs.settings({ enable_whispers: true });
+  needs.settings({
+    prioritize_username_in_ux: true,
+    display_name_on_post: false,
+    enable_whispers: true
+  });
   needs.site({ can_tag_topics: true });
 
   test("creating new topic and then reply_as_private_message keeps attributes", async function (assert) {
