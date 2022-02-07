@@ -122,3 +122,5 @@ end
 
 Sidekiq.error_handlers.clear
 Sidekiq.error_handlers << SidekiqLogsterReporter.new
+
+Sidekiq.strict_args!
