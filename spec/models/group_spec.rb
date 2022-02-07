@@ -1225,6 +1225,23 @@ describe Group do
       expect(group.smtp_updated_by).to eq(user)
     end
 
+    it "records the change for singular setting changes" do
+      group.update(
+        smtp_port: 587,
+        smtp_ssl: true,
+        smtp_server: "smtp.gmail.com",
+        email_username: "test@gmail.com",
+        email_password: "password",
+      )
+      group.record_email_setting_changes!(user)
+      group.reload
+
+      old_updated_at = group.smtp_updated_at
+      group.update(email_from_alias: "somealias@gmail.com")
+      group.record_email_setting_changes!(user)
+      expect(group.reload.smtp_updated_at).not_to eq_time(old_updated_at)
+    end
+
     it "enables imap and records the change" do
       group.update(
         imap_port: 587,
@@ -1312,6 +1329,13 @@ describe Group do
       group.update!(email_username: "abc@test.com", incoming_email: "support@test.com")
       expect(Group.find_by_email("abc@test.com")).to eq(group)
       expect(Group.find_by_email("support@test.com")).to eq(group)
+      expect(Group.find_by_email("nope@test.com")).to eq(nil)
+    end
+
+    it "finds the group by its email_from_alias" do
+      group.update!(email_username: "abc@test.com", email_from_alias: "somealias@test.com")
+      expect(Group.find_by_email("abc@test.com")).to eq(group)
+      expect(Group.find_by_email("somealias@test.com")).to eq(group)
       expect(Group.find_by_email("nope@test.com")).to eq(nil)
     end
   end

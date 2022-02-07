@@ -221,6 +221,12 @@
             "null"
           ]
         },
+        "email_from_alias": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
         "email_password": {
           "type": [
             "string",

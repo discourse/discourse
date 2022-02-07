@@ -32,6 +32,7 @@ class GroupShowSerializer < BasicGroupSerializer
                    :imap_updated_by,
                    :email_username,
                    :email_password,
+                   :email_from_alias,
                    :imap_last_error,
                    :imap_old_emails,
                    :imap_new_emails,
