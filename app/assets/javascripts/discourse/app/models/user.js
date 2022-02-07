@@ -334,13 +334,16 @@ const User = RestModel.extend({
       userFields.filter((uf) => !fields || fields.indexOf(uf) !== -1)
     );
 
+    let filteredUserOptionFields = [];
     if (fields) {
-      userOptionFields = userOptionFields.filter(
+      filteredUserOptionFields = userOptionFields.filter(
         (uo) => fields.indexOf(uo) !== -1
       );
+    } else {
+      filteredUserOptionFields = userOptionFields;
     }
 
-    userOptionFields.forEach((s) => {
+    filteredUserOptionFields.forEach((s) => {
       data[s] = this.get(`user_option.${s}`);
     });
 
@@ -379,6 +382,10 @@ const User = RestModel.extend({
       }
     });
 
+    return this._saveUserData(data, updatedState);
+  },
+
+  _saveUserData(data, updatedState) {
     // TODO: We can remove this when migrated fully to rest model.
     this.set("isSaving", true);
     return ajax(userPath(`${this.username_lower}.json`), {
