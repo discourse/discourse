@@ -2933,12 +2933,12 @@ describe Topic do
     end
 
     it 'returns error message if topic has more posts' do
-      post_2 = PostCreator.create!(Fabricate(:user), topic_id: topic.id, raw: 'some post content')
+      post_2 = create_post(user: user, topic_id: topic.id, raw: 'some post content')
 
       PostDestroyer.new(admin, post).destroy
       expect(topic.reload.cannot_permanently_delete_reason(Fabricate(:admin))).to eq(I18n.t('post.cannot_permanently_delete.many_posts'))
 
-      PostDestroyer.new(admin, post_2).destroy
+      PostDestroyer.new(admin, post_2.reload).destroy
       expect(topic.reload.cannot_permanently_delete_reason(Fabricate(:admin))).to eq(nil)
     end
 
