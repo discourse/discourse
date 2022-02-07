@@ -170,7 +170,7 @@ export function setup(helper) {
     md.block.bbcode.ruler.push("quotes", rule);
   });
 
-  helper.allowList(["img[class=avatar]"]);
+  helper.allowList(["img[class=avatar]", "img[loading=lazy]"]);
   helper.allowList({
     custom(tag, name, value) {
       if (tag === "aside" && name === "class") {
