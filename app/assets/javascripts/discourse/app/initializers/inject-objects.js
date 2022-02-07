@@ -1,6 +1,7 @@
 import { setDefaultOwner } from "discourse-common/lib/get-owner";
 import { isLegacyEmber } from "discourse-common/config/environment";
 import User from "discourse/models/user";
+import Site from "discourse/models/site";
 import deprecated from "discourse-common/lib/deprecated";
 
 export default {
@@ -33,6 +34,18 @@ export default {
             }
           );
           return User;
+        },
+      });
+      Object.defineProperty(app, "Site", {
+        get() {
+          deprecated(
+            `import discourse/models/site instead of using Discourse.Site`,
+            {
+              since: "2.8",
+              dropFrom: "2.9",
+            }
+          );
+          return Site;
         },
       });
     }
