@@ -23,6 +23,7 @@ import deprecated from "discourse-common/lib/deprecated";
 import { isEmpty } from "@ember/utils";
 import { propertyNotEqual } from "discourse/lib/computed";
 import { throwAjaxError } from "discourse/lib/ajax-error";
+import { _clearSnapshots } from "select-kit/components/composer-actions";
 
 let _customizations = [];
 export function registerCustomizationCallback(cb) {
@@ -919,6 +920,7 @@ const Composer = RestModel.extend({
       noBump: false,
       editConflict: false,
     });
+    _clearSnapshots();
   },
 
   @discourseComputed("editConflict", "originalText")

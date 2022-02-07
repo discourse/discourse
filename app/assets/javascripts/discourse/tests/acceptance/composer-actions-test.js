@@ -57,6 +57,18 @@ acceptance("Composer Actions", function (needs) {
       "toggle_topic_bump"
     );
     assert.strictEqual(composerActions.rowByIndex(5).value(), null);
+
+    await click("#reply-control .save-or-cancel .cancel");
+    await visit("/");
+    await click("#create-topic");
+    await composerActions.expand();
+
+    assert.strictEqual(
+      composerActions.rowByIndex(0).value(),
+      "reply_as_private_message"
+    );
+    assert.strictEqual(composerActions.rowByIndex(1).value(), "shared_draft");
+    assert.strictEqual(composerActions.rowByIndex(2).value(), null);
   });
 
   test("replying to post - reply_as_private_message", async function (assert) {
