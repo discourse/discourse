@@ -2,7 +2,6 @@ import EmberObject from "@ember/object";
 import User from "discourse/models/user";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import sinon from "sinon";
-import pretender from "discourse/tests/helpers/create-pretender";
 import {
   acceptance,
   exists,
@@ -150,15 +149,14 @@ acceptance("User - Saving user options", function (needs) {
     disable_mailing_list_mode: false,
   });
 
-  test("saving user options", async function (assert) {
-    pretender.put("/u/eviltrout.json", () => {
-      return [
-        200,
-        { "Content-Type": "application/json" },
-        { success: true, user: {} },
-      ];
+  needs.pretender((server, helper) => {
+    server.put("/u/eviltrout.json", () => {
+      return helper.response(200, { user: {} });
     });
-    let spy = sinon.spy(User.current(), "_saveUserData");
+  });
+
+  test("saving user options", async function (assert) {
+    const spy = sinon.spy(User.current(), "_saveUserData");
 
     await visit("/u/eviltrout/preferences/emails");
     await click(".pref-mailing-list-mode input[type='checkbox']");
