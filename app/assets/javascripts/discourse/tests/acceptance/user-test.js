@@ -1,3 +1,8 @@
+import EmberObject from "@ember/object";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
+import sinon from "sinon";
+import * as ajaxlib from "discourse/lib/ajax";
+import pretender from "discourse/tests/helpers/create-pretender";
 import {
   acceptance,
   exists,
@@ -129,5 +134,54 @@ acceptance("User Routes - Moderator viewing warnings", function (needs) {
     await visit("/u/eviltrout/messages/warnings");
     assert.ok($("body.user-messages-page").length, "has the body class");
     assert.ok($("div.alert-info").length, "has the permissions alert");
+  });
+});
+
+acceptance("User - Saving user options", function (needs) {
+  needs.user({
+    admin: false,
+    moderator: false,
+    username: "eviltrout",
+    id: 1,
+    user_option: EmberObject.create({}),
+  });
+
+  needs.settings({
+    disable_mailing_list_mode: false,
+  });
+
+  test("saving user options", async function (assert) {
+    pretender.put("/u/eviltrout.json", () => {
+      return [
+        200,
+        { "Content-Type": "application/json" },
+        { success: true, user: {} },
+      ];
+    });
+    let spy = sinon.spy(ajaxlib, "ajax");
+
+    await visit("/u/eviltrout/preferences/emails");
+    await click(".pref-mailing-list-mode input[type='checkbox']");
+    await click(".save-changes");
+
+    assert.ok(
+      spy.calledWithMatch("/u/eviltrout.json", {
+        data: { mailing_list_mode: true },
+        type: "PUT",
+      }),
+      "sends a PUT request to update the specified user option"
+    );
+
+    await selectKit("#user-email-messages-level").expand();
+    await selectKit("#user-email-messages-level").selectRowByValue(2); // never option
+    await click(".save-changes");
+
+    assert.ok(
+      spy.calledWithMatch("/u/eviltrout.json", {
+        data: { email_messages_level: 2 },
+        type: "PUT",
+      }),
+      "is able to save a different user_option on a subsequent request"
+    );
   });
 });
