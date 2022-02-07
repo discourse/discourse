@@ -4,6 +4,11 @@
 # we need to handle certain exceptions here
 module Middleware
   class DiscoursePublicExceptions < ::ActionDispatch::PublicExceptions
+    INVALID_REQUEST_ERRORS = Set.new([
+      Rack::QueryParser::InvalidParameterError,
+      ActionController::BadRequest,
+      ActionDispatch::Http::Parameters::ParseError,
+    ])
 
     def initialize(path)
       super
@@ -18,12 +23,7 @@ module Middleware
       exception = env["action_dispatch.exception"]
       response = ActionDispatch::Response.new
 
-      # Special handling for invalid params, in this case we can not re-dispatch
-      # the Request object has a "broken" .params which can not be accessed
-      exception = nil if Rack::QueryParser::InvalidParameterError === exception
-
-      # We also can not dispatch bad requests as no proper params
-      exception = nil if ActionController::BadRequest === exception
+      exception = nil if INVALID_REQUEST_ERRORS.include?(exception)
 
       if exception
         begin
@@ -38,6 +38,13 @@ module Middleware
             return [400, { "Cache-Control" => "private, max-age=0, must-revalidate" }, ["Invalid MIME type"]]
           end
 
+          # Or badly formatted multipart requests
+          begin
+            request.POST
+          rescue EOFError
+            return [400, { "Cache-Control" => "private, max-age=0, must-revalidate" }, ["Invalid request"]]
+          end
+
           if ApplicationController.rescue_with_handler(exception, object: fake_controller)
             body = response.body
             if String === body
@@ -46,6 +53,7 @@ module Middleware
             return [response.status, response.headers, body]
           end
         rescue => e
+          return super if INVALID_REQUEST_ERRORS.include?(e.class)
           Discourse.warn_exception(e, message: "Failed to handle exception in exception app middleware")
         end
 
