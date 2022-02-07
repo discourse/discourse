@@ -241,8 +241,6 @@ acceptance("Topic", function (needs) {
 acceptance("Topic featured links", function (needs) {
   needs.user();
   needs.settings({
-    display_name_on_posts: false,
-    prioritize_username_in_ux: true,
     topic_featured_link_enabled: true,
     max_topic_title_length: 80,
     exclude_rel_nofollow_domains: "example.com",
@@ -392,10 +390,20 @@ acceptance("Topic featured links", function (needs) {
   chromeTest(
     "Quoting a quote with the Reply button keeps the original poster name",
     async function (assert) {
+      needs.settings({
+        display_names_on_posts: false,
+        prioritize_username_in_ux: false,
+      });
+
       await visit("/t/internationalization-localization/280");
       await selectText("#post_5 blockquote");
       await click(".reply");
 
+      debugger
+      console.log(
+        queryAll(".d-editor-input")
+          .val()
+      );
       assert.ok(
         queryAll(".d-editor-input")
           .val()
