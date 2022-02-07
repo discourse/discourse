@@ -3,6 +3,9 @@
 require 'cose'
 require 'openssl/signature_algorithm/rsapkcs1'
 
+# 'cose' gem does not implement all algorithms from the Web Authentication
+# (WebAuthn) standard specification. This patch implements one of the missing
+# ones, RSASSA-PKCS1-v1_5.
 module COSE
   module Algorithm
     class RSAPKCS1 < SignatureAlgorithm
