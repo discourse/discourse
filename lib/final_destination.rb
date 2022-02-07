@@ -8,8 +8,8 @@ require 'url_helper'
 
 # Determine the final endpoint for a Web URI, following redirects
 class FinalDestination
-  MAX_TIME = 10
-  MAX_SIZE = 1_048_576 # 1024 * 1024
+  MAX_REQUEST_TIME_SECONDS = 10
+  MAX_REQUEST_SIZE_BYTES = 1_048_576 # 1024 * 1024
 
   def self.clear_https_cache!(domain)
     key = redis_https_key(domain)
@@ -205,12 +205,12 @@ class FinalDestination
     middlewares = Excon.defaults[:middlewares]
     middlewares << Excon::Middleware::Decompress if @http_verb == :get
 
-    time = Time.now
-    body = +""
+    request_start_time = Time.now
+    response_body = +""
     request_validator = lambda do |chunk, _remaining_bytes, _total_bytes|
-      body << chunk
-      raise Excon::Errors::ExpectationFailed.new('response size too big') if body.bytesize > MAX_SIZE
-      raise Excon::Errors::ExpectationFailed.new('connect timeout reached') if Time.now - time > MAX_TIME
+      response_body << chunk
+      raise Excon::Errors::ExpectationFailed.new("response size too big: #{@uri.to_s}") if response_body.bytesize > MAX_REQUEST_SIZE_BYTES
+      raise Excon::Errors::ExpectationFailed.new("connect timeout reached: #{@uri.to_s}") if Time.now - request_start_time > MAX_REQUEST_TIME_SECONDS
     end
 
     response = Excon.public_send(@http_verb,
@@ -231,12 +231,12 @@ class FinalDestination
       # Cache body of successful `get` requests
       if @http_verb == :get
         if Oneboxer.cache_response_body?(@uri)
-          Oneboxer.cache_response_body(@uri.to_s, body)
+          Oneboxer.cache_response_body(@uri.to_s, response_body)
         end
       end
 
       if @follow_canonical
-        next_url = fetch_canonical_url(body)
+        next_url = fetch_canonical_url(response_body)
 
         if next_url.to_s.present? && next_url != @uri
           @follow_canonical = false

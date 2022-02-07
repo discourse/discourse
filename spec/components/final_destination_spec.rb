@@ -190,17 +190,17 @@ describe FinalDestination do
     end
 
     it 'raises error when response is too big' do
-      stub_const(described_class, "MAX_SIZE", 1) do
+      stub_const(described_class, "MAX_REQUEST_SIZE_BYTES", 1) do
         stub_request(:get, "https://codinghorror.com/blog").to_return(body_response)
         final = FinalDestination.new('https://codinghorror.com/blog', opts.merge(follow_canonical: true))
-        expect { final.resolve }.to raise_error(Excon::Errors::ExpectationFailed, "response size too big")
+        expect { final.resolve }.to raise_error(Excon::Errors::ExpectationFailed, "response size too big: https://codinghorror.com/blog")
       end
     end
 
     it 'raises error when response is too slow' do
       stub_request(:get, "https://codinghorror.com/blog").to_return(lambda { |request| freeze_time(11.seconds.from_now) ; body_response })
       final = FinalDestination.new('https://codinghorror.com/blog', opts.merge(follow_canonical: true))
-      expect { final.resolve }.to raise_error(Excon::Errors::ExpectationFailed, "connect timeout reached")
+      expect { final.resolve }.to raise_error(Excon::Errors::ExpectationFailed, "connect timeout reached: https://codinghorror.com/blog")
     end
 
     context 'follows canonical links' do
