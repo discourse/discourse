@@ -298,7 +298,7 @@ module Jobs
 
     # Only string keys are allowed in JSON. We call `.with_indifferent_access`
     # in Jobs::Base#perform, so this is invisible to developers
-    opts = opts.stringify_keys
+    opts = opts.deep_stringify_keys
 
     # Simulate the args being dumped/parsed through JSON
     parsed_opts = JSON.parse(JSON.dump(opts))
