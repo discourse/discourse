@@ -815,6 +815,7 @@ describe PostsController do
       end
 
       it 'allows to create posts with an external_id' do
+        master_key = Fabricate(:api_key).key
         post "/posts.json", params: {
           raw: 'this is the test content',
           title: "this is some post",

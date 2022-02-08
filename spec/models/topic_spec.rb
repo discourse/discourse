@@ -37,7 +37,7 @@ describe Topic do
     context "#external_id" do
       describe 'when external_id is too long' do
         it 'should not be valid' do
-          topic.external_id = 'a' * Topic::EXTERNAL_ID_MAX_LENGTH + 1
+          topic.external_id = 'a' * (Topic::EXTERNAL_ID_MAX_LENGTH + 1)
           expect(topic).to_not be_valid
         end
       end
