@@ -35,7 +35,7 @@ task 'assets:precompile:before' do
   require 'sprockets'
   require 'digest/sha1'
 
-  if ENV['EMBER_CLI_PROD_ASSETS'] == "1"
+  if ENV['EMBER_CLI_PROD_ASSETS'] != "0"
     # Remove the assets that Ember CLI will handle for us
     Rails.configuration.assets.precompile.reject! do |asset|
       asset.is_a?(String) &&
@@ -312,7 +312,7 @@ end
 
 task 'assets:precompile' => 'assets:precompile:before' do
 
-  copy_ember_cli_assets if ENV['EMBER_CLI_PROD_ASSETS'] == '1'
+  copy_ember_cli_assets if ENV['EMBER_CLI_PROD_ASSETS'] != '0'
 
   refresh_days = GlobalSetting.refresh_maxmind_db_during_precompile_days
 
