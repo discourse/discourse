@@ -1399,7 +1399,6 @@ es:
     min_personal_message_title_length: "Longitud mínima del título para un mensaje en número de caracteres"
     max_emojis_in_title: "Cantidad máxima de emojis en el título del tema"
     min_search_term_length: "Extensión mínima de una búsqueda válida en número de caracteres"
-    search_tokenize_chinese_japanese_korean: "Forzar la búsqueda a tokenizar Chino/Japonés/Coreano incluso en sitios no basados en esos idiomas"
     search_prefer_recent_posts: "Si la búsqueda en tu foro grande es lenta, esta opción prueba primero en un índice de publicaciones más recientes"
     search_recent_posts_size: "Cantidad de publicaciones recientes que se mantienen en el índice"
     log_search_queries: "Registro de búsquedas realizadas por los usuarios"
@@ -1530,7 +1529,7 @@ es:
     allowed_iframes: "Una lista de prefijos de dominios para iframe src que discourse puede permitir de forma segura en publicaciones"
     allowed_crawler_user_agents: "Agentes de usuario de crawlers a los que se debe permitir el acceso al sitio. ¡ADVERTENCIA! ¡CONFIGURAR ESTO INHABILITARÁ A TODOS LOS CRAWLERS QUE NO SE ENCUENTRAN AQUÍ!"
     blocked_crawler_user_agents: "Palabra única insensible a mayúsculas y minúsculas en la cadena del agente de usuario que identifica a los que no se debe permitir el acceso al sitio. No se aplica si se define una lista de permitidos."
-    slow_down_crawler_user_agents: "Agentes de usuario de rastreadores web a los que se les debe limitar la velocidad según lo configurado en el ajuste «slow down crawler rate». Cada valor debe tener al menos 3 caracteres."
+    slow_down_crawler_user_agents: 'Agentes de usuario de rastreadores web a los que se les debe limitar la velocidad según lo configurado en el ajuste «slow down crawler rate». Cada valor debe tener al menos 3 caracteres.'
     slow_down_crawler_rate: "Si slow_down_crawler_user_agents es especificado, esta proporción aplicará para todos los crawlers (número de segundos de demora entre solicitudes)"
     content_security_policy: "Activar la política de seguridad de contenido (CSP)"
     content_security_policy_report_only: "Activar solo el informe de la política de seguridad de contenido (CPS)"

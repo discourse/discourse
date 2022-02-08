@@ -1322,7 +1322,6 @@ da:
     min_personal_message_title_length: "Minimumslængde af emnetitel i tegn."
     max_emojis_in_title: "Maksimum tilladte humørikoner i emnetitel"
     min_search_term_length: "Antal tegn i søgefeltet skal have et minimum"
-    search_tokenize_chinese_japanese_korean: "Tving søg til at \"tokenize\" Chinese/Japanese/Korean selv på sites som ikke er CJK"
     search_prefer_recent_posts: "Såfremt søgning på forum er langsomt, kan denne option indeksere og vise nyeste indlæg først"
     search_recent_posts_size: "Hvor mange nye indlæg skal der gemmes i index"
     log_search_queries: "Log søgeforespørgsler udført af brugere"

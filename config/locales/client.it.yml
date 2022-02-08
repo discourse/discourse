@@ -173,6 +173,7 @@ it:
     themes:
       default_description: "Predefinito"
       broken_theme_alert: "Il tuo sito potrebbe non funzionare perché il tema / componente %{theme} contiene degli errori. Disabilitalo qui %{path}."
+    broken_decorator_alert: "I messaggi potrebbero non essere visualizzati correttamente perché uno dei decoratori di contenuti sul tuo sito ha generato un errore. Per maggiori informazioni, controlla gli strumenti di sviluppo del browser."
     s3:
       regions:
         ap_northeast_1: "Asia Pacifico (Tokyo)"
@@ -689,6 +690,7 @@ it:
             title: "Impostazioni"
             allow_unknown_sender_topic_replies: "Consenti a mittenti sconosciuti di rispondere agli argomenti."
             allow_unknown_sender_topic_replies_hint: "Consenti a mittenti sconosciuti di rispondere agli argomenti del gruppo. Se l'opzione è disabilitata, le risposte provenienti da indirizzi e-mail non invitati all'argomento causeranno la creazione di un nuovo argomento in cui saranno incluse."
+            from_alias: "Da Alias"
           mailboxes:
             synchronized: "Maibox sincronizzata"
             none_found: "Nessuna mailbox trovata in questo account e-mail."
@@ -1482,13 +1484,16 @@ it:
           show_advanced: "Mostra Opzioni Avanzate"
           hide_advanced: "Nascondi opzioni avanzate"
           restrict: "Limita a"
+          restrict_email: "Limita all'e-mail"
           restrict_domain: "Limita al dominio"
           email_or_domain_placeholder: "nome@esempio.com o esempio.com"
           max_redemptions_allowed: "Limite max di utilizzi"
           add_to_groups: "Aggiungi ai gruppi"
+          invite_to_topic: "Arriva all'argomento"
           expires_at: "Scadenza:"
           custom_message: "Messaggio personale facoltativo"
           send_invite_email: "Salva e invia Email"
+          send_invite_email_instructions: "Limita l'invito all'e-mail per inviare un'e-mail di invito"
           save_invite: "Salva invito"
           invite_saved: "Invito salvato."
         bulk_invite:
@@ -1685,10 +1690,12 @@ it:
       disclaimer: "Registrandoti accetti <a href='%{privacy_link}' target='blank'>Informativa sulla privacy</a> e <a href='%{tos_link}' target='blank'>termini del servizio</a>."
       title: "Crea il tuo account"
       failed: "Qualcosa non ha funzionato. Forse questa email è già registrata, prova a usare il link di recupero password"
+      associate: "Hai già un account? <a href='%{associate_link}'>Accedi</a> per collegare il tuo account %{provider}."
     forgot_password:
       title: "Reimposta Password"
       action: "Ho dimenticato la password"
       invite: "Inserisci il nome utente o l'indirizzo email. Ti manderemo un'email per reimpostare la password."
+      invite_no_username: "Inserisci il tuo indirizzo di posta elettronica e ti spediremo un'e-mail per reimpostare la password."
       reset: "Reimposta Password"
       complete_username: "Se un account corrisponde al nome utente <b>%{username}</b>, a breve dovresti ricevere un'email con le istruzioni per ripristinare la tua password."
       complete_email: "Se un account corrisponde a <b>%{email}</b>, a breve dovresti ricevere un'email contenente le istruzioni per ripristinare la password."
@@ -1762,21 +1769,27 @@ it:
       google_oauth2:
         name: "Google"
         title: "con Google"
+        sr_title: "Accedi con Google"
       twitter:
         name: "Twitter"
         title: "con Twitter"
+        sr_title: "Accedi con Twitter"
       instagram:
         name: "Instagram"
         title: "con Instagram"
+        sr_title: "Accedi con Instagram"
       facebook:
         name: "Facebook"
         title: "con Facebook"
+        sr_title: "Accedi con Facebook"
       github:
         name: "GitHub"
         title: "con GitHub"
+        sr_title: "Accedi con GitHub"
       discord:
         name: "Discord"
         title: "con Discord"
+        sr_title: "Accedi con Discord"
       second_factor_toggle:
         totp: "Utilizzare un'app di autenticazione"
         backup_code: "Utilizza un codice di backup"

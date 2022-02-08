@@ -84,6 +84,15 @@ tr_TR:
       "10":
         quote: "İnsan zihni ne olursa olsun düşünebilir ve inanabilir, başarabilir."
         author: "Napoleon Hill"
+      "11":
+        quote: "Yurtta sulh cihanda sulh."
+        author: "Mustafa Kemal Atatürk"
+      "12":
+        quote: "Eğitim, yoksulluktan kurtulmanın bir yolu değil, onunla savaşmanın bir yoludur."
+        author: "Julius Nyerere"
+      "13":
+        quote: "Bin millik bir yolculuk tek bir adımla başlar."
+        author: "Lao Tzu"
       results: |-
         > :left_speech_bubble: _%{quote}_ &mdash; %{author}
     magic_8_ball:

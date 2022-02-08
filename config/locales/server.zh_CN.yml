@@ -1342,7 +1342,6 @@ zh_CN:
     min_personal_message_title_length: "消息允许的最小标题长度（以字符为单位）"
     max_emojis_in_title: "话题标题中允许的最大表情数量"
     min_search_term_length: "最小有效搜索词长度（以字符为单位）"
-    search_tokenize_chinese_japanese_korean: "即使在非 CJK 站点上也强制搜索将中文/日语/韩语词例化"
     search_prefer_recent_posts: "如果搜索大型论坛的速度很慢，此选项会首先尝试索引最近的帖子"
     search_recent_posts_size: "在索引中保留多少个最近的帖子"
     log_search_queries: "记录用户执行的搜索查询"

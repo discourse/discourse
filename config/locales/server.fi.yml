@@ -1373,7 +1373,6 @@ fi:
     min_personal_message_title_length: "Yksityisviestin otsikon vähimmäismerkkimäärä"
     max_emojis_in_title: "Kuinka monta emojia enintään otsikossa"
     min_search_term_length: "Haun merkkien minimimäärä"
-    search_tokenize_chinese_japanese_korean: "Pakota haku käsittelemään kiinaa/japania/koreaa myös muunkielisillä sivustoilla"
     search_prefer_recent_posts: "Jos hakeminen suurelta foorumilta on hidasta, tämä asetus kokeilee indeksiä, jossa tuoreimmat viestit ovat ensin"
     search_recent_posts_size: "Kuinka monta tuoretta viestiä pidetään indeksissä"
     log_search_queries: "Pidä lokia käyttäjien tekemistä hauista"

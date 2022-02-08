@@ -887,7 +887,6 @@ vi:
     max_topic_title_length: "Số kí tự tối đa trong tiêu đề chủ đề."
     min_personal_message_title_length: "Chiều dài tối thiểu cho phép theo số kí tự của một thông điệp"
     min_search_term_length: "Số kí tự tối thiểu trong từ khóa tìm kiếm."
-    search_tokenize_chinese_japanese_korean: "Bắt buộc tìm kiếm tách từ Chinese/Japanese/Korean ngay cả trên các site không phải là CJK"
     search_recent_posts_size: "Có bao nhiêu bài đăng gần đây để giữ trong chỉ mục"
     log_search_queries: "Ghi nhật ký các truy vấn tìm kiếm do người dùng thực hiện"
     search_query_log_max_size: "Số lượng truy vấn tìm kiếm tối đa cần lưu giữ"

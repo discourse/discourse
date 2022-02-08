@@ -84,6 +84,15 @@ da:
       "10":
         quote: "Uanset hvad menneskets sind kan begribe og tro på, kan det opnå."
         author: "Napoleon Hill"
+      "11":
+        quote: "Fred derhjemme, fred i verden."
+        author: "Mustafa Kemal Atatürk"
+      "12":
+        quote: "Uddannelse er ikke en måde at slippe ud af fattigdom, det er en måde at bekæmpe den."
+        author: "Julius Nyerere"
+      "13":
+        quote: "En rejse på tusind km. skal begynde med et enkelt trin."
+        author: "Lao Tzu"
       results: |-
         > :left_speech_bubble: _%{quote}_ &mdash; %{author}
     magic_8_ball:

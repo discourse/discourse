@@ -1392,7 +1392,8 @@ tr_TR:
     min_personal_message_title_length: "İleti başlıkları için izin verilen en az karakter sayısı"
     max_emojis_in_title: "Konu başlığında izin verilen maksimum emoji"
     min_search_term_length: "Arama için girilecek sözcükte olması gereken en az karakter sayısı"
-    search_tokenize_chinese_japanese_korean: "CJK olmayan siteler dahil, -Çince/Japonca/Korece için aramayı bilgileri sıfırlamaya zorla"
+    search_tokenize_chinese: "Çince olmayan sitelerde bile aramayı Çince'ye dönüştürmeye zorla"
+    search_tokenize_japanese: "Japonca olmayan sitelerde bile aramayı Japonca'ya dönüştürmeye etmeye zorla"
     search_prefer_recent_posts: "Eğer büyük forumunuzda arama yavaş ise bu seçenek daha yeni gönderilerin dizine eklenmesini deneyecek"
     search_recent_posts_size: "Kaç tane son gönderi dizinde tutulacak"
     log_search_queries: "Kullanıcılar tarafından gerçekleştirilen günlük arama sorguları"
@@ -1523,7 +1524,7 @@ tr_TR:
     allowed_iframes: "Gönderilerde güvenli bir şekilde izin verebilecek iframe src alan adı öneklerinin listesi"
     allowed_crawler_user_agents: "Siteye erişmesine izin verilmesi gereken ağ tarayıcılarının kullanıcı aracıları. UYARI! BU AYARLAR, BURADA LİSTEN OLMAYAN TÜM TARAYICILARI ÇIKARACAKTIR!"
     blocked_crawler_user_agents: "Siteye erişmesine izin verilmemesi gereken web tarayıcılarını tanımlayan kullanıcı aracısı dizesindeki benzersiz BÜYÜK/küçük harf duyarsız sözcük. İzin listesi tanımlanmışsa geçerli değildir."
-    slow_down_crawler_user_agents: "\"Tarayıcı hızını yavaşlat\" ayarında yapılandırıldığı gibi hızı sınırlandırılması gereken web tarayıcılarının kullanıcı aracıları. Her değer en az 3 karakter uzunluğunda olmalıdır."
+    slow_down_crawler_user_agents: '"Tarayıcı hızını yavaşlat" ayarında yapılandırıldığı gibi hızı sınırlandırılması gereken web tarayıcılarının kullanıcı aracıları. Her değer en az 3 karakter uzunluğunda olmalıdır.'
     slow_down_crawler_rate: "slow_down_crawler_user_agents belirtilirse bu oran tüm tarayıcılara uygulanır (istekler arasında saniye cinsinden gecikme sayısı)."
     content_security_policy: "İçerik-Güvenlik-Politikasını Etkinleştir"
     content_security_policy_report_only: "Yalnızca İçerik-Güvenlik-İlke-Raporunu Etkinleştir"
@@ -2120,6 +2121,8 @@ tr_TR:
       unicode_usernames_avatars: "Dahili sistem avatarları Unicode kullanıcı adlarını desteklemez."
       list_value_count: "Liste tam olarak %{count} değerleri içermelidir."
       google_oauth2_hd_groups: "Bu ayarı etkinleştirmeden önce 'google oauth2 hd'yi ayarlamalısınız."
+      search_tokenize_chinese_enabled: "Bu ayarı etkinleştirmeden önce 'search_tokenize_chinese' özelliğini devre dışı bırakmalısınız."
+      search_tokenize_japanese_enabled: "Bu ayarı etkinleştirmeden önce 'search_tokenize_japanese' özelliğini devre dışı bırakmalısınız."
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.örnek.com"

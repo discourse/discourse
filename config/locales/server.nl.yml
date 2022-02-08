@@ -1285,7 +1285,6 @@ nl:
     min_personal_message_title_length: "Minimaal toegestane titellengte voor een bericht in tekens"
     max_emojis_in_title: "Maximale aantal toegestane emoji in topictitel"
     min_search_term_length: "Minimaal geldige lengte van een zoekterm in tekens"
-    search_tokenize_chinese_japanese_korean: "Zoeken voor het tokeniseren van Chinees/Japans/Koreaans ook op niet-CJK-websites afdwingen"
     search_prefer_recent_posts: "Als doorzoeken van uw grote forum traag werkt, probeert deze optie eerst een index van recentere berichten"
     search_recent_posts_size: "Het aantal in de index te behouden recente berichten"
     log_search_queries: "Zoekopdrachten van gebruikers opslaan"

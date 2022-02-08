@@ -1322,7 +1322,6 @@ ja:
     min_personal_message_title_length: "メッセージのタイトルの最小文字数"
     max_emojis_in_title: "トピックタイトルに許可される最大絵文字数"
     min_search_term_length: "有効な検索語の最小文字数"
-    search_tokenize_chinese_japanese_korean: "CJK 以外のサイトでも強制検索で中国語/日本語/韓国語をトークン化する"
     search_prefer_recent_posts: "大規模なフォーラムの検索が遅い場合、このオプションは先により直近の投稿のインデックスを試す"
     search_recent_posts_size: "インデックスに保持する直近の投稿の数"
     log_search_queries: "ユーザーが実行した検索クエリをログに記録する"

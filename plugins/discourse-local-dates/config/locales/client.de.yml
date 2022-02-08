@@ -31,6 +31,7 @@ de:
           format_title: Datumsformat
           timezone: Zeitzone
           until: Bis …
+          current_timezone: "Aktuelle Zeitzone:"
           recurring:
             every_day: "Jeden Tag"
             every_week: "Jede Woche"

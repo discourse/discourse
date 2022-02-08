@@ -84,6 +84,15 @@ de:
       "10":
         quote: "Was der Verstand eines Menschen begreifen und glauben kann, kann er erreichen."
         author: "Napoleon Hill"
+      "11":
+        quote: "Frieden zu Hause, Frieden in der Welt."
+        author: "Mustafa Kemal Atatürk"
+      "12":
+        quote: "Bildung ist kein Weg, der Armut zu entkommen, sondern ein Weg, sie zu bekämpfen."
+        author: "Julius Nyerere"
+      "13":
+        quote: "Eine Reise von tausend Meilen muss mit einem einzigen Schritt beginnen."
+        author: "Lao Tzu"
       results: |-
         > :left_speech_bubble: _%{quote}_ &mdash; %{author}
     magic_8_ball:
