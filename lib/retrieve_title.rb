@@ -46,6 +46,7 @@ module RetrieveTitle
     # but these are large sites.
     return 500 if uri.host =~ /amazon\.(com|ca|co\.uk|es|fr|de|it|com\.au|com\.br|cn|in|co\.jp|com\.mx)$/
     return 300 if uri.host =~ /youtube\.com$/ || uri.host =~ /youtu.be/
+    return 50 if uri.host =~ /github\.com$/
 
     # default is 20k
     20
