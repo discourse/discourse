@@ -17,15 +17,15 @@ module Onebox
         if extracted_url
           iframe_src = extracted_url[1]
 
-          <<-HTML
-            <iframe
-              src="#{iframe_src}"
-              width="#{oembed.width}"
-              height="#{oembed.height}"
-              title="#{oembed.title}"
-              frameborder="0"
-              allowfullscreen
-            ></iframe>
+          <<~HTML
+          <iframe
+            src="#{iframe_src}"
+            width="#{oembed.width}"
+            height="#{oembed.height}"
+            title="#{oembed.title}"
+            frameborder="0"
+            allowfullscreen
+          ></iframe>
           HTML
         else
           oembed.html
