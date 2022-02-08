@@ -157,7 +157,7 @@ module ApplicationHelper
   end
 
   def preload_script_url(url, defer = true)
-    defer_attribute = defer ? ' defer' : ''
+    defer_attribute = (SiteSetting.enable_experimental_javascript_defer && defer) ? ' defer' : ''
     <<~HTML.html_safe
       <link rel="preload" href="#{url}" as="script">
       <script#{defer_attribute} src="#{url}"></script>

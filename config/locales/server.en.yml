@@ -1773,6 +1773,9 @@ en:
 
     enable_safe_mode: "Allow users to enter safe mode to debug plugins."
 
+    enable_experimental_static_topic_content: "(Highly experimental!) Show static content in topic view for a faster Largest Contentful Paint (LCP). Warning: visitors might see disconcerting jumping of content!"
+    enable_experimental_javascript_defer: "(Highly experimental!) Defer loading of JavaScripts to show static content even faster in combination with 'enable_experimental_javascript_defer'. Warning: the discourse frontend, themes, components and/or plugins might fail!"
+
     rate_limit_create_topic: "After creating a topic, users must wait (n) seconds before creating another topic."
     rate_limit_create_post: "After posting, users must wait (n) seconds before creating another post."
     rate_limit_new_user_create_topic: "After creating a topic, new users must wait (n) seconds before creating another topic."

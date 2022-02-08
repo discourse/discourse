@@ -142,7 +142,8 @@ class ThemeField < ActiveRecord::Base
     javascript_cache.content = js_compiler.content
     javascript_cache.save!
 
-    doc.add_child("<script defer src='#{javascript_cache.url}' data-theme-id='#{theme_id}'></script>") if javascript_cache.content.present?
+    defer_attribute = SiteSetting.enable_experimental_javascript_defer ? ' defer' : ''
+    doc.add_child("<script#{defer_attribute} src='#{javascript_cache.url}' data-theme-id='#{theme_id}'></script>") if javascript_cache.content.present?
     [doc.to_s, errors&.join("\n")]
   end
 
@@ -258,7 +259,8 @@ class ThemeField < ActiveRecord::Base
     javascript_cache.content = js_compiler.content
     javascript_cache.save!
     doc = ""
-    doc = "<script defer src='#{javascript_cache.url}' data-theme-id='#{theme_id}'></script>" if javascript_cache.content.present?
+    defer_attribute = SiteSetting.enable_experimental_javascript_defer ? ' defer' : ''
+    doc = "<script#{defer_attribute} src='#{javascript_cache.url}' data-theme-id='#{theme_id}'></script>" if javascript_cache.content.present?
     [doc, errors&.join("\n")]
   end
 

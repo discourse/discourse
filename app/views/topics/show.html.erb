@@ -35,7 +35,7 @@
 
   <%= server_plugin_outlet "topic_header" %>
 
-  <%- if include_crawler_content? || mobile_view? %>
+  <%- if include_crawler_content? || (SiteSetting.enable_experimental_static_topic_content && mobile_view?) %>
 
   <% @topic_view.posts.each_with_index do |post, idx| %>
     <% if (u = post.user) %>

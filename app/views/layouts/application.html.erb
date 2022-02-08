@@ -72,7 +72,7 @@
     <%- end -%>
 
     <%= render_google_tag_manager_body_code %>
-    <% if !@topic_view %>
+    <% if !(SiteSetting.enable_experimental_static_topic_content && @topic_view) %>
     <noscript data-path="<%= request.env['PATH_INFO'] %>">
       <%= render partial: 'header' %>
       <div id="main-outlet" class="wrap" role="main">
@@ -107,7 +107,7 @@
     <section id='main'>
     </section>
 
-    <% if @topic_view %>
+    <% if SiteSetting.enable_experimental_static_topic_content && @topic_view %>
       <section id='main-placeholder'>
         <div class='d-header-wrap'>
           <%= render partial: 'header' %>
@@ -146,11 +146,11 @@
 
     <div class="hidden" id="data-preloaded" data-preloaded="<%= preloaded_json %>"></div>
 
-    <script defer src="<%= script_asset_path "start-discourse" %>"></script>
+    <script<%= SiteSetting.enable_experimental_javascript_defer ? ' defer' : '' %> src="<%= script_asset_path "start-discourse" %>"></script>
 
     <%= yield :data %>
 
-    <script defer src="<%= script_asset_path "browser-update" %>"></script>
+    <script<%= SiteSetting.enable_experimental_javascript_defer ? ' defer' : '' %> src="<%= script_asset_path "browser-update" %>"></script>
 
     <%- unless customization_disabled? %>
       <%= theme_lookup("body_tag") %>
