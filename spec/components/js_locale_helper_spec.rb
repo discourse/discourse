@@ -87,7 +87,7 @@ describe JsLocaleHelper do
     end
 
     it 'handles message format special keys' do
-      JsLocaleHelper.set_translations('en',         "en" => {
+      JsLocaleHelper.set_translations('en', "en" => {
           "js" => {
             "hello" => "world",
             "test_MF" => "{HELLO} {COUNT, plural, one {1 duck} other {# ducks}}",
@@ -113,7 +113,7 @@ describe JsLocaleHelper do
       expect(ctx.eval('I18n.messageFormat("foo_MF", { HELLO: "hi", COUNT: 4 })')).to eq("hi 4 ducks")
     end
 
-    it 'load pluralizations rules before precompile' do
+    it 'load pluralization rules before precompile' do
       message = JsLocaleHelper.compile_message_format(message_format_filename('ru'), 'ru', 'format')
       expect(message).not_to match 'Plural Function not found'
     end
@@ -186,6 +186,43 @@ describe JsLocaleHelper do
     end
   end
 
+  it "correctly evaluates message formats in en fallback" do
+    JsLocaleHelper.set_translations("en", "en" => {
+      "js" => {
+        "something_MF" => "en mf",
+      },
+    })
+
+    JsLocaleHelper.set_translations("de", "de" => {
+      "js" => {
+        "something_MF" => "de mf",
+      },
+    })
+
+    TranslationOverride.upsert!("en", "js.something_MF", <<~MF.strip)
+      There {
+        UNREAD, plural,
+        =0 {are no}
+        one {is one unread}
+        other {are # unread}
+      }
+    MF
+
+    ctx = MiniRacer::Context.new
+    ctx.eval("var window = this;")
+    ctx.load(Rails.root + "app/assets/javascripts/locales/i18n.js")
+    ctx.eval(JsLocaleHelper.output_locale("de"))
+    ctx.eval(JsLocaleHelper.output_client_overrides("de"))
+    ctx.eval(<<~JS)
+      for (let [key, value] of Object.entries(I18n._mfOverrides || {})) {
+        key = key.replace(/^[a-z_]*js\./, "");
+        I18n._compiledMFs[key] = value;
+      }
+    JS
+
+    expect(ctx.eval("I18n.messageFormat('something_MF', { UNREAD: 1 })")).to eq("There is one unread")
+  end
+
   LocaleSiteSetting.values.each do |locale|
     it "generates valid date helpers for #{locale[:value]} locale" do
       js = JsLocaleHelper.output_locale(locale[:value])
@@ -207,12 +244,24 @@ describe JsLocaleHelper do
   end
 
   describe ".find_message_format_locale" do
+    it "finds locale's message format rules" do
+      locale, filename = JsLocaleHelper.find_message_format_locale([:de], fallback_to_english: false)
+      expect(locale).to eq("de")
+      expect(filename).to end_with("/de.js")
+    end
+
     it "finds locale for en_GB" do
-      locale, filename = JsLocaleHelper.find_message_format_locale([:en_GB],  fallback_to_english: false)
+      locale, filename = JsLocaleHelper.find_message_format_locale([:en_GB], fallback_to_english: false)
       expect(locale).to eq("en")
       expect(filename).to end_with("/en.js")
 
-      locale, filename = JsLocaleHelper.find_message_format_locale(["en_GB"],  fallback_to_english: false)
+      locale, filename = JsLocaleHelper.find_message_format_locale(["en_GB"], fallback_to_english: false)
+      expect(locale).to eq("en")
+      expect(filename).to end_with("/en.js")
+    end
+
+    it "falls back to en when locale doesn't have own message format rules" do
+      locale, filename = JsLocaleHelper.find_message_format_locale([:nonexistent],  fallback_to_english: true)
       expect(locale).to eq("en")
       expect(filename).to end_with("/en.js")
     end
