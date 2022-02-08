@@ -10,7 +10,7 @@ module Webauthn
 
   # -7   - ES256
   # -257 - RS256 (Windows Hello supported alg.)
-  SUPPORTED_ALGORITHMS = [-7, -257].freeze
+  SUPPORTED_ALGORITHMS = COSE::Algorithm.registered_algorithm_ids.freeze
   VALID_ATTESTATION_FORMATS = ['none', 'packed', 'fido-u2f'].freeze
 
   class SecurityKeyError < StandardError; end
