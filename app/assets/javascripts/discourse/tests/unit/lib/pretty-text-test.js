@@ -907,7 +907,7 @@ eviltrout</p>
 
     assert.cooked(
       "```eviltrout\nhello\n```",
-      '<pre data-wrap="eviltrout"><code class="lang-nohighlight">hello\n</code></pre>',
+      '<pre data-code-wrap="eviltrout"><code class="lang-nohighlight">hello\n</code></pre>',
       "it converts to custom block unknown code names"
     );
 
