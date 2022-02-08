@@ -22,8 +22,17 @@ class InvitesController < ApplicationController
     invite = Invite.find_by(invite_key: params[:id])
     if invite.present? && invite.redeemable?
       if current_user
-        added_to_group = false
+        invited_user = InvitedUser.find_or_initialize_by(user: current_user, invite: invite)
+        if invited_user.new_record?
+          invited_user.save!
+          Invite.increment_counter(:redemption_count, invite.id)
+          invite.invited_by.notifications.create!(
+            notification_type: Notification.types[:invitee_accepted],
+            data: { display_username: current_user.username }.to_json
+          )
+        end
 
+        added_to_group = false
         if invite.groups.present?
           invite_by_guardian = Guardian.new(invite.invited_by)
           new_group_ids = invite.groups.pluck(:id) - current_user.group_users.pluck(:group_id)
@@ -37,12 +46,14 @@ class InvitesController < ApplicationController
           end
         end
 
-        create_topic_invite_notifications(invite, current_user)
-
         if topic = invite.topics.first
-          new_guardian = Guardian.new(current_user)
-          return redirect_to(topic.url) if new_guardian.can_see?(topic)
-        elsif added_to_group
+          if current_user.guardian.can_see?(topic)
+            create_topic_invite_notifications(invite, current_user)
+            return redirect_to(topic.url)
+          end
+        end
+
+        if added_to_group
           return redirect_to(path("/"))
         end
 

@@ -105,6 +105,18 @@ describe InvitesController do
       expect(Notification.where(notification_type: Notification.types[:invited_to_topic], topic: topic).count).to eq(1)
     end
 
+    it 'creates a notification to inviter' do
+      topic = Fabricate(:topic)
+      TopicInvite.create!(topic: topic, invite: invite)
+
+      sign_in(user)
+
+      get "/invites/#{invite.invite_key}"
+      expect(response).to redirect_to(topic.url)
+      expect(Notification.where(user: user, notification_type: Notification.types[:invited_to_topic], topic: topic).count).to eq(1)
+      expect(Notification.where(user: invite.invited_by, notification_type: Notification.types[:invitee_accepted]).count).to eq(1)
+    end
+
     it 'fails for logged in users' do
       sign_in(Fabricate(:user))
 
