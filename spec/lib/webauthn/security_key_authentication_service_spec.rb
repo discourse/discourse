@@ -157,4 +157,10 @@ describe Webauthn::SecurityKeyAuthenticationService do
       )
     end
   end
+
+  it 'all supported algorithms are implemented' do
+    Webauthn::SUPPORTED_ALGORITHMS.each do |alg|
+      expect(COSE::Algorithm.find(alg)).not_to be_nil
+    end
+  end
 end
