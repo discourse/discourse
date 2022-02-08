@@ -1373,7 +1373,6 @@ fr:
     min_personal_message_title_length: "Longueur minimale pour un titre de message en nombre de caractères"
     max_emojis_in_title: "Nombre maximal d'émojis permis dans le titre d'un sujet"
     min_search_term_length: "Longueur minimale en caractères du terme à rechercher"
-    search_tokenize_chinese_japanese_korean: "Forcer la recherche à segmenter les textes chinois, japonais et coréens, même sur les sites n'utilisant pas ces langues par défaut."
     search_prefer_recent_posts: "Si les recherches dans votre forum sont lentes, cette option effectue l'indexation des messages les plus récents en premier"
     search_recent_posts_size: "Combien de messages récents à garder dans l'index"
     log_search_queries: "Archiver les requêtes de recherche des utilisateurs"

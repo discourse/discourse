@@ -1338,7 +1338,6 @@ ko:
     min_personal_message_title_length: "메세지 제목의 최소 길이"
     max_emojis_in_title: "제목에 허용되는 최대 이모티콘"
     min_search_term_length: "검색을 하기 위한 최소 글자 수"
-    search_tokenize_chinese_japanese_korean: "CJK(한중일) 설정이 되어 있지 않은 사이트라도, 검색시 한중일 언어를 토크나이징하도록 강제합니다."
     search_prefer_recent_posts: "이 옵션을 켜면, 포럼이 너무 커서 검색이 느리게 작동할 때 최근의 포스트부터 먼저 검색합니다."
     search_recent_posts_size: "대문에 실을 최신 포스트 수"
     log_search_queries: "사용자에 의해 발생된 로그 탐색 쿼리"

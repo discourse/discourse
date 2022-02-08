@@ -1090,7 +1090,6 @@ zh_TW:
     min_personal_message_title_length: "訊息標題的字元數下限"
     max_emojis_in_title: "話題標題可含有的表情符號上限"
     min_search_term_length: "搜尋條件允許的最小文字數"
-    search_tokenize_chinese_japanese_korean: "在非中/日/韓語站點強制切割中/日/韓語搜索分詞"
     search_prefer_recent_posts: "如果搜索大型論壇較慢，這個選項將優先嘗試最新的貼文"
     search_recent_posts_size: "索引多少最新的主題"
     log_search_queries: "登入使用者進行搜尋查詢"

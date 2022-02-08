@@ -1154,7 +1154,6 @@ ur:
     min_personal_message_title_length: "حروف میں ایک پیغام کیلئے عنوان کی کم از کم لمبائی"
     max_emojis_in_title: "ٹاپک عنوان میں اِیمَوجیوں کی زیادہ سے زیادہ تعداد"
     min_search_term_length: "حروف میں درست سرچ ٹَرم کی کم از کم لمبائی"
-    search_tokenize_chinese_japanese_korean: "CJK سائٹس کے علاوہ بھی سرچ کو چینی/ جاپانی/کورین کو ٹوکنائیز کرنے پر مجبور کریں"
     search_prefer_recent_posts: "اگر آپ کے بڑے فورم پر سرچ سست ہے، تو یہ آپشن پہلے حالیہ پوسٹس کے ایک اِنڈَیکس پر کوشش کرتا ہے"
     search_recent_posts_size: "اِنڈَیکس میں کتنی حالیہ پوسٹس رکھی جائیں"
     log_search_queries: "صارفین کی طرف سے سرچ قُوَیریز کو لاگ کریں"

@@ -1402,7 +1402,6 @@ de:
     min_personal_message_title_length: "Minimal zulässige Zeichenanzahl für den Titel von Nachrichten."
     max_emojis_in_title: "Maximal erlaubte Emoji-Anzahl in Thementiteln"
     min_search_term_length: "Minimal zulässige Länge eines Suchbegriffs in Zeichen."
-    search_tokenize_chinese_japanese_korean: "Zwinge die Suche, Chinesisch/Japanisch/Koreanisch zu tokenisieren, auch wenn Websites keine dieser Sprachen nutzen"
     search_prefer_recent_posts: "Wenn das Durchsuchen deines großen Forums langsam ist, dann versucht es diese Option zuerst mit einem Index der letzten Beiträge."
     search_recent_posts_size: "Anzahl aktueller Beiträge im Index"
     log_search_queries: "Protokolliere Suchanfragen von Benutzern"
@@ -1534,7 +1533,7 @@ de:
     allowed_iframes: "Eine Liste von iframe-src-Domain-Präfixen, die Discourse in Beiträgen sicher erlauben kann."
     allowed_crawler_user_agents: "Browserkennungen von Webcrawlern, denen der Zugriff auf die Website erlaubt sein soll. WARNUNG! DIESE EINSTELLUNG BLOCKIERT ALLE HIER NICHT GELISTETEN CRAWLER!"
     blocked_crawler_user_agents: "Eindeutiges Wort unter Vernachlässigung der Groß- und Kleinschreibung in der Zeichenfolge der Browserkennung, das Webcrawler identifiziert, die nicht auf die Website zugreifen dürfen. Gilt nicht, wenn die Positivliste definiert ist."
-    slow_down_crawler_user_agents: "Benutzeragenten von Web-Crawlern, die wie in der Einstellung \"Crawler-Rate verlangsamen\" konfiguriert, begrenzt werden sollen. Jeder Wert muss mindestens 3 Zeichen lang sein."
+    slow_down_crawler_user_agents: 'Benutzeragenten von Web-Crawlern, die wie in der Einstellung "Crawler-Rate verlangsamen" konfiguriert, begrenzt werden sollen. Jeder Wert muss mindestens 3 Zeichen lang sein.'
     slow_down_crawler_rate: "Wenn slow_down_crawler_user_agents ausgewählt ist, wird diese Anfragenbegrenzung auf alle Crawler angewendet (Anzahl der Sekunden zwischen zwei Anfragen)"
     content_security_policy: "Aktiviere Content-Security-Policy"
     content_security_policy_report_only: "Aktiviere Content-Security-Policy-Report-Only"

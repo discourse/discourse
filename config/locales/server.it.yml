@@ -1396,7 +1396,8 @@ it:
     min_personal_message_title_length: "Numero minimo di caratteri per un messaggio"
     max_emojis_in_title: "Numero massimo di emoji permessi nel titolo di un Argomento"
     min_search_term_length: "Numero minimo di caratteri per le parole cercate"
-    search_tokenize_chinese_japanese_korean: "Attiva la tokenizzazione dei caratteri Cinesi/Giapponesi/Coreani nella ricerca anche sui siti non CJK"
+    search_tokenize_chinese: "Forza la ricerca per tokenizzare il cinese anche su siti non cinesi"
+    search_tokenize_japanese: "Forza la ricerca per tokenizzare il giapponese anche su siti non giapponesi"
     search_prefer_recent_posts: "Se il tuo forum è corposo e la ricerca è lenta, questa opzione tenta di indicizzare prima i messaggi più recenti"
     search_recent_posts_size: "Quanti messaggi recenti mantenere nell'indice"
     log_search_queries: "Log delle query di ricerca eseguite dagli utenti"
@@ -1525,7 +1526,7 @@ it:
     allowed_iframes: "Un elenco di prefissi di dominio src iframe che discourse può consentire in modo sicuro nei messaggi"
     allowed_crawler_user_agents: "User Agent dei crawler Web che dovrebbero poter accedere al sito. ATTENZIONE! IMPOSTANDO TALE OPZIONE SARANNO BLOCCATI TUTTI I CRAWLER NON ELENCATI QUI!"
     blocked_crawler_user_agents: "Parola univoca, senza distinzione tra maiuscole e minuscole, nella stringa user agent che identifica i web crawler cui non si vuole consentire l'accesso al sito. L'impostazione non si applica se è stata definita una lista di elementi consentiti."
-    slow_down_crawler_user_agents: "Gli user agent dei web crawler a cui impostare limiti di velocità come configurato nell'impostazione \"rallenta la velocità dei crawler\". Ogni valore deve essere lungo almeno 3 caratteri."
+    slow_down_crawler_user_agents: 'Gli user agent dei web crawler a cui impostare limiti di velocità come configurato nell''impostazione "rallenta la velocità dei crawler". Ogni valore deve essere lungo almeno 3 caratteri.'
     slow_down_crawler_rate: "Se viene specificato slow_down_crawler_user_agents, tale frequenza verrà applicata a tutti i crawler (numero di secondi di ritardo tra le richieste)"
     content_security_policy: "Abilita Content-Security-Policy"
     content_security_policy_report_only: "Abilita Content-Security-Policy-Report-Only"
@@ -2128,6 +2129,8 @@ it:
         leading_trailing_slash: "L'espressione regolare non può iniziare o terminare con una barra."
       unicode_usernames_avatars: "Gli avatar di sistema interni non supportano i nomi utente Unicode."
       list_value_count: "La lista deve contenere esattamente %{count} valori."
+      search_tokenize_chinese_enabled: "Devi disattivare \"search_tokenize_chinese\" prima di attivare questa impostazione."
+      search_tokenize_japanese_enabled: "Devi disattivare \"search_tokenize_japanese\" prima di attivare questa impostazione."
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"

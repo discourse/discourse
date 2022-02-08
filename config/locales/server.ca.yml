@@ -1194,7 +1194,6 @@ ca:
     min_personal_message_title_length: "Longitud mínima permesa de títol de tema en caràcters per a un missatge"
     max_emojis_in_title: "Emojis màxims permesos en el títol del tema"
     min_search_term_length: "Longitud mínima vàlida del terme de cerca en caràcters"
-    search_tokenize_chinese_japanese_korean: "Força la cerca per a segmentar xinès/japonès/coreà fins i tot en llocs web no-CJK."
     search_prefer_recent_posts: "Si la cerca en el vostre fòrum és lenta, aquesta opció prova primer amb un índex de publicacions més recents."
     search_recent_posts_size: "Quantes publicacions recents es mantenen en l'índex"
     log_search_queries: "Registra les cerques fetes pels usuaris"
