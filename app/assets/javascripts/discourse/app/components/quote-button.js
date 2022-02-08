@@ -173,9 +173,6 @@ export default Component.extend(KeyEnterEscape, {
         selectedRange().startOffset > 0
           ? false
           : _selectedText === toMarkdown(cooked.innerHTML),
-      displayName:
-        this.siteSettings.display_name_on_posts &&
-        !this.siteSettings.prioritize_username_in_ux,
     };
 
     for (

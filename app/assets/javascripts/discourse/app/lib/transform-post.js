@@ -74,7 +74,6 @@ export function transformBasicPost(post) {
     actionsSummary: null,
     read: post.read,
     replyToUsername: null,
-    replyToName: null,
     replyToAvatarTemplate: null,
     reply_to_post_number: post.reply_to_post_number,
     cooked_hidden: !!post.cooked_hidden,
@@ -228,7 +227,6 @@ export default function transformPost(
   const replyToUser = post.get("reply_to_user");
   if (replyToUser) {
     postAtts.replyToUsername = replyToUser.username;
-    postAtts.replyToName = replyToUser.name;
     postAtts.replyToAvatarTemplate = replyToUser.avatar_template;
   }
 

@@ -4,7 +4,6 @@ import {
   exists,
   query,
   queryAll,
-  selectText,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit } from "@ember/test-helpers";
@@ -19,11 +18,7 @@ import { toggleCheckDraftPopup } from "discourse/controllers/composer";
 
 acceptance("Composer Actions", function (needs) {
   needs.user();
-  needs.settings({
-    prioritize_username_in_ux: true,
-    display_name_on_post: false,
-    enable_whispers: true,
-  });
+  needs.settings({ enable_whispers: true });
   needs.site({ can_tag_topics: true });
 
   test("creating new topic and then reply_as_private_message keeps attributes", async function (assert) {
@@ -554,61 +549,5 @@ acceptance("Composer Actions With New Topic Draft", function (needs) {
     );
     await click(".modal-footer .btn.btn-default");
     sinon.restore();
-  });
-});
-
-acceptance("Prioritize Username", function (needs) {
-  needs.user();
-  needs.settings({
-    prioritize_username_in_ux: true,
-    display_name_on_post: false,
-  });
-
-  test("Reply to post use username", async function (assert) {
-    await visit("/t/internationalization-localization/280");
-    await click("article#post_3 button.reply");
-
-    assert.strictEqual(
-      queryAll(".action-title .user-link").text().trim(),
-      "codinghorror"
-    );
-  });
-
-  test("Quotes use username", async function (assert) {
-    await visit("/t/internationalization-localization/280");
-    await selectText("#post_3 p");
-    await click(".insert-quote");
-    assert.strictEqual(
-      queryAll(".d-editor-input").val().trim(),
-      '[quote="codinghorror, post:3, topic:280"]\nYep, all strings are going through a lookup table.*\n[/quote]'
-    );
-  });
-});
-
-acceptance("Prioritize Full Name", function (needs) {
-  needs.user();
-  needs.settings({
-    prioritize_username_in_ux: false,
-    display_name_on_post: true,
-  });
-
-  test("Reply to post use full name", async function (assert) {
-    await visit("/t/internationalization-localization/280");
-    await click("article#post_3 button.reply");
-
-    assert.strictEqual(
-      queryAll(".action-title .user-link").text().trim(),
-      "Jeff Atwood"
-    );
-  });
-
-  test("Quotes use full name", async function (assert) {
-    await visit("/t/internationalization-localization/280");
-    await selectText("#post_3 p");
-    await click(".insert-quote");
-    assert.strictEqual(
-      queryAll(".d-editor-input").val().trim(),
-      '[quote="Jeff Atwood, post:3, topic:280"]\nYep, all strings are going through a lookup table.*\n[/quote]'
-    );
   });
 });
