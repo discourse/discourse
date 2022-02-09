@@ -165,7 +165,7 @@ class PostMover
       guardian: Guardian.new(user),
       skip_jobs: true
     )
-    new_post = @post_creator.create
+    new_post = @post_creator.create!
 
     move_email_logs(post, new_post)
 

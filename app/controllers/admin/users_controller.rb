@@ -127,7 +127,7 @@ class Admin::UsersController < Admin::AdminController
     if message.present?
       Jobs.enqueue(
         :critical_user_email,
-        type: :account_suspended,
+        type: "account_suspended",
         user_id: @user.id,
         user_history_id: user_history.id
       )
@@ -368,7 +368,7 @@ class Admin::UsersController < Admin::AdminController
     if silencer.silence
       Jobs.enqueue(
         :critical_user_email,
-        type: :account_silenced,
+        type: "account_silenced",
         user_id: @user.id,
         user_history_id: silencer.user_history.id
       )
@@ -412,7 +412,7 @@ class Admin::UsersController < Admin::AdminController
 
     Jobs.enqueue(
       :critical_user_email,
-      type: :account_second_factor_disabled,
+      type: "account_second_factor_disabled",
       user_id: @user.id
     )
 

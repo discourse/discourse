@@ -144,17 +144,17 @@ $quote-share-maxwidth: 150px;
     word-wrap: break-word;
   }
 
-  del,
-  ins,
   mark {
     text-decoration: none;
   }
 
   ins {
     background-color: var(--success-low);
+    text-decoration: underline;
   }
   del {
     background-color: var(--danger-low);
+    text-decoration: line-through;
   }
   mark {
     background-color: var(--highlight);
@@ -536,6 +536,10 @@ aside.quote {
   opacity: 0.9;
   background-color: var(--secondary-high);
   flex-direction: column;
+
+  &.animated {
+    transition: top 0.1s linear, left 0.1s linear;
+  }
 
   &.visible {
     display: flex;

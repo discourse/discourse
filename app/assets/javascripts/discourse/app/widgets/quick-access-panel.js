@@ -3,6 +3,7 @@ import { Promise } from "rsvp";
 import Session from "discourse/models/session";
 import { createWidget } from "discourse/widgets/widget";
 import { h } from "virtual-dom";
+import { postRNWebviewMessage } from "discourse/lib/utilities";
 
 /**
  * This tries to enforce a consistent flow of fetching, caching, refreshing,
@@ -75,6 +76,7 @@ export default createWidget("quick-access-panel", {
   markRead() {
     return this.markReadRequest().then(() => {
       this.refreshNotifications(this.state);
+      postRNWebviewMessage("markRead", "1");
     });
   },
 

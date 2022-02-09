@@ -34,6 +34,51 @@ describe Topic do
       end
     end
 
+    context "#external_id" do
+      describe 'when external_id is too long' do
+        it 'should not be valid' do
+          topic.external_id = 'a' * (Topic::EXTERNAL_ID_MAX_LENGTH + 1)
+          expect(topic).to_not be_valid
+        end
+      end
+
+      describe 'when external_id has invalid characters' do
+        it 'should not be valid' do
+          topic.external_id = 'a*&^!@()#'
+          expect(topic).to_not be_valid
+        end
+      end
+
+      describe 'when external_id is an empty string' do
+        it 'should not be valid' do
+          topic.external_id = ''
+          expect(topic).to_not be_valid
+        end
+      end
+
+      describe 'when external_id has already been used' do
+        it 'should not be valid' do
+          topic2 = Fabricate(:topic, external_id: 'asdf')
+          topic.external_id = 'asdf'
+          expect(topic).to_not be_valid
+        end
+      end
+
+      describe 'when external_id is nil' do
+        it 'should be valid' do
+          topic.external_id = nil
+          expect(topic).to be_valid
+        end
+      end
+
+      describe 'when external_id is valid' do
+        it 'should be valid' do
+          topic.external_id = 'abc_123-ZXY'
+          expect(topic).to be_valid
+        end
+      end
+    end
+
     context "#title" do
       it { is_expected.to validate_presence_of :title }
 
@@ -116,6 +161,7 @@ describe Topic do
         end
       end
     end
+
   end
 
   it { is_expected.to rate_limit }
@@ -2933,12 +2979,12 @@ describe Topic do
     end
 
     it 'returns error message if topic has more posts' do
-      post_2 = PostCreator.create!(Fabricate(:user), topic_id: topic.id, raw: 'some post content')
+      post_2 = create_post(user: user, topic_id: topic.id, raw: 'some post content')
 
       PostDestroyer.new(admin, post).destroy
       expect(topic.reload.cannot_permanently_delete_reason(Fabricate(:admin))).to eq(I18n.t('post.cannot_permanently_delete.many_posts'))
 
-      PostDestroyer.new(admin, post_2).destroy
+      PostDestroyer.new(admin, post_2.reload).destroy
       expect(topic.reload.cannot_permanently_delete_reason(Fabricate(:admin))).to eq(nil)
     end
 

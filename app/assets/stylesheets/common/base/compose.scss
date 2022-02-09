@@ -237,11 +237,6 @@
     max-width: 40%;
     margin: 0 0 8px 8px;
 
-    @media screen and (max-width: 955px) {
-      flex: 1 0 100%;
-      margin-left: 0;
-    }
-
     .category-chooser {
       display: flex;
       flex: 1 0 auto;
@@ -286,12 +281,6 @@
       min-width: 0; // allows flex to shrink
       flex-wrap: wrap;
       max-width: calc(50% - 4px);
-
-      @media screen and (max-width: 920px) {
-        margin-right: 0;
-        margin-bottom: 6px;
-        max-width: calc(50% - 3px);
-      }
     }
   }
 
@@ -321,10 +310,6 @@
     max-width: calc(50% - 4px);
     margin: 0 0 8px 8px;
     z-index: z("composer", "dropdown");
-
-    @media screen and (max-width: 920px) {
-      max-width: calc(50% - 3px);
-    }
 
     .select-kit-header {
       color: var(--primary-high);

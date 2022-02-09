@@ -43,7 +43,7 @@ acceptance("Share and Invite modal", function (needs) {
   });
 
   test("Post date link", async function (assert) {
-    await visit("/t/internationalization-localization/280");
+    await visit("/t/short-topic-with-two-posts/54077");
     await click("#post_2 .post-info.post-date a");
 
     assert.ok(exists("#share-link"), "it shows the share modal");

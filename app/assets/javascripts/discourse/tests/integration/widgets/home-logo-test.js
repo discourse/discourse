@@ -24,7 +24,6 @@ discourseModule(
 
     componentTest("basics", {
       template: hbs`{{mount-widget widget="home-logo" args=args}}`,
-      skip: true,
       beforeEach() {
         this.siteSettings.site_logo_url = bigLogo;
         this.siteSettings.site_logo_small_url = smallLogo;

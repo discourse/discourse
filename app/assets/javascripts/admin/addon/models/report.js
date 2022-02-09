@@ -163,9 +163,23 @@ const Report = EmberObject.extend({
     return this._computeTrend(prev, total, higherIsBetter);
   },
 
-  @discourseComputed("prev30Days", "lastThirtyDaysCount", "higher_is_better")
-  thirtyDaysTrend(prev30Days, lastThirtyDaysCount, higherIsBetter) {
-    return this._computeTrend(prev30Days, lastThirtyDaysCount, higherIsBetter);
+  @discourseComputed(
+    "prev30Days",
+    "prev_period",
+    "lastThirtyDaysCount",
+    "higher_is_better"
+  )
+  thirtyDaysTrend(
+    prev30Days,
+    prev_period,
+    lastThirtyDaysCount,
+    higherIsBetter
+  ) {
+    return this._computeTrend(
+      prev30Days ?? prev_period,
+      lastThirtyDaysCount,
+      higherIsBetter
+    );
   },
 
   @discourseComputed("type")
@@ -236,10 +250,15 @@ const Report = EmberObject.extend({
     );
   },
 
-  @discourseComputed("prev30Days", "lastThirtyDaysCount")
-  thirtyDaysCountTitle(prev30Days, lastThirtyDaysCount) {
+  @discourseComputed("prev30Days", "prev_period")
+  canDisplayTrendIcon(prev30Days, prev_period) {
+    return prev30Days ?? prev_period;
+  },
+
+  @discourseComputed("prev30Days", "prev_period", "lastThirtyDaysCount")
+  thirtyDaysCountTitle(prev30Days, prev_period, lastThirtyDaysCount) {
     return this.changeTitle(
-      prev30Days,
+      prev30Days ?? prev_period,
       lastThirtyDaysCount,
       "in the previous 30 day period"
     );

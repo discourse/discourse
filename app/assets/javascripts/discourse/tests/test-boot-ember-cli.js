@@ -8,6 +8,13 @@ import { setup } from "qunit-dom";
 setEnvironment("testing");
 
 document.addEventListener("discourse-booted", () => {
+  const script = document.getElementById("plugin-test-script");
+  if (script && !requirejs.entries["discourse/tests/active-plugins"]) {
+    throw new Error(
+      `Plugin JS payload failed to load from ${script.src}. Is the Rails server running?`
+    );
+  }
+
   let setupTests = require("discourse/tests/setup-tests").default;
   const skippingCore =
     new URLSearchParams(window.location.search).get("qunit_skip_core") === "1";
@@ -27,6 +34,13 @@ document.addEventListener("discourse-booted", () => {
   setup(QUnit.assert);
   setupTests(config.APP);
   let loader = loadEmberExam();
+
+  if (loader.urlParams.size === 0 && !QUnit.config.seed) {
+    // If we're running in browser, default to random order. Otherwise, let Ember Exam
+    // handle randomization.
+    QUnit.config.seed = true;
+  }
+
   loader.loadModules();
   start({
     setupTestContainer: false,

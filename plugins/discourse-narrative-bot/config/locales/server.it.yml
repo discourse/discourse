@@ -84,6 +84,15 @@ it:
       "10":
         quote: "Tutto ciò che la mente umana può concepire e credere, può essere realizzato."
         author: "Napoleon Hill"
+      "11":
+        quote: "Pace in casa, pace nel mondo."
+        author: "Mustafa Kemal Atatürk"
+      "12":
+        quote: "L'istruzione non è un modo per sfuggire alla povertà, è un modo per combatterla."
+        author: "Julius Nyerere"
+      "13":
+        quote: "Un viaggio di mille miglia deve iniziare con un solo passo."
+        author: "Lao Tzu"
       results: |-
         > :left_speech_bubble: _%{quote}_ &mdash; %{author}
     magic_8_ball:
@@ -214,7 +223,7 @@ it:
 
           - oppure premi i pulsanti <kbd><b>G</b></kbd> o <kbd><i>I</i></kbd> sull'editor
         reply: |-
-          Ottimo lavoro! Anche HTML e BBCode funzionano per la formattazione – per saperne di più [prova questo tutorial](http://commonmark.org/help) :nerd:
+          Ottimo lavoro! Anche HTML e BBCode funzionano per la formattazione – per saperne di più [prova questo tutorial](https://commonmark.org/help) :nerd:
         not_found: |-
           Acc! Non ho trovato nessuna formattazione nella tua risposta. :pencil2:
 

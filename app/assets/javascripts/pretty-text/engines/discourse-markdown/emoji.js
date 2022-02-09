@@ -118,6 +118,9 @@ function getEmojiTokenByName(name, state) {
       ["title", info.title],
       ["class", info.classes],
       ["alt", info.title],
+      ["loading", "lazy"],
+      ["width", "20"],
+      ["height", "20"],
     ];
 
     return token;
@@ -345,5 +348,8 @@ export function setup(helper) {
     "img[class=emoji emoji-custom]",
     "img[class=emoji emoji-custom only-emoji]",
     "img[class=emoji only-emoji]",
+    "img[loading=lazy]",
+    "img[width=20]",
+    "img[height=20]",
   ]);
 }

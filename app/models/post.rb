@@ -574,7 +574,7 @@ class Post < ActiveRecord::Base
         5.seconds,
         :send_system_message,
         user_id: user.id,
-        message_type: message,
+        message_type: message.to_s,
         message_options: options
       )
     end

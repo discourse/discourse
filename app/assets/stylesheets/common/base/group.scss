@@ -252,7 +252,7 @@ table.group-category-permissions {
 .group-imap-email-settings {
   .groups-form {
     display: grid;
-    grid-template-columns: 1fr 3fr;
+    grid-template-columns: 1fr 1fr 1fr;
     margin-bottom: 0;
 
     &.groups-form-imap {

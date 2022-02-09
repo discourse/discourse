@@ -36,5 +36,6 @@ export function autoLoadModules(container, registry) {
 
 export default {
   name: "auto-load-modules",
+  after: "inject-objects",
   initialize: (container) => autoLoadModules(container, container.registry),
 };

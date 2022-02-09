@@ -269,6 +269,8 @@ class SiteSettings::TypeSupervisor
       RegexSettingValidator
     when self.class.types[:string], self.class.types[:list], self.class.types[:enum]
       StringSettingValidator
+    when self.class.types[:host_list]
+      HostListSettingValidator
     else nil
     end
   end

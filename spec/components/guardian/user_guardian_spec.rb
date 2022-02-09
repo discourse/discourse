@@ -243,10 +243,11 @@ describe UserGuardian do
       end
 
       it "isn't allowed when user created too many posts" do
-        Fabricate(:post, user: user)
+        topic = Fabricate(:topic)
+        Fabricate(:post, topic: topic, user: user)
         expect(guardian.can_delete_user?(user)).to eq(true)
 
-        Fabricate(:post, user: user)
+        Fabricate(:post, topic: topic, user: user)
         expect(guardian.can_delete_user?(user)).to eq(false)
       end
 
@@ -319,16 +320,18 @@ describe UserGuardian do
       end
 
       it "correctly respects the delete_user_self_max_post_count setting" do
+        topic = Fabricate(:topic)
+
         SiteSetting.delete_user_self_max_post_count = 0
         expect(guardian.can_delete_user?(user)).to eq(true)
 
-        Fabricate(:post, user: user)
+        Fabricate(:post, topic: topic, user: user)
 
         expect(guardian.can_delete_user?(user)).to eq(false)
         SiteSetting.delete_user_self_max_post_count = 1
         expect(guardian.can_delete_user?(user)).to eq(true)
 
-        Fabricate(:post, user: user)
+        Fabricate(:post, topic: topic, user: user)
 
         expect(guardian.can_delete_user?(user)).to eq(false)
         SiteSetting.delete_user_self_max_post_count = 2

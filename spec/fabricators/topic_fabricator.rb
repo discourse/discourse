@@ -6,6 +6,13 @@ Fabricator(:topic) do
   category_id do |attrs|
     attrs[:category] ? attrs[:category].id : SiteSetting.uncategorized_category_id
   end
+
+  # Fabrication bypasses PostCreator, for performance reasons, where the counts are updated so we have to handle this manually here.
+  after_save do |topic, _transients|
+    if !topic.private_message?
+      topic.user.user_stat.increment!(:topic_count)
+    end
+  end
 end
 
 Fabricator(:deleted_topic, from: :topic) do

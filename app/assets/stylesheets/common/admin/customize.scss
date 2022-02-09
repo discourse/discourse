@@ -176,12 +176,10 @@
 
   .themes-list-header {
     width: 100%;
-    border-bottom: 1px solid var(--primary-low);
-    border-top: 1px solid var(--primary-low);
-    border-right: 1px solid var(--primary-low);
     display: flex;
 
     .tab {
+      border: none;
       padding: 1em;
       width: 50%;
       box-sizing: border-box;
@@ -190,16 +188,12 @@
       &.active {
         font-weight: 700;
       }
-
-      &:last-child {
-        border-left: 1px solid var(--primary-low);
-      }
     }
   }
 
   .themes-list-container {
     overflow-y: auto;
-    box-sizing: content-box;
+    box-sizing: border-box;
     max-height: 60vh;
     @media screen and (max-height: 1000px) {
       max-height: 50vh;
@@ -209,6 +203,7 @@
     }
     border-right: 1px solid var(--primary-low);
     border-bottom: 1px solid var(--primary-low);
+    border-left: 1px solid var(--primary-low);
     width: 100%;
 
     .themes-list-item:last-child {
@@ -218,7 +213,6 @@
       color: var(--primary);
       border-bottom: 1px solid var(--primary-low);
       display: flex;
-      border-left: 1px solid var(--primary-low);
 
       &.inactive-indicator {
         border-right: 0;
@@ -557,10 +551,9 @@
     td.actions {
       width: 200px;
     }
-    .hex-input {
+    .color-picker input {
       width: 80px;
       margin-bottom: 0;
-      margin-right: 6px;
     }
     th.overriden {
       text-align: right;

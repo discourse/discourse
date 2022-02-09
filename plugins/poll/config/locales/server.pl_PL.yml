@@ -44,6 +44,17 @@ pl_PL:
     user_cant_post_in_topic: "Nie możesz głosować, bo nie możesz odpowiadać w tym temacie."
     topic_must_be_open_to_vote: "Tematy musi być otwarta aby głosować."
     poll_must_be_open_to_vote: "Ankieta musi być otwarta aby głosować."
+    one_vote_per_user: "W tej ankiecie można oddać tylko 1 głos."
+    max_vote_per_user:
+      one: Tylko %{count} głos jest dozwolony w tej ankiecie.
+      few: Tylko %{count} głosy są dozwolone w tej ankiecie.
+      many: Tylko %{count} głosów jest dozwolonych w tej ankiecie.
+      other: W tej ankiecie można oddać maksymalnie %{count} głosów.
+    min_vote_per_user:
+      one: Do tej ankiety wymagany jest co najmniej %{count} głos.
+      few: Do tej ankiety wymagane są co najmniej %{count} głosy.
+      many: Do tej ankiety wymagane jest co najmniej %{count} głosów.
+      other: Do tej ankiety wymagane jest co najmniej %{count} głosów.
     topic_must_be_open_to_toggle_status: "Ankieta musi być otwarta aby zmienić status ankiety."
     only_staff_or_op_can_toggle_status: "Status ankiety może być zmieniony przez autora wpisu lub członka załogi serwisu."
     insufficient_rights_to_create: "Nie masz zezwolenia na tworzenie ankiet."

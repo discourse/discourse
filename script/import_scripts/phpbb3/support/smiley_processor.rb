@@ -18,7 +18,7 @@ module ImportScripts::PhpBB3
 
     def replace_smilies(text)
       # :) is encoded as <!-- s:) --><img src="{SMILIES_PATH}/icon_e_smile.gif" alt=":)" title="Smile" /><!-- s:) -->
-      text.gsub!(/<!-- s(\S+) --><img src="\{SMILIES_PATH\}\/.+?" alt=".*?" title=".*?" \/><!-- s?:\S+ -->/) do
+      text.gsub!(/<!-- s(\S+) --><img src="\{SMILIES_PATH\}\/.+?" alt=".*?" title=".*?" \/><!-- s?\S+ -->/) do
         emoji($1)
       end
     end

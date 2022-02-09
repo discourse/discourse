@@ -656,6 +656,14 @@ describe PostsController do
 
       let!(:post) { post_by_user }
 
+      it "returns 400 when wiki parameter is not present" do
+        sign_in(admin)
+
+        put "/posts/#{post.id}/wiki.json", params: {}
+
+        expect(response.status).to eq(400)
+      end
+
       it "raises an error if the user doesn't have permission to wiki the post" do
         put "/posts/#{post.id}/wiki.json", params: { wiki: 'true' }
         expect(response).to be_forbidden
@@ -706,18 +714,31 @@ describe PostsController do
 
     describe "when logged in" do
       before do
-        sign_in(user)
+        sign_in(moderator)
       end
 
       let!(:post) { post_by_user }
 
       it "raises an error if the user doesn't have permission to change the post type" do
+        sign_in(user)
+
         put "/posts/#{post.id}/post_type.json", params: { post_type: 2 }
         expect(response).to be_forbidden
       end
 
+      it "returns 400 if post_type parameter is not present" do
+        put "/posts/#{post.id}/post_type.json", params: {}
+
+        expect(response.status).to eq(400)
+      end
+
+      it "returns 400 if post_type parameters is invalid" do
+        put "/posts/#{post.id}/post_type.json", params: { post_type: -1 }
+
+        expect(response.status).to eq(400)
+      end
+
       it "can change the post type" do
-        sign_in(moderator)
         put "/posts/#{post.id}/post_type.json", params: { post_type: 2 }
 
         post.reload
@@ -814,6 +835,21 @@ describe PostsController do
         expect(post_1.topic.user.notifications.count).to eq(1)
       end
 
+      it 'allows a topic to be created with an external_id' do
+        master_key = Fabricate(:api_key).key
+        post "/posts.json", params: {
+          raw: 'this is the test content',
+          title: "this is some post",
+          external_id: 'external_id'
+        }, headers: { HTTP_API_USERNAME: user.username, HTTP_API_KEY: master_key }
+
+        expect(response.status).to eq(200)
+
+        new_topic = Topic.last
+
+        expect(new_topic.external_id).to eq('external_id')
+      end
+
       it 'prevents whispers for regular users' do
         post_1 = Fabricate(:post)
         user_key = ApiKey.create!(user: user).key
@@ -823,6 +859,18 @@ describe PostsController do
           headers: { HTTP_API_USERNAME: user.username, HTTP_API_KEY: user_key }
 
         expect(response.status).to eq(403)
+      end
+
+      it 'does not advance draft' do
+        Draft.set(user, Draft::NEW_TOPIC, 0, "test")
+        user_key = ApiKey.create!(user: user).key
+
+        post "/posts.json",
+          params: { title: 'this is a test topic', raw: 'this is test whisper' },
+          headers: { HTTP_API_USERNAME: user.username, HTTP_API_KEY: user_key }
+
+        expect(response.status).to eq(200)
+        expect(Draft.get(user, Draft::NEW_TOPIC, 0)).to eq("test")
       end
 
       it 'will raise an error if specified category cannot be found' do
@@ -853,6 +901,8 @@ describe PostsController do
     end
 
     describe "when logged in" do
+      fab!(:user) { Fabricate(:user) }
+
       before do
         sign_in(user)
       end
@@ -898,7 +948,7 @@ describe PostsController do
         end
 
         it "doesn't enqueue posts when user first creates a topic" do
-          user.user_stat.update_column(:topic_count, 1)
+          Fabricate(:topic, user: user)
 
           Draft.set(user, "should_clear", 0, "{'a' : 'b'}")
 
@@ -1887,6 +1937,16 @@ describe PostsController do
       get "/raw/#{topic.id}/1.json"
       expect(response.status).to eq(200)
       expect(response.body).to eq("123456789")
+    end
+
+    it "can show whole topics" do
+      topic = Fabricate(:topic)
+      post = Fabricate(:post, topic: topic, post_number: 1, raw: "123456789")
+      post_2 = Fabricate(:post, topic: topic, post_number: 2, raw: "abcdefghij")
+      post.save
+      get "/raw/#{topic.id}"
+      expect(response.status).to eq(200)
+      expect(response.body).to include("123456789", "abcdefghij")
     end
   end
 

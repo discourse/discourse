@@ -204,25 +204,44 @@ export default Component.extend({
     }
 
     const topic = this.topic;
-    const target = $(e.target);
-    if (target.hasClass("bulk-select")) {
+    if (e.target.classList.contains("bulk-select")) {
       const selected = this.selected;
 
-      if (target.is(":checked")) {
+      if (e.target.checked) {
         selected.addObject(topic);
+
+        if (this.lastChecked && e.shiftKey) {
+          const bulkSelects = Array.from(
+              document.querySelectorAll("input.bulk-select")
+            ),
+            from = bulkSelects.indexOf(e.target),
+            to = bulkSelects.findIndex((el) => el.id === this.lastChecked.id),
+            start = Math.min(from, to),
+            end = Math.max(from, to);
+
+          bulkSelects
+            .slice(start, end)
+            .filter((el) => el.checked !== true)
+            .forEach((checkbox) => {
+              checkbox.click();
+            });
+        }
+
+        this.set("lastChecked", e.target);
       } else {
         selected.removeObject(topic);
+        this.set("lastChecked", null);
       }
     }
 
-    if (target.hasClass("raw-topic-link")) {
+    if (e.target.classList.contains("raw-topic-link")) {
       if (wantsNewWindow(e)) {
         return true;
       }
-      return this.navigateToTopic(topic, target.attr("href"));
+      return this.navigateToTopic(topic, e.target.getAttribute("href"));
     }
 
-    if (target.closest("a.topic-status").length === 1) {
+    if (e.target.closest("a.topic-status")) {
       this.topic.togglePinnedForUser();
       return false;
     }

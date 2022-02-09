@@ -44,6 +44,19 @@ export default Controller.extend({
     },
   }),
 
+  _highlightEmojiList() {
+    const customEmojiListEl = document.querySelector("#custom_emoji");
+    if (
+      customEmojiListEl &&
+      !customEmojiListEl.classList.contains("highlighted")
+    ) {
+      customEmojiListEl.classList.add("highlighted");
+      customEmojiListEl.addEventListener("animationend", () => {
+        customEmojiListEl.classList.remove("highlighted");
+      });
+    }
+  },
+
   @action
   filterGroups(value) {
     this.set("filter", value);
@@ -54,6 +67,7 @@ export default Controller.extend({
     emoji.url += "?t=" + new Date().getTime();
     emoji.group = group;
     this.model.pushObject(EmberObject.create(emoji));
+    this._highlightEmojiList();
   },
 
   @action

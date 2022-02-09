@@ -995,7 +995,7 @@ describe PostDestroyer do
     end
 
     it 'should destroy internal links when moderator deletes post' do
-      new_post = Post.create!(user: user, topic: topic, raw: "Link to other topic:\n\n#{url}\n")
+      new_post = create_post(user: user, topic: topic, raw: "Link to other topic:\n\n#{url}\n")
       TopicLink.extract_from(new_post)
       link_counts = TopicLink.counts_for(guardian, other_topic.reload, [other_post])
       expect(link_counts.count).to eq(1)

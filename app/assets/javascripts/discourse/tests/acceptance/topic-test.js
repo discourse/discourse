@@ -355,43 +355,52 @@ acceptance("Topic featured links", function (needs) {
     assert.ok(!exists(".gap"), "it hides gap");
   });
 
-  test("Quoting a quote keeps the original poster name", async function (assert) {
-    await visit("/t/internationalization-localization/280");
-    await selectText("#post_5 blockquote");
-    await click(".quote-button .insert-quote");
+  chromeTest(
+    "Quoting a quote keeps the original poster name",
+    async function (assert) {
+      await visit("/t/internationalization-localization/280");
+      await selectText("#post_5 blockquote");
+      await click(".quote-button .insert-quote");
 
-    assert.ok(
-      queryAll(".d-editor-input")
-        .val()
-        .indexOf('quote="codinghorror said, post:3, topic:280"') !== -1
-    );
-  });
+      assert.ok(
+        queryAll(".d-editor-input")
+          .val()
+          .indexOf('quote="codinghorror said, post:3, topic:280"') !== -1
+      );
+    }
+  );
 
-  test("Quoting a quote of a different topic keeps the original topic title", async function (assert) {
-    await visit("/t/internationalization-localization/280");
-    await selectText("#post_9 blockquote");
-    await click(".quote-button .insert-quote");
+  chromeTest(
+    "Quoting a quote of a different topic keeps the original topic title",
+    async function (assert) {
+      await visit("/t/internationalization-localization/280");
+      await selectText("#post_9 blockquote");
+      await click(".quote-button .insert-quote");
 
-    assert.ok(
-      queryAll(".d-editor-input")
-        .val()
-        .indexOf(
-          'quote="A new topic with a link to another topic, post:3, topic:62"'
-        ) !== -1
-    );
-  });
+      assert.ok(
+        queryAll(".d-editor-input")
+          .val()
+          .indexOf(
+            'quote="A new topic with a link to another topic, post:3, topic:62"'
+          ) !== -1
+      );
+    }
+  );
 
-  test("Quoting a quote with the Reply button keeps the original poster name", async function (assert) {
-    await visit("/t/internationalization-localization/280");
-    await selectText("#post_5 blockquote");
-    await click(".reply");
+  chromeTest(
+    "Quoting a quote with the Reply button keeps the original poster name",
+    async function (assert) {
+      await visit("/t/internationalization-localization/280");
+      await selectText("#post_5 blockquote");
+      await click(".reply");
 
-    assert.ok(
-      queryAll(".d-editor-input")
-        .val()
-        .indexOf('quote="codinghorror said, post:3, topic:280"') !== -1
-    );
-  });
+      assert.ok(
+        queryAll(".d-editor-input")
+          .val()
+          .indexOf('quote="codinghorror said, post:3, topic:280"') !== -1
+      );
+    }
+  );
 
   // Using J/K on Firefox clean the text selection, so this won't work there
   chromeTest(

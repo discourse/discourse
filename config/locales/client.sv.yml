@@ -128,6 +128,7 @@ sv:
       url: "Kopiera och dela URL"
     action_codes:
       public_topic: "gjorde det här ämnet publikt %{when}"
+      open_topic: "konverterade detta till ett ämne %{when}"
       private_topic: "gjorde det här ämnet till ett personligt meddelande %{when}"
       split_topic: "splitta det här ämnet %{when}"
       invited_user: "bjöd in %{who} %{when}"
@@ -172,6 +173,7 @@ sv:
     themes:
       default_description: "Standard"
       broken_theme_alert: "Din sida kanske inte fungerar på grund av att tema/komponent %{theme} innehåller fel. Avaktivera det/den från %{path}."
+    broken_decorator_alert: "Inlägg kanske inte visas korrekt eftersom en av dekorationerna för inläggsinnehåll skapade ett fel på din webbplats . Kontrollera webbläsarens utvecklarverktyg för mer information."
     s3:
       regions:
         ap_northeast_1: "Asien Stillahavsområdet (Tokyo)"
@@ -1393,9 +1395,11 @@ sv:
         every_month: "varje månad"
         every_six_months: "varje halvår"
       email_level:
+        title: "E-posta mig när jag blir citerad, besvarad, mitt @användarnamn nämns eller när det finns ny aktivitet i mina bevakade kategorier, taggar eller ämnen"
         always: "alltid"
         only_when_away: "bara när jag är borta"
         never: "aldrig"
+      email_messages_level: "E-posta mig när jag får ett personligt meddelande"
       include_tl0_in_digests: "Inkludera innehåll från nya användare i sammanfattningen som skickas via e-post"
       email_in_reply_to: "Inkludera ett utdrag av inlägg som svarats på i e-postmeddelanden"
       other_settings: "Övrigt"
@@ -1912,6 +1916,11 @@ sv:
       group_mentioned:
         one: "Genom att nämna %{group}, så kommer du att avisera <a href='%{group_link}'>%{count} person</a> – är du säker?"
         other: "Genom att nämna %{group}, så kommer du att avisera <a href='%{group_link}'>%{count} medlemmar</a> – är du säker?"
+      cannot_see_mention:
+        category: "Du nämnde @%{username} men de kommer inte att meddelas eftersom de inte har tillgång till denna kategori. Du måste lägga till dem i en grupp som har tillgång till denna kategori."
+        private: "Du nämnde @%{username} men de kommer inte att meddelas eftersom de inte kan se detta personliga meddelande. Du måste bjuda in dem till detta personliga meddelande."
+        muted_topic: "Du nämnde @%{username} men de kommer inte att meddelas eftersom de tystade detta ämne."
+        not_allowed: "Du nämnde @%{username} men de kommer inte att meddelas eftersom de inte var inbjudna till detta ämne."
       here_mention:
         one: "Genom att nämna <b>@%{here}</b>kommer du att meddela %{count} användare – är du säker?"
         other: "Genom att nämna <b>@%{here}</b>kommer du att meddela %{count} användare – är du säker?"
@@ -3065,7 +3074,7 @@ sv:
       default_list_filter: "Standardlistfilter:"
       allow_badges_label: "Tillåt utmärkelser i den här kategorin"
       edit_permissions: "Redigera behörigheter"
-      reviewable_by_group: "Förutom av personal kan innehåll i denna kategori också granskas av:"
+      reviewable_by_group: "Förutom personal kan innehåll i denna kategori också granskas av:"
       review_group_name: "gruppnamn"
       require_topic_approval: "Kräv att en moderator godkänner alla nya ämnen"
       require_reply_approval: "Kräv att en moderator godkänner alla nya svar"
@@ -5112,8 +5121,9 @@ sv:
           grant_existing_holders: Utfärda ytterligare utmärkelser till befintliga utmärkelseinnehavare
       emoji:
         title: "Emoji"
-        help: "Lägg till nya emoji som kommer att vara tillgängliga för alla. Dra och släpp flera filer samtidigt utan att ange ett namn för att skapa emojis med deras filnamn."
+        help: "Lägg till ny emoji som kommer att vara tillgänglig för alla. Dra och släpp flera filer samtidigt utan att ange ett namn för att skapa emojis med deras filnamn. Den valda gruppen kommer att användas för alla filer som läggs till samtidigt. Du kan också klicka på \"Lägg till ny emoji\" för att öppna filväljaren."
         add: "Lägg till ny emoji"
+        choose_files: "Välj filer"
         uploading: "Laddar upp..."
         name: "Namn"
         group: "Grupp"

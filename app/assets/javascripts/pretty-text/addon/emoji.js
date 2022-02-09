@@ -222,9 +222,11 @@ export function emojiSearch(term, options) {
     }
   }
 
-  if (searchAliases[term]) {
-    for (const emoji of searchAliases[term]) {
-      addResult(emoji);
+  for (const [key, value] of Object.entries(searchAliases)) {
+    if (key.startsWith(term)) {
+      for (const emoji of value) {
+        addResult(emoji);
+      }
     }
   }
 

@@ -79,7 +79,6 @@ export default Component.extend({
       now,
       day: now.day(),
       includeWeekend: this.includeWeekend,
-      includeMidFuture: this.includeMidFuture || true,
       includeFarFuture: this.includeFarFuture,
       includeDateTime: this.includeDateTime,
       canScheduleNow: this.includeNow || false,

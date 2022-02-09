@@ -16,7 +16,7 @@ he:
     poll: "סקר"
     invalid_argument: "ערך שגוי ‚%{value}’ למשתנה ‚%{argument}’."
     multiple_polls_without_name: "יש מספר סקרים ללא שם. יש להשתמש במאפיין ‚<code>name</code>’ כדי לזהות את הסקרים שלך באופן ייחודי."
-    multiple_polls_with_same_name: "יש מספר סקרים עם אותו השם: <strong>%{name}</strong>. יש להשתמש במאפיין ‚<code>name</code>’ כדי לזהות את הסקרים שלך באופן ייחודי."
+    multiple_polls_with_same_name: "יש מספר סקרים עם אותו השם: <strong>%{name}</strong>. יש להשתמש במאפיין ‚<code>name</code>’ (שם) כדי לזהות את הסקרים שלך באופן ייחודי."
     default_poll_must_have_at_least_1_option: "לסקר חייבת להיות אפשרות אחת לפחות."
     named_poll_must_have_at_least_1_option: "לסקר בשם <strong>%{name}</strong> חייבת להיות אפשרות אחת לפחות."
     default_poll_must_have_less_options:

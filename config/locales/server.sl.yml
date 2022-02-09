@@ -172,8 +172,6 @@ sl:
     two: "Novi uporabniki lahko v prispevek dodajo samo %{count} povezavi."
     few: "Novi uporabniki lahko v prispevek dodajo samo %{count} povezave."
     other: "Novi uporabniki lahko v prispevek dodajo samo %{count} povezav."
-  contains_blocked_word: "Vaš prispevek vsebuje prepovedano besedo: %{word}"
-  contains_blocked_words: "Vaš prispevek vsebuje prepovedane besede: %{words}"
   user_is_suspended: "Suspendirani uporabniki ne morejo objavljati."
   pm_reached_recipients_limit: "Ne morete imeti več kot %{recipients_limit} prejemnikov v sporočilu."
   removed_direct_reply_full_quotes: "Samodejno odstranjen citat celotnega prejšnega prispevka."

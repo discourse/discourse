@@ -2,7 +2,7 @@
   <div id="modal-alert" role="alert" class="alert alert-{{flashClass}}">
     {{#if flashLink}}
       <div class="input-group invite-link">
-        <label for="invite-link">{{flashText}} {{i18n "user.invited.invite.instructions"}}</label>
+        <label for="invite-link">{{html-safe flashText}} {{i18n "user.invited.invite.instructions"}}</label>
         <div class="link-share-container">
           {{input
             name="invite-link"
@@ -14,7 +14,7 @@
         </div>
       </div>
     {{else}}
-      {{flashText}}
+      {{html-safe flashText}}
     {{/if}}
   </div>
 {{/if}}
@@ -124,7 +124,6 @@
           displayLabel=(i18n "user.invited.invite.expires_at")
           statusType="close"
           includeDateTime=true
-          includeMidFuture=true
           clearable=true
           input=buffered.expires_at
           onChangeInput=(action (mut buffered.expires_at))

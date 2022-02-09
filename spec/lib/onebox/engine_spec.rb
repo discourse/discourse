@@ -50,6 +50,18 @@ describe Onebox::Engine do
     end
   end
 
+  describe "origins_to_regexes" do
+    it "converts URLs to regexes" do
+      result = Onebox::Engine.origins_to_regexes(["https://example.com", "https://example2.com"])
+      expect(result).to eq([/\Ahttps:\/\/example\.com/i, /\Ahttps:\/\/example2\.com/i])
+    end
+
+    it "treats '*' as a catch-all" do
+      result = Onebox::Engine.origins_to_regexes(["https://example.com", "*", "https://example2.com"])
+      expect(result).to eq([/.*/])
+    end
+  end
+
   describe "handles_content_type?" do
     class OneboxEngineImages
       include Onebox::Engine

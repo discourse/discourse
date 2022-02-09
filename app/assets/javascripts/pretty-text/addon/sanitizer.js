@@ -41,6 +41,18 @@ export function hrefAllowed(href, extraHrefMatchers) {
   }
 }
 
+function testDataAttribute(forTag, name, value) {
+  return Object.keys(forTag).find((k) => {
+    const nameWithMatcher = `^${k.replace(/\*$/, "\\w+?")}`;
+    const validValues = forTag[k];
+
+    return (
+      new RegExp(nameWithMatcher).test(name) &&
+      (validValues.includes("*") ? true : validValues.includes(value))
+    );
+  });
+}
+
 export function sanitize(text, allowLister) {
   if (!text) {
     return "";
@@ -72,12 +84,13 @@ export function sanitize(text, allowLister) {
       const forTag = allowList.attrList[tag];
       if (forTag) {
         const forAttr = forTag[name];
+
         if (
           (forAttr &&
             (forAttr.indexOf("*") !== -1 || forAttr.indexOf(value) !== -1)) ||
           (name.indexOf("data-html-") === -1 &&
             name.indexOf("data-") === 0 &&
-            forTag["data-*"]) ||
+            (forTag["data-*"] || testDataAttribute(forTag, name, value))) ||
           (tag === "a" &&
             name === "href" &&
             hrefAllowed(value, extraHrefMatchers)) ||

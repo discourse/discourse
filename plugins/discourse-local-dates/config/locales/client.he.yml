@@ -31,6 +31,7 @@ he:
           format_title: מבנה תאריך
           timezone: אזור זמן
           until: עד…
+          current_timezone: "אזור זמן נוכחי:"
           recurring:
             every_day: "כל יום"
             every_week: "כל שבוע"

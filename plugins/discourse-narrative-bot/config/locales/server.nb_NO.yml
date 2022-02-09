@@ -6,9 +6,9 @@
 
 nb_NO:
   site_settings:
-    discourse_narrative_bot_enabled: "Aktiver Discourse Narrativ Bot (discobot)"
-    disable_discourse_narrative_bot_welcome_post: "Deaktiver velkomstinnlegget fra Discourse Fortellerbot"
-    discourse_narrative_bot_ignored_usernames: "Brukernavn som Discourse Fortellerbot skal ignorere"
+    discourse_narrative_bot_enabled: "Aktiver Discourse Narrative Bot (discobot)"
+    disable_discourse_narrative_bot_welcome_post: "Deaktiver velkomst innlegg fra Discourse Fortellerbot"
+    discourse_narrative_bot_ignored_usernames: "Brukernavn som Discourse Narrative bot skal ignorere"
     discourse_narrative_bot_disable_public_replies: "Deaktiver åpne svar fra Discourse Fortellerbot"
     discourse_narrative_bot_welcome_post_type: "Type velkomstinnlegg som Discourse Fortellerbot skal sende ut"
     discourse_narrative_bot_welcome_post_delay: "Vent (n) sekunder før Discourse Fortellerbot sender ut velkomstinnlegg."
@@ -214,7 +214,7 @@ nb_NO:
 
           - eller trykk på <kbd><b>F</b></kbd> eller <kbd><i>K</i></kbd> knappene i redigeringsfeltet
         reply: |-
-          Godt jobbet! HTML og BBCode kan også brukes til formatering av tekst - for å lære mer om formatering, [prøv denne manualen](http://commonmark.org/help):nerd:
+          Godt jobbet! HTML og BBCode kan også brukes til formatering av tekst - for å lære mer om formatering, [prøv denne manualen](https://commonmark.org/help):nerd:
         not_found: |-
           Uff, jeg fant ingen formatering i svaret ditt. :pencil2:
 

@@ -788,7 +788,6 @@ sk:
     max_topic_title_length: "Maximálny povolený počet znakov v názve témy"
     min_personal_message_title_length: "Minimálny povolený počet znakov v správe"
     min_search_term_length: "Minimálny povolený počet znakov vo vyhľadávaní"
-    search_tokenize_chinese_japanese_korean: "Prinúť vyhľádávanie rozložiť Čínštinu/Japončinu/Kórejčinu dokonca i pre nie CJK stránky"
     allow_uncategorized_topics: "Pvoliť vytváranie tém bez kategórií. UPOZORNENIE: Pokiaľ existujú nekategorizované témy, musíte ich zaradiť do kategórii skôr než túto možnosť vypnete."
     allow_duplicate_topic_titles: "Povoliť témy s rovnakými, duplikovanými názvami"
     unique_posts_mins: "Koľko minút musí byť medzi dvomi rovnakými príspevkami od jedného používateľa."

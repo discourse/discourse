@@ -5,7 +5,7 @@ import {
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit } from "@ember/test-helpers";
-import { skip, test } from "qunit";
+import { test } from "qunit";
 
 acceptance("Signing In", function () {
   test("sign in", async function (assert) {
@@ -81,7 +81,7 @@ acceptance("Signing In", function () {
     );
   });
 
-  skip("second factor", async function (assert) {
+  test("second factor", async function (assert) {
     await visit("/");
     await click("header .login-button");
 
@@ -91,7 +91,6 @@ acceptance("Signing In", function () {
     await fillIn("#login-account-password", "need-second-factor");
     await click(".modal-footer .btn-primary");
 
-    assert.notOk(exists("#modal-alert:visible"), "it hides the login error");
     assert.notOk(
       exists("#credentials:visible"),
       "it hides the username and password prompt"
@@ -114,7 +113,7 @@ acceptance("Signing In", function () {
     );
   });
 
-  skip("security key", async function (assert) {
+  test("security key", async function (assert) {
     await visit("/");
     await click("header .login-button");
 
@@ -124,7 +123,6 @@ acceptance("Signing In", function () {
     await fillIn("#login-account-password", "need-security-key");
     await click(".modal-footer .btn-primary");
 
-    assert.notOk(exists("#modal-alert:visible"), "it hides the login error");
     assert.notOk(
       exists("#credentials:visible"),
       "it hides the username and password prompt"

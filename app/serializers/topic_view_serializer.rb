@@ -41,7 +41,8 @@ class TopicViewSerializer < ApplicationSerializer
     :pinned_at,
     :pinned_until,
     :image_url,
-    :slow_mode_seconds
+    :slow_mode_seconds,
+    :external_id
   )
 
   attributes(
@@ -102,6 +103,10 @@ class TopicViewSerializer < ApplicationSerializer
 
   def include_is_warning?
     is_warning
+  end
+
+  def include_external_id?
+    external_id
   end
 
   def draft

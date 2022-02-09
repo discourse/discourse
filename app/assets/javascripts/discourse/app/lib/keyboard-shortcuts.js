@@ -1,7 +1,7 @@
 import { bind } from "discourse-common/utils/decorators";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { isAppWebview } from "discourse/lib/utilities";
-import { later, run, schedule, throttle } from "@ember/runloop";
+import { later, run, throttle } from "@ember/runloop";
 import {
   nextTopicUrl,
   previousTopicUrl,
@@ -103,6 +103,13 @@ function preventKeyboardEvent(event) {
 
 export default {
   init(keyTrapper, container) {
+    // Sometimes the keyboard shortcut initializer is not torn down. This makes sure
+    // we clear any previous test state.
+    if (this.keyTrapper) {
+      this.keyTrapper.destroy();
+      this.keyTrapper = null;
+    }
+
     this.keyTrapper = new keyTrapper();
     this.container = container;
     this._stopCallback();
@@ -174,7 +181,6 @@ export default {
       this.keyTrapper.paused = true;
       return;
     }
-
     combinations.forEach((combo) => this.keyTrapper.unbind(combo));
   },
 
@@ -407,16 +413,11 @@ export default {
 
   focusComposer(event) {
     const composer = this.container.lookup("controller:composer");
-    if (composer.get("model.viewOpen")) {
-      preventKeyboardEvent(event);
-
-      schedule("afterRender", () => {
-        const input = document.querySelector("textarea.d-editor-input");
-        input && input.focus();
-      });
-    } else {
-      composer.openIfDraft(event);
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
     }
+    composer.focusComposer(event);
   },
 
   fullscreenComposer() {

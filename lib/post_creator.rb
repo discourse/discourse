@@ -36,6 +36,7 @@ class PostCreator
   #   hidden_reason_id        - Reason for hiding the post (optional)
   #   skip_validations        - Do not validate any of the content in the post
   #   draft_key               - the key of the draft we are creating (will be deleted on success)
+  #   advance_draft           - Destroy draft after creating post or topic
   #   silent                  - Do not update topic stats and fields like last_post_user_id
   #
   #   When replying to a topic:
@@ -218,7 +219,7 @@ class PostCreator
         delete_owned_bookmarks
         ensure_in_allowed_users if guardian.is_staff?
         unarchive_message if !@opts[:import_mode]
-        DraftSequence.next!(@user, draft_key) if !@opts[:import_mode]
+        DraftSequence.next!(@user, draft_key) if !@opts[:import_mode] && @opts[:advance_draft]
         @post.save_reply_relationships
       end
     end
@@ -599,15 +600,10 @@ class PostCreator
     @user.create_user_stat if @user.user_stat.nil?
 
     if @user.user_stat.first_post_created_at.nil?
-      @user.user_stat.first_post_created_at = @post.created_at
+      @user.user_stat.update!(first_post_created_at: @post.created_at)
     end
 
-    unless @post.topic.private_message?
-      @user.user_stat.post_count += 1 if @post.post_type == Post.types[:regular] && !@post.is_first_post?
-      @user.user_stat.topic_count += 1 if @post.is_first_post?
-    end
-
-    @user.user_stat.save!
+    UserStatCountUpdater.increment!(@post)
 
     if !@topic.private_message? && @post.post_type != Post.types[:whisper]
       @user.update(last_posted_at: @post.created_at)
