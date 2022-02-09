@@ -1,5 +1,4 @@
 import getURL, { getURLWithCDN } from "discourse-common/lib/get-url";
-import { Promise } from "rsvp";
 import Handlebars from "handlebars";
 import I18n from "I18n";
 import { deepMerge } from "discourse-common/lib/object";
@@ -548,12 +547,7 @@ export function clipboardCopy(text) {
   // Cleanup
   selection.removeAllRanges();
   window.document.body.removeChild(span);
-
-  return success
-    ? Promise.resolve()
-    : Promise.reject(
-        new DOMException("The request is not allowed", "NotAllowedError")
-      );
+  return success;
 }
 
 // This prevents a mini racer crash

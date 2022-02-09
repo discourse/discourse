@@ -45,7 +45,7 @@ export default {
             )
             .trim();
 
-          clipboardCopy(text).then(() => {
+          if (clipboardCopy(text)) {
             button.classList.add("copied");
             const state = button.innerHTML;
             button.innerHTML = I18n.t("copy_codeblock.copied");
@@ -62,7 +62,7 @@ export default {
               button.innerHTML = state;
               delete _fadeCopyCodeblocksRunners[commandId];
             }, 3000);
-          });
+          }
         }
       }
 
