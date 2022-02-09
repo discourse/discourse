@@ -767,6 +767,8 @@ export default Controller.extend(bufferedProperty("model"), {
               post_id: post.id,
               topic_id: post.topic_id,
               for_topic: false,
+              auto_delete_preference: this.currentUser
+                .bookmark_auto_delete_preference,
             }),
           post
         );
@@ -1320,6 +1322,8 @@ export default Controller.extend(bufferedProperty("model"), {
           post_id: firstPost.id,
           topic_id: this.model.id,
           for_topic: true,
+          auto_delete_preference: this.currentUser
+            .bookmark_auto_delete_preference,
         })
       );
     }

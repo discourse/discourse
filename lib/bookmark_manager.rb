@@ -65,6 +65,7 @@ class BookmarkManager
     end
 
     update_topic_user_bookmarked(post.topic)
+    update_user_option(bookmark)
 
     bookmark
   end
@@ -117,6 +118,8 @@ class BookmarkManager
       return add_errors_from(bookmark)
     end
 
+    update_user_option(bookmark)
+
     success
   end
 
@@ -149,5 +152,9 @@ class BookmarkManager
 
     TopicUser.change(@user.id, topic, bookmarked: bookmarks_remaining_in_topic)
     bookmarks_remaining_in_topic
+  end
+
+  def update_user_option(bookmark)
+    @user.user_option.update!(bookmark_auto_delete_preference: bookmark.auto_delete_preference)
   end
 end

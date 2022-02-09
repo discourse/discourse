@@ -135,6 +135,15 @@ RSpec.describe BookmarkManager do
         expect { subject.create(post_id: post.id, name: name) }.to raise_error(Discourse::InvalidAccess)
       end
     end
+
+    it "saves user's preference" do
+      subject.create(post_id: post.id, options: { auto_delete_preference: Bookmark.auto_delete_preferences[:when_reminder_sent] })
+      expect(user.user_option.bookmark_auto_delete_preference).to eq(Bookmark.auto_delete_preferences[:when_reminder_sent])
+
+      bookmark = Bookmark.find_by(user: user)
+      subject.update(bookmark_id: bookmark, name: "test", reminder_at: 1.day.from_now, options: { auto_delete_preference: Bookmark.auto_delete_preferences[:on_owner_reply] })
+      expect(user.user_option.bookmark_auto_delete_preference).to eq(Bookmark.auto_delete_preferences[:on_owner_reply])
+    end
   end
 
   describe ".destroy" do
