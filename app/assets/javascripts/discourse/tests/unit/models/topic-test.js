@@ -20,7 +20,7 @@ discourseModule("Unit | Model | topic", function () {
       last_read_post_number: 1,
     });
 
-    assert.not(
+    assert.notOk(
       topic.get("visited"),
       "not visited unless we've read all the posts"
     );

@@ -108,7 +108,7 @@ module("Unit | Model | user", function () {
       undefined,
       "if the user has no timezone and the user is not the current user, do NOT guess with moment"
     );
-    assert.not(
+    assert.notOk(
       spy.calledWith("/u/howardhamlin.json", {
         type: "PUT",
         dataType: "json",

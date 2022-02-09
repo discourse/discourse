@@ -13,7 +13,7 @@ module("Unit | Utility | url", function () {
   test("isInternal with a HTTP url", function (assert) {
     sinon.stub(DiscourseURL, "origin").returns("http://eviltrout.com");
 
-    assert.not(DiscourseURL.isInternal(null), "a blank URL is not internal");
+    assert.notOk(DiscourseURL.isInternal(null), "a blank URL is not internal");
     assert.ok(DiscourseURL.isInternal("/test"), "relative URLs are internal");
     assert.ok(
       DiscourseURL.isInternal("//eviltrout.com"),
@@ -27,11 +27,11 @@ module("Unit | Utility | url", function () {
       DiscourseURL.isInternal("https://eviltrout.com/moustache"),
       "a url on a HTTPS of the same host is internal"
     );
-    assert.not(
+    assert.notOk(
       DiscourseURL.isInternal("//twitter.com.com"),
       "a different host is not internal (protocol-less)"
     );
-    assert.not(
+    assert.notOk(
       DiscourseURL.isInternal("http://twitter.com"),
       "a different host is not internal"
     );
@@ -47,11 +47,11 @@ module("Unit | Utility | url", function () {
 
   test("isInternal on subfolder install", function (assert) {
     sinon.stub(DiscourseURL, "origin").returns("http://eviltrout.com/forum");
-    assert.not(
+    assert.notOk(
       DiscourseURL.isInternal("http://eviltrout.com"),
       "the host root is not internal"
     );
-    assert.not(
+    assert.notOk(
       DiscourseURL.isInternal("http://eviltrout.com/tophat"),
       "a url on the same host but on a different folder is not internal"
     );
