@@ -80,6 +80,18 @@ RSpec.describe BookmarkReminderNotificationHandler do
       end
     end
 
+    context "when the auto_delete_preference is clear_reminder" do
+      before do
+        TopicUser.create!(topic: bookmark.topic, user: user, bookmarked: true)
+        bookmark.update(auto_delete_preference: Bookmark.auto_delete_preferences[:clear_reminder])
+      end
+
+      it "resets reminder_at after the reminder gets sent" do
+        subject.send_notification(bookmark)
+        expect(Bookmark.find_by(id: bookmark.id).reminder_at).to eq(nil)
+      end
+    end
+
     context "when the post has been deleted" do
       it "does not send a notification" do
         bookmark.post.trash!

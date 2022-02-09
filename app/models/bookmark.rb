@@ -21,7 +21,8 @@ class Bookmark < ActiveRecord::Base
     @auto_delete_preferences ||= Enum.new(
       never: 0,
       when_reminder_sent: 1,
-      on_owner_reply: 2
+      on_owner_reply: 2,
+      clear_reminder: 3,
     )
   end
 
@@ -89,6 +90,10 @@ class Bookmark < ActiveRecord::Base
 
   def auto_delete_on_owner_reply?
     self.auto_delete_preference == Bookmark.auto_delete_preferences[:on_owner_reply]
+  end
+
+  def auto_clear_reminder_when_reminder_sent?
+    self.auto_delete_preference == Bookmark.auto_delete_preferences[:clear_reminder]
   end
 
   def reminder_at_ics(offset: 0)

@@ -16,6 +16,7 @@ export const AUTO_DELETE_PREFERENCES = {
   NEVER: 0,
   WHEN_REMINDER_SENT: 1,
   ON_OWNER_REPLY: 2,
+  CLEAR_REMINDER: 3,
 };
 
 const Bookmark = RestModel.extend({

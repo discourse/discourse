@@ -328,9 +328,10 @@ en:
       no_user_bookmarks: "You have no bookmarked posts; bookmarks allow you to quickly refer to specific posts."
       auto_delete_preference:
         label: "Automatically delete"
-        never: "Never"
-        when_reminder_sent: "Once the reminder is sent"
+        never: "Never clear reminder or bookmark"
+        when_reminder_sent: "Delete bookmark after being reminded"
         on_owner_reply: "After I reply to this topic"
+        clear_reminder: "Clear reminder after being reminded"
       search_placeholder: "Search bookmarks by name, topic title, or post content"
       search: "Search"
       reminders:
