@@ -547,7 +547,7 @@ describe PrettyText do
       expect(PrettyText.cook("```c++\nc++\n```")).to match_html("<pre><code class='lang-c++'>c++\n</code></pre>")
       expect(PrettyText.cook("```structured-text\nstructured-text\n```")).to match_html("<pre><code class='lang-structured-text'>structured-text\n</code></pre>")
       expect(PrettyText.cook("```p21\np21\n```")).to match_html("<pre><code class='lang-p21'>p21\n</code></pre>")
-      expect(PrettyText.cook("<pre data-code-foo='1' data-malicous-code='2'></pre>")).to match_html("<pre data-code-foo='1'></pre>")
+      expect(PrettyText.cook("<pre data-code='3' data-code-foo='1' data-malicous-code='2'></pre>")).to match_html("<pre data-code-foo='1'></pre>")
     end
 
     it 'indents code correctly' do
