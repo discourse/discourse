@@ -17,40 +17,41 @@ export default Controller.extend(ModalFunctionality, {
   },
 
   @discourseComputed(
-    "siteSettings.selectable_avatars_enabled",
+    "siteSettings.selectable_avatar_restriction",
     "siteSettings.selectable_avatars"
   )
   selectableAvatars(enabled, list) {
-    if (enabled !== "none") {
+    if (enabled !== "disabled") {
       return list ? list.split("|") : [];
     }
   },
 
-  @discourseComputed("siteSettings.selectable_avatars_enabled")
+  @discourseComputed("siteSettings.selectable_avatar_restriction")
   showSelectableAvatars(enabled) {
-    return enabled !== "none";
+    return enabled !== "disabled";
   },
 
-  @discourseComputed("siteSettings.selectable_avatars_enabled")
+  @discourseComputed("siteSettings.selectable_avatar_restriction")
   showAvatarUploader(selectableAvatars) {
     switch (selectableAvatars) {
-      case "restrict_all":
+      case "everyone":
         return false;
-      case "restrict_tl1":
-      case "restrict_tl2":
-      case "restrict_tl3":
-        const restrictedTl = parseInt(
-          selectableAvatars.replace("restrict_tl", ""),
+      case "under_tl1":
+      case "under_tl2":
+      case "under_tl3":
+      case "under_tl4":
+        const allowedTl = parseInt(
+          selectableAvatars.replace("under_tl", ""),
           10
         );
         return (
           this.user.admin ||
           this.user.moderator ||
-          this.user.trust_level > restrictedTl
+          this.user.trust_level >= allowedTl
         );
-      case "restrict_nonstaff":
+      case "non_staff":
         return this.user.admin || this.user.moderator;
-      case "none":
+      case "no_one":
       default:
         return true;
     }

@@ -299,7 +299,7 @@ acceptance(
   "Avatar selector when selectable avatars is enabled",
   function (needs) {
     needs.user();
-    needs.settings({ selectable_avatars_enabled: "restrict_all" });
+    needs.settings({ selectable_avatar_restriction: "everyone" });
     needs.pretender((server, helper) => {
       server.get("/site/selectable-avatars.json", () =>
         helper.response([
@@ -328,7 +328,7 @@ acceptance(
   "Avatar selector when selectable avatars allows staff to upload",
   function (needs) {
     needs.user();
-    needs.settings({ selectable_avatars_enabled: "restrict_nonstaff" });
+    needs.settings({ selectable_avatar_restriction: "non_staff" });
     needs.pretender((server, helper) => {
       server.get("/site/selectable-avatars.json", () =>
         helper.response([
@@ -380,7 +380,7 @@ acceptance(
   "Avatar selector when selectable avatars allows trust level 3+ to upload",
   function (needs) {
     needs.user();
-    needs.settings({ selectable_avatars_enabled: "restrict_tl2" });
+    needs.settings({ selectable_avatar_restriction: "under_tl3" });
     needs.pretender((server, helper) => {
       server.get("/site/selectable-avatars.json", () =>
         helper.response([

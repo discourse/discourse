@@ -1397,18 +1397,20 @@ files:
     type: list
     list_type: compact
     validator: "ColorListValidator"
-  selectable_avatars_enabled:
-    default: none
+  selectable_avatar_restriction:
+    default: disabled
     client: true
     type: enum
     choices:
-      - none
-      - restrict_tl1
-      - restrict_tl2
-      - restrict_tl3
-      - restrict_nonstaff
-      - restrict_all
-    validator: "SelectableAvatarsEnabledValidator"
+      - disabled
+      - no_one
+      - under_tl1
+      - under_tl2
+      - under_tl3
+      - under_tl4
+      - non_staff
+      - everyone
+    validator: "SelectableAvatarRestrictionValidator"
   selectable_avatars:
     default: ""
     client: true

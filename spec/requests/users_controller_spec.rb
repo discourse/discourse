@@ -2622,7 +2622,7 @@ describe UsersController do
 
         before do
           SiteSetting.selectable_avatars = [avatar1, avatar2]
-          SiteSetting.selectable_avatars_enabled = "restrict_all"
+          SiteSetting.selectable_avatar_restriction = "everyone"
         end
 
         it 'raises an error when selectable avatars is empty' do

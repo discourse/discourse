@@ -2141,7 +2141,7 @@ describe User do
       avatar1 = Fabricate(:upload)
       avatar2 = Fabricate(:upload)
       SiteSetting.selectable_avatars = [avatar1, avatar2]
-      SiteSetting.selectable_avatars_enabled = "restrict_all"
+      SiteSetting.selectable_avatar_restriction = "everyone"
 
       user = Fabricate(:user)
       expect(user.uploaded_avatar_id).not_to be(nil)
