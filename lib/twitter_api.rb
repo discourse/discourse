@@ -95,14 +95,14 @@ class TwitterApi
     protected
 
     def link_handles_in(text)
-      text.gsub(/(?:^|\s)@(\w+)/) do |match|
+      text.gsub(/(?:^|\s)@\w+/) do |match|
         handle = match.strip[1..]
         "<a href='https://twitter.com/#{handle}' target='_blank'>@#{handle}</a>"
       end.strip
     end
 
     def link_hashtags_in(text)
-      text.gsub(/(?:^|\s)#(\w+)/) do |match|
+      text.gsub(/(?:^|\s)#\w+/) do |match|
         hashtag = match.strip[1..]
         "<a href='https://twitter.com/search?q=%23#{hashtag}' target='_blank'>##{hashtag}</a>"
       end.strip
