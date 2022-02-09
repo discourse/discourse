@@ -519,6 +519,28 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
         );
       });
 
+      test("correct tag and category filters for different lists", function (assert) {
+        trackingState.trackIncoming("unread");
+        assert.strictEqual(trackingState.filterCategory, undefined);
+        assert.strictEqual(trackingState.filterTag, undefined);
+        assert.strictEqual(trackingState.filter, "unread");
+
+        trackingState.trackIncoming("tag/test/l/latest");
+        assert.strictEqual(trackingState.filterCategory, undefined);
+        assert.strictEqual(trackingState.filterTag, "test");
+        assert.strictEqual(trackingState.filter, "latest");
+
+        trackingState.trackIncoming("c/cat/subcat/6/l/latest");
+        assert.strictEqual(trackingState.filterCategory.id, 6);
+        assert.strictEqual(trackingState.filterTag, undefined);
+        assert.strictEqual(trackingState.filter, "latest");
+
+        trackingState.trackIncoming("tags/c/cat/subcat/6/test/l/latest");
+        assert.strictEqual(trackingState.filterCategory.id, 6);
+        assert.strictEqual(trackingState.filterTag, "test");
+        assert.strictEqual(trackingState.filter, "latest");
+      });
+
       test("adds incoming in the categories latest topics list", function (assert) {
         trackingState.trackIncoming("categories");
         const unreadCategoriesLatestTopicsPayload = {
