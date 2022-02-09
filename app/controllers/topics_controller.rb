@@ -45,8 +45,8 @@ class TopicsController < ApplicationController
 
   def show_by_external_id
     topic = Topic.find_by(external_id: params[:external_id])
-    guardian.ensure_can_see!(topic)
     raise Discourse::NotFound unless topic
+    guardian.ensure_can_see!(topic)
     redirect_to_correct_topic(topic, params[:post_number])
   end
 
