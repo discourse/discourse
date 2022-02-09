@@ -20,11 +20,6 @@ discourseModule("Unit | Service | screen-track", function () {
 
     tracker.sendNextConsolidatedTiming();
     assert.equal(
-      tracker.highestReadFromCache(1),
-      3,
-      "caches highest read post number for first topic"
-    );
-    assert.equal(
       tracker.highestReadFromCache(2),
       4,
       "caches highest read post number for second topic"

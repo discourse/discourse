@@ -1,7 +1,7 @@
 import { Promise } from "rsvp";
 let model, currentTopicId;
 
-let highestReadCache = new Map();
+let lastTopicId, lastHighestRead;
 
 export function setTopicList(incomingModel) {
   model = incomingModel;
@@ -14,8 +14,8 @@ export function setTopicList(incomingModel) {
         unread_posts: count,
         new_posts: count,
       });
+      resetHighestReadCache();
     }
-    deleteHighestReadCache(topic.id);
   });
   currentTopicId = null;
 }
@@ -29,19 +29,19 @@ export function previousTopicUrl() {
 }
 
 export function setHighestReadCache(topicId, postNumber) {
-  highestReadCache.set(topicId, postNumber);
+  lastTopicId = topicId;
+  lastHighestRead = postNumber;
 }
 
 export function getHighestReadCache(topicId) {
-  return highestReadCache.get(topicId);
-}
-
-export function deleteHighestReadCache(topicId) {
-  highestReadCache.delete(topicId);
+  if (topicId === lastTopicId) {
+    return lastHighestRead;
+  }
 }
 
 export function resetHighestReadCache() {
-  highestReadCache.clear();
+  lastTopicId = undefined;
+  lastHighestRead = undefined;
 }
 
 function urlAt(delta) {

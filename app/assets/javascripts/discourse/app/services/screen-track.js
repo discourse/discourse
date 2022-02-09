@@ -3,8 +3,8 @@ import { ajax } from "discourse/lib/ajax";
 import { bind } from "discourse-common/utils/decorators";
 import { isTesting } from "discourse-common/config/environment";
 import {
-  deleteHighestReadCache,
   getHighestReadCache,
+  resetHighestReadCache,
   setHighestReadCache,
 } from "discourse/lib/topic-list-tracker";
 
@@ -193,7 +193,7 @@ export default class ScreenTrack extends Service {
             cachedHighestRead &&
             cachedHighestRead <= postNumbers.lastObject
           ) {
-            deleteHighestReadCache(topicId);
+            resetHighestReadCache(topicId);
           }
         }
         this.appEvents.trigger("topic:timings-sent", data);
