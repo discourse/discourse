@@ -22,31 +22,36 @@ class InvitesController < ApplicationController
     invite = Invite.find_by(invite_key: params[:id])
     if invite.present? && invite.redeemable?
       if current_user
-        added_to_group = false
+        InvitedUser.transaction do
+          invited_user = InvitedUser.find_or_initialize_by(user: current_user, invite: invite)
+          if invited_user.new_record?
+            invited_user.save!
+            Invite.increment_counter(:redemption_count, invite.id)
+            invite.invited_by.notifications.create!(
+              notification_type: Notification.types[:invitee_accepted],
+              data: { display_username: current_user.username }.to_json
+            )
+          end
+        end
 
         if invite.groups.present?
           invite_by_guardian = Guardian.new(invite.invited_by)
           new_group_ids = invite.groups.pluck(:id) - current_user.group_users.pluck(:group_id)
           new_group_ids.each do |id|
             if group = Group.find_by(id: id)
-              if invite_by_guardian.can_edit_group?(group)
-                group.add(current_user)
-                added_to_group = true
-              end
+              group.add(current_user) if invite_by_guardian.can_edit_group?(group)
             end
           end
         end
 
-        create_topic_invite_notifications(invite, current_user)
-
         if topic = invite.topics.first
-          new_guardian = Guardian.new(current_user)
-          return redirect_to(topic.url) if new_guardian.can_see?(topic)
-        elsif added_to_group
-          return redirect_to(path("/"))
+          if current_user.guardian.can_see?(topic)
+            create_topic_invite_notifications(invite, current_user)
+            return redirect_to(topic.url)
+          end
         end
 
-        return ensure_not_logged_in
+        return redirect_to(path("/"))
       end
 
       email = Email.obfuscate(invite.email)
