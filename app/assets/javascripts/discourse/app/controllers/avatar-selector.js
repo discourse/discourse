@@ -39,7 +39,7 @@ export default Controller.extend(ModalFunctionality, {
     if (selectableAvatars === "restrict_all") {
       return false;
     }
-    if (selectableAvatars.startsWith("restrict_tl")) {
+    if (selectableAvatars?.startsWith("restrict_tl")) {
       const restrictedTl = parseInt(
         selectableAvatars.replace("restrict_tl", ""),
         10
