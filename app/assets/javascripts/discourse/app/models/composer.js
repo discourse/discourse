@@ -660,6 +660,10 @@ const Composer = RestModel.extend({
       }
     }
 
+    if (opts && opts.new_line) {
+      text = "\n\n" + text.trim();
+    }
+
     this.set("reply", before + text + after);
 
     return before.length + text.length;

@@ -1,7 +1,7 @@
 import { bind } from "discourse-common/utils/decorators";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { isAppWebview } from "discourse/lib/utilities";
-import { later, run, schedule, throttle } from "@ember/runloop";
+import { later, run, throttle } from "@ember/runloop";
 import {
   nextTopicUrl,
   previousTopicUrl,
@@ -413,16 +413,11 @@ export default {
 
   focusComposer(event) {
     const composer = this.container.lookup("controller:composer");
-    if (composer.get("model.viewOpen")) {
-      preventKeyboardEvent(event);
-
-      schedule("afterRender", () => {
-        const input = document.querySelector("textarea.d-editor-input");
-        input && input.focus();
-      });
-    } else {
-      composer.openIfDraft(event);
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
     }
+    composer.focusComposer(event);
   },
 
   fullscreenComposer() {
