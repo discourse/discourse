@@ -33,7 +33,7 @@ export default Controller.extend(ModalFunctionality, {
 
   @discourseComputed("siteSettings.selectable_avatars_enabled")
   showAvatarUploader(selectableAvatars) {
-    if (selectableAvatars === "none") {
+    if (!selectableAvatars || selectableAvatars === "none") {
       return true;
     }
     if (selectableAvatars === "restrict_all") {
