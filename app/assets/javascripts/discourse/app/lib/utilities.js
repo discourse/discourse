@@ -503,5 +503,15 @@ export function translateModKey(string) {
 
   return string;
 }
+
+export function copyToClipboard(text) {
+  let textArea = document.createElement("textarea");
+  textArea.value = text;
+  document.body.appendChild(textArea);
+  textArea.select();
+  document.execCommand("copy");
+  textArea.remove();
+}
+
 // This prevents a mini racer crash
 export default {};
