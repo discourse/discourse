@@ -4,7 +4,7 @@ module QunitHelper
 
   def vendor_theme_tests
     return preload_script("vendor-theme-tests") if @legacy_ember
-    preload_script("vendor")
+    preload_vendor_scripts
   end
 
   def support_bundles

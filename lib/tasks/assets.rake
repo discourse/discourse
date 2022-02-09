@@ -245,7 +245,7 @@ def copy_ember_cli_assets
   files = {}
 
   log_task_duration('ember build -prod') {
-    unless system("yarn --cwd #{ember_dir} run ember build -prod")
+    unless system("NODE_OPTIONS='--max-old-space-size=2048' yarn --cwd #{ember_dir} run ember build -prod")
       STDERR.puts "Error running ember build"
       exit 1
     end
