@@ -14,7 +14,7 @@ describe PostCreator do
 
   context "new topic" do
     fab!(:category) { Fabricate(:category, user: user) }
-    let(:basic_topic_params) { { title: "hello world topic", raw: "my name is fred", archetype_id: 1 } }
+    let(:basic_topic_params) { { title: "hello world topic", raw: "my name is fred", archetype_id: 1, advance_draft: true } }
     let(:image_sizes) { { 'http://an.image.host/image.jpg' => { "width" => 111, "height" => 222 } } }
 
     let(:creator) { PostCreator.new(user, basic_topic_params) }
@@ -150,7 +150,7 @@ describe PostCreator do
 
         messages = MessageBus.track_publish do
           created_post = PostCreator.new(admin, basic_topic_params.merge(category: cat.id)).create
-          _reply = PostCreator.new(admin, raw: "this is my test reply 123 testing", topic_id: created_post.topic_id).create
+          _reply = PostCreator.new(admin, raw: "this is my test reply 123 testing", topic_id: created_post.topic_id, advance_draft: true).create
         end
 
         messages.filter! { |m| m.channel != "/distributed_hash" }
@@ -301,6 +301,20 @@ describe PostCreator do
         ensure
           PostCreator.track_post_stats = false
         end
+      end
+
+      it 'clears the draft if advanced_draft is true' do
+        creator = PostCreator.new(user, basic_topic_params.merge(advance_draft: true))
+        Draft.set(user, Draft::NEW_TOPIC, 0, 'test')
+        expect(Draft.where(user: user).size).to eq(1)
+        expect { creator.create }.to change { Draft.count }.by(-1)
+      end
+
+      it 'does not clear the draft if advanced_draft is false' do
+        creator = PostCreator.new(user, basic_topic_params.merge(advance_draft: false))
+        Draft.set(user, Draft::NEW_TOPIC, 0, 'test')
+        expect(Draft.where(user: user).size).to eq(1)
+        expect { creator.create }.to change { Draft.count }.by(0)
       end
 
       it "updates topic stats" do

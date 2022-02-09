@@ -330,6 +330,7 @@ class Topic < ActiveRecord::Base
 
   attr_accessor :ignore_category_auto_close
   attr_accessor :skip_callbacks
+  attr_accessor :advance_draft
 
   before_create do
     initialize_default_values
@@ -338,7 +339,7 @@ class Topic < ActiveRecord::Base
   after_create do
     unless skip_callbacks
       changed_to_category(category)
-      advance_draft_sequence
+      advance_draft_sequence if advance_draft
     end
   end
 

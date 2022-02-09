@@ -182,6 +182,7 @@ class PostsController < ApplicationController
   def create
     @manager_params = create_params
     @manager_params[:first_post_checks] = !is_api?
+    @manager_params[:advance_draft] = !is_api?
 
     manager = NewPostManager.new(current_user, @manager_params)
 
