@@ -5,7 +5,7 @@ import Permalink from "admin/models/permalink";
 import bootbox from "bootbox";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { observes } from "discourse-common/utils/decorators";
-import { copyToClipboard } from "discourse/lib/utilities";
+import { clipboardCopy } from "discourse/lib/utilities";
 
 export default Controller.extend({
   loading: false,
@@ -30,7 +30,7 @@ export default Controller.extend({
 
     copyUrl(pl) {
       let linkElement = document.querySelector(`#admin-permalink-${pl.id}`);
-      copyToClipboard(linkElement.textContent);
+      clipboardCopy(linkElement.textContent);
     },
 
     destroy(record) {
