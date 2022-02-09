@@ -28,6 +28,25 @@ export default {
         _fadeCopyCodeblocksRunners = {};
       }
 
+      function _copyComplete(button) {
+        button.classList.add("copied");
+        const state = button.innerHTML;
+        button.innerHTML = I18n.t("copy_codeblock.copied");
+
+        const commandId = guidFor(button);
+
+        if (_fadeCopyCodeblocksRunners[commandId]) {
+          cancel(_fadeCopyCodeblocksRunners[commandId]);
+          delete _fadeCopyCodeblocksRunners[commandId];
+        }
+
+        _fadeCopyCodeblocksRunners[commandId] = later(() => {
+          button.classList.remove("copied");
+          button.innerHTML = state;
+          delete _fadeCopyCodeblocksRunners[commandId];
+        }, 3000);
+      }
+
       function _handleClick(event) {
         if (!event.target.classList.contains("copy-cmd")) {
           return;
@@ -45,23 +64,13 @@ export default {
             )
             .trim();
 
-          if (clipboardCopy(text)) {
-            button.classList.add("copied");
-            const state = button.innerHTML;
-            button.innerHTML = I18n.t("copy_codeblock.copied");
-
-            const commandId = guidFor(button);
-
-            if (_fadeCopyCodeblocksRunners[commandId]) {
-              cancel(_fadeCopyCodeblocksRunners[commandId]);
-              delete _fadeCopyCodeblocksRunners[commandId];
-            }
-
-            _fadeCopyCodeblocksRunners[commandId] = later(() => {
-              button.classList.remove("copied");
-              button.innerHTML = state;
-              delete _fadeCopyCodeblocksRunners[commandId];
-            }, 3000);
+          const result = clipboardCopy(text);
+          if (result.then) {
+            result.then(() => {
+              _copyComplete(button);
+            });
+          } else if (result) {
+            _copyComplete(button);
           }
         }
       }
