@@ -1804,10 +1804,10 @@ RSpec.describe TopicsController do
 
     it 'returns right response when not found' do
       get "/t/external_id/fdsa.json"
-      expect(response.status).to eq(403)
+      expect(response.status).to eq(404)
     end
 
-    describe 'when topic is not allowed' do
+    describe 'when user does not have access to the topic' do
       it 'should return the right response' do
         sign_in(user)
 

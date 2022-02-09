@@ -814,7 +814,7 @@ describe PostsController do
         expect(post_1.topic.user.notifications.count).to eq(1)
       end
 
-      it 'allows to create posts with an external_id' do
+      it 'allows a topic to be created with an external_id' do
         master_key = Fabricate(:api_key).key
         post "/posts.json", params: {
           raw: 'this is the test content',
