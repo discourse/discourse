@@ -56,7 +56,7 @@ Fabricator(:post_with_plenty_of_images, from: :post) do
 <aside class="quote"><img src="/#{Discourse.store.upload_path}/original/1X/1234567890123456.jpg"></aside>
 <div class="onebox-result"><img src="/#{Discourse.store.upload_path}/original/1X/1234567890123456.jpg"></div>
 <div class="onebox"><img src="/#{Discourse.store.upload_path}/original/1X/1234567890123456.jpg"></div>
-<p>With an emoji! <img src="//cdn.discourse.org/meta/images/emoji/twitter/smile.png?v=#{Emoji::EMOJI_VERSION}" title=":smile:" class="emoji" alt="smile" width="72" height="72"></p>
+<p>With an emoji! <img src="//cdn.discourse.org/meta/images/emoji/twitter/smile.png?v=#{Emoji::EMOJI_VERSION}" title=":smile:" class="emoji" alt="smile" loading="lazy" width="20" height="20"></p>
 HTML
 end
 

@@ -240,9 +240,9 @@ class Emoji
 
       if code && Emoji.custom?(code)
         emoji = Emoji[code]
-        "<img src=\"#{emoji.url}\" title=\"#{code}\" class=\"emoji\" alt=\"#{code}\">"
+        "<img src=\"#{emoji.url}\" title=\"#{code}\" class=\"emoji\" alt=\"#{code}\" loading=\"lazy\" width=\"20\" height=\"20\">"
       elsif code && Emoji.exists?(code)
-        "<img src=\"#{Emoji.url_for(code)}\" title=\"#{code}\" class=\"emoji\" alt=\"#{code}\">"
+        "<img src=\"#{Emoji.url_for(code)}\" title=\"#{code}\" class=\"emoji\" alt=\"#{code}\" loading=\"lazy\" width=\"20\" height=\"20\">"
       else
         name
       end

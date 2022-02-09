@@ -97,14 +97,14 @@ describe Emoji do
       str = "This is a good day :xxxxxx: :woman: :man:t4:"
       replaced_str = described_class.codes_to_img(str)
 
-      expect(replaced_str).to eq("This is a good day <img src=\"/public/xxxxxx.png\" title=\"xxxxxx\" class=\"emoji\" alt=\"xxxxxx\"> <img src=\"/images/emoji/twitter/woman.png?v=#{Emoji::EMOJI_VERSION}\" title=\"woman\" class=\"emoji\" alt=\"woman\"> <img src=\"/images/emoji/twitter/man/4.png?v=#{Emoji::EMOJI_VERSION}\" title=\"man:t4\" class=\"emoji\" alt=\"man:t4\">")
+      expect(replaced_str).to eq("This is a good day <img src=\"/public/xxxxxx.png\" title=\"xxxxxx\" class=\"emoji\" alt=\"xxxxxx\" loading=\"lazy\" width=\"20\" height=\"20\"> <img src=\"/images/emoji/twitter/woman.png?v=#{Emoji::EMOJI_VERSION}\" title=\"woman\" class=\"emoji\" alt=\"woman\" loading=\"lazy\" width=\"20\" height=\"20\"> <img src=\"/images/emoji/twitter/man/4.png?v=#{Emoji::EMOJI_VERSION}\" title=\"man:t4\" class=\"emoji\" alt=\"man:t4\" loading=\"lazy\" width=\"20\" height=\"20\">")
     end
 
     it "doesn't replace if code doesn't exist" do
       str = "This is a good day :woman: :foo: :bar:t4: :man:t8:"
       replaced_str = described_class.codes_to_img(str)
 
-      expect(replaced_str).to eq("This is a good day <img src=\"/images/emoji/twitter/woman.png?v=#{Emoji::EMOJI_VERSION}\" title=\"woman\" class=\"emoji\" alt=\"woman\"> :foo: :bar:t4: :man:t8:")
+      expect(replaced_str).to eq("This is a good day <img src=\"/images/emoji/twitter/woman.png?v=#{Emoji::EMOJI_VERSION}\" title=\"woman\" class=\"emoji\" alt=\"woman\" loading=\"lazy\" width=\"20\" height=\"20\"> :foo: :bar:t4: :man:t8:")
     end
   end
 end
