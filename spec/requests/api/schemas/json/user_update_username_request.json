@@ -1,0 +1,11 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "new_username": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "new_username"
+  ]
+}
