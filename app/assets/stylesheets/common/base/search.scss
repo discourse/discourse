@@ -1,5 +1,5 @@
 @mixin search-page-spacing {
-  padding: 2rem 10%;
+  padding: 1rem 10%;
 
   @include breakpoint(medium) {
     padding: 1rem;
@@ -63,7 +63,6 @@
 
   .search-advanced {
     position: relative;
-
     .search-actions,
     .search-title,
     .search-bar {
@@ -76,14 +75,12 @@
 
     .search-info {
       display: flex;
-      @include search-page-spacing();
       flex-wrap: wrap;
+      padding: 1em 10%;
+      @include breakpoint(medium) {
+        padding: 0.5em 1em;
+      }
       border-bottom: 1px solid var(--primary-low);
-      padding-top: 2em;
-      margin-bottom: 2em;
-      flex-direction: row;
-      align-items: flex-start;
-      justify-content: flex-start;
 
       &.bulk-select-visible {
         @include sticky;
@@ -97,7 +94,10 @@
       }
 
       button {
-        margin: 0 0.5em 0.5em 0;
+        margin: 0 0.5em 0 0;
+        @include breakpoint(medium) {
+          margin: 0 0.5em 0.5em 0;
+        }
       }
 
       #bulk-select {
@@ -109,6 +109,13 @@
         button {
           margin-right: 0.5em;
         }
+      }
+
+      .sort-by.inline-form label {
+        margin-bottom: 0;
+      }
+      #search-sort-by {
+        margin-bottom: 0;
       }
     }
   }
@@ -229,7 +236,7 @@
 
 .fps-result {
   display: flex;
-  padding: 0 0.5em;
+  padding: 0 0.5em 0 0;
   margin-bottom: 2em;
   max-width: 100%;
   word-break: break-word;
