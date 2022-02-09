@@ -527,12 +527,27 @@ describe PrettyText do
     end
 
     it 'can include code class correctly' do
+      SiteSetting.highlighted_languages += '|c++|structured-text|p21'
+
       # keep in mind spaces should be trimmed per spec
       expect(PrettyText.cook("```   ruby the mooby\n`````")).to eq('<pre><code class="lang-ruby"></code></pre>')
       expect(PrettyText.cook("```cpp\ncpp\n```")).to match_html("<pre><code class='lang-cpp'>cpp\n</code></pre>")
       expect(PrettyText.cook("```\ncpp\n```")).to match_html("<pre><code class='lang-auto'>cpp\n</code></pre>")
       expect(PrettyText.cook("```text\ncpp\n```")).to match_html("<pre><code class='lang-nohighlight'>cpp\n</code></pre>")
-
+      expect(PrettyText.cook("```custom\ncustom content\n```")).to match_html("<pre data-code-wrap='custom'><code class='lang-nohighlight'>custom content\n</code></pre>")
+      expect(PrettyText.cook("```custom foo=bar\ncustom content\n```")).to match_html("<pre data-code-foo='bar' data-code-wrap='custom'><code class='lang-nohighlight'>custom content</code></pre>")
+      expect(PrettyText.cook("```INVALID a=1\n```")).to match_html("<pre data-code-a='1' data-code-wrap='INVALID'><code class='lang-nohighlight'>\n</code></pre>")
+      expect(PrettyText.cook("```INVALID a=1, foo=bar , baz=2\n```")).to match_html("<pre data-code-a='1' data-code-foo='bar' data-code-baz='2' data-code-wrap='INVALID'><code class='lang-nohighlight'>\n</code></pre>")
+      expect(PrettyText.cook("```text\n```")).to match_html("<pre><code class='lang-nohighlight'>\n</code></pre>")
+      expect(PrettyText.cook("```auto\n```")).to match_html("<pre><code class='lang-auto'>\n</code></pre>")
+      expect(PrettyText.cook("```ruby startline=3 $%@#\n```")).to match_html("<pre data-code-startline='3'><code class='lang-ruby'>\n</code></pre>")
+      expect(PrettyText.cook("```mermaid a_-你=17\n```")).to match_html("<pre data-code-a_-='17' data-code-wrap='mermaid'><code class='lang-nohighlight'>\n</code></pre>")
+      expect(PrettyText.cook("```mermaid foo=<script>alert(document.cookie)</script>\n```")).to match_html("<pre data-code-foo='&lt;script&gt;alert(document.cookie)&lt;/script&gt;' data-code-wrap='mermaid'><code class='lang-nohighlight'>\n</code></pre>")
+      expect(PrettyText.cook("```mermaid foo=‮ begin admin o\n```")).to match_html("<pre data-code-wrap='mermaid'><code class='lang-nohighlight'>\n</code></pre>")
+      expect(PrettyText.cook("```c++\nc++\n```")).to match_html("<pre><code class='lang-c++'>c++\n</code></pre>")
+      expect(PrettyText.cook("```structured-text\nstructured-text\n```")).to match_html("<pre><code class='lang-structured-text'>structured-text\n</code></pre>")
+      expect(PrettyText.cook("```p21\np21\n```")).to match_html("<pre><code class='lang-p21'>p21\n</code></pre>")
+      expect(PrettyText.cook("<pre data-code='3' data-code-foo='1' data-malicous-code='2'></pre>")).to match_html("<pre data-code-foo='1'></pre>")
     end
 
     it 'indents code correctly' do
@@ -553,7 +568,7 @@ describe PrettyText do
     it "strips out unicode bidirectional (bidi) override characters and replaces with a highlighted span" do
       code = <<~MD
          X
-         ```js
+         ```auto
          var isAdmin = false;
          /*‮ begin admin only */⁦ if (isAdmin) ⁩ ⁦ {
          console.log("You are an admin.");

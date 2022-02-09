@@ -893,8 +893,8 @@ eviltrout</p>
 
     assert.cooked(
       "```eviltrout\nhello\n```",
-      '<pre><code class="lang-auto">hello\n</code></pre>',
-      "it doesn't not allowlist all classes"
+      '<pre data-code-wrap="eviltrout"><code class="lang-nohighlight">hello\n</code></pre>',
+      "it converts to custom block unknown code names"
     );
 
     assert.cooked(
