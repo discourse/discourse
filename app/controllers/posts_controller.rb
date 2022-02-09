@@ -760,6 +760,8 @@ class PostsController < ApplicationController
       # We allow `created_at` via the API
       permitted << :created_at
 
+      # We allow `external_id` via the API
+      permitted << :external_id
     end
 
     result = params.permit(*permitted).tap do |allowed|

@@ -57,5 +57,9 @@ RSpec.describe WebHookTopicViewSerializer do
     keys = serializer.as_json.keys
 
     expect(serializer.as_json.keys).to contain_exactly(*expected_keys)
+
+    topic.external_id = 'external_id'
+    expected_keys << :external_id
+    expect(serializer.as_json.keys).to contain_exactly(*expected_keys)
   end
 end

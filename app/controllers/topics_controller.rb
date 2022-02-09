@@ -43,6 +43,13 @@ class TopicsController < ApplicationController
     render json: { slug: topic.slug, topic_id: topic.id, url: topic.url }
   end
 
+  def show_by_external_id
+    topic = Topic.find_by(external_id: params[:external_id])
+    raise Discourse::NotFound unless topic
+    guardian.ensure_can_see!(topic)
+    redirect_to_correct_topic(topic, params[:post_number])
+  end
+
   def show
     if request.referer
       flash["referer"] ||= request.referer[0..255]

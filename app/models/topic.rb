@@ -11,6 +11,8 @@ class Topic < ActiveRecord::Base
   include LimitedEdit
   extend Forwardable
 
+  EXTERNAL_ID_MAX_LENGTH = 50
+
   self.ignored_columns = [
     "avg_time", # TODO(2021-01-04): remove
     "image_url" # TODO(2021-06-01): remove
@@ -194,6 +196,8 @@ class Topic < ActiveRecord::Base
       errors.add(:featured_link)
     end
   end
+
+  validates :external_id, allow_nil: true, uniqueness: { case_sensitive: false }, length: { maximum: EXTERNAL_ID_MAX_LENGTH }, format: { with: /\A[\w-]+\z/ }
 
   before_validation do
     self.title = TextCleaner.clean_title(TextSentinel.title_sentinel(title).text) if errors[:title].empty?
@@ -1902,6 +1906,7 @@ end
 #  image_upload_id           :bigint
 #  slow_mode_seconds         :integer          default(0), not null
 #  bannered_until            :datetime
+#  external_id               :string
 #
 # Indexes
 #
@@ -1911,6 +1916,7 @@ end
 #  index_topics_on_bannered_until          (bannered_until) WHERE (bannered_until IS NOT NULL)
 #  index_topics_on_bumped_at_public        (bumped_at) WHERE ((deleted_at IS NULL) AND ((archetype)::text <> 'private_message'::text))
 #  index_topics_on_created_at_and_visible  (created_at,visible) WHERE ((deleted_at IS NULL) AND ((archetype)::text <> 'private_message'::text))
+#  index_topics_on_external_id             (external_id) UNIQUE WHERE (external_id IS NOT NULL)
 #  index_topics_on_id_and_deleted_at       (id,deleted_at)
 #  index_topics_on_id_filtered_banner      (id) UNIQUE WHERE (((archetype)::text = 'banner'::text) AND (deleted_at IS NULL))
 #  index_topics_on_image_upload_id         (image_upload_id)
