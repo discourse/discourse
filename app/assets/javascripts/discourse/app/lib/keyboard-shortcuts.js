@@ -413,6 +413,10 @@ export default {
 
   focusComposer(event) {
     const composer = this.container.lookup("controller:composer");
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
     composer.focusComposer(event);
   },
 

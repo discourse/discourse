@@ -408,16 +408,11 @@ export default Controller.extend({
   // - openOpts: this object will be passed to this.open if fallbackToNewTopic is
   // true
   @action
-  focusComposer(event, opts = {}) {
-    if (event) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
-
+  focusComposer(opts = {}) {
     if (this.get("model.viewOpen")) {
       this._focusAndInsertText(opts.insertText);
     } else {
-      const opened = this.openIfDraft(event);
+      const opened = this.openIfDraft();
       if (!opened && opts.fallbackToNewTopic) {
         this.open(
           Object.assign(

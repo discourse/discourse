@@ -929,7 +929,7 @@ acceptance("Composer - Focus Open and Closed", function (needs) {
     await visit("/t/internationalization-localization/280");
 
     const composer = this.container.lookup("controller:composer");
-    composer.focusComposer(null, { fallbackToNewTopic: true });
+    composer.focusComposer({ fallbackToNewTopic: true });
 
     await settled();
     assert.strictEqual(
@@ -944,7 +944,7 @@ acceptance("Composer - Focus Open and Closed", function (needs) {
     await visit("/t/internationalization-localization/280");
 
     const composer = this.container.lookup("controller:composer");
-    composer.focusComposer(null, {
+    composer.focusComposer({
       fallbackToNewTopic: true,
       insertText: "this is appended",
     });
@@ -966,7 +966,7 @@ acceptance("Composer - Focus Open and Closed", function (needs) {
     await click("#create-topic");
 
     const composer = this.container.lookup("controller:composer");
-    composer.focusComposer(null);
+    composer.focusComposer();
 
     await settled();
     assert.strictEqual(
@@ -981,7 +981,7 @@ acceptance("Composer - Focus Open and Closed", function (needs) {
     await click("#create-topic");
 
     const composer = this.container.lookup("controller:composer");
-    composer.focusComposer(null, { insertText: "this is some appended text" });
+    composer.focusComposer({ insertText: "this is some appended text" });
 
     await settled();
     assert.strictEqual(
@@ -1003,7 +1003,7 @@ acceptance("Composer - Focus Open and Closed", function (needs) {
     await click(".toggle-minimize");
 
     const composer = this.container.lookup("controller:composer");
-    composer.focusComposer(null, { insertText: "this is some appended text" });
+    composer.focusComposer({ insertText: "this is some appended text" });
 
     await settled();
     assert.strictEqual(
