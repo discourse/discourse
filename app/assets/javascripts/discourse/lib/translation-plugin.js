@@ -34,7 +34,7 @@ class TranslationPlugin extends Plugin {
       } else if (key.endsWith("_MF")) {
         // omit locale.js
         let mfPath = subpath.slice(2).join(".");
-        formats[mfPath] = this.mf.precompile(this.mf.parse(value));
+        formats[mfPath] = this.mf.compile(value);
       }
     });
   }

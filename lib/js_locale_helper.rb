@@ -319,7 +319,7 @@ module JsLocaleHelper
     with_context do |ctx|
       ctx.load(path) if File.exist?(path)
       ctx.eval("mf = new MessageFormat('#{locale}');")
-      ctx.eval("mf.precompile(mf.parse(#{format.inspect}))")
+      ctx.eval("mf.compile(#{format.inspect});")
     end
   rescue MiniRacer::EvalError => e
     message = +"Invalid Format: " << e.message

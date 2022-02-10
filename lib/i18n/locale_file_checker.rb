@@ -137,7 +137,7 @@ class LocaleFileChecker
         JsLocaleHelper.with_context do |ctx|
           ctx.load(mf_filename) if File.exist?(mf_filename)
           ctx.eval("mf = new MessageFormat('#{mf_locale}');")
-          ctx.eval("mf.precompile(mf.parse(#{value.to_s.inspect}))")
+          ctx.eval("mf.compile(#{value.to_s.inspect});")
         end
       rescue MiniRacer::EvalError => error
         error_message = error.message.sub(/at undefined[:\d]+/, "").strip
