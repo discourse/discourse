@@ -39,7 +39,10 @@ import { resetCardClickListenerSelector } from "discourse/mixins/card-contents-b
 import { resetComposerCustomizations } from "discourse/models/composer";
 import { resetQuickSearchRandomTips } from "discourse/widgets/search-menu-results";
 import sessionFixtures from "discourse/tests/fixtures/session-fixtures";
-import { setTopicList } from "discourse/lib/topic-list-tracker";
+import {
+  resetHighestReadCache,
+  setTopicList,
+} from "discourse/lib/topic-list-tracker";
 import sinon from "sinon";
 import siteFixtures from "discourse/tests/fixtures/site-fixtures";
 import { clearResolverOptions } from "discourse-common/resolver";
@@ -160,6 +163,7 @@ function testCleanup(container, app) {
   resetOneboxCache();
   resetCustomPostMessageCallbacks();
   resetUserSearchCache();
+  resetHighestReadCache();
   resetCardClickListenerSelector();
   resetComposerCustomizations();
   resetQuickSearchRandomTips();
