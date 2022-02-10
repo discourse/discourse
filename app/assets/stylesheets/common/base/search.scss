@@ -1,5 +1,5 @@
 @mixin search-page-spacing {
-  padding: 1rem 10% 0 10%;
+  padding: 1rem 10%;
 
   @include breakpoint(medium) {
     padding: 1rem;
@@ -76,10 +76,11 @@
     .search-info {
       display: flex;
       flex-wrap: wrap;
-      padding: 1em 10% 1em 10%;
-      background-color: var(--primary-very-low);
+      padding: 1em 10%;
+      background-color: var(--secondary);
+      border-bottom: 1px solid var(--primary-low);
       @include breakpoint(medium) {
-        padding: 0.5em 1em;
+        padding: 0.5em 0;
       }
 
       &.bulk-select-visible {
@@ -94,10 +95,6 @@
 
       button {
         margin: 0 0.5em 0 0;
-        border: 1px solid var(--primary-low-mid);
-        &:hover {
-          border: 1px solid transparent;
-        }
         @include breakpoint(medium) {
           margin: 0 0.5em 0.5em 0;
         }
