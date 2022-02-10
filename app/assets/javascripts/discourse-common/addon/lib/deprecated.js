@@ -11,5 +11,11 @@ export default function deprecated(msg, opts = {}) {
   if (opts.raiseError) {
     throw msg;
   }
-  console.warn(msg); // eslint-disable-line no-console
+
+  // Using deferred `require` because this is discourse-specific logic which
+  // we don't want to run in pretty-text/wizard/etc.
+  const consolePrefix =
+    require("discourse/lib/source-identifier")?.consolePrefix() || "";
+
+  console.warn(consolePrefix, msg); //eslint-disable-line no-console
 }
