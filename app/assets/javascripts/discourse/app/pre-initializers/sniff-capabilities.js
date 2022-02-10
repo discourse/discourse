@@ -46,6 +46,9 @@ export default {
       window.navigator.standalone ||
       document.referrer.includes("android-app://");
 
+    caps.wasLaunchedFromDiscourseHub =
+      window.location.search.indexOf("discourse_app=1") !== -1;
+
     // Inject it
     app.register("capabilities:main", caps, { instantiate: false });
     app.inject("view", "capabilities", "capabilities:main");

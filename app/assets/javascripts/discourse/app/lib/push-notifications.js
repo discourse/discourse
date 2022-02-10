@@ -1,5 +1,6 @@
 import KeyValueStore from "discourse/lib/key-value-store";
 import { ajax } from "discourse/lib/ajax";
+import { helperContext } from "discourse-common/lib/helpers";
 
 export const keyValueStore = new KeyValueStore("discourse_push_notifications_");
 
@@ -50,13 +51,16 @@ function setupActivityListeners(appEvents) {
 }
 
 export function isPushNotificationsSupported(mobileView) {
+  let caps = helperContext().capabilities;
   if (
     !(
       "serviceWorker" in navigator &&
       typeof ServiceWorkerRegistration !== "undefined" &&
       typeof Notification !== "undefined" &&
       "showNotification" in ServiceWorkerRegistration.prototype &&
-      "PushManager" in window
+      "PushManager" in window &&
+      !caps.wasLaunchedFromDiscourseHub &&
+      !caps.isIOS
     )
   ) {
     return false;
