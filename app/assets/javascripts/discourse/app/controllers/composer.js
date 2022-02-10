@@ -412,12 +412,22 @@ export default Controller.extend({
   // true or topic is provided
   @action
   focusComposer(opts = {}) {
-    if (this.get("model.viewOpen")) {
+    this._openComposerForFocus(opts).then(() => {
       this._focusAndInsertText(opts.insertText);
+    });
+  },
+
+  _openComposerForFocus(opts) {
+    if (this.get("model.viewOpen")) {
+      return Promise.resolve();
     } else {
       const opened = this.openIfDraft();
-      if (!opened && opts.topic) {
-        this.open(
+      if (opened) {
+        return Promise.resolve();
+      }
+
+      if (opts.topic) {
+        return this.open(
           Object.assign(
             {
               action: Composer.REPLY,
@@ -427,11 +437,9 @@ export default Controller.extend({
             },
             opts.openOpts || {}
           )
-        ).then(() => {
-          this._focusAndInsertText(opts.insertText);
-        });
+        );
       } else if (!opened && opts.fallbackToNewTopic) {
-        this.open(
+        return this.open(
           Object.assign(
             {
               action: Composer.CREATE_TOPIC,
@@ -439,11 +447,7 @@ export default Controller.extend({
             },
             opts.openOpts || {}
           )
-        ).then(() => {
-          this._focusAndInsertText(opts.insertText);
-        });
-      } else if (opened) {
-        this._focusAndInsertText(opts.insertText);
+        );
       }
     }
   },
