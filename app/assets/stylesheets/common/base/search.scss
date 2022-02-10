@@ -1,5 +1,5 @@
 @mixin search-page-spacing {
-  padding: 1rem 10%;
+  padding: 1rem 10% 0 10%;
 
   @include breakpoint(medium) {
     padding: 1rem;
@@ -76,7 +76,7 @@
     .search-info {
       display: flex;
       flex-wrap: wrap;
-      padding: 1em 10%;
+      padding: 1em 10% 1em 10%;
       background-color: var(--primary-very-low);
       @include breakpoint(medium) {
         padding: 0.5em 1em;
