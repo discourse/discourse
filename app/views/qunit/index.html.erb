@@ -5,16 +5,16 @@
     <%= discourse_color_scheme_stylesheets %>
     <%= discourse_stylesheet_link_tag(:desktop, theme_id: nil) %>
     <%= discourse_stylesheet_link_tag(:test_helper, theme_id: nil) %>
-    <%= preload_script "locales/#{I18n.locale}" %>
-    <%= preload_vendor_scripts %>
-    <%= preload_script "application" %>
-    <%= preload_script "admin" %>
-    <%= preload_script "discourse/tests/test-support-rails" %>
-    <%= preload_script "discourse/tests/test-helpers-rails" %>
-    <%= preload_script "discourse/tests/active-plugins" %>
-    <%= preload_script "discourse/tests/core-tests" %>
-    <%= preload_script "discourse/tests/plugin-tests" %>
-    <%= preload_script "discourse/tests/test_starter" %>
+    <%= preload_script("locales/#{I18n.locale}", false) %>
+    <%= preload_vendor_scripts(false) %>
+    <%= preload_script("application", false) %>
+    <%= preload_script("admin", false) %>
+    <%= preload_script("discourse/tests/test-support-rails", false) %>
+    <%= preload_script("discourse/tests/test-helpers-rails", false) %>
+    <%= preload_script("discourse/tests/active-plugins", false) %>
+    <%= preload_script("discourse/tests/core-tests", false) %>
+    <%= preload_script("discourse/tests/plugin-tests", false) %>
+    <%= preload_script("discourse/tests/test_starter", false) %>
     <%= csrf_meta_tags %>
     <meta property="og:title" content="">
     <meta property="og:url" content="">
