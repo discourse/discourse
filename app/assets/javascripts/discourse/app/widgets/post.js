@@ -21,6 +21,8 @@ import { prioritizeNameInUx } from "discourse/lib/settings";
 import { relativeAgeMediumSpan } from "discourse/lib/formatter";
 import { transformBasicPost } from "discourse/lib/transform-post";
 import autoGroupFlairForUser from "discourse/lib/avatar-flair";
+import showModal from "discourse/lib/show-modal";
+import { nativeShare } from "discourse/lib/pwa-utils";
 
 function transformWithCallbacks(post) {
   let transformed = transformBasicPost(post);
@@ -539,6 +541,15 @@ createWidget("post-contents", {
   expandFirstPost() {
     const post = this.findAncestorModel();
     return post.expand().then(() => (this.state.expandedFirstPost = true));
+  },
+
+  share() {
+    const post = this.findAncestorModel();
+    nativeShare(this.capabilities, { url: post.shareUrl }).catch(() => {
+      const topic = post.topic;
+      const controller = showModal("share-topic", { model: topic.category });
+      controller.setProperties({ topic, post });
+    });
   },
 });
 

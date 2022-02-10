@@ -1751,14 +1751,14 @@ class Topic < ActiveRecord::Base
     email_addresses.to_a
   end
 
-  def create_invite_notification!(target_user, notification_type, username)
+  def create_invite_notification!(target_user, notification_type, username, post_number: 1)
     invited_by = User.find_by_username(username)
     ensure_can_invite!(target_user, invited_by)
 
     target_user.notifications.create!(
       notification_type: notification_type,
       topic_id: self.id,
-      post_number: 1,
+      post_number: post_number,
       data: {
         topic_title: self.title,
         display_username: username,

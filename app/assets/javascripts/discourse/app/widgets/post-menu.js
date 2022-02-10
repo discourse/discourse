@@ -277,10 +277,6 @@ registerButton("share", (attrs) => {
     className: "share",
     title: "post.controls.share",
     icon: "d-post-share",
-    data: {
-      "share-url": attrs.shareUrl,
-      "post-number": attrs.post_number,
-    },
   };
 });
 

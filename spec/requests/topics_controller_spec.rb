@@ -2825,6 +2825,10 @@ RSpec.describe TopicsController do
   end
 
   describe '#invite_notify' do
+    before do
+      topic.update!(highest_post_number: 1)
+    end
+
     it 'does not notify same user multiple times' do
       sign_in(user)
 

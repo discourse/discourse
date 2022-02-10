@@ -1,12 +1,14 @@
-{{#d-modal-body title="topic.share.title"}}
+{{#d-modal-body rawTitle=(if post (i18n "post.share.title" post_number=post.post_number) (i18n "topic.share.title"))}}
   <form>
     <div class="input-group invite-link">
-      <label for="invite-link">{{i18n "topic.share.instructions"}}</label>
+      <label for="invite-link">
+        {{if post (i18n "post.share.instructions" post_number=post.post_number) (i18n "topic.share.instructions")}}
+      </label>
       <div class="link-share-container">
         {{input
           name="invite-link"
           class="invite-link"
-          value=topicUrl
+          value=url
           readonly=true
         }}
         {{copy-button selector="input.invite-link"}}

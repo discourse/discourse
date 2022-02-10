@@ -16,19 +16,31 @@ export default Controller.extend(
   bufferedProperty("invite"),
   {
     topic: null,
+    post: null,
+    allowInvites: false,
+    showNotifyUsers: false,
     restrictedGroups: null,
 
     onShow() {
-      this.set("showNotifyUsers", false);
+      this.setProperties({
+        topic: null,
+        post: null,
+        allowInvites: false,
+        showNotifyUsers: false,
+      });
 
       if (this.model && this.model.read_restricted) {
         this.restrictedGroupWarning();
       }
     },
 
-    @discourseComputed("topic.shareUrl")
-    topicUrl(url) {
-      return url ? getAbsoluteURL(url) : null;
+    @discourseComputed("post.shareUrl", "topic.shareUrl")
+    url(postUrl, topicUrl) {
+      if (postUrl) {
+        return getAbsoluteURL(postUrl);
+      } else if (topicUrl) {
+        return getAbsoluteURL(topicUrl);
+      }
     },
 
     @discourseComputed(
@@ -57,7 +69,7 @@ export default Controller.extend(
       this.set("showNotifyUsers", false);
       Sharing.shareSource(source, {
         title: this.topic.title,
-        url: this.topicUrl,
+        url: this.url,
       });
     },
 
@@ -81,7 +93,10 @@ export default Controller.extend(
 
       ajax(`/t/${this.topic.id}/invite-notify`, {
         type: "POST",
-        data: { usernames: this.users },
+        data: {
+          usernames: this.users,
+          post_number: this.post ? this.post.post_number : undefined,
+        },
       })
         .then(() => {
           this.setProperties({ showNotifyUsers: false });
