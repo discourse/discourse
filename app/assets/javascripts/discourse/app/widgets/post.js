@@ -17,7 +17,10 @@ import { h } from "virtual-dom";
 import hbs from "discourse/widgets/hbs-compiler";
 import { iconNode } from "discourse-common/lib/icon-library";
 import { postTransformCallbacks } from "discourse/widgets/post-stream";
-import { prioritizeNameInUx } from "discourse/lib/settings";
+import {
+  prioritizeNameFallback,
+  prioritizeNameInUx,
+} from "discourse/lib/settings";
 import { relativeAgeMediumSpan } from "discourse/lib/formatter";
 import { transformBasicPost } from "discourse/lib/transform-post";
 import autoGroupFlairForUser from "discourse/lib/avatar-flair";
@@ -134,11 +137,12 @@ createWidget("reply-to-tab", {
 
   html(attrs, state) {
     const icon = state.loading ? h("div.spinner.small") : iconNode("share");
-    const name =
+    const name = prioritizeNameFallback(
       this.siteSettings.display_name_on_posts &&
-      prioritizeNameInUx(attrs.replyToName)
-        ? attrs.replyToName
-        : attrs.replyToUsername;
+        prioritizeNameInUx(attrs.replyToName),
+      attrs.replyToName,
+      attrs.replyToUsername
+    );
 
     return [
       icon,

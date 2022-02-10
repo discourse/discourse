@@ -612,3 +612,25 @@ acceptance("Prioritize Full Name", function (needs) {
     );
   });
 });
+
+acceptance(
+  "Gracefully falls back when prioritizing Full Name",
+  function (needs) {
+    needs.user();
+    needs.settings({
+      prioritize_username_in_ux: false,
+      display_name_on_post: true,
+    });
+
+    test("Quotes fall back to username if name is not present", async function (assert) {
+      await visit("/t/internationalization-localization/280");
+      // select a user with no full name
+      await selectText("#post_21 p");
+      await click(".insert-quote");
+      assert.strictEqual(
+        queryAll(".d-editor-input").val().trim(),
+        '[quote="Player, post:21, topic:280, full:true"]\nIs it a coincidence that the strings file is 1337 lines long? :smiley:\n[/quote]'
+      );
+    });
+  }
+);

@@ -8,6 +8,14 @@ export function prioritizeNameInUx(name) {
   );
 }
 
+export function prioritizeNameFallback(prioritizeName, name, username) {
+  if (prioritizeName) {
+    return name ? name : username;
+  } else {
+    return username;
+  }
+}
+
 export function emojiBasePath() {
   let siteSettings = helperContext().siteSettings;
 
