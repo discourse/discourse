@@ -6,74 +6,110 @@ require 'rails_helper'
 describe ApplicationHelper do
 
   describe "preload_script" do
-    def preload_link(url)
-      <<~HTML
-          <link rel="preload" href="#{url}" as="script">
-          <script src="#{url}"></script>
-      HTML
-    end
-
-    it "provides brotli links to brotli cdn" do
-      set_cdn_url "https://awesome.com"
-
-      helper.request.env["HTTP_ACCEPT_ENCODING"] = 'br'
-      link = helper.preload_script('application')
-
-      expect(link).to eq(preload_link("https://awesome.com/brotli_asset/application.js"))
-    end
-
-    context "with s3 CDN" do
+    context "enable_experimental_javascript_defer is true" do
       before do
-        global_setting :s3_bucket, 'test_bucket'
-        global_setting :s3_region, 'ap-australia'
-        global_setting :s3_access_key_id, '123'
-        global_setting :s3_secret_access_key, '123'
-        global_setting :s3_cdn_url, 'https://s3cdn.com'
+        SiteSetting.enable_experimental_javascript_defer = true
       end
 
-      it "deals correctly with subfolder" do
-        set_subfolder "/community"
-        expect(helper.preload_script("application")).to include('https://s3cdn.com/assets/application.js')
+      it "returns defer tag as default" do
+        expect(helper.preload_script("application")).to include(' defer ')
       end
 
-      it "replaces cdn URLs with s3 cdn subfolder paths" do
-        global_setting :s3_cdn_url, 'https://s3cdn.com/s3_subpath'
+      it "returns defer tag when forced true" do
+        expect(helper.preload_script("application", true)).to include(' defer ')
+      end
+
+      it "returns no defer tag when forced false" do
+        expect(helper.preload_script("application", false)).not_to include(' defer ')
+      end
+    end
+
+    context "enable_experimental_javascript_defer is false" do
+      before do
+        SiteSetting.enable_experimental_javascript_defer = false
+      end
+
+      def preload_link(url)
+        <<~HTML
+            <link rel="preload" href="#{url}" as="script">
+            <script src="#{url}"></script>
+        HTML
+      end
+
+      it "returns no defer tag as default" do
+        expect(helper.preload_script("application")).not_to include(' defer')
+      end
+
+      it "returns no defer tag when forced true" do
+        expect(helper.preload_script("application", true)).not_to include(' defer')
+      end
+
+      it "returns no defer tag when forced false" do
+        expect(helper.preload_script("application", false)).not_to include(' defer')
+      end
+
+      it "provides brotli links to brotli cdn" do
         set_cdn_url "https://awesome.com"
-        set_subfolder "/community"
-        expect(helper.preload_script("application")).to include('https://s3cdn.com/s3_subpath/assets/application.js')
-      end
-
-      it "returns magic brotli mangling for brotli requests" do
 
         helper.request.env["HTTP_ACCEPT_ENCODING"] = 'br'
         link = helper.preload_script('application')
 
-        expect(link).to eq(preload_link("https://s3cdn.com/assets/application.br.js"))
+        expect(link).to eq(preload_link("https://awesome.com/brotli_asset/application.js"))
       end
 
-      it "gives s3 cdn if asset host is not set" do
-        link = helper.preload_script('application')
+      context "with s3 CDN" do
+        before do
+          global_setting :s3_bucket, 'test_bucket'
+          global_setting :s3_region, 'ap-australia'
+          global_setting :s3_access_key_id, '123'
+          global_setting :s3_secret_access_key, '123'
+          global_setting :s3_cdn_url, 'https://s3cdn.com'
+        end
 
-        expect(link).to eq(preload_link("https://s3cdn.com/assets/application.js"))
-      end
+        it "deals correctly with subfolder" do
+          set_subfolder "/community"
+          expect(helper.preload_script("application")).to include('https://s3cdn.com/assets/application.js')
+        end
 
-      it "can fall back to gzip compression" do
-        helper.request.env["HTTP_ACCEPT_ENCODING"] = 'gzip'
-        link = helper.preload_script('application')
-        expect(link).to eq(preload_link("https://s3cdn.com/assets/application.gz.js"))
-      end
+        it "replaces cdn URLs with s3 cdn subfolder paths" do
+          global_setting :s3_cdn_url, 'https://s3cdn.com/s3_subpath'
+          set_cdn_url "https://awesome.com"
+          set_subfolder "/community"
+          expect(helper.preload_script("application")).to include('https://s3cdn.com/s3_subpath/assets/application.js')
+        end
 
-      it "gives s3 cdn even if asset host is set" do
-        set_cdn_url "https://awesome.com"
-        link = helper.preload_script('application')
+        it "returns magic brotli mangling for brotli requests" do
 
-        expect(link).to eq(preload_link("https://s3cdn.com/assets/application.js"))
-      end
+          helper.request.env["HTTP_ACCEPT_ENCODING"] = 'br'
+          link = helper.preload_script('application')
 
-      it "gives s3 cdn but without brotli/gzip extensions for theme tests assets" do
-        helper.request.env["HTTP_ACCEPT_ENCODING"] = 'gzip, br'
-        link = helper.preload_script('discourse/tests/theme_qunit_ember_jquery')
-        expect(link).to eq(preload_link("https://s3cdn.com/assets/discourse/tests/theme_qunit_ember_jquery.js"))
+          expect(link).to eq(preload_link("https://s3cdn.com/assets/application.br.js"))
+        end
+
+        it "gives s3 cdn if asset host is not set" do
+          link = helper.preload_script('application')
+
+          expect(link).to eq(preload_link("https://s3cdn.com/assets/application.js"))
+        end
+
+        it "can fall back to gzip compression" do
+          helper.request.env["HTTP_ACCEPT_ENCODING"] = 'gzip'
+          link = helper.preload_script('application')
+          expect(link).to eq(preload_link("https://s3cdn.com/assets/application.gz.js"))
+        end
+
+        it "gives s3 cdn even if asset host is set" do
+          set_cdn_url "https://awesome.com"
+          link = helper.preload_script('application')
+
+          expect(link).to eq(preload_link("https://s3cdn.com/assets/application.js"))
+        end
+
+        it "gives s3 cdn but without brotli/gzip extensions for theme tests assets" do
+          helper.request.env["HTTP_ACCEPT_ENCODING"] = 'gzip, br'
+          link = helper.preload_script('discourse/tests/theme_qunit_ember_jquery')
+          expect(link).to eq(preload_link("https://s3cdn.com/assets/discourse/tests/theme_qunit_ember_jquery.js"))
+        end
       end
     end
   end
