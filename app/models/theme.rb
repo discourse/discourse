@@ -312,7 +312,8 @@ class Theme < ActiveRecord::Base
     return "" if theme_id.blank?
 
     theme_ids = !skip_transformation ? transform_ids(theme_id) : [theme_id]
-    cache_key = "#{theme_ids.join(",")}:#{target}:#{field}:#{Theme.compiler_version}"
+    cache_key_part_experimental = target == :extra_js && SiteSetting.enable_experimental_javascript_defer ? ':defer' : ''
+    cache_key = "#{theme_ids.join(",")}:#{target}:#{field}:#{Theme.compiler_version}#{cache_key_part_experimental}"
     lookup = @cache[cache_key]
     return lookup.html_safe if lookup
 

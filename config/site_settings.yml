@@ -1948,7 +1948,6 @@ developer:
     default: false
   enable_experimental_javascript_defer:
     default: false
-    hidden: true
 
 embedding:
   embed_by_username:
