@@ -200,7 +200,10 @@ export default Component.extend(ComposerUploadUppy, {
 
   @discourseComputed()
   acceptsAllFormats() {
-    return authorizesAllExtensions(this.currentUser.staff, this.siteSettings);
+    return (
+      this.capabilities.isIOS ||
+      authorizesAllExtensions(this.currentUser.staff, this.siteSettings)
+    );
   },
 
   @discourseComputed()
