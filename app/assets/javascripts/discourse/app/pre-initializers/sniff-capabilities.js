@@ -47,7 +47,7 @@ export default {
       document.referrer.includes("android-app://");
 
     caps.wasLaunchedFromDiscourseHub =
-      window.location.search.indexOf("discourse_app=1") !== -1;
+      window.location.search.includes("discourse_app=1");
 
     // Inject it
     app.register("capabilities:main", caps, { instantiate: false });
