@@ -1,27 +1,17 @@
 # frozen_string_literal: true
 
 class SecondFactor::AuthManagerResult
-  class StrictEnum
-    def initialize(hash)
-      @hash = hash
-    end
-
-    def [](key)
-      if !@hash.key?(key)
-        raise ArgumentError.new("key #{key.inspect} is not in enum #{@hash.inspect}")
-      end
-      @hash[key]
-    end
-  end
-
-  STATUSES = StrictEnum.new({
+  STATUSES = {
     no_second_factor: 1,
     second_factor_auth_completed: 2,
-  }.freeze)
+  }.freeze
 
-  private_constant :StrictEnum, :STATUSES
+  private_constant :STATUSES
 
   def initialize(status)
+    if !STATUSES.key?(status)
+      raise ArgumentError.new("#{status.inspect} is not a valid status. Allowed statuses: #{STATUSES.inspect}")
+    end
     @status_id = STATUSES[status]
   end
 
