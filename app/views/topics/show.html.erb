@@ -40,7 +40,6 @@
   <% @topic_view.posts.each_with_index do |post, idx| %>
     <% if (u = post.user) %>
     <div class='row'>
-      <div class='topic-avatar crawler-post' style='min-width: 55px'></div>
       <div itemscope itemtype='http://schema.org/DiscussionForumPosting' class='topic-body crawler-post'>
         <div class='crawler-post-meta'>
           <div itemprop='publisher' itemscope itemtype="http://schema.org/Organization">

@@ -1,0 +1,90 @@
+/*
+ * Hide placeholder on ember ready.
+ * This is an alternative to removing the placeholder via JavaScript on EmberJs Application.ready()
+ */
+//#main.ember-application + #main-placeholder {
+//  display: none;
+//  visibility: hidden;
+//}
+
+/*
+ * Static placeholder for topic view is based on crawler layout.
+ * These hacks make the layout pixel-perfectly identical to the EmberJs rendered view.
+ */
+#main-placeholder {
+  #topic-title {
+    margin-bottom: 0;
+
+    html.mobile-view & {
+      padding-top: 1.25em;
+      padding-bottom: 0;
+    }
+
+    html.desktop-view & {
+      padding-top: 2.5em;
+    }
+  }
+
+  > .wrap > .row {
+    border-left: 1px solid transparent;
+  }
+
+  .topic-body {
+    padding-top: 0;
+
+    html.desktop-view & {
+      border-top: 1px solid var(--primary-low);
+      width: $topic-body-width;
+      padding: 12px $topic-body-width-padding 0
+        ($topic-avatar-width + $topic-body-width-padding);
+    }
+  }
+
+  #topic-title + .row .topic-body {
+    /* first post */
+    /* topic footer: post-menu-area + margin + post-links-container */
+
+    html.mobile-view & {
+      padding-bottom: 37.7px + 10px + 55.1px - 25px;
+    }
+
+    html.desktop-view & {
+      padding-bottom: 33.7px + 20px + 55.9px;
+    }
+  }
+
+  .crawler-post-meta {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
+    html.mobile-view & {
+      width: calc(100% - #{$topic-avatar-width + 10px});
+      height: $topic-avatar-width;
+      margin-left: $topic-avatar-width + 10px;
+      margin-bottom: 10px;
+      padding-top: 15px;
+      font-size: var(--font-down-1);
+      line-height: var(--line-height-medium);
+    }
+
+    html.desktop-view & {
+      margin-bottom: 1.25em;
+      width: 100%;
+      height: 1.4em;
+    }
+  }
+
+  .creator a span {
+    color: var(--primary-high-or-secondary-low);
+
+    html.mobile-view & {
+      font-size: var(--font-0);
+    }
+  }
+
+  div.post p {
+    margin-top: 0;
+    overflow-wrap: break-word;
+  }
+}
