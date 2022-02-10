@@ -1,4 +1,16 @@
 /*
+ * Disable animations for EmberJs generated content because static content was already in place:
+ * Header menu and highlighting of first post
+ */
+html.experimental-static-topic-content {
+  .d-header .title,
+  .d-header .panel,
+  .post-stream > div:first-child .topic-body.highlighted {
+    animation: none;
+  }
+}
+
+/*
  * Hide placeholder on ember ready.
  * This is an alternative to removing the placeholder via JavaScript on EmberJs Application.ready()
  */

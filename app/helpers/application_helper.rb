@@ -181,6 +181,7 @@ module ApplicationHelper
     list << 'rtl' if rtl?
     list << text_size_class
     list << 'anon' unless current_user
+    list << 'experimental-static-topic-content' if SiteSetting.enable_experimental_static_topic_content
     list.join(' ')
   end
 
