@@ -626,7 +626,6 @@ const Composer = RestModel.extend({
   appendText(text, position, opts) {
     const reply = this.reply || "";
     position = typeof position === "number" ? position : reply.length;
-    text = text.trim();
 
     let before = reply.slice(0, position) || "";
     let after = reply.slice(position) || "";
@@ -664,6 +663,8 @@ const Composer = RestModel.extend({
     if (opts && opts.new_line) {
       if (before.length > 0) {
         text = "\n\n" + text.trim();
+      } else {
+        text = text.trim();
       }
     }
 
