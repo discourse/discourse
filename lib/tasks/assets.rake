@@ -105,7 +105,7 @@ def compress_node(from, to)
   assets = cdn_relative_path("/assets")
   assets_additional_path = (d = File.dirname(from)) == "." ? "" : "/#{d}"
   source_map_root = assets + assets_additional_path
-  source_map_url = cdn_path "/assets/#{to}.map"
+  source_map_url = "#{File.basename(to)}.map"
   base_source_map = assets_path + assets_additional_path
 
   cmd = <<~EOS
