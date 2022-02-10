@@ -438,7 +438,9 @@ export default Controller.extend({
             opts.openOpts || {}
           )
         );
-      } else if (opts.fallbackToNewTopic) {
+      }
+
+      if (opts.fallbackToNewTopic) {
         return this.open(
           Object.assign(
             {
