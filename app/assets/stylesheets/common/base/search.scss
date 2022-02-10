@@ -77,15 +77,14 @@
       display: flex;
       flex-wrap: wrap;
       padding: 1em 10%;
+      background-color: var(--primary-very-low);
       @include breakpoint(medium) {
         padding: 0.5em 1em;
       }
-      border-bottom: 1px solid var(--primary-low);
 
       &.bulk-select-visible {
         @include sticky;
         top: 60px;
-        background-color: var(--secondary);
         z-index: 10;
       }
 
@@ -95,6 +94,10 @@
 
       button {
         margin: 0 0.5em 0 0;
+        border: 1px solid var(--primary-low-mid);
+        &:hover {
+          border: 1px solid transparent;
+        }
         @include breakpoint(medium) {
           margin: 0 0.5em 0.5em 0;
         }
@@ -265,10 +268,10 @@
     align-items: baseline;
     .bulk-select {
       position: absolute;
-      left: 0px;
-      top: 0px;
-      padding: 0.5em;
-      background: var(--tertiary-very-low);
+      left: 0.5em;
+      top: 0.75em;
+      padding: 0.25em 0.5em;
+      background-color: var(--tertiary-low);
       input[type="checkbox"] {
         margin: 0;
       }
