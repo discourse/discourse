@@ -3977,7 +3977,7 @@ en:
       expand_btn: "Expand Table"
 
     second_factor_auth:
-      redirect_after_success: "Second factor authentication is successful. Redirecting the previous page…"
+      redirect_after_success: "Second factor authentication is successful. Redirecting to the previous page…"
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
     type_to_filter: "type to filter..."
