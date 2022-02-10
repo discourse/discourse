@@ -46,8 +46,9 @@ export default {
       window.navigator.standalone ||
       document.referrer.includes("android-app://");
 
-    caps.wasLaunchedFromDiscourseHub =
-      window.location.search.includes("discourse_app=1");
+    caps.wasLaunchedFromDiscourseHub = window.location.search.includes(
+      "discourse_app=1"
+    );
 
     // Inject it
     app.register("capabilities:main", caps, { instantiate: false });
