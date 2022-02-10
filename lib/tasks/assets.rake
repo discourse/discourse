@@ -38,8 +38,7 @@ task 'assets:precompile:before' do
   if ENV['EMBER_CLI_PROD_ASSETS'] != "0"
     # Remove the assets that Ember CLI will handle for us
     Rails.configuration.assets.precompile.reject! do |asset|
-      asset.is_a?(String) &&
-        (%w(application.js admin.js ember_jquery.js pretty-text-bundle.js start-discourse.js vendor.js).include?(asset))
+      asset.is_a?(String) && is_ember_cli_asset?(asset)
     end
   end
 end
@@ -80,6 +79,11 @@ task 'assets:flush_sw' => 'environment' do
   rescue
     STDERR.puts "Warning: unable to flush service worker script"
   end
+end
+
+def is_ember_cli_asset?(name)
+  return false if ENV['EMBER_CLI_PROD_ASSETS'] == '0'
+  %w(application.js admin.js ember_jquery.js pretty-text-bundle.js start-discourse.js vendor.js).include?(name)
 end
 
 def assets_path
@@ -162,6 +166,7 @@ end
 
 def max_compress?(path, locales)
   return false if Rails.configuration.assets.skip_minification.include? path
+  return false if is_ember_cli_asset?(path)
   return true unless path.include? "locales/"
 
   path_locale = path.delete_prefix("locales/").delete_suffix(".js")
