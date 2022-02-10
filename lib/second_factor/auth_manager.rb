@@ -13,6 +13,33 @@ class SecondFactor::AuthManager
 
   attr_reader :allowed_methods
 
+  def self.find_second_factor_challenge(nonce, secure_session)
+    challenge_json = secure_session["current_second_factor_auth_challenge"]
+    if challenge_json.blank?
+      raise SecondFactor::BadChallenge.new(
+        "second_factor_auth.challenge_not_found",
+        status_code: 404
+      )
+    end
+
+    challenge = JSON.parse(challenge_json).deep_symbolize_keys
+    if challenge[:nonce] != nonce
+      raise SecondFactor::BadChallenge.new(
+        "second_factor_auth.challenge_not_found",
+        status_code: 404
+      )
+    end
+
+    generated_at = challenge[:generated_at]
+    if generated_at < MAX_CHALLENGE_AGE.ago.to_i
+      raise SecondFactor::BadChallenge.new(
+        "second_factor_auth.challenge_expired",
+        status_code: 401
+      )
+    end
+    challenge
+  end
+
   def initialize(current_user, guardian, action)
     @current_user = current_user
     @guardian = guardian
@@ -61,32 +88,10 @@ class SecondFactor::AuthManager
   end
 
   def verify_second_factor_auth_completed(nonce, secure_session)
-    json = secure_session["current_second_factor_auth_challenge"]
-    if json.blank?
-      raise SecondFactor::BadChallenge.new(
-        "second_factor_auth.challenge_not_found",
-        status_code: 404,
-      )
-    end
-
-    challenge = JSON.parse(json).deep_symbolize_keys
-    if challenge[:nonce] != nonce
-      raise SecondFactor::BadChallenge.new(
-        "second_factor_auth.challenge_not_found",
-        status_code: 404,
-      )
-    end
-
+    challenge = self.class.find_second_factor_challenge(nonce, secure_session)
     if !challenge[:successful]
       raise SecondFactor::BadChallenge.new(
         "second_factor_auth.challenge_not_completed",
-        status_code: 401
-      )
-    end
-
-    if challenge[:generated_at] < MAX_CHALLENGE_AGE.ago.to_i
-      raise SecondFactor::BadChallenge.new(
-        "second_factor_auth.challenge_expired",
         status_code: 401
       )
     end

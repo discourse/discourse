@@ -436,7 +436,7 @@ class SessionController < ApplicationController
     error_key = nil
     status_code = 200
     begin
-      challenge = find_second_factor_challenge(nonce)
+      challenge = SecondFactor::AuthManager.find_second_factor_challenge(nonce, secure_session)
     rescue SecondFactor::BadChallenge => exception
       error_key = exception.error_translation_key
       status_code = exception.status_code
@@ -478,7 +478,7 @@ class SessionController < ApplicationController
     error_key = nil
     status_code = 200
     begin
-      challenge = find_second_factor_challenge(nonce)
+      challenge = SecondFactor::AuthManager.find_second_factor_challenge(nonce, secure_session)
     rescue SecondFactor::BadChallenge => exception
       error_key = exception.error_translation_key
       status_code = exception.status_code
@@ -799,32 +799,5 @@ class SessionController < ApplicationController
   rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotSaved => e
     Rails.logger.warn("SSO invite redemption failed: #{e}")
     raise Invite::RedemptionFailed
-  end
-
-  def find_second_factor_challenge(nonce)
-    challenge_json = secure_session["current_second_factor_auth_challenge"]
-    if challenge_json.blank?
-      raise SecondFactor::BadChallenge.new(
-        "second_factor_auth.challenge_not_found",
-        status_code: 404
-      )
-    end
-
-    challenge = JSON.parse(challenge_json).deep_symbolize_keys
-    if challenge[:nonce] != nonce
-      raise SecondFactor::BadChallenge.new(
-        "second_factor_auth.challenge_not_found",
-        status_code: 404
-      )
-    end
-
-    generated_at = challenge[:generated_at]
-    if generated_at < SecondFactor::AuthManager::MAX_CHALLENGE_AGE.ago.to_i
-      raise SecondFactor::BadChallenge.new(
-        "second_factor_auth.challenge_expired",
-        status_code: 401
-      )
-    end
-    challenge
   end
 end
