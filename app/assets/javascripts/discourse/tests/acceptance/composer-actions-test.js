@@ -623,13 +623,13 @@ acceptance(
     });
 
     test("Quotes fall back to username if name is not present", async function (assert) {
-      await visit("/t/internationalization-localization/280");
-      // select a user with no full name
-      await selectText("#post_21 p");
+      await visit("/t/internationalization-localization/130");
+      // select a user with no name
+      await selectText("#post_1 p");
       await click(".insert-quote");
       assert.strictEqual(
         queryAll(".d-editor-input").val().trim(),
-        '[quote="Player, post:21, topic:280, full:true"]\nIs it a coincidence that the strings file is 1337 lines long? :smiley:\n[/quote]'
+        '[quote="bianca, post:1, topic:130, full:true"]\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas a varius ipsum. Nunc euismod, metus non vulputate malesuada, ligula metus pharetra tortor, vel sodales arcu lacus sed mauris. Nam semper, orci vitae fringilla placerat, dui tellus convallis felis, ultricies laoreet sapien mi et metus. Mauris facilisis, mi fermentum rhoncus feugiat, dolor est vehicula leo, id porta leo ex non enim. In a ligula vel tellus commodo scelerisque non in ex. Pellentesque semper leo quam, nec varius est viverra eget. Donec vehicula sem et massa faucibus tempus.\n[/quote]'
       );
     });
   }
