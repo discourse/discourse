@@ -152,7 +152,7 @@ class Theme < ActiveRecord::Base
     SvgSprite.expire_cache
   end
 
-  BASE_COMPILER_VERSION = 51
+  BASE_COMPILER_VERSION = 52
   def self.compiler_version
     get_set_cache "compiler_version" do
       dependencies = [
@@ -389,7 +389,7 @@ class Theme < ActiveRecord::Base
       end
       caches = JavascriptCache.where(theme_id: theme_ids)
       caches = caches.sort_by { |cache| theme_ids.index(cache.theme_id) }
-      return caches.map { |c| "<script src='#{c.url}'></script>" }.join("\n")
+      return caches.map { |c| "<script src='#{c.url}' data-theme-id='#{c.theme_id}'></script>" }.join("\n")
     end
     list_baked_fields(theme_ids, target, name).map { |f| f.value_baked || f.value }.join("\n")
   end
