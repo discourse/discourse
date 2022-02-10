@@ -948,7 +948,7 @@ describe PostsController do
         end
 
         it "doesn't enqueue posts when user first creates a topic" do
-          Fabricate(:topic, user: user)
+          topic = Fabricate(:post, user: user).topic
 
           Draft.set(user, "should_clear", 0, "{'a' : 'b'}")
 
