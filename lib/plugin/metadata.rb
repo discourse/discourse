@@ -79,6 +79,7 @@ class Plugin::Metadata
     "discourse-user-notes",
     "discourse-vk-auth",
     "discourse-voting",
+    "discourse-whos-online",
     "discourse-yearly-review",
     "discourse-zendesk-plugin",
     "docker_manager",
