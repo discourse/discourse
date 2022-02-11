@@ -194,9 +194,11 @@ en:
 
     themes:
       default_description: "Default"
-      broken_theme_alert: "Your site may not work because theme / component %{theme} has errors. Disable it at %{path}."
+      broken_theme_alert: "Your site may not work because a theme / component has errors."
+      error_caused_by: "Caused by '%{name}'. <a target='blank' href='%{path}'>Click here</a> to reconfigure or disable."
+      only_admins: "(this message is only shown to site administrators)"
 
-    broken_decorator_alert: "Posts may not display correctly because one of the post content decorators on your site raised an error. Check the browser developer tools for more information."
+    broken_decorator_alert: "Posts may not display correctly because one of the post content decorators on your site raised an error."
 
     s3:
       regions:
