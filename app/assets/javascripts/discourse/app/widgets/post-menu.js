@@ -271,7 +271,7 @@ registerButton("replies", (attrs, state, siteSettings) => {
   };
 });
 
-registerButton("share", (attrs) => {
+registerButton("share", () => {
   return {
     action: "share",
     className: "share",
