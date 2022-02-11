@@ -486,6 +486,12 @@ button {
     }
   }
 
+  .mfp-ready {
+    .mfp-content {
+      min-width: 200px;
+    }
+  }
+
   .mfp-title,
   .mfp-title .image-source-link {
     display: inline-block;
