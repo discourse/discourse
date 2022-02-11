@@ -82,10 +82,18 @@ module PrettyText
 
     ctx.eval("window = {}; window.devicePixelRatio = 2;") # hack to make code think stuff is retina
 
-    if Rails.env.development? || Rails.env.test?
-      ctx.attach("console.log", proc { |l| p l })
-      ctx.eval('window.console = console;')
-    end
+    ctx.attach("rails.logger.info", proc { |err| Rails.logger.info(err.to_s) })
+    ctx.attach("rails.logger.warn", proc { |err| Rails.logger.warn(err.to_s) })
+    ctx.attach("rails.logger.error", proc { |err| Rails.logger.error(err.to_s) })
+    ctx.eval <<~JS
+      console = {
+        prefix: "[PrettyText] ",
+        log: function(...args){ rails.logger.info(console.prefix + args.join(" ")); },
+        warn: function(...args){ rails.logger.warn(console.prefix + args.join(" ")); },
+        error: function(...args){ rails.logger.error(console.prefix + args.join(" ")); }
+      }
+    JS
+
     ctx.eval("__PRETTY_TEXT = true")
 
     PrettyText::Helpers.instance_methods.each do |method|
