@@ -100,7 +100,7 @@ describe Emoji do
       expect(emoji.tonable).to eq(true)
     end
 
-    it 'should correct cache when site is stale' do
+    it 'should correct cache when site emojis cache is stale' do
       CustomEmoji.create!(name: 'test123', upload_id: 9999)
       Emoji.clear_cache
 
