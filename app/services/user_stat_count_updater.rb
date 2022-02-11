@@ -33,7 +33,7 @@ class UserStatCountUpdater
       # to trigger an error.
       if action == :decrement! && stat.public_send(column) < 1
         if SiteSetting.verbose_user_stat_count_logging
-          Rails.logger.warn("Attempted to insert negative count into UserStat##{column}} for post with id '#{post.id}'")
+          Rails.logger.warn("Attempted to insert negative count into UserStat##{column} for post with id '#{post.id}'")
         end
 
         return
