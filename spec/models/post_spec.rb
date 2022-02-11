@@ -851,6 +851,12 @@ describe Post do
         expect(reply.reply_to_user).to eq(post.user)
       end
 
+      it 'has a reply to the user of the original user' do
+        SiteSetting.display_name_on_posts = true
+        SiteSetting.prioritize_username_in_ux = false
+        expect(reply.reply_to_user).to eq(post.user)
+      end
+
       it 'increases the reply count of the parent' do
         post.reload
         expect(post.reply_count).to eq(1)

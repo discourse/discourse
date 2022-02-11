@@ -614,7 +614,7 @@ acceptance("Prioritize Full Name", function (needs) {
 });
 
 acceptance(
-  "Gracefully falls back when prioritizing Full Name",
+  "Prioritizing Name fall back",
   function (needs) {
     needs.user();
     needs.settings({
