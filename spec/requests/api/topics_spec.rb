@@ -113,265 +113,22 @@ describe 'topics' do
       parameter name: 'Api-Key', in: :header, type: :string, required: true
       parameter name: 'Api-Username', in: :header, type: :string, required: true
       parameter name: :id, in: :path, schema: { type: :string }
+      expected_request_schema = nil
 
       produces 'application/json'
       response '200', 'specific posts' do
 
-        schema type: :object, properties: {
-          post_stream: {
-            type: :object,
-            properties: {
-              posts: {
-                type: :array,
-                items: {
-                  type: :object,
-                  properties: {
-                    id: { type: :integer },
-                    name: { type: :string },
-                    username: { type: :string },
-                    avatar_template: { type: :string },
-                    created_at: { type: :string },
-                    cooked: { type: :string },
-                    post_number: { type: :integer },
-                    post_type: { type: :integer },
-                    updated_at: { type: :string },
-                    reply_count: { type: :integer },
-                    reply_to_post_number: { type: [:string, :null] },
-                    quote_count: { type: :integer },
-                    incoming_link_count: { type: :integer },
-                    reads: { type: :integer },
-                    readers_count: { type: :integer },
-                    score: { type: :number },
-                    yours: { type: :boolean },
-                    topic_id: { type: :integer },
-                    topic_slug: { type: :string },
-                    display_username: { type: :string },
-                    primary_group_name: { type: [:string, :null] },
-                    flair_name: { type: [:string, :null] },
-                    flair_url: { type: [:string, :null] },
-                    flair_bg_color: { type: [:string, :null] },
-                    flair_color: { type: [:string, :null] },
-                    version: { type: :integer },
-                    can_edit: { type: :boolean },
-                    can_delete: { type: :boolean },
-                    can_recover: { type: :boolean },
-                    can_wiki: { type: :boolean },
-                    link_counts: {
-                      type: :array,
-                      items: {
-                        type: :object,
-                        properties: {
-                          url: { type: :string },
-                          internal: { type: :boolean },
-                          reflection: { type: :boolean },
-                          clicks: { type: :integer },
-                        }
-                      },
-                    },
-                    read: { type: :boolean },
-                    user_title: { type: [:string, :null] },
-                    actions_summary: {
-                      type: :array,
-                      items: {
-                        type: :object,
-                        properties: {
-                          id: { type: :integer },
-                          can_act: { type: :boolean },
-                        }
-                      },
-                    },
-                    moderator: { type: :boolean },
-                    admin: { type: :boolean },
-                    staff: { type: :boolean },
-                    user_id: { type: :integer },
-                    hidden: { type: :boolean },
-                    trust_level: { type: :integer },
-                    deleted_at: { type: [:string, :null] },
-                    user_deleted: { type: :boolean },
-                    edit_reason: { type: [:string, :null] },
-                    can_view_edit_history: { type: :boolean },
-                    wiki: { type: :boolean },
-                    reviewable_id: { type: :integer },
-                    reviewable_score_count: { type: :integer },
-                    reviewable_score_pending_count: { type: :integer },
-                  }
-                },
-              },
-              stream: {
-                type: :array,
-                items: {
-                },
-              },
-            }
-          },
-          timeline_lookup: {
-            type: :array,
-            items: {
-            },
-          },
-          suggested_topics: {
-            type: :array,
-            items: {
-              type: :object,
-              properties: {
-                id: { type: :integer },
-                title: { type: :string },
-                fancy_title: { type: :string },
-                slug: { type: :string },
-                posts_count: { type: :integer },
-                reply_count: { type: :integer },
-                highest_post_number: { type: :integer },
-                image_url: { type: [:string, :null] },
-                created_at: { type: :string },
-                last_posted_at: { type: [:string, :null] },
-                bumped: { type: :boolean },
-                bumped_at: { type: :string },
-                archetype: { type: :string },
-                unseen: { type: :boolean },
-                last_read_post_number: { type: :integer },
-                unread_posts: { type: :integer },
-                pinned: { type: :boolean },
-                unpinned: { type: :boolean },
-                visible: { type: :boolean },
-                closed: { type: :boolean },
-                archived: { type: :boolean },
-                notification_level: { type: :integer },
-                bookmarked: { type: :boolean },
-                liked: { type: :boolean },
-                like_count: { type: :integer },
-                views: { type: :integer },
-                category_id: { type: :integer },
-                featured_link: { type: [:string, :null] },
-                posters: {
-                  type: :array,
-                  items: {
-                    type: :object,
-                    properties: {
-                      extras: { type: [:string, :null] },
-                      description: { type: :string },
-                      user: {
-                        type: :object,
-                        properties: {
-                          id: { type: :integer },
-                          username: { type: :string },
-                          name: { type: :string },
-                          avatar_template: { type: :string },
-                        }
-                      },
-                    }
-                  },
-                },
-              }
-            },
-          },
-          id: { type: :integer },
-          title: { type: :string },
-          fancy_title: { type: :string },
-          posts_count: { type: :integer },
-          created_at: { type: :string },
-          views: { type: :integer },
-          reply_count: { type: :integer },
-          like_count: { type: :integer },
-          last_posted_at: { type: [:string, :null] },
-          visible: { type: :boolean },
-          closed: { type: :boolean },
-          archived: { type: :boolean },
-          has_summary: { type: :boolean },
-          archetype: { type: :string },
-          slug: { type: :string },
-          category_id: { type: :integer },
-          word_count: { type: [:integer, :null] },
-          deleted_at: { type: [:string, :null] },
-          user_id: { type: :integer },
-          featured_link: { type: [:string, :null] },
-          pinned_globally: { type: :boolean },
-          pinned_at: { type: [:string, :null] },
-          pinned_until: { type: [:string, :null] },
-          image_url: { type: [:string, :null] },
-          draft: { type: [:string, :null] },
-          draft_key: { type: :string },
-          draft_sequence: { type: :integer },
-          unpinned: { type: [:string, :null] },
-          pinned: { type: :boolean },
-          current_post_number: { type: :integer },
-          highest_post_number: { type: [:integer, :null] },
-          deleted_by: { type: [:string, :null] },
-          has_deleted: { type: :boolean },
-          actions_summary: {
-            type: :array,
-            items: {
-              type: :object,
-              properties: {
-                id: { type: :integer },
-                count: { type: :integer },
-                hidden: { type: :boolean },
-                can_act: { type: :boolean },
-              }
-            },
-          },
-          chunk_size: { type: :integer },
-          bookmarked: { type: :boolean },
-          topic_timer: { type: [:string, :null] },
-          message_bus_last_id: { type: :integer },
-          participant_count: { type: :integer },
-          show_read_indicator: { type: :boolean },
-          thumbnails: { type: [:string, :null] },
-          details: {
-            type: :object,
-            properties: {
-              notification_level: { type: :integer },
-              can_move_posts: { type: :boolean },
-              can_edit: { type: :boolean },
-              can_delete: { type: :boolean },
-              can_remove_allowed_users: { type: :boolean },
-              can_create_post: { type: :boolean },
-              can_reply_as_new_topic: { type: :boolean },
-              can_flag_topic: { type: :boolean },
-              can_convert_topic: { type: :boolean },
-              can_review_topic: { type: :boolean },
-              can_remove_self_id: { type: :integer },
-              participants: {
-                type: :array,
-                items: {
-                  type: :object,
-                  properties: {
-                    id: { type: :integer },
-                    username: { type: :string },
-                    name: { type: :string },
-                    avatar_template: { type: :string },
-                    post_count: { type: :integer },
-                    primary_group_name: { type: [:string, :null] },
-                    flair_name: { type: [:string, :null] },
-                    flair_url: { type: [:string, :null] },
-                    flair_color: { type: [:string, :null] },
-                    flair_bg_color: { type: [:string, :null] },
-                  }
-                },
-              },
-              created_by: {
-                type: :object,
-                properties: {
-                  id: { type: :integer },
-                  username: { type: :string },
-                  name: { type: :string },
-                  avatar_template: { type: :string },
-                }
-              },
-              last_poster: {
-                type: :object,
-                properties: {
-                  id: { type: :integer },
-                  username: { type: :string },
-                  name: { type: :string },
-                  avatar_template: { type: :string },
-                }
-              },
-            }
-          },
-        }
-        let(:id) { Fabricate(:topic).id }
+        let(:topic) { Fabricate(:topic) }
+        let(:id) { topic.id }
+        let(:post) { Fabricate(:post, topic: topic) }
 
-        run_test!
+        expected_response_schema = load_spec_schema('topic_show_response')
+        schema expected_response_schema
+
+        it_behaves_like "a JSON endpoint", 200 do
+          let(:expected_response_schema) { expected_response_schema }
+          let(:expected_request_schema) { expected_request_schema }
+        end
       end
     end
 
@@ -873,6 +630,29 @@ describe 'topics' do
         let(:id) { topic_post.topic.id }
 
         run_test!
+      end
+    end
+  end
+
+  path '/t/external_id/{external_id}.json' do
+    get 'Get topic by external_id' do
+      tags 'Topics'
+      operationId 'getTopicByExternalId'
+      consumes 'application/json'
+      parameter name: :external_id, in: :path, type: :string, required: true
+      expected_request_schema = nil
+
+      produces 'application/json'
+      response '301', 'redirects to /t/{topic_id}.json' do
+        expected_response_schema = nil
+        schema expected_response_schema
+
+        let(:topic) { Fabricate(:topic, external_id: 'external_id_1') }
+        let(:external_id) { topic.external_id }
+
+        run_test! do |response|
+          expect(response).to redirect_to(topic.relative_url + ".json?page=")
+        end
       end
     end
   end
