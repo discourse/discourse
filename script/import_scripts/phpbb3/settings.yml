@@ -5,7 +5,7 @@ database:
   host: localhost
   port: 3306
   username: root
-  password:
+  password: password
   schema: phpbb
   table_prefix: phpbb_ # Change this, if your forum is using a different prefix. Usually all table names start with phpbb_
   batch_size: 1000 # Don't change this unless you know what you're doing. The default (1000) should work just fine.
@@ -32,7 +32,7 @@ import:
   #   name: Bar Category
   #   parent_id: foo
   #
-  new_categories:
+  new_categories: []
 
   # Category mappings
   #
@@ -49,7 +49,7 @@ import:
   #   4: 5
   #   6: SKIP
   #
-  category_mappings:
+  category_mappings: {}
 
   # Tag mappings
   #
@@ -64,7 +64,7 @@ import:
   #   3:
   #   - third-category
   #
-  tag_mappings:
+  tag_mappings: {}
 
   # Rank to trust level mapping
   #
@@ -76,7 +76,7 @@ import:
   #   trust_level_2: 1000
   #   trust_level_3: 3000
   #
-  rank_mapping:
+  rank_mapping: {}
 
   # WARNING: Do not activate this option unless you know what you are doing.
   # It will probably break the BBCode to Markdown conversion and slows down your import.
