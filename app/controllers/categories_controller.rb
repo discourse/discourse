@@ -211,7 +211,7 @@ class CategoriesController < ApplicationController
     notification_level = params[:notification_level].to_i
 
     CategoryUser.set_notification_level_for_category(current_user, notification_level, category_id)
-    render json: success_json
+    render json: success_json.merge({ indirectly_muted_category_ids: CategoryUser.indirectly_muted_category_ids(current_user) })
   end
 
   def destroy

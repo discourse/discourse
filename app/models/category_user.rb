@@ -234,6 +234,28 @@ class CategoryUser < ActiveRecord::Base
       acc[category_user.category_id] = category_user
     end
   end
+
+  def self.indirectly_muted_category_ids(user)
+    query = Category.where.not(parent_category_id: nil)
+      .joins("LEFT JOIN categories categories2 ON categories2.id = categories.parent_category_id")
+      .joins("LEFT JOIN category_users ON category_users.category_id = categories.id AND category_users.user_id = #{user.id}")
+      .joins("LEFT JOIN category_users category_users2 ON category_users2.category_id = categories2.id AND category_users2.user_id = #{user.id}")
+      .where("category_users.id IS NULL")
+
+    if SiteSetting.max_category_nesting === 3
+      query = query
+        .joins("LEFT JOIN categories categories3 ON categories3.id = categories2.parent_category_id")
+        .joins("LEFT JOIN category_users category_users3 ON category_users3.category_id = categories3.id AND category_users3.user_id = #{user.id}")
+        .where("
+          (category_users2.notification_level = #{notification_levels[:muted]})
+          OR
+          (category_users2.id IS NULL AND category_users3.notification_level = #{notification_levels[:muted]})
+      ")
+    else
+      query = query.where("category_users2.notification_level = #{notification_levels[:muted]}")
+    end
+    query.pluck("categories.id")
+  end
 end
 
 # == Schema Information
