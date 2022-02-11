@@ -402,19 +402,46 @@ export default Controller.extend({
   //
   // opts:
   //
-  // - fallbackToNewTopic: if true, and there is no draft, the composer will
-  // be opened with the create_topic action and a new topic draft key
+  // - topic: if this is present, the composer will be opened with the reply
+  // action and the current topic key and draft sequence
+  // - fallbackToNewTopic: if true, and there is no draft and no topic,
+  // the composer will be opened with the create_topic action and a new
+  // topic draft key
   // - insertText: the text to append to the composer once it is opened
   // - openOpts: this object will be passed to this.open if fallbackToNewTopic is
-  // true
+  // true or topic is provided
   @action
   focusComposer(opts = {}) {
-    if (this.get("model.viewOpen")) {
+    this._openComposerForFocus(opts).then(() => {
       this._focusAndInsertText(opts.insertText);
+    });
+  },
+
+  _openComposerForFocus(opts) {
+    if (this.get("model.viewOpen")) {
+      return Promise.resolve();
     } else {
       const opened = this.openIfDraft();
-      if (!opened && opts.fallbackToNewTopic) {
-        this.open(
+      if (opened) {
+        return Promise.resolve();
+      }
+
+      if (opts.topic) {
+        return this.open(
+          Object.assign(
+            {
+              action: Composer.REPLY,
+              draftKey: opts.topic.get("draft_key"),
+              draftSequence: opts.topic.get("draft_sequence"),
+              topic: opts.topic,
+            },
+            opts.openOpts || {}
+          )
+        );
+      }
+
+      if (opts.fallbackToNewTopic) {
+        return this.open(
           Object.assign(
             {
               action: Composer.CREATE_TOPIC,
@@ -422,11 +449,7 @@ export default Controller.extend({
             },
             opts.openOpts || {}
           )
-        ).then(() => {
-          this._focusAndInsertText(opts.insertText);
-        });
-      } else if (opened) {
-        this._focusAndInsertText(opts.insertText);
+        );
       }
     }
   },
