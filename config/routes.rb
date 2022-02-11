@@ -890,16 +890,14 @@ Discourse::Application.routes.draw do
 
     resources :drafts, only: [:index, :create, :show, :destroy]
 
+    get "/service-worker.js" => "static#service_worker_asset", format: :js
     if service_worker_asset = Rails.application.assets_manifest.assets['service-worker.js']
       # https://developers.google.com/web/fundamentals/codelabs/debugging-service-workers/
       # Normally the browser will wait until a user closes all tabs that contain the
       # current site before updating to a new Service Worker.
       # Support the old Service Worker path to avoid routing error filling up the
       # logs.
-      get "/service-worker.js" => "static#service_worker_asset", format: :js
       get service_worker_asset => "static#service_worker_asset", format: :js
-    elsif Rails.env.development?
-      get "/service-worker.js" => "static#service_worker_asset", format: :js
     end
 
     get "cdn_asset/:site/*path" => "static#cdn_asset", format: false, constraints: { format: /.*/ }
