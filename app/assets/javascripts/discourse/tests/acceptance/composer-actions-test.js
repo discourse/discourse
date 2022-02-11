@@ -613,24 +613,21 @@ acceptance("Prioritize Full Name", function (needs) {
   });
 });
 
-acceptance(
-  "Prioritizing Name fall back",
-  function (needs) {
-    needs.user();
-    needs.settings({
-      prioritize_username_in_ux: false,
-      display_name_on_post: true,
-    });
+acceptance("Prioritizing Name fall back", function (needs) {
+  needs.user();
+  needs.settings({
+    prioritize_username_in_ux: false,
+    display_name_on_post: true,
+  });
 
-    test("Quotes fall back to username if name is not present", async function (assert) {
-      await visit("/t/internationalization-localization/130");
-      // select a user with no name
-      await selectText("#post_1 p");
-      await click(".insert-quote");
-      assert.strictEqual(
-        queryAll(".d-editor-input").val().trim(),
-        '[quote="bianca, post:1, topic:130, full:true"]\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas a varius ipsum. Nunc euismod, metus non vulputate malesuada, ligula metus pharetra tortor, vel sodales arcu lacus sed mauris. Nam semper, orci vitae fringilla placerat, dui tellus convallis felis, ultricies laoreet sapien mi et metus. Mauris facilisis, mi fermentum rhoncus feugiat, dolor est vehicula leo, id porta leo ex non enim. In a ligula vel tellus commodo scelerisque non in ex. Pellentesque semper leo quam, nec varius est viverra eget. Donec vehicula sem et massa faucibus tempus.\n[/quote]'
-      );
-    });
-  }
-);
+  test("Quotes fall back to username if name is not present", async function (assert) {
+    await visit("/t/internationalization-localization/130");
+    // select a user with no name
+    await selectText("#post_1 p");
+    await click(".insert-quote");
+    assert.strictEqual(
+      queryAll(".d-editor-input").val().trim(),
+      '[quote="bianca, post:1, topic:130, full:true"]\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas a varius ipsum. Nunc euismod, metus non vulputate malesuada, ligula metus pharetra tortor, vel sodales arcu lacus sed mauris. Nam semper, orci vitae fringilla placerat, dui tellus convallis felis, ultricies laoreet sapien mi et metus. Mauris facilisis, mi fermentum rhoncus feugiat, dolor est vehicula leo, id porta leo ex non enim. In a ligula vel tellus commodo scelerisque non in ex. Pellentesque semper leo quam, nec varius est viverra eget. Donec vehicula sem et massa faucibus tempus.\n[/quote]'
+    );
+  });
+});

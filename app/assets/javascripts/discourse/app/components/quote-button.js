@@ -184,7 +184,6 @@ export default Component.extend(KeyEnterEscape, {
       element = element.parentElement
     ) {
       if (element.tagName === "ASIDE" && element.classList.contains("quote")) {
-        debugger
         opts.username = element.dataset.username || getQuoteTitle(element);
         opts.post = element.dataset.post;
         opts.topic = element.dataset.topic;
