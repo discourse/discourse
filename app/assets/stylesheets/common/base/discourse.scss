@@ -830,19 +830,10 @@ table {
   font-size: $base-font-size;
   font-weight: bold;
   padding: 5px 0;
-  background: var(--danger);
+  background: var(--danger-medium);
   text-align: center;
   z-index: z("max");
   color: var(--secondary);
-
-  a {
-    color: var(--secondary);
-    text-decoration: underline;
-  }
-
-  .theme-error-suffix {
-    font-weight: normal;
-  }
 }
 
 .controls {

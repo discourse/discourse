@@ -52,11 +52,6 @@ const Discourse = Application.extend({
   start() {
     document.querySelector("noscript")?.remove();
 
-    if (Error.stackTraceLimit) {
-      // We need Errors to have full stack traces for `lib/source-identifier`
-      Error.stackTraceLimit = Infinity;
-    }
-
     Object.keys(requirejs._eak_seen).forEach((key) => {
       if (/\/pre\-initializers\//.test(key)) {
         const initializer = this._prepareInitializer(key);
