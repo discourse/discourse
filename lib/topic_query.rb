@@ -75,6 +75,7 @@ class TopicQuery
          guardian
          no_definitions
          destination_category_id
+         include_all_pms
          include_pms)
   end
 
@@ -709,8 +710,12 @@ class TopicQuery
 
     all_listable_topics = @guardian.filter_allowed_categories(Topic.unscoped.listable_topics)
 
-    if options[:include_pms]
-      all_pm_topics = Topic.unscoped.private_messages_for_user(@user)
+    if options[:include_pms] || options[:include_all_pms]
+      all_pm_topics = if options[:include_all_pms] && @guardian.is_admin?
+        Topic.unscoped.private_messages
+      else
+        Topic.unscoped.private_messages_for_user(@user)
+      end
       result = result.merge(all_listable_topics.or(all_pm_topics))
     else
       result = result.merge(all_listable_topics)
