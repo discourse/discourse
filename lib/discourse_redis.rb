@@ -76,10 +76,11 @@ class DiscourseRedis
     DiscourseRedis.ignore_readonly { @redis.mget(*args) }
   end
 
-  def del(k)
+  def del(*keys)
     DiscourseRedis.ignore_readonly do
-      k = "#{namespace}:#{k}"  if @namespace
-      @redis.del k
+      keys = keys.flatten(1)
+      keys.map! { |k| "#{namespace}:#{k}" } if @namespace
+      @redis.del(*keys)
     end
   end
 
