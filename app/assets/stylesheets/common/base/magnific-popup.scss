@@ -486,6 +486,11 @@ button {
     }
   }
 
+  .mfp-title,
+  .mfp-title .image-source-link {
+    display: inline-block;
+  }
+
   .mfp-image-holder {
     .mfp-content {
       max-width: 100%;

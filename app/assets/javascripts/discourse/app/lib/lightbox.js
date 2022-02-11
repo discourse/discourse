@@ -111,7 +111,7 @@ export default function (elem, siteSettings) {
             '<a class="image-source-link" href="' +
               item.src +
               '">' +
-              renderIcon("string", "search") +
+              renderIcon("string", "image") +
               I18n.t("lightbox.open") +
               "</a>"
           );
