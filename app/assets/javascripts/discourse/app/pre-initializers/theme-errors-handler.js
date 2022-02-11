@@ -1,13 +1,9 @@
 import { isTesting } from "discourse-common/config/environment";
 import { getAndClearUnhandledThemeErrors } from "discourse/app";
+import PreloadStore from "discourse/lib/preload-store";
 import getURL from "discourse-common/lib/get-url";
 import I18n from "I18n";
 import { bind } from "discourse-common/utils/decorators";
-import { escape } from "pretty-text/sanitizer";
-import identifySource, {
-  consolePrefix,
-  getThemeInfo,
-} from "discourse/lib/source-identifier";
 
 const showingErrors = new Set();
 
@@ -60,64 +56,39 @@ function reportToLogster(name, error) {
 function reportThemeError(currentUser, e) {
   const { themeId, error } = e.detail;
 
-  const source = {
-    type: "theme",
-    ...getThemeInfo(themeId),
-  };
+  const name =
+    PreloadStore.get("activatedThemes")[themeId] || `(theme-id: ${themeId})`;
+  /* eslint-disable-next-line no-console */
+  console.error(`An error occurred in the "${name}" theme/component:`, error);
+  reportToLogster(name, error);
 
-  reportToConsole(error, source);
-  reportToLogster(source.name, error);
-
-  const message = I18n.t("themes.broken_theme_alert");
-  displayErrorNotice(currentUser, message, source);
+  const path = getURL("/admin/customize/themes");
+  const message = I18n.t("themes.broken_theme_alert", {
+    theme: name,
+    path: `<a href="${path}">${path}</a>`,
+  });
+  displayErrorNotice(currentUser, message);
 }
 
 function reportGenericError(currentUser, e) {
   const { messageKey, error } = e.detail;
 
-  let message = I18n.t(messageKey);
-
-  const source = identifySource(error);
-
-  reportToConsole(error, source);
+  /* eslint-disable-next-line no-console */
+  console.error(error);
 
   if (messageKey && !showingErrors.has(messageKey)) {
     showingErrors.add(messageKey);
-    displayErrorNotice(currentUser, message, source);
+    displayErrorNotice(currentUser, I18n.t(messageKey));
   }
 }
 
-function reportToConsole(error, source) {
-  const prefix = consolePrefix(error, source);
-  if (prefix) {
-    /* eslint-disable-next-line no-console */
-    console.error(prefix, error);
-  } else {
-    /* eslint-disable-next-line no-console */
-    console.error(error);
-  }
-}
-
-function displayErrorNotice(currentUser, message, source) {
+function displayErrorNotice(currentUser, message) {
   if (!currentUser?.admin) {
     return;
   }
 
-  let html = `⚠️ ${message}`;
-
-  if (source && source.type === "theme") {
-    html += `<br/>${I18n.t("themes.error_caused_by", {
-      name: escape(source.name),
-      path: source.path,
-    })}`;
-  }
-
-  html += `<br/><span class='theme-error-suffix'>${I18n.t(
-    "themes.only_admins"
-  )}</span>`;
-
   const alertDiv = document.createElement("div");
   alertDiv.classList.add("broken-theme-alert");
-  alertDiv.innerHTML = html;
+  alertDiv.innerHTML = `⚠️ ${message}`;
   document.body.prepend(alertDiv);
 }
