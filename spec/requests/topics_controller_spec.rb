@@ -3563,7 +3563,7 @@ RSpec.describe TopicsController do
 
     describe 'converting public topic to private message' do
       fab!(:topic) { Fabricate(:topic, user: user) }
-      fab!(:post) { Fabricate(:post, user: post_author1, topic: topic) }
+      fab!(:post) { Fabricate(:post, user: user, topic: topic) }
 
       it "raises an error when the user doesn't have permission to convert topic" do
         sign_in(user)

@@ -46,8 +46,9 @@ TopicStatusUpdater = Struct.new(:topic, :user) do
       UserProfile.remove_featured_topic_from_all_profiles(topic)
     end
 
-    if status.visible?
+    if status.visible? && result
       topic.update_category_topic_count_by(status.enabled? ? 1 : -1)
+      UserStatCountUpdater.public_send(status.enabled? ? :increment! : :decrement!, topic.first_post)
     end
 
     if @topic_timer

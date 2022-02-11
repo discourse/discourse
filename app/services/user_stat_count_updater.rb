@@ -13,9 +13,11 @@ class UserStatCountUpdater
     private
 
     def update!(post, user_stat: nil, action: :increment!)
-      return if !post.topic
-      return if post.topic.private_message?
-      stat = user_stat || post.user.user_stat
+      return if !post&.topic
+      return if action == :increment! && post.topic.private_message?
+      stat = user_stat || post.user&.user_stat
+
+      return if stat.blank?
 
       column =
         if post.is_first_post?
@@ -26,11 +28,14 @@ class UserStatCountUpdater
 
       return if column.blank?
 
+      # There are lingering bugs in the code base that does not properly increase the count when the status of the post
+      # changes. Since we have Job::DirectoryRefreshOlder which runs daily to reconcile the count, there is no need
+      # to trigger an error.
       if action == :decrement! && stat.public_send(column) < 1
-        # There are still spots in the code base which results in the counter cache going out of sync. However,
-        # we have a job that runs on a daily basis which will correct the count. Therefore, we always check that we
-        # wouldn't end up with a negative count first before inserting.
-        Rails.logger.warn("Attempted to insert negative count into UserStat##{column}\n#{caller.join('\n')}")
+        if SiteSetting.verbose_user_stat_count_logging
+          Rails.logger.warn("Attempted to insert negative count into UserStat##{column}} for post with id '#{post.id}'")
+        end
+
         return
       end
 

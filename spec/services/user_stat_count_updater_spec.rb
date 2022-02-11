@@ -11,6 +11,7 @@ describe UserStatCountUpdater do
   before do
     @orig_logger = Rails.logger
     Rails.logger = @fake_logger = FakeLogger.new
+    SiteSetting.verbose_user_stat_count_logging = true
   end
 
   after do
@@ -21,9 +22,11 @@ describe UserStatCountUpdater do
     UserStatCountUpdater.decrement!(post, user_stat: user_stat)
 
     expect(@fake_logger.warnings.last).to match("topic_count")
+    expect(@fake_logger.warnings.last).to match(post.id.to_s)
 
     UserStatCountUpdater.decrement!(post_2, user_stat: user_stat)
 
     expect(@fake_logger.warnings.last).to match("post_count")
+    expect(@fake_logger.warnings.last).to match(post_2.id.to_s)
   end
 end

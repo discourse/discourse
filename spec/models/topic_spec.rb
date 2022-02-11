@@ -1219,7 +1219,11 @@ describe Topic do
   end
 
   context 'update_status' do
-    fab!(:topic) { Fabricate(:topic, bumped_at: 1.hour.ago) }
+    fab!(:post) do
+      Fabricate(:post).tap { |p| p.topic.update!(bumped_at: 1.hour.ago) }
+    end
+
+    fab!(:topic) { post.topic }
 
     before do
       @original_bumped_at = topic.bumped_at
@@ -1243,8 +1247,15 @@ describe Topic do
           topic.update!(category: category)
           Category.update_stats
 
-          expect { topic.update_status('visible', false, @user) }
-            .to change { category.reload.topic_count }.by(-1)
+          expect do
+            2.times { topic.update_status('visible', false, @user) }
+          end.to change { category.reload.topic_count }.by(-1)
+        end
+
+        it 'decreases topic_count of user stat' do
+          expect do
+            2.times { topic.update_status('visible', false, @user) }
+          end.to change { post.user.user_stat.reload.topic_count }.from(1).to(0)
         end
 
         it 'removes itself as featured topic on user profiles' do
@@ -1258,22 +1269,30 @@ describe Topic do
 
       context 'enable' do
         before do
-          topic.update_attribute :visible, false
-          topic.update_status('visible', true, @user)
+          topic.update_status('visible', false, @user)
           topic.reload
         end
 
         it 'should be visible with correct counts' do
+          topic.update_status('visible', true, @user)
+
           expect(topic).to be_visible
-          expect(topic.moderator_posts_count).to eq(1)
+          expect(topic.moderator_posts_count).to eq(2)
           expect(topic.bumped_at).to eq_time(@original_bumped_at)
         end
 
         it 'increases topic_count of topic category' do
-          topic.update!(category: category, visible: false)
+          topic.update!(category: category)
 
-          expect { topic.update_status('visible', true, @user) }
-            .to change { category.reload.topic_count }.by(1)
+          expect do
+            2.times { topic.update_status('visible', true, @user) }
+          end.to change { category.reload.topic_count }.by(1)
+        end
+
+        it 'increases topic_count of user stat' do
+          expect do
+            2.times { topic.update_status('visible', true, @user) }
+          end.to change { post.user.user_stat.reload.topic_count }.from(0).to(1)
         end
       end
     end

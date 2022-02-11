@@ -603,7 +603,9 @@ class PostCreator
       @user.user_stat.update!(first_post_created_at: @post.created_at)
     end
 
-    UserStatCountUpdater.increment!(@post)
+    if !@post.hidden || @post.topic.visible
+      UserStatCountUpdater.increment!(@post)
+    end
 
     if !@topic.private_message? && @post.post_type != Post.types[:whisper]
       @user.update(last_posted_at: @post.created_at)
