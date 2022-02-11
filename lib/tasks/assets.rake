@@ -245,7 +245,8 @@ def copy_ember_cli_assets
   files = {}
 
   log_task_duration('ember build -prod') {
-    unless system("yarn --cwd #{ember_dir} run ember build -prod")
+    ember_env = ENV.slice("DISCOURSE_LOW_MEM").merge("JOBS" => "1")
+    unless system(ember_env, "yarn --cwd #{ember_dir} run ember build -prod")
       STDERR.puts "Error running ember build"
       exit 1
     end

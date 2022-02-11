@@ -14,6 +14,8 @@ module.exports = function (defaults) {
   let discourseRoot = resolve("../../../..");
   let vendorJs = discourseRoot + "/vendor/assets/javascripts/";
 
+  const lowMem = process.env.DISCOURSE_LOW_MEM;
+
   const isProduction = EmberApp.env().includes("production");
   let app = new EmberApp(defaults, {
     autoRun: false,
@@ -40,7 +42,7 @@ module.exports = function (defaults) {
     },
 
     "ember-cli-terser": {
-      enabled: isProduction,
+      enabled: !lowMem && isProduction,
       exclude: [
         "**/test-*.js",
         "**/core-tests*.js",
