@@ -118,9 +118,7 @@ describe 'topics' do
       produces 'application/json'
       response '200', 'specific posts' do
 
-        let(:topic) { Fabricate(:topic) }
-        let(:id) { topic.id }
-        let(:post) { Fabricate(:post, topic: topic) }
+        let(:id) { Fabricate(:topic).id }
 
         expected_response_schema = load_spec_schema('topic_show_response')
         schema expected_response_schema
