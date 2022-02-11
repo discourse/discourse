@@ -119,13 +119,8 @@ describe Emoji do
   end
 
   describe '.codes_to_img' do
-    before do
-      Emoji.clear_cache
-    end
-
-    after do
-      Emoji.clear_cache
-    end
+    before { Plugin::CustomEmoji.clear_cache }
+    after { Plugin::CustomEmoji.clear_cache }
 
     it "replaces emoji codes by images" do
       Plugin::CustomEmoji.register("xxxxxx", "/public/xxxxxx.png")
