@@ -87,7 +87,7 @@ describe Emoji do
     end
   end
 
-  describe 'version updates do' do
+  describe 'version updates' do
     it 'should correct cache when global is stale' do
       Emoji.global_emoji_cache["blonde_man"] = [
         "invalid",
