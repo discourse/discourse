@@ -70,7 +70,7 @@ export function avatarFor(wanted, attrs) {
   return h(
     "a",
     {
-      className: `test trigger-user-card ${attrs.className || ""}`,
+      className: `trigger-user-card ${attrs.className || ""}`,
       attributes: {
         href: attrs.url,
         "data-user-card": attrs.username,
