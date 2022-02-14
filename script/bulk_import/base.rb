@@ -431,6 +431,11 @@ class BulkImport::Base
     user[:last_emailed_at] ||= NOW
     user[:created_at] ||= NOW
     user[:updated_at] ||= user[:created_at]
+
+    if (date_of_birth = user[:date_of_birth]).is_a?(Date) && date_of_birth.year != 1904
+      user[:date_of_birth] = Date.new(1904, date_of_birth.month, date_of_birth.day)
+    end
+
     user
   end
 
