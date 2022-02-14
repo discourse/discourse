@@ -117,7 +117,7 @@ class Theme < ActiveRecord::Base
   def update_javascript_cache!
     all_extra_js = theme_fields
       .where(target_id: Theme.targets[:extra_js])
-      .order(:id)
+      .order(:name, :id)
       .pluck(:value_baked)
       .join("\n")
 
