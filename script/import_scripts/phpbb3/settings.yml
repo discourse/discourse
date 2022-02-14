@@ -122,6 +122,9 @@ import:
   private_messages: true
   polls: true
 
+  # Import likes from the phpBB's "Thanks for posts" extension
+  likes: false
+
   # When true: each imported user will have the original username from phpBB as its name
   # When false: the name of each imported user will be blank unless the username was changed during import
   username_as_name: false

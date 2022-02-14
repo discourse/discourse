@@ -233,6 +233,25 @@ module ImportScripts::PhpBB3
       SQL
     end
 
+    def count_likes
+      count(<<-SQL)
+        SELECT COUNT(*) AS count
+        FROM #{@table_prefix}thanks
+        WHERE user_id <> poster_id
+      SQL
+    end
+
+    def fetch_likes(last_post_id, last_user_id)
+      query(<<-SQL, :post_id, :user_id)
+        SELECT post_id, user_id, thanks_time
+        FROM #{@table_prefix}thanks
+        WHERE user_id <> poster_id
+          AND (post_id, user_id) > (#{last_post_id}, #{last_user_id})
+        ORDER BY post_id, user_id
+        LIMIT #{@batch_size}
+      SQL
+    end
+
     def get_smiley(smiley_code)
       query(<<-SQL).first
         SELECT emotion, smiley_url

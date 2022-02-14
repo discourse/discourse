@@ -24,6 +24,7 @@ module ImportScripts::PhpBB3
     attr_reader :import_polls
     attr_reader :import_bookmarks
     attr_reader :import_passwords
+    attr_reader :import_likes
 
     attr_reader :import_uploaded_avatars
     attr_reader :import_remote_avatars
@@ -58,6 +59,7 @@ module ImportScripts::PhpBB3
       @import_polls = import_settings['polls']
       @import_bookmarks = import_settings['bookmarks']
       @import_passwords = import_settings['passwords']
+      @import_likes = import_settings['likes']
 
       avatar_settings = import_settings['avatars']
       @import_uploaded_avatars = avatar_settings['uploaded']
