@@ -1,5 +1,6 @@
 import getURL from "discourse-common/lib/get-url";
 import PreloadStore from "discourse/lib/preload-store";
+import { isDevelopment } from "discourse-common/config/environment";
 
 export default function identifySource(error) {
   if (!error || !error.stack) {
@@ -26,6 +27,28 @@ export default function identifySource(error) {
       };
     }
   }
+
+  let plugin;
+
+  if (isDevelopment()) {
+    // Source-mapped:
+    plugin = plugin || error.stack.match(/plugins\/([\w-]+)\//)?.[1];
+
+    // Un-source-mapped:
+    plugin = plugin || error.stack.match(/assets\/plugins\/([\w-]+)\.js/)?.[1];
+  }
+
+  // Production mode
+  plugin =
+    plugin ||
+    error.stack.match(/assets\/plugins\/_?([\w-]+)-[0-9a-f]+\.js/)?.[1];
+
+  if (plugin) {
+    return {
+      type: "plugin",
+      name: plugin,
+    };
+  }
 }
 
 export function getThemeInfo(id) {
@@ -41,6 +64,9 @@ export function consolePrefix(error, source) {
   source = source || identifySource(error);
   if (source && source.type === "theme") {
     return `[THEME ${source.id} '${source.name}']`;
+  } else if (source && source.type === "plugin") {
+    return `[PLUGIN ${source.name}]`;
   }
+
   return "";
 }
