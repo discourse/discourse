@@ -1359,6 +1359,26 @@ describe CookedPostProcessor do
           HTML
         end
 
+        it "doesn't use the secure media URL for custom emoji" do
+          CustomEmoji.create!(name: 'trout', upload: upload)
+          Emoji.clear_cache
+          Emoji.load_custom
+          stored_path = Discourse.store.get_path_for_upload(upload)
+          upload.update_column(:url, "#{SiteSetting.Upload.absolute_base_url}/#{stored_path}")
+          upload.update_column(:secure, true)
+
+          the_post = Fabricate(:post, raw: "This post has a custom emoji :trout:")
+          the_post.cook(the_post.raw)
+
+          cpp = CookedPostProcessor.new(the_post)
+          cpp.optimize_urls
+
+          upload_url = upload.url.gsub(SiteSetting.Upload.absolute_base_url, "https://s3.cdn.com")
+          expect(cpp.html).to match_html <<~HTML
+            <p>This post has a custom emoji <img src="#{upload_url}?v=#{Emoji::EMOJI_VERSION}" title=":trout:" class="emoji emoji-custom" alt=":trout:" loading="lazy" width="20" height="20"></p>
+          HTML
+        end
+
         context "media uploads" do
           fab!(:image_upload) { Fabricate(:upload) }
           fab!(:audio_upload) { Fabricate(:upload, extension: "ogg") }
