@@ -14,12 +14,12 @@ describe 'AutoResponder' do
 
   context 'present word_answer list' do
     before do
-      automation.upsert_field!('word_answer_list', 'key-value', { value: [{ key: 'foo', value: 'this is foo' }, { key: 'bar', value: 'this is bar' }].to_json })
+      automation.upsert_field!('word_answer_list', 'key-value', { value: [{ key: 'fooz?|bar', value: 'this is %%KEY%%' }, { key: 'bar', value: 'this is %%KEY%%' }].to_json })
     end
 
     context 'post contains a keyword' do
       it 'creates an answer' do
-        post = create_post(topic: topic, raw: 'this is a post with foo')
+        post = create_post(topic: topic, raw: 'this is foo a post with foo')
         automation.trigger!('post' => post)
 
         expect(topic.reload.posts.last.raw).to eq('this is foo')
@@ -69,7 +69,7 @@ describe 'AutoResponder' do
         post = create_post(topic: topic, raw: 'this is a post with FOO and bar')
         automation.trigger!('post' => post)
 
-        expect(topic.reload.posts.last.raw).to eq("this is foo\n\nthis is bar")
+        expect(topic.reload.posts.last.raw).to eq("this is FOO\n\nthis is bar")
       end
     end
 
