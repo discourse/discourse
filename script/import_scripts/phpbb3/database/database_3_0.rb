@@ -227,7 +227,7 @@ module ImportScripts::PhpBB3
         SELECT b.user_id, t.topic_first_post_id
         FROM #{@table_prefix}bookmarks b
           JOIN #{@table_prefix}topics t ON (b.topic_id = t.topic_id)
-        WHERE b.user_id > #{last_user_id}
+        WHERE (b.user_id, b.topic_id) > (#{last_user_id}, #{last_topic_id})
         ORDER BY b.user_id, b.topic_id
         LIMIT #{@batch_size}
       SQL
