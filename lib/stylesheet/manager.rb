@@ -225,7 +225,7 @@ class Stylesheet::Manager
 
           next if builder.theme&.component && !scss_checker.has_scss(theme_id)
           builder.compile unless File.exist?(builder.stylesheet_fullpath)
-          href = builder.stylesheet_path
+          href = builder.stylesheet_absolute_url
 
           data[:new_href] = href
           stylesheets << data
@@ -243,7 +243,7 @@ class Stylesheet::Manager
       else
         builder = Builder.new(target: target, manager: self)
         builder.compile unless File.exist?(builder.stylesheet_fullpath)
-        href = builder.stylesheet_path
+        href = builder.stylesheet_absolute_url
 
         data = { target: target, new_href: href }
         stylesheets << data
@@ -287,7 +287,7 @@ class Stylesheet::Manager
 
     builder.compile unless File.exist?(builder.stylesheet_fullpath)
 
-    href = builder.stylesheet_path
+    href = builder.stylesheet_absolute_url
     stylesheet[:new_href] = href
     cache.defer_set(cache_key, stylesheet.freeze)
     stylesheet

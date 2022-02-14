@@ -36,7 +36,7 @@ class Stylesheet::Manager::Builder
          rtl: rtl,
          theme_id: theme&.id,
          theme_variables: theme&.scss_variables.to_s,
-         source_map_file: source_map_filename,
+         source_map_file: source_map_url_relative_from_stylesheet,
          color_scheme_id: @color_scheme&.id,
          load_paths: load_paths
       )
@@ -90,19 +90,19 @@ class Stylesheet::Manager::Builder
   end
 
   def source_map_filename
-    "#{stylesheet_filename}.map?__ws=#{current_hostname}"
+    "#{stylesheet_filename}.map"
+  end
+
+  def source_map_url_relative_from_stylesheet
+    "#{source_map_filename}?__ws=#{current_hostname}"
   end
 
   def stylesheet_fullpath_no_digest
     "#{cache_fullpath}/#{stylesheet_filename_no_digest}"
   end
 
-  def stylesheet_cdnpath
+  def stylesheet_absolute_url
     "#{GlobalSetting.cdn_url}#{stylesheet_relpath}?__ws=#{current_hostname}"
-  end
-
-  def stylesheet_path
-    stylesheet_cdnpath
   end
 
   def root_path
