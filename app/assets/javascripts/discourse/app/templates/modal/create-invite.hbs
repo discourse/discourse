@@ -85,12 +85,14 @@
 
     {{#if currentUser.staff}}
       <div class="input-group invite-to-topic">
-        {{choose-topic
-          selectedTopicId=buffered.topicId
-          topicTitle=buffered.topicTitle
-          additionalFilters="status:public"
-          labelIcon="hand-point-right"
-          label="user.invited.invite.invite_to_topic"
+        <label for="invite-topic">{{d-icon "hand-point-right"}}{{i18n "user.invited.invite.invite_to_topic"}}</label>
+        {{topic-chooser
+          value=buffered.topicId
+          content=topics
+          onChange=(action "onChangeTopic")
+          options=(hash
+            additionalFilters="status:public"
+          )
         }}
       </div>
     {{else if buffered.topicTitle}}
