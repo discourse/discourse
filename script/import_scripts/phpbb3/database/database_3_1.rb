@@ -5,7 +5,7 @@ require_relative '../support/constants'
 
 module ImportScripts::PhpBB3
   class Database_3_1 < Database_3_0
-    def fetch_users(last_user_id)
+    def fetch_users(last_user_id, profile_fields)
       query(<<-SQL, :user_id)
         SELECT u.user_id, u.user_email, u.username,
           CASE WHEN u.user_password LIKE '$2y$%'
@@ -15,6 +15,7 @@ module ImportScripts::PhpBB3
           u.user_type, u.user_inactive_reason, g.group_name, b.ban_start, b.ban_end, b.ban_reason,
           u.user_posts, f.pf_phpbb_website AS user_website, f.pf_phpbb_location AS user_from,
           u.user_birthday, u.user_avatar_type, u.user_avatar
+          #{profile_fields_query(profile_fields)}
         FROM #{@table_prefix}users u
           LEFT OUTER JOIN #{@table_prefix}profile_fields_data f ON (u.user_id = f.user_id)
           JOIN #{@table_prefix}groups g ON (g.group_id = u.group_id)
@@ -26,6 +27,19 @@ module ImportScripts::PhpBB3
         ORDER BY u.user_id
         LIMIT #{@batch_size}
       SQL
+    end
+
+    private
+
+    def profile_fields_query(profile_fields)
+      @profile_fields_query ||= begin
+        if profile_fields.present?
+          columns = profile_fields.map { |field| "pf_#{field[:phpbb_field_name]}" }
+          ", #{columns.join(', ')}"
+        else
+          ""
+        end
+      end
     end
   end
 end

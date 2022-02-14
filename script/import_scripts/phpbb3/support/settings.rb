@@ -38,6 +38,7 @@ module ImportScripts::PhpBB3
 
     attr_reader :username_as_name
     attr_reader :emojis
+    attr_reader :custom_fields
 
     attr_reader :database
 
@@ -72,6 +73,7 @@ module ImportScripts::PhpBB3
 
       @username_as_name = import_settings['username_as_name']
       @emojis = import_settings.fetch('emojis', [])
+      @custom_fields = import_settings.fetch('custom_fields', [])
 
       @database = DatabaseSettings.new(yaml['database'])
     end

@@ -134,3 +134,12 @@ import:
     # here are two example mappings...
     smiley: [':D', ':-D', ':grin:']
     heart: ':love:'
+
+  # Map custom profile fields from phpBB to custom user fields in Discourse (works for phpBB 3.1+)
+  #
+  #  custom_fields:
+  #    - phpbb_field_name: "company_name"
+  #      discourse_field_name: "Company"
+  #    - phpbb_field_name: "facebook"
+  #      discourse_field_name: "Facebook"
+  custom_fields: []
