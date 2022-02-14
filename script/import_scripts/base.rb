@@ -332,6 +332,10 @@ class ImportScripts::Base
     opts[:import_mode] = true
     opts[:last_emailed_at] = opts.fetch(:last_emailed_at, Time.now)
 
+    if (date_of_birth = opts[:date_of_birth]).is_a?(Date) && date_of_birth.year != 1904
+      opts[:date_of_birth] = Date.new(1904, date_of_birth.month, date_of_birth.day)
+    end
+
     u = User.new(opts)
     (opts[:custom_fields] || {}).each { |k, v| u.custom_fields[k] = v }
     u.custom_fields["import_id"] = import_id
