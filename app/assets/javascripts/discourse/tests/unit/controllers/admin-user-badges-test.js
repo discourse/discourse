@@ -51,7 +51,10 @@ discourseModule("Unit | Controller | admin-user-badges", function () {
       return badge.name;
     });
 
-    assert.not(badgeNames.includes(badgeDisabled), "excludes disabled badges");
+    assert.notOk(
+      badgeNames.includes(badgeDisabled),
+      "excludes disabled badges"
+    );
     assert.deepEqual(badgeNames, sortedNames, "sorts badges by name");
   });
 });

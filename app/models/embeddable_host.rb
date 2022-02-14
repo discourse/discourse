@@ -14,13 +14,13 @@ class EmbeddableHost < ActiveRecord::Base
   self.ignored_columns = ["path_whitelist"]
 
   def self.record_for_url(uri)
-
     if uri.is_a?(String)
       uri = begin
         URI(UrlHelper.escape_uri(uri))
-      rescue URI::Error
+      rescue URI::Error, Addressable::URI::InvalidURIError
       end
     end
+
     return false unless uri.present?
 
     host = uri.host

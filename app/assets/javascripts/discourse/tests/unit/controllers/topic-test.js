@@ -33,12 +33,15 @@ discourseModule("Unit | Controller | topic", function (hooks) {
   test("editTopic", function (assert) {
     const model = Topic.create();
     const controller = this.getController("topic", { model });
-    assert.not(controller.get("editingTopic"), "we are not editing by default");
+    assert.notOk(
+      controller.get("editingTopic"),
+      "we are not editing by default"
+    );
 
     controller.set("model.details.can_edit", false);
     controller.send("editTopic");
 
-    assert.not(
+    assert.notOk(
       controller.get("editingTopic"),
       "calling editTopic doesn't enable editing unless the user can edit"
     );
@@ -58,7 +61,7 @@ discourseModule("Unit | Controller | topic", function (hooks) {
 
     controller.send("cancelEditingTopic");
 
-    assert.not(
+    assert.notOk(
       controller.get("editingTopic"),
       "cancelling edit mode reverts the property value"
     );
@@ -84,7 +87,7 @@ discourseModule("Unit | Controller | topic", function (hooks) {
 
     model.set("views", 10000);
     controller.send("deleteTopic");
-    assert.not(destroyed, "don't destroy popular topic");
+    assert.notOk(destroyed, "don't destroy popular topic");
     assert.ok(modalDisplayed, "display confirmation modal for popular topic");
 
     model.set("views", 3);
@@ -96,7 +99,7 @@ discourseModule("Unit | Controller | topic", function (hooks) {
     const model = Topic.create();
     const controller = this.getController("topic", { model });
 
-    assert.not(
+    assert.notOk(
       controller.get("multiSelect"),
       "multi selection mode is disabled by default"
     );
@@ -123,7 +126,7 @@ discourseModule("Unit | Controller | topic", function (hooks) {
     controller.send("toggleMultiSelect");
     await settled();
 
-    assert.not(
+    assert.notOk(
       controller.get("multiSelect"),
       "calling 'toggleMultiSelect' twice disables multi selection mode"
     );
@@ -145,7 +148,7 @@ discourseModule("Unit | Controller | topic", function (hooks) {
       2,
       "selectedPosts only contains already loaded posts"
     );
-    assert.not(
+    assert.notOk(
       controller.get("selectedPosts").some((p) => p === undefined),
       "selectedPosts only contains valid post objects"
     );
@@ -157,7 +160,7 @@ discourseModule("Unit | Controller | topic", function (hooks) {
 
     controller.set("selectedPostIds", [1, 2]);
 
-    assert.not(
+    assert.notOk(
       controller.get("selectedAllPosts"),
       "not all posts are selected"
     );
@@ -240,11 +243,14 @@ discourseModule("Unit | Controller | topic", function (hooks) {
     const model = Topic.create({ posts_count: 3 });
     const controller = this.getController("topic", { model, site });
 
-    assert.not(controller.get("showSelectedPostsAtBottom"), "false on desktop");
+    assert.notOk(
+      controller.get("showSelectedPostsAtBottom"),
+      "false on desktop"
+    );
 
     site.set("mobileView", true);
 
-    assert.not(
+    assert.notOk(
       controller.get("showSelectedPostsAtBottom"),
       "requires at least 3 posts on mobile"
     );
@@ -277,14 +283,14 @@ discourseModule("Unit | Controller | topic", function (hooks) {
     });
     const selectedPostIds = controller.get("selectedPostIds");
 
-    assert.not(
+    assert.notOk(
       controller.get("canDeleteSelected"),
       "false when no posts are selected"
     );
 
     selectedPostIds.pushObject(1);
 
-    assert.not(
+    assert.notOk(
       controller.get("canDeleteSelected"),
       "false when can't delete one of the selected posts"
     );
@@ -298,7 +304,7 @@ discourseModule("Unit | Controller | topic", function (hooks) {
 
     selectedPostIds.pushObject(1);
 
-    assert.not(
+    assert.notOk(
       controller.get("canDeleteSelected"),
       "false when all posts are selected and user is staff"
     );
@@ -324,14 +330,14 @@ discourseModule("Unit | Controller | topic", function (hooks) {
     const controller = this.getController("topic", { model });
     const selectedPostIds = controller.get("selectedPostIds");
 
-    assert.not(
+    assert.notOk(
       controller.get("canMergeTopic"),
       "can't merge topic when no posts are selected"
     );
 
     selectedPostIds.pushObject(1);
 
-    assert.not(
+    assert.notOk(
       controller.get("canMergeTopic"),
       "can't merge topic when can't move posts"
     );
@@ -377,14 +383,14 @@ discourseModule("Unit | Controller | topic", function (hooks) {
     });
     const selectedPostIds = controller.get("selectedPostIds");
 
-    assert.not(
+    assert.notOk(
       controller.get("canChangeOwner"),
       "false when no posts are selected"
     );
 
     selectedPostIds.pushObject(1);
 
-    assert.not(controller.get("canChangeOwner"), "false when not admin");
+    assert.notOk(controller.get("canChangeOwner"), "false when not admin");
 
     currentUser.set("admin", true);
 
@@ -395,7 +401,7 @@ discourseModule("Unit | Controller | topic", function (hooks) {
 
     selectedPostIds.pushObject(2);
 
-    assert.not(
+    assert.notOk(
       controller.get("canChangeOwner"),
       "false when admin but more than 1 user"
     );
@@ -416,28 +422,28 @@ discourseModule("Unit | Controller | topic", function (hooks) {
     });
     const selectedPostIds = controller.get("selectedPostIds");
 
-    assert.not(
+    assert.notOk(
       controller.get("canMergePosts"),
       "false when no posts are selected"
     );
 
     selectedPostIds.pushObject(1);
 
-    assert.not(
+    assert.notOk(
       controller.get("canMergePosts"),
       "false when only one post is selected"
     );
 
     selectedPostIds.pushObject(2);
 
-    assert.not(
+    assert.notOk(
       controller.get("canMergePosts"),
       "false when selected posts are from different users"
     );
 
     selectedPostIds.replace(1, 1, [3]);
 
-    assert.not(
+    assert.notOk(
       controller.get("canMergePosts"),
       "false when selected posts can't be deleted"
     );

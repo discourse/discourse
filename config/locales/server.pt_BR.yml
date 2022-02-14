@@ -338,8 +338,6 @@ pt_BR:
   too_many_links:
     one: "Desculpe, usuários(as) novos(as) podem inserir apenas %{count} link em uma postagem."
     other: "Desculpe, usuários(as) novos(as) podem inserir apenas %{count} links em uma postagem."
-  contains_blocked_word: "Sua postagem contém uma palavra que não é permitida: %{word}"
-  contains_blocked_words: "Sua postagem contém várias palavras que não são permitidas: %{words}"
   spamming_host: "Desculpe, você não pode postar um link para esse host."
   user_is_suspended: "Usuários(as) suspensos(as) não têm permissão para postar."
   topic_not_found: "Ocorreu um erro. Talvez este tópico tenha sido fechado ou removido enquanto você estava visualizando."
@@ -1401,7 +1399,6 @@ pt_BR:
     min_personal_message_title_length: "Tamanho mínimo permitido para o título de uma mensagem em caracteres"
     max_emojis_in_title: "Emojis permitidos máximos no título do tópico"
     min_search_term_length: "Tamanho mínimo válido para termo de pesquisa em caracteres"
-    search_tokenize_chinese_japanese_korean: "Forçar a pesquisa a transformar em token caracteres de mandarim/japonês/coreano até para sites que não estão nesses idiomas"
     search_prefer_recent_posts: "Se as pesquisas no seu fórum estiverem lentas, essa opção tenta indexar as postagens mais recentes primeiro"
     search_recent_posts_size: "Quantidade de postagens recentes para serem mantidas no índice"
     log_search_queries: "Registrar consultas de pesquisa realizadas pelos(as) usuários(as)"
@@ -1445,7 +1442,6 @@ pt_BR:
     show_pinned_excerpt_mobile: "Mostre trecho de tópicos fixados na visualização para dispositivos móveis."
     show_pinned_excerpt_desktop: "Mostrar trecho de tópicos fixados na visualização para desktop."
     post_onebox_maxlength: "Tamanho máximo para uma postagem do Discourse no Onebox."
-    blocked_onebox_domains: "Uma lista de domínios que nunca serão transformados em Onebox."
     allowed_inline_onebox_domains: "Uma lista de domínios que serão colocados em miniatura no Onebox se forem vinculados sem um título"
     enable_inline_onebox_on_all_domains: "Ignore a configuração do site inline_onebox_domain_whitelist e permita inclusões de Onebox em todos os domínios."
     force_custom_user_agent_hosts: "Hosts para os quais usar um agente do(a) usuário(a) do Onebox em todos os pedidos. (Especialmente útil para hosts que limitam acesso do agente do(a) usuário(a).)"
@@ -1533,7 +1529,7 @@ pt_BR:
     allowed_iframes: "Uma lista de prefixos de domínio iframe src que o Discourse pode permitir com segurança em postagens"
     allowed_crawler_user_agents: "Agentes de usuário(a) de rastreadores da web que devem ter permissão para acessar o site. AVISO! ESTA CONFIGURAÇÃO NEGARÁ ACESSO A TODOS OS RASTREADORES NÃO LISTADOS AQUI!"
     blocked_crawler_user_agents: "Palavra sem diferenciação de maiúsculas e minúsculas na linha do agente do(a) usuário(a) que identifica os rastreadores da web que não devem ter permissão para acessar o site. Não se aplica se a lista de permissões estiver definida."
-    slow_down_crawler_user_agents: "Agentes de usuário(a) de rastreadores da web que devem ter a taxa limitada conforme a configuração \"reduzir taxa de rastreador\". Cada valor dever ter pelo menos três caracteres."
+    slow_down_crawler_user_agents: 'Agentes de usuário(a) de rastreadores da web que devem ter a taxa limitada conforme a configuração "reduzir taxa de rastreador". Cada valor dever ter pelo menos três caracteres.'
     slow_down_crawler_rate: "Se slow_down_crawler_user_agents for especificado, essa taxa será aplicada a todos os rastreadores (quantidade de segundos de atraso entre os pedidos)"
     content_security_policy: "Ativar Content-Security-Policy"
     content_security_policy_report_only: "Ativar Content-Security-Policy-Report-Only"

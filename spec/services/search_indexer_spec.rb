@@ -62,7 +62,7 @@ describe SearchIndexer do
 
   it 'extracts emoji name from emoji image' do
     emoji = Emoji["wink"]
-    html = %Q|<img src=\"#{URI.join(Discourse.base_url_no_prefix, emoji.url)}\" title=\":wink:\" class=\"emoji only-emoji\" alt=\":wink:\">|
+    html = %Q|<img src=\"#{URI.join(Discourse.base_url_no_prefix, emoji.url)}\" title=\":wink:\" class=\"emoji only-emoji\" alt=\":wink:\" loading=\"lazy\" width=\"20\" height=\"20\">|
     scrubbed = scrub(html)
 
     expect(scrubbed).to eq(':wink:')

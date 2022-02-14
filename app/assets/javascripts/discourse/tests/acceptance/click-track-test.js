@@ -4,8 +4,7 @@ import {
   exists,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, currentURL, visit } from "@ember/test-helpers";
-import { skip } from "qunit";
-// import { test } from "qunit";
+import { test } from "qunit";
 
 acceptance("Click Track", function (needs) {
   let tracked = false;
@@ -16,7 +15,7 @@ acceptance("Click Track", function (needs) {
     });
   });
 
-  skip("Do not track mentions", async function (assert) {
+  test("Do not track mentions", async function (assert) {
     await visit("/t/internationalization-localization/280");
     assert.ok(!exists(".user-card.show"), "card should not appear");
 

@@ -23,6 +23,7 @@ function getOpts(opts) {
       formatUsername,
       watchedWordsReplace: context.site.watched_words_replace,
       watchedWordsLink: context.site.watched_words_link,
+      additionalOptions: context.site.markdown_additional_options,
     },
     opts
   );

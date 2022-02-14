@@ -1,4 +1,5 @@
 import QUnit, { module, skip, test } from "qunit";
+import { deepMerge } from "discourse-common/lib/object";
 import MessageBus from "message-bus-client";
 import {
   clearCache as clearOutletCache,
@@ -12,15 +13,15 @@ import {
 import { forceMobile, resetMobile } from "discourse/lib/mobile";
 import { getApplication, getContext, settled } from "@ember/test-helpers";
 import { getOwner } from "discourse-common/lib/get-owner";
-import { later, run } from "@ember/runloop";
+import { run } from "@ember/runloop";
 import { setupApplicationTest } from "ember-qunit";
 import { Promise } from "rsvp";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
 import { _clearSnapshots } from "select-kit/components/composer-actions";
 import { clearHTMLCache } from "discourse/helpers/custom-html";
-import createStore from "discourse/tests/helpers/create-store";
 import deprecated from "discourse-common/lib/deprecated";
+import { restoreBaseUri } from "discourse-common/lib/get-url";
 import { flushMap } from "discourse/services/store";
 import { initSearchData } from "discourse/widgets/search-menu";
 import { resetPostMenuExtraButtons } from "discourse/widgets/post-menu";
@@ -38,7 +39,10 @@ import { resetCardClickListenerSelector } from "discourse/mixins/card-contents-b
 import { resetComposerCustomizations } from "discourse/models/composer";
 import { resetQuickSearchRandomTips } from "discourse/widgets/search-menu-results";
 import sessionFixtures from "discourse/tests/fixtures/session-fixtures";
-import { setTopicList } from "discourse/lib/topic-list-tracker";
+import {
+  resetHighestReadCache,
+  setTopicList,
+} from "discourse/lib/topic-list-tracker";
 import sinon from "sinon";
 import siteFixtures from "discourse/tests/fixtures/site-fixtures";
 import { clearResolverOptions } from "discourse-common/resolver";
@@ -57,6 +61,7 @@ import {
   clearPresenceCallbacks,
   setTestPresence,
 } from "discourse/lib/user-presence";
+import PreloadStore from "discourse/lib/preload-store";
 
 const LEGACY_ENV = !setupApplicationTest;
 
@@ -115,9 +120,9 @@ export function resetSite(siteSettings, extras) {
     siteFixtures["site.json"].site,
     extras || {}
   );
-  siteAttrs.store = createStore();
   siteAttrs.siteSettings = siteSettings;
-  return Site.resetCurrent(Site.create(siteAttrs));
+  PreloadStore.store("site", siteAttrs);
+  Site.resetCurrent();
 }
 
 export function applyPretender(name, server, helper) {
@@ -158,6 +163,7 @@ function testCleanup(container, app) {
   resetOneboxCache();
   resetCustomPostMessageCallbacks();
   resetUserSearchCache();
+  resetHighestReadCache();
   resetCardClickListenerSelector();
   resetComposerCustomizations();
   resetQuickSearchRandomTips();
@@ -177,6 +183,7 @@ function testCleanup(container, app) {
   if (!LEGACY_ENV) {
     clearPresenceCallbacks();
   }
+  restoreBaseUri();
 }
 
 export function discourseModule(name, options) {
@@ -400,6 +407,11 @@ export function fixture(selector) {
 }
 
 QUnit.assert.not = function (actual, message) {
+  deprecated("assert.not() is deprecated. Use assert.notOk() instead.", {
+    since: "2.9.0.beta1",
+    dropFrom: "2.10.0.beta1",
+  });
+
   this.pushResult({
     result: !actual,
     actual,
@@ -431,16 +443,6 @@ QUnit.assert.containsInstance = function (collection, klass, message) {
     message,
   });
 };
-
-export function waitFor(assert, callback, timeout) {
-  timeout = timeout || 500;
-
-  const done = assert.async();
-  later(() => {
-    callback();
-    done();
-  }, timeout);
-}
 
 export async function selectDate(selector, date) {
   return new Promise((resolve) => {
@@ -560,4 +562,12 @@ export function createFile(name, type = "image/png", blobData = null) {
     lastModified: new Date().getTime(),
   });
   return file;
+}
+
+export async function paste(element, text, otherClipboardData = {}) {
+  let e = new Event("paste", { cancelable: true });
+  e.clipboardData = deepMerge({ getData: () => text }, otherClipboardData);
+  element.dispatchEvent(e);
+  await settled();
+  return e;
 }

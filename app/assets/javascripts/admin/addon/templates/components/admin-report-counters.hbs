@@ -18,7 +18,7 @@
 <div class="cell value thirty-days-count {{model.thirtyDaysTrend}}" title={{model.thirtyDaysCountTitle}}>
   {{number model.lastThirtyDaysCount}}
 
-  {{#if model.prev30Days}}
+  {{#if model.canDisplayTrendIcon}}
     {{d-icon model.thirtyDaysTrendIcon}}
   {{/if}}
 </div>

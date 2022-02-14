@@ -1184,6 +1184,8 @@ describe Guardian do
   end
 
   describe "can_recover_topic?" do
+    fab!(:topic) { Fabricate(:topic, user: user) }
+    fab!(:post) { Fabricate(:post, user: user, topic: topic) }
 
     it "returns false for a nil user" do
       expect(Guardian.new(nil).can_recover_topic?(topic)).to be_falsey
@@ -1198,11 +1200,6 @@ describe Guardian do
     end
 
     context 'as a moderator' do
-      before do
-        topic.save!
-        post.save!
-      end
-
       describe 'when post has been deleted' do
         it "should return the right value" do
           expect(Guardian.new(moderator).can_recover_topic?(topic)).to be_falsey
@@ -1227,9 +1224,6 @@ describe Guardian do
       fab!(:group_user) { Fabricate(:group_user) }
 
       before do
-        topic.save!
-        post.save!
-
         SiteSetting.enable_category_group_moderation = true
         PostDestroyer.new(moderator, topic.first_post).destroy
         topic.reload
@@ -1262,10 +1256,8 @@ describe Guardian do
     end
 
     context 'as a moderator' do
-      before do
-        topic.save!
-        post.save!
-      end
+      fab!(:topic) { Fabricate(:topic, user: user) }
+      fab!(:post) { Fabricate(:post, user: user, topic: topic) }
 
       describe 'when post has been deleted' do
         it "should return the right value" do

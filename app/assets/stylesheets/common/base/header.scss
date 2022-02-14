@@ -14,8 +14,10 @@
   backface-visibility: hidden; /** do magic for scrolling performance **/
 
   > .wrap {
-    width: calc(100% - 20px); // accommodates for 10px vertical padding
+    box-sizing: border-box;
+    width: 100%;
     height: 100%;
+
     .contents {
       display: flex;
       align-items: center;

@@ -6,7 +6,7 @@ import {
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, triggerKeyEvent, visit } from "@ember/test-helpers";
-import { skip, test } from "qunit";
+import { test } from "qunit";
 import I18n from "I18n";
 import hbs from "htmlbars-inline-precompile";
 import { run } from "@ember/runloop";
@@ -30,7 +30,7 @@ acceptance("Modal", function (needs) {
     I18n.translations = _translations;
   });
 
-  skip("modal", async function (assert) {
+  test("modal", async function (assert) {
     await visit("/");
 
     assert.ok(!exists(".d-modal:visible"), "there is no modal at first");
@@ -51,7 +51,7 @@ acceptance("Modal", function (needs) {
     await click(".login-button");
     assert.strictEqual(count(".d-modal:visible"), 1, "modal should reappear");
 
-    await triggerKeyEvent("#main-outlet", "keyup", 27);
+    await triggerKeyEvent("#main-outlet", "keydown", 27);
     assert.ok(!exists(".d-modal:visible"), "ESC should close the modal");
 
     Ember.TEMPLATES[

@@ -1,12 +1,4 @@
-import {
-  LATER_TODAY_CUTOFF_HOUR,
-  MOMENT_THURSDAY,
-  laterToday,
-  now,
-  parseCustomDatetime,
-  startOfDay,
-  tomorrow,
-} from "discourse/lib/time-utils";
+import { now, parseCustomDatetime, startOfDay } from "discourse/lib/time-utils";
 import { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
 import Component from "@ember/component";
 import I18n from "I18n";
@@ -305,9 +297,7 @@ export default Component.extend({
         id: TIME_SHORTCUT_TYPES.POST_LOCAL_DATE,
         label: "time_shortcut.post_local_date",
         time: this._postLocalDate(),
-        timeFormatted: this._postLocalDate().format(
-          I18n.t("dates.long_no_year")
-        ),
+        timeFormatKey: "dates.long_no_year",
         hidden: false,
       });
     }
@@ -330,36 +320,11 @@ export default Component.extend({
     editingExistingBookmark,
     existingBookmarkHasReminder
   ) {
-    if (!editingExistingBookmark) {
-      return [];
-    }
-
-    if (!existingBookmarkHasReminder) {
+    if (editingExistingBookmark && !existingBookmarkHasReminder) {
       return [TIME_SHORTCUT_TYPES.NONE];
     }
 
     return [];
-  },
-
-  @discourseComputed()
-  additionalTimeShortcutOptions() {
-    let additional = [];
-
-    if (
-      !laterToday(this.userTimezone).isSame(
-        tomorrow(this.userTimezone),
-        "date"
-      ) &&
-      now(this.userTimezone).hour() < LATER_TODAY_CUTOFF_HOUR
-    ) {
-      additional.push(TIME_SHORTCUT_TYPES.LATER_TODAY);
-    }
-
-    if (now(this.userTimezone).day() < MOMENT_THURSDAY) {
-      additional.push(TIME_SHORTCUT_TYPES.LATER_THIS_WEEK);
-    }
-
-    return additional;
   },
 
   @discourseComputed("model.reminderAt")

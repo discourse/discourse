@@ -182,6 +182,7 @@ class PostsController < ApplicationController
   def create
     @manager_params = create_params
     @manager_params[:first_post_checks] = !is_api?
+    @manager_params[:advance_draft] = !is_api?
 
     manager = NewPostManager.new(current_user, @manager_params)
 
@@ -546,6 +547,7 @@ class PostsController < ApplicationController
 
   def wiki
     post = find_post_from_params
+    params.require(:wiki)
     guardian.ensure_can_wiki!(post)
 
     post.revise(current_user, wiki: params[:wiki])
@@ -555,8 +557,10 @@ class PostsController < ApplicationController
 
   def post_type
     guardian.ensure_can_change_post_type!
-
     post = find_post_from_params
+    params.require(:post_type)
+    raise Discourse::InvalidParameters.new(:post_type) if Post.types[params[:post_type].to_i].blank?
+
     post.revise(current_user, post_type: params[:post_type].to_i)
 
     render body: nil
@@ -757,6 +761,8 @@ class PostsController < ApplicationController
       # We allow `created_at` via the API
       permitted << :created_at
 
+      # We allow `external_id` via the API
+      permitted << :external_id
     end
 
     result = params.permit(*permitted).tap do |allowed|

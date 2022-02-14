@@ -71,13 +71,7 @@ module.exports = function (defaults) {
     });
 
     let tests = concat(appTestTrees, {
-      inputFiles: [
-        "**/tests/acceptance/*.js",
-        "**/tests/integration/*.js",
-        "**/tests/integration/**/*.js",
-        "**/tests/unit/*.js",
-        "**/tests/unit/**/*.js",
-      ],
+      inputFiles: ["**/tests/**/*-test.js"],
       headerFiles: ["vendor/ember-cli/tests-prefix.js"],
       footerFiles: ["vendor/ember-cli/app-config.js"],
       outputFile: "/assets/core-tests.js",
@@ -104,12 +98,16 @@ module.exports = function (defaults) {
   // For example: our very specific version of bootstrap-modal.
   app.import(vendorJs + "bootbox.js");
   app.import(vendorJs + "bootstrap-modal.js");
-  app.import(vendorJs + "jquery.ui.widget.js");
   app.import(vendorJs + "caret_position.js");
   app.import("node_modules/ember-source/dist/ember-template-compiler.js", {
     type: "test",
   });
   app.import(discourseRoot + "/app/assets/javascripts/polyfills.js");
+
+  app.import(
+    discourseRoot +
+      "/app/assets/javascripts/discourse/public/assets/scripts/module-shims.js"
+  );
 
   const mergedTree = mergeTrees([
     discourseScss(`${discourseRoot}/app/assets/stylesheets`, "testem.scss"),

@@ -318,6 +318,33 @@ describe 'posts' do
     end
   end
 
+  path '/posts/{id}/replies.json' do
+    get 'List replies to a post' do
+      tags 'Posts'
+      operationId 'postReplies'
+      consumes 'application/json'
+      expected_request_schema = nil
+      parameter name: :id, in: :path, schema: { type: :string }
+
+      produces 'application/json'
+      response '200', 'post replies' do
+        expected_response_schema = load_spec_schema('post_replies_response')
+        schema expected_response_schema
+
+        fab!(:user) { Fabricate(:user) }
+        fab!(:topic) { Fabricate(:topic) }
+        fab!(:post) { Fabricate(:post, topic: topic, user: user) }
+        let!(:reply) { PostCreator.new(user, raw: "this is some text for my post", topic_id: topic.id, reply_to_post_number: post.post_number).create }
+        let!(:id) { post.id }
+
+        it_behaves_like "a JSON endpoint", 200 do
+          let(:expected_response_schema) { expected_response_schema }
+          let(:expected_request_schema) { expected_request_schema }
+        end
+      end
+    end
+  end
+
   path '/posts/{id}/locked.json' do
     put 'Lock a post from being edited' do
       tags 'Posts'

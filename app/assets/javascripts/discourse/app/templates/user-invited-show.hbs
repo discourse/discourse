@@ -10,9 +10,11 @@
         {{#d-section class="user-invite-buttons"}}
           {{d-button class="btn-default" icon="plus" action=(action "createInvite") label="user.invited.create"}}
           {{#if canBulkInvite}}
-            {{#unless site.mobileView}}
-              {{d-button class="btn-default" icon="upload" action=(action "createInviteCsv") label="user.invited.bulk_invite.text"}}
-            {{/unless}}
+            {{#if siteSettings.allow_bulk_invite}}
+              {{#unless site.mobileView}}
+                {{d-button class="btn-default" icon="upload" action=(action "createInviteCsv") label="user.invited.bulk_invite.text"}}
+              {{/unless}}
+            {{/if}}
           {{/if}}
           {{#if showBulkActionButtons}}
             {{#if inviteExpired}}

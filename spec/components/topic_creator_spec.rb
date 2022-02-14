@@ -286,5 +286,15 @@ describe TopicCreator do
         expect(topic.pinned_at).to eq_time(time2)
       end
     end
+
+    context 'external_id' do
+      it 'adds external_id' do
+        topic = TopicCreator.create(user, Guardian.new(user), valid_attrs.merge(
+          external_id: 'external_id'
+        ))
+
+        expect(topic.external_id).to eq('external_id')
+      end
+    end
   end
 end

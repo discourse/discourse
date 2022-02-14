@@ -2951,7 +2951,6 @@ da:
       default_list_filter: "Standard Listefilter:"
       allow_badges_label: "Tillad at emblemer bliver tildelt i denne kategori"
       edit_permissions: "Redigér tilladelser"
-      reviewable_by_group: "Ud over personalet kan indholdet i denne kategori også gennemgås af:"
       review_group_name: "gruppe navn"
       require_topic_approval: "Kræv moderator godkendelse af alle nye emner"
       require_reply_approval: "Kræv moderator godkendelse af alle nye svar"

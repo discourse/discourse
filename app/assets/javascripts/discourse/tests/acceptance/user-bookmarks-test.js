@@ -16,7 +16,7 @@ acceptance("User's bookmarks", function (needs) {
     await dropdown.expand();
     await dropdown.selectRowByValue("remove");
 
-    assert.not(exists(".bootbox.modal"), "it should not show the modal");
+    assert.notOk(exists(".bootbox.modal"), "it should not show the modal");
   });
 
   test("it renders search controls if there are bookmarks", async function (assert) {
@@ -46,7 +46,7 @@ acceptance("User's bookmarks - reminder", function (needs) {
     assert.ok(exists(".bootbox.modal"), "it asks for delete confirmation");
 
     await click(".bootbox.modal a.btn-primary");
-    assert.not(exists(".bootbox.modal"));
+    assert.notOk(exists(".bootbox.modal"));
   });
 });
 

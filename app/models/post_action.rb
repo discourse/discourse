@@ -239,8 +239,7 @@ class PostAction < ActiveRecord::Base
     end
 
     if column == "like_count"
-      topic_count = Post.where(topic_id: topic_id).sum(column)
-      Topic.where(id: topic_id).update_all ["#{column} = ?", topic_count]
+      Topic.find_by(id: topic_id)&.update_action_counts
     end
 
   end

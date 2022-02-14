@@ -94,7 +94,7 @@ RSpec.describe MetadataController do
       expect(response.status).to eq(200)
       manifest = JSON.parse(response.body)
       expect(manifest["shortcuts"].size).to be > 0
-      expect { URI.parse(manifest["shortcuts"][0]["icons"][0]["src"]) }.not_to raise_error
+      expect { URI.parse(manifest["shortcuts"][0]["url"]) }.not_to raise_error
     end
   end
 

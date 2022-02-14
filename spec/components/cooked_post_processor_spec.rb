@@ -1246,7 +1246,7 @@ describe CookedPostProcessor do
         <a href="http://www.google.com" rel="noopener nofollow ugc">Google</a><br>
         <img src="http://foo.bar/image.png"><br>
         <a class="attachment" href="//test.localhost/#{upload_path}/original/1X/af2c2618032c679333bebf745e75f9088748d737.txt">text.txt</a> (20 Bytes)<br>
-        <img src="//test.localhost/images/emoji/twitter/smile.png?v=#{Emoji::EMOJI_VERSION}" title=":smile:" class="emoji only-emoji" alt=":smile:"></p>
+        <img src="//test.localhost/images/emoji/twitter/smile.png?v=#{Emoji::EMOJI_VERSION}" title=":smile:" class="emoji only-emoji" alt=":smile:" loading="lazy" width="20" height="20"></p>
       HTML
     end
 
@@ -1261,7 +1261,7 @@ describe CookedPostProcessor do
           <a href="http://www.google.com" rel="noopener nofollow ugc">Google</a><br>
           <img src="http://foo.bar/image.png"><br>
           <a class="attachment" href="//my.cdn.com/#{upload_path}/original/1X/af2c2618032c679333bebf745e75f9088748d737.txt">text.txt</a> (20 Bytes)<br>
-          <img src="//my.cdn.com/images/emoji/twitter/smile.png?v=#{Emoji::EMOJI_VERSION}" title=":smile:" class="emoji only-emoji" alt=":smile:"></p>
+          <img src="//my.cdn.com/images/emoji/twitter/smile.png?v=#{Emoji::EMOJI_VERSION}" title=":smile:" class="emoji only-emoji" alt=":smile:" loading="lazy" width="20" height="20"></p>
         HTML
       end
 
@@ -1274,7 +1274,7 @@ describe CookedPostProcessor do
           <a href="http://www.google.com" rel="noopener nofollow ugc">Google</a><br>
           <img src="http://foo.bar/image.png"><br>
           <a class="attachment" href="https://my.cdn.com/#{upload_path}/original/1X/af2c2618032c679333bebf745e75f9088748d737.txt">text.txt</a> (20 Bytes)<br>
-          <img src="https://my.cdn.com/images/emoji/twitter/smile.png?v=#{Emoji::EMOJI_VERSION}" title=":smile:" class="emoji only-emoji" alt=":smile:"></p>
+          <img src="https://my.cdn.com/images/emoji/twitter/smile.png?v=#{Emoji::EMOJI_VERSION}" title=":smile:" class="emoji only-emoji" alt=":smile:" loading="lazy" width="20" height="20"></p>
         HTML
       end
 
@@ -1288,7 +1288,7 @@ describe CookedPostProcessor do
           <a href="http://www.google.com" rel="noopener nofollow ugc">Google</a><br>
           <img src="http://foo.bar/image.png"><br>
           <a class="attachment" href="//test.localhost/#{upload_path}/original/1X/af2c2618032c679333bebf745e75f9088748d737.txt">text.txt</a> (20 Bytes)<br>
-          <img src="//my.cdn.com/images/emoji/twitter/smile.png?v=#{Emoji::EMOJI_VERSION}" title=":smile:" class="emoji only-emoji" alt=":smile:"></p>
+          <img src="//my.cdn.com/images/emoji/twitter/smile.png?v=#{Emoji::EMOJI_VERSION}" title=":smile:" class="emoji only-emoji" alt=":smile:" loading="lazy" width="20" height="20"></p>
         HTML
       end
 
@@ -1302,7 +1302,7 @@ describe CookedPostProcessor do
           <a href="http://www.google.com" rel="noopener nofollow ugc">Google</a><br>
           <img src="http://foo.bar/image.png"><br>
           <a class="attachment" href="//test.localhost/#{upload_path}/original/1X/af2c2618032c679333bebf745e75f9088748d737.txt">text.txt</a> (20 Bytes)<br>
-          <img src="//my.cdn.com/images/emoji/twitter/smile.png?v=#{Emoji::EMOJI_VERSION}" title=":smile:" class="emoji only-emoji" alt=":smile:"></p>
+          <img src="//my.cdn.com/images/emoji/twitter/smile.png?v=#{Emoji::EMOJI_VERSION}" title=":smile:" class="emoji only-emoji" alt=":smile:" loading="lazy" width="20" height="20"></p>
         HTML
       end
 
@@ -1336,7 +1336,7 @@ describe CookedPostProcessor do
           cpp.optimize_urls
 
           expect(cpp.html).to match_html <<~HTML
-            <p>This post has a local emoji <img src="https://local.cdn.com/images/emoji/twitter/+1.png?v=#{Emoji::EMOJI_VERSION}" title=":+1:" class="emoji" alt=":+1:"> and an external upload</p>
+            <p>This post has a local emoji <img src="https://local.cdn.com/images/emoji/twitter/+1.png?v=#{Emoji::EMOJI_VERSION}" title=":+1:" class="emoji" alt=":+1:" loading="lazy" width="20" height="20"> and an external upload</p>
             <p><img src="https://s3.cdn.com/#{stored_path}" alt="smallest.png" data-base62-sha1="#{upload.base62_sha1}" width="10" height="20"></p>
           HTML
         end
@@ -1354,8 +1354,28 @@ describe CookedPostProcessor do
           cpp.optimize_urls
 
           expect(cpp.html).to match_html <<~HTML
-            <p>This post has a local emoji <img src="https://local.cdn.com/images/emoji/twitter/+1.png?v=#{Emoji::EMOJI_VERSION}" title=":+1:" class="emoji" alt=":+1:"> and an external upload</p>
+            <p>This post has a local emoji <img src="https://local.cdn.com/images/emoji/twitter/+1.png?v=#{Emoji::EMOJI_VERSION}" title=":+1:" class="emoji" alt=":+1:" loading="lazy" width="20" height="20"> and an external upload</p>
             <p><img src="/secure-media-uploads/#{stored_path}" alt="smallest.png" data-base62-sha1="#{upload.base62_sha1}" width="10" height="20"></p>
+          HTML
+        end
+
+        it "doesn't use the secure media URL for custom emoji" do
+          CustomEmoji.create!(name: 'trout', upload: upload)
+          Emoji.clear_cache
+          Emoji.load_custom
+          stored_path = Discourse.store.get_path_for_upload(upload)
+          upload.update_column(:url, "#{SiteSetting.Upload.absolute_base_url}/#{stored_path}")
+          upload.update_column(:secure, true)
+
+          the_post = Fabricate(:post, raw: "This post has a custom emoji :trout:")
+          the_post.cook(the_post.raw)
+
+          cpp = CookedPostProcessor.new(the_post)
+          cpp.optimize_urls
+
+          upload_url = upload.url.gsub(SiteSetting.Upload.absolute_base_url, "https://s3.cdn.com")
+          expect(cpp.html).to match_html <<~HTML
+            <p>This post has a custom emoji <img src="#{upload_url}?v=#{Emoji::EMOJI_VERSION}" title=":trout:" class="emoji emoji-custom" alt=":trout:" loading="lazy" width="20" height="20"></p>
           HTML
         end
 

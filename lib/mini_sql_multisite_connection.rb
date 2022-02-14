@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class MiniSqlMultisiteConnection < MiniSql::Postgres::Connection
+class MiniSqlMultisiteConnection < MiniSql::ActiveRecordPostgres::Connection
 
   class CustomBuilder < MiniSql::Builder
 
@@ -78,8 +78,8 @@ class MiniSqlMultisiteConnection < MiniSql::Postgres::Connection
 
   # we need a tiny adapter here so we always run against the
   # correct multisite connection
-  def raw_connection
-    ActiveRecord::Base.connection.raw_connection
+  def active_record_connection
+    ActiveRecord::Base.connection
   end
 
   # make for a multisite friendly prepared statement cache

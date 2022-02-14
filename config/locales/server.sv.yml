@@ -338,8 +338,8 @@ sv:
   too_many_links:
     one: "Tyvärr kan nya användare bara ha en länk i ett inlägg."
     other: "Tyvärr kan nya användare bara ha %{count} länkar i ett inlägg."
-  contains_blocked_word: "Ditt inlägg innehåller ett ord som inte är tillåtet: %{word}"
-  contains_blocked_words: "Ditt inlägg innehåller flera ord som inte är tillåtna: %{words}"
+  contains_blocked_word: "Tyvärr, du kan inte använda ordet '%{word}'; det är inte tillåtet."
+  contains_blocked_words: "Tyvärr, du kan inte skriva det. Ej tillåtet: %{words}."
   spamming_host: "Tyvärr kan du inte publicera en länk till den värden."
   user_is_suspended: "Avstängda användare har inte tillåtelse att göra inlägg"
   topic_not_found: "Något har gått fel. Kanske har ämnet stängts eller raderats medan du tittade på det?"
@@ -1361,6 +1361,7 @@ sv:
     unreachable_themes: "Vi kunde inte kontrollera uppdateringar för följande teman:"
     watched_word_regexp_error: "Det reguljära uttrycket för '%{action}'-bevakade ord är ogiltigt. Kontrollera dina <a href='%{base_path}/admin/customize/watched_words'>inställningar för bevakade ord</a> eller inaktivera webbplatsinställningen 'Reguljära uttryck för bevakade ord'."
   site_settings:
+    allow_bulk_invite: "Tillåt massinbjudningar genom att ladda upp en CSV-fil"
     disabled: "inaktiverade"
     display_local_time_in_user_card: "Visa den lokala tiden baserat på en användares tidszon när deras användarkort öppnas."
     censored_words: "Ord som automatiskt ersätts med &#9632;&#9632;&#9632;&#9632;"
@@ -1381,7 +1382,8 @@ sv:
     min_personal_message_title_length: "Lägst tillåtna längd på rubrik för ett meddelande uttryckt i tecken"
     max_emojis_in_title: "Maximalt antal tillåtna emojier i ämnesrubriken"
     min_search_term_length: "Lägsta giltiga teckenlängd på sökterm"
-    search_tokenize_chinese_japanese_korean: "Framtvinga sökning för att koda kinesiska/japanska/koreanska även på webbplatser som inte är på dessa språk"
+    search_tokenize_chinese: "Tvinga sökning att tokenisera kinesiska även på icke-kinesiska webbplatser"
+    search_tokenize_japanese: "Tvinga sökning att tokenisera japanska även på icke-japanska webbplatser"
     search_prefer_recent_posts: "Om sökningar på ditt stora forum går långsamt, försök detta alternativ som är ett index av de senaste inläggen först."
     search_recent_posts_size: "Hur många nya inlägg som ska behållas i index"
     log_search_queries: "Logga sökfrågor utförda av användare"
@@ -1425,7 +1427,7 @@ sv:
     show_pinned_excerpt_mobile: "Visa utdrag för fästa ämnen i mobilen."
     show_pinned_excerpt_desktop: "Visa utdrag för fästa ämnen på datorn."
     post_onebox_maxlength: "Maximal teckenlängd för ett Discourse-inlägg i onebox."
-    blocked_onebox_domains: "En lista över domäner som aldrig placeras i onebox."
+    blocked_onebox_domains: "En lista över domäner som aldrig kommer att oneboxas t.ex. wikipedia.org\n(Jokertecken * ? stöds inte)"
     allowed_inline_onebox_domains: "En lista över domäner som placeras i onebox i miniatyrform om de länkas utan en rubrik"
     enable_inline_onebox_on_all_domains: "Ignorera webbplatsinställningen inline_onebox_domain_allowlist och tillåt infogad onebox på alla domäner."
     force_custom_user_agent_hosts: "Värdar för vilka anpassad användaragent för onebox ska användas vid alla förfrågningar. (särskilt användbart för värdar som begränsar åtkomst av användaragent)."
@@ -1513,7 +1515,7 @@ sv:
     allowed_iframes: "En lista med iframekällors domänprefix som Discourse säkert kan tillåta i inlägg"
     allowed_crawler_user_agents: "Användaragenter för sökrobotar som ska få åtkomst till webbplatsen. VARNING! INSTÄLLNING AV DETTA FÖRBJUDER ALLA SÖKMOTORER SOM INTE LISTAS HÄR!"
     blocked_crawler_user_agents: "Unikt fall av känsligt ord i användaragent-strängen som identifierar webbsökare som inte bör få åtkomst till webbplatsen. Gäller inte om vitlista har definierats."
-    slow_down_crawler_user_agents: "Användaragenter för sökrobotar som ska vara hastighetsbegränsade vilket konfigurerats i inställningen \"sakta ned sökrobots hastighet\". Varje värde måste vara minst 3 tecken långt."
+    slow_down_crawler_user_agents: 'Användaragenter för sökrobotar som ska vara hastighetsbegränsade vilket konfigurerats i inställningen "sakta ned sökrobots hastighet". Varje värde måste vara minst 3 tecken långt.'
     slow_down_crawler_rate: "Om slow_down_crawler_user_agents anges kommer denna hastighet att gälla för alla sökrobotar (fördröjning mellan förfrågningarna uttryckt i sekunder)"
     content_security_policy: "Aktivera säkerhetspolicy för innehåll"
     content_security_policy_report_only: "Aktivera enbart säkerhetspolicy för innehåll"
@@ -2077,6 +2079,7 @@ sv:
     share_quote_visibility: "Avgör när du ska visa citatdelningsknappar: aldrig, endast till anonyma användare eller för alla användare. "
     create_revision_on_bulk_topic_moves: "Skapa ny version av första inlägg när ämnen flyttas till en ny kategori i bulk."
     allow_changing_staged_user_tracking: "Tillåt att aviseringsinställningar för en arrangerad användares kategori och tagg kan ändras av en administratörsanvändare."
+    use_email_for_username_and_name_suggestions: "Använd den första delen av e-postadresser för användarnamn och namnförslag. Observera att detta gör det lättare för allmänheten att gissa användares fullständiga e-postadresser (eftersom en stor del av människor delar gemensamma tjänster som `gmail.com`)."
     errors:
       invalid_css_color: "Ogiltig färg. Ange ett färgnamn eller ett hexvärde."
       invalid_email: "Felaktig e-postadress."
@@ -2096,6 +2099,7 @@ sv:
       invalid_json: "Ogiltig JSON."
       invalid_reply_by_email_address: "Värdet måste innehålla '%{reply_key}' och vara annorlunda från e-postaviseringen."
       invalid_alternative_reply_by_email_addresses: "Alla värden måste innehålla '%{reply_key}' och vara annorlunda från e-postaviseringen."
+      invalid_domain_hostname: "Får inte innehålla * eller ? tecken."
       pop3_polling_host_is_empty: "Du måste ställa in en 'pop3 polling host' innan du aktiverar POP3-polling."
       pop3_polling_username_is_empty: "Du måste ställa in ett 'pop3 polling username' innan du aktiverar POP3-polling."
       pop3_polling_password_is_empty: "Du måste ställa in ett 'pop3 polling password' innan du aktiverar POP3-polling."
@@ -2125,6 +2129,8 @@ sv:
       unicode_usernames_avatars: "De interna systemavatarerna stöder inte Unicode-användarnamn."
       list_value_count: "Listan måste innehålla exakt %{count} värden."
       google_oauth2_hd_groups: "Du måste först ange 'google oauth2 hd' innan du aktiverar denna inställning."
+      search_tokenize_chinese_enabled: "Du måste inaktivera 'search_tokenize_chinese' innan du aktiverar den här inställningen."
+      search_tokenize_japanese_enabled: "Du måste inaktivera 'search_tokenize_japanese' innan du aktiverar den här inställningen."
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.exempel.se"

@@ -25,6 +25,7 @@ import QUnit from "qunit";
 import { ScrollingDOMMethods } from "discourse/mixins/scrolling";
 import Session from "discourse/models/session";
 import User from "discourse/models/user";
+import Site from "discourse/models/site";
 import bootbox from "bootbox";
 import { buildResolver } from "discourse-common/resolver";
 import { createHelperContext } from "discourse-common/lib/helpers";
@@ -269,11 +270,11 @@ function setupTestsCommon(application, container, config) {
 
     const cdn = setupData ? setupData.cdn : null;
     const baseUri = setupData ? setupData.baseUri : "";
-    setupURL(cdn, "http://localhost:3000", baseUri);
+    setupURL(cdn, "http://localhost:3000", baseUri, { snapshot: true });
     if (setupData && setupData.s3BaseUrl) {
-      setupS3CDN(setupData.s3BaseUrl, setupData.s3Cdn);
+      setupS3CDN(setupData.s3BaseUrl, setupData.s3Cdn, { snapshot: true });
     } else {
-      setupS3CDN(null, null);
+      setupS3CDN(null, null, { snapshot: true });
     }
 
     server = pretender;
@@ -319,15 +320,28 @@ function setupTestsCommon(application, container, config) {
       session.highlightJsPath = setupData.highlightJsPath;
     }
     User.resetCurrent();
-    let site = resetSite(settings);
+
     createHelperContext({
-      siteSettings: settings,
+      get siteSettings() {
+        if (isLegacyEmber() && container.isDestroyed) {
+          return settings;
+        } else {
+          return container.lookup("site-settings:main");
+        }
+      },
       capabilities: {},
-      site,
+      get site() {
+        if (isLegacyEmber() && container.isDestroyed) {
+          return Site.current();
+        } else {
+          return container.lookup("site:main") || Site.current();
+        }
+      },
       registry: app.__registry__,
     });
 
     PreloadStore.reset();
+    resetSite(settings);
 
     sinon.stub(ScrollingDOMMethods, "screenNotFull");
     sinon.stub(ScrollingDOMMethods, "bindOnScroll");
@@ -342,8 +356,20 @@ function setupTestsCommon(application, container, config) {
     resetPretender();
     clearPresenceState();
 
-    // Destroy any modals
-    $(".modal-backdrop").remove();
+    // Clean up the DOM. Some tests might leave extra classes or elements behind.
+    Array.from(document.getElementsByClassName("modal-backdrop")).forEach((e) =>
+      e.remove()
+    );
+    document.body.removeAttribute("class");
+    let html = document.documentElement;
+    html.removeAttribute("class");
+    html.removeAttribute("style");
+    let testing = document.getElementById("ember-testing");
+    testing.removeAttribute("class");
+    testing.removeAttribute("style");
+    let testContainer = document.getElementById("ember-testing-container");
+    testContainer.scrollTop = 0;
+
     flushMap();
 
     MessageBus.unsubscribe("*");

@@ -40,6 +40,7 @@ export function buildOptions(state) {
     watchedWordsLink,
     featuresOverride,
     markdownItRules,
+    additionalOptions,
   } = state;
 
   let features = {};
@@ -80,6 +81,7 @@ export function buildOptions(state) {
     watchedWordsLink,
     featuresOverride,
     markdownItRules,
+    additionalOptions,
   };
 
   // note, this will mutate options due to the way the API is designed

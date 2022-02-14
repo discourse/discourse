@@ -1,60 +1,9 @@
 import { cancel, later } from "@ember/runloop";
 import I18n from "I18n";
-import { Promise } from "rsvp";
 import { guidFor } from "@ember/object/internals";
+import { clipboardCopy } from "discourse/lib/utilities";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import { withPluginApi } from "discourse/lib/plugin-api";
-
-// http://github.com/feross/clipboard-copy
-function clipboardCopy(text) {
-  // Use the Async Clipboard API when available.
-  // Requires a secure browsing context (i.e. HTTPS)
-  if (navigator.clipboard) {
-    return navigator.clipboard.writeText(text).catch(function (err) {
-      throw err !== undefined
-        ? err
-        : new DOMException("The request is not allowed", "NotAllowedError");
-    });
-  }
-
-  // ...Otherwise, use document.execCommand() fallback
-
-  // Put the text to copy into a <span>
-  const span = document.createElement("span");
-  span.textContent = text;
-
-  // Preserve consecutive spaces and newlines
-  span.style.whiteSpace = "pre";
-
-  // Add the <span> to the page
-  document.body.appendChild(span);
-
-  // Make a selection object representing the range of text selected by the user
-  const selection = window.getSelection();
-  const range = window.document.createRange();
-  selection.removeAllRanges();
-  range.selectNode(span);
-  selection.addRange(range);
-
-  // Copy text to the clipboard
-  let success = false;
-  try {
-    success = window.document.execCommand("copy");
-  } catch (err) {
-    // eslint-disable-next-line no-console
-    console.log("error", err);
-  }
-
-  // Cleanup
-  selection.removeAllRanges();
-  window.document.body.removeChild(span);
-
-  return success
-    ? Promise.resolve()
-    : Promise.reject(
-        new DOMException("The request is not allowed", "NotAllowedError")
-      );
-}
 
 let _copyCodeblocksClickHandlers = {};
 let _fadeCopyCodeblocksRunners = {};
@@ -79,6 +28,25 @@ export default {
         _fadeCopyCodeblocksRunners = {};
       }
 
+      function _copyComplete(button) {
+        button.classList.add("copied");
+        const state = button.innerHTML;
+        button.innerHTML = I18n.t("copy_codeblock.copied");
+
+        const commandId = guidFor(button);
+
+        if (_fadeCopyCodeblocksRunners[commandId]) {
+          cancel(_fadeCopyCodeblocksRunners[commandId]);
+          delete _fadeCopyCodeblocksRunners[commandId];
+        }
+
+        _fadeCopyCodeblocksRunners[commandId] = later(() => {
+          button.classList.remove("copied");
+          button.innerHTML = state;
+          delete _fadeCopyCodeblocksRunners[commandId];
+        }, 3000);
+      }
+
       function _handleClick(event) {
         if (!event.target.classList.contains("copy-cmd")) {
           return;
@@ -96,24 +64,14 @@ export default {
             )
             .trim();
 
-          clipboardCopy(text).then(() => {
-            button.classList.add("copied");
-            const state = button.innerHTML;
-            button.innerHTML = I18n.t("copy_codeblock.copied");
-
-            const commandId = guidFor(button);
-
-            if (_fadeCopyCodeblocksRunners[commandId]) {
-              cancel(_fadeCopyCodeblocksRunners[commandId]);
-              delete _fadeCopyCodeblocksRunners[commandId];
-            }
-
-            _fadeCopyCodeblocksRunners[commandId] = later(() => {
-              button.classList.remove("copied");
-              button.innerHTML = state;
-              delete _fadeCopyCodeblocksRunners[commandId];
-            }, 3000);
-          });
+          const result = clipboardCopy(text);
+          if (result.then) {
+            result.then(() => {
+              _copyComplete(button);
+            });
+          } else if (result) {
+            _copyComplete(button);
+          }
         }
       }
 

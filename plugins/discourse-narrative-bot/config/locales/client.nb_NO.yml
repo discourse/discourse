@@ -8,5 +8,5 @@ nb_NO:
   js:
     discourse_narrative_bot:
       welcome_post_type:
-        new_user_track: "Start den nye brukerveiledningen for alle nye brukere"
-        welcome_message: "Send alle nye brukere en velkomstmelding med en rask startguide for bruk av forumet."
+        new_user_track: "Start den nye brukerveiledningen for alle nye brukere?"
+        welcome_message: "Send alle nye brukere en velkomstmelding med en rask startguide for bruk av forumet?"

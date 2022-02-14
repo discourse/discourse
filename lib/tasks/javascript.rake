@@ -90,13 +90,6 @@ def dependencies
       source: 'pikaday/pikaday.js',
       public: true
     }, {
-      source: 'spectrum-colorpicker/spectrum.js',
-      uglify: true,
-      public: true
-    }, {
-      source: 'spectrum-colorpicker/spectrum.css',
-      public: true
-    }, {
       source: 'handlebars/dist/handlebars.js'
     }, {
       source: 'handlebars/dist/handlebars.runtime.js'

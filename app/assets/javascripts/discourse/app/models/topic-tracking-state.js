@@ -194,6 +194,7 @@ const TopicTrackingState = EmberObject.extend({
 
     const filter = this.filter;
     const filterCategory = this.filterCategory;
+    const filterTag = this.filterTag;
     const categoryId = data.payload && data.payload.category_id;
 
     // if we have a filter category currently and it is not the
@@ -207,6 +208,10 @@ const TopicTrackingState = EmberObject.extend({
       ) {
         return;
       }
+    }
+
+    if (filterTag && !data.payload.tags.includes(filterTag)) {
+      return;
     }
 
     // always count a new_topic as incoming
@@ -275,25 +280,34 @@ const TopicTrackingState = EmberObject.extend({
    * @method trackIncoming
    * @param {String} filter - Valid values are all, categories, and any topic list
    *                          filters e.g. latest, unread, new. As well as this
-   *                          specific category and tag URLs like /tag/test/l/latest
-   *                          or c/cat/subcat/6/l/latest.
+   *                          specific category and tag URLs like tag/test/l/latest,
+   *                          c/cat/subcat/6/l/latest or tags/c/cat/subcat/6/test/l/latest.
    */
   trackIncoming(filter) {
     this.newIncoming = [];
 
-    if (filter.startsWith("c/")) {
-      const categoryId = filter.match(/\/(\d*)\//);
-      const category = Category.findById(parseInt(categoryId[1], 10));
-      this.set("filterCategory", category);
+    let category, tag;
 
+    if (filter.startsWith("c/") || filter.startsWith("tags/c/")) {
+      const categoryId = filter.match(/\/(\d*)\//);
+      category = Category.findById(parseInt(categoryId[1], 10));
       const split = filter.split("/");
+
+      if (filter.startsWith("tags/c/")) {
+        tag = split[split.indexOf(categoryId[1]) + 1];
+      }
+
       if (split.length >= 4) {
         filter = split[split.length - 1];
       }
-    } else {
-      this.set("filterCategory", null);
+    } else if (filter.startsWith("tag/")) {
+      const split = filter.split("/");
+      filter = split[split.length - 1];
+      tag = split[1];
     }
 
+    this.set("filterCategory", category);
+    this.set("filterTag", tag);
     this.set("filter", filter);
     this.set("incomingCount", 0);
   },

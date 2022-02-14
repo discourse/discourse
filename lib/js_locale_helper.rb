@@ -289,6 +289,13 @@ module JsLocaleHelper
     result = +"MessageFormat = {locale: {}};\n"
     result << "I18n._compiledMFs = {#{formats}};\n"
     result << File.read(filename) << "\n"
+
+    if locale != "en"
+      # Include "en" pluralization rules for use in fallbacks
+      _, en_filename = find_message_format_locale(["en"], fallback_to_english: false)
+      result << File.read(en_filename) << "\n"
+    end
+
     result << File.read("#{Rails.root}/lib/javascripts/messageformat-lookup.js") << "\n"
   end
 

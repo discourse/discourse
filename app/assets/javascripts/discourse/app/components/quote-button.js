@@ -5,6 +5,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import {
   postUrl,
   selectedElement,
+  selectedRange,
   selectedText,
   setCaretPosition,
   translateModKey,
@@ -164,10 +165,14 @@ export default Component.extend(KeyEnterEscape, {
     const cooked =
       $selectedElement.find(".cooked")[0] ||
       $selectedElement.closest(".cooked")[0];
-    const postBody = toMarkdown(cooked.innerHTML);
 
+    // computing markdown takes a lot of time on long posts
+    // this code attempts to compute it only when we can't fast track
     let opts = {
-      full: _selectedText === postBody,
+      full:
+        selectedRange().startOffset > 0
+          ? false
+          : _selectedText === toMarkdown(cooked.innerHTML),
     };
 
     for (
@@ -192,22 +197,24 @@ export default Component.extend(KeyEnterEscape, {
         this.topic.postStream.findLoadedPost(postId)?.can_edit
       );
 
-      const regexp = new RegExp(regexSafeStr(quoteState.buffer), "gi");
-      const matches = postBody.match(regexp);
+      if (this._canEditPost) {
+        const regexp = new RegExp(regexSafeStr(quoteState.buffer), "gi");
+        const matches = cooked.innerHTML.match(regexp);
 
-      if (
-        quoteState.buffer.length < 1 ||
-        quoteState.buffer.includes("|") || // tables are too complex
-        quoteState.buffer.match(/\n/g) || // linebreaks are too complex
-        matches?.length > 1 // duplicates are too complex
-      ) {
-        this.set("_isFastEditable", false);
-        this.set("_fastEditInitalSelection", null);
-        this.set("_fastEditNewSelection", null);
-      } else if (matches?.length === 1) {
-        this.set("_isFastEditable", true);
-        this.set("_fastEditInitalSelection", quoteState.buffer);
-        this.set("_fastEditNewSelection", quoteState.buffer);
+        if (
+          quoteState.buffer.length < 1 ||
+          quoteState.buffer.includes("|") || // tables are too complex
+          quoteState.buffer.match(/\n/g) || // linebreaks are too complex
+          matches?.length > 1 // duplicates are too complex
+        ) {
+          this.set("_isFastEditable", false);
+          this.set("_fastEditInitalSelection", null);
+          this.set("_fastEditNewSelection", null);
+        } else if (matches?.length === 1) {
+          this.set("_isFastEditable", true);
+          this.set("_fastEditInitalSelection", quoteState.buffer);
+          this.set("_fastEditNewSelection", quoteState.buffer);
+        }
       }
     }
 

@@ -27,11 +27,6 @@ class Demon::Sidekiq < ::Demon::Base
 
     puts "Loading Sidekiq in process id #{Process.pid}"
     require 'sidekiq/cli'
-    # CLI will close the logger, if we have one set we can be in big
-    # trouble, if STDOUT is closed in our process all sort of weird
-    # will ensue, resetting the logger ensures it will reinit correctly
-    # parent process is in charge of the file anyway.
-    Sidekiq.logger = nil
     cli = Sidekiq::CLI.instance
 
     # Unicorn uses USR1 to indicate that log files have been rotated

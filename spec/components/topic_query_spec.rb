@@ -249,6 +249,19 @@ describe TopicQuery do
     end
   end
 
+  describe 'include_all_pms option' do
+    it "includes all pms in regular topic lists for admins" do
+      topic = Fabricate(:topic)
+      own_pm = Fabricate(:private_message_topic, user: user)
+      other_pm = Fabricate(:private_message_topic, user: Fabricate(:user))
+
+      expect(TopicQuery.new(user).list_latest.topics).to contain_exactly(topic)
+      expect(TopicQuery.new(admin).list_latest.topics).to contain_exactly(topic)
+      expect(TopicQuery.new(user, include_all_pms: true).list_latest.topics).to contain_exactly(topic, own_pm)
+      expect(TopicQuery.new(admin, include_all_pms: true).list_latest.topics).to contain_exactly(topic, own_pm, other_pm)
+    end
+  end
+
   context 'category filter' do
     let(:category) { Fabricate(:category_with_definition) }
     let(:diff_category) { Fabricate(:category_with_definition, name: "Different Category") }

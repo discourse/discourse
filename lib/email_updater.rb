@@ -24,7 +24,7 @@ class EmailUpdater
 
     if existing_user = User.find_by_email(email)
       if SiteSetting.hide_email_address_taken
-        Jobs.enqueue(:critical_user_email, type: :account_exists, user_id: existing_user.id)
+        Jobs.enqueue(:critical_user_email, type: "account_exists", user_id: existing_user.id)
       else
         error_message = +'change_email.error'
         error_message << '_staged' if existing_user.staged?
@@ -68,10 +68,10 @@ class EmailUpdater
 
     if @change_req.change_state == EmailChangeRequest.states[:authorizing_old]
       @change_req.old_email_token = @user.email_tokens.create!(email: @user.email, scope: EmailToken.scopes[:email_update])
-      send_email(add ? :confirm_old_email_add : :confirm_old_email, @change_req.old_email_token)
+      send_email(add ? "confirm_old_email_add" : "confirm_old_email", @change_req.old_email_token)
     elsif @change_req.change_state == EmailChangeRequest.states[:authorizing_new]
       @change_req.new_email_token = @user.email_tokens.create!(email: email, scope: EmailToken.scopes[:email_update])
-      send_email(:confirm_new_email, @change_req.new_email_token)
+      send_email("confirm_new_email", @change_req.new_email_token)
     end
 
     @change_req.save!
@@ -102,7 +102,7 @@ class EmailUpdater
           change_state: EmailChangeRequest.states[:authorizing_new],
           new_email_token: @user.email_tokens.create!(email: @change_req.new_email, scope: EmailToken.scopes[:email_update])
         )
-        send_email(:confirm_new_email, @change_req.new_email_token)
+        send_email("confirm_new_email", @change_req.new_email_token)
         confirm_result = :authorizing_new
       when EmailChangeRequest.states[:authorizing_new]
         @change_req.update!(change_state: EmailChangeRequest.states[:complete])
@@ -144,7 +144,7 @@ class EmailUpdater
   def send_email_notification(old_email, new_email)
     Jobs.enqueue :critical_user_email,
                  to_address: @user.email,
-                 type: old_email ? :notify_old_email : :notify_old_email_add,
+                 type: old_email ? "notify_old_email" : "notify_old_email_add",
                  user_id: @user.id,
                  new_email: new_email
   end

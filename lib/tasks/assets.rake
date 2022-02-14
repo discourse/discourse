@@ -35,11 +35,10 @@ task 'assets:precompile:before' do
   require 'sprockets'
   require 'digest/sha1'
 
-  if ENV['EMBER_CLI_PROD_ASSETS']
+  if ENV['EMBER_CLI_PROD_ASSETS'] != "0"
     # Remove the assets that Ember CLI will handle for us
     Rails.configuration.assets.precompile.reject! do |asset|
-      asset.is_a?(String) &&
-        (%w(application.js admin.js ember_jquery.js pretty-text-bundle.js start-discourse.js vendor.js).include?(asset))
+      asset.is_a?(String) && is_ember_cli_asset?(asset)
     end
   end
 end
@@ -82,6 +81,11 @@ task 'assets:flush_sw' => 'environment' do
   end
 end
 
+def is_ember_cli_asset?(name)
+  return false if ENV['EMBER_CLI_PROD_ASSETS'] == '0'
+  %w(application.js admin.js ember_jquery.js pretty-text-bundle.js start-discourse.js vendor.js).include?(name)
+end
+
 def assets_path
   "#{Rails.root}/public/assets"
 end
@@ -105,11 +109,11 @@ def compress_node(from, to)
   assets = cdn_relative_path("/assets")
   assets_additional_path = (d = File.dirname(from)) == "." ? "" : "/#{d}"
   source_map_root = assets + assets_additional_path
-  source_map_url = cdn_path "/assets/#{to}.map"
+  source_map_url = "#{File.basename(to)}.map"
   base_source_map = assets_path + assets_additional_path
 
   cmd = <<~EOS
-    terser '#{assets_path}/#{from}' -m -c -o '#{to_path}' --source-map "base='#{base_source_map}',root='#{source_map_root}',url='#{source_map_url}'"
+    terser '#{assets_path}/#{from}' -m -c -o '#{to_path}' --source-map "base='#{base_source_map}',root='#{source_map_root}',url='#{source_map_url}',includeSources=true"
   EOS
 
   STDERR.puts cmd
@@ -162,6 +166,7 @@ end
 
 def max_compress?(path, locales)
   return false if Rails.configuration.assets.skip_minification.include? path
+  return false if is_ember_cli_asset?(path)
   return true unless path.include? "locales/"
 
   path_locale = path.delete_prefix("locales/").delete_suffix(".js")
@@ -312,7 +317,7 @@ end
 
 task 'assets:precompile' => 'assets:precompile:before' do
 
-  copy_ember_cli_assets if ENV['EMBER_CLI_PROD_ASSETS']
+  copy_ember_cli_assets if ENV['EMBER_CLI_PROD_ASSETS'] != '0'
 
   refresh_days = GlobalSetting.refresh_maxmind_db_during_precompile_days
 

@@ -243,6 +243,7 @@ const Group = RestModel.extend({
       imap_mailbox_name: this.imap_mailbox_name,
       imap_enabled: this.imap_enabled,
       email_username: this.email_username,
+      email_from_alias: this.email_from_alias,
       email_password: this.email_password,
       flair_icon: null,
       flair_upload_id: null,

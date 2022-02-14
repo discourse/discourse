@@ -466,6 +466,9 @@
         "null"
       ]
     },
+    "markdown_additional_options" : {
+      "type": "object"
+    },
     "categories": {
       "type": "array",
       "items": [
