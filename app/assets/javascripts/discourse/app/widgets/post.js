@@ -173,6 +173,8 @@ createWidget("post-avatar", {
 
   html(attrs) {
     let body;
+    let hideFromAnonUser =
+      this.siteSettings.hide_user_profiles_from_public && !this.currentUser;
     if (!attrs.user_id) {
       body = iconNode("far-trash-alt", { class: "deleted-user-avatar" });
     } else {
@@ -181,7 +183,7 @@ createWidget("post-avatar", {
         username: attrs.username,
         name: attrs.name,
         url: attrs.usernameUrl,
-        className: "main-avatar",
+        className: `main-avatar ${hideFromAnonUser ? "non-clickable" : ""}`,
         hideTitle: true,
       });
     }
