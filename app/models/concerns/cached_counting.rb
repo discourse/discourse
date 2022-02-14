@@ -45,8 +45,7 @@ module CachedCounting
     # this may seem a bit fancy but in so it allows
     # for concurrent calls without double counting
     def get_and_reset(key)
-      namespaced_key = Discourse.redis.namespace_key(key)
-      Discourse.redis.set(key, '0', 'EX', '259200', 'GET').to_i
+      Discourse.redis.set(key, '0', ex: 259200, get: true).to_i
     end
 
     def request_id(query_params, retries = 0)

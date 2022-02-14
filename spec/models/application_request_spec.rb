@@ -30,14 +30,14 @@ describe ApplicationRequest do
       inc(:http_total)
 
       Discourse.redis.without_namespace.stubs(:incr).raises(Redis::CommandError.new("READONLY"))
-      Discourse.redis.without_namespace.stubs(:eval).raises(Redis::CommandError.new("READONLY"))
+      Discourse.redis.without_namespace.stubs(:set).raises(Redis::CommandError.new("READONLY"))
 
       # flush will be deferred no error raised
       inc(:http_total, autoflush: 3)
       ApplicationRequest.write_cache!
 
       Discourse.redis.without_namespace.unstub(:incr)
-      Discourse.redis.without_namespace.unstub(:eval)
+      Discourse.redis.without_namespace.unstub(:set)
 
       inc(:http_total, autoflush: 3)
       expect(ApplicationRequest.http_total.first.count).to eq(3)
