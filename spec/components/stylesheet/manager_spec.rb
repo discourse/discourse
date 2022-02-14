@@ -366,6 +366,24 @@ describe Stylesheet::Manager do
       builder = Stylesheet::Manager::Builder.new(target: :desktop, manager: manager)
       expect(builder.digest).to eq(builder.default_digest)
     end
+
+    it 'returns different digest based on hostname' do
+      theme = Fabricate(:theme)
+
+      SiteSetting.force_hostname = "host1.example.com"
+      initial_theme_digest = Stylesheet::Manager::Builder.new(target: :desktop_theme, theme: theme, manager: manager).digest
+      initial_color_scheme_digest = Stylesheet::Manager::Builder.new(target: :color_definitions, manager: manager).digest
+      initial_default_digest = Stylesheet::Manager::Builder.new(target: :desktop, manager: manager).digest
+
+      SiteSetting.force_hostname = "host2.example.com"
+      new_theme_digest = Stylesheet::Manager::Builder.new(target: :desktop_theme, theme: theme, manager: manager).digest
+      new_color_scheme_digest = Stylesheet::Manager::Builder.new(target: :color_definitions, manager: manager).digest
+      new_default_digest = Stylesheet::Manager::Builder.new(target: :desktop, manager: manager).digest
+
+      expect(initial_theme_digest).not_to eq(new_theme_digest)
+      expect(initial_color_scheme_digest).not_to eq(new_color_scheme_digest)
+      expect(initial_default_digest).not_to eq(new_default_digest)
+    end
   end
 
   describe 'color_scheme_digest' do
@@ -788,6 +806,10 @@ describe Stylesheet::Manager do
 
       expect(results).to include("color_definitions_#{scheme1.name}_#{scheme1.id}_#{user_theme.id}")
       expect(results).to include("color_definitions_#{scheme2.name}_#{scheme2.id}_#{default_theme.id}")
+
+      # Check that sourceMappingURL includes __ws parameter
+      content = StylesheetCache.last.content
+      expect(content).to match(/# sourceMappingURL=[^\/]+\.css\.map\?__ws=test\.localhost/)
     end
   end
 end
