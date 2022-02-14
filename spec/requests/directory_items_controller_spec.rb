@@ -136,6 +136,38 @@ describe DirectoryItemsController do
       expect(json['directory_items'][1]['user']['username']).to eq(evil_trout.username) | eq(stage_user.username)
     end
 
+    it "orders users by user fields" do
+      group.add(walter_white)
+      field = Fabricate(:user_field, searchable: true)
+
+      UserCustomField.create!(
+        user_id: walter_white.id,
+        name: "user_field_#{field.id}",
+        value: "Yellow"
+      )
+      UserCustomField.create!(
+        user_id: stage_user.id,
+        name: "user_field_#{field.id}",
+        value: "Apple"
+      )
+      UserCustomField.create!(
+        user_id: evil_trout.id,
+        name: "custom_field",
+        value: "Moon"
+      )
+
+      get '/directory_items.json', params: { period: 'all', group: group.name, order: field.name, user_field_ids: field.id.to_s, asc: true }
+      expect(response.status).to eq(200)
+
+      json = response.parsed_body
+      expect(json).to be_present
+      expect(json['directory_items'].length).to eq(3)
+      expect(json['meta']['total_rows_directory_items']).to eq(3)
+      expect(json['directory_items'][0]['user']['username']).to eq(stage_user.username)
+      expect(json['directory_items'][1]['user']['username']).to eq(walter_white.username)
+      expect(json['directory_items'][2]['user']['username']).to eq(evil_trout.username)
+    end
+
     it "checks group permissions" do
       group.update!(visibility_level: Group.visibility_levels[:members])
 

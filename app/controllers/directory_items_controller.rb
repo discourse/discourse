@@ -38,8 +38,7 @@ class DirectoryItemsController < ApplicationController
       user_field = UserField.find_by(name: params[:order])
       if user_field
         result = result
-          .joins(:user)
-          .joins("LEFT OUTER JOIN user_custom_fields ON user_custom_fields.user_id = users.id AND user_custom_fields.name = 'user_field_#{user_field.id}'")
+          .where("user_custom_fields.name = 'user_field_#{user_field.id}' OR user_custom_fields.name IS NULL")
           .order("user_custom_fields.name = 'user_field_#{user_field.id}' ASC, user_custom_fields.value #{dir}")
       end
     end
