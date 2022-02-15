@@ -14,8 +14,8 @@ describe SecondFactor::Actions::GrantAdmin do
     ActionController::Parameters.new(hash)
   end
 
-  def create_instance(u)
-    SecondFactor::Actions::GrantAdmin.new(u, Guardian.new(u))
+  def create_instance(user)
+    SecondFactor::Actions::GrantAdmin.new(user, Guardian.new(user))
   end
 
   describe "#no_second_factors_enabled!" do
