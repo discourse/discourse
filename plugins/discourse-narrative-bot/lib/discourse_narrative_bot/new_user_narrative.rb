@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'distributed_mutex'
-
 module DiscourseNarrativeBot
   class NewUserNarrative < Base
     I18N_KEY = "discourse_narrative_bot.new_user_narrative".freeze

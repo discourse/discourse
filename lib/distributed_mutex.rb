@@ -4,7 +4,8 @@
 #
 # Expiration happens when the current time is greater than the expire time
 class DistributedMutex
-  DEFAULT_VALIDITY ||= 60
+  DEFAULT_VALIDITY = 60
+  CHECK_READONLY_ATTEMPTS = 10
 
   def self.synchronize(key, redis: nil, validity: DEFAULT_VALIDITY, &blk)
     self.new(
@@ -19,11 +20,8 @@ class DistributedMutex
     @using_global_redis = true if !redis
     @redis = redis || Discourse.redis
     @mutex = Mutex.new
-    @lock_monitor = Monitor.new
     @validity = validity
   end
-
-  CHECK_READONLY_ATTEMPT ||= 10
 
   # NOTE wrapped in mutex to maintain its semantics
   def synchronize
@@ -69,7 +67,7 @@ class DistributedMutex
       if @using_global_redis && Discourse.recently_readonly?
         attempts += 1
 
-        if attempts > CHECK_READONLY_ATTEMPT
+        if attempts > CHECK_READONLY_ATTEMPTS
           raise Discourse::ReadOnly
         end
       end
@@ -82,7 +80,7 @@ class DistributedMutex
     now = redis.time[0]
     expire_time = now + validity
 
-    @lock_monitor.synchronize do
+    redis.synchronize do
       redis.unwatch
       redis.watch key
 
@@ -107,7 +105,7 @@ class DistributedMutex
   end
 
   def unlock(expire_time)
-    @lock_monitor.synchronize do
+    redis.synchronize do
       redis.unwatch
       redis.watch key
       current_expire_time = redis.get key
