@@ -6,7 +6,7 @@ describe SecondFactor::Actions::GrantAdmin do
   fab!(:admin) { Fabricate(:admin) }
   fab!(:user) { Fabricate(:user) }
 
-  before do
+  after do
     AdminConfirmation.cleanup_redis
   end
 
