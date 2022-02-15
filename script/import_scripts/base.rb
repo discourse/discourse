@@ -366,6 +366,7 @@ class ImportScripts::Base
       # try based on email
       if e.try(:record).try(:errors).try(:messages).try(:[], :primary_email).present?
         if existing = User.find_by_email(opts[:email].downcase)
+          existing.created_at = opts[:created_at] if opts[:created_at]
           existing.custom_fields["import_id"] = import_id
           existing.save!
           u = existing
