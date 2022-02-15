@@ -6,7 +6,7 @@ class Auth::DiscordAuthenticator < Auth::ManagedAuthenticator
     option :scope, 'identify email guilds'
 
     option :client_options,
-            site: 'https://discordapp.com/api',
+            site: 'https://discord.com/api',
             authorize_url: 'oauth2/authorize',
             token_url: 'oauth2/token'
 
