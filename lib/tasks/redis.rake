@@ -15,13 +15,13 @@ task 'redis:clean_up' => ['environment'] do
     cursor, keys = redis.scan(cursor)
     cursor = cursor.to_i
 
-    redis.multi do |transaction|
+    redis.multi do
       keys.each do |key|
         if match = key.match(regexp)
           db_name = match[:message_bus] || match[:namespace]
 
           if !dbs.include?(db_name)
-            transaction.del(key)
+            redis.del(key)
           end
         end
       end

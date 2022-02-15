@@ -181,10 +181,10 @@ class Site
     json = MultiJson.dump(SiteSerializer.new(site, root: false, scope: guardian))
 
     if guardian.anonymous?
-      Discourse.redis.multi do |transaction|
-        transaction.setex 'site_json', 1800, json
-        transaction.set 'site_json_seq', seq
-        transaction.set 'site_json_version', Discourse.git_version
+      Discourse.redis.multi do
+        Discourse.redis.setex 'site_json', 1800, json
+        Discourse.redis.set 'site_json_seq', seq
+        Discourse.redis.set 'site_json_version', Discourse.git_version
       end
     end
 
