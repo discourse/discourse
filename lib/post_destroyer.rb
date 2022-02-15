@@ -416,9 +416,9 @@ class PostDestroyer
     counts.each do |user_id, count|
       if user_stat = UserStat.where(user_id: user_id).first
         if operator == USER_STAT_COUNT_DECREMENT
-          UserStatCountUpdater.decrement!(@post, user_stat: user_stat, count_type: :post_count)
+          UserStatCountUpdater.set!(user_stat: user_stat, count: user_stat.post_count - count, count_column: :post_count)
         else
-          UserStatCountUpdater.increment!(@post, user_stat: user_stat, count_type: :post_count)
+          UserStatCountUpdater.set!(user_stat: user_stat, count: user_stat.post_count + count, count_column: :post_count)
         end
       end
     end

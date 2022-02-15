@@ -2,36 +2,40 @@
 
 class UserStatCountUpdater
   class << self
-    def increment!(post, user_stat: nil, count_type: nil)
-      update!(post, user_stat: user_stat, action: :increment!, count_type: count_type)
+    def increment!(post, user_stat: nil)
+      update_using_operator!(post, user_stat: user_stat, action: :increment!)
     end
 
-    def decrement!(post, user_stat: nil, count_type: nil)
-      update!(post, user_stat: user_stat, action: :decrement!, count_type: count_type)
+    def decrement!(post, user_stat: nil)
+      update_using_operator!(post, user_stat: user_stat, action: :decrement!)
+    end
+
+    def set!(user_stat:, count:, count_column:)
+      return if user_stat.blank?
+      return if ![:post_count, :topic_count].include?(count_column)
+
+      if SiteSetting.verbose_user_stat_count_logging && count < 0
+        Rails.logger.warn("Attempted to insert negative count into UserStat##{count_column} for user #{user_stat.user_id}, using 0 instead.")
+      end
+
+      user_stat.update_column(count_column, [count, 0].max)
     end
 
     private
 
-    def update!(post, user_stat: nil, action: :increment!, count_type: nil)
+    def update_using_operator!(post, user_stat: nil, action: :increment!)
       return if !post&.topic
       return if action == :increment! && post.topic.private_message?
       stat = user_stat || post.user&.user_stat
 
       return if stat.blank?
 
-      # In some cases we don't want to base the column on the
-      # post passed in, we may be updating multiple user stats
-      # at the same time for a topic
-      if count_type.present?
-        column = count_type
-      else
-        column =
-          if post.is_first_post?
-            :topic_count
-          elsif post.post_type == Post.types[:regular]
-            :post_count
-          end
-      end
+      column =
+        if post.is_first_post?
+          :topic_count
+        elsif post.post_type == Post.types[:regular]
+          :post_count
+        end
 
       return if column.blank?
 

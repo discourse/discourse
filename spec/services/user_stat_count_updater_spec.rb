@@ -29,4 +29,13 @@ describe UserStatCountUpdater do
     expect(@fake_logger.warnings.last).to match("post_count")
     expect(@fake_logger.warnings.last).to match(post_2.id.to_s)
   end
+
+  it 'should log the exception when a negative count will be inserted but 0 is used instead' do
+    UserStatCountUpdater.set!(user_stat: user_stat, count: -10, count_column: :post_count)
+
+    expect(@fake_logger.warnings.last).to match("post_count")
+    expect(@fake_logger.warnings.last).to match("using 0")
+    expect(@fake_logger.warnings.last).to match("user #{user_stat.user_id}")
+    expect(user_stat.reload.post_count).to eq(0)
+  end
 end
