@@ -5,9 +5,9 @@ module SecondFactor::Actions
     include Rails.application.routes.url_helpers
     attr_reader :current_user, :guardian
 
-    def initialize(current_user, guardian)
-      @current_user = current_user
+    def initialize(guardian)
       @guardian = guardian
+      @current_user = guardian.user
     end
 
     def no_second_factors_enabled!(params)
