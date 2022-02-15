@@ -35,28 +35,14 @@ import { siteDir } from "discourse/lib/text-direction";
 import { translations } from "pretty-text/emoji/data";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { action } from "@ember/object";
-import TextareaTextManipulation from "discourse/mixins/textarea-text-manipulation";
-
-// Our head can be a static string or a function that returns a string
-// based on input (like for numbered lists).
-function getHead(head, prev) {
-  if (typeof head === "string") {
-    return [head, head.length];
-  } else {
-    return getHead(head(prev));
-  }
-}
+import TextareaTextManipulation, {
+  getHead,
+} from "discourse/mixins/textarea-text-manipulation";
 
 function getButtonLabel(labelKey, defaultLabel) {
   // use the Font Awesome icon if the label matches the default
   return I18n.t(labelKey) === defaultLabel ? null : labelKey;
 }
-
-const OP = {
-  NONE: 0,
-  REMOVED: 1,
-  ADDED: 2,
-};
 
 const FOUR_SPACES_INDENT = "4-spaces-indent";
 
@@ -615,114 +601,6 @@ export default Component.extend(TextareaTextManipulation, {
       triggerRule: (textarea) =>
         !inCodeBlock(textarea.value, caretPosition(textarea)),
     });
-  },
-
-  // perform the same operation over many lines of text
-  _getMultilineContents(lines, head, hval, hlen, tail, tlen, opts) {
-    let operation = OP.NONE;
-
-    const applyEmptyLines = opts && opts.applyEmptyLines;
-
-    return lines
-      .map((l) => {
-        if (!applyEmptyLines && l.length === 0) {
-          return l;
-        }
-
-        if (
-          operation !== OP.ADDED &&
-          ((l.slice(0, hlen) === hval && tlen === 0) ||
-            (tail.length && l.slice(-tlen) === tail))
-        ) {
-          operation = OP.REMOVED;
-          if (tlen === 0) {
-            const result = l.slice(hlen);
-            [hval, hlen] = getHead(head, hval);
-            return result;
-          } else if (l.slice(-tlen) === tail) {
-            const result = l.slice(hlen, -tlen);
-            [hval, hlen] = getHead(head, hval);
-            return result;
-          }
-        } else if (operation === OP.NONE) {
-          operation = OP.ADDED;
-        } else if (operation === OP.REMOVED) {
-          return l;
-        }
-
-        const result = `${hval}${l}${tail}`;
-        [hval, hlen] = getHead(head, hval);
-        return result;
-      })
-      .join("\n");
-  },
-
-  _applySurround(sel, head, tail, exampleKey, opts) {
-    const pre = sel.pre;
-    const post = sel.post;
-
-    const tlen = tail.length;
-    if (sel.start === sel.end) {
-      if (tlen === 0) {
-        return;
-      }
-
-      const [hval, hlen] = getHead(head);
-      const example = I18n.t(`composer.${exampleKey}`);
-      this.set("value", `${pre}${hval}${example}${tail}${post}`);
-      this._selectText(pre.length + hlen, example.length);
-    } else if (opts && !opts.multiline) {
-      let [hval, hlen] = getHead(head);
-
-      if (opts.useBlockMode && sel.value.split("\n").length > 1) {
-        hval += "\n";
-        hlen += 1;
-        tail = `\n${tail}`;
-      }
-
-      if (pre.slice(-hlen) === hval && post.slice(0, tail.length) === tail) {
-        this.set(
-          "value",
-          `${pre.slice(0, -hlen)}${sel.value}${post.slice(tail.length)}`
-        );
-        this._selectText(sel.start - hlen, sel.value.length);
-      } else {
-        this.set("value", `${pre}${hval}${sel.value}${tail}${post}`);
-        this._selectText(sel.start + hlen, sel.value.length);
-      }
-    } else {
-      const lines = sel.value.split("\n");
-
-      let [hval, hlen] = getHead(head);
-      if (
-        lines.length === 1 &&
-        pre.slice(-tlen) === tail &&
-        post.slice(0, hlen) === hval
-      ) {
-        this.set(
-          "value",
-          `${pre.slice(0, -hlen)}${sel.value}${post.slice(tlen)}`
-        );
-        this._selectText(sel.start - hlen, sel.value.length);
-      } else {
-        const contents = this._getMultilineContents(
-          lines,
-          head,
-          hval,
-          hlen,
-          tail,
-          tlen,
-          opts
-        );
-
-        this.set("value", `${pre}${contents}${post}`);
-        if (lines.length === 1 && tlen > 0) {
-          this._selectText(sel.start + hlen, sel.value.length);
-        } else {
-          this._selectText(sel.start, contents.length);
-        }
-      }
-    }
   },
 
   _applyList(sel, head, exampleKey, opts) {
