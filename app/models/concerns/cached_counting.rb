@@ -3,6 +3,18 @@
 module CachedCounting
   extend ActiveSupport::Concern
 
+  EXPIRE_CACHE_AFTER = 4.days.to_i
+
+  LUA_INCR_AND_EXPIRE = DiscourseRedis::EvalHelper.new <<~LUA
+    local result = redis.call("INCR", KEYS[1])
+
+    if result == 1 then
+      redis.call("EXPIRE", KEYS[1], ARGV[1])
+    end
+
+    return result
+  LUA
+
   included do
     class << self
       attr_accessor :autoflush, :autoflush_seconds, :last_flush
@@ -19,13 +31,16 @@ module CachedCounting
 
   class_methods do
     def perform_increment!(key, opts = nil)
-      val = Discourse.redis.incr(key).to_i
+      val = DiscourseRedis.ignore_readonly do
+        LUA_INCR_AND_EXPIRE.eval(
+          Discourse.redis.without_namespace,
+          [Discourse.redis.namespace_key(key)],
+          [EXPIRE_CACHE_AFTER]
+        ).to_i
+      end
 
-      # readonly mode it is going to be 0, skip
-      return if val == 0
-
-      # 3.days, see: https://github.com/rails/rails/issues/21296
-      Discourse.redis.expire(key, 259200)
+      # readonly mode it is going to be nil, skip
+      return if val.nil?
 
       autoflush = (opts && opts[:autoflush]) || self.autoflush
       if autoflush > 0 && val >= autoflush
@@ -45,7 +60,7 @@ module CachedCounting
     # this may seem a bit fancy but in so it allows
     # for concurrent calls without double counting
     def get_and_reset(key)
-      Discourse.redis.set(key, '0', ex: 259200, get: true).to_i
+      Discourse.redis.set(key, '0', ex: EXPIRE_CACHE_AFTER, get: true).to_i
     end
 
     def request_id(query_params, retries = 0)

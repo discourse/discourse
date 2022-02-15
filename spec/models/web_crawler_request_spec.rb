@@ -31,13 +31,15 @@ describe WebCrawlerRequest do
     inc('Googlebot')
     inc('Googlebot')
 
-    Discourse.redis.without_namespace.stubs(:incr).raises(Redis::CommandError.new("READONLY"))
+    Discourse.redis.without_namespace.stubs(:eval).raises(Redis::CommandError.new("READONLY"))
+    Discourse.redis.without_namespace.stubs(:evalsha).raises(Redis::CommandError.new("READONLY"))
     Discourse.redis.without_namespace.stubs(:set).raises(Redis::CommandError.new("READONLY"))
 
     inc('Googlebot', autoflush: 3)
     WebCrawlerRequest.write_cache!
 
-    Discourse.redis.without_namespace.unstub(:incr)
+    Discourse.redis.without_namespace.unstub(:eval)
+    Discourse.redis.without_namespace.unstub(:evalsha)
     Discourse.redis.without_namespace.unstub(:set)
 
     inc('Googlebot', autoflush: 3)
