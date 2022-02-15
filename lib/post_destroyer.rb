@@ -5,9 +5,6 @@
 # this class contains the logic to delete it.
 #
 class PostDestroyer
-  USER_STAT_COUNT_DECREMENT = "decrement"
-  USER_STAT_COUNT_INCREMENT = "increment"
-
   def self.destroy_old_hidden_posts
     Post.where(deleted_at: nil, hidden: true)
       .where("hidden_at < ?", 30.days.ago)
@@ -134,7 +131,7 @@ class PostDestroyer
 
       if @post.is_first_post?
         # Update stats of all people who replied
-        update_post_counts(USER_STAT_COUNT_INCREMENT)
+        update_post_counts(:increment)
       end
     end
 
@@ -397,7 +394,7 @@ class PostDestroyer
 
     if @post.is_first_post? && @post.topic && !@post.topic.private_message?
       # Update stats of all people who replied
-      update_post_counts(USER_STAT_COUNT_DECREMENT)
+      update_post_counts(:decrement)
     end
   end
 
@@ -415,7 +412,7 @@ class PostDestroyer
 
     counts.each do |user_id, count|
       if user_stat = UserStat.where(user_id: user_id).first
-        if operator == USER_STAT_COUNT_DECREMENT
+        if operator == :decrement
           UserStatCountUpdater.set!(user_stat: user_stat, count: user_stat.post_count - count, count_column: :post_count)
         else
           UserStatCountUpdater.set!(user_stat: user_stat, count: user_stat.post_count + count, count_column: :post_count)
