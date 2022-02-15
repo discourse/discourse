@@ -15,5 +15,5 @@ begin
     exit 1
   end
 rescue Redis::CannotConnectError
-  puts "Couldn't connect to Redis"
+  STDERR.puts "Couldn't connect to Redis"
 end
