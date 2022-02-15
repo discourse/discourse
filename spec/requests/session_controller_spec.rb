@@ -2281,7 +2281,7 @@ describe SessionController do
       expect(response.parsed_body["error"]).to eq(I18n.t("second_factor_auth.challenge_not_found"))
     end
 
-    it 'returns 401 if the challenge has expired' do
+    it 'returns 401 if the challenge nonce has expired' do
       post "/session/2fa/test-action"
       nonce = response.parsed_body["second_factor_challenge_nonce"]
       get "/session/2fa.json", params: { nonce: nonce }
@@ -2339,7 +2339,7 @@ describe SessionController do
       sign_in(user)
     end
 
-    it 'returns 401 if the challenge has expired' do
+    it 'returns 401 if the challenge nonce has expired' do
       post "/session/2fa/test-action"
       nonce = response.parsed_body["second_factor_challenge_nonce"]
 
