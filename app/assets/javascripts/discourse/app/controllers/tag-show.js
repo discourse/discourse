@@ -69,10 +69,6 @@ export default Controller.extend(BulkTopicSelection, FilterModeMixin, {
     return true;
   },
 
-  loadMoreTopics() {
-    return this.list.loadMore();
-  },
-
   @observes("list.canLoadMore")
   _showFooter() {
     this.set("application.showFooter", !this.get("list.canLoadMore"));

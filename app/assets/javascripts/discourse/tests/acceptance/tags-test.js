@@ -522,3 +522,46 @@ acceptance("Tag info", function (needs) {
     assert.strictEqual(composer.get("model").tags, undefined);
   });
 });
+
+acceptance(
+  "Tag show - topic list with `more_topics_url` present",
+  function (needs) {
+    needs.pretender((server, helper) => {
+      server.get("/tag/:tagName/l/latest.json", () =>
+        helper.response({
+          users: [],
+          primary_groups: [],
+          topic_list: {
+            topics: [],
+            more_topics_url: "...",
+          },
+        })
+      );
+      server.put("/topics/bulk", () => helper.response({}));
+    });
+
+    test("load more footer message is present", async function (assert) {
+      await visit("/tag/planters");
+      assert.notOk(exists(".topic-list-bottom .footer-message"));
+    });
+  }
+);
+
+acceptance("Tag show - topic list without `more_topics_url`", function (needs) {
+  needs.pretender((server, helper) => {
+    server.get("/tag/:tagName/l/latest.json", () =>
+      helper.response({
+        users: [],
+        primary_groups: [],
+        topic_list: {
+          topics: [],
+        },
+      })
+    );
+    server.put("/topics/bulk", () => helper.response({}));
+  });
+  test("load more footer message is not present", async function (assert) {
+    await visit("/tag/planters");
+    assert.ok(exists(".topic-list-bottom .footer-message"));
+  });
+});
