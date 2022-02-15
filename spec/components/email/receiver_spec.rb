@@ -147,17 +147,29 @@ describe Email::Receiver do
         expect(IncomingEmail.last.is_bounce).to eq(true)
       end
 
-      it "when bounce with verp" do
-        SiteSetting.reply_by_email_address = "foo+%{reply_key}@discourse.org"
-        bounce_key = "14b08c855160d67f2e0c2f8ef36e251e"
-        create_post_reply_key(bounce_key)
-        Fabricate(:email_log, to_address: email_address, user: user2, bounce_key: bounce_key, post: post)
+      context "when bounce with verp" do
+        let(:bounce_key) { "14b08c855160d67f2e0c2f8ef36e251e" }
 
-        expect { process(:hard_bounce_via_verp) }.to raise_error(Email::Receiver::BouncedEmailError)
-        post = Post.last
-        expect(post.whisper?).to eq(true)
-        expect(post.raw).to eq(I18n.t("system_messages.email_bounced", email: email_address, raw: "Your email bounced").strip)
-        expect(IncomingEmail.last.is_bounce).to eq(true)
+        before do
+          SiteSetting.reply_by_email_address = "foo+%{reply_key}@discourse.org"
+          create_post_reply_key(bounce_key)
+          Fabricate(:email_log, to_address: email_address, user: user2, bounce_key: bounce_key, post: post)
+        end
+
+        it "creates a post with the bounce error" do
+          expect { process(:hard_bounce_via_verp) }.to raise_error(Email::Receiver::BouncedEmailError)
+          post = Post.last
+          expect(post.whisper?).to eq(true)
+          expect(post.raw).to eq(I18n.t("system_messages.email_bounced", email: email_address, raw: "Your email bounced").strip)
+          expect(IncomingEmail.last.is_bounce).to eq(true)
+        end
+
+        it "updates the email log with the bounce error message" do
+          expect { process(:hard_bounce_via_verp) }.to raise_error(Email::Receiver::BouncedEmailError)
+          email_log = EmailLog.find_by(bounce_key: bounce_key)
+          expect(email_log.bounced).to eq(true)
+          expect(email_log.bounce_error_code).to eq("5.1.1")
+        end
       end
     end
   end
