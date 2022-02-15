@@ -18,7 +18,6 @@ class DiscourseRedis
     @config = config || DiscourseRedis.config
     @redis = DiscourseRedis.raw_connection(@config.dup)
     @namespace = namespace
-    # @lock_monitor = Monitor.new
   end
 
   def without_namespace
@@ -135,10 +134,9 @@ class DiscourseRedis
     @redis._client.reconnect
   end
 
-  # def synchronize
-  #   @redis.instance_variable_get(:@mon_data).synchronize { yield(@redis._client) }
-  #   # @lock_monitor.synchronize { yield }
-  # end
+  def synchronize
+    @redis.instance_variable_get(:@monitor).synchronize { yield }
+  end
 
   def namespace_key(key)
     if @namespace
