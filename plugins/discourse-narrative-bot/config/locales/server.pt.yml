@@ -360,12 +360,12 @@ pt:
         not_found: |-
           Com problemas? Lembre-se que <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> mostrar mais irá revelar <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> recuperar.
         reply: |-
-          Ufa, essa foi por pouco! Obrigado por corrigir isso :wink:
+          Ufa, esta foi por pouco! Obrigado por corrigir isto :wink:
 
-          Observe que você só tem %{deletion_after} hora(s) para desfazer a exclusão de uma postagem.
+          Observe que você só tem %{deletion_after} hora(s) para desfazer a exclusão de um post.
       category_hashtag:
         instructions: |-
-          Você sabia que pode se referir a categorias e tags em sua postagem? Por exemplo, você viu a categoria %{category}?
+          Sabia que pode se referir a categorias e tags no seu post? Por exemplo, viu a categoria %{category}?
 
           Digite `#` no meio de uma frase e selecione qualquer categoria ou tag.
         not_found: |-

@@ -175,7 +175,6 @@ lv:
     bootstrap_mode_disabled: "Bootstrap režīms tiks atspējots 24 stundu laikā."
     themes:
       default_description: "Noklusējums"
-      broken_theme_alert: "Jūsu vietne var nedarboties, jo tēmā / komponentā %{theme} ir kļūdas. Atspējojiet to %{path}."
     s3:
       regions:
         ap_northeast_1: "Āzijas un Klusā okeāna reģions (Tokija)"

@@ -172,8 +172,6 @@ sv:
     bootstrap_mode_disabled: "Bootstrap-läge stängs av om 24 timmar."
     themes:
       default_description: "Standard"
-      broken_theme_alert: "Din sida kanske inte fungerar på grund av att tema/komponent %{theme} innehåller fel. Avaktivera det/den från %{path}."
-    broken_decorator_alert: "Inlägg kanske inte visas korrekt eftersom en av dekorationerna för inläggsinnehåll skapade ett fel på din webbplats . Kontrollera webbläsarens utvecklarverktyg för mer information."
     s3:
       regions:
         ap_northeast_1: "Asien Stillahavsområdet (Tokyo)"

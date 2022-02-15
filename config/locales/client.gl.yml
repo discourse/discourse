@@ -167,7 +167,6 @@ gl:
     bootstrap_mode_disabled: "O modo Bootstrap desactivarase nun prazo de 24 horas."
     themes:
       default_description: "Predeterminado"
-      broken_theme_alert: "Pode que o seu sitio non funcione porque o tema ou compoñente %{theme} contén erros. Desactíveo en %{path}."
     s3:
       regions:
         ap_northeast_1: "Asia Pacífico (Tokio)"

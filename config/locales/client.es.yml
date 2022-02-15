@@ -172,8 +172,6 @@ es:
     bootstrap_mode_disabled: "El modo de arranque se desactivará dentro de las próximas 24 horas."
     themes:
       default_description: "Por defecto"
-      broken_theme_alert: "Tu sitio puede que no funcione porque el tema / componente %{theme} tiene errores. Desactívalo en %{path}."
-    broken_decorator_alert: "Puede que las publicaciones no se muestren correctamente porque uno de los decoradores de contenido de publicaciones de tu sitio está causando errores. Revisa la consola de desarrollo del navegador para más información."
     s3:
       regions:
         ap_northeast_1: "Asia-Pacífico (Tokio)"
@@ -690,6 +688,8 @@ es:
             title: "Ajustes"
             allow_unknown_sender_topic_replies: "Permitir respuestas a temas de remitentes desconocidos."
             allow_unknown_sender_topic_replies_hint: "Permite a remitentes desconocidos responder a temas de grupo. Si esto no está activado, las respuestas de direcciones de correo electrónico no invitadas todavía al tema crearán un nuevo tema."
+            from_alias: "Alias de envío"
+            from_alias_hint: "Alias que usar como la dirección de envío al enviar mensajes de grupo con SMTP. Ten en cuenta que no todos los proveedores de correo son compatibles con esta opción, consulta con el tuyo para saber si puedes usar los alias."
           mailboxes:
             synchronized: "Bandeja de correo electrónico sincronizada"
             none_found: "No se han encontrado bandejas de correo electrónico para esta cuenta de correo electrónico."

@@ -218,8 +218,6 @@ pl_PL:
     bootstrap_mode_disabled: "Tryb bootstrap zostanie wyłączony w ciągu 24 godzin."
     themes:
       default_description: "Domyślny"
-      broken_theme_alert: "Twoja strona może nie działać, bo motyw / komponent %{theme} zawiera błędy. Wyłącz go w %{path}."
-    broken_decorator_alert: "Posty mogą nie wyświetlać się poprawnie, ponieważ jeden z dekoratorów treści postów w Twojej witrynie zgłosił błąd. Sprawdź narzędzia programistyczne przeglądarki, aby uzyskać więcej informacji."
     s3:
       regions:
         ap_northeast_1: "Azja i Pacyfik (Tokio)"
@@ -1771,7 +1769,7 @@ pl_PL:
     last_post: Opublikowano
     local_time: "Czas lokalny"
     time_read: Przeczytane
-    time_read_recently: "%{time_read} częstości"
+    time_read_recently: "%{time_read} ostatnio"
     time_read_tooltip: "%{time_read} całkowity czas czytania"
     time_read_recently_tooltip: "%{time_read} całkowity czytania (%{recent_time_read} w ciągu ostatnich 60 dni)"
     last_reply_lowercase: ostatnia odpowiedź
@@ -2725,7 +2723,7 @@ pl_PL:
         jump_prompt_to_date: "do daty"
         jump_prompt_or: "lub"
       notifications:
-        title: Ustaw jak często chcesz być powiadamiany o tym temacie
+        title: ustaw jak często chcesz mieć powiadomienia o tym temacie
         reasons:
           mailing_list_mode: "Masz włączony tryb powiadomień mailowych, więc będziesz otrzymywał powiadomienia o nowych odpowiedziach w tym temacie za przez e-mail."
           "3_10": "Będziesz otrzymywał powiadomienia, ponieważ temat zawiera obserwowany przez Ciebie tag"
@@ -4441,8 +4439,8 @@ pl_PL:
           revert_confirm: "Czy na pewno chcesz wycofać swoje zmiany?"
         theme:
           theme: "Motyw"
-          component: "Składnik"
-          components: "Składniki"
+          component: "Komponent"
+          components: "Komponenty"
           filter_placeholder: "pisz, aby filtrować…"
           theme_name: "Nazwa motywu"
           component_name: "Nazwa komponentu"
@@ -4461,7 +4459,7 @@ pl_PL:
           edit_confirm: "To jest zdalny styl. Jeśli edytujesz CSS/HTML, twoje zmiany zostaną usunięte po ponownej aktualizacji motywu."
           update_confirm: "Te zmiany zostaną usunięte przez aktualizację. Czy na pewno chcesz kontynuować? "
           update_confirm_yes: "Tak, kontynuuj aktualizację"
-          common: "Częste"
+          common: "Wspólne"
           desktop: "Komputer"
           mobile: "Mobilnie"
           settings: "Ustawienia"
@@ -4485,12 +4483,12 @@ pl_PL:
           theme_components: "Komponenty motywu"
           add_all_themes: "Dodaj wszystkie motywy"
           convert: "Konwertuj"
-          convert_component_alert: "Czy na pewno chcesz konwertować ten składnik na motyw? Zostanie usunięty jako składnik z %{relatives}."
-          convert_component_tooltip: "Konwertuj ten składnik na motyw"
+          convert_component_alert: "Czy na pewno chcesz konwertować ten komponent na motyw? Zostanie usunięty jako komponent z %{relatives}."
+          convert_component_tooltip: "Konwertuj ten komponent na motyw"
           convert_component_alert_generic: "Czy na pewno chcesz przekonwertować ten komponent na motyw?"
-          convert_theme_alert: "Czy na pewno chcesz konwertować ten motyw na składnik. Zostanie usunięty jako rodzic z %{relatives}."
+          convert_theme_alert: "Czy na pewno chcesz konwertować ten motyw na komponent? Zostanie usunięty jako rodzic z %{relatives}."
           convert_theme_alert_generic: "Czy na pewno chcesz przekonwertować ten motyw na komponent?"
-          convert_theme_tooltip: "Konwertuj ten motyw na składnik"
+          convert_theme_tooltip: "Konwertuj ten motyw na komponent"
           inactive_themes: "Nieaktywne motywy:"
           inactive_components: "Nieużywane komponenty:"
           broken_theme_tooltip: "Ten motyw ma błędy w CSS, HTML lub YAML"
@@ -4510,7 +4508,7 @@ pl_PL:
             no_overwrite: "Niewłaściwa nazwa zmiennej. Nie może nadpisywać istniejącej zmiennej."
             must_be_unique: "Niepoprawna nazwa zmiennej. Musi być unikalna."
           upload: "Plik"
-          select_component: "Wybierz składnik..."
+          select_component: "Wybierz komponent..."
           unsaved_changes_alert: "Nie zapisałeś/łaś jeszcze zmian, czy chcesz je odrzucić i przejść dalej?"
           unsaved_parent_themes: "Nie przypisałeś/łaś komponentu do motywów, czy chcesz przejść dalej?"
           discard: "Odrzuć"
@@ -4669,8 +4667,8 @@ pl_PL:
           warning: "To ustawienie permanentnie nadpisze wszystkie powiązane ustawienia witryny."
           overridden: Domyślny plik robots.txt twojej witryny został nadpisany
         email_style:
-          title: "Styl wiadomości e-mail"
-          heading: "Dostosuj styl wiadomości e-mail"
+          title: "Styl e-maili"
+          heading: "Dostosuj styl e-maili"
           html: "Szablon HTML"
           css: "CSS"
           reset: "Przywróć ustawienia domyślne"
@@ -4860,8 +4858,8 @@ pl_PL:
             embeddable_host_update: "zmodyfikuj hosta do osadzania"
             embeddable_host_destroy: "usuń hosta do osadzania"
             change_theme_setting: "zmień ustawienia motywu"
-            disable_theme_component: "dezaktywuj składnik motywu"
-            enable_theme_component: "aktywuj składnik motywu"
+            disable_theme_component: "dezaktywuj komponent"
+            enable_theme_component: "aktywuj komponent"
             revoke_title: "odbierz tytuł"
             change_title: "zmień tytuł"
             api_key_create: "utwórz klucz api"

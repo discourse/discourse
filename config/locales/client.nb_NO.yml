@@ -169,7 +169,6 @@ nb_NO:
     bootstrap_mode_disabled: "Oppstartsmodus vil bli deaktivert i løpet av 24 timer."
     themes:
       default_description: "Forvalg"
-      broken_theme_alert: "Du kan oppleve at siden din ikke fungerer fordi temaet eller komponenten %{theme} har feil. Deaktiver temaet eller komponenten her: %{path}."
     s3:
       regions:
         ap_northeast_1: "Asia/Stillehavsregionen (Tokyo)"

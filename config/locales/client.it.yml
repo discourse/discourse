@@ -172,8 +172,10 @@ it:
     bootstrap_mode_disabled: "La modalità bootstrap sarà disattivata entro 24 ore."
     themes:
       default_description: "Predefinito"
-      broken_theme_alert: "Il tuo sito potrebbe non funzionare perché il tema / componente %{theme} contiene degli errori. Disabilitalo qui %{path}."
-    broken_decorator_alert: "I messaggi potrebbero non essere visualizzati correttamente perché uno dei decoratori di contenuti sul tuo sito ha generato un errore. Per maggiori informazioni, controlla gli strumenti di sviluppo del browser."
+      broken_theme_alert: "Il sito potrebbe non funzionare a causa di errori in un tema / componente."
+      error_caused_by: "Causato da '%{name}'. <a target='blank' href='%{path}'>Clicca qui</a> per riconfigurare o disabilitare."
+      only_admins: "(questo messaggio è mostrato solo agli amministratori del sito)"
+    broken_decorator_alert: "I messaggi potrebbero non essere visualizzati correttamente perché uno dei decoratori dei contenuti dei messaggi sul tuo sito ha generato un errore."
     s3:
       regions:
         ap_northeast_1: "Asia Pacifico (Tokyo)"

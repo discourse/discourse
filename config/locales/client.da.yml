@@ -168,7 +168,6 @@ da:
     bootstrap_mode_disabled: "Bootstrap-tilstand deaktiveres inden for 24 timer."
     themes:
       default_description: "Standard"
-      broken_theme_alert: "Dit websted fungerer muligvis ikke, fordi tema / komponent %{theme} har fejl. Deaktiver det her: %{path}."
     s3:
       regions:
         ap_northeast_1: "Asien (Tokyo)"

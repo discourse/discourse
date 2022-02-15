@@ -185,7 +185,6 @@ bs_BA:
     bootstrap_mode_disabled: "Bootstrap način rada će biti isključen u toku 24 sata."
     themes:
       default_description: "Uobičajen"
-      broken_theme_alert: "Vaša stranica možda neradi jer tema / komponeta ima %{theme} greške.\nUgasi ju kod %{path}"
     s3:
       regions:
         ap_northeast_1: "Azija Pacifik (Tokio)"

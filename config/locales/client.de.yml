@@ -172,8 +172,10 @@ de:
     bootstrap_mode_disabled: "Der Starthilfe-Modus wird in den nächsten 24 Stunden deaktiviert."
     themes:
       default_description: "Standard"
-      broken_theme_alert: "Deine Website funktioniert vielleicht nicht, weil Theme/Komponente %{theme} Fehler hat. Deaktiviere es in %{path}."
-    broken_decorator_alert: "Beiträge werden möglicherweise nicht korrekt angezeigt, weil einer der Beitragsdekorateure auf deiner Seite einen Fehler ausgelöst hat. Überprüfe die Entwickler-Tools deines Browsers für weitere Informationen."
+      broken_theme_alert: "Deine Website funktioniert vielleicht nicht, weil eine Theme / eine Komponente Fehler hat."
+      error_caused_by: "Verursacht durch '%{name}'. <a target='blank' href='%{path}'>Klicke hier</a> , um die Funktion neu zu konfigurieren oder zu deaktivieren."
+      only_admins: "(Diese Meldung wird nur Site-Administratoren angezeigt)"
+    broken_decorator_alert: "Beiträge werden möglicherweise nicht richtig angezeigt, weil einer der Beitragsausstatter auf deiner Website einen Fehler ausgelöst hat."
     s3:
       regions:
         ap_northeast_1: "Asien-Pazifik (Tokio)"
@@ -690,6 +692,8 @@ de:
             title: "Einstellungen"
             allow_unknown_sender_topic_replies: "Unbekannten Absendern das Antworten auf Gruppenthemen erlauben."
             allow_unknown_sender_topic_replies_hint: "Erlaubt unbekannten Absendern, auf Gruppenthemen zu antworten. Wenn dies nicht aktiviert ist, werden Antworten von E-Mail-Adressen, die nicht bereits zu dem Thema eingeladen wurden, ein neues Thema erstellen."
+            from_alias: "Von Alias"
+            from_alias_hint: "Alias, der beim Versenden von Gruppen-SMTP-E-Mails als Absenderadresse verwendet werden soll. Bitte beachte, dass dies nicht von allen E-Mail-Anbietern unterstützt wird; sieh in der Dokumentation deines E-Mail-Anbieters nach."
           mailboxes:
             synchronized: "Synchronisierte Mailbox"
             none_found: "In diesem E-Mail-Konto wurden keine Postfächer gefunden."

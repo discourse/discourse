@@ -172,8 +172,6 @@ pt_BR:
     bootstrap_mode_disabled: "O modo de inicialização será desativado em 24 horas."
     themes:
       default_description: "Padrão"
-      broken_theme_alert: "Seu site pode não funcionar porque o tema/componente %{theme} tem erros. Desative-o em %{path}."
-    broken_decorator_alert: "As postagens podem não ser exibidas corretamente porque um dos decoradores de conteúdo do seu site detectou um erro. Confira as ferramentas de desenvolvedor do navegador para obter mais informações."
     s3:
       regions:
         ap_northeast_1: "Ásia Pacífico (Tóquio)"

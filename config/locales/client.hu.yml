@@ -172,7 +172,10 @@ hu:
     bootstrap_mode_disabled: "Az előkészítési mód 24 órán belül kikapcsol."
     themes:
       default_description: "Alapértelmezett"
-      broken_theme_alert: "Lehet, hogy webhelye nem működik, mert a(z) %{theme} téma / összetevő hibába ütközött. Tiltsa le a(z) %{path} fájlban."
+      broken_theme_alert: "Lehet, hogy webhelye nem működik, mert a téma/összetevő hibába ütközött."
+      error_caused_by: "Az okozó: „%{name}”. <a target='blank' href='%{path}'>Kattintson ide</a> az újrakonfiguráláshoz vagy letiltáshoz."
+      only_admins: "(ez az üzenet csak a webhely rendszergazdáinak jelenik meg)"
+    broken_decorator_alert: "Előfordulhat, hogy a bejegyzések nem jelennek meg megfelelően, mert a webhely egyik bejegyzéstartalmának dekorátora hibát dobott."
     s3:
       regions:
         ap_northeast_1: "Csendes-óceáni térség (Tokió)"

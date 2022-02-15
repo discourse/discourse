@@ -167,7 +167,6 @@ ca:
     bootstrap_mode_disabled: "El mode d'arrencada serà desactivat d'aquí a 24 hores."
     themes:
       default_description: "Per defecte"
-      broken_theme_alert: "Pot ser que el vostre lloc web no funcioni perquè l'aparença o component %{theme} té errors. Inhabiliteu-lo en %{path}."
     s3:
       regions:
         ap_northeast_1: "Àsia Pacífic (Tòquio)"
