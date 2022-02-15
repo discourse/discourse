@@ -394,6 +394,9 @@
           grid-gap: 0 1em;
           a {
             @include ellipsis;
+            > div {
+              display: block;
+            }
           }
           button {
             span:not(.relative-date) {
