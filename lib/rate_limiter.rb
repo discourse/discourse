@@ -70,7 +70,7 @@ class RateLimiter
 
   # reloader friendly
   unless defined? PERFORM_LUA
-    PERFORM_LUA = <<~LUA
+    PERFORM_LUA = DiscourseRedis::EvalHelper.new <<~LUA
       local now = tonumber(ARGV[1])
       local secs = tonumber(ARGV[2])
       local max = tonumber(ARGV[3])
@@ -89,12 +89,10 @@ class RateLimiter
         return 0
       end
     LUA
-
-    PERFORM_LUA_SHA = Digest::SHA1.hexdigest(PERFORM_LUA)
   end
 
   unless defined? PERFORM_LUA_AGGRESSIVE
-    PERFORM_LUA_AGGRESSIVE = <<~LUA
+    PERFORM_LUA_AGGRESSIVE = DiscourseRedis::EvalHelper.new <<~LUA
       local now = tonumber(ARGV[1])
       local secs = tonumber(ARGV[2])
       local max = tonumber(ARGV[3])
@@ -116,8 +114,6 @@ class RateLimiter
 
       return return_val
     LUA
-
-    PERFORM_LUA_AGGRESSIVE_SHA = Digest::SHA1.hexdigest(PERFORM_LUA_AGGRESSIVE)
   end
 
   def performed!(raise_error: true)
@@ -161,15 +157,9 @@ class RateLimiter
 
   def rate_limiter_allowed?(now)
     lua, lua_sha = nil
-    if @aggressive
-      lua = PERFORM_LUA_AGGRESSIVE
-      lua_sha = PERFORM_LUA_AGGRESSIVE_SHA
-    else
-      lua = PERFORM_LUA
-      lua_sha = PERFORM_LUA_SHA
-    end
+    eval_helper = @aggressive ? PERFORM_LUA_AGGRESSIVE : PERFORM_LUA
 
-    eval_lua(lua, lua_sha, [prefixed_key], [now, @secs, @max]) == 0
+    eval_helper.eval(redis, [prefixed_key], [now, @secs, @max]) == 0
   end
 
   def prefixed_key
@@ -200,15 +190,5 @@ class RateLimiter
 
   def rate_unlimited?
     !!(RateLimiter.disabled? || (@user&.staff? && !@apply_limit_to_staff && @staff_limit[:max].nil?))
-  end
-
-  def eval_lua(lua, sha, keys, args)
-    redis.evalsha(sha, keys, args)
-  rescue Redis::CommandError => e
-    if e.to_s =~ /^NOSCRIPT/
-      redis.eval(lua, keys, args)
-    else
-      raise
-    end
   end
 end
