@@ -72,12 +72,20 @@ class Upload < ActiveRecord::Base
     @unused_callbacks
   end
 
+  def self.reset_unused_callbacks
+    @unused_callbacks = []
+  end
+
   def self.add_in_use_callback(&block)
     (@in_use_callbacks ||= []) << block
   end
 
   def self.in_use_callbacks
     @in_use_callbacks
+  end
+
+  def self.reset_in_use_callbacks
+    @in_use_callbacks = []
   end
 
   def self.with_no_non_post_relations
