@@ -2287,7 +2287,7 @@ describe SessionController do
       get "/session/2fa.json", params: { nonce: nonce }
       expect(response.status).to eq(200)
 
-      freeze_time 6.minutes.from_now
+      freeze_time (SecondFactor::AuthManager::MAX_CHALLENGE_AGE + 1.minute).from_now
       get "/session/2fa.json", params: { nonce: nonce }
       expect(response.status).to eq(401)
       expect(response.parsed_body["error"]).to eq(I18n.t("second_factor_auth.challenge_expired"))
@@ -2343,7 +2343,7 @@ describe SessionController do
       post "/session/2fa/test-action"
       nonce = response.parsed_body["second_factor_challenge_nonce"]
 
-      freeze_time 6.minutes.from_now
+      freeze_time (SecondFactor::AuthManager::MAX_CHALLENGE_AGE + 1.minute).from_now
       token = ROTP::TOTP.new(user_second_factor.data).now
       post "/session/2fa.json", params: {
         nonce: nonce,

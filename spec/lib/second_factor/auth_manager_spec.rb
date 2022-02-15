@@ -168,7 +168,7 @@ describe SecondFactor::AuthManager do
         path: "/abc/xyz"
       )
 
-      freeze_time 6.minutes.from_now
+      freeze_time (SecondFactor::AuthManager::MAX_CHALLENGE_AGE + 1.minute).from_now
       expect {
         manager.run!(request, { second_factor_nonce: nonce }, secure_session)
       }.to raise_error(SecondFactor::BadChallenge) do |ex|
