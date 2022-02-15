@@ -49,23 +49,27 @@ class DistributedMutex
 
   # NOTE wrapped in mutex to maintain its semantics
   def synchronize
+    result = nil
+
     @mutex.synchronize do
       expire_time = get_lock
 
       begin
-        yield
+        result = yield
       ensure
         current_time = redis.time[0]
         if current_time > expire_time
           warn("held for too long, expected max: #{@validity} secs, took an extra #{current_time - expire_time} secs")
         end
 
-        result = UNLOCK_SCRIPT.eval(redis, [prefixed_key], [expire_time.to_s])
-        if !result && current_time <= expire_time
+        unlocked = UNLOCK_SCRIPT.eval(redis, [prefixed_key], [expire_time.to_s])
+        if !unlocked && current_time <= expire_time
           warn("the redis key appears to have been tampered with before expiration")
         end
       end
     end
+
+    result
   end
 
   private
