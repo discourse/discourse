@@ -14,7 +14,7 @@ define("ember-addons/ember-computed-decorators", [
 ], function (decorators, deprecated) {
   deprecated.default(
     "ember-addons/ember-computed-decorators is deprecated. Use discourse-common/utils/decorators instead.",
-    { since: "v2.4", dropFrom: "v3.0" }
+    { since: "2.4", dropFrom: "3.0" }
   );
   return decorators;
 });
