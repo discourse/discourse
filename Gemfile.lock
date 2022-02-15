@@ -327,10 +327,10 @@ GEM
       nokogiri (>= 1.6)
     rails-html-sanitizer (1.4.2)
       loofah (~> 2.3)
-    rails_failover (0.7.3)
-      activerecord (~> 6.0)
+    rails_failover (0.8.1)
+      activerecord (> 6.0, < 7.1)
       concurrent-ruby
-      railties (~> 6.0)
+      railties (> 6.0, < 7.1)
     rails_multisite (4.0.0)
       activerecord (> 5.0, < 7)
       railties (> 5.0, < 7)
