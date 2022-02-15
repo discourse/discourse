@@ -58,11 +58,4 @@ class AdminConfirmation
     ac.token = token
     ac
   end
-
-  def self.cleanup_redis
-    return if !Rails.env.test?
-    keys = Discourse.redis.keys("admin-confirmation:*")
-    keys += Discourse.redis.keys("admin-confirmation-token:*")
-    Discourse.redis.del(keys)
-  end
 end

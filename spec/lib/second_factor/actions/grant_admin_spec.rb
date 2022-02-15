@@ -6,8 +6,14 @@ describe SecondFactor::Actions::GrantAdmin do
   fab!(:admin) { Fabricate(:admin) }
   fab!(:user) { Fabricate(:user) }
 
+  def cleanup_admin_confirmation_redis_keys
+    keys = Discourse.redis.keys("admin-confirmation:*")
+    keys += Discourse.redis.keys("admin-confirmation-token:*")
+    Discourse.redis.del(keys)
+  end
+
   after do
-    AdminConfirmation.cleanup_redis
+    cleanup_admin_confirmation_redis_keys
   end
 
   def params(hash)
