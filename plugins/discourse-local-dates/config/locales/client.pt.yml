@@ -31,6 +31,7 @@ pt:
           format_title: Formato da data
           timezone: Zona Horária
           until: Até...
+          current_timezone: "Fuso horário atual:"
           recurring:
             every_day: "Diariamente"
             every_week: "Semanalmente"
@@ -40,3 +41,4 @@ pt:
             every_three_months: "Trimestral"
             every_six_months: "Semestral"
             every_year: "Anualmente"
+      default_title: "%{site_name} Evento"

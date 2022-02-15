@@ -368,7 +368,7 @@ pt:
   too_late_to_edit: "Essa mensagem foi criada há muito tempo. Já não pode ser editada ou apagada."
   edit_conflict: "Essa postagem foi editada por outro usuário e suas alterações não podem mais ser salvas."
   revert_version_same: "A versão actual é o mesma versão para a qual está a tentar reverter."
-  cannot_edit_on_slow_mode: "Este tópico está em modo lento. Para incentivar uma discussão ponderada e respeitada, a edição de postagens antigas neste tópico não é permitida enquanto em modo lento."
+  cannot_edit_on_slow_mode: "Este tópico está em modo lento. Para incentivar uma discussão ponderada e respeitada, a edição de posts antigos neste tópico não é permitida enquanto em modo lento."
   excerpt_image: "imagem"
   bookmarks:
     errors:
@@ -2082,8 +2082,7 @@ pt:
     reader:
       name: Leitor
       description: Ler todas as respostas num tópico com mais de 100 respostas
-      long_description: |2
-
+      long_description: |
         Este distintivo é concedido pela primeira vez que lê um tópico alongado com mais de 100 respostas. Ler uma discussão atentamente ajuda-o a acompanhar uma discussão, compreender diferentes pontos de vista, e leva a discussões mais interessantes. Quanto mais lê, melhor fica a discussão. Como costumamos dizer, Ler é Fundamental! :slight_smile:
     popular_link:
       name: Ligação Popular
@@ -2094,8 +2093,7 @@ pt:
     hot_link:
       name: Ligação Quente
       description: Publicou uma ligação externa com 300 cliques
-      long_description: |2
-
+      long_description: |
         Este distintivo é concedido quando uma ligação que partilhou obtém 300 cliques. Obrigado por publicar uma ligação fascinante que empurrou a conversa para a frente e iluminou a discussão!
     famous_link:
       name: Ligação Famosa

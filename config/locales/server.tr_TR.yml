@@ -1752,7 +1752,6 @@ tr_TR:
     max_mentions_per_post: "Bir kullanıcının bir gönderi içinde kullanabileceği en fazla @ad bildiri sayısı."
     max_users_notified_per_group_mention: "Grubun bahsi geçtiğinde bildirim alabilecek maksimum kullanıcı sayısı (Eğer eşik uyuşursa bildirim yapılmayacak)"
     enable_mentions: "Kullanıcıların diğer kullanıcılardan bahsetmesine izin verin."
-    here_mention: "@burada bahsetmek için kullanılan ad. Mevcut bir kullanıcı adı olmamalıdır."
     max_here_mentioned: "@burada tarafından belirtilen maksimum kişi sayısı."
     min_trust_level_for_here_mention: "Kullanıcı davet etmek için gereken minimum güven düzeyi."
     create_thumbnails: "Gönderiye sığmayacak kadar büyük olan görseller için küçük resimler ve lightbox resimleri oluştur."

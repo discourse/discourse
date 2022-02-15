@@ -168,7 +168,6 @@ fr:
     bootstrap_mode_disabled: "Le mode d'amorçage sera désactivé dans les prochaines 24 heures."
     themes:
       default_description: "Par défaut"
-      broken_theme_alert: "Votre site pourrait ne pas fonctionner parce que le thème/composant %{theme} comprend des erreurs. Vous pouvez le désactiver ici : %{path}."
     s3:
       regions:
         ap_northeast_1: "Asie-Pacifique (Tokyo)"
@@ -1541,6 +1540,7 @@ fr:
       title:
         title: "Titre"
         none: "(aucun)"
+        instructions: "Apparaît après votre nom d'utilisateur"
       flair:
         none: "(aucun)"
       primary_group:

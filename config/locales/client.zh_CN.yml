@@ -149,8 +149,6 @@ zh_CN:
     bootstrap_mode_disabled: "引导模式将在 24 小时内禁用。"
     themes:
       default_description: "默认"
-      broken_theme_alert: "因为主题/组件 %{theme} 有错误，您的站点可能无法正常运行，在%{path}下将其禁用。"
-    broken_decorator_alert: "帖子可能无法正确显示，因为您网站上的某个帖子内容修饰器引发了错误。查看浏览器开发者工具获取更多信息。"
     s3:
       regions:
         ap_northeast_1: "亚太地区（东京）"

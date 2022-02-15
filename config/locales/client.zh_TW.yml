@@ -143,7 +143,6 @@ zh_TW:
     bootstrap_mode_disabled: "初始模式將會在 24 小時後自動禁用。"
     themes:
       default_description: "預設"
-      broken_theme_alert: "您的網站可能無法正常工作，因為話題/組件 %{theme} 有錯誤。在 %{path} 處停用它。"
     s3:
       regions:
         ap_northeast_1: "亞太地區 (東京)"

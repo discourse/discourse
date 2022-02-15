@@ -164,7 +164,6 @@ el:
     bootstrap_mode_disabled: "Η λειτουργία bootstrap θα απενεργοποιηθεί εντός 24 ωρών."
     themes:
       default_description: "Προεπιλογή"
-      broken_theme_alert: "Ο ιστότοπός σας ενδέχεται να μη λειτουργεί επειδή το θέμα/συστατικό %{theme} έχει σφάλματα. Απενεργοποιήστε το στο %{path}."
     s3:
       regions:
         ap_northeast_1: "Ασία Ειρηνικός (Τόκιο)"

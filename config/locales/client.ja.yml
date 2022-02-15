@@ -148,7 +148,6 @@ ja:
     bootstrap_mode_disabled: "ブートストラップモードは 24 時間以内に無効になります。"
     themes:
       default_description: "デフォルト"
-      broken_theme_alert: "テーマ/コンポーネントの %{theme} にエラーがあるため、サイトが動作しない可能性があります。%{path} で無効にしてください。"
     s3:
       regions:
         ap_northeast_1: "アジア・太平洋 (東京)"

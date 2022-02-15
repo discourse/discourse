@@ -263,7 +263,6 @@ ar:
     bootstrap_mode_disabled: "سيتم إيقاف وضع تمهيد التشغيل خلال 24 ساعة."
     themes:
       default_description: "افتراضي"
-      broken_theme_alert: "قد لا يعمل الموقع كما ينبغي بسبب وجود أخطاء في السمة/المكوِّن %{theme}. أوقفه من %{path}."
     s3:
       regions:
         ap_northeast_1: "آسيا والمحيط الهادئ (طوكيو)"

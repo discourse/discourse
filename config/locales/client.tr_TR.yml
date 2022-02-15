@@ -172,8 +172,10 @@ tr_TR:
     bootstrap_mode_disabled: "Önyükleme modu 24 saat içinde devre dışı bırakılacak."
     themes:
       default_description: "Varsayılan"
-      broken_theme_alert: "%{theme} temasında veya tema bileşeninde hata olduğundan siteniz çalışmayabilir. %{path} adresinden devre dışı bırakın."
-    broken_decorator_alert: "Sitenizdeki gönderi içeriği dekoratörlerinden biri bir hata oluşturduğundan gönderiler düzgün görüntülenmeyebilir. Daha fazla bilgi için tarayıcı geliştirici araçlarına bakın."
+      broken_theme_alert: "Bir tema veya bileşende hata olduğu için siteniz çalışmayabilir."
+      error_caused_by: "Neden: '%{name}'. Yeniden yapılandırmak veya devre dışı bırakmak için <a target='blank' href='%{path}'>buraya tıklayın</a>."
+      only_admins: "(bu mesaj sadece site yöneticilerine gösterilir)"
+    broken_decorator_alert: "Sitenizdeki içerik dekoratörlerinden biri bir hataya neden olduğundan gönderiler doğru görüntülenmeyebilir."
     s3:
       regions:
         ap_northeast_1: "Asya Pasifik (Tokyo)"

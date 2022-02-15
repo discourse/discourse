@@ -212,7 +212,6 @@ lt:
     bootstrap_mode_disabled: "Paleidimo režimas bus išjungtas per 24 valandas."
     themes:
       default_description: "Numatytasis"
-      broken_theme_alert: "Jūsų svetainė gali neveikti, nes temoje / komponente %{theme} yra klaidų. Išjunkite jį %{path}."
     s3:
       regions:
         ap_northeast_1: "Asia Pacific (Tokyo)"

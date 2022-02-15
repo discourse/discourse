@@ -313,6 +313,8 @@ ko:
   links_require_trust: "죄송합니다. 게시물에 링크를 포함 할 수 없습니다."
   too_many_links:
     other: "죄송합니다. 신규회원은 글 하나에 링크를 %{count}개까지 넣을 수 있습니다."
+  contains_blocked_word: "죄송합니다. '%{word}' 는 금지된 단어로 사용할 수 없습니다."
+  contains_blocked_words: "죄송합니다. 허용되지 않는 단어로 글을 게시할 수 없습니다: %{words}."
   spamming_host: "죄송합니다. 회원님은 링크를 첨부할 수 없습니다."
   user_is_suspended: "가입이 보류된 회원은 글을 쓸 수 없습니다."
   topic_not_found: "뭔가 잘못됐네요. 아마 읽려는 도중에 토픽이 닫혔거나 지워진 건 아닐까요?"
@@ -1318,6 +1320,7 @@ ko:
     out_of_date_themes: "다음 테마에 대한 업데이트가 제공됩니다."
     unreachable_themes: "다음 테마에 대한 업데이트를 확인할 수 없습니다."
   site_settings:
+    allow_bulk_invite: "CSV 파일을 업로드하여 대량 초대 허용"
     disabled: "비활성"
     display_local_time_in_user_card: "사용자 카드 페이지가 열릴 때 사용자의 시간대를 기준으로 현지 시간을 표시합니다."
     censored_words: "단어는 자동적으로 `&#9632;&#9632;&#9632;&#9632;` 로 대체 됩니다."
@@ -1338,6 +1341,7 @@ ko:
     min_personal_message_title_length: "메세지 제목의 최소 길이"
     max_emojis_in_title: "제목에 허용되는 최대 이모티콘"
     min_search_term_length: "검색을 하기 위한 최소 글자 수"
+    search_tokenize_chinese: "중국어가 아닌 사이트에서도 중국어를 토큰화하도록 강제 검색"
     search_prefer_recent_posts: "이 옵션을 켜면, 포럼이 너무 커서 검색이 느리게 작동할 때 최근의 포스트부터 먼저 검색합니다."
     search_recent_posts_size: "대문에 실을 최신 포스트 수"
     log_search_queries: "사용자에 의해 발생된 로그 탐색 쿼리"
@@ -1890,7 +1894,6 @@ ko:
     display_name_on_posts: "글에 @username 뿐만 아니라 사용자의 전체 이름도 보여준다."
     show_time_gap_days: "두 글의 일차를 보여주기 위해 두 글이 떨어져 있어야 할 일수"
     short_progress_text_threshold: "글타래의 글 개수가 이 값을 넘어서면, 글 프로그래스바는 오직 현재 글 넘버만 보여준다. 만약 글 프로그래스바의 넓이는 변경하면, 이 숫자도 변경해야합니다."
-    default_code_lang: "GitHub 코드 블록에 적용된 기본 프로그래밍 언어 구문 강조 표시 (auto, nohighlight, ruby, python 등)"
     warn_reviving_old_topic_age: "이 값보다 오래된 글타래에 답글을 달면, 오래된 토론이라는 것을 상기시키기 위해 주의 알림이 보여진다. 비활성화 값음 0 이다. "
     autohighlight_all_code: "형식이 지정되기 전의(되지 않은) 모든 코드 블럭들에 대해, 사용자가 언어를 지정하지 않아도 강제로 code highlighting이 적용된다."
     highlighted_languages: "구문 강조 규칙이 포함되었습니다. (경고 : 너무 많은 언어를 포함하면 성능에 영향을 줄 수 있습니다.) 데모는 <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> 를 참조하십시오."
@@ -2033,6 +2036,7 @@ ko:
       invalid_json: "잘못된 JSON입니다."
       invalid_reply_by_email_address: "값이 반드시 '%{reply_key}'를 갖고 있어야하며 알림 이메일과 달라야합니다."
       invalid_alternative_reply_by_email_addresses: "모든 값은 &#39;%{reply_key}&#39;을 포함해야하며 알림 이메일과 달라야합니다."
+      invalid_domain_hostname: "문자에 * 또는? 를 포함해서는 안 됩니다."
       pop3_polling_host_is_empty: "POP3 폴링을 활성화하기 전에 &#39;pop3 폴링 호스트&#39;를 설정해야합니다."
       pop3_polling_username_is_empty: "POP3 폴링을 활성화하기 전에 &#39;pop3 폴링 사용자 이름&#39;을 설정해야합니다."
       pop3_polling_password_is_empty: "POP3 폴링을 활성화하기 전에 &#39;pop3 폴링 비밀번호&#39;를 설정해야합니다."
@@ -2062,6 +2066,8 @@ ko:
       unicode_usernames_avatars: "내부 시스템 아바타는 유니 코드 사용자 이름을 지원하지 않습니다."
       list_value_count: "목록에는 정확히 %{count} 값이 포함되어야합니다."
       google_oauth2_hd_groups: "이 설정을 활성화하기 전에 먼저 'google oauth2 hd'를 설정해야 합니다."
+      search_tokenize_chinese_enabled: "이 설정을 활성화하기 전에 'search_tokenize_chinese '를 비활성화해야 합니다."
+      search_tokenize_japanese_enabled: "이 설정을 활성화하기 전에 'search_tokenize_japanese'를 비활성화해야 합니다."
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"

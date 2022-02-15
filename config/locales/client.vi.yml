@@ -145,7 +145,6 @@ vi:
     bootstrap_mode_disabled: "Chế độ bootstrap sẽ bị vô hiệu trong 24 giờ tới."
     themes:
       default_description: "Mặc định"
-      broken_theme_alert: "Site của bạn có thể không hoạt động vì theme / component %{theme} bị lỗi. Tắt nó ở %{path}"
     s3:
       regions:
         ap_northeast_1: "Châu Á Thái Bình Dương (Tokyo)"

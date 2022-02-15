@@ -208,7 +208,6 @@ cs:
     bootstrap_mode_disabled: "Režim bootstrap bude deaktivován v následujících 24 hodinách."
     themes:
       default_description: "Výchozí"
-      broken_theme_alert: "Vaše stránka nemusí fungovat, protože šablona / komponenta %{theme} má chyby. Vypněte ji na %{path}."
     s3:
       regions:
         ap_northeast_1: "Asia Pacific (Tokyo)"
