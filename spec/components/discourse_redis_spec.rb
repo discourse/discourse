@@ -132,4 +132,49 @@ describe DiscourseRedis do
       end
     end
   end
+
+  describe DiscourseRedis::EvalHelper do
+    it "works" do
+      helper = DiscourseRedis::EvalHelper.new <<~LUA
+        return 'hello world'
+      LUA
+      expect(helper.eval(Discourse.redis)).to eq('hello world')
+    end
+
+    it "works with arguments" do
+      helper = DiscourseRedis::EvalHelper.new <<~LUA
+        return ARGV[1]..ARGV[2]..KEYS[1]..KEYS[2]
+      LUA
+      expect(helper.eval(Discourse.redis, ['key1', 'key2'], ['arg1', 'arg2'])).to eq("arg1arg2key1key2")
+    end
+
+    it "works with arguments" do
+      helper = DiscourseRedis::EvalHelper.new <<~LUA
+        return ARGV[1]..ARGV[2]..KEYS[1]..KEYS[2]
+      LUA
+      expect(helper.eval(Discourse.redis, ['key1', 'key2'], ['arg1', 'arg2'])).to eq("arg1arg2key1key2")
+    end
+
+    it "uses evalsha correctly" do
+      redis_proxy = Class.new do
+        attr_reader :calls
+        def method_missing(meth, *args, **kwargs, &block)
+          @calls ||= []
+          @calls.push(meth)
+          Discourse.redis.public_send(meth, *args, **kwargs, &block)
+        end
+      end.new
+
+      Discourse.redis.call("SCRIPT", "FLUSH", "SYNC")
+
+      helper = DiscourseRedis::EvalHelper.new <<~LUA
+        return 'hello world'
+      LUA
+      expect(helper.eval(redis_proxy)).to eq("hello world")
+      expect(helper.eval(redis_proxy)).to eq("hello world")
+      expect(helper.eval(redis_proxy)).to eq("hello world")
+
+      expect(redis_proxy.calls).to eq([:evalsha, :eval, :evalsha, :evalsha])
+    end
+  end
 end

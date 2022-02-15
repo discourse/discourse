@@ -260,15 +260,7 @@ class PresenceChannel
   end
 
   def self.redis_eval(key, *args)
-    script_sha1 = LUA_SCRIPTS_SHA1[key]
-    raise ArgumentError.new("No script for #{key}") if script_sha1.nil?
-    redis.evalsha script_sha1, *args
-  rescue ::Redis::CommandError => e
-    if e.to_s =~ /^NOSCRIPT/
-      redis.eval LUA_SCRIPTS[key], *args
-    else
-      raise
-    end
+    LUA_SCRIPTS[key].eval(redis, *args)
   end
 
   # Register a callback to configure channels with a given prefix
@@ -473,7 +465,7 @@ class PresenceChannel
 
   LUA_SCRIPTS ||= {}
 
-  LUA_SCRIPTS[:present] = <<~LUA
+  LUA_SCRIPTS[:present] = DiscourseRedis::EvalHelper.new <<~LUA
     #{COMMON_PRESENT_LEAVE_LUA}
 
     if mutex_locked then
@@ -502,7 +494,7 @@ class PresenceChannel
     return added_users
   LUA
 
-  LUA_SCRIPTS[:leave] = <<~LUA
+  LUA_SCRIPTS[:leave] = DiscourseRedis::EvalHelper.new <<~LUA
     #{COMMON_PRESENT_LEAVE_LUA}
 
     if mutex_locked then
@@ -532,7 +524,7 @@ class PresenceChannel
     return removed_users
   LUA
 
-  LUA_SCRIPTS[:release_mutex] = <<~LUA
+  LUA_SCRIPTS[:release_mutex] = DiscourseRedis::EvalHelper.new <<~LUA
     local mutex_key = KEYS[1]
     local expected_value = ARGV[1]
 
@@ -541,7 +533,7 @@ class PresenceChannel
     end
   LUA
 
-  LUA_SCRIPTS[:user_ids] = <<~LUA
+  LUA_SCRIPTS[:user_ids] = DiscourseRedis::EvalHelper.new <<~LUA
     local zlist_key = KEYS[1]
     local hash_key = KEYS[2]
     local message_bus_id_key = KEYS[4]
@@ -562,7 +554,7 @@ class PresenceChannel
     return { message_bus_id, user_ids }
   LUA
 
-  LUA_SCRIPTS[:count] = <<~LUA
+  LUA_SCRIPTS[:count] = DiscourseRedis::EvalHelper.new <<~LUA
     local zlist_key = KEYS[1]
     local hash_key = KEYS[2]
     local message_bus_id_key = KEYS[4]
@@ -582,7 +574,7 @@ class PresenceChannel
     return { message_bus_id, count }
   LUA
 
-  LUA_SCRIPTS[:auto_leave] = <<~LUA
+  LUA_SCRIPTS[:auto_leave] = DiscourseRedis::EvalHelper.new <<~LUA
     local zlist_key = KEYS[1]
     local hash_key = KEYS[2]
     local channels_key = KEYS[3]
@@ -626,9 +618,4 @@ class PresenceChannel
 
     return expired_user_ids
   LUA
-  LUA_SCRIPTS.freeze
-
-  LUA_SCRIPTS_SHA1 = LUA_SCRIPTS.transform_values do |script|
-    Digest::SHA1.hexdigest(script)
-  end.freeze
 end

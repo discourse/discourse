@@ -161,4 +161,20 @@ class DiscourseRedis
     key[(namespace.length + 1)..-1]
   end
 
+  class EvalHelper
+    def initialize(script)
+      @script = script
+      @sha1 = Digest::SHA1.hexdigest(script)
+    end
+
+    def eval(redis, *args, **kwargs)
+      redis.evalsha @sha1, *args, **kwargs
+    rescue ::Redis::CommandError => e
+      if e.to_s =~ /^NOSCRIPT/
+        redis.eval @script, *args, **kwargs
+      else
+        raise
+      end
+    end
+  end
 end
