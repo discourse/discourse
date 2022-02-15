@@ -977,7 +977,7 @@ class ApplicationController < ActionController::Base
 
   def run_second_factor!(action_class)
     action = action_class.new(guardian)
-    manager = SecondFactor::AuthManager.new(current_user, guardian, action)
+    manager = SecondFactor::AuthManager.new(guardian, action)
     yield(manager) if block_given?
     result = manager.run!(request, params, secure_session)
 

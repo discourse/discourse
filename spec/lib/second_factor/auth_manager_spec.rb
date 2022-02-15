@@ -15,7 +15,7 @@ describe SecondFactor::AuthManager do
   end
 
   def create_manager(action)
-    SecondFactor::AuthManager.new(user, guardian, action)
+    SecondFactor::AuthManager.new(guardian, action)
   end
 
   def create_action(callback_params = {}, redirect_path = nil)
@@ -37,7 +37,7 @@ describe SecondFactor::AuthManager do
       (@called_methods ||= []) << __method__
     end
 
-    klass.new(user, guardian)
+    klass.new(guardian)
   end
 
   def stage_challenge(successful:)

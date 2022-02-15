@@ -126,9 +126,9 @@ class SecondFactor::AuthManager
     challenge
   end
 
-  def initialize(current_user, guardian, action)
-    @current_user = current_user
+  def initialize(guardian, action)
     @guardian = guardian
+    @current_user = guardian.user
     @action = action
     @allowed_methods = Set.new([
       UserSecondFactor.methods[:totp],
