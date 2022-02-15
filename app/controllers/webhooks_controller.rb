@@ -17,7 +17,7 @@ class WebhooksController < ActionController::Base
       to_address = event["email"]
       error_code = event["status"]
       if event["event"] == "bounce"
-        if error_code["4."]
+        if error_code[Email::SMTP_STATUS_TRANSIENT_FAILURE]
           process_bounce(message_id, to_address, SiteSetting.soft_bounce_score, error_code)
         else
           process_bounce(message_id, to_address, SiteSetting.hard_bounce_score, error_code)
@@ -159,7 +159,7 @@ class WebhooksController < ActionController::Base
     # only handle soft bounces, because hard bounces are also handled
     # by the "dropped" event and we don't want to increase bounce score twice
     # for the same message
-    if event == "bounced" && params["error"]["4."]
+    if event == "bounced" && params["error"][Email::SMTP_STATUS_TRANSIENT_FAILURE]
       process_bounce(message_id, to_address, SiteSetting.soft_bounce_score, error_code)
     elsif event == "dropped"
       process_bounce(message_id, to_address, SiteSetting.hard_bounce_score, error_code)

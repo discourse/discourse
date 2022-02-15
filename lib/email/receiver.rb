@@ -251,7 +251,7 @@ module Email
 
       DiscourseEvent.trigger(:email_bounce, @mail, @incoming_email, @email_log)
 
-      if mail_error_statuses.any? { |s| s.start_with?("4.") }
+      if mail_error_statuses.any? { |s| s.start_with?(Email::SMTP_STATUS_TRANSIENT_FAILURE) }
         Email::Receiver.update_bounce_score(@from_email, SiteSetting.soft_bounce_score)
       else
         Email::Receiver.update_bounce_score(@from_email, SiteSetting.hard_bounce_score)
