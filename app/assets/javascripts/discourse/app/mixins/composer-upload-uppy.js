@@ -107,7 +107,7 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
       this.fileInputEl,
       this._addFiles
     );
-    this.editorEl.addEventListener("paste", this.pasteEventListener);
+    this.editorEl?.addEventListener("paste", this.pasteEventListener);
 
     this._uppyInstance = new Uppy({
       id: this.uppyId,
