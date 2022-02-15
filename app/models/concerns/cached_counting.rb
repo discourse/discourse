@@ -42,19 +42,10 @@ module CachedCounting
       raise NotImplementedError
     end
 
-    GET_AND_RESET = <<~LUA
-      local val = redis.call('get', KEYS[1])
-      redis.call('set', KEYS[1], '0')
-      return val
-    LUA
-
     # this may seem a bit fancy but in so it allows
     # for concurrent calls without double counting
     def get_and_reset(key)
-      namespaced_key = Discourse.redis.namespace_key(key)
-      val = Discourse.redis.without_namespace.eval(GET_AND_RESET, keys: [namespaced_key]).to_i
-      Discourse.redis.expire(key, 259200) # SET removes expiry, so set it again
-      val
+      Discourse.redis.set(key, '0', ex: 259200, get: true).to_i
     end
 
     def request_id(query_params, retries = 0)
