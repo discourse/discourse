@@ -11,11 +11,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 import getURL from "discourse-common/lib/get-url";
 import { htmlSafe } from "@ember/template";
 import { iconHTML } from "discourse-common/lib/icon-library";
-import {
-  extractError,
-  extractSecondFactorAuthNonce,
-  popupAjaxError,
-} from "discourse/lib/ajax-error";
+import { extractError, popupAjaxError } from "discourse/lib/ajax-error";
 import { inject as service } from "@ember/service";
 import showModal from "discourse/lib/show-modal";
 
@@ -234,7 +230,7 @@ export default Controller.extend(CanCheckEmails, {
           }
         })
         .catch((error) => {
-          const nonce = extractSecondFactorAuthNonce(error);
+          const nonce = error.jqXHR?.responseJSON.second_factor_challenge_nonce;
           if (nonce) {
             this.router.transitionTo("second-factor-auth", {
               queryParams: { nonce },
