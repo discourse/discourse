@@ -117,21 +117,22 @@ end
 #
 # Table name: email_logs
 #
-#  id            :integer          not null, primary key
-#  to_address    :string           not null
-#  email_type    :string           not null
-#  user_id       :integer
-#  created_at    :datetime         not null
-#  updated_at    :datetime         not null
-#  post_id       :integer
-#  bounce_key    :uuid
-#  bounced       :boolean          default(FALSE), not null
-#  message_id    :string
-#  smtp_group_id :integer
-#  cc_addresses  :text
-#  cc_user_ids   :integer          is an Array
-#  raw           :text
-#  topic_id      :integer
+#  id                :integer          not null, primary key
+#  to_address        :string           not null
+#  email_type        :string           not null
+#  user_id           :integer
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
+#  post_id           :integer
+#  bounce_key        :uuid
+#  bounced           :boolean          default(FALSE), not null
+#  message_id        :string
+#  smtp_group_id     :integer
+#  cc_addresses      :text
+#  cc_user_ids       :integer          is an Array
+#  raw               :text
+#  topic_id          :integer
+#  bounce_error_code :string
 #
 # Indexes
 #
