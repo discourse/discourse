@@ -117,6 +117,16 @@ describe InvitesController do
       expect(Notification.where(user: invite.invited_by, notification_type: Notification.types[:invitee_accepted]).count).to eq(1)
     end
 
+    it 'creates an invited user record' do
+      sign_in(invite.invited_by)
+      expect { get "/invites/#{invite.invite_key}" }.to change { InvitedUser.count }.by(0)
+      expect(response.status).to eq(302)
+
+      sign_in(user)
+      expect { get "/invites/#{invite.invite_key}" }.to change { InvitedUser.count }.by(1)
+      expect(response.status).to eq(302)
+    end
+
     it 'fails if invite does not exist' do
       get '/invites/missing'
       expect(response.status).to eq(200)
