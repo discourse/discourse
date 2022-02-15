@@ -22,15 +22,17 @@ class InvitesController < ApplicationController
     invite = Invite.find_by(invite_key: params[:id])
     if invite.present? && invite.redeemable?
       if current_user
-        InvitedUser.transaction do
-          invited_user = InvitedUser.find_or_initialize_by(user: current_user, invite: invite)
-          if invited_user.new_record?
-            invited_user.save!
-            Invite.increment_counter(:redemption_count, invite.id)
-            invite.invited_by.notifications.create!(
-              notification_type: Notification.types[:invitee_accepted],
-              data: { display_username: current_user.username }.to_json
-            )
+        if current_user != invite.invited_by
+          InvitedUser.transaction do
+            invited_user = InvitedUser.find_or_initialize_by(user: current_user, invite: invite)
+            if invited_user.new_record?
+              invited_user.save!
+              Invite.increment_counter(:redemption_count, invite.id)
+              invite.invited_by.notifications.create!(
+                notification_type: Notification.types[:invitee_accepted],
+                data: { display_username: current_user.username }.to_json
+              )
+            end
           end
         end
 
