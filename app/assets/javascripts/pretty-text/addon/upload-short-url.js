@@ -167,7 +167,7 @@ let queueResolve;
 
 function queuePop(ajax) {
   lookupUncachedUploadUrls(queueUrls, ajax).then(queueResolve);
-  queueUrls = queuePromise = queueResolve = null;
+  queueUrls = queueResolve = null;
 }
 
 function _loadShortUrls(uploads, ajax, siteSettings, opts) {
