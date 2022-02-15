@@ -9,10 +9,10 @@
   <div class="top-row">
     {{raw "topic-status" topic=topic}}
     {{topic-link topic}}
-    {{#if topic.featured_link}}
+    {{~#if topic.featured_link}}
       {{topic-featured-link topic}}
     {{/if}}
-    {{topic-post-badges unreadPosts=topic.unread_posts unseen=topic.unseen url=topic.lastUnreadUrl}}
+    {{~topic-post-badges unreadPosts=topic.unread_posts unseen=topic.unseen url=topic.lastUnreadUrl}}
   </div>
   <div class="bottom-row">
     {{category-link topic.category}}{{discourse-tags topic mode="list"}}{{! intentionally inline to avoid whitespace}}
