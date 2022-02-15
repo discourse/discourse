@@ -42,26 +42,19 @@ describe DistributedMutex do
     expect(Time.now.to_i).to be <= start + 1
   end
 
-  #  expected: 1574200319
-  #       got: 1574200320
-  #
-  #  (compared using ==)
-  # ./spec/components/distributed_mutex_spec.rb:60:in `block (3 levels) in <main>'
-  # ./lib/distributed_mutex.rb:33:in `block in synchronize'
-  xit 'allows the validity of the lock to be configured' do
+  it "allows the validity of the lock to be configured" do
     freeze_time
-
     mutex = DistributedMutex.new(key, validity: 2)
 
     mutex.synchronize do
-      expect(Discourse.redis.ttl(key)).to eq(2)
+      expect(Discourse.redis.ttl(key)).to eq(3)
       expect(Discourse.redis.get(key).to_i).to eq(Time.now.to_i + 2)
     end
 
     mutex = DistributedMutex.new(key)
 
     mutex.synchronize do
-      expect(Discourse.redis.ttl(key)).to eq(DistributedMutex::DEFAULT_VALIDITY)
+      expect(Discourse.redis.ttl(key)).to eq(DistributedMutex::DEFAULT_VALIDITY + 1)
 
       expect(Discourse.redis.get(key).to_i)
         .to eq(Time.now.to_i + DistributedMutex::DEFAULT_VALIDITY)

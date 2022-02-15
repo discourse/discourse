@@ -7,6 +7,30 @@ class DistributedMutex
   DEFAULT_VALIDITY = 60
   CHECK_READONLY_ATTEMPTS = 10
 
+  LOCK_SCRIPT = DiscourseRedis::EvalHelper.new <<~LUA
+    local now = redis.call("time")[1]
+    local expire_time = now + ARGV[1]
+    local current_expire_time = redis.call("get", KEYS[1])
+
+    if current_expire_time and tonumber(now) <= tonumber(current_expire_time) then
+      return { false, expire_time }
+    else
+      local result = redis.call("setex", KEYS[1], ARGV[1] + 1, tostring(expire_time))
+      return { true, expire_time }
+    end
+  LUA
+
+  UNLOCK_SCRIPT = DiscourseRedis::EvalHelper.new <<~LUA
+    local current_expire_time = redis.call("get", KEYS[1])
+
+    if current_expire_time == ARGV[1] then
+      local result = redis.call("del", KEYS[1])
+      return result ~= nil
+    else
+      return false
+    end
+  LUA
+
   def self.synchronize(key, redis: nil, validity: DEFAULT_VALIDITY, &blk)
     self.new(
       key,
@@ -36,7 +60,8 @@ class DistributedMutex
           warn("held for too long, expected max: #{@validity} secs, took an extra #{current_time - expire_time} secs")
         end
 
-        if !unlock(expire_time) && current_time <= expire_time
+        result = UNLOCK_SCRIPT.eval(redis, [prefixed_key], [expire_time.to_s])
+        if !result && current_time <= expire_time
           warn("the redis key appears to have been tampered with before expiration")
         end
       end
@@ -49,20 +74,16 @@ class DistributedMutex
   attr_reader :redis
   attr_reader :validity
 
-  def warn(msg)
-    Rails.logger.warn("DistributedMutex(#{key.inspect}): #{msg}")
-  end
-
   def get_lock
     attempts = 0
 
     while true
-      got_lock, expire_time = try_to_get_lock
-      if got_lock
-        return expire_time
-      end
+      got_lock, expire_time = LOCK_SCRIPT.eval(redis, [prefixed_key], [validity])
+
+      return expire_time if got_lock
 
       sleep 0.001
+
       # in readonly we will never be able to get a lock
       if @using_global_redis && Discourse.recently_readonly?
         attempts += 1
@@ -74,52 +95,11 @@ class DistributedMutex
     end
   end
 
-  def try_to_get_lock
-    got_lock = false
-
-    now = redis.time[0]
-    expire_time = now + validity
-
-    redis.synchronize do
-      redis.unwatch
-      redis.watch key
-
-      current_expire_time = redis.get key
-
-      if current_expire_time && now <= current_expire_time.to_i
-        redis.unwatch
-
-        got_lock = false
-      else
-        result =
-          redis.multi do |transaction|
-            transaction.set key, expire_time.to_s
-            transaction.expireat key, expire_time + 1
-          end
-
-        got_lock = !result.nil?
-      end
-
-      [got_lock, expire_time]
-    end
+  def prefixed_key
+    redis.namespace_key(key)
   end
 
-  def unlock(expire_time)
-    redis.synchronize do
-      redis.unwatch
-      redis.watch key
-      current_expire_time = redis.get key
-
-      if current_expire_time == expire_time.to_s
-        result =
-          redis.multi do |transaction|
-            transaction.del key
-          end
-        return !result.nil?
-      else
-        redis.unwatch
-        return false
-      end
-    end
+  def warn(msg)
+    Rails.logger.warn("DistributedMutex(#{key.inspect}): #{msg}")
   end
 end

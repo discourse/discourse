@@ -134,10 +134,6 @@ class DiscourseRedis
     @redis._client.reconnect
   end
 
-  def synchronize
-    @redis.instance_variable_get(:@monitor).synchronize { yield }
-  end
-
   def namespace_key(key)
     if @namespace
       "#{namespace}:#{key}"
