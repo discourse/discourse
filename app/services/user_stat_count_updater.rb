@@ -2,29 +2,36 @@
 
 class UserStatCountUpdater
   class << self
-    def increment!(post, user_stat: nil)
-      update!(post, user_stat: user_stat)
+    def increment!(post, user_stat: nil, count_type: nil)
+      update!(post, user_stat: user_stat, action: :increment!, count_type: count_type)
     end
 
-    def decrement!(post, user_stat: nil)
-      update!(post, user_stat: user_stat, action: :decrement!)
+    def decrement!(post, user_stat: nil, count_type: nil)
+      update!(post, user_stat: user_stat, action: :decrement!, count_type: count_type)
     end
 
     private
 
-    def update!(post, user_stat: nil, action: :increment!)
+    def update!(post, user_stat: nil, action: :increment!, count_type: nil)
       return if !post&.topic
       return if action == :increment! && post.topic.private_message?
       stat = user_stat || post.user&.user_stat
 
       return if stat.blank?
 
-      column =
-        if post.is_first_post?
-          :topic_count
-        elsif post.post_type == Post.types[:regular]
-          :post_count
-        end
+      # In some cases we don't want to base the column on the
+      # post passed in, we may be updating multiple user stats
+      # at the same time for a topic
+      if count_type.present?
+        column = count_type
+      else
+        column =
+          if post.is_first_post?
+            :topic_count
+          elsif post.post_type == Post.types[:regular]
+            :post_count
+          end
+      end
 
       return if column.blank?
 

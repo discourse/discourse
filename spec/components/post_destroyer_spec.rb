@@ -442,6 +442,21 @@ describe PostDestroyer do
       expect(user2.user_stat.post_count).to eq(0)
     end
 
+    it "does not update post_count or topic_count to a negative number" do
+      user1 = post.user
+      reply2 = create_post(topic_id: post.topic_id, user: user1)
+      expect(user1.user_stat.topic_count).to eq(1)
+      expect(user1.user_stat.post_count).to eq(1)
+
+      user1.user_stat.update!(topic_count: 0)
+      user1.user_stat.update!(post_count: 0)
+
+      PostDestroyer.new(admin, post).destroy
+      user1.reload
+      expect(user1.user_stat.topic_count).to eq(0)
+      expect(user1.user_stat.post_count).to eq(0)
+    end
+
     it 'deletes the published page associated with the topic' do
       slug = 'my-published-page'
       publish_result = PublishedPage.publish!(admin, post.topic, slug)

@@ -5,6 +5,8 @@
 # this class contains the logic to delete it.
 #
 class PostDestroyer
+  USER_STAT_COUNT_DECREMENT = "decrement"
+  USER_STAT_COUNT_INCREMENT = "increment"
 
   def self.destroy_old_hidden_posts
     Post.where(deleted_at: nil, hidden: true)
@@ -132,12 +134,7 @@ class PostDestroyer
 
       if @post.is_first_post?
         # Update stats of all people who replied
-        counts = Post.where(post_type: Post.types[:regular], topic_id: @post.topic_id).where('post_number > 1').group(:user_id).count
-        counts.each do |user_id, count|
-          if user_stat = UserStat.where(user_id: user_id).first
-            user_stat.update(post_count: user_stat.post_count + count)
-          end
-        end
+        update_post_counts(USER_STAT_COUNT_INCREMENT)
       end
     end
 
@@ -400,13 +397,7 @@ class PostDestroyer
 
     if @post.is_first_post? && @post.topic && !@post.topic.private_message?
       # Update stats of all people who replied
-      counts = Post.where(post_type: Post.types[:regular], topic_id: @post.topic_id).where('post_number > 1').group(:user_id).count
-
-      counts.each do |user_id, count|
-        if user_stat = UserStat.where(user_id: user_id).first
-          user_stat.update(post_count: user_stat.post_count - count)
-        end
-      end
+      update_post_counts(USER_STAT_COUNT_DECREMENT)
     end
   end
 
@@ -417,4 +408,19 @@ class PostDestroyer
     incoming.update(imap_sync: sync)
   end
 
+  def update_post_counts(operator)
+    counts = Post.where(
+      post_type: Post.types[:regular], topic_id: @post.topic_id
+    ).where('post_number > 1').group(:user_id).count
+
+    counts.each do |user_id, count|
+      if user_stat = UserStat.where(user_id: user_id).first
+        if operator == USER_STAT_COUNT_DECREMENT
+          UserStatCountUpdater.decrement!(@post, user_stat: user_stat, count_type: :post_count)
+        else
+          UserStatCountUpdater.increment!(@post, user_stat: user_stat, count_type: :post_count)
+        end
+      end
+    end
+  end
 end
