@@ -174,7 +174,7 @@ module ImportScripts::PhpBB3
       importer = @importers.category_importer
 
       create_categories(rows) do |row|
-        next if @settings.category_mappings[row[:forum_id].to_s] == 'SKIP'
+        next if @settings.category_mappings.dig(row[:forum_id].to_s, :skip)
 
         importer.map_category(row)
       end

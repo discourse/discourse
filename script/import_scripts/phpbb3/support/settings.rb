@@ -49,7 +49,7 @@ module ImportScripts::PhpBB3
       @site_name = import_settings['site_name']
 
       @new_categories = import_settings['new_categories']
-      @category_mappings = import_settings['category_mappings']
+      @category_mappings = import_settings.fetch('category_mappings', []).to_h { |m| [m[:source_category_id].to_s, m] }
       @tag_mappings = import_settings['tag_mappings']
       @rank_mapping = import_settings['rank_mapping']
 

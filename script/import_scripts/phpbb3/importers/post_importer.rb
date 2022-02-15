@@ -22,7 +22,7 @@ module ImportScripts::PhpBB3
     end
 
     def map_post(row)
-      return if @settings.category_mappings[row[:forum_id].to_s] == 'SKIP'
+      return if @settings.category_mappings.dig(row[:forum_id].to_s, :skip)
 
       imported_user_id = @settings.prefix(row[:post_username].blank? ? row[:poster_id] : row[:post_username])
       user_id = @lookup.user_id_from_imported_user_id(imported_user_id) || -1
@@ -56,8 +56,13 @@ module ImportScripts::PhpBB3
     def map_first_post(row, mapped)
       poll_data = add_poll(row, mapped) if @settings.import_polls
 
-      mapped[:category] = @lookup.category_id_from_imported_category_id(@settings.prefix(@settings.category_mappings[row[:forum_id].to_s])) ||
-                          @lookup.category_id_from_imported_category_id(@settings.prefix(row[:forum_id]))
+      mapped[:category] = if category_mapping = @settings.category_mappings[row[:forum_id].to_s]
+        category_mapping[:discourse_category_id] ||
+          @lookup.category_id_from_imported_category_id(@settings.prefix(category_mapping[:target_category_id]))
+      else
+        @lookup.category_id_from_imported_category_id(@settings.prefix(row[:forum_id]))
+      end
+
       mapped[:title] = CGI.unescapeHTML(row[:topic_title]).strip[0...255]
       mapped[:pinned_at] = mapped[:created_at] unless row[:topic_type] == Constants::POST_NORMAL
       mapped[:pinned_globally] = row[:topic_type] == Constants::POST_GLOBAL

@@ -36,20 +36,25 @@ import:
 
   # Category mappings
   #
-  # For example, topics from phpBB category 1 and 2 will be imported
-  # in the new "Foo Category" category, topics from phpBB category 3
-  # will be imported in subcategory "Bar category", topics from phpBB
-  # category 4 will be merged into category 5 and category 6 will be
-  # skipped.
+  # * "source_category_id" is the forum ID in phpBB3
+  # * "target_category_id" is either a forum ID from phpBB3 or a "forum_id"
+  #   from the "new_categories" setting (see above)
+  # * "discourse_category_id" is a category ID from Discourse
+  # * "skip" allows you to ignore a category during import
   #
-  # category_mappings:
-  #   1: foo
-  #   2: foo
-  #   3: bar
-  #   4: 5
-  #   6: SKIP
+  # Use "target_category_id" if you want to merge categories and use
+  # "discourse_category_id" if you want to import a forum into an existing
+  # category in Discourse.
   #
-  category_mappings: {}
+  #  category_mappings:
+  #    - source_category_id: 1
+  #      target_category_id: foo
+  #    - source_category_id: 2
+  #      discourse_category_id: 42
+  #    - source_category_id: 6
+  #      skip: true
+  #
+  category_mappings: []
 
   # Tag mappings
   #
