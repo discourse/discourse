@@ -847,7 +847,7 @@ class TopicQuery
         .joins("LEFT JOIN category_users ON category_users.category_id = topics.category_id AND category_users.user_id = #{user.id}")
         .where("topics.category_id = :category_id
                 OR
-                (COALESCE(category_users.notification_level, :default) <> :muted AND topics.category_id NOT IN(:indirectly_muted_category_ids))
+                (COALESCE(category_users.notification_level, :default) <> :muted AND (topics.category_id IS NULL OR topics.category_id NOT IN(:indirectly_muted_category_ids)))
                 OR tu.notification_level > :regular",
                 category_id: category_id || -1,
                 default: CategoryUser.default_notification_level,

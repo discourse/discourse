@@ -27,6 +27,7 @@ export default Component.extend(FilterModeMixin, {
   categoryNotificationLevel(notificationLevel) {
     if (
       this.currentUser &&
+      this.currentUser.indirectly_muted_category_ids &&
       this.currentUser.indirectly_muted_category_ids.includes(this.category.id)
     ) {
       return NotificationLevels.MUTED;

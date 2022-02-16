@@ -473,11 +473,14 @@ const TopicTrackingState = EmberObject.extend({
       ? new Set([categoryId])
       : this.getSubCategoryIds(categoryId);
 
-    const mutedCategoryIds =
-      this.currentUser &&
-      this.currentUser.muted_category_ids.concat(
+    let mutedCategoryIds =
+      this.currentUser && this.currentUser.muted_category_ids;
+
+    if (mutedCategoryIds) {
+      mutedCategoryIds = mutedCategoryIds.concat(
         this.currentUser.indirectly_muted_category_ids
       );
+    }
     let filterFn = type === "new" ? isNew : isUnread;
 
     return Array.from(this.states.values()).filter(
@@ -776,9 +779,12 @@ const TopicTrackingState = EmberObject.extend({
     }
 
     if (["new_topic", "latest"].includes(data.message_type)) {
-      const mutedCategoryIds = User.currentProp("muted_category_ids").concat(
-        User.currentProp("indirectly_muted_category_ids")
-      );
+      let mutedCategoryIds = User.currentProp("muted_category_ids");
+      if (mutedCategoryIds) {
+        mutedCategoryIds = mutedCategoryIds.concat(
+          User.currentProp("indirectly_muted_category_ids")
+        );
+      }
 
       if (
         mutedCategoryIds &&

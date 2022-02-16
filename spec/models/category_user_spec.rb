@@ -289,12 +289,15 @@ describe CategoryUser do
       end
     end
     context "max category nesting 3" do
-      fab!(:category1) { Fabricate(:category) }
-      fab!(:category2) { Fabricate(:category, parent_category: category1) }
-      fab!(:category3) { Fabricate(:category, parent_category: category2) }
+      let(:category1) { Fabricate(:category) }
+      let(:category2) { Fabricate(:category, parent_category: category1) }
+      let(:category3) { Fabricate(:category, parent_category: category2) }
 
       before do
         SiteSetting.max_category_nesting = 3
+        category1
+        category2
+        category3
       end
       it "calculates muted categories based on parent category state" do
         expect(CategoryUser.indirectly_muted_category_ids(user)).to eq([])
