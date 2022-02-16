@@ -51,6 +51,74 @@ describe Jobs::CleanUpUploads do
     expect(Upload.exists?(id: expired_upload.id)).to eq(false)
   end
 
+  describe 'unused callbacks' do
+    before do
+      Upload.add_unused_callback do |uploads|
+        uploads.where.not(id: expired_upload.id)
+      end
+    end
+
+    after do
+      Upload.reset_unused_callbacks
+    end
+
+    it 'does not delete uploads skipped by an unused callback' do
+      expect do
+        Jobs::CleanUpUploads.new.execute(nil)
+      end.to change { Upload.count }.by(0)
+
+      expect(Upload.exists?(id: expired_upload.id)).to eq(true)
+    end
+
+    it 'deletes other uploads not skipped by an unused callback' do
+      expired_upload2 = fabricate_upload
+      upload = fabricate_upload
+      PostUpload.create(post: Fabricate(:post), upload: upload)
+
+      expect do
+        Jobs::CleanUpUploads.new.execute(nil)
+      end.to change { Upload.count }.by(-1)
+
+      expect(Upload.exists?(id: expired_upload.id)).to eq(true)
+      expect(Upload.exists?(id: expired_upload2.id)).to eq(false)
+      expect(Upload.exists?(id: upload.id)).to eq(true)
+    end
+  end
+
+  describe 'in use callbacks' do
+    before do
+      Upload.add_in_use_callback do |upload|
+        expired_upload.id == upload.id
+      end
+    end
+
+    after do
+      Upload.reset_in_use_callbacks
+    end
+
+    it 'does not delete uploads that are in use by callback' do
+      expect do
+        Jobs::CleanUpUploads.new.execute(nil)
+      end.to change { Upload.count }.by(0)
+
+      expect(Upload.exists?(id: expired_upload.id)).to eq(true)
+    end
+
+    it 'deletes other uploads that are not in use by callback' do
+      expired_upload2 = fabricate_upload
+      upload = fabricate_upload
+      PostUpload.create(post: Fabricate(:post), upload: upload)
+
+      expect do
+        Jobs::CleanUpUploads.new.execute(nil)
+      end.to change { Upload.count }.by(-1)
+
+      expect(Upload.exists?(id: expired_upload.id)).to eq(true)
+      expect(Upload.exists?(id: expired_upload2.id)).to eq(false)
+      expect(Upload.exists?(id: upload.id)).to eq(true)
+    end
+  end
+
   describe 'when clean_up_uploads is disabled' do
     before do
       SiteSetting.clean_up_uploads = false
