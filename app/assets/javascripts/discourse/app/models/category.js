@@ -324,8 +324,6 @@ const Category = RestModel.extend({
   },
 
   setNotification(notification_level) {
-    this.set("notification_level", notification_level);
-
     User.currentProp(
       "muted_category_ids",
       User.current().calculateMutedIds(
@@ -336,7 +334,16 @@ const Category = RestModel.extend({
     );
 
     const url = `/category/${this.id}/notifications`;
-    return ajax(url, { data: { notification_level }, type: "POST" });
+    return ajax(url, { data: { notification_level }, type: "POST" }).then(
+      (data) => {
+        User.current().set(
+          "indirectly_muted_category_ids",
+          data.indirectly_muted_category_ids
+        );
+        this.set("notification_level", notification_level);
+        this.notifyPropertyChange("notification_level");
+      }
+    );
   },
 
   @discourseComputed("id")

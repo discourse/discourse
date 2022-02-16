@@ -661,6 +661,19 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
         );
       });
 
+      test("topics in indirectly muted categories do not get added to the state", function (assert) {
+        trackingState.currentUser.setProperties({
+          muted_category_ids: [],
+          indirectly_muted_category_ids: [123],
+        });
+        publishToMessageBus("/new", newTopicPayload);
+        assert.strictEqual(
+          trackingState.findState(222),
+          undefined,
+          "the new topic is not in the state"
+        );
+      });
+
       test("topics in muted tags do not get added to the state", function (assert) {
         trackingState.currentUser.set("muted_tag_ids", [44]);
         publishToMessageBus("/new", newTopicPayload);

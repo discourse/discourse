@@ -67,7 +67,7 @@
       {{!-- don't show category notification menu on tag pages --}}
       {{#if showCategoryNotifications}}
         {{category-notifications-button
-          value=category.notification_level
+          value=categoryNotificationLevel
           category=category
           onChange=(action "changeCategoryNotificationLevel")
         }}
