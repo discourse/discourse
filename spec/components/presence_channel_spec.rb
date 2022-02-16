@@ -74,6 +74,8 @@ describe PresenceChannel do
 
     freeze_time Time.zone.now + 1 + PresenceChannel::DEFAULT_TIMEOUT
 
+    Jobs::PresenceChannelAutoLeave.new.execute({})
+
     expect(channel.count).to eq(0)
   end
 

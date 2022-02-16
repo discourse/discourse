@@ -129,8 +129,6 @@ class PresenceChannel
         release_mutex(mutex_value)
       end
     end
-
-    auto_leave
   end
 
   # Immediately mark a user's client as leaving the channel
@@ -151,16 +149,12 @@ class PresenceChannel
         release_mutex(mutex_value)
       end
     end
-
-    auto_leave
   end
 
   # Fetch a {PresenceChannel::State} instance representing the current state of this
   #
   # @param [Boolean] count_only set true to skip fetching the list of user ids from redis
   def state(count_only: config.count_only)
-    auto_leave
-
     if count_only
       last_id, count = retry_on_mutex_error do
         PresenceChannel.redis_eval(
