@@ -636,9 +636,6 @@ class ImportScripts::Base
     skipped = 0
     total = opts[:total] || results.count
 
-    created_by = User.new
-    post = Post.new
-
     results.each do |result|
       params = yield(result)
 
