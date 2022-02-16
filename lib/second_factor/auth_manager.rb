@@ -159,7 +159,7 @@ class SecondFactor::AuthManager
     config = @action.second_factor_auth_required!(params)
     nonce = SecureRandom.alphanumeric(32)
     callback_params = config[:callback_params] || {}
-    redirect_path = config[:redirect_path] || GlobalPath.path("/")
+    redirect_path = config[:redirect_path] || GlobalPath.path("").presence || "/"
     challenge = {
       nonce: nonce,
       callback_method: request.request_method,

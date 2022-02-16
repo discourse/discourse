@@ -150,7 +150,6 @@ module TestSetup
     BadgeGranter.disable_queue
 
     OmniAuth.config.test_mode = false
-    TestSecondFactorAction.reset_called_methods
   end
 end
 
@@ -509,34 +508,5 @@ end
 class SpecSecureRandom
   class << self
     attr_accessor :value
-  end
-end
-
-class TestSecondFactorAction < SecondFactor::Actions::Base
-  def self.called_methods
-    @@called_methods ||= []
-  end
-
-  def self.reset_called_methods
-    @@called_methods = []
-  end
-
-  def no_second_factors_enabled!(params)
-    self.class.called_methods << __method__
-  end
-
-  def second_factor_auth_required!(params)
-    self.class.called_methods << __method__
-    {
-      redirect_path: params[:redirect_path],
-      callback_params: {
-        saved_param_1: params[:saved_param_1],
-        saved_param_2: params[:saved_param_2]
-      }
-    }
-  end
-
-  def second_factor_auth_completed!(callback_params)
-    self.class.called_methods << __method__
   end
 end

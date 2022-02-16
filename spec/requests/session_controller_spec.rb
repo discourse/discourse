@@ -2381,9 +2381,6 @@ describe SessionController do
 
     it 'marks the challenge as successful if the 2fa succeeds' do
       post "/session/2fa/test-action", params: { redirect_path: "/ggg" }
-      expect(TestSecondFactorAction.called_methods).to eq([
-        :second_factor_auth_required!
-      ])
       nonce = response.parsed_body["second_factor_challenge_nonce"]
 
       token = ROTP::TOTP.new(user_second_factor.data).now
@@ -2401,17 +2398,10 @@ describe SessionController do
       post "/session/2fa/test-action", params: { second_factor_nonce: nonce }
       expect(response.status).to eq(200)
       expect(response.parsed_body["result"]).to eq("second_factor_auth_completed")
-      expect(TestSecondFactorAction.called_methods).to eq([
-        :second_factor_auth_required!,
-        :second_factor_auth_completed!
-      ])
     end
 
     it 'does not mark the challenge as successful if the 2fa fails' do
       post "/session/2fa/test-action", params: { redirect_path: "/ggg" }
-      expect(TestSecondFactorAction.called_methods).to eq([
-        :second_factor_auth_required!
-      ])
       nonce = response.parsed_body["second_factor_challenge_nonce"]
 
       token = ROTP::TOTP.new(user_second_factor.data).now.to_i
@@ -2428,9 +2418,6 @@ describe SessionController do
 
       post "/session/2fa/test-action", params: { second_factor_nonce: nonce }
       expect(response.status).to eq(401)
-      expect(TestSecondFactorAction.called_methods).to eq([
-        :second_factor_auth_required!
-      ])
     end
   end
 end
