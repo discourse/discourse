@@ -12,7 +12,7 @@ class TopicsBulkAction
 
   def self.operations
     @operations ||= %w(change_category close archive change_notification_level
-                       reset_read dismiss_posts delete unlist archive_messages
+                       destroy_post_timing dismiss_posts delete unlist archive_messages
                        move_messages_to_inbox change_tags append_tags remove_tags
                        relist dismiss_topics)
   end
@@ -98,8 +98,11 @@ class TopicsBulkAction
     @changed_ids = rows.map { |row| row[:topic_id] }
   end
 
-  def reset_read
-    PostTiming.destroy_for(@user.id, @topic_ids)
+  def destroy_post_timing
+    topics.each do |t|
+      PostTiming.destroy_last_for(@user, topic: t)
+      @changed_ids << t.id
+    end
   end
 
   def change_category

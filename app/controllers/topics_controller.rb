@@ -292,7 +292,7 @@ class TopicsController < ApplicationController
     topic_id = params[:topic_id].to_i
 
     if params[:last].to_s == "1"
-      PostTiming.destroy_last_for(current_user, topic_id)
+      PostTiming.destroy_last_for(current_user, topic_id: topic_id)
     else
       PostTiming.destroy_for(current_user.id, [topic_id])
     end

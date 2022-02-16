@@ -2500,7 +2500,7 @@ en:
         clear_all: "Clear All"
         unlist_topics: "Unlist Topics"
         relist_topics: "Relist Topics"
-        reset_read: "Reset Read"
+        defer: "Defer"
         delete: "Delete Topics"
         dismiss: "Dismiss"
         dismiss_read: "Dismiss all unread"
