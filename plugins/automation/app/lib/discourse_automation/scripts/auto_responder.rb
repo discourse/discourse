@@ -26,6 +26,13 @@ DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scriptable::AUTO_RESPON
     next if tuples.blank?
 
     tuples.each do |tuple|
+      if post.is_first_post?
+        if match = post.topic.title.match(/\b(#{tuple['key']})\b/i)
+          tuple['key'] = match.captures.first
+          answers.add(tuple)
+        end
+      end
+
       if match = post.raw.match(/\b(#{tuple['key']})\b/i)
         tuple['key'] = match.captures.first
         answers.add(tuple)

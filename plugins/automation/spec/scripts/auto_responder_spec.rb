@@ -17,6 +17,28 @@ describe 'AutoResponder' do
       automation.upsert_field!('word_answer_list', 'key-value', { value: [{ key: 'fooz?|bar', value: 'this is %%KEY%%' }, { key: 'bar', value: 'this is %%KEY%%' }].to_json })
     end
 
+    context 'post is first post' do
+      context 'topic title contains keywords' do
+        it 'creates an answer' do
+          topic = Fabricate(:topic, title: 'What a foo day to walk')
+          post = create_post(topic: topic, raw: 'this is a post with no keyword')
+          automation.trigger!('post' => post)
+
+          expect(topic.reload.posts.last.raw).to eq('this is foo')
+        end
+      end
+
+      context 'post and topic title contain keyword' do
+        it 'creates only one answer' do
+          topic = Fabricate(:topic, title: 'What a foo day to walk')
+          post = create_post(topic: topic, raw: 'this is a post with foo keyword')
+          automation.trigger!('post' => post)
+
+          expect(topic.reload.posts.last.raw).to eq('this is foo')
+        end
+      end
+    end
+
     context 'post contains a keyword' do
       it 'creates an answer' do
         post = create_post(topic: topic, raw: 'this is foo a post with foo')
