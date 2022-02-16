@@ -4,28 +4,102 @@ import {
   query,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
-import pretender from "discourse/tests/helpers/create-pretender";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import { test } from "qunit";
 
 const { TOTP, BACKUP_CODE, SECURITY_KEY } = SECOND_FACTOR_METHODS;
 
-function setupResponse(response = {}) {
-  const status = response.status || 200;
-  delete response.status;
-  pretender.get("/session/2fa.json", () => {
-    return [status, { "Content-Type": "application/json" }, response];
-  });
-}
+const RESPONSES = {
+  failed: {
+    status: 404,
+    error: "could not find an active challenge in your session",
+  },
+  ok111111: {
+    totp_enabled: true,
+    backup_enabled: true,
+    security_keys_enabled: true,
+    allowed_methods: [TOTP, BACKUP_CODE, SECURITY_KEY],
+  },
+  ok111110: {
+    totp_enabled: true,
+    backup_enabled: true,
+    security_keys_enabled: true,
+    allowed_methods: [TOTP, BACKUP_CODE],
+  },
+  ok110111: {
+    totp_enabled: true,
+    backup_enabled: true,
+    security_keys_enabled: false,
+    allowed_methods: [TOTP, BACKUP_CODE, SECURITY_KEY],
+  },
+  ok100111: {
+    totp_enabled: true,
+    backup_enabled: false,
+    security_keys_enabled: false,
+    allowed_methods: [TOTP, BACKUP_CODE, SECURITY_KEY],
+  },
+  ok111010: {
+    totp_enabled: true,
+    backup_enabled: true,
+    security_keys_enabled: true,
+    allowed_methods: [BACKUP_CODE],
+  },
+};
+
+const WRONG_TOTP = "124323";
+let callbackCount = 0;
 
 acceptance("Second Factor Auth Page", function (needs) {
   needs.user();
-  test("when challenge data fails to load", async function (assert) {
-    setupResponse({
-      status: 404,
-      error: "could not find an active challenge in your session",
+  needs.pretender((server, helpers) => {
+    server.get("/session/2fa.json", (request) => {
+      const response = { ...RESPONSES[request.queryParams.nonce] };
+      const status = response.status || 200;
+      delete response.status;
+      return [status, { "Content-Type": "application/json" }, response];
     });
-    await visit("/session/2fa?nonce=abcdef");
+
+    server.post("/session/2fa", (request) => {
+      const params = helpers.parsePostData(request.requestBody);
+      if (params.second_factor_token === WRONG_TOTP) {
+        return [
+          401,
+          { "Content-Type": "application/json" },
+          {
+            error: "invalid token man",
+            ok: false,
+          },
+        ];
+      } else {
+        return [
+          200,
+          { "Content-Type": "application/json" },
+          {
+            ok: true,
+            callback_method: "PUT",
+            callback_path: "/callback-path",
+            redirect_path: "/",
+          },
+        ];
+      }
+    });
+
+    server.put("/callback-path", () => {
+      callbackCount++;
+      return [
+        200,
+        { "Content-Type": "application/json" },
+        {
+          whatever: true,
+        },
+      ];
+    });
+  });
+
+  needs.hooks.beforeEach(() => (callbackCount = 0));
+
+  test("when challenge data fails to load", async function (assert) {
+    await visit("/session/2fa?nonce=failed");
     assert.equal(
       query(".alert-error").textContent,
       "could not find an active challenge in your session",
@@ -34,13 +108,7 @@ acceptance("Second Factor Auth Page", function (needs) {
   });
 
   test("default 2FA method", async function (assert) {
-    setupResponse({
-      totp_enabled: true,
-      backup_enabled: true,
-      security_keys_enabled: true,
-      allowed_methods: [TOTP, BACKUP_CODE, SECURITY_KEY],
-    });
-    await visit("/session/2fa?nonce=realnonce");
+    await visit("/session/2fa?nonce=ok111111");
     assert.ok(
       exists("#security-key-authenticate-button"),
       "security key is the default method"
@@ -54,14 +122,8 @@ acceptance("Second Factor Auth Page", function (needs) {
       "backup code form is not shown by default when security key is allowed"
     );
 
-    setupResponse({
-      totp_enabled: true,
-      backup_enabled: true,
-      security_keys_enabled: true,
-      allowed_methods: [TOTP, BACKUP_CODE],
-    });
     await visit("/");
-    await visit("/session/2fa?nonce=realnonce");
+    await visit("/session/2fa?nonce=ok111110");
     assert.ok(
       !exists("#security-key-authenticate-button"),
       "security key method is not shown when it's not allowed"
@@ -75,14 +137,8 @@ acceptance("Second Factor Auth Page", function (needs) {
       "backup code form is not shown by default when TOTP is allowed"
     );
 
-    setupResponse({
-      totp_enabled: true,
-      backup_enabled: true,
-      security_keys_enabled: false,
-      allowed_methods: [TOTP, BACKUP_CODE, SECURITY_KEY],
-    });
     await visit("/");
-    await visit("/session/2fa?nonce=realnonce");
+    await visit("/session/2fa?nonce=ok110111");
     assert.ok(
       !exists("#security-key-authenticate-button"),
       "security key method is not shown when it's not enabled"
@@ -98,13 +154,7 @@ acceptance("Second Factor Auth Page", function (needs) {
   });
 
   test("alternative 2FA methods", async function (assert) {
-    setupResponse({
-      totp_enabled: true,
-      backup_enabled: true,
-      security_keys_enabled: true,
-      allowed_methods: [TOTP, BACKUP_CODE, SECURITY_KEY],
-    });
-    await visit("/session/2fa?nonce=realnonce");
+    await visit("/session/2fa?nonce=ok111111");
     assert.ok(
       exists(".toggle-second-factor-method.totp"),
       "TOTP is shown as an alternative method if it's enabled and allowed"
@@ -118,27 +168,15 @@ acceptance("Second Factor Auth Page", function (needs) {
       "security key is not shown as an alternative method when it's selected"
     );
 
-    setupResponse({
-      totp_enabled: true,
-      backup_enabled: false,
-      security_keys_enabled: false,
-      allowed_methods: [TOTP, BACKUP_CODE, SECURITY_KEY],
-    });
     await visit("/");
-    await visit("/session/2fa?nonce=realnonce");
+    await visit("/session/2fa?nonce=ok100111");
     assert.ok(
       !exists(".toggle-second-factor-method"),
       "no alternative methods are shown if only 1 method is enabled"
     );
 
-    setupResponse({
-      totp_enabled: true,
-      backup_enabled: true,
-      security_keys_enabled: true,
-      allowed_methods: [BACKUP_CODE],
-    });
     await visit("/");
-    await visit("/session/2fa?nonce=realnonce");
+    await visit("/session/2fa?nonce=ok111010");
     assert.ok(
       !exists(".toggle-second-factor-method"),
       "no alternative methods are shown if only 1 method is allowed"
@@ -146,13 +184,7 @@ acceptance("Second Factor Auth Page", function (needs) {
   });
 
   test("switching 2FA methods", async function (assert) {
-    setupResponse({
-      totp_enabled: true,
-      backup_enabled: true,
-      security_keys_enabled: true,
-      allowed_methods: [TOTP, BACKUP_CODE, SECURITY_KEY],
-    });
-    await visit("/session/2fa?nonce=realnonce");
+    await visit("/session/2fa?nonce=ok111111");
     assert.ok(
       exists("#security-key-authenticate-button"),
       "security key form is shown because it's the default"
@@ -223,24 +255,8 @@ acceptance("Second Factor Auth Page", function (needs) {
   });
 
   test("error when submitting 2FA form", async function (assert) {
-    setupResponse({
-      totp_enabled: true,
-      backup_enabled: true,
-      security_keys_enabled: false,
-      allowed_methods: [TOTP, BACKUP_CODE, SECURITY_KEY],
-    });
-    pretender.post("/session/2fa", () => {
-      return [
-        401,
-        { "Content-Type": "application/json" },
-        {
-          error: "invalid token man",
-          ok: false,
-        },
-      ];
-    });
-    await visit("/session/2fa?nonce=realnonce");
-    await fillIn("form.totp-token .second-factor-token-input", "124323");
+    await visit("/session/2fa?nonce=ok110111");
+    await fillIn("form.totp-token .second-factor-token-input", WRONG_TOTP);
     await click('form.totp-token .btn-primary[type="submit"]');
     assert.equal(
       query(".alert-error").textContent.trim(),
@@ -250,43 +266,14 @@ acceptance("Second Factor Auth Page", function (needs) {
   });
 
   test("successful 2FA form submit", async function (assert) {
-    setupResponse({
-      totp_enabled: true,
-      backup_enabled: true,
-      security_keys_enabled: false,
-      allowed_methods: [TOTP, BACKUP_CODE, SECURITY_KEY],
-    });
-    pretender.post("/session/2fa", () => {
-      return [
-        200,
-        { "Content-Type": "application/json" },
-        {
-          ok: true,
-          callback_method: "PUT",
-          callback_path: "/callback-path",
-          redirect_path: "/",
-        },
-      ];
-    });
-    let callbackCalled = false;
-    pretender.put("/callback-path", () => {
-      callbackCalled = true;
-      return [
-        200,
-        { "Content-Type": "application/json" },
-        {
-          whatever: true,
-        },
-      ];
-    });
-    await visit("/session/2fa?nonce=realnonce");
-    await fillIn("form.totp-token .second-factor-token-input", "124323");
+    await visit("/session/2fa?nonce=ok110111");
+    await fillIn("form.totp-token .second-factor-token-input", "323421");
     await click('form.totp-token .btn-primary[type="submit"]');
     assert.equal(
       currentURL(),
       "/",
       "user has been redirected to the redirect_path"
     );
-    assert.ok(callbackCalled, "callback request has been performed");
+    assert.equal(callbackCount, 1, "callback request has been performed");
   });
 });
