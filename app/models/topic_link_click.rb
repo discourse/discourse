@@ -80,7 +80,7 @@ class TopicLinkClick < ActiveRecord::Base
     link = link.where(topic_id: args[:topic_id]) if args[:topic_id].present?
 
     # select the TopicLink associated to first url
-    link = link.order("array_position(ARRAY[#{urls.map { |s| "#{ActiveRecord::Base.connection.quote(s)}" }.join(',')}], url)").first
+    link = link.order("array_position(ARRAY[#{urls.map { |s| "#{ActiveRecord::Base.connection.quote(s)}" }.join(',')}], url::text)").first
 
     # If no link is found...
     unless link.present?
