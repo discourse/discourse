@@ -4,8 +4,13 @@
 
 html {
   color: var(--primary);
-  font-family: $base-font-family;
   font-size: $base-font-size;
+  // This is intentionally set after the font-size, but before font-family
+  @supports (font: -apple-system-body) and (-webkit-touch-callout: none) {
+    // only applied to iOS devices
+    font: -apple-system-body;
+  }
+  font-family: $base-font-family;
   line-height: $line-height-large;
   background-color: var(--secondary);
   overflow-y: scroll;
