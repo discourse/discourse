@@ -13,7 +13,7 @@ module ImportScripts::PhpBB3
       SQL
     end
 
-    def fetch_users(last_user_id, _)
+    def fetch_users(last_user_id, _profile_fields)
       query(<<-SQL, :user_id)
         SELECT u.user_id, u.user_email, u.username, u.user_password, u.user_regdate, u.user_lastvisit, u.user_ip,
           u.user_type, u.user_inactive_reason, g.group_name, b.ban_start, b.ban_end, b.ban_reason,
