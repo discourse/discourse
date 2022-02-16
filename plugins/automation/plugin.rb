@@ -103,6 +103,7 @@ after_initialize do
     '../app/models/discourse_automation/pending_pm',
     '../app/models/discourse_automation/user_global_notice',
     '../app/models/discourse_automation/field',
+    '../app/jobs/regular/call_zapier_webhook',
     '../app/jobs/scheduled/discourse_automation_tracker',
     '../app/jobs/scheduled/stalled_wiki_tracker',
     '../app/jobs/scheduled/stalled_topic_tracker',
@@ -117,6 +118,7 @@ after_initialize do
     '../app/lib/discourse_automation/scripts/send_pms',
     '../app/lib/discourse_automation/scripts/topic_required_words',
     '../app/lib/discourse_automation/scripts/flag_post_on_words',
+    '../app/lib/discourse_automation/scripts/zapier_webhook',
   ].each { |path| require File.expand_path(path, __FILE__) }
 
   module ::DiscourseAutomation

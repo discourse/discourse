@@ -132,6 +132,11 @@ en:
               description: Optional, allows to limit trigger execution to this category
       scriptables:
         not_found: Couldn’t find script `%{script}` for automation `%{automation}`, ensure the associated plugin is installed
+        zapier_webhook:
+          fields:
+            webhook_url:
+              label: Webhook URL
+              description: "Expects a valid Zapier webhook URL, eg: https://hooks.zapier.com/hooks/catch/xxx/yyy/"
         auto_responder:
           fields:
             word_answer_list:
