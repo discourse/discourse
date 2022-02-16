@@ -103,6 +103,9 @@
         },
         "chat_group_mention": {
           "type": "integer"
+        },
+        "chat_quoted": {
+          "type": "integer"
         }
       },
       "required": [
