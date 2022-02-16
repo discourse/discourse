@@ -38,6 +38,7 @@ module ImportScripts::PhpBB3
       import_posts
       import_private_messages if @settings.import_private_messages
       import_bookmarks if @settings.import_bookmarks
+      import_likes if @settings.import_likes
     end
 
     def change_site_settings
@@ -71,7 +72,7 @@ module ImportScripts::PhpBB3
       last_user_id = 0
 
       batches do |offset|
-        rows, last_user_id = @database.fetch_users(last_user_id)
+        rows, last_user_id = @database.fetch_users(last_user_id, @settings.custom_fields)
         rows = rows.to_a.uniq { |row| row[:user_id] }
         break if rows.size < 1
 
@@ -173,7 +174,7 @@ module ImportScripts::PhpBB3
       importer = @importers.category_importer
 
       create_categories(rows) do |row|
-        next if @settings.category_mappings[row[:forum_id].to_s] == 'SKIP'
+        next if @settings.category_mappings.dig(row[:forum_id].to_s, :skip)
 
         importer.map_category(row)
       end
@@ -237,6 +238,25 @@ module ImportScripts::PhpBB3
           rescue => e
             log_error("Failed to map bookmark (#{row[:user_id]}, #{row[:topic_first_post_id]})", e)
           end
+        end
+      end
+    end
+
+    def import_likes
+      puts '', 'importing likes'
+      total_count = @database.count_likes
+      last_post_id = last_user_id = 0
+
+      batches do |offset|
+        rows, last_post_id, last_user_id = @database.fetch_likes(last_post_id, last_user_id)
+        break if rows.size < 1
+
+        create_likes(rows, total: total_count, offset: offset) do |row|
+          {
+            post_id: @settings.prefix(row[:post_id]),
+            user_id: @settings.prefix(row[:user_id]),
+            created_at: Time.zone.at(row[:thanks_time])
+          }
         end
       end
     end
