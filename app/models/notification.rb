@@ -109,7 +109,8 @@ class Notification < ActiveRecord::Base
                         chat_mention: 29,
                         chat_message: 30,
                         chat_invitation: 31,
-                        chat_group_mention: 32
+                        chat_group_mention: 32,
+                        chat_quoted: 33
                        )
   end
 
