@@ -138,6 +138,11 @@ class InvitesController < ApplicationController
 
     guardian.ensure_can_invite_to_forum!(groups)
 
+    if !groups_can_see_topic?(groups, topic)
+      editable_topic_groups = topic.category.groups.filter { |g| guardian.can_edit_group?(g) }
+      return render_json_error(I18n.t("invite.requires_groups", groups: editable_topic_groups.pluck(:name).join(", ")))
+    end
+
     begin
       invite = Invite.generate(current_user,
         email: params[:email],
@@ -199,6 +204,11 @@ class InvitesController < ApplicationController
       if params.has_key?(:group_ids) || params.has_key?(:group_names)
         invite.invited_groups.destroy_all
         groups.each { |group| invite.invited_groups.find_or_create_by!(group_id: group.id) } if groups.present?
+      end
+
+      if !groups_can_see_topic?(invite.groups, invite.topics.first)
+        editable_topic_groups = invite.topics.first.category.groups.filter { |g| guardian.can_edit_group?(g) }
+        return render_json_error(I18n.t("invite.requires_groups", groups: editable_topic_groups.pluck(:name).join(", ")))
       end
 
       if params.has_key?(:email)
@@ -446,6 +456,15 @@ class InvitesController < ApplicationController
       render layout: 'no_ember'
       false
     end
+  end
+
+  def groups_can_see_topic?(groups, topic)
+    if topic&.read_restricted_category?
+      topic_groups = topic.category.groups
+      return false if (groups & topic_groups).blank?
+    end
+
+    true
   end
 
   def post_process_invite(user)

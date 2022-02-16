@@ -203,6 +203,35 @@ describe InvitesController do
         post '/invites.json', params: { email: 'test@example.com', topic_id: -9999 }
         expect(response.status).to eq(400)
       end
+
+      context 'topic is private' do
+        fab!(:group) { Fabricate(:group) }
+
+        fab!(:secured_category) do |category|
+          category = Fabricate(:category)
+          category.permissions = { group.name => :full }
+          category.save!
+          category
+        end
+
+        fab!(:topic) { Fabricate(:topic, category: secured_category) }
+
+        it 'does not work and returns a list of required groups' do
+          sign_in(admin)
+
+          post '/invites.json', params: { email: 'test@example.com', topic_id: topic.id }
+          expect(response.status).to eq(422)
+          expect(response.parsed_body["errors"]).to contain_exactly(I18n.t("invite.requires_groups", groups: group.name))
+        end
+
+        it 'does not work if user cannot edit groups' do
+          group.add(user)
+          sign_in(user)
+
+          post '/invites.json', params: { email: 'test@example.com', topic_id: topic.id }
+          expect(response.status).to eq(403)
+        end
+      end
     end
 
     context 'invite to group' do

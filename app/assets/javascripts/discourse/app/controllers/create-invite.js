@@ -121,7 +121,7 @@ export default Controller.extend(
 
       return this.invite
         .save(data)
-        .then((result) => {
+        .then(() => {
           this.rollbackBuffer();
 
           if (
@@ -131,22 +131,14 @@ export default Controller.extend(
             this.invites.unshiftObject(this.invite);
           }
 
-          if (result.warnings) {
+          if (this.isEmail && opts.sendEmail) {
+            this.send("closeModal");
+          } else {
             this.setProperties({
-              flashText: sanitize(result.warnings.join(",")),
-              flashClass: "warning",
+              flashText: sanitize(I18n.t("user.invited.invite.invite_saved")),
+              flashClass: "success",
               flashLink: !this.editing,
             });
-          } else {
-            if (this.isEmail && opts.sendEmail) {
-              this.send("closeModal");
-            } else {
-              this.setProperties({
-                flashText: sanitize(I18n.t("user.invited.invite.invite_saved")),
-                flashClass: "success",
-                flashLink: !this.editing,
-              });
-            }
           }
         })
         .catch((e) =>
