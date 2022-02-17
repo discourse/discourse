@@ -6,7 +6,7 @@ en:
       update: Update
       select_script: Select a script
       select_trigger: Select a trigger
-      confirm_automation_reset: This action will reset script and trigger options, do you want to proceed?
+      confirm_automation_reset: This action will reset script and trigger options, new state will be saved, do you want to proceed?
       confirm_automation_trigger: This action will trigger the automation, do you want to proceed?
       edit_automation:
         trigger_section:
