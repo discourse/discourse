@@ -68,7 +68,7 @@ export default Mixin.create({
   },
 
   _insertBlock(text) {
-    this._addBlock(this._getSelected(), text);
+    this._addBlock(this.getSelected(), text);
   },
 
   // TODO (martin) clean up this indirection, functions used outside this
@@ -78,13 +78,13 @@ export default Mixin.create({
   },
 
   _insertText(text, options) {
-    this._addText(this._getSelected(), text, options);
+    this._addText(this.getSelected(), text, options);
   },
 
   // TODO (martin) clean up this indirection, functions used outside this
   // file should not be prefixed with lowercase
   getSelected(trimLeading, opts) {
-    this._getSelected(trimLeading, opts);
+    return this._getSelected(trimLeading, opts);
   },
 
   _getSelected(trimLeading, opts) {
@@ -189,7 +189,7 @@ export default Mixin.create({
       !opts.skipNewSelection
     ) {
       // Restore cursor.
-      this._selectText(
+      this.selectText(
         newSelection.start,
         newSelection.end - newSelection.start
       );
@@ -215,7 +215,7 @@ export default Mixin.create({
       const [hval, hlen] = getHead(head);
       const example = I18n.t(`composer.${exampleKey}`);
       this.set("value", `${pre}${hval}${example}${tail}${post}`);
-      this._selectText(pre.length + hlen, example.length);
+      this.selectText(pre.length + hlen, example.length);
     } else if (opts && !opts.multiline) {
       let [hval, hlen] = getHead(head);
 
@@ -230,10 +230,10 @@ export default Mixin.create({
           "value",
           `${pre.slice(0, -hlen)}${sel.value}${post.slice(tail.length)}`
         );
-        this._selectText(sel.start - hlen, sel.value.length);
+        this.selectText(sel.start - hlen, sel.value.length);
       } else {
         this.set("value", `${pre}${hval}${sel.value}${tail}${post}`);
-        this._selectText(sel.start + hlen, sel.value.length);
+        this.selectText(sel.start + hlen, sel.value.length);
       }
     } else {
       const lines = sel.value.split("\n");
@@ -248,7 +248,7 @@ export default Mixin.create({
           "value",
           `${pre.slice(0, -hlen)}${sel.value}${post.slice(tlen)}`
         );
-        this._selectText(sel.start - hlen, sel.value.length);
+        this.selectText(sel.start - hlen, sel.value.length);
       } else {
         const contents = this._getMultilineContents(
           lines,
@@ -262,9 +262,9 @@ export default Mixin.create({
 
         this.set("value", `${pre}${contents}${post}`);
         if (lines.length === 1 && tlen > 0) {
-          this._selectText(sel.start + hlen, sel.value.length);
+          this.selectText(sel.start + hlen, sel.value.length);
         } else {
-          this._selectText(sel.start, contents.length);
+          this.selectText(sel.start, contents.length);
         }
       }
     }
@@ -373,7 +373,7 @@ export default Mixin.create({
   // TODO (martin) clean up this indirection, functions used outside this
   // file should not be prefixed with lowercase
   extractTable(text) {
-    this._extractTable(text);
+    return this._extractTable(text);
   },
 
   _extractTable(text) {
@@ -416,7 +416,7 @@ export default Mixin.create({
   // TODO (martin) clean up this indirection, functions used outside this
   // file should not be prefixed with lowercase
   isInside(text, regex) {
-    this._isInside(text, regex);
+    return this._isInside(text, regex);
   },
 
   _isInside(text, regex) {
@@ -440,7 +440,7 @@ export default Mixin.create({
     let html = clipboard.getData("text/html");
     let handled = false;
 
-    const selected = this._getSelected(null, { lineVal: true });
+    const selected = this.getSelected(null, { lineVal: true });
     const { pre, value: selectedValue, lineVal } = selected;
     const isInlinePasting = pre.match(/[^\n]$/);
     const isCodeBlock = this._isInside(pre, /(^|\n)```/g);
@@ -540,7 +540,7 @@ export default Mixin.create({
       return;
     }
 
-    const selected = this._getSelected(null, { lineVal: true });
+    const selected = this.getSelected(null, { lineVal: true });
     const { lineVal } = selected;
     let value = selected.value;
 
@@ -600,14 +600,14 @@ export default Mixin.create({
       .join("\n");
 
     if (newValue.trim() !== "") {
-      this._replaceText(value, newValue, { skipNewSelection: true });
-      this._selectText(this.value.indexOf(newValue), newValue.length);
+      this.replaceText(value, newValue, { skipNewSelection: true });
+      this.selectText(this.value.indexOf(newValue), newValue.length);
     }
   },
 
   @action
   emojiSelected(code) {
-    let selected = this._getSelected();
+    let selected = this.getSelected();
     const captures = selected.pre.match(/\B:(\w*)$/);
 
     if (isEmpty(captures)) {
