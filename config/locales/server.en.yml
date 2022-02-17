@@ -2576,6 +2576,10 @@ en:
       totp: "Use an authenticator app or security key instead"
       backup_code: "Use a backup code instead"
 
+  second_factor_auth:
+    challenge_not_found: "Couldn't find a 2FA challenge in your current session."
+    challenge_expired: "Too much time has passed since the 2FA challenge was staged and it's no longer valid. Please try again."
+    challenge_not_completed: "You've not completed the 2FA challenge to perform this action. Please complete the 2FA challenge and try again."
   admin:
     email:
       sent_test: "sent!"

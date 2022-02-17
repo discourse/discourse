@@ -247,6 +247,16 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  rescue_from SecondFactor::AuthManager::SecondFactorRequired do |e|
+    render json: {
+      second_factor_challenge_nonce: e.nonce
+    }, status: 403
+  end
+
+  rescue_from SecondFactor::BadChallenge do |e|
+    render json: { error: I18n.t(e.error_translation_key) }, status: e.status_code
+  end
+
   def redirect_with_client_support(url, options)
     if request.xhr?
       response.headers['Discourse-Xhr-Redirect'] = 'true'
@@ -963,5 +973,19 @@ class ApplicationController < ActionController::Base
         break
       end
     end
+  end
+
+  def run_second_factor!(action_class)
+    action = action_class.new(guardian)
+    manager = SecondFactor::AuthManager.new(guardian, action)
+    yield(manager) if block_given?
+    result = manager.run!(request, params, secure_session)
+
+    if !result.no_second_factors_enabled? && !result.second_factor_auth_completed?
+      # should never happen, but I want to know if somehow it does! (osama)
+      raise "2fa process ended up in a bad state!"
+    end
+
+    result
   end
 end

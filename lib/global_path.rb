@@ -31,4 +31,5 @@ module GlobalPath
     uri.to_s
   end
 
+  extend self
 end
