@@ -3,7 +3,6 @@
 require "rails_helper"
 
 describe CommonPasswords do
-
   it "the passwords file should exist" do
     expect(File.exist?(described_class::PASSWORD_FILE)).to eq(true)
   end
@@ -39,31 +38,25 @@ describe CommonPasswords do
   end
 
   describe '#password_list' do
+    before { Discourse.redis.flushdb }
+    after { Discourse.redis.flushdb }
+
     it "loads the passwords file if redis doesn't have it" do
-      mock_redis = mock("redis")
-      mock_redis.stubs(:exists).returns(false)
-      mock_redis.stubs(:scard).returns(0)
-      described_class.stubs(:redis).returns(mock_redis)
+      Discourse.redis.without_namespace.stubs(:scard).returns(0)
       described_class.expects(:load_passwords).returns(['password'])
       list = described_class.password_list
       expect(list).to respond_to(:include?)
     end
 
     it "doesn't load the passwords file if redis has it" do
-      mock_redis = mock("redis")
-      mock_redis.stubs(:exists).returns(true)
-      mock_redis.stubs(:scard).returns(10000)
-      described_class.stubs(:redis).returns(mock_redis)
+      Discourse.redis.without_namespace.stubs(:scard).returns(10000)
       described_class.expects(:load_passwords).never
       list = described_class.password_list
       expect(list).to respond_to(:include?)
     end
 
     it "loads the passwords file if redis has an empty list" do
-      mock_redis = mock("redis")
-      mock_redis.stubs(:exists).returns(true)
-      mock_redis.stubs(:scard).returns(0)
-      described_class.stubs(:redis).returns(mock_redis)
+      Discourse.redis.without_namespace.stubs(:scard).returns(0)
       described_class.expects(:load_passwords).returns(['password'])
       list = described_class.password_list
       expect(list).to respond_to(:include?)
@@ -72,7 +65,6 @@ describe CommonPasswords do
 
   context "missing password file" do
     it "tolerates it" do
-      described_class.stubs(:redis).returns(stub_everything(sismember: false, exists: false, scard: 0))
       File.stubs(:readlines).with(described_class::PASSWORD_FILE).raises(Errno::ENOENT)
       expect(described_class.common_password?("password")).to eq(false)
     end

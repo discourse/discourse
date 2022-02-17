@@ -241,8 +241,6 @@ GEM
       ffi (~> 1.9)
     minitest (5.15.0)
     mocha (1.13.0)
-    mock_redis (0.29.0)
-      ruby2_keywords
     msgpack (1.4.5)
     multi_json (1.15.0)
     multi_xml (0.6.0)
@@ -556,7 +554,6 @@ DEPENDENCIES
   mini_suffix
   minitest
   mocha
-  mock_redis
   multi_json
   mustache
   nokogiri
