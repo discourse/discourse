@@ -41,6 +41,13 @@ export default Mixin.create({
   },
 
   // ensures textarea scroll position is correct
+  //
+  // TODO (martin) clean up this indirection, functions used outside this
+  // file should not be prefixed with lowercase
+  focusTextArea() {
+    this._focusTextArea();
+  },
+
   _focusTextArea() {
     if (!this.element || this.isDestroying || this.isDestroyed) {
       return;
@@ -54,12 +61,30 @@ export default Mixin.create({
     this._textarea.focus();
   },
 
+  // TODO (martin) clean up this indirection, functions used outside this
+  // file should not be prefixed with lowercase
+  insertBlock(text) {
+    this._insertBlock(text);
+  },
+
   _insertBlock(text) {
     this._addBlock(this._getSelected(), text);
   },
 
+  // TODO (martin) clean up this indirection, functions used outside this
+  // file should not be prefixed with lowercase
+  insertText(text, options) {
+    this._insertText(text, options);
+  },
+
   _insertText(text, options) {
     this._addText(this._getSelected(), text, options);
+  },
+
+  // TODO (martin) clean up this indirection, functions used outside this
+  // file should not be prefixed with lowercase
+  getSelected(trimLeading, opts) {
+    this._getSelected(trimLeading, opts);
   },
 
   _getSelected(trimLeading, opts) {
@@ -97,6 +122,12 @@ export default Mixin.create({
     }
   },
 
+  // TODO (martin) clean up this indirection, functions used outside this
+  // file should not be prefixed with lowercase
+  selectText(from, length, opts = { scroll: true }) {
+    this._selectText(from, length, opts);
+  },
+
   _selectText(from, length, opts = { scroll: true }) {
     next(() => {
       if (!this.element) {
@@ -114,6 +145,12 @@ export default Mixin.create({
         this._$textarea.scrollTop(oldScrollPos);
       }
     });
+  },
+
+  // TODO (martin) clean up this indirection, functions used outside this
+  // file should not be prefixed with lowercase
+  replaceText(oldVal, newVal, opts = {}) {
+    this._replaceText(oldVal, newVal, opts);
   },
 
   _replaceText(oldVal, newVal, opts = {}) {
@@ -157,6 +194,12 @@ export default Mixin.create({
         newSelection.end - newSelection.start
       );
     }
+  },
+
+  // TODO (martin) clean up this indirection, functions used outside this
+  // file should not be prefixed with lowercase
+  applySurround(sel, head, tail, exampleKey, opts) {
+    this._applySurround(sel, head, tail, exampleKey, opts);
   },
 
   _applySurround(sel, head, tail, exampleKey, opts) {
@@ -297,6 +340,12 @@ export default Mixin.create({
     schedule("afterRender", this, this._focusTextArea);
   },
 
+  // TODO (martin) clean up this indirection, functions used outside this
+  // file should not be prefixed with lowercase
+  addText(sel, text, options) {
+    this._addText(sel, text, options);
+  },
+
   _addText(sel, text, options) {
     if (options && options.ensureSpace) {
       if ((sel.pre + "").length > 0) {
@@ -319,6 +368,12 @@ export default Mixin.create({
     this._$textarea.prop("selectionEnd", insert.length);
     next(() => this._$textarea.trigger("change"));
     this._focusTextArea();
+  },
+
+  // TODO (martin) clean up this indirection, functions used outside this
+  // file should not be prefixed with lowercase
+  extractTable(text) {
+    this._extractTable(text);
   },
 
   _extractTable(text) {
@@ -356,6 +411,12 @@ export default Mixin.create({
       }
     }
     return null;
+  },
+
+  // TODO (martin) clean up this indirection, functions used outside this
+  // file should not be prefixed with lowercase
+  isInside(text, regex) {
+    this._isInside(text, regex);
   },
 
   _isInside(text, regex) {
@@ -474,7 +535,7 @@ export default Mixin.create({
   },
 
   @bind
-  _indentSelection(direction) {
+  indentSelection(direction) {
     if (![INDENT_DIRECTION_LEFT, INDENT_DIRECTION_RIGHT].includes(direction)) {
       return;
     }

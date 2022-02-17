@@ -271,8 +271,8 @@ export default Component.extend(TextareaTextManipulation, {
       });
     });
 
-    this._itsatrap.bind("tab", () => this._indentSelection("right"));
-    this._itsatrap.bind("shift+tab", () => this._indentSelection("left"));
+    this._itsatrap.bind("tab", () => this.indentSelection("right"));
+    this._itsatrap.bind("shift+tab", () => this.indentSelection("left"));
 
     // disable clicking on links in the preview
     this.element
@@ -280,13 +280,13 @@ export default Component.extend(TextareaTextManipulation, {
       .addEventListener("click", this._handlePreviewLinkClick);
 
     if (this.composerEvents) {
-      this.appEvents.on("composer:insert-block", this, "_insertBlock");
-      this.appEvents.on("composer:insert-text", this, "_insertText");
-      this.appEvents.on("composer:replace-text", this, "_replaceText");
+      this.appEvents.on("composer:insert-block", this, "insertBlock");
+      this.appEvents.on("composer:insert-text", this, "insertText");
+      this.appEvents.on("composer:replace-text", this, "replaceText");
       this.appEvents.on(
         "composer:indent-selected-text",
         this,
-        "_indentSelection"
+        "indentSelection"
       );
     }
 
@@ -324,13 +324,13 @@ export default Component.extend(TextareaTextManipulation, {
   @on("willDestroyElement")
   _shutDown() {
     if (this.composerEvents) {
-      this.appEvents.off("composer:insert-block", this, "_insertBlock");
-      this.appEvents.off("composer:insert-text", this, "_insertText");
-      this.appEvents.off("composer:replace-text", this, "_replaceText");
+      this.appEvents.off("composer:insert-block", this, "insertBlock");
+      this.appEvents.off("composer:insert-text", this, "insertText");
+      this.appEvents.off("composer:replace-text", this, "replaceText");
       this.appEvents.off(
         "composer:indent-selected-text",
         this,
-        "_indentSelection"
+        "indentSelection"
       );
     }
 
@@ -463,7 +463,7 @@ export default Component.extend(TextareaTextManipulation, {
       key: "#",
       afterComplete: (value) => {
         this.set("value", value);
-        schedule("afterRender", this, this._focusTextArea);
+        schedule("afterRender", this, this.focusTextArea);
       },
       transformComplete: (obj) => {
         return obj.text;
@@ -490,7 +490,7 @@ export default Component.extend(TextareaTextManipulation, {
       key: ":",
       afterComplete: (text) => {
         this.set("value", text);
-        schedule("afterRender", this, this._focusTextArea);
+        schedule("afterRender", this, this.focusTextArea);
       },
 
       onKeyUp: (text, cp) => {
@@ -605,7 +605,7 @@ export default Component.extend(TextareaTextManipulation, {
 
   _applyList(sel, head, exampleKey, opts) {
     if (sel.value.indexOf("\n") !== -1) {
-      this._applySurround(sel, head, "", exampleKey, opts);
+      this.applySurround(sel, head, "", exampleKey, opts);
     } else {
       const [hval, hlen] = getHead(head);
       if (sel.start === sel.end) {
@@ -623,7 +623,7 @@ export default Component.extend(TextareaTextManipulation, {
       const post = trimmedPost.length ? `\n\n${trimmedPost}` : trimmedPost;
 
       this.set("value", `${preLines}${number}${post}`);
-      this._selectText(preLines.length, number.length);
+      this.selectText(preLines.length, number.length);
     }
   },
 
@@ -689,16 +689,16 @@ export default Component.extend(TextareaTextManipulation, {
         return;
       }
 
-      const selected = this._getSelected(button.trimLeading);
+      const selected = this.getSelected(button.trimLeading);
       const toolbarEvent = {
         selected,
         selectText: (from, length) =>
-          this._selectText(from, length, { scroll: false }),
+          this.selectText(from, length, { scroll: false }),
         applySurround: (head, tail, exampleKey, opts) =>
-          this._applySurround(selected, head, tail, exampleKey, opts),
+          this.applySurround(selected, head, tail, exampleKey, opts),
         applyList: (head, exampleKey, opts) =>
           this._applyList(selected, head, exampleKey, opts),
-        addText: (text) => this._addText(selected, text),
+        addText: (text) => this.addText(selected, text),
         getText: () => this.value,
         toggleDirection: () => this._toggleDirection(),
       };
@@ -733,7 +733,7 @@ export default Component.extend(TextareaTextManipulation, {
         return;
       }
 
-      const sel = this._getSelected("", { lineVal: true });
+      const sel = this.getSelected("", { lineVal: true });
       const selValue = sel.value;
       const hasNewLine = selValue.indexOf("\n") !== -1;
       const isBlankLine = sel.lineVal.trim().length === 0;
@@ -745,25 +745,20 @@ export default Component.extend(TextareaTextManipulation, {
           if (isFourSpacesIndent) {
             const example = I18n.t(`composer.code_text`);
             this.set("value", `${sel.pre}    ${example}${sel.post}`);
-            return this._selectText(sel.pre.length + 4, example.length);
+            return this.selectText(sel.pre.length + 4, example.length);
           } else {
-            return this._applySurround(
-              sel,
-              "```\n",
-              "\n```",
-              "paste_code_text"
-            );
+            return this.applySurround(sel, "```\n", "\n```", "paste_code_text");
           }
         } else {
-          return this._applySurround(sel, "`", "`", "code_title");
+          return this.applySurround(sel, "`", "`", "code_title");
         }
       } else {
         if (isFourSpacesIndent) {
-          return this._applySurround(sel, "    ", "", "code_text");
+          return this.applySurround(sel, "    ", "", "code_text");
         } else {
           const preNewline = sel.pre[-1] !== "\n" && sel.pre !== "" ? "\n" : "";
           const postNewline = sel.post[0] !== "\n" ? "\n" : "";
-          return this._addText(
+          return this.addText(
             sel,
             `${preNewline}\`\`\`\n${sel.value}\n\`\`\`${postNewline}`
           );
