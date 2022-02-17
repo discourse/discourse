@@ -241,7 +241,7 @@ GEM
       ffi (~> 1.9)
     minitest (5.15.0)
     mocha (1.13.0)
-    mock_redis (0.29.0)
+    mock_redis (0.30.0)
       ruby2_keywords
     msgpack (1.4.5)
     multi_json (1.15.0)
