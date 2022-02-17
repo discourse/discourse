@@ -12,7 +12,7 @@
           {{#if canBulkInvite}}
             {{#if siteSettings.allow_bulk_invite}}
               {{#unless site.mobileView}}
-                {{d-button class="btn-default" icon="upload" action=(action "createInviteCsv") label="user.invited.bulk_invite.text"}}
+                {{d-button class="btn-flat" icon="upload" action=(action "createInviteCsv") label="user.invited.bulk_invite.text"}}
               {{/unless}}
             {{/if}}
           {{/if}}
