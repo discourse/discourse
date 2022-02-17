@@ -44,6 +44,18 @@ $tertiary-hover: dark-light-choose(
   dark-light-diff($tertiary, $primary, 20%, 70%)
 ) !default;
 
+//tertiary-numbers
+$tertiary-50: dark-light-diff($tertiary, $secondary, 95%, -80%) !default;
+$tertiary-100: dark-light-diff($tertiary, $secondary, 90%, -75%) !default;
+$tertiary-200: dark-light-diff($tertiary, $secondary, 80%, -65%) !default;
+$tertiary-300: dark-light-diff($tertiary, $secondary, 70%, -55%) !default;
+$tertiary-400: dark-light-diff($tertiary, $secondary, 60%, -45%) !default;
+$tertiary-500: dark-light-diff($tertiary, $secondary, 50%, -35%) !default;
+$tertiary-600: dark-light-diff($tertiary, $secondary, 40%, -25%) !default;
+$tertiary-700: dark-light-diff($tertiary, $secondary, 30%, -15%) !default;
+$tertiary-800: dark-light-diff($tertiary, $secondary, 20%, -5%) !default;
+$tertiary-900: dark-light-diff($tertiary, $secondary, 10%, 0%) !default;
+
 //quaternary
 $quaternary-low: dark-light-diff($quaternary, $secondary, 70%, -70%) !default;
 
