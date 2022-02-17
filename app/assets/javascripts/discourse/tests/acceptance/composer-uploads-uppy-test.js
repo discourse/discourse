@@ -316,6 +316,30 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
     appEvents.trigger("composer:add-files", image);
   });
 
+  skip("should place cursor properly after inserting a placeholder", async function (assert) {
+    const appEvents = loggedInUser().appEvents;
+    const done = assert.async();
+
+    await visit("/");
+    await click("#create-topic");
+    await fillIn(".d-editor-input", "The image:\ntext after image");
+    const input = query(".d-editor-input");
+    input.selectionStart = 10;
+    input.selectionEnd = 10;
+
+    appEvents.on("composer:all-uploads-complete", () => {
+      // after uploading we have this in the textarea:
+      // "The image:\n![avatar.PNG|690x320](upload://yoj8pf9DdIeHRRULyw7i57GAYdz.jpeg)\ntext after image"
+      // cursor should be just before "text after image":
+      assert.equal(input.selectionStart, 76);
+      assert.equal(input.selectionEnd, 76);
+      done();
+    });
+
+    const image = createFile("avatar.png");
+    appEvents.trigger("composer:add-files", image);
+  });
+
   test("should be able to paste a table with files and not upload the files", async function (assert) {
     await visit("/");
     await click("#create-topic");
