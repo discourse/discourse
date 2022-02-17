@@ -177,9 +177,9 @@ $box-shadow: (
   @return rgb($r_r, $r_g, $r_b);
 }
 
-// Replaces dark-light-diff($primary, $secondary, 50%, -50%)
-@function blend-primary-secondary($percent) {
-  @return srgb-scale($primary, $secondary, $percent);
+// Replaces dark-light-diff($primary,50%)
+@function blend-two-colors($color1, $color2, $percent) {
+  @return srgb-scale($color1, $color2, $percent);
 }
 
 @function blend-header-primary-background($percent) {
