@@ -1,4 +1,5 @@
 import { bind } from "discourse-common/utils/decorators";
+import I18n from "I18n";
 import Mixin from "@ember/object/mixin";
 import { generateLinkifyFunction } from "discourse/lib/text";
 import toMarkdown from "discourse/lib/to-markdown";
@@ -14,6 +15,22 @@ import { next, schedule } from "@ember/runloop";
 const INDENT_DIRECTION_LEFT = "left";
 const INDENT_DIRECTION_RIGHT = "right";
 
+const OP = {
+  NONE: 0,
+  REMOVED: 1,
+  ADDED: 2,
+};
+
+// Our head can be a static string or a function that returns a string
+// based on input (like for numbered lists).
+export function getHead(head, prev) {
+  if (typeof head === "string") {
+    return [head, head.length];
+  } else {
+    return getHead(head(prev));
+  }
+}
+
 export default Mixin.create({
   init() {
     this._super(...arguments);
@@ -24,6 +41,13 @@ export default Mixin.create({
   },
 
   // ensures textarea scroll position is correct
+  //
+  // TODO (martin) clean up this indirection, functions used outside this
+  // file should not be prefixed with lowercase
+  focusTextArea() {
+    this._focusTextArea();
+  },
+
   _focusTextArea() {
     if (!this.element || this.isDestroying || this.isDestroyed) {
       return;
@@ -37,12 +61,30 @@ export default Mixin.create({
     this._textarea.focus();
   },
 
+  // TODO (martin) clean up this indirection, functions used outside this
+  // file should not be prefixed with lowercase
+  insertBlock(text) {
+    this._insertBlock(text);
+  },
+
   _insertBlock(text) {
-    this._addBlock(this._getSelected(), text);
+    this._addBlock(this.getSelected(), text);
+  },
+
+  // TODO (martin) clean up this indirection, functions used outside this
+  // file should not be prefixed with lowercase
+  insertText(text, options) {
+    this._insertText(text, options);
   },
 
   _insertText(text, options) {
-    this._addText(this._getSelected(), text, options);
+    this._addText(this.getSelected(), text, options);
+  },
+
+  // TODO (martin) clean up this indirection, functions used outside this
+  // file should not be prefixed with lowercase
+  getSelected(trimLeading, opts) {
+    return this._getSelected(trimLeading, opts);
   },
 
   _getSelected(trimLeading, opts) {
@@ -80,6 +122,12 @@ export default Mixin.create({
     }
   },
 
+  // TODO (martin) clean up this indirection, functions used outside this
+  // file should not be prefixed with lowercase
+  selectText(from, length, opts = { scroll: true }) {
+    this._selectText(from, length, opts);
+  },
+
   _selectText(from, length, opts = { scroll: true }) {
     next(() => {
       if (!this.element) {
@@ -97,6 +145,12 @@ export default Mixin.create({
         this._$textarea.scrollTop(oldScrollPos);
       }
     });
+  },
+
+  // TODO (martin) clean up this indirection, functions used outside this
+  // file should not be prefixed with lowercase
+  replaceText(oldVal, newVal, opts = {}) {
+    this._replaceText(oldVal, newVal, opts);
   },
 
   _replaceText(oldVal, newVal, opts = {}) {
@@ -135,11 +189,125 @@ export default Mixin.create({
       !opts.skipNewSelection
     ) {
       // Restore cursor.
-      this._selectText(
+      this.selectText(
         newSelection.start,
         newSelection.end - newSelection.start
       );
     }
+  },
+
+  // TODO (martin) clean up this indirection, functions used outside this
+  // file should not be prefixed with lowercase
+  applySurround(sel, head, tail, exampleKey, opts) {
+    this._applySurround(sel, head, tail, exampleKey, opts);
+  },
+
+  _applySurround(sel, head, tail, exampleKey, opts) {
+    const pre = sel.pre;
+    const post = sel.post;
+
+    const tlen = tail.length;
+    if (sel.start === sel.end) {
+      if (tlen === 0) {
+        return;
+      }
+
+      const [hval, hlen] = getHead(head);
+      const example = I18n.t(`composer.${exampleKey}`);
+      this.set("value", `${pre}${hval}${example}${tail}${post}`);
+      this.selectText(pre.length + hlen, example.length);
+    } else if (opts && !opts.multiline) {
+      let [hval, hlen] = getHead(head);
+
+      if (opts.useBlockMode && sel.value.split("\n").length > 1) {
+        hval += "\n";
+        hlen += 1;
+        tail = `\n${tail}`;
+      }
+
+      if (pre.slice(-hlen) === hval && post.slice(0, tail.length) === tail) {
+        this.set(
+          "value",
+          `${pre.slice(0, -hlen)}${sel.value}${post.slice(tail.length)}`
+        );
+        this.selectText(sel.start - hlen, sel.value.length);
+      } else {
+        this.set("value", `${pre}${hval}${sel.value}${tail}${post}`);
+        this.selectText(sel.start + hlen, sel.value.length);
+      }
+    } else {
+      const lines = sel.value.split("\n");
+
+      let [hval, hlen] = getHead(head);
+      if (
+        lines.length === 1 &&
+        pre.slice(-tlen) === tail &&
+        post.slice(0, hlen) === hval
+      ) {
+        this.set(
+          "value",
+          `${pre.slice(0, -hlen)}${sel.value}${post.slice(tlen)}`
+        );
+        this.selectText(sel.start - hlen, sel.value.length);
+      } else {
+        const contents = this._getMultilineContents(
+          lines,
+          head,
+          hval,
+          hlen,
+          tail,
+          tlen,
+          opts
+        );
+
+        this.set("value", `${pre}${contents}${post}`);
+        if (lines.length === 1 && tlen > 0) {
+          this.selectText(sel.start + hlen, sel.value.length);
+        } else {
+          this.selectText(sel.start, contents.length);
+        }
+      }
+    }
+  },
+
+  // perform the same operation over many lines of text
+  _getMultilineContents(lines, head, hval, hlen, tail, tlen, opts) {
+    let operation = OP.NONE;
+
+    const applyEmptyLines = opts && opts.applyEmptyLines;
+
+    return lines
+      .map((l) => {
+        if (!applyEmptyLines && l.length === 0) {
+          return l;
+        }
+
+        if (
+          operation !== OP.ADDED &&
+          ((l.slice(0, hlen) === hval && tlen === 0) ||
+            (tail.length && l.slice(-tlen) === tail))
+        ) {
+          operation = OP.REMOVED;
+          if (tlen === 0) {
+            const result = l.slice(hlen);
+            [hval, hlen] = getHead(head, hval);
+            return result;
+          } else if (l.slice(-tlen) === tail) {
+            const result = l.slice(hlen, -tlen);
+            [hval, hlen] = getHead(head, hval);
+            return result;
+          }
+        } else if (operation === OP.NONE) {
+          operation = OP.ADDED;
+        } else if (operation === OP.REMOVED) {
+          return l;
+        }
+
+        const result = `${hval}${l}${tail}`;
+        [hval, hlen] = getHead(head, hval);
+        return result;
+      })
+      .join("\n");
   },
 
   _addBlock(sel, text) {
@@ -172,6 +340,12 @@ export default Mixin.create({
     schedule("afterRender", this, this._focusTextArea);
   },
 
+  // TODO (martin) clean up this indirection, functions used outside this
+  // file should not be prefixed with lowercase
+  addText(sel, text, options) {
+    this._addText(sel, text, options);
+  },
+
   _addText(sel, text, options) {
     if (options && options.ensureSpace) {
       if ((sel.pre + "").length > 0) {
@@ -194,6 +368,12 @@ export default Mixin.create({
     this._$textarea.prop("selectionEnd", insert.length);
     next(() => this._$textarea.trigger("change"));
     this._focusTextArea();
+  },
+
+  // TODO (martin) clean up this indirection, functions used outside this
+  // file should not be prefixed with lowercase
+  extractTable(text) {
+    return this._extractTable(text);
   },
 
   _extractTable(text) {
@@ -233,6 +413,12 @@ export default Mixin.create({
     return null;
   },
 
+  // TODO (martin) clean up this indirection, functions used outside this
+  // file should not be prefixed with lowercase
+  isInside(text, regex) {
+    return this._isInside(text, regex);
+  },
+
   _isInside(text, regex) {
     const matches = text.match(regex);
     return matches && matches.length % 2;
@@ -254,7 +440,7 @@ export default Mixin.create({
     let html = clipboard.getData("text/html");
     let handled = false;
 
-    const selected = this._getSelected(null, { lineVal: true });
+    const selected = this.getSelected(null, { lineVal: true });
     const { pre, value: selectedValue, lineVal } = selected;
     const isInlinePasting = pre.match(/[^\n]$/);
     const isCodeBlock = this._isInside(pre, /(^|\n)```/g);
@@ -349,12 +535,12 @@ export default Mixin.create({
   },
 
   @bind
-  _indentSelection(direction) {
+  indentSelection(direction) {
     if (![INDENT_DIRECTION_LEFT, INDENT_DIRECTION_RIGHT].includes(direction)) {
       return;
     }
 
-    const selected = this._getSelected(null, { lineVal: true });
+    const selected = this.getSelected(null, { lineVal: true });
     const { lineVal } = selected;
     let value = selected.value;
 
@@ -414,14 +600,14 @@ export default Mixin.create({
       .join("\n");
 
     if (newValue.trim() !== "") {
-      this._replaceText(value, newValue, { skipNewSelection: true });
-      this._selectText(this.value.indexOf(newValue), newValue.length);
+      this.replaceText(value, newValue, { skipNewSelection: true });
+      this.selectText(this.value.indexOf(newValue), newValue.length);
     }
   },
 
   @action
   emojiSelected(code) {
-    let selected = this._getSelected();
+    let selected = this.getSelected();
     const captures = selected.pre.match(/\B:(\w*)$/);
 
     if (isEmpty(captures)) {
