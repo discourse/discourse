@@ -124,6 +124,7 @@ const Group = RestModel.extend({
     await ajax(`/groups/${this.id}/leave.json`, {
       type: "DELETE",
     });
+    this.set("can_see_members", this.members_visibility_level < 2);
     await this.reloadMembers({}, true);
   },
 
