@@ -71,7 +71,7 @@ class TopicLinkClick < ActiveRecord::Base
     end
 
     # test for all possible URLs
-    link = TopicLink.select([:id, :user_id]).where(url: urls)
+    link = TopicLink.where(url: urls)
 
     # Find the forum topic link
     link = link.where(post_id: args[:post_id]) if args[:post_id].present?
