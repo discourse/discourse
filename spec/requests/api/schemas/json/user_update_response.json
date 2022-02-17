@@ -2,7 +2,7 @@
   "additionalProperties": false,
   "properties": {
     "success": {
-      "type": "boolean"
+      "type": "string"
     },
     "user": {
       "type": "object"

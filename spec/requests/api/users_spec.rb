@@ -80,6 +80,7 @@ describe 'users' do
       parameter name: 'Api-Key', in: :header, type: :string, required: true
       parameter name: 'Api-Username', in: :header, type: :string, required: true
       expected_request_schema = load_spec_schema('user_update_request')
+      parameter name: :username, in: :path, type: :string, required: true
       parameter name: :params, in: :body, schema: expected_request_schema
 
       produces 'application/json'
@@ -87,6 +88,7 @@ describe 'users' do
         expected_response_schema = load_spec_schema('user_update_response')
         schema expected_response_schema
 
+        let(:username) { Fabricate(:user).username }
         let(:params) { { 'name' => 'user' } }
 
         it_behaves_like "a JSON endpoint", 200 do
