@@ -3,7 +3,7 @@
 class EmailValidator < ActiveModel::EachValidator
 
   def validate_each(record, attribute, value)
-    unless value =~ EmailValidator.email_regex
+    if !EmailAddressValidator.valid_value?(value)
       if Invite === record && attribute == :email
         record.errors.add(:base, I18n.t(:'invite.invalid_email', email: CGI.escapeHTML(value)))
       else
@@ -12,7 +12,7 @@ class EmailValidator < ActiveModel::EachValidator
       invalid = true
     end
 
-    unless EmailValidator.allowed?(value)
+    if !EmailValidator.allowed?(value)
       record.errors.add(attribute, I18n.t(:'user.email.not_allowed'))
       invalid = true
     end
@@ -51,7 +51,11 @@ class EmailValidator < ActiveModel::EachValidator
   end
 
   def self.email_regex
-    /\A[a-zA-Z0-9!#\$%&'*+\/=?\^_`{|}~\-]+(?:\.[a-zA-Z0-9!#\$%&'\*+\/=?\^_`{|}~\-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9\-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9\-]*[a-zA-Z0-9])?$\z/
+    Discourse.deprecate(
+      "EmailValidator.email_regex is deprecated. Please use EmailAddressValidator instead.",
+      output_in_test: true,
+      drop_from: '2.9.0',
+    )
+    EmailAddressValidator.email_regex
   end
-
 end

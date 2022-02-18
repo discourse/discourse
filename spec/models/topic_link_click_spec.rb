@@ -238,6 +238,27 @@ describe TopicLinkClick do
         end
       end
 
+      context 'same base URL with different query' do
+        it 'are handled differently' do
+          post = Fabricate(:post, raw: <<~RAW)
+            no query param: http://example.com/a
+            with query param: http://example.com/a?b=c
+            with two query params: http://example.com/a?b=c&d=e
+          RAW
+
+          TopicLink.extract_from(post)
+
+          TopicLinkClick.create_from(url: 'http://example.com/a', post_id: post.id, ip: '127.0.0.1', user: Fabricate(:user))
+          TopicLinkClick.create_from(url: 'http://example.com/a?b=c', post_id: post.id, ip: '127.0.0.2', user: Fabricate(:user))
+          TopicLinkClick.create_from(url: 'http://example.com/a?b=c&d=e', post_id: post.id, ip: '127.0.0.3', user: Fabricate(:user))
+          TopicLinkClick.create_from(url: 'http://example.com/a?b=c', post_id: post.id, ip: '127.0.0.4', user: Fabricate(:user))
+
+          expect(TopicLink.where("url LIKE '%example.com%'").pluck(:url, :clicks)).to contain_exactly(
+            ['http://example.com/a', 1], ['http://example.com/a?b=c', 2], ['http://example.com/a?b=c&d=e', 1]
+          )
+        end
+      end
+
       context 'with a google analytics tracking code and a hash' do
         before do
           @url = TopicLinkClick.create_from(url: 'http://discourse.org?_ga=1.16846778.221554446.1071987018#faq',

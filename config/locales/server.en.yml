@@ -1595,6 +1595,9 @@ en:
     tl2_additional_edits_per_day_multiplier: "Increase limit of edits per day for tl2 (member) by multiplying with this number"
     tl3_additional_edits_per_day_multiplier: "Increase limit of edits per day for tl3 (regular) by multiplying with this number"
     tl4_additional_edits_per_day_multiplier: "Increase limit of edits per day for tl4 (leader) by multiplying with this number"
+    tl2_additional_flags_per_day_multiplier: "Increase limit of flags per day for tl2 (member) by multiplying with this number"
+    tl3_additional_flags_per_day_multiplier: "Increase limit of flags per day for tl3 (regular) by multiplying with this number"
+    tl4_additional_flags_per_day_multiplier: "Increase limit of flags per day for tl4 (leader) by multiplying with this number"
 
     num_users_to_silence_new_user: "If a new user's posts get num_spam_flags_to_silence_new_user spam flags from this many different users, hide all their posts and prevent future posting. 0 to disable."
     num_tl3_flags_to_silence_new_user: "If a new user's posts get this many flags from num_tl3_users_to_silence_new_user different trust level 3 users, hide all their posts and prevent future posting. 0 to disable."
