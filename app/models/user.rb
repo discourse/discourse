@@ -1151,7 +1151,7 @@ class User < ActiveRecord::Base
   end
 
   def find_email
-    last_sent_email_address.present? && EmailValidator.email_regex =~ last_sent_email_address ? last_sent_email_address : email
+    last_sent_email_address.present? && EmailAddressValidator.valid_value?(last_sent_email_address) ? last_sent_email_address : email
   end
 
   def tl3_requirements

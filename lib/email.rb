@@ -10,7 +10,7 @@ module Email
 
   def self.is_valid?(email)
     return false unless String === email
-    !!(EmailValidator.email_regex =~ email)
+    EmailAddressValidator.valid_value?(email)
   end
 
   def self.downcase(email)
