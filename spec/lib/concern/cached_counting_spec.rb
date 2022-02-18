@@ -11,7 +11,7 @@ class TestCachedCounting
     @data ||= {}
   end
 
-  def self.write_cache!(key, count)
+  def self.write_cache!(key, count, date)
     data[key] = count
   end
 end
@@ -71,8 +71,8 @@ describe CachedCounting do
         @cache_data = nil
       end
 
-      def self.write_cache!(key, val)
-        cache_data[key] = val
+      def self.write_cache!(key, val, date)
+        cache_data[[key, date]] = val
       end
     end
 
@@ -87,15 +87,32 @@ describe CachedCounting do
     end
 
     it "can dispatch data via background thread" do
+
+      freeze_time
+      d1 = Time.now.utc.to_date
+
       RailsCacheCounter.perform_increment!("a,a")
       RailsCacheCounter.perform_increment!("b")
       20.times do
         RailsCacheCounter.perform_increment!("a,a")
       end
 
+      freeze_time 2.days.from_now
+      d2 = Time.now.utc.to_date
+
+      RailsCacheCounter.perform_increment!("a,a")
+      RailsCacheCounter.perform_increment!("d")
+
       CachedCounting.flush
 
-      expect(RailsCacheCounter.cache_data).to eq({ "a,a" => 21, "b" => 1 })
+      expected = {
+        ["a,a", d1] => 21,
+        ["b", d1] => 1,
+        ["a,a", d2] => 1,
+        ["d", d2] => 1,
+      }
+
+      expect(RailsCacheCounter.cache_data).to eq(expected)
     end
   end
 end

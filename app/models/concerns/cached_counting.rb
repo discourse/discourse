@@ -72,8 +72,8 @@ module CachedCounting
     counts = nil
     while QUEUE.length > 0
       # only 1 consumer, no need to avoid blocking
-      key, klass, db = QUEUE.deq
-      _redis_key = "#{COUNTER_PREFIX},#{klass},#{db},#{key}"
+      key, klass, db, time = QUEUE.deq
+      _redis_key = "#{COUNTER_PREFIX},#{klass},#{db},#{time.strftime("%Y%m%d")},#{key}"
       counts ||= Hash.new(0)
       counts[_redis_key] += 1
     end
@@ -105,11 +105,12 @@ module CachedCounting
             [key]
           ).to_i
 
-          _prefix, klass_name, db, local_key = key.split(",", 4)
+          _prefix, klass_name, db, date, local_key = key.split(",", 5)
+          date = Date.strptime(date, "%Y%m%d")
           klass = Module.const_get(klass_name)
 
           RailsMultisite::ConnectionManagement.with_connection(db) do
-            klass.write_cache!(local_key, val)
+            klass.write_cache!(local_key, val, date)
           end
         end
       end
@@ -129,7 +130,7 @@ module CachedCounting
   end
 
   def self.queue(key, klass)
-    QUEUE.push([key, klass, RailsMultisite::ConnectionManagement.current_db])
+    QUEUE.push([key, klass, RailsMultisite::ConnectionManagement.current_db, Time.now.utc])
   end
 
   def self.clear_queue!
@@ -146,7 +147,7 @@ module CachedCounting
       CachedCounting.queue(key, self)
     end
 
-    def write_cache!(key, count)
+    def write_cache!(key, count, date)
       raise NotImplementedError
     end
 

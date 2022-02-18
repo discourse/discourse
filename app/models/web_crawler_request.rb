@@ -12,13 +12,10 @@ class WebCrawlerRequest < ActiveRecord::Base
   self.max_record_age = 30.days
 
   def self.increment!(user_agent)
-    perform_increment!(redis_key(user_agent))
+    perform_increment!(user_agent)
   end
 
-  def self.write_cache!(key, count)
-    date, user_agent = key.split(":", 2)
-    date = Date.strptime(date, "%Y%m%d")
-
+  def self.write_cache!(user_agent, count, date)
     where(id: request_id(date: date, user_agent: user_agent))
       .update_all(["count = count + ?", count])
   end
@@ -28,10 +25,6 @@ class WebCrawlerRequest < ActiveRecord::Base
   end
 
   protected
-
-  def self.redis_key(user_agent, time = Time.now.utc)
-    "#{time.strftime('%Y%m%d')}:#{user_agent}"
-  end
 
   def self.request_id(date:, user_agent:, retries: 0)
     id = where(date: date, user_agent: user_agent).pluck_first(:id)
