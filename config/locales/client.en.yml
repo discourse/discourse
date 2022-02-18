@@ -4296,6 +4296,9 @@ en:
         notification_event:
           name: "Notification Event"
           details: "When a user receives a notification in their feed."
+        user_promoted_event:
+          name: "User Promoted Event"
+          details: "When a user is promoted from one trust level to another."
         user_badge_event:
           name: "Badge Grant Event"
           details: "When a user receives a badge."
