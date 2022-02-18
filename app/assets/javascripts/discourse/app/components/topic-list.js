@@ -176,7 +176,7 @@ export default Component.extend(LoadMore, {
       if (target.length === 1) {
         callback.apply(this, [target]);
       }
-    }
+    };
 
     onClick("button.bulk-select", function () {
       this.toggleBulkSelect();
