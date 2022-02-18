@@ -7,14 +7,14 @@
     <%- unless customization_disabled? %>
       <%= discourse_stylesheet_link_tag  :embedded_theme %>
     <%- end %>
-    <%= preload_script 'break_string' %>
+    <%= preload_script('break_string', false) %>
 
     <%- if @topic_view && @topic_view.page_title.present? %>
       <title><%= @topic_view.page_title %> - <%= SiteSetting.title %></title>
     <%- end %>
 
     <meta id="data-embedded" data-referer="<%= @data_referer %>">
-    <%= preload_script 'embed-application' %>
+    <%= preload_script('embed-application', false) %>
 
     <%= yield :head %>
   </head>
