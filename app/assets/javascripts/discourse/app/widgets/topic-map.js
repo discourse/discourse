@@ -75,7 +75,7 @@ createWidget("topic-participant", {
       }),
     ];
 
-    if (attrs.post_count > 2) {
+    if (attrs.post_count > 1) {
       linkContents.push(h("span.post-count", attrs.post_count.toString()));
     }
 
