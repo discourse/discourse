@@ -407,6 +407,54 @@ discourseModule("Unit | Controller | topic", function (hooks) {
     );
   });
 
+  test("modCanChangeOwner", function (assert) {
+    const currentUser = User.create({ moderator: false });
+    this.registry.register("current-user:main", currentUser, {
+      instantiate: false,
+    });
+    this.registry.injection("controller", "currentUser", "current-user:main");
+
+    let model = topicWithStream({
+      posts: [
+        { id: 1, username: "gary" },
+        { id: 2, username: "lili" },
+      ],
+      stream: [1, 2],
+    });
+    model.set("currentUser", { moderator: false });
+    const controller = this.getController("topic", {
+      model,
+      currentUser,
+      siteSettings: {
+        moderators_change_post_ownership: true,
+      },
+    });
+    const selectedPostIds = controller.get("selectedPostIds");
+
+    assert.notOk(
+      controller.get("canChangeOwner"),
+      "false when no posts are selected"
+    );
+
+    selectedPostIds.pushObject(1);
+
+    assert.notOk(controller.get("canChangeOwner"), "false when not moderator");
+
+    currentUser.set("moderator", true);
+
+    assert.ok(
+      controller.get("canChangeOwner"),
+      "true when moderator and one post is selected"
+    );
+
+    selectedPostIds.pushObject(2);
+
+    assert.notOk(
+      controller.get("canChangeOwner"),
+      "false when moderator but more than 1 user"
+    );
+  });
+
   test("canMergePosts", function (assert) {
     let model = topicWithStream({
       posts: [
