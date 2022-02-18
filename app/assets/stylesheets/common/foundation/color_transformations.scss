@@ -11,16 +11,16 @@ $primary-high: dark-light-diff($primary, $secondary, 30%, -25%) !default;
 $primary-very-high: dark-light-diff($primary, $secondary, 15%, -10%) !default;
 
 //primary-numbers
-$primary-50: blend-two-colors($primary, $secondary, 5%) !default;
-$primary-100: blend-two-colors($primary, $secondary, 10%) !default;
-$primary-200: blend-two-colors($primary, $secondary, 20%) !default;
-$primary-300: blend-two-colors($primary, $secondary, 30%) !default;
-$primary-400: blend-two-colors($primary, $secondary, 40%) !default;
-$primary-500: blend-two-colors($primary, $secondary, 50%) !default;
-$primary-600: blend-two-colors($primary, $secondary, 60%) !default;
-$primary-700: blend-two-colors($primary, $secondary, 70%) !default;
-$primary-800: blend-two-colors($primary, $secondary, 80%) !default;
-$primary-900: blend-two-colors($primary, $secondary, 90%) !default;
+$primary-50: dark-light-diff($primary, $secondary, 97%, -82%) !default;
+$primary-100: dark-light-diff($primary, $secondary, 94%, -80%) !default;
+$primary-200: dark-light-diff($primary, $secondary, 90%, -78%) !default;
+$primary-300: dark-light-diff($primary, $secondary, 80%, -60%) !default;
+$primary-400: dark-light-diff($primary, $secondary, 70%, -45%) !default;
+$primary-500: dark-light-diff($primary, $secondary, 60%, -40%) !default;
+$primary-600: dark-light-diff($primary, $secondary, 50%, -35%) !default;
+$primary-700: dark-light-diff($primary, $secondary, 30%, -30%) !default;
+$primary-800: dark-light-diff($primary, $secondary, 30%, -25%) !default;
+$primary-900: dark-light-diff($primary, $secondary, 15%, -10%) !default;
 
 $header_primary-low: blend-header-primary-background(10%) !default;
 $header_primary-low-mid: blend-header-primary-background(35%) !default;
