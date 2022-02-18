@@ -1187,11 +1187,6 @@ describe Report do
     before do
       freeze_time(Time.now.at_midnight)
       Theme.clear_default!
-      ApplicationRequest.clear_cache!
-    end
-
-    after do
-      ApplicationRequest.clear_cache!
     end
 
     let(:reports) { Report.find('consolidated_page_views') }
@@ -1205,12 +1200,22 @@ describe Report do
     end
 
     context "with data" do
-      it "works" do
+      before do
+        CachedCounting.reset
+        CachedCounting.enable
         ApplicationRequest.enable
+      end
+
+      after do
+        ApplicationRequest.disable
+        CachedCounting.disable
+      end
+      it "works" do
         3.times { ApplicationRequest.increment!(:page_view_crawler) }
         2.times { ApplicationRequest.increment!(:page_view_logged_in) }
         ApplicationRequest.increment!(:page_view_anon)
-        ApplicationRequest.write_cache!
+
+        CachedCounting.flush
 
         page_view_crawler_report = reports.data.find { |r| r[:req] == "page_view_crawler" }
         page_view_logged_in_report = reports.data.find { |r| r[:req] == "page_view_logged_in" }
@@ -1225,8 +1230,6 @@ describe Report do
         expect(page_view_anon_report[:color]).to eql("#40c8ff")
         expect(page_view_anon_report[:data][0][:y]).to eql(1)
       ensure
-        ApplicationRequest.disable
-        ApplicationRequest.clear_cache!
       end
     end
   end
