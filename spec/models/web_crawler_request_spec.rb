@@ -4,8 +4,7 @@ require 'rails_helper'
 
 describe WebCrawlerRequest do
   before do
-    CachedCounting.clear_queue!
-    CachedCounting.clear_flush_to_db_lock!
+    CachedCounting.reset
     CachedCounting.enable
   end
 

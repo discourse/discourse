@@ -38,8 +38,7 @@ describe CachedCounting do
 
     context "with a test counting class" do
       before do
-        CachedCounting.clear_queue!
-        CachedCounting.clear_flush_to_db_lock!
+        CachedCounting.reset
         TestCachedCounting.clear!
       end
 
@@ -77,8 +76,7 @@ describe CachedCounting do
     end
 
     before do
-      CachedCounting.clear_queue!
-      CachedCounting.clear_flush_to_db_lock!
+      CachedCounting.reset
       CachedCounting.enable
     end
 

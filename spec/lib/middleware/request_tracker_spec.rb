@@ -15,29 +15,25 @@ describe Middleware::RequestTracker do
   end
 
   before do
-    ApplicationRequest.clear_cache!
     ApplicationRequest.enable
+    CachedCounting.reset
+    CachedCounting.enable
   end
 
   after do
     ApplicationRequest.disable
-    ApplicationRequest.clear_cache!
+    CachedCounting.enable
   end
 
   context "full request" do
-    before do
-      @orig = WebCrawlerRequest.autoflush
-      WebCrawlerRequest.autoflush = 1
-    end
-    after do
-      WebCrawlerRequest.autoflush = @orig
-    end
 
     it "can handle rogue user agents" do
       agent = (+"Evil Googlebot String \xc3\x28").force_encoding("Windows-1252")
 
       middleware = Middleware::RequestTracker.new(->(env) { ["200", { "Content-Type" => "text/html" }, [""]] })
       middleware.call(env("HTTP_USER_AGENT" => agent))
+
+      CachedCounting.flush
 
       expect(WebCrawlerRequest.where(user_agent: agent.encode('utf-8')).count).to eq(1)
     end
@@ -63,7 +59,8 @@ describe Middleware::RequestTracker do
       log_tracked_view("1")
       log_tracked_view("false")
       log_tracked_view("0")
-      ApplicationRequest.write_cache!
+
+      CachedCounting.flush
 
       expect(ApplicationRequest.page_view_anon.first.count).to eq(2)
     end
@@ -95,7 +92,7 @@ describe Middleware::RequestTracker do
 
       Middleware::RequestTracker.log_request(data)
 
-      ApplicationRequest.write_cache!
+      CachedCounting.flush
 
       expect(ApplicationRequest.http_total.first.count).to eq(4)
       expect(ApplicationRequest.http_2xx.first.count).to eq(4)
@@ -114,7 +111,10 @@ describe Middleware::RequestTracker do
       ), ["200", { "Content-Type" => 'text/html' }], 0.1)
 
       Middleware::RequestTracker.log_request(data)
-      ApplicationRequest.write_cache!
+
+      CachedCounting.flush
+      CachedCounting.reset
+
       expect(ApplicationRequest.page_view_crawler.first.count).to eq(1)
 
       # ...but count our mobile app user agents as regular visits
@@ -123,7 +123,8 @@ describe Middleware::RequestTracker do
       ), ["200", { "Content-Type" => 'text/html' }], 0.1)
 
       Middleware::RequestTracker.log_request(data)
-      ApplicationRequest.write_cache!
+
+      CachedCounting.flush
 
       expect(ApplicationRequest.page_view_crawler.first.count).to eq(1)
       expect(ApplicationRequest.page_view_anon.first.count).to eq(1)
@@ -157,7 +158,7 @@ describe Middleware::RequestTracker do
         Middleware::RequestTracker.log_request(anon_data)
         Middleware::RequestTracker.log_request(logged_in_data)
 
-        ApplicationRequest.write_cache!
+        CachedCounting.flush
 
         expect(ApplicationRequest.http_total.first.count).to eq(2)
         expect(ApplicationRequest.http_2xx.first.count).to eq(2)
@@ -172,7 +173,7 @@ describe Middleware::RequestTracker do
         Middleware::RequestTracker.log_request(anon_data)
         Middleware::RequestTracker.log_request(logged_in_data)
 
-        ApplicationRequest.write_cache!
+        CachedCounting.flush
 
         expect(ApplicationRequest.http_total.first.count).to eq(2)
         expect(ApplicationRequest.http_2xx.first.count).to eq(2)

@@ -31,6 +31,11 @@ module CachedCounting
     @enabled = true
   end
 
+  def self.reset
+    clear_queue!
+    clear_flush_to_db_lock!
+  end
+
   def self.ensure_thread!
     return if !enabled?
 

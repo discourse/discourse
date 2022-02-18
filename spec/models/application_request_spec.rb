@@ -5,8 +5,7 @@ require 'rails_helper'
 describe ApplicationRequest do
   before do
     ApplicationRequest.enable
-    CachedCounting.clear_queue!
-    CachedCounting.clear_flush_to_db_lock!
+    CachedCounting.reset
     CachedCounting.enable
   end
 
