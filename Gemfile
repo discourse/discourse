@@ -158,7 +158,6 @@ end
 
 group :test, :development do
   gem 'rspec'
-  gem 'mock_redis'
   gem 'listen', require: false
   gem 'certified', require: false
   gem 'fabrication', require: false
