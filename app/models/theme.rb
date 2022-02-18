@@ -91,7 +91,6 @@ class Theme < ActiveRecord::Base
     update_javascript_cache!
 
     remove_from_cache!
-    clear_cached_settings!
     DB.after_commit { ColorScheme.hex_cache.clear }
     notify_theme_change(with_scheme: notify_with_scheme)
 
@@ -135,7 +134,6 @@ class Theme < ActiveRecord::Base
 
   after_destroy do
     remove_from_cache!
-    clear_cached_settings!
     if SiteSetting.default_theme_id == self.id
       Theme.clear_default!
     end
@@ -529,13 +527,13 @@ class Theme < ActiveRecord::Base
   end
 
   def cached_settings
-    Discourse.cache.fetch("settings_for_theme_#{self.id}", expires_in: 30.minutes) do
+    Theme.get_set_cache "settings_for_theme_#{self.id}" do
       build_settings_hash
     end
   end
 
   def cached_default_settings
-    Discourse.cache.fetch("default_settings_for_theme_#{self.id}", expires_in: 30.minutes) do
+    Theme.get_set_cache "default_settings_for_theme_#{self.id}" do
       settings_hash = {}
       self.settings.each do |setting|
         settings_hash[setting.name] = setting.default
@@ -559,13 +557,6 @@ class Theme < ActiveRecord::Base
     hash['theme_uploads'] = theme_uploads if theme_uploads.present?
 
     hash
-  end
-
-  def clear_cached_settings!
-    DB.after_commit do
-      Discourse.cache.delete("settings_for_theme_#{self.id}")
-      Discourse.cache.delete("default_settings_for_theme_#{self.id}")
-    end
   end
 
   def included_settings
