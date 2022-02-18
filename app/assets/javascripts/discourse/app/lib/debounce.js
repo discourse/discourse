@@ -6,13 +6,13 @@ import { debounce } from "@ember/runloop";
 **/
 export default function (func, wait) {
   let args;
-  const later = function () {
+  const later = () => {
     func.apply(this, args);
   };
 
   return function () {
     args = arguments;
 
-    debounce(null, later.bind(this), wait);
+    debounce(null, later, wait);
   };
 }
