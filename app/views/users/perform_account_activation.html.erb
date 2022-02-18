@@ -16,7 +16,7 @@
       <%- content_for(:no_ember_head) do %>
         <%= tag.meta id: 'data-auto-redirect', data: { path: path('/') } %>
       <%- end %>
-      <%= preload_script 'auto-redirect' %>
+      <%= preload_script('auto-redirect', false) %>
     <% end %>
   <%end%>
 </div>

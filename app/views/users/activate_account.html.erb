@@ -10,9 +10,9 @@
 </div>
 
 <%- content_for(:no_ember_head) do %>
-  <%= preload_vendor_scripts %>
+  <%= preload_vendor_scripts(false) %>
   <%= render_google_universal_analytics_code %>
   <%= tag.meta id: 'data-activate-account', data: { path: path('/session/hp') } %>
 <%- end %>
 
-<%= preload_script "activate-account" %>
+<%= preload_script("activate-account", false) %>
