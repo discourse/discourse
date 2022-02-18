@@ -15,13 +15,9 @@ class WebCrawlerRequest < ActiveRecord::Base
     perform_increment!(user_agent)
   end
 
-  def self.write_cache!(user_agent, count, date)
+  def self.write_cache!(key, count, date)
     where(id: request_id(date: date, user_agent: user_agent))
       .update_all(["count = count + ?", count])
-  end
-
-  def self.clear_cache!(date = nil)
-    raise "not implemented"
   end
 
   protected
