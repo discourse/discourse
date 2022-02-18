@@ -3,9 +3,9 @@
 module CachedCounting
   extend ActiveSupport::Concern
 
-  LUA_GET_DEL = DiscourseRedis::EvalHelper.new <<~LUA
-    local result = redis.call("GET", KEYS[1])
-    redis.call("DEL", KEYS[1])
+  LUA_HGET_DEL = DiscourseRedis::EvalHelper.new <<~LUA
+    local result = redis.call("HGET", KEYS[1], KEYS[2])
+    redis.call("HDEL", KEYS[1], KEYS[2])
 
     return result
   LUA
@@ -71,14 +71,14 @@ module CachedCounting
     end
   end
 
-  COUNTER_PREFIX = "__DCC__"
+  COUNTER_REDIS_HASH = "CounterCacheHash"
 
   def self.flush_in_memory
     counts = nil
     while QUEUE.length > 0
       # only 1 consumer, no need to avoid blocking
       key, klass, db, time = QUEUE.deq
-      _redis_key = "#{COUNTER_PREFIX},#{klass},#{db},#{time.strftime("%Y%m%d")},#{key}"
+      _redis_key = "#{klass},#{db},#{time.strftime("%Y%m%d")},#{key}"
       counts ||= Hash.new(0)
       counts[_redis_key] += 1
     end
@@ -89,7 +89,7 @@ module CachedCounting
         # concerns:
         # - Is there a limit of params, will we need to chunk it
         # - Would this lock up redis for too long, chunk it due to that?
-        Discourse.redis.without_namespace.incrby(redis_key, count)
+        Discourse.redis.without_namespace.hincrby(COUNTER_REDIS_HASH, redis_key, count)
       end
     end
   end
@@ -103,19 +103,23 @@ module CachedCounting
       if allowed_to_flush_to_db?
         # TODO can be done in a single eval (including keys call)
         # same concern as above
-        redis.keys("#{COUNTER_PREFIX}*").each do |key|
+        redis.hkeys(COUNTER_REDIS_HASH).each do |key|
 
-          val = LUA_GET_DEL.eval(
+          val = LUA_HGET_DEL.eval(
             redis,
-            [key]
+            [COUNTER_REDIS_HASH, key]
           ).to_i
 
-          _prefix, klass_name, db, date, local_key = key.split(",", 5)
-          date = Date.strptime(date, "%Y%m%d")
-          klass = Module.const_get(klass_name)
+          # unlikely (protected by mutex), but protect just in case
+          # could be a race condition in test
+          if val > 0
+            klass_name, db, date, local_key = key.split(",", 4)
+            date = Date.strptime(date, "%Y%m%d")
+            klass = Module.const_get(klass_name)
 
-          RailsMultisite::ConnectionManagement.with_connection(db) do
-            klass.write_cache!(local_key, val, date)
+            RailsMultisite::ConnectionManagement.with_connection(db) do
+              klass.write_cache!(local_key, val, date)
+            end
           end
         end
       end
@@ -141,9 +145,7 @@ module CachedCounting
   def self.clear_queue!
     QUEUE.clear
     redis = Discourse.redis.without_namespace
-    redis.keys("#{COUNTER_PREFIX}*").each do |key|
-      redis.del(key)
-    end
+    redis.del(COUNTER_REDIS_HASH)
   end
 
   class_methods do
