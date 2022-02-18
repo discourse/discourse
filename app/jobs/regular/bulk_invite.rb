@@ -37,7 +37,7 @@ module Jobs
 
     def process_invites(invites)
       invites.each do |invite|
-        if (EmailValidator.email_regex =~ invite[:email])
+        if EmailAddressValidator.valid_value?(invite[:email])
           # email is valid
           send_invite(invite)
           @sent += 1

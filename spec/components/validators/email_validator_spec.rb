@@ -57,17 +57,4 @@ describe EmailValidator do
       expect(EmailValidator.can_auto_approve_user?("foobar@googlemail.com")).to eq(true)
     end
   end
-
-  context '.email_regex' do
-    it 'should match valid emails' do
-      expect(!!('test@discourse.org' =~ EmailValidator.email_regex)).to eq(true)
-    end
-
-    it 'should not match invalid emails' do
-      ['testdiscourse.org', 'test@discourse.org; a@discourse.org', 'random'].each do |email|
-        expect(!!(email =~ EmailValidator.email_regex)).to eq(false)
-      end
-    end
-  end
-
 end

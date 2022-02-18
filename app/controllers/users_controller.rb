@@ -600,7 +600,7 @@ class UsersController < ApplicationController
       return render json: success_json
     end
 
-    if !(email =~ EmailValidator.email_regex)
+    if !EmailAddressValidator.valid_value?(email)
       error = User.new.errors.full_message(:email, I18n.t(:'user.email.invalid'))
       return render json: failed_json.merge(errors: [error])
     end
