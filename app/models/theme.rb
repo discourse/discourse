@@ -155,7 +155,7 @@ class Theme < ActiveRecord::Base
     SvgSprite.expire_cache
   end
 
-  BASE_COMPILER_VERSION = 54
+  BASE_COMPILER_VERSION = 55
   def self.compiler_version
     get_set_cache "compiler_version" do
       dependencies = [
@@ -563,10 +563,10 @@ class Theme < ActiveRecord::Base
     hash = {}
 
     Theme.where(id: Theme.transform_ids(id)).each do |theme|
-      hash.merge!(theme.cached_settings)
+      hash.merge!(theme.build_settings_hash)
     end
 
-    hash.merge!(self.cached_settings)
+    hash.merge!(self.build_settings_hash)
     hash
   end
 
