@@ -22,7 +22,7 @@ describe Middleware::RequestTracker do
 
   after do
     ApplicationRequest.disable
-    CachedCounting.enable
+    CachedCounting.disable
   end
 
   context "full request" do
