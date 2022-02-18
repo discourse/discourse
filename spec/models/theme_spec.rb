@@ -512,7 +512,7 @@ HTML
     theme.save!
 
     Upload.find(upload.id).destroy
-    theme.clear_cached_settings!
+    theme.remove_from_cache!
 
     json = JSON.parse(cached_settings(theme.id))
     expect(json).to be_empty
