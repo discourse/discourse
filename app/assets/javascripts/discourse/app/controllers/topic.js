@@ -1446,12 +1446,22 @@ export default Controller.extend(bufferedProperty("model"), {
 
   @discourseComputed(
     "currentUser.admin",
+    "currentUser.staff",
+    "siteSettings.moderators_change_post_ownership",
     "selectedPostsCount",
     "selectedPostsUsername"
   )
-  canChangeOwner(isAdmin, selectedPostsCount, selectedPostsUsername) {
+  canChangeOwner(
+    isAdmin,
+    isStaff,
+    modChangePostOwner,
+    selectedPostsCount,
+    selectedPostsUsername
+  ) {
     return (
-      isAdmin && selectedPostsCount > 0 && selectedPostsUsername !== undefined
+      (isAdmin || (modChangePostOwner && isStaff)) &&
+      selectedPostsCount > 0 &&
+      selectedPostsUsername !== undefined
     );
   },
 
