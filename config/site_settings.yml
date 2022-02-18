@@ -1828,6 +1828,9 @@ rate_limits:
   tl2_additional_edits_per_day_multiplier: 1.5
   tl3_additional_edits_per_day_multiplier: 2
   tl4_additional_edits_per_day_multiplier: 3
+  tl2_additional_flags_per_day_multiplier: 1.5
+  tl3_additional_flags_per_day_multiplier: 2
+  tl4_additional_flags_per_day_multiplier: 3
   alert_admins_if_errors_per_minute:
     client: true
     default: 0
