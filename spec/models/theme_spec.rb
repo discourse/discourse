@@ -565,36 +565,6 @@ HTML
     expect(json["my_upload"]).to eq("http://cdn.localhost#{upload.url}")
   end
 
-  it 'handles child settings correctly' do
-    Theme.destroy_all
-
-    expect(included_settings(theme.id)).to eq("{}")
-
-    theme.set_field(target: :settings, name: "yaml", value: "boolean_setting: true")
-    theme.save!
-    expect(included_settings(theme.id)).to match(/\"boolean_setting\":true/)
-
-    theme.settings.first.value = "false"
-    theme.save!
-    expect(included_settings(theme.id)).to match(/\"boolean_setting\":false/)
-
-    child.set_field(target: :settings, name: "yaml", value: "integer_setting: 54")
-
-    child.save!
-    theme.add_relative_theme!(:child, child)
-
-    json = included_settings(theme.id)
-    expect(json).to match(/\"boolean_setting\":false/)
-    expect(json).to match(/\"integer_setting\":54/)
-
-    expect(included_settings(child.id)).to eq("{\"integer_setting\":54}")
-
-    child.destroy!
-    json = included_settings(theme.id)
-    expect(json).not_to match(/\"integer_setting\":54/)
-    expect(json).to match(/\"boolean_setting\":false/)
-  end
-
   describe "convert_settings" do
 
     it 'can migrate a list field to a string field with json schema' do
