@@ -1,57 +1,51 @@
 import Component from "@ember/component";
-import { observes } from "discourse-common/utils/decorators";
 import { scheduleOnce } from "@ember/runloop";
 
 export default Component.extend({
-  _slug: null,
+  tagName: "",
+  currentClasses: null,
 
-  didInsertElement() {
-    this._super(...arguments);
-    this.refreshClass();
+  init() {
+    this.currentClasses = new Set();
+    this._super();
   },
 
-  _updateClass() {
-    if (this.isDestroying || this.isDestroyed) {
-      return;
-    }
-    const slug = this.get("category.fullSlug");
-
-    this._removeClass();
-
-    const classes = [];
-
-    if (slug) {
-      classes.push("category");
-      classes.push(`category-${slug}`);
-    }
-
-    this.tags?.forEach((t) => classes.push(`tag-${t}`));
-
-    document.body.classList.add(...classes);
-  },
-
-  @observes("category.fullSlug", "tags")
-  refreshClass() {
-    scheduleOnce("afterRender", this, this._updateClass);
+  didReceiveAttrs() {
+    scheduleOnce("afterRender", this, this._updateClasses);
   },
 
   willDestroyElement() {
-    this._super(...arguments);
-    this._removeClass();
+    scheduleOnce("afterRender", this, this._removeClasses);
   },
 
-  _removeClass() {
-    const invalidClasses = [];
-    const regex = /\b(?:category|tag)-\S+|( category )/g;
-
-    document.body.classList.forEach((name) => {
-      if (regex.test(name)) {
-        invalidClasses.push(name);
-      }
-    });
-
-    if (invalidClasses.length) {
-      document.body.classList.remove(...invalidClasses);
+  _updateClasses() {
+    if (this.isDestroying || this.isDestroyed) {
+      return;
     }
+
+    const desiredClasses = new Set();
+
+    const slug = this.category?.fullSlug;
+    if (slug) {
+      desiredClasses.add("category");
+      desiredClasses.add(`category-${slug}`);
+    }
+    this.tags?.forEach((t) => desiredClasses.add(`tag-${t}`));
+
+    const addClasses = [...desiredClasses].filter(
+      (c) => !this.currentClasses.has(c)
+    );
+    const removeClasses = [...this.currentClasses].filter(
+      (c) => !desiredClasses.has(c)
+    );
+
+    document.body.classList.add(...addClasses);
+    document.body.classList.remove(...removeClasses);
+
+    this.currentClasses = desiredClasses;
+  },
+
+  _removeClasses() {
+    document.body.classList.remove(...this.currentClasses);
   },
 });
