@@ -27,7 +27,10 @@ export default {
           model: this.topic.category,
         });
         controller.setProperties({
-          allowInvites: this.canInviteTo && !this.inviteDisabled,
+          allowInvites:
+            this.currentUser.can_invite_to_forum &&
+            this.canInviteTo &&
+            !this.inviteDisabled,
           topic: this.topic,
         });
       },
