@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # name: discourse-automation
-# about:
+# about: Lets you automate actions on your Discourse Forum
 # version: 0.1
 # authors: jjaffeux
 # url: https://github.com/discourse/discourse-automation
