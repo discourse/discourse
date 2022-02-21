@@ -688,6 +688,10 @@ class TopicsController < ApplicationController
     users = User.where(username_lower: usernames.map(&:downcase))
     raise Discourse::InvalidParameters.new(:usernames) if usernames.size != users.size
 
+    post_number = 1
+    post_number = params[:post_number].to_i if params[:post_number].present?
+    raise Discourse::InvalidParameters.new(:post_number) if post_number < 1 || post_number > topic.highest_post_number
+
     topic.rate_limit_topic_invitation(current_user)
 
     users.find_each do |user|
@@ -700,11 +704,16 @@ class TopicsController < ApplicationController
       last_notification = user.notifications
         .where(notification_type: Notification.types[:invited_to_topic])
         .where(topic_id: topic.id)
-        .where(post_number: 1)
+        .where(post_number: post_number)
         .where('created_at > ?', 1.hour.ago)
 
       if !last_notification.exists?
-        topic.create_invite_notification!(user, Notification.types[:invited_to_topic], current_user.username)
+        topic.create_invite_notification!(
+          user,
+          Notification.types[:invited_to_topic],
+          current_user.username,
+          post_number: post_number
+        )
       end
     end
 

@@ -2840,7 +2840,7 @@ en:
         help: "begin composing a reply to this topic"
 
       share:
-        title: "Share"
+        title: "Share Topic"
         extended_title: "Share a link"
         help: "share a link to this topic"
         instructions: "Share a link to this topic:"
@@ -3281,6 +3281,10 @@ en:
         viewing_summary: "Viewing a summary of this topic"
         post_number: "%{username}, post #%{post_number}"
         show_all: "Show all"
+
+      share:
+        title: "Share Post #%{post_number}"
+        instructions: "Share a link to this post:"
 
     category:
       none: "(no category)"

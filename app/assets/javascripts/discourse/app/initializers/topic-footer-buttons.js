@@ -18,7 +18,7 @@ export default {
       priority: SHARE_PRIORITY,
       label() {
         if (!this.get("topic.isPrivateMessage") || this.site.mobileView) {
-          return "topic.share.title";
+          return "footer_nav.share";
         }
       },
       title: "topic.share.help",
