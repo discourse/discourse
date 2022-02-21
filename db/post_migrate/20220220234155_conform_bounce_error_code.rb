@@ -2,7 +2,7 @@
 #
 class ConformBounceErrorCode < ActiveRecord::Migration[6.1]
   def up
-    DB.exec(<<~SQL, regexp: '\d.\d.\d|\d\d\d')
+    DB.exec(<<~SQL, regexp: '\d\.\d\.\d|\d\d\d')
       UPDATE email_logs
       SET bounce_error_code = (
         SELECT array_to_string(
