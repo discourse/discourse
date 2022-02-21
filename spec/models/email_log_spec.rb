@@ -168,6 +168,8 @@ describe EmailLog do
     it "makes sure the bounce_error_code is in the format X.X.X or XXX" do
       email_log.update!(bounce_error_code: "5.1.1")
       expect(email_log.reload.bounce_error_code).to eq("5.1.1")
+      email_log.update!(bounce_error_code: "5.2.23")
+      expect(email_log.reload.bounce_error_code).to eq("5.2.23")
       email_log.update!(bounce_error_code: "5.0.0 (permanent failure)")
       expect(email_log.reload.bounce_error_code).to eq("5.0.0")
       email_log.update!(bounce_error_code: "422")
