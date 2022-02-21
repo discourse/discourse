@@ -470,16 +470,6 @@ class Theme < ActiveRecord::Base
     end
   end
 
-  def all_theme_variables
-    fields = {}
-    ids = Theme.transform_ids(id)
-    ThemeField.find_by_theme_ids(ids).where(type_id: ThemeField.theme_var_type_ids).each do |field|
-      next if fields.key?(field.name)
-      fields[field.name] = field
-    end
-    fields.values
-  end
-
   def add_relative_theme!(kind, theme)
     new_relation = if kind == :child
       child_theme_relation.new(child_theme_id: theme.id)
@@ -556,17 +546,6 @@ class Theme < ActiveRecord::Base
     end
     hash['theme_uploads'] = theme_uploads if theme_uploads.present?
 
-    hash
-  end
-
-  def included_settings
-    hash = {}
-
-    Theme.where(id: Theme.transform_ids(id)).each do |theme|
-      hash.merge!(theme.build_settings_hash)
-    end
-
-    hash.merge!(self.build_settings_hash)
     hash
   end
 
@@ -654,11 +633,14 @@ class Theme < ActiveRecord::Base
   end
 
   def scss_variables
-    return if all_theme_variables.empty? && included_settings.empty?
+    settings_hash = build_settings_hash
+    theme_variable_fields = var_theme_fields
+
+    return if theme_variable_fields.empty? && settings_hash.empty?
 
     contents = +""
 
-    all_theme_variables&.each do |field|
+    theme_variable_fields&.each do |field|
       if field.type_id == ThemeField.types[:theme_upload_var]
         if upload = field.upload
           url = upload_cdn_path(upload.url)
@@ -669,7 +651,7 @@ class Theme < ActiveRecord::Base
       end
     end
 
-    included_settings&.each do |name, value|
+    settings_hash&.each do |name, value|
       next if name == "theme_uploads"
       contents << to_scss_variable(name, value)
     end

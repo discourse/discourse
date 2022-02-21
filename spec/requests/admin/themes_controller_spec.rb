@@ -650,7 +650,7 @@ describe Admin::ThemesController do
       expect(response.parsed_body["bg"]).to eq("green")
 
       theme.reload
-      expect(theme.included_settings[:bg]).to eq("green")
+      expect(theme.cached_settings[:bg]).to eq("green")
       user_history = UserHistory.last
 
       expect(user_history.action).to eq(
@@ -663,7 +663,7 @@ describe Admin::ThemesController do
       theme.reload
 
       expect(response.status).to eq(200)
-      expect(theme.included_settings[:bg]).to eq("")
+      expect(theme.cached_settings[:bg]).to eq("")
     end
   end
 end
