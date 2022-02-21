@@ -1595,7 +1595,7 @@ security:
   enable_escaped_fragments: true
   allow_index_in_robots_txt: true
   allow_indexing_non_canonical_urls:
-    default: true
+    default: false
     hidden: true
   moderators_manage_categories_and_groups: false
   moderators_change_post_ownership:
