@@ -173,7 +173,7 @@ it:
     themes:
       default_description: "Predefinito"
       broken_theme_alert: "Il sito potrebbe non funzionare a causa di errori in un tema / componente."
-      error_caused_by: "Causato da '%{name}'. <a target='blank' href='%{path}'>Clicca qui</a> per riconfigurare o disabilitare."
+      error_caused_by: "Causato da '%{name}'. <a target='blank' href='%{path}'>Clicca qui</a> per aggiornare, riconfigurare o disattivare."
       only_admins: "(questo messaggio è mostrato solo agli amministratori del sito)"
     broken_decorator_alert: "I messaggi potrebbero non essere visualizzati correttamente perché uno dei decoratori dei contenuti dei messaggi sul tuo sito ha generato un errore."
     s3:
@@ -1795,6 +1795,7 @@ it:
       second_factor_toggle:
         totp: "Utilizzare un'app di autenticazione"
         backup_code: "Utilizza un codice di backup"
+        security_key: "Usa invece una chiave di sicurezza"
     invites:
       accept_title: "Invito"
       emoji: "emoji envelope"
@@ -2262,7 +2263,7 @@ it:
         clear_all: "Deseleziona Tutto"
         unlist_topics: "Rendi argomenti invisibili"
         relist_topics: "Ripubblica Argomenti"
-        reset_read: "Reimposta stato lettura"
+        defer: "Leggi più tardi"
         delete: "Elimina argomenti"
         dismiss: "Ignora"
         dismiss_read: "Ignora tutti i non letti"
@@ -2566,7 +2567,7 @@ it:
         title: "Rispondi"
         help: "inizia a comporre una risposta a questo argomento"
       share:
-        title: "Condividi"
+        title: "Condividi Argomento"
         extended_title: "Condividi un collegamento"
         help: "condividi un collegamento a questo argomento"
         instructions: "Condividi un link a questo argomento:"
@@ -2959,6 +2960,9 @@ it:
         viewing_summary: "Visualizza un riepilogo di questo argomento"
         post_number: "%{username}, messaggio n. %{post_number}"
         show_all: "Mostra tutto"
+      share:
+        title: "Condividi Messaggio n°%{post_number}"
+        instructions: "Condividi un collegamento a questo messaggio:"
     category:
       none: "(nessuna categoria)"
       all: "Tutte le categorie"
@@ -3600,6 +3604,8 @@ it:
       no_likes_others: "Nessun messaggio con \"Mi piace\"."
     fullscreen_table:
       expand_btn: "Espandi Tabella"
+    second_factor_auth:
+      redirect_after_success: "Autenticazione a due fattori riuscita. Reindirizzamento alla pagina precedente…"
   admin_js:
     type_to_filter: "digita per filtrare..."
     admin:
@@ -3904,6 +3910,9 @@ it:
         notification_event:
           name: "Evento Notifica"
           details: "Quando un utente riceve una notifica nel proprio feed."
+        user_promoted_event:
+          name: "Evento promosso dall'utente"
+          details: "Quando un utente viene promosso da un livello di attendibilità a un altro."
         user_badge_event:
           name: "Evento Assegnazione Distintivo"
           details: "Quando un utente riceve un distintivo."

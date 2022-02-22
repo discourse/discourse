@@ -1794,7 +1794,7 @@ cs:
         clear_all: "Zrušit vše"
         unlist_topics: "Odebrat témata ze seznamu"
         relist_topics: "Znovunačíst seznam témat"
-        reset_read: "reset přečteného"
+        defer: "Odložit"
         delete: "Smazat témata"
         dismiss: "Označit jako přečtené"
         dismiss_read: "Označit všechno nepřečtené jako přečtené"
@@ -2030,7 +2030,6 @@ cs:
         title: "Odpovědět"
         help: "Začít psát odpověď na toto téma"
       share:
-        title: "Sdílet"
         help: "sdílet odkaz na toto téma"
         invite_users: "Pozvat"
       print:

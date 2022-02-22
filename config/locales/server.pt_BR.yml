@@ -241,7 +241,6 @@ pt_BR:
     disabled_errors:
       discourse_connect_enabled: "Convites estão desativados porque o DiscourseConnect está ativado."
       invalid_access: "Você não tem permissão para visualizar o recurso solicitado."
-    requires_groups: "Convite salvo. Para conceder acesso ao tópico especificado, adicione um dos grupos a seguir: %{groups}."
     domain_not_allowed: "Seu e-mail não pode ser usado para resgatar este convite."
   bulk_invite:
     file_should_be_csv: "O arquivo atualizado deve ter o formato csv."

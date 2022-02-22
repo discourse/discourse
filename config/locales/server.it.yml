@@ -241,7 +241,7 @@ it:
     disabled_errors:
       discourse_connect_enabled: "Gli inviti sono disabilitati perché è abilitato DiscourseConnect."
       invalid_access: "Non hai il permesso di visualizzare la risorsa richiesta."
-    requires_groups: "Invito salvato. Per dare accesso all'argomento specificato, aggiungi uno dei seguenti gruppi: %{groups}."
+    requires_groups: "L'invito non è stato salvato perché l'argomento specificato non è accessibile. Aggiungi uno dei seguenti gruppi: %{groups}."
     domain_not_allowed: "La tua email non può essere usata per riscattare l’invito."
   bulk_invite:
     file_should_be_csv: "Il file caricato deve essere in formato csv."
@@ -644,6 +644,7 @@ it:
       permission_conflict: "Qualsiasi gruppo a cui è consentito l'accesso a una sottocategoria deve anche poter avere accesso alla categoria genitore. I seguenti gruppi hanno accesso a una delle sottocategorie ma non hanno accesso alla categoria genitore: %{group_names}."
       disallowed_topic_tags: "In questo argomento sono presenti etichette non consentite in questa categoria: '%{tags}'"
       disallowed_tags_generic: "Su questo argomento non sono consentite etichette."
+      slug_contains_non_ascii_chars: "contiene caratteri non-ascii"
     cannot_delete:
       uncategorized: "Questa è una categoria speciale. È utilizzata come area di attesa per gli argomenti senza categoria. Non può essere eliminata."
       has_subcategories: "Non puoi cancellare questa categoria perché ha sotto-categorie."
@@ -2290,6 +2291,8 @@ it:
     second_factor_toggle:
       totp: "Utilizza un'app di autenticazione o una chiave di sicurezza"
       backup_code: "Utilizza un codice di backup"
+  second_factor_auth:
+    challenge_not_found: "Impossibile trovare una richiesta 2FA nella sessione corrente."
   admin:
     email:
       sent_test: "inviata!"

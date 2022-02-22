@@ -149,6 +149,9 @@ zh_CN:
     bootstrap_mode_disabled: "引导模式将在 24 小时内禁用。"
     themes:
       default_description: "默认"
+      broken_theme_alert: "您的网站可能无法运行，因为主题/组件有错误。"
+      only_admins: "（此消息仅向站点管理员显示）"
+    broken_decorator_alert: "帖子可能无法正确显示，因为您的站点上的其中一个帖子内容装饰器出现了错误。"
     s3:
       regions:
         ap_northeast_1: "亚太地区（东京）"
@@ -643,6 +646,7 @@ zh_CN:
             title: "设置"
             allow_unknown_sender_topic_replies: "允许未知发件人回复话题。"
             allow_unknown_sender_topic_replies_hint: "允许未知发件人回复群组话题。如果未启用此功能，且从未被邀请至该话题的电子邮件地址回复，将创建一个新话题。"
+            from_alias: "来源的别名"
           mailboxes:
             synchronized: "已同步的邮箱"
             none_found: "未在此电子邮件帐户中找到任何邮箱。"
@@ -1724,6 +1728,7 @@ zh_CN:
       second_factor_toggle:
         totp: "改用身份验证器应用"
         backup_code: "改用备份代码"
+        security_key: "改为使用安全密钥"
     invites:
       accept_title: "邀请"
       emoji: "信封表情符号"
@@ -2187,7 +2192,7 @@ zh_CN:
         clear_all: "全部清除"
         unlist_topics: "取消公开话题"
         relist_topics: "重新公开话题"
-        reset_read: "重置已读话题"
+        defer: "推迟"
         delete: "删除话题"
         dismiss: "关闭"
         dismiss_read: "关闭所有未读话题"
@@ -2483,7 +2488,6 @@ zh_CN:
         title: "回复"
         help: "开始撰写此话题的回复"
       share:
-        title: "分享"
         extended_title: "分享链接"
         help: "分享此话题的链接"
         instructions: "分享此话题的链接："
@@ -2936,6 +2940,7 @@ zh_CN:
       default_list_filter: "默认列表筛选器："
       allow_badges_label: "允许在此类别中授予徽章"
       edit_permissions: "编辑权限"
+      reviewable_by_group: "除工作人员外，还可通过以下方式审查这一类别的内容："
       review_group_name: "群组名称"
       require_topic_approval: "所有新话题都需要版主审批"
       require_reply_approval: "所有新回复都需要版主审批"
@@ -3486,6 +3491,8 @@ zh_CN:
     no_group_messages_title: "未找到群组消息"
     fullscreen_table:
       expand_btn: "展开表格"
+    second_factor_auth:
+      redirect_after_success: "双重认证验证成功。重定向到之前的页面…"
   admin_js:
     type_to_filter: "输入以筛选…"
     admin:

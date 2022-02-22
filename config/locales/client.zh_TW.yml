@@ -1772,7 +1772,7 @@ zh_TW:
         clear_all: "清除全部"
         unlist_topics: "未在列表中的話題"
         relist_topics: "討論話題"
-        reset_read: "重設閱讀"
+        defer: "延遲"
         delete: "刪除話題"
         dismiss: "忽略"
         dismiss_read: "忽略所有未讀話題"
@@ -1992,7 +1992,6 @@ zh_TW:
         title: "回覆"
         help: "開始編寫對此話題的回覆"
       share:
-        title: "分享"
         extended_title: "分享連結"
         help: "分享此話題的連結"
         invite_users: "邀請"

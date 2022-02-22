@@ -1785,7 +1785,7 @@ ro:
         select_all: "Selectează tot"
         clear_all: "Deselectează tot"
         unlist_topics: "Elimină subiecte din listă"
-        reset_read: "Resetează citite"
+        defer: "Amânare"
         delete: "Șterge subiectele"
         dismiss: "Abandonează"
         dismiss_read: "Abandonează toate necitite"
@@ -2008,7 +2008,6 @@ ro:
         title: "Răspunde"
         help: "începe să scrii un răspuns la acest subiect"
       share:
-        title: "Distribuie"
         help: "distribuie un link cu acest subiect"
         invite_users: "Invită"
       print:

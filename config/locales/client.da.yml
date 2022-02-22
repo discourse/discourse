@@ -2193,7 +2193,7 @@ da:
         clear_all: "Ryd alle"
         unlist_topics: "Fjern emner fra liste"
         relist_topics: "Genindlæs emner"
-        reset_read: "Nulstil \"læst\""
+        defer: "Udsæt"
         delete: "Slet emner"
         dismiss: "Skjul"
         dismiss_read: "Afvis alle ulæste"
@@ -2482,7 +2482,6 @@ da:
         title: "Svar"
         help: "start på et svar til dette emne"
       share:
-        title: "Del"
         extended_title: "Del et link"
         help: "del et link til dette emne"
         copied: "Emne link kopieret."

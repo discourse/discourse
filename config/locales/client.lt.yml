@@ -2158,7 +2158,7 @@ lt:
         select_all: "Pasirinkti viską"
         clear_all: "Išvalyti viską"
         unlist_topics: "Atžymėti temas"
-        reset_read: "Atkurti, kaip perskaityta"
+        defer: "Atidėti"
         delete: "Ištrinti temas"
         dismiss: "Praleisti"
         dismiss_read: "Praleisti visas neperskaitytas"
@@ -2449,7 +2449,6 @@ lt:
         title: "Atsakyti"
         help: "Pradėk rašyti atsakymą į šią temą"
       share:
-        title: "Pasidalinti"
         extended_title: "Dalintis nuoroda"
         help: "Pasidalink šios temos nuoroda"
         instructions: "Dalintis nuoroda šioje temoje:"

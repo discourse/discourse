@@ -1425,7 +1425,7 @@ sk:
         select_all: "Vyber všetko"
         clear_all: "Zruš všetko"
         unlist_topics: "Dôverné témy"
-        reset_read: "Obnoviť prečítané"
+        defer: "Odložiť"
         delete: "Zmazať témy"
         dismiss: "Zahodiť"
         dismiss_read: "Zahodiť všetký neprečítané"
@@ -1625,7 +1625,6 @@ sk:
         title: "Odpovedať"
         help: "vytvor odpoveď k tejto téme"
       share:
-        title: "Zdieľaj"
         help: "zdieľaj odkaz na túto tému"
         invite_users: "Pozvi"
       print:

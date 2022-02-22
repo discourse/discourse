@@ -1928,7 +1928,7 @@ lv:
         clear_all: "Noņemt visu"
         unlist_topics: "Izņemt no sarakstiem tēmas"
         relist_topics: "Atkal padarīt tēmas redzamas sarakstiem"
-        reset_read: "Noņemt statusus \"lasīts\""
+        defer: "Nepiekrist"
         delete: "Dzēst tēmas"
         dismiss: "Nerādīt"
         dismiss_read: "Nerādīt visu neizlasīto"
@@ -2148,7 +2148,6 @@ lv:
         title: "Atbildēt"
         help: "sākt rakstīt atbildi šai tēmai"
       share:
-        title: "Dalīties"
         help: "dalīties ar saiti uz so tēmu"
         invite_users: "Ielūgt"
       print:

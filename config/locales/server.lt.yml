@@ -194,7 +194,6 @@ lt:
     disabled_errors:
       discourse_connect_enabled: "Kvietimai išjungti, nes įgalintas „DiscourseConnect“."
       invalid_access: "Jums neleidžiama peržiūrėti prašomo šaltinio."
-    requires_groups: "Kvietimas išsaugotas. Norėdami suteikti prieigą prie nurodytos temos, pridėkite vieną iš šių grupių: %{groups}."
   bulk_invite:
     file_should_be_csv: "Įkeltas failas turi būti csv formato."
     max_rows: "Išsiųsti pirmieji %{max_bulk_invites} kvietimų. Pabandykite padalinti failą į mažesnes dalis."

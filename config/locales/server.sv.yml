@@ -241,7 +241,6 @@ sv:
     disabled_errors:
       discourse_connect_enabled: "Inbjudningar är inaktiverade eftersom DiscourseConnect har aktiverats."
       invalid_access: "Du har inte behörighet att visa den efterfrågade resursen."
-    requires_groups: "Inbjudan sparad. För att ge tillgång till det angivna ämnet lägger du till en av följande grupper: %{groups}."
     domain_not_allowed: "Din e-post kan inte användas för att lösa in denna inbjudan."
   bulk_invite:
     file_should_be_csv: "De uppladdade filerna skall vara i csv-format."
