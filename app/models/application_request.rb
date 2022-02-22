@@ -23,49 +23,15 @@ class ApplicationRequest < ActiveRecord::Base
     @disabled = false
   end
 
-  def self.increment!(type, opts = nil)
+  def self.increment!(req_type)
     return if @disabled
-    perform_increment!(redis_key(type), opts)
+    perform_increment!(req_type)
   end
 
-  def self.write_cache!(date = nil)
-    if date.nil?
-      write_cache!(Time.now.utc)
-      write_cache!(Time.now.utc.yesterday)
-      return
-    end
-
-    self.last_flush = Time.now.utc
-
-    date = date.to_date
-
-    req_types.each do |req_type, _|
-      val = get_and_reset(redis_key(req_type, date))
-
-      next if val == 0
-
-      id = req_id(date, req_type)
-      where(id: id).update_all(["count = count + ?", val])
-    end
-  rescue Redis::CommandError => e
-    raise unless e.message =~ /READONLY/
-    nil
+  def self.write_cache!(req_type, count, date)
+    id = req_id(date, req_type)
+    where(id: id).update_all(["count = count + ?", count])
   end
-
-  def self.clear_cache!(date = nil)
-    if date.nil?
-      clear_cache!(Time.now.utc)
-      clear_cache!(Time.now.utc.yesterday)
-      return
-    end
-
-    req_types.each do |req_type, _|
-      key = redis_key(req_type, date)
-      Discourse.redis.del key
-    end
-  end
-
-  protected
 
   def self.req_id(date, req_type, retries = 0)
 
@@ -81,10 +47,6 @@ class ApplicationRequest < ActiveRecord::Base
     else
       raise
     end
-  end
-
-  def self.redis_key(req_type, time = Time.now.utc)
-    "app_req_#{req_type}#{time.strftime('%Y%m%d')}"
   end
 
   def self.stats
