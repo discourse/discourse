@@ -61,11 +61,18 @@ module CachedCounting
       end
       iterations += 1
     end
-  rescue => e
-    Discourse.warn_exception(
-      e,
-      message: 'Unexpected error while processing cached counts'
-    )
+
+  rescue => ex
+    if Redis::CommandError === ex && ex.message =~ /READONLY/
+      # do not warn for Redis readonly mode
+    elsif PG::ReadOnlySqlTransaction === ex
+      # do not warn for PG readonly mode
+    else
+      Discourse.warn_exception(
+        ex,
+        message: 'Unexpected error while processing cached counts'
+      )
+    end
   end
 
   def self.flush
