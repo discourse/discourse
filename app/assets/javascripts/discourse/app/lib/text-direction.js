@@ -16,10 +16,7 @@ export function isLTR(text) {
 export function setTextDirections(elem) {
   for (let e of elem.children) {
     if (e.textContent) {
-      if (
-        e.tagName.toLowerCase() === "aside" &&
-        e.classList.contains("quote")
-      ) {
+      if (e.tagName === "ASIDE" && e.classList.contains("quote")) {
         setTextDirectionsForQuote(e);
       } else {
         e.setAttribute("dir", isRTL(e.textContent) ? "rtl" : "ltr");
