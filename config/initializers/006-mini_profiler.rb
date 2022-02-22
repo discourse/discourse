@@ -68,6 +68,10 @@ if defined?(Rack::MiniProfiler) && defined?(Rack::MiniProfiler::Config)
     Digest::MD5.hexdigest(id)
   end
 
+  # Cookie path should be set to the base path so Discourse's session cookie path
+  #  does not get clobbered.
+  Rack::MiniProfiler.config.cookie_path = Discourse.base_path
+
   Rack::MiniProfiler.config.position = 'left'
   Rack::MiniProfiler.config.backtrace_ignores ||= []
   Rack::MiniProfiler.config.backtrace_ignores << /lib\/rack\/message_bus.rb/
