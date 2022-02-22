@@ -1,5 +1,5 @@
 import QUnit, { module, skip, test } from "qunit";
-import { deepMerge } from "discourse-common/lib/object";
+import { cloneJSON, deepMerge } from "discourse-common/lib/object";
 import MessageBus from "message-bus-client";
 import {
   clearCache as clearOutletCache,
@@ -487,6 +487,7 @@ export function exists(selector) {
 }
 
 export function publishToMessageBus(channelPath, ...args) {
+  args = cloneJSON(args);
   MessageBus.callbacks
     .filterBy("channel", channelPath)
     .forEach((c) => c.func(...args));
