@@ -77,7 +77,7 @@ describe TopicTrackingState do
 
   describe '#publish_unread' do
     it "can correctly publish unread" do
-      message = MessageBus.track_publish(described_class.unread_channel_key(post.user.id)) do
+      message = MessageBus.track_publish("/unread") do
         TopicTrackingState.publish_unread(post)
       end.first
 
@@ -92,7 +92,7 @@ describe TopicTrackingState do
 
     it "is not erroring when user_stat is missing" do
       post.user.user_stat.destroy!
-      message = MessageBus.track_publish(described_class.unread_channel_key(post.user.id)) do
+      message = MessageBus.track_publish("/unread") do
         TopicTrackingState.publish_unread(post)
       end.first
 
@@ -104,7 +104,7 @@ describe TopicTrackingState do
     it "does not publish whisper post to non-staff users" do
       post.update!(post_type: Post.types[:whisper])
 
-      messages = MessageBus.track_publish(described_class.unread_channel_key(post.user_id)) do
+      messages = MessageBus.track_publish("/unread") do
         TopicTrackingState.publish_unread(post)
       end
 
@@ -112,7 +112,7 @@ describe TopicTrackingState do
 
       post.user.grant_admin!
 
-      message = MessageBus.track_publish(described_class.unread_channel_key(post.user_id)) do
+      message = MessageBus.track_publish("/unread") do
         TopicTrackingState.publish_unread(post)
       end.first
 
@@ -126,7 +126,7 @@ describe TopicTrackingState do
 
       post.topic.update!(category: category)
 
-      messages = MessageBus.track_publish(described_class.unread_channel_key(post.user_id)) do
+      messages = MessageBus.track_publish("/unread") do
         TopicTrackingState.publish_unread(post)
       end
 
@@ -134,7 +134,7 @@ describe TopicTrackingState do
 
       group.add(post.user)
 
-      message = MessageBus.track_publish(described_class.unread_channel_key(post.user_id)) do
+      message = MessageBus.track_publish("/unread") do
         TopicTrackingState.publish_unread(post)
       end.first
 

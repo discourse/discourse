@@ -165,7 +165,7 @@ describe PostCreator do
             "/new",
             "/u/#{admin.username}",
             "/u/#{admin.username}",
-            "/unread/#{admin.id}",
+            "/unread",
             "/unread/#{admin.id}",
             "/latest",
             "/latest",
