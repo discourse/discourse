@@ -61,7 +61,7 @@
   }
 }
 
-.topic-list-body {
+.topic-list-body, .topic-list-header {
   @extend .topic-list-icons;
 
   button.bulk-select {
