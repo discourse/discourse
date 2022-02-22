@@ -32,14 +32,27 @@ module CachedCounting
   end
 
   def self.reset
+    @last_ensure_thread = nil
     clear_queue!
     clear_flush_to_db_lock!
   end
+
+  ENSURE_THREAD_COOLDOWN_SECONDS = 5
 
   def self.ensure_thread!
     return if !enabled?
 
     MUTEX.synchronize do
+      now = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+      delta = @last_ensure_thread && (now - @last_ensure_thread)
+
+      if delta && delta < ENSURE_THREAD_COOLDOWN_SECONDS
+        # creating threads can be very expensive and bog down a process
+        return
+      end
+
+      @last_ensure_thread = now
+
       if !@thread&.alive?
         @thread = nil
       end
