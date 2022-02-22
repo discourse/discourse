@@ -2152,7 +2152,7 @@ nb_NO:
         clear_all: "Fjern alle"
         unlist_topics: "Fjern emner fra lister"
         relist_topics: "Før opp igjen emner i lister"
-        reset_read: "Nullstill lest"
+        defer: "Utsett"
         delete: "Slett emner"
         dismiss: "Avslå"
         dismiss_read: "Forkast alle uleste"
@@ -2444,7 +2444,6 @@ nb_NO:
         title: "Svar"
         help: "begynn å skrive et svar i dette emnet"
       share:
-        title: "Del"
         extended_title: "Del en lenke"
         help: "del en lenke til dette emnet"
         instructions: "Del en lenke til dette emnet:"

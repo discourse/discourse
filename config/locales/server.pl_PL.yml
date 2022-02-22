@@ -259,7 +259,6 @@ pl_PL:
     disabled_errors:
       discourse_connect_enabled: "Zaproszenia są wyłączone, ponieważ DiscourseConnect jest włączony."
       invalid_access: "Nie masz uprawnień do przeglądania żądanego zasobu."
-    requires_groups: "Zaproszenie zapisane. Aby dać dostęp do określonego tematu, dodaj jedną z następujących grup: %{groups}."
     domain_not_allowed: "Twój adres e-mail nie może zostać użyty do zrealizowania tego zaproszenia."
   bulk_invite:
     file_should_be_csv: "Wgrywany plik powinien być formatu csv."
@@ -698,6 +697,7 @@ pl_PL:
       permission_conflict: "Grupa posiadająca dostęp do podkategorii musi mieć także dostęp do jej kategorii nadrzędnej. Grupy %{group_names} mają dostęp do jednej z podkategorii, ale nie do grupy nadrzędnej."
       disallowed_topic_tags: "Ten temat zawiera tagi %{tags}, które nie są dozwolone w tej kategorii"
       disallowed_tags_generic: "W tym temacie niedozwolone są tagi."
+      slug_contains_non_ascii_chars: "zawiera znaki inne niż ascii"
     cannot_delete:
       uncategorized: "Ta kategoria ma specjalny charakter. Jest przeznaczona jako miejsce do przechowywania tematów nieprzypisanych do żadnej kategorii i jako taka nie może zostać usunięta."
       has_subcategories: "Nie można usunąć tej kategorii ponieważ posiada podkategorie. "

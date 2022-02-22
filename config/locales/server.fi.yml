@@ -236,7 +236,6 @@ fi:
     disabled_errors:
       discourse_connect_enabled: "Kutsut on poistettu käytöstä, koska DiscourseConnect on aktiivinen."
       invalid_access: "Sinulla ei ole oikeutta nähdä pyydettyä resurssia."
-    requires_groups: "Kutsu tallennettu. Jos haluat antaa määritetyn alueen käyttöoikeuden, lisää yksi seuraavista ryhmistä: %{groups}."
   bulk_invite:
     file_should_be_csv: "Ladattavan tiedoston tulee olla CSV-muodossa."
     max_rows: "Ensimmäiset %{max_bulk_invites} kutsua lähetettiin. Jaa tiedosto pienempiin osiin."

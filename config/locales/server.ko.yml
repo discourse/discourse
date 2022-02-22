@@ -226,7 +226,6 @@ ko:
     disabled_errors:
       discourse_connect_enabled: "DiscourseConnect가 활성화되어 있기 때문에 초대가 비활성화됩니다."
       invalid_access: "요청한 리소스를 볼 수 없습니다."
-    requires_groups: "초대가 저장되었습니다. 지정된 글에 대한 접근 권한을 부여하려면 다음 그룹 중 하나를 추가하십시오: %{groups}."
     domain_not_allowed: "사용자님의 이메일은 이 초대를 사용하는데 사용할 수 없습니다."
   bulk_invite:
     file_should_be_csv: "업로드 파일은 CSV형식이어야 합니다."
@@ -1437,6 +1436,9 @@ ko:
     tl2_additional_edits_per_day_multiplier: "tl2 (회원) 에 대해 이 숫자를 곱하여 일일 편집 제한을 늘립니다."
     tl3_additional_edits_per_day_multiplier: "tl3 (일반) 에 대해 이 숫자를 곱하여 일일 편집 제한을 늘립니다."
     tl4_additional_edits_per_day_multiplier: "tl4 (리더) 의 일일 편집 한도를 이 숫자에 곱하여 늘립니다."
+    tl2_additional_flags_per_day_multiplier: "이 숫자를 곱하여 tl2(회원)에 대한 하루 신고 제한을 늘립니다."
+    tl3_additional_flags_per_day_multiplier: "이 숫자를 곱하여 tl3(일반)에 대한 하루 신고 제한을 늘립니다."
+    tl4_additional_flags_per_day_multiplier: "이 숫자를 곱하여 tl4(리더)에 대한 하루 신고 제한을 늘립니다."
     num_users_to_silence_new_user: "새 사용자의 게시물에이 많은 다른 사용자로부터 num_spam_flags_to_silence_new_user 스팸 플래그가 표시되면 모든 게시물을 숨기고 향후 게시를 방지하십시오. 비활성화하려면 0입니다."
     num_tl3_flags_to_silence_new_user: "새 사용자의 게시물이 num_tl3_users_to_silence_new_user 다른 신뢰 수준 3 사용자로부터이 많은 플래그를 얻는 경우 모든 게시물을 숨기고 향후 게시를 방지하십시오. 비활성화하려면 0입니다."
     num_tl3_users_to_silence_new_user: "새 사용자의 게시물이이 많은 다른 신뢰 수준 3 사용자로부터 num_tl3_flags_to_silence_new_user 플래그를 얻는 경우 모든 게시물을 숨기고 향후 게시를 방지하십시오. 비활성화하려면 0입니다."

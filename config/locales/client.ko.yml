@@ -148,6 +148,7 @@ ko:
     bootstrap_mode_disabled: "Bootstrap 모드가 24시간 이내에 해제됩니다."
     themes:
       default_description: "기본"
+      only_admins: "(이 메시지는 사이트 관리자에게만 표시됩니다.)"
     s3:
       regions:
         ap_northeast_1: "아시아 태평양 (도쿄)"
@@ -1330,6 +1331,7 @@ ko:
         every_month: "매달"
         every_six_months: "6개월마다"
       email_level:
+        title: "내가 인용되거나 댓글을 받았을 때, 내 @username이 언급되었을 때 또는 내가 본 카테고리, 태그 또는 글에 새로운 활동이 있을 때 이메일을 보내십시오."
         always: "항상 알림 받기"
         only_when_away: "방문이 없을때 알림 받기"
         never: "알림 받지 않음"
@@ -1715,6 +1717,7 @@ ko:
       second_factor_toggle:
         totp: "대신 인증 자 앱을 사용하십시오."
         backup_code: "대신 백업 코드 사용"
+        security_key: "대신 보안 키 사용"
     invites:
       accept_title: "초대"
       emoji: "봉투 이모티콘"
@@ -2170,7 +2173,7 @@ ko:
         clear_all: "모두 지우기"
         unlist_topics: "목록에서 글 숨기기"
         relist_topics: "목록에서 글 다시 보이기"
-        reset_read: "읽기 초기화"
+        defer: "연기"
         delete: "글 삭제"
         dismiss: "읽음"
         dismiss_read: "읽지 않은 항목 모두 읽음"
@@ -2207,6 +2210,7 @@ ko:
           other: "진행률: <strong>%{count}</strong>개의 글"
       none:
         unread: "읽지 않은 글이 없습니다."
+        unseen: "보지 않은 글이 없습니다."
         new: "새로운 글이 없습니다."
         read: "아직 읽은 글이 없습니다."
         posted: "아직 어떤 글도 게시하지 않았습니다."
@@ -2223,6 +2227,7 @@ ko:
         read: "더 이상 읽을 글이 없습니다."
         new: "더 이상 새로운 글이 없습니다."
         unread: "더 이상 읽지 않은 글이 없습니다."
+        unseen: "더 이상 보지 않는 글이 없습니다."
         category: "더 이상 %{category}에 글이 없습니다."
         tag: "더 이상 %{tag}의 글이 없습니다."
         top: "더 이상 주요 글이 없습니다."
@@ -2463,7 +2468,6 @@ ko:
         title: "댓글쓰기"
         help: "이 글에 대한 댓글을 작성합니다"
       share:
-        title: "공유하기"
         extended_title: "링크 공유"
         help: "이 글의 링크 공유"
         instructions: "이 글의 링크 공유:"
@@ -3394,6 +3398,7 @@ ko:
       topics:
         none:
           unread: "읽지 않은 토픽이 없습니다."
+          unseen: "보지 않은 글이 없습니다."
           new: "새로운 토픽이 없습니다."
           read: "아직 어떠한 토픽도 읽지 않았습니다."
           posted: "아직 게시글을 하나도 쓰지 않았습니다."

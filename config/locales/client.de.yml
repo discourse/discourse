@@ -173,7 +173,7 @@ de:
     themes:
       default_description: "Standard"
       broken_theme_alert: "Deine Website funktioniert vielleicht nicht, weil eine Theme / eine Komponente Fehler hat."
-      error_caused_by: "Verursacht durch '%{name}'. <a target='blank' href='%{path}'>Klicke hier</a> , um die Funktion neu zu konfigurieren oder zu deaktivieren."
+      error_caused_by: "Verursacht durch '%{name}'. <a target='blank' href='%{path}'>Klicke hier</a> , um die Funktion zu aktualisieren, neu zu konfigurieren oder zu deaktivieren."
       only_admins: "(Diese Meldung wird nur Site-Administratoren angezeigt)"
     broken_decorator_alert: "Beiträge werden möglicherweise nicht richtig angezeigt, weil einer der Beitragsausstatter auf deiner Website einen Fehler ausgelöst hat."
     s3:
@@ -1800,6 +1800,7 @@ de:
       second_factor_toggle:
         totp: "Benutze stattdessen eine Authentifizierungs-App"
         backup_code: "Benutze stattdessen einen Wiederherstellungscode"
+        security_key: "Stattdessen einen Sicherheitsschlüssel verwenden"
     invites:
       accept_title: "Einladung"
       emoji: "Umschlag-Emoji"
@@ -2286,7 +2287,7 @@ de:
         clear_all: "Auswahl aufheben"
         unlist_topics: "Themen unsichtbar machen"
         relist_topics: "Themen neu auflisten"
-        reset_read: "Gelesene zurücksetzen"
+        defer: "Aufschieben"
         delete: "Themen löschen"
         dismiss: "Ignorieren"
         dismiss_read: "Blende alle ungelesenen Beiträge aus"
@@ -2596,7 +2597,7 @@ de:
         title: "Antworten"
         help: "beginne damit, eine Antwort auf dieses Thema zu verfassen"
       share:
-        title: "Teilen"
+        title: "Thema teilen"
         extended_title: "Link teilen"
         help: "teile einen Link zu diesem Thema"
         instructions: "Link zu diesem Thema teilen:"
@@ -2996,6 +2997,9 @@ de:
         viewing_summary: "Eine Zusammenfassung dieses Themas anzeigen"
         post_number: "%{username}, Beitrag #%{post_number}"
         show_all: "Alle anzeigen"
+      share:
+        title: "Beitrag #%{post_number} teilen"
+        instructions: "Link zu diesem Beitrag teilen:"
     category:
       none: "(keine Kategorie)"
       all: "Alle Kategorien"
@@ -3656,6 +3660,8 @@ de:
     no_group_messages_title: "Keine Gruppennachrichten gefunden"
     fullscreen_table:
       expand_btn: "Tabelle erweitern"
+    second_factor_auth:
+      redirect_after_success: "Die Zwei-Faktor-Authentifizierung ist erfolgreich. Weiterleitung zur vorherigen Seite…"
   admin_js:
     type_to_filter: "zum Filtern hier eingeben …"
     admin:

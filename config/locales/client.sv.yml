@@ -2280,7 +2280,7 @@ sv:
         clear_all: "Rensa alla"
         unlist_topics: "Avlista ämnen"
         relist_topics: "Lista om ämnen"
-        reset_read: "Återställ lästa"
+        defer: "Skjut upp"
         delete: "Ta bort ämnen"
         dismiss: "Avfärda"
         dismiss_read: "Avfärda alla olästa"
@@ -2590,7 +2590,6 @@ sv:
         title: "Svara"
         help: "Börja komponera ett svar på detta ämne"
       share:
-        title: "Dela"
         extended_title: "Dela en länk"
         help: "dela en länk till detta ämne"
         instructions: "Dela en länk till detta ämne:"

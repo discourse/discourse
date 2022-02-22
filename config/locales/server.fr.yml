@@ -236,7 +236,6 @@ fr:
     disabled_errors:
       discourse_connect_enabled: "Les invitations sont désactivées car DiscourseConnect est activé."
       invalid_access: "Vous n'êtes pas autorisé(e) à afficher la ressource demandée."
-    requires_groups: "Invitation enregistrée. Pour donner accès au sujet spécifié, ajoutez l'un des groupes suivants : %{groups}."
   bulk_invite:
     file_should_be_csv: "Le fichier envoyé doit être au format CSV."
     max_rows: "Les premières %{max_bulk_invites} invitations ont été envoyées. Essayez de diviser le fichier en parties plus petites."

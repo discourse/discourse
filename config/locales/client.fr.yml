@@ -2181,7 +2181,7 @@ fr:
         clear_all: "Tout désélectionner"
         unlist_topics: "Rendre les sujets invisibles"
         relist_topics: "Lister les sujets"
-        reset_read: "Réinitialiser la lecture"
+        defer: "Reporter à plus tard"
         delete: "Supprimer les sujets"
         dismiss: "Marquer comme vus"
         dismiss_read: "Marquer tous les sujets comme vus"
@@ -2484,7 +2484,6 @@ fr:
         title: "Répondre"
         help: "commencer à répondre à ce sujet"
       share:
-        title: "Partager"
         extended_title: "Partager un lien"
         help: "partager ce sujet"
         instructions: "Partager ce sujet avec un lien :"

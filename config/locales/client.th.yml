@@ -1578,7 +1578,6 @@ th:
         select_all: "เลือกทั้งหมด"
         clear_all: "ล้างทั้งหมด"
         unlist_topics: "กระทู้ที่ไม่ได้แสดง"
-        reset_read: "ล้างจำนวนการอ่าน"
         delete: "ลบกระทู้"
         dismiss: "ซ่อน"
         dismiss_read: "ซ่อนทั้งหมดที่ไม่ได้อ่าน"
@@ -1785,7 +1784,6 @@ th:
         title: "ตอบ"
         help: "เริ่มเขียนตอบกระทู้นี้"
       share:
-        title: "แบ่งปัน"
         extended_title: "แบ่งปันลิงก์"
         help: "แบ่งปันลิงก์ไปยังกระทู้นี้"
         invite_users: "เชิญ"
