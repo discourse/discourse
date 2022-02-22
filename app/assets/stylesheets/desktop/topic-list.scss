@@ -19,13 +19,16 @@
 .topic-list-data {
   &.main-link,
   &.default {
-    flex: 1 1 50%;
+    flex: 1 1;
   }
   &.posters {
     flex: 0 1 146px;
   }
   &.num {
     flex: 0 1 65px;
+    &:last-of-type {
+      flex: 0 1 61px;
+    }
   }
   &.age {
     flex: 0 1 60px;
@@ -61,7 +64,8 @@
   }
 }
 
-.topic-list-body, .topic-list-header {
+.topic-list-body,
+.topic-list-header {
   @extend .topic-list-icons;
 
   button.bulk-select {
