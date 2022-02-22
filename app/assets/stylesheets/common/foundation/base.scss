@@ -62,6 +62,7 @@ hr {
 // --------------------------------------------------
 
 ul,
+ol,
 dd {
   margin: 1em 0 1em 1.25em;
   padding: 0;
@@ -73,9 +74,12 @@ dd {
   clear: both;
 }
 
-.cooked ul,
-.d-editor-preview ul {
-  padding-left: 1.25em;
+.cooked,
+.d-editor-preview {
+  ul,
+  ol {
+    padding-left: 1.25em;
+  }
 }
 
 li,
