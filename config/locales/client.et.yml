@@ -1027,10 +1027,8 @@ et:
         every_month: "iga kuu"
         every_six_months: "iga kuue kuu tagant"
       email_level:
-        title: "Teavita mind, kui keegi tsiteerib minu postitust, vastab minu postitusele, mainib minu @kasutajanime või kutsub mind teemaga liituma"
         always: "alati"
         never: "mitte kunagi"
-      email_messages_level: "Saada meilile teavitus, kui minuga kontakteerutakse sõnumi teel"
       include_tl0_in_digests: "Kajasta meili teel kokkuvõttes ka uute kasutajate loodud sisu."
       email_in_reply_to: "Lisa e-kirjale katkend eelmisest vastusest"
       other_settings: "Muu"
@@ -1358,9 +1356,6 @@ et:
       group_mentioned:
         one: "Mainides %{group}, oled teavitamas <a href='%{group_link}'>%{count} inimest</a> – oled selles kindel?"
         other: "Mainides %{group}, oled teavitamas <a href='%{group_link}'>%{count} inimest</a> – oled selles kindel?"
-      cannot_see_mention:
-        category: "Mainisid kasutajat %{username} kuid teda ei teavitata, kuna tal puudub juurdepääs siia foorumisse. Lisa ta gruppi, kellel on siia foorumisse ligipääs."
-        private: "Mainisid kasutajat %{username} kuid teda ei teavitata, kuna tal puudub juurdepääs käesoleva privaatsõnumi juurde. Kutsu ta seda privaatsõnumit vaatama."
       error:
         title_missing: "Pealkiri on kohustuslik"
         try_like: "Oled sa proovinud %{heart} nuppu?"
@@ -1563,7 +1558,7 @@ et:
         select_all: "Vali kõik"
         clear_all: "Puhasta kõik"
         unlist_topics: "Eemalda teemad loetelust"
-        reset_read: "Nulli loetud"
+        defer: "Lükka edasi"
         delete: "Kustuta teemad"
         dismiss: "Ignoreeri"
         dismiss_read: "Ignoreeri lugemata"
@@ -1736,16 +1731,9 @@ et:
         replies_short: "%{current} / %{total}"
       progress:
         title: teema edenemine
-        go_top: "üles"
-        go_bottom: "alla"
-        go: "mine"
-        jump_bottom: "hüppa viimase postituse juurde"
         jump_prompt: "mine..."
         jump_prompt_long: "Mine..."
-        jump_bottom_with_number: "hüppa postituse %{post_number} juurde"
         jump_prompt_or: "või"
-        total: postitusi kokku
-        current: käesolev postitus
       notifications:
         title: muuda kui tihti sind sellest teemast teavitatakse
         reasons:
@@ -1811,7 +1799,6 @@ et:
         title: "Vasta"
         help: "kirjuta sellele teemale vastus"
       share:
-        title: "Jaga"
         help: "jaga viidet sellele teemale"
         invite_users: "Kutsu"
       print:
@@ -2173,7 +2160,6 @@ et:
       default_list_filter: "Vaikimisi teemade filter:"
       allow_badges_label: "Luba selles foorumis autasustamist märgistega"
       edit_permissions: "Muuda kasutusõigusi"
-      reviewable_by_group: "Lisaks meeskonnaliikmetle saavad selle kategooria sisu üle vaadata ka:"
       review_group_name: "grupi nimi"
       require_topic_approval: "Nõua moderaatori heakskiitu kõikidele uutele teemadele"
       require_reply_approval: "Nõua moderaatori heakskiitu kõikidele uutele vastustele"
@@ -3103,9 +3089,6 @@ et:
         screened_ips:
           title: "Varjestatud IP-aadressid"
           delete_confirm: "Oled kindel, et soovid aadressi %{ip_address} jaoks kehtestatud reegli eemaldada?"
-          roll_up_confirm: "Oled kindel, et soovid tavaliselt varjestatud IP-aadressid alamvõrkudesse kokku koondada?"
-          rolled_up_some_subnets: "Bännitud IP-aadrissid edukalt järgmistesse alamvõrkudesse kokku koondatud: %{subnets}."
-          rolled_up_no_subnet: "Ei ole midagi kokku koondada."
           actions:
             block: "Blokeeri"
             do_nothing: "Luba"

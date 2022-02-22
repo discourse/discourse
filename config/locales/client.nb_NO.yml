@@ -116,6 +116,7 @@ nb_NO:
       previous_month: "Forrige måned"
       next_month: "Neste måned"
       placeholder: dato
+      from_placeholder: "fra dato"
       to_placeholder: "til dato"
     share:
       topic_html: 'Emne: <span class="topic-title">%{topicTitle}</span>'
@@ -127,6 +128,7 @@ nb_NO:
       url: "Kopier og del URL"
     action_codes:
       public_topic: "gjorde dette emnet offentlig %{when}"
+      open_topic: "konverterte dette til et emne %{when}"
       private_topic: "gjorde dette emnet om til en personlig melding %{when}"
       split_topic: "del opp dette emnet %{when}"
       invited_user: "inviterte %{who} %{when}"
@@ -158,6 +160,7 @@ nb_NO:
         disabled: "fjernet dette banneret %{when}. Det vil ikke lenger vises på toppen av hver side."
       forwarded: "videresendte e-posten voer"
     topic_admin_menu: "handlinger for tråd"
+    skip_to_main_content: "Gå til hovedinnhold"
     wizard_required: "Velkommen til ditt nye Discourse! Kom i gang med <a href='%{url}' data-auto-route='true'>oppstartsveiviseren</a> ✨"
     emails_are_disabled: "All utgående e-post har blitt deaktivert globalt av en administrator. Ingen e-postvarslinger vil bli sendt."
     software_update_prompt:
@@ -166,7 +169,6 @@ nb_NO:
     bootstrap_mode_disabled: "Oppstartsmodus vil bli deaktivert i løpet av 24 timer."
     themes:
       default_description: "Forvalg"
-      broken_theme_alert: "Du kan oppleve at siden din ikke fungerer fordi temaet eller komponenten %{theme} har feil. Deaktiver temaet eller komponenten her: %{path}."
     s3:
       regions:
         ap_northeast_1: "Asia/Stillehavsregionen (Tokyo)"
@@ -1353,11 +1355,9 @@ nb_NO:
         every_month: "hver måned"
         every_six_months: "hver sjette måned"
       email_level:
-        title: "Send meg en e-post når noen siterer meg, svarer på innlegget mitt, nevner @brukernavnet mitt eller inviterer meg til et emne"
         always: "alltid"
         only_when_away: "bare når du er borte"
         never: "aldri"
-      email_messages_level: "Motta en e-post når noen sender meg en melding"
       include_tl0_in_digests: "Inkluder innhold fra nye brukere i oppsummerings-eposter"
       email_in_reply_to: "Inkluder et utdrag i e-poster av innlegget man svarer på"
       other_settings: "Annet"
@@ -1849,9 +1849,6 @@ nb_NO:
       group_mentioned:
         one: "Ved å nevne %{group}, er du i ferd med å henvende deg til <a href='%{group_link}'>%{count} én person</a> – er du sikker?"
         other: "Ved å nevne %{group}, er du i ferd med å henvende deg til <a href='%{group_link}'>%{count} folk</a> – er du sikker?"
-      cannot_see_mention:
-        category: "Du nevnte %{username}, men de vil ikke ikke bli varslet fordi de ikke har tilgang til denne kategorien. Du må legge dem til en gruppe som har tilgang til denne kategorien."
-        private: "Du nevnte %{username}, men de vil ikke bli varslet fordi de ikke kan se denne samtalen. Du må invitere dem til denne private samtalen."
       duplicate_link: "Det ser ut til at lenken din til <b>%{domain}</b> allerede ble publisert i emnet av <b>@%{username}</b> i <a href='%{post_url}'>et svar %{ago}</a>. Er du sikker på at du vil publisere den igjen?"
       reference_topic_title: "RE: %{title}"
       error:
@@ -2155,7 +2152,7 @@ nb_NO:
         clear_all: "Fjern alle"
         unlist_topics: "Fjern emner fra lister"
         relist_topics: "Før opp igjen emner i lister"
-        reset_read: "Nullstill lest"
+        defer: "Utsett"
         delete: "Slett emner"
         dismiss: "Avslå"
         dismiss_read: "Forkast alle uleste"
@@ -2370,17 +2367,10 @@ nb_NO:
         replies_short: "%{current} / %{total}"
       progress:
         title: fremgang i emne
-        go_top: "topp"
-        go_bottom: "bunn"
-        go: "gå"
-        jump_bottom: "Hopp til nyeste innlegg"
         jump_prompt: "hopp til…"
         jump_prompt_long: "Hopp til…"
-        jump_bottom_with_number: "hopp til innlegg %{post_number}"
         jump_prompt_to_date: "til dato"
         jump_prompt_or: "eller"
-        total: innlegg totalt
-        current: gjeldende innlegg
       notifications:
         title: endre hvor ofte du blir varslet om dette emnet
         reasons:
@@ -2454,7 +2444,6 @@ nb_NO:
         title: "Svar"
         help: "begynn å skrive et svar i dette emnet"
       share:
-        title: "Del"
         extended_title: "Del en lenke"
         help: "del en lenke til dette emnet"
         instructions: "Del en lenke til dette emnet:"
@@ -2919,7 +2908,6 @@ nb_NO:
       default_list_filter: "Standard listefilter:"
       allow_badges_label: "Tillat merker å bli tildelt i denne kategorien"
       edit_permissions: "Rediger tillatelser"
-      reviewable_by_group: "I tillegg til de ansatte, kan innholdet i denne kategorien også gjennomgås ved å:"
       review_group_name: "gruppenavn"
       require_topic_approval: "Krev godkjennelse fra moderator for alle nye emner"
       require_reply_approval: "Krev godkjennelse fra moderator for alle nye svar"
@@ -4214,9 +4202,6 @@ nb_NO:
         screened_ips:
           title: "Kontrollerte IP-er"
           delete_confirm: "Er du sikker på at du vil fjerne regelen for %{ip_address}?"
-          roll_up_confirm: "Er du sikker på at du vil rulle opp vanligvis undersøkte IP-adresser i delnett?"
-          rolled_up_some_subnets: "Fullførte sammenslåingen av blokkerte IP-adresser til disse subnettene: %{subnets}."
-          rolled_up_no_subnet: "Det var ingenting å slå sammen."
           actions:
             block: "Blokker"
             do_nothing: "Tillat"

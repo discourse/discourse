@@ -277,6 +277,8 @@
     color: var(--primary-low-mid);
   }
   @include hover {
+    background: transparent;
+    color: var(--primary);
     .d-icon {
       color: var(--primary);
     }

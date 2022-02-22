@@ -107,7 +107,7 @@ class Stylesheet::Manager
 
   def self.last_file_updated
     if Rails.env.production?
-      @last_file_updated ||= if File.exists?(MANIFEST_FULL_PATH)
+      @last_file_updated ||= if File.exist?(MANIFEST_FULL_PATH)
         File.readlines(MANIFEST_FULL_PATH, 'r')[0]
       else
         mtime = max_file_mtime
@@ -224,8 +224,8 @@ class Stylesheet::Manager
           builder = Builder.new(target: target, theme: theme, manager: self)
 
           next if builder.theme&.component && !scss_checker.has_scss(theme_id)
-          builder.compile unless File.exists?(builder.stylesheet_fullpath)
-          href = builder.stylesheet_path(current_hostname)
+          builder.compile unless File.exist?(builder.stylesheet_fullpath)
+          href = builder.stylesheet_absolute_url
 
           data[:new_href] = href
           stylesheets << data
@@ -242,8 +242,8 @@ class Stylesheet::Manager
         end
       else
         builder = Builder.new(target: target, manager: self)
-        builder.compile unless File.exists?(builder.stylesheet_fullpath)
-        href = builder.stylesheet_path(current_hostname)
+        builder.compile unless File.exist?(builder.stylesheet_fullpath)
+        href = builder.stylesheet_absolute_url
 
         data = { target: target, new_href: href }
         stylesheets << data
@@ -285,9 +285,9 @@ class Stylesheet::Manager
       manager: self
     )
 
-    builder.compile unless File.exists?(builder.stylesheet_fullpath)
+    builder.compile unless File.exist?(builder.stylesheet_fullpath)
 
-    href = builder.stylesheet_path(current_hostname)
+    href = builder.stylesheet_absolute_url
     stylesheet[:new_href] = href
     cache.defer_set(cache_key, stylesheet.freeze)
     stylesheet

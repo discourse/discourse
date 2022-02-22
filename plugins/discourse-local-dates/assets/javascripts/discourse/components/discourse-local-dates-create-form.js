@@ -205,7 +205,7 @@ export default Component.extend({
 
   @computed("currentUserTimezone")
   formatedCurrentUserTimezone(timezone) {
-    return timezone.replace("_", " ").replace("Etc/", "").split("/");
+    return timezone.replace("_", " ").replace("Etc/", "").replace("/", ", ");
   },
 
   @computed("formats")
@@ -258,15 +258,27 @@ export default Component.extend({
     ];
   },
 
-  _generateDateMarkup(config, options, isRange) {
-    let text = `[date=${config.date}`;
+  _generateDateMarkup(fromDateTime, options, isRange, toDateTime) {
+    let text = ``;
 
-    if (config.time) {
-      text += ` time=${config.time}`;
+    if (isRange) {
+      let from = [fromDateTime.date, fromDateTime.time]
+        .filter((element) => !isEmpty(element))
+        .join("T");
+      let to = [toDateTime.date, toDateTime.time]
+        .filter((element) => !isEmpty(element))
+        .join("T");
+      text += `[date-range from=${from} to=${to}`;
+    } else {
+      text += `[date=${fromDateTime.date}`;
     }
 
-    if (config.format && config.format.length) {
-      text += ` format="${config.format}"`;
+    if (fromDateTime.time && !isRange) {
+      text += ` time=${fromDateTime.time}`;
+    }
+
+    if (fromDateTime.format && fromDateTime.format.length) {
+      text += ` format="${fromDateTime.format}"`;
     }
 
     if (options.timezone) {
@@ -298,11 +310,15 @@ export default Component.extend({
     let text;
 
     if (isValid && config.from) {
-      text = this._generateDateMarkup(config.from, options, isRange);
-
       if (config.to && config.to.range) {
-        text += ` → `;
-        text += this._generateDateMarkup(config.to, options, isRange);
+        text = this._generateDateMarkup(
+          config.from,
+          options,
+          isRange,
+          config.to
+        );
+      } else {
+        text = this._generateDateMarkup(config.from, options, isRange);
       }
     }
 
@@ -382,8 +398,10 @@ export default Component.extend({
     return new Promise((resolve) => {
       loadScript("/javascripts/pikaday.js").then(() => {
         const options = {
-          field: this.$(`.fake-input`)[0],
-          container: this.$(`#picker-container-${this.elementId}`)[0],
+          field: this.element.querySelector(".fake-input"),
+          container: this.element.querySelector(
+            `#picker-container-${this.elementId}`
+          ),
           bound: false,
           format: "YYYY-MM-DD",
           reposition: false,

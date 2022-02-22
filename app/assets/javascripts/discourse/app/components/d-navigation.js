@@ -3,6 +3,7 @@ import FilterModeMixin from "discourse/mixins/filter-mode";
 import NavItem from "discourse/models/nav-item";
 import bootbox from "bootbox";
 import discourseComputed from "discourse-common/utils/decorators";
+import { NotificationLevels } from "discourse/lib/notification-levels";
 import { inject as service } from "@ember/service";
 
 export default Component.extend(FilterModeMixin, {
@@ -20,6 +21,19 @@ export default Component.extend(FilterModeMixin, {
   @discourseComputed("category")
   showCategoryNotifications(category) {
     return category && this.currentUser;
+  },
+
+  @discourseComputed("category.notification_level")
+  categoryNotificationLevel(notificationLevel) {
+    if (
+      this.currentUser?.indirectly_muted_category_ids?.includes(
+        this.category.id
+      )
+    ) {
+      return NotificationLevels.MUTED;
+    } else {
+      return notificationLevel;
+    }
   },
 
   // don't show tag notification menu on tag intersections

@@ -297,12 +297,20 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
       expect(flagged_reply.reload.status).to eq(Reviewable.statuses[:ignored])
     end
 
-    it 'notifies users that responded to flagged post' do
+    it "notifies users that responded to flagged post" do
       SiteSetting.notify_users_after_responses_deleted_on_flagged_post = true
       flagged_post.perform(moderator, :delete_and_agree_replies)
 
       expect(Jobs::SendSystemMessage.jobs.size).to eq(2)
       expect(Jobs::SendSystemMessage.jobs.last["args"].first["message_type"]).to eq("flags_agreed_and_post_deleted_for_responders")
+    end
+
+    it "ignores flagged responses" do
+      SiteSetting.notify_users_after_responses_deleted_on_flagged_post = true
+      flagged_reply = Fabricate(:reviewable_flagged_post, target: reply)
+      flagged_post.perform(moderator, :delete_and_agree_replies)
+
+      expect(flagged_reply.reload.status).to eq(Reviewable.statuses[:ignored])
     end
   end
 

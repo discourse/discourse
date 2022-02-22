@@ -1,10 +1,10 @@
 import Category from "discourse/models/category";
-import EmberObject from "@ember/object";
 import Topic from "discourse/models/topic";
 import User from "discourse/models/user";
 import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
 import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
+import createStore from "discourse/tests/helpers/create-store";
 
 discourseModule("Unit | Model | topic", function () {
   test("defaults", function (assert) {
@@ -20,7 +20,7 @@ discourseModule("Unit | Model | topic", function () {
       last_read_post_number: 1,
     });
 
-    assert.not(
+    assert.notOk(
       topic.get("visited"),
       "not visited unless we've read all the posts"
     );
@@ -36,7 +36,9 @@ discourseModule("Unit | Model | topic", function () {
   });
 
   test("lastUnreadUrl", function (assert) {
-    const category = EmberObject.create({
+    const store = createStore();
+    const category = store.createRecord("category", {
+      id: 22,
       navigate_to_first_post_after_read: true,
     });
 
@@ -45,9 +47,8 @@ discourseModule("Unit | Model | topic", function () {
       highest_post_number: 10,
       last_read_post_number: 10,
       slug: "hello",
+      category_id: category.id,
     });
-
-    topic.set("category", category);
 
     assert.strictEqual(topic.get("lastUnreadUrl"), "/t/hello/101/1");
   });

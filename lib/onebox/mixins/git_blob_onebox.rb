@@ -169,6 +169,12 @@ module Onebox
             else
               contents = URI.parse(self.raw_template(m)).open(read_timeout: timeout).read
 
+              if contents.encoding == Encoding::BINARY || contents.bytes.include?(0)
+                @raw = nil
+                @binary = true
+                return
+              end
+
               contents_lines = contents.lines           #get contents lines
               contents_lines_size = contents_lines.size #get number of lines
 
@@ -211,6 +217,7 @@ module Onebox
             #     as *side effects* of the `raw` method! They must all appear
             #     AFTER the call to `raw`! Don't get bitten by this like I did!
             content: raw,
+            binary: @binary,
             lang: "lang-#{@lang}",
             lines: @selected_lines_array ,
             has_lines: !@selected_lines_array.nil?,

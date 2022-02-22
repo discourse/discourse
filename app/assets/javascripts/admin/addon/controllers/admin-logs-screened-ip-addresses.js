@@ -107,36 +107,6 @@ export default Controller.extend({
       this.model.unshiftObject(arg);
     },
 
-    rollUp() {
-      return bootbox.confirm(
-        I18n.t("admin.logs.screened_ips.roll_up_confirm"),
-        I18n.t("no_value"),
-        I18n.t("yes_value"),
-        (confirmed) => {
-          if (confirmed) {
-            this.set("loading", true);
-            return ScreenedIpAddress.rollUp().then((results) => {
-              if (results && results.subnets) {
-                if (results.subnets.length > 0) {
-                  this.send("show");
-                  bootbox.alert(
-                    I18n.t("admin.logs.screened_ips.rolled_up_some_subnets", {
-                      subnets: results.subnets.join(", "),
-                    })
-                  );
-                } else {
-                  this.set("loading", false);
-                  bootbox.alert(
-                    I18n.t("admin.logs.screened_ips.rolled_up_no_subnet")
-                  );
-                }
-              }
-            });
-          }
-        }
-      );
-    },
-
     exportScreenedIpList() {
       exportEntity("screened_ip").then(outputExportResult);
     },

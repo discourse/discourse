@@ -187,6 +187,18 @@ describe ScreenedIpAddress do
       expect(described_class.should_block?('222.12.12.12')).to eq(false)
     end
 
+    it 'returns false if a more specific recrord matches and action is :do_nothing' do
+      Fabricate(:screened_ip_address, ip_address: '111.234.23.0/24', action_type: described_class.actions[:block])
+      Fabricate(:screened_ip_address, ip_address: '111.234.23.11', action_type: described_class.actions[:do_nothing])
+      expect(described_class.should_block?('111.234.23.11')).to eq(false)
+      expect(described_class.should_block?('111.234.23.12')).to eq(true)
+
+      Fabricate(:screened_ip_address, ip_address: '222.234.23.0/24', action_type: described_class.actions[:do_nothing])
+      Fabricate(:screened_ip_address, ip_address: '222.234.23.11', action_type: described_class.actions[:block])
+      expect(described_class.should_block?('222.234.23.11')).to eq(true)
+      expect(described_class.should_block?('222.234.23.12')).to eq(false)
+    end
+
     context 'IPv4' do
       it 'returns false when when record matches and action is :do_nothing' do
         Fabricate(:screened_ip_address, ip_address: '111.234.23.11', action_type: described_class.actions[:do_nothing])

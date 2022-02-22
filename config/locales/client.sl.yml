@@ -208,7 +208,6 @@ sl:
     bootstrap_mode_disabled: "Zagonski način bo onemogočen v 24 urah."
     themes:
       default_description: "Privzeto"
-      broken_theme_alert: "Vaše spletno mesto morda ne bo delovalo, ker ima tema / komponenta %{theme} napake. Onemogočite jo na %{path}."
     s3:
       regions:
         ap_northeast_1: "Asia Pacific (Tokyo)"
@@ -1349,11 +1348,9 @@ sl:
         every_month: "vsak mesec"
         every_six_months: "vsakih 6 mesecev"
       email_level:
-        title: "Pošlji mi e-sporočilo, ko me nekdo citira, odgovori na moj prispevek, omeni moje @ime ali me povabi v temo."
         always: "vedno"
         only_when_away: "samo ko sem odsoten"
         never: "nikoli"
-      email_messages_level: "Pošlji mi e-sporočilo, ko mi nekdo pošlje zasebno sporočilo"
       include_tl0_in_digests: "V e-sporočilo s povzetki vključi vsebino, ki so jo dodali novi uporabniki"
       email_in_reply_to: "Vključi povzetek prispevka v e-sporočilo"
       other_settings: "Ostalo"
@@ -1623,6 +1620,7 @@ sl:
       title: "Zamenjava gesla"
       action: "Pozabil sem geslo"
       invite: "Vpišite uporabniško ime ali e-naslov in poslali vam bomo e-sporočilo za zamenjavo gesla."
+      invite_no_username: "Vpišite naslov elektronske pošte in poslali vam bomo sporočilo za zamenjavo gesla."
       reset: "Zamenjaj geslo"
       complete_username: "Če obstaja račun za uporabniško ime <b>%{username}</b>, boste kmalu prejeli e-sporočilo z navodili za zamenjavo gesla."
       complete_email: "Če račun ustreza <b>%{email}</b>, boste v kratkem prejeli e-sporočilo z navodili za zamenjavo gesla."
@@ -1812,9 +1810,6 @@ sl:
         two: "Z omembo %{group}boste obvestili <a href='%{group_link}'>%{count} osebi</a> – ali ste prepričani?"
         few: "Z omembo %{group} boste obvestili <a href='%{group_link}'>%{count} osebe</a> – ali ste prepričani?"
         other: "Z omembo %{group} boste obvestili <a href='%{group_link}'>%{count} oseb</a> – ali ste prepričani?"
-      cannot_see_mention:
-        category: "Omenil si uporabnika %{username}, a ta ne bo obveščen saj nima dostopa do te kategorije. Dodati ga je potrebno v skupino ki lahko dostopa do kategorije."
-        private: "Omenili ste uporabnika %{username}, a ta ne bo obveščen, ker ne more videti tega zasebnega sporočila. Morali ga boste povabiti v to zasebno sporočilo."
       duplicate_link: "Povezava do <b>%{domain}</b> bila že objavljena v temi od <b>@%{username}</b> v <a href='%{post_url}'>odgovoru %{ago}</a> – ali ste prepričani, da jo želite objaviti še enkrat?"
       reference_topic_title: "RE: %{title}"
       error:
@@ -2128,7 +2123,7 @@ sl:
         clear_all: "Počisti vse"
         unlist_topics: "Izloči temo iz seznamov"
         relist_topics: "Postavi temo nazaj na seznam"
-        reset_read: "Ponastavi prebrano"
+        defer: "Preloži"
         delete: "Izbriši teme"
         dismiss: "Opusti"
         dismiss_read: "Opusti vse neprebrane"
@@ -2333,10 +2328,6 @@ sl:
         replies_short: "%{current} / %{total}"
       progress:
         title: napredek teme
-        go_top: "na vrh"
-        go_bottom: "dno"
-        go: "pojdi"
-        jump_bottom: "skoči na zadnji prispevek"
         jump_prompt: "skoči na..."
         jump_prompt_of:
           one: "od %{count} prispevka"
@@ -2344,11 +2335,8 @@ sl:
           few: "od %{count} prispevkov"
           other: "od %{count} prispevkov"
         jump_prompt_long: "Skoči na..."
-        jump_bottom_with_number: "skoči na prispevek %{post_number}"
         jump_prompt_to_date: "na datum"
         jump_prompt_or: "ali"
-        total: število prispevkov
-        current: trenutni prispevek
       notifications:
         title: spremenite kako pogosto želite biti obveščeni o tej temi
         reasons:
@@ -2418,7 +2406,6 @@ sl:
         title: "Odgovori"
         help: "sestavi odgovor na to temo"
       share:
-        title: "Deli"
         extended_title: "Deli povezavo"
         help: "deli povezavo do te teme"
         invite_users: "Povabi"
@@ -2842,8 +2829,8 @@ sl:
         toggle_full: "Preklopi dovoljenje za ustvarjanje"
         inherited: 'To dovoljenje je podedovano od "vsi"'
       special_warning: "Ta kategorija je prednastavljena, zato varnostnih nastavitev ni mogoče urejati. Če ne želite uporabljati te kategorije jo raje izbrišite kot uporabljajte v drug namen."
-      uncategorized_security_warning: "Ta kategorija je posebna. Namenjena je za shranjevanje tem, ki nimajo kategorije. Zato ne more imeti varnostnih nastavitev."
-      uncategorized_general_warning: 'Ta kategorija je posebna. Uporabi se kot privzeta kategorija za teme brez kategorije. Če hočete onemogočiti takšen način in hočete obvezno izbiro kategorije, <a href="%{settingLink}">potem onemogočite nastavitev tukaj</a>. Če hočete spremeniti ime ali opis, pojdite <a href="%{customizeLink}">Prilagodi / Vsebina besedila</a>.'
+      uncategorized_security_warning: "Ta kategorija je posebna. Namenjena je shranjevanju tem, ki nimajo kategorije, zato ne more imeti varnostnih nastavitev."
+      uncategorized_general_warning: 'Ta kategorija je posebna. Uporablja se kot privzeta kategorija za nove teme, ki nimajo izbrane kategorije. Če želite onemogočiti takšen način in vsiliti obvezno izbiro kategorije, <a href="%{settingLink}">potem onemogočite nastavitev tukaj</a>. Če želite spremeniti ime ali opis, pojdite <a href="%{customizeLink}">Prilagodi / Vsebina besedila</a>.'
       pending_permission_change_alert: "Niste dodali %{group} v to kategorijo; kliknite ta gumb za dodajanje."
       images: "Slike"
       email_in: "Dohodni e-naslov po meri:"

@@ -168,7 +168,6 @@ fr:
     bootstrap_mode_disabled: "Le mode d'amorçage sera désactivé dans les prochaines 24 heures."
     themes:
       default_description: "Par défaut"
-      broken_theme_alert: "Votre site pourrait ne pas fonctionner parce que le thème/composant %{theme} comprend des erreurs. Vous pouvez le désactiver ici : %{path}."
     s3:
       regions:
         ap_northeast_1: "Asie-Pacifique (Tokyo)"
@@ -1367,11 +1366,9 @@ fr:
         every_month: "tous les mois"
         every_six_months: "tous les six mois"
       email_level:
-        title: "M'envoyer un courriel quand quelqu'un me cite, répond à l'un de mes messages, me mentionne ou m'invite à rejoindre un sujet."
         always: "toujours"
         only_when_away: "seulement en cas d'absence"
         never: "jamais"
-      email_messages_level: "M'envoyer un courriel quand quelqu'un m'envoie un message direct"
       include_tl0_in_digests: "Inclure les contributions des nouveaux utilisateurs dans les résumés par courriel"
       email_in_reply_to: "En plus du message notifié par courriel, inclure un extrait du message auquel il répond"
       other_settings: "Autre"
@@ -1543,6 +1540,7 @@ fr:
       title:
         title: "Titre"
         none: "(aucun)"
+        instructions: "Apparaît après votre nom d'utilisateur"
       flair:
         none: "(aucun)"
       primary_group:
@@ -1866,9 +1864,6 @@ fr:
       group_mentioned:
         one: "En mentionnant %{group}, vous êtes sur le point de notifier <a href='%{group_link}'>%{count} personne</a>. Voulez-vous continuer ?"
         other: "En mentionnant %{group}, vous êtes sur le point de notifier <a href='%{group_link}'>%{count} personnes</a>. Voulez-vous continuer ?"
-      cannot_see_mention:
-        category: "Vous avez mentionné %{username}, mais il/elle ne sera pas notifié(e) car il/elle n'a pas accès à cette catégorie. Vous devez ajouter cet utilisateur à un groupe ayant accès à cette catégorie."
-        private: "Vous avez mentionné %{username} mais il/elle ne sera pas notifié(e) car il/elle ne peut pas voir ce message direct. Vous devez inviter cet utilisateur à la discussion."
       duplicate_link: "Il semblerait que votre lien vers <b>%{domain}</b> a déjà été publié dans le sujet par <b>@%{username}</b> dans <a href='%{post_url}'>une réponse de %{ago}</a>. Voulez-vous vraiment le publier à nouveau ?"
       reference_topic_title: "RE : %{title}"
       error:
@@ -2186,7 +2181,7 @@ fr:
         clear_all: "Tout désélectionner"
         unlist_topics: "Rendre les sujets invisibles"
         relist_topics: "Lister les sujets"
-        reset_read: "Réinitialiser la lecture"
+        defer: "Reporter à plus tard"
         delete: "Supprimer les sujets"
         dismiss: "Marquer comme vus"
         dismiss_read: "Marquer tous les sujets comme vus"
@@ -2410,20 +2405,13 @@ fr:
         replies_short: "%{current}/%{total}"
       progress:
         title: progression dans le sujet
-        go_top: "haut"
-        go_bottom: "bas"
-        go: "aller"
-        jump_bottom: "accéder au dernier message"
         jump_prompt: "aller à…"
         jump_prompt_of:
           one: "sur %{count} message"
           other: "sur %{count} messages"
         jump_prompt_long: "Aller à…"
-        jump_bottom_with_number: "accéder au message %{post_number}"
         jump_prompt_to_date: "à la date"
         jump_prompt_or: "ou"
-        total: total des messages
-        current: message actuel
       notifications:
         title: modifier la fréquence des notifications concernant ce sujet
         reasons:
@@ -2496,7 +2484,6 @@ fr:
         title: "Répondre"
         help: "commencer à répondre à ce sujet"
       share:
-        title: "Partager"
         extended_title: "Partager un lien"
         help: "partager ce sujet"
         instructions: "Partager ce sujet avec un lien :"
@@ -2965,7 +2952,6 @@ fr:
       default_list_filter: "Filtre de liste par défaut :"
       allow_badges_label: "Autoriser les badges à être accordés dans cette catégorie"
       edit_permissions: "Modifier les permissions"
-      reviewable_by_group: "En plus des responsables, le contenu de cette catégorie peut également être examiné par :"
       review_group_name: "nom du groupe"
       require_topic_approval: "Nécessiter l'approbation pour chaque nouveau sujet"
       require_reply_approval: "Nécessiter l'approbation pour chaque nouvelle réponse"
@@ -4391,9 +4377,6 @@ fr:
           title: "IP sous surveillance"
           description: 'Adresses IP qui sont surveillées. Utilisez « Autoriser » pour ajouter des adresses IP à la liste.'
           delete_confirm: "Voulez-vous vraiment supprimer la règle pour %{ip_address} ?"
-          roll_up_confirm: "Voulez-vous vraiment consolider les adresses IP sous surveillance sous forme de plages de sous-réseau ?"
-          rolled_up_some_subnets: "Consolidation réussie des adresses IP interdites vers ces plages de sous-réseau : %{subnets}."
-          rolled_up_no_subnet: "Aucune consolidation possible."
           actions:
             block: "Bloquer"
             do_nothing: "Autoriser"

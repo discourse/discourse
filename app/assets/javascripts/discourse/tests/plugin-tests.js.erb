@@ -1,0 +1,10 @@
+<%
+  Discourse.plugins.each do |p|
+    root_path = "#{File.dirname(p.path)}/test/javascripts"
+
+    to_glob = [root_path + '/**/**.es6']
+    to_glob << (root_path + '/**/**.js') if p.transpile_js
+
+    Dir.glob(to_glob) { |f| require_asset(f) }
+  end
+%>

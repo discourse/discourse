@@ -9,7 +9,6 @@
       {{i18n "review.deleted_user"}}
     {{/if}}
   </span>
-  {{plugin-outlet name="after-reviewable-post-user"
-      tagName=""
+  {{plugin-outlet name="after-reviewable-post-user" connectorTagName="div"
       args=(hash user=user)}}
 </div>

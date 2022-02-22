@@ -4,7 +4,6 @@ import buildTimeframes from "discourse/lib/timeframes-builder";
 
 const DEFAULT_OPTIONS = {
   includeWeekend: null,
-  includeMidFuture: true,
   includeFarFuture: null,
   includeDateTime: null,
   canScheduleNow: false,
@@ -19,10 +18,16 @@ function buildOptions(now, opts) {
   );
 }
 
-module("Unit | Lib | timeframes-builder", function () {
+module("Unit | Lib | timeframes-builder", function (hooks) {
+  hooks.afterEach(function () {
+    if (this.clock) {
+      this.clock.restore();
+    }
+  });
+
   test("default options", function (assert) {
     const timezone = moment.tz.guess();
-    const clock = fakeTime("2100-06-07T08:00:00", timezone, true); // Monday
+    this.clock = fakeTime("2100-06-07T08:00:00", timezone, true); // Monday
 
     const expected = [
       "later_today",
@@ -40,45 +45,37 @@ module("Unit | Lib | timeframes-builder", function () {
       buildTimeframes(buildOptions(moment())).mapBy("id"),
       expected
     );
-
-    clock.restore();
   });
 
   test("doesn't output 'Next Week' on Sundays", function (assert) {
     const timezone = moment.tz.guess();
-    const clock = fakeTime("2100-06-13T08:00:00", timezone, true); // Sunday
+    this.clock = fakeTime("2100-06-13T08:00:00", timezone, true); // Sunday
 
     assert.ok(
       !buildTimeframes(buildOptions(moment())).mapBy("id").includes("next_week")
     );
-
-    clock.restore();
   });
 
   test("outputs 'This Weekend' if it's enabled", function (assert) {
     const timezone = moment.tz.guess();
-    const clock = fakeTime("2100-06-07T08:00:00", timezone, true); // Monday
+    this.clock = fakeTime("2100-06-07T08:00:00", timezone, true); // Monday
 
     assert.ok(
       buildTimeframes(buildOptions(moment(), { includeWeekend: true }))
         .mapBy("id")
         .includes("this_weekend")
     );
-
-    clock.restore();
   });
 
   test("doesn't output 'This Weekend' on Fridays", function (assert) {
     const timezone = moment.tz.guess();
-    const clock = fakeTime("2100-04-23 18:00:00", timezone, true); // Friday
+    this.clock = fakeTime("2100-04-23 18:00:00", timezone, true); // Friday
 
     assert.ok(
       !buildTimeframes(buildOptions(moment(), { includeWeekend: true }))
         .mapBy("id")
         .includes("this_weekend")
     );
-
-    clock.restore();
   });
 
   test("doesn't show 'This Weekend' on Sundays", function (assert) {
@@ -97,36 +94,30 @@ module("Unit | Lib | timeframes-builder", function () {
     */
 
     const timezone = moment.tz.guess();
-    const clock = fakeTime("2100-04-25 18:00:00", timezone, true); // Sunday
+    this.clock = fakeTime("2100-04-25 18:00:00", timezone, true); // Sunday
 
     assert.ok(
       !buildTimeframes(buildOptions(moment(), { includeWeekend: true }))
         .mapBy("id")
         .includes("this_weekend")
     );
-
-    clock.restore();
   });
 
   test("outputs 'Later This Week' instead of 'Later Today' at the end of the day", function (assert) {
     const timezone = moment.tz.guess();
-    const clock = fakeTime("2100-04-19 18:00:00", timezone, true); // Monday evening
+    this.clock = fakeTime("2100-04-19 18:00:00", timezone, true); // Monday evening
     const timeframes = buildTimeframes(buildOptions(moment())).mapBy("id");
 
-    assert.not(timeframes.includes("later_today"));
+    assert.notOk(timeframes.includes("later_today"));
     assert.ok(timeframes.includes("later_this_week"));
-
-    clock.restore();
   });
 
   test("doesn't output 'Later This Week' on Tuesdays", function (assert) {
     const timezone = moment.tz.guess();
-    const clock = fakeTime("2100-04-22 18:00:00", timezone, true); // Tuesday evening
+    this.clock = fakeTime("2100-04-22 18:00:00", timezone, true); // Tuesday evening
     const timeframes = buildTimeframes(buildOptions(moment())).mapBy("id");
 
-    assert.not(timeframes.includes("later_this_week"));
-
-    clock.restore();
+    assert.notOk(timeframes.includes("later_this_week"));
   });
 
   test("doesn't output 'Later This Week' on Sundays", function (assert) {
@@ -144,21 +135,17 @@ module("Unit | Lib | timeframes-builder", function () {
       in moment.js 0 stands for Sunday.
     */
     const timezone = moment.tz.guess();
-    const clock = fakeTime("2100-04-25 18:00:00", timezone, true); // Sunday evening
+    this.clock = fakeTime("2100-04-25 18:00:00", timezone, true); // Sunday evening
     const timeframes = buildTimeframes(buildOptions(moment())).mapBy("id");
 
-    assert.not(timeframes.includes("later_this_week"));
-
-    clock.restore();
+    assert.notOk(timeframes.includes("later_this_week"));
   });
 
   test("doesn't output 'Next Month' on the last day of the month", function (assert) {
     const timezone = moment.tz.guess();
-    const clock = fakeTime("2100-04-30 18:00:00", timezone, true); // The last day of April
+    this.clock = fakeTime("2100-04-30 18:00:00", timezone, true); // The last day of April
     const timeframes = buildTimeframes(buildOptions(moment())).mapBy("id");
 
-    assert.not(timeframes.includes("next_month"));
-
-    clock.restore();
+    assert.notOk(timeframes.includes("next_month"));
   });
 });

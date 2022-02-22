@@ -747,14 +747,6 @@
   }
 }
 
-.qr-code-container {
-  display: flex;
-  .qr-code {
-    padding: 5px 5px 0 5px;
-    background-color: white;
-  }
-}
-
 .second-factor {
   &.instructions {
     color: var(--primary-medium);

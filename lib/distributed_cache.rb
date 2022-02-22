@@ -21,7 +21,7 @@ class DistributedCache < MessageBus::DistributedCache
   end
 
   def defer_get_set(k, &block)
-    return self[k] if self[k]
+    return self[k] if hash.key? k
     value = block.call
     self.defer_set(k, value)
     value

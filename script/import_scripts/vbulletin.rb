@@ -151,7 +151,7 @@ EOM
 
       create_users(users, total: user_count, offset: offset) do |user|
         email = user["email"].presence || fake_email
-        email = fake_email unless email[EmailValidator.email_regex]
+        email = fake_email if !EmailAddressValidator.valid_value?(email)
 
         password = [user["password"].presence, user["salt"].presence].compact.join(":")
 
@@ -426,7 +426,7 @@ EOM
     real_filename = row['filename']
     real_filename.prepend SecureRandom.hex if real_filename[0] == '.'
 
-    unless File.exists?(filename)
+    unless File.exist?(filename)
       if row['dbsize'].to_i == 0
         puts "Attachment file #{row['filedataid']} doesn't exist"
         return nil

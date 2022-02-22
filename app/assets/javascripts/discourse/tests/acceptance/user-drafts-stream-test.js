@@ -8,6 +8,7 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import { IMAGE_VERSION } from "pretty-text/emoji/version";
 
 acceptance("User Drafts", function (needs) {
   needs.user();
@@ -54,7 +55,7 @@ acceptance("User Drafts", function (needs) {
     );
     assert.strictEqual(
       query(".user-stream-item:nth-child(3) .excerpt").innerHTML.trim(),
-      'here goes a reply to a PM <img src="/images/emoji/google_classic/slight_smile.png?v=10" title=":slight_smile:" class="emoji" alt=":slight_smile:">'
+      `here goes a reply to a PM <img src="/images/emoji/google_classic/slight_smile.png?v=${IMAGE_VERSION}" title=":slight_smile:" class="emoji" alt=":slight_smile:" loading="lazy" width="20" height="20">`
     );
   });
 });

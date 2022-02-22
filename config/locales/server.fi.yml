@@ -225,8 +225,6 @@ fi:
       <p>Jos muistat salasanasi, voit <a href="%{base_url}/login">kirjautua sisään</a>.</p>
 
       <p>Muussa tapauksessa <a href="%{base_url}/password-reset">vaihda salasanasi</a>.</p>
-    not_found_template_link: |
-      <p>Kutsua sivustolle <a href="%{base_url}">%{site_name}</a> ei voida enää käyttää. Pyydä henkilöä, joka kutsui sinut, lähettämään sinulle uusi kutsu.</p>
     user_exists: "Osoitteeseen <b>%{email}</b> ei tarvitse lähettää kutsua, sillä kutsuttavalla <a href='%{base_path}/u/%{username}/summary'>on jo tili!</a>"
     invite_exists: "Olet jo lähettänyt kutsun osoitteeseen <b>%{email}</b>."
     invalid_email: "%{email} ei ole kelvollinen sähköpostiosoite."
@@ -238,7 +236,6 @@ fi:
     disabled_errors:
       discourse_connect_enabled: "Kutsut on poistettu käytöstä, koska DiscourseConnect on aktiivinen."
       invalid_access: "Sinulla ei ole oikeutta nähdä pyydettyä resurssia."
-    requires_groups: "Kutsu tallennettu. Jos haluat antaa määritetyn alueen käyttöoikeuden, lisää yksi seuraavista ryhmistä: %{groups}."
   bulk_invite:
     file_should_be_csv: "Ladattavan tiedoston tulee olla CSV-muodossa."
     max_rows: "Ensimmäiset %{max_bulk_invites} kutsua lähetettiin. Jaa tiedosto pienempiin osiin."
@@ -333,8 +330,6 @@ fi:
   too_many_links:
     one: "Uudet käyttäjät voivat lisätä vain yhden linkin viestiin."
     other: "Uudet käyttäjät voivat lisätä vain %{count} linkkiä viestiin."
-  contains_blocked_word: "Viestissäsi on kielletty sana: %{word}"
-  contains_blocked_words: "Viestissäsi on kiellettyjä sanoja: %{words}"
   spamming_host: "Et voi lisätä linkkiä tähän isäntään."
   user_is_suspended: "Hyllytetyt käyttäjät eivät saa luoda viestejä."
   topic_not_found: "Jokin on mennyt pieleen. Ehkä tämä ketju on suljettu tai poistettu sillä välin, kun katselit sitä?"
@@ -1377,7 +1372,6 @@ fi:
     min_personal_message_title_length: "Yksityisviestin otsikon vähimmäismerkkimäärä"
     max_emojis_in_title: "Kuinka monta emojia enintään otsikossa"
     min_search_term_length: "Haun merkkien minimimäärä"
-    search_tokenize_chinese_japanese_korean: "Pakota haku käsittelemään kiinaa/japania/koreaa myös muunkielisillä sivustoilla"
     search_prefer_recent_posts: "Jos hakeminen suurelta foorumilta on hidasta, tämä asetus kokeilee indeksiä, jossa tuoreimmat viestit ovat ensin"
     search_recent_posts_size: "Kuinka monta tuoretta viestiä pidetään indeksissä"
     log_search_queries: "Pidä lokia käyttäjien tekemistä hauista"
@@ -1419,7 +1413,6 @@ fi:
     show_pinned_excerpt_mobile: "Näytä katkelma kiinnitetyistä ketjuista mobiilinäkymässä."
     show_pinned_excerpt_desktop: "Näytä katkelma kiinnitetyistä ketjuista työpöytänäkymässä."
     post_onebox_maxlength: "Discourse-viestin Onebox-esikatselun merkkien maksimimäärä."
-    blocked_onebox_domains: "Verkko-osoitteet, joista ei luoda Onebox-esikatselua."
     allowed_inline_onebox_domains: "Verkko-osoitteet, joista luodaan minimoitu Onebox-esikatselu, jos niihin linkitetään määrittämättä otsikkoa."
     enable_inline_onebox_on_all_domains: "Ohita inline_onebox_domain_whitelist-asetus ja salli Onebox-esikatselut kaikista verkko-osoitteista."
     force_custom_user_agent_hosts: "Isännät, joille käytetään mukautettua onebox-käyttäjäagenttia kaikissa pyynnöissä. (Erityisen hyödyllinen isännille, jotka rajoittavat käyttäjäagentin pääsyä)."
@@ -1923,7 +1916,6 @@ fi:
     display_name_on_posts: "Näytä käyttäjän koko nimi viesteissä @käyttäjätunnuksen lisäksi."
     show_time_gap_days: "Jos kahden viestin välissä on kulunut näin monta päivää, näytä aikaväli ketjussa."
     short_progress_text_threshold: "Kuinka monen viestin jälkeen ketjun edistyspalkissa näytetään vain nykyisen viestin numero. Jos muutat palkin leveyttä, voit joutua muuttamaan tätä arvoa."
-    default_code_lang: "Oletusarvoinen ohjelmointikieli syntaksin korostukseen GitHub-koodilohkoissa (auto, nohighlight, ruby, python jne.)"
     warn_reviving_old_topic_age: "Kun käyttäjä alkaa kirjoittamaan vastausta ketjuun, jonka uusin viesti on tätä vanhempi päivissä, näytetään varoitus. Poista käytöstä asettamalla arvoksi 0."
     autohighlight_all_code: "Pakota koodin korostus kaikkiin esimuotoiltuihin koodilohkoihin, vaikka käyttäjä ei määrittelisi kieltä."
     highlighted_languages: "Mitä syntaksikorostussääntöjä on käytössä. (Varoitus: liian monen kielen käyttöönotto voi vaikuttaa suorituskykyyn.) Ks. demo: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a>"

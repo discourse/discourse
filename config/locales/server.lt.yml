@@ -194,7 +194,6 @@ lt:
     disabled_errors:
       discourse_connect_enabled: "Kvietimai išjungti, nes įgalintas „DiscourseConnect“."
       invalid_access: "Jums neleidžiama peržiūrėti prašomo šaltinio."
-    requires_groups: "Kvietimas išsaugotas. Norėdami suteikti prieigą prie nurodytos temos, pridėkite vieną iš šių grupių: %{groups}."
   bulk_invite:
     file_should_be_csv: "Įkeltas failas turi būti csv formato."
     max_rows: "Išsiųsti pirmieji %{max_bulk_invites} kvietimų. Pabandykite padalinti failą į mažesnes dalis."
@@ -272,8 +271,6 @@ lt:
   no_attachments_allowed: "Atsiprašome, bet nauji vartotojai negali įkelti priedų pranešimuose."
   no_links_allowed: "Atsiprašome, bet nauji vartotojai negali įkelti nuorodų į pranešimus."
   links_require_trust: "Atsiprašome, negalite įtraukti nuorodų į savo įrašus."
-  contains_blocked_word: "Jūsų įraše yra neleistinas žodis: %{word}"
-  contains_blocked_words: "Jūsų įraše yra keli neleidžiami žodžiai: %{words}"
   user_is_suspended: "Sustabdyti vartotojai negali rašyti pranešimų."
   topic_not_found: "Kažkas nepavyko. Galbūt ši tema buvo uždaryta arba ištrinta, kol į ją žiūrėjote?"
   not_accepting_pms: "Atsiprašome, %{username} šiuo metu nepriima pranešimų."
@@ -1771,20 +1768,6 @@ lt:
         Jei reikia papildomų nurodymų, skaitykite mūsų [bendruomenės gaires] (%{base_url}/gairės).
     flags_agreed_and_post_deleted_for_responders:
       subject_template: "Darbuotojai pašalino atsakymą iš pažymėto įrašo"
-      text_body_template: |
-        Sveiki,
-
-        Tai yra automatizuota %{site_name} žinutė, leidžianti jums žinoti, kad [post](%{base_url}%{url}), į kurį atsakėte, buvo pašalintas.
-
-        %{flag_reason}
-
-        Šis įrašas buvo pažymėtas bendruomenės ir darbuotojas pasirinko jį pašalinti.
-
-        “``markdown
-        %{flagged_post_raw_content}
-        ```
-
-        Norėdami gauti daugiau informacijos apie pašalinimo priežastis, peržiūrėkite mūsų [bendruomenės gaires] (%{base_url}/gairės).
     usage_tips:
       text_body_template: |
         Jei reikia kelių greitų patarimų, kaip naudotis forumu, kaip naujas vartotojas, [žr. šį tinklaraščio įrašą](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).

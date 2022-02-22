@@ -13,9 +13,11 @@ module ApplicationHelper
     @extra_body_classes ||= Set.new
   end
 
-  def discourse_config_environment
+  def discourse_config_environment(testing: false)
+
     # TODO: Can this come from Ember CLI somehow?
-    { modulePrefix: "discourse",
+    config = {
+      modulePrefix: "discourse",
       environment: Rails.env,
       rootURL: Discourse.base_path,
       locationType: "auto",
@@ -32,7 +34,16 @@ module ApplicationHelper
         version: "#{Discourse::VERSION::STRING} #{Discourse.git_version}",
         exportApplicationGlobal: true
       }
-    }.to_json
+    }
+
+    if testing
+      config[:environment] = "test"
+      config[:locationType] = "none"
+      config[:APP][:autoboot] = false
+      config[:APP][:rootElement] = '#ember-testing'
+    end
+
+    config.to_json
   end
 
   def google_universal_analytics_json(ua_domain_name = nil)
@@ -122,6 +133,22 @@ module ApplicationHelper
     end
 
     path
+  end
+
+  def preload_vendor_scripts
+    scripts = ["vendor"]
+
+    if ENV["EMBER_CLI_PROD_ASSETS"] != "0"
+      @@vendor_chunks ||= begin
+        all_assets = ActionController::Base.helpers.assets_manifest.assets
+        all_assets.keys.filter_map { |name| name[/\A(chunk\..*)\.js\z/, 1] }
+      end
+      scripts.push(*@@vendor_chunks)
+    end
+
+    scripts.map do |name|
+      preload_script(name)
+    end.join("\n").html_safe
   end
 
   def preload_script(script)

@@ -203,7 +203,7 @@ class BulkImport::Vanilla < BulkImport::Base
   end
 
   def import_avatars
-    if ATTACHMENTS_BASE_DIR && File.exists?(ATTACHMENTS_BASE_DIR)
+    if ATTACHMENTS_BASE_DIR && File.exist?(ATTACHMENTS_BASE_DIR)
       puts "", "importing user avatars"
 
       start = Time.now
@@ -237,7 +237,7 @@ class BulkImport::Vanilla < BulkImport::Base
           next
         end
 
-        if !File.exists?(photo_path)
+        if !File.exist?(photo_path)
           puts "Path to avatar file not found! Skipping. #{photo_path}"
           next
         end
@@ -265,7 +265,7 @@ class BulkImport::Vanilla < BulkImport::Base
   end
 
   def import_attachments
-    if ATTACHMENTS_BASE_DIR && File.exists?(ATTACHMENTS_BASE_DIR)
+    if ATTACHMENTS_BASE_DIR && File.exist?(ATTACHMENTS_BASE_DIR)
       puts "", "importing attachments"
 
       start = Time.now
@@ -297,7 +297,7 @@ class BulkImport::Vanilla < BulkImport::Base
           path.gsub!("s3://uploads/", "")
           file_path = "#{ATTACHMENTS_BASE_DIR}/#{path}"
 
-          if File.exists?(file_path)
+          if File.exist?(file_path)
             upload = create_upload(post.user.id, file_path, File.basename(file_path))
             if upload && upload.errors.empty?
               # upload.url
@@ -318,7 +318,7 @@ class BulkImport::Vanilla < BulkImport::Base
 
           file_path = "#{ATTACHMENTS_BASE_DIR}/#{attachment_id}"
 
-          if File.exists?(file_path)
+          if File.exist?(file_path)
             upload = create_upload(post.user.id, file_path, File.basename(file_path))
             if upload && upload.errors.empty?
               upload.url
@@ -348,13 +348,13 @@ class BulkImport::Vanilla < BulkImport::Base
     base_guess = base_filename.dup
     full_guess = File.join(path, base_guess) # often an exact match exists
 
-    return full_guess if File.exists?(full_guess)
+    return full_guess if File.exist?(full_guess)
 
     # Otherwise, the file exists but with a prefix:
     # The p prefix seems to be the full file, so try to find that one first.
     ['p', 't', 'n'].each do |prefix|
       full_guess = File.join(path, "#{prefix}#{base_guess}")
-      return full_guess if File.exists?(full_guess)
+      return full_guess if File.exist?(full_guess)
     end
 
     # Didn't find it.

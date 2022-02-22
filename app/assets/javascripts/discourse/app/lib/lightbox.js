@@ -9,9 +9,18 @@ import loadScript from "discourse/lib/load-script";
 import { renderIcon } from "discourse-common/lib/icon-library";
 import { spinnerHTML } from "discourse/helpers/loading-spinner";
 import { helperContext } from "discourse-common/lib/helpers";
+import { isTesting } from "discourse-common/config/environment";
 
 export default function (elem, siteSettings) {
   if (!elem) {
+    return;
+  }
+
+  const lightboxes = elem.querySelectorAll(
+    "*:not(.spoiler):not(.spoiled) a.lightbox"
+  );
+
+  if (!lightboxes.length) {
     return;
   }
 
@@ -19,14 +28,10 @@ export default function (elem, siteSettings) {
   const imageClickNavigation = caps.touch;
 
   loadScript("/javascripts/jquery.magnific-popup.min.js").then(function () {
-    const lightboxes = elem.querySelectorAll(
-      "*:not(.spoiler):not(.spoiled) a.lightbox"
-    );
-
     $(lightboxes).magnificPopup({
       type: "image",
       closeOnContentClick: false,
-      removalDelay: 300,
+      removalDelay: isTesting() ? 0 : 300,
       mainClass: "mfp-zoom-in",
       tClose: I18n.t("lightbox.close"),
       tLoading: spinnerHTML,

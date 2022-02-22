@@ -404,17 +404,21 @@ describe UserMerger do
       post1 = p1
       post2 = p2
       post3 = p3
+      post4 = p4
 
       create_post_timing(post1, source_user, 12345)
       create_post_timing(post2, source_user, 9876)
+      create_post_timing(post4, source_user, 2**31 - 100)
       create_post_timing(post2, target_user, 3333)
       create_post_timing(post3, target_user, 10000)
+      create_post_timing(post4, target_user, 5000)
 
       merge_users!
 
       expect(post_timing_msecs_for(post1, target_user)).to eq(12345)
       expect(post_timing_msecs_for(post2, target_user)).to eq(13209)
       expect(post_timing_msecs_for(post3, target_user)).to eq(10000)
+      expect(post_timing_msecs_for(post4, target_user)).to eq(2**31 - 1)
 
       expect(PostTiming.where(user_id: source_user.id).count).to eq(0)
     end
@@ -999,13 +1003,11 @@ describe UserMerger do
 
   it "deletes external auth infos of source user" do
     UserAssociatedAccount.create(user_id: source_user.id, provider_name: "facebook", provider_uid: "1234")
-    Oauth2UserInfo.create(user_id: source_user.id, uid: "example", provider: "example")
     SingleSignOnRecord.create(user_id: source_user.id, external_id: "example", last_payload: "looks good")
 
     merge_users!
 
     expect(UserAssociatedAccount.where(user_id: source_user.id).count).to eq(0)
-    expect(Oauth2UserInfo.where(user_id: source_user.id).count).to eq(0)
     expect(SingleSignOnRecord.where(user_id: source_user.id).count).to eq(0)
   end
 

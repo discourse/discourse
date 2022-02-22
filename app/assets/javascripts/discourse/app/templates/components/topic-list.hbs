@@ -26,8 +26,7 @@
     lastVisitedTopic=lastVisitedTopic
     discoveryList=discoveryList
     hideCategory=hideCategory)
-  tagName=""
-  connectorTagName=""}}
+ }}
 
 <tbody class="topic-list-body">
   {{#each filteredTopics as |topic|}}
@@ -42,6 +41,7 @@
                       expandAllPinned=expandAllPinned
                       lastVisitedTopic=lastVisitedTopic
                       selected=selected
+                      lastChecked=lastChecked
                       tagsForUser=tagsForUser}}
     {{raw "list/visited-line" lastVisitedTopic=lastVisitedTopic topic=topic}}
   {{/each}}
@@ -56,5 +56,4 @@
     lastVisitedTopic=lastVisitedTopic
     discoveryList=discoveryList
     hideCategory=hideCategory)
-  tagName=""
-  connectorTagName=""}}
+ }}

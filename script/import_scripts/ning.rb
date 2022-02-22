@@ -55,7 +55,7 @@ class ImportScripts::Ning < ImportScripts::Base
 
   def load_ning_json(arg)
     filename = File.join(JSON_FILES_DIR, arg)
-    raise RuntimeError.new("File #{filename} not found!") if !File.exists?(filename)
+    raise RuntimeError.new("File #{filename} not found!") if !File.exist?(filename)
     JSON.parse(repair_json(File.read(filename))).reverse
   end
 
@@ -112,7 +112,7 @@ class ImportScripts::Ning < ImportScripts::Base
 
           if u["profilePhoto"] && newuser.user_avatar.try(:custom_upload_id).nil?
             photo_path = file_full_path(u["profilePhoto"])
-            if File.exists?(photo_path)
+            if File.exist?(photo_path)
               begin
                 upload = create_upload(newuser.id, photo_path, File.basename(photo_path))
                 if upload.persisted?
@@ -315,7 +315,7 @@ class ImportScripts::Ning < ImportScripts::Base
       ning_filename = matches[1]
 
       filename = File.join(JSON_FILES_DIR, ning_filename.split("?").first)
-      if !File.exists?(filename)
+      if !File.exist?(filename)
         puts "Attachment file doesn't exist: #{filename}"
         next s
       end
@@ -339,7 +339,7 @@ class ImportScripts::Ning < ImportScripts::Base
 
     file_names.each do |f|
       filename = File.join(JSON_FILES_DIR, f.split("?").first)
-      if !File.exists?(filename)
+      if !File.exist?(filename)
         puts "Attachment file doesn't exist: #{filename}"
         next
       end
@@ -363,7 +363,7 @@ class ImportScripts::Ning < ImportScripts::Base
 
     # filename = File.join(JSON_FILES_DIR, file_name)
     filename = file_full_path(file_name)
-    if File.exists?(filename)
+    if File.exist?(filename)
       upload = create_upload(@system_user.id, filename, File.basename(filename))
 
       if upload.nil? || !upload.valid?

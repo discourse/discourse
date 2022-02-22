@@ -8,11 +8,19 @@ import {
   selectText,
   visible,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
+import {
+  click,
+  currentURL,
+  fillIn,
+  triggerKeyEvent,
+  visit,
+} from "@ember/test-helpers";
 import I18n from "I18n";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { test } from "qunit";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import topicFixtures from "discourse/tests/fixtures/topic";
+import { cloneJSON } from "discourse-common/lib/object";
 
 acceptance("Topic", function (needs) {
   needs.user();
@@ -347,43 +355,52 @@ acceptance("Topic featured links", function (needs) {
     assert.ok(!exists(".gap"), "it hides gap");
   });
 
-  test("Quoting a quote keeps the original poster name", async function (assert) {
-    await visit("/t/internationalization-localization/280");
-    await selectText("#post_5 blockquote");
-    await click(".quote-button .insert-quote");
+  chromeTest(
+    "Quoting a quote keeps the original poster name",
+    async function (assert) {
+      await visit("/t/internationalization-localization/280");
+      await selectText("#post_5 blockquote");
+      await click(".quote-button .insert-quote");
 
-    assert.ok(
-      queryAll(".d-editor-input")
-        .val()
-        .indexOf('quote="codinghorror said, post:3, topic:280"') !== -1
-    );
-  });
+      assert.ok(
+        queryAll(".d-editor-input")
+          .val()
+          .indexOf('quote="codinghorror said, post:3, topic:280"') !== -1
+      );
+    }
+  );
 
-  test("Quoting a quote of a different topic keeps the original topic title", async function (assert) {
-    await visit("/t/internationalization-localization/280");
-    await selectText("#post_9 blockquote");
-    await click(".quote-button .insert-quote");
+  chromeTest(
+    "Quoting a quote of a different topic keeps the original topic title",
+    async function (assert) {
+      await visit("/t/internationalization-localization/280");
+      await selectText("#post_9 blockquote");
+      await click(".quote-button .insert-quote");
 
-    assert.ok(
-      queryAll(".d-editor-input")
-        .val()
-        .indexOf(
-          'quote="A new topic with a link to another topic, post:3, topic:62"'
-        ) !== -1
-    );
-  });
+      assert.ok(
+        queryAll(".d-editor-input")
+          .val()
+          .indexOf(
+            'quote="A new topic with a link to another topic, post:3, topic:62"'
+          ) !== -1
+      );
+    }
+  );
 
-  test("Quoting a quote with the Reply button keeps the original poster name", async function (assert) {
-    await visit("/t/internationalization-localization/280");
-    await selectText("#post_5 blockquote");
-    await click(".reply");
+  chromeTest(
+    "Quoting a quote with the Reply button keeps the original poster name",
+    async function (assert) {
+      await visit("/t/internationalization-localization/280");
+      await selectText("#post_5 blockquote");
+      await click(".reply");
 
-    assert.ok(
-      queryAll(".d-editor-input")
-        .val()
-        .indexOf('quote="codinghorror said, post:3, topic:280"') !== -1
-    );
-  });
+      assert.ok(
+        queryAll(".d-editor-input")
+          .val()
+          .indexOf('quote="codinghorror said, post:3, topic:280"') !== -1
+      );
+    }
+  );
 
   // Using J/K on Firefox clean the text selection, so this won't work there
   chromeTest(
@@ -569,5 +586,47 @@ acceptance("Topic filter replies to post number", function (needs) {
       I18n.t("post.view_all_posts"),
       "it displays the right title when filtered by replies"
     );
+  });
+});
+
+acceptance("Navigating between topics", function (needs) {
+  needs.pretender((server, helper) => {
+    const topicResponse = cloneJSON(topicFixtures["/t/280/1.json"]);
+    const firstPost = topicResponse.post_stream.posts[0];
+    firstPost.cooked += `\n<a class='same-topic-slugless' href='/t/280'>Link 1</a>`;
+    firstPost.cooked += `\n<a class='same-topic-slugless-post' href='/t/280/3'>Link 2</a>`;
+    firstPost.cooked += `\n<a class='diff-topic-slugless' href='/t/28830'>Link 3</a>`;
+    firstPost.cooked += `\n<a class='diff-topic-slugless-post' href='/t/28830/1'>Link 4</a>`;
+    firstPost.cooked += `\n<a class='by-post-id' href='/p/${firstPost.id}'>Link to Post</a>`;
+
+    server.get("/t/280.json", () => helper.response(topicResponse));
+    server.get("/t/280/:post_number.json", () =>
+      helper.response(topicResponse)
+    );
+  });
+
+  test("clicking slug-less URLs within the same topic", async function (assert) {
+    await visit("/t/-/280");
+    await click("a.same-topic-slugless");
+    assert.ok(currentURL().includes("/280"));
+
+    await click("a.same-topic-slugless-post");
+    assert.ok(currentURL().includes("/280"));
+  });
+
+  test("clicking slug-less URLs to a different topic", async function (assert) {
+    await visit("/t/-/280");
+    await click("a.diff-topic-slugless");
+    assert.ok(currentURL().includes("/28830"));
+
+    await visit("/t/-/280");
+    await click("a.diff-topic-slugless-post");
+    assert.ok(currentURL().includes("/28830"));
+  });
+
+  test("clicking post URLs", async function (assert) {
+    await visit("/t/-/280");
+    await click("a.by-post-id");
+    assert.ok(currentURL().includes("/280"));
   });
 });

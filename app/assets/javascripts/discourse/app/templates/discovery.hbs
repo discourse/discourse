@@ -5,10 +5,10 @@
   {{/unless}}
 </div>
 
-{{plugin-outlet name="discovery-list-controls-above"}}
+{{plugin-outlet name="discovery-list-controls-above" tagName="span" connectorTagName="div"}}
 
 <div class="list-controls">
-  {{plugin-outlet name="discovery-navigation-bar-above" tagName=""}}
+  {{plugin-outlet name="discovery-navigation-bar-above" connectorTagName="div"}}
   <div class="container">
     {{outlet "navigation-bar"}}
   </div>
@@ -16,7 +16,7 @@
 
 {{conditional-loading-spinner condition=loading}}
 
-{{plugin-outlet name="discovery-above"}}
+{{plugin-outlet name="discovery-above" tagName="span" connectorTagName="div"}}
 
 <div class="container list-container {{if loading "hidden"}}">
   <div class="row">
@@ -29,7 +29,7 @@
   <div class="row">
     <div class="full-width">
       <div id="list-area">
-        {{plugin-outlet name="discovery-list-container-top"
+        {{plugin-outlet name="discovery-list-container-top" tagName="span" connectorTagName="div"
                         args=(hash category=category listLoading=loading)}}
         {{outlet "list-container"}}
       </div>
@@ -37,4 +37,4 @@
   </div>
 </div>
 
-{{plugin-outlet name="discovery-below"}}
+{{plugin-outlet name="discovery-below" tagName="span" connectorTagName="div"}}

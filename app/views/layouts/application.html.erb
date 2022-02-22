@@ -29,7 +29,7 @@
     <%- if ExtraLocalesController.client_overrides_exist? %>
       <%= preload_script_url ExtraLocalesController.url('overrides') %>
     <%- end %>
-    <%= preload_script "vendor" %>
+    <%= preload_vendor_scripts %>
     <%= preload_script "application" %>
     <%- Discourse.find_plugin_js_assets(include_official: allow_plugins?, include_unofficial: allow_third_party_plugins?, request: request).each do |file| %>
       <%= preload_script file %>

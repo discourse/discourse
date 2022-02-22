@@ -168,7 +168,6 @@ da:
     bootstrap_mode_disabled: "Bootstrap-tilstand deaktiveres inden for 24 timer."
     themes:
       default_description: "Standard"
-      broken_theme_alert: "Dit websted fungerer muligvis ikke, fordi tema / komponent %{theme} har fejl. Deaktiver det her: %{path}."
     s3:
       regions:
         ap_northeast_1: "Asien (Tokyo)"
@@ -1362,11 +1361,9 @@ da:
         every_month: "hver måned"
         every_six_months: "hver sjette måned"
       email_level:
-        title: "Send mig en email når nogen citerer mig, svarer på mit indlæg, nævner mit @brugernavn eller inviterer mig til et emne"
         always: "altid"
         only_when_away: "kun når du er væk"
         never: "aldrig"
-      email_messages_level: "Send mig en e-mail, når nogen sender beskeder til mig"
       include_tl0_in_digests: "Inkluder indhold fra nye brugere i opsummerende mails"
       email_in_reply_to: "Inkluder et uddrag af svaret på indlæg i emails"
       other_settings: "Andre"
@@ -1752,6 +1749,7 @@ da:
         backup_code: "Brug en backup kode i stedet"
     invites:
       accept_title: "Invitation"
+      emoji: "konvolut humørikon"
       welcome_to: "Velkommen til %{site_name}!"
       invited_by: "Du blev inviteret af:"
       social_login_available: "Du vil også kunne logge ind med enhvert socialt login med brug af denne e-mail."
@@ -1866,9 +1864,6 @@ da:
       group_mentioned:
         one: "Ved at nævne %{group} sender du en notifikation til <a href='%{group_link}'>%{count} person</a> - vil du fortsætte?"
         other: "Ved at nævne %{group} sender du en notifikation til <a href='%{group_link}'>%{count} personer</a> - vil du fortsætte?"
-      cannot_see_mention:
-        category: "Du nævnte %{username}, men de vil ikke blive notificeret fordi de ikke har adgang til denne kategori. Du vil være nødt til at tilføje dem til en gruppe, der har adgang til denne kategori."
-        private: "Du nævnte %{username}, men de vil ikke blive notificeret fordi de ikke er i stand til at se denne personlige besked. Du vil være nødt til at invitere dem til denne personlige besked."
       duplicate_link: "Det ser ud til, at dit link til <b>%{domain}</b> allerede var sendt i emnet af <b>@ %{username}</b> i <a href='%{post_url}'>et svar på %{ago}</a> - er du sikker på, at du vil sende det igen?"
       reference_topic_title: "SV: %{title}"
       error:
@@ -2109,16 +2104,30 @@ da:
       search_button: "Søg"
       categories: "Kategorier"
       tags: "Mærker"
+      enter_hint: "eller tryk på Enter"
+      in_posts_by: "i indlæg af %{username}"
+      browser_tip: "%{modifier} + f"
+      browser_tip_description: "igen for at bruge indbygget browser søgning"
+      recent: "Seneste Søgninger"
+      clear_recent: "Ryd Seneste Søgninger"
       type:
+        default: "Emner/indlæg"
         users: "Brugere"
         categories: "Kategorier"
+        categories_and_tags: "Kategorier/mærker"
       context:
         user: "Søg i indlæg fra @%{username}"
         category: "Søg i #%{category} kategorien"
         tag: "Søg i #%{tag} tag"
         topic: "Søg i dette emne"
         private_messages: "Søg i meddelelser"
+      tips:
+        category_tag: "filtrerer efter kategori eller mærke"
+        in: "filtrerer efter metadata (f.eks. in:title, in:personal, in:pinned)"
+        status: "filtrerer efter emnestatus"
+        full_search_key: "%{modifier} + Enter"
       advanced:
+        title: Avancerede filtre
         posted_by:
           label: Skrevet af
         in_category:
@@ -2171,6 +2180,7 @@ da:
           placeholder: minimum
         max_views:
           placeholder: maksimum
+    hamburger_menu: "menu"
     new_item: "ny"
     go_back: "gå tilbage"
     not_logged_in_user: "bruger side, med oversigt over aktivitet og indstillinger"
@@ -2183,7 +2193,7 @@ da:
         clear_all: "Ryd alle"
         unlist_topics: "Fjern emner fra liste"
         relist_topics: "Genindlæs emner"
-        reset_read: "Nulstil \"læst\""
+        defer: "Udsæt"
         delete: "Slet emner"
         dismiss: "Skjul"
         dismiss_read: "Afvis alle ulæste"
@@ -2193,6 +2203,7 @@ da:
         dismiss_new: "Afvis nye"
         toggle: "vælg flere emner af gangen"
         actions: "Handlinger på flere indlæg"
+        change_category: "Indstil kategori..."
         close_topics: "Luk indlæg"
         archive_topics: "Arkiver Emner"
         move_messages_to_inbox: "Flyt til indbakke"
@@ -2395,20 +2406,13 @@ da:
         replies_short: "%{current} / %{total}"
       progress:
         title: emnestatus
-        go_top: "top"
-        go_bottom: "bund"
-        go: "start"
-        jump_bottom: "Hop til sidste indlæg"
         jump_prompt: "hop til..."
         jump_prompt_of:
           one: "af %{count} indlæg"
           other: "af %{count} indlæg"
         jump_prompt_long: "Hop til..."
-        jump_bottom_with_number: "hop til indlæg %{post_number}"
         jump_prompt_to_date: "til dato"
         jump_prompt_or: "eller"
-        total: antal indlæg
-        current: nuværende indlæg
       notifications:
         title: skift hvor ofte du vil blive notificeret om dette emne
         reasons:
@@ -2478,9 +2482,9 @@ da:
         title: "Svar"
         help: "start på et svar til dette emne"
       share:
-        title: "Del"
         extended_title: "Del et link"
         help: "del et link til dette emne"
+        copied: "Emne link kopieret."
         notify_users:
           title: "Underret"
           instructions: "Giv følgende brugere besked om dette emne:"
@@ -2945,7 +2949,6 @@ da:
       default_list_filter: "Standard Listefilter:"
       allow_badges_label: "Tillad at emblemer bliver tildelt i denne kategori"
       edit_permissions: "Redigér tilladelser"
-      reviewable_by_group: "Ud over personalet kan indholdet i denne kategori også gennemgås af:"
       review_group_name: "gruppe navn"
       require_topic_approval: "Kræv moderator godkendelse af alle nye emner"
       require_reply_approval: "Kræv moderator godkendelse af alle nye svar"
@@ -3333,7 +3336,9 @@ da:
       favorite_max_reached: "Du kan ikke favorisere flere badges."
       favorite_max_not_reached: "Markér dette badge som favorit"
     download_calendar:
+      remember: "Spørg mig ikke igen"
       download: "Download"
+      ics: "ICS"
     tagging:
       all_tags: "Alle Mærker"
       other_tags: "Andre Mærker"
@@ -4376,9 +4381,6 @@ da:
           title: "Blokerede IPer"
           description: 'IP-adresser der overvåges. Brug "Tillad" til at tillade IP-adresser.'
           delete_confirm: "Er du sikker på, at du ønsker at fjerne reglen for %{ip_address}?"
-          roll_up_confirm: "Er du sikker på du vil samle alle screenede IP adresser i subnets ?"
-          rolled_up_some_subnets: "Har med succes samlet alle IP forbud til disse subnets: %{subnets}"
-          rolled_up_no_subnet: "Der var intet at samle."
           actions:
             block: "Blokér"
             do_nothing: "Tillad"

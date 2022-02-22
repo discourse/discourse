@@ -326,6 +326,21 @@ RSpec.describe TopicsController do
           expect(result['success']).to eq(false)
           expect(result['url']).to be_blank
         end
+
+        it 'returns plugin validation error' do
+          # stub here is to simulate validation added by plugin which would be triggered when post is moved
+          PostCreator.any_instance.stubs(:skip_validations?).returns(false)
+
+          p1.update_columns(raw: "i", cooked: "")
+          post "/t/#{topic.id}/move-posts.json", params: {
+            post_ids: [p1.id],
+            destination_topic_id: dest_topic.id
+          }
+
+          expect(response.status).to eq(422)
+          result = response.parsed_body
+          expect(result['errors']).to eq(["Body is too short (minimum is 5 characters) and Body seems unclear, is it a complete sentence?"])
+        end
       end
     end
 
@@ -1777,6 +1792,34 @@ RSpec.describe TopicsController do
     end
   end
 
+  describe '#show_by_external_id' do
+    fab!(:private_topic) { Fabricate(:private_message_topic, external_id: 'private') }
+    fab!(:topic) { Fabricate(:topic, external_id: 'asdf') }
+
+    it 'returns 301 when found' do
+      get "/t/external_id/asdf.json"
+      expect(response.status).to eq(301)
+      expect(response).to redirect_to(topic.relative_url + ".json?page=")
+    end
+
+    it 'returns right response when not found' do
+      get "/t/external_id/fdsa.json"
+      expect(response.status).to eq(404)
+    end
+
+    describe 'when user does not have access to the topic' do
+      it 'should return the right response' do
+        sign_in(user)
+
+        get "/t/external_id/private.json"
+
+        expect(response.status).to eq(403)
+        expect(response.body).to include(I18n.t('invalid_access'))
+      end
+    end
+
+  end
+
   describe '#show' do
     use_redis_snapshotting
 
@@ -1959,7 +2002,7 @@ RSpec.describe TopicsController do
       let!(:nonexistent_topic_id) { Topic.last.id + 10000 }
       fab!(:secure_accessible_topic) { Fabricate(:topic, category: accessible_category) }
 
-      shared_examples "various scenarios" do |expected, request_json: false|
+      shared_examples "various scenarios" do |expected, request_json:|
         expected.each do |key, value|
           it "returns #{value} for #{key}" do
             slug = key == :nonexistent ? "garbage-slug" : send(key.to_s).slug
@@ -1994,7 +2037,7 @@ RSpec.describe TopicsController do
             nonexistent: 404,
             secure_accessible_topic: 404
           }
-          include_examples "various scenarios", expected
+          include_examples "various scenarios", expected, request_json: false
         end
 
         context 'anonymous with login required' do
@@ -2011,7 +2054,7 @@ RSpec.describe TopicsController do
             nonexistent: 302,
             secure_accessible_topic: 302
           }
-          include_examples "various scenarios", expected
+          include_examples "various scenarios", expected, request_json: false
         end
 
         context 'anonymous with login required, requesting json' do
@@ -2046,7 +2089,7 @@ RSpec.describe TopicsController do
             nonexistent: 404,
             secure_accessible_topic: 404
           }
-          include_examples "various scenarios", expected
+          include_examples "various scenarios", expected, request_json: false
         end
 
         context 'allowed user' do
@@ -2064,7 +2107,7 @@ RSpec.describe TopicsController do
             nonexistent: 404,
             secure_accessible_topic: 404
           }
-          include_examples "various scenarios", expected
+          include_examples "various scenarios", expected, request_json: false
         end
 
         context 'moderator' do
@@ -2082,7 +2125,7 @@ RSpec.describe TopicsController do
             nonexistent: 404,
             secure_accessible_topic: 404
           }
-          include_examples "various scenarios", expected
+          include_examples "various scenarios", expected, request_json: false
         end
 
         context 'admin' do
@@ -2100,7 +2143,7 @@ RSpec.describe TopicsController do
             nonexistent: 404,
             secure_accessible_topic: 200
           }
-          include_examples "various scenarios", expected
+          include_examples "various scenarios", expected, request_json: false
         end
       end
 
@@ -2137,7 +2180,7 @@ RSpec.describe TopicsController do
             nonexistent: 302,
             secure_accessible_topic: 302
           }
-          include_examples "various scenarios", expected
+          include_examples "various scenarios", expected, request_json: false
         end
 
         context 'normal user' do
@@ -2173,7 +2216,7 @@ RSpec.describe TopicsController do
             nonexistent: 404,
             secure_accessible_topic: 403
           }
-          include_examples "various scenarios", expected
+          include_examples "various scenarios", expected, request_json: false
         end
 
         context 'moderator' do
@@ -2191,7 +2234,7 @@ RSpec.describe TopicsController do
             nonexistent: 404,
             secure_accessible_topic: 403
           }
-          include_examples "various scenarios", expected
+          include_examples "various scenarios", expected, request_json: false
         end
 
         context 'admin' do
@@ -2209,7 +2252,7 @@ RSpec.describe TopicsController do
             nonexistent: 404,
             secure_accessible_topic: 200
           }
-          include_examples "various scenarios", expected
+          include_examples "various scenarios", expected, request_json: false
         end
       end
 
@@ -2810,6 +2853,10 @@ RSpec.describe TopicsController do
   end
 
   describe '#invite_notify' do
+    before do
+      topic.update!(highest_post_number: 1)
+    end
+
     it 'does not notify same user multiple times' do
       sign_in(user)
 
@@ -3308,72 +3355,65 @@ RSpec.describe TopicsController do
             DismissedTopicUser.where(user_id: user.id, topic_id: tracked_topic.id).count
           }.by(1)
         end
-
-        it "creates dismissed topic user records if there are > 30 (default pagination) topics" do
-          topic_ids = []
-          5.times do
-            topic_ids << create_post(category: tracked_category).topic.id
-          end
-
-          expect do
-            stub_const(TopicQuery, "DEFAULT_PER_PAGE_COUNT", 2) do
-              put "/topics/reset-new.json?tracked=true"
-            end
-          end.to change {
-            DismissedTopicUser.where(user_id: user.id, topic_id: topic_ids).count
-          }.by(5)
-        end
-
-        it "creates dismissed topic user records if there are > 30 (default pagination) topics and topic_ids are provided" do
-          topic_ids = []
-          5.times do
-            topic_ids << create_post(category: tracked_category).topic.id
-          end
-          dismissing_topic_ids = topic_ids.sample(4)
-
-          expect do
-            stub_const(TopicQuery, "DEFAULT_PER_PAGE_COUNT", 2) do
-              put "/topics/reset-new.json?tracked=true", params: { topic_ids: dismissing_topic_ids }
-            end
-          end.to change {
-            DismissedTopicUser.where(user_id: user.id, topic_id: topic_ids).count
-          }.by(4)
-        end
       end
 
-      context "when tracked=false" do
-        it "updates the user_stat new_since column and dismisses all the new topics" do
-          topic_ids = []
-          5.times do
-            topic_ids << create_post(category: tracked_category).topic.id
-          end
-          topic_ids << Fabricate(:topic).id
-          topic_ids << Fabricate(:topic).id
-          old_new_since = user.user_stat.new_since
-
-          put "/topics/reset-new.json?tracked=false"
-          expect(DismissedTopicUser.where(user_id: user.id, topic_id: topic_ids).count).to eq(7)
-          expect(user.reload.user_stat.new_since > old_new_since).to eq(true)
+      context "when 5 tracked topics exist" do
+        before_all do
+          @tracked_topic_ids = 5.times.map { create_post(category: tracked_category).topic.id }
+          @tracked_topic_ids.freeze
         end
 
-        it "does not pass topic ids that are not new for the user to the bulk action, limit the scope to new topics" do
-
-          topic_ids = []
-          5.times do
-            topic_ids << create_post(category: tracked_category).topic.id
+        describe "when tracked param is true" do
+          it "creates dismissed topic user records if there are > 30 (default pagination) topics" do
+            expect do
+              stub_const(TopicQuery, "DEFAULT_PER_PAGE_COUNT", 2) do
+                put "/topics/reset-new.json?tracked=true"
+              end
+            end.to change {
+              DismissedTopicUser.where(user_id: user.id, topic_id: @tracked_topic_ids).count
+            }.by(5)
           end
-          topic_ids << Fabricate(:topic).id
-          topic_ids << Fabricate(:topic).id
 
-          dismiss_ids = topic_ids[0..1]
-          other_ids = topic_ids[2..-1].sort.reverse
+          it "creates dismissed topic user records if there are > 30 (default pagination) topics and topic_ids are provided" do
+            dismissing_topic_ids = @tracked_topic_ids.sample(4)
 
-          DismissedTopicUser.create(user_id: user.id, topic_id: dismiss_ids.first)
-          DismissedTopicUser.create(user_id: user.id, topic_id: dismiss_ids.second)
+            expect do
+              stub_const(TopicQuery, "DEFAULT_PER_PAGE_COUNT", 2) do
+                put "/topics/reset-new.json?tracked=true", params: { topic_ids: dismissing_topic_ids }
+              end
+            end.to change {
+              DismissedTopicUser.where(user_id: user.id, topic_id: @tracked_topic_ids).count
+            }.by(4)
+          end
+        end
 
-          expect { put "/topics/reset-new.json?tracked=false" }.to change {
-            DismissedTopicUser.where(user_id: user.id).count
-          }.by(5)
+        context "when two extra topics exist" do
+          before_all do
+            @topic_ids = @tracked_topic_ids + [Fabricate(:topic).id, Fabricate(:topic).id]
+            @topic_ids.freeze
+          end
+
+          context "when tracked=false" do
+            it "updates the user_stat new_since column and dismisses all the new topics" do
+              old_new_since = user.user_stat.new_since
+
+              put "/topics/reset-new.json?tracked=false"
+              expect(DismissedTopicUser.where(user_id: user.id, topic_id: @topic_ids).count).to eq(7)
+              expect(user.reload.user_stat.new_since > old_new_since).to eq(true)
+            end
+
+            it "does not pass topic ids that are not new for the user to the bulk action, limit the scope to new topics" do
+              dismiss_ids = @topic_ids[0..1]
+              other_ids = @topic_ids[2..-1].sort.reverse
+
+              DismissedTopicUser.create(user_id: user.id, topic_id: dismiss_ids.first)
+              DismissedTopicUser.create(user_id: user.id, topic_id: dismiss_ids.second)
+
+              expect { put "/topics/reset-new.json?tracked=false" }.to change {
+                DismissedTopicUser.where(user_id: user.id).count
+              }.by(5)
+            end
+          end
         end
       end
 
@@ -3527,7 +3567,7 @@ RSpec.describe TopicsController do
 
     describe 'converting public topic to private message' do
       fab!(:topic) { Fabricate(:topic, user: user) }
-      fab!(:post) { Fabricate(:post, user: post_author1, topic: topic) }
+      fab!(:post) { Fabricate(:post, user: user, topic: topic) }
 
       it "raises an error when the user doesn't have permission to convert topic" do
         sign_in(user)
@@ -3993,7 +4033,9 @@ RSpec.describe TopicsController do
 
       describe 'when topic id is invalid' do
         it 'should return the right response' do
-          post "/t/999/invite.json", params: {
+          id = topic.id
+          topic.destroy!
+          post "/t/#{id}/invite.json", params: {
             email: user.email
           }
 

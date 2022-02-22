@@ -208,14 +208,24 @@ class TopicEmbed < ActiveRecord::Base
     fragment = Nokogiri::HTML5.fragment("<div>#{contents}</div>")
     fragment.css('a').each do |a|
       if a['href'].present?
-        a['href'] = URI.join(prefix, a['href']).to_s
+        begin
+          a['href'] = URI.join(prefix, a['href']).to_s
+        rescue URI::InvalidURIError
+          # NOOP, URL is malformed
+        end
       end
     end
+
     fragment.css('img').each do |a|
       if a['src'].present?
-        a['src'] = URI.join(prefix, a['src']).to_s
+        begin
+          a['src'] = URI.join(prefix, a['src']).to_s
+        rescue URI::InvalidURIError
+          # NOOP, URL is malformed
+        end
       end
     end
+
     fragment.at('div').inner_html
   end
 

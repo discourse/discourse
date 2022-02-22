@@ -170,7 +170,6 @@ nl:
     bootstrap_mode_disabled: "De bootstrapmodus wordt binnen 24 uur uitgeschakeld."
     themes:
       default_description: "Standaard"
-      broken_theme_alert: "Uw website werkt mogelijk niet, omdat het thema / onderdeel %{theme} fouten bevat. Schakel het uit via %{path}."
     s3:
       regions:
         ap_northeast_1: "Azië Pacifisch (Tokio)"
@@ -1364,11 +1363,9 @@ nl:
         every_month: "elke maand"
         every_six_months: "elke zes maanden"
       email_level:
-        title: "Mij een e-mail sturen wanneer iemand mij citeert, op mijn bericht antwoordt, mijn @gebruikersnaam vermeldt, of mij voor een topic uitnodigt"
         always: "altijd"
         only_when_away: "alleen wanneer afwezig"
         never: "nooit"
-      email_messages_level: "Mij een e-mail sturen wanneer iemand mij een bericht stuurt"
       include_tl0_in_digests: "Bijdragen van nieuwe gebruikers in e-mailsamenvattingen bijvoegen"
       email_in_reply_to: "Fragment van antwoord op bericht in e-mails bijvoegen"
       other_settings: "Overige"
@@ -1873,9 +1870,6 @@ nl:
       group_mentioned:
         one: "Door %{group} te vermelden, gaat u <a href='%{group_link}'>%{count} persoon</a> op de hoogte brengen – weet u dit zeker?"
         other: "Door %{group} te vermelden, gaat u <a href='%{group_link}'>%{count} personen</a> op de hoogte brengen – weet u dit zeker?"
-      cannot_see_mention:
-        category: "U hebt %{username} genoemd, maar de gebruiker ontvangt geen melding, omdat hij of zij geen toegang heeft tot deze categorie. U dient de gebruiker toe te voegen aan een groep die toegang heeft tot deze categorie."
-        private: "U hebt %{username} genoemd, maar de gebruiker ontvangt geen melding, omdat hij of zij dit persoonlijke bericht niet kan zien. U dient de gebruiker voor dit PB uit te nodigen."
       duplicate_link: "Het lijkt erop dat uw koppeling naar <b>%{domain}</b> al in het topic is geplaatst door <b>@%{username}</b> in <a href='%{post_url}'>een antwoord op %{ago}</a> – weet u zeker dat u deze opnieuw wilt plaatsen?"
       reference_topic_title: "RE: %{title}"
       error:
@@ -2213,7 +2207,7 @@ nl:
         clear_all: "Alles wissen"
         unlist_topics: "Topics onzichtbaar maken"
         relist_topics: "Topics opnieuw weergeven"
-        reset_read: "Markeren als ongelezen"
+        defer: "Negeren"
         delete: "Topics verwijderen"
         dismiss: "Negeren"
         dismiss_read: "Alle ongelezen negeren"
@@ -2429,20 +2423,13 @@ nl:
         replies_short: "%{current} / %{total}"
       progress:
         title: topicvoortgang
-        go_top: "boven"
-        go_bottom: "onder"
-        go: "gaan"
-        jump_bottom: "naar laatste bericht"
         jump_prompt: "springen naar..."
         jump_prompt_of:
           one: "van %{count} bericht"
           other: "van %{count} berichten"
         jump_prompt_long: "Springen naar..."
-        jump_bottom_with_number: "naar bericht %{post_number}"
         jump_prompt_to_date: "tot datum"
         jump_prompt_or: "of"
-        total: totale aantal berichten
-        current: huidige bericht
       notifications:
         title: wijzigen hoe vaak u meldingen over dit topic ontvangt
         reasons:
@@ -2512,7 +2499,6 @@ nl:
         title: "Antwoorden"
         help: "beginnen met opstellen van een antwoord op dit topic"
       share:
-        title: "Delen"
         extended_title: "Een koppeling delen"
         help: "een koppeling naar dit topic delen"
         instructions: "Een koppeling naar dit topic delen:"
@@ -2982,7 +2968,6 @@ nl:
       default_list_filter: "Standaard lijstfilter:"
       allow_badges_label: "Badges laten toekennen in deze categorie"
       edit_permissions: "Toestemmingen bewerken"
-      reviewable_by_group: "Naast stafleden kan inhoud in deze categorie ook worden beoordeeld door:"
       review_group_name: "groepsnaam"
       require_topic_approval: "Goedkeuring van moderator voor alle nieuwe topics vereisen"
       require_reply_approval: "Goedkeuring van moderator voor alle nieuwe antwoorden vereisen"
@@ -4415,9 +4400,6 @@ nl:
           title: "Gecontroleerde IP-adressen"
           description: 'IP-adressen die in de gaten worden gehouden. Gebruik ''Toestaan'' om IP-adressen op de acceptatielijst te zetten.'
           delete_confirm: "Weet u zeker dat u de regel voor %{ip_address} wilt verwijderen?"
-          roll_up_confirm: "Weet u zeker dat u regelmatig gecontroleerde IP-adressen in subnetten wilt samenvoegen?"
-          rolled_up_some_subnets: "Verbannen IP-adressen zijn zojuist succesvol tot deze subnetten samengevoegd: %{subnets}."
-          rolled_up_no_subnet: "Er was niets om samen te voegen."
           actions:
             block: "Blokkeren"
             do_nothing: "Toestaan"

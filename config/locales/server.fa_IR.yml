@@ -139,6 +139,8 @@ fa_IR:
     comma: "، "
   invite:
     expired: "توکن دعوت‌نامه شما منقضی شده است. لطفا با <a href='%{base_url}/about'>مدیران تماس</a> بگیرید."
+    not_found_template_link: |
+      <p>این دعوت‌نامه برای <a href="%{base_url}">%{site_name}</a> دیگر قابل استفاده نیست. لطفا از فردی که شما را دعوت کرده است، بخواهید یکبار دیگر دعوت‌نامه جدیدی ارسال کند.</p>
     user_exists: "نیازی به دعوت <b>%{email}</b> نیست، در حال حاضر <a href='%{base_path}/u/%{username}/summary'>حساب کاربری دارند!</a> "
     invite_exists: "شما قبلا <b>%{email}</b> را دعوت کرده‌اید."
     invalid_email: "آدرس ایمیل %{email} معتبر نیست."
@@ -881,7 +883,6 @@ fa_IR:
     max_topic_title_length: "حداکثر طول مجاز عنوان موضوع به نویسه"
     min_personal_message_title_length: "حداقل طول مجاز عنوان برای پیام به نویسه"
     min_search_term_length: "حداقل طول واژه جستجوی معتبر به نویسه"
-    search_tokenize_chinese_japanese_korean: "اجبار جستجو برای tokenize کردن چینی/ژاپنی/کره‌ای حتی در سایت هایی که از این زبان‌ها استفاده نمی‌کنند"
     search_prefer_recent_posts: "اگر در انجمن بزرگ شما سرعت جست‌وجو کم است، این گزینه در ابتدا نمایه‌ی آخرین فرسته‌ها را می‌گردد."
     search_recent_posts_size: "تعداد فرسته‌های اخیر برای قرار گرفتن در نمایه"
     log_search_queries: "کارنامه جستجوهای انجام شده توسط کاربران"
@@ -908,7 +909,6 @@ fa_IR:
     show_pinned_excerpt_mobile: "نمایش خلاصه موضوعات سنجاق شده در موبایل."
     show_pinned_excerpt_desktop: "نمایش خلاصه موضوعات سنجاق شده در کامپیوتر."
     post_onebox_maxlength: "حداکثر طول متن پیشنمایش لینک به نویسه."
-    blocked_onebox_domains: "لیست دامنه‌هایی که نباید پیش‌نمایش داشته باشند."
     max_oneboxes_per_post: "حداکثر تعداد پیش نمایش پیوند در یک نوشته"
     notification_email: "از: ایمیل آدرس زمان ارسال تمام ایمیل های ضروری سیستم استفاده شد. .دامنه مشخص شده در اینجا باید SPF, DKIM داشته باشد و سوابق PTR معکوس به درستی برای ورود ایمیل تنظیم شده باشد. "
     email_custom_headers: "فهرست pipe-delimited از سربرگ‌های ایمیل سفارشی "

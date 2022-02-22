@@ -477,7 +477,7 @@ class UsersController < ApplicationController
     usernames = params[:usernames] if params[:usernames].present?
     usernames = [params[:username]] if params[:username].present?
 
-    raise Discourse::InvalidParameters.new(:usernames) if !usernames.kind_of?(Array)
+    raise Discourse::InvalidParameters.new(:usernames) if !usernames.kind_of?(Array) || usernames.size > 20
 
     groups = Group.where(name: usernames).pluck(:name)
     mentionable_groups =
@@ -496,15 +496,53 @@ class UsersController < ApplicationController
     usernames -= groups
     usernames.each(&:downcase!)
 
-    cannot_see = []
+    users = User
+      .where(staged: false, username_lower: usernames)
+      .index_by(&:username_lower)
+
+    cannot_see = {}
     here_count = nil
 
     topic_id = params[:topic_id]
     if topic_id.present? && topic = Topic.find_by(id: topic_id)
+      topic_muted_by = TopicUser
+        .where(topic: topic)
+        .where(user_id: users.values.map(&:id))
+        .where(notification_level: TopicUser.notification_levels[:muted])
+        .pluck(:user_id)
+        .to_set
+
+      if topic.private_message?
+        topic_allowed_user_ids = TopicAllowedUser
+          .where(topic: topic)
+          .where(user_id: users.values.map(&:id))
+          .pluck(:user_id)
+          .to_set
+
+        topic_allowed_group_ids = TopicAllowedGroup
+          .where(topic: topic)
+          .pluck(:group_id)
+          .to_set
+      end
+
       usernames.each do |username|
-        if !Guardian.new(User.find_by_username(username)).can_see?(topic)
-          cannot_see.push(username)
+        user = users[username]
+        next if user.blank?
+
+        cannot_see_reason = nil
+        if !user.guardian.can_see?(topic)
+          cannot_see_reason = topic.private_message? ? :private : :category
+        elsif topic_muted_by.include?(user.id)
+          cannot_see_reason = :muted_topic
+        elsif topic.private_message? && !topic_allowed_user_ids.include?(user.id) && !user.group_ids.any? { |group_id| topic_allowed_group_ids.include?(group_id) }
+          cannot_see_reason = :not_allowed
         end
+
+        if !guardian.is_staff? && cannot_see_reason.present? && cannot_see_reason != :private && cannot_see_reason != :category
+          cannot_see_reason = nil # do not leak private information
+        end
+
+        cannot_see[username] = cannot_see_reason if cannot_see_reason.present?
       end
 
       if usernames.include?(SiteSetting.here_mention) && guardian.can_mention_here?
@@ -512,12 +550,8 @@ class UsersController < ApplicationController
       end
     end
 
-    result = User.where(staged: false)
-      .where(username_lower: usernames)
-      .pluck(:username_lower)
-
     render json: {
-      valid: result,
+      valid: users.keys,
       valid_groups: groups,
       mentionable_groups: mentionable_groups,
       cannot_see: cannot_see,
@@ -566,7 +600,7 @@ class UsersController < ApplicationController
       return render json: success_json
     end
 
-    if !(email =~ EmailValidator.email_regex)
+    if !EmailAddressValidator.valid_value?(email)
       error = User.new.errors.full_message(:email, I18n.t(:'user.email.invalid'))
       return render json: failed_json.merge(errors: [error])
     end
@@ -703,7 +737,7 @@ class UsersController < ApplicationController
       session["user_created_message"] = activation.success_message
 
       if existing_user = User.find_by_email(user.primary_email&.email)
-        Jobs.enqueue(:critical_user_email, type: :account_exists, user_id: existing_user.id)
+        Jobs.enqueue(:critical_user_email, type: "account_exists", user_id: existing_user.id)
       end
 
       render json: {
@@ -898,7 +932,7 @@ class UsersController < ApplicationController
 
       if user = User.with_email(params[:email]).admins.human_users.first
         email_token = user.email_tokens.create!(email: user.email, scope: EmailToken.scopes[:email_login])
-        Jobs.enqueue(:critical_user_email, type: :admin_login, user_id: user.id, email_token: email_token.token)
+        Jobs.enqueue(:critical_user_email, type: "admin_login", user_id: user.id, email_token: email_token.token)
         @message = I18n.t("admin_login.success")
       else
         @message = I18n.t("admin_login.errors.unknown_email_address")
@@ -933,7 +967,7 @@ class UsersController < ApplicationController
         email_token = user.email_tokens.create!(email: user.email, scope: EmailToken.scopes[:email_login])
 
         Jobs.enqueue(:critical_user_email,
-          type: :email_login,
+          type: "email_login",
           user_id: user.id,
           email_token: email_token.token
         )
@@ -1412,16 +1446,14 @@ class UsersController < ApplicationController
     require 'rotp' if !defined? ROTP
     totp_data = ROTP::Base32.random
     secure_session["staged-totp-#{current_user.id}"] = totp_data
-    qrcode_svg = RQRCode::QRCode.new(current_user.totp_provisioning_uri(totp_data)).as_svg(
-      offset: 0,
-      color: '000',
-      shape_rendering: 'crispEdges',
-      module_size: 4
+    qrcode_png = RQRCode::QRCode.new(current_user.totp_provisioning_uri(totp_data)).as_png(
+      border_modules: 1,
+      size: 240
     )
 
     render json: success_json.merge(
              key: totp_data.scan(/.{4}/).join(" "),
-             qr: qrcode_svg
+             qr: qrcode_png.to_data_url
            )
   end
 
@@ -1503,7 +1535,7 @@ class UsersController < ApplicationController
 
     Jobs.enqueue(
       :critical_user_email,
-      type: :account_second_factor_disabled,
+      type: "account_second_factor_disabled",
       user_id: current_user.id
     )
 

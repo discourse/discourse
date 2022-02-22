@@ -14,7 +14,7 @@ describe PostOwnerChanger do
     it "raises an error with a parameter missing" do
       expect {
         PostOwnerChanger.new(post_ids: [p1.id], topic_id: topic.id, new_owner: nil, acting_user: editor)
-      }.to raise_error(ArgumentError)
+      }.to raise_error(ArgumentError, /new_owner/)
     end
 
     it "calls PostRevisor" do
@@ -112,7 +112,7 @@ describe PostOwnerChanger do
 
         p1user.user_stat.update!(
           topic_count: 1,
-          post_count: 1,
+          post_count: 0,
           first_post_created_at: p1.created_at,
         )
 
@@ -151,7 +151,7 @@ describe PostOwnerChanger do
         expect(p2user.topic_count).to eq(0)
         expect(p2user.post_count).to eq(0)
         expect(user_a.topic_count).to eq(1)
-        expect(user_a.post_count).to eq(2)
+        expect(user_a.post_count).to eq(1)
 
         p1_user_stat = p1user.user_stat
 

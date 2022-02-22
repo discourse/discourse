@@ -1,5 +1,5 @@
 import { bind } from "discourse-common/utils/decorators";
-import { minimumOffset } from "discourse/lib/offset-calculator";
+import { headerOffset } from "discourse/lib/offset-calculator";
 
 // Dear traveller, you are entering a zone where we are at war with the browser.
 // The browser is insisting on positioning scrollTop per the location it was in
@@ -50,7 +50,7 @@ export default class LockOn {
       }
     }
 
-    return offset - minimumOffset();
+    return offset - headerOffset();
   }
 
   clearLock() {

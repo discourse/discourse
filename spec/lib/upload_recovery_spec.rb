@@ -41,7 +41,7 @@ RSpec.describe UploadRecovery do
       [
         public_path,
         public_path.sub("uploads", "uploads/tombstone")
-      ].each { |path| File.delete(path) if File.exists?(path) }
+      ].each { |path| File.delete(path) if File.exist?(path) }
     end
   end
 

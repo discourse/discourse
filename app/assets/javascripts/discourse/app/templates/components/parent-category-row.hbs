@@ -1,9 +1,9 @@
 {{#unless isHidden}}
-  {{plugin-outlet name="category-list-above-each-category" connectorTagName="" tagName="" args=(hash category=category)}}
+  {{plugin-outlet name="category-list-above-each-category" args=(hash category=category)}}
   <tr data-category-id={{category.id}} data-notification-level={{category.notificationLevelString}} class="{{if category.description_excerpt "has-description" "no-description"}} {{if category.uploaded_logo.url "has-logo" "no-logo"}}">
-    <td class="category {{if isMuted "muted"}} {{if noCategoryStyle "no-category-style"}}" style={{unless noCategoryStyle (border-color category.color)}}>
+    <td class="category {{if isMuted "muted"}} {{if noCategoryStyle "no-category-style"}}" style={{unless noCategoryStyle (concat (border-color category.color) (category-color-variable category.color))}}>
       {{category-title-link category=category}}
-      {{plugin-outlet name="below-category-title-link" tagName="" args=(hash category=category)}}
+      {{plugin-outlet name="below-category-title-link" connectorTagName="div" args=(hash category=category)}}
       {{#if category.description_excerpt}}
         <div class="category-description">
           {{dir-span category.description_excerpt htmlSafe="true"}}

@@ -584,7 +584,7 @@ users:
     client: true
     default: true
   invite_expiry_days:
-    default: 30
+    default: 90
     client: true
     max: 36500
   invites_per_page:
@@ -686,7 +686,6 @@ users:
     default: 2000
     hidden: true
   use_email_for_username_and_name_suggestions:
-    hidden: true
     default: false
 
 groups:
@@ -1596,7 +1595,7 @@ security:
   enable_escaped_fragments: true
   allow_index_in_robots_txt: true
   allow_indexing_non_canonical_urls:
-    default: true
+    default: false
     hidden: true
   moderators_manage_categories_and_groups: false
   moderators_change_post_ownership:
@@ -1701,7 +1700,7 @@ onebox:
       zh_TW: 200
   blocked_onebox_domains:
     default: ""
-    type: list
+    type: host_list
     list_type: compact
   max_oneboxes_per_post:
     default: 50
@@ -1829,6 +1828,9 @@ rate_limits:
   tl2_additional_edits_per_day_multiplier: 1.5
   tl3_additional_edits_per_day_multiplier: 2
   tl4_additional_edits_per_day_multiplier: 3
+  tl2_additional_flags_per_day_multiplier: 1.5
+  tl3_additional_flags_per_day_multiplier: 2
+  tl4_additional_flags_per_day_multiplier: 3
   alert_admins_if_errors_per_minute:
     client: true
     default: 0
@@ -1900,7 +1902,7 @@ developer:
   anon_polling_interval:
     hidden: true
     client: true
-    default: 30000
+    default: 25000
     max: 99000
   flush_timings_secs:
     client: true
@@ -2035,7 +2037,12 @@ search:
       zh_TW: 1
       ko: 1
       ja: 1
-  search_tokenize_chinese_japanese_korean: false
+  search_tokenize_chinese:
+    default: false
+    validator: "SearchTokenizeChineseValidator"
+  search_tokenize_japanese:
+    default: false
+    validator: "SearchTokenizeJapaneseValidator"
   search_prefer_recent_posts: false
   search_recent_posts_size:
     default: 1000000
@@ -2348,6 +2355,10 @@ uncategorized:
     default: false
     hidden: true
 
+  allow_bulk_invite:
+    default: true
+    client: true
+
   max_bulk_invites:
     default: 50000
     hidden: true
@@ -2580,3 +2591,6 @@ dashboard:
       - flags
       - user_to_user_private_messages_with_replies
       - signups
+  verbose_user_stat_count_logging:
+    hidden: true
+    default: false

@@ -10,9 +10,9 @@ $mobile-breakpoint: 700px;
   display: inline-flex;
   position: relative;
   width: 100%;
-  height: auto;
   overflow: hidden;
   height: 100%;
+
   @include breakpoint(tablet) {
     width: calc(100% + 10px);
     margin-left: -10px;
@@ -855,6 +855,19 @@ table#user-badges {
     .remove-value-btn {
       @include value-btn;
       margin-right: 0.25em;
+    }
+
+    .shift-up-value-btn,
+    .shift-down-value-btn {
+      display: none;
+      margin-inline: 0.25em;
+    }
+
+    &:hover {
+      .shift-up-value-btn,
+      .shift-down-value-btn {
+        display: block;
+      }
     }
   }
   .values {

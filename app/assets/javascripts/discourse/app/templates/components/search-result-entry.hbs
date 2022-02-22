@@ -31,7 +31,7 @@
       {{#if post.topic}}
         {{discourse-tags post.topic}}
       {{/if}}
-      {{plugin-outlet name="full-page-search-category" args=(hash post=post)}}
+      {{plugin-outlet name="full-page-search-category" tagName="span" connectorTagName="div" args=(hash post=post)}}
     </div>
   </div>
 

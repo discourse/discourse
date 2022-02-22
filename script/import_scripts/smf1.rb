@@ -411,7 +411,7 @@ class ImportScripts::Smf1 < ImportScripts::Base
         next unless post = PostCustomField.joins(:post).find_by(name: "import_id", value: u["id_msg"].to_s)&.post
 
         path = File.join(UPLOADS_DIR, "#{u["id_attach"]}_#{u["file_hash"]}")
-        next unless File.exists?(path) && File.size(path) > 0
+        next unless File.exist?(path) && File.size(path) > 0
 
         if upload = create_upload(post.user_id, path, u["filename"])
           html = html_for_upload(upload, u["filename"])

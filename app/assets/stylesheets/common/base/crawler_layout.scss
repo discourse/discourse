@@ -25,6 +25,8 @@ body.crawler {
   }
 
   .topic-list {
+    table-layout: fixed;
+    overflow: hidden;
     margin-bottom: 1em;
     @media (max-width: 850px) {
       td {
@@ -140,4 +142,9 @@ body.crawler {
     display: inline-block;
     padding: 0.5em 1em 0.5em 0;
   }
+}
+
+.poll-info {
+  // crawler vote count always shows 0
+  display: none;
 }

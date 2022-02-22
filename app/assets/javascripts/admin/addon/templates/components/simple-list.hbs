@@ -15,8 +15,23 @@
           class="value-input"
           focus-out=(action "changeValue" index)
         }}
+
+        {{#if showUpDownButtons}}
+          {{d-button
+            action=(action "shift" -1 index)
+            icon="arrow-up"
+            class="shift-up-value-btn btn-small"
+          }}
+          {{d-button
+            action=(action "shift" 1 index)
+            icon="arrow-down"
+            class="shift-down-value-btn btn-small"
+          }}
+        {{/if}}
       </div>
+
     {{/each}}
+
   </div>
 {{/if}}
 
@@ -26,9 +41,10 @@
     value=newValue
     placeholderKey="admin.site_settings.simple_list.add_item"
     class="add-value-input"
-    autocomplete="discourse"
+    autocomplete="off"
     autocorrect="off"
-    autocapitalize="off"}}
+    autocapitalize="off"
+  }}
 
   {{d-button
       action=(action "addValue")

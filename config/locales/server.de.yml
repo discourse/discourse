@@ -229,7 +229,7 @@ de:
 
       <p>Ansonsten kannst du <a href="%{base_url}/password-reset">dein Passwort zurücksetzen</a>.</p>
     not_found_template_link: |
-      <p>Die Einladung zu <a href="%{base_url}">%{site_name}</a> kann nicht mehr angenommen werden. Bitte die Person, die dich eingeladen hat, dir eine neue Einladung zu schicken.</p>
+      <p>Diese Einladung zu <a href="%{base_url}">%{site_name}</a> kann nicht mehr eingelöst werden. Bitte die Person, die dich eingeladen hat, dir eine neue Einladung zu schicken.</p>
     user_exists: "Es ist nicht nötig, <b>%{email}</b> einzuladen, die Person <a href='%{base_path}/u/%{username}/summary'>hat schon ein Konto!</a>"
     invite_exists: "Du hast <b>%{email}</b> bereits eingeladen."
     invalid_email: "%{email} ist keine gültige E-Mail-Adresse."
@@ -241,7 +241,7 @@ de:
     disabled_errors:
       discourse_connect_enabled: "Einladungen sind deaktiviert, da DiscourseConnect aktiviert ist."
       invalid_access: "Du bist nicht berechtigt, die angeforderte Ressource anzuzeigen."
-    requires_groups: "Einladung gespeichert. Um Zugriff auf das angegebene Thema zu gewähren, füge eine der folgenden Gruppen hinzu: %{groups}."
+    requires_groups: "Die Einladung wurde nicht gespeichert, weil auf das angegebene Thema nicht zugegriffen werden kann. Füge eine der folgenden Gruppen hinzu: %{groups}."
     domain_not_allowed: "Diese E-Mail-Adresse kann nicht verwendet werden, um diese Einladung einzulösen."
   bulk_invite:
     file_should_be_csv: "Die hochgeladene Datei sollte im CSV-Format vorliegen."
@@ -338,8 +338,8 @@ de:
   too_many_links:
     one: "Entschuldige, neue Benutzer können Beiträgen höchstens einen Link hinzufügen."
     other: "Entschuldige, neue Benutzer können Beiträgen höchstens %{count} Links hinzufügen."
-  contains_blocked_word: "Dein Beitrag enthält ein nicht erlaubtes Wort: %{word}"
-  contains_blocked_words: "Dein Beitrag enthält mehrere Wörter, die nicht erlaubt sind: %{words}"
+  contains_blocked_word: "Tut mir leid, du kannst das Wort '%{word}' nicht posten; es ist nicht erlaubt."
+  contains_blocked_words: "Sorry, das kannst du nicht posten. Nicht erlaubt: %{words}."
   spamming_host: "Entschuldige, leider kannst du keinen Link zu diesem Host posten."
   user_is_suspended: "Gesperrte Benutzer dürfen keine Beiträge schreiben."
   topic_not_found: "Etwas ist schiefgelaufen. Wurde das Thema eventuell geschlossen oder gelöscht, während du es angeschaut hast?"
@@ -647,6 +647,7 @@ de:
       permission_conflict: "Jede Gruppe, die Zugriff auf eine Unterkategorie hat, muss auch Zugriff auf die übergeordnete Kategorie erhalten. Folgende Gruppen haben Zugriff auf eine der Unterkategorien, aber keinen Zugriff auf die übergeordnete Kategorie: %{group_names}."
       disallowed_topic_tags: "Dieses Thema hat Schlagwörter, die in dieser Kategorie nicht erlaubt sind: „%{tags}“"
       disallowed_tags_generic: "Dieses Thema hat unerlaubte Schlagwörter."
+      slug_contains_non_ascii_chars: "enthält Nicht-ASCII-Zeichen"
     cannot_delete:
       uncategorized: "Diese Kategorie ist etwas Spezielles. Sie dient als Bereich für Themen, die keine Kategorie haben, und kann nicht gelöscht werden."
       has_subcategories: "Diese Kategorie kann nicht gelöscht werden, weil sie Unterkategorien enthält."
@@ -1353,6 +1354,7 @@ de:
         qtt_like: Erhaltene „Gefällt mir“
       description: "Top 10 Benutzer, die von einer Vielzahl von Leuten Likes bekommen haben."
   dashboard:
+    group_email_credentials_warning: 'Es gab ein Problem mit den E-Mail-Anmeldedaten für die Gruppe <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. Bis dieses Problem behoben ist, werden keine E-Mails aus dem Posteingang der Gruppe versendet. %{error}'
     rails_env_warning: "Dein Server läuft im %{env}-Modus."
     host_names_warning: "Deine config/database.yml-Datei verwendet localhost als Hostnamen. Trage hier den Hostnamen deiner Website ein."
     sidekiq_warning: 'Sidekiq läuft nicht. Viele Aufgaben – wie zum Beispiel das Versenden von E-Mails – werden asynchron durch Sidekiq ausgeführt. Bitte stell sicher, dass mindestens ein Sidekiq-Prozess läuft. <a href="https://github.com/mperham/sidekiq" target="_blank">Mehr über Sidekiq erfährst du hier</a>.'
@@ -1380,6 +1382,7 @@ de:
     unreachable_themes: "Wir konnten die folgenden Themes nicht auf Updates prüfen:"
     watched_word_regexp_error: "Der reguläre Ausdruck für „%{action}“ überwachte Wörter ist ungültig. Bitte überprüfe deine <a href='%{base_path}/admin/customize/watched_words'>Einstellungen für überwachte Wörter</a> oder deaktiviere die Website-Einstellung „watched words regular expressions“."
   site_settings:
+    allow_bulk_invite: "Erlaube Masseneinladungen durch Hochladen einer CSV-Datei"
     disabled: "deaktiviert"
     display_local_time_in_user_card: "Zeigt die lokale Zeit basierend auf der Zeitzone eines Benutzers an, wenn die Benutzerkarte geöffnet wird."
     censored_words: "Wörter, die automatisch durch &#9632;&#9632;&#9632;&#9632; ersetzt werden"
@@ -1400,7 +1403,8 @@ de:
     min_personal_message_title_length: "Minimal zulässige Zeichenanzahl für den Titel von Nachrichten."
     max_emojis_in_title: "Maximal erlaubte Emoji-Anzahl in Thementiteln"
     min_search_term_length: "Minimal zulässige Länge eines Suchbegriffs in Zeichen."
-    search_tokenize_chinese_japanese_korean: "Zwinge die Suche, Chinesisch/Japanisch/Koreanisch zu tokenisieren, auch wenn Websites keine dieser Sprachen nutzen"
+    search_tokenize_chinese: "Suche erzwingen, um Chinesisch auch auf nicht chinesischen Websites zu kennzeichnen"
+    search_tokenize_japanese: "Suche erzwingen, um Japanisch auch auf nicht japanischen Websites zu kennzeichnen"
     search_prefer_recent_posts: "Wenn das Durchsuchen deines großen Forums langsam ist, dann versucht es diese Option zuerst mit einem Index der letzten Beiträge."
     search_recent_posts_size: "Anzahl aktueller Beiträge im Index"
     log_search_queries: "Protokolliere Suchanfragen von Benutzern"
@@ -1444,7 +1448,7 @@ de:
     show_pinned_excerpt_mobile: "Zeige einen Auszug angehefteter Themen in der mobilen Ansicht."
     show_pinned_excerpt_desktop: "Zeige einen Auszug angehefteter Themen in der Desktop-Ansicht."
     post_onebox_maxlength: "Maximale Länge eines Onebox-Discourse-Beitrags in Zeichen."
-    blocked_onebox_domains: "Eine Liste von Domains, die nie in eine Onebox umgewandelt werden."
+    blocked_onebox_domains: "Eine Liste von Domains, die niemals in einer Onebox untergebracht werden, z.B. wikipedia.org\n(Wildcard-Symbole * ? nicht unterstützt)"
     allowed_inline_onebox_domains: "Eine Liste von Domains, die in verkleinerter Form in eine Onebox umgewandelt werden, wenn sie ohne Titel verlinkt werden"
     enable_inline_onebox_on_all_domains: "Ignoriere die Website-Einstellung `inline_onebox_domain_allowlist` und erlaube Inline-Oneboxen für alle Domains"
     force_custom_user_agent_hosts: "Hosts, bei denen der spezifische Onebox-Useragent für alle Anfragen genutzt wird. (Besonders hilfreich bei Hosts, die Zugriffe per Useragent limitieren.)"
@@ -1498,6 +1502,9 @@ de:
     tl2_additional_edits_per_day_multiplier: "Erhöhe das Limit der Bearbeitungen pro Tag für Benutzer mit Vertrauensstufe 2 (Mitglied) durch Multiplikation mit dieser Zahl"
     tl3_additional_edits_per_day_multiplier: "Erhöhe das Limit der Bearbeitungen pro Tag für Benutzer mit Vertrauensstufe 3 (Stammgast) durch Multiplikation mit dieser Zahl"
     tl4_additional_edits_per_day_multiplier: "Erhöhe das Limit der Bearbeitungen pro Tag für Benutzer mit Vertrauensstufe 4 (Anführer) durch Multiplikation mit dieser Zahl"
+    tl2_additional_flags_per_day_multiplier: "Erhöhe das Limit der „Meldungen“ pro Tag für Benutzer mit Vertrauensstufe 2 (Mitglied) durch Multiplikation mit dieser Zahl"
+    tl3_additional_flags_per_day_multiplier: "Erhöhe das Limit der „Meldungen“ pro Tag für Benutzer mit Vertrauensstufe 3 (Stammgast) durch Multiplikation mit dieser Zahl"
+    tl4_additional_flags_per_day_multiplier: "Erhöhe das Limit der „Meldungen“ pro Tag für Benutzer mit Vertrauensstufe 4 (Anführer) durch Multiplikation mit dieser Zahl"
     num_users_to_silence_new_user: "Wenn die Beiträge eines neuen Benutzers num_spam_flags_to_silence_new_user Spam-Meldungen von so vielen verschiedenen Benutzern erhalten, werden alle Beiträge des Benutzers versteckt und zukünftige Beiträge verhindert. 0 zum Deaktivieren."
     num_tl3_flags_to_silence_new_user: "Wenn die Beiträge eines neuen Benutzers so viele Meldungen von num_tl3_users_to_silence_new_user verschiedenen Benutzern mit Vertrauensstufe 3 erhalten, werden alle Beiträge des Benutzers versteckt und zukünftige Beiträge verhindert. 0 zum Deaktivieren."
     num_tl3_users_to_silence_new_user: "Wenn die Beiträge eines neuen Benutzers num_tl3_flags_to_silence_new_user Meldungen von so vielen verschiedenen Benutzern mit Vertrauensstufe 3 erhalten, werden alle Beiträge des Benutzers versteckt und zukünftige Beiträge verhindert. 0 zum Deaktivieren."
@@ -1532,7 +1539,7 @@ de:
     allowed_iframes: "Eine Liste von iframe-src-Domain-Präfixen, die Discourse in Beiträgen sicher erlauben kann."
     allowed_crawler_user_agents: "Browserkennungen von Webcrawlern, denen der Zugriff auf die Website erlaubt sein soll. WARNUNG! DIESE EINSTELLUNG BLOCKIERT ALLE HIER NICHT GELISTETEN CRAWLER!"
     blocked_crawler_user_agents: "Eindeutiges Wort unter Vernachlässigung der Groß- und Kleinschreibung in der Zeichenfolge der Browserkennung, das Webcrawler identifiziert, die nicht auf die Website zugreifen dürfen. Gilt nicht, wenn die Positivliste definiert ist."
-    slow_down_crawler_user_agents: "Benutzeragenten von Web-Crawlern, die wie in der Einstellung \"Crawler-Rate verlangsamen\" konfiguriert, begrenzt werden sollen. Jeder Wert muss mindestens 3 Zeichen lang sein."
+    slow_down_crawler_user_agents: 'Benutzeragenten von Web-Crawlern, die wie in der Einstellung "Crawler-Rate verlangsamen" konfiguriert, begrenzt werden sollen. Jeder Wert muss mindestens 3 Zeichen lang sein.'
     slow_down_crawler_rate: "Wenn slow_down_crawler_user_agents ausgewählt ist, wird diese Anfragenbegrenzung auf alle Crawler angewendet (Anzahl der Sekunden zwischen zwei Anfragen)"
     content_security_policy: "Aktiviere Content-Security-Policy"
     content_security_policy_report_only: "Aktiviere Content-Security-Policy-Report-Only"
@@ -1760,7 +1767,7 @@ de:
     max_mentions_per_post: "Maximale Anzahl der Namenserwähnungen mit @, die Benutzer in Beiträgen nutzen dürfen."
     max_users_notified_per_group_mention: "Maximale Anzahl von Benutzern, die eine Benachrichtigung erhalten können, wenn eine Gruppe erwähnt wird (wenn der Schwellenwert erreicht ist, werden keine Benachrichtigungen ausgelöst)"
     enable_mentions: "Erlaube Benutzern, andere Benutzer zu erwähnen."
-    here_mention: "Name, der für die @here-Erwähnung verwendet wird. Darf kein bestehender Benutzername sein."
+    here_mention: "Name, der für eine @Erwähnung verwendet wird, damit privilegierte Benutzer bis zu 'max_here_mentioned' Personen benachrichtigen können, die an dem Thema teilnehmen. Darf kein bestehender Benutzername sein."
     max_here_mentioned: "Maximale Anzahl der erwähnten Personen von @here."
     min_trust_level_for_here_mention: "Die minimale Vertrauensstufe, die @hier erwähnt werden darf."
     create_thumbnails: "Erzeuge ein Vorschaubild und eine Lightbox für Bilder, die zu groß sind, um in einem Beitrag angezeigt zu werden."
@@ -1970,7 +1977,7 @@ de:
     display_name_on_posts: "Zeige zusätzlich zum @Benutzernamen auch den vollständigen Namen des Benutzers bei seinen Beiträgen."
     show_time_gap_days: "Wenn zwei Beiträge so viele Tage auseinanderliegen, dann wird die Zeitspanne im Thema angezeigt."
     short_progress_text_threshold: "Sobald die Anzahl an Beiträgen in einem Thema diese Nummer übersteigt, zeigt der Fortschrittsbalken nur noch die aktuelle Beitragsnummer. Dieser Wert sollte angepasst werden, falls die Breite des Fortschrittsbalkens verändert wird."
-    default_code_lang: "Standardmäßiges Syntax-Highlighting für GitHub-Codeblöcke (auto, nohighlight, ruby, python usw.)"
+    default_code_lang: "Standardmäßige Syntaxhervorhebung der Programmiersprache, die auf Codeblöcke angewendet wird (auto, nohighlight, ruby, python etc.). Dieser Wert muss auch in der Site-Einstellung \"Hervorgehobene Sprachen\" enthalten sein."
     warn_reviving_old_topic_age: "Wenn jemand beginnt, auf ein Thema zu antworten, dessen letzte Antwort älter als diese Anzahl an Tagen ist, wird eine Warnung angezeigt. Zum Deaktivieren auf 0 setzen."
     autohighlight_all_code: "Erzwinge Syntaxhervorhebung für alle Quellcode-Blöcke auch dann, wenn keine Sprache angegeben wurde."
     highlighted_languages: "Aktivierte Regeln für die Syntaxhervorhebung. (Warnung: Das Aktivieren zu vieler Sprachen kann die Leistung beeinträchtigen.) Siehe <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> für eine Demonstration"
@@ -2096,6 +2103,7 @@ de:
     share_quote_visibility: "Bestimme, wann die Schaltflächen zum Teilen von Zitaten angezeigt werden sollen: nie, nur für anonyme Benutzer oder für alle Benutzer. "
     create_revision_on_bulk_topic_moves: "Erstelle eine Überarbeitung für die ersten Beiträge, wenn Themen massenweise in eine neue Kategorie verschoben werden."
     allow_changing_staged_user_tracking: "Erlauben Sie, dass die Kategorie- und Tag-Benachrichtigungseinstellungen eines bereitgestellten Benutzers von einem Administratorbenutzer geändert werden."
+    use_email_for_username_and_name_suggestions: "Verwende den ersten Teil der E-Mail-Adressen für Vorschläge für Benutzernamen und Namen. Dies macht es für die Öffentlichkeit einfacher, die vollständigen E-Mail-Adressen der Nutzer/innen zu erraten (da ein großer Teil der Menschen gemeinsame Dienste wie \"gmail.com\" nutzt)."
     errors:
       invalid_css_color: "Ungültige Farbe. Gib einen Farbnamen oder einen Hexadezimalwert ein."
       invalid_email: "Ungültige E-Mail-Adresse."
@@ -2115,6 +2123,7 @@ de:
       invalid_json: "Ungültiges JSON."
       invalid_reply_by_email_address: "Wert muss „%{reply_key}“ enthalten und sich von der Benachrichtigungs-E-Mail unterscheiden."
       invalid_alternative_reply_by_email_addresses: "Alle Werte müssen „%{reply_key}“ enthalten und sich von der Benachrichtigungs-E-Mail unterscheiden."
+      invalid_domain_hostname: "Darf kein * oder ? Zeichen enthalten."
       pop3_polling_host_is_empty: "Du musst „pop3 polling host“ definieren, um POP3-Abfragen zu aktivieren."
       pop3_polling_username_is_empty: "Du musst „pop3 polling username“ definieren, um POP3-Abfragen zu aktivieren."
       pop3_polling_password_is_empty: "Du musst „pop3 polling password“ definieren, um POP3-Abfragen zu aktivieren."
@@ -2144,6 +2153,8 @@ de:
       unicode_usernames_avatars: "Die internen System-Avatare unterstützen keine Unicode-Benutzernamen."
       list_value_count: "Die Liste muss genau %{count} Werte enthalten."
       google_oauth2_hd_groups: "Vor Aktivierung dieser Einstellung musst zuerst \"google oauth2 hd\" eingeschaltet werden."
+      search_tokenize_chinese_enabled: "Du musst „search_tokenize_chinese“ deaktivieren, bevor du diese Einstellung aktivierst."
+      search_tokenize_japanese_enabled: "Du musst „search_tokenize_japanese“ deaktivieren, bevor du diese Einstellung aktivierst."
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2305,6 +2316,10 @@ de:
     second_factor_toggle:
       totp: "Verwende stattdessen eine Authentifizierungs-App oder einen Sicherheitsschlüssel"
       backup_code: "Benutze stattdessen einen Wiederherstellungscode"
+  second_factor_auth:
+    challenge_not_found: "Es konnte keine 2FA-Herausforderung in deiner aktuellen Sitzung gefunden werden."
+    challenge_expired: "Es ist zu viel Zeit vergangen, seit die 2FA-Herausforderung durchgeführt wurde, und sie ist nicht mehr gültig. Bitte versuche es erneut."
+    challenge_not_completed: "Du hast die 2FA-Herausforderung nicht abgeschlossen, um diese Aktion durchzuführen. Bitte schließe die 2FA-Herausforderung ab und versuche es erneut."
   admin:
     email:
       sent_test: "gesendet!"
@@ -2544,7 +2559,7 @@ de:
     other: "Dieses Thema wurde aufgrund einer großen Anzahl an Community-Meldungen vorübergehend für mindestens %{count} Stunden geschlossen."
   system_messages:
     reviewables_reminder:
-      subject_template: "Es gibt Elemente in der Überprüfungswarteschlange, die überprüft werden müssen"
+      subject_template: "Es gibt Einträge in der Überprüfungswarteschlange, die überprüft werden müssen"
       text_body_template:
         one: "%{mentions} Elemente wurden vor über %{count} Stunde übermittelt. [Bitte überprüfe sie](%{base_url}/review)."
         other: "%{mentions} Elemente wurden vor über %{count} Stunden übermittelt. [Bitte überprüfe sie](%{base_url}/review)."
@@ -2643,7 +2658,13 @@ de:
         %{flagged_post_raw_content}
         ```
 
-        Weitere Einzelheiten zum Grund für die Entfernung findest du in unseren [Community-Richtlinien](%{base_url}/guidelines).
+        Worauf du geantwortet hast
+
+        ``` markdown
+        %{flagged_post_response_raw_content}
+        ```
+
+        Für weitere Details zum Grund der Entfernung lies bitte unsere [Community-Richtlinien](%{base_url}/guidelines).
     usage_tips:
       text_body_template: |
         Für einige schnelle Tipps, um als neuer Benutzer loszulegen, [schaue einmal diesen Blog-Beitrag an](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).

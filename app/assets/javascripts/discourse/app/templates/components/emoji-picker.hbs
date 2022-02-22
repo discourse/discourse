@@ -1,5 +1,7 @@
 {{#if isActive}}
-  <div class="emoji-picker {{if @isActive "opened"}}">
+  {{!-- template-lint-disable no-invalid-interactive --}}
+  <div {{on "keydown" (action "keydown")}} class="emoji-picker {{if @isActive "opened"}}">
+    {{!-- template-lint-enable no-invalid-interactive --}}
     <div class="emoji-picker-category-buttons">
       {{#if recentEmojis.length}}
         <button type="button" data-section="recent" {{action "onCategorySelection" "recent"}} class="btn btn-default category-button emoji">
@@ -22,7 +24,8 @@
           class="filter"
           name="filter"
           placeholder=(i18n "emoji_picker.filter_placeholder")
-          autocomplete="discourse"
+          autocomplete="off"
+          type="search"
           autocorrect="off"
           autocapitalize="off"
           input=(action "onFilter")

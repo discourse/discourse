@@ -116,7 +116,7 @@ EMOJI_ALIASES ||= {
   "nerd_face" => [ "nerd" ],
   "hugs" => [ "hugging", "hugging_face" ],
   "roll_eyes" => [ "rolling_eyes", "face_with_rolling_eyes" ],
-  "slightly_frowning_face" => [ "slight_frown" ],
+  "slightly_frowning_face" => [ "frowning", "slight_frown" ],
   "frowning_face" => [ "frowning2", "white_frowning_face" ],
   "zipper_mouth_face" => [ "zipper_mouth" ],
   "face_with_head_bandage" => [ "head_bandage" ],
@@ -205,7 +205,9 @@ EMOJI_ALIASES ||= {
   "new_moon" => [ "moon" ],
   "oncoming_automobile" => [ "car", "automobile" ],
   "fleur_de_lis" => [ "fleur-de-lis" ],
-  "face_vomiting" => [ "puke" ]
+  "face_vomiting" => [ "puke" ],
+  "smile" => [ "grinning_face_with_smiling_eyes" ],
+  "frowning_with_open_mouth" => ["frowning_face_with_open_mouth"],
 }
 
 EMOJI_GROUPS ||= [
@@ -266,7 +268,7 @@ EMOJI_SETS ||= {
   "windows" => "win10",
 }
 
-EMOJI_DB_REPO ||= "git@github.com:jjaffeux/emoji-db.git"
+EMOJI_DB_REPO ||= "git@github.com:xfalcox/emoji-db.git"
 
 EMOJI_DB_REPO_PATH ||= File.join("tmp", "emoji-db")
 
@@ -330,7 +332,7 @@ def optimize_images(images)
 end
 
 def copy_emoji_db
-  `rm -rf tmp/emoji-db && git clone --depth 1 #{EMOJI_DB_REPO} tmp/emoji-db`
+  `rm -rf tmp/emoji-db && git clone -b unicodeorg-as-source-of-truth --depth 1 #{EMOJI_DB_REPO} tmp/emoji-db`
 
   path = "#{EMOJI_IMAGES_PATH}/**/*"
   confirm_overwrite(path)
@@ -511,12 +513,12 @@ class TestEmojiUpdate < MiniTest::Test
   end
 
   def test_groups_js_es6_creation
-    assert File.exists?(EMOJI_GROUPS_PATH)
+    assert File.exist?(EMOJI_GROUPS_PATH)
     assert File.size?(EMOJI_GROUPS_PATH)
   end
 
   def test_db_json_creation
-    assert File.exists?(EMOJI_DB_PATH)
+    assert File.exist?(EMOJI_DB_PATH)
     assert File.size?(EMOJI_DB_PATH)
   end
 
@@ -536,12 +538,12 @@ class TestEmojiUpdate < MiniTest::Test
 
   def test_scales
     original_image = image_path("apple", "blonde_woman")
-    assert File.exists?(original_image)
+    assert File.exist?(original_image)
     assert File.size?(original_image)
 
     (2..6).each do |scale|
       image = image_path("apple", "blonde_woman/#{scale}")
-      assert File.exists?(image)
+      assert File.exist?(image)
       assert File.size?(image)
     end
   end

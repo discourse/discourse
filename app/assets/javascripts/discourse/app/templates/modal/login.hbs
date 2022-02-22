@@ -1,5 +1,5 @@
 {{#login-modal loginName=loginName loginPassword=loginPassword secondFactorToken=secondFactorToken action=(action "login")}}
-  {{plugin-outlet name="login-before-modal-body" tagName=""}}
+  {{plugin-outlet name="login-before-modal-body" connectorTagName="div"}}
   {{#d-modal-body class=modalBodyClasses}}
 
     {{#if canLoginLocal}}
@@ -90,7 +90,7 @@
     {{/if}}
   {{/d-modal-body}}
 
-  {{plugin-outlet name="login-after-modal-footer" tagName=""}}
+  {{plugin-outlet name="login-after-modal-footer" connectorTagName="div"}}
 
   <div class={{alertClass}} id="login-alert">{{alert}}</div>
 {{/login-modal}}

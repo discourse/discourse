@@ -19,6 +19,7 @@ model=model showResetNew=showResetNew showDismissRead=showDismissRead resetNew=(
 {{#discovery-topics-list
   model=model
   refresh=(action "refresh")
+  loadingComplete=(action "loadingComplete")
   incomingCount=topicTrackingState.incomingCount
   autoAddTopicsToBulkSelect=autoAddTopicsToBulkSelect
   bulkSelectEnabled=bulkSelectEnabled
@@ -37,7 +38,7 @@ model=model showResetNew=showResetNew showDismissRead=showDismissRead resetNew=(
       </div>
     {{/if}}
   {{/if}}
-  {{plugin-outlet name="before-topic-list" args=(hash category=category)}}
+  {{plugin-outlet name="before-topic-list" tagName="span" connectorTagName="div" args=(hash category=category)}}
 
   {{#if hasTopics}}
     {{topic-list
@@ -64,7 +65,7 @@ model=model showResetNew=showResetNew showDismissRead=showDismissRead resetNew=(
       onScroll=discoveryTopicList.saveScrollPosition}}
   {{/if}}
 
-  {{plugin-outlet name="after-topic-list" args=(hash category=category)}}
+  {{plugin-outlet name="after-topic-list" tagName="span" connectorTagName="div" args=(hash category=category)}}
 {{/discovery-topics-list}}
 
 <footer class="topic-list-bottom">

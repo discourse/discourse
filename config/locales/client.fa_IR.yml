@@ -159,6 +159,7 @@ fa_IR:
         disabled: "این بنر در %{when} حذف شده. و دیگر در بالای صفحات نمایش داده نمی‌شود."
       forwarded: "ایمیل بالا را ارسال کرد"
     topic_admin_menu: "اقدامات موضوع"
+    skip_to_main_content: "رفتن به محتوای اصلی"
     wizard_required: "به دیسکورس خوش آمدید! برای شروع نصب <a href='%{url}' data-auto-route='true'>کلیک کنید</a> ✨"
     emails_are_disabled: "تمام ایمیل های خروجی بصورت کلی توسط مدیر قطع شده است. هیچگونه ایمیل اگاه سازی ارسال نخواهد شد."
     software_update_prompt:
@@ -167,7 +168,6 @@ fa_IR:
     bootstrap_mode_disabled: "حالت خود راه انداز در 24 ساعت آینده غیر‌فعال خواهد شد."
     themes:
       default_description: "پیش‌فرض"
-      broken_theme_alert: "ممکن است سایت شما به دلیل خطا در قالب %{theme} کار نکند. آن را در مسیر زیر از کار بیندازید: %{path}"
     s3:
       regions:
         ap_northeast_1: "آسیا و اقیانوسیه (توکیو)"
@@ -181,6 +181,7 @@ fa_IR:
         cn_northwest_1: "چین (نینگ‌شیا)"
         eu_central_1: "اتحادیه اروپا (فرانکفورت)"
         eu_north_1: "اتحادیه اروپا (استکهلم)"
+        eu_south_1: "اتحادیه اروپا (میلان)"
         eu_west_1: "اتحادیه اروپا (ایرلند)"
         eu_west_2: "اتحادیه اروپا (لندن)"
         eu_west_3: "اتحادیه اروپا (پاریس)"
@@ -238,6 +239,8 @@ fa_IR:
     character_count:
       one: "%{count} نویسه"
       other: "%{count} نویسه"
+    period_chooser:
+      aria_label: "فیلتر بر اساس دوره زمانی"
     related_messages:
       title: "پیام‌های مرتبط"
       see_all: '<a href="%{path}">تمام پیام‌های</a>از طرف%{username}@ را ببینید'
@@ -276,6 +279,7 @@ fa_IR:
     bookmarks:
       created: "شما این نوشته را نشانک کردید. %{name}"
       not_bookmarked: "این نوشته را نشانک بزنید"
+      remove_reminder_keep_bookmark: "حذف یادآوری و نگه داشتن نشانک"
       created_with_reminder: "شما این نوشته را با یادآوری %{date} نشانک کردید. %{name}"
       remove: "پاک کردن نشانک"
       delete: "حذف نشانک"
@@ -560,6 +564,7 @@ fa_IR:
       custom: "تاریخ و زمان سفارشی"
       relative: "زمان نسبی"
       none: "هیچکدام نیازی نیست"
+      last_custom: "آخرین تاریخ سفارشی"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> <a href='%{topicUrl}'>یک موضوع</a> ایجاد کرد"
       you_posted_topic: "<a href='%{userUrl}'>شما یک </a><a href='%{topicUrl}'>موضوع</a> جدید ایجاد کردید."
@@ -597,6 +602,7 @@ fa_IR:
         one: "%{count} کاربر"
         other: "%{count} کاربر"
       edit_columns:
+        title: "ویرایش ستون‌های فهرست راهنما"
         save: "ذخیره"
         reset_to_default: "بازگردانی به پیش‌فرض"
       group:
@@ -612,6 +618,8 @@ fa_IR:
       member_added: "اضافه شده"
       member_requested: "درخواست شده در"
       add_members:
+        title: "کاربران را به %{group_name} اضافه کنید"
+        description: "لیستی از کاربرانی را که می‌خواهید به گروه دعوت کنید وارد کنید یا در لیست جدا شده با کاما جایگذاری کنید:"
         usernames_placeholder: "نام های کاربری"
         usernames_or_emails_placeholder: "نام‌کاربری یا ایمیل"
         notify_users: "اطلاع رسانی به کاربران"
@@ -640,6 +648,7 @@ fa_IR:
           notification: اعلان‌ها
         email:
           title: "ایمیل"
+          status: "ایمیل‌های %{old_emails} / %{total_emails} از طریق IMAP همگام‌سازی شده است."
           enable_smtp: "فعال کردن SMTP"
           enable_imap: "فعال کردن IMAP"
           test_settings: "تنظیمات تست"
@@ -649,10 +658,17 @@ fa_IR:
           settings_required: "تمام تنظیمات اجباری هستند، لطفاً قبل از اعتبار‌سنجی، تمام فیلدها را پر کنید."
           smtp_settings_valid: "تنظیمات SMTP معتبر است."
           smtp_title: "SMTP"
+          smtp_instructions: "وقتی SMTP را برای گروه فعال می‌کنید، همه ایمیل‌های ارسالی از صندوق ورودی گروه به‌جای سرور ایمیلی که برای سایر ایمیل‌های ارسال‌شده توسط انجمن شما پیکربندی شده است، از طریق تنظیمات SMTP که در اینجا مشخص شده‌اند ارسال می‌شوند."
           imap_title: "IMAP"
           imap_additional_settings: "تنظیمات اضافی"
+          imap_instructions: 'وقتی IMAP را برای گروه فعال می‌کنید، ایمیل‌ها بین صندوق ورودی گروه و سرور و صندوق پستی ارائه شده IMAP همگام‌سازی می‌شوند. SMTP باید قبل از فعال شدن IMAP با اعتبار معتبر و آزمایش شده فعال شود. نام کاربری و رمزعبور ایمیل مورد استفاده برای SMTP برای IMAP استفاده خواهد شد. برای کسب اطلاعات بیشتر به <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">اطلاعیه ویژگی در گفتمان متا</a>مراجعه کنید.'
+          imap_alpha_warning: "هشدار: این یک ویژگی آلفا مرحله است. فقط Gmail به طور رسمی پشتیبانی می‌شود. با مسئولیت خود استفاده کنید!"
           imap_settings_valid: "تنظیمات IMAP معتبر است."
+          smtp_disable_confirm: "اگر SMTP را غیرفعال کنید، تمام تنظیمات SMTP و IMAP بازنشانی می‌شوند و عملکرد مربوطه غیرفعال خواهد شد. آیا مطمئن هستید که می‌خواهید ادامه دهید؟"
+          imap_disable_confirm: "اگر IMAP را غیرفعال کنید، تمام تنظیمات IMAP بازنشانی می‌شود و عملکرد مرتبط غیرفعال می‌شود. آیا مطمئن هستید که می‌خواهید ادامه دهید؟"
+          imap_mailbox_not_selected: "شما باید یک صندوق پستی برای این پیکربندی IMAP انتخاب کنید وگرنه هیچ صندوق پستی همگام‌سازی نخواهد شد!"
           prefill:
+            title: "از قبل پر کردن با تنظیمات برای:"
             gmail: "جی‌میل"
           credentials:
             title: "اطلاعات ورود"
@@ -666,14 +682,20 @@ fa_IR:
             password: "رمزعبور"
           settings:
             title: "تنظیمات"
+            allow_unknown_sender_topic_replies: "پاسخ‌های موضوع فرستنده ناشناس را مجاز کنید."
+            allow_unknown_sender_topic_replies_hint: "به فرستندگان ناشناس اجازه می‌دهد تا به موضوعات گروه پاسخ دهند. اگر این مورد فعال نباشد، پاسخ‌هایی از آدرس‌های ایمیلی که قبلاً به موضوع دعوت نشده‌اند، موضوع جدیدی ایجاد می‌کنند."
+            from_alias: "از نام مستعار"
           mailboxes:
             synchronized: "صندوق پستی همگام شده"
+            none_found: "هیچ صندوق پستی در این حساب ایمیل یافت نشد."
             disabled: "غیرفعال"
         membership:
           title: عضویت
           access: دسترسی
         categories:
           title: دسته‌بندی‌ها
+          long_title: "اعلان‌های پیش‌فرض دسته"
+          description: "هنگامی که کاربران به این گروه اضافه می‌شوند، تنظیمات اعلان دسته آنها روی این پیشفرض‌ها تنظیم می‌شود. پس از آن، آنها می‌توانند آنها را تغییر دهند."
           tracked_categories_instructions: "پیگیری خودکار تمامی موضوعات در این دسته٬ تعداد پست های جدید در جلوی موضوعات نمایش داده خواهد شد."
         tags:
           title: برچسب‌ها
@@ -947,7 +969,9 @@ fa_IR:
       dismiss_notifications: "پنهان کردن همه"
       dismiss_notifications_tooltip: "علامت گذاری همه اطلاعیه های خوانده نشده به عنوان خوانده شده"
       no_messages_title: "پیامی ندارید"
+      no_bookmarks_title: "شما هنوز چیزی را نشانه‌گذاری نکرده‌اید"
       no_bookmarks_search: "هیچ نشانکی با درخواست جستجوی شده یافت نشد."
+      no_notifications_title: "شما هنوز هیچ اطلاعیه‌ای ندارید"
       first_notification: "اولین پیام اطلاع‌رسانی شما! برای شروع آن‌را انتخاب کنید."
       dynamic_favicon: "نمایش تعداد در ایکون بروسر"
       skip_new_user_tips:
@@ -1094,6 +1118,7 @@ fa_IR:
           description: "هر کدام از این کدهای پشتیبان فقط یک بار قابل استفاده است. آن ها را در جای امن و قابل دسترسی نگه دارید."
       second_factor:
         title: "ورود دو مرحله ای"
+        enable: "مدیریت تایید هوییت دوعاملی"
         disable_all: "غیرفعال کردن همه"
         forgot_password: "فراموشی گذرواژه؟"
         confirm_password_description: "لطفا رمز عبور خود را تایید کنید تا ادامه دهیم."
@@ -1106,8 +1131,13 @@ fa_IR:
         show_key_description: "دستی وارد کنید"
         short_description: |
           حساب کاربری خود را با کد امنیتی یک بار مصرف محافظت کنید
+        extended_description: |
+          احراز هویت دو عامله امنیت بیشتری به حساب کاربری شما میدهد، چرا که یک توکن یک بار مصرف علاوه بر رمز عبور خود خواهید داشت. توکن ها در ابزارهای <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>اندروید</a> و <a href="https://www.google.com/search?q=authenticator+apps+for+ios">IOS</a> قابل تولید هستند.
+        oauth_enabled_warning: "دقت کنید وقتی احراز هویت دوعامله فعال شود، ورود با حساب شبکه های اجتماعی به حساب کاربری شما از کار میفتد."
         use: "از اپلیکیشن احراز هویت استفاده کنید"
+        enforced_notice: "شما باید احراز هویت دو عامله را قبل از دسترسی به سایت فعال کنید"
         disable: "ازکاراندازی"
+        disable_confirm: "ایا از غیرفعال‌ سازی تمامی تایید‌های دوعاملی مطمعن‌ هستید؟"
         save: "ذخیره"
         edit: "ویرایش"
         edit_title: "ویرایش احراز‌کننده‌ی هویت"
@@ -1269,11 +1299,9 @@ fa_IR:
         every_month: "هر ماه"
         every_six_months: "هر شش ماه"
       email_level:
-        title: "وقتی کسی نوشته‌های مرا نقل‌قول کرد، به من پاسخ داد، به @نام‌کاربری من اشاره کرد، یا مرا به موضوعی دعوت کرد، یک ایمیل برایم بفرست."
         always: "همیشه"
         only_when_away: "فقط وقتی نیستم"
         never: "هیچوقت"
-      email_messages_level: "وقتی کسی به من پیام خصوصی فرستاد، ایمیل بفرست"
       include_tl0_in_digests: "محتوای ایجاد شده توسط کاربران جدید در ایمیل خلاصه قرار گیرد."
       email_in_reply_to: "خلاصه‌ی پاسخ‌ها را در ایمیل قرار بده."
       other_settings: "موارد دیگر"
@@ -1764,9 +1792,6 @@ fa_IR:
       group_mentioned:
         one: "با اشاره به %{group}، به <a href='%{group_link}'>%{count} نفر</a> اطلاعیه ارسال می‌شود. مطمئن هستید؟"
         other: "با اشاره به %{group}، به <a href='%{group_link}'>%{count} نفر</a> اطلاعیه ارسال می‌شود. مطمئن هستید؟"
-      cannot_see_mention:
-        category: "شما به %{username} اشاره کردید ولی ایشان به دلیل نداشتن دسترسی به این دسته‌بندی، مطلع نخواهند شد. برای دسترسی باید آن‌ها را به گروهی که به این دسته‌بندی دسترسی دارند اضافه کنید."
-        private: "شما به %{username} اشاره کردید ولی به دلیل نداشتن دسترسی به این پیام خصوصی مطلع نخواهند شد. برای دسترسی باید آن‌ها را به این پیام خصوصی دعوت کنید."
       duplicate_link: "به نظر می‌رسد پیوند شما به <b>%{domain}</b> قبلاً در یک مبحث توسط <b>@ %{username}</b> در <a href='%{post_url}'>پاسخ به %{ago} ارسال شده است</a> - مطمئن هستید که می خواهید دوباره آن را بفرستید؟"
       reference_topic_title: "پاسخ: %{title}"
       error:
@@ -1977,7 +2002,7 @@ fa_IR:
       or_search_google: "یا به‌جای این، جست‌وجو با گوگل را امتحان کنید:"
       search_google: "به‌جای این، جست‌وجو با گوگل را امتحان کنید:"
       search_google_button: "گوگل"
-      search_button: "جسنجو"
+      search_button: "جستجو"
       categories: "دسته‌بندی‌ها"
       tags: "برچسب‌ها"
       in_posts_by: "در پست‌های %{username}"
@@ -2061,7 +2086,7 @@ fa_IR:
         clear_all: "پاکسازی همه"
         unlist_topics: "از فهرست خارج کردن مباحث"
         relist_topics: "ایجاد فهرست مجدد از موضوعات"
-        reset_read: "تنظیم مجدد خوانده شد"
+        defer: " واگذار کردن"
         delete: "حذف موضوعات"
         dismiss: "پنهان کردن"
         dismiss_read: "پنهان کردن تمامی خوانده نشده ها"
@@ -2246,20 +2271,13 @@ fa_IR:
         replies_short: "%{current} از %{total}"
       progress:
         title: پیشرفت موضوع
-        go_top: "بالا"
-        go_bottom: "پایین"
-        go: "برو"
-        jump_bottom: "پرش به آخرین نوشته"
         jump_prompt: "پرش به..."
         jump_prompt_of:
           one: "از %{count} نوشته"
           other: "از %{count} نوشته"
         jump_prompt_long: "برو به ..."
-        jump_bottom_with_number: "رفتن به نوشته ی %{post_number}"
         jump_prompt_to_date: "تا تاریخ"
         jump_prompt_or: "یا"
-        total: همه نوشته‌ها
-        current: نوشته‌ی کنونی
       notifications:
         title: بازه زمانی آگاه‌سازی از این موضوع را تغییر دهید
         reasons:
@@ -2329,7 +2347,6 @@ fa_IR:
         title: "پاسخ"
         help: "شروع ارسال پاسخ به این موضوع"
       share:
-        title: "اشتراک‌گذاری"
         extended_title: "اشتراک‌گذاری یک پیوند"
         help: "اشتراک‌گذاری پیوند این موضوع"
         invite_users: "دعوت"
@@ -3788,9 +3805,6 @@ fa_IR:
         screened_ips:
           title: "نمایش IP ها"
           delete_confirm: "آیا از حذف قانون وضع شده برای {ip_address}% اطمینان دارید؟"
-          roll_up_confirm: "آیا مطمئن هستید که می خواهید IP مشاهده شده به زیر شبکه بازگشت داده شوند ؟"
-          rolled_up_some_subnets: "با موفقیت IP مسدود شده بازگشت داده شد به ورودی های این زیر شبکه: %{subnets}."
-          rolled_up_no_subnet: "هیچ چیز برای جمع کردن وجود ندارد."
           actions:
             block: "بستن"
             do_nothing: "اجازه دادن"
@@ -4182,6 +4196,7 @@ fa_IR:
       emoji:
         title: "شکلک"
         add: "افزودن شکلک جدید"
+        choose_files: "انتخاب پرونده"
         uploading: "در حال بار گذاری ..."
         name: "نام"
         group: "گروه"

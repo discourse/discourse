@@ -40,6 +40,7 @@ fr:
     user_cant_post_in_topic: "Vous ne pouvez pas voter parce que vous ne pouvez pas publier dans ce sujet."
     topic_must_be_open_to_vote: "Le sujet doit être ouvert pour pouvoir voter."
     poll_must_be_open_to_vote: "Le sondage doit être ouvert pour pouvoir voter."
+    one_vote_per_user: "Seul 1 vote est autorisé pour ce sondage."
     topic_must_be_open_to_toggle_status: "Le sujet doit être ouvert pour modifier le statut."
     only_staff_or_op_can_toggle_status: "Seul(e) un(e) responsable ou le créateur ou la créatrice du sujet peuvent modifier le statut d'un sondage."
     insufficient_rights_to_create: "Vous n'avez pas la permission de créer des sondages."

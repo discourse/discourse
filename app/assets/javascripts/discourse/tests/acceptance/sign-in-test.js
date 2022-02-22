@@ -5,7 +5,7 @@ import {
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit } from "@ember/test-helpers";
-import { skip, test } from "qunit";
+import { test } from "qunit";
 
 acceptance("Signing In", function () {
   test("sign in", async function (assert) {
@@ -18,7 +18,7 @@ acceptance("Signing In", function () {
     await fillIn("#login-account-password", "incorrect");
     await click(".modal-footer .btn-primary");
     assert.ok(exists("#modal-alert:visible"), "it displays the login error");
-    assert.not(
+    assert.notOk(
       exists(".modal-footer .btn-primary:disabled"),
       "enables the login button"
     );
@@ -81,7 +81,7 @@ acceptance("Signing In", function () {
     );
   });
 
-  skip("second factor", async function (assert) {
+  test("second factor", async function (assert) {
     await visit("/");
     await click("header .login-button");
 
@@ -91,8 +91,7 @@ acceptance("Signing In", function () {
     await fillIn("#login-account-password", "need-second-factor");
     await click(".modal-footer .btn-primary");
 
-    assert.not(exists("#modal-alert:visible"), "it hides the login error");
-    assert.not(
+    assert.notOk(
       exists("#credentials:visible"),
       "it hides the username and password prompt"
     );
@@ -100,7 +99,7 @@ acceptance("Signing In", function () {
       exists("#second-factor:visible"),
       "it displays the second factor prompt"
     );
-    assert.not(
+    assert.notOk(
       exists(".modal-footer .btn-primary:disabled"),
       "enables the login button"
     );
@@ -114,7 +113,7 @@ acceptance("Signing In", function () {
     );
   });
 
-  skip("security key", async function (assert) {
+  test("security key", async function (assert) {
     await visit("/");
     await click("header .login-button");
 
@@ -124,12 +123,11 @@ acceptance("Signing In", function () {
     await fillIn("#login-account-password", "need-security-key");
     await click(".modal-footer .btn-primary");
 
-    assert.not(exists("#modal-alert:visible"), "it hides the login error");
-    assert.not(
+    assert.notOk(
       exists("#credentials:visible"),
       "it hides the username and password prompt"
     );
-    assert.not(
+    assert.notOk(
       exists("#login-second-factor:visible"),
       "it does not display the second factor prompt"
     );
@@ -137,7 +135,7 @@ acceptance("Signing In", function () {
       exists("#security-key:visible"),
       "it shows the security key prompt"
     );
-    assert.not(exists("#login-button:visible"), "hides the login button");
+    assert.notOk(exists("#login-button:visible"), "hides the login button");
   });
 
   test("create account", async function (assert) {

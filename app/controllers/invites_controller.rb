@@ -22,31 +22,38 @@ class InvitesController < ApplicationController
     invite = Invite.find_by(invite_key: params[:id])
     if invite.present? && invite.redeemable?
       if current_user
-        added_to_group = false
+        if current_user != invite.invited_by
+          InvitedUser.transaction do
+            invited_user = InvitedUser.find_or_initialize_by(user: current_user, invite: invite)
+            if invited_user.new_record?
+              invited_user.save!
+              Invite.increment_counter(:redemption_count, invite.id)
+              invite.invited_by.notifications.create!(
+                notification_type: Notification.types[:invitee_accepted],
+                data: { display_username: current_user.username }.to_json
+              )
+            end
+          end
+        end
 
         if invite.groups.present?
           invite_by_guardian = Guardian.new(invite.invited_by)
           new_group_ids = invite.groups.pluck(:id) - current_user.group_users.pluck(:group_id)
           new_group_ids.each do |id|
             if group = Group.find_by(id: id)
-              if invite_by_guardian.can_edit_group?(group)
-                group.add(current_user)
-                added_to_group = true
-              end
+              group.add(current_user) if invite_by_guardian.can_edit_group?(group)
             end
           end
         end
 
-        create_topic_invite_notifications(invite, current_user)
-
         if topic = invite.topics.first
-          new_guardian = Guardian.new(current_user)
-          return redirect_to(topic.url) if new_guardian.can_see?(topic)
-        elsif added_to_group
-          return redirect_to(path("/"))
+          if current_user.guardian.can_see?(topic)
+            create_topic_invite_notifications(invite, current_user)
+            return redirect_to(topic.url)
+          end
         end
 
-        return ensure_not_logged_in
+        return redirect_to(path("/"))
       end
 
       email = Email.obfuscate(invite.email)
@@ -131,6 +138,11 @@ class InvitesController < ApplicationController
 
     guardian.ensure_can_invite_to_forum!(groups)
 
+    if !groups_can_see_topic?(groups, topic)
+      editable_topic_groups = topic.category.groups.filter { |g| guardian.can_edit_group?(g) }
+      return render_json_error(I18n.t("invite.requires_groups", groups: editable_topic_groups.pluck(:name).join(", ")))
+    end
+
     begin
       invite = Invite.generate(current_user,
         email: params[:email],
@@ -194,13 +206,21 @@ class InvitesController < ApplicationController
         groups.each { |group| invite.invited_groups.find_or_create_by!(group_id: group.id) } if groups.present?
       end
 
+      if !groups_can_see_topic?(invite.groups, invite.topics.first)
+        editable_topic_groups = invite.topics.first.category.groups.filter { |g| guardian.can_edit_group?(g) }
+        return render_json_error(I18n.t("invite.requires_groups", groups: editable_topic_groups.pluck(:name).join(", ")))
+      end
+
       if params.has_key?(:email)
         old_email = invite.email.presence
         new_email = params[:email].presence
 
         if new_email
           if Invite.where.not(id: invite.id).find_by(email: new_email.downcase, invited_by_id: current_user.id)&.redeemable?
-            return render_json_error(I18n.t("invite.invite_exists", email: new_email), status: 409)
+            return render_json_error(
+              I18n.t("invite.invite_exists", email: CGI.escapeHTML(new_email)),
+              status: 409
+            )
           end
         end
 
@@ -298,7 +318,7 @@ class InvitesController < ApplicationController
         return render json: failed_json.merge(message: I18n.t('invite.not_found_json')), status: 404
       end
 
-      log_on_user(user) if user.active?
+      log_on_user(user) if user.active? && user.guardian.can_access_forum?
       user.update_timezone_if_missing(params[:timezone])
       post_process_invite(user)
       create_topic_invite_notifications(invite, user)
@@ -307,14 +327,19 @@ class InvitesController < ApplicationController
       response = {}
 
       if user.present?
-        if user.active?
+        if user.active? && user.guardian.can_access_forum?
           if user.guardian.can_see?(topic)
             response[:redirect_to] = path(topic.relative_url)
           else
             response[:redirect_to] = path("/")
           end
         else
-          response[:message] = I18n.t('invite.confirm_email')
+          response[:message] = if user.active?
+            I18n.t('activation.approval_required')
+          else
+            I18n.t('invite.confirm_email')
+          end
+
           if user.guardian.can_see?(topic)
             cookies[:destination_url] = path(topic.relative_url)
           end
@@ -352,6 +377,12 @@ class InvitesController < ApplicationController
 
   def resend_all_invites
     guardian.ensure_can_resend_all_invites!(current_user)
+
+    begin
+      RateLimiter.new(current_user, "bulk-reinvite-per-day", 1, 1.day, apply_limit_to_staff: true).performed!
+    rescue RateLimiter::LimitExceeded
+      return render_json_error(I18n.t("rate_limiter.slow_down"))
+    end
 
     Invite.pending(current_user)
       .where('invites.email IS NOT NULL')
@@ -425,6 +456,15 @@ class InvitesController < ApplicationController
       render layout: 'no_ember'
       false
     end
+  end
+
+  def groups_can_see_topic?(groups, topic)
+    if topic&.read_restricted_category?
+      topic_groups = topic.category.groups
+      return false if (groups & topic_groups).blank?
+    end
+
+    true
   end
 
   def post_process_invite(user)

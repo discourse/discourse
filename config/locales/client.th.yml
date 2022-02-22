@@ -974,10 +974,8 @@ th:
         every_month: "ทุกเดือน"
         every_six_months: "ทุกหกเดือน"
       email_level:
-        title: "ส่งอีเมลเมื่อมีบางคนอ้างอิงถึงฉัน ตอบโพสต์ฉัน กล่าวถึงฉัน @ชื่อผู้ใช้ หรือเชิญฉันเข้าไปในกระทู้"
         always: "เสมอ"
         never: "ไม่เคย"
-      email_messages_level: "ส่งอีเมลหาฉันเมื่อมีคนส่งข้อความส่วนตัวมาหาฉัน"
       include_tl0_in_digests: "รวมเนื้อหาจากผู้ใช้ใหม่ในอีเมลสรุป"
       email_in_reply_to: "เพิ่มการตอบในโพสท์ที่คัดกรองแล้วในอีเมล"
       other_settings: "อื่นๆ"
@@ -1580,7 +1578,6 @@ th:
         select_all: "เลือกทั้งหมด"
         clear_all: "ล้างทั้งหมด"
         unlist_topics: "กระทู้ที่ไม่ได้แสดง"
-        reset_read: "ล้างจำนวนการอ่าน"
         delete: "ลบกระทู้"
         dismiss: "ซ่อน"
         dismiss_read: "ซ่อนทั้งหมดที่ไม่ได้อ่าน"
@@ -1717,19 +1714,12 @@ th:
         back_description: "กลับไปยังโพสต์ล่าสุดที่ยังไม่ได้อ่าน"
         replies_short: "%{current} / %{total}"
       progress:
-        go_top: "ด้านบน"
-        go_bottom: "ปุ่ม"
-        go: "ไป"
-        jump_bottom: "ข้ามไปยังโพสต์ล่าสุด"
         jump_prompt: "ข้ามไปยัง..."
         jump_prompt_of:
           other: "ของ %{count} โพสต์"
         jump_prompt_long: "ข้ามไปยัง..."
-        jump_bottom_with_number: "ข้ามไปยังโพสต์ %{post_number}"
         jump_prompt_to_date: "ไปวันที่"
         jump_prompt_or: "หรือ"
-        total: โพสต์ทั้งหมด
-        current: โพสต์ปัจจุบัน
       notifications:
         title: เปลี่ยนความถี่ในการรับการแจ้งเตือนเกี่ยวกระทู้นี้
         reasons:
@@ -1794,7 +1784,6 @@ th:
         title: "ตอบ"
         help: "เริ่มเขียนตอบกระทู้นี้"
       share:
-        title: "แบ่งปัน"
         extended_title: "แบ่งปันลิงก์"
         help: "แบ่งปันลิงก์ไปยังกระทู้นี้"
         invite_users: "เชิญ"

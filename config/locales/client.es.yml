@@ -128,6 +128,7 @@ es:
       url: "Copiar y compartir la URL"
     action_codes:
       public_topic: "hizo este tema público %{when}"
+      open_topic: "convirtió esto en un tema %{when}"
       private_topic: "hizo este tema un mensaje personal %{when}"
       split_topic: "separó este tema %{when}"
       invited_user: "invitó a %{who} %{when}"
@@ -171,7 +172,10 @@ es:
     bootstrap_mode_disabled: "El modo de arranque se desactivará dentro de las próximas 24 horas."
     themes:
       default_description: "Por defecto"
-      broken_theme_alert: "Tu sitio puede que no funcione porque el tema / componente %{theme} tiene errores. Desactívalo en %{path}."
+      broken_theme_alert: "Puede que tu sitio no funcione, un tema o componente está causando errores."
+      error_caused_by: "Causado por '%{name}'. <a target='blank' href='%{path}'>Haz clic aquí</a> para actualizar, reconfigurar o update, reconfigure or desctivar."
+      only_admins: "(este mensaje solo lo ven los administradores del sitio)"
+    broken_decorator_alert: "Puede que las publicaciones no se muestren correctamente porque uno de los decoradores de publicaciones de tu sitio está causando errores."
     s3:
       regions:
         ap_northeast_1: "Asia-Pacífico (Tokio)"
@@ -688,6 +692,8 @@ es:
             title: "Ajustes"
             allow_unknown_sender_topic_replies: "Permitir respuestas a temas de remitentes desconocidos."
             allow_unknown_sender_topic_replies_hint: "Permite a remitentes desconocidos responder a temas de grupo. Si esto no está activado, las respuestas de direcciones de correo electrónico no invitadas todavía al tema crearán un nuevo tema."
+            from_alias: "Alias de envío"
+            from_alias_hint: "Alias que usar como la dirección de envío al enviar mensajes de grupo con SMTP. Ten en cuenta que no todos los proveedores de correo son compatibles con esta opción, consulta con el tuyo para saber si puedes usar los alias."
           mailboxes:
             synchronized: "Bandeja de correo electrónico sincronizada"
             none_found: "No se han encontrado bandejas de correo electrónico para esta cuenta de correo electrónico."
@@ -1017,7 +1023,7 @@ es:
       no_notifications_title: "No tienes ninguna notificación todavía"
       no_notifications_body: >
         En esta pestaña te avisaremos sobre actividad relevante para ti incluyendo respuestas a tus temas y mensajes, <b>@menciones</b> o citas, y respuestas a los temas que estés siguiendo. También te notificaremos por correo electrónico si hace tiempo que no te conectas.<br><br>A través del icono %{icon} puedes decidir sobre qué temas, categorías y etiquetas quieres que te avisemos. Ve a tus <a href='%{preferencesUrl}'>preferencias de notificaciones</a> para más detalles.
-      no_notifications_page_title: "No tienes ninguna notificación todavía"
+      no_notifications_page_title: "Todavía no tienes notificaciones"
       no_notifications_page_body: >
         Te notificaremos de actividad relevante para ti, como cuando alguien responda a tus temas o mensajes, te <b>@mencione</b> o cite, y también cuando alguien responda a temas que estés vigilando. Además, te mandaremos las notificaciones a tu correo electrónico cuando no te hayamos visto por aquí en un tiempo. <br><br>Busca el icono %{icon} para decidir las categorías o etiquetas sobre las que quieres que mandemos notificaciones. Para más ajustes, pásate por tus <a href='%{preferencesUrl}'>preferencias de notificaciones</a>.
       first_notification: "¡Tu primera notificación! Selecciónala para empezar."
@@ -1143,7 +1149,7 @@ es:
         tags: "Etiquetas"
         warnings: "Advertencias oficiales"
         read_more_in_group: "¿Quieres leer más? Consulta otros mensajes de %{groupLink}."
-        read_more: "¿Quieres leer más? Busca otros mensajes en tus <a href='%{basePath}/u/%{username}/messages'>mensajes personales</a>."
+        read_more: "¿Quieres seguir leyendo? Echa un vistazo a otros mensajes en tus <a href='%{basePath}/u/%{username}/messages'>mensajes personales</a>."
       preferences_nav:
         account: "Cuenta"
         security: "Seguridad"
@@ -1391,11 +1397,11 @@ es:
         every_month: "cada mes"
         every_six_months: "cada seis meses"
       email_level:
-        title: "Enviarme un correo electrónico cuando alguien me cite, me responda, mencione mi @nombre de usuario o me invite a un tema"
+        title: "Enviadme un correo cuando alguien me cite, responda, mencione mi @nombre de usuario o cuando haya nueva actividad en las categorías, etiquetas o temas que vigile"
         always: "siempre"
         only_when_away: "solo cuando no esté en la página"
         never: "nunca"
-      email_messages_level: "Enviarme un correo electrónico cuando alguien me envíe un mensaje"
+      email_messages_level: "Enviadme un correo cuando me manden un mensaje personal"
       include_tl0_in_digests: "Incluir contenido de usuarios nuevos en los correos electrónicos de resumen"
       email_in_reply_to: "Incluir un extracto de la publicación que recibió una respuesta en los correo electrónicos"
       other_settings: "Otros"
@@ -1694,6 +1700,7 @@ es:
       title: "Restablecer contraseña"
       action: "Olvidé mi contraseña"
       invite: "Introduce tu nombre de usuario o tu dirección de correo electrónico, y te enviaremos un correo electrónico para restablecer tu contraseña."
+      invite_no_username: "Escribe tu correo y te mandamos un enlace para que cambies la contraseña."
       reset: "Restablecer contraseña"
       complete_username: "Si una cuenta coincide con el nombre de usuario <b>%{username}</b>, en breve deberías recibir un correo electrónico con las instrucciones para restablecer tu contraseña."
       complete_email: "Si una cuenta coincide con <b>%{email}</b>, en breve deberías recibir un correo electrónico con las instrucciones para restablecer tu contraseña."
@@ -1791,6 +1798,7 @@ es:
       second_factor_toggle:
         totp: "Usar una aplicación de autenticación en su lugar"
         backup_code: "Usar un código de copia de seguridad en su lugar"
+        security_key: "Utilizar una clave de seguridad en su lugar"
     invites:
       accept_title: "Invitación"
       emoji: "emoji de un sobre"
@@ -1912,8 +1920,10 @@ es:
         one: "Al mencionar a %{group}, estás a punto de notificar a <a href='%{group_link}'>%{count} persona</a> ¿Seguro que quieres hacerlo?"
         other: "Al mencionar a %{group}, estás a punto de notificar a <a href='%{group_link}'>%{count} personas</a> ¿Seguro de que quieres hacerlo?"
       cannot_see_mention:
-        category: "Mencionaste a %{username} pero no se les notificará porque no tienen acceso a esta categoría. Necesitarás añadirlos a un grupo que tenga acceso a esta categoría."
-        private: "Mencionaste a %{username} pero no se les notificará porque no pueden ver este mensaje personal. Necesitarás invitarlos a este MP."
+        category: "Has mencionado a @%{username}, pero no le va a llegar una notificación porque no tiene acceso a esta categoría. Tendrás que añadirle a un grupo que sí tenga acceso."
+        private: "Has mencionado a @%{username}, pero no le va a llegar una notificación porque no puede ver este mensaje. Tendrás que invitarle al mensaje."
+        muted_topic: "Has mencionado a @%{username}, pero no le va a llegar una notificación porque ha silenciado este tema."
+        not_allowed: "Has mencionado a @%{username}, pero no le va a llegar una notificación porque no le han invitado a este tema."
       here_mention:
         one: "Al mencionar a <b>@%{here}</b> mencionarás a %{count} usuario – ¿quieres continuar?"
         other: "Al mencionar a <b>@%{here}</b> mencionarás a %{count} usuarios – ¿quieres continuar?"
@@ -2275,7 +2285,7 @@ es:
         clear_all: "Limpiar todo"
         unlist_topics: "Hacer invisibles"
         relist_topics: "Hacer visibles de nuevo"
-        reset_read: "Restablecer leídos"
+        defer: "Aplazar"
         delete: "Eliminar temas"
         dismiss: "Descartar"
         dismiss_read: "Descartar todos los temas sin leer"
@@ -2503,20 +2513,13 @@ es:
         replies_short: "%{current} / %{total}"
       progress:
         title: avances
-        go_top: "arriba"
-        go_bottom: "abajo"
-        go: "ir"
-        jump_bottom: "saltar a la última publicación"
         jump_prompt: "saltar a..."
         jump_prompt_of:
           one: "de %{count} publicación"
           other: "de %{count} publicaciones"
         jump_prompt_long: "Saltar a..."
-        jump_bottom_with_number: "saltar a la publicación %{post_number}"
         jump_prompt_to_date: "hasta hoy"
         jump_prompt_or: "o"
-        total: total de publicaciones
-        current: publicación actual
       notifications:
         title: cambiar la frecuencia con la que se te notifica acerca de este tema
         reasons:
@@ -2592,13 +2595,12 @@ es:
         title: "Responder"
         help: "comienza a escribir un mensaje en este tema"
       share:
-        title: "Compartir"
         extended_title: "Compartir un enlace"
         help: "comparte el enlace a este tema"
         instructions: "Comparte el enlace a este tema:"
         copied: "Enlace al tema copiado."
         restricted_groups:
-          one: "Sólo visible para los miembros del grupo: %{groupNames}"
+          one: "Solo visible para los miembros del grupo: %{groupNames}"
           other: "Solo visible para los miembros de los grupos: %{groupNames}"
         notify_users:
           title: "Notificar"
@@ -3074,7 +3076,7 @@ es:
       default_list_filter: "Filtro de lista por defecto:"
       allow_badges_label: "Permitir que se concedan insignias en esta categoría"
       edit_permissions: "Editar permisos"
-      reviewable_by_group: "Además del personal, el contenido de esta categoría también puede ser revisado por:"
+      reviewable_by_group: "Además del personal, los siguientes grupos también pueden revisar el contenido de esta categoría:"
       review_group_name: "nombre del grupo"
       require_topic_approval: "Requiere aprobación del moderador para todos los temas nuevos"
       require_reply_approval: "Requiere aprobación del moderador para todas las respuestas nuevas"
@@ -3652,6 +3654,8 @@ es:
     no_group_messages_title: "No hay ningún mensaje en el grupo"
     fullscreen_table:
       expand_btn: "Expandir tabla"
+    second_factor_auth:
+      redirect_after_success: "La autenticación de segundo factor se ha realizado con éxito. Redirigiendo a la página anterior…"
   admin_js:
     type_to_filter: "filtrar opciones..."
     admin:
@@ -4565,9 +4569,6 @@ es:
           title: "Direcciones IP bloqueadas"
           description: 'Direcciones IP que se están vigilando. Usar «Allow» para añadir direcciones a la lista de permitidas.'
           delete_confirm: "¿Seguro que quieres quitar el bloqueo para %{ip_address}?"
-          roll_up_confirm: "¿Seguro que quieres agrupar las direcciones IP bloqueadas vistas con frecuencia en subredes?"
-          rolled_up_some_subnets: "Se han agrupado con éxito las entradas de IP bloqueadas a estas subredes: %{subnets}."
-          rolled_up_no_subnet: "No había nada para agrupar."
           actions:
             block: "Bloquear"
             do_nothing: "Permitir"
@@ -5123,8 +5124,9 @@ es:
           grant_existing_holders: Conceder una vez más la medalla a las cuentas que ya la tengan
       emoji:
         title: "Emoji"
-        help: "Añade nuevos emojis, que cualquiera podrá usar. Arrastra y suelta varios archivos a la vez sin escribir un nombre para crear emojis en masa y nombrarlos según el nombre de archivo que tengan."
+        help: "Añade emojis que cualquiera podrá usar. Suelta varios archivos a la vez sin escribir un nombre para crear emojis usando su nombre de archivo. Los archivos que subas a la vez serán parte del grupo seleccionado. También puedes hacer clic en «Añadir nuevo emoji» para abrir el selector de archivos."
         add: "Añadir emoji nuevo"
+        choose_files: "Seleccionar archivos"
         uploading: "Subiendo..."
         name: "Nombre"
         group: "Grupo"

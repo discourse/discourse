@@ -28,6 +28,8 @@ class PostsController < ApplicationController
     :user_posts_feed
   ]
 
+  MARKDOWN_TOPIC_PAGE_SIZE ||= 100
+
   def markdown_id
     markdown Post.find(params[:id].to_i)
   end
@@ -36,8 +38,23 @@ class PostsController < ApplicationController
     if params[:revision].present?
       post_revision = find_post_revision_from_topic_id
       render plain: post_revision.modifications[:raw].last
+    elsif params[:post_number].present?
+      markdown Post.find_by(topic_id: params[:topic_id].to_i, post_number: params[:post_number].to_i)
     else
-      markdown Post.find_by(topic_id: params[:topic_id].to_i, post_number: (params[:post_number] || 1).to_i)
+      opts = params.slice(:page)
+      opts[:limit] = MARKDOWN_TOPIC_PAGE_SIZE
+      topic_view = TopicView.new(params[:topic_id], current_user, opts)
+      content = topic_view.posts.map do |p|
+        <<~HEREDOC
+          #{p.user.username} | #{p.updated_at} | ##{p.post_number}
+
+          #{p.raw}
+
+          -------------------------
+
+        HEREDOC
+      end
+      render plain: content.join
     end
   end
 
@@ -165,6 +182,7 @@ class PostsController < ApplicationController
   def create
     @manager_params = create_params
     @manager_params[:first_post_checks] = !is_api?
+    @manager_params[:advance_draft] = !is_api?
 
     manager = NewPostManager.new(current_user, @manager_params)
 
@@ -529,6 +547,7 @@ class PostsController < ApplicationController
 
   def wiki
     post = find_post_from_params
+    params.require(:wiki)
     guardian.ensure_can_wiki!(post)
 
     post.revise(current_user, wiki: params[:wiki])
@@ -538,8 +557,10 @@ class PostsController < ApplicationController
 
   def post_type
     guardian.ensure_can_change_post_type!
-
     post = find_post_from_params
+    params.require(:post_type)
+    raise Discourse::InvalidParameters.new(:post_type) if Post.types[params[:post_type].to_i].blank?
+
     post.revise(current_user, post_type: params[:post_type].to_i)
 
     render body: nil
@@ -740,6 +761,8 @@ class PostsController < ApplicationController
       # We allow `created_at` via the API
       permitted << :created_at
 
+      # We allow `external_id` via the API
+      permitted << :external_id
     end
 
     result = params.permit(*permitted).tap do |allowed|

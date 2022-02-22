@@ -11,7 +11,25 @@ module Onebox
       always_https
 
       def to_html
-        get_oembed.html
+        oembed = get_oembed
+        extracted_url = oembed.html.match(/iframe\ src\=\"(.*?)\"/)
+
+        if extracted_url
+          iframe_src = extracted_url[1]
+
+          <<~HTML
+          <iframe
+            src="#{iframe_src}"
+            width="#{oembed.width}"
+            height="#{oembed.height}"
+            title="#{oembed.title}"
+            frameborder="0"
+            allowfullscreen
+          ></iframe>
+          HTML
+        else
+          oembed.html
+        end
       end
 
       def placeholder_html

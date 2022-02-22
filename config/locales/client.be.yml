@@ -921,7 +921,6 @@ be:
       new_messages_marker: "апошні візыт"
       bulk:
         select_all: "выбраць усе"
-        reset_read: "Reset Read"
         delete: "Выдаліць тэмы"
         dismiss_read: "Пазначыць усе як прачытаныя"
         dismiss_new: "Dismiss New"
@@ -996,13 +995,7 @@ be:
         back: "Назад"
       progress:
         title: прасоўванне па тэме
-        go_top: "топ"
-        go_bottom: "кнопка"
-        jump_bottom: "перайсці да апошняга паведамлення"
-        jump_bottom_with_number: "перайсці да паведамлення %{post_number}"
         jump_prompt_or: "або"
-        total: усяго паведамленняў
-        current: бягучы паведамленне
       notifications:
         reasons:
           "3_6": "Вы будзеце атрымліваць апавяшчэнні, таму што вы сочыце за гэтай катэгорыяй."
@@ -1050,7 +1043,6 @@ be:
         title: "Адказаць"
         help: "пачаць складаць адказ на гэтую тэму"
       share:
-        title: "Падзяліцца тэмай"
         help: "Распаўсюдзіць спасылку на гэтую тэму"
       print:
         title: "друк"

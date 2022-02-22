@@ -14,21 +14,15 @@ end
 
 require 'rubygems'
 require 'rbtrace'
-
 require 'pry'
 require 'pry-byebug'
 require 'pry-rails'
-
-# Loading more in this block will cause your tests to run faster. However,
-# if you change any configuration or code from libraries loaded here, you'll
-# need to restart spork for it take effect.
 require 'fabrication'
 require 'mocha/api'
 require 'certified'
 require 'webmock/rspec'
 
 class RspecErrorTracker
-
   def self.last_exception=(ex)
     @ex = ex
   end
@@ -105,16 +99,6 @@ ENV['DISCOURSE_DEV_ALLOW_ANON_TO_IMPERSONATE'] = '1'
 module TestSetup
   # This is run before each test and before each before_all block
   def self.test_setup(x = nil)
-    # TODO not sure about this, we could use a mock redis implementation here:
-    #   this gives us really clean "flush" semantics, however the side-effect is that
-    #   we are no longer using a clean redis implementation, a preferable solution may
-    #   be simply flushing before tests, trouble is that redis may be reused with dev
-    #   so that would mean the dev would act weird
-    #
-    #   perf benefit seems low (shaves 20 secs off a 4 minute test suite)
-    #
-    # Discourse.redis = DiscourseMockRedis.new
-
     RateLimiter.disable
     PostActionNotifier.disable
     SearchIndexer.disable
@@ -210,6 +194,8 @@ RSpec.configure do |config|
   config.infer_base_class_for_anonymous_controllers = true
 
   config.before(:suite) do
+    CachedCounting.disable
+
     begin
       ActiveRecord::Migration.check_pending!
     rescue ActiveRecord::PendingMigrationError
@@ -253,16 +239,6 @@ RSpec.configure do |config|
     def initialize
       super
       self.current_site = "test"
-    end
-  end
-
-  class DiscourseMockRedis < MockRedis
-    def without_namespace
-      self
-    end
-
-    def delete_prefixed(prefix)
-      keys("#{prefix}*").each { |k| del(k) }
     end
   end
 
@@ -425,7 +401,7 @@ end
 
 def file_from_fixtures(filename, directory = "images")
   SpecSecureRandom.value ||= SecureRandom.hex
-  FileUtils.mkdir_p(file_from_fixtures_tmp_folder) unless Dir.exists?(file_from_fixtures_tmp_folder)
+  FileUtils.mkdir_p(file_from_fixtures_tmp_folder) unless Dir.exist?(file_from_fixtures_tmp_folder)
   tmp_file_path = File.join(file_from_fixtures_tmp_folder, SecureRandom.hex << filename)
   FileUtils.cp("#{Rails.root}/spec/fixtures/#{directory}/#{filename}", tmp_file_path)
   File.new(tmp_file_path)

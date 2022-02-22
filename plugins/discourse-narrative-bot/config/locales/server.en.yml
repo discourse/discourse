@@ -84,6 +84,15 @@ en:
       "10":
         quote: "Whatever the mind of man can conceive and believe, it can achieve."
         author: "Napoleon Hill"
+      "11":
+        quote: "Peace at home, peace in the world."
+        author: "Mustafa Kemal Atatürk"
+      "12":
+        quote: "Education is not a way of escaping poverty, it is a way of fighting it."
+        author: "Julius Nyerere"
+      "13":
+        quote: "A journey of a thousand miles must begin with a single step."
+        author: "Lao Tzu"
       results: |-
         > :left_speech_bubble: _%{quote}_ &mdash; %{author}
 
@@ -225,7 +234,7 @@ en:
           - or, push the <kbd><b>B</b></kbd> or <kbd><i>I</i></kbd> buttons in the editor
 
         reply: |-
-          Great job! HTML and BBCode also work for formatting – to learn more, [try this tutorial](http://commonmark.org/help) :nerd:
+          Great job! HTML and BBCode also work for formatting – to learn more, [try this tutorial](https://commonmark.org/help) :nerd:
         not_found: |-
           Aww, I didn’t find any formatting in your reply. :pencil2:
 

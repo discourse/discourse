@@ -1,4 +1,4 @@
-{{plugin-outlet name="before-group-container" args=(hash group=model)}}
+{{plugin-outlet name="before-group-container" tagName="span" connectorTagName="div" args=(hash group=model)}}
 
 <div class="container group {{model.name}}">
   {{#if showTooltip}}
@@ -62,7 +62,7 @@
         {{/if}}
       </div>
 
-      {{plugin-outlet name="group-details-after" args=(hash model=model)}}
+      {{plugin-outlet name="group-details-after" tagName="span" connectorTagName="div" args=(hash model=model)}}
     </div>
 
     {{#if model.bio_cooked}}

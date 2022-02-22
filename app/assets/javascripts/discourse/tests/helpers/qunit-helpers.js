@@ -1,4 +1,5 @@
 import QUnit, { module, skip, test } from "qunit";
+import { cloneJSON, deepMerge } from "discourse-common/lib/object";
 import MessageBus from "message-bus-client";
 import {
   clearCache as clearOutletCache,
@@ -12,20 +13,19 @@ import {
 import { forceMobile, resetMobile } from "discourse/lib/mobile";
 import { getApplication, getContext, settled } from "@ember/test-helpers";
 import { getOwner } from "discourse-common/lib/get-owner";
-import { later, run } from "@ember/runloop";
-import { moduleFor, setupApplicationTest } from "ember-qunit";
+import { run } from "@ember/runloop";
+import { setupApplicationTest } from "ember-qunit";
 import { Promise } from "rsvp";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
 import { _clearSnapshots } from "select-kit/components/composer-actions";
 import { clearHTMLCache } from "discourse/helpers/custom-html";
-import createStore from "discourse/tests/helpers/create-store";
 import deprecated from "discourse-common/lib/deprecated";
+import { restoreBaseUri } from "discourse-common/lib/get-url";
 import { flushMap } from "discourse/services/store";
 import { initSearchData } from "discourse/widgets/search-menu";
 import { resetPostMenuExtraButtons } from "discourse/widgets/post-menu";
 import { isEmpty } from "@ember/utils";
-import { mapRoutes } from "discourse/mapping-router";
 import { resetCustomPostMessageCallbacks } from "discourse/controllers/topic";
 import { resetDecorators } from "discourse/widgets/widget";
 import { resetCache as resetOneboxCache } from "pretty-text/oneboxer";
@@ -39,7 +39,10 @@ import { resetCardClickListenerSelector } from "discourse/mixins/card-contents-b
 import { resetComposerCustomizations } from "discourse/models/composer";
 import { resetQuickSearchRandomTips } from "discourse/widgets/search-menu-results";
 import sessionFixtures from "discourse/tests/fixtures/session-fixtures";
-import { setTopicList } from "discourse/lib/topic-list-tracker";
+import {
+  resetHighestReadCache,
+  setTopicList,
+} from "discourse/lib/topic-list-tracker";
 import sinon from "sinon";
 import siteFixtures from "discourse/tests/fixtures/site-fixtures";
 import { clearResolverOptions } from "discourse-common/resolver";
@@ -58,11 +61,22 @@ import {
   clearPresenceCallbacks,
   setTestPresence,
 } from "discourse/lib/user-presence";
+import PreloadStore from "discourse/lib/preload-store";
 
 const LEGACY_ENV = !setupApplicationTest;
 
 export function currentUser() {
   return User.create(sessionFixtures["/session/current.json"].current_user);
+}
+
+let _initialized = new Set();
+
+export function testsInitialized() {
+  _initialized.add(QUnit.config.current.testId);
+}
+
+export function testsTornDown() {
+  _initialized.delete(QUnit.config.current.testId);
 }
 
 export function updateCurrentUser(properties) {
@@ -106,9 +120,9 @@ export function resetSite(siteSettings, extras) {
     siteFixtures["site.json"].site,
     extras || {}
   );
-  siteAttrs.store = createStore();
   siteAttrs.siteSettings = siteSettings;
-  return Site.resetCurrent(Site.create(siteAttrs));
+  PreloadStore.store("site", siteAttrs);
+  Site.resetCurrent();
 }
 
 export function applyPretender(name, server, helper) {
@@ -118,18 +132,58 @@ export function applyPretender(name, server, helper) {
   }
 }
 
-export function controllerModule(name, args = {}) {
-  moduleFor(name, name, {
-    setup() {
-      this.registry.register("router:main", mapRoutes());
-      let controller = this.subject();
-      controller.siteSettings = currentSettings();
-      if (args.setupController) {
-        args.setupController(controller);
-      }
-    },
-    needs: args.needs,
-  });
+// Add clean up code here to run after every test
+function testCleanup(container, app) {
+  if (_initialized.has(QUnit.config.current.testId)) {
+    if (!app) {
+      app = getApplication();
+    }
+    app._runInitializer("instanceInitializers", (_, initializer) => {
+      initializer.teardown?.();
+    });
+
+    app._runInitializer("initializers", (_, initializer) => {
+      initializer.teardown?.(container);
+    });
+  }
+
+  flushMap();
+  localStorage.clear();
+  User.resetCurrent();
+  resetExtraClasses();
+  clearOutletCache();
+  clearHTMLCache();
+  clearRewrites();
+  initSearchData();
+  resetDecorators();
+  resetPostCookedDecorators();
+  resetPluginOutletDecorators();
+  resetTopicTitleDecorators();
+  resetUsernameDecorators();
+  resetOneboxCache();
+  resetCustomPostMessageCallbacks();
+  resetUserSearchCache();
+  resetHighestReadCache();
+  resetCardClickListenerSelector();
+  resetComposerCustomizations();
+  resetQuickSearchRandomTips();
+  resetPostMenuExtraButtons();
+  clearNavItems();
+  setTopicList(null);
+  _clearSnapshots();
+  cleanUpComposerUploadHandler();
+  cleanUpComposerUploadMarkdownResolver();
+  cleanUpComposerUploadPreProcessor();
+  clearTopicFooterDropdowns();
+  clearTopicFooterButtons();
+  clearDesktopNotificationHandlers();
+  resetLastEditNotificationClick();
+  clearAuthMethods();
+  setTestPresence(true);
+  if (!LEGACY_ENV) {
+    clearPresenceCallbacks();
+  }
+  restoreBaseUri();
 }
 
 export function discourseModule(name, options) {
@@ -147,6 +201,7 @@ export function discourseModule(name, options) {
         this.siteSettings = currentSettings();
         clearResolverOptions();
       });
+      hooks.afterEach(() => testCleanup(this.container));
 
       this.getController = function (controllerName, properties) {
         let controller = this.container.lookup(`controller:${controllerName}`);
@@ -172,14 +227,11 @@ export function discourseModule(name, options) {
     beforeEach() {
       this.container = getOwner(this);
       this.siteSettings = currentSettings();
-      if (options && options.beforeEach) {
-        options.beforeEach.call(this);
-      }
+      options?.beforeEach?.call(this);
     },
     afterEach() {
-      if (options && options.afterEach) {
-        options.afterEach.call(this);
-      }
+      options?.afterEach?.call(this);
+      testCleanup(this.container);
     },
   });
 }
@@ -267,52 +319,8 @@ export function acceptance(name, optionsOrCallback) {
     afterEach() {
       resetMobile();
       let app = getApplication();
-      if (options && options.afterEach) {
-        options.afterEach.call(this);
-      }
-      flushMap();
-      localStorage.clear();
-      User.resetCurrent();
-      resetExtraClasses();
-      clearOutletCache();
-      clearHTMLCache();
-      clearRewrites();
-      initSearchData();
-      resetDecorators();
-      resetPostCookedDecorators();
-      resetPluginOutletDecorators();
-      resetTopicTitleDecorators();
-      resetUsernameDecorators();
-      resetOneboxCache();
-      resetCustomPostMessageCallbacks();
-      resetUserSearchCache();
-      resetCardClickListenerSelector();
-      resetComposerCustomizations();
-      resetQuickSearchRandomTips();
-      resetPostMenuExtraButtons();
-      clearNavItems();
-      setTopicList(null);
-      _clearSnapshots();
-      cleanUpComposerUploadHandler();
-      cleanUpComposerUploadMarkdownResolver();
-      cleanUpComposerUploadPreProcessor();
-      clearTopicFooterDropdowns();
-      clearTopicFooterButtons();
-      clearDesktopNotificationHandlers();
-      resetLastEditNotificationClick();
-      clearAuthMethods();
-      setTestPresence(true);
-      if (!LEGACY_ENV) {
-        clearPresenceCallbacks();
-      }
-
-      app._runInitializer("instanceInitializers", (_, initializer) => {
-        initializer.teardown?.();
-      });
-
-      app._runInitializer("initializers", (_, initializer) => {
-        initializer.teardown?.(this.container);
-      });
+      options?.afterEach?.call(this);
+      testCleanup(this.container, app);
 
       if (LEGACY_ENV) {
         app.__registeredObjects__ = false;
@@ -399,6 +407,11 @@ export function fixture(selector) {
 }
 
 QUnit.assert.not = function (actual, message) {
+  deprecated("assert.not() is deprecated. Use assert.notOk() instead.", {
+    since: "2.9.0.beta1",
+    dropFrom: "2.10.0.beta1",
+  });
+
   this.pushResult({
     result: !actual,
     actual,
@@ -430,16 +443,6 @@ QUnit.assert.containsInstance = function (collection, klass, message) {
     message,
   });
 };
-
-export function waitFor(assert, callback, timeout) {
-  timeout = timeout || 500;
-
-  const done = assert.async();
-  later(() => {
-    callback();
-    done();
-  }, timeout);
-}
 
 export async function selectDate(selector, date) {
   return new Promise((resolve) => {
@@ -484,6 +487,7 @@ export function exists(selector) {
 }
 
 export function publishToMessageBus(channelPath, ...args) {
+  args = cloneJSON(args);
   MessageBus.callbacks
     .filterBy("channel", channelPath)
     .forEach((c) => c.func(...args));
@@ -559,4 +563,12 @@ export function createFile(name, type = "image/png", blobData = null) {
     lastModified: new Date().getTime(),
   });
   return file;
+}
+
+export async function paste(element, text, otherClipboardData = {}) {
+  let e = new Event("paste", { cancelable: true });
+  e.clipboardData = deepMerge({ getData: () => text }, otherClipboardData);
+  element.dispatchEvent(e);
+  await settled();
+  return e;
 }

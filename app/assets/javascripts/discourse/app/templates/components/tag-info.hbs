@@ -15,9 +15,9 @@
         </div>
       {{else}}
         <div class="tag-name-wrapper">
-          {{discourse-tag tagInfo.name tagName="div" size="large"}}
+          {{discourse-tag tagInfo.name tagName="div"}}
           {{#if canAdminTag}}
-            {{d-button action=(action "edit") class="btn-flat edit-tag" title="tagging.edit_tag" icon="pencil-alt" }}
+            <a href {{action "edit"}} class="edit-tag" title={{i18n "tagging.edit_tag"}}>{{d-icon "pencil-alt"}}</a>
           {{/if}}
         </div>
         <div class="tag-description-wrapper">
@@ -89,7 +89,7 @@
       </section>
     {{/if}}
     {{#if canAdminTag}}
-      {{plugin-outlet name="tag-custom-settings" args=(hash tag=tagInfo) connectorTagName="" tagName="section"}}
+      {{plugin-outlet name="tag-custom-settings" args=(hash tag=tagInfo) tagName="section"}}
       <div class="tag-actions">
         {{d-button class="btn-default" action=(action "toggleEditControls") icon="cog" label="tagging.edit_synonyms" id="edit-synonyms"}}
         {{#if deleteAction}}

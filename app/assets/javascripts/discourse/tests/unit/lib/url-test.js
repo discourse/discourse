@@ -1,4 +1,8 @@
-import DiscourseURL, { prefixProtocol, userPath } from "discourse/lib/url";
+import DiscourseURL, {
+  getCategoryAndTagUrl,
+  prefixProtocol,
+  userPath,
+} from "discourse/lib/url";
 import { module, test } from "qunit";
 import User from "discourse/models/user";
 import { logIn } from "discourse/tests/helpers/qunit-helpers";
@@ -9,7 +13,7 @@ module("Unit | Utility | url", function () {
   test("isInternal with a HTTP url", function (assert) {
     sinon.stub(DiscourseURL, "origin").returns("http://eviltrout.com");
 
-    assert.not(DiscourseURL.isInternal(null), "a blank URL is not internal");
+    assert.notOk(DiscourseURL.isInternal(null), "a blank URL is not internal");
     assert.ok(DiscourseURL.isInternal("/test"), "relative URLs are internal");
     assert.ok(
       DiscourseURL.isInternal("//eviltrout.com"),
@@ -23,11 +27,11 @@ module("Unit | Utility | url", function () {
       DiscourseURL.isInternal("https://eviltrout.com/moustache"),
       "a url on a HTTPS of the same host is internal"
     );
-    assert.not(
+    assert.notOk(
       DiscourseURL.isInternal("//twitter.com.com"),
       "a different host is not internal (protocol-less)"
     );
-    assert.not(
+    assert.notOk(
       DiscourseURL.isInternal("http://twitter.com"),
       "a different host is not internal"
     );
@@ -43,11 +47,11 @@ module("Unit | Utility | url", function () {
 
   test("isInternal on subfolder install", function (assert) {
     sinon.stub(DiscourseURL, "origin").returns("http://eviltrout.com/forum");
-    assert.not(
+    assert.notOk(
       DiscourseURL.isInternal("http://eviltrout.com"),
       "the host root is not internal"
     );
-    assert.not(
+    assert.notOk(
       DiscourseURL.isInternal("http://eviltrout.com/tophat"),
       "a url on the same host but on a different folder is not internal"
     );
@@ -73,6 +77,11 @@ module("Unit | Utility | url", function () {
     logIn();
     const user = User.current();
 
+    sinon.stub(DiscourseURL, "router").get(() => {
+      return {
+        currentURL: "/forum",
+      };
+    });
     sinon.stub(DiscourseURL, "handleURL");
     DiscourseURL.routeTo("/my/messages");
     assert.ok(
@@ -97,6 +106,40 @@ module("Unit | Utility | url", function () {
     assert.strictEqual(
       prefixProtocol("www.discourse.org/mailto:foo"),
       "https://www.discourse.org/mailto:foo"
+    );
+  });
+
+  test("getCategoryAndTagUrl", function (assert) {
+    assert.strictEqual(
+      getCategoryAndTagUrl(
+        { path: "/c/foo/1", default_list_filter: "all" },
+        true
+      ),
+      "/c/foo/1"
+    );
+
+    assert.strictEqual(
+      getCategoryAndTagUrl(
+        { path: "/c/foo/1", default_list_filter: "all" },
+        false
+      ),
+      "/c/foo/1/none"
+    );
+
+    assert.strictEqual(
+      getCategoryAndTagUrl(
+        { path: "/c/foo/1", default_list_filter: "none" },
+        true
+      ),
+      "/c/foo/1/all"
+    );
+
+    assert.strictEqual(
+      getCategoryAndTagUrl(
+        { path: "/c/foo/1", default_list_filter: "none" },
+        false
+      ),
+      "/c/foo/1"
     );
   });
 

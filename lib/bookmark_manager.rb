@@ -33,11 +33,9 @@ class BookmarkManager
   #                        See Bookmark.auto_delete_preferences,
   #                        this is used to determine when to delete a bookmark
   #                        automatically.
-  # TODO (martin) (2021-12-01) Remove reminder_type keyword argument once plugins are not using it.
   def create(
     post_id:,
     name: nil,
-    reminder_type: nil,
     reminder_at: nil,
     for_topic: false,
     options: {}
@@ -100,8 +98,7 @@ class BookmarkManager
     BookmarkReminderNotificationHandler.send_notification(bookmark)
   end
 
-  # TODO (martin) (2021-12-01) Remove reminder_type keyword argument once plugins are not using it.
-  def update(bookmark_id:, name:, reminder_at:, reminder_type: nil, options: {})
+  def update(bookmark_id:, name:, reminder_at:, options: {})
     bookmark = find_bookmark_and_check_access(bookmark_id)
 
     success = bookmark.update(

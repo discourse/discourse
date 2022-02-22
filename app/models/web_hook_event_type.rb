@@ -14,6 +14,7 @@ class WebHookEventType < ActiveRecord::Base
   USER_BADGE = 13
   GROUP_USER = 14
   LIKE = 15
+  USER_PROMOTED = 16
 
   has_and_belongs_to_many :web_hooks
 

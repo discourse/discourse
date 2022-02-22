@@ -28,7 +28,7 @@ function preferencesPretender(server, helper) {
   server.post("/u/create_second_factor_totp.json", () => {
     return helper.response({
       key: "rcyryaqage3jexfj",
-      qr: '<div id="test-qr">qr-code</div>',
+      qr: "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=",
     });
   });
 
@@ -207,7 +207,7 @@ acceptance("User Preferences", function (needs) {
     assert.notOk(exists("#password"), "it hides the password input");
 
     await click(".new-totp");
-    assert.ok(exists("#test-qr"), "shows qr code");
+    assert.ok(exists(".qr-code img"), "shows qr code image");
 
     await click(".add-totp");
 

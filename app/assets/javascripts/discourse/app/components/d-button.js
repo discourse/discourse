@@ -71,7 +71,7 @@ export default Component.extend({
 
   @discourseComputed("title", "translatedTitle")
   computedTitle(title, translatedTitle) {
-    if (this.title) {
+    if (title) {
       return I18n.t(title);
     }
     return translatedTitle;
@@ -79,7 +79,7 @@ export default Component.extend({
 
   @discourseComputed("label", "translatedLabel")
   computedLabel(label, translatedLabel) {
-    if (this.label) {
+    if (label) {
       return I18n.t(label);
     }
     return translatedLabel;
@@ -109,10 +109,24 @@ export default Component.extend({
     if (this.onKeyDown) {
       e.stopPropagation();
       this.onKeyDown(e);
+    } else if (e.key === "Enter") {
+      this._triggerAction(e);
+      return false;
     }
   },
 
   click(event) {
+    this._triggerAction(event);
+    return false;
+  },
+
+  mouseDown(event) {
+    if (this.preventFocus) {
+      event.preventDefault();
+    }
+  },
+
+  _triggerAction(event) {
     let { action } = this;
 
     if (action) {
@@ -141,13 +155,5 @@ export default Component.extend({
 
     event.preventDefault();
     event.stopPropagation();
-
-    return false;
-  },
-
-  mouseDown(event) {
-    if (this.preventFocus) {
-      event.preventDefault();
-    }
   },
 });

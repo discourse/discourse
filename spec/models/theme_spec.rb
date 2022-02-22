@@ -341,6 +341,18 @@ HTML
       expect(scss).to include('font-size:"#{$fakeinterpolatedvariable}\a andanothervalue \'withquotes\'; margin: 0;\a"')
     end
 
+    it "can use a setting straight away after introducing it" do
+      theme.set_field(target: :common, name: :scss, value: 'body {background-color: red;}')
+      theme.save!
+
+      theme.reload
+      theme.set_field(target: :settings, name: :yaml, value: "background_color: red\nfont_size: 25px")
+      theme.set_field(target: :common, name: :scss, value: 'body {background-color: $background_color;}')
+      theme.save!
+
+      expect(theme.theme_fields.find_by(target_id: Theme.targets[:common], name: "scss").error).to eq(nil)
+    end
+
     it "allows values to be used in JS" do
       theme.name = 'awesome theme"'
       theme.set_field(target: :settings, name: :yaml, value: "name: bob")
@@ -440,6 +452,10 @@ HTML
   end
 
   def cached_settings(id)
+    Theme.find_by(id: id).cached_settings.to_json
+  end
+
+  def included_settings(id)
     Theme.find_by(id: id).included_settings.to_json
   end
 
@@ -512,7 +528,7 @@ HTML
     theme.save!
 
     Upload.find(upload.id).destroy
-    theme.clear_cached_settings!
+    theme.remove_from_cache!
 
     json = JSON.parse(cached_settings(theme.id))
     expect(json).to be_empty
@@ -547,36 +563,6 @@ HTML
 
     json = JSON.parse(cached_settings(theme.id))
     expect(json["my_upload"]).to eq("http://cdn.localhost#{upload.url}")
-  end
-
-  it 'handles settings cache correctly' do
-    Theme.destroy_all
-
-    expect(cached_settings(theme.id)).to eq("{}")
-
-    theme.set_field(target: :settings, name: "yaml", value: "boolean_setting: true")
-    theme.save!
-    expect(cached_settings(theme.id)).to match(/\"boolean_setting\":true/)
-
-    theme.settings.first.value = "false"
-    theme.save!
-    expect(cached_settings(theme.id)).to match(/\"boolean_setting\":false/)
-
-    child.set_field(target: :settings, name: "yaml", value: "integer_setting: 54")
-
-    child.save!
-    theme.add_relative_theme!(:child, child)
-
-    json = cached_settings(theme.id)
-    expect(json).to match(/\"boolean_setting\":false/)
-    expect(json).to match(/\"integer_setting\":54/)
-
-    expect(cached_settings(child.id)).to eq("{\"integer_setting\":54}")
-
-    child.destroy!
-    json = cached_settings(theme.id)
-    expect(json).not_to match(/\"integer_setting\":54/)
-    expect(json).to match(/\"boolean_setting\":false/)
   end
 
   describe "convert_settings" do

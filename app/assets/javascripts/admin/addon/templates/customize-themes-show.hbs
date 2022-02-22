@@ -1,5 +1,5 @@
 <div class="show-current-style">
-  {{plugin-outlet name="admin-customize-themes-show-top" args=(hash theme=model)}}
+  {{plugin-outlet name="admin-customize-themes-show-top" tagName="span" connectorTagName="div" args=(hash theme=model)}}
   <div class="title">
     {{#if editingName}}
       {{text-field value=model.name autofocus="true"}}

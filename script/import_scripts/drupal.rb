@@ -76,7 +76,7 @@ class ImportScripts::Drupal < ImportScripts::Base
 
       create_users(users, total: user_count, offset: offset) do |user|
         email = user["email"].presence || fake_email
-        email = fake_email unless email[EmailValidator.email_regex]
+        email = fake_email if !EmailAddressValidator.valid_value?(email)
 
         username = @htmlentities.decode(user["username"]).strip
 
@@ -428,7 +428,7 @@ class ImportScripts::Drupal < ImportScripts::Base
     real_filename = CGI.unescapeHTML(uri)
     file = File.join(ATTACHMENT_DIR, real_filename)
 
-    unless File.exists?(file)
+    unless File.exist?(file)
       puts "Attachment file #{attachment['filename']} doesn't exist"
 
       tmpfile = "attachments_failed.txt"

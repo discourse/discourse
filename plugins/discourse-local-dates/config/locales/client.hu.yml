@@ -19,7 +19,9 @@ hu:
           insert: Beszúrás
           advanced_mode: Speciális mód
           simple_mode: Egyszerű mód
+          format_description: "A dátum megjelenítésére használt formátum a felhasználó számára. Használja a Z-t az időeltolódás, a zz-t pedig az időzóna nevének megjelenítéséhez."
           timezones_title: Megjelenítendő időzónák
+          timezones_description: Az időzónák a dátumok megjelenítésére szolgálnak az előnézetben és a tartalékban.
           recurring_title: Ismétlődés
           recurring_description: "Adja meg az esemény ismétlődését. Kézzel is szerkesztheti az űrlap által előállított ismétlődési beállítást, és a következő kulcsokat használhatja: years (év), quarters (negyedév), months (hónap), days (nap), hours (óra), minutes (perc), seconds (másodperc), milliseconds (ezredmásodperc)."
           recurring_none: Nincs ismétlődés
@@ -29,6 +31,7 @@ hu:
           format_title: Dátumformátum
           timezone: Időzóna
           until: Eddig…
+          current_timezone: "Jelenlegi időzóna:"
           recurring:
             every_day: "Naponta"
             every_week: "Hetente"
@@ -38,3 +41,4 @@ hu:
             every_three_months: "Három havonta"
             every_six_months: "Hat havonta"
             every_year: "Évente"
+      default_title: "%{site_name} esemény"

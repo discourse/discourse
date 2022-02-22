@@ -82,10 +82,18 @@ module PrettyText
 
     ctx.eval("window = {}; window.devicePixelRatio = 2;") # hack to make code think stuff is retina
 
-    if Rails.env.development? || Rails.env.test?
-      ctx.attach("console.log", proc { |l| p l })
-      ctx.eval('window.console = console;')
-    end
+    ctx.attach("rails.logger.info", proc { |err| Rails.logger.info(err.to_s) })
+    ctx.attach("rails.logger.warn", proc { |err| Rails.logger.warn(err.to_s) })
+    ctx.attach("rails.logger.error", proc { |err| Rails.logger.error(err.to_s) })
+    ctx.eval <<~JS
+      console = {
+        prefix: "[PrettyText] ",
+        log: function(...args){ rails.logger.info(console.prefix + args.join(" ")); },
+        warn: function(...args){ rails.logger.warn(console.prefix + args.join(" ")); },
+        error: function(...args){ rails.logger.error(console.prefix + args.join(" ")); }
+      }
+    JS
+
     ctx.eval("__PRETTY_TEXT = true")
 
     PrettyText::Helpers.instance_methods.each do |method|
@@ -156,6 +164,17 @@ module PrettyText
     end
   end
 
+  # Acceptable options:
+  #
+  #  disable_emojis    - Disables the emoji markdown engine.
+  #  features          - A hash where the key is the markdown feature name and the value is a boolean to enable/disable the markdown feature.
+  #                      The hash is merged into the default features set in pretty-text.js which can be used to add new features or disable existing features.
+  #  features_override - An array of markdown feature names to override the default markdown feature set. Currently used by plugins to customize what features should be enabled
+  #                      when rendering markdown.
+  #  markdown_it_rules - An array of markdown rule names which will be applied to the markdown-it engine. Currently used by plugins to customize what markdown-it rules should be
+  #                      enabled when rendering markdown.
+  #  topic_id          - Topic id for the post being cooked.
+  #  user_id           - User id for the post being cooked.
   def self.markdown(text, opts = {})
     # we use the exact same markdown converter as the client
     # TODO: use the same extensions on both client and server (in particular the template for mentions)
@@ -175,6 +194,8 @@ module PrettyText
         __paths = #{paths_json};
         __optInput.getURL = __getURL;
         #{"__optInput.features = #{opts[:features].to_json};" if opts[:features]}
+        #{"__optInput.featuresOverride = #{opts[:features_override].to_json};" if opts[:features_override]}
+        #{"__optInput.markdownItRules = #{opts[:markdown_it_rules].to_json};" if opts[:markdown_it_rules]}
         __optInput.getCurrentUser = __getCurrentUser;
         __optInput.lookupAvatar = __lookupAvatar;
         __optInput.lookupPrimaryUserGroup = __lookupPrimaryUserGroup;
@@ -188,10 +209,11 @@ module PrettyText
         __optInput.censoredRegexp = #{WordWatcher.word_matcher_regexp(:censor)&.source.to_json};
         __optInput.watchedWordsReplace = #{WordWatcher.word_matcher_regexps(:replace).to_json};
         __optInput.watchedWordsLink = #{WordWatcher.word_matcher_regexps(:link).to_json};
+        __optInput.additionalOptions = #{Site.markdown_additional_options.to_json};
       JS
 
-      if opts[:topicId]
-        buffer << "__optInput.topicId = #{opts[:topicId].to_i};\n"
+      if opts[:topic_id]
+        buffer << "__optInput.topicId = #{opts[:topic_id].to_i};\n"
       end
 
       if opts[:user_id]
@@ -279,10 +301,6 @@ module PrettyText
 
   def self.cook(text, opts = {})
     options = opts.dup
-
-    # we have a minor inconsistency
-    options[:topicId] = opts[:topic_id]
-
     working_text = text.dup
 
     sanitized = markdown(working_text, options)
@@ -361,6 +379,9 @@ module PrettyText
 
     # remove href inside quotes & oneboxes & elided part
     doc.css("aside.quote a, aside.onebox a, .elided a").remove
+
+    # remove hotlinked images
+    doc.css("a.onebox > img").each { |img| img.parent.remove }
 
     # extract all links
     doc.css("a").each do |a|

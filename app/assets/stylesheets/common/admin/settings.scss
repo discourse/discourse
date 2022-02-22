@@ -107,15 +107,6 @@
       font-size: $font-0;
       font-weight: normal;
     }
-
-    &.color {
-      .color-picker {
-        display: flex;
-        .picker + .sp-replacer {
-          border-left: none;
-        }
-      }
-    }
   }
   .setting.overridden {
     h3 {

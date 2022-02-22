@@ -130,6 +130,8 @@ sr:
       previous_month: "Prethodni mesec"
       next_month: "Sledeći mesec"
       placeholder: datum
+      from_placeholder: "од датума"
+      to_placeholder: "до датума"
     share:
       topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
       post: "poruka #%{postNumber}"
@@ -179,7 +181,6 @@ sr:
     bootstrap_mode_disabled: "Bootstrap mod će biti onemogućen u roku od 24 časa."
     themes:
       default_description: "zadato"
-      broken_theme_alert: "Vaš forum možda neće raditi jer tema / komponenta %{theme} ima greške. Onemogućite je putem linka %{path}."
     s3:
       regions:
         ap_northeast_1: "Azija Pacifik (Tokio)"
@@ -829,7 +830,6 @@ sr:
       email_level:
         always: "uvek"
         never: "nikada"
-      email_messages_level: "Pošalji mi email kada mi neko pošalje poruku"
       other_settings: "Drugo"
       categories_settings: "Kategorije"
       new_topic_duration:
@@ -1174,7 +1174,7 @@ sr:
       new_messages_marker: "poslednja poseta"
       bulk:
         select_all: "Izaberi sve"
-        reset_read: "Poništi Pročitano"
+        defer: "Odloži"
         delete: "Obriši Teme"
         dismiss_new: "Odbaci Novo"
         toggle: "uključi/isključi grupni odabir tema"
@@ -1276,13 +1276,7 @@ sr:
         replies_short: "%{current} / %{total}"
       progress:
         title: napredak teme
-        go_top: "vrh"
-        go_bottom: "dno"
-        go: "idi"
-        jump_bottom_with_number: "skoči na poruku %{post_number}"
         jump_prompt_or: "ili"
-        total: ukupno poruka
-        current: trenutna poruka
       notifications:
         reasons:
           "3_6": "Primaćete obaveštenja jer posmatrate ovu kategoriju."
@@ -1334,7 +1328,6 @@ sr:
         title: "Odgovori"
         help: "Počni pravljenje odgovora na ovu temu"
       share:
-        title: "Podeli"
         help: "podeli link ka ovoj temi"
         invite_users: "Pozovi"
       print:
@@ -2133,9 +2126,6 @@ sr:
         screened_ips:
           title: "Provereni IP-ovi"
           delete_confirm: "Jeste li sigruni da želite ukloniti pravilo za %{ip_address}?"
-          roll_up_confirm: "Jeste li sigurni da želite zaokružiti često proveraavnje IP adrese u pod-mreže?"
-          rolled_up_some_subnets: "Uspešno zaokruženi zabranjeni IP unosi u ove pod-mreže: %{subnets}."
-          rolled_up_no_subnet: "Nema ničega za zaokružiti."
           actions:
             block: "Blokiraj"
             do_nothing: "Dozvoli"

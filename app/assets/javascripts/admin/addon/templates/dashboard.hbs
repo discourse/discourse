@@ -1,4 +1,4 @@
-{{plugin-outlet name="admin-dashboard-top"}}
+{{plugin-outlet name="admin-dashboard-top" tagName="span" connectorTagName="div"}}
 
 {{#if showVersionChecks}}
   <div class="section-top">
@@ -11,7 +11,8 @@
 {{dashboard-problems
   loadingProblems=loadingProblems
   foundProblems=foundProblems
-  problems=problems
+  lowPriorityProblems=lowPriorityProblems
+  highPriorityProblems=highPriorityProblems
   problemsTimestamp=problemsTimestamp
   refreshProblems=(action "refreshProblems")
 }}
@@ -52,4 +53,4 @@
 
 {{dashboard-new-features tagName="div"}}
 
-{{plugin-outlet name="admin-dashboard-bottom"}}
+{{plugin-outlet name="admin-dashboard-bottom" tagName="span" connectorTagName="div"}}

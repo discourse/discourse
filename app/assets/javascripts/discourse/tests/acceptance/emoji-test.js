@@ -13,7 +13,7 @@ acceptance("Emoji", function (needs) {
     await fillIn(".d-editor-input", "this is an emoji :blonde_woman:");
     assert.strictEqual(
       queryAll(".d-editor-preview:visible").html().trim(),
-      `<p>this is an emoji <img src="/images/emoji/google_classic/blonde_woman.png?v=${v}" title=":blonde_woman:" class="emoji" alt=":blonde_woman:"></p>`
+      `<p>this is an emoji <img src="/images/emoji/google_classic/blonde_woman.png?v=${v}" title=":blonde_woman:" class="emoji" alt=":blonde_woman:" loading="lazy" width="20" height="20"></p>`
     );
   });
 
@@ -24,7 +24,7 @@ acceptance("Emoji", function (needs) {
     await fillIn(".d-editor-input", "this is an emoji :blonde_woman:t5:");
     assert.strictEqual(
       queryAll(".d-editor-preview:visible").html().trim(),
-      `<p>this is an emoji <img src="/images/emoji/google_classic/blonde_woman/5.png?v=${v}" title=":blonde_woman:t5:" class="emoji" alt=":blonde_woman:t5:"></p>`
+      `<p>this is an emoji <img src="/images/emoji/google_classic/blonde_woman/5.png?v=${v}" title=":blonde_woman:t5:" class="emoji" alt=":blonde_woman:t5:" loading="lazy" width="20" height="20"></p>`
     );
   });
 });

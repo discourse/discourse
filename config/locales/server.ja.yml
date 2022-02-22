@@ -217,8 +217,6 @@ ja:
       <p>パスワードを覚えている場合は、<a href="%{base_url}/login">ログイン</a>してください。</p>
 
       <p>そうでない場合は、<a href="%{base_url}/password-reset">パスワードをリセット</a>してください。</p>
-    not_found_template_link: |
-      <p><a href="%{base_url}">%{site_name}</a> への招待を引き換えられなくなりました。あなたを招待した人に新しい招待を送るようリクエストしてください。</p>
     user_exists: "<b>%{email}</b> を招待する必要はありません。 <a href='%{base_path}/u/%{username}/summary'> のアカウントはすでに存在します！</a>"
     invite_exists: "<b>%{email}</b> はすでに招待済みです。"
     invalid_email: "%{email} は有効なメールアドレスではありません。"
@@ -229,7 +227,6 @@ ja:
     disabled_errors:
       discourse_connect_enabled: "DiscourseConnect が有効であるため、招待は無効です。"
       invalid_access: "リクエストしたリソースの閲覧が許可されていません。"
-    requires_groups: "招待を保存しました。指定されたトピックへのアクセスを許可するには、次のいずれかのグループを追加してください: %{groups}。"
   bulk_invite:
     file_should_be_csv: "アップロードファイルは csv 形式である必要があります。"
     max_rows: "最初の %{max_bulk_invites} 件の招待が送信されました。ファイルをより小さく分割してください。"
@@ -314,8 +311,6 @@ ja:
   links_require_trust: "投稿にリンクを含めることはできません。"
   too_many_links:
     other: "新規ユーザーは投稿につき %{count} 件のリンクしか追加できません。"
-  contains_blocked_word: "投稿に許可されていない言葉が含まれています: %{word}"
-  contains_blocked_words: "投稿に許可されていない語が複数含まれています: %{words}"
   spamming_host: "このホストへのリンクを投稿できません。"
   user_is_suspended: "凍結中のユーザーは投稿できません。"
   topic_not_found: "問題が発生しました。トピックがクローズしたか、閲覧中に削除された可能性があります。"
@@ -1326,7 +1321,6 @@ ja:
     min_personal_message_title_length: "メッセージのタイトルの最小文字数"
     max_emojis_in_title: "トピックタイトルに許可される最大絵文字数"
     min_search_term_length: "有効な検索語の最小文字数"
-    search_tokenize_chinese_japanese_korean: "CJK 以外のサイトでも強制検索で中国語/日本語/韓国語をトークン化する"
     search_prefer_recent_posts: "大規模なフォーラムの検索が遅い場合、このオプションは先により直近の投稿のインデックスを試す"
     search_recent_posts_size: "インデックスに保持する直近の投稿の数"
     log_search_queries: "ユーザーが実行した検索クエリをログに記録する"
@@ -1369,7 +1363,6 @@ ja:
     show_pinned_excerpt_mobile: "モバイルビューで固定トピックの抜粋を表示する。"
     show_pinned_excerpt_desktop: "デスクトップビューで固定トピックの抜粋を表示する。"
     post_onebox_maxlength: "Discourse OneBox 投稿の最大文字数。"
-    blocked_onebox_domains: "ワンボックス化されないドメインのリスト。"
     allowed_inline_onebox_domains: "タイトルなしでリンクされた場合、ミニチュア形式でワンボックス化されるドメインのリスト"
     enable_inline_onebox_on_all_domains: "inline_onebox_domain_allowlist サイト設定を無視し、すべてのドメインでインラインのワンボックスを許可する。"
     force_custom_user_agent_hosts: "すべてのリクエストでカスタムワンボックスユーザーエージェントを使用するホスト (特にユーザーエージェントごとにアクセスを制限するホストで役立ちます)。"
@@ -1881,7 +1874,6 @@ ja:
     display_name_on_posts: "投稿に、@username に加えてユーザーのフルネームを表示します。"
     show_time_gap_days: "2 つの投稿の作成日の間が指定された日数以上の場合、トピックに時間の差を表示します。"
     short_progress_text_threshold: "トピック内の投稿数が指定された数字を超えると、プログレスバーに現在の投稿番号のみを表示します。プログレスバーの幅を変更すると、この値を変更する必要がある場合があります。"
-    default_code_lang: "Github コードブロックにデフォルトで適用されるプログラム言語シンタックスハイライト (auto、nohighlight、ruby、python など)"
     warn_reviving_old_topic_age: "最後の返信が指定された日数より古いトピックに返信し始めると、警告を表示します。0 に設定すると無効になります。"
     autohighlight_all_code: "明示的に言語を指定しなくても、すべての整形済みのコードブロックにコードハイライトを強制的に適用します。"
     highlighted_languages: "シンタックスハイライトルールが含まれる。(警告: 多くの言語を含めすぎると、パフォーマンスに影響を与える可能性があります) デモは、<a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> をご覧ください。"

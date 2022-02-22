@@ -167,7 +167,6 @@ gl:
     bootstrap_mode_disabled: "O modo Bootstrap desactivarase nun prazo de 24 horas."
     themes:
       default_description: "Predeterminado"
-      broken_theme_alert: "Pode que o seu sitio non funcione porque o tema ou compoñente %{theme} contén erros. Desactíveo en %{path}."
     s3:
       regions:
         ap_northeast_1: "Asia Pacífico (Tokio)"
@@ -1318,11 +1317,9 @@ gl:
         every_month: "cada mes"
         every_six_months: "cada seis meses"
       email_level:
-        title: "Enviar un correo electrónico cando alguén me cite, responda a unha das miñas publicacións, mencione o meu @nomedeusuario ou me convide a un tema."
         always: "sempre"
         only_when_away: "só cando ausente"
         never: "nunca"
-      email_messages_level: "Enviar correo electrónico cando alguén me mande unha mensaxe"
       include_tl0_in_digests: "Incluír contido de novos usuarios nos correos electrónicos de resumo"
       email_in_reply_to: "Incluír nos correos un extracto das respostas á publicación"
       other_settings: "Outro"
@@ -1808,9 +1805,6 @@ gl:
       group_mentioned:
         one: "Ao mencionar %{group}, vai enviar a notificación a <a href='%{group_link}'>%{count} persoa</a>. Está seguro de querelo facer?"
         other: "Ao mencionar %{group}, vai enviar a notificación a <a href='%{group_link}'>%{count} persoas</a>. Está seguro de querelo facer?"
-      cannot_see_mention:
-        category: "Mencionou a %{username}, mais non poden recibir notificacións porque non teñen acceso a esta categoría. Debe engadilos a un grupo con acceso a esta categoría."
-        private: "Mencionou a %{username}, mais non recibirán notificacións porque non poden ver esta mensaxe privada. Debe convidalos a esta mensaxe privada."
       duplicate_link: "Parece que a súa ligazón a <b>%{domain}</b> xa foi publicada no tema por <b>@%{username}</b> e <a href='%{post_url}'>nunha resposta sobre %{ago}</a> Confirma que quere publicala de novo?"
       reference_topic_title: "RE: %{title}"
       error:
@@ -2123,7 +2117,7 @@ gl:
         clear_all: "Borrar todo"
         unlist_topics: "Retirar temas da listaxe"
         relist_topics: "Refacer a listaxe de temas"
-        reset_read: "Restabelecer os lidos"
+        defer: "Adiar"
         delete: "Eliminar temas"
         dismiss: "Desbotar"
         dismiss_read: "Desbotar os non lidos"
@@ -2330,20 +2324,13 @@ gl:
         replies_short: "%{current} / %{total}"
       progress:
         title: progreso do tema
-        go_top: "principio"
-        go_bottom: "final"
-        go: "ir"
-        jump_bottom: "saltar á última publicación"
         jump_prompt: "saltar a..."
         jump_prompt_of:
           one: "de %{count} publicación"
           other: "de %{count} publicacións"
         jump_prompt_long: "Saltar a..."
-        jump_bottom_with_number: "ir á publicación %{post_number}"
         jump_prompt_to_date: "ata a data"
         jump_prompt_or: "ou"
-        total: publicacións totais
-        current: publicación actual
       notifications:
         title: cambiar a frecuencia coa que recibe notificacións sobre este tema
         reasons:
@@ -2413,7 +2400,6 @@ gl:
         title: "Responder"
         help: "escribir unha resposta a este tema"
       share:
-        title: "Compartir"
         extended_title: "Compartir unha ligazón"
         help: "compartir unha ligazón a este tema"
         invite_users: "Convidar"
@@ -2871,7 +2857,6 @@ gl:
       default_list_filter: "Filtro de listaxe predeterminado:"
       allow_badges_label: "Permitir adxudicar insignias nesta categoría"
       edit_permissions: "Editar permisos"
-      reviewable_by_group: "Ademais do equipo, o contido desta categoría tamén pode ser revisado por:"
       review_group_name: "nome do grupo"
       require_topic_approval: "Require a aprobación de todos os temas novos polo moderador"
       require_reply_approval: "Require a aprobación de todas as respostas novas polo moderador"
@@ -4265,9 +4250,6 @@ gl:
           title: "IP controlados"
           description: 'Enderezos IP observados. Use «Permitir» para crear listas de enderezos IP.'
           delete_confirm: "Confirma a eliminación da regra para %{ip_address}?"
-          roll_up_confirm: "Confirma que quere agrupar en subredes os enderezos IP controlados comunmente?"
-          rolled_up_some_subnets: "Agrupáronse correctamente en subredes as entradas de IP para bloquear: %{subnets}."
-          rolled_up_no_subnet: "Non hai nada que agrupar."
           actions:
             block: "Bloquear"
             do_nothing: "Permitir"

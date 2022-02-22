@@ -58,5 +58,4 @@ class AdminConfirmation
     ac.token = token
     ac
   end
-
 end

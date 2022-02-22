@@ -293,7 +293,23 @@ module Jobs
       opts[:current_site_id] ||= RailsMultisite::ConnectionManagement.current_db
     end
 
-    # If we are able to queue a job, do it
+    delay = opts.delete(:delay_for)
+    queue = opts.delete(:queue)
+
+    # Only string keys are allowed in JSON. We call `.with_indifferent_access`
+    # in Jobs::Base#perform, so this is invisible to developers
+    opts = opts.deep_stringify_keys
+
+    # Simulate the args being dumped/parsed through JSON
+    parsed_opts = JSON.parse(JSON.dump(opts))
+    if opts != parsed_opts
+      Discourse.deprecate(<<~MSG.squish, since: "2.9", drop_from: "3.0")
+        #{klass.name} was enqueued with argument values which do not cleanly serialize to/from JSON.
+        This means that the job will be run with slightly different values than the ones supplied to `enqueue`.
+        Argument values should be strings, booleans, numbers, or nil (or arrays/hashes of those value types).
+      MSG
+    end
+    opts = parsed_opts
 
     if ::Jobs.run_later?
       hash = {
@@ -301,23 +317,21 @@ module Jobs
         'args' => [opts]
       }
 
-      if delay = opts.delete(:delay_for)
+      if delay
         if delay.to_f > 0
           hash['at'] = Time.now.to_f + delay.to_f
         end
       end
 
-      if queue = opts.delete(:queue)
+      if queue
         hash['queue'] = queue
       end
 
       DB.after_commit { klass.client_push(hash) }
     else
       # Otherwise execute the job right away
-      opts.delete(:delay_for)
-      opts.delete(:queue)
+      opts["sync_exec"] = true
 
-      opts[:sync_exec] = true
       if Rails.env == "development"
         Scheduler::Defer.later("job") do
           klass.new.perform(opts)

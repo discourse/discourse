@@ -7,6 +7,20 @@ class Site
   cattr_accessor :preloaded_category_custom_fields
   self.preloaded_category_custom_fields = Set.new
 
+  ##
+  # Sometimes plugins need to have additional data or options available
+  # when rendering custom markdown features/rules that are not available
+  # on the default opts.discourse object. These additional options should
+  # be namespaced to the plugin adding them.
+  #
+  # ```
+  # Site.markdown_additional_options["chat"] = { limited_pretty_text_markdown_rules: [] }
+  # ```
+  #
+  # These are passed down to markdown rules on opts.discourse.additionalOptions.
+  cattr_accessor :markdown_additional_options
+  self.markdown_additional_options = {}
+
   def self.add_categories_callbacks(&block)
     categories_callbacks << block
   end

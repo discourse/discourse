@@ -114,6 +114,7 @@ describe UserSearch do
     fab!(:post5) { Fabricate :post, user: mr_brown, topic: topic3 }
     fab!(:post6) { Fabricate :post, user: mr_white, topic: topic }
     fab!(:post7) { Fabricate :post, user: staged, topic: topic4 }
+    fab!(:post8) { Fabricate :post, user: mr_brown, topic: topic2, post_type: Post.types[:whisper] }
 
     before { mr_white.update(suspended_at: 1.day.ago, suspended_till: 1.year.from_now) }
 
@@ -168,6 +169,17 @@ describe UserSearch do
 
       results = search_for(mr_b.username, topic_id: topic3.id)
       expect(results).to eq [mr_b, mr_brown, mr_blue].map(&:username)
+    end
+
+    it "does not reveal whisper users" do
+      results = search_for("", topic_id: topic2.id)
+      expect(results).to eq [mr_blue.username]
+    end
+
+    it "does not include deleted posts users" do
+      post4.trash!
+      results = search_for("", topic_id: topic.id)
+      expect(results).to eq [mr_orange, mr_b].map(&:username)
     end
 
     it "only reveals topic participants to people with permission" do

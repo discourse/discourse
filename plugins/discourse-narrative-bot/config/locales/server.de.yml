@@ -84,6 +84,15 @@ de:
       "10":
         quote: "Was der Verstand eines Menschen begreifen und glauben kann, kann er erreichen."
         author: "Napoleon Hill"
+      "11":
+        quote: "Frieden zu Hause, Frieden in der Welt."
+        author: "Mustafa Kemal Atatürk"
+      "12":
+        quote: "Bildung ist kein Weg, der Armut zu entkommen, sondern ein Weg, sie zu bekämpfen."
+        author: "Julius Nyerere"
+      "13":
+        quote: "Eine Reise von tausend Meilen muss mit einem einzigen Schritt beginnen."
+        author: "Lao Tzu"
       results: |-
         > :left_speech_bubble: _%{quote}_ &mdash; %{author}
     magic_8_ball:
@@ -214,7 +223,7 @@ de:
 
           - Oder drücke die <kbd><b>F</b></kbd>- oder <kbd><i>K</i></kbd>-Schaltflächen im Editor
         reply: |-
-          Großartige Leistung! HTML und BBCode funktionieren auch zur Formatierung – um mehr zu erfahren, [probiere dieses Tutorial aus](http://commonmark.org/help) :nerd:
+          Gut gemacht! HTML und BBCode können auch zur Formatierung genutzt werden – mehr dazu findet sich [in diesem Tutorial](https://commonmark.org/help) :nerd:
         not_found: |-
           Huch, ich habe keine Formatierung in deiner Antwort gefunden. :pencil2:
 

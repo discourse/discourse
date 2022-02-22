@@ -85,3 +85,5 @@ pt_BR:
           title: "Ícones no cabeçalho"
         spinners:
           title: "Controle giratório"
+        empty_state:
+          title: "Estado vazio"

@@ -616,7 +616,7 @@ class BulkImport::VBulletin5 < BulkImport::Base
     real_filename = db_filename
     real_filename.prepend SecureRandom.hex if real_filename[0] == '.'
 
-    unless File.exists?(filename)
+    unless File.exist?(filename)
       filename = check_database_for_attachment(row) if filename.blank?
       return nil if filename.nil?
     end

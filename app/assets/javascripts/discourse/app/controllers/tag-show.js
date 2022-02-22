@@ -69,10 +69,6 @@ export default Controller.extend(BulkTopicSelection, FilterModeMixin, {
     return true;
   },
 
-  loadMoreTopics() {
-    return this.list.loadMore();
-  },
-
   @observes("list.canLoadMore")
   _showFooter() {
     this.set("application.showFooter", !this.get("list.canLoadMore"));
@@ -125,6 +121,13 @@ export default Controller.extend(BulkTopicSelection, FilterModeMixin, {
           tracked ? { skipResettingParams: ["filter", "f"] } : {}
         )
       );
+    },
+
+    showInserted() {
+      const tracker = this.topicTrackingState;
+      this.list.loadBefore(tracker.get("newIncoming"), true);
+      tracker.resetTracking();
+      return false;
     },
 
     changeSort(order) {

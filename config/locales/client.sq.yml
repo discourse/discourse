@@ -738,10 +738,8 @@ sq:
         daily: "çdo ditë"
         weekly: "çdo javë"
       email_level:
-        title: "Më dërgo një email kur dikush më citon, i përgjigjet një postimi tim, më përmend me @username, ose më fton në një temë"
         always: "gjithmonë"
         never: "asnjëherë"
-      email_messages_level: "Më dërgo një email kur dikush më dërgon një mesazh"
       include_tl0_in_digests: "Përfshini dhe postime nga anëtarët e rinj"
       email_in_reply_to: "Përfshi një copëz të përgjigjeve ndaj postimit në email"
       other_settings: "Tjetër"
@@ -1033,8 +1031,6 @@ sq:
       group_mentioned:
         one: "By mentioning %{group}, you are about to notify <a href='%{group_link}'>%{count} person</a> – are you sure?"
         other: "By mentioning %{group}, you are about to notify <a href='%{group_link}'>%{count} people</a> – are you sure?"
-      cannot_see_mention:
-        private: "Ju përmendët %{username} , por ky anëtar nuk do të njoftohet sepse nuk kanë akses në këtë mesazh privat. Do t'ju duhet t'a ftoni anëtarin në këtë mesazh. "
       error:
         title_missing: "Titulli është i nevojshëm"
         category_missing: "Duhet të zgjidhni një kategori"
@@ -1157,7 +1153,7 @@ sq:
         select_all: "Zgjidh të gjitha"
         clear_all: "Pastro kriteret"
         unlist_topics: "Hiq temat nga lista"
-        reset_read: "Rivendos leximet"
+        defer: "Shty"
         delete: "Fshi temat"
         dismiss: "Hiqe"
         dismiss_read: "Hiq të gjitha temat e palexuara"
@@ -1265,14 +1261,7 @@ sq:
         replies_short: "%{current} / %{total}"
       progress:
         title: progresi i temës
-        go_top: "sipër"
-        go_bottom: "poshtë"
-        go: "shko"
-        jump_bottom: "hidhu tek përgjigja e fundit"
-        jump_bottom_with_number: "shko tek përgjigja %{post_number}"
         jump_prompt_or: "ose"
-        total: totali i postimeve
-        current: postimi aktual
       notifications:
         title: ndryshoni sa shpesh njoftoheni mbi këtë temë
         reasons:
@@ -1338,7 +1327,6 @@ sq:
         title: "Përgjigju"
         help: "fillo shkrimin e një përgjigjeje në këtë temë"
       share:
-        title: "Shpërndaje"
         help: "shpërndani një lidhje mbi temën"
         invite_users: "Fto"
       flag_topic:
@@ -2360,9 +2348,6 @@ sq:
         screened_ips:
           title: "Kontroll IP-sh"
           delete_confirm: "Are you sure you want to remove the rule for %{ip_address}?"
-          roll_up_confirm: "Are you sure you want to roll up commonly screened IP addresses into subnets?"
-          rolled_up_some_subnets: "Successfully rolled up IP ban entries to these subnets: %{subnets}."
-          rolled_up_no_subnet: "There was nothing to roll up."
           actions:
             block: "Blloko"
             do_nothing: "Lejo"

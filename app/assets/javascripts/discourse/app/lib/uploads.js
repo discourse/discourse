@@ -222,7 +222,7 @@ export function isImage(path) {
 }
 
 export function isVideo(path) {
-  return /\.(mov|mp4|webm|m4v|3gp|ogv|avi|mpeg|ogv)$/i.test(path);
+  return /\.(mov|mp4|webm|m4v|3gp|ogv|avi|mpeg)$/i.test(path);
 }
 
 export function isAudio(path) {

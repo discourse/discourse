@@ -48,6 +48,7 @@ const REPLACEMENTS = {
   "notification.membership_request_consolidated": "users",
   "notification.reaction": "bell",
   "notification.votes_released": "plus",
+  "notification.chat_quoted": "quote-right",
 };
 
 export function replaceIcon(source, destination) {

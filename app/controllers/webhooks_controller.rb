@@ -15,14 +15,15 @@ class WebhooksController < ActionController::Base
     events.each do |event|
       message_id = Email::MessageIdService.message_id_clean((event["smtp-id"] || ""))
       to_address = event["email"]
+      error_code = event["status"]
       if event["event"] == "bounce"
-        if event["status"]["4."]
-          process_bounce(message_id, to_address, SiteSetting.soft_bounce_score)
+        if error_code[Email::SMTP_STATUS_TRANSIENT_FAILURE]
+          process_bounce(message_id, to_address, SiteSetting.soft_bounce_score, error_code)
         else
-          process_bounce(message_id, to_address, SiteSetting.hard_bounce_score)
+          process_bounce(message_id, to_address, SiteSetting.hard_bounce_score, error_code)
         end
       elsif event["event"] == "dropped"
-        process_bounce(message_id, to_address, SiteSetting.hard_bounce_score)
+        process_bounce(message_id, to_address, SiteSetting.hard_bounce_score, error_code)
       end
     end
 
@@ -51,12 +52,13 @@ class WebhooksController < ActionController::Base
     events.each do |event|
       message_id = event.dig("msg", "metadata", "message_id")
       to_address = event.dig("msg", "email")
+      error_code = event.dig("msg", "diag")
 
       case event["event"]
       when "hard_bounce"
-        process_bounce(message_id, to_address, SiteSetting.hard_bounce_score)
+        process_bounce(message_id, to_address, SiteSetting.hard_bounce_score, error_code)
       when "soft_bounce"
-        process_bounce(message_id, to_address, SiteSetting.soft_bounce_score)
+        process_bounce(message_id, to_address, SiteSetting.soft_bounce_score, error_code)
       end
     end
 
@@ -152,14 +154,15 @@ class WebhooksController < ActionController::Base
     event = params["event"]
     message_id = Email::MessageIdService.message_id_clean(params["Message-Id"])
     to_address = params["recipient"]
+    error_code = params["code"]
 
     # only handle soft bounces, because hard bounces are also handled
     # by the "dropped" event and we don't want to increase bounce score twice
     # for the same message
-    if event == "bounced" && params["error"]["4."]
-      process_bounce(message_id, to_address, SiteSetting.soft_bounce_score)
+    if event == "bounced" && params["error"][Email::SMTP_STATUS_TRANSIENT_FAILURE]
+      process_bounce(message_id, to_address, SiteSetting.soft_bounce_score, error_code)
     elsif event == "dropped"
-      process_bounce(message_id, to_address, SiteSetting.hard_bounce_score)
+      process_bounce(message_id, to_address, SiteSetting.hard_bounce_score, error_code)
     end
 
     success
@@ -170,28 +173,29 @@ class WebhooksController < ActionController::Base
     return mailgun_failure unless valid_mailgun_signature?(signature["token"], signature["timestamp"], signature["signature"])
 
     data = params["event-data"]
+    error_code = params.dig("delivery-status", "code")
     message_id = data.dig("message", "headers", "message-id")
     to_address = data["recipient"]
     severity = data["severity"]
 
     if data["event"] == "failed"
       if severity == "temporary"
-        process_bounce(message_id, to_address, SiteSetting.soft_bounce_score)
+        process_bounce(message_id, to_address, SiteSetting.soft_bounce_score, error_code)
       elsif severity == "permanent"
-        process_bounce(message_id, to_address, SiteSetting.hard_bounce_score)
+        process_bounce(message_id, to_address, SiteSetting.hard_bounce_score, error_code)
       end
     end
 
     success
   end
 
-  def process_bounce(message_id, to_address, bounce_score)
+  def process_bounce(message_id, to_address, bounce_score, bounce_error_code = nil)
     return if message_id.blank? || to_address.blank?
 
     email_log = EmailLog.find_by(message_id: message_id, to_address: to_address)
     return if email_log.nil?
 
-    email_log.update_columns(bounced: true)
+    email_log.update_columns(bounced: true, bounce_error_code: bounce_error_code)
     return if email_log.user.nil? || email_log.user.email.blank?
 
     Email::Receiver.update_bounce_score(email_log.user.email, bounce_score)

@@ -60,6 +60,7 @@ module UserGuardian
 
   def can_delete_user?(user)
     return false if user.nil? || user.admin?
+
     if is_me?(user)
       !SiteSetting.enable_discourse_connect &&
       !user.has_more_posts_than?(SiteSetting.delete_user_self_max_post_count)
@@ -101,7 +102,7 @@ module UserGuardian
   end
 
   def restrict_user_fields?(user)
-    user.trust_level == TrustLevel[0] && anonymous?
+    (user.trust_level == TrustLevel[0] && anonymous?) || !can_see_profile?(user)
   end
 
   def can_see_staff_info?(user)

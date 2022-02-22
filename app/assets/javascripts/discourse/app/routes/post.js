@@ -1,17 +1,14 @@
 import DiscourseRoute from "discourse/routes/discourse";
-import { ajax } from "discourse/lib/ajax";
+import { inject as service } from "@ember/service";
 
 export default DiscourseRoute.extend({
-  beforeModel({ params, _discourse_anchor }) {
-    return ajax(`/p/${params.post.id}`).then((t) => {
-      const transition = this.transitionTo(
-        "topic.fromParamsNear",
-        t.slug,
-        t.id,
-        t.current_post_number
-      );
+  router: service(),
 
-      transition._discourse_anchor = _discourse_anchor;
-    });
+  model(params) {
+    return this.store.find("post", params.id);
+  },
+
+  afterModel(post) {
+    this.router.transitionTo(post.url);
   },
 });

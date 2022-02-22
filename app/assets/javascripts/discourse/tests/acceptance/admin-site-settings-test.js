@@ -13,6 +13,9 @@ import {
 } from "@ember/test-helpers";
 import siteSettingFixture from "discourse/tests/fixtures/site-settings";
 import { test } from "qunit";
+import pretender from "discourse/tests/helpers/create-pretender";
+
+const ENTER_KEYCODE = 13;
 
 acceptance("Admin - Site Settings", function (needs) {
   let updatedTitle;
@@ -105,7 +108,7 @@ acceptance("Admin - Site Settings", function (needs) {
     );
 
     await fillIn(".input-setting-string", "Test");
-    await triggerKeyEvent(".input-setting-string", "keydown", 13); // enter
+    await triggerKeyEvent(".input-setting-string", "keydown", ENTER_KEYCODE);
     assert.ok(
       exists(".row.setting.overridden"),
       "saving via Enter key marks setting as overriden"
@@ -161,6 +164,32 @@ acceptance("Admin - Site Settings", function (needs) {
     assert.strictEqual(
       currentURL(),
       "/admin/site_settings/category/all_results?filter=contact"
+    );
+  });
+
+  test("filters * and ? for domain lists", async (assert) => {
+    pretender.put("/admin/site_settings/blocked_onebox_domains", () => [200]);
+
+    await visit("/admin/site_settings");
+    await fillIn("#setting-filter", "domains");
+
+    await click(".select-kit-header.multi-select-header");
+
+    await fillIn(".select-kit-filter input", "cat.?.domain");
+    await triggerKeyEvent(".select-kit-filter input", "keydown", ENTER_KEYCODE);
+
+    await fillIn(".select-kit-filter input", "*.domain");
+    await triggerKeyEvent(".select-kit-filter input", "keydown", ENTER_KEYCODE);
+
+    await fillIn(".select-kit-filter input", "proper.com");
+    await triggerKeyEvent(".select-kit-filter input", "keydown", ENTER_KEYCODE);
+
+    await click("button.ok");
+
+    assert.strictEqual(
+      pretender.handledRequests[pretender.handledRequests.length - 1]
+        .requestBody,
+      "blocked_onebox_domains=proper.com"
     );
   });
 });

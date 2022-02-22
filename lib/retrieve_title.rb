@@ -41,11 +41,10 @@ module RetrieveTitle
   private
 
   def self.max_chunk_size(uri)
-
-    # Amazon and YouTube leave the title until very late. Exceptions are bad
-    # but these are large sites.
-    return 500 if uri.host =~ /amazon\.(com|ca|co\.uk|es|fr|de|it|com\.au|com\.br|cn|in|co\.jp|com\.mx)$/
-    return 300 if uri.host =~ /youtube\.com$/ || uri.host =~ /youtu.be/
+    # Exception for sites that leave the title until very late.
+    return 500 if uri.host =~ /(^|\.)amazon\.(com|ca|co\.uk|es|fr|de|it|com\.au|com\.br|cn|in|co\.jp|com\.mx)$/
+    return 300 if uri.host =~ /(^|\.)youtube\.com$/ || uri.host =~ /(^|\.)youtu\.be$/
+    return 50 if uri.host =~ /(^|\.)github\.com$/
 
     # default is 20k
     20
@@ -60,6 +59,10 @@ module RetrieveTitle
     encoding = nil
 
     fd.get do |_response, chunk, uri|
+      if (uri.present? && Onebox::DomainChecker.is_blocked?(uri.hostname))
+        throw :done
+      end
+
       unless Net::HTTPRedirection === _response
         if current
           current << chunk

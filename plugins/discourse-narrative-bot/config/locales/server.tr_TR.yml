@@ -25,7 +25,7 @@ tr_TR:
       long_description: |
         Bu rozet, interaktif ileri kullanıcı eğitiminin başarılı tamamlanmasının ardından verilir. Gelişmiş tartışma araçlarına hakim oldunuz - ve şimdi tamamen lisanslısınız!
   discourse_narrative_bot:
-    bio: "Merhaba, ben gerçek bir insan değilim. Ben size bu siteyi öğretebilecek bir botum. Benimle etkileşim kurmak için bana bir mesaj gönderin veya adımı kullanarak benden bahsedin."
+    bio: "Merhaba, ben gerçek bir insan değilim. Ben size bu siteyi öğretebilecek bir botum. Benimle etkileşim kurmak için bana bir ileti gönderin veya adımı kullanarak benden söz edin."
     tl2_promotion_message:
       subject_template: "Artık güvenlik seviyeniz arttığına göre, bazı gelişmiş özellikler hakkında bilgi edinmenin zamanı geldi!"
       text_body_template: |
@@ -84,6 +84,15 @@ tr_TR:
       "10":
         quote: "İnsan zihni ne olursa olsun düşünebilir ve inanabilir, başarabilir."
         author: "Napoleon Hill"
+      "11":
+        quote: "Yurtta sulh cihanda sulh."
+        author: "Mustafa Kemal Atatürk"
+      "12":
+        quote: "Eğitim, yoksulluktan kurtulmanın bir yolu değil, onunla savaşmanın bir yoludur."
+        author: "Julius Nyerere"
+      "13":
+        quote: "Bin millik bir yolculuk tek bir adımla başlar."
+        author: "Lao Tzu"
       results: |-
         > :left_speech_bubble: _%{quote}_ &mdash; %{author}
     magic_8_ball:
@@ -122,7 +131,7 @@ tr_TR:
           Şu an için aşağıdakileri nasıl yapacağımı biliyorum:
 
           `@%{discobot_username} %{reset_trigger} {name-of-tutorial}`
-          > Kişisel bir mesajla yalnızca sizin için etkileşimli bir eğitim başlatır. `{name-of-tutorial}` şunlardan biri olabilir: `%{tracks}`.
+          > Kişisel bir iletiyle yalnızca sizin için etkileşimli bir eğitim başlatır. `{name-of-tutorial}` şunlardan biri olabilir: `%{tracks}`.
         bot_actions: |-
           `@%{discobot_username} %{dice_trigger} 2d6`
           > :game_die: 3, 6
@@ -207,7 +216,7 @@ tr_TR:
 
           - veya düzenleyicideki <kbd><b>B</b></kbd> veya <kbd><i>I</i></kbd> butonlarına basın
         reply: |-
-          Güzel! HTML ve BBCode da bu biçim için çalışır - daha fazla bilgi edinmek için [bu eğitimi deneyin] (http://commonmark.org/help) :nerd:.
+          Güzel! HTML ve BBCode da bu biçim için çalışır - daha fazla bilgi edinmek için [bu eğitimi deneyin] (https://commonmark.org/help) :nerd:.
         not_found: |-
           Ooo, yanıtınızda biçimlendirme bulamadım. :pencil2:
 
@@ -235,7 +244,7 @@ tr_TR:
         reply: |-
           Mükemmel! Artık istediğiniz zaman doğrudan [profilinizdeki yer imleri sekmesinden](%{bookmark_url}) özel sohbetimize geri dönüş yolunu kolayca bulabilirsiniz. Sağ üstteki &#8599; profil resminizi seçmeniz yeterli
         not_found: |-
-          Ah, bu konuda hiçbir yer işareti görmüyorum. Her gönderinin altındaki yer işaretlerini gördünüz mü? <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">Ek eylemleri ortaya çıkarmak için daha fazla göster seçeneğini kullanın.
+          Ah, bu konuda hiçbir yer imi görmüyorum. Her gönderinin altındaki yer imlerini gördünüz mü? <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">Ek eylemleri ortaya çıkarmak için daha fazla göster seçeneğini kullanın.
       emoji:
         instructions: |-
           Yanıtlarımda küçük resimler kullandığımı görmüş olabilirsiniz :blue_car: :dash: bunlara [emoji] denir (https://en.wikipedia.org/wiki/Emoji). Yanıtınıza **bir emoji** ekleyebilir misiniz? Bunlardan herhangi biri işe yarayacaktır:
@@ -395,6 +404,6 @@ tr_TR:
           %{certificate}
 
           Sizin için sahip olduğum tek şey bu.
-          Şimdilik hoşçakal! Benimle tekrar konuşmak isterseniz, istediğiniz zaman bana bir mesaj gönderin :sunglasses:
+          Şimdilik hoşçakal! Benimle tekrar konuşmak isterseniz, istediğiniz zaman bana bir ileti gönderin :sunglasses:
       certificate:
         alt: "İleri Kullanıcı İzlemesi Başarı Sertifikası"

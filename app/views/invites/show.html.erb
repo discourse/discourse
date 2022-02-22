@@ -1,7 +1,12 @@
 <div id='simple-container'>
   <%if flash[:error]%>
-    <div class='alert alert-error'>
-      <%=flash[:error].html_safe%>
+    <div class='invite-error'>
+      <div class="error-image">
+        <img src="/images/crying-face.svg" alt="crying-face emoji">
+      </div>
+      <div class="error-info">
+        <%=flash[:error].html_safe%>
+      </div>
     </div>
   <%end%>
 </div>

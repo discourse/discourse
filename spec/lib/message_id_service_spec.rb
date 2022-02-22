@@ -24,8 +24,21 @@ describe Email::MessageIdService do
 
   describe "#generate_for_topic" do
     it "generates for the topic using the message_id on the first post's incoming_email" do
-      Fabricate(:incoming_email, message_id: "test213428@somemailservice.com", post: post)
+      Fabricate(:incoming_email, message_id: "test213428@somemailservice.com", post: post, created_via: IncomingEmail.created_via_types[:handle_mail])
       post.reload
+      expect(subject.generate_for_topic(topic, use_incoming_email_if_present: true)).to eq("<test213428@somemailservice.com>")
+    end
+
+    it "does not use the first post's incoming email if it was created via group_smtp, only handle_mail" do
+      incoming = Fabricate(
+        :incoming_email,
+        message_id: "test213428@somemailservice.com",
+        post: post,
+        created_via: IncomingEmail.created_via_types[:group_smtp]
+      )
+      post.reload
+      expect(subject.generate_for_topic(topic, use_incoming_email_if_present: true)).to match(subject.message_id_topic_id_regexp)
+      incoming.update(created_via: IncomingEmail.created_via_types[:handle_mail])
       expect(subject.generate_for_topic(topic, use_incoming_email_if_present: true)).to eq("<test213428@somemailservice.com>")
     end
 

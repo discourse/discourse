@@ -238,14 +238,20 @@ module Email
 
     def handle_bounce
       @incoming_email.update_columns(is_bounce: true)
+      mail_error_statuses = Array.wrap(@mail.error_status)
 
       if email_log.present?
-        email_log.update_columns(bounced: true)
+        email_log.update_columns(
+          bounced: true,
+          bounce_error_code: mail_error_statuses.first
+        )
         post = email_log.post
         topic = email_log.topic
       end
 
-      if @mail.error_status.present? && Array.wrap(@mail.error_status).any? { |s| s.start_with?("4.") }
+      DiscourseEvent.trigger(:email_bounce, @mail, @incoming_email, @email_log)
+
+      if mail_error_statuses.any? { |s| s.start_with?(Email::SMTP_STATUS_TRANSIENT_FAILURE) }
         Email::Receiver.update_bounce_score(@from_email, SiteSetting.soft_bounce_score)
       else
         Email::Receiver.update_bounce_score(@from_email, SiteSetting.hard_bounce_score)
@@ -1306,7 +1312,7 @@ module Email
                              import_mode: options[:import_mode],
                              post_alert_options: options[:post_alert_options]
                             ).enqueue_jobs
-        DiscourseEvent.trigger(:topic_created, result.post.topic, options, user)
+        DiscourseEvent.trigger(:topic_created, result.post.topic, options, user) if result.post.is_first_post?
         DiscourseEvent.trigger(:post_created, result.post, options, user)
       end
 

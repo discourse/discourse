@@ -252,6 +252,14 @@ class Plugin::Instance
     Site.add_categories_callbacks(&block)
   end
 
+  def register_upload_unused(&block)
+    Upload.add_unused_callback(&block)
+  end
+
+  def register_upload_in_use(&block)
+    Upload.add_in_use_callback(&block)
+  end
+
   def custom_avatar_column(column)
     reloadable_patch do |plugin|
       UserLookup.lookup_columns << column
@@ -424,7 +432,7 @@ class Plugin::Instance
   end
 
   def delete_extra_automatic_assets(good_paths)
-    return unless Dir.exists? auto_generated_path
+    return unless Dir.exist? auto_generated_path
 
     filenames = good_paths.map { |f| File.basename(f) }
     # nuke old files
@@ -701,7 +709,7 @@ class Plugin::Instance
     end
 
     public_data = File.dirname(path) + "/public"
-    if Dir.exists?(public_data)
+    if Dir.exist?(public_data)
       target = Rails.root.to_s + "/public/plugins/"
 
       Discourse::Utils.execute_command('mkdir', '-p', target)
@@ -839,7 +847,7 @@ class Plugin::Instance
   end
 
   def js_asset_exists?
-    File.exists?(js_file_path)
+    File.exist?(js_file_path)
   end
 
   # Receives an array with two elements:
@@ -1085,7 +1093,7 @@ class Plugin::Instance
   end
 
   def write_asset(path, contents)
-    unless File.exists?(path)
+    unless File.exist?(path)
       ensure_directory(path)
       File.open(path, "w") { |f| f.write(contents) }
     end

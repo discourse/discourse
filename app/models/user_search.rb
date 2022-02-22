@@ -83,7 +83,7 @@ class UserSearch
     # 2. in topic
     if @topic_id
       in_topic = filtered_by_term_users
-        .where('users.id IN (SELECT user_id FROM posts WHERE topic_id = ?)', @topic_id)
+        .where('users.id IN (SELECT user_id FROM posts WHERE topic_id = ? AND post_type = ? AND deleted_at IS NULL)', @topic_id, Post.types[:regular])
 
       if @searching_user.present?
         in_topic = in_topic.where('users.id <> ?', @searching_user.id)

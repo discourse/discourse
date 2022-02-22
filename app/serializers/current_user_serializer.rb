@@ -28,6 +28,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :redirected_to_top,
              :custom_fields,
              :muted_category_ids,
+             :indirectly_muted_category_ids,
              :regular_category_ids,
              :tracked_category_ids,
              :watched_first_post_category_ids,
@@ -200,6 +201,10 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def muted_category_ids
     categories_with_notification_level(:muted)
+  end
+
+  def indirectly_muted_category_ids
+    CategoryUser.indirectly_muted_category_ids(object)
   end
 
   def regular_category_ids

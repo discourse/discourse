@@ -47,10 +47,6 @@ ScreenedIpAddress.reopenClass({
       screened_ips.map((b) => ScreenedIpAddress.create(b))
     );
   },
-
-  rollUp() {
-    return ajax("/admin/logs/screened_ip_addresses/roll_up", { type: "POST" });
-  },
 });
 
 export default ScreenedIpAddress;

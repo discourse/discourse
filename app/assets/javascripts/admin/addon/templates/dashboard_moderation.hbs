@@ -1,5 +1,5 @@
 <div class="sections">
-  {{plugin-outlet name="admin-dashboard-moderation-top"}}
+  {{plugin-outlet name="admin-dashboard-moderation-top" tagName="span" connectorTagName="div"}}
 
   {{#if isModeratorsActivityVisible}}
     <div class="moderators-activity section">
@@ -40,6 +40,6 @@
       filters=lastWeekfilters
       reportOptions=userFlaggingRatioOptions}}
 
-    {{plugin-outlet name="admin-dashboard-moderation-bottom"}}
+    {{plugin-outlet name="admin-dashboard-moderation-bottom" tagName="span" connectorTagName="div"}}
   </div>
 </div>

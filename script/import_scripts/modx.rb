@@ -261,7 +261,7 @@ FROM #{TABLE_PREFIX}discuss_users
     end
 
     filename = File.join(ATTACHMENT_DIR, row['user_id'].to_s.split('').join('/'), "#{row['file_id']}.attach")
-    unless File.exists?(filename)
+    unless File.exist?(filename)
       puts "Attachment file doesn't exist: #{filename}"
       return
     end

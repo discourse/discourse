@@ -30,7 +30,7 @@ export default {
         },
         { id: "discourse-lightbox" }
       );
-      api.decorateCookedElement(lightbox, { id: "discourse-lightbox" });
+
       if (siteSettings.support_mixed_text_direction) {
         api.decorateCookedElement(setTextDirections, {
           id: "discourse-text-direction",
@@ -39,20 +39,19 @@ export default {
 
       nativeLazyLoading(api);
 
-      api.decorateCooked(
-        ($elem) => {
-          const players = $("audio", $elem);
-          if (players.length) {
-            players.on("play", () => {
+      api.decorateCookedElement(
+        (elem) => {
+          elem.querySelectorAll("audio").forEach((player) => {
+            player.addEventListener("play", () => {
               const postId = parseInt(
-                $elem.closest("article").data("post-id"),
+                elem.closest("article")?.dataset.postId,
                 10
               );
               if (postId) {
                 api.preventCloak(postId);
               }
             });
-          }
+          });
         },
         { id: "discourse-audio" }
       );

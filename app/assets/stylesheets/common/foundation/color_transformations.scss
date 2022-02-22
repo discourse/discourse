@@ -10,6 +10,18 @@ $primary-medium: dark-light-diff($primary, $secondary, 50%, -35%) !default;
 $primary-high: dark-light-diff($primary, $secondary, 30%, -25%) !default;
 $primary-very-high: dark-light-diff($primary, $secondary, 15%, -10%) !default;
 
+//primary-numbers
+$primary-50: blend-two-colors($primary, $secondary, 5%) !default;
+$primary-100: blend-two-colors($primary, $secondary, 10%) !default;
+$primary-200: blend-two-colors($primary, $secondary, 20%) !default;
+$primary-300: blend-two-colors($primary, $secondary, 30%) !default;
+$primary-400: blend-two-colors($primary, $secondary, 40%) !default;
+$primary-500: blend-two-colors($primary, $secondary, 50%) !default;
+$primary-600: blend-two-colors($primary, $secondary, 60%) !default;
+$primary-700: blend-two-colors($primary, $secondary, 70%) !default;
+$primary-800: blend-two-colors($primary, $secondary, 80%) !default;
+$primary-900: blend-two-colors($primary, $secondary, 90%) !default;
+
 $header_primary-low: blend-header-primary-background(10%) !default;
 $header_primary-low-mid: blend-header-primary-background(35%) !default;
 $header_primary-medium: blend-header-primary-background(55%) !default;
@@ -31,6 +43,18 @@ $tertiary-hover: dark-light-choose(
   dark-light-diff($tertiary, $secondary, -25%, -25%),
   dark-light-diff($tertiary, $primary, 20%, 70%)
 ) !default;
+
+//tertiary-numbers
+$tertiary-50: dark-light-diff($tertiary, $secondary, 95%, -80%) !default;
+$tertiary-100: dark-light-diff($tertiary, $secondary, 90%, -75%) !default;
+$tertiary-200: dark-light-diff($tertiary, $secondary, 80%, -65%) !default;
+$tertiary-300: dark-light-diff($tertiary, $secondary, 70%, -55%) !default;
+$tertiary-400: dark-light-diff($tertiary, $secondary, 60%, -45%) !default;
+$tertiary-500: dark-light-diff($tertiary, $secondary, 50%, -35%) !default;
+$tertiary-600: dark-light-diff($tertiary, $secondary, 40%, -25%) !default;
+$tertiary-700: dark-light-diff($tertiary, $secondary, 30%, -15%) !default;
+$tertiary-800: dark-light-diff($tertiary, $secondary, 20%, -5%) !default;
+$tertiary-900: dark-light-diff($tertiary, $secondary, 10%, 0%) !default;
 
 //quaternary
 $quaternary-low: dark-light-diff($quaternary, $secondary, 70%, -70%) !default;
@@ -63,7 +87,7 @@ $love-low: dark-light-diff($love, $secondary, 85%, -60%) !default;
 $wiki: green !default;
 
 //blended variants
-$blend-primary-secondary-5: blend-primary-secondary(5%) !default;
+$blend-primary-secondary-5: blend-two-colors($primary, $secondary, 5%) !default;
 
 $primary-med-or-secondary-med: dark-light-choose(
   $primary-medium,

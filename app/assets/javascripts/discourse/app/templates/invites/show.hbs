@@ -1,134 +1,140 @@
-<div class="container invites-show clearfix">
-  <div class="login-welcome-header">
-    <h1 class="login-title">{{welcomeTitle}}</h1>
-    <img src={{wavingHandURL}} alt="" class="waving-hand">
-    <p class="login-subheader">{{i18n "create_account.subheader_title"}}</p>
-  </div>
-
-  <div class="two-col">
-    <div class="col-image">
-      <img src={{inviteImageUrl}} alt={{i18n "invites.emoji"}}>
+{{#d-section pageClass="invite"}}
+  <div class="container invites-show clearfix">
+    <div class="login-welcome-header">
+      <h1 class="login-title">{{welcomeTitle}}</h1>
+      <img src={{wavingHandURL}} alt="" class="waving-hand">
+      {{#unless successMessage}}
+        <p class="login-subheader">{{i18n "create_account.subheader_title"}}</p>
+      {{/unless}}
     </div>
 
-    <div class="col-form">
-      {{#if successMessage}}
-        <br><br>
-        <div class="alert alert-info">
-          <p>{{html-safe successMessage}}</p>
+    <div class={{if successMessage "invite-success" "invite-form"}}>
+      <div class="two-col">
+        <div class="col-image">
+          <img src={{inviteImageUrl}} alt={{i18n "invites.emoji"}}>
         </div>
-      {{else}}
-        <p>{{i18n "invites.invited_by"}}</p>
-        <p>{{user-info user=invitedBy}}</p>
 
-        {{#if associateHtml}}
-          <p class="create-account-associate-link">
-            {{html-safe associateHtml}}
-          </p>
-        {{/if}}
-
-        {{#unless isInviteLink}}
-          <p class="email-message">
-            {{html-safe yourEmailMessage}}
-            {{#if showSocialLoginAvailable}}
-              {{i18n "invites.social_login_available"}}
-            {{/if}}
-          </p>
-        {{/unless}}
-
-        {{#if externalAuthsOnly}}
-          {{! authOptions are present once the user has followed the OmniAuth flow (e.g. twitter/google/etc) }}
-          {{#if authOptions}}
-            {{#unless isInviteLink}}
-              {{input-tip validation=emailValidation id="account-email-validation"}}
-            {{/unless}}
-          {{else}}
-            {{login-buttons externalLogin=(action "externalLogin")}}
-          {{/if}}
-        {{/if}}
-
-        {{#if discourseConnectEnabled}}
-          <a class="btn btn-primary discourse-connect raw-link" href={{ssoPath}}>
-            {{i18n "continue"}}
-          </a>
-        {{/if}}
-
-        {{#if shouldDisplayForm}}
-          <form>
-            {{#if isInviteLink}}
-              <div class="input email-input">
-                <label for="new-account-email">
-                  {{i18n "user.email.title"}}
-                  <span class="required">*</span>
-                </label>
-                {{input type="email" value=email id="new-account-email" name="email" autofocus="autofocus" disabled=externalAuthsOnly}}
-                {{input-tip validation=emailValidation id="account-email-validation"}}
-                <div class="instructions">{{i18n "user.email.instructions"}}</div>
-              </div>
-            {{/if}}
-
-            <div class="input username-input">
-              <label for="new-account-username">
-                {{i18n "user.username.title"}}
-                <span class="required">*</span>
-              </label>
-              {{input value=accountUsername id="new-account-username" name="username" maxlength=maxUsernameLength autocomplete="discourse"}}
-              {{input-tip validation=usernameValidation id="username-validation"}}
-              <div class="instructions">{{i18n "user.username.instructions"}}</div>
+        <div class="col-form">
+          {{#if successMessage}}
+            <div class="success-info">
+              <p>{{html-safe successMessage}}</p>
             </div>
+          {{else}}
+            <p>{{i18n "invites.invited_by"}}</p>
+            <p>{{user-info user=invitedBy}}</p>
 
-            {{#if fullnameRequired}}
-              <div class="input name-input">
-                <label for="new-account-name">
-                  {{i18n "invites.name_label"}}
-                  {{#if siteSettings.full_name_required}}
-                    <span class="required">*</span>
-                  {{/if}}
-                </label>
-                {{input value=accountName id="new-account-name" name="name"}}
-                <div class="instructions">{{nameInstructions}}</div>
-              </div>
+            {{#if associateHtml}}
+              <p class="create-account-associate-link">
+                {{html-safe associateHtml}}
+              </p>
             {{/if}}
 
-            {{#unless externalAuthsOnly}}
-              <div class="input password-input">
-                <label for="new-account-password">
-                  {{i18n "invites.password_label"}}
-                  <span class="required">*</span>
-                </label>
-                {{password-field value=accountPassword type="password" id="new-account-password" capsLockOn=capsLockOn}}
-                {{input-tip validation=passwordValidation}}
-                <div class="instructions">
-                  {{passwordInstructions}} {{i18n "invites.optional_description"}}
-                  <div class="caps-lock-warning {{unless capsLockOn "invisible"}}">
-                    {{d-icon "exclamation-triangle"}} {{i18n "login.caps_lock_warning"}}
-                  </div>
-                </div>
-              </div>
+            {{#unless isInviteLink}}
+              <p class="email-message">
+                {{html-safe yourEmailMessage}}
+                {{#if showSocialLoginAvailable}}
+                  {{i18n "invites.social_login_available"}}
+                {{/if}}
+              </p>
             {{/unless}}
 
-            {{#if userFields}}
-              <div class="user-fields">
-                {{#each userFields as |f|}}
-                  {{user-field field=f.field value=f.value}}
-                {{/each}}
-              </div>
+            {{#if externalAuthsOnly}}
+              {{! authOptions are present once the user has followed the OmniAuth flow (e.g. twitter/google/etc) }}
+              {{#if authOptions}}
+                {{#unless isInviteLink}}
+                  {{input-tip validation=emailValidation id="account-email-validation"}}
+                {{/unless}}
+              {{else}}
+                {{login-buttons externalLogin=(action "externalLogin")}}
+              {{/if}}
             {{/if}}
 
-            {{d-button
-              class="btn-primary"
-              action=(action "submit")
-              type="submit"
-              disabled=submitDisabled
-              label="invites.accept_invite"
-            }}
-
-            {{#if errorMessage}}
-              <br><br>
-              <div class="alert alert-error">{{errorMessage}}</div>
+            {{#if discourseConnectEnabled}}
+              <a class="btn btn-primary discourse-connect raw-link" href={{ssoPath}}>
+                {{i18n "continue"}}
+              </a>
             {{/if}}
-          </form>
-        {{/if}}
-      {{/if}}
+
+            {{#if shouldDisplayForm}}
+              <form>
+                {{#if isInviteLink}}
+                  <div class="input email-input input-group">
+                    {{input type="email" value=email id="new-account-email" name="email" class=(value-entered email) autofocus="autofocus" disabled=externalAuthsOnly}}
+                    <label class="alt-placeholder" for="new-account-email">
+                      {{i18n "user.email.title"}}
+                      <span class="required">*</span>
+                    </label>
+                    {{input-tip validation=emailValidation id="account-email-validation"}}
+                    <div class="instructions">{{i18n "user.email.instructions"}}</div>
+                  </div>
+                {{/if}}
+
+                <div class="input username-input input-group">
+                  {{input value=accountUsername class=(value-entered accountUsername) id="new-account-username" name="username" maxlength=maxUsernameLength autocomplete="off"}}
+                  <label class="alt-placeholder" for="new-account-username">
+                    {{i18n "user.username.title"}}
+                    <span class="required">*</span>
+                  </label>
+                  {{input-tip validation=usernameValidation id="username-validation"}}
+                  <div class="instructions">{{i18n "user.username.instructions"}}</div>
+                </div>
+
+                {{#if fullnameRequired}}
+                  <div class="input name-input input-group">
+                    {{input value=accountName class=(value-entered accountName) id="new-account-name" name="name"}}
+                    <label class="alt-placeholder" for="new-account-name">
+                      {{i18n "invites.name_label"}}
+                      {{#if siteSettings.full_name_required}}
+                        <span class="required">*</span>
+                      {{/if}}
+                    </label>
+                    <div class="instructions">{{nameInstructions}}</div>
+                  </div>
+                {{/if}}
+
+                {{#unless externalAuthsOnly}}
+                  <div class="input password-input input-group">
+                    {{password-field value=accountPassword class=(value-entered accountPassword) type="password" id="new-account-password" capsLockOn=capsLockOn}}
+                    <label class="alt-placeholder" for="new-account-password">
+                      {{i18n "invites.password_label"}}
+                    </label>
+                    {{input-tip validation=passwordValidation}}
+                    <div class="instructions">
+                      {{passwordInstructions}} {{i18n "invites.optional_description"}}
+                      <div class="caps-lock-warning {{unless capsLockOn "invisible"}}">
+                        {{d-icon "exclamation-triangle"}} {{i18n "login.caps_lock_warning"}}
+                      </div>
+                    </div>
+                  </div>
+                {{/unless}}
+
+                {{#if userFields}}
+                  <div class="user-fields">
+                    {{#each userFields as |f|}}
+                      <div class="input-group">
+                        {{user-field field=f.field value=f.value class=(value-entered f.value)}}
+                      </div>
+                    {{/each}}
+                  </div>
+                {{/if}}
+
+                {{d-button
+                  class="btn-primary"
+                  action=(action "submit")
+                  type="submit"
+                  disabled=submitDisabled
+                  label="invites.accept_invite"
+                }}
+
+                {{#if errorMessage}}
+                  <br><br>
+                  <div class="alert alert-error">{{errorMessage}}</div>
+                {{/if}}
+              </form>
+            {{/if}}
+          {{/if}}
+        </div>
+      </div>
     </div>
   </div>
-</div>
+{{/d-section}}

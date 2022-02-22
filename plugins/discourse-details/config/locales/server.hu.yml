@@ -5,5 +5,7 @@
 # https://translate.discourse.org/
 
 hu:
+  site_settings:
+    details_enabled: 'Lehetővé teszi, hogy kibontható részleteket adjon hozzá egy bejegyzéshez. Ez a funkció a szerkesztő eszköztárának felugró menüjében található. Ha módosítja ezt a beállítást, akkor minden bejegyzést újra el kell készítenie a „rake posts:rebake” paranccsal.'
   details:
     excerpt_details: "(kattintson a további részletekért)"

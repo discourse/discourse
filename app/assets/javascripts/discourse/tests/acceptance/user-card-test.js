@@ -20,7 +20,7 @@ acceptance("User Card - Show Local Time", function (needs) {
     await visit("/t/internationalization-localization/280");
     await click('a[data-user-card="charlie"]');
 
-    assert.not(
+    assert.notOk(
       exists(".user-card .local-time"),
       "it does not show the local time if the user card returns a null/undefined timezone for another user"
     );

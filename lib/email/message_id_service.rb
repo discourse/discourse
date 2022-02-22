@@ -39,8 +39,15 @@ module Email
 
       def generate_for_topic(topic, use_incoming_email_if_present: false, canonical: false)
         first_post = topic.ordered_posts.first
+        incoming_email = first_post.incoming_email
 
-        if use_incoming_email_if_present && first_post.incoming_email&.message_id.present?
+        # If the incoming email was created by handle_mail, then it was an
+        # inbound email sent to Discourse and handled by Email::Receiver,
+        # this is the only case where we want to use the original Message-ID
+        # because we want to maintain threading in the original mail client.
+        if use_incoming_email_if_present &&
+            incoming_email&.message_id.present? &&
+            incoming_email&.created_via == IncomingEmail.created_via_types[:handle_mail]
           return "<#{first_post.incoming_email.message_id}>"
         end
 

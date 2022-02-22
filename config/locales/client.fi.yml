@@ -168,7 +168,6 @@ fi:
     bootstrap_mode_disabled: "Aloitustila poistetaan käytöstä seuraavan 24 tunnin aikana."
     themes:
       default_description: "Oletus"
-      broken_theme_alert: "Teemassa/komponentissa %{theme} on virheitä, jotka voivat aiheuttaa sen, ettei sivustosi toimi. Voit poistaa sen käytöstä täällä: %{path}."
     s3:
       regions:
         ap_northeast_1: "Aasia ja Tyynimeri (Tokio)"
@@ -1367,11 +1366,9 @@ fi:
         every_month: "kuukausittain"
         every_six_months: "kuuden kuukauden välein"
       email_level:
-        title: "Lähetä minulle sähköposti, jos joku lainaa viestiäni, vastaa viestiini, maintsee @käyttäjätunnukseni tai kutsuu minut ketjuun"
         always: "aina"
         only_when_away: "vain, kun olen poissa"
         never: "ei koskaan"
-      email_messages_level: "Lähetä minulle sähköposti, kun joku lähettää minulle viestin"
       include_tl0_in_digests: "Lisää uusien käyttäjien sisältö yhteenvetosähköposteihin"
       email_in_reply_to: "Sisällytä lyhennelmä vastattavasta viestistä sähköposteihin"
       other_settings: "Muut"
@@ -1869,9 +1866,6 @@ fi:
       group_mentioned:
         one: "Jos mainitset ryhmän %{group}, <a href='%{group_link}'>%{count} käyttäjä</a> saa ilmoituksen – oletko varma?"
         other: "Jos mainitset ryhmän %{group}, <a href='%{group_link}'>%{count} käyttäjää</a> saa ilmoituksen – oletko varma?"
-      cannot_see_mention:
-        category: "Mainitsit käyttäjän %{username}, mutta hän ei saa ilmoitusta, koska hänellä ei ole pääsyä tälle alueelle. Hänet tulee lisätä ryhmään, jolla on pääsy alueelle."
-        private: "Mainitsit käyttäjän %{username}, mutta hän ei saa ilmoitusta, koska hän ei näe tätä yksityiskeskustelua. Hänet tulee kutsua tähän yksityiskeskusteluun."
       duplicate_link: "Näyttää siltä, että <b>@%{username}</b> linkitti jo samaan kohteeseen <b>%{domain}</b> ketjun <a href='%{post_url}'>aiemmassa vastauksessa %{ago}</a> – oletko varma, että haluat lähettää sen uudestaan?"
       reference_topic_title: "RE: %{title}"
       error:
@@ -2189,7 +2183,7 @@ fi:
         clear_all: "Tyhjennä kaikki"
         unlist_topics: "Poista ketjuja listauksista"
         relist_topics: "Palauta ketjuja listauksiin"
-        reset_read: "Palauta lukutila"
+        defer: "Lykkää"
         delete: "Poista ketjut"
         dismiss: "Kuittaa"
         dismiss_read: "Kuittaa luetuiksi"
@@ -2413,20 +2407,13 @@ fi:
         replies_short: "%{current} / %{total}"
       progress:
         title: ketjun edistyminen
-        go_top: "alkuun"
-        go_bottom: "loppuun"
-        go: "siirry"
-        jump_bottom: "siirry viimeisimpään viestiin"
         jump_prompt: "siirry..."
         jump_prompt_of:
           one: "%{count} viestistä"
           other: "%{count} viestistä"
         jump_prompt_long: "Siirry..."
-        jump_bottom_with_number: "siirry viestiin %{post_number}"
         jump_prompt_to_date: "päivämäärään"
         jump_prompt_or: "tai"
-        total: viestejä yhteensä
-        current: tämänhetkinen viesti
       notifications:
         title: muuta sitä, kuinka usein saat muistutuksia tästä ketjusta
         reasons:
@@ -2499,7 +2486,6 @@ fi:
         title: "Vastaa"
         help: "aloita kirjoittamaan vastausta tähän ketjuun"
       share:
-        title: "Jaa"
         extended_title: "Jaa linkki"
         help: "jaa linkki tähän ketjuun"
         instructions: "Jaa linkki tähän ketjuun:"
@@ -2968,7 +2954,6 @@ fi:
       default_list_filter: "Oletusluettelosuodatin:"
       allow_badges_label: "Salli kunniamerkkien myöntäminen tällä alueella"
       edit_permissions: "Muokkaa oikeuksia"
-      reviewable_by_group: "Henkilökunnan lisäksi tämän alueen sisältöä voi käsitellä myös:"
       review_group_name: "ryhmän nimi"
       require_topic_approval: "Edellytä valvojan hyväksyntää kaikille uusille ketjuille"
       require_reply_approval: "Edellytä valvojan hyväksyntää kaikille uusille vastauksille"
@@ -4393,9 +4378,6 @@ fi:
           title: "Seulottavat IP:t"
           description: 'IP-osoitteet joita tarkkaillaan. Valitse "Salli" lisätäksesi osoitteen sallittujen listalle.'
           delete_confirm: "Oletko varma, että haluat poistaa tämän säännön IP-osoitteelle %{ip_address}?"
-          roll_up_confirm: "Oletko varma, että haluat koota seulottavat IP-osoitteet aliverkoiksi?"
-          rolled_up_some_subnets: "IP-estomerkinnät koottiin näihin aliverkkoihin: %{subnets}."
-          rolled_up_no_subnet: "Koottavaa ei ole."
           actions:
             block: "Estä"
             do_nothing: "Salli"

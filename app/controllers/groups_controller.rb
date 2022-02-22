@@ -174,6 +174,7 @@ class GroupsController < ApplicationController
       group.record_email_setting_changes!(current_user)
       group.expire_imap_mailbox_cache
       update_existing_users(group.group_users, notification_level, categories, tags) if params[:update_existing_users] == "true"
+      AdminDashboardData.clear_found_problem("group_#{group.id}_email_credentials")
 
       if guardian.can_see?(group)
         render json: success_json
@@ -250,7 +251,7 @@ class GroupsController < ApplicationController
       Discourse.deprecate(":desc is deprecated please use :asc instead", output_in_test: true, drop_from: '2.9.0')
       dir = (params[:desc] && params[:desc].present?) ? 'DESC' : 'ASC'
     end
-    order = ""
+    order = "NOT group_users.owner"
 
     if params[:requesters]
       guardian.ensure_can_edit!(group)
@@ -304,21 +305,15 @@ class GroupsController < ApplicationController
       end
     end
 
-    users = users.joins(:user_option).select('users.*, user_options.timezone, group_users.created_at as added_at')
-
-    members = users
-      .order('NOT group_users.owner')
+    users = users
+      .includes(:primary_group)
+      .joins(:user_option)
+      .select('users.*, user_options.timezone, group_users.created_at as added_at')
       .order(order)
       .order(username_lower: dir)
-      .limit(limit)
-      .offset(offset)
-      .includes(:primary_group)
 
-    owners = users
-      .order(order)
-      .order(username_lower: dir)
-      .where('group_users.owner')
-      .includes(:primary_group)
+    members = users.limit(limit).offset(offset)
+    owners = users.where('group_users.owner')
 
     render json: {
       members: serialize_data(members, GroupUserSerializer),
@@ -712,6 +707,7 @@ class GroupsController < ApplicationController
             :imap_updated_at,
             :email_username,
             :email_password,
+            :email_from_alias,
             :primary_group,
             :visibility_level,
             :members_visibility_level,
