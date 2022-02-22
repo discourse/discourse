@@ -71,7 +71,7 @@ export default Component.extend({
 
   @discourseComputed("title", "translatedTitle")
   computedTitle(title, translatedTitle) {
-    if (this.title) {
+    if (title) {
       return I18n.t(title);
     }
     return translatedTitle;
@@ -79,7 +79,7 @@ export default Component.extend({
 
   @discourseComputed("label", "translatedLabel")
   computedLabel(label, translatedLabel) {
-    if (this.label) {
+    if (label) {
       return I18n.t(label);
     }
     return translatedLabel;
