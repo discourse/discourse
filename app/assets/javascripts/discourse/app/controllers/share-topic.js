@@ -10,6 +10,7 @@ import { bufferedProperty } from "discourse/mixins/buffered-content";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import I18n from "I18n";
 import Category from "discourse/models/category";
+import { scheduleOnce } from "@ember/runloop";
 
 export default Controller.extend(
   ModalFunctionality,
@@ -32,6 +33,17 @@ export default Controller.extend(
       if (this.model && this.model.read_restricted) {
         this.restrictedGroupWarning();
       }
+
+      scheduleOnce("afterRender", this, this.selectUrl);
+    },
+
+    selectUrl() {
+      const input = document.querySelector("input.invite-link");
+      if (!this.site.mobileView) {
+        // if the input is auto-focused on mobile, iOS requires two taps of the copy button
+        input.setSelectionRange(0, this.url.length);
+        input.focus();
+      }
     },
 
     @discourseComputed("post.shareUrl", "topic.shareUrl")
@@ -51,7 +63,7 @@ export default Controller.extend(
         this.siteSettings.login_required ||
         (topic && topic.isPrivateMessage) ||
         (topic && topic.invisible) ||
-        topic.category.read_restricted;
+        (topic && topic.category && topic.category.read_restricted);
 
       return Sharing.activeSources(
         this.siteSettings.share_links,
