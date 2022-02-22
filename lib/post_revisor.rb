@@ -166,7 +166,7 @@ class PostRevisor
       # case, should_revise? returns false because nothing has really changed
       # in the post, but we want to get rid of the draft so we advance the
       # sequence.
-      advance_draft_sequence if !opts[:skip_advance_draft_seq]
+      advance_draft_sequence if !opts[:keep_existing_draft]
       return false
     end
 
@@ -213,7 +213,7 @@ class PostRevisor
       plugin_callbacks
 
       revise_topic
-      advance_draft_sequence if !opts[:skip_advance_draft_seq]
+      advance_draft_sequence if !opts[:keep_existing_draft]
     end
 
     # Lock the post by default if the appropriate setting is true

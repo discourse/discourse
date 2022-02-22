@@ -675,7 +675,7 @@ Topic.reopenClass({
 
     const data = { ...props };
     if (opts.fastEdit) {
-      data.skip_advance_draft_seq = true;
+      data.keep_existing_draft = true;
     }
     return ajax(topic.get("url"), {
       type: "PUT",

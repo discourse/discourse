@@ -1238,7 +1238,7 @@ describe PostRevisor do
     end
 
     context 'with drafts' do
-      it "does not advance draft sequence if skip_advance_draft_seq option is true" do
+      it "does not advance draft sequence if keep_existing_draft option is true" do
         post = Fabricate(:post, user: user)
         topic = post.topic
         draft_key = "topic_#{topic.id}"
@@ -1249,7 +1249,7 @@ describe PostRevisor do
           PostRevisor.new(post).revise!(
             post.user,
             { title: "updated title for my topic" },
-            skip_advance_draft_seq: true
+            keep_existing_draft: true
           )
         }.to change { Draft.where(user: user, draft_key: draft_key).first.sequence }.by(0)
           .and change { DraftSequence.where(user_id: user.id, draft_key: draft_key).first.sequence }.by(0)
