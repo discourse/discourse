@@ -61,6 +61,11 @@ module CachedCounting
       end
       iterations += 1
     end
+  rescue => e
+    Discourse.warn_exception(
+      e,
+      message: 'Unexpected error while processing cached counts'
+    )
   end
 
   def self.flush
@@ -85,10 +90,6 @@ module CachedCounting
 
     if counts
       counts.each do |redis_key, count|
-        # TODO this whole loop can be done in a single LUA script
-        # concerns:
-        # - Is there a limit of params, will we need to chunk it
-        # - Would this lock up redis for too long, chunk it due to that?
         Discourse.redis.without_namespace.hincrby(COUNTER_REDIS_HASH, redis_key, count)
       end
     end
@@ -101,8 +102,6 @@ module CachedCounting
     redis = Discourse.redis.without_namespace
     DistributedMutex.synchronize("flush_counters_to_db", redis: redis, validity: 5.minutes) do
       if allowed_to_flush_to_db?
-        # TODO can be done in a single eval (including keys call)
-        # same concern as above
         redis.hkeys(COUNTER_REDIS_HASH).each do |key|
 
           val = LUA_HGET_DEL.eval(
