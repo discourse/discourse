@@ -16,7 +16,11 @@ export function isLTR(text) {
 export function setTextDirections(elem) {
   for (let e of elem.children) {
     if (e.textContent) {
-      e.setAttribute("dir", isRTL(e.textContent) ? "rtl" : "ltr");
+      if (e.tagName === "ASIDE" && e.classList.contains("quote")) {
+        setTextDirectionsForQuote(e);
+      } else {
+        e.setAttribute("dir", isRTL(e.textContent) ? "rtl" : "ltr");
+      }
     }
   }
 }
@@ -32,4 +36,16 @@ export function siteDir() {
 
 export function isDocumentRTL() {
   return siteDir() === "rtl";
+}
+
+function setTextDirectionsForQuote(quoteElem) {
+  for (let titleElem of quoteElem.querySelectorAll(".title")) {
+    titleElem.setAttribute("dir", siteDir());
+  }
+  for (let quoteParagraphElem of quoteElem.querySelectorAll("blockquote > p")) {
+    quoteParagraphElem.setAttribute(
+      "dir",
+      isRTL(quoteParagraphElem.textContent) ? "rtl" : "ltr"
+    );
+  }
 }
