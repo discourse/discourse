@@ -127,8 +127,8 @@
       }
       .pull-right {
         grid-area: replies;
-        .num {
-          justify-content: end;
+        .num .posts-map {
+          margin-left: auto;
         }
       }
       .topic-item-stats {
