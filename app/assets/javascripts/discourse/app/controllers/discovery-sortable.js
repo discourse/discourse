@@ -8,6 +8,7 @@ export const queryParams = {
   state: { replace: true, refreshModel: true },
   search: { replace: true, refreshModel: true },
   max_posts: { replace: true, refreshModel: true },
+  min_posts: { replace: true, refreshModel: true },
   q: { replace: true, refreshModel: true },
   before: { replace: true, refreshModel: true },
   bumped_before: { replace: true, refreshModel: true },
