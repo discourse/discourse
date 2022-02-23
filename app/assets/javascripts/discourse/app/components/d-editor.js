@@ -214,7 +214,7 @@ export function onToolbarCreate(func) {
   addToolbarCallback(func);
 }
 
-const _extraAutocompletes = [];
+let _extraAutocompletes = [];
 export function addExtraAutocomplete(fn) {
   _extraAutocompletes.push(fn);
 }
