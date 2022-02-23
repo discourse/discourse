@@ -264,7 +264,6 @@ export default Component.extend(TextareaTextManipulation, {
 
     this._textarea = this.element.querySelector("textarea.d-editor-input");
     this._$textarea = $(this._textarea);
-    this.$textarea = $(this._textarea);
 
     this._applyEmojiAutocomplete(this._$textarea);
     this._applyCategoryHashtagAutocomplete(this._$textarea);
