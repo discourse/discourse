@@ -120,7 +120,7 @@
       flex-grow: 1;
       display: grid;
       grid-template-columns: 78% 22%;
-      grid-template-rows: 50% 50%;
+      grid-template-rows: auto auto;
       grid-template-areas: "title replies" "data data";
       .main-link {
         grid-area: title;
