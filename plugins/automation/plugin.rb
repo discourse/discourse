@@ -47,7 +47,7 @@ def handle_user_promoted(user_id, new_trust_level, old_trust_level)
   # be a separate event in core
   return if new_trust_level < old_trust_level
 
-  DiscourseAutomation::Automation.where(trigger: trigger).find_each do |automation|
+  DiscourseAutomation::Automation.where(trigger: trigger, enabled: true).find_each do |automation|
     trust_level_code_all = DiscourseAutomation::Triggerable::USER_PROMOTED_TRUST_LEVEL_CHOICES.first[:id]
 
     restricted_group_id = automation.trigger_field('restricted_group')['value']
@@ -181,7 +181,7 @@ after_initialize do
   on(:user_added_to_group) do |user, group|
     name = DiscourseAutomation::Triggerable::USER_ADDED_TO_GROUP
 
-    DiscourseAutomation::Automation.where(trigger: name).find_each do |automation|
+    DiscourseAutomation::Automation.where(trigger: name, enabled: true).find_each do |automation|
       joined_group = automation.trigger_field('joined_group')
       if joined_group['value'] == group.id
         automation.trigger!(
@@ -221,7 +221,9 @@ after_initialize do
       validate :discourse_automation_topic_required_words
 
       def discourse_automation_topic_required_words
+        return unless SiteSetting.discourse_automation_enabled
         return if self.post_type == Post.types[:small_action]
+        return if !topic
 
         if topic.custom_fields[DiscourseAutomation::CUSTOM_FIELD].present?
           topic.custom_fields[DiscourseAutomation::CUSTOM_FIELD].each do |automation_id|

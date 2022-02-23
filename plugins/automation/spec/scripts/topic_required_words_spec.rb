@@ -15,6 +15,7 @@ describe 'TopicRequiredWords' do
   end
 
   before do
+    SiteSetting.discourse_automation_enabled = true
     topic.upsert_custom_fields(discourse_automation_ids: automation.id)
     automation.upsert_field!('words', 'text_list', { value: ['#foo', '#bar'] })
   end
