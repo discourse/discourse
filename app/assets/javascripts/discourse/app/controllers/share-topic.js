@@ -61,9 +61,9 @@ export default Controller.extend(
     sources(topic) {
       const privateContext =
         this.siteSettings.login_required ||
-        (topic && topic.isPrivateMessage) ||
-        (topic && topic.invisible) ||
-        (topic && topic.category && topic.category.read_restricted);
+        topic?.isPrivateMessage ||
+        topic?.invisible ||
+        topic?.category?.read_restricted;
 
       return Sharing.activeSources(
         this.siteSettings.share_links,
