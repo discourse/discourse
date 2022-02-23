@@ -214,6 +214,15 @@ export function onToolbarCreate(func) {
   addToolbarCallback(func);
 }
 
+const _extraAutocompletes = [];
+export function addExtraAutocomplete(fn) {
+  _extraAutocompletes.push(fn);
+}
+
+export function resetExtraAutocompletes() {
+  _extraAutocompletes = [];
+}
+
 export default Component.extend(TextareaTextManipulation, {
   classNames: ["d-editor"],
   ready: false,
@@ -255,8 +264,11 @@ export default Component.extend(TextareaTextManipulation, {
 
     this._textarea = this.element.querySelector("textarea.d-editor-input");
     this._$textarea = $(this._textarea);
+    this.$textarea = $(this._textarea);
+
     this._applyEmojiAutocomplete(this._$textarea);
     this._applyCategoryHashtagAutocomplete(this._$textarea);
+    this._applyExtraAutocompletes();
 
     scheduleOnce("afterRender", this, this._readyNow);
 
@@ -453,6 +465,12 @@ export default Component.extend(TextareaTextManipulation, {
     } else {
       discourseDebounce(this, this._updatePreview, 30);
     }
+  },
+
+  _applyExtraAutocompletes() {
+    _extraAutocompletes.forEach((buildAutocompleteOptions) => {
+      this._$textarea.autocomplete(buildAutocompleteOptions(this));
+    });
   },
 
   _applyCategoryHashtagAutocomplete() {

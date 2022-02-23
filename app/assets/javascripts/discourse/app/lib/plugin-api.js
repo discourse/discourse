@@ -62,7 +62,10 @@ import {
 } from "discourse/widgets/post-small-action";
 import { addQuickAccessProfileItem } from "discourse/widgets/quick-access-profile";
 import { addTagsHtmlCallback } from "discourse/lib/render-tags";
-import { addToolbarCallback } from "discourse/components/d-editor";
+import {
+  addExtraAutocomplete,
+  addToolbarCallback,
+} from "discourse/components/d-editor";
 import { addTopicParticipantClassesCallback } from "discourse/widgets/topic-map";
 import { addTopicTitleDecorator } from "discourse/components/topic-title";
 import { addUserMenuGlyph } from "discourse/widgets/user-menu";
@@ -579,6 +582,38 @@ class PluginApi {
    **/
   onToolbarCreate(callback) {
     addToolbarCallback(callback);
+  }
+
+  /**
+   * Example:
+   * ```
+   * api.addExtraAutocomplete((editor) => {
+   *  return {
+   *    template: findRawTemplate("category-tag-autocomplete"),
+   *    key: "#",
+   *    afterComplete: (value) => {
+   *      editor.set("value", value);
+   *      schedule("afterRender", editor, editor.focusTextArea);
+   *    },
+   *    transformComplete: (obj) => {
+   *      return obj.text;
+   *    },
+   *    dataSource: (term) => {
+   *      if (term.match(/\s/)) {
+   *        return null;
+   *      }
+   *      return searchCategoryTag(term, siteSettings);
+   *    },
+   *    triggerRule: (textarea, opts) => {
+   *      return categoryHashtagTriggerRule(textarea, opts);
+   *    },
+   *  }
+   * })
+   * ```
+   *
+   **/
+  addExtraComposerAutocomplete(buildAutocompleteOptions) {
+    addExtraAutocomplete(buildAutocompleteOptions);
   }
 
   /**
