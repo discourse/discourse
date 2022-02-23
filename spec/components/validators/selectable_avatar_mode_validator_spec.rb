@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe SelectableAvatarRestrictionValidator do
+describe SelectableAvatarModeValidator do
   describe '#valid_value?' do
     subject(:validator) { described_class.new }
 
@@ -16,15 +16,15 @@ describe SelectableAvatarRestrictionValidator do
 
     it "returns true when there are at least two selectable avatars" do
       SiteSetting.selectable_avatars = [Fabricate(:image_upload), Fabricate(:image_upload)]
-      expect(validator.valid_value?("everyone")).to eq(true)
+      expect(validator.valid_value?("no_one")).to eq(true)
     end
 
     it "returns false when selectable avatars is blank or has one avatar" do
       SiteSetting.selectable_avatars = ""
-      expect(validator.valid_value?("everyone")).to eq(false)
+      expect(validator.valid_value?("no_one")).to eq(false)
 
       SiteSetting.selectable_avatars = [Fabricate(:image_upload)]
-      expect(validator.valid_value?("everyone")).to eq(false)
+      expect(validator.valid_value?("no_one")).to eq(false)
     end
   end
 end

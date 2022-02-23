@@ -1244,7 +1244,7 @@ class UsersController < ApplicationController
       return render json: failed_json, status: 422
     end
 
-    if SiteSetting.selectable_avatar_restriction == "disabled"
+    if SiteSetting.selectable_avatar_mode == "disabled"
       return render json: failed_json, status: 422
     end
 

@@ -17,7 +17,7 @@ export default Controller.extend(ModalFunctionality, {
   },
 
   @discourseComputed(
-    "siteSettings.selectable_avatar_restriction",
+    "siteSettings.selectable_avatar_mode",
     "siteSettings.selectable_avatars"
   )
   selectableAvatars(enabled, list) {
@@ -26,32 +26,29 @@ export default Controller.extend(ModalFunctionality, {
     }
   },
 
-  @discourseComputed("siteSettings.selectable_avatar_restriction")
+  @discourseComputed("siteSettings.selectable_avatar_mode")
   showSelectableAvatars(enabled) {
     return enabled !== "disabled";
   },
 
-  @discourseComputed("siteSettings.selectable_avatar_restriction")
+  @discourseComputed("siteSettings.selectable_avatar_mode")
   showAvatarUploader(selectableAvatars) {
     switch (selectableAvatars) {
-      case "everyone":
+      case "no_one":
         return false;
-      case "under_tl1":
-      case "under_tl2":
-      case "under_tl3":
-      case "under_tl4":
-        const allowedTl = parseInt(
-          selectableAvatars.replace("under_tl", ""),
-          10
-        );
+      case "tl1":
+      case "tl2":
+      case "tl3":
+      case "tl4":
+        const allowedTl = parseInt(selectableAvatars.replace("tl", ""), 10);
         return (
           this.user.admin ||
           this.user.moderator ||
           this.user.trust_level >= allowedTl
         );
-      case "non_staff":
+      case "staff":
         return this.user.admin || this.user.moderator;
-      case "no_one":
+      case "everyone":
       default:
         return true;
     }
