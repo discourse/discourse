@@ -70,7 +70,7 @@ if defined?(Rack::MiniProfiler) && defined?(Rack::MiniProfiler::Config)
 
   # Cookie path should be set to the base path so Discourse's session cookie path
   #  does not get clobbered.
-  Rack::MiniProfiler.config.cookie_path = Discourse.base_path
+  Rack::MiniProfiler.config.cookie_path = Discourse.base_path.presence || "/"
 
   Rack::MiniProfiler.config.position = 'left'
   Rack::MiniProfiler.config.backtrace_ignores ||= []
