@@ -21,7 +21,7 @@ describe DiscourseAutomation::AdminDiscourseAutomationAutomationsController do
           before { sign_in(Fabricate(:admin)) }
 
           it 'triggers the automation' do
-            output = JSON.load(capture_stdout do
+            output = JSON.parse(capture_stdout do
               post "/automations/#{automation.id}/trigger.json"
             end)
 
@@ -75,7 +75,7 @@ describe DiscourseAutomation::AdminDiscourseAutomationAutomationsController do
       end
 
       it 'passes the params' do
-        output = JSON.load(capture_stdout do
+        output = JSON.parse(capture_stdout do
           post "/automations/#{automation.id}/trigger.json", { params: { foo: '1', bar: '2' } }
         end)
 

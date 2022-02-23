@@ -15,14 +15,14 @@ describe 'PostCreatedEdited' do
     it 'fires the trigger' do
       post = nil
 
-      output = JSON.load(capture_stdout do
+      output = JSON.parse(capture_stdout do
         post = PostCreator.create(user, basic_topic_params)
       end)
 
       expect(output['kind']).to eq('post_created_edited')
       expect(output['action']).to eq('create')
 
-      output = JSON.load(capture_stdout do
+      output = JSON.parse(capture_stdout do
         post.revise(post.user, raw: 'this is another cool topic')
       end)
 
@@ -37,7 +37,7 @@ describe 'PostCreatedEdited' do
 
       context 'trust level is allowed' do
         it 'fires the trigger' do
-          output = JSON.load(capture_stdout do
+          output = JSON.parse(capture_stdout do
             user.trust_level = TrustLevel[0]
             PostCreator.create(user, basic_topic_params)
           end)
@@ -48,12 +48,12 @@ describe 'PostCreatedEdited' do
 
       context 'trust level is not allowed' do
         it 'doesn’t fire the trigger' do
-          output = JSON.load(capture_stdout do
+          output = capture_stdout do
             user.trust_level = TrustLevel[1]
             PostCreator.create(user, basic_topic_params)
-          end)
+          end
 
-          expect(output).to be_nil
+          expect(output).to be_blank
         end
       end
     end
@@ -65,7 +65,7 @@ describe 'PostCreatedEdited' do
 
       context 'category is allowed' do
         it 'fires the trigger' do
-          output = JSON.load(capture_stdout do
+          output = JSON.parse(capture_stdout do
             PostCreator.create(user, basic_topic_params.merge({ category: Category.first.id }))
           end)
 
@@ -77,11 +77,11 @@ describe 'PostCreatedEdited' do
         fab!(:category) { Fabricate(:category) }
 
         it 'doesn’t fire the trigger' do
-          output = JSON.load(capture_stdout do
+          output = capture_stdout do
             PostCreator.create(user, basic_topic_params.merge({ category: category.id }))
-          end)
+          end
 
-          expect(output).to be_nil
+          expect(output).to be_blank
         end
       end
     end

@@ -21,7 +21,10 @@ DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scriptable::AUTO_RESPON
     post = context['post']
 
     answers = Set.new
-    tuples = JSON.load(fields.dig('word_answer_list', 'value'))
+    json = fields.dig('word_answer_list', 'value')
+    next if json.blank?
+
+    tuples = JSON.parse(json)
 
     next if tuples.blank?
 
