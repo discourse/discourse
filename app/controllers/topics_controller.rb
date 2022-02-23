@@ -402,7 +402,7 @@ class TopicsController < ApplicationController
         changes,
         validate_post: false,
         bypass_bump: bypass_bump,
-        keep_existing_draft: [true, "true"].include?(params[:keep_existing_draft])
+        keep_existing_draft: params[:keep_existing_draft].to_s == "true"
       )
 
       if !success && topic.errors.blank?
