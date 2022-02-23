@@ -180,7 +180,7 @@ end
 desc 'run plugin specs'
 task 'plugin:spec', :plugin do |t, args|
   args.with_defaults(plugin: "*")
-  params = ENV['RSPEC_FAILFAST'] ? '--profile --fail-fast' : '--profile'
+  params = ENV['RSPEC_FAILFAST'] ? '--profile --fail-fast' : '--profile --format documentation'
   ruby = `which ruby`.strip
   files = Dir.glob("./plugins/#{args[:plugin]}/spec/**/*_spec.rb")
   if files.length > 0
