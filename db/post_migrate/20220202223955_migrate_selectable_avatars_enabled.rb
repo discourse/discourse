@@ -20,6 +20,7 @@ class MigrateSelectableAvatarsEnabled < ActiveRecord::Migration[6.1]
       UPDATE site_settings AS s
         SET value =
           CASE WHEN t.value = 'everyone' THEN 't'
+          WHEN t.value = 'no_one' THEN 't'
           WHEN t.value = 'staff' THEN 't'
           WHEN t.value = 'tl1' THEN 't'
           WHEN t.value = 'tl2' THEN 't'
