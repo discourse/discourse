@@ -39,7 +39,7 @@ export default Controller.extend(
 
     selectUrl() {
       const input = document.querySelector("input.invite-link");
-      if (!this.site.mobileView) {
+      if (input && !this.site.mobileView) {
         // if the input is auto-focused on mobile, iOS requires two taps of the copy button
         input.setSelectionRange(0, this.url.length);
         input.focus();
