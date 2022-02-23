@@ -141,7 +141,7 @@ en:
           fields:
             word_answer_list:
               label: List of word/answer pairs
-              description: Defines a list of key/value groups, where the `key` is the searched term, and `value` the text of the reply. Note that `value` accepts `%%KEY%%` as a placeholder to be replaced by the value of `key` in the reply.
+              description: "Defines a list of key/value groups, where the `key` is the searched term, and `value` the text of the reply. Note that `value` accepts `%%KEY%%` as a placeholder to be replaced by the value of `key` in the reply. Note that `key` will be evaluated as a regex, and special chars like `.` should be escaped if you actually mean a dot, eg: `\\.`"
             answering_user:
               label: Answering user
               description: Defaults to System user
