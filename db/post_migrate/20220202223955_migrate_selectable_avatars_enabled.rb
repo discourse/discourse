@@ -9,7 +9,7 @@ class MigrateSelectableAvatarsEnabled < ActiveRecord::Migration[6.1]
           ELSE 'disabled'
           END,
         data_type = #{SiteSettings::TypeSupervisor.types[:enum]},
-        name = 'selectable_avatar_mode'
+        name = 'selectable_avatars_mode'
         FROM site_settings t
         WHERE s.id = t.id AND s.name = 'selectable_avatars_enabled'
     SQL
@@ -31,7 +31,7 @@ class MigrateSelectableAvatarsEnabled < ActiveRecord::Migration[6.1]
         data_type = #{SiteSettings::TypeSupervisor.types[:bool]},
         name = 'selectable_avatars_enabled'
         FROM site_settings t
-        WHERE s.id = t.id AND s.name = 'selectable_avatar_mode'
+        WHERE s.id = t.id AND s.name = 'selectable_avatars_mode'
     SQL
   end
 end

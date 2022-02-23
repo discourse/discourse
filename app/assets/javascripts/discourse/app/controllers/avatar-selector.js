@@ -17,7 +17,7 @@ export default Controller.extend(ModalFunctionality, {
   },
 
   @discourseComputed(
-    "siteSettings.selectable_avatar_mode",
+    "siteSettings.selectable_avatars_mode",
     "siteSettings.selectable_avatars"
   )
   selectableAvatars(enabled, list) {
@@ -26,12 +26,12 @@ export default Controller.extend(ModalFunctionality, {
     }
   },
 
-  @discourseComputed("siteSettings.selectable_avatar_mode")
+  @discourseComputed("siteSettings.selectable_avatars_mode")
   showSelectableAvatars(enabled) {
     return enabled !== "disabled";
   },
 
-  @discourseComputed("siteSettings.selectable_avatar_mode")
+  @discourseComputed("siteSettings.selectable_avatars_mode")
   showAvatarUploader(selectableAvatars) {
     switch (selectableAvatars) {
       case "no_one":

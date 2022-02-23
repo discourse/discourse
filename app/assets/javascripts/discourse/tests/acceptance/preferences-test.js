@@ -299,7 +299,7 @@ acceptance(
   "Avatar selector when selectable avatars is enabled",
   function (needs) {
     needs.user();
-    needs.settings({ selectable_avatar_mode: "no_one" });
+    needs.settings({ selectable_avatars_mode: "no_one" });
     needs.pretender((server, helper) => {
       server.get("/site/selectable-avatars.json", () =>
         helper.response([
@@ -328,7 +328,7 @@ acceptance(
   "Avatar selector when selectable avatars allows staff to upload",
   function (needs) {
     needs.user();
-    needs.settings({ selectable_avatar_mode: "staff" });
+    needs.settings({ selectable_avatars_mode: "staff" });
     needs.pretender((server, helper) => {
       server.get("/site/selectable-avatars.json", () =>
         helper.response([
@@ -380,7 +380,7 @@ acceptance(
   "Avatar selector when selectable avatars allows trust level 3+ to upload",
   function (needs) {
     needs.user();
-    needs.settings({ selectable_avatar_mode: "tl3" });
+    needs.settings({ selectable_avatars_mode: "tl3" });
     needs.pretender((server, helper) => {
       server.get("/site/selectable-avatars.json", () =>
         helper.response([

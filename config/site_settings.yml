@@ -1397,7 +1397,7 @@ files:
     type: list
     list_type: compact
     validator: "ColorListValidator"
-  selectable_avatar_mode:
+  selectable_avatars_mode:
     default: disabled
     client: true
     type: enum
@@ -1410,7 +1410,7 @@ files:
       - tl4
       - staff
       - no_one
-    validator: "SelectableAvatarModeValidator"
+    validator: "SelectableAvatarsModeValidator"
   selectable_avatars:
     default: ""
     client: true

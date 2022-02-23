@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class SelectableAvatarModeValidator
+class SelectableAvatarsModeValidator
   def initialize(opts = {})
     @opts = opts
   end

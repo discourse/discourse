@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe SelectableAvatarModeValidator do
+describe SelectableAvatarsModeValidator do
   describe '#valid_value?' do
     subject(:validator) { described_class.new }
 
