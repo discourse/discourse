@@ -271,16 +271,12 @@ registerButton("replies", (attrs, state, siteSettings) => {
   };
 });
 
-registerButton("share", (attrs) => {
+registerButton("share", () => {
   return {
     action: "share",
     className: "share",
     title: "post.controls.share",
     icon: "d-post-share",
-    data: {
-      "share-url": attrs.shareUrl,
-      "post-number": attrs.post_number,
-    },
   };
 });
 

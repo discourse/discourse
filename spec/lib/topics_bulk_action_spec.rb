@@ -197,11 +197,18 @@ describe TopicsBulkAction do
     end
   end
 
-  describe "reset_read" do
+  describe "destroy_post_timing" do
+    fab!(:fist_post) { Fabricate(:post, topic: topic) }
+
+    before do
+      PostTiming.process_timings(topic.user, topic.id, 10, [[1, 10]])
+    end
+
     it "delegates to PostTiming.destroy_for" do
-      tba = TopicsBulkAction.new(topic.user, [topic.id], type: 'reset_read')
-      PostTiming.expects(:destroy_for).with(topic.user_id, [topic.id])
-      topic_ids = tba.perform!
+      tba = TopicsBulkAction.new(topic.user, [topic.id], type: 'destroy_post_timing')
+      topic_ids = nil
+      expect { topic_ids = tba.perform! }.to change { PostTiming.count }.by(-1)
+      expect(topic_ids).to contain_exactly(topic.id)
     end
   end
 

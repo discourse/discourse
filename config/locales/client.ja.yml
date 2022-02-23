@@ -2154,7 +2154,7 @@ ja:
         clear_all: "すべてクリア"
         unlist_topics: "トピックを非表示"
         relist_topics: "トピックを表示"
-        reset_read: "未読に設定"
+        defer: "取り下げる"
         delete: "トピックを削除"
         dismiss: "閉じる"
         dismiss_read: "未読をすべて閉じる"
@@ -2444,7 +2444,6 @@ ja:
         title: "返信"
         help: "このトピックへの返信を作成する"
       share:
-        title: "共有"
         extended_title: "リンクの共有"
         help: "このトピックのリンクを共有する"
         instructions: "このトピックへのリンクを共有します:"

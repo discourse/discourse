@@ -62,10 +62,10 @@ export default Component.extend({
   },
 
   @discourseComputed("watchForLink")
-  titleMaxLength() {
+  titleMaxLength(watchForLink) {
     // maxLength gets in the way of pasting long links, so don't use it if featured links are allowed.
     // Validation will display a message if titles are too long.
-    return this.watchForLink ? null : this.siteSettings.max_topic_title_length;
+    return watchForLink ? null : this.siteSettings.max_topic_title_length;
   },
 
   @observes("composer.titleLength", "watchForLink")

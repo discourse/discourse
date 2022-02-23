@@ -241,7 +241,7 @@ es:
     disabled_errors:
       discourse_connect_enabled: "Las invitaciones están desactivadas porque DiscourseConnect está activado."
       invalid_access: "No tienes permitido ver el recurso solicitado."
-    requires_groups: "Invitación guardada. Para dar acceso al tema que has puesto, añade uno de los siguientes grupos: %{groups}."
+    requires_groups: "La invitación no se ha guardado porque el tema especificado es inaccesible. Añade uno de los siguientes grupos: %{groups}."
     domain_not_allowed: "Esta invitación no permite registrarte con esta dirección de correo."
   bulk_invite:
     file_should_be_csv: "El archivo subido debería estar en formato csv."
@@ -647,6 +647,7 @@ es:
       permission_conflict: "Cualquier grupo que tenga acceso a una subcategoría también debe tener acceso a la categoría primaria. Los siguientes grupos tienen acceso a una de las subcategorías, pero no a la categoría primaria: %{group_names}."
       disallowed_topic_tags: "Este tema tiene etiquetas no permitidas en esta categoría: «%{tags}»"
       disallowed_tags_generic: "Este tema tiene etiquetas no permitidas."
+      slug_contains_non_ascii_chars: "contiene caracteres no ascii"
     cannot_delete:
       uncategorized: "Esta categoría es especial Se usa para agrupar los temas que no tienen ninguna categoría asignada. No se puede eliminar."
       has_subcategories: "No se puede eliminar esta categoría porque tiene subcategorías."
@@ -1447,6 +1448,7 @@ es:
     show_pinned_excerpt_mobile: "Mostrar extracto de temas anclados en la vista móvil."
     show_pinned_excerpt_desktop: "Mostrar extracto de temas anclados en la vista de escritorio."
     post_onebox_maxlength: "Extensión máxima en caracteres de una publicación de Discourse en formato onebox."
+    blocked_onebox_domains: "Una lista de dominios que nunca serán oneboxeados, p. ej., wikipedia.org\n(símbolos comodines * ? no soportados)"
     allowed_inline_onebox_domains: "Una lista de dominios que serán oneboxed en forma de miniatura si están vinculados sin título"
     enable_inline_onebox_on_all_domains: "Ignorar el ajuste del sitio inline_onebox_domain_allowlist y permitir inline onebox en todos los dominios."
     force_custom_user_agent_hosts: "Hosts que se utilizará para el agente usuario personalizado de onebox en todas las solicitudes. (Especialmente útil para hosts que limitan el acceso por usuario agente)."
@@ -1500,6 +1502,9 @@ es:
     tl2_additional_edits_per_day_multiplier: "Incrementar el límite de ediciones por día para los usuarios con nivel de confianza 2 (miembros) multiplicándolo por este número"
     tl3_additional_edits_per_day_multiplier: "Incrementar el límite de ediciones por día para los usuarios con nivel de confianza 3 (habitual) multiplicándolo por este número"
     tl4_additional_edits_per_day_multiplier: "Incrementar el límite de ediciones por día para los usuarios con nivel de confianza 4 (líder) multiplicándolo por este número"
+    tl2_additional_flags_per_day_multiplier: "Aumenta el límite de reportes por día para nc2 (miembro) al multiplicar con este número"
+    tl3_additional_flags_per_day_multiplier: "Aumenta el límite de reportes por día para nc3 (regular) al multiplicar con este número"
+    tl4_additional_flags_per_day_multiplier: "Aumenta el límite de reportes por día para nc4 (líder) al multiplicar con este número"
     num_users_to_silence_new_user: "Si las publicaciones de un usuario nuevo se denuncian como spam por num_spam_flags_to_silence_new_user usuarios diferentes, ocultar todas sus publicaciones y evitar que publique en el futuro. Establece el valor en 0 para desactivar."
     num_tl3_flags_to_silence_new_user: "Si las publicaciones de un usuario nuevo obtienen este número de denuncias de num_tl3_users_to_silence_new_user diferentes usuarios con nivel de confianza 3, se ocultarán todas sus publicaciones y no podrá publicar más en un futuro. Establece el valor en 0 para desactivar."
     num_tl3_users_to_silence_new_user: "Si las publicaciones de un usuario nuevo reciben num_tl3_flags_to_silence_new_user denuncias de este número de usuarios de nivel 3 de confianza, ocultar todas sus publicaciones y prevenir futuras publicaciones. Establece el valor en 0 para desactivar."
@@ -1762,6 +1767,7 @@ es:
     max_mentions_per_post: "Número máximo de menciones a @usuarios que alguien puede realizar en una publicación."
     max_users_notified_per_group_mention: "Número máximo de usuarios que serán notificados si se menciona un grupo (si se llega al límite, no se enviará ninguna notificación)"
     enable_mentions: "Permitir a los usuarios mencionar a otros usuarios."
+    here_mention: "Nombre utilizado para una @mención que permite a los usuarios privilegiados notificar a hasta 'max_here_mentioned' personas que participan en el tema. No debe ser un nombre de usuario existente."
     max_here_mentioned: "Número máximo de personas mencionadas por @here."
     min_trust_level_for_here_mention: "Nivel de confianza mínimo que hay que tener para mencionar a @here."
     create_thumbnails: "Crear miniaturas y lightbox cuando las imágenes son demasiado grandes y no caben en una publicación."
@@ -2309,6 +2315,8 @@ es:
     second_factor_toggle:
       totp: "Usar una aplicación de autenticación o una clave de seguridad en su lugar"
       backup_code: "Usar un código de copia de seguridad en su lugar"
+  second_factor_auth:
+    challenge_not_found: "No se pudo encontrar un desafío de A2F en tu sesión actual."
   admin:
     email:
       sent_test: "¡enviado!"

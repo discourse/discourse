@@ -292,7 +292,7 @@ class TopicsController < ApplicationController
     topic_id = params[:topic_id].to_i
 
     if params[:last].to_s == "1"
-      PostTiming.destroy_last_for(current_user, topic_id)
+      PostTiming.destroy_last_for(current_user, topic_id: topic_id)
     else
       PostTiming.destroy_for(current_user.id, [topic_id])
     end
@@ -397,7 +397,13 @@ class TopicsController < ApplicationController
       bypass_bump = should_bypass_bump?(changes)
 
       first_post = topic.ordered_posts.first
-      success = PostRevisor.new(first_post, topic).revise!(current_user, changes, validate_post: false, bypass_bump: bypass_bump)
+      success = PostRevisor.new(first_post, topic).revise!(
+        current_user,
+        changes,
+        validate_post: false,
+        bypass_bump: bypass_bump,
+        keep_existing_draft: params[:keep_existing_draft].to_s == "true"
+      )
 
       if !success && topic.errors.blank?
         topic.errors.add(:base, :unable_to_update)
@@ -688,6 +694,10 @@ class TopicsController < ApplicationController
     users = User.where(username_lower: usernames.map(&:downcase))
     raise Discourse::InvalidParameters.new(:usernames) if usernames.size != users.size
 
+    post_number = 1
+    post_number = params[:post_number].to_i if params[:post_number].present?
+    raise Discourse::InvalidParameters.new(:post_number) if post_number < 1 || post_number > topic.highest_post_number
+
     topic.rate_limit_topic_invitation(current_user)
 
     users.find_each do |user|
@@ -700,11 +710,16 @@ class TopicsController < ApplicationController
       last_notification = user.notifications
         .where(notification_type: Notification.types[:invited_to_topic])
         .where(topic_id: topic.id)
-        .where(post_number: 1)
+        .where(post_number: post_number)
         .where('created_at > ?', 1.hour.ago)
 
       if !last_notification.exists?
-        topic.create_invite_notification!(user, Notification.types[:invited_to_topic], current_user.username)
+        topic.create_invite_notification!(
+          user,
+          Notification.types[:invited_to_topic],
+          current_user.username,
+          post_number: post_number
+        )
       end
     end
 

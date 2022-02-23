@@ -36,17 +36,17 @@ export default Component.extend({
   },
 
   @discourseComputed("deferredInstallPromptEvent", "bannerDismissed")
-  showPWAInstallBanner() {
+  showPWAInstallBanner(deferredInstallPromptEvent, bannerDismissed) {
     const launchedFromDiscourseHub =
       window.location.search.indexOf("discourse_app=1") !== -1;
 
     return (
       this.capabilities.isAndroid &&
       this.get("currentUser.trust_level") > 0 &&
-      this.deferredInstallPromptEvent && // Pass the browser engagement checks
+      deferredInstallPromptEvent && // Pass the browser engagement checks
       !window.matchMedia("(display-mode: standalone)").matches && // Not be in the installed PWA already
       !launchedFromDiscourseHub && // not launched via official app
-      !this.bannerDismissed // Have not a previously dismissed install banner
+      !bannerDismissed // Have not a previously dismissed install banner
     );
   },
 

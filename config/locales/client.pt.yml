@@ -2202,7 +2202,7 @@ pt:
         clear_all: "Remover Tudo"
         unlist_topics: "Remover Tópicos da Lista"
         relist_topics: "Voltar a Listar Tópicos"
-        reset_read: "Repor Leitura"
+        defer: "Diferir"
         delete: "Eliminar Tópicos"
         dismiss: "Marcar Visto"
         dismiss_read: "Marcar todos os não lidos como vistos"
@@ -2506,7 +2506,6 @@ pt:
         title: "Responder"
         help: "comece a escrever uma resposta a este tópico"
       share:
-        title: "Partilhar"
         extended_title: "Partilhar uma ligação"
         help: "Partilhar uma ligação para este tópico"
         instructions: "Compartilhe um link para este tópico:"

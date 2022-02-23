@@ -574,6 +574,26 @@ describe WebHook do
       expect(payload["user_id"]).to eq(user.id)
     end
 
+    context 'user promoted hooks' do
+      fab!(:user_promoted_web_hook) { Fabricate(:user_promoted_web_hook) }
+      fab!(:another_user) { Fabricate(:user, trust_level: 2) }
+
+      it 'should pass the user to the webhook job when a user is promoted' do
+        another_user.change_trust_level!(another_user.trust_level + 1)
+
+        job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
+        expect(job_args["event_name"]).to eq("user_promoted")
+        payload = JSON.parse(job_args["payload"])
+        expect(payload["id"]).to eq(another_user.id)
+      end
+
+      it 'shouldn’t trigger when the user is demoted' do
+        expect {
+          another_user.change_trust_level!(another_user.trust_level - 1)
+        }.to change { Jobs::EmitWebHookEvent.jobs.length }.by(0)
+      end
+    end
+
     context 'like created hooks' do
       fab!(:like_web_hook) { Fabricate(:like_web_hook) }
       fab!(:another_user) { Fabricate(:user) }

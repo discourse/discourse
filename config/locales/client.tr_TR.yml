@@ -173,7 +173,6 @@ tr_TR:
     themes:
       default_description: "Varsayılan"
       broken_theme_alert: "Bir tema veya bileşende hata olduğu için siteniz çalışmayabilir."
-      error_caused_by: "Neden: '%{name}'. Yeniden yapılandırmak veya devre dışı bırakmak için <a target='blank' href='%{path}'>buraya tıklayın</a>."
       only_admins: "(bu mesaj sadece site yöneticilerine gösterilir)"
     broken_decorator_alert: "Sitenizdeki içerik dekoratörlerinden biri bir hataya neden olduğundan gönderiler doğru görüntülenmeyebilir."
     s3:
@@ -2271,7 +2270,7 @@ tr_TR:
         clear_all: "Tümünü Temizle"
         unlist_topics: "Konuları Listeleme"
         relist_topics: "Konuları yeniden listele"
-        reset_read: "Okunmuşları Sıfırla"
+        defer: "Ertele"
         delete: "Konuları Sil"
         dismiss: "Yoksay"
         dismiss_read: "Okumadıklarını yoksay"
@@ -2581,7 +2580,6 @@ tr_TR:
         title: "Yanıtla"
         help: "bu konuya bir yanıt oluşturmaya başla"
       share:
-        title: "Paylaş"
         extended_title: "Bağlantı paylaş"
         help: "bu konunun bağlantısını paylaş"
         instructions: "Bu konunun bağlantısını paylaş:"

@@ -229,10 +229,7 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       this.set("args", { shareUrl: "http://share-me.example.com" });
     },
     test(assert) {
-      assert.ok(
-        exists(".actions button[data-share-url]"),
-        "it renders a share button"
-      );
+      assert.ok(exists(".actions button.share"), "it renders a share button");
     },
   });
 

@@ -57,9 +57,12 @@ addBulkButton("showNotificationLevel", "notification_level", {
   icon: "d-regular",
   class: "btn-default",
 });
-addBulkButton("resetRead", "reset_read", {
-  icon: "backward",
+addBulkButton("deletePostTiming", "defer", {
+  icon: "circle",
   class: "btn-default",
+  buttonVisible() {
+    return this.currentUser.enable_defer;
+  },
 });
 addBulkButton("unlistTopics", "unlist_topics", {
   icon: "far-eye-slash",
@@ -299,8 +302,8 @@ export default Controller.extend(ModalFunctionality, {
       );
     },
 
-    resetRead() {
-      this.performAndRefresh({ type: "reset_read" });
+    deletePostTiming() {
+      this.performAndRefresh({ type: "destroy_post_timing" });
     },
 
     removeTags() {

@@ -90,11 +90,11 @@ const rule = {
     }
 
     if (username) {
+      let forOtherTopic = options.topicId && topicId !== options.topicId;
       let offTopicQuote =
-        options.topicId &&
         postNumber &&
         options.getTopicInfo &&
-        topicId !== options.topicId;
+        (forOtherTopic || options.forceQuoteLink);
 
       // on topic quote
       token = state.push("quote_header_open", "div", 1);

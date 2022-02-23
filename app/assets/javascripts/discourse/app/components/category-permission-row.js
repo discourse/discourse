@@ -63,8 +63,8 @@ export default Component.extend({
   },
 
   @discourseComputed("replyDisabled")
-  replyTooltip() {
-    return this.replyDisabled
+  replyTooltip(replyDisabled) {
+    return replyDisabled
       ? I18n.t("category.permissions.inherited")
       : I18n.t("category.permissions.toggle_reply");
   },
@@ -82,8 +82,8 @@ export default Component.extend({
   },
 
   @discourseComputed("createDisabled")
-  createTooltip() {
-    return this.createDisabled
+  createTooltip(createDisabled) {
+    return createDisabled
       ? I18n.t("category.permissions.inherited")
       : I18n.t("category.permissions.toggle_full");
   },

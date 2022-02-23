@@ -194,6 +194,8 @@ RSpec.configure do |config|
   config.infer_base_class_for_anonymous_controllers = true
 
   config.before(:suite) do
+    CachedCounting.disable
+
     begin
       ActiveRecord::Migration.check_pending!
     rescue ActiveRecord::PendingMigrationError

@@ -22,17 +22,17 @@ export default Component.extend({
   ),
 
   @discourseComputed("post.user")
-  name() {
-    if (prioritizeNameInUx(this.post.user.name)) {
-      return this.post.user.name;
+  name(postUser) {
+    if (prioritizeNameInUx(postUser.name)) {
+      return postUser.name;
     }
-    return this.post.user.username;
+    return postUser.username;
   },
 
   @discourseComputed("post.user")
-  primaryGroup() {
-    if (this.post.user.primary_group_name) {
-      return `group-${this.post.user.primary_group_name}`;
+  primaryGroup(postUser) {
+    if (postUser.primary_group_name) {
+      return `group-${postUser.primary_group_name}`;
     }
   },
 });

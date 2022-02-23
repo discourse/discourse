@@ -20,7 +20,8 @@
     "@discourse/itsatrap": "^2.0.10",
     "@ember/optional-features": "^1.1.0",
     "@ember/test-helpers": "^2.2.0",
-    "@glimmer/component": "^1.0.0",
+    "@glimmer/component": "^1.0.4",
+    "@glimmer/tracking": "^1.0.4",
     "@popperjs/core": "2.10.2",
     "@uppy/aws-s3": "^2.0.4",
     "@uppy/aws-s3-multipart": "^2.1.0",
@@ -36,6 +37,7 @@
     "discourse-widget-hbs": "^1.0.0",
     "ember-auto-import": "^2.2.4",
     "ember-buffered-proxy": "^2.0.0-beta.0",
+    "ember-cached-decorator-polyfill": "^0.1.4",
     "ember-cli": "~3.25.3",
     "ember-cli-app-version": "^4.0.0",
     "ember-cli-babel": "^7.23.1",
@@ -85,6 +87,7 @@
     ]
   },
   "devDependencies": {
+    "ember-cached-decorator-polyfill": "^0.1.4",
     "ember-exam": "^7.0.1"
   }
 }

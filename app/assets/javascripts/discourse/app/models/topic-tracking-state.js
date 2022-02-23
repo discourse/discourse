@@ -65,9 +65,10 @@ const TopicTrackingState = EmberObject.extend({
    * @method establishChannels
    */
   establishChannels() {
-    this.messageBus.subscribe("/new", this._processChannelPayload);
     this.messageBus.subscribe("/latest", this._processChannelPayload);
     if (this.currentUser) {
+      this.messageBus.subscribe("/new", this._processChannelPayload);
+      this.messageBus.subscribe(`/unread`, this._processChannelPayload);
       this.messageBus.subscribe(
         `/unread/${this.currentUser.id}`,
         this._processChannelPayload
@@ -813,22 +814,34 @@ const TopicTrackingState = EmberObject.extend({
     if (["new_topic", "unread", "read"].includes(data.message_type)) {
       this.notifyIncoming(data);
       if (!deepEqual(old, data.payload)) {
-        if (data.message_type === "read") {
-          let mergeData = {};
+        // The 'unread' and 'read' payloads are deliberately incomplete
+        // for efficiency. We rebuild them by using any existing state
+        // we have, and then substitute inferred values for last_read_post_number
+        // and notification_level. Any errors will be corrected when a
+        // topic-list is loaded which includes the topic.
 
-          // we have to do this because the "read" event does not
-          // include tags; we don't want them to be overridden
-          if (old) {
-            mergeData = {
-              tags: old.tags,
-              topic_tag_ids: old.topic_tag_ids,
-            };
+        let payload = data.payload;
+
+        if (old) {
+          payload = deepMerge(old, data.payload);
+        }
+
+        if (data.message_type === "unread") {
+          if (payload.last_read_post_number === undefined) {
+            // If we didn't already have state for this topic,
+            // we're probably only 1 post behind.
+            payload.last_read_post_number = payload.highest_post_number - 1;
           }
 
-          this.modifyState(data, deepMerge(data.payload, mergeData));
-        } else {
-          this.modifyState(data, data.payload);
+          if (payload.notification_level === undefined) {
+            // /unread messages will only have been published to us
+            // if we are tracking or watching the topic.
+            // Let's guess TRACKING for now:
+            payload.notification_level = NotificationLevels.TRACKING;
+          }
         }
+
+        this.modifyState(data, payload);
         this.incrementMessageCount();
       }
     }

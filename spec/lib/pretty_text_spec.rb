@@ -214,6 +214,25 @@ describe PrettyText do
         expect(cook("[quote=\"maja, post:3, topic:#{topic.id}\"]\nI have nothing to say.\n[/quote]", topic_id: 1)).to eq(n(expected))
       end
 
+      it "do off topic quoting with the force_quote_link opt and no topic_id opt provided" do
+        topic = Fabricate(:topic, title: "This is an off-topic topic")
+
+        expected = <<~HTML
+          <aside class="quote no-group" data-username="maja" data-post="3" data-topic="#{topic.id}">
+          <div class="title">
+          <div class="quote-controls"></div>
+          <a href="http://test.localhost/t/this-is-an-off-topic-topic/#{topic.id}/3">#{topic.title}</a>
+          </div>
+          <blockquote>
+          <p>I have nothing to say.</p>
+          </blockquote>
+          </aside>
+        HTML
+
+        cooked = cook("[quote=\"maja, post:3, topic:#{topic.id}\"]\nI have nothing to say.\n[/quote]", force_quote_link: true)
+        expect(cooked).to eq(n(expected))
+      end
+
       it "indifferent about missing quotations" do
         md = <<~MD
           [quote=#{user.username}, post:123, topic:456, full:true]

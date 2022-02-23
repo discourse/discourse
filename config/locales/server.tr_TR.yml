@@ -238,7 +238,7 @@ tr_TR:
     disabled_errors:
       discourse_connect_enabled: "DiscourseConnect etkinleştirildiğinden davetler devre dışı bırakıldı."
       invalid_access: "İstenilen kaynağı görüntüleyebilmeniz için izniniz yok."
-    requires_groups: "Davet kaydedildi. Belirtilen konuya erişim vermek için aşağıdaki gruplardan birini ekleyin: %{groups}."
+    requires_groups: "Belirtilen konuya erişilemediğinden davet kaydedilmedi. Aşağıdaki gruplardan birini ekleyin: %{groups}."
     domain_not_allowed: "E-postanız bu daveti değerlendirmek için kullanılamaz."
   bulk_invite:
     file_should_be_csv: "Yüklenen dosya csv formatında olmalıdır."
@@ -1490,6 +1490,9 @@ tr_TR:
     tl2_additional_edits_per_day_multiplier: "Güvenlik düzeyi 2 (üye) olanlar için günlük düzenleme limitini bu rakamla çarparak artır"
     tl3_additional_edits_per_day_multiplier: "Güven düzeyi 3 (müdavim) olanlar için günlük düzenleme limitini bu rakamla çarparak artır"
     tl4_additional_edits_per_day_multiplier: "Güvenlik düzeyi 4 (lider) olanlar için günlük düzenleme limitini bu rakamla çarparak artır"
+    tl2_additional_flags_per_day_multiplier: "Güvenlik düzeyi 2 (Üye) olanlar için günlük işaretleme limitini bu rakamla çarparak artır"
+    tl3_additional_flags_per_day_multiplier: "Güven düzeyi 3 (Müdavim) olanlar için günlük işaretleme limitini bu rakamla çarparak artır"
+    tl4_additional_flags_per_day_multiplier: "Güvenlik düzeyi 4 (Lider) olanlar için günlük işaretleme limitini bu rakamla çarparak artır"
     num_users_to_silence_new_user: "Eğer, yeni bir kullanıcının gönderileri buradaki sayı kadar farklı kullanıcı tarafından num_flags_to_block_new_user rapor alırsa kullanıcının bütün gönderilerini gizle ve yeni gönderi oluşturabilmesine izin verme. Devre dışı bırakmak için 0 girin."
     num_tl3_flags_to_silence_new_user: "Eğer, yeni bir kullanıcının gönderileri num_flags_to_block_new_user güven düzeyi 3 olan farklı kullanıcılardan buradaki sayı kadar bayrak alırsa , kullanıcının bütün gönderilerini gizle ve yeni gönderi oluşturabilmesine izin verme. Devre dışı bırakmak için 0 girin."
     num_tl3_users_to_silence_new_user: "Eğer, yeni bir kullanıcının gönderileri buradaki sayı kadar farklı güven düzeyi 3 olan kullanıcı tarafından num_flags_to_block_new_user rapor alırsa kullanıcının bütün gönderilerini gizle ve yeni gönderi oluşturabilmesine izin verme. Devre dışı bırakmak için 0 girin."

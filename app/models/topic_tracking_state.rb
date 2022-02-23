@@ -159,38 +159,32 @@ class TopicTrackingState
         .where("gu.group_id IN (?)", group_ids)
     end
 
-    scope
-      .select([:user_id, :last_read_post_number, :notification_level])
-      .each do |tu|
+    user_ids = scope.pluck(:user_id)
+    return if user_ids.empty?
 
-      payload = {
-        last_read_post_number: tu.last_read_post_number,
-        highest_post_number: post.post_number,
-        updated_at: post.topic.updated_at,
-        created_at: post.created_at,
-        category_id: post.topic.category_id,
-        notification_level: tu.notification_level,
-        archetype: post.topic.archetype,
-        first_unread_at: tu.user.user_stat&.first_unread_at,
-        unread_not_too_old: true
-      }
+    payload = {
+      highest_post_number: post.post_number,
+      updated_at: post.topic.updated_at,
+      created_at: post.created_at,
+      category_id: post.topic.category_id,
+      archetype: post.topic.archetype,
+      unread_not_too_old: true
+    }
 
-      if tags
-        payload[:tags] = tags
-        payload[:topic_tag_ids] = tag_ids
-      end
-
-      message = {
-        topic_id: post.topic_id,
-        message_type: UNREAD_MESSAGE_TYPE,
-        payload: payload
-      }
-
-      MessageBus.publish(self.unread_channel_key(tu.user_id), message.as_json,
-        user_ids: [tu.user_id]
-      )
+    if tags
+      payload[:tags] = tags
+      payload[:topic_tag_ids] = tag_ids
     end
 
+    message = {
+      topic_id: post.topic_id,
+      message_type: UNREAD_MESSAGE_TYPE,
+      payload: payload
+    }
+
+    MessageBus.publish("/unread", message.as_json,
+      user_ids: user_ids
+    )
   end
 
   def self.publish_recover(topic)

@@ -172,6 +172,10 @@ es:
     bootstrap_mode_disabled: "El modo de arranque se desactivará dentro de las próximas 24 horas."
     themes:
       default_description: "Por defecto"
+      broken_theme_alert: "Puede que tu sitio no funcione, un tema o componente está causando errores."
+      error_caused_by: "Causado por '%{name}'. <a target='blank' href='%{path}'>Haz clic aquí</a> para actualizar, reconfigurar o update, reconfigure or desctivar."
+      only_admins: "(este mensaje solo lo ven los administradores del sitio)"
+    broken_decorator_alert: "Puede que las publicaciones no se muestren correctamente porque uno de los decoradores de publicaciones de tu sitio está causando errores."
     s3:
       regions:
         ap_northeast_1: "Asia-Pacífico (Tokio)"
@@ -1794,6 +1798,7 @@ es:
       second_factor_toggle:
         totp: "Usar una aplicación de autenticación en su lugar"
         backup_code: "Usar un código de copia de seguridad en su lugar"
+        security_key: "Utilizar una clave de seguridad en su lugar"
     invites:
       accept_title: "Invitación"
       emoji: "emoji de un sobre"
@@ -2280,7 +2285,7 @@ es:
         clear_all: "Limpiar todo"
         unlist_topics: "Hacer invisibles"
         relist_topics: "Hacer visibles de nuevo"
-        reset_read: "Restablecer leídos"
+        defer: "Aplazar"
         delete: "Eliminar temas"
         dismiss: "Descartar"
         dismiss_read: "Descartar todos los temas sin leer"
@@ -2590,7 +2595,6 @@ es:
         title: "Responder"
         help: "comienza a escribir un mensaje en este tema"
       share:
-        title: "Compartir"
         extended_title: "Compartir un enlace"
         help: "comparte el enlace a este tema"
         instructions: "Comparte el enlace a este tema:"
@@ -3650,6 +3654,8 @@ es:
     no_group_messages_title: "No hay ningún mensaje en el grupo"
     fullscreen_table:
       expand_btn: "Expandir tabla"
+    second_factor_auth:
+      redirect_after_success: "La autenticación de segundo factor se ha realizado con éxito. Redirigiendo a la página anterior…"
   admin_js:
     type_to_filter: "filtrar opciones..."
     admin:

@@ -173,7 +173,6 @@ hu:
     themes:
       default_description: "Alapértelmezett"
       broken_theme_alert: "Lehet, hogy webhelye nem működik, mert a téma/összetevő hibába ütközött."
-      error_caused_by: "Az okozó: „%{name}”. <a target='blank' href='%{path}'>Kattintson ide</a> az újrakonfiguráláshoz vagy letiltáshoz."
       only_admins: "(ez az üzenet csak a webhely rendszergazdáinak jelenik meg)"
     broken_decorator_alert: "Előfordulhat, hogy a bejegyzések nem jelennek meg megfelelően, mert a webhely egyik bejegyzéstartalmának dekorátora hibát dobott."
     s3:
@@ -2267,7 +2266,7 @@ hu:
         clear_all: "Összes törlése"
         unlist_topics: "Témák listázásnak megszüntetése"
         relist_topics: "Újralistázott témák"
-        reset_read: "Olvasott állapot visszaállítása"
+        defer: "Elhalasztás"
         delete: "Témák törlése"
         dismiss: "Elvetés"
         dismiss_read: "Olvasatlan üzenetek elvetése"
@@ -2549,7 +2548,6 @@ hu:
         title: "Válasz"
         help: "kezdj választ írni erre a témára"
       share:
-        title: "Megosztás"
         extended_title: "Link megosztása"
         help: "a témakör hivatkozásának megosztása"
         invite_users: "Meghívás"

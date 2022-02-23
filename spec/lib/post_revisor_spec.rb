@@ -1236,6 +1236,33 @@ describe PostRevisor do
         end
       end
     end
+
+    context 'with drafts' do
+      it "does not advance draft sequence if keep_existing_draft option is true" do
+        post = Fabricate(:post, user: user)
+        topic = post.topic
+        draft_key = "topic_#{topic.id}"
+        data = { reply: "test 12222" }.to_json
+        Draft.set(user, draft_key, 0, data)
+        Draft.set(user, draft_key, 0, data)
+        expect {
+          PostRevisor.new(post).revise!(
+            post.user,
+            { title: "updated title for my topic" },
+            keep_existing_draft: true
+          )
+        }.to change { Draft.where(user: user, draft_key: draft_key).first.sequence }.by(0)
+          .and change { DraftSequence.where(user_id: user.id, draft_key: draft_key).first.sequence }.by(0)
+
+        expect {
+          PostRevisor.new(post).revise!(
+            post.user,
+            { title: "updated title for my topic" },
+          )
+        }.to change { Draft.where(user: user, draft_key: draft_key).count }.from(1).to(0)
+          .and change { DraftSequence.where(user_id: user.id, draft_key: draft_key).first.sequence }.by(1)
+      end
+    end
   end
 
   context 'when the review_every_post setting is enabled' do

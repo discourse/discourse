@@ -18,7 +18,7 @@ export default {
       priority: SHARE_PRIORITY,
       label() {
         if (!this.get("topic.isPrivateMessage") || this.site.mobileView) {
-          return "topic.share.title";
+          return "footer_nav.share";
         }
       },
       title: "topic.share.help",
@@ -27,7 +27,10 @@ export default {
           model: this.topic.category,
         });
         controller.setProperties({
-          allowInvites: this.canInviteTo && !this.inviteDisabled,
+          allowInvites:
+            this.currentUser.can_invite_to_forum &&
+            this.canInviteTo &&
+            !this.inviteDisabled,
           topic: this.topic,
         });
       },

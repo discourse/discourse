@@ -227,7 +227,6 @@ ja:
     disabled_errors:
       discourse_connect_enabled: "DiscourseConnect が有効であるため、招待は無効です。"
       invalid_access: "リクエストしたリソースの閲覧が許可されていません。"
-    requires_groups: "招待を保存しました。指定されたトピックへのアクセスを許可するには、次のいずれかのグループを追加してください: %{groups}。"
   bulk_invite:
     file_should_be_csv: "アップロードファイルは csv 形式である必要があります。"
     max_rows: "最初の %{max_bulk_invites} 件の招待が送信されました。ファイルをより小さく分割してください。"
