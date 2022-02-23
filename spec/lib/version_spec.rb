@@ -67,6 +67,10 @@ describe Discourse::VERSION do
       expect(Discourse.find_compatible_resource(nil)).to be_nil
     end
 
+    it "returns nil when empty" do
+      expect(Discourse.find_compatible_resource("")).to be_nil
+    end
+
     it "raises an error on invalid input" do
       expect { Discourse.find_compatible_resource("1.0.0.beta1 12f82d5") }.to raise_error(Discourse::InvalidVersionListError)
     end
