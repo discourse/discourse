@@ -13,6 +13,11 @@ export default Ember.Controller.extend({
   },
 
   @action
+  newAutomation() {
+    this.transitionToRoute("adminPlugins.discourse-automation.new");
+  },
+
+  @action
   destroyAutomation(automation) {
     bootbox.confirm(
       I18n.t("discourse_automation.destroy_automation.confirm", {
