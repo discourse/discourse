@@ -397,7 +397,13 @@ class TopicsController < ApplicationController
       bypass_bump = should_bypass_bump?(changes)
 
       first_post = topic.ordered_posts.first
-      success = PostRevisor.new(first_post, topic).revise!(current_user, changes, validate_post: false, bypass_bump: bypass_bump)
+      success = PostRevisor.new(first_post, topic).revise!(
+        current_user,
+        changes,
+        validate_post: false,
+        bypass_bump: bypass_bump,
+        keep_existing_draft: params[:keep_existing_draft].to_s == "true"
+      )
 
       if !success && topic.errors.blank?
         topic.errors.add(:base, :unable_to_update)

@@ -16,6 +16,7 @@ class Plugin::Metadata
     "discourse-apple-auth",
     "discourse-assign",
     "discourse-auto-deactivate",
+    "discourse-automation",
     "discourse-bbcode",
     "discourse-bbcode-color",
     "discourse-cakeday",

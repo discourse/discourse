@@ -25,7 +25,7 @@ export default Component.extend({
 
   isLoading: computed({
     set(key, value) {
-      this.set("forceDisabled", value);
+      this.set("forceDisabled", !!value);
       return value;
     },
   }),

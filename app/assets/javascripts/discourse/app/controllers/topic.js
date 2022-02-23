@@ -980,7 +980,7 @@ export default Controller.extend(bufferedProperty("model"), {
       // save the modifications
       const props = this.get("buffered.buffer");
 
-      Topic.update(this.model, props)
+      Topic.update(this.model, props, { fastEdit: true })
         .then(() => {
           // We roll back on success here because `update` saves the properties to the topic
           this.rollbackBuffer();

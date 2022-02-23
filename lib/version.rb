@@ -31,7 +31,7 @@ module Discourse
   #  2.4.4.beta6: some-other-branch-ref
   #  2.4.2.beta1: v1-tag
   def self.find_compatible_resource(version_list, version = ::Discourse::VERSION::STRING)
-    return unless version_list
+    return unless version_list.present?
 
     begin
       version_list = YAML.safe_load(version_list)

@@ -1,12 +1,8 @@
-{{#if icon}}
-  {{#if isLoading}}
-    {{~d-icon "spinner" class="loading-icon"~}}
-  {{else}}
-    {{~d-icon icon~}}
-  {{/if}}
+{{#if isLoading}}
+  {{~d-icon "spinner" class="loading-icon"~}}
 {{else}}
-  {{#if isLoading}}
-    {{~d-icon "spinner" class="loading-icon"~}}
+  {{#if icon}}
+    {{~d-icon icon~}}
   {{/if}}
 {{/if}}
 

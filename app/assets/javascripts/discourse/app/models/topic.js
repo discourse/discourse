@@ -661,7 +661,7 @@ Topic.reopenClass({
     }
   },
 
-  update(topic, props) {
+  update(topic, props, opts = {}) {
     // We support `category_id` and `categoryId` for compatibility
     if (typeof props.categoryId !== "undefined") {
       props.category_id = props.categoryId;
@@ -673,9 +673,13 @@ Topic.reopenClass({
       delete props.category_id;
     }
 
+    const data = { ...props };
+    if (opts.fastEdit) {
+      data.keep_existing_draft = true;
+    }
     return ajax(topic.get("url"), {
       type: "PUT",
-      data: JSON.stringify(props),
+      data: JSON.stringify(data),
       contentType: "application/json",
     }).then((result) => {
       // The title can be cleaned up server side

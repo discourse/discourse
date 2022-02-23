@@ -99,6 +99,42 @@ discourseModule("Integration | Component | d-button", function (hooks) {
     },
   });
 
+  componentTest("button without isLoading attribute", {
+    template: hbs`{{d-button}}`,
+
+    test(assert) {
+      assert.notOk(
+        exists("button.is-loading"),
+        "it doesn't have class is-loading"
+      );
+      assert.notOk(
+        exists("button .loading-icon"),
+        "it doesn't have a spinner showing"
+      );
+      assert.notOk(exists("button[disabled]"), "it isn't disabled");
+    },
+  });
+
+  componentTest("isLoading button explicitly set to undefined state", {
+    template: hbs`{{d-button isLoading=isLoading}}`,
+
+    beforeEach() {
+      this.set("isLoading");
+    },
+
+    test(assert) {
+      assert.notOk(
+        exists("button.is-loading"),
+        "it doesn't have class is-loading"
+      );
+      assert.notOk(
+        exists("button .loading-icon"),
+        "it doesn't have a spinner showing"
+      );
+      assert.notOk(exists("button[disabled]"), "it isn't disabled");
+    },
+  });
+
   componentTest("disabled button", {
     template: hbs`{{d-button disabled=disabled}}`,
 
