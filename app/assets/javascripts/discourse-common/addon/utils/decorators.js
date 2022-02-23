@@ -20,7 +20,7 @@ export function afterRender(target, name, descriptor) {
   const originalFunction = descriptor.value;
   descriptor.value = function () {
     schedule("afterRender", () => {
-      if (this.element && !this.isDestroying && !this.isDestroyed) {
+      if (!this.isDestroying && !this.isDestroyed) {
         return originalFunction.apply(this, arguments);
       }
     });
