@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-EMBER_CLI = ENV["EMBER_CLI_PROD_ASSETS"] != "0"
+EMBER_CLI ||= ENV["EMBER_CLI_PROD_ASSETS"] != "0"
 
 task 'assets:precompile:before' do
 
