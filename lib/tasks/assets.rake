@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
-EMBER_CLI = ENV["EMBER_CLI_PROD_ASSETS"] != "0" if EMBER_CLI.nil?
+if !defined?(EMBER_CLI)
+  EMBER_CLI = ENV["EMBER_CLI_PROD_ASSETS"] != "0"
+end
 
 task 'assets:precompile:before' do
 
