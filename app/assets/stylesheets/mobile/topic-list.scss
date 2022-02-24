@@ -112,10 +112,16 @@
     margin-left: 55px;
   }
 
+  .topic-list-item {
+    display: flex;
+    width: 100%;
+  }
+
   .topic-list-data {
     padding: 7px 0;
     display: flex;
-    .right {
+    width: 100%;
+    .topic-list-content {
       margin-left: 10px;
       flex-grow: 1;
       display: grid;
@@ -125,14 +131,17 @@
       .main-link {
         grid-area: title;
       }
-      .pull-right {
+      .topic-list-num {
         grid-area: replies;
+        margin-left: auto;
         .num .posts-map {
           margin-left: auto;
         }
       }
       .topic-item-stats {
         grid-area: data;
+        display: flex;
+        align-items: end;
       }
     }
   }

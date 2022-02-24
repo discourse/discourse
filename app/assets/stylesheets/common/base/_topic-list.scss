@@ -205,20 +205,26 @@
 
   .topic-list-item-separator {
     border: none;
+    display: flex;
+    max-height: 0px;
 
     .topic-list-data {
-      border-top: 1px solid var(--danger-medium);
-      line-height: 0em;
+      width: 100%;
+      display: flex;
       padding: 0;
-      text-align: center;
-    }
-
-    .topic-list-data span {
-      position: relative; // Chrome needs this, otherwise the line is above the text
-      background-color: var(--secondary);
-      color: var(--danger-medium);
-      padding: 0 8px;
-      font-size: $font-down-1;
+      position: relative;
+      align-items: center;
+      span.separator-line {
+        flex-grow: 1;
+        border-top: 1px solid var(--danger-medium);
+        height: 1px;
+      }
+      span.separator-text {
+        background-color: var(--secondary);
+        color: var(--danger-medium);
+        padding: 0 8px;
+        font-size: var(--font-down-1);
+      }
     }
   }
 
