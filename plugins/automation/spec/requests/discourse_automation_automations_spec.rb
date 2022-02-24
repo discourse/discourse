@@ -55,12 +55,15 @@ describe DiscourseAutomation::AdminDiscourseAutomationAutomationsController do
         let(:api_key) { Fabricate(:api_key, user: admin) }
 
         it 'works' do
-          post "/automations/#{automation.id}/trigger.json", {
-            params: { context: { foo: :bar } },
-            headers: {
-              HTTP_API_KEY: api_key.key
+          capture_stdout do
+            post "/automations/#{automation.id}/trigger.json", {
+              params: { context: { foo: :bar } },
+              headers: {
+                HTTP_API_KEY: api_key.key
+              }
             }
-          }
+          end
+
           expect(response.status).to eq(200)
         end
       end
@@ -68,7 +71,7 @@ describe DiscourseAutomation::AdminDiscourseAutomationAutomationsController do
 
     describe 'params as context' do
       fab!(:admin) { Fabricate(:admin) }
-      fab!(:automation) { Fabricate(:automation, script: 'something_about_us', trigger: 'api_call') }
+      fab!(:automation) { Fabricate(:automation, trigger: 'api_call') }
 
       before do
         sign_in(admin)
