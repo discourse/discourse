@@ -223,7 +223,7 @@
         background-color: var(--secondary);
         color: var(--danger-medium);
         padding: 0 8px;
-        font-size: $font-down-1;
+        font-size: var(--font-down-1);
       }
     }
   }

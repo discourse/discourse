@@ -121,7 +121,7 @@
     padding: 7px 0;
     display: flex;
     width: 100%;
-    .right {
+    .topic-list-content {
       margin-left: 10px;
       flex-grow: 1;
       display: grid;
@@ -131,12 +131,8 @@
       .main-link {
         grid-area: title;
       }
-      .pull-left {
-        float: unset;
-      }
-      .pull-right {
+      .topic-list-num {
         grid-area: replies;
-        float: unset;
         margin-left: auto;
         .num .posts-map {
           margin-left: auto;
