@@ -122,6 +122,7 @@ export default {
             user.indirectly_muted_category_ids
           );
           if (
+            mutedCategoryIds &&
             mutedCategoryIds.includes(c.parent_category_id) &&
             !mutedCategoryIds.includes(c.id)
           ) {
