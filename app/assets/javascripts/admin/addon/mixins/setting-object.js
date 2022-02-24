@@ -66,4 +66,9 @@ export default Mixin.create({
       return "admin.settings.none";
     }
   },
+
+  @discourseComputed("allow_any")
+  anyValue(allowAny) {
+    return !!allowAny;
+  },
 });
