@@ -1,22 +1,23 @@
 import { cancel, later } from "@ember/runloop";
+import showModal from "discourse/lib/show-modal";
 import I18n from "I18n";
 import { guidFor } from "@ember/object/internals";
 import { clipboardCopy } from "discourse/lib/utilities";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import { withPluginApi } from "discourse/lib/plugin-api";
 
-let _copyCodeblocksClickHandlers = {};
+let _codeblockButtonClickHandlers = {};
 let _fadeCopyCodeblocksRunners = {};
 
 export default {
-  name: "copy-codeblocks",
+  name: "codeblock-buttons",
 
   initialize(container) {
     const siteSettings = container.lookup("site-settings:main");
 
     withPluginApi("0.8.7", (api) => {
       function _cleanUp() {
-        Object.values(_copyCodeblocksClickHandlers || {}).forEach((handler) =>
+        Object.values(_codeblockButtonClickHandlers || {}).forEach((handler) =>
           handler.removeEventListener("click", _handleClick)
         );
 
@@ -24,12 +25,12 @@ export default {
           cancel(runner)
         );
 
-        _copyCodeblocksClickHandlers = {};
+        _codeblockButtonClickHandlers = {};
         _fadeCopyCodeblocksRunners = {};
       }
 
       function _copyComplete(button) {
-        button.classList.add("copied");
+        button.classList.add("action-complete");
         const state = button.innerHTML;
         button.innerHTML = I18n.t("copy_codeblock.copied");
 
@@ -41,41 +42,54 @@ export default {
         }
 
         _fadeCopyCodeblocksRunners[commandId] = later(() => {
-          button.classList.remove("copied");
+          button.classList.remove("action-complete");
           button.innerHTML = state;
           delete _fadeCopyCodeblocksRunners[commandId];
         }, 3000);
       }
 
       function _handleClick(event) {
-        if (!event.target.classList.contains("copy-cmd")) {
+        if (
+          !event.target.classList.contains("copy-cmd") &&
+          !event.target.classList.contains("fullscreen-cmd")
+        ) {
           return;
         }
 
+        const action = event.target.classList.contains("fullscreen-cmd")
+          ? "fullscreen"
+          : "copy";
         const button = event.target;
-        const code = button.nextSibling;
+        const codeEl = button.parentElement.querySelector("code");
 
-        if (code) {
+        if (codeEl) {
           // replace any weird whitespace characters with a proper '\u20' whitespace
-          const text = code.innerText
+          const text = codeEl.innerText
             .replace(
               /[\f\v\u00a0\u1680\u2000-\u200a\u202f\u205f\u3000\ufeff]/g,
               " "
             )
             .trim();
 
-          const result = clipboardCopy(text);
-          if (result.then) {
-            result.then(() => {
+          if (action === "copy") {
+            const result = clipboardCopy(text);
+            if (result.then) {
+              result.then(() => {
+                _copyComplete(button);
+              });
+            } else if (result) {
               _copyComplete(button);
+            }
+          } else if (action === "fullscreen") {
+            showModal("fullscreen-code").setProperties({
+              code: text,
+              codeClasses: codeEl.className,
             });
-          } else if (result) {
-            _copyComplete(button);
           }
         }
       }
 
-      function _attachCommands(postElements, helper) {
+      function _attachCommands(postElement, helper) {
         if (!helper) {
           return;
         }
@@ -84,48 +98,56 @@ export default {
           return;
         }
 
-        let commands = [];
+        let codeBlocks = [];
         try {
-          commands = postElements[0].querySelectorAll(
+          codeBlocks = postElement.querySelectorAll(
             ":scope > pre > code, :scope :not(article):not(blockquote) > pre > code"
           );
         } catch (e) {
           // :scope is probably not supported by this browser
-          commands = [];
+          codeBlocks = [];
         }
 
         const post = helper.getModel();
 
-        if (!commands.length || !post) {
+        if (!codeBlocks.length || !post) {
           return;
         }
 
-        const postElement = postElements[0];
+        codeBlocks.forEach((codeBlock) => {
+          const fullscreenButton = document.createElement("button");
+          fullscreenButton.classList.add(
+            "btn",
+            "nohighlight",
+            "fullscreen-cmd"
+          );
+          fullscreenButton.innerHTML = iconHTML("discourse-expand");
+          codeBlock.before(fullscreenButton);
 
-        commands.forEach((command) => {
-          const button = document.createElement("button");
-          button.classList.add("btn", "nohighlight", "copy-cmd");
-          button.innerHTML = iconHTML("copy");
-          command.before(button);
-          command.parentElement.classList.add("copy-codeblocks");
+          const copyButton = document.createElement("button");
+          copyButton.classList.add("btn", "nohighlight", "copy-cmd");
+          copyButton.innerHTML = iconHTML("copy");
+          codeBlock.before(copyButton);
+
+          codeBlock.parentElement.classList.add("codeblock-buttons");
         });
 
-        if (_copyCodeblocksClickHandlers[post.id]) {
-          _copyCodeblocksClickHandlers[post.id].removeEventListener(
+        if (_codeblockButtonClickHandlers[post.id]) {
+          _codeblockButtonClickHandlers[post.id].removeEventListener(
             "click",
             _handleClick
           );
 
-          delete _copyCodeblocksClickHandlers[post.id];
+          delete _codeblockButtonClickHandlers[post.id];
         }
 
-        _copyCodeblocksClickHandlers[post.id] = postElement;
+        _codeblockButtonClickHandlers[post.id] = postElement;
         postElement.addEventListener("click", _handleClick, false);
       }
 
-      api.decorateCooked(_attachCommands, {
+      api.decorateCookedElement(_attachCommands, {
         onlyStream: true,
-        id: "copy-codeblocks",
+        id: "codeblock-buttons",
       });
 
       api.cleanupStream(_cleanUp);
