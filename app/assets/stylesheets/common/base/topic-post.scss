@@ -992,12 +992,11 @@ pre {
   position: relative;
   overflow: visible;
 
-  .copy-cmd {
-    right: 28px;
-  }
-
-  .fullscreen-cmd {
+  button:nth-child(1n) {
     right: 0;
+  }
+  button:nth-child(2n) {
+    right: 28px;
   }
 
   .copy-cmd,
