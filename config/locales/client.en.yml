@@ -1381,6 +1381,7 @@ en:
         upload_title: "Upload your picture"
         image_is_not_a_square: "Warning: we've cropped your image; width and height were not equal."
         logo_small: "Site's small logo. Used by default."
+        use_custom: "Or upload a custom avatar:"
 
       change_profile_background:
         title: "Profile Header"
