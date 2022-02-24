@@ -19,14 +19,7 @@ class MigrateSelectableAvatarsEnabled < ActiveRecord::Migration[6.1]
     execute <<~SQL
       UPDATE site_settings AS s
         SET value =
-          CASE WHEN t.value = 'everyone' THEN 't'
-          WHEN t.value = 'no_one' THEN 't'
-          WHEN t.value = 'staff' THEN 't'
-          WHEN t.value = 'tl1' THEN 't'
-          WHEN t.value = 'tl2' THEN 't'
-          WHEN t.value = 'tl3' THEN 't'
-          WHEN t.value = 'tl3' THEN 't'
-          WHEN t.value = 'tl4' THEN 't'
+          CASE WHEN t.value IN ('everyone', 'no_one', 'staff', 'tl1','tl2', 'tl3', 'tl4') THEN 't'
           ELSE 'f'
           END,
         data_type = #{SiteSettings::TypeSupervisor.types[:bool]},

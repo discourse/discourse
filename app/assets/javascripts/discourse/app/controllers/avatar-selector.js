@@ -20,27 +20,27 @@ export default Controller.extend(ModalFunctionality, {
     "siteSettings.selectable_avatars_mode",
     "siteSettings.selectable_avatars"
   )
-  selectableAvatars(enabled, list) {
-    if (enabled !== "disabled") {
+  selectableAvatars(mode, list) {
+    if (mode !== "disabled") {
       return list ? list.split("|") : [];
     }
   },
 
   @discourseComputed("siteSettings.selectable_avatars_mode")
-  showSelectableAvatars(enabled) {
-    return enabled !== "disabled";
+  showSelectableAvatars(mode) {
+    return mode !== "disabled";
   },
 
   @discourseComputed("siteSettings.selectable_avatars_mode")
-  showAvatarUploader(selectableAvatars) {
-    switch (selectableAvatars) {
+  showAvatarUploader(mode) {
+    switch (mode) {
       case "no_one":
         return false;
       case "tl1":
       case "tl2":
       case "tl3":
       case "tl4":
-        const allowedTl = parseInt(selectableAvatars.replace("tl", ""), 10);
+        const allowedTl = parseInt(mode.replace("tl", ""), 10);
         return (
           this.user.admin ||
           this.user.moderator ||
