@@ -8,7 +8,7 @@
 
 gem 'iso8601', '0.13.0'
 gem 'json_schemer', '0.2.19'
-gem 'rrule', '0.4.2'
+gem 'rrule', '0.4.3'
 
 register_asset 'stylesheets/common/discourse-automation.scss'
 enabled_site_setting :discourse_automation_enabled
