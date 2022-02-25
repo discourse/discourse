@@ -125,9 +125,33 @@ module DiscourseAutomation
     end
 
     module Utils
+      def self.fetch_report(name, args = {})
+        report = Report.find(name, args)
+
+        return if !report
+
+        return if !report.modes.include?(:table)
+
+        ordered_columns = report.labels.map { |l| l[:property] }
+
+        table = +"\n"
+        table << '|' + report.labels.map { |l| l[:title] }.join('|') + "|\n"
+        table << '|' + report.labels.count.times.map { '-' }.join('|') + "|\n"
+        report.data.each { |data| table << "|#{ordered_columns.map { |col| data[col] }.join('|')}|\n" }
+        table
+      end
+
+      REPORT_REGEX = /%%REPORT=(.*?)%%/
       def self.apply_placeholders(input, map)
         input = input.dup
         map[:site_title] = SiteSetting.title
+
+        input = input.gsub(REPORT_REGEX) do |pattern|
+          match = pattern.match(REPORT_REGEX)
+          if match
+            fetch_report(match[1].downcase)
+          end
+        end
 
         map.each do |key, value|
           input.gsub!("%%#{key.upcase}%%", value)

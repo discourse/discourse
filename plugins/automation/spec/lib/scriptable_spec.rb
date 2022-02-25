@@ -120,13 +120,42 @@ describe DiscourseAutomation::Scriptable do
     end
   end
 
-  context '.utils' do
+  describe '.utils' do
+    describe '.fetch_report' do
+      context 'the report doesn’t exist' do
+        it 'does nothing' do
+          expect(automation.scriptable.utils.fetch_report(:foo)).to eq(nil)
+        end
+      end
+
+      context 'the report exists' do
+        fab!(:like_1) { Fabricate(:like, user: Fabricate(:user)) }
+        fab!(:like_2) { Fabricate(:like, user: Fabricate(:user)) }
+
+        it 'returns the data' do
+          expect(automation.scriptable.utils.fetch_report(:likes)).to eq("\n|Day|Count|\n|-|-|\n|2022-02-25|2|\n")
+        end
+      end
+    end
+
     describe '.apply_placeholders' do
       it 'replaces the given string by placeholders' do
         input = 'hello %%COOL_CAT%%'
         map = { cool_cat: 'siberian cat' }
         output = automation.scriptable.utils.apply_placeholders(input, map)
         expect(output).to eq('hello siberian cat')
+      end
+
+      context 'using the REPORT key' do
+        fab!(:like_1) { Fabricate(:like, user: Fabricate(:user)) }
+        fab!(:like_2) { Fabricate(:like, user: Fabricate(:user)) }
+
+        it 'replaces REPORT key' do
+          input = 'hello %%REPORT=likes%%'
+
+          output = automation.scriptable.utils.apply_placeholders(input, {})
+          expect(output).to eq("hello \n|Day|Count|\n|-|-|\n|2022-02-25|2|\n")
+        end
       end
     end
 
