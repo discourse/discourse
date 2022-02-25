@@ -172,7 +172,7 @@ module DiscourseAutomation
                 if ['start_date', 'end_date'].include?(key)
                   args[key.to_sym] = Date.parse(value) rescue nil
                 else
-                  args[:filters][key.to_sym] = DateTime.parse(value) rescue value
+                  args[:filters][key.to_sym] = value
                 end
               end
             end
