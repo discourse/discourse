@@ -388,8 +388,7 @@ class PostDestroyer
     UserStatCountUpdater.decrement!(@post)
 
     if @post.created_at == author.last_posted_at
-      author.last_posted_at = author.posts.order('created_at DESC').first.try(:created_at)
-      author.save!
+      author.update_column(:last_posted_at, author.posts.order('created_at DESC').first.try(:created_at))
     end
 
     if @post.is_first_post? && @post.topic && !@post.topic.private_message?
