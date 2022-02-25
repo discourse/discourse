@@ -231,7 +231,7 @@ after_initialize do
             if automation&.script == DiscourseAutomation::Scriptable::TOPIC_REQUIRED_WORDS
               words = automation.fields.find_by(name: 'words')
 
-              return if !words
+              next if !words
 
               words = words.metadata['value']
 
