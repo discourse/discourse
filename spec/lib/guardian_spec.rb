@@ -1641,6 +1641,17 @@ describe Guardian do
         expect(Guardian.new(coding_horror).can_edit?(topic)).to be_falsey
       end
 
+      context 'first post is hidden' do
+        let!(:topic) { Fabricate(:topic, user: user) }
+        let!(:post) { Fabricate(:post, topic: topic, user: topic.user, hidden: true, hidden_at: Time.zone.now) }
+
+        it 'returns false for editing your own post while inside the cooldown window' do
+          SiteSetting.cooldown_minutes_after_hiding_posts = 30
+
+          expect(Guardian.new(topic.user).can_edit?(topic)).to eq(false)
+        end
+      end
+
       context "locked" do
         let(:post) { Fabricate(:post, locked_by_id: admin.id) }
         let(:topic) { post.topic }
