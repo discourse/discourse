@@ -5,10 +5,10 @@
         {{#unless site.mobileView}}
           <tr class="topic-list-header-row">
             <th class="topic-list-data default">{{i18n "topic.title"}}</th>
-            <th class="post-metadata topic-list-data posters"></th>
+            <th class="post-metadata topic-list-data fill-space"></th>
             <th class="post-metadata topic-list-data num">{{i18n "post.bookmarks.updated"}}</th>
             <th class="post-metadata topic-list-data num">{{i18n "activity"}}</th>
-            <th class="post-metadata topic-list-data num"></th>
+            <th class="post-metadata topic-list-data fill-space"></th>
           </tr>
         {{/unless}}
       </thead>
@@ -52,7 +52,7 @@
               </div>
             </td>
             {{#unless site.mobileView}}
-              <td class="topic-list-data posters">
+              <td class="topic-list-data fill-space">
                 {{#if bookmark.post_user_avatar_template}}
                   <a href={{bookmark.postUser.path}} data-user-card={{bookmark.post_user_username}} class="avatar">
                     {{avatar bookmark.postUser avatarTemplatePath="avatar_template" usernamePath="username" namePath="name" imageSize="small"}}
@@ -60,9 +60,9 @@
                 {{/if}}
               </td>
               <td class="post-metadata topic-list-data num">{{format-date bookmark.updated_at format="tiny"}}</td>
-              {{raw "list/activity-column" topic=bookmark class="num post-metadata" tagName="td"}}
+              {{raw "list/activity-column" topic=bookmark class="num post-metadata topic-list-data" tagName="td"}}
             {{/unless}}
-            <td class="topic-list-data num">
+            <td class="topic-list-data fill-space">
               {{bookmark-actions-dropdown
               bookmark=bookmark
               removeBookmark=(action "removeBookmark")

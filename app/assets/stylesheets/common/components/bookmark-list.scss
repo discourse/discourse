@@ -6,6 +6,10 @@ $mobile-breakpoint: 700px;
   }
 }
 
+.topic-list-data.fill-space {
+  flex: 0 1 45px;
+}
+
 .bookmark-list-item {
   .topic-list-data.post-metadata {
     text-align: center;
