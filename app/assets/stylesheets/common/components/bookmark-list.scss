@@ -12,7 +12,7 @@ $mobile-breakpoint: 700px;
   }
   @media (max-width: $mobile-breakpoint) {
     .topic-list-data.main-link {
-      padding-right: 0.5em;
+      padding-right: 1em;
       flex-direction: column;
       & ~ .topic-list-data {
         width: 10%;
@@ -63,7 +63,6 @@ $mobile-breakpoint: 700px;
 
   .post-excerpt {
     overflow: hidden;
-    padding-right: 1em;
   }
 
   .mobile-view & {
