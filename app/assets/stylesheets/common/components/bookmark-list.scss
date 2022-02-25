@@ -18,7 +18,7 @@ $mobile-breakpoint: 700px;
     .topic-list-data.main-link {
       padding-right: 1em;
       flex-direction: column;
-      & ~ .topic-list-data {
+      ~ .topic-list-data {
         width: 10%;
       }
     }
