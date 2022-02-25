@@ -11,8 +11,12 @@ $mobile-breakpoint: 700px;
     text-align: center;
   }
   @media (max-width: $mobile-breakpoint) {
-    .main-link {
+    .topic-list-data.main-link {
       padding-right: 0.5em;
+      flex-direction: column;
+      & ~ .topic-list-data {
+        width: 10%;
+      }
     }
   }
   .main-link.topic-list-data {

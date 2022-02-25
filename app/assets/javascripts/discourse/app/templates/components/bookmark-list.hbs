@@ -3,11 +3,11 @@
     <table class="topic-list bookmark-list">
       <thead class="topic-list-header">
         {{#unless site.mobileView}}
-          <th class="topic-list-data">{{i18n "topic.title"}}</th>
-          <th class="topic-list-data">&nbsp;</th>
-          <th class="post-metadata topic-list-data">{{i18n "post.bookmarks.updated"}}</th>
-          <th class="post-metadata topic-list-data">{{i18n "activity"}}</th>
-          <th>&nbsp;</th>
+          <tr class="topic-list-header-row">
+            <th class="topic-list-data default">{{i18n "topic.title"}}</th>
+            <th class="post-metadata topic-list-data num">{{i18n "post.bookmarks.updated"}}</th>
+            <th class="post-metadata topic-list-data num">{{i18n "activity"}}</th>
+          </tr>
         {{/unless}}
       </thead>
       <tbody class="topic-list-body">
@@ -39,26 +39,28 @@
                 {{category-link bookmark.category}}
                 {{discourse-tags bookmark mode="list" tagsForUser=tagsForUser}}
               </div>
-              {{#if (and site.mobileView bookmark.excerpt bookmark.post_user_avatar_template)}}
-                <a href={{bookmark.postUser.path}} data-user-card={{bookmark.post_user_username}} class="avatar">
-                  {{avatar bookmark.postUser avatarTemplatePath="avatar_template" usernamePath="username" namePath="name" imageSize="small"}}
-                </a>
-              {{/if}}
-              {{!-- template-lint-disable --}}
-              <p class="post-excerpt" {{on "click" this.screenExcerptForExternalLink}}>{{html-safe bookmark.excerpt}}</p>
+              <div class="post-info">
+                {{#if (and site.mobileView bookmark.excerpt bookmark.post_user_avatar_template)}}
+                  <a href={{bookmark.postUser.path}} data-user-card={{bookmark.post_user_username}} class="avatar">
+                    {{avatar bookmark.postUser avatarTemplatePath="avatar_template" usernamePath="username" namePath="name" imageSize="small"}}
+                  </a>
+                {{/if}}
+                {{!-- template-lint-disable --}}
+                <p class="post-excerpt" {{on "click" this.screenExcerptForExternalLink}}>{{html-safe bookmark.excerpt}}</p>
+              </div>
             </td>
             {{#unless site.mobileView}}
-              <td class="topic-list-data">
+              <td class="topic-list-data posters">
                 {{#if bookmark.post_user_avatar_template}}
                   <a href={{bookmark.postUser.path}} data-user-card={{bookmark.post_user_username}} class="avatar">
                     {{avatar bookmark.postUser avatarTemplatePath="avatar_template" usernamePath="username" namePath="name" imageSize="small"}}
                   </a>
                 {{/if}}
               </td>
-              <td class="post-metadata topic-list-data">{{format-date bookmark.updated_at format="tiny"}}</td>
+              <td class="post-metadata topic-list-data num">{{format-date bookmark.updated_at format="tiny"}}</td>
               {{raw "list/activity-column" topic=bookmark class="num post-metadata" tagName="td"}}
             {{/unless}}
-            <td class="topic-list-data">
+            <td class="topic-list-data num">
               {{bookmark-actions-dropdown
               bookmark=bookmark
               removeBookmark=(action "removeBookmark")
