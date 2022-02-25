@@ -147,14 +147,51 @@ describe DiscourseAutomation::Scriptable do
       end
 
       context 'using the REPORT key' do
-        fab!(:like_1) { Fabricate(:like, user: Fabricate(:user)) }
-        fab!(:like_2) { Fabricate(:like, user: Fabricate(:user)) }
+        context 'no filters specified' do
+          fab!(:like_1) { Fabricate(:like, user: Fabricate(:user)) }
+          fab!(:like_2) { Fabricate(:like, user: Fabricate(:user)) }
 
-        it 'replaces REPORT key' do
-          input = 'hello %%REPORT=likes%%'
+          it 'replaces REPORT key' do
+            input = 'hello %%REPORT=likes%%'
 
-          output = automation.scriptable.utils.apply_placeholders(input, {})
-          expect(output).to eq("hello \n|Day|Count|\n|-|-|\n|2022-02-25|2|\n")
+            output = automation.scriptable.utils.apply_placeholders(input, {})
+            expect(output).to eq("hello \n|Day|Count|\n|-|-|\n|#{Time.now.strftime('%Y-%m-%d')}|2|\n")
+          end
+        end
+
+        context 'dates specified' do
+          fab!(:group_1) { Fabricate(:group) }
+          fab!(:user_1) { Fabricate(:user, created_at: 10.days.ago) }
+          fab!(:user_2) { Fabricate(:user) }
+
+          before do
+            group_1.add(user_1)
+            group_1.add(user_2)
+          end
+
+          it 'replaces REPORT key using dates' do
+            input = "hello %%REPORT=signups start_date=#{2.days.ago.strftime('%Y-%m-%d')}%%"
+
+            output = automation.scriptable.utils.apply_placeholders(input, {})
+            expect(output).to eq("hello \n|Day|Count|\n|-|-|\n|#{Time.now.strftime('%Y-%m-%d')}|1|\n")
+          end
+        end
+
+        context 'filters specified' do
+          fab!(:group_1) { Fabricate(:group) }
+          fab!(:user_1) { Fabricate(:user) }
+          fab!(:user_2) { Fabricate(:user) }
+
+          before do
+            group_1.add(user_1)
+          end
+
+          it 'replaces REPORT key using filters' do
+            input = "hello %%REPORT=signups group=#{group_1.id}%%"
+
+            output = automation.scriptable.utils.apply_placeholders(input, {})
+            expect(output).to eq("hello \n|Day|Count|\n|-|-|\n|#{Time.now.strftime('%Y-%m-%d')}|1|\n")
+          end
         end
       end
     end

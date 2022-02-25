@@ -137,27 +137,49 @@ module DiscourseAutomation
         table = +"\n"
         table << '|' + report.labels.map { |l| l[:title] }.join('|') + "|\n"
         table << '|' + report.labels.count.times.map { '-' }.join('|') + "|\n"
-        report.data.each { |data| table << "|#{ordered_columns.map { |col| data[col] }.join('|')}|\n" }
+        if report.data.count > 0
+          report.data.each { |data| table << "|#{ordered_columns.map { |col| data[col] }.join('|')}|\n" }
+        else
+          table << '|' + report.labels.count.times.map { ' ' }.join('|') + "|\n"
+        end
         table
       end
 
-      REPORT_REGEX = /%%REPORT=(.*?)%%/
       def self.apply_placeholders(input, map)
         input = input.dup
         map[:site_title] = SiteSetting.title
 
-        input = input.gsub(REPORT_REGEX) do |pattern|
-          match = pattern.match(REPORT_REGEX)
-          if match
-            fetch_report(match[1].downcase)
-          end
-        end
+        input = apply_report_placeholder(input)
 
         map.each do |key, value|
-          input.gsub!("%%#{key.upcase}%%", value)
+          input = input.gsub("%%#{key.upcase}%%", value)
         end
 
         input
+      end
+
+      REPORT_REGEX = /%%REPORT=(.*?)%%/
+      def self.apply_report_placeholder(input = '')
+        input.gsub(REPORT_REGEX) do |pattern|
+          match = pattern.match(REPORT_REGEX)
+          if match
+            params = match[1].match(/^(.*?)(?:\s(.*))?$/)
+
+            args = { filters: {} }
+            if params[2]
+              params[2].split(' ').each do |param|
+                key, value = param.split('=')
+                if ['start_date', 'end_date'].include?(key)
+                  args[key.to_sym] = Date.parse(value) rescue nil
+                else
+                  args[:filters][key.to_sym] = DateTime.parse(value) rescue value
+                end
+              end
+            end
+
+            fetch_report(params[1].downcase, args) || ''
+          end
+        end
       end
 
       def self.send_pm(pm, sender: Discourse.system_user.username, delay: nil, automation_id: nil, encrypt: true)
