@@ -81,6 +81,7 @@ export default Component.extend({
   onShow() {
     this.set("isLoading", true);
     this.set("recentEmojis", this.emojiStore.favorites);
+    this._applyFilter(this.initialFilter);
 
     schedule("afterRender", () => {
       this._applyFilter(this.initialFilter);
