@@ -1,3 +1,5 @@
+import { on as emberOn } from "@ember/object/evented";
+import { computed, observer } from "@ember/object";
 import { bind as emberBind, schedule } from "@ember/runloop";
 import decoratorAlias from "discourse-common/utils/decorator-alias";
 import extractValue from "discourse-common/utils/extract-value";
@@ -55,38 +57,37 @@ export function readOnly(target, name, desc) {
   };
 }
 
-/* eslint-disable */
-export var on = decoratorAlias(Ember.on, "Can not `on` without event names");
-export var observes = decoratorAlias(
-  Ember.observer,
+export let on = decoratorAlias(emberOn, "Can not `on` without event names");
+export let observes = decoratorAlias(
+  observer,
   "Can not `observe` without property names"
 );
 
-export var alias = macroAlias(Ember.computed.alias);
-export var and = macroAlias(Ember.computed.and);
-export var bool = macroAlias(Ember.computed.bool);
-export var collect = macroAlias(Ember.computed.collect);
-export var empty = macroAlias(Ember.computed.empty);
-export var equal = macroAlias(Ember.computed.equal);
-export var filter = macroAlias(Ember.computed.filter);
-export var filterBy = macroAlias(Ember.computed.filterBy);
-export var gt = macroAlias(Ember.computed.gt);
-export var gte = macroAlias(Ember.computed.gte);
-export var lt = macroAlias(Ember.computed.lt);
-export var lte = macroAlias(Ember.computed.lte);
-export var map = macroAlias(Ember.computed.map);
-export var mapBy = macroAlias(Ember.computed.mapBy);
-export var match = macroAlias(Ember.computed.match);
-export var max = macroAlias(Ember.computed.max);
-export var min = macroAlias(Ember.computed.min);
-export var none = macroAlias(Ember.computed.none);
-export var not = macroAlias(Ember.computed.not);
-export var notEmpty = macroAlias(Ember.computed.notEmpty);
-export var oneWay = macroAlias(Ember.computed.oneWay);
-export var or = macroAlias(Ember.computed.or);
-export var reads = macroAlias(Ember.computed.reads);
-export var setDiff = macroAlias(Ember.computed.setDiff);
-export var sort = macroAlias(Ember.computed.sort);
-export var sum = macroAlias(Ember.computed.sum);
-export var union = macroAlias(Ember.computed.union);
-export var uniq = macroAlias(Ember.computed.uniq);
+export let alias = macroAlias(computed.alias);
+export let and = macroAlias(computed.and);
+export let bool = macroAlias(computed.bool);
+export let collect = macroAlias(computed.collect);
+export let empty = macroAlias(computed.empty);
+export let equal = macroAlias(computed.equal);
+export let filter = macroAlias(computed.filter);
+export let filterBy = macroAlias(computed.filterBy);
+export let gt = macroAlias(computed.gt);
+export let gte = macroAlias(computed.gte);
+export let lt = macroAlias(computed.lt);
+export let lte = macroAlias(computed.lte);
+export let map = macroAlias(computed.map);
+export let mapBy = macroAlias(computed.mapBy);
+export let match = macroAlias(computed.match);
+export let max = macroAlias(computed.max);
+export let min = macroAlias(computed.min);
+export let none = macroAlias(computed.none);
+export let not = macroAlias(computed.not);
+export let notEmpty = macroAlias(computed.notEmpty);
+export let oneWay = macroAlias(computed.oneWay);
+export let or = macroAlias(computed.or);
+export let reads = macroAlias(computed.reads);
+export let setDiff = macroAlias(computed.setDiff);
+export let sort = macroAlias(computed.sort);
+export let sum = macroAlias(computed.sum);
+export let union = macroAlias(computed.union);
+export let uniq = macroAlias(computed.uniq);
