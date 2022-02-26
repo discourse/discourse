@@ -218,14 +218,14 @@ module Onebox
       def card_html
         escaped_url = ::Onebox::Helpers.normalize_url_for_output(data[:player])
 
-        <<~RAW
+        <<~HTML
         <iframe src="#{escaped_url}"
                 width="#{data[:player_width] || "100%"}"
                 height="#{data[:player_height]}"
                 scrolling="no"
                 frameborder="0">
         </iframe>
-        RAW
+        HTML
       end
 
       def article_html

@@ -165,11 +165,11 @@ def clean_up_uploads
     exit 1
   end
 
-  puts <<~OUTPUT
+  puts <<~TEXT
   This task will remove upload records and files permanently.
 
   Would you like to take a full backup before the clean up? (Y/N)
-  OUTPUT
+  TEXT
 
   if STDIN.gets.chomp.downcase == 'y'
     puts "Starting backup..."
@@ -420,7 +420,7 @@ task "uploads:analyze", [:cache_path, :limit] => :environment do |_, args|
   uploads_count = Upload.count
   optimized_images_count = OptimizedImage.count
 
-  puts <<~REPORT
+  puts <<~TEXT
   Report for '#{current_db}'
   -----------#{'-' * current_db.length}
   Number of `Upload` records in DB: #{uploads_count}
@@ -430,7 +430,7 @@ task "uploads:analyze", [:cache_path, :limit] => :environment do |_, args|
   Number of images in uploads folder: #{paths_count}
   ------------------------------------#{'-' * paths_count.to_s.length}
 
-  REPORT
+  TEXT
 
   helper = Class.new do
     include ActionView::Helpers::NumberHelper

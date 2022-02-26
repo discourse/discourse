@@ -551,9 +551,9 @@ describe Search do
 
       result = Search.execute('search term')
 
-      expect(result.posts.first.topic_title_headline).to eq(<<~TITLE.chomp)
+      expect(result.posts.first.topic_title_headline).to eq(<<~HTML.chomp)
       Very very very very very very very long topic title with our <span class=\"#{Search::HIGHLIGHT_CSS_CLASS}\">search</span> <span class=\"#{Search::HIGHLIGHT_CSS_CLASS}\">term</span> in the middle of the title
-      TITLE
+      HTML
     end
 
     it "limits the search headline to #{Search::GroupedSearchResults::BLURB_LENGTH} characters" do

@@ -102,20 +102,20 @@ Fabricator(:post_with_uploads, from: :post) do
 end
 
 Fabricator(:post_with_uploads_and_links, from: :post) do
-  raw <<~RAW
+  raw <<~MD
     <a href="/#{Discourse.store.upload_path}/original/2X/2345678901234567.jpg">Link</a>
     <img src="/#{Discourse.store.upload_path}/original/1X/1234567890123456.jpg">
     <a href="http://www.google.com">Google</a>
     <img src="http://foo.bar/image.png">
     <a class="attachment" href="/#{Discourse.store.upload_path}/original/1X/af2c2618032c679333bebf745e75f9088748d737.txt">text.txt</a> (20 Bytes)
     :smile:
-  RAW
+  MD
 end
 
 Fabricator(:post_with_external_links, from: :post) do
   user
   topic
-  raw <<~RAW
+  raw <<~MD
     Here's a link to twitter: http://twitter.com
     And a link to google: http://google.com
     And a secure link to google: https://google.com
@@ -123,7 +123,7 @@ Fabricator(:post_with_external_links, from: :post) do
     And a markdown link with a period after it [codinghorror](http://www.codinghorror.com/blog).
     And one with a hash http://discourse.org#faq
     And one with a two hash http://discourse.org#a#b
-  RAW
+  MD
 end
 
 Fabricator(:private_message_post, from: :post) do

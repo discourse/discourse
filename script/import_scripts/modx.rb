@@ -43,25 +43,25 @@ class ImportScripts::Modx < ImportScripts::Base
   rescue Exception => e
     puts '=' * 50
     puts e.message
-    puts <<EOM
-Cannot connect in to database.
+    puts <<~TEXT
+      Cannot connect in to database.
 
-Hostname: #{DB_HOST}
-Username: #{DB_USER}
-Password: #{DB_PW}
-database: #{DB_NAME}
+      Hostname: #{DB_HOST}
+      Username: #{DB_USER}
+      Password: #{DB_PW}
+      database: #{DB_NAME}
 
-Edit the script or set these environment variables:
+      Edit the script or set these environment variables:
 
-export DB_HOST="localhost"
-export DB_NAME="modx"
-export DB_PW="modx"
-export DB_USER="modx"
-export TABLE_PREFIX="modx_"
-export ATTACHMENT_DIR '/path/to/your/attachment/folder'
+      export DB_HOST="localhost"
+      export DB_NAME="modx"
+      export DB_PW="modx"
+      export DB_USER="modx"
+      export TABLE_PREFIX="modx_"
+      export ATTACHMENT_DIR '/path/to/your/attachment/folder'
 
-Exiting.
-EOM
+      Exiting.
+    TEXT
     exit
   end
 
@@ -446,12 +446,12 @@ FROM #{TABLE_PREFIX}discuss_users
     # keep track of closed topics
     closed_topic_ids = []
 
-    topics = mysql_query <<-MYSQL
+    topics = mysql_query <<-SQL
         SELECT t.threadid threadid, firstpostid, open
           FROM #{TABLE_PREFIX}thread t
           JOIN #{TABLE_PREFIX}post p ON p.postid = t.firstpostid
       ORDER BY t.threadid
-    MYSQL
+    SQL
     topics.each do |topic|
       topic_id = "thread-#{topic["threadid"]}"
       closed_topic_ids << topic_id if topic["open"] == 0

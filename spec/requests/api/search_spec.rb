@@ -20,7 +20,7 @@ describe 'groups' do
         in: :query,
         type: :string,
         example: 'api @blake #support tags:api after:2021-06-04 in:unseen in:open order:latest_topic',
-        description: <<~HEREDOC
+        description: <<~MD
           The query string needs to be url encoded and is made up of the following options:
           - Search term. This is just a string. Usually it would be the first item in the query.
           - `@<username>`: Use the `@` followed by the username to specify posts by this user.
@@ -44,7 +44,7 @@ describe 'groups' do
           curl -i -sS -X GET -G "http://localhost:4200/search.json" \\
           --data-urlencode 'q=wordpress @scossar #fun after:2020-01-01'
           ```
-        HEREDOC
+        MD
       )
       parameter name: :page, in: :query, type: :integer, example: 1
 

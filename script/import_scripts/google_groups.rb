@@ -85,11 +85,11 @@ def crawl_topics
 
     begin
       if start == 1 && find("h2").text == "Error 403"
-        exit_with_error(<<~MSG.red.bold)
+        exit_with_error(<<~TEXT.red.bold)
           Unable to find topics. Try running the script with the "--domain example.com"
           option if you are a G Suite user and your group's URL contains a path with
           your domain that looks like "/a/example.com".
-        MSG
+        TEXT
       end
     rescue Selenium::WebDriver::Error::NoSuchElementError
       # Ignore this error. It simply means there wasn't an error.
@@ -151,10 +151,10 @@ def crawl_message(url, might_be_deleted)
     @first_message_checked = true
 
     if content.match?(/From:.*\.\.\.@.*/i) && !@force_import
-      exit_with_error(<<~MSG.red.bold)
+      exit_with_error(<<~TEXT.red.bold)
         It looks like you do not have permissions to see email addresses. Aborting.
         Use the --force option to import anyway.
-      MSG
+      TEXT
     end
   end
 

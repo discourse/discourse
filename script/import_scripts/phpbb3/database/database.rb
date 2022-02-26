@@ -26,10 +26,10 @@ module ImportScripts::PhpBB3
         require_relative 'database_3_1'
         Database_3_1.new(@database_client, @database_settings)
       else
-        raise UnsupportedVersionError, <<~MSG
+        raise UnsupportedVersionError, <<~TEXT
           Unsupported version (#{version}) of phpBB detected.
           Currently only version 3.0, 3.1 and 3.2 are supported by this importer.
-        MSG
+        TEXT
       end
     end
 

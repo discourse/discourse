@@ -8,9 +8,9 @@ RSpec.describe "Local Dates" do
   end
 
   it "should work without timezone" do
-    post = Fabricate(:post, raw: <<~TXT)
+    post = Fabricate(:post, raw: <<~MD)
       [date=2018-05-08 time=22:00 format="L LTS" timezones="Europe/Paris|America/Los_Angeles"]
-    TXT
+    MD
 
     cooked = post.cooked
 
@@ -28,9 +28,9 @@ RSpec.describe "Local Dates" do
   end
 
   it "should work with timezone" do
-    post = Fabricate(:post, raw: <<~TXT)
+    post = Fabricate(:post, raw: <<~MD)
       [date=2018-05-08 time=22:00 format="L LTS" timezone="Asia/Calcutta" timezones="Europe/Paris|America/Los_Angeles"]
-    TXT
+    MD
 
     cooked = post.cooked
 
@@ -39,9 +39,9 @@ RSpec.describe "Local Dates" do
   end
 
   it 'requires the right attributes to convert to a local date' do
-    post = Fabricate(:post, raw: <<~TXT)
+    post = Fabricate(:post, raw: <<~MD)
       [date]
-    TXT
+    MD
 
     cooked = post.cooked
 
@@ -50,9 +50,9 @@ RSpec.describe "Local Dates" do
   end
 
   it 'requires the right attributes to convert to a local date' do
-    post = Fabricate(:post, raw: <<~TXT)
+    post = Fabricate(:post, raw: <<~MD)
       [date]
-    TXT
+    MD
 
     cooked = post.cooked
 

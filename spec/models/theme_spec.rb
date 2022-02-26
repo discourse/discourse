@@ -326,10 +326,10 @@ HTML
       expect(scss).to include("font-size:30px")
 
       # Escapes correctly. If not, compiling this would throw an exception
-      setting.value = <<~MULTILINE
+      setting.value = <<~CSS
           \#{$fakeinterpolatedvariable}
           andanothervalue 'withquotes'; margin: 0;
-      MULTILINE
+      CSS
 
       theme.set_field(target: :common, name: :scss, value: 'body {font-size: quote($font-size)}')
       theme.save!

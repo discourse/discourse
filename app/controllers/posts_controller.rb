@@ -45,14 +45,14 @@ class PostsController < ApplicationController
       opts[:limit] = MARKDOWN_TOPIC_PAGE_SIZE
       topic_view = TopicView.new(params[:topic_id], current_user, opts)
       content = topic_view.posts.map do |p|
-        <<~HEREDOC
+        <<~MD
           #{p.user.username} | #{p.updated_at} | ##{p.post_number}
 
           #{p.raw}
 
           -------------------------
 
-        HEREDOC
+        MD
       end
       render plain: content.join
     end

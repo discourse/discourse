@@ -34,23 +34,23 @@ module Stylesheet
       contents = +""
 
       if body_font.present?
-        contents << <<~EOF
+        contents << <<~CSS
           #{font_css(body_font)}
 
           :root {
             --font-family: #{body_font[:stack]};
           }
-        EOF
+        CSS
       end
 
       if heading_font.present?
-        contents << <<~EOF
+        contents << <<~CSS
           #{font_css(heading_font)}
 
           :root {
             --heading-font-family: #{heading_font[:stack]};
           }
-        EOF
+        CSS
       end
 
       contents
@@ -70,14 +70,14 @@ module Stylesheet
         end
 
         contents << font_css(font)
-        contents << <<~EOF
+        contents << <<~CSS
           .body-font-#{font[:key].tr("_", "-")} {
             font-family: #{font[:stack]};
           }
           .heading-font-#{font[:key].tr("_", "-")} h2 {
             font-family: #{font[:stack]};
           }
-        EOF
+        CSS
       end
 
       contents
@@ -184,11 +184,11 @@ module Stylesheet
       fields.map do |field|
         value = field.value
         if value.present?
-          contents << <<~COMMENT
+          contents << <<~TEXT
           // Theme: #{field.theme.name}
           // Target: #{field.target_name} #{field.name}
           // Last Edited: #{field.updated_at}
-          COMMENT
+          TEXT
 
           contents << value
         end
@@ -216,13 +216,13 @@ module Stylesheet
         fonts_dir = UrlHelper.absolute("#{Discourse.base_path}/fonts")
         font[:variants].each do |variant|
           src = variant[:src] ? variant[:src] : "url(\"#{fonts_dir}/#{variant[:filename]}?v=#{DiscourseFonts::VERSION}\") format(\"#{variant[:format]}\")"
-          contents << <<~EOF
+          contents << <<~CSS
             @font-face {
               font-family: #{font[:name]};
               src: #{src};
               font-weight: #{variant[:weight]};
             }
-          EOF
+          CSS
         end
       end
 
