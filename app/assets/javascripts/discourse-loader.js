@@ -47,6 +47,7 @@ var define, requirejs;
         setProperties: Ember.setProperties,
         computed: Ember.computed,
         defineProperty: Ember.defineProperty,
+        observer: Ember.observer,
       },
       "@ember/object/computed": {
         alias: Ember.computed.alias,
