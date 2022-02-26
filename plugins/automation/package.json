@@ -5,6 +5,6 @@
   "author": "jjaffeux",
   "license": "MIT",
   "devDependencies": {
-    "eslint-config-discourse": "^1.1.9"
+    "eslint-config-discourse": "^2.0.0"
   }
 }

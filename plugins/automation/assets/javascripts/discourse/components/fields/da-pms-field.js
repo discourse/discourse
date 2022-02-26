@@ -1,6 +1,7 @@
 import BaseField from "./da-base-field";
 import I18n from "I18n";
 import { action } from "@ember/object";
+import bootbox from "bootbox";
 
 export default BaseField.extend({
   didReceiveAttrs() {

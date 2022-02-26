@@ -5,6 +5,7 @@ import { filterBy, reads } from "@ember/object/computed";
 import { ajax } from "discourse/lib/ajax";
 import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
+import bootbox from "bootbox";
 
 export default Ember.Controller.extend({
   error: null,
