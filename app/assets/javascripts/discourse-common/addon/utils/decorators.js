@@ -57,37 +57,37 @@ export function readOnly(target, name, desc) {
   };
 }
 
-export let on = decoratorAlias(emberOn, "Can not `on` without event names");
-export let observes = decoratorAlias(
+export const on = decoratorAlias(emberOn, "Can not `on` without event names");
+export const observes = decoratorAlias(
   observer,
   "Can not `observe` without property names"
 );
 
-export let alias = macroAlias(computed.alias);
-export let and = macroAlias(computed.and);
-export let bool = macroAlias(computed.bool);
-export let collect = macroAlias(computed.collect);
-export let empty = macroAlias(computed.empty);
-export let equal = macroAlias(computed.equal);
-export let filter = macroAlias(computed.filter);
-export let filterBy = macroAlias(computed.filterBy);
-export let gt = macroAlias(computed.gt);
-export let gte = macroAlias(computed.gte);
-export let lt = macroAlias(computed.lt);
-export let lte = macroAlias(computed.lte);
-export let map = macroAlias(computed.map);
-export let mapBy = macroAlias(computed.mapBy);
-export let match = macroAlias(computed.match);
-export let max = macroAlias(computed.max);
-export let min = macroAlias(computed.min);
-export let none = macroAlias(computed.none);
-export let not = macroAlias(computed.not);
-export let notEmpty = macroAlias(computed.notEmpty);
-export let oneWay = macroAlias(computed.oneWay);
-export let or = macroAlias(computed.or);
-export let reads = macroAlias(computed.reads);
-export let setDiff = macroAlias(computed.setDiff);
-export let sort = macroAlias(computed.sort);
-export let sum = macroAlias(computed.sum);
-export let union = macroAlias(computed.union);
-export let uniq = macroAlias(computed.uniq);
+export const alias = macroAlias(computed.alias);
+export const and = macroAlias(computed.and);
+export const bool = macroAlias(computed.bool);
+export const collect = macroAlias(computed.collect);
+export const empty = macroAlias(computed.empty);
+export const equal = macroAlias(computed.equal);
+export const filter = macroAlias(computed.filter);
+export const filterBy = macroAlias(computed.filterBy);
+export const gt = macroAlias(computed.gt);
+export const gte = macroAlias(computed.gte);
+export const lt = macroAlias(computed.lt);
+export const lte = macroAlias(computed.lte);
+export const map = macroAlias(computed.map);
+export const mapBy = macroAlias(computed.mapBy);
+export const match = macroAlias(computed.match);
+export const max = macroAlias(computed.max);
+export const min = macroAlias(computed.min);
+export const none = macroAlias(computed.none);
+export const not = macroAlias(computed.not);
+export const notEmpty = macroAlias(computed.notEmpty);
+export const oneWay = macroAlias(computed.oneWay);
+export const or = macroAlias(computed.or);
+export const reads = macroAlias(computed.reads);
+export const setDiff = macroAlias(computed.setDiff);
+export const sort = macroAlias(computed.sort);
+export const sum = macroAlias(computed.sum);
+export const union = macroAlias(computed.union);
+export const uniq = macroAlias(computed.uniq);
