@@ -36,7 +36,6 @@ export default Component.extend({
   recentEmojis: null,
   hoveredEmoji: null,
   isActive: false,
-  isLoading: true,
   usePopper: true,
   initialFilter: "",
 
@@ -79,7 +78,6 @@ export default Component.extend({
 
   @action
   onShow() {
-    this.set("isLoading", true);
     this.set("recentEmojis", this.emojiStore.favorites);
 
     schedule("afterRender", () => {
@@ -135,8 +133,6 @@ export default Component.extend({
       // this is a low-tech trick to prevent appending hundreds of emojis
       // of blocking the rendering of the picker
       later(() => {
-        this.set("isLoading", false);
-
         schedule("afterRender", () => {
           if (!this.site.isMobileDevice || this.isEditorFocused) {
             const filter = emojiPicker.querySelector("input.filter");
