@@ -1,6 +1,6 @@
 {{#if isActive}}
   {{!-- template-lint-disable no-invalid-interactive --}}
-  <div {{on "keydown" (action "keydown")}} class="emoji-picker {{if @isActive "opened"}}">
+  <div {{on "keydown" (action "keydown")}} class="emoji-picker {{if this.isActive "opened"}}">
     {{!-- template-lint-enable no-invalid-interactive --}}
     <div class="emoji-picker-category-buttons">
       {{#if recentEmojis.length}}
@@ -23,12 +23,13 @@
         {{input
           class="filter"
           name="filter"
+          value=@initialFilter
           placeholder=(i18n "emoji_picker.filter_placeholder")
           autocomplete="off"
           type="search"
           autocorrect="off"
           autocapitalize="off"
-          input=(action "onFilter")
+          input=(action "onFilterChange")
         }}
 
         {{d-icon "search"}}

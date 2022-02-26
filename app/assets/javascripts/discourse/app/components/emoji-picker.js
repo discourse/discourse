@@ -38,6 +38,7 @@ export default Component.extend({
   isActive: false,
   isLoading: true,
   usePopper: true,
+  initialFilter: "",
 
   init() {
     this._super(...arguments);
@@ -80,6 +81,7 @@ export default Component.extend({
   onShow() {
     this.set("isLoading", true);
     this.set("recentEmojis", this.emojiStore.favorites);
+    this._applyFilter(this.initialFilter);
 
     schedule("afterRender", () => {
       document.addEventListener("click", this.handleOutsideClick);
@@ -245,13 +247,17 @@ export default Component.extend({
   },
 
   @action
-  onFilter(event) {
+  onFilterChange(event) {
+    this._applyFilter(event.target.value);
+  },
+
+  _applyFilter(filter) {
     const emojiPicker = document.querySelector(".emoji-picker");
     const results = document.querySelector(".emoji-picker-emoji-area .results");
     results.innerHTML = "";
 
-    if (event.target.value) {
-      results.innerHTML = emojiSearch(event.target.value.toLowerCase(), {
+    if (filter) {
+      results.innerHTML = emojiSearch(filter.toLowerCase(), {
         maxResults: 20,
         diversity: this.emojiStore.diversity,
       })
