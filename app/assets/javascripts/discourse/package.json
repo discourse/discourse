@@ -68,7 +68,7 @@
     "qunit-dom": "^1.6.0",
     "sass": "^1.32.8",
     "select-kit": "^1.0.0",
-    "sinon": "^9.2.0",
+    "sinon": "^13.0.1",
     "virtual-dom": "^2.1.1",
     "webpack": "^5.67.0"
   },
