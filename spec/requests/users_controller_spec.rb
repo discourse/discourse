@@ -5125,6 +5125,7 @@ describe UsersController do
     end
 
     it 'works for logged in user' do
+      freeze_time
       sign_in(user1)
       delete "/u/recent-searches.json"
 
@@ -5141,6 +5142,7 @@ describe UsersController do
     end
 
     it 'works for logged in user' do
+      freeze_time
       sign_in(user1)
       SiteSetting.log_search_queries = true
       user1.user_option.update!(oldest_search_log_date: nil)
