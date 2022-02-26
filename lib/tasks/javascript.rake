@@ -114,7 +114,7 @@ def dependencies
       source: 'lodash.js',
       destination: 'lodash.js'
     }, {
-      source: 'moment-timezone-names-translations/locales/.',
+      source: '@discourse/moment-timezone-names-translations/locales/.',
       destination: 'moment-timezone-names-locale'
     }, {
       source: 'workbox-sw/build/.',
