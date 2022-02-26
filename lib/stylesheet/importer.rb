@@ -184,11 +184,11 @@ module Stylesheet
       fields.map do |field|
         value = field.value
         if value.present?
-          contents << <<~TEXT
+          contents << <<~SCSS
           // Theme: #{field.theme.name}
           // Target: #{field.target_name} #{field.name}
           // Last Edited: #{field.updated_at}
-          TEXT
+          SCSS
 
           contents << value
         end
