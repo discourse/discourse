@@ -123,7 +123,7 @@ def crawl_topic(url)
   puts "Scraping #{url}"
   get(url)
 
-  messsages_crawled = false
+  messages_crawled = false
 
   extract(".subject a[href*='#{@groupname}']") do |a|
     [
@@ -131,10 +131,10 @@ def crawl_topic(url)
       a["title"].empty?
     ]
   end.each do |msg_url, might_be_deleted|
-    messsages_crawled |= crawl_message(msg_url, might_be_deleted)
+    messages_crawled |= crawl_message(msg_url, might_be_deleted)
   end
 
-  @skipped_topic_count = skippable && messsages_crawled ? 0 : @skipped_topic_count + 1
+  @skipped_topic_count = skippable && messages_crawled ? 0 : @skipped_topic_count + 1
   @scraped_topic_urls << url
 rescue
   puts "Failed to scrape topic at #{url}".red

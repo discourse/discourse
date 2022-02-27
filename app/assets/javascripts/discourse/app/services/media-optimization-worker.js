@@ -44,7 +44,7 @@ export default class MediaOptimizationWorkerService extends Service {
     ) {
       return Promise.resolve();
     }
-    await this.ensureAvailiableWorker();
+    await this.ensureAvailableWorker();
 
     return new Promise(async (resolve) => {
       this.logIfDebug(`Transforming ${file.name}`);
@@ -88,7 +88,7 @@ export default class MediaOptimizationWorkerService extends Service {
     });
   }
 
-  async ensureAvailiableWorker() {
+  async ensureAvailableWorker() {
     if (this.worker && this.workerInstalled) {
       return Promise.resolve();
     }
