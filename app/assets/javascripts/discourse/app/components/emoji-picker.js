@@ -17,14 +17,13 @@ import { underscore } from "@ember/string";
 function customEmojis() {
   const list = extendedEmojiList();
   const groups = [];
-  Object.keys(list).forEach((code) => {
-    const emoji = list[code];
+  for (const [code, emoji] of list.entries()) {
     groups[emoji.group] = groups[emoji.group] || [];
     groups[emoji.group].push({
       code,
       src: emojiUrlFor(code),
     });
-  });
+  }
   return groups;
 }
 
