@@ -314,7 +314,7 @@ GEM
     r2 (0.2.7)
     racc (1.6.0)
     rack (2.2.3)
-    rack-mini-profiler (2.3.4)
+    rack-mini-profiler (3.0.0)
       rack (>= 1.2.0)
     rack-protection (2.2.0)
       rack
@@ -451,7 +451,7 @@ GEM
       activesupport (>= 5.2)
       sprockets (>= 3.0.0)
     sshkey (2.0.0)
-    stackprof (0.2.18)
+    stackprof (0.2.19)
     test-prof (1.0.7)
     thor (1.2.1)
     tilt (2.0.10)

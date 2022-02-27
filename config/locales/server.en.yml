@@ -1828,7 +1828,7 @@ en:
     use_site_small_logo_as_system_avatar: "Use the site's small logo instead of the system user's avatar. Requires the logo to be present."
     restrict_letter_avatar_colors: "A list of 6-digit hexadecimal color values to be used for letter avatar background."
     enable_listing_suspended_users_on_search: "Enable regular users to find suspended users."
-    selectable_avatars_enabled: "Force users to choose an avatar from the list."
+    selectable_avatars_mode: "Allow users to select an avatar from the selectable_avatars list and limit custom avatar uploads to the selected trust level."
     selectable_avatars: "List of avatars users can choose from."
 
     allow_all_attachments_for_group_messages: "Allow all email attachments for group messages."

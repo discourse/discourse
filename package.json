@@ -50,7 +50,7 @@
     "puppeteer-core": "^13.0.0",
     "qunit": "2.8.0",
     "route-recognizer": "^0.3.3",
-    "sinon": "^9.0.2",
+    "sinon": "^13.0.1",
     "squoosh": "discourse/squoosh#dc9649d"
   },
   "resolutions": {

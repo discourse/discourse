@@ -17,12 +17,40 @@ export default Controller.extend(ModalFunctionality, {
   },
 
   @discourseComputed(
-    "siteSettings.selectable_avatars_enabled",
+    "siteSettings.selectable_avatars_mode",
     "siteSettings.selectable_avatars"
   )
-  selectableAvatars(enabled, list) {
-    if (enabled) {
+  selectableAvatars(mode, list) {
+    if (mode !== "disabled") {
       return list ? list.split("|") : [];
+    }
+  },
+
+  @discourseComputed("siteSettings.selectable_avatars_mode")
+  showSelectableAvatars(mode) {
+    return mode !== "disabled";
+  },
+
+  @discourseComputed("siteSettings.selectable_avatars_mode")
+  showAvatarUploader(mode) {
+    switch (mode) {
+      case "no_one":
+        return false;
+      case "tl1":
+      case "tl2":
+      case "tl3":
+      case "tl4":
+        const allowedTl = parseInt(mode.replace("tl", ""), 10);
+        return (
+          this.user.admin ||
+          this.user.moderator ||
+          this.user.trust_level >= allowedTl
+        );
+      case "staff":
+        return this.user.admin || this.user.moderator;
+      case "everyone":
+      default:
+        return true;
     }
   },
 

@@ -37,7 +37,7 @@ describe HasErrors do
     it "triggers a rollback" do
       invalid_topic.valid?
 
-      expect(-> { error_test.rollback_from_errors!(invalid_topic) }).to raise_error(ActiveRecord::Rollback)
+      expect { error_test.rollback_from_errors!(invalid_topic) }.to raise_error(ActiveRecord::Rollback)
       expect(error_test.errors).to be_present
       expect(error_test.errors[:base]).to include(title_error)
     end
@@ -46,9 +46,9 @@ describe HasErrors do
   context "rollback_with_error!" do
     it "triggers a rollback" do
 
-      expect(-> {
+      expect do
         error_test.rollback_with!(invalid_topic, :too_many_users)
-      }).to raise_error(ActiveRecord::Rollback)
+      end.to raise_error(ActiveRecord::Rollback)
       expect(error_test.errors).to be_present
       expect(error_test.errors[:base]).to include("You can only send warnings to one user at a time.")
     end

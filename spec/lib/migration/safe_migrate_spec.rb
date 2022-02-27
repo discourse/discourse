@@ -23,9 +23,9 @@ describe Migration::SafeMigrate do
     path = File.expand_path "#{Rails.root}/spec/fixtures/db/migrate/drop_table"
 
     output = capture_stdout do
-      expect(lambda do
+      expect do
         migrate_up(path)
-      end).to raise_error(StandardError)
+      end.to raise_error(StandardError)
     end
 
     expect(output).to include("rails g post_migration")
@@ -40,9 +40,9 @@ describe Migration::SafeMigrate do
     path = File.expand_path "#{Rails.root}/spec/fixtures/db/migrate/rename_table"
 
     output = capture_stdout do
-      expect(lambda do
+      expect do
         migrate_up(path)
-      end).to raise_error(StandardError)
+      end.to raise_error(StandardError)
     end
 
     expect { User.first }.not_to raise_error
@@ -57,9 +57,9 @@ describe Migration::SafeMigrate do
     path = File.expand_path "#{Rails.root}/spec/fixtures/db/migrate/remove_column"
 
     output = capture_stdout do
-      expect(lambda do
+      expect do
         migrate_up(path)
-      end).to raise_error(StandardError)
+      end.to raise_error(StandardError)
     end
 
     expect(output).to include("rails g post_migration")
@@ -74,9 +74,9 @@ describe Migration::SafeMigrate do
     path = File.expand_path "#{Rails.root}/spec/fixtures/db/migrate/rename_column"
 
     output = capture_stdout do
-      expect(lambda do
+      expect do
         migrate_up(path)
-      end).to raise_error(StandardError)
+      end.to raise_error(StandardError)
     end
 
     expect(output).to include("rails g post_migration")
