@@ -220,7 +220,7 @@ class PresenceChannel
   end
 
   # Designed to be run periodically. Checks the channel list for channels with expired members,
-  # and runs auto_leave for each eligable channel
+  # and runs auto_leave for each eligible channel
   def self.auto_leave_all
     channels_with_expiring_members = PresenceChannel.redis.zrangebyscore(redis_key_channel_list, '-inf', Time.zone.now.to_i)
     channels_with_expiring_members.each do |name|
@@ -357,7 +357,7 @@ class PresenceChannel
   # are published in the same sequence that the PresenceChannel lua script are run.
   #
   # The present/leave/auto_leave lua scripts will automatically acquire this mutex
-  # if needed. If their return value indicates a change has occured, the mutex
+  # if needed. If their return value indicates a change has occurred, the mutex
   # should be released via #release_mutex after the messagebus message has been sent
   #
   # If they need a change, and the mutex is not available, they will raise an error

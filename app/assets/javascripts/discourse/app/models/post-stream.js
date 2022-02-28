@@ -680,8 +680,8 @@ export default RestModel.extend({
     });
   },
 
-  /* mainly for backwards compatability with plugins, used in quick messages plugin
-   * TODO: remove July 2021
+  /* mainly for backwards compatibility with plugins, used in quick messages plugin
+   * TODO: remove July 2022
    * */
   triggerNewPostInStream(postId, opts) {
     deprecated(

@@ -759,8 +759,8 @@ const User = RestModel.extend({
   },
 
   @discourseComputed("watched_first_post_category_ids")
-  watchedFirstPostCategories(wachedFirstPostCategoryIds) {
-    return Category.findByIds(wachedFirstPostCategoryIds);
+  watchedFirstPostCategories(watchedFirstPostCategoryIds) {
+    return Category.findByIds(watchedFirstPostCategoryIds);
   },
 
   @discourseComputed("can_delete_account")
