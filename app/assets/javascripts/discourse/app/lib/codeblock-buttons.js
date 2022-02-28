@@ -1,4 +1,6 @@
 import { cancel, later } from "@ember/runloop";
+import Mobile from "discourse/lib/mobile";
+import { bind } from "discourse-common/utils/decorators";
 import showModal from "discourse/lib/show-modal";
 import I18n from "I18n";
 import { guidFor } from "@ember/object/internals";
@@ -41,8 +43,6 @@ export default class CodeblockButtons {
 
     this.showFullscreen = opts.showFullscreen;
     this.showCopy = opts.showCopy;
-
-    this._boundClickHandler = this._handleClick.bind(this);
   }
 
   attachToPost(post, postElement) {
@@ -70,7 +70,7 @@ export default class CodeblockButtons {
 
   cleanup() {
     Object.values(this._codeblockButtonClickHandlers || {}).forEach((handler) =>
-      handler.removeEventListener("click", this._boundClickHandler)
+      handler.removeEventListener("click", this._handleClick)
     );
 
     Object.values(this._fadeCopyCodeblocksRunners || {}).forEach((runner) =>
@@ -85,7 +85,7 @@ export default class CodeblockButtons {
     if (this._codeblockButtonClickHandlers[identifier]) {
       this._codeblockButtonClickHandlers[identifier].removeEventListener(
         "click",
-        this._boundClickHandler
+        this._handleClick
       );
 
       delete this._codeblockButtonClickHandlers[identifier];
@@ -95,32 +95,35 @@ export default class CodeblockButtons {
   }
 
   _getCodeBlocks(element) {
-    let codeBlocks = [];
-    try {
-      codeBlocks = element.querySelectorAll(
-        ":scope > pre > code, :scope :not(article):not(blockquote) > pre > code"
-      );
-    } catch (e) {
-      // :scope is probably not supported by this browser
-      codeBlocks = [];
-    }
-    return codeBlocks;
+    return element.querySelectorAll(
+      ":scope > pre > code, :scope :not(article):not(blockquote) > pre > code"
+    );
   }
 
   _createButtons(codeBlocks) {
     codeBlocks.forEach((codeBlock) => {
-      if (this.showFullscreen) {
-        const fullscreenButton = document.createElement("button");
-        fullscreenButton.classList.add("btn", "nohighlight", "fullscreen-cmd");
-        fullscreenButton.innerHTML = iconHTML("discourse-expand");
-        codeBlock.before(fullscreenButton);
-      }
+      const wrapperEl = document.createElement("div");
+      wrapperEl.classList.add("codeblock-button-wrapper");
+      codeBlock.before(wrapperEl);
 
       if (this.showCopy) {
         const copyButton = document.createElement("button");
         copyButton.classList.add("btn", "nohighlight", "copy-cmd");
+        copyButton.ariaLabel = I18n.t("copy_codeblock.copy");
         copyButton.innerHTML = iconHTML("copy");
-        codeBlock.before(copyButton);
+        wrapperEl.appendChild(copyButton);
+      }
+
+      if (
+        this.showFullscreen &&
+        !Mobile.isMobileDevice &&
+        codeBlock.scrollWidth > codeBlock.clientWidth
+      ) {
+        const fullscreenButton = document.createElement("button");
+        fullscreenButton.classList.add("btn", "nohighlight", "fullscreen-cmd");
+        fullscreenButton.ariaLabel = I18n.t("copy_codeblock.fullscreen");
+        fullscreenButton.innerHTML = iconHTML("discourse-expand");
+        wrapperEl.appendChild(fullscreenButton);
       }
 
       codeBlock.parentElement.classList.add("codeblock-buttons");
@@ -128,9 +131,10 @@ export default class CodeblockButtons {
   }
 
   _addClickEvent(element) {
-    element.addEventListener("click", this._boundClickHandler, false);
+    element.addEventListener("click", this._handleClick, false);
   }
 
+  @bind
   _handleClick(event) {
     if (
       !event.target.classList.contains("copy-cmd") &&
@@ -143,7 +147,7 @@ export default class CodeblockButtons {
       ? "fullscreen"
       : "copy";
     const button = event.target;
-    const codeEl = button.parentElement.querySelector("code");
+    const codeEl = button.parentElement.parentElement.querySelector("code");
 
     if (codeEl) {
       // replace any weird whitespace characters with a proper '\u20' whitespace
@@ -156,7 +160,7 @@ export default class CodeblockButtons {
 
       if (action === "copy") {
         const result = clipboardCopy(text);
-        if (result.then) {
+        if (result?.then) {
           result.then(() => {
             this._copyComplete(button);
           });

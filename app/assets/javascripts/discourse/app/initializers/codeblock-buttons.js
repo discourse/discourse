@@ -1,4 +1,5 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
+import { schedule } from "@ember/runloop";
 import CodeblockButtons from "discourse/lib/codeblock-buttons";
 
 let _codeblockButtons = [];
@@ -12,6 +13,7 @@ export default {
     withPluginApi("0.8.7", (api) => {
       function _cleanUp() {
         _codeblockButtons.forEach((cb) => cb.cleanup());
+        _codeblockButtons.length = 0;
       }
 
       function _attachCommands(postElement, helper) {
@@ -33,10 +35,19 @@ export default {
         _codeblockButtons.push(cb);
       }
 
-      api.decorateCookedElement(_attachCommands, {
-        onlyStream: true,
-        id: "codeblock-buttons",
-      });
+      api.decorateCookedElement(
+        (postElement, helper) => {
+          // must be done after render so we can check the scroll width
+          // of the code blocks
+          schedule("afterRender", () => {
+            _attachCommands(postElement, helper);
+          });
+        },
+        {
+          onlyStream: true,
+          id: "codeblock-buttons",
+        }
+      );
 
       api.cleanupStream(_cleanUp);
     });
