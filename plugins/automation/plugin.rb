@@ -222,26 +222,20 @@ after_initialize do
       validate :discourse_automation_topic_required_words
 
       def discourse_automation_topic_required_words
-        return unless SiteSetting.discourse_automation_enabled
+        return if !SiteSetting.discourse_automation_enabled
         return if self.post_type == Post.types[:small_action]
         return if !topic
+        return if topic.custom_fields[DiscourseAutomation::CUSTOM_FIELD].blank?
 
-        if topic.custom_fields[DiscourseAutomation::CUSTOM_FIELD].present?
-          topic.custom_fields[DiscourseAutomation::CUSTOM_FIELD].each do |automation_id|
-            automation = DiscourseAutomation::Automation.find_by(id: automation_id)
-            if automation&.script == DiscourseAutomation::Scriptable::TOPIC_REQUIRED_WORDS
-              words = automation.fields.find_by(name: 'words')
+        topic.custom_fields[DiscourseAutomation::CUSTOM_FIELD].each do |automation_id|
+          automation = DiscourseAutomation::Automation.find_by(id: automation_id)
+          next if automation&.script != DiscourseAutomation::Scriptable::TOPIC_REQUIRED_WORDS
 
-              next if !words
+          words = automation.fields.find_by(name: 'words')&.metadata['value']
+          next if words.blank?
 
-              words = words.metadata['value']
-
-              if words.present?
-                if words.none? { |word| raw.include?(word) }
-                  errors.add(:base, I18n.t('discourse_automation.scriptables.topic_required_words.errors.must_include_word', words: words.join(', ')))
-                end
-              end
-            end
+          if words.none? { |word| raw.include?(word) }
+            errors.add(:base, I18n.t('discourse_automation.scriptables.topic_required_words.errors.must_include_word', words: words.join(', ')))
           end
         end
       end
