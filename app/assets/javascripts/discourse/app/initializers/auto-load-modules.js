@@ -16,6 +16,7 @@ export function autoLoadModules(container, registry) {
       requirejs(entry, null, null, true);
     }
   });
+  console.log("HERE!")
 
   let context = {
     siteSettings: container.lookup("site-settings:main"),

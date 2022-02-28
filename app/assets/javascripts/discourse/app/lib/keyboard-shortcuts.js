@@ -12,6 +12,7 @@ import domUtils from "discourse-common/utils/dom-utils";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import { ajax } from "discourse/lib/ajax";
 import { headerOffset } from "discourse/lib/offset-calculator";
+import { addExtraKeyboardShortcutHelp } from "discourse/controllers/keyboard-shortcuts-help";
 
 const DEFAULT_BINDINGS = {
   "!": { postAction: "showFlags" },
@@ -218,6 +219,9 @@ export default {
     shortcut = shortcut.trim();
     let newBinding = Object.assign({ handler: callback }, opts);
     this.bindKey(shortcut, newBinding);
+    if (opts.shortcutHelp) {
+      addExtraKeyboardShortcutHelp(opts.shortcutHelp);
+    }
   },
 
   // unbinds all the shortcuts in a key binding object e.g.

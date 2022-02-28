@@ -1,17 +1,44 @@
 import Controller from "@ember/controller";
 import I18n from "I18n";
 import { translateModKey } from "discourse/lib/utilities";
+import { cloneJSON } from "discourse-common/lib/object";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
+
+let extraKeyboardShortcuts = {};
+export function addExtraKeyboardShortcutHelp(help) {
+  const category = help.category || "more"
+  if (extraKeyboardShortcuts[category]) {
+    extraKeyboardShortcuts[category] = Array.concat(extraKeyboardShortcuts[category], [help.details]);
+  } else {
+    extraKeyboardShortcuts[category] = [help.details];
+  }
+};
+
+export function clearExtraKeyboardShortcutHelp() {
+  extraKeyboardShortcuts = {};
+};
 
 const KEY = "keyboard_shortcuts_help";
 
 const SHIFT = I18n.t("shortcut_modifier_key.shift");
 const ALT = translateModKey("Alt");
+const META = translateModKey("Meta");
+// const META = "Meta";
 const CTRL = I18n.t("shortcut_modifier_key.ctrl");
 const ENTER = I18n.t("shortcut_modifier_key.enter");
 
 const COMMA = I18n.t(`${KEY}.shortcut_key_delimiter_comma`);
 const PLUS = I18n.t(`${KEY}.shortcut_key_delimiter_plus`);
+
+const translationForExtraShortcuts = {
+  shift: SHIFT,
+  alt: ALT,
+  meta: META,
+  ctrl: CTRL,
+  enter: enter,
+  comma: COMMA,
+  plus: PLUS,
+};
 
 function buildHTML(keys1, keys2, keysDelimiter, shortcutsDelimiter) {
   const allKeys = [keys1, keys2]
@@ -59,6 +86,8 @@ export default Controller.extend(ModalFunctionality, {
   },
 
   _defineShortcuts() {
+    const extras = cloneJSON(extraKeyboardShortcuts);
+    console.log(extras);
     this.set("shortcuts", {
       jump_to: {
         home: buildShortcut("jump_to.home", { keys1: ["g", "h"] }),
@@ -211,7 +240,7 @@ export default Controller.extend(ModalFunctionality, {
           keys1: ["m", "w"],
         }),
         print: buildShortcut("actions.print", {
-          keys1: [translateModKey("Meta"), "p"],
+          keys1: [META, "p"],
           keysDelimiter: PLUS,
         }),
         defer: buildShortcut("actions.defer", {
@@ -233,7 +262,7 @@ export default Controller.extend(ModalFunctionality, {
           keys1: ["a"],
         }),
         full_page_search: buildShortcut("search_menu.full_page_search", {
-          keys1: [translateModKey("Meta"), "Enter"],
+          keys1: [META, "Enter"],
           keysDelimiter: PLUS,
         }),
       },
