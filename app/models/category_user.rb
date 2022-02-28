@@ -235,7 +235,7 @@ class CategoryUser < ActiveRecord::Base
     end
   end
 
-  def self.indirectly_muted_category_ids(user)
+  def self.indirectly_muted_category_ids_query(user)
     query = Category.where.not(parent_category_id: nil)
       .joins("LEFT JOIN categories categories2 ON categories2.id = categories.parent_category_id")
       .joins("LEFT JOIN category_users ON category_users.category_id = categories.id AND category_users.user_id = #{user.id}")
@@ -254,7 +254,11 @@ class CategoryUser < ActiveRecord::Base
     else
       query = query.where("category_users2.notification_level = #{notification_levels[:muted]}")
     end
-    query.pluck("categories.id")
+    query
+  end
+
+  def self.indirectly_muted_category_ids(user)
+    indirectly_muted_category_ids_query(user).pluck("categories.id")
   end
 end
 

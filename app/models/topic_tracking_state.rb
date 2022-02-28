@@ -478,7 +478,10 @@ class TopicTrackingState
             NOT (
               #{(skip_new && skip_unread) ? "" : "last_read_post_number IS NULL AND"}
               (
-                COALESCE(category_users.notification_level, #{CategoryUser.default_notification_level}) = #{CategoryUser.notification_levels[:muted]}
+                (
+                  COALESCE(category_users.notification_level, #{CategoryUser.default_notification_level}) = #{CategoryUser.notification_levels[:muted]}
+                  OR topics.category_id IN (#{CategoryUser.indirectly_muted_category_ids_query(user).select("categories.id").to_sql})
+                )
                 AND tu.notification_level <= #{TopicUser.notification_levels[:regular]}
               )
             )
