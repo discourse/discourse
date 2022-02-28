@@ -11,7 +11,7 @@ import discourseComputed, {
 } from "discourse-common/utils/decorators";
 import { emojiSearch, isSkinTonableEmoji } from "pretty-text/emoji";
 import { emojiUrlFor, generateCookFunction } from "discourse/lib/text";
-import { later, schedule, scheduleOnce } from "@ember/runloop";
+import { schedule, scheduleOnce } from "@ember/runloop";
 import Component from "@ember/component";
 import I18n from "I18n";
 import ItsATrap from "@discourse/itsatrap";
@@ -221,6 +221,7 @@ export default Component.extend(TextareaTextManipulation, {
   _itsatrap: null,
   showLink: true,
   emojiPickerIsActive: false,
+  emojiFilter: "",
   emojiStore: service("emoji-store"),
   isEditorFocused: false,
   processPreview: true,
@@ -514,17 +515,7 @@ export default Component.extend(TextareaTextManipulation, {
         } else {
           $textarea.autocomplete({ cancel: true });
           this.set("emojiPickerIsActive", true);
-
-          schedule("afterRender", () => {
-            const filterInput = document.querySelector(
-              ".emoji-picker input[name='filter']"
-            );
-            if (filterInput) {
-              filterInput.value = v.term;
-
-              later(() => filterInput.dispatchEvent(new Event("input")), 50);
-            }
-          });
+          this.set("emojiFilter", v.term);
 
           return "";
         }
