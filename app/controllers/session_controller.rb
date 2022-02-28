@@ -247,7 +247,7 @@ class SessionController < ApplicationController
     rescue ActiveRecord::RecordInvalid => e
 
       if SiteSetting.verbose_discourse_connect_logging
-        Rails.logger.warn(<<~EOF)
+        Rails.logger.warn(<<~TEXT)
         Verbose SSO log: Record was invalid: #{e.record.class.name} #{e.record.id}
         #{e.record.errors.to_h}
 
@@ -256,7 +256,7 @@ class SessionController < ApplicationController
 
         SSO Diagnostics:
         #{sso.diagnostics}
-        EOF
+        TEXT
       end
 
       text = nil

@@ -15,10 +15,10 @@ task 'assets:precompile:before' do
 
   if EMBER_CLI && !(ENV["EMBER_CLI_COMPILE_DONE"] == "1")
     # Using exec to free up Rails app memory during ember build
-    exec <<~SCRIPT
+    exec <<~SH
       NODE_OPTIONS='--max-old-space-size=2048' yarn --cwd app/assets/javascripts/discourse run ember build -prod && \
       EMBER_CLI_COMPILE_DONE=1 bin/rake assets:precompile
-    SCRIPT
+    SH
   end
 
   # Ensure we ALWAYS do a clean build
@@ -124,9 +124,9 @@ def compress_node(from, to)
   source_map_url = "#{File.basename(to)}.map"
   base_source_map = assets_path + assets_additional_path
 
-  cmd = <<~EOS
+  cmd = <<~SH
     terser '#{assets_path}/#{from}' -m -c -o '#{to_path}' --source-map "base='#{base_source_map}',root='#{source_map_root}',url='#{source_map_url}',includeSources=true"
-  EOS
+  SH
 
   STDERR.puts cmd
   result = `#{cmd} 2>&1`

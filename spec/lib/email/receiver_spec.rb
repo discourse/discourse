@@ -808,7 +808,7 @@ describe Email::Receiver do
       post = Post.last
 
       expect(post.user.email).to eq("ba@bar.com")
-      expect(post.raw).to eq(<<~EOF.chomp
+      expect(post.raw).to eq(<<~RAW.chomp)
         @team, can you have a look at this email below?
 
         [quote]
@@ -823,8 +823,7 @@ describe Email::Receiver do
 
         XoXo
         [/quote]
-      EOF
-      )
+      RAW
     end
   end
 
@@ -976,7 +975,7 @@ describe Email::Receiver do
         let!(:post) { Fabricate(:post, topic: topic) }
 
         def process_mail_with_message_id(message_id)
-          mail_string = <<~REPLY
+          mail_string = <<~EMAIL
           Return-Path: <two@foo.com>
           From: Two <two@foo.com>
           To: one@foo.com
@@ -989,7 +988,7 @@ describe Email::Receiver do
           Content-Transfer-Encoding: 7bit
 
           This is email reply testing with Message-ID formats.
-          REPLY
+          EMAIL
           Email::Receiver.new(mail_string).process!
         end
 
@@ -1867,7 +1866,7 @@ describe Email::Receiver do
   context "#select_body" do
 
     let(:email) {
-      <<~EOF
+      <<~EMAIL
       MIME-Version: 1.0
       Date: Tue, 01 Jan 2019 00:00:00 +0300
       Subject: An email with whitespaces
@@ -1916,11 +1915,11 @@ describe Email::Receiver do
               This is going to be stripped too.
 
       Bye!
-      EOF
+      EMAIL
     }
 
     let(:stripped_text) {
-      <<~EOF
+      <<~MD
       This is a line that will be stripped
       This is another line that will be stripped
 
@@ -1962,7 +1961,7 @@ describe Email::Receiver do
       This is going to be stripped too.
 
       Bye!
-      EOF
+      MD
     }
 
     it "strips lines if strip_incoming_email_lines is enabled" do
@@ -1976,7 +1975,7 @@ describe Email::Receiver do
     it "works with empty mail body" do
       SiteSetting.strip_incoming_email_lines = true
 
-      email = <<~EOF
+      email = <<~EMAIL
         Date: Tue, 01 Jan 2019 00:00:00 +0300
         Subject: An email with whitespaces
         From: Foo <foo@discourse.org>
@@ -1986,7 +1985,7 @@ describe Email::Receiver do
         --
         my signature
 
-      EOF
+      EMAIL
 
       receiver = Email::Receiver.new(email)
       text, _elided, _format = receiver.select_body
@@ -2004,7 +2003,7 @@ describe Email::Receiver do
       message_id: digest_message_id
     )}
     let(:email) {
-      <<~EOF
+      <<~EMAIL
       MIME-Version: 1.0
       Date: Tue, 01 Jan 2019 00:00:00 +0300
       From: someone <#{user.email}>
@@ -2017,7 +2016,7 @@ describe Email::Receiver do
 
       hello there! I like the digest!
 
-      EOF
+      EMAIL
     }
 
     before do
@@ -2034,7 +2033,7 @@ describe Email::Receiver do
     let(:user) { Fabricate(:user) }
     let(:group) { Fabricate(:group, users: [user]) }
 
-    let (:email_1) { <<~EOF
+    let (:email_1) { <<~EMAIL
       MIME-Version: 1.0
       Date: Wed, 01 Jan 2019 12:00:00 +0200
       Message-ID: <7aN1uwcokt2xkfG3iYrpKmiuVhy4w9b5@mail.gmail.com>
@@ -2052,7 +2051,7 @@ describe Email::Receiver do
       Vivamus semper lacinia scelerisque. Cras urna magna, porttitor nec
       libero quis, congue viverra sapien. Nulla sodales ac tellus a
       suscipit.
-      EOF
+      EMAIL
     }
 
     let (:post_2) {
@@ -2064,7 +2063,7 @@ describe Email::Receiver do
       )
     }
 
-    let (:email_3) { <<~EOF
+    let (:email_3) { <<~EMAIL
       MIME-Version: 1.0
       Date: Wed, 01 Jan 2019 12:00:00 +0200
       References: <7aN1uwcokt2xkfG3iYrpKmiuVhy4w9b5@mail.gmail.com> <topic/#{post_2.topic_id}/#{post_2.id}@test.localhost>
@@ -2087,7 +2086,7 @@ describe Email::Receiver do
       felis. Sed pellentesque, massa auctor venenatis gravida, risus lorem
       iaculis mi, at hendrerit nisi turpis sit amet metus. Nulla egestas
       ante eget nisi luctus consectetur.
-      EOF
+      EMAIL
     }
 
     def receive(email_string)

@@ -831,14 +831,14 @@ describe UploadsController do
         FileStore::S3Store.any_instance.stubs(:temporary_upload_path).returns(
           "uploads/default/#{test_bucket_prefix}/temp/28fccf8259bbe75b873a2bd2564b778c/test.png"
         )
-        create_multipart_result = <<~BODY
+        create_multipart_result = <<~XML
         <?xml version=\"1.0\" encoding=\"UTF-8\"?>\n
         <InitiateMultipartUploadResult>
            <Bucket>s3-upload-bucket</Bucket>
            <Key>uploads/default/#{test_bucket_prefix}/temp/28fccf8259bbe75b873a2bd2564b778c/test.png</Key>
            <UploadId>#{mock_multipart_upload_id}</UploadId>
         </InitiateMultipartUploadResult>
-        BODY
+        XML
         stub_request(
           :post,
           "https://s3-upload-bucket.s3.us-west-1.amazonaws.com/uploads/default/#{test_bucket_prefix}/temp/28fccf8259bbe75b873a2bd2564b778c/test.png?uploads"
@@ -948,7 +948,7 @@ describe UploadsController do
       end
 
       def stub_list_multipart_request
-        list_multipart_result = <<~BODY
+        list_multipart_result = <<~XML
         <?xml version=\"1.0\" encoding=\"UTF-8\"?>\n
         <ListPartsResult>
            <Bucket>s3-upload-bucket</Bucket>
@@ -974,7 +974,7 @@ describe UploadsController do
            </Owner>
            <StorageClass>STANDARD</StorageClass>
         </ListPartsResult>
-        BODY
+        XML
         stub_request(:get, "https://s3-upload-bucket.s3.us-west-1.amazonaws.com/#{external_upload_stub.key}?max-parts=1&uploadId=#{mock_multipart_upload_id}").to_return({ status: 200, body: list_multipart_result })
       end
 
@@ -1092,7 +1092,7 @@ describe UploadsController do
       end
 
       def stub_list_multipart_request
-        list_multipart_result = <<~BODY
+        list_multipart_result = <<~XML
         <?xml version=\"1.0\" encoding=\"UTF-8\"?>\n
         <ListPartsResult>
            <Bucket>s3-upload-bucket</Bucket>
@@ -1118,7 +1118,7 @@ describe UploadsController do
            </Owner>
            <StorageClass>STANDARD</StorageClass>
         </ListPartsResult>
-        BODY
+        XML
         stub_request(:get, "#{upload_base_url}/#{external_upload_stub.key}?max-parts=1&uploadId=#{mock_multipart_upload_id}").to_return({ status: 200, body: list_multipart_result })
       end
 

@@ -114,28 +114,28 @@ class ImportScripts::IpboardSQL < ImportScripts::Base
     rescue Exception => e
       puts '=' * 50
       puts e.message
-      puts <<EOM
-Cannot log in to database.
+      puts <<~TEXT
+        Cannot log in to database.
 
-Hostname: #{DB_HOST}
-Username: #{DB_USER}
-Password: #{DB_PW}
-database: #{DB_NAME}
+        Hostname: #{DB_HOST}
+        Username: #{DB_USER}
+        Password: #{DB_PW}
+        database: #{DB_NAME}
 
-You should set these variables:
+        You should set these variables:
 
-export DB_HOST="localhost"
-export DB_NAME="ipboard"
-export DB_PW="ipboard"
-export DB_USER="ipboard"
-export TABLE_PREFIX="ipb_"
-export IMPORT_AFTER="1970-01-01"
-export URL="http://example.com"
-export UPLOADS=
-export USERDIR="user"
+        export DB_HOST="localhost"
+        export DB_NAME="ipboard"
+        export DB_PW="ipboard"
+        export DB_USER="ipboard"
+        export TABLE_PREFIX="ipb_"
+        export IMPORT_AFTER="1970-01-01"
+        export URL="http://example.com"
+        export UPLOADS=
+        export USERDIR="user"
 
-Exiting.
-EOM
+        Exiting.
+      TEXT
       exit
     end
   end

@@ -76,25 +76,25 @@ describe Discourse::VERSION do
     end
 
     context "with a regular compatible list" do
-      let(:version_list) { <<~VERSION_LIST
+      let(:version_list) { <<~YML
         2.5.0.beta6: twofivebetasix
         2.5.0.beta4: twofivebetafour
         2.5.0.beta2: twofivebetatwo
         2.4.4.beta6: twofourfourbetasix
         2.4.2.beta1: twofourtwobetaone
-        VERSION_LIST
+        YML
       }
       include_examples "test compatible resource"
     end
 
     context "handle a compatible resource out of order" do
-      let(:version_list) { <<~VERSION_LIST
+      let(:version_list) { <<~YML
         2.4.2.beta1: twofourtwobetaone
         2.5.0.beta4: twofivebetafour
         2.5.0.beta6: twofivebetasix
         2.5.0.beta2: twofivebetatwo
         2.4.4.beta6: twofourfourbetasix
-        VERSION_LIST
+        YML
       }
       include_examples "test compatible resource"
     end

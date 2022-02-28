@@ -3,7 +3,7 @@
 # Generates posts and topics
 class Populate < Thor
   desc "posts", "Generate posts"
-  long_desc <<-LONGDESC
+  long_desc <<-MD
     Create topics with any number of posts, or add posts to an existing topic.
 
     Examples:
@@ -20,7 +20,7 @@ class Populate < Thor
 
     > $ thor populate:posts -p 10 -n 5
 
-  LONGDESC
+  MD
   method_option :num_posts, aliases: '-n',  type: :numeric, required: true, desc: "Number of posts to make"
   method_option :users,     aliases: '-u',  type: :array, desc: "Usernames of users who will make the posts"
   method_option :title,     aliases: '-t',  desc: "The title of the topic, if making a new topic"

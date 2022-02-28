@@ -353,7 +353,7 @@ describe PrettyText do
       expect(PrettyText.cook("[quote]\ntest")).not_to include('aside')
       expect(PrettyText.cook("[quote]\ntest\n[/quote]z")).not_to include('aside')
 
-      nested = <<~QUOTE
+      nested = <<~MD
         [quote]
         a
         [quote]
@@ -361,7 +361,7 @@ describe PrettyText do
         [/quote]
         c
         [/quote]
-      QUOTE
+      MD
 
       cooked = PrettyText.cook(nested)
       expect(cooked.scan('aside').length).to eq(4)
@@ -799,9 +799,9 @@ describe PrettyText do
 
     context "emojis" do
       it "should remove broken emoji" do
-        html = <<~EOS
+        html = <<~HTML
           <img src=\"//localhost:3000/images/emoji/twitter/bike.png?v=#{Emoji::EMOJI_VERSION}\" title=\":bike:\" class=\"emoji\" alt=\":bike:\" loading=\"lazy\" width=\"20\" height=\"20\"> <img src=\"//localhost:3000/images/emoji/twitter/cat.png?v=#{Emoji::EMOJI_VERSION}\" title=\":cat:\" class=\"emoji\" alt=\":cat:\" loading=\"lazy\" width=\"20\" height=\"20\"> <img src=\"//localhost:3000/images/emoji/twitter/discourse.png?v=#{Emoji::EMOJI_VERSION}\" title=\":discourse:\" class=\"emoji\" alt=\":discourse:\" loading=\"lazy\" width=\"20\" height=\"20\">
-        EOS
+        HTML
         expect(PrettyText.excerpt(html, 7)).to eq(":bike: &hellip;")
         expect(PrettyText.excerpt(html, 8)).to eq(":bike: &hellip;")
         expect(PrettyText.excerpt(html, 9)).to eq(":bike: &hellip;")
@@ -914,7 +914,7 @@ describe PrettyText do
     end
 
     it "should not extract links inside oneboxes" do
-      onebox = <<~EOF
+      onebox = <<~HTML
         <aside class="onebox twitterstatus" data-onebox-src="https://twitter.com/EDBPostgres/status/1402528437441634306">
           <header class="source">
             <a href="https://twitter.com/EDBPostgres/status/1402528437441634306" target="_blank" rel="noopener">twitter.com</a>
@@ -924,7 +924,7 @@ describe PrettyText do
             <div class="tweet">Example URL: <a target="_blank" href="https://example.com" rel="noopener">example.com</a></div>
           </article>
         </aside>
-      EOF
+      HTML
 
       expect(PrettyText.extract_links(onebox).map(&:url)).to contain_exactly("https://twitter.com/EDBPostgres/status/1402528437441634306")
     end
@@ -938,12 +938,13 @@ describe PrettyText do
     end
 
     it "handles custom bbcode excerpt" do
-      raw = <<~RAW
+      raw = <<~MD
       [excerpt]
       hello [site](https://site.com)
       [/excerpt]
       more stuff
-      RAW
+      MD
+
       post = Fabricate(:post, raw: raw)
       expect(post.excerpt).to eq("hello <a href=\"https://site.com\" rel=\"noopener nofollow ugc\">site</a>")
     end
@@ -1929,17 +1930,17 @@ HTML
 
   it "can properly allowlist iframes" do
     SiteSetting.allowed_iframes = "https://bob.com/a|http://silly.com?EMBED="
-    raw = <<~IFRAMES
+    raw = <<~HTML
       <iframe src='https://www.google.com/maps/Embed?testing'></iframe>
       <iframe src='https://bob.com/a?testing'></iframe>
       <iframe src='HTTP://SILLY.COM?EMBED=111'></iframe>
-    IFRAMES
+    HTML
 
     # we require explicit HTTPS here
-    html = <<~IFRAMES
+    html = <<~HTML
       <iframe src="https://bob.com/a?testing"></iframe>
       <iframe src="HTTP://SILLY.COM?EMBED=111"></iframe>
-    IFRAMES
+    HTML
 
     cooked = PrettyText.cook(raw).strip
 

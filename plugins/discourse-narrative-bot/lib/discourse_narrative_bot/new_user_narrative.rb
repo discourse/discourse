@@ -175,11 +175,11 @@ module DiscourseNarrativeBot
 
       MessageBus.publish('/new_user_narrative/tutorial_search', {}, user_ids: [@user.id])
 
-      raw = <<~RAW
+      raw = <<~MD
       #{post.raw}
 
       #{I18n.t("#{I18N_KEY}.search.hidden_message", i18n_post_args.merge(search_answer: NewUserNarrative.search_answer))}
-      RAW
+      MD
 
       PostRevisor.new(post, topic).revise!(
         self.discobot_user,
@@ -206,11 +206,11 @@ module DiscourseNarrativeBot
         )
       )
 
-      raw = <<~RAW
+      raw = <<~MD
       #{raw}
 
       #{instance_eval(&@next_instructions)}
-      RAW
+      MD
 
       title = I18n.t("#{I18N_KEY}.hello.title", title: SiteSetting.title)
       if SiteSetting.max_emojis_in_title == 0
@@ -259,11 +259,11 @@ module DiscourseNarrativeBot
 
       profile_page_url = url_helpers(:user_url, username: @user.username)
       bookmark_url = "#{profile_page_url}/activity/bookmarks"
-      raw = <<~RAW
+      raw = <<~MD
         #{I18n.t("#{I18N_KEY}.bookmark.reply", i18n_post_args(bookmark_url: bookmark_url))}
 
         #{instance_eval(&@next_instructions)}
-      RAW
+      MD
 
       fake_delay
 
@@ -279,11 +279,11 @@ module DiscourseNarrativeBot
       @post.post_analyzer.cook(@post.raw, {})
 
       if @post.post_analyzer.found_oneboxes?
-        raw = <<~RAW
+        raw = <<~MD
           #{I18n.t("#{I18N_KEY}.onebox.reply", i18n_post_args)}
 
           #{instance_eval(&@next_instructions)}
-        RAW
+        MD
 
         fake_delay
 
@@ -315,11 +315,11 @@ module DiscourseNarrativeBot
           fake_delay
           like_post(post)
 
-          raw = <<~RAW
+          raw = <<~MD
             #{I18n.t("#{I18N_KEY}.images.reply", i18n_post_args)}
 
             #{instance_eval(&@next_instructions)}
-          RAW
+          MD
 
           reply = reply_to(@post, raw)
           enqueue_timeout_job(@user)
@@ -350,11 +350,11 @@ module DiscourseNarrativeBot
         set_state_data(:post_id, @post.id)
 
         if get_state_data(:liked)
-          raw = <<~RAW
+          raw = <<~MD
             #{I18n.t("#{I18N_KEY}.images.reply", i18n_post_args)}
 
             #{instance_eval(&@next_instructions)}
-          RAW
+          MD
 
           like_post(@post)
         else
@@ -405,11 +405,11 @@ module DiscourseNarrativeBot
       )
 
       if post_liked
-        raw = <<~RAW
+        raw = <<~MD
           #{I18n.t("#{I18N_KEY}.likes.reply", i18n_post_args)}
 
           #{instance_eval(&@next_instructions)}
-        RAW
+        MD
 
         fake_delay
 
@@ -426,11 +426,11 @@ module DiscourseNarrativeBot
       return unless valid_topic?(post_topic_id)
 
       if Nokogiri::HTML5.fragment(@post.cooked).css("b", "strong", "em", "i", ".bbcode-i", ".bbcode-b").size > 0
-        raw = <<~RAW
+        raw = <<~MD
           #{I18n.t("#{I18N_KEY}.formatting.reply", i18n_post_args)}
 
           #{instance_eval(&@next_instructions)}
-        RAW
+        MD
 
         fake_delay
 
@@ -452,11 +452,11 @@ module DiscourseNarrativeBot
       doc = Nokogiri::HTML5.fragment(@post.cooked)
 
       if doc.css(".quote").size > 0
-        raw = <<~RAW
+        raw = <<~MD
           #{I18n.t("#{I18N_KEY}.quoting.reply", i18n_post_args)}
 
           #{instance_eval(&@next_instructions)}
-        RAW
+        MD
 
         fake_delay
 
@@ -478,11 +478,11 @@ module DiscourseNarrativeBot
       doc = Nokogiri::HTML5.fragment(@post.cooked)
 
       if doc.css(".emoji").size > 0
-        raw = <<~RAW
+        raw = <<~MD
           #{I18n.t("#{I18N_KEY}.emoji.reply", i18n_post_args)}
 
           #{instance_eval(&@next_instructions)}
-        RAW
+        MD
 
         fake_delay
 
@@ -502,11 +502,11 @@ module DiscourseNarrativeBot
       return unless valid_topic?(post_topic_id)
 
       if bot_mentioned?(@post)
-        raw = <<~RAW
+        raw = <<~MD
           #{I18n.t("#{I18N_KEY}.mention.reply", i18n_post_args)}
 
           #{instance_eval(&@next_instructions)}
-        RAW
+        MD
 
         fake_delay
 
@@ -552,11 +552,11 @@ module DiscourseNarrativeBot
       return unless valid_topic?(post_topic_id)
       return unless @post.user.id == -2
 
-      raw = <<~RAW
+      raw = <<~MD
         #{I18n.t("#{I18N_KEY}.flag.reply", i18n_post_args)}
 
         #{instance_eval(&@next_instructions)}
-      RAW
+      MD
 
       fake_delay
 

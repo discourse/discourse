@@ -11,10 +11,10 @@ class FixIncorrectUserHistory < ActiveRecord::Migration[4.2]
 
     # this is a :auto_trust_level_change mislabeled as :check_email
     # impersonate that was actually delete topic
-    condition = <<CLAUSE
-(action = 16 AND previous_value in ('0','1','2','3','4')) OR
-(action = 19 AND target_user_id IS NULL AND details IS NOT NULL)
-CLAUSE
+    condition = <<~SQL
+      (action = 16 AND previous_value in ('0','1','2','3','4')) OR
+      (action = 19 AND target_user_id IS NULL AND details IS NOT NULL)
+    SQL
 
     first_wrong_id = execute("SELECT min(id) FROM user_histories WHERE #{condition}").values[0][0].to_i
     last_wrong_id = execute("SELECT max(id) FROM user_histories WHERE #{condition}").values[0][0].to_i

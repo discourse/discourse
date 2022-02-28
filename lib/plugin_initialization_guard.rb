@@ -24,7 +24,7 @@ def plugin_initialization_guard(&block)
         end
       end.reverse.join("\n")
 
-      STDERR.puts <<~MESSAGE
+      STDERR.puts <<~TEXT
         #{stack_trace}
 
         ** INCOMPATIBLE PLUGIN **
@@ -33,9 +33,9 @@ def plugin_initialization_guard(&block)
         #{plugin_path}
 
         Please try removing this plugin and rebuilding again!
-      MESSAGE
+      TEXT
     else
-      STDERR.puts <<~MESSAGE
+      STDERR.puts <<~TEXT
         ** PLUGIN FAILURE **
 
         You are unable to build Discourse due to this error during plugin
@@ -44,7 +44,7 @@ def plugin_initialization_guard(&block)
         #{error}
 
         #{error.backtrace.join("\n")}
-      MESSAGE
+      TEXT
     end
     exit 1
   end

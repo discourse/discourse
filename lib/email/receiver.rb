@@ -1011,13 +1011,13 @@ module Email
 
     def forwarded_email_quote_forwarded(destination, user)
       embedded = embedded_email_raw
-      raw = <<~EOF
+      raw = <<~MD
         #{@before_embedded}
 
         [quote]
         #{PlainTextToMarkdown.new(embedded).to_markdown}
         [/quote]
-      EOF
+      MD
 
       return true if forwarded_email_create_topic(destination: destination, user: user, raw: raw, title: subject)
     end

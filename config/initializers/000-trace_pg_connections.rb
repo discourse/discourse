@@ -39,7 +39,7 @@ if ENV["TRACE_PG_CONNECTIONS"]
     def log_access(&blk)
       @access_log_mutex.synchronize do
         if !@accessor_thread.nil?
-          Rails.logger.error <<~STRING
+          Rails.logger.error <<~TEXT
             PG Clash: A connection is being accessed from two locations
 
             #{@accessor_thread} was using the connection. Backtrace:
@@ -49,7 +49,7 @@ if ENV["TRACE_PG_CONNECTIONS"]
             #{Thread.current} is now attempting to use the connection. Backtrace:
 
             #{Thread.current&.backtrace&.join("\n")}
-          STRING
+          TEXT
 
           if ENV["ON_PG_CLASH"] == "byebug"
             require "byebug"

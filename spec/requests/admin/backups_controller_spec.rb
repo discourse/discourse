@@ -454,14 +454,14 @@ RSpec.describe Admin::BackupsController do
         BackupRestore::S3BackupStore.any_instance.stubs(:temporary_upload_path).returns(
           "temp/default/#{test_bucket_prefix}/28fccf8259bbe75b873a2bd2564b778c/2u98j832nx93272x947823.gz"
         )
-        create_multipart_result = <<~BODY
+        create_multipart_result = <<~XML
         <?xml version=\"1.0\" encoding=\"UTF-8\"?>\n
         <InitiateMultipartUploadResult>
            <Bucket>s3-backup-bucket</Bucket>
            <Key>temp/default/#{test_bucket_prefix}/28fccf8259bbe75b873a2bd2564b778c/2u98j832nx93272x947823.gz</Key>
            <UploadId>#{mock_multipart_upload_id}</UploadId>
         </InitiateMultipartUploadResult>
-        BODY
+        XML
         stub_request(:post, "https://s3-backup-bucket.s3.us-west-1.amazonaws.com/temp/default/#{test_bucket_prefix}/28fccf8259bbe75b873a2bd2564b778c/2u98j832nx93272x947823.gz?uploads").
           to_return(status: 200, body: create_multipart_result)
       end
