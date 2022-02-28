@@ -2,7 +2,7 @@ import RestModel from "discourse/models/rest";
 
 const ATTRIBUTES = ["name", "script", "fields", "trigger", "id"];
 
-const Automation = RestModel.extend({
+export default class Automation extends RestModel {
   updateProperties() {
     return {
       id: this.id,
@@ -15,11 +15,9 @@ const Automation = RestModel.extend({
         metadata: this.trigger.metadata,
       },
     };
-  },
+  }
 
   createProperties() {
     return this.getProperties(ATTRIBUTES);
-  },
-});
-
-export default Automation;
+  }
+}

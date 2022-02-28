@@ -1,3 +1,4 @@
+import Controller from "@ember/controller";
 import { action, set } from "@ember/object";
 import { extractError } from "discourse/lib/ajax-error";
 import { schedule } from "@ember/runloop";
@@ -7,24 +8,21 @@ import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
 import bootbox from "bootbox";
 
-export default Ember.Controller.extend({
-  error: null,
+export default class AutomationEdit extends Controller {
+  error = null;
+  isUpdatingAutomation = false;
+  isTriggeringAutomation = false;
 
-  automation: reads("model.automation"),
-
-  isUpdatingAutomation: false,
-  isTriggeringAutomation: false,
-
-  scriptFields: filterBy("automationForm.fields", "target", "script"),
-
-  triggerFields: filterBy("automationForm.fields", "target", "trigger"),
+  @reads("model.automation") automation;
+  @filterBy("automationForm.fields", "target", "script") scriptFields;
+  @filterBy("automationForm.fields", "target", "trigger") triggerFields;
 
   @discourseComputed("model.automation.next_pending_automation_at")
   nextPendingAutomationAtFormatted(date) {
     if (date) {
       return moment(date).format("LLLL");
     }
-  },
+  }
 
   @action
   saveAutomation() {
@@ -46,12 +44,12 @@ export default Ember.Controller.extend({
       .finally(() => {
         this.set("isUpdatingAutomation", false);
       });
-  },
+  }
 
   @action
   onChangeField(field, identifier, value) {
     set(field, `metadata.${identifier}`, value);
-  },
+  }
 
   @action
   onChangeTrigger(id) {
@@ -64,7 +62,7 @@ export default Ember.Controller.extend({
       set(this.automationForm, "trigger", id);
       this.saveAutomation();
     }
-  },
+  }
 
   @action
   onManualAutomationTrigger(id) {
@@ -79,7 +77,7 @@ export default Ember.Controller.extend({
           this.set("isTriggeringAutomation", false);
         });
     });
-  },
+  }
 
   @action
   onChangeScript(id) {
@@ -89,7 +87,7 @@ export default Ember.Controller.extend({
         this.saveAutomation();
       });
     }
-  },
+  }
 
   _confirmReset(callback) {
     bootbox.confirm(
@@ -102,7 +100,7 @@ export default Ember.Controller.extend({
         }
       }
     );
-  },
+  }
 
   _confirmTrigger(callback) {
     bootbox.confirm(
@@ -115,7 +113,7 @@ export default Ember.Controller.extend({
         }
       }
     );
-  },
+  }
 
   _showError(error) {
     this.set("error", extractError(error));
@@ -123,5 +121,5 @@ export default Ember.Controller.extend({
     schedule("afterRender", () => {
       window.scrollTo(0, 0);
     });
-  },
-});
+  }
+}

@@ -1,3 +1,3 @@
 import BaseField from "./da-base-field";
 
-export default BaseField.extend({});
+export default class BooleanField extends BaseField {}

@@ -1,12 +1,13 @@
 import DiscourseRoute from "discourse/routes/discourse";
+import { hash } from "rsvp";
 
-export default DiscourseRoute.extend({
-  controllerName: "admin-plugins-discourse-automation-new",
+export default class AutomationNew extends DiscourseRoute {
+  controllerName = "admin-plugins-discourse-automation-new";
 
   model() {
-    return Ember.RSVP.hash({
+    return hash({
       scriptables: this.store.findAll("discourse-automation-scriptable"),
       automation: this.store.createRecord("discourse-automation-automation"),
     });
-  },
-});
+  }
+}

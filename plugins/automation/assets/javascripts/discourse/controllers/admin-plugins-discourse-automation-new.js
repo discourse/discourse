@@ -1,15 +1,15 @@
+import Controller from "@ember/controller";
 import { extractError } from "discourse/lib/ajax-error";
 import EmberObject, { action } from "@ember/object";
 
-export default Ember.Controller.extend({
-  form: null,
-  error: null,
+export default class AutomationNew extends Controller {
+  form = null;
+  error = null;
 
   init() {
-    this._super(...arguments);
-
+    super.init(...arguments);
     this._resetForm();
-  },
+  }
 
   @action
   saveAutomation(automation) {
@@ -27,9 +27,9 @@ export default Ember.Controller.extend({
       .catch((e) => {
         this.set("error", extractError(e));
       });
-  },
+  }
 
   _resetForm() {
     this.set("form", EmberObject.create({ name: null, script: null }));
-  },
-});
+  }
+}

@@ -4,8 +4,8 @@ import EmberObject, { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { hash } from "rsvp";
 
-export default DiscourseRoute.extend({
-  controllerName: "admin-plugins-discourse-automation-edit",
+export default class AutomationEdit extends DiscourseRoute {
+  controllerName = "admin-plugins-discourse-automation-edit";
 
   model(params) {
     return hash({
@@ -17,7 +17,7 @@ export default DiscourseRoute.extend({
       ).then((result) => (result ? result.triggerables : [])),
       automation: this.store.find("discourse-automation-automation", params.id),
     });
-  },
+  }
 
   _fieldsForTarget(automation, target) {
     return (automation[target].templates || []).map((template) => {
@@ -39,7 +39,7 @@ export default DiscourseRoute.extend({
         extra: template.extra,
       });
     });
-  },
+  }
 
   setupController(controller, model) {
     const automation = model.automation;
@@ -56,10 +56,10 @@ export default DiscourseRoute.extend({
         ),
       },
     });
-  },
+  }
 
   @action
   refreshRoute() {
     return this.refresh();
-  },
-});
+  }
+}

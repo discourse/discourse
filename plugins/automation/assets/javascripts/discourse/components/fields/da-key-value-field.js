@@ -2,7 +2,7 @@ import showModal from "discourse/lib/show-modal";
 import BaseField from "./da-base-field";
 import { action } from "@ember/object";
 
-export default BaseField.extend({
+export default class KeyValueField extends BaseField {
   @action
   openSchemaModal() {
     const jsonSchemaEditorModal = showModal("json-schema-editor", {
@@ -37,5 +37,5 @@ export default BaseField.extend({
         this.saveAutomation();
       }
     });
-  },
-});
+  }
+}

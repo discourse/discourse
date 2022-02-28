@@ -3,14 +3,14 @@ import I18n from "I18n";
 import { action } from "@ember/object";
 import bootbox from "bootbox";
 
-export default BaseField.extend({
+export default class PmsField extends BaseField {
   didReceiveAttrs() {
-    this._super(...arguments);
+    super.didReceiveAttrs(...arguments);
 
     if (!this.field.metadata.value) {
       this.set("field.metadata.value", []);
     }
-  },
+  }
 
   @action
   removePM(pm) {
@@ -24,7 +24,7 @@ export default BaseField.extend({
         }
       }
     );
-  },
+  }
 
   @action
   insertPM() {
@@ -34,5 +34,5 @@ export default BaseField.extend({
       delay: 0,
       encrypt: true,
     });
-  },
-});
+  }
+}

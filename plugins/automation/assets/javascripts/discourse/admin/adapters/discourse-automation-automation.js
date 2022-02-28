@@ -1,9 +1,9 @@
 import DiscourseAutomationAdapter from "./discourse-automation-adapter";
 
-export default DiscourseAutomationAdapter.extend({
+export default class AutomationAdapter extends DiscourseAutomationAdapter {
+  jsonMode = true;
+
   apiNameFor() {
     return "automation";
-  },
-
-  jsonMode: true,
-});
+  }
+}
