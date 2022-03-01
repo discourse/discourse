@@ -71,9 +71,8 @@ export default Controller.extend(ModalFunctionality, {
 
   _defineShortcuts() {
     let shortcuts = {
-      jump_to: { class: "span-2", shortcuts: this._buildJumpToSection() },
+      jump_to: { shortcuts: this._buildJumpToSection() },
       application: {
-        class: "span-2",
         shortcuts: {
           hamburger_menu: buildShortcut("application.hamburger_menu", {
             keys1: ["="],
@@ -107,7 +106,6 @@ export default Controller.extend(ModalFunctionality, {
         },
       },
       actions: {
-        class: "span-4",
         shortcuts: {
           bookmark_topic: buildShortcut("actions.bookmark_topic", {
             keys1: ["f"],
@@ -162,7 +160,6 @@ export default Controller.extend(ModalFunctionality, {
         },
       },
       navigation: {
-        class: "span-2",
         shortcuts: {
           back: buildShortcut("navigation.back", { keys1: ["u"] }),
           jump: buildShortcut("navigation.jump", { keys1: ["#"] }),
@@ -188,7 +185,6 @@ export default Controller.extend(ModalFunctionality, {
         },
       },
       composing: {
-        class: "span-1",
         shortcuts: {
           return: buildShortcut("composing.return", {
             keys1: [SHIFT, "c"],
@@ -201,7 +197,6 @@ export default Controller.extend(ModalFunctionality, {
         },
       },
       bookmarks: {
-        class: "span-2",
         shortcuts: {
           enter: buildShortcut("bookmarks.enter", { keys1: [ENTER] }),
           later_today: buildShortcut("bookmarks.later_today", {
@@ -239,7 +234,6 @@ export default Controller.extend(ModalFunctionality, {
         },
       },
       search_menu: {
-        class: "span-1",
         shortcuts: {
           prev_next: buildShortcut("search_menu.prev_next", {
             keys1: ["&uarr;"],
