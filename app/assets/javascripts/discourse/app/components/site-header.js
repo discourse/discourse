@@ -196,7 +196,10 @@ const SiteHeaderComponent = MountWidget.extend(
         document.documentElement.style.setProperty("--header-offset", newValue);
       }
 
-      if (window.pageYOffset >= this.docAt) {
+      const main = document.querySelector("#main");
+      const offsetTop = main ? main.offsetTop : 0;
+      const offset = window.pageYOffset - offsetTop;
+      if (offset >= this.docAt) {
         if (!this.dockedHeader) {
           document.body.classList.add("docked");
           this.dockedHeader = true;
