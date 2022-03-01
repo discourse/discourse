@@ -19,9 +19,9 @@ function addExtraKeyboardShortcutHelp(help) {
   if (extraKeyboardShortcutsHelp[category]) {
     extraKeyboardShortcutsHelp[category] = extraKeyboardShortcutsHelp[
       category
-    ].concat([help.details]);
+    ].concat([help]);
   } else {
-    extraKeyboardShortcutsHelp[category] = [help.details];
+    extraKeyboardShortcutsHelp[category] = [help];
   }
 }
 
