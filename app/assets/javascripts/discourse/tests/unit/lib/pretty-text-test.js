@@ -1273,7 +1273,7 @@ eviltrout</p>
 
     formatQuote(
       "lorem",
-      '[quote="eviltrout, post:1, topic:2"]\nlorem\n[/quote]\n\n',
+      '[quote="eviltrout, post:1, topic:2, username:eviltrout"]\nlorem\n[/quote]\n\n',
       "correctly formats quotes"
     );
 
@@ -1332,7 +1332,7 @@ eviltrout</p>
 
     assert.strictEqual(
       quote,
-      '[quote="eviltrout, post:1, topic:2"]\n[quote="sam, post:1, topic:1, full:true"]\nhello\n[/quote]\n[/quote]\n\n',
+      '[quote="eviltrout, post:1, topic:2, username:eviltrout"]\n[quote="sam, post:1, topic:1, full:true"]\nhello\n[/quote]\n[/quote]\n\n',
       "allows quoting a quote"
     );
   });
