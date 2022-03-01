@@ -464,7 +464,6 @@ class TopicTrackingState
       JOIN user_options AS uo ON uo.user_id = u.id
       JOIN categories c ON c.id = topics.category_id
       LEFT JOIN topic_users tu ON tu.topic_id = topics.id AND tu.user_id = u.id
-      LEFT JOIN category_users ON category_users.category_id = topics.category_id AND category_users.user_id = :user_id
       #{skip_new ? "" : "LEFT JOIN dismissed_topic_users ON dismissed_topic_users.topic_id = topics.id AND dismissed_topic_users.user_id = :user_id"}
       #{additional_join_sql}
       WHERE u.id = :user_id AND
@@ -478,10 +477,7 @@ class TopicTrackingState
             NOT (
               #{(skip_new && skip_unread) ? "" : "last_read_post_number IS NULL AND"}
               (
-                (
-                  COALESCE(category_users.notification_level, #{CategoryUser.default_notification_level}) = #{CategoryUser.notification_levels[:muted]}
-                  OR topics.category_id IN (#{CategoryUser.indirectly_muted_category_ids_query(user).select("categories.id").to_sql})
-                )
+                topics.category_id IN (#{CategoryUser.muted_category_ids_query(user, include_direct: true).select("categories.id").to_sql})
                 AND tu.notification_level <= #{TopicUser.notification_levels[:regular]}
               )
             )

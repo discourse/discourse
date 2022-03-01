@@ -15,7 +15,14 @@ export default Component.extend(FilterModeMixin, {
   // the `categories` property into this component
   @discourseComputed("site.categoriesList")
   categories(categoriesList) {
-    return categoriesList;
+    if (this.currentUser?.indirectly_muted_category_ids) {
+      return categoriesList.filter(
+        (category) =>
+          !this.currentUser.indirectly_muted_category_ids.includes(category.id)
+      );
+    } else {
+      return categoriesList;
+    }
   },
 
   @discourseComputed("category")
