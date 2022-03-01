@@ -22,6 +22,8 @@ const rawOpts = {
     default_code_lang: "auto",
     enable_markdown_linkify: true,
     markdown_linkify_tlds: "com",
+    display_name_on_posts: false,
+    prioritize_username_in_ux: true,
   },
   getURL: (url) => url,
 };
@@ -1332,7 +1334,7 @@ eviltrout</p>
 
     assert.strictEqual(
       quote,
-      '[quote="eviltrout, post:1, topic:2, username:eviltrout"]\n[quote="sam, post:1, topic:1, full:true"]\nhello\n[/quote]\n[/quote]\n\n',
+      '[quote="eviltrout, post:1, topic:2"]\n[quote="sam, post:1, topic:1, full:true"]\nhello\n[/quote]\n[/quote]\n\n',
       "allows quoting a quote"
     );
   });
