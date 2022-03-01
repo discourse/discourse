@@ -20,12 +20,6 @@ const rule = {
       let split = quoteInfo.split(/\,\s*/);
       username = split[0];
 
-      // if we have the additional attribute of username: because we are prioritizing full name
-      // then assign the name to be the displayName
-      if (split[3]) {
-        displayName = split[0];
-      }
-
       let i;
       for (i = 1; i < split.length; i++) {
         if (split[i].indexOf("post:") === 0) {
@@ -43,7 +37,10 @@ const rule = {
           continue;
         }
 
+        // if we have the additional attribute of username: because we are prioritizing full name
+        // then assign the name to be the displayName
         if (split[i].indexOf("username:") === 0) {
+          displayName = split[0];
           username = split[i].substr(9);
           continue;
         }
