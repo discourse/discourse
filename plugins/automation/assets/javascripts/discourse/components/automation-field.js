@@ -1,4 +1,3 @@
-import discourseComputed from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import { computed } from "@ember/object";
 import I18n from "I18n";
@@ -10,8 +9,10 @@ export default class AutomationField extends Component {
   saveAutomation = null;
   tagName = "";
 
-  @discourseComputed("automation.trigger.id", "field.triggerable")
-  displayField(triggerId, triggerable) {
+  @computed("automation.trigger.id", "field.triggerable")
+  get displayField() {
+    const triggerId = this.automation?.trigger?.id;
+    const triggerable = this.field?.triggerable;
     return triggerId && (!triggerable || triggerable === triggerId);
   }
 

@@ -1,12 +1,12 @@
-import discourseComputed from "discourse-common/utils/decorators";
 import Category from "discourse/models/category";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import BaseField from "./da-base-field";
 
 export default class CategoriesField extends BaseField {
-  @discourseComputed("field.metadata.value")
-  categories(ids) {
-    return (ids || []).map((id) => Category.findById(id)).filter(Boolean);
+  @computed("field.metadata.value")
+  get categories() {
+    const ids = this.field?.metadata?.value || [];
+    return ids.map((id) => Category.findById(id)).filter(Boolean);
   }
 
   @action

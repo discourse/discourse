@@ -1,11 +1,10 @@
 import Controller from "@ember/controller";
-import { action, set } from "@ember/object";
+import { action, computed, set } from "@ember/object";
 import { extractError } from "discourse/lib/ajax-error";
 import { schedule } from "@ember/runloop";
 import { filterBy, reads } from "@ember/object/computed";
 import { ajax } from "discourse/lib/ajax";
 import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
 import bootbox from "bootbox";
 
 export default class AutomationEdit extends Controller {
@@ -17,8 +16,9 @@ export default class AutomationEdit extends Controller {
   @filterBy("automationForm.fields", "target", "script") scriptFields;
   @filterBy("automationForm.fields", "target", "trigger") triggerFields;
 
-  @discourseComputed("model.automation.next_pending_automation_at")
-  nextPendingAutomationAtFormatted(date) {
+  @computed("model.automation.next_pending_automation_at")
+  get nextPendingAutomationAtFormatted() {
+    const date = this.model?.automation?.next_pending_automation_at;
     if (date) {
       return moment(date).format("LLLL");
     }

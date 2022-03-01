@@ -1,5 +1,5 @@
 import Component from "@ember/component";
-import discourseComputed from "discourse-common/utils/decorators";
+import { computed } from "@ember/object";
 
 export default class BaseField extends Component {
   tagName = "";
@@ -7,8 +7,8 @@ export default class BaseField extends Component {
   field = null;
   saveAutomation = null;
 
-  @discourseComputed("placeholders.length", "field.acceptsPlaceholders")
-  displayPlaceholders(hasPlaceholders, acceptsPlaceholders) {
-    return hasPlaceholders && acceptsPlaceholders;
+  @computed("placeholders.length", "field.acceptsPlaceholders")
+  get displayPlaceholders() {
+    return this.placeholders?.length && this.field?.acceptsPlaceholders;
   }
 }
