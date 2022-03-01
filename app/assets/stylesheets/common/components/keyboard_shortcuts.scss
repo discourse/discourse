@@ -43,7 +43,7 @@
     outline: none;
   }
 
-  @for $i from 1 through 50 {
+  @for $i from 1 through 25 {
     .span-#{$i} {
       grid-row-end: span $i;
     }
