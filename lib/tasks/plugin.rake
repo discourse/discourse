@@ -182,7 +182,7 @@ task 'plugin:spec', :plugin do |t, args|
   args.with_defaults(plugin: "*")
   params = ENV['RSPEC_FAILFAST'] ? '--profile --fail-fast' : '--profile'
   ruby = `which ruby`.strip
-  files = Dir.glob("./plugins/#{args[:plugin]}/spec/**/*_spec.rb")
+  files = Dir.glob("./plugins/#{args[:plugin]}/spec/**/*_spec.rb").sort
   if files.length > 0
     sh "LOAD_PLUGINS=1 #{ruby} -S rspec #{files.join(' ')} #{params}"
   else
