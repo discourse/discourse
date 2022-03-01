@@ -20,6 +20,12 @@ const rule = {
       let split = quoteInfo.split(/\,\s*/);
       username = split[0];
 
+      // if we have the additional attribute of username: because we are prioritizing full name
+      // then assign the name to be the displayName
+      if (split[3]) {
+        displayName = split[0];
+      }
+
       let i;
       for (i = 1; i < split.length; i++) {
         if (split[i].indexOf("post:") === 0) {
@@ -34,6 +40,11 @@ const rule = {
 
         if (/full:\s*true/.test(split[i])) {
           full = true;
+          continue;
+        }
+
+        if (split[i].indexOf("username:") === 0) {
+          username = split[i].substr(9);
           continue;
         }
       }
@@ -59,9 +70,9 @@ const rule = {
     }
 
     if (options.formatUsername) {
-      displayName = options.formatUsername(username);
+      displayName ||= options.formatUsername(username);
     } else {
-      displayName = username;
+      displayName ||= username;
     }
 
     let token = state.push("bbcode_open", "aside", 1);

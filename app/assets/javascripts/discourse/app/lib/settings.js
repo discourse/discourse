@@ -8,6 +8,18 @@ export function prioritizeNameInUx(name) {
   );
 }
 
+export function prioritizeNameFallback(name, username) {
+  let siteSettings = helperContext().siteSettings;
+  if (
+    siteSettings.display_name_on_posts &&
+    !siteSettings.prioritize_username_in_ux
+  ) {
+    return name ? name : username;
+  } else {
+    return username;
+  }
+}
+
 export function emojiBasePath() {
   let siteSettings = helperContext().siteSettings;
 
