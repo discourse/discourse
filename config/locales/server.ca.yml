@@ -1406,7 +1406,6 @@ ca:
     external_system_avatars_enabled: "Fes servir un servei extern de sistema d'avatars."
     external_system_avatars_url: "URL del sistema extern de servei d'avatars. Les substitucions permeses són {username} {first_letter} {color} {size}"
     restrict_letter_avatar_colors: "Llista de valors de color hexadecimal de 6 dígits que s'utilitzaran per al fons de l'avatar de lletres."
-    selectable_avatars_enabled: "Obliga els usuaris a triar un avatar de la llista."
     selectable_avatars: "Llista dels avatars que els usuaris poden triar."
     allow_all_attachments_for_group_messages: "Permet tots els adjunts de correu per a missatges de grup."
     png_to_jpg_quality: "La qualitat del fitxer JPG convertit (1 és la qualitat més baixa, 99 és la qualitat més alta, 100 per a desactivar)."

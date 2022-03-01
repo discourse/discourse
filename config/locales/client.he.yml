@@ -364,6 +364,8 @@ he:
         existing_reminder: "הגדרת תזכורת עבור הסימנייה הזאת שתישלח ב־%{at_date_time}"
     copy_codeblock:
       copied: "הועתק!"
+      copy: "העתקת קוד ללוח הגזירים"
+      fullscreen: "הצגת קוד במסך מלא"
     drafts:
       label: "טיוטות"
       label_with_count: "טיוטות (%{count})"
@@ -1305,7 +1307,7 @@ he:
         title: "אימות דו־שלבי"
         enable: "ניהול אימות דו־שלבי"
         disable_all: "להשבית הכול"
-        forgot_password: "שכחת את הססמה?"
+        forgot_password: "שכחת את הסיסמה?"
         confirm_password_description: "אנא אשר את סיסמתך בכדי להמשיך"
         name: "שם"
         label: "קוד"
@@ -1317,7 +1319,7 @@ he:
         short_description: |
           הגנה על החשבון שלך עם קודים חד־פעמיים לאבטחה.
         extended_description: |
-          אימות דו־שלבי מחזק את אבטחת המשתמש שלך באסימון אבטחה חד־פעמי בנוסף לססמה שלך. ניתן ליצור אסימונים על מכשירי <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> ו־<a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>.
+          אימות דו־שלבי מחזק את אבטחת המשתמש שלך באסימון אבטחה חד־פעמי בנוסף לסיסמה שלך. ניתן ליצור אסימונים על מכשירי <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> ו־<a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>.
         oauth_enabled_warning: "לידיעתך, כניסות מרשתות חברתיות יושבתו לאחר הפעלת אימות דו־שלבי בחשבונך."
         use: "להשתמש ביישומון אימות"
         enforced_notice: "עליך להפעיל אימות דו־שלבי בטרם הגישה לאתר הזה."
@@ -1375,6 +1377,7 @@ he:
         upload_title: "העלאת התמונה שלך"
         image_is_not_a_square: "אזהרה: קיצצנו את התמונה שלך; האורך והרוחב לא היו שווים."
         logo_small: "הלוגו הקטן של האתר. משמש כבררת מחדל."
+        use_custom: "או להעלות תמונה ייצוגית משלך:"
       change_profile_background:
         title: "כותרת פרופיל"
         instructions: "כותרות הפרופילים ימורכזו ורוחבן ייקבע ל־1110 פיקסלים כבררת מחדל."
@@ -1400,7 +1403,7 @@ he:
         auth_override_instructions: "ניתן לעדכן את כתובת הדוא״ל דרך ספק האימות."
         no_secondary: "אין כתובות דוא״ל משניות"
         instructions: "לעולם לא מוצג לציבור."
-        admin_note: "הערה: משתמש ניהולי שמשנה כתובת דוא״ל למשתמש שאינו ניהולי מציינת שהגישה של המשתמש לכתובת הדוא״ל המקורית אבדה, לכן תישלח הודעת איפוס ססמה לכתובת החדשה בדוא״ל. כתובת הדוא״ל של המשתמש לא תוחלף עד לביצוע תהליך איפוס הססמה."
+        admin_note: "הערה: משתמש ניהולי שמשנה כתובת דוא״ל למשתמש שאינו ניהולי מציינת שהגישה של המשתמש לכתובת הדוא״ל המקורית אבדה, לכן תישלח הודעת איפוס סיסמה לכתובת החדשה בדוא״ל. כתובת הדוא״ל של המשתמש לא תוחלף עד לביצוע תהליך איפוס הסיסמה."
         ok: "נשלח אליכם דואר אלקטרוני לאישור"
         required: "נא למלא כתובת דוא״ל"
         invalid: "בבקשה הכניסו כתובת דואר אלקטרוני תקינה"
@@ -1434,7 +1437,7 @@ he:
       username:
         title: "שם משתמש/ת"
         instructions: "ייחודי, ללא רווחים, קצר"
-        short_instructions: "אנשים יכולים לאזכר אותך כ @%{username}"
+        short_instructions: "אנשים יכולים לאזכר אותך בתור ‎@%{username}"
         available: "שם המשתמש שלך פנוי"
         not_available: "לא זמין. נסו %{suggestion}?"
         not_available_no_suggestion: "לא זמין"
@@ -1462,7 +1465,7 @@ he:
         show_all: "להציג הכול (%{count})"
         show_few: "להציג פחות"
         was_this_you: "האם זה היית אתה?"
-        was_this_you_description: "אם לא נכנסת למערכת, אנו ממליצים לך לשנות את ססמתך ולהוציא את המשתמש בכל מקום שניתן."
+        was_this_you_description: "אם לא נכנסת למערכת, אנו ממליצים לך לשנות את סיסמתך ולהוציא את המשתמש בכל מקום שניתן."
         browser_and_device: "%{browser} ב%{device}"
         secure_account: "אבטח את החשבון שלי"
         latest_post: "פרסמת לאחרונה..."
@@ -1632,10 +1635,10 @@ he:
         too_short: "הסיסמה שלך קצרה מידי."
         common: "הסיסמה הזו נפוצה מידי."
         same_as_username: "הסיסמה שלך זהה לשם המשתמש/ת שלך."
-        same_as_email: "הססמה שלך זהה לכתובת הדוא״ל שלך."
+        same_as_email: "הסיסמה שלך זהה לכתובת הדוא״ל שלך."
         ok: "הסיסמה שלך נראית טוב."
         instructions: "לפחות %{count} תווים"
-        required: "נא למלא ססמה"
+        required: "נא למלא סיסמה"
       summary:
         title: "סיכום"
         stats: "סטטיסטיקות"
@@ -1713,6 +1716,7 @@ he:
         none: "(ללא)"
         instructions: "מופיע לאחר שם המשתמש שלך"
       flair:
+        title: "סמלון"
         none: "(ללא)"
         instructions: "סמל המוצג לצד תמונת הפרופיל שלך"
       primary_group:
@@ -1833,7 +1837,7 @@ he:
       associate: "כבר יש לך חשבון? ניתן <a href='%{associate_link}'>להיכנס</a> כדי לקשר את חשבון ה־%{provider} שלך."
     forgot_password:
       title: "אתחול סיסמה"
-      action: "שכחתי את ססמתי"
+      action: "שכחתי את הסיסמה שלי"
       invite: "נא להקליד את שם המשתמש וכתובת הדוא״ל שלך ואנו נשלח לך הודעה בדוא״ל לאיפוס ססמה."
       invite_no_username: "נא להקליד את כתובת הדוא״ל שלך ואנו נשלח לך הודעה בדוא״ל לאיפוס ססמה."
       reset: "איפוס ססמה"
@@ -2261,7 +2265,7 @@ he:
       invitee_accepted: "<span>%{username}</span> אישר/ה את ההזמנה שלך"
       moved_post: "<span>%{username}</span> עבר %{description}"
       linked: "<span>%{username}</span> %{description}"
-      granted_badge: "הרווחת '%{description}'"
+      granted_badge: "הרווחת את ‚%{description}’"
       topic_reminder: "<span>%{username}</span> %{description}"
       watching_first_post: "<span>נושא חדש</span> %{description}"
       membership_request_accepted: "התקבלת לחברות בקבוצה ‚%{group_name}’"
@@ -4113,6 +4117,7 @@ he:
               description: "מנהלים יכולים לראות את כל הקבוצות."
             members_visibility_levels:
               title: "מי יכול לראות את חברי הקבוצה הזו?"
+              description: "מנהלים יכולים לראות חברים מכל הקבוצות. סמלון גלוי לכל המשתמשים."
             publish_read_state: "בהודעות קבוצתית לפרסם את מצב הקריאה של הקבוצה"
           membership:
             automatic: אוטומטי
@@ -4291,6 +4296,9 @@ he:
         notification_event:
           name: "אירוע התראה"
           details: "כשמשתמש מקבל התראה בהזנה שלו."
+        user_promoted_event:
+          name: "אירוע שקודם על ידי משתמש"
+          details: "כאשר משתמש מקודם מדרגת אמון אחת לאחרת."
         user_badge_event:
           name: "אירוע הענקת עיטור"
           details: "כמשתמש מקבל עיטור."

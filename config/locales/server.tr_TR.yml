@@ -637,6 +637,7 @@ tr_TR:
       permission_conflict: "Bir alt kategoriye erişmesine izin verilen herhangi bir grubun üst kategoriye erişmesine de izin verilmelidir. Aşağıdaki grupların alt kategorilerden birine erişimi vardır, ancak üst kategoriye erişimi yoktur: %{group_names}."
       disallowed_topic_tags: "Bu konuya bu kategoride izin verilmiyor: '%{tags}'"
       disallowed_tags_generic: "Bu konuya izin verilmeyen etiketler var."
+      slug_contains_non_ascii_chars: "ascii olmayan karakterler içeriyor"
     cannot_delete:
       uncategorized: "Kategorisi olmayan konular bu kategoride gösterilir. Bu kategori silinemez."
       has_subcategories: "Alt kategorileri bulunduğu için bu kategori silinemez."
@@ -1690,7 +1691,6 @@ tr_TR:
     use_site_small_logo_as_system_avatar: "Sistem kullanıcısının avatarı yerine sitenin küçük logosunu kullanın. Logonun mevcut olmasını gerektirir."
     restrict_letter_avatar_colors: "Harf avatarı arka planı için kullanılacak 6 basamaklı onaltılı renk değerlerinin listesi."
     enable_listing_suspended_users_on_search: "Askıya alınan kullanıcıları bulmak için normal kullanıcıların etkinleştir."
-    selectable_avatars_enabled: "Kullanıcıları listeden bir avatar seçmeye zorlayın."
     selectable_avatars: "Kullanıcıların seçebileceği avatarların listesi."
     allow_all_attachments_for_group_messages: "Grup iletileri için tüm e-posta eklentilerine izin ver."
     png_to_jpg_quality: "Dönüştürülen JPG dosyasının kalitesi (1 en düşük kalite, 99 en iyi kalite, 100 devre dışı bırakmak için)."

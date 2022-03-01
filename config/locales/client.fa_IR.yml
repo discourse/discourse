@@ -304,6 +304,8 @@ fa_IR:
         existing_reminder: "شما یک یادآور برای این نشانک دارید که در %{at_date_time} ارسال خواهد شد"
     copy_codeblock:
       copied: "کپی شد!"
+      copy: "کپی کد در کلیپ‌بورد"
+      fullscreen: "نمایش کد در تمام صفحه"
     drafts:
       label: "درفت"
       label_with_count: "پیش‌نویس (%{count})"

@@ -1267,6 +1267,7 @@ de:
         upload_title: "Lade dein Bild hoch"
         image_is_not_a_square: "Achtung: Wir haben dein Bild zugeschnitten, weil Höhe und Breite nicht übereingestimmt haben."
         logo_small: "Das kleine Logo der Website. Es wird standardmäßig verwendet."
+        use_custom: "Oder lade einen eigenen Avatar hoch:"
       change_profile_background:
         title: "Profil-Kopfzeile"
         instructions: "Profil-Kopfzeilen werden zentriert und haben eine Standardbreite von 1110 px."
@@ -3970,6 +3971,9 @@ de:
         notification_event:
           name: "Benachrichtigungs-Ereignis"
           details: "Wenn ein Benutzer eine Benachrichtigung in seinem Feed erhält."
+        user_promoted_event:
+          name: "Vom Benutzer gefördertes Ereignis"
+          details: "Wenn ein Nutzer von einer Vertrauensstufe zur nächsten befördert wird."
         user_badge_event:
           name: "Abzeichen-Verleihungs-Ereignis"
           details: "Wenn ein Benutzer ein Abzeichen erhält."

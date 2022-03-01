@@ -1702,7 +1702,7 @@ de:
     use_site_small_logo_as_system_avatar: "Verwende das kleine Logo der Website anstelle des Avatars des Systembenutzers. Das Logo muss vorhanden sein."
     restrict_letter_avatar_colors: "Eine Liste von 6-stelligen hexadezimalen Farbwerten, die für den Buchstaben-Avatar-Hintergrund verwendet werden."
     enable_listing_suspended_users_on_search: "Ermögliche normalen Benutzern, gesperrte Benutzer zu finden."
-    selectable_avatars_enabled: "Benutzer zwingen, einen Avatar aus der Liste auszuwählen."
+    selectable_avatars_mode: "Erlaube es den Nutzern, einen Avatar aus der Liste selectable_avatars auszuwählen, und beschränke benutzerdefinierte Avatar-Uploads auf die ausgewählte Vertrauensstufe."
     selectable_avatars: "Liste der Avatare, aus denen Benutzer wählen können."
     allow_all_attachments_for_group_messages: "Erlaube alle E-Mail-Anhänge für Gruppen-Nachrichten."
     png_to_jpg_quality: "Qualität der umgewandelten JPG-Datei (1 ist die niedrigste, 99 die beste Qualität, 100 deaktiviert die Funktion)."

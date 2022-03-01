@@ -150,6 +150,7 @@ zh_CN:
     themes:
       default_description: "默认"
       broken_theme_alert: "您的网站可能无法运行，因为主题/组件有错误。"
+      error_caused_by: "由 '%{name}' 引起。 <a target='blank' href='%{path}'>单击此处</a> 进行更新、重新配置或禁用。"
       only_admins: "（此消息仅向站点管理员显示）"
     broken_decorator_alert: "帖子可能无法正确显示，因为您的站点上的其中一个帖子内容装饰器出现了错误。"
     s3:
@@ -647,6 +648,7 @@ zh_CN:
             allow_unknown_sender_topic_replies: "允许未知发件人回复话题。"
             allow_unknown_sender_topic_replies_hint: "允许未知发件人回复群组话题。如果未启用此功能，且从未被邀请至该话题的电子邮件地址回复，将创建一个新话题。"
             from_alias: "来源的别名"
+            from_alias_hint: "发送群组 SMTP 邮件时使用的别名。 请注意，这可能不是所有邮件提供商都支持的，请查阅您的邮件提供商的文档。"
           mailboxes:
             synchronized: "已同步的邮箱"
             none_found: "未在此电子邮件帐户中找到任何邮箱。"
@@ -1208,6 +1210,7 @@ zh_CN:
         upload_title: "上传图片"
         image_is_not_a_square: "警告：我们已经裁剪了您的图片；宽度和高度不相等。"
         logo_small: "站点的小徽标。默认情况下使用。"
+        use_custom: "或上传自定义头像："
       change_profile_background:
         title: "个人资料标题"
         instructions: "个人资料标题将居中且默认宽度为 1110px。"
@@ -2488,6 +2491,7 @@ zh_CN:
         title: "回复"
         help: "开始撰写此话题的回复"
       share:
+        title: "分享话题"
         extended_title: "分享链接"
         help: "分享此话题的链接"
         instructions: "分享此话题的链接："
@@ -2858,6 +2862,9 @@ zh_CN:
         viewing_summary: "正在查看此话题的摘要"
         post_number: "%{username}，帖子 #%{post_number}"
         show_all: "全部显示"
+      share:
+        title: "分享帖子 #%{post_number}"
+        instructions: "分享此帖子的链接:"
     category:
       none: "（无类别）"
       all: "所有类别"
@@ -3797,6 +3804,9 @@ zh_CN:
         notification_event:
           name: "通知事件"
           details: "当用户在 Feed 中收到通知时。"
+        user_promoted_event:
+          name: "用户信任级别提升事件"
+          details: "当用户从一个信任级别提升到另一个信任级别时。"
         user_badge_event:
           name: "徽章授予事件"
           details: "当用户收到徽章时。"

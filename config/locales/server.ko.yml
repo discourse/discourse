@@ -618,6 +618,7 @@ ko:
       permission_conflict: "하위 범주에 액세스 할 수있는 모든 그룹도 상위 범주에 액세스 할 수 있어야합니다. 다음 그룹은 하위 카테고리 중 하나에 액세스 할 수 있지만 상위 카테고리에는 액세스 할 수 없습니다 : %{group_names}."
       disallowed_topic_tags: "이 주제에는 허용되지 않는 태그가 있습니다 : &#39;%{tags}&#39;"
       disallowed_tags_generic: "이 주제는 태그를 허용하지 않습니다."
+      slug_contains_non_ascii_chars: "비 ASCII 문자 포함"
     cannot_delete:
       uncategorized: "이 카테고리는 특별합니다. 카테고리가없는 주제의 보관 영역으로 사용됩니다. 삭제할 수 없습니다."
       has_subcategories: "하위 카테고리가 있어, 삭제할 수 없습니다."
@@ -1629,7 +1630,6 @@ ko:
     use_site_small_logo_as_system_avatar: "시스템 사용자 아바타 대신 사이트의 작은 로고를 사용하십시오. 로고가 있어야 합니다."
     restrict_letter_avatar_colors: "문자 아바타 배경에 사용되는 6 자리 16 진수 색상 값 목록입니다."
     enable_listing_suspended_users_on_search: "일반 사용자가 일시 중지된 사용자를 찾을 수 있도록 합니다."
-    selectable_avatars_enabled: "사용자가 목록에서 아바타를 선택하도록합니다."
     selectable_avatars: "사용자가 선택할 수있는 아바타 목록."
     allow_all_attachments_for_group_messages: "그룹 메시지에 모든 이메일 첨부 허용"
     png_to_jpg_quality: "변환된 JPG 파일의 퀄리티(1은 최하, 99는 최상, 100은 해제)"
