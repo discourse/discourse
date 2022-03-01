@@ -1273,7 +1273,7 @@ eviltrout</p>
 
     formatQuote(
       "lorem",
-      '[quote="eviltrout, post:1, topic:2, username:eviltrout"]\nlorem\n[/quote]\n\n',
+      '[quote="eviltrout, post:1, topic:2"]\nlorem\n[/quote]\n\n',
       "correctly formats quotes"
     );
 
