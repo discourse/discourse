@@ -3,7 +3,6 @@ import I18n from "I18n";
 import { translateModKey } from "discourse/lib/utilities";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { extraKeyboardShortcutsHelp } from "discourse/lib/keyboard-shortcuts";
-import { afterRender } from "discourse-common/utils/decorators";
 
 const KEY = "keyboard_shortcuts_help";
 const SHIFT = I18n.t("shortcut_modifier_key.shift");
@@ -64,12 +63,6 @@ export default Controller.extend(ModalFunctionality, {
   onShow() {
     this.set("modal.modalClass", "keyboard-shortcuts-modal");
     this._defineShortcuts();
-    this.focusModal();
-  },
-
-  @afterRender
-  focusModal() {
-    document.getElementById("keyboard-shortcuts-help")?.focus();
   },
 
   onClose() {

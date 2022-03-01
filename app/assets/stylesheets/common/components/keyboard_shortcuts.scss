@@ -39,6 +39,9 @@
   display: grid;
   grid-gap: 0.5em 1.25em;
   grid-template-columns: repeat(3, minmax(250px, 1fr));
+  &:focus {
+    outline: none;
+  }
 
   @for $i from 1 through 50 {
     .span-#{$i} {

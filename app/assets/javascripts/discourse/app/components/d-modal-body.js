@@ -5,6 +5,8 @@ export default Component.extend({
   fixed: false,
   submitOnEnter: true,
   dismissable: true,
+  attributeBindings: ["tabindex"],
+  tabindex: -1,
 
   didInsertElement() {
     this._super(...arguments);
