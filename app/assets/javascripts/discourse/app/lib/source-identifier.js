@@ -52,7 +52,7 @@ export default function identifySource(error) {
 }
 
 export function getThemeInfo(id) {
-  const name = PreloadStore.get("activatedThemes")[id] || `(theme-id: ${id})`;
+  const name = PreloadStore.get("activatedThemes")?.[id] || `(theme-id: ${id})`;
   return {
     id,
     name,
