@@ -12,7 +12,24 @@ import domUtils from "discourse-common/utils/dom-utils";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import { ajax } from "discourse/lib/ajax";
 import { headerOffset } from "discourse/lib/offset-calculator";
-import { addExtraKeyboardShortcutHelp } from "discourse/controllers/keyboard-shortcuts-help";
+
+let extraKeyboardShortcutsHelp = {};
+function addExtraKeyboardShortcutHelp(help) {
+  const category = help.category || "more";
+  if (extraKeyboardShortcutsHelp[category]) {
+    extraKeyboardShortcutsHelp[category] = extraKeyboardShortcutsHelp[
+      category
+    ].concat([help.details]);
+  } else {
+    extraKeyboardShortcutsHelp[category] = [help.details];
+  }
+}
+
+export function clearExtraKeyboardShortcutHelp() {
+  extraKeyboardShortcutsHelp = {};
+}
+
+export { extraKeyboardShortcutsHelp as extraKeyboardShortcutsHelp };
 
 const DEFAULT_BINDINGS = {
   "!": { postAction: "showFlags" },
