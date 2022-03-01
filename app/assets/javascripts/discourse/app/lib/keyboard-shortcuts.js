@@ -15,7 +15,7 @@ import { headerOffset } from "discourse/lib/offset-calculator";
 
 let extraKeyboardShortcutsHelp = {};
 function addExtraKeyboardShortcutHelp(help) {
-  const category = help.category || "more";
+  const category = help.category;
   if (extraKeyboardShortcutsHelp[category]) {
     extraKeyboardShortcutsHelp[category] = extraKeyboardShortcutsHelp[
       category
@@ -227,6 +227,16 @@ export default {
    * - path       - a specific path to limit the shortcut to .e.g /latest
    * - postAction - binds the shortcut to fire the specified post action when a
    *                post is selected
+   * - help       - adds the shortcut to the keyboard shortcuts modal. `help` is an object
+   *                with key/value pairs
+   *                {
+   *                  category: String,
+   *                  name: String,
+   *                  definition: (See function `buildShortcut` in
+   *                    app/assets/javascripts/discourse/app/controllers/keyboard-shortcuts-help.js
+   *                    for definition structure)
+   *                }
+   *
    * - click      - allows to provide a selector on which a click event
    *                will be triggered, eg: { click: ".topic.last .title" }
    **/
@@ -236,8 +246,8 @@ export default {
     shortcut = shortcut.trim();
     let newBinding = Object.assign({ handler: callback }, opts);
     this.bindKey(shortcut, newBinding);
-    if (opts.shortcutHelp) {
-      addExtraKeyboardShortcutHelp(opts.shortcutHelp);
+    if (opts.help) {
+      addExtraKeyboardShortcutHelp(opts.help);
     }
   },
 

@@ -56,7 +56,7 @@ acceptance("Plugin Keyboard Shortcuts - Anonymous", function () {
   test("a plugin can add a shortcut and create a new category in the shortcut help modal", async function (assert) {
     withPluginApi("0.8.38", (api) => {
       api.addKeyboardShortcut("meta+]", () => {}, {
-        shortcutHelp: {
+        help: {
           category: "new_category",
           name: "new_category.test",
           definition: {
@@ -82,7 +82,7 @@ acceptance("Plugin Keyboard Shortcuts - Anonymous", function () {
 
     withPluginApi("0.8.38", (api) => {
       api.addKeyboardShortcut("meta+]", () => {}, {
-        shortcutHelp: {
+        help: {
           category: "application",
           name: "application.test",
           definition: {
