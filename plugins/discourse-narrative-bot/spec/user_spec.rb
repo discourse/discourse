@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe User do
   let(:user) { Fabricate(:user) }
   let(:profile_page_url) { "#{Discourse.base_url}/users/#{user.username}" }

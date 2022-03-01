@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe Jobs::DiscourseNarrativeBot::RemapOldBotImages do
   context "when bot's post contains an old link" do
     let!(:post) do

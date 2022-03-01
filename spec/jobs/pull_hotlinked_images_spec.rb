@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
 require 'jobs/regular/pull_hotlinked_images'
 
 describe Jobs::PullHotlinkedImages do

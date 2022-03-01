@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe "translate accelerator" do
   before do
     @original_i18n_load_path = I18n.load_path.dup

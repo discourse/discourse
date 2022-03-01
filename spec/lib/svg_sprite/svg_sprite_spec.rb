@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe SvgSprite do
   fab!(:theme) { Fabricate(:theme) }
 

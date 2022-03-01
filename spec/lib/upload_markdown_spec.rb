@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe UploadMarkdown do
   it "generates markdown for each different upload type (attachment, image, video, audio)" do
     SiteSetting.authorized_extensions = "mp4|mp3|pdf|jpg|mmmppp444"

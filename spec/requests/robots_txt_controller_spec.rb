@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 RSpec.describe RobotsTxtController do
   describe '#builder' do
     it "returns json information for building a robots.txt" do

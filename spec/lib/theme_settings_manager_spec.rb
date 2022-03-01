@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
 require 'theme_settings_manager'
 
 describe ThemeSettingsManager do

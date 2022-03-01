@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
 require "email/receiver"
 
 describe Email::Cleaner do

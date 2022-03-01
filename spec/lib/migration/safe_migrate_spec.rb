@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe Migration::SafeMigrate do
   before do
     Migration::SafeMigrate::SafeMigration.disable_safe!

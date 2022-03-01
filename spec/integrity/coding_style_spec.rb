@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 def list_files(base_dir, pattern = '*')
   Dir[File.join("#{base_dir}", pattern)]
 end

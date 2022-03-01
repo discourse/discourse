@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe UserActionsController do
   describe "GET index" do
     subject(:user_actions) { get "/user_actions.json", params: params }

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe FreedomPatches::SchemaMigrationDetails do
 
   # we usually don't really need this model so lets not clutter up with it

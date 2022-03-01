@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe CrawlerDetection do
 
   def crawler!(user_agent, via = nil)

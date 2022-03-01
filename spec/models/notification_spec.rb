@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe Notification do
   fab!(:user) { Fabricate(:user) }
   fab!(:coding_horror) { Fabricate(:coding_horror) }

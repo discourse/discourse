@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe PostReadersController do
   describe '#index' do
     fab!(:admin) { Fabricate(:admin) }

@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
 require 'pbkdf2'
 
 describe Pbkdf2 do

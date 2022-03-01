@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
 require 'flag_settings'
 
 RSpec.describe FlagSettings do

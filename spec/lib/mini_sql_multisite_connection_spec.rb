@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe MiniSqlMultisiteConnection do
 
   describe "after_commit" do

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe Jobs::Tl3Promotions do
 
   def create_qualifying_stats(user)

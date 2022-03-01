@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Onebox::Engine::GitlabBlobOnebox do
   before do
     @link = "https://gitlab.com/discourse/onebox/blob/master/lib/onebox/engine/gitlab_blob_onebox.rb"

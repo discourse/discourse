@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe DiscourseRedis do
   it "ignore_readonly returns nil from a pure exception" do
     result = DiscourseRedis.ignore_readonly { raise Redis::CommandError.new("READONLY") }

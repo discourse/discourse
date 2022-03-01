@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe Auth::ManagedAuthenticator do
   let(:authenticator) {
     Class.new(described_class) do

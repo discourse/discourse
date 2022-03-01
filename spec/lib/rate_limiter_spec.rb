@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
 require 'rate_limiter'
 
 describe RateLimiter do

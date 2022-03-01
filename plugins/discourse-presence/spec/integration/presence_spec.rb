@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe "discourse-presence" do
   describe 'PresenceChannel configuration' do
     fab!(:user) { Fabricate(:user) }

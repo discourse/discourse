@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe DiscourseNarrativeBot::Store do
   describe '.set' do
     it 'should set the right value in the plugin store' do

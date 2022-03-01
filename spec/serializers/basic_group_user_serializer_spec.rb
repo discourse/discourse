@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe BasicGroupUserSerializer do
   fab!(:group) { Fabricate(:group) }
   fab!(:user) { Fabricate(:user) }

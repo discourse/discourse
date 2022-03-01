@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe ReviewableScoreSerializer do
   fab!(:reviewable) { Fabricate(:reviewable_flagged_post) }
   fab!(:admin) { Fabricate(:admin) }

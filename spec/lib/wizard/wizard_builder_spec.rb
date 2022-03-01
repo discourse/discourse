@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
 require 'wizard'
 require 'wizard/builder'
 require 'global_path'

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe InlineOneboxer do
 
   it "should return nothing with empty input" do

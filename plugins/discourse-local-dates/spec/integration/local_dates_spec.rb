@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 RSpec.describe "Local Dates" do
   before do
     freeze_time DateTime.parse('2018-11-10 12:00')

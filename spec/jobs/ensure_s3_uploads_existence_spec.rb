@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 RSpec.describe Jobs::EnsureS3UploadsExistence do
   context "S3 inventory enabled" do
     before do

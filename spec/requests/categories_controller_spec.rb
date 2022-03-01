@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe CategoriesController do
   let(:admin) { Fabricate(:admin) }
   let!(:category) { Fabricate(:category, user: admin) }

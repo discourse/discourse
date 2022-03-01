@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
 require "import_export/category_structure_exporter"
 
 describe ImportExport::CategoryStructureExporter do

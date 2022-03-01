@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 RSpec.describe Admin::BackupsController do
   fab!(:admin) { Fabricate(:admin) }
   let(:backup_filename) { "2014-02-10-065935.tar.gz" }

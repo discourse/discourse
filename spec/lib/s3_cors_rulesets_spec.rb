@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
 require "s3_cors_rulesets"
 
 RSpec.describe S3CorsRulesets do

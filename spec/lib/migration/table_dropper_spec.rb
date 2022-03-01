@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe Migration::TableDropper do
 
   def table_exists?(table_name)

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe SimilarTopicsController do
   context 'similar_to' do
     let(:title) { 'this title is long enough to search for' }

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 RSpec.describe Jobs::BookmarkReminderNotifications do
   subject { described_class.new }
 

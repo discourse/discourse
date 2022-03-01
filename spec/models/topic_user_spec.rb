@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe TopicUser do
   let :watching do
     TopicUser.notification_levels[:watching]

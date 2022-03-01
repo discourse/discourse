@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe RegexPresenceValidator do
   subject { described_class.new(regex: 'latest', regex_error: 'site_settings.errors.must_include_latest') }
 

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe SiteSettings::LocalProcessProvider do
 
   def expect_same_setting(actual, expected)

@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
 require 'validators/topic_title_length_validator'
 
 RSpec.describe UrlValidator do

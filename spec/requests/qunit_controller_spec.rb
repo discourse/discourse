@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe QunitController do
   describe "#theme" do
     let(:theme) { Fabricate(:theme, name: 'main-theme') }

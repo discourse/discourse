@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe TopicTimestampChanger do
   describe "change!" do
     let(:old_timestamp) { Time.zone.now }

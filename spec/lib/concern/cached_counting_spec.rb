@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 class TestCachedCounting
   def self.clear!
     @data = nil

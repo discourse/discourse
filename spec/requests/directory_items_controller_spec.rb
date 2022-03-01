@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe DirectoryItemsController do
   fab!(:user) { Fabricate(:user) }
   fab!(:evil_trout) { Fabricate(:evil_trout) }

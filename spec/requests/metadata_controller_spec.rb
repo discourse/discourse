@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 # rubocop:disable Discourse/NoJsonParseResponse
 
-require 'rails_helper'
-
 RSpec.describe MetadataController do
 
   describe 'manifest.webmanifest' do

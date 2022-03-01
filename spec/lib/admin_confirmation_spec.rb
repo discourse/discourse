@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 require 'admin_confirmation'
-require 'rails_helper'
-
 describe AdminConfirmation do
 
   fab!(:admin) { Fabricate(:admin) }

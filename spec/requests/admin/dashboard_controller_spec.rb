@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe Admin::DashboardController do
   before do
     AdminDashboardData.stubs(:fetch_cached_stats).returns(reports: [])

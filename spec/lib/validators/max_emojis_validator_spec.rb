@@ -1,7 +1,6 @@
 # encoding: UTF-8
 # frozen_string_literal: true
 
-require 'rails_helper'
 require 'validators/max_emojis_validator'
 
 describe MaxEmojisValidator do

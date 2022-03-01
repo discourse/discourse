@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe Jobs::GrantAnniversaryBadges do
 
   let(:granter) { described_class.new }

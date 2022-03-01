@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe Post do
   fab!(:coding_horror) { Fabricate(:coding_horror) }
 

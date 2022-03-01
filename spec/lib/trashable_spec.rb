@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe Trashable do
   # post is trashable, just use it.
   it "works correctly" do

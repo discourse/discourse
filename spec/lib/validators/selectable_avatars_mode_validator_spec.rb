@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe SelectableAvatarsModeValidator do
   describe '#valid_value?' do
     subject(:validator) { described_class.new }

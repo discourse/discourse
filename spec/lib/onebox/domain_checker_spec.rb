@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Onebox::DomainChecker do
   describe '.is_blocked?' do
     before do

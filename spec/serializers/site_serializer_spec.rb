@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe SiteSerializer do
   let(:guardian) { Guardian.new }
   let(:category) { Fabricate(:category) }

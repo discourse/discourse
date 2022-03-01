@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 require 'topic_publisher'
-require 'rails_helper'
-
 describe TopicPublisher do
 
   context "shared drafts" do

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Onebox::Engine::GithubFolderOnebox do
   context 'without fragments' do
     before do

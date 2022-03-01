@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe Auth::DiscordAuthenticator do
   let(:hash) {
     OmniAuth::AuthHash.new(

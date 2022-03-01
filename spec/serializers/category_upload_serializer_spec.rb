@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe CategoryUploadSerializer do
 
   fab!(:upload) { Fabricate(:upload) }

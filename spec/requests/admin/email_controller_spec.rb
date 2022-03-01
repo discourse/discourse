@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe Admin::EmailController do
   fab!(:admin) { Fabricate(:admin) }
   fab!(:email_log) { Fabricate(:email_log) }

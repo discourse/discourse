@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe WebHook do
   it { is_expected.to validate_presence_of :payload_url }
   it { is_expected.to validate_presence_of :content_type }

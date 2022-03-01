@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 RSpec.describe Jobs::MigrateBadgeImageToUploads do
   let(:image_url) { "https://omg.aws.somestack/test.png" }
   let(:badge) { Fabricate(:badge) }

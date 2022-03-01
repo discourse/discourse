@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe Jobs::PendingUsersReminder do
 
   context 'must_approve_users is true' do

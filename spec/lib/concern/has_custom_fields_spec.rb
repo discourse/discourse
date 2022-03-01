@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe HasCustomFields do
   context "custom_fields" do
     before do

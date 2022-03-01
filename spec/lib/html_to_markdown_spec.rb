@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
 require 'html_to_markdown'
 
 describe HtmlToMarkdown do

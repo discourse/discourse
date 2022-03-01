@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe Plugin::Metadata do
   context "parse" do
     it "correctly parses plugin info" do

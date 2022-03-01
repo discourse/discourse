@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe TopicQuery::PrivateMessageLists do
   fab!(:admin) { Fabricate(:admin) }
   fab!(:user) { Fabricate(:user) }

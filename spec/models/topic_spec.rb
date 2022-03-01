@@ -1,8 +1,6 @@
 # encoding: utf-8
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe Topic do
   let(:now) { Time.zone.local(2013, 11, 20, 8, 0) }
   fab!(:user) { Fabricate(:user) }

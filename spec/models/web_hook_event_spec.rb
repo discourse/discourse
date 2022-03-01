@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe WebHookEvent do
   let(:event) { WebHookEvent.new(status: 200, web_hook: Fabricate(:web_hook)) }
   let(:failed_event) { WebHookEvent.new(status: 400, web_hook: Fabricate(:web_hook)) }
