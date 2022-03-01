@@ -63,7 +63,7 @@ class TopicsController < ApplicationController
     # arrays are not supported
     params[:page] = params[:page].to_i rescue 1
 
-    opts = params.slice(:username_filters, :filter, :page, :post_number, :show_deleted, :replies_to_post_number, :filter_upwards_post_id)
+    opts = params.slice(:username_filters, :filter, :page, :post_number, :show_deleted, :replies_to_post_number, :filter_upwards_post_id, :filter_top_level_replies)
     username_filters = opts[:username_filters]
 
     opts[:print] = true if params[:print].present?
@@ -1221,7 +1221,7 @@ class TopicsController < ApplicationController
       scope: guardian,
       root: false,
       include_raw: !!params[:include_raw],
-      exclude_suggested_and_related: !!params[:replies_to_post_number] || !!params[:filter_upwards_post_id]
+      exclude_suggested_and_related: !!params[:replies_to_post_number] || !!params[:filter_upwards_post_id] || !!params[:filter_top_level_replies]
     )
 
     respond_to do |format|
