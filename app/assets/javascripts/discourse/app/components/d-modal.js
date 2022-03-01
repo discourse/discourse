@@ -185,9 +185,14 @@ export default Component.extend({
         !autofocusedElement ||
         document.activeElement !== autofocusedElement
       ) {
-        innerContainer
-          .querySelectorAll(focusableElements + ", button:not(.modal-close)")[0]
-          ?.focus();
+        // if there's not autofocus, or the activeElement, is not the autofocusable element
+        // attempt to focus the first of the focusable elements or just the modal-body
+        // to make it possible to scroll with arrow down/up
+        (
+          innerContainer.querySelector(
+            focusableElements + ", button:not(.modal-close)"
+          ) || innerContainer.querySelector(".modal-body")
+        )?.focus();
       }
 
       return;
