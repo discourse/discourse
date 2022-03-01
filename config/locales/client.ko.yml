@@ -148,6 +148,7 @@ ko:
     bootstrap_mode_disabled: "Bootstrap 모드가 24시간 이내에 해제됩니다."
     themes:
       default_description: "기본"
+      broken_theme_alert: "테마/구성 요소에 오류가 있어 사이트가 작동하지 않을 수 있습니다."
       only_admins: "(이 메시지는 사이트 관리자에게만 표시됩니다.)"
     s3:
       regions:
@@ -2468,6 +2469,7 @@ ko:
         title: "댓글쓰기"
         help: "이 글에 대한 댓글을 작성합니다"
       share:
+        title: "글 공유"
         extended_title: "링크 공유"
         help: "이 글의 링크 공유"
         instructions: "이 글의 링크 공유:"
@@ -2838,6 +2840,9 @@ ko:
         viewing_summary: "이 글의 요약 보기"
         post_number: "%{username}, 글 #%{post_number}"
         show_all: "모두 보기"
+      share:
+        title: "글 공유 #%{post_number}"
+        instructions: "이 글의 링크 공유:"
     category:
       none: "(카테고리 없음)"
       all: "모든 카테고리"

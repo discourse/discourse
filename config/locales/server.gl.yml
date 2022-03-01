@@ -1598,7 +1598,6 @@ gl:
     external_emoji_url: "URL do servizo externo de imaxes emoticonas. Déixeo en branco para desactivalo."
     use_site_small_logo_as_system_avatar: "Utilice o pequeno logotipo do sitio no canto do avatar de usuario do sistema. Require que estea presente o logotipo."
     restrict_letter_avatar_colors: "Unha listaxe de valores hexadecimais das cores permitidas para os fondos dos avatares de letras."
-    selectable_avatars_enabled: "Obrigar os usuarios a elixiren un avatar da listaxe."
     selectable_avatars: "Listaxe de avatares que os usuarios poden elixir."
     allow_all_attachments_for_group_messages: "Permitir todos os ficheiros anexos para mensaxes de grupo."
     png_to_jpg_quality: "Calidade do ficheiro JPG convertido (1 é calidade mínima; 99 é a mellor; 100 para desactivar)"

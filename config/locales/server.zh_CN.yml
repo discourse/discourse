@@ -1638,7 +1638,6 @@ zh_CN:
     use_site_small_logo_as_system_avatar: "使用站点的小徽标代替系统用户的头像。要求存在徽标。"
     restrict_letter_avatar_colors: "用于字母头像背景的 6 位十六进制颜色值列表。"
     enable_listing_suspended_users_on_search: "让普通用户能够找到被暂停的用户。"
-    selectable_avatars_enabled: "强制用户从列表中选择一个头像。"
     selectable_avatars: "用户可以选择的头像列表。"
     allow_all_attachments_for_group_messages: "允许群组消息的所有电子邮件附件。"
     png_to_jpg_quality: "转换后的 JPG 文件的质量（1 为最低质量，99 为最佳质量，100 为禁用）。"

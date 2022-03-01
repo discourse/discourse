@@ -311,6 +311,8 @@ tr_TR:
         existing_reminder: "Bu yer imi için %{at_date_time} tarihine ayarlanmış bir anımsatıcınız var"
     copy_codeblock:
       copied: "kopyalandı!"
+      copy: "kodu panoya kopyala"
+      fullscreen: "kodu tam ekranda göster"
     drafts:
       label: "Taslaklar"
       label_with_count: "Taslaklar (%{count})"

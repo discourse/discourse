@@ -1687,7 +1687,7 @@ it:
     external_emoji_url: "URL del servizio esterno per le immagini di emoji. Lasciare vuoto questo valore per disabilitare l'opzione."
     use_site_small_logo_as_system_avatar: "Usa il logo piccolo del sito invece dell'avatar utente di sistema. Richiede che il logo sia presente."
     restrict_letter_avatar_colors: "Un elenco di valori in 6 cifre esadecimali per i colori da utilizzare per lo sfondo dell'avatar predefinito con la lettera iniziale."
-    selectable_avatars_enabled: "Forza gli utenti a scegliere un avatar dall'elenco."
+    selectable_avatars_mode: "Consenti agli utenti di selezionare un avatar dall'elenco selectable_avatars e limita i caricamenti di avatar personalizzati al livello di attendibilità selezionato."
     selectable_avatars: "Lista di avatar da cui gli utenti possono scegliere."
     allow_all_attachments_for_group_messages: "Consenti tutti gli allegati sulle email per i messaggi di gruppo."
     png_to_jpg_quality: "Qualità del file JPG convertito (1 è la qualità più bassa, 99 è la qualità migliore, 100 per disabilitare)."
