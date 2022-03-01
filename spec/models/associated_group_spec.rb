@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe AssociatedGroup do
   let(:user) { Fabricate(:user) }
   let(:associated_group) { Fabricate(:associated_group) }

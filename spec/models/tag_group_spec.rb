@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe TagGroup do
   describe '#visible' do
     fab!(:user1) { Fabricate(:user) }

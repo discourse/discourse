@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe Sidekiq::Pausable do
   after do
     Sidekiq.unpause_all!

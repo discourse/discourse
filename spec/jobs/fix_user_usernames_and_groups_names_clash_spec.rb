@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 RSpec.describe Jobs::FixUserUsernamesAndGroupsNamesClash do
   it 'update usernames of users that clashes with a group name' do
     user = Fabricate(:user)

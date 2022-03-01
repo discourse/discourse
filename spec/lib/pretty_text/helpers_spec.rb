@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe PrettyText::Helpers do
 
   context "lookup_upload_urls" do

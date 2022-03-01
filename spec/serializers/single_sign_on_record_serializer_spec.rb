@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 RSpec.describe SingleSignOnRecordSerializer do
   fab!(:user) { Fabricate(:user) }
   let :sso do

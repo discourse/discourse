@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe User do
   fab!(:group) { Fabricate(:group) }
 

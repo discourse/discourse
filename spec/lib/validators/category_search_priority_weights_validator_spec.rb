@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
 require 'validators/category_search_priority_weights_validator'
 
 RSpec.describe CategorySearchPriorityWeightsValidator do

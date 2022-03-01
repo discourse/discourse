@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe TopicConverter do
 
   context 'convert_to_public_topic' do

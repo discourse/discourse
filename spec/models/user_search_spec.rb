@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe UserSearch do
 
   before_all { SearchIndexer.enable } # Enable for prefabrication

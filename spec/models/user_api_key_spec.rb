@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe UserApiKey do
   context "#allow?" do
     def request_env(method, path, **path_parameters)

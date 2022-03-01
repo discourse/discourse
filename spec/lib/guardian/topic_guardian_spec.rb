@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe TopicGuardian do
   fab!(:admin) { Fabricate(:admin) }
   fab!(:tl3_user) { Fabricate(:leader) }

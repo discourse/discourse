@@ -1,8 +1,6 @@
 # encoding: UTF-8
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe "spam rules for users" do
 
   describe 'auto-silence users based on flagging' do

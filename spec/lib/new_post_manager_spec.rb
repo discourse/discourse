@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
 require 'new_post_manager'
 
 describe NewPostManager do

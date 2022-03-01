@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe ChildTheme do
   describe "validations" do
     it "doesn't allow children to become parents or parents to become children" do

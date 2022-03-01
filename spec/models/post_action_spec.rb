@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe PostAction do
   it { is_expected.to rate_limit }
 

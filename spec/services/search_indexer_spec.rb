@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe SearchIndexer do
   let(:post_id) { 99 }
 

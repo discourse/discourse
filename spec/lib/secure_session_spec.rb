@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe SecureSession do
   it "operates correctly" do
     s = SecureSession.new("abc")

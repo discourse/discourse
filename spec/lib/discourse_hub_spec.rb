@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe DiscourseHub do
   describe '.discourse_version_check' do
     it 'should return just return the json that the hub returns' do

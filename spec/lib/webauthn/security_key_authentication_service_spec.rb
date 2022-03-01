@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-require 'rails_helper'
 require 'webauthn'
 require 'webauthn/security_key_registration_service'
 

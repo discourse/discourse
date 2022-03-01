@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe PostLocker do
   fab!(:moderator) { Fabricate(:moderator) }
   fab!(:post) { Fabricate(:post) }

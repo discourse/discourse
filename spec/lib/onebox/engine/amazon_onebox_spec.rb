@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Onebox::Engine::AmazonOnebox do
   context "regular amazon page" do
     before do

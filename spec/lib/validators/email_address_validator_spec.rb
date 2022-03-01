@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe EmailAddressValidator do
   it 'should match valid emails' do
     ['test@discourse.org', 'good_user@discourse.org', 'incoming+%{reply_key}@discourse.org'].each do |email|

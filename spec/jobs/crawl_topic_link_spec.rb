@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe Jobs::CrawlTopicLink do
 
   let(:job) { Jobs::CrawlTopicLink.new }

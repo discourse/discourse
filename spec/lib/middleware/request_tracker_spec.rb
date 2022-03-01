@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Middleware::RequestTracker do
   def env(opts = {})
     create_request_env.merge(

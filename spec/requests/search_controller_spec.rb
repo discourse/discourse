@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe SearchController do
   fab!(:awesome_topic) do
     topic = Fabricate(:topic)

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Onebox do
   before do
     stub_request(:get, "https://www.amazon.com/product")

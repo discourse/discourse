@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe SiteSetting do
 
   describe 'topic_title_length' do

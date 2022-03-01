@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 RSpec::Matchers.define :add_notification do |user, notification_type|
   match(notify_expectation_failures: true) do |actual|
     notifications = user.notifications

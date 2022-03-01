@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe Jobs::ProcessBulkInviteEmails do
   describe '#execute' do
     it 'processes pending invites' do

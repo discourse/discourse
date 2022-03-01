@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe EmailValidator do
   def blocks?(email)
     user = Fabricate.build(:user, email: email)

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 RSpec.describe ApplicationController do
   describe '#redirect_to_login_if_required' do
     let(:admin) { Fabricate(:admin) }

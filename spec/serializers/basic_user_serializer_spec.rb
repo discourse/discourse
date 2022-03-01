@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe BasicUserSerializer do
   describe '#as_json' do
     let(:user) { Fabricate.build(:user) }

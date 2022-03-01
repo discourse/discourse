@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 RSpec.describe Migration::ColumnDropper do
   def has_column?(table, column)
     DB.exec(<<~SQL, table: table, column: column) == 1

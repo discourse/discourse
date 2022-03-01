@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
 require 'html_prettify'
 
 describe HtmlPrettify do

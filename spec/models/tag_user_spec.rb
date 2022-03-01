@@ -1,8 +1,6 @@
 # encoding: utf-8
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe TagUser do
   before do
     SiteSetting.tagging_enabled = true

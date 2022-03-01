@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 RSpec.describe SafeModeController do
   describe 'index' do
     it 'never includes customizations' do

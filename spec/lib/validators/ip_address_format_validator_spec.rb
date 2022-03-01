@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe IpAddressFormatValidator do
 
   let(:record) { Fabricate.build(:screened_ip_address, ip_address: '99.232.23.123') }

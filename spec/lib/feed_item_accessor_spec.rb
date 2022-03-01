@@ -2,8 +2,6 @@
 
 require 'rss'
 require 'feed_item_accessor'
-require 'rails_helper'
-
 describe FeedItemAccessor do
   context 'for ATOM feed' do
     let(:atom_feed) { RSS::Parser.parse(file_from_fixtures('feed.atom', 'feed'), false) }

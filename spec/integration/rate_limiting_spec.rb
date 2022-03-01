@@ -1,8 +1,6 @@
 # encoding: UTF-8
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe 'rate limiter integration' do
 
   before do

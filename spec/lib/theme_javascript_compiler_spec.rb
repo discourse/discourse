@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe ThemeJavascriptCompiler do
 
   let(:theme_id) { 22 }

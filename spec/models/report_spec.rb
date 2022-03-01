@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe Report do
   let(:user) { Fabricate(:user) }
   let(:c0) { Fabricate(:category, user: user) }

@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
 require "cooked_post_processor"
 require "file_store/s3_store"
 

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe IncomingLink do
 
   fab!(:sharing_user) { Fabricate(:user, name: 'Alice') }

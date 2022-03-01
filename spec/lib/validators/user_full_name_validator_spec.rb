@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe UserFullNameValidator do
   let(:validator) { described_class.new(attributes: :name) }
   subject(:validate) { validator.validate_each(record, :name, @name) }

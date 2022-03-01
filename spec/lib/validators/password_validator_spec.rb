@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe PasswordValidator do
 
   def password_error_message(key)

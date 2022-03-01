@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 RSpec.describe UserBookmarkSerializer do
   let(:user) { Fabricate(:user) }
   let(:post) { Fabricate(:post, user: user) }

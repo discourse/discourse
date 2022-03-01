@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 RSpec.describe SecondFactorManager do
   fab!(:user) { Fabricate(:user) }
   fab!(:user_second_factor_totp) { Fabricate(:user_second_factor_totp, user: user) }

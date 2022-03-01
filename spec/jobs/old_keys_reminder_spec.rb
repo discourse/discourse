@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Jobs::OldKeysReminder do
   let!(:google_secret) { SiteSetting.create!(name: 'google_oauth2_client_secret', value: '123', data_type: 1) }
   let!(:github_secret) { SiteSetting.create!(name: 'github_client_secret', value: '123', data_type: 1) }

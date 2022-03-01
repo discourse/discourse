@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe CommonPasswords do
   it "the passwords file should exist" do
     expect(File.exist?(described_class::PASSWORD_FILE)).to eq(true)

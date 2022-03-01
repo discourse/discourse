@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe AllowedIpAddressValidator do
 
   let(:record) { Fabricate.build(:user, trust_level: TrustLevel[0], ip_address: '99.232.23.123') }

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Onebox::Engine::JSON do
   before do
     @link = "http://stackoverflow.com"

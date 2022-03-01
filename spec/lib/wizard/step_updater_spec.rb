@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe Wizard::StepUpdater do
   before do
     SiteSetting.wizard_enabled = true

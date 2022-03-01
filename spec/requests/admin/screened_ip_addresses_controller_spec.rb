@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe Admin::ScreenedIpAddressesController do
 
   it "is a subclass of AdminController" do

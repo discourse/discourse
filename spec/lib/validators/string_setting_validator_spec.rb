@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe StringSettingValidator do
 
   describe '#valid_value?' do

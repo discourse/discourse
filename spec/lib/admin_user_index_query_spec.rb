@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe AdminUserIndexQuery do
   def real_users(query)
     query.find_users_query.where('users.id > 0')

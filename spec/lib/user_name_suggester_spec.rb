@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
 require 'user_name_suggester'
 
 describe UserNameSuggester do

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe TinyJapaneseSegmenter do
   describe '.segment' do
     it 'generates the segments for a given japanese text' do

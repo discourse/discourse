@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe 'message bus integration' do
 
   it "allows anonymous requests to the messagebus" do

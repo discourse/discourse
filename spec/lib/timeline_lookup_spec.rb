@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe TimelineLookup do
   it "returns an empty array for empty input" do
     expect(TimelineLookup.build([])).to eq([])
