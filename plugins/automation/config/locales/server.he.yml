@@ -1,0 +1,30 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+he:
+  site_settings:
+    discourse_automation_enabled: "הפעלת תוסף discourse-automation"
+  discourse_automation:
+    triggerables:
+      api_call:
+        title: קריאת API
+      point_in_time:
+        title: נקודה בזמן
+      user_added_to_group:
+        title: משתמש נוסף לקבוצה
+      user_promoted:
+        title: משתמש קיבל קידום
+        description: כאשר משתמש מקודם מדרגת אמון אחת לאחרת
+        transition_placeholder: "מדרגה %{from_level_name} אל %{to_level_name}"
+      post_created_edited:
+        title: פוסט נוצר/נערך
+      topic:
+        title: נושא
+    scriptables:
+      zapier_webhook:
+        title: התליה של Zapier
+      auto_responder:
+        title: משיב אוטומטי

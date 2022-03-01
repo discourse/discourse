@@ -1,0 +1,120 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fa_IR:
+  js:
+    discourse_automation:
+      title: اتوماسیون
+      create: ایجاد
+      update: به‌روزرسانی
+      destroy_automation:
+        confirm: "آیا مطمئنید هستید که می‌خواهید «%{name}» را حذف کنید؟"
+      fields:
+        key_value:
+          label: پیکربندی
+        user:
+          label: کاربر
+        pm:
+          title:
+            label: عنوان
+          raw:
+            label: بدنه
+        pms:
+          title:
+            label: عنوان
+          raw:
+            label: بدنه
+          delay:
+            label: تاخیر (دقیقه)
+        group:
+          label: گروه
+        text:
+          label: متن
+      triggerables:
+        stalled_topic:
+          durations:
+            PT1H: "یک ساعت"
+            P1D: "یک روز"
+            P1W: "یک هفته"
+            P2W: "دو هفته"
+            P1M: "یک ماه"
+            P3M: "سه ماه"
+            P6M: "شش ماه"
+            P1Y: "یک سال"
+          fields:
+            categories:
+              label: محدود شده به دسته‌بندی‌ها
+            tags:
+              label: محدود شده به برچسب‌ها
+        recurring:
+          recurrences:
+            every_minute: هر دقیقه
+            every_hour: هر ساعت
+            every_day: هر روز
+            every_weekday: هر روز هفته
+            every_week: هر هفته
+            every_month: هر ماه
+            every_year: هر سال
+          fields:
+            start_date:
+              label: تاریخ شروع
+        stalled_wiki:
+          durations:
+            PT1H: "یک ساعت"
+            P1D: "یک روز"
+            P1W: "یک هفته"
+            P2W: "دو هفته"
+            P1M: "یک ماه"
+            P3M: "سه ماه"
+            P6M: "شش ماه"
+            P1Y: "یک سال"
+        post_created_edited:
+          fields:
+            restricted_category:
+              label: دسته‌بندی
+      scriptables:
+        user_global_notice:
+          fields:
+            level:
+              label: سطح
+          levels:
+            warning: هشدار
+            info: اطلاعات
+            success: موفقیت
+            error: خطا
+        suspend_user_by_email:
+          fields:
+            reason:
+              label: دلیل (پیش‌فرض)
+            actor:
+              label: کاربر
+        pin_topic:
+          fields:
+            pinned_until:
+              label: سنجاق شده تا
+        banner_topic:
+          fields:
+            user:
+              label: کاربر
+      models:
+        script:
+          name:
+            label: اسکریپت
+        automation:
+          name:
+            label: نام
+          script:
+            label: اسکریپت
+          version:
+            label: نسخه
+          enabled:
+            label: فعال شد
+          disabled:
+            label: غیرفعال شد
+          last_updated_at:
+            label: آخرین به‌روزرسانی
+          last_updated_by:
+            label: به‌روز شده توسط

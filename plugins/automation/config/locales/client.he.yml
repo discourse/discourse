@@ -1,0 +1,186 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+he:
+  js:
+    discourse_automation:
+      title: אוטומציה
+      create: יצירה
+      update: עדכון
+      select_script: בחירת סקריפט
+      select_trigger: בחירת גורם מפעיל
+      edit_automation:
+        trigger_section:
+          title: מתי/מה…
+        fields_section:
+          title: אפשרויות סקריפט
+      destroy_automation:
+        confirm: "למחוק את `%{name}`?"
+      fields:
+        key_value:
+          label: הגדרה
+        user:
+          label: משתמש
+        pm:
+          title:
+            label: כותרת
+          raw:
+            label: גוף
+        pms:
+          confirm_remove_pm: "להסיר את ההודעה הפרטית הזאת?"
+          placeholder_title: כותרת ההודעה הפרטית
+          add_pm: הוספת הודעה פרטית
+          title:
+            label: כותרת
+          raw:
+            label: גוף
+          delay:
+            label: השהיה (דקות)
+        group:
+          label: קבוצה
+        text:
+          label: טקסט
+      triggerables:
+        not_found: לא ניתן למצוא את גורם ההקפצה `%{trigger}` לאוטומציה `%{automation}`, יש לוודא שהתוסף המשויך מותקן
+        stalled_topic:
+          durations:
+            PT1H: "שעה"
+            P1D: "יום"
+            P1W: "שבוע"
+            P2W: "שבועיים"
+            P1M: "חודש"
+            P3M: "שלושה חודשים"
+            P6M: "שישה חודשים"
+            P1Y: "שנה"
+          fields:
+            categories:
+              label: מוגבל לקטגוריות
+            tags:
+              label: מוגבל לתגיות
+        recurring:
+          recurrences:
+            every_minute: כל דקה
+            every_hour: כל שעה
+            every_day: כל יום
+            every_weekday: כל יום חול
+            every_week: כל שבוע
+            every_other_week: כל שבוע שני
+            every_month: כל חודש
+            every_year: כל שנה
+          fields:
+            recurrence:
+              label: חזרתיות
+            start_date:
+              label: תאריך התחלה
+        stalled_wiki:
+          durations:
+            PT1H: "שעה"
+            P1D: "יום"
+            P1W: "שבוע"
+            P2W: "שבועיים"
+            P1M: "חודש"
+            P3M: "שלושה חודשים"
+            P6M: "שישה חודשים"
+            P1Y: "שנה"
+          fields:
+            restricted_category:
+              label: מוגבל לקטגוריה
+        user_promoted:
+          fields:
+            restricted_group:
+              label: הגבלה לקבוצה
+            trust_level_transition:
+              label: מעבר בין דרגות אמון
+          trust_levels:
+            ALL: "כל דרגות האמון"
+            TL01: "דרגת אמון 0 ל־1"
+            TL12: "דרגת אמון 1 ל־2"
+            TL23: "דרגת אמון 2 ל־3"
+            TL34: "דרגת אמון 3 ל־4"
+        topic:
+          fields:
+            restricted_topic:
+              label: מזהה נושא
+        post_created_edited:
+          fields:
+            valid_trust_levels:
+              label: דרגות אמון תקפות
+            restricted_category:
+              label: קטגוריה
+      scriptables:
+        not_found: לא ניתן למצוא את הסקריפט `%{script}` לאוטומציה `%{automation}`, יש לוודא שהתוסף המשויך מותקן
+        zapier_webhook:
+          fields:
+            webhook_url:
+              label: כתובת התליה
+              description: "אמורה להיות כתובת התליה תקפה של Zapier, למשל: https://hooks.zapier.com/hooks/catch/xxx/yyy/"
+        auto_responder:
+          fields:
+            word_answer_list:
+              label: רשימה של צמדי מילה/תשובה
+        user_global_notice:
+          fields:
+            level:
+              label: דרגה
+            notice:
+              label: הודעה
+              description: מקבל HTML, לא למלא את זה בקלט מפוקפק!
+          levels:
+            warning: אזהרה
+            info: מידע
+            success: הצלחה
+            error: שגיאה
+        suspend_user_by_email:
+          fields:
+            suspend_until:
+              label: להשעות עד (ברירת מחדל)
+            reason:
+              label: סיבה (ברירת מחדל)
+            actor:
+              label: משתמש
+              description: "המשתמש האחראי להשעיה (ברירת מחדל: מערכת)"
+        pin_topic:
+          fields:
+            pinnable_topic:
+              label: מזהה נושא
+            pinned_globally:
+              label: נעוץ גלובלית
+            pinned_until:
+              label: נעוץ עד
+        banner_topic:
+          fields:
+            topic_id:
+              label: מזהה נושא
+            banner_until:
+              label: להציב ככרזה עד
+            user:
+              label: משתמש
+      models:
+        script:
+          name:
+            label: סקריפט
+        trigger:
+          name:
+            label: גורם מפעיל
+        automation:
+          name:
+            label: שם
+          trigger:
+            label: גורם מפעיל
+          script:
+            label: סקריפט
+          version:
+            label: גירסה
+          enabled:
+            label: מופעל
+          disabled:
+            label: מושבת
+          placeholders:
+            label: ממלאי מקום
+          last_updated_at:
+            label: עדכון אחרון
+          last_updated_by:
+            label: עודכן על ידי

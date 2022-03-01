@@ -1,0 +1,95 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+hu:
+  js:
+    discourse_automation:
+      title: Automatizálás
+      create: Létrehozás
+      update: Frissítés
+      select_script: Válasszon egy parancsfájlt
+      select_trigger: Válasszon egy aktiválót
+      confirm_automation_reset: Ez a művelet visszaállítja a parancsfájlt és az aktiválási beállításokat, az új állapot mentésre kerül. Folytatja?
+      confirm_automation_trigger: Ez a művelet kiváltja az automatizálást, folytatja?
+      no_automation_yet: Még nem hozott létre automatizálást.
+      edit_automation:
+        trigger_section:
+          forced: Ez az aktiválót a parancsfájl kényszeríti ki.
+          next_pending_automation: "A következő automatizálás ekkor indul: %{date}"
+          trigger_now: "Kiváltás most"
+          title: Mikor/mi…
+        fields_section:
+          title: Parancsfájl beállításai
+      destroy_automation:
+        confirm: "Biztos, hogy törli: „%{name}\"?"
+      fields:
+        key_value:
+          label: Beállítás
+        user:
+          label: Felhasználó
+        pm:
+          title:
+            label: Cím
+          raw:
+            label: Törzs
+        pms:
+          confirm_remove_pm: "Biztos, hogy eltávolítja ezt a PÜ-t?"
+          placeholder_title: PÜ címe
+          add_pm: PÜ hozzáadása
+          no_pm_created: Még nem hozott létre PÜ-t. A PÜ-k az automatizálás aktiválása után lesznek elküldve.
+          title:
+            label: Cím
+          raw:
+            label: Törzs
+          delay:
+            label: Késleltetés (perc)
+          encrypt:
+            label: PÜ titkosítása, ha elérhető
+        group:
+          label: Csoport
+        text:
+          label: Szöveg
+      triggerables:
+        stalled_topic:
+          durations:
+            PT1H: "Egy óra"
+            P1D: "Egy nap"
+            P1W: "Egy hét"
+            P2W: "Két hét"
+            P1M: "Egy hónap"
+            P3M: "Három hónap"
+            P6M: "Hat hónap"
+            P1Y: "Egy év"
+          fields:
+            categories:
+              label: Kategóriákra korlátozva
+            tags:
+              label: Címkékre korlátozva
+            stalled_after:
+              label: Ennyi idő után elakadt
+        recurring:
+          recurrences:
+            every_minute: Percenként
+            every_hour: Óránként
+            every_day: Naponta
+            every_weekday: Hétköznaponként
+            every_week: Hetente
+            every_other_week: Kéthetente
+            every_month: Havonta
+            every_year: Évente
+          fields:
+            recurrence:
+              label: Ismétlődés
+            start_date:
+              label: Kezdő dátum
+        stalled_wiki:
+          durations:
+            PT1H: "Egy óra"
+      scriptables:
+        auto_responder:
+          fields:
+            word_answer_list:
+              description: "Kulcs/érték csoportok listáját határoz meg, ahol a `kulcs` a keresett kifejezés, az `érték` pedig a válasz szövege. Vegye figyelembe, hogy az `érték` elfogadja a `%%KEY%%` helykitöltőt, amelybe a `kulcs` értéke lesz behelyettesítve a válaszban. Vegye figyelembe, hogy a `kulcs` reguláris kifejezésként lesz kiértékelve, így figyelembe kell vennie a speciális karaktereket, például ha a `.` karakterre gondol, akkor ezt kell megadnia: `\\.`."
