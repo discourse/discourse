@@ -848,7 +848,6 @@ Discourse::Application.routes.draw do
     post "t/:topic_id/timings" => "topics#timings", constraints: { topic_id: /\d+/ }
     post "t/:topic_id/invite" => "topics#invite", constraints: { topic_id: /\d+/ }
     post "t/:topic_id/invite-group" => "topics#invite_group", constraints: { topic_id: /\d+/ }
-    post "t/:topic_id/invite-notify" => "topics#invite_notify", constraints: { topic_id: /\d+/ }
     post "t/:topic_id/move-posts" => "topics#move_posts", constraints: { topic_id: /\d+/ }
     post "t/:topic_id/merge-topic" => "topics#merge_topic", constraints: { topic_id: /\d+/ }
     post "t/:topic_id/change-owner" => "topics#change_post_owners", constraints: { topic_id: /\d+/ }

@@ -2,8 +2,6 @@ import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { getAbsoluteURL } from "discourse-common/lib/get-url";
 import discourseComputed from "discourse-common/utils/decorators";
-import { ajax } from "discourse/lib/ajax";
-import { extractError } from "discourse/lib/ajax-error";
 import Sharing from "discourse/lib/sharing";
 import showModal from "discourse/lib/show-modal";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
@@ -19,7 +17,6 @@ export default Controller.extend(
     topic: null,
     post: null,
     allowInvites: false,
-    showNotifyUsers: false,
     restrictedGroups: null,
 
     onShow() {
@@ -27,7 +24,6 @@ export default Controller.extend(
         topic: null,
         post: null,
         allowInvites: false,
-        showNotifyUsers: false,
       });
 
       if (this.model && this.model.read_restricted) {
@@ -72,13 +68,7 @@ export default Controller.extend(
     },
 
     @action
-    onChangeUsers(usernames) {
-      this.set("users", usernames.uniq());
-    },
-
-    @action
     share(source) {
-      this.set("showNotifyUsers", false);
       Sharing.shareSource(source, {
         title: this.topic.title,
         url: this.url,
@@ -86,51 +76,7 @@ export default Controller.extend(
     },
 
     @action
-    toggleNotifyUsers() {
-      if (this.showNotifyUsers) {
-        this.set("showNotifyUsers", false);
-      } else {
-        this.setProperties({
-          showNotifyUsers: true,
-          users: [],
-        });
-      }
-    },
-
-    @action
-    notifyUsers() {
-      if (this.users.length === 0) {
-        return;
-      }
-
-      ajax(`/t/${this.topic.id}/invite-notify`, {
-        type: "POST",
-        data: {
-          usernames: this.users,
-          post_number: this.post ? this.post.post_number : undefined,
-        },
-      })
-        .then(() => {
-          this.setProperties({ showNotifyUsers: false });
-          this.appEvents.trigger("modal-body:flash", {
-            text: I18n.t("topic.share.notify_users.success", {
-              count: this.users.length,
-              username: this.users[0],
-            }),
-            messageClass: "success",
-          });
-        })
-        .catch((error) => {
-          this.appEvents.trigger("modal-body:flash", {
-            text: extractError(error),
-            messageClass: "error",
-          });
-        });
-    },
-
-    @action
     inviteUsers() {
-      this.set("showNotifyUsers", false);
       const controller = showModal("create-invite");
       controller.setProperties({
         inviteToTopic: true,
