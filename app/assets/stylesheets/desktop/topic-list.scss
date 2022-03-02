@@ -69,7 +69,11 @@
     line-height: $line-height-large;
   }
 
-  .topic-list-data.bulk-select {
+  .topic-list-header-row .topic-list-data.bulk-select {
+    padding: 12px 10px;
+  }
+
+  .topic-list-item .topic-list-data.bulk-select {
     padding: 0;
     label {
       margin: 0px;
