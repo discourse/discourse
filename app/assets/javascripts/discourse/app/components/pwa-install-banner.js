@@ -42,7 +42,7 @@ export default Component.extend({
       this.get("currentUser.trust_level") > 0 &&
       deferredInstallPromptEvent && // Pass the browser engagement checks
       !window.matchMedia("(display-mode: standalone)").matches && // Not be in the installed PWA already
-      !this.capabilities.wasLaunchedFromDiscourseHub && // not launched via official app
+      !this.capabilities.isAppWebview && // not launched via official app
       !bannerDismissed // Have not a previously dismissed install banner
     );
   },

@@ -46,7 +46,7 @@ export function isPushNotificationsSupported() {
       typeof Notification !== "undefined" &&
       "showNotification" in ServiceWorkerRegistration.prototype &&
       "PushManager" in window &&
-      !caps.wasLaunchedFromDiscourseHub &&
+      !caps.isAppWebview &&
       !caps.isIOS
     )
   ) {
