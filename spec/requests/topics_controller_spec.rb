@@ -2873,46 +2873,6 @@ RSpec.describe TopicsController do
     end
   end
 
-  describe '#invite_notify' do
-    before do
-      topic.update!(highest_post_number: 1)
-    end
-
-    it 'does not notify same user multiple times' do
-      sign_in(user)
-
-      expect { post "/t/#{topic.id}/invite-notify.json", params: { usernames: [user_2.username] } }
-        .to change { Notification.count }.by(1)
-      expect(response.status).to eq(200)
-
-      expect { post "/t/#{topic.id}/invite-notify.json", params: { usernames: [user_2.username] } }
-        .to change { Notification.count }.by(0)
-      expect(response.status).to eq(200)
-
-      freeze_time 1.day.from_now
-
-      expect { post "/t/#{topic.id}/invite-notify.json", params: { usernames: [user_2.username] } }
-        .to change { Notification.count }.by(1)
-      expect(response.status).to eq(200)
-    end
-
-    it 'does not let regular users to notify multiple users' do
-      sign_in(user)
-
-      expect { post "/t/#{topic.id}/invite-notify.json", params: { usernames: [admin.username, user_2.username] } }
-        .to change { Notification.count }.by(0)
-      expect(response.status).to eq(400)
-    end
-
-    it 'lets staff to notify multiple users' do
-      sign_in(admin)
-
-      expect { post "/t/#{topic.id}/invite-notify.json", params: { usernames: [user.username, user_2.username] } }
-        .to change { Notification.count }.by(2)
-      expect(response.status).to eq(200)
-    end
-  end
-
   describe '#invite_group' do
     let!(:admins) { Group[:admins] }
 

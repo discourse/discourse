@@ -21,13 +21,6 @@
           {{share-source source=s title=topic.title action=(action "share")}}
         {{/each}}
 
-        {{d-button
-          class="btn-default notify"
-          label="topic.share.notify_users.title"
-          icon="hand-point-right"
-          action=(action "toggleNotifyUsers")
-        }}
-
         {{#if allowInvites}}
           {{d-button
             class="btn-default invite"
@@ -37,29 +30,6 @@
           }}
         {{/if}}
       </div>
-
-      {{#if showNotifyUsers}}
-        <div class="input-group invite-users">
-          <label for="invite-users">{{i18n "topic.share.notify_users.instructions"}}</label>
-          <div class="notify-user-input">
-            {{user-chooser
-              value=users
-              onChange=(action "onChangeUsers")
-              options=(hash
-                      topicId=topic.id
-                      maximum=(unless currentUser.staff 1)
-                      excludeCurrentUser=true
-                      )
-            }}
-            {{d-button
-              icon="check"
-              class="btn-primary"
-              disabled=(if users false true)
-              action=(action "notifyUsers")
-            }}
-          </div>
-        </div>
-      {{/if}}
     </div>
   </form>
 {{/d-modal-body}}

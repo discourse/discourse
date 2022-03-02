@@ -2851,12 +2851,6 @@ en:
         restricted_groups:
           one: "Only visible to members of group: %{groupNames}"
           other: "Only visible to members of groups: %{groupNames}"
-        notify_users:
-          title: "Notify"
-          instructions: "Notify the following users about this topic:"
-          success:
-            one: "Successfully notified %{username} about this topic."
-            other: "Successfully notified all users about this topic."
         invite_users: "Invite"
 
       print:

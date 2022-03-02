@@ -684,48 +684,6 @@ class TopicsController < ApplicationController
     end
   end
 
-  def invite_notify
-    topic = Topic.find_by(id: params[:topic_id])
-    guardian.ensure_can_see!(topic)
-
-    usernames = params[:usernames]
-    raise Discourse::InvalidParameters.new(:usernames) if !usernames.kind_of?(Array) || (!current_user.staff? && usernames.size > 1)
-
-    users = User.where(username_lower: usernames.map(&:downcase))
-    raise Discourse::InvalidParameters.new(:usernames) if usernames.size != users.size
-
-    post_number = 1
-    post_number = params[:post_number].to_i if params[:post_number].present?
-    raise Discourse::InvalidParameters.new(:post_number) if post_number < 1 || post_number > topic.highest_post_number
-
-    topic.rate_limit_topic_invitation(current_user)
-
-    users.find_each do |user|
-      if !user.guardian.can_see_topic?(topic)
-        return render json: failed_json.merge(error: I18n.t('topic_invite.user_cannot_see_topic', username: user.username)), status: 422
-      end
-    end
-
-    users.find_each do |user|
-      last_notification = user.notifications
-        .where(notification_type: Notification.types[:invited_to_topic])
-        .where(topic_id: topic.id)
-        .where(post_number: post_number)
-        .where('created_at > ?', 1.hour.ago)
-
-      if !last_notification.exists?
-        topic.create_invite_notification!(
-          user,
-          Notification.types[:invited_to_topic],
-          current_user.username,
-          post_number: post_number
-        )
-      end
-    end
-
-    render json: success_json
-  end
-
   def invite_group
     group = Group.find_by(name: params[:group])
     raise Discourse::NotFound unless group
