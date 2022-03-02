@@ -994,6 +994,7 @@ RSpec.describe Admin::UsersController do
         city: "London",
         country: "United Kingdom",
         country_code: "GB",
+        geoname_ids: [6255148, 2635167, 2643743, 6269131],
         hostname: "ip-81-2-69-142.example.com",
         location: "London, England, United Kingdom",
         region: "England",
