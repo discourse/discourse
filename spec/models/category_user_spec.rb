@@ -287,7 +287,7 @@ describe CategoryUser do
         expect(CategoryUser.indirectly_muted_category_ids(user)).to contain_exactly(category2.id)
         expect(CategoryUser.muted_category_ids(user)).to contain_exactly(category1.id, category2.id, category3.id)
 
-        category_user.update(notification_level: CategoryUser.notification_levels[:regular])
+        category_user.update!(notification_level: CategoryUser.notification_levels[:regular])
         expect(CategoryUser.indirectly_muted_category_ids(user)).to eq([])
         expect(CategoryUser.muted_category_ids(user)).to contain_exactly(category3.id)
       end
