@@ -608,7 +608,7 @@ acceptance("Prioritize Full Name", function (needs) {
     await click(".insert-quote");
     assert.strictEqual(
       queryAll(".d-editor-input").val().trim(),
-      '[quote="Jeff Atwood, post:3, topic:280"]\nYep, all strings are going through a lookup table.*\n[/quote]'
+      '[quote="Jeff Atwood, post:3, topic:280, username:codinghorror"]\nYep, all strings are going through a lookup table.*\n[/quote]'
     );
   });
 });
