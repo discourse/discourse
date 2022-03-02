@@ -277,7 +277,7 @@ const TopicRoute = DiscourseRoute.extend({
 
   setupParams(topic, params) {
     const postStream = topic.get("postStream");
-    postStream.set("summary", get(params, "filter") === "summary");
+    postStream.set("filter", get(params, "filter"));
 
     const usernames = get(params, "username_filters"),
       userFilters = postStream.get("userFilters");
