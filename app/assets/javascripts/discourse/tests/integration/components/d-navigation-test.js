@@ -33,7 +33,7 @@ discourseModule("Integration | Component | d-navigation", function (hooks) {
       assert.strictEqual(
         document.querySelectorAll(".category-row").length,
         1,
-        "displayed only unmutted categories"
+        "displays only categories that are not muted"
       );
       assert.strictEqual(
         query(".category-row .badge-category span").textContent.trim(),
