@@ -2016,6 +2016,7 @@ en:
       categories_and_top_topics: "Categories and Top Topics"
       categories_boxes: "Boxes with Subcategories"
       categories_boxes_with_topics: "Boxes with Featured Topics"
+      subcategories_with_featured_topics: "Subcategories with Featured Topics"
 
     shortcut_modifier_key:
       shift: "Shift"

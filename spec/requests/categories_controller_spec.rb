@@ -115,6 +115,50 @@ describe CategoriesController do
       expect(subcategories_for_category).to eq(nil)
     end
 
+    it 'includes topics for categories, subcategories and subsubcategories when requested' do
+      SiteSetting.max_category_nesting = 3
+      subcategory = Fabricate(:category, user: admin, parent_category: category)
+      subsubcategory = Fabricate(:category, user: admin, parent_category: subcategory)
+
+      topic1 = Fabricate(:topic, category: category)
+      topic2 = Fabricate(:topic, category: subcategory)
+      topic3 = Fabricate(:topic, category: subsubcategory)
+      CategoryFeaturedTopic.feature_topics
+
+      get "/categories.json?include_subcategories=true&include_topics=true"
+      expect(response.status).to eq(200)
+
+      category_list = response.parsed_body["category_list"]
+
+      category_response = category_list["categories"].find { |c| c["id"] == category.id }
+      expect(category_response["topics"].map { |c| c['id'] }).to contain_exactly(topic1.id)
+
+      subcategory_response = category_response["subcategory_list"][0]
+      expect(subcategory_response["topics"].map { |c| c['id'] }).to contain_exactly(topic2.id)
+
+      subsubcategory_response = subcategory_response["subcategory_list"][0]
+      expect(subsubcategory_response["topics"].map { |c| c['id'] }).to contain_exactly(topic3.id)
+    end
+
+    it 'includes subcategories and topics by default when view is subcategories_with_featured_topics' do
+      SiteSetting.max_category_nesting = 3
+      subcategory = Fabricate(:category, user: admin, parent_category: category)
+
+      topic1 = Fabricate(:topic, category: category)
+      CategoryFeaturedTopic.feature_topics
+
+      SiteSetting.desktop_category_page_style = "subcategories_with_featured_topics"
+      get "/categories.json"
+      expect(response.status).to eq(200)
+
+      category_list = response.parsed_body["category_list"]
+
+      category_response = category_list["categories"].find { |c| c["id"] == category.id }
+      expect(category_response["topics"].map { |c| c['id'] }).to contain_exactly(topic1.id)
+
+      expect(category_response["subcategory_list"][0]["id"]).to eq(subcategory.id)
+    end
+
     it 'does not show uncategorized unless allow_uncategorized_topics' do
       SiteSetting.desktop_category_page_style = "categories_boxes_with_topics"
 
