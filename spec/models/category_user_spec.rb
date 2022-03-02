@@ -269,7 +269,7 @@ describe CategoryUser do
     end
   end
 
-  describe "#muted_category_ids" do
+  describe ".muted_category_ids" do
     context "max category nesting 2" do
       fab!(:category1) { Fabricate(:category) }
       fab!(:category2) { Fabricate(:category, parent_category: category1) }
