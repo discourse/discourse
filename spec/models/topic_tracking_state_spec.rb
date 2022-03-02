@@ -371,10 +371,11 @@ describe TopicTrackingState do
     report = TopicTrackingState.report(user)
     expect(report.length).to eq(0)
 
-    CategoryUser.create!(user_id: user.id,
-                         notification_level: CategoryUser.notification_levels[:regular],
-                         category_id: sub_category.id
-                         )
+    CategoryUser.create!(
+      user_id: user.id,
+      notification_level: CategoryUser.notification_levels[:regular],
+      category_id: sub_category.id
+    )
 
     report = TopicTrackingState.report(user)
     expect(report.length).to eq(1)
