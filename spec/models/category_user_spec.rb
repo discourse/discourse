@@ -290,7 +290,6 @@ describe CategoryUser do
         category_user.update(notification_level: CategoryUser.notification_levels[:regular])
         expect(CategoryUser.indirectly_muted_category_ids(user)).to eq([])
         expect(CategoryUser.muted_category_ids(user)).to contain_exactly(category3.id)
-
       end
     end
     context "max category nesting 3" do
