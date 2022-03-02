@@ -101,6 +101,12 @@ class DiscourseIpInfo
           ret[:latitude] = result.location.latitude
           ret[:longitude] = result.location.longitude
           ret[:location] = ret.values_at(:city, :region, :country).reject(&:blank?).uniq.join(", ")
+          ret[:geoname_ids] = [
+            result.continent.geoname_id,
+            result.country.geoname_id,
+            result.city.geoname_id,
+            result.subdivisions.map(&:geoname_id),
+          ].flatten.compact
         end
       rescue => e
         Discourse.warn_exception(e, message: "IP #{ip} could not be looked up in MaxMind GeoLite2-City database.")
