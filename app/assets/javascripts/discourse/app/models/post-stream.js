@@ -1,4 +1,4 @@
-import { and, not, or } from "@ember/object/computed";
+import { and, equal, not, or } from "@ember/object/computed";
 import DiscourseURL from "discourse/lib/url";
 import I18n from "I18n";
 import PostsWithPlaceholders from "discourse/lib/posts-with-placeholders";
@@ -37,7 +37,6 @@ export default RestModel.extend({
   posts: null,
   stream: null,
   userFilters: null,
-  summary: null,
   loaded: null,
   loadingAbove: null,
   loadingBelow: null,
@@ -48,6 +47,7 @@ export default RestModel.extend({
   timelineLookup: null,
   filterRepliesToPostNumber: null,
   filterUpwardsPostID: null,
+  filter: null,
 
   init() {
     this._identityMap = {};
@@ -62,7 +62,6 @@ export default RestModel.extend({
       postsWithPlaceholders,
       stream: [],
       userFilters: [],
-      summary: false,
       filterRepliesToPostNumber:
         parseInt(this.get("topic.replies_to_post_number"), 10) || false,
       filterUpwardsPostID: false,
@@ -77,6 +76,8 @@ export default RestModel.extend({
 
   loading: or("loadingAbove", "loadingBelow", "loadingFilter", "stagingPost"),
   notLoading: not("loading"),
+
+  summary: equal("filter", "summary"),
 
   @discourseComputed(
     "isMegaTopic",
@@ -137,7 +138,7 @@ export default RestModel.extend({
     params for the stream.
   **/
   @discourseComputed(
-    "summary",
+    "filter",
     "userFilters.[]",
     "filterRepliesToPostNumber",
     "filterUpwardsPostID"
@@ -145,8 +146,8 @@ export default RestModel.extend({
   streamFilters() {
     const result = {};
 
-    if (this.summary) {
-      result.filter = "summary";
+    if (this.filter) {
+      result.filter = this.filter;
     }
 
     const userFilters = this.userFilters;
@@ -235,10 +236,10 @@ export default RestModel.extend({
   cancelFilter() {
     this.setProperties({
       userFilters: [],
-      summary: false,
       filterRepliesToPostNumber: false,
       filterUpwardsPostID: false,
       mixedHiddenPosts: false,
+      filter: null,
     });
   },
 
@@ -252,7 +253,7 @@ export default RestModel.extend({
 
   showSummary() {
     this.cancelFilter();
-    this.set("summary", true);
+    this.set("filter", "summary");
     return this.refreshAndJumptoSecondVisible();
   },
 
