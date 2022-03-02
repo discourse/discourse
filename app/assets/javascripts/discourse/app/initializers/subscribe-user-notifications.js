@@ -148,9 +148,9 @@ export default {
         );
         initDesktopNotifications(bus, appEvents);
 
-        if (isPushNotificationsEnabled(user, site.mobileView)) {
+        if (isPushNotificationsEnabled(user)) {
           disableDesktopNotifications();
-          registerPushNotifications(user, site.mobileView, router, appEvents);
+          registerPushNotifications(user, router, appEvents);
         } else {
           unsubscribePushNotifications(user);
         }

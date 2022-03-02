@@ -46,9 +46,12 @@ export default {
       window.navigator.standalone ||
       document.referrer.includes("android-app://");
 
+    caps.isiOSPWA = caps.isPwa && caps.isIOS;
+
     caps.wasLaunchedFromDiscourseHub = window.location.search.includes(
       "discourse_app=1"
     );
+    caps.isAppWebview = window.ReactNativeWebView !== undefined;
 
     // Inject it
     app.register("capabilities:main", caps, { instantiate: false });
