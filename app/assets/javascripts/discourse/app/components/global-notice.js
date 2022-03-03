@@ -121,10 +121,17 @@ export default Component.extend({
       );
     }
 
-    if (disableEmails === "yes" || disableEmails === "non-staff") {
+    if (disableEmails === "yes") {
       notices.push(
         Notice.create({
           text: I18n.t("emails_are_disabled"),
+          id: "alert-emails-disabled",
+        })
+      );
+    } else if (disableEmails === "non-staff") {
+      notices.push(
+        Notice.create({
+          text: I18n.t("emails_are_disabled_non_staff"),
           id: "alert-emails-disabled",
         })
       );
