@@ -1171,8 +1171,7 @@ class UsersController < ApplicationController
         end
       end
 
-      groups = Group.search_groups(term, groups: groups)
-      groups = groups.order('groups.name asc')
+      groups = Group.search_groups(term, groups: groups, sort: :auto)
 
       to_render[:groups] = groups.map do |m|
         { name: m.name, full_name: m.full_name }
@@ -1328,7 +1327,7 @@ class UsersController < ApplicationController
     end
 
     render json: success_json
-  rescue Discourse::InvalidAccess => e
+  rescue Discourse::InvalidAccess
     render_json_error(I18n.t("notification_level.#{@error_message}"))
   end
 

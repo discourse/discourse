@@ -1788,7 +1788,7 @@ describe UsersController do
           inviter = Fabricate(:user, trust_level: 2)
           sign_in(inviter)
           invite = Fabricate(:invite, invited_by: inviter)
-          invited_user = Fabricate(:invited_user, invite: invite, user: invitee)
+          _invited_user = Fabricate(:invited_user, invite: invite, user: invitee)
 
           get "/u/#{inviter.username}/invited.json"
           expect(response.status).to eq(200)
@@ -1848,7 +1848,7 @@ describe UsersController do
 
           it 'allows admin to see invites' do
             inviter = Fabricate(:user, trust_level: 2)
-            admin = sign_in(Fabricate(:admin))
+            _admin = sign_in(Fabricate(:admin))
             invite = Fabricate(:invite, invited_by: inviter,  email: nil, max_redemptions_allowed: 5, expires_at: 1.month.from_now, emailed_status: Invite.emailed_status_types[:not_required])
 
             get "/u/#{inviter.username}/invited/pending.json"
@@ -1863,7 +1863,7 @@ describe UsersController do
 
         context 'without permission to see invite links' do
           it 'does not return invites' do
-            user = Fabricate(:user, trust_level: 2)
+            _user = Fabricate(:user, trust_level: 2)
             inviter = admin
             Fabricate(:invite, invited_by: inviter,  email: nil, max_redemptions_allowed: 5, expires_at: 1.month.from_now, emailed_status: Invite.emailed_status_types[:not_required])
 
@@ -3984,7 +3984,7 @@ describe UsersController do
           mentionable_level: Group::ALIAS_LEVELS[:everyone],
           messageable_level: Group::ALIAS_LEVELS[:nobody],
           visibility_level: Group.visibility_levels[:public],
-          name: 'aaa1'
+          name: 'aaa1bbb'
         )
       end
 
@@ -3993,7 +3993,7 @@ describe UsersController do
           mentionable_level: Group::ALIAS_LEVELS[:everyone],
           messageable_level: Group::ALIAS_LEVELS[:nobody],
           visibility_level: Group.visibility_levels[:logged_on_users],
-          name: 'aaa2'
+          name: 'bbb1aaa'
         )
       end
 
@@ -4002,7 +4002,7 @@ describe UsersController do
           mentionable_level: Group::ALIAS_LEVELS[:nobody],
           messageable_level: Group::ALIAS_LEVELS[:everyone],
           visibility_level: Group.visibility_levels[:logged_on_users],
-          name: 'aaa3'
+          name: 'ccc1aaa'
         )
       end
 
@@ -4011,13 +4011,22 @@ describe UsersController do
           mentionable_level: Group::ALIAS_LEVELS[:members_mods_and_admins],
           messageable_level: Group::ALIAS_LEVELS[:members_mods_and_admins],
           visibility_level: Group.visibility_levels[:members],
-          name: 'aaa4'
+          name: 'ddd1aaa'
         )
       end
 
       describe 'when signed in' do
         before do
           sign_in(user)
+        end
+
+        it "correctly sorts on prefix" do
+          get "/u/search/users.json", params: { include_groups: "true", term: 'bbb' }
+
+          expect(response.status).to eq(200)
+          groups = response.parsed_body["groups"]
+
+          expect(groups.map { |g| g["name"] }).to eq(["bbb1aaa", "aaa1bbb"])
         end
 
         it "does not search for groups if there is no term" do
@@ -4612,7 +4621,7 @@ describe UsersController do
       it "creates a security key for the user" do
         simulate_localhost_webauthn_challenge
         create_second_factor_security_key
-        response_parsed = response.parsed_body
+        _response_parsed = response.parsed_body
 
         post "/u/register_second_factor_security_key.json", params: valid_security_key_create_post_data
 
@@ -4626,7 +4635,7 @@ describe UsersController do
       it "shows a security key error and does not create a key" do
         stub_as_dev_localhost
         create_second_factor_security_key
-        response_parsed = response.parsed_body
+        _response_parsed = response.parsed_body
 
         post "/u/register_second_factor_security_key.json", params: {
           id: "bad id",
@@ -4651,8 +4660,8 @@ describe UsersController do
       end
       context 'when user has a registered totp and security key' do
         before do
-          totp_second_factor = Fabricate(:user_second_factor_totp, user: user1)
-          security_key_second_factor = Fabricate(:user_security_key, user: user1, factor_type: UserSecurityKey.factor_types[:second_factor])
+          _totp_second_factor = Fabricate(:user_second_factor_totp, user: user1)
+          _security_key_second_factor = Fabricate(:user_security_key, user: user1, factor_type: UserSecurityKey.factor_types[:second_factor])
         end
 
         it 'should disable all totp and security keys' do
