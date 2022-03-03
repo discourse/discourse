@@ -102,7 +102,7 @@ class DiscourseIpInfo
           ret[:longitude] = result.location.longitude
           ret[:location] = ret.values_at(:city, :region, :country).reject(&:blank?).uniq.join(", ")
 
-          # used by plugins or API to locate users more accurate
+          # used by plugins or API to locate users more accurately
           ret[:geoname_ids] = [
             result.continent.geoname_id, result.country.geoname_id, result.city.geoname_id,
             *result.subdivisions.map(&:geoname_id)
