@@ -216,7 +216,7 @@ module Email
 
         if post && Guardian.new(user).can_see_post?(post)
           if destination_too_old?(post)
-            raise OldDestinationError.new("#{Discourse.base_url}/p/#{post.id}")
+            raise OldDestinationError
           end
         end
 

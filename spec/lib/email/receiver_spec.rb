@@ -98,6 +98,7 @@ describe Email::Receiver do
     expect { process(:old_destination) }.to raise_error(
       Email::Receiver::OldDestinationError
     )
+    expect(IncomingEmail.last.error).to eq("Email::Receiver::OldDestinationError")
 
     SiteSetting.disallow_reply_by_email_after_days = 0
     IncomingEmail.destroy_all
