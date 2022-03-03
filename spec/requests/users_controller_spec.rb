@@ -648,6 +648,69 @@ describe UsersController do
           expect(response.status).to eq(200)
         end
       end
+
+      context 'with external_ids' do
+        fab!(:api_key, refind: false) { Fabricate(:api_key, user: admin) }
+
+        let(:plugin_auth_provider) do
+          authenticator_class = Class.new(Auth::ManagedAuthenticator) do
+            def name
+              'pluginauth'
+            end
+
+            def enabled?
+              true
+            end
+          end
+
+          provider = Auth::AuthProvider.new
+          provider.authenticator = authenticator_class.new
+          provider
+        end
+
+        before do
+          DiscoursePluginRegistry.register_auth_provider(plugin_auth_provider)
+        end
+
+        after do
+          DiscoursePluginRegistry.reset!
+        end
+
+        it 'creates User record' do
+          params = {
+            username: 'foobar',
+            email: 'test@example.com',
+            external_ids: { 'pluginauth' => 'pluginauth_uid' },
+          }
+
+          expect { post "/u.json", params: params, headers: { HTTP_API_KEY: api_key.key } }
+            .to change { UserAssociatedAccount.count }.by(1)
+            .and change { User.count }.by(1)
+
+          expect(response.status).to eq(200)
+
+          user = User.last
+          user_associated_account = UserAssociatedAccount.last
+
+          expect(user.username).to eq('foobar')
+          expect(user.email).to eq('test@example.com')
+          expect(user.user_associated_account_ids).to contain_exactly(user_associated_account.id)
+          expect(user_associated_account.provider_name).to eq('pluginauth')
+          expect(user_associated_account.provider_uid).to eq('pluginauth_uid')
+          expect(user_associated_account.user_id).to eq(user.id)
+        end
+
+        it 'returns error if external ID provider does not exist' do
+          params = {
+            username: 'foobar',
+            email: 'test@example.com',
+            external_ids: { 'pluginauth2' => 'pluginauth_uid' },
+          }
+
+          post "/u.json", params: params, headers: { HTTP_API_KEY: api_key.key }
+          expect(response.status).to eq(400)
+        end
+      end
     end
 
     context 'when creating a non active user (unconfirmed email)' do
@@ -2229,6 +2292,74 @@ describe UsersController do
           expect(response).to be_forbidden
           expect(user.reload.name).not_to eq 'Jim Tom'
         end
+      end
+    end
+
+    context 'with external_ids' do
+      fab!(:api_key, refind: false) { Fabricate(:api_key, user: admin) }
+
+      let(:plugin_auth_provider) do
+        authenticator_class = Class.new(Auth::ManagedAuthenticator) do
+          def name
+            'pluginauth'
+          end
+
+          def enabled?
+            true
+          end
+        end
+
+        provider = Auth::AuthProvider.new
+        provider.authenticator = authenticator_class.new
+        provider
+      end
+
+      before do
+        DiscoursePluginRegistry.register_auth_provider(plugin_auth_provider)
+      end
+
+      after do
+        DiscoursePluginRegistry.reset!
+      end
+
+      it 'can create UserAssociatedAccount records' do
+        params = {
+          external_ids: { 'pluginauth' => 'pluginauth_uid' },
+        }
+
+        expect { put "/u/#{user.username}.json", params: params, headers: { HTTP_API_KEY: api_key.key } }
+          .to change { UserAssociatedAccount.count }.by(1)
+
+        expect(response.status).to eq(200)
+
+        user_associated_account = UserAssociatedAccount.last
+        expect(user.reload.user_associated_account_ids).to contain_exactly(user_associated_account.id)
+        expect(user_associated_account.provider_name).to eq('pluginauth')
+        expect(user_associated_account.provider_uid).to eq('pluginauth_uid')
+        expect(user_associated_account.user_id).to eq(user.id)
+      end
+
+      it 'can destroy UserAssociatedAccount records' do
+        user.user_associated_accounts.create!(provider_name: 'pluginauth', provider_uid: 'pluginauth_uid')
+
+        params = {
+          external_ids: { 'pluginauth' => nil },
+        }
+
+        expect { put "/u/#{user.username}.json", params: params, headers: { HTTP_API_KEY: api_key.key } }
+          .to change { UserAssociatedAccount.count }.by(-1)
+
+        expect(response.status).to eq(200)
+        expect(user.reload.user_associated_account_ids).to be_blank
+      end
+
+      it 'returns error if external ID provider does not exist' do
+        params = {
+          external_ids: { 'pluginauth2' => 'pluginauth_uid' },
+        }
+
+        put "/u/#{user.username}.json", params: params, headers: { HTTP_API_KEY: api_key.key }
+        expect(response.status).to eq(400)
       end
     end
   end

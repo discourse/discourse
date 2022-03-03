@@ -21,6 +21,9 @@
     },
     "user_fields[1]": {
       "type": "boolean"
+    },
+    "external_ids": {
+      "type": "object"
     }
   },
   "required": [

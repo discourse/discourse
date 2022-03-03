@@ -48,6 +48,15 @@ RSpec.describe Admin::UsersController do
         get "/admin/users/#{user.id}.json"
         expect(response.status).to eq(200)
       end
+
+      it 'includes associated accounts' do
+        user.user_associated_accounts.create!(provider_name: 'pluginauth', provider_uid: 'pluginauth_uid')
+
+        get "/admin/users/#{user.id}.json"
+        expect(response.status).to eq(200)
+        expect(response.parsed_body['external_ids'].size).to eq(1)
+        expect(response.parsed_body['external_ids']['pluginauth']).to eq('pluginauth_uid')
+      end
     end
 
     context 'a non-existing user' do
