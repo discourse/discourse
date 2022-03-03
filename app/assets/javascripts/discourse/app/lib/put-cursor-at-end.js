@@ -1,8 +1,10 @@
-import { isAppleDevice } from "discourse/lib/utilities";
+import { helperContext } from "discourse-common/lib/helpers";
 import positioningWorkaround from "discourse/lib/safari-hacks";
 
 export default function (element) {
-  if (isAppleDevice() && positioningWorkaround.touchstartEvent) {
+  const caps = helperContext().capabilities;
+
+  if (caps.isApple && positioningWorkaround.touchstartEvent) {
     positioningWorkaround.touchstartEvent(element);
   } else {
     element.focus();

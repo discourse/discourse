@@ -113,7 +113,6 @@ const DEFAULT_BINDINGS = {
 };
 
 const animationDuration = 100;
-const caps = helperContext().capabilities;
 
 function preventKeyboardEvent(event) {
   event.preventDefault();
@@ -857,13 +856,13 @@ export default {
   },
 
   webviewKeyboardBack() {
-    if (caps.isAppWebview) {
+    if (helperContext().capabilities.isAppWebview) {
       window.history.back();
     }
   },
 
   webviewKeyboardForward() {
-    if (caps.isAppWebview) {
+    if (helperContext().capabilities.isAppWebview) {
       window.history.forward();
     }
   },
