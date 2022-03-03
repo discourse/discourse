@@ -43,7 +43,7 @@ describe PostActionDestroyer do
     end
   end
 
-  context 'any other notifyable type' do
+  context 'any other notifiable type' do
     before do
       PostActionCreator.new(user, post, PostActionType.types[:spam]).perform
     end
