@@ -942,7 +942,7 @@ describe Group do
       expect(search_group_names('test2')).to eq([])
     end
 
-    it 'should prioritize prefix matches' do
+    it 'should prioritize prefix matches on group's name or fullname' do
       Fabricate(:group, name: 'pears_11', full_name: 'fred apple')
       Fabricate(:group, name: 'apples', full_name: 'jane orange')
       Fabricate(:group, name: 'oranges', full_name: 'ms fred')
