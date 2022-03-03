@@ -1,6 +1,5 @@
 import {
   escapeExpression,
-  isAppWebview,
   postRNWebviewMessage,
 } from "discourse/lib/utilities";
 import I18n from "I18n";
@@ -64,7 +63,7 @@ export default function (elem, siteSettings) {
             });
           }
 
-          if (isAppWebview()) {
+          if (caps.isAppWebview) {
             postRNWebviewMessage(
               "headerBg",
               $(".mfp-bg").css("background-color")
@@ -77,7 +76,7 @@ export default function (elem, siteSettings) {
         beforeClose() {
           this.wrap.off("click.pinhandler");
           this.wrap.removeClass("mfp-force-scrollbars");
-          if (isAppWebview()) {
+          if (caps.isAppWebview) {
             postRNWebviewMessage(
               "headerBg",
               $(".d-header").css("background-color")

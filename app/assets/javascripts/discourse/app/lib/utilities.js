@@ -436,17 +436,8 @@ export function areCookiesEnabled() {
   }
 }
 
-export function isiOSPWA() {
-  let caps = helperContext().capabilities;
-  return window.matchMedia("(display-mode: standalone)").matches && caps.isIOS;
-}
-
 export function prefersReducedMotion() {
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-}
-
-export function isAppWebview() {
-  return window.ReactNativeWebView !== undefined;
 }
 
 export function postRNWebviewMessage(prop, value) {

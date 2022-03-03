@@ -1,6 +1,5 @@
 import { bind } from "discourse-common/utils/decorators";
 import discourseDebounce from "discourse-common/lib/debounce";
-import { isAppWebview } from "discourse/lib/utilities";
 import { later, run, throttle } from "@ember/runloop";
 import {
   nextTopicUrl,
@@ -12,6 +11,7 @@ import domUtils from "discourse-common/utils/dom-utils";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import { ajax } from "discourse/lib/ajax";
 import { headerOffset } from "discourse/lib/offset-calculator";
+import { helperContext } from "discourse-common/lib/helpers";
 
 let extraKeyboardShortcutsHelp = {};
 function addExtraKeyboardShortcutHelp(help) {
@@ -856,13 +856,13 @@ export default {
   },
 
   webviewKeyboardBack() {
-    if (isAppWebview()) {
+    if (helperContext().capabilities.isAppWebview) {
       window.history.back();
     }
   },
 
   webviewKeyboardForward() {
-    if (isAppWebview()) {
+    if (helperContext().capabilities.isAppWebview) {
       window.history.forward();
     }
   },
