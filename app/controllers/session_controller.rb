@@ -456,6 +456,9 @@ class SessionController < ApplicationController
       else
         json[:security_keys_enabled] = false
       end
+      if challenge[:description]
+        json[:description] = challenge[:description]
+      end
     else
       json[:error] = I18n.t(error_key)
     end

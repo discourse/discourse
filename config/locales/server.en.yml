@@ -2583,6 +2583,9 @@ en:
     challenge_not_found: "Couldn't find a 2FA challenge in your current session."
     challenge_expired: "Too much time has passed since the 2FA challenge was staged and it's no longer valid. Please try again."
     challenge_not_completed: "You've not completed the 2FA challenge to perform this action. Please complete the 2FA challenge and try again."
+    actions:
+      grant_admin:
+        description: "For additional security measures, you need to confirm your 2FA before %{username} is granted admin access."
   admin:
     email:
       sent_test: "sent!"
