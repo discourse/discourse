@@ -120,7 +120,7 @@ describe Email::Processor do
         expect(errors.first).to include("boom")
 
         incoming_email = IncomingEmail.last
-        expect(incoming_email.error).to eq("boom")
+        expect(incoming_email.error).to eq("RuntimeError")
         expect(incoming_email.rejection_message).to be_present
 
         expect(EmailLog.last.email_type).to eq("email_reject_unrecognized_error")
