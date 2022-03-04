@@ -4213,6 +4213,7 @@ en:
             topics:
               read: Read a topic or a specific post in it. RSS is also supported.
               write: Create a new topic or post to an existing one.
+              update: Update a topic. Change the title, category, tags, etc.
               read_lists: Read topic lists like top, new, latest, etc. RSS is also supported.
               wordpress: Necessary for the WordPress wp-discourse plugin to work.
             posts:
