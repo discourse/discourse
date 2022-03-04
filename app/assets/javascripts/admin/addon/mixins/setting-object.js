@@ -69,6 +69,6 @@ export default Mixin.create({
 
   @discourseComputed("allow_any")
   anyValue(allowAny) {
-    return !!allowAny;
+    return allowAny;
   },
 });

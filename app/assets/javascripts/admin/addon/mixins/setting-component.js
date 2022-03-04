@@ -102,7 +102,7 @@ export default Mixin.create({
 
   @discourseComputed("setting.anyValue")
   allowAny(anyValue) {
-    return !!anyValue;
+    return anyValue !== false;
   },
 
   overridden: propertyNotEqual("setting.default", "buffered.value"),
