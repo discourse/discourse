@@ -109,16 +109,23 @@ class ScreenedIpAddress < ActiveRecord::Base
   end
 
   def self.subnets(family, masklen)
-    max_masklen = case family
-                  when 4 then 32
-                  when 6 then 128
+    base_masklen = case family
+                   # every IPv4 is important and represents a single user
+                   when 4 then 32
+                   # IPv6 are less important and ISPs assign blocks of /64 to a
+                   # single user we set the base masklen to 72 to be more
+                   # similar to IPv4 so we can use the algorithm for rolling up
+                   # 72 (the base masklen) - 64 (the first rollup) for IPv6
+                   # is equal to
+                   # 32 (the base masklen) - 24 (the first rollup) for IPv4
+                   when 6 then 72
     end
 
     sql = <<~SQL
       WITH weighted_ips AS (
         SELECT ip_address,
                network(inet(host(ip_address) || '/' || :masklen))::text subnet,
-               greatest(1, pow(2, :max_masklen - masklen(ip_address)) * :weight)::int weight
+               greatest(1, pow(2, :base_masklen - masklen(ip_address)) * :weight)::int weight
         FROM screened_ip_addresses
         WHERE family(ip_address) = :family AND
               masklen(ip_address) > :masklen AND
@@ -136,10 +143,10 @@ class ScreenedIpAddress < ActiveRecord::Base
       sql,
       family: family,
       masklen: masklen,
-      max_masklen: max_masklen,
+      base_masklen: base_masklen,
       weight: weight,
       blocked: ScreenedIpAddress.actions[:block],
-      threshold: (2**(max_masklen - masklen) * weight).round
+      threshold: (2**(base_masklen - masklen) * weight).round
     )
   end
 

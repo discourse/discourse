@@ -338,7 +338,7 @@ describe ScreenedIpAddress do
       expect(ScreenedIpAddress.pluck(:ip_address)).to include("1.1.1.0/24")
       expect(ScreenedIpAddress.pluck(:ip_address)).not_to include("1.1.1.1", "1.1.1.2", "1.1.1.3")
 
-      # Roll up is stable
+      # roll up is stable
       expect { ScreenedIpAddress.roll_up }.to change { ScreenedIpAddress.count }.by(0)
       expect(ScreenedIpAddress.pluck(:ip_address)).to include("1.1.1.0/24")
       expect(ScreenedIpAddress.pluck(:ip_address)).not_to include("1.1.1.1", "1.1.1.2", "1.1.1.3")
@@ -346,13 +346,57 @@ describe ScreenedIpAddress do
       Fabricate(:screened_ip_address, ip_address: "1.1.2.0/24")
       Fabricate(:screened_ip_address, ip_address: "1.1.3.0/24")
       # 1.1.1.0/24, 1.1.2.0/24, 1.1.3.0/24 sum up to 9 IPs
-      # at least 10 are needed for roll up to /22
+      # at least 10 are needed for roll up to /22, this will not work
       expect { ScreenedIpAddress.roll_up }.to change { ScreenedIpAddress.count }.by(0)
 
+      # now there are 10
       Fabricate(:screened_ip_address, ip_address: "1.1.0.1/24")
       expect { ScreenedIpAddress.roll_up }.to change { ScreenedIpAddress.count }.by(-3)
       expect(ScreenedIpAddress.pluck(:ip_address)).to include("1.1.0.0/22")
-      expect(ScreenedIpAddress.pluck(:ip_address)).not_to include("1.1.1.0/24", "1.1.2.0/24", "1.1.3.0/24", "1.1.3.0/24")
+      expect(ScreenedIpAddress.pluck(:ip_address)).not_to include("1.1.1.0/24", "1.1.2.0/24", "1.1.3.0/24")
+    end
+
+    it 'rolls up IPv6 addresses' do
+      # roll up to /64 requires 256 * 1% ~ 3 IPs
+      # roll up to /60 requires 4096 * 1% ~ 40 IPs
+      SiteSetting.min_ban_entries_for_roll_up = 1
+
+      Fabricate(:screened_ip_address, ip_address: "2001:db8:3333:4444:5555:6666:7777:8888")
+      expect { ScreenedIpAddress.roll_up }.not_to change { ScreenedIpAddress.count }
+
+      Fabricate(:screened_ip_address, ip_address: "2001:db8:3333:4444:5555:6666:7777:8889")
+      expect { ScreenedIpAddress.roll_up }.not_to change { ScreenedIpAddress.count }
+
+      Fabricate(:screened_ip_address, ip_address: "2001:db8:3333:4444:5555:6666:7777:888a")
+      expect { ScreenedIpAddress.roll_up }.to change { ScreenedIpAddress.count }.by(-2)
+      expect(ScreenedIpAddress.pluck(:ip_address)).to include("2001:db8:3333:4444:5555:6666:7777:8888/64")
+      expect(ScreenedIpAddress.pluck(:ip_address)).not_to include("2001:db8:3333:4444:5555:6666:7777:8888", "2001:db8:3333:4444:5555:6666:7777:8889", "2001:db8:3333:4444:5555:6666:7777:888a")
+
+      # roll up is stable
+      expect { ScreenedIpAddress.roll_up }.to change { ScreenedIpAddress.count }.by(0)
+      expect(ScreenedIpAddress.pluck(:ip_address)).to include("2001:db8:3333:4444:5555:6666:7777:8888/64")
+      expect(ScreenedIpAddress.pluck(:ip_address)).not_to include("2001:db8:3333:4444:5555:6666:7777:8888", "2001:db8:3333:4444:5555:6666:7777:8889", "2001:db8:3333:4444:5555:6666:7777:888a")
+
+      Fabricate(:screened_ip_address, ip_address: "2001:db8:3333:4442::/64")
+      Fabricate(:screened_ip_address, ip_address: "2001:db8:3333:4443::/64")
+      Fabricate(:screened_ip_address, ip_address: "2001:db8:3333:4445::/64")
+      Fabricate(:screened_ip_address, ip_address: "2001:db8:3333:4446::/64")
+      Fabricate(:screened_ip_address, ip_address: "2001:db8:3333:4447::/64")
+      Fabricate(:screened_ip_address, ip_address: "2001:db8:3333:4448::/64")
+      Fabricate(:screened_ip_address, ip_address: "2001:db8:3333:4449::/64")
+      Fabricate(:screened_ip_address, ip_address: "2001:db8:3333:444a::/64")
+      Fabricate(:screened_ip_address, ip_address: "2001:db8:3333:444b::/64")
+      Fabricate(:screened_ip_address, ip_address: "2001:db8:3333:444c::/64")
+      Fabricate(:screened_ip_address, ip_address: "2001:db8:3333:444d::/64")
+      Fabricate(:screened_ip_address, ip_address: "2001:db8:3333:444e::/64")
+      # at least 40 IPs are needed for roll up to /60 (or 13 x /64), this will not work
+      expect { ScreenedIpAddress.roll_up }.to change { ScreenedIpAddress.count }.by(0)
+
+      # now there are 40
+      Fabricate(:screened_ip_address, ip_address: "2001:db8:3333:444f::/64")
+      expect { ScreenedIpAddress.roll_up }.to change { ScreenedIpAddress.count }.by(-13)
+      expect(ScreenedIpAddress.pluck(:ip_address)).to include("2001:db8:3333:4440::/60")
+      expect(ScreenedIpAddress.pluck(:ip_address)).not_to include("2001:db8:3333:4444:5555:6666:7777:8888::/64", "2001:db8:3333:4445::/64", "2001:db8:3333:4446::/64")
     end
   end
 end
