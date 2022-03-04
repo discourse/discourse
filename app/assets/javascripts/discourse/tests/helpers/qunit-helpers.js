@@ -370,9 +370,9 @@ export function acceptance(name, optionsOrCallback) {
     // New, preferred way
     module(name, function (hooks) {
       needs.hooks = hooks;
+      callback(needs);
       hooks.beforeEach(setup.beforeEach);
       hooks.afterEach(setup.afterEach);
-      callback(needs);
 
       if (!LEGACY_ENV && getContext) {
         setupApplicationTest(hooks);
