@@ -22,6 +22,7 @@ class ApiKeyScope < ActiveRecord::Base
         },
         topics: {
           write: { actions: %w[posts#create], params: %i[topic_id] },
+          update: { actions: %w[topics#update], params: %i[topic_id] },
           read: {
             actions: %w[topics#show topics#feed topics#posts],
             params: %i[topic_id], aliases: { topic_id: :id }
