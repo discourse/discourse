@@ -1,37 +1,48 @@
-import { computed, get } from "@ember/object";
+import EmberObject, { computed, get } from "@ember/object";
 import extractValue from "./extract-value";
 
 export default function handleDescriptor(target, key, desc, params = []) {
-  return {
-    enumerable: desc.enumerable,
-    configurable: desc.configurable,
-    writeable: desc.writeable,
-    initializer() {
-      let computedDescriptor;
+  const val = extractValue(desc);
 
-      if (desc.writable) {
-        let val = extractValue(desc);
-        if (typeof val === "object") {
-          let value = {};
-          if (val.get) {
-            value.get = callUserSuppliedGet(params, val.get);
+  if (typeof val === "function" && target instanceof EmberObject) {
+    // We're in a native class, so convert the method to a getter first
+    desc.writable = false;
+    desc.initializer = undefined;
+    desc.value = undefined;
+    desc.get = callUserSuppliedGet(params, val);
+
+    return computed(target, key, desc);
+  } else {
+    return {
+      enumerable: desc.enumerable,
+      configurable: desc.configurable,
+      writable: desc.writable,
+      initializer() {
+        let computedDescriptor;
+
+        if (desc.writable) {
+          if (typeof val === "object") {
+            let value = {};
+            if (val.get) {
+              value.get = callUserSuppliedGet(params, val.get);
+            }
+            if (val.set) {
+              value.set = callUserSuppliedSet(params, val.set);
+            }
+            computedDescriptor = value;
+          } else {
+            computedDescriptor = callUserSuppliedGet(params, val);
           }
-          if (val.set) {
-            value.set = callUserSuppliedSet(params, val.set);
-          }
-          computedDescriptor = value;
         } else {
-          computedDescriptor = callUserSuppliedGet(params, val);
+          throw new Error(
+            "ember-computed-decorators does not support using getters and setters"
+          );
         }
-      } else {
-        throw new Error(
-          "ember-computed-decorators does not support using getters and setters"
-        );
-      }
 
-      return computed.apply(null, params.concat(computedDescriptor));
-    },
-  };
+        return computed.apply(null, params.concat(computedDescriptor));
+      },
+    };
+  }
 }
 
 function niceAttr(attr) {
