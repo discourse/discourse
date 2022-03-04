@@ -40,11 +40,17 @@ describe SecondFactor::Actions::GrantAdmin do
   end
 
   describe "#second_factor_auth_required!" do
-    it "returns a hash with callback_params and redirect_path" do
+    it "returns a hash with callback_params, redirect_path and a description" do
       instance = create_instance(admin)
       hash = instance.second_factor_auth_required!(params({ user_id: user.id }))
       expect(hash[:callback_params]).to eq({ user_id: user.id })
       expect(hash[:redirect_path]).to eq("/admin/users/#{user.id}/#{user.username}")
+      expect(hash[:description]).to eq(
+        I18n.t(
+          "second_factor_auth.actions.grant_admin.description",
+          username: "@#{user.username}"
+        )
+      )
     end
 
     it "ensures the acting user is admin" do

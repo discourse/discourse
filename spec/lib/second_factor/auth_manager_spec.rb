@@ -94,7 +94,7 @@ describe SecondFactor::AuthManager do
       action
         .expects(:second_factor_auth_required!)
         .with({ expect_me: 131 })
-        .returns({ callback_params: { call_me_back: 4314 }, redirect_path: "/gg" })
+        .returns({ callback_params: { call_me_back: 4314 }, redirect_path: "/gg", description: "hello world!" })
         .once
       action.expects(:second_factor_auth_completed!).never
       manager = create_manager(action)
@@ -114,6 +114,7 @@ describe SecondFactor::AuthManager do
       expect(challenge[:redirect_path]).to eq("/gg")
       expect(challenge[:allowed_methods]).to eq(manager.allowed_methods.to_a)
       expect(challenge[:callback_params]).to eq({ call_me_back: 4314 })
+      expect(challenge[:description]).to eq("hello world!")
     end
 
     it "sets the redirect_path to the root path if second_factor_auth_required! doesn't specify a redirect_path" do

@@ -2305,6 +2305,7 @@ describe SessionController do
         UserSecondFactor.methods[:totp],
         UserSecondFactor.methods[:security_key],
       )
+      expect(challenge_data["description"]).to eq("this is description for test action")
 
       Fabricate(
         :user_security_key_with_random_credential,
