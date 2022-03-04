@@ -298,10 +298,6 @@ export function acceptance(name, optionsOrCallback) {
 
       resetSite(currentSettings(), siteChanges);
 
-      if (LEGACY_ENV) {
-        getApplication().__registeredObjects__ = false;
-        getApplication().reset();
-      }
       this.container = getOwner(this);
       if (LEGACY_ENV && loggedIn) {
         updateCurrentUser({
@@ -373,6 +369,13 @@ export function acceptance(name, optionsOrCallback) {
       callback(needs);
       hooks.beforeEach(setup.beforeEach);
       hooks.afterEach(setup.afterEach);
+
+      if (LEGACY_ENV) {
+        hooks.beforeEach(function () {
+          getApplication().__registeredObjects__ = false;
+          getApplication().reset();
+        });
+      }
 
       if (!LEGACY_ENV && getContext) {
         setupApplicationTest(hooks);
