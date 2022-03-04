@@ -36,6 +36,10 @@ class ApiKeyScope < ActiveRecord::Base
         posts: {
           edit: { actions: %w[posts#update], params: %i[id] }
         },
+        categories: {
+          list: { actions: %w[categories#index] },
+          show: { actions: %w[categories#show], params: %i[id] }
+        },
         uploads: {
           create: {
             actions: %w[

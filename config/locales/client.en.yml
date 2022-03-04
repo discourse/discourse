@@ -4218,6 +4218,9 @@ en:
               wordpress: Necessary for the WordPress wp-discourse plugin to work.
             posts:
               edit: Edit any post or a specific one.
+            categories:
+              list: Get a list of categories.
+              show: Get a single category by id.
             uploads:
               create: Upload a new file or initiate single or multipart direct uploads to external storage.
             users:
