@@ -307,13 +307,15 @@ describe StaffActionLogger do
   end
 
   describe 'log_roll_up' do
-    let(:subnets) { ["1.2.3.0/24", "42.42.42.0/24"] }
-    subject(:log_roll_up) { described_class.new(admin).log_roll_up(subnets) }
+    let(:subnet) { "1.2.3.0/24" }
+    let(:ips) { ["1.2.3.4", "1.2.3.100"] }
+
+    subject(:log_roll_up) { described_class.new(admin).log_roll_up(subnet, ips) }
 
     it 'creates a new UserHistory record' do
-      log_record = logger.log_roll_up(subnets)
+      log_record = logger.log_roll_up(subnet, ips)
       expect(log_record).to be_valid
-      expect(log_record.details).to eq(subnets.join(", "))
+      expect(log_record.details).to eq("#{subnet} from #{ips.join(", ")}")
     end
   end
 

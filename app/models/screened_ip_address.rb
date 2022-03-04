@@ -80,7 +80,8 @@ class ScreenedIpAddress < ActiveRecord::Base
     #
     #   http://www.postgresql.org/docs/9.1/static/datatype-net-types.html
     #   http://www.postgresql.org/docs/9.1/static/functions-net.html
-    order('masklen(ip_address) DESC').find_by("? <<= ip_address", ip_address.to_cidr_s)
+    ip_address = IPAddr === ip_address ? ip_address.to_cidr_s : ip_address.to_s
+    order('masklen(ip_address) DESC').find_by("? <<= ip_address", ip_address)
   end
 
   def self.should_block?(ip_address)
