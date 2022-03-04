@@ -43,20 +43,20 @@
 
   <table class='topic-list'>
 
-    <thead>
-      <tr>
-        <th><%= t 'js.topic.title' %></th>
-        <th></th>
-        <th class="replies"><%= t 'js.replies' %></th>
-        <th class="views"><%= t 'js.views' %></th>
-        <th><%= t 'js.activity' %></th>
+    <thead class="topic-list-header">
+      <tr class="topic-list-header-row">
+        <th class="default topic-list-data"><%= t 'js.topic.title' %></th>
+        <th class="posters topic-list-data"></th>
+        <th class="posts num topic-list-data"><%= t 'js.replies' %></th>
+        <th class="views num topic-list-data"><%= t 'js.views' %></th>
+        <th class="activity num topic-list-data"><%= t 'js.activity' %></th>
       </tr>
     </thead>
 
-    <tbody>
+    <tbody class="topic-list-body">
       <% @list.topics.each_with_index do |t,i| %>
         <tr class="topic-list-item">
-          <td class="main-link" itemprop='itemListElement' itemscope itemtype='http://schema.org/ListItem'>
+          <td class="main-link topic-list-data" itemprop='itemListElement' itemscope itemtype='http://schema.org/ListItem'>
             <meta itemprop='name' content='<%= t.title %>'>
             <meta itemprop='url' content='<%= t.url %>'>
             <% if t.image_url.present? %>
@@ -90,20 +90,20 @@
               </p>
             <% end %>
           </td>
-          <td class='posters'>
+          <td class='posters topic-list-data'>
             <% t.posters.each do |poster| %>
               <a href="<%= Discourse.base_url %>/u/<%= poster.user.username %>" class="<%= poster.extras %>">
                 <img width="25" height="25" src="<%= poster.user.avatar_template.gsub('{size}', '25') %>" class="avatar" title='<%= h(poster.name_and_description) %>' aria-label='<%= h(poster.name_and_description) %>'>
               </a>
             <% end %>
           </td>
-          <td class="replies">
+          <td class="replies num topic-list-data">
             <span class='posts' title='<%= t 'posts' %>'><%= t.posts_count - 1 %></span>
           </td>
-          <td class="views">
+          <td class="views num topic-list-data">
             <span class='views' title='<%= t 'views' %>'><%= t.views %></span>
           </td>
-          <td>
+          <td class="num topic-list-data">
             <%= I18n.l(t.last_posted_at || t.created_at, format: :date_only) %>
           </td>
         </tr>
