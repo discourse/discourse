@@ -48,7 +48,6 @@ class Plugin::Metadata
     "discourse-math",
     "discourse-moderator-attention",
     "discourse-narrative-bot",
-    "discourse-nginx-performance-report",
     "discourse-no-bump",
     "discourse-oauth2-basic",
     "discourse-openid-connect",
