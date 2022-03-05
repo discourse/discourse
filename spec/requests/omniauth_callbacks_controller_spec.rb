@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
 require 'discourse_connect_base'
 
 RSpec.describe Users::OmniauthCallbacksController do
@@ -241,6 +240,32 @@ RSpec.describe Users::OmniauthCallbacksController do
         expect(data["associate_url"]).to eq(nil)
       end
 
+      it 'does not use email for username suggestions if disabled in settings' do
+        SiteSetting.use_email_for_username_and_name_suggestions = false
+        username = ""
+        name = ""
+        email = "billmailbox@test.com"
+        mock_auth(email, username, name)
+
+        get "/auth/google_oauth2/callback.json"
+        data = JSON.parse(cookies[:authentication_data])
+
+        expect(data["username"]).to eq("user1") # not "billmailbox" that can be extracted from email
+      end
+
+      it 'uses email for username suggestions if enabled in settings' do
+        SiteSetting.use_email_for_username_and_name_suggestions = true
+        username = ""
+        name = ""
+        email = "billmailbox@test.com"
+        mock_auth(email, username, name)
+
+        get "/auth/google_oauth2/callback.json"
+        data = JSON.parse(cookies[:authentication_data])
+
+        expect(data["username"]).to eq("billmailbox")
+      end
+
       describe 'when site is invite_only' do
         before do
           SiteSetting.invite_only = true
@@ -409,6 +434,20 @@ RSpec.describe Users::OmniauthCallbacksController do
 
         # Delete the password, it may have been set by someone else
         expect(user.confirm_password?("securepassword")).to eq(false)
+      end
+
+      it "should work if the user has no email_tokens, and an invite" do
+        # Confirming existing email_tokens has a side effect of redeeming invites.
+        # Pretend we don't have any email_tokens
+        user.email_tokens.destroy_all
+
+        invite = Fabricate(:invite, invited_by: Fabricate(:admin))
+        invite.update_column(:email, user.email) # (avoid validation)
+
+        get "/auth/google_oauth2/callback.json"
+        expect(response.status).to eq(302)
+
+        expect(invite.reload.invalidated_at).not_to eq(nil)
       end
 
       it "should update name/username/email when SiteSetting.auth_overrides_* are enabled" do

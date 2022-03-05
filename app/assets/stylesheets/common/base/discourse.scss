@@ -230,6 +230,14 @@ input {
   }
 }
 
+input[type="search"] {
+  &::-webkit-search-cancel-button,
+  &::-webkit-search-decoration {
+    -webkit-appearance: none;
+    appearance: none;
+  }
+}
+
 // Fixes Safari height inconsistency
 ::-webkit-datetime-edit {
   display: inline;
@@ -255,6 +263,8 @@ textarea {
   height: auto;
   background-color: var(--secondary);
   border: 1px solid var(--primary-medium);
+  border-radius: 0;
+
   &:focus {
     @include default-focus;
   }
@@ -820,10 +830,19 @@ table {
   font-size: $base-font-size;
   font-weight: bold;
   padding: 5px 0;
-  background: var(--danger-medium);
+  background: var(--danger);
   text-align: center;
   z-index: z("max");
   color: var(--secondary);
+
+  a {
+    color: var(--secondary);
+    text-decoration: underline;
+  }
+
+  .theme-error-suffix {
+    font-weight: normal;
+  }
 }
 
 .controls {

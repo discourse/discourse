@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe InviteRedeemer do
 
   describe '#create_user_from_invite' do

@@ -146,7 +146,7 @@ Discourse::Application.routes.draw do
         delete "sso_record"
       end
       get "users/:id.json" => 'users#show', defaults: { format: 'json' }
-      get 'users/:id/:username' => 'users#show', constraints: { username: RouteFormat.username }
+      get 'users/:id/:username' => 'users#show', constraints: { username: RouteFormat.username }, as: :user_show
       get 'users/:id/:username/badges' => 'users#show'
       get 'users/:id/:username/tl3_requirements' => 'users#show'
 
@@ -371,6 +371,11 @@ Discourse::Application.routes.draw do
     post "session/email-login/:token" => "session#email_login"
     get "session/otp/:token" => "session#one_time_password", constraints: { token: /[0-9a-f]+/ }
     post "session/otp/:token" => "session#one_time_password", constraints: { token: /[0-9a-f]+/ }
+    get "session/2fa" => "session#second_factor_auth_show"
+    post "session/2fa" => "session#second_factor_auth_perform"
+    if Rails.env.test?
+      post "session/2fa/test-action" => "session#test_second_factor_restricted_route"
+    end
     get "composer_messages" => "composer_messages#index"
 
     resources :static
@@ -809,6 +814,7 @@ Discourse::Application.routes.draw do
 
     # Topic routes
     get "t/id_for/:slug" => "topics#id_for_slug"
+    get "t/external_id/:external_id" => "topics#show_by_external_id", format: :json, constrains: { external_id: /\A[\w-]+\z/ }
     get "t/:slug/:topic_id/print" => "topics#show", format: :html, print: true, constraints: { topic_id: /\d+/ }
     get "t/:slug/:topic_id/wordpress" => "topics#wordpress", constraints: { topic_id: /\d+/ }
     get "t/:topic_id/wordpress" => "topics#wordpress", constraints: { topic_id: /\d+/ }
@@ -842,7 +848,6 @@ Discourse::Application.routes.draw do
     post "t/:topic_id/timings" => "topics#timings", constraints: { topic_id: /\d+/ }
     post "t/:topic_id/invite" => "topics#invite", constraints: { topic_id: /\d+/ }
     post "t/:topic_id/invite-group" => "topics#invite_group", constraints: { topic_id: /\d+/ }
-    post "t/:topic_id/invite-notify" => "topics#invite_notify", constraints: { topic_id: /\d+/ }
     post "t/:topic_id/move-posts" => "topics#move_posts", constraints: { topic_id: /\d+/ }
     post "t/:topic_id/merge-topic" => "topics#merge_topic", constraints: { topic_id: /\d+/ }
     post "t/:topic_id/change-owner" => "topics#change_post_owners", constraints: { topic_id: /\d+/ }
@@ -889,16 +894,14 @@ Discourse::Application.routes.draw do
 
     resources :drafts, only: [:index, :create, :show, :destroy]
 
+    get "/service-worker.js" => "static#service_worker_asset", format: :js
     if service_worker_asset = Rails.application.assets_manifest.assets['service-worker.js']
       # https://developers.google.com/web/fundamentals/codelabs/debugging-service-workers/
       # Normally the browser will wait until a user closes all tabs that contain the
       # current site before updating to a new Service Worker.
       # Support the old Service Worker path to avoid routing error filling up the
       # logs.
-      get "/service-worker.js" => "static#service_worker_asset", format: :js
       get service_worker_asset => "static#service_worker_asset", format: :js
-    elsif Rails.env.development?
-      get "/service-worker.js" => "static#service_worker_asset", format: :js
     end
 
     get "cdn_asset/:site/*path" => "static#cdn_asset", format: false, constraints: { format: /.*/ }

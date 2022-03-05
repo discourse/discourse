@@ -221,7 +221,6 @@ hu:
   too_many_links:
     one: "Sajnáljuk, de az új felhasználók csak egy hivatkozást tehetnek egy bejegyzésbe."
     other: "Sajnáljuk, de az új felhasználók csak %{count} hivatkozást tehetnek egy bejegyzésbe."
-  contains_blocked_word: "A bejegyzésed egy olyan szót tartalmaz, amely nem megengedett: %{word}"
   user_is_suspended: "A felfüggesztett felhasználók nem hozhatnak létre új bejegyzést."
   topic_not_found: "Valami hiba történt. Esetleg lezárták vagy törölték ezt a témát, míg megnézte?"
   create_pm_on_existing_topic: "Sajnáljuk, nem hozhatsz létre PM-et egy meglévő témakörben."
@@ -429,7 +428,7 @@ hu:
     slow_down: "Túl sokszor hajtotta végre ezt a műveletet, próbálja újra később."
     too_many_requests: "Túl sokszor hajtotta végre ezt a műveletet. Az újrapróbálkozás előtt várjon ennyi időt: %{time_left}."
     by_type:
-      unsubscribe_via_email: "Elérted az e-mailben történő leiratkozások maximális számát. Várj %{time_left}t mielőtt újra megpróbálod."
+      unsubscribe_via_email: "Elérte az e-mailben történő leiratkozások legnagyobb számát. Az újrapróbálkozás előtt várjon ennyi időt: %{time_left}."
     hours:
       one: "%{count} óra"
       other: "%{count} óra"
@@ -885,19 +884,22 @@ hu:
   site_settings:
     disabled: "kikapcsolva"
     max_emojis_in_title: "A témacímekben lévő emodzsik legnagyobb száma"
+    search_tokenize_chinese: "A keresés kényszerítése, hogy tokenizálja a kínait, még a nem kínai oldalakon is"
+    search_tokenize_japanese: "A keresés kényszerítése, hogy tokenizálja a japánt, még a nem japán oldalakon is"
     notify_users_after_responses_deleted_on_flagged_post: "Ha egy bejegyzést jelentenek, majd eltávolítanak, akkor minden olyan felhasználó értesítést kap, aki válaszolt a bejegyzésre, és ezért a válaszait eltávolították."
     post_excerpt_maxlength: "A bejegyzés kivonatának / összefoglalójának maximális hossza."
     topic_excerpt_maxlength: "A témakör kivonatának / összefoglalójának maximális hossza a téma első bejegyzéséből generálva."
+    blocked_onebox_domains: "Azok a domainek, amelyek soha nem kerülnek dobozba, például wikipedia.org\n(A * ? helyettesítő karakterek nem támogatottak)"
     enforce_second_factor: "Kényszeríti a felhasználókat, hogy engedélyezzék a kétfaktoros hitelesítést. Válassza az 'all' lehetőséget, hogy érvényesítse az összes felhasználó számára. Válassza a „személyzet” lehetőséget, hogy csak a személyzet felhasználói számára érvényesítse."
     use_admin_ip_allowlist: "Az adminokk csak akkor tudnak bejelentkezni, ha a Screened IPs listában megadott IP-címmel vannak megadva (Admin > Naplók > Screened Ips)."
-    slow_down_crawler_user_agents: "A forgalmi korlátozás alá elő webes robotok felhasználói ügynökei, ahogy a „robotok sebességének lelassítása” beállításban meg van adva. Minden egyes értéknek legalább 3 karakteresnek kell lennie."
+    slow_down_crawler_user_agents: 'A forgalmi korlátozás alá elő webes robotok felhasználói ügynökei, ahogy a „robotok sebességének lelassítása” beállításban meg van adva. Minden egyes értéknek legalább 3 karakteresnek kell lennie.'
     enable_badges: "A jelvény rendszer engedélyezése"
     normalize_emails: "Ellenőrizze, hogy a normalizált e-mail egyedi-e. A normalizált e-mail eltávolítja az összes pontot a felhasználónévből, és mindent, ami a + és a @ szimbólumok között található."
     hide_email_address_taken: "Ne tájékoztassa a felhasználókat arról, hogy létezik fiók egy adott e-mail-címmel a regisztráció során vagy az elfelejtett jelszó folyamata során. Teljes e-mail-cím megkövetelése az „elfelejtett jelszó” kérésekhez."
     min_password_length: "Minimum jelszóhossz."
     block_common_passwords: "A 10 000 leggyakoribb jelszó tiltása."
     google_oauth2_hd_groups: "(kísérleti) A felhasználók a kiszolgálóhoz tartozó domainben lévő Google-csoportjainak lekérése hitelesítéskor. A lekért Google-csoportok segítségével automatikusan állíthat be Discourse csoporttagságot (lásd a csoportbeállításokat)."
-    rate_limit_new_user_create_topic: "Egy téma létrehozása után az új felhasználóknak (n) másodpercet kell várniuk, mielőtt új témát hoznának létre."
+    rate_limit_new_user_create_topic: "Egy téma létrehozása után az új felhasználóknak (n) másodpercet kell várniuk, mielőtt új témát hozhatnak létre."
     suggested_topics: "A javasolt témák száma a téma alján láthatók."
     limit_suggested_to_category: "Csak a javasolt kategóriákból származó témakörök jelenhetnek meg a javasolt témakörökben."
     suggested_topics_max_days_old: "A javasolt olvasatlan témák nem lehetnek több, mint n naposak."
@@ -906,7 +908,6 @@ hu:
     selectable_avatars: "A felhasználó által választható avatarok listája."
     recompress_original_jpg_quality: "A feltöltött képfájlok minősége (1 – legalacsonyabb, 99 – legjobb, 100 – letiltás)."
     image_preview_jpg_quality: "Az átméretezett képfájlok minősége (1 – legalacsonyabb, 99 – legjobb, 100 – letiltás)."
-    here_mention: "Az @itt megemlítéshez használandó név. Nem lehet létező felhasználónév."
     max_here_mentioned: "Az @itt által megemlített személyek maximális száma."
     min_trust_level_for_here_mention: "Az @itt megemlítés használatához szükséges minimális bizalmi szint."
     dark_mode_none: "Egyik sem"
@@ -926,6 +927,7 @@ hu:
     default_other_skip_new_user_tips: "A tippek és jelvények kihagyása az új felhasználók regisztrációjakor"
     default_other_like_notification_frequency: "A felhasználók értesítése a kedvelésekről alapértelmezett esetben."
     company_name: "Cégnév"
+    use_email_for_username_and_name_suggestions: "Használja az e-mail-címek első részét a felhasználónév- és névjavaslatokhoz. Vegye figyelembe, hogy ez megkönnyíti a nyilvánosság számára a teljes felhasználói e-mail-címek kitalálását (mivel az emberek nagy része olyan gyakori szolgáltatásokat használ, mint a „gmail.com”)."
     errors:
       invalid_email: "Érvénytelen e-mail cím."
       invalid_username: "Nincs ilyen nevű felhasználó."
@@ -939,9 +941,12 @@ hu:
       invalid_string_min_max: "A karakterek számának %{min} és %{max} között kell lennie."
       invalid_string_min: "Nem lehet rövidebb, mint %{min} karakter."
       invalid_string_max: "Nem lehet hosszabb, mint %{max} karakter."
+      invalid_domain_hostname: "Nem tartalmazhatja a * vagy a ? karaktereket."
       min_username_length_range: "Nem lehet a legnagyobb értéknél nagyobb legkisebb értéket beállítani."
       max_username_length_range: "Nem lehet a legkisebb értéknél kisebb legnagyobb értéket beállítani."
       google_oauth2_hd_groups: "A beállítás engedélyezése előtt be kell ezt állítania: „google oauth2 hd”."
+      search_tokenize_chinese_enabled: "A beállítás engedélyezése előtt le kell tiltania a „search_tokenize_chinese” beállítást."
+      search_tokenize_japanese_enabled: "A beállítás engedélyezése előtt le kell tiltania a „search_tokenize_japanese” beállítást."
   search:
     within_post: "#%{post_number}, szerző: %{username}"
     types:
@@ -1059,72 +1064,72 @@ hu:
     contents_hidden: "Kérjük, látogass el a bejegyzésre, hogy a tartalom megtekintéséhez!"
     post_hidden:
       text_body_template: |
-        Szia!
+        Üdv!
 
-        Ez egy automatikus üzenet a %{site_name}ról, hogy tudassa veled: a bejegyzésed elrejtettük.
+        Ez egy automatikus üzenet a(z) %{site_name} oldaltól, hogy tudassa Önnel, hogy a bejegyzését elrejtették.
 
         <%{base_url}%{url}>
 
         %{flag_reason}
 
-        Ezt a bejegyzést a közösség jelzései miatt rejtettük el, ezért kérjük, fontold meg, hogyan módosíthatnád úgy a bejegyzésedet, hogy ne keltsen a tagjainkban rossz érzést. **A bejegyzésedet %{edit_delay} perc múlva szerkesztheted, és utána automatikusan feloldjuk az elrejtését.**
+        Ezt a bejegyzést a közösség jelzései miatt rejtettük el, ezért fontolja meg, hogyan módosíthatná úgy a bejegyzését, hogy megfeleljen a közösség visszajelzésének. **A bejegyzését %{edit_delay} perc múlva szerkesztheti, és utána automatikusan fel lesz fedve.**
 
-        Ha azonban a közösség másodszor is elrejti a bejegyzést, rejtve marad, amíg a munkatársak nem kezelik a problémát.
+        Ha azonban a közösség másodszor is elrejti a bejegyzést, akkor rejtve marad, amíg a stáb nem kezeli.
 
-        További útmutatásért olvasd el a [fórumunk szabályzatát](%{base_url}/guidelines).
+        További útmutatásért olvassa el a [közösségi irányelveket](%{base_url}/guidelines).
     post_hidden_again:
       text_body_template: |
-        Szia,
+        Üdv!
 
-        Ez egy automatikus üzenet a %{site_name}tól, hogy tudassa veled: a bejegyzésed ismét el lett rejtve.
+        Ez egy automatikus üzenet a(z) %{site_name} oldaltól, hogy tudassa Önnel, hogy a bejegyzését ismét elrejtették.
 
         <%{base_url}%{url}>
 
         %{flag_reason}
 
-        A közösség megjelölte ezt a bejegyzést, és most el van rejtve. ** Mivel ez a bejegyzés már egynél többször lett problémásként megjelölve, a bejegyzés most már rejtve marad, amíg valamelyik admin személyesen meg nem nézi, és esetleg fel nem oldja a láthatatlanná tételt. **
+        A közösség jelentette ezt a bejegyzést, és most el van rejtve. **Mivel ez a bejegyzés már egynél többször lett jelentve, így a bejegyzés most már addig rejtve marad, amíg valamelyik stábtag nem kezeli.**
 
-        További útmutatásért olvasd el a [fórumunk szabályzatát](%{base_url}/guidelines).
+        További útmutatásért olvassa el a [közösségi irányelveket](%{base_url}/guidelines).
     queued_by_staff:
       title: "A bejegyzés jóváhagyásra vár."
     flags_disagreed:
       text_body_template: |
-        Szia!
+        Üdv!
 
-        Ez egy automatikus üzenet a %{site_name}ról, hogy tudassa veled: [a bejegyzésed](%{base_url}%{url}) visszaállítottuk.
+        Ez egy automatikus üzenet a(z) %{site_name} oldaltól, hogy tudassa Önnel, hogy [a bejegyzését](%{base_url}%{url}) helyreállították.
 
-        A közösség megjelölte ezt a bejegyzést, de egy moderátorunk úgy döntött, hogy visszaállítja azt.
+        A közösség jelentette a bejegyzést, de egy stábtagunk úgy döntött, hogy helyreállítja azt.
 
-        [részletek= Kattints a helyreállított bejegyzés kibontásához"]
+        [details="Kattintson a helyreállított bejegyzés kibontásához"]
         ``` markdown
         %{flagged_post_raw_content}
         ```
         [/details]
     flags_agreed_and_post_deleted:
       text_body_template: |
-        Szia!
+        Üdv!
 
-        Ez egy automatikus üzenet a %{site_name}ról, hogy tudassa veled: [a bejegyzésed](%{base_url}%{url}) töröltük.
+        Ez egy automatikus üzenet a(z) %{site_name} oldaltól, hogy tudassa Önnel, hogy [a bejegyzését](%{base_url}%{url}) törölték.
 
         %{flag_reason}
 
-        A közösség megjelölte ezt a bejegyzést, de egy moderátorunk úgy döntött, hogy törli azt.
+        A közösség jelentette ezt a bejegyzést, de egy stábtagunk úgy döntött, hogy törli azt.
 
         ``` markdown
         %{flagged_post_raw_content}
         ```
-        További útmutatásért olvasd el a [fórumunk szabályzatát](%{base_url}/guidelines)!
+        További útmutatásért olvassa el a [közösségi irányelveket](%{base_url}/guidelines).
     flags_agreed_and_post_deleted_for_responders:
       title: "A stáb eltávolította a választ egy jelentett bejegyzésről"
       subject_template: "A stáb eltávolította a választ egy jelentett bejegyzésről"
       text_body_template: |
         Üdv!
 
-        Ez egy automatikus üzenet a(z) %{site_name} oldalról, hogy tudja, hogy a [bejegyzéshez](%{base_url}%{url}) küldött válaszát eltávolították.
+        Ez egy automatikus üzenet a(z) %{site_name} oldaltól, hogy tudja, hogy a [bejegyzéshez](%{base_url}%{url}) küldött válaszát eltávolították.
 
         %{flag_reason}
 
-        A bejegyzést a közösség jelentette, és egy stábtag úgy döntött, hogy eltávolítja.
+        A bejegyzést a közösség jelentette, és egy stábtag úgy döntött, hogy eltávolítja azt.
 
         ``` markdown
         %{flagged_post_raw_content}
@@ -1355,7 +1360,7 @@ hu:
     reply_by_email: "[Látogass el a témára](%{base_url}%{url}), vagy válaszolj erre az e-mailre a válaszadáshoz."
     only_reply_by_email: "Válaszolj erre az e-mailre a válaszadáshoz!"
     only_reply_by_email_pm: "Válaszolj erre az e-mailre, hogy válaszolj neki: %{participants}."
-    visit_link_to_respond: "[Látogassd meg a témát](%{base_url}%{url}) a válaszadáshoz."
+    visit_link_to_respond: "[Látogasd meg a témát](%{base_url}%{url}) a válaszadáshoz."
     posted_by: "Beküldte: %{username}, ekkor: %{post_date}"
     pm_participants: "Résztvevők: %{participants}"
     user_invited_to_private_message_pm_group:

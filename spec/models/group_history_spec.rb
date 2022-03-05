@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 RSpec.describe GroupHistory do
   fab!(:group_history) { Fabricate(:group_history) }
 

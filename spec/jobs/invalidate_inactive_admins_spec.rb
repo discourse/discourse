@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe Jobs::InvalidateInactiveAdmins do
   fab!(:active_admin) { Fabricate(:admin, last_seen_at: 1.hour.ago) }
   before { active_admin.email_tokens.update_all(confirmed: true) }

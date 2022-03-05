@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe PluginStore do
   let(:store) { PluginStore.new("my_plugin_2") }
 

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe Compression::Engine do
   let(:available_size) { SiteSetting.decompressed_theme_max_file_size_mb }
 

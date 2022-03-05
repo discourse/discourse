@@ -1,6 +1,7 @@
 import PrettyText, { buildOptions } from "pretty-text/pretty-text";
 import { module, test } from "qunit";
-import { hrefAllowed } from "pretty-text/sanitizer";
+import { hrefAllowed, sanitize } from "pretty-text/sanitizer";
+import AllowLister from "pretty-text/allow-lister";
 
 module("Unit | Utility | sanitizer", function () {
   test("sanitize", function (assert) {
@@ -248,6 +249,69 @@ module("Unit | Utility | sanitizer", function () {
       hrefAllowed("http://google.com/test'onmouseover=alert('XSS!');//.swf"),
       "http://google.com/test%27onmouseover=alert(%27XSS!%27);//.swf",
       "escape single quotes"
+    );
+  });
+
+  test("correctly sanitizes complex data attributes rules", function (assert) {
+    const allowLister = new AllowLister();
+
+    allowLister.allowListFeature("test", [
+      "pre[data-*]",
+      "code[data-custom-*=foo]",
+      "div[data-cat-*]",
+    ]);
+    allowLister.enable("test");
+
+    assert.strictEqual(sanitize("<b data-foo=*></b>", allowLister), "<b></b>");
+    assert.strictEqual(sanitize("<b data-foo=1></b>", allowLister), "<b></b>");
+    assert.strictEqual(sanitize("<b data-=1></b>", allowLister), "<b></b>");
+    assert.strictEqual(sanitize("<b data=1></b>", allowLister), "<b></b>");
+    assert.strictEqual(sanitize("<b data></b>", allowLister), "<b></b>");
+    assert.strictEqual(sanitize("<b data=*></b>", allowLister), "<b></b>");
+
+    assert.strictEqual(
+      sanitize("<pre data-foo=1></pre>", allowLister),
+      '<pre data-foo="1"></pre>'
+    );
+
+    assert.strictEqual(
+      sanitize("<pre data-foo-bar=1></pre>", allowLister),
+      '<pre data-foo-bar="1"></pre>'
+    );
+
+    assert.strictEqual(
+      sanitize("<code data-foo=foo></code>", allowLister),
+      "<code></code>"
+    );
+
+    assert.strictEqual(
+      sanitize("<code data-custom-=foo></code>", allowLister),
+      "<code></code>"
+    );
+
+    assert.strictEqual(
+      sanitize("<code data-custom-*=foo></code>", allowLister),
+      "<code></code>"
+    );
+
+    assert.strictEqual(
+      sanitize("<code data-custom-bar=foo></code>", allowLister),
+      '<code data-custom-bar="foo"></code>'
+    );
+
+    assert.strictEqual(
+      sanitize("<code data-custom-bar=1></code>", allowLister),
+      "<code></code>"
+    );
+
+    assert.strictEqual(
+      sanitize("<div data-cat=1></div>", allowLister),
+      '<div data-cat="1"></div>'
+    );
+
+    assert.strictEqual(
+      sanitize("<div data-cat-dog=1></div>", allowLister),
+      '<div data-cat-dog="1"></div>'
     );
   });
 });

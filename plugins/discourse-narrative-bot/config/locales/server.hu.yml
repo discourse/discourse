@@ -84,6 +84,15 @@ hu:
       "10":
         quote: "Amit az emberi elme el tud képzelni és hinni, elérheti."
         author: "Napoleon Hill"
+      "11":
+        quote: "Béke otthon, béke a világban."
+        author: "Mustafa Kemal Atatürk"
+      "12":
+        quote: "Az oktatás nem a szegénység előli menekülés, hanem az ellene folytatott küzdelem módja."
+        author: "Julius Nyerere"
+      "13":
+        quote: "Az ezer mérföldes utazásnak is egyetlen lépéssel kell kezdődnie."
+        author: "Lao-ce"
       results: |-
         > :left_speech_bubble: _%{quote}_ &mdash; %{author}
     magic_8_ball:
@@ -214,7 +223,7 @@ hu:
 
           - vagy kattintson a szerkesztő <kbd><b>B</b></kbd> vagy <kbd><i>I</i></kbd> gombjaira
         reply: |-
-          Nagyszerű munka! HTML és BBCode is használható formázáshoz – további információkért [próbálja ki ezt az oktatóanyagot](http://commonmark.org/help) :nerd:
+          Nagyszerű munka! HTML és BBCode is használható formázáshoz – további információkért [próbálja ki ezt az oktatóanyagot](https://commonmark.org/help) :nerd:
         not_found: |-
           Ó, nem találtam formázást a válaszában. :pencil2:
 

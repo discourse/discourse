@@ -43,6 +43,13 @@ class TopicsController < ApplicationController
     render json: { slug: topic.slug, topic_id: topic.id, url: topic.url }
   end
 
+  def show_by_external_id
+    topic = Topic.find_by(external_id: params[:external_id])
+    raise Discourse::NotFound unless topic
+    guardian.ensure_can_see!(topic)
+    redirect_to_correct_topic(topic, params[:post_number])
+  end
+
   def show
     if request.referer
       flash["referer"] ||= request.referer[0..255]
@@ -56,7 +63,7 @@ class TopicsController < ApplicationController
     # arrays are not supported
     params[:page] = params[:page].to_i rescue 1
 
-    opts = params.slice(:username_filters, :filter, :page, :post_number, :show_deleted, :replies_to_post_number, :filter_upwards_post_id)
+    opts = params.slice(:username_filters, :filter, :page, :post_number, :show_deleted, :replies_to_post_number, :filter_upwards_post_id, :filter_top_level_replies)
     username_filters = opts[:username_filters]
 
     opts[:print] = true if params[:print].present?
@@ -285,7 +292,7 @@ class TopicsController < ApplicationController
     topic_id = params[:topic_id].to_i
 
     if params[:last].to_s == "1"
-      PostTiming.destroy_last_for(current_user, topic_id)
+      PostTiming.destroy_last_for(current_user, topic_id: topic_id)
     else
       PostTiming.destroy_for(current_user.id, [topic_id])
     end
@@ -390,7 +397,13 @@ class TopicsController < ApplicationController
       bypass_bump = should_bypass_bump?(changes)
 
       first_post = topic.ordered_posts.first
-      success = PostRevisor.new(first_post, topic).revise!(current_user, changes, validate_post: false, bypass_bump: bypass_bump)
+      success = PostRevisor.new(first_post, topic).revise!(
+        current_user,
+        changes,
+        validate_post: false,
+        bypass_bump: bypass_bump,
+        keep_existing_draft: params[:keep_existing_draft].to_s == "true"
+      )
 
       if !success && topic.errors.blank?
         topic.errors.add(:base, :unable_to_update)
@@ -671,39 +684,6 @@ class TopicsController < ApplicationController
     end
   end
 
-  def invite_notify
-    topic = Topic.find_by(id: params[:topic_id])
-    guardian.ensure_can_see!(topic)
-
-    usernames = params[:usernames]
-    raise Discourse::InvalidParameters.new(:usernames) if !usernames.kind_of?(Array) || (!current_user.staff? && usernames.size > 1)
-
-    users = User.where(username_lower: usernames.map(&:downcase))
-    raise Discourse::InvalidParameters.new(:usernames) if usernames.size != users.size
-
-    topic.rate_limit_topic_invitation(current_user)
-
-    users.find_each do |user|
-      if !user.guardian.can_see_topic?(topic)
-        return render json: failed_json.merge(error: I18n.t('topic_invite.user_cannot_see_topic', username: user.username)), status: 422
-      end
-    end
-
-    users.find_each do |user|
-      last_notification = user.notifications
-        .where(notification_type: Notification.types[:invited_to_topic])
-        .where(topic_id: topic.id)
-        .where(post_number: 1)
-        .where('created_at > ?', 1.hour.ago)
-
-      if !last_notification.exists?
-        topic.create_invite_notification!(user, Notification.types[:invited_to_topic], current_user.username)
-      end
-    end
-
-    render json: success_json
-  end
-
   def invite_group
     group = Group.find_by(name: params[:group])
     raise Discourse::NotFound unless group
@@ -839,7 +819,7 @@ class TopicsController < ApplicationController
 
     destination_topic = move_posts_to_destination(topic)
     render_topic_changes(destination_topic)
-  rescue ActiveRecord::RecordInvalid => ex
+  rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotSaved => ex
     render_json_error(ex)
   end
 
@@ -1199,7 +1179,7 @@ class TopicsController < ApplicationController
       scope: guardian,
       root: false,
       include_raw: !!params[:include_raw],
-      exclude_suggested_and_related: !!params[:replies_to_post_number] || !!params[:filter_upwards_post_id]
+      exclude_suggested_and_related: !!params[:replies_to_post_number] || !!params[:filter_upwards_post_id] || !!params[:filter_top_level_replies]
     )
 
     respond_to do |format|

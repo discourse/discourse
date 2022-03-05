@@ -1,8 +1,6 @@
 # encoding: UTF-8
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe "category tag restrictions" do
 
   def filter_allowed_tags(opts = {})

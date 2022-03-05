@@ -8,6 +8,7 @@
   }
   input,
   .select-kit {
+    cursor: auto;
     width: 100%;
     margin-bottom: 0;
   }
@@ -187,6 +188,7 @@
     textarea#invite-message,
     &.invite-to-topic input[type="text"],
     .group-chooser,
+    .topic-chooser,
     .user-chooser,
     .future-date-input-selector,
     .future-date-input-date-picker,

@@ -20,7 +20,8 @@
     "@discourse/itsatrap": "^2.0.10",
     "@ember/optional-features": "^1.1.0",
     "@ember/test-helpers": "^2.2.0",
-    "@glimmer/component": "^1.0.0",
+    "@glimmer/component": "^1.0.4",
+    "@glimmer/tracking": "^1.0.4",
     "@popperjs/core": "2.10.2",
     "@uppy/aws-s3": "^2.0.4",
     "@uppy/aws-s3-multipart": "^2.1.0",
@@ -34,8 +35,9 @@
     "discourse-common": "^1.0.0",
     "discourse-hbr": "^1.0.0",
     "discourse-widget-hbs": "^1.0.0",
-    "ember-auto-import": "^1.12.0",
+    "ember-auto-import": "^2.2.4",
     "ember-buffered-proxy": "^2.0.0-beta.0",
+    "ember-cached-decorator-polyfill": "^0.1.4",
     "ember-cli": "~3.25.3",
     "ember-cli-app-version": "^4.0.0",
     "ember-cli-babel": "^7.23.1",
@@ -44,11 +46,12 @@
     "ember-cli-inject-live-reload": "^2.0.1",
     "ember-cli-sri": "^2.1.1",
     "ember-cli-terser": "^4.0.1",
-    "ember-exam": "6.1.0",
+    "ember-exam": "^7.0.1",
     "ember-export-application-global": "^2.0.1",
     "ember-load-initializers": "^2.1.1",
     "ember-maybe-import-regenerator": "^0.1.6",
     "ember-qunit": "^5.1.2",
+    "ember-rfc176-data": "^0.3.17",
     "ember-source": "~3.15.0",
     "ember-test-selectors": "^6.0.0",
     "eslint": "^7.27.0",
@@ -65,8 +68,9 @@
     "qunit-dom": "^1.6.0",
     "sass": "^1.32.8",
     "select-kit": "^1.0.0",
-    "sinon": "^9.2.0",
-    "virtual-dom": "^2.1.1"
+    "sinon": "^13.0.1",
+    "virtual-dom": "^2.1.1",
+    "webpack": "^5.67.0"
   },
   "engines": {
     "node": "12.* || 14.* || >= 16",
@@ -78,10 +82,12 @@
   },
   "ember-addon": {
     "paths": [
-      "lib/bootstrap-json"
+      "lib/bootstrap-json",
+      "lib/rfc176-shims"
     ]
   },
   "devDependencies": {
-    "ember-exam": "6.1.0"
+    "ember-cached-decorator-polyfill": "^0.1.4",
+    "ember-exam": "^7.0.1"
   }
 }

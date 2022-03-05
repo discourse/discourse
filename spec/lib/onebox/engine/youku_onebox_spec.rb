@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Onebox::Engine::YoukuOnebox do
   before do
     stub_request(:get, 'http://v.youku.com/v_show/id_XNjM3MzAxNzc2.html')

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe PostMover do
   fab!(:admin) { Fabricate(:admin) }
   fab!(:evil_trout) { Fabricate(:evil_trout) }

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 RSpec.describe PostReplyKey do
   describe "#reply_key" do
     it "should format the reply_key correctly" do

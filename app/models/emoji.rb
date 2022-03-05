@@ -12,6 +12,14 @@ class Emoji
 
   attr_accessor :name, :url, :tonable, :group
 
+  def self.global_emoji_cache
+    @global_emoji_cache ||= DistributedCache.new("global_emoji_cache", namespace: false)
+  end
+
+  def self.site_emoji_cache
+    @site_emoji_cache ||= DistributedCache.new("site_emoji_cache")
+  end
+
   def self.all
     Discourse.cache.fetch(cache_key("all_emojis")) { standard | custom }
   end
@@ -54,10 +62,28 @@ class Emoji
     is_toned = name.match?(/.+:t[1-6]/)
     normalized_name = name.gsub(/(.+):t[1-6]/, '\1')
 
-    Emoji.all.detect do |e|
-      e.name == normalized_name &&
-      (!is_toned || (is_toned && e.tonable))
+    found_emoji = nil
+
+    [[global_emoji_cache, :standard], [site_emoji_cache, :custom]].each do |cache, list_key|
+      cache_postfix, found_emoji = cache.defer_get_set(normalized_name) do
+        emoji = Emoji.public_send(list_key).detect do |e|
+          e.name == normalized_name &&
+          (!is_toned || (is_toned && e.tonable))
+        end
+        [self.cache_postfix, emoji]
+      end
+
+      if found_emoji && (cache_postfix != self.cache_postfix)
+        cache.delete(normalized_name)
+        redo
+      end
+
+      if found_emoji
+        break
+      end
     end
+
+    found_emoji
   end
 
   def self.create_from_db_item(emoji)
@@ -81,13 +107,19 @@ class Emoji
   end
 
   def self.cache_key(name)
-    "#{name}:v#{EMOJI_VERSION}:#{Plugin::CustomEmoji.cache_key}"
+    "#{name}#{cache_postfix}"
+  end
+
+  def self.cache_postfix
+    ":v#{EMOJI_VERSION}:#{Plugin::CustomEmoji.cache_key}"
   end
 
   def self.clear_cache
     %w{custom standard aliases search_aliases translations all tonable}.each do |key|
       Discourse.cache.delete(cache_key("#{key}_emojis"))
     end
+    global_emoji_cache.clear
+    site_emoji_cache.clear
   end
 
   def self.db_file
@@ -240,9 +272,9 @@ class Emoji
 
       if code && Emoji.custom?(code)
         emoji = Emoji[code]
-        "<img src=\"#{emoji.url}\" title=\"#{code}\" class=\"emoji\" alt=\"#{code}\">"
+        "<img src=\"#{emoji.url}\" title=\"#{code}\" class=\"emoji\" alt=\"#{code}\" loading=\"lazy\" width=\"20\" height=\"20\">"
       elsif code && Emoji.exists?(code)
-        "<img src=\"#{Emoji.url_for(code)}\" title=\"#{code}\" class=\"emoji\" alt=\"#{code}\">"
+        "<img src=\"#{Emoji.url_for(code)}\" title=\"#{code}\" class=\"emoji\" alt=\"#{code}\" loading=\"lazy\" width=\"20\" height=\"20\">"
       else
         name
       end

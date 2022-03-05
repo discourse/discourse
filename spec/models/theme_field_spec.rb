@@ -1,8 +1,6 @@
 # encoding: utf-8
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe ThemeField do
   fab!(:theme) { Fabricate(:theme) }
 
@@ -77,7 +75,7 @@ describe ThemeField do
 
     theme_field = ThemeField.create!(theme_id: 1, target_id: 0, name: "header", value: html)
     theme_field.ensure_baked!
-    expect(theme_field.value_baked).to include("<script src=\"#{theme_field.javascript_cache.url}\"></script>")
+    expect(theme_field.value_baked).to include("<script src=\"#{theme_field.javascript_cache.url}\" data-theme-id=\"1\"></script>")
     expect(theme_field.value_baked).to include("external-script.js")
     expect(theme_field.value_baked).to include('<script type="text/template"')
     expect(theme_field.javascript_cache.content).to include('a = "inline discourse plugin"')
@@ -92,10 +90,10 @@ describe ThemeField do
       <script>var b = 10</script>
     HTML
 
-    extracted = <<~JavaScript
+    extracted = <<~JS
       var a = 10
       var b = 10
-    JavaScript
+    JS
 
     theme_field = ThemeField.create!(theme_id: 1, target_id: 0, name: "header", value: html)
     theme_field.ensure_baked!
@@ -112,7 +110,7 @@ HTML
     field = ThemeField.create!(theme_id: 1, target_id: 0, name: "header", value: html)
     field.ensure_baked!
     expect(field.error).not_to eq(nil)
-    expect(field.value_baked).to include("<script src=\"#{field.javascript_cache.url}\"></script>")
+    expect(field.value_baked).to include("<script src=\"#{field.javascript_cache.url}\" data-theme-id=\"1\"></script>")
     expect(field.javascript_cache.content).to include("Theme Transpilation Error:")
 
     field.update!(value: '')
@@ -132,7 +130,7 @@ HTML
     theme_field.ensure_baked!
     javascript_cache = theme_field.javascript_cache
 
-    expect(theme_field.value_baked).to include("<script src=\"#{javascript_cache.url}\"></script>")
+    expect(theme_field.value_baked).to include("<script src=\"#{javascript_cache.url}\" data-theme-id=\"1\"></script>")
     expect(javascript_cache.content).to include("testing-div")
     expect(javascript_cache.content).to include("string_setting")
     expect(javascript_cache.content).to include("test text \\\" 123!")
@@ -380,7 +378,7 @@ HTML
     describe "javascript cache" do
       it "is generated correctly" do
         fr1.ensure_baked!
-        expect(fr1.value_baked).to include("<script src='#{fr1.javascript_cache.url}'></script>")
+        expect(fr1.value_baked).to include("<script src='#{fr1.javascript_cache.url}' data-theme-id='#{fr1.theme_id}'></script>")
         expect(fr1.javascript_cache.content).to include("bonjourworld")
         expect(fr1.javascript_cache.content).to include("helloworld")
         expect(fr1.javascript_cache.content).to include("enval1")

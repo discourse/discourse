@@ -228,7 +228,6 @@ da:
     disabled_errors:
       discourse_connect_enabled: "Invitationer er deaktiveret, fordi DiscourseConnect er aktiveret."
       invalid_access: "Du har ikke tilladelse til at se den ønskede ressource."
-    requires_groups: "Invitation gemt. For at give adgang til det angivne emne skal du tilføje en af følgende grupper: %{groups}."
   bulk_invite:
     file_should_be_csv: "Den overførte fil skal være i csv format."
     max_rows: "De første %{max_bulk_invites} invitationer er blevet sendt. Prøv at opdele filen i mindre dele."
@@ -323,8 +322,6 @@ da:
   too_many_links:
     one: "Beklager, nye brugere kan kun indsætte et link i et indlæg."
     other: "Beklager, nye brugere kan kun indsætte %{count} links i et indlæg."
-  contains_blocked_word: "Dit indlæg indeholder et ord, der ikke er tilladt: %{word}"
-  contains_blocked_words: "Dit indlæg indeholder flere ord, der ikke er tilladt: %{words}"
   spamming_host: "Beklager, du kan ikke indsætte et link til det pågældende domæne."
   user_is_suspended: "Suspenderede brugere tilllades ikke at oprette indlæg."
   topic_not_found: "Der er gået noget galt. Måske er emnet blevet lukket eller slettet mens du kiggede på det?"
@@ -1324,7 +1321,6 @@ da:
     min_personal_message_title_length: "Minimumslængde af emnetitel i tegn."
     max_emojis_in_title: "Maksimum tilladte humørikoner i emnetitel"
     min_search_term_length: "Antal tegn i søgefeltet skal have et minimum"
-    search_tokenize_chinese_japanese_korean: "Tving søg til at \"tokenize\" Chinese/Japanese/Korean selv på sites som ikke er CJK"
     search_prefer_recent_posts: "Såfremt søgning på forum er langsomt, kan denne option indeksere og vise nyeste indlæg først"
     search_recent_posts_size: "Hvor mange nye indlæg skal der gemmes i index"
     log_search_queries: "Log søgeforespørgsler udført af brugere"
@@ -1359,7 +1355,6 @@ da:
     show_pinned_excerpt_mobile: "Vis uddrag af fastgjorte emner på mobilen."
     show_pinned_excerpt_desktop: "Vis uddrag af fastgjorte emner i desktop visning"
     post_onebox_maxlength: "Max længde af Discourse indlæg i tegn"
-    blocked_onebox_domains: "En liste af domæner som aldrig vil blive onebox'et."
     allowed_inline_onebox_domains: "En liste over domæner, der vil blive onebox'et i miniatureform, hvis de linkes uden en titel"
     enable_inline_onebox_on_all_domains: "Ignorer webstedsindstilling for inline_onebox_domain_allowlist, og tillad indlejret onebox på alle domæner."
     max_oneboxes_per_post: "Maksimalt antal onebox-forekomster i et opslag."
@@ -1509,7 +1504,6 @@ da:
     avatar_sizes: "Liste over automatisk genererede avatarstørrelser."
     external_emoji_url: "URL til den eksterne tjeneste for humørikon-billeder. Lad det være tomt for at deaktivere det."
     restrict_letter_avatar_colors: "En liste med 6-cifrede hexadecimale farveværdier til brug for bogstavesavatar baggrund."
-    selectable_avatars_enabled: "Tving brugere til at vælge en avatar fra listen."
     selectable_avatars: "Liste over avatarer, som brugere kan vælge imellem."
     allow_all_attachments_for_group_messages: "Tillad alle vedhæftede filer (e-mail) for gruppemeddelelser."
     png_to_jpg_quality: "Kvaliteten af den konverterede JPG-fil (1 er laveste kvalitet, 99 er bedste kvalitet, 100 for at deaktivere)."

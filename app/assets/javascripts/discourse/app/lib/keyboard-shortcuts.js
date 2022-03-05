@@ -1,7 +1,6 @@
 import { bind } from "discourse-common/utils/decorators";
 import discourseDebounce from "discourse-common/lib/debounce";
-import { isAppWebview } from "discourse/lib/utilities";
-import { later, run, schedule, throttle } from "@ember/runloop";
+import { later, run, throttle } from "@ember/runloop";
 import {
   nextTopicUrl,
   previousTopicUrl,
@@ -12,6 +11,25 @@ import domUtils from "discourse-common/utils/dom-utils";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import { ajax } from "discourse/lib/ajax";
 import { headerOffset } from "discourse/lib/offset-calculator";
+import { helperContext } from "discourse-common/lib/helpers";
+
+let extraKeyboardShortcutsHelp = {};
+function addExtraKeyboardShortcutHelp(help) {
+  const category = help.category;
+  if (extraKeyboardShortcutsHelp[category]) {
+    extraKeyboardShortcutsHelp[category] = extraKeyboardShortcutsHelp[
+      category
+    ].concat([help]);
+  } else {
+    extraKeyboardShortcutsHelp[category] = [help];
+  }
+}
+
+export function clearExtraKeyboardShortcutHelp() {
+  extraKeyboardShortcutsHelp = {};
+}
+
+export { extraKeyboardShortcutsHelp as extraKeyboardShortcutsHelp };
 
 const DEFAULT_BINDINGS = {
   "!": { postAction: "showFlags" },
@@ -103,6 +121,13 @@ function preventKeyboardEvent(event) {
 
 export default {
   init(keyTrapper, container) {
+    // Sometimes the keyboard shortcut initializer is not torn down. This makes sure
+    // we clear any previous test state.
+    if (this.keyTrapper) {
+      this.keyTrapper.destroy();
+      this.keyTrapper = null;
+    }
+
     this.keyTrapper = new keyTrapper();
     this.container = container;
     this._stopCallback();
@@ -174,7 +199,6 @@ export default {
       this.keyTrapper.paused = true;
       return;
     }
-
     combinations.forEach((combo) => this.keyTrapper.unbind(combo));
   },
 
@@ -203,6 +227,16 @@ export default {
    * - path       - a specific path to limit the shortcut to .e.g /latest
    * - postAction - binds the shortcut to fire the specified post action when a
    *                post is selected
+   * - help       - adds the shortcut to the keyboard shortcuts modal. `help` is an object
+   *                with key/value pairs
+   *                {
+   *                  category: String,
+   *                  name: String,
+   *                  definition: (See function `buildShortcut` in
+   *                    app/assets/javascripts/discourse/app/controllers/keyboard-shortcuts-help.js
+   *                    for definition structure)
+   *                }
+   *
    * - click      - allows to provide a selector on which a click event
    *                will be triggered, eg: { click: ".topic.last .title" }
    **/
@@ -212,6 +246,9 @@ export default {
     shortcut = shortcut.trim();
     let newBinding = Object.assign({ handler: callback }, opts);
     this.bindKey(shortcut, newBinding);
+    if (opts.help) {
+      addExtraKeyboardShortcutHelp(opts.help);
+    }
   },
 
   // unbinds all the shortcuts in a key binding object e.g.
@@ -407,16 +444,11 @@ export default {
 
   focusComposer(event) {
     const composer = this.container.lookup("controller:composer");
-    if (composer.get("model.viewOpen")) {
-      preventKeyboardEvent(event);
-
-      schedule("afterRender", () => {
-        const input = document.querySelector("textarea.d-editor-input");
-        input && input.focus();
-      });
-    } else {
-      composer.openIfDraft(event);
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
     }
+    composer.focusComposer(event);
   },
 
   fullscreenComposer() {
@@ -824,13 +856,13 @@ export default {
   },
 
   webviewKeyboardBack() {
-    if (isAppWebview()) {
+    if (helperContext().capabilities.isAppWebview) {
       window.history.back();
     }
   },
 
   webviewKeyboardForward() {
-    if (isAppWebview()) {
+    if (helperContext().capabilities.isAppWebview) {
       window.history.forward();
     }
   },

@@ -17,14 +17,13 @@ import { underscore } from "@ember/string";
 function customEmojis() {
   const list = extendedEmojiList();
   const groups = [];
-  Object.keys(list).forEach((code) => {
-    const emoji = list[code];
+  for (const [code, emoji] of list.entries()) {
     groups[emoji.group] = groups[emoji.group] || [];
     groups[emoji.group].push({
       code,
       src: emojiUrlFor(code),
     });
-  });
+  }
   return groups;
 }
 
@@ -36,8 +35,8 @@ export default Component.extend({
   recentEmojis: null,
   hoveredEmoji: null,
   isActive: false,
-  isLoading: true,
   usePopper: true,
+  initialFilter: "",
 
   init() {
     this._super(...arguments);
@@ -78,10 +77,10 @@ export default Component.extend({
 
   @action
   onShow() {
-    this.set("isLoading", true);
     this.set("recentEmojis", this.emojiStore.favorites);
 
     schedule("afterRender", () => {
+      this._applyFilter(this.initialFilter);
       document.addEventListener("click", this.handleOutsideClick);
 
       const emojiPicker = document.querySelector(".emoji-picker");
@@ -92,28 +91,47 @@ export default Component.extend({
       const textareaWrapper = document.querySelector(
         ".d-editor-textarea-wrapper"
       );
+
       if (!this.site.isMobileDevice && this.usePopper && textareaWrapper) {
+        const modifiers = [
+          {
+            name: "preventOverflow",
+          },
+          {
+            name: "offset",
+            options: {
+              offset: [5, 5],
+            },
+          },
+        ];
+
+        if (window.innerWidth < textareaWrapper.clientWidth * 2) {
+          modifiers.push({
+            name: "computeStyles",
+            enabled: true,
+            fn({ state }) {
+              state.styles.popper = {
+                ...state.styles.popper,
+                position: "fixed",
+                left: `${(window.innerWidth - state.rects.popper.width) / 2}px`,
+                top: "50%",
+                transform: "translateY(-50%)",
+              };
+
+              return state;
+            },
+          });
+        }
+
         this._popper = createPopper(textareaWrapper, emojiPicker, {
           placement: "auto",
-          modifiers: [
-            {
-              name: "preventOverflow",
-            },
-            {
-              name: "offset",
-              options: {
-                offset: [5, 5],
-              },
-            },
-          ],
+          modifiers,
         });
       }
 
       // this is a low-tech trick to prevent appending hundreds of emojis
       // of blocking the rendering of the picker
       later(() => {
-        this.set("isLoading", false);
-
         schedule("afterRender", () => {
           if (!this.site.isMobileDevice || this.isEditorFocused) {
             const filter = emojiPicker.querySelector("input.filter");
@@ -224,13 +242,17 @@ export default Component.extend({
   },
 
   @action
-  onFilter(event) {
+  onFilterChange(event) {
+    this._applyFilter(event.target.value);
+  },
+
+  _applyFilter(filter) {
     const emojiPicker = document.querySelector(".emoji-picker");
     const results = document.querySelector(".emoji-picker-emoji-area .results");
     results.innerHTML = "";
 
-    if (event.target.value) {
-      results.innerHTML = emojiSearch(event.target.value.toLowerCase(), {
+    if (filter) {
+      results.innerHTML = emojiSearch(filter.toLowerCase(), {
         maxResults: 20,
         diversity: this.emojiStore.diversity,
       })

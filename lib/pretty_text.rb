@@ -82,10 +82,18 @@ module PrettyText
 
     ctx.eval("window = {}; window.devicePixelRatio = 2;") # hack to make code think stuff is retina
 
-    if Rails.env.development? || Rails.env.test?
-      ctx.attach("console.log", proc { |l| p l })
-      ctx.eval('window.console = console;')
-    end
+    ctx.attach("rails.logger.info", proc { |err| Rails.logger.info(err.to_s) })
+    ctx.attach("rails.logger.warn", proc { |err| Rails.logger.warn(err.to_s) })
+    ctx.attach("rails.logger.error", proc { |err| Rails.logger.error(err.to_s) })
+    ctx.eval <<~JS
+      console = {
+        prefix: "[PrettyText] ",
+        log: function(...args){ rails.logger.info(console.prefix + args.join(" ")); },
+        warn: function(...args){ rails.logger.warn(console.prefix + args.join(" ")); },
+        error: function(...args){ rails.logger.error(console.prefix + args.join(" ")); }
+      }
+    JS
+
     ctx.eval("__PRETTY_TEXT = true")
 
     PrettyText::Helpers.instance_methods.each do |method|
@@ -167,6 +175,8 @@ module PrettyText
   #                      enabled when rendering markdown.
   #  topic_id          - Topic id for the post being cooked.
   #  user_id           - User id for the post being cooked.
+  #  force_quote_link  - Always create the link to the quoted topic for [quote] bbcode. Normally this only happens
+  #                      if the topic_id provided is different from the [quote topic:X].
   def self.markdown(text, opts = {})
     # we use the exact same markdown converter as the client
     # TODO: use the same extensions on both client and server (in particular the template for mentions)
@@ -179,6 +189,9 @@ module PrettyText
       custom_emoji = {}
       Emoji.custom.map { |e| custom_emoji[e.name] = e.url }
 
+      # note, any additional options added to __optInput here must be
+      # also be added to the buildOptions function in pretty-text.js,
+      # otherwise they will be discarded
       buffer = +<<~JS
         __optInput = {};
         __optInput.siteSettings = #{SiteSetting.client_settings_json};
@@ -201,10 +214,15 @@ module PrettyText
         __optInput.censoredRegexp = #{WordWatcher.word_matcher_regexp(:censor)&.source.to_json};
         __optInput.watchedWordsReplace = #{WordWatcher.word_matcher_regexps(:replace).to_json};
         __optInput.watchedWordsLink = #{WordWatcher.word_matcher_regexps(:link).to_json};
+        __optInput.additionalOptions = #{Site.markdown_additional_options.to_json};
       JS
 
       if opts[:topic_id]
         buffer << "__optInput.topicId = #{opts[:topic_id].to_i};\n"
+      end
+
+      if opts[:force_quote_link]
+        buffer << "__optInput.forceQuoteLink = #{opts[:force_quote_link]};\n"
       end
 
       if opts[:user_id]
@@ -370,6 +388,9 @@ module PrettyText
 
     # remove href inside quotes & oneboxes & elided part
     doc.css("aside.quote a, aside.onebox a, .elided a").remove
+
+    # remove hotlinked images
+    doc.css("a.onebox > img").each { |img| img.parent.remove }
 
     # extract all links
     doc.css("a").each do |a|

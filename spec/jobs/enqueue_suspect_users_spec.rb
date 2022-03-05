@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe Jobs::EnqueueSuspectUsers do
   before { SiteSetting.approve_suspect_users = true }
 

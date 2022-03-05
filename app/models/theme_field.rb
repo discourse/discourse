@@ -142,7 +142,7 @@ class ThemeField < ActiveRecord::Base
     javascript_cache.content = js_compiler.content
     javascript_cache.save!
 
-    doc.add_child("<script src='#{javascript_cache.url}'></script>") if javascript_cache.content.present?
+    doc.add_child("<script src='#{javascript_cache.url}' data-theme-id='#{theme_id}'></script>") if javascript_cache.content.present?
     [doc.to_s, errors&.join("\n")]
   end
 
@@ -258,7 +258,7 @@ class ThemeField < ActiveRecord::Base
     javascript_cache.content = js_compiler.content
     javascript_cache.save!
     doc = ""
-    doc = "<script src='#{javascript_cache.url}'></script>" if javascript_cache.content.present?
+    doc = "<script src='#{javascript_cache.url}' data-theme-id='#{theme_id}'></script>" if javascript_cache.content.present?
     [doc, errors&.join("\n")]
   end
 
@@ -378,7 +378,6 @@ class ThemeField < ActiveRecord::Base
       DB.after_commit { Stylesheet::Manager.clear_theme_cache! }
     elsif settings_field?
       validate_yaml!
-      theme.clear_cached_settings!
       DB.after_commit { CSP::Extension.clear_theme_extensions_cache! }
       DB.after_commit { SvgSprite.expire_cache }
       self.value_baked = "baked"

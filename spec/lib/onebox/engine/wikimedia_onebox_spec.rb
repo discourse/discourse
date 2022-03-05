@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Onebox::Engine::WikimediaOnebox do
   let(:link) { "https://commons.wikimedia.org/wiki/File:Stones_members_montage2.jpg" }
   let(:api_link) { "https://en.wikipedia.org/w/api.php?action=query&titles=File:Stones_members_montage2.jpg&prop=imageinfo&iilimit=50&iiprop=timestamp|user|url&iiurlwidth=500&format=json" }

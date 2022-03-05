@@ -165,11 +165,11 @@ def clean_up_uploads
     exit 1
   end
 
-  puts <<~OUTPUT
+  puts <<~TEXT
   This task will remove upload records and files permanently.
 
   Would you like to take a full backup before the clean up? (Y/N)
-  OUTPUT
+  TEXT
 
   if STDIN.gets.chomp.downcase == 'y'
     puts "Starting backup..."
@@ -420,7 +420,7 @@ task "uploads:analyze", [:cache_path, :limit] => :environment do |_, args|
   uploads_count = Upload.count
   optimized_images_count = OptimizedImage.count
 
-  puts <<~REPORT
+  puts <<~TEXT
   Report for '#{current_db}'
   -----------#{'-' * current_db.length}
   Number of `Upload` records in DB: #{uploads_count}
@@ -430,7 +430,7 @@ task "uploads:analyze", [:cache_path, :limit] => :environment do |_, args|
   Number of images in uploads folder: #{paths_count}
   ------------------------------------#{'-' * paths_count.to_s.length}
 
-  REPORT
+  TEXT
 
   helper = Class.new do
     include ActionView::Helpers::NumberHelper
@@ -1010,15 +1010,26 @@ def fix_missing_s3
     next if !upload
 
     tempfile = nil
+    downloaded_from = nil
 
     begin
       tempfile = FileHelper.download(upload.url, max_file_size: 30.megabyte, tmp_file_name: "#{SecureRandom.hex}.#{upload.extension}")
+      downloaded_from = upload.url
     rescue => e
-      puts "Failed to download #{upload.url} #{e}"
+      if upload.origin.present?
+        begin
+          tempfile = FileHelper.download(upload.origin, max_file_size: 30.megabyte, tmp_file_name: "#{SecureRandom.hex}.#{upload.extension}")
+          downloaded_from = upload.origin
+        rescue => e
+          puts "Failed to download #{upload.origin} #{e}"
+        end
+      else
+        puts "Failed to download #{upload.url} #{e}"
+      end
     end
 
     if tempfile
-      puts "Successfully downloaded upload id: #{upload.id} - #{upload.url} fixing upload"
+      puts "Successfully downloaded upload id: #{upload.id} - #{downloaded_from} fixing upload"
 
       fixed_upload = nil
       fix_error = nil

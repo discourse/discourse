@@ -135,6 +135,22 @@ module ApplicationHelper
     path
   end
 
+  def preload_vendor_scripts
+    scripts = ["vendor"]
+
+    if ENV["EMBER_CLI_PROD_ASSETS"] != "0"
+      @@vendor_chunks ||= begin
+        all_assets = ActionController::Base.helpers.assets_manifest.assets
+        all_assets.keys.filter_map { |name| name[/\A(chunk\..*)\.js\z/, 1] }
+      end
+      scripts.push(*@@vendor_chunks)
+    end
+
+    scripts.map do |name|
+      preload_script(name)
+    end.join("\n").html_safe
+  end
+
   def preload_script(script)
     path = script_asset_path(script)
     preload_script_url(path)

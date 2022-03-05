@@ -1,8 +1,6 @@
 # coding: utf-8
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 RSpec.describe TopicsController do
   fab!(:topic) { Fabricate(:topic) }
   fab!(:dest_topic) { Fabricate(:topic) }
@@ -325,6 +323,21 @@ RSpec.describe TopicsController do
           result = response.parsed_body
           expect(result['success']).to eq(false)
           expect(result['url']).to be_blank
+        end
+
+        it 'returns plugin validation error' do
+          # stub here is to simulate validation added by plugin which would be triggered when post is moved
+          PostCreator.any_instance.stubs(:skip_validations?).returns(false)
+
+          p1.update_columns(raw: "i", cooked: "")
+          post "/t/#{topic.id}/move-posts.json", params: {
+            post_ids: [p1.id],
+            destination_topic_id: dest_topic.id
+          }
+
+          expect(response.status).to eq(422)
+          result = response.parsed_body
+          expect(result['errors']).to eq(["Body is too short (minimum is 5 characters) and Body seems unclear, is it a complete sentence?"])
         end
       end
     end
@@ -1777,6 +1790,34 @@ RSpec.describe TopicsController do
     end
   end
 
+  describe '#show_by_external_id' do
+    fab!(:private_topic) { Fabricate(:private_message_topic, external_id: 'private') }
+    fab!(:topic) { Fabricate(:topic, external_id: 'asdf') }
+
+    it 'returns 301 when found' do
+      get "/t/external_id/asdf.json"
+      expect(response.status).to eq(301)
+      expect(response).to redirect_to(topic.relative_url + ".json?page=")
+    end
+
+    it 'returns right response when not found' do
+      get "/t/external_id/fdsa.json"
+      expect(response.status).to eq(404)
+    end
+
+    describe 'when user does not have access to the topic' do
+      it 'should return the right response' do
+        sign_in(user)
+
+        get "/t/external_id/private.json"
+
+        expect(response.status).to eq(403)
+        expect(response.body).to include(I18n.t('invalid_access'))
+      end
+    end
+
+  end
+
   describe '#show' do
     use_redis_snapshotting
 
@@ -2387,6 +2428,29 @@ RSpec.describe TopicsController do
         end
       end
 
+      describe 'filter by top level replies' do
+        fab!(:post3) { Fabricate(:post, user: post_author3, topic: topic, reply_to_post_number: post2.post_number) }
+        fab!(:post4) { Fabricate(:post, user: post_author4, topic: topic, reply_to_post_number: post2.post_number) }
+        fab!(:post5) { Fabricate(:post, user: post_author5, topic: topic) }
+        fab!(:post6) { Fabricate(:post, user: post_author4, topic: topic, reply_to_post_number: post5.post_number) }
+
+        it 'should return the right posts' do
+          get "/t/#{topic.id}.json", params: {
+            filter_top_level_replies: true
+          }
+
+          expect(response.status).to eq(200)
+
+          body = response.parsed_body
+
+          expect(body.has_key?("suggested_topics")).to eq(false)
+          expect(body.has_key?("related_messages")).to eq(false)
+
+          ids = body["post_stream"]["posts"].map { |p| p["id"] }
+          expect(ids).to eq([post2.id, post5.id])
+        end
+      end
+
       describe 'filter upwards by post id' do
         fab!(:post3) { Fabricate(:post, user: post_author3, topic: topic) }
         fab!(:post4) { Fabricate(:post, user: post_author4, topic: topic, reply_to_post_number: post3.post_number) }
@@ -2806,42 +2870,6 @@ RSpec.describe TopicsController do
       topic.trash!
       get "/t/foo/#{topic.id}.rss"
       expect(response.status).to eq(404)
-    end
-  end
-
-  describe '#invite_notify' do
-    it 'does not notify same user multiple times' do
-      sign_in(user)
-
-      expect { post "/t/#{topic.id}/invite-notify.json", params: { usernames: [user_2.username] } }
-        .to change { Notification.count }.by(1)
-      expect(response.status).to eq(200)
-
-      expect { post "/t/#{topic.id}/invite-notify.json", params: { usernames: [user_2.username] } }
-        .to change { Notification.count }.by(0)
-      expect(response.status).to eq(200)
-
-      freeze_time 1.day.from_now
-
-      expect { post "/t/#{topic.id}/invite-notify.json", params: { usernames: [user_2.username] } }
-        .to change { Notification.count }.by(1)
-      expect(response.status).to eq(200)
-    end
-
-    it 'does not let regular users to notify multiple users' do
-      sign_in(user)
-
-      expect { post "/t/#{topic.id}/invite-notify.json", params: { usernames: [admin.username, user_2.username] } }
-        .to change { Notification.count }.by(0)
-      expect(response.status).to eq(400)
-    end
-
-    it 'lets staff to notify multiple users' do
-      sign_in(admin)
-
-      expect { post "/t/#{topic.id}/invite-notify.json", params: { usernames: [user.username, user_2.username] } }
-        .to change { Notification.count }.by(2)
-      expect(response.status).to eq(200)
     end
   end
 
@@ -3520,7 +3548,7 @@ RSpec.describe TopicsController do
 
     describe 'converting public topic to private message' do
       fab!(:topic) { Fabricate(:topic, user: user) }
-      fab!(:post) { Fabricate(:post, user: post_author1, topic: topic) }
+      fab!(:post) { Fabricate(:post, user: user, topic: topic) }
 
       it "raises an error when the user doesn't have permission to convert topic" do
         sign_in(user)

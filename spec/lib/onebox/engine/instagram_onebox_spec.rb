@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Onebox::Engine::InstagramOnebox do
   let(:access_token) { 'abc123' }
   let(:link) { "https://www.instagram.com/p/CARbvuYDm3Q" }

@@ -118,6 +118,7 @@ else
 end
 
 MessageBus.backend_instance.max_backlog_size = GlobalSetting.message_bus_max_backlog_size
+MessageBus.backend_instance.clear_every = GlobalSetting.message_bus_clear_every
 
 if SiteSetting.table_exists? && SiteSetting.where(name: ['enable_long_polling', 'long_polling_interval']).exists?
   Discourse.deprecate("enable_long_polling/long_polling_interval have switched from site settings to global settings. Remove the override from the Site Settings UI, and use a config file or environment variables to set the global settings.", drop_from: '2.9.0')

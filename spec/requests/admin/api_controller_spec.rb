@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe Admin::ApiController do
 
   it "is a subclass of AdminController" do
@@ -237,7 +235,7 @@ describe Admin::ApiController do
 
         scopes = response.parsed_body['scopes']
 
-        expect(scopes.keys).to contain_exactly('topics', 'users', 'email', 'posts', 'uploads', 'global', 'badges')
+        expect(scopes.keys).to contain_exactly('topics', 'users', 'email', 'posts', 'uploads', 'global', 'badges', 'categories')
       end
     end
   end

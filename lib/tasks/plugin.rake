@@ -6,7 +6,6 @@ desc 'install all official plugins (use GIT_WRITE=1 to pull with write access)'
 task 'plugin:install_all_official' do
   skip = Set.new([
     'customer-flair',
-    'discourse-nginx-performance-report',
     'lazy-yt',
     'poll'
   ])
@@ -182,7 +181,7 @@ task 'plugin:spec', :plugin do |t, args|
   args.with_defaults(plugin: "*")
   params = ENV['RSPEC_FAILFAST'] ? '--profile --fail-fast' : '--profile'
   ruby = `which ruby`.strip
-  files = Dir.glob("./plugins/#{args[:plugin]}/spec/**/*_spec.rb")
+  files = Dir.glob("./plugins/#{args[:plugin]}/spec/**/*_spec.rb").sort
   if files.length > 0
     sh "LOAD_PLUGINS=1 #{ruby} -S rspec #{files.join(' ')} #{params}"
   else
@@ -194,7 +193,7 @@ desc 'run plugin qunit tests'
 task 'plugin:qunit', [:plugin, :timeout] do |t, args|
   args.with_defaults(plugin: "*")
 
-  rake = `which rake`.strip
+  rake = "#{Rails.root}/bin/rake"
 
   cmd = 'LOAD_PLUGINS=1 '
   cmd += 'QUNIT_SKIP_CORE=1 '
@@ -209,7 +208,8 @@ task 'plugin:qunit', [:plugin, :timeout] do |t, args|
   cmd += "#{rake} qunit:test"
   cmd += "[#{args[:timeout]}]" if args[:timeout]
 
-  sh cmd
+  system cmd
+  exit $?.exitstatus
 end
 
 desc 'run all migrations of a plugin'

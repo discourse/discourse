@@ -58,27 +58,27 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
     rescue Exception => e
       puts '=' * 50
       puts e.message
-      puts <<EOM
-Cannot log in to database.
+      puts <<~TEXT
+        Cannot log in to database.
 
-Hostname: #{DB_HOST}
-Username: #{DB_USER}
-Password: #{DB_PW}
-database: #{DB_NAME}
+        Hostname: #{DB_HOST}
+        Username: #{DB_USER}
+        Password: #{DB_PW}
+        database: #{DB_NAME}
 
-You should set these variables:
+        You should set these variables:
 
-export DB_HOST="localhost"
-export DB_NAME="mylittleforum"
-export DB_PW=""
-export DB_USER="root"
-export TABLE_PREFIX="forum_"
-export IMPORT_AFTER="1970-01-01"
-export IMAGE_BASE="http://www.example.com/forum"
-export BASE="forum"
+        export DB_HOST="localhost"
+        export DB_NAME="mylittleforum"
+        export DB_PW=""
+        export DB_USER="root"
+        export TABLE_PREFIX="forum_"
+        export IMPORT_AFTER="1970-01-01"
+        export IMAGE_BASE="http://www.example.com/forum"
+        export BASE="forum"
 
-Exiting.
-EOM
+        Exiting.
+      TEXT
       exit
     end
   end

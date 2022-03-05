@@ -1,6 +1,4 @@
 # frozen_string_literal: true
-require 'rails_helper'
-
 describe Auth::Result do
   fab!(:initial_email) { "initialemail@example.org" }
   fab!(:initial_username) { "initialusername" }

@@ -17,7 +17,8 @@ module Onebox
     end
 
     def self.origins_to_regexes(origins)
-      return /.*/ if origins.include?("*")
+      return [/.*/] if origins.include?("*")
+
       origins.map do |origin|
         escaped_origin = Regexp.escape(origin)
         if origin.start_with?("*.", "https://*.", "http://*.")
@@ -209,3 +210,4 @@ require_relative "engine/kaltura_onebox"
 require_relative "engine/reddit_media_onebox"
 require_relative "engine/google_drive_onebox"
 require_relative "engine/facebook_media_onebox"
+require_relative "engine/hackernews_onebox"

@@ -62,6 +62,14 @@
                 <div class="top-lists">
                   {{period-chooser period=period action=(action "changePeriod") fullDay=false}}
                 </div>
+              {{else}}
+                {{#if topicTrackingState.hasIncoming}}
+                  <div class="show-more {{if hasTopics "has-topics"}}">
+                    <a tabindex="0" href {{action "showInserted"}} class="alert alert-info clickable">
+                      {{count-i18n key="topic_count_" suffix=topicTrackingState.filter count=topicTrackingState.incomingCount}}
+                    </a>
+                  </div>
+                {{/if}}
               {{/if}}
 
               {{#if list.topics}}
@@ -88,9 +96,11 @@
               {{topic-dismiss-buttons position="bottom" selectedTopics=selected
               model=model showResetNew=showResetNew showDismissRead=showDismissRead resetNew=(action "resetNew")}}
 
-              {{#footer-message education=footerEducation message=footerMessage}}
-                {{#link-to "tags"}} {{i18n "topic.browse_all_tags"}}{{/link-to}} {{i18n "or"}} {{#link-to "discovery.latest"}}{{i18n "topic.view_latest_topics"}}{{/link-to}}.
-              {{/footer-message}}
+              {{#unless list.canLoadMore}}
+                {{#footer-message education=footerEducation message=footerMessage}}
+                  {{#link-to "tags"}} {{i18n "topic.browse_all_tags"}}{{/link-to}} {{i18n "or"}} {{#link-to "discovery.latest"}}{{i18n "topic.view_latest_topics"}}{{/link-to}}.
+                {{/footer-message}}
+              {{/unless}}
             </footer>
           {{/unless}}
 

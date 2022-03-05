@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe InlineUploads, type: :multisite do
   before do
     set_cdn_url "https://awesome.com"

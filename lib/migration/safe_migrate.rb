@@ -121,7 +121,7 @@ class Migration::SafeMigrate
 
   def self.protect!(sql)
     if sql =~ /^\s*(?:drop\s+table|alter\s+table.*rename\s+to)\s+/i
-      $stdout.puts("", <<~STR)
+      $stdout.puts("", <<~TEXT)
         WARNING
         -------------------------------------------------------------------------------------
         An attempt was made to drop or rename a table in a migration
@@ -131,10 +131,10 @@ class Migration::SafeMigrate
 
         This protection is in place to protect us against dropping tables that are currently
         in use by live applications.
-      STR
+      TEXT
       raise Discourse::InvalidMigration, "Attempt was made to drop a table"
     elsif sql =~ /^\s*alter\s+table.*(?:rename|drop)\s+/i
-      $stdout.puts("", <<~STR)
+      $stdout.puts("", <<~TEXT)
         WARNING
         -------------------------------------------------------------------------------------
         An attempt was made to drop or rename a column in a migration
@@ -148,7 +148,7 @@ class Migration::SafeMigrate
 
         This protection is in place to protect us against dropping columns that are currently
         in use by live applications.
-      STR
+      TEXT
       raise Discourse::InvalidMigration, "Attempt was made to rename or delete column"
     end
   end

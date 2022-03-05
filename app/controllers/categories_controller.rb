@@ -23,11 +23,14 @@ class CategoriesController < ApplicationController
 
     parent_category = Category.find_by_slug(params[:parent_category_id]) || Category.find_by(id: params[:parent_category_id].to_i)
 
+    include_subcategories = SiteSetting.desktop_category_page_style == "subcategories_with_featured_topics" ||
+      params[:include_subcategories] == "true"
+
     category_options = {
       is_homepage: current_homepage == "categories",
       parent_category_id: params[:parent_category_id],
       include_topics: include_topics(parent_category),
-      include_subcategories: params[:include_subcategories] == "true"
+      include_subcategories: include_subcategories
     }
 
     @category_list = CategoryList.new(guardian, category_options)
@@ -211,7 +214,7 @@ class CategoriesController < ApplicationController
     notification_level = params[:notification_level].to_i
 
     CategoryUser.set_notification_level_for_category(current_user, notification_level, category_id)
-    render json: success_json
+    render json: success_json.merge({ indirectly_muted_category_ids: CategoryUser.indirectly_muted_category_ids(current_user) })
   end
 
   def destroy
@@ -377,6 +380,7 @@ class CategoriesController < ApplicationController
       params[:include_topics] ||
       (parent_category && parent_category.subcategory_list_includes_topics?) ||
       style == "categories_with_featured_topics" ||
+      style == "subcategories_with_featured_topics" ||
       style == "categories_boxes_with_topics" ||
       style == "categories_with_top_topics"
   end

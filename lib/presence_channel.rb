@@ -129,8 +129,6 @@ class PresenceChannel
         release_mutex(mutex_value)
       end
     end
-
-    auto_leave
   end
 
   # Immediately mark a user's client as leaving the channel
@@ -151,16 +149,12 @@ class PresenceChannel
         release_mutex(mutex_value)
       end
     end
-
-    auto_leave
   end
 
   # Fetch a {PresenceChannel::State} instance representing the current state of this
   #
   # @param [Boolean] count_only set true to skip fetching the list of user ids from redis
   def state(count_only: config.count_only)
-    auto_leave
-
     if count_only
       last_id, count = retry_on_mutex_error do
         PresenceChannel.redis_eval(
@@ -226,7 +220,7 @@ class PresenceChannel
   end
 
   # Designed to be run periodically. Checks the channel list for channels with expired members,
-  # and runs auto_leave for each eligable channel
+  # and runs auto_leave for each eligible channel
   def self.auto_leave_all
     channels_with_expiring_members = PresenceChannel.redis.zrangebyscore(redis_key_channel_list, '-inf', Time.zone.now.to_i)
     channels_with_expiring_members.each do |name|
@@ -260,15 +254,7 @@ class PresenceChannel
   end
 
   def self.redis_eval(key, *args)
-    script_sha1 = LUA_SCRIPTS_SHA1[key]
-    raise ArgumentError.new("No script for #{key}") if script_sha1.nil?
-    redis.evalsha script_sha1, *args
-  rescue ::Redis::CommandError => e
-    if e.to_s =~ /^NOSCRIPT/
-      redis.eval LUA_SCRIPTS[key], *args
-    else
-      raise
-    end
+    LUA_SCRIPTS[key].eval(redis, *args)
   end
 
   # Register a callback to configure channels with a given prefix
@@ -371,7 +357,7 @@ class PresenceChannel
   # are published in the same sequence that the PresenceChannel lua script are run.
   #
   # The present/leave/auto_leave lua scripts will automatically acquire this mutex
-  # if needed. If their return value indicates a change has occured, the mutex
+  # if needed. If their return value indicates a change has occurred, the mutex
   # should be released via #release_mutex after the messagebus message has been sent
   #
   # If they need a change, and the mutex is not available, they will raise an error
@@ -473,7 +459,7 @@ class PresenceChannel
 
   LUA_SCRIPTS ||= {}
 
-  LUA_SCRIPTS[:present] = <<~LUA
+  LUA_SCRIPTS[:present] = DiscourseRedis::EvalHelper.new <<~LUA
     #{COMMON_PRESENT_LEAVE_LUA}
 
     if mutex_locked then
@@ -502,7 +488,7 @@ class PresenceChannel
     return added_users
   LUA
 
-  LUA_SCRIPTS[:leave] = <<~LUA
+  LUA_SCRIPTS[:leave] = DiscourseRedis::EvalHelper.new <<~LUA
     #{COMMON_PRESENT_LEAVE_LUA}
 
     if mutex_locked then
@@ -532,7 +518,7 @@ class PresenceChannel
     return removed_users
   LUA
 
-  LUA_SCRIPTS[:release_mutex] = <<~LUA
+  LUA_SCRIPTS[:release_mutex] = DiscourseRedis::EvalHelper.new <<~LUA
     local mutex_key = KEYS[1]
     local expected_value = ARGV[1]
 
@@ -541,7 +527,7 @@ class PresenceChannel
     end
   LUA
 
-  LUA_SCRIPTS[:user_ids] = <<~LUA
+  LUA_SCRIPTS[:user_ids] = DiscourseRedis::EvalHelper.new <<~LUA
     local zlist_key = KEYS[1]
     local hash_key = KEYS[2]
     local message_bus_id_key = KEYS[4]
@@ -562,7 +548,7 @@ class PresenceChannel
     return { message_bus_id, user_ids }
   LUA
 
-  LUA_SCRIPTS[:count] = <<~LUA
+  LUA_SCRIPTS[:count] = DiscourseRedis::EvalHelper.new <<~LUA
     local zlist_key = KEYS[1]
     local hash_key = KEYS[2]
     local message_bus_id_key = KEYS[4]
@@ -582,7 +568,7 @@ class PresenceChannel
     return { message_bus_id, count }
   LUA
 
-  LUA_SCRIPTS[:auto_leave] = <<~LUA
+  LUA_SCRIPTS[:auto_leave] = DiscourseRedis::EvalHelper.new <<~LUA
     local zlist_key = KEYS[1]
     local hash_key = KEYS[2]
     local channels_key = KEYS[3]
@@ -626,9 +612,4 @@ class PresenceChannel
 
     return expired_user_ids
   LUA
-  LUA_SCRIPTS.freeze
-
-  LUA_SCRIPTS_SHA1 = LUA_SCRIPTS.transform_values do |script|
-    Digest::SHA1.hexdigest(script)
-  end.freeze
 end

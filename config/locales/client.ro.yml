@@ -186,7 +186,6 @@ ro:
     bootstrap_mode_disabled: "Modul bootstrap va fi dezactivat în următoarele 24 de ore"
     themes:
       default_description: "Implicit"
-      broken_theme_alert: "Este posibil ca site-ul dvs. să nu funcționeze, deoarece tema / componenta %{theme} are erori. Dezactivați-l la %{path}."
     s3:
       regions:
         ap_northeast_1: "Asia Pacific (Tokyo)"
@@ -1786,7 +1785,7 @@ ro:
         select_all: "Selectează tot"
         clear_all: "Deselectează tot"
         unlist_topics: "Elimină subiecte din listă"
-        reset_read: "Resetează citite"
+        defer: "Amânare"
         delete: "Șterge subiectele"
         dismiss: "Abandonează"
         dismiss_read: "Abandonează toate necitite"
@@ -2009,7 +2008,6 @@ ro:
         title: "Răspunde"
         help: "începe să scrii un răspuns la acest subiect"
       share:
-        title: "Distribuie"
         help: "distribuie un link cu acest subiect"
         invite_users: "Invită"
       print:

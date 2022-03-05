@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe CategorySerializer do
   fab!(:group) { Fabricate(:group) }
   fab!(:category) { Fabricate(:category, reviewable_by_group_id: group.id) }

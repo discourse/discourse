@@ -137,9 +137,8 @@
         width: 100px;
       }
       .timeline-scrollarea {
-        border-left: 0;
-        border-right-style: solid;
-        border-right-width: 1px;
+        border-right: 1px solid var(--tertiary-low-or-tertiary-high);
+        border-left: none;
         max-width: 120px;
 
         .timeline-scroller {
@@ -161,6 +160,11 @@
             position: relative;
             right: -6px;
           }
+        }
+
+        .timeline-padding {
+          margin-left: 0;
+          margin-right: -1em;
         }
       }
     }
@@ -214,8 +218,7 @@
     .timeline-scrollarea {
       margin-top: 0.5em;
       margin-left: 0.5em;
-      border-left: 1px solid;
-      border-color: var(--tertiary-low-or-tertiary-high);
+      border-left: 1px solid var(--tertiary-low-or-tertiary-high);
       position: relative;
       -webkit-transform: translate3d(0, 0, 0);
     }
@@ -223,6 +226,11 @@
     .timeline-padding {
       transition: height 0.15s ease-out;
       cursor: pointer;
+      // this element has a click event
+      // the negative margin lets this element overlap
+      // the scrollarea's vertical track and thus it
+      // enables taps on the track to work
+      margin-left: -1em;
       .widget-dragging & {
         transition: none;
       }

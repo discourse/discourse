@@ -1,6 +1,4 @@
 # frozen_string_literal: true
-require 'rails_helper'
-
 describe ThemeModifierSet do
   describe "#resolve_modifiers_for_themes" do
     it "returns nil for unknown modifier" do

@@ -143,7 +143,6 @@ zh_TW:
     bootstrap_mode_disabled: "初始模式將會在 24 小時後自動禁用。"
     themes:
       default_description: "預設"
-      broken_theme_alert: "您的網站可能無法正常工作，因為話題/組件 %{theme} 有錯誤。在 %{path} 處停用它。"
     s3:
       regions:
         ap_northeast_1: "亞太地區 (東京)"
@@ -1773,7 +1772,7 @@ zh_TW:
         clear_all: "清除全部"
         unlist_topics: "未在列表中的話題"
         relist_topics: "討論話題"
-        reset_read: "重設閱讀"
+        defer: "延遲"
         delete: "刪除話題"
         dismiss: "忽略"
         dismiss_read: "忽略所有未讀話題"
@@ -1993,7 +1992,6 @@ zh_TW:
         title: "回覆"
         help: "開始編寫對此話題的回覆"
       share:
-        title: "分享"
         extended_title: "分享連結"
         help: "分享此話題的連結"
         invite_users: "邀請"

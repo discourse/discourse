@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe Jobs::ReviewablePriorities do
 
   it "needs returns 0s with no existing reviewables" do

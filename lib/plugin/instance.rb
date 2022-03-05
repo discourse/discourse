@@ -252,6 +252,14 @@ class Plugin::Instance
     Site.add_categories_callbacks(&block)
   end
 
+  def register_upload_unused(&block)
+    Upload.add_unused_callback(&block)
+  end
+
+  def register_upload_in_use(&block)
+    Upload.add_in_use_callback(&block)
+  end
+
   def custom_avatar_column(column)
     reloadable_patch do |plugin|
       UserLookup.lookup_columns << column

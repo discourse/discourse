@@ -65,49 +65,21 @@ class MetadataController < ApplicationController
           name: I18n.t('js.topic.create_long'),
           short_name: I18n.t('js.topic.create'),
           url: "#{Discourse.base_path}/new-topic",
-          icons: [
-            {
-              src: "#{icon_url_base}/plus.svg",
-              sizes: "131x150",
-              type: "image/svg"
-            }
-          ]
         },
         {
           name: I18n.t('js.user.messages.inbox'),
           short_name: I18n.t('js.user.messages.inbox'),
           url: "#{Discourse.base_path}/my/messages",
-          icons: [
-            {
-              src: "#{icon_url_base}/envelope.svg",
-              sizes: "150x150",
-              type: "image/svg"
-            }
-          ]
         },
         {
           name: I18n.t('js.user.bookmarks'),
           short_name: I18n.t('js.user.bookmarks'),
           url: "#{Discourse.base_path}/my/activity/bookmarks",
-          icons: [
-            {
-              src: "#{icon_url_base}/bookmark.svg",
-              sizes: "113x150",
-              type: "image/svg"
-            }
-          ]
         },
         {
           name: I18n.t('js.filters.top.title'),
           short_name: I18n.t('js.filters.top.title'),
           url: "#{Discourse.base_path}/top",
-          icons: [
-            {
-              src: "#{icon_url_base}/signal.svg",
-              sizes: "188x150",
-              type: "image/svg"
-            }
-          ]
         }
       ]
     }

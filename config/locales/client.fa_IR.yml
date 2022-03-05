@@ -168,7 +168,6 @@ fa_IR:
     bootstrap_mode_disabled: "حالت خود راه انداز در 24 ساعت آینده غیر‌فعال خواهد شد."
     themes:
       default_description: "پیش‌فرض"
-      broken_theme_alert: "ممکن است سایت شما به دلیل خطا در قالب %{theme} کار نکند. آن را در مسیر زیر از کار بیندازید: %{path}"
     s3:
       regions:
         ap_northeast_1: "آسیا و اقیانوسیه (توکیو)"
@@ -305,6 +304,8 @@ fa_IR:
         existing_reminder: "شما یک یادآور برای این نشانک دارید که در %{at_date_time} ارسال خواهد شد"
     copy_codeblock:
       copied: "کپی شد!"
+      copy: "کپی کد در کلیپ‌بورد"
+      fullscreen: "نمایش کد در تمام صفحه"
     drafts:
       label: "درفت"
       label_with_count: "پیش‌نویس (%{count})"
@@ -685,6 +686,7 @@ fa_IR:
             title: "تنظیمات"
             allow_unknown_sender_topic_replies: "پاسخ‌های موضوع فرستنده ناشناس را مجاز کنید."
             allow_unknown_sender_topic_replies_hint: "به فرستندگان ناشناس اجازه می‌دهد تا به موضوعات گروه پاسخ دهند. اگر این مورد فعال نباشد، پاسخ‌هایی از آدرس‌های ایمیلی که قبلاً به موضوع دعوت نشده‌اند، موضوع جدیدی ایجاد می‌کنند."
+            from_alias: "از نام مستعار"
           mailboxes:
             synchronized: "صندوق پستی همگام شده"
             none_found: "هیچ صندوق پستی در این حساب ایمیل یافت نشد."
@@ -2086,7 +2088,7 @@ fa_IR:
         clear_all: "پاکسازی همه"
         unlist_topics: "از فهرست خارج کردن مباحث"
         relist_topics: "ایجاد فهرست مجدد از موضوعات"
-        reset_read: "تنظیم مجدد خوانده شد"
+        defer: " واگذار کردن"
         delete: "حذف موضوعات"
         dismiss: "پنهان کردن"
         dismiss_read: "پنهان کردن تمامی خوانده نشده ها"
@@ -2347,7 +2349,6 @@ fa_IR:
         title: "پاسخ"
         help: "شروع ارسال پاسخ به این موضوع"
       share:
-        title: "اشتراک‌گذاری"
         extended_title: "اشتراک‌گذاری یک پیوند"
         help: "اشتراک‌گذاری پیوند این موضوع"
         invite_users: "دعوت"
@@ -4197,6 +4198,7 @@ fa_IR:
       emoji:
         title: "شکلک"
         add: "افزودن شکلک جدید"
+        choose_files: "انتخاب پرونده"
         uploading: "در حال بار گذاری ..."
         name: "نام"
         group: "گروه"

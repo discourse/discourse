@@ -182,6 +182,7 @@ en:
 
     wizard_required: "Welcome to your new Discourse! Let’s get started with <a href='%{url}' data-auto-route='true'>the setup wizard</a> ✨"
     emails_are_disabled: "All outgoing email has been globally disabled by an administrator. No email notifications of any kind will be sent."
+    emails_are_disabled_non_staff: "Outgoing email has been disabled for non-staff users."
 
     software_update_prompt:
       message: "We've updated this site, <span>please refresh</span>, or you may experience unexpected behavior."
@@ -194,9 +195,11 @@ en:
 
     themes:
       default_description: "Default"
-      broken_theme_alert: "Your site may not work because theme / component %{theme} has errors. Disable it at %{path}."
+      broken_theme_alert: "Your site may not work because a theme / component has errors."
+      error_caused_by: "Caused by '%{name}'. <a target='blank' href='%{path}'>Click here</a> to update, reconfigure or disable."
+      only_admins: "(this message is only shown to site administrators)"
 
-    broken_decorator_alert: "Posts may not display correctly because one of the post content decorators on your site raised an error. Check the browser developer tools for more information."
+    broken_decorator_alert: "Posts may not display correctly because one of the post content decorators on your site raised an error."
 
     s3:
       regions:
@@ -341,6 +344,8 @@ en:
 
     copy_codeblock:
       copied: "copied!"
+      copy: "copy code to clipboard"
+      fullscreen: "show code in full screen"
 
     drafts:
       label: "Drafts"
@@ -754,6 +759,8 @@ en:
             title: "Settings"
             allow_unknown_sender_topic_replies: "Allow unknown sender topic replies."
             allow_unknown_sender_topic_replies_hint: "Allows unknown senders to reply to group topics. If this is not enabled, replies from email addresses not already invited to the topic will create a new topic."
+            from_alias: "From Alias"
+            from_alias_hint: "Alias to use as the from address when sending group SMTP emails. Note this may not be supported by all mail providers, please consult your mail provider's documentation."
           mailboxes:
             synchronized: "Synchronized Mailbox"
             none_found: "No mailboxes were found in this email account."
@@ -1377,6 +1384,7 @@ en:
         upload_title: "Upload your picture"
         image_is_not_a_square: "Warning: we've cropped your image; width and height were not equal."
         logo_small: "Site's small logo. Used by default."
+        use_custom: "Or upload a custom avatar:"
 
       change_profile_background:
         title: "Profile Header"
@@ -1976,6 +1984,7 @@ en:
       second_factor_toggle:
         totp: "Use an authenticator app instead"
         backup_code: "Use a backup code instead"
+        security_key: "Use a security key instead"
     invites:
       accept_title: "Invitation"
       emoji: "envelope emoji"
@@ -2007,6 +2016,7 @@ en:
       categories_and_top_topics: "Categories and Top Topics"
       categories_boxes: "Boxes with Subcategories"
       categories_boxes_with_topics: "Boxes with Featured Topics"
+      subcategories_with_featured_topics: "Subcategories with Featured Topics"
 
     shortcut_modifier_key:
       shift: "Shift"
@@ -2495,7 +2505,7 @@ en:
         clear_all: "Clear All"
         unlist_topics: "Unlist Topics"
         relist_topics: "Relist Topics"
-        reset_read: "Reset Read"
+        defer: "Defer"
         delete: "Delete Topics"
         dismiss: "Dismiss"
         dismiss_read: "Dismiss all unread"
@@ -2835,7 +2845,7 @@ en:
         help: "begin composing a reply to this topic"
 
       share:
-        title: "Share"
+        title: "Share Topic"
         extended_title: "Share a link"
         help: "share a link to this topic"
         instructions: "Share a link to this topic:"
@@ -2843,12 +2853,6 @@ en:
         restricted_groups:
           one: "Only visible to members of group: %{groupNames}"
           other: "Only visible to members of groups: %{groupNames}"
-        notify_users:
-          title: "Notify"
-          instructions: "Notify the following users about this topic:"
-          success:
-            one: "Successfully notified %{username} about this topic."
-            other: "Successfully notified all users about this topic."
         invite_users: "Invite"
 
       print:
@@ -3277,6 +3281,10 @@ en:
         post_number: "%{username}, post #%{post_number}"
         show_all: "Show all"
 
+      share:
+        title: "Share Post #%{post_number}"
+        instructions: "Share a link to this post:"
+
     category:
       none: "(no category)"
       all: "All categories"
@@ -3359,7 +3367,7 @@ en:
       default_list_filter: "Default List Filter:"
       allow_badges_label: "Allow badges to be awarded in this category"
       edit_permissions: "Edit Permissions"
-      reviewable_by_group: "In addition to staff, content in this category can be also be reviewed by:"
+      reviewable_by_group: "In addition to staff, content in this category can also be reviewed by:"
       review_group_name: "group name"
       require_topic_approval: "Require moderator approval of all new topics"
       require_reply_approval: "Require moderator approval of all new replies"
@@ -3971,6 +3979,8 @@ en:
     fullscreen_table:
       expand_btn: "Expand Table"
 
+    second_factor_auth:
+      redirect_after_success: "Second factor authentication is successful. Redirecting to the previous page…"
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
     type_to_filter: "type to filter..."
@@ -4204,10 +4214,14 @@ en:
             topics:
               read: Read a topic or a specific post in it. RSS is also supported.
               write: Create a new topic or post to an existing one.
+              update: Update a topic. Change the title, category, tags, etc.
               read_lists: Read topic lists like top, new, latest, etc. RSS is also supported.
               wordpress: Necessary for the WordPress wp-discourse plugin to work.
             posts:
               edit: Edit any post or a specific one.
+            categories:
+              list: Get a list of categories.
+              show: Get a single category by id.
             uploads:
               create: Upload a new file or initiate single or multipart direct uploads to external storage.
             users:
@@ -4289,6 +4303,9 @@ en:
         notification_event:
           name: "Notification Event"
           details: "When a user receives a notification in their feed."
+        user_promoted_event:
+          name: "User Promoted Event"
+          details: "When a user is promoted from one trust level to another."
         user_badge_event:
           name: "Badge Grant Event"
           details: "When a user receives a badge."
@@ -5481,8 +5498,9 @@ en:
 
       emoji:
         title: "Emoji"
-        help: "Add new emoji that will be available to everyone. Drag and drop multiple files at once without entering a name to create emojis using their file names."
+        help: "Add new emoji that will be available to everyone. Drag and drop multiple files at once without entering a name to create emojis using their file names. The selected group will be used for all files that are added at the same time. You can also click 'Add New Emoji' to open the file picker."
         add: "Add New Emoji"
+        choose_files: "Choose Files"
         uploading: "Uploading..."
         name: "Name"
         group: "Group"

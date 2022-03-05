@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 RSpec.describe UserBookmarkList do
   let(:params) { {} }
   fab!(:user) { Fabricate(:user) }

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 RSpec.describe Jobs::PublishTopicToCategory do
   fab!(:category) { Fabricate(:category) }
   fab!(:another_category) { Fabricate(:category) }
@@ -17,7 +15,7 @@ RSpec.describe Jobs::PublishTopicToCategory do
       created_at: 5.minutes.ago
     )
 
-    Fabricate(:post, topic: topic)
+    Fabricate(:post, topic: topic, user: topic.user)
 
     topic
   end

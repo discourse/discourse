@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Onebox::Engine::AudioOnebox do
   it "supports ogg" do
     expect(Onebox.preview('http://upload.wikimedia.org/wikipedia/commons/c/c8/Example.ogg').to_s).to match(/<audio/)

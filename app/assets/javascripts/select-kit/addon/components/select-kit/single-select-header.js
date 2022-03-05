@@ -26,7 +26,7 @@ export default SelectKitHeaderComponent.extend(UtilsMixin, {
   name: computed("selectedContent.name", function () {
     if (this.selectedContent) {
       return I18n.t("select_kit.filter_by", {
-        name: this.selectedContent.name,
+        name: this.getName(this.selectedContent),
       });
     } else {
       return I18n.t("select_kit.select_to_filter");

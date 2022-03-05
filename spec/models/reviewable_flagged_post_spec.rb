@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 RSpec.describe ReviewableFlaggedPost, type: :model do
 
   def pending_count

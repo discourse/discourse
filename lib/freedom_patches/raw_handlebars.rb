@@ -18,7 +18,7 @@ class Barber::Precompiler
       # very hacky but lets us use ES6. I'm ashamed of this code -RW
       transpiled = transpiled[transpiled.index('var RawHandlebars = ')...transpiled.index('export ')]
 
-      @precompiler = StringIO.new <<~END
+      @precompiler = StringIO.new <<~JS
         var __RawHandlebars;
         (function() {
           #{transpiled};
@@ -30,7 +30,7 @@ class Barber::Precompiler
             return __RawHandlebars.precompile(string, false).toString();
           }
         };
-      END
+      JS
     end
 
     @precompiler
@@ -111,10 +111,10 @@ class Ember::Handlebars::Template
       "define('#{module_name}', ['exports'], function(__exports__){ __exports__['default'] = #{template} });"
     when :global
       if raw
-        return <<~RAW_TEMPLATE
+        return <<~JS
           var __t = #{template};
           requirejs('discourse-common/lib/raw-templates').addRawTemplate(#{path_for(template_name, config)}, __t);
-        RAW_TEMPLATE
+        JS
       end
 
       target = global_template_target('Ember.TEMPLATES', template_name, config)

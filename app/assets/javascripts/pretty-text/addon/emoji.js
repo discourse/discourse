@@ -8,18 +8,18 @@ import {
 } from "pretty-text/emoji/data";
 import { IMAGE_VERSION } from "pretty-text/emoji/version";
 
-const extendedEmoji = {};
+const extendedEmojiMap = new Map();
 
 export function registerEmoji(code, url, group) {
   code = code.toLowerCase();
-  extendedEmoji[code] = { url, group };
+  extendedEmojiMap.set(code, { url, group });
 }
 
 export function extendedEmojiList() {
-  return extendedEmoji;
+  return extendedEmojiMap;
 }
 
-const emojiHash = {};
+const emojiMap = new Map();
 
 // https://github.com/mathiasbynens/emoji-regex/blob/main/text.js
 export const emojiReplacementRegex =
@@ -30,12 +30,12 @@ function textEmojiRegex(inlineEmoji) {
 }
 
 // add all default emojis
-emojis.forEach((code) => (emojiHash[code] = true));
+emojis.forEach((code) => emojiMap.set(code, true));
 
 // and their aliases
-const aliasHash = {};
-Object.keys(aliases).forEach((name) => {
-  aliases[name].forEach((alias) => (aliasHash[alias] = name));
+const aliasMap = new Map();
+Object.entries(aliases).forEach(([name, list]) => {
+  list.forEach((alias) => aliasMap.set(alias, name));
 });
 
 function isReplacableInlineEmoji(string, index, inlineEmoji) {
@@ -84,7 +84,7 @@ export function performEmojiUnescape(string, opts) {
       : "emoji";
 
     if (opts.class) {
-      classes = `${classes} ${opts.class}`;
+      classes += ` ${opts.class}`;
     }
 
     const isReplacable =
@@ -131,23 +131,18 @@ export function performEmojiEscape(string, opts) {
 
 export function isCustomEmoji(code, opts) {
   code = code.toLowerCase();
-  if (extendedEmoji.hasOwnProperty(code)) {
-    return true;
-  }
-  if (opts && opts.customEmoji && opts.customEmoji.hasOwnProperty(code)) {
-    return true;
-  }
-  return false;
+  return extendedEmojiMap.has(code) || opts?.customEmoji?.hasOwnProperty(code);
 }
 
 export function buildEmojiUrl(code, opts) {
   let url;
   code = String(code).toLowerCase();
-  if (extendedEmoji.hasOwnProperty(code)) {
-    url = extendedEmoji[code].url;
+
+  if (extendedEmojiMap.has(code)) {
+    url = extendedEmojiMap.get(code).url;
   }
 
-  if (opts && opts.customEmoji && opts.customEmoji[code]) {
+  if (opts.customEmoji?.[code]) {
     url = opts.customEmoji[code].url || opts.customEmoji[code];
   }
 
@@ -159,10 +154,11 @@ export function buildEmojiUrl(code, opts) {
   }
 
   if (
+    opts.getURL &&
+    opts.emojiSet &&
     noToneMatch &&
     !url &&
-    (emojiHash.hasOwnProperty(noToneMatch[1]) ||
-      aliasHash.hasOwnProperty(noToneMatch[1]))
+    (emojiMap.has(noToneMatch[1]) || aliasMap.has(noToneMatch[1]))
   ) {
     url = opts.getURL(
       `${emojiBasePath}/${opts.emojiSet}/${code.replace(/:t/, "/")}.png`
@@ -170,7 +166,7 @@ export function buildEmojiUrl(code, opts) {
   }
 
   if (url) {
-    url = url + "?v=" + IMAGE_VERSION;
+    url = `${url}?v=${IMAGE_VERSION}`;
   }
 
   return url;
@@ -178,34 +174,30 @@ export function buildEmojiUrl(code, opts) {
 
 export function emojiExists(code) {
   code = code.toLowerCase();
-  return !!(
-    extendedEmoji.hasOwnProperty(code) ||
-    emojiHash.hasOwnProperty(code) ||
-    aliasHash.hasOwnProperty(code)
-  );
+  return extendedEmojiMap.has(code) || emojiMap.has(code) || aliasMap.has(code);
 }
 
 let toSearch;
 export function emojiSearch(term, options) {
-  const maxResults = (options && options["maxResults"]) || -1;
-  const diversity = options && options.diversity;
+  const maxResults = options?.maxResults;
+  const diversity = options?.diversity;
   if (maxResults === 0) {
     return [];
   }
 
-  toSearch =
-    toSearch ||
-    [
-      ...Object.keys(emojiHash),
-      ...Object.keys(extendedEmoji),
-      ...Object.keys(aliasHash),
+  if (!toSearch) {
+    toSearch = [
+      ...emojiMap.keys(),
+      ...extendedEmojiMap.keys(),
+      ...aliasMap.keys(),
     ].sort();
+  }
 
   const results = [];
 
   function addResult(t) {
-    const val = aliasHash[t] || t;
-    if (results.indexOf(val) === -1) {
+    const val = aliasMap.get(t) || t;
+    if (!results.includes(val)) {
       if (diversity && diversity > 1 && isSkinTonableEmoji(val)) {
         results.push(`${val}:t${diversity}`);
       } else {
@@ -215,37 +207,37 @@ export function emojiSearch(term, options) {
   }
 
   // if term matches from beginning
-  for (let i = 0; i < toSearch.length; i++) {
-    const item = toSearch[i];
+  for (const item of toSearch) {
     if (item.indexOf(term) === 0) {
       addResult(item);
     }
   }
 
-  if (searchAliases[term]) {
-    for (const emoji of searchAliases[term]) {
-      addResult(emoji);
+  for (const [key, value] of Object.entries(searchAliases)) {
+    if (key.startsWith(term)) {
+      for (const emoji of value) {
+        addResult(emoji);
+      }
     }
   }
 
-  for (let i = 0; i < toSearch.length; i++) {
-    const item = toSearch[i];
+  for (const item of toSearch) {
     if (item.indexOf(term) > 0) {
       addResult(item);
     }
   }
 
-  if (maxResults === -1) {
-    return results;
-  } else {
+  if (maxResults) {
     return results.slice(0, maxResults);
+  } else {
+    return results;
   }
 }
 
 export function isSkinTonableEmoji(term) {
   const match = term.split(":").filter(Boolean)[0];
   if (match) {
-    return tonableEmojis.indexOf(match) !== -1;
+    return tonableEmojis.includes(match);
   }
   return false;
 }

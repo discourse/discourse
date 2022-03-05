@@ -159,6 +159,17 @@ class UsersController < ApplicationController
       end
     end
 
+    if params[:external_ids]&.is_a?(ActionController::Parameters) && current_user&.admin? && is_api?
+      attributes[:user_associated_accounts] = []
+
+      params[:external_ids].each do |provider_name, provider_uid|
+        authenticator = Discourse.enabled_authenticators.find { |a| a.name == provider_name }
+        raise Discourse::InvalidParameters.new(:external_ids) if !authenticator&.is_managed?
+
+        attributes[:user_associated_accounts] << { provider_name: provider_name, provider_uid: provider_uid }
+      end
+    end
+
     json_result(user, serializer: UserSerializer, additional_errors: [:user_profile, :user_option]) do |u|
       updater = UserUpdater.new(current_user, user)
       updater.update(attributes.permit!)
@@ -600,7 +611,7 @@ class UsersController < ApplicationController
       return render json: success_json
     end
 
-    if !(email =~ EmailValidator.email_regex)
+    if !EmailAddressValidator.valid_value?(email)
       error = User.new.errors.full_message(:email, I18n.t(:'user.email.invalid'))
       return render json: failed_json.merge(errors: [error])
     end
@@ -632,6 +643,7 @@ class UsersController < ApplicationController
     params.require(:username)
     params.require(:invite_code) if SiteSetting.require_invite_code
     params.permit(:user_fields)
+    params.permit(:external_ids)
 
     unless SiteSetting.allow_new_registrations
       return fail_with("login.new_registrations_disabled")
@@ -691,6 +703,18 @@ class UsersController < ApplicationController
       user.custom_fields = fields
     end
 
+    # Handle associated accounts
+    associations = []
+    if params[:external_ids]&.is_a?(ActionController::Parameters) && current_user&.admin? && is_api?
+      params[:external_ids].each do |provider_name, provider_uid|
+        authenticator = Discourse.enabled_authenticators.find { |a| a.name == provider_name }
+        raise Discourse::InvalidParameters.new(:external_ids) if !authenticator&.is_managed?
+
+        association = UserAssociatedAccount.find_or_initialize_by(provider_name: provider_name, provider_uid: provider_uid)
+        associations << association
+      end
+    end
+
     authentication = UserAuthenticator.new(user, session)
 
     if !authentication.has_authenticator? && !SiteSetting.enable_local_logins && !(current_user&.admin? && is_api?)
@@ -709,11 +733,12 @@ class UsersController < ApplicationController
 
     # just assign a password if we have an authenticator and no password
     # this is the case for Twitter
-    user.password = SecureRandom.hex if user.password.blank? && authentication.has_authenticator?
+    user.password = SecureRandom.hex if user.password.blank? && (authentication.has_authenticator? || associations.present?)
 
     if user.save
       authentication.finish
       activation.finish
+      associations.each { |a| a.update!(user: user) }
       user.update_timezone_if_missing(params[:timezone])
 
       secure_session[HONEYPOT_KEY] = nil
@@ -737,7 +762,7 @@ class UsersController < ApplicationController
       session["user_created_message"] = activation.success_message
 
       if existing_user = User.find_by_email(user.primary_email&.email)
-        Jobs.enqueue(:critical_user_email, type: :account_exists, user_id: existing_user.id)
+        Jobs.enqueue(:critical_user_email, type: "account_exists", user_id: existing_user.id)
       end
 
       render json: {
@@ -932,7 +957,7 @@ class UsersController < ApplicationController
 
       if user = User.with_email(params[:email]).admins.human_users.first
         email_token = user.email_tokens.create!(email: user.email, scope: EmailToken.scopes[:email_login])
-        Jobs.enqueue(:critical_user_email, type: :admin_login, user_id: user.id, email_token: email_token.token)
+        Jobs.enqueue(:critical_user_email, type: "admin_login", user_id: user.id, email_token: email_token.token)
         @message = I18n.t("admin_login.success")
       else
         @message = I18n.t("admin_login.errors.unknown_email_address")
@@ -967,7 +992,7 @@ class UsersController < ApplicationController
         email_token = user.email_tokens.create!(email: user.email, scope: EmailToken.scopes[:email_login])
 
         Jobs.enqueue(:critical_user_email,
-          type: :email_login,
+          type: "email_login",
           user_id: user.id,
           email_token: email_token.token
         )
@@ -1171,8 +1196,7 @@ class UsersController < ApplicationController
         end
       end
 
-      groups = Group.search_groups(term, groups: groups)
-      groups = groups.order('groups.name asc')
+      groups = Group.search_groups(term, groups: groups, sort: :auto)
 
       to_render[:groups] = groups.map do |m|
         { name: m.name, full_name: m.full_name }
@@ -1244,7 +1268,7 @@ class UsersController < ApplicationController
       return render json: failed_json, status: 422
     end
 
-    unless SiteSetting.selectable_avatars_enabled
+    if SiteSetting.selectable_avatars_mode == "disabled"
       return render json: failed_json, status: 422
     end
 
@@ -1328,7 +1352,7 @@ class UsersController < ApplicationController
     end
 
     render json: success_json
-  rescue Discourse::InvalidAccess => e
+  rescue Discourse::InvalidAccess
     render_json_error(I18n.t("notification_level.#{@error_message}"))
   end
 
@@ -1535,7 +1559,7 @@ class UsersController < ApplicationController
 
     Jobs.enqueue(
       :critical_user_email,
-      type: :account_second_factor_disabled,
+      type: "account_second_factor_disabled",
       user_id: current_user.id
     )
 

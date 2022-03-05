@@ -36,7 +36,7 @@ class Stylesheet::Manager::Builder
          rtl: rtl,
          theme_id: theme&.id,
          theme_variables: theme&.scss_variables.to_s,
-         source_map_file: source_map_filename,
+         source_map_file: source_map_url_relative_from_stylesheet,
          color_scheme_id: @color_scheme&.id,
          load_paths: load_paths
       )
@@ -73,6 +73,10 @@ class Stylesheet::Manager::Builder
     css
   end
 
+  def current_hostname
+    Discourse.current_hostname
+  end
+
   def cache_fullpath
     Stylesheet::Manager.cache_fullpath
   end
@@ -89,16 +93,16 @@ class Stylesheet::Manager::Builder
     "#{stylesheet_filename}.map"
   end
 
+  def source_map_url_relative_from_stylesheet
+    "#{source_map_filename}?__ws=#{current_hostname}"
+  end
+
   def stylesheet_fullpath_no_digest
     "#{cache_fullpath}/#{stylesheet_filename_no_digest}"
   end
 
-  def stylesheet_cdnpath(hostname)
-    "#{GlobalSetting.cdn_url}#{stylesheet_relpath}?__ws=#{hostname}"
-  end
-
-  def stylesheet_path(hostname)
-    stylesheet_cdnpath(hostname)
+  def stylesheet_absolute_url
+    "#{GlobalSetting.cdn_url}#{stylesheet_relpath}?__ws=#{current_hostname}"
   end
 
   def root_path
@@ -177,7 +181,7 @@ class Stylesheet::Manager::Builder
   end
 
   def theme_digest
-    Digest::SHA1.hexdigest(scss_digest.to_s + color_scheme_digest.to_s + settings_digest + uploads_digest)
+    Digest::SHA1.hexdigest(scss_digest.to_s + color_scheme_digest.to_s + settings_digest + uploads_digest + current_hostname)
   end
 
   # this protects us from situations where new versions of a plugin removed a file
@@ -225,7 +229,7 @@ class Stylesheet::Manager::Builder
   end
 
   def default_digest
-    Digest::SHA1.hexdigest "default-#{Stylesheet::Manager.last_file_updated}-#{plugins_digest}"
+    Digest::SHA1.hexdigest "default-#{Stylesheet::Manager.last_file_updated}-#{plugins_digest}-#{current_hostname}"
   end
 
   def color_scheme_digest
@@ -241,18 +245,18 @@ class Stylesheet::Manager::Builder
 
     fonts = "#{SiteSetting.base_font}-#{SiteSetting.heading_font}"
 
+    digest_string = "#{current_hostname}-"
     if cs || categories_updated > 0
       theme_color_defs = resolve_baked_field(:common, :color_definitions)
-      Digest::SHA1.hexdigest "#{RailsMultisite::ConnectionManagement.current_db}-#{cs&.id}-#{cs&.version}-#{theme_color_defs}-#{Stylesheet::Manager.last_file_updated}-#{categories_updated}-#{fonts}"
+      digest_string += "#{RailsMultisite::ConnectionManagement.current_db}-#{cs&.id}-#{cs&.version}-#{theme_color_defs}-#{Stylesheet::Manager.last_file_updated}-#{categories_updated}-#{fonts}"
     else
-      digest_string = "defaults-#{Stylesheet::Manager.last_file_updated}-#{fonts}"
+      digest_string += "defaults-#{Stylesheet::Manager.last_file_updated}-#{fonts}"
 
       if cdn_url = GlobalSetting.cdn_url
-        digest_string = "#{digest_string}-#{cdn_url}"
+        digest_string += "-#{cdn_url}"
       end
-
-      Digest::SHA1.hexdigest digest_string
     end
+    Digest::SHA1.hexdigest digest_string
   end
 
   def resolve_baked_field(target, name)

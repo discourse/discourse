@@ -22,6 +22,7 @@ class ApiKeyScope < ActiveRecord::Base
         },
         topics: {
           write: { actions: %w[posts#create], params: %i[topic_id] },
+          update: { actions: %w[topics#update], params: %i[topic_id] },
           read: {
             actions: %w[topics#show topics#feed topics#posts],
             params: %i[topic_id], aliases: { topic_id: :id }
@@ -34,6 +35,10 @@ class ApiKeyScope < ActiveRecord::Base
         },
         posts: {
           edit: { actions: %w[posts#update], params: %i[id] }
+        },
+        categories: {
+          list: { actions: %w[categories#index] },
+          show: { actions: %w[categories#show], params: %i[id] }
         },
         uploads: {
           create: {
@@ -101,7 +106,14 @@ class ApiKeyScope < ActiveRecord::Base
       urls = []
 
       if actions.present?
-        Rails.application.routes.routes.each do |route|
+        routes = Rails.application.routes.routes.to_a
+        Rails::Engine.descendants.each do |engine|
+          next if engine == Rails::Application # abstract engine, can't call routes on it
+          next if engine == Discourse::Application # equiv. to Rails.application
+          routes.concat(engine.routes.routes.to_a)
+        end
+
+        routes.each do |route|
           defaults = route.defaults
           action = "#{defaults[:controller].to_s}##{defaults[:action]}"
           path = route.path.spec.to_s.gsub(/\(\.:format\)/, '')

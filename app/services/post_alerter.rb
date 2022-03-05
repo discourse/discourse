@@ -429,8 +429,13 @@ class PostAlerter
       return
     end
 
-    # linked, quoted, mentioned may be suppressed if you already have a reply notification
-    if type == Notification.types[:quoted] || type == Notification.types[:linked] || type == Notification.types[:mentioned]
+    # linked, quoted, mentioned, chat_quoted may be suppressed if you already have a reply notification
+    if [
+      Notification.types[:quoted],
+      Notification.types[:linked],
+      Notification.types[:mentioned],
+      Notification.types[:chat_quoted]
+    ].include?(type)
       return if existing_notifications.find { |n| n.notification_type == Notification.types[:replied] }
     end
 

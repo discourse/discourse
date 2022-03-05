@@ -860,6 +860,14 @@ class TopicView
       @contains_gaps = true
     end
 
+    # Show Only Top Level Replies
+    if @filter_top_level_replies.present?
+      @filtered_posts = @filtered_posts.where('
+        posts.post_number > 1
+        AND posts.reply_to_post_number IS NULL
+      ')
+    end
+
     # Filtering upwards
     if @filter_upwards_post_id.present?
       post = Post.find(@filter_upwards_post_id)

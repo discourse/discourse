@@ -148,7 +148,6 @@ ja:
     bootstrap_mode_disabled: "ブートストラップモードは 24 時間以内に無効になります。"
     themes:
       default_description: "デフォルト"
-      broken_theme_alert: "テーマ/コンポーネントの %{theme} にエラーがあるため、サイトが動作しない可能性があります。%{path} で無効にしてください。"
     s3:
       regions:
         ap_northeast_1: "アジア・太平洋 (東京)"
@@ -2155,7 +2154,7 @@ ja:
         clear_all: "すべてクリア"
         unlist_topics: "トピックを非表示"
         relist_topics: "トピックを表示"
-        reset_read: "未読に設定"
+        defer: "取り下げる"
         delete: "トピックを削除"
         dismiss: "閉じる"
         dismiss_read: "未読をすべて閉じる"
@@ -2445,7 +2444,6 @@ ja:
         title: "返信"
         help: "このトピックへの返信を作成する"
       share:
-        title: "共有"
         extended_title: "リンクの共有"
         help: "このトピックのリンクを共有する"
         instructions: "このトピックへのリンクを共有します:"
@@ -2886,7 +2884,6 @@ ja:
       default_list_filter: "デフォルトのリストのフィルタ:"
       allow_badges_label: "このカテゴリでバッジの付与を許可する"
       edit_permissions: "権限を編集"
-      reviewable_by_group: "このカテゴリのコンテンツはスタッフのほか、次のユーザーもレビューできる:"
       review_group_name: "グループ名"
       require_topic_approval: "すべての新しいトピックにモデレーターの承認を必要とする"
       require_reply_approval: "すべての新しい返信にモデレーターの承認を必要とする"

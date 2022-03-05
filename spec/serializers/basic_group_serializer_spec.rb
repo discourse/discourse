@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe BasicGroupSerializer do
   let(:guardian) { Guardian.new }
   fab!(:group) { Fabricate(:group) }

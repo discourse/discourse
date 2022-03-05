@@ -148,7 +148,6 @@ id:
     bootstrap_mode_disabled: "Mode bootstrap akan dinonaktifkan dalam 24 jam."
     themes:
       default_description: "Asal"
-      broken_theme_alert: "Situs Anda mungkin tidak akan bekerja karena tema / komponen %{theme} memiliki masalah. Nonaktifkan pada %{path}."
     s3:
       regions:
         ap_northeast_1: "Asia Pacific (Tokyo)"

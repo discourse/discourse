@@ -32,7 +32,7 @@ class Invite < ActiveRecord::Base
   validates :email, email: true, allow_blank: true
   validate :ensure_max_redemptions_allowed
   validate :valid_domain, if: :will_save_change_to_domain?
-  validate :user_doesnt_already_exist
+  validate :user_doesnt_already_exist, if: :will_save_change_to_email?
 
   before_create do
     self.invite_key ||= SecureRandom.base58(10)
@@ -62,12 +62,7 @@ class Invite < ActiveRecord::Base
 
     if user && user.id != self.invited_users&.first&.user_id
       @email_already_exists = true
-      errors.add(:base, I18n.t(
-        "invite.user_exists",
-        email: email,
-        username: user.username,
-        base_path: Discourse.base_path
-      ))
+      errors.add(:base, user_exists_error_msg(email, user.username))
     end
   end
 
@@ -106,12 +101,7 @@ class Invite < ActiveRecord::Base
     email = Email.downcase(opts[:email]) if opts[:email].present?
 
     if user = find_user_by_email(email)
-      raise UserExists.new(I18n.t(
-        "invite.user_exists",
-        email: email,
-        username: user.username,
-        base_path: Discourse.base_path
-      ))
+      raise UserExists.new(new.user_exists_error_msg(email, user.username))
     end
 
     if email.present?
@@ -249,23 +239,6 @@ class Invite < ActiveRecord::Base
     Jobs.enqueue(:invite_email, invite_id: self.id)
   end
 
-  def warnings(guardian)
-    @warnings ||= begin
-      warnings = []
-
-      topic = self.topics.first
-      if topic&.read_restricted_category?
-        topic_groups = topic.category.groups
-        if (self.groups & topic_groups).blank?
-          editable_topic_groups = topic_groups.filter { |g| guardian.can_edit_group?(g) }
-          warnings << I18n.t("invite.requires_groups", groups: editable_topic_groups.pluck(:name).join(", "))
-        end
-      end
-
-      warnings
-    end
-  end
-
   def limit_invites_per_day
     RateLimiter.new(invited_by, "invites-per-day", SiteSetting.max_invites_per_day, 1.day.to_i)
   end
@@ -293,8 +266,18 @@ class Invite < ActiveRecord::Base
     self.domain.downcase!
 
     if self.domain !~ Invite::DOMAIN_REGEX
-      self.errors.add(:base, I18n.t('invite.domain_not_allowed', domain: self.domain))
+      self.errors.add(:base, I18n.t('invite.domain_not_allowed'))
     end
+  end
+
+  def user_exists_error_msg(email, username)
+    sanitized_email = CGI.escapeHTML(email)
+    sanitized_username = CGI.escapeHTML(username)
+
+    I18n.t(
+      "invite.user_exists",
+      email: sanitized_email, username: sanitized_username, base_path: Discourse.base_path
+    )
   end
 end
 

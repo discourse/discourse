@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe PresenceController do
   fab!(:user) { Fabricate(:user) }
   fab!(:group) { Fabricate(:group).tap { |g| g.add(user) } }

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe EmailLog do
 
   it { is_expected.to belong_to :user }
@@ -159,6 +157,25 @@ describe EmailLog do
 
     it "returns nothing if no emails match" do
       expect(EmailLog.addressed_to_user(user).count).to eq(0)
+    end
+  end
+
+  describe "bounce_error_code fix before update" do
+    fab!(:email_log) { Fabricate(:email_log) }
+
+    it "makes sure the bounce_error_code is in the format X.X.X or XXX" do
+      email_log.update!(bounce_error_code: "5.1.1")
+      expect(email_log.reload.bounce_error_code).to eq("5.1.1")
+      email_log.update!(bounce_error_code: "5.2.23")
+      expect(email_log.reload.bounce_error_code).to eq("5.2.23")
+      email_log.update!(bounce_error_code: "5.0.0 (permanent failure)")
+      expect(email_log.reload.bounce_error_code).to eq("5.0.0")
+      email_log.update!(bounce_error_code: "422")
+      expect(email_log.reload.bounce_error_code).to eq("422")
+      email_log.update!(bounce_error_code: "5.2")
+      expect(email_log.reload.bounce_error_code).to eq(nil)
+      email_log.update!(bounce_error_code: "blah")
+      expect(email_log.reload.bounce_error_code).to eq(nil)
     end
   end
 end

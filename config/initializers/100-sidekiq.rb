@@ -81,7 +81,16 @@ if Sidekiq.server?
   end
 end
 
-Sidekiq.logger.level = Logger::WARN
+# Sidekiq#logger= applies patches to whichever logger we pass it.
+# Therefore something like Sidekiq.logger = Rails.logger will break
+# all logging in the application.
+#
+# Instead, this patch adds a dedicated logger instance and patches
+# the #add method to forward messages to Rails.logger.
+Sidekiq.logger = Logger.new(nil)
+Sidekiq.logger.define_singleton_method(:add) do |severity, message = nil, progname = nil, &blk|
+  Rails.logger.add(severity, message, progname, &blk)
+end
 
 class SidekiqLogsterReporter < Sidekiq::ExceptionHandler::Logger
   def call(ex, context = {})
@@ -111,8 +120,7 @@ class SidekiqLogsterReporter < Sidekiq::ExceptionHandler::Logger
   end
 end
 
-unless Rails.env.development?
-  Sidekiq.error_handlers.clear
-end
-
+Sidekiq.error_handlers.clear
 Sidekiq.error_handlers << SidekiqLogsterReporter.new
+
+Sidekiq.strict_args!

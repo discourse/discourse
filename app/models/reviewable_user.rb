@@ -31,7 +31,7 @@ class ReviewableUser < Reviewable
     if args[:send_email] != false && SiteSetting.must_approve_users?
       Jobs.enqueue(
         :critical_user_email,
-        type: :signup_after_approval,
+        type: "signup_after_approval",
         user_id: target.id
       )
     end

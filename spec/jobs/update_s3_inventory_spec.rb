@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
 require "file_store/s3_store"
 
 describe Jobs::UpdateS3Inventory do

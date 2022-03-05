@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 RSpec.describe ReviewableClaimedTopic, type: :model do
 
   it "respects the uniqueness constraint" do

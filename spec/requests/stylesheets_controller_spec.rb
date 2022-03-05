@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe StylesheetsController do
   it 'can survive cache miss' do
     StylesheetCache.destroy_all

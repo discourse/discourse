@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe WatchedWord do
   fab!(:tl2_user) { Fabricate(:user, trust_level: TrustLevel[2]) }
   fab!(:admin) { Fabricate(:admin) }

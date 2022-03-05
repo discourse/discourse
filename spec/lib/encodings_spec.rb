@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe Encodings do
   def to_utf8(filename)
     string = File.read("#{Rails.root}/spec/fixtures/encodings/#{filename}").chomp

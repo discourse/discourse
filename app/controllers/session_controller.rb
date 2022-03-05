@@ -6,6 +6,10 @@ class SessionController < ApplicationController
   skip_before_action :redirect_to_login_if_required
   skip_before_action :preload_json, :check_xhr, only: %i(sso sso_login sso_provider destroy one_time_password)
 
+  skip_before_action :check_xhr, only: %i(second_factor_auth_show)
+
+  requires_login only: [:second_factor_auth_show, :second_factor_auth_perform]
+
   ACTIVATE_USER_KEY = "activate_user"
 
   def csrf
@@ -243,7 +247,7 @@ class SessionController < ApplicationController
     rescue ActiveRecord::RecordInvalid => e
 
       if SiteSetting.verbose_discourse_connect_logging
-        Rails.logger.warn(<<~EOF)
+        Rails.logger.warn(<<~TEXT)
         Verbose SSO log: Record was invalid: #{e.record.class.name} #{e.record.id}
         #{e.record.errors.to_h}
 
@@ -252,7 +256,7 @@ class SessionController < ApplicationController
 
         SSO Diagnostics:
         #{sso.diagnostics}
-        EOF
+        TEXT
       end
 
       text = nil
@@ -424,6 +428,116 @@ class SessionController < ApplicationController
     render layout: 'no_ember', locals: { hide_auth_buttons: true }
   end
 
+  def second_factor_auth_show
+    user = current_user
+
+    nonce = params.require(:nonce)
+    challenge = nil
+    error_key = nil
+    status_code = 200
+    begin
+      challenge = SecondFactor::AuthManager.find_second_factor_challenge(nonce, secure_session)
+    rescue SecondFactor::BadChallenge => exception
+      error_key = exception.error_translation_key
+      status_code = exception.status_code
+    end
+
+    json = {}
+    if challenge
+      json.merge!(
+        totp_enabled: user.totp_enabled?,
+        backup_enabled: user.backup_codes_enabled?,
+        allowed_methods: challenge[:allowed_methods]
+      )
+      if user.security_keys_enabled?
+        Webauthn.stage_challenge(user, secure_session)
+        json.merge!(Webauthn.allowed_credentials(user, secure_session))
+        json[:security_keys_enabled] = true
+      else
+        json[:security_keys_enabled] = false
+      end
+      if challenge[:description]
+        json[:description] = challenge[:description]
+      end
+    else
+      json[:error] = I18n.t(error_key)
+    end
+
+    respond_to do |format|
+      format.html do
+        store_preloaded("2fa_challenge_data", MultiJson.dump(json))
+        raise ApplicationController::RenderEmpty.new
+      end
+
+      format.json do
+        render json: json, status: status_code
+      end
+    end
+  end
+
+  def second_factor_auth_perform
+    nonce = params.require(:nonce)
+    challenge = nil
+    error_key = nil
+    status_code = 200
+    begin
+      challenge = SecondFactor::AuthManager.find_second_factor_challenge(nonce, secure_session)
+    rescue SecondFactor::BadChallenge => exception
+      error_key = exception.error_translation_key
+      status_code = exception.status_code
+    end
+
+    if error_key
+      json = failed_json.merge(
+        ok: false,
+        error: I18n.t(error_key),
+        reason: "challenge_not_found_or_expired"
+      )
+      render json: failed_json.merge(json), status: status_code
+      return
+    end
+
+    # no proper error messages for these cases because the only way they can
+    # happen is if someone is messing with us.
+    # the first one can only happen if someone disables a 2FA method after
+    # they're redirected to the 2fa page and then uses the same method they've
+    # disabled.
+    second_factor_method = params[:second_factor_method].to_i
+    if !current_user.valid_second_factor_method_for_user?(second_factor_method)
+      raise Discourse::InvalidAccess.new
+    end
+    # and this happens if someone tries to use a 2FA method that's not accepted
+    # for the action they're trying to perform. e.g. using backup codes to
+    # grant someone admin status.
+    if !challenge[:allowed_methods].include?(second_factor_method)
+      raise Discourse::InvalidAccess.new
+    end
+
+    if !challenge[:successful]
+      rate_limit_second_factor!(current_user)
+      second_factor_auth_result = current_user.authenticate_second_factor(params, secure_session)
+      if second_factor_auth_result.ok
+        challenge[:successful] = true
+        challenge[:generated_at] += 1.minute.to_i
+        secure_session["current_second_factor_auth_challenge"] = challenge.to_json
+      else
+        error_json = second_factor_auth_result
+          .to_h
+          .deep_symbolize_keys
+          .slice(:ok, :error, :reason)
+          .merge(failed_json)
+        render json: error_json, status: 400
+        return
+      end
+    end
+    render json: {
+      ok: true,
+      callback_method: challenge[:callback_method],
+      callback_path: challenge[:callback_path],
+      redirect_path: challenge[:redirect_path]
+    }, status: 200
+  end
+
   def forgot_password
     params.require(:login)
 
@@ -434,32 +548,24 @@ class SessionController < ApplicationController
     RateLimiter.new(nil, "forgot-password-hr-#{request.remote_ip}", 6, 1.hour).performed!
     RateLimiter.new(nil, "forgot-password-min-#{request.remote_ip}", 3, 1.minute).performed!
 
-    if SiteSetting.hide_email_address_taken
-      user = User.find_by_email(Email.downcase(normalized_login_param))
+    user = if SiteSetting.hide_email_address_taken && !current_user&.staff?
+      raise Discourse::InvalidParameters.new(:login) if !EmailAddressValidator.valid_value?(normalized_login_param)
+      User.real.where(staged: false).find_by_email(Email.downcase(normalized_login_param))
     else
-      user = User.find_by_username_or_email(normalized_login_param)
+      User.real.where(staged: false).find_by_username_or_email(normalized_login_param)
     end
 
     if user
       RateLimiter.new(nil, "forgot-password-login-day-#{user.username}", 6, 1.day).performed!
+      email_token = user.email_tokens.create!(email: user.email, scope: EmailToken.scopes[:password_reset])
+      Jobs.enqueue(:critical_user_email, type: "forgot_password", user_id: user.id, email_token: email_token.token)
     else
       RateLimiter.new(nil, "forgot-password-login-hour-#{normalized_login_param}", 5, 1.hour).performed!
     end
 
-    user_presence = user.present? && user.human? && !user.staged
-    if user_presence
-      email_token = user.email_tokens.create!(email: user.email, scope: EmailToken.scopes[:password_reset])
-      Jobs.enqueue(:critical_user_email, type: :forgot_password, user_id: user.id, email_token: email_token.token)
-    end
-
     json = success_json
-
-    if !SiteSetting.hide_email_address_taken
-      json[:user_found] = user_presence
-    end
-
+    json[:user_found] = user.present? if !SiteSetting.hide_email_address_taken
     render json: json
-
   rescue RateLimiter::LimitExceeded
     render_json_error(I18n.t("rate_limiter.slow_down"))
   end

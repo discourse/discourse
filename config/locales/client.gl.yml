@@ -167,7 +167,6 @@ gl:
     bootstrap_mode_disabled: "O modo Bootstrap desactivarase nun prazo de 24 horas."
     themes:
       default_description: "Predeterminado"
-      broken_theme_alert: "Pode que o seu sitio non funcione porque o tema ou compoñente %{theme} contén erros. Desactíveo en %{path}."
     s3:
       regions:
         ap_northeast_1: "Asia Pacífico (Tokio)"
@@ -2118,7 +2117,7 @@ gl:
         clear_all: "Borrar todo"
         unlist_topics: "Retirar temas da listaxe"
         relist_topics: "Refacer a listaxe de temas"
-        reset_read: "Restabelecer os lidos"
+        defer: "Adiar"
         delete: "Eliminar temas"
         dismiss: "Desbotar"
         dismiss_read: "Desbotar os non lidos"
@@ -2401,7 +2400,6 @@ gl:
         title: "Responder"
         help: "escribir unha resposta a este tema"
       share:
-        title: "Compartir"
         extended_title: "Compartir unha ligazón"
         help: "compartir unha ligazón a este tema"
         invite_users: "Convidar"
@@ -2859,7 +2857,6 @@ gl:
       default_list_filter: "Filtro de listaxe predeterminado:"
       allow_badges_label: "Permitir adxudicar insignias nesta categoría"
       edit_permissions: "Editar permisos"
-      reviewable_by_group: "Ademais do equipo, o contido desta categoría tamén pode ser revisado por:"
       review_group_name: "nome do grupo"
       require_topic_approval: "Require a aprobación de todos os temas novos polo moderador"
       require_reply_approval: "Require a aprobación de todas as respostas novas polo moderador"

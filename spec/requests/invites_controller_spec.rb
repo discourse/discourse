@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe InvitesController do
   fab!(:admin) { Fabricate(:admin) }
   fab!(:user) { Fabricate(:user, trust_level: SiteSetting.min_trust_level_to_allow_invite) }
@@ -105,13 +103,26 @@ describe InvitesController do
       expect(Notification.where(notification_type: Notification.types[:invited_to_topic], topic: topic).count).to eq(1)
     end
 
-    it 'fails for logged in users' do
-      sign_in(Fabricate(:user))
+    it 'creates a notification to inviter' do
+      topic = Fabricate(:topic)
+      TopicInvite.create!(topic: topic, invite: invite)
+
+      sign_in(user)
 
       get "/invites/#{invite.invite_key}"
-      expect(response.status).to eq(200)
-      expect(response.body).to_not have_tag(:script, with: { src: '/assets/application.js' })
-      expect(response.body).to include(I18n.t('login.already_logged_in'))
+      expect(response).to redirect_to(topic.url)
+      expect(Notification.where(user: user, notification_type: Notification.types[:invited_to_topic], topic: topic).count).to eq(1)
+      expect(Notification.where(user: invite.invited_by, notification_type: Notification.types[:invitee_accepted]).count).to eq(1)
+    end
+
+    it 'creates an invited user record' do
+      sign_in(invite.invited_by)
+      expect { get "/invites/#{invite.invite_key}" }.to change { InvitedUser.count }.by(0)
+      expect(response.status).to eq(302)
+
+      sign_in(user)
+      expect { get "/invites/#{invite.invite_key}" }.to change { InvitedUser.count }.by(1)
+      expect(response.status).to eq(302)
     end
 
     it 'fails if invite does not exist' do
@@ -189,6 +200,35 @@ describe InvitesController do
 
         post '/invites.json', params: { email: 'test@example.com', topic_id: -9999 }
         expect(response.status).to eq(400)
+      end
+
+      context 'topic is private' do
+        fab!(:group) { Fabricate(:group) }
+
+        fab!(:secured_category) do |category|
+          category = Fabricate(:category)
+          category.permissions = { group.name => :full }
+          category.save!
+          category
+        end
+
+        fab!(:topic) { Fabricate(:topic, category: secured_category) }
+
+        it 'does not work and returns a list of required groups' do
+          sign_in(admin)
+
+          post '/invites.json', params: { email: 'test@example.com', topic_id: topic.id }
+          expect(response.status).to eq(422)
+          expect(response.parsed_body["errors"]).to contain_exactly(I18n.t("invite.requires_groups", groups: group.name))
+        end
+
+        it 'does not work if user cannot edit groups' do
+          group.add(user)
+          sign_in(user)
+
+          post '/invites.json', params: { email: 'test@example.com', topic_id: topic.id }
+          expect(response.status).to eq(403)
+        end
       end
     end
 
@@ -907,15 +947,15 @@ describe InvitesController do
 
       freeze_time
 
-      user = Fabricate(:admin)
-      new_invite = Fabricate(:invite, invited_by: user)
-      expired_invite = Fabricate(:invite, invited_by: user)
+      admin = Fabricate(:admin)
+      new_invite = Fabricate(:invite, invited_by: admin)
+      expired_invite = Fabricate(:invite, invited_by: admin)
       expired_invite.update!(expires_at: 2.days.ago)
-      redeemed_invite = Fabricate(:invite, invited_by: user)
+      redeemed_invite = Fabricate(:invite, invited_by: admin)
       Fabricate(:invited_user, invite: redeemed_invite, user: Fabricate(:user))
       redeemed_invite.update!(expires_at: 5.days.ago)
 
-      sign_in(user)
+      sign_in(admin)
       post '/invites/reinvite-all'
 
       expect(response.status).to eq(200)
@@ -950,6 +990,15 @@ describe InvitesController do
         sign_in(admin)
         post '/invites/upload_csv.json', params: { file: file, name: 'discourse.csv' }
         expect(response.status).to eq(200)
+        expect(Jobs::BulkInvite.jobs.size).to eq(1)
+      end
+
+      it 'limits admins when bulk inviting' do
+        sign_in(admin)
+        post '/invites/upload_csv.json', params: { file: file, name: 'discourse.csv' }
+        expect(response.status).to eq(200)
+        post '/invites/upload_csv.json', params: { file: file, name: 'discourse.csv' }
+        expect(response.status).to eq(422)
         expect(Jobs::BulkInvite.jobs.size).to eq(1)
       end
 

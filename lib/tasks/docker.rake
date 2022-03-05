@@ -102,8 +102,11 @@ task 'docker:test' do
       puts "Starting background redis"
       @redis_pid = Process.spawn('redis-server --dir tmp/test_data/redis')
 
+      puts "Initializing postgres"
+      system("script/start_test_db.rb --skip-run", exception: true)
+
       puts "Starting postgres"
-      @pg_pid = Process.spawn("script/start_test_db.rb --exec")
+      @pg_pid = Process.spawn("script/start_test_db.rb --skip-setup --exec")
 
       ENV["RAILS_ENV"] = "test"
       # this shaves all the creation of the multisite db off

@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
 require_relative '../../../script/import_scripts/vanilla_body_parser'
 require_relative '../../../script/import_scripts/base/lookup_container'
 require_relative '../../../script/import_scripts/base/uploader'

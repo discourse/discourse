@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe GroupMessage do
 
   let(:moderators_group) { Group[:moderators].name }

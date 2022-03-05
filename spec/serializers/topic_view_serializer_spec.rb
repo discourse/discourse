@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe TopicViewSerializer do
   def serialize_topic(topic, user_arg)
     topic_view = TopicView.new(topic.id, user_arg)
@@ -41,6 +39,17 @@ describe TopicViewSerializer do
 
         expect(json[:featured_link]).to eq(featured_link)
         expect(json[:featured_link_root_domain]).to eq('discourse.org')
+      end
+    end
+  end
+
+  describe '#external_id' do
+    describe 'when a topic has an external_id' do
+      before { topic.update!(external_id: '42-asdf') }
+
+      it 'should return the external_id' do
+        json = serialize_topic(topic, user)
+        expect(json[:external_id]).to eq('42-asdf')
       end
     end
   end

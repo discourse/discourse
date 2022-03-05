@@ -31,6 +31,7 @@ es:
           format_title: Formato de fecha
           timezone: Zona horaria
           until: Hasta...
+          current_timezone: "Zona horaria actual:"
           recurring:
             every_day: "Cada día"
             every_week: "Cada semana"

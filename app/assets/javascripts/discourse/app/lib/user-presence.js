@@ -15,7 +15,7 @@ let testPresence = true;
 
 // Check whether the document is currently visible, and the user is actively using the site
 // Will return false if the browser went into the background more than `browserHiddenTime` milliseconds ago
-// Will also return false if there has been no user activty for more than `userUnseenTime` milliseconds
+// Will also return false if there has been no user activity for more than `userUnseenTime` milliseconds
 // Otherwise, will return true
 export default function userPresent({
   browserHiddenTime = DEFAULT_BROWSER_HIDDEN_MS,

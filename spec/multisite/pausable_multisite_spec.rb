@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe "Pausing/Unpausing Sidekiq", type: :multisite do
   describe "#pause!, #unpause! and #paused?" do
     it "can pause and unpause" do

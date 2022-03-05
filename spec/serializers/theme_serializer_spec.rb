@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 RSpec.describe ThemeSerializer do
   describe "load theme settings" do
     it 'should add error message when settings format is invalid' do

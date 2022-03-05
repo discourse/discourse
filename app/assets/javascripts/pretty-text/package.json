@@ -15,10 +15,11 @@
     "start": "ember serve"
   },
   "dependencies": {
-    "ember-auto-import": "^1.5.3",
+    "ember-auto-import": "^2.2.4",
     "ember-cli-babel": "^7.13.0",
     "ember-cli-htmlbars": "^4.2.0",
-    "xss": "^1.0.8"
+    "xss": "^1.0.8",
+    "webpack": "^5.67.0"
   },
   "devDependencies": {
     "@ember/optional-features": "^1.1.0",

@@ -31,6 +31,7 @@ ko:
           format_title: 날짜 형식
           timezone: 시간대
           until: 까지...
+          current_timezone: "현재 시간대:"
           recurring:
             every_day: "매일"
             every_week: "매주"

@@ -1,8 +1,8 @@
 import * as ajaxlib from "discourse/lib/ajax";
 import { module, test } from "qunit";
+import sinon from "sinon";
 import Group from "discourse/models/group";
 import User from "discourse/models/user";
-import sinon from "sinon";
 
 module("Unit | Model | user", function () {
   test("staff", function (assert) {
@@ -108,7 +108,7 @@ module("Unit | Model | user", function () {
       undefined,
       "if the user has no timezone and the user is not the current user, do NOT guess with moment"
     );
-    assert.not(
+    assert.notOk(
       spy.calledWith("/u/howardhamlin.json", {
         type: "PUT",
         dataType: "json",

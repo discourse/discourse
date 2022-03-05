@@ -185,7 +185,6 @@ bs_BA:
     bootstrap_mode_disabled: "Bootstrap način rada će biti isključen u toku 24 sata."
     themes:
       default_description: "Uobičajen"
-      broken_theme_alert: "Vaša stranica možda neradi jer tema / komponeta ima %{theme} greške.\nUgasi ju kod %{path}"
     s3:
       regions:
         ap_northeast_1: "Azija Pacifik (Tokio)"
@@ -1952,7 +1951,7 @@ bs_BA:
         clear_all: "Očisti sve"
         unlist_topics: "Skini teme sa liste"
         relist_topics: "Listaj teme"
-        reset_read: "Reset Read"
+        defer: "Defer"
         delete: "Obriši teme"
         dismiss: "Odbaci"
         dismiss_read: "Odbaci sve nepročitane"
@@ -2185,7 +2184,6 @@ bs_BA:
         title: "Odgovori"
         help: "počni sastavljati odgovor za ovu temu"
       share:
-        title: "Dijeli"
         extended_title: "Dijeli link"
         help: "podjeli link do ove teme"
         invite_users: "Invite"

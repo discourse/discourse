@@ -106,6 +106,8 @@ acceptance(
 
       await fillIn('input[name="username"]', "myusername@gmail.com");
       await fillIn('input[name="password"]', "password@gmail.com");
+      await fillIn("#from_alias", "akasomegroup@example.com");
+
       await click(".test-smtp-settings");
 
       assert.ok(exists(".smtp-settings-ok"), "tested settings are ok");

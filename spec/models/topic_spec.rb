@@ -1,8 +1,6 @@
 # encoding: utf-8
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe Topic do
   let(:now) { Time.zone.local(2013, 11, 20, 8, 0) }
   fab!(:user) { Fabricate(:user) }
@@ -29,6 +27,51 @@ describe Topic do
       describe 'when featured_link is a valid URL' do
         it 'should be valid' do
           topic.featured_link = 'http://meta.discourse.org'
+          expect(topic).to be_valid
+        end
+      end
+    end
+
+    context "#external_id" do
+      describe 'when external_id is too long' do
+        it 'should not be valid' do
+          topic.external_id = 'a' * (Topic::EXTERNAL_ID_MAX_LENGTH + 1)
+          expect(topic).to_not be_valid
+        end
+      end
+
+      describe 'when external_id has invalid characters' do
+        it 'should not be valid' do
+          topic.external_id = 'a*&^!@()#'
+          expect(topic).to_not be_valid
+        end
+      end
+
+      describe 'when external_id is an empty string' do
+        it 'should not be valid' do
+          topic.external_id = ''
+          expect(topic).to_not be_valid
+        end
+      end
+
+      describe 'when external_id has already been used' do
+        it 'should not be valid' do
+          topic2 = Fabricate(:topic, external_id: 'asdf')
+          topic.external_id = 'asdf'
+          expect(topic).to_not be_valid
+        end
+      end
+
+      describe 'when external_id is nil' do
+        it 'should be valid' do
+          topic.external_id = nil
+          expect(topic).to be_valid
+        end
+      end
+
+      describe 'when external_id is valid' do
+        it 'should be valid' do
+          topic.external_id = 'abc_123-ZXY'
           expect(topic).to be_valid
         end
       end
@@ -116,6 +159,7 @@ describe Topic do
         end
       end
     end
+
   end
 
   it { is_expected.to rate_limit }
@@ -1173,7 +1217,11 @@ describe Topic do
   end
 
   context 'update_status' do
-    fab!(:topic) { Fabricate(:topic, bumped_at: 1.hour.ago) }
+    fab!(:post) do
+      Fabricate(:post).tap { |p| p.topic.update!(bumped_at: 1.hour.ago) }
+    end
+
+    fab!(:topic) { post.topic }
 
     before do
       @original_bumped_at = topic.bumped_at
@@ -1197,8 +1245,15 @@ describe Topic do
           topic.update!(category: category)
           Category.update_stats
 
-          expect { topic.update_status('visible', false, @user) }
-            .to change { category.reload.topic_count }.by(-1)
+          expect do
+            2.times { topic.update_status('visible', false, @user) }
+          end.to change { category.reload.topic_count }.by(-1)
+        end
+
+        it 'decreases topic_count of user stat' do
+          expect do
+            2.times { topic.update_status('visible', false, @user) }
+          end.to change { post.user.user_stat.reload.topic_count }.from(1).to(0)
         end
 
         it 'removes itself as featured topic on user profiles' do
@@ -1212,22 +1267,30 @@ describe Topic do
 
       context 'enable' do
         before do
-          topic.update_attribute :visible, false
-          topic.update_status('visible', true, @user)
+          topic.update_status('visible', false, @user)
           topic.reload
         end
 
         it 'should be visible with correct counts' do
+          topic.update_status('visible', true, @user)
+
           expect(topic).to be_visible
-          expect(topic.moderator_posts_count).to eq(1)
+          expect(topic.moderator_posts_count).to eq(2)
           expect(topic.bumped_at).to eq_time(@original_bumped_at)
         end
 
         it 'increases topic_count of topic category' do
-          topic.update!(category: category, visible: false)
+          topic.update!(category: category)
 
-          expect { topic.update_status('visible', true, @user) }
-            .to change { category.reload.topic_count }.by(1)
+          expect do
+            2.times { topic.update_status('visible', true, @user) }
+          end.to change { category.reload.topic_count }.by(1)
+        end
+
+        it 'increases topic_count of user stat' do
+          expect do
+            2.times { topic.update_status('visible', true, @user) }
+          end.to change { post.user.user_stat.reload.topic_count }.from(0).to(1)
         end
       end
     end
@@ -2933,12 +2996,12 @@ describe Topic do
     end
 
     it 'returns error message if topic has more posts' do
-      post_2 = PostCreator.create!(Fabricate(:user), topic_id: topic.id, raw: 'some post content')
+      post_2 = create_post(user: user, topic_id: topic.id, raw: 'some post content')
 
       PostDestroyer.new(admin, post).destroy
       expect(topic.reload.cannot_permanently_delete_reason(Fabricate(:admin))).to eq(I18n.t('post.cannot_permanently_delete.many_posts'))
 
-      PostDestroyer.new(admin, post_2).destroy
+      PostDestroyer.new(admin, post_2.reload).destroy
       expect(topic.reload.cannot_permanently_delete_reason(Fabricate(:admin))).to eq(nil)
     end
 

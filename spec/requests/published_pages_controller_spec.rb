@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 RSpec.describe PublishedPagesController do
   fab!(:published_page) { Fabricate(:published_page) }
   fab!(:admin) { Fabricate(:admin) }

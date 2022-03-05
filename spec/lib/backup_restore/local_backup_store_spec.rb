@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
 require 'backup_restore/local_backup_store'
 require_relative 'shared_examples_for_backup_store'
 

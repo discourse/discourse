@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe ColorSchemeColor do
   after do
     ColorScheme.hex_cache.clear

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe UserNotificationsHelper do
   let(:upload_path) { Discourse.store.upload_path }
 
@@ -55,7 +53,7 @@ describe UserNotificationsHelper do
     end
 
     it "doesn't count emoji images" do
-      with_emoji = "<p>Hi <img src=\"/images/emoji/twitter/smile.png?v=#{Emoji::EMOJI_VERSION}\" title=\":smile:\" class=\"emoji\" alt=\":smile:\"></p>"
+      with_emoji = "<p>Hi <img src=\"/images/emoji/twitter/smile.png?v=#{Emoji::EMOJI_VERSION}\" title=\":smile:\" class=\"emoji\" alt=\":smile:\" loading=\"lazy\" width=\"20\" height=\"20\"></p>"
       arg = ([with_emoji] + paragraphs).join("\n")
       SiteSetting.digest_min_excerpt_length = 50
       expect(helper.email_excerpt(arg)).to eq([with_emoji, paragraphs[0]].join)

@@ -11,7 +11,7 @@ import discourseComputed, {
 } from "discourse-common/utils/decorators";
 import { emojiSearch, isSkinTonableEmoji } from "pretty-text/emoji";
 import { emojiUrlFor, generateCookFunction } from "discourse/lib/text";
-import { later, schedule, scheduleOnce } from "@ember/runloop";
+import { schedule, scheduleOnce } from "@ember/runloop";
 import Component from "@ember/component";
 import I18n from "I18n";
 import ItsATrap from "@discourse/itsatrap";
@@ -35,28 +35,14 @@ import { siteDir } from "discourse/lib/text-direction";
 import { translations } from "pretty-text/emoji/data";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { action } from "@ember/object";
-import TextareaTextManipulation from "discourse/mixins/textarea-text-manipulation";
-
-// Our head can be a static string or a function that returns a string
-// based on input (like for numbered lists).
-function getHead(head, prev) {
-  if (typeof head === "string") {
-    return [head, head.length];
-  } else {
-    return getHead(head(prev));
-  }
-}
+import TextareaTextManipulation, {
+  getHead,
+} from "discourse/mixins/textarea-text-manipulation";
 
 function getButtonLabel(labelKey, defaultLabel) {
   // use the Font Awesome icon if the label matches the default
   return I18n.t(labelKey) === defaultLabel ? null : labelKey;
 }
-
-const OP = {
-  NONE: 0,
-  REMOVED: 1,
-  ADDED: 2,
-};
 
 const FOUR_SPACES_INDENT = "4-spaces-indent";
 
@@ -235,6 +221,7 @@ export default Component.extend(TextareaTextManipulation, {
   _itsatrap: null,
   showLink: true,
   emojiPickerIsActive: false,
+  emojiFilter: "",
   emojiStore: service("emoji-store"),
   isEditorFocused: false,
   processPreview: true,
@@ -285,8 +272,8 @@ export default Component.extend(TextareaTextManipulation, {
       });
     });
 
-    this._itsatrap.bind("tab", () => this._indentSelection("right"));
-    this._itsatrap.bind("shift+tab", () => this._indentSelection("left"));
+    this._itsatrap.bind("tab", () => this.indentSelection("right"));
+    this._itsatrap.bind("shift+tab", () => this.indentSelection("left"));
 
     // disable clicking on links in the preview
     this.element
@@ -294,13 +281,13 @@ export default Component.extend(TextareaTextManipulation, {
       .addEventListener("click", this._handlePreviewLinkClick);
 
     if (this.composerEvents) {
-      this.appEvents.on("composer:insert-block", this, "_insertBlock");
-      this.appEvents.on("composer:insert-text", this, "_insertText");
-      this.appEvents.on("composer:replace-text", this, "_replaceText");
+      this.appEvents.on("composer:insert-block", this, "insertBlock");
+      this.appEvents.on("composer:insert-text", this, "insertText");
+      this.appEvents.on("composer:replace-text", this, "replaceText");
       this.appEvents.on(
         "composer:indent-selected-text",
         this,
-        "_indentSelection"
+        "indentSelection"
       );
     }
 
@@ -338,13 +325,13 @@ export default Component.extend(TextareaTextManipulation, {
   @on("willDestroyElement")
   _shutDown() {
     if (this.composerEvents) {
-      this.appEvents.off("composer:insert-block", this, "_insertBlock");
-      this.appEvents.off("composer:insert-text", this, "_insertText");
-      this.appEvents.off("composer:replace-text", this, "_replaceText");
+      this.appEvents.off("composer:insert-block", this, "insertBlock");
+      this.appEvents.off("composer:insert-text", this, "insertText");
+      this.appEvents.off("composer:replace-text", this, "replaceText");
       this.appEvents.off(
         "composer:indent-selected-text",
         this,
-        "_indentSelection"
+        "indentSelection"
       );
     }
 
@@ -477,7 +464,7 @@ export default Component.extend(TextareaTextManipulation, {
       key: "#",
       afterComplete: (value) => {
         this.set("value", value);
-        return this._focusTextArea();
+        schedule("afterRender", this, this.focusTextArea);
       },
       transformComplete: (obj) => {
         return obj.text;
@@ -504,7 +491,7 @@ export default Component.extend(TextareaTextManipulation, {
       key: ":",
       afterComplete: (text) => {
         this.set("value", text);
-        this._focusTextArea();
+        schedule("afterRender", this, this.focusTextArea);
       },
 
       onKeyUp: (text, cp) => {
@@ -528,17 +515,7 @@ export default Component.extend(TextareaTextManipulation, {
         } else {
           $textarea.autocomplete({ cancel: true });
           this.set("emojiPickerIsActive", true);
-
-          schedule("afterRender", () => {
-            const filterInput = document.querySelector(
-              ".emoji-picker input[name='filter']"
-            );
-            if (filterInput) {
-              filterInput.value = v.term;
-
-              later(() => filterInput.dispatchEvent(new Event("input")), 50);
-            }
-          });
+          this.set("emojiFilter", v.term);
 
           return "";
         }
@@ -617,117 +594,9 @@ export default Component.extend(TextareaTextManipulation, {
     });
   },
 
-  // perform the same operation over many lines of text
-  _getMultilineContents(lines, head, hval, hlen, tail, tlen, opts) {
-    let operation = OP.NONE;
-
-    const applyEmptyLines = opts && opts.applyEmptyLines;
-
-    return lines
-      .map((l) => {
-        if (!applyEmptyLines && l.length === 0) {
-          return l;
-        }
-
-        if (
-          operation !== OP.ADDED &&
-          ((l.slice(0, hlen) === hval && tlen === 0) ||
-            (tail.length && l.slice(-tlen) === tail))
-        ) {
-          operation = OP.REMOVED;
-          if (tlen === 0) {
-            const result = l.slice(hlen);
-            [hval, hlen] = getHead(head, hval);
-            return result;
-          } else if (l.slice(-tlen) === tail) {
-            const result = l.slice(hlen, -tlen);
-            [hval, hlen] = getHead(head, hval);
-            return result;
-          }
-        } else if (operation === OP.NONE) {
-          operation = OP.ADDED;
-        } else if (operation === OP.REMOVED) {
-          return l;
-        }
-
-        const result = `${hval}${l}${tail}`;
-        [hval, hlen] = getHead(head, hval);
-        return result;
-      })
-      .join("\n");
-  },
-
-  _applySurround(sel, head, tail, exampleKey, opts) {
-    const pre = sel.pre;
-    const post = sel.post;
-
-    const tlen = tail.length;
-    if (sel.start === sel.end) {
-      if (tlen === 0) {
-        return;
-      }
-
-      const [hval, hlen] = getHead(head);
-      const example = I18n.t(`composer.${exampleKey}`);
-      this.set("value", `${pre}${hval}${example}${tail}${post}`);
-      this._selectText(pre.length + hlen, example.length);
-    } else if (opts && !opts.multiline) {
-      let [hval, hlen] = getHead(head);
-
-      if (opts.useBlockMode && sel.value.split("\n").length > 1) {
-        hval += "\n";
-        hlen += 1;
-        tail = `\n${tail}`;
-      }
-
-      if (pre.slice(-hlen) === hval && post.slice(0, tail.length) === tail) {
-        this.set(
-          "value",
-          `${pre.slice(0, -hlen)}${sel.value}${post.slice(tail.length)}`
-        );
-        this._selectText(sel.start - hlen, sel.value.length);
-      } else {
-        this.set("value", `${pre}${hval}${sel.value}${tail}${post}`);
-        this._selectText(sel.start + hlen, sel.value.length);
-      }
-    } else {
-      const lines = sel.value.split("\n");
-
-      let [hval, hlen] = getHead(head);
-      if (
-        lines.length === 1 &&
-        pre.slice(-tlen) === tail &&
-        post.slice(0, hlen) === hval
-      ) {
-        this.set(
-          "value",
-          `${pre.slice(0, -hlen)}${sel.value}${post.slice(tlen)}`
-        );
-        this._selectText(sel.start - hlen, sel.value.length);
-      } else {
-        const contents = this._getMultilineContents(
-          lines,
-          head,
-          hval,
-          hlen,
-          tail,
-          tlen,
-          opts
-        );
-
-        this.set("value", `${pre}${contents}${post}`);
-        if (lines.length === 1 && tlen > 0) {
-          this._selectText(sel.start + hlen, sel.value.length);
-        } else {
-          this._selectText(sel.start, contents.length);
-        }
-      }
-    }
-  },
-
   _applyList(sel, head, exampleKey, opts) {
     if (sel.value.indexOf("\n") !== -1) {
-      this._applySurround(sel, head, "", exampleKey, opts);
+      this.applySurround(sel, head, "", exampleKey, opts);
     } else {
       const [hval, hlen] = getHead(head);
       if (sel.start === sel.end) {
@@ -745,7 +614,7 @@ export default Component.extend(TextareaTextManipulation, {
       const post = trimmedPost.length ? `\n\n${trimmedPost}` : trimmedPost;
 
       this.set("value", `${preLines}${number}${post}`);
-      this._selectText(preLines.length, number.length);
+      this.selectText(preLines.length, number.length);
     }
   },
 
@@ -811,17 +680,16 @@ export default Component.extend(TextareaTextManipulation, {
         return;
       }
 
-      const selected = this._getSelected(button.trimLeading);
+      const selected = this.getSelected(button.trimLeading);
       const toolbarEvent = {
         selected,
         selectText: (from, length) =>
-          this._selectText(from, length, { scroll: false }),
+          this.selectText(from, length, { scroll: false }),
         applySurround: (head, tail, exampleKey, opts) =>
-          this._applySurround(selected, head, tail, exampleKey, opts),
+          this.applySurround(selected, head, tail, exampleKey, opts),
         applyList: (head, exampleKey, opts) =>
           this._applyList(selected, head, exampleKey, opts),
-        addText: (text) => this._addText(selected, text),
-        replaceText: (text) => this._addText({ pre: "", post: "" }, text),
+        addText: (text) => this.addText(selected, text),
         getText: () => this.value,
         toggleDirection: () => this._toggleDirection(),
       };
@@ -856,7 +724,7 @@ export default Component.extend(TextareaTextManipulation, {
         return;
       }
 
-      const sel = this._getSelected("", { lineVal: true });
+      const sel = this.getSelected("", { lineVal: true });
       const selValue = sel.value;
       const hasNewLine = selValue.indexOf("\n") !== -1;
       const isBlankLine = sel.lineVal.trim().length === 0;
@@ -868,25 +736,20 @@ export default Component.extend(TextareaTextManipulation, {
           if (isFourSpacesIndent) {
             const example = I18n.t(`composer.code_text`);
             this.set("value", `${sel.pre}    ${example}${sel.post}`);
-            return this._selectText(sel.pre.length + 4, example.length);
+            return this.selectText(sel.pre.length + 4, example.length);
           } else {
-            return this._applySurround(
-              sel,
-              "```\n",
-              "\n```",
-              "paste_code_text"
-            );
+            return this.applySurround(sel, "```\n", "\n```", "paste_code_text");
           }
         } else {
-          return this._applySurround(sel, "`", "`", "code_title");
+          return this.applySurround(sel, "`", "`", "code_title");
         }
       } else {
         if (isFourSpacesIndent) {
-          return this._applySurround(sel, "    ", "", "code_text");
+          return this.applySurround(sel, "    ", "", "code_text");
         } else {
           const preNewline = sel.pre[-1] !== "\n" && sel.pre !== "" ? "\n" : "";
           const postNewline = sel.post[0] !== "\n" ? "\n" : "";
-          return this._addText(
+          return this.addText(
             sel,
             `${preNewline}\`\`\`\n${sel.value}\n\`\`\`${postNewline}`
           );

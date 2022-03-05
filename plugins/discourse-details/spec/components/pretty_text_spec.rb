@@ -28,13 +28,13 @@ describe PrettyText do
   end
 
   it 'can replace spoilers in emails' do
-    md = PrettyText.cook(<<~EOF)
+    md = PrettyText.cook(<<~MD)
       hello
 
       [details="Summary"]
       world
       [/details]
-    EOF
+    MD
     md = PrettyText.format_for_email(md, post)
     html = "<p>hello</p>\n\nSummary <a href=\"#{post.full_url}\">(click for more details)</a>"
 
@@ -42,7 +42,7 @@ describe PrettyText do
   end
 
   it 'properly handles multiple spoiler blocks in a post' do
-    md = PrettyText.cook(<<~EOF)
+    md = PrettyText.cook(<<~MD)
       [details="First"]
       body secret stuff very long
       [/details]
@@ -55,7 +55,7 @@ describe PrettyText do
       [details="Third"]
       body secret stuff very long
       [/details]
-    EOF
+    MD
 
     md = PrettyText.format_for_email(md, post)
     expect(md).not_to include('secret stuff')
@@ -65,12 +65,12 @@ describe PrettyText do
   end
 
   it 'escapes summary text' do
-    md = PrettyText.cook(<<~EOF)
+    md = PrettyText.cook(<<~MD)
       <script>alert('hello')</script>
       [details="<script>alert('hello')</script>"]
       <script>alert('hello')</script>
       [/details]
-    EOF
+    MD
     md = PrettyText.format_for_email(md, post)
 
     expect(md).not_to include('<script>')

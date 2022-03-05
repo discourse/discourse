@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 RSpec.describe Jobs::FixPrimaryEmailsForStagedUsers do
   it 'should clean up duplicated staged users' do
     common_email = 'test@reply'

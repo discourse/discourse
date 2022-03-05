@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe PrettyText do
 
   def n(html)
@@ -100,7 +98,7 @@ describe PrettyText do
       <div>
       <div class="poll-container">
       <ol>
-      <li data-poll-option-id="b6475cbf6acb8676b20c60582cfc487a">test 1 <img src="/images/emoji/twitter/slight_smile.png?v=#{Emoji::EMOJI_VERSION}" title=":slight_smile:" class="emoji" alt=":slight_smile:"> <b>test</b>
+      <li data-poll-option-id="b6475cbf6acb8676b20c60582cfc487a">test 1 <img src="/images/emoji/twitter/slight_smile.png?v=#{Emoji::EMOJI_VERSION}" title=":slight_smile:" class="emoji" alt=":slight_smile:" loading="lazy" width="20" height="20"> <b>test</b>
       </li>
       <li data-poll-option-id="7158af352698eb1443d709818df097d4">test 2</li>
       </ol>
@@ -165,7 +163,7 @@ describe PrettyText do
     MD
 
     expect(cooked).to include(<<~HTML)
-      <div class="poll-title">What’s your favorite <em>berry</em>? <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji" alt=":wink:"> <a href="https://google.com/" rel="noopener nofollow ugc">https://google.com/</a>
+      <div class="poll-title">What’s your favorite <em>berry</em>? <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji" alt=":wink:" loading="lazy" width="20" height="20"> <a href="https://google.com/" rel="noopener nofollow ugc">https://google.com/</a>
       </div>
     HTML
   end
@@ -185,7 +183,7 @@ describe PrettyText do
     MD
 
     expect(cooked).to include(<<~HTML)
-      <div class="poll-title">What’s your favorite <em>berry</em>? <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji" alt=":wink:"> <a href="https://google.com/" rel="noopener nofollow ugc">https://google.com/</a>
+      <div class="poll-title">What’s your favorite <em>berry</em>? <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji" alt=":wink:" loading="lazy" width="20" height="20"> <a href="https://google.com/" rel="noopener nofollow ugc">https://google.com/</a>
       </div>
     HTML
 

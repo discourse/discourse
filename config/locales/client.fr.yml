@@ -168,7 +168,6 @@ fr:
     bootstrap_mode_disabled: "Le mode d'amorçage sera désactivé dans les prochaines 24 heures."
     themes:
       default_description: "Par défaut"
-      broken_theme_alert: "Votre site pourrait ne pas fonctionner parce que le thème/composant %{theme} comprend des erreurs. Vous pouvez le désactiver ici : %{path}."
     s3:
       regions:
         ap_northeast_1: "Asie-Pacifique (Tokyo)"
@@ -1541,6 +1540,7 @@ fr:
       title:
         title: "Titre"
         none: "(aucun)"
+        instructions: "Apparaît après votre nom d'utilisateur"
       flair:
         none: "(aucun)"
       primary_group:
@@ -2181,7 +2181,7 @@ fr:
         clear_all: "Tout désélectionner"
         unlist_topics: "Rendre les sujets invisibles"
         relist_topics: "Lister les sujets"
-        reset_read: "Réinitialiser la lecture"
+        defer: "Reporter à plus tard"
         delete: "Supprimer les sujets"
         dismiss: "Marquer comme vus"
         dismiss_read: "Marquer tous les sujets comme vus"
@@ -2484,7 +2484,6 @@ fr:
         title: "Répondre"
         help: "commencer à répondre à ce sujet"
       share:
-        title: "Partager"
         extended_title: "Partager un lien"
         help: "partager ce sujet"
         instructions: "Partager ce sujet avec un lien :"
@@ -2953,7 +2952,6 @@ fr:
       default_list_filter: "Filtre de liste par défaut :"
       allow_badges_label: "Autoriser les badges à être accordés dans cette catégorie"
       edit_permissions: "Modifier les permissions"
-      reviewable_by_group: "En plus des responsables, le contenu de cette catégorie peut également être examiné par :"
       review_group_name: "nom du groupe"
       require_topic_approval: "Nécessiter l'approbation pour chaque nouveau sujet"
       require_reply_approval: "Nécessiter l'approbation pour chaque nouvelle réponse"

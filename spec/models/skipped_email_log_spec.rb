@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 RSpec.describe SkippedEmailLog, type: :model do
   let(:custom_skipped_email_log) do
     Fabricate.build(:skipped_email_log,

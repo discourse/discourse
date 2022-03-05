@@ -143,3 +143,8 @@ body.crawler {
     padding: 0.5em 1em 0.5em 0;
   }
 }
+
+.poll-info {
+  // crawler vote count always shows 0
+  display: none;
+}

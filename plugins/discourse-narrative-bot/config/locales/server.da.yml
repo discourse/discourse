@@ -84,6 +84,15 @@ da:
       "10":
         quote: "Uanset hvad menneskets sind kan begribe og tro på, kan det opnå."
         author: "Napoleon Hill"
+      "11":
+        quote: "Fred derhjemme, fred i verden."
+        author: "Mustafa Kemal Atatürk"
+      "12":
+        quote: "Uddannelse er ikke en måde at slippe ud af fattigdom, det er en måde at bekæmpe den."
+        author: "Julius Nyerere"
+      "13":
+        quote: "En rejse på tusind km. skal begynde med et enkelt trin."
+        author: "Lao Tzu"
       results: |-
         > :left_speech_bubble: _%{quote}_ &mdash; %{author}
     magic_8_ball:
@@ -216,7 +225,7 @@ da:
 
           - eller tryk på <kbd><b>B</b></kbd> eller <kbd><i>I</i></kbd> i editoren
         reply: |-
-          Godt arbejde! HTML og BBCode fungerer også til formatering - for at lære mere, [prøv denne tutorial](http://commonmark.org/help) :nerd:
+          Godt arbejde! HTML og BBCode fungerer også til formatering - for at lære mere, [prøv denne tutorial](https://commonmark.org/help) :nerd:
         not_found: |-
           Åhr, jeg fandt ikke nogen formatering i dit svar. :pencil2:
 

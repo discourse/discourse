@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe PostAction do
   it { is_expected.to rate_limit }
 
@@ -454,6 +452,16 @@ describe PostAction do
 
       expect(notification.user_id).to eq(post.user_id)
       expect(notification.notification_type).to eq(Notification.types[:liked])
+    end
+
+    it 'should not increase topic like count when liking a whisper' do
+      SiteSetting.set(:enable_whispers, true)
+      post.revise(admin, post_type: Post.types[:whisper])
+
+      PostActionCreator.like(admin, post)
+
+      expect(post.reload.like_count).to eq(1)
+      expect(post.topic.like_count).to eq(0)
     end
 
     it 'should increase the `like_count` and `like_score` when a user likes something' do
@@ -927,28 +935,49 @@ describe PostAction do
 
   describe "rate limiting" do
 
-    def limiter(tl)
+    def limiter(tl, type)
       user = Fabricate.build(:user)
       user.trust_level = tl
-      action = PostAction.new(user: user, post_action_type_id: PostActionType.types[:like])
+      action = PostAction.new(user: user, post_action_type_id: PostActionType.types[type])
       action.post_action_rate_limiter
     end
 
-    it "should scale up like limits depending on liker" do
-      expect(limiter(0).max).to eq SiteSetting.max_likes_per_day
-      expect(limiter(1).max).to eq SiteSetting.max_likes_per_day
-      expect(limiter(2).max).to eq (SiteSetting.max_likes_per_day * SiteSetting.tl2_additional_likes_per_day_multiplier).to_i
-      expect(limiter(3).max).to eq (SiteSetting.max_likes_per_day * SiteSetting.tl3_additional_likes_per_day_multiplier).to_i
-      expect(limiter(4).max).to eq (SiteSetting.max_likes_per_day * SiteSetting.tl4_additional_likes_per_day_multiplier).to_i
+    it "should scale up likes limits depending on trust level" do
+      expect(limiter(0, :like).max).to eq SiteSetting.max_likes_per_day
+      expect(limiter(1, :like).max).to eq SiteSetting.max_likes_per_day
+      expect(limiter(2, :like).max).to eq (SiteSetting.max_likes_per_day * SiteSetting.tl2_additional_likes_per_day_multiplier).to_i
+      expect(limiter(3, :like).max).to eq (SiteSetting.max_likes_per_day * SiteSetting.tl3_additional_likes_per_day_multiplier).to_i
+      expect(limiter(4, :like).max).to eq (SiteSetting.max_likes_per_day * SiteSetting.tl4_additional_likes_per_day_multiplier).to_i
 
       SiteSetting.tl2_additional_likes_per_day_multiplier = -1
-      expect(limiter(2).max).to eq SiteSetting.max_likes_per_day
+      expect(limiter(2, :like).max).to eq SiteSetting.max_likes_per_day
 
       SiteSetting.tl2_additional_likes_per_day_multiplier = 0.8
-      expect(limiter(2).max).to eq SiteSetting.max_likes_per_day
+      expect(limiter(2, :like).max).to eq SiteSetting.max_likes_per_day
 
       SiteSetting.tl2_additional_likes_per_day_multiplier = "bob"
-      expect(limiter(2).max).to eq SiteSetting.max_likes_per_day
+      expect(limiter(2, :like).max).to eq SiteSetting.max_likes_per_day
+    end
+
+    it "should scale up flag limits depending on trust level" do
+      %i(off_topic inappropriate spam notify_moderators).each do |type|
+        SiteSetting.tl2_additional_flags_per_day_multiplier = 1.5
+
+        expect(limiter(0, type).max).to eq SiteSetting.max_flags_per_day
+        expect(limiter(1, type).max).to eq SiteSetting.max_flags_per_day
+        expect(limiter(2, type).max).to eq (SiteSetting.max_flags_per_day * SiteSetting.tl2_additional_flags_per_day_multiplier).to_i
+        expect(limiter(3, type).max).to eq (SiteSetting.max_flags_per_day * SiteSetting.tl3_additional_flags_per_day_multiplier).to_i
+        expect(limiter(4, type).max).to eq (SiteSetting.max_flags_per_day * SiteSetting.tl4_additional_flags_per_day_multiplier).to_i
+
+        SiteSetting.tl2_additional_flags_per_day_multiplier = -1
+        expect(limiter(2, type).max).to eq SiteSetting.max_flags_per_day
+
+        SiteSetting.tl2_additional_flags_per_day_multiplier = 0.8
+        expect(limiter(2, type).max).to eq SiteSetting.max_flags_per_day
+
+        SiteSetting.tl2_additional_flags_per_day_multiplier = "bob"
+        expect(limiter(2, type).max).to eq SiteSetting.max_flags_per_day
+      end
     end
 
   end

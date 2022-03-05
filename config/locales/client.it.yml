@@ -128,7 +128,7 @@ it:
       url: "Copia e condividi l'URL"
     action_codes:
       public_topic: "ha reso questo argomento pubblico %{when}"
-      open_topic: "convertito in un argomento %{when}"
+      open_topic: "Convertito in un argomento %{when}"
       private_topic: "ha reso questo argomento un messaggio personale %{when}"
       split_topic: "ha separato questo argomento %{when}"
       invited_user: "ha invitato %{who} %{when}"
@@ -172,7 +172,10 @@ it:
     bootstrap_mode_disabled: "La modalità bootstrap sarà disattivata entro 24 ore."
     themes:
       default_description: "Predefinito"
-      broken_theme_alert: "Il tuo sito potrebbe non funzionare perché il tema / componente %{theme} contiene degli errori. Disabilitalo qui %{path}."
+      broken_theme_alert: "Il sito potrebbe non funzionare a causa di errori in un tema / componente."
+      error_caused_by: "Causato da '%{name}'. <a target='blank' href='%{path}'>Clicca qui</a> per aggiornare, riconfigurare o disattivare."
+      only_admins: "(questo messaggio è mostrato solo agli amministratori del sito)"
+    broken_decorator_alert: "I messaggi potrebbero non essere visualizzati correttamente perché uno dei decoratori dei contenuti dei messaggi sul tuo sito ha generato un errore."
     s3:
       regions:
         ap_northeast_1: "Asia Pacifico (Tokyo)"
@@ -309,6 +312,8 @@ it:
         existing_reminder: "Hai un promemoria impostato per questo segnalibro, che verrà inviato il %{at_date_time}"
     copy_codeblock:
       copied: "copiato!"
+      copy: "copia il codice negli appunti"
+      fullscreen: "mostra il codice a schermo intero"
     drafts:
       label: "Bozze"
       label_with_count: "Bozze (%{count})"
@@ -689,6 +694,8 @@ it:
             title: "Impostazioni"
             allow_unknown_sender_topic_replies: "Consenti a mittenti sconosciuti di rispondere agli argomenti."
             allow_unknown_sender_topic_replies_hint: "Consenti a mittenti sconosciuti di rispondere agli argomenti del gruppo. Se l'opzione è disabilitata, le risposte provenienti da indirizzi e-mail non invitati all'argomento causeranno la creazione di un nuovo argomento in cui saranno incluse."
+            from_alias: "Da Alias"
+            from_alias_hint: "Alias da usare come indirizzo di provenienza per l'invio di email SMTP di gruppo. Nota che questo potrebbe non essere supportato da tutti i provider di posta; consulta la documentazione del tuo provider di posta."
           mailboxes:
             synchronized: "Maibox sincronizzata"
             none_found: "Nessuna mailbox trovata in questo account e-mail."
@@ -1260,6 +1267,7 @@ it:
         upload_title: "Carica la tua foto"
         image_is_not_a_square: "Attenzione: abbiamo ritagliato l'immagine; la larghezza e l'altezza non erano uguali."
         logo_small: "Logo piccolo del sito. Usato come impostazione predefinita."
+        use_custom: "Oppure carica un avatar personalizzato:"
       change_profile_background:
         title: "Intestazione Profilo "
         instructions: "Le intestazioni dei profili saranno centrate e avranno una larghezza predefinita di 1110 px."
@@ -1392,9 +1400,11 @@ it:
         every_month: "ogni mese"
         every_six_months: "ogni sei mesi"
       email_level:
+        title: "Inviami un'e-mail quando sono citato, ricevo una risposta, il mio @nomeutente è menzionato, o quando c'è una nuova attività nelle categorie, nei tag o negli argomenti che osservo"
         always: "sempre"
         only_when_away: "solo quando non collegato"
         never: "mai"
+      email_messages_level: "Inviami un'e-mail quando mi viene inviato un messaggio personale"
       include_tl0_in_digests: "Includi contenuti dei nuovi utenti nelle email riepilogative"
       email_in_reply_to: "Nelle email includi un estratto delle risposte al messaggio"
       other_settings: "Altro"
@@ -1482,13 +1492,16 @@ it:
           show_advanced: "Mostra Opzioni Avanzate"
           hide_advanced: "Nascondi opzioni avanzate"
           restrict: "Limita a"
+          restrict_email: "Limita all'e-mail"
           restrict_domain: "Limita al dominio"
           email_or_domain_placeholder: "nome@esempio.com o esempio.com"
           max_redemptions_allowed: "Limite max di utilizzi"
           add_to_groups: "Aggiungi ai gruppi"
+          invite_to_topic: "Arriva all'argomento"
           expires_at: "Scadenza:"
           custom_message: "Messaggio personale facoltativo"
           send_invite_email: "Salva e invia Email"
+          send_invite_email_instructions: "Limita l'invito all'e-mail per inviare un'e-mail di invito"
           save_invite: "Salva invito"
           invite_saved: "Invito salvato."
         bulk_invite:
@@ -1685,10 +1698,12 @@ it:
       disclaimer: "Registrandoti accetti <a href='%{privacy_link}' target='blank'>Informativa sulla privacy</a> e <a href='%{tos_link}' target='blank'>termini del servizio</a>."
       title: "Crea il tuo account"
       failed: "Qualcosa non ha funzionato. Forse questa email è già registrata, prova a usare il link di recupero password"
+      associate: "Hai già un account? <a href='%{associate_link}'>Accedi</a> per collegare il tuo account %{provider}."
     forgot_password:
       title: "Reimposta Password"
       action: "Ho dimenticato la password"
       invite: "Inserisci il nome utente o l'indirizzo email. Ti manderemo un'email per reimpostare la password."
+      invite_no_username: "Inserisci il tuo indirizzo di posta elettronica e ti spediremo un'e-mail per reimpostare la password."
       reset: "Reimposta Password"
       complete_username: "Se un account corrisponde al nome utente <b>%{username}</b>, a breve dovresti ricevere un'email con le istruzioni per ripristinare la tua password."
       complete_email: "Se un account corrisponde a <b>%{email}</b>, a breve dovresti ricevere un'email contenente le istruzioni per ripristinare la password."
@@ -1762,24 +1777,31 @@ it:
       google_oauth2:
         name: "Google"
         title: "con Google"
+        sr_title: "Accedi con Google"
       twitter:
         name: "Twitter"
         title: "con Twitter"
+        sr_title: "Accedi con Twitter"
       instagram:
         name: "Instagram"
         title: "con Instagram"
+        sr_title: "Accedi con Instagram"
       facebook:
         name: "Facebook"
         title: "con Facebook"
+        sr_title: "Accedi con Facebook"
       github:
         name: "GitHub"
         title: "con GitHub"
+        sr_title: "Accedi con GitHub"
       discord:
         name: "Discord"
         title: "con Discord"
+        sr_title: "Accedi con Discord"
       second_factor_toggle:
         totp: "Utilizzare un'app di autenticazione"
         backup_code: "Utilizza un codice di backup"
+        security_key: "Usa invece una chiave di sicurezza"
     invites:
       accept_title: "Invito"
       emoji: "emoji envelope"
@@ -2136,6 +2158,7 @@ it:
       too_short: "La tua chiave di ricerca è troppo corta."
       open_advanced: "Apri ricerca avanzata"
       clear_search: "Azzera ricerca"
+      sort_or_bulk_actions: "Ordina o seleziona in blocco i risultati"
       result_count:
         one: "<span>%{count} risultato per</span><span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} risultati per</span><span class='term'>%{term}</span>"
@@ -2152,18 +2175,24 @@ it:
       search_google: "Prova a cercare con Google:"
       search_google_button: "Google"
       search_button: "Cerca"
+      search_term_label: "inserisci la parola chiave di ricerca"
       categories: "Categorie"
       tags: "Etichette"
       in: "in"
       in_this_topic: "in questo argomento"
+      in_this_topic_tooltip: "passa alla ricerca di tutti gli argomenti"
       in_topics_posts: "in tutti gli argomenti e i messaggi"
       enter_hint: "o premi Invio"
       in_posts_by: "nei messaggi di @%{username}"
       browser_tip: "%{modifier} + f"
       browser_tip_description: "di nuovo per utilizzare la ricerca nativa del browser"
+      recent: "Ricerche recenti"
+      clear_recent: "Cancella le ricerche recenti"
       type:
+        default: "Argomenti/messaggi"
         users: "Utenti"
         categories: "Categorie"
+        categories_and_tags: "Categorie/etichette"
       context:
         user: "Cerca messaggi di @%{username}"
         category: "Cerca nella categoria #%{category}"
@@ -2178,8 +2207,10 @@ it:
         full_search: "avvia la ricerca a pagina intera"
         full_search_key: "%{modifier} + Invio"
       advanced:
+        title: Filtri avanzati
         posted_by:
           label: Pubblicato da
+          aria_label: Filtra per autore del messaggio
         in_category:
           label: Per categorie
         in_group:
@@ -2188,6 +2219,7 @@ it:
           label: Con Distintivo
         with_tags:
           label: Con etichetta
+          aria_label: Filtra usando le etichette
         filters:
           label: Mostra solamente argomenti/messaggi...
           title: cerca solo nel titolo
@@ -2224,6 +2256,7 @@ it:
             aria_label: filtra per numero massimo di messaggi
           time:
             label: Pubblicato
+            aria_label: Filtra per data di pubblicazione
             before: prima del
             after: dopo il
         views:
@@ -2234,6 +2267,8 @@ it:
         max_views:
           placeholder: massimo
           aria_label: filtra per visualizzazioni massime
+        additional_options:
+          label: "Filtra per numero di post e visualizzazioni dell'argomento"
     hamburger_menu: "menu"
     new_item: "nuovo"
     go_back: "indietro"
@@ -2247,7 +2282,7 @@ it:
         clear_all: "Deseleziona Tutto"
         unlist_topics: "Rendi argomenti invisibili"
         relist_topics: "Ripubblica Argomenti"
-        reset_read: "Reimposta stato lettura"
+        defer: "Leggi più tardi"
         delete: "Elimina argomenti"
         dismiss: "Ignora"
         dismiss_read: "Ignora tutti i non letti"
@@ -2266,9 +2301,11 @@ it:
           other: "Ignora i nuovi (%{count})"
         toggle: "interruttore di selezione multipla degli argomenti"
         actions: "Azioni Multiple"
+        change_category: "Imposta categoria..."
         close_topics: "Chiudi argomenti"
         archive_topics: "Archivia argomenti"
         move_messages_to_inbox: "Sposta nella posta in arrivo"
+        notification_level: "Notifiche..."
         change_notification_level: "Modifica livello di notifica"
         choose_new_category: "Scegli la nuova categoria per gli argomenti:"
         selected:
@@ -2288,6 +2325,7 @@ it:
           other: "Avanzamento: <strong>%{count}</strong> argomenti"
       none:
         unread: "Non ci sono argomenti non letti."
+        unseen: "Non hai argomenti non visualizzati."
         new: "Non ci sono nuovi argomenti."
         read: "Non hai ancora letto nessun argomento."
         posted: "Non hai ancora scritto in nessun argomento."
@@ -2304,6 +2342,7 @@ it:
         read: "Non ci sono altri argomenti letti."
         new: "Non ci sono altri argomenti nuovi."
         unread: "Non ci sono altri argomenti non letti."
+        unseen: "Non ci sono altri argomenti non letti."
         category: "Non ci sono altri argomenti nella categoria %{category}."
         tag: "Non ci sono altri argomenti con l'etichetta %{tag}."
         top: "Non ci sono altri argomenti popolari."
@@ -2531,6 +2570,7 @@ it:
         open: "Apri Argomento"
         close: "Chiudi Argomento"
         multi_select: "Seleziona Messaggi..."
+        slow_mode: "Imposta modalità lenta..."
         timed_update: "Imposta Timer..."
         pin: "Appunta Argomento..."
         unpin: "Spunta Argomento..."
@@ -2539,6 +2579,7 @@ it:
         invisible: "Rendi Invisibile"
         visible: "Rendi Visibile"
         reset_read: "Reimposta Dati di lettura"
+        make_public: "Rendi l'argomento pubblico..."
         make_private: "Rendi Messaggio Personale"
         reset_bump_date: "Reimposta la data di riproposizione"
       feature:
@@ -2551,11 +2592,14 @@ it:
         title: "Rispondi"
         help: "inizia a comporre una risposta a questo argomento"
       share:
-        title: "Condividi"
+        title: "Condividi Argomento"
         extended_title: "Condividi un collegamento"
         help: "condividi un collegamento a questo argomento"
         instructions: "Condividi un link a questo argomento:"
         copied: "Link all'argomento copiato."
+        restricted_groups:
+          one: "Visibile solo ai membri del gruppo %{groupNames}"
+          other: "Visibile solo ai membri dei gruppi %{groupNames}"
         notify_users:
           title: "Notifica"
           instructions: "Notifica i seguenti utenti su questo argomento:"
@@ -2837,6 +2881,8 @@ it:
         rebake: "Ricrea HTML"
         publish_page: "Pubblicazione Pagina"
         unhide: "Mostra nuovamente"
+        change_owner: "Cambia proprieterio..."
+        grant_badge: "Concedi un distintivo..."
         lock_post: "Blocca Messaggio"
         lock_post_description: "impedisci all'autore di modificare questo messaggio"
         unlock_post: "Sblocca messaggio"
@@ -2850,6 +2896,8 @@ it:
         delete_topic_confirm_modal_no: "No, mantieni questo argomento"
         delete_topic_error: "Si è verificato un errore durante l'eliminazione di questo argomento"
         delete_topic: "elimina argomento"
+        add_post_notice: "Aggiungi avviso dello staff..."
+        change_post_notice: "Cambia avviso dello staff..."
         delete_post_notice: "Elimina avviso dello staff"
         remove_timer: "rimuovi il timer"
         edit_timer: "modifica timer"
@@ -2944,6 +2992,9 @@ it:
         viewing_summary: "Visualizza un riepilogo di questo argomento"
         post_number: "%{username}, messaggio n. %{post_number}"
         show_all: "Mostra tutto"
+      share:
+        title: "Condividi Messaggio n°%{post_number}"
+        instructions: "Condividi un collegamento a questo messaggio:"
     category:
       none: "(nessuna categoria)"
       all: "Tutte le categorie"
@@ -3026,7 +3077,7 @@ it:
       default_list_filter: "Filtro predefinito della lista:"
       allow_badges_label: "Permetti l'assegnazione di distintivi in questa categoria"
       edit_permissions: "Modifica Permessi"
-      reviewable_by_group: "Oltre allo staff, i contenuti di questa categoria possono essere esaminati da:"
+      reviewable_by_group: "Oltre che dal personale, i contenuti di questa categoria possono essere revisionati anche da:"
       review_group_name: "nome gruppo"
       require_topic_approval: "Richiedi l'approvazione di un moderatore per tutti i nuovi argomenti"
       require_reply_approval: "Richiedi l'approvazione di un moderatore per tutte le nuove risposte"
@@ -3036,6 +3087,7 @@ it:
       position_disabled: "Le categorie verranno mostrate in ordine d'attività. Per modificare l'ordinamento delle categorie nelle liste,"
       position_disabled_click: 'attiva l''impostazione "posizione fissa delle categorie".'
       minimum_required_tags: "Numero minimo di etichette richieste per argomento:"
+      default_slow_mode: 'Attiva la "modalità lenta" per i nuovi argomenti in questa categoria.'
       parent: "Categoria Superiore"
       num_auto_bump_daily: "Numero di argomenti aperti da riproporre automaticamente ogni giorno:"
       navigate_to_first_post_after_read: "Vai al primo messaggio dopo che gli argomenti vengono letti"
@@ -3205,6 +3257,7 @@ it:
       other: "utenti"
     category_title: "Categoria"
     history_capped_revisions: "Cronologia, ultime 100 revisioni"
+    history: "Cronologia"
     changed_by: "da %{author}"
     raw_email:
       title: "Email In Arrivo"
@@ -3235,6 +3288,9 @@ it:
         lower_title_with_count:
           one: "%{count} non letto"
           other: "%{count} non letti"
+      unseen:
+        title: "Non visualizzati"
+        lower_title: "non visualizzati"
       new:
         lower_title_with_count:
           one: "%{count} nuovo"
@@ -3585,6 +3641,8 @@ it:
       no_likes_others: "Nessun messaggio con \"Mi piace\"."
     fullscreen_table:
       expand_btn: "Espandi Tabella"
+    second_factor_auth:
+      redirect_after_success: "Autenticazione a due fattori riuscita. Reindirizzamento alla pagina precedente…"
   admin_js:
     type_to_filter: "digita per filtrare..."
     admin:
@@ -3889,6 +3947,9 @@ it:
         notification_event:
           name: "Evento Notifica"
           details: "Quando un utente riceve una notifica nel proprio feed."
+        user_promoted_event:
+          name: "Evento promosso dall'utente"
+          details: "Quando un utente viene promosso da un livello di attendibilità a un altro."
         user_badge_event:
           name: "Evento Assegnazione Distintivo"
           details: "Quando un utente riceve un distintivo."
@@ -5039,7 +5100,6 @@ it:
           grant_existing_holders: Assegna distintivi aggiuntivi ai titolari di distintivi già esistenti
       emoji:
         title: "Emoji"
-        help: "Aggiungi nuove emoji che saranno disponibili per tutti. Trascina e rilascia più file contemporaneamente senza inserire un nome per creare emoji utilizzando i nomi dei file."
         add: "Aggiungi Nuovo Emoji"
         uploading: "In caricamento..."
         name: "Nome"

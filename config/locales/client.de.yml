@@ -128,7 +128,7 @@ de:
       url: "URL kopieren und teilen"
     action_codes:
       public_topic: "hat dieses Thema öffentlich gemacht, %{when}"
-      open_topic: "hat dies in ein Thema %{when} umgewandelt"
+      open_topic: "hat dies in ein Thema umgewandelt, %{when}"
       private_topic: "hat dieses Thema in eine Nachricht umgewandelt, %{when}"
       split_topic: "hat dieses Thema aufgeteilt, %{when}"
       invited_user: "hat %{who} eingeladen, %{when}"
@@ -172,8 +172,10 @@ de:
     bootstrap_mode_disabled: "Der Starthilfe-Modus wird in den nächsten 24 Stunden deaktiviert."
     themes:
       default_description: "Standard"
-      broken_theme_alert: "Deine Website funktioniert vielleicht nicht, weil Theme/Komponente %{theme} Fehler hat. Deaktiviere es in %{path}."
-    broken_decorator_alert: "Beiträge werden möglicherweise nicht korrekt angezeigt, weil einer der Beitragsdekorateure auf deiner Seite einen Fehler ausgelöst hat. Überprüfe die Entwickler-Tools deines Browsers für weitere Informationen."
+      broken_theme_alert: "Deine Website funktioniert vielleicht nicht, weil eine Theme / eine Komponente Fehler hat."
+      error_caused_by: "Verursacht durch '%{name}'. <a target='blank' href='%{path}'>Klicke hier</a> , um die Funktion zu aktualisieren, neu zu konfigurieren oder zu deaktivieren."
+      only_admins: "(Diese Meldung wird nur Site-Administratoren angezeigt)"
+    broken_decorator_alert: "Beiträge werden möglicherweise nicht richtig angezeigt, weil einer der Beitragsausstatter auf deiner Website einen Fehler ausgelöst hat."
     s3:
       regions:
         ap_northeast_1: "Asien-Pazifik (Tokio)"
@@ -398,7 +400,7 @@ de:
         type_bonus:
           name: "Bonustyp"
           title: "Bestimmte überprüfbare Typen können vom Team mit einem Bonus ausgestattet werden, damit sie höher priorisiert sind."
-      stale_help: "Diese Überprüfung wurde von <b>%{username}</b>gelöst."
+      stale_help: "Diese Überprüfung wurde von <b>%{username}</b> gelöst."
       claim_help:
         optional: "Du kannst dieses Element reservieren, damit andere es nicht überprüfen."
         required: "Du musst Elemente reservieren, bevor du sie überprüfen kannst."
@@ -690,6 +692,8 @@ de:
             title: "Einstellungen"
             allow_unknown_sender_topic_replies: "Unbekannten Absendern das Antworten auf Gruppenthemen erlauben."
             allow_unknown_sender_topic_replies_hint: "Erlaubt unbekannten Absendern, auf Gruppenthemen zu antworten. Wenn dies nicht aktiviert ist, werden Antworten von E-Mail-Adressen, die nicht bereits zu dem Thema eingeladen wurden, ein neues Thema erstellen."
+            from_alias: "Von Alias"
+            from_alias_hint: "Alias, der beim Versenden von Gruppen-SMTP-E-Mails als Absenderadresse verwendet werden soll. Bitte beachte, dass dies nicht von allen E-Mail-Anbietern unterstützt wird; sieh in der Dokumentation deines E-Mail-Anbieters nach."
           mailboxes:
             synchronized: "Synchronisierte Mailbox"
             none_found: "In diesem E-Mail-Konto wurden keine Postfächer gefunden."
@@ -1263,6 +1267,7 @@ de:
         upload_title: "Lade dein Bild hoch"
         image_is_not_a_square: "Achtung: Wir haben dein Bild zugeschnitten, weil Höhe und Breite nicht übereingestimmt haben."
         logo_small: "Das kleine Logo der Website. Es wird standardmäßig verwendet."
+        use_custom: "Oder lade einen eigenen Avatar hoch:"
       change_profile_background:
         title: "Profil-Kopfzeile"
         instructions: "Profil-Kopfzeilen werden zentriert und haben eine Standardbreite von 1110 px."
@@ -1796,6 +1801,7 @@ de:
       second_factor_toggle:
         totp: "Benutze stattdessen eine Authentifizierungs-App"
         backup_code: "Benutze stattdessen einen Wiederherstellungscode"
+        security_key: "Stattdessen einen Sicherheitsschlüssel verwenden"
     invites:
       accept_title: "Einladung"
       emoji: "Umschlag-Emoji"
@@ -2282,7 +2288,7 @@ de:
         clear_all: "Auswahl aufheben"
         unlist_topics: "Themen unsichtbar machen"
         relist_topics: "Themen neu auflisten"
-        reset_read: "Gelesene zurücksetzen"
+        defer: "Aufschieben"
         delete: "Themen löschen"
         dismiss: "Ignorieren"
         dismiss_read: "Blende alle ungelesenen Beiträge aus"
@@ -2592,7 +2598,7 @@ de:
         title: "Antworten"
         help: "beginne damit, eine Antwort auf dieses Thema zu verfassen"
       share:
-        title: "Teilen"
+        title: "Thema teilen"
         extended_title: "Link teilen"
         help: "teile einen Link zu diesem Thema"
         instructions: "Link zu diesem Thema teilen:"
@@ -2992,6 +2998,9 @@ de:
         viewing_summary: "Eine Zusammenfassung dieses Themas anzeigen"
         post_number: "%{username}, Beitrag #%{post_number}"
         show_all: "Alle anzeigen"
+      share:
+        title: "Beitrag #%{post_number} teilen"
+        instructions: "Link zu diesem Beitrag teilen:"
     category:
       none: "(keine Kategorie)"
       all: "Alle Kategorien"
@@ -3652,6 +3661,8 @@ de:
     no_group_messages_title: "Keine Gruppennachrichten gefunden"
     fullscreen_table:
       expand_btn: "Tabelle erweitern"
+    second_factor_auth:
+      redirect_after_success: "Die Zwei-Faktor-Authentifizierung ist erfolgreich. Weiterleitung zur vorherigen Seite…"
   admin_js:
     type_to_filter: "zum Filtern hier eingeben …"
     admin:
@@ -3960,6 +3971,9 @@ de:
         notification_event:
           name: "Benachrichtigungs-Ereignis"
           details: "Wenn ein Benutzer eine Benachrichtigung in seinem Feed erhält."
+        user_promoted_event:
+          name: "Vom Benutzer gefördertes Ereignis"
+          details: "Wenn ein Nutzer von einer Vertrauensstufe zur nächsten befördert wird."
         user_badge_event:
           name: "Abzeichen-Verleihungs-Ereignis"
           details: "Wenn ein Benutzer ein Abzeichen erhält."
@@ -5121,8 +5135,9 @@ de:
           grant_existing_holders: Gewähre weiteren Abzeichen an bestehende Abzeicheninhaber
       emoji:
         title: "Emoji"
-        help: "Füge neue Emoji hinzu, die dann für alle verfügbar sind. Ziehe mehrere Dateien auf einmal per Drag & Drop, ohne einen Namen einzugeben, um Emojis mit ihren Dateinamen zu erstellen."
+        help: "Füge neue Emojis hinzu, die für alle verfügbar sind. Ziehe mehrere Dateien gleichzeitig per Drag & Drop, ohne einen Namen einzugeben, um Emojis mit ihren Dateinamen zu erstellen. Die ausgewählte Gruppe wird für alle Dateien verwendet, die gleichzeitig hinzugefügt werden. Du kannst auch auf „Neues Emoji hinzufügen“ klicken, um die Dateiauswahl zu öffnen."
         add: "Neues Emoji hinzufügen"
+        choose_files: "Wähle Dateien"
         uploading: "Wird hochgeladen …"
         name: "Name"
         group: "Gruppe"

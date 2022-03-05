@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Onebox::Engine::GithubCommitOnebox do
   describe "regular commit url" do
     before do

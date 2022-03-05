@@ -48,7 +48,7 @@ class GroupSmtpMailer < ActionMailer::Base
       add_re_to_subject: true,
       locale: SiteSetting.default_locale,
       delivery_method_options: delivery_options,
-      from: from_group.email_username,
+      from: from_group.smtp_from_address,
       from_alias: I18n.t('email_from_without_site', user_name: group_name),
       html_override: html_override(post),
       cc: cc_addresses

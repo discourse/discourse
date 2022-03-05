@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe ::DiscoursePoll::Poll do
   describe ".transform_for_user_field_override" do
     it "Transforms UserField name if a matching CustomUserField is present" do

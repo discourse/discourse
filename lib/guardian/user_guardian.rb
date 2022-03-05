@@ -60,6 +60,7 @@ module UserGuardian
 
   def can_delete_user?(user)
     return false if user.nil? || user.admin?
+
     if is_me?(user)
       !SiteSetting.enable_discourse_connect &&
       !user.has_more_posts_than?(SiteSetting.delete_user_self_max_post_count)

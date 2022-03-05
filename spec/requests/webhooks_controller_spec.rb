@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe WebhooksController do
   before { Discourse.redis.flushdb }
 
@@ -29,13 +27,16 @@ describe WebhooksController do
         "event" => "dropped",
         "recipient" => email,
         "Message-Id" => "<#{message_id}>",
-        "signature" => signature
+        "signature" => signature,
+        "error" => "smtp; 550-5.1.1 The email account that you tried to reach does not exist.",
+        "code" => "5.1.1"
       }
 
       expect(response.status).to eq(200)
 
       email_log.reload
       expect(email_log.bounced).to eq(true)
+      expect(email_log.bounce_error_code).to eq("5.1.1")
       expect(email_log.user.user_stat.bounce_score).to eq(SiteSetting.hard_bounce_score)
     end
 
@@ -58,6 +59,11 @@ describe WebhooksController do
               "message-id" => message_id,
             }
           }
+        },
+        "delivery-status" => {
+          "message" => "smtp; 550-5.1.1 The email account that you tried to reach does not exist.",
+          "code" => "5.1.1",
+          "description" => ""
         }
       }
 
@@ -65,6 +71,7 @@ describe WebhooksController do
 
       email_log.reload
       expect(email_log.bounced).to eq(true)
+      expect(email_log.bounce_error_code).to eq("5.1.1")
       expect(email_log.user.user_stat.bounce_score).to eq(SiteSetting.soft_bounce_score)
     end
   end
@@ -89,6 +96,7 @@ describe WebhooksController do
 
       email_log.reload
       expect(email_log.bounced).to eq(true)
+      expect(email_log.bounce_error_code).to eq("5.0.0")
       expect(email_log.user.user_stat.bounce_score).to eq(SiteSetting.hard_bounce_score)
     end
   end
@@ -109,6 +117,7 @@ describe WebhooksController do
 
       email_log.reload
       expect(email_log.bounced).to eq(true)
+      expect(email_log.bounce_error_code).to eq(nil) # mailjet doesn't give us this
       expect(email_log.user.user_stat.bounce_score).to eq(SiteSetting.hard_bounce_score)
     end
   end
@@ -123,6 +132,8 @@ describe WebhooksController do
           "event" => "hard_bounce",
           "msg" => {
             "email" => email,
+            "diag" => "5.1.1",
+            "bounce_description": "smtp; 550-5.1.1 The email account that you tried to reach does not exist.",
             "metadata" => {
               "message_id" => message_id
             }
@@ -134,6 +145,7 @@ describe WebhooksController do
 
       email_log.reload
       expect(email_log.bounced).to eq(true)
+      expect(email_log.bounce_error_code).to eq("5.1.1")
       expect(email_log.user.user_stat.bounce_score).to eq(SiteSetting.hard_bounce_score)
     end
   end
@@ -152,6 +164,7 @@ describe WebhooksController do
 
       email_log.reload
       expect(email_log.bounced).to eq(true)
+      expect(email_log.bounce_error_code).to eq(nil) # postmark doesn't give us this
       expect(email_log.user.user_stat.bounce_score).to eq(SiteSetting.hard_bounce_score)
     end
     it "soft bounces" do
@@ -167,6 +180,7 @@ describe WebhooksController do
 
       email_log.reload
       expect(email_log.bounced).to eq(true)
+      expect(email_log.bounce_error_code).to eq(nil) # postmark doesn't give us this
       expect(email_log.user.user_stat.bounce_score).to eq(SiteSetting.soft_bounce_score)
     end
   end
@@ -181,6 +195,7 @@ describe WebhooksController do
           "msys" => {
             "message_event" => {
               "bounce_class" => 10,
+              "error_code" => "554",
               "rcpt_to" => email,
               "rcpt_meta" => {
                 "message_id" => message_id

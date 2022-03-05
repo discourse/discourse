@@ -43,7 +43,7 @@
 
       {{conditional-loading-spinner condition=loading}}
       {{d-textarea
-        autocomplete="discourse"
+        autocomplete="off"
         tabindex=tabindex
         value=value
         class="d-editor-input"
@@ -72,6 +72,7 @@
 {{emoji-picker
   isActive=emojiPickerIsActive
   isEditorFocused=isEditorFocused
+  initialFilter=this.emojiFilter
   emojiSelected=(action "emojiSelected")
   onEmojiPickerClose=(action (mut emojiPickerIsActive) false)
 }}

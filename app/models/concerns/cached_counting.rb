@@ -3,69 +3,179 @@
 module CachedCounting
   extend ActiveSupport::Concern
 
-  included do
-    class << self
-      attr_accessor :autoflush, :autoflush_seconds, :last_flush
+  LUA_HGET_DEL = DiscourseRedis::EvalHelper.new <<~LUA
+    local result = redis.call("HGET", KEYS[1], KEYS[2])
+    redis.call("HDEL", KEYS[1], KEYS[2])
+
+    return result
+  LUA
+
+  QUEUE = Queue.new
+  SLEEP_SECONDS = 1
+  FLUSH_DB_ITERATIONS = 60
+  MUTEX = Mutex.new
+
+  def self.disable
+    @enabled = false
+    if @thread && @thread.alive?
+      @thread.wakeup
+      @thread.join
     end
-
-    # auto flush if backlog is larger than this
-    self.autoflush = 2000
-
-    # auto flush if older than this
-    self.autoflush_seconds = 5.minutes
-
-    self.last_flush = Time.now.utc
   end
 
-  class_methods do
-    def perform_increment!(key, opts = nil)
-      val = Discourse.redis.incr(key).to_i
+  def self.enabled?
+    @enabled != false
+  end
 
-      # readonly mode it is going to be 0, skip
-      return if val == 0
+  def self.enable
+    @enabled = true
+  end
 
-      # 3.days, see: https://github.com/rails/rails/issues/21296
-      Discourse.redis.expire(key, 259200)
+  def self.reset
+    @last_ensure_thread = nil
+    clear_queue!
+    clear_flush_to_db_lock!
+  end
 
-      autoflush = (opts && opts[:autoflush]) || self.autoflush
-      if autoflush > 0 && val >= autoflush
-        write_cache!
+  ENSURE_THREAD_COOLDOWN_SECONDS = 5
+
+  def self.ensure_thread!
+    return if !enabled?
+
+    MUTEX.synchronize do
+      now = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+      delta = @last_ensure_thread && (now - @last_ensure_thread)
+
+      if delta && delta < ENSURE_THREAD_COOLDOWN_SECONDS
+        # creating threads can be very expensive and bog down a process
         return
       end
 
-      if (Time.now.utc - last_flush).to_i > autoflush_seconds
-        write_cache!
+      @last_ensure_thread = now
+
+      if !@thread&.alive?
+        @thread = nil
       end
+      @thread ||= Thread.new { thread_loop }
+    end
+  end
+
+  def self.thread_loop
+    iterations = 0
+    while true
+      break if !enabled?
+
+      sleep SLEEP_SECONDS
+      flush_in_memory
+      if (iterations >= FLUSH_DB_ITERATIONS) || @flush
+        iterations = 0
+        flush_to_db
+        @flush = false
+      end
+      iterations += 1
     end
 
-    def write_cache!(date = nil)
+  rescue => ex
+    if Redis::CommandError === ex && ex.message =~ /READONLY/
+      # do not warn for Redis readonly mode
+    elsif PG::ReadOnlySqlTransaction === ex
+      # do not warn for PG readonly mode
+    else
+      Discourse.warn_exception(
+        ex,
+        message: 'Unexpected error while processing cached counts'
+      )
+    end
+  end
+
+  def self.flush
+    @flush = true
+    @thread.wakeup
+    while @flush
+      sleep 0.001
+    end
+  end
+
+  COUNTER_REDIS_HASH = "CounterCacheHash"
+
+  def self.flush_in_memory
+    counts = nil
+    while QUEUE.length > 0
+      # only 1 consumer, no need to avoid blocking
+      key, klass, db, time = QUEUE.deq
+      _redis_key = "#{klass},#{db},#{time.strftime("%Y%m%d")},#{key}"
+      counts ||= Hash.new(0)
+      counts[_redis_key] += 1
+    end
+
+    if counts
+      counts.each do |redis_key, count|
+        Discourse.redis.without_namespace.hincrby(COUNTER_REDIS_HASH, redis_key, count)
+      end
+    end
+  end
+
+  DB_FLUSH_COOLDOWN_SECONDS = 60
+  DB_COOLDOWN_KEY = "cached_counting_cooldown"
+
+  def self.flush_to_db
+    redis = Discourse.redis.without_namespace
+    DistributedMutex.synchronize("flush_counters_to_db", redis: redis, validity: 5.minutes) do
+      if allowed_to_flush_to_db?
+        redis.hkeys(COUNTER_REDIS_HASH).each do |key|
+
+          val = LUA_HGET_DEL.eval(
+            redis,
+            [COUNTER_REDIS_HASH, key]
+          ).to_i
+
+          # unlikely (protected by mutex), but protect just in case
+          # could be a race condition in test
+          if val > 0
+            klass_name, db, date, local_key = key.split(",", 4)
+            date = Date.strptime(date, "%Y%m%d")
+            klass = Module.const_get(klass_name)
+
+            RailsMultisite::ConnectionManagement.with_connection(db) do
+              klass.write_cache!(local_key, val, date)
+            end
+          end
+        end
+      end
+    end
+  end
+
+  def self.clear_flush_to_db_lock!
+    Discourse.redis.without_namespace.del(DB_COOLDOWN_KEY)
+  end
+
+  def self.flush_to_db_lock_ttl
+    Discourse.redis.without_namespace.ttl(DB_COOLDOWN_KEY)
+  end
+
+  def self.allowed_to_flush_to_db?
+    Discourse.redis.without_namespace.set(DB_COOLDOWN_KEY, "1", ex: DB_FLUSH_COOLDOWN_SECONDS, nx: true)
+  end
+
+  def self.queue(key, klass)
+    QUEUE.push([key, klass, RailsMultisite::ConnectionManagement.current_db, Time.now.utc])
+  end
+
+  def self.clear_queue!
+    QUEUE.clear
+    redis = Discourse.redis.without_namespace
+    redis.del(COUNTER_REDIS_HASH)
+  end
+
+  class_methods do
+    def perform_increment!(key)
+      CachedCounting.ensure_thread!
+      CachedCounting.queue(key, self)
+    end
+
+    def write_cache!(key, count, date)
       raise NotImplementedError
     end
 
-    GET_AND_RESET = <<~LUA
-      local val = redis.call('get', KEYS[1])
-      redis.call('set', KEYS[1], '0')
-      return val
-    LUA
-
-    # this may seem a bit fancy but in so it allows
-    # for concurrent calls without double counting
-    def get_and_reset(key)
-      namespaced_key = Discourse.redis.namespace_key(key)
-      val = Discourse.redis.without_namespace.eval(GET_AND_RESET, keys: [namespaced_key]).to_i
-      Discourse.redis.expire(key, 259200) # SET removes expiry, so set it again
-      val
-    end
-
-    def request_id(query_params, retries = 0)
-      id = where(query_params).pluck_first(:id)
-      id ||= create!(query_params.merge(count: 0)).id
-    rescue # primary key violation
-      if retries == 0
-        request_id(query_params, 1)
-      else
-        raise
-      end
-    end
   end
 end

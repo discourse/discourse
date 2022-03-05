@@ -92,9 +92,10 @@ import {
 } from "discourse/widgets/search-menu-results";
 import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
 import { downloadCalendar } from "discourse/lib/download-calendar";
+import { consolePrefix } from "discourse/lib/source-identifier";
 
 // If you add any methods to the API ensure you bump up the version number
-// based on Semantic Versioning 2.0.0. Please up the changelog at
+// based on Semantic Versioning 2.0.0. Please update the changelog at
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
 const PLUGIN_API_VERSION = "1.1.0";
@@ -104,6 +105,7 @@ function canModify(klass, type, resolverName, changes) {
   if (!changes.pluginId) {
     // eslint-disable-next-line no-console
     console.warn(
+      consolePrefix(),
       "To prevent errors in tests, add a `pluginId` key to your `modifyClass` call. This will ensure the modification is only applied once."
     );
     return true;
@@ -166,6 +168,7 @@ class PluginApi {
     if (this.container.cache[resolverName]) {
       // eslint-disable-next-line no-console
       console.warn(
+        consolePrefix(),
         `"${resolverName}" was already cached in the container. Changes won't be applied.`
       );
     }
@@ -174,7 +177,10 @@ class PluginApi {
     if (!klass) {
       if (!opts.ignoreMissing) {
         // eslint-disable-next-line no-console
-        console.warn(`"${resolverName}" was not found by modifyClass`);
+        console.warn(
+          consolePrefix(),
+          `"${resolverName}" was not found by modifyClass`
+        );
       }
       return;
     }
@@ -825,7 +831,7 @@ class PluginApi {
   }
 
   /**
-   * Register a desktop notificaiton handler
+   * Register a desktop notification handler
    *
    * ```javascript
    * api.registerDesktopNotificationHandler((data, siteSettings, user) => {
@@ -981,6 +987,7 @@ class PluginApi {
     if (!item["name"]) {
       // eslint-disable-next-line no-console
       console.warn(
+        consolePrefix(),
         "A 'name' is required when adding a Navigation Bar Item.",
         item
       );
@@ -1643,7 +1650,7 @@ function getPluginApi(version) {
     return pluginApi;
   } else {
     // eslint-disable-next-line no-console
-    console.warn(`Plugin API v${version} is not supported`);
+    console.warn(consolePrefix(), `Plugin API v${version} is not supported`);
   }
 }
 
@@ -1670,6 +1677,7 @@ function decorate(klass, evt, cb, id) {
   if (!id) {
     // eslint-disable-next-line no-console
     console.warn(
+      consolePrefix(),
       "`decorateCooked` should be supplied with an `id` option to avoid memory leaks in test mode. The id will be used to ensure the decorator is only applied once."
     );
   } else {

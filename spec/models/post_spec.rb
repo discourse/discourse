@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe Post do
   fab!(:coding_horror) { Fabricate(:coding_horror) }
 
@@ -1302,22 +1300,44 @@ describe Post do
     end
   end
 
-  describe ".hide!" do
+  describe "#hide!" do
+    fab!(:post) { Fabricate(:post) }
+
     after do
       Discourse.redis.flushdb
     end
 
-    it "should ignore the duplicate check" do
-      p1 = Fabricate(:post)
-      p2 = Fabricate(:post, user: p1.user)
+    it "should ignore the unique post validator when hiding a post with similar content as a recent post" do
+      post_2 = Fabricate(:post, user: post.user)
       SiteSetting.unique_posts_mins = 10
-      p1.store_unique_post_key
-      p2.reload.hide!(PostActionType.types[:off_topic])
-      expect(p2).to be_hidden
+      post.store_unique_post_key
+
+      expect(post_2.valid?).to eq(false)
+      expect(post_2.errors.full_messages.to_s).to include(I18n.t(:just_posted_that))
+
+      post_2.hide!(PostActionType.types[:off_topic])
+
+      expect(post_2.reload.hidden).to eq(true)
+    end
+
+    it 'should decrease user_stat topic_count for first post' do
+      expect do
+        post.hide!(PostActionType.types[:off_topic])
+      end.to change { post.user.user_stat.reload.topic_count }.from(1).to(0)
+    end
+
+    it 'should decrease user_stat post_count' do
+      post_2 = Fabricate(:post, topic: post.topic, user: post.user)
+
+      expect do
+        post_2.hide!(PostActionType.types[:off_topic])
+      end.to change { post_2.user.user_stat.reload.post_count }.from(1).to(0)
     end
   end
 
-  describe ".unhide!" do
+  describe "#unhide!" do
+    fab!(:post) { Fabricate(:post) }
+
     before { SiteSetting.unique_posts_mins = 5 }
 
     it "will unhide the first post & make the topic visible" do
@@ -1338,6 +1358,23 @@ describe Post do
 
       expect(post.hidden).to eq(false)
       expect(hidden_topic.visible).to eq(true)
+    end
+
+    it 'should increase user_stat topic_count for first post' do
+      post.hide!(PostActionType.types[:off_topic])
+
+      expect do
+        post.unhide!
+      end.to change { post.user.user_stat.reload.topic_count }.from(0).to(1)
+    end
+
+    it 'should decrease user_stat post_count' do
+      post_2 = Fabricate(:post, topic: post.topic, user: post.user)
+      post_2.hide!(PostActionType.types[:off_topic])
+
+      expect do
+        post_2.unhide!
+      end.to change { post_2.user.user_stat.reload.post_count }.from(0).to(1)
     end
   end
 

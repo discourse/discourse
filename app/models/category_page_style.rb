@@ -16,6 +16,7 @@ class CategoryPageStyle < EnumSiteSetting
       { name: 'category_page_style.categories_and_top_topics', value: 'categories_and_top_topics' },
       { name: 'category_page_style.categories_boxes', value: 'categories_boxes' },
       { name: 'category_page_style.categories_boxes_with_topics', value: 'categories_boxes_with_topics' },
+      { name: 'category_page_style.subcategories_with_featured_topics', value: 'subcategories_with_featured_topics' },
     ]
   end
 

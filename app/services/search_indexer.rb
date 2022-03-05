@@ -120,11 +120,11 @@ class SearchIndexer
       a_weight: topic_title,
       b_weight: category_name,
       c_weight: topic_tags,
-      # Length of a tsvector must be less than 1_048_576 bytes.
-      # The difference between the max ouptut limit and imposed input limit
-      # accounts for the fact that sometimes the output tsvector may be
-      # slighlty longer than the input.
-      d_weight: scrub_html_for_search(cooked)[0..1_000_000]
+      # The tsvector resulted from parsing a string can be double the size of
+      # the original string. Since there is no way to estimate the length of
+      # the expected tsvector, we limit the input to ~50% of the maximum
+      # length of a tsvector (1_048_576 bytes).
+      d_weight: scrub_html_for_search(cooked)[0..600_000]
     ) do |params|
       params["private_message"] = private_message
     end
@@ -328,7 +328,7 @@ class SearchIndexer
         end
       end
 
-      document.css("img[class='emoji']").each do |node|
+      document.css("img.emoji").each do |node|
         node.remove_attribute("alt")
       end
 

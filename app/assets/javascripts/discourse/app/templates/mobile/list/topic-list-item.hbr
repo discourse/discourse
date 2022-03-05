@@ -1,7 +1,7 @@
 <td class="topic-list-data">
   {{~raw-plugin-outlet name="topic-list-before-columns"}}
   <div class='pull-left'>
-    <a href="{{topic.lastPostUrl}}" data-user-card="{{topic.last_poster_username}}">{{avatar topic.lastPosterUser imageSize="large"}}</a>
+    <a href="{{topic.lastPostUrl}}" data-user-card="{{topic.lastPosterUser.username}}">{{avatar topic.lastPosterUser imageSize="large"}}</a>
   </div>
   <div class='right'>
     {{!--

@@ -111,7 +111,7 @@ class TopicCreator
       visible: @opts[:visible]
     }
 
-    [:subtype, :archetype, :meta_data, :import_mode].each do |key|
+    [:subtype, :archetype, :meta_data, :import_mode, :advance_draft].each do |key|
       topic_params[key] = @opts[key] if @opts[key].present?
     end
 
@@ -137,6 +137,7 @@ class TopicCreator
     topic_params[:created_at] = convert_time(@opts[:created_at]) if @opts[:created_at].present?
     topic_params[:pinned_at] = convert_time(@opts[:pinned_at]) if @opts[:pinned_at].present?
     topic_params[:pinned_globally] = @opts[:pinned_globally] if @opts[:pinned_globally].present?
+    topic_params[:external_id] = @opts[:external_id] if @opts[:external_id].present?
     topic_params[:featured_link] = @opts[:featured_link]
 
     topic_params

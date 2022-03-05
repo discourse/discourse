@@ -78,10 +78,10 @@ module ImportScripts::PhpBB3
       # Many phpbb bbcode tags have a hash attached to them. Examples:
       #   [url=https&#58;//google&#46;com:1qh1i7ky]click here[/url:1qh1i7ky]
       #   [quote=&quot;cybereality&quot;:b0wtlzex]Some text.[/quote:b0wtlzex]
-      text.gsub!(/:(?:\w{8})\]/, ']')
+      text.gsub!(/:(?:\w{5,8})\]/, ']')
 
       # remove color tags
-      text.gsub!(/\[\/?color(=#[a-z0-9]*)?\]/i, "")
+      text.gsub!(/\[\/?color(=#?[a-z0-9]*)?\]/i, "")
     end
 
     def bbcode_to_md(text)

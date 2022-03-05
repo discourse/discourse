@@ -85,3 +85,5 @@ it:
           title: "Icone Intestazione"
         spinners:
           title: "Icone di Caricamento"
+        empty_state:
+          title: "Status Vuoto"

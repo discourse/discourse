@@ -145,7 +145,6 @@ vi:
     bootstrap_mode_disabled: "Chế độ bootstrap sẽ bị vô hiệu trong 24 giờ tới."
     themes:
       default_description: "Mặc định"
-      broken_theme_alert: "Site của bạn có thể không hoạt động vì theme / component %{theme} bị lỗi. Tắt nó ở %{path}"
     s3:
       regions:
         ap_northeast_1: "Châu Á Thái Bình Dương (Tokyo)"
@@ -2038,7 +2037,7 @@ vi:
         clear_all: "Xoá hết"
         unlist_topics: "Chủ đề không công khai"
         relist_topics: "Chủ đề liên quan"
-        reset_read: "Đặt lại lượt đọc"
+        defer: "Hoãn"
         delete: "Xóa chủ đề"
         dismiss: "Bỏ qua"
         dismiss_read: "Bỏ qua tất cả thư chưa đọc"
@@ -2303,7 +2302,6 @@ vi:
         title: "Trả lời"
         help: "bắt đầu soạn phản hồi cho chủ đề này"
       share:
-        title: "Chia sẻ"
         extended_title: "Chia sẻ một liên kết"
         help: "Chia sẻ một liên kết đến chủ đề này"
         invite_users: "Mời"
@@ -2724,7 +2722,6 @@ vi:
       default_list_filter: "Bộ lọc danh sách mặc định:"
       allow_badges_label: "Cho phép thưởng huy hiệu trong chuyên mục này"
       edit_permissions: "Sửa quyền"
-      reviewable_by_group: "Ngoài nhân viên, nội dung trong danh mục này cũng có thể được kiểm duyệt bởi:"
       review_group_name: "Nhóm tên"
       require_topic_approval: "Yêu cầu người kiểm duyệt phê duyệt tất cả các chủ đề mới"
       require_reply_approval: "Yêu cầu người kiểm duyệt phê duyệt tất cả các câu trả lời mới"

@@ -1,57 +1,44 @@
 import Component from "@ember/component";
-import { observes } from "discourse-common/utils/decorators";
 import { scheduleOnce } from "@ember/runloop";
 
-export default Component.extend({
-  _slug: null,
+export default class extends Component {
+  tagName = "";
+  currentClasses = new Set();
 
-  didInsertElement() {
-    this._super(...arguments);
-    this.refreshClass();
-  },
+  didReceiveAttrs() {
+    scheduleOnce("afterRender", this, this._updateClasses);
+  }
 
-  _updateClass() {
+  willDestroyElement() {
+    scheduleOnce("afterRender", this, this._removeClasses);
+  }
+
+  _updateClasses() {
     if (this.isDestroying || this.isDestroyed) {
       return;
     }
-    const slug = this.get("category.fullSlug");
 
-    this._removeClass();
+    const desiredClasses = new Set();
 
-    const classes = [];
-
+    const slug = this.category?.fullSlug;
     if (slug) {
-      classes.push("category");
-      classes.push(`category-${slug}`);
+      desiredClasses.add("category");
+      desiredClasses.add(`category-${slug}`);
     }
+    this.tags?.forEach((t) => desiredClasses.add(`tag-${t}`));
 
-    this.tags?.forEach((t) => classes.push(`tag-${t}`));
+    document.body.classList.add(...desiredClasses);
 
-    document.body.classList.add(...classes);
-  },
+    const removeClasses = [...this.currentClasses].filter(
+      (c) => !desiredClasses.has(c)
+    );
 
-  @observes("category.fullSlug", "tags")
-  refreshClass() {
-    scheduleOnce("afterRender", this, this._updateClass);
-  },
+    document.body.classList.remove(...removeClasses);
 
-  willDestroyElement() {
-    this._super(...arguments);
-    this._removeClass();
-  },
+    this.currentClasses = desiredClasses;
+  }
 
-  _removeClass() {
-    const invalidClasses = [];
-    const regex = /\b(?:category|tag)-\S+|( category )/g;
-
-    document.body.classList.forEach((name) => {
-      if (regex.test(name)) {
-        invalidClasses.push(name);
-      }
-    });
-
-    if (invalidClasses.length) {
-      document.body.classList.remove(...invalidClasses);
-    }
-  },
-});
+  _removeClasses() {
+    document.body.classList.remove(...this.currentClasses);
+  }
+}

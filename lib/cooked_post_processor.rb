@@ -415,7 +415,10 @@ class CookedPostProcessor
 
     %w{src data-small-upload}.each do |selector|
       @doc.css("img[#{selector}]").each do |img|
-        img[selector] = UrlHelper.cook_url(img[selector].to_s, secure: @post.with_secure_media?)
+        custom_emoji = img["class"]&.include?("emoji-custom") && Emoji.custom?(img["title"])
+        img[selector] = UrlHelper.cook_url(
+          img[selector].to_s, secure: @post.with_secure_media? && !custom_emoji
+        )
       end
     end
   end

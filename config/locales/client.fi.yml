@@ -168,7 +168,6 @@ fi:
     bootstrap_mode_disabled: "Aloitustila poistetaan käytöstä seuraavan 24 tunnin aikana."
     themes:
       default_description: "Oletus"
-      broken_theme_alert: "Teemassa/komponentissa %{theme} on virheitä, jotka voivat aiheuttaa sen, ettei sivustosi toimi. Voit poistaa sen käytöstä täällä: %{path}."
     s3:
       regions:
         ap_northeast_1: "Aasia ja Tyynimeri (Tokio)"
@@ -2184,7 +2183,7 @@ fi:
         clear_all: "Tyhjennä kaikki"
         unlist_topics: "Poista ketjuja listauksista"
         relist_topics: "Palauta ketjuja listauksiin"
-        reset_read: "Palauta lukutila"
+        defer: "Lykkää"
         delete: "Poista ketjut"
         dismiss: "Kuittaa"
         dismiss_read: "Kuittaa luetuiksi"
@@ -2487,7 +2486,6 @@ fi:
         title: "Vastaa"
         help: "aloita kirjoittamaan vastausta tähän ketjuun"
       share:
-        title: "Jaa"
         extended_title: "Jaa linkki"
         help: "jaa linkki tähän ketjuun"
         instructions: "Jaa linkki tähän ketjuun:"
@@ -2956,7 +2954,6 @@ fi:
       default_list_filter: "Oletusluettelosuodatin:"
       allow_badges_label: "Salli kunniamerkkien myöntäminen tällä alueella"
       edit_permissions: "Muokkaa oikeuksia"
-      reviewable_by_group: "Henkilökunnan lisäksi tämän alueen sisältöä voi käsitellä myös:"
       review_group_name: "ryhmän nimi"
       require_topic_approval: "Edellytä valvojan hyväksyntää kaikille uusille ketjuille"
       require_reply_approval: "Edellytä valvojan hyväksyntää kaikille uusille vastauksille"
