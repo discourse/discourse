@@ -16,8 +16,6 @@ class ScreenedIpAddress < ActiveRecord::Base
   ROLLED_UP_BLOCKS = [
     # IPv4
     [4, 24],
-    [4, 22],
-    [4, 20],
     # IPv6
     [6, 64],
     [6, 60],
