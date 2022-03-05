@@ -29,7 +29,33 @@
             action=(action "inviteUsers")
           }}
         {{/if}}
+
+        {{#if topic.details.can_reply_as_new_topic}}
+          {{#if topic.isPrivateMessage}}
+            {{d-button
+              action=(action "replyAsNewTopic")
+              class="btn-default new-topic"
+              icon="plus"
+              aria-label="post.reply_as_new_private_message"
+              title="post.reply_as_new_private_message"
+              label="user.new_private_message"
+            }}
+          {{else}}
+            {{d-button
+              action=(action "replyAsNewTopic")
+              class="btn-default new-topic"
+              icon="plus"
+              aria-label="post.reply_as_new_topic"
+              title="post.reply_as_new_topic"
+              label="topic.create"
+            }}
+          {{/if}}
+        {{/if}}
       </div>
+
+      {{#if post}}
+        <div class="date">{{displayDate}}</div>
+      {{/if}}
     </div>
   </form>
 {{/d-modal-body}}
