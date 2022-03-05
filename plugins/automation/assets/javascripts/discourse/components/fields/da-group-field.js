@@ -9,6 +9,10 @@ export default class GroupField extends BaseField {
     super.init(...arguments);
 
     Group.findAll().then((groups) => {
+      if (this.isDestroying || this.isDestroyed) {
+        return;
+      }
+
       this.set("allGroups", groups);
     });
   }
