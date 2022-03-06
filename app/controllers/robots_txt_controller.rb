@@ -13,6 +13,7 @@ class RobotsTxtController < ApplicationController
     /assets/browser-update*.js
     /email/
     /session
+    /theme-javascripts/
     /user-api-key
     /*?api_key*
     /*?*api_key*
