@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import initializer from "wizard/initializers/load-helpers";
 import { test } from "qunit";
 

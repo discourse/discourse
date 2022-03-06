@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import { TestModuleForComponent, render } from "@ember/test-helpers";
 import MessageBus from "message-bus-client";
 import EmberObject from "@ember/object";
