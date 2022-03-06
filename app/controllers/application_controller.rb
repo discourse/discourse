@@ -49,7 +49,7 @@ class ApplicationController < ActionController::Base
   after_action  :conditionally_allow_site_embedding
   after_action  :ensure_vary_header
   after_action  :add_noindex_header, if: -> { is_feed_request? || !SiteSetting.allow_index_in_robots_txt }
-  after_action  :add_noindex_header_to_non_canonical, if: -> { request.get? && !(request.format && request.format.json?) && !request.xhr? }
+  after_action  :add_header_to_non_canonical, if: -> { request.get? && !(request.format && request.format.json?) && !request.xhr? }
 
   HONEYPOT_KEY ||= 'HONEYPOT_KEY'
   CHALLENGE_KEY ||= 'CHALLENGE_KEY'
@@ -906,10 +906,14 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def add_noindex_header_to_non_canonical
+  def add_header_to_non_canonical
     canonical = (@canonical_url || @default_canonical)
-    if canonical.present? && canonical != request.url && !SiteSetting.allow_indexing_non_canonical_urls
-      response.headers['X-Robots-Tag'] ||= 'noindex'
+    if canonical.present? && canonical != request.url
+      if SiteSetting.allow_indexing_non_canonical_urls
+        response.headers['Link'] = "<#{canonical}>; rel=\"canonical\""
+      else
+        response.headers['X-Robots-Tag'] ||= 'noindex'
+      end
     end
   end
 

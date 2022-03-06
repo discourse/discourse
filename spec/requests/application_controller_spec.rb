@@ -676,6 +676,35 @@ RSpec.describe ApplicationController do
     expect(response.body).to have_tag("link", with: { rel: "canonical", href: "http://test.localhost/t/#{topic.slug}/#{topic.id}" })
   end
 
+  it "adds a canonical header if non-canonical indexing is enabled" do
+    SiteSetting.allow_indexing_non_canonical_urls = true
+    get '/'
+    expect(response.headers['Link']).to be_nil
+
+    get '/latest'
+    expect(response.headers['Link']).to be_nil
+
+    get '/categories'
+    expect(response.headers['Link']).to be_nil
+
+    topic = create_post.topic
+    get "/t/#{topic.slug}/#{topic.id}"
+    expect(response.headers['Link']).to be_nil
+    post = create_post(topic_id: topic.id)
+    get "/t/#{topic.slug}/#{topic.id}/2"
+    expect(response.headers['Link']).to eq("<http://test.localhost/t/#{topic.slug}/#{topic.id}>; rel=\"canonical\"")
+    expect(response.headers['X-Robots-Tag']).to be_nil
+
+    20.times do
+      create_post(topic_id: topic.id)
+    end
+    get "/t/#{topic.slug}/#{topic.id}/21"
+    expect(response.headers['Link']).to eq("<http://test.localhost/t/#{topic.slug}/#{topic.id}?page=2>; rel=\"canonical\"")
+    expect(response.headers['X-Robots-Tag']).to be_nil
+    get "/t/#{topic.slug}/#{topic.id}?page=2"
+    expect(response.headers['Link']).to be_nil
+  end
+
   it "adds a noindex header if non-canonical indexing is disabled" do
     SiteSetting.allow_indexing_non_canonical_urls = false
     get '/'
