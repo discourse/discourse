@@ -102,7 +102,6 @@ module PrettyText
 
     ctx_load(ctx, "#{Rails.root}/app/assets/javascripts/discourse-loader.js")
     ctx_load(ctx, "#{Rails.root}/app/assets/javascripts/handlebars-shim.js")
-    ctx_load(ctx, "vendor/assets/javascripts/lodash.js")
     ctx_load(ctx, "vendor/assets/javascripts/xss.min.js")
     ctx.load("#{Rails.root}/lib/pretty_text/vendor-shims.js")
     ctx_load_manifest(ctx, "pretty-text-bundle.js")
