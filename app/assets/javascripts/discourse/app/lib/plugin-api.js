@@ -213,7 +213,15 @@ class PluginApi {
 
     if (canModify(klass, "member", resolverName, changes)) {
       delete changes.pluginId;
-      klass.class.reopen(changes);
+
+      if (klass.class.reopen) {
+        klass.class.reopen(changes);
+      } else {
+        Object.defineProperties(
+          klass.class.prototype || klass.class,
+          Object.getOwnPropertyDescriptors(changes)
+        );
+      }
     }
 
     return klass;
