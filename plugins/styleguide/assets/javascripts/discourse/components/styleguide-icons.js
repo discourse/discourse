@@ -1,7 +1,8 @@
+import Component from "@ember/component";
 import { afterRender } from "discourse-common/utils/decorators";
 import { later } from "@ember/runloop";
 
-export default Ember.Component.extend({
+export default Component.extend({
   tagName: "section",
   classNames: ["styleguide-icons"],
   iconIds: [],
