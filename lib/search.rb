@@ -1144,7 +1144,8 @@ class Search
 
   def self.to_tsquery(ts_config: nil, term:, joiner: nil)
     ts_config = ActiveRecord::Base.connection.quote(ts_config) if ts_config
-    tsquery = "TO_TSQUERY(#{ts_config || default_ts_config}, #{Search.wrap_unaccent("'#{self.escape_string(term)}'")})"
+    escaped_term = Search.wrap_unaccent("'#{self.escape_string(term)}'")
+    tsquery = "TO_TSQUERY(#{ts_config || default_ts_config}, #{escaped_term})"
     tsquery = "REPLACE(#{tsquery}::text, '&', '#{self.escape_string(joiner)}')::tsquery" if joiner
     tsquery
   end
