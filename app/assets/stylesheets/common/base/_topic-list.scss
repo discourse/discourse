@@ -229,10 +229,8 @@
   }
 
   .topic-list-data {
-    line-height: $line-height-large;
-    text-align: left;
-    vertical-align: middle;
     color: var(--primary-medium);
+    line-height: var(--line-height-large);
   }
   .btn-flat .d-icon {
     color: currentColor;
@@ -299,6 +297,7 @@
     .badge-posts {
       font-weight: 700;
       color: inherit;
+      padding: 15px 5px;
     }
   }
 
