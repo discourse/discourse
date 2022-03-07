@@ -274,8 +274,10 @@ select {
   border: 1px solid var(--primary-low);
 }
 
-table {
-  th {
+table,
+.topic-list {
+  th,
+  .topic-list-header {
     font-weight: normal;
     color: var(--primary-medium);
     text-align: left;
