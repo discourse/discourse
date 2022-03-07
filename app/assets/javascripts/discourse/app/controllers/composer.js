@@ -412,7 +412,7 @@ export default Controller.extend({
   // true or topic is provided
   @action
   focusComposer(opts = {}) {
-    this._openComposerForFocus(opts).then(() => {
+    return this._openComposerForFocus(opts).then(() => {
       this._focusAndInsertText(opts.insertText);
     });
   },
