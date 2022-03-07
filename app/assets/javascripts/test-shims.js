@@ -35,7 +35,8 @@ define("@ember/test-helpers", () => {
       return _app;
     },
     async settled() {
-      // No-op in pre ember-cli environment
+      // eslint-disable-next-line no-undef, discourse-ember/global-ember
+      Ember.run(() => {});
     },
     TestModuleForComponent: window.TestModuleForComponent,
   };
