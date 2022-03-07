@@ -5,11 +5,10 @@ import {
   exists,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, triggerKeyEvent, visit } from "@ember/test-helpers";
+import { click, settled, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import I18n from "I18n";
 import hbs from "htmlbars-inline-precompile";
-import { run } from "@ember/runloop";
 import showModal from "discourse/lib/show-modal";
 
 acceptance("Modal", function (needs) {
@@ -58,7 +57,8 @@ acceptance("Modal", function (needs) {
       "modal/not-dismissable"
     ] = hbs`{{#d-modal-body title="" class="" dismissable=false}}test{{/d-modal-body}}`;
 
-    run(() => showModal("not-dismissable", {}));
+    showModal("not-dismissable", {});
+    await settled();
 
     assert.strictEqual(count(".d-modal:visible"), 1, "modal should appear");
 
@@ -84,7 +84,8 @@ acceptance("Modal", function (needs) {
     ];
 
     await visit("/");
-    run(() => showModal("test-raw-title-panels", { panels }));
+    showModal("test-raw-title-panels", { panels });
+    await settled();
 
     assert.strictEqual(
       queryAll(".d-modal .modal-tab:first-child").text().trim(),
@@ -101,7 +102,8 @@ acceptance("Modal", function (needs) {
 
     await visit("/");
 
-    run(() => showModal("test-title", { title: "test_title" }));
+    showModal("test-title", { title: "test_title" });
+    await settled();
     assert.strictEqual(
       queryAll(".d-modal .title").text().trim(),
       "Test title",
@@ -110,7 +112,8 @@ acceptance("Modal", function (needs) {
 
     await click(".d-modal .close");
 
-    run(() => showModal("test-title-with-body", { title: "test_title" }));
+    showModal("test-title-with-body", { title: "test_title" });
+    await settled();
     assert.strictEqual(
       queryAll(".d-modal .title").text().trim(),
       "Test title",
@@ -119,7 +122,8 @@ acceptance("Modal", function (needs) {
 
     await click(".d-modal .close");
 
-    run(() => showModal("test-title"));
+    showModal("test-title");
+    await settled();
     assert.ok(
       !exists(".d-modal .title"),
       "it should not re-use the previous title"
