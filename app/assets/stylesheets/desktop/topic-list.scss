@@ -229,6 +229,10 @@ button.dismiss-read {
     }
     // show only the first poster
     .topic-list-data.posters {
+      a:first-child .avatar.latest:not(.single) {
+        top: 0px;
+        left: 0px;
+      }
       a:not(.latest) {
         display: none;
       }
