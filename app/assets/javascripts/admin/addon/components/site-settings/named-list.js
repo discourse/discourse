@@ -4,11 +4,13 @@ import { action, computed } from "@ember/object";
 export default Component.extend({
   tokenSeparator: "|",
 
-  settingValue: computed("value", function () {
+  @computed("value")
+  get settingValue() {
     return this.value.toString().split(this.tokenSeparator).filter(Boolean);
-  }),
+  },
 
-  settingChoices: computed("setting.choices.[]", "settingValue", function () {
+  @computed("setting.choices.[]", "settingValue")
+  get settingChoices() {
     let choices = this.setting.choices;
 
     if (this.settingValue) {
@@ -22,7 +24,7 @@ export default Component.extend({
     }
 
     return choices;
-  }),
+  },
 
   @action
   onChangeListSetting(value) {
