@@ -15,14 +15,13 @@ import { action } from "@ember/object";
 
 const controllerOpts = {
   discovery: controller(),
-  discoveryTopics: controller("discovery/topics"),
   router: service(),
 
   period: null,
   canCreateTopicOnCategory: null,
 
   canStar: alias("currentUser.id"),
-  showTopicPostBadges: not("discoveryTopics.new"),
+  showTopicPostBadges: not("new"),
   redirectedReason: alias("currentUser.redirected_to_top.reason"),
 
   expandGloballyPinned: false,
