@@ -42,6 +42,10 @@ export default class MediaOptimizationWorkerService extends Service {
       this.siteSettings
         .composer_media_optimization_image_bytes_optimization_threshold
     ) {
+      this.logIfDebug(
+        `The file ${file.name} was less than the image optimization bytes threshold (${this.siteSettings.composer_media_optimization_image_bytes_optimization_threshold} bytes), skipping.`,
+        file
+      );
       return Promise.resolve();
     }
     await this.ensureAvailableWorker();
@@ -185,10 +189,10 @@ export default class MediaOptimizationWorkerService extends Service {
     this.installPromise = null;
   }
 
-  logIfDebug(message) {
+  logIfDebug(...messages) {
     if (this.siteSettings.composer_media_optimization_debug_mode) {
       // eslint-disable-next-line no-console
-      console.log(message);
+      console.log(...messages);
     }
   }
 }
