@@ -111,9 +111,6 @@ def dependencies
       source: 'moment-timezone/builds/moment-timezone-with-data-10-year-range.js',
       destination: 'moment-timezone-with-data.js'
     }, {
-      source: 'lodash.js',
-      destination: 'lodash.js'
-    }, {
       source: '@discourse/moment-timezone-names-translations/locales/.',
       destination: 'moment-timezone-names-locale'
     }, {
@@ -314,12 +311,6 @@ task 'javascript:update' => 'clean_up' do
       addtl_files.each do |file|
         FileUtils.cp_r("#{ace_root}#{file}.js", dest_path)
       end
-    end
-
-    # lodash.js needs building
-    if src.include? "lodash.js"
-      puts "Building custom lodash.js build"
-      system('yarn run lodash include="escapeRegExp,each,filter,map,range,first,isEmpty,chain,extend,every,omit,merge,union,sortBy,uniq,intersection,reject,compact,reduce,debounce,throttle,values,pick,keys,flatten,min,max,isArray,delay,isString,isEqual,without,invoke,clone,findIndex,find,groupBy" minus="template" -d -o "node_modules/lodash.js"')
     end
 
     # we need a custom build of uppy because we cannot import

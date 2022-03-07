@@ -22,6 +22,7 @@ class ApiKeyScope < ActiveRecord::Base
         },
         topics: {
           write: { actions: %w[posts#create], params: %i[topic_id] },
+          update: { actions: %w[topics#update], params: %i[topic_id] },
           read: {
             actions: %w[topics#show topics#feed topics#posts],
             params: %i[topic_id], aliases: { topic_id: :id }
@@ -34,6 +35,10 @@ class ApiKeyScope < ActiveRecord::Base
         },
         posts: {
           edit: { actions: %w[posts#update], params: %i[id] }
+        },
+        categories: {
+          list: { actions: %w[categories#index] },
+          show: { actions: %w[categories#show], params: %i[id] }
         },
         uploads: {
           create: {

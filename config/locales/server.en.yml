@@ -4088,6 +4088,7 @@ en:
     external_upload_not_found: "The upload was not found in the external store. %{additional_detail}"
     checksum_mismatch_failure: "The checksum of the file you uploaded does not match. The file contents may have changed on upload. Please try again."
     cannot_promote_failure: "The upload cannot be completed, it may have already completed or previously failed."
+    size_zero_failure: "Sorry, it looks like something has gone wrong, the file you are trying to upload is 0 bytes. Please try again."
     attachments:
       too_large: "Sorry, the file you are trying to upload is too big (maximum size is %{max_size_kb}KB)."
       too_large_humanized: "Sorry, the file you are trying to upload is too big (maximum size is %{max_size})."
