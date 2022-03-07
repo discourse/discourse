@@ -16,7 +16,10 @@ module PluginGem
       command  = "gem install #{name} -v #{version} -i #{gems_path} --no-document --ignore-dependencies --no-user-install"
       command += " --source #{opts[:source]}" if opts[:source]
       puts command
-      puts `#{command}`
+
+      Bundler.with_unbundled_env do
+        puts `#{command}`
+      end
     end
 
     if File.exist? spec_file
