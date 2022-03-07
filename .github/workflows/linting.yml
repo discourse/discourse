@@ -86,6 +86,7 @@ jobs:
         if: ${{ always() }}
         run: |
           yarn ember-template-lint \
+            --no-error-on-unmatched-pattern \
             app/assets/javascripts \
             plugins/**/assets/javascripts
 
