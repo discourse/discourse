@@ -825,6 +825,22 @@ describe UploadsController do
         expect(response.body).to include(I18n.t("upload.attachments.too_large_humanized", max_size: "1 MB"))
       end
 
+      it 'returns a sensible error if the file size is 0 bytes' do
+        SiteSetting.authorized_extensions = "*"
+        stub_create_multipart_request
+
+        post "/uploads/create-multipart.json", **{
+          params: {
+            file_name: "test.zip",
+            file_size: 0,
+            upload_type: "composer",
+          }
+        }
+
+        expect(response.status).to eq(422)
+        expect(response.body).to include(I18n.t("upload.size_zero_failure"))
+      end
+
       def stub_create_multipart_request
         FileStore::S3Store.any_instance.stubs(:temporary_upload_path).returns(
           "uploads/default/#{test_bucket_prefix}/temp/28fccf8259bbe75b873a2bd2564b778c/test.png"
