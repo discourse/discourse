@@ -274,13 +274,12 @@ select {
   border: 1px solid var(--primary-low);
 }
 
-table {
-  th {
-    font-weight: normal;
-    color: var(--primary-medium);
-    text-align: left;
-    padding: 0.5em;
-  }
+table th,
+.topic-list .topic-list-header {
+  font-weight: normal;
+  color: var(--primary-medium);
+  text-align: left;
+  padding: 0.5em;
 }
 
 // Common Classes
