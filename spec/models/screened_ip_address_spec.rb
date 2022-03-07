@@ -342,18 +342,6 @@ describe ScreenedIpAddress do
       expect { ScreenedIpAddress.roll_up }.to change { ScreenedIpAddress.count }.by(0)
       expect(ScreenedIpAddress.pluck(:ip_address)).to include("1.1.1.0/24")
       expect(ScreenedIpAddress.pluck(:ip_address)).not_to include("1.1.1.1", "1.1.1.2", "1.1.1.3")
-
-      Fabricate(:screened_ip_address, ip_address: "1.1.2.0/24")
-      Fabricate(:screened_ip_address, ip_address: "1.1.3.0/24")
-      # 1.1.1.0/24, 1.1.2.0/24, 1.1.3.0/24 sum up to 9 IPs
-      # at least 10 are needed for roll up to /22, this will not work
-      expect { ScreenedIpAddress.roll_up }.to change { ScreenedIpAddress.count }.by(0)
-
-      # now there are 10
-      Fabricate(:screened_ip_address, ip_address: "1.1.0.1/24")
-      expect { ScreenedIpAddress.roll_up }.to change { ScreenedIpAddress.count }.by(-3)
-      expect(ScreenedIpAddress.pluck(:ip_address)).to include("1.1.0.0/22")
-      expect(ScreenedIpAddress.pluck(:ip_address)).not_to include("1.1.1.0/24", "1.1.2.0/24", "1.1.3.0/24")
     end
 
     it 'rolls up IPv6 addresses' do
