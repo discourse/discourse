@@ -11,7 +11,10 @@ export default Component.extend({
       this.items.removeObject(item);
       User.findByUsername(item).then((user) => {
         user
-          .updateNotificationLevel("normal", null, this.model)
+          .updateNotificationLevel({
+            level: "normal",
+            actingUser: this.model,
+          })
           .catch(popupAjaxError)
           .finally(() => this.set("saved", true));
       });

@@ -780,26 +780,25 @@ const User = RestModel.extend({
     }
   },
 
-  updateNotificationLevel(level, expiringAt, sourceUser = null) {
-    const currentUser = User.current();
-    if (!sourceUser) {
-      sourceUser = currentUser;
+  updateNotificationLevel({ level, expiringAt = null, actingUser = null }) {
+    if (!actingUser) {
+      actingUser = User.current();
     }
     return ajax(`${userPath(this.username)}/notification_level.json`, {
       type: "PUT",
       data: {
         notification_level: level,
         expiring_at: expiringAt,
-        source_user_id: sourceUser.id,
+        acting_user_id: actingUser.id,
       },
     }).then(() => {
-      if (!sourceUser.ignored_users) {
-        sourceUser.ignored_users = [];
+      if (!actingUser.ignored_users) {
+        actingUser.ignored_users = [];
       }
       if (level === "normal" || level === "mute") {
-        sourceUser.ignored_users.removeObject(this.username);
+        actingUser.ignored_users.removeObject(this.username);
       } else if (level === "ignore") {
-        sourceUser.ignored_users.addObject(this.username);
+        actingUser.ignored_users.addObject(this.username);
       }
     });
   },

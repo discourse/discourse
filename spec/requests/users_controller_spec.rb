@@ -2939,7 +2939,7 @@ describe UsersController do
           sign_in(Fabricate(:user, admin: true))
           put "/u/#{another_user.username}/notification_level.json", params: {
             notification_level: "ignore",
-            source_user_id: user.id,
+            acting_user_id: user.id,
             expiring_at: 3.days.from_now
           }
           expect(response.status).to eq(200)
@@ -2948,14 +2948,14 @@ describe UsersController do
 
         it "does not allow a regular user to change the ignore status for anyone but themself" do
           ignored_user.destroy!
-          source_user = Fabricate(:user)
+          acting_user = Fabricate(:user)
           put "/u/#{another_user.username}/notification_level.json", params: {
             notification_level: "ignore",
-            source_user_id: source_user.id,
+            acting_user_id: acting_user.id,
             expiring_at: 3.days.from_now
           }
           expect(response.status).to eq(422)
-          expect(IgnoredUser.find_by(user_id: source_user.id, ignored_user_id: another_user.id)).to eq(nil)
+          expect(IgnoredUser.find_by(user_id: acting_user.id, ignored_user_id: another_user.id)).to eq(nil)
 
           put "/u/#{another_user.username}/notification_level.json", params: {
             notification_level: "ignore",
