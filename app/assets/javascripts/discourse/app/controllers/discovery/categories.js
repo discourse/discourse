@@ -11,6 +11,11 @@ const subcategoryStyleComponentNames = {
   boxes_with_featured_topics: "categories_boxes_with_topics",
 };
 
+const mobileCompatibleViews = [
+  "categories_with_featured_topics",
+  "subcategories_with_featured_topics",
+];
+
 export default DiscoveryController.extend({
   discovery: controller(),
 
@@ -21,9 +26,11 @@ export default DiscoveryController.extend({
 
   @discourseComputed("model.parentCategory")
   categoryPageStyle(parentCategory) {
-    let style = this.site.mobileView
-      ? "categories_with_featured_topics"
-      : this.siteSettings.desktop_category_page_style;
+    let style = this.siteSettings.desktop_category_page_style;
+
+    if (this.site.mobileView && !mobileCompatibleViews.includes(style)) {
+      style = mobileCompatibleViews[0];
+    }
 
     if (parentCategory) {
       style =
