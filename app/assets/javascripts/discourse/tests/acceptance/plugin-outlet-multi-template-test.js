@@ -15,12 +15,16 @@ const GOODBYE =
 acceptance("Plugin Outlet - Multi Template", function (needs) {
   needs.hooks.beforeEach(() => {
     clearCache();
+    // eslint-disable-next-line no-undef
     Ember.TEMPLATES[HELLO] = hbs`<span class='hello-span'>Hello</span>`;
+    // eslint-disable-next-line no-undef
     Ember.TEMPLATES[GOODBYE] = hbs`<span class='bye-span'>Goodbye</span>`;
   });
 
   needs.hooks.afterEach(() => {
+    // eslint-disable-next-line no-undef
     delete Ember.TEMPLATES[HELLO];
+    // eslint-disable-next-line no-undef
     delete Ember.TEMPLATES[GOODBYE];
     clearCache();
   });

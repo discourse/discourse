@@ -20,6 +20,7 @@ define("ember-qunit", () => {
 define("htmlbars-inline-precompile", () => {
   return {
     default: function (str) {
+      // eslint-disable-next-line no-undef
       return Ember.HTMLBars.compile(str[0]);
     },
   };

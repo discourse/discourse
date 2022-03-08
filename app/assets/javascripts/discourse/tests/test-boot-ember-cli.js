@@ -18,6 +18,7 @@ document.addEventListener("discourse-booted", () => {
   let setupTests = require("discourse/tests/setup-tests").default;
   const skippingCore =
     new URLSearchParams(window.location.search).get("qunit_skip_core") === "1";
+  // eslint-disable-next-line no-undef
   Ember.ENV.LOG_STACKTRACE_ON_DEPRECATION = false;
 
   document.body.insertAdjacentHTML(

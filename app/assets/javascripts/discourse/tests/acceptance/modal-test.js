@@ -53,6 +53,7 @@ acceptance("Modal", function (needs) {
     await triggerKeyEvent("#main-outlet", "keydown", 27);
     assert.ok(!exists(".d-modal:visible"), "ESC should close the modal");
 
+    // eslint-disable-next-line no-undef
     Ember.TEMPLATES[
       "modal/not-dismissable"
     ] = hbs`{{#d-modal-body title="" class="" dismissable=false}}test{{/d-modal-body}}`;
@@ -77,6 +78,7 @@ acceptance("Modal", function (needs) {
   });
 
   test("rawTitle in modal panels", async function (assert) {
+    // eslint-disable-next-line no-undef
     Ember.TEMPLATES["modal/test-raw-title-panels"] = hbs``;
     const panels = [
       { id: "test1", rawTitle: "Test 1" },
@@ -95,7 +97,9 @@ acceptance("Modal", function (needs) {
   });
 
   test("modal title", async function (assert) {
+    // eslint-disable-next-line no-undef
     Ember.TEMPLATES["modal/test-title"] = hbs``;
+    // eslint-disable-next-line no-undef
     Ember.TEMPLATES[
       "modal/test-title-with-body"
     ] = hbs`{{#d-modal-body}}test{{/d-modal-body}}`;

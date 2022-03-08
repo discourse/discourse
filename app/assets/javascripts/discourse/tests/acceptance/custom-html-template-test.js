@@ -5,10 +5,12 @@ import { visit } from "@ember/test-helpers";
 
 acceptance("CustomHTML template", function (needs) {
   needs.hooks.beforeEach(() => {
+    // eslint-disable-next-line no-undef
     Ember.TEMPLATES["top"] = hbs`<span class='top-span'>TOP</span>`;
   });
 
   needs.hooks.afterEach(() => {
+    // eslint-disable-next-line no-undef
     delete Ember.TEMPLATES["top"];
   });
 
