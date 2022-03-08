@@ -80,7 +80,7 @@
           </tr>
         </tbody>
       </table>
-      <table class="with-dir" align="center" style="border-spacing:0;background:<%= @bg_lighter %>;margin:0;padding:0;text-align:center;vertical-align:top;width:100%">
+      <table class="with-dir" align="center" style="border-spacing:0;background:<%= @bg_lighter -%>;margin:0;padding:0;text-align:center;vertical-align:top;width:100%">
         <tbody>
           <tr>
             <td class="digest-popular-topic-wrapper with-dir" style="-moz-hyphens:auto;-webkit-hyphens:auto;border-collapse:collapse!important;color:#0a0a0a;hyphens:auto;line-height:1.3;margin:0;padding:0;vertical-align:top;word-wrap:normal">
@@ -145,7 +145,7 @@
 </table>
 
 <%- if t.first_post.present? && !t.first_post.user_deleted %>
-<table class="digest-topic-body with-dir" style="border-bottom:1px solid #f3f3f3;mso-border-bottom-alt:none;padding:0;vertical-align:top;width:100%;">
+<table class="digest-topic-body with-dir" style="border-bottom:1px solid <%= @bg_lighter -%>;mso-border-bottom-alt:none;padding:0;vertical-align:top;width:100%;">
   <tbody>
     <tr>
       <td class="post-excerpt" style="color:#0a0a0a;font-size:14px;padding:0 16px 0 16px;width:100%;font-weight:normal;mso-padding-alt: 16px;">
@@ -184,8 +184,8 @@
     </tr>
   </tbody>
 </table>
-<div style="background-color:<%= @bg_lighter %>;">
-  <table class="spacer with-dir" style="padding:0;width:100%;background-color:<%= @bg_lighter %>">
+<div style="background-color:<%= @bg_light -%>;">
+  <table class="spacer with-dir" style="padding:0;width:100%;background-color:<%= @bg_light -%>">
     <tbody><tr><td height="20px" style="border-collapse:collapse!important;line-height:20px;margin:0;mso-line-height-rule:exactly;padding:0;">&#xA0;</td></tr></tbody>
   </table>
 </div>
@@ -219,11 +219,11 @@
 
 <% if @popular_posts.present? %>
 
-  <center class="header-popular-posts" style="color:#0a0a0a;background:<%= @bg_light %>;font-size:22px;font-weight:400;padding: 20px 0;font-family:Arial,sans-serif;">
+  <center class="header-popular-posts" style="color:#0a0a0a;background:<%= @bg_light -%>;font-size:22px;font-weight:400;padding: 20px 0;font-family:Arial,sans-serif;">
   <%=t 'user_notifications.digest.popular_posts' %>
 </center>
 
-<table class="body with-dir" style="width:100%;background:#<%= @bg_light %>;border-spacing:0;border-collapse:collapse!important;font-family:Arial,sans-serif;font-size:14px;font-weight:200;line-height:1.3;padding:0;vertical-align:top;">
+<table class="body with-dir" style="width:100%;background:#<%= @bg_light -%>;border-spacing:0;border-collapse:collapse!important;font-family:Arial,sans-serif;font-size:14px;font-weight:200;line-height:1.3;padding:0;vertical-align:top;">
   <tr>
     <td class="side-spacer" style="width:5%;padding:0;">&nbsp;</td>
     <td class="with-dir" align="center" valign="top" style="width:90%;border-collapse:collapse!important;line-height:1.3;margin:0;padding:0;vertical-align:top;">
@@ -231,7 +231,7 @@
 <% @popular_posts.each do |post| %>
 
 <!--   Beginning of Popular Post   -->
-<table class="popular-post-excerpt with-dir" style="width:100%;background:<%= @bg_lighter %>;border-spacing:0;padding:0;vertical-align:top;">
+<table class="popular-post-excerpt with-dir" style="width:100%;background:<%= @bg_lighter -%>;border-spacing:0;padding:0;vertical-align:top;">
   <tbody>
     <tr>
       <td class="post-excerpt with-dir" style="color:#0a0a0a;font-size:14px;font-weight:normal;padding:16px;width:100%;">
@@ -241,7 +241,7 @@
   </tbody>
 </table>
 
-<table class="popular-post-spacer with-dir" style="border-spacing:0;background-color:#f3f3f3;padding:0;vertical-align:top;width:100%">
+<table class="popular-post-spacer with-dir" style="border-spacing:0;background-color:<%= @bg_light -%>;padding:0;vertical-align:top;width:100%">
   <tbody>
     <tr>
       <td style="border-spacing:0;padding:0;color:#0a0a0a;line-height:1.3;padding:<%= rtl? ? '0 65px 0 0' : '0 0 0 65px' %>;">
@@ -251,7 +251,7 @@
   </tbody>
 </table>
 
-<table class="popular-post-meta with-dir" style="background-color:#f3f3f3;padding:0;position:relative;vertical-align:top;width:100%">
+<table class="popular-post-meta with-dir" style="background-color:<%= @bg_light -%>;padding:0;position:relative;vertical-align:top;width:100%">
   <tbody>
     <tr>
       <td style="padding:0 8px 8px 8px;width:50px;vertical-align:top;">
@@ -277,8 +277,8 @@
   </tbody>
 </table>
 
-<div style="background-color:#f3f3f3">
-  <table class="spacer with-dir" style="padding:0;vertical-align:top;width:100%;background-color:#f3f3f3">
+<div style="background-color:<%= @bg_light -%>">
+  <table class="spacer with-dir" style="padding:0;vertical-align:top;width:100%;background-color:<%= @bg_light -%>">
     <tbody><tr><td height="40" style="-moz-hyphens:auto;-webkit-hyphens:auto;border-collapse:collapse!important;color:#0a0a0a;font-size:40px;font-weight:400;hyphens:auto;line-height:40px;margin:0;mso-line-height-rule:exactly;padding:0;vertical-align:top;word-wrap:normal">&#xA0;</td></tr></tbody>
   </table>
 </div>
@@ -297,9 +297,9 @@
 <%= digest_custom_html("above_popular_topics") %>
 
 <% if @other_new_for_you.present? %>
-<center class="digest-new-header" style="color:#0a0a0a;background:#f3f3f3;font-size:22px;font-weight:400;padding-bottom: 8px;font-family:Arial,sans-serif;mso-line-height-rule:exactly;line-height:36px;"><%=t 'user_notifications.digest.more_new' %></center>
+<center class="digest-new-header" style="color:#0a0a0a;background:<%= @bg_light -%>;font-size:22px;font-weight:400;padding-bottom: 8px;font-family:Arial,sans-serif;mso-line-height-rule:exactly;line-height:36px;"><%=t 'user_notifications.digest.more_new' %></center>
 
-<table class="digest-new-topics body with-dir" style="width:100%;background:#f3f3f3;border-spacing:0;border-collapse:collapse!important;font-family:Arial,sans-serif;font-size:14px;font-weight:200;line-height:1.3;padding:0;vertical-align:top;">
+<table class="digest-new-topics body with-dir" style="width:100%;background:<%= @bg_light -%>;border-spacing:0;border-collapse:collapse!important;font-family:Arial,sans-serif;font-size:14px;font-weight:200;line-height:1.3;padding:0;vertical-align:top;">
   <tr>
     <td class="side-spacer" style="width:5%;padding:0;">&nbsp;</td>
     <td align="center" valign="top" style="width:90%;border-collapse:collapse!important;margin:0;padding:0;">

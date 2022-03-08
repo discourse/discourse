@@ -725,7 +725,7 @@ class UserNotifications < ActionMailer::Base
     @markdown_linker = MarkdownLinker.new(@base_url)
     @unsubscribe_key = UnsubscribeKey.create_key_for(@user, "digest")
     @disable_email_custom_styles = !SiteSetting.apply_custom_styles_to_digest
-    
+
     @bg_lighter = "#fefefe"
     @bg_light = "#f3f3f3"
   end
