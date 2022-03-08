@@ -1931,6 +1931,12 @@ describe PostsController do
       expect(response.status).to eq(200)
       expect(response.body).to eq("123456789")
     end
+
+    it "renders a 404 page" do
+      get "/posts/0/raw"
+      expect(response.status).to eq(404)
+      expect(response.body).to include(I18n.t("page_not_found.title"))
+    end
   end
 
   describe '#markdown_num' do
@@ -1967,6 +1973,12 @@ describe PostsController do
       post = Fabricate(:private_message_post)
       get "/p/#{post.id}.json"
       expect(response).to be_forbidden
+    end
+
+    it "renders a 404 page" do
+      get "/p/0"
+      expect(response.status).to eq(404)
+      expect(response.body).to include(I18n.t("page_not_found.title"))
     end
   end
 
