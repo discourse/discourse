@@ -327,7 +327,7 @@ en:
       list_permission_denied: "You do not have permission to view this user's bookmarks."
       no_user_bookmarks: "You have no bookmarked posts; bookmarks allow you to quickly refer to specific posts."
       auto_delete_preference:
-        label: "Automatically delete"
+        label: "After you are notified"
         never: "Keep bookmark"
         when_reminder_sent: "Delete bookmark"
         on_owner_reply: "Delete bookmark, once I reply"
