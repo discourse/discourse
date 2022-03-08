@@ -20,7 +20,7 @@ export default Controller.extend(ModalFunctionality, {
       this.set("loading", true);
       User.findByUsername(this.ignoredUsername).then((user) => {
         user
-          .updateNotificationLevel("ignore", this.ignoredUntil)
+          .updateNotificationLevel("ignore", this.ignoredUntil, this.model)
           .then(() => {
             this.onUserIgnored(this.ignoredUsername);
             this.send("closeModal");

@@ -1329,26 +1329,42 @@ class UsersController < ApplicationController
   end
 
   def notification_level
-    user = fetch_user_from_params
+    target_user = fetch_user_from_params
+    source_user = current_user
+
+    # the admin should be able to change notification levels
+    # on behalf of other users, so we cannot rely on current_user
+    # for this case
+    if params[:source_user_id].present? &&
+        params[:source_user_id].to_i != current_user.id
+      if current_user.staff?
+        source_user = User.find(params[:source_user_id])
+      else
+        @error_message = "error"
+        raise Discourse::InvalidAccess
+      end
+    end
 
     if params[:notification_level] == "ignore"
       @error_message = "ignore_error"
-      guardian.ensure_can_ignore_user!(user)
-      MutedUser.where(user: current_user, muted_user: user).delete_all
-      ignored_user = IgnoredUser.find_by(user: current_user, ignored_user: user)
+      guardian.ensure_can_ignore_user!(target_user)
+      MutedUser.where(user: source_user, muted_user: target_user).delete_all
+      ignored_user = IgnoredUser.find_by(user: source_user, ignored_user: target_user)
       if ignored_user.present?
         ignored_user.update(expiring_at: DateTime.parse(params[:expiring_at]))
       else
-        IgnoredUser.create!(user: current_user, ignored_user: user, expiring_at: Time.parse(params[:expiring_at]))
+        IgnoredUser.create!(user: source_user, ignored_user: target_user, expiring_at: Time.parse(params[:expiring_at]))
       end
+
     elsif params[:notification_level] == "mute"
       @error_message = "mute_error"
-      guardian.ensure_can_mute_user!(user)
-      IgnoredUser.where(user: current_user, ignored_user: user).delete_all
-      MutedUser.find_or_create_by!(user: current_user, muted_user: user)
+      guardian.ensure_can_mute_user!(target_user)
+      IgnoredUser.where(user: source_user, ignored_user: target_user).delete_all
+      MutedUser.find_or_create_by!(user: source_user, muted_user: target_user)
+
     elsif params[:notification_level] == "normal"
-      MutedUser.where(user: current_user, muted_user: user).delete_all
-      IgnoredUser.where(user: current_user, ignored_user: user).delete_all
+      MutedUser.where(user: source_user, muted_user: target_user).delete_all
+      IgnoredUser.where(user: source_user, ignored_user: target_user).delete_all
     end
 
     render json: success_json
