@@ -1,6 +1,7 @@
 import I18n from "I18n";
 import Mixin from "@ember/object/mixin";
 import { computed } from "@ember/object";
+import { readOnly } from "@ember/object/computed";
 import discourseComputed from "discourse-common/utils/decorators";
 import { isPresent } from "@ember/utils";
 
@@ -66,4 +67,6 @@ export default Mixin.create({
       return "admin.settings.none";
     }
   },
+
+  anyValue: readOnly("allow_any"),
 });
