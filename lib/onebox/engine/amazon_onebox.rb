@@ -124,7 +124,7 @@ module Onebox
         elsif !raw.css("#priceblock_ourprice").inner_text.empty?
           raw.css("#priceblock_ourprice").inner_text
         else
-          result = raw.css('#corePrice_feature_div .a-price .a-offscreen').inner_text
+          result = raw.css('#corePrice_feature_div .a-price .a-offscreen').first&.inner_text
           if result.blank?
             result = raw.css(".mediaMatrixListItem.a-active .a-color-price").inner_text
           end

@@ -98,6 +98,7 @@ let userOptionFields = [
   "timezone",
   "skip_new_user_tips",
   "default_calendar",
+  "bookmark_auto_delete_preference",
 ];
 
 export function addSaveableUserOptionField(fieldName) {

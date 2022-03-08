@@ -486,6 +486,17 @@ button {
     }
   }
 
+  .mfp-ready {
+    .mfp-content {
+      min-width: 300px;
+    }
+  }
+
+  .mfp-title,
+  .mfp-title .image-source-link {
+    display: inline-block;
+  }
+
   .mfp-image-holder {
     .mfp-content {
       max-width: 100%;

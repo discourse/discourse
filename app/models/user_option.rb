@@ -260,6 +260,7 @@ end
 #  color_scheme_id                  :integer
 #  default_calendar                 :integer          default("none_selected"), not null
 #  oldest_search_log_date           :datetime
+#  bookmark_auto_delete_preference  :integer          default(3), not null
 #
 # Indexes
 #
