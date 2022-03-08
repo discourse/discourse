@@ -116,6 +116,11 @@ module DiscourseAutomation
           'type' => ['string', 'integer', 'null']
         }
       },
+      'post' => {
+        'value' => {
+          'type' => ['string', 'integer', 'null']
+        }
+      },
       'message' => {
         'value' => {
           'type' => ['string', 'integer', 'null']
