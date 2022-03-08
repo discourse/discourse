@@ -16,6 +16,12 @@ shared_examples 'finding and showing post' do
     expect(response.status).to eq(200)
   end
 
+  it "returns 404 when post's topic is deleted" do
+    post.topic.destroy!
+    get url
+    expect(response.status).to eq(404)
+  end
+
   context "deleted post" do
     before do
       post.trash!(user)
