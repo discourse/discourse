@@ -14,6 +14,7 @@ import { none } from "@ember/object/computed";
 
 export const AUTO_DELETE_PREFERENCES = {
   NEVER: 0,
+  CLEAR_REMINDER: 3,
   WHEN_REMINDER_SENT: 1,
   ON_OWNER_REPLY: 2,
 };
@@ -127,6 +128,11 @@ const Bookmark = RestModel.extend({
       bookmarkReminderAt,
       currentUser.resolvedTimezone(currentUser)
     ).capitalize();
+  },
+
+  @discourseComputed("reminder_at")
+  reminderAtExpired(bookmarkReminderAt) {
+    return moment(bookmarkReminderAt) < moment();
   },
 
   @discourseComputed()

@@ -330,10 +330,11 @@ en:
       list_permission_denied: "You do not have permission to view this user's bookmarks."
       no_user_bookmarks: "You have no bookmarked posts; bookmarks allow you to quickly refer to specific posts."
       auto_delete_preference:
-        label: "Automatically delete"
-        never: "Never"
-        when_reminder_sent: "Once the reminder is sent"
-        on_owner_reply: "After I reply to this topic"
+        label: "After you are notified"
+        never: "Keep bookmark"
+        when_reminder_sent: "Delete bookmark"
+        on_owner_reply: "Delete bookmark, once I reply"
+        clear_reminder: "Keep bookmark and clear reminder"
       search_placeholder: "Search bookmarks by name, topic title, or post content"
       search: "Search"
       reminders:
@@ -3268,6 +3269,9 @@ en:
           edit_bookmark:
             name: "Edit bookmark"
             description: "Edit the bookmark name or change the reminder date and time"
+          clear_bookmark_reminder:
+            name: "Clear reminder"
+            description: "Clear the reminder date and time"
           pin_bookmark:
             name: "Pin bookmark"
             description: "Pin the bookmark. This will make it appear at the top of your bookmarks list."
