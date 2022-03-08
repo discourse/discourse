@@ -2605,12 +2605,6 @@ sv:
         restricted_groups:
           one: "Endast synligt för medlemmar i grupp: %{groupNames}"
           other: "Endast synligt för medlemmar i grupperna: %{groupNames}"
-        notify_users:
-          title: "Avisera"
-          instructions: "Avisera följande användare om det här ämnet:"
-          success:
-            one: "Aviserade %{username} om det här ämnet."
-            other: "Aviserade alla användare om det här ämnet."
         invite_users: "Bjud in"
       print:
         title: "Skriv ut"

@@ -2448,12 +2448,6 @@ nb_NO:
         help: "del en lenke til dette emnet"
         instructions: "Del en lenke til dette emnet:"
         copied: "Emnelink kopiert."
-        notify_users:
-          title: "Varsle"
-          instructions: "Varsle følgende brukere om dette emnet:"
-          success:
-            one: "Vellykket varsling av %{username} om dette emnet."
-            other: "Vellykket varsling av alle brukere om dette emnet."
         invite_users: "Inviter"
       print:
         title: "Skriv ut"

@@ -2510,12 +2510,6 @@ pt:
         help: "Partilhar uma ligação para este tópico"
         instructions: "Compartilhe um link para este tópico:"
         copied: "Link do tópico copiado."
-        notify_users:
-          title: "Notificar"
-          instructions: "Notifique os seguintes usuários sobre este tópico:"
-          success:
-            one: "%{username} notificado com sucesso sobre este tópico."
-            other: "Todos os usuários foram notificados sobre este tópico."
         invite_users: "Convidar"
       print:
         title: "Imprimir"

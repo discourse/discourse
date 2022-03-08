@@ -3430,6 +3430,7 @@ it:
     create_multipart_failure: "Errore nel creare il caricamento multipart nell'archivio esterno."
     abort_multipart_failure: "Errore nell’annullare il caricamento multipart nell'archivio esterno."
     complete_multipart_failure: "Errore nel completare il caricamento multipart nell'archivio esterno."
+    size_zero_failure: "Spiacenti, sembra che qualcosa sia andato storto, il file che stai tentando di caricare è di 0 byte. Per favore riprova."
     attachments:
       too_large: "Spiacenti, ma il file che stai cercando di caricare è troppo grande (la dimensione massima è %{max_size_kb}KB)."
       too_large_humanized: "Purtroppo il file che stai cercando di caricare è troppo grande (la dimensione massima consentita è %{max_size})."

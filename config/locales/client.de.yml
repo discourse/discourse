@@ -312,6 +312,8 @@ de:
         existing_reminder: "Du wirst %{at_date_time} an dieses Lesezeichen erinnert."
     copy_codeblock:
       copied: "Kopiert!"
+      copy: "Code in die Zwischenablage kopieren"
+      fullscreen: "zeige Code im Vollbildmodus"
     drafts:
       label: "Entwürfe"
       label_with_count: "Entwürfe (%{count})"
@@ -2606,12 +2608,6 @@ de:
         restricted_groups:
           one: "Nur für Mitglieder der Gruppe sichtbar: %{groupNames}"
           other: "Nur für Gruppenmitglieder sichtbar: %{groupNames}"
-        notify_users:
-          title: "Benachrichtige"
-          instructions: "Folgende Benutzer über dieses Thema benachrichtigen:"
-          success:
-            one: "%{username} erfolgreich zu diesem Thema benachrichtigt."
-            other: "Alle Benutzer wurden erfolgreich über dieses Thema informiert."
         invite_users: "Einladen"
       print:
         title: "Drucken"

@@ -2448,11 +2448,6 @@ ja:
         help: "このトピックのリンクを共有する"
         instructions: "このトピックへのリンクを共有します:"
         copied: "トピックのリンクをコピーしました。"
-        notify_users:
-          title: "通知"
-          instructions: "このトピックについて次のユーザーに通知します:"
-          success:
-            other: "このトピックについてすべてのユーザーに正常に通知しました。"
         invite_users: "招待"
       print:
         title: "印刷"

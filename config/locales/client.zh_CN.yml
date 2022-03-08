@@ -141,6 +141,7 @@ zh_CN:
     skip_to_main_content: "跳转到主要内容"
     wizard_required: "欢迎来到全新的 Discourse！让我们跟随<a href='%{url}' data-auto-route='true'>设置向导</a>开始吧 ✨"
     emails_are_disabled: "所有外发电子邮件已被管理员全局禁用。任何类型的电子邮件通知都不会发出。"
+    emails_are_disabled_non_staff: "非管理员用户无法向外发送电子邮件。"
     software_update_prompt:
       message: "我们已经更新此站点，请 <span>刷新页面</span>，否则可能会遇到意外行为。"
       dismiss: "关闭"
@@ -286,6 +287,8 @@ zh_CN:
         existing_reminder: "您为此书签设置的提醒将在%{at_date_time}发送"
     copy_codeblock:
       copied: "已复制！"
+      copy: "将代码复制到剪贴板"
+      fullscreen: "全屏显示代码"
     drafts:
       label: "草稿"
       label_with_count: "草稿 (%{count})"
@@ -2498,11 +2501,6 @@ zh_CN:
         copied: "话题链接已复制。"
         restricted_groups:
           other: "仅对 %{groupNames} 群组成员可见"
-        notify_users:
-          title: "通知"
-          instructions: "通知以下用户有关此话题的信息："
-          success:
-            other: "已成功通知所有用户有关此话题的信息。"
         invite_users: "邀请"
       print:
         title: "打印"
@@ -2708,6 +2706,7 @@ zh_CN:
         edit: "抱歉，编辑您的帖子时出错。请重试。"
         upload: "抱歉，上传该文件时出错。请重试。"
         file_too_large: "抱歉，该文件太大（最大大小为 %{max_size_kb}KB）。为什么不将您的大文件上传到云共享服务，然后粘贴链接呢？"
+        file_size_zero: "抱歉，好像出了点问题，您要上传的文件大小是 0 字节。请再试一次。"
         file_too_large_humanized: "抱歉，该文件太大（最大大小为 %{max_size}KB）。为什么不将您的大文件上传到云共享服务，然后粘贴链接呢？"
         too_many_uploads: "抱歉，一次只能上传一个文件。"
         too_many_dragged_and_dropped_files:
@@ -3724,6 +3723,9 @@ zh_CN:
               wordpress: WordPress wp-discourse 插件正常工作所必需。
             posts:
               edit: 编辑任意帖子或特定帖子。
+            categories:
+              list: 获取类别列表。
+              show: 通过 id 获取单个类别。
             uploads:
               create: 上传一个新文件或启动单个或多个部分直接上传至外部存储。
             users:

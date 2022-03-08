@@ -3308,6 +3308,8 @@ fa_IR:
           global: جهانی
           action: اقدام
           descriptions:
+            topics:
+              update: به‌روزرسانی موضوع. تغییر عنوان، دسته‌بندی، برچسب‌ها و غیره.
             badges:
               create: ایجاد نشان جدید
               update: به‌روزرسانی نشان

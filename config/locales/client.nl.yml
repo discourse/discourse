@@ -2503,12 +2503,6 @@ nl:
         help: "een koppeling naar dit topic delen"
         instructions: "Een koppeling naar dit topic delen:"
         copied: "Topiclink gekopieerd."
-        notify_users:
-          title: "Een melding sturen"
-          instructions: "De volgende gebruikers een melding sturen over dit topic."
-          success:
-            one: "%{username} is succesvol een melding gestuurd over dit topic."
-            other: "Alle gebruikers succesvol een melding gestuurd over dit topic."
         invite_users: "Uitnodigen"
       print:
         title: "Afdrukken"
