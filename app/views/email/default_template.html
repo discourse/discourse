@@ -10,32 +10,17 @@
       name="viewport"
       content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no, width=device-width"
     />
-    <meta name="color-scheme" content="light dark" />
-    <meta name="supported-color-schemes" content="light dark" />
-    <style type="text/css">
-      :root {
-        color-scheme: light dark;
-        supported-color-schemes: light dark;
-      }
-      @media (prefers-color-scheme: dark) {
-        body {
-          background-color: #222222 !important;
+
+    <!--[if dark_mode_active]>
+      <meta name="color-scheme" content="light dark" />
+      <meta name="supported-color-schemes" content="light dark" />
+      <style type="text/css">
+        :root {
+          color-scheme: light dark;
+          supported-color-schemes: light dark;
         }
-        :not(td *) > blockquote[style] {
-          background-color: #3c3c3c !important;
-          border-left: 5px solid #313131 !important;
-        }
-        :not(td *) > code {
-          background-color: #3c3c3c !important;
-        }
-        :not(td *) > p {
-          color: #dedede;
-        }
-        :not(td *) > p a {
-          color: #ffffff !important;
-        }
-      }
-    </style>
+      </style>
+    <![endif]-->
     <!-- prevent ios zooming + autoscaling -->
     <meta name="x-apple-disable-message-reformatting" />
     <title></title>

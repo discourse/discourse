@@ -719,12 +719,15 @@ class UserNotifications < ActionMailer::Base
     @date            = short_date(Time.now)
     @base_url        = Discourse.base_url
     @email_prefix    = SiteSetting.email_prefix.presence || SiteSetting.title
-    @header_color    = ColorScheme.hex_for_name('header_primary')
-    @header_bgcolor  = ColorScheme.hex_for_name('header_background')
-    @anchor_color    = ColorScheme.hex_for_name('tertiary')
+    @header_color    = ColorScheme.hex_for_name('header_primary', 1)
+    @header_bgcolor  = ColorScheme.hex_for_name('header_background', 1)
+    @anchor_color    = ColorScheme.hex_for_name('tertiary', 1)
     @markdown_linker = MarkdownLinker.new(@base_url)
     @unsubscribe_key = UnsubscribeKey.create_key_for(@user, "digest")
     @disable_email_custom_styles = !SiteSetting.apply_custom_styles_to_digest
+    
+    @bg_lighter = "#fefefe"
+    @bg_light = "#f3f3f3"
   end
 
   def self.summary_new_users_count_key(min_date_str)

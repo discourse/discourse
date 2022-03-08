@@ -22,6 +22,11 @@ module Email
       @opts = opts || {}
       @fragment = Nokogiri::HTML5.parse(@html)
       @custom_styles = nil
+
+      @dark_mode_active = SiteSetting.dark_mode_active
+      @link_color = SiteSetting.public_send("#{'dark_mode_' if @dark_mode_active}email_link_color")
+      @fg_color = SiteSetting.public_send("#{'dark_mode_' if @dark_mode_active}email_accent_fg_color")
+      @bg_color = SiteSetting.public_send("#{'dark_mode_' if @dark_mode_active}email_accent_bg_color")
     end
 
     def self.register_plugin_style(&block)
@@ -201,11 +206,11 @@ module Email
       style('blockquote > :last-child', 'margin-bottom: 0;')
       style('blockquote > p', 'padding: 0;')
 
-      style('.with-accent-colors', "background-color: #{SiteSetting.email_accent_bg_color}; color: #{SiteSetting.email_accent_fg_color};")
+      style('.with-accent-colors', "background-color: #{@bg_color}; color: #{@fg_color};")
       style('h4', 'color: #222;')
       style('h3', 'margin: 30px 0 10px;')
       style('hr', 'background-color: #ddd; height: 1px; border: 1px;')
-      style('a', "text-decoration: none; font-weight: bold; color: #{SiteSetting.email_link_color};")
+      style('a', "text-decoration: none; font-weight: bold; color: #{@link_color};")
       style('ul', 'margin: 0 0 0 10px; padding: 0 0 0 20px;')
       style('li', 'padding-bottom: 10px')
       style('div.summary-footer', 'color:#666; font-size:95%; text-align:center; padding-top:15px;')
@@ -215,13 +220,13 @@ module Email
       style('pre code', 'display: block; background-color: #f9f9f9; overflow: auto; padding: 5px;')
       style('pre.onebox code', 'white-space: normal;')
       style('pre code li', 'white-space: pre;')
-      style('.featured-topic a', "text-decoration: none; font-weight: bold; color: #{SiteSetting.email_link_color}; line-height:1.5em;")
-      style('.summary-email', "-moz-box-sizing:border-box;-ms-text-size-adjust:100%;-webkit-box-sizing:border-box;-webkit-text-size-adjust:100%;box-sizing:border-box;color:#0a0a0a;font-family:Arial,sans-serif;font-size:14px;font-weight:400;line-height:1.3;margin:0;min-width:100%;padding:0;width:100%;background-color:#f3f3f3")
+      style('.featured-topic a', "text-decoration: none; font-weight: bold; color: #{@link_color}; line-height:1.5em;")
+      style('.summary-email', "-moz-box-sizing:border-box;-ms-text-size-adjust:100%;-webkit-box-sizing:border-box;-webkit-text-size-adjust:100%;box-sizing:border-box;color:#0a0a0a;font-family:Arial,sans-serif;font-size:14px;font-weight:400;line-height:1.3;margin:0;min-width:100%;padding:0;width:100%;")
 
       style('.previous-discussion', 'font-size: 17px; color: #444; margin-bottom:10px;')
       style('.notification-date', "text-align:right;color:#999999;padding-right:5px;font-family:'lucida grande',tahoma,verdana,arial,sans-serif;font-size:11px")
       style('.username', "font-size:13px;font-family:'lucida grande',tahoma,verdana,arial,sans-serif;text-decoration:none;font-weight:bold")
-      style('.username-link', "color:#{SiteSetting.email_link_color};")
+      style('.username-link', "color:#{@link_color};")
       style('.username-title', "color:#777;margin-left:5px;")
       style('.user-title', "font-size:13px;font-family:'lucida grande',tahoma,verdana,arial,sans-serif;text-decoration:none;margin-left:5px;color: #999;")
       style('.post-wrapper', "margin-bottom:25px;")
@@ -233,11 +238,12 @@ module Email
       style('.whisper div.body', 'font-style: italic; color: #9c9c9c;')
       style('.lightbox-wrapper .meta', 'display: none')
       style('div.undecorated-link-footer a', "font-weight: normal;")
-      style('.mso-accent-link', "mso-border-alt: 6px solid #{SiteSetting.email_accent_bg_color}; background-color: #{SiteSetting.email_accent_bg_color};")
+      style('.mso-accent-link', "mso-border-alt: 6px solid #{@bg_color}; background-color: #{@bg_color};")
       style('.reply-above-line', "font-size: 10px;font-family:'lucida grande',tahoma,verdana,arial,sans-serif;color: #b5b5b5;padding: 5px 0px 20px;border-top: 1px dotted #ddd;")
 
       onebox_styles
       plugin_styles
+      dark_mode_styles if @dark_mode_active
 
       style('.post-excerpt img', "max-width: 50%; max-height: #{MAX_IMAGE_DIMENSION}px;")
 
@@ -333,6 +339,10 @@ module Email
 
     private
 
+    def dark_mode_styles
+      # style('html', 'background: unset;')
+    end
+
     def replace_relative_urls
       forum_uri = URI(Discourse.base_url)
       host = forum_uri.host
@@ -362,7 +372,7 @@ module Email
       PrettyText.strip_secure_media(@fragment)
 
       style('div.secure-media-notice', 'border: 5px solid #e9e9e9; padding: 5px; display: inline-block;')
-      style('div.secure-media-notice a', "color: #{SiteSetting.email_link_color}")
+      style('div.secure-media-notice a', "color: #{@link_color}")
     end
 
     def correct_first_body_margin
@@ -387,8 +397,7 @@ module Email
         element.css('a').each do |inner|
           # we want the first footer link to be specially highlighted as IMPORTANT
           if footernum == (0) && linknum == (0)
-            bg_color = SiteSetting.email_accent_bg_color
-            inner['style'] = "background-color: #{bg_color}; color: #{SiteSetting.email_accent_fg_color}; border-top: 4px solid #{bg_color}; border-right: 6px solid #{bg_color}; border-bottom: 4px solid #{bg_color}; border-left: 6px solid #{bg_color}; display: inline-block; font-weight: bold;"
+            inner['style'] = "background-color: #{@bg_color}; color: #{@fg_color}; border-top: 4px solid #{@bg_color}; border-right: 6px solid #{@bg_color}; border-bottom: 4px solid #{@bg_color}; border-left: 6px solid #{@bg_color}; display: inline-block; font-weight: bold;"
           end
           return
         end

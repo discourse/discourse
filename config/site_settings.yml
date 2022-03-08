@@ -283,6 +283,9 @@ basic:
     type: enum
     enum: "ColorSchemeSetting"
     client: true
+  dark_mode_active:
+    default: true
+    hidden: true    
   relative_date_duration:
     client: true
     default: 30
@@ -1092,6 +1095,18 @@ email:
   email_link_color:
     type: color
     default: "#006699"
+    validator: "CssColorValidator"
+  dark_mode_email_accent_bg_color:
+    type: color
+    default: "#c14924"
+    validator: "CssColorValidator"
+  dark_mode_email_accent_fg_color:
+    type: color
+    default: "#222222"
+    validator: "CssColorValidator"
+  dark_mode_email_link_color:
+    type: color
+    default: "#0f82af"
     validator: "CssColorValidator"
   show_topic_featured_link_in_digest: false
   email_custom_headers: "Auto-Submitted: auto-generated"
