@@ -1,5 +1,4 @@
 import DiscourseURL from "discourse/lib/url";
-import Handlebars from "handlebars";
 import { isDevelopment } from "discourse-common/config/environment";
 
 //  Use the message bus for live reloading of components for faster development.
