@@ -20,11 +20,19 @@
       @media (prefers-color-scheme: dark) {
         body {
           background-color: #222222 !important;
-          color: #dddddd !important;
         }
-        blockquote[style] {
+        :not(td *) > blockquote[style] {
           background-color: #3c3c3c !important;
           border-left: 5px solid #313131 !important;
+        }
+        :not(td *) > code {
+          background-color: #3c3c3c !important;
+        }
+        :not(td *) > p {
+          color: #dedede;
+        }
+        :not(td *) > p a {
+          color: #ffffff !important;
         }
       }
     </style>
