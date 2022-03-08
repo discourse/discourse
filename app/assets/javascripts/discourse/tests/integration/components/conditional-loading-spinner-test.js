@@ -33,6 +33,7 @@ discourseModule(
       `,
 
       async test(assert) {
+        assert.notOk(exists(".loading-container"));
         assert.deepEqual(query("b").innerText, "test");
       },
     });
