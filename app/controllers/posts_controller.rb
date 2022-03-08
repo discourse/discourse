@@ -869,7 +869,7 @@ class PostsController < ApplicationController
     post = finder.with_deleted.first
     raise Discourse::NotFound unless post
 
-    post.topic = Topic.with_deleted.find(post.topic_id)
+    post.topic = Topic.with_deleted.find_by(id: post.topic_id)
 
     if !post.topic ||
        (
