@@ -170,6 +170,28 @@ describe PostsController do
     end
   end
 
+  describe '#reply_ids' do
+    include_examples 'finding and showing post' do
+      let(:url) { "/posts/#{post.id}/reply-ids.json" }
+    end
+
+    it "returns ids of post's replies" do
+      post = Fabricate(:post)
+      reply1 = Fabricate(:post, topic: post.topic, reply_to_post_number: post.post_number)
+      reply2 = Fabricate(:post, topic: post.topic, reply_to_post_number: post.post_number)
+      PostReply.create(post_id: post.id, reply_post_id: reply1.id)
+      PostReply.create(post_id: post.id, reply_post_id: reply2.id)
+
+      get "/posts/#{post.id}/reply-ids.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body).to eq([
+        { "id" => reply1.id, "level" => 1 },
+        { "id" => reply2.id, "level" => 1 },
+      ])
+    end
+  end
+
   describe '#replies' do
     include_examples 'finding and showing post' do
       let(:url) { "/posts/#{post.id}/replies.json" }

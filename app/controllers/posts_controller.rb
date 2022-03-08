@@ -9,7 +9,7 @@ class PostsController < ApplicationController
     :by_date,
     :short_link,
     :reply_history,
-    :replyIids,
+    :reply_ids,
     :revisions,
     :latest_revision,
     :expand_embed,
