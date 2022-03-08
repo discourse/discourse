@@ -281,7 +281,7 @@ table th,
   text-align: left;
 }
 
-table th {
+table th:not(.topic-list-header) {
   padding: 0.5em;
 }
 
