@@ -1,5 +1,7 @@
 {{#if condition}}
-  <div class="spinner {{size}}"></div>
+  <div class="loading-container {{containerClass}}">
+    <div class="spinner {{size}}"></div>
+  </div>
 {{else}}
   {{yield}}
 {{/if}}

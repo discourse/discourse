@@ -2,11 +2,9 @@ import Component from "@ember/component";
 import discourseComputed from "discourse-common/utils/decorators";
 
 export default Component.extend({
-  classNameBindings: [
-    ":loading-container",
-    "containerClass",
-    "condition:visible",
-  ],
+  tagName: "",
+  size: null,
+  condition: null,
 
   @discourseComputed("size")
   containerClass(size) {
