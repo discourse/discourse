@@ -115,7 +115,7 @@ class UploadCreator
         # return the previous upload if any
         if @upload
           add_metadata!
-          UserUpload.find_or_create_by!(user_id: user_id, upload_id: @upload.id) if user_id
+          UploadReference.find_or_create_by!(upload_id: @upload.id, target_type: 'User', target_id: user_id) if user_id
           return @upload
         end
       end
@@ -225,7 +225,7 @@ class UploadCreator
       end
 
       if @upload.errors.empty?
-        UserUpload.find_or_create_by!(user_id: user_id, upload_id: @upload.id) if user_id
+        UploadReference.find_or_create_by!(upload_id: @upload.id, target_type: 'User', target_id: user_id) if user_id
       end
 
       @upload
