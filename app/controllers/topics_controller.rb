@@ -922,6 +922,8 @@ class TopicsController < ApplicationController
     end
 
     discourse_expires_in 1.minute
+
+    response.headers['X-Robots-Tag'] = 'noindex, nofollow'
     render 'topics/show', formats: [:rss]
   end
 
