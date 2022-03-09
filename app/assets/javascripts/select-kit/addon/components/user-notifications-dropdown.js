@@ -49,10 +49,10 @@ export default DropdownSelectBox.extend({
   }),
 
   changeToNormal() {
-    this.updateNotificationLevel("normal").catch(popupAjaxError);
+    this.updateNotificationLevel({ level: "normal" }).catch(popupAjaxError);
   },
   changeToMuted() {
-    this.updateNotificationLevel("mute").catch(popupAjaxError);
+    this.updateNotificationLevel({ level: "mute" }).catch(popupAjaxError);
   },
   changeToIgnored() {
     showModal("ignore-duration", {
