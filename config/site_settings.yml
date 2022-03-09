@@ -70,6 +70,10 @@ branding:
     default: ""
     client: true
     type: upload
+  digest_logo_dark:
+    default: ""
+    client: true
+    type: upload
   mobile_logo:
     default: ""
     client: true
@@ -284,7 +288,7 @@ basic:
     enum: "ColorSchemeSetting"
     client: true
   dark_mode_active:
-    default: true
+    default: false
     hidden: true    
   relative_date_duration:
     client: true
@@ -1098,11 +1102,11 @@ email:
     validator: "CssColorValidator"
   dark_mode_email_accent_bg_color:
     type: color
-    default: "#c14924"
+    default: "#515151"
     validator: "CssColorValidator"
   dark_mode_email_accent_fg_color:
     type: color
-    default: "#222222"
+    default: "#fefefe"
     validator: "CssColorValidator"
   dark_mode_email_link_color:
     type: color

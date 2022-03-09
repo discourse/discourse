@@ -197,6 +197,7 @@ class SiteSetting < ActiveRecord::Base
     logo
     logo_small
     digest_logo
+    digest_logo_dark
     mobile_logo
     logo_dark
     logo_small_dark

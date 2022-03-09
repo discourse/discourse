@@ -30,7 +30,7 @@
 </table>
 <%- end %>
 
-<table class="body digest-content with-dir" style="width:100%;background:#f3f3f3;padding:0;border-spacing:0;font-family:Arial,sans-serif;font-size:14px;font-weight:200;line-height:1.3;vertical-align:top;">
+<table class="body digest-content with-dir" style="width:100%;background:<%= @bg_light -%>;padding:0;border-spacing:0;font-family:Arial,sans-serif;font-size:14px;font-weight:200;line-height:1.3;vertical-align:top;">
   <tr>
     <td class="side-spacer" style="width:5%;vertical-align:top;padding:0;">
       <div class="with-accent-colors">
@@ -47,7 +47,7 @@
       <table align="center" class="digest-content-header with-accent-colors with-dir" style="border-spacing:0;margin:0;padding:0;vertical-align:top;width:100%">
         <tbody>
           <tr>
-            <td style="border-collapse:collapse!important;color:#0a0a0a;line-height:1.3;margin:0;padding:0;vertical-align:top;word-wrap:normal">
+            <td style="border-collapse:collapse!important;color:<%= @text_color -%>;line-height:1.3;margin:0;padding:0;vertical-align:top;word-wrap:normal">
 
 <br/>
 <center class="header-since-last-visit with-accent-colors" style="font-size:22px;font-weight:400;mso-line-height-rule:exactly;line-height:36px;"><%=t 'user_notifications.digest.since_last_visit' %></center>
@@ -83,7 +83,7 @@
       <table class="with-dir" align="center" style="border-spacing:0;background:<%= @bg_lighter -%>;margin:0;padding:0;text-align:center;vertical-align:top;width:100%">
         <tbody>
           <tr>
-            <td class="digest-popular-topic-wrapper with-dir" style="-moz-hyphens:auto;-webkit-hyphens:auto;border-collapse:collapse!important;color:#0a0a0a;hyphens:auto;line-height:1.3;margin:0;padding:0;vertical-align:top;word-wrap:normal">
+            <td class="digest-popular-topic-wrapper with-dir" style="-moz-hyphens:auto;-webkit-hyphens:auto;border-collapse:collapse!important;color:<%= @text_color -%>;hyphens:auto;line-height:1.3;margin:0;padding:0;vertical-align:top;word-wrap:normal">
 
 <% @popular_topics.each_with_index do |t, i| %>
 <!--   Beginning of Popular Topic   -->
@@ -124,10 +124,10 @@
 <table class="with-dir" style="padding:0;position:relative;vertical-align:top;width:100%">
   <tbody>
     <tr>
-      <td class="digest-topic-op" style="color:#0a0a0a;line-height:1.3;margin:0 auto;padding:<%= rtl? ? '0 16px 0 0' : '0 0 0 16px' %>;width:50px;vertical-align:top;">
+      <td class="digest-topic-op" style="color:<%= @text_color -%>;line-height:1.3;margin:0 auto;padding:<%= rtl? ? '0 16px 0 0' : '0 0 0 16px' %>;width:50px;vertical-align:top;">
         <img src="<%= t.user.small_avatar_url -%>" style="border-radius:50%;clear:both;display:block;float:none;height:50px;width:50px;margin:0;max-width:100%;outline:0;text-align:center;text-decoration:none;" align="center" alt="<%= t.user.username -%>">
       </td>
-      <td style="color:#0a0a0a;padding:<%= rtl? ? '0 8px 0 16px' : '0 16px 0 8px' %>;vertical-align:top;">
+      <td style="color:<%= @text_color -%>;padding:<%= rtl? ? '0 8px 0 16px' : '0 16px 0 8px' %>;vertical-align:top;">
         <% if t.user %>
           <% if SiteSetting.enable_names? && t.user.name.present? && t.user.name.downcase != t.user.username.downcase %>
             <h6 class="digest-topic-username" style="color:inherit;line-height:1.3;margin:0;padding:0;font-weight: normal;font-size:16px;"><%= t.user.name -%></h6>
@@ -148,7 +148,7 @@
 <table class="digest-topic-body with-dir" style="border-bottom:1px solid <%= @bg_lighter -%>;mso-border-bottom-alt:none;padding:0;vertical-align:top;width:100%;">
   <tbody>
     <tr>
-      <td class="post-excerpt" style="color:#0a0a0a;font-size:14px;padding:0 16px 0 16px;width:100%;font-weight:normal;mso-padding-alt: 16px;">
+      <td class="post-excerpt" style="color:<%= @text_color -%>;font-size:14px;padding:0 16px 0 16px;width:100%;font-weight:normal;mso-padding-alt: 16px;">
         <%= @excerpts[t.first_post.id] %>
       </td>
     </tr>
@@ -219,11 +219,11 @@
 
 <% if @popular_posts.present? %>
 
-  <center class="header-popular-posts" style="color:#0a0a0a;background:<%= @bg_light -%>;font-size:22px;font-weight:400;padding: 20px 0;font-family:Arial,sans-serif;">
+  <center class="header-popular-posts" style="color:<%= @text_color -%>;background:<%= @bg_light -%>;font-size:22px;font-weight:400;padding: 20px 0;font-family:Arial,sans-serif;">
   <%=t 'user_notifications.digest.popular_posts' %>
 </center>
 
-<table class="body with-dir" style="width:100%;background:#<%= @bg_light -%>;border-spacing:0;border-collapse:collapse!important;font-family:Arial,sans-serif;font-size:14px;font-weight:200;line-height:1.3;padding:0;vertical-align:top;">
+<table class="body with-dir" style="width:100%;background:<%= @bg_light -%>;border-spacing:0;border-collapse:collapse!important;font-family:Arial,sans-serif;font-size:14px;font-weight:200;line-height:1.3;padding:0;vertical-align:top;">
   <tr>
     <td class="side-spacer" style="width:5%;padding:0;">&nbsp;</td>
     <td class="with-dir" align="center" valign="top" style="width:90%;border-collapse:collapse!important;line-height:1.3;margin:0;padding:0;vertical-align:top;">
@@ -234,7 +234,7 @@
 <table class="popular-post-excerpt with-dir" style="width:100%;background:<%= @bg_lighter -%>;border-spacing:0;padding:0;vertical-align:top;">
   <tbody>
     <tr>
-      <td class="post-excerpt with-dir" style="color:#0a0a0a;font-size:14px;font-weight:normal;padding:16px;width:100%;">
+      <td class="post-excerpt with-dir" style="color:<%= @text_color -%>;font-size:14px;font-weight:normal;padding:16px;width:100%;">
         <%= email_excerpt(post.cooked, post) %>
       </td>
     </tr>
@@ -244,8 +244,8 @@
 <table class="popular-post-spacer with-dir" style="border-spacing:0;background-color:<%= @bg_light -%>;padding:0;vertical-align:top;width:100%">
   <tbody>
     <tr>
-      <td style="border-spacing:0;padding:0;color:#0a0a0a;line-height:1.3;padding:<%= rtl? ? '0 65px 0 0' : '0 0 0 65px' %>;">
-        <img src="<%= email_image_url 'right_triangle.png' -%>" style="clear:both;display:block;height:20px;width:20px;outline:0;text-decoration:none;" alt="">
+      <td style="border-spacing:0;padding:0;color:<%= @text_color -%>;line-height:1.3;padding:<%= rtl? ? '0 65px 0 0' : '0 0 0 65px' %>;">
+        <img src="<%= email_image_url @triangle_url -%>" style="clear:both;display:block;height:20px;width:20px;outline:0;text-decoration:none;" alt="">
       </td>
     </tr>
   </tbody>
@@ -257,7 +257,7 @@
       <td style="padding:0 8px 8px 8px;width:50px;vertical-align:top;">
         <img src="<%= post.user.small_avatar_url -%>" style="border-radius:50%;clear:both;display:block;height:50px;width:50px;outline:0;" alt="<%= post.user.username -%>">
       </td>
-      <td style="color:#0a0a0a;line-height:1.3;padding:0 8px 8px 8px;vertical-align:top;">
+      <td style="color:<%= @text_color -%>;line-height:1.3;padding:0 8px 8px 8px;vertical-align:top;">
         <% if post.user %>
           <% if SiteSetting.enable_names? && post.user.name && post.user.name.downcase != post.user.username.downcase %>
             <h6 style="color:inherit;line-height:1.3;margin:0;padding:0;font-weight: normal;font-size:16px;"><%= post.user.name -%></h6>
@@ -265,7 +265,7 @@
           <p style="color:inherit;font-size:14px;font-weight:400;line-height:1.3;margin:0 0 8px 0;padding:0;word-wrap:normal;"><%= post.user.username -%></p>
         <% end %>
       </td>
-      <td style="color:#0a0a0a;line-height:1.3;padding:0 8px 8px 8px;text-align:<%= rtl? ? 'left' : 'right' %>;">
+      <td style="color:<%= @text_color -%>;line-height:1.3;padding:0 8px 8px 8px;text-align:<%= rtl? ? 'left' : 'right' %>;">
         <p style="color:#8f8f8f;line-height:1.3;margin:0 0 10px 0;padding:0;">
           <a href="<%= post.full_url -%>" style="font-weight:400;line-height:1.3;margin:0;padding:0;text-decoration:none"><%= gsub_emoji_to_unicode(post.topic.title.truncate(100, separator: /\s/)) -%></a>
         </p>
@@ -279,7 +279,7 @@
 
 <div style="background-color:<%= @bg_light -%>">
   <table class="spacer with-dir" style="padding:0;vertical-align:top;width:100%;background-color:<%= @bg_light -%>">
-    <tbody><tr><td height="40" style="-moz-hyphens:auto;-webkit-hyphens:auto;border-collapse:collapse!important;color:#0a0a0a;font-size:40px;font-weight:400;hyphens:auto;line-height:40px;margin:0;mso-line-height-rule:exactly;padding:0;vertical-align:top;word-wrap:normal">&#xA0;</td></tr></tbody>
+    <tbody><tr><td height="40" style="-moz-hyphens:auto;-webkit-hyphens:auto;border-collapse:collapse!important;color:<%= @text_color -%>;font-size:40px;font-weight:400;hyphens:auto;line-height:40px;margin:0;mso-line-height-rule:exactly;padding:0;vertical-align:top;word-wrap:normal">&#xA0;</td></tr></tbody>
   </table>
 </div>
 <!--   End of Popular Post   -->
@@ -297,7 +297,7 @@
 <%= digest_custom_html("above_popular_topics") %>
 
 <% if @other_new_for_you.present? %>
-<center class="digest-new-header" style="color:#0a0a0a;background:<%= @bg_light -%>;font-size:22px;font-weight:400;padding-bottom: 8px;font-family:Arial,sans-serif;mso-line-height-rule:exactly;line-height:36px;"><%=t 'user_notifications.digest.more_new' %></center>
+  <center class="digest-new-header" style="color:<%= @text_color -%>;background:<%= @bg_light -%>;font-size:22px;font-weight:400;padding-bottom: 8px;font-family:Arial,sans-serif;mso-line-height-rule:exactly;line-height:36px;"><%=t 'user_notifications.digest.more_new' %></center>
 
 <table class="digest-new-topics body with-dir" style="width:100%;background:<%= @bg_light -%>;border-spacing:0;border-collapse:collapse!important;font-family:Arial,sans-serif;font-size:14px;font-weight:200;line-height:1.3;padding:0;vertical-align:top;">
   <tr>
@@ -318,7 +318,7 @@
         <%- if SiteSetting.show_topic_featured_link_in_digest && t.featured_link %>
           <a class='topic-featured-link' href='<%= t.featured_link %>'><%= raw topic_featured_link_domain(t.featured_link) %></a>
         <%- end %>
-        <p class="digest-new-topic-category" style="color:#0a0a0a;line-height:1.3;margin:0 0 10px 0;padding:0;">
+        <p class="digest-new-topic-category" style="color:<%= @text_color -%>;line-height:1.3;margin:0 0 10px 0;padding:0;">
           <%= category_badge(t.category, inline_style: true, absolute_url: true) %>
         </p>
       </td>
@@ -366,7 +366,7 @@
   @media only screen {
     html {
       min-height: 100%;
-      background: #f3f3f3
+      background: <%= @bg_light -%>
     }
   }
 

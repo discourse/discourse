@@ -340,7 +340,10 @@ module Email
     private
 
     def dark_mode_styles
-      # style('html', 'background: unset;')
+      style('html', 'background: unset;')
+      style('table', 'color: #dddddd;')
+      style('span', 'color: #dddddd !important;')
+      style('img[alt="likes"], img[alt="replies"]', 'filter: invert(1); opacity: .6;')
     end
 
     def replace_relative_urls
