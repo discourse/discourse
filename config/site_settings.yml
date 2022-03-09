@@ -1102,7 +1102,7 @@ email:
     validator: "CssColorValidator"
   dark_mode_email_accent_bg_color:
     type: color
-    default: "#515151"
+    default: "#004466"
     validator: "CssColorValidator"
   dark_mode_email_accent_fg_color:
     type: color
