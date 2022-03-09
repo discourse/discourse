@@ -723,7 +723,10 @@ end
 def update_uploads_access_control_post
   DB.exec(<<~SQL)
     WITH upl AS (
-      SELECT DISTINCT ON (upload_id) upload_id, post_id FROM post_uploads ORDER BY upload_id, post_id
+      SELECT DISTINCT ON (upload_id) upload_id, target_id AS post_id
+      FROM upload_references
+      WHERE target_type = 'Post'
+      ORDER BY upload_id, target_id
     )
     UPDATE uploads
     SET access_control_post_id = upl.post_id
@@ -855,9 +858,9 @@ def analyze_missing_s3
   puts "List of posts with missing images:"
   sql = <<~SQL
     SELECT post_id, url, sha1, extension, uploads.id
-    FROM post_uploads pu
-    RIGHT JOIN uploads on uploads.id = pu.upload_id
-    WHERE verification_status = :invalid_etag
+    FROM upload_references ur
+    RIGHT JOIN uploads on uploads.id = ur.upload_id
+    WHERE ur.target_type = 'Post' AND verification_status = :invalid_etag
     ORDER BY created_at
   SQL
 
@@ -867,9 +870,9 @@ def analyze_missing_s3
 
   DB.query(sql, invalid_etag: Upload.verification_statuses[:invalid_etag]).each do |r|
     all << r
-    if r.post_id
-      lookup[r.post_id] ||= []
-      lookup[r.post_id] << [r.url, r.sha1, r.extension]
+    if r.target_id
+      lookup[r.target_id] ||= []
+      lookup[r.target_id] << [r.url, r.sha1, r.extension]
     else
       other << r
     end
@@ -894,7 +897,7 @@ def analyze_missing_s3
     ids = all.map { |r| r.id }
 
     lookups = [
-      [:post_uploads, :upload_id],
+      [:upload_references, :upload_id],
       [:users, :uploaded_avatar_id],
       [:user_avatars, :gravatar_upload_id],
       [:user_avatars, :custom_upload_id],

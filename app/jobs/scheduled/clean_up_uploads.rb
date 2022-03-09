@@ -31,8 +31,8 @@ module Jobs
         .where("uploads.retain_hours IS NULL OR uploads.created_at < current_timestamp - interval '1 hour' * uploads.retain_hours")
         .where("uploads.created_at < ?", grace_period.hour.ago)
         .where("uploads.access_control_post_id IS NULL")
-        .joins("LEFT JOIN post_uploads pu ON pu.upload_id = uploads.id")
-        .where("pu.upload_id IS NULL")
+        .joins("LEFT JOIN upload_references ON upload_references.upload_id = uploads.id")
+        .where("upload_references.upload_id IS NULL")
         .with_no_non_post_relations
 
       result.find_each do |upload|

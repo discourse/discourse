@@ -71,7 +71,7 @@ describe Jobs::CleanUpUploads do
     it 'deletes other uploads not skipped by an unused callback' do
       expired_upload2 = fabricate_upload
       upload = fabricate_upload
-      PostUpload.create(post: Fabricate(:post), upload: upload)
+      UploadReference.create(target: Fabricate(:post), upload: upload)
 
       expect do
         Jobs::CleanUpUploads.new.execute(nil)
@@ -105,7 +105,7 @@ describe Jobs::CleanUpUploads do
     it 'deletes other uploads that are not in use by callback' do
       expired_upload2 = fabricate_upload
       upload = fabricate_upload
-      PostUpload.create(post: Fabricate(:post), upload: upload)
+      UploadReference.create(target: Fabricate(:post), upload: upload)
 
       expect do
         Jobs::CleanUpUploads.new.execute(nil)

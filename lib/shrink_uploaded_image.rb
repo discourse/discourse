@@ -19,7 +19,7 @@ class ShrinkUploadedImage
       return false
     end
 
-    posts = Post.unscoped.joins(:post_uploads).where(post_uploads: { upload_id: original_upload.id }).uniq.sort_by(&:created_at)
+    posts = Post.unscoped.joins(:upload_references).where(upload_references: { upload_id: original_upload.id }).uniq.sort_by(&:created_at)
 
     if posts.empty?
       log "Upload not used in any posts"

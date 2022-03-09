@@ -20,13 +20,11 @@ class Upload < ActiveRecord::Base
     Post.unscoped { super }
   end
 
-  has_many :post_uploads, dependent: :destroy
-  has_many :posts, through: :post_uploads
-
   has_many :post_hotlinked_media, dependent: :destroy, class_name: "PostHotlinkedMedia"
-
   has_many :optimized_images, dependent: :destroy
   has_many :user_uploads, dependent: :destroy
+  has_many :upload_references, dependent: :destroy
+  has_many :posts, through: :upload_references, source: :target, source_type: 'Post'
   has_many :topic_thumbnails
 
   attr_accessor :for_group_message
