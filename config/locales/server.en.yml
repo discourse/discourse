@@ -2101,6 +2101,9 @@ en:
     email_accent_bg_color: "The accent color to be used as the background of some elements in HTML emails. Enter a color name ('red') or hex value ('#FF0000')."
     email_accent_fg_color: "The color of text rendered on the email bg color in HTML emails. Enter a color name ('white') or hex value ('#FFFFFF')."
     email_link_color: "The color of links in HTML emails. Enter a color name ('blue') or hex value ('#0000FF')."
+    dark_mode_email_accent_bg_color: "The accent color to be used as the background of some elements in HTML emails when in dark mode. Enter a color name ('red') or hex value ('#FF0000')."
+    dark_mode_email_accent_fg_color: "The color of text rendered on the email bg color in HTML emails when in dark mode. Enter a color name ('white') or hex value ('#FFFFFF')."
+    dark_mode_email_link_color: "The color of links in HTML emails when in dark mode. Enter a color name ('blue') or hex value ('#0000FF')."
 
     detect_custom_avatars: "Whether or not to check that users have uploaded custom profile pictures."
     max_daily_gravatar_crawls: "Maximum number of times Discourse will check Gravatar for custom avatars in a day"
