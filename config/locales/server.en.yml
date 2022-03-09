@@ -1546,6 +1546,7 @@ en:
     logo: "The logo image at the top left of your site. Use a wide rectangular image with a height of 120 and an aspect ratio greater than 3:1. If left blank, the site title text will be shown."
     logo_small: "The small logo image at the top left of your site, seen when scrolling down. Use a square 120 × 120 image. If left blank, a home glyph will be shown."
     digest_logo: "The alternate logo image used at the top of your site's email summary. Use a wide rectangle image. Don't use an SVG image. If left blank, the image from the `logo` setting will be used."
+    digest_logo_dark: "The alternate logo image used at the top of your site's email summary when in dark mode. Use a wide rectangle image. Don't use an SVG image. If left blank, the image from the `logo` setting will be used."
     mobile_logo: "The logo used on mobile version of your site. Use a wide rectangular image with a height of 120 and an aspect ratio greater than 3:1. If left blank, the image from the `logo` setting will be used."
     logo_dark: "Dark scheme alternative for the 'logo' site setting."
     logo_small_dark: "Dark scheme alternative for the 'logo small' site setting."
