@@ -2850,6 +2850,11 @@ RSpec.describe TopicsController do
       get "/t/foo/#{topic.id}.rss"
       expect(response.status).to eq(200)
       expect(response.media_type).to eq('application/rss+xml')
+
+      # our RSS feed is full of post 1/2/3/4/5 links, we do not want it included
+      # in the index, and do not want links followed
+      # this allows us to remove it while allowing via robots.txt
+      expect(response.headers['X-Robots-Tag']).to eq('noindex, nofollow')
     end
 
     it 'renders rss of the topic correctly with subfolder' do
