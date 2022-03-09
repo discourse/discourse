@@ -166,7 +166,7 @@ module DiscourseTagging
           "tags.required_tags_from_group",
           count: category.min_tags_from_required_group,
           tag_group_name: category.required_tag_group.name,
-          tags: category.required_tag_group.tags.pluck(:name).join(", ")
+          tags: category.required_tag_group.tags.order(:id).pluck(:name).join(", ")
         )
       )
       false
