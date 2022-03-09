@@ -8,22 +8,22 @@ GIT
 GEM
   remote: https://rubygems.org/
   specs:
-    actionmailer (6.1.4.1)
-      actionpack (= 6.1.4.1)
-      actionview (= 6.1.4.1)
-      activejob (= 6.1.4.1)
-      activesupport (= 6.1.4.1)
+    actionmailer (6.1.4.7)
+      actionpack (= 6.1.4.7)
+      actionview (= 6.1.4.7)
+      activejob (= 6.1.4.7)
+      activesupport (= 6.1.4.7)
       mail (~> 2.5, >= 2.5.4)
       rails-dom-testing (~> 2.0)
-    actionpack (6.1.4.1)
-      actionview (= 6.1.4.1)
-      activesupport (= 6.1.4.1)
+    actionpack (6.1.4.7)
+      actionview (= 6.1.4.7)
+      activesupport (= 6.1.4.7)
       rack (~> 2.0, >= 2.0.9)
       rack-test (>= 0.6.3)
       rails-dom-testing (~> 2.0)
       rails-html-sanitizer (~> 1.0, >= 1.2.0)
-    actionview (6.1.4.1)
-      activesupport (= 6.1.4.1)
+    actionview (6.1.4.7)
+      activesupport (= 6.1.4.7)
       builder (~> 3.1)
       erubi (~> 1.4)
       rails-dom-testing (~> 2.0)
@@ -32,15 +32,15 @@ GEM
       actionview (>= 6.0.a)
     active_model_serializers (0.8.4)
       activemodel (>= 3.0)
-    activejob (6.1.4.1)
-      activesupport (= 6.1.4.1)
+    activejob (6.1.4.7)
+      activesupport (= 6.1.4.7)
       globalid (>= 0.3.6)
-    activemodel (6.1.4.1)
-      activesupport (= 6.1.4.1)
-    activerecord (6.1.4.1)
-      activemodel (= 6.1.4.1)
-      activesupport (= 6.1.4.1)
-    activesupport (6.1.4.1)
+    activemodel (6.1.4.7)
+      activesupport (= 6.1.4.7)
+    activerecord (6.1.4.7)
+      activemodel (= 6.1.4.7)
+      activesupport (= 6.1.4.7)
+    activesupport (6.1.4.7)
       concurrent-ruby (~> 1.0, >= 1.0.2)
       i18n (>= 1.6, < 2)
       minitest (>= 5.1)
@@ -332,9 +332,9 @@ GEM
     rails_multisite (4.0.1)
       activerecord (> 5.0, < 7.1)
       railties (> 5.0, < 7.1)
-    railties (6.1.4.1)
-      actionpack (= 6.1.4.1)
-      activesupport (= 6.1.4.1)
+    railties (6.1.4.7)
+      actionpack (= 6.1.4.7)
+      activesupport (= 6.1.4.7)
       method_source
       rake (>= 0.13)
       thor (~> 1.0)
@@ -350,7 +350,7 @@ GEM
       optimist (>= 3.0.0)
     rchardet (1.8.0)
     redis (4.5.1)
-    redis-namespace (1.8.1)
+    redis-namespace (1.8.2)
       redis (>= 3.0.4)
     regexp_parser (2.2.1)
     request_store (1.5.1)
@@ -489,14 +489,14 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
-  actionmailer (= 6.1.4.1)
-  actionpack (= 6.1.4.1)
-  actionview (= 6.1.4.1)
+  actionmailer (= 6.1.4.7)
+  actionpack (= 6.1.4.7)
+  actionview (= 6.1.4.7)
   actionview_precompiler
   active_model_serializers (~> 0.8.3)
-  activemodel (= 6.1.4.1)
-  activerecord (= 6.1.4.1)
-  activesupport (= 6.1.4.1)
+  activemodel (= 6.1.4.7)
+  activerecord (= 6.1.4.7)
+  activesupport (= 6.1.4.7)
   addressable
   annotate
   aws-sdk-s3
@@ -575,7 +575,7 @@ DEPENDENCIES
   rack-protection
   rails_failover
   rails_multisite
-  railties (= 6.1.4.1)
+  railties (= 6.1.4.7)
   rake
   rb-fsevent
   rbtrace
@@ -617,4 +617,4 @@ DEPENDENCIES
   yaml-lint
 
 BUNDLED WITH
-   2.3.4
+   2.3.5

@@ -4,7 +4,9 @@ We take security very seriously at Discourse. We welcome any peer review of our 
 
 ### Where should I report security issues?
 
-In order to give the community time to respond and upgrade we strongly urge you report all security issues privately. Please use our [vulnerability disclosure program at Hacker One](https://hackerone.com/discourse) to provide details and repro steps and we will respond ASAP. If you prefer not to use Hacker One, email us directly at `team@discourse.org` with details and repro steps. Security issues *always* take precedence over bug fixes and feature work. We can and do mark releases as "urgent" if they contain serious security fixes.
+In order to give the community time to respond and upgrade we strongly urge you report all security issues privately. Please use our [vulnerability disclosure program at Hacker One](https://hackerone.com/discourse) to provide details and repro steps and we will respond ASAP. If you are unable to use Hacker One, email us directly at `team@discourse.org` with details and repro steps. Security issues *always* take precedence over bug fixes and feature work. We can and do mark releases as "urgent" if they contain serious security fixes.
+
+**Please note:** Due to a significant number of low quality security reports sent via email, we are unlikely to act on security reports sent to us via email unless they come from a trusted source, and include details on the vulnerability and step by step instructions to reproduce it. Theoretical reports without a proof of concept are not accepted. We strongly recommend you follow the Hacker One submission protocols.
 
 For a list of recent security commits, check [our GitHub commits prefixed with SECURITY](https://github.com/discourse/discourse/search?o=desc&q=SECURITY&s=committer-date&type=Commits).
 

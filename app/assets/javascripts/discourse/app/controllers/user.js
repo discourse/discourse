@@ -250,8 +250,7 @@ export default Controller.extend(CanCheckEmails, {
     },
 
     updateNotificationLevel(level) {
-      const user = this.model;
-      return user.updateNotificationLevel(level);
+      return this.model.updateNotificationLevel({ level });
     },
   },
 });
