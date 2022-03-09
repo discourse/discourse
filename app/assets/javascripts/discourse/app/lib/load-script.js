@@ -13,9 +13,9 @@ function loadWithTag(path, cb) {
   let finished = false;
   let s = document.createElement("script");
   s.src = path;
-  if (Ember.Test) {
-    Ember.Test.registerWaiter(() => finished);
-  }
+
+  // eslint-disable-next-line no-undef
+  Ember.Test?.registerWaiter(() => finished);
 
   s.onload = s.onreadystatechange = function (_, abort) {
     finished = true;

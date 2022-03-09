@@ -66,6 +66,7 @@ discourseModule("Unit | Utils | decorators", function (hooks) {
     template: hbs`<NativeComponent @name="Jarek" />`,
 
     beforeEach() {
+      // eslint-disable-next-line no-undef
       Ember.TEMPLATES[
         "components/native-component"
       ] = hbs`<span class="native-component">{{this.text}}</span>`;
@@ -73,6 +74,7 @@ discourseModule("Unit | Utils | decorators", function (hooks) {
     },
 
     afterEach() {
+      // eslint-disable-next-line no-undef
       delete Ember.TEMPLATES["components/native-component"];
     },
 

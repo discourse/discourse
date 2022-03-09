@@ -11,10 +11,12 @@ export function setEnvironment(e) {
 }
 
 export function isTesting() {
+  // eslint-disable-next-line no-undef
   return Ember.testing || environment === "testing";
 }
 
 // Generally means "before we migrated to Ember CLI"
+// eslint-disable-next-line no-undef
 let _isLegacy = Ember.VERSION.startsWith("3.12");
 export function isLegacyEmber() {
   return _isLegacy;
