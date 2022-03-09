@@ -23,10 +23,10 @@ module Email
       @fragment = Nokogiri::HTML5.parse(@html)
       @custom_styles = nil
 
-      @dark_mode_active = SiteSetting.dark_mode_active
-      @link_color = SiteSetting.public_send("#{'dark_mode_' if @dark_mode_active}email_link_color")
-      @fg_color = SiteSetting.public_send("#{'dark_mode_' if @dark_mode_active}email_accent_fg_color")
-      @bg_color = SiteSetting.public_send("#{'dark_mode_' if @dark_mode_active}email_accent_bg_color")
+      @dark_mode_emails_active = SiteSetting.dark_mode_emails_active
+      @link_color = SiteSetting.public_send("#{'dark_mode_' if @dark_mode_emails_active}email_link_color")
+      @fg_color = SiteSetting.public_send("#{'dark_mode_' if @dark_mode_emails_active}email_accent_fg_color")
+      @bg_color = SiteSetting.public_send("#{'dark_mode_' if @dark_mode_emails_active}email_accent_bg_color")
     end
 
     def self.register_plugin_style(&block)
@@ -243,7 +243,7 @@ module Email
 
       onebox_styles
       plugin_styles
-      dark_mode_styles if @dark_mode_active
+      dark_mode_styles if @dark_mode_emails_active
 
       style('.post-excerpt img', "max-width: 50%; max-height: #{MAX_IMAGE_DIMENSION}px;")
 

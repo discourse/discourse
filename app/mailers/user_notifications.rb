@@ -717,7 +717,7 @@ end
     @user            = user
     @date            = short_date(Time.now)
     @base_url        = Discourse.base_url
-    @dark_mode_active = SiteSetting.dark_mode_active
+    @dark_mode_emails_active = SiteSetting.dark_mode_emails_active
     @email_prefix    = SiteSetting.email_prefix.presence || SiteSetting.title
     @header_color    = ColorScheme.hex_for_name('header_primary')
     @header_bgcolor  = header_background_color
@@ -725,10 +725,10 @@ end
     @markdown_linker = MarkdownLinker.new(@base_url)
     @unsubscribe_key = UnsubscribeKey.create_key_for(@user, "digest")
     @disable_email_custom_styles = !SiteSetting.apply_custom_styles_to_digest
-    @bg_lighter = SiteSetting.dark_mode_active ? "#151515" : "#fefefe"
-    @bg_light = SiteSetting.dark_mode_active ? "#282828" : "#f3f3f3"
-    @text_color = SiteSetting.dark_mode_active ? "#dddddd" : "#0a0a0a"
-    @triangle_url = "right_triangle#{'_dark' if @dark_mode_active}.png"
+    @bg_lighter = SiteSetting.dark_mode_emails_active ? "#151515" : "#fefefe"
+    @bg_light = SiteSetting.dark_mode_emails_active ? "#282828" : "#f3f3f3"
+    @text_color = SiteSetting.dark_mode_emails_active ? "#dddddd" : "#0a0a0a"
+    @triangle_url = "right_triangle#{'_dark' if @dark_mode_emails_active}.png"
   end
 
   def self.summary_new_users_count_key(min_date_str)
@@ -746,7 +746,7 @@ end
   end
 
   def header_background_color
-    return ColorScheme.hex_for_name('header_background') if !@dark_mode_active
+    return ColorScheme.hex_for_name('header_background') if !@dark_mode_emails_active
 
     if ColorScheme.find_by_id(SiteSetting.default_theme_id).is_dark?
       ColorScheme.hex_for_name('header_background', SiteSetting.default_theme_id)
