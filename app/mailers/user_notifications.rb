@@ -726,9 +726,9 @@ class UserNotifications < ActionMailer::Base
     @markdown_linker = MarkdownLinker.new(@base_url)
     @unsubscribe_key = UnsubscribeKey.create_key_for(@user, "digest")
     @disable_email_custom_styles = !SiteSetting.apply_custom_styles_to_digest
-    @bg_lighter = SiteSetting.dark_mode_emails_active ? "#151515" : "#fefefe"
-    @bg_light = SiteSetting.dark_mode_emails_active ? "#282828" : "#f3f3f3"
-    @text_color = SiteSetting.dark_mode_emails_active ? "#dddddd" : "#0a0a0a"
+    @bg_lighter = @dark_mode_emails_active ? "#151515" : "#fefefe"
+    @bg_light = @dark_mode_emails_active ? "#282828" : "#f3f3f3"
+    @text_color = @dark_mode_emails_active ? "#dddddd" : "#0a0a0a"
     @triangle_url = "right_triangle#{'_dark' if @dark_mode_emails_active}.png"
   end
 
