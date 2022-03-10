@@ -88,7 +88,6 @@ jobs:
       - name: Checkout official plugins
         if: matrix.target == 'plugins'
         run: |
-          REPO=http://github.com/discourse/discourse-encrypt bin/rails plugin:install
           REPO=http://github.com/discourse/discourse-prometheus-alert-receiver bin/rails plugin:install
 
       - name: Fetch app state cache
