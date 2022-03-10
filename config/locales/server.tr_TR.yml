@@ -3430,6 +3430,7 @@ tr_TR:
     complete_multipart_failure: "Harici depoda çok parçalı yükleme tamamlanamadı."
     external_upload_not_found: "Yükleme harici depoda bulunamadı. %{additional_detail}"
     cannot_promote_failure: "Yükleme tamamlanamıyor, zaten tamamlanmış veya daha önce başarısız olmuş olabilir."
+    size_zero_failure: "Üzgünüz, bir şeyler ters gitmiş gibi görünüyor, yüklemeye çalıştığınız dosya 0 bayt. Lütfen tekrar deneyin."
     attachments:
       too_large: "Üzgünüz, yüklemeye çalıştığınız dosya çok büyük (en fazla %{max_size_kb}KB olabilir)."
       too_large_humanized: "Maalesef yüklemeye çalıştığınız dosya çok büyük (maksimum boyut %{max_size})."
@@ -3727,7 +3728,7 @@ tr_TR:
       name: İlk Bahsetme
       description: Bir gönderide bir kullanıcıdan bahsetti
       long_description: |
-        Bu rozet, gönderinizde birisinin @kullanıcıadından ilk kez bahsettiğinizde verilir. Her bir bahsetme, söz konusu kişiye bir bildirim oluşturur. Herhangi bir kullanıcıdan veya izin veriliyorsa gruptan bahsetmek için @(takmaad) yazın. - dikkatlerini çekmek için kullanışlı bir yol.
+        Bu rozet, gönderinizde birisinin @kullanıcıadından ilk kez bahsettiğinizde verilir. Her bir bahsetme, söz konusu kişiye bir bildirim oluşturur. Herhangi bir kullanıcıdan veya izin veriliyorsa gruptan bahsetmek için @(takmaad) yazın. - dikkatlerini çekmek için kullanışlı bir yoldur.
     first_onebox:
       name: İlk Kutulama
       description: Kutulanmış bir bağlantı gönderdi

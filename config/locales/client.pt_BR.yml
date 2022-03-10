@@ -2597,12 +2597,6 @@ pt_BR:
         restricted_groups:
           one: "Visível apenas para membros do grupo: %{groupNames}"
           other: "Visível apenas para membros dos grupos: %{groupNames}"
-        notify_users:
-          title: "Notificar"
-          instructions: "Notificar os(as) usuários(as) a seguir sobre este tópico:"
-          success:
-            one: "%{username} foi notificado(a) sobre este tópico."
-            other: "Todos os(as) usuários(as) foram notificados sobre este tópico."
         invite_users: "Convite"
       print:
         title: "Imprimir"

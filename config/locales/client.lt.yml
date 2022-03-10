@@ -2453,9 +2453,6 @@ lt:
         help: "Pasidalink šios temos nuoroda"
         instructions: "Dalintis nuoroda šioje temoje:"
         copied: "Temos nuoroda nukopijuota."
-        notify_users:
-          title: "Pranešti"
-          instructions: "Praneškite šiems vartotojams apie šią temą:"
         invite_users: "Kviesti"
       print:
         title: "Spausdinti"

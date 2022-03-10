@@ -163,6 +163,7 @@ es:
     skip_to_main_content: "Saltar al contenido principal"
     wizard_required: "¡Te damos la bienvenida a tu nuevo Discourse! Empezaremos con <a href='%{url}' data-auto-route='true'>el asistente de configuración</a> ✨"
     emails_are_disabled: "Todos los correos electrónicos salientes han sido desactivados globalmente por un administrador. No se enviarán notificaciones por correo electrónico de ningún tipo."
+    emails_are_disabled_non_staff: "El correo electrónico saliente se ha desactivado para los usuarios que no pertenecen al personal."
     software_update_prompt:
       message: "Hemos actualizado este sitio, <span>vuelve a cargarlo</span>, o podrías experimentar un comportamiento inesperado."
       dismiss: "Descartar"
@@ -312,6 +313,8 @@ es:
         existing_reminder: "Tienes un recordatorio para este marcador que se enviará %{at_date_time}"
     copy_codeblock:
       copied: "¡copiado!"
+      copy: "código copiado al portapapeles"
+      fullscreen: "ver código en pantalla completa"
     drafts:
       label: "Borradores"
       label_with_count: "Borradores (%{count})"
@@ -1265,6 +1268,7 @@ es:
         upload_title: "Sube tu foto"
         image_is_not_a_square: "Advertencia: hemos recortado tu imagen porque la anchura y la altura no eran iguales."
         logo_small: "Logotipo pequeño del sitio. Usado por defecto."
+        use_custom: "O sube un avatar personalizado:"
       change_profile_background:
         title: "Encabezado de perfil"
         instructions: "Por defecto, los encabezados de perfil estarán centrados y tendrán una anchura de 1110px."
@@ -2595,6 +2599,7 @@ es:
         title: "Responder"
         help: "comienza a escribir un mensaje en este tema"
       share:
+        title: "Compartir tema"
         extended_title: "Compartir un enlace"
         help: "comparte el enlace a este tema"
         instructions: "Comparte el enlace a este tema:"
@@ -2602,12 +2607,6 @@ es:
         restricted_groups:
           one: "Solo visible para los miembros del grupo: %{groupNames}"
           other: "Solo visible para los miembros de los grupos: %{groupNames}"
-        notify_users:
-          title: "Notificar"
-          instructions: "Notificar sobre este tema a los siguientes usuarios:"
-          success:
-            one: "Se ha notificado a %{username} sobre este tema."
-            other: "Se ha notificado a todos los usuarios sobre este tema."
         invite_users: "Invitar"
       print:
         title: "Imprimir"
@@ -2994,6 +2993,9 @@ es:
         viewing_summary: "Estás viendo un resumen de este tema"
         post_number: "%{username}, publicación nº %{post_number}"
         show_all: "Mostrar todas"
+      share:
+        title: "Compartir publicación n.º %{post_number}"
+        instructions: "Comparte un enlace a esta publicación:"
     category:
       none: "(sin categoría)"
       all: "Todas las categorías"
@@ -3963,6 +3965,9 @@ es:
         notification_event:
           name: "Evento de notificación"
           details: "Cuando un usuario recibe una notificación."
+        user_promoted_event:
+          name: "Evento por ascenso de usuario"
+          details: "Cuando un usuario asciende de nivel de confianza."
         user_badge_event:
           name: "Evento por obtención de insignia"
           details: "Cuando un usuario recibe una insignia."

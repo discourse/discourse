@@ -2490,12 +2490,6 @@ fi:
         help: "jaa linkki tähän ketjuun"
         instructions: "Jaa linkki tähän ketjuun:"
         copied: "Ketjun linkki kopioitu."
-        notify_users:
-          title: "Ilmoita"
-          instructions: "Ilmoita seuraaville käyttäjille tästä ketjusta:"
-          success:
-            one: "Tästä ketjusta ilmoitettiin käyttäjälle %{username}."
-            other: "Tästä ketjusta ilmoitettiin kaikille käyttäjille."
         invite_users: "Kutsu"
       print:
         title: "Tulosta"

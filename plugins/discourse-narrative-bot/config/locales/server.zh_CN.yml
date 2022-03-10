@@ -83,6 +83,8 @@ zh_CN:
       "10":
         quote: "人只要敢于梦想，并对此坚信不疑，就一定能达成目标。"
         author: "拿破仑·希尔"
+      "12":
+        quote: "教育不是摆脱贫困的方式，而是与贫困作斗争的方式。"
       results: |-
         > :left_speech_bubble: _%{quote}_ &mdash; %{author}
     magic_8_ball:

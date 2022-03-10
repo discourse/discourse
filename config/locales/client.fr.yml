@@ -1366,9 +1366,11 @@ fr:
         every_month: "tous les mois"
         every_six_months: "tous les six mois"
       email_level:
+        title: "Envoyez-moi un courriel lorsque je suis cité, que l’on me répond, que mon @username d’utilisateur est mentionné ou qu’il y a une nouvelle activité dans les catégories, les étiquettes ou les sujets que je surveille"
         always: "toujours"
         only_when_away: "seulement en cas d'absence"
         never: "jamais"
+      email_messages_level: "Envoyez-moi un courriel lorsque je reçois un message personnel"
       include_tl0_in_digests: "Inclure les contributions des nouveaux utilisateurs dans les résumés par courriel"
       email_in_reply_to: "En plus du message notifié par courriel, inclure un extrait du message auquel il répond"
       other_settings: "Autre"
@@ -2488,12 +2490,6 @@ fr:
         help: "partager ce sujet"
         instructions: "Partager ce sujet avec un lien :"
         copied: "Le lien vers ce sujet a été copié."
-        notify_users:
-          title: "Notifier"
-          instructions: "Notifier les utilisateurs suivants de l'existence de ce sujet :"
-          success:
-            one: "Une notification a été envoyée à %{username}."
-            other: "Une notification a été envoyée aux utilisateurs sélectionnés."
         invite_users: "Inviter"
       print:
         title: "Imprimer"

@@ -163,6 +163,7 @@ it:
     skip_to_main_content: "Passa al contenuto principale"
     wizard_required: "Benvenuto al tuo nuovo sito Discourse! Inizia la <a href='%{url}' data-auto-route='true'>procedura guidata di configurazione</a> ✨"
     emails_are_disabled: "Tutte le e-mail in uscita sono state disabilitate a livello globale da un amministratore. Non sarà inviato nessun tipo di notifica via e-mail."
+    emails_are_disabled_non_staff: "La posta in uscita è stata disattivata per gli utenti al di fuori dello staff."
     software_update_prompt:
       message: "Abbiamo aggiornato il sito, <span>si prega di aggiornare</span> o potrebbe verificarsi un comportamento imprevisto."
       dismiss: "Ignora"
@@ -1830,6 +1831,7 @@ it:
       categories_and_top_topics: "Categorie e Argomenti Popolari"
       categories_boxes: "Riquadri con sottocategorie"
       categories_boxes_with_topics: "Riquadri con Argomenti in evidenza"
+      subcategories_with_featured_topics: "Sottocategorie con argomenti in evidenza"
     shortcut_modifier_key:
       shift: "Maiusc"
       ctrl: "Ctrl"
@@ -1853,6 +1855,9 @@ it:
       select_to_filter: "Seleziona un valore da filtrare"
       default_header_text: Selezione...
       no_content: Nessun risultato trovato
+      results_count:
+        one: "%{count} risultato"
+        other: "%{count} risultati"
       filter_placeholder: Ricerca...
       filter_placeholder_with_any: Cerca o crea...
       create: "Crea: '%{content}'"
@@ -2600,12 +2605,6 @@ it:
         restricted_groups:
           one: "Visibile solo ai membri del gruppo %{groupNames}"
           other: "Visibile solo ai membri dei gruppi %{groupNames}"
-        notify_users:
-          title: "Notifica"
-          instructions: "Notifica i seguenti utenti su questo argomento:"
-          success:
-            one: "%{username} notificato su questo argomento."
-            other: "Notifica all'argomento inviata correttamente a tutti gli utenti."
         invite_users: "Invita"
       print:
         title: "Stampa"
@@ -2828,6 +2827,7 @@ it:
         edit: "Spiacenti, si è verificato un errore nel modificare il tuo messaggio. Prova di nuovo."
         upload: "Spiacenti, si è verificato un errore durante il caricamento del file. Prova di nuovo."
         file_too_large: "Spiacenti, ma questo file è troppo grande (la dimensione massima è %{max_size_kb}kb). Perché non lo carichi su un servizio di cloud sharing per poi incollarne qui il collegamento?"
+        file_size_zero: "Spiacenti, sembra che qualcosa sia andato storto, il file che stai tentando di caricare è di 0 byte. Per favore riprova."
         file_too_large_humanized: "Purtroppo questo file è troppo grande (la dimensione massima consentita è %{max_size}). Perché non carichi il file su un servizio di condivisione in cloud e poi incolli qui il collegamento?"
         too_many_uploads: "Spiacenti, puoi caricare un solo file per volta."
         too_many_dragged_and_dropped_files:
@@ -3291,6 +3291,7 @@ it:
       unseen:
         title: "Non visualizzati"
         lower_title: "non visualizzati"
+        help: "nuovi argomenti, e argomenti che stai osservando o seguendo contenenti messaggi non letti"
       new:
         lower_title_with_count:
           one: "%{count} nuovo"
@@ -3590,6 +3591,7 @@ it:
       topics:
         none:
           unread: "Non hai argomenti non letti."
+          unseen: "Non hai argomenti non visualizzati."
           new: "Non hai nuovi argomenti."
           read: "Non hai ancora letto nessun argomento."
           posted: "Non hai ancora scritto in nessun argomento."
@@ -3637,8 +3639,17 @@ it:
       no_activity_title: "Ancora nessuna attività"
       no_activity_body: "Ti diamo il benvenuto nella nostra comunità! Sei nuovo/a qui e non hai ancora contribuito alle discussioni. Per cominciare, visita <a href='%{topUrl}'>Top</a> o <a href='%{categoriesUrl}'>Categorie</a> e inizia a leggere! Seleziona %{heartIcon} sui post che ti piacciono o che vuoi approfondire. Se non lo hai già fatto, fatti conoscere aggiungendo una foto e una biografia nelle tue <a href='%{preferencesUrl}'>preferenze utente</a>."
       no_activity_others: "Nessuna attività."
+      no_replies_title: "Non hai ancora risposto a nessun argomento"
       no_replies_others: "Nessuna risposta."
+      no_drafts_title: "Non hai iniziato nessuna bozza"
+      no_drafts_body: "Non sei ancora pronto/a a pubblicare? Salveremo automaticamente una nuova bozza e la elencheremo qui ogni volta che inizierai a scrivere un argomento, una risposta o un messaggio personale. Seleziona il pulsante Annulla per eliminare o salvare la bozza e continuare a scrivere più avanti."
+      no_likes_title: "Non hai ancora messo \"mi piace\" a nessun argomento"
+      no_likes_body: "Un ottimo modo per iniziare a contribuire è mettersi a leggere le conversazioni già avvenute e assegnare un %{heartIcon} ai post che ti piacciono!"
       no_likes_others: "Nessun messaggio con \"Mi piace\"."
+      no_topics_title: "Non hai ancora avviato nessun argomento"
+      no_read_topics_title: "Non hai ancora letto nessun argomento"
+      no_read_topics_body: "Una volta che avrai iniziato a leggere discussioni, ne vedrai un elenco qui. Per cominciare a leggere, cerca argomenti di tuo interesse alle pagine <a href='%{topUrl}'>Popolari</a> o <a href='%{categoriesUrl}'>Categorie</a>; oppure effettua una ricerca per parola chiave %{searchIcon}"
+    no_group_messages_title: "Nessun messaggio di gruppo trovato"
     fullscreen_table:
       expand_btn: "Espandi Tabella"
     second_factor_auth:
@@ -3786,6 +3797,7 @@ it:
             automatic_membership_user_count:
               one: "%{count} utente ha i nuovi domini di email e verrà aggiunto al gruppo."
               other: "%{count} utenti hanno i nuovi domini di email e verranno aggiunti al gruppo."
+            automatic_membership_associated_groups: "Gli utenti iscritti a un gruppo su uno dei servizi qui elencati saranno aggiunti automaticamente a questo gruppo quando accedono con tale servizio."
             primary_group: "Imposta automaticamente come gruppo principale"
         name_placeholder: "Nome del gruppo, senza spazi, stesse regole del nome utente"
         primary: "Gruppo Primario"
@@ -3865,10 +3877,16 @@ it:
             topics:
               read: Leggi un argomento o un messaggio specifico in esso. È supportato anche RSS.
               write: Crea un nuovo argomento o pubblica un messaggio su uno esistente.
+              update: Aggiorna un argomento. Modifica il titolo, la categoria, le etichette, ecc.
               read_lists: Leggi liste di argomenti come Popolari, Nuovi, Recenti, ecc. E' supportato anche l'RSS.
               wordpress: Necessario al funzionamento del plugin wp-discourse di WordPress.
             posts:
               edit: Modifica qualsiasi messaggio o uno specifico.
+            categories:
+              list: Ottieni un elenco di categorie.
+              show: Ottieni una singola categoria per ID.
+            uploads:
+              create: Carica un nuovo file o avvia caricamenti diretti singoli o multipli su una memoria esterna.
             users:
               bookmarks: Elenca i segnalibri utente. Restituisce i segnalibri quando si utilizza il formato ICS.
               sync_sso: Sincronizza un utente utilizzando DiscourseConnect.
@@ -4104,6 +4122,7 @@ it:
           theme: "Tema"
           component: "Componente"
           components: "Componenti"
+          filter_placeholder: "digita per filtrare…"
           theme_name: "Nome del Tema"
           component_name: "Nome del Componente"
           themes_intro: "Seleziona un tema esistente o installane uno nuovo per iniziare"
@@ -4704,6 +4723,7 @@ it:
         cant_suspend: "Questo utente non può essere sospeso."
         delete_posts_failed: "C'è stato un problema con la cancellazione dei messaggi."
         post_edits: "Modifiche Messaggio"
+        view_edits: "Visualizza modifiche"
         penalty_post_actions: "Cosa vorresti fare con il messaggio associato?"
         penalty_post_delete: "Elimina il messaggio"
         penalty_post_delete_replies: "Elimina il messaggio e tutte le sue risposte"
@@ -4773,6 +4793,15 @@ it:
             title: "Avanzamento dell'eliminazione dei messaggi"
             description: "Cancellazione messaggi..."
           confirmation:
+            title: "Elimina tutti i messaggi di @%{username}"
+            description: |
+              <p>Vuoi davvero eliminare <b>%{post_count}</b> post di @%{username}?
+
+              <p><b>Questa decisione non può essere annullata!</b></p>
+
+              <p>Per continuare, digita: <code>%{text}</code></p>
+            text: "elimina messaggi di @%{username}"
+            delete: "Elimina messaggi di @%{username}"
             cancel: "Annulla"
         merge:
           button: "Unisci"
@@ -5100,7 +5129,9 @@ it:
           grant_existing_holders: Assegna distintivi aggiuntivi ai titolari di distintivi già esistenti
       emoji:
         title: "Emoji"
+        help: "Aggiungi nuovi emoji che saranno disponibili per tutti. Trascina e rilascia più file alla volta senza inserire un nome per creare emoji usando i nomi dei file. Il gruppo selezionato verrà utilizzato per tutti i file aggiunti. Puoi anche fare clic su \"Aggiungi nuovo emoji\" per aprire il selettore di file."
         add: "Aggiungi Nuovo Emoji"
+        choose_files: "Scegli file"
         uploading: "In caricamento..."
         name: "Nome"
         group: "Gruppo"
@@ -5181,5 +5212,8 @@ it:
           moderator: "Moderatore"
           regular: "Utente Normale"
       previews:
+        topic_title: "Il titolo di un argomento di discussione"
         share_button: "Condividi"
         reply_button: "Rispondi"
+        topic_preview: "Anteprima argomento"
+        homepage_preview: "Anteprima della home page"

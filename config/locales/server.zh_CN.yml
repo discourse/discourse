@@ -3506,6 +3506,7 @@ zh_CN:
     external_upload_not_found: "在外部存储中未找到上传。 %{additional_detail}"
     checksum_mismatch_failure: "您上传的文件的校验和不匹配。在上传时文件内容可能已更改。请再试一次。"
     cannot_promote_failure: "上传无法完成，可能已经完成或失败了。"
+    size_zero_failure: "抱歉，好像出了点问题，您要上传的文件大小是 0 字节。请再试一次。"
     attachments:
       too_large: "抱歉，您尝试上传的文件过大（最大大小为 %{max_size_kb}KB）。"
     images:
@@ -4414,7 +4415,11 @@ zh_CN:
       watched_word: "这篇主题包括一个关注词。检查你的设置： %{link}。"
       staged: "暂存用户的新主题和帖子必须得到管理人员的批准。见 %{link}。"
       category: "发布于此类别的帖子需要工作人员手动批准。见 %{link}。"
+      must_approve_users: "所有新用户都必须经过工作人员的审核。见 %{link}。"
       email_auth_res_enqueue: "此电子邮件未通过 DMARC 检查，它很可能不是来自表面看起来的人。检查原始电子邮件标头以获取更多信息。"
+      email_spam: "此电子邮件被 %{link} 中定义的标头标记为垃圾邮件。"
+      suspect_user: "这个新用户在没有阅读任何主题或帖子的情况下输入了个人资料信息，这强烈表明他们可能是垃圾邮件发送者。见 %{link}。"
+      contains_media: "这个帖子帖子包含嵌入式媒体。见 %{link}。"
       queued_by_staff: "一名管理人员认为此帖子需要审核。在此之前，它将保持隐藏。"
       links:
         watched_word: 列出关注的关键字

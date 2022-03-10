@@ -2476,11 +2476,6 @@ ko:
         copied: "글 링크가 복사되었습니다."
         restricted_groups:
           other: "그룹 구성원만 볼 수 있음: %{groupNames}"
-        notify_users:
-          title: "알림"
-          instructions: "다음 사용자에게 이 항목에 대해 알립니다."
-          success:
-            other: "이 글에 대해 모든 사용자에게 알렸습니다."
         invite_users: "초대"
       print:
         title: "프린트하기"
