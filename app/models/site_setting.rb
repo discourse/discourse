@@ -101,22 +101,24 @@ class SiteSetting < ActiveRecord::Base
     :markdown_typographer_quotation_marks
   ]
 
+  def self.cache
+    @cache ||= DistributedCache.new("site_settings")
+  end
+
   def self.reset_cached_settings!
-    @blocked_attachment_content_types_regex = nil
-    @blocked_attachment_filenames_regex = nil
-    @allowed_unicode_username_regex = nil
+    cache.clear
   end
 
   def self.blocked_attachment_content_types_regex
-    @blocked_attachment_content_types_regex ||= Regexp.union(SiteSetting.blocked_attachment_content_types.split("|"))
+    cache["blocked_attachment_content_types_regex"] ||= Regexp.union(SiteSetting.blocked_attachment_content_types.split("|"))
   end
 
   def self.blocked_attachment_filenames_regex
-    @blocked_attachment_filenames_regex ||= Regexp.union(SiteSetting.blocked_attachment_filenames.split("|"))
+    cache["blocked_attachment_filenames_regex"] ||= Regexp.union(SiteSetting.blocked_attachment_filenames.split("|"))
   end
 
   def self.allowed_unicode_username_characters_regex
-    @allowed_unicode_username_regex ||= SiteSetting.allowed_unicode_username_characters.present? \
+    cache["allowed_unicode_username_regex"] ||= SiteSetting.allowed_unicode_username_characters.present? \
       ? Regexp.new(SiteSetting.allowed_unicode_username_characters) : nil
   end
 
