@@ -12,7 +12,7 @@
 <meta name="discourse-base-uri" content="<%= Discourse.base_path %>">
 <% end %>
 <%= canonical_link_tag %>
-<%- if current_page?('/') || current_page?("#{Discourse.base_path}") %>
+<%- if current_page?('/') || current_page?(Discourse.base_path) %>
 <%= render_sitelinks_search_tag %>
 <%- end %>
 <link rel="search" type="application/opensearchdescription+xml" href="<%= Discourse.base_url %>/opensearch.xml" title="<%= SiteSetting.title %> Search">
