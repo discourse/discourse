@@ -542,6 +542,6 @@ class FinalDestination
   end
 
   def blocked_domain?(uri)
-    uri && Onebox::DomainChecker.is_blocked?(uri.hostname)
+    Onebox::DomainChecker.is_blocked?(uri.hostname)
   end
 end
