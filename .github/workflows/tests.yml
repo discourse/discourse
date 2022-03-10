@@ -26,19 +26,11 @@ jobs:
       USES_PARALLEL_DATABASES: ${{ matrix.build_type == 'backend' && matrix.target == 'core' }}
 
     strategy:
-      fail-fast: false
+      fail-fast: true
 
       matrix:
-        build_type: [backend, frontend, frontend-legacy, annotations]
-        target: [core, plugins]
-        exclude:
-          - build_type: annotations
-            target: plugins
-          - build_type: frontend
-            target: core # Handled by core_frontend_tests job (below)
-        include:
-          - build_type: frontend
-            target: core-plugins
+        build_type: [frontend-legacy]
+        target: [plugins]
 
     steps:
       - uses: actions/checkout@master
