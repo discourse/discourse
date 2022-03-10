@@ -1421,7 +1421,7 @@ en:
       labels:
         user: User
         qtt_like: Likes Received
-      description: "Top 10 users who have been received more likes."
+      description: "Top 10 users who have received likes."
     top_users_by_likes_received_from_inferior_trust_level:
       title: "Top Users by likes received from a user with a lower trust level"
       labels:
@@ -1434,7 +1434,7 @@ en:
       labels:
         user: User
         qtt_like: Likes Received
-      description: "Top 10 users who have had the likes from a wide range of people."
+      description: "Top 10 users who have had likes from a wide range of people."
 
   dashboard:
     group_email_credentials_warning: 'There was an issue with the email credentials for the group <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. No emails will send from the group inbox until this problem is addressed. %{error}'
