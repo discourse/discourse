@@ -202,7 +202,7 @@ class FinalDestination
     end
 
     headers = request_headers
-    middlewares = Excon.defaults[:middlewares]
+    middlewares = Excon.defaults[:middlewares].dup
     middlewares << Excon::Middleware::Decompress if @http_verb == :get
 
     request_start_time = Time.now
