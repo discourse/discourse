@@ -596,9 +596,6 @@ class TopicsController < ApplicationController
       else
         UserArchivedMessage.move_to_inbox!(current_user.id, topic)
       end
-
-      current_user.reload
-      current_user.publish_notifications_state
     end
 
     if group_id
