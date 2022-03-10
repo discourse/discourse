@@ -140,16 +140,18 @@ describe PostAlerter do
         expect(updated_payload["group_name"]).to eq(group.name)
         expect(updated_payload["inbox_count"]).to eq(2)
 
-        # archiving the second PM updates the group summary count
-        GroupArchivedMessage.archive!(group.id, pm2)
+        # archiving the second PM quietly updates the group summary count for the acting user
+        GroupArchivedMessage.archive!(group.id, pm2, acting_user_id: user2.id)
         group_summary_notification = Notification.where(user_id: user2.id)
+        expect(group_summary_notification.first.read).to eq(true)
         updated_payload = JSON.parse(group_summary_notification.first.data)
 
         expect(updated_payload["inbox_count"]).to eq(1)
 
-        # moving to inbox the second PM updates the group summary count
-        GroupArchivedMessage.move_to_inbox!(group.id, pm2)
+        # moving to inbox the second PM quietly updates the group summary count for the acting user
+        GroupArchivedMessage.move_to_inbox!(group.id, pm2, acting_user_id: user2.id)
         group_summary_notification = Notification.where(user_id: user2.id)
+        expect(group_summary_notification.first.read).to eq(true)
         updated_payload = JSON.parse(group_summary_notification.first.data)
 
         expect(updated_payload["group_name"]).to eq(group.name)

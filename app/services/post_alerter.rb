@@ -315,7 +315,7 @@ class PostAlerter
     end
   end
 
-  def notify_group_summary(user, topic)
+  def notify_group_summary(user, topic, acting_user_id: nil)
     @group_stats ||= {}
     stats = (@group_stats[topic.id] ||= group_stats(topic))
     return unless stats
@@ -333,6 +333,7 @@ class PostAlerter
         Notification.consolidate_or_create!(
           notification_type: Notification.types[:group_message_summary],
           user_id: user.id,
+          read: user.id === acting_user_id ? true : false,
           data: {
             group_id: stat[:group_id],
             group_name: stat[:group_name],
