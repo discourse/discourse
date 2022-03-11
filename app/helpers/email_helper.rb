@@ -29,10 +29,19 @@ module EmailHelper
     EmailStyle.new.html
       .sub('%{email_content}') { capture { yield } }
       .gsub('%{html_lang}', html_lang)
+      .gsub('%{dark_mode_styles}', SiteSetting.dark_mode_emails_active ? dark_mode_meta_tags : "")
       .html_safe
   end
 
   protected
+
+  def dark_mode_meta_tags
+    "
+    <meta name='color-scheme' content='light dark' />
+    <meta name='supported-color-schemes' content='light dark' />
+    #{stylesheet_link_tag("email_dark")}
+    "
+  end
 
   def extract_details(topic)
     if SiteSetting.private_email?

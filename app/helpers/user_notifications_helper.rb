@@ -21,9 +21,8 @@ module UserNotificationsHelper
   end
 
   def logo_url
-    dark_enabled = SiteSetting.dark_mode_emails_active
-    logo_url = SiteSetting.public_send("site_digest_logo#{'_dark' if dark_enabled}_url")
-    logo_url = SiteSetting.public_send("site_logo#{'_dark' if dark_enabled}_url") if logo_url.blank? || logo_url =~ /\.svg$/i
+    logo_url = SiteSetting.site_digest_logo_url
+    logo_url = SiteSetting.site_logo_url if logo_url.blank? || logo_url =~ /\.svg$/i
     return nil if logo_url.blank? || logo_url =~ /\.svg$/i
     logo_url
   end

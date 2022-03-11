@@ -70,10 +70,6 @@ branding:
     default: ""
     client: true
     type: upload
-  digest_logo_dark:
-    default: ""
-    client: true
-    type: upload
   mobile_logo:
     default: ""
     client: true
@@ -1099,18 +1095,6 @@ email:
   email_link_color:
     type: color
     default: "#006699"
-    validator: "CssColorValidator"
-  dark_mode_email_accent_bg_color:
-    type: color
-    default: "#004466"
-    validator: "CssColorValidator"
-  dark_mode_email_accent_fg_color:
-    type: color
-    default: "#fefefe"
-    validator: "CssColorValidator"
-  dark_mode_email_link_color:
-    type: color
-    default: "#0f82af"
     validator: "CssColorValidator"
   show_topic_featured_link_in_digest: false
   email_custom_headers: "Auto-Submitted: auto-generated"

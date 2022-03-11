@@ -1,0 +1,43 @@
+@media (prefers-color-scheme: dark) {
+  html {
+    background: #151515 !important;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p,
+  span {
+    color: #dddddd !important;
+  }
+
+  [dm="light-img"] {
+    display: none !important;
+  }
+
+  [dm="dark-img"] {
+    display: block !important;
+    opacity: 0.7 !important;
+  }
+
+  [dm="text-color"] {
+    color: #dddddd;
+  }
+
+  [dm="header"] {
+    background: #151515 !important;
+  }
+
+  [dm="body"] {
+    background: #222222 !important;
+    color: #dddddd !important;
+  }
+
+  [dm="body_primary"] {
+    background: #004466 !important;
+    color: #dddddd !important;
+  }
+}

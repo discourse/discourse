@@ -9,7 +9,6 @@ module SiteIconManager
 
   ICONS = {
     digest_logo: { width: nil, height: nil, settings: [:digest_logo, :logo], fallback_to_sketch: false, resize_required: false },
-    digest_logo_dark: { width: nil, height: nil, settings: [:digest_logo_dark, :logo_dark], fallback_to_sketch: false, resize_required: false },
     mobile_logo: { width: nil, height: nil, settings: [:mobile_logo, :logo], fallback_to_sketch: false, resize_required: false },
     large_icon: { width: nil, height: nil, settings: [:large_icon, :logo_small], fallback_to_sketch: true, resize_required: false },
     manifest_icon: { width: 512, height: 512, settings: [:manifest_icon, :large_icon, :logo_small], fallback_to_sketch: true, resize_required: true },
