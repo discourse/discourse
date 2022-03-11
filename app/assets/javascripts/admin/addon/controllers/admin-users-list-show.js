@@ -17,7 +17,7 @@ export default Controller.extend(CanCheckEmails, {
   listFilter: null,
   selectAll: false,
   searchHint: i18n("search_hint"),
-  _searchIndex: null,
+  _searchIndex: 0,
 
   init() {
     this._super(...arguments);
@@ -25,7 +25,6 @@ export default Controller.extend(CanCheckEmails, {
     this._page = 1;
     this._results = [];
     this._canLoadMore = true;
-    this._searchIndex = 0;
   },
 
   @discourseComputed("query")
@@ -62,7 +61,7 @@ export default Controller.extend(CanCheckEmails, {
       page: this._page,
     })
       .then((result) => {
-        if (searchIndex !== this._searchIndex) {
+        if (this.ignoreResponse(searchIndex)) {
           return;
         }
 
@@ -74,10 +73,17 @@ export default Controller.extend(CanCheckEmails, {
         this.set("model", this._results);
       })
       .finally(() => {
-        if (searchIndex === this._searchIndex) {
-          this.set("refreshing", false);
+        if (this.ignoreResponse(searchIndex)) {
+          return;
         }
+        this.set("refreshing", false);
       });
+  },
+
+  ignoreResponse(searchIndex) {
+    return (
+      searchIndex !== this._searchIndex || this.isDestroyed || this.isDestroying
+    );
   },
 
   actions: {
