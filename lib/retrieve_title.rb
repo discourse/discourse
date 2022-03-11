@@ -8,6 +8,7 @@ module RetrieveTitle
   rescue Exception => ex
     raise if Rails.env.test?
     Rails.logger.error(ex)
+    nil
   end
 
   def self.extract_title(html, encoding = nil)
