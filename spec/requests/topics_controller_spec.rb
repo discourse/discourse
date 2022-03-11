@@ -1317,6 +1317,27 @@ RSpec.describe TopicsController do
           expect(payload["title"]).to eq('This is a new title for the topic')
         end
 
+        it 'allows update on short non-slug url' do
+          put "/t/#{topic.id}.json", params: {
+            title: 'This is a new title for the topic'
+          }
+
+          topic.reload
+          expect(topic.title).to eq('This is a new title for the topic')
+        end
+
+        it 'only allows update on digit ids' do
+          non_digit_id = "asdf"
+          original_title = topic.title
+          put "/t/#{non_digit_id}.json", params: {
+            title: 'This is a new title for the topic'
+          }
+
+          topic.reload
+          expect(topic.title).to eq(original_title)
+          expect(response.status).to eq(404)
+        end
+
         it 'allows a change of then updating the OP' do
           topic.update(user: user)
           topic.first_post.update(user: user)
