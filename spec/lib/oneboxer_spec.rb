@@ -182,11 +182,16 @@ describe Oneboxer do
         stub_request(:get, "https://kitten.com").to_return(status: 200, body: html, headers: {})
         stub_request(:head, "https://kitten.com").to_return(status: 200, body: "", headers: {})
 
-        expect(Oneboxer.external_onebox("http://cat.com/meow")[:onebox]).to be_empty
-        expect(Oneboxer.external_onebox("https://kitten.com")[:onebox]).to be_empty
+        result = Oneboxer.external_onebox("http://cat.com/meow")
+        expect(result[:onebox]).to be_empty
+        expect(result[:preview]).to be_empty
+
+        result = Oneboxer.external_onebox("http://kitten.com")
+        expect(result[:onebox]).to be_empty
+        expect(result[:preview]).to be_empty
       end
 
-      it "returns onebox if 'midway redirect' is blocked but final redirect uri is not blocked" do
+      it "does not return onebox if anything in the redirect chain is blocked" do
         SiteSetting.blocked_onebox_domains = "middle.com"
 
         stub_request(:get, "https://cat.com/start").to_return(status: 301, body: "a", headers: { "location" => "https://middle.com/midway" })
@@ -197,7 +202,44 @@ describe Oneboxer do
         stub_request(:get, "https://cat.com/end").to_return(status: 200, body: html)
         stub_request(:head, "https://cat.com/end").to_return(status: 200, body: "", headers: {})
 
-        expect(Oneboxer.external_onebox("https://cat.com/start")[:onebox]).to be_present
+        result = Oneboxer.external_onebox("https://cat.com/start")
+        expect(result[:onebox]).to be_empty
+        expect(result[:preview]).to be_empty
+      end
+
+      it "does not return onebox if the Discourse-No-Onebox header == 1" do
+        stub_request(:get, "https://website.com/discourse-no-onebox")
+          .to_return(status: 200, body: "abc", headers: { "Discourse-No-Onebox" => "1" })
+        stub_request(:head, "https://website.com/discourse-no-onebox")
+          .to_return(status: 200, body: "", headers: { "Discourse-No-Onebox" => "1" })
+
+        result = Oneboxer.external_onebox("https://website.com/discourse-no-onebox")
+        expect(result[:onebox]).to be_empty
+        expect(result[:preview]).to be_empty
+      end
+
+      it "does not return onebox if the Discourse-No-Onebox header == 1 anywhere in the redirect chain" do
+        stub_request(:get, "https://website.com/redirect-no-onebox")
+          .to_return(status: 301, body: "", headers: { "Discourse-No-Onebox" => "1", "location" => "https://willneverreach.com" })
+        stub_request(:head, "https://website.com/redirect-no-onebox")
+          .to_return(status: 301, body: "", headers: { "Discourse-No-Onebox" => "1", "location" => "https://willneverreach.com" })
+
+        result = Oneboxer.external_onebox("https://website.com/redirect-no-onebox")
+        expect(result[:onebox]).to be_empty
+        expect(result[:preview]).to be_empty
+
+        stub_request(:get, "https://website.com/redirect")
+          .to_return(status: 301, body: "", headers: { "location" => "https://website.com/redirect/dont-onebox" })
+        stub_request(:head, "https://website.com/redirect")
+          .to_return(status: 301, body: "", headers: { "location" => "https://website.com/redirect/dont-onebox" })
+        stub_request(:get, "https://website.com/redirect/dont-onebox")
+          .to_return(status: 301, body: "", headers: { "Discourse-No-Onebox" => "1", "location" => "https://wontreachme.com" })
+        stub_request(:head, "https://website.com/redirect/dont-onebox")
+          .to_return(status: 301, body: "", headers: { "Discourse-No-Onebox" => "1", "location" => "https://wontreachme.com" })
+
+        result = Oneboxer.external_onebox("https://website.com/redirect")
+        expect(result[:onebox]).to be_empty
+        expect(result[:preview]).to be_empty
       end
     end
 
