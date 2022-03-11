@@ -149,13 +149,13 @@ class ScreenedIpAddress < ActiveRecord::Base
   end
 
   def self.roll_up(current_user = Discourse.system_user)
-    subnets = ROLLED_UP_BLOCKS.map do |family, masklen|
+    subnets = ROLLED_UP_BLOCKS.flat_map do |family, masklen|
       ScreenedIpAddress.subnets(family, masklen).map do |subnet|
         [family, subnet]
       end
     end
 
-    subnets.flatten(1).each do |family, subnet|
+    subnets.each do |family, subnet|
       if !ScreenedIpAddress.where("? <<= ip_address", subnet).exists?
         ScreenedIpAddress.create!(ip_address: subnet)
       end
