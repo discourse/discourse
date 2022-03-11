@@ -987,23 +987,35 @@ pre {
   }
 }
 
-.copy-codeblocks {
+.codeblock-buttons {
   display: block;
   position: relative;
   overflow: visible;
 
-  .copy-cmd {
-    @include unselectable;
+  .codeblock-button-wrapper {
     position: absolute;
-    top: 0;
     right: 0;
+    display: flex;
+
+    .copy-cmd {
+      right: 0;
+    }
+    .copy-fullscreen {
+      right: 28px;
+    }
+  }
+
+  .copy-cmd,
+  .fullscreen-cmd {
+    @include unselectable;
+    top: 0;
     min-height: 0;
     font-size: $font-down-2;
     min-height: 0;
     font-size: $font-down-2;
     opacity: 0.7;
 
-    &.copied {
+    &.action-complete {
       .d-icon {
         color: var(--tertiary);
       }
@@ -1604,7 +1616,8 @@ a.mention-group {
   margin-right: 4px;
 }
 
-.fullscreen-table-modal .modal-inner-container {
+.fullscreen-table-modal .modal-inner-container,
+.fullscreen-code-modal .modal-inner-container {
   width: max-content;
   max-width: 90%;
   margin: 0 auto;
@@ -1627,6 +1640,12 @@ a.mention-group {
 
   td {
     padding: 0.5rem;
+  }
+}
+
+.fullscreen-code-modal {
+  pre code {
+    max-width: none;
   }
 }
 

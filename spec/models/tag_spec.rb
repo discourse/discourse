@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe Tag do
   def make_some_tags(count: 3, tag_a_topic: false)
     @tags = []

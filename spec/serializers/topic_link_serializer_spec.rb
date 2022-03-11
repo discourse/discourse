@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe TopicLinkSerializer do
 
   it "correctly serializes the topic link" do

@@ -303,11 +303,11 @@ module Jobs
     # Simulate the args being dumped/parsed through JSON
     parsed_opts = JSON.parse(JSON.dump(opts))
     if opts != parsed_opts
-      Discourse.deprecate(<<~MSG.squish, since: "2.9", drop_from: "3.0")
+      Discourse.deprecate(<<~TEXT.squish, since: "2.9", drop_from: "3.0")
         #{klass.name} was enqueued with argument values which do not cleanly serialize to/from JSON.
         This means that the job will be run with slightly different values than the ones supplied to `enqueue`.
         Argument values should be strings, booleans, numbers, or nil (or arrays/hashes of those value types).
-      MSG
+      TEXT
     end
     opts = parsed_opts
 

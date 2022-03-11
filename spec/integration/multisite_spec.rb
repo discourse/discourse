@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe 'multisite', type: [:multisite, :request] do
   it "should always allow /srv/status through" do
     get "http://unknown.com/srv/status"

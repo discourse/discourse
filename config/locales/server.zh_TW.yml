@@ -1289,7 +1289,6 @@ zh_TW:
     external_system_avatars_enabled: "使用外部系統頭像服務。"
     external_system_avatars_url: "外部系統頭像服務的 URL 地址。可選參數是 {username} {first_letter} {color} {size}"
     restrict_letter_avatar_colors: "設定分類顏色的十六進制色彩值列表。"
-    selectable_avatars_enabled: "強制使用者從列表中選擇一個大頭貼。"
     selectable_avatars: "使用者可選擇的頭像列表。"
     allow_all_attachments_for_group_messages: "允許群組消息中包含任何郵件附件。"
     png_to_jpg_quality: "轉換後的JPG文件品質（1是最低品質，99是最佳品質，100是禁用）。"

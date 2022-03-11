@@ -2117,7 +2117,7 @@ gl:
         clear_all: "Borrar todo"
         unlist_topics: "Retirar temas da listaxe"
         relist_topics: "Refacer a listaxe de temas"
-        reset_read: "Restabelecer os lidos"
+        defer: "Adiar"
         delete: "Eliminar temas"
         dismiss: "Desbotar"
         dismiss_read: "Desbotar os non lidos"
@@ -2400,7 +2400,6 @@ gl:
         title: "Responder"
         help: "escribir unha resposta a este tema"
       share:
-        title: "Compartir"
         extended_title: "Compartir unha ligazón"
         help: "compartir unha ligazón a este tema"
         invite_users: "Convidar"

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe EmailToken do
   it { is_expected.to validate_presence_of :user_id }
   it { is_expected.to validate_presence_of :email }

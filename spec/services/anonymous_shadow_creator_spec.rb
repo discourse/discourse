@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe AnonymousShadowCreator do
 
   it "returns no shadow by default" do

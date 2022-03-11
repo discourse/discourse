@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe TwitterApi do
   context '.link_handles_in' do
     it 'correctly replaces handles' do

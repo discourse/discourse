@@ -2207,7 +2207,7 @@ nl:
         clear_all: "Alles wissen"
         unlist_topics: "Topics onzichtbaar maken"
         relist_topics: "Topics opnieuw weergeven"
-        reset_read: "Markeren als ongelezen"
+        defer: "Negeren"
         delete: "Topics verwijderen"
         dismiss: "Negeren"
         dismiss_read: "Alle ongelezen negeren"
@@ -2499,17 +2499,10 @@ nl:
         title: "Antwoorden"
         help: "beginnen met opstellen van een antwoord op dit topic"
       share:
-        title: "Delen"
         extended_title: "Een koppeling delen"
         help: "een koppeling naar dit topic delen"
         instructions: "Een koppeling naar dit topic delen:"
         copied: "Topiclink gekopieerd."
-        notify_users:
-          title: "Een melding sturen"
-          instructions: "De volgende gebruikers een melding sturen over dit topic."
-          success:
-            one: "%{username} is succesvol een melding gestuurd over dit topic."
-            other: "Alle gebruikers succesvol een melding gestuurd over dit topic."
         invite_users: "Uitnodigen"
       print:
         title: "Afdrukken"

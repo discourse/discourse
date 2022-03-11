@@ -1,5 +1,5 @@
 {{#d-modal-body title="user.change_avatar.title" class="avatar-selector"}}
-  {{#if siteSettings.selectable_avatars_enabled}}
+  {{#if showSelectableAvatars}}
     <div class="selectable-avatars">
       {{#each selectableAvatars as |avatar|}}
         <a href class="selectable-avatar" {{action "selectAvatar" avatar}}>
@@ -7,7 +7,11 @@
         </a>
       {{/each}}
     </div>
-  {{else}}
+    {{#if showAvatarUploader}}
+      <h4>{{html-safe (i18n "user.change_avatar.use_custom")}}</h4>
+    {{/if}}
+  {{/if}}
+  {{#if showAvatarUploader}}
     {{#if user.use_logo_small_as_avatar}}
       <div class="avatar-choice">
         {{radio-button id="logo-small" name="logo" value="logo" selection=selected}}
@@ -55,9 +59,9 @@
   {{/if}}
 {{/d-modal-body}}
 
-{{#unless siteSettings.selectable_avatars_enabled}}
+{{#if showAvatarUploader}}
   <div class="modal-footer">
     {{d-button action=(action "saveAvatarSelection") class="btn-primary" disabled=submitDisabled label="save"}}
     {{d-modal-cancel close=(route-action "closeModal")}}
   </div>
-{{/unless}}
+{{/if}}

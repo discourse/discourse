@@ -163,6 +163,7 @@ hu:
     skip_to_main_content: "Ugrás a fő tartalomhoz"
     wizard_required: "Üdvözöljük az új Discourse-on. Kezdjük a <a href='%{url}' data-auto-route='true'>beállításvarázslóval</a>. ✨"
     emails_are_disabled: "Egy adminisztrátor letiltotta a kimenő e-maileket. Semmilyen értesítő e-mail nem lesz elküldve."
+    emails_are_disabled_non_staff: "A kimenő e-mailek le vannak tiltva a nem stábtagok számára."
     software_update_prompt:
       message: "Frissítettük a webhelyet, <span>frissítse az oldalt</span>, különben váratlan viselkedést tapasztalhat."
       dismiss: "Elvetés"
@@ -173,7 +174,6 @@ hu:
     themes:
       default_description: "Alapértelmezett"
       broken_theme_alert: "Lehet, hogy webhelye nem működik, mert a téma/összetevő hibába ütközött."
-      error_caused_by: "Az okozó: „%{name}”. <a target='blank' href='%{path}'>Kattintson ide</a> az újrakonfiguráláshoz vagy letiltáshoz."
       only_admins: "(ez az üzenet csak a webhely rendszergazdáinak jelenik meg)"
     broken_decorator_alert: "Előfordulhat, hogy a bejegyzések nem jelennek meg megfelelően, mert a webhely egyik bejegyzéstartalmának dekorátora hibát dobott."
     s3:
@@ -2267,7 +2267,7 @@ hu:
         clear_all: "Összes törlése"
         unlist_topics: "Témák listázásnak megszüntetése"
         relist_topics: "Újralistázott témák"
-        reset_read: "Olvasott állapot visszaállítása"
+        defer: "Elhalasztás"
         delete: "Témák törlése"
         dismiss: "Elvetés"
         dismiss_read: "Olvasatlan üzenetek elvetése"
@@ -2549,12 +2549,17 @@ hu:
         title: "Válasz"
         help: "kezdj választ írni erre a témára"
       share:
-        title: "Megosztás"
+        title: "Téma megosztása"
         extended_title: "Link megosztása"
         help: "a témakör hivatkozásának megosztása"
+        copied: "Témahivatkozás másolva."
+        restricted_groups:
+          one: "Csak a csoport tagjai számára látható: %{groupNames}"
+          other: "Csak a csoportok tagjai számára látható: %{groupNames}"
         invite_users: "Meghívás"
       print:
         title: "Nyomtatás"
+        help: "A téma nyomtatóbarát változatának megnyitása"
       flag_topic:
         title: "Megjelölés"
         success_message: "Sikeresen megjelölted ezt a témát."
@@ -2600,21 +2605,48 @@ hu:
           one: "%{count} bejegyzés"
           other: "%{count} bejegyzés"
         cancel: "Szűrő törlése"
+      move_to:
+        title: "Áthelyezés ide:"
+        action: "áthelyezés ide:"
+        error: "Hiba történt a bejegyzések áthelyezése során."
       split_topic:
         title: "Áthelyezés új témába"
         action: "áthelyezés új témába"
+        topic_name: "Új téma címe"
         radio_label: "Új téma"
         error: "Hiba lépett fel a bejegyzés új témakörbe való helyezése során!"
+        instructions:
+          one: "Egy új témát fog létrehozni, és feltölti a kiválasztott hozzászólással."
+          other: "Egy új témát fog létrehozni, és feltölti azt a kiválasztott <b>%{count}</b> hozzászólással."
       merge_topic:
         title: "Áthelyezés létező témába"
         action: "áthelyezés létező témába"
         error: "Hiba történt a bejegyzések áthelyezésekor ebben a témába."
+        radio_label: "Meglévő téma"
+        instructions:
+          one: "Válassza ki azt a témát, ahová áthelyezi a hozzászólást."
+          other: "Válassza ki azt a témát, ahová áthelyezi a(z) <b>%{count}</b> hozzászólást."
       move_to_new_message:
+        title: "Áthelyezés az új üzenethez"
+        action: "áthelyezés az új üzenethez"
+        message_title: "Új üzenet címe"
         radio_label: "Új Üzenet"
+        participants: "Résztvevők"
+      move_to_existing_message:
+        title: "Áthelyezés egy meglévő üzenethez"
+        action: "áthelyezés egy meglévő üzenethez"
+        radio_label: "Meglévő üzenet"
+        participants: "Résztvevők"
+        instructions:
+          one: "Válassza ki azt az üzenetet, ahová áthelyezi a hozzászólást."
+          other: "Válassza ki azt a üzenetet, ahová áthelyezi a(z) <b>%{count}</b> hozzászólást."
       merge_posts:
         title: "Kiválasztott bejegyzések összevonása"
         action: "kiválasztott bejegyzések összevonása"
+        error: "Hiba történt a kiválasztott hozzászólások összevonása során."
       publish_page:
+        title: "Oldal közzététele"
+        publish: "Közzététel"
         public: "Nyilvános"
       change_owner:
         title: "Tulajdonosváltás"
@@ -2682,6 +2714,7 @@ hu:
         create: "Sajnáljuk, de a bejegyzésed létrehozása közben hiba lépett fel. Kérünk próbáld újra!"
         edit: "Sajnáljuk, de a bejegyzésed szerkesztése közben hiba lépett fel. Kérünk próbáld újra!"
         upload: "Sajnáljuk, de a fájl feltöltése közben hiba lépett fel. Kérünk próbáld újra!"
+        file_size_zero: "Sajnáljuk, úgy tűnik, hogy valami hiba történt, a feltöltendő fájl 0 bájtos. Próbálja újra."
         too_many_uploads: "Sajnáljuk, de egyszerre csak egy fájlt tölthetsz fel!"
         image_upload_not_allowed_for_new_user: "Sajnáljuk, de az új felhasználók nem tölthetnek fel képeket!"
         attachment_upload_not_allowed_for_new_user: "Sajnáljuk, de az új felhasználók nem tölthetnek fel csatolmányokat!"

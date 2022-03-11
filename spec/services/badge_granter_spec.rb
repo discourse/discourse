@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe BadgeGranter do
 
   fab!(:badge) { Fabricate(:badge) }

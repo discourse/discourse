@@ -238,7 +238,7 @@ tr_TR:
     disabled_errors:
       discourse_connect_enabled: "DiscourseConnect etkinleştirildiğinden davetler devre dışı bırakıldı."
       invalid_access: "İstenilen kaynağı görüntüleyebilmeniz için izniniz yok."
-    requires_groups: "Davet kaydedildi. Belirtilen konuya erişim vermek için aşağıdaki gruplardan birini ekleyin: %{groups}."
+    requires_groups: "Belirtilen konuya erişilemediğinden davet kaydedilmedi. Aşağıdaki gruplardan birini ekleyin: %{groups}."
     domain_not_allowed: "E-postanız bu daveti değerlendirmek için kullanılamaz."
   bulk_invite:
     file_should_be_csv: "Yüklenen dosya csv formatında olmalıdır."
@@ -637,6 +637,7 @@ tr_TR:
       permission_conflict: "Bir alt kategoriye erişmesine izin verilen herhangi bir grubun üst kategoriye erişmesine de izin verilmelidir. Aşağıdaki grupların alt kategorilerden birine erişimi vardır, ancak üst kategoriye erişimi yoktur: %{group_names}."
       disallowed_topic_tags: "Bu konuya bu kategoride izin verilmiyor: '%{tags}'"
       disallowed_tags_generic: "Bu konuya izin verilmeyen etiketler var."
+      slug_contains_non_ascii_chars: "ascii olmayan karakterler içeriyor"
     cannot_delete:
       uncategorized: "Kategorisi olmayan konular bu kategoride gösterilir. Bu kategori silinemez."
       has_subcategories: "Alt kategorileri bulunduğu için bu kategori silinemez."
@@ -1490,6 +1491,9 @@ tr_TR:
     tl2_additional_edits_per_day_multiplier: "Güvenlik düzeyi 2 (üye) olanlar için günlük düzenleme limitini bu rakamla çarparak artır"
     tl3_additional_edits_per_day_multiplier: "Güven düzeyi 3 (müdavim) olanlar için günlük düzenleme limitini bu rakamla çarparak artır"
     tl4_additional_edits_per_day_multiplier: "Güvenlik düzeyi 4 (lider) olanlar için günlük düzenleme limitini bu rakamla çarparak artır"
+    tl2_additional_flags_per_day_multiplier: "Güvenlik düzeyi 2 (Üye) olanlar için günlük işaretleme limitini bu rakamla çarparak artır"
+    tl3_additional_flags_per_day_multiplier: "Güven düzeyi 3 (Müdavim) olanlar için günlük işaretleme limitini bu rakamla çarparak artır"
+    tl4_additional_flags_per_day_multiplier: "Güvenlik düzeyi 4 (Lider) olanlar için günlük işaretleme limitini bu rakamla çarparak artır"
     num_users_to_silence_new_user: "Eğer, yeni bir kullanıcının gönderileri buradaki sayı kadar farklı kullanıcı tarafından num_flags_to_block_new_user rapor alırsa kullanıcının bütün gönderilerini gizle ve yeni gönderi oluşturabilmesine izin verme. Devre dışı bırakmak için 0 girin."
     num_tl3_flags_to_silence_new_user: "Eğer, yeni bir kullanıcının gönderileri num_flags_to_block_new_user güven düzeyi 3 olan farklı kullanıcılardan buradaki sayı kadar bayrak alırsa , kullanıcının bütün gönderilerini gizle ve yeni gönderi oluşturabilmesine izin verme. Devre dışı bırakmak için 0 girin."
     num_tl3_users_to_silence_new_user: "Eğer, yeni bir kullanıcının gönderileri buradaki sayı kadar farklı güven düzeyi 3 olan kullanıcı tarafından num_flags_to_block_new_user rapor alırsa kullanıcının bütün gönderilerini gizle ve yeni gönderi oluşturabilmesine izin verme. Devre dışı bırakmak için 0 girin."
@@ -1687,7 +1691,6 @@ tr_TR:
     use_site_small_logo_as_system_avatar: "Sistem kullanıcısının avatarı yerine sitenin küçük logosunu kullanın. Logonun mevcut olmasını gerektirir."
     restrict_letter_avatar_colors: "Harf avatarı arka planı için kullanılacak 6 basamaklı onaltılı renk değerlerinin listesi."
     enable_listing_suspended_users_on_search: "Askıya alınan kullanıcıları bulmak için normal kullanıcıların etkinleştir."
-    selectable_avatars_enabled: "Kullanıcıları listeden bir avatar seçmeye zorlayın."
     selectable_avatars: "Kullanıcıların seçebileceği avatarların listesi."
     allow_all_attachments_for_group_messages: "Grup iletileri için tüm e-posta eklentilerine izin ver."
     png_to_jpg_quality: "Dönüştürülen JPG dosyasının kalitesi (1 en düşük kalite, 99 en iyi kalite, 100 devre dışı bırakmak için)."
@@ -3427,6 +3430,7 @@ tr_TR:
     complete_multipart_failure: "Harici depoda çok parçalı yükleme tamamlanamadı."
     external_upload_not_found: "Yükleme harici depoda bulunamadı. %{additional_detail}"
     cannot_promote_failure: "Yükleme tamamlanamıyor, zaten tamamlanmış veya daha önce başarısız olmuş olabilir."
+    size_zero_failure: "Üzgünüz, bir şeyler ters gitmiş gibi görünüyor, yüklemeye çalıştığınız dosya 0 bayt. Lütfen tekrar deneyin."
     attachments:
       too_large: "Üzgünüz, yüklemeye çalıştığınız dosya çok büyük (en fazla %{max_size_kb}KB olabilir)."
       too_large_humanized: "Maalesef yüklemeye çalıştığınız dosya çok büyük (maksimum boyut %{max_size})."
@@ -3724,7 +3728,7 @@ tr_TR:
       name: İlk Bahsetme
       description: Bir gönderide bir kullanıcıdan bahsetti
       long_description: |
-        Bu rozet, gönderinizde birisinin @kullanıcıadından ilk kez bahsettiğinizde verilir. Her bir bahsetme, söz konusu kişiye bir bildirim oluşturur. Herhangi bir kullanıcıdan veya izin veriliyorsa gruptan bahsetmek için @(takmaad) yazın. - dikkatlerini çekmek için kullanışlı bir yol.
+        Bu rozet, gönderinizde birisinin @kullanıcıadından ilk kez bahsettiğinizde verilir. Her bir bahsetme, söz konusu kişiye bir bildirim oluşturur. Herhangi bir kullanıcıdan veya izin veriliyorsa gruptan bahsetmek için @(takmaad) yazın. - dikkatlerini çekmek için kullanışlı bir yoldur.
     first_onebox:
       name: İlk Kutulama
       description: Kutulanmış bir bağlantı gönderdi

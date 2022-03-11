@@ -1096,6 +1096,7 @@ da:
         warnings_received: "advarsler"
         rejected_posts: "afviste indlæg"
       messages:
+        all: "alle indbakker"
         inbox: "Indbakke"
         personal: "Personlige"
         latest: "Seneste"
@@ -1446,8 +1447,13 @@ da:
           edit_title: "Rediger Invitation"
           instructions: "Del dette link for øjeblikkeligt at give adgang til dette websted:"
           copy_link: "kopier link"
+          expired_at_time: "Udløb kl. %{time}"
           show_advanced: "Vis Avancerede Indstillinger"
           hide_advanced: "Skjul Avancerede Indstillinger"
+          restrict: "Begræns til"
+          restrict_email: "Begræns til e-mail"
+          restrict_domain: "Begræns til domæne"
+          email_or_domain_placeholder: "navn@eksempel.dk eller eksempel.dk"
           add_to_groups: "Tilføj til grupper"
           expires_at: "Udløber efter"
           custom_message: "Valgfri personlig meddelelse"
@@ -2193,7 +2199,7 @@ da:
         clear_all: "Ryd alle"
         unlist_topics: "Fjern emner fra liste"
         relist_topics: "Genindlæs emner"
-        reset_read: "Nulstil \"læst\""
+        defer: "Udsæt"
         delete: "Slet emner"
         dismiss: "Skjul"
         dismiss_read: "Afvis alle ulæste"
@@ -2482,16 +2488,9 @@ da:
         title: "Svar"
         help: "start på et svar til dette emne"
       share:
-        title: "Del"
         extended_title: "Del et link"
         help: "del et link til dette emne"
         copied: "Emne link kopieret."
-        notify_users:
-          title: "Underret"
-          instructions: "Giv følgende brugere besked om dette emne:"
-          success:
-            one: "Underrettede %{username} om dette emne."
-            other: "Alle brugere fik besked om dette emne."
         invite_users: "Invitér"
       print:
         title: "Print"
@@ -2712,6 +2711,7 @@ da:
         edit: "Beklager, der opstrod en fejl under redigeringen af dit indlæg. Prøv venligst igen."
         upload: "Beklager, der opstod en fejl under overførsel af filen. Prøv venligst igen."
         file_too_large: "Beklager, denne fil er for stor (maksimal størrelse er %{max_size_kb}kb). Hvorfor ikke overføre din store fil til en sky-delingstjeneste, og derefter indsætte linket?"
+        file_size_zero: "Beklager, det ser ud til, at der er gået noget galt, filen, du forsøger at overføre er 0 bytes. Prøv venligst igen."
         too_many_uploads: "Beklager, men du kan kun overføre én fil ad gangen."
         too_many_dragged_and_dropped_files:
           one: "Beklager, men du kan kun overføre %{count} fil ad gangen."

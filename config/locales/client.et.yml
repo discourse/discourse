@@ -1558,7 +1558,7 @@ et:
         select_all: "Vali kõik"
         clear_all: "Puhasta kõik"
         unlist_topics: "Eemalda teemad loetelust"
-        reset_read: "Nulli loetud"
+        defer: "Lükka edasi"
         delete: "Kustuta teemad"
         dismiss: "Ignoreeri"
         dismiss_read: "Ignoreeri lugemata"
@@ -1799,7 +1799,6 @@ et:
         title: "Vasta"
         help: "kirjuta sellele teemale vastus"
       share:
-        title: "Jaga"
         help: "jaga viidet sellele teemale"
         invite_users: "Kutsu"
       print:

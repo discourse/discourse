@@ -207,6 +207,7 @@ he:
     skip_to_main_content: "דילוג לתוכן הראשי"
     wizard_required: "ברוך בואך ל־Discourse החדש שלך! נתחיל עם <a href='%{url}' data-auto-route='true'>אשף ההתקנה</a> ✨"
     emails_are_disabled: "כל הדוא״ל היוצא נוטרל באופן גורף על ידי מנהל אתר. שום הודעת דוא״ל, מכל סוג שהוא, לא תשלח."
+    emails_are_disabled_non_staff: "דוא״ל יוצא הושבת עבור משתמשים שאינם מהסגל."
     software_update_prompt:
       message: "עדכנו את האתר הזה, <span>נא לרענן</span> או שיתכן שתופענה כל מיני תופעות בלתי מוסברות."
       dismiss: "התעלמות"
@@ -219,7 +220,7 @@ he:
     themes:
       default_description: "בררת מחדל"
       broken_theme_alert: "יתכן שהאתר שלך לא יתפקד כיוון שבערכת העיצוב / הרכיב יש שגיאות."
-      error_caused_by: "נגרם על ידי ‚%{name}’. <a target='blank' href='%{path}'>יש ללחוץ כאן</a> כדי להגדיר מחדש או להשבית."
+      error_caused_by: "נגרם על ידי ‚%{name}’. <a target='blank' href='%{path}'>יש ללחוץ כאן</a> כדי לעדכן, להגדיר מחדש או להשבית."
       only_admins: "(הודעה זו מופיע רק למנהלי האתר)"
     broken_decorator_alert: "פוסטים עלולים שלא להופיע כראוי כיוון שאחד ממעצבי התוכן באתר שלך העלה שגיאה."
     s3:
@@ -364,6 +365,8 @@ he:
         existing_reminder: "הגדרת תזכורת עבור הסימנייה הזאת שתישלח ב־%{at_date_time}"
     copy_codeblock:
       copied: "הועתק!"
+      copy: "העתקת קוד ללוח הגזירים"
+      fullscreen: "הצגת קוד במסך מלא"
     drafts:
       label: "טיוטות"
       label_with_count: "טיוטות (%{count})"
@@ -1035,7 +1038,7 @@ he:
       mute: "השתקה"
       edit: "עריכת העדפות"
       download_archive:
-        button_text: "להוריד הכל"
+        button_text: "להוריד הכול"
         confirm: "להוריד את הפוסטים שלך?"
         success: "ההורדה החלה, תישלח אליך הודעה עם סיום התהליך."
         rate_limit_error: "ניתן להוריד פוסטים פעם אחת ביום, נא לנסות שוב מחר."
@@ -1045,7 +1048,7 @@ he:
       user_notifications:
         filters:
           filter_by: "סינון לפי"
-          all: "הכל"
+          all: "הכול"
           read: "נקרא"
           unread: "לא-נקראו"
           unseen: "לא נראו"
@@ -1113,7 +1116,7 @@ he:
         each_browser_note: 'הערה: עליך לשנות הגדרה זו בכל דפדפן שבו אתה משתמש. כל ההודעות יושבתו במצב "אל תפריע", ללא קשר להגדרה זו.'
         consent_prompt: "לקבל התראות חיות כשמתקבלות תגובות לפוסטים שלך?"
       dismiss: "דחה"
-      dismiss_notifications: "בטלו הכל"
+      dismiss_notifications: "להתעלם מהכול"
       dismiss_notifications_tooltip: "סימון כל ההתראות שלא נקראו כהתראות שנקראו"
       no_messages_title: "אין לך הודעות כלל"
       no_messages_body: >
@@ -1305,7 +1308,7 @@ he:
         title: "אימות דו־שלבי"
         enable: "ניהול אימות דו־שלבי"
         disable_all: "להשבית הכול"
-        forgot_password: "שכחת את הססמה?"
+        forgot_password: "שכחת את הסיסמה?"
         confirm_password_description: "אנא אשר את סיסמתך בכדי להמשיך"
         name: "שם"
         label: "קוד"
@@ -1317,7 +1320,7 @@ he:
         short_description: |
           הגנה על החשבון שלך עם קודים חד־פעמיים לאבטחה.
         extended_description: |
-          אימות דו־שלבי מחזק את אבטחת המשתמש שלך באסימון אבטחה חד־פעמי בנוסף לססמה שלך. ניתן ליצור אסימונים על מכשירי <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> ו־<a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>.
+          אימות דו־שלבי מחזק את אבטחת המשתמש שלך באסימון אבטחה חד־פעמי בנוסף לסיסמה שלך. ניתן ליצור אסימונים על מכשירי <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> ו־<a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>.
         oauth_enabled_warning: "לידיעתך, כניסות מרשתות חברתיות יושבתו לאחר הפעלת אימות דו־שלבי בחשבונך."
         use: "להשתמש ביישומון אימות"
         enforced_notice: "עליך להפעיל אימות דו־שלבי בטרם הגישה לאתר הזה."
@@ -1375,6 +1378,7 @@ he:
         upload_title: "העלאת התמונה שלך"
         image_is_not_a_square: "אזהרה: קיצצנו את התמונה שלך; האורך והרוחב לא היו שווים."
         logo_small: "הלוגו הקטן של האתר. משמש כבררת מחדל."
+        use_custom: "או להעלות תמונה ייצוגית משלך:"
       change_profile_background:
         title: "כותרת פרופיל"
         instructions: "כותרות הפרופילים ימורכזו ורוחבן ייקבע ל־1110 פיקסלים כבררת מחדל."
@@ -1400,7 +1404,7 @@ he:
         auth_override_instructions: "ניתן לעדכן את כתובת הדוא״ל דרך ספק האימות."
         no_secondary: "אין כתובות דוא״ל משניות"
         instructions: "לעולם לא מוצג לציבור."
-        admin_note: "הערה: משתמש ניהולי שמשנה כתובת דוא״ל למשתמש שאינו ניהולי מציינת שהגישה של המשתמש לכתובת הדוא״ל המקורית אבדה, לכן תישלח הודעת איפוס ססמה לכתובת החדשה בדוא״ל. כתובת הדוא״ל של המשתמש לא תוחלף עד לביצוע תהליך איפוס הססמה."
+        admin_note: "הערה: משתמש ניהולי שמשנה כתובת דוא״ל למשתמש שאינו ניהולי מציינת שהגישה של המשתמש לכתובת הדוא״ל המקורית אבדה, לכן תישלח הודעת איפוס סיסמה לכתובת החדשה בדוא״ל. כתובת הדוא״ל של המשתמש לא תוחלף עד לביצוע תהליך איפוס הסיסמה."
         ok: "נשלח אליכם דואר אלקטרוני לאישור"
         required: "נא למלא כתובת דוא״ל"
         invalid: "בבקשה הכניסו כתובת דואר אלקטרוני תקינה"
@@ -1434,7 +1438,7 @@ he:
       username:
         title: "שם משתמש/ת"
         instructions: "ייחודי, ללא רווחים, קצר"
-        short_instructions: "אנשים יכולים לאזכר אותך כ @%{username}"
+        short_instructions: "אנשים יכולים לאזכר אותך בתור ‎@%{username}"
         available: "שם המשתמש שלך פנוי"
         not_available: "לא זמין. נסו %{suggestion}?"
         not_available_no_suggestion: "לא זמין"
@@ -1459,10 +1463,10 @@ he:
         details: "פרטים"
         log_out_all: "להוציא את כולם"
         not_you: "לא אתה?"
-        show_all: "הצג הכל (%{count})"
-        show_few: "הצג פחות"
+        show_all: "להציג הכול (%{count})"
+        show_few: "להציג פחות"
         was_this_you: "האם זה היית אתה?"
-        was_this_you_description: "אם לא נכנסת למערכת, אנו ממליצים לך לשנות את ססמתך ולהוציא את המשתמש בכל מקום שניתן."
+        was_this_you_description: "אם לא נכנסת למערכת, אנו ממליצים לך לשנות את סיסמתך ולהוציא את המשתמש בכל מקום שניתן."
         browser_and_device: "%{browser} ב%{device}"
         secure_account: "אבטח את החשבון שלי"
         latest_post: "פרסמת לאחרונה..."
@@ -1632,10 +1636,10 @@ he:
         too_short: "הסיסמה שלך קצרה מידי."
         common: "הסיסמה הזו נפוצה מידי."
         same_as_username: "הסיסמה שלך זהה לשם המשתמש/ת שלך."
-        same_as_email: "הססמה שלך זהה לכתובת הדוא״ל שלך."
+        same_as_email: "הסיסמה שלך זהה לכתובת הדוא״ל שלך."
         ok: "הסיסמה שלך נראית טוב."
         instructions: "לפחות %{count} תווים"
-        required: "נא למלא ססמה"
+        required: "נא למלא סיסמה"
       summary:
         title: "סיכום"
         stats: "סטטיסטיקות"
@@ -1713,13 +1717,14 @@ he:
         none: "(ללא)"
         instructions: "מופיע לאחר שם המשתמש שלך"
       flair:
+        title: "סמלון"
         none: "(ללא)"
         instructions: "סמל המוצג לצד תמונת הפרופיל שלך"
       primary_group:
         title: "קבוצה ראשית"
         none: "(ללא)"
       filters:
-        all: "הכל"
+        all: "הכול"
       stream:
         posted_by: "פורסם על ידי"
         sent_by: "נשלח על ידי"
@@ -1833,7 +1838,7 @@ he:
       associate: "כבר יש לך חשבון? ניתן <a href='%{associate_link}'>להיכנס</a> כדי לקשר את חשבון ה־%{provider} שלך."
     forgot_password:
       title: "אתחול סיסמה"
-      action: "שכחתי את ססמתי"
+      action: "שכחתי את הסיסמה שלי"
       invite: "נא להקליד את שם המשתמש וכתובת הדוא״ל שלך ואנו נשלח לך הודעה בדוא״ל לאיפוס ססמה."
       invite_no_username: "נא להקליד את כתובת הדוא״ל שלך ואנו נשלח לך הודעה בדוא״ל לאיפוס ססמה."
       reset: "איפוס ססמה"
@@ -1933,6 +1938,7 @@ he:
       second_factor_toggle:
         totp: "להשתמש ביישומון אימות במקום"
         backup_code: "להשתמש בקוד גיבוי במקום"
+        security_key: "להשתמש במפתח אבטחה במקום"
     invites:
       accept_title: "הזמנה"
       emoji: "אמוג׳י של מעטפה"
@@ -2260,7 +2266,7 @@ he:
       invitee_accepted: "<span>%{username}</span> אישר/ה את ההזמנה שלך"
       moved_post: "<span>%{username}</span> עבר %{description}"
       linked: "<span>%{username}</span> %{description}"
-      granted_badge: "הרווחת '%{description}'"
+      granted_badge: "הרווחת את ‚%{description}’"
       topic_reminder: "<span>%{username}</span> %{description}"
       watching_first_post: "<span>נושא חדש</span> %{description}"
       membership_request_accepted: "התקבלת לחברות בקבוצה ‚%{group_name}’"
@@ -2334,8 +2340,8 @@ he:
       latest_topic: "נושא אחרון"
       most_viewed: "הנצפה ביותר"
       most_liked: "האהובים ביותר"
-      select_all: "בחירה של הכל"
-      clear_all: "נקוי של הכל"
+      select_all: "בחירה בהכול"
+      clear_all: "לפנות הכול"
       too_short: "ביטוי החיפוש שלך קצר מידי."
       open_advanced: "פתיחת חיפוש מתקדם"
       clear_search: "פינוי החיפוש"
@@ -2462,17 +2468,32 @@ he:
       new_messages_marker: "ביקור אחרון"
       bulk:
         select_all: "בחירה בהכול"
-        clear_all: "נקו הכל"
+        clear_all: "לפנות הכול"
         unlist_topics: "הסרת נושאים"
         relist_topics: "רשימה מחדש של נושאים"
-        reset_read: "איפוס נקראו"
+        defer: "אחר כך"
         delete: "מחיקת נושאים"
         dismiss: "ביטול"
         dismiss_read: "התעלמות מאלו שלא נקראו"
+        dismiss_read_with_selected:
+          one: "להתעלם מ־%{count} שלא נקרא"
+          two: "להתעלם מ־%{count} שלא נקראו"
+          many: "להתעלם מ־%{count} שלא נקראו"
+          other: "להתעלם מ־%{count} שלא נקראו"
         dismiss_button: "ביטול..."
+        dismiss_button_with_selected:
+          one: "להתעלם (%{count})…"
+          two: "להתעלם (%{count})…"
+          many: "להתעלם (%{count})…"
+          other: "להתעלם (%{count})…"
         dismiss_tooltip: "ביטול הצגת פוסטים חדשים או מעקב אחר נושאים"
         also_dismiss_topics: "הפסיקו לעקוב אחרי נושאים אלו כדי שהם לא יופיעו שוב בתור לא-נקראו"
         dismiss_new: "ביטול חדשים"
+        dismiss_new_with_selected:
+          one: "להתעלם מחדש (%{count})"
+          two: "להתעלם מחדשים (%{count})"
+          many: "להתעלם מחדשים (%{count})"
+          other: "להתעלם מחדשים (%{count})"
         toggle: "החלף קבוצה מסומנת של נושאים"
         actions: "מקבץ פעולות"
         change_category: "הגדרת קטגוריה…"
@@ -2787,7 +2808,7 @@ he:
         title: "תגובה"
         help: "להתחיל לכתוב תגובה לנושא זה"
       share:
-        title: "שיתוף"
+        title: "שיתוף נושא"
         extended_title: "שתף קישור"
         help: "שתפו קישור לנושא זה"
         instructions: "שיתוף קישור לנושא זה:"
@@ -2797,14 +2818,6 @@ he:
           two: "גלוי רק לחברי הקבוצות: %{groupNames}"
           many: "גלוי רק לחברי הקבוצות: %{groupNames}"
           other: "גלוי רק לחברי הקבוצות: %{groupNames}"
-        notify_users:
-          title: "להודיע"
-          instructions: "להודיע למשתמשים הבאים על הנושא הזה:"
-          success:
-            one: "נשלחה הודעה אל %{username} על הנושא הזה."
-            two: "נשלחה הודעה לכולם על הנושא הזה."
-            many: "נשלחה הודעה לכולם על הנושא הזה."
-            other: "נשלחה הודעה לכולם על הנושא הזה."
         invite_users: "להזמין"
       print:
         title: "הדפסה"
@@ -2935,7 +2948,7 @@ he:
       merge_posts:
         title: "מיזוג פוסטים שנבחרו"
         action: "מיזוג פוסטים שנבחרו"
-        error: "ארעה שגיאה במיזוג הפוסטים שנבחרו."
+        error: "אירעה שגיאה במיזוג הפוסטים שנבחרו."
       publish_page:
         title: "פרסום עמוד"
         publish: "פרסום"
@@ -2988,7 +3001,7 @@ he:
           title: "הוספת פוסט וכל מה שאחריו לבחירה"
         delete: מחק נבחרים
         cancel: בטל בחירה
-        select_all: בחר הכל
+        select_all: בחירה בהכול
         deselect_all: בחר כלום
         description:
           one: בחרתם פוסט אחד.
@@ -3061,6 +3074,7 @@ he:
         edit: "אירעה שגיאה בעריכת הפוסט שלך. נא לנסות שוב, עמך הסליחה."
         upload: "סליחה, הייתה שגיאה בהעלאת הקובץ שלך. אנא נסו שנית"
         file_too_large: "הקובץ הזה גדול מדי (הגודל המרבי הוא %{max_size_kb} ק״ב), עמך הסליחה. למה שלא להעלות את הקובץ שלך לשירות שיתוף בענן ואז להדביק את הקישור?"
+        file_size_zero: "נראה שמשהו השתבש, הקובץ שניסית להעלות הוא בגודל 0 בתים. נא לנסות שוב, עמך הסליחה."
         file_too_large_humanized: "הקובץ הזה גדול מדי (הגודל המרבי הוא %{max_size}), עמך הסליחה. למה שלא להעלות את הקובץ שלך לשירות שיתוף בענן ואז להדביק את הקישור?"
         too_many_uploads: "סליחה, אך ניתן להעלות רק קובץ אחת כל פעם."
         too_many_dragged_and_dropped_files:
@@ -3245,6 +3259,9 @@ he:
         viewing_summary: "מוצג סיכום של הפוסט הזה"
         post_number: "%{username}, פוסט מס׳ %{post_number}"
         show_all: "להציג הכול"
+      share:
+        title: "שיתוף פוסט מס׳ %{post_number}"
+        instructions: "שיתוף קישור לפוסט זה:"
     category:
       none: "(ללא קטגוריה)"
       all: "כל הקטגוריות"
@@ -3957,6 +3974,8 @@ he:
     no_group_messages_title: "לא נמצאו הודעות קבוצתיות"
     fullscreen_table:
       expand_btn: "הרחבת טבלה"
+    second_factor_auth:
+      redirect_after_success: "האימות הדו־שלבי הצליח. מתבצעת הפניה לעמוד הקודם…"
   admin_js:
     type_to_filter: "הקלידו לסינון..."
     admin:
@@ -4038,7 +4057,7 @@ he:
           all_time: "כל הזמן"
           7_days_ago: "לפני שבעה ימים"
           30_days_ago: "לפני 30 ימים"
-          all: "הכל"
+          all: "הכול"
           view_table: "טבלה"
           view_graph: "גרף"
           refresh_report: "רענון דו\"ח"
@@ -4092,6 +4111,7 @@ he:
               description: "מנהלים יכולים לראות את כל הקבוצות."
             members_visibility_levels:
               title: "מי יכול לראות את חברי הקבוצה הזו?"
+              description: "מנהלים יכולים לראות חברים מכל הקבוצות. סמלון גלוי לכל המשתמשים."
             publish_read_state: "בהודעות קבוצתית לפרסם את מצב הקריאה של הקבוצה"
           membership:
             automatic: אוטומטי
@@ -4186,6 +4206,7 @@ he:
             topics:
               read: קריאת נושא או פוסט מסוים בתוכו. יש גם תמיכה ב־RSS.
               write: יצירת נושא חדש או פרסום לאחד קיים.
+              update: עדכון נושא. החלפת הכותרת, הקטגוריה, התגיות וכו׳.
               read_lists: לקרוא רשימת נושאים כמו מובילים, חדשים, אחרונים וכו׳. יש גם תמיכה ב־RSS.
               wordpress: נחוץ כדי שהתוסף wp-discourse ל־WordPress יעבוד.
             posts:
@@ -4234,7 +4255,7 @@ he:
         content_type: "סוג תוכן"
         secret: "סוד"
         event_chooser: "אילו ארועים תרצו שיפעילו את ה webhook הזה?"
-        wildcard_event: "שלחו אלי הכל."
+        wildcard_event: "לשלוח הכול אלי."
         individual_event: "בחירת אירועים מסוימים."
         verify_certificate: "בדיקה של סרטיפיקט TLS של ה url של התוכן"
         active: "פעיל"
@@ -4270,6 +4291,9 @@ he:
         notification_event:
           name: "אירוע התראה"
           details: "כשמשתמש מקבל התראה בהזנה שלו."
+        user_promoted_event:
+          name: "אירוע שקודם על ידי משתמש"
+          details: "כאשר משתמש מקודם מדרגת אמון אחת לאחרת."
         user_badge_event:
           name: "אירוע הענקת עיטור"
           details: "כמשתמש מקבל עיטור."
@@ -4759,10 +4783,10 @@ he:
           block: "חסום"
           do_nothing: "עשה כלום"
         staff_actions:
-          all: "הכל"
+          all: "הכול"
           filter: "סינון:"
           title: "פעולות סגל"
-          clear_filters: "הראה הכל"
+          clear_filters: "להציג הכול"
           staff_user: "משתמש"
           target_user: "משתמש מטרה"
           subject: "נושא"
@@ -4917,7 +4941,7 @@ he:
           many: "להציג %{count} מילים"
           other: "להציג %{count} מילים"
         download: הורדה
-        clear_all: נקו הכל
+        clear_all: לפנות הכול
         clear_all_confirm: "לפנות את כל המילים שבמעקב לפעולה %{action}?"
         invalid_regex: 'המילה „%{word}” שבמעקב היא ביטוי רגולרי שגוי.'
         regex_warning: '<a href="%{basePath}/admin/site_settings/category/all_results?filter=watched%20words%20regular%20expressions%20">מילים במעקב הן ביטויים רגולריים</a> ואין כוללות גבולות מילים. כדי שהביטוי הרגולרי ילכוד מילים מלאות, יש לכלול ‎<code>\b</code>‎ בתחילת ובסוף הביטוי הרגולרי שלך.'
@@ -5159,7 +5183,7 @@ he:
         delete_confirm: "בדרך כלל מומלץ להפוך משתמשים לאלמונים מאשר למחוק אותם כדי למנוע הסרת תוכן מדיונים קיימים.<br><br>האם בוודאות ברצונך למחוק את המשתמש הזה? מדובר בפעולה בלתי הפיכה!"
         delete_and_block: "מחיקה ו<b>חסימה</b> של כתובות הדוא״ל וה־IP האלו"
         delete_dont_block: "מחיקה בלבד"
-        deleting_user: "המשתמש נמחק…"
+        deleting_user: "משתמש נמחק…"
         deleted: "המשתמש נמחק."
         delete_failed: "הייתה שגיאה במחיקת המשתמש. יש לוודא שכל הפוסטים נמחקו לפני ניסיון להסיר את המשתמש."
         send_activation_email: "שלח הודעת הפעלת חשבון"
@@ -5317,7 +5341,7 @@ he:
         selectable_avatars:
           title: "רשימת תמונות ייצוגיות מהן המשתמשים יכולים לבחור"
         categories:
-          all_results: "הכל"
+          all_results: "הכול"
           required: "נדרש"
           branding: "מיתוג"
           basic: "התקנה בסיסית"

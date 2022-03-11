@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe Invite do
   fab!(:user) { Fabricate(:user) }
   let(:xss_email) { "<b onmouseover=alert('wufff!')>email</b><script>alert('test');</script>@test.com" }

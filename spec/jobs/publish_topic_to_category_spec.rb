@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 RSpec.describe Jobs::PublishTopicToCategory do
   fab!(:category) { Fabricate(:category) }
   fab!(:another_category) { Fabricate(:category) }

@@ -236,7 +236,6 @@ fr:
     disabled_errors:
       discourse_connect_enabled: "Les invitations sont désactivées car DiscourseConnect est activé."
       invalid_access: "Vous n'êtes pas autorisé(e) à afficher la ressource demandée."
-    requires_groups: "Invitation enregistrée. Pour donner accès au sujet spécifié, ajoutez l'un des groupes suivants : %{groups}."
   bulk_invite:
     file_should_be_csv: "Le fichier envoyé doit être au format CSV."
     max_rows: "Les premières %{max_bulk_invites} invitations ont été envoyées. Essayez de diviser le fichier en parties plus petites."
@@ -1649,7 +1648,6 @@ fr:
     external_emoji_url: "URL du service externe de fourniture d'images d'émojis. Laisser ce champ vierge pour désactiver cette fonctionnalité."
     use_site_small_logo_as_system_avatar: "Utiliser le logo de petit format du site à la place de l'avatar de l'utilisateur 'system'. Nécessite que ce logo soit défini."
     restrict_letter_avatar_colors: "Une liste de couleurs au format hexadécimal à 6 chiffres utilisées pour l'arrière-plan des avatars en forme de lettres."
-    selectable_avatars_enabled: "Obliger les utilisateurs à sélectionner un avatar repris dans la liste."
     selectable_avatars: "Liste d'avatars que les utilisateurs peuvent sélectionner."
     allow_all_attachments_for_group_messages: "Autoriser toutes les pièces jointes pour les messages de groupes."
     png_to_jpg_quality: "Qualité du fichier JPEG converti (1 représente la qualité la plus faible, 99 la meilleure qualité, 100 sert à désactiver)."

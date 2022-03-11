@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 RSpec.describe GroupMentionsUpdater do
   fab!(:post) { Fabricate(:post) }
 

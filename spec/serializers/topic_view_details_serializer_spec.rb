@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe TopicViewDetailsSerializer do
   describe '#allowed_users' do
     it "add the current user to the allowed user's list even if they are an allowed group member" do

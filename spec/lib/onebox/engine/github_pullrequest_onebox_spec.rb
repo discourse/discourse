@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Onebox::Engine::GithubPullRequestOnebox do
   before do
     @link = "https://github.com/discourse/discourse/pull/1253/"

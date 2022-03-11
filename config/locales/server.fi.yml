@@ -236,7 +236,6 @@ fi:
     disabled_errors:
       discourse_connect_enabled: "Kutsut on poistettu käytöstä, koska DiscourseConnect on aktiivinen."
       invalid_access: "Sinulla ei ole oikeutta nähdä pyydettyä resurssia."
-    requires_groups: "Kutsu tallennettu. Jos haluat antaa määritetyn alueen käyttöoikeuden, lisää yksi seuraavista ryhmistä: %{groups}."
   bulk_invite:
     file_should_be_csv: "Ladattavan tiedoston tulee olla CSV-muodossa."
     max_rows: "Ensimmäiset %{max_bulk_invites} kutsua lähetettiin. Jaa tiedosto pienempiin osiin."
@@ -1649,7 +1648,6 @@ fi:
     external_emoji_url: "Emoji-kuvien ulkoisen palvelun URL-osoite. Poista käytöstä jättämällä tyhjäksi."
     use_site_small_logo_as_system_avatar: "Käytä sivuston pientä logoa järjestelmäkäyttäjän avatarin sijasta. Edellyttää, että logo on asetettu."
     restrict_letter_avatar_colors: "Luettelo kuusinumeroisista heksadesimaalisista väriarvoista, joita käytetään kirjainavatareja luotaessa."
-    selectable_avatars_enabled: "Pakota käyttäjä valitsemaan avatarinsa listalta."
     selectable_avatars: "Avatarit, joista käyttäjä voi valita."
     allow_all_attachments_for_group_messages: "Salli kaikki sähköpostiliitteet ryhmäviesteissä."
     png_to_jpg_quality: "Muunnetun JPG-tiedoston laatu (1 on huonoin laatu, 99 on paras laatu, 100 poistaa käytöstä)."

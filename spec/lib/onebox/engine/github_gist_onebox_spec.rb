@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Onebox::Engine::GithubGistOnebox do
   before do
     @link = "https://gist.github.com/karreiro/208fdd59fc4b4c39283b"

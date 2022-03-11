@@ -218,6 +218,10 @@ pl_PL:
     bootstrap_mode_disabled: "Tryb bootstrap zostanie wyłączony w ciągu 24 godzin."
     themes:
       default_description: "Domyślny"
+      broken_theme_alert: "Twoja strona może nie działać, ponieważ motyw / komponent ma błędy."
+      error_caused_by: "Spowodowane przez '%{name}'. <a target='blank' href='%{path}'>Kliknij tutaj</a>, aby zaktualizować, zmienić konfigurację lub wyłączyć."
+      only_admins: "(ta wiadomość jest wyświetlana tylko administratorom witryny)"
+    broken_decorator_alert: "Posty mogą nie wyświetlać się poprawnie, ponieważ jeden z dekoratorów treści postów w Twojej witrynie zgłosił błąd."
     s3:
       regions:
         ap_northeast_1: "Azja i Pacyfik (Tokio)"
@@ -778,6 +782,7 @@ pl_PL:
             title: "Ustawienia"
             allow_unknown_sender_topic_replies: "Zezwalaj na odpowiedzi od nieznanego nadawcy w temacie."
             allow_unknown_sender_topic_replies_hint: "Umożliwia nieznanym nadawcom odpowiadanie na tematy grupy. Jeśli ta opcja nie jest włączona, odpowiedzi z adresów e-mail, które nie zostały jeszcze zaproszone do tematu, utworzą nowy temat."
+            from_alias: "Z aliasu"
           mailboxes:
             synchronized: "Zsynchronizowana skrzynka pocztowa"
             none_found: "Na tym koncie e-mail nie znaleziono żadnych skrzynek pocztowych."
@@ -1927,6 +1932,7 @@ pl_PL:
       second_factor_toggle:
         totp: "Zamiast tego użyj aplikacji uwierzytelniającej"
         backup_code: "Zamiast tego użyj kodu zapasowego"
+        security_key: "Zamiast tego użyj klucza zabezpieczeń"
     invites:
       accept_title: "Zaproszenie"
       emoji: "envelope emoji"
@@ -2459,7 +2465,7 @@ pl_PL:
         clear_all: "Wyczyść wszystko"
         unlist_topics: "Ukryj tematy"
         relist_topics: "Odśwież listę tematów"
-        reset_read: "Wyzeruj przeczytane"
+        defer: "Zignoruj"
         delete: "Usuń tematy"
         dismiss: "Wyczyść"
         dismiss_read: "Wyczyść nieprzeczytane"
@@ -2797,7 +2803,6 @@ pl_PL:
         title: "Odpowiedz"
         help: "zacznij tworzyć odpowiedź do tego tematu"
       share:
-        title: "Udostępnij"
         extended_title: "Udostępnij link"
         help: "udostępnij odnośnik do tego tematu"
         instructions: "Udostępnij link do tego tematu:"
@@ -2807,14 +2812,6 @@ pl_PL:
           few: "Widoczne tylko dla członków grup: %{groupNames}"
           many: "Widoczne tylko dla członków grup: %{groupNames}"
           other: "Widoczne tylko dla członków grup: %{groupNames}"
-        notify_users:
-          title: "Powiadom"
-          instructions: "Powiadom następujących użytkowników o tym temacie:"
-          success:
-            one: "Pomyślnie powiadomiono %{username} o tym temacie."
-            few: "Pomyślnie powiadomiono wszystkich użytkowników o tym temacie."
-            many: "Pomyślnie powiadomiono wszystkich użytkowników o tym temacie."
-            other: "Pomyślnie powiadomiono wszystkich użytkowników o tym temacie."
         invite_users: "Zaproś"
       print:
         title: "Drukuj"
@@ -3969,6 +3966,8 @@ pl_PL:
     no_group_messages_title: "Nie znaleziono wiadomości grupowych"
     fullscreen_table:
       expand_btn: "Rozwiń tabelę"
+    second_factor_auth:
+      redirect_after_success: "Uwierzytelnianie dwuskładnikowe powiodło się. Przekierowanie do poprzedniej strony…"
   admin_js:
     type_to_filter: "pisz, aby filtrować…"
     admin:
@@ -4199,6 +4198,7 @@ pl_PL:
             topics:
               read: Przeczytaj temat lub konkretny post w nim. Obsługiwany jest również format RSS.
               write: Utwórz nowy temat lub post w istniejącym.
+              update: Zaktualizuj temat. Zmień tytuł, kategorię, tagi itp.
               read_lists: Czytaj listy tematów, takie jak najpopularniejsze, nowe, najnowsze itp. Obsługiwany jest również format RSS.
               wordpress: Niezbędne do działania wtyczki wp-discourse na WordPress.
             posts:

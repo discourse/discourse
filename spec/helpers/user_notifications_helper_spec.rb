@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe UserNotificationsHelper do
   let(:upload_path) { Discourse.store.upload_path }
 

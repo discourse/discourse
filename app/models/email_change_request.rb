@@ -6,7 +6,7 @@ class EmailChangeRequest < ActiveRecord::Base
   belongs_to :new_email_token, class_name: 'EmailToken', dependent: :destroy
   belongs_to :requested_by, class_name: "User", foreign_key: :requested_by_user_id
 
-  validates :new_email, presence: true, format: { with: EmailValidator.email_regex }
+  validates :new_email, presence: true, format: { with: EmailAddressValidator.email_regex }
 
   def self.states
     @states ||= Enum.new(authorizing_old: 1, authorizing_new: 2, complete: 3)

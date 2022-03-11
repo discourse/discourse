@@ -4,6 +4,7 @@ import { schedule } from "@ember/runloop";
 import bootbox from "bootbox";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { openBookmarkModal } from "discourse/controllers/bookmark";
+import { ajax } from "discourse/lib/ajax";
 import {
   openLinkInNewTab,
   shouldOpenInNewTab,
@@ -104,6 +105,16 @@ export default Component.extend(Scrolling, {
       onAfterDelete: () => {
         this.reload();
       },
+    });
+  },
+
+  @action
+  clearBookmarkReminder(bookmark) {
+    return ajax(`/bookmarks/${bookmark.id}`, {
+      type: "PUT",
+      data: { reminder_at: null },
+    }).then(() => {
+      bookmark.set("reminder_at", null);
     });
   },
 

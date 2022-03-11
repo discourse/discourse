@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe TopicViewItem do
 
   def add(topic_id, ip, user_id = nil)

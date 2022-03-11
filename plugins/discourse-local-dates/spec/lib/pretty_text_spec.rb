@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 def generate_html(text, opts = {})
   output = "<p><span"
   output += " data-date=\"#{opts[:date]}\"" if opts[:date]

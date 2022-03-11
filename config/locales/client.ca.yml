@@ -1867,7 +1867,7 @@ ca:
         clear_all: "Neteja-ho tot"
         unlist_topics: "Fes temes invisibles"
         relist_topics: "Torna a llistar els temes"
-        reset_read: "Restableix llegit"
+        defer: "Ajorna"
         delete: "Suprimeix temes"
         dismiss: "Descarta-ho"
         dismiss_read: "Descarta tots els llegits"
@@ -2094,7 +2094,6 @@ ca:
         title: "Respon"
         help: "comença a redactar una resposta al tema"
       share:
-        title: "Comparteix"
         extended_title: "Comparteix un enllaç"
         help: "comparteix un enllaç a aquest tema"
         invite_users: "Convida"

@@ -199,6 +199,7 @@ zh_CN:
       local_login_cannot_be_disabled_if_second_factor_enforced: "如果强制执行双重身份验证，则无法禁用本地登录。先禁用强制双重身份验证，然后再禁用本地登录。"
       cannot_enable_s3_uploads_when_s3_enabled_globally: "您无法启用 S3 上传，因为 S3 上传已全局启用，启用此站点级设置可能会导致上传出现严重问题"
       cors_origins_should_not_have_trailing_slash: "您不应该将尾部反斜杠 (/) 添加到 CORS 源。"
+      slow_down_crawler_user_agent_must_be_at_least_3_characters: "用户代理的长度至少为 3 个字符，以免错误地限制了人类用户的速率。"
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "您不能将以下任何值添加到设置中： %{values}。"
     conflicting_google_user_id: '此帐户的 Google 帐号 ID 已更改；出于安全原因，需要管理人员干预。请联系管理人员并将他们指向 <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
@@ -219,6 +220,8 @@ zh_CN:
       <p>如果您记得密码，可以<a href="%{base_url}/login">登录</a>。</p>
 
       <p>否则，请<a href="%{base_url}/password-reset">重置密码</a>。</p>
+    not_found_template_link: |
+      <p>这个给<a href="%{base_url}">%{site_name}</a>发出的邀请无法再被兑换。请让邀请你的人给你发送新的邀请。</p>
     user_exists: "不需要邀请 <b>%{email}</b>，他们<a href='%{base_path}/u/%{username}/summary'>已经拥有帐户！</a>"
     invite_exists: "您已经邀请 <b>%{email}</b>。"
     invalid_email: "%{email} 不是有效的电子邮件地址。"
@@ -229,7 +232,7 @@ zh_CN:
     disabled_errors:
       discourse_connect_enabled: "邀请已被禁用，因为 DiscourseConnect 已启用。"
       invalid_access: "您没有权限查看请求的资源。"
-    requires_groups: "邀请已保存。要授予对指定话题的访问权限，请添加以下群组之一：%{groups}。"
+    requires_groups: "邀请未保存，因为指定的话题无法访问。需要添加以下群组之一： %{groups}。"
     domain_not_allowed: "您的电子邮件域名不符合邀请条件。"
   bulk_invite:
     file_should_be_csv: "上传的文件应为 csv 格式。"
@@ -316,6 +319,8 @@ zh_CN:
   links_require_trust: "抱歉，您的帖子中不能包含链接。"
   too_many_links:
     other: "抱歉，新用户在一个帖子中仅能发布 %{count} 个链接。"
+  contains_blocked_word: "抱歉，您不能使用“%{word}”这个词；这是不被允许的内容。"
+  contains_blocked_words: "抱歉，您不能发帖。不允许的内容： %{words}。"
   spamming_host: "抱歉，您不能发布指向该主机的链接。"
   user_is_suspended: "被封禁的用户不允许发帖。"
   topic_not_found: "出了点问题。或许此话题在您查看时已被关闭或删除。"
@@ -617,6 +622,7 @@ zh_CN:
       permission_conflict: "任何被允许访问子类别的组也必须被允许访问父类别。以下群组可以访问子类别之一，但无法访问父类别：%{group_names}。"
       disallowed_topic_tags: "此话题包含此类别不允许的标签：%{tags}"
       disallowed_tags_generic: "此话题包含禁止的标签。"
+      slug_contains_non_ascii_chars: "包含非ASCII字符"
     cannot_delete:
       uncategorized: "此类别比较特殊。它旨在作为没有类别的话题的存放区域；不能删除。"
       has_subcategories: "无法删除此类别，因为它有子类别。"
@@ -631,6 +637,7 @@ zh_CN:
   post:
     image_placeholder:
       broken: "此图片已损坏"
+    hidden_bidi_character: "双向字符可以更改文本渲染的顺序。这可以用来掩盖恶意代码。"
     has_likes:
       other: "%{count} 个赞"
     cannot_permanently_delete:
@@ -1631,7 +1638,6 @@ zh_CN:
     use_site_small_logo_as_system_avatar: "使用站点的小徽标代替系统用户的头像。要求存在徽标。"
     restrict_letter_avatar_colors: "用于字母头像背景的 6 位十六进制颜色值列表。"
     enable_listing_suspended_users_on_search: "让普通用户能够找到被暂停的用户。"
-    selectable_avatars_enabled: "强制用户从列表中选择一个头像。"
     selectable_avatars: "用户可以选择的头像列表。"
     allow_all_attachments_for_group_messages: "允许群组消息的所有电子邮件附件。"
     png_to_jpg_quality: "转换后的 JPG 文件的质量（1 为最低质量，99 为最佳质量，100 为禁用）。"
@@ -1882,6 +1888,7 @@ zh_CN:
     permalink_normalizations: "在匹配永久链接之前应用以下正则表达式，例如：/(topic.*)\\?.*/\\1 将从话题路由中去除查询字符串。格式为正则表达式+字符串。使用 \\1 等访问捕获"
     global_notice: "向所有访客显示紧急、突发、不可关闭的全局横幅通知，更改为空将隐藏（允许使用 HTML）。"
     disable_system_edit_notifications: "当 'download_remote_images_to_local' 启用时禁用系统用户的编辑通知。"
+    disable_tags_edit_notifications: "禁用话题标签编辑通知"
     notification_consolidation_threshold: "合并通知前，收到的赞或成员资格请求通知的数量。设置为 0 将禁用。"
     likes_notification_consolidation_window_mins: "以分钟计的持续时间，被赞的通知在达到此阈值后会被合并到单个通知中。可以通过 `SiteSetting.notification_consolidation_threshold` 配置阈值。"
     automatically_unpin_topics: "当用户到达底部时自动取消置顶话题。"
@@ -1941,6 +1948,7 @@ zh_CN:
     max_allowed_message_recipients: "消息中允许的最大收件人数。"
     watched_words_regular_expressions: "关注词是正则表达式。"
     enable_diffhtml_preview: "使用 diffHTML 同步预览而不是完全重新呈现的实验性功能"
+    enable_fast_edit: "启用帖文行内选中编辑"
     old_post_notice_days: "帖子通知变旧前的天数"
     new_user_notice_tl: "查看新用户帖子通知所需的最低信任级别。"
     returning_user_notice_tl: "查看回访用户帖子通知所需的最低信任级别。"
@@ -2028,6 +2036,7 @@ zh_CN:
       invalid_css_color: "颜色无效。输入颜色名称或十六进制值。"
       invalid_email: "无效的电子邮件地址。"
       invalid_username: "没有使用该用户名的用户。"
+      valid_username: "已存在一个使用了该用户名的用户"
       invalid_group: "没有使用该名称的群组。"
       invalid_integer_min_max: "值必须介于 %{min} 和 %{max}之间。"
       invalid_integer_min: "值必须为 %{min} 或更大。"
@@ -2042,6 +2051,7 @@ zh_CN:
       invalid_json: "无效的 JSON。"
       invalid_reply_by_email_address: "值必须包含 '%{reply_key}' 并且与通知电子邮件不同。"
       invalid_alternative_reply_by_email_addresses: "所有值必须包含 '%{reply_key}' 并且与通知电子邮件不同。"
+      invalid_domain_hostname: "不得包含* 或?字符。"
       pop3_polling_host_is_empty: "在启用 POP3 轮询前，您必须先设置 'pop3 polling host'。"
       pop3_polling_username_is_empty: "在启用 POP3 轮询前，您必须先设置 'pop3 polling username'。"
       pop3_polling_password_is_empty: "在启用 POP3 轮询前，您必须先设置 'pop3 polling password'。"
@@ -2070,6 +2080,7 @@ zh_CN:
         leading_trailing_slash: "正则表达式不得以斜杠作开头或结尾。"
       unicode_usernames_avatars: "内部系统头像不支持 Unicode 用户名。"
       list_value_count: "该列表必须恰好包含 %{count} 个值。"
+      google_oauth2_hd_groups: "在启用此设置之前，您必须先设置 “google oauth2 hd”。"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2503,6 +2514,8 @@ zh_CN:
         ```
 
         请阅读我们的[社区准则](%{base_url}/guidelines)以了解详情。
+    flags_agreed_and_post_deleted_for_responders:
+      title: "回复被管理人员从举报帖子中删除"
     usage_tips:
       text_body_template: |
         有关作为新用户入门的一些快速提示，请[查看此博文](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/)。
@@ -3493,6 +3506,7 @@ zh_CN:
     external_upload_not_found: "在外部存储中未找到上传。 %{additional_detail}"
     checksum_mismatch_failure: "您上传的文件的校验和不匹配。在上传时文件内容可能已更改。请再试一次。"
     cannot_promote_failure: "上传无法完成，可能已经完成或失败了。"
+    size_zero_failure: "抱歉，好像出了点问题，您要上传的文件大小是 0 字节。请再试一次。"
     attachments:
       too_large: "抱歉，您尝试上传的文件过大（最大大小为 %{max_size_kb}KB）。"
     images:
@@ -4401,7 +4415,11 @@ zh_CN:
       watched_word: "这篇主题包括一个关注词。检查你的设置： %{link}。"
       staged: "暂存用户的新主题和帖子必须得到管理人员的批准。见 %{link}。"
       category: "发布于此类别的帖子需要工作人员手动批准。见 %{link}。"
+      must_approve_users: "所有新用户都必须经过工作人员的审核。见 %{link}。"
       email_auth_res_enqueue: "此电子邮件未通过 DMARC 检查，它很可能不是来自表面看起来的人。检查原始电子邮件标头以获取更多信息。"
+      email_spam: "此电子邮件被 %{link} 中定义的标头标记为垃圾邮件。"
+      suspect_user: "这个新用户在没有阅读任何主题或帖子的情况下输入了个人资料信息，这强烈表明他们可能是垃圾邮件发送者。见 %{link}。"
+      contains_media: "这个帖子帖子包含嵌入式媒体。见 %{link}。"
       queued_by_staff: "一名管理人员认为此帖子需要审核。在此之前，它将保持隐藏。"
       links:
         watched_word: 列出关注的关键字

@@ -8,6 +8,7 @@ import {
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
+import User from "discourse/models/user";
 
 acceptance("User Notifications", function (needs) {
   needs.user();
@@ -194,6 +195,41 @@ acceptance("User Notifications", function (needs) {
       "test1 accepted your invitation",
       "Membership accepted in 'test'",
     ]);
+  });
+});
+
+acceptance("Category Notifications", function (needs) {
+  needs.user({ muted_category_ids: [1], indirectly_muted_category_ids: [2] });
+
+  test("New category is muted when parent category is muted", async function (assert) {
+    await visit("/");
+    const user = User.current();
+    publishToMessageBus("/categories", {
+      categories: [
+        {
+          id: 3,
+          parent_category_id: 99,
+        },
+        {
+          id: 4,
+        },
+      ],
+    });
+    assert.deepEqual(user.indirectly_muted_category_ids, [2]);
+
+    publishToMessageBus("/categories", {
+      categories: [
+        {
+          id: 4,
+          parent_category_id: 1,
+        },
+        {
+          id: 5,
+          parent_category_id: 2,
+        },
+      ],
+    });
+    assert.deepEqual(user.indirectly_muted_category_ids, [2, 4, 5]);
   });
 });
 

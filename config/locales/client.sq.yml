@@ -1153,7 +1153,7 @@ sq:
         select_all: "Zgjidh të gjitha"
         clear_all: "Pastro kriteret"
         unlist_topics: "Hiq temat nga lista"
-        reset_read: "Rivendos leximet"
+        defer: "Shty"
         delete: "Fshi temat"
         dismiss: "Hiqe"
         dismiss_read: "Hiq të gjitha temat e palexuara"
@@ -1327,7 +1327,6 @@ sq:
         title: "Përgjigju"
         help: "fillo shkrimin e një përgjigjeje në këtë temë"
       share:
-        title: "Shpërndaje"
         help: "shpërndani një lidhje mbi temën"
         invite_users: "Fto"
       flag_topic:

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 def serialize_option(option, user)
   PollOptionSerializer.new(
     option,

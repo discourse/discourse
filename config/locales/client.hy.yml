@@ -1793,7 +1793,7 @@ hy:
         clear_all: "Ջնջել Բոլորը"
         unlist_topics: "Թեմաները Ցանկից Հանել"
         relist_topics: "Վերացանկավորել Թեմաները"
-        reset_read: "Զրոյացնել Կարդացածները (Reset Read)"
+        defer: "Հետաձգել"
         delete: "Ջնջել Թեմաները"
         dismiss: "Չեղարկել"
         dismiss_read: "Չեղարկել բոլոր չկարդացածները"
@@ -2024,7 +2024,6 @@ hy:
         title: "Պատասխանել"
         help: "այս թեմային պատասխան գրել"
       share:
-        title: "Կիսվել"
         extended_title: "Կիսվել հղումով"
         help: "կիսվել այս թեմայի հղումով"
         invite_users: "Հրավիրել"

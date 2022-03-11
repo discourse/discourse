@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
 require 'jobs/regular/pull_hotlinked_images'
 
 describe Jobs::PullHotlinkedImages do
@@ -122,12 +121,12 @@ describe Jobs::PullHotlinkedImages do
       stub_request(:get, "http://test.localhost/uploads/short-url/z2QSs1KJWoj51uYhDjb6ifCzxH6.gif")
         .to_return(status: 200, body: "")
 
-      post = Fabricate(:post, raw: <<~RAW)
+      post = Fabricate(:post, raw: <<~MD)
       <h1></h1>
                                 <a href="https://somelink.com">
                                     <img alt="somelink" src="#{image_url}" />
                                 </a>
-      RAW
+      MD
 
       expect do
         Jobs::PullHotlinkedImages.new.execute(post_id: post.id)
@@ -135,12 +134,12 @@ describe Jobs::PullHotlinkedImages do
 
       upload = post.uploads.last
 
-      expect(post.reload.raw).to eq(<<~RAW.chomp)
+      expect(post.reload.raw).to eq(<<~MD.chomp)
       <h1></h1>
                                 <a href="https://somelink.com">
                                     ![somelink](#{upload.short_url})
                                 </a>
-      RAW
+      MD
     end
 
     it 'replaces correct image URL' do
@@ -371,12 +370,12 @@ describe Jobs::PullHotlinkedImages do
       end
 
       it 'all combinations' do
-        post = Fabricate(:post, raw: <<~BODY)
+        post = Fabricate(:post, raw: <<~MD)
         <img src='#{image_url}'>
         #{url}
         <img src='#{broken_image_url}'>
         <a href='#{url}'><img src='#{large_image_url}'></a>
-        BODY
+        MD
         stub_image_size
 
         2.times do

@@ -3,9 +3,6 @@
 class WebCrawlerRequest < ActiveRecord::Base
   include CachedCounting
 
-  # auto flush if older than this
-  self.autoflush_seconds = 1.hour
-
   cattr_accessor :max_record_age, :max_records_per_day
 
   # only keep the top records based on request count
@@ -14,67 +11,28 @@ class WebCrawlerRequest < ActiveRecord::Base
   # delete records older than this
   self.max_record_age = 30.days
 
-  def self.increment!(user_agent, opts = nil)
-    ua_list_key = user_agent_list_key
-    Discourse.redis.sadd(ua_list_key, user_agent)
-    Discourse.redis.expire(ua_list_key, 259200) # 3.days
-
-    perform_increment!(redis_key(user_agent), opts)
+  def self.increment!(user_agent)
+    perform_increment!(user_agent)
   end
 
-  def self.write_cache!(date = nil)
-    if date.nil?
-      write_cache!(Time.now.utc)
-      write_cache!(Time.now.utc.yesterday)
-      return
-    end
-
-    self.last_flush = Time.now.utc
-
-    date = date.to_date
-    ua_list_key = user_agent_list_key(date)
-
-    while user_agent = Discourse.redis.spop(ua_list_key)
-      val = get_and_reset(redis_key(user_agent, date))
-
-      next if val == 0
-
-      self.where(id: req_id(date, user_agent)).update_all(["count = count + ?", val])
-    end
-  rescue Redis::CommandError => e
-    raise unless e.message =~ /READONLY/
-    nil
-  end
-
-  def self.clear_cache!(date = nil)
-    if date.nil?
-      clear_cache!(Time.now.utc)
-      clear_cache!(Time.now.utc.yesterday)
-      return
-    end
-
-    ua_list_key = user_agent_list_key(date)
-
-    while user_agent = Discourse.redis.spop(ua_list_key)
-      Discourse.redis.del redis_key(user_agent, date)
-    end
-
-    Discourse.redis.del(ua_list_key)
+  def self.write_cache!(user_agent, count, date)
+    where(id: request_id(date: date, user_agent: user_agent))
+      .update_all(["count = count + ?", count])
   end
 
   protected
 
-  def self.user_agent_list_key(time = Time.now.utc)
-    "crawl_ua_list:#{time.strftime('%Y%m%d')}"
+  def self.request_id(date:, user_agent:, retries: 0)
+    id = where(date: date, user_agent: user_agent).pluck_first(:id)
+    id ||= create!({ date: date, user_agent: user_agent }.merge(count: 0)).id
+  rescue # primary key violation
+    if retries == 0
+      request_id(date: date, user_agent: user_agent, retries: 1)
+    else
+      raise
+    end
   end
 
-  def self.redis_key(user_agent, time = Time.now.utc)
-    "crawl_req:#{time.strftime('%Y%m%d')}:#{user_agent}"
-  end
-
-  def self.req_id(date, user_agent)
-    request_id(date: date, user_agent: user_agent)
-  end
 end
 
 # == Schema Information

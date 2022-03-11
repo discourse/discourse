@@ -64,3 +64,8 @@ WebHookEventType.seed do |b|
   b.id = WebHookEventType::LIKE
   b.name = "like"
 end
+
+WebHookEventType.seed do |b|
+  b.id = WebHookEventType::USER_PROMOTED
+  b.name = "user_promoted"
+end

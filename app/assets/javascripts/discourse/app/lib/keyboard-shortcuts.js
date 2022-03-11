@@ -1,6 +1,5 @@
 import { bind } from "discourse-common/utils/decorators";
 import discourseDebounce from "discourse-common/lib/debounce";
-import { isAppWebview } from "discourse/lib/utilities";
 import { later, run, throttle } from "@ember/runloop";
 import {
   nextTopicUrl,
@@ -12,6 +11,25 @@ import domUtils from "discourse-common/utils/dom-utils";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import { ajax } from "discourse/lib/ajax";
 import { headerOffset } from "discourse/lib/offset-calculator";
+import { helperContext } from "discourse-common/lib/helpers";
+
+let extraKeyboardShortcutsHelp = {};
+function addExtraKeyboardShortcutHelp(help) {
+  const category = help.category;
+  if (extraKeyboardShortcutsHelp[category]) {
+    extraKeyboardShortcutsHelp[category] = extraKeyboardShortcutsHelp[
+      category
+    ].concat([help]);
+  } else {
+    extraKeyboardShortcutsHelp[category] = [help];
+  }
+}
+
+export function clearExtraKeyboardShortcutHelp() {
+  extraKeyboardShortcutsHelp = {};
+}
+
+export { extraKeyboardShortcutsHelp as extraKeyboardShortcutsHelp };
 
 const DEFAULT_BINDINGS = {
   "!": { postAction: "showFlags" },
@@ -209,6 +227,16 @@ export default {
    * - path       - a specific path to limit the shortcut to .e.g /latest
    * - postAction - binds the shortcut to fire the specified post action when a
    *                post is selected
+   * - help       - adds the shortcut to the keyboard shortcuts modal. `help` is an object
+   *                with key/value pairs
+   *                {
+   *                  category: String,
+   *                  name: String,
+   *                  definition: (See function `buildShortcut` in
+   *                    app/assets/javascripts/discourse/app/controllers/keyboard-shortcuts-help.js
+   *                    for definition structure)
+   *                }
+   *
    * - click      - allows to provide a selector on which a click event
    *                will be triggered, eg: { click: ".topic.last .title" }
    **/
@@ -218,6 +246,9 @@ export default {
     shortcut = shortcut.trim();
     let newBinding = Object.assign({ handler: callback }, opts);
     this.bindKey(shortcut, newBinding);
+    if (opts.help) {
+      addExtraKeyboardShortcutHelp(opts.help);
+    }
   },
 
   // unbinds all the shortcuts in a key binding object e.g.
@@ -825,13 +856,13 @@ export default {
   },
 
   webviewKeyboardBack() {
-    if (isAppWebview()) {
+    if (helperContext().capabilities.isAppWebview) {
       window.history.back();
     }
   },
 
   webviewKeyboardForward() {
-    if (isAppWebview()) {
+    if (helperContext().capabilities.isAppWebview) {
       window.history.forward();
     }
   },

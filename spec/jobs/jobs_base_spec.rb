@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe ::Jobs::Base do
   class GoodJob < ::Jobs::Base
     attr_accessor :count

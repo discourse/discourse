@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe 'api keys' do
   let(:user) { Fabricate(:user) }
   let(:api_key) { ApiKey.create!(user_id: user.id, created_by_id: Discourse.system_user) }

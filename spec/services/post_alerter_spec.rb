@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 RSpec::Matchers.define :add_notification do |user, notification_type|
   match(notify_expectation_failures: true) do |actual|
     notifications = user.notifications
@@ -175,9 +173,9 @@ describe PostAlerter do
 
         post = Fabricate(:post, topic: pm, user: user1)
         TopicUser.change(user1.id, pm.id, notification_level: TopicUser.notification_levels[:regular])
-        quote_raw = <<~STRING
+        quote_raw = <<~MD
           [quote="#{user1.username}, post:1, topic:#{pm.id}"]#{post.raw}[/quote]
-        STRING
+        MD
 
         expect {
           create_post_with_alerts(
@@ -190,9 +188,9 @@ describe PostAlerter do
         group.add(admin)
 
         TopicUser.change(user2.id, pm.id, notification_level: TopicUser.notification_levels[:regular])
-        quote_raw = <<~STRING
+        quote_raw = <<~MD
           [quote="#{user2.username}, post:1, topic:#{pm.id}"]#{op.raw}[/quote]
-        STRING
+        MD
 
         expect {
           create_post_with_alerts(
@@ -1566,7 +1564,7 @@ describe PostAlerter do
     end
 
     def create_post_with_incoming
-      raw_mail = <<~MAIL
+      raw_mail = <<~EMAIL
       From: Foo <foo@discourse.org>
       To: discourse@example.com
       Cc: bar@discourse.org, jim@othersite.com
@@ -1578,7 +1576,7 @@ describe PostAlerter do
       Content-Transfer-Encoding: 7bit
 
       This is the first email.
-      MAIL
+      EMAIL
 
       Email::Receiver.new(raw_mail, {}).process!
     end
@@ -1716,7 +1714,7 @@ describe PostAlerter do
       email = ActionMailer::Base.deliveries.last
 
       # the reply post from someone who was emailed
-      reply_raw_mail = <<~MAIL
+      reply_raw_mail = <<~EMAIL
       From: Bar <bar@discourse.org>
       To: discourse@example.com
       Cc: someothernewcc@baz.com, finalnewcc@doom.com
@@ -1729,7 +1727,7 @@ describe PostAlerter do
       Content-Transfer-Encoding: 7bit
 
       Hey here is my reply!
-      MAIL
+      EMAIL
 
       reply_post_from_email = nil
       expect {
@@ -1767,7 +1765,7 @@ describe PostAlerter do
       email = ActionMailer::Base.deliveries.last
 
       # the reply post from someone who was emailed
-      reply_raw_mail = <<~MAIL
+      reply_raw_mail = <<~EMAIL
       From: Foo <foo@discourse.org>
       To: discourse@example.com
       Cc: someothernewcc@baz.com, finalnewcc@doom.com
@@ -1780,7 +1778,7 @@ describe PostAlerter do
       Content-Transfer-Encoding: 7bit
 
       I am ~~Commander Shepherd~~ the OP and I approve of this message.
-      MAIL
+      EMAIL
 
       reply_post_from_email = nil
       expect {
@@ -1811,7 +1809,7 @@ describe PostAlerter do
 
       # this is a special case where we are not CC'ing on the original email,
       # only on the follow up email
-      raw_mail = <<~MAIL
+      raw_mail = <<~EMAIL
       From: Foo <foo@discourse.org>
       To: discourse@example.com
       Subject: Full email group username flow
@@ -1822,7 +1820,7 @@ describe PostAlerter do
       Content-Transfer-Encoding: 7bit
 
       This is the first email.
-      MAIL
+      EMAIL
 
       incoming_email_post = Email::Receiver.new(raw_mail, {}).process!
       topic = incoming_email_post.topic
@@ -1833,7 +1831,7 @@ describe PostAlerter do
       email = ActionMailer::Base.deliveries.last
 
       # the reply post from the OP, cc'ing new people in
-      reply_raw_mail = <<~MAIL
+      reply_raw_mail = <<~EMAIL
       From: Foo <foo@discourse.org>
       To: discourse@example.com
       Cc: someothernewcc@baz.com, finalnewcc@doom.com
@@ -1846,7 +1844,7 @@ describe PostAlerter do
       Content-Transfer-Encoding: 7bit
 
       I am inviting my mates to this email party.
-      MAIL
+      EMAIL
 
       reply_post_from_email = nil
       expect {

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe WizardController do
   context 'wizard enabled' do
     before do

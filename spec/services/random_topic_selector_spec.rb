@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe RandomTopicSelector do
 
   it 'can correctly use cache' do

@@ -378,7 +378,6 @@ class ThemeField < ActiveRecord::Base
       DB.after_commit { Stylesheet::Manager.clear_theme_cache! }
     elsif settings_field?
       validate_yaml!
-      theme.clear_cached_settings!
       DB.after_commit { CSP::Extension.clear_theme_extensions_cache! }
       DB.after_commit { SvgSprite.expire_cache }
       self.value_baked = "baked"

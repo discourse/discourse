@@ -1919,7 +1919,7 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
-"@glimmer/component@^1.0.0":
+"@glimmer/component@^1.0.0", "@glimmer/component@^1.0.4":
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/@glimmer/component/-/component-1.0.4.tgz#1c85a5181615a6647f6acfaaed68e28ad7e9626e"
   integrity sha512-sS4N8wtcKfYdUJ6O3m8nbTut6NjErdz94Ap8VB1ekcg4WSD+7sI7Nmv6kt2rdPoe363nUdjUbRBzHNWhLzraBw==
@@ -2023,6 +2023,14 @@
     handlebars "^4.5.1"
     simple-html-tokenizer "^0.5.9"
 
+"@glimmer/tracking@^1.0.4":
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/@glimmer/tracking/-/tracking-1.0.4.tgz#f1bc1412fe5e2236d0f8d502994a8f88af1bbb21"
+  integrity sha512-F+oT8I55ba2puSGIzInmVrv/8QA2PcK1VD+GWgFMhF6WC97D+uZX7BFg+a3s/2N4FVBq5KHE+QxZzgazM151Yw==
+  dependencies:
+    "@glimmer/env" "^0.1.7"
+    "@glimmer/validator" "^0.44.0"
+
 "@glimmer/util@^0.42.2":
   version "0.42.2"
   resolved "https://registry.yarnpkg.com/@glimmer/util/-/util-0.42.2.tgz#9ca1631e42766ea6059f4b49d0bdfb6095aad2c4"
@@ -2040,6 +2048,11 @@
   dependencies:
     "@glimmer/env" "0.1.7"
     "@simple-dom/interface" "^1.4.0"
+
+"@glimmer/validator@^0.44.0":
+  version "0.44.0"
+  resolved "https://registry.yarnpkg.com/@glimmer/validator/-/validator-0.44.0.tgz#03d127097dc9cb23052cdb7fcae59d0a9dca53e1"
+  integrity sha512-i01plR0EgFVz69GDrEuFgq1NheIjZcyTy3c7q+w7d096ddPVeVcRzU3LKaqCfovvLJ+6lJx40j45ecycASUUyw==
 
 "@glimmer/vm@^0.42.2":
   version "0.42.2"
@@ -2106,24 +2119,24 @@
   resolved "https://registry.yarnpkg.com/@sindresorhus/is/-/is-0.7.0.tgz#9a06f4f137ee84d7df0460c1fdb1135ffa6c50fd"
   integrity sha512-ONhaKPIufzzrlNbqtWFFd+jlnemX6lJAgq9ZeiZtS7I1PIf/la7CW4m83rTXRnVnsMbW2k56pGYu7AUFJD9Pow==
 
-"@sinonjs/commons@^1.6.0", "@sinonjs/commons@^1.7.0", "@sinonjs/commons@^1.8.1":
+"@sinonjs/commons@^1.6.0", "@sinonjs/commons@^1.7.0", "@sinonjs/commons@^1.8.3":
   version "1.8.3"
   resolved "https://registry.yarnpkg.com/@sinonjs/commons/-/commons-1.8.3.tgz#3802ddd21a50a949b6721ddd72da36e67e7f1b2d"
   integrity sha512-xkNcLAn/wZaX14RPlwizcKicDk9G3F8m2nU3L7Ukm5zBgTwiT0wsoFAHx9Jq56fJA1z/7uKGtCRu16sOUCLIHQ==
   dependencies:
     type-detect "4.0.8"
 
-"@sinonjs/fake-timers@^6.0.0", "@sinonjs/fake-timers@^6.0.1":
-  version "6.0.1"
-  resolved "https://registry.yarnpkg.com/@sinonjs/fake-timers/-/fake-timers-6.0.1.tgz#293674fccb3262ac782c7aadfdeca86b10c75c40"
-  integrity sha512-MZPUxrmFubI36XS1DI3qmI0YdN1gks62JtFZvxR67ljjSNCeK6U08Zx4msEWOXuofgqUt6zPHSi1H9fbjR/NRA==
+"@sinonjs/fake-timers@>=5", "@sinonjs/fake-timers@^9.0.0":
+  version "9.1.0"
+  resolved "https://registry.yarnpkg.com/@sinonjs/fake-timers/-/fake-timers-9.1.0.tgz#8c92c56f195e0bed4c893ba59c8e3d55831ca0df"
+  integrity sha512-M8vapsv9qQupMdzrVzkn5rb9jG7aUTEPAZdMtME2PuBaefksFZVE2C1g4LBRTkF/k3nRDNbDc5tp5NFC1PEYxA==
   dependencies:
     "@sinonjs/commons" "^1.7.0"
 
-"@sinonjs/samsam@^5.3.1":
-  version "5.3.1"
-  resolved "https://registry.yarnpkg.com/@sinonjs/samsam/-/samsam-5.3.1.tgz#375a45fe6ed4e92fca2fb920e007c48232a6507f"
-  integrity sha512-1Hc0b1TtyfBu8ixF/tpfSHTVWKwCBLY4QJbkgnE7HcwyvT2xArDxb4K7dMgqRm3szI+LJbzmW/s4xxEhv6hwDg==
+"@sinonjs/samsam@^6.1.1":
+  version "6.1.1"
+  resolved "https://registry.yarnpkg.com/@sinonjs/samsam/-/samsam-6.1.1.tgz#627f7f4cbdb56e6419fa2c1a3e4751ce4f6a00b1"
+  integrity sha512-cZ7rKJTLiE7u7Wi/v9Hc2fs3Ucc3jrWeMgPHbbTCeVAB2S0wOBbYlkJVeNSL04i7fdhT8wIbDq1zhC/PXTD2SA==
   dependencies:
     "@sinonjs/commons" "^1.6.0"
     lodash.get "^4.4.2"
@@ -5776,6 +5789,11 @@ diff@^4.0.2:
   resolved "https://registry.yarnpkg.com/diff/-/diff-4.0.2.tgz#60f3aecb89d5fae520c11aa19efc2bb982aade7d"
   integrity sha512-58lmxKSA4BNyLz+HHMUzlOEpg09FV+ev6ZMe3vJihgdxzgcwZ8VoEEPmALCZG9LmqfVoNMMKpttIYTVG6uDY7A==
 
+diff@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/diff/-/diff-5.0.0.tgz#7ed6ad76d859d030787ec35855f5b1daf31d852b"
+  integrity sha512-/VTCrvm5Z0JGty/BWHljh+BAiw3IK+2j87NGMu8Nwc/f48WoDAC395uomO9ZD117ZOBaHmkX1oyLvkVM/aIT3w==
+
 diffie-hellman@^5.0.0:
   version "5.0.3"
   resolved "https://registry.yarnpkg.com/diffie-hellman/-/diffie-hellman-5.0.3.tgz#40e8ee98f55a2149607146921c63e1ae5f3d2875"
@@ -5993,6 +6011,26 @@ ember-buffered-proxy@^2.0.0-beta.0:
     ember-cli-babel "^7.11.1"
     ember-cli-htmlbars "^4.0.5"
     ember-notify-property-change-polyfill "^0.0.1"
+
+ember-cache-primitive-polyfill@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/ember-cache-primitive-polyfill/-/ember-cache-primitive-polyfill-1.0.1.tgz#a27075443bd87e5af286c1cd8a7df24e3b9f6715"
+  integrity sha512-hSPcvIKarA8wad2/b6jDd/eU+OtKmi6uP+iYQbzi5TQpjsqV6b4QdRqrLk7ClSRRKBAtdTuutx+m+X+WlEd2lw==
+  dependencies:
+    ember-cli-babel "^7.22.1"
+    ember-cli-version-checker "^5.1.1"
+    ember-compatibility-helpers "^1.2.1"
+    silent-error "^1.1.1"
+
+ember-cached-decorator-polyfill@^0.1.4:
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/ember-cached-decorator-polyfill/-/ember-cached-decorator-polyfill-0.1.4.tgz#f1e2c65cc78d0d9c4ac0e047e643af477eb85ace"
+  integrity sha512-JOK7kBCWsTVCzmCefK4nr9BACDJk0owt9oIUaVt6Q0UtQ4XeAHmoK5kQ/YtDcxQF1ZevHQFdGhsTR3JLaHNJgA==
+  dependencies:
+    "@glimmer/tracking" "^1.0.4"
+    ember-cache-primitive-polyfill "^1.0.1"
+    ember-cli-babel "^7.21.0"
+    ember-cli-babel-plugin-helpers "^1.1.1"
 
 ember-cli-app-version@^4.0.0:
   version "4.0.0"
@@ -10286,13 +10324,13 @@ nice-try@^1.0.4:
   resolved "https://registry.yarnpkg.com/nice-try/-/nice-try-1.0.5.tgz#a3378a7696ce7d223e88fc9b764bd7ef1089e366"
   integrity sha512-1nh45deeb5olNY7eX82BkPO7SSxR5SSYJiPTrTdFUVYwAl8CKMA5N9PjTYkHiRjisVcxcQ1HXdLhx2qxxJzLNQ==
 
-nise@^4.0.4:
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/nise/-/nise-4.1.0.tgz#8fb75a26e90b99202fa1e63f448f58efbcdedaf6"
-  integrity sha512-eQMEmGN/8arp0xsvGoQ+B1qvSkR73B1nWSCh7nOt5neMCtwcQVYQGdzQMhcNscktTsWB54xnlSQFzOAPJD8nXA==
+nise@^5.1.1:
+  version "5.1.1"
+  resolved "https://registry.yarnpkg.com/nise/-/nise-5.1.1.tgz#ac4237e0d785ecfcb83e20f389185975da5c31f3"
+  integrity sha512-yr5kW2THW1AkxVmCnKEh4nbYkJdB3I7LUkiUgOvEkOp414mc2UMaHMA7pjq1nYowhdoJZGwEKGaQVbxfpWj10A==
   dependencies:
-    "@sinonjs/commons" "^1.7.0"
-    "@sinonjs/fake-timers" "^6.0.0"
+    "@sinonjs/commons" "^1.8.3"
+    "@sinonjs/fake-timers" ">=5"
     "@sinonjs/text-encoding" "^0.7.1"
     just-extend "^4.0.2"
     path-to-regexp "^1.7.0"
@@ -12030,17 +12068,17 @@ simple-html-tokenizer@^0.5.8, simple-html-tokenizer@^0.5.9:
   resolved "https://registry.yarnpkg.com/simple-html-tokenizer/-/simple-html-tokenizer-0.5.11.tgz#4c5186083c164ba22a7b477b7687ac056ad6b1d9"
   integrity sha512-C2WEK/Z3HoSFbYq8tI7ni3eOo/NneSPRoPpcM7WdLjFOArFuyXEjAoCdOC3DgMfRyziZQ1hCNR4mrNdWEvD0og==
 
-sinon@^9.2.0:
-  version "9.2.4"
-  resolved "https://registry.yarnpkg.com/sinon/-/sinon-9.2.4.tgz#e55af4d3b174a4443a8762fa8421c2976683752b"
-  integrity sha512-zljcULZQsJxVra28qIAL6ow1Z9tpattkCTEJR4RBP3TGc00FcttsP5pK284Nas5WjMZU5Yzy3kAIp3B3KRf5Yg==
+sinon@^13.0.1:
+  version "13.0.1"
+  resolved "https://registry.yarnpkg.com/sinon/-/sinon-13.0.1.tgz#2a568beca2084c48985dd98e276e065c81738e3c"
+  integrity sha512-8yx2wIvkBjIq/MGY1D9h1LMraYW+z1X0mb648KZnKSdvLasvDu7maa0dFaNYdTDczFgbjNw2tOmWdTk9saVfwQ==
   dependencies:
-    "@sinonjs/commons" "^1.8.1"
-    "@sinonjs/fake-timers" "^6.0.1"
-    "@sinonjs/samsam" "^5.3.1"
-    diff "^4.0.2"
-    nise "^4.0.4"
-    supports-color "^7.1.0"
+    "@sinonjs/commons" "^1.8.3"
+    "@sinonjs/fake-timers" "^9.0.0"
+    "@sinonjs/samsam" "^6.1.1"
+    diff "^5.0.0"
+    nise "^5.1.1"
+    supports-color "^7.2.0"
 
 slash@^1.0.0:
   version "1.0.0"
@@ -12590,7 +12628,7 @@ supports-color@^5.3.0:
   dependencies:
     has-flag "^3.0.0"
 
-supports-color@^7.1.0:
+supports-color@^7.1.0, supports-color@^7.2.0:
   version "7.2.0"
   resolved "https://registry.yarnpkg.com/supports-color/-/supports-color-7.2.0.tgz#1b7dcdcb32b8138801b3e478ba6a51caa89648da"
   integrity sha512-qpCAvRl9stuOHveKsn7HncJRvv501qIacKzQlO/+Lwxc9+0q2wLyv4Dfvt80/DPn2pqOBsJdDiogXGR9+OvwRw==

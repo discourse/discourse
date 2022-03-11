@@ -1,8 +1,6 @@
 # coding: utf-8
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 RSpec.describe TopicsController do
   fab!(:topic) { Fabricate(:topic) }
   fab!(:dest_topic) { Fabricate(:topic) }
@@ -2430,6 +2428,29 @@ RSpec.describe TopicsController do
         end
       end
 
+      describe 'filter by top level replies' do
+        fab!(:post3) { Fabricate(:post, user: post_author3, topic: topic, reply_to_post_number: post2.post_number) }
+        fab!(:post4) { Fabricate(:post, user: post_author4, topic: topic, reply_to_post_number: post2.post_number) }
+        fab!(:post5) { Fabricate(:post, user: post_author5, topic: topic) }
+        fab!(:post6) { Fabricate(:post, user: post_author4, topic: topic, reply_to_post_number: post5.post_number) }
+
+        it 'should return the right posts' do
+          get "/t/#{topic.id}.json", params: {
+            filter_top_level_replies: true
+          }
+
+          expect(response.status).to eq(200)
+
+          body = response.parsed_body
+
+          expect(body.has_key?("suggested_topics")).to eq(false)
+          expect(body.has_key?("related_messages")).to eq(false)
+
+          ids = body["post_stream"]["posts"].map { |p| p["id"] }
+          expect(ids).to eq([post2.id, post5.id])
+        end
+      end
+
       describe 'filter upwards by post id' do
         fab!(:post3) { Fabricate(:post, user: post_author3, topic: topic) }
         fab!(:post4) { Fabricate(:post, user: post_author4, topic: topic, reply_to_post_number: post3.post_number) }
@@ -2829,6 +2850,11 @@ RSpec.describe TopicsController do
       get "/t/foo/#{topic.id}.rss"
       expect(response.status).to eq(200)
       expect(response.media_type).to eq('application/rss+xml')
+
+      # our RSS feed is full of post 1/2/3/4/5 links, we do not want it included
+      # in the index, and do not want links followed
+      # this allows us to remove it while allowing via robots.txt
+      expect(response.headers['X-Robots-Tag']).to eq('noindex, nofollow')
     end
 
     it 'renders rss of the topic correctly with subfolder' do
@@ -2849,42 +2875,6 @@ RSpec.describe TopicsController do
       topic.trash!
       get "/t/foo/#{topic.id}.rss"
       expect(response.status).to eq(404)
-    end
-  end
-
-  describe '#invite_notify' do
-    it 'does not notify same user multiple times' do
-      sign_in(user)
-
-      expect { post "/t/#{topic.id}/invite-notify.json", params: { usernames: [user_2.username] } }
-        .to change { Notification.count }.by(1)
-      expect(response.status).to eq(200)
-
-      expect { post "/t/#{topic.id}/invite-notify.json", params: { usernames: [user_2.username] } }
-        .to change { Notification.count }.by(0)
-      expect(response.status).to eq(200)
-
-      freeze_time 1.day.from_now
-
-      expect { post "/t/#{topic.id}/invite-notify.json", params: { usernames: [user_2.username] } }
-        .to change { Notification.count }.by(1)
-      expect(response.status).to eq(200)
-    end
-
-    it 'does not let regular users to notify multiple users' do
-      sign_in(user)
-
-      expect { post "/t/#{topic.id}/invite-notify.json", params: { usernames: [admin.username, user_2.username] } }
-        .to change { Notification.count }.by(0)
-      expect(response.status).to eq(400)
-    end
-
-    it 'lets staff to notify multiple users' do
-      sign_in(admin)
-
-      expect { post "/t/#{topic.id}/invite-notify.json", params: { usernames: [user.username, user_2.username] } }
-        .to change { Notification.count }.by(2)
-      expect(response.status).to eq(200)
     end
   end
 

@@ -163,11 +163,11 @@ module DiscourseNarrativeBot
     def start_advanced_track
       raw = I18n.t("#{I18N_KEY}.start_message", i18n_post_args(username: @user.username))
 
-      raw = <<~RAW
+      raw = <<~MD
       #{raw}
 
       #{instance_eval(&@next_instructions)}
-      RAW
+      MD
 
       opts = {
         title: I18n.t("#{I18N_KEY}.title"),
@@ -197,11 +197,11 @@ module DiscourseNarrativeBot
 
       fake_delay
 
-      raw = <<~RAW
+      raw = <<~MD
       #{I18n.t("#{I18N_KEY}.edit.reply", i18n_post_args)}
 
       #{instance_eval(&@next_instructions)}
-      RAW
+      MD
 
       reply_to(@post, raw)
     end
@@ -227,11 +227,11 @@ module DiscourseNarrativeBot
 
       fake_delay
 
-      raw = <<~RAW
+      raw = <<~MD
       #{I18n.t("#{I18N_KEY}.delete.reply", i18n_post_args)}
 
       #{instance_eval(&@next_instructions)}
-      RAW
+      MD
 
       PostCreator.create!(self.discobot_user,
         raw: raw,
@@ -252,11 +252,11 @@ module DiscourseNarrativeBot
 
       fake_delay
 
-      raw = <<~RAW
+      raw = <<~MD
       #{I18n.t("#{I18N_KEY}.recover.reply", i18n_post_args(deletion_after: SiteSetting.delete_removed_posts_after))}
 
       #{instance_eval(&@next_instructions)}
-      RAW
+      MD
 
       PostCreator.create!(self.discobot_user,
         raw: raw,
@@ -279,11 +279,11 @@ module DiscourseNarrativeBot
       return unless valid_topic?(topic_id)
 
       if Nokogiri::HTML5.fragment(@post.cooked).css('.hashtag').size > 0
-        raw = <<~RAW
+        raw = <<~MD
           #{I18n.t("#{I18N_KEY}.category_hashtag.reply", i18n_post_args)}
 
           #{instance_eval(&@next_instructions)}
-        RAW
+        MD
 
         fake_delay
         reply_to(@post, raw)
@@ -308,11 +308,11 @@ module DiscourseNarrativeBot
       return unless valid_topic?(@topic_id)
 
       fake_delay
-      raw = <<~RAW
+      raw = <<~MD
         #{I18n.t("#{I18N_KEY}.change_topic_notification_level.reply", i18n_post_args)}
 
         #{instance_eval(&@next_instructions)}
-      RAW
+      MD
 
       fake_delay
 
@@ -330,11 +330,11 @@ module DiscourseNarrativeBot
       return unless valid_topic?(topic_id)
 
       if Nokogiri::HTML5.fragment(@post.cooked).css(".poll").size > 0
-        raw = <<~RAW
+        raw = <<~MD
           #{I18n.t("#{I18N_KEY}.poll.reply", i18n_post_args)}
 
           #{instance_eval(&@next_instructions)}
-        RAW
+        MD
 
         fake_delay
         reply_to(@post, raw)

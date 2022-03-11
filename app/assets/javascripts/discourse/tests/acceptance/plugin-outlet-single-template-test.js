@@ -12,12 +12,14 @@ const CONNECTOR =
 
 acceptance("Plugin Outlet - Single Template", function (needs) {
   needs.hooks.beforeEach(() => {
+    // eslint-disable-next-line no-undef
     Ember.TEMPLATES[
       CONNECTOR
     ] = hbs`<span class='hello-username'>{{model.username}}</span>`;
   });
 
   needs.hooks.afterEach(() => {
+    // eslint-disable-next-line no-undef
     delete Ember.TEMPLATES[CONNECTOR];
   });
 

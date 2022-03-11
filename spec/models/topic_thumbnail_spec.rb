@@ -1,6 +1,4 @@
 # frozen_string_literal: true
-require 'rails_helper'
-
 describe "TopicThumbnail" do
   let(:upload1) { Fabricate(:image_upload, width: 50, height: 50) }
   let(:topic) { Fabricate(:topic, image_upload: upload1) }

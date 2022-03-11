@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe Jobs::UpdateGravatar do
   fab!(:user) { Fabricate(:user) }
   let(:temp) { Tempfile.new('test') }

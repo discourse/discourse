@@ -1,8 +1,6 @@
 
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 RSpec.describe Imap::Providers::Gmail do
   fab!(:username) { "test@generic.com" }
   fab!(:password) { "test1!" }

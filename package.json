@@ -24,7 +24,7 @@
     "chart.js": "3.5.1",
     "chartjs-plugin-datalabels": "^2.0.0",
     "diffhtml": "^1.0.0-beta.20",
-    "eslint-config-discourse": "^1.1.9",
+    "eslint-config-discourse": "^2.0.0",
     "handlebars": "^4.7.7",
     "jquery": "3.5.1",
     "magnific-popup": "1.1.0",
@@ -45,16 +45,12 @@
     "browserify": "^17.0.0",
     "chrome-launcher": "^0.14.2",
     "chrome-remote-interface": "^0.25",
-    "lodash-cli": "https://github.com/lodash-archive/lodash-cli.git",
     "pretender": "^3.4.7",
     "puppeteer-core": "^13.0.0",
     "qunit": "2.8.0",
     "route-recognizer": "^0.3.3",
-    "sinon": "^9.0.2",
+    "sinon": "^13.0.1",
     "squoosh": "discourse/squoosh#dc9649d"
-  },
-  "resolutions": {
-    "lodash": "4.17.21"
   },
   "scripts": {
     "postinstall": "yarn --cwd app/assets/javascripts/discourse"

@@ -320,7 +320,7 @@ class ImportScripts::Base
       opts[:username] = UserNameSuggester.suggest(opts[:username].presence || opts[:name].presence || opts[:email])
     end
 
-    unless opts[:email][EmailValidator.email_regex]
+    if !EmailAddressValidator.valid_value?(opts[:email])
       opts[:email] = fake_email
       puts "Invalid email '#{original_email}' for '#{opts[:username]}'. Using '#{opts[:email]}'"
     end

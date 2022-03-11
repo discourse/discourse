@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe ComposerMessagesController do
   fab!(:topic) { Fabricate(:topic, created_at: 10.years.ago, last_posted_at: 10.years.ago) }
   fab!(:post) { Fabricate(:post, topic: topic, post_number: 1, created_at: 10.years.ago) }

@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 # rubocop:disable Discourse/OnlyTopLevelMultisiteSpecs
 
-require 'rails_helper'
 require_relative 'shared_context_for_backup_restore'
 
 describe BackupRestore::UploadsRestorer do

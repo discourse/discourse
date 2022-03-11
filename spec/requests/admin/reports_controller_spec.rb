@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe Admin::ReportsController do
   it "is a subclass of AdminController" do
     expect(Admin::ReportsController < Admin::AdminController).to eq(true)

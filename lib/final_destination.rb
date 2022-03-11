@@ -9,7 +9,7 @@ require 'url_helper'
 # Determine the final endpoint for a Web URI, following redirects
 class FinalDestination
   MAX_REQUEST_TIME_SECONDS = 10
-  MAX_REQUEST_SIZE_BYTES = 1_048_576 # 1024 * 1024
+  MAX_REQUEST_SIZE_BYTES = 5_242_880 # 1024 * 1024 * 5
 
   def self.clear_https_cache!(domain)
     key = redis_https_key(domain)
@@ -202,7 +202,7 @@ class FinalDestination
     end
 
     headers = request_headers
-    middlewares = Excon.defaults[:middlewares]
+    middlewares = Excon.defaults[:middlewares].dup
     middlewares << Excon::Middleware::Decompress if @http_verb == :get
 
     request_start_time = Time.now

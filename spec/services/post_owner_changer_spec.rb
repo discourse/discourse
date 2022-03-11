@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe PostOwnerChanger do
   describe "change_owner!" do
     fab!(:editor) { Fabricate(:admin) }

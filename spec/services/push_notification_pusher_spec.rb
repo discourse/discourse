@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 RSpec.describe PushNotificationPusher do
 
   it "returns badges url by default" do

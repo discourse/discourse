@@ -1951,7 +1951,7 @@ bs_BA:
         clear_all: "Očisti sve"
         unlist_topics: "Skini teme sa liste"
         relist_topics: "Listaj teme"
-        reset_read: "Reset Read"
+        defer: "Defer"
         delete: "Obriši teme"
         dismiss: "Odbaci"
         dismiss_read: "Odbaci sve nepročitane"
@@ -2184,7 +2184,6 @@ bs_BA:
         title: "Odgovori"
         help: "počni sastavljati odgovor za ovu temu"
       share:
-        title: "Dijeli"
         extended_title: "Dijeli link"
         help: "podjeli link do ove teme"
         invite_users: "Invite"

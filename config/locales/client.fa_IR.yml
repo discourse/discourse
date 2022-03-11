@@ -304,6 +304,8 @@ fa_IR:
         existing_reminder: "شما یک یادآور برای این نشانک دارید که در %{at_date_time} ارسال خواهد شد"
     copy_codeblock:
       copied: "کپی شد!"
+      copy: "کپی کد در کلیپ‌بورد"
+      fullscreen: "نمایش کد در تمام صفحه"
     drafts:
       label: "درفت"
       label_with_count: "پیش‌نویس (%{count})"
@@ -2086,7 +2088,7 @@ fa_IR:
         clear_all: "پاکسازی همه"
         unlist_topics: "از فهرست خارج کردن مباحث"
         relist_topics: "ایجاد فهرست مجدد از موضوعات"
-        reset_read: "تنظیم مجدد خوانده شد"
+        defer: " واگذار کردن"
         delete: "حذف موضوعات"
         dismiss: "پنهان کردن"
         dismiss_read: "پنهان کردن تمامی خوانده نشده ها"
@@ -2347,7 +2349,6 @@ fa_IR:
         title: "پاسخ"
         help: "شروع ارسال پاسخ به این موضوع"
       share:
-        title: "اشتراک‌گذاری"
         extended_title: "اشتراک‌گذاری یک پیوند"
         help: "اشتراک‌گذاری پیوند این موضوع"
         invite_users: "دعوت"
@@ -3307,6 +3308,8 @@ fa_IR:
           global: جهانی
           action: اقدام
           descriptions:
+            topics:
+              update: به‌روزرسانی موضوع. تغییر عنوان، دسته‌بندی، برچسب‌ها و غیره.
             badges:
               create: ایجاد نشان جدید
               update: به‌روزرسانی نشان

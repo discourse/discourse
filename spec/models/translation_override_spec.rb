@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe TranslationOverride do
   context 'validations' do
     describe '#value' do

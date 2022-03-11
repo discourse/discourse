@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe Upload do
   let(:upload) { build(:upload) }
   let(:user_id) { 1 }

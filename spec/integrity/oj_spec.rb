@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe 'Oj' do
   it "is enabled" do
     classes = Set.new

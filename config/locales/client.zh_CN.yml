@@ -141,6 +141,7 @@ zh_CN:
     skip_to_main_content: "跳转到主要内容"
     wizard_required: "欢迎来到全新的 Discourse！让我们跟随<a href='%{url}' data-auto-route='true'>设置向导</a>开始吧 ✨"
     emails_are_disabled: "所有外发电子邮件已被管理员全局禁用。任何类型的电子邮件通知都不会发出。"
+    emails_are_disabled_non_staff: "非管理员用户无法向外发送电子邮件。"
     software_update_prompt:
       message: "我们已经更新此站点，请 <span>刷新页面</span>，否则可能会遇到意外行为。"
       dismiss: "关闭"
@@ -149,6 +150,10 @@ zh_CN:
     bootstrap_mode_disabled: "引导模式将在 24 小时内禁用。"
     themes:
       default_description: "默认"
+      broken_theme_alert: "您的网站可能无法运行，因为主题/组件有错误。"
+      error_caused_by: "由 '%{name}' 引起。 <a target='blank' href='%{path}'>单击此处</a> 进行更新、重新配置或禁用。"
+      only_admins: "（此消息仅向站点管理员显示）"
+    broken_decorator_alert: "帖子可能无法正确显示，因为您的站点上的其中一个帖子内容装饰器出现了错误。"
     s3:
       regions:
         ap_northeast_1: "亚太地区（东京）"
@@ -282,6 +287,8 @@ zh_CN:
         existing_reminder: "您为此书签设置的提醒将在%{at_date_time}发送"
     copy_codeblock:
       copied: "已复制！"
+      copy: "将代码复制到剪贴板"
+      fullscreen: "全屏显示代码"
     drafts:
       label: "草稿"
       label_with_count: "草稿 (%{count})"
@@ -643,6 +650,8 @@ zh_CN:
             title: "设置"
             allow_unknown_sender_topic_replies: "允许未知发件人回复话题。"
             allow_unknown_sender_topic_replies_hint: "允许未知发件人回复群组话题。如果未启用此功能，且从未被邀请至该话题的电子邮件地址回复，将创建一个新话题。"
+            from_alias: "来源的别名"
+            from_alias_hint: "发送群组 SMTP 邮件时使用的别名。 请注意，这可能不是所有邮件提供商都支持的，请查阅您的邮件提供商的文档。"
           mailboxes:
             synchronized: "已同步的邮箱"
             none_found: "未在此电子邮件帐户中找到任何邮箱。"
@@ -1204,6 +1213,7 @@ zh_CN:
         upload_title: "上传图片"
         image_is_not_a_square: "警告：我们已经裁剪了您的图片；宽度和高度不相等。"
         logo_small: "站点的小徽标。默认情况下使用。"
+        use_custom: "或上传自定义头像："
       change_profile_background:
         title: "个人资料标题"
         instructions: "个人资料标题将居中且默认宽度为 1110px。"
@@ -1724,6 +1734,7 @@ zh_CN:
       second_factor_toggle:
         totp: "改用身份验证器应用"
         backup_code: "改用备份代码"
+        security_key: "改为使用安全密钥"
     invites:
       accept_title: "邀请"
       emoji: "信封表情符号"
@@ -2187,7 +2198,7 @@ zh_CN:
         clear_all: "全部清除"
         unlist_topics: "取消公开话题"
         relist_topics: "重新公开话题"
-        reset_read: "重置已读话题"
+        defer: "推迟"
         delete: "删除话题"
         dismiss: "关闭"
         dismiss_read: "关闭所有未读话题"
@@ -2483,18 +2494,13 @@ zh_CN:
         title: "回复"
         help: "开始撰写此话题的回复"
       share:
-        title: "分享"
+        title: "分享话题"
         extended_title: "分享链接"
         help: "分享此话题的链接"
         instructions: "分享此话题的链接："
         copied: "话题链接已复制。"
         restricted_groups:
           other: "仅对 %{groupNames} 群组成员可见"
-        notify_users:
-          title: "通知"
-          instructions: "通知以下用户有关此话题的信息："
-          success:
-            other: "已成功通知所有用户有关此话题的信息。"
         invite_users: "邀请"
       print:
         title: "打印"
@@ -2700,6 +2706,7 @@ zh_CN:
         edit: "抱歉，编辑您的帖子时出错。请重试。"
         upload: "抱歉，上传该文件时出错。请重试。"
         file_too_large: "抱歉，该文件太大（最大大小为 %{max_size_kb}KB）。为什么不将您的大文件上传到云共享服务，然后粘贴链接呢？"
+        file_size_zero: "抱歉，好像出了点问题，您要上传的文件大小是 0 字节。请再试一次。"
         file_too_large_humanized: "抱歉，该文件太大（最大大小为 %{max_size}KB）。为什么不将您的大文件上传到云共享服务，然后粘贴链接呢？"
         too_many_uploads: "抱歉，一次只能上传一个文件。"
         too_many_dragged_and_dropped_files:
@@ -2854,6 +2861,9 @@ zh_CN:
         viewing_summary: "正在查看此话题的摘要"
         post_number: "%{username}，帖子 #%{post_number}"
         show_all: "全部显示"
+      share:
+        title: "分享帖子 #%{post_number}"
+        instructions: "分享此帖子的链接:"
     category:
       none: "（无类别）"
       all: "所有类别"
@@ -2936,6 +2946,7 @@ zh_CN:
       default_list_filter: "默认列表筛选器："
       allow_badges_label: "允许在此类别中授予徽章"
       edit_permissions: "编辑权限"
+      reviewable_by_group: "除工作人员外，还可通过以下方式审查这一类别的内容："
       review_group_name: "群组名称"
       require_topic_approval: "所有新话题都需要版主审批"
       require_reply_approval: "所有新回复都需要版主审批"
@@ -3486,6 +3497,8 @@ zh_CN:
     no_group_messages_title: "未找到群组消息"
     fullscreen_table:
       expand_btn: "展开表格"
+    second_factor_auth:
+      redirect_after_success: "双重认证验证成功。重定向到之前的页面…"
   admin_js:
     type_to_filter: "输入以筛选…"
     admin:
@@ -3710,6 +3723,9 @@ zh_CN:
               wordpress: WordPress wp-discourse 插件正常工作所必需。
             posts:
               edit: 编辑任意帖子或特定帖子。
+            categories:
+              list: 获取类别列表。
+              show: 通过 id 获取单个类别。
             uploads:
               create: 上传一个新文件或启动单个或多个部分直接上传至外部存储。
             users:
@@ -3790,6 +3806,9 @@ zh_CN:
         notification_event:
           name: "通知事件"
           details: "当用户在 Feed 中收到通知时。"
+        user_promoted_event:
+          name: "用户信任级别提升事件"
+          details: "当用户从一个信任级别提升到另一个信任级别时。"
         user_badge_event:
           name: "徽章授予事件"
           details: "当用户收到徽章时。"

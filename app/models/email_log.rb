@@ -14,6 +14,9 @@ class EmailLog < ActiveRecord::Base
     signup_after_approval
   }
 
+  # cf. https://www.iana.org/assignments/smtp-enhanced-status-codes/smtp-enhanced-status-codes.xhtml
+  SMTP_ERROR_CODE_REGEXP = Regexp.new(/\d\.\d\.\d+|\d{3}/).freeze
+
   belongs_to :user
   belongs_to :post
   belongs_to :smtp_group, class_name: 'Group'
@@ -32,6 +35,13 @@ class EmailLog < ActiveRecord::Base
          email_logs.cc_addresses ILIKE '%' || user_emails.email || '%')
       )
     SQL
+  end
+
+  before_save do
+    if self.bounce_error_code.present?
+      match = SMTP_ERROR_CODE_REGEXP.match(self.bounce_error_code)
+      self.bounce_error_code = match.present? ? match[0] : nil
+    end
   end
 
   after_create do

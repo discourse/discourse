@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe CensoredWordsValidator do
   let(:value) { 'some new bad text' }
   let(:record) { Fabricate(:post, raw: 'this is a test') }

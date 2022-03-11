@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe Emoji do
 
   it "returns the correct codepoints" do

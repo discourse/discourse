@@ -110,11 +110,15 @@ class Middleware::RequestTracker
     has_auth_cookie = Auth::DefaultCurrentUserProvider.find_v0_auth_cookie(request).present?
     has_auth_cookie ||= Auth::DefaultCurrentUserProvider.find_v1_auth_cookie(env).present?
 
+    is_message_bus = request.path.start_with?("#{Discourse.base_path}/message-bus/")
+    is_topic_timings = request.path.start_with?("#{Discourse.base_path}/topics/timings")
+
     h = {
       status: status,
       is_crawler: helper.is_crawler?,
       has_auth_cookie: has_auth_cookie,
-      is_background: !!(request.path =~ /^\/message-bus\// || request.path =~ /\/topics\/timings/),
+      is_background: is_message_bus || is_topic_timings,
+      background_type: is_message_bus ? "message-bus" : "topic-timings",
       is_mobile: helper.is_mobile?,
       track_view: track_view,
       timing: timing,

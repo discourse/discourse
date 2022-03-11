@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe 'multisite', type: [:multisite, :request] do
   it "works" do
     get "http://test.localhost/session/csrf.json"

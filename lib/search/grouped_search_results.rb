@@ -120,7 +120,7 @@ class Search
       blurb = nil
 
       if scrub
-        cooked = SearchIndexer.scrub_html_for_search(cooked)
+        cooked = SearchIndexer::HtmlScrubber.scrub(cooked)
 
         urls = Set.new
         cooked.scan(Discourse::Utils::URI_REGEXP) { urls << $& }

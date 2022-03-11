@@ -831,7 +831,7 @@ class PluginApi {
   }
 
   /**
-   * Register a desktop notificaiton handler
+   * Register a desktop notification handler
    *
    * ```javascript
    * api.registerDesktopNotificationHandler((data, siteSettings, user) => {

@@ -241,7 +241,7 @@ de:
     disabled_errors:
       discourse_connect_enabled: "Einladungen sind deaktiviert, da DiscourseConnect aktiviert ist."
       invalid_access: "Du bist nicht berechtigt, die angeforderte Ressource anzuzeigen."
-    requires_groups: "Einladung gespeichert. Um Zugriff auf das angegebene Thema zu gewähren, füge eine der folgenden Gruppen hinzu: %{groups}."
+    requires_groups: "Die Einladung wurde nicht gespeichert, weil auf das angegebene Thema nicht zugegriffen werden kann. Füge eine der folgenden Gruppen hinzu: %{groups}."
     domain_not_allowed: "Diese E-Mail-Adresse kann nicht verwendet werden, um diese Einladung einzulösen."
   bulk_invite:
     file_should_be_csv: "Die hochgeladene Datei sollte im CSV-Format vorliegen."
@@ -647,6 +647,7 @@ de:
       permission_conflict: "Jede Gruppe, die Zugriff auf eine Unterkategorie hat, muss auch Zugriff auf die übergeordnete Kategorie erhalten. Folgende Gruppen haben Zugriff auf eine der Unterkategorien, aber keinen Zugriff auf die übergeordnete Kategorie: %{group_names}."
       disallowed_topic_tags: "Dieses Thema hat Schlagwörter, die in dieser Kategorie nicht erlaubt sind: „%{tags}“"
       disallowed_tags_generic: "Dieses Thema hat unerlaubte Schlagwörter."
+      slug_contains_non_ascii_chars: "enthält Nicht-ASCII-Zeichen"
     cannot_delete:
       uncategorized: "Diese Kategorie ist etwas Spezielles. Sie dient als Bereich für Themen, die keine Kategorie haben, und kann nicht gelöscht werden."
       has_subcategories: "Diese Kategorie kann nicht gelöscht werden, weil sie Unterkategorien enthält."
@@ -1501,6 +1502,9 @@ de:
     tl2_additional_edits_per_day_multiplier: "Erhöhe das Limit der Bearbeitungen pro Tag für Benutzer mit Vertrauensstufe 2 (Mitglied) durch Multiplikation mit dieser Zahl"
     tl3_additional_edits_per_day_multiplier: "Erhöhe das Limit der Bearbeitungen pro Tag für Benutzer mit Vertrauensstufe 3 (Stammgast) durch Multiplikation mit dieser Zahl"
     tl4_additional_edits_per_day_multiplier: "Erhöhe das Limit der Bearbeitungen pro Tag für Benutzer mit Vertrauensstufe 4 (Anführer) durch Multiplikation mit dieser Zahl"
+    tl2_additional_flags_per_day_multiplier: "Erhöhe das Limit der „Meldungen“ pro Tag für Benutzer mit Vertrauensstufe 2 (Mitglied) durch Multiplikation mit dieser Zahl"
+    tl3_additional_flags_per_day_multiplier: "Erhöhe das Limit der „Meldungen“ pro Tag für Benutzer mit Vertrauensstufe 3 (Stammgast) durch Multiplikation mit dieser Zahl"
+    tl4_additional_flags_per_day_multiplier: "Erhöhe das Limit der „Meldungen“ pro Tag für Benutzer mit Vertrauensstufe 4 (Anführer) durch Multiplikation mit dieser Zahl"
     num_users_to_silence_new_user: "Wenn die Beiträge eines neuen Benutzers num_spam_flags_to_silence_new_user Spam-Meldungen von so vielen verschiedenen Benutzern erhalten, werden alle Beiträge des Benutzers versteckt und zukünftige Beiträge verhindert. 0 zum Deaktivieren."
     num_tl3_flags_to_silence_new_user: "Wenn die Beiträge eines neuen Benutzers so viele Meldungen von num_tl3_users_to_silence_new_user verschiedenen Benutzern mit Vertrauensstufe 3 erhalten, werden alle Beiträge des Benutzers versteckt und zukünftige Beiträge verhindert. 0 zum Deaktivieren."
     num_tl3_users_to_silence_new_user: "Wenn die Beiträge eines neuen Benutzers num_tl3_flags_to_silence_new_user Meldungen von so vielen verschiedenen Benutzern mit Vertrauensstufe 3 erhalten, werden alle Beiträge des Benutzers versteckt und zukünftige Beiträge verhindert. 0 zum Deaktivieren."
@@ -1698,7 +1702,7 @@ de:
     use_site_small_logo_as_system_avatar: "Verwende das kleine Logo der Website anstelle des Avatars des Systembenutzers. Das Logo muss vorhanden sein."
     restrict_letter_avatar_colors: "Eine Liste von 6-stelligen hexadezimalen Farbwerten, die für den Buchstaben-Avatar-Hintergrund verwendet werden."
     enable_listing_suspended_users_on_search: "Ermögliche normalen Benutzern, gesperrte Benutzer zu finden."
-    selectable_avatars_enabled: "Benutzer zwingen, einen Avatar aus der Liste auszuwählen."
+    selectable_avatars_mode: "Erlaube es den Nutzern, einen Avatar aus der Liste selectable_avatars auszuwählen, und beschränke benutzerdefinierte Avatar-Uploads auf die ausgewählte Vertrauensstufe."
     selectable_avatars: "Liste der Avatare, aus denen Benutzer wählen können."
     allow_all_attachments_for_group_messages: "Erlaube alle E-Mail-Anhänge für Gruppen-Nachrichten."
     png_to_jpg_quality: "Qualität der umgewandelten JPG-Datei (1 ist die niedrigste, 99 die beste Qualität, 100 deaktiviert die Funktion)."
@@ -1973,6 +1977,7 @@ de:
     display_name_on_posts: "Zeige zusätzlich zum @Benutzernamen auch den vollständigen Namen des Benutzers bei seinen Beiträgen."
     show_time_gap_days: "Wenn zwei Beiträge so viele Tage auseinanderliegen, dann wird die Zeitspanne im Thema angezeigt."
     short_progress_text_threshold: "Sobald die Anzahl an Beiträgen in einem Thema diese Nummer übersteigt, zeigt der Fortschrittsbalken nur noch die aktuelle Beitragsnummer. Dieser Wert sollte angepasst werden, falls die Breite des Fortschrittsbalkens verändert wird."
+    default_code_lang: "Standardmäßige Syntaxhervorhebung der Programmiersprache, die auf Codeblöcke angewendet wird (auto, nohighlight, ruby, python etc.). Dieser Wert muss auch in der Site-Einstellung \"Hervorgehobene Sprachen\" enthalten sein."
     warn_reviving_old_topic_age: "Wenn jemand beginnt, auf ein Thema zu antworten, dessen letzte Antwort älter als diese Anzahl an Tagen ist, wird eine Warnung angezeigt. Zum Deaktivieren auf 0 setzen."
     autohighlight_all_code: "Erzwinge Syntaxhervorhebung für alle Quellcode-Blöcke auch dann, wenn keine Sprache angegeben wurde."
     highlighted_languages: "Aktivierte Regeln für die Syntaxhervorhebung. (Warnung: Das Aktivieren zu vieler Sprachen kann die Leistung beeinträchtigen.) Siehe <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> für eine Demonstration"
@@ -2311,6 +2316,10 @@ de:
     second_factor_toggle:
       totp: "Verwende stattdessen eine Authentifizierungs-App oder einen Sicherheitsschlüssel"
       backup_code: "Benutze stattdessen einen Wiederherstellungscode"
+  second_factor_auth:
+    challenge_not_found: "Es konnte keine 2FA-Herausforderung in deiner aktuellen Sitzung gefunden werden."
+    challenge_expired: "Es ist zu viel Zeit vergangen, seit die 2FA-Herausforderung durchgeführt wurde, und sie ist nicht mehr gültig. Bitte versuche es erneut."
+    challenge_not_completed: "Du hast die 2FA-Herausforderung nicht abgeschlossen, um diese Aktion durchzuführen. Bitte schließe die 2FA-Herausforderung ab und versuche es erneut."
   admin:
     email:
       sent_test: "gesendet!"

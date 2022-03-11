@@ -114,6 +114,15 @@ DiscourseEvent.on(:user_added_to_group) do |user, group, options|
   WebHook.enqueue_object_hooks(:group_user, group_user, :user_added_to_group, WebHookGroupUserSerializer)
 end
 
+DiscourseEvent.on(:user_promoted) do |payload|
+  user_id, new_trust_level, old_trust_level = payload.values_at(:user_id, :new_trust_level, :old_trust_level)
+
+  next if new_trust_level < old_trust_level
+
+  user = User.find(user_id)
+  WebHook.enqueue_object_hooks(:user_promoted, user, :user_promoted, UserSerializer)
+end
+
 DiscourseEvent.on(:like_created) do |post_action|
   user = post_action.user
   group_ids = user.groups.map(&:id)

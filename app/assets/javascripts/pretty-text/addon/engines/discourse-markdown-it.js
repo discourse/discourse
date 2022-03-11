@@ -337,9 +337,7 @@ function buildCustomMarkdownCookFunction(engineOpts, defaultEngineOpts) {
   // we don't need the whole engine as a consumer, just a cook function
   // will do
   return function customRenderFn(contentToRender) {
-    return newOpts.discourse
-      .sanitizer(newOpts.engine.render(contentToRender))
-      .trim();
+    return cook(contentToRender, newOpts);
   };
 }
 

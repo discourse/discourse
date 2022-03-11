@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe PermalinksController do
   fab!(:topic) { Fabricate(:topic) }
   fab!(:permalink) { Fabricate(:permalink, url: "deadroute/topic/546") }

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Onebox::Engine::CloudAppOnebox do
   before do
     stub_request(:get, "https://cl.ly/0m2a2u2k440O").to_return(status: 200, body: onebox_response("cloudapp-gif"))

@@ -20,7 +20,7 @@ acceptance("Topic - Bulk Actions", function (needs) {
   });
 
   test("bulk select - modal", async function (assert) {
-    updateCurrentUser({ moderator: true });
+    updateCurrentUser({ moderator: true, enable_defer: true });
     await visit("/latest");
     await click("button.bulk-select");
 
@@ -65,9 +65,7 @@ acceptance("Topic - Bulk Actions", function (needs) {
     );
 
     assert.ok(
-      queryAll(".bulk-buttons")
-        .html()
-        .includes(I18n.t("topics.bulk.reset_read")),
+      queryAll(".bulk-buttons").html().includes(I18n.t("topics.bulk.defer")),
       "it shows an option to reset read"
     );
 

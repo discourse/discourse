@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe TrustLevel3Requirements do
 
   let(:user) { Fabricate.build(:user) }

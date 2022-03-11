@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Onebox::StatusCheck do
   before do
     stub_request(:get, "http://www.amazon.com/200-url").to_return(status: 200)

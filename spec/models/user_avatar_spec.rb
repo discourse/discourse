@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe UserAvatar do
   fab!(:user) { Fabricate(:user) }
   let(:avatar) { user.create_user_avatar! }

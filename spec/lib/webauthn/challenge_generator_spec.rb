@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe Webauthn::ChallengeGenerator do
   it "generates a Webauthn::ChallengeGenerator::ChallengeSession with correct params" do
     session = Webauthn::ChallengeGenerator.generate

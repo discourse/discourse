@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe InvitesController do
   fab!(:admin) { Fabricate(:admin) }
   fab!(:user) { Fabricate(:user, trust_level: SiteSetting.min_trust_level_to_allow_invite) }

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe Search do
 
   context "#ts_config" do
@@ -77,6 +75,35 @@ describe Search do
       it "are hidden to regular users" do
         result = Search.execute(hidden_tag.name, guardian: Guardian.new(Fabricate(:user)))
         expect(result.tags).to contain_exactly()
+      end
+    end
+
+    context "accents" do
+      fab!(:post_1) { Fabricate(:post, raw: "Cette ****** d'art n'est pas une œuvre") }
+      fab!(:post_2) { Fabricate(:post, raw: "Cette oeuvre d'art n'est pas une *****") }
+
+      before do
+        SearchIndexer.enable
+      end
+
+      after do
+        SearchIndexer.disable
+      end
+
+      it "removes them if search_ignore_accents" do
+        SiteSetting.search_ignore_accents = true
+        [post_1, post_2].each { |post| SearchIndexer.index(post.topic, force: true) }
+
+        expect(Search.execute("oeuvre").posts).to contain_exactly(post_1, post_2)
+        expect(Search.execute("œuvre").posts).to contain_exactly(post_1, post_2)
+      end
+
+      it "does not remove them if not search_ignore_accents" do
+        SiteSetting.search_ignore_accents = false
+        [post_1, post_2].each { |post| SearchIndexer.index(post.topic, force: true) }
+
+        expect(Search.execute("œuvre").posts).to contain_exactly(post_1)
+        expect(Search.execute("oeuvre").posts).to contain_exactly(post_2)
       end
     end
   end

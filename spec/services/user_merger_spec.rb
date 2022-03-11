@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe UserMerger do
   fab!(:target_user) { Fabricate(:user, username: 'alice', email: 'alice@example.com') }
   fab!(:source_user) { Fabricate(:user, username: 'alice1', email: 'alice@work.com') }

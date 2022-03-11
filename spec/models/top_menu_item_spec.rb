@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe TopMenuItem do
   before do
     SiteSetting.top_menu = 'categories|latest'

@@ -241,7 +241,6 @@ pt_BR:
     disabled_errors:
       discourse_connect_enabled: "Convites estão desativados porque o DiscourseConnect está ativado."
       invalid_access: "Você não tem permissão para visualizar o recurso solicitado."
-    requires_groups: "Convite salvo. Para conceder acesso ao tópico especificado, adicione um dos grupos a seguir: %{groups}."
     domain_not_allowed: "Seu e-mail não pode ser usado para resgatar este convite."
   bulk_invite:
     file_should_be_csv: "O arquivo atualizado deve ter o formato csv."
@@ -1692,7 +1691,6 @@ pt_BR:
     use_site_small_logo_as_system_avatar: "Use o logotipo pequeno do site em vez do avatar do(a) usuário(a) do sistema. Requer que o logo esteja presente."
     restrict_letter_avatar_colors: "Uma lista de valores de cor hexadecimais de 6 dígitos para serem usados no plano de fundo do avatar da letra."
     enable_listing_suspended_users_on_search: "Ative usuários(as) regulares para encontrar usuários(as) suspensos(as)."
-    selectable_avatars_enabled: "Obrigue os(as) usuários(as) a escolher um avatar da lista."
     selectable_avatars: "Lista de avatares que os(as) usuários(as) podem escolher."
     allow_all_attachments_for_group_messages: "Permitir todos os anexos de e-mail para mensagens de grupo."
     png_to_jpg_quality: "Qualidade do arquivo JPG convertido (1 é a qualidade mais baixa, 99 é a melhor qualidade, 100 para desativar)."

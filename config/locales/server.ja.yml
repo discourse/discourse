@@ -227,7 +227,6 @@ ja:
     disabled_errors:
       discourse_connect_enabled: "DiscourseConnect が有効であるため、招待は無効です。"
       invalid_access: "リクエストしたリソースの閲覧が許可されていません。"
-    requires_groups: "招待を保存しました。指定されたトピックへのアクセスを許可するには、次のいずれかのグループを追加してください: %{groups}。"
   bulk_invite:
     file_should_be_csv: "アップロードファイルは csv 形式である必要があります。"
     max_rows: "最初の %{max_bulk_invites} 件の招待が送信されました。ファイルをより小さく分割してください。"
@@ -1606,7 +1605,6 @@ ja:
     external_emoji_url: "絵文字画像の外部サービスの URL。無効にするには空のままにします。"
     use_site_small_logo_as_system_avatar: "システムユーザーのアバターの代わりにサイトの small logo を使用する。ロゴが存在する必要があります。"
     restrict_letter_avatar_colors: "文字アバターの背景に使用される 6 桁の 16 進数の色値のリスト。"
-    selectable_avatars_enabled: "ユーザーにリストからアバターを選択するように強制する。"
     selectable_avatars: "ユーザーが選択できるアバターのリスト。"
     allow_all_attachments_for_group_messages: "グループメッセージのメールの添付ファイルをすべて許可する。"
     png_to_jpg_quality: "変換された JPG ファイルの品質 (1 は最低品質、99 は最高品質、100 は無効)。"

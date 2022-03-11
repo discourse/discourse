@@ -53,25 +53,25 @@ class ImportScripts::VBulletin < ImportScripts::Base
     rescue Exception => e
       puts '=' * 50
       puts e.message
-      puts <<EOM
-Cannot connect in to database.
+      puts <<~TEXT
+        Cannot connect in to database.
 
-Hostname: #{DB_HOST}
-Username: #{DB_USER}
-Password: #{DB_PW}
-database: #{DB_NAME}
+        Hostname: #{DB_HOST}
+        Username: #{DB_USER}
+        Password: #{DB_PW}
+        database: #{DB_NAME}
 
-Edit the script or set these environment variables:
+        Edit the script or set these environment variables:
 
-export DB_HOST="localhost"
-export DB_NAME="vbulletin"
-export DB_PW=""
-export DB_USER="root"
-export TABLE_PREFIX="vb_"
-export ATTACHMENT_DIR '/path/to/your/attachment/folder'
+        export DB_HOST="localhost"
+        export DB_NAME="vbulletin"
+        export DB_PW=""
+        export DB_USER="root"
+        export TABLE_PREFIX="vb_"
+        export ATTACHMENT_DIR '/path/to/your/attachment/folder'
 
-Exiting.
-EOM
+        Exiting.
+      TEXT
       exit
   end
 
@@ -151,7 +151,7 @@ EOM
 
       create_users(users, total: user_count, offset: offset) do |user|
         email = user["email"].presence || fake_email
-        email = fake_email unless email[EmailValidator.email_regex]
+        email = fake_email if !EmailAddressValidator.valid_value?(email)
 
         password = [user["password"].presence, user["salt"].presence].compact.join(":")
 
@@ -674,12 +674,12 @@ EOM
     # keep track of closed topics
     closed_topic_ids = []
 
-    topics = mysql_query <<-MYSQL
+    topics = mysql_query <<-SQL
         SELECT t.threadid threadid, firstpostid, open
           FROM #{TABLE_PREFIX}thread t
           JOIN #{TABLE_PREFIX}post p ON p.postid = t.firstpostid
       ORDER BY t.threadid
-    MYSQL
+    SQL
     topics.each do |topic|
       topic_id = "thread-#{topic["threadid"]}"
       closed_topic_ids << topic_id if topic["open"] == 0

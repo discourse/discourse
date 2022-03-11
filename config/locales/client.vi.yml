@@ -2037,7 +2037,7 @@ vi:
         clear_all: "Xoá hết"
         unlist_topics: "Chủ đề không công khai"
         relist_topics: "Chủ đề liên quan"
-        reset_read: "Đặt lại lượt đọc"
+        defer: "Hoãn"
         delete: "Xóa chủ đề"
         dismiss: "Bỏ qua"
         dismiss_read: "Bỏ qua tất cả thư chưa đọc"
@@ -2302,7 +2302,6 @@ vi:
         title: "Trả lời"
         help: "bắt đầu soạn phản hồi cho chủ đề này"
       share:
-        title: "Chia sẻ"
         extended_title: "Chia sẻ một liên kết"
         help: "Chia sẻ một liên kết đến chủ đề này"
         invite_users: "Mời"

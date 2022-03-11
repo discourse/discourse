@@ -558,4 +558,16 @@ acceptance("Search - Full Page", function (needs) {
     await click(".topic-bulk-actions-modal .btn:nth-child(2)"); // close topics
     assert.equal(lastBody["topic_ids[]"], 7);
   });
+
+  test("adds visited class to visited topics", async function (assert) {
+    await visit("/search");
+
+    await fillIn(".search-query", "discourse");
+    await click(".search-cta");
+    assert.equal(queryAll(".visited").length, 0);
+
+    await fillIn(".search-query", "discourse visited");
+    await click(".search-cta");
+    assert.equal(queryAll(".visited").length, 1);
+  });
 });

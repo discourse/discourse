@@ -133,7 +133,7 @@ acceptance("Search - Anonymous", function (needs) {
     assert.strictEqual(
       query(firstResult).textContent.trim(),
       `${I18n.t("search.in")} test`,
-      "contenxtual tag search is first available option with no term"
+      "contextual tag search is first available option with no term"
     );
 
     await fillIn("#search-term", "smth");
@@ -190,11 +190,11 @@ acceptance("Search - Anonymous", function (needs) {
     assert.strictEqual(
       query(firstResult).textContent.trim(),
       I18n.t("search.in_this_topic"),
-      "contenxtual topic search is first available option"
+      "contextual topic search is first available option"
     );
 
     await fillIn("#search-term", "a proper");
-    await focus("input#search-term");
+    await query("input#search-term").focus();
     await triggerKeyEvent(".search-menu", "keydown", 40);
 
     await click(document.activeElement);
@@ -224,7 +224,7 @@ acceptance("Search - Anonymous", function (needs) {
     );
 
     await fillIn("#search-term", "dev");
-    await focus("input#search-term");
+    await query("input#search-term").focus();
     await triggerKeyEvent(".search-menu", "keydown", 40);
     await click(document.activeElement);
 
@@ -234,7 +234,7 @@ acceptance("Search - Anonymous", function (needs) {
     );
 
     await fillIn("#search-term", "");
-    await focus("input#search-term");
+    await query("input#search-term").focus();
     await triggerKeyEvent("input#search-term", "keydown", 8); // backspace
 
     assert.ok(
@@ -254,11 +254,11 @@ acceptance("Search - Anonymous", function (needs) {
     assert.strictEqual(
       query(firstResult).textContent.trim(),
       I18n.t("search.in_this_topic"),
-      "contenxtual topic search is first available option"
+      "contextual topic search is first available option"
     );
 
     await fillIn("#search-term", "proper");
-    await focus("input#search-term");
+    await query("input#search-term").focus();
     await triggerKeyEvent(".search-menu", "keydown", 40);
     await click(document.activeElement);
 
@@ -393,7 +393,7 @@ acceptance("Search - Authenticated", function (needs) {
     await visit("/t/internationalization-localization/280");
     await click("#search-button");
     await fillIn("#search-term", "plans");
-    await focus("input#search-term");
+    await query("input#search-term").focus();
     await triggerKeyEvent(".search-menu", "keydown", 40);
     await click(document.activeElement);
 

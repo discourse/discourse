@@ -1174,7 +1174,7 @@ sr:
       new_messages_marker: "poslednja poseta"
       bulk:
         select_all: "Izaberi sve"
-        reset_read: "Poništi Pročitano"
+        defer: "Odloži"
         delete: "Obriši Teme"
         dismiss_new: "Odbaci Novo"
         toggle: "uključi/isključi grupni odabir tema"
@@ -1328,7 +1328,6 @@ sr:
         title: "Odgovori"
         help: "Počni pravljenje odgovora na ovu temu"
       share:
-        title: "Podeli"
         help: "podeli link ka ovoj temi"
         invite_users: "Pozovi"
       print:

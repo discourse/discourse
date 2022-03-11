@@ -228,7 +228,6 @@ da:
     disabled_errors:
       discourse_connect_enabled: "Invitationer er deaktiveret, fordi DiscourseConnect er aktiveret."
       invalid_access: "Du har ikke tilladelse til at se den ønskede ressource."
-    requires_groups: "Invitation gemt. For at give adgang til det angivne emne skal du tilføje en af følgende grupper: %{groups}."
   bulk_invite:
     file_should_be_csv: "Den overførte fil skal være i csv format."
     max_rows: "De første %{max_bulk_invites} invitationer er blevet sendt. Prøv at opdele filen i mindre dele."
@@ -1505,7 +1504,6 @@ da:
     avatar_sizes: "Liste over automatisk genererede avatarstørrelser."
     external_emoji_url: "URL til den eksterne tjeneste for humørikon-billeder. Lad det være tomt for at deaktivere det."
     restrict_letter_avatar_colors: "En liste med 6-cifrede hexadecimale farveværdier til brug for bogstavesavatar baggrund."
-    selectable_avatars_enabled: "Tving brugere til at vælge en avatar fra listen."
     selectable_avatars: "Liste over avatarer, som brugere kan vælge imellem."
     allow_all_attachments_for_group_messages: "Tillad alle vedhæftede filer (e-mail) for gruppemeddelelser."
     png_to_jpg_quality: "Kvaliteten af den konverterede JPG-fil (1 er laveste kvalitet, 99 er bedste kvalitet, 100 for at deaktivere)."
@@ -2913,6 +2911,7 @@ da:
     download_failure: "Hentning af filen fra den eksterne udbyder mislykkedes."
     checksum_mismatch_failure: "Kontrolsummen af den fil du overførte stemmer ikke overens. Filens indhold kan have ændret sig under overførsel. Prøv venligst igen."
     cannot_promote_failure: "Overførslen kan ikke fuldføres, den kan allerede være fuldført eller tidligere mislykkedes."
+    size_zero_failure: "Beklager, det ser ud til, at der er gået noget galt, filen, du forsøger at overføre er 0 bytes. Prøv venligst igen."
     attachments:
       too_large: "Beklager, men den fil du prøver at overføre er for stor (maksimumstørelsen er %{max_size_kb}KB)"
     images:

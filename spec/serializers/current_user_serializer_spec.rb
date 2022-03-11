@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 RSpec.describe CurrentUserSerializer do
   subject(:serializer) { described_class.new(user, scope: guardian, root: false) }
 

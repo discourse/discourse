@@ -306,7 +306,7 @@ discourseModule(
         store.createRecord("category", {
           id: 1,
           name: "cat-with-entities",
-          description: "baz &quot;bar ‘foo’",
+          description_text: "baz &quot;bar ‘foo’",
         });
       },
 

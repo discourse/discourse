@@ -1515,7 +1515,6 @@ nl:
     external_system_avatars_enabled: "Externe service voor systeemavatars gebruiken."
     external_system_avatars_url: "URL van de externe avatarservice. Toegestane vervangingen zijn {username} {first_letter} {color} {size}"
     restrict_letter_avatar_colors: "Een lijst van 6-cijferige hexadecimale kleurwaarden voor letter-avatar-achtergronden."
-    selectable_avatars_enabled: "Gebruikers dwingen een avatar uit de lijst te kiezen."
     selectable_avatars: "Lijst van avatars waaruit gebruikers kunnen kiezen."
     allow_all_attachments_for_group_messages: "Alle e-mailbijlagen voor groepsberichten toestaan."
     png_to_jpg_quality: "Kwaliteit van het geconverteerde JPG-bestand (1 is laagste kwaliteit, 99 is beste kwaliteit, 100 om uit te schakelen)."

@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 require "pg"
 
-usage = <<-END
+usage = <<-TEXT
 Commands:
   ruby db_timestamp_updater.rb yesterday <date> move all timestamps by x days so that <date> will be moved to yesterday
   ruby db_timestamp_updater.rb 100              move all timestamps forward by 100 days
   ruby db_timestamp_updater.rb -100             move all timestamps backward by 100 days
-END
+TEXT
 
 class TimestampsUpdater
   def initialize(schema, ignore_tables)

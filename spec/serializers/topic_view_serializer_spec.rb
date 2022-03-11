@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe TopicViewSerializer do
   def serialize_topic(topic, user_arg)
     topic_view = TopicView.new(topic.id, user_arg)
