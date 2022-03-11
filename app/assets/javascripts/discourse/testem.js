@@ -34,7 +34,7 @@ module.exports = {
   browser_args: {
     Chrome: [
       // --no-sandbox is needed when running Chrome inside a container
-      process.env.CI || process.env.EMBER_CLI ? "--no-sandbox" : null,
+      process.env.CI ? "--no-sandbox" : null,
       "--headless",
       "--disable-dev-shm-usage",
       "--disable-software-rasterizer",
