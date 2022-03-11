@@ -435,7 +435,7 @@ class Guardian
     # Can't send PMs to suspended users
     (is_staff? || is_group || !target.suspended?) &&
     # Check group messageable level
-    (is_staff? || is_user || Group.messageable(@user).where(id: target.id).exists? || notify_moderators) &&
+    (is_user || Group.messageable(@user).where(id: target.id).exists? || notify_moderators) &&
     # Silenced users can only send PM to staff
     (!is_silenced? || target.staff?)
   end

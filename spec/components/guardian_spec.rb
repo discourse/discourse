@@ -338,14 +338,13 @@ describe Guardian do
     it "respects the group's messageable_level" do
       Group::ALIAS_LEVELS.each do |level, _|
         group.update!(messageable_level: Group::ALIAS_LEVELS[level])
-        output = level == :everyone ? true : false
+        user_output = level == :everyone ? true : false
+        admin_output = level != :nobody
+        mod_output = [:nobody, :only_admins].exclude?(level)
 
-        expect(Guardian.new(user).can_send_private_message?(group)).to eq(output)
-      end
-
-      Group::ALIAS_LEVELS.each do |level, _|
-        group.update!(messageable_level: Group::ALIAS_LEVELS[level])
-        expect(Guardian.new(admin).can_send_private_message?(group)).to eq(true)
+        expect(Guardian.new(user).can_send_private_message?(group)).to eq(user_output)
+        expect(Guardian.new(admin).can_send_private_message?(group)).to eq(admin_output)
+        expect(Guardian.new(moderator).can_send_private_message?(group)).to eq(mod_output)
       end
     end
 
