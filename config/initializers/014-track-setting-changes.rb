@@ -45,10 +45,6 @@ DiscourseEvent.on(:site_setting_changed) do |name, old_value, new_value|
     SiteIconManager.ensure_optimized!
   end
 
-  if SiteSetting::WATCHED_SETTINGS.include?(name)
-    SiteSetting.reset_cached_settings!
-  end
-
   # Make sure medium and high priority thresholds were calculated.
   if name == :reviewable_low_priority_threshold && Reviewable.min_score_for_priority(:medium) > 0
     Reviewable.set_priorities(low: new_value)
