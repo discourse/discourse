@@ -101,25 +101,33 @@ class SiteSetting < ActiveRecord::Base
     :markdown_typographer_quotation_marks
   ]
 
-  def self.cache
-    @cache ||= DistributedCache.new("site_settings")
-  end
-
-  def self.reset_cached_settings!
-    cache.clear
-  end
-
   def self.blocked_attachment_content_types_regex
-    cache["blocked_attachment_content_types_regex"] ||= Regexp.union(SiteSetting.blocked_attachment_content_types.split("|"))
+    current_db = RailsMultisite::ConnectionManagement.current_db
+
+    @blocked_attachment_content_types_regex ||= {}
+    @blocked_attachment_content_types_regex[current_db] ||= begin
+      Regexp.union(SiteSetting.blocked_attachment_content_types.split("|"))
+    end
   end
 
   def self.blocked_attachment_filenames_regex
-    cache["blocked_attachment_filenames_regex"] ||= Regexp.union(SiteSetting.blocked_attachment_filenames.split("|"))
+    current_db = RailsMultisite::ConnectionManagement.current_db
+
+    @blocked_attachment_filenames_regex ||= {}
+    @blocked_attachment_filenames_regex[current_db] ||= begin
+      Regexp.union(SiteSetting.blocked_attachment_filenames.split("|"))
+    end
   end
 
   def self.allowed_unicode_username_characters_regex
-    cache["allowed_unicode_username_regex"] ||= SiteSetting.allowed_unicode_username_characters.present? \
-      ? Regexp.new(SiteSetting.allowed_unicode_username_characters) : nil
+    current_db = RailsMultisite::ConnectionManagement.current_db
+
+    @allowed_unicode_username_regex ||= {}
+    @allowed_unicode_username_regex[current_db] ||= begin
+      if SiteSetting.allowed_unicode_username_characters.present?
+        Regexp.new(SiteSetting.allowed_unicode_username_characters)
+      end
+    end
   end
 
   # helpers for getting s3 settings that fallback to global
@@ -247,6 +255,16 @@ class SiteSetting < ActiveRecord::Base
       Discourse.deprecate("#{old_method.to_s} is deprecated, use the #{new_method.to_s}.", drop_from: "2.6", raise_error: true)
       send("#{new_method}=", args)
     end
+  end
+
+  protected
+
+  def self.clear_cache!
+    super
+
+    @blocked_attachment_content_types_regex = nil
+    @blocked_attachment_filenames_regex = nil
+    @allowed_unicode_username_regex = nil
   end
 end
 
