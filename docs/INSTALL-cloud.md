@@ -1,6 +1,7 @@
-**Set up Discourse in the cloud in under 30 minutes** with zero knowledge of Rails or Linux shell. One example
-is [DigitalOcean][do], but these steps will work on any **Docker-compatible** cloud provider or local server. This
-walkthrough will go through these in detail:
+**Set up Discourse in the cloud in under 30 minutes** with zero knowledge of Rails or Linux shell.
+One example is [DigitalOcean][do], but these steps will work on any **Docker-compatible** cloud provider or local server.
+
+This walkthrough will go through these in detail:
 
 1. [Create new cloud server](#1-create-new-cloud-server)
 2. [Access new cloud server](#2-access-your-cloud-server)
@@ -77,6 +78,8 @@ You will need to be root through the rest of the setup and bootstrap process.
 Launch the setup tool at
 
     ./discourse-setup
+
+Note that this only works if port 80 is not occupied... Otherwise the script will malfunction!
 
 Answer the following questions when prompted:
 
