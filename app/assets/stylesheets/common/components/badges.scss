@@ -192,10 +192,10 @@
 
   &.new-topic::before {
     content: "";
-    background: var(--tertiary-high);
+    background: var(--tertiary-med-or-tertiary);
     display: inline-block;
-    height: 0.4em;
-    width: 0.4em;
+    height: 8px;
+    width: 8px;
     border-radius: 50%;
   }
 

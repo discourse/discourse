@@ -55,9 +55,10 @@
   .badge-notification {
     position: relative;
     top: -2px;
+
     &.new-topic {
       top: -1px;
-      padding-left: 5px;
+      padding-left: 2px;
     }
   }
 
