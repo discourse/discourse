@@ -55,11 +55,10 @@ export default Component.extend({
       userTimezone: this.currentUser.resolvedTimezone(this.currentUser),
       showOptions: false,
       _itsatrap: new ItsATrap(),
+      autoDeletePreference: this.model.autoDeletePreference || 0,
     });
 
     this.registerOnCloseHandler(this._onModalClose);
-
-    this._loadBookmarkOptions();
     this._bindKeyboardShortcuts();
 
     if (this.editingExistingBookmark) {
@@ -79,8 +78,8 @@ export default Component.extend({
 
     // we want to make sure the options panel opens so the user
     // knows they have set these options previously.
-    if (this.autoDeletePreference) {
-      this.toggleOptionsPanel();
+    if (this.model.id) {
+      this.set("showOptions", true);
     }
   },
 
@@ -96,21 +95,6 @@ export default Component.extend({
 
       this.set("selectedDatetime", parsedDatetime);
     }
-  },
-
-  _loadBookmarkOptions() {
-    this.set(
-      "autoDeletePreference",
-      this.model.autoDeletePreference || this._preferredDeleteOption() || 0
-    );
-  },
-
-  _preferredDeleteOption() {
-    let preferred = localStorage.bookmarkDeleteOption;
-    if (preferred && preferred !== "") {
-      preferred = parseInt(preferred, 10);
-    }
-    return preferred;
   },
 
   _bindKeyboardShortcuts() {
@@ -157,7 +141,10 @@ export default Component.extend({
       }
     }
 
-    localStorage.bookmarkDeleteOption = this.autoDeletePreference;
+    this.currentUser.set(
+      "bookmark_auto_delete_preference",
+      this.autoDeletePreference
+    );
 
     const data = {
       reminder_at: reminderAtISO,
@@ -347,12 +334,7 @@ export default Component.extend({
   },
 
   @action
-  toggleOptionsPanel() {
-    if (this.showOptions) {
-      $(".bookmark-options-panel").slideUp("fast");
-    } else {
-      $(".bookmark-options-panel").slideDown("fast");
-    }
+  toggleShowOptions() {
     this.toggleProperty("showOptions");
   },
 
