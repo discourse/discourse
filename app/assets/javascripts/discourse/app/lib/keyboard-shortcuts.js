@@ -661,8 +661,8 @@ export default {
         .toArray()
         .find((article) =>
           direction > 0
-            ? article.getBoundingClientRect().top > offset
-            : article.getBoundingClientRect().bottom > offset
+            ? article.getBoundingClientRect().top >= offset
+            : article.getBoundingClientRect().bottom >= offset
         );
       if (!$selected) {
         $selected = $articles[$articles.length - 1];
