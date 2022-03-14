@@ -102,7 +102,7 @@ task 'plugin:update', :plugin do |t, args|
     `git -C '#{plugin_path}' branch -u origin/main main`
   end
 
-  update_status = system("git -C '#{plugin_path}' pull")
+  update_status = system("git -C '#{plugin_path}' pull --no-rebase")
   abort("Unable to pull latest version of plugin #{plugin_path}") unless update_status
 end
 
