@@ -18,8 +18,6 @@
 # => PAUSE_ON_TERMINATE        set to 1 to pause prior to terminating redis and pg
 # => JS_TIMEOUT                set timeout for qunit tests in ms
 # => WARMUP_TMP_FOLDER runs a single spec to warmup the tmp folder and obtain accurate results when profiling specs.
-# => EMBER_CLI                 set to 1 to run JS tests using the Ember CLI
-# => EMBER_CLI_BROWSERS        comma separated list of browsers to test against. Options are Chrome, Firefox, and Headless Firefox.
 #
 # Other useful environment variables (not specific to this rake task)
 # => COMMIT_HASH    used by the discourse_test docker image to load a specific commit of discourse
@@ -205,23 +203,15 @@ task 'docker:test' do
         js_timeout = ENV["JS_TIMEOUT"].presence || 900_000 # 15 minutes
 
         unless ENV["SKIP_CORE"]
-          @good &&= run_or_fail("bundle exec rake qunit:test['#{js_timeout}']")
-          @good &&= run_or_fail("bundle exec rake qunit:test['#{js_timeout}','/wizard/qunit']")
+          @good &&= run_or_fail("cd app/assets/javascripts/discourse && CI=1 yarn ember exam --random")
+          @good &&= run_or_fail("QUNIT_EMBER_CLI=0 bundle exec rake qunit:test['#{js_timeout}','/wizard/qunit']")
         end
 
         unless ENV["SKIP_PLUGINS"]
           if ENV["SINGLE_PLUGIN"]
-            @good &&= run_or_fail("bundle exec rake plugin:qunit['#{ENV['SINGLE_PLUGIN']}','#{js_timeout}']")
+            @good &&= run_or_fail("CI=1 QUNIT_EMBER_CLI=1 bundle exec rake plugin:qunit['#{ENV['SINGLE_PLUGIN']}','#{js_timeout}']")
           else
-            @good &&= run_or_fail("bundle exec rake plugin:qunit['*','#{js_timeout}']")
-          end
-        end
-
-        if ENV["EMBER_CLI"]
-          Dir.chdir("#{Rails.root}/app/assets/javascripts/discourse") do # rubocop:disable Discourse/NoChdir
-            browsers = ENV["EMBER_CLI_BROWSERS"] || 'Chrome'
-            @good &&= run_or_fail("yarn install")
-            @good &&= run_or_fail("yarn ember test --launch #{browsers}")
+            @good &&= run_or_fail("CI=1 QUNIT_EMBER_CLI=1 bundle exec rake plugin:qunit['*','#{js_timeout}']")
           end
         end
       end
