@@ -95,7 +95,14 @@ end
 
 def is_ember_cli_asset?(name)
   return false if !EMBER_CLI
-  %w(application.js admin.js ember_jquery.js pretty-text-bundle.js start-discourse.js vendor.js).include?(name)
+  %w(
+    application.js
+    admin.js
+    ember_jquery.js
+    pretty-text-bundle.js
+    start-discourse.js
+    vendor.js
+  ).include?(name) || name.start_with?("chunk.")
 end
 
 def assets_path
