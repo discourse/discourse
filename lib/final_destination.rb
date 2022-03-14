@@ -137,11 +137,12 @@ class FinalDestination
     raise "Must specify block" unless block_given?
 
     if uri && uri.port == 80 && FinalDestination.is_https_domain?(uri.hostname)
+      uri = uri.dup if uri == @uri
       uri.scheme = "https"
       uri = URI(uri.to_s)
     end
 
-    return if !validate_uri
+    return if !validate_uri(uri)
     return if @stop_at_blocked_pages && blocked_domain?(uri)
 
     result, headers_subset = safe_get(uri, &blk)
@@ -338,52 +339,52 @@ class FinalDestination
     nil
   end
 
-  def validate_uri
-    !@validate_uri || (validate_uri_format && is_dest_valid?)
+  def validate_uri(uri = @uri)
+    !@validate_uri || (validate_uri_format(uri) && is_dest_valid?(uri))
   end
 
-  def validate_uri_format
-    return false unless @uri
-    return false unless ['https', 'http'].include?(@uri.scheme)
-    return false if @uri.scheme == 'http' && @uri.port != 80
-    return false if @uri.scheme == 'https' && @uri.port != 443
+  def validate_uri_format(uri = @uri)
+    return false unless uri
+    return false unless ['https', 'http'].include?(uri.scheme)
+    return false if uri.scheme == 'http' && uri.port != 80
+    return false if uri.scheme == 'https' && uri.port != 443
 
     # Disallow IP based crawling
-    (IPAddr.new(@uri.hostname) rescue nil).nil?
+    (IPAddr.new(uri.hostname) rescue nil).nil?
   end
 
   def hostname
     @uri.hostname
   end
 
-  def hostname_matches?(url)
+  def hostname_matches?(url, uri = @url)
     url = uri(url)
 
-    if @uri&.hostname.present? && url&.hostname.present?
+    if uri&.hostname.present? && url&.hostname.present?
       hostname_parts = url.hostname.split('.')
       has_wildcard = hostname_parts.first == '*'
 
       if has_wildcard
-        @uri.hostname.end_with?(hostname_parts[1..-1].join('.'))
+        uri.hostname.end_with?(hostname_parts[1..-1].join('.'))
       else
-        @uri.hostname == url.hostname
+        uri.hostname == url.hostname
       end
     end
   end
 
-  def is_dest_valid?
-    return false unless @uri && @uri.host
+  def is_dest_valid?(uri = @uri)
+    return false unless uri && uri.host
 
     # Allowlisted hosts
-    return true if hostname_matches?(SiteSetting.Upload.s3_cdn_url) ||
-      hostname_matches?(GlobalSetting.try(:cdn_url)) ||
-      hostname_matches?(Discourse.base_url_no_prefix)
+    return true if hostname_matches?(SiteSetting.Upload.s3_cdn_url, uri) ||
+      hostname_matches?(GlobalSetting.try(:cdn_url), uri) ||
+      hostname_matches?(Discourse.base_url_no_prefix, uri)
 
     if SiteSetting.allowed_internal_hosts.present?
-      return true if SiteSetting.allowed_internal_hosts.split("|").any? { |h| h.downcase == @uri.hostname.downcase }
+      return true if SiteSetting.allowed_internal_hosts.split("|").any? { |h| h.downcase == uri.hostname.downcase }
     end
 
-    address_s = @opts[:lookup_ip].call(@uri.hostname)
+    address_s = @opts[:lookup_ip].call(uri.hostname)
     return false unless address_s
 
     address = IPAddr.new(address_s)
