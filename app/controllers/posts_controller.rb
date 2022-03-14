@@ -309,6 +309,8 @@ class PostsController < ApplicationController
   end
 
   def all_reply_ids
+    Discourse.deprecate("/posts/:id/reply-ids/all is deprecated.", drop_from: "3.0")
+
     post = find_post_from_params
     render json: post.reply_ids(guardian, only_replies_to_single_post: false).to_json
   end
