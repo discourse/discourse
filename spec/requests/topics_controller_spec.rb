@@ -4329,12 +4329,18 @@ RSpec.describe TopicsController do
         expect(body).to_not have_tag(:meta, with: { name: 'fragment' })
         expect(body).to include('<link rel="next" href="' + topic.relative_url + "?page=2")
 
+        expect(body).to include("id='post_1'")
+        expect(body).to include("id='post_2'")
+
         expect(response.headers['Last-Modified']).to eq(page1_time.httpdate)
 
         get topic.url + "?page=2", env: { "HTTP_USER_AGENT" => user_agent }
         body = response.body
 
         expect(response.headers['Last-Modified']).to eq(page2_time.httpdate)
+
+        expect(body).to include("id='post_3'")
+        expect(body).to include("id='post_4'")
 
         expect(body).to include('<link rel="prev" href="' + topic.relative_url)
         expect(body).to include('<link rel="next" href="' + topic.relative_url + "?page=3")

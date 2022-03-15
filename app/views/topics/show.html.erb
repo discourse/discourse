@@ -37,7 +37,7 @@
 
   <% @topic_view.posts.each_with_index do |post, idx| %>
     <% if (u = post.user) %>
-      <div itemscope itemtype='http://schema.org/DiscussionForumPosting' class='topic-body crawler-post'>
+      <div id='post_<%= post.post_number %>' itemscope itemtype='http://schema.org/DiscussionForumPosting' class='topic-body crawler-post'>
         <div class='crawler-post-meta'>
           <div itemprop='publisher' itemscope itemtype="http://schema.org/Organization">
             <meta itemprop='name' content='<%= SiteSetting.company_name.presence || SiteSetting.title %>'>

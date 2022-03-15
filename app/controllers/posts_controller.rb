@@ -84,6 +84,7 @@ class PostsController < ApplicationController
         .includes(:reply_to_user)
         .limit(50)
       rss_description = I18n.t("rss_description.posts")
+      @use_canonical = true
     end
 
     # Remove posts the user doesn't have permission to see

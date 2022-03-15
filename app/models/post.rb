@@ -610,6 +610,18 @@ class Post < ActiveRecord::Base
     end
   end
 
+  def canonical_url
+    topic_view = TopicView.new(topic, nil, post_number: post_number)
+
+    page = ""
+
+    if topic_view.page > 1
+      page = "?page=#{topic_view.page}"
+    end
+
+    "#{topic.url}#{page}#post_#{post_number}"
+  end
+
   def unsubscribe_url(user)
     "#{Discourse.base_url}/email/unsubscribe/#{UnsubscribeKey.create_key_for(user, self)}"
   end
