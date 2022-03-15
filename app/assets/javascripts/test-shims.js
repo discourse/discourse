@@ -50,6 +50,7 @@ define("@ember/test-helpers", () => {
     "setResolver",
     "triggerEvent",
     "registerWaiter",
+    "unregisterWaiter",
   ].forEach((attr) => {
     helpers[attr] = function () {
       return window[attr](...arguments);
