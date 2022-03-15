@@ -16,7 +16,6 @@
     display: flex;
 
     > .btn {
-      margin-left: 0.25em;
       padding-top: 0em;
       padding-bottom: 0em;
       color: var(--primary-high);
@@ -30,6 +29,10 @@
           color: var(--primary-high);
         }
       }
+    }
+
+    .desktop-view & .btn.close {
+      margin-left: 0.25em;
     }
   }
 }
