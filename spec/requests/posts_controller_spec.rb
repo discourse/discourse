@@ -2113,7 +2113,10 @@ describe PostsController do
 
         body = response.body
 
-        expect(body).to include(public_post.url)
+        # we cache in redis, in rare cases this cause cause a flaky test
+        PostsHelper.clear_canonical_cache!(public_post)
+
+        expect(body).to include(public_post.canonical_url)
         expect(body).to_not include(private_post.url)
       end
 

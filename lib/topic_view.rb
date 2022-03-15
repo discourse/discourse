@@ -33,7 +33,8 @@ class TopicView
     :message_bus_last_id,
     :queued_posts_enabled,
     :personal_message,
-    :can_review_topic
+    :can_review_topic,
+    :page
   )
   alias queued_posts_enabled? queued_posts_enabled
 
