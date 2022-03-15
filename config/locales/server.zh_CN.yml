@@ -1288,7 +1288,6 @@ zh_CN:
       labels:
         user: 用户
         qtt_like: 获赞
-      description: "获得更多喜欢的前10名用户。"
     top_users_by_likes_received_from_inferior_trust_level:
       title: "收到最多来自低信任级别用户喜欢的用户"
       labels:
@@ -1301,7 +1300,6 @@ zh_CN:
       labels:
         user: 用户
         qtt_like: 获赞
-      description: "前10位有很多人喜欢的用户。"
   dashboard:
     rails_env_warning: "您的服务器正在以%{env}模式运行。"
     host_names_warning: "您的 config/database.yml 文件使用的是默认的 localhost 主机名。请更新为您的站点主机名。"

@@ -260,10 +260,7 @@ vi:
       list_permission_denied: "Bạn không có quyền xem chỉ mục của người dùng này"
       no_user_bookmarks: "Bạn không có bài viết nào được đánh dấu; dấu trang cho phép bạn nhanh chóng tham khảo các bài viết cụ thể."
       auto_delete_preference:
-        label: "Tự động xóa"
-        never: "Không bao giờ"
-        when_reminder_sent: "Sau khi lời nhắc được gửi đi"
-        on_owner_reply: "Sau khi tôi trả lời chủ đề này"
+        when_reminder_sent: "Xóa dấu trang"
       search_placeholder: "Tìm kiếm dấu trang theo tên, tiêu đề chủ đề hoặc nội dung bài đăng"
       search: "Tìm kiếm"
       reminders:

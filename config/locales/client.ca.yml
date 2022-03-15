@@ -289,11 +289,6 @@ ca:
       invalid_custom_datetime: "La data i l'hora que heu proporcionat no són vàlides, torneu-ho a provar."
       list_permission_denied: "No teniu permís per veure els marcadors d'aquest usuari."
       no_user_bookmarks: "No teniu publicacions en els preferits. Els preferits us permeten referir-vos fàcilment a publicacions específiques. "
-      auto_delete_preference:
-        label: "Esborra automàticament"
-        never: "Mai"
-        when_reminder_sent: "Una vegada enviat el recordatori"
-        on_owner_reply: "Després de respondre a aquest tema"
       search_placeholder: "Cerqueu preferits per nom, títol del tema o contingut de la publicació"
       search: "Cerca"
       reminders:

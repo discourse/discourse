@@ -299,10 +299,7 @@ hu:
       list_permission_denied: "Nincs engedélye a felhasználó könyvjelzőinek megtekintéséhez."
       no_user_bookmarks: "Nincsenek könyvjelzőzött bejegyzései; a könyvjelzők segítségével gyorsan hivatkozhat bizonyos bejegyzésekre."
       auto_delete_preference:
-        label: "Automatikus törlés"
-        never: "Soha"
-        when_reminder_sent: "Az emlékeztető elküldése után"
-        on_owner_reply: "Miután válaszoltam erre a témára"
+        when_reminder_sent: "Könyvjelző törlése"
       search_placeholder: "Könyvjelzők keresése név, téma címe vagy tartalom alapján"
       search: "Keresés"
       reminders:

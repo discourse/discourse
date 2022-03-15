@@ -287,10 +287,7 @@ nb_NO:
       list_permission_denied: "Du har ikke tillatelse til å se brukerens bokmerker."
       no_user_bookmarks: "Du har ingen bokmerkede innlegg; bokmerker lar deg raskt slå opp spesifike innlegg."
       auto_delete_preference:
-        label: "Slett automatisk"
-        never: "Aldri"
-        when_reminder_sent: "Når påminnelsen er sendt"
-        on_owner_reply: "Etter at jeg har svart på dette emnet"
+        when_reminder_sent: "Slett bokmerke"
       search_placeholder: "Søk i bokmerker etter navn, emnetittel eller innleggsinnhold"
       search: "Søk"
       reminders:

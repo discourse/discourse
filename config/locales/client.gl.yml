@@ -279,10 +279,7 @@ gl:
       list_permission_denied: "Non ten permiso para ver os marcadores deste usuario."
       no_user_bookmarks: "Non ten marcadores de publicacións; os marcadores permítenlle facer rapidamente referencia a publicacións específicas."
       auto_delete_preference:
-        label: "Eliminar automaticamente"
-        never: "Nunca"
-        when_reminder_sent: "Unha vez enviado o recordatorio"
-        on_owner_reply: "Despois de responder eu a este tema"
+        when_reminder_sent: "Eliminar marcador"
       search_placeholder: "Buscar marcadores por nome, título do tema ou contido da publicación"
       search: "Buscar"
       reminders:

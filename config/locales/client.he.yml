@@ -352,10 +352,11 @@ he:
       list_permission_denied: "אין לך הרשאה לצפות בסימניות של המשתמש הזה."
       no_user_bookmarks: "לא הוספת פוסטים לסימניות, סימניות מאפשרות לך לפנות במהירות לפוסטים מסוימים."
       auto_delete_preference:
-        label: "למחוק אוטומטית"
-        never: "לעולם לא"
-        when_reminder_sent: "לאחר שליחת התזכורת"
-        on_owner_reply: "לאחר שהגבתי לנושא הזה"
+        label: "לאחר שקיבלת התראה"
+        never: "לשמור על הסימנייה"
+        when_reminder_sent: "מחיקת סימנייה"
+        on_owner_reply: "מחיקת מסד נתונים, לאחר התגובה"
+        clear_reminder: "לשמור על הסימנייה ולפנות את התזכורת"
       search_placeholder: "חיפוש סימניות לפי שם, כותרת הנושא או תוכן הפוסט"
       search: "חיפוש"
       reminders:
@@ -1967,6 +1968,7 @@ he:
       categories_and_top_topics: "קטגוריות ונושאים מובילים"
       categories_boxes: "תיבות עם תתי קטגוריות"
       categories_boxes_with_topics: "תיבות עם נושאים מומלצים"
+      subcategories_with_featured_topics: "תת־קטגוריות עם נושאים מובילים"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -3247,6 +3249,9 @@ he:
           edit_bookmark:
             name: "עריכת סימנייה"
             description: "עריכת שם הסימנייה או החלפת מועד התזכורת"
+          clear_bookmark_reminder:
+            name: "פינוי התזכורת"
+            description: "פינוי התאריך והשעה של התזכורת"
           pin_bookmark:
             name: "הצמדת הסימנייה"
             description: "הצמדת הסימנייה. פעולה זו תגרום לה להופיע בראש רשימת הסימניות שלך."
@@ -3638,6 +3643,7 @@ he:
       readonly: "צפה"
     lightbox:
       download: "הורדה"
+      open: "תמונה מקורית"
       previous: "הקודם (מקש שמאלה)"
       next: "הבא (מקש ימינה)"
       counter: "%curr% מתוך %total%"
@@ -4211,6 +4217,9 @@ he:
               wordpress: נחוץ כדי שהתוסף wp-discourse ל־WordPress יעבוד.
             posts:
               edit: לערוך כל פוסט שהוא או אחד מסוים.
+            categories:
+              list: קבלת רשימת קטגוריות.
+              show: קבלת קטגוריה יחידה לפי מזהה.
             uploads:
               create: להעלות קובץ חדש או להפעיל העלאות ישירות יחידניות או מרובות חלקים לאחסון חיצוני.
             users:

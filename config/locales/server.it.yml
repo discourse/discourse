@@ -1334,7 +1334,7 @@ it:
       labels:
         user: Utente
         qtt_like: Mi piace - Ricevuti
-      description: "I 10 migliori utenti che hanno ricevuto più Mi piace."
+      description: "Primi 10 utenti a ricevere dei \"mi piace\"."
     top_users_by_likes_received_from_inferior_trust_level:
       title: "Migliori utenti per Mi piace ricevuti da un utente con un basso livello di attendibilità"
       labels:
@@ -1347,7 +1347,7 @@ it:
       labels:
         user: Utente
         qtt_like: Mi piace - Ricevuti
-      description: "I migliori 10 utenti che hanno ricevuto Mi piace da una vasta gamma di persone."
+      description: "Primi 10 utenti a ricevere \"mi piace\" da una vasta gamma di persone."
   dashboard:
     group_email_credentials_warning: 'Si è verificato un problema con le credenziali e-mail per il gruppo <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. Nessuna e-mail verrà inviata dalla casella di posta del gruppo fino a quando il problema non sarà risolto. %{error}'
     rails_env_warning: "Il tuo server è in modalità %{env}."
@@ -4164,6 +4164,7 @@ it:
   notification_level:
     ignore_error: "Spiacenti, non puoi ignorare questo utente."
     mute_error: "Spiacenti, non puoi silenziate questo utente."
+    error: "Non si può modificare il livello di notifica per questo utente."
   discord:
     not_in_allowed_guild: "Autenticazione non riuscita. Non sei un membro di una gilda Discord consentita."
   old_keys_reminder:

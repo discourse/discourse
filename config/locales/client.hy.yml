@@ -268,7 +268,7 @@ hy:
       list_permission_denied: "Դուք իրավունք չունեք դիտելու այս օգտատիրոջ էջանշանները: "
       no_user_bookmarks: "Դուք էջանշած գրառումներ չունեք; էջանշումները թույլ են տալիս Ձեզ արագորեն տեղափոխվել դեպի որոշակի գրառում:"
       auto_delete_preference:
-        never: "Երբեք"
+        when_reminder_sent: "Ջնջել էջանշանը"
       search: "Որոնում"
       reminders:
         today_with_time: "այսօր %{time}"
