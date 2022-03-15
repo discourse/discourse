@@ -133,19 +133,18 @@ class FinalDestination
 
   # this is a new interface for simply getting
   # N bytes accounting for all internal logic
-  def get(uri = @uri, redirects = @limit, extra_headers: {}, &blk)
+  def get(redirects = @limit, extra_headers: {}, &blk)
     raise "Must specify block" unless block_given?
 
-    if uri && uri.port == 80 && FinalDestination.is_https_domain?(uri.hostname)
-      uri = uri.dup if uri == @uri
-      uri.scheme = "https"
-      uri = URI(uri.to_s)
+    if @uri && @uri.port == 80 && FinalDestination.is_https_domain?(@uri.hostname)
+      @uri.scheme = "https"
+      @uri = URI(@uri.to_s)
     end
 
-    return if !validate_uri(uri)
-    return if @stop_at_blocked_pages && blocked_domain?(uri)
+    return if !validate_uri
+    return if @stop_at_blocked_pages && blocked_domain?(@uri)
 
-    result, headers_subset = safe_get(uri, &blk)
+    result, headers_subset = safe_get(@uri, &blk)
     cookie = headers_subset.set_cookie
     location = headers_subset.location
 
@@ -154,23 +153,23 @@ class FinalDestination
     end
 
     if result == :redirect
-      old_port = uri.port
-      location = "#{uri.scheme}://#{uri.host}#{location}" if location[0] == "/"
-      uri = uri(location)
+      old_port = @uri.port
+      location = "#{@uri.scheme}://#{@uri.host}#{location}" if location[0] == "/"
+      @uri = uri(location)
 
       # https redirect, so just cache that whole new domain is https
-      if old_port == 80 && uri&.port == 443 && (URI::HTTPS === uri)
-        FinalDestination.cache_https_domain(uri.hostname)
+      if old_port == 80 && @uri&.port == 443 && (URI::HTTPS === @uri)
+        FinalDestination.cache_https_domain(@uri.hostname)
       end
 
-      return nil if !uri
+      return nil if !@uri
 
       extra = nil
       extra = { 'Cookie' => cookie } if cookie
 
-      get(uri, redirects - 1, extra_headers: extra, &blk)
+      get(redirects - 1, extra_headers: extra, &blk)
     elsif result == :ok
-      uri.to_s
+      @uri.to_s
     else
       nil
     end
@@ -339,52 +338,52 @@ class FinalDestination
     nil
   end
 
-  def validate_uri(uri = @uri)
-    !@validate_uri || (validate_uri_format(uri) && is_dest_valid?(uri))
+  def validate_uri
+    !@validate_uri || (validate_uri_format && is_dest_valid?)
   end
 
-  def validate_uri_format(uri = @uri)
-    return false unless uri
-    return false unless ['https', 'http'].include?(uri.scheme)
-    return false if uri.scheme == 'http' && uri.port != 80
-    return false if uri.scheme == 'https' && uri.port != 443
+  def validate_uri_format
+    return false unless @uri
+    return false unless ['https', 'http'].include?(@uri.scheme)
+    return false if @uri.scheme == 'http' && @uri.port != 80
+    return false if @uri.scheme == 'https' && @uri.port != 443
 
     # Disallow IP based crawling
-    (IPAddr.new(uri.hostname) rescue nil).nil?
+    (IPAddr.new(@uri.hostname) rescue nil).nil?
   end
 
   def hostname
     @uri.hostname
   end
 
-  def hostname_matches?(url, uri = @url)
+  def hostname_matches?(url)
     url = uri(url)
 
-    if uri&.hostname.present? && url&.hostname.present?
+    if @uri&.hostname.present? && url&.hostname.present?
       hostname_parts = url.hostname.split('.')
       has_wildcard = hostname_parts.first == '*'
 
       if has_wildcard
-        uri.hostname.end_with?(hostname_parts[1..-1].join('.'))
+        @uri.hostname.end_with?(hostname_parts[1..-1].join('.'))
       else
-        uri.hostname == url.hostname
+        @uri.hostname == url.hostname
       end
     end
   end
 
-  def is_dest_valid?(uri = @uri)
-    return false unless uri && uri.host
+  def is_dest_valid?
+    return false unless @uri && @uri.host
 
     # Allowlisted hosts
-    return true if hostname_matches?(SiteSetting.Upload.s3_cdn_url, uri) ||
-      hostname_matches?(GlobalSetting.try(:cdn_url), uri) ||
-      hostname_matches?(Discourse.base_url_no_prefix, uri)
+    return true if hostname_matches?(SiteSetting.Upload.s3_cdn_url) ||
+      hostname_matches?(GlobalSetting.try(:cdn_url)) ||
+      hostname_matches?(Discourse.base_url_no_prefix)
 
     if SiteSetting.allowed_internal_hosts.present?
-      return true if SiteSetting.allowed_internal_hosts.split("|").any? { |h| h.downcase == uri.hostname.downcase }
+      return true if SiteSetting.allowed_internal_hosts.split("|").any? { |h| h.downcase == @uri.hostname.downcase }
     end
 
-    address_s = @opts[:lookup_ip].call(uri.hostname)
+    address_s = @opts[:lookup_ip].call(@uri.hostname)
     return false unless address_s
 
     address = IPAddr.new(address_s)
