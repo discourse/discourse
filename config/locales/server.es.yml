@@ -1339,7 +1339,6 @@ es:
       labels:
         user: Usuario
         qtt_like: Me gusta recibidos
-      description: "Los 10 usuarios que más me gusta han recibido."
     top_users_by_likes_received_from_inferior_trust_level:
       title: "Usuarios que más «me gusta» han recibido de usuarios con niveles de confianza bajos"
       labels:
@@ -1352,7 +1351,6 @@ es:
       labels:
         user: Usuario
         qtt_like: Me gusta recibidos
-      description: "Los 10 usuarios que han recibido más me gusta de numerosas personas distintas."
   dashboard:
     group_email_credentials_warning: 'Hay un problema con las credenciales del correo electrónico del grupo <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. No se enviarán mensajes desde la bandeja de entrada del grupo hasta que se solucione el problema. %{error}'
     rails_env_warning: "Tu servidor está funcionando en modo de %{env}."

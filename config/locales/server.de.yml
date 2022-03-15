@@ -1339,7 +1339,7 @@ de:
       labels:
         user: Benutzer
         qtt_like: Erhaltene „Gefällt mir“
-      description: "Top 10 Benutzer, die mehr Likes erhalten haben."
+      description: "Top 10 Benutzer, die Likes erhalten haben."
     top_users_by_likes_received_from_inferior_trust_level:
       title: "Top-Benutzer nach Likes, die von einem Benutzer mit einer niedrigeren Vertrauensstufe erhalten wurden"
       labels:
@@ -2320,6 +2320,9 @@ de:
     challenge_not_found: "Es konnte keine 2FA-Herausforderung in deiner aktuellen Sitzung gefunden werden."
     challenge_expired: "Es ist zu viel Zeit vergangen, seit die 2FA-Herausforderung durchgeführt wurde, und sie ist nicht mehr gültig. Bitte versuche es erneut."
     challenge_not_completed: "Du hast die 2FA-Herausforderung nicht abgeschlossen, um diese Aktion durchzuführen. Bitte schließe die 2FA-Herausforderung ab und versuche es erneut."
+    actions:
+      grant_admin:
+        description: "Für zusätzliche Sicherheitsmaßnahmen musst Di Deine 2FA bestätigen, bevor %{username} Administratorzugriff gewährt wird."
   admin:
     email:
       sent_test: "gesendet!"
@@ -3658,6 +3661,7 @@ de:
     external_upload_not_found: "Der Upload wurde im externen Speicher nicht gefunden. %{additional_detail}"
     checksum_mismatch_failure: "Die Prüfsumme der hochgeladenen Datei stimmt nicht überein. Der Dateiinhalt könnte sich beim Hochladen geändert haben. Bitte versuche es erneut."
     cannot_promote_failure: "Der Upload kann nicht abgeschlossen werden, er kann bereits abgeschlossen oder zuvor gescheitert sein."
+    size_zero_failure: "Es tut uns leid, es sieht so aus, als ob etwas schief gelaufen ist. Die Datei, die Du hochzuladen versuchst, hat 0 Bytes. Bitte versuche es erneut."
     attachments:
       too_large: "Entschuldige, die Datei, die du hochladen möchtest, ist zu groß (maximale Dateigröße: %{max_size_kb} KB)."
       too_large_humanized: "Entschuldige, die Datei, die du hochladen möchtest, ist zu groß (maximale Dateigröße: %{max_size})."
@@ -4672,6 +4676,7 @@ de:
   notification_level:
     ignore_error: "Entschuldige, du kannst diesen Benutzer nicht ignorieren."
     mute_error: "Entschuldige, du kannst diesen Benutzer nicht stummschalten."
+    error: "Leider kannst Du die Benachrichtigungsebene für diesen Benutzer nicht ändern."
   discord:
     not_in_allowed_guild: "Authentifizierung fehlgeschlagen. Du bist kein Mitglied einer erlaubten Discord-Gilde."
   old_keys_reminder:

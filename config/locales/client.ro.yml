@@ -303,10 +303,7 @@ ro:
       list_permission_denied: "Nu ai permisiuni de acces la link-urile preferate ale acestui utilizator"
       no_user_bookmarks: "Nu ai link-uri de postări salvate; link-urile salvate îți permit revenirea la postări specifice"
       auto_delete_preference:
-        label: "Ștergere automată"
-        never: "Niciodată"
-        when_reminder_sent: "Imediat ce memento-ul este trimis"
-        on_owner_reply: "După ce răspund la acest subiect"
+        when_reminder_sent: "Ștergere semn de carte"
       search_placeholder: "Căutați marcaje după nume, titlul subiectului sau conținutul postării"
       search: "Caută"
       reminders:

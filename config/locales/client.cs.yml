@@ -324,11 +324,6 @@ cs:
       invalid_custom_datetime: "Zadané datum a čas jsou neplatné, zkuste to prosím znovu."
       list_permission_denied: "Nemáte oprávnění k zobrazení záložek tohoto uživatele."
       no_user_bookmarks: "Nemáte žádné záložky; záložky vám umožňují rychle odkazovat na konkrétní příspěvky."
-      auto_delete_preference:
-        label: "Automaticky smazat"
-        never: "Nikdy"
-        when_reminder_sent: "Jakmile je připomenutí odesláno"
-        on_owner_reply: "Po odpovědi na toto téma"
       search_placeholder: "Hledat záložky podle názvu, názvu tématu nebo obsahu příspěvku"
       search: "Vyhledat"
       reminders:

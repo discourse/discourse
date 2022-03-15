@@ -300,10 +300,7 @@ it:
       list_permission_denied: "Non sei autorizzato a visualizzare i segnalibri di questo utente."
       no_user_bookmarks: "Non hai nessun messaggio nei Segnalibri. I Segnalibri ti permettono di fare riferimento rapidamente a specifici messaggi."
       auto_delete_preference:
-        label: "Elimina automaticamente"
-        never: "Mai"
-        when_reminder_sent: "Una volta inviato il promemoria"
-        on_owner_reply: "Dopo aver risposto a questo argomento"
+        when_reminder_sent: "Cancella segnalibro"
       search_placeholder: "Cerca nei segnalibri per nome, titolo dell'argomento o contenuto del messaggio"
       search: "Cerca"
       reminders:

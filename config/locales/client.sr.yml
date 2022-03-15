@@ -301,11 +301,6 @@ sr:
       invalid_custom_datetime: "Uneti datum i vreme nisu važeći. Pokušajte ponovo."
       list_permission_denied: "Nemate dozvolu da vidite obeleživače ovog člana."
       no_user_bookmarks: "Nemate obeleženih poruka; obeleživači vam omogućavaju da se brzo uputite ka određenoj poruci."
-      auto_delete_preference:
-        label: "Automatski ukloni"
-        never: "Nikad"
-        when_reminder_sent: "Kada je podestnik poslan"
-        on_owner_reply: "Nakon mog odgovora u ovoj temi"
       search_placeholder: "Pretraži obeleživače po nazivu, naslovu teme ili sadržaju poruka"
       search: "Pretraži"
       reminders:

@@ -254,11 +254,6 @@ zh_TW:
       no_timezone: '您尚未設定時區。將無法設定提醒事項。在<a href="%{basePath}/my/preferences/profile">您的設定檔</a>中設定一個 。'
       list_permission_denied: "您沒有權限查看此用戶的書籤。"
       no_user_bookmarks: "您沒有加入書籤的貼文，書籤能夠讓您快速的找到特定貼文。"
-      auto_delete_preference:
-        label: "自動刪除"
-        never: "永不"
-        when_reminder_sent: "一旦發送提醒"
-        on_owner_reply: "在我回复這個話題之後"
       search: "搜索"
       reminders:
         today_with_time: "今天 %{time}"

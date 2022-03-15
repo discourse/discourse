@@ -295,11 +295,6 @@ lv:
       invalid_custom_datetime: "Norādītais datums un laiks nav derīgi. Lūdzu, mēģiniet vēlreiz."
       list_permission_denied: "Jums nav atļaujas skatīt šī lietotāja grāmatzīmes."
       no_user_bookmarks: "Jums nav ziņu ar grāmatzīmēm; grāmatzīmes ļauj ātri atsaukties uz konkrētām ziņām."
-      auto_delete_preference:
-        label: "Automātiski dzēst"
-        never: "Nekad"
-        when_reminder_sent: "Kad atgādinājums ir nosūtīts"
-        on_owner_reply: "Pēc tam, kad es atbildēšu uz šo tēmu"
       search_placeholder: "Meklējiet grāmatzīmes pēc nosaukuma, tēmas nosaukuma vai ziņas satura"
       search: "Meklēt"
       reminders:

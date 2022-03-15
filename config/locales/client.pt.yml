@@ -296,10 +296,7 @@ pt:
       list_permission_denied: "Você não tem permissão para ver os favoritos deste utilizador."
       no_user_bookmarks: "Você não tem posts marcados; os favoritos permitem-lhe consultar rapidamente posts específicos."
       auto_delete_preference:
-        label: "Remover automaticamente"
-        never: "Nunca"
-        when_reminder_sent: "Assim que o lembrete for enviado"
-        on_owner_reply: "Depois de responder a este tópico"
+        when_reminder_sent: "Excluir favorito"
       search_placeholder: "Pesquise favoritos por nome, título do tópico ou conteúdo do post"
       search: "Pesquisar"
       reminders:

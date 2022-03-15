@@ -1335,7 +1335,6 @@ pt_BR:
       labels:
         user: Usuário(a)
         qtt_like: Curtidas recebidas
-      description: "Melhores 10 usuários(as) que receberram mais curtidas."
     top_users_by_likes_received_from_inferior_trust_level:
       title: "Melhores usuários(as) por curtidas recebidas de usuário(a) com nível de confiança mais baixo"
       labels:
@@ -1348,7 +1347,6 @@ pt_BR:
       labels:
         user: Usuário(a)
         qtt_like: Curtidas recebidas
-      description: "Melhores 10 usuários(as) que tinham recebido curtidas de uma ampla variedade de pessoas."
   dashboard:
     group_email_credentials_warning: 'Houve um problema nas credenciais do e-mail do grupo <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. Nenhum e-mail será enviado a partir da caixa de entrada do grupo até este problema ser resolvido. %{error}'
     rails_env_warning: "Seu servidor está rodando no modo %{env}."

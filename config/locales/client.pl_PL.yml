@@ -351,10 +351,7 @@ pl_PL:
       list_permission_denied: "Nie masz uprawnień do przeglądania zakładek tego użytkownika."
       no_user_bookmarks: "Nie masz żadnych postów dodanych do zakładek. Zakładki pozwalają na szybkie odwoływanie się do konkretnych postów."
       auto_delete_preference:
-        label: "Usuń automatycznie"
-        never: "Nigdy"
-        when_reminder_sent: "Po wysłaniu przypomnienia"
-        on_owner_reply: "Gdy odpowiem w tym temacie"
+        when_reminder_sent: "Usuń zakładkę"
       search_placeholder: "Wyszukiwanie zakładek według nazwy, tytułu tematu lub treści postu"
       search: "Wyszukaj"
       reminders:

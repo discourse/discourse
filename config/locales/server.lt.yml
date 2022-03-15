@@ -1212,7 +1212,6 @@ lt:
       labels:
         user: Narys
         qtt_like: Gauta patikimų
-      description: "10 geriausių vartotojų, kurie sulaukė daugiau „patinka“ paspaudimų."
     top_users_by_likes_received_from_inferior_trust_level:
       title: "Geriausi vartotojai pagal mygtukus „Patinka“, gauti iš naudotojo, kurio patikimumo lygis žemesnis"
       labels:
@@ -1225,7 +1224,6 @@ lt:
       labels:
         user: Narys
         qtt_like: Gauta patikimų
-      description: "Top 10 vartotojų, kurie gavo \"Patinka\" iš įvairių žmonių."
   dashboard:
     rails_env_warning: "Jūsų serveris veikia %{env} režimu."
     out_of_date_themes: "Galimi naujiniai šioms temoms:"
