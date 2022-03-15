@@ -3,6 +3,8 @@
 module PostsHelper
   include ApplicationHelper
 
+  CACHE_URL_DURATION = 12.hours.to_i
+
   def self.clear_canonical_cache!(post)
     key = canonical_redis_key(post)
     Discourse.redis.del(key)
@@ -14,7 +16,7 @@ module PostsHelper
 
   def cached_post_url(post, use_canonical:)
     if use_canonical
-      # this is very expensive, we cache it for 12 hours to ensure N+1 is not
+      # this is very expensive to calculate page, we cache it for 12 hours
       key = PostsHelper.canonical_redis_key(post)
 
       url = Discourse.redis.get(key)
@@ -26,7 +28,7 @@ module PostsHelper
 
       if !url
         url = post.canonical_url
-        Discourse.redis.setex(key, 12.hours.to_i, url)
+        Discourse.redis.setex(key, CACHE_URL_DURATION, url)
       end
 
       url
