@@ -51,6 +51,7 @@ describe Notification do
         expect(@types[:event_invitation]).to eq(28)
         expect(@types[:chat_mention]).to eq(29)
         expect(@types[:chat_message]).to eq(30)
+        expect(@types[:assigned]).to eq(34)
       end
     end
   end
