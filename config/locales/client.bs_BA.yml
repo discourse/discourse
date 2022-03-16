@@ -3451,7 +3451,7 @@ bs_BA:
         delete_confirm: 'Jeste li sigurni da želite izbrisati "%{theme_name}"?'
         color: "Color"
         opacity: "Opacity"
-        copy: "Copy"
+        copy: "Duplicate"
         copy_to_clipboard: "Kopirati u clipboard"
         copied_to_clipboard: "Kopirano u međuspremnik"
         copy_to_clipboard_error: "Pogreška pri kopiranju podataka u međuspremnik"

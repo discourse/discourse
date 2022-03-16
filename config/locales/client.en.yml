@@ -4454,7 +4454,7 @@ en:
         delete_confirm: 'Are you sure you want to delete "%{theme_name}"?'
         color: "Color"
         opacity: "Opacity"
-        copy: "Copy"
+        copy: "Duplicate"
         copy_to_clipboard: "Copy to Clipboard"
         copied_to_clipboard: "Copied to Clipboard"
         copy_to_clipboard_error: "Error copying data to Clipboard"
