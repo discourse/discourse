@@ -164,10 +164,6 @@ var define, requirejs;
       "@ember/object/internals": {
         guidFor: Ember.guidFor,
       },
-      "@ember/test": {
-        registerWaiter: Ember.Test && Ember.Test.registerWaiter,
-        unregisterWaiter: Ember.Test && Ember.Test.unregisterWaiter,
-      },
       I18n: {
         // eslint-disable-next-line
         default: I18n,
