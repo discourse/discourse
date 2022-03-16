@@ -11,6 +11,7 @@ import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { test } from "qunit";
 import topicFixtures from "discourse/tests/fixtures/topic";
 import { cloneJSON } from "discourse-common/lib/object";
+import User from "discourse/models/user";
 
 async function openBookmarkModal(postNumber = 1) {
   if (exists(`#post_${postNumber} button.show-more-actions`)) {
@@ -154,6 +155,10 @@ acceptance("Bookmarking", function (needs) {
   test("Opening the options panel and remembering the option", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await openBookmarkModal();
+    assert.notOk(
+      exists(".bookmark-options-panel"),
+      "it should not open the options panel by default"
+    );
     await click(".bookmark-options-button");
     assert.ok(
       exists(".bookmark-options-panel"),
@@ -162,6 +167,9 @@ acceptance("Bookmarking", function (needs) {
     await selectKit(".bookmark-option-selector").expand();
     await selectKit(".bookmark-option-selector").selectRowByValue(1);
     await click("#save-bookmark");
+
+    assert.equal(User.current().bookmark_auto_delete_preference, "1");
+
     await openEditBookmarkModal();
 
     assert.ok(
