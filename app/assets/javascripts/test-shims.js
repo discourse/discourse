@@ -26,16 +26,6 @@ define("htmlbars-inline-precompile", () => {
   };
 });
 
-define("@ember/test", () => {
-  // eslint-disable-next-line no-undef, discourse-ember/global-ember
-  const { registerWaiter, unregisterWaiter } = Ember.Test;
-
-  return {
-    registerWaiter,
-    unregisterWaiter,
-  };
-});
-
 let _app;
 define("@ember/test-helpers", () => {
   let helpers = {
