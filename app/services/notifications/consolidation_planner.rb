@@ -13,9 +13,13 @@ module Notifications
 
     def plan_for(notification)
       consolidation_plans = [liked_by_two_users, liked, group_message_summary, group_membership]
-      consolidation_plans.concat(DiscoursePluginRegistry.notification_consolidation_plans)
+      consolidation_plans.concat(plugin_consolidation_plans)
 
       consolidation_plans.detect { |plan| plan.can_consolidate_data?(notification) }
+    end
+
+    def plugin_consolidation_plans
+      DiscoursePluginRegistry.notification_consolidation_plans.map(&:deep_dup)
     end
 
     def liked
