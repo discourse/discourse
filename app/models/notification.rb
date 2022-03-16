@@ -110,7 +110,8 @@ class Notification < ActiveRecord::Base
                         chat_message: 30,
                         chat_invitation: 31,
                         chat_group_mention: 32, # March 2022 - This is obsolete, as all chat_mentions use `chat_mention` type
-                        chat_quoted: 33
+                        chat_quoted: 33,
+                        assigned: 34
                        )
   end
 
