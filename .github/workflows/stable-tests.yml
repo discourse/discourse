@@ -1,0 +1,246 @@
+name: Tests (stable)
+
+on:
+  pull_request:
+  push:
+    branches:
+      - stable
+
+concurrency:
+  group: tests-${{ format('{0}-{1}', github.head_ref || github.run_number, github.job) }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: ${{ matrix.target }} ${{ matrix.build_type }}
+    runs-on: ubuntu-latest
+    container: discourse/discourse_test:slim${{ startsWith(matrix.build_type, 'frontend') && '-browsers' || '' }}
+    timeout-minutes: 60
+
+    env:
+      DISCOURSE_HOSTNAME: www.example.com
+      RUBY_GLOBAL_METHOD_CACHE_SIZE: 131072
+      RAILS_ENV: test
+      PGUSER: discourse
+      PGPASSWORD: discourse
+      USES_PARALLEL_DATABASES: ${{ matrix.build_type == 'backend' && matrix.target == 'core' }}
+
+    strategy:
+      fail-fast: false
+
+      matrix:
+        build_type: [backend, frontend, frontend-legacy, annotations]
+        target: [core, plugins]
+        exclude:
+          - build_type: annotations
+            target: plugins
+          - build_type: frontend
+            target: core # Handled by core_frontend_tests job (below)
+          - build_type: frontend
+            target: plugins # Not yet passing in Ember CLI
+        include:
+          - build_type: frontend
+            target: core-plugins
+
+    steps:
+      - uses: actions/checkout@master
+        with:
+          fetch-depth: 1
+
+      - name: Setup Git
+        run: |
+          git config --global user.email "ci@ci.invalid"
+          git config --global user.name "Discourse CI"
+
+      - name: Start redis
+        run: |
+          redis-server /etc/redis/redis.conf &
+
+      - name: Start Postgres
+        run: |
+          chown -R postgres /var/run/postgresql
+          sudo -E -u postgres script/start_test_db.rb
+          sudo -u postgres psql -c "CREATE ROLE $PGUSER LOGIN SUPERUSER PASSWORD '$PGPASSWORD';"
+
+      - name: Bundler cache
+        uses: actions/cache@v2
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-gem-${{ hashFiles('**/Gemfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-gem-
+
+      - name: Setup gems
+        run: |
+          gem install bundler --conservative -v $(awk '/BUNDLED WITH/ { getline; gsub(/ /,""); print $0 }' Gemfile.lock)
+          bundle config --local path vendor/bundle
+          bundle config --local deployment true
+          bundle config --local without development
+          bundle install --jobs 4
+          bundle clean
+
+      - name: Get yarn cache directory
+        id: yarn-cache-dir
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - name: Yarn cache
+        uses: actions/cache@v2
+        id: yarn-cache
+        with:
+          path: ${{ steps.yarn-cache-dir.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Yarn install
+        run: yarn install
+
+      - name: Checkout official plugins
+        if: matrix.target == 'plugins'
+        run: bin/rake plugin:install_all_official
+
+      - name: Fetch app state cache
+        uses: actions/cache@v2
+        id: app-cache
+        with:
+          path: tmp/app-cache
+          key: >- # postgres version, hash of migrations, "parallel?"
+            ${{ runner.os }}-
+            ${{ hashFiles('.github/workflows/tests.yml') }}-
+            ${{ matrix.postgres }}-
+            ${{ hashFiles('db/**/*', 'plugins/**/db/**/*') }}-
+            ${{ env.USES_PARALLEL_DATABASES }}
+
+      - name: Restore database from cache
+        if: steps.app-cache.outputs.cache-hit == 'true'
+        run: psql -f tmp/app-cache/cache.sql postgres
+
+      - name: Restore uploads from cache
+        if: steps.app-cache.outputs.cache-hit == 'true'
+        run: rm -rf public/uploads && cp -r tmp/app-cache/uploads public/uploads
+
+      - name: Create and migrate database
+        if: steps.app-cache.outputs.cache-hit != 'true'
+        run: |
+          bin/rake db:create
+          bin/rake db:migrate
+
+      - name: Create and migrate parallel databases
+        if: >-
+          env.USES_PARALLEL_DATABASES == 'true' &&
+          steps.app-cache.outputs.cache-hit != 'true'
+        run: |
+          bin/rake parallel:create
+          bin/rake parallel:migrate
+
+      - name: Dump database for cache
+        if: steps.app-cache.outputs.cache-hit != 'true'
+        run: mkdir -p tmp/app-cache && pg_dumpall > tmp/app-cache/cache.sql
+
+      - name: Dump uploads for cache
+        if: steps.app-cache.outputs.cache-hit != 'true'
+        run: rm -rf tmp/app-cache/uploads && cp -r public/uploads tmp/app-cache/uploads
+
+      - name: Core RSpec
+        if: matrix.build_type == 'backend' && matrix.target == 'core'
+        run: bin/turbo_rspec --verbose
+
+      - name: Plugin RSpec
+        if: matrix.build_type == 'backend' && matrix.target == 'plugins'
+        run: bin/rake plugin:spec
+
+      - name: Core QUnit (Legacy)
+        if: matrix.build_type == 'frontend-legacy' && matrix.target == 'core'
+        run: QUNIT_EMBER_CLI=0 bin/rake qunit:test['1200000']
+        timeout-minutes: 30
+
+      - name: Wizard QUnit (Legacy)
+        if: matrix.build_type == 'frontend-legacy' && matrix.target == 'core'
+        run: QUNIT_EMBER_CLI=0 bin/rake qunit:test['600000','/wizard/qunit']
+        timeout-minutes: 10
+
+      - name: Plugin QUnit (Legacy)
+        if: matrix.build_type == 'frontend-legacy' && matrix.target == 'plugins'
+        run: QUNIT_EMBER_CLI=0 bin/rake plugin:qunit['*','1200000']
+        timeout-minutes: 30
+
+      - name: Plugin QUnit (Ember CLI)
+        if: matrix.build_type == 'frontend' && (matrix.target == 'plugins' || matrix.target == 'core-plugins')
+        run: QUNIT_EMBER_CLI=1 bin/rake plugin:qunit['*','1200000']
+        timeout-minutes: 30
+
+      - name: Check Annotations
+        if: matrix.build_type == 'annotations'
+        run: |
+          bin/rake annotate:ensure_all_indexes
+          bin/annotate --models --model-dir app/models
+
+          if [ ! -z "$(git status --porcelain app/models/)" ]; then
+            echo "Core annotations are not up to date. To resolve, run:"
+            echo "  bin/rake annotate:clean"
+            echo
+            echo "Or manually apply the diff printed below:"
+            echo "---------------------------------------------"
+            git -c color.ui=always diff app/models/
+            exit 1
+          fi
+        timeout-minutes: 30
+
+  core_frontend_tests:
+    name: core frontend (${{ matrix.browser }})
+    runs-on: ubuntu-latest
+    container: discourse/discourse_test:slim-browsers
+    timeout-minutes: 30
+
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: ["Chrome", "Firefox", "Headless Firefox"]
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+
+      - name: Setup Git
+        run: |
+          git config --global user.email "ci@ci.invalid"
+          git config --global user.name "Discourse CI"
+
+      - name: Get yarn cache directory
+        id: yarn-cache-dir
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - name: Yarn cache
+        uses: actions/cache@v2
+        id: yarn-cache
+        with:
+          path: ${{ steps.yarn-cache-dir.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Yarn install
+        working-directory: ./app/assets/javascripts/discourse
+        run: yarn install
+
+      - name: Ember Build
+        working-directory: ./app/assets/javascripts/discourse
+        run: |
+          sudo -E -u discourse mkdir /tmp/emberbuild
+          sudo -E -u discourse -H yarn ember build --environment=test  -o /tmp/emberbuild
+
+      - name: Core QUnit 1
+        working-directory: ./app/assets/javascripts/discourse
+        run: sudo -E -u discourse -H yarn ember exam --path /tmp/emberbuild --split=3 --partition=1 --launch "${{ matrix.browser }}"
+        timeout-minutes: 20
+
+      - name: Core QUnit 2
+        working-directory: ./app/assets/javascripts/discourse
+        run: sudo -E -u discourse -H yarn ember exam --path /tmp/emberbuild --split=3 --partition=2 --launch "${{ matrix.browser }}"
+        timeout-minutes: 20
+
+      - name: Core QUnit 3
+        working-directory: ./app/assets/javascripts/discourse
+        run: sudo -E -u discourse -H yarn ember exam --path /tmp/emberbuild --split=3 --partition=3 --launch "${{ matrix.browser }}"
+        timeout-minutes: 20
