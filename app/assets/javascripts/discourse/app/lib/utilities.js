@@ -349,6 +349,15 @@ const toArray = (items) => {
   return items;
 };
 
+const gifInDisguise = (clipboard) => {
+  return (
+    clipboard.files.length === 1 &&
+    clipboard.files[0].type === "image/png" &&
+    clipboard.types.every((e) => ["text/html", "Files"].includes(e)) &&
+    /<img.*src=.*\.gif/.test(clipboard.getData("text/html"))
+  );
+};
+
 export function clipboardHelpers(e, opts) {
   const clipboard =
     e.clipboardData ||
@@ -365,7 +374,9 @@ export function clipboardHelpers(e, opts) {
 
   let canUpload = files && opts.canUpload && types.includes("Files");
   const canUploadImage =
-    canUpload && files.filter((f) => f.type.match("^image/"))[0];
+    canUpload &&
+    files.filter((f) => f.type.match("^image/"))[0] &&
+    !gifInDisguise(clipboard);
   const canPasteHtml =
     opts.siteSettings.enable_rich_text_paste &&
     types.includes("text/html") &&
