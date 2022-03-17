@@ -5,6 +5,8 @@ on:
   push:
     branches:
       - main
+      - beta
+      - stable
 
 concurrency:
   group: tests-${{ format('{0}-{1}', github.head_ref || github.run_number, github.job) }}
@@ -36,8 +38,6 @@ jobs:
             target: plugins
           - build_type: frontend
             target: core # Handled by core_frontend_tests job (below)
-          - build_type: frontend
-            target: plugins # Not yet passing in Ember CLI
         include:
           - build_type: frontend
             target: core-plugins
@@ -232,15 +232,15 @@ jobs:
 
       - name: Core QUnit 1
         working-directory: ./app/assets/javascripts/discourse
-        run: sudo -E -u discourse -H yarn ember exam --path /tmp/emberbuild --split=3 --partition=1 --launch "${{ matrix.browser }}"
+        run: sudo -E -u discourse -H yarn ember exam --path /tmp/emberbuild --split=3 --partition=1 --launch "${{ matrix.browser }}" --random
         timeout-minutes: 20
 
       - name: Core QUnit 2
         working-directory: ./app/assets/javascripts/discourse
-        run: sudo -E -u discourse -H yarn ember exam --path /tmp/emberbuild --split=3 --partition=2 --launch "${{ matrix.browser }}"
+        run: sudo -E -u discourse -H yarn ember exam --path /tmp/emberbuild --split=3 --partition=2 --launch "${{ matrix.browser }}" --random
         timeout-minutes: 20
 
       - name: Core QUnit 3
         working-directory: ./app/assets/javascripts/discourse
-        run: sudo -E -u discourse -H yarn ember exam --path /tmp/emberbuild --split=3 --partition=3 --launch "${{ matrix.browser }}"
+        run: sudo -E -u discourse -H yarn ember exam --path /tmp/emberbuild --split=3 --partition=3 --launch "${{ matrix.browser }}" --random
         timeout-minutes: 20
