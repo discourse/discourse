@@ -167,39 +167,24 @@ export default Controller.extend(ModalFunctionality, {
 
   _processChunks(operation) {
     const allTopics = this.get("model.topics");
-    const topicChunks = this._generateTopicChunks(allTopics);
-    const topicIds = [];
 
-    const tasks = topicChunks.map((topics) => () => {
-      return Topic.bulkOperation(topics, operation).then((result) => {
-        this.set(
-          "processedTopicCount",
-          this.get("processedTopicCount") + topics.length
-        );
-        return result;
-      });
+    const promises = this._generateTopicChunks(allTopics).map((topics) => {
+      return new Promise((resolve) =>
+        Topic.bulkOperation(topics, operation).then((result) => {
+          this.set(
+            "processedTopicCount",
+            this.processedTopicCount + topics.length
+          );
+          resolve(result);
+        })
+      );
     });
 
-    return new Promise((resolve, reject) => {
-      const resolveNextTask = () => {
-        if (tasks.length === 0) {
-          const topics = topicIds.map((id) => allTopics.findBy("id", id));
-          return resolve(topics);
-        }
-
-        tasks
-          .shift()()
-          .then((result) => {
-            if (result && result.topic_ids) {
-              topicIds.push(...result.topic_ids);
-            }
-            resolveNextTask();
-          })
-          .catch(reject);
-      };
-
-      resolveNextTask();
-    });
+    return Promise.all(promises)
+      .then((results) => results.flatMap((result) => result?.topic_ids))
+      .then((topicIds) =>
+        topicIds.filter(Boolean).map((id) => allTopics.findBy("id", id))
+      );
   },
 
   forEachPerformed(operation, cb) {
