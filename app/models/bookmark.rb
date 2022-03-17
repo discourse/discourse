@@ -112,7 +112,7 @@ class Bookmark < ActiveRecord::Base
   end
 
   scope :pending_reminders, ->(before_time = Time.now.utc) do
-    with_reminders.where("reminder_at <= :before_time", before_time: before_time)
+    with_reminders.where("reminder_at <= ?", before_time).where(reminder_last_sent_at: nil)
   end
 
   scope :pending_reminders_for_user, ->(user) do

@@ -10,5 +10,6 @@ class ResetBookmarksReminderLastSentAt < ActiveRecord::Migration[6.1]
   end
 
   def down
+    raise ActiveRecord::IrreversibleMigration
   end
 end
