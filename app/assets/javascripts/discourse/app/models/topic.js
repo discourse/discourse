@@ -894,4 +894,9 @@ export function registerCustomLastUnreadUrlCallback(fn) {
   _customLastUnreadUrlCallbacks.push(fn);
 }
 
+// Should only be used in tests
+export function clearCustomLastUnreadUrlCallbacks() {
+  _customLastUnreadUrlCallbacks.clear();
+}
+
 export default Topic;
