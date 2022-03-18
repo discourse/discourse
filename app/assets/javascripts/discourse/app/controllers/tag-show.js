@@ -57,11 +57,6 @@ export default DiscoverySortableController.extend(
       });
     },
 
-    @discourseComputed("category")
-    showTagFilter() {
-      return true;
-    },
-
     @observes("list.canLoadMore")
     _showFooter() {
       this.set("application.showFooter", !this.list?.canLoadMore);
