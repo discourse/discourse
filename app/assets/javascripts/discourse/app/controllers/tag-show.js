@@ -64,7 +64,7 @@ export default DiscoverySortableController.extend(
 
     @observes("list.canLoadMore")
     _showFooter() {
-      this.set("application.showFooter", !this.get("list.canLoadMore"));
+      this.set("application.showFooter", !this.list?.canLoadMore);
     },
 
     @discourseComputed("navMode", "list.topics.length", "loading")
@@ -75,11 +75,11 @@ export default DiscoverySortableController.extend(
 
       if (listTopicsLength === 0) {
         return I18n.t(`tagging.topics.none.${navMode}`, {
-          tag: this.get("tag.id"),
+          tag: this.tag?.id,
         });
       } else {
-        return I18n.t(`topics.bottom.tag`, {
-          tag: this.get("tag.id"),
+        return I18n.t("topics.bottom.tag", {
+          tag: this.tag?.id,
         });
       }
     },
@@ -101,7 +101,7 @@ export default DiscoverySortableController.extend(
             this.router.currentRoute.queryParams["filter"]) === "tracked";
 
         let topicIds = this.selected
-          ? this.selected.map((topic) => topic.id)
+          ? this.selected.mapBy("id")
           : null;
 
         Topic.resetNew(this.category, !this.noSubcategories, {
@@ -118,7 +118,7 @@ export default DiscoverySortableController.extend(
 
       showInserted() {
         const tracker = this.topicTrackingState;
-        this.list.loadBefore(tracker.get("newIncoming"), true);
+        this.list.loadBefore(tracker.newIncoming, true);
         tracker.resetTracking();
         return false;
       },
@@ -142,7 +142,7 @@ export default DiscoverySortableController.extend(
       refresh() {
         return this.store
           .findFiltered("topicList", {
-            filter: this.get("list.filter"),
+            filter: this.list?.filter,
           })
           .then((list) => {
             this.set("list", list);

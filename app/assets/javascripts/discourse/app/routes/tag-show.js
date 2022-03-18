@@ -56,7 +56,7 @@ export default DiscourseRoute.extend(FilterModeMixin, {
       // If logged in, we should get the tag's user settings
       tagNotification = await this.store.find(
         "tagNotification",
-        tag.get("id").toLowerCase()
+        tag.id.toLowerCase()
       );
     }
 
