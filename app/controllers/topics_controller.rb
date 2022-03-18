@@ -1125,7 +1125,7 @@ class TopicsController < ApplicationController
     url << "/#{post_number}" if post_number.to_i > 0
     url << ".json" if request.format.json?
 
-    opts.each do |k,v|
+    opts.each do |k, v|
       s = url.include?('?') ? '&' : '?'
       url << "#{s}#{k}=#{v}"
     end
