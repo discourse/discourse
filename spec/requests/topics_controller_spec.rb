@@ -1818,12 +1818,40 @@ RSpec.describe TopicsController do
     it 'returns 301 when found' do
       get "/t/external_id/asdf.json"
       expect(response.status).to eq(301)
-      expect(response).to redirect_to(topic.relative_url + ".json?page=")
+      expect(response).to redirect_to(topic.relative_url + ".json")
     end
 
     it 'returns right response when not found' do
       get "/t/external_id/fdsa.json"
       expect(response.status).to eq(404)
+    end
+
+    it 'preserves only select query params' do
+      get "/t/external_id/asdf.json", params: {
+        filter_top_level_replies: true
+      }
+      expect(response.status).to eq(301)
+      expect(response).to redirect_to(topic.relative_url + ".json?filter_top_level_replies=true")
+
+      get "/t/external_id/asdf.json", params: {
+        not_valid: true
+      }
+      expect(response.status).to eq(301)
+      expect(response).to redirect_to(topic.relative_url + ".json")
+
+      get "/t/external_id/asdf.json", params: {
+        filter_top_level_replies: true,
+        post_number: 9999
+      }
+      expect(response.status).to eq(301)
+      expect(response).to redirect_to(topic.relative_url + "/9999.json?filter_top_level_replies=true")
+
+      get "/t/external_id/asdf.json", params: {
+        filter_top_level_replies: true,
+        print: true
+      }
+      expect(response.status).to eq(301)
+      expect(response).to redirect_to(topic.relative_url + ".json?print=true&filter_top_level_replies=true")
     end
 
     describe 'when user does not have access to the topic' do
