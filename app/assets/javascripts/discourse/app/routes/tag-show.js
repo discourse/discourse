@@ -23,8 +23,8 @@ export default DiscourseRoute.extend(FilterModeMixin, {
 
   queryParams,
 
-  controllerName: "tags.show",
-  templateName: "tags.show",
+  controllerName: "tag.show",
+  templateName: "tag.show",
 
   beforeModel() {
     const controller = this.controllerFor("tag.show");
