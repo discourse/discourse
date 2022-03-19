@@ -7626,9 +7626,9 @@ findup-sync@^4.0.0:
     resolve-dir "^1.0.1"
 
 fireworm@^0.7.0:
-  version "0.7.1"
-  resolved "https://registry.yarnpkg.com/fireworm/-/fireworm-0.7.1.tgz#ccf20f7941f108883fcddb99383dbe6e1861c758"
-  integrity sha1-zPIPeUHxCIg/zduZOD2+bhhhx1g=
+  version "0.7.2"
+  resolved "https://registry.yarnpkg.com/fireworm/-/fireworm-0.7.2.tgz#bc5736515b48bd30bf3293a2062e0b0e0361537a"
+  integrity sha512-GjebTzq+NKKhfmDxjKq3RXwQcN9xRmZWhnnuC9L+/x5wBQtR0aaQM50HsjrzJ2wc28v1vSdfOpELok0TKR4ddg==
   dependencies:
     async "~0.2.9"
     is-type "0.0.1"
