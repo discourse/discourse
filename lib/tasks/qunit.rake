@@ -8,7 +8,7 @@ task "qunit:test", [:timeout, :qunit_path] do |_, args|
 
   begin
     ChromeInstalledChecker.run
-  rescue ChromeNotInstalled, ChromeVersionTooLow => err
+  rescue ChromeInstalledChecker::ChromeError => err
     abort err.message
   end
 

@@ -6,7 +6,7 @@ task "smoke:test" do
 
   begin
     ChromeInstalledChecker.run
-  rescue ChromeNotInstalled, ChromeVersionTooLow => err
+  rescue ChromeInstalledChecker::ChromeError => err
     abort err.message
   end
 
