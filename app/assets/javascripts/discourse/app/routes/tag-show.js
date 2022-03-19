@@ -154,7 +154,7 @@ export default DiscourseRoute.extend(FilterModeMixin, {
       if (controller.category) {
         return I18n.t("tagging.filters.untagged_with_category", {
           filter: filterText,
-          category: controller.category?.name,
+          category: controller.category.name,
         });
       } else {
         return I18n.t("tagging.filters.untagged_without_category", {
@@ -213,7 +213,7 @@ export default DiscourseRoute.extend(FilterModeMixin, {
   dismissRead(operationType) {
     const controller = this.controllerFor("tags-show");
     let options = {
-      tagName: controller.tag.id,
+      tagName: controller.tag?.id,
     };
     const categoryId = controller.category?.id;
 
