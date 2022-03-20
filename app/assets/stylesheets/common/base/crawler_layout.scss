@@ -188,7 +188,7 @@ body > noscript {
     @include breakpoint(tablet, min-width) {
       float: right;
     }
-    [itemprop="position"] {
+    .position {
       float: left;
       margin-right: 0.5em;
     }
