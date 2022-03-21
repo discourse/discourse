@@ -1693,11 +1693,18 @@ function decorate(klass, evt, cb, id) {
   }
 
   const mixin = {};
-  mixin["_decorate_" + _decorateId++] = on(evt, function (elem) {
+  let name = `_decorate_${_decorateId++}`;
+
+  if (id) {
+    name += `_${id.replaceAll(/\W/g, "_")}`;
+  }
+
+  mixin[name] = on(evt, function (elem) {
     elem = elem || this.element;
     if (elem) {
       cb(elem);
     }
   });
+
   klass.reopen(mixin);
 }

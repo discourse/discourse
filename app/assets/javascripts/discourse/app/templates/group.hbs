@@ -9,16 +9,16 @@
 
   <div class="group-details-container">
     <div class="group-info">
-      <div class="group-avatar-flair">
-        {{#if (or model.flair_icon model.flair_url model.flair_bg_color)}}
+      {{#if (or model.flair_icon model.flair_url model.flair_bg_color)}}
+        <div class="group-avatar-flair">
           {{avatar-flair
             flairName=model.name
             flairUrl=(or model.flair_icon model.flair_url)
             flairBgColor=model.flair_bg_color
             flairColor=model.flair_color
           }}
-        {{/if}}
-      </div>
+        </div>
+      {{/if}}
 
       <div class="group-info-names">
         <span class="group-info-name">{{groupName}}</span>

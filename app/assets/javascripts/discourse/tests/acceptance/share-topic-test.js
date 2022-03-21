@@ -39,7 +39,7 @@ acceptance("Share and Invite modal", function (needs) {
     await visit("/t/short-topic-with-two-posts/54077");
     await click("#post_2 .post-info.post-date a");
 
-    assert.ok(exists("#share-link"), "it shows the share modal");
+    assert.ok(exists(".share-topic-modal"), "it shows the share modal");
   });
 
   test("Share topic in a restricted category", async function (assert) {

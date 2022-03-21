@@ -270,10 +270,7 @@ ko:
       list_permission_denied: "이 사용자의 북마크를 볼 수있는 권한이 없습니다."
       no_user_bookmarks: "북마크된 게시물이 없습니다. 북마크를 사용하면 특정 게시물을 빠르게 확인 할 수 있습니다."
       auto_delete_preference:
-        label: "자동 삭제"
-        never: "절대"
-        when_reminder_sent: "알림이 전송되면"
-        on_owner_reply: "이 글에 댓글을 작성한 후"
+        when_reminder_sent: "북마크 삭제"
       search_placeholder: "이름, 글 제목 또는 내용으로 북마크 검색"
       search: "검색"
       reminders:

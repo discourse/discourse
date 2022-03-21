@@ -74,6 +74,7 @@ class FinalDestination
     @preserve_fragment_url = @preserve_fragment_url_hosts.any? { |host| hostname_matches?(host) }
     @validate_uri = @opts.fetch(:validate_uri) { true }
     @user_agent = @force_custom_user_agent_hosts.any? { |host| hostname_matches?(host) } ? Onebox.options.user_agent : @default_user_agent
+    @stop_at_blocked_pages = @opts[:stop_at_blocked_pages]
   end
 
   def self.connection_timeout
@@ -132,40 +133,43 @@ class FinalDestination
 
   # this is a new interface for simply getting
   # N bytes accounting for all internal logic
-  def get(uri = @uri, redirects = @limit, extra_headers: {}, &blk)
+  def get(redirects = @limit, extra_headers: {}, &blk)
     raise "Must specify block" unless block_given?
 
-    if uri && uri.port == 80 && FinalDestination.is_https_domain?(uri.hostname)
-      uri.scheme = "https"
-      uri = URI(uri.to_s)
+    if @uri && @uri.port == 80 && FinalDestination.is_https_domain?(@uri.hostname)
+      @uri.scheme = "https"
+      @uri = URI(@uri.to_s)
     end
 
-    return nil unless validate_uri
+    return if !validate_uri
+    return if @stop_at_blocked_pages && blocked_domain?(@uri)
 
-    result, (location, cookie) = safe_get(uri, &blk)
+    result, headers_subset = safe_get(@uri, &blk)
+    cookie = headers_subset.set_cookie
+    location = headers_subset.location
 
     if result == :redirect && (redirects == 0 || !location)
       return nil
     end
 
     if result == :redirect
-      old_port = uri.port
-      location = "#{uri.scheme}://#{uri.host}#{location}" if location[0] == "/"
-      uri = uri(location)
+      old_port = @uri.port
+      location = "#{@uri.scheme}://#{@uri.host}#{location}" if location[0] == "/"
+      @uri = uri(location)
 
       # https redirect, so just cache that whole new domain is https
-      if old_port == 80 && uri&.port == 443 && (URI::HTTPS === uri)
-        FinalDestination.cache_https_domain(uri.hostname)
+      if old_port == 80 && @uri&.port == 443 && (URI::HTTPS === @uri)
+        FinalDestination.cache_https_domain(@uri.hostname)
       end
 
-      return nil if !uri
+      return nil if !@uri
 
       extra = nil
       extra = { 'Cookie' => cookie } if cookie
 
-      get(uri, redirects - 1, extra_headers: extra, &blk)
+      get(redirects - 1, extra_headers: extra, &blk)
     elsif result == :ok
-      uri.to_s
+      @uri.to_s
     else
       nil
     end
@@ -222,6 +226,13 @@ class FinalDestination
       response_block: request_validator
     )
 
+    if @stop_at_blocked_pages
+      if blocked_domain?(@uri) || response.headers['Discourse-No-Onebox'] == "1"
+        @status = :blocked_page
+        return
+      end
+    end
+
     location = nil
     response_headers = nil
     response_status = response.status.to_i
@@ -252,6 +263,18 @@ class FinalDestination
       return @uri
     when 103, 400, 405, 406, 409, 500, 501
       response_status, small_headers = small_get(request_headers)
+
+      if @stop_at_blocked_pages
+        # this may seem weird, but the #to_hash method of the response object
+        # of ruby's net/http lib returns a hash where each value is an array.
+        # small_headers here is like that so our no onebox header value is an
+        # array if it's set. Also the hash keys are always lower-cased.
+        dont_onebox = small_headers["discourse-no-onebox"]&.join("") == "1"
+        if dont_onebox || blocked_domain?(@uri)
+          @status = :blocked_page
+          return
+        end
+      end
 
       if response_status == 200
         @status = :resolved
@@ -425,6 +448,7 @@ class FinalDestination
   def safe_get(uri)
     result = nil
     unsafe_close = false
+    headers_subset = Struct.new(:location, :set_cookie).new
 
     safe_session(uri) do |http|
       headers = request_headers.merge(
@@ -435,8 +459,19 @@ class FinalDestination
       req = Net::HTTP::Get.new(uri.request_uri, headers)
 
       http.request(req) do |resp|
+        headers_subset.set_cookie = resp['Set-Cookie']
+
+        if @stop_at_blocked_pages
+          dont_onebox = resp["Discourse-No-Onebox"] == "1"
+          if dont_onebox
+            result = :blocked, headers_subset
+            next
+          end
+        end
+
         if Net::HTTPRedirection === resp
-          result = :redirect, [resp['location'], resp['Set-Cookie']]
+          headers_subset.location = resp['location']
+          result = :redirect, headers_subset
         end
 
         if Net::HTTPSuccess === resp
@@ -460,7 +495,7 @@ class FinalDestination
               raise StandardError
             end
           end
-          result = :ok
+          result = :ok, headers_subset
         else
           catch(:done) do
             yield resp, nil, nil
@@ -471,7 +506,7 @@ class FinalDestination
 
     result
   rescue StandardError
-    unsafe_close ? :ok : raise
+    unsafe_close ? [:ok, headers_subset] : raise
   end
 
   def safe_session(uri)
@@ -504,5 +539,9 @@ class FinalDestination
     complete_url = "#{@uri.scheme}://#{complete_url}" if @uri.scheme
 
     uri(complete_url)
+  end
+
+  def blocked_domain?(uri)
+    Onebox::DomainChecker.is_blocked?(uri.hostname)
   end
 end

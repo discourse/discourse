@@ -268,10 +268,7 @@ ja:
       list_permission_denied: "このユーザーのブックマークを表示する権限がありません。"
       no_user_bookmarks: "ブックマークした投稿はありません。ブックマークを使用すると、特定の投稿を素早く参照できます。"
       auto_delete_preference:
-        label: "自動的に削除"
-        never: "削除しない"
-        when_reminder_sent: "リマインダーが送信されたとき"
-        on_owner_reply: "このトピックに返信した後"
+        when_reminder_sent: "ブックマークを削除"
       search_placeholder: "名前、トピックタイトル、または投稿コンテンツでブックマークを検索する"
       search: "検索"
       reminders:

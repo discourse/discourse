@@ -1293,7 +1293,6 @@ ko:
       labels:
         user: 사용자
         qtt_like: '''좋아요'' 받은 횟수'
-      description: "여러 사람들로부터 좋아요를 받은 상위 10명의 사용자."
   dashboard:
     rails_env_warning: "당신의 서버는 %{env} 모드에서 실행되고 있습니다."
     host_names_warning: "당신의 config/database.yml 파일은 기본 호스트네임을 사용하고 있습니다. 사이트의 호스트네임으로 업데이트 하세요."

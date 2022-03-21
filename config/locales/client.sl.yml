@@ -327,11 +327,6 @@ sl:
       invalid_custom_datetime: "Datum in čas, ki ste ju navedli, sta neveljavna. Poskusite znova."
       list_permission_denied: "Nimate dovoljenja za ogled zaznamkov tega uporabnika."
       no_user_bookmarks: "Nimate nobenega zaznamka; zaznamki vam omogočajo, da se hitro sklicujete na določene objave."
-      auto_delete_preference:
-        label: "Samodejno izbriši"
-        never: "Nikoli"
-        when_reminder_sent: "Ko je opomnik poslan"
-        on_owner_reply: "Ko odgovorim na to temo"
       search_placeholder: "Iščite zaznamke po imenu, naslovu teme ali vsebini objave"
       search: "Išči"
       reminders:

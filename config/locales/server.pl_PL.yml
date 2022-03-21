@@ -1441,7 +1441,6 @@ pl_PL:
       labels:
         user: Użytkownik
         qtt_like: Polubienia otrzymane
-      description: "Top 10 użytkowników, którzy otrzymali więcej polubień."
     top_users_by_likes_received_from_inferior_trust_level:
       title: "Najlepsi użytkownicy według polubień otrzymanych od użytkownika o niższym poziomie zaufania"
       labels:
@@ -1454,7 +1453,6 @@ pl_PL:
       labels:
         user: Użytkownik
         qtt_like: Polubienia otrzymane
-      description: "Top 10 użytkowników, którzy mają polubienia od szerokiego grona osób."
   dashboard:
     group_email_credentials_warning: 'Wystąpił problem z poświadczeniami e-mail dla grupy <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. Żadne e-maile nie będą wysyłane ze skrzynki odbiorczej grupy, dopóki ten problem nie zostanie rozwiązany. %{error}'
     rails_env_warning: "Twój serwer działa w trybie %{env}"

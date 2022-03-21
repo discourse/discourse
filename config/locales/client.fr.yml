@@ -286,10 +286,9 @@ fr:
       list_permission_denied: "Vous n'avez pas la permission de voir les signets de cet utilisateur."
       no_user_bookmarks: "Vous n'avez pas de messages dans vos signets ; les signets vous permettent de retrouver rapidement des sujets d'intérêt."
       auto_delete_preference:
-        label: "Supprimer automatiquement"
-        never: "Jamais"
-        when_reminder_sent: "Après l'envoi du rappel"
-        on_owner_reply: "Après avoir répondu à ce sujet"
+        label: "Après avoir été notifié"
+        never: "Conserver le signet"
+        when_reminder_sent: "Supprimer le signet"
       search_placeholder: "Rechercher des signets par nom, titre de sujet ou contenu de message"
       search: "Recherche"
       reminders:
@@ -3206,6 +3205,7 @@ fr:
       readonly: "Voir"
     lightbox:
       download: "télécharger"
+      open: "image originale"
       previous: "Précédent (touche flèche gauche)"
       next: "Suivant (touche flèche droite)"
       counter: "%curr% sur %total%"

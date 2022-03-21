@@ -28,13 +28,13 @@ module.exports = {
   disable_watching: true,
   launch_in_ci: ["Chrome"],
   // launch_in_dev: ["Chrome"] // Ember-CLI always launches testem in 'CI' mode
-  tap_failed_tests_only: process.env.CI,
+  tap_failed_tests_only: false,
   parallel: 1, // disable parallel tests for stability
   browser_start_timeout: 120,
   browser_args: {
     Chrome: [
       // --no-sandbox is needed when running Chrome inside a container
-      process.env.CI || process.env.EMBER_CLI ? "--no-sandbox" : null,
+      process.env.CI ? "--no-sandbox" : null,
       "--headless",
       "--disable-dev-shm-usage",
       "--disable-software-rasterizer",

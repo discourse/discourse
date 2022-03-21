@@ -1265,6 +1265,7 @@ da:
       labels:
         user: Bruger
         qtt_like: Likes modtaget
+      description: "Top 10 over brugere, der har modtaget 'Synes godt om'."
     top_users_by_likes_received_from_inferior_trust_level:
       labels:
         user: Bruger
@@ -1273,6 +1274,7 @@ da:
       labels:
         user: Bruger
         qtt_like: Likes modtaget
+      description: "Top 10 over brugere, der har fået 'Synes godt om' fra en lang række personer."
   dashboard:
     group_email_credentials_warning: 'Der opstod et problem med e-mail-legitimationsoplysninger for gruppen <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. Ingen e-mails vil blive sendt fra gruppe-indbakken, før problemet er løst. %{error}'
     rails_env_warning: "Din server kører i %{env}-tilstand."
@@ -1346,7 +1348,7 @@ da:
     delete_removed_posts_after: "Indlæg, fjernet af forfatteren, vil blive automatisk slettet efter (n) hours. Såfremt værdien sat til 0 vil indlæg blive fjernet straks."
     max_image_width: "Maximum thumbnail width of images in a post"
     max_image_height: "Maksimum miniaturebillede højde for billeder i et indlæg"
-    fixed_category_positions: "Hvis krydset af, vil du være i stand til at arrangere ordnet visning af kategorier. Hvis ikke afkrydset vil de være listet i en rækkefølge baseret på aktivitet."
+    fixed_category_positions: "Hvis afkrydset, vil du være i stand til at arrangere kategorier i en fast rækkefølge. Hvis ikke afkrydset vil de være listet i en rækkefølge baseret på aktivitet."
     fixed_category_positions_on_create: "Hvis afkrydset vil kategori visning blive vedligeholdt baseret på emne (kræver manuelt valgt visning af kategorier)."
     add_rel_nofollow_to_user_content: 'Tilføj rel nofollow til alt indsendt brugerindhold, undtagen interne links (herunder overordnede domæner). Hvis du ændrer dette, skal du gen-bage alle indlæg med: "rake indlæg:rebake“'
     exclude_rel_nofollow_domains: "En liste over domæner, hvor nofollow ikke skal føjes til links. eksempel.dk tillader automatisk også sub.eksempel.dk. Som et minimum bør du tilføje domænet på dette websted for at hjælpe webcrawlere med at finde alt indhold. Hvis andre dele af dit websted er på andre domæner, bør du også tilføje dem."
@@ -1472,6 +1474,7 @@ da:
     google_oauth2_client_id: "Klient ID til din Google application."
     google_oauth2_client_secret: "Klient hemmelighed til din Google-applikation."
     google_oauth2_prompt: "En valgfri mellemrums-afgrænset liste over strengværdier, der specificerer, om godkendelsesserveren beder brugeren om gen-godkendelse og samtykke. Se <a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> for de mulige værdier."
+    google_oauth2_hd_groups: "(eksperimentel) Hent brugernes Google-grupper på det hostede domæne ved godkendelse. Hentede Google-grupper kan bruges til at give automatisk Discourse gruppemedlemskab (se gruppeindstillinger)."
     enable_twitter_logins: "Aktivér Twitter-godkendelse, kræver twitter_consumer_key og twitter_consumer_secret. Se <a href='https://meta.discourse.org/t/13395' target='_blank'>Konfiguration af Twitter-login (og rige indlejringer) for Discourse</a>."
     twitter_consumer_key: "Forbrugernøgle til Twitter-godkendelse, registreret på <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
     twitter_consumer_secret: "Forbrugerhemmelighed til Twitter-godkendelse, registreret på <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
@@ -1633,10 +1636,12 @@ da:
     email_link_color: "Farven på links i HTML-e-mails. Indtast et farvenavn ('blue') eller hex-værdi ('#0000FF')."
     staff_user_custom_fields: "En liste over brugertilpassede felter, der kan hentes for personale med API'en."
     enable_user_directory: "Gør det muligt at gennemse et indeks af brugere "
+    enable_group_directory: "Tilbyd en oversigt over grupper til gennemsyn"
     allow_anonymous_posting: "Tillad brugere at skifte til en anonym tilstand"
     hide_user_profiles_from_public: "Deaktiver brugerkort, brugerprofiler og brugerkatalog for anonyme brugere."
     show_inactive_accounts: "Tillad brugere der er logget ind at gennemse profiler af inaktive konti."
     hide_suspension_reasons: "Vis ikke suspensionsårsager offentligt på brugerprofiler."
+    user_selected_primary_groups: "Tillad brugere at indstille deres egen primære gruppe"
     allow_profile_backgrounds: "Tillad brugere at uploade en profil baggrund."
     enable_mobile_theme: "Mobile enheder bruger et mobilvenligt tema, med mulighed for at skifte til det fulde site. Deaktivér dette hvis du ønsker at anvende et brugerdefineret stylesheet som er fuldstændigt responsivt."
     disable_avatar_education_message: "Deaktivér hjælpetekst for at skifte sin avatar."
@@ -1701,6 +1706,7 @@ da:
     city_for_disputes: "By for tvister"
     shared_drafts_category: "Aktiver funktionen Delte kladder ved at angive en kategori for emneudkast. Emner i denne kategori vil blive undertrykt fra emnelister for personalebrugere."
     shared_drafts_min_trust_level: "Tillad brugere at se og redigere Delte kladder."
+    push_notifications_prompt: "Vis meddelelse om brugersamtykke."
     push_notifications_icon: "Emblemikonet, der vises i meddelelseshjørnet. Et monokromatisk PNG på 96×96 med gennemsigtighed anbefales."
     allow_changing_staged_user_tracking: "Tillad, at en forhåndsoprettet brugers kategori- og mærke notifikationsindstillinger ændres af en administratorbruger."
     errors:
@@ -2402,6 +2408,16 @@ da:
         Du kan fortsat kigge dig omkring på sitet, men du kan ikke oprette indlæg eller emner, intil en [administrator](%{base_url}/about) har gennemgået dine seneste indlæg. Vi beklager ulejligheden.
 
         Se venligst vores [Retningslinjer](%{base_url}/guidelines) for yderligere vejledning.
+    user_automatically_silenced:
+      subject_template: "Ny bruger %{username} er blevet gjort tavs af fællesskabsanmeldelse"
+      text_body_template: |
+        Dette er en automatisk besked.
+
+        Den nye bruger [%{username}](%{user_url}) blev automatisk gjort lydløs, fordi flere brugere anmeldte %{username}'s indlæg.
+
+        Venligst [gennemse anmeldelsen](%{base_url}/admin/flags). Hvis %{username} fejlagtigt blev gjort lydløs pga. indlæg, skal du klikke på Mådeholdt (silenced) knappen på [admin siden for denne bruger](%{user_url}).
+
+        Denne tærskel kan ændres via webstedsindstillingerne 'silence_new_user'.
     spam_post_blocked:
       title: "Spam-indlæg blokeret"
       subject_template: "Ny bruger %{username} indlæg blokeret på grund af gentagne links"

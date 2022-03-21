@@ -1329,7 +1329,6 @@ tr_TR:
       labels:
         user: Kullanıcı
         qtt_like: Alınan Beğeniler
-      description: "En fazla beğeni alan ilk 10 kullanıcı."
     top_users_by_likes_received_from_inferior_trust_level:
       title: "Daha düşük güven düzeyine sahip bir kullanıcıdan alınan beğenilere göre En İyi Kullanıcılar"
       labels:
@@ -1342,7 +1341,6 @@ tr_TR:
       labels:
         user: Kullanıcı
         qtt_like: Alınan Beğeniler
-      description: "Çok çeşitli kullanıcılardan beğeni alan ilk 10 kullanıcı."
   dashboard:
     group_email_credentials_warning: '<a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>grubu için e-posta kimlik bilgileriyle ilgili bir sorun oluştu. Bu sorun çözülene kadar grup gelen kutusundan hiçbir e-posta gönderilmeyecektir. %{error}'
     rails_env_warning: "Sunucunuz %{env} modunda çalışıyor."

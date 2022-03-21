@@ -18,6 +18,7 @@
   "dependencies": {
     "@babel/core": "^7.14.3",
     "@discourse/itsatrap": "^2.0.10",
+    "@ember/jquery": "^2.0.0",
     "@ember/optional-features": "^1.1.0",
     "@ember/test-helpers": "^2.2.0",
     "@glimmer/component": "^1.0.4",

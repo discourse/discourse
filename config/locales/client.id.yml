@@ -255,10 +255,6 @@ id:
       confirm_clear: "Yakin ingin menghapus semua penandaan Anda dari topik ini?"
       save: "Simpan"
       no_timezone: 'Anda belum menetapkan zona waktu. Anda tidak akan dapat mengatur pengingat. Tetapkan satu <a href="%{basePath}/my/preferences/profile">di profil Anda</a> .'
-      auto_delete_preference:
-        label: "Hapus secara otomatis"
-        never: "Tidak pernah"
-        on_owner_reply: "Setelah saya membalas topik ini"
       search: "Cari"
       reminders:
         today_with_time: "hari ini pada %{time}"

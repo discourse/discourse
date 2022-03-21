@@ -181,4 +181,17 @@ module Helpers
     target.send(:remove_const, const)
     target.const_set(const, old)
   end
+
+  def track_sql_queries
+    queries = []
+    callback = ->(*, payload) {
+      queries << payload.fetch(:sql) unless ["CACHE", "SCHEMA"].include?(payload.fetch(:name))
+    }
+
+    ActiveSupport::Notifications.subscribed(callback, "sql.active_record") do
+      yield
+    end
+
+    queries
+  end
 end

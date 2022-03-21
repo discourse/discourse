@@ -90,6 +90,9 @@ class ApplicationController < ActionController::Base
       response.cache_control[:no_cache] = true
       response.cache_control[:extras] = ["no-store"]
     end
+    if SiteSetting.login_required
+      response.headers['Discourse-No-Onebox'] = '1'
+    end
   end
 
   def conditionally_allow_site_embedding

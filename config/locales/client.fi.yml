@@ -286,10 +286,7 @@ fi:
       list_permission_denied: "Et voi nähdä tämän käyttäjän kirjanmerkkejä."
       no_user_bookmarks: "Kirjanmerkeissäsi ei ole mitään. Kirjanmerkitsemällä viestin löydät sen myöhemmin helposti."
       auto_delete_preference:
-        label: "Poista automaattisesti"
-        never: "Ei koskaan"
-        when_reminder_sent: "Kun muistutus on lähetetty"
-        on_owner_reply: "Kun olen vastannut tähän ketjuun"
+        when_reminder_sent: "Poista kirjanmerkki"
       search_placeholder: "Hae kirjanmerkkejä nimen, ketjun otsikon tai viestin sisällön perusteella"
       search: "Haku"
       reminders:

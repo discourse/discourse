@@ -300,10 +300,7 @@ es:
       list_permission_denied: "No tienes permiso para ver los marcadores de este usuario."
       no_user_bookmarks: "No tienes publicaciones guardadas en marcadores; guardar en marcadores permite que vuelvas a los temas rápidamente."
       auto_delete_preference:
-        label: "Eliminar automáticamente"
-        never: "Nunca"
-        when_reminder_sent: "Cuando se envíe el recordatorio"
-        on_owner_reply: "Cuando responda a este tema"
+        when_reminder_sent: "Eliminar marcador"
       search_placeholder: "Buscar marcadores por nombre, título del tema o contenido de la publicación"
       search: "Buscar"
       reminders:

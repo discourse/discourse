@@ -231,8 +231,6 @@ sw:
       remove: "Ondoa Alamisho"
       confirm_clear: "Una uhakika unataka kuondoa mialamisho ya mada hii?"
       save: "hifadhi"
-      auto_delete_preference:
-        never: "Kamwe"
       search: "Tafuta"
     drafts:
       remove: "Ondoa"

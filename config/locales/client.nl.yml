@@ -289,10 +289,7 @@ nl:
       list_permission_denied: "U hebt geen toestemming om de bladwijzers van deze gebruiker te bekijken."
       no_user_bookmarks: "U hebt geen bladwijzers voor berichten; via bladwijzers kunt u snel bepaalde berichten raadplegen."
       auto_delete_preference:
-        label: "Automatisch verwijderen"
-        never: "Nooit"
-        when_reminder_sent: "Zodra de herinnering is verzonden"
-        on_owner_reply: "Nadat ik op dit topic antwoord"
+        when_reminder_sent: "Bladwijzer verwijderen"
       search_placeholder: "Bladwijzers doorzoeken op naam, topictitel of berichtinhoud"
       search: "Zoeken"
       reminders:

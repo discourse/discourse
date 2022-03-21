@@ -163,6 +163,7 @@ de:
     skip_to_main_content: "Zum Hauptinhalt springen"
     wizard_required: "Willkommen bei deinem neuen Discourse! Lass uns mit dem <a href='%{url}' data-auto-route='true'>Setup-Assistenten</a> ✨ starten"
     emails_are_disabled: "Die ausgehende E-Mail-Kommunikation wurde von einem Administrator global deaktiviert. Es werden keinerlei Benachrichtigungen per E-Mail verschickt."
+    emails_are_disabled_non_staff: "Ausgehende E-Mails wurden für Benutzer, die nicht zum Team gehören, deaktiviert."
     software_update_prompt:
       message: "Wir haben ein Update dieser Website durchgeführt. <span>Bitte aktualisiere</span>, da es sonst zu unerwartetem Verhalten kommen kann."
       dismiss: "Verwerfen"
@@ -299,10 +300,11 @@ de:
       list_permission_denied: "Du hast keine Berechtigung, die Lesezeichen dieses Benutzers anzuzeigen."
       no_user_bookmarks: "Du hast noch keine Beiträge mit einem Lesezeichen versehen. Lesezeichen erlauben dir den schnellen Zugriff auf bestimmte Beiträge."
       auto_delete_preference:
-        label: "Automatisch löschen"
-        never: "Nie"
-        when_reminder_sent: "Sobald die Erinnerung gesendet wurde"
-        on_owner_reply: "Nachdem ich auf dieses Thema geantwortet habe"
+        label: "Nachdem Du benachrichtigst wurdest."
+        never: "Lesezeichen behalten"
+        when_reminder_sent: "Lesezeichen löschen"
+        on_owner_reply: "Lesezeichen löschen, sobald ich antworte"
+        clear_reminder: "Lesezeichen behalten und Erinnerung löschen"
       search_placeholder: "Lesezeichen nach Namen, Thementitel oder Beitragsinhalt durchsuchen"
       search: "Suche"
       reminders:
@@ -1832,6 +1834,7 @@ de:
       categories_and_top_topics: "Kategorien und angesagte Themen"
       categories_boxes: "Boxen mit Unterkategorien"
       categories_boxes_with_topics: "Spalten mit hervorgehobenen Themen"
+      subcategories_with_featured_topics: "Unterkategorien mit hervorgehobenen Themen"
     shortcut_modifier_key:
       shift: "Umschalt"
       ctrl: "Strg"
@@ -2830,6 +2833,7 @@ de:
         edit: "Entschuldige, es gab einen Fehler beim Bearbeiten des Beitrags. Bitte versuche es noch einmal."
         upload: "Entschuldige, es gab einen Fehler beim Hochladen der Datei. Bitte versuche es noch einmal."
         file_too_large: "Entschuldige, die Datei ist zu groß (die maximale Größe beträgt %{max_size_kb} KB). Wie wäre es, die Datei bei einem Cloud-Sharing-Service hochzuladen und dann den Link einzufügen?"
+        file_size_zero: "Es tut uns leid, es sieht so aus, als ob etwas schief gelaufen ist. Die Datei, die Du hochzuladen versuchst, hat 0 Bytes. Bitte versuche es erneut."
         file_too_large_humanized: "Entschuldige, die Datei ist zu groß (die maximale Größe beträgt %{max_size}). Wie wäre es, die Datei bei einem Cloud-Sharing-Service hochzuladen und dann den Link einzufügen?"
         too_many_uploads: "Entschuldige, du darfst immer nur eine Datei hochladen."
         too_many_dragged_and_dropped_files:
@@ -2982,6 +2986,9 @@ de:
           edit_bookmark:
             name: "Lesezeichen bearbeiten"
             description: "Ändere den Namen des Lesezeichens oder den Erinnerungszeitpunkt."
+          clear_bookmark_reminder:
+            name: "Erinnerung löschen"
+            description: "Lösche das Datum und die Uhrzeit der Erinnerung"
           pin_bookmark:
             name: "Lesezeichen anheften"
             description: "Das Lesezeichen anheften, damit es oben auf der Liste der Lesezeichen erscheint."
@@ -3345,6 +3352,7 @@ de:
       readonly: "Ansehen"
     lightbox:
       download: "herunterladen"
+      open: "Originalbild"
       previous: "Zurück (linke Pfeiltaste)"
       next: "Weiter (rechte Pfeiltaste)"
       counter: "%curr% von %total%"
@@ -3883,10 +3891,14 @@ de:
             topics:
               read: Lies ein Thema oder einen bestimmten Beitrag darin. RSS wird ebenfalls unterstützt.
               write: Erstelle ein neues Thema oder schreibe einen Beitrag zu einem bestehenden.
+              update: Aktualisiere ein Thema. Ändere den Titel, die Kategorie, Tags usw.
               read_lists: Lies Themenlisten wie „Angesagt“, „Neu“, „Aktuell“ usw. RSS wird ebenfalls unterstützt.
               wordpress: Notwendig, damit das „wp-discourse“-Plug-in für WordPress funktioniert.
             posts:
               edit: Bearbeite jeden Beitrag oder einen bestimmten.
+            categories:
+              list: Eine Liste der Kategorien anfordern.
+              show: Eine einzelne Kategorie nach der ID abrufen.
             uploads:
               create: Lade eine neue Datei hoch oder starte einzelne oder mehrteilige direkte Uploads auf einen externen Speicher.
             users:

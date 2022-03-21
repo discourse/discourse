@@ -1421,7 +1421,7 @@ he:
       labels:
         user: משתמש
         qtt_like: לייקים שהתקבלו
-      description: "10 המשתמשים המובילים שקיבלו יותר לייקים."
+      description: "10 המשתמשים המובילים שקיבלו לייקים."
     top_users_by_likes_received_from_inferior_trust_level:
       title: "משתמשים מובילים לפי לייקים שהתקבלו ממשתמש בדרגת אמון נמוכה יותר"
       labels:
@@ -4820,6 +4820,7 @@ he:
   notification_level:
     ignore_error: "אין אפשרות להתעלם מהמשתמש הזה, עמך הסליחה."
     mute_error: "אין אפשרות להשתיק את המשתמש הזה, עמך הסליחה."
+    error: "אין לך אפשרות להחליף את רמת ההתראות למשתמש הזה, עמך הסליחה."
   discord:
     not_in_allowed_guild: "האימות נכשל. הגילדה ב־Discord אליה הצטרפת אינה מורשית לגשת."
   old_keys_reminder:

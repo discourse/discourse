@@ -397,8 +397,13 @@ module Oneboxer
       available_strategies ||= Oneboxer.ordered_strategies(uri.hostname)
       strategy = available_strategies.shift
 
-      fd = FinalDestination.new(url, get_final_destination_options(url, strategy))
+      fd = FinalDestination.new(
+        url,
+        get_final_destination_options(url, strategy).merge(stop_at_blocked_pages: true)
+      )
       uri = fd.resolve
+
+      return blank_onebox if fd.status == :blocked_page
 
       if fd.status != :resolved
         args = { link: url }
@@ -416,7 +421,7 @@ module Oneboxer
         return error_box
       end
 
-      return blank_onebox if uri.blank? || Onebox::DomainChecker.is_blocked?(uri.hostname)
+      return blank_onebox if uri.blank?
 
       onebox_options = {
         max_width: 695,

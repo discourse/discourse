@@ -1317,6 +1317,7 @@ fr:
       labels:
         user: Utilisateur
         qtt_like: '« J''aime » reçus'
+      description: "Top 10 des utilisateurs qui ont reçu des likes."
     top_users_by_likes_received_from_inferior_trust_level:
       labels:
         user: Utilisateur
@@ -4479,6 +4480,7 @@ fr:
   notification_level:
     ignore_error: "Nous sommes désolés, vous ne pouvez pas ignorer cet utilisateur."
     mute_error: "Nous sommes désolés, vous ne pouvez pas mettre cet utilisateur en sourdine."
+    error: "Désolé, vous ne pouvez pas modifier le niveau de notification pour cet utilisateur."
   discord:
     not_in_allowed_guild: "L'authentification a échoué. Vous n'êtes membre d'aucune guilde Discord autorisée."
   old_keys_reminder:

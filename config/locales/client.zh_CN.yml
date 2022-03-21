@@ -274,10 +274,7 @@ zh_CN:
       list_permission_denied: "您没有权限查看此用户的书签。"
       no_user_bookmarks: "您没有已加入书签的帖子；书签让您可以快速定位特定帖子。"
       auto_delete_preference:
-        label: "自动删除"
-        never: "从不"
-        when_reminder_sent: "发送提醒后"
-        on_owner_reply: "在我回复此话题后"
+        when_reminder_sent: "删除书签"
       search_placeholder: "按名称、话题标题或帖子内容搜索书签"
       search: "搜索"
       reminders:

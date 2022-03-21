@@ -86,7 +86,7 @@ describe PostAlerter do
     context "group inboxes" do
       fab!(:user1) { Fabricate(:user) }
       fab!(:user2) { Fabricate(:user) }
-      fab!(:group) { Fabricate(:group, users: [user2], name: "TestGroup") }
+      fab!(:group) { Fabricate(:group, users: [user2], name: "TestGroup", default_notification_level: 2) }
       fab!(:pm) { Fabricate(:topic, archetype: 'private_message', category_id: nil, allowed_groups: [group]) }
       fab!(:op) { Fabricate(:post, user: pm.user, topic: pm) }
 
@@ -102,6 +102,7 @@ describe PostAlerter do
       end
 
       it "triggers group summary notification" do
+        Jobs.run_immediately!
         TopicUser.change(user2.id, pm.id, notification_level: TopicUser.notification_levels[:tracking])
 
         PostAlerter.post_created(op)
@@ -112,6 +113,49 @@ describe PostAlerter do
 
         notification_payload = JSON.parse(group_summary_notification.first.data)
         expect(notification_payload["group_name"]).to eq(group.name)
+        expect(notification_payload["inbox_count"]).to eq(1)
+
+        # archiving the only PM clears the group summary notification
+        GroupArchivedMessage.archive!(group.id, pm)
+        expect(Notification.where(user_id: user2.id)).to be_blank
+
+        # moving to inbox the only PM restores the group summary notification
+        GroupArchivedMessage.move_to_inbox!(group.id, pm)
+        group_summary_notification = Notification.where(user_id: user2.id)
+        expect(group_summary_notification.first.notification_type).to eq(Notification.types[:group_message_summary])
+
+        updated_payload = JSON.parse(group_summary_notification.first.data)
+        expect(updated_payload["group_name"]).to eq(group.name)
+        expect(updated_payload["inbox_count"]).to eq(1)
+
+        # adding a second PM updates the count
+        pm2 = Fabricate(:topic, archetype: 'private_message', category_id: nil, allowed_groups: [group])
+        op2 = Fabricate(:post, user: pm2.user, topic: pm2)
+        TopicUser.change(user2.id, pm2.id, notification_level: TopicUser.notification_levels[:tracking])
+
+        PostAlerter.post_created(op2)
+        group_summary_notification = Notification.where(user_id: user2.id)
+        updated_payload = JSON.parse(group_summary_notification.first.data)
+
+        expect(updated_payload["group_name"]).to eq(group.name)
+        expect(updated_payload["inbox_count"]).to eq(2)
+
+        # archiving the second PM quietly updates the group summary count for the acting user
+        GroupArchivedMessage.archive!(group.id, pm2, acting_user_id: user2.id)
+        group_summary_notification = Notification.where(user_id: user2.id)
+        expect(group_summary_notification.first.read).to eq(true)
+        updated_payload = JSON.parse(group_summary_notification.first.data)
+
+        expect(updated_payload["inbox_count"]).to eq(1)
+
+        # moving to inbox the second PM quietly updates the group summary count for the acting user
+        GroupArchivedMessage.move_to_inbox!(group.id, pm2, acting_user_id: user2.id)
+        group_summary_notification = Notification.where(user_id: user2.id)
+        expect(group_summary_notification.first.read).to eq(true)
+        updated_payload = JSON.parse(group_summary_notification.first.data)
+
+        expect(updated_payload["group_name"]).to eq(group.name)
+        expect(updated_payload["inbox_count"]).to eq(2)
       end
 
       it 'updates the consolidated group summary inbox count and bumps the notification' do
@@ -168,7 +212,7 @@ describe PostAlerter do
         }.to change(user1.notifications, :count).by(1)
       end
 
-      it 'nofies a group member if someone quotes their post' do
+      it 'notifies a group member if someone quotes their post' do
         group.add(user1)
 
         post = Fabricate(:post, topic: pm, user: user1)

@@ -298,10 +298,11 @@ tr_TR:
       list_permission_denied: "Bu kullanıcının yer imlerini görüntüleme izniniz yok."
       no_user_bookmarks: "Yer işaretli gönderiniz yok; yer imleri, belirli gönderilere hızlı bir şekilde başvurmanızı sağlar."
       auto_delete_preference:
-        label: "Otomatik olarak sil"
-        never: "Asla"
-        when_reminder_sent: "Hatırlatıcı gönderildikten sonra"
-        on_owner_reply: "Bu konuyu yanıtladıktan sonra"
+        label: "Size bildirildikten sonra"
+        never: "Yer işaretini koru"
+        when_reminder_sent: "Yer imini sil"
+        on_owner_reply: "Yanıtladıktan sonra yer imini sil"
+        clear_reminder: "Yer işaretini koru ve hatırlatıcıyı temizle"
       search_placeholder: "Yer imlerini ada, konu başlığına veya gönderi içeriğine göre arayın"
       search: "Arama"
       reminders:
@@ -2961,6 +2962,9 @@ tr_TR:
           edit_bookmark:
             name: "Yer imini düzenle"
             description: "Yer imi adını düzenleyin veya hatırlatıcı tarih ve saatini değiştirin"
+          clear_bookmark_reminder:
+            name: "Hatırlatıcıyı temizle"
+            description: "Anımsatıcı tarih ve saatini temizle"
           pin_bookmark:
             name: "Yer imini sabitle"
             description: "Yer imini sabitleyin; böylece yer imleri listenizin en üstünde görünür."
@@ -3321,6 +3325,7 @@ tr_TR:
       readonly: "Bak"
     lightbox:
       download: "indir"
+      open: "orijinal imaj"
       previous: "Önceki (Sol ok tuşu)"
       next: "Sonraki (Sağ ok tuşu)"
       counter: "%curr% of %total%"

@@ -1317,6 +1317,27 @@ RSpec.describe TopicsController do
           expect(payload["title"]).to eq('This is a new title for the topic')
         end
 
+        it 'allows update on short non-slug url' do
+          put "/t/#{topic.id}.json", params: {
+            title: 'This is a new title for the topic'
+          }
+
+          topic.reload
+          expect(topic.title).to eq('This is a new title for the topic')
+        end
+
+        it 'only allows update on digit ids' do
+          non_digit_id = "asdf"
+          original_title = topic.title
+          put "/t/#{non_digit_id}.json", params: {
+            title: 'This is a new title for the topic'
+          }
+
+          topic.reload
+          expect(topic.title).to eq(original_title)
+          expect(response.status).to eq(404)
+        end
+
         it 'allows a change of then updating the OP' do
           topic.update(user: user)
           topic.first_post.update(user: user)
@@ -1797,12 +1818,40 @@ RSpec.describe TopicsController do
     it 'returns 301 when found' do
       get "/t/external_id/asdf.json"
       expect(response.status).to eq(301)
-      expect(response).to redirect_to(topic.relative_url + ".json?page=")
+      expect(response).to redirect_to(topic.relative_url + ".json")
     end
 
     it 'returns right response when not found' do
       get "/t/external_id/fdsa.json"
       expect(response.status).to eq(404)
+    end
+
+    it 'preserves only select query params' do
+      get "/t/external_id/asdf.json", params: {
+        filter_top_level_replies: true
+      }
+      expect(response.status).to eq(301)
+      expect(response).to redirect_to(topic.relative_url + ".json?filter_top_level_replies=true")
+
+      get "/t/external_id/asdf.json", params: {
+        not_valid: true
+      }
+      expect(response.status).to eq(301)
+      expect(response).to redirect_to(topic.relative_url + ".json")
+
+      get "/t/external_id/asdf.json", params: {
+        filter_top_level_replies: true,
+        post_number: 9999
+      }
+      expect(response.status).to eq(301)
+      expect(response).to redirect_to(topic.relative_url + "/9999.json?filter_top_level_replies=true")
+
+      get "/t/external_id/asdf.json", params: {
+        filter_top_level_replies: true,
+        print: true
+      }
+      expect(response.status).to eq(301)
+      expect(response).to redirect_to(topic.relative_url + ".json?print=true&filter_top_level_replies=true")
     end
 
     describe 'when user does not have access to the topic' do
@@ -4308,12 +4357,18 @@ RSpec.describe TopicsController do
         expect(body).to_not have_tag(:meta, with: { name: 'fragment' })
         expect(body).to include('<link rel="next" href="' + topic.relative_url + "?page=2")
 
+        expect(body).to include("id='post_1'")
+        expect(body).to include("id='post_2'")
+
         expect(response.headers['Last-Modified']).to eq(page1_time.httpdate)
 
         get topic.url + "?page=2", env: { "HTTP_USER_AGENT" => user_agent }
         body = response.body
 
         expect(response.headers['Last-Modified']).to eq(page2_time.httpdate)
+
+        expect(body).to include("id='post_3'")
+        expect(body).to include("id='post_4'")
 
         expect(body).to include('<link rel="prev" href="' + topic.relative_url)
         expect(body).to include('<link rel="next" href="' + topic.relative_url + "?page=3")

@@ -84,6 +84,7 @@ class PostsController < ApplicationController
         .includes(:reply_to_user)
         .limit(50)
       rss_description = I18n.t("rss_description.posts")
+      @use_canonical = true
     end
 
     # Remove posts the user doesn't have permission to see
@@ -309,6 +310,8 @@ class PostsController < ApplicationController
   end
 
   def all_reply_ids
+    Discourse.deprecate("/posts/:id/reply-ids/all is deprecated.", drop_from: "3.0")
+
     post = find_post_from_params
     render json: post.reply_ids(guardian, only_replies_to_single_post: false).to_json
   end

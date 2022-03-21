@@ -426,11 +426,13 @@ export default Mixin.create({
 
   @bind
   paste(e) {
-    if (!this._$textarea.is(":focus") && !isTesting()) {
+    const isComposer =
+      document.querySelector(this.composerFocusSelector) === e.target;
+
+    if (!isComposer && !isTesting()) {
       return;
     }
 
-    const isComposer = $(this.composerFocusSelector).is(":focus");
     let { clipboard, canPasteHtml, canUpload } = clipboardHelpers(e, {
       siteSettings: this.siteSettings,
       canUpload: isComposer,

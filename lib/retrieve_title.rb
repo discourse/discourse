@@ -5,8 +5,10 @@ module RetrieveTitle
 
   def self.crawl(url)
     fetch_title(url)
-  rescue Exception
-    # If there was a connection error, do nothing
+  rescue Exception => ex
+    raise if Rails.env.test?
+    Rails.logger.error(ex)
+    nil
   end
 
   def self.extract_title(html, encoding = nil)
@@ -52,17 +54,13 @@ module RetrieveTitle
 
   # Fetch the beginning of a HTML document at a url
   def self.fetch_title(url)
-    fd = FinalDestination.new(url, timeout: CRAWL_TIMEOUT)
+    fd = FinalDestination.new(url, timeout: CRAWL_TIMEOUT, stop_at_blocked_pages: true)
 
     current = nil
     title = nil
     encoding = nil
 
     fd.get do |_response, chunk, uri|
-      if (uri.present? && Onebox::DomainChecker.is_blocked?(uri.hostname))
-        throw :done
-      end
-
       unless Net::HTTPRedirection === _response
         if current
           current << chunk

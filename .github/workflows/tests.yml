@@ -5,6 +5,8 @@ on:
   push:
     branches:
       - main
+      - beta
+      - stable
 
 concurrency:
   group: tests-${{ format('{0}-{1}', github.head_ref || github.run_number, github.job) }}
@@ -96,6 +98,10 @@ jobs:
       - name: Checkout official plugins
         if: matrix.target == 'plugins'
         run: bin/rake plugin:install_all_official
+
+      - name: Pull compatible versions of plugins
+        if: matrix.target == 'plugins'
+        run: bin/rake plugin:pull_compatible_all
 
       - name: Fetch app state cache
         uses: actions/cache@v2

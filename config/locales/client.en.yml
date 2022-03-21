@@ -411,8 +411,8 @@ en:
     switch_from_anon: "Exit Anonymous Mode"
 
     banner:
-      close: "Dismiss this banner."
-      edit: "Edit this banner >>"
+      close: "Dismiss this banner"
+      edit: "Edit"
 
     pwa:
       install_banner: "Do you want to <a href>install %{title} on this device?</a>"
@@ -4454,7 +4454,7 @@ en:
         delete_confirm: 'Are you sure you want to delete "%{theme_name}"?'
         color: "Color"
         opacity: "Opacity"
-        copy: "Copy"
+        copy: "Duplicate"
         copy_to_clipboard: "Copy to Clipboard"
         copied_to_clipboard: "Copied to Clipboard"
         copy_to_clipboard_error: "Error copying data to Clipboard"

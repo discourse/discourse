@@ -286,10 +286,7 @@ da:
       list_permission_denied: "Du har ikke tilladelse til at se denne brugers bogmærker."
       no_user_bookmarks: "Du har ingen bogmærkede indlæg; bogmærker giver dig mulighed for hurtigt at henvise til bestemte indlæg."
       auto_delete_preference:
-        label: "Slet automatisk"
-        never: "Aldrig"
-        when_reminder_sent: "Når påmindelsen er sendt"
-        on_owner_reply: "Efter at jeg har svaret på dette emne"
+        when_reminder_sent: "Slet bogmærke"
       search_placeholder: "Søg i bogmærker efter navn, emnetitel eller indlægs indhold"
       search: "Søg"
       reminders:
@@ -651,6 +648,8 @@ da:
           imap_title: "IMAP"
           imap_additional_settings: "Yderligere indstillinger"
           imap_settings_valid: "IMAP-indstillinger er gyldige."
+          smtp_disable_confirm: "Hvis du deaktiverer SMTP, vil alle SMTP og IMAP indstillinger blive nulstillet, og den tilknyttede funktionalitet vil blive deaktiveret. Er du sikker på, at du vil fortsætte?"
+          imap_disable_confirm: "Hvis du deaktiverer IMAP, vil alle IMAP-indstillinger blive nulstillet, og den tilknyttede funktion vil blive deaktiveret. Er du sikker på, at du vil fortsætte?"
           prefill:
             gmail: "GMail"
           credentials:
@@ -2110,6 +2109,7 @@ da:
       search_button: "Søg"
       categories: "Kategorier"
       tags: "Mærker"
+      in_topics_posts: "i alle emner og indlæg"
       enter_hint: "eller tryk på Enter"
       in_posts_by: "i indlæg af %{username}"
       browser_tip: "%{modifier} + f"
@@ -3618,6 +3618,7 @@ da:
               description: "Administratorer kan se alle grupper."
             members_visibility_levels:
               title: "Hvem kan se medlemmer for denne gruppe?"
+              description: "Administratorer kan se medlemmer af alle grupper. Flair er synlig for alle brugere."
             publish_read_state: "På gruppemeddelelser offentliggør gruppens læsetilstand"
           membership:
             automatic: Automatisk
