@@ -10,6 +10,8 @@ class SessionController < ApplicationController
 
   requires_login only: [:second_factor_auth_show, :second_factor_auth_perform]
 
+  allow_in_staff_writes_only_mode :create
+
   ACTIVATE_USER_KEY = "activate_user"
 
   def csrf
@@ -116,7 +118,7 @@ class SessionController < ApplicationController
 
   def sso_login
     raise Discourse::NotFound unless SiteSetting.enable_discourse_connect
-    raise Discourse::ReadOnly if @readonly_mode
+    raise Discourse::ReadOnly if @readonly_mode && !staff_writes_only_mode?
 
     params.require(:sso)
     params.require(:sig)
@@ -147,6 +149,7 @@ class SessionController < ApplicationController
       invite = validate_invitiation!(sso)
 
       if user = sso.lookup_or_create_user(request.remote_ip)
+        raise Discourse::ReadOnly if staff_writes_only_mode? && !user&.staff?
 
         if user.suspended?
           render_sso_error(text: failed_to_login(user)[:error], status: 403)
@@ -270,6 +273,9 @@ class SessionController < ApplicationController
     return invalid_credentials if params[:password].length > User.max_password_length
 
     user = User.find_by_username_or_email(normalized_login_param)
+
+    raise Discourse::ReadOnly if staff_writes_only_mode? && !user&.staff?
+
     rate_limit_second_factor!(user)
 
     if user.present?
@@ -303,7 +309,11 @@ class SessionController < ApplicationController
       return render(json: @second_factor_failure_payload)
     end
 
-    (user.active && user.email_confirmed?) ? login(user, second_factor_auth_result) : not_activated(user)
+    if user.active && user.email_confirmed?
+      login(user, second_factor_auth_result)
+    else
+      not_activated(user)
+    end
   end
 
   def email_login_info
