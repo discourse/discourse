@@ -375,14 +375,15 @@ class TagsController < ::ApplicationController
       @filter_on_category = Category.query_category(slug_or_id, nil)
     end
 
-    guardian.ensure_can_see!(@filter_on_category)
-
     if !@filter_on_category
       permalink = Permalink.find_by_url("c/#{params[:category_slug_path_with_id]}")
       if permalink.present? && permalink.category_id
         return redirect_to "#{Discourse::base_path}/tags#{permalink.target_url}/#{params[:tag_id]}", status: :moved_permanently
       end
+    end
 
+    if !(@filter_on_category && guardian.can_see?(@filter_on_category))
+      # 404 on 'access denied' to avoid leaking existence of category
       raise Discourse::NotFound
     end
   end
