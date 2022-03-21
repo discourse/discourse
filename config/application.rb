@@ -177,6 +177,7 @@ module Discourse
       onpopstate-handler.js
       embed-application.js
       discourse/tests/active-plugins.js
+      admin-plugins.js
       discourse/tests/test_starter.js
     }
 
