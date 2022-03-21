@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_dependency 'migration/base_dropper'
+require 'migration/base_dropper'
 
 module Migration
   class Migration::TableDropper

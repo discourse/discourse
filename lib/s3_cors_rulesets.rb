@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_dependency "s3_helper"
+require "s3_helper"
 
 class S3CorsRulesets
   ASSETS = {

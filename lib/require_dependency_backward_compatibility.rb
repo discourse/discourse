@@ -18,5 +18,5 @@ module RequireDependencyBackwardCompatibility
     super
   end
 
-  ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency.prepend(self)
+  Object.prepend(self)
 end

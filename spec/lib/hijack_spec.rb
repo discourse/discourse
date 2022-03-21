@@ -193,7 +193,7 @@ describe Hijack do
     Process.stubs(:clock_gettime).returns(1.0)
     tester.hijack_test do
       Process.stubs(:clock_gettime).returns(2.0)
-      redirect_to 'http://awesome.com'
+      redirect_to 'http://awesome.com', allow_other_host: true
     end
 
     result = "HTTP/1.1 302 Found\r\nLocation: http://awesome.com\r\nContent-Type: text/html; charset=utf-8\r\nContent-Length: 84\r\nConnection: close\r\nX-Runtime: 1.000000\r\n\r\n<html><body>You are being <a href=\"http://awesome.com\">redirected</a>.</body></html>"

@@ -1,13 +1,11 @@
 # frozen_string_literal: true
 
 describe Jobs::CreateLinkedTopic do
-
   it "returns when the post cannot be found" do
     expect { Jobs::CreateLinkedTopic.new.perform(post_id: 1, sync_exec: true) }.not_to raise_error
   end
 
   context 'with a post' do
-
     fab!(:category) { Fabricate(:category) }
     fab!(:topic) { Fabricate(:topic, category: category) }
     fab!(:post) do
@@ -54,5 +52,4 @@ describe Jobs::CreateLinkedTopic do
       expect(linked_topic.sequence).to eq(2)
     end
   end
-
 end

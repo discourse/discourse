@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class PostsController < ApplicationController
+  # Bug with Rails 7+
+  # see https://github.com/rails/rails/issues/44867
+  self._flash_types -= [:notice]
 
   requires_login except: [
     :show,

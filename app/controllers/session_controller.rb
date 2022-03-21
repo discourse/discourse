@@ -33,7 +33,7 @@ class SessionController < ApplicationController
       if SiteSetting.verbose_discourse_connect_logging
         Rails.logger.warn("Verbose SSO log: Started SSO process\n\n#{sso.diagnostics}")
       end
-      redirect_to sso_url(sso)
+      redirect_to sso_url(sso), allow_other_host: true
     else
       render body: nil, status: 404
     end
@@ -69,14 +69,14 @@ class SessionController < ApplicationController
         # for the login modal
         cookies[:sso_destination_url] = data[:sso_redirect_url]
       else
-        redirect_to data[:sso_redirect_url]
+        redirect_to data[:sso_redirect_url], allow_other_host: true
       end
     elsif result.no_second_factors_enabled?
       if request.xhr?
         # for the login modal
         cookies[:sso_destination_url] = result.data[:sso_redirect_url]
       else
-        redirect_to result.data[:sso_redirect_url]
+        redirect_to result.data[:sso_redirect_url], allow_other_host: true
       end
     elsif result.second_factor_auth_completed?
       redirect_url = result.data[:sso_redirect_url]
@@ -169,7 +169,7 @@ class SessionController < ApplicationController
         # they are already pre-approved because they have been invited
         if SiteSetting.must_approve_users? && !user.approved? && invite.blank?
           if SiteSetting.discourse_connect_not_approved_url.present?
-            redirect_to SiteSetting.discourse_connect_not_approved_url
+            redirect_to SiteSetting.discourse_connect_not_approved_url, allow_other_host: true
           else
             render_sso_error(text: I18n.t("discourse_connect.account_not_approved"), status: 403)
           end
@@ -220,7 +220,7 @@ class SessionController < ApplicationController
           return_path = path("/")
         end
 
-        redirect_to return_path
+        redirect_to return_path, allow_other_host: true
       else
         render_sso_error(text: I18n.t("discourse_connect.not_found"), status: 500)
       end
@@ -583,7 +583,7 @@ class SessionController < ApplicationController
         redirect_url: redirect_url
       }
     else
-      redirect_to redirect_url
+      redirect_to redirect_url, allow_other_host: true
     end
   end
 

@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 describe Jobs::FeatureTopicUsers do
-
   it "raises an error without a topic_id" do
     expect { Jobs::FeatureTopicUsers.new.execute({}) }.to raise_error(Discourse::InvalidParameters)
   end
@@ -32,16 +31,13 @@ describe Jobs::FeatureTopicUsers do
       Jobs::FeatureTopicUsers.new.execute(topic_id: topic.id)
       expect(topic.reload.featured_user_ids.include?(evil_trout.id)).to eq(false)
     end
-
   end
 
   context "participant count" do
-
     let!(:post) { create_post }
     let(:topic) { post.topic }
 
     it "it works as expected" do
-
       # It has 1 participant after creation
       expect(topic.participant_count).to eq(1)
 
@@ -58,9 +54,6 @@ describe Jobs::FeatureTopicUsers do
       create_post(topic: topic, user: Fabricate(:evil_trout))
       Jobs::FeatureTopicUsers.new.execute(topic_id: topic.id)
       expect(topic.reload.participant_count).to eq(2)
-
     end
-
   end
-
 end

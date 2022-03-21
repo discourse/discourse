@@ -2,9 +2,9 @@
 
 require "uri"
 require "mini_mime"
-require_dependency "file_store/base_store"
-require_dependency "s3_helper"
-require_dependency "file_helper"
+require "file_store/base_store"
+require "s3_helper"
+require "file_helper"
 
 module FileStore
 

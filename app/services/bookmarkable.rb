@@ -73,8 +73,8 @@ class Bookmarkable
   # @param [Array] bookmarks The array of bookmarks after initial listing and filtering, note this is
   #                          array _not_ an ActiveRecord::Relation.
   def perform_preload(bookmarks)
-    ActiveRecord::Associations::Preloader.new.preload(
-      Bookmark.select_type(bookmarks, model.to_s), { bookmarkable: preload_associations }
-    )
+    ActiveRecord::Associations::Preloader
+      .new(records: Bookmark.select_type(bookmarks, model.to_s), associations: [bookmarkable: preload_associations])
+      .call
   end
 end

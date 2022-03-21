@@ -8,7 +8,7 @@ require "base62"
 #                                    gather                                    #
 ################################################################################
 
-require_dependency "rake_helpers"
+require "rake_helpers"
 
 task "uploads:gather" => :environment do
   ENV["RAILS_DB"] ? gather_uploads : gather_uploads_for_all_sites

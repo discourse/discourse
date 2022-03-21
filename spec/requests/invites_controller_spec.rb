@@ -22,13 +22,22 @@ describe InvitesController do
       end
     end
 
-    it 'shows unobfuscated email if email data is present in authentication data' do
-      ActionDispatch::Request.any_instance.stubs(:session).returns(authentication: { email: invite.email })
-      get "/invites/#{invite.invite_key}"
-      expect(response.status).to eq(200)
-      expect(response.body).to have_tag(:script, with: { src: "/assets/#{EmberCli.transform_name("application")}.js" })
-      expect(response.body).to include(invite.email)
-      expect(response.body).not_to include('i*****g@a***********e.ooo')
+    context 'when email data is present in authentication data' do
+      let(:store) { ActionDispatch::Session::CookieStore.new({}) }
+      let(:session_stub) { ActionDispatch::Request::Session.create(store, ActionDispatch::TestRequest.create, {}) }
+
+      before do
+        session_stub[:authentication] = { email: invite.email }
+        ActionDispatch::Request.any_instance.stubs(:session).returns(session_stub)
+      end
+
+      it 'shows unobfuscated email' do
+        get "/invites/#{invite.invite_key}"
+        expect(response.status).to eq(200)
+        expect(response.body).to have_tag(:script, with: { src: "/assets/#{EmberCli.transform_name("application")}.js" })
+        expect(response.body).to include(invite.email)
+        expect(response.body).not_to include('i*****g@a***********e.ooo')
+      end
     end
 
     it 'shows default user fields' do

@@ -10,10 +10,10 @@ module BackupRestore
     def self.create(opts = {})
       case opts[:location] || SiteSetting.backup_location
       when BackupLocationSiteSetting::LOCAL
-        require_dependency "backup_restore/local_backup_store"
+        require "backup_restore/local_backup_store"
         BackupRestore::LocalBackupStore.new(opts)
       when BackupLocationSiteSetting::S3
-        require_dependency "backup_restore/s3_backup_store"
+        require "backup_restore/s3_backup_store"
         BackupRestore::S3BackupStore.new(opts)
       end
     end
