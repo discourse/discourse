@@ -484,7 +484,7 @@ end
 
 def decrypt_auth_cookie(cookie)
   request = ActionDispatch::Request.new(create_request_env.merge("HTTP_COOKIE" => "_t=#{cookie}"))
-  request.cookie_jar.encrypted["_t"]
+  request.cookie_jar.encrypted["_t"].with_indifferent_access
 end
 
 class SpecSecureRandom

@@ -53,7 +53,7 @@ end
 # Table name: published_pages
 #
 #  id         :bigint           not null, primary key
-#  topic_id   :bigint           not null
+#  topic_id   :integer          not null
 #  slug       :string           not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null

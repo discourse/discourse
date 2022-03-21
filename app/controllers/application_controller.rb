@@ -68,7 +68,7 @@ class ApplicationController < ActionController::Base
   def use_crawler_layout?
     @use_crawler_layout ||=
       request.user_agent &&
-      (request.content_type.blank? || request.content_type.include?('html')) &&
+      (request.media_type.blank? || request.media_type.include?('html')) &&
       !['json', 'rss'].include?(params[:format]) &&
       (has_escaped_fragment? || params.key?("print") || show_browser_update? ||
       CrawlerDetection.crawler?(request.user_agent, request.headers["HTTP_VIA"])
@@ -283,7 +283,7 @@ class ApplicationController < ActionController::Base
       # cause category / topic was deleted
       if permalink.present? && permalink.target_url
         # permalink present, redirect to that URL
-        redirect_with_client_support permalink.target_url, status: :moved_permanently
+        redirect_with_client_support permalink.target_url, status: :moved_permanently, allow_other_host: true
         return
       end
     end
@@ -825,7 +825,7 @@ class ApplicationController < ActionController::Base
       end
 
       if UserApiKey.allowed_scopes.superset?(Set.new(["one_time_password"]))
-        redirect_to("#{params[:auth_redirect]}?otp=true")
+        redirect_to("#{params[:auth_redirect]}?otp=true", allow_other_host: true)
         return
       end
     end

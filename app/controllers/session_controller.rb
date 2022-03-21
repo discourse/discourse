@@ -33,7 +33,7 @@ class SessionController < ApplicationController
       if SiteSetting.verbose_discourse_connect_logging
         Rails.logger.warn("Verbose SSO log: Started SSO process\n\n#{sso.diagnostics}")
       end
-      redirect_to sso_url(sso)
+      redirect_to sso_url(sso), allow_other_host: true
     else
       render body: nil, status: 404
     end
@@ -101,7 +101,7 @@ class SessionController < ApplicationController
         if request.xhr?
           cookies[:sso_destination_url] = sso.to_url(sso.return_sso_url)
         else
-          redirect_to sso.to_url(sso.return_sso_url)
+          redirect_to sso.to_url(sso.return_sso_url), allow_other_host: true
         end
       else
         cookies[:sso_payload] = request.query_string
@@ -240,7 +240,7 @@ class SessionController < ApplicationController
           return_path = path("/")
         end
 
-        redirect_to return_path
+        redirect_to return_path, allow_other_host: true
       else
         render_sso_error(text: I18n.t("discourse_connect.not_found"), status: 500)
       end
@@ -602,7 +602,7 @@ class SessionController < ApplicationController
         redirect_url: redirect_url
       }
     else
-      redirect_to redirect_url
+      redirect_to redirect_url, allow_other_host: true
     end
   end
 

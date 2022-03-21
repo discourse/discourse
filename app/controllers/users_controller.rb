@@ -1024,7 +1024,7 @@ class UsersController < ApplicationController
       if SiteSetting.enable_discourse_connect_provider && payload = cookies.delete(:sso_payload)
         return redirect_to(session_sso_provider_url + "?" + payload)
       elsif destination_url = cookies.delete(:destination_url)
-        return redirect_to(destination_url)
+        return redirect_to(destination_url, allow_other_host: true)
       else
         return redirect_to(path('/'))
       end
@@ -1069,7 +1069,7 @@ class UsersController < ApplicationController
           return redirect_to(wizard_path)
         elsif destination_url = cookies[:destination_url]
           cookies[:destination_url] = nil
-          return redirect_to(destination_url)
+          return redirect_to(destination_url, allow_other_host: true)
         elsif SiteSetting.enable_discourse_connect_provider && payload = cookies.delete(:sso_payload)
           return redirect_to(session_sso_provider_url + "?" + payload)
         end
