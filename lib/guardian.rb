@@ -47,6 +47,9 @@ class Guardian
     def silenced?
       false
     end
+    def is_system_user?
+      false
+    end
     def secure_category_ids
       []
     end
