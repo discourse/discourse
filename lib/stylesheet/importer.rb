@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_dependency 'global_path'
+require 'global_path'
 
 module Stylesheet
   class Importer

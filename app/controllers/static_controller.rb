@@ -30,7 +30,7 @@ class StaticController < ApplicationController
     if map.has_key?(@page)
       site_setting_key = map[@page][:redirect]
       url = SiteSetting.get(site_setting_key) if site_setting_key
-      return redirect_to(url) if url.present?
+      return redirect_to(url, allow_other_host: true) if url.present?
     end
 
     # The /guidelines route ALWAYS shows our FAQ, ignoring the faq_url site setting.

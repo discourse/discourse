@@ -153,7 +153,9 @@ class TopicList
       ft.topic_list = self
     end
 
-    ActiveRecord::Associations::Preloader.new.preload(@topics, [:image_upload, topic_thumbnails: :optimized_image])
+    ActiveRecord::Associations::Preloader
+      .new(records: @topics, associations: [:image_upload, topic_thumbnails: :optimized_image])
+      .call
 
     if preloaded_custom_fields.present?
       Topic.preload_custom_fields(@topics, preloaded_custom_fields)

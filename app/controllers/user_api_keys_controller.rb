@@ -97,7 +97,7 @@ class UserApiKeysController < ApplicationController
       query_attributes << "oneTimePassword=#{CGI.escape(otp_payload)}" if scopes.include?("one_time_password")
       uri.query = query_attributes.compact.join('&')
 
-      redirect_to(uri.to_s)
+      redirect_to(uri.to_s, allow_other_host: true)
     else
       respond_to do |format|
         format.html { render :show }
@@ -138,7 +138,7 @@ class UserApiKeysController < ApplicationController
     otp_payload = one_time_password(public_key, current_user.username)
 
     redirect_path = "#{params[:auth_redirect]}?oneTimePassword=#{CGI.escape(otp_payload)}"
-    redirect_to(redirect_path)
+    redirect_to(redirect_path, allow_other_host: true)
   end
 
   def revoke

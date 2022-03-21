@@ -1,8 +1,6 @@
 # encoding: UTF-8
 # frozen_string_literal: true
 
-require 'validators/topic_title_length_validator'
-
 describe TopicTitleLengthValidator do
 
   # simulate Rails behavior (singleton)
