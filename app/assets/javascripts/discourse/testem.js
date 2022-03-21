@@ -59,6 +59,9 @@ if (shouldLoadPluginTestJs()) {
     "/assets/discourse/tests/active-plugins.js": {
       target,
     },
+    "/assets/admin-plugins.js": {
+      target,
+    },
     "/assets/discourse/tests/plugin-tests.js": {
       target,
     },
