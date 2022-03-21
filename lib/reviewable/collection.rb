@@ -4,10 +4,11 @@ class Reviewable < ActiveRecord::Base
   class Collection
     class Item
       include ActiveModel::Serialization
-      attr_reader :id
+      attr_reader :id, :reason
 
-      def initialize(id)
+      def initialize(id, reason: nil)
         @id = id
+        @reason = reason
       end
     end
 
