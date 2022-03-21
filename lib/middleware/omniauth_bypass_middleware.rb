@@ -25,7 +25,7 @@ class Middleware::OmniauthBypassMiddleware
       request = ActionDispatch::Request.new(env)
 
       # Check for CSRF token in POST requests
-      CSRFTokenVerifier.new.call(env) if request.request_method.downcase.to_sym != :get
+      CsrfTokenVerifier.new.call(env) if request.request_method.downcase.to_sym != :get
 
       # Check whether the authenticator is enabled
       if !Discourse.enabled_authenticators.any? { |a| a.name.to_sym == env['omniauth.strategy'].name.to_sym }
@@ -62,7 +62,7 @@ class Middleware::OmniauthBypassMiddleware
         env["omniauth.error.type"] ||= "invalid_iat"
         Rails.logger.error "Authentication failure! invalid_iat: #{e.class}, #{e.message}"
         OmniAuth::FailureEndpoint.call(env)
-      rescue CSRFTokenVerifier::InvalidCSRFToken => e
+      rescue CsrfTokenVerifier::InvalidCsrfToken => e
         # Happens when CSRF token is missing from request
         env["omniauth.error.type"] ||= "csrf_detected"
         OmniAuth::FailureEndpoint.call(env)

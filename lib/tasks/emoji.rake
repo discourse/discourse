@@ -5,7 +5,7 @@ require "fileutils"
 require "json"
 require "nokogiri"
 require "open-uri"
-require_dependency "file_helper"
+require "file_helper"
 
 EMOJI_GROUPS_PATH ||= "lib/emoji/groups.json"
 

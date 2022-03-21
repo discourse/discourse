@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'i18n/locale_file_checker'
+require 'locale_file_checker'
 require 'seed_data/categories'
 require 'seed_data/topics'
 require 'colored2'

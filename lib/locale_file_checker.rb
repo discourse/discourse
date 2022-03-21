@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'i18n/i18n_interpolation_keys_finder'
+require 'i18n_interpolation_keys_finder'
 require 'yaml'
 
 class LocaleFileChecker

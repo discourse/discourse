@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module CanonicalURL
+module CanonicalUrl
   module ControllerExtensions
     ALLOWED_CANONICAL_PARAMS = %w(page)
 

@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
-require 'guardian/category_guardian'
-require 'guardian/ensure_magic'
-require 'guardian/post_guardian'
-require 'guardian/bookmark_guardian'
-require 'guardian/topic_guardian'
-require 'guardian/user_guardian'
-require 'guardian/post_revision_guardian'
-require 'guardian/group_guardian'
-require 'guardian/tag_guardian'
+require 'category_guardian'
+require 'ensure_magic'
+require 'post_guardian'
+require 'bookmark_guardian'
+require 'topic_guardian'
+require 'user_guardian'
+require 'post_revision_guardian'
+require 'group_guardian'
+require 'tag_guardian'
 
 # The guardian is responsible for confirming access to various site resources and operations
 class Guardian

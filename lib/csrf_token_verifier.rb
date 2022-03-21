@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 # Provides a way to check a CSRF token outside of a controller
-class CSRFTokenVerifier
-  class InvalidCSRFToken < StandardError; end
+class CsrfTokenVerifier
+  class InvalidCsrfToken < StandardError; end
 
   include ActiveSupport::Configurable
   include ActionController::RequestForgeryProtection
@@ -19,7 +19,7 @@ class CSRFTokenVerifier
     @request = ActionDispatch::Request.new(env.dup)
 
     unless verified_request?
-      raise InvalidCSRFToken
+      raise InvalidCsrfToken
     end
   end
 

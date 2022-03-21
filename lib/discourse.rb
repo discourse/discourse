@@ -2,8 +2,8 @@
 
 require 'cache'
 require 'open3'
-require_dependency 'plugin/instance'
-require_dependency 'version'
+require 'plugin/instance'
+require 'discourse/version'
 
 module Discourse
   DB_POST_MIGRATE_PATH ||= "db/post_migrate"

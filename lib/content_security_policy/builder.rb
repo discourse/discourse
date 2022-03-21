@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-require_dependency 'content_security_policy/default'
+require 'content_security_policy/default'
 
 class ContentSecurityPolicy
   class Builder
