@@ -53,7 +53,7 @@ class ReviewableScore < ActiveRecord::Base
   end
 
   def score_type
-    Reviewable::Collection::Item.new(reviewable_score_type, reason: reason)
+    Reviewable::Collection::Item.new(reviewable_score_type)
   end
 
   def took_action?

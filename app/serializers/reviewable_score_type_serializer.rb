@@ -5,8 +5,6 @@ class ReviewableScoreTypeSerializer < ApplicationSerializer
 
   # Allow us to share post action type translations for backwards compatibility
   def title
-    # Calling #try here because post action types don't have a reason method.
-    I18n.t("reviewables.reason_titles.#{object.try(:reason)}", default: nil) ||
     I18n.t("post_action_types.#{ReviewableScore.types[id]}.title", default: nil) ||
       I18n.t("reviewable_score_types.#{ReviewableScore.types[id]}.title")
   end
