@@ -2,64 +2,42 @@
 
 # Speeds up #pluck so its about 2.2x faster, importantly makes pluck avoid creation of a slew
 # of AR objects
-#
-#
-class ActiveRecord::Relation
 
-  # Note: In discourse, the following code is included in lib/sql_builder.rb
-  #
-  # class RailsDateTimeDecoder < PG::SimpleDecoder
-  #   def decode(string, tuple=nil, field=nil)
-  #     if Rails.version >= "4.2.0"
-  #       @caster ||= ActiveRecord::Type::DateTime.new
-  #       @caster.type_cast_from_database(string)
-  #     else
-  #       ActiveRecord::ConnectionAdapters::Column.string_to_time string
-  #     end
-  #   end
-  # end
-  #
-  # class ActiveRecordTypeMap < PG::BasicTypeMapForResults
-  #   def initialize(connection)
-  #     super(connection)
-  #     rm_coder 0, 1114
-  #     add_coder RailsDateTimeDecoder.new(name: "timestamp", oid: 1114, format: 0)
-  #     # we don't need deprecations
-  #     self.default_type_map = PG::TypeMapInRuby.new
-  #   end
-  # end
-  #
-  # def self.pg_type_map
-  #   conn = ActiveRecord::Base.connection.raw_connection
-  #   @typemap ||= ActiveRecordTypeMap.new(conn)
-  # end
+SanePatch.patch("activerecord", "~> 6.1.4") do
+  module FreedomPatches
+    module FastPluck
+      module Relation
+        def pluck(*column_names)
+          if loaded? && (column_names.map(&:to_s) - @klass.attribute_names - @klass.attribute_aliases.keys).empty?
+            return records.pluck(*column_names)
+          end
 
-  class ::ActiveRecord::ConnectionAdapters::PostgreSQLAdapter
-    def select_raw(arel, name = nil, binds = [], &block)
-      arel = arel_from_relation(arel)
-      sql, binds = to_sql_and_binds(arel, binds)
-      execute_and_clear(sql, name, binds, &block)
-    end
-  end
+          if has_include?(column_names.first)
+            relation = apply_join_dependency
+            relation.pluck(*column_names)
+          else
+            relation = spawn
 
-  def pluck(*column_names)
-    if loaded? && (column_names.map(&:to_s) - @klass.attribute_names - @klass.attribute_aliases.keys).empty?
-      return records.pluck(*column_names)
-    end
+            relation.select_values = column_names
 
-    if has_include?(column_names.first)
-      relation = apply_join_dependency
-      relation.pluck(*column_names)
-    else
-      enforce_raw_sql_whitelist(column_names)
-      relation = spawn
-
-      relation.select_values = column_names
-
-      klass.connection.select_raw(relation.arel) do |result, _|
-        result.type_map = DB.type_map
-        result.nfields == 1 ? result.column_values(0) : result.values
+            klass.connection.select_raw(relation.arel) do |result, _|
+              result.type_map = DB.type_map
+              result.nfields == 1 ? result.column_values(0) : result.values
+            end
+          end
+        end
       end
+
+      module PostgreSQLAdapter
+        def select_raw(arel, name = nil, binds = [], &block)
+          arel = arel_from_relation(arel)
+          sql, binds = to_sql_and_binds(arel, binds)
+          execute_and_clear(sql, name, binds, &block)
+        end
+      end
+
+      ActiveRecord::Relation.prepend(Relation)
+      ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.prepend(PostgreSQLAdapter)
     end
   end
 end

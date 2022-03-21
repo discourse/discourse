@@ -10,7 +10,7 @@ require "cgi"
 require "net/http"
 require "digest"
 require "sanitize"
-require_relative "onebox/sanitize_config"
+require_relative "onebox/discourse_onebox_sanitize_config"
 
 module Onebox
   DEFAULTS = {
@@ -20,7 +20,7 @@ module Onebox
     load_paths: [File.join(Rails.root, "lib/onebox/templates")],
     allowed_ports: [80, 443],
     allowed_schemes: ["http", "https"],
-    sanitize_config: Sanitize::Config::ONEBOX,
+    sanitize_config: DiscourseOneboxSanitizeConfig::ONEBOX,
     redirect_limit: 5
   }
 

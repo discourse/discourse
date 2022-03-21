@@ -81,7 +81,7 @@ module Onebox
     end
 
     def sanitize(html)
-      config = @options[:sanitize_config] || Sanitize::Config::ONEBOX
+      config = @options[:sanitize_config] || DiscourseOneboxSanitizeConfig::ONEBOX
       config = config.merge(allowed_iframe_regexes: @options[:allowed_iframe_regexes])
 
       Sanitize.fragment(html, config)

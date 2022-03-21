@@ -425,7 +425,7 @@ module Oneboxer
 
       onebox_options = {
         max_width: 695,
-        sanitize_config: Onebox::DiscourseOneboxSanitizeConfig::Config::DISCOURSE_ONEBOX,
+        sanitize_config: Onebox::DiscourseOneboxSanitizeConfig::DISCOURSE_ONEBOX,
         allowed_iframe_origins: allowed_iframe_origins,
         hostname: GlobalSetting.hostname,
         facebook_app_access_token: SiteSetting.facebook_app_access_token,
