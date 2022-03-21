@@ -230,7 +230,7 @@ async function handleRequest(proxy, baseURL, req, res) {
   let url = `${proxy}${req.path}`;
   const queryLoc = req.url.indexOf("?");
   if (queryLoc !== -1) {
-    url += req.url.substr(queryLoc);
+    url += req.url.slice(queryLoc);
   }
 
   if (req.method === "GET") {

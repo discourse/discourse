@@ -23,12 +23,12 @@ const rule = {
       let i;
       for (i = 1; i < split.length; i++) {
         if (split[i].indexOf("post:") === 0) {
-          postNumber = parseInt(split[i].substr(5), 10);
+          postNumber = parseInt(split[i].slice(5), 10);
           continue;
         }
 
         if (split[i].indexOf("topic:") === 0) {
-          topicId = parseInt(split[i].substr(6), 10);
+          topicId = parseInt(split[i].slice(6), 10);
           continue;
         }
 
