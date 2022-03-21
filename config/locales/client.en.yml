@@ -3542,15 +3542,20 @@ en:
         other {}}
     original_post: "Original Post"
     views: "Views"
+    sr_views: "Sort by views"
     views_lowercase:
       one: "view"
       other: "views"
     replies: "Replies"
+    sr_replies: "Sort by replies"
     views_long:
       one: "this topic has been viewed %{count} time"
       other: "this topic has been viewed %{number} times"
     activity: "Activity"
+    sr_activity: "Sort by activity"
     likes: "Likes"
+    sr_likes: "Sort by likes"
+    sr_op_likes: "Sort by original post likes"
     likes_lowercase:
       one: "like"
       other: "likes"
