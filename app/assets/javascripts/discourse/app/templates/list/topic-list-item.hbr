@@ -16,6 +16,7 @@
   at the end of the link, preventing it from line wrapping onto its own line.
 --}}
 <td class='main-link clearfix topic-list-data' colspan="1">
+  <a href aria-hidden="true" tabindex="-1" class="tabLoc"></a>
   {{~raw-plugin-outlet name="topic-list-before-link"}}
   <span class='link-top-line'>
     {{~raw-plugin-outlet name="topic-list-before-status"}}
