@@ -31,13 +31,13 @@ jobs:
         build_type: ["backend", "frontend-legacy", "frontend"]
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           repository: discourse/discourse
           fetch-depth: 1
 
       - name: Install plugin
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           path: plugins/${{ github.event.repository.name }}
           fetch-depth: 1
@@ -58,7 +58,7 @@ jobs:
           sudo -u postgres psql -c "CREATE ROLE $PGUSER LOGIN SUPERUSER PASSWORD '$PGPASSWORD';"
 
       - name: Bundler cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: vendor/bundle
           key: ${{ runner.os }}-gem-${{ hashFiles('**/Gemfile.lock') }}
@@ -83,7 +83,7 @@ jobs:
         run: echo "::set-output name=dir::$(yarn cache dir)"
 
       - name: Yarn cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         id: yarn-cache
         with:
           path: ${{ steps.yarn-cache-dir.outputs.dir }}
@@ -95,7 +95,7 @@ jobs:
         run: yarn install
 
       - name: Fetch app state cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         id: app-cache
         with:
           path: tmp/app-cache
