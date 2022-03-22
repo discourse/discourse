@@ -49,11 +49,13 @@ export default Controller.extend(
       Category.reloadBySlugPath(this.model.slug).then((result) => {
         const groups = result.category.group_permissions.mapBy("group_name");
         if (groups && !groups.any((x) => x === "everyone")) {
-          const message = I18n.t("topic.share.restricted_groups", {
-            count: groups.length,
-            groups: groups.join(", "),
-          });
-          this.flash(message, "warning");
+          this.flash(
+            I18n.t("topic.share.restricted_groups", {
+              count: groups.length,
+              groups: groups.join(", "),
+            }),
+            "warning"
+          );
         }
       });
     },
