@@ -1,3 +1,4 @@
+import CategoryFixtures from "discourse/tests/fixtures/category-fixtures";
 import { click, visit } from "@ember/test-helpers";
 import {
   acceptance,
@@ -9,6 +10,12 @@ import { test } from "qunit";
 
 acceptance("Share and Invite modal", function (needs) {
   needs.user();
+
+  needs.pretender((server, helper) => {
+    server.get("/c/feature/find_by_slug.json", () =>
+      helper.response(200, CategoryFixtures["/c/1/show.json"])
+    );
+  });
 
   test("Topic footer button", async function (assert) {
     await visit("/t/internationalization-localization/280");
