@@ -312,8 +312,8 @@ et:
     switch_to_anon: "Sisene anonüümsesse režiimi"
     switch_from_anon: "Välju anonüümsest režiimist"
     banner:
-      close: "Sulge see bänner."
-      edit: "Muuda seda bännerit >>"
+      close: "Sulge see bänner"
+      edit: "Muuda"
     pwa:
       install_banner: "Kas soovid <a href>sellesse seadmesse %{title} paigaldada?</a>"
     choose_topic:
@@ -2826,7 +2826,6 @@ et:
         delete: "Kustuta"
         color: "Värv"
         opacity: "Läbipaistvus"
-        copy: "Kopeeri"
         copy_to_clipboard: "Kopeeri lõikelauale"
         copied_to_clipboard: "Kopeeritud lõikelauale"
         copy_to_clipboard_error: "Tõrge kopeerimisel"

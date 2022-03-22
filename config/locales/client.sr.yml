@@ -361,8 +361,8 @@ sr:
     switch_to_anon: "Uključi Anonimni režim"
     switch_from_anon: "Izađi iz Anonimnog režima"
     banner:
-      close: "Sakrij ovaj element."
-      edit: "Promeni ovaj baner >>"
+      close: "Sakrij ovaj element"
+      edit: "Izmeni"
     pwa:
       install_banner: "Da li želite <a href>da instalirate %{title} na ovom uređaju?</a>"
     choose_topic:
@@ -1958,7 +1958,6 @@ sr:
         delete: "Obriši"
         color: "Boja"
         opacity: "Prozirnost"
-        copy: "Kopija"
         email_templates:
           title: "E-mail"
           subject: "Predmet"

@@ -323,8 +323,7 @@ ja:
     switch_to_anon: "匿名モードを開始"
     switch_from_anon: "匿名モードを終了"
     banner:
-      close: "バナーを閉じる。"
-      edit: "このバナーを編集 >>"
+      edit: "編集"
     pwa:
       install_banner: "<a href>このデバイスに %{title} をインストール</a>しますか？"
     choose_topic:
@@ -3823,7 +3822,6 @@ ja:
         delete_confirm: '"%{theme_name}" を削除してもよろしいですか？'
         color: "色"
         opacity: "透明度"
-        copy: "コピー"
         copy_to_clipboard: "クリップボードにコピー"
         copied_to_clipboard: "クリップボードにコピーしました"
         copy_to_clipboard_error: "データをクリップボードにコピーする際にエラーが発生しました"

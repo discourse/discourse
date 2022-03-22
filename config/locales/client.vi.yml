@@ -315,8 +315,8 @@ vi:
     switch_to_anon: "Vào chế độ Ẩn danh"
     switch_from_anon: "Thoát chế độ Ẩn danh"
     banner:
-      close: "Ẩn banner này."
-      edit: "Sửa banner này >>"
+      close: "Ẩn banner này"
+      edit: "Sửa"
     pwa:
       install_banner: "Bạn có muốn <a href>cài đặt %{title} trên thiết bị này?</a> "
     choose_topic:
@@ -3617,7 +3617,6 @@ vi:
         delete_confirm: 'Bạn có chắc chắn muốn xóa "%{theme_name}" không?'
         color: "Màu sắc"
         opacity: "Độ mờ"
-        copy: "Sao chép"
         copy_to_clipboard: "Sao chép vào clipboard"
         copied_to_clipboard: "Sao chép vào Clipboard"
         copy_to_clipboard_error: "Lỗi sao chép dữ liệu vào Clipboard"

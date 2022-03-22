@@ -417,8 +417,8 @@ uk:
     switch_to_anon: "Увійти в анонімний режим"
     switch_from_anon: "Полишити анонімний режим"
     banner:
-      close: "Прибрати цей банер."
-      edit: "Редагувати цей банер >>"
+      close: "Прибрати цей банер"
+      edit: "Редагувати"
     pwa:
       install_banner: "Чи хочете ви <a href> встановити %{title} на цей пристрій?</a>"
     choose_topic:
@@ -4414,7 +4414,6 @@ uk:
         delete_confirm: 'Ви впевнені, що хочете видалити "%{theme_name}"?'
         color: "Колір"
         opacity: "Непрозорість"
-        copy: "Копіювати"
         copy_to_clipboard: "Скопіювати в буфер"
         copied_to_clipboard: "Скопійовано у буфер обміну"
         copy_to_clipboard_error: "Помилка під час копіювання даних у буфер обміну"

@@ -339,8 +339,8 @@ lv:
     switch_to_anon: "Ieiet anonīmajā režīmā"
     switch_from_anon: "Iziet no anonīmā režīma"
     banner:
-      close: "Aizvērt šo baneri."
-      edit: "Rediģēt šo banneri >>"
+      close: "Aizvērt šo baneri"
+      edit: "Labot"
     pwa:
       install_banner: "Vai vēlaties <a href>instalēt %{title} šajā ierīcē?</a>"
     choose_topic:
@@ -3062,7 +3062,6 @@ lv:
         delete: "Dzēst"
         color: "Krāsa"
         opacity: "Caurspīdīgums"
-        copy: "Kopēt"
         copy_to_clipboard: "Kopēt uz starpliktuvi (clipboard)"
         copied_to_clipboard: "Nokopēts uz starpliktuvi (clipboard)"
         copy_to_clipboard_error: "Radās kļūda, kopējot uz starpliktuvi (clipboard)"

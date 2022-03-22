@@ -333,8 +333,7 @@ ur:
     switch_to_anon: "گمنام موڈ میں داخل ہوں"
     switch_from_anon: "گمنام موڈ سے باہر نکلیں"
     banner:
-      close: "اس بینر کو برخاست کریں۔"
-      edit: "اس بینر میں ترمیم کریں >>"
+      edit: "ترمیم"
     pwa:
       install_banner: "کیا آپ <a href>اِس ڈیوائس پر %{title} انسٹال کرنا چاہتے ہیں؟</a>"
     choose_topic:
@@ -3401,7 +3400,6 @@ ur:
         delete_confirm: 'کیا آپ واقعی "%{theme_name}" حذف کرنا چاہتے ہیں؟'
         color: "رنگ"
         opacity: "دھندلاپن"
-        copy: "کاپی"
         copy_to_clipboard: "کلِپ بورڈ میں کاپی کریں"
         copied_to_clipboard: "کلِپ بورڈ میں کاپی کر لیا گیا"
         copy_to_clipboard_error: "کلِپ بورڈ میں ڈیٹا کاپی کرنے پر خرابی کا سامنا کر نا پرا"

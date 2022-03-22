@@ -300,7 +300,11 @@ es:
       list_permission_denied: "No tienes permiso para ver los marcadores de este usuario."
       no_user_bookmarks: "No tienes publicaciones guardadas en marcadores; guardar en marcadores permite que vuelvas a los temas rápidamente."
       auto_delete_preference:
+        label: "Después de ser notificado"
+        never: "Mantener el marcador"
         when_reminder_sent: "Eliminar marcador"
+        on_owner_reply: "Borrar el marcador cuando responda"
+        clear_reminder: "Mantener el marcador, pero quitar recordatorio"
       search_placeholder: "Buscar marcadores por nombre, título del tema o contenido de la publicación"
       search: "Buscar"
       reminders:
@@ -362,8 +366,8 @@ es:
     switch_to_anon: "Entrar en modo anónimo"
     switch_from_anon: "Salir del modo anónimo"
     banner:
-      close: "Descartar este banner."
-      edit: "Editar este banner >>"
+      close: "Descartar este banner"
+      edit: "Editar"
     pwa:
       install_banner: "¿Quieres <a href>instalar %{title} en este dispositivo?</a>"
     choose_topic:
@@ -1828,6 +1832,7 @@ es:
       categories_and_top_topics: "Categorías y temas destacados"
       categories_boxes: "Cajas con subcategorías"
       categories_boxes_with_topics: "Cajas con temas destacados"
+      subcategories_with_featured_topics: "Subcategorías con temas destacados"
     shortcut_modifier_key:
       shift: "Mayús"
       ctrl: "Ctrl"
@@ -2826,6 +2831,7 @@ es:
         edit: "Lo sentimos, se produjo un error al editar tu publicación. Inténtalo de nuevo."
         upload: "Lo sentimos, se ha producido un error al cargar este archivo. Inténtalo de nuevo."
         file_too_large: "Lo sentimos, ese archivo es demasiado grande (el tamaño máximo es %{max_size_kb} kb). ¿Por qué no lo subes a un servicio de almacenamiento en la nube y compartes el enlace luego?"
+        file_size_zero: "Lo sentimos, algo ha ido mal. El archivo que estás intentando cargar ocupa 0 bytes. Inténtalo de nuevo."
         file_too_large_humanized: "Lo sentimos, el archivo es demasiado grande (el tamaño máximo es %{max_size}). Podrías probar a subirlo a una plataforma en la nube, compartirlo y pegar el enlace."
         too_many_uploads: "Lo sentimos, solo puedes cargar un archivo a la vez."
         too_many_dragged_and_dropped_files:
@@ -2978,6 +2984,9 @@ es:
           edit_bookmark:
             name: "Editar marcador"
             description: "Editar el nombre del marcador o cambia la fecha y hora del recordatorio"
+          clear_bookmark_reminder:
+            name: "Quitar recordatorio"
+            description: "Quitar la fecha y hora del recordatorio"
           pin_bookmark:
             name: "Anclar marcador"
             description: "Anclar el marcador. Esto hará que aparezca al principio de tu lista de marcadores."
@@ -3341,6 +3350,7 @@ es:
       readonly: "Ver"
     lightbox:
       download: "descargar"
+      open: "imagen original"
       previous: "Anterior (flecha izquierda)"
       next: "Siguiente (flecha derecha)"
       counter: "%curr% de %total%"
@@ -3878,10 +3888,14 @@ es:
             topics:
               read: Leer un tema o una publicación específica del mismo. También usando RSS.
               write: Crear un nuevo tema o publicar en uno existente.
+              update: Actualizar un tema. Cambiar el título, categoría, etiquetas, etc.
               read_lists: Lea listas de temas como destacados, nuevos, recientes, etc. También se admite RSS.
               wordpress: Necesario para que el plugin para WordPress wp-discourse funcione.
             posts:
               edit: Edita cualquier publicación o una específica.
+            categories:
+              list: Obtener la lista de categorías.
+              show: Obtener una sola categoría por id.
             uploads:
               create: Subir un nuevo archivo o iniciar subidas directas de uno o varios archivos al almacenamiento externo.
             users:
@@ -4103,7 +4117,7 @@ es:
         delete_confirm: '¿Seguro que quieres eliminar «%{theme_name}»?'
         color: "Color"
         opacity: "Opacidad"
-        copy: "Copiar"
+        copy: "Duplicar"
         copy_to_clipboard: "Copiar al portapapeles"
         copied_to_clipboard: "Copiado al portapapeles"
         copy_to_clipboard_error: "Error al copiar datos al portapapeles"

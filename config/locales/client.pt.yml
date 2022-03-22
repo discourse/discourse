@@ -355,8 +355,8 @@ pt:
     switch_to_anon: "Entrar em modo Anónimo"
     switch_from_anon: "Sair de modo Anónimo"
     banner:
-      close: "Marcar esta faixa como vista."
-      edit: "Editar esta faixa >>"
+      close: "Marcar esta faixa como vista"
+      edit: "Editar"
     pwa:
       install_banner: "Você deseja <a href>instalar o %{title} neste dispositivo?</a>"
     choose_topic:
@@ -3824,7 +3824,6 @@ pt:
         delete_confirm: 'Tem certeza de que deseja excluir "%{theme_name}"?'
         color: "Cor"
         opacity: "Opacidade"
-        copy: "Copiar"
         copy_to_clipboard: "Copiar para a Área de Transferência"
         copied_to_clipboard: "Copiado para a Área de Transferência"
         copy_to_clipboard_error: "Erro a copiar dados para a Área de Transferência"

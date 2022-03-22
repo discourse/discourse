@@ -307,8 +307,7 @@ zh_TW:
     switch_to_anon: "進入匿名模式"
     switch_from_anon: "離開匿名模式"
     banner:
-      close: "關閉此橫幅"
-      edit: "編輯此橫幅 >>"
+      edit: "編輯"
     pwa:
       install_banner: "你希望在此裝置上 <a href>安裝 %{title} 嗎？</a>"
     choose_topic:
@@ -3087,7 +3086,6 @@ zh_TW:
         delete_confirm: '你確定要刪除%{theme_name}嗎？'
         color: "顏色"
         opacity: "不透明度"
-        copy: "複製"
         copy_to_clipboard: "複製至剪貼簿"
         copied_to_clipboard: "已複製至剪貼簿"
         copy_to_clipboard_error: "複製資料到剪貼簿時發生錯誤"

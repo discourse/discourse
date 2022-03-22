@@ -274,7 +274,11 @@ zh_CN:
       list_permission_denied: "您没有权限查看此用户的书签。"
       no_user_bookmarks: "您没有已加入书签的帖子；书签让您可以快速定位特定帖子。"
       auto_delete_preference:
+        label: "在你收到通知后"
+        never: "保留书签"
         when_reminder_sent: "删除书签"
+        on_owner_reply: "删除书签，一旦我回复"
+        clear_reminder: "保留书签并清除提醒"
       search_placeholder: "按名称、话题标题或帖子内容搜索书签"
       search: "搜索"
       reminders:
@@ -331,8 +335,8 @@ zh_CN:
     switch_to_anon: "进入匿名模式"
     switch_from_anon: "退出匿名模式"
     banner:
-      close: "关闭此横幅。"
-      edit: "编辑此横幅 >>"
+      close: "关闭此横幅"
+      edit: "编辑"
     pwa:
       install_banner: "要<a href>在此设备上安装%{title}</a> 吗？"
     choose_topic:
@@ -1760,6 +1764,7 @@ zh_CN:
       categories_and_top_topics: "类别和热门话题"
       categories_boxes: "带子类别的框"
       categories_boxes_with_topics: "带精选话题的框"
+      subcategories_with_featured_topics: "有特色主题的子类别"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -2846,6 +2851,9 @@ zh_CN:
           edit_bookmark:
             name: "编辑书签"
             description: "编辑书签名称或更改提醒的日期和时间"
+          clear_bookmark_reminder:
+            name: "清除提醒"
+            description: "清除提醒日期和时间"
           pin_bookmark:
             name: "置顶书签"
             description: "置顶该书签。这会将使其显示在您的书签列表的顶部。"
@@ -3194,6 +3202,7 @@ zh_CN:
       readonly: "查看"
     lightbox:
       download: "下载"
+      open: "原始图像"
       previous: "上一个（左方向键）"
       next: "下一个（右方向键）"
       counter: "%curr%/%total%"
@@ -3942,7 +3951,6 @@ zh_CN:
         delete_confirm: '确定要删除“%{theme_name}”吗？'
         color: "颜色"
         opacity: "不透明度"
-        copy: "复制"
         copy_to_clipboard: "复制到剪贴板"
         copied_to_clipboard: "已复制到剪贴板"
         copy_to_clipboard_error: "复制到剪贴板时出错"

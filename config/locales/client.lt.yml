@@ -391,8 +391,7 @@ lt:
     switch_to_anon: "Pasirinkti slaptumo būseną"
     switch_from_anon: "Išjunkti slaptumo būseną"
     banner:
-      close: "panaikinti banerį"
-      edit: "Redaguoti banerį >>"
+      edit: "Redaguoti"
     pwa:
       install_banner: "Ar norite <a href>šiame įrenginyje įdiegti %{title} ?</a>"
     choose_topic:
@@ -3845,7 +3844,6 @@ lt:
         delete_confirm: 'Ar tikrai norite ištrinti „%{theme_name}“?'
         color: "Spalva"
         opacity: "Permatomumas"
-        copy: "Kopijuoti"
         copy_to_clipboard: "Nukopijuoti į iškarpinę"
         copied_to_clipboard: "Nukopijuota į iškirptę"
         copy_to_clipboard_error: "Klaida kopijuojant duomenis į iškarpinę"

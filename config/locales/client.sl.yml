@@ -391,8 +391,8 @@ sl:
     switch_to_anon: "Vklopi anonimni način"
     switch_from_anon: "Izklopi anonimni način"
     banner:
-      close: "Opusti ta oglasni trak."
-      edit: "Uredi ta oglasni trak >>"
+      close: "Opusti ta oglasni trak"
+      edit: "Uredi"
     pwa:
       install_banner: "Ali želite <a href>namestiti %{title} na to napravo?</a>"
     choose_topic:
@@ -3653,7 +3653,6 @@ sl:
         delete: "Izbriši"
         color: "Barva"
         opacity: "Transparentnost"
-        copy: "Kopiraj"
         copy_to_clipboard: "Kopiraj v odložišče"
         copied_to_clipboard: "Kopirano v odložišče"
         copy_to_clipboard_error: "Prišlo je do napake pri kopiranju v odložišče"

@@ -1288,6 +1288,7 @@ zh_CN:
       labels:
         user: 用户
         qtt_like: 获赞
+      description: "获得最多赞的前 10 名用户。"
     top_users_by_likes_received_from_inferior_trust_level:
       title: "收到最多来自低信任级别用户喜欢的用户"
       labels:
@@ -2433,6 +2434,8 @@ zh_CN:
   temporarily_closed_due_to_flags:
     other: "由于大量社区举报，此话题被临时关闭至少 %{count} 小时。"
   system_messages:
+    reviewables_reminder:
+      subject_template: "审核队列中有一些需要审核的项目"
     private_topic_title: "话题 #%{id}"
     contents_hidden: "请访问帖子以查看内容。"
     post_hidden:
@@ -3167,7 +3170,7 @@ zh_CN:
         %{respond_instructions}
     user_group_mentioned_pm:
       title: "私信提及的用户群组"
-      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      subject_template: "[%{email_prefix}] [私信] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -3178,7 +3181,7 @@ zh_CN:
         %{respond_instructions}
     user_group_mentioned_pm_group:
       title: "私信提及的用户群组"
-      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      subject_template: "[%{email_prefix}] [私信] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 

@@ -344,8 +344,8 @@ fi:
     switch_to_anon: "Siirry anonyymitilaan"
     switch_from_anon: "Poistu anonyymitilasta"
     banner:
-      close: "Sulje tämä banneri."
-      edit: "Muokkaa banneria >>"
+      close: "Sulje tämä banneri"
+      edit: "Muokkaa"
     pwa:
       install_banner: "Haluatko <a href>asentaa kohteen %{title} tälle laitteelle?</a>"
     choose_topic:
@@ -3906,7 +3906,6 @@ fi:
         delete_confirm: 'Haluatko varmasti poistaa teeman "%{theme_name}"?'
         color: "Väri"
         opacity: "Läpinäkyvyys"
-        copy: "Kopioi"
         copy_to_clipboard: "Kopioi leikepöydälle"
         copied_to_clipboard: "Kopioitiin leikepöydälle"
         copy_to_clipboard_error: "Virhe kopioimisessa leikepöydälle"

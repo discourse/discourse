@@ -346,8 +346,8 @@ da:
     switch_to_anon: "Gå i anonym tilstand"
     switch_from_anon: "Afslut anonym tilstand"
     banner:
-      close: "Fjern dette banner."
-      edit: "Rediger dette banner >>"
+      close: "Fjern dette banner"
+      edit: "Rediger"
     pwa:
       install_banner: "Vil du <a href>installere %{title} på denne enhed?</a>"
     choose_topic:
@@ -3919,7 +3919,6 @@ da:
         delete_confirm: 'Er du sikker på, at du vil slette "%{theme_name}"?'
         color: "Farve"
         opacity: "Gennemsigtighed"
-        copy: "Kopier"
         copy_to_clipboard: "Kopiér til udklipsholder"
         copied_to_clipboard: "Kopierede til udklipsholder"
         copy_to_clipboard_error: "Fejl ved kopiering til udklipsholder"

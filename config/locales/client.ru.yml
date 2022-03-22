@@ -428,8 +428,8 @@ ru:
     switch_to_anon: "Войти в анонимный режим"
     switch_from_anon: "Выйти из анонимного режима"
     banner:
-      close: "Больше не показывать это объявление."
-      edit: "Редактировать это объявление >>"
+      close: "Закрыть этот баннер"
+      edit: "Редактировать"
     pwa:
       install_banner: "Хотите ли вы <a href> установить %{title} на это устройство?</a>"
     choose_topic:
@@ -4448,7 +4448,7 @@ ru:
         delete_confirm: 'Вы действительно хотите удалить тему "%{theme_name}"?'
         color: "Цвет"
         opacity: "Прозрачность"
-        copy: "Копировать"
+        copy: "Дублировать"
         copy_to_clipboard: "Скопировать в буфер"
         copied_to_clipboard: "Скопировано в буфер"
         copy_to_clipboard_error: "Ошибка при копировании данных в буфер обмена"

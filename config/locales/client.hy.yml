@@ -317,8 +317,7 @@ hy:
     switch_to_anon: "Սկսել Անանուն Ռեժիմը"
     switch_from_anon: "Ավարտել Անանուն Ռեժիմը"
     banner:
-      close: "Փակել այս բանները"
-      edit: "Խմբագրել այս բանները >>"
+      edit: "Խմբագրել"
     pwa:
       install_banner: "Դուք ցանկանու՞մ եք <a href>տեղադրել %{title}-ը այս սարքի վրա?</a>"
     choose_topic:
@@ -3265,7 +3264,6 @@ hy:
         delete_confirm: 'Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել <<%{theme_name}>> :'
         color: "Գույն"
         opacity: "Թափանցիկություն"
-        copy: "Կրկնօրինակել"
         copy_to_clipboard: "Կրկնօրինակել Փոխանակման Հարթակում"
         copied_to_clipboard: "Կրկնօրինակված է Փոխանակման Հարթակում"
         copy_to_clipboard_error: "Փոխանակման Հարթակում տվյալների կրկնօրինակման սխալ"
