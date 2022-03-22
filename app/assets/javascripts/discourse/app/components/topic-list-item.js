@@ -58,6 +58,16 @@ export default Component.extend({
         if (this.selected && this.selected.includes(this.topic)) {
           this.element.querySelector("input.bulk-select").checked = true;
         }
+        const mainLink = this.element.querySelector(".main-link");
+        const title = mainLink?.querySelector(".title");
+        if (mainLink && title) {
+          title.addEventListener("focus", () => {
+            mainLink.classList.add("focused");
+          });
+          title.addEventListener("blur", () => {
+            mainLink.classList.remove("focused");
+          });
+        }
       });
     }
   },
@@ -267,7 +277,7 @@ export default Component.extend({
       this.element.addEventListener("animationend", () => {
         this.element.classList.remove("highlighted");
       });
-      this.element.querySelector(".tabLoc").focus();
+      this.element.querySelector(".main-link .title").focus();
     });
   },
 
