@@ -61,6 +61,9 @@ export default {
     app["TagsShowCategoryNoneRoute"] = TagShowRoute.extend({
       noSubcategories: true,
     });
+    app["TagsShowCategoryAllRoute"] = TagShowRoute.extend({
+      noSubcategories: false,
+    });
 
     site.get("filters").forEach(function (filter) {
       app["TagShow" + filter.capitalize() + "Route"] = TagShowRoute.extend({
@@ -70,8 +73,11 @@ export default {
         "TagsShowCategory" + filter.capitalize() + "Route"
       ] = TagShowRoute.extend({ navMode: filter });
       app[
-        "TagsShowNoneCategory" + filter.capitalize() + "Route"
+        "TagsShowCategoryNone" + filter.capitalize() + "Route"
       ] = TagShowRoute.extend({ navMode: filter, noSubcategories: true });
+      app[
+        "TagsShowCategoryAll" + filter.capitalize() + "Route"
+      ] = TagShowRoute.extend({ navMode: filter, noSubcategories: false });
     });
   },
 };

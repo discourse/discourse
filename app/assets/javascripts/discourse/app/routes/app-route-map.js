@@ -225,6 +225,9 @@ export default function () {
     this.route("showCategory", {
       path: "/c/*category_slug_path_with_id/:tag_id",
     });
+    this.route("showCategoryAll", {
+      path: "/c/*category_slug_path_with_id/all/:tag_id",
+    });
     this.route("showCategoryNone", {
       path: "/c/*category_slug_path_with_id/none/:tag_id",
     });
@@ -232,6 +235,9 @@ export default function () {
     Site.currentProp("filters").forEach((filter) => {
       this.route("showCategory" + filter.capitalize(), {
         path: "/c/*category_slug_path_with_id/:tag_id/l/" + filter,
+      });
+      this.route("showCategoryAll" + filter.capitalize(), {
+        path: "/c/*category_slug_path_with_id/all/:tag_id/l/" + filter,
       });
       this.route("showCategoryNone" + filter.capitalize(), {
         path: "/c/*category_slug_path_with_id/none/:tag_id/l/" + filter,

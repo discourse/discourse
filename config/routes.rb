@@ -952,9 +952,11 @@ Discourse::Application.routes.draw do
         scope path: '/c/*category_slug_path_with_id' do
           Discourse.filters.each do |filter|
             get "/none/:tag_id/l/#{filter}" => "tags#show_#{filter}", as: "tag_category_none_show_#{filter}", defaults: { no_subcategories: true }
+            get "/all/:tag_id/l/#{filter}" => "tags#show_#{filter}", as: "tag_category_all_show_#{filter}", defaults: { no_subcategories: false }
           end
 
           get '/none/:tag_id' => 'tags#show', as: 'tag_category_none_show', defaults: { no_subcategories: true }
+          get '/all/:tag_id' => 'tags#show', as: 'tag_category_all_show', defaults: { no_subcategories: false }
 
           Discourse.filters.each do |filter|
             get "/:tag_id/l/#{filter}" => "tags#show_#{filter}", as: "tag_category_show_#{filter}"
