@@ -336,8 +336,7 @@ export default Mixin.create({
       "_topicHeaderTrigger"
     );
 
-    this.appEvents.off("card:close");
-
+    this.appEvents.off("card:close", this, "_close");
     this._hide();
   },
 
