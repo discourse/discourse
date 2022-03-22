@@ -362,8 +362,8 @@ it:
     switch_to_anon: "Avvia Modalità Anonima"
     switch_from_anon: "Esci da Modalità Anonima"
     banner:
-      close: "Ignora questo banner."
-      edit: "Modifica questo banner >>"
+      close: "Ignora questo banner"
+      edit: "Modifica"
     pwa:
       install_banner: "Vuoi <a href>installare %{title} su questo dispositivo?</a>"
     choose_topic:
@@ -4103,7 +4103,6 @@ it:
         delete_confirm: 'Sei sicuro di voler eliminare "%{theme_name}"?'
         color: "Colore"
         opacity: "Opacità"
-        copy: "Copia"
         copy_to_clipboard: "Copia negli Appunti"
         copied_to_clipboard: "Copiato negli Appunti"
         copy_to_clipboard_error: "Errore durante la copia negli appunti"

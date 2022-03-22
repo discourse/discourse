@@ -1339,6 +1339,7 @@ es:
       labels:
         user: Usuario
         qtt_like: Me gusta recibidos
+      description: "Los 10 usuarios que han recibido más Me gusta."
     top_users_by_likes_received_from_inferior_trust_level:
       title: "Usuarios que más «me gusta» han recibido de usuarios con niveles de confianza bajos"
       labels:
@@ -1351,6 +1352,7 @@ es:
       labels:
         user: Usuario
         qtt_like: Me gusta recibidos
+      description: "Los 10 usuarios que han recibido más me gusta de varias personas."
   dashboard:
     group_email_credentials_warning: 'Hay un problema con las credenciales del correo electrónico del grupo <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. No se enviarán mensajes desde la bandeja de entrada del grupo hasta que se solucione el problema. %{error}'
     rails_env_warning: "Tu servidor está funcionando en modo de %{env}."
@@ -2316,6 +2318,11 @@ es:
       backup_code: "Usar un código de copia de seguridad en su lugar"
   second_factor_auth:
     challenge_not_found: "No se pudo encontrar un desafío de A2F en tu sesión actual."
+    challenge_expired: "Hace demasiado que empezaste este inicio de sesión con autenticación de dos factores (2FA), ya no es válido. Inténtalo de nuevo."
+    challenge_not_completed: "No has completado la autenticación en dos factores (2FA) necesaria para ejecutar esta acción. Por favor, complétala y prueba otra vez."
+    actions:
+      grant_admin:
+        description: "Por motivos de seguridad, confirma tu autenticación de dos factores (2FA) antes de darle permisos de administrador a %{username}."
   admin:
     email:
       sent_test: "¡enviado!"
@@ -3654,6 +3661,7 @@ es:
     external_upload_not_found: "La carga no se encontró en la tienda externa. %{additional_detail}"
     checksum_mismatch_failure: "La suma de comprobación del archivo que has subido no coincide. Puede que haya cambiado su contenido mientras se subía. Por favor, inténtalo de nuevo."
     cannot_promote_failure: "No se ha podido completar la subida, puede que ya haya terminado o fallado antes."
+    size_zero_failure: "Lo siento, parece que algo ha ido mal. El archivo que estás intentando cargar ocupa 0 bytes. Inténtalo de nuevo."
     attachments:
       too_large: "Lo sentimos, el archivo que estás intentando subir es demasiado grande (el tamaño máximo es %{max_size_kb}%KB)."
       too_large_humanized: "Lo sentimos, el archivo que estás intentando subir es demasiado grande (el tamaño máximo es %{max_size})."
@@ -4669,6 +4677,7 @@ es:
   notification_level:
     ignore_error: "Lo sentimos, pero no puedes ignorar a este usuario."
     mute_error: "Lo sentimos, pero no puedes silenciar a este usuario."
+    error: "Lo siento, no puedes cambiar el nivel de notificación de ese usuario."
   discord:
     not_in_allowed_guild: "La autenticación falló. No eres miembro de ningún clan de Discord permitido."
   old_keys_reminder:

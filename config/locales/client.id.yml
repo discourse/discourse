@@ -303,8 +303,8 @@ id:
     switch_to_anon: "Masuki Mode Anonim"
     switch_from_anon: "Keluar Mode Anonim"
     banner:
-      close: "Abaikan banner ini."
-      edit: "Ubah banner ini >>"
+      close: "Abaikan banner ini"
+      edit: "Ubah"
     pwa:
       install_banner: "Apakah Anda ingin <a href>menginstal %{title} pada perangkat ini?</a>"
     choose_topic:

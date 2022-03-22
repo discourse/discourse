@@ -365,8 +365,8 @@ ro:
     switch_to_anon: "Intrați în Modul anonim"
     switch_from_anon: "Ieșiți din Modul anonim"
     banner:
-      close: "Ignoră acest banner."
-      edit: "Editează acest banner."
+      close: "Ignoră acest banner"
+      edit: "Editează"
     pwa:
       install_banner: "Vrei să <a href>instalezi %{title} pe acest dispozitiv?</a>"
     choose_topic:
@@ -3036,7 +3036,6 @@ ro:
         delete: "Șterge"
         color: "Culoare"
         opacity: "Opacitate"
-        copy: "Copiază"
         copy_to_clipboard: "Copiază în clipboard"
         copied_to_clipboard: "Copiat în clipboard"
         copy_to_clipboard_error: "Eroare la copierea datelor în clipboard"

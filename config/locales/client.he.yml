@@ -428,8 +428,8 @@ he:
     switch_to_anon: "כניסה למצב אלמוני"
     switch_from_anon: "יציאה ממצב אלמוני"
     banner:
-      close: "שחרור באנר זה."
-      edit: "עריכת הבאנר הזה >>"
+      close: "התעלמות מהכרזה"
+      edit: "עריכה"
     pwa:
       install_banner: "<a href>להתקין את %{title} על המכשיר הזה?</a>"
     choose_topic:
@@ -4445,7 +4445,7 @@ he:
         delete_confirm: 'למחוק את „%{theme_name}”?'
         color: "צבע"
         opacity: "שקיפות"
-        copy: "העתקה"
+        copy: "שכפול"
         copy_to_clipboard: "העתקה ללוח"
         copied_to_clipboard: "הועתק ללוח"
         copy_to_clipboard_error: "שגיאה בהעתקת מידע ללוח"

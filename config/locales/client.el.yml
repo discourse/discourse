@@ -327,8 +327,8 @@ el:
     switch_to_anon: "Έναρξη Κατάστασης Ανωνυμίας"
     switch_from_anon: "Τερματισμός Κατάστασης Ανωνυμίας"
     banner:
-      close: "Απόρριψη αυτής της ανακοίνωσης."
-      edit: "Επεξεργασία αυτής της ανακοίνωσης >>"
+      close: "Απόρριψη αυτής της ανακοίνωσης"
+      edit: "Επεξεργασία"
     pwa:
       install_banner: "Θέλετε να <a href>εγκαταστήσετε %{title} σε αυτήν τη συσκευή;</a>"
     choose_topic:
@@ -3477,7 +3477,6 @@ el:
         delete_confirm: 'Είστε βέβαιοι πως θέλετε να διαγράψετε το «%{theme_name}»;'
         color: "Χρώμα"
         opacity: "Αδιαφάνεια"
-        copy: "Αντιγραφή"
         copy_to_clipboard: "Αντιγραφή στο Clipboard"
         copied_to_clipboard: "Αντιγράφτηκε στο Clipboard"
         copy_to_clipboard_error: "Σφάλμα αντιγραφής δεδομένων στο Clipboard"

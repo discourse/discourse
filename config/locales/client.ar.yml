@@ -478,8 +478,7 @@ ar:
     switch_to_anon: "دخول وضع التخفي"
     switch_from_anon: "الخروج من وضع التخفي"
     banner:
-      close: "إزالة هذا البانر"
-      edit: "تعديل هذا البانر >>"
+      edit: "تعديل"
     pwa:
       install_banner: "هل تريد <a href>تثبيت %{title} على هذا الجهاز؟</a>"
     choose_topic:
@@ -4733,7 +4732,6 @@ ar:
         delete_confirm: 'هل تريد بالتأكيد حذف السمة "%{theme_name}"؟'
         color: "اللون"
         opacity: "الشفافية"
-        copy: "نسخ"
         copy_to_clipboard: "نسخ الى الحافظة"
         copied_to_clipboard: "تم النسخ إلى الحافظة"
         copy_to_clipboard_error: "حدث خطأ في نسخ البيانات إلى الحافظة"

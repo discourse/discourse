@@ -364,8 +364,8 @@ tr_TR:
     switch_to_anon: "Anonim Moda Geç"
     switch_from_anon: "Anonim Moddan Çık"
     banner:
-      close: "Bu pankartı artık anımsatma"
-      edit: "Bu pankartı düzenle >>"
+      close: "Bu bannerı devre dışı bırak"
+      edit: "Düzenle"
     pwa:
       install_banner: "Bu cihazda <a href>güncellemek %{title} ister misiniz?</a>"
     choose_topic:
@@ -4071,7 +4071,6 @@ tr_TR:
         delete_confirm: '"%{theme_name}" silmek istediğinizden emin misiniz?'
         color: "Renk"
         opacity: "Saydam"
-        copy: "Kopyala"
         copy_to_clipboard: "Kopyala"
         copied_to_clipboard: "Kopyalandı"
         copy_to_clipboard_error: "Panoya veri kopyalama hatası"

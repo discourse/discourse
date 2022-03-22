@@ -348,8 +348,8 @@ ca:
     switch_to_anon: "Entra en el mode anònim"
     switch_from_anon: "Surt del mode anònim"
     banner:
-      close: "Descarta aquesta bandera."
-      edit: "Edita aquesta bandera >>"
+      close: "Descarta aquesta bandera"
+      edit: "Edita"
     pwa:
       install_banner: "Voleu <a href>instal·lar %{title} en aquest dispositiu?</a>"
     choose_topic:
@@ -3269,7 +3269,6 @@ ca:
         delete_confirm: 'Esteu segur que voleu suprimir "%{theme_name}"?'
         color: "Color"
         opacity: "Opacitat"
-        copy: "Còpia"
         copy_to_clipboard: "Copia al porta-retalls"
         copied_to_clipboard: "Copiat al porta-retalls."
         copy_to_clipboard_error: "Error copiant dades al porta-retalls"

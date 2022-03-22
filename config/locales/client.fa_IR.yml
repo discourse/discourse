@@ -351,8 +351,8 @@ fa_IR:
     switch_to_anon: "ورود به حالت ناشناس"
     switch_from_anon: "خروج از حالت ناشناس"
     banner:
-      close: "این بنر را ببند."
-      edit: "این بنر را ویرایش کنید >>"
+      close: "این بنر را ببند"
+      edit: "ویرایش"
     pwa:
       install_banner: "ایامایل هستید تا <a href>، %{title} را بر‌روی دستگاه شما نصب کند؟</a>"
     choose_topic:
@@ -3488,7 +3488,6 @@ fa_IR:
         delete_confirm: 'آیا از حذف "%{theme_name}" مطمئن هستید؟ '
         color: "رنگ"
         opacity: "تاری"
-        copy: "کپی"
         copy_to_clipboard: "کپی در clipboard"
         copied_to_clipboard: "کپی شد"
         copy_to_clipboard_error: "خطا در کپی اطلاعات"

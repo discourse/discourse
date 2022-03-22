@@ -346,8 +346,8 @@ fr:
     switch_to_anon: "Activer le mode anonyme"
     switch_from_anon: "Quitter le mode anonyme"
     banner:
-      close: "Ignorer cette bannière."
-      edit: "Modifier cette bannière >>"
+      close: "Ignorer cette bannière"
+      edit: "Modifier"
     pwa:
       install_banner: "Voulez-vous <a href>installer %{title} sur cet appareil</a> ?"
     choose_topic:
@@ -3910,7 +3910,7 @@ fr:
         delete_confirm: 'Voulez-vous vraiment supprimer « %{theme_name} » ?'
         color: "Couleur"
         opacity: "Opacité"
-        copy: "Copier"
+        copy: "Dupliquer"
         copy_to_clipboard: "Copier dans le presse-papier"
         copied_to_clipboard: "Copié dans le presse-papier"
         copy_to_clipboard_error: "Erreur en copiant les données dans le presse-papier"

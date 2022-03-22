@@ -349,8 +349,8 @@ nl:
     switch_to_anon: "Anonieme modus starten"
     switch_from_anon: "Anonieme modus verlaten"
     banner:
-      close: "Deze banner verbergen"
-      edit: "Deze banner bewerken >>"
+      close: "Deze banner negeren"
+      edit: "Bewerken"
     pwa:
       install_banner: "Wilt u <a href>%{title} op dit apparaat installeren?</a>"
     choose_topic:
@@ -843,7 +843,7 @@ nl:
       "14": "In wachtrij"
       "15": "Concepten"
     categories:
-      all: "Alle categorieën"
+      all: "alle categorieën"
       all_subcategories: "alles"
       no_subcategory: "geen"
       category: "Categorie"
@@ -2118,6 +2118,7 @@ nl:
       tags: "Tags"
       in: "in"
       in_this_topic: "in dit onderwerp"
+      in_topics_posts: "in alle topics en berichten"
       enter_hint: "of druk op Enter"
       in_posts_by: "In berichten van @%{username}"
       type:
@@ -2133,7 +2134,9 @@ nl:
         private_messages: "Berichten doorzoeken"
       tips:
         category_tag: "filtert op categorie of tag"
+        full_search: "start zoeken op volledige pagina"
       advanced:
+        title: Geavanceerde filters
         posted_by:
           label: Geplaatst door
         in_category:
@@ -2212,9 +2215,15 @@ nl:
           one: "%{count} ongelezen onderwerp negeren"
           other: "%{count} ongelezen onderwerpen negeren"
         dismiss_button: "Negeren..."
+        dismiss_button_with_selected:
+          one: "Negeren (%{count})…"
+          other: "Negeren (%{count})…"
         dismiss_tooltip: "Alleen nieuwe berichten negeren of het volgen van topics stoppen"
         also_dismiss_topics: "Het volgen van deze topics stoppen, zodat ze nooit meer als ongelezen verschijnen."
         dismiss_new: "Nieuwe berichten negeren"
+        dismiss_new_with_selected:
+          one: "Negeer nieuw topic (%{count})"
+          other: "Negeer nieuwe topics (%{count})"
         toggle: "bulkselectie van topics in-/uitschakelen"
         actions: "Bulkacties"
         close_topics: "Topics sluiten"
@@ -3266,6 +3275,7 @@ nl:
         show_incoming_updated_topics: "%{shortcut} Bijgewerkte topics tonen"
         search: "%{shortcut} Zoeken"
         help: "%{shortcut} Hulp voor sneltoetsen openen"
+        dismiss_new: "%{shortcut} Nieuwe topics negeren"
         dismiss_topics: "%{shortcut} Topics negeren"
         log_out: "%{shortcut} Afmelden"
       composing:
@@ -3311,6 +3321,7 @@ nl:
         title: "Menu Zoeken"
         prev_next: "%{shortcut} Selectie omhoog en omlaag verplaatsen"
         insert_url: "%{shortcut} Selectie in open editorvenster invoegen"
+        full_page_search: "%{shortcut} Start zoeken op volledige pagina"
     badges:
       earned_n_times:
         one: "Deze badge is %{count} keer verdiend"
@@ -3499,6 +3510,7 @@ nl:
         regular: "vaste gebruiker"
         leader: "leider"
     user_activity:
+      no_activity_title: "Nog geen activiteit"
       no_activity_body: "Welkom bij onze gemeenschap! U bent hier gloednieuw en hebt nog niet bijgedragen aan discussies. Als een eerste stap, bezoek <a href='%{topUrl}'>Top</a> of <a href='%{categoriesUrl}'>Categorieën</a> en begin maar met lezen! Selecteer %{heartIcon} op berichten die u leuk vindt of waarover u meer wilt weten. Indien u dat nog niet gedaan hebt, help anderen u beter te leren kennen door een foto en een bio toe te voegen in uw <a href='%{preferencesUrl}'>gebruikersvoorkeuren</a>."
       no_activity_others: "Geen activiteit."
       no_replies_others: "Geen antwoorden."
@@ -3613,7 +3625,7 @@ nl:
       groups:
         new:
           title: "Nieuwe groep"
-          create: "Maken"
+          create: "Aanmaken"
           name:
             too_short: "Groepsnaam is te kort"
             too_long: "Groepsnaam is te lang"
@@ -3930,7 +3942,6 @@ nl:
         delete_confirm: 'Weet u zeker dat u ''%{theme_name}'' wilt verwijderen?'
         color: "Kleur"
         opacity: "Ondoorzichtigheid"
-        copy: "Kopiëren"
         copy_to_clipboard: "Kopiëren naar klembord"
         copied_to_clipboard: "Gekopieerd naar klembord"
         copy_to_clipboard_error: "Fout bij kopiëren van gegevens naar klembord"
@@ -3955,7 +3966,7 @@ nl:
           browse_themes: "Gemeenschapsthema's bekijken"
           customize_desc: "Aanpassen:"
           title: "Thema's"
-          create: "Maken"
+          create: "Aanmaken"
           create_type: "Type"
           create_name: "Naam"
           long_title: "Kleuren, CSS en HTML-inhoud van uw website aanpassen"
@@ -4828,7 +4839,7 @@ nl:
         simple_list:
           add_item: "Item toevoegen..."
         json_schema:
-          edit: Editor opzetten.
+          edit: Editor starten
           modal_title: "%{name} bewerken"
       badges:
         title: Badges

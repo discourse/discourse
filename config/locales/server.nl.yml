@@ -2722,6 +2722,8 @@ nl:
     good_topic:
       name: Goed topic
       description: Heeft 25 likes op een topic ontvangen
+      long_description: |
+        Deze badge wordt toegekend wanneer je topic 25 likes krijgt. Je startte een levendig gesprek waar de gemeenschap zich omheen verzamelde.
     great_topic:
       name: Geweldig topic
       description: Heeft 50 likes op een topic ontvangen

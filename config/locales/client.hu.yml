@@ -359,8 +359,8 @@ hu:
     switch_to_anon: "Anonim módba lépés"
     switch_from_anon: "Kilépés az anonim módból"
     banner:
-      close: "Kiemelés eltávolítása."
-      edit: "Kiemelés szerkesztése >>"
+      close: "Kiemelés eltávolítása"
+      edit: "Szerkesztés"
     pwa:
       install_banner: "Biztos, hogy <a href>telepíti ezt az eszközére: %{title}</a>?"
     choose_topic:
@@ -3560,7 +3560,6 @@ hu:
         delete: "Törlés"
         color: "Szín"
         opacity: "Áttetszőség"
-        copy: "Másolás"
         copy_to_clipboard: "Vágólapra másolás"
         copied_to_clipboard: "Vágólapra másolva"
         copy_to_clipboard_error: "Hiba történt a vágólapra másoláskor"

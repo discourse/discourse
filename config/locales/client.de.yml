@@ -366,8 +366,8 @@ de:
     switch_to_anon: "Anonymen Modus aktivieren"
     switch_from_anon: "Anonymen Modus deaktivieren"
     banner:
-      close: "Dieses Banner ausblenden."
-      edit: "Dieses Banner bearbeiten >>"
+      close: "Dieses Banner ausblenden"
+      edit: "Bearbeiten"
     pwa:
       install_banner: "Möchtest du <a href>%{title} auf diesem Gerät installieren?</a>"
     choose_topic:
@@ -4120,7 +4120,7 @@ de:
         delete_confirm: 'Möchtest du wirklich „%{theme_name}“ löschen?'
         color: "Farbe"
         opacity: "Transparenz"
-        copy: "Kopieren"
+        copy: "Duplizieren"
         copy_to_clipboard: "In Zwischenablage kopieren"
         copied_to_clipboard: "Wurde in Zwischenablage kopiert"
         copy_to_clipboard_error: "Beim Kopieren in die Zwischenablage trat ein Fehler auf"

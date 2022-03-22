@@ -421,8 +421,8 @@ pl_PL:
     switch_to_anon: "Włącz tryb anonimowy"
     switch_from_anon: "Zakończ tryb anonimowy"
     banner:
-      close: "Zamknij ten baner."
-      edit: "Edytuj ten baner >>"
+      close: "Zamknij ten baner"
+      edit: "Edytuj"
     pwa:
       install_banner: "Czy chcesz <a href>zainstalować %{title} na tym urządzeniu?</a>"
     choose_topic:
@@ -4422,7 +4422,6 @@ pl_PL:
         delete_confirm: 'Czy na pewno chcesz usunąć "%{theme_name}"?'
         color: "Kolor"
         opacity: "Widoczność"
-        copy: "Kopiuj"
         copy_to_clipboard: "Skopiuj do schowka"
         copied_to_clipboard: "Tekst skopiowany do schowka."
         copy_to_clipboard_error: "Wystąpił błąd w trakcie kopiowania do schowka."
