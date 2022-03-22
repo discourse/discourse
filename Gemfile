@@ -190,7 +190,7 @@ if ENV["ALLOW_DEV_POPULATE"] == "1"
   gem 'discourse_dev_assets'
   gem 'faker', "~> 2.16"
 else
-  group :development, :test do
+  group :development do
     gem 'discourse_dev_assets'
     gem 'faker', "~> 2.16"
   end

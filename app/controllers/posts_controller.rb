@@ -506,7 +506,7 @@ class PostsController < ApplicationController
     render_json_dump(locked: post.locked?)
   end
 
-  def notice_action
+  def toggle_notice
     post = find_post_from_params
     raise Discourse::NotFound unless guardian.can_edit_staff_notes?(post.topic)
 
