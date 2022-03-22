@@ -62,7 +62,9 @@ model=model showResetNew=showResetNew showDismissRead=showDismissRead resetNew=(
       topics=model.topics
       discoveryList=true
       scrollOnLoad=true
-      onScroll=discoveryTopicList.saveScrollPosition}}
+      onScroll=discoveryTopicList.saveScrollPosition
+      focusLastVisitedTopic=true
+    }}
   {{/if}}
 
   {{plugin-outlet name="after-topic-list" tagName="span" connectorTagName="div" args=(hash category=category)}}
