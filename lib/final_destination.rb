@@ -145,6 +145,8 @@ class FinalDestination
     return if @stop_at_blocked_pages && blocked_domain?(@uri)
 
     result, headers_subset = safe_get(@uri, &blk)
+    return nil if !result
+
     cookie = headers_subset.set_cookie
     location = headers_subset.location
 
