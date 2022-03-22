@@ -47,17 +47,11 @@ export default Controller.extend(
 
     showRestrictedGroupWarning() {
       Category.reloadBySlugPath(this.model.slug).then((result) => {
-        const restrictedGroups = result.category.group_permissions.map(
-          (group) => group.group_name
-        );
-
-        if (
-          restrictedGroups &&
-          !restrictedGroups.any((x) => x === "everyone")
-        ) {
+        const groups = result.category.group_permissions.mapBy("group_name");
+        if (groups && !groups.any((x) => x === "everyone")) {
           const message = I18n.t("topic.share.restricted_groups", {
-            count: restrictedGroups.length,
-            groupNames: restrictedGroups.join(", "),
+            count: groups.length,
+            groups: groups.join(", "),
           });
           this.flash(message, "warning");
         }
