@@ -126,6 +126,8 @@ export default Mixin.create({
       this,
       "_topicHeaderTrigger"
     );
+
+    this.appEvents.on("card:close", this, "_close");
   },
 
   @bind
@@ -333,6 +335,8 @@ export default Mixin.create({
       this,
       "_topicHeaderTrigger"
     );
+
+    this.appEvents.off("card:close");
 
     this._hide();
   },
