@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class HomepageConstraint
+class HomePageConstraint
   def initialize(filter)
     @filter = filter
   end

@@ -975,12 +975,12 @@ Discourse::Application.routes.draw do
     get '/tag_groups/filter/search' => 'tag_groups#search', format: :json
 
     Discourse.filters.each do |filter|
-      root to: "list##{filter}", constraints: HomepageConstraint.new("#{filter}"), as: "list_#{filter}"
+      root to: "list##{filter}", constraints: HomePageConstraint.new("#{filter}"), as: "list_#{filter}"
     end
     # special case for categories
-    root to: "categories#index", constraints: HomepageConstraint.new("categories"), as: "categories_index"
+    root to: "categories#index", constraints: HomePageConstraint.new("categories"), as: "categories_index"
 
-    root to: 'finish_installation#index', constraints: HomepageConstraint.new("finish_installation"), as: 'installation_redirect'
+    root to: 'finish_installation#index', constraints: HomePageConstraint.new("finish_installation"), as: 'installation_redirect'
 
     get "/user-api-key/new" => "user_api_keys#new"
     post "/user-api-key" => "user_api_keys#create"
