@@ -19,6 +19,7 @@ class Plugin::Metadata
     "discourse-automation",
     "discourse-bbcode",
     "discourse-bbcode-color",
+    "discourse-bcc",
     "discourse-cakeday",
     "discourse-calendar",
     "discourse-canned-replies",
