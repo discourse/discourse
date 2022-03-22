@@ -75,8 +75,8 @@ export default DiscourseRoute.extend(FilterModeMixin, {
       category.setupGroupsAndPermissions();
       filter = `tags/c/${Category.slugFor(category)}/${category.id}`;
 
-      if (this.noSubcategories) {
-        filter += "/none";
+      if (this.noSubcategories !== undefined) {
+        filter += this.noSubcategories ? "/none" : "/all";
       }
 
       filter += `/${tagId}/l/${topicFilter}`;
@@ -120,12 +120,17 @@ export default DiscourseRoute.extend(FilterModeMixin, {
   },
 
   setupController(controller, model) {
+    const noSubcategories =
+      this.noSubcategories === undefined
+        ? model.category?.default_list_filter === "none"
+        : this.noSubcategories;
+
     this.controllerFor("tag.show").setProperties({
       model: model.tag,
       ...model,
       period: model.list.for_period,
       navMode: this.navMode,
-      noSubcategories: this.noSubcategories,
+      noSubcategories,
       loading: false,
     });
     this.searchService.set("searchContext", model.tag.searchContext);
