@@ -1,4 +1,7 @@
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import discourseComputed, {
+  bind,
+  observes,
+} from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import DiscourseURL from "discourse/lib/url";
 import I18n from "I18n";
@@ -58,6 +61,11 @@ export default Component.extend({
         if (this.selected && this.selected.includes(this.topic)) {
           this.element.querySelector("input.bulk-select").checked = true;
         }
+        const title = this.element.querySelector(".main-link .title");
+        if (title) {
+          title.addEventListener("focus", this._onTitleFocus);
+          title.addEventListener("blur", this._onTitleBlur);
+        }
       });
     }
   },
@@ -97,6 +105,11 @@ export default Component.extend({
 
     if (this.includeUnreadIndicator) {
       this.messageBus.unsubscribe(this.unreadIndicatorChannel);
+    }
+    const title = this.element?.querySelector(".main-link .title");
+    if (title) {
+      title.removeEventListener("focus", this._onTitleFocus);
+      title.removeEventListener("blur", this._onTitleBlur);
     }
   },
 
@@ -259,12 +272,15 @@ export default Component.extend({
         return;
       }
 
-      const $topic = $(this.element);
-      $topic
-        .addClass("highlighted")
-        .attr("data-islastviewedtopic", opts.isLastViewedTopic);
-
-      $topic.on("animationend", () => $topic.removeClass("highlighted"));
+      this.element.classList.add("highlighted");
+      this.element.setAttribute(
+        "data-islastviewedtopic",
+        opts.isLastViewedTopic
+      );
+      this.element.addEventListener("animationend", () => {
+        this.element.classList.remove("highlighted");
+      });
+      this.element.querySelector(".main-link .title").focus();
     });
   },
 
@@ -279,4 +295,20 @@ export default Component.extend({
       this.highlight();
     }
   }),
+
+  @bind
+  _onTitleFocus() {
+    if (this.element && !this.isDestroying && !this.isDestroyed) {
+      const mainLink = this.element.querySelector(".main-link");
+      mainLink.classList.add("focused");
+    }
+  },
+
+  @bind
+  _onTitleBlur() {
+    if (this.element && !this.isDestroying && !this.isDestroyed) {
+      const mainLink = this.element.querySelector(".main-link");
+      mainLink.classList.remove("focused");
+    }
+  },
 });
