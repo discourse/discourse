@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 RSpec.describe Jobs::DiscourseNarrativeBot::GrantBadges do
   let(:user) { Fabricate(:user) }
   let(:other_user) { Fabricate(:user) }

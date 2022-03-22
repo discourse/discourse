@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe UserProfile do
   it 'is created automatically when a user is created' do
     user = Fabricate(:evil_trout)

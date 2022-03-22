@@ -17,6 +17,7 @@ export default Controller.extend(CanCheckEmails, {
   listFilter: null,
   selectAll: false,
   searchHint: i18n("search_hint"),
+  _searchIndex: 0,
 
   init() {
     this._super(...arguments);
@@ -48,6 +49,8 @@ export default Controller.extend(CanCheckEmails, {
       return;
     }
 
+    this._searchIndex++;
+    const searchIndex = this._searchIndex;
     this.set("refreshing", true);
 
     AdminUser.findAll(this.query, {
@@ -58,6 +61,10 @@ export default Controller.extend(CanCheckEmails, {
       page: this._page,
     })
       .then((result) => {
+        if (this.ignoreResponse(searchIndex)) {
+          return;
+        }
+
         if (!result || result.length === 0) {
           this._canLoadMore = false;
         }
@@ -65,7 +72,18 @@ export default Controller.extend(CanCheckEmails, {
         this._results = this._results.concat(result);
         this.set("model", this._results);
       })
-      .finally(() => this.set("refreshing", false));
+      .finally(() => {
+        if (this.ignoreResponse(searchIndex)) {
+          return;
+        }
+        this.set("refreshing", false);
+      });
+  },
+
+  ignoreResponse(searchIndex) {
+    return (
+      searchIndex !== this._searchIndex || this.isDestroyed || this.isDestroying
+    );
   },
 
   actions: {

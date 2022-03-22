@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 RSpec.describe WebHookPostSerializer do
   fab!(:admin) { Fabricate(:admin) }
   fab!(:post) { Fabricate(:post) }

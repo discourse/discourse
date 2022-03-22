@@ -256,26 +256,30 @@
 
   .topic {
     padding-bottom: 0.25em;
-    max-width: 700px;
     display: grid;
     grid-template-areas:
       "bulk-select title"
       "meta meta";
     grid-template-columns: auto 1fr;
-    align-items: baseline;
+
     .bulk-select {
       position: absolute;
       left: 0.5em;
       top: 0.75em;
       padding: 0.25em 0.5em;
       background-color: var(--tertiary-low);
+
       input[type="checkbox"] {
         margin: 0;
       }
     }
+
     .search-link {
+      align-items: baseline;
+      display: flex;
       grid-area: title;
     }
+
     .search-category {
       grid-area: meta;
     }
@@ -325,7 +329,7 @@
     }
   }
 
-  a.search-link:visited .topic-title {
+  a.search-link.visited .topic-title {
     color: var(--primary-medium);
   }
   .search-link {
@@ -336,6 +340,7 @@
     }
     .topic-statuses {
       display: inline-block;
+      flex-shrink: 0;
       font-size: 1.3em;
       line-height: $line-height-medium;
       color: var(--primary-medium);

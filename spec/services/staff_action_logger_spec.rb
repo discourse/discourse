@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe StaffActionLogger do
 
   fab!(:admin)  { Fabricate(:admin) }

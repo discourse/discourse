@@ -148,7 +148,6 @@ id:
     bootstrap_mode_disabled: "Mode bootstrap akan dinonaktifkan dalam 24 jam."
     themes:
       default_description: "Asal"
-      broken_theme_alert: "Situs Anda mungkin tidak akan bekerja karena tema / komponen %{theme} memiliki masalah. Nonaktifkan pada %{path}."
     s3:
       regions:
         ap_northeast_1: "Asia Pacific (Tokyo)"
@@ -256,10 +255,6 @@ id:
       confirm_clear: "Yakin ingin menghapus semua penandaan Anda dari topik ini?"
       save: "Simpan"
       no_timezone: 'Anda belum menetapkan zona waktu. Anda tidak akan dapat mengatur pengingat. Tetapkan satu <a href="%{basePath}/my/preferences/profile">di profil Anda</a> .'
-      auto_delete_preference:
-        label: "Hapus secara otomatis"
-        never: "Tidak pernah"
-        on_owner_reply: "Setelah saya membalas topik ini"
       search: "Cari"
       reminders:
         today_with_time: "hari ini pada %{time}"
@@ -308,8 +303,8 @@ id:
     switch_to_anon: "Masuki Mode Anonim"
     switch_from_anon: "Keluar Mode Anonim"
     banner:
-      close: "Abaikan banner ini."
-      edit: "Ubah banner ini >>"
+      close: "Abaikan banner ini"
+      edit: "Ubah"
     pwa:
       install_banner: "Apakah Anda ingin <a href>menginstal %{title} pada perangkat ini?</a>"
     choose_topic:

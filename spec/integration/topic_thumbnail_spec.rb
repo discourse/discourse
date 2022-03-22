@@ -1,6 +1,4 @@
 # frozen_string_literal: true
-require 'rails_helper'
-
 describe "Topic Thumbnails" do
   before do
     SiteSetting.create_thumbnails = true

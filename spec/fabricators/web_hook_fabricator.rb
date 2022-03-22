@@ -110,3 +110,11 @@ Fabricator(:like_web_hook, from: :web_hook) do
     web_hook.web_hook_event_types = [transients[:like_hook]]
   end
 end
+
+Fabricator(:user_promoted_web_hook, from: :web_hook) do
+  transient user_promoted_hook: WebHookEventType.find_by(name: 'user_promoted')
+
+  after_build do |web_hook, transients|
+    web_hook.web_hook_event_types = [transients[:user_promoted_hook]]
+  end
+end

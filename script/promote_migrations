@@ -100,9 +100,9 @@ end
 puts 'Done! File moves are staged and ready for commit.'
 puts 'Suggested commit message:'
 puts '-' * 20
-puts <<~MESSAGE
+puts <<~TEXT
 DEV: Promote historic post_deploy migrations
 
 This commit promotes all post_deploy migrations which existed in Discourse #{previous_stable_version} (timestamp <= #{promote_threshold})
-MESSAGE
+TEXT
 puts '-' * 20

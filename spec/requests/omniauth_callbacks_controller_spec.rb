@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
 require 'discourse_connect_base'
 
 RSpec.describe Users::OmniauthCallbacksController do

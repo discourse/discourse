@@ -856,3 +856,11 @@
     width: calc(100%);
   }
 }
+
+.modal-body .codeblock-buttons {
+  margin: 0;
+
+  button {
+    top: 21px;
+  }
+}

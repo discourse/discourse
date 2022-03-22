@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe EmbeddableHost do
   it "trims http" do
     eh = EmbeddableHost.new(host: 'http://example.com')

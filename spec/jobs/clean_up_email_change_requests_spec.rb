@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe Jobs::CleanUpEmailChangeRequests do
   it "deletes records older than 1 month" do
     very_old = Fabricate(:email_change_request, updated_at: 32.days.ago)

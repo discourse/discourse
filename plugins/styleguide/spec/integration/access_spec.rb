@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe 'SiteSetting.styleguide_admin_only' do
   before do
     SiteSetting.styleguide_enabled = true

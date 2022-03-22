@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe UserOption do
 
   describe "#ensure_consistency!" do

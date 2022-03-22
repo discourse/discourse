@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 RSpec::Matchers.define :add_notification do |user, notification_type|
   match(notify_expectation_failures: true) do |actual|
     notifications = user.notifications
@@ -88,7 +86,7 @@ describe PostAlerter do
     context "group inboxes" do
       fab!(:user1) { Fabricate(:user) }
       fab!(:user2) { Fabricate(:user) }
-      fab!(:group) { Fabricate(:group, users: [user2], name: "TestGroup") }
+      fab!(:group) { Fabricate(:group, users: [user2], name: "TestGroup", default_notification_level: 2) }
       fab!(:pm) { Fabricate(:topic, archetype: 'private_message', category_id: nil, allowed_groups: [group]) }
       fab!(:op) { Fabricate(:post, user: pm.user, topic: pm) }
 
@@ -104,6 +102,7 @@ describe PostAlerter do
       end
 
       it "triggers group summary notification" do
+        Jobs.run_immediately!
         TopicUser.change(user2.id, pm.id, notification_level: TopicUser.notification_levels[:tracking])
 
         PostAlerter.post_created(op)
@@ -114,6 +113,49 @@ describe PostAlerter do
 
         notification_payload = JSON.parse(group_summary_notification.first.data)
         expect(notification_payload["group_name"]).to eq(group.name)
+        expect(notification_payload["inbox_count"]).to eq(1)
+
+        # archiving the only PM clears the group summary notification
+        GroupArchivedMessage.archive!(group.id, pm)
+        expect(Notification.where(user_id: user2.id)).to be_blank
+
+        # moving to inbox the only PM restores the group summary notification
+        GroupArchivedMessage.move_to_inbox!(group.id, pm)
+        group_summary_notification = Notification.where(user_id: user2.id)
+        expect(group_summary_notification.first.notification_type).to eq(Notification.types[:group_message_summary])
+
+        updated_payload = JSON.parse(group_summary_notification.first.data)
+        expect(updated_payload["group_name"]).to eq(group.name)
+        expect(updated_payload["inbox_count"]).to eq(1)
+
+        # adding a second PM updates the count
+        pm2 = Fabricate(:topic, archetype: 'private_message', category_id: nil, allowed_groups: [group])
+        op2 = Fabricate(:post, user: pm2.user, topic: pm2)
+        TopicUser.change(user2.id, pm2.id, notification_level: TopicUser.notification_levels[:tracking])
+
+        PostAlerter.post_created(op2)
+        group_summary_notification = Notification.where(user_id: user2.id)
+        updated_payload = JSON.parse(group_summary_notification.first.data)
+
+        expect(updated_payload["group_name"]).to eq(group.name)
+        expect(updated_payload["inbox_count"]).to eq(2)
+
+        # archiving the second PM quietly updates the group summary count for the acting user
+        GroupArchivedMessage.archive!(group.id, pm2, acting_user_id: user2.id)
+        group_summary_notification = Notification.where(user_id: user2.id)
+        expect(group_summary_notification.first.read).to eq(true)
+        updated_payload = JSON.parse(group_summary_notification.first.data)
+
+        expect(updated_payload["inbox_count"]).to eq(1)
+
+        # moving to inbox the second PM quietly updates the group summary count for the acting user
+        GroupArchivedMessage.move_to_inbox!(group.id, pm2, acting_user_id: user2.id)
+        group_summary_notification = Notification.where(user_id: user2.id)
+        expect(group_summary_notification.first.read).to eq(true)
+        updated_payload = JSON.parse(group_summary_notification.first.data)
+
+        expect(updated_payload["group_name"]).to eq(group.name)
+        expect(updated_payload["inbox_count"]).to eq(2)
       end
 
       it 'updates the consolidated group summary inbox count and bumps the notification' do
@@ -170,14 +212,14 @@ describe PostAlerter do
         }.to change(user1.notifications, :count).by(1)
       end
 
-      it 'nofies a group member if someone quotes their post' do
+      it 'notifies a group member if someone quotes their post' do
         group.add(user1)
 
         post = Fabricate(:post, topic: pm, user: user1)
         TopicUser.change(user1.id, pm.id, notification_level: TopicUser.notification_levels[:regular])
-        quote_raw = <<~STRING
+        quote_raw = <<~MD
           [quote="#{user1.username}, post:1, topic:#{pm.id}"]#{post.raw}[/quote]
-        STRING
+        MD
 
         expect {
           create_post_with_alerts(
@@ -190,9 +232,9 @@ describe PostAlerter do
         group.add(admin)
 
         TopicUser.change(user2.id, pm.id, notification_level: TopicUser.notification_levels[:regular])
-        quote_raw = <<~STRING
+        quote_raw = <<~MD
           [quote="#{user2.username}, post:1, topic:#{pm.id}"]#{op.raw}[/quote]
-        STRING
+        MD
 
         expect {
           create_post_with_alerts(
@@ -1566,7 +1608,7 @@ describe PostAlerter do
     end
 
     def create_post_with_incoming
-      raw_mail = <<~MAIL
+      raw_mail = <<~EMAIL
       From: Foo <foo@discourse.org>
       To: discourse@example.com
       Cc: bar@discourse.org, jim@othersite.com
@@ -1578,7 +1620,7 @@ describe PostAlerter do
       Content-Transfer-Encoding: 7bit
 
       This is the first email.
-      MAIL
+      EMAIL
 
       Email::Receiver.new(raw_mail, {}).process!
     end
@@ -1716,7 +1758,7 @@ describe PostAlerter do
       email = ActionMailer::Base.deliveries.last
 
       # the reply post from someone who was emailed
-      reply_raw_mail = <<~MAIL
+      reply_raw_mail = <<~EMAIL
       From: Bar <bar@discourse.org>
       To: discourse@example.com
       Cc: someothernewcc@baz.com, finalnewcc@doom.com
@@ -1729,7 +1771,7 @@ describe PostAlerter do
       Content-Transfer-Encoding: 7bit
 
       Hey here is my reply!
-      MAIL
+      EMAIL
 
       reply_post_from_email = nil
       expect {
@@ -1767,7 +1809,7 @@ describe PostAlerter do
       email = ActionMailer::Base.deliveries.last
 
       # the reply post from someone who was emailed
-      reply_raw_mail = <<~MAIL
+      reply_raw_mail = <<~EMAIL
       From: Foo <foo@discourse.org>
       To: discourse@example.com
       Cc: someothernewcc@baz.com, finalnewcc@doom.com
@@ -1780,7 +1822,7 @@ describe PostAlerter do
       Content-Transfer-Encoding: 7bit
 
       I am ~~Commander Shepherd~~ the OP and I approve of this message.
-      MAIL
+      EMAIL
 
       reply_post_from_email = nil
       expect {
@@ -1811,7 +1853,7 @@ describe PostAlerter do
 
       # this is a special case where we are not CC'ing on the original email,
       # only on the follow up email
-      raw_mail = <<~MAIL
+      raw_mail = <<~EMAIL
       From: Foo <foo@discourse.org>
       To: discourse@example.com
       Subject: Full email group username flow
@@ -1822,7 +1864,7 @@ describe PostAlerter do
       Content-Transfer-Encoding: 7bit
 
       This is the first email.
-      MAIL
+      EMAIL
 
       incoming_email_post = Email::Receiver.new(raw_mail, {}).process!
       topic = incoming_email_post.topic
@@ -1833,7 +1875,7 @@ describe PostAlerter do
       email = ActionMailer::Base.deliveries.last
 
       # the reply post from the OP, cc'ing new people in
-      reply_raw_mail = <<~MAIL
+      reply_raw_mail = <<~EMAIL
       From: Foo <foo@discourse.org>
       To: discourse@example.com
       Cc: someothernewcc@baz.com, finalnewcc@doom.com
@@ -1846,7 +1888,7 @@ describe PostAlerter do
       Content-Transfer-Encoding: 7bit
 
       I am inviting my mates to this email party.
-      MAIL
+      EMAIL
 
       reply_post_from_email = nil
       expect {

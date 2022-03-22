@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe PostActionUsersController do
   fab!(:user) { Fabricate(:user) }
   let(:post) { Fabricate(:post, user: sign_in(user)) }

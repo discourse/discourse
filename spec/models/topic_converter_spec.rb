@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe TopicConverter do
 
   context 'convert_to_public_topic' do
@@ -202,6 +200,11 @@ describe TopicConverter do
         expect(private_message.topic_allowed_users.count).to eq(1)
       end
 
+      it "includes the poster of a single-post topic" do
+        moderator = Fabricate(:moderator)
+        private_message = topic.convert_to_private_message(moderator)
+        expect(private_message.allowed_users).to match_array([topic.user, moderator])
+      end
     end
 
     context 'topic has replies' do

@@ -11,5 +11,13 @@ export default function deprecated(msg, opts = {}) {
   if (opts.raiseError) {
     throw msg;
   }
-  console.warn(msg); // eslint-disable-line no-console
+
+  let consolePrefix = "";
+  if (window.Discourse) {
+    // This module doesn't exist in pretty-text/wizard/etc.
+    consolePrefix =
+      require("discourse/lib/source-identifier").consolePrefix() || "";
+  }
+
+  console.warn(consolePrefix, msg); //eslint-disable-line no-console
 }

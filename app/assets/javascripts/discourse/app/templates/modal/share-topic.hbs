@@ -1,12 +1,14 @@
-{{#d-modal-body title="topic.share.title"}}
+{{#d-modal-body rawTitle=(if post (i18n "post.share.title" post_number=post.post_number) (i18n "topic.share.title"))}}
   <form>
     <div class="input-group invite-link">
-      <label for="invite-link">{{i18n "topic.share.instructions"}}</label>
+      <label for="invite-link">
+        {{if post (i18n "post.share.instructions" post_number=post.post_number) (i18n "topic.share.instructions")}}
+      </label>
       <div class="link-share-container">
         {{input
           name="invite-link"
           class="invite-link"
-          value=topicUrl
+          value=url
           readonly=true
         }}
         {{copy-button selector="input.invite-link"}}
@@ -19,13 +21,6 @@
           {{share-source source=s title=topic.title action=(action "share")}}
         {{/each}}
 
-        {{d-button
-          class="btn-default notify"
-          label="topic.share.notify_users.title"
-          icon="hand-point-right"
-          action=(action "toggleNotifyUsers")
-        }}
-
         {{#if allowInvites}}
           {{d-button
             class="btn-default invite"
@@ -34,29 +29,32 @@
             action=(action "inviteUsers")
           }}
         {{/if}}
+
+        {{#if topic.details.can_reply_as_new_topic}}
+          {{#if topic.isPrivateMessage}}
+            {{d-button
+              action=(action "replyAsNewTopic")
+              class="btn-default new-topic"
+              icon="plus"
+              aria-label="post.reply_as_new_private_message"
+              title="post.reply_as_new_private_message"
+              label="user.new_private_message"
+            }}
+          {{else}}
+            {{d-button
+              action=(action "replyAsNewTopic")
+              class="btn-default new-topic"
+              icon="plus"
+              aria-label="post.reply_as_new_topic"
+              title="post.reply_as_new_topic"
+              label="topic.create"
+            }}
+          {{/if}}
+        {{/if}}
       </div>
 
-      {{#if showNotifyUsers}}
-        <div class="input-group invite-users">
-          <label for="invite-users">{{i18n "topic.share.notify_users.instructions"}}</label>
-          <div class="notify-user-input">
-            {{user-chooser
-              value=users
-              onChange=(action "onChangeUsers")
-              options=(hash
-                      topicId=topic.id
-                      maximum=(unless currentUser.staff 1)
-                      excludeCurrentUser=true
-                      )
-            }}
-            {{d-button
-              icon="check"
-              class="btn-primary"
-              disabled=(if users false true)
-              action=(action "notifyUsers")
-            }}
-          </div>
-        </div>
+      {{#if post}}
+        <div class="date">{{displayDate}}</div>
       {{/if}}
     </div>
   </form>

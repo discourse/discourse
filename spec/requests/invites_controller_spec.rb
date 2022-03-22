@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe InvitesController do
   fab!(:admin) { Fabricate(:admin) }
   fab!(:user) { Fabricate(:user, trust_level: SiteSetting.min_trust_level_to_allow_invite) }
@@ -117,6 +115,16 @@ describe InvitesController do
       expect(Notification.where(user: invite.invited_by, notification_type: Notification.types[:invitee_accepted]).count).to eq(1)
     end
 
+    it 'creates an invited user record' do
+      sign_in(invite.invited_by)
+      expect { get "/invites/#{invite.invite_key}" }.to change { InvitedUser.count }.by(0)
+      expect(response.status).to eq(302)
+
+      sign_in(user)
+      expect { get "/invites/#{invite.invite_key}" }.to change { InvitedUser.count }.by(1)
+      expect(response.status).to eq(302)
+    end
+
     it 'fails if invite does not exist' do
       get '/invites/missing'
       expect(response.status).to eq(200)
@@ -192,6 +200,35 @@ describe InvitesController do
 
         post '/invites.json', params: { email: 'test@example.com', topic_id: -9999 }
         expect(response.status).to eq(400)
+      end
+
+      context 'topic is private' do
+        fab!(:group) { Fabricate(:group) }
+
+        fab!(:secured_category) do |category|
+          category = Fabricate(:category)
+          category.permissions = { group.name => :full }
+          category.save!
+          category
+        end
+
+        fab!(:topic) { Fabricate(:topic, category: secured_category) }
+
+        it 'does not work and returns a list of required groups' do
+          sign_in(admin)
+
+          post '/invites.json', params: { email: 'test@example.com', topic_id: topic.id }
+          expect(response.status).to eq(422)
+          expect(response.parsed_body["errors"]).to contain_exactly(I18n.t("invite.requires_groups", groups: group.name))
+        end
+
+        it 'does not work if user cannot edit groups' do
+          group.add(user)
+          sign_in(user)
+
+          post '/invites.json', params: { email: 'test@example.com', topic_id: topic.id }
+          expect(response.status).to eq(403)
+        end
       end
     end
 

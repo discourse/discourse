@@ -28,6 +28,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :redirected_to_top,
              :custom_fields,
              :muted_category_ids,
+             :indirectly_muted_category_ids,
              :regular_category_ids,
              :tracked_category_ids,
              :watched_first_post_category_ids,
@@ -67,6 +68,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :can_review,
              :draft_count,
              :default_calendar,
+             :bookmark_auto_delete_preference,
              :pending_posts_count
 
   delegate :user_stat, to: :object, private: true
@@ -141,6 +143,10 @@ class CurrentUserSerializer < BasicUserSerializer
     object.user_option.default_calendar
   end
 
+  def bookmark_auto_delete_preference
+    object.user_option.bookmark_auto_delete_preference
+  end
+
   def can_send_private_email_messages
     scope.can_send_private_messages_to_email?
   end
@@ -200,6 +206,10 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def muted_category_ids
     categories_with_notification_level(:muted)
+  end
+
+  def indirectly_muted_category_ids
+    CategoryUser.indirectly_muted_category_ids(object)
   end
 
   def regular_category_ids

@@ -486,6 +486,9 @@
           ]
         }
       ]
+    },
+    "external_ids": {
+      "type": "object"
     }
   },
   "required": [
@@ -547,6 +550,7 @@
     "approved_by",
     "suspended_by",
     "silenced_by",
-    "groups"
+    "groups",
+    "external_ids"
   ]
 }

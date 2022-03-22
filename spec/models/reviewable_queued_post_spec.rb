@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 RSpec.describe ReviewableQueuedPost, type: :model do
 
   fab!(:category) { Fabricate(:category) }
@@ -73,7 +71,7 @@ RSpec.describe ReviewableQueuedPost, type: :model do
           expect(notifications).to be_present
 
           # We can't approve twice
-          expect(-> { reviewable.perform(moderator, :approve_post) }).to raise_error(Reviewable::InvalidAction)
+          expect { reviewable.perform(moderator, :approve_post) }.to raise_error(Reviewable::InvalidAction)
         end
 
         it "skips validations" do
@@ -113,7 +111,7 @@ RSpec.describe ReviewableQueuedPost, type: :model do
           expect(Post.count).to eq(post_count)
 
           # We can't reject twice
-          expect(-> { reviewable.perform(moderator, :reject_post) }).to raise_error(Reviewable::InvalidAction)
+          expect { reviewable.perform(moderator, :reject_post) }.to raise_error(Reviewable::InvalidAction)
         end
       end
 

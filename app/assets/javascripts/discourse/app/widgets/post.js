@@ -21,6 +21,8 @@ import { prioritizeNameInUx } from "discourse/lib/settings";
 import { relativeAgeMediumSpan } from "discourse/lib/formatter";
 import { transformBasicPost } from "discourse/lib/transform-post";
 import autoGroupFlairForUser from "discourse/lib/avatar-flair";
+import showModal from "discourse/lib/show-modal";
+import { nativeShare } from "discourse/lib/pwa-utils";
 
 function transformWithCallbacks(post) {
   let transformed = transformBasicPost(post);
@@ -173,6 +175,8 @@ createWidget("post-avatar", {
 
   html(attrs) {
     let body;
+    let hideFromAnonUser =
+      this.siteSettings.hide_user_profiles_from_public && !this.currentUser;
     if (!attrs.user_id) {
       body = iconNode("far-trash-alt", { class: "deleted-user-avatar" });
     } else {
@@ -181,7 +185,7 @@ createWidget("post-avatar", {
         username: attrs.username,
         name: attrs.name,
         url: attrs.usernameUrl,
-        className: "main-avatar",
+        className: `main-avatar ${hideFromAnonUser ? "non-clickable" : ""}`,
         hideTitle: true,
       });
     }
@@ -276,21 +280,6 @@ createWidget("post-meta-data", {
       );
     }
 
-    const lastWikiEdit =
-      attrs.wiki && attrs.lastWikiEdit && new Date(attrs.lastWikiEdit);
-    const createdAt = new Date(attrs.created_at);
-    const date = lastWikiEdit ? dateNode(lastWikiEdit) : dateNode(createdAt);
-    const attributes = {
-      class: "post-date",
-      href: attrs.shareUrl,
-      "data-share-url": attrs.shareUrl,
-      "data-post-number": attrs.post_number,
-    };
-
-    if (lastWikiEdit) {
-      attributes["class"] += " last-wiki-edit";
-    }
-
     if (attrs.via_email) {
       postInfo.push(this.attach("post-email-indicator", attrs));
     }
@@ -311,7 +300,7 @@ createWidget("post-meta-data", {
       postInfo.push(this.attach("reply-to-tab", attrs));
     }
 
-    postInfo.push(h("div.post-info.post-date", h("a", { attributes }, date)));
+    postInfo.push(this.attach("post-date", attrs));
 
     postInfo.push(
       h(
@@ -345,6 +334,29 @@ createWidget("expand-hidden", {
 
   click() {
     this.sendWidgetAction("expandHidden");
+  },
+});
+
+createWidget("post-date", {
+  tagName: "div.post-info.post-date",
+
+  html(attrs) {
+    const attributes = { class: "post-date" };
+    let date;
+    if (attrs.wiki && attrs.lastWikiEdit) {
+      attributes["class"] += " last-wiki-edit";
+      date = new Date(attrs.lastWikiEdit);
+    } else {
+      date = new Date(attrs.created_at);
+    }
+    return h("a", { attributes }, dateNode(date));
+  },
+
+  click() {
+    const post = this.findAncestorModel();
+    const topic = post.topic;
+    const controller = showModal("share-topic", { model: topic.category });
+    controller.setProperties({ topic, post });
   },
 });
 
@@ -534,6 +546,15 @@ createWidget("post-contents", {
   expandFirstPost() {
     const post = this.findAncestorModel();
     return post.expand().then(() => (this.state.expandedFirstPost = true));
+  },
+
+  share() {
+    const post = this.findAncestorModel();
+    nativeShare(this.capabilities, { url: post.shareUrl }).catch(() => {
+      const topic = post.topic;
+      const controller = showModal("share-topic", { model: topic.category });
+      controller.setProperties({ topic, post });
+    });
   },
 });
 

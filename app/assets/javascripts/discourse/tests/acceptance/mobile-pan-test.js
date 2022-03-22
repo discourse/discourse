@@ -73,7 +73,7 @@ async function triggerSwipeEnd({ x, y, touchTarget }) {
   });
 }
 
-// new Touch() isn't availiable in Firefox, so this is skipped there
+// new Touch() isn't available in Firefox, so this is skipped there
 acceptance("Mobile - menu swipes", function (needs) {
   needs.mobileView();
   needs.user();

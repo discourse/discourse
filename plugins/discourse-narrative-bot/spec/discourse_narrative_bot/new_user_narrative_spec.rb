@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe DiscourseNarrativeBot::NewUserNarrative do
   fab!(:welcome_topic) { Fabricate(:topic, title: 'Welcome to Discourse') }
   fab!(:narrative_bot) { ::DiscourseNarrativeBot::Base.new }

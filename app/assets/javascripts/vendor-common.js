@@ -8,7 +8,6 @@
 //= require popper.js
 //= require bootstrap-modal.js
 //= require caret_position
-//= require lodash.js
 //= require itsatrap.js
 //= require rsvp.js
 //= require uppy.js

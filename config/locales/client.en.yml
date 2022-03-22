@@ -182,6 +182,7 @@ en:
 
     wizard_required: "Welcome to your new Discourse! Let’s get started with <a href='%{url}' data-auto-route='true'>the setup wizard</a> ✨"
     emails_are_disabled: "All outgoing email has been globally disabled by an administrator. No email notifications of any kind will be sent."
+    emails_are_disabled_non_staff: "Outgoing email has been disabled for non-staff users."
 
     software_update_prompt:
       message: "We've updated this site, <span>please refresh</span>, or you may experience unexpected behavior."
@@ -194,9 +195,11 @@ en:
 
     themes:
       default_description: "Default"
-      broken_theme_alert: "Your site may not work because theme / component %{theme} has errors. Disable it at %{path}."
+      broken_theme_alert: "Your site may not work because a theme / component has errors."
+      error_caused_by: "Caused by '%{name}'. <a target='blank' href='%{path}'>Click here</a> to update, reconfigure or disable."
+      only_admins: "(this message is only shown to site administrators)"
 
-    broken_decorator_alert: "Posts may not display correctly because one of the post content decorators on your site raised an error. Check the browser developer tools for more information."
+    broken_decorator_alert: "Posts may not display correctly because one of the post content decorators on your site raised an error."
 
     s3:
       regions:
@@ -327,10 +330,11 @@ en:
       list_permission_denied: "You do not have permission to view this user's bookmarks."
       no_user_bookmarks: "You have no bookmarked posts; bookmarks allow you to quickly refer to specific posts."
       auto_delete_preference:
-        label: "Automatically delete"
-        never: "Never"
-        when_reminder_sent: "Once the reminder is sent"
-        on_owner_reply: "After I reply to this topic"
+        label: "After you are notified"
+        never: "Keep bookmark"
+        when_reminder_sent: "Delete bookmark"
+        on_owner_reply: "Delete bookmark, once I reply"
+        clear_reminder: "Keep bookmark and clear reminder"
       search_placeholder: "Search bookmarks by name, topic title, or post content"
       search: "Search"
       reminders:
@@ -341,6 +345,8 @@ en:
 
     copy_codeblock:
       copied: "copied!"
+      copy: "copy code to clipboard"
+      fullscreen: "show code in full screen"
 
     drafts:
       label: "Drafts"
@@ -405,8 +411,8 @@ en:
     switch_from_anon: "Exit Anonymous Mode"
 
     banner:
-      close: "Dismiss this banner."
-      edit: "Edit this banner >>"
+      close: "Dismiss this banner"
+      edit: "Edit"
 
     pwa:
       install_banner: "Do you want to <a href>install %{title} on this device?</a>"
@@ -1379,6 +1385,7 @@ en:
         upload_title: "Upload your picture"
         image_is_not_a_square: "Warning: we've cropped your image; width and height were not equal."
         logo_small: "Site's small logo. Used by default."
+        use_custom: "Or upload a custom avatar:"
 
       change_profile_background:
         title: "Profile Header"
@@ -1978,6 +1985,7 @@ en:
       second_factor_toggle:
         totp: "Use an authenticator app instead"
         backup_code: "Use a backup code instead"
+        security_key: "Use a security key instead"
     invites:
       accept_title: "Invitation"
       emoji: "envelope emoji"
@@ -2009,6 +2017,7 @@ en:
       categories_and_top_topics: "Categories and Top Topics"
       categories_boxes: "Boxes with Subcategories"
       categories_boxes_with_topics: "Boxes with Featured Topics"
+      subcategories_with_featured_topics: "Subcategories with Featured Topics"
 
     shortcut_modifier_key:
       shift: "Shift"
@@ -2497,7 +2506,7 @@ en:
         clear_all: "Clear All"
         unlist_topics: "Unlist Topics"
         relist_topics: "Relist Topics"
-        reset_read: "Reset Read"
+        defer: "Defer"
         delete: "Delete Topics"
         dismiss: "Dismiss"
         dismiss_read: "Dismiss all unread"
@@ -2837,7 +2846,7 @@ en:
         help: "begin composing a reply to this topic"
 
       share:
-        title: "Share"
+        title: "Share Topic"
         extended_title: "Share a link"
         help: "share a link to this topic"
         instructions: "Share a link to this topic:"
@@ -2845,12 +2854,6 @@ en:
         restricted_groups:
           one: "Only visible to members of group: %{groupNames}"
           other: "Only visible to members of groups: %{groupNames}"
-        notify_users:
-          title: "Notify"
-          instructions: "Notify the following users about this topic:"
-          success:
-            one: "Successfully notified %{username} about this topic."
-            other: "Successfully notified all users about this topic."
         invite_users: "Invite"
 
       print:
@@ -3102,6 +3105,7 @@ en:
         edit: "Sorry, there was an error editing your post. Please try again."
         upload: "Sorry, there was an error uploading that file. Please try again."
         file_too_large: "Sorry, that file is too big (maximum size is %{max_size_kb}kb). Why not upload your large file to a cloud sharing service, then paste the link?"
+        file_size_zero: "Sorry, it looks like something has gone wrong, the file you are trying to upload is 0 bytes. Please try again."
         file_too_large_humanized: "Sorry, that file is too big (maximum size is %{max_size}). Why not upload your large file to a cloud sharing service, then paste the link?"
         too_many_uploads: "Sorry, you can only upload one file at a time."
         too_many_dragged_and_dropped_files:
@@ -3265,6 +3269,9 @@ en:
           edit_bookmark:
             name: "Edit bookmark"
             description: "Edit the bookmark name or change the reminder date and time"
+          clear_bookmark_reminder:
+            name: "Clear reminder"
+            description: "Clear the reminder date and time"
           pin_bookmark:
             name: "Pin bookmark"
             description: "Pin the bookmark. This will make it appear at the top of your bookmarks list."
@@ -3278,6 +3285,10 @@ en:
         viewing_summary: "Viewing a summary of this topic"
         post_number: "%{username}, post #%{post_number}"
         show_all: "Show all"
+
+      share:
+        title: "Share Post #%{post_number}"
+        instructions: "Share a link to this post:"
 
     category:
       none: "(no category)"
@@ -3641,6 +3652,7 @@ en:
 
     lightbox:
       download: "download"
+      open: "original image"
       previous: "Previous (Left arrow key)"
       next: "Next (Right arrow key)"
       counter: "%curr% of %total%"
@@ -3973,6 +3985,8 @@ en:
     fullscreen_table:
       expand_btn: "Expand Table"
 
+    second_factor_auth:
+      redirect_after_success: "Second factor authentication is successful. Redirecting to the previous page…"
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
     type_to_filter: "type to filter..."
@@ -4206,10 +4220,14 @@ en:
             topics:
               read: Read a topic or a specific post in it. RSS is also supported.
               write: Create a new topic or post to an existing one.
+              update: Update a topic. Change the title, category, tags, etc.
               read_lists: Read topic lists like top, new, latest, etc. RSS is also supported.
               wordpress: Necessary for the WordPress wp-discourse plugin to work.
             posts:
               edit: Edit any post or a specific one.
+            categories:
+              list: Get a list of categories.
+              show: Get a single category by id.
             uploads:
               create: Upload a new file or initiate single or multipart direct uploads to external storage.
             users:
@@ -4291,6 +4309,9 @@ en:
         notification_event:
           name: "Notification Event"
           details: "When a user receives a notification in their feed."
+        user_promoted_event:
+          name: "User Promoted Event"
+          details: "When a user is promoted from one trust level to another."
         user_badge_event:
           name: "Badge Grant Event"
           details: "When a user receives a badge."
@@ -4433,7 +4454,7 @@ en:
         delete_confirm: 'Are you sure you want to delete "%{theme_name}"?'
         color: "Color"
         opacity: "Opacity"
-        copy: "Copy"
+        copy: "Duplicate"
         copy_to_clipboard: "Copy to Clipboard"
         copied_to_clipboard: "Copied to Clipboard"
         copy_to_clipboard_error: "Error copying data to Clipboard"

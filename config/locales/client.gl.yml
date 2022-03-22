@@ -167,7 +167,6 @@ gl:
     bootstrap_mode_disabled: "O modo Bootstrap desactivarase nun prazo de 24 horas."
     themes:
       default_description: "Predeterminado"
-      broken_theme_alert: "Pode que o seu sitio non funcione porque o tema ou compoñente %{theme} contén erros. Desactíveo en %{path}."
     s3:
       regions:
         ap_northeast_1: "Asia Pacífico (Tokio)"
@@ -280,10 +279,7 @@ gl:
       list_permission_denied: "Non ten permiso para ver os marcadores deste usuario."
       no_user_bookmarks: "Non ten marcadores de publicacións; os marcadores permítenlle facer rapidamente referencia a publicacións específicas."
       auto_delete_preference:
-        label: "Eliminar automaticamente"
-        never: "Nunca"
-        when_reminder_sent: "Unha vez enviado o recordatorio"
-        on_owner_reply: "Despois de responder eu a este tema"
+        when_reminder_sent: "Eliminar marcador"
       search_placeholder: "Buscar marcadores por nome, título do tema ou contido da publicación"
       search: "Buscar"
       reminders:
@@ -340,8 +336,8 @@ gl:
     switch_to_anon: "Entrar no modo anónimo"
     switch_from_anon: "Saír do modo anónimo"
     banner:
-      close: "Desbotar este báner."
-      edit: "Editar este báner »"
+      close: "Desbotar este báner"
+      edit: "Editar"
     pwa:
       install_banner: "Quere <a href>instalar %{title} neste dispositivo?</a>"
     choose_topic:
@@ -2118,7 +2114,7 @@ gl:
         clear_all: "Borrar todo"
         unlist_topics: "Retirar temas da listaxe"
         relist_topics: "Refacer a listaxe de temas"
-        reset_read: "Restabelecer os lidos"
+        defer: "Adiar"
         delete: "Eliminar temas"
         dismiss: "Desbotar"
         dismiss_read: "Desbotar os non lidos"
@@ -2401,7 +2397,6 @@ gl:
         title: "Responder"
         help: "escribir unha resposta a este tema"
       share:
-        title: "Compartir"
         extended_title: "Compartir unha ligazón"
         help: "compartir unha ligazón a este tema"
         invite_users: "Convidar"
@@ -3792,7 +3787,6 @@ gl:
         delete_confirm: 'Confirma a eliminación de «%{theme_name}»?'
         color: "Cor"
         opacity: "Opacidade"
-        copy: "Copiar"
         copy_to_clipboard: "Copiar ao portapapeis"
         copied_to_clipboard: "Copiado ao portapapeis"
         copy_to_clipboard_error: "Erro ao copiar os datos ao portapapeis"

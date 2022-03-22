@@ -9,7 +9,9 @@ class PostOwnerChanger
     @acting_user = params[:acting_user]
     @skip_revision = params[:skip_revision] || false
 
-    raise ArgumentError unless @post_ids && @topic && @new_owner && @acting_user
+    [:post_ids, :topic, :new_owner, :acting_user].each do |arg|
+      raise ArgumentError.new(arg) if self.instance_variable_get("@#{arg}").blank?
+    end
   end
 
   def change_owner!

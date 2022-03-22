@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe GroupShowSerializer do
   fab!(:user) { Fabricate(:user) }
   fab!(:group) { Fabricate(:group) }

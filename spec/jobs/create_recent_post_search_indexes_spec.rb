@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe Jobs::CreateRecentPostSearchIndexes do
   subject { described_class.new }
 

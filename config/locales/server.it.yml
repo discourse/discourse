@@ -241,7 +241,7 @@ it:
     disabled_errors:
       discourse_connect_enabled: "Gli inviti sono disabilitati perché è abilitato DiscourseConnect."
       invalid_access: "Non hai il permesso di visualizzare la risorsa richiesta."
-    requires_groups: "Invito salvato. Per dare accesso all'argomento specificato, aggiungi uno dei seguenti gruppi: %{groups}."
+    requires_groups: "L'invito non è stato salvato perché l'argomento specificato non è accessibile. Aggiungi uno dei seguenti gruppi: %{groups}."
     domain_not_allowed: "La tua email non può essere usata per riscattare l’invito."
   bulk_invite:
     file_should_be_csv: "Il file caricato deve essere in formato csv."
@@ -644,6 +644,7 @@ it:
       permission_conflict: "Qualsiasi gruppo a cui è consentito l'accesso a una sottocategoria deve anche poter avere accesso alla categoria genitore. I seguenti gruppi hanno accesso a una delle sottocategorie ma non hanno accesso alla categoria genitore: %{group_names}."
       disallowed_topic_tags: "In questo argomento sono presenti etichette non consentite in questa categoria: '%{tags}'"
       disallowed_tags_generic: "Su questo argomento non sono consentite etichette."
+      slug_contains_non_ascii_chars: "contiene caratteri non-ascii"
     cannot_delete:
       uncategorized: "Questa è una categoria speciale. È utilizzata come area di attesa per gli argomenti senza categoria. Non può essere eliminata."
       has_subcategories: "Non puoi cancellare questa categoria perché ha sotto-categorie."
@@ -1333,7 +1334,7 @@ it:
       labels:
         user: Utente
         qtt_like: Mi piace - Ricevuti
-      description: "I 10 migliori utenti che hanno ricevuto più Mi piace."
+      description: "Primi 10 utenti a ricevere dei \"mi piace\"."
     top_users_by_likes_received_from_inferior_trust_level:
       title: "Migliori utenti per Mi piace ricevuti da un utente con un basso livello di attendibilità"
       labels:
@@ -1346,7 +1347,7 @@ it:
       labels:
         user: Utente
         qtt_like: Mi piace - Ricevuti
-      description: "I migliori 10 utenti che hanno ricevuto Mi piace da una vasta gamma di persone."
+      description: "Primi 10 utenti a ricevere \"mi piace\" da una vasta gamma di persone."
   dashboard:
     group_email_credentials_warning: 'Si è verificato un problema con le credenziali e-mail per il gruppo <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. Nessuna e-mail verrà inviata dalla casella di posta del gruppo fino a quando il problema non sarà risolto. %{error}'
     rails_env_warning: "Il tuo server è in modalità %{env}."
@@ -1686,7 +1687,7 @@ it:
     external_emoji_url: "URL del servizio esterno per le immagini di emoji. Lasciare vuoto questo valore per disabilitare l'opzione."
     use_site_small_logo_as_system_avatar: "Usa il logo piccolo del sito invece dell'avatar utente di sistema. Richiede che il logo sia presente."
     restrict_letter_avatar_colors: "Un elenco di valori in 6 cifre esadecimali per i colori da utilizzare per lo sfondo dell'avatar predefinito con la lettera iniziale."
-    selectable_avatars_enabled: "Forza gli utenti a scegliere un avatar dall'elenco."
+    selectable_avatars_mode: "Consenti agli utenti di selezionare un avatar dall'elenco selectable_avatars e limita i caricamenti di avatar personalizzati al livello di attendibilità selezionato."
     selectable_avatars: "Lista di avatar da cui gli utenti possono scegliere."
     allow_all_attachments_for_group_messages: "Consenti tutti gli allegati sulle email per i messaggi di gruppo."
     png_to_jpg_quality: "Qualità del file JPG convertito (1 è la qualità più bassa, 99 è la qualità migliore, 100 per disabilitare)."
@@ -1958,7 +1959,6 @@ it:
     display_name_on_posts: "Mostra il nome completo dell'utente sui messaggi oltre allo @username."
     show_time_gap_days: "Se due messaggi vengono creati dopo tale numero di giorni, mostrare l'intervallo di tempo nell'argomento."
     short_progress_text_threshold: "Quando il numero di messaggi di un argomento supera questo valore, la barra di avanzamento mostrerà solo il numero di messaggi attuale. Se modifichi l'ampiezza della barra di avanzamento, potresti dover cambiare questo valore."
-    default_code_lang: "Ai blocchi di codice GitHub si applica l'evidenziazione predefinita in uso per la sintassi dei linguaggi di programmazione (lang-auto, ruby, python ecc.)"
     warn_reviving_old_topic_age: "Quando qualcuno inizia a rispondere ad un argomento in cui l'ultima risposta è più vecchia di tale numero di giorni, verrà visualizzato un avviso. Disabilita impostando su 0."
     autohighlight_all_code: "Forza l'evidenziazione della sintassi del codice nei blocchi di testo preformattato, anche se non è stato specificato il linguaggio di programmazione. "
     highlighted_languages: "Regole di evidenziazione della sintassi incluse. (Attenzione: includere troppi linguaggi può influire sulle prestazioni) vedi: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> per una demo"
@@ -2291,6 +2291,8 @@ it:
     second_factor_toggle:
       totp: "Utilizza un'app di autenticazione o una chiave di sicurezza"
       backup_code: "Utilizza un codice di backup"
+  second_factor_auth:
+    challenge_not_found: "Impossibile trovare una richiesta 2FA nella sessione corrente."
   admin:
     email:
       sent_test: "inviata!"
@@ -3428,6 +3430,7 @@ it:
     create_multipart_failure: "Errore nel creare il caricamento multipart nell'archivio esterno."
     abort_multipart_failure: "Errore nell’annullare il caricamento multipart nell'archivio esterno."
     complete_multipart_failure: "Errore nel completare il caricamento multipart nell'archivio esterno."
+    size_zero_failure: "Spiacenti, sembra che qualcosa sia andato storto, il file che stai tentando di caricare è di 0 byte. Per favore riprova."
     attachments:
       too_large: "Spiacenti, ma il file che stai cercando di caricare è troppo grande (la dimensione massima è %{max_size_kb}KB)."
       too_large_humanized: "Purtroppo il file che stai cercando di caricare è troppo grande (la dimensione massima consentita è %{max_size})."
@@ -4161,6 +4164,7 @@ it:
   notification_level:
     ignore_error: "Spiacenti, non puoi ignorare questo utente."
     mute_error: "Spiacenti, non puoi silenziate questo utente."
+    error: "Non si può modificare il livello di notifica per questo utente."
   discord:
     not_in_allowed_guild: "Autenticazione non riuscita. Non sei un membro di una gilda Discord consentita."
   old_keys_reminder:

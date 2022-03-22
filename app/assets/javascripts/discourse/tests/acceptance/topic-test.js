@@ -74,7 +74,7 @@ acceptance("Topic", function (needs) {
     await visit("/t/internationalization-localization/280");
     await click(".topic-post:first-child button.share");
 
-    assert.ok(exists("#share-link"), "it shows the share modal");
+    assert.ok(exists(".share-topic-modal"), "it shows the share modal");
   });
 
   test("Showing and hiding the edit controls", async function (assert) {

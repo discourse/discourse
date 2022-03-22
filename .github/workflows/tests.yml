@@ -38,8 +38,6 @@ jobs:
             target: plugins
           - build_type: frontend
             target: core # Handled by core_frontend_tests job (below)
-          - build_type: frontend
-            target: plugins # Not yet passing in Ember CLI
         include:
           - build_type: frontend
             target: core-plugins

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 RSpec.describe DbHelper do
   describe '.remap' do
     it 'should remap columns properly' do

@@ -167,7 +167,6 @@ ca:
     bootstrap_mode_disabled: "El mode d'arrencada serà desactivat d'aquí a 24 hores."
     themes:
       default_description: "Per defecte"
-      broken_theme_alert: "Pot ser que el vostre lloc web no funcioni perquè l'aparença o component %{theme} té errors. Inhabiliteu-lo en %{path}."
     s3:
       regions:
         ap_northeast_1: "Àsia Pacífic (Tòquio)"
@@ -290,11 +289,6 @@ ca:
       invalid_custom_datetime: "La data i l'hora que heu proporcionat no són vàlides, torneu-ho a provar."
       list_permission_denied: "No teniu permís per veure els marcadors d'aquest usuari."
       no_user_bookmarks: "No teniu publicacions en els preferits. Els preferits us permeten referir-vos fàcilment a publicacions específiques. "
-      auto_delete_preference:
-        label: "Esborra automàticament"
-        never: "Mai"
-        when_reminder_sent: "Una vegada enviat el recordatori"
-        on_owner_reply: "Després de respondre a aquest tema"
       search_placeholder: "Cerqueu preferits per nom, títol del tema o contingut de la publicació"
       search: "Cerca"
       reminders:
@@ -354,8 +348,8 @@ ca:
     switch_to_anon: "Entra en el mode anònim"
     switch_from_anon: "Surt del mode anònim"
     banner:
-      close: "Descarta aquesta bandera."
-      edit: "Edita aquesta bandera >>"
+      close: "Descarta aquesta bandera"
+      edit: "Edita"
     pwa:
       install_banner: "Voleu <a href>instal·lar %{title} en aquest dispositiu?</a>"
     choose_topic:
@@ -1868,7 +1862,7 @@ ca:
         clear_all: "Neteja-ho tot"
         unlist_topics: "Fes temes invisibles"
         relist_topics: "Torna a llistar els temes"
-        reset_read: "Restableix llegit"
+        defer: "Ajorna"
         delete: "Suprimeix temes"
         dismiss: "Descarta-ho"
         dismiss_read: "Descarta tots els llegits"
@@ -2095,7 +2089,6 @@ ca:
         title: "Respon"
         help: "comença a redactar una resposta al tema"
       share:
-        title: "Comparteix"
         extended_title: "Comparteix un enllaç"
         help: "comparteix un enllaç a aquest tema"
         invite_users: "Convida"
@@ -3276,7 +3269,6 @@ ca:
         delete_confirm: 'Esteu segur que voleu suprimir "%{theme_name}"?'
         color: "Color"
         opacity: "Opacitat"
-        copy: "Còpia"
         copy_to_clipboard: "Copia al porta-retalls"
         copied_to_clipboard: "Copiat al porta-retalls."
         copy_to_clipboard_error: "Error copiant dades al porta-retalls"

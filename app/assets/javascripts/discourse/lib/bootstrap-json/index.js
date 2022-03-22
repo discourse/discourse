@@ -301,7 +301,10 @@ module.exports = {
 
   contentFor: function (type, config) {
     if (shouldLoadPluginTestJs() && type === "test-plugin-js") {
-      return `<script src="${config.rootURL}assets/discourse/tests/active-plugins.js"></script>`;
+      return `
+        <script src="${config.rootURL}assets/discourse/tests/active-plugins.js"></script>
+        <script src="${config.rootURL}assets/admin-plugins.js"></script>
+      `;
     } else if (shouldLoadPluginTestJs() && type === "test-plugin-tests-js") {
       return `<script id="plugin-test-script" src="${config.rootURL}assets/discourse/tests/plugin-tests.js"></script>`;
     }

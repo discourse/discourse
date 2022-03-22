@@ -258,7 +258,7 @@ en:
     disabled_errors:
       discourse_connect_enabled: "Invites are disabled because DiscourseConnect is enabled."
       invalid_access: "You are not permitted to view the requested resource."
-    requires_groups: "Invite saved. To give access to the specified topic, add one of the following groups: %{groups}."
+    requires_groups: "Invite was not saved because the specified topic is inaccessible. Add one of the following groups: %{groups}."
     domain_not_allowed: "Your email cannot be used to redeem this invite."
 
   bulk_invite:
@@ -704,6 +704,7 @@ en:
       permission_conflict: "Any group that is allowed to access a subcategory must also be allowed to access the parent category. The following groups have access to one of the subcategories, but no access to parent category: %{group_names}."
       disallowed_topic_tags: "This topic has tags not allowed by this category: '%{tags}'"
       disallowed_tags_generic: "This topic has disallowed tags."
+      slug_contains_non_ascii_chars: "contains non-ascii characters"
     cannot_delete:
       uncategorized: "This category is special. It is intended as a holding area for topics that have no category; it cannot be deleted."
       has_subcategories: "Can't delete this category because it has sub-categories."
@@ -1420,7 +1421,7 @@ en:
       labels:
         user: User
         qtt_like: Likes Received
-      description: "Top 10 users who have been received more likes."
+      description: "Top 10 users who have received likes."
     top_users_by_likes_received_from_inferior_trust_level:
       title: "Top Users by likes received from a user with a lower trust level"
       labels:
@@ -1433,7 +1434,7 @@ en:
       labels:
         user: User
         qtt_like: Likes Received
-      description: "Top 10 users who have had the likes from a wide range of people."
+      description: "Top 10 users who have had likes from a wide range of people."
 
   dashboard:
     group_email_credentials_warning: 'There was an issue with the email credentials for the group <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. No emails will send from the group inbox until this problem is addressed. %{error}'
@@ -1594,6 +1595,9 @@ en:
     tl2_additional_edits_per_day_multiplier: "Increase limit of edits per day for tl2 (member) by multiplying with this number"
     tl3_additional_edits_per_day_multiplier: "Increase limit of edits per day for tl3 (regular) by multiplying with this number"
     tl4_additional_edits_per_day_multiplier: "Increase limit of edits per day for tl4 (leader) by multiplying with this number"
+    tl2_additional_flags_per_day_multiplier: "Increase limit of flags per day for tl2 (member) by multiplying with this number"
+    tl3_additional_flags_per_day_multiplier: "Increase limit of flags per day for tl3 (regular) by multiplying with this number"
+    tl4_additional_flags_per_day_multiplier: "Increase limit of flags per day for tl4 (leader) by multiplying with this number"
 
     num_users_to_silence_new_user: "If a new user's posts get num_spam_flags_to_silence_new_user spam flags from this many different users, hide all their posts and prevent future posting. 0 to disable."
     num_tl3_flags_to_silence_new_user: "If a new user's posts get this many flags from num_tl3_users_to_silence_new_user different trust level 3 users, hide all their posts and prevent future posting. 0 to disable."
@@ -1824,7 +1828,7 @@ en:
     use_site_small_logo_as_system_avatar: "Use the site's small logo instead of the system user's avatar. Requires the logo to be present."
     restrict_letter_avatar_colors: "A list of 6-digit hexadecimal color values to be used for letter avatar background."
     enable_listing_suspended_users_on_search: "Enable regular users to find suspended users."
-    selectable_avatars_enabled: "Force users to choose an avatar from the list."
+    selectable_avatars_mode: "Allow users to select an avatar from the selectable_avatars list and limit custom avatar uploads to the selected trust level."
     selectable_avatars: "List of avatars users can choose from."
 
     allow_all_attachments_for_group_messages: "Allow all email attachments for group messages."
@@ -2188,7 +2192,7 @@ en:
     display_name_on_posts: "Show a user's full name on their posts in addition to their @username."
     show_time_gap_days: "If two posts are made this many days apart, display the time gap in the topic."
     short_progress_text_threshold: "After the number of posts in a topic goes above this number, the progress bar will only show the current post number. If you change the progress bar's width, you may need to change this value."
-    default_code_lang: "Default programming language syntax highlighting applied to code blocks (auto, nohighlight, ruby, python etc.)"
+    default_code_lang: "Default programming language syntax highlighting applied to code blocks (auto, nohighlight, ruby, python etc.). This value must also be present in the `highlighted languages` site setting."
     warn_reviving_old_topic_age: "When someone starts replying to a topic where the last reply is older than this many days, a warning will be displayed. Disable by setting to 0."
     autohighlight_all_code: "Force apply code highlighting to all preformatted code blocks even when they didn't explicitly specify the language."
     highlighted_languages: "Included syntax highlighting rules. (Warning: including too many languages may impact performance) see: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> for a demo"
@@ -2575,6 +2579,13 @@ en:
       totp: "Use an authenticator app or security key instead"
       backup_code: "Use a backup code instead"
 
+  second_factor_auth:
+    challenge_not_found: "Couldn't find a 2FA challenge in your current session."
+    challenge_expired: "Too much time has passed since the 2FA challenge was staged and it's no longer valid. Please try again."
+    challenge_not_completed: "You've not completed the 2FA challenge to perform this action. Please complete the 2FA challenge and try again."
+    actions:
+      grant_admin:
+        description: "For additional security measures, you need to confirm your 2FA before %{username} is granted admin access."
   admin:
     email:
       sent_test: "sent!"
@@ -4077,6 +4088,7 @@ en:
     external_upload_not_found: "The upload was not found in the external store. %{additional_detail}"
     checksum_mismatch_failure: "The checksum of the file you uploaded does not match. The file contents may have changed on upload. Please try again."
     cannot_promote_failure: "The upload cannot be completed, it may have already completed or previously failed."
+    size_zero_failure: "Sorry, it looks like something has gone wrong, the file you are trying to upload is 0 bytes. Please try again."
     attachments:
       too_large: "Sorry, the file you are trying to upload is too big (maximum size is %{max_size_kb}KB)."
       too_large_humanized: "Sorry, the file you are trying to upload is too big (maximum size is %{max_size})."
@@ -5141,6 +5153,7 @@ en:
   notification_level:
     ignore_error: "Sorry, you can't ignore that user."
     mute_error: "Sorry, you can't mute that user."
+    error: "Sorry, you cannot change the notification level for that user."
 
   discord:
     not_in_allowed_guild: "Authentication failed. You are not a member of a permitted Discord guild."

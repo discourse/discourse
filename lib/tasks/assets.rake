@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+if !defined?(EMBER_CLI)
+  EMBER_CLI = ENV["EMBER_CLI_PROD_ASSETS"] != "0"
+end
+
 task 'assets:precompile:before' do
 
   require 'uglifier'
@@ -7,6 +11,18 @@ task 'assets:precompile:before' do
 
   unless %w{profile production}.include? Rails.env
     raise "rake assets:precompile should only be run in RAILS_ENV=production, you are risking unminified assets"
+  end
+
+  if EMBER_CLI && !(ENV["EMBER_CLI_COMPILE_DONE"] == "1")
+    compile_command = "NODE_OPTIONS='--max-old-space-size=2048' yarn --cwd app/assets/javascripts/discourse run ember build -prod"
+    only_assets_precompile_remaining = (ARGV.last == "assets:precompile")
+
+    if only_assets_precompile_remaining
+      # Using exec to free up Rails app memory during ember build
+      exec "#{compile_command} && EMBER_CLI_COMPILE_DONE=1 bin/rake assets:precompile"
+    else
+      system compile_command
+    end
   end
 
   # Ensure we ALWAYS do a clean build
@@ -35,7 +51,7 @@ task 'assets:precompile:before' do
   require 'sprockets'
   require 'digest/sha1'
 
-  if ENV['EMBER_CLI_PROD_ASSETS'] != "0"
+  if EMBER_CLI
     # Remove the assets that Ember CLI will handle for us
     Rails.configuration.assets.precompile.reject! do |asset|
       asset.is_a?(String) && is_ember_cli_asset?(asset)
@@ -82,8 +98,15 @@ task 'assets:flush_sw' => 'environment' do
 end
 
 def is_ember_cli_asset?(name)
-  return false if ENV['EMBER_CLI_PROD_ASSETS'] == '0'
-  %w(application.js admin.js ember_jquery.js pretty-text-bundle.js start-discourse.js vendor.js).include?(name)
+  return false if !EMBER_CLI
+  %w(
+    application.js
+    admin.js
+    ember_jquery.js
+    pretty-text-bundle.js
+    start-discourse.js
+    vendor.js
+  ).include?(name) || name.start_with?("chunk.")
 end
 
 def assets_path
@@ -112,9 +135,9 @@ def compress_node(from, to)
   source_map_url = "#{File.basename(to)}.map"
   base_source_map = assets_path + assets_additional_path
 
-  cmd = <<~EOS
+  cmd = <<~SH
     terser '#{assets_path}/#{from}' -m -c -o '#{to_path}' --source-map "base='#{base_source_map}',root='#{source_map_root}',url='#{source_map_url}',includeSources=true"
-  EOS
+  SH
 
   STDERR.puts cmd
   result = `#{cmd} 2>&1`
@@ -244,13 +267,6 @@ def copy_ember_cli_assets
   assets = {}
   files = {}
 
-  log_task_duration('ember build -prod') {
-    unless system("yarn --cwd #{ember_dir} run ember build -prod")
-      STDERR.puts "Error running ember build"
-      exit 1
-    end
-  }
-
   # Copy assets and generate manifest data
   log_task_duration('Copy assets and generate manifest data') {
     Dir["#{ember_cli_assets}**/*"].each do |f|
@@ -317,7 +333,7 @@ end
 
 task 'assets:precompile' => 'assets:precompile:before' do
 
-  copy_ember_cli_assets if ENV['EMBER_CLI_PROD_ASSETS'] != '0'
+  copy_ember_cli_assets if EMBER_CLI
 
   refresh_days = GlobalSetting.refresh_maxmind_db_during_precompile_days
 

@@ -186,7 +186,6 @@ ro:
     bootstrap_mode_disabled: "Modul bootstrap va fi dezactivat în următoarele 24 de ore"
     themes:
       default_description: "Implicit"
-      broken_theme_alert: "Este posibil ca site-ul dvs. să nu funcționeze, deoarece tema / componenta %{theme} are erori. Dezactivați-l la %{path}."
     s3:
       regions:
         ap_northeast_1: "Asia Pacific (Tokyo)"
@@ -304,10 +303,7 @@ ro:
       list_permission_denied: "Nu ai permisiuni de acces la link-urile preferate ale acestui utilizator"
       no_user_bookmarks: "Nu ai link-uri de postări salvate; link-urile salvate îți permit revenirea la postări specifice"
       auto_delete_preference:
-        label: "Ștergere automată"
-        never: "Niciodată"
-        when_reminder_sent: "Imediat ce memento-ul este trimis"
-        on_owner_reply: "După ce răspund la acest subiect"
+        when_reminder_sent: "Ștergere semn de carte"
       search_placeholder: "Căutați marcaje după nume, titlul subiectului sau conținutul postării"
       search: "Caută"
       reminders:
@@ -369,8 +365,8 @@ ro:
     switch_to_anon: "Intrați în Modul anonim"
     switch_from_anon: "Ieșiți din Modul anonim"
     banner:
-      close: "Ignoră acest banner."
-      edit: "Editează acest banner."
+      close: "Ignoră acest banner"
+      edit: "Editează"
     pwa:
       install_banner: "Vrei să <a href>instalezi %{title} pe acest dispozitiv?</a>"
     choose_topic:
@@ -1786,7 +1782,7 @@ ro:
         select_all: "Selectează tot"
         clear_all: "Deselectează tot"
         unlist_topics: "Elimină subiecte din listă"
-        reset_read: "Resetează citite"
+        defer: "Amânare"
         delete: "Șterge subiectele"
         dismiss: "Abandonează"
         dismiss_read: "Abandonează toate necitite"
@@ -2009,7 +2005,6 @@ ro:
         title: "Răspunde"
         help: "începe să scrii un răspuns la acest subiect"
       share:
-        title: "Distribuie"
         help: "distribuie un link cu acest subiect"
         invite_users: "Invită"
       print:
@@ -3041,7 +3036,6 @@ ro:
         delete: "Șterge"
         color: "Culoare"
         opacity: "Opacitate"
-        copy: "Copiază"
         copy_to_clipboard: "Copiază în clipboard"
         copied_to_clipboard: "Copiat în clipboard"
         copy_to_clipboard_error: "Eroare la copierea datelor în clipboard"

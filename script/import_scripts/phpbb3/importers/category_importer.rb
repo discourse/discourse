@@ -17,7 +17,7 @@ module ImportScripts::PhpBB3
       return if @settings.category_mappings[row[:forum_id].to_s]
 
       if row[:parent_id] && @settings.category_mappings[row[:parent_id].to_s]
-        puts "parent category (#{row[:parent_id]}) was mapped, but children was not (#{row[:forum_id]})"
+        puts "parent category (#{row[:parent_id]}) was mapped, but child was not (#{row[:forum_id]})"
       end
 
       {

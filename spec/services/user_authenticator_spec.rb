@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe UserAuthenticator do
   def github_auth(email_valid)
     {

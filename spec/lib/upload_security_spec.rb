@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 RSpec.describe UploadSecurity do
   let(:private_category) { Fabricate(:private_category, group: Fabricate(:group)) }
   let(:post_in_secure_context) { Fabricate(:post, topic: Fabricate(:topic, category: private_category)) }

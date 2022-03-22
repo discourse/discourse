@@ -85,3 +85,5 @@ pt:
           title: "Ícones de Cabeçalho"
         spinners:
           title: "Spinners"
+        empty_state:
+          title: "Estado vazio"

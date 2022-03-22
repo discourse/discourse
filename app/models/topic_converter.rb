@@ -63,7 +63,7 @@ class TopicConverter
   private
 
   def posters
-    @posters ||= @topic.posts.where("post_number > 1").distinct.pluck(:user_id)
+    @posters ||= @topic.posts.distinct.pluck(:user_id)
   end
 
   def increment_users_post_count

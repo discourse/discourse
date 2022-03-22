@@ -1,15 +1,18 @@
 import Component from "@ember/component";
 import discourseComputed from "discourse-common/utils/decorators";
+import { action } from "@ember/object";
 
 export default Component.extend({
   hide: false,
 
   @discourseComputed("banner.html")
   content(bannerHtml) {
-    const $div = $("<div>");
-    $div.append(bannerHtml);
-    $div.find("[id^='heading--']").removeAttr("id");
-    return $div.html();
+    const newDiv = document.createElement("div");
+    newDiv.innerHTML = bannerHtml;
+    newDiv.querySelectorAll("[id^='heading--']").forEach((el) => {
+      el.removeAttribute("id");
+    });
+    return newDiv.innerHTML;
   },
 
   @discourseComputed("user.dismissed_banner_key", "banner.key", "hide")
@@ -27,17 +30,16 @@ export default Component.extend({
     return !hide && bannerKey && dismissedBannerKey !== bannerKey;
   },
 
-  actions: {
-    dismiss() {
-      if (this.user) {
-        this.user.dismissBanner(this.get("banner.key"));
-      } else {
-        this.set("hide", true);
-        this.keyValueStore.set({
-          key: "dismissed_banner_key",
-          value: this.get("banner.key"),
-        });
-      }
-    },
+  @action
+  dismiss() {
+    if (this.user) {
+      this.user.dismissBanner(this.get("banner.key"));
+    } else {
+      this.set("hide", true);
+      this.keyValueStore.set({
+        key: "dismissed_banner_key",
+        value: this.get("banner.key"),
+      });
+    }
   },
 });

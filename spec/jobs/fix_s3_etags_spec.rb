@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 RSpec.describe Jobs::FixS3Etags do
   let(:etag_with_quotes) { '"ETag"' }
   let(:etag_without_quotes) { 'ETag' }

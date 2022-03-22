@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe StaticController do
   fab!(:upload) { Fabricate(:upload) }
 
@@ -402,6 +400,29 @@ describe StaticController do
         post "/login.json", params: { redirect: login_path }
         expect(response).to redirect_to('/')
       end
+    end
+  end
+
+  describe "#service_worker_asset" do
+    it "works" do
+      get "/service-worker.js"
+      expect(response.status).to eq(200)
+      expect(response.content_type).to start_with("application/javascript")
+      expect(response.body).to include("workbox")
+    end
+
+    it "replaces sourcemap URL" do
+      Rails.application.assets_manifest.stubs(:find_sources).with("service-worker.js").returns([
+        <<~JS
+          someFakeServiceWorkerSource();
+          //# sourceMappingURL=service-worker-abcde.js.map
+        JS
+      ])
+
+      get "/service-worker.js"
+      expect(response.status).to eq(200)
+      expect(response.content_type).to start_with("application/javascript")
+      expect(response.body).to include("sourceMappingURL=/assets/service-worker-abcde.js.map")
     end
   end
 end

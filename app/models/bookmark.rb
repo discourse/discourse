@@ -21,7 +21,8 @@ class Bookmark < ActiveRecord::Base
     @auto_delete_preferences ||= Enum.new(
       never: 0,
       when_reminder_sent: 1,
-      on_owner_reply: 2
+      on_owner_reply: 2,
+      clear_reminder: 3,
     )
   end
 
@@ -33,7 +34,7 @@ class Bookmark < ActiveRecord::Base
     on: [:create, :update],
     if: Proc.new { |b| b.will_save_change_to_post_id? || b.will_save_change_to_for_topic? }
 
-  validate :ensure_sane_reminder_at_time
+  validate :ensure_sane_reminder_at_time, if: :will_save_change_to_reminder_at?
   validate :bookmark_limit_not_reached
   validates :name, length: { maximum: 100 }
 
@@ -83,10 +84,6 @@ class Bookmark < ActiveRecord::Base
     @is_for_first_post ||= new_record? ? Post.exists?(id: post_id, post_number: 1) : post.post_number == 1
   end
 
-  def no_reminder?
-    self.reminder_at.blank?
-  end
-
   def auto_delete_when_reminder_sent?
     self.auto_delete_preference == Bookmark.auto_delete_preferences[:when_reminder_sent]
   end
@@ -95,15 +92,18 @@ class Bookmark < ActiveRecord::Base
     self.auto_delete_preference == Bookmark.auto_delete_preferences[:on_owner_reply]
   end
 
+  def auto_clear_reminder_when_reminder_sent?
+    self.auto_delete_preference == Bookmark.auto_delete_preferences[:clear_reminder]
+  end
+
   def reminder_at_ics(offset: 0)
     (reminder_at + offset).strftime(I18n.t("datetime_formats.formats.calendar_ics"))
   end
 
   def clear_reminder!
     update!(
-      reminder_at: nil,
       reminder_last_sent_at: Time.zone.now,
-      reminder_set_at: nil
+      reminder_set_at: nil,
     )
   end
 
@@ -112,7 +112,7 @@ class Bookmark < ActiveRecord::Base
   end
 
   scope :pending_reminders, ->(before_time = Time.now.utc) do
-    with_reminders.where("reminder_at <= :before_time", before_time: before_time)
+    with_reminders.where("reminder_at <= ?", before_time).where(reminder_last_sent_at: nil)
   end
 
   scope :pending_reminders_for_user, ->(user) do

@@ -25,7 +25,7 @@ module Jobs
 
       message.dig("bounce", "bouncedRecipients").each do |r|
         if email_log = EmailLog.order("created_at DESC").where(to_address: r["emailAddress"]).first
-          email_log.update_columns(bounced: true)
+          email_log.update_columns(bounced: true, bounce_error_code: r["status"])
 
           if email_log.user&.email.present?
             if email_log.user.user_stat.bounce_score.to_s.start_with?("4.") || bounce_type == "Transient"

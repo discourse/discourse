@@ -116,6 +116,13 @@ export function validateUploadedFile(file, opts) {
     }
   }
 
+  if (file.size === 0) {
+    /* eslint-disable no-console */
+    console.warn("File with a 0 byte size detected, cancelling upload.", file);
+    bootbox.alert(I18n.t("post.errors.file_size_zero"));
+    return false;
+  }
+
   // everything went fine
   return true;
 }
@@ -222,7 +229,7 @@ export function isImage(path) {
 }
 
 export function isVideo(path) {
-  return /\.(mov|mp4|webm|m4v|3gp|ogv|avi|mpeg|ogv)$/i.test(path);
+  return /\.(mov|mp4|webm|m4v|3gp|ogv|avi|mpeg)$/i.test(path);
 }
 
 export function isAudio(path) {

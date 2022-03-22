@@ -55,9 +55,10 @@
   .badge-notification {
     position: relative;
     top: -2px;
+
     &.new-topic {
       top: -1px;
-      padding-left: 5px;
+      padding-left: 2px;
     }
   }
 
@@ -229,6 +230,10 @@ button.dismiss-read {
     }
     // show only the first poster
     .topic-list-data.posters {
+      a:first-child .avatar.latest:not(.single) {
+        top: 0px;
+        left: 0px;
+      }
       a:not(.latest) {
         display: none;
       }

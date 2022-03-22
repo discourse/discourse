@@ -241,7 +241,6 @@ pt_BR:
     disabled_errors:
       discourse_connect_enabled: "Convites estão desativados porque o DiscourseConnect está ativado."
       invalid_access: "Você não tem permissão para visualizar o recurso solicitado."
-    requires_groups: "Convite salvo. Para conceder acesso ao tópico especificado, adicione um dos grupos a seguir: %{groups}."
     domain_not_allowed: "Seu e-mail não pode ser usado para resgatar este convite."
   bulk_invite:
     file_should_be_csv: "O arquivo atualizado deve ter o formato csv."
@@ -1336,7 +1335,6 @@ pt_BR:
       labels:
         user: Usuário(a)
         qtt_like: Curtidas recebidas
-      description: "Melhores 10 usuários(as) que receberram mais curtidas."
     top_users_by_likes_received_from_inferior_trust_level:
       title: "Melhores usuários(as) por curtidas recebidas de usuário(a) com nível de confiança mais baixo"
       labels:
@@ -1349,7 +1347,6 @@ pt_BR:
       labels:
         user: Usuário(a)
         qtt_like: Curtidas recebidas
-      description: "Melhores 10 usuários(as) que tinham recebido curtidas de uma ampla variedade de pessoas."
   dashboard:
     group_email_credentials_warning: 'Houve um problema nas credenciais do e-mail do grupo <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. Nenhum e-mail será enviado a partir da caixa de entrada do grupo até este problema ser resolvido. %{error}'
     rails_env_warning: "Seu servidor está rodando no modo %{env}."
@@ -1692,7 +1689,6 @@ pt_BR:
     use_site_small_logo_as_system_avatar: "Use o logotipo pequeno do site em vez do avatar do(a) usuário(a) do sistema. Requer que o logo esteja presente."
     restrict_letter_avatar_colors: "Uma lista de valores de cor hexadecimais de 6 dígitos para serem usados no plano de fundo do avatar da letra."
     enable_listing_suspended_users_on_search: "Ative usuários(as) regulares para encontrar usuários(as) suspensos(as)."
-    selectable_avatars_enabled: "Obrigue os(as) usuários(as) a escolher um avatar da lista."
     selectable_avatars: "Lista de avatares que os(as) usuários(as) podem escolher."
     allow_all_attachments_for_group_messages: "Permitir todos os anexos de e-mail para mensagens de grupo."
     png_to_jpg_quality: "Qualidade do arquivo JPG convertido (1 é a qualidade mais baixa, 99 é a melhor qualidade, 100 para desativar)."
@@ -1757,7 +1753,6 @@ pt_BR:
     max_mentions_per_post: "Quantidade máxima de notificações de @nome que alguém pode usar em uma postagem."
     max_users_notified_per_group_mention: "Quantidade máxima de usuários(as) que podem receber uma notificação se um grupo for mencionado (se o limite for atingido, nenhuma notificação será gerada)"
     enable_mentions: "Permitir que os(as) usuários(as) mencionem outros(as) usuários(as)."
-    here_mention: "Nome usado para menção @here. Não deve ser um nome de usuário(a) que já existe."
     max_here_mentioned: "Número máximo de pessoas mencionadas por @here."
     min_trust_level_for_here_mention: "O nível de confiança mínimo permitido mencioar @here."
     create_thumbnails: "Criar miniaturas e imagens lightbox que são muito grandes para caber em uma postagem."
@@ -1967,7 +1962,6 @@ pt_BR:
     display_name_on_posts: "Exibir o nome completo do(a) usuário(a) em suas postagens, além de seu(sua) @username."
     show_time_gap_days: "Se duas postagens forem feitas com tantos dias de intervalo, mostre o intervalo de tempo no tópico."
     short_progress_text_threshold: "Após a quantidade de mensagens em um tópico ultrapassar este número, a barra de progresso exibirá apenas o número da postagem atual. Se você alterar a largura da barra de progresso, talvez seja necessário alterar este valor."
-    default_code_lang: "Realce de sintaxe de linguagem de programação padrão aplicada aos blocos de código do GitHub (automático, sem destaque, rubi, python, etc.)"
     warn_reviving_old_topic_age: "Quando alguém começa a responder a um tópico anterior a esta quantidade de dias, um aviso será exibido. Desative ao definir como 0."
     autohighlight_all_code: "Aplicar código destacando todos os blocos de código pré-formatados, mesmo quando não especificarem o idioma"
     highlighted_languages: "Regras de destaque de sintaxe incluídas. (Atenção: incluir muitos idiomas pode afetar o desempenho) consulte: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> para ver uma demonstração"

@@ -3,9 +3,14 @@
 require 'mail'
 
 module Email
+  # See https://www.iana.org/assignments/smtp-enhanced-status-codes/smtp-enhanced-status-codes.xhtml#smtp-enhanced-status-codes-1
+  SMTP_STATUS_SUCCESS = "2."
+  SMTP_STATUS_TRANSIENT_FAILURE = "4."
+  SMTP_STATUS_PERMANENT_FAILURE = "5."
+
   def self.is_valid?(email)
     return false unless String === email
-    !!(EmailValidator.email_regex =~ email)
+    EmailAddressValidator.valid_value?(email)
   end
 
   def self.downcase(email)

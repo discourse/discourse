@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe WatchedWord do
 
   it "can't have duplicate words" do

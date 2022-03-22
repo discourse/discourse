@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Onebox::Engine::ImgurOnebox do
   let(:link) { "https://imgur.com/gallery/Sdc0Klc" }
   let(:imgur) { described_class.new(link) }

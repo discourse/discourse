@@ -26,6 +26,10 @@ class BookmarkReminderNotificationHandler
       "Clearing bookmark reminder for bookmark_id #{bookmark.id}. reminder at: #{bookmark.reminder_at}"
     )
 
+    if bookmark.auto_clear_reminder_when_reminder_sent?
+      bookmark.reminder_at = nil
+    end
+
     bookmark.clear_reminder!
   end
 

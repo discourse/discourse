@@ -110,7 +110,11 @@ module Jobs
           tmp_file_name: "discourse-hotlinked",
           follow_redirect: true
         )
-      rescue
+      rescue => e
+        if SiteSetting.verbose_upload_logging
+          Rails.logger.warn("Verbose Upload Logging: Error '#{e.message}' while downloading #{src}")
+        end
+
         if (retries -= 1) > 0 && !Rails.env.test?
           sleep 1
           retry

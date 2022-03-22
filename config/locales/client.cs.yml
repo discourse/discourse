@@ -208,7 +208,6 @@ cs:
     bootstrap_mode_disabled: "Režim bootstrap bude deaktivován v následujících 24 hodinách."
     themes:
       default_description: "Výchozí"
-      broken_theme_alert: "Vaše stránka nemusí fungovat, protože šablona / komponenta %{theme} má chyby. Vypněte ji na %{path}."
     s3:
       regions:
         ap_northeast_1: "Asia Pacific (Tokyo)"
@@ -325,11 +324,6 @@ cs:
       invalid_custom_datetime: "Zadané datum a čas jsou neplatné, zkuste to prosím znovu."
       list_permission_denied: "Nemáte oprávnění k zobrazení záložek tohoto uživatele."
       no_user_bookmarks: "Nemáte žádné záložky; záložky vám umožňují rychle odkazovat na konkrétní příspěvky."
-      auto_delete_preference:
-        label: "Automaticky smazat"
-        never: "Nikdy"
-        when_reminder_sent: "Jakmile je připomenutí odesláno"
-        on_owner_reply: "Po odpovědi na toto téma"
       search_placeholder: "Hledat záložky podle názvu, názvu tématu nebo obsahu příspěvku"
       search: "Vyhledat"
       reminders:
@@ -394,8 +388,8 @@ cs:
     switch_to_anon: "Vstoupit do anonymního módu"
     switch_from_anon: "Opustit anonymní mód"
     banner:
-      close: "Odmítnout tento banner."
-      edit: "Editujte tento banner >>"
+      close: "Odmítnout tento banner"
+      edit: "Upravit"
     pwa:
       install_banner: "Chcete <a href>nainstalovat %{title} na toto zařízení?</a>"
     choose_topic:
@@ -1795,7 +1789,7 @@ cs:
         clear_all: "Zrušit vše"
         unlist_topics: "Odebrat témata ze seznamu"
         relist_topics: "Znovunačíst seznam témat"
-        reset_read: "reset přečteného"
+        defer: "Odložit"
         delete: "Smazat témata"
         dismiss: "Označit jako přečtené"
         dismiss_read: "Označit všechno nepřečtené jako přečtené"
@@ -2031,7 +2025,6 @@ cs:
         title: "Odpovědět"
         help: "Začít psát odpověď na toto téma"
       share:
-        title: "Sdílet"
         help: "sdílet odkaz na toto téma"
         invite_users: "Pozvat"
       print:
@@ -3125,7 +3118,6 @@ cs:
         delete: "Smazat"
         color: "Barva"
         opacity: "Neprůhlednost"
-        copy: "Kopírovat"
         copy_to_clipboard: "Kopírovat do schránky"
         copied_to_clipboard: "Zkopírováno do schránky"
         copy_to_clipboard_error: "Při kopírování dat do schránky došlo k chybě"

@@ -70,17 +70,17 @@ class TopicLinkClick < ActiveRecord::Base
       end
     end
 
-    link = TopicLink.select([:id, :user_id])
-
     # test for all possible URLs
-    link = link.where(Array.new(urls.count, "url = ?").join(" OR "), *urls)
+    link = TopicLink.where(url: urls)
 
     # Find the forum topic link
     link = link.where(post_id: args[:post_id]) if args[:post_id].present?
 
     # If we don't have a post, just find the first occurrence of the link
     link = link.where(topic_id: args[:topic_id]) if args[:topic_id].present?
-    link = link.first
+
+    # select the TopicLink associated to first url
+    link = link.order("array_position(ARRAY[#{urls.map { |s| "#{ActiveRecord::Base.connection.quote(s)}" }.join(',')}], url::text)").first
 
     # If no link is found...
     unless link.present?

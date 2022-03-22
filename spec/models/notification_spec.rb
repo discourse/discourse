@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe Notification do
   fab!(:user) { Fabricate(:user) }
   fab!(:coding_horror) { Fabricate(:coding_horror) }
@@ -53,6 +51,7 @@ describe Notification do
         expect(@types[:event_invitation]).to eq(28)
         expect(@types[:chat_mention]).to eq(29)
         expect(@types[:chat_message]).to eq(30)
+        expect(@types[:assigned]).to eq(34)
       end
     end
   end

@@ -181,7 +181,6 @@ sr:
     bootstrap_mode_disabled: "Bootstrap mod će biti onemogućen u roku od 24 časa."
     themes:
       default_description: "zadato"
-      broken_theme_alert: "Vaš forum možda neće raditi jer tema / komponenta %{theme} ima greške. Onemogućite je putem linka %{path}."
     s3:
       regions:
         ap_northeast_1: "Azija Pacifik (Tokio)"
@@ -302,11 +301,6 @@ sr:
       invalid_custom_datetime: "Uneti datum i vreme nisu važeći. Pokušajte ponovo."
       list_permission_denied: "Nemate dozvolu da vidite obeleživače ovog člana."
       no_user_bookmarks: "Nemate obeleženih poruka; obeleživači vam omogućavaju da se brzo uputite ka određenoj poruci."
-      auto_delete_preference:
-        label: "Automatski ukloni"
-        never: "Nikad"
-        when_reminder_sent: "Kada je podestnik poslan"
-        on_owner_reply: "Nakon mog odgovora u ovoj temi"
       search_placeholder: "Pretraži obeleživače po nazivu, naslovu teme ili sadržaju poruka"
       search: "Pretraži"
       reminders:
@@ -367,8 +361,8 @@ sr:
     switch_to_anon: "Uključi Anonimni režim"
     switch_from_anon: "Izađi iz Anonimnog režima"
     banner:
-      close: "Sakrij ovaj element."
-      edit: "Promeni ovaj baner >>"
+      close: "Sakrij ovaj element"
+      edit: "Izmeni"
     pwa:
       install_banner: "Da li želite <a href>da instalirate %{title} na ovom uređaju?</a>"
     choose_topic:
@@ -1175,7 +1169,7 @@ sr:
       new_messages_marker: "poslednja poseta"
       bulk:
         select_all: "Izaberi sve"
-        reset_read: "Poništi Pročitano"
+        defer: "Odloži"
         delete: "Obriši Teme"
         dismiss_new: "Odbaci Novo"
         toggle: "uključi/isključi grupni odabir tema"
@@ -1329,7 +1323,6 @@ sr:
         title: "Odgovori"
         help: "Počni pravljenje odgovora na ovu temu"
       share:
-        title: "Podeli"
         help: "podeli link ka ovoj temi"
         invite_users: "Pozovi"
       print:
@@ -1965,7 +1958,6 @@ sr:
         delete: "Obriši"
         color: "Boja"
         opacity: "Prozirnost"
-        copy: "Kopija"
         email_templates:
           title: "E-mail"
           subject: "Predmet"

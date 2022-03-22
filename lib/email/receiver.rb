@@ -83,9 +83,7 @@ module Email
 
           post
         rescue Exception => e
-          error = e.to_s
-          error = e.class.name if error.blank?
-          @incoming_email.update_columns(error: error) if @incoming_email
+          @incoming_email.update_columns(error: e.class.name) if @incoming_email
           delete_staged_users
           raise
         end
@@ -238,16 +236,20 @@ module Email
 
     def handle_bounce
       @incoming_email.update_columns(is_bounce: true)
+      mail_error_statuses = Array.wrap(@mail.error_status)
 
       if email_log.present?
-        email_log.update_columns(bounced: true)
+        email_log.update_columns(
+          bounced: true,
+          bounce_error_code: mail_error_statuses.first
+        )
         post = email_log.post
         topic = email_log.topic
       end
 
       DiscourseEvent.trigger(:email_bounce, @mail, @incoming_email, @email_log)
 
-      if @mail.error_status.present? && Array.wrap(@mail.error_status).any? { |s| s.start_with?("4.") }
+      if mail_error_statuses.any? { |s| s.start_with?(Email::SMTP_STATUS_TRANSIENT_FAILURE) }
         Email::Receiver.update_bounce_score(@from_email, SiteSetting.soft_bounce_score)
       else
         Email::Receiver.update_bounce_score(@from_email, SiteSetting.hard_bounce_score)
@@ -1007,13 +1009,13 @@ module Email
 
     def forwarded_email_quote_forwarded(destination, user)
       embedded = embedded_email_raw
-      raw = <<~EOF
+      raw = <<~MD
         #{@before_embedded}
 
         [quote]
         #{PlainTextToMarkdown.new(embedded).to_markdown}
         [/quote]
-      EOF
+      MD
 
       return true if forwarded_email_create_topic(destination: destination, user: user, raw: raw, title: subject)
     end

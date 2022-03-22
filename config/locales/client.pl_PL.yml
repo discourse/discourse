@@ -218,8 +218,10 @@ pl_PL:
     bootstrap_mode_disabled: "Tryb bootstrap zostanie wyłączony w ciągu 24 godzin."
     themes:
       default_description: "Domyślny"
-      broken_theme_alert: "Twoja strona może nie działać, bo motyw / komponent %{theme} zawiera błędy. Wyłącz go w %{path}."
-    broken_decorator_alert: "Posty mogą nie wyświetlać się poprawnie, ponieważ jeden z dekoratorów treści postów w Twojej witrynie zgłosił błąd. Sprawdź narzędzia programistyczne przeglądarki, aby uzyskać więcej informacji."
+      broken_theme_alert: "Twoja strona może nie działać, ponieważ motyw / komponent ma błędy."
+      error_caused_by: "Spowodowane przez '%{name}'. <a target='blank' href='%{path}'>Kliknij tutaj</a>, aby zaktualizować, zmienić konfigurację lub wyłączyć."
+      only_admins: "(ta wiadomość jest wyświetlana tylko administratorom witryny)"
+    broken_decorator_alert: "Posty mogą nie wyświetlać się poprawnie, ponieważ jeden z dekoratorów treści postów w Twojej witrynie zgłosił błąd."
     s3:
       regions:
         ap_northeast_1: "Azja i Pacyfik (Tokio)"
@@ -349,10 +351,7 @@ pl_PL:
       list_permission_denied: "Nie masz uprawnień do przeglądania zakładek tego użytkownika."
       no_user_bookmarks: "Nie masz żadnych postów dodanych do zakładek. Zakładki pozwalają na szybkie odwoływanie się do konkretnych postów."
       auto_delete_preference:
-        label: "Usuń automatycznie"
-        never: "Nigdy"
-        when_reminder_sent: "Po wysłaniu przypomnienia"
-        on_owner_reply: "Gdy odpowiem w tym temacie"
+        when_reminder_sent: "Usuń zakładkę"
       search_placeholder: "Wyszukiwanie zakładek według nazwy, tytułu tematu lub treści postu"
       search: "Wyszukaj"
       reminders:
@@ -422,8 +421,8 @@ pl_PL:
     switch_to_anon: "Włącz tryb anonimowy"
     switch_from_anon: "Zakończ tryb anonimowy"
     banner:
-      close: "Zamknij ten baner."
-      edit: "Edytuj ten baner >>"
+      close: "Zamknij ten baner"
+      edit: "Edytuj"
     pwa:
       install_banner: "Czy chcesz <a href>zainstalować %{title} na tym urządzeniu?</a>"
     choose_topic:
@@ -780,6 +779,7 @@ pl_PL:
             title: "Ustawienia"
             allow_unknown_sender_topic_replies: "Zezwalaj na odpowiedzi od nieznanego nadawcy w temacie."
             allow_unknown_sender_topic_replies_hint: "Umożliwia nieznanym nadawcom odpowiadanie na tematy grupy. Jeśli ta opcja nie jest włączona, odpowiedzi z adresów e-mail, które nie zostały jeszcze zaproszone do tematu, utworzą nowy temat."
+            from_alias: "Z aliasu"
           mailboxes:
             synchronized: "Zsynchronizowana skrzynka pocztowa"
             none_found: "Na tym koncie e-mail nie znaleziono żadnych skrzynek pocztowych."
@@ -1771,7 +1771,7 @@ pl_PL:
     last_post: Opublikowano
     local_time: "Czas lokalny"
     time_read: Przeczytane
-    time_read_recently: "%{time_read} częstości"
+    time_read_recently: "%{time_read} ostatnio"
     time_read_tooltip: "%{time_read} całkowity czas czytania"
     time_read_recently_tooltip: "%{time_read} całkowity czytania (%{recent_time_read} w ciągu ostatnich 60 dni)"
     last_reply_lowercase: ostatnia odpowiedź
@@ -1929,6 +1929,7 @@ pl_PL:
       second_factor_toggle:
         totp: "Zamiast tego użyj aplikacji uwierzytelniającej"
         backup_code: "Zamiast tego użyj kodu zapasowego"
+        security_key: "Zamiast tego użyj klucza zabezpieczeń"
     invites:
       accept_title: "Zaproszenie"
       emoji: "envelope emoji"
@@ -2461,7 +2462,7 @@ pl_PL:
         clear_all: "Wyczyść wszystko"
         unlist_topics: "Ukryj tematy"
         relist_topics: "Odśwież listę tematów"
-        reset_read: "Wyzeruj przeczytane"
+        defer: "Zignoruj"
         delete: "Usuń tematy"
         dismiss: "Wyczyść"
         dismiss_read: "Wyczyść nieprzeczytane"
@@ -2725,7 +2726,7 @@ pl_PL:
         jump_prompt_to_date: "do daty"
         jump_prompt_or: "lub"
       notifications:
-        title: Ustaw jak często chcesz być powiadamiany o tym temacie
+        title: ustaw jak często chcesz mieć powiadomienia o tym temacie
         reasons:
           mailing_list_mode: "Masz włączony tryb powiadomień mailowych, więc będziesz otrzymywał powiadomienia o nowych odpowiedziach w tym temacie za przez e-mail."
           "3_10": "Będziesz otrzymywał powiadomienia, ponieważ temat zawiera obserwowany przez Ciebie tag"
@@ -2799,7 +2800,6 @@ pl_PL:
         title: "Odpowiedz"
         help: "zacznij tworzyć odpowiedź do tego tematu"
       share:
-        title: "Udostępnij"
         extended_title: "Udostępnij link"
         help: "udostępnij odnośnik do tego tematu"
         instructions: "Udostępnij link do tego tematu:"
@@ -2809,14 +2809,6 @@ pl_PL:
           few: "Widoczne tylko dla członków grup: %{groupNames}"
           many: "Widoczne tylko dla członków grup: %{groupNames}"
           other: "Widoczne tylko dla członków grup: %{groupNames}"
-        notify_users:
-          title: "Powiadom"
-          instructions: "Powiadom następujących użytkowników o tym temacie:"
-          success:
-            one: "Pomyślnie powiadomiono %{username} o tym temacie."
-            few: "Pomyślnie powiadomiono wszystkich użytkowników o tym temacie."
-            many: "Pomyślnie powiadomiono wszystkich użytkowników o tym temacie."
-            other: "Pomyślnie powiadomiono wszystkich użytkowników o tym temacie."
         invite_users: "Zaproś"
       print:
         title: "Drukuj"
@@ -3971,6 +3963,8 @@ pl_PL:
     no_group_messages_title: "Nie znaleziono wiadomości grupowych"
     fullscreen_table:
       expand_btn: "Rozwiń tabelę"
+    second_factor_auth:
+      redirect_after_success: "Uwierzytelnianie dwuskładnikowe powiodło się. Przekierowanie do poprzedniej strony…"
   admin_js:
     type_to_filter: "pisz, aby filtrować…"
     admin:
@@ -4201,6 +4195,7 @@ pl_PL:
             topics:
               read: Przeczytaj temat lub konkretny post w nim. Obsługiwany jest również format RSS.
               write: Utwórz nowy temat lub post w istniejącym.
+              update: Zaktualizuj temat. Zmień tytuł, kategorię, tagi itp.
               read_lists: Czytaj listy tematów, takie jak najpopularniejsze, nowe, najnowsze itp. Obsługiwany jest również format RSS.
               wordpress: Niezbędne do działania wtyczki wp-discourse na WordPress.
             posts:
@@ -4427,7 +4422,6 @@ pl_PL:
         delete_confirm: 'Czy na pewno chcesz usunąć "%{theme_name}"?'
         color: "Kolor"
         opacity: "Widoczność"
-        copy: "Kopiuj"
         copy_to_clipboard: "Skopiuj do schowka"
         copied_to_clipboard: "Tekst skopiowany do schowka."
         copy_to_clipboard_error: "Wystąpił błąd w trakcie kopiowania do schowka."
@@ -4441,8 +4435,8 @@ pl_PL:
           revert_confirm: "Czy na pewno chcesz wycofać swoje zmiany?"
         theme:
           theme: "Motyw"
-          component: "Składnik"
-          components: "Składniki"
+          component: "Komponent"
+          components: "Komponenty"
           filter_placeholder: "pisz, aby filtrować…"
           theme_name: "Nazwa motywu"
           component_name: "Nazwa komponentu"
@@ -4461,7 +4455,7 @@ pl_PL:
           edit_confirm: "To jest zdalny styl. Jeśli edytujesz CSS/HTML, twoje zmiany zostaną usunięte po ponownej aktualizacji motywu."
           update_confirm: "Te zmiany zostaną usunięte przez aktualizację. Czy na pewno chcesz kontynuować? "
           update_confirm_yes: "Tak, kontynuuj aktualizację"
-          common: "Częste"
+          common: "Wspólne"
           desktop: "Komputer"
           mobile: "Mobilnie"
           settings: "Ustawienia"
@@ -4485,12 +4479,12 @@ pl_PL:
           theme_components: "Komponenty motywu"
           add_all_themes: "Dodaj wszystkie motywy"
           convert: "Konwertuj"
-          convert_component_alert: "Czy na pewno chcesz konwertować ten składnik na motyw? Zostanie usunięty jako składnik z %{relatives}."
-          convert_component_tooltip: "Konwertuj ten składnik na motyw"
+          convert_component_alert: "Czy na pewno chcesz konwertować ten komponent na motyw? Zostanie usunięty jako komponent z %{relatives}."
+          convert_component_tooltip: "Konwertuj ten komponent na motyw"
           convert_component_alert_generic: "Czy na pewno chcesz przekonwertować ten komponent na motyw?"
-          convert_theme_alert: "Czy na pewno chcesz konwertować ten motyw na składnik. Zostanie usunięty jako rodzic z %{relatives}."
+          convert_theme_alert: "Czy na pewno chcesz konwertować ten motyw na komponent? Zostanie usunięty jako rodzic z %{relatives}."
           convert_theme_alert_generic: "Czy na pewno chcesz przekonwertować ten motyw na komponent?"
-          convert_theme_tooltip: "Konwertuj ten motyw na składnik"
+          convert_theme_tooltip: "Konwertuj ten motyw na komponent"
           inactive_themes: "Nieaktywne motywy:"
           inactive_components: "Nieużywane komponenty:"
           broken_theme_tooltip: "Ten motyw ma błędy w CSS, HTML lub YAML"
@@ -4510,7 +4504,7 @@ pl_PL:
             no_overwrite: "Niewłaściwa nazwa zmiennej. Nie może nadpisywać istniejącej zmiennej."
             must_be_unique: "Niepoprawna nazwa zmiennej. Musi być unikalna."
           upload: "Plik"
-          select_component: "Wybierz składnik..."
+          select_component: "Wybierz komponent..."
           unsaved_changes_alert: "Nie zapisałeś/łaś jeszcze zmian, czy chcesz je odrzucić i przejść dalej?"
           unsaved_parent_themes: "Nie przypisałeś/łaś komponentu do motywów, czy chcesz przejść dalej?"
           discard: "Odrzuć"
@@ -4669,8 +4663,8 @@ pl_PL:
           warning: "To ustawienie permanentnie nadpisze wszystkie powiązane ustawienia witryny."
           overridden: Domyślny plik robots.txt twojej witryny został nadpisany
         email_style:
-          title: "Styl wiadomości e-mail"
-          heading: "Dostosuj styl wiadomości e-mail"
+          title: "Styl e-maili"
+          heading: "Dostosuj styl e-maili"
           html: "Szablon HTML"
           css: "CSS"
           reset: "Przywróć ustawienia domyślne"
@@ -4860,8 +4854,8 @@ pl_PL:
             embeddable_host_update: "zmodyfikuj hosta do osadzania"
             embeddable_host_destroy: "usuń hosta do osadzania"
             change_theme_setting: "zmień ustawienia motywu"
-            disable_theme_component: "dezaktywuj składnik motywu"
-            enable_theme_component: "aktywuj składnik motywu"
+            disable_theme_component: "dezaktywuj komponent"
+            enable_theme_component: "aktywuj komponent"
             revoke_title: "odbierz tytuł"
             change_title: "zmień tytuł"
             api_key_create: "utwórz klucz api"

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe Jobs::UpdateAnimatedUploads do
   let!(:upload) { Fabricate(:upload) }
   let!(:gif_upload) { Fabricate(:upload, extension: "gif") }

@@ -42,6 +42,7 @@ module ImportScripts::PhpBB3
         website: row[:user_website],
         location: row[:user_from],
         date_of_birth: parse_birthdate(row),
+        custom_fields: custom_fields(row),
         post_create_action: proc do |user|
           suspend_user(user, row)
           @avatar_importer.import_avatar(user, row) if row[:user_avatar_type].present?
@@ -81,6 +82,45 @@ module ImportScripts::PhpBB3
       return nil if row[:user_birthday].blank?
       birthdate = Date.strptime(row[:user_birthday].delete(' '), '%d-%m-%Y') rescue nil
       birthdate && birthdate.year > 0 ? birthdate : nil
+    end
+
+    def user_fields
+      @user_fields ||= begin
+        Hash[UserField.all.map { |field| [field.name, field] }]
+      end
+    end
+
+    def field_mappings
+      @field_mappings ||= begin
+        @settings.custom_fields.map do |field|
+          {
+            phpbb_field_name: "pf_#{field[:phpbb_field_name]}".to_sym,
+            discourse_user_field: user_fields[field[:discourse_field_name]]
+          }
+        end
+      end
+    end
+
+    def custom_fields(row)
+      return nil if @settings.custom_fields.blank?
+
+      custom_fields = {}
+
+      field_mappings.each do |field|
+        value = row[field[:phpbb_field_name]]
+        user_field = field[:discourse_user_field]
+
+        case user_field.field_type
+        when "confirm"
+          value = value == 1 ? true : nil
+        when "dropdown"
+          value = user_field.user_field_options.find { |option| option.value == value } ? value : nil
+        end
+
+        custom_fields["user_field_#{user_field.id}"] = value if value.present?
+      end
+
+      custom_fields
     end
 
     # Suspends the user if it is currently banned.

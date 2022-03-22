@@ -208,7 +208,6 @@ sl:
     bootstrap_mode_disabled: "Zagonski način bo onemogočen v 24 urah."
     themes:
       default_description: "Privzeto"
-      broken_theme_alert: "Vaše spletno mesto morda ne bo delovalo, ker ima tema / komponenta %{theme} napake. Onemogočite jo na %{path}."
     s3:
       regions:
         ap_northeast_1: "Asia Pacific (Tokyo)"
@@ -328,11 +327,6 @@ sl:
       invalid_custom_datetime: "Datum in čas, ki ste ju navedli, sta neveljavna. Poskusite znova."
       list_permission_denied: "Nimate dovoljenja za ogled zaznamkov tega uporabnika."
       no_user_bookmarks: "Nimate nobenega zaznamka; zaznamki vam omogočajo, da se hitro sklicujete na določene objave."
-      auto_delete_preference:
-        label: "Samodejno izbriši"
-        never: "Nikoli"
-        when_reminder_sent: "Ko je opomnik poslan"
-        on_owner_reply: "Ko odgovorim na to temo"
       search_placeholder: "Iščite zaznamke po imenu, naslovu teme ali vsebini objave"
       search: "Išči"
       reminders:
@@ -397,8 +391,8 @@ sl:
     switch_to_anon: "Vklopi anonimni način"
     switch_from_anon: "Izklopi anonimni način"
     banner:
-      close: "Opusti ta oglasni trak."
-      edit: "Uredi ta oglasni trak >>"
+      close: "Opusti ta oglasni trak"
+      edit: "Uredi"
     pwa:
       install_banner: "Ali želite <a href>namestiti %{title} na to napravo?</a>"
     choose_topic:
@@ -2124,7 +2118,7 @@ sl:
         clear_all: "Počisti vse"
         unlist_topics: "Izloči temo iz seznamov"
         relist_topics: "Postavi temo nazaj na seznam"
-        reset_read: "Ponastavi prebrano"
+        defer: "Preloži"
         delete: "Izbriši teme"
         dismiss: "Opusti"
         dismiss_read: "Opusti vse neprebrane"
@@ -2407,7 +2401,6 @@ sl:
         title: "Odgovori"
         help: "sestavi odgovor na to temo"
       share:
-        title: "Deli"
         extended_title: "Deli povezavo"
         help: "deli povezavo do te teme"
         invite_users: "Povabi"
@@ -3660,7 +3653,6 @@ sl:
         delete: "Izbriši"
         color: "Barva"
         opacity: "Transparentnost"
-        copy: "Kopiraj"
         copy_to_clipboard: "Kopiraj v odložišče"
         copied_to_clipboard: "Kopirano v odložišče"
         copy_to_clipboard_error: "Prišlo je do napake pri kopiranju v odložišče"

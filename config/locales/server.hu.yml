@@ -863,7 +863,6 @@ hu:
       labels:
         user: Felhasználó
         qtt_like: Kapott kedvelések
-      description: "A 10 legnépszerűbb felhasználó, akik a legtöbb kedvelést kapták."
     top_users_by_likes_received_from_inferior_trust_level:
       title: "Legnépszerűbb felhasználók az alacsonyabb szintű felhasználóktól kapott kedvelések alapján"
       labels:
@@ -876,7 +875,6 @@ hu:
       labels:
         user: Felhasználó
         qtt_like: Kapott kedvelések
-      description: "A 10 legnépszerűbb felhasználó, akiket sokféle ember kedvelt."
   dashboard:
     rails_env_warning: "A kiszolgáló jelenleg %{env} módban fut."
     host_names_warning: "A config/database.yml fájl az alapértelmezett „localhost” domaint használja. Állítsa be az oldala saját domain nevét."
@@ -908,7 +906,6 @@ hu:
     selectable_avatars: "A felhasználó által választható avatarok listája."
     recompress_original_jpg_quality: "A feltöltött képfájlok minősége (1 – legalacsonyabb, 99 – legjobb, 100 – letiltás)."
     image_preview_jpg_quality: "Az átméretezett képfájlok minősége (1 – legalacsonyabb, 99 – legjobb, 100 – letiltás)."
-    here_mention: "Az @itt megemlítéshez használandó név. Nem lehet létező felhasználónév."
     max_here_mentioned: "Az @itt által megemlített személyek maximális száma."
     min_trust_level_for_here_mention: "Az @itt megemlítés használatához szükséges minimális bizalmi szint."
     dark_mode_none: "Egyik sem"
@@ -1722,6 +1719,7 @@ hu:
   deleted: "törölt"
   image: "kép"
   upload:
+    size_zero_failure: "Sajnáljuk, úgy tűnik, hogy valami hiba történt, a feltöltendő fájl 0 bájtos. Próbálja újra."
     images:
       size_not_found: "Sajnáljuk, de nem tudtuk megállapítani a kép méretét. Lehet, hogy a kép sérült?"
   skipped_email_log:

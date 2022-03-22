@@ -146,7 +146,7 @@ Discourse::Application.routes.draw do
         delete "sso_record"
       end
       get "users/:id.json" => 'users#show', defaults: { format: 'json' }
-      get 'users/:id/:username' => 'users#show', constraints: { username: RouteFormat.username }
+      get 'users/:id/:username' => 'users#show', constraints: { username: RouteFormat.username }, as: :user_show
       get 'users/:id/:username/badges' => 'users#show'
       get 'users/:id/:username/tl3_requirements' => 'users#show'
 
@@ -371,6 +371,11 @@ Discourse::Application.routes.draw do
     post "session/email-login/:token" => "session#email_login"
     get "session/otp/:token" => "session#one_time_password", constraints: { token: /[0-9a-f]+/ }
     post "session/otp/:token" => "session#one_time_password", constraints: { token: /[0-9a-f]+/ }
+    get "session/2fa" => "session#second_factor_auth_show"
+    post "session/2fa" => "session#second_factor_auth_perform"
+    if Rails.env.test?
+      post "session/2fa/test-action" => "session#test_second_factor_restricted_route"
+    end
     get "composer_messages" => "composer_messages#index"
 
     resources :static
@@ -762,7 +767,7 @@ Discourse::Application.routes.draw do
 
     # Topics resource
     get "t/:id" => "topics#show"
-    put "t/:id" => "topics#update"
+    put "t/:topic_id" => "topics#update", constraints: { topic_id: /\d+/ }
     delete "t/:id" => "topics#destroy"
     put "t/:id/archive-message" => "topics#archive_message"
     put "t/:id/move-to-inbox" => "topics#move_to_inbox"
@@ -843,7 +848,6 @@ Discourse::Application.routes.draw do
     post "t/:topic_id/timings" => "topics#timings", constraints: { topic_id: /\d+/ }
     post "t/:topic_id/invite" => "topics#invite", constraints: { topic_id: /\d+/ }
     post "t/:topic_id/invite-group" => "topics#invite_group", constraints: { topic_id: /\d+/ }
-    post "t/:topic_id/invite-notify" => "topics#invite_notify", constraints: { topic_id: /\d+/ }
     post "t/:topic_id/move-posts" => "topics#move_posts", constraints: { topic_id: /\d+/ }
     post "t/:topic_id/merge-topic" => "topics#merge_topic", constraints: { topic_id: /\d+/ }
     post "t/:topic_id/change-owner" => "topics#change_post_owners", constraints: { topic_id: /\d+/ }
@@ -890,16 +894,14 @@ Discourse::Application.routes.draw do
 
     resources :drafts, only: [:index, :create, :show, :destroy]
 
+    get "/service-worker.js" => "static#service_worker_asset", format: :js
     if service_worker_asset = Rails.application.assets_manifest.assets['service-worker.js']
       # https://developers.google.com/web/fundamentals/codelabs/debugging-service-workers/
       # Normally the browser will wait until a user closes all tabs that contain the
       # current site before updating to a new Service Worker.
       # Support the old Service Worker path to avoid routing error filling up the
       # logs.
-      get "/service-worker.js" => "static#service_worker_asset", format: :js
       get service_worker_asset => "static#service_worker_asset", format: :js
-    elsif Rails.env.development?
-      get "/service-worker.js" => "static#service_worker_asset", format: :js
     end
 
     get "cdn_asset/:site/*path" => "static#cdn_asset", format: false, constraints: { format: /.*/ }
@@ -950,9 +952,11 @@ Discourse::Application.routes.draw do
         scope path: '/c/*category_slug_path_with_id' do
           Discourse.filters.each do |filter|
             get "/none/:tag_id/l/#{filter}" => "tags#show_#{filter}", as: "tag_category_none_show_#{filter}", defaults: { no_subcategories: true }
+            get "/all/:tag_id/l/#{filter}" => "tags#show_#{filter}", as: "tag_category_all_show_#{filter}", defaults: { no_subcategories: false }
           end
 
           get '/none/:tag_id' => 'tags#show', as: 'tag_category_none_show', defaults: { no_subcategories: true }
+          get '/all/:tag_id' => 'tags#show', as: 'tag_category_all_show', defaults: { no_subcategories: false }
 
           Discourse.filters.each do |filter|
             get "/:tag_id/l/#{filter}" => "tags#show_#{filter}", as: "tag_category_show_#{filter}"

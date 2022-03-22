@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe UserStat do
 
   it "is created automatically when a user is created" do

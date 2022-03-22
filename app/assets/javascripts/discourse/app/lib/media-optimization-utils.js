@@ -1,11 +1,13 @@
 import { Promise } from "rsvp";
-import { isAppleDevice } from "discourse/lib/utilities";
+import { helperContext } from "discourse-common/lib/helpers";
 
 // Chrome and Firefox use a native method to do Image -> Bitmap Array (it happens of the main thread!)
 // Safari < 15 uses the `<img async>` element due to https://bugs.webkit.org/show_bug.cgi?id=182424
 // Safari > 15 still uses `<img async>` due to their buggy createImageBitmap not handling EXIF rotation
 async function fileToDrawable(file) {
-  if ("createImageBitmap" in self && !isAppleDevice()) {
+  const caps = helperContext().capabilities;
+
+  if ("createImageBitmap" in self && !caps.isApple) {
     return await createImageBitmap(file);
   } else {
     const url = URL.createObjectURL(file);

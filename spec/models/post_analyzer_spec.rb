@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe PostAnalyzer do
 
   let(:default_topic_id) { 12 }

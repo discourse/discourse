@@ -288,25 +288,31 @@ acceptance("Tag info", function (needs) {
       });
     });
 
-    server.get("/tags/c/faq/4/planters/l/latest.json", () => {
-      return helper.response({
-        users: [],
-        primary_groups: [],
-        topic_list: {
-          can_create_topic: true,
-          draft: null,
-          draft_key: "new_topic",
-          draft_sequence: 1,
-          per_page: 30,
-          tags: [
-            {
-              id: 1,
-              name: "planters",
-              topic_count: 1,
-            },
-          ],
-          topics: [],
-        },
+    [
+      "/tags/c/faq/4/planters/l/latest.json",
+      "/tags/c/feature/2/planters/l/latest.json",
+      "/tags/c/feature/2/none/planters/l/latest.json",
+    ].forEach((url) => {
+      server.get(url, () => {
+        return helper.response({
+          users: [],
+          primary_groups: [],
+          topic_list: {
+            can_create_topic: true,
+            draft: null,
+            draft_key: "new_topic",
+            draft_sequence: 1,
+            per_page: 30,
+            tags: [
+              {
+                id: 1,
+                name: "planters",
+                topic_count: 1,
+              },
+            ],
+            topics: [],
+          },
+        });
       });
     });
 
@@ -484,6 +490,20 @@ acceptance("Tag info", function (needs) {
     assert.strictEqual(currentURL(), "/tags/c/faq/4/planters");
   });
 
+  test("can switch between all/none subcategories", async function (assert) {
+    await visit("/tag/planters");
+
+    await click(".category-breadcrumb .category-drop-header");
+    await click('.category-breadcrumb .category-row[data-name="feature"]');
+    assert.strictEqual(currentURL(), "/tags/c/feature/2/planters");
+
+    await click(".category-breadcrumb li:nth-of-type(2) .category-drop-header");
+    await click(
+      '.category-breadcrumb li:nth-of-type(2) .category-row[data-name="none"]'
+    );
+    assert.strictEqual(currentURL(), "/tags/c/feature/2/none/planters");
+  });
+
   test("admin can manage tags", async function (assert) {
     updateCurrentUser({ moderator: false, admin: true });
 
@@ -520,5 +540,48 @@ acceptance("Tag info", function (needs) {
     await click("#create-topic");
     let composer = this.owner.lookup("controller:composer");
     assert.strictEqual(composer.get("model").tags, undefined);
+  });
+});
+
+acceptance(
+  "Tag show - topic list with `more_topics_url` present",
+  function (needs) {
+    needs.pretender((server, helper) => {
+      server.get("/tag/:tagName/l/latest.json", () =>
+        helper.response({
+          users: [],
+          primary_groups: [],
+          topic_list: {
+            topics: [],
+            more_topics_url: "...",
+          },
+        })
+      );
+      server.put("/topics/bulk", () => helper.response({}));
+    });
+
+    test("load more footer message is present", async function (assert) {
+      await visit("/tag/planters");
+      assert.notOk(exists(".topic-list-bottom .footer-message"));
+    });
+  }
+);
+
+acceptance("Tag show - topic list without `more_topics_url`", function (needs) {
+  needs.pretender((server, helper) => {
+    server.get("/tag/:tagName/l/latest.json", () =>
+      helper.response({
+        users: [],
+        primary_groups: [],
+        topic_list: {
+          topics: [],
+        },
+      })
+    );
+    server.put("/topics/bulk", () => helper.response({}));
+  });
+  test("load more footer message is not present", async function (assert) {
+    await visit("/tag/planters");
+    assert.ok(exists(".topic-list-bottom .footer-message"));
   });
 });

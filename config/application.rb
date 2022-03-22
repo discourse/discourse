@@ -177,6 +177,7 @@ module Discourse
       onpopstate-handler.js
       embed-application.js
       discourse/tests/active-plugins.js
+      admin-plugins.js
       discourse/tests/test_starter.js
     }
 
@@ -241,7 +242,7 @@ module Discourse
     config.assets.enabled = true
 
     # Version of your assets, change this if you want to expire all your assets
-    config.assets.version = '1.2.4'
+    config.assets.version = '1.2.5'
 
     # see: http://stackoverflow.com/questions/11894180/how-does-one-correctly-add-custom-sql-dml-in-migrations/11894420#11894420
     config.active_record.schema_format = :sql

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Onebox::Engine::AmazonOnebox do
   context "regular amazon page" do
     before do
@@ -217,4 +215,34 @@ describe Onebox::Engine::AmazonOnebox do
     end
   end
 
+  context "alternate page layout response from Amazon" do
+    let(:link) { "https://www.amazon.com/dp/B07FQ7M16H" }
+    let(:html) { described_class.new(link).to_html }
+
+    before do
+      stub_request(:get, "https://www.amazon.com/dp/B07FQ7M16H")
+        .to_return(status: 200, body: onebox_response("amazon-alternate"))
+
+      stub_request(:get, "https://www.amazon.com/Lnchett-Nibbler-Quality-Attachment-Straight/dp/B07FQ7M16H")
+        .to_return(status: 200, body: onebox_response("amazon-alternate"))
+    end
+
+    describe "#to_html" do
+      it "includes image" do
+        expect(html).to include("https://m.media-amazon.com/images/I/71y4BRqNP7L._AC_SL1500_.jpg")
+      end
+
+      it "includes description" do
+        expect(html).to include("Drill Attachment for Straight Curve and Circle Cutting, Maximum 14 Gauge Steel")
+      end
+
+      it "includes price" do
+        expect(html).to include("$37.99")
+      end
+
+      it "includes title" do
+        expect(html).to include("Quality Nibbler Drill Attachment...")
+      end
+    end
+  end
 end

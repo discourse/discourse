@@ -1,4 +1,9 @@
-if (!window.WeakMap || !window.Promise || typeof globalThis === "undefined") {
+if (
+  !window.WeakMap ||
+  !window.Promise ||
+  typeof globalThis === "undefined" ||
+  !String.prototype.replaceAll
+) {
   window.unsupportedBrowser = true;
 } else {
   // Some implementations of `WeakMap.prototype.has` do not accept false

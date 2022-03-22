@@ -58,6 +58,12 @@ export default createWidget("poster-name", {
         attributes: {
           href: attrs.usernameUrl,
           "data-user-card": attrs.username,
+          class: `${
+            this.siteSettings.hide_user_profiles_from_public &&
+            !this.currentUser
+              ? "non-clickable"
+              : ""
+          }`,
         },
       },
       formatUsername(text)

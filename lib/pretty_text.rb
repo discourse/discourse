@@ -102,7 +102,6 @@ module PrettyText
 
     ctx_load(ctx, "#{Rails.root}/app/assets/javascripts/discourse-loader.js")
     ctx_load(ctx, "#{Rails.root}/app/assets/javascripts/handlebars-shim.js")
-    ctx_load(ctx, "vendor/assets/javascripts/lodash.js")
     ctx_load(ctx, "vendor/assets/javascripts/xss.min.js")
     ctx.load("#{Rails.root}/lib/pretty_text/vendor-shims.js")
     ctx_load_manifest(ctx, "pretty-text-bundle.js")
@@ -175,6 +174,8 @@ module PrettyText
   #                      enabled when rendering markdown.
   #  topic_id          - Topic id for the post being cooked.
   #  user_id           - User id for the post being cooked.
+  #  force_quote_link  - Always create the link to the quoted topic for [quote] bbcode. Normally this only happens
+  #                      if the topic_id provided is different from the [quote topic:X].
   def self.markdown(text, opts = {})
     # we use the exact same markdown converter as the client
     # TODO: use the same extensions on both client and server (in particular the template for mentions)
@@ -187,6 +188,9 @@ module PrettyText
       custom_emoji = {}
       Emoji.custom.map { |e| custom_emoji[e.name] = e.url }
 
+      # note, any additional options added to __optInput here must be
+      # also be added to the buildOptions function in pretty-text.js,
+      # otherwise they will be discarded
       buffer = +<<~JS
         __optInput = {};
         __optInput.siteSettings = #{SiteSetting.client_settings_json};
@@ -214,6 +218,10 @@ module PrettyText
 
       if opts[:topic_id]
         buffer << "__optInput.topicId = #{opts[:topic_id].to_i};\n"
+      end
+
+      if opts[:force_quote_link]
+        buffer << "__optInput.forceQuoteLink = #{opts[:force_quote_link]};\n"
       end
 
       if opts[:user_id]

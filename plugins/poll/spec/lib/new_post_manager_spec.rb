@@ -39,12 +39,12 @@ describe NewPostManager do
     end
 
     it 're-validates the poll when the approve_post event is triggered' do
-      invalid_raw_poll = <<~RAW
+      invalid_raw_poll = <<~MD
         [poll type=multiple min=0]
         * 1
         * 2
         [/poll]
-      RAW
+      MD
 
       result = NewPostManager.new(user, params).perform
 

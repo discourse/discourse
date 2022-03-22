@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe 'invalid requests', type: :request do
   before do
     @orig_logger = Rails.logger

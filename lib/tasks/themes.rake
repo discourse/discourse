@@ -71,7 +71,7 @@ def update_themes
       raise RemoteTheme::ImportError.new(remote_theme.last_error_text) if remote_theme.last_error_text.present?
     rescue => e
       STDERR.puts "Failed to update '#{theme.name}': #{e}"
-      raise if RailsMultisite::ConnectionManagement.current_db == "default"
+      raise if ENV["RAISE_THEME_ERRORS"] == "1"
     end
   end
 
@@ -118,7 +118,7 @@ task "themes:qunit", :type, :value do |t, args|
   type = args[:type]
   value = args[:value]
   if !%w(name url id).include?(type) || value.blank?
-    raise <<~MSG
+    raise <<~TEXT
       Wrong arguments type:#{type.inspect}, value:#{value.inspect}"
       Usage:
         `bundle exec rake "themes:qunit[url,<theme_url>]"`
@@ -126,7 +126,7 @@ task "themes:qunit", :type, :value do |t, args|
         `bundle exec rake "themes:qunit[name,<theme_name>]"`
         OR
         `bundle exec rake "themes:qunit[id,<theme_id>]"`
-    MSG
+    TEXT
   end
   ENV["THEME_#{type.upcase}"] = value.to_s
   ENV["QUNIT_RAILS_ENV"] ||= 'development' # qunit:test will switch to `test` by default

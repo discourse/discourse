@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe GroupsController do
   fab!(:user) { Fabricate(:user) }
   fab!(:user2) { Fabricate(:user) }

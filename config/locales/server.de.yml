@@ -241,7 +241,7 @@ de:
     disabled_errors:
       discourse_connect_enabled: "Einladungen sind deaktiviert, da DiscourseConnect aktiviert ist."
       invalid_access: "Du bist nicht berechtigt, die angeforderte Ressource anzuzeigen."
-    requires_groups: "Einladung gespeichert. Um Zugriff auf das angegebene Thema zu gewähren, füge eine der folgenden Gruppen hinzu: %{groups}."
+    requires_groups: "Die Einladung wurde nicht gespeichert, weil auf das angegebene Thema nicht zugegriffen werden kann. Füge eine der folgenden Gruppen hinzu: %{groups}."
     domain_not_allowed: "Diese E-Mail-Adresse kann nicht verwendet werden, um diese Einladung einzulösen."
   bulk_invite:
     file_should_be_csv: "Die hochgeladene Datei sollte im CSV-Format vorliegen."
@@ -647,6 +647,7 @@ de:
       permission_conflict: "Jede Gruppe, die Zugriff auf eine Unterkategorie hat, muss auch Zugriff auf die übergeordnete Kategorie erhalten. Folgende Gruppen haben Zugriff auf eine der Unterkategorien, aber keinen Zugriff auf die übergeordnete Kategorie: %{group_names}."
       disallowed_topic_tags: "Dieses Thema hat Schlagwörter, die in dieser Kategorie nicht erlaubt sind: „%{tags}“"
       disallowed_tags_generic: "Dieses Thema hat unerlaubte Schlagwörter."
+      slug_contains_non_ascii_chars: "enthält Nicht-ASCII-Zeichen"
     cannot_delete:
       uncategorized: "Diese Kategorie ist etwas Spezielles. Sie dient als Bereich für Themen, die keine Kategorie haben, und kann nicht gelöscht werden."
       has_subcategories: "Diese Kategorie kann nicht gelöscht werden, weil sie Unterkategorien enthält."
@@ -1338,7 +1339,7 @@ de:
       labels:
         user: Benutzer
         qtt_like: Erhaltene „Gefällt mir“
-      description: "Top 10 Benutzer, die mehr Likes erhalten haben."
+      description: "Top 10 Benutzer, die Likes erhalten haben."
     top_users_by_likes_received_from_inferior_trust_level:
       title: "Top-Benutzer nach Likes, die von einem Benutzer mit einer niedrigeren Vertrauensstufe erhalten wurden"
       labels:
@@ -1402,6 +1403,8 @@ de:
     min_personal_message_title_length: "Minimal zulässige Zeichenanzahl für den Titel von Nachrichten."
     max_emojis_in_title: "Maximal erlaubte Emoji-Anzahl in Thementiteln"
     min_search_term_length: "Minimal zulässige Länge eines Suchbegriffs in Zeichen."
+    search_tokenize_chinese: "Suche erzwingen, um Chinesisch auch auf nicht chinesischen Websites zu kennzeichnen"
+    search_tokenize_japanese: "Suche erzwingen, um Japanisch auch auf nicht japanischen Websites zu kennzeichnen"
     search_prefer_recent_posts: "Wenn das Durchsuchen deines großen Forums langsam ist, dann versucht es diese Option zuerst mit einem Index der letzten Beiträge."
     search_recent_posts_size: "Anzahl aktueller Beiträge im Index"
     log_search_queries: "Protokolliere Suchanfragen von Benutzern"
@@ -1499,6 +1502,9 @@ de:
     tl2_additional_edits_per_day_multiplier: "Erhöhe das Limit der Bearbeitungen pro Tag für Benutzer mit Vertrauensstufe 2 (Mitglied) durch Multiplikation mit dieser Zahl"
     tl3_additional_edits_per_day_multiplier: "Erhöhe das Limit der Bearbeitungen pro Tag für Benutzer mit Vertrauensstufe 3 (Stammgast) durch Multiplikation mit dieser Zahl"
     tl4_additional_edits_per_day_multiplier: "Erhöhe das Limit der Bearbeitungen pro Tag für Benutzer mit Vertrauensstufe 4 (Anführer) durch Multiplikation mit dieser Zahl"
+    tl2_additional_flags_per_day_multiplier: "Erhöhe das Limit der „Meldungen“ pro Tag für Benutzer mit Vertrauensstufe 2 (Mitglied) durch Multiplikation mit dieser Zahl"
+    tl3_additional_flags_per_day_multiplier: "Erhöhe das Limit der „Meldungen“ pro Tag für Benutzer mit Vertrauensstufe 3 (Stammgast) durch Multiplikation mit dieser Zahl"
+    tl4_additional_flags_per_day_multiplier: "Erhöhe das Limit der „Meldungen“ pro Tag für Benutzer mit Vertrauensstufe 4 (Anführer) durch Multiplikation mit dieser Zahl"
     num_users_to_silence_new_user: "Wenn die Beiträge eines neuen Benutzers num_spam_flags_to_silence_new_user Spam-Meldungen von so vielen verschiedenen Benutzern erhalten, werden alle Beiträge des Benutzers versteckt und zukünftige Beiträge verhindert. 0 zum Deaktivieren."
     num_tl3_flags_to_silence_new_user: "Wenn die Beiträge eines neuen Benutzers so viele Meldungen von num_tl3_users_to_silence_new_user verschiedenen Benutzern mit Vertrauensstufe 3 erhalten, werden alle Beiträge des Benutzers versteckt und zukünftige Beiträge verhindert. 0 zum Deaktivieren."
     num_tl3_users_to_silence_new_user: "Wenn die Beiträge eines neuen Benutzers num_tl3_flags_to_silence_new_user Meldungen von so vielen verschiedenen Benutzern mit Vertrauensstufe 3 erhalten, werden alle Beiträge des Benutzers versteckt und zukünftige Beiträge verhindert. 0 zum Deaktivieren."
@@ -1696,7 +1702,7 @@ de:
     use_site_small_logo_as_system_avatar: "Verwende das kleine Logo der Website anstelle des Avatars des Systembenutzers. Das Logo muss vorhanden sein."
     restrict_letter_avatar_colors: "Eine Liste von 6-stelligen hexadezimalen Farbwerten, die für den Buchstaben-Avatar-Hintergrund verwendet werden."
     enable_listing_suspended_users_on_search: "Ermögliche normalen Benutzern, gesperrte Benutzer zu finden."
-    selectable_avatars_enabled: "Benutzer zwingen, einen Avatar aus der Liste auszuwählen."
+    selectable_avatars_mode: "Erlaube es den Nutzern, einen Avatar aus der Liste selectable_avatars auszuwählen, und beschränke benutzerdefinierte Avatar-Uploads auf die ausgewählte Vertrauensstufe."
     selectable_avatars: "Liste der Avatare, aus denen Benutzer wählen können."
     allow_all_attachments_for_group_messages: "Erlaube alle E-Mail-Anhänge für Gruppen-Nachrichten."
     png_to_jpg_quality: "Qualität der umgewandelten JPG-Datei (1 ist die niedrigste, 99 die beste Qualität, 100 deaktiviert die Funktion)."
@@ -1761,7 +1767,7 @@ de:
     max_mentions_per_post: "Maximale Anzahl der Namenserwähnungen mit @, die Benutzer in Beiträgen nutzen dürfen."
     max_users_notified_per_group_mention: "Maximale Anzahl von Benutzern, die eine Benachrichtigung erhalten können, wenn eine Gruppe erwähnt wird (wenn der Schwellenwert erreicht ist, werden keine Benachrichtigungen ausgelöst)"
     enable_mentions: "Erlaube Benutzern, andere Benutzer zu erwähnen."
-    here_mention: "Name, der für die @here-Erwähnung verwendet wird. Darf kein bestehender Benutzername sein."
+    here_mention: "Name, der für eine @Erwähnung verwendet wird, damit privilegierte Benutzer bis zu 'max_here_mentioned' Personen benachrichtigen können, die an dem Thema teilnehmen. Darf kein bestehender Benutzername sein."
     max_here_mentioned: "Maximale Anzahl der erwähnten Personen von @here."
     min_trust_level_for_here_mention: "Die minimale Vertrauensstufe, die @hier erwähnt werden darf."
     create_thumbnails: "Erzeuge ein Vorschaubild und eine Lightbox für Bilder, die zu groß sind, um in einem Beitrag angezeigt zu werden."
@@ -1971,7 +1977,7 @@ de:
     display_name_on_posts: "Zeige zusätzlich zum @Benutzernamen auch den vollständigen Namen des Benutzers bei seinen Beiträgen."
     show_time_gap_days: "Wenn zwei Beiträge so viele Tage auseinanderliegen, dann wird die Zeitspanne im Thema angezeigt."
     short_progress_text_threshold: "Sobald die Anzahl an Beiträgen in einem Thema diese Nummer übersteigt, zeigt der Fortschrittsbalken nur noch die aktuelle Beitragsnummer. Dieser Wert sollte angepasst werden, falls die Breite des Fortschrittsbalkens verändert wird."
-    default_code_lang: "Standardmäßiges Syntax-Highlighting für GitHub-Codeblöcke (auto, nohighlight, ruby, python usw.)"
+    default_code_lang: "Standardmäßige Syntaxhervorhebung der Programmiersprache, die auf Codeblöcke angewendet wird (auto, nohighlight, ruby, python etc.). Dieser Wert muss auch in der Site-Einstellung \"Hervorgehobene Sprachen\" enthalten sein."
     warn_reviving_old_topic_age: "Wenn jemand beginnt, auf ein Thema zu antworten, dessen letzte Antwort älter als diese Anzahl an Tagen ist, wird eine Warnung angezeigt. Zum Deaktivieren auf 0 setzen."
     autohighlight_all_code: "Erzwinge Syntaxhervorhebung für alle Quellcode-Blöcke auch dann, wenn keine Sprache angegeben wurde."
     highlighted_languages: "Aktivierte Regeln für die Syntaxhervorhebung. (Warnung: Das Aktivieren zu vieler Sprachen kann die Leistung beeinträchtigen.) Siehe <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> für eine Demonstration"
@@ -2147,6 +2153,8 @@ de:
       unicode_usernames_avatars: "Die internen System-Avatare unterstützen keine Unicode-Benutzernamen."
       list_value_count: "Die Liste muss genau %{count} Werte enthalten."
       google_oauth2_hd_groups: "Vor Aktivierung dieser Einstellung musst zuerst \"google oauth2 hd\" eingeschaltet werden."
+      search_tokenize_chinese_enabled: "Du musst „search_tokenize_chinese“ deaktivieren, bevor du diese Einstellung aktivierst."
+      search_tokenize_japanese_enabled: "Du musst „search_tokenize_japanese“ deaktivieren, bevor du diese Einstellung aktivierst."
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2308,6 +2316,13 @@ de:
     second_factor_toggle:
       totp: "Verwende stattdessen eine Authentifizierungs-App oder einen Sicherheitsschlüssel"
       backup_code: "Benutze stattdessen einen Wiederherstellungscode"
+  second_factor_auth:
+    challenge_not_found: "Es konnte keine 2FA-Herausforderung in deiner aktuellen Sitzung gefunden werden."
+    challenge_expired: "Es ist zu viel Zeit vergangen, seit die 2FA-Herausforderung durchgeführt wurde, und sie ist nicht mehr gültig. Bitte versuche es erneut."
+    challenge_not_completed: "Du hast die 2FA-Herausforderung nicht abgeschlossen, um diese Aktion durchzuführen. Bitte schließe die 2FA-Herausforderung ab und versuche es erneut."
+    actions:
+      grant_admin:
+        description: "Für zusätzliche Sicherheitsmaßnahmen musst Di Deine 2FA bestätigen, bevor %{username} Administratorzugriff gewährt wird."
   admin:
     email:
       sent_test: "gesendet!"
@@ -3646,6 +3661,7 @@ de:
     external_upload_not_found: "Der Upload wurde im externen Speicher nicht gefunden. %{additional_detail}"
     checksum_mismatch_failure: "Die Prüfsumme der hochgeladenen Datei stimmt nicht überein. Der Dateiinhalt könnte sich beim Hochladen geändert haben. Bitte versuche es erneut."
     cannot_promote_failure: "Der Upload kann nicht abgeschlossen werden, er kann bereits abgeschlossen oder zuvor gescheitert sein."
+    size_zero_failure: "Es tut uns leid, es sieht so aus, als ob etwas schief gelaufen ist. Die Datei, die Du hochzuladen versuchst, hat 0 Bytes. Bitte versuche es erneut."
     attachments:
       too_large: "Entschuldige, die Datei, die du hochladen möchtest, ist zu groß (maximale Dateigröße: %{max_size_kb} KB)."
       too_large_humanized: "Entschuldige, die Datei, die du hochladen möchtest, ist zu groß (maximale Dateigröße: %{max_size})."
@@ -4660,6 +4676,7 @@ de:
   notification_level:
     ignore_error: "Entschuldige, du kannst diesen Benutzer nicht ignorieren."
     mute_error: "Entschuldige, du kannst diesen Benutzer nicht stummschalten."
+    error: "Leider kannst Du die Benachrichtigungsebene für diesen Benutzer nicht ändern."
   discord:
     not_in_allowed_guild: "Authentifizierung fehlgeschlagen. Du bist kein Mitglied einer erlaubten Discord-Gilde."
   old_keys_reminder:

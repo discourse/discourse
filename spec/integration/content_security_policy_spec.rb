@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe 'content security policy integration' do
 
   it "adds the csp headers correctly" do

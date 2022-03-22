@@ -194,7 +194,6 @@ lt:
     disabled_errors:
       discourse_connect_enabled: "Kvietimai išjungti, nes įgalintas „DiscourseConnect“."
       invalid_access: "Jums neleidžiama peržiūrėti prašomo šaltinio."
-    requires_groups: "Kvietimas išsaugotas. Norėdami suteikti prieigą prie nurodytos temos, pridėkite vieną iš šių grupių: %{groups}."
   bulk_invite:
     file_should_be_csv: "Įkeltas failas turi būti csv formato."
     max_rows: "Išsiųsti pirmieji %{max_bulk_invites} kvietimų. Pabandykite padalinti failą į mažesnes dalis."
@@ -1213,7 +1212,6 @@ lt:
       labels:
         user: Narys
         qtt_like: Gauta patikimų
-      description: "10 geriausių vartotojų, kurie sulaukė daugiau „patinka“ paspaudimų."
     top_users_by_likes_received_from_inferior_trust_level:
       title: "Geriausi vartotojai pagal mygtukus „Patinka“, gauti iš naudotojo, kurio patikimumo lygis žemesnis"
       labels:
@@ -1226,7 +1224,6 @@ lt:
       labels:
         user: Narys
         qtt_like: Gauta patikimų
-      description: "Top 10 vartotojų, kurie gavo \"Patinka\" iš įvairių žmonių."
   dashboard:
     rails_env_warning: "Jūsų serveris veikia %{env} režimu."
     out_of_date_themes: "Galimi naujiniai šioms temoms:"
@@ -1379,7 +1376,6 @@ lt:
     external_emoji_url: "Jaustukų vaizdų išorinės paslaugos URL. Palikite tuščią, kad išjungtumėte."
     use_site_small_logo_as_system_avatar: "Naudokite mažą svetainės logotipą, o ne sistemos vartotojo avatarą. Reikalingas logotipas."
     enable_listing_suspended_users_on_search: "Įgalinkite nuolatinius vartotojus rasti sustabdytus vartotoj"
-    selectable_avatars_enabled: "Priversti vartotojus pasirinkti avatarą iš sąrašo."
     selectable_avatars: "Sąrašas avatarų, kuriuos vartotojai gali pasirinkti."
     allow_all_attachments_for_group_messages: "Leisti visus el. pašto priedus grupiniams pranešimams."
     png_to_jpg_quality: "Konvertuoto JPG failo kokybė (1 – žemiausia kokybė, 99 – geriausia kokybė, 100 – išjungti)."

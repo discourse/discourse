@@ -37,7 +37,7 @@ discourseModule(
         this.set("args", {
           username: "test",
           avatar_template: "/images/avatar.png",
-          post_count: 5,
+          post_count: 2,
           primary_group_name: "devs",
           flair_name: "devs",
           flair_url: "/images/d-logo-sketch-small.png",

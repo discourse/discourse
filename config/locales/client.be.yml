@@ -165,8 +165,6 @@ be:
       remove: "выдаліць закладку"
       save: "Захаваць"
       no_user_bookmarks: "У вас няма закладак паведамлення; закладкі дазваляюць хутка спасылацца на канкрэтныя пасады."
-      auto_delete_preference:
-        never: "ніколі"
       search: "Пошук"
     drafts:
       label: "Чарнавікі"
@@ -188,8 +186,7 @@ be:
     switch_to_anon: "Увайсці як ананім"
     switch_from_anon: "Пакінуць ананімны прагляд"
     banner:
-      close: "схаваць"
-      edit: "Рэдагаваць гэты банер >>"
+      edit: "Рэдагаваць"
     choose_topic:
       none_found: "Не знойдзена тэмаў."
     review:
@@ -921,7 +918,6 @@ be:
       new_messages_marker: "апошні візыт"
       bulk:
         select_all: "выбраць усе"
-        reset_read: "Reset Read"
         delete: "Выдаліць тэмы"
         dismiss_read: "Пазначыць усе як прачытаныя"
         dismiss_new: "Dismiss New"
@@ -1044,7 +1040,6 @@ be:
         title: "Адказаць"
         help: "пачаць складаць адказ на гэтую тэму"
       share:
-        title: "Падзяліцца тэмай"
         help: "Распаўсюдзіць спасылку на гэтую тэму"
       print:
         title: "друк"
@@ -1534,7 +1529,6 @@ be:
         delete: "Выдаліць"
         color: "колер"
         opacity: "непразрыстасць"
-        copy: "капіяваць"
         email_templates:
           title: "Электронная пошта"
           subject: "тэма"

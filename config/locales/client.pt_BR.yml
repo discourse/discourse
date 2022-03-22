@@ -172,8 +172,6 @@ pt_BR:
     bootstrap_mode_disabled: "O modo de inicialização será desativado em 24 horas."
     themes:
       default_description: "Padrão"
-      broken_theme_alert: "Seu site pode não funcionar porque o tema/componente %{theme} tem erros. Desative-o em %{path}."
-    broken_decorator_alert: "As postagens podem não ser exibidas corretamente porque um dos decoradores de conteúdo do seu site detectou um erro. Confira as ferramentas de desenvolvedor do navegador para obter mais informações."
     s3:
       regions:
         ap_northeast_1: "Ásia Pacífico (Tóquio)"
@@ -297,10 +295,7 @@ pt_BR:
       list_permission_denied: "Você não tem permissão para visualizar os favoritos deste usuário(a)."
       no_user_bookmarks: "Você não tem postagens favoritas. Os favoritos permitem que você consulte rapidamente postagens específicas."
       auto_delete_preference:
-        label: "Excluir automaticamente"
-        never: "Nunca"
-        when_reminder_sent: "Assim que o lembrete for enviado"
-        on_owner_reply: "Após responder a este tópico"
+        when_reminder_sent: "Excluir favorito"
       search_placeholder: "Pesquisar os favoritos por nome, título do tópico ou conteúdo da postagem"
       search: "Pesquisar"
       reminders:
@@ -360,8 +355,8 @@ pt_BR:
     switch_to_anon: "Entrar no Modo anônimo"
     switch_from_anon: "Sair do Modo anônimo"
     banner:
-      close: "Descarte este banner."
-      edit: "Editar este banner >>"
+      close: "Descarte este banner"
+      edit: "Editar"
     pwa:
       install_banner: "Você quer <a href>instalar %{title} no seu dispositivo?</a>"
     choose_topic:
@@ -2282,7 +2277,7 @@ pt_BR:
         clear_all: "Limpar tudo"
         unlist_topics: "Remover tópicos da lista"
         relist_topics: "Reinserir tópicos na lista"
-        reset_read: "Redefinir lidos"
+        defer: "Adiar"
         delete: "Excluir tópicos"
         dismiss: "Descartar"
         dismiss_read: "Descartar todos os não lidos"
@@ -2592,7 +2587,6 @@ pt_BR:
         title: "Responder"
         help: "começar a escrever uma resposta para este tópico"
       share:
-        title: "Compartilhar"
         extended_title: "Compartilhar um link"
         help: "compartilhar um link deste tópico"
         instructions: "Compartilhar um link para este tópico:"
@@ -2600,12 +2594,6 @@ pt_BR:
         restricted_groups:
           one: "Visível apenas para membros do grupo: %{groupNames}"
           other: "Visível apenas para membros dos grupos: %{groupNames}"
-        notify_users:
-          title: "Notificar"
-          instructions: "Notificar os(as) usuários(as) a seguir sobre este tópico:"
-          success:
-            one: "%{username} foi notificado(a) sobre este tópico."
-            other: "Todos os(as) usuários(as) foram notificados sobre este tópico."
         invite_users: "Convite"
       print:
         title: "Imprimir"
@@ -4097,7 +4085,6 @@ pt_BR:
         delete_confirm: 'Você tem certeza de que deseja excluir "%{theme_name}"?'
         color: "Cor"
         opacity: "Opacidade"
-        copy: "Copiar"
         copy_to_clipboard: "Copiar para área de transferência"
         copied_to_clipboard: "Copiou para área de transferência"
         copy_to_clipboard_error: "Erro ao copiar dados para a área de transferência"

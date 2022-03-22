@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe PostOwnerChanger do
   describe "change_owner!" do
     fab!(:editor) { Fabricate(:admin) }
@@ -14,7 +12,7 @@ describe PostOwnerChanger do
     it "raises an error with a parameter missing" do
       expect {
         PostOwnerChanger.new(post_ids: [p1.id], topic_id: topic.id, new_owner: nil, acting_user: editor)
-      }.to raise_error(ArgumentError)
+      }.to raise_error(ArgumentError, /new_owner/)
     end
 
     it "calls PostRevisor" do

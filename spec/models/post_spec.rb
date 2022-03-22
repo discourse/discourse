@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe Post do
   fab!(:coding_horror) { Fabricate(:coding_horror) }
 
@@ -1811,6 +1809,30 @@ describe Post do
 
     it 'returns nothing if different admin' do
       expect(post.cannot_permanently_delete_reason(Fabricate(:admin))).to eq(nil)
+    end
+  end
+
+  describe "#canonical_url" do
+    it 'is able to determine correct canonical urls' do
+
+      # ugly, but no interface to set this and we don't want to create
+      # 100 posts to test this thing
+      TopicView.stubs(:chunk_size).returns(2)
+
+      post1 = Fabricate(:post)
+      topic = post1.topic
+
+      post2 = Fabricate(:post, topic: topic)
+      post3 = Fabricate(:post, topic: topic)
+      post4 = Fabricate(:post, topic: topic)
+
+      topic_url = post1.topic.url
+
+      expect(post1.canonical_url).to eq("#{topic_url}#post_#{post1.post_number}")
+      expect(post2.canonical_url).to eq("#{topic_url}#post_#{post2.post_number}")
+
+      expect(post3.canonical_url).to eq("#{topic_url}?page=2#post_#{post3.post_number}")
+      expect(post4.canonical_url).to eq("#{topic_url}?page=2#post_#{post4.post_number}")
     end
   end
 end

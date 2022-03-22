@@ -24,6 +24,7 @@
   background-color: var(--secondary);
   position: relative;
   border: 1px solid var(--primary-medium);
+  min-height: 0;
 
   textarea {
     background: transparent;

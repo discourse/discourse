@@ -5,7 +5,6 @@
 # this class contains the logic to delete it.
 #
 class PostDestroyer
-
   def self.destroy_old_hidden_posts
     Post.where(deleted_at: nil, hidden: true)
       .where("hidden_at < ?", 30.days.ago)
@@ -132,12 +131,7 @@ class PostDestroyer
 
       if @post.is_first_post?
         # Update stats of all people who replied
-        counts = Post.where(post_type: Post.types[:regular], topic_id: @post.topic_id).where('post_number > 1').group(:user_id).count
-        counts.each do |user_id, count|
-          if user_stat = UserStat.where(user_id: user_id).first
-            user_stat.update(post_count: user_stat.post_count + count)
-          end
-        end
+        update_post_counts(:increment)
       end
     end
 
@@ -394,19 +388,12 @@ class PostDestroyer
     UserStatCountUpdater.decrement!(@post)
 
     if @post.created_at == author.last_posted_at
-      author.last_posted_at = author.posts.order('created_at DESC').first.try(:created_at)
-      author.save!
+      author.update_column(:last_posted_at, author.posts.order('created_at DESC').first.try(:created_at))
     end
 
     if @post.is_first_post? && @post.topic && !@post.topic.private_message?
       # Update stats of all people who replied
-      counts = Post.where(post_type: Post.types[:regular], topic_id: @post.topic_id).where('post_number > 1').group(:user_id).count
-
-      counts.each do |user_id, count|
-        if user_stat = UserStat.where(user_id: user_id).first
-          user_stat.update(post_count: user_stat.post_count - count)
-        end
-      end
+      update_post_counts(:decrement)
     end
   end
 
@@ -417,4 +404,19 @@ class PostDestroyer
     incoming.update(imap_sync: sync)
   end
 
+  def update_post_counts(operator)
+    counts = Post.where(
+      post_type: Post.types[:regular], topic_id: @post.topic_id
+    ).where('post_number > 1').group(:user_id).count
+
+    counts.each do |user_id, count|
+      if user_stat = UserStat.where(user_id: user_id).first
+        if operator == :decrement
+          UserStatCountUpdater.set!(user_stat: user_stat, count: user_stat.post_count - count, count_column: :post_count)
+        else
+          UserStatCountUpdater.set!(user_stat: user_stat, count: user_stat.post_count + count, count_column: :post_count)
+        end
+      end
+    end
+  end
 end

@@ -168,7 +168,6 @@ fi:
     bootstrap_mode_disabled: "Aloitustila poistetaan käytöstä seuraavan 24 tunnin aikana."
     themes:
       default_description: "Oletus"
-      broken_theme_alert: "Teemassa/komponentissa %{theme} on virheitä, jotka voivat aiheuttaa sen, ettei sivustosi toimi. Voit poistaa sen käytöstä täällä: %{path}."
     s3:
       regions:
         ap_northeast_1: "Aasia ja Tyynimeri (Tokio)"
@@ -287,10 +286,7 @@ fi:
       list_permission_denied: "Et voi nähdä tämän käyttäjän kirjanmerkkejä."
       no_user_bookmarks: "Kirjanmerkeissäsi ei ole mitään. Kirjanmerkitsemällä viestin löydät sen myöhemmin helposti."
       auto_delete_preference:
-        label: "Poista automaattisesti"
-        never: "Ei koskaan"
-        when_reminder_sent: "Kun muistutus on lähetetty"
-        on_owner_reply: "Kun olen vastannut tähän ketjuun"
+        when_reminder_sent: "Poista kirjanmerkki"
       search_placeholder: "Hae kirjanmerkkejä nimen, ketjun otsikon tai viestin sisällön perusteella"
       search: "Haku"
       reminders:
@@ -348,8 +344,8 @@ fi:
     switch_to_anon: "Siirry anonyymitilaan"
     switch_from_anon: "Poistu anonyymitilasta"
     banner:
-      close: "Sulje tämä banneri."
-      edit: "Muokkaa banneria >>"
+      close: "Sulje tämä banneri"
+      edit: "Muokkaa"
     pwa:
       install_banner: "Haluatko <a href>asentaa kohteen %{title} tälle laitteelle?</a>"
     choose_topic:
@@ -2184,7 +2180,7 @@ fi:
         clear_all: "Tyhjennä kaikki"
         unlist_topics: "Poista ketjuja listauksista"
         relist_topics: "Palauta ketjuja listauksiin"
-        reset_read: "Palauta lukutila"
+        defer: "Lykkää"
         delete: "Poista ketjut"
         dismiss: "Kuittaa"
         dismiss_read: "Kuittaa luetuiksi"
@@ -2487,17 +2483,10 @@ fi:
         title: "Vastaa"
         help: "aloita kirjoittamaan vastausta tähän ketjuun"
       share:
-        title: "Jaa"
         extended_title: "Jaa linkki"
         help: "jaa linkki tähän ketjuun"
         instructions: "Jaa linkki tähän ketjuun:"
         copied: "Ketjun linkki kopioitu."
-        notify_users:
-          title: "Ilmoita"
-          instructions: "Ilmoita seuraaville käyttäjille tästä ketjusta:"
-          success:
-            one: "Tästä ketjusta ilmoitettiin käyttäjälle %{username}."
-            other: "Tästä ketjusta ilmoitettiin kaikille käyttäjille."
         invite_users: "Kutsu"
       print:
         title: "Tulosta"
@@ -3917,7 +3906,6 @@ fi:
         delete_confirm: 'Haluatko varmasti poistaa teeman "%{theme_name}"?'
         color: "Väri"
         opacity: "Läpinäkyvyys"
-        copy: "Kopioi"
         copy_to_clipboard: "Kopioi leikepöydälle"
         copied_to_clipboard: "Kopioitiin leikepöydälle"
         copy_to_clipboard_error: "Virhe kopioimisessa leikepöydälle"

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe UsernameValidator do
   def expect_valid(*usernames)
     usernames.each do |username|

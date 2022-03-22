@@ -16,7 +16,7 @@ module Jobs
         "group_users.notification_level = :level",
         level: NotificationLevels.all[:tracking]
       ).find_each do |u|
-        alerter.notify_group_summary(u, post)
+        alerter.notify_group_summary(u, topic)
       end
 
       notification_data = {

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe AdminDashboardData do
   after do
     AdminDashboardData.reset_problem_checks

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe CategoryGroup do
 
   describe '#permission_types' do

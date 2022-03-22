@@ -231,8 +231,6 @@ sw:
       remove: "Ondoa Alamisho"
       confirm_clear: "Una uhakika unataka kuondoa mialamisho ya mada hii?"
       save: "hifadhi"
-      auto_delete_preference:
-        never: "Kamwe"
       search: "Tafuta"
     drafts:
       remove: "Ondoa"
@@ -271,8 +269,8 @@ sw:
     switch_to_anon: "Ingia Hali-tumizi Isiyojulikana"
     switch_from_anon: "Ondoka kwenye Hali-tumizi Isiyojulikana"
     banner:
-      close: "Puuzia bango hili."
-      edit: "Hariri bango hili >>"
+      close: "Puuzia bango hili"
+      edit: "Hariri"
     choose_topic:
       none_found: "Hakuna mada zilizopatikana."
     review:
@@ -1434,7 +1432,6 @@ sw:
         clear_all: "Ondoa Zote"
         unlist_topics: "Ondoa Mada kwenye listi"
         relist_topics: "Orodhesha Upya Mada"
-        reset_read: "Anzisha Upya Usomaji"
         delete: "Futa Mada"
         dismiss: "Ondosha..."
         dismiss_read: "Ondosha zote ambazo hazijasomwa"
@@ -1646,7 +1643,6 @@ sw:
         title: "Jibu"
         help: "anza kuandika jibu lako kwenye mada hii"
       share:
-        title: "Gawiza"
         help: "gawiza kiungo kwenye mada hii"
         invite_users: "Mualiko"
       print:
@@ -2551,7 +2547,6 @@ sw:
         new_style: "Style Mpya"
         delete: "Ondoa"
         color: "Rangi"
-        copy: "Nakili"
         copy_to_clipboard: "Umenakili kwenye Ubao Nakili"
         copied_to_clipboard: "Umenakili kwenye Ubao Nakili"
         copy_to_clipboard_error: "Hitilafu imetokea wakati wa kunakili taarifa kwenye ubao nakili."

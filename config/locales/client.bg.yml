@@ -168,7 +168,6 @@ bg:
     bootstrap_mode_disabled: "Режимът на стартиране ще бъде изключен в следващите 24 часа. "
     themes:
       default_description: "По подразбиране"
-      broken_theme_alert: "Вашият уебсайт може да не работи, защото в тема / компонент %{theme} има грешки. Изключете я тук %{path}."
     s3:
       regions:
         ap_northeast_1: "Азия (Токио)"
@@ -289,10 +288,7 @@ bg:
       list_permission_denied: "Нямате право да преглеждате отметките на този потребител."
       no_user_bookmarks: "Нямате отбелязани публикации; отметките ви позволяват бързо да препращате към конкретни публикации."
       auto_delete_preference:
-        label: "Автоматично изтриване"
-        never: "Никога"
-        when_reminder_sent: "След като напомнянето е изпратено"
-        on_owner_reply: "След като отговоря на тази тема"
+        when_reminder_sent: "Изтриване на отметка"
       search_placeholder: "Търсете отметки по име, заглавие на тема или съдържание на публикация"
       search: "Търсене"
       reminders:
@@ -352,8 +348,7 @@ bg:
     switch_to_anon: "Влез в Анонимен режим. "
     switch_from_anon: "Излез от Анонимен режим."
     banner:
-      close: "Премахнете банера"
-      edit: "Редактирай този банер >>"
+      edit: "Редактирай"
     pwa:
       install_banner: "Искате ли <a href>да инсталирате %{title} на това устройство?</a>"
     choose_topic:
@@ -2072,7 +2067,7 @@ bg:
         select_all: "Селектирай всички"
         clear_all: "Изчисти всички"
         unlist_topics: "Непоказани теми"
-        reset_read: "Изчисти прочетеното "
+        defer: "Отложи "
         delete: "Изтрий темите"
         dismiss: "Отмени"
         dismiss_read: "Отхвърли всички непрочетени"
@@ -2314,7 +2309,6 @@ bg:
         title: "Отговорете"
         help: "започнете да пишете отговор на тази тема"
       share:
-        title: "Споделяне"
         extended_title: "Сподели линк"
         help: "споделете връзка към тази тема"
         invite_users: "Покана"
@@ -3220,7 +3214,6 @@ bg:
         delete: "Изтрий"
         color: "Цвят"
         opacity: "Прозрачност"
-        copy: "Копирай"
         email_templates:
           title: "Имейл"
           subject: "Тема"

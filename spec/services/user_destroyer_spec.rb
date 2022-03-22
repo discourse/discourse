@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe UserDestroyer do
 
   fab!(:user) { Fabricate(:user_with_secondary_email) }

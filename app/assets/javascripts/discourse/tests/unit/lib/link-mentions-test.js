@@ -3,7 +3,6 @@ import {
   linkSeenMentions,
 } from "discourse/lib/link-mentions";
 import { module, test } from "qunit";
-import { Promise } from "rsvp";
 import pretender from "discourse/tests/helpers/create-pretender";
 import domFromString from "discourse-common/lib/dom-from-string";
 
@@ -42,17 +41,6 @@ module("Unit | Utility | link-mentions", function () {
       </div>
     `)[0];
     await linkSeenMentions(root);
-
-    // Ember.Test.registerWaiter is not available here, so we are implementing
-    // our own
-    await new Promise((resolve) => {
-      const interval = setInterval(() => {
-        if (root.querySelectorAll("a").length > 0) {
-          clearInterval(interval);
-          resolve();
-        }
-      }, 500);
-    });
 
     assert.strictEqual(root.querySelector("a").innerText, "@valid_user");
     assert.strictEqual(root.querySelectorAll("a")[1].innerText, "@valid_group");

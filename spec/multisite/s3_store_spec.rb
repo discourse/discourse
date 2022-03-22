@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
 require 'file_store/s3_store'
 
 RSpec.describe 'Multisite s3 uploads', type: :multisite do

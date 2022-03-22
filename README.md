@@ -32,7 +32,7 @@ To get your environment setup, follow the community setup guide for your operati
 
 If you're familiar with how Rails works and are comfortable setting up your own environment, you can also try out the [**Discourse Advanced Developer Guide**](docs/DEVELOPER-ADVANCED.md), which is aimed primarily at Ubuntu and macOS environments.
 
-Before you get started, ensure you have the following minimum versions: [Ruby 2.7+](https://www.ruby-lang.org/en/downloads/), [PostgreSQL 13+](https://www.postgresql.org/download/), [Redis 6.0+](https://redis.io/download). If you're having trouble, please see our [**TROUBLESHOOTING GUIDE**](docs/TROUBLESHOOTING.md) first!
+Before you get started, ensure you have the following minimum versions: [Ruby 2.7+](https://www.ruby-lang.org/en/downloads/), [PostgreSQL 13+](https://www.postgresql.org/download/), [Redis 6.2+](https://redis.io/download). If you're having trouble, please see our [**TROUBLESHOOTING GUIDE**](docs/TROUBLESHOOTING.md) first!
 
 ## Setting up Discourse
 
@@ -93,7 +93,7 @@ The original Discourse code contributors can be found in [**AUTHORS.MD**](docs/A
 
 ## Copyright / License
 
-Copyright 2014 - 2021 Civilized Discourse Construction Kit, Inc.
+Copyright 2014 - 2022 Civilized Discourse Construction Kit, Inc.
 
 Licensed under the GNU General Public License Version 2.0 (or later);
 you may not use this work except in compliance with the License.

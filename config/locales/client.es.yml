@@ -163,6 +163,7 @@ es:
     skip_to_main_content: "Saltar al contenido principal"
     wizard_required: "¡Te damos la bienvenida a tu nuevo Discourse! Empezaremos con <a href='%{url}' data-auto-route='true'>el asistente de configuración</a> ✨"
     emails_are_disabled: "Todos los correos electrónicos salientes han sido desactivados globalmente por un administrador. No se enviarán notificaciones por correo electrónico de ningún tipo."
+    emails_are_disabled_non_staff: "El correo electrónico saliente se ha desactivado para los usuarios que no pertenecen al personal."
     software_update_prompt:
       message: "Hemos actualizado este sitio, <span>vuelve a cargarlo</span>, o podrías experimentar un comportamiento inesperado."
       dismiss: "Descartar"
@@ -172,8 +173,10 @@ es:
     bootstrap_mode_disabled: "El modo de arranque se desactivará dentro de las próximas 24 horas."
     themes:
       default_description: "Por defecto"
-      broken_theme_alert: "Tu sitio puede que no funcione porque el tema / componente %{theme} tiene errores. Desactívalo en %{path}."
-    broken_decorator_alert: "Puede que las publicaciones no se muestren correctamente porque uno de los decoradores de contenido de publicaciones de tu sitio está causando errores. Revisa la consola de desarrollo del navegador para más información."
+      broken_theme_alert: "Puede que tu sitio no funcione, un tema o componente está causando errores."
+      error_caused_by: "Causado por '%{name}'. <a target='blank' href='%{path}'>Haz clic aquí</a> para actualizar, reconfigurar o update, reconfigure or desctivar."
+      only_admins: "(este mensaje solo lo ven los administradores del sitio)"
+    broken_decorator_alert: "Puede que las publicaciones no se muestren correctamente porque uno de los decoradores de publicaciones de tu sitio está causando errores."
     s3:
       regions:
         ap_northeast_1: "Asia-Pacífico (Tokio)"
@@ -297,10 +300,11 @@ es:
       list_permission_denied: "No tienes permiso para ver los marcadores de este usuario."
       no_user_bookmarks: "No tienes publicaciones guardadas en marcadores; guardar en marcadores permite que vuelvas a los temas rápidamente."
       auto_delete_preference:
-        label: "Eliminar automáticamente"
-        never: "Nunca"
-        when_reminder_sent: "Cuando se envíe el recordatorio"
-        on_owner_reply: "Cuando responda a este tema"
+        label: "Después de ser notificado"
+        never: "Mantener el marcador"
+        when_reminder_sent: "Eliminar marcador"
+        on_owner_reply: "Borrar el marcador cuando responda"
+        clear_reminder: "Mantener el marcador, pero quitar recordatorio"
       search_placeholder: "Buscar marcadores por nombre, título del tema o contenido de la publicación"
       search: "Buscar"
       reminders:
@@ -310,6 +314,8 @@ es:
         existing_reminder: "Tienes un recordatorio para este marcador que se enviará %{at_date_time}"
     copy_codeblock:
       copied: "¡copiado!"
+      copy: "código copiado al portapapeles"
+      fullscreen: "ver código en pantalla completa"
     drafts:
       label: "Borradores"
       label_with_count: "Borradores (%{count})"
@@ -360,8 +366,8 @@ es:
     switch_to_anon: "Entrar en modo anónimo"
     switch_from_anon: "Salir del modo anónimo"
     banner:
-      close: "Descartar este banner."
-      edit: "Editar este banner >>"
+      close: "Descartar este banner"
+      edit: "Editar"
     pwa:
       install_banner: "¿Quieres <a href>instalar %{title} en este dispositivo?</a>"
     choose_topic:
@@ -690,6 +696,8 @@ es:
             title: "Ajustes"
             allow_unknown_sender_topic_replies: "Permitir respuestas a temas de remitentes desconocidos."
             allow_unknown_sender_topic_replies_hint: "Permite a remitentes desconocidos responder a temas de grupo. Si esto no está activado, las respuestas de direcciones de correo electrónico no invitadas todavía al tema crearán un nuevo tema."
+            from_alias: "Alias de envío"
+            from_alias_hint: "Alias que usar como la dirección de envío al enviar mensajes de grupo con SMTP. Ten en cuenta que no todos los proveedores de correo son compatibles con esta opción, consulta con el tuyo para saber si puedes usar los alias."
           mailboxes:
             synchronized: "Bandeja de correo electrónico sincronizada"
             none_found: "No se han encontrado bandejas de correo electrónico para esta cuenta de correo electrónico."
@@ -1261,6 +1269,7 @@ es:
         upload_title: "Sube tu foto"
         image_is_not_a_square: "Advertencia: hemos recortado tu imagen porque la anchura y la altura no eran iguales."
         logo_small: "Logotipo pequeño del sitio. Usado por defecto."
+        use_custom: "O sube un avatar personalizado:"
       change_profile_background:
         title: "Encabezado de perfil"
         instructions: "Por defecto, los encabezados de perfil estarán centrados y tendrán una anchura de 1110px."
@@ -1794,6 +1803,7 @@ es:
       second_factor_toggle:
         totp: "Usar una aplicación de autenticación en su lugar"
         backup_code: "Usar un código de copia de seguridad en su lugar"
+        security_key: "Utilizar una clave de seguridad en su lugar"
     invites:
       accept_title: "Invitación"
       emoji: "emoji de un sobre"
@@ -1822,6 +1832,7 @@ es:
       categories_and_top_topics: "Categorías y temas destacados"
       categories_boxes: "Cajas con subcategorías"
       categories_boxes_with_topics: "Cajas con temas destacados"
+      subcategories_with_featured_topics: "Subcategorías con temas destacados"
     shortcut_modifier_key:
       shift: "Mayús"
       ctrl: "Ctrl"
@@ -2280,7 +2291,7 @@ es:
         clear_all: "Limpiar todo"
         unlist_topics: "Hacer invisibles"
         relist_topics: "Hacer visibles de nuevo"
-        reset_read: "Restablecer leídos"
+        defer: "Aplazar"
         delete: "Eliminar temas"
         dismiss: "Descartar"
         dismiss_read: "Descartar todos los temas sin leer"
@@ -2590,7 +2601,7 @@ es:
         title: "Responder"
         help: "comienza a escribir un mensaje en este tema"
       share:
-        title: "Compartir"
+        title: "Compartir tema"
         extended_title: "Compartir un enlace"
         help: "comparte el enlace a este tema"
         instructions: "Comparte el enlace a este tema:"
@@ -2598,12 +2609,6 @@ es:
         restricted_groups:
           one: "Solo visible para los miembros del grupo: %{groupNames}"
           other: "Solo visible para los miembros de los grupos: %{groupNames}"
-        notify_users:
-          title: "Notificar"
-          instructions: "Notificar sobre este tema a los siguientes usuarios:"
-          success:
-            one: "Se ha notificado a %{username} sobre este tema."
-            other: "Se ha notificado a todos los usuarios sobre este tema."
         invite_users: "Invitar"
       print:
         title: "Imprimir"
@@ -2826,6 +2831,7 @@ es:
         edit: "Lo sentimos, se produjo un error al editar tu publicación. Inténtalo de nuevo."
         upload: "Lo sentimos, se ha producido un error al cargar este archivo. Inténtalo de nuevo."
         file_too_large: "Lo sentimos, ese archivo es demasiado grande (el tamaño máximo es %{max_size_kb} kb). ¿Por qué no lo subes a un servicio de almacenamiento en la nube y compartes el enlace luego?"
+        file_size_zero: "Lo sentimos, algo ha ido mal. El archivo que estás intentando cargar ocupa 0 bytes. Inténtalo de nuevo."
         file_too_large_humanized: "Lo sentimos, el archivo es demasiado grande (el tamaño máximo es %{max_size}). Podrías probar a subirlo a una plataforma en la nube, compartirlo y pegar el enlace."
         too_many_uploads: "Lo sentimos, solo puedes cargar un archivo a la vez."
         too_many_dragged_and_dropped_files:
@@ -2978,6 +2984,9 @@ es:
           edit_bookmark:
             name: "Editar marcador"
             description: "Editar el nombre del marcador o cambia la fecha y hora del recordatorio"
+          clear_bookmark_reminder:
+            name: "Quitar recordatorio"
+            description: "Quitar la fecha y hora del recordatorio"
           pin_bookmark:
             name: "Anclar marcador"
             description: "Anclar el marcador. Esto hará que aparezca al principio de tu lista de marcadores."
@@ -2990,6 +2999,9 @@ es:
         viewing_summary: "Estás viendo un resumen de este tema"
         post_number: "%{username}, publicación nº %{post_number}"
         show_all: "Mostrar todas"
+      share:
+        title: "Compartir publicación n.º %{post_number}"
+        instructions: "Comparte un enlace a esta publicación:"
     category:
       none: "(sin categoría)"
       all: "Todas las categorías"
@@ -3338,6 +3350,7 @@ es:
       readonly: "Ver"
     lightbox:
       download: "descargar"
+      open: "imagen original"
       previous: "Anterior (flecha izquierda)"
       next: "Siguiente (flecha derecha)"
       counter: "%curr% de %total%"
@@ -3650,6 +3663,8 @@ es:
     no_group_messages_title: "No hay ningún mensaje en el grupo"
     fullscreen_table:
       expand_btn: "Expandir tabla"
+    second_factor_auth:
+      redirect_after_success: "La autenticación de segundo factor se ha realizado con éxito. Redirigiendo a la página anterior…"
   admin_js:
     type_to_filter: "filtrar opciones..."
     admin:
@@ -3873,10 +3888,14 @@ es:
             topics:
               read: Leer un tema o una publicación específica del mismo. También usando RSS.
               write: Crear un nuevo tema o publicar en uno existente.
+              update: Actualizar un tema. Cambiar el título, categoría, etiquetas, etc.
               read_lists: Lea listas de temas como destacados, nuevos, recientes, etc. También se admite RSS.
               wordpress: Necesario para que el plugin para WordPress wp-discourse funcione.
             posts:
               edit: Edita cualquier publicación o una específica.
+            categories:
+              list: Obtener la lista de categorías.
+              show: Obtener una sola categoría por id.
             uploads:
               create: Subir un nuevo archivo o iniciar subidas directas de uno o varios archivos al almacenamiento externo.
             users:
@@ -3957,6 +3976,9 @@ es:
         notification_event:
           name: "Evento de notificación"
           details: "Cuando un usuario recibe una notificación."
+        user_promoted_event:
+          name: "Evento por ascenso de usuario"
+          details: "Cuando un usuario asciende de nivel de confianza."
         user_badge_event:
           name: "Evento por obtención de insignia"
           details: "Cuando un usuario recibe una insignia."
@@ -4095,7 +4117,7 @@ es:
         delete_confirm: '¿Seguro que quieres eliminar «%{theme_name}»?'
         color: "Color"
         opacity: "Opacidad"
-        copy: "Copiar"
+        copy: "Duplicar"
         copy_to_clipboard: "Copiar al portapapeles"
         copied_to_clipboard: "Copiado al portapapeles"
         copy_to_clipboard_error: "Error al copiar datos al portapapeles"

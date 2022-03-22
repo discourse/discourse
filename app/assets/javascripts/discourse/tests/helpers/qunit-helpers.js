@@ -1,5 +1,5 @@
 import QUnit, { module, skip, test } from "qunit";
-import { deepMerge } from "discourse-common/lib/object";
+import { cloneJSON, deepMerge } from "discourse-common/lib/object";
 import MessageBus from "message-bus-client";
 import {
   clearCache as clearOutletCache,
@@ -45,6 +45,7 @@ import {
 } from "discourse/lib/topic-list-tracker";
 import sinon from "sinon";
 import siteFixtures from "discourse/tests/fixtures/site-fixtures";
+import { clearExtraKeyboardShortcutHelp } from "discourse/lib/keyboard-shortcuts";
 import { clearResolverOptions } from "discourse-common/resolver";
 import { clearNavItems } from "discourse/models/nav-item";
 import {
@@ -168,6 +169,7 @@ function testCleanup(container, app) {
   resetComposerCustomizations();
   resetQuickSearchRandomTips();
   resetPostMenuExtraButtons();
+  clearExtraKeyboardShortcutHelp();
   clearNavItems();
   setTopicList(null);
   _clearSnapshots();
@@ -487,6 +489,7 @@ export function exists(selector) {
 }
 
 export function publishToMessageBus(channelPath, ...args) {
+  args = cloneJSON(args);
   MessageBus.callbacks
     .filterBy("channel", channelPath)
     .forEach((c) => c.func(...args));
