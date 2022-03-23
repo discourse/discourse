@@ -10,18 +10,20 @@ acceptance("Topic list plugin API", function () {
   }
 
   test("Overrides lastUnreadUrl", async function (assert) {
-    withPluginApi("1.2.0", (api) => {
-      api.registerCustomLastUnreadUrlCallback(customLastUnreadUrl);
-    });
+    try {
+      withPluginApi("1.2.0", (api) => {
+        api.registerCustomLastUnreadUrlCallback(customLastUnreadUrl);
+      });
 
-    await visit("/");
-    assert.strictEqual(
-      query(
-        ".topic-list .topic-list-item:first-child a.raw-topic-link"
-      ).getAttribute("href"),
-      "/t/error-after-upgrade-to-0-9-7-9/11557/1?overriden"
-    );
-
-    clearCustomLastUnreadUrlCallbacks();
+      await visit("/");
+      assert.strictEqual(
+        query(
+          ".topic-list .topic-list-item:first-child a.raw-topic-link"
+        ).getAttribute("href"),
+        "/t/error-after-upgrade-to-0-9-7-9/11557/1?overriden"
+      );
+    } finally {
+      clearCustomLastUnreadUrlCallbacks();
+    }
   });
 });
