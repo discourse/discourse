@@ -61,10 +61,12 @@ export default Component.extend({
         if (this.selected && this.selected.includes(this.topic)) {
           this.element.querySelector("input.bulk-select").checked = true;
         }
-        const title = this.element.querySelector(".main-link .title");
-        if (title) {
-          title.addEventListener("focus", this._onTitleFocus);
-          title.addEventListener("blur", this._onTitleBlur);
+        if (this._shouldFocusLastVisited()) {
+          const title = this._titleElement();
+          if (title) {
+            title.addEventListener("focus", this._onTitleFocus);
+            title.addEventListener("blur", this._onTitleBlur);
+          }
         }
       });
     }
@@ -106,10 +108,12 @@ export default Component.extend({
     if (this.includeUnreadIndicator) {
       this.messageBus.unsubscribe(this.unreadIndicatorChannel);
     }
-    const title = this.element?.querySelector(".main-link .title");
-    if (title) {
-      title.removeEventListener("focus", this._onTitleFocus);
-      title.removeEventListener("blur", this._onTitleBlur);
+    if (this._shouldFocusLastVisited()) {
+      const title = this._titleElement();
+      if (title) {
+        title.removeEventListener("focus", this._onTitleFocus);
+        title.removeEventListener("blur", this._onTitleBlur);
+      }
     }
   },
 
@@ -280,12 +284,8 @@ export default Component.extend({
       this.element.addEventListener("animationend", () => {
         this.element.classList.remove("highlighted");
       });
-      if (
-        this.focusLastVisitedTopic &&
-        opts.isLastViewedTopic &&
-        !this.site.mobileView
-      ) {
-        this.element.querySelector(".main-link .title").focus();
+      if (opts.isLastViewedTopic && this._shouldFocusLastVisited()) {
+        this._titleElement().focus();
       }
     });
   },
@@ -305,16 +305,26 @@ export default Component.extend({
   @bind
   _onTitleFocus() {
     if (this.element && !this.isDestroying && !this.isDestroyed) {
-      const mainLink = this.element.querySelector(".main-link");
-      mainLink.classList.add("focused");
+      this._mainLinkElement().classList.add("focused");
     }
   },
 
   @bind
   _onTitleBlur() {
     if (this.element && !this.isDestroying && !this.isDestroyed) {
-      const mainLink = this.element.querySelector(".main-link");
-      mainLink.classList.remove("focused");
+      this._mainLinkElement().classList.remove("focused");
     }
+  },
+
+  _shouldFocusLastVisited() {
+    return !this.site.mobileView && this.focusLastVisitedTopic;
+  },
+
+  _mainLinkElement() {
+    return this.element.querySelector(".main-link");
+  },
+
+  _titleElement() {
+    return this.element.querySelector(".main-link .title");
   },
 });
