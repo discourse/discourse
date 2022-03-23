@@ -3550,7 +3550,7 @@ en:
     sr_replies: "Sort by replies"
     views_long:
       one: "this topic has been viewed %{count} time"
-      other: "this topic has been viewed %{number} times"
+      other: "this topic has been viewed %{count} times"
     activity: "Activity"
     sr_activity: "Sort by activity"
     likes: "Likes"

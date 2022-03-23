@@ -73,7 +73,7 @@
   </td>
 {{/if}}
 
-<td class="num views {{topic.viewsHeat}} topic-list-data">
+<td class="num views {{topic.viewsHeat}} topic-list-data" aria-label='{{i18n "views_long" count=topic.views}}' tabindex="0">
   {{raw-plugin-outlet name="topic-list-before-view-count"}}
   {{number topic.views numberKey="views_long"}}
 </td>
