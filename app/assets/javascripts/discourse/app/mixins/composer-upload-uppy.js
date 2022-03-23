@@ -67,9 +67,9 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
 
     this.editorEl?.removeEventListener("paste", this.pasteEventListener);
 
-    this.appEvents.off(`${this.eventPrefix}:add-files`, this._addFiles);
+    this.appEvents.off(`${this.composerEventPrefix}:add-files`, this._addFiles);
     this.appEvents.off(
-      `${this.eventPrefix}:cancel-upload`,
+      `${this.composerEventPrefix}:cancel-upload`,
       this._cancelSingleUpload
     );
 
@@ -84,7 +84,7 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
   },
 
   _abortAndReset() {
-    this.appEvents.trigger(`${this.eventPrefix}:uploads-aborted`);
+    this.appEvents.trigger(`${this.composerEventPrefix}:uploads-aborted`);
     this._reset();
     return false;
   },
@@ -97,9 +97,9 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
     this.fileInputEl = document.getElementById(this.fileUploadElementId);
     const isPrivateMessage = this.get("composerModel.privateMessage");
 
-    this.appEvents.on(`${this.eventPrefix}:add-files`, this._addFiles);
+    this.appEvents.on(`${this.composerEventPrefix}:add-files`, this._addFiles);
     this.appEvents.on(
-      `${this.eventPrefix}:cancel-upload`,
+      `${this.composerEventPrefix}:cancel-upload`,
       this._cancelSingleUpload
     );
 
@@ -136,7 +136,7 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
         });
 
         if (!isUploading) {
-          this.appEvents.trigger(`${this.eventPrefix}:uploads-aborted`);
+          this.appEvents.trigger(`${this.composerEventPrefix}:uploads-aborted`);
         }
         return isUploading;
       },
@@ -290,11 +290,11 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
             uploadPlaceholder: placeholder,
           };
           this.appEvents.trigger(
-            `${this.eventPrefix}:insert-text`,
+            `${this.composerEventPrefix}:insert-text`,
             placeholder
           );
           this.appEvents.trigger(
-            `${this.eventPrefix}:upload-started`,
+            `${this.composerEventPrefix}:upload-started`,
             file.name
           );
         });
@@ -316,14 +316,14 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
         cacheShortUploadUrl(upload.short_url, upload);
 
         this.appEvents.trigger(
-          `${this.eventPrefix}:replace-text`,
+          `${this.composerEventPrefix}:replace-text`,
           this.placeholders[file.id].uploadPlaceholder.trim(),
           markdown
         );
 
         this._resetUpload(file, { removePlaceholder: false });
         this.appEvents.trigger(
-          `${this.eventPrefix}:upload-success`,
+          `${this.composerEventPrefix}:upload-success`,
           file.name,
           upload
         );
@@ -334,7 +334,9 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
 
     this._uppyInstance.on("complete", () => {
       run(() => {
-        this.appEvents.trigger(`${this.eventPrefix}:all-uploads-complete`);
+        this.appEvents.trigger(
+          `${this.composerEventPrefix}:all-uploads-complete`
+        );
         this._reset();
       });
     });
@@ -346,7 +348,7 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
         Object.values(this.placeholders).forEach((data) => {
           run(() => {
             this.appEvents.trigger(
-              `${this.eventPrefix}:replace-text`,
+              `${this.composerEventPrefix}:replace-text`,
               data.uploadPlaceholder,
               ""
             );
@@ -356,7 +358,7 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
         this.set("userCancelled", false);
         this._reset();
 
-        this.appEvents.trigger(`${this.eventPrefix}:uploads-cancelled`);
+        this.appEvents.trigger(`${this.composerEventPrefix}:uploads-cancelled`);
       }
     });
 
@@ -381,7 +383,7 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
 
     if (!this.userCancelled) {
       displayErrorForUpload(response || error, this.siteSettings, file.name);
-      this.appEvents.trigger(`${this.eventPrefix}:upload-error`, file);
+      this.appEvents.trigger(`${this.composerEventPrefix}:upload-error`, file);
     }
 
     if (this.inProgressUploads.length === 0) {
@@ -434,7 +436,7 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
       )}]()\n`;
 
       this.appEvents.trigger(
-        `${this.eventPrefix}:replace-text`,
+        `${this.composerEventPrefix}:replace-text`,
         placeholderData.uploadPlaceholder,
         placeholderData.processingPlaceholder
       );
@@ -445,7 +447,7 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
         run(() => {
           let placeholderData = this.placeholders[file.id];
           this.appEvents.trigger(
-            `${this.eventPrefix}:replace-text`,
+            `${this.composerEventPrefix}:replace-text`,
             placeholderData.processingPlaceholder,
             placeholderData.uploadPlaceholder
           );
@@ -458,7 +460,7 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
             isCancellable: true,
           });
           this.appEvents.trigger(
-            `${this.eventPrefix}:uploads-preprocessing-complete`
+            `${this.composerEventPrefix}:uploads-preprocessing-complete`
           );
         });
       }
@@ -536,7 +538,7 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
   _resetUpload(file, opts) {
     if (opts.removePlaceholder) {
       this.appEvents.trigger(
-        `${this.eventPrefix}:replace-text`,
+        `${this.composerEventPrefix}:replace-text`,
         this.placeholders[file.id].uploadPlaceholder,
         ""
       );
