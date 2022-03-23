@@ -30,6 +30,7 @@ describe SessionController do
         user.update(admin: true)
         get "/session/email-login/#{email_token.token}.json"
         expect(response.status).to eq(200)
+        expect(response.parsed_body).not_to include('error')
       end
     end
 
@@ -46,6 +47,7 @@ describe SessionController do
         user.update(admin: true)
         get "/session/email-login/#{email_token.token}.json"
         expect(response.status).to eq(200)
+        expect(response.parsed_body).not_to include('error')
       end
     end
 
@@ -257,6 +259,7 @@ describe SessionController do
         it "sets the user_option timezone for the user" do
           post "/session/email-login/#{email_token.token}.json", params: { timezone: "Australia/Melbourne" }
           expect(response.status).to eq(200)
+          expect(response.parsed_body).not_to include('error')
           expect(user.reload.user_option.timezone).to eq("Australia/Melbourne")
         end
       end
@@ -421,6 +424,7 @@ describe SessionController do
             }
 
             expect(response.status).to eq(200)
+            expect(response.parsed_body).not_to include('error')
             user.reload
 
             expect(session[:current_user_id]).to eq(user.id)
@@ -1344,12 +1348,15 @@ describe SessionController do
     context 'local login via email is disabled' do
       before do
         SiteSetting.enable_local_logins_via_email = false
+        EmailToken.confirm(email_token.token)
       end
+
       it 'doesnt matter, logs in correctly' do
         post "/session.json", params: {
           login: user.username, password: 'myawesomepassword'
         }
         expect(response.status).to eq(200)
+        expect(response.parsed_body).not_to include('error')
       end
     end
 
@@ -1369,7 +1376,7 @@ describe SessionController do
             login: user.username, password: 'sssss'
           }
 
-          expect(response.status).to eq(200)
+          expect(response.status).to eq(401)
           expect(response.parsed_body['error']).to eq(
             I18n.t("login.incorrect_username_email_or_password")
           )
@@ -1383,7 +1390,7 @@ describe SessionController do
             login: user.username, password: ('s' * (User.max_password_length + 1))
           }
 
-          expect(response.status).to eq(200)
+          expect(response.status).to eq(401)
           expect(response.parsed_body['error']).to eq(
             I18n.t("login.incorrect_username_email_or_password")
           )
@@ -1432,7 +1439,7 @@ describe SessionController do
             login: user.username, password: 'myawesomepassword'
           }
 
-          expect(response.status).to eq(200)
+          expect(response.status).to eq(403)
           expect(response.parsed_body['error']).to eq(I18n.t('login.not_activated'))
         end
       end
@@ -1446,6 +1453,7 @@ describe SessionController do
           end
 
           expect(response.status).to eq(200)
+          expect(response.parsed_body).not_to include('error')
           expect(events.map { |event| event[:event_name] }).to contain_exactly(
             :user_logged_in, :user_first_logged_in
           )
@@ -1464,6 +1472,7 @@ describe SessionController do
               login: user.username, password: 'myawesomepassword', timezone: "Australia/Melbourne"
             }
             expect(response.status).to eq(200)
+            expect(response.parsed_body).not_to include('error')
             expect(user.reload.user_option.timezone).to eq("Australia/Melbourne")
           end
         end
@@ -1544,6 +1553,7 @@ describe SessionController do
             }
 
             expect(response.status).to eq(200)
+            expect(response.parsed_body).not_to include('error')
             user.reload
 
             expect(session[:current_user_id]).to eq(user.id)
@@ -1638,6 +1648,7 @@ describe SessionController do
                 second_factor_method: UserSecondFactor.methods[:totp]
               }
               expect(response.status).to eq(200)
+              expect(response.parsed_body).not_to include('error')
               user.reload
 
               expect(session[:current_user_id]).to eq(user.id)
@@ -1658,6 +1669,7 @@ describe SessionController do
                 second_factor_method: UserSecondFactor.methods[:backup_codes]
               }
               expect(response.status).to eq(200)
+              expect(response.parsed_body).not_to include('error')
               user.reload
 
               expect(session[:current_user_id]).to eq(user.id)
@@ -1680,6 +1692,7 @@ describe SessionController do
             login: "@" + user.username, password: 'myawesomepassword'
           }
           expect(response.status).to eq(200)
+          expect(response.parsed_body).to include('error')
           user.reload
 
           expect(session[:current_user_id]).to be_nil
@@ -1692,6 +1705,7 @@ describe SessionController do
             login: "@" + user.username, password: 'myawesomepassword'
           }
           expect(response.status).to eq(200)
+          expect(response.parsed_body).not_to include('error')
           user.reload
 
           expect(session[:current_user_id]).to eq(user.id)
@@ -1704,6 +1718,7 @@ describe SessionController do
             login: user.email, password: 'myawesomepassword'
           }
           expect(response.status).to eq(200)
+          expect(response.parsed_body).not_to include('error')
           expect(session[:current_user_id]).to eq(user.id)
         end
       end
@@ -1743,12 +1758,13 @@ describe SessionController do
           end
 
           it "doesn't log in the user" do
-            expect(response.status).to eq(200)
+            expect(response.status).to eq(403)
+            expect(response.parsed_body).to include('error')
             expect(session[:current_user_id]).to be_blank
           end
 
           it "shows the 'not approved' error message" do
-            expect(response.status).to eq(200)
+            expect(response.status).to eq(403)
             expect(response.parsed_body['error']).to eq(
               I18n.t('login.not_approved')
             )
@@ -1764,6 +1780,7 @@ describe SessionController do
               login: user.email, password: 'myawesomepassword'
             }
             expect(response.status).to eq(200)
+            expect(response.parsed_body).not_to include('error')
             expect(session[:current_user_id]).to eq(user.id)
           end
         end
@@ -1786,6 +1803,7 @@ describe SessionController do
             login: user.username, password: 'myawesomepassword'
           }
           expect(response.status).to eq(200)
+          expect(response.parsed_body).not_to include('error')
           expect(session[:current_user_id]).to eq(user.id)
         end
 
@@ -1813,6 +1831,7 @@ describe SessionController do
           }
 
           expect(response.status).to eq(200)
+          expect(response.parsed_body).not_to include('error')
           expect(session[:current_user_id]).to eq(user.id)
         end
       end
@@ -1827,13 +1846,14 @@ describe SessionController do
 
       it "doesn't log in the user" do
         post_login
-        expect(response.status).to eq(200)
+        expect(response.status).to eq(403)
+        expect(response.parsed_body).to include('error')
         expect(session[:current_user_id]).to be_blank
       end
 
       it "shows the 'not activated' error message" do
         post_login
-        expect(response.status).to eq(200)
+        expect(response.status).to eq(403)
         expect(response.parsed_body['error']).to eq(
           I18n.t 'login.not_activated'
         )
@@ -1844,7 +1864,7 @@ describe SessionController do
 
         it "shows the 'not approved' error message" do
           post_login
-          expect(response.status).to eq(200)
+          expect(response.status).to eq(403)
           expect(response.parsed_body['error']).to eq(
             I18n.t 'login.not_approved'
           )
@@ -1857,6 +1877,7 @@ describe SessionController do
         SiteSetting.max_logins_per_ip_per_hour = 2
         RateLimiter.enable
         RateLimiter.clear_all!
+        EmailToken.confirm(email_token.token)
 
         2.times do
           post "/session.json", params: {
@@ -1886,7 +1907,7 @@ describe SessionController do
             second_factor_token: '000000',
             second_factor_method: UserSecondFactor.methods[:totp]
           }
-          expect(response.status).to eq(200)
+          expect(response.status).to eq(401)
         end
 
         post "/session.json", params: {
@@ -1904,6 +1925,7 @@ describe SessionController do
       it 'rate limits second factor attempts by login' do
         RateLimiter.enable
         RateLimiter.clear_all!
+        EmailToken.confirm(email_token.token)
 
         6.times do |x|
           post "/session.json", params: {

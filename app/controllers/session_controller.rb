@@ -318,7 +318,7 @@ class SessionController < ApplicationController
 
       # If the site requires user approval and the user is not approved yet
       if login_not_approved_for?(user)
-        render json: login_not_approved
+        render json: login_not_approved, status: 403
         return
       end
 
@@ -674,7 +674,7 @@ class SessionController < ApplicationController
   end
 
   def invalid_credentials
-    render json: { error: I18n.t("login.incorrect_username_email_or_password") }
+    render json: { error: I18n.t("login.incorrect_username_email_or_password") }, status: 401
   end
 
   def login_not_approved
@@ -688,7 +688,7 @@ class SessionController < ApplicationController
       reason: 'not_activated',
       sent_to_email: user.find_email || user.email,
       current_email: user.email
-    }
+    }, status: 403
   end
 
   def not_allowed_from_ip_address(user)
