@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class AddBookmarkPolymorphicColumns < ActiveRecord::Migration[6.1]
+class AddBookmarkPolymorphicColumnsAgain < ActiveRecord::Migration[6.1]
   def change
     add_column :bookmarks, :bookmarkable_id, :integer
     add_column :bookmarks, :bookmarkable_type, :string
