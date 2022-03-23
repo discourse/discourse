@@ -31,7 +31,11 @@ class PostAnalyzer
       cooked = PrettyText.cook(raw, opts)
     end
 
+    limit = SiteSetting.max_oneboxes_per_post
     result = Oneboxer.apply(cooked) do |url|
+      next if limit <= 0
+      limit -= 1
+
       @onebox_urls << url
       if opts[:invalidate_oneboxes]
         Oneboxer.invalidate(url)
