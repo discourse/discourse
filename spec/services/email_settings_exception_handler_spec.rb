@@ -38,7 +38,7 @@ RSpec.describe EmailSettingsExceptionHandler do
     end
 
     it "formats a Net::SMTPAuthenticationError with application-specific password Gmail error" do
-      exception = Net::SMTPAuthenticationError.new(stub(message: "Application-specific password required"))
+      exception = Net::SMTPAuthenticationError.new(nil, message: "Application-specific password required")
       expect(subject.class.friendly_exception_message(exception, "smtp.gmail.com")).to eq(
         I18n.t("email_settings.authentication_error_gmail_app_password")
       )
@@ -52,15 +52,15 @@ RSpec.describe EmailSettingsExceptionHandler do
     end
 
     it "formats a Net::SMTPSyntaxError, Net::SMTPFatalError, and Net::SMTPUnknownError" do
-      exception = Net::SMTPSyntaxError.new(stub(message: "bad syntax"))
+      exception = Net::SMTPSyntaxError.new(nil, message: "bad syntax")
       expect(subject.class.friendly_exception_message(exception, "smtp.test.com")).to eq(
         I18n.t("email_settings.smtp_unhandled_error", message: exception.message)
       )
-      exception = Net::SMTPFatalError.new(stub(message: "fatal"))
+      exception = Net::SMTPFatalError.new(nil, message: "fatal")
       expect(subject.class.friendly_exception_message(exception, "smtp.test.com")).to eq(
         I18n.t("email_settings.smtp_unhandled_error", message: exception.message)
       )
-      exception = Net::SMTPUnknownError.new(stub(message: "unknown"))
+      exception = Net::SMTPUnknownError.new(nil, message: "unknown")
       expect(subject.class.friendly_exception_message(exception, "smtp.test.com")).to eq(
         I18n.t("email_settings.smtp_unhandled_error", message: exception.message)
       )
