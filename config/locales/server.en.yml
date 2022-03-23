@@ -5154,6 +5154,7 @@ en:
     ignore_error: "Sorry, you can't ignore that user."
     mute_error: "Sorry, you can't mute that user."
     error: "Sorry, you cannot change the notification level for that user."
+    invalid_value: '"%{value}" is not a valid notification level.'
 
   discord:
     not_in_allowed_guild: "Authentication failed. You are not a member of a permitted Discord guild."

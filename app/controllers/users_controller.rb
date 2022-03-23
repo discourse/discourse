@@ -1365,6 +1365,9 @@ class UsersController < ApplicationController
     elsif params[:notification_level] == "normal"
       MutedUser.where(user: acting_user, muted_user: target_user).delete_all
       IgnoredUser.where(user: acting_user, ignored_user: target_user).delete_all
+
+    else
+      return render_json_error(I18n.t("notification_level.invalid_value", value: params[:notification_level]))
     end
 
     render json: success_json
