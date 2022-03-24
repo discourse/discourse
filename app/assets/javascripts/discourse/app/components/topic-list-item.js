@@ -285,7 +285,7 @@ export default Component.extend({
         this.element.classList.remove("highlighted");
       });
       if (opts.isLastViewedTopic && this._shouldFocusLastVisited()) {
-        this._titleElement().focus();
+        this._titleElement()?.focus();
       }
     });
   },
