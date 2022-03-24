@@ -580,6 +580,11 @@ describe Topic do
       end
     end
 
+    it 'does not result in a syntax error when removing accents' do
+      SiteSetting.search_ignore_accents = true
+      expect(Topic.similar_to('something', 'it\'s')).to eq([])
+    end
+
     it 'does not result in a syntax error when raw is blank after cooking' do
       expect(Topic.similar_to('some title', '#')).to eq([])
     end
