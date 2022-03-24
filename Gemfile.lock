@@ -466,7 +466,7 @@ GEM
     unicorn (6.1.0)
       kgio (~> 2.6)
       raindrops (~> 0.7)
-    uniform_notifier (1.15.0)
+    uniform_notifier (1.16.0)
     uri_template (0.7.0)
     webmock (3.14.0)
       addressable (>= 2.8.0)
