@@ -998,81 +998,80 @@ task "uploads:analyze_missing_s3" => :environment do
   end
 end
 
-def fix_missing_s3
-  Jobs.run_immediately!
+def fix_missing_upload(id, verbose: true)
+  upload = Upload.find_by(id: id)
+  return true if !upload
 
-  puts "Attempting to download missing uploads and recreate"
-  ids = Upload.where(
-    verification_status: Upload.verification_statuses[:invalid_etag]
-  ).pluck(:id)
-  ids.each do |id|
-    upload = Upload.find_by(id: id)
-    next if !upload
+  result = false
+  tempfile = nil
+  downloaded_from = nil
 
-    tempfile = nil
-    downloaded_from = nil
-
-    begin
-      tempfile = FileHelper.download(upload.url, max_file_size: 30.megabyte, tmp_file_name: "#{SecureRandom.hex}.#{upload.extension}")
-      downloaded_from = upload.url
-    rescue => e
-      if upload.origin.present?
-        begin
-          tempfile = FileHelper.download(upload.origin, max_file_size: 30.megabyte, tmp_file_name: "#{SecureRandom.hex}.#{upload.extension}")
-          downloaded_from = upload.origin
-        rescue => e
-          puts "Failed to download #{upload.origin} #{e}"
-        end
-      else
-        puts "Failed to download #{upload.url} #{e}"
+  begin
+    tempfile = FileHelper.download(upload.url, max_file_size: 30.megabyte, tmp_file_name: "#{SecureRandom.hex}.#{upload.extension}")
+    downloaded_from = upload.url
+  rescue => e
+    if upload.origin.present?
+      begin
+        tempfile = FileHelper.download(upload.origin, max_file_size: 30.megabyte, tmp_file_name: "#{SecureRandom.hex}.#{upload.extension}")
+        downloaded_from = upload.origin
+      rescue => e
+        puts "Failed to download #{upload.origin} #{e}" if verbose
       end
+    else
+      puts "Failed to download #{upload.url} #{e}" if verbose
+    end
+  end
+
+  if tempfile
+    puts "Successfully downloaded upload id: #{upload.id} - #{downloaded_from} fixing upload" if verbose
+
+    fixed_upload = nil
+    fix_error = nil
+    Upload.transaction do
+      begin
+        upload.update_column(:sha1, SecureRandom.hex)
+        fixed_upload = UploadCreator.new(tempfile, "temp.#{upload.extension}", skip_validations: true).create_for(Discourse.system_user.id)
+      rescue => fix_error
+        # invalid extension is the most common issue
+      end
+      raise ActiveRecord::Rollback
     end
 
-    if tempfile
-      puts "Successfully downloaded upload id: #{upload.id} - #{downloaded_from} fixing upload"
-
-      fixed_upload = nil
-      fix_error = nil
-      Upload.transaction do
-        begin
-          upload.update_column(:sha1, SecureRandom.hex)
-          fixed_upload = UploadCreator.new(tempfile, "temp.#{upload.extension}", skip_validations: true).create_for(Discourse.system_user.id)
-        rescue => fix_error
-          # invalid extension is the most common issue
-        end
-        raise ActiveRecord::Rollback
+    if fix_error
+      puts "Failed to fix upload #{fix_error}" if verbose
+    else
+      # we do not fix sha, it may be wrong for arbitrary reasons, if we correct it
+      # we may end up breaking posts
+      save_error = nil
+      begin
+        upload.assign_attributes(etag: fixed_upload.etag, url: fixed_upload.url, verification_status: Upload.verification_statuses[:unchecked])
+        upload.save!(validate: false)
+      rescue => save_error
+        # url might be null
       end
 
-      if fix_error
-        puts "Failed to fix upload #{fix_error}"
+      if save_error
+        puts "Failed to save upload #{save_error}" if verbose
       else
-        # we do not fix sha, it may be wrong for arbitrary reasons, if we correct it
-        # we may end up breaking posts
-        save_error = nil
-        begin
-          upload.assign_attributes(etag: fixed_upload.etag, url: fixed_upload.url, verification_status: Upload.verification_statuses[:unchecked])
-          upload.save!(validate: false)
-        rescue => save_error
-          # url might be null
-        end
+        OptimizedImage.where(upload_id: upload.id).destroy_all
+        rebake_ids = PostUpload.where(upload_id: upload.id).pluck(:post_id)
 
-        if save_error
-          puts "Failed to save upload #{save_error}"
-        else
-          OptimizedImage.where(upload_id: upload.id).destroy_all
-          rebake_ids = PostUpload.where(upload_id: upload.id).pluck(:post_id)
-
-          if rebake_ids.present?
-            Post.where(id: rebake_ids).each do |post|
-              puts "rebake post #{post.id}"
-              post.rebake!
-            end
+        if rebake_ids.present?
+          Post.where(id: rebake_ids).each do |post|
+            puts "rebake post #{post.id}" if verbose
+            post.rebake!
           end
         end
+
+        result = true
       end
     end
   end
 
+  result
+end
+
+def rebake_missing_s3
   puts "Attempting to automatically fix problem uploads"
   puts
   puts "Rebaking posts with missing uploads, this can take a while as all rebaking runs inline"
@@ -1097,12 +1096,82 @@ def fix_missing_s3
   puts
 end
 
+def fix_missing_s3
+  Jobs.run_immediately!
+
+  puts "Attempting to download missing uploads and recreate"
+  ids = Upload.where(
+    verification_status: Upload.verification_statuses[:invalid_etag]
+  ).pluck(:id)
+
+  ids.each do |id|
+    fix_missing_upload(id)
+  end
+
+  rebake_missing_s3
+end
+
+def fix_missing_s3_parallel
+  Jobs.run_immediately!
+
+  puts "Attempting to download missing uploads and recreate"
+  queue = Queue.new
+  threads = []
+
+  Upload.where(
+    verification_status: Upload.verification_statuses[:invalid_etag]
+  ).pluck(:id).each { |id| queue << id }
+  max_count = queue.size
+  queue.close
+
+  status_queue = Queue.new
+  status_thread = Thread.new do
+    error_count = 0
+    current_count = 0
+
+    while !(status = status_queue.pop).nil?
+      error_count += 1 if !status
+      current_count += 1
+
+      print "\r%7d / %7d (%d errors)" % [current_count, max_count, error_count]
+    end
+  end
+
+  20.times do
+    threads << Thread.new do
+      while id = queue.pop
+        begin
+          status_queue << fix_missing_upload(id, verbose: false)
+        rescue
+          status_queue << false
+        end
+      end
+    end
+  end
+
+  threads.each(&:join)
+  status_queue.close
+  status_thread.join
+
+  rebake_missing_s3
+end
+
 task "uploads:fix_missing_s3" => :environment do
   if RailsMultisite::ConnectionManagement.current_db != "default"
     fix_missing_s3
   else
     RailsMultisite::ConnectionManagement.each_connection do
       fix_missing_s3
+    end
+  end
+end
+
+task "uploads:fix_missing_s3_parallel" => :environment do
+  if RailsMultisite::ConnectionManagement.current_db != "default"
+    fix_missing_s3_parallel
+  else
+    RailsMultisite::ConnectionManagement.each_connection do
+      fix_missing_s3_parallel
     end
   end
 end
