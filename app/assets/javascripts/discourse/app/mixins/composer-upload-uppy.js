@@ -37,6 +37,7 @@ import { run } from "@ember/runloop";
 export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
   uploadRootPath: "/uploads",
   uploadTargetBound: false,
+  useUploadPlaceholders: true,
 
   @bind
   _cancelSingleUpload(data) {
@@ -289,10 +290,14 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
           this.placeholders[file.id] = {
             uploadPlaceholder: placeholder,
           };
-          this.appEvents.trigger(
-            `${this.composerEventPrefix}:insert-text`,
-            placeholder
-          );
+
+          if (this.useUploadPlaceholders) {
+            this.appEvents.trigger(
+              `${this.composerEventPrefix}:insert-text`,
+              placeholder
+            );
+          }
+
           this.appEvents.trigger(
             `${this.composerEventPrefix}:upload-started`,
             file.name
@@ -315,11 +320,13 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
 
         cacheShortUploadUrl(upload.short_url, upload);
 
-        this.appEvents.trigger(
-          `${this.composerEventPrefix}:replace-text`,
-          this.placeholders[file.id].uploadPlaceholder.trim(),
-          markdown
-        );
+        if (this.useUploadPlaceholders) {
+          this.appEvents.trigger(
+            `${this.composerEventPrefix}:replace-text`,
+            this.placeholders[file.id].uploadPlaceholder.trim(),
+            markdown
+          );
+        }
 
         this._resetUpload(file, { removePlaceholder: false });
         this.appEvents.trigger(
@@ -347,11 +354,13 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
       if (this.userCancelled) {
         Object.values(this.placeholders).forEach((data) => {
           run(() => {
-            this.appEvents.trigger(
-              `${this.composerEventPrefix}:replace-text`,
-              data.uploadPlaceholder,
-              ""
-            );
+            if (this.useUploadPlaceholders) {
+              this.appEvents.trigger(
+                `${this.composerEventPrefix}:replace-text`,
+                data.uploadPlaceholder,
+                ""
+              );
+            }
           });
         });
 
