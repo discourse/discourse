@@ -11,6 +11,10 @@ describe SearchIndexer do
     SearchIndexer.disable
   end
 
+  def scrub(html, strip_diacritics: false)
+    SearchIndexer.scrub_html_for_search(html, strip_diacritics: strip_diacritics)
+  end
+
   it 'correctly indexes chinese' do
     SiteSetting.default_locale = 'zh_CN'
     data = "你好世界"
@@ -32,34 +36,46 @@ describe SearchIndexer do
 
   it 'extract youtube title' do
     html = "<div class=\"lazyYT\" data-youtube-id=\"lmFgeFh2nlw\" data-youtube-title=\"Metallica Mixer Explains Missing Bass on 'And Justice for All' [Exclusive]\" data-width=\"480\" data-height=\"270\" data-parameters=\"feature=oembed&amp;wmode=opaque\"></div>"
-    scrubbed = SearchIndexer::HtmlScrubber.scrub(html)
+    scrubbed = scrub(html)
     expect(scrubbed).to eq("Metallica Mixer Explains Missing Bass on 'And Justice for All' [Exclusive]")
   end
 
   it 'extract a link' do
     html = "<a href='http://meta.discourse.org/'>link</a>"
-    scrubbed = SearchIndexer::HtmlScrubber.scrub(html)
+    scrubbed = scrub(html)
     expect(scrubbed).to eq("http://meta.discourse.org/ link")
   end
 
   it 'extracts @username from mentions' do
     html = '<p><a class="mention" href="/u/%E7%8B%AE%E5%AD%90">@狮子</a> <a class="mention" href="/u/foo">@foo</a></p>'
-    scrubbed = SearchIndexer::HtmlScrubber.scrub(html)
+    scrubbed = scrub(html)
     expect(scrubbed).to eq('@狮子 @foo')
   end
 
   it 'extracts @groupname from group mentions' do
     html = '<p><a class="mention-group" href="/groups/%D0%B0%D0%B2%D1%82%D0%BE%D0%BC%D0%BE%D0%B1%D0%B8%D0%BB%D0%B8%D1%81%D1%82">@автомобилист</a></p>'
-    scrubbed = SearchIndexer::HtmlScrubber.scrub(html)
+    scrubbed = scrub(html)
     expect(scrubbed).to eq('@автомобилист')
   end
 
   it 'extracts emoji name from emoji image' do
     emoji = Emoji["wink"]
     html = %Q|<img src=\"#{URI.join(Discourse.base_url_no_prefix, emoji.url)}\" title=\":wink:\" class=\"emoji only-emoji\" alt=\":wink:\" loading=\"lazy\" width=\"20\" height=\"20\">|
-    scrubbed = SearchIndexer::HtmlScrubber.scrub(html)
+    scrubbed = scrub(html)
 
     expect(scrubbed).to eq(':wink:')
+  end
+
+  it 'uses ignore_accent setting to strip diacritics' do
+    html = "<p>HELLO Hétérogénéité Здравствуйте هتاف للترحيب 你好</p>"
+
+    SiteSetting.search_ignore_accents = true
+    scrubbed = SearchIndexer.scrub_html_for_search(html)
+    expect(scrubbed).to eq("HELLO Heterogeneite Здравствуите هتاف للترحيب 你好")
+
+    SiteSetting.search_ignore_accents = false
+    scrubbed = SearchIndexer.scrub_html_for_search(html)
+    expect(scrubbed).to eq("HELLO Hétérogénéité Здравствуйте هتاف للترحيب 你好")
   end
 
   it "doesn't index local files" do
@@ -79,7 +95,7 @@ describe SearchIndexer do
       </div>
     HTML
 
-    scrubbed = SearchIndexer::HtmlScrubber.scrub(html)
+    scrubbed = scrub(html)
 
     expect(scrubbed).to eq("Discourse 51%20PM Untitled%20design%20(21)")
   end
@@ -254,20 +270,6 @@ describe SearchIndexer do
       expect(post.post_search_data.search_data).to eq(
         "'/audio.m4a':23 '/content/somethingelse.mov':31 'audio':19 'com':15,22,30 'error':38 'extern':13 'file':20,28 'google.com':15 'http':37 'invalid':35 'link':10,16,24,32 'page':14 'somesite.com':22,30 'somesite.com/audio.m4a':21 'somesite.com/content/somethingelse.mov':29 'test':8A 'titl':4A 'uncategor':9B 'url':36 'video':27"
       )
-    end
-
-    it 'should unaccent indexed content' do
-      SiteSetting.search_ignore_accents = true
-      post.update!(raw: "Cette oeuvre d'art n'est pas une œuvre")
-      post.post_search_data.reload
-      expect(post.post_search_data.search_data).not_to include('œuvr')
-      expect(post.post_search_data.search_data).to include('oeuvr')
-
-      SiteSetting.search_ignore_accents = false
-      SearchIndexer.index(post, force: true)
-      post.post_search_data.reload
-      expect(post.post_search_data.search_data).to include('œuvr')
-      expect(post.post_search_data.search_data).to include('oeuvr')
     end
   end
 

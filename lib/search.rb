@@ -21,6 +21,13 @@ class Search
     5
   end
 
+  def self.strip_diacritics(str)
+    s = str.unicode_normalize(:nfkd)
+    s.gsub!(DIACRITICS, "")
+    s.strip!
+    s
+  end
+
   def self.per_filter
     50
   end
@@ -55,10 +62,6 @@ class Search
     when :tr then 'turkish'
     else 'simple' # use the 'simple' stemmer for other languages
     end
-  end
-
-  def self.wrap_unaccent(str)
-    SiteSetting.search_ignore_accents ? "unaccent(#{str})" : str
   end
 
   def self.segment_chinese?
@@ -111,6 +114,10 @@ class Search
         data = data.join(' ')
       else
         data.squish!
+      end
+
+      if SiteSetting.search_ignore_accents
+        data = strip_diacritics(data)
       end
     end
 
@@ -697,7 +704,7 @@ class Search
         FROM topic_tags tt, tags
         WHERE tt.tag_id = tags.id
         GROUP BY tt.topic_id
-        HAVING to_tsvector(#{default_ts_config}, #{Search.wrap_unaccent("array_to_string(array_agg(lower(tags.name)), ' ')")}) @@ to_tsquery(#{default_ts_config}, #{Search.wrap_unaccent('?')})
+        HAVING to_tsvector(#{default_ts_config}, array_to_string(array_agg(lower(tags.name)), ' ')) @@ to_tsquery(#{default_ts_config}, ?)
       )", tags.join('&'))
     else
       tags = match.split(",")
@@ -1144,8 +1151,7 @@ class Search
 
   def self.to_tsquery(ts_config: nil, term:, joiner: nil)
     ts_config = ActiveRecord::Base.connection.quote(ts_config) if ts_config
-    escaped_term = Search.wrap_unaccent("'#{self.escape_string(term)}'")
-    tsquery = "TO_TSQUERY(#{ts_config || default_ts_config}, #{escaped_term})"
+    tsquery = "TO_TSQUERY(#{ts_config || default_ts_config}, '#{self.escape_string(term)}')"
     tsquery = "REPLACE(#{tsquery}::text, '&', '#{self.escape_string(joiner)}')::tsquery" if joiner
     tsquery
   end

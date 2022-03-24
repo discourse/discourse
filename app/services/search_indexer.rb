@@ -17,6 +17,10 @@ class SearchIndexer
     @disabled = false
   end
 
+  def self.scrub_html_for_search(html, strip_diacritics: SiteSetting.search_ignore_accents)
+    HtmlScrubber.scrub(html, strip_diacritics: strip_diacritics)
+  end
+
   def self.update_index(table: , id: , a_weight: nil, b_weight: nil, c_weight: nil, d_weight: nil)
     raw_data = [a_weight, b_weight, c_weight, d_weight]
 
@@ -31,10 +35,10 @@ class SearchIndexer
     stemmer = table == "user" ? "simple" : Search.ts_config
 
     ranked_index = <<~SQL
-      setweight(to_tsvector('#{stemmer}', #{Search.wrap_unaccent("coalesce(:a,''))")}, 'A') ||
-      setweight(to_tsvector('#{stemmer}', #{Search.wrap_unaccent("coalesce(:b,''))")}, 'B') ||
-      setweight(to_tsvector('#{stemmer}', #{Search.wrap_unaccent("coalesce(:c,''))")}, 'C') ||
-      setweight(to_tsvector('#{stemmer}', #{Search.wrap_unaccent("coalesce(:d,''))")}, 'D')
+      setweight(to_tsvector('#{stemmer}', coalesce(:a,'')), 'A') ||
+      setweight(to_tsvector('#{stemmer}', coalesce(:b,'')), 'B') ||
+      setweight(to_tsvector('#{stemmer}', coalesce(:c,'')), 'C') ||
+      setweight(to_tsvector('#{stemmer}', coalesce(:d,'')), 'D')
     SQL
 
     ranked_params = {
@@ -105,7 +109,7 @@ class SearchIndexer
       table: 'topic',
       id: topic_id,
       a_weight: title,
-      b_weight: HtmlScrubber.scrub(cooked)[0...Topic::MAX_SIMILAR_BODY_LENGTH]
+      b_weight: scrub_html_for_search(cooked)[0...Topic::MAX_SIMILAR_BODY_LENGTH]
     )
   end
 
@@ -120,7 +124,7 @@ class SearchIndexer
       # the original string. Since there is no way to estimate the length of
       # the expected tsvector, we limit the input to ~50% of the maximum
       # length of a tsvector (1_048_576 bytes).
-      d_weight: HtmlScrubber.scrub(cooked)[0..600_000]
+      d_weight: scrub_html_for_search(cooked)[0..600_000]
     ) do |params|
       params["private_message"] = private_message
     end
@@ -290,11 +294,12 @@ class SearchIndexer
 
     attr_reader :scrubbed
 
-    def initialize
+    def initialize(strip_diacritics: false)
       @scrubbed = +""
+      @strip_diacritics = strip_diacritics
     end
 
-    def self.scrub(html)
+    def self.scrub(html, strip_diacritics: false)
       return +"" if html.blank?
 
       begin
@@ -333,9 +338,9 @@ class SearchIndexer
         end
       end
 
-      html_scrubber = new
-      Nokogiri::HTML::SAX::Parser.new(html_scrubber).parse(document.to_html)
-      html_scrubber.scrubbed.squish
+      me = new(strip_diacritics: strip_diacritics)
+      Nokogiri::HTML::SAX::Parser.new(me).parse(document.to_html)
+      me.scrubbed.squish
     end
 
     MENTION_CLASSES ||= %w{mention mention-group}
@@ -357,6 +362,7 @@ class SearchIndexer
     end
 
     def characters(str)
+      str = Search.strip_diacritics(str) if @strip_diacritics
       scrubbed << " #{str} "
     end
   end
