@@ -23,18 +23,17 @@ describe DiscourseRedis do
       it 'should append namespace to the keys' do
         raw_redis.set('default:key', 1)
         raw_redis.set('test:key2', 1)
+        raw_redis.set('default:key3', 1)
 
         expect(redis.keys).to include('key')
         expect(redis.keys).to_not include('key2')
-        expect(redis.scan_each.to_a).to eq(['key'])
+        expect(redis.scan_each.to_a).to eq(['key', 'key3'])
 
-        redis.scan_each.each do |key|
-          expect(key).to eq('key')
-        end
-
-        redis.del('key')
+        redis.del('key', 'key3')
 
         expect(raw_redis.get('default:key')).to eq(nil)
+        expect(raw_redis.get('default:key3')).to eq(nil)
+
         expect(redis.scan_each.to_a).to eq([])
 
         raw_redis.set('default:key1', '1')
@@ -54,14 +53,14 @@ describe DiscourseRedis do
 
         expect(redis.keys).to include('default:key', 'test:key2')
 
-        redis.del('key')
-
-        expect(raw_redis.get('key')).to eq(nil)
-
         raw_redis.set('key1', '1')
         raw_redis.set('key2', '2')
 
         expect(redis.mget('key1', 'key2')).to eq(['1', '2'])
+
+        redis.del('key1', 'key2')
+
+        expect(redis.mget('key1', 'key2')).to eq([nil, nil])
       end
 
       it 'should noop a readonly redis' do
