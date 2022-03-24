@@ -46,6 +46,10 @@ export default Controller.extend(
     },
 
     showRestrictedGroupWarning() {
+      if (!this.model) {
+        return;
+      }
+
       Category.reloadBySlugPath(this.model.slug).then((result) => {
         const groups = result.category.group_permissions.mapBy("group_name");
         if (groups && !groups.any((x) => x === "everyone")) {
