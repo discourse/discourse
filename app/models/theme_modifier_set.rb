@@ -99,7 +99,7 @@ end
 # Table name: theme_modifier_sets
 #
 #  id                       :bigint           not null, primary key
-#  theme_id                 :integer          not null
+#  theme_id                 :bigint           not null
 #  serialize_topic_excerpts :boolean
 #  csp_extensions           :string           is an Array
 #  svg_icons                :string           is an Array
