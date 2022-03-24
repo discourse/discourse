@@ -254,10 +254,14 @@ export function applyDefaultHandlers(pretender) {
   pretender.get("/search", (request) => {
     if (request.queryParams.q === "discourse") {
       return response(fixturesByUrl["/search.json"]);
+    } else if (request.queryParams.q === "discourse visited") {
+      const obj = JSON.parse(JSON.stringify(fixturesByUrl["/search.json"]));
+      obj.topics.firstObject.visited = true;
+      return response(obj);
     } else if (request.queryParams.q === "discourse in:personal") {
-      const fixtures = fixturesByUrl["/search.json"];
-      fixtures.topics.firstObject.archetype = "private_message";
-      return response(fixtures);
+      const obj = JSON.parse(JSON.stringify(fixturesByUrl["/search.json"]));
+      obj.topics.firstObject.archetype = "private_message";
+      return response(obj);
     } else {
       return response({});
     }

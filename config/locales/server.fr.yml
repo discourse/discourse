@@ -1317,6 +1317,7 @@ fr:
       labels:
         user: Utilisateur
         qtt_like: '« J''aime » reçus'
+      description: "Top 10 des utilisateurs qui ont reçu des likes."
     top_users_by_likes_received_from_inferior_trust_level:
       labels:
         user: Utilisateur
@@ -1648,7 +1649,6 @@ fr:
     external_emoji_url: "URL du service externe de fourniture d'images d'émojis. Laisser ce champ vierge pour désactiver cette fonctionnalité."
     use_site_small_logo_as_system_avatar: "Utiliser le logo de petit format du site à la place de l'avatar de l'utilisateur 'system'. Nécessite que ce logo soit défini."
     restrict_letter_avatar_colors: "Une liste de couleurs au format hexadécimal à 6 chiffres utilisées pour l'arrière-plan des avatars en forme de lettres."
-    selectable_avatars_enabled: "Obliger les utilisateurs à sélectionner un avatar repris dans la liste."
     selectable_avatars: "Liste d'avatars que les utilisateurs peuvent sélectionner."
     allow_all_attachments_for_group_messages: "Autoriser toutes les pièces jointes pour les messages de groupes."
     png_to_jpg_quality: "Qualité du fichier JPEG converti (1 représente la qualité la plus faible, 99 la meilleure qualité, 100 sert à désactiver)."
@@ -4480,6 +4480,7 @@ fr:
   notification_level:
     ignore_error: "Nous sommes désolés, vous ne pouvez pas ignorer cet utilisateur."
     mute_error: "Nous sommes désolés, vous ne pouvez pas mettre cet utilisateur en sourdine."
+    error: "Désolé, vous ne pouvez pas modifier le niveau de notification pour cet utilisateur."
   discord:
     not_in_allowed_guild: "L'authentification a échoué. Vous n'êtes membre d'aucune guilde Discord autorisée."
   old_keys_reminder:

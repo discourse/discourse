@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 RSpec.describe UserSecondFactor do
   describe '.methods' do
     it 'should retain the right order' do

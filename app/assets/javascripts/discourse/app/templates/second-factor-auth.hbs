@@ -3,6 +3,9 @@
 {{/if}}
 {{#unless loadError}}
   <h3>{{secondFactorTitle}}</h3>
+  {{#if customDescription}}
+    <p class="action-description">{{customDescription}}</p>
+  {{/if}}
   <p>{{secondFactorDescription}}</p>
   {{#if showSecurityKeyForm}}
     <div id="security-key">

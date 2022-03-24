@@ -1421,7 +1421,7 @@ en:
       labels:
         user: User
         qtt_like: Likes Received
-      description: "Top 10 users who have been received more likes."
+      description: "Top 10 users who have received likes."
     top_users_by_likes_received_from_inferior_trust_level:
       title: "Top Users by likes received from a user with a lower trust level"
       labels:
@@ -1434,7 +1434,7 @@ en:
       labels:
         user: User
         qtt_like: Likes Received
-      description: "Top 10 users who have had the likes from a wide range of people."
+      description: "Top 10 users who have had likes from a wide range of people."
 
   dashboard:
     group_email_credentials_warning: 'There was an issue with the email credentials for the group <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. No emails will send from the group inbox until this problem is addressed. %{error}'
@@ -1828,7 +1828,7 @@ en:
     use_site_small_logo_as_system_avatar: "Use the site's small logo instead of the system user's avatar. Requires the logo to be present."
     restrict_letter_avatar_colors: "A list of 6-digit hexadecimal color values to be used for letter avatar background."
     enable_listing_suspended_users_on_search: "Enable regular users to find suspended users."
-    selectable_avatars_enabled: "Force users to choose an avatar from the list."
+    selectable_avatars_mode: "Allow users to select an avatar from the selectable_avatars list and limit custom avatar uploads to the selected trust level."
     selectable_avatars: "List of avatars users can choose from."
 
     allow_all_attachments_for_group_messages: "Allow all email attachments for group messages."
@@ -2583,6 +2583,9 @@ en:
     challenge_not_found: "Couldn't find a 2FA challenge in your current session."
     challenge_expired: "Too much time has passed since the 2FA challenge was staged and it's no longer valid. Please try again."
     challenge_not_completed: "You've not completed the 2FA challenge to perform this action. Please complete the 2FA challenge and try again."
+    actions:
+      grant_admin:
+        description: "For additional security measures, you need to confirm your 2FA before %{username} is granted admin access."
   admin:
     email:
       sent_test: "sent!"
@@ -4085,6 +4088,7 @@ en:
     external_upload_not_found: "The upload was not found in the external store. %{additional_detail}"
     checksum_mismatch_failure: "The checksum of the file you uploaded does not match. The file contents may have changed on upload. Please try again."
     cannot_promote_failure: "The upload cannot be completed, it may have already completed or previously failed."
+    size_zero_failure: "Sorry, it looks like something has gone wrong, the file you are trying to upload is 0 bytes. Please try again."
     attachments:
       too_large: "Sorry, the file you are trying to upload is too big (maximum size is %{max_size_kb}KB)."
       too_large_humanized: "Sorry, the file you are trying to upload is too big (maximum size is %{max_size})."
@@ -5149,6 +5153,7 @@ en:
   notification_level:
     ignore_error: "Sorry, you can't ignore that user."
     mute_error: "Sorry, you can't mute that user."
+    error: "Sorry, you cannot change the notification level for that user."
 
   discord:
     not_in_allowed_guild: "Authentication failed. You are not a member of a permitted Discord guild."

@@ -287,10 +287,7 @@ nb_NO:
       list_permission_denied: "Du har ikke tillatelse til å se brukerens bokmerker."
       no_user_bookmarks: "Du har ingen bokmerkede innlegg; bokmerker lar deg raskt slå opp spesifike innlegg."
       auto_delete_preference:
-        label: "Slett automatisk"
-        never: "Aldri"
-        when_reminder_sent: "Når påminnelsen er sendt"
-        on_owner_reply: "Etter at jeg har svart på dette emnet"
+        when_reminder_sent: "Slett bokmerke"
       search_placeholder: "Søk i bokmerker etter navn, emnetittel eller innleggsinnhold"
       search: "Søk"
       reminders:
@@ -350,8 +347,8 @@ nb_NO:
     switch_to_anon: "Start inkognitomodus"
     switch_from_anon: "Avslutt inkognitomodus"
     banner:
-      close: "Fjern dette banneret."
-      edit: "Endre dette banneret >>"
+      close: "Fjern dette banneret"
+      edit: "Rediger"
     pwa:
       install_banner: "Ønsker du å <a href>installere %{title} på denne enheten</a>?"
     choose_topic:
@@ -2448,12 +2445,6 @@ nb_NO:
         help: "del en lenke til dette emnet"
         instructions: "Del en lenke til dette emnet:"
         copied: "Emnelink kopiert."
-        notify_users:
-          title: "Varsle"
-          instructions: "Varsle følgende brukere om dette emnet:"
-          success:
-            one: "Vellykket varsling av %{username} om dette emnet."
-            other: "Vellykket varsling av alle brukere om dette emnet."
         invite_users: "Inviter"
       print:
         title: "Skriv ut"
@@ -3815,7 +3806,6 @@ nb_NO:
         delete_confirm: 'Er du sikker på at du vil slette "%{theme_name}?'
         color: "Farge"
         opacity: "Opacity"
-        copy: "Kopier"
         copy_to_clipboard: "Kopier til utklippstavle"
         copied_to_clipboard: "Kopiert til utklippstavle"
         copy_to_clipboard_error: "Feil ved kopiering av data til utklippstavle"

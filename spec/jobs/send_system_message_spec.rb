@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
 require 'jobs/regular/send_system_message'
 
 describe Jobs::SendSystemMessage do

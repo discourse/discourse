@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
 require 'filter_best_posts'
 require 'topic_view'
 

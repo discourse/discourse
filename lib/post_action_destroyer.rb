@@ -48,14 +48,28 @@ class PostActionDestroyer
 
     UserActionManager.post_action_destroyed(post_action)
     PostActionNotifier.post_action_deleted(post_action)
-
     result.success = true
     result.post = @post.reload
+
+    notify_subscribers
 
     result
   end
 
 protected
+
+  def self.notify_types
+    @notify_types ||= PostActionType.notify_flag_types.keys
+  end
+
+  def notify_subscribers
+    name = PostActionType.types[@post_action_type_id]
+    if name == :like
+      @post.publish_change_to_clients!(:liked, { likes_count: @post.like_count })
+    elsif self.class.notify_types.include?(name)
+      @post.publish_change_to_clients!(:acted)
+    end
+  end
 
   def guardian
     @guardian ||= Guardian.new(@destroyed_by)

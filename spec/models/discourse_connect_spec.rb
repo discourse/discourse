@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe DiscourseConnect do
   before do
     @discourse_connect_url = "http://example.com/discourse_sso"

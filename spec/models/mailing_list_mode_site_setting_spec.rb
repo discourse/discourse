@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe MailingListModeSiteSetting do
   describe 'valid_value?' do
     it 'returns true for a valid value as an int' do

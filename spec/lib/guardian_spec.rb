@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 require 'guardian'
 
 describe Guardian do
@@ -338,14 +336,13 @@ describe Guardian do
     it "respects the group's messageable_level" do
       Group::ALIAS_LEVELS.each do |level, _|
         group.update!(messageable_level: Group::ALIAS_LEVELS[level])
-        output = level == :everyone ? true : false
+        user_output = level == :everyone ? true : false
+        admin_output = level != :nobody
+        mod_output = [:nobody, :only_admins].exclude?(level)
 
-        expect(Guardian.new(user).can_send_private_message?(group)).to eq(output)
-      end
-
-      Group::ALIAS_LEVELS.each do |level, _|
-        group.update!(messageable_level: Group::ALIAS_LEVELS[level])
-        expect(Guardian.new(admin).can_send_private_message?(group)).to eq(true)
+        expect(Guardian.new(user).can_send_private_message?(group)).to eq(user_output)
+        expect(Guardian.new(admin).can_send_private_message?(group)).to eq(admin_output)
+        expect(Guardian.new(moderator).can_send_private_message?(group)).to eq(mod_output)
       end
     end
 
@@ -1639,6 +1636,17 @@ describe Guardian do
 
       it 'returns false as a regular user' do
         expect(Guardian.new(coding_horror).can_edit?(topic)).to be_falsey
+      end
+
+      context 'first post is hidden' do
+        let!(:topic) { Fabricate(:topic, user: user) }
+        let!(:post) { Fabricate(:post, topic: topic, user: topic.user, hidden: true, hidden_at: Time.zone.now) }
+
+        it 'returns false for editing your own post while inside the cooldown window' do
+          SiteSetting.cooldown_minutes_after_hiding_posts = 30
+
+          expect(Guardian.new(topic.user).can_edit?(topic)).to eq(false)
+        end
       end
 
       context "locked" do

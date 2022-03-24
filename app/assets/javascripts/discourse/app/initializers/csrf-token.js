@@ -8,7 +8,10 @@ export default {
   initialize(container) {
     // Add a CSRF token to all AJAX requests
     let session = container.lookup("session:main");
-    session.set("csrfToken", $("meta[name=csrf-token]").attr("content"));
+    session.set(
+      "csrfToken",
+      document.head.querySelector("meta[name=csrf-token]")?.content
+    );
 
     if (!installed) {
       $.ajaxPrefilter(callbacks.fire);

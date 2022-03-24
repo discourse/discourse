@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe Jobs::RemoveBanner do
   fab!(:topic) { Fabricate(:topic) }
   fab!(:user) { topic.user }

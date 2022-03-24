@@ -1,4 +1,3 @@
-import { run } from "@ember/runloop";
 import { click, currentURL, fillIn, settled, visit } from "@ember/test-helpers";
 import { toggleCheckDraftPopup } from "discourse/controllers/composer";
 import LinkLookup from "discourse/lib/link-lookup";
@@ -20,7 +19,7 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import I18n from "I18n";
-import { skip, test } from "qunit";
+import { test } from "qunit";
 import { Promise } from "rsvp";
 import sinon from "sinon";
 
@@ -46,7 +45,7 @@ acceptance("Composer", function (needs) {
     });
   });
 
-  test("Tests the Composer controls", async function (assert) {
+  test("composer controls", async function (assert) {
     await visit("/");
     assert.ok(exists("#create-topic"), "the create button is visible");
 
@@ -109,7 +108,8 @@ acceptance("Composer", function (needs) {
     event.key = "B";
     event.keyCode = 66;
 
-    run(() => textarea.dispatchEvent(event));
+    textarea.dispatchEvent(event);
+    await settled();
 
     const example = I18n.t(`composer.bold_text`);
     assert.strictEqual(
@@ -922,16 +922,14 @@ acceptance("Composer - Customizations", function (needs) {
   });
 });
 
-// all of these are broken on legacy ember qunit for...some reason. commenting
-// until we are fully on ember cli.
 acceptance("Composer - Focus Open and Closed", function (needs) {
   needs.user();
 
-  skip("Focusing a composer which is not open with create topic", async function (assert) {
+  test("Focusing a composer which is not open with create topic", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
     const composer = this.container.lookup("controller:composer");
-    composer.focusComposer({ fallbackToNewTopic: true });
+    await composer.focusComposer({ fallbackToNewTopic: true });
 
     await settled();
     assert.strictEqual(
@@ -942,11 +940,11 @@ acceptance("Composer - Focus Open and Closed", function (needs) {
     assert.strictEqual(composer.model.action, Composer.CREATE_TOPIC);
   });
 
-  skip("Focusing a composer which is not open with create topic and append text", async function (assert) {
+  test("Focusing a composer which is not open with create topic and append text", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
     const composer = this.container.lookup("controller:composer");
-    composer.focusComposer({
+    await composer.focusComposer({
       fallbackToNewTopic: true,
       insertText: "this is appended",
     });
@@ -963,12 +961,12 @@ acceptance("Composer - Focus Open and Closed", function (needs) {
     );
   });
 
-  skip("Focusing a composer which is already open", async function (assert) {
+  test("Focusing a composer which is already open", async function (assert) {
     await visit("/");
     await click("#create-topic");
 
     const composer = this.container.lookup("controller:composer");
-    composer.focusComposer();
+    await composer.focusComposer();
 
     await settled();
     assert.strictEqual(
@@ -978,12 +976,12 @@ acceptance("Composer - Focus Open and Closed", function (needs) {
     );
   });
 
-  skip("Focusing a composer which is already open and append text", async function (assert) {
+  test("Focusing a composer which is already open and append text", async function (assert) {
     await visit("/");
     await click("#create-topic");
 
     const composer = this.container.lookup("controller:composer");
-    composer.focusComposer({ insertText: "this is some appended text" });
+    await composer.focusComposer({ insertText: "this is some appended text" });
 
     await settled();
     assert.strictEqual(
@@ -997,7 +995,7 @@ acceptance("Composer - Focus Open and Closed", function (needs) {
     );
   });
 
-  skip("Focusing a composer which is not open that has a draft", async function (assert) {
+  test("Focusing a composer which is not open that has a draft", async function (assert) {
     await visit("/t/this-is-a-test-topic/9");
 
     await click(".topic-post:nth-of-type(1) button.edit");
@@ -1005,7 +1003,7 @@ acceptance("Composer - Focus Open and Closed", function (needs) {
     await click(".toggle-minimize");
 
     const composer = this.container.lookup("controller:composer");
-    composer.focusComposer({ insertText: "this is some appended text" });
+    await composer.focusComposer({ insertText: "this is some appended text" });
 
     await settled();
     assert.strictEqual(

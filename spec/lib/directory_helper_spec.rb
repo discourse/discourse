@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe DirectoryHelper do
   class DummyClass
     include DirectoryHelper

@@ -6,6 +6,9 @@ export default function (name, opts) {
   opts = opts || {};
 
   let container = getOwner(this);
+  if (container.isDestroying || container.isDestroyed) {
+    return;
+  }
 
   // We use the container here because modals are like singletons
   // in Discourse. Only one can be shown with a particular state.

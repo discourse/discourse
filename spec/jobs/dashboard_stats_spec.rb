@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe ::Jobs::DashboardStats do
   let(:group_message) { GroupMessage.new(Group[:admins].name, :dashboard_problems, limit_once_per: 7.days.to_i) }
 

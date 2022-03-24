@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe GroupUser do
 
   it 'correctly sets notification level' do

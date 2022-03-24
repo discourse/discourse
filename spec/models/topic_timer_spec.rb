@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 RSpec.describe TopicTimer, type: :model do
   fab!(:topic_timer) { Fabricate(:topic_timer) }
   fab!(:topic) { Fabricate(:topic) }

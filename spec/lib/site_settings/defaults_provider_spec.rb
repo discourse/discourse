@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe SiteSettings::DefaultsProvider do
   let(:provider_local) do
     SiteSettings::LocalProcessProvider.new

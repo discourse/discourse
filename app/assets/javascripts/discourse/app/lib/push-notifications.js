@@ -1,5 +1,6 @@
 import KeyValueStore from "discourse/lib/key-value-store";
 import { ajax } from "discourse/lib/ajax";
+import { helperContext } from "discourse-common/lib/helpers";
 
 export const keyValueStore = new KeyValueStore("discourse_push_notifications_");
 
@@ -15,19 +16,6 @@ function sendSubscriptionToServer(subscription, sendConfirmation) {
       send_confirmation: sendConfirmation,
     },
   });
-}
-
-function userAgentVersionChecker(agent, version, mobileView) {
-  const uaMatch = navigator.userAgent.match(
-    new RegExp(`${agent}\/(\\d+)\\.\\d`)
-  );
-  if (uaMatch && mobileView) {
-    return false;
-  }
-  if (!uaMatch || parseInt(uaMatch[1], 10) < version) {
-    return false;
-  }
-  return true;
 }
 
 function resetIdle() {
@@ -49,22 +37,18 @@ function setupActivityListeners(appEvents) {
   appEvents.on("page:changed", resetIdle);
 }
 
-export function isPushNotificationsSupported(mobileView) {
+export function isPushNotificationsSupported() {
+  let caps = helperContext().capabilities;
   if (
     !(
       "serviceWorker" in navigator &&
       typeof ServiceWorkerRegistration !== "undefined" &&
       typeof Notification !== "undefined" &&
       "showNotification" in ServiceWorkerRegistration.prototype &&
-      "PushManager" in window
+      "PushManager" in window &&
+      !caps.isAppWebview &&
+      !caps.isIOS
     )
-  ) {
-    return false;
-  }
-
-  if (
-    !userAgentVersionChecker("Firefox", 44, mobileView) &&
-    !userAgentVersionChecker("Chrome", 50)
   ) {
     return false;
   }
@@ -72,17 +56,17 @@ export function isPushNotificationsSupported(mobileView) {
   return true;
 }
 
-export function isPushNotificationsEnabled(user, mobileView) {
+export function isPushNotificationsEnabled(user) {
   return (
     user &&
     !user.isInDoNotDisturb() &&
-    isPushNotificationsSupported(mobileView) &&
+    isPushNotificationsSupported() &&
     keyValueStore.getItem(userSubscriptionKey(user))
   );
 }
 
-export function register(user, mobileView, router, appEvents) {
-  if (!isPushNotificationsSupported(mobileView)) {
+export function register(user, router, appEvents) {
+  if (!isPushNotificationsSupported()) {
     return;
   }
   if (Notification.permission === "denied" || !user) {
@@ -114,8 +98,8 @@ export function register(user, mobileView, router, appEvents) {
   });
 }
 
-export function subscribe(callback, applicationServerKey, mobileView) {
-  if (!isPushNotificationsSupported(mobileView)) {
+export function subscribe(callback, applicationServerKey) {
+  if (!isPushNotificationsSupported()) {
     return;
   }
 
@@ -138,8 +122,8 @@ export function subscribe(callback, applicationServerKey, mobileView) {
   });
 }
 
-export function unsubscribe(user, callback, mobileView) {
-  if (!isPushNotificationsSupported(mobileView)) {
+export function unsubscribe(user, callback) {
+  if (!isPushNotificationsSupported()) {
     return;
   }
 

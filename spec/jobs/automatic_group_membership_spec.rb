@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe Jobs::AutomaticGroupMembership do
 
   it "raises an error when the group id is missing" do

@@ -107,7 +107,9 @@ export default Component.extend({
     let dasherized = dasherize(type);
     let templatePath = `components/${dasherized}`;
     let template =
+      // eslint-disable-next-line no-undef
       Ember.TEMPLATES[`${templatePath}`] ||
+      // eslint-disable-next-line no-undef
       Ember.TEMPLATES[`javascripts/${templatePath}`];
     _components[type] = template ? dasherized : null;
     return _components[type];

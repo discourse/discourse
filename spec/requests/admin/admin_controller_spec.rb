@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 RSpec.describe Admin::AdminController do
   describe '#index' do
     it "needs you to be logged in" do

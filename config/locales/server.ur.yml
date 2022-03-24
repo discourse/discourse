@@ -1362,7 +1362,6 @@ ur:
     external_system_avatars_enabled: "بیرونی سسٹم کی اوتار سروس کا استعمال کریں۔"
     external_system_avatars_url: "بیرونی سسٹم کی اوتار سروس کا URL۔ اجازت شدہ متبادلات {username} {first_letter} {color} {size} ہیں"
     restrict_letter_avatar_colors: "خط اوتار کے پس منظرمیں استعمال کیلئے 6-عددی ہیکسا ڈَیسیمل رنگوں کے اقدار کی ایک فہرست۔"
-    selectable_avatars_enabled: "صارفین کو فہرست سے اوتار منتخب کرنے کیلئے مجبور کریں۔"
     selectable_avatars: "اوتار کی فہرست جس میں سے صارفین منتخب کر سکتے ہیں۔"
     allow_all_attachments_for_group_messages: "گروپ کے پیغامات کیلئے تمام ای میل منسلکات کی اجازت دیں۔"
     png_to_jpg_quality: "تبدیل شدہ JPG فائل کا معیار (1 سب سے کم معیار ہے، 99 بہترین معیار ہے، 100 غیر فعال)۔"

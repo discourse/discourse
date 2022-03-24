@@ -68,6 +68,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :can_review,
              :draft_count,
              :default_calendar,
+             :bookmark_auto_delete_preference,
              :pending_posts_count
 
   delegate :user_stat, to: :object, private: true
@@ -140,6 +141,10 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def default_calendar
     object.user_option.default_calendar
+  end
+
+  def bookmark_auto_delete_preference
+    object.user_option.bookmark_auto_delete_preference
   end
 
   def can_send_private_email_messages

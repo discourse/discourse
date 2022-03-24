@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe Auth::DefaultCurrentUserProvider do
   # careful using fab! here is can lead to an erratic test
   # we want a distinct user object per test so last_seen_at is

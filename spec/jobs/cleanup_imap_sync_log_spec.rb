@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe Jobs::CleanupImapSyncLog do
   let(:job_class) { Jobs::CleanupImapSyncLog.new }
 

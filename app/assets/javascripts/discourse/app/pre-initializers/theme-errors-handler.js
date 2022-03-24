@@ -51,6 +51,8 @@ function reportToLogster(name, error) {
     stacktrace: error.stack,
   };
 
+  // TODO: To be moved out into a logster-provided lib
+  // eslint-disable-next-line no-undef
   Ember.$.ajax(getURL("/logs/report_js_error"), {
     data,
     type: "POST",

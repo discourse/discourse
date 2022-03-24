@@ -237,7 +237,7 @@ module("Unit | Model | post-stream", function () {
 
     sinon.stub(postStream, "refresh").returns(Promise.resolve());
 
-    postStream.set("summary", true);
+    postStream.set("filter", "summary");
     postStream.cancelFilter();
     assert.ok(!postStream.get("summary"), "summary is cancelled");
 
@@ -391,7 +391,7 @@ module("Unit | Model | post-stream", function () {
       "there are no filters by default"
     );
 
-    postStream.set("summary", true);
+    postStream.set("filter", "summary");
     assert.deepEqual(
       postStream.get("streamFilters"),
       { filter: "summary" },

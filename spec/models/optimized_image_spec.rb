@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe OptimizedImage do
   let(:upload) { build(:upload) }
   before { upload.id = 42 }

@@ -35,8 +35,6 @@ export default SelectKitRowComponent.extend({
   }),
   categoryName: reads("category.name"),
 
-  categoryDescription: reads("category.description"),
-
   categoryDescriptionText: reads("category.description_text"),
 
   category: computed("rowValue", "rowName", function () {
@@ -94,12 +92,12 @@ export default SelectKitRowComponent.extend({
 
   shouldDisplayDescription: computed(
     "displayCategoryDescription",
-    "categoryDescription",
+    "categoryDescriptionText",
     function () {
       return (
         this.displayCategoryDescription &&
-        this.categoryDescription &&
-        this.categoryDescription !== "null"
+        this.categoryDescriptionText &&
+        this.categoryDescriptionText !== "null"
       );
     }
   ),
@@ -107,12 +105,6 @@ export default SelectKitRowComponent.extend({
   descriptionText: computed("categoryDescriptionText", function () {
     if (this.categoryDescriptionText) {
       return this._formatDescription(this.categoryDescriptionText);
-    }
-  }),
-
-  description: computed("categoryDescription", function () {
-    if (this.categoryDescription) {
-      return this._formatDescription(this.categoryDescription);
     }
   }),
 

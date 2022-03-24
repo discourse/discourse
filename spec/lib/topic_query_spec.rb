@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
 require 'topic_view'
 
 describe TopicQuery do
@@ -1080,7 +1079,7 @@ describe TopicQuery do
     end
 
     let(:group_with_user) do
-      group = Fabricate(:group)
+      group = Fabricate(:group, messageable_level: Group::ALIAS_LEVELS[:everyone])
       group.add(user)
       group.save
       group

@@ -236,9 +236,7 @@ th:
       invalid_custom_datetime: "วันและเวลาที่คุณกรอกไม่ถูกต้อง กรุณาลองอีกครั้ง"
       list_permission_denied: "คุณไม่ได้รับอนุญาตให้ดูบุ๊กมาร์กของผู้ใช้งานนี้"
       auto_delete_preference:
-        label: "ลบโดยอัตโนมัติ"
-        never: "ไม่เคย"
-        on_owner_reply: "หลังจากฉันตอบกลับกระทู้นี้"
+        when_reminder_sent: "ลบบุ๊กมาร์ก"
       search: "ค้นหา"
       reminders:
         today_with_time: "วันนี้ตอน%{time}"
@@ -282,8 +280,7 @@ th:
     switch_to_anon: "เข้าสู่โหมดไม่ระบุชื่อ"
     switch_from_anon: "ออกจากโหมดไม่ระบุชื่อ"
     banner:
-      close: "ปิดแบนเนอร์นี้"
-      edit: "แก้ไขแบนเนอร์นี้ >>"
+      edit: "แก้ไข"
     pwa:
       install_banner: "คุณต้องการ<a href>ติดตั้ง%{title}บนอุปกรณ์นี้ใช่ไหม</a>"
     choose_topic:
@@ -2610,7 +2607,6 @@ th:
         delete: "ลบ"
         delete_confirm: 'คุณแน่ใจหรือว่าต้องการลบ "%{theme_name}"'
         color: "สี"
-        copy: "คัดลอก"
         theme_owner: "ไม่สามารถแก้ไขได้ เป็นเจ้าของโดย:"
         email_templates:
           title: "อีเมล"

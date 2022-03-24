@@ -52,6 +52,9 @@ the following methods:
   redirected to after the action is finished. When this key is omitted, the
   redirect path is set to the homepage (/).
 
+  :description => optional action-specific description message that's shown on
+  the 2FA page.
+
   After this method is called, the auth manager will send a 403 response with a
   JSON body. It does that by raising an exception that's then rescued by a
   `rescue_from` handler. The JSON response contains a challenge nonce which the
@@ -169,6 +172,9 @@ class SecondFactor::AuthManager
       allowed_methods: allowed_methods.to_a,
       generated_at: Time.zone.now.to_i
     }
+    if config[:description]
+      challenge[:description] = config[:description]
+    end
     secure_session["current_second_factor_auth_challenge"] = challenge.to_json
     nonce
   end

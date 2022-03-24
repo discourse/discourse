@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
 require 'rotp'
 
 describe UsersController do
@@ -647,6 +646,69 @@ describe UsersController do
           api_key = Fabricate(:api_key, user: admin)
           post "/u.json", params: post_user_params, headers: { HTTP_API_KEY: api_key.key }
           expect(response.status).to eq(200)
+        end
+      end
+
+      context 'with external_ids' do
+        fab!(:api_key, refind: false) { Fabricate(:api_key, user: admin) }
+
+        let(:plugin_auth_provider) do
+          authenticator_class = Class.new(Auth::ManagedAuthenticator) do
+            def name
+              'pluginauth'
+            end
+
+            def enabled?
+              true
+            end
+          end
+
+          provider = Auth::AuthProvider.new
+          provider.authenticator = authenticator_class.new
+          provider
+        end
+
+        before do
+          DiscoursePluginRegistry.register_auth_provider(plugin_auth_provider)
+        end
+
+        after do
+          DiscoursePluginRegistry.reset!
+        end
+
+        it 'creates User record' do
+          params = {
+            username: 'foobar',
+            email: 'test@example.com',
+            external_ids: { 'pluginauth' => 'pluginauth_uid' },
+          }
+
+          expect { post "/u.json", params: params, headers: { HTTP_API_KEY: api_key.key } }
+            .to change { UserAssociatedAccount.count }.by(1)
+            .and change { User.count }.by(1)
+
+          expect(response.status).to eq(200)
+
+          user = User.last
+          user_associated_account = UserAssociatedAccount.last
+
+          expect(user.username).to eq('foobar')
+          expect(user.email).to eq('test@example.com')
+          expect(user.user_associated_account_ids).to contain_exactly(user_associated_account.id)
+          expect(user_associated_account.provider_name).to eq('pluginauth')
+          expect(user_associated_account.provider_uid).to eq('pluginauth_uid')
+          expect(user_associated_account.user_id).to eq(user.id)
+        end
+
+        it 'returns error if external ID provider does not exist' do
+          params = {
+            username: 'foobar',
+            email: 'test@example.com',
+            external_ids: { 'pluginauth2' => 'pluginauth_uid' },
+          }
+
+          post "/u.json", params: params, headers: { HTTP_API_KEY: api_key.key }
+          expect(response.status).to eq(400)
         end
       end
     end
@@ -1789,7 +1851,7 @@ describe UsersController do
           inviter = Fabricate(:user, trust_level: 2)
           sign_in(inviter)
           invite = Fabricate(:invite, invited_by: inviter)
-          invited_user = Fabricate(:invited_user, invite: invite, user: invitee)
+          _invited_user = Fabricate(:invited_user, invite: invite, user: invitee)
 
           get "/u/#{inviter.username}/invited.json"
           expect(response.status).to eq(200)
@@ -1849,7 +1911,7 @@ describe UsersController do
 
           it 'allows admin to see invites' do
             inviter = Fabricate(:user, trust_level: 2)
-            admin = sign_in(Fabricate(:admin))
+            _admin = sign_in(Fabricate(:admin))
             invite = Fabricate(:invite, invited_by: inviter,  email: nil, max_redemptions_allowed: 5, expires_at: 1.month.from_now, emailed_status: Invite.emailed_status_types[:not_required])
 
             get "/u/#{inviter.username}/invited/pending.json"
@@ -1864,7 +1926,7 @@ describe UsersController do
 
         context 'without permission to see invite links' do
           it 'does not return invites' do
-            user = Fabricate(:user, trust_level: 2)
+            _user = Fabricate(:user, trust_level: 2)
             inviter = admin
             Fabricate(:invite, invited_by: inviter,  email: nil, max_redemptions_allowed: 5, expires_at: 1.month.from_now, emailed_status: Invite.emailed_status_types[:not_required])
 
@@ -2230,6 +2292,74 @@ describe UsersController do
           expect(response).to be_forbidden
           expect(user.reload.name).not_to eq 'Jim Tom'
         end
+      end
+    end
+
+    context 'with external_ids' do
+      fab!(:api_key, refind: false) { Fabricate(:api_key, user: admin) }
+
+      let(:plugin_auth_provider) do
+        authenticator_class = Class.new(Auth::ManagedAuthenticator) do
+          def name
+            'pluginauth'
+          end
+
+          def enabled?
+            true
+          end
+        end
+
+        provider = Auth::AuthProvider.new
+        provider.authenticator = authenticator_class.new
+        provider
+      end
+
+      before do
+        DiscoursePluginRegistry.register_auth_provider(plugin_auth_provider)
+      end
+
+      after do
+        DiscoursePluginRegistry.reset!
+      end
+
+      it 'can create UserAssociatedAccount records' do
+        params = {
+          external_ids: { 'pluginauth' => 'pluginauth_uid' },
+        }
+
+        expect { put "/u/#{user.username}.json", params: params, headers: { HTTP_API_KEY: api_key.key } }
+          .to change { UserAssociatedAccount.count }.by(1)
+
+        expect(response.status).to eq(200)
+
+        user_associated_account = UserAssociatedAccount.last
+        expect(user.reload.user_associated_account_ids).to contain_exactly(user_associated_account.id)
+        expect(user_associated_account.provider_name).to eq('pluginauth')
+        expect(user_associated_account.provider_uid).to eq('pluginauth_uid')
+        expect(user_associated_account.user_id).to eq(user.id)
+      end
+
+      it 'can destroy UserAssociatedAccount records' do
+        user.user_associated_accounts.create!(provider_name: 'pluginauth', provider_uid: 'pluginauth_uid')
+
+        params = {
+          external_ids: { 'pluginauth' => nil },
+        }
+
+        expect { put "/u/#{user.username}.json", params: params, headers: { HTTP_API_KEY: api_key.key } }
+          .to change { UserAssociatedAccount.count }.by(-1)
+
+        expect(response.status).to eq(200)
+        expect(user.reload.user_associated_account_ids).to be_blank
+      end
+
+      it 'returns error if external ID provider does not exist' do
+        params = {
+          external_ids: { 'pluginauth2' => 'pluginauth_uid' },
+        }
+
+        put "/u/#{user.username}.json", params: params, headers: { HTTP_API_KEY: api_key.key }
+        expect(response.status).to eq(400)
       end
     end
   end
@@ -2622,7 +2752,7 @@ describe UsersController do
 
         before do
           SiteSetting.selectable_avatars = [avatar1, avatar2]
-          SiteSetting.selectable_avatars_enabled = true
+          SiteSetting.selectable_avatars_mode = "no_one"
         end
 
         it 'raises an error when selectable avatars is empty' do
@@ -2795,8 +2925,43 @@ describe UsersController do
 
       context 'when changing notification level to ignore' do
         it 'changes notification level to ignore' do
-          put "/u/#{another_user.username}/notification_level.json", params: { notification_level: "ignore" }
+          put "/u/#{another_user.username}/notification_level.json", params: {
+            notification_level: "ignore",
+            expiring_at: 3.days.from_now
+          }
+          expect(response.status).to eq(200)
           expect(MutedUser.count).to eq(0)
+          expect(IgnoredUser.find_by(user_id: user.id, ignored_user_id: another_user.id)).to be_present
+        end
+
+        it "allows admin to change the ignore status for a source user" do
+          ignored_user.destroy!
+          sign_in(Fabricate(:user, admin: true))
+          put "/u/#{another_user.username}/notification_level.json", params: {
+            notification_level: "ignore",
+            acting_user_id: user.id,
+            expiring_at: 3.days.from_now
+          }
+          expect(response.status).to eq(200)
+          expect(IgnoredUser.find_by(user_id: user.id, ignored_user_id: another_user.id)).to be_present
+        end
+
+        it "does not allow a regular user to change the ignore status for anyone but themself" do
+          ignored_user.destroy!
+          acting_user = Fabricate(:user)
+          put "/u/#{another_user.username}/notification_level.json", params: {
+            notification_level: "ignore",
+            acting_user_id: acting_user.id,
+            expiring_at: 3.days.from_now
+          }
+          expect(response.status).to eq(422)
+          expect(IgnoredUser.find_by(user_id: acting_user.id, ignored_user_id: another_user.id)).to eq(nil)
+
+          put "/u/#{another_user.username}/notification_level.json", params: {
+            notification_level: "ignore",
+            expiring_at: 3.days.from_now
+          }
+          expect(response.status).to eq(200)
           expect(IgnoredUser.find_by(user_id: user.id, ignored_user_id: another_user.id)).to be_present
         end
 
@@ -3985,7 +4150,7 @@ describe UsersController do
           mentionable_level: Group::ALIAS_LEVELS[:everyone],
           messageable_level: Group::ALIAS_LEVELS[:nobody],
           visibility_level: Group.visibility_levels[:public],
-          name: 'aaa1'
+          name: 'aaa1bbb'
         )
       end
 
@@ -3994,7 +4159,7 @@ describe UsersController do
           mentionable_level: Group::ALIAS_LEVELS[:everyone],
           messageable_level: Group::ALIAS_LEVELS[:nobody],
           visibility_level: Group.visibility_levels[:logged_on_users],
-          name: 'aaa2'
+          name: 'bbb1aaa'
         )
       end
 
@@ -4003,7 +4168,7 @@ describe UsersController do
           mentionable_level: Group::ALIAS_LEVELS[:nobody],
           messageable_level: Group::ALIAS_LEVELS[:everyone],
           visibility_level: Group.visibility_levels[:logged_on_users],
-          name: 'aaa3'
+          name: 'ccc1aaa'
         )
       end
 
@@ -4012,13 +4177,22 @@ describe UsersController do
           mentionable_level: Group::ALIAS_LEVELS[:members_mods_and_admins],
           messageable_level: Group::ALIAS_LEVELS[:members_mods_and_admins],
           visibility_level: Group.visibility_levels[:members],
-          name: 'aaa4'
+          name: 'ddd1aaa'
         )
       end
 
       describe 'when signed in' do
         before do
           sign_in(user)
+        end
+
+        it "correctly sorts on prefix" do
+          get "/u/search/users.json", params: { include_groups: "true", term: 'bbb' }
+
+          expect(response.status).to eq(200)
+          groups = response.parsed_body["groups"]
+
+          expect(groups.map { |g| g["name"] }).to eq(["bbb1aaa", "aaa1bbb"])
         end
 
         it "does not search for groups if there is no term" do
@@ -4613,7 +4787,7 @@ describe UsersController do
       it "creates a security key for the user" do
         simulate_localhost_webauthn_challenge
         create_second_factor_security_key
-        response_parsed = response.parsed_body
+        _response_parsed = response.parsed_body
 
         post "/u/register_second_factor_security_key.json", params: valid_security_key_create_post_data
 
@@ -4627,7 +4801,7 @@ describe UsersController do
       it "shows a security key error and does not create a key" do
         stub_as_dev_localhost
         create_second_factor_security_key
-        response_parsed = response.parsed_body
+        _response_parsed = response.parsed_body
 
         post "/u/register_second_factor_security_key.json", params: {
           id: "bad id",
@@ -4652,8 +4826,8 @@ describe UsersController do
       end
       context 'when user has a registered totp and security key' do
         before do
-          totp_second_factor = Fabricate(:user_second_factor_totp, user: user1)
-          security_key_second_factor = Fabricate(:user_security_key, user: user1, factor_type: UserSecurityKey.factor_types[:second_factor])
+          _totp_second_factor = Fabricate(:user_second_factor_totp, user: user1)
+          _security_key_second_factor = Fabricate(:user_security_key, user: user1, factor_type: UserSecurityKey.factor_types[:second_factor])
         end
 
         it 'should disable all totp and security keys' do
@@ -5125,6 +5299,7 @@ describe UsersController do
     end
 
     it 'works for logged in user' do
+      freeze_time
       sign_in(user1)
       delete "/u/recent-searches.json"
 
@@ -5141,6 +5316,7 @@ describe UsersController do
     end
 
     it 'works for logged in user' do
+      freeze_time
       sign_in(user1)
       SiteSetting.log_search_queries = true
       user1.user_option.update!(oldest_search_log_date: nil)

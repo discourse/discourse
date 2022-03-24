@@ -15,6 +15,7 @@ export default {
     withPluginApi("0.1", (api) => {
       const siteSettings = container.lookup("site-settings:main");
       const session = container.lookup("session:main");
+      const site = container.lookup("site:main");
       api.decorateCookedElement(
         (elem) => {
           return highlightSyntax(elem, siteSettings, session);
@@ -165,6 +166,10 @@ export default {
       function generatePopups(tables) {
         tables.forEach((table) => {
           if (!isOverflown(table.parentNode)) {
+            return;
+          }
+
+          if (site.isMobileDevice) {
             return;
           }
 

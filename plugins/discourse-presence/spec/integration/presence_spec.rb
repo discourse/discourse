@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe "discourse-presence" do
   describe 'PresenceChannel configuration' do
     fab!(:user) { Fabricate(:user) }
@@ -98,7 +96,7 @@ describe "discourse-presence" do
       expect(c.config.allowed_user_ids).to eq(nil)
     end
 
-    it 'handles permissions for private messsages' do
+    it 'handles permissions for private messages' do
       c = PresenceChannel.new("/discourse-presence/reply/#{private_message.id}")
       expect(c.config.public).to eq(false)
       expect(c.config.allowed_group_ids).to contain_exactly(group.id, Group::AUTO_GROUPS[:staff])

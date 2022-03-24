@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe "constants match ruby" do
 
   let(:ctx) { MiniRacer::Context.new }

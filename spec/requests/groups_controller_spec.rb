@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe GroupsController do
   fab!(:user) { Fabricate(:user) }
   fab!(:user2) { Fabricate(:user) }
@@ -906,13 +904,11 @@ describe GroupsController do
             }
           }
 
-          expect(response.status).to eq(200)
-
+          expect(response.status).to eq(422)
+          expect(response.parsed_body["user_count"]).to eq(group.group_users.count)
+          expect(response.parsed_body["errors"].first).to include("update_existing_users")
           expect(group_user1.reload.notification_level).to eq(NotificationLevels.all[:watching])
           expect(group_user2.reload.notification_level).to eq(NotificationLevels.all[:watching])
-
-          group_users = group.group_users
-          expect(response.parsed_body["user_count"]).to eq(group_users.count)
 
           group_user1.update!(notification_level: NotificationLevels.all[:regular])
 
@@ -922,7 +918,7 @@ describe GroupsController do
             }
           }
 
-          expect(response.status).to eq(200)
+          expect(response.status).to eq(422)
           expect(response.parsed_body["user_count"]).to eq(group.group_users.count - 1)
           expect(group_user1.reload.notification_level).to eq(NotificationLevels.all[:regular])
           expect(group_user2.reload.notification_level).to eq(NotificationLevels.all[:watching])
@@ -975,7 +971,7 @@ describe GroupsController do
             }
           }
 
-          expect(response.status).to eq(200)
+          expect(response.status).to eq(422)
           expect(response.parsed_body["user_count"]).to eq(group.group_users.count - 1)
 
           put "/groups/#{group.id}.json", params: {

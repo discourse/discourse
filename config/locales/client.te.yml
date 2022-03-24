@@ -184,7 +184,7 @@ te:
     revert: "తిద్దు"
     failed: "విఫలం"
     banner:
-      close: "బ్యానరు తుడువు"
+      edit: "సవరించు"
     choose_topic:
       none_found: "ఎటువంటి విషయాలూ కనపడలేదు."
     review:
@@ -1533,7 +1533,6 @@ te:
         delete: "తొలగించు"
         color: "రంగు"
         opacity: "అపారదర్శకత"
-        copy: "నకలు"
         email_templates:
           title: "ఈమెయిల్"
           subject: "సబ్జెక్టు"

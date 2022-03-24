@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe User do
   fab!(:group) { Fabricate(:group) }
 
@@ -2141,7 +2139,7 @@ describe User do
       avatar1 = Fabricate(:upload)
       avatar2 = Fabricate(:upload)
       SiteSetting.selectable_avatars = [avatar1, avatar2]
-      SiteSetting.selectable_avatars_enabled = true
+      SiteSetting.selectable_avatars_mode = "no_one"
 
       user = Fabricate(:user)
       expect(user.uploaded_avatar_id).not_to be(nil)

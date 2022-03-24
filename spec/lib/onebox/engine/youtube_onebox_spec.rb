@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Onebox::Engine::YoutubeOnebox do
   before do
     stub_request(:get, "https://www.youtube.com/watch?feature=player_embedded&v=21Lk4YiASMo").to_return(status: 200, body: onebox_response("youtube"))

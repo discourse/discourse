@@ -286,10 +286,7 @@ fi:
       list_permission_denied: "Et voi nähdä tämän käyttäjän kirjanmerkkejä."
       no_user_bookmarks: "Kirjanmerkeissäsi ei ole mitään. Kirjanmerkitsemällä viestin löydät sen myöhemmin helposti."
       auto_delete_preference:
-        label: "Poista automaattisesti"
-        never: "Ei koskaan"
-        when_reminder_sent: "Kun muistutus on lähetetty"
-        on_owner_reply: "Kun olen vastannut tähän ketjuun"
+        when_reminder_sent: "Poista kirjanmerkki"
       search_placeholder: "Hae kirjanmerkkejä nimen, ketjun otsikon tai viestin sisällön perusteella"
       search: "Haku"
       reminders:
@@ -347,8 +344,8 @@ fi:
     switch_to_anon: "Siirry anonyymitilaan"
     switch_from_anon: "Poistu anonyymitilasta"
     banner:
-      close: "Sulje tämä banneri."
-      edit: "Muokkaa banneria >>"
+      close: "Sulje tämä banneri"
+      edit: "Muokkaa"
     pwa:
       install_banner: "Haluatko <a href>asentaa kohteen %{title} tälle laitteelle?</a>"
     choose_topic:
@@ -2490,12 +2487,6 @@ fi:
         help: "jaa linkki tähän ketjuun"
         instructions: "Jaa linkki tähän ketjuun:"
         copied: "Ketjun linkki kopioitu."
-        notify_users:
-          title: "Ilmoita"
-          instructions: "Ilmoita seuraaville käyttäjille tästä ketjusta:"
-          success:
-            one: "Tästä ketjusta ilmoitettiin käyttäjälle %{username}."
-            other: "Tästä ketjusta ilmoitettiin kaikille käyttäjille."
         invite_users: "Kutsu"
       print:
         title: "Tulosta"
@@ -3915,7 +3906,6 @@ fi:
         delete_confirm: 'Haluatko varmasti poistaa teeman "%{theme_name}"?'
         color: "Väri"
         opacity: "Läpinäkyvyys"
-        copy: "Kopioi"
         copy_to_clipboard: "Kopioi leikepöydälle"
         copied_to_clipboard: "Kopioitiin leikepöydälle"
         copy_to_clipboard_error: "Virhe kopioimisessa leikepöydälle"

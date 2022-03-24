@@ -1,6 +1,6 @@
 {{#if isActive}}
   {{!-- template-lint-disable no-invalid-interactive --}}
-  <div {{on "keydown" (action "keydown")}} class="emoji-picker {{if @isActive "opened"}}">
+  <div {{on "keydown" (action "keydown")}} class="emoji-picker {{if this.isActive "opened"}}">
     {{!-- template-lint-enable no-invalid-interactive --}}
     <div class="emoji-picker-category-buttons">
       {{#if recentEmojis.length}}
@@ -23,12 +23,13 @@
         {{input
           class="filter"
           name="filter"
+          value=@initialFilter
           placeholder=(i18n "emoji_picker.filter_placeholder")
           autocomplete="off"
           type="search"
           autocorrect="off"
           autocapitalize="off"
-          input=(action "onFilter")
+          input=(action "onFilterChange")
         }}
 
         {{d-icon "search"}}
@@ -37,42 +38,40 @@
       <div class="emoji-picker-emoji-area" role="button" {{on "click" this.onEmojiSelection}} {{on "mouseover" this.onEmojiHover}}>
         <div class="results"></div>
 
-        {{#conditional-loading-spinner condition=isLoading}}
-          <div class="emojis-container">
-            {{#if recentEmojis.length}}
-              <div class="section recent" data-section="recent">
-                <div class="section-header">
-                  <span class="title">{{i18n "emoji_picker.recent"}}</span>
-                  {{d-button icon="trash-alt" action=(action "onClearRecents") class="trash-recent"}}
-                </div>
+        <div class="emojis-container">
+          {{#if recentEmojis.length}}
+            <div class="section recent" data-section="recent">
+              <div class="section-header">
+                <span class="title">{{i18n "emoji_picker.recent"}}</span>
+                {{d-button icon="trash-alt" action=(action "onClearRecents") class="trash-recent"}}
+              </div>
+              <div class="section-group">
+                {{#each recentEmojis as |emoji|}}
+                  {{replace-emoji (concat ":" emoji ":") (hash lazy=true)}}
+                {{/each}}
+              </div>
+            </div>
+          {{/if}}
+
+          {{emoji-group-sections}}
+
+          {{#each-in customEmojis as |group emojis|}}
+            <div class="section" data-section="custom-{{group}}">
+              <div class="section-header">
+                <span class="title">
+                  {{i18n (concat "emoji_picker." group)}}
+                </span>
+              </div>
+              {{#if emojis.length}}
                 <div class="section-group">
-                  {{#each recentEmojis as |emoji|}}
-                    {{replace-emoji (concat ":" emoji ":") (hash lazy=true)}}
+                  {{#each emojis as |emoji|}}
+                    <img title={{emoji.code}} width="20" height="20" loading="lazy" class="emoji" src={{emoji.src}}>
                   {{/each}}
                 </div>
-              </div>
-            {{/if}}
-
-            {{emoji-group-sections}}
-
-            {{#each-in customEmojis as |group emojis|}}
-              <div class="section" data-section="custom-{{group}}">
-                <div class="section-header">
-                  <span class="title">
-                    {{i18n (concat "emoji_picker." group)}}
-                  </span>
-                </div>
-                {{#if emojis.length}}
-                  <div class="section-group">
-                    {{#each emojis as |emoji|}}
-                      <img title={{emoji.code}} width="20" height="20" loading="lazy" class="emoji" src={{emoji.src}}>
-                    {{/each}}
-                  </div>
-                {{/if}}
-              </div>
-            {{/each-in}}
-          </div>
-        {{/conditional-loading-spinner}}
+              {{/if}}
+            </div>
+          {{/each-in}}
+        </div>
       </div>
 
       <div class="emoji-picker-footer">

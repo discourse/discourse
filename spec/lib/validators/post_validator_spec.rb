@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe PostValidator do
   fab!(:topic) { Fabricate(:topic) }
   let(:post) { build(:post, topic: topic) }

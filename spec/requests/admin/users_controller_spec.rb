@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
 require 'discourse_ip_info'
 require 'rotp'
 
@@ -48,6 +47,15 @@ RSpec.describe Admin::UsersController do
       it 'returns success' do
         get "/admin/users/#{user.id}.json"
         expect(response.status).to eq(200)
+      end
+
+      it 'includes associated accounts' do
+        user.user_associated_accounts.create!(provider_name: 'pluginauth', provider_uid: 'pluginauth_uid')
+
+        get "/admin/users/#{user.id}.json"
+        expect(response.status).to eq(200)
+        expect(response.parsed_body['external_ids'].size).to eq(1)
+        expect(response.parsed_body['external_ids']['pluginauth']).to eq('pluginauth_uid')
       end
     end
 
@@ -994,6 +1002,7 @@ RSpec.describe Admin::UsersController do
         city: "London",
         country: "United Kingdom",
         country_code: "GB",
+        geoname_ids: [6255148, 2635167, 2643743, 6269131],
         hostname: "ip-81-2-69-142.example.com",
         location: "London, England, United Kingdom",
         region: "England",

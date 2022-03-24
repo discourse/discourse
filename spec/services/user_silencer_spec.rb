@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe UserSilencer do
   fab!(:user) { Fabricate(:user, trust_level: 0) }
   fab!(:post) { Fabricate(:post, user: user) }

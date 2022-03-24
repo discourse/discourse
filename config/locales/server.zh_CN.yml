@@ -1288,7 +1288,7 @@ zh_CN:
       labels:
         user: 用户
         qtt_like: 获赞
-      description: "获得更多喜欢的前10名用户。"
+      description: "获得最多赞的前 10 名用户。"
     top_users_by_likes_received_from_inferior_trust_level:
       title: "收到最多来自低信任级别用户喜欢的用户"
       labels:
@@ -1301,7 +1301,6 @@ zh_CN:
       labels:
         user: 用户
         qtt_like: 获赞
-      description: "前10位有很多人喜欢的用户。"
   dashboard:
     rails_env_warning: "您的服务器正在以%{env}模式运行。"
     host_names_warning: "您的 config/database.yml 文件使用的是默认的 localhost 主机名。请更新为您的站点主机名。"
@@ -1638,7 +1637,6 @@ zh_CN:
     use_site_small_logo_as_system_avatar: "使用站点的小徽标代替系统用户的头像。要求存在徽标。"
     restrict_letter_avatar_colors: "用于字母头像背景的 6 位十六进制颜色值列表。"
     enable_listing_suspended_users_on_search: "让普通用户能够找到被暂停的用户。"
-    selectable_avatars_enabled: "强制用户从列表中选择一个头像。"
     selectable_avatars: "用户可以选择的头像列表。"
     allow_all_attachments_for_group_messages: "允许群组消息的所有电子邮件附件。"
     png_to_jpg_quality: "转换后的 JPG 文件的质量（1 为最低质量，99 为最佳质量，100 为禁用）。"
@@ -2436,6 +2434,8 @@ zh_CN:
   temporarily_closed_due_to_flags:
     other: "由于大量社区举报，此话题被临时关闭至少 %{count} 小时。"
   system_messages:
+    reviewables_reminder:
+      subject_template: "审核队列中有一些需要审核的项目"
     private_topic_title: "话题 #%{id}"
     contents_hidden: "请访问帖子以查看内容。"
     post_hidden:
@@ -3170,7 +3170,7 @@ zh_CN:
         %{respond_instructions}
     user_group_mentioned_pm:
       title: "私信提及的用户群组"
-      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      subject_template: "[%{email_prefix}] [私信] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -3181,7 +3181,7 @@ zh_CN:
         %{respond_instructions}
     user_group_mentioned_pm_group:
       title: "私信提及的用户群组"
-      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      subject_template: "[%{email_prefix}] [私信] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -3507,6 +3507,7 @@ zh_CN:
     external_upload_not_found: "在外部存储中未找到上传。 %{additional_detail}"
     checksum_mismatch_failure: "您上传的文件的校验和不匹配。在上传时文件内容可能已更改。请再试一次。"
     cannot_promote_failure: "上传无法完成，可能已经完成或失败了。"
+    size_zero_failure: "抱歉，好像出了点问题，您要上传的文件大小是 0 字节。请再试一次。"
     attachments:
       too_large: "抱歉，您尝试上传的文件过大（最大大小为 %{max_size_kb}KB）。"
     images:
@@ -4415,7 +4416,11 @@ zh_CN:
       watched_word: "这篇主题包括一个关注词。检查你的设置： %{link}。"
       staged: "暂存用户的新主题和帖子必须得到管理人员的批准。见 %{link}。"
       category: "发布于此类别的帖子需要工作人员手动批准。见 %{link}。"
+      must_approve_users: "所有新用户都必须经过工作人员的审核。见 %{link}。"
       email_auth_res_enqueue: "此电子邮件未通过 DMARC 检查，它很可能不是来自表面看起来的人。检查原始电子邮件标头以获取更多信息。"
+      email_spam: "此电子邮件被 %{link} 中定义的标头标记为垃圾邮件。"
+      suspect_user: "这个新用户在没有阅读任何主题或帖子的情况下输入了个人资料信息，这强烈表明他们可能是垃圾邮件发送者。见 %{link}。"
+      contains_media: "这个帖子帖子包含嵌入式媒体。见 %{link}。"
       queued_by_staff: "一名管理人员认为此帖子需要审核。在此之前，它将保持隐藏。"
       links:
         watched_word: 列出关注的关键字

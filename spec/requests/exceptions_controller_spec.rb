@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 RSpec.describe ExceptionsController do
   describe "#not_found" do
     it "should return the right response" do

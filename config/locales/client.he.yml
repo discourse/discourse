@@ -207,6 +207,7 @@ he:
     skip_to_main_content: "דילוג לתוכן הראשי"
     wizard_required: "ברוך בואך ל־Discourse החדש שלך! נתחיל עם <a href='%{url}' data-auto-route='true'>אשף ההתקנה</a> ✨"
     emails_are_disabled: "כל הדוא״ל היוצא נוטרל באופן גורף על ידי מנהל אתר. שום הודעת דוא״ל, מכל סוג שהוא, לא תשלח."
+    emails_are_disabled_non_staff: "דוא״ל יוצא הושבת עבור משתמשים שאינם מהסגל."
     software_update_prompt:
       message: "עדכנו את האתר הזה, <span>נא לרענן</span> או שיתכן שתופענה כל מיני תופעות בלתי מוסברות."
       dismiss: "התעלמות"
@@ -351,10 +352,11 @@ he:
       list_permission_denied: "אין לך הרשאה לצפות בסימניות של המשתמש הזה."
       no_user_bookmarks: "לא הוספת פוסטים לסימניות, סימניות מאפשרות לך לפנות במהירות לפוסטים מסוימים."
       auto_delete_preference:
-        label: "למחוק אוטומטית"
-        never: "לעולם לא"
-        when_reminder_sent: "לאחר שליחת התזכורת"
-        on_owner_reply: "לאחר שהגבתי לנושא הזה"
+        label: "לאחר שקיבלת התראה"
+        never: "לשמור על הסימנייה"
+        when_reminder_sent: "מחיקת סימנייה"
+        on_owner_reply: "מחיקת מסד נתונים, לאחר התגובה"
+        clear_reminder: "לשמור על הסימנייה ולפנות את התזכורת"
       search_placeholder: "חיפוש סימניות לפי שם, כותרת הנושא או תוכן הפוסט"
       search: "חיפוש"
       reminders:
@@ -364,6 +366,8 @@ he:
         existing_reminder: "הגדרת תזכורת עבור הסימנייה הזאת שתישלח ב־%{at_date_time}"
     copy_codeblock:
       copied: "הועתק!"
+      copy: "העתקת קוד ללוח הגזירים"
+      fullscreen: "הצגת קוד במסך מלא"
     drafts:
       label: "טיוטות"
       label_with_count: "טיוטות (%{count})"
@@ -424,8 +428,8 @@ he:
     switch_to_anon: "כניסה למצב אלמוני"
     switch_from_anon: "יציאה ממצב אלמוני"
     banner:
-      close: "שחרור באנר זה."
-      edit: "עריכת הבאנר הזה >>"
+      close: "התעלמות מהכרזה"
+      edit: "עריכה"
     pwa:
       install_banner: "<a href>להתקין את %{title} על המכשיר הזה?</a>"
     choose_topic:
@@ -1305,7 +1309,7 @@ he:
         title: "אימות דו־שלבי"
         enable: "ניהול אימות דו־שלבי"
         disable_all: "להשבית הכול"
-        forgot_password: "שכחת את הססמה?"
+        forgot_password: "שכחת את הסיסמה?"
         confirm_password_description: "אנא אשר את סיסמתך בכדי להמשיך"
         name: "שם"
         label: "קוד"
@@ -1317,7 +1321,7 @@ he:
         short_description: |
           הגנה על החשבון שלך עם קודים חד־פעמיים לאבטחה.
         extended_description: |
-          אימות דו־שלבי מחזק את אבטחת המשתמש שלך באסימון אבטחה חד־פעמי בנוסף לססמה שלך. ניתן ליצור אסימונים על מכשירי <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> ו־<a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>.
+          אימות דו־שלבי מחזק את אבטחת המשתמש שלך באסימון אבטחה חד־פעמי בנוסף לסיסמה שלך. ניתן ליצור אסימונים על מכשירי <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> ו־<a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>.
         oauth_enabled_warning: "לידיעתך, כניסות מרשתות חברתיות יושבתו לאחר הפעלת אימות דו־שלבי בחשבונך."
         use: "להשתמש ביישומון אימות"
         enforced_notice: "עליך להפעיל אימות דו־שלבי בטרם הגישה לאתר הזה."
@@ -1375,6 +1379,7 @@ he:
         upload_title: "העלאת התמונה שלך"
         image_is_not_a_square: "אזהרה: קיצצנו את התמונה שלך; האורך והרוחב לא היו שווים."
         logo_small: "הלוגו הקטן של האתר. משמש כבררת מחדל."
+        use_custom: "או להעלות תמונה ייצוגית משלך:"
       change_profile_background:
         title: "כותרת פרופיל"
         instructions: "כותרות הפרופילים ימורכזו ורוחבן ייקבע ל־1110 פיקסלים כבררת מחדל."
@@ -1400,7 +1405,7 @@ he:
         auth_override_instructions: "ניתן לעדכן את כתובת הדוא״ל דרך ספק האימות."
         no_secondary: "אין כתובות דוא״ל משניות"
         instructions: "לעולם לא מוצג לציבור."
-        admin_note: "הערה: משתמש ניהולי שמשנה כתובת דוא״ל למשתמש שאינו ניהולי מציינת שהגישה של המשתמש לכתובת הדוא״ל המקורית אבדה, לכן תישלח הודעת איפוס ססמה לכתובת החדשה בדוא״ל. כתובת הדוא״ל של המשתמש לא תוחלף עד לביצוע תהליך איפוס הססמה."
+        admin_note: "הערה: משתמש ניהולי שמשנה כתובת דוא״ל למשתמש שאינו ניהולי מציינת שהגישה של המשתמש לכתובת הדוא״ל המקורית אבדה, לכן תישלח הודעת איפוס סיסמה לכתובת החדשה בדוא״ל. כתובת הדוא״ל של המשתמש לא תוחלף עד לביצוע תהליך איפוס הסיסמה."
         ok: "נשלח אליכם דואר אלקטרוני לאישור"
         required: "נא למלא כתובת דוא״ל"
         invalid: "בבקשה הכניסו כתובת דואר אלקטרוני תקינה"
@@ -1434,7 +1439,7 @@ he:
       username:
         title: "שם משתמש/ת"
         instructions: "ייחודי, ללא רווחים, קצר"
-        short_instructions: "אנשים יכולים לאזכר אותך כ @%{username}"
+        short_instructions: "אנשים יכולים לאזכר אותך בתור ‎@%{username}"
         available: "שם המשתמש שלך פנוי"
         not_available: "לא זמין. נסו %{suggestion}?"
         not_available_no_suggestion: "לא זמין"
@@ -1462,7 +1467,7 @@ he:
         show_all: "להציג הכול (%{count})"
         show_few: "להציג פחות"
         was_this_you: "האם זה היית אתה?"
-        was_this_you_description: "אם לא נכנסת למערכת, אנו ממליצים לך לשנות את ססמתך ולהוציא את המשתמש בכל מקום שניתן."
+        was_this_you_description: "אם לא נכנסת למערכת, אנו ממליצים לך לשנות את סיסמתך ולהוציא את המשתמש בכל מקום שניתן."
         browser_and_device: "%{browser} ב%{device}"
         secure_account: "אבטח את החשבון שלי"
         latest_post: "פרסמת לאחרונה..."
@@ -1632,10 +1637,10 @@ he:
         too_short: "הסיסמה שלך קצרה מידי."
         common: "הסיסמה הזו נפוצה מידי."
         same_as_username: "הסיסמה שלך זהה לשם המשתמש/ת שלך."
-        same_as_email: "הססמה שלך זהה לכתובת הדוא״ל שלך."
+        same_as_email: "הסיסמה שלך זהה לכתובת הדוא״ל שלך."
         ok: "הסיסמה שלך נראית טוב."
         instructions: "לפחות %{count} תווים"
-        required: "נא למלא ססמה"
+        required: "נא למלא סיסמה"
       summary:
         title: "סיכום"
         stats: "סטטיסטיקות"
@@ -1713,6 +1718,7 @@ he:
         none: "(ללא)"
         instructions: "מופיע לאחר שם המשתמש שלך"
       flair:
+        title: "סמלון"
         none: "(ללא)"
         instructions: "סמל המוצג לצד תמונת הפרופיל שלך"
       primary_group:
@@ -1833,7 +1839,7 @@ he:
       associate: "כבר יש לך חשבון? ניתן <a href='%{associate_link}'>להיכנס</a> כדי לקשר את חשבון ה־%{provider} שלך."
     forgot_password:
       title: "אתחול סיסמה"
-      action: "שכחתי את ססמתי"
+      action: "שכחתי את הסיסמה שלי"
       invite: "נא להקליד את שם המשתמש וכתובת הדוא״ל שלך ואנו נשלח לך הודעה בדוא״ל לאיפוס ססמה."
       invite_no_username: "נא להקליד את כתובת הדוא״ל שלך ואנו נשלח לך הודעה בדוא״ל לאיפוס ססמה."
       reset: "איפוס ססמה"
@@ -1962,6 +1968,7 @@ he:
       categories_and_top_topics: "קטגוריות ונושאים מובילים"
       categories_boxes: "תיבות עם תתי קטגוריות"
       categories_boxes_with_topics: "תיבות עם נושאים מומלצים"
+      subcategories_with_featured_topics: "תת־קטגוריות עם נושאים מובילים"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -2261,7 +2268,7 @@ he:
       invitee_accepted: "<span>%{username}</span> אישר/ה את ההזמנה שלך"
       moved_post: "<span>%{username}</span> עבר %{description}"
       linked: "<span>%{username}</span> %{description}"
-      granted_badge: "הרווחת '%{description}'"
+      granted_badge: "הרווחת את ‚%{description}’"
       topic_reminder: "<span>%{username}</span> %{description}"
       watching_first_post: "<span>נושא חדש</span> %{description}"
       membership_request_accepted: "התקבלת לחברות בקבוצה ‚%{group_name}’"
@@ -2813,14 +2820,6 @@ he:
           two: "גלוי רק לחברי הקבוצות: %{groupNames}"
           many: "גלוי רק לחברי הקבוצות: %{groupNames}"
           other: "גלוי רק לחברי הקבוצות: %{groupNames}"
-        notify_users:
-          title: "להודיע"
-          instructions: "להודיע למשתמשים הבאים על הנושא הזה:"
-          success:
-            one: "נשלחה הודעה אל %{username} על הנושא הזה."
-            two: "נשלחה הודעה לכולם על הנושא הזה."
-            many: "נשלחה הודעה לכולם על הנושא הזה."
-            other: "נשלחה הודעה לכולם על הנושא הזה."
         invite_users: "להזמין"
       print:
         title: "הדפסה"
@@ -3077,6 +3076,7 @@ he:
         edit: "אירעה שגיאה בעריכת הפוסט שלך. נא לנסות שוב, עמך הסליחה."
         upload: "סליחה, הייתה שגיאה בהעלאת הקובץ שלך. אנא נסו שנית"
         file_too_large: "הקובץ הזה גדול מדי (הגודל המרבי הוא %{max_size_kb} ק״ב), עמך הסליחה. למה שלא להעלות את הקובץ שלך לשירות שיתוף בענן ואז להדביק את הקישור?"
+        file_size_zero: "נראה שמשהו השתבש, הקובץ שניסית להעלות הוא בגודל 0 בתים. נא לנסות שוב, עמך הסליחה."
         file_too_large_humanized: "הקובץ הזה גדול מדי (הגודל המרבי הוא %{max_size}), עמך הסליחה. למה שלא להעלות את הקובץ שלך לשירות שיתוף בענן ואז להדביק את הקישור?"
         too_many_uploads: "סליחה, אך ניתן להעלות רק קובץ אחת כל פעם."
         too_many_dragged_and_dropped_files:
@@ -3249,6 +3249,9 @@ he:
           edit_bookmark:
             name: "עריכת סימנייה"
             description: "עריכת שם הסימנייה או החלפת מועד התזכורת"
+          clear_bookmark_reminder:
+            name: "פינוי התזכורת"
+            description: "פינוי התאריך והשעה של התזכורת"
           pin_bookmark:
             name: "הצמדת הסימנייה"
             description: "הצמדת הסימנייה. פעולה זו תגרום לה להופיע בראש רשימת הסימניות שלך."
@@ -3640,6 +3643,7 @@ he:
       readonly: "צפה"
     lightbox:
       download: "הורדה"
+      open: "תמונה מקורית"
       previous: "הקודם (מקש שמאלה)"
       next: "הבא (מקש ימינה)"
       counter: "%curr% מתוך %total%"
@@ -4113,6 +4117,7 @@ he:
               description: "מנהלים יכולים לראות את כל הקבוצות."
             members_visibility_levels:
               title: "מי יכול לראות את חברי הקבוצה הזו?"
+              description: "מנהלים יכולים לראות חברים מכל הקבוצות. סמלון גלוי לכל המשתמשים."
             publish_read_state: "בהודעות קבוצתית לפרסם את מצב הקריאה של הקבוצה"
           membership:
             automatic: אוטומטי
@@ -4207,10 +4212,14 @@ he:
             topics:
               read: קריאת נושא או פוסט מסוים בתוכו. יש גם תמיכה ב־RSS.
               write: יצירת נושא חדש או פרסום לאחד קיים.
+              update: עדכון נושא. החלפת הכותרת, הקטגוריה, התגיות וכו׳.
               read_lists: לקרוא רשימת נושאים כמו מובילים, חדשים, אחרונים וכו׳. יש גם תמיכה ב־RSS.
               wordpress: נחוץ כדי שהתוסף wp-discourse ל־WordPress יעבוד.
             posts:
               edit: לערוך כל פוסט שהוא או אחד מסוים.
+            categories:
+              list: קבלת רשימת קטגוריות.
+              show: קבלת קטגוריה יחידה לפי מזהה.
             uploads:
               create: להעלות קובץ חדש או להפעיל העלאות ישירות יחידניות או מרובות חלקים לאחסון חיצוני.
             users:
@@ -4291,6 +4300,9 @@ he:
         notification_event:
           name: "אירוע התראה"
           details: "כשמשתמש מקבל התראה בהזנה שלו."
+        user_promoted_event:
+          name: "אירוע שקודם על ידי משתמש"
+          details: "כאשר משתמש מקודם מדרגת אמון אחת לאחרת."
         user_badge_event:
           name: "אירוע הענקת עיטור"
           details: "כמשתמש מקבל עיטור."
@@ -4433,7 +4445,7 @@ he:
         delete_confirm: 'למחוק את „%{theme_name}”?'
         color: "צבע"
         opacity: "שקיפות"
-        copy: "העתקה"
+        copy: "שכפול"
         copy_to_clipboard: "העתקה ללוח"
         copied_to_clipboard: "הועתק ללוח"
         copy_to_clipboard_error: "שגיאה בהעתקת מידע ללוח"

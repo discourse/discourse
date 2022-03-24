@@ -34,6 +34,13 @@ export function getHead(head, prev) {
 export default Mixin.create({
   init() {
     this._super(...arguments);
+
+    // fallback in the off chance someone has implemented a custom composer
+    // which does not define this
+    if (!this.composerEventPrefix) {
+      this.composerEventPrefix = "composer";
+    }
+
     generateLinkifyFunction(this.markdownOptions || {}).then((linkify) => {
       // When pasting links, we should use the same rules to match links as we do when creating links for a cooked post.
       this._cachedLinkify = linkify;
@@ -426,11 +433,13 @@ export default Mixin.create({
 
   @bind
   paste(e) {
-    if (!this._$textarea.is(":focus") && !isTesting()) {
+    const isComposer =
+      document.querySelector(this.composerFocusSelector) === e.target;
+
+    if (!isComposer && !isTesting()) {
       return;
     }
 
-    const isComposer = $(this.composerFocusSelector).is(":focus");
     let { clipboard, canPasteHtml, canUpload } = clipboardHelpers(e, {
       siteSettings: this.siteSettings,
       canUpload: isComposer,
@@ -454,7 +463,10 @@ export default Mixin.create({
       plainText = plainText.replace(/\r/g, "");
       const table = this._extractTable(plainText);
       if (table) {
-        this.appEvents.trigger("composer:insert-text", table);
+        this.appEvents.trigger(
+          `${this.composerEventPrefix}:insert-text`,
+          table
+        );
         handled = true;
       }
     }
@@ -506,7 +518,10 @@ export default Mixin.create({
         }
 
         if (isComposer) {
-          this.appEvents.trigger("composer:insert-text", markdown);
+          this.appEvents.trigger(
+            `${this.composerEventPrefix}:insert-text`,
+            markdown
+          );
           handled = true;
         }
       }

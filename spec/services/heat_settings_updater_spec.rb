@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe HeatSettingsUpdater do
   describe '#update' do
     subject(:update_settings) { HeatSettingsUpdater.update }

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe InlineOneboxer do
 
   it "should return nothing with empty input" do
@@ -31,33 +29,18 @@ describe InlineOneboxer do
 
     it "puts an entry in the cache" do
       SiteSetting.enable_inline_onebox_on_all_domains = true
-      url = "https://example.com/random-url"
+      url = "https://example.com/good-url"
       stub_request(:get, url).to_return(status: 200, body: "<html><head><title>a blog</title></head></html>")
 
       InlineOneboxer.invalidate(url)
       expect(InlineOneboxer.cache_lookup(url)).to be_blank
 
       result = InlineOneboxer.lookup(url)
-      expect(result).to be_present
+      expect(result[:title]).to be_present
 
       cached = InlineOneboxer.cache_lookup(url)
       expect(cached[:url]).to eq(url)
       expect(cached[:title]).to eq('a blog')
-    end
-
-    it "puts an entry in the cache for failed onebox" do
-      SiteSetting.enable_inline_onebox_on_all_domains = true
-      url = "https://example.com/random-url"
-
-      InlineOneboxer.invalidate(url)
-      expect(InlineOneboxer.cache_lookup(url)).to be_blank
-
-      result = InlineOneboxer.lookup(url)
-      expect(result).to be_present
-
-      cached = InlineOneboxer.cache_lookup(url)
-      expect(cached[:url]).to eq(url)
-      expect(cached[:title]).to be_nil
     end
   end
 
@@ -201,6 +184,11 @@ describe InlineOneboxer do
     describe "lookups for blocked domains in the hostname" do
       shared_examples "blocks the domain" do |setting, domain_to_test|
         it "does not retrieve title" do
+          stub_request(:get, domain_to_test)
+            .to_return(
+              status: 200,
+              body: "<html><head><title>hello world</title></head></html>",
+            )
           SiteSetting.blocked_onebox_domains = setting
 
           onebox = InlineOneboxer.lookup(domain_to_test, skip_cache: true)
@@ -211,11 +199,16 @@ describe InlineOneboxer do
 
       shared_examples "does not fulfil blocked domain" do |setting, domain_to_test|
         it "retrieves title" do
+          stub_request(:get, domain_to_test)
+            .to_return(
+              status: 200,
+              body: "<html><head><title>hello world</title></head></html>",
+            )
           SiteSetting.blocked_onebox_domains = setting
 
           onebox = InlineOneboxer.lookup(domain_to_test, skip_cache: true)
 
-          expect(onebox).to be_present
+          expect(onebox[:title]).to be_present
         end
       end
 
@@ -230,6 +223,47 @@ describe InlineOneboxer do
       include_examples "does not fulfil blocked domain", "kitten.cloud", "https://cat.2kitten.cloud"
       include_examples "does not fulfil blocked domain", "kitten.cloud", "https://cat.kitten.cloud9"
       include_examples "does not fulfil blocked domain", "api.cat.org", "https://api-cat.org"
+
+      it "doesn't retrieve title if a blocked domain is encountered anywhere in the redirect chain" do
+        SiteSetting.blocked_onebox_domains = "redirect.com"
+        stub_request(:get, "https://mainwebsite.com/blah")
+          .to_return(status: 301, body: "", headers: { "location" => "https://redirect.com/blah" })
+        stub_request(:get, "https://redirect.com/blah")
+          .to_return(status: 301, body: "", headers: { "location" => "https://finalwebsite.com/blah" })
+        stub_request(:get, "https://finalwebsite.com/blah")
+          .to_return(status: 200, body: "<html><head><title>hello world</title></head></html>")
+        onebox = InlineOneboxer.lookup("https://mainwebsite.com/blah", skip_cache: true)
+
+        expect(onebox[:title]).to be_blank
+      end
+
+      it "doesn't retrieve title if the Discourse-No-Onebox header == 1" do
+        stub_request(:get, "https://mainwebsite.com/blah")
+          .to_return(
+            status: 200,
+            body: "<html><head><title>hello world</title></head></html>",
+            headers: { "Discourse-No-Onebox" => "1" }
+          )
+        onebox = InlineOneboxer.lookup("https://mainwebsite.com/blah", skip_cache: true)
+        expect(onebox[:title]).to be_blank
+
+        stub_request(:get, "https://mainwebsite.com/blah/2")
+          .to_return(
+            status: 301,
+            body: "",
+            headers: { "location" => "https://mainwebsite.com/blah/2/redirect" }
+          )
+        stub_request(:get, "https://mainwebsite.com/blah/2/redirect")
+          .to_return(
+            status: 301,
+            body: "",
+            headers: { "Discourse-No-Onebox" => "1", "location" => "https://somethingdoesnotmatter.com" }
+          )
+        onebox = InlineOneboxer.lookup("https://mainwebsite.com/blah/2", skip_cache: true)
+        expect(onebox[:title]).to be_blank
+        onebox = InlineOneboxer.lookup("https://mainwebsite.com/blah/2/redirect", skip_cache: true)
+        expect(onebox[:title]).to be_blank
+      end
     end
   end
 end

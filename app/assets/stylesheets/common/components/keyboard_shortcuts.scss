@@ -36,10 +36,17 @@
 }
 
 #keyboard-shortcuts-help {
-  display: flex;
+  display: grid;
+  grid-gap: 0.5em 1.25em;
+  grid-template-columns: repeat(3, 1fr);
+  &:focus {
+    outline: none;
+  }
 
-  .column {
-    width: 33.3%;
+  @for $i from 1 through 25 {
+    .span-#{$i} {
+      grid-row-end: span $i;
+    }
   }
 
   ul {

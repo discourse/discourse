@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe "Discobot welcome post" do
   let(:user) { Fabricate(:user) }
 

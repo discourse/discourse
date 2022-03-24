@@ -106,6 +106,7 @@ ko:
       url: "URL 복사 및 공유"
     action_codes:
       public_topic: "이 글을 %{when}에 공개"
+      open_topic: "%{when}에 글로 변환되었습니다."
       private_topic: "이 글을 개인 메시지로 설정 %{when}"
       split_topic: "이 글을 %{when}에 분리"
       invited_user: "%{when}에 %{who}님이 초대됨"
@@ -148,6 +149,7 @@ ko:
     bootstrap_mode_disabled: "Bootstrap 모드가 24시간 이내에 해제됩니다."
     themes:
       default_description: "기본"
+      broken_theme_alert: "테마/구성 요소에 오류가 있어 사이트가 작동하지 않을 수 있습니다."
       only_admins: "(이 메시지는 사이트 관리자에게만 표시됩니다.)"
     s3:
       regions:
@@ -269,10 +271,10 @@ ko:
       list_permission_denied: "이 사용자의 북마크를 볼 수있는 권한이 없습니다."
       no_user_bookmarks: "북마크된 게시물이 없습니다. 북마크를 사용하면 특정 게시물을 빠르게 확인 할 수 있습니다."
       auto_delete_preference:
-        label: "자동 삭제"
-        never: "절대"
-        when_reminder_sent: "알림이 전송되면"
-        on_owner_reply: "이 글에 댓글을 작성한 후"
+        never: "북마크 유지"
+        when_reminder_sent: "북마크 삭제"
+        on_owner_reply: "답장후 북마크 삭제"
+        clear_reminder: "북마크 유지 및 알림 지우기"
       search_placeholder: "이름, 글 제목 또는 내용으로 북마크 검색"
       search: "검색"
       reminders:
@@ -282,6 +284,8 @@ ko:
         existing_reminder: "이 북마크는 %{at_date_time}에 미리 알림이 설정되어 있습니다"
     copy_codeblock:
       copied: "복사되었습니다!"
+      copy: "클립보드에 코드 복사"
+      fullscreen: "전체 화면으로 코드 표시"
     drafts:
       label: "임시저장"
       label_with_count: "임시 보관함 (%{count})"
@@ -327,8 +331,8 @@ ko:
     switch_to_anon: "익명 모드 시작"
     switch_from_anon: "익명 모드 종료"
     banner:
-      close: "이 배너를 닫습니다."
-      edit: "이 배너 편집 >>"
+      close: "이 배너를 닫습니다"
+      edit: "편집"
     pwa:
       install_banner: "이 장치에 <a href>%{title} 바로가기를 만드시겠습니까?</a>"
     choose_topic:
@@ -643,6 +647,7 @@ ko:
             title: "설정"
             allow_unknown_sender_topic_replies: "알 수 없는 발신자 주제 응답을 허용합니다."
             allow_unknown_sender_topic_replies_hint: "알 수없는 발신자가 그룹 글에 댓글을 작성 할 수 있습니다. 이 기능이 활성화되지 않은 경우 글에 아직 초대되지 않은 이메일 주소에서 답장하면 새 글이 생성됩니다."
+            from_alias: "보낸 사람 별칭"
           mailboxes:
             synchronized: "동기화된 사서함"
             none_found: "현재 이메일 계정에 사서함이 없습니다."
@@ -2468,17 +2473,13 @@ ko:
         title: "댓글쓰기"
         help: "이 글에 대한 댓글을 작성합니다"
       share:
+        title: "글 공유"
         extended_title: "링크 공유"
         help: "이 글의 링크 공유"
         instructions: "이 글의 링크 공유:"
         copied: "글 링크가 복사되었습니다."
         restricted_groups:
           other: "그룹 구성원만 볼 수 있음: %{groupNames}"
-        notify_users:
-          title: "알림"
-          instructions: "다음 사용자에게 이 항목에 대해 알립니다."
-          success:
-            other: "이 글에 대해 모든 사용자에게 알렸습니다."
         invite_users: "초대"
       print:
         title: "프린트하기"
@@ -2826,6 +2827,9 @@ ko:
           edit_bookmark:
             name: "북마크 수정"
             description: "북마크 이름을 수정하거나 알림 날짜 및 시간을 변경하십시오."
+          clear_bookmark_reminder:
+            name: "알림 지우기"
+            description: "알림 날짜 및 시간 지우기"
           pin_bookmark:
             name: "북마크 고정"
             description: "북마크를 고정합니다. 북마크 목록 상단에 표시됩니다."
@@ -2838,6 +2842,9 @@ ko:
         viewing_summary: "이 글의 요약 보기"
         post_number: "%{username}, 글 #%{post_number}"
         show_all: "모두 보기"
+      share:
+        title: "글 공유 #%{post_number}"
+        instructions: "이 글의 링크 공유:"
     category:
       none: "(카테고리 없음)"
       all: "모든 카테고리"
@@ -3160,6 +3167,7 @@ ko:
       readonly: "보기"
     lightbox:
       download: "다운로드"
+      open: "원본 이미지"
       previous: "이전 (왼쪽 화살표 키)"
       next: "다음 (오른쪽 화살표 키)"
       counter: "%total %의 %curr %"
@@ -3680,6 +3688,9 @@ ko:
               wordpress: 워드프레스 wp-discourse 플러그인이 작동하는데 필요합니다.
             posts:
               edit: 게시물 또는 특정 게시물을 편집합니다.
+            categories:
+              list: 카테고리 목록을 가져옵니다.
+              show: ID별로 단일 카테고리를 가져옵니다.
             uploads:
               create: 새 파일을 업로드하거나 외부 저장소에 단일 또는 멀티파트 직접 업로드를 시작합니다.
             users:
@@ -3896,7 +3907,6 @@ ko:
         delete_confirm: '&quot;%{theme_name}&quot;를 삭제 하시겠습니까?'
         color: "색상"
         opacity: "투명도"
-        copy: "복사"
         copy_to_clipboard: "클립보드에 복사하기"
         copied_to_clipboard: "클립보드로 복사됨"
         copy_to_clipboard_error: "클립보드로 복사하는 중 에러가 발생하였습니다"

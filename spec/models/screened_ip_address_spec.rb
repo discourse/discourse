@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe ScreenedIpAddress do
   let(:ip_address) { '99.232.23.124' }
   let(:valid_params) { { ip_address: ip_address } }

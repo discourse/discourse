@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
 require 'stringio'
 
 describe TopicEmbed do
@@ -390,10 +389,10 @@ describe TopicEmbed do
     it "handles malformed links" do
       url = "https://somesource.com"
 
-      contents = <<~CONTENT
+      contents = <<~HTML
       hello world new post <a href="mailto:somemail@somewhere.org>">hello</a>
       some image <img src="https:/><invalidimagesrc/">
-      CONTENT
+      HTML
 
       raw = TopicEmbed.absolutize_urls(url, contents)
       expect(raw).to eq(contents)

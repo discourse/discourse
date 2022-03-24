@@ -506,7 +506,7 @@ const TopicTrackingState = EmberObject.extend({
   },
 
   /**
-   * Calls the provided callback for each of the currenty tracked topics
+   * Calls the provided callback for each of the currently tracked topics
    * we have in state.
    *
    * @method forEachTracked

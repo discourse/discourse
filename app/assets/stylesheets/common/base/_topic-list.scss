@@ -242,6 +242,17 @@
     .raw-topic-link > * {
       pointer-events: none;
     }
+
+    &.focused {
+      box-shadow: inset 3px 0 0 var(--tertiary);
+    }
+    /* we have a custom focus indicator so we can remove the native one */
+    .title:focus {
+      outline: none;
+    }
+    .title:focus-visible {
+      outline: none;
+    }
   }
 
   .unread-indicator {

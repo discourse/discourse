@@ -27,6 +27,7 @@ export default Controller.extend({
   backupCodesEnabled: readOnly("model.backup_enabled"),
   securityKeysEnabled: readOnly("model.security_keys_enabled"),
   allowedMethods: readOnly("model.allowed_methods"),
+  customDescription: readOnly("model.description"),
 
   showTotpForm: equal("shownSecondFactorMethod", TOTP),
   showSecurityKeyForm: equal("shownSecondFactorMethod", SECURITY_KEY),

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Jobs::ProcessEmail do
 
   let(:mail) { "From: foo@bar.com\nTo: bar@foo.com\nSubject: FOO BAR\n\nFoo foo bar bar?" }

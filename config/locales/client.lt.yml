@@ -341,10 +341,7 @@ lt:
       list_permission_denied: "Neturite leidimo peržiūrėti šio vartotojo žymes."
       no_user_bookmarks: "Jūs neturite pažymėtų įrašų; žymos leidžia greitai nukreipti į konkrečius įrašus."
       auto_delete_preference:
-        label: "Automatiškai ištrinti"
-        never: "Niekada"
-        when_reminder_sent: "Kai priminimas bus išsiųstas"
-        on_owner_reply: "Po to, kai atsakysiu į šią temą"
+        when_reminder_sent: "Ištrinti žymę"
       search_placeholder: "Ieškokite žymių pagal pavadinimą, temos pavadinimą ar įrašo turinį"
       search: "Paieška"
       reminders:
@@ -394,8 +391,7 @@ lt:
     switch_to_anon: "Pasirinkti slaptumo būseną"
     switch_from_anon: "Išjunkti slaptumo būseną"
     banner:
-      close: "panaikinti banerį"
-      edit: "Redaguoti banerį >>"
+      edit: "Redaguoti"
     pwa:
       install_banner: "Ar norite <a href>šiame įrenginyje įdiegti %{title} ?</a>"
     choose_topic:
@@ -2453,9 +2449,6 @@ lt:
         help: "Pasidalink šios temos nuoroda"
         instructions: "Dalintis nuoroda šioje temoje:"
         copied: "Temos nuoroda nukopijuota."
-        notify_users:
-          title: "Pranešti"
-          instructions: "Praneškite šiems vartotojams apie šią temą:"
         invite_users: "Kviesti"
       print:
         title: "Spausdinti"
@@ -3851,7 +3844,6 @@ lt:
         delete_confirm: 'Ar tikrai norite ištrinti „%{theme_name}“?'
         color: "Spalva"
         opacity: "Permatomumas"
-        copy: "Kopijuoti"
         copy_to_clipboard: "Nukopijuoti į iškarpinę"
         copied_to_clipboard: "Nukopijuota į iškirptę"
         copy_to_clipboard_error: "Klaida kopijuojant duomenis į iškarpinę"

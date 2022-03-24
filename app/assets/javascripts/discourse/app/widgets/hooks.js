@@ -43,7 +43,7 @@ function buildHook(attributeName, setAttr) {
 }
 
 // For the majority of events, we register a single listener on the `<body>`, and then
-// notify the relavent widget (if any) when the event fires (see setupDocumentCallback() below)
+// notify the relevant widget (if any) when the event fires (see setupDocumentCallback() below)
 export const WidgetClickHook = buildHook(CLICK_ATTRIBUTE_NAME);
 export const WidgetDoubleClickHook = buildHook(DOUBLE_CLICK_ATTRIBUTE_NAME);
 export const WidgetClickOutsideHook = buildHook(

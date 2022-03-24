@@ -637,6 +637,7 @@ tr_TR:
       permission_conflict: "Bir alt kategoriye erişmesine izin verilen herhangi bir grubun üst kategoriye erişmesine de izin verilmelidir. Aşağıdaki grupların alt kategorilerden birine erişimi vardır, ancak üst kategoriye erişimi yoktur: %{group_names}."
       disallowed_topic_tags: "Bu konuya bu kategoride izin verilmiyor: '%{tags}'"
       disallowed_tags_generic: "Bu konuya izin verilmeyen etiketler var."
+      slug_contains_non_ascii_chars: "ascii olmayan karakterler içeriyor"
     cannot_delete:
       uncategorized: "Kategorisi olmayan konular bu kategoride gösterilir. Bu kategori silinemez."
       has_subcategories: "Alt kategorileri bulunduğu için bu kategori silinemez."
@@ -1328,7 +1329,6 @@ tr_TR:
       labels:
         user: Kullanıcı
         qtt_like: Alınan Beğeniler
-      description: "En fazla beğeni alan ilk 10 kullanıcı."
     top_users_by_likes_received_from_inferior_trust_level:
       title: "Daha düşük güven düzeyine sahip bir kullanıcıdan alınan beğenilere göre En İyi Kullanıcılar"
       labels:
@@ -1341,7 +1341,6 @@ tr_TR:
       labels:
         user: Kullanıcı
         qtt_like: Alınan Beğeniler
-      description: "Çok çeşitli kullanıcılardan beğeni alan ilk 10 kullanıcı."
   dashboard:
     group_email_credentials_warning: '<a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>grubu için e-posta kimlik bilgileriyle ilgili bir sorun oluştu. Bu sorun çözülene kadar grup gelen kutusundan hiçbir e-posta gönderilmeyecektir. %{error}'
     rails_env_warning: "Sunucunuz %{env} modunda çalışıyor."
@@ -1690,7 +1689,6 @@ tr_TR:
     use_site_small_logo_as_system_avatar: "Sistem kullanıcısının avatarı yerine sitenin küçük logosunu kullanın. Logonun mevcut olmasını gerektirir."
     restrict_letter_avatar_colors: "Harf avatarı arka planı için kullanılacak 6 basamaklı onaltılı renk değerlerinin listesi."
     enable_listing_suspended_users_on_search: "Askıya alınan kullanıcıları bulmak için normal kullanıcıların etkinleştir."
-    selectable_avatars_enabled: "Kullanıcıları listeden bir avatar seçmeye zorlayın."
     selectable_avatars: "Kullanıcıların seçebileceği avatarların listesi."
     allow_all_attachments_for_group_messages: "Grup iletileri için tüm e-posta eklentilerine izin ver."
     png_to_jpg_quality: "Dönüştürülen JPG dosyasının kalitesi (1 en düşük kalite, 99 en iyi kalite, 100 devre dışı bırakmak için)."
@@ -3430,6 +3428,7 @@ tr_TR:
     complete_multipart_failure: "Harici depoda çok parçalı yükleme tamamlanamadı."
     external_upload_not_found: "Yükleme harici depoda bulunamadı. %{additional_detail}"
     cannot_promote_failure: "Yükleme tamamlanamıyor, zaten tamamlanmış veya daha önce başarısız olmuş olabilir."
+    size_zero_failure: "Üzgünüz, bir şeyler ters gitmiş gibi görünüyor, yüklemeye çalıştığınız dosya 0 bayt. Lütfen tekrar deneyin."
     attachments:
       too_large: "Üzgünüz, yüklemeye çalıştığınız dosya çok büyük (en fazla %{max_size_kb}KB olabilir)."
       too_large_humanized: "Maalesef yüklemeye çalıştığınız dosya çok büyük (maksimum boyut %{max_size})."
@@ -3727,7 +3726,7 @@ tr_TR:
       name: İlk Bahsetme
       description: Bir gönderide bir kullanıcıdan bahsetti
       long_description: |
-        Bu rozet, gönderinizde birisinin @kullanıcıadından ilk kez bahsettiğinizde verilir. Her bir bahsetme, söz konusu kişiye bir bildirim oluşturur. Herhangi bir kullanıcıdan veya izin veriliyorsa gruptan bahsetmek için @(takmaad) yazın. - dikkatlerini çekmek için kullanışlı bir yol.
+        Bu rozet, gönderinizde birisinin @kullanıcıadından ilk kez bahsettiğinizde verilir. Her bir bahsetme, söz konusu kişiye bir bildirim oluşturur. Herhangi bir kullanıcıdan veya izin veriliyorsa gruptan bahsetmek için @(takmaad) yazın. - dikkatlerini çekmek için kullanışlı bir yoldur.
     first_onebox:
       name: İlk Kutulama
       description: Kutulanmış bir bağlantı gönderdi

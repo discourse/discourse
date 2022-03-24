@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
 require "i18n/duplicate_key_finder"
 
 def extract_locale(path)

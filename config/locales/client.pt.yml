@@ -296,10 +296,7 @@ pt:
       list_permission_denied: "Você não tem permissão para ver os favoritos deste utilizador."
       no_user_bookmarks: "Você não tem posts marcados; os favoritos permitem-lhe consultar rapidamente posts específicos."
       auto_delete_preference:
-        label: "Remover automaticamente"
-        never: "Nunca"
-        when_reminder_sent: "Assim que o lembrete for enviado"
-        on_owner_reply: "Depois de responder a este tópico"
+        when_reminder_sent: "Excluir favorito"
       search_placeholder: "Pesquise favoritos por nome, título do tópico ou conteúdo do post"
       search: "Pesquisar"
       reminders:
@@ -358,8 +355,8 @@ pt:
     switch_to_anon: "Entrar em modo Anónimo"
     switch_from_anon: "Sair de modo Anónimo"
     banner:
-      close: "Marcar esta faixa como vista."
-      edit: "Editar esta faixa >>"
+      close: "Marcar esta faixa como vista"
+      edit: "Editar"
     pwa:
       install_banner: "Você deseja <a href>instalar o %{title} neste dispositivo?</a>"
     choose_topic:
@@ -2510,12 +2507,6 @@ pt:
         help: "Partilhar uma ligação para este tópico"
         instructions: "Compartilhe um link para este tópico:"
         copied: "Link do tópico copiado."
-        notify_users:
-          title: "Notificar"
-          instructions: "Notifique os seguintes usuários sobre este tópico:"
-          success:
-            one: "%{username} notificado com sucesso sobre este tópico."
-            other: "Todos os usuários foram notificados sobre este tópico."
         invite_users: "Convidar"
       print:
         title: "Imprimir"
@@ -3833,7 +3824,6 @@ pt:
         delete_confirm: 'Tem certeza de que deseja excluir "%{theme_name}"?'
         color: "Cor"
         opacity: "Opacidade"
-        copy: "Copiar"
         copy_to_clipboard: "Copiar para a Área de Transferência"
         copied_to_clipboard: "Copiado para a Área de Transferência"
         copy_to_clipboard_error: "Erro a copiar dados para a Área de Transferência"

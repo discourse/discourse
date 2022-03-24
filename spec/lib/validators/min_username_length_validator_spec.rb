@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe MinUsernameLengthValidator do
   it "checks for maximum range" do
     SiteSetting.max_username_length = 10

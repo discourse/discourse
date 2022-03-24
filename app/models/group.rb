@@ -560,12 +560,24 @@ class Group < ActiveRecord::Base
     lookup_group(name) || refresh_automatic_group!(name)
   end
 
-  def self.search_groups(name, groups: nil, custom_scope: {})
+  def self.search_groups(name, groups: nil, custom_scope: {}, sort: :none)
     groups ||= Group
 
-    groups.where(
+    relation = groups.where(
       "name ILIKE :term_like OR full_name ILIKE :term_like", term_like: "%#{name}%"
     )
+
+    if sort == :auto
+      prefix = "#{name.gsub("_", "\\_")}%"
+      relation = relation.reorder(
+        DB.sql_fragment(
+          "CASE WHEN name ILIKE :like OR full_name ILIKE :like THEN 0 ELSE 1 END ASC, name ASC",
+          like: prefix
+        )
+      )
+    end
+
+    relation
   end
 
   def self.lookup_group(name)

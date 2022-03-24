@@ -268,7 +268,7 @@ hy:
       list_permission_denied: "Դուք իրավունք չունեք դիտելու այս օգտատիրոջ էջանշանները: "
       no_user_bookmarks: "Դուք էջանշած գրառումներ չունեք; էջանշումները թույլ են տալիս Ձեզ արագորեն տեղափոխվել դեպի որոշակի գրառում:"
       auto_delete_preference:
-        never: "Երբեք"
+        when_reminder_sent: "Ջնջել էջանշանը"
       search: "Որոնում"
       reminders:
         today_with_time: "այսօր %{time}"
@@ -317,8 +317,7 @@ hy:
     switch_to_anon: "Սկսել Անանուն Ռեժիմը"
     switch_from_anon: "Ավարտել Անանուն Ռեժիմը"
     banner:
-      close: "Փակել այս բանները"
-      edit: "Խմբագրել այս բանները >>"
+      edit: "Խմբագրել"
     pwa:
       install_banner: "Դուք ցանկանու՞մ եք <a href>տեղադրել %{title}-ը այս սարքի վրա?</a>"
     choose_topic:
@@ -3265,7 +3264,6 @@ hy:
         delete_confirm: 'Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել <<%{theme_name}>> :'
         color: "Գույն"
         opacity: "Թափանցիկություն"
-        copy: "Կրկնօրինակել"
         copy_to_clipboard: "Կրկնօրինակել Փոխանակման Հարթակում"
         copied_to_clipboard: "Կրկնօրինակված է Փոխանակման Հարթակում"
         copy_to_clipboard_error: "Փոխանակման Հարթակում տվյալների կրկնօրինակման սխալ"

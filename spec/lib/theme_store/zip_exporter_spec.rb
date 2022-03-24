@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
 require 'theme_store/zip_exporter'
 
 describe ThemeStore::ZipExporter do

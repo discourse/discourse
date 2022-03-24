@@ -41,6 +41,7 @@ export function loadTopicView(topic, args) {
 }
 
 export const ID_CONSTRAINT = /^\d+$/;
+let _customLastUnreadUrlCallbacks = [];
 
 const Topic = RestModel.extend({
   message: null,
@@ -256,6 +257,19 @@ const Topic = RestModel.extend({
 
   @discourseComputed("last_read_post_number", "highest_post_number", "url")
   lastUnreadUrl(lastReadPostNumber, highestPostNumber) {
+    let customUrl = null;
+    _customLastUnreadUrlCallbacks.some((cb) => {
+      const result = cb(this);
+      if (result) {
+        customUrl = result;
+        return true;
+      }
+    });
+
+    if (customUrl) {
+      return customUrl;
+    }
+
     if (highestPostNumber <= lastReadPostNumber) {
       if (this.get("category.navigate_to_first_post_after_read")) {
         return this.urlForPostNumber(1);
@@ -874,6 +888,15 @@ export function mergeTopic(topicId, data) {
   return ajax(`/t/${topicId}/merge-topic`, { type: "POST", data }).then(
     moveResult
   );
+}
+
+export function registerCustomLastUnreadUrlCallback(fn) {
+  _customLastUnreadUrlCallbacks.push(fn);
+}
+
+// Should only be used in tests
+export function clearCustomLastUnreadUrlCallbacks() {
+  _customLastUnreadUrlCallbacks.clear();
 }
 
 export default Topic;

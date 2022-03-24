@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Jobs::PendingQueuedPostsReminder do
   let(:job) { described_class.new }
 

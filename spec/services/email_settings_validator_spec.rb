@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 RSpec.describe EmailSettingsValidator do
   let(:username) { "kwest@gmail.com" }
   let(:password) { "mbdtf" }

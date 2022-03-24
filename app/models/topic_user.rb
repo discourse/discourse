@@ -405,8 +405,8 @@ class TopicUser < ActiveRecord::Base
   # The parameters can be used to shrink the scope, and make it faster.
   # user_id, post_id and topic_id can optionally be arrays of ids.
   #
-  # Providing post_id will automatically scope to the relavent user_id and topic_id.
-  # A provided `topic_id` value will always take presedence, which is
+  # Providing post_id will automatically scope to the relevant user_id and topic_id.
+  # A provided `topic_id` value will always take precedence, which is
   # useful when a post has been moved between topics.
   def self.update_post_action_cache(
     user_id: nil,

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe BookmarksController do
   let(:current_user) { Fabricate(:user) }
   let(:bookmark_post) { Fabricate(:post) }

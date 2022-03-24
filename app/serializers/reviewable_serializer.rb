@@ -59,7 +59,7 @@ class ReviewableSerializer < ApplicationSerializer
   def self.create_attribute(name, field)
     attribute(name)
 
-    class_eval <<~GETTER
+    class_eval <<~RUBY
       def #{name}
         #{field}
       end
@@ -67,7 +67,7 @@ class ReviewableSerializer < ApplicationSerializer
       def include_#{name}?
         #{name}.present?
       end
-    GETTER
+    RUBY
   end
 
   # This is easier than creating an AMS method for each attribute

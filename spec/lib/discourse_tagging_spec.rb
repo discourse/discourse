@@ -1,7 +1,6 @@
 # encoding: UTF-8
 # frozen_string_literal: true
 
-require 'rails_helper'
 require 'discourse_tagging'
 
 # More tests are found in the category_tag_spec integration specs

@@ -46,6 +46,10 @@ $mobile-breakpoint: 700px;
       span {
         word-break: break-word;
       }
+
+      &.bookmark-expired-reminder {
+        color: var(--danger);
+      }
     }
 
     .d-icon {

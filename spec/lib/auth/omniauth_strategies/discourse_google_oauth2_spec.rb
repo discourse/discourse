@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe Auth::OmniAuthStrategies::DiscourseGoogleOauth2 do
   let(:response_hash) do
     {

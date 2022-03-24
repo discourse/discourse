@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
 require 'discourse'
 
 describe Discourse do
@@ -142,7 +141,7 @@ describe Discourse do
             'pluginauth'
           end
 
-          def enabled
+          def enabled?
             true
           end
         end

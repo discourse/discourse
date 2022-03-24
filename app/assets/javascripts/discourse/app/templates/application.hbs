@@ -31,7 +31,10 @@
 
   {{plugin-outlet name="above-footer" connectorTagName="div" args=(hash showFooter=showFooter)}}
   {{#if showFooter}}
-    {{custom-html name="footer" triggerAppEvent="true"}}
+    {{custom-html
+      name="footer"
+      triggerAppEvent="true"
+      classNames="custom-footer-content"}}
   {{/if}}
   {{plugin-outlet name="below-footer" connectorTagName="div" args=(hash showFooter=showFooter)}}
 

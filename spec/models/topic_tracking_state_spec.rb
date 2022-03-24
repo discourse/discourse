@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe TopicTrackingState do
 
   fab!(:user) { Fabricate(:user) }
@@ -349,6 +347,33 @@ describe TopicTrackingState do
     expect(report.length).to eq(0)
 
     TopicUser.create!(user_id: user.id, topic_id: post.topic_id, last_read_post_number: 1, notification_level: 3)
+
+    report = TopicTrackingState.report(user)
+    expect(report.length).to eq(1)
+  end
+
+  it "correctly handles indirectly muted categories" do
+    parent_category = Fabricate(:category)
+    sub_category = Fabricate(:category, parent_category_id: parent_category.id)
+    create_post(category: sub_category)
+
+    report = TopicTrackingState.report(user)
+    expect(report.length).to eq(1)
+
+    CategoryUser.create!(
+      user_id: user.id,
+      notification_level: CategoryUser.notification_levels[:muted],
+      category_id: parent_category.id
+    )
+
+    report = TopicTrackingState.report(user)
+    expect(report.length).to eq(0)
+
+    CategoryUser.create!(
+      user_id: user.id,
+      notification_level: CategoryUser.notification_levels[:regular],
+      category_id: sub_category.id
+    )
 
     report = TopicTrackingState.report(user)
     expect(report.length).to eq(1)

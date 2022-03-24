@@ -20,6 +20,7 @@ define("ember-qunit", () => {
 define("htmlbars-inline-precompile", () => {
   return {
     default: function (str) {
+      // eslint-disable-next-line no-undef
       return Ember.HTMLBars.compile(str[0]);
     },
   };
@@ -35,7 +36,8 @@ define("@ember/test-helpers", () => {
       return _app;
     },
     async settled() {
-      // No-op in pre ember-cli environment
+      // eslint-disable-next-line no-undef, discourse-ember/global-ember
+      Ember.run(() => {});
     },
     TestModuleForComponent: window.TestModuleForComponent,
   };

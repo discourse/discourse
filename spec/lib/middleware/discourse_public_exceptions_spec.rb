@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Middleware::DiscoursePublicExceptions do
   before do
     @orig_logger = Rails.logger

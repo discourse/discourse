@@ -351,10 +351,7 @@ pl_PL:
       list_permission_denied: "Nie masz uprawnień do przeglądania zakładek tego użytkownika."
       no_user_bookmarks: "Nie masz żadnych postów dodanych do zakładek. Zakładki pozwalają na szybkie odwoływanie się do konkretnych postów."
       auto_delete_preference:
-        label: "Usuń automatycznie"
-        never: "Nigdy"
-        when_reminder_sent: "Po wysłaniu przypomnienia"
-        on_owner_reply: "Gdy odpowiem w tym temacie"
+        when_reminder_sent: "Usuń zakładkę"
       search_placeholder: "Wyszukiwanie zakładek według nazwy, tytułu tematu lub treści postu"
       search: "Wyszukaj"
       reminders:
@@ -424,8 +421,8 @@ pl_PL:
     switch_to_anon: "Włącz tryb anonimowy"
     switch_from_anon: "Zakończ tryb anonimowy"
     banner:
-      close: "Zamknij ten baner."
-      edit: "Edytuj ten baner >>"
+      close: "Zamknij ten baner"
+      edit: "Edytuj"
     pwa:
       install_banner: "Czy chcesz <a href>zainstalować %{title} na tym urządzeniu?</a>"
     choose_topic:
@@ -2812,14 +2809,6 @@ pl_PL:
           few: "Widoczne tylko dla członków grup: %{groupNames}"
           many: "Widoczne tylko dla członków grup: %{groupNames}"
           other: "Widoczne tylko dla członków grup: %{groupNames}"
-        notify_users:
-          title: "Powiadom"
-          instructions: "Powiadom następujących użytkowników o tym temacie:"
-          success:
-            one: "Pomyślnie powiadomiono %{username} o tym temacie."
-            few: "Pomyślnie powiadomiono wszystkich użytkowników o tym temacie."
-            many: "Pomyślnie powiadomiono wszystkich użytkowników o tym temacie."
-            other: "Pomyślnie powiadomiono wszystkich użytkowników o tym temacie."
         invite_users: "Zaproś"
       print:
         title: "Drukuj"
@@ -4206,6 +4195,7 @@ pl_PL:
             topics:
               read: Przeczytaj temat lub konkretny post w nim. Obsługiwany jest również format RSS.
               write: Utwórz nowy temat lub post w istniejącym.
+              update: Zaktualizuj temat. Zmień tytuł, kategorię, tagi itp.
               read_lists: Czytaj listy tematów, takie jak najpopularniejsze, nowe, najnowsze itp. Obsługiwany jest również format RSS.
               wordpress: Niezbędne do działania wtyczki wp-discourse na WordPress.
             posts:
@@ -4432,7 +4422,6 @@ pl_PL:
         delete_confirm: 'Czy na pewno chcesz usunąć "%{theme_name}"?'
         color: "Kolor"
         opacity: "Widoczność"
-        copy: "Kopiuj"
         copy_to_clipboard: "Skopiuj do schowka"
         copied_to_clipboard: "Tekst skopiowany do schowka."
         copy_to_clipboard_error: "Wystąpił błąd w trakcie kopiowania do schowka."

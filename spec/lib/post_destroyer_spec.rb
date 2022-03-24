@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe PostDestroyer do
 
   before do
@@ -183,6 +181,18 @@ describe PostDestroyer do
       expect { PostDestroyer.new(admin, post.reload).recover }
         .to change { post.reload.user_id }.to(Discourse.system_user.id)
         .and change { post.topic.user_id }.to(Discourse.system_user.id)
+    end
+
+    it "bypassed validation when updating users" do
+      post = create_post
+
+      # ensure user would fail validations
+      UserEmail.where(user_id: post.user_id).delete_all
+
+      PostDestroyer.new(admin, post.reload).destroy
+      PostDestroyer.new(admin, post.reload, force_destroy: true).destroy
+
+      expect(Post.with_deleted.find_by(id: post.id)).to eq(nil)
     end
 
     describe "post_count recovery" do

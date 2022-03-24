@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
 require 'site_settings/validations'
 
 describe SiteSettings::Validations do

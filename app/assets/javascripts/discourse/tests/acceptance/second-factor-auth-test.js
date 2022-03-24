@@ -46,6 +46,15 @@ const RESPONSES = {
   },
 };
 
+Object.keys(RESPONSES).forEach((k) => {
+  if (k.startsWith("ok")) {
+    const response = RESPONSES[k];
+    if (!response.description) {
+      response.description =
+        "This is an additional description that can be customized per action";
+    }
+  }
+});
 const WRONG_TOTP = "124323";
 let callbackCount = 0;
 
@@ -251,6 +260,16 @@ acceptance("Second Factor Auth Page", function (needs) {
     assert.ok(
       exists(".toggle-second-factor-method.backup-code"),
       "backup code is now shown as an alternative method"
+    );
+  });
+
+  test("2FA action description", async function (assert) {
+    await visit("/session/2fa?nonce=ok111111");
+
+    assert.equal(
+      query(".action-description").textContent.trim(),
+      "This is an additional description that can be customized per action",
+      "action description is rendered on the page"
     );
   });
 

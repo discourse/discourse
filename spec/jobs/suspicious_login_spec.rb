@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe Jobs::SuspiciousLogin do
 
   fab!(:user) { Fabricate(:moderator) }

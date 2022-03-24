@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 shared_examples "a generic error" do
   let(:result) { creator.create_errors_json(obj) }
 

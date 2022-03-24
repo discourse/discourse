@@ -83,9 +83,7 @@ module Email
 
           post
         rescue Exception => e
-          error = e.to_s
-          error = e.class.name if error.blank?
-          @incoming_email.update_columns(error: error) if @incoming_email
+          @incoming_email.update_columns(error: e.class.name) if @incoming_email
           delete_staged_users
           raise
         end
@@ -1011,13 +1009,13 @@ module Email
 
     def forwarded_email_quote_forwarded(destination, user)
       embedded = embedded_email_raw
-      raw = <<~EOF
+      raw = <<~MD
         #{@before_embedded}
 
         [quote]
         #{PlainTextToMarkdown.new(embedded).to_markdown}
         [/quote]
-      EOF
+      MD
 
       return true if forwarded_email_create_topic(destination: destination, user: user, raw: raw, title: subject)
     end

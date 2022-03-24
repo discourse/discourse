@@ -10,7 +10,8 @@ class TestSecondFactorAction < SecondFactor::Actions::Base
       callback_params: {
         saved_param_1: params[:saved_param_1],
         saved_param_2: params[:saved_param_2]
-      }
+      },
+      description: "this is description for test action"
     }
   end
 

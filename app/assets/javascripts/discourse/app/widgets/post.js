@@ -280,21 +280,6 @@ createWidget("post-meta-data", {
       );
     }
 
-    const lastWikiEdit =
-      attrs.wiki && attrs.lastWikiEdit && new Date(attrs.lastWikiEdit);
-    const createdAt = new Date(attrs.created_at);
-    const date = lastWikiEdit ? dateNode(lastWikiEdit) : dateNode(createdAt);
-    const attributes = {
-      class: "post-date",
-      href: attrs.shareUrl,
-      "data-share-url": attrs.shareUrl,
-      "data-post-number": attrs.post_number,
-    };
-
-    if (lastWikiEdit) {
-      attributes["class"] += " last-wiki-edit";
-    }
-
     if (attrs.via_email) {
       postInfo.push(this.attach("post-email-indicator", attrs));
     }
@@ -315,7 +300,7 @@ createWidget("post-meta-data", {
       postInfo.push(this.attach("reply-to-tab", attrs));
     }
 
-    postInfo.push(h("div.post-info.post-date", h("a", { attributes }, date)));
+    postInfo.push(this.attach("post-date", attrs));
 
     postInfo.push(
       h(
@@ -349,6 +334,29 @@ createWidget("expand-hidden", {
 
   click() {
     this.sendWidgetAction("expandHidden");
+  },
+});
+
+createWidget("post-date", {
+  tagName: "div.post-info.post-date",
+
+  html(attrs) {
+    const attributes = { class: "post-date" };
+    let date;
+    if (attrs.wiki && attrs.lastWikiEdit) {
+      attributes["class"] += " last-wiki-edit";
+      date = new Date(attrs.lastWikiEdit);
+    } else {
+      date = new Date(attrs.created_at);
+    }
+    return h("a", { attributes }, dateNode(date));
+  },
+
+  click() {
+    const post = this.findAncestorModel();
+    const topic = post.topic;
+    const controller = showModal("share-topic", { model: topic.category });
+    controller.setProperties({ topic, post });
   },
 });
 

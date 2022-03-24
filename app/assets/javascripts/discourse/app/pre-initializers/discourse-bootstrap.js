@@ -138,23 +138,5 @@ export default {
 
       window.onerror(e && e.message, null, null, null, e);
     });
-
-    // Deprecate lodash usage
-    let lo = window._;
-    if (lo) {
-      Object.keys(lo).forEach((m) => {
-        let old = lo[m];
-        lo[m] = function () {
-          deprecated(
-            `lodash is deprecated and will be removed from Discourse.`,
-            {
-              since: "2.6",
-              dropFrom: "2.7",
-            }
-          );
-          return old(...arguments);
-        };
-      });
-    }
   },
 };

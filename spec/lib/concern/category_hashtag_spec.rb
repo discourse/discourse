@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe CategoryHashtag do
   describe '#query_from_hashtag_slug' do
     fab!(:parent_category) { Fabricate(:category) }

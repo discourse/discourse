@@ -1,8 +1,6 @@
 # encoding: utf-8
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe ThemeField do
   fab!(:theme) { Fabricate(:theme) }
 
@@ -92,10 +90,10 @@ describe ThemeField do
       <script>var b = 10</script>
     HTML
 
-    extracted = <<~JavaScript
+    extracted = <<~JS
       var a = 10
       var b = 10
-    JavaScript
+    JS
 
     theme_field = ThemeField.create!(theme_id: 1, target_id: 0, name: "header", value: html)
     theme_field.ensure_baked!

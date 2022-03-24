@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
 require 'discourse_plugin_registry'
 
 describe DiscoursePluginRegistry do

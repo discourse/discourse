@@ -17,14 +17,13 @@ import { underscore } from "@ember/string";
 function customEmojis() {
   const list = extendedEmojiList();
   const groups = [];
-  Object.keys(list).forEach((code) => {
-    const emoji = list[code];
+  for (const [code, emoji] of list.entries()) {
     groups[emoji.group] = groups[emoji.group] || [];
     groups[emoji.group].push({
       code,
       src: emojiUrlFor(code),
     });
-  });
+  }
   return groups;
 }
 
@@ -36,8 +35,8 @@ export default Component.extend({
   recentEmojis: null,
   hoveredEmoji: null,
   isActive: false,
-  isLoading: true,
   usePopper: true,
+  initialFilter: "",
 
   init() {
     this._super(...arguments);
@@ -78,10 +77,10 @@ export default Component.extend({
 
   @action
   onShow() {
-    this.set("isLoading", true);
     this.set("recentEmojis", this.emojiStore.favorites);
 
     schedule("afterRender", () => {
+      this._applyFilter(this.initialFilter);
       document.addEventListener("click", this.handleOutsideClick);
 
       const emojiPicker = document.querySelector(".emoji-picker");
@@ -133,8 +132,6 @@ export default Component.extend({
       // this is a low-tech trick to prevent appending hundreds of emojis
       // of blocking the rendering of the picker
       later(() => {
-        this.set("isLoading", false);
-
         schedule("afterRender", () => {
           if (!this.site.isMobileDevice || this.isEditorFocused) {
             const filter = emojiPicker.querySelector("input.filter");
@@ -156,9 +153,10 @@ export default Component.extend({
   },
 
   @action
-  onClose() {
+  onClose(event) {
+    event?.stopPropagation();
     document.removeEventListener("click", this.handleOutsideClick);
-    this.onEmojiPickerClose && this.onEmojiPickerClose();
+    this.onEmojiPickerClose && this.onEmojiPickerClose(event);
   },
 
   diversityScales: computed("selectedDiversity", function () {
@@ -224,7 +222,7 @@ export default Component.extend({
     });
 
     if (this.site.isMobileDevice) {
-      this.onClose();
+      this.onClose(event);
     }
   },
 
@@ -239,19 +237,23 @@ export default Component.extend({
   @action
   keydown(event) {
     if (event.code === "Escape") {
-      this.onClose();
+      this.onClose(event);
       return false;
     }
   },
 
   @action
-  onFilter(event) {
+  onFilterChange(event) {
+    this._applyFilter(event.target.value);
+  },
+
+  _applyFilter(filter) {
     const emojiPicker = document.querySelector(".emoji-picker");
     const results = document.querySelector(".emoji-picker-emoji-area .results");
     results.innerHTML = "";
 
-    if (event.target.value) {
-      results.innerHTML = emojiSearch(event.target.value.toLowerCase(), {
+    if (filter) {
+      results.innerHTML = emojiSearch(filter.toLowerCase(), {
         maxResults: 20,
         diversity: this.emojiStore.diversity,
       })
@@ -333,7 +335,7 @@ export default Component.extend({
   handleOutsideClick(event) {
     const emojiPicker = document.querySelector(".emoji-picker");
     if (emojiPicker && !emojiPicker.contains(event.target)) {
-      this.onClose();
+      this.onClose(event);
     }
   },
 });

@@ -274,10 +274,7 @@ el:
       list_permission_denied: "Δεν έχετε άδεια για την προβολή των σελιδοδεικτών αυτού του χρήστη."
       no_user_bookmarks: "Δεν έχετε σελιδοδείκτες. Οι σελιδοδείκτες σας επιτρέπουν να ανατρέξετε γρήγορα σε συγκεκριμένες αναρτήσεις."
       auto_delete_preference:
-        label: "Αυτόματη διαγραφή"
-        never: "Ποτέ"
-        when_reminder_sent: "Μόλις αποσταλεί η υπενθύμιση"
-        on_owner_reply: "Αφού απαντήσω σε αυτό το θέμα"
+        when_reminder_sent: "Διαγραφή σελιδοδείκτη"
       search_placeholder: "Αναζήτηση σελιδοδεικτών με βάση το όνομα, τον τίτλο θέματος ή το περιεχόμενο δημοσίευσης"
       search: "Αναζήτηση"
       reminders:
@@ -330,8 +327,8 @@ el:
     switch_to_anon: "Έναρξη Κατάστασης Ανωνυμίας"
     switch_from_anon: "Τερματισμός Κατάστασης Ανωνυμίας"
     banner:
-      close: "Απόρριψη αυτής της ανακοίνωσης."
-      edit: "Επεξεργασία αυτής της ανακοίνωσης >>"
+      close: "Απόρριψη αυτής της ανακοίνωσης"
+      edit: "Επεξεργασία"
     pwa:
       install_banner: "Θέλετε να <a href>εγκαταστήσετε %{title} σε αυτήν τη συσκευή;</a>"
     choose_topic:
@@ -3480,7 +3477,6 @@ el:
         delete_confirm: 'Είστε βέβαιοι πως θέλετε να διαγράψετε το «%{theme_name}»;'
         color: "Χρώμα"
         opacity: "Αδιαφάνεια"
-        copy: "Αντιγραφή"
         copy_to_clipboard: "Αντιγραφή στο Clipboard"
         copied_to_clipboard: "Αντιγράφτηκε στο Clipboard"
         copy_to_clipboard_error: "Σφάλμα αντιγραφής δεδομένων στο Clipboard"

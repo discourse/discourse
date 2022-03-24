@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe SiteSettingExtension, type: :multisite do
   before do
     MessageBus.off

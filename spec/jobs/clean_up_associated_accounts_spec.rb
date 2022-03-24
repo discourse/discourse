@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe Jobs::CleanUpAssociatedAccounts do
   subject { Jobs::CleanUpAssociatedAccounts.new.execute({}) }
 

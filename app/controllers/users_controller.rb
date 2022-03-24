@@ -159,6 +159,17 @@ class UsersController < ApplicationController
       end
     end
 
+    if params[:external_ids]&.is_a?(ActionController::Parameters) && current_user&.admin? && is_api?
+      attributes[:user_associated_accounts] = []
+
+      params[:external_ids].each do |provider_name, provider_uid|
+        authenticator = Discourse.enabled_authenticators.find { |a| a.name == provider_name }
+        raise Discourse::InvalidParameters.new(:external_ids) if !authenticator&.is_managed?
+
+        attributes[:user_associated_accounts] << { provider_name: provider_name, provider_uid: provider_uid }
+      end
+    end
+
     json_result(user, serializer: UserSerializer, additional_errors: [:user_profile, :user_option]) do |u|
       updater = UserUpdater.new(current_user, user)
       updater.update(attributes.permit!)
@@ -632,6 +643,7 @@ class UsersController < ApplicationController
     params.require(:username)
     params.require(:invite_code) if SiteSetting.require_invite_code
     params.permit(:user_fields)
+    params.permit(:external_ids)
 
     unless SiteSetting.allow_new_registrations
       return fail_with("login.new_registrations_disabled")
@@ -691,6 +703,18 @@ class UsersController < ApplicationController
       user.custom_fields = fields
     end
 
+    # Handle associated accounts
+    associations = []
+    if params[:external_ids]&.is_a?(ActionController::Parameters) && current_user&.admin? && is_api?
+      params[:external_ids].each do |provider_name, provider_uid|
+        authenticator = Discourse.enabled_authenticators.find { |a| a.name == provider_name }
+        raise Discourse::InvalidParameters.new(:external_ids) if !authenticator&.is_managed?
+
+        association = UserAssociatedAccount.find_or_initialize_by(provider_name: provider_name, provider_uid: provider_uid)
+        associations << association
+      end
+    end
+
     authentication = UserAuthenticator.new(user, session)
 
     if !authentication.has_authenticator? && !SiteSetting.enable_local_logins && !(current_user&.admin? && is_api?)
@@ -709,11 +733,12 @@ class UsersController < ApplicationController
 
     # just assign a password if we have an authenticator and no password
     # this is the case for Twitter
-    user.password = SecureRandom.hex if user.password.blank? && authentication.has_authenticator?
+    user.password = SecureRandom.hex if user.password.blank? && (authentication.has_authenticator? || associations.present?)
 
     if user.save
       authentication.finish
       activation.finish
+      associations.each { |a| a.update!(user: user) }
       user.update_timezone_if_missing(params[:timezone])
 
       secure_session[HONEYPOT_KEY] = nil
@@ -1171,8 +1196,7 @@ class UsersController < ApplicationController
         end
       end
 
-      groups = Group.search_groups(term, groups: groups)
-      groups = groups.order('groups.name asc')
+      groups = Group.search_groups(term, groups: groups, sort: :auto)
 
       to_render[:groups] = groups.map do |m|
         { name: m.name, full_name: m.full_name }
@@ -1244,7 +1268,7 @@ class UsersController < ApplicationController
       return render json: failed_json, status: 422
     end
 
-    unless SiteSetting.selectable_avatars_enabled
+    if SiteSetting.selectable_avatars_mode == "disabled"
       return render json: failed_json, status: 422
     end
 
@@ -1305,30 +1329,46 @@ class UsersController < ApplicationController
   end
 
   def notification_level
-    user = fetch_user_from_params
+    target_user = fetch_user_from_params
+    acting_user = current_user
+
+    # the admin should be able to change notification levels
+    # on behalf of other users, so we cannot rely on current_user
+    # for this case
+    if params[:acting_user_id].present? &&
+        params[:acting_user_id].to_i != current_user.id
+      if current_user.staff?
+        acting_user = User.find(params[:acting_user_id])
+      else
+        @error_message = "error"
+        raise Discourse::InvalidAccess
+      end
+    end
 
     if params[:notification_level] == "ignore"
       @error_message = "ignore_error"
-      guardian.ensure_can_ignore_user!(user)
-      MutedUser.where(user: current_user, muted_user: user).delete_all
-      ignored_user = IgnoredUser.find_by(user: current_user, ignored_user: user)
+      guardian.ensure_can_ignore_user!(target_user)
+      MutedUser.where(user: acting_user, muted_user: target_user).delete_all
+      ignored_user = IgnoredUser.find_by(user: acting_user, ignored_user: target_user)
       if ignored_user.present?
         ignored_user.update(expiring_at: DateTime.parse(params[:expiring_at]))
       else
-        IgnoredUser.create!(user: current_user, ignored_user: user, expiring_at: Time.parse(params[:expiring_at]))
+        IgnoredUser.create!(user: acting_user, ignored_user: target_user, expiring_at: Time.parse(params[:expiring_at]))
       end
+
     elsif params[:notification_level] == "mute"
       @error_message = "mute_error"
-      guardian.ensure_can_mute_user!(user)
-      IgnoredUser.where(user: current_user, ignored_user: user).delete_all
-      MutedUser.find_or_create_by!(user: current_user, muted_user: user)
+      guardian.ensure_can_mute_user!(target_user)
+      IgnoredUser.where(user: acting_user, ignored_user: target_user).delete_all
+      MutedUser.find_or_create_by!(user: acting_user, muted_user: target_user)
+
     elsif params[:notification_level] == "normal"
-      MutedUser.where(user: current_user, muted_user: user).delete_all
-      IgnoredUser.where(user: current_user, ignored_user: user).delete_all
+      MutedUser.where(user: acting_user, muted_user: target_user).delete_all
+      IgnoredUser.where(user: acting_user, ignored_user: target_user).delete_all
     end
 
     render json: success_json
-  rescue Discourse::InvalidAccess => e
+  rescue Discourse::InvalidAccess
     render_json_error(I18n.t("notification_level.#{@error_message}"))
   end
 

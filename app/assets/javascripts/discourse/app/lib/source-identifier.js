@@ -41,7 +41,9 @@ export default function identifySource(error) {
   // Production mode
   plugin =
     plugin ||
-    error.stack.match(/assets\/plugins\/_?([\w-]+)-[0-9a-f]+\.js/)?.[1];
+    error.stack.match(
+      /assets\/plugins\/_?([\w-]+)-[0-9a-f]+(?:\.br)?\.js/
+    )?.[1];
 
   if (plugin) {
     return {
@@ -52,7 +54,7 @@ export default function identifySource(error) {
 }
 
 export function getThemeInfo(id) {
-  const name = PreloadStore.get("activatedThemes")[id] || `(theme-id: ${id})`;
+  const name = PreloadStore.get("activatedThemes")?.[id] || `(theme-id: ${id})`;
   return {
     id,
     name,

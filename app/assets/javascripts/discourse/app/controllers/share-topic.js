@@ -2,14 +2,15 @@ import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { getAbsoluteURL } from "discourse-common/lib/get-url";
 import discourseComputed from "discourse-common/utils/decorators";
-import { ajax } from "discourse/lib/ajax";
-import { extractError } from "discourse/lib/ajax-error";
+import { longDateNoYear } from "discourse/lib/formatter";
 import Sharing from "discourse/lib/sharing";
 import showModal from "discourse/lib/show-modal";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import I18n from "I18n";
 import Category from "discourse/models/category";
+import { scheduleOnce } from "@ember/runloop";
+import { getOwner } from "discourse-common/lib/get-owner";
 
 export default Controller.extend(
   ModalFunctionality,
@@ -18,7 +19,6 @@ export default Controller.extend(
     topic: null,
     post: null,
     allowInvites: false,
-    showNotifyUsers: false,
     restrictedGroups: null,
 
     onShow() {
@@ -26,11 +26,21 @@ export default Controller.extend(
         topic: null,
         post: null,
         allowInvites: false,
-        showNotifyUsers: false,
       });
 
       if (this.model && this.model.read_restricted) {
         this.restrictedGroupWarning();
+      }
+
+      scheduleOnce("afterRender", this, this.selectUrl);
+    },
+
+    selectUrl() {
+      const input = document.querySelector("input.invite-link");
+      if (input && !this.site.mobileView) {
+        // if the input is auto-focused on mobile, iOS requires two taps of the copy button
+        input.setSelectionRange(0, this.url.length);
+        input.focus();
       }
     },
 
@@ -43,15 +53,21 @@ export default Controller.extend(
       }
     },
 
+    @discourseComputed("post.created_at", "post.wiki", "post.last_wiki_edit")
+    displayDate(createdAt, wiki, lastWikiEdit) {
+      const date = wiki && lastWikiEdit ? lastWikiEdit : createdAt;
+      return longDateNoYear(new Date(date));
+    },
+
     @discourseComputed(
       "topic.{isPrivateMessage,invisible,category.read_restricted}"
     )
     sources(topic) {
       const privateContext =
         this.siteSettings.login_required ||
-        (topic && topic.isPrivateMessage) ||
-        (topic && topic.invisible) ||
-        topic.category.read_restricted;
+        topic?.isPrivateMessage ||
+        topic?.invisible ||
+        topic?.category?.read_restricted;
 
       return Sharing.activeSources(
         this.siteSettings.share_links,
@@ -60,13 +76,7 @@ export default Controller.extend(
     },
 
     @action
-    onChangeUsers(usernames) {
-      this.set("users", usernames.uniq());
-    },
-
-    @action
     share(source) {
-      this.set("showNotifyUsers", false);
       Sharing.shareSource(source, {
         title: this.topic.title,
         url: this.url,
@@ -74,51 +84,7 @@ export default Controller.extend(
     },
 
     @action
-    toggleNotifyUsers() {
-      if (this.showNotifyUsers) {
-        this.set("showNotifyUsers", false);
-      } else {
-        this.setProperties({
-          showNotifyUsers: true,
-          users: [],
-        });
-      }
-    },
-
-    @action
-    notifyUsers() {
-      if (this.users.length === 0) {
-        return;
-      }
-
-      ajax(`/t/${this.topic.id}/invite-notify`, {
-        type: "POST",
-        data: {
-          usernames: this.users,
-          post_number: this.post ? this.post.post_number : undefined,
-        },
-      })
-        .then(() => {
-          this.setProperties({ showNotifyUsers: false });
-          this.appEvents.trigger("modal-body:flash", {
-            text: I18n.t("topic.share.notify_users.success", {
-              count: this.users.length,
-              username: this.users[0],
-            }),
-            messageClass: "success",
-          });
-        })
-        .catch((error) => {
-          this.appEvents.trigger("modal-body:flash", {
-            text: extractError(error),
-            messageClass: "error",
-          });
-        });
-    },
-
-    @action
     inviteUsers() {
-      this.set("showNotifyUsers", false);
       const controller = showModal("create-invite");
       controller.setProperties({
         inviteToTopic: true,
@@ -128,6 +94,16 @@ export default Controller.extend(
         topicId: this.topic.id,
         topicTitle: this.topic.title,
       });
+    },
+
+    @action
+    replyAsNewTopic() {
+      const postStream = this.topic.postStream;
+      const postId = this.post?.id || postStream.findPostIdForPostNumber(1);
+      const post = postStream.findLoadedPost(postId);
+      const topicController = getOwner(this).lookup("controller:topic");
+      topicController.actions.replyAsNewTopic.call(topicController, post);
+      this.send("closeModal");
     },
 
     restrictedGroupWarning() {

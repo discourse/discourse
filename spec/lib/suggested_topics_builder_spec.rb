@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
 require 'suggested_topics_builder'
 
 describe SuggestedTopicsBuilder do

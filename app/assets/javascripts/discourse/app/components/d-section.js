@@ -1,24 +1,18 @@
 import deprecated from "discourse-common/lib/deprecated";
 import Component from "@ember/component";
 import { scrollTop } from "discourse/mixins/scroll-top";
+import { scheduleOnce } from "@ember/runloop";
 
 // Can add a body class from within a component, also will scroll to the top automatically.
-export default Component.extend({
-  tagName: null,
-  pageClass: null,
-  bodyClass: null,
-  scrollTop: true,
+export default class extends Component {
+  tagName = null;
+  pageClass = null;
+  bodyClass = null;
+  scrollTop = true;
+  currentClasses = new Set();
 
   didInsertElement() {
     this._super(...arguments);
-
-    if (this.pageClass) {
-      document.body.classList.add(`${this.pageClass}-page`);
-    }
-
-    if (this.bodyClass) {
-      document.body.classList.add(...this.bodyClass.split(" "));
-    }
 
     if (this.scrollTop === "false") {
       deprecated("Uses boolean instead of string for scrollTop.", {
@@ -34,17 +28,42 @@ export default Component.extend({
     }
 
     scrollTop();
-  },
+  }
+
+  didReceiveAttrs() {
+    this._super(...arguments);
+    scheduleOnce("afterRender", this, this._updateClasses);
+  }
 
   willDestroyElement() {
     this._super(...arguments);
+    scheduleOnce("afterRender", this, this._removeClasses);
+  }
 
+  _updateClasses() {
+    if (this.isDestroying || this.isDestroyed) {
+      return;
+    }
+
+    const desiredClasses = new Set();
     if (this.pageClass) {
-      document.body.classList.remove(`${this.pageClass}-page`);
+      desiredClasses.add(`${this.pageClass}-page`);
+    }
+    if (this.bodyClass) {
+      for (const bodyClass of this.bodyClass.split(" ")) {
+        desiredClasses.add(bodyClass);
+      }
     }
 
-    if (this.bodyClass) {
-      document.body.classList.remove(...this.bodyClass.split(" "));
-    }
-  },
-});
+    document.body.classList.add(...desiredClasses);
+    const removeClasses = [...this.currentClasses].filter(
+      (c) => !desiredClasses.has(c)
+    );
+    document.body.classList.remove(...removeClasses);
+    this.currentClasses = desiredClasses;
+  }
+
+  _removeClasses() {
+    document.body.classList.remove(...this.currentClasses);
+  }
+}

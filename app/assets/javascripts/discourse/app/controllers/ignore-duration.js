@@ -17,7 +17,10 @@ export default Controller.extend(ModalFunctionality, {
       }
       this.set("loading", true);
       this.model
-        .updateNotificationLevel("ignore", this.ignoredUntil)
+        .updateNotificationLevel({
+          level: "ignored",
+          expiringAt: this.ignoredUntil,
+        })
         .then(() => {
           this.set("model.ignored", true);
           this.set("model.muted", false);

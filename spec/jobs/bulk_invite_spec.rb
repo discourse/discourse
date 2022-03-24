@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe Jobs::BulkInvite do
   describe '#execute' do
     fab!(:user) { Fabricate(:user) }

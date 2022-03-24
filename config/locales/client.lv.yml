@@ -295,11 +295,6 @@ lv:
       invalid_custom_datetime: "Norādītais datums un laiks nav derīgi. Lūdzu, mēģiniet vēlreiz."
       list_permission_denied: "Jums nav atļaujas skatīt šī lietotāja grāmatzīmes."
       no_user_bookmarks: "Jums nav ziņu ar grāmatzīmēm; grāmatzīmes ļauj ātri atsaukties uz konkrētām ziņām."
-      auto_delete_preference:
-        label: "Automātiski dzēst"
-        never: "Nekad"
-        when_reminder_sent: "Kad atgādinājums ir nosūtīts"
-        on_owner_reply: "Pēc tam, kad es atbildēšu uz šo tēmu"
       search_placeholder: "Meklējiet grāmatzīmes pēc nosaukuma, tēmas nosaukuma vai ziņas satura"
       search: "Meklēt"
       reminders:
@@ -344,8 +339,8 @@ lv:
     switch_to_anon: "Ieiet anonīmajā režīmā"
     switch_from_anon: "Iziet no anonīmā režīma"
     banner:
-      close: "Aizvērt šo baneri."
-      edit: "Rediģēt šo banneri >>"
+      close: "Aizvērt šo baneri"
+      edit: "Labot"
     pwa:
       install_banner: "Vai vēlaties <a href>instalēt %{title} šajā ierīcē?</a>"
     choose_topic:
@@ -3067,7 +3062,6 @@ lv:
         delete: "Dzēst"
         color: "Krāsa"
         opacity: "Caurspīdīgums"
-        copy: "Kopēt"
         copy_to_clipboard: "Kopēt uz starpliktuvi (clipboard)"
         copied_to_clipboard: "Nokopēts uz starpliktuvi (clipboard)"
         copy_to_clipboard_error: "Radās kļūda, kopējot uz starpliktuvi (clipboard)"

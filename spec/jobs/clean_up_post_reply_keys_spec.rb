@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 RSpec.describe Jobs::CleanUpPostReplyKeys do
   it 'removes old post_reply_keys' do
     freeze_time

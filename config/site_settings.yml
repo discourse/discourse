@@ -554,7 +554,7 @@ users:
   reserved_usernames:
     type: list
     list_type: compact
-    default: "admin|moderator|administrator|mod|sys|system|community|info|you|name|username|user|nickname|discourse|discourseorg|discourseforum|support"
+    default: "admin|moderator|administrator|mod|sys|system|community|info|you|name|username|user|nickname|discourse|discourseorg|discourseforum|support|all|here"
   min_password_length:
     client: true
     default: 10
@@ -1397,10 +1397,20 @@ files:
     type: list
     list_type: compact
     validator: "ColorListValidator"
-  selectable_avatars_enabled:
-    default: false
+  selectable_avatars_mode:
+    default: disabled
     client: true
-    validator: "SelectableAvatarsEnabledValidator"
+    type: enum
+    choices:
+      - disabled
+      - everyone
+      - tl1
+      - tl2
+      - tl3
+      - tl4
+      - staff
+      - no_one
+    validator: "SelectableAvatarsModeValidator"
   selectable_avatars:
     default: ""
     client: true
@@ -1595,7 +1605,7 @@ security:
   enable_escaped_fragments: true
   allow_index_in_robots_txt: true
   allow_indexing_non_canonical_urls:
-    default: false
+    default: true
     hidden: true
   moderators_manage_categories_and_groups: false
   moderators_change_post_ownership:

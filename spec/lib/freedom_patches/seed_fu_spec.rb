@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe "seed-fu patch" do
   it "does not modify a sequence on an existing table" do
     u = User.create!(username: "test1", email: "test1@example.com")

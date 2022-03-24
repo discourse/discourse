@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe BackupRestore::Backuper do
   it 'returns a non-empty parameterized title when site title contains unicode' do
     SiteSetting.title = 'Ɣ'

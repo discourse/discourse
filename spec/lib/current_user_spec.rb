@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe CurrentUser do
   it "allows us to lookup a user from our environment" do
     user = Fabricate(:user, active: true)

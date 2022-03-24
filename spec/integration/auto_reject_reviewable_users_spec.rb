@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe "auto reject reviewable users" do
   context "reviewable users" do
     fab!(:old_user) { Fabricate(:reviewable, created_at: 80.days.ago) }

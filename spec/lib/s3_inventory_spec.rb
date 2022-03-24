@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
 require "s3_helper"
 require "s3_inventory"
 require "file_store/s3_store"

@@ -84,6 +84,7 @@ import { registerTopicFooterDropdown } from "discourse/lib/register-topic-footer
 import { registerDesktopNotificationHandler } from "discourse/lib/desktop-notifications";
 import { replaceFormatter } from "discourse/lib/utilities";
 import { replaceTagRenderer } from "discourse/lib/render-tag";
+import { registerCustomLastUnreadUrlCallback } from "discourse/models/topic";
 import { setNewCategoryDefaultColors } from "discourse/routes/new-category";
 import { addSearchResultsCallback } from "discourse/lib/search";
 import {
@@ -98,7 +99,7 @@ import { consolePrefix } from "discourse/lib/source-identifier";
 // based on Semantic Versioning 2.0.0. Please update the changelog at
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
-const PLUGIN_API_VERSION = "1.1.0";
+const PLUGIN_API_VERSION = "1.2.0";
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
 function canModify(klass, type, resolverName, changes) {
@@ -831,7 +832,7 @@ class PluginApi {
   }
 
   /**
-   * Register a desktop notificaiton handler
+   * Register a desktop notification handler
    *
    * ```javascript
    * api.registerDesktopNotificationHandler((data, siteSettings, user) => {
@@ -1291,6 +1292,21 @@ class PluginApi {
   }
 
   /**
+   * Register a custom last unread url for a topic list item.
+   * If a non-null value is returned, it will be used right away.
+   *
+   * Example:
+   *
+   * function testLastUnreadUrl(context) {
+   *   return context.urlForPostNumber(1);
+   * }
+   * api.registerCustomLastUnreadUrlCallback(testLastUnreadUrl);
+   **/
+  registerCustomLastUnreadUrlCallback(fn) {
+    registerCustomLastUnreadUrlCallback(fn);
+  }
+
+  /**
    * Registers custom languages for use with HighlightJS.
    *
    * See https://highlightjs.readthedocs.io/en/latest/language-guide.html
@@ -1693,11 +1709,18 @@ function decorate(klass, evt, cb, id) {
   }
 
   const mixin = {};
-  mixin["_decorate_" + _decorateId++] = on(evt, function (elem) {
+  let name = `_decorate_${_decorateId++}`;
+
+  if (id) {
+    name += `_${id.replaceAll(/\W/g, "_")}`;
+  }
+
+  mixin[name] = on(evt, function (elem) {
     elem = elem || this.element;
     if (elem) {
       cb(elem);
     }
   });
+
   klass.reopen(mixin);
 }

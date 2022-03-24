@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe Jobs::CleanDismissedTopicUsers do
   fab!(:user) { Fabricate(:user, created_at: 1.days.ago, previous_visit_at: 1.days.ago) }
   fab!(:topic) { Fabricate(:topic, created_at: 5.hours.ago) }

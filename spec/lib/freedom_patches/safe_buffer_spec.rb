@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe ActiveSupport::SafeBuffer do
   it "can cope with encoding weirdness" do
     buffer = ActiveSupport::SafeBuffer.new

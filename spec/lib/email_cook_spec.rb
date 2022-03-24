@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
 require 'email_cook'
 require 'pretty_text'
 
@@ -16,28 +15,28 @@ describe EmailCook do
   end
 
   it "doesn't add linebreaks to long lines" do
-    long = plaintext(<<~LONG_EMAIL)
+    long = plaintext(<<~EMAIL)
       Hello,
 
       Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc convallis volutpat
       risus. Nulla ac faucibus quam, quis cursus lorem. Sed rutrum eget nunc sed accumsan.
       Vestibulum feugiat mi vitae turpis tempor dignissim.
-    LONG_EMAIL
+    EMAIL
 
-    long_cooked = (+<<~LONG_COOKED).strip!
+    long_cooked = (+<<~HTML).strip!
       Hello,
       <br>
       <br>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc convallis volutpat
       risus. Nulla ac faucibus quam, quis cursus lorem. Sed rutrum eget nunc sed accumsan.
       Vestibulum feugiat mi vitae turpis tempor dignissim.
       <br>
-    LONG_COOKED
+    HTML
 
     expect(cook(long)).to eq(long_cooked)
   end
 
   it "replaces a blank line with 2 linebreaks" do
-    long = plaintext(<<~LONG_EMAIL)
+    long = plaintext(<<~EMAIL)
       Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc convallis volutpat
       risus.
       Nulla ac faucibus quam, quis cursus lorem. Sed rutrum eget nunc sed accumsan.
@@ -45,9 +44,9 @@ describe EmailCook do
       Vestibulum feugiat mi vitae turpis tempor dignissim.
 
       Stet clita kasd gubergren.
-    LONG_EMAIL
+    EMAIL
 
-    long_cooked = (+<<~LONG_COOKED).strip!
+    long_cooked = (+<<~HTML).strip!
       Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc convallis volutpat
       risus.
       <br>Nulla ac faucibus quam, quis cursus lorem. Sed rutrum eget nunc sed accumsan.
@@ -56,13 +55,13 @@ describe EmailCook do
       <br>
       <br>Stet clita kasd gubergren.
       <br>
-    LONG_COOKED
+    HTML
 
     expect(cook(long)).to eq(long_cooked)
   end
 
   it "escapes HTML" do
-    long = plaintext(<<~LONG_EMAIL)
+    long = plaintext(<<~EMAIL)
       Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
       <form name="f1" method="post" action="test.html" onsubmit="javascript:showAlert()">
@@ -70,9 +69,9 @@ describe EmailCook do
       </form>
 
       Nunc convallis volutpat risus.
-    LONG_EMAIL
+    EMAIL
 
-    long_cooked = (+<<~LONG_COOKED).strip!
+    long_cooked = (+<<~HTML).strip!
       Lorem ipsum dolor sit amet, consectetur adipiscing elit.
       <br>
       <br>&lt;form name=&quot;f1&quot; method=&quot;post&quot; action=&quot;test.html&quot; onsubmit=&quot;javascript:showAlert()&quot;&gt;
@@ -81,29 +80,29 @@ describe EmailCook do
       <br>
       <br>Nunc convallis volutpat risus.
       <br>
-    LONG_COOKED
+    HTML
 
     expect(cook(long)).to eq(long_cooked)
   end
 
   it "replaces indentation of more than 2 spaces with corresponding amount of non-breaking spaces" do
     nbsp = "\u00A0"
-    long = plaintext(<<~LONG_EMAIL)
+    long = plaintext(<<~EMAIL)
       Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
           this is intended by 4 spaces
        this is intended by 1 space
       no indentation, but lots       of spaces
-    LONG_EMAIL
+    EMAIL
 
-    long_cooked = (+<<~LONG_COOKED).strip!
+    long_cooked = (+<<~HTML).strip!
       Lorem ipsum dolor sit amet, consectetur adipiscing elit.
       <br>
       <br>#{nbsp}#{nbsp}#{nbsp}#{nbsp}this is intended by 4 spaces
       <br> this is intended by 1 space
       <br>no indentation, but lots       of spaces
       <br>
-    LONG_COOKED
+    HTML
 
     expect(cook(long)).to eq(long_cooked)
   end
@@ -129,7 +128,7 @@ describe EmailCook do
   end
 
   it "it works and does not interpret Markdown in plaintext and elided" do
-    long = <<~LONG_EMAIL
+    long = <<~EMAIL
       [plaintext]
       *Lorem ipsum* dolor sit amet, consectetur adipiscing elit.
       [/plaintext]
@@ -139,9 +138,9 @@ describe EmailCook do
       [elided]
       At vero eos *et accusam* et justo duo dolores et ea rebum.
       [/elided]
-    LONG_EMAIL
+    EMAIL
 
-    long_cooked = <<~LONG_COOKED
+    long_cooked = <<~HTML
       *Lorem ipsum* dolor sit amet, consectetur adipiscing elit.<br>
       <br><img src='some_image.png' width='100' height='100'>
       <br><br>
@@ -152,22 +151,22 @@ describe EmailCook do
       At vero eos *et accusam* et justo duo dolores et ea rebum.<br>
 
       </details>
-    LONG_COOKED
+    HTML
 
     expect(cook(long)).to eq(long_cooked)
   end
 
   it "works without attachments" do
-    long = <<~LONG_EMAIL
+    long = <<~EMAIL
       [plaintext]
       *Lorem ipsum* dolor sit amet, consectetur adipiscing elit.
       [/plaintext]
       [elided]
       At vero eos *et accusam* et justo duo dolores et ea rebum.
       [/elided]
-    LONG_EMAIL
+    EMAIL
 
-    long_cooked = <<~LONG_COOKED
+    long_cooked = <<~HTML
       *Lorem ipsum* dolor sit amet, consectetur adipiscing elit.<br>
       <br><br>
 
@@ -177,7 +176,7 @@ describe EmailCook do
       At vero eos *et accusam* et justo duo dolores et ea rebum.<br>
 
       </details>
-    LONG_COOKED
+    HTML
 
     expect(cook(long)).to eq(long_cooked)
   end

@@ -324,11 +324,6 @@ cs:
       invalid_custom_datetime: "Zadané datum a čas jsou neplatné, zkuste to prosím znovu."
       list_permission_denied: "Nemáte oprávnění k zobrazení záložek tohoto uživatele."
       no_user_bookmarks: "Nemáte žádné záložky; záložky vám umožňují rychle odkazovat na konkrétní příspěvky."
-      auto_delete_preference:
-        label: "Automaticky smazat"
-        never: "Nikdy"
-        when_reminder_sent: "Jakmile je připomenutí odesláno"
-        on_owner_reply: "Po odpovědi na toto téma"
       search_placeholder: "Hledat záložky podle názvu, názvu tématu nebo obsahu příspěvku"
       search: "Vyhledat"
       reminders:
@@ -393,8 +388,8 @@ cs:
     switch_to_anon: "Vstoupit do anonymního módu"
     switch_from_anon: "Opustit anonymní mód"
     banner:
-      close: "Odmítnout tento banner."
-      edit: "Editujte tento banner >>"
+      close: "Odmítnout tento banner"
+      edit: "Upravit"
     pwa:
       install_banner: "Chcete <a href>nainstalovat %{title} na toto zařízení?</a>"
     choose_topic:
@@ -3123,7 +3118,6 @@ cs:
         delete: "Smazat"
         color: "Barva"
         opacity: "Neprůhlednost"
-        copy: "Kopírovat"
         copy_to_clipboard: "Kopírovat do schránky"
         copied_to_clipboard: "Zkopírováno do schránky"
         copy_to_clipboard_error: "Při kopírování dat do schránky došlo k chybě"

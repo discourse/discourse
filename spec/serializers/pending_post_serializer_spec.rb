@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe PendingPostSerializer do
   subject(:serializer) { described_class.new(post, scope: guardian, root: false) }
 

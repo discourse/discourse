@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Onebox::Engine::AllowlistedGenericOnebox do
   describe ".===" do
     it "matches any domain" do

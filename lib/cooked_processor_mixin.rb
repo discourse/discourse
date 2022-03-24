@@ -3,7 +3,7 @@
 module CookedProcessorMixin
 
   def post_process_oneboxes
-    limit = SiteSetting.max_oneboxes_per_post
+    limit = SiteSetting.max_oneboxes_per_post - @doc.css("aside.onebox, a.inline-onebox").size
     oneboxes = {}
     inlineOneboxes = {}
 
@@ -330,8 +330,9 @@ module CookedProcessorMixin
   end
 
   def create_node(tag_name, klass)
-    node = Nokogiri::XML::Node.new(tag_name, @doc)
+    node = @doc.document.create_element(tag_name)
     node["class"] = klass if klass.present?
+    @doc.add_child(node)
     node
   end
 
