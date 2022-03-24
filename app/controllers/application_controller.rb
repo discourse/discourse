@@ -260,7 +260,7 @@ class ApplicationController < ActionController::Base
     render json: { error: I18n.t(e.error_translation_key) }, status: e.status_code
   end
 
-  def redirect_with_client_support(url, options)
+  def redirect_with_client_support(url, options = {})
     if request.xhr?
       response.headers['Discourse-Xhr-Redirect'] = 'true'
       render plain: url
