@@ -2877,7 +2877,7 @@ describe UsersController do
   end
 
   describe "#notification_level" do
-    it 'raises an error when an invalid value is passed in `notification_level` arg' do
+    it 'raises an error when `notification_level` param is not a valid value' do
       sign_in(user)
       invalid_arg = "invalid"
       put "/u/#{user.username}/notification_level.json", params: { notification_level: invalid_arg }
