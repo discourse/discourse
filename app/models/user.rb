@@ -428,7 +428,7 @@ class User < ActiveRecord::Base
       user_id: id,
       message_type: 'welcome_staff',
       message_options: {
-        role: role
+        role: role.to_s
       }
     )
   end
