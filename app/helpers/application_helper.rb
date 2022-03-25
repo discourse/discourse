@@ -333,17 +333,19 @@ module ApplicationHelper
   end
 
   def render_sitelinks_search_tag
-    json = {
-      '@context' => 'http://schema.org',
-      '@type' => 'WebSite',
-      url: Discourse.base_url,
-      potentialAction: {
-        '@type' => 'SearchAction',
-        target: "#{Discourse.base_url}/search?q={search_term_string}",
-        'query-input' => 'required name=search_term_string',
+    if current_page?('/') || current_page?(Discourse.base_path)
+      json = {
+        '@context' => 'http://schema.org',
+        '@type' => 'WebSite',
+        url: Discourse.base_url,
+        potentialAction: {
+          '@type' => 'SearchAction',
+          target: "#{Discourse.base_url}/search?q={search_term_string}",
+          'query-input' => 'required name=search_term_string',
+        }
       }
-    }
-    content_tag(:script, MultiJson.dump(json).html_safe, type: 'application/ld+json')
+      content_tag(:script, MultiJson.dump(json).html_safe, type: 'application/ld+json')
+    end
   end
 
   def gsub_emoji_to_unicode(str)
