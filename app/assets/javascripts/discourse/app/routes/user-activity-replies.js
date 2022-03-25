@@ -5,10 +5,15 @@ import { action } from "@ember/object";
 
 export default UserActivityStreamRoute.extend({
   userActionType: UserAction.TYPES["posts"],
-  emptyStateOthers: I18n.t("user_activity.no_replies_others"),
 
   emptyState() {
-    const title = I18n.t("user_activity.no_replies_title");
+    const user = this.modelFor("user");
+
+    const title = this.isCurrentUser(user)
+      ? I18n.t("user_activity.no_replies_title")
+      : I18n.t("user_activity.no_replies_title_others", {
+          username: user.username,
+        });
     const body = "";
     return { title, body };
   },
