@@ -168,14 +168,19 @@ export default Controller.extend(CanCheckEmails, {
     "currentUser.ignored_ids",
     "model.ignored",
     "model.muted",
-    function () {
-      if (this.get("model.ignored")) {
-        return "changeToIgnored";
-      } else if (this.get("model.muted")) {
-        return "changeToMuted";
-      } else {
-        return "changeToNormal";
-      }
+    {
+      get() {
+        if (this.get("model.ignored")) {
+          return "changeToIgnored";
+        } else if (this.get("model.muted")) {
+          return "changeToMuted";
+        } else {
+          return "changeToNormal";
+        }
+      },
+      set(key, value) {
+        return value;
+      },
     }
   ),
 
@@ -250,7 +255,7 @@ export default Controller.extend(CanCheckEmails, {
     },
 
     updateNotificationLevel(level) {
-      return this.model.updateNotificationLevel({ level });
+      return this.model.updateNotificationLevel(level);
     },
   },
 });
