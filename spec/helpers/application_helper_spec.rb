@@ -87,6 +87,45 @@ describe ApplicationHelper do
     end
   end
 
+  describe "render_sitelinks_search_tag" do
+    context "for non-subfolder install" do
+      context "when on homepage" do
+        it "will return sitelinks search tag" do
+          helper.stubs(:current_page?).returns(false)
+          helper.stubs(:current_page?).with('/').returns(true)
+          expect(helper.render_sitelinks_search_tag).to include('"@type":"SearchAction"')
+        end
+      end
+      context "when not on homepage" do
+        it "will not return sitelinks search tag" do
+          helper.stubs(:current_page?).returns(true)
+          helper.stubs(:current_page?).with('/').returns(false)
+          helper.stubs(:current_page?).with(Discourse.base_path).returns(false)
+          expect(helper.render_sitelinks_search_tag).to be_nil
+        end
+      end
+    end
+    context "for subfolder install" do
+      context "when on homepage" do
+        it "will return sitelinks search tag" do
+          Discourse.stubs(:base_path).returns('/subfolder-base-path/')
+          helper.stubs(:current_page?).returns(false)
+          helper.stubs(:current_page?).with(Discourse.base_path).returns(true)
+          expect(helper.render_sitelinks_search_tag).to include('"@type":"SearchAction"')
+        end
+      end
+      context "when not on homepage" do
+        it "will not return sitelinks search tag" do
+          Discourse.stubs(:base_path).returns('/subfolder-base-path/')
+          helper.stubs(:current_page?).returns(true)
+          helper.stubs(:current_page?).with('/').returns(false)
+          helper.stubs(:current_page?).with(Discourse.base_path).returns(false)
+          expect(helper.render_sitelinks_search_tag).to be_nil
+        end
+      end
+    end
+  end
+
   describe "application_logo_url" do
     context "when a dark color scheme is active" do
       before do
