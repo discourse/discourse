@@ -254,8 +254,8 @@ export default Controller.extend(CanCheckEmails, {
       bootbox.dialog(message, buttons, { classes: "delete-user-modal" });
     },
 
-    updateNotificationLevel(level) {
-      return this.model.updateNotificationLevel(level);
+    updateNotificationLevel(params) {
+      return this.model.updateNotificationLevel(params);
     },
   },
 });
