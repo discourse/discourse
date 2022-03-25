@@ -1,4 +1,5 @@
 import { bind } from "discourse-common/utils/decorators";
+import deprecated from "discourse-common/lib/deprecated";
 import I18n from "I18n";
 import Mixin from "@ember/object/mixin";
 import { generateLinkifyFunction } from "discourse/lib/text";
@@ -49,13 +50,8 @@ export default Mixin.create({
 
   // ensures textarea scroll position is correct
   //
-  // TODO (martin) clean up this indirection, functions used outside this
-  // file should not be prefixed with lowercase
+  // TODO (martin) (2022-06-25) Remove the _ version of this function.
   focusTextArea() {
-    this._focusTextArea();
-  },
-
-  _focusTextArea() {
     if (!this.element || this.isDestroying || this.isDestroyed) {
       return;
     }
@@ -68,33 +64,33 @@ export default Mixin.create({
     this._textarea.focus();
   },
 
-  // TODO (martin) clean up this indirection, functions used outside this
-  // file should not be prefixed with lowercase
-  insertBlock(text) {
-    this._insertBlock(text);
+  _focusTextArea() {
+    deprecated("focusTextArea (without _) should be used");
+    this.focusTextArea();
   },
 
-  _insertBlock(text) {
+  // TODO (martin) (2022-06-25) Remove the _ version of this function.
+  insertBlock(text) {
     this._addBlock(this.getSelected(), text);
   },
 
-  // TODO (martin) clean up this indirection, functions used outside this
-  // file should not be prefixed with lowercase
-  insertText(text, options) {
-    this._insertText(text, options);
+  _insertBlock(text) {
+    deprecated("insertBlock (without _) should be used");
+    this.insertBlock(text);
   },
 
-  _insertText(text, options) {
+  // TODO (martin) (2022-06-25) Remove the _ version of this function.
+  insertText(text, options) {
     this._addText(this.getSelected(), text, options);
   },
 
-  // TODO (martin) clean up this indirection, functions used outside this
-  // file should not be prefixed with lowercase
-  getSelected(trimLeading, opts) {
-    return this._getSelected(trimLeading, opts);
+  _insertText(text, options) {
+    deprecated("insertText (without _) should be used");
+    this.insertText(text, options);
   },
 
-  _getSelected(trimLeading, opts) {
+  // TODO (martin) (2022-06-25) Remove the _ version of this function.
+  getSelected(trimLeading, opts) {
     if (!this.ready || !this.element) {
       return;
     }
@@ -129,13 +125,13 @@ export default Mixin.create({
     }
   },
 
-  // TODO (martin) clean up this indirection, functions used outside this
-  // file should not be prefixed with lowercase
-  selectText(from, length, opts = { scroll: true }) {
-    this._selectText(from, length, opts);
+  _getSelected(trimLeading, opts) {
+    deprecated("getSelected (without _) should be used");
+    return this.getSelected(trimLeading, opts);
   },
 
-  _selectText(from, length, opts = { scroll: true }) {
+  // TODO (martin) (2022-06-25) Remove the _ version of this function.
+  selectText(from, length, opts = { scroll: true }) {
     next(() => {
       if (!this.element) {
         return;
@@ -154,13 +150,13 @@ export default Mixin.create({
     });
   },
 
-  // TODO (martin) clean up this indirection, functions used outside this
-  // file should not be prefixed with lowercase
-  replaceText(oldVal, newVal, opts = {}) {
-    this._replaceText(oldVal, newVal, opts);
+  _selectText(from, length, opts = { scroll: true }) {
+    deprecated("selectText (without _) should be used");
+    this.selectText(from, length, opts);
   },
 
-  _replaceText(oldVal, newVal, opts = {}) {
+  // TODO (martin) (2022-06-25) Remove the _ version of this function.
+  replaceText(oldVal, newVal, opts = {}) {
     const val = this.value;
     const needleStart = val.indexOf(oldVal);
 
@@ -203,13 +199,13 @@ export default Mixin.create({
     }
   },
 
-  // TODO (martin) clean up this indirection, functions used outside this
-  // file should not be prefixed with lowercase
-  applySurround(sel, head, tail, exampleKey, opts) {
-    this._applySurround(sel, head, tail, exampleKey, opts);
+  _replaceText(oldVal, newVal, opts = {}) {
+    deprecated("replaceText (without _) should be used");
+    this.replaceText(oldVal, newVal, opts);
   },
 
-  _applySurround(sel, head, tail, exampleKey, opts) {
+  // TODO (martin) (2022-06-25) Remove the _ version of this function.
+  applySurround(sel, head, tail, exampleKey, opts) {
     const pre = sel.pre;
     const post = sel.post;
 
@@ -275,6 +271,11 @@ export default Mixin.create({
         }
       }
     }
+  },
+
+  _applySurround(sel, head, tail, exampleKey, opts) {
+    deprecated("applySurround (without _) should be used");
+    this.applySurround(sel, head, tail, exampleKey, opts);
   },
 
   // perform the same operation over many lines of text
@@ -347,13 +348,8 @@ export default Mixin.create({
     schedule("afterRender", this, this._focusTextArea);
   },
 
-  // TODO (martin) clean up this indirection, functions used outside this
-  // file should not be prefixed with lowercase
+  // TODO (martin) (2022-06-25) Remove the _ version of this function.
   addText(sel, text, options) {
-    this._addText(sel, text, options);
-  },
-
-  _addText(sel, text, options) {
     if (options && options.ensureSpace) {
       if ((sel.pre + "").length > 0) {
         if (!sel.pre.match(/\s$/)) {
@@ -377,13 +373,13 @@ export default Mixin.create({
     this._focusTextArea();
   },
 
-  // TODO (martin) clean up this indirection, functions used outside this
-  // file should not be prefixed with lowercase
-  extractTable(text) {
-    return this._extractTable(text);
+  _addText(sel, text, options) {
+    deprecated("addText (without _) should be used");
+    this.addText(sel, text, options);
   },
 
-  _extractTable(text) {
+  // TODO (martin) (2022-06-25) Remove the _ version of this function.
+  extractTable(text) {
     if (text.endsWith("\n")) {
       text = text.substring(0, text.length - 1);
     }
@@ -420,15 +416,20 @@ export default Mixin.create({
     return null;
   },
 
-  // TODO (martin) clean up this indirection, functions used outside this
-  // file should not be prefixed with lowercase
+  _extractTable(text) {
+    deprecated("extractTable (without _) should be used");
+    return this.extractTable(text);
+  },
+
+  // TODO (martin) (2022-06-25) Remove the _ version of this function.
   isInside(text, regex) {
-    return this._isInside(text, regex);
+    const matches = text.match(regex);
+    return matches && matches.length % 2;
   },
 
   _isInside(text, regex) {
-    const matches = text.match(regex);
-    return matches && matches.length % 2;
+    deprecated("isInside (without _) should be used");
+    return this.isInside(text, regex);
   },
 
   @bind
