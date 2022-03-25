@@ -3,8 +3,8 @@
 class CreatePostRevisions < ActiveRecord::Migration[4.2]
   def up
     create_table :post_revisions do |t|
-      t.belongs_to :user
-      t.belongs_to :post
+      t.integer :user_id
+      t.integer :post_id
       t.text :modifications
       t.integer :number
       t.timestamps null: false

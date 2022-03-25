@@ -3,7 +3,7 @@
 class CreateReplies < ActiveRecord::Migration[4.2]
   def change
     create_table :post_replies, id: false do |t|
-      t.references :post
+      t.integer :post_id
       t.integer :reply_id
       t.timestamps null: false
     end

@@ -3,7 +3,7 @@
 class CreateArchetypeOptions < ActiveRecord::Migration[4.2]
   def change
     create_table :archetype_options do |t|
-      t.references :archetype, null: false
+      t.integer :archetype_id, null: false
       t.string :key, null: false
       t.integer :option_type, null: false
       t.timestamps null: false

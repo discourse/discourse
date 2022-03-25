@@ -9,8 +9,8 @@ class CreateTagGroups < ActiveRecord::Migration[4.2]
     end
 
     create_table :tag_group_memberships do |t|
-      t.references :tag,       null: false
-      t.references :tag_group, null: false
+      t.integer :tag_id, null: false
+      t.integer :tag_group_id, null: false
       t.timestamps null: false
     end
 

@@ -40,7 +40,3 @@ end
 #  index_user_security_keys_on_public_key               (public_key)
 #  index_user_security_keys_on_user_id                  (user_id)
 #
-# Foreign Keys
-#
-#  fk_rails_...  (user_id => users.id)
-#

@@ -6,7 +6,7 @@ class CreateTopTopics < ActiveRecord::Migration[4.2]
 
   def change
     create_table :top_topics, force: true do |t|
-      t.belongs_to :topic
+      t.integer :topic_id
 
       PERIODS.each do |period|
         SORT_ORDERS.each do |sort|

@@ -3,7 +3,7 @@
 class CreateUserSecurityKeys < ActiveRecord::Migration[5.2]
   def up
     create_table :user_security_keys do |t|
-      t.references :user, null: false, index: true, foreign_key: true
+      t.bigint :user_id, null: false
       t.string :credential_id, null: false
       t.string :public_key, null: false, index: true
       t.integer :factor_type, null: false, default: 0, index: true
@@ -15,6 +15,7 @@ class CreateUserSecurityKeys < ActiveRecord::Migration[5.2]
     end
 
     add_index :user_security_keys, :credential_id, unique: true
+    add_index :user_security_keys, :user_id
     add_index :user_security_keys, :last_used
   end
 

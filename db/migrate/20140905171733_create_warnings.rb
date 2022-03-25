@@ -3,8 +3,8 @@
 class CreateWarnings < ActiveRecord::Migration[4.2]
   def change
     create_table :warnings do |t|
-      t.references :topic, null: false
-      t.references :user, null: false
+      t.integer :topic_id, null: false
+      t.integer :user_id, null: false
       t.integer :created_by_id, null: false
       t.timestamps null: false
     end

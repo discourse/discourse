@@ -9,14 +9,14 @@ class CreateTags < ActiveRecord::Migration[4.2]
     end
 
     create_table :topic_tags do |t|
-      t.references :topic, null: false
-      t.references :tag,   null: false
+      t.integer :topic_id, null: false
+      t.integer :tag_id, null: false
       t.timestamps null: false
     end
 
     create_table :tag_users do |t|
-      t.references :tag,  null: false
-      t.references :user, null: false
+      t.integer :tag_id, null: false
+      t.integer :user_id, null: false
       t.integer    :notification_level, null: false
       t.timestamps null: false
     end

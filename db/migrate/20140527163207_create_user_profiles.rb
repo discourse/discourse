@@ -3,7 +3,7 @@
 class CreateUserProfiles < ActiveRecord::Migration[4.2]
   def up
     create_table :user_profiles, id: false do |t|
-      t.references :user
+      t.integer :user_id, null: false
       t.string :location
     end
     execute "ALTER TABLE user_profiles ADD PRIMARY KEY (user_id)"

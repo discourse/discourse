@@ -188,9 +188,3 @@ end
 #  index_user_profiles_on_granted_title_badge_id        (granted_title_badge_id)
 #  index_user_profiles_on_profile_background_upload_id  (profile_background_upload_id)
 #
-# Foreign Keys
-#
-#  fk_rails_...  (card_background_upload_id => uploads.id)
-#  fk_rails_...  (granted_title_badge_id => badges.id)
-#  fk_rails_...  (profile_background_upload_id => uploads.id)
-#

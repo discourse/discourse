@@ -3,8 +3,8 @@
 class CreateCategoryTagGroups < ActiveRecord::Migration[4.2]
   def change
     create_table :category_tag_groups do |t|
-      t.references :category,  null: false
-      t.references :tag_group, null: false
+      t.integer :category_id, null: false
+      t.integer :tag_group_id, null: false
       t.timestamps null: false
     end
 

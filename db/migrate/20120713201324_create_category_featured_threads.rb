@@ -3,8 +3,8 @@
 class CreateCategoryFeaturedThreads < ActiveRecord::Migration[4.2]
   def change
     create_table :category_featured_threads, id: false do |t|
-      t.references :category, null: false
-      t.references :forum_thread, null: false
+      t.integer :category_id, null: false
+      t.integer :forum_thread_id, null: false
       t.timestamps null: false
     end
 

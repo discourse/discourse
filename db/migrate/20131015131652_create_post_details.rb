@@ -3,7 +3,7 @@
 class CreatePostDetails < ActiveRecord::Migration[4.2]
   def change
     create_table :post_details do |t|
-      t.belongs_to :post
+      t.integer    :post_id
       t.string     :key
       t.string     :value, size: 512
       t.text       :extra

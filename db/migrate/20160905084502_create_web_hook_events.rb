@@ -3,7 +3,7 @@
 class CreateWebHookEvents < ActiveRecord::Migration[4.2]
   def change
     create_table :web_hook_events do |t|
-      t.belongs_to :web_hook, null: false, index: true
+      t.integer    :web_hook_id, null: false
       t.string     :headers
       t.text       :payload
       t.integer    :status, default: 0
@@ -13,5 +13,7 @@ class CreateWebHookEvents < ActiveRecord::Migration[4.2]
 
       t.timestamps null: false
     end
+
+    add_index :web_hook_events, :web_hook_id
   end
 end

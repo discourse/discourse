@@ -3,8 +3,8 @@
 class CreateTopicRevisions < ActiveRecord::Migration[4.2]
   def up
     create_table :topic_revisions do |t|
-      t.belongs_to :user
-      t.belongs_to :topic
+      t.integer :user_id, null: false
+      t.integer :topic_id, null: false
       t.text :modifications
       t.integer :number
       t.timestamps null: false

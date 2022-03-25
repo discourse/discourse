@@ -3,7 +3,7 @@
 class CreateEmailTokens < ActiveRecord::Migration[4.2]
   def change
     create_table :email_tokens do |t|
-      t.references :user, null: false
+      t.integer :user_id, null: false
       t.string :email, null: false
       t.string :token, null: false
       t.boolean :confirmed, null: false, default: false

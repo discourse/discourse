@@ -40,8 +40,3 @@ end
 #  index_javascript_caches_on_theme_field_id  (theme_field_id)
 #  index_javascript_caches_on_theme_id        (theme_id)
 #
-# Foreign Keys
-#
-#  fk_rails_...  (theme_field_id => theme_fields.id) ON DELETE => cascade
-#  fk_rails_...  (theme_id => themes.id) ON DELETE => cascade
-#

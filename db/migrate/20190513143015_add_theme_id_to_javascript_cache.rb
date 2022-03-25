@@ -22,7 +22,8 @@ class AddThemeIdToJavascriptCache < ActiveRecord::Migration[5.2]
   private
 
   def make_changes
-    add_reference :javascript_caches, :theme, foreign_key: { on_delete: :cascade }
+    add_column :javascript_caches, :theme_id, :bigint, null: true
+    add_index :javascript_caches, :theme_id
     add_foreign_key :javascript_caches, :theme_fields, on_delete: :cascade
 
     begin
