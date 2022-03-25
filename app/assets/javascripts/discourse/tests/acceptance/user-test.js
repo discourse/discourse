@@ -180,26 +180,23 @@ acceptance("User - Saving user options", function (needs) {
   });
 });
 
-acceptance(
-  "User - Notification level when `can_{mute|ignore}_user` are false",
-  function (needs) {
-    needs.user({ username: "eviltrout", id: 1, ignored_ids: [] });
+acceptance("User - Notification level dropdown visibility", function (needs) {
+  needs.user({ username: "eviltrout", id: 1, ignored_ids: [] });
 
-    needs.pretender((server, helper) => {
-      server.get("/u/charlie.json", () => {
-        const cloned = cloneJSON(userFixtures["/u/charlie.json"]);
-        cloned.user.can_ignore_user = false;
-        cloned.user.can_mute_user = false;
-        return helper.response(200, cloned);
-      });
+  needs.pretender((server, helper) => {
+    server.get("/u/charlie.json", () => {
+      const cloned = cloneJSON(userFixtures["/u/charlie.json"]);
+      cloned.user.can_ignore_user = false;
+      cloned.user.can_mute_user = false;
+      return helper.response(200, cloned);
     });
+  });
 
-    test("Notification level button is not rendered", async function (assert) {
-      await visit("/u/charlie");
-      assert.notOk(exists(".user-notifications-dropdown"));
-    });
-  }
-);
+  test("Notification level button is not rendered for user who cannot mute or ignore another user", async function (assert) {
+    await visit("/u/charlie");
+    assert.notOk(exists(".user-notifications-dropdown"));
+  });
+});
 
 acceptance(
   "User - Muting other user with notification level dropdown",
@@ -209,7 +206,6 @@ acceptance(
     needs.pretender((server, helper) => {
       server.get("/u/charlie.json", () => {
         const cloned = cloneJSON(userFixtures["/u/charlie.json"]);
-        cloned.user.can_ignore_user = true;
         cloned.user.can_mute_user = true;
         return helper.response(200, cloned);
       });
@@ -252,7 +248,6 @@ acceptance(
       server.get("/u/charlie.json", () => {
         const cloned = cloneJSON(userFixtures["/u/charlie.json"]);
         cloned.user.can_ignore_user = true;
-        cloned.user.can_mute_user = true;
         return helper.response(200, cloned);
       });
 
