@@ -84,6 +84,11 @@ describe TopicCreator do
     context 'tags' do
       fab!(:tag1) { Fabricate(:tag, name: "fun") }
       fab!(:tag2) { Fabricate(:tag, name: "fun2") }
+      fab!(:tag3) { Fabricate(:tag, name: "fun3") }
+      fab!(:tag4) { Fabricate(:tag, name: "fun4") }
+      fab!(:tag5) { Fabricate(:tag, name: "fun5") }
+      fab!(:tag_group1) { Fabricate(:tag_group, tags: [tag1]) }
+      fab!(:tag_group2) { Fabricate(:tag_group, tags: [tag2]) }
 
       before do
         SiteSetting.tagging_enabled = true
@@ -178,6 +183,203 @@ describe TopicCreator do
           expect(
             TopicCreator.new(user, Guardian.new(admin), valid_attrs.merge(category: category.id)).valid?
           ).to be_truthy
+        end
+      end
+
+      context "when category has restricted tags or tag groups" do
+        fab!(:category) { Fabricate(:category, tags: [tag3], tag_groups: [tag_group1]) }
+
+        it "allows topics without any tags" do
+          tc = TopicCreator.new(
+            user,
+            Guardian.new(user),
+            title: "hello this is a test topic with tags",
+            raw: "hello this is a test topic with tags",
+            category: category.id,
+          )
+          expect(tc.valid?).to eq(true)
+          expect(tc.errors).to be_empty
+          topic = tc.create
+          expect(topic.tags).to be_empty
+        end
+
+        it "allows topics if they use tags only from the tags set that the category restricts" do
+          tc = TopicCreator.new(
+            user,
+            Guardian.new(user),
+            title: "hello this is a test topic with tags",
+            raw: "hello this is a test topic with tags",
+            category: category.id,
+            tags: [tag1.name, tag3.name]
+          )
+          expect(tc.valid?).to eq(true)
+          expect(tc.errors).to be_empty
+          topic = tc.create
+          expect(topic.tags).to contain_exactly(tag1, tag3)
+        end
+
+        it "allows topics to use tags that are restricted in multiple categories" do
+          category2 = Fabricate(:category, tags: [tag5], tag_groups: [tag_group1])
+          tc = TopicCreator.new(
+            user,
+            Guardian.new(user),
+            title: "hello this is a test topic with tags",
+            raw: "hello this is a test topic with tags",
+            category: category2.id,
+            tags: [tag1.name, tag5.name]
+          )
+          expect(tc.valid?).to eq(true)
+          expect(tc.errors).to be_empty
+          topic = tc.create
+          expect(topic.tags).to contain_exactly(tag1, tag5)
+
+          tc = TopicCreator.new(
+            user,
+            Guardian.new(user),
+            title: "hello this is a test topic with tags 1",
+            raw: "hello this is a test topic with tags",
+            category: category.id,
+            tags: [tag1.name, tag3.name]
+          )
+          expect(tc.valid?).to eq(true)
+          expect(tc.errors).to be_empty
+          topic = tc.create
+          expect(topic.tags).to contain_exactly(tag1, tag3)
+
+          tc = TopicCreator.new(
+            user,
+            Guardian.new(user),
+            title: "hello this is a test topic with tags 2",
+            raw: "hello this is a test topic with tags",
+            category: category.id,
+            tags: [tag1.name, tag5.name]
+          )
+          expect(tc.valid?).to eq(false)
+          expect(tc.errors.full_messages).to contain_exactly(
+            I18n.t(
+              "tags.forbidden.restricted_tags_cannot_be_used_in_category",
+              count: 1,
+              tags: tag5.name,
+              category: category.name
+            )
+          )
+        end
+
+        it "rejects topics if they use a tag outside the set of tags that the category restricts" do
+          tc = TopicCreator.new(
+            user,
+            Guardian.new(user),
+            title: "hello this is a test topic with tags",
+            raw: "hello this is a test topic with tags",
+            category: category.id,
+            tags: [tag2.name, tag1.name]
+          )
+          expect(tc.valid?).to eq(false)
+          expect(tc.errors.full_messages).to contain_exactly(
+            I18n.t(
+              "tags.forbidden.category_does_not_allow_tags",
+              count: 1,
+              tags: tag2.name,
+              category: category.name
+            )
+          )
+
+          tc = TopicCreator.new(
+            user,
+            Guardian.new(user),
+            title: "hello this is a test topic with tags",
+            raw: "hello this is a test topic with tags",
+            category: category.id,
+            tags: [tag2.name, tag5.name, tag3.name]
+          )
+          expect(tc.valid?).to eq(false)
+          expect(tc.errors.full_messages).to contain_exactly(
+            I18n.t(
+              "tags.forbidden.category_does_not_allow_tags",
+              count: 2,
+              tags: [tag2, tag5].map(&:name).sort.join(", "),
+              category: category.name
+            )
+          )
+        end
+
+        it "rejects topics in other categories if a restricted tag of a category are used" do
+          category2 = Fabricate(:category)
+          tc = TopicCreator.new(
+            user,
+            Guardian.new(user),
+            title: "hello this is a test topic with tags",
+            raw: "hello this is a test topic with tags",
+            category: category2.id,
+            tags: [tag1.name, tag2.name]
+          )
+          expect(tc.valid?).to eq(false)
+          expect(tc.errors.full_messages).to contain_exactly(
+            I18n.t(
+              "tags.forbidden.restricted_tags_cannot_be_used_in_category",
+              count: 1,
+              tags: tag1.name,
+              category: category2.name
+            )
+          )
+        end
+
+        context "and allows other tags" do
+          before { category.update!(allow_global_tags: true) }
+
+          it "allows topics to use tags that aren't restricted by any category" do
+            tc = TopicCreator.new(
+              user,
+              Guardian.new(user),
+              title: "hello this is a test topic with tags",
+              raw: "hello this is a test topic with tags",
+              category: category.id,
+              tags: [tag1.name, tag2.name, tag3.name, tag5.name]
+            )
+            expect(tc.valid?).to eq(true)
+            expect(tc.errors).to be_empty
+            topic = tc.create
+            expect(topic.tags).to contain_exactly(tag1, tag2, tag3, tag5)
+          end
+
+          it "rejects topics if they use restricted tags of another category" do
+            Fabricate(:category, tags: [tag5], tag_groups: [tag_group2])
+            tc = TopicCreator.new(
+              user,
+              Guardian.new(user),
+              title: "hello this is a test topic with tags",
+              raw: "hello this is a test topic with tags",
+              category: category.id,
+              tags: [tag1.name, tag5.name]
+            )
+            expect(tc.valid?).to eq(false)
+            expect(tc.errors.full_messages).to contain_exactly(
+              I18n.t(
+                "tags.forbidden.restricted_tags_cannot_be_used_in_category",
+                count: 1,
+                tags: tag5.name,
+                category: category.name
+              )
+            )
+
+            tc = TopicCreator.new(
+              user,
+              Guardian.new(user),
+              title: "hello this is a test topic with tags",
+              raw: "hello this is a test topic with tags",
+              category: category.id,
+              tags: [tag1.name, tag2.name, tag5.name]
+            )
+            expect(tc.valid?).to eq(false)
+            expect(tc.errors.full_messages).to contain_exactly(
+              I18n.t(
+                "tags.forbidden.restricted_tags_cannot_be_used_in_category",
+                count: 2,
+                tags: [tag2, tag5].map(&:name).sort.join(", "),
+                category: category.name
+              )
+            )
+          end
         end
       end
     end

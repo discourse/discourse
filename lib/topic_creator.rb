@@ -33,6 +33,7 @@ class TopicCreator
       # both add to topic.errors
       DiscourseTagging.validate_min_required_tags_for_category(guardian, topic, category, valid_tags)
       DiscourseTagging.validate_required_tags_from_group(guardian, topic, category, existing_tags)
+      DiscourseTagging.validate_category_restricted_tags(guardian, topic, category, valid_tags)
     end
 
     DiscourseEvent.trigger(:after_validate_topic, topic, self)
