@@ -1997,7 +1997,6 @@ en:
       success: "Your account has been created and you're now logged in."
       name_label: "Name"
       password_label: "Password"
-      optional_description: "(optional)"
 
     password_reset:
       continue: "Continue to %{site_name}"
