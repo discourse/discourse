@@ -73,6 +73,10 @@
               label="user.private_message"}}
             </li>
           {{/if}}
+          {{plugin-outlet
+          name="user-card-chat-button" connectorTagName="li"
+          args=(hash user=this.user close=(action "close"))
+          tagName=""}}
           {{#if this.showFilter}}
             <li>
               {{d-button
@@ -101,9 +105,9 @@
             </li>
           {{/if}}
           {{plugin-outlet
-            name="user-card-additional-buttons" connectorTagName="div"
+            name="user-card-additional-buttons" connectorTagName="li"
             args=(hash user=this.user close=(action "close"))
-            tagName="li"}}
+            tagName=""}}
         </ul>
         {{plugin-outlet
         name="user-card-additional-controls" connectorTagName="div"
