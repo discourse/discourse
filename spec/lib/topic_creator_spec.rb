@@ -193,8 +193,8 @@ describe TopicCreator do
           tc = TopicCreator.new(
             user,
             Guardian.new(user),
-            title: "hello this is a test topic with tags",
-            raw: "hello this is a test topic with tags",
+            title: "hello this is a test topic without tags",
+            raw: "hello this is a test topic without tags",
             category: category.id,
           )
           expect(tc.valid?).to eq(true)
