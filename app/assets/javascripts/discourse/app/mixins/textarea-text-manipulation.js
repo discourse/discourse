@@ -66,7 +66,7 @@ export default Mixin.create({
   },
 
   insertText(text, options) {
-    this._addText(this.getSelected(), text, options);
+    this.addText(this.getSelected(), text, options);
   },
 
   getSelected(trimLeading, opts) {
@@ -301,7 +301,7 @@ export default Mixin.create({
     this._$textarea.prop("selectionStart", (pre + text).length + 2);
     this._$textarea.prop("selectionEnd", (pre + text).length + 2);
 
-    schedule("afterRender", this, this._focusTextArea);
+    schedule("afterRender", this, this.focusTextArea);
   },
 
   addText(sel, text, options) {
@@ -325,7 +325,7 @@ export default Mixin.create({
     this._$textarea.prop("selectionStart", insert.length);
     this._$textarea.prop("selectionEnd", insert.length);
     next(() => this._$textarea.trigger("change"));
-    this._focusTextArea();
+    this.focusTextArea();
   },
 
   extractTable(text) {
@@ -400,7 +400,7 @@ export default Mixin.create({
       !isCodeBlock
     ) {
       plainText = plainText.replace(/\r/g, "");
-      const table = this._extractTable(plainText);
+      const table = this.extractTable(plainText);
       if (table) {
         this.appEvents.trigger(
           `${this.composerEventPrefix}:insert-text`,
@@ -441,7 +441,7 @@ export default Mixin.create({
         ) {
           // When specified, linkify supports fuzzy links and emails. Prefer providing the protocol.
           // eg: pasting "example@discourse.org" may apply a link format of "mailto:example@discourse.org"
-          this._addText(selected, `[${selectedValue}](${match.url})`);
+          this.addText(selected, `[${selectedValue}](${match.url})`);
           handled = true;
         }
       }
@@ -566,9 +566,9 @@ export default Mixin.create({
 
     if (isEmpty(captures)) {
       if (selected.pre.match(/\S$/)) {
-        this._addText(selected, ` :${code}:`);
+        this.addText(selected, ` :${code}:`);
       } else {
-        this._addText(selected, `:${code}:`);
+        this.addText(selected, `:${code}:`);
       }
     } else {
       let numOfRemovedChars = selected.pre.length - captures[1].length;
@@ -578,7 +578,7 @@ export default Mixin.create({
       );
       selected.start -= numOfRemovedChars;
       selected.end -= numOfRemovedChars;
-      this._addText(selected, `${code}:`);
+      this.addText(selected, `${code}:`);
     }
   },
 });
