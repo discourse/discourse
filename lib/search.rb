@@ -1144,9 +1144,18 @@ class Search
 
   def self.to_tsquery(ts_config: nil, term:, joiner: nil)
     ts_config = ActiveRecord::Base.connection.quote(ts_config) if ts_config
-    escaped_term = Search.wrap_unaccent("'#{self.escape_string(term)}'")
-    tsquery = "TO_TSQUERY(#{ts_config || default_ts_config}, #{escaped_term})"
-    tsquery = "REPLACE(#{tsquery}::text, '&', '#{self.escape_string(joiner)}')::tsquery" if joiner
+
+    # unaccent can be used only when a joiner is present because the
+    # additional processing and the final conversion to tsquery does not
+    # work well with characters that are converted to quotes by unaccent.
+    if joiner
+      tsquery = "TO_TSQUERY(#{ts_config || default_ts_config}, '#{self.escape_string(term)}')"
+      tsquery = "REPLACE(#{tsquery}::text, '&', '#{self.escape_string(joiner)}')::tsquery"
+    else
+      escaped_term = Search.wrap_unaccent("'#{self.escape_string(term)}'")
+      tsquery = "TO_TSQUERY(#{ts_config || default_ts_config}, #{escaped_term})"
+    end
+
     tsquery
   end
 

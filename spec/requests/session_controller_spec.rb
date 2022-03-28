@@ -30,6 +30,7 @@ describe SessionController do
         user.update(admin: true)
         get "/session/email-login/#{email_token.token}.json"
         expect(response.status).to eq(200)
+        expect(response.parsed_body['error']).not_to be_present
       end
     end
 
@@ -46,6 +47,7 @@ describe SessionController do
         user.update(admin: true)
         get "/session/email-login/#{email_token.token}.json"
         expect(response.status).to eq(200)
+        expect(response.parsed_body['error']).not_to be_present
       end
     end
 
@@ -134,6 +136,7 @@ describe SessionController do
         user.update(admin: true)
         post "/session/email-login/#{email_token.token}.json"
         expect(response.status).to eq(200)
+        expect(response.parsed_body['error']).not_to be_present
         expect(session[:current_user_id]).to eq(user.id)
       end
     end
@@ -257,6 +260,7 @@ describe SessionController do
         it "sets the user_option timezone for the user" do
           post "/session/email-login/#{email_token.token}.json", params: { timezone: "Australia/Melbourne" }
           expect(response.status).to eq(200)
+          expect(response.parsed_body['error']).not_to be_present
           expect(user.reload.user_option.timezone).to eq("Australia/Melbourne")
         end
       end
@@ -421,6 +425,7 @@ describe SessionController do
             }
 
             expect(response.status).to eq(200)
+            expect(response.parsed_body['error']).not_to be_present
             user.reload
 
             expect(session[:current_user_id]).to eq(user.id)
@@ -1344,12 +1349,14 @@ describe SessionController do
     context 'local login via email is disabled' do
       before do
         SiteSetting.enable_local_logins_via_email = false
+        EmailToken.confirm(email_token.token)
       end
       it 'doesnt matter, logs in correctly' do
         post "/session.json", params: {
           login: user.username, password: 'myawesomepassword'
         }
         expect(response.status).to eq(200)
+        expect(response.parsed_body['error']).not_to be_present
       end
     end
 
@@ -1446,6 +1453,7 @@ describe SessionController do
           end
 
           expect(response.status).to eq(200)
+          expect(response.parsed_body['error']).not_to be_present
           expect(events.map { |event| event[:event_name] }).to contain_exactly(
             :user_logged_in, :user_first_logged_in
           )
@@ -1464,6 +1472,7 @@ describe SessionController do
               login: user.username, password: 'myawesomepassword', timezone: "Australia/Melbourne"
             }
             expect(response.status).to eq(200)
+            expect(response.parsed_body['error']).not_to be_present
             expect(user.reload.user_option.timezone).to eq("Australia/Melbourne")
           end
         end
@@ -1544,6 +1553,7 @@ describe SessionController do
             }
 
             expect(response.status).to eq(200)
+            expect(response.parsed_body['error']).not_to be_present
             user.reload
 
             expect(session[:current_user_id]).to eq(user.id)
@@ -1638,6 +1648,7 @@ describe SessionController do
                 second_factor_method: UserSecondFactor.methods[:totp]
               }
               expect(response.status).to eq(200)
+              expect(response.parsed_body['error']).not_to be_present
               user.reload
 
               expect(session[:current_user_id]).to eq(user.id)
@@ -1658,6 +1669,7 @@ describe SessionController do
                 second_factor_method: UserSecondFactor.methods[:backup_codes]
               }
               expect(response.status).to eq(200)
+              expect(response.parsed_body['error']).not_to be_present
               user.reload
 
               expect(session[:current_user_id]).to eq(user.id)
@@ -1680,6 +1692,7 @@ describe SessionController do
             login: "@" + user.username, password: 'myawesomepassword'
           }
           expect(response.status).to eq(200)
+          expect(response.parsed_body['error']).to be_present
           user.reload
 
           expect(session[:current_user_id]).to be_nil
@@ -1692,6 +1705,7 @@ describe SessionController do
             login: "@" + user.username, password: 'myawesomepassword'
           }
           expect(response.status).to eq(200)
+          expect(response.parsed_body['error']).not_to be_present
           user.reload
 
           expect(session[:current_user_id]).to eq(user.id)
@@ -1704,6 +1718,7 @@ describe SessionController do
             login: user.email, password: 'myawesomepassword'
           }
           expect(response.status).to eq(200)
+          expect(response.parsed_body['error']).not_to be_present
           expect(session[:current_user_id]).to eq(user.id)
         end
       end
@@ -1744,6 +1759,7 @@ describe SessionController do
 
           it "doesn't log in the user" do
             expect(response.status).to eq(200)
+            expect(response.parsed_body['error']).to be_present
             expect(session[:current_user_id]).to be_blank
           end
 
@@ -1764,6 +1780,7 @@ describe SessionController do
               login: user.email, password: 'myawesomepassword'
             }
             expect(response.status).to eq(200)
+            expect(response.parsed_body['error']).not_to be_present
             expect(session[:current_user_id]).to eq(user.id)
           end
         end
@@ -1786,6 +1803,7 @@ describe SessionController do
             login: user.username, password: 'myawesomepassword'
           }
           expect(response.status).to eq(200)
+          expect(response.parsed_body['error']).not_to be_present
           expect(session[:current_user_id]).to eq(user.id)
         end
 
@@ -1813,6 +1831,7 @@ describe SessionController do
           }
 
           expect(response.status).to eq(200)
+          expect(response.parsed_body['error']).not_to be_present
           expect(session[:current_user_id]).to eq(user.id)
         end
       end
@@ -1828,6 +1847,7 @@ describe SessionController do
       it "doesn't log in the user" do
         post_login
         expect(response.status).to eq(200)
+        expect(response.parsed_body['error']).to be_present
         expect(session[:current_user_id]).to be_blank
       end
 
@@ -1857,6 +1877,7 @@ describe SessionController do
         SiteSetting.max_logins_per_ip_per_hour = 2
         RateLimiter.enable
         RateLimiter.clear_all!
+        EmailToken.confirm(email_token.token)
 
         2.times do
           post "/session.json", params: {
@@ -1864,6 +1885,7 @@ describe SessionController do
           }
 
           expect(response.status).to eq(200)
+          expect(response.parsed_body['error']).not_to be_present
         end
 
         post "/session.json", params: {
@@ -1887,6 +1909,7 @@ describe SessionController do
             second_factor_method: UserSecondFactor.methods[:totp]
           }
           expect(response.status).to eq(200)
+          expect(response.parsed_body['error']).to be_present
         end
 
         post "/session.json", params: {
@@ -1904,6 +1927,7 @@ describe SessionController do
       it 'rate limits second factor attempts by login' do
         RateLimiter.enable
         RateLimiter.clear_all!
+        EmailToken.confirm(email_token.token)
 
         6.times do |x|
           post "/session.json", params: {
@@ -1914,6 +1938,7 @@ describe SessionController do
           }, env: { "REMOTE_ADDR": "1.2.3.#{x}" }
 
           expect(response.status).to eq(200)
+          expect(response.parsed_body['error']).not_to be_present
         end
 
         [user.username + " ", user.username.capitalize, user.username].each_with_index do |username , x|
@@ -1947,6 +1972,7 @@ describe SessionController do
       delete "/session/#{user.username}.json", xhr: true
 
       expect(response.status).to eq(200)
+      expect(response.parsed_body['error']).not_to be_present
       expect(session[:current_user_id]).to be_blank
       expect(response.cookies["_t"]).to be_blank
 
@@ -1960,12 +1986,14 @@ describe SessionController do
       user = sign_in(Fabricate(:user))
       delete "/session/#{user.username}.json", xhr: true
       expect(response.status).to eq(200)
+      expect(response.parsed_body['error']).not_to be_present
       expect(response.parsed_body["redirect_url"]).to eq("/")
 
       SiteSetting.login_required = true
       user = sign_in(Fabricate(:user))
       delete "/session/#{user.username}.json", xhr: true
       expect(response.status).to eq(200)
+      expect(response.parsed_body['error']).not_to be_present
       expect(response.parsed_body["redirect_url"]).to eq("/login")
     end
 
@@ -1980,6 +2008,7 @@ describe SessionController do
       delete "/session/#{user.username}.json", xhr: true
 
       expect(response.status).to eq(200)
+      expect(response.parsed_body['error']).not_to be_present
       expect(response.parsed_body["redirect_url"]).to eq("/myredirect/#{user.username}")
     ensure
       DiscourseEvent.off(:before_session_destroy, &callback)
@@ -2013,6 +2042,7 @@ describe SessionController do
           get "/session/otp/#{token}"
 
           expect(response.status).to eq(200)
+          expect(response.parsed_body['error']).not_to be_present
           expect(response.body).to include(
             I18n.t("user_api_key.otp_confirmation.logging_in_as", username: user.username)
           )
@@ -2050,6 +2080,7 @@ describe SessionController do
 
           get "/session/current.json"
           expect(response.status).to eq(200)
+          expect(response.parsed_body['error']).not_to be_present
         end
       end
     end
@@ -2078,6 +2109,7 @@ describe SessionController do
           params: { login: user.username }
 
         expect(response.status).to eq(200)
+        expect(response.parsed_body['error']).not_to be_present
         expect(Jobs::CriticalUserEmail.jobs.size).to eq(1)
       end
 
@@ -2086,6 +2118,7 @@ describe SessionController do
           params: { login: user.email }
 
         expect(response.status).to eq(200)
+        expect(response.parsed_body['error']).not_to be_present
         expect(Jobs::CriticalUserEmail.jobs.size).to eq(1)
       end
     end
@@ -2120,6 +2153,7 @@ describe SessionController do
       3.times do
         post "/session/forgot_password.json", params: { login: user.username }
         expect(response.status).to eq(200)
+        expect(response.parsed_body['error']).not_to be_present
       end
 
       post "/session/forgot_password.json", params: { login: user.username }
@@ -2131,6 +2165,7 @@ describe SessionController do
           headers: { 'REMOTE_ADDR' => '10.1.1.1'  }
 
         expect(response.status).to eq(200)
+        expect(response.parsed_body['error']).not_to be_present
       end
 
       post "/session/forgot_password.json",
@@ -2253,6 +2288,7 @@ describe SessionController do
       it "returns the JSON for the user" do
         get "/session/current.json"
         expect(response.status).to eq(200)
+        expect(response.parsed_body['error']).not_to be_present
         json = response.parsed_body
         expect(json['current_user']).to be_present
         expect(json['current_user']['id']).to eq(user.id)
@@ -2285,6 +2321,7 @@ describe SessionController do
       nonce = response.parsed_body["second_factor_challenge_nonce"]
       get "/session/2fa.json", params: { nonce: nonce }
       expect(response.status).to eq(200)
+      expect(response.parsed_body['error']).not_to be_present
 
       freeze_time (SecondFactor::AuthManager::MAX_CHALLENGE_AGE + 1.minute).from_now
       get "/session/2fa.json", params: { nonce: nonce }
@@ -2297,6 +2334,7 @@ describe SessionController do
       nonce = response.parsed_body["second_factor_challenge_nonce"]
       get "/session/2fa.json", params: { nonce: nonce }
       expect(response.status).to eq(200)
+      expect(response.parsed_body['error']).not_to be_present
       challenge_data = response.parsed_body
       expect(challenge_data["totp_enabled"]).to eq(true)
       expect(challenge_data["backup_enabled"]).to eq(false)
@@ -2318,6 +2356,7 @@ describe SessionController do
       nonce = response.parsed_body["second_factor_challenge_nonce"]
       get "/session/2fa.json", params: { nonce: nonce }
       expect(response.status).to eq(200)
+      expect(response.parsed_body['error']).not_to be_present
       challenge_data = response.parsed_body
       expect(challenge_data["totp_enabled"]).to eq(true)
       expect(challenge_data["backup_enabled"]).to eq(true)
@@ -2390,6 +2429,7 @@ describe SessionController do
         second_factor_token: token
       }
       expect(response.status).to eq(200)
+      expect(response.parsed_body['error']).not_to be_present
       expect(response.parsed_body["ok"]).to eq(true)
       expect(response.parsed_body["callback_method"]).to eq("POST")
       expect(response.parsed_body["callback_path"]).to eq("/session/2fa/test-action")
@@ -2397,6 +2437,7 @@ describe SessionController do
 
       post "/session/2fa/test-action", params: { second_factor_nonce: nonce }
       expect(response.status).to eq(200)
+      expect(response.parsed_body['error']).not_to be_present
       expect(response.parsed_body["result"]).to eq("second_factor_auth_completed")
     end
 
