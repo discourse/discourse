@@ -27,7 +27,7 @@ describe DiscourseRedis do
 
         expect(redis.keys).to include('key')
         expect(redis.keys).to_not include('key2')
-        expect(redis.scan_each.to_a).to eq(['key', 'key3'])
+        expect(redis.scan_each.to_a).to contain_exactly('key', 'key3')
 
         redis.del('key', 'key3')
 
