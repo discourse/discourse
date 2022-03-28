@@ -7,7 +7,7 @@ function addImage(uploads, token) {
   if (token.attrs) {
     for (let i = 0; i < token.attrs.length; i++) {
       if (token.attrs[i][1].indexOf("upload://") === 0) {
-        uploads.push([token, i, token.attrs[i][1]]);
+        uploads.push({ token, srcIndex: i, origSrc: token.attrs[i][1] });
         break;
       }
     }
@@ -44,7 +44,7 @@ function findUploadsInHtml(uploads, blockToken) {
     },
     onTagAttr(tag, name, value) {
       if (tag === "img" && name === "src" && value.startsWith("upload://")) {
-        uploads.push([blockToken, null, value]);
+        uploads.push({ token: blockToken, srcIndex: null, origSrc: value });
         foundImage = true;
         return uploadLocatorString(value);
       }
@@ -81,7 +81,7 @@ function rule(state) {
   }
 
   if (uploads.length > 0) {
-    let srcList = uploads.map((u) => u[2]); // origSrc
+    let srcList = uploads.map((u) => u.origSrc);
 
     // In client-side cooking, this lookup returns nothing
     // This means we set data-orig-src, and let decorateCooked
@@ -89,7 +89,7 @@ function rule(state) {
     let lookup = state.md.options.discourse.lookupUploadUrls;
     let longUrls = (lookup && lookup(srcList)) || {};
 
-    uploads.forEach(([token, srcIndex, origSrc]) => {
+    uploads.forEach(({ token, srcIndex, origSrc }) => {
       let mapped = longUrls[origSrc];
 
       if (HTML_TYPES.includes(token.type)) {
