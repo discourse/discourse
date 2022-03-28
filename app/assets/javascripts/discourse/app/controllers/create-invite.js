@@ -150,15 +150,6 @@ export default Controller.extend(
         );
     },
 
-    @discourseComputed(
-      "currentUser.staff",
-      "siteSettings.invite_link_max_redemptions_limit",
-      "siteSettings.invite_link_max_redemptions_limit_users"
-    )
-    maxRedemptionsAllowedLimit(staff, staffLimit, usersLimit) {
-      return staff ? staffLimit : usersLimit;
-    },
-
     @discourseComputed("buffered.expires_at")
     expiresAtLabel(expires_at) {
       const expiresAt = moment(expires_at);

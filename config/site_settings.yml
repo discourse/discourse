@@ -1862,16 +1862,6 @@ rate_limits:
   max_post_deletions_per_day:
     min: 0
     default: 10
-  invite_link_max_redemptions_limit:
-    min: 2
-    max: 1000000
-    default: 5000
-    client: true
-  invite_link_max_redemptions_limit_users:
-    min: 2
-    max: 1000000
-    default: 10
-    client: true
   max_allowed_secondary_emails:
     default: 10
     hidden: true

@@ -136,11 +136,9 @@ describe Invite do
       end
 
       it 'checks for max_redemptions_allowed range' do
-        SiteSetting.invite_link_max_redemptions_limit_users = 3
-        expect { Invite.generate(user, max_redemptions_allowed: 4) }.to raise_error(ActiveRecord::RecordInvalid)
-
-        SiteSetting.invite_link_max_redemptions_limit = 3
-        expect { Invite.generate(Fabricate(:admin), max_redemptions_allowed: 4) }.to raise_error(ActiveRecord::RecordInvalid)
+        expect { Invite.generate(user, max_redemptions_allowed: -1) }.to raise_error(ActiveRecord::RecordInvalid)
+        expect { Invite.generate(user, max_redemptions_allowed: 0) }.to raise_error(ActiveRecord::RecordInvalid)
+        expect { Invite.generate(user, max_redemptions_allowed: 1) }.not_to raise_error(ActiveRecord::RecordInvalid)
       end
     end
 

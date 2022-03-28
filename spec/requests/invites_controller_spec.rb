@@ -328,26 +328,6 @@ describe InvitesController do
         expect(Invite.last.invited_by).to eq(admin)
         expect(Invite.last.max_redemptions_allowed).to eq(1)
       end
-
-      it 'fails if over invite_link_max_redemptions_limit' do
-        sign_in(admin)
-
-        post '/invites.json', params: { max_redemptions_allowed: SiteSetting.invite_link_max_redemptions_limit - 1 }
-        expect(response.status).to eq(200)
-
-        post '/invites.json', params: { max_redemptions_allowed: SiteSetting.invite_link_max_redemptions_limit + 1 }
-        expect(response.status).to eq(422)
-      end
-
-      it 'fails if over invite_link_max_redemptions_limit_users' do
-        sign_in(user)
-
-        post '/invites.json', params: { max_redemptions_allowed: SiteSetting.invite_link_max_redemptions_limit_users - 1 }
-        expect(response.status).to eq(200)
-
-        post '/invites.json', params: { max_redemptions_allowed: SiteSetting.invite_link_max_redemptions_limit_users + 1 }
-        expect(response.status).to eq(422)
-      end
     end
   end
 

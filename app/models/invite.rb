@@ -28,11 +28,11 @@ class Invite < ActiveRecord::Base
   has_many :topic_invites
   has_many :topics, through: :topic_invites, source: :topic
 
-  validates_presence_of :invited_by_id
   validates :email, email: true, allow_blank: true
-  validate :ensure_max_redemptions_allowed
-  validate :valid_domain, if: :will_save_change_to_domain?
   validate :user_doesnt_already_exist, if: :will_save_change_to_email?
+  validates :invited_by_id, presence: true
+  validates :max_redemptions_allowed, numericality: { only_integer: true, greater_than: 0 }
+  validate :valid_domain, if: :will_save_change_to_domain?
 
   before_create do
     self.invite_key ||= SecureRandom.base58(10)
@@ -46,7 +46,8 @@ class Invite < ActiveRecord::Base
   end
 
   before_validation do
-    self.email = Email.downcase(email) unless email.nil?
+    self.email = Email.downcase(email) if email.present?
+    self.max_redemptions_allowed ||= 1
   end
 
   attr_accessor :email_already_exists
@@ -245,19 +246,6 @@ class Invite < ActiveRecord::Base
 
   def self.base_directory
     File.join(Rails.root, "public", "uploads", "csv", RailsMultisite::ConnectionManagement.current_db)
-  end
-
-  def ensure_max_redemptions_allowed
-    if self.max_redemptions_allowed.nil?
-      self.max_redemptions_allowed = 1
-    else
-      limit = invited_by&.staff? ? SiteSetting.invite_link_max_redemptions_limit
-                                 : SiteSetting.invite_link_max_redemptions_limit_users
-
-      if !self.max_redemptions_allowed.between?(1, limit)
-        errors.add(:max_redemptions_allowed, I18n.t("invite_link.max_redemptions_limit", max_limit: limit))
-      end
-    end
   end
 
   def valid_domain
