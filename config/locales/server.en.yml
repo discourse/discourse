@@ -4810,6 +4810,12 @@ en:
         other: '"%{tag_name}" is restricted to the following categories: %{category_names}'
       synonym: 'Synonyms are not allowed. Use "%{tag_name}" instead.'
       has_synonyms: '"%{tag_name}" cannot be used because it has synonyms.'
+      restricted_tags_cannot_be_used_in_category:
+        one: 'The "%{tags}" tag cannot be used in the "%{category}" category. Please remove it.'
+        other: 'The following tags cannot be used in the "%{category}" category: %{tags}. Please remove them.'
+      category_does_not_allow_tags:
+        one: 'The "%{category}" category does not allow the "%{tags}" tag. Please remove it.'
+        other: 'The "%{category}" category does not allow the following tags: "%{tags}". Please remove them.'
     required_tags_from_group:
       one: "You must include at least %{count} %{tag_group_name} tag. The tags in this group are: %{tags}."
       other: "You must include at least %{count} %{tag_group_name} tags. The tags in this group are: %{tags}."
