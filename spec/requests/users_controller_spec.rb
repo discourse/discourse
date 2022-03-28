@@ -2876,6 +2876,16 @@ describe UsersController do
     end
   end
 
+  describe "#notification_level" do
+    it 'raises an error when `notification_level` param is not a valid value' do
+      sign_in(user)
+      invalid_arg = "invalid"
+      put "/u/#{user.username}/notification_level.json", params: { notification_level: invalid_arg }
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["errors"].first).to eq(I18n.t("notification_level.invalid_value", value: invalid_arg))
+    end
+  end
+
   describe '#ignore' do
     it 'raises an error when not logged in' do
       put "/u/#{user1.username}/notification_level.json", params: { notification_level: "" }

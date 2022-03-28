@@ -1,5 +1,4 @@
 import { bind } from "discourse-common/utils/decorators";
-import deprecated from "discourse-common/lib/deprecated";
 import I18n from "I18n";
 import Mixin from "@ember/object/mixin";
 import { generateLinkifyFunction } from "discourse/lib/text";
@@ -49,8 +48,6 @@ export default Mixin.create({
   },
 
   // ensures textarea scroll position is correct
-  //
-  // TODO (martin) (2022-06-25) Remove the _ version of this function.
   focusTextArea() {
     if (!this.element || this.isDestroying || this.isDestroyed) {
       return;
@@ -64,32 +61,14 @@ export default Mixin.create({
     this._textarea.focus();
   },
 
-  _focusTextArea() {
-    deprecated("focusTextArea (without _) should be used");
-    this.focusTextArea();
-  },
-
-  // TODO (martin) (2022-06-25) Remove the _ version of this function.
   insertBlock(text) {
     this._addBlock(this.getSelected(), text);
   },
 
-  _insertBlock(text) {
-    deprecated("insertBlock (without _) should be used");
-    this.insertBlock(text);
-  },
-
-  // TODO (martin) (2022-06-25) Remove the _ version of this function.
   insertText(text, options) {
     this._addText(this.getSelected(), text, options);
   },
 
-  _insertText(text, options) {
-    deprecated("insertText (without _) should be used");
-    this.insertText(text, options);
-  },
-
-  // TODO (martin) (2022-06-25) Remove the _ version of this function.
   getSelected(trimLeading, opts) {
     if (!this.ready || !this.element) {
       return;
@@ -125,12 +104,6 @@ export default Mixin.create({
     }
   },
 
-  _getSelected(trimLeading, opts) {
-    deprecated("getSelected (without _) should be used");
-    return this.getSelected(trimLeading, opts);
-  },
-
-  // TODO (martin) (2022-06-25) Remove the _ version of this function.
   selectText(from, length, opts = { scroll: true }) {
     next(() => {
       if (!this.element) {
@@ -150,12 +123,6 @@ export default Mixin.create({
     });
   },
 
-  _selectText(from, length, opts = { scroll: true }) {
-    deprecated("selectText (without _) should be used");
-    this.selectText(from, length, opts);
-  },
-
-  // TODO (martin) (2022-06-25) Remove the _ version of this function.
   replaceText(oldVal, newVal, opts = {}) {
     const val = this.value;
     const needleStart = val.indexOf(oldVal);
@@ -199,12 +166,6 @@ export default Mixin.create({
     }
   },
 
-  _replaceText(oldVal, newVal, opts = {}) {
-    deprecated("replaceText (without _) should be used");
-    this.replaceText(oldVal, newVal, opts);
-  },
-
-  // TODO (martin) (2022-06-25) Remove the _ version of this function.
   applySurround(sel, head, tail, exampleKey, opts) {
     const pre = sel.pre;
     const post = sel.post;
@@ -271,11 +232,6 @@ export default Mixin.create({
         }
       }
     }
-  },
-
-  _applySurround(sel, head, tail, exampleKey, opts) {
-    deprecated("applySurround (without _) should be used");
-    this.applySurround(sel, head, tail, exampleKey, opts);
   },
 
   // perform the same operation over many lines of text
@@ -348,7 +304,6 @@ export default Mixin.create({
     schedule("afterRender", this, this._focusTextArea);
   },
 
-  // TODO (martin) (2022-06-25) Remove the _ version of this function.
   addText(sel, text, options) {
     if (options && options.ensureSpace) {
       if ((sel.pre + "").length > 0) {
@@ -373,12 +328,6 @@ export default Mixin.create({
     this._focusTextArea();
   },
 
-  _addText(sel, text, options) {
-    deprecated("addText (without _) should be used");
-    this.addText(sel, text, options);
-  },
-
-  // TODO (martin) (2022-06-25) Remove the _ version of this function.
   extractTable(text) {
     if (text.endsWith("\n")) {
       text = text.substring(0, text.length - 1);
@@ -416,20 +365,9 @@ export default Mixin.create({
     return null;
   },
 
-  _extractTable(text) {
-    deprecated("extractTable (without _) should be used");
-    return this.extractTable(text);
-  },
-
-  // TODO (martin) (2022-06-25) Remove the _ version of this function.
   isInside(text, regex) {
     const matches = text.match(regex);
     return matches && matches.length % 2;
-  },
-
-  _isInside(text, regex) {
-    deprecated("isInside (without _) should be used");
-    return this.isInside(text, regex);
   },
 
   @bind
@@ -453,7 +391,7 @@ export default Mixin.create({
     const selected = this.getSelected(null, { lineVal: true });
     const { pre, value: selectedValue, lineVal } = selected;
     const isInlinePasting = pre.match(/[^\n]$/);
-    const isCodeBlock = this._isInside(pre, /(^|\n)```/g);
+    const isCodeBlock = this.isInside(pre, /(^|\n)```/g);
 
     if (
       plainText &&
@@ -476,7 +414,7 @@ export default Mixin.create({
       if (isInlinePasting) {
         canPasteHtml = !(
           lineVal.match(/^```/) ||
-          this._isInside(pre, /`/g) ||
+          this.isInside(pre, /`/g) ||
           lineVal.match(/^    /)
         );
       } else {
