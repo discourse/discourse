@@ -105,9 +105,9 @@
             </li>
           {{/if}}
           {{plugin-outlet
-            name="user-card-additional-buttons" connectorTagName="li"
+            name="user-card-additional-buttons" connectorTagName="div"
             args=(hash user=this.user close=(action "close"))
-            tagName=""}}
+            tagName="li"}}
         </ul>
         {{plugin-outlet
         name="user-card-additional-controls" connectorTagName="div"
