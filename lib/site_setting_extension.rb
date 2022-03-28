@@ -508,6 +508,8 @@ module SiteSettingExtension
           value = current[name]
         end
 
+        return [] if value.empty?
+
         value = value.split("|").map(&:to_i)
         uploads_list = Upload.where(id: value).to_a
         uploads[name] = uploads_list if uploads_list
