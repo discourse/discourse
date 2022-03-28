@@ -111,7 +111,8 @@ class Notification < ActiveRecord::Base
                         chat_invitation: 31,
                         chat_group_mention: 32, # March 2022 - This is obsolete, as all chat_mentions use `chat_mention` type
                         chat_quoted: 33,
-                        assigned: 34
+                        assigned: 34,
+                        question_answer_user_commented: 35, # Used by https://github.com/discourse/discourse-question-answer
                        )
   end
 
