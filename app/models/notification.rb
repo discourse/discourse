@@ -31,19 +31,19 @@ class Notification < ActiveRecord::Base
     self.high_priority = self.high_priority || Notification.high_priority_types.include?(self.notification_type)
   end
 
-  @@consistency_exempt_types = []
+  @consistency_exempt_types = []
 
   def self.register_consistency_exempt_type(type)
     begin
       type = type.to_i
-      @@consistency_exempt_types << type unless @@consistency_exempt_types.include?(type)
+      @consistency_exempt_types << type unless @consistency_exempt_types.include?(type)
     rescue => e
       Discourse.warn_exception(e, message: "Failed to register '#{type}' as a consistency exempt notification type. Ensure the type is a valid notifcation type.")
     end
   end
 
   def self.reset_consistency_exempt_types
-    @@consistency_exempt_types = []
+    @consistency_exempt_types = []
   end
 
   def self.consolidate_or_create!(notification_params)
@@ -75,9 +75,9 @@ class Notification < ActiveRecord::Base
   end
 
   def self.consistency_exempt_sql
-    return "" if @@consistency_exempt_types.empty?
+    return "" if @consistency_exempt_types.empty?
 
-    "AND notification_type NOT IN (#{@@consistency_exempt_types.join(", ")})"
+    "AND notification_type NOT IN (#{@consistency_exempt_types.join(", ")})"
   end
 
   def self.ensure_consistency!
