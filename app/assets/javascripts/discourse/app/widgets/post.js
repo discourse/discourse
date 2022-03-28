@@ -652,6 +652,7 @@ createWidget("post-article", {
     return {
       "aria-label": I18n.t("share.post", {
         postNumber: attrs.post_number,
+        username: attrs.username,
       }),
       role: "region",
       "data-post-id": attrs.id,

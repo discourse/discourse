@@ -136,7 +136,7 @@ en:
       to_placeholder: "to date"
     share:
       topic_html: 'Topic: <span class="topic-title">%{topicTitle}</span>'
-      post: "post #%{postNumber}"
+      post: "post #%{postNumber} by @%{username}"
       close: "close"
       twitter: "Share on Twitter"
       facebook: "Share on Facebook"
