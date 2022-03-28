@@ -112,6 +112,7 @@ export default Mixin.create({
     });
 
     document.addEventListener("mousedown", this._clickOutsideHandler);
+    document.addEventListener("keyup", this._escListener);
 
     _cardClickListenerSelectors.forEach((selector) => {
       document
@@ -320,6 +321,7 @@ export default Mixin.create({
     this._super(...arguments);
 
     document.removeEventListener("mousedown", this._clickOutsideHandler);
+    document.removeEventListener("keyup", this._escListener);
 
     _cardClickListenerSelectors.forEach((selector) => {
       document
@@ -340,14 +342,6 @@ export default Mixin.create({
     this._hide();
   },
 
-  keyUp(e) {
-    if (e.key === "Escape") {
-      const target = this.cardTarget;
-      this._close();
-      target.focus();
-    }
-  },
-
   @bind
   _clickOutsideHandler(event) {
     if (this.visible) {
@@ -363,6 +357,16 @@ export default Mixin.create({
       this._close();
     }
 
+    return true;
+  },
+
+  @bind
+  _escListener(event) {
+    if (this.visible && event.key === "Escape") {
+      this._close();
+      this.cardTarget?.focus();
+      return;
+    }
     return true;
   },
 });
