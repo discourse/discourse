@@ -21,9 +21,38 @@ export default Controller.extend(
     onShow() {
       this.set("showNotifyUsers", false);
 
-      if (this.model && this.model.read_restricted) {
-        this.restrictedGroupWarning();
+      this.appEvents.on(
+        "modal:body-shown",
+        this,
+        this.showRestrictedGroupWarning
+      );
+    },
+
+    onClose() {
+      this.appEvents.off(
+        "modal:body-shown",
+        this,
+        this.showRestrictedGroupWarning
+      );
+    },
+
+    showRestrictedGroupWarning() {
+      if (!this.model) {
+        return;
       }
+
+      Category.reloadBySlugPath(this.model.slug).then((result) => {
+        const groups = result.category.group_permissions.mapBy("group_name");
+        if (groups && !groups.any((x) => x === "everyone")) {
+          this.flash(
+            I18n.t("topic.share.restricted_groups", {
+              count: groups.length,
+              groups: groups.join(", "),
+            }),
+            "warning"
+          );
+        }
+      });
     },
 
     @discourseComputed("topic.shareUrl")
@@ -109,25 +138,6 @@ export default Controller.extend(
       controller.buffered.setProperties({
         topicId: this.topic.id,
         topicTitle: this.topic.title,
-      });
-    },
-
-    restrictedGroupWarning() {
-      this.appEvents.on("modal:body-shown", () => {
-        let restrictedGroups;
-        Category.reloadBySlugPath(this.model.slug).then((result) => {
-          restrictedGroups = result.category.group_permissions.map(
-            (g) => g.group_name
-          );
-
-          if (restrictedGroups) {
-            const message = I18n.t("topic.share.restricted_groups", {
-              count: restrictedGroups.length,
-              groupNames: restrictedGroups.join(", "),
-            });
-            this.flash(message, "warning");
-          }
-        });
       });
     },
   }
