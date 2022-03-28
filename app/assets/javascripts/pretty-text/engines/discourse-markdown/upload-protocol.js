@@ -36,6 +36,7 @@ function findUploadsInHtml(uploads, blockToken) {
   let foundImage = false;
   const newContent = xss(blockToken.content, {
     whiteList: fakeAllowList,
+    allowCommentTag: true,
     onTag(tag, html, options) {
       // We're not using this for sanitizing, so allow all tags through
       options.isWhite = true;
