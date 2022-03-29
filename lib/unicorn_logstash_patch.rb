@@ -5,16 +5,18 @@
 # However, that means we get a separate logstash message for each backtrace which isn't what we want. The
 # monkey patch here overrides Unicorn's logging of error so that we log the error and backtrace in a
 # single message.
-module UnicornLogstashPatch
-  extend ActiveSupport::Concern
+SanePatch.patch("unicorn", "~> 6.1.0") do
+  module UnicornLogstashPatch
+    extend ActiveSupport::Concern
 
-  class_methods do
-    def log_error(logger, prefix, exc)
-      message = exc.message
-      message = message.dump if /[[:cntrl:]]/ =~ message
-      logger.error "#{prefix}: #{message} (#{exc.class})\n#{exc.backtrace.join("\n")}"
+    class_methods do
+      def log_error(logger, prefix, exc)
+        message = exc.message
+        message = message.dump if /[[:cntrl:]]/ =~ message
+        logger.error "#{prefix}: #{message} (#{exc.class})\n#{exc.backtrace.join("\n")}"
+      end
     end
-  end
 
-  Unicorn.prepend(self) if defined?(Unicorn)
+    Unicorn.prepend(self) if defined?(Unicorn)
+  end
 end
