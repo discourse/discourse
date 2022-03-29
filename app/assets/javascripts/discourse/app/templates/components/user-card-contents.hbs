@@ -1,4 +1,5 @@
 {{#if this.visible}}
+  {{plugin-outlet name="before-user-card-content" args=(hash user=this.user)}}
   <div class="card-content">
     {{#if this.loading}}
       <div class="card-row first-row">
