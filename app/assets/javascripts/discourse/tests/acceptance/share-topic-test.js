@@ -1,8 +1,10 @@
 import CategoryFixtures from "discourse/tests/fixtures/category-fixtures";
+import I18n from "I18n";
 import { click, visit } from "@ember/test-helpers";
 import {
   acceptance,
   exists,
+  query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -28,6 +30,10 @@ acceptance("Share and Invite modal", function (needs) {
     await click("#topic-footer-button-share-and-invite");
 
     assert.ok(exists(".share-topic-modal"), "it shows the modal");
+    assert.notOk(
+      exists("#modal-alert.alert-warning"),
+      "it does not show the alert with restricted groups"
+    );
 
     assert.ok(
       queryAll("input.invite-link")
@@ -64,12 +70,26 @@ acceptance("Share and Invite modal", function (needs) {
       exists("#modal-alert.alert-warning"),
       "it shows restricted warning"
     );
+    assert.strictEqual(
+      query("#modal-alert.alert-warning").innerText,
+      I18n.t("topic.share.restricted_groups", {
+        count: 1,
+        groupNames: "moderators",
+      }),
+      "it shows correct restricted group name"
+    );
   });
 });
 
 acceptance("Share and Invite modal - mobile", function (needs) {
   needs.user();
   needs.mobileView();
+
+  needs.pretender((server, helper) => {
+    server.get("/c/feature/find_by_slug.json", () =>
+      helper.response(200, CategoryFixtures["/c/1/show.json"])
+    );
+  });
 
   test("Topic footer mobile button", async function (assert) {
     await visit("/t/internationalization-localization/280");
@@ -90,6 +110,13 @@ acceptance("Share and Invite modal - mobile", function (needs) {
 acceptance("Share url with badges disabled - desktop", function (needs) {
   needs.user();
   needs.settings({ enable_badges: false });
+
+  needs.pretender((server, helper) => {
+    server.get("/c/feature/find_by_slug.json", () =>
+      helper.response(200, CategoryFixtures["/c/1/show.json"])
+    );
+  });
+
   test("topic footer button - badges disabled - desktop", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-button-share-and-invite");
