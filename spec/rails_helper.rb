@@ -57,6 +57,8 @@ require 'shoulda-matchers'
 require 'sidekiq/testing'
 require 'test_prof/recipes/rspec/let_it_be'
 require 'test_prof/before_all/adapters/active_record'
+require 'selenium-webdriver'
+require 'capybara/rails'
 
 # The shoulda-matchers gem no longer detects the test framework
 # you're using or mixes itself into that framework automatically.
@@ -212,6 +214,10 @@ RSpec.configure do |config|
 
     SiteSetting.refresh!
 
+    Capybara.server_host = "test.localhost"
+    Capybara.server_port = 31337
+    Capybara.app_host = "http://test.localhost:31337"
+
     # Rebase defaults
     #
     # We nuke the DB storage provider from site settings, so need to yank out the existing settings
@@ -224,7 +230,8 @@ RSpec.configure do |config|
 
     SiteSetting.provider = TestLocalProcessProvider.new
 
-    WebMock.disable_net_connect!
+    allowed_sites = ["test.localhost", "test.localhost:31337", "localhost", %r{127\.0\.0\.1:(\d{0,4})}]
+    WebMock.disable_net_connect!(allow: allowed_sites, net_http_connect_on_start: true)
 
     if ENV['ELEVATED_UPLOADS_ID']
       DB.exec "SELECT setval('uploads_id_seq', 10000)"
@@ -282,8 +289,8 @@ RSpec.configure do |config|
   end
 
   # Match the request hostname to the value in `database.yml`
-  config.before(:all, type: [:request, :multisite]) { host! "test.localhost" }
-  config.before(:each, type: [:request, :multisite]) { host! "test.localhost" }
+  config.before(:all, type: [:request, :multisite, :system]) { host! "test.localhost" }
+  config.before(:each, type: [:request, :multisite, :system]) { host! "test.localhost" }
 
   config.before(:each, type: :multisite) do
     Rails.configuration.multisite = true # rubocop:disable Discourse/NoDirectMultisiteManipulation

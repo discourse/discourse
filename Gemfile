@@ -149,10 +149,12 @@ group :assets do
 end
 
 group :test do
+  gem 'capybara', require: false
   gem 'webmock', require: false
   gem 'fakeweb', require: false
   gem 'minitest', require: false
   gem 'simplecov', require: false
+  gem 'selenium-webdriver', require: false
   gem "test-prof"
 end
 
