@@ -50,6 +50,7 @@
       {{/unless}}
       <div class="details">
         <div class="primary">
+          {{plugin-outlet name="before-user-profile-avatar" args=(hash model=model)}}
           {{user-profile-avatar user=model tagName=""}}
           <section class="controls">
             <ul>
