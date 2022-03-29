@@ -397,7 +397,15 @@ const Topic = RestModel.extend({
     this.set(
       "bookmarks",
       this.bookmarks.filter((bookmark) => {
-        if (bookmark.id === id && bookmark.for_topic) {
+        // TODO (martin) [POLYBOOK] Not relevant once polymorphic bookmarks are implemented.
+        if (
+          (!this.siteSettings.use_polymorphic_bookmarks &&
+            bookmark.id === id &&
+            bookmark.for_topic) ||
+          (this.siteSettings.use_polymorphic_bookmarks &&
+            bookmark.id === id &&
+            bookmark.bookmarkable_type === "Topic")
+        ) {
           // TODO (martin) (2022-02-01) Remove these old bookmark events, replaced by bookmarks:changed.
           this.appEvents.trigger("topic:bookmark-toggled");
           this.appEvents.trigger(
@@ -417,7 +425,11 @@ const Topic = RestModel.extend({
   clearBookmarks() {
     this.toggleProperty("bookmarked");
 
-    const postIds = this.bookmarks.mapBy("post_id");
+    const postIds = this.siteSettings.use_polymorphic_bookmarks
+      ? this.bookmarks
+          .filterBy("bookmarkable_type", "Post")
+          .mapBy("bookmarkable_id")
+      : this.bookmarks.mapBy("post_id");
     postIds.forEach((postId) => {
       const loadedPost = this.postStream.findLoadedPost(postId);
       if (loadedPost) {

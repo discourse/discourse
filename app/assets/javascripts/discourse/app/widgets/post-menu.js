@@ -301,7 +301,7 @@ registerButton("reply", (attrs, state, siteSettings, postMenuSettings) => {
 
 registerButton(
   "bookmark",
-  (attrs, _state, _siteSettings, _settings, currentUser) => {
+  (attrs, _state, siteSettings, _settings, currentUser) => {
     if (!attrs.canBookmark) {
       return;
     }
@@ -331,7 +331,9 @@ registerButton(
 
     return {
       id: attrs.bookmarked ? "unbookmark" : "bookmark",
-      action: "toggleBookmark",
+      action: siteSettings.use_polymorphic_bookmarks
+        ? "toggleBookmarkPolymorphic"
+        : "toggleBookmark",
       title,
       titleOptions,
       className: classNames.join(" "),

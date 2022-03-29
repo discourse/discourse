@@ -3,6 +3,7 @@
 describe BookmarksController do
   let(:current_user) { Fabricate(:user) }
   let(:bookmark_post) { Fabricate(:post) }
+  let(:bookmark_topic) { Fabricate(:topic) }
   let(:bookmark_user) { current_user }
 
   before do
@@ -28,6 +29,7 @@ describe BookmarksController do
       expect(response.status).to eq(429)
     end
 
+    # TODO (martin) [POLYBOOK] Not relevant once polymorphic bookmarks are implemented.
     it "creates a for_topic bookmark" do
       post "/bookmarks.json", params: {
         post_id: bookmark_post.id,
@@ -40,6 +42,7 @@ describe BookmarksController do
       expect(bookmark.for_topic).to eq(true)
     end
 
+    # TODO (martin) [POLYBOOK] Not relevant once polymorphic bookmarks are implemented.
     it "errors when trying to create a for_topic bookmark for post_number > 1" do
       post "/bookmarks.json", params: {
         post_id: Fabricate(:post, topic: bookmark_post.topic).id,
@@ -89,6 +92,38 @@ describe BookmarksController do
         expect(response.status).to eq(400)
         expect(response.parsed_body['errors']).to include(
           I18n.t("bookmarks.errors.already_bookmarked_post")
+        )
+      end
+    end
+
+    context "if the user already has bookmarked the record (polymorphic)" do
+      before do
+        SiteSetting.use_polymorphic_bookmarks = true
+        Fabricate(:bookmark, bookmarkable: bookmark_post, user: bookmark_user)
+        Fabricate(:bookmark, bookmarkable: bookmark_topic, user: bookmark_user)
+      end
+
+      it "returns failed JSON with a 400 error" do
+        post "/bookmarks.json", params: {
+          bookmarkable_id: bookmark_post.id,
+          bookmarkable_type: "Post",
+          reminder_at: (Time.zone.now + 1.day).iso8601
+        }
+
+        expect(response.status).to eq(400)
+        expect(response.parsed_body['errors']).to include(
+          I18n.t("bookmarks.errors.already_bookmarked", type: "Post")
+        )
+
+        post "/bookmarks.json", params: {
+          bookmarkable_id: bookmark_topic.id,
+          bookmarkable_type: "Topic",
+          reminder_at: (Time.zone.now + 1.day).iso8601
+        }
+
+        expect(response.status).to eq(400)
+        expect(response.parsed_body['errors']).to include(
+          I18n.t("bookmarks.errors.already_bookmarked", type: "Topic")
         )
       end
     end

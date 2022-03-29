@@ -4,22 +4,42 @@ class BookmarksController < ApplicationController
   requires_login
 
   def create
-    params.require(:post_id)
+    if SiteSetting.use_polymorphic_bookmarks
+      params.require(:bookmarkable_id)
+      params.require(:bookmarkable_type)
+    else
+      params.require(:post_id)
+    end
 
     RateLimiter.new(
       current_user, "create_bookmark", SiteSetting.max_bookmarks_per_day, 1.day.to_i
     ).performed!
 
     bookmark_manager = BookmarkManager.new(current_user)
-    bookmark = bookmark_manager.create(
-      post_id: params[:post_id],
+
+    create_params = {
       name: params[:name],
       reminder_at: params[:reminder_at],
-      for_topic: params[:for_topic] == "true",
       options: {
         auto_delete_preference: params[:auto_delete_preference] || 0
       }
-    )
+    }
+
+    if SiteSetting.use_polymorphic_bookmarks
+      bookmark = bookmark_manager.create_for(
+        **create_params.merge(
+          bookmarkable_id: params[:bookmarkable_id],
+          bookmarkable_type: params[:bookmarkable_type]
+        )
+      )
+    else
+      bookmark = bookmark_manager.create(
+        **create_params.merge(
+          post_id: params[:post_id],
+          for_topic: params[:for_topic] == "true",
+        )
+      )
+    end
 
     if bookmark_manager.errors.empty?
       return render json: success_json.merge(id: bookmark.id)

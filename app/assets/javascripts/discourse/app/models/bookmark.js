@@ -38,6 +38,14 @@ const Bookmark = RestModel.extend({
   },
 
   attachedTo() {
+    if (this.siteSettings.use_polymorphic_bookmarks) {
+      return {
+        target: this.bookmarkable_type.toLowerCase(),
+        targetId: this.bookmarkable_id,
+      };
+    }
+
+    // TODO (martin) [POLYBOOK] Not relevant once polymorphic bookmarks are implemented.
     if (this.for_topic) {
       return { target: "topic", targetId: this.topic_id };
     }

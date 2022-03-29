@@ -317,6 +317,8 @@ en:
 
     bookmarks:
       created: "You've bookmarked this post. %{name}"
+      create_for: "Create bookmark for %{type}"
+      edit_for: "Edit bookmark for %{type}"
       not_bookmarked: "bookmark this post"
       remove_reminder_keep_bookmark: "Remove reminder and keep bookmark"
       created_with_reminder: "You've bookmarked this post with a reminder %{date}. %{name}"
