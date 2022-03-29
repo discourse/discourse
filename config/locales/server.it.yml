@@ -3870,6 +3870,9 @@ it:
         other: '"%{tag_name}" è limitato alle seguenti categorie: %{category_names}'
       synonym: 'I sinonimi non sono ammessi. Utilizza invece "%{tag_name}".'
       has_synonyms: '"%{tag_name}" non può essere utilizzato perché ha dei sinonimi.'
+      category_does_not_allow_tags:
+        one: 'La categoria "%{category}" non consente l''etichetta "%{tags}". Si prega di rimuoverla.'
+        other: 'La categoria "%{category}" non consente le seguenti etichette: "%{tags}". Si prega di rimuoverle.'
     required_tags_from_group:
       one: "Devi includere almeno %{count} etichetta %{tag_group_name}. Le etichette in questo gruppo sono: %{tags}."
       other: "Devi includere almeno %{count} etichette %{tag_group_name}. Le etichette in questo gruppo sono: %{tags}."
@@ -4165,6 +4168,7 @@ it:
     ignore_error: "Spiacenti, non puoi ignorare questo utente."
     mute_error: "Spiacenti, non puoi silenziate questo utente."
     error: "Non si può modificare il livello di notifica per questo utente."
+    invalid_value: '"%{value}" non è un livello di notifica valido.'
   discord:
     not_in_allowed_guild: "Autenticazione non riuscita. Non sei un membro di una gilda Discord consentita."
   old_keys_reminder:

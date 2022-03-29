@@ -3246,15 +3246,20 @@ es:
        other {}}
     original_post: "Publicación original"
     views: "Vistas"
+    sr_views: "Ordenar por núm. de visitas"
     views_lowercase:
       one: "visita"
       other: "vistas"
     replies: "Respuestas"
+    sr_replies: "Ordenar por núm. de respuestas"
     views_long:
       one: "este tema se ha visto %{count} vez"
       other: "este tema se ha visto %{number} veces"
     activity: "Actividad"
+    sr_activity: "Ordenar por fecha de actividad"
     likes: "Me gusta"
+    sr_likes: "Ordenar por núm. de me gusta"
+    sr_op_likes: "Ordenar por núm. de me gusta de la primera publicación"
     likes_lowercase:
       one: "me gusta"
       other: "me gusta"
@@ -3658,9 +3663,13 @@ es:
       no_likes_body: "Una buena manera de empezar a contribuir es ir leyendo los temas ya publicados y darle a %{heartIcon} en lo que te guste"
       no_likes_others: "No le ha dado me gusta a ninguna publicación."
       no_topics_title: "Todavía no has empezado ningún tema"
+      no_topics_title_others: "%{username} no ha creado ningún tema todavía"
       no_read_topics_title: "Todavía no has leído ningún tema"
       no_read_topics_body: "Cuando empieces a leer temas, los verás aquí en una lista. Puedes empezar a buscar temas que te interesen en <a href='%{topUrl}'>Destacados</a>, la lista de <a href='%{categoriesUrl}'>Categorías</a> o buscando palabras %{searchIcon}"
     no_group_messages_title: "No hay ningún mensaje en el grupo"
+    topic_entrance:
+      sr_jump_top_button: "Ir a la primera publicación"
+      sr_jump_bottom_button: "Ir a la última publicación"
     fullscreen_table:
       expand_btn: "Expandir tabla"
     second_factor_auth:

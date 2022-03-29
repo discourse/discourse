@@ -4678,6 +4678,7 @@ es:
     ignore_error: "Lo sentimos, pero no puedes ignorar a este usuario."
     mute_error: "Lo sentimos, pero no puedes silenciar a este usuario."
     error: "Lo siento, no puedes cambiar el nivel de notificación de ese usuario."
+    invalid_value: '«%{value}» no es un nivel de notificaciones válido.'
   discord:
     not_in_allowed_guild: "La autenticación falló. No eres miembro de ningún clan de Discord permitido."
   old_keys_reminder:

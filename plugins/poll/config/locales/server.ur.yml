@@ -10,32 +10,47 @@ ur:
     poll_maximum_options: "ایک پول میں رکھے جانے والی آپشنز کی زیادہ سے زیادہ تعداد۔"
     poll_edit_window_mins: "پوسٹ بنانے کے بعد کتنے منت تک پولز کی ترمیم کی جاسکتی ہے۔"
     poll_minimum_trust_level_to_create: "پول بنانے کیلئے کم از کم ٹرسٹ لَیول واضح کریں۔"
+    poll_groupable_user_fields: "صارف کے فیلڈ کے ناموں کا ایک سیٹ جو پول کے نتائج کو گروپ اور فلٹر کرنے کے لیے استعمال کیا جا سکتا ہے۔"
+    poll_export_data_explorer_query_id: "رائے شماری کے نتائج برآمد کرنےکے لیے ڈیٹا ایکسپلورر استفسار کی ID (غیر فعال کرنے کے لیے 0)۔"
   poll:
     poll: "پَول"
     invalid_argument: "آرگیومنٹ کیلئے '%{argument}' غلط وَیلِیو '%{value}'۔"
     multiple_polls_without_name: "نام کے بغیر ایک سے زیادہ پولزموجود ہیں۔ اپنے پولز کو منفرد شناخت دینے کیلیے '<code>نام</code>' صفت کا استعمال کریں۔"
-    multiple_polls_with_same_name: "ایک ہی نام والے ایک سے زیادہ پولزموجود ہیں: <strong>%{نام}</strong>۔ اپنے پولز کو منفرد شناخت دینے کیلیے '<code>نام</code>' صفت کا استعمال کریں۔"
+    multiple_polls_with_same_name: "ایک ہی نام کے متعدد پولز ہیں: <strong>%{name}</strong>۔ اپنے پولز کی منفرد شناخت کے لیے '<code>نام</code>' وصف استعمال کریں۔"
+    default_poll_must_have_at_least_1_option: "پول میں کم از کم 1 آپشن ہونا ضروری ہے۔"
+    named_poll_must_have_at_least_1_option: "<strong>%{name}</strong> نامی پول میں کم از کم 1 آپشن ہونا ضروری ہے۔"
     default_poll_must_have_less_options:
       one: "پول کی %{count} سے کم آپشن ہونا ضروری ہے۔"
-      other: "پول کی %{گنتی} سے کم آپشنز ہونا ضروری ہے۔"
+      other: "پول میں %{count} سے کم آپشنز ہوناچاھیے۔"
     named_poll_must_have_less_options:
       one: "پول جس کا نام <strong>%{نام}</strong> ہے، کی %{count} سے کم آپشن ہونا ضروری ہے۔"
-      other: "پول جس کا نام <strong>%{نام}</strong> ہے، کی %{count} سے کم آپشنز ہونا ضروری ہے۔"
+      other: "<strong>%{name}</strong> نامی پول میں %{count} سے کم آپشنز ہونا چاھیے۔"
     default_poll_must_have_different_options: "پول کی مختلف آپشنز ہونا ضروری ہے۔"
-    named_poll_must_have_different_options: "پول جس کا نام <strong>%{نام}</strong> ہے، کی آپشنز مختلف ہونا ضروری ہے۔"
+    named_poll_must_have_different_options: "<strong>%{name}</strong> نامی پول میں مختلف آپشنزہونے چاہئیں۔"
+    default_poll_must_not_have_any_empty_options: "پول میں کوئی خالی آپشن نہیں ہونا چاہیے۔"
+    named_poll_must_not_have_any_empty_options: "<strong>%{name}</strong> نامی پول میں کوئی خالی آپشن نہیں ہونا چاہیے۔"
     default_poll_with_multiple_choices_has_invalid_parameters: "ایک سے زیادہ انتخاب والے پول کے غلط پیرامیٹرز ہیں۔"
-    named_poll_with_multiple_choices_has_invalid_parameters: "ایک سے زیادہ انتخاب والے پول جس کا نام <strong>%{نام}</strong> ہے، کے غلط پیرامیٹرز ہیں۔"
+    named_poll_with_multiple_choices_has_invalid_parameters: "متعدد انتخاب کے ساتھ <strong>%{name}</strong> نامی پول میں غلط پیرامیٹرز ہیں۔"
     requires_at_least_1_valid_option: "آپ کو کم از کم 1 جائز آپشن منتخب کرنا ضروری ہے۔"
     edit_window_expired:
       cannot_edit_default_poll_with_votes: "آپ پہلے %{minutes} منٹ کے بعد ایک پول میں تبدیلی نہیں کر سکتے۔"
       cannot_edit_named_poll_with_votes: "آپ پہلے %{minutes} منٹ کے بعد پول کا نام <strong>${name}</strong> تبدیل نہیں کر سکتے۔"
-    no_poll_with_this_name: "کوئی پول جس کا نام <strong>%{نام}</strong> ہو، اس پوسٹ کے ساتھ منسلک نہیں ہے۔"
+    no_poll_with_this_name: "اس پوسٹ کے ساتھ <strong>%{name}</strong> نام کا کوئی پول منسلک نہیں ہے۔"
     post_is_deleted: "حذف کر دی گی پوست پر کام نہیں کیا جا سکتا۔"
     user_cant_post_in_topic: "آپ ووٹ نہیں کر سکتے کیونکہ آپ اِس ٹاپک میں پوسٹ نہیں کر سکتے ہیں۔"
     topic_must_be_open_to_vote: "ووٹ کرنے کیلیے ٹاپک کا کھلا ہونا ضروری ہے۔"
     poll_must_be_open_to_vote: "ووٹ کرنے کیلیے پول کا کھلا ہونا ضروری ہے۔"
+    one_vote_per_user: "اس پول کے لیے صرف 1 ووٹ کی اجازت ہے۔"
+    max_vote_per_user:
+      one: اس پول کے لیے صرف %{count} ووٹ کی اجازت ہے۔
+      other: اس پول کے لیے زیادہ سے زیادہ %{count} ووٹوں کی اجازت ہے۔
+    min_vote_per_user:
+      one: اس پول کے لیے کم از کم %{count} ووٹ درکار ہیں۔
+      other: اس پول کے لیے کم از کم %{count} ووٹ درکار ہیں۔
     topic_must_be_open_to_toggle_status: "سٹیٹس بدلنے کیلیے ٹاپک کا کھلا ہونا ضروری ہے۔"
     only_staff_or_op_can_toggle_status: "صرف عملے کے رکن یا اصل پوسٹر ایک پول کا سٹیٹس تبدیل کر سکتے ہیں۔"
     insufficient_rights_to_create: "آپ کو پول بنانے کی اجازت نہیں ہے۔"
     email:
       link_to_poll: "پول دیکھنے کیلیے کلک کریں۔"
+    user_field:
+      no_data: "کوئی مواد نہیں"

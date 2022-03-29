@@ -2800,6 +2800,7 @@ pl_PL:
         title: "Odpowiedz"
         help: "zacznij tworzyć odpowiedź do tego tematu"
       share:
+        title: "Udostępnij temat"
         extended_title: "Udostępnij link"
         help: "udostępnij odnośnik do tego tematu"
         instructions: "Udostępnij link do tego tematu:"
@@ -3627,6 +3628,7 @@ pl_PL:
       readonly: "przeglądać"
     lightbox:
       download: "pobierz"
+      open: "oryginalny obraz"
       previous: "Poprzedni (klawisz strzałki w lewo)"
       next: "Następny (klawisz strzałki w prawo)"
       counter: "%curr% z %total%"

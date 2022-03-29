@@ -3248,15 +3248,20 @@ de:
         other {}}
     original_post: "Original-Beitrag"
     views: "Aufrufe"
+    sr_views: "Nach Ansichten sortieren"
     views_lowercase:
       one: "Aufruf"
       other: "Aufrufe"
     replies: "Antworten"
+    sr_replies: "Nach Antworten sortieren"
     views_long:
       one: "dieses Thema wurde %{count}-mal betrachtet"
       other: "dieses Thema wurde %{number}-mal betrachtet"
     activity: "Aktivität"
+    sr_activity: "Nach Aktivität sortieren"
     likes: "„Gefällt mir“"
+    sr_likes: "Nach Likes sortieren"
+    sr_op_likes: "Nach Likes des Originalbeitrags sortieren"
     likes_lowercase:
       one: "„Gefällt mir“"
       other: "„Gefällt mir“"
@@ -3660,9 +3665,13 @@ de:
       no_likes_body: "Eine großartige Möglichkeit einzusteigen und Beiträge zu leisten, besteht darin, bereits stattgefundene Konversationen zu lesen und die %{heartIcon} bei Beiträgen auszuwählen, die Dir gefallen!"
       no_likes_others: "Keine Beiträge mit „Gefällt mir“."
       no_topics_title: "Du hast noch keine Themen begonnen"
+      no_topics_title_others: "%{username} hat noch keine Themen begonnen"
       no_read_topics_title: "Du hast noch keine Themen gelesen"
       no_read_topics_body: "Sobald Du mit dem Lesen von Diskussionen beginnst, siehst Du hier eine Liste. Zum Lesen suche nach Themen, die Du in <a href='%{topUrl}'>Top</a> oder <a href='%{categoriesUrl}'>Kategorien</a> oder suche nach dem Stichwort %{searchIcon}"
     no_group_messages_title: "Keine Gruppennachrichten gefunden"
+    topic_entrance:
+      sr_jump_top_button: "Zum ersten Beitrag springen"
+      sr_jump_bottom_button: "Zum letzten Beitrag springen"
     fullscreen_table:
       expand_btn: "Tabelle erweitern"
     second_factor_auth:
