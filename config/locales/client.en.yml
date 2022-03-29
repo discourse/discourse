@@ -3065,7 +3065,13 @@ en:
       show_hidden: "View ignored content."
       deleted_by_author_simple: "(post deleted by author)"
       collapse: "collapse"
+      sr_collapse_replies: "Collapse embedded replies"
+      sr_expand_replies:
+        one: "This post has %{count} reply. Click to expand"
+        other: "This post has %{count} replies. Click to expand"
       expand_collapse: "expand/collapse"
+      sr_below_embedded_posts_description: "post #%{post_number} replies"
+      sr_embedded_reply_description: "reply by @%{username} to post #%{post_number}"
       locked: "a staff member has locked this post from being edited"
       gap:
         one: "view %{count} hidden reply"

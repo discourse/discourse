@@ -270,6 +270,10 @@ registerButton("replies", (attrs, state, siteSettings) => {
     return;
   }
 
+  let ariaPressed;
+  if (!siteSettings.enable_filtered_replies_view) {
+    ariaPressed = state.repliesShown ? "true" : "false";
+  }
   return {
     action,
     icon,
@@ -284,6 +288,10 @@ registerButton("replies", (attrs, state, siteSettings) => {
     label: attrs.mobileView ? "post.has_replies_count" : "post.has_replies",
     iconRight: !siteSettings.enable_filtered_replies_view || attrs.mobileView,
     disabled: !!attrs.deleted,
+    translatedAriaLabel: I18n.t("post.sr_expand_replies", {
+      count: replyCount,
+    }),
+    ariaPressed,
   };
 });
 

@@ -464,7 +464,16 @@ createWidget("post-contents", {
       result.push(
         h("section.embedded-posts.bottom", [
           repliesBelow.map((p) => {
-            return this.attach("embedded-post", p, { model: p.asPost });
+            return this.attach("embedded-post", p, {
+              model: p.asPost,
+              state: {
+                role: "region",
+                "aria-label": I18n.t("post.sr_embedded_reply_description", {
+                  post_number: attrs.post_number,
+                  username: p.username,
+                }),
+              },
+            });
           }),
           this.attach("button", {
             title: "post.collapse",
@@ -472,6 +481,7 @@ createWidget("post-contents", {
             action: "toggleRepliesBelow",
             actionParam: "true",
             className: "btn collapse-up",
+            translatedAriaLabel: I18n.t("post.sr_collapse_replies"),
           }),
         ])
       );
