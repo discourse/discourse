@@ -630,10 +630,6 @@ class Plugin::Instance
     Plugin::CustomEmoji.translate(from, to)
   end
 
-  def register_consistency_exempt_notification_type(type)
-    Notification.register_consistency_exempt_type(type)
-  end
-
   def automatic_assets
     css = styles.join("\n")
     js = javascripts.join("\n")

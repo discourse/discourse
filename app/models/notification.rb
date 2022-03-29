@@ -31,21 +31,6 @@ class Notification < ActiveRecord::Base
     self.high_priority = self.high_priority || Notification.high_priority_types.include?(self.notification_type)
   end
 
-  @consistency_exempt_types = []
-
-  def self.register_consistency_exempt_type(type)
-    begin
-      type = type.to_i
-      @consistency_exempt_types << type unless @consistency_exempt_types.include?(type)
-    rescue => e
-      Discourse.warn_exception(e, message: "Failed to register '#{type}' as a consistency exempt notification type. Ensure the type is a valid notifcation type.")
-    end
-  end
-
-  def self.reset_consistency_exempt_types
-    @consistency_exempt_types = []
-  end
-
   def self.consolidate_or_create!(notification_params)
     notification = new(notification_params)
     consolidation_planner = Notifications::ConsolidationPlanner.new
@@ -74,18 +59,13 @@ class Notification < ActiveRecord::Base
     SQL
   end
 
-  def self.consistency_exempt_sql
-    return "" if @consistency_exempt_types.empty?
-
-    "AND notification_type NOT IN (#{@consistency_exempt_types.join(", ")})"
-  end
-
   def self.ensure_consistency!
     DB.exec(<<~SQL)
       DELETE
         FROM notifications n
        WHERE high_priority
-         #{consistency_exempt_sql}
+         AND n.topic_id IS NOT NULL
+         AND n.post_number IS NOT NULL
          AND NOT EXISTS (
             SELECT 1
               FROM posts p

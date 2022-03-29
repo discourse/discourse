@@ -340,17 +340,12 @@ describe Notification do
       expect(Notification.count).to eq(2)
     end
 
-    it 'does not delete consistency exempt notifications' do
-      chat_mention_type = Notification.types[:chat_mention]
-      Notification.register_consistency_exempt_type(chat_mention_type)
+    it 'does not delete notifications that do not have a topic_id or post number' do
       Notification.create!(read: false, user_id: user.id, topic_id: nil, post_number: nil, data: '[]',
-                           notification_type: chat_mention_type, high_priority: true)
-
+                           notification_type: Notification.types[:chat_mention], high_priority: true)
       expect {
         Notification.ensure_consistency!
       }.to_not change { Notification.count }
-
-      Notification.reset_consistency_exempt_types
     end
   end
 
