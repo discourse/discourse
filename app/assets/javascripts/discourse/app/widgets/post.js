@@ -68,16 +68,20 @@ export function avatarImg(wanted, attrs) {
   return h("img", properties);
 }
 
-export function avatarFor(wanted, attrs) {
+export function avatarFor(wanted, attrs, linkAttrs) {
+  const attributes = {
+    href: attrs.url,
+    "data-user-card": attrs.username,
+    "aria-hidden": true,
+  };
+  if (linkAttrs) {
+    Object.assign(attributes, linkAttrs);
+  }
   return h(
     "a",
     {
       className: `trigger-user-card ${attrs.className || ""}`,
-      attributes: {
-        href: attrs.url,
-        "data-user-card": attrs.username,
-        "aria-hidden": true,
-      },
+      attributes,
     },
     avatarImg(wanted, attrs)
   );

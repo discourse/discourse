@@ -23,6 +23,14 @@ createWidget("small-user-list", {
     return atts.listClassName;
   },
 
+  buildAttributes(attrs) {
+    const attributes = { role: "list" };
+    if (attrs.ariaLabel) {
+      attributes["aria-label"] = attrs.ariaLabel;
+    }
+    return attributes;
+  },
+
   html(atts) {
     let users = atts.users;
     if (users) {
@@ -37,7 +45,11 @@ createWidget("small-user-list", {
       let description = null;
 
       if (atts.description) {
-        description = I18n.t(atts.description, { count: atts.count });
+        description = h(
+          "span",
+          { attributes: { "aria-hidden": true } },
+          I18n.t(atts.description, { count: atts.count })
+        );
       }
 
       // oddly post_url is on the user
@@ -46,10 +58,16 @@ createWidget("small-user-list", {
         postUrl = postUrl || u.post_url;
         if (u.unknown) {
           return h("div.unknown", {
-            attributes: { title: I18n.t("post.unknown_user") },
+            attributes: {
+              title: I18n.t("post.unknown_user"),
+              role: "listitem",
+            },
           });
         } else {
-          return avatarFor.call(this, "small", u);
+          return avatarFor.call(this, "small", u, {
+            role: "listitem",
+            "aria-hidden": false,
+          });
         }
       });
 
