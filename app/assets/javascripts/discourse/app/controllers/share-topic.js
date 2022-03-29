@@ -1,7 +1,9 @@
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { getAbsoluteURL } from "discourse-common/lib/get-url";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed, {
+  afterRender,
+} from "discourse-common/utils/decorators";
 import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
 import Sharing from "discourse/lib/sharing";
@@ -16,38 +18,26 @@ export default Controller.extend(
   bufferedProperty("invite"),
   {
     topic: null,
-    restrictedGroups: null,
 
     onShow() {
       this.set("showNotifyUsers", false);
 
-      this.appEvents.on(
-        "modal:body-shown",
-        this,
-        this.showRestrictedGroupWarning
-      );
+      this._showRestrictedGroupWarning();
     },
 
-    onClose() {
-      this.appEvents.off(
-        "modal:body-shown",
-        this,
-        this.showRestrictedGroupWarning
-      );
-    },
-
-    showRestrictedGroupWarning() {
+    @afterRender
+    _showRestrictedGroupWarning() {
       if (!this.model) {
         return;
       }
 
       Category.reloadBySlugPath(this.model.slug).then((result) => {
         const groups = result.category.group_permissions.mapBy("group_name");
-        if (groups && !groups.any((x) => x === "everyone")) {
+        if (groups && !groups.any((group) => group === "everyone")) {
           this.flash(
             I18n.t("topic.share.restricted_groups", {
               count: groups.length,
-              groups: groups.join(", "),
+              groupNames: groups.join(", "),
             }),
             "warning"
           );
