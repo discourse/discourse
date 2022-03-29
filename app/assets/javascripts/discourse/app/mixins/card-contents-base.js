@@ -367,6 +367,5 @@ export default Mixin.create({
       this.cardTarget?.focus();
       return;
     }
-    return true;
   },
 });
