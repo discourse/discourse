@@ -3091,6 +3091,12 @@ en:
         one: "you and %{count} other person liked this post"
         other: "you and %{count} other people liked this post"
 
+      sr_post_like_count_button:
+        one: "%{count} person liked this post. Click to view"
+        other: "%{count} people liked this post. Click to view"
+      sr_post_read_count_button:
+        one: "%{count} person read this post. Click to view"
+        other: "%{count} people read this post. Click to view"
       filtered_replies_hint:
         one: "View this post and its reply"
         other: "View this post and its %{count} replies"
@@ -3201,6 +3207,8 @@ en:
           read_capped:
             one: "and %{count} other read this"
             other: "and %{count} others read this"
+          sr_post_likers_list_description: "users who liked this post"
+          sr_post_readers_list_description: "users who read this post"
         by_you:
           off_topic: "You flagged this as off-topic"
           spam: "You flagged this as spam"
