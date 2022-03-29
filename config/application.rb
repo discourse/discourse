@@ -108,16 +108,6 @@ module Discourse
     # issue is image_optim crashes on missing dependencies
     config.assets.image_optim = false
 
-    require 'discourse_inflector'
-    Rails.autoloaders.each do |autoloader|
-      autoloader.inflector = DiscourseInflector.new
-      autoloader.inflector.inflect(
-        'onceoff' => 'Jobs',
-        'regular' => 'Jobs',
-        'scheduled' => 'Jobs'
-      )
-    end
-
     # Custom directories with classes and modules you want to be autoloadable.
     config.autoload_paths << "#{root}/lib"
 
