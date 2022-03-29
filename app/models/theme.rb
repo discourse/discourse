@@ -28,7 +28,7 @@ class Theme < ActiveRecord::Base
   has_one :javascript_cache, dependent: :destroy
   has_many :locale_fields, -> { filter_locale_fields(I18n.fallbacks[I18n.locale]) }, class_name: 'ThemeField'
   has_many :upload_fields, -> { where(type_id: ThemeField.types[:theme_upload_var]).preload(:upload) }, class_name: 'ThemeField'
-  has_many :raw_js_fields, -> { where(type_id: ThemeField.types[:raw_js]).preload(:javascript_cache) }, class_name: 'ThemeField'
+  has_many :raw_js_fields, -> { where(target_id: Theme.targets[:raw_js]).preload(:javascript_cache) }, class_name: 'ThemeField'
   has_many :extra_scss_fields, -> { where(target_id: Theme.targets[:extra_scss]) }, class_name: 'ThemeField'
   has_many :yaml_theme_fields, -> { where("name = 'yaml' AND type_id = ?", ThemeField.types[:yaml]) }, class_name: 'ThemeField'
   has_many :var_theme_fields, -> { where("type_id IN (?)", ThemeField.theme_var_type_ids) }, class_name: 'ThemeField'
@@ -121,10 +121,7 @@ class Theme < ActiveRecord::Base
       .pluck(:value_baked)
       .join("\n")
 
-    has_js_payload = all_extra_js.present?
-    has_js_payload ||= theme_fields.where(target_id: Theme.targets[:local_js]).exists?
-
-    if has_js_payload
+    if all_extra_js.present?
       js_compiler = ThemeJavascriptCompiler.new(id, name)
       js_compiler.append_raw_script(all_extra_js)
       settings_hash = build_settings_hash
@@ -352,7 +349,7 @@ class Theme < ActiveRecord::Base
       extra_scss: 5,
       extra_js: 6,
       tests_js: 7,
-      local_js: 8
+      raw_js: 8
     )
   end
 
@@ -560,13 +557,16 @@ class Theme < ActiveRecord::Base
     end
     hash['theme_uploads'] = theme_uploads if theme_uploads.present?
 
-    local_js_urls = {}
-    raw_js_fields.each do |field|
-      if field.javascript_cache
-        local_js_urls[field.name] = field.javascript_cache.local_url
+    raw_js_urls = {}
+    theme_fields.filter(&:raw_js_field?).each do |field|
+      if js_cache = field.javascript_cache
+        raw_js_urls[field.name] = {
+          url: js_cache.url,
+          local_url: js_cache.local_url
+        }
       end
     end
-    hash['local_js_urls'] = local_js_urls if local_js_urls.present?
+    hash['raw_js'] = raw_js_urls if raw_js_urls.present?
 
     hash
   end
@@ -675,7 +675,7 @@ class Theme < ActiveRecord::Base
 
     settings_hash&.each do |name, value|
       next if name == "theme_uploads"
-      next if name == "local_js_urls"
+      next if name == "raw_js"
       contents << to_scss_variable(name, value)
     end
 

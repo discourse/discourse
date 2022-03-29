@@ -314,7 +314,7 @@ class ThemeField < ActiveRecord::Base
       types[:js]
     elsif target.to_s == "settings" || target.to_s == "translations"
       types[:yaml]
-    elsif target.to_s == "local_js"
+    elsif target.to_s == "raw_js"
       types[:raw_js]
     end
   end
@@ -336,8 +336,8 @@ class ThemeField < ActiveRecord::Base
       ThemeField.html_fields.include?(self.name)
   end
 
-  def local_js_field?
-    Theme.targets[self.target_id] == :local_js
+  def raw_js_field?
+    Theme.targets[self.target_id] == :raw_js
   end
 
   def extra_js_field?
@@ -396,7 +396,7 @@ class ThemeField < ActiveRecord::Base
       self.error = validate_svg_sprite_xml
       self.value_baked = "baked"
       self.compiler_version = Theme.compiler_version
-    elsif local_js_field?
+    elsif raw_js_field?
       javascript_cache || build_javascript_cache
       javascript_cache.content = self.value
       javascript_cache.save!
@@ -527,6 +527,9 @@ class ThemeField < ActiveRecord::Base
     ThemeFileMatcher.new(regex: /^javascripts\/(?<name>.+)$/,
                          targets: :extra_js, names: nil, types: :js,
                          canonical: -> (h) { "javascripts/#{h[:name]}" }),
+    ThemeFileMatcher.new(regex: /^raw-javascripts\/(?<name>.+)$/,
+                         targets: :raw_js, names: nil, types: :js,
+                         canonical: -> (h) { "raw-javascripts/#{h[:name]}" }),
     ThemeFileMatcher.new(regex: /^test\/(?<name>.+)$/,
                          targets: :tests_js, names: nil, types: :js,
                          canonical: -> (h) { "test/#{h[:name]}" }),
@@ -570,6 +573,9 @@ class ThemeField < ActiveRecord::Base
     elsif settings_field?
       return theme.theme_fields.where(target_id: ThemeField.basic_targets.map { |t| Theme.targets[t.to_sym] },
                                       name: ThemeField.scss_fields + ThemeField.html_fields)
+    elsif raw_js_field?
+      return theme.theme_fields.where(target_id: ThemeField.basic_targets.map { |t| Theme.targets[t.to_sym] },
+                                      name: ThemeField.html_fields)
     end
     ThemeField.none
   end

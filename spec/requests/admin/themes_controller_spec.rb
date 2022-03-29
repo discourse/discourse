@@ -167,7 +167,7 @@ describe Admin::ThemesController do
 
       theme = Theme.find(json["theme"]["id"])
 
-      # the theme imported includes `local_js_assets` with a file including this contents
+      # the theme imported includes `raw-javascripts` with a file including this contents
       expect(theme.raw_js_fields.first.javascript_cache.content).to include("web worker")
     end
 

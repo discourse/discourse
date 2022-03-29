@@ -200,38 +200,55 @@ HTML
     expect(theme.javascript_cache.content).to include("var settings =")
   end
 
-  it "correctly handles local JS assets" do
+  it "correctly handles raw JS assets" do
     content = "// not transpiled; console.log('hello world');"
-    js_field = theme.set_field(target: :local_js, name: "test.js", value: content)
+
+    theme.set_field(target: :extra_js, name: "discourse/controllers/discovery.js", value: "let a = 'b';")
+    common_field = theme.set_field(target: :common, name: "head_tag", value: "<script>let c = 'd';</script>", type: :html)
+    theme.save!
+
     theme.set_field(target: :settings, type: :yaml, name: "yaml", value: "hello: world")
     theme.save!
 
-    js_field.reload
-    expect(js_field.javascript_cache.content).to eq(content)
+    raw_js_field = theme.set_field(target: :raw_js, name: "test", value: content)
+    theme.save!
 
-    # a bit fragile, but at lease we test it properly
-    js_to_eval = <<~JS
-      var settings;
-      var window = {};
-      var require = function(name) {
-        if(name == "discourse/lib/theme-settings-store") {
-          return({
-            registerSettings: function(id, s) {
-              settings = s;
-            }
-          });
+    raw_js_field.reload
+    expect(raw_js_field.javascript_cache.content).to eq(content)
+
+    common_field.ensure_baked!
+    common_field.reload
+
+    # a bit fragile, but at least we test it properly
+    [theme.reload.javascript_cache.content, common_field.reload.javascript_cache.content].each do |js|
+      js_to_eval = <<~JS
+        var settings;
+        var window = {};
+        var require = function(name) {
+          if(name == "discourse/lib/theme-settings-store") {
+            return({
+              registerSettings: function(id, s) {
+                settings = s;
+              }
+            });
+          }
         }
-      }
-      window.require = require;
-      #{theme.javascript_cache.content}
-      settings
-    JS
+        window.require = require;
+        #{js}
+        settings
+      JS
 
-    ctx = MiniRacer::Context.new
-    val = ctx.eval(js_to_eval)
-    ctx.dispose
+      ctx = MiniRacer::Context.new
+      val = ctx.eval(js_to_eval)
+      ctx.dispose
 
-    expect(val["local_js_urls"]["test.js"]).to eq(js_field.javascript_cache.local_url)
+      expect(val["raw_js"]).to eq({
+        "test" => {
+          "local_url" => raw_js_field.javascript_cache.local_url,
+          "url" => raw_js_field.javascript_cache.url
+        }
+      })
+    end
 
     # this is important, we do not want local_js_urls to leak into scss
     expect(theme.scss_variables).to eq("$hello: unquote(\"world\");")
