@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'jobs/regular/process_post'
-
 describe Jobs::ProcessPost do
 
   it "returns when the post cannot be found" do
