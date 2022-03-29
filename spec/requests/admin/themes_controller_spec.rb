@@ -161,9 +161,14 @@ describe Admin::ThemesController do
       json = response.parsed_body
 
       expect(json["theme"]["name"]).to eq("Header Icons")
-      expect(json["theme"]["theme_fields"].length).to eq(5)
+      expect(json["theme"]["theme_fields"].length).to eq(6)
       expect(json["theme"]["auto_update"]).to eq(false)
       expect(UserHistory.where(action: UserHistory.actions[:change_theme]).count).to eq(1)
+
+      theme = Theme.find(json["theme"]["id"])
+
+      # the theme imported includes `local_js_assets` with a file including this contents
+      expect(theme.raw_js_fields.first.javascript_cache.content).to include("web worker")
     end
 
     it 'updates an existing theme from an archive by name' do
@@ -177,7 +182,7 @@ describe Admin::ThemesController do
       json = response.parsed_body
 
       expect(json["theme"]["name"]).to eq("Header Icons")
-      expect(json["theme"]["theme_fields"].length).to eq(5)
+      expect(json["theme"]["theme_fields"].length).to eq(6)
       expect(UserHistory.where(action: UserHistory.actions[:change_theme]).count).to eq(1)
     end
 
@@ -202,7 +207,7 @@ describe Admin::ThemesController do
 
       expect(json["theme"]["name"]).to eq("Some other name")
       expect(json["theme"]["id"]).to eq(other_existing_theme.id)
-      expect(json["theme"]["theme_fields"].length).to eq(5)
+      expect(json["theme"]["theme_fields"].length).to eq(6)
       expect(UserHistory.where(action: UserHistory.actions[:change_theme]).count).to eq(1)
     end
 
@@ -218,7 +223,7 @@ describe Admin::ThemesController do
 
       expect(json["theme"]["name"]).to eq("Header Icons")
       expect(json["theme"]["id"]).not_to eq(existing_theme.id)
-      expect(json["theme"]["theme_fields"].length).to eq(5)
+      expect(json["theme"]["theme_fields"].length).to eq(6)
       expect(json["theme"]["auto_update"]).to eq(false)
       expect(UserHistory.where(action: UserHistory.actions[:change_theme]).count).to eq(1)
     end

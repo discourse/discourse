@@ -188,6 +188,13 @@ class RemoteTheme < ActiveRecord::Base
 
     theme.convert_settings
 
+    theme_info["local_js_assets"]&.each do |name, relative_path|
+      if path = importer.real_path(relative_path)
+        contents = File.read(path)
+        updated_fields << theme.set_field(target: :local_js, name: name, value: contents)
+      end
+    end
+
     # Destroy fields that no longer exist in the remote theme
     field_ids_to_destroy = theme.theme_fields.pluck(:id) - updated_fields.map { |tf| tf&.id }
     ThemeField.where(id: field_ids_to_destroy).destroy_all

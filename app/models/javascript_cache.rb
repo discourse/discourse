@@ -8,10 +8,18 @@ class JavascriptCache < ActiveRecord::Base
   before_save :update_digest
 
   def url
-    "#{GlobalSetting.cdn_url}#{Discourse.base_path}/theme-javascripts/#{digest}.js?__ws=#{Discourse.current_hostname}"
+    "#{GlobalSetting.cdn_url}#{Discourse.base_path}#{path}"
+  end
+
+  def local_url
+    "#{Discourse.base_url}#{path}"
   end
 
   private
+
+  def path
+    "/theme-javascripts/#{digest}.js?__ws=#{Discourse.current_hostname}"
+  end
 
   def update_digest
     self.digest = Digest::SHA1.hexdigest(content) if content_changed?

@@ -37,13 +37,16 @@ class ThemeField < ActiveRecord::Base
   }
 
   def self.types
-    @types ||= Enum.new(html: 0,
-                        scss: 1,
-                        theme_upload_var: 2,
-                        theme_color_var: 3, # No longer used
-                        theme_var: 4, # No longer used
-                        yaml: 5,
-                        js: 6)
+    @types ||= Enum.new(
+      html: 0,
+      scss: 1,
+      theme_upload_var: 2,
+      theme_color_var: 3, # No longer used
+      theme_var: 4, # No longer used
+      yaml: 5,
+      js: 6,
+      raw_js: 7
+    )
   end
 
   def self.theme_var_type_ids
@@ -184,7 +187,7 @@ class ThemeField < ActiveRecord::Base
 
     begin
       content = File.read(path)
-      svg_file = Nokogiri::XML(content) do |config|
+      Nokogiri::XML(content) do |config|
         config.options = Nokogiri::XML::ParseOptions::NOBLANKS
       end
     rescue => e
@@ -311,6 +314,8 @@ class ThemeField < ActiveRecord::Base
       types[:js]
     elsif target.to_s == "settings" || target.to_s == "translations"
       types[:yaml]
+    elsif target.to_s == "local_js"
+      types[:raw_js]
     end
   end
 
@@ -329,6 +334,10 @@ class ThemeField < ActiveRecord::Base
   def basic_html_field?
     ThemeField.basic_targets.include?(Theme.targets[self.target_id].to_s) &&
       ThemeField.html_fields.include?(self.name)
+  end
+
+  def local_js_field?
+    Theme.targets[self.target_id] == :local_js
   end
 
   def extra_js_field?
@@ -385,6 +394,12 @@ class ThemeField < ActiveRecord::Base
     elsif svg_sprite_field?
       DB.after_commit { SvgSprite.expire_cache }
       self.error = validate_svg_sprite_xml
+      self.value_baked = "baked"
+      self.compiler_version = Theme.compiler_version
+    elsif local_js_field?
+      javascript_cache || build_javascript_cache
+      javascript_cache.content = self.value
+      javascript_cache.save!
       self.value_baked = "baked"
       self.compiler_version = Theme.compiler_version
     end

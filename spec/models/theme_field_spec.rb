@@ -174,7 +174,7 @@ HTML
 
   it "correctly handles extra JS fields" do
     js_field = theme.set_field(target: :extra_js, name: "discourse/controllers/discovery.js.es6", value: "import 'discourse/lib/ajax'; console.log('hello from .js.es6');")
-    js_2_field = theme.set_field(target: :extra_js, name: "discourse/controllers/discovery-2.js", value: "import 'discourse/lib/ajax'; console.log('hello from .js');")
+    theme.set_field(target: :extra_js, name: "discourse/controllers/discovery-2.js", value: "import 'discourse/lib/ajax'; console.log('hello from .js');")
     hbs_field = theme.set_field(target: :extra_js, name: "discourse/templates/discovery.hbs", value: "{{hello-world}}")
     raw_hbs_field = theme.set_field(target: :extra_js, name: "discourse/templates/discovery.hbr", value: "{{hello-world}}")
     hbr_field = theme.set_field(target: :extra_js, name: "discourse/templates/other_discovery.hbr", value: "{{hello-world}}")
@@ -198,6 +198,43 @@ HTML
     expect(theme.javascript_cache.content).to include("define(\"discourse/theme-#{theme.id}/controllers/discovery\"")
     expect(theme.javascript_cache.content).to include("define(\"discourse/theme-#{theme.id}/controllers/discovery-2\"")
     expect(theme.javascript_cache.content).to include("var settings =")
+  end
+
+  it "correctly handles local JS assets" do
+    content = "// not transpiled; console.log('hello world');"
+    js_field = theme.set_field(target: :local_js, name: "test.js", value: content)
+    theme.set_field(target: :settings, type: :yaml, name: "yaml", value: "hello: world")
+    theme.save!
+
+    js_field.reload
+    expect(js_field.javascript_cache.content).to eq(content)
+
+    # a bit fragile, but at lease we test it properly
+    js_to_eval = <<~JS
+      var settings;
+      var window = {};
+      var require = function(name) {
+        if(name == "discourse/lib/theme-settings-store") {
+          return({
+            registerSettings: function(id, s) {
+              settings = s;
+            }
+          });
+        }
+      }
+      window.require = require;
+      #{theme.javascript_cache.content}
+      settings
+    JS
+
+    ctx = MiniRacer::Context.new
+    val = ctx.eval(js_to_eval)
+    ctx.dispose
+
+    expect(val["local_js_urls"]["test.js"]).to eq(js_field.javascript_cache.local_url)
+
+    # this is important, we do not want local_js_urls to leak into scss
+    expect(theme.scss_variables).to eq("$hello: unquote(\"world\");")
   end
 
   def create_upload_theme_field!(name)
