@@ -85,15 +85,9 @@ class Upload < ActiveRecord::Base
   end
 
   def self.with_no_non_post_relations
-    scope = self
+    self
       .joins("LEFT JOIN upload_references ur ON ur.upload_id = uploads.id AND ur.target_type != 'Post'")
       .where("ur.upload_id IS NULL")
-      .joins(<<~SQL)
-        LEFT JOIN site_settings ss
-        ON NULLIF(ss.value, '')::integer = uploads.id
-        AND ss.data_type = #{SiteSettings::TypeSupervisor.types[:upload].to_i}
-      SQL
-      .where("ss.value IS NULL")
       .joins("LEFT JOIN users u ON u.uploaded_avatar_id = uploads.id")
       .where("u.uploaded_avatar_id IS NULL")
       .joins("LEFT JOIN user_avatars ua ON ua.gravatar_upload_id = uploads.id OR ua.custom_upload_id = uploads.id")
@@ -118,12 +112,6 @@ class Upload < ActiveRecord::Base
         AND ts.data_type = #{ThemeSetting.types[:upload].to_i}
       SQL
       .where("ts.value IS NULL")
-
-    if SiteSetting.selectable_avatars.present?
-      scope = scope.where.not(id: SiteSetting.selectable_avatars.map(&:id))
-    end
-
-    scope
   end
 
   def to_s

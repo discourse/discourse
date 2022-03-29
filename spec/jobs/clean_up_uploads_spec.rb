@@ -193,6 +193,10 @@ describe Jobs::CleanUpUploads do
   end
 
   it "does not clean up selectable avatars" do
+    original_provider = SiteSetting.provider
+    SiteSetting.provider = SiteSettings::DbProvider.new(SiteSetting)
+    SiteSetting.clean_orphan_uploads_grace_period_hours = 1
+
     avatar1_upload = fabricate_upload
     avatar2_upload = fabricate_upload
 
@@ -203,6 +207,9 @@ describe Jobs::CleanUpUploads do
     expect(Upload.exists?(id: expired_upload.id)).to eq(false)
     expect(Upload.exists?(id: avatar1_upload.id)).to eq(true)
     expect(Upload.exists?(id: avatar2_upload.id)).to eq(true)
+  ensure
+    SiteSetting.delete_all
+    SiteSetting.provider = original_provider
   end
 
   it "does not delete profile background uploads" do
