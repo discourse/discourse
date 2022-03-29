@@ -663,8 +663,8 @@ createWidget("post-article", {
 
   html(attrs, state) {
     const rows = [
-      h("a.tabLoc", {
-        attributes: { href: "", "aria-hidden": true, tabindex: -1 },
+      h("span.tabLoc", {
+        attributes: { "aria-hidden": true, tabindex: -1 },
       }),
     ];
     if (state.repliesAbove.length) {
