@@ -5,6 +5,14 @@ class UserExport < ActiveRecord::Base
   belongs_to :upload, dependent: :destroy
   belongs_to :topic, dependent: :destroy
 
+  has_many :upload_references, as: :target, dependent: :destroy
+
+  after_save do
+    if saved_change_to_upload_id?
+      UploadReference.ensure_exist!(upload_ids: [self.upload_id], target: self)
+    end
+  end
+
   DESTROY_CREATED_BEFORE = 2.days.ago
 
   def self.remove_old_exports
