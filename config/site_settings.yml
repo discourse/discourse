@@ -1883,18 +1883,10 @@ developer:
   port:
     hidden: true
     default: ""
-  enable_long_polling:
-    hidden: true
-    client: true
-    default: true
   enable_chunked_encoding:
     hidden: true
     client: true
     default: true
-  long_polling_interval:
-    hidden: true
-    default: 25000
-    max: 25000
   long_polling_base_url:
     hidden: true
     client: true

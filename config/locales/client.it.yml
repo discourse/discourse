@@ -3236,15 +3236,20 @@ it:
         other {}}
     original_post: "Messaggio Originale"
     views: "Visualizzazioni"
+    sr_views: "Ordina per visualizzazioni"
     views_lowercase:
       one: "visita"
       other: "visite"
     replies: "Risposte"
+    sr_replies: "Ordina per risposte"
     views_long:
       one: "questo argomento è stato visto una volta"
       other: "questo argomento è stato visto %{number} volte"
     activity: "Attività"
+    sr_activity: "Ordina per attività"
     likes: "Mi piace"
+    sr_likes: "Ordina per n° di \"mi piace\""
+    sr_op_likes: "Ordina per n° di \"mi piace\" al post originale"
     likes_lowercase:
       one: "mi piace"
       other: "mi piace"
@@ -3647,6 +3652,9 @@ it:
       no_read_topics_title: "Non hai ancora letto nessun argomento"
       no_read_topics_body: "Una volta che avrai iniziato a leggere discussioni, ne vedrai un elenco qui. Per cominciare a leggere, cerca argomenti di tuo interesse alle pagine <a href='%{topUrl}'>Popolari</a> o <a href='%{categoriesUrl}'>Categorie</a>; oppure effettua una ricerca per parola chiave %{searchIcon}"
     no_group_messages_title: "Nessun messaggio di gruppo trovato"
+    topic_entrance:
+      sr_jump_top_button: "Vai al primo post"
+      sr_jump_bottom_button: "Vai all'ultimo post"
     fullscreen_table:
       expand_btn: "Espandi Tabella"
     second_factor_auth:

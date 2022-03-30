@@ -274,7 +274,7 @@ tr_TR:
       contact: "Bize Ulaşın"
       contact_info: "Bu siteyi etkileyen ciddi bir sorun veya acil bir durum oluştuğunda, lütfen %{contact_info} adresi üzerinden bizimle iletişime geçin."
     bookmarked:
-      title: "İşaret"
+      title: "Yer İmi"
       edit_bookmark: "Yer İmini Düzenle"
       clear_bookmarks: "Yer İmlerini Temizle"
       help:
@@ -2592,8 +2592,8 @@ tr_TR:
         title: "Yazdır"
         help: "Bu konunun yazıcı dostu olan sürümünü aç"
       flag_topic:
-        title: "Bayrakla işaretle"
-        help: "bu gönderiyi denetlenmesi için özel olarak bayrakla imle veya bununla ilgili özel bir bildirim gönder"
+        title: "Bayrak Koy"
+        help: "Bu gönderiyi denetlenmesi için özel olarak bayrakla imle veya bununla ilgili özel bir bildirim gönder"
         success_message: "Bu konuyu başarıyla bayrakla işaretledin"
       make_public:
         title: "Herkese Açık Konuya Dönüştür"
@@ -3127,7 +3127,7 @@ tr_TR:
       colors_disabled: "Category style olarak none belirlenmiş olduğundan renk seçemezsiniz."
     flagging:
       title: "Topluluğumuzun nezaket kuralları içerisinde kalmasına sağladığın destek için teşekkürler!"
-      action: "Gönderiyi Bayrakla İşaretle"
+      action: "Gönderiye Bayrak Koy"
       take_action: "Harekete Geç..."
       take_action_options:
         default:
@@ -3169,7 +3169,7 @@ tr_TR:
           other: "%{count} kaldı"
     flagging_topic:
       title: "Topluluğumuzun nezaket kuralları içerisinde kalmasına verdiğin destek için teşekkürler!"
-      action: "Konuyu Bayrakla İşaretle"
+      action: "Konuya Bayrak Koy"
       notify_action: "Mesaj"
     topic_map:
       title: "Konu Özeti"
@@ -3221,15 +3221,20 @@ tr_TR:
       other {}} {count, plural, one {1 yanıt} other {# yanıt}} var
     original_post: "Orjinal Gönderi"
     views: "Görüntüleme"
+    sr_views: "Görüntüleme sayısına göre sırala"
     views_lowercase:
       one: "gösterim"
       other: "görüntülenenler"
     replies: "Yanıtlar"
+    sr_replies: "Cevap sayısına göre sırala"
     views_long:
       one: "bu konu %{count} defa görüntülendi"
       other: "bu konu %{number} defa görüntülendi"
     activity: "Etkinlik"
+    sr_activity: "Aktiviteye göre sırala"
     likes: "Beğeni"
+    sr_likes: "Beğeni sayısına göre sırala"
+    sr_op_likes: "Orijinal gönderi beğenilerine göre sırala"
     likes_lowercase:
       one: "beğeni"
       other: "beğeni"
@@ -3626,8 +3631,12 @@ tr_TR:
       no_likes_title: "Henüz hiçbir konuyu beğenmedin"
       no_likes_others: "Beğenilen gönderi yok."
       no_topics_title: "Henüz herhangi bir konu başlatmadın"
+      no_topics_title_others: "%{username} kullanıcısı henüz herhangi bir konu başlatmadı"
       no_read_topics_title: "Henüz herhangi bir konu okumadın"
     no_group_messages_title: "Grup mesajı bulunamadı"
+    topic_entrance:
+      sr_jump_top_button: "İlk gönderiye atla"
+      sr_jump_bottom_button: "Son gönderiye atla"
     fullscreen_table:
       expand_btn: "Tabloyu Genişlet"
   admin_js:
@@ -4579,7 +4588,7 @@ tr_TR:
           block: "Engelle"
           censor: "Sansür"
           require_approval: "Onay gerektir"
-          flag: "Bayrakla işaretle"
+          flag: "Bayrak Koy"
           replace: "Değiştir"
           tag: "Etiket"
           silence: "Sustur"

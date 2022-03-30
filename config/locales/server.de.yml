@@ -4677,6 +4677,7 @@ de:
     ignore_error: "Entschuldige, du kannst diesen Benutzer nicht ignorieren."
     mute_error: "Entschuldige, du kannst diesen Benutzer nicht stummschalten."
     error: "Leider kannst Du die Benachrichtigungsebene für diesen Benutzer nicht ändern."
+    invalid_value: '„%{value}“ ist keine gültige Benachrichtigungsstufe.'
   discord:
     not_in_allowed_guild: "Authentifizierung fehlgeschlagen. Du bist kein Mitglied einer erlaubten Discord-Gilde."
   old_keys_reminder:

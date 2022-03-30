@@ -4093,6 +4093,7 @@ tr_TR:
   notification_level:
     ignore_error: "Üzgünüz, o kullanıcıyı görmezden gelemezsiniz."
     mute_error: "Üzgünüz, o kullanıcıyı sessize alamazsınız."
+    invalid_value: '"%{value}" geçerli bir bildirim düzeyi değil.'
   discord:
     not_in_allowed_guild: "Kimlik doğrulama başarısız oldu. İzin verilen bir Discord guildinin üyesi değilsiniz."
   old_keys_reminder:

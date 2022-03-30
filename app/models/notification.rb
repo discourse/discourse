@@ -64,7 +64,7 @@ class Notification < ActiveRecord::Base
       DELETE
         FROM notifications n
        WHERE high_priority
-         AND notification_type NOT IN (#{types[:chat_mention].to_i}, #{types[:chat_message].to_i})
+         AND n.topic_id IS NOT NULL
          AND NOT EXISTS (
             SELECT 1
               FROM posts p

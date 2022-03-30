@@ -3039,7 +3039,7 @@ he:
         other: "הצגת %{count} תגובות שהוסתרו"
       notice:
         new_user: "זהו הפרסום הראשון מאת %{user} - הבה נקבל את פניו/ה לקהילה שלנו!"
-        returning_user: "עבר זמן מה מאז שראינו במחוזותינו את %{user} - הפרסום האחרון שלו/ה היה ב־%{time}."
+        returning_user: "עבר זמן מה מאז שראינו במחוזותינו את %{user} - הפרסום האחרון שלו/ה היה %{time}."
       unread: "הפוסט טרם נקרא"
       has_replies:
         one: "תגובה אחת"
@@ -3521,19 +3521,24 @@ he:
         other {}}
     original_post: "פוסט מקורי"
     views: "צפיות"
+    sr_views: "מיון לפי תצוגות"
     views_lowercase:
       one: "צפיה"
       two: "צפיות"
       many: "צפיות"
       other: "צפיות"
     replies: "תגובות"
+    sr_replies: "מיון לפי תגובות"
     views_long:
       one: "נושא זה נצפה פעם %{count}"
       two: "נושא זה נצפה %{number} פעמים"
       many: "נושא זה נצפה %{number} פעמים"
       other: "נושא זה נצפה %{number} פעמים"
     activity: "פעילות"
+    sr_activity: "מיון לפי פעילות"
     likes: "לייקים"
+    sr_likes: "מיון לפי לייקים"
+    sr_op_likes: "מיון לפי לייקים בפוסט המקורי"
     likes_lowercase:
       one: "לייק"
       two: "לייקים"
@@ -3975,9 +3980,13 @@ he:
       no_likes_body: "דרך נפלאה לקפוץ ישירות פנימה ולהתחיל לתרום היא להתחיל לקרוא דיונים שכבר נערכו ולבחור בסמל %{heartIcon} על פוסטים שאהבת!"
       no_likes_others: "אין פוסטים שנעשה להם לייק."
       no_topics_title: "עדיין לא פתחת אף נושא"
+      no_topics_title_others: "לא נפתח עוד אף נושא על ידי %{username}"
       no_read_topics_title: "טרם קראת נושאים"
       no_read_topics_body: "עם תחילת קריאת הדיונים, תופיע כאן רשימה. כדי להתחיל לקרוא, כדאי לחפש נושאים שמעניינים אותך תחת <a href='%{topUrl}'>עליונים</a> או <a href='%{categoriesUrl}'>קטגוריות</a> או לחפש אחר מילת מפתח %{searchIcon}"
     no_group_messages_title: "לא נמצאו הודעות קבוצתיות"
+    topic_entrance:
+      sr_jump_top_button: "קפיצה לפוסט הראשון"
+      sr_jump_bottom_button: "קפיצה לפוסט האחרון"
     fullscreen_table:
       expand_btn: "הרחבת טבלה"
     second_factor_auth:
