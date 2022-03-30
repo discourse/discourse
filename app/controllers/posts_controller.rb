@@ -537,9 +537,9 @@ class PostsController < ApplicationController
     params.require(:post_id)
 
     bookmark_id = Bookmark.where(post_id: params[:post_id], user_id: current_user.id).pluck_first(:id)
-    result = BookmarkManager.new(current_user).destroy(bookmark_id)
+    destroyed_bookmark = BookmarkManager.new(current_user).destroy(bookmark_id)
 
-    render json: success_json.merge(result)
+    render json: success_json.merge(BookmarkManager.bookmark_metadata(destroyed_bookmark, current_user))
   end
 
   def wiki

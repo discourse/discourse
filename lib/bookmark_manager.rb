@@ -8,6 +8,20 @@ class BookmarkManager
     @guardian = Guardian.new(user)
   end
 
+  def self.bookmark_metadata(bookmark, user)
+    data = {}
+    if SiteSetting.use_polymorphic_bookmarks
+      if bookmark.bookmarkable_type == "Topic"
+        data[:topic_bookmarked] = Bookmark.for_user_in_topic(user.id, bookmark.bookmarkable.id).exists?
+      elsif bookmark.bookmarkable_type == "Post"
+        data[:topic_bookmarked] = Bookmark.for_user_in_topic(user.id, bookmark.bookmarkable.topic.id).exists?
+      end
+    else
+      data[:topic_bookmarked] = Bookmark.for_user_in_topic(user.id, bookmark.topic.id).exists?
+    end
+    data
+  end
+
   # TODO (martin) [POLYBOOK] This will be used in place of #create once
   # polymorphic bookmarks are implemented.
   def create_for(bookmarkable_id:, bookmarkable_type:, name: nil, reminder_at: nil, options: {})
