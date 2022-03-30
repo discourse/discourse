@@ -110,6 +110,9 @@ module Discourse
 
     # Custom directories with classes and modules you want to be autoloadable.
     config.autoload_paths << "#{root}/lib"
+    config.autoload_paths << "#{root}/lib/validators"
+    config.autoload_paths << "#{root}/lib/guardian"
+    config.autoload_paths << "#{root}/lib/common_passwords"
 
     config.eager_load_paths << "#{root}/lib"
 
