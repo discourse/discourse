@@ -1,3 +1,4 @@
+import { headerOffset } from "discourse/lib/offset-calculator";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import EmberObject, { computed, get } from "@ember/object";
 import PluginApiMixin, {
@@ -870,6 +871,13 @@ export default Component.extend(
           strategy,
           placement: this.selectKit.options.placement,
           modifiers: [
+            {
+              name: "flip",
+              enabled: !inModal,
+              options: {
+                padding: { top: headerOffset() },
+              },
+            },
             {
               name: "offset",
               options: {
