@@ -1,20 +1,19 @@
 # frozen_string_literal: true
 
-require_relative 'post_item_excerpt'
+class UserTopicBookmarkSerializer < UserBookmarkBaseSerializer
+  attr_reader :topic
 
-class UserBookmarkSerializer < ApplicationSerializer
-  include PostItemExcerpt
+  def initialize(obj, topic, opts)
+    # what is scope??? baby don't hurt me
+    super(obj, opts)
+    @topic = topic
+  end
+
   include TopicTagsMixin
 
-  attributes :id,
-             :created_at,
-             :updated_at,
-             :topic_id,
+  attributes :topic_id,
              :linked_post_number,
              :post_id,
-             :name,
-             :reminder_at,
-             :pinned,
              :title,
              :fancy_title,
              :deleted,
@@ -26,36 +25,19 @@ class UserBookmarkSerializer < ApplicationSerializer
              :highest_post_number,
              :last_read_post_number,
              :bumped_at,
-             :slug,
-             :post_user_username,
-             :post_user_avatar_template,
-             :post_user_name,
-             :for_topic,
-             :bookmarkable_id,
-             :bookmarkable_type
+             :slug
+
+  # always linking to post 1 for the topic
+  def linked_post_number
+    1
+  end
 
   def topic_id
-    post.topic_id
+    topic.id
   end
 
-  def topic
-    @topic ||= object.topic
-  end
-
-  def post
-    @post ||= object.post
-  end
-
-  def closed
-    topic.closed
-  end
-
-  def archived
-    topic.archived
-  end
-
-  def linked_post_number
-    post.post_number
+  def post_id
+    topic.first_post.id
   end
 
   def title
@@ -66,12 +48,13 @@ class UserBookmarkSerializer < ApplicationSerializer
     topic.fancy_title
   end
 
+  # todo handle all the deleted_at conditions add with_deleted to scope query
   def deleted
-    topic.deleted_at.present? || post.deleted_at.present?
+    topic.deleted_at.present? || topic.first_post.deleted_at.present?
   end
 
   def hidden
-    post.hidden
+    topic.first_post.hidden
   end
 
   def category_id
@@ -90,6 +73,7 @@ class UserBookmarkSerializer < ApplicationSerializer
     topic.closed
   end
 
+  # todo: where does scope come from?
   def highest_post_number
     scope.is_staff? ? topic.highest_staff_post_number : topic.highest_post_number
   end
@@ -107,15 +91,15 @@ class UserBookmarkSerializer < ApplicationSerializer
   end
 
   def raw
-    post.raw
+    topic.first_post.raw
   end
 
   def cooked
     @cooked ||= \
-      if object.for_topic && last_read_post_number.present?
+      if last_read_post_number.present?
         for_topic_cooked_post
       else
-        post.cooked
+        topic.first_post.cooked
       end
   end
 
@@ -135,19 +119,7 @@ class UserBookmarkSerializer < ApplicationSerializer
     topic.slug
   end
 
-  def post_user
-    @post_user ||= post.user
-  end
-
-  def post_user_username
-    post_user.username
-  end
-
-  def post_user_avatar_template
-    post_user.avatar_template
-  end
-
-  def post_user_name
-    post_user.name
+  def bookmarkable_user
+    @bookmarkable_user ||= topic.first_post.user
   end
 end

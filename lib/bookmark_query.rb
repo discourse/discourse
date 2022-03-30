@@ -27,25 +27,40 @@ class BookmarkQuery
   end
 
   def list_all
-    results = user_bookmarks.order(
-      '(CASE WHEN bookmarks.pinned THEN 0 ELSE 1 END), bookmarks.reminder_at ASC, bookmarks.updated_at DESC'
-    )
+    topic_results = topic_related_user_bookmarks
+    other_results = other_user_bookmarks
 
     topics = Topic.listable_topics.secured(@guardian)
     pms = Topic.private_messages_for_user(@user)
-    results = results.merge(topics.or(pms))
 
-    results = results.merge(Post.secured(@guardian))
+    topic_results = topic_results.merge(topics.or(pms))
+    topic_results = topic_results.merge(Post.secured(@guardian))
+    topic_results = @guardian.filter_allowed_categories(topic_results)
 
+    if BookmarkQuery.preloaded_custom_fields.any?
+      Topic.preload_custom_fields(
+        topic_results, BookmarkQuery.preloaded_custom_fields
+      )
+    end
+
+    results = Bookmark.select("*").from("(#{topic_results.to_sql} UNION #{other_results.to_sql}) as bookmarks").order(
+      '(CASE WHEN bookmarks.pinned THEN 0 ELSE 1 END), bookmarks.reminder_at ASC, bookmarks.updated_at DESC'
+    )
+
+    # MethodProfiler.output_sql_to_stderr!(filter_transactions: true)
     if @params[:q].present?
       term = @params[:q]
       bookmark_ts_query = Search.ts_query(term: term)
       results = results
-        .joins("LEFT JOIN post_search_data ON post_search_data.post_id = bookmarks.post_id")
-        .where(
-          "bookmarks.name ILIKE :q OR #{bookmark_ts_query} @@ post_search_data.search_data",
-          q: "%#{term}%"
+        .joins(
+          "LEFT JOIN post_search_data ON post_search_data.post_id = bookmarks.bookmarkable_id
+            AND bookmarks.bookmarkable_type = 'Post'"
         )
+      results = results.joins("LEFT JOIN chat_messages ON chat_messages.id = bookmarks.bookmarkable_id AND bookmarks.bookmarkable_type = 'ChatMessage'")
+      results = results.where(
+        "bookmarks.name ILIKE :q OR #{bookmark_ts_query} @@ post_search_data.search_data OR chat_messages.message ILIKE :q",
+        q: "%#{term}%"
+      )
     end
 
     if @page.positive?
@@ -54,27 +69,23 @@ class BookmarkQuery
 
     results = results.limit(@limit)
 
-    if BookmarkQuery.preloaded_custom_fields.any?
-      Topic.preload_custom_fields(
-        results.map(&:topic), BookmarkQuery.preloaded_custom_fields
-      )
-    end
-
     BookmarkQuery.preload(results, self)
-
-    @guardian.filter_allowed_categories(results)
+    results
   end
 
   private
 
-  def user_bookmarks
+  def other_user_bookmarks
+    Bookmark.where(user: @user).where.not(bookmarkable_type: ["Post", "Topic"])
+  end
+
+  def topic_related_user_bookmarks
     # There is guaranteed to be a TopicUser record if the user has bookmarked
     # a topic, see BookmarkManager
     Bookmark.where(user: @user)
-      .includes(post: :user)
-      .includes(post: { topic: :tags })
-      .includes(topic: :topic_users)
-      .references(:post)
+      .where(bookmarkable_type: ["Post", "Topic"])
+      .joins(:post)
+      .joins(topic: :topic_users)
       .where(topic_users: { user_id: @user.id })
   end
 end

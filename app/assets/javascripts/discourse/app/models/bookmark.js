@@ -160,16 +160,21 @@ const Bookmark = RestModel.extend({
   },
 
   @discourseComputed(
-    "post_user_username",
-    "post_user_avatar_template",
-    "post_user_name"
+    "bookmarkable_user_username",
+    "bookmarkable_user_avatar_template",
+    "bookmarkable_user_name"
   )
-  postUser(post_user_username, avatarTemplate, name) {
+  bookmarkableUser(bookmarkable_user_username, avatarTemplate, name) {
     return User.create({
-      username: post_user_username,
+      username: bookmarkable_user_username,
       avatar_template: avatarTemplate,
       name,
     });
+  },
+
+  @discourseComputed("bookmarkable_type")
+  bookmarkableTopicAlike(bookmarkable_type) {
+    return ["Topic", "Post"].includes(bookmarkable_type);
   },
 });
 
