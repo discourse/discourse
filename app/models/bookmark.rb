@@ -24,19 +24,46 @@ class Bookmark < ActiveRecord::Base
     )
   end
 
+  # TODO (martin) [POLYBOOK] Not relevant once polymorphic bookmarks are implemented.
   validate :unique_per_post_for_user,
     on: [:create, :update],
     if: Proc.new { |b| b.will_save_change_to_post_id? || b.will_save_change_to_user_id? }
 
+  # TODO (martin) [POLYBOOK] Not relevant once polymorphic bookmarks are implemented.
   validate :for_topic_must_use_first_post,
     on: [:create, :update],
     if: Proc.new { |b| b.will_save_change_to_post_id? || b.will_save_change_to_for_topic? }
+
+  validate :polymorphic_columns_present, on: [:create, :update]
+
+  validate :unique_per_bookmarkable,
+    on: [:create, :update],
+    if: Proc.new { |b|
+      b.will_save_change_to_bookmarkable_id? || b.will_save_change_to_bookmarkable_type? || b.will_save_change_to_user_id?
+    }
 
   validate :ensure_sane_reminder_at_time, if: :will_save_change_to_reminder_at?
   validate :bookmark_limit_not_reached
   validates :name, length: { maximum: 100 }
 
+  def polymorphic_columns_present
+    return if !SiteSetting.use_polymorphic_bookmarks
+    return if self.bookmarkable_id.present? && self.bookmarkable_type.present?
+
+    self.errors.add(:base, I18n.t("bookmarks.errors.bookmarkable_id_type_required"))
+  end
+
+  def unique_per_bookmarkable
+    return if !SiteSetting.use_polymorphic_bookmarks
+    return if !Bookmark.exists?(user_id: user_id, bookmarkable_id: bookmarkable_id, bookmarkable_type: bookmarkable_type)
+
+    self.errors.add(:base, I18n.t("bookmarks.errors.already_bookmarked", type: bookmarkable_type))
+  end
+
+  # TODO (martin) [POLYBOOK] Not relevant once polymorphic bookmarks are implemented.
   def unique_per_post_for_user
+    return if SiteSetting.use_polymorphic_bookmarks
+
     exists = if is_for_first_post?
       Bookmark.exists?(user_id: user_id, post_id: post_id, for_topic: for_topic)
     else
@@ -48,6 +75,7 @@ class Bookmark < ActiveRecord::Base
     end
   end
 
+  # TODO (martin) [POLYBOOK] Not relevant once polymorphic bookmarks are implemented.
   def for_topic_must_use_first_post
     if !is_for_first_post? && self.for_topic
       self.errors.add(:base, I18n.t("bookmarks.errors.for_topic_must_use_first_post"))
@@ -78,6 +106,7 @@ class Bookmark < ActiveRecord::Base
     )
   end
 
+  # TODO (martin) [POLYBOOK] Not relevant once polymorphic bookmarks are implemented.
   def is_for_first_post?
     @is_for_first_post ||= new_record? ? Post.exists?(id: post_id, post_number: 1) : post.post_number == 1
   end
@@ -86,6 +115,8 @@ class Bookmark < ActiveRecord::Base
     self.auto_delete_preference == Bookmark.auto_delete_preferences[:when_reminder_sent]
   end
 
+  # TODO (martin) [POLYBOOK] This is only relevant for post/topic bookmarkables, need to
+  # think of a way to do this gracefully.
   def auto_delete_on_owner_reply?
     self.auto_delete_preference == Bookmark.auto_delete_preferences[:on_owner_reply]
   end
@@ -118,11 +149,24 @@ class Bookmark < ActiveRecord::Base
   end
 
   scope :for_user_in_topic, ->(user_id, topic_id) {
-    joins(:post).where(user_id: user_id, posts: { topic_id: topic_id })
+    if SiteSetting.use_polymorphic_bookmarks
+      joins("LEFT JOIN posts ON posts.id = bookmarks.bookmarkable_id AND bookmarks.bookmarkable_type = 'Post'")
+        .joins("LEFT JOIN topics ON topics.id = bookmarks.bookmarkable_id AND bookmarks.bookmarkable_type = 'Topic'")
+        .where(
+          "bookmarks.user_id = :user_id AND (topics.id = :topic_id OR posts.topic_id = :topic_id)",
+          user_id: user_id, topic_id: topic_id
+        )
+    else
+      joins(:post).where(user_id: user_id, posts: { topic_id: topic_id })
+    end
   }
 
   def self.find_for_topic_by_user(topic_id, user_id)
-    for_user_in_topic(user_id, topic_id).where(for_topic: true).first
+    if SiteSetting.use_polymorphic_bookmarks
+      find_by(user_id: user_id, bookmarkable_id: topic_id, bookmarkable_type: "Topic")
+    else
+      for_user_in_topic(user_id, topic_id).where(for_topic: true).first
+    end
   end
 
   def self.count_per_day(opts = nil)

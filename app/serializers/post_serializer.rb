@@ -367,10 +367,18 @@ class PostSerializer < BasicPostSerializer
   end
 
   def post_bookmark
-    if @topic_view.present?
-      @post_bookmark ||= @topic_view.user_post_bookmarks.find { |bookmark| bookmark.post_id == object.id && !bookmark.for_topic }
+    if SiteSetting.use_polymorphic_bookmarks
+      if @topic_view.present?
+        @post_bookmark ||= @topic_view.bookmarks.find { |bookmark| bookmark.bookmarkable == object }
+      else
+        @post_bookmark ||= Bookmark.find_by(user: scope.user, bookmarkable: object)
+      end
     else
-      @post_bookmark ||= object.bookmarks.find_by(user: scope.user, for_topic: false)
+      if @topic_view.present?
+        @post_bookmark ||= @topic_view.bookmarks.find { |bookmark| bookmark.post_id == object.id && !bookmark.for_topic }
+      else
+        @post_bookmark ||= object.bookmarks.find_by(user: scope.user, for_topic: false)
+      end
     end
   end
 

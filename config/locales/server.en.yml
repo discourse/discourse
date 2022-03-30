@@ -429,11 +429,13 @@ en:
   bookmarks:
     errors:
       already_bookmarked_post: "You cannot bookmark the same post twice."
+      already_bookmarked: "You cannot bookmark the same %{type} twice."
       too_many: "Sorry, you cannot add more than %{limit} bookmarks, visit <a href='%{user_bookmarks_url}'>%{user_bookmarks_url}</a> to remove some."
       cannot_set_past_reminder: "You cannot set a bookmark reminder in the past."
       cannot_set_reminder_in_distant_future: "You cannot set a bookmark reminder more than 10 years in the future."
-      time_must_be_provided: "time must be provided for all reminders"
+      time_must_be_provided: "Time must be provided for all reminders"
       for_topic_must_use_first_post: "You can only use the first post to bookmark the topic."
+      bookmarkable_id_type_required: "The name and type of the record to bookmark is required."
 
     reminders:
       at_desktop: "Next time I'm at my desktop"

@@ -2385,6 +2385,11 @@ uncategorized:
 
   allow_changing_staged_user_tracking: false
 
+  use_polymorphic_bookmarks:
+    client: true
+    default: false
+    hidden: true
+
 user_preferences:
   default_email_digest_frequency:
     enum: "DigestEmailSiteSetting"
