@@ -25,14 +25,13 @@ export function openBookmarkModal(
             type: bookmark.bookmarkable_type,
           }
         );
+      } else if (bookmark.for_topic) {
+        return I18n.t(
+          bookmark.id
+            ? "post.bookmarks.edit_for_topic"
+            : "post.bookmarks.create_for_topic"
+        );
       } else {
-        if (bookmark.for_topic) {
-          return I18n.t(
-            bookmark.id
-              ? "post.bookmarks.edit_for_topic"
-              : "post.bookmarks.create_for_topic"
-          );
-        }
         return I18n.t(
           bookmark.id ? "post.bookmarks.edit" : "post.bookmarks.create"
         );

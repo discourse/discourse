@@ -41,12 +41,12 @@ RSpec.describe BookmarkManager do
       expect(subject.errors.full_messages).to include(I18n.t("bookmarks.errors.for_topic_must_use_first_post"))
     end
 
-    it "when topic is deleted it raises invalid access from guardian check" do
+    it "when topic is deleted it raises invalid access" do
       post.topic.trash!
       expect { subject.create(post_id: post.id, name: name) }.to raise_error(Discourse::InvalidAccess)
     end
 
-    it "when post is deleted it raises invalid access from guardian check" do
+    it "when post is deleted it raises invalid access" do
       post.trash!
       expect { subject.create(post_id: post.id, name: name) }.to raise_error(Discourse::InvalidAccess)
     end
@@ -149,15 +149,8 @@ RSpec.describe BookmarkManager do
   describe ".destroy" do
     let!(:bookmark) { Fabricate(:bookmark, user: user, post: post) }
     it "deletes the existing bookmark" do
-      result = subject.destroy(bookmark.id)
+      subject.destroy(bookmark.id)
       expect(Bookmark.exists?(id: bookmark.id)).to eq(false)
-      expect(result[:topic_bookmarked]).to eq(false)
-    end
-
-    it "returns a value indicating whether there are still other bookmarks in the topic for the user" do
-      Fabricate(:bookmark, user: user, post: Fabricate(:post, topic: post.topic))
-      result = subject.destroy(bookmark.id)
-      expect(result[:topic_bookmarked]).to eq(true)
     end
 
     # TODO (martin) [POLYBOOK] Not relevant once polymorphic bookmarks are implemented.
@@ -388,7 +381,7 @@ RSpec.describe BookmarkManager do
     it "allows creating a bookmark for the topic and for the first post" do
       subject.create_for(bookmarkable_id: post.topic_id, bookmarkable_type: "Topic", name: name)
       bookmark = Bookmark.find_by(user: user, bookmarkable: post.topic)
-      expect(bookmark).not_to eq(nil)
+      expect(bookmark.present?).to eq(true)
 
       subject.create_for(bookmarkable_id: post.id, bookmarkable_type: "Post", name: name)
       bookmark = Bookmark.find_by(user: user, bookmarkable: post)

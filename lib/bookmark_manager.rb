@@ -99,9 +99,10 @@ class BookmarkManager
     if SiteSetting.use_polymorphic_bookmarks
       self.send("after_destroy_bookmarkable_#{bookmark.bookmarkable_type.downcase}", bookmark)
     else
-      bookmarks_remaining_in_topic = update_topic_user_bookmarked(bookmark.topic)
-      { topic_bookmarked: bookmarks_remaining_in_topic }
+      update_topic_user_bookmarked(bookmark.topic)
     end
+
+    bookmark
   end
 
   def destroy_for_topic(topic, filter = {}, opts = {})
@@ -171,11 +172,8 @@ class BookmarkManager
   def update_topic_user_bookmarked(topic, opts = {})
     # PostCreator can specify whether auto_track is enabled or not, don't want to
     # create a TopicUser in that case
-    bookmarks_remaining_in_topic = Bookmark.for_user_in_topic(@user.id, topic.id).exists?
-    return bookmarks_remaining_in_topic if opts.key?(:auto_track) && !opts[:auto_track]
-
-    TopicUser.change(@user.id, topic, bookmarked: bookmarks_remaining_in_topic)
-    bookmarks_remaining_in_topic
+    return if opts.key?(:auto_track) && !opts[:auto_track]
+    TopicUser.change(@user.id, topic, bookmarked: Bookmark.for_user_in_topic(@user.id, topic.id).exists?)
   end
 
   def update_user_option(bookmark)
@@ -191,11 +189,11 @@ class BookmarkManager
   end
 
   def after_destroy_bookmarkable_post(bookmark)
-    { topic_bookmarked: update_topic_user_bookmarked(bookmark.bookmarkable.topic) }
+    update_topic_user_bookmarked(bookmark.bookmarkable.topic)
   end
 
   def after_destroy_bookmarkable_topic(bookmark)
-    { topic_bookmarked: update_topic_user_bookmarked(bookmark.bookmarkable) }
+    update_topic_user_bookmarked(bookmark.bookmarkable)
   end
 
   def validate_bookmarkable_post(post)

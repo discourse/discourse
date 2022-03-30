@@ -394,20 +394,20 @@ RSpec.describe TopicView do
       end
     end
 
-    context "#user_bookmarks" do
+    context "#bookmarks" do
       let!(:user) { Fabricate(:user) }
       let!(:bookmark1) { Fabricate(:bookmark, post: Fabricate(:post, topic: topic), user: user) }
       let!(:bookmark2) { Fabricate(:bookmark, post: Fabricate(:post, topic: topic), user: user) }
       let!(:bookmark3) { Fabricate(:bookmark, post: Fabricate(:post, topic: topic)) }
 
       it "returns all the bookmarks in the topic for a user" do
-        expect(TopicView.new(topic.id, user).user_bookmarks.pluck(:id)).to match_array(
+        expect(TopicView.new(topic.id, user).bookmarks.pluck(:id)).to match_array(
           [bookmark1.id, bookmark2.id]
         )
       end
 
       it "returns [] for anon users" do
-        expect(TopicView.new(topic.id, nil).user_bookmarks.pluck(:id)).to eq([])
+        expect(TopicView.new(topic.id, nil).bookmarks.pluck(:id)).to eq([])
       end
     end
 

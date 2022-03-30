@@ -50,8 +50,20 @@ class BookmarksController < ApplicationController
 
   def destroy
     params.require(:id)
-    result = BookmarkManager.new(current_user).destroy(params[:id])
-    render json: success_json.merge(result)
+    destroyed_bookmark = BookmarkManager.new(current_user).destroy(params[:id])
+
+    success_data = {}
+    if SiteSetting.use_polymorphic_bookmarks
+      if destroyed_bookmark.bookmarkable_type == "Topic"
+        success_data[:topic_bookmarked] = Bookmark.for_user_in_topic(current_user.id, destroyed_bookmark.bookmarkable.id).exists?
+      elsif destroyed_bookmark.bookmarkable_type == "Post"
+        success_data[:topic_bookmarked] = Bookmark.for_user_in_topic(current_user.id, destroyed_bookmark.bookmarkable.topic.id).exists?
+      end
+    else
+      success_data[:topic_bookmarked] = Bookmark.for_user_in_topic(current_user.id, destroyed_bookmark.topic.id).exists?
+    end
+
+    render json: success_json.merge(success_data)
   end
 
   def update

@@ -137,6 +137,39 @@ describe BookmarksController do
       expect(Bookmark.find_by(id: bookmark.id)).to eq(nil)
     end
 
+    it "returns an indication of whether there are still bookmarks in the topic" do
+      delete "/bookmarks/#{bookmark.id}.json"
+      expect(Bookmark.find_by(id: bookmark.id)).to eq(nil)
+      expect(response.parsed_body["topic_bookmarked"]).to eq(false)
+      bm2 = Fabricate(:bookmark, user: bookmark_user, post: Fabricate(:post, topic: bookmark_post.topic))
+      Fabricate(:bookmark, user: bookmark_user, post: Fabricate(:post, topic: bookmark_post.topic))
+      delete "/bookmarks/#{bm2.id}.json"
+      expect(Bookmark.find_by(id: bm2.id)).to eq(nil)
+      expect(response.parsed_body["topic_bookmarked"]).to eq(true)
+    end
+
+    context "for polymorphic bookmarks" do
+      let!(:bookmark) { Fabricate(:bookmark, bookmarkable: bookmark_post, user: bookmark_user) }
+
+      before do
+        SiteSetting.use_polymorphic_bookmarks = true
+      end
+
+      it "returns an indication of whether there are still bookmarks in the topic" do
+        delete "/bookmarks/#{bookmark.id}.json"
+        expect(Bookmark.find_by(id: bookmark.id)).to eq(nil)
+        expect(response.parsed_body["topic_bookmarked"]).to eq(false)
+        bm2 = Fabricate(:bookmark, user: bookmark_user, bookmarkable: Fabricate(:post, topic: bookmark_post.topic))
+        bm3 = Fabricate(:bookmark, user: bookmark_user, bookmarkable: bookmark_post.topic)
+        delete "/bookmarks/#{bm2.id}.json"
+        expect(Bookmark.find_by(id: bm2.id)).to eq(nil)
+        expect(response.parsed_body["topic_bookmarked"]).to eq(true)
+        delete "/bookmarks/#{bm3.id}.json"
+        expect(Bookmark.find_by(id: bm3.id)).to eq(nil)
+        expect(response.parsed_body["topic_bookmarked"]).to eq(false)
+      end
+    end
+
     context "if the bookmark has already been destroyed" do
       it "returns failed JSON with a 403 error" do
         bookmark.destroy!

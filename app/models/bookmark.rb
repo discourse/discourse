@@ -34,6 +34,8 @@ class Bookmark < ActiveRecord::Base
     on: [:create, :update],
     if: Proc.new { |b| b.will_save_change_to_post_id? || b.will_save_change_to_for_topic? }
 
+  validate :polymorphic_columns_present, on: [:create, :update]
+
   validate :unique_per_bookmarkable,
     on: [:create, :update],
     if: Proc.new { |b|
@@ -43,6 +45,13 @@ class Bookmark < ActiveRecord::Base
   validate :ensure_sane_reminder_at_time, if: :will_save_change_to_reminder_at?
   validate :bookmark_limit_not_reached
   validates :name, length: { maximum: 100 }
+
+  def polymorphic_columns_present
+    return if !SiteSetting.use_polymorphic_bookmarks
+    return if self.bookmarkable_id.present? && self.bookmarkable_type.present?
+
+    self.errors.add(:base, I18n.t("bookmarks.errors.bookmarkable_id_type_required"))
+  end
 
   def unique_per_bookmarkable
     return if !SiteSetting.use_polymorphic_bookmarks

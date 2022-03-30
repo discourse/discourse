@@ -414,7 +414,7 @@ class TopicView
 
   def bookmarks
     if SiteSetting.use_polymorphic_bookmarks
-      @bookmarks ||= Bookmark.for_user_in_topic(@user&.id, @topic.id).select(
+      @bookmarks ||= Bookmark.for_user_in_topic(@user, @topic.id).select(
         :id, :bookmarkable_id, :bookmarkable_type, :reminder_at, :name, :auto_delete_preference
       )
     else
@@ -516,10 +516,6 @@ class TopicView
 
   def links
     @links ||= TopicLink.topic_map(@guardian, @topic.id)
-  end
-
-  def user_bookmarks
-    @user_bookmarks ||= Bookmark.for_user_in_topic(@user&.id, @topic.id)
   end
 
   def reviewable_counts
