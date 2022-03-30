@@ -184,14 +184,21 @@ createWidget("post-avatar", {
     if (!attrs.user_id) {
       body = iconNode("far-trash-alt", { class: "deleted-user-avatar" });
     } else {
-      body = avatarFor.call(this, this.settings.size, {
-        template: attrs.avatar_template,
-        username: attrs.username,
-        name: attrs.name,
-        url: attrs.usernameUrl,
-        className: `main-avatar ${hideFromAnonUser ? "non-clickable" : ""}`,
-        hideTitle: true,
-      });
+      body = avatarFor.call(
+        this,
+        this.settings.size,
+        {
+          template: attrs.avatar_template,
+          username: attrs.username,
+          name: attrs.name,
+          url: attrs.usernameUrl,
+          className: `main-avatar ${hideFromAnonUser ? "non-clickable" : ""}`,
+          hideTitle: true,
+        },
+        {
+          tabindex: "-1",
+        }
+      );
     }
 
     const postAvatarBody = [body];
