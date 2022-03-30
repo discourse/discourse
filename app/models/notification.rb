@@ -65,7 +65,6 @@ class Notification < ActiveRecord::Base
         FROM notifications n
        WHERE high_priority
          AND n.topic_id IS NOT NULL
-         AND n.post_number IS NOT NULL
          AND NOT EXISTS (
             SELECT 1
               FROM posts p
