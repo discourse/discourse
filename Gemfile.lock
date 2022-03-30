@@ -439,7 +439,6 @@ GEM
       nokogiri (>= 1.6.0)
     ruby2_keywords (0.0.5)
     rubyzip (2.3.2)
-    sane_patch (1.0.0)
     sanitize (6.0.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
@@ -623,7 +622,6 @@ DEPENDENCIES
   ruby-prof
   ruby-readability
   rubyzip
-  sane_patch (~> 1.0)
   sanitize
   sassc (= 2.0.1)
   sassc-rails

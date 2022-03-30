@@ -22,5 +22,8 @@ Rails.autoloaders.each do |autoloader|
     'scheduled' => 'Jobs',
   )
 end
-Rails.autoloaders.main.ignore("lib/tasks",
-                              "lib/generators")
+Rails.autoloaders.main.ignore(
+  "lib/tasks",
+  "lib/generators",
+  "lib/freedom_patches",
+)

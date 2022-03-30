@@ -4,8 +4,8 @@ require "fileutils"
 
 # See: https://github.com/docker/for-linux/issues/1015
 
-module FreedomPatches
-  module CopyFile
+module FileUtils
+  class Entry_
     def copy_file(dest)
       File.open(path()) do |s|
         File.open(dest, "wb", s.stat.mode) do |f|
@@ -14,7 +14,5 @@ module FreedomPatches
         end
       end
     end
-
-    FileUtils::Entry_.prepend(self)
   end
 end
