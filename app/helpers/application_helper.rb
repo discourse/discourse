@@ -5,7 +5,7 @@ require 'canonical_url'
 
 module ApplicationHelper
   include CurrentUser
-  include CanonicalUrl::Helpers
+  include CanonicalURL::Helpers
   include ConfigurableUrls
   include GlobalPath
 

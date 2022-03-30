@@ -4,7 +4,7 @@ require 'current_user'
 
 class ApplicationController < ActionController::Base
   include CurrentUser
-  include CanonicalUrl::ControllerExtensions
+  include CanonicalURL::ControllerExtensions
   include JsonError
   include GlobalPath
   include Hijack
