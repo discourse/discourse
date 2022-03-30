@@ -204,16 +204,10 @@ class InlineUploads
 
       if src && (external_src || matched_uploads(src).present?)
         upload = uploads&.[](src)
-
-        text = upload&.original_filename || node.attributes["alt"]&.value
-        width = (node.attributes["width"]&.value || upload&.width).to_i
-        height = (node.attributes["height"]&.value || upload&.height).to_i
-        title = node.attributes["title"]&.value
-        text = "#{text}|#{width}x#{height}" if width > 0 && height > 0
-        url = upload&.short_url || PLACEHOLDER
+        node["src"] = upload&.short_url || PLACEHOLDER
 
         spaces_before = match[1].present? ? match[1][/ +$/].size : 0
-        replacement = +"#{" " * spaces_before}![#{text}](#{url}#{title.present? ? " \"#{title}\"" : ""})"
+        replacement = +"#{" " * spaces_before}#{node.to_s}"
 
         yield(match[2], src, replacement, $~.offset(0)[0]) if block_given?
       end

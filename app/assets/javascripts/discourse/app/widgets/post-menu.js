@@ -268,6 +268,7 @@ registerButton("replies", (attrs, state, siteSettings) => {
     labelOptions: { count: replyCount },
     label: attrs.mobileView ? "post.has_replies_count" : "post.has_replies",
     iconRight: !siteSettings.enable_filtered_replies_view || attrs.mobileView,
+    disabled: !!attrs.deleted,
   };
 });
 

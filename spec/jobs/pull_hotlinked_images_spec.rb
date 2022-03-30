@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'jobs/regular/pull_hotlinked_images'
-
 describe Jobs::PullHotlinkedImages do
 
   let(:image_url) { "http://wiki.mozilla.org/images/2/2e/Longcat1.png" }
@@ -67,7 +65,7 @@ describe Jobs::PullHotlinkedImages do
       end.to change { Upload.count }.by(1) &
              change { UserHistory.count }.by(0) # Should not add to the staff log
 
-      expect(post.reload.raw).to eq("![](#{Upload.last.short_url})")
+      expect(post.reload.raw).to eq("<img src=\"#{Upload.last.short_url}\">")
     end
 
     it 'removes downloaded images when they are no longer needed' do
@@ -91,7 +89,7 @@ describe Jobs::PullHotlinkedImages do
         post.rebake!
       end.to change { Upload.count }.by(1)
 
-      expect(post.reload.raw).to eq("![](#{Upload.last.short_url})")
+      expect(post.reload.raw).to eq("<img src=\"#{Upload.last.short_url}\">")
 
       # Post raw is updated back to the old value (e.g. by wordpress integration)
       post.update(raw: "<img src='#{image_url}'>")
@@ -100,7 +98,7 @@ describe Jobs::PullHotlinkedImages do
         post.rebake!
       end.to change { Upload.count }.by(0) # We alread have the upload
 
-      expect(post.reload.raw).to eq("![](#{Upload.last.short_url})")
+      expect(post.reload.raw).to eq("<img src=\"#{Upload.last.short_url}\">")
     end
 
     it 'replaces encoded image urls' do
@@ -110,10 +108,10 @@ describe Jobs::PullHotlinkedImages do
         Jobs::PullHotlinkedImages.new.execute(post_id: post.id)
       end.to change { Upload.count }.by(1)
 
-      expect(post.reload.raw).to eq("![](#{Upload.last.short_url})")
+      expect(post.reload.raw).to eq("<img src=\"#{Upload.last.short_url}\">")
     end
 
-    xit 'replaces images in an anchor tag with weird indentation' do
+    it 'replaces images in an anchor tag with weird indentation' do
       # Skipped pending https://meta.discourse.org/t/152801
       # This spec was previously passing, even though the resulting markdown was invalid
       # Now the spec has been improved, and shows the issue
@@ -124,7 +122,7 @@ describe Jobs::PullHotlinkedImages do
       post = Fabricate(:post, raw: <<~MD)
       <h1></h1>
                                 <a href="https://somelink.com">
-                                    <img alt="somelink" src="#{image_url}" />
+                                    <img alt="somelink" src="#{image_url}">
                                 </a>
       MD
 
@@ -137,7 +135,7 @@ describe Jobs::PullHotlinkedImages do
       expect(post.reload.raw).to eq(<<~MD.chomp)
       <h1></h1>
                                 <a href="https://somelink.com">
-                                    ![somelink](#{upload.short_url})
+                                    <img alt="somelink" src="#{upload.short_url}">
                                 </a>
       MD
     end
@@ -163,7 +161,7 @@ describe Jobs::PullHotlinkedImages do
         Jobs::PullHotlinkedImages.new.execute(post_id: post.id)
       end.to change { Upload.count }.by(1)
 
-      expect(post.reload.raw).to eq("![test](#{Upload.last.short_url})")
+      expect(post.reload.raw).to eq("<img alt=\"test\" src=\"#{Upload.last.short_url}\">")
     end
 
     it 'replaces images without extension' do
@@ -176,7 +174,7 @@ describe Jobs::PullHotlinkedImages do
         Jobs::PullHotlinkedImages.new.execute(post_id: post.id)
       end.to change { Upload.count }.by(1)
 
-      expect(post.reload.raw).to eq("![](#{Upload.last.short_url})")
+      expect(post.reload.raw).to eq("<img src=\"#{Upload.last.short_url}\">")
     end
 
     it 'replaces optimized images' do
@@ -195,7 +193,7 @@ describe Jobs::PullHotlinkedImages do
       upload = Upload.last
       post.reload
 
-      expect(post.raw).to eq("![](#{upload.short_url})")
+      expect(post.raw).to eq("<img src=\"#{Upload.last.short_url}\">")
       expect(post.uploads).to contain_exactly(upload)
     end
 
@@ -385,7 +383,7 @@ describe Jobs::PullHotlinkedImages do
         post.reload
 
         expect(post.raw).to eq(<<~MD.chomp)
-        ![](upload://z2QSs1KJWoj51uYhDjb6ifCzxH6.gif)
+        <img src="upload://z2QSs1KJWoj51uYhDjb6ifCzxH6.gif">
         https://commons.wikimedia.org/wiki/File:Brisbane_May_2013201.jpg
         <img src='#{broken_image_url}'>
         <a href='#{url}'><img src='#{large_image_url}'></a>
@@ -525,7 +523,7 @@ describe Jobs::PullHotlinkedImages do
 
       post.reload
 
-      expect(post.raw).to eq("![](#{Upload.last.short_url})")
+      expect(post.raw).to eq("<img src=\"#{Upload.last.short_url}\">")
       expect(post.uploads.count).to eq(1)
     end
 

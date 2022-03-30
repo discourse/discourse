@@ -1,7 +1,9 @@
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { getAbsoluteURL } from "discourse-common/lib/get-url";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed, {
+  afterRender,
+} from "discourse-common/utils/decorators";
 import { longDateNoYear } from "discourse/lib/formatter";
 import Sharing from "discourse/lib/sharing";
 import showModal from "discourse/lib/show-modal";
@@ -9,7 +11,6 @@ import { bufferedProperty } from "discourse/mixins/buffered-content";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import I18n from "I18n";
 import Category from "discourse/models/category";
-import { scheduleOnce } from "@ember/runloop";
 import { getOwner } from "discourse-common/lib/get-owner";
 
 export default Controller.extend(
@@ -19,7 +20,6 @@ export default Controller.extend(
     topic: null,
     post: null,
     allowInvites: false,
-    restrictedGroups: null,
 
     onShow() {
       this.setProperties({
@@ -28,35 +28,23 @@ export default Controller.extend(
         allowInvites: false,
       });
 
-      this.appEvents.on(
-        "modal:body-shown",
-        this,
-        this.showRestrictedGroupWarning
-      );
-
-      scheduleOnce("afterRender", this, this.selectUrl);
+      this._showRestrictedGroupWarning();
+      this._selectUrl();
     },
 
-    onClose() {
-      this.appEvents.off(
-        "modal:body-shown",
-        this,
-        this.showRestrictedGroupWarning
-      );
-    },
-
-    showRestrictedGroupWarning() {
+    @afterRender
+    _showRestrictedGroupWarning() {
       if (!this.model) {
         return;
       }
 
       Category.reloadBySlugPath(this.model.slug).then((result) => {
         const groups = result.category.group_permissions.mapBy("group_name");
-        if (groups && !groups.any((x) => x === "everyone")) {
+        if (groups && !groups.any((group) => group === "everyone")) {
           this.flash(
             I18n.t("topic.share.restricted_groups", {
               count: groups.length,
-              groups: groups.join(", "),
+              groupNames: groups.join(", "),
             }),
             "warning"
           );
@@ -64,7 +52,8 @@ export default Controller.extend(
       });
     },
 
-    selectUrl() {
+    @afterRender
+    _selectUrl() {
       const input = document.querySelector("input.invite-link");
       if (input && !this.site.mobileView) {
         // if the input is auto-focused on mobile, iOS requires two taps of the copy button
