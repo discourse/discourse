@@ -62,7 +62,7 @@ end
 success =
   TurboTests::Runner.run(
     formatters: formatters,
-    files: ARGV.empty? ? ["spec"] : ARGV,
+    files: ARGV.empty? ? ["spec\/(?!system)"] : ARGV,
     verbose: verbose,
     fail_fast: fail_fast
   )

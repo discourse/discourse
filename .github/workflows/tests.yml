@@ -16,7 +16,7 @@ jobs:
   build:
     name: ${{ matrix.target }} ${{ matrix.build_type }}
     runs-on: ubuntu-latest
-    container: discourse/discourse_test:slim${{ startsWith(matrix.build_type, 'frontend') && '-browsers' || '' }}
+    container: discourse/discourse_test:${{ startsWith(matrix.build_type, 'frontend') && 'slim-browsers' || 'systemspecbuild' }}
     timeout-minutes: 60
 
     env:
@@ -152,6 +152,10 @@ jobs:
       - name: Plugin RSpec
         if: matrix.build_type == 'backend' && matrix.target == 'plugins'
         run: bin/rake plugin:spec
+
+      - name: Core RSpec System Specs
+        if: matrix.build_type == 'backend' && matrix.target == 'core'
+        run: bin/rspec --verbose -P spec/system/**/*_spec.rb
 
       - name: Core QUnit (Legacy)
         if: matrix.build_type == 'frontend-legacy' && matrix.target == 'core'
