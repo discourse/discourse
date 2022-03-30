@@ -340,7 +340,7 @@ describe Notification do
       expect(Notification.count).to eq(2)
     end
 
-    it 'does not delete notifications that do not have a topic_id or post number' do
+    it 'does not delete notifications that do not have a topic_id' do
       Notification.create!(read: false, user_id: user.id, topic_id: nil, post_number: nil, data: '[]',
                            notification_type: Notification.types[:chat_mention], high_priority: true)
       expect {
