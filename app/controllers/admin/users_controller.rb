@@ -455,6 +455,7 @@ class Admin::UsersController < Admin::AdminController
 
     begin
       user = sso.lookup_or_create_user
+      DiscourseEvent.trigger(:sync_sso, user)
       render_serialized(user, AdminDetailedUserSerializer, root: false)
     rescue ActiveRecord::RecordInvalid => ex
       render json: failed_json.merge(message: ex.message), status: 403
