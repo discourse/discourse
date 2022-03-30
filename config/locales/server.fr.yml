@@ -4195,6 +4195,12 @@ fr:
         other: 'L''étiquette « %{tag_name} » est réservée aux catégories suivantes : %{category_names}'
       synonym: 'Les synonymes ne sont pas autorisés. Utilisez « %{tag_name} ».'
       has_synonyms: 'L''étiquette « %{tag_name} » ne peut pas être utilisée car elle a des synonymes.'
+      restricted_tags_cannot_be_used_in_category:
+        one: 'La balise "%{tags}" ne peut pas être utilisée dans la catégorie "%{category}". Veuillez la supprimer.'
+        other: 'Les balises suivantes ne peuvent pas être utilisées dans la catégorie "%{category}" : %{tags}. Veuillez les supprimer.'
+      category_does_not_allow_tags:
+        one: 'La catégorie "%{category}" n''autorise pas la balise "%{tags}". Veuillez la supprimer.'
+        other: 'La catégorie "%{category}" n''autorise pas les balises suivantes : "%{tags}". Veuillez les supprimer.'
     required_tags_from_group:
       one: "Vous devez inclure au moins %{count} étiquette %{tag_group_name}. Les étiquettes associées à ce groupe sont : %{tags}"
       other: "Vous devez inclure au moins %{count} étiquettes %{tag_group_name}. Les étiquettes associées à ce groupe sont : %{tags}"

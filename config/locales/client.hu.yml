@@ -174,6 +174,7 @@ hu:
     themes:
       default_description: "Alapértelmezett"
       broken_theme_alert: "Lehet, hogy webhelye nem működik, mert a téma/összetevő hibába ütközött."
+      error_caused_by: "A(z) „%{name}” okozta. <a target='blank' href='%{path}'>Kattintson ide</a> a frissítéshez, újrakonfiguráláshoz vagy letiltáshoz."
       only_admins: "(ez az üzenet csak a webhely rendszergazdáinak jelenik meg)"
     broken_decorator_alert: "Előfordulhat, hogy a bejegyzések nem jelennek meg megfelelően, mert a webhely egyik bejegyzéstartalmának dekorátora hibát dobott."
     s3:
@@ -299,7 +300,11 @@ hu:
       list_permission_denied: "Nincs engedélye a felhasználó könyvjelzőinek megtekintéséhez."
       no_user_bookmarks: "Nincsenek könyvjelzőzött bejegyzései; a könyvjelzők segítségével gyorsan hivatkozhat bizonyos bejegyzésekre."
       auto_delete_preference:
+        label: "Miután értesítést kapott"
+        never: "Könyvjelző megtartása"
         when_reminder_sent: "Könyvjelző törlése"
+        on_owner_reply: "Könyvjelző törlése, amint válaszolok"
+        clear_reminder: "Könyvjelző megtartása és az emlékeztető törlése"
       search_placeholder: "Könyvjelzők keresése név, téma címe vagy tartalom alapján"
       search: "Keresés"
       reminders:
@@ -309,6 +314,8 @@ hu:
         existing_reminder: "Beállított egy emlékeztetőt erre a könyvjelzőre, amely %{at_date_time}-kor lesz kiküldve."
     copy_codeblock:
       copied: "másolva!"
+      copy: "kód másolása a vágólapra"
+      fullscreen: "kód megjelenítése teljes képernyőn"
     drafts:
       label: "Vázlatok"
       label_with_count: "Vázlatok (%{count})"
@@ -690,6 +697,7 @@ hu:
             allow_unknown_sender_topic_replies: "Engedélyezze az ismeretlen feladóktól érkező témaválaszokat."
             allow_unknown_sender_topic_replies_hint: "Lehetővé teszi az ismeretlen feladók számára, hogy válaszoljanak a csoport témáira. Ha ez nincs engedélyezve, akkor az e-mail szálban még nem szereplő címekről érkező válaszok új témát hoznak létre."
             from_alias: "Álnévből"
+            from_alias_hint: "A csoportos SMTP e-mailek küldésekor a \"from\" címként használandó álnév. Megjegyzés: ezt nem minden e-mail szolgáltató támogatja, tekintse meg a szolgáltató dokumentációját."
           mailboxes:
             synchronized: "Szinkronizált postafiók"
             none_found: "Ebben az e-mail fiókban nem találhatók postaládák."
@@ -1090,6 +1098,7 @@ hu:
       muted_categories_instructions: "Semmilyen értesítést nem fog kapni a kategória témaköreiről, és a kategóriák vagy a legújabbak között sem fog megjelenni."
       muted_categories_instructions_dont_hide: "Nem fog értesítést kapni az új témákról ezekben a kategóriákban."
       regular_categories: "Átlagos"
+      regular_categories_instructions: "Ezek a kategóriák a „Legújabb” és a „Legnépszerűbb” témák között lesznek láthatóak."
       no_category_access: "Moderátorként korlátozott kategória-hozzáférése van, a mentés tiltott."
       delete_account: "Saját fiók törlése"
       delete_account_confirm: "Biztos, hogy végleg törli a fiókját? Ez a művelet nem vonható vissza."
@@ -1113,6 +1122,7 @@ hu:
       api_approved: "Jóváhagyva:"
       api_last_used_at: "Utoljára használva:"
       theme: "Téma"
+      save_to_change_theme: 'A téma a „%{save_text}” gombra kattintás után frissül'
       home: "Alapértelmezett főoldal"
       staged: "Lépcsőzetes"
       staff_counters:
@@ -2528,6 +2538,7 @@ hu:
         open: "Téma megnyitása"
         close: "Téma lezárása"
         multi_select: "Bejegyzések Kiválasztása"
+        slow_mode: "Lassú mód beállítása…"
         timed_update: "Téma időzítőjének beállítása"
         pin: "Témakör kiemelése..."
         unpin: "Témakör kiemelésének megszüntetése..."
@@ -2536,11 +2547,13 @@ hu:
         invisible: "Listázás törlése"
         visible: "Listázás"
         reset_read: "Olvasási adatok visszaállítása"
+        make_public: "Téma nyilvánossá tétele"
         make_private: "Személyes üzenet írása"
       feature:
         pin: "Témakör kiemelése"
         unpin: "Témakör kiemelésének megszüntetése"
         pin_globally: "Témakör globális kiemelése"
+        make_banner: "Kiemelt téma létrehozása"
         remove_banner: "Kiemelt Téma eltávolítása"
       reply:
         title: "Válasz"
@@ -2549,6 +2562,7 @@ hu:
         title: "Téma megosztása"
         extended_title: "Link megosztása"
         help: "a témakör hivatkozásának megosztása"
+        instructions: "Ossza meg a témához tartozó hivatkozást:"
         copied: "Témahivatkozás másolva."
         restricted_groups:
           one: "Csak a csoport tagjai számára látható: %{groupNames}"

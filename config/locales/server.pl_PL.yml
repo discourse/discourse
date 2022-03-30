@@ -4500,6 +4500,11 @@ pl_PL:
         other: '"%{tag_name}" jest ograniczony do kategorii "%{category_names}"'
       synonym: 'Synonimy nie są dozwolone. Zamiast tego użyj "%{tag_name}".'
       has_synonyms: 'Nie można użyć "%{tag_name}", ponieważ zawiera synonimy.'
+      restricted_tags_cannot_be_used_in_category:
+        one: 'Tag "%{tags}" nie może być użyty w kategorii "%{category}". Usuń go.'
+        few: 'Następujące tagi nie mogą być używane w kategorii "%{category}": %{tags}. Usuń je.'
+        many: 'Następujące tagi nie mogą być używane w kategorii "%{category}": %{tags}. Usuń je.'
+        other: 'Następujące tagi nie mogą być używane w kategorii "%{category}": %{tags}. Usuń je.'
     required_tags_from_group:
       one: "Musisz dołączyć co najmniej %{count} %{tag_group_name} tag. Tagi w tej grupie to: %{tags}."
       few: "Musisz dołączyć co najmniej %{count} %{tag_group_name} tagi. Tagi w tej grupie to: %{tags}."
