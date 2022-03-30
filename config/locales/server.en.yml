@@ -1574,10 +1574,8 @@ en:
 
     enable_personal_messages: "Allow trust level 1 (configurable via min trust to send messages) users to create messages and reply to messages. Note that staff can always send messages no matter what."
     enable_system_message_replies: "Allows users to reply to system messages, even if personal messages are disabled"
-    enable_long_polling: "Message bus used for notification can use long polling"
     enable_chunked_encoding: "Enable chunked encoding responses by the server. This feature works on most setups however some proxies may buffer, causing responses to be delayed"
     long_polling_base_url: "Base URL used for long polling (when a CDN is serving dynamic content, be sure to set this to origin pull) eg: http://origin.site.com"
-    long_polling_interval: "Amount of time the server should wait before responding to clients when there is no data to send (logged on users only)"
     polling_interval: "When not long polling, how often should logged on clients poll in milliseconds"
     anon_polling_interval: "How often should anonymous clients poll in milliseconds"
     background_polling_interval: "How often should the clients poll in milliseconds (when the window is in the background)"
