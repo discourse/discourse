@@ -218,8 +218,11 @@ RSpec.configure do |config|
     Capybara.server_host = "test.localhost"
     Capybara.server_port = 31337
     Capybara.app_host = "http://test.localhost:31337"
+
+    chrome_binary_path = `which #{ChromeInstalledChecker.binary_name}`.chomp
+    puts "Using chrome binary at #{chrome_binary_path}"
     Capybara.register_driver :selenium_chrome_headless do |app|
-      browser_options = ::Selenium::WebDriver::Chrome::Options.new.tap do |opts|
+      browser_options = ::Selenium::WebDriver::Chrome::Options.new(profile: nil, binary: chrome_binary_path).tap do |opts|
         # these are the default options defined within capybara
         opts.add_argument('--headless')
         opts.add_argument('--disable-gpu') if Gem.win_platform?

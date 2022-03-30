@@ -8,7 +8,7 @@ class ChromeInstalledChecker
   class ChromeNotInstalled < ChromeError; end
   class ChromeVersionTooLow < ChromeError; end
 
-  def self.run
+  def self.binary_name
     if RbConfig::CONFIG['host_os'][/darwin|mac os/]
       binary = "/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"
     elsif system("command -v google-chrome-stable >/dev/null;")
@@ -16,6 +16,12 @@ class ChromeInstalledChecker
     end
     binary ||= "google-chrome" if system("command -v google-chrome >/dev/null;")
     binary ||= "chromium" if system("command -v chromium >/dev/null;")
+
+    binary
+  end
+
+  def self.run
+    binary = ChromeInstalledChecker.binary_name
 
     if !binary
       raise ChromeNotInstalled.new("Chrome is not installed. Download from https://www.google.com/chrome/browser/desktop/index.html")
