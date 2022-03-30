@@ -235,7 +235,9 @@ RSpec.configure do |config|
         opts.add_argument("--no-sandbox")
       end
 
-      Selenium::WebDriver::Chrome::Service.driver_path = `which chromedriver`.chomp
+      chromedriver_binary_path = `which chromedriver`.chomp
+      puts "Using chromedriver binary at #{chromedriver_binary_path}"
+      Selenium::WebDriver::Chrome::Service.driver_path = chromedriver_binary_path
       Capybara::Selenium::Driver.new(app, browser: :chrome, capabilities: browser_options)
     end
 
