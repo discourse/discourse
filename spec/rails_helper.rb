@@ -218,6 +218,20 @@ RSpec.configure do |config|
     Capybara.server_host = "test.localhost"
     Capybara.server_port = 31337
     Capybara.app_host = "http://test.localhost:31337"
+    Capybara.register_driver :selenium_chrome_headless do |app|
+      browser_options = ::Selenium::WebDriver::Chrome::Options.new.tap do |opts|
+        # these are the default options defined within capybara
+        opts.add_argument('--headless')
+        opts.add_argument('--disable-gpu') if Gem.win_platform?
+        opts.add_argument('--disable-site-isolation-trials')
+
+        # this is added for CI, otherwise we get
+        # > DevToolsActivePort file doesn't exist
+        opts.add_argument('--user-data-dir=~/.config/google-chrome')
+      end
+
+      Capybara::Selenium::Driver.new(app, browser: :chrome, capabilities: browser_options)
+    end
 
     # Rebase defaults
     #
