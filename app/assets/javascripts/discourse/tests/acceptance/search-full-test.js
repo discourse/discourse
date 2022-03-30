@@ -103,6 +103,10 @@ acceptance("Search - Full Page", function (needs) {
       searchResultClickTracked = true;
       return helper.response({ success: "OK" });
     });
+
+    needs.hooks.afterEach(() => {
+      searchResultClickTracked = false;
+    });
   });
 
   test("perform various searches", async function (assert) {
