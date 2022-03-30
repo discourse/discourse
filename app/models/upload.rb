@@ -88,6 +88,8 @@ class Upload < ActiveRecord::Base
 
   def self.with_no_non_post_relations
     scope = self
+      .joins("LEFT JOIN upload_references ur ON ur.upload_id = uploads.id AND ur.target_type != 'Post'")
+      .where("ur.upload_id IS NULL")
       .joins(<<~SQL)
         LEFT JOIN site_settings ss
         ON NULLIF(ss.value, '')::integer = uploads.id
