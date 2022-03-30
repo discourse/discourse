@@ -232,8 +232,10 @@ RSpec.configure do |config|
         # > DevToolsActivePort file doesn't exist
         opts.add_argument('--user-data-dir=~/.config/google-chrome')
         opts.add_argument("--remote-debugging-port=9222")
+        opts.add_argument("--no-sandbox")
       end
 
+      Selenium::WebDriver::Chrome::Service.driver_path = `which chromedriver`.chomp
       Capybara::Selenium::Driver.new(app, browser: :chrome, capabilities: browser_options)
     end
 
