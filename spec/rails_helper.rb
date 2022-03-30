@@ -175,6 +175,7 @@ RSpec.configure do |config|
   config.include MessageBus
   config.include RSpecHtmlMatchers
   config.include IntegrationHelpers, type: :request
+  config.include SystemHelpers, type: :system
   config.include WebauthnIntegrationHelpers
   config.include SiteSettingsHelpers
   config.include SidekiqHelpers
@@ -231,7 +232,7 @@ RSpec.configure do |config|
     SiteSetting.provider = TestLocalProcessProvider.new
 
     allowed_sites = ["test.localhost", "test.localhost:31337", "localhost", %r{127\.0\.0\.1:(\d{0,4})}]
-    WebMock.disable_net_connect!(allow: allowed_sites, net_http_connect_on_start: true)
+    WebMock.disable_net_connect!(allow: allowed_sites)
 
     if ENV['ELEVATED_UPLOADS_ID']
       DB.exec "SELECT setval('uploads_id_seq', 10000)"

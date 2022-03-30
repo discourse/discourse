@@ -17,7 +17,7 @@ describe "Bookmarking posts and topics", type: :system, js: true do
   end
 
   it "allows logged in user to create bookmarks" do
-    visit "/session/#{user.encoded_username}/become"
+    sign_in user
     visit "/t/#{topic.id}"
     expect(page).to have_content("This is some post to bookmark")
     find("#post_#{post.post_number} .show-more-actions").click
