@@ -19,7 +19,7 @@ import { applyLocalDates } from "discourse/lib/local-dates";
 const FETCH_VOTERS_COUNT = 25;
 
 function optionHtml(option, siteSettings = {}) {
-  var el = document.createElement("span");
+  const el = document.createElement("span");
   el.innerHTML = option.html;
   applyLocalDates(el.querySelectorAll(".discourse-local-date"), siteSettings);
   return new RawHtml({ html: `<span>${el.innerHTML}</span>` });
