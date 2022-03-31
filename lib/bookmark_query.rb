@@ -28,7 +28,6 @@ class BookmarkQuery
 
   def list_all
     topic_results = topic_related_user_bookmarks
-    other_results = other_user_bookmarks
 
     topics = Topic.listable_topics.secured(@guardian)
     pms = Topic.private_messages_for_user(@user)
@@ -43,24 +42,24 @@ class BookmarkQuery
       )
     end
 
-    results = Bookmark.select("*").from("(#{topic_results.to_sql} UNION #{other_results.to_sql}) as bookmarks").order(
-      '(CASE WHEN bookmarks.pinned THEN 0 ELSE 1 END), bookmarks.reminder_at ASC, bookmarks.updated_at DESC'
+    if SiteSetting.use_polymorphic_bookmarks
+      results = Bookmark.select("bookmarks.*").from("(#{topic_results.to_sql} UNION #{other_user_bookmarks.to_sql}) as bookmarks")
+    else
+      results = topic_results
+    end
+
+    results = results.order(
+      "(CASE WHEN bookmarks.pinned THEN 0 ELSE 1 END),
+        bookmarks.reminder_at ASC,
+        bookmarks.updated_at DESC"
     )
 
-    # MethodProfiler.output_sql_to_stderr!(filter_transactions: true)
     if @params[:q].present?
-      term = @params[:q]
-      bookmark_ts_query = Search.ts_query(term: term)
-      results = results
-        .joins(
-          "LEFT JOIN post_search_data ON post_search_data.post_id = bookmarks.bookmarkable_id
-            AND bookmarks.bookmarkable_type = 'Post'"
-        )
-      results = results.joins("LEFT JOIN chat_messages ON chat_messages.id = bookmarks.bookmarkable_id AND bookmarks.bookmarkable_type = 'ChatMessage'")
-      results = results.where(
-        "bookmarks.name ILIKE :q OR #{bookmark_ts_query} @@ post_search_data.search_data OR chat_messages.message ILIKE :q",
-        q: "%#{term}%"
-      )
+      if SiteSetting.use_polymorphic_bookmarks
+        results = polymorphic_search(results, @params[:q])
+      else
+        results = search(results, @params[:q])
+      end
     end
 
     if @page.positive?
@@ -82,10 +81,52 @@ class BookmarkQuery
   def topic_related_user_bookmarks
     # There is guaranteed to be a TopicUser record if the user has bookmarked
     # a topic, see BookmarkManager
-    Bookmark.where(user: @user)
-      .where(bookmarkable_type: ["Post", "Topic"])
-      .joins(:post)
-      .joins(topic: :topic_users)
-      .where(topic_users: { user_id: @user.id })
+    if SiteSetting.use_polymorphic_bookmarks
+      # FIXME: (martin) How do these joins work with bookmarkable??
+      #
+      # Oh...these joins will work but somehow need to go via
+      # the polymorphic association, should be possible?
+      Bookmark.where(user: @user)
+        .where(bookmarkable_type: ["Post", "Topic"])
+        .joins("LEFT JOIN posts ON posts.id = bookmarks.bookmarkable_id AND bookmarks.bookmarkable_type = 'Post'")
+        .joins("LEFT JOIN topics ON topics.id = posts.topic_id OR (topics.id = bookmarks.bookmarkable_id AND bookmarks.bookmarkable_type = 'Topic')")
+        .joins("LEFT JOIN topic_users ON topic_users.topic_id = topics.id")
+        .where("topic_users.user_id = ?", @user.id)
+    else
+      Bookmark.where(user: @user)
+        .includes(post: :user)
+        .includes(post: { topic: :tags })
+        .includes(topic: :topic_users)
+        .references(:post)
+        .where(topic_users: { user_id: @user.id })
+    end
+  end
+
+  def search(results, term)
+    bookmark_ts_query = Search.ts_query(term: term)
+    results
+      .joins("LEFT JOIN post_search_data ON post_search_data.post_id = bookmarks.post_id")
+      .where("bookmarks.name ILIKE :q OR #{bookmark_ts_query} @@ post_search_data.search_data", q: "%#{term}%")
+  end
+
+  def polymorphic_search(results, term)
+    bookmark_ts_query = Search.ts_query(term: term)
+    results = results
+      .joins(
+        "LEFT JOIN post_search_data ON post_search_data.post_id = bookmarks.bookmarkable_id
+            AND bookmarks.bookmarkable_type = 'Post'"
+    )
+
+    #### PLUGIN OUTLET NEEDED HERE
+    results = results.joins("LEFT JOIN chat_messages ON chat_messages.id = bookmarks.bookmarkable_id AND bookmarks.bookmarkable_type = 'ChatMessage'")
+    ####
+
+    search_sql = ["bookmarks.name ILIKE :q OR #{bookmark_ts_query} @@ post_search_data.search_data"]
+
+    #### PLUGIN OUTLET NEEDED HERE
+    search_sql << "chat_messages.message ILIKE :q"
+    ####
+
+    results.where(search_sql.join(" OR "), q: "%#{term}%")
   end
 end

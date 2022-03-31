@@ -51,27 +51,60 @@ RSpec.describe BookmarkQuery do
     end
 
     context "when q param is provided" do
-      before do
-        @post = Fabricate(:post, raw: "Some post content here", topic: Fabricate(:topic, title: "Bugfix game for devs"))
-        @bookmark3 = Fabricate(:bookmark, user: user, name: "Check up later")
-        @bookmark4 = Fabricate(:bookmark, user: user, post: @post)
-        Fabricate(:topic_user, user: user, topic: @bookmark3.topic)
-        Fabricate(:topic_user, user: user, topic: @bookmark4.topic)
+      let!(:post) { Fabricate(:post, raw: "Some post content here", topic: Fabricate(:topic, title: "Bugfix game for devs")) }
+
+      context "when not using polymorphic bookmarks" do
+        let(:bookmark3) { Fabricate(:bookmark, user: user, name: "Check up later") }
+        let(:bookmark4) { Fabricate(:bookmark, user: user, post: post) }
+
+        before do
+          Fabricate(:topic_user, user: user, topic: bookmark3.topic)
+          Fabricate(:topic_user, user: user, topic: bookmark4.topic)
+        end
+
+        it "can search by bookmark name" do
+          bookmarks = bookmark_query(params: { q: 'check' }).list_all
+          expect(bookmarks.map(&:id)).to eq([bookmark3.id])
+        end
+
+        it "can search by post content" do
+          bookmarks = bookmark_query(params: { q: 'content' }).list_all
+          expect(bookmarks.map(&:id)).to eq([bookmark4.id])
+        end
+
+        it "can search by topic title" do
+          bookmarks = bookmark_query(params: { q: 'bugfix' }).list_all
+          expect(bookmarks.map(&:id)).to eq([bookmark4.id])
+        end
       end
 
-      it "can search by bookmark name" do
-        bookmarks = bookmark_query(params: { q: 'check' }).list_all
-        expect(bookmarks.map(&:id)).to eq([@bookmark3.id])
-      end
+      context "when using polymorphic bookmarks" do
+        before do
+          SiteSetting.use_polymorphic_bookmarks = true
+        end
 
-      it "can search by post content" do
-        bookmarks = bookmark_query(params: { q: 'content' }).list_all
-        expect(bookmarks.map(&:id)).to eq([@bookmark4.id])
-      end
+        let(:bookmark3) { Fabricate(:bookmark, user: user, name: "Check up later", bookmarkable: Fabricate(:post)) }
+        let(:bookmark4) { Fabricate(:bookmark, user: user, bookmarkable: post) }
 
-      it "can search by topic title" do
-        bookmarks = bookmark_query(params: { q: 'bugfix' }).list_all
-        expect(bookmarks.map(&:id)).to eq([@bookmark4.id])
+        before do
+          Fabricate(:topic_user, user: user, topic: bookmark3.bookmarkable.topic)
+          Fabricate(:topic_user, user: user, topic: bookmark4.bookmarkable.topic)
+        end
+
+        it "can search by bookmark name" do
+          bookmarks = bookmark_query(params: { q: 'check' }).list_all
+          expect(bookmarks.map(&:id)).to eq([bookmark3.id])
+        end
+
+        it "can search by post content" do
+          bookmarks = bookmark_query(params: { q: 'content' }).list_all
+          expect(bookmarks.map(&:id)).to eq([bookmark4.id])
+        end
+
+        it "can search by topic title" do
+          bookmarks = bookmark_query(params: { q: 'bugfix' }).list_all
+          expect(bookmarks.map(&:id)).to eq([bookmark4.id])
+        end
       end
     end
 
