@@ -8,6 +8,7 @@ import { downloadCalendar } from "discourse/lib/download-calendar";
 import { renderIcon } from "discourse-common/lib/icon-library";
 import I18n from "I18n";
 
+// Import applyLocalDates from discourse/lib/local-dates instead
 export function applyLocalDates(dates, siteSettings) {
   if (!siteSettings.discourse_local_dates_enabled) {
     return;

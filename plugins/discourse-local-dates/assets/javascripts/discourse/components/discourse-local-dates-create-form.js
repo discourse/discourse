@@ -13,6 +13,7 @@ import { notEmpty } from "@ember/object/computed";
 import { propertyNotEqual } from "discourse/lib/computed";
 import { schedule } from "@ember/runloop";
 import { getOwner } from "discourse-common/lib/get-owner";
+import { applyLocalDates } from "discourse/lib/local-dates";
 
 export default Component.extend({
   timeFormat: "HH:mm:ss",
@@ -56,19 +57,21 @@ export default Component.extend({
     });
   },
 
-  @observes("markup")
+  @observes("computedConfig.{from,to,options}", "options", "isValid", "isRange")
   _renderPreview() {
     discourseDebounce(
       this,
       function () {
         const markup = this.markup;
-
         if (markup) {
           cookAsync(markup).then((result) => {
             this.set("currentPreview", result);
-            schedule("afterRender", () =>
-              this.$(".preview .discourse-local-date").applyLocalDates()
-            );
+            schedule("afterRender", () => {
+              applyLocalDates(
+                document.querySelectorAll(".preview .discourse-local-date"),
+                this.siteSettings
+              );
+            });
           });
         }
       },
@@ -321,7 +324,6 @@ export default Component.extend({
         text = this._generateDateMarkup(config.from, options, isRange);
       }
     }
-
     return text;
   },
 
