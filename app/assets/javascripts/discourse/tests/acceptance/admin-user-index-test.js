@@ -8,7 +8,9 @@ import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { test } from "qunit";
 import I18n from "I18n";
+import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 
+const { TOTP, BACKUP_CODE, SECURITY_KEY } = SECOND_FACTOR_METHODS;
 acceptance("Admin - User Index", function (needs) {
   needs.user();
   needs.pretender((server, helper) => {
@@ -83,17 +85,17 @@ acceptance("Admin - User Index", function (needs) {
     });
 
     server.put("/admin/users/4/grant_admin", () => {
-      return helper.response({
-        failed: "FAILED",
-        ok: false,
-        error: "The selected two-factor method is invalid.",
-        reason: "invalid_second_factor_method",
-        backup_enabled: true,
-        security_key_enabled: true,
+      return helper.response(403, {
+        second_factor_challenge_nonce: "somenonce",
+      });
+    });
+
+    server.get("/session/2fa.json", () => {
+      return helper.response(200, {
         totp_enabled: true,
-        multiple_second_factor_methods: true,
-        allowed_credential_ids: ["allowed_credential_ids"],
-        challenge: "challenge",
+        backup_enabled: true,
+        security_keys_enabled: true,
+        allowed_methods: [TOTP, BACKUP_CODE, SECURITY_KEY],
       });
     });
   });
@@ -202,9 +204,13 @@ acceptance("Admin - User Index", function (needs) {
     await click(".bootbox .btn-primary");
   });
 
-  test("grant admin - shows the second factor modal", async function (assert) {
+  test("grant admin - redirects to the 2fa page", async function (assert) {
     await visit("/admin/users/4/user2");
     await click(".grant-admin");
-    assert.ok(exists(".grant-admin-second-factor-modal"));
+    assert.equal(
+      currentURL(),
+      "/session/2fa?nonce=somenonce",
+      "user is redirected to the 2FA page"
+    );
   });
 });
