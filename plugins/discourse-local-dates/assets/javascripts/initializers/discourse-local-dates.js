@@ -87,31 +87,9 @@ function _rangeElements(element) {
 
 function initializeDiscourseLocalDates(api) {
   const siteSettings = api.container.lookup("site-settings:main");
-  const chat = api.container.lookup("service:chat");
   const defaultTitle = I18n.t("discourse_local_dates.default_title", {
     site_name: siteSettings.title,
   });
-
-  if (chat) {
-    chat.addToolbarButton({
-      title: "discourse_local_dates.title",
-      id: "local-dates",
-      icon: "calendar-alt",
-      action: "insertDiscourseLocalDate",
-    });
-
-    api.modifyClass("component:chat-composer", {
-      pluginId: "discourse-local-dates",
-      actions: {
-        insertDiscourseLocalDate() {
-          const insertDate = this.addText.bind(this);
-          showModal("discourse-local-dates-create-modal").setProperties({
-            insertDate,
-          });
-        },
-      },
-    });
-  }
 
   api.decorateCookedElement(
     (elem, helper) => {
