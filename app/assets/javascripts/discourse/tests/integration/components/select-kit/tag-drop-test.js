@@ -36,11 +36,7 @@ discourseModule(
       };
 
       pretender.get("/tags/filter/search", (params) => {
-        if (params.queryParams.q === "rég") {
-          return response({
-            results: [{ id: "régis", name: "régis", count: 2, pm_count: 0 }],
-          });
-        } else if (params.queryParams.q === "dav") {
+        if (params.queryParams.q === "dav") {
           return response({
             results: [{ id: "David", name: "David", count: 2, pm_count: 0 }],
           });
@@ -84,6 +80,32 @@ discourseModule(
           content[1].name,
           I18n.t("tagging.selector_all_tags"),
           "it has the correct label for all-tags"
+        );
+
+        await this.subject.fillInFilter("dav");
+
+        assert.strictEqual(
+          this.subject.rows()[0].textContent.trim(),
+          "David",
+          "it has no tag count when filtering in a category context"
+        );
+      },
+    });
+
+    componentTest("default global (no category)", {
+      template: hbs`{{tag-drop}}`,
+
+      async test(assert) {
+        await this.subject.expand();
+
+        assert.ok(true);
+
+        await this.subject.fillInFilter("dav");
+
+        assert.strictEqual(
+          this.subject.rows()[0].textContent.trim(),
+          "David x2",
+          "it has the tag count"
         );
       },
     });
