@@ -46,7 +46,7 @@
               {{user-stat value=model.post_count label="user.summary.post_count"}}
             {{/link-to}}
           </li>
-          {{plugin-outlet name="user-summary-stat" connectorTagName="li" args=(hash model=model)}}
+          {{plugin-outlet name="user-summary-stat" connectorTagName="li" args=(hash model=model user=user)}}
         </ul>
       </div>
     {{/if}}
@@ -157,7 +157,7 @@
             {{#each model.badges as |badge|}}
               {{badge-card badge=badge count=badge.count username=user.username_lower}}
             {{/each}}
-            {{plugin-outlet name="after-user-summary-badges" args=(hash model=model)}}
+            {{plugin-outlet name="after-user-summary-badges" args=(hash model=model user=user)}}
           </div>
         {{else}}
           <p>{{i18n "user.summary.no_badges"}}</p>
