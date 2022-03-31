@@ -4744,6 +4744,7 @@ en:
         time: "Time"
         user: "User"
         email_type: "Email Type"
+        details_title: "Show email details"
         to_address: "To Address"
         test_email_address: "email address to test"
         send_test: "Send Test Email"
