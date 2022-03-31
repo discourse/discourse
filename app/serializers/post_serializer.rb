@@ -173,7 +173,7 @@ class PostSerializer < BasicPostSerializer
   end
 
   def include_can_permanently_delete?
-    SiteSetting.can_permanently_delete && object.deleted_at
+    SiteSetting.can_permanently_delete && scope.is_admin? && object.deleted_at
   end
 
   def can_recover
