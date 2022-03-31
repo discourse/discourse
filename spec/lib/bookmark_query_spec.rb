@@ -105,6 +105,39 @@ RSpec.describe BookmarkQuery do
           bookmarks = bookmark_query(params: { q: 'bugfix' }).list_all
           expect(bookmarks.map(&:id)).to eq([bookmark4.id])
         end
+
+        context "with custom bookmarkable fitering" do
+          let!(:bookmark5) { Fabricate(:bookmark, user: user, bookmarkable: Fabricate(:user, username: "bookmarkqueen")) }
+          before do
+            BookmarkQuery.register_additional_search_join do |results|
+              results.joins("LEFT JOIN users ON users.id = bookmarks.bookmarkable_id AND bookmarks.bookmarkable_type = 'User'")
+            end
+            BookmarkQuery.register_additional_search_filter(
+              "users.username ILIKE :q"
+            )
+          end
+          it "allows searching bookmarkables by fields in other tables" do
+            bookmarks = bookmark_query(params: { q: 'bookmarkq' }).list_all
+            expect(bookmarks.map(&:id)).to eq([bookmark5.id])
+          end
+          after do
+            BookmarkQuery.additional_search_joins = []
+            BookmarkQuery.additional_search_filters = []
+          end
+
+          # Construct join and filter based on table name
+          # and search fields
+          #
+          # Not sure how this will go for pathalogical cases where
+          # someone has tons of bookmarks
+          #
+          # register_bookmarkable do |bm|
+          # bm.klass = ChatMessage
+          # bm.search_join = X
+          # bm.search_filter = X
+          # bm.serializer = X
+          # end
+        end
       end
     end
 
@@ -207,6 +240,9 @@ RSpec.describe BookmarkQuery do
             b.topic.id = bookmark1.topic.id
           end.topic.custom_fields['test_field']
         ).not_to eq(nil)
+      end
+      after do
+        BookmarkQuery.preloaded_custom_fields.clear
       end
     end
   end

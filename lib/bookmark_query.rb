@@ -5,8 +5,10 @@
 # in the user/activity/bookmarks page.
 
 class BookmarkQuery
-  cattr_accessor :preloaded_custom_fields
+  cattr_accessor :preloaded_custom_fields, :additional_search_joins, :additional_search_filters
   self.preloaded_custom_fields = Set.new
+  self.additional_search_joins = []
+  self.additional_search_filters = []
 
   def self.on_preload(&blk)
     (@preload ||= Set.new) << blk
@@ -16,6 +18,14 @@ class BookmarkQuery
     if @preload
       @preload.each { |preload| preload.call(bookmarks, object) }
     end
+  end
+
+  def self.register_additional_search_join(&block)
+    self.additional_search_joins << block
+  end
+
+  def self.register_additional_search_filter(filter_sql)
+    self.additional_search_filters << filter_sql
   end
 
   def initialize(user:, guardian: nil, params: {})
@@ -82,10 +92,6 @@ class BookmarkQuery
     # There is guaranteed to be a TopicUser record if the user has bookmarked
     # a topic, see BookmarkManager
     if SiteSetting.use_polymorphic_bookmarks
-      # FIXME: (martin) How do these joins work with bookmarkable??
-      #
-      # Oh...these joins will work but somehow need to go via
-      # the polymorphic association, should be possible?
       Bookmark.where(user: @user)
         .where(bookmarkable_type: ["Post", "Topic"])
         .joins("LEFT JOIN posts ON posts.id = bookmarks.bookmarkable_id AND bookmarks.bookmarkable_type = 'Post'")
@@ -117,15 +123,14 @@ class BookmarkQuery
             AND bookmarks.bookmarkable_type = 'Post'"
     )
 
-    #### PLUGIN OUTLET NEEDED HERE
-    results = results.joins("LEFT JOIN chat_messages ON chat_messages.id = bookmarks.bookmarkable_id AND bookmarks.bookmarkable_type = 'ChatMessage'")
-    ####
+    BookmarkQuery.additional_search_joins.each do |joiner|
+      results = joiner.call(results)
+    end
 
     search_sql = ["bookmarks.name ILIKE :q OR #{bookmark_ts_query} @@ post_search_data.search_data"]
-
-    #### PLUGIN OUTLET NEEDED HERE
-    search_sql << "chat_messages.message ILIKE :q"
-    ####
+    BookmarkQuery.additional_search_filters.each do |sql|
+      search_sql << sql
+    end
 
     results.where(search_sql.join(" OR "), q: "%#{term}%")
   end
