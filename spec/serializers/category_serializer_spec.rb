@@ -78,28 +78,28 @@ describe CategorySerializer do
       it "returns the right category group permissions for an anon user" do
         json = described_class.new(category, scope: Guardian.new, root: false).as_json
 
-        expect(json[:group_permissions]).to eq([
+        expect(json[:group_permissions]).to contain_exactly(
           { permission_type: CategoryGroup.permission_types[:readonly], group_name: group.name },
-        ])
+        )
       end
 
       it "returns the right category group permissions for a regular user" do
         json = described_class.new(category, scope: Guardian.new(user), root: false).as_json
 
-        expect(json[:group_permissions]).to eq([
+        expect(json[:group_permissions]).to contain_exactly(
           { permission_type: CategoryGroup.permission_types[:readonly], group_name: group.name },
           { permission_type: CategoryGroup.permission_types[:full], group_name: user_group.name },
-        ])
+        )
       end
 
       it "returns the right category group permission for a staff user" do
         json = described_class.new(category, scope: Guardian.new(admin), root: false).as_json
 
-        expect(json[:group_permissions]).to eq([
+        expect(json[:group_permissions]).to contain_exactly(
           { permission_type: CategoryGroup.permission_types[:readonly], group_name: group.name },
           { permission_type: CategoryGroup.permission_types[:full], group_name: private_group.name },
           { permission_type: CategoryGroup.permission_types[:full], group_name: user_group.name }
-        ])
+        )
       end
     end
   end
