@@ -18,10 +18,19 @@ module("Unit | Utility | get-url", function () {
   });
 
   test("getAbsoluteURL", function (assert) {
-    setupURL(null, "https://example.com", "/forum");
+    setupURL(null, "https://example.com", null);
     assert.strictEqual(
       getAbsoluteURL("/cool/path"),
       "https://example.com/cool/path"
+    );
+    setupURL(null, "https://example.com/forum", "/forum");
+    assert.strictEqual(
+      getAbsoluteURL("/cool/path"),
+      "https://example.com/forum/cool/path"
+    );
+    assert.strictEqual(
+      getAbsoluteURL("/forum/cool/path"),
+      "https://example.com/forum/cool/path"
     );
   });
 
