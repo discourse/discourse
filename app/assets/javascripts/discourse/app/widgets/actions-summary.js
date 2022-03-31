@@ -46,7 +46,7 @@ createWidget("small-user-list", {
 
       if (atts.description) {
         description = h(
-          "span",
+          "span.list-description",
           { attributes: { "aria-hidden": true } },
           I18n.t(atts.description, { count: atts.count })
         );
