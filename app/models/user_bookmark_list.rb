@@ -34,17 +34,20 @@ class UserBookmarkList
   # we have already confirmed the user has access to these records at
   # this point in BookmarkQuery, so it is safe to load them directly
   def preload_polymorphic_associations
-    @topics = Topic.where(id: @bookmarks.select { |bm| bm.bookmarkable_type == "Topic" }.map(&:bookmarkable_id)).includes(
-      :topic_user
-    ).where(topic_users: { user_id: @user.id })
-    @posts = Post.where(id: @bookmarks.select { |bm| bm.bookmarkable_type == "Post" }.map(&:bookmarkable_id)).includes(
-      topic: :topic_users
+    @topics = Topic.includes(:topic_users).where(
+      id: Bookmark.select_type(@bookmarks, "Topic").map(&:bookmarkable_id)
     ).where(topic_users: { user_id: @user.id })
 
-    # needs to probably be a plugin hook or some other way of loading these associations,
-    # maybe just .map'ing all the :bookmarkable records directly?
-    @chat_messages = ChatMessage.where(
-      id: @bookmarks.select { |bm| bm.bookmarkable_type == "ChatMessage" }.map(&:bookmarkable_id)
-    ).includes(:chat_channel)
+    @posts = Post.includes(topic: :topic_users).where(
+      id: Bookmark.select_type(@bookmarks, "Post").map(&:bookmarkable_id)
+    ).where(topic_users: { user_id: @user.id })
+
+    Bookmark.registered_bookmarkables.each do |registered_bookmarkable|
+      bookmarkable_ids = Bookmark.select_type(@bookmarks, registered_bookmarkable.model.name).map(&:bookmarkable_id)
+      instance_variable_set(
+        :"@#{registered_bookmarkable.model.table_name}",
+        registered_bookmarkable.preload_associations(bookmarkable_ids)
+      )
+    end
   end
 end

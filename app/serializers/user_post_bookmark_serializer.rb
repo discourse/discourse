@@ -4,7 +4,6 @@ class UserPostBookmarkSerializer < UserBookmarkBaseSerializer
   attr_reader :post
 
   def initialize(obj, post, opts)
-    # what is scope??? baby don't hurt me
     super(obj, opts)
     @post = post
   end
@@ -49,7 +48,6 @@ class UserPostBookmarkSerializer < UserBookmarkBaseSerializer
     topic.fancy_title
   end
 
-  # todo handle all the deleted_at conditions add with_deleted to scope query
   def deleted
     topic.deleted_at.present? || post.deleted_at.present?
   end
@@ -74,7 +72,6 @@ class UserPostBookmarkSerializer < UserBookmarkBaseSerializer
     topic.closed
   end
 
-  # todo: where does scope come from?
   def highest_post_number
     scope.is_staff? ? topic.highest_staff_post_number : topic.highest_post_number
   end

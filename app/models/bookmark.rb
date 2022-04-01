@@ -9,13 +9,14 @@ class Bookmark < ActiveRecord::Base
   ]
 
   class Bookmarkable
-    attr_reader :model, :serializer, :search_fields
+    attr_reader :model, :serializer, :search_fields, :preload_includes
     delegate :table_name, to: :@model
 
-    def initialize(model:, serializer:, search_fields:)
+    def initialize(model:, serializer:, search_fields:, preload_includes: [])
       @model = model
       @serializer = serializer
       @search_fields = search_fields
+      @preload_includes = preload_includes
     end
 
     def search_join(ar_relation)
@@ -30,16 +31,25 @@ class Bookmark < ActiveRecord::Base
         "#{table_name}.#{field} ILIKE :q"
       end
     end
+
+    def preload_associations(bookmarkable_ids)
+      relation = model
+      preload_includes.each do |preload_include|
+        relation = relation.includes(preload_include)
+      end
+      relation.where(id: bookmarkable_ids)
+    end
   end
 
   cattr_accessor :registered_bookmarkables
   self.registered_bookmarkables = []
 
-  def self.register_bookmarkable(model:, serializer:, search_fields:)
+  def self.register_bookmarkable(model:, serializer:, search_fields:, preload_includes: [])
     Bookmark.registered_bookmarkables << Bookmarkable.new(
       model: model,
       serializer: serializer,
-      search_fields: search_fields
+      search_fields: search_fields,
+      preload_includes: preload_includes
     )
   end
 
@@ -57,6 +67,10 @@ class Bookmark < ActiveRecord::Base
       on_owner_reply: 2,
       clear_reminder: 3,
     )
+  end
+
+  def self.select_type(bookmarks_relation, type)
+    bookmarks_relation.select { |bm| bm.bookmarkable_type == type }
   end
 
   # TODO (martin) [POLYBOOK] Not relevant once polymorphic bookmarks are implemented.
@@ -169,6 +183,10 @@ class Bookmark < ActiveRecord::Base
       reminder_last_sent_at: Time.zone.now,
       reminder_set_at: nil,
     )
+  end
+
+  scope :for_user_of_type, ->(user, type) do
+    where(bookmarkable_type: type, user: user)
   end
 
   scope :with_reminders, -> do
