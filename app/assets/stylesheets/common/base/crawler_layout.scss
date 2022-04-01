@@ -1,4 +1,5 @@
 body.crawler {
+  font-family: "Times New Roman", Times, serif;
   > header {
     width: 100%;
     top: 0;
@@ -15,6 +16,7 @@ body.crawler {
   }
 
   div#main-outlet {
+    padding: 10px;
     div.post {
       word-break: break-word;
       img {
@@ -28,7 +30,17 @@ body.crawler {
     table-layout: fixed;
     overflow: hidden;
     margin-bottom: 1em;
+    td {
+      padding: 10px 0;
+      &.posters {
+        padding: 10px 20px;
+      }
+    }
+    th:first-of-type {
+      padding-left: 0;
+    }
     @media (max-width: 850px) {
+      table-layout: auto;
       td {
         word-break: break-all;
         &.posters {
