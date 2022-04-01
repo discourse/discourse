@@ -16,8 +16,10 @@ document.addEventListener("discourse-booted", () => {
   }
 
   let setupTests = require("discourse/tests/setup-tests").default;
-  const skippingCore =
-    new URLSearchParams(window.location.search).get("qunit_skip_core") === "1";
+  const params = new URLSearchParams(window.location.search);
+  const skipCore = params.get("qunit_skip_core") === "1";
+  const disableAutoStart = params.get("qunit_disable_auto_start") === "1";
+
   // eslint-disable-next-line no-undef
   Ember.ENV.LOG_STACKTRACE_ON_DEPRECATION = false;
 
@@ -43,10 +45,12 @@ document.addEventListener("discourse-booted", () => {
   }
 
   loader.loadModules();
+
   start({
     setupTestContainer: false,
     loadTests: false,
-    setupEmberOnerrorValidation: !skippingCore,
+    startTests: !disableAutoStart,
+    setupEmberOnerrorValidation: !skipCore,
   });
 });
 window.EmberENV.TESTS_FILE_LOADED = true;
