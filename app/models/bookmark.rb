@@ -8,6 +8,41 @@ class Bookmark < ActiveRecord::Base
     "reminder_type" # TODO 2021-04-01: remove
   ]
 
+  class Bookmarkable
+    attr_reader :model, :serializer, :search_fields
+    delegate :table_name, to: :@model
+
+    def initialize(model:, serializer:, search_fields:)
+      @model = model
+      @serializer = serializer
+      @search_fields = search_fields
+    end
+
+    def search_join(ar_relation)
+      ar_relation.joins(
+        "LEFT JOIN #{table_name} ON #{table_name}.id = bookmarks.bookmarkable_id
+        AND bookmarks.bookmarkable_type = '#{model.name}'"
+      )
+    end
+
+    def search_filters
+      search_fields.map do |field|
+        "#{table_name}.#{field} ILIKE :q"
+      end
+    end
+  end
+
+  cattr_accessor :registered_bookmarkables
+  self.registered_bookmarkables = []
+
+  def self.register_bookmarkable(model:, serializer:, search_fields:)
+    Bookmark.registered_bookmarkables << Bookmarkable.new(
+      model: model,
+      serializer: serializer,
+      search_fields: search_fields
+    )
+  end
+
   belongs_to :user
   belongs_to :post
   has_one :topic, through: :post

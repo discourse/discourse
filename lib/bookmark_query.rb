@@ -5,10 +5,8 @@
 # in the user/activity/bookmarks page.
 
 class BookmarkQuery
-  cattr_accessor :preloaded_custom_fields, :additional_search_joins, :additional_search_filters
+  cattr_accessor :preloaded_custom_fields
   self.preloaded_custom_fields = Set.new
-  self.additional_search_joins = []
-  self.additional_search_filters = []
 
   def self.on_preload(&blk)
     (@preload ||= Set.new) << blk
@@ -18,14 +16,6 @@ class BookmarkQuery
     if @preload
       @preload.each { |preload| preload.call(bookmarks, object) }
     end
-  end
-
-  def self.register_additional_search_join(&block)
-    self.additional_search_joins << block
-  end
-
-  def self.register_additional_search_filter(filter_sql)
-    self.additional_search_filters << filter_sql
   end
 
   def initialize(user:, guardian: nil, params: {})
@@ -123,15 +113,12 @@ class BookmarkQuery
             AND bookmarks.bookmarkable_type = 'Post'"
     )
 
-    BookmarkQuery.additional_search_joins.each do |joiner|
-      results = joiner.call(results)
-    end
-
     search_sql = ["bookmarks.name ILIKE :q OR #{bookmark_ts_query} @@ post_search_data.search_data"]
-    BookmarkQuery.additional_search_filters.each do |sql|
-      search_sql << sql
+    Bookmark.registered_bookmarkables.each do |bm|
+      results = bm.search_join(results)
+      search_sql << bm.search_filters
     end
 
-    results.where(search_sql.join(" OR "), q: "%#{term}%")
+    results.where(search_sql.flatten.join(" OR "), q: "%#{term}%")
   end
 end
