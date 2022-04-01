@@ -9,7 +9,7 @@ import {
 } from "discourse/lib/time-utils";
 import {
   TIME_SHORTCUT_TYPES,
-  defaultShortcutOptions,
+  defaultTimeShortcuts,
   specialShortcutOptions,
 } from "discourse/lib/time-shortcut";
 import discourseComputed, {
@@ -169,30 +169,23 @@ export default Component.extend({
   },
 
   @discourseComputed(
+    "timeShortcuts",
     "hiddenOptions",
-    "customOptions",
     "customLabels",
     "userTimezone"
   )
-  options(hiddenOptions, customOptions, customLabels, userTimezone) {
+  options(timeShortcuts, hiddenOptions, customLabels, userTimezone) {
     this._loadLastUsedCustomDatetime();
 
-    let options = defaultShortcutOptions(userTimezone);
+    let options;
+    if (timeShortcuts && timeShortcuts.length) {
+      options = timeShortcuts;
+    } else {
+      options = defaultTimeShortcuts(userTimezone);
+    }
     this._hideDynamicOptions(options);
-    options = options.concat(customOptions);
-
-    options.sort((a, b) => {
-      if (a.time < b.time) {
-        return -1;
-      }
-      if (a.time > b.time) {
-        return 1;
-      }
-      return 0;
-    });
 
     let specialOptions = specialShortcutOptions();
-
     if (this.lastCustomDate && this.lastCustomTime) {
       let lastCustom = specialOptions.findBy(
         "id",
@@ -202,7 +195,6 @@ export default Component.extend({
       lastCustom.timeFormatKey = "dates.long_no_year";
       lastCustom.hidden = false;
     }
-
     options = options.concat(specialOptions);
 
     if (hiddenOptions.length > 0) {
