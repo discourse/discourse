@@ -482,7 +482,7 @@ export function inCodeBlock(text, pos) {
   // Character at position `pos` can be in a code block that is unfinished.
   // To check this case, we look for any open code blocks after the last closed
   // code block.
-  const lastOpenBlock = text.substr(end).search(OPEN_CODE_BLOCKS_REGEX);
+  const lastOpenBlock = text.slice(end).search(OPEN_CODE_BLOCKS_REGEX);
   return lastOpenBlock !== -1 && pos >= end + lastOpenBlock;
 }
 
