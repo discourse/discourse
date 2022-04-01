@@ -56,15 +56,17 @@ describe CategorySerializer do
     end
 
     context "category with group permissions configured" do
-      fab!(:private_group) { Fabricate(:group, visibility_level: Group.visibility_levels[:staff]) }
+      fab!(:private_group) { Fabricate(:group, visibility_level: Group.visibility_levels[:staff], name: 'bbb') }
 
       fab!(:user_group) do
-        Fabricate(:group, visibility_level: Group.visibility_levels[:members]).tap do |g|
+        Fabricate(:group, visibility_level: Group.visibility_levels[:members], name: 'ccc').tap do |g|
           g.add(user)
         end
       end
 
       before do
+        group.update!(name: 'aaa')
+
         category.set_permissions(
           :everyone => :readonly,
           group.name => :readonly,
@@ -78,28 +80,28 @@ describe CategorySerializer do
       it "returns the right category group permissions for an anon user" do
         json = described_class.new(category, scope: Guardian.new, root: false).as_json
 
-        expect(json[:group_permissions]).to contain_exactly(
+        expect(json[:group_permissions]).to eq([
           { permission_type: CategoryGroup.permission_types[:readonly], group_name: group.name },
-        )
+        ])
       end
 
-      it "returns the right category group permissions for a regular user" do
+      it "returns the right category group permissions for a regular user ordered by ascending group name" do
         json = described_class.new(category, scope: Guardian.new(user), root: false).as_json
 
-        expect(json[:group_permissions]).to contain_exactly(
+        expect(json[:group_permissions]).to eq([
           { permission_type: CategoryGroup.permission_types[:readonly], group_name: group.name },
           { permission_type: CategoryGroup.permission_types[:full], group_name: user_group.name },
-        )
+        ])
       end
 
-      it "returns the right category group permission for a staff user" do
+      it "returns the right category group permission for a staff user ordered by ascending group name" do
         json = described_class.new(category, scope: Guardian.new(admin), root: false).as_json
 
-        expect(json[:group_permissions]).to contain_exactly(
+        expect(json[:group_permissions]).to eq([
           { permission_type: CategoryGroup.permission_types[:readonly], group_name: group.name },
           { permission_type: CategoryGroup.permission_types[:full], group_name: private_group.name },
           { permission_type: CategoryGroup.permission_types[:full], group_name: user_group.name }
-        )
+        ])
       end
     end
   end
