@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+    xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"
+    xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+        http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd
+        http://www.google.com/schemas/sitemap-news/0.9
+        http://www.google.com/schemas/sitemap-news/0.9/sitemap-news.xsd
+        http://www.google.com/schemas/sitemap-image/1.1
+        http://www.google.com/schemas/sitemap-image/1.1/sitemap-image.xsd">
+    <% @topics.each do |topic| %>
+      <url>
+          <loc><%= Discourse.base_url %>/t/<%= topic[2] %>/<%= topic[0] %></loc>
+          <news:news>
+              <news:publication>
+                  <news:name><%= SiteSetting.title %></news:name>
+                  <news:language><%= @locale %></news:language>
+              </news:publication>
+              <news:publication_date><%= topic[3].xmlschema %></news:publication_date>
+              <news:title><%= topic[1] %></news:title>
+          </news:news>
+      </url>
+    <% end %>
+</urlset>

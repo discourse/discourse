@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+    xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+        http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd
+        http://www.google.com/schemas/sitemap-image/1.1
+        http://www.google.com/schemas/sitemap-image/1.1/sitemap-image.xsd">
+    <% @topics.each do |topic| %>
+      <url>
+      <%-
+          url = "#{Discourse.base_url}/t/#{topic[1]}/#{topic[0]}"
+          if topic[4]
+            page = topic[4] / TopicView.chunk_size
+            page += 1 if topic[4] % TopicView.chunk_size > 0
+            url += "?page=#{page}" if page > 1
+          end
+      -%>
+          <loc><%= url %></loc>
+          <lastmod><%= (topic[2] || topic[3]).xmlschema %></lastmod>
+      </url>
+    <% end %>
+</urlset>
