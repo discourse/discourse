@@ -36,7 +36,21 @@ body.crawler {
         padding: 0 0 0.5em;
       }
       th:first-of-type {
-        width: 50%;
+        width: 40%;
+      }
+      @media screen and (min-width: 500px) {
+        th {
+          &.replies,
+          &.views {
+            width: 10%;
+          }
+        }
+        th:first-of-type {
+          width: 50%;
+        }
+        th:last-of-type {
+          width: 15%;
+        }
       }
     }
 
@@ -75,6 +89,9 @@ body.crawler {
       border-bottom: 1px solid #eee;
       > * {
         padding: 0.75em 0;
+      }
+      td.main-link {
+        padding-right: 1em;
       }
     }
   }
