@@ -27,7 +27,7 @@ To use the auth manager for requiring 2fa for an action, it needs to be invoked
 from the controller action using the `run_second_factor!` method which is
 available in all controllers. This method takes a single argument which is a
 class that inherits from the `SecondFactor::Actions::Base` class and implements
-the following methods:
+at least the following methods:
 
 1. no_second_factors_enabled!(params):
   This method corresponds to outcome (1) above, i.e. it's called when the user
@@ -48,9 +48,8 @@ the following methods:
   finish the action once 2fa is completed. Everything in this Hash must be
   serializable to JSON.
 
-  :redirect_path => relative subfolder-aware path that the user should be
-  redirected to after the action is finished. When this key is omitted, the
-  redirect path is set to the homepage (/).
+  :redirect_url => where the user should be redirected after they confirm 2fa.
+  A relative path (must be subfolder-aware) is a valid value for this key.
 
   :description => optional action-specific description message that's shown on
   the 2FA page.
@@ -68,6 +67,20 @@ the following methods:
   The `callback_params` param of this method is the `callback_params` Hash from
   the return value of the previous method.
 
+There are 2 additionals methods in the base class that can be overridden, but
+they're optional:
+
+4. skip_second_factor_auth?(params):
+  This method returns false by default. As the name implies, this method can be
+  used to skip the 2FA for the action entirely. For example, if your action
+  deletes a user, then you may want to require 2FA only if the deleted user has
+  more than a specific number of posts. If you override this method in your
+  action, you must implement the following method as well.
+
+5. second_factor_auth_skipped!(params):
+  This method is called when the `skip_second_factor_auth?` method above
+  returns true.
+
 If there are permission/security checks that the current user must pass in
 order to perform the 2fa-protected action, it's important to run the checks in
 all of the 3 methods of the action class and raise errors if the user doesn't
@@ -79,13 +92,18 @@ which is an instance of `SecondFactor::AuthManagerResult`, can be used to know
 which outcome the auth manager has picked and render a different response based
 on the outcome.
 
+The results object also has a `data` method that returns the return value of
+the the hook/method of your action class. For example, if
+`second_factor_auth_required!` is called and it returns a hash object, you can
+get that hash object by calling the `data` method of the results object.
+
 For a real example where the auth manager is used, please refer to:
 
-* `SecondFactor::Actions::GrantAdmin` action class. This is a class that
-  inherits `SecondFactor::Actions::Base` and implements the 3 methods mentioned
-  above.
+* The `lib/second_factor/actions` directory where all existing actions live.
 
 * `Admin::UsersController#grant_admin` controller action.
+
+* `SessionController#sso_provider` controller action.
 
 =end
 
@@ -144,12 +162,15 @@ class SecondFactor::AuthManager
   end
 
   def run!(request, params, secure_session)
-    if !allowed_methods.any? { |m| @current_user.valid_second_factor_method_for_user?(m) }
-      @action.no_second_factors_enabled!(params)
-      create_result(:no_second_factor)
-    elsif nonce = params[:second_factor_nonce].presence
-      verify_second_factor_auth_completed(nonce, secure_session)
-      create_result(:second_factor_auth_completed)
+    if nonce = params[:second_factor_nonce].presence
+      data = verify_second_factor_auth_completed(nonce, secure_session)
+      create_result(:second_factor_auth_completed, data)
+    elsif @action.skip_second_factor_auth?(params)
+      data = @action.second_factor_auth_skipped!(params)
+      create_result(:second_factor_auth_skipped, data)
+    elsif !allowed_methods.any? { |m| @current_user.valid_second_factor_method_for_user?(m) }
+      data = @action.no_second_factors_enabled!(params)
+      create_result(:no_second_factor, data)
     else
       nonce = initiate_second_factor_auth(params, secure_session, request)
       raise SecondFactorRequired.new(nonce: nonce)
@@ -162,18 +183,19 @@ class SecondFactor::AuthManager
     config = @action.second_factor_auth_required!(params)
     nonce = SecureRandom.alphanumeric(32)
     callback_params = config[:callback_params] || {}
-    redirect_path = config[:redirect_path] || GlobalPath.path("").presence || "/"
     challenge = {
       nonce: nonce,
-      callback_method: request.request_method,
-      callback_path: request.path,
+      callback_method: config[:callback_method] || request.request_method,
+      callback_path: config[:callback_path] || request.path,
       callback_params: callback_params,
-      redirect_path: redirect_path,
       allowed_methods: allowed_methods.to_a,
       generated_at: Time.zone.now.to_i
     }
     if config[:description]
       challenge[:description] = config[:description]
+    end
+    if config[:redirect_url].present?
+      challenge[:redirect_url] = config[:redirect_url]
     end
     secure_session["current_second_factor_auth_challenge"] = challenge.to_json
     nonce
@@ -190,7 +212,8 @@ class SecondFactor::AuthManager
 
     secure_session["current_second_factor_auth_challenge"] = nil
     callback_params = challenge[:callback_params]
-    @action.second_factor_auth_completed!(callback_params)
+    data = @action.second_factor_auth_completed!(callback_params)
+    data
   end
 
   def add_method(id)
@@ -201,7 +224,7 @@ class SecondFactor::AuthManager
     end
   end
 
-  def create_result(status)
-    SecondFactor::AuthManagerResult.new(status)
+  def create_result(status, data = nil)
+    SecondFactor::AuthManagerResult.new(status, data)
   end
 end

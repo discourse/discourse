@@ -2587,6 +2587,8 @@ en:
     actions:
       grant_admin:
         description: "For additional security measures, you need to confirm your 2FA before %{username} is granted admin access."
+      discourse_connect_provider:
+        description: "%{hostname} has requested that you confirm your 2FA. You'll be redirected to %{sso_return_url} once you confirm your 2FA."
   admin:
     email:
       sent_test: "sent!"
