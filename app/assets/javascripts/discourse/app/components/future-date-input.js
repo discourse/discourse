@@ -1,7 +1,6 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
 import { and, empty, equal } from "@ember/object/computed";
-import { CLOSE_STATUS_TYPE } from "discourse/controllers/edit-topic-timer";
 import buildTimeframes from "discourse/lib/timeframes-builder";
 import I18n from "I18n";
 import { FORMAT } from "select-kit/components/future-date-input-selector";
@@ -14,12 +13,14 @@ export default Component.extend({
   displayLabel: null,
   labelClasses: null,
   timeInputDisabled: empty("_date"),
+  userTimezone: null,
 
   _date: null,
   _time: null,
 
   init() {
     this._super(...arguments);
+    this.userTimezone = this.currentUser.resolvedTimezone(this.currentUser);
 
     if (this.input) {
       const dateTime = moment(this.input);
@@ -73,26 +74,16 @@ export default Component.extend({
   },
 
   findClosestTimeframe(dateTime) {
-    const now = moment();
-
-    const futureDateInputSelectorOptions = {
-      now,
-      day: now.day(),
+    const options = {
       includeWeekend: this.includeWeekend,
       includeFarFuture: this.includeFarFuture,
       includeDateTime: this.includeDateTime,
       canScheduleNow: this.includeNow || false,
-      canScheduleToday: 24 - now.hour() > 6,
     };
 
-    return buildTimeframes(futureDateInputSelectorOptions).find((tf) => {
-      const tfDateTime = tf.when(
-        moment(),
-        this.statusType !== CLOSE_STATUS_TYPE ? 8 : 18
-      );
-
-      if (tfDateTime) {
-        const diff = tfDateTime.diff(dateTime);
+    return buildTimeframes(this.userTimezone, options).find((tf) => {
+      if (tf.time) {
+        const diff = tf.time.diff(dateTime);
         return 0 <= diff && diff < 60 * 1000;
       }
     });
