@@ -218,4 +218,22 @@ describe UploadReference do
         .to change { UploadReference.count }.by(-1)
     end
   end
+
+  context 'user profile uploads' do
+    fab!(:user) { Fabricate(:user) }
+    fab!(:upload1) { Fabricate(:upload) }
+    fab!(:upload2) { Fabricate(:upload) }
+
+    it 'creates upload references' do
+      user_profile = user.user_profile
+      expect { user_profile.update!(profile_background_upload_id: upload1.id, card_background_upload_id: upload2.id) }
+        .to change { UploadReference.count }.by(2)
+
+      upload_reference = UploadReference.last
+      expect(upload_reference.target).to eq(user_profile)
+
+      expect { user_profile.destroy! }
+        .to change { UploadReference.count }.by(-2)
+    end
+  end
 end

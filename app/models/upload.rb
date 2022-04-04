@@ -88,8 +88,6 @@ class Upload < ActiveRecord::Base
     self
       .joins("LEFT JOIN upload_references ur ON ur.upload_id = uploads.id AND ur.target_type != 'Post'")
       .where("ur.upload_id IS NULL")
-      .joins("LEFT JOIN user_profiles up ON up.profile_background_upload_id = uploads.id OR up.card_background_upload_id = uploads.id")
-      .where("up.profile_background_upload_id IS NULL AND up.card_background_upload_id IS NULL")
   end
 
   def to_s
