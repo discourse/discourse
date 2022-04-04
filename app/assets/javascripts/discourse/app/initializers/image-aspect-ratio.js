@@ -23,8 +23,8 @@ export default {
           const declaredWidth = parseFloat(img.getAttribute("width"));
 
           if (
-            declaredHeight === NaN ||
-            declaredWidth === NaN ||
+            isNaN(declaredHeight) ||
+            isNaN(declaredWidth) ||
             img.style.aspectRatio
           ) {
             return;
