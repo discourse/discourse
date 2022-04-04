@@ -4,15 +4,19 @@ class UserBookmarkListSerializer < ApplicationSerializer
   attributes :more_bookmarks_url, :bookmarks
 
   def bookmarks
-    object.bookmarks.map do |bm|
-      case bm.bookmarkable_type
-      when "Topic"
-        UserTopicBookmarkSerializer.new(bm, object.topics.find { |t| t.id == bm.bookmarkable_id }, scope: scope, root: false)
-      when "Post"
-        UserPostBookmarkSerializer.new(bm, object.posts.find { |p| p.id == bm.bookmarkable_id }, scope: scope, root: false)
-      else
-        serialize_registered_type(bm)
+    if SiteSetting.use_polymorphic_bookmarks
+      object.bookmarks.map do |bm|
+        case bm.bookmarkable_type
+        when "Topic"
+          UserTopicBookmarkSerializer.new(bm, object.topics.find { |t| t.id == bm.bookmarkable_id }, scope: scope, root: false)
+        when "Post"
+          UserPostBookmarkSerializer.new(bm, object.posts.find { |p| p.id == bm.bookmarkable_id }, scope: scope, root: false)
+        else
+          serialize_registered_type(bm)
+        end
       end
+    else
+      object.bookmarks.map { |bm| UserBookmarkSerializer.new(bm, scope: scope, root: false) }
     end
   end
 

@@ -5,7 +5,7 @@ class UserBookmarkList
 
   PER_PAGE = 20
 
-  attr_reader :bookmarks, :per_page, :posts, :topics, :chat_messages
+  attr_reader :bookmarks, :per_page, :posts, :topics
   attr_accessor :more_bookmarks_url
 
   def initialize(user:, guardian:, params:)
@@ -21,7 +21,9 @@ class UserBookmarkList
 
   def load
     @bookmarks = BookmarkQuery.new(user: @user, guardian: @guardian, params: @params).list_all
-    preload_polymorphic_associations
+    if SiteSetting.use_polymorphic_bookmarks
+      preload_polymorphic_associations
+    end
     @bookmarks
   end
 
@@ -44,10 +46,11 @@ class UserBookmarkList
 
     Bookmark.registered_bookmarkables.each do |registered_bookmarkable|
       bookmarkable_ids = Bookmark.select_type(@bookmarks, registered_bookmarkable.model.name).map(&:bookmarkable_id)
-      instance_variable_set(
-        :"@#{registered_bookmarkable.model.table_name}",
+      self.instance_variable_set(
+        :"@#{registered_bookmarkable.table_name}",
         registered_bookmarkable.preload_associations(bookmarkable_ids)
       )
+      self.class.send(:attr_reader, registered_bookmarkable.table_name)
     end
   end
 end
