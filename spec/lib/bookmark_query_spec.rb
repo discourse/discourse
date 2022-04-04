@@ -50,6 +50,34 @@ RSpec.describe BookmarkQuery do
       expect(bookmark.topic.topic_users.map(&:user_id)).to contain_exactly(user.id)
     end
 
+    context "for polymorphic bookmarks" do
+      before do
+        SiteSetting.use_polymorphic_bookmarks = true
+        Bookmark.register_bookmarkable(
+          model: User,
+          serializer: UserBookmarkSerializer,
+          search_fields: ["username"]
+        )
+
+        Fabricate(:topic_user, user: user, topic: post_bookmark.bookmarkable.topic)
+        Fabricate(:topic_user, user: user, topic: topic_bookmark.bookmarkable)
+        user_bookmark
+      end
+
+      let(:post_bookmark) { Fabricate(:bookmark, user: user, bookmarkable: Fabricate(:post)) }
+      let(:topic_bookmark) { Fabricate(:bookmark, user: user, bookmarkable: Fabricate(:topic)) }
+      let(:user_bookmark) { Fabricate(:bookmark, user: user, bookmarkable: Fabricate(:user, username: "bookmarkqueen")) }
+
+      after do
+        Bookmark.registered_bookmarkables = []
+      end
+
+      it "returns a mixture of post, topic, and custom bookmarkable type bookmarks" do
+        bookmarks = bookmark_query.list_all
+        expect(bookmarks.map(&:id)).to match_array([post_bookmark.id, topic_bookmark.id, user_bookmark.id])
+      end
+    end
+
     context "when q param is provided" do
       let!(:post) { Fabricate(:post, raw: "Some post content here", topic: Fabricate(:topic, title: "Bugfix game for devs")) }
 
@@ -107,7 +135,6 @@ RSpec.describe BookmarkQuery do
         end
 
         context "with custom bookmarkable fitering" do
-          let!(:bookmark5) { Fabricate(:bookmark, user: user, bookmarkable: Fabricate(:user, username: "bookmarkqueen")) }
           before do
             Bookmark.register_bookmarkable(
               model: User,
@@ -115,12 +142,14 @@ RSpec.describe BookmarkQuery do
               search_fields: ["username"]
             )
           end
+          let!(:bookmark5) { Fabricate(:bookmark, user: user, bookmarkable: Fabricate(:user, username: "bookmarkqueen")) }
+          after do
+            Bookmark.registered_bookmarkables = []
+          end
+
           it "allows searching bookmarkables by fields in other tables" do
             bookmarks = bookmark_query(params: { q: 'bookmarkq' }).list_all
             expect(bookmarks.map(&:id)).to eq([bookmark5.id])
-          end
-          after do
-            Bookmark.registered_bookmarkables = []
           end
         end
       end
@@ -218,6 +247,10 @@ RSpec.describe BookmarkQuery do
         )
         BookmarkQuery.preloaded_custom_fields << "test_field"
       end
+      after do
+        BookmarkQuery.preloaded_custom_fields.clear
+      end
+
       it "preloads them" do
         Topic.expects(:preload_custom_fields)
         expect(
@@ -225,9 +258,6 @@ RSpec.describe BookmarkQuery do
             b.topic.id = bookmark1.topic.id
           end.topic.custom_fields['test_field']
         ).not_to eq(nil)
-      end
-      after do
-        BookmarkQuery.preloaded_custom_fields.clear
       end
     end
   end

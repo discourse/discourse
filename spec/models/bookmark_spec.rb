@@ -42,6 +42,9 @@ describe Bookmark do
       before do
         SiteSetting.use_polymorphic_bookmarks = true
       end
+      after do
+        Bookmark.registered_bookmarkables = []
+      end
 
       it "does not allow a user to create a bookmark with only one polymorphic column" do
         user = Fabricate(:user)
@@ -58,6 +61,19 @@ describe Bookmark do
         Bookmark.create(bookmarkable_type: "Post", bookmarkable_id: post.id, user: user)
         bm = Bookmark.create(bookmarkable_type: "Post", bookmarkable_id: post.id, user: user)
         expect(bm.errors.full_messages).to include(I18n.t("bookmarks.errors.already_bookmarked", type: "Post"))
+      end
+
+      it "does not allow a user to create a bookmarkable for a type that has not been registered" do
+        user = Fabricate(:user)
+        bm = Bookmark.create(bookmarkable_type: "Upload", bookmarkable: Fabricate(:upload), user: user)
+        expect(bm.errors.full_messages).to include(I18n.t("bookmarks.errors.invalid_bookmarkable", type: "Upload"))
+        Bookmark.register_bookmarkable(
+          model: Upload,
+          serializer: stub,
+          search_fields: ["file_name"]
+        )
+        bm = Bookmark.create(bookmarkable_type: "Upload", bookmarkable: Fabricate(:upload), user: user)
+        expect(bm.errors.empty?).to eq(true)
       end
     end
   end

@@ -29,7 +29,7 @@ class UserBookmarkBaseSerializer < ApplicationSerializer
   end
 
   def cooked
-    "test cookie"
+    "-"
   end
 
   def bookmarkable_user_username
@@ -47,5 +47,6 @@ class UserBookmarkBaseSerializer < ApplicationSerializer
   def bookmarkable_url
     # we get the topic URL using topic-link for topic + post bookmarks,
     # this is only for other bookmarkables to define their own urls
+    Discourse.base_url
   end
 end

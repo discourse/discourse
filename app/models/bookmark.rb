@@ -8,6 +8,14 @@ class Bookmark < ActiveRecord::Base
     "reminder_type" # TODO 2021-04-01: remove
   ]
 
+  # Should only be created via the Bookmark.register_bookmarkable
+  # method; this is used to let the BookmarkQuery class query and
+  # search additional bookmarks for the user bookmark list, and
+  # also to enumerate on the registered Bookmarkable types.
+  #
+  # Anything other than types registered in this way will throw an error
+  # when trying to save the Bookmark record  (excluding Post and Topic
+  # bookmarkables, which have special logic handled directly in core.)
   class Bookmarkable
     attr_reader :model, :serializer, :search_fields, :preload_includes
     delegate :table_name, to: :@model
@@ -53,6 +61,10 @@ class Bookmark < ActiveRecord::Base
     )
   end
 
+  def self.valid_bookmarkable_types
+    Bookmark.registered_bookmarkables.map(&:model).map(&:to_s)
+  end
+
   belongs_to :user
   belongs_to :post
   has_one :topic, through: :post
@@ -84,6 +96,7 @@ class Bookmark < ActiveRecord::Base
     if: Proc.new { |b| b.will_save_change_to_post_id? || b.will_save_change_to_for_topic? }
 
   validate :polymorphic_columns_present, on: [:create, :update]
+  validate :polymorphic_type_ok, on: [:create, :update]
 
   validate :unique_per_bookmarkable,
     on: [:create, :update],
@@ -153,6 +166,14 @@ class Bookmark < ActiveRecord::Base
         limit: SiteSetting.max_bookmarks_per_user
       )
     )
+  end
+
+  def polymorphic_type_ok
+    return if !SiteSetting.use_polymorphic_bookmarks
+    return if Bookmark.valid_bookmarkable_types.include?(self.bookmarkable_type)
+    return if ["Post", "Topic"].include?(self.bookmarkable_type)
+
+    self.errors.add(:base, I18n.t("bookmarks.errors.invalid_bookmarkable", type: self.bookmarkable_type))
   end
 
   # TODO (martin) [POLYBOOK] Not relevant once polymorphic bookmarks are implemented.

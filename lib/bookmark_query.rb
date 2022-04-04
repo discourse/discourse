@@ -27,25 +27,21 @@ class BookmarkQuery
   end
 
   def list_all
-    topic_results = topic_related_user_bookmarks
-
     topics = Topic.listable_topics.secured(@guardian)
     pms = Topic.private_messages_for_user(@user)
 
-    topic_results = topic_results.merge(topics.or(pms))
-    topic_results = topic_results.merge(Post.secured(@guardian))
-    topic_results = @guardian.filter_allowed_categories(topic_results)
-
-    if BookmarkQuery.preloaded_custom_fields.any?
-      Topic.preload_custom_fields(
-        topic_results, BookmarkQuery.preloaded_custom_fields
-      )
-    end
-
+    # A note about the difference in queries here...pre-polymorphic bookmarks are
+    # all attached to a post so both the Post.secured filter and the topics/pms/allowed
+    # category filters all work correctly. However with polymorphic bookmarks, the
+    # bookmarks could be attached to any relation, so we must get the post and
+    # topic bookmarks separately and apply the relevant filters to them directly.
+    #
+    # Much of the complexity in this file will be cleaned up when we switch completely
+    # to polymorphic bookmakrks.
     if SiteSetting.use_polymorphic_bookmarks
-      results = Bookmark.select("bookmarks.*").from("(#{topic_results.to_sql} UNION #{other_user_bookmarks.to_sql}) as bookmarks")
+      results = list_all_results_polymorphic(topics, pms)
     else
-      results = topic_results
+      results = list_all_results(topics, pms)
     end
 
     results = results.order(
@@ -74,28 +70,68 @@ class BookmarkQuery
 
   private
 
-  def other_user_bookmarks
-    Bookmark.where(user: @user).where.not(bookmarkable_type: ["Post", "Topic"])
+  def list_all_results(topics, pms)
+    results = base_bookmarks.merge(topics.or(pms))
+    results = results.merge(Post.secured(@guardian))
+    results = @guardian.filter_allowed_categories(results)
+
+    if BookmarkQuery.preloaded_custom_fields.any?
+      Topic.preload_custom_fields(results, BookmarkQuery.preloaded_custom_fields)
+    end
+
+    results
   end
 
-  def topic_related_user_bookmarks
-    # There is guaranteed to be a TopicUser record if the user has bookmarked
-    # a topic, see BookmarkManager
-    if SiteSetting.use_polymorphic_bookmarks
-      Bookmark.where(user: @user)
-        .where(bookmarkable_type: ["Post", "Topic"])
-        .joins("LEFT JOIN posts ON posts.id = bookmarks.bookmarkable_id AND bookmarks.bookmarkable_type = 'Post'")
-        .joins("LEFT JOIN topics ON topics.id = posts.topic_id OR (topics.id = bookmarks.bookmarkable_id AND bookmarks.bookmarkable_type = 'Topic')")
-        .joins("LEFT JOIN topic_users ON topic_users.topic_id = topics.id")
-        .where("topic_users.user_id = ?", @user.id)
-    else
-      Bookmark.where(user: @user)
-        .includes(post: :user)
-        .includes(post: { topic: :tags })
-        .includes(topic: :topic_users)
-        .references(:post)
-        .where(topic_users: { user_id: @user.id })
+  def list_all_results_polymorphic(topics, pms)
+    topic_results = topic_bookmarks.merge(topics.or(pms))
+
+    post_results = post_bookmarks.merge(topics.or(pms))
+    post_results = post_results.merge(Post.secured(@guardian))
+
+    topic_results = @guardian.filter_allowed_categories(topic_results)
+    post_results = @guardian.filter_allowed_categories(post_results)
+
+    if BookmarkQuery.preloaded_custom_fields.any?
+      Topic.preload_custom_fields(topic_results, BookmarkQuery.preloaded_custom_fields)
+      Topic.preload_custom_fields(post_results, BookmarkQuery.preloaded_custom_fields)
     end
+
+    # TODO: At some point we may want to introduce ways for other Bookmarkable types
+    # to further filter results securely using merges, though this is not necessary just
+    # yet.
+
+    results = Bookmark.select("bookmarks.*").from(
+      "(#{topic_results.to_sql} UNION #{post_results.to_sql} UNION #{other_bookmarks.to_sql}) as bookmarks"
+    )
+  end
+
+  def base_bookmarks
+    Bookmark.where(user: @user)
+      .includes(post: :user)
+      .includes(post: { topic: :tags })
+      .includes(topic: :topic_users)
+      .references(:post)
+      .where(topic_users: { user_id: @user.id })
+  end
+
+  def base_bookmarks_polymorphic
+    Bookmark.where(user: @user)
+      .joins("LEFT JOIN posts ON posts.id = bookmarks.bookmarkable_id AND bookmarks.bookmarkable_type = 'Post'")
+      .joins("LEFT JOIN topics ON topics.id = posts.topic_id OR (topics.id = bookmarks.bookmarkable_id AND bookmarks.bookmarkable_type = 'Topic')")
+      .joins("LEFT JOIN topic_users ON topic_users.topic_id = topics.id")
+      .where("topic_users.user_id = ?", @user.id)
+  end
+
+  def topic_bookmarks
+    base_bookmarks_polymorphic.where(bookmarkable_type: "Topic")
+  end
+
+  def post_bookmarks
+    base_bookmarks_polymorphic.where(bookmarkable_type: "Post")
+  end
+
+  def other_bookmarks
+    Bookmark.where(user: @user).where.not(bookmarkable_type: ["Post", "Topic"])
   end
 
   def search(results, term)

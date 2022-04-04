@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class UserTopicBookmarkSerializer < UserBookmarkBaseSerializer
+class UserTopicBookmarkSerializer < UserPostTopicBookmarkBaseSerializer
   attr_reader :topic
 
   def initialize(obj, topic, opts)
@@ -8,43 +8,11 @@ class UserTopicBookmarkSerializer < UserBookmarkBaseSerializer
     @topic = topic
   end
 
-  include TopicTagsMixin
-
-  attributes :topic_id,
-             :linked_post_number,
-             :post_id,
-             :title,
-             :fancy_title,
-             :deleted,
-             :hidden,
-             :category_id,
-             :closed,
-             :archived,
-             :archetype,
-             :highest_post_number,
-             :last_read_post_number,
-             :bumped_at,
-             :slug
-
-  # always linking to post 1 for the topic
+  # it does not matter what the linked post number is for topic bookmarks,
+  # on the client we always take the user to the last unread post in the
+  # topic when the bookmark URL is clicked
   def linked_post_number
     1
-  end
-
-  def topic_id
-    topic.id
-  end
-
-  def post_id
-    topic.first_post.id
-  end
-
-  def title
-    topic.title
-  end
-
-  def fancy_title
-    topic.fancy_title
   end
 
   def deleted
@@ -53,38 +21,6 @@ class UserTopicBookmarkSerializer < UserBookmarkBaseSerializer
 
   def hidden
     topic.first_post.hidden
-  end
-
-  def category_id
-    topic.category_id
-  end
-
-  def archetype
-    topic.archetype
-  end
-
-  def archived
-    topic.archived
-  end
-
-  def closed
-    topic.closed
-  end
-
-  def highest_post_number
-    scope.is_staff? ? topic.highest_staff_post_number : topic.highest_post_number
-  end
-
-  def last_read_post_number
-    topic_user&.last_read_post_number
-  end
-
-  def topic_user
-    @topic_user ||= topic.topic_users.find { |tu| tu.user_id == scope.user.id }
-  end
-
-  def bumped_at
-    topic.bumped_at
   end
 
   def raw
@@ -110,10 +46,6 @@ class UserTopicBookmarkSerializer < UserBookmarkBaseSerializer
     # in this case we should just get the last regular post and
     # use that for the cooked value so we have something to show
     first_unread_cooked || posts.last.cooked
-  end
-
-  def slug
-    topic.slug
   end
 
   def bookmarkable_user
