@@ -113,9 +113,9 @@ module("Unit | Lib | timeframes-builder", function (hooks) {
     assert.ok(timeframes.includes("later_this_week"));
   });
 
-  test("doesn't output 'Later This Week' on Tuesdays", function (assert) {
+  test("doesn't output 'Later This Week' on Thursdays", function (assert) {
     const timezone = moment.tz.guess();
-    this.clock = fakeTime("2100-04-22 18:00:00", timezone, true); // Tuesday evening
+    this.clock = fakeTime("2100-04-22 18:00:00", timezone, true); // Thursday evening
     const timeframes = buildTimeframes(buildOptions(moment())).mapBy("id");
 
     assert.notOk(timeframes.includes("later_this_week"));
