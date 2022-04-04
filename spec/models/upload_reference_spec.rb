@@ -35,6 +35,22 @@ describe UploadReference do
     end
   end
 
+  context 'custom emoji uploads' do
+    fab!(:upload) { Fabricate(:upload) }
+
+    it 'creates upload references' do
+      custom_emoji = nil
+      expect { custom_emoji = CustomEmoji.create!(name: 'emoji', upload_id: upload.id) }
+        .to change { UploadReference.count }.by(1)
+
+      upload_reference = UploadReference.last
+      expect(upload_reference.target).to eq(custom_emoji)
+
+      expect { custom_emoji.destroy! }
+        .to change { UploadReference.count }.by(-1)
+    end
+  end
+
   context 'post uploads' do
     fab!(:upload) { Fabricate(:upload) }
     fab!(:post) { Fabricate(:post, raw: "[](#{upload.short_url})") }
