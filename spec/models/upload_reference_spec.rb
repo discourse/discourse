@@ -178,4 +178,21 @@ describe UploadReference do
         .to change { UploadReference.count }.by(-1)
     end
   end
+
+  context 'user avatar uploads' do
+    fab!(:upload1) { Fabricate(:upload) }
+    fab!(:upload2) { Fabricate(:upload) }
+
+    it 'creates upload references' do
+      user_avatar = nil
+      expect { user_avatar = Fabricate(:user_avatar, custom_upload_id: upload1.id, gravatar_upload_id: upload2.id) }
+        .to change { UploadReference.count }.by(2)
+
+      upload_reference = UploadReference.last
+      expect(upload_reference.target).to eq(user_avatar)
+
+      expect { user_avatar.destroy! }
+        .to change { UploadReference.count }.by(-2)
+    end
+  end
 end
