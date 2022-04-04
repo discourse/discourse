@@ -18,6 +18,23 @@ describe UploadReference do
     end
   end
 
+  context 'category uploads' do
+    fab!(:upload1) { Fabricate(:upload) }
+    fab!(:upload2) { Fabricate(:upload) }
+
+    it 'creates upload references' do
+      category = nil
+      expect { category = Fabricate(:category, uploaded_logo_id: upload1.id, uploaded_background_id: upload2.id) }
+        .to change { UploadReference.count }.by(2)
+
+      upload_reference = UploadReference.last
+      expect(upload_reference.target).to eq(category)
+
+      expect { category.destroy! }
+        .to change { UploadReference.count }.by(-2)
+    end
+  end
+
   context 'post uploads' do
     fab!(:upload) { Fabricate(:upload) }
     fab!(:post) { Fabricate(:post, raw: "[](#{upload.short_url})") }

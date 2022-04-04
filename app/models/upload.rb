@@ -94,8 +94,6 @@ class Upload < ActiveRecord::Base
       .where("ua.gravatar_upload_id IS NULL AND ua.custom_upload_id IS NULL")
       .joins("LEFT JOIN user_profiles up ON up.profile_background_upload_id = uploads.id OR up.card_background_upload_id = uploads.id")
       .where("up.profile_background_upload_id IS NULL AND up.card_background_upload_id IS NULL")
-      .joins("LEFT JOIN categories c ON c.uploaded_logo_id = uploads.id OR c.uploaded_background_id = uploads.id")
-      .where("c.uploaded_logo_id IS NULL AND c.uploaded_background_id IS NULL")
       .joins("LEFT JOIN custom_emojis ce ON ce.upload_id = uploads.id")
       .where("ce.upload_id IS NULL")
       .joins("LEFT JOIN theme_fields tf ON tf.upload_id = uploads.id")
