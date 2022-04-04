@@ -70,7 +70,11 @@ class Bookmark < ActiveRecord::Base
   has_one :topic, through: :post
   belongs_to :bookmarkable, polymorphic: true
 
-  delegate :topic_id, to: :post
+  # TODO (martin) [POLYBOOK] Not relevant once polymorphic bookmarks are implemented.
+  def topic_id
+    return if SiteSetting.use_polymorphic_bookmarks
+    post.topic_id
+  end
 
   def self.auto_delete_preferences
     @auto_delete_preferences ||= Enum.new(

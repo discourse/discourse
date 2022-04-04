@@ -174,6 +174,9 @@ const Bookmark = RestModel.extend({
 
   @discourseComputed("bookmarkable_type")
   bookmarkableTopicAlike(bookmarkable_type) {
+    if (!this.siteSettings.use_polymorphic_bookmarks) {
+      return true;
+    }
     return ["Topic", "Post"].includes(bookmarkable_type);
   },
 });
