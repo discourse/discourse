@@ -33,8 +33,14 @@ class UserBookmarkList
 
   private
 
-  # we have already confirmed the user has access to these records at
+  # We have already confirmed the user has access to these records at
   # this point in BookmarkQuery, so it is safe to load them directly
+  # without any further security checks.
+  #
+  # These polymorphic associations are loaded to make the UserBookmarkListSerializer's
+  # life easier, which conditionally chooses the bookmark serializer to use based
+  # on the type, and we want the associations all loaded ahead of time to make
+  # sure we are not doing N1s.
   def preload_polymorphic_associations
     @topics = Topic.includes(:topic_users).where(
       id: Bookmark.select_type(@bookmarks, "Topic").map(&:bookmarkable_id)

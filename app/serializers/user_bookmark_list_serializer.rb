@@ -28,7 +28,6 @@ class UserBookmarkListSerializer < ApplicationSerializer
 
   def serialize_registered_type(bookmark)
     bookmarkable = Bookmark.registered_bookmarkables.find { |bm| bm.model.name == bookmark.bookmarkable_type }
-    raise StandardError if !bookmarkable
     preloaded = object.send(bookmarkable.model.table_name).find { |preloaded_data| preloaded_data.id == bookmark.bookmarkable_id }
     bookmarkable.serializer.new(bookmark, preloaded, scope: scope, root: false)
   end
