@@ -32,6 +32,7 @@ module("Unit | Lib | timeframes-builder", function (hooks) {
     const expected = [
       "later_today",
       "tomorrow",
+      "later_this_week",
       "next_week",
       "two_weeks",
       "next_month",
