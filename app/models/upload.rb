@@ -96,12 +96,6 @@ class Upload < ActiveRecord::Base
       .where("up.profile_background_upload_id IS NULL AND up.card_background_upload_id IS NULL")
       .joins("LEFT JOIN user_exports ue ON ue.upload_id = uploads.id")
       .where("ue.upload_id IS NULL")
-      .joins(<<~SQL)
-        LEFT JOIN theme_settings ts
-        ON NULLIF(ts.value, '')::integer = uploads.id
-        AND ts.data_type = #{ThemeSetting.types[:upload].to_i}
-      SQL
-      .where("ts.value IS NULL")
   end
 
   def to_s
