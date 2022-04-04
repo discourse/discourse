@@ -772,7 +772,7 @@ export default {
   },
 
   _onScrollEndsCallback() {
-    document.querySelector(".topic-post.selected a.tabLoc")?.focus();
+    document.querySelector(".topic-post.selected span.tabLoc")?.focus();
   },
 
   categoriesTopicsList() {

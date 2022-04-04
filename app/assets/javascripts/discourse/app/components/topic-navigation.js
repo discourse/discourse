@@ -45,6 +45,11 @@ export default Component.extend(PanEvents, {
 
     let info = this.info;
 
+    // Safari's window.innerWidth doesn't match CSS media queries
+    let windowWidth = this.capabilities.isSafari
+      ? document.documentElement.clientWidth
+      : window.innerWidth;
+
     if (info.get("topicProgressExpanded")) {
       info.set("renderTimeline", true);
     } else {
@@ -55,7 +60,7 @@ export default Component.extend(PanEvents, {
 
         if (composer) {
           renderTimeline =
-            window.innerWidth > MIN_WIDTH_TIMELINE &&
+            windowWidth > MIN_WIDTH_TIMELINE &&
             window.innerHeight - composer.offsetHeight - headerOffset() >
               MIN_HEIGHT_TIMELINE;
         }

@@ -136,7 +136,7 @@ en:
       to_placeholder: "to date"
     share:
       topic_html: 'Topic: <span class="topic-title">%{topicTitle}</span>'
-      post: "post #%{postNumber}"
+      post: "post #%{postNumber} by @%{username}"
       close: "close"
       twitter: "Share on Twitter"
       facebook: "Share on Facebook"
@@ -3065,7 +3065,13 @@ en:
       show_hidden: "View ignored content."
       deleted_by_author_simple: "(post deleted by author)"
       collapse: "collapse"
+      sr_collapse_replies: "Collapse embedded replies"
+      sr_expand_replies:
+        one: "This post has %{count} reply. Click to expand"
+        other: "This post has %{count} replies. Click to expand"
       expand_collapse: "expand/collapse"
+      sr_below_embedded_posts_description: "post #%{post_number} replies"
+      sr_embedded_reply_description: "reply by @%{username} to post #%{post_number}"
       locked: "a staff member has locked this post from being edited"
       gap:
         one: "view %{count} hidden reply"
@@ -3091,6 +3097,12 @@ en:
         one: "you and %{count} other person liked this post"
         other: "you and %{count} other people liked this post"
 
+      sr_post_like_count_button:
+        one: "%{count} person liked this post. Click to view"
+        other: "%{count} people liked this post. Click to view"
+      sr_post_read_count_button:
+        one: "%{count} person read this post. Click to view"
+        other: "%{count} people read this post. Click to view"
       filtered_replies_hint:
         one: "View this post and its reply"
         other: "View this post and its %{count} replies"
@@ -3201,6 +3213,8 @@ en:
           read_capped:
             one: "and %{count} other read this"
             other: "and %{count} others read this"
+          sr_post_likers_list_description: "users who liked this post"
+          sr_post_readers_list_description: "users who read this post"
         by_you:
           off_topic: "You flagged this as off-topic"
           spam: "You flagged this as spam"
@@ -4744,6 +4758,7 @@ en:
         time: "Time"
         user: "User"
         email_type: "Email Type"
+        details_title: "Show email details"
         to_address: "To Address"
         test_email_address: "email address to test"
         send_test: "Send Test Email"

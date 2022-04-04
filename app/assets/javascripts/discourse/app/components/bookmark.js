@@ -5,7 +5,10 @@ import I18n from "I18n";
 import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
 import ItsATrap from "@discourse/itsatrap";
 import { Promise } from "rsvp";
-import { TIME_SHORTCUT_TYPES } from "discourse/lib/time-shortcut";
+import {
+  TIME_SHORTCUT_TYPES,
+  defaultTimeShortcuts,
+} from "discourse/lib/time-shortcut";
 import { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import bootbox from "bootbox";
@@ -291,12 +294,12 @@ export default Component.extend({
     });
   },
 
-  @discourseComputed()
-  customTimeShortcutOptions() {
-    let customOptions = [];
+  @discourseComputed("userTimezone")
+  timeOptions(userTimezone) {
+    const options = defaultTimeShortcuts(userTimezone);
 
     if (this.showPostLocalDate) {
-      customOptions.push({
+      options.push({
         icon: "globe-americas",
         id: TIME_SHORTCUT_TYPES.POST_LOCAL_DATE,
         label: "time_shortcut.post_local_date",
@@ -306,7 +309,7 @@ export default Component.extend({
       });
     }
 
-    return customOptions;
+    return options;
   },
 
   @discourseComputed("existingBookmarkHasReminder")

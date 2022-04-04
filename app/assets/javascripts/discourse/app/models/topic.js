@@ -574,7 +574,7 @@ const Topic = RestModel.extend({
 
   @discourseComputed("excerpt")
   excerptTruncated(excerpt) {
-    return excerpt && excerpt.substr(excerpt.length - 8, 8) === "&hellip;";
+    return excerpt && excerpt.slice(-8) === "&hellip;";
   },
 
   readLastPost: propertyEqual("last_read_post_number", "highest_post_number"),

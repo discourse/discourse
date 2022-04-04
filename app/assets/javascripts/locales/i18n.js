@@ -201,8 +201,9 @@ I18n.toNumber = function(number, options) {
   number = parts[0];
 
   while (number.length > 0) {
-    buffer.unshift(number.substr(Math.max(0, number.length - 3), 3));
-    number = number.substr(0, number.length - 3);
+    var pos = Math.max(0, number.length - 3);
+    buffer.unshift(number.slice(pos, pos + 3));
+    number = number.slice(0, -3);
   }
 
   formattedNumber = buffer.join(options.delimiter);
