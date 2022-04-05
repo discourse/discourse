@@ -98,7 +98,6 @@ ja:
       to_placeholder: "日付"
     share:
       topic_html: 'トピック: <span class="topic-title">%{topicTitle}</span>'
-      post: "投稿 #%{postNumber}"
       close: "閉じる"
       twitter: "Twitter で共有"
       facebook: "Facebook で共有"
@@ -1728,7 +1727,6 @@ ja:
       success: "あなたのアカウントが作成され、ログインしました。"
       name_label: "名前"
       password_label: "パスワード"
-      optional_description: "(オプション)"
     password_reset:
       continue: "%{site_name} に進む"
     emoji_set:

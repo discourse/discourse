@@ -84,6 +84,15 @@ fr:
       "10":
         quote: "Tout ce que l'esprit de l'homme peut concevoir et croire peut être atteint."
         author: "Napoleon Hill"
+      "11":
+        quote: "Paix dans le pays, paix dans le monde."
+        author: "Mustafa Kemal Atatürk"
+      "12":
+        quote: "L'éducation n'est pas un moyen d'échapper à la pauvreté. Elle est un\nmoyen de la combattre."
+        author: "Julius Nyerere"
+      "13":
+        quote: "Un voyage de mille lieues commence toujours par un premier pas."
+        author: "Lao Tseu"
       results: |-
         > :left_speech_bubble: %{quote} __ &mdash; %{author}
     magic_8_ball:

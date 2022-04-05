@@ -120,7 +120,7 @@ it:
       to_placeholder: "ad oggi"
     share:
       topic_html: 'Argomento: <span class="topic-title">%{topicTitle}</span>'
-      post: "messaggio n°%{postNumber}"
+      post: "messaggio n°%{postNumber} di @%{username}"
       close: "chiudi"
       twitter: "Condividi su Twitter"
       facebook: "Condividi su Facebook"
@@ -287,6 +287,8 @@ it:
         unbookmark_with_reminder: "Clicca per rimuovere tutti i segnalibri e i promemoria a questo argomento."
     bookmarks:
       created: "Hai aggiunto questo messaggio ai segnalibri %{name}"
+      create_for: "Crea un segnalibro per %{type}"
+      edit_for: "Modifica il segnalibro per %{type}"
       not_bookmarked: "aggiungi messaggio ai segnalibri"
       remove_reminder_keep_bookmark: "Rimuovi il promemoria e mantieni il segnalibro"
       created_with_reminder: "Hai aggiunto ai segnalibri questo messaggio con un promemoria %{date}. %{name}"
@@ -1811,7 +1813,6 @@ it:
       success: "Il tuo account è stato creato e ora hai effettuato l'accesso."
       name_label: "Nome"
       password_label: "Password"
-      optional_description: "(opzionale)"
     password_reset:
       continue: "Procedi su %{site_name}"
     emoji_set:
@@ -2790,7 +2791,10 @@ it:
       show_hidden: "Visualizza contenuto ignorato."
       deleted_by_author_simple: "(messaggio eliminato dall'autore)"
       collapse: "comprimi"
+      sr_collapse_replies: "Comprimi risposte incorporate"
       expand_collapse: "espandi/comprimi"
+      sr_below_embedded_posts_description: "risposte al messaggio n°%{post_number}"
+      sr_embedded_reply_description: "risposta da @%{username} al messaggio n°%{post_number}"
       locked: "un membro dello Staff ha bloccato le modifiche a questo messaggio"
       gap:
         one: "visualizza %{count} risposta nascosta"
@@ -2912,6 +2916,8 @@ it:
           read_capped:
             one: "e %{count} ha letto"
             other: "e altri %{count} hanno letto"
+          sr_post_likers_list_description: "utenti a cui è piaciuto questo messaggio"
+          sr_post_readers_list_description: "utenti che hanno letto questo messaggio"
         by_you:
           off_topic: "L'hai segnalato come fuori tema"
           spam: "L'hai segnalato come spam"
@@ -3639,7 +3645,6 @@ it:
       unsupported_file_picked: "Hai scelto un file non supportato. Tipi di file supportati: %{types}."
     user_activity:
       no_activity_title: "Ancora nessuna attività"
-      no_activity_body: "Ti diamo il benvenuto nella nostra comunità! Sei nuovo/a qui e non hai ancora contribuito alle discussioni. Per cominciare, visita <a href='%{topUrl}'>Top</a> o <a href='%{categoriesUrl}'>Categorie</a> e inizia a leggere! Seleziona %{heartIcon} sui post che ti piacciono o che vuoi approfondire. Se non lo hai già fatto, fatti conoscere aggiungendo una foto e una biografia nelle tue <a href='%{preferencesUrl}'>preferenze utente</a>."
       no_activity_others: "Nessuna attività."
       no_replies_title: "Non hai ancora risposto a nessun argomento"
       no_replies_others: "Nessuna risposta."
@@ -4382,6 +4387,7 @@ it:
         time: "Orario"
         user: "Utente"
         email_type: "Tipo di Email"
+        details_title: "Mostra dettagli email"
         to_address: "Indirizzo Destinazione"
         test_email_address: "indirizzo email da testare"
         send_test: "Invia una email di prova"

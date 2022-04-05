@@ -120,7 +120,6 @@ nb_NO:
       to_placeholder: "til dato"
     share:
       topic_html: 'Emne: <span class="topic-title">%{topicTitle}</span>'
-      post: "innlegg #%{postNumber}"
       close: "lukk"
       twitter: "Del på Twitter"
       facebook: "Del på Facebook"
@@ -1743,7 +1742,6 @@ nb_NO:
       success: "Kontoen din har blitt opprettet og du er nå logget inn."
       name_label: "Navn"
       password_label: "Passord"
-      optional_description: "(valgfritt)"
     password_reset:
       continue: "Fortsett til %{site_name}"
     emoji_set:

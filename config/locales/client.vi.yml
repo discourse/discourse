@@ -96,7 +96,6 @@ vi:
       to_placeholder: "đến nay"
     share:
       topic_html: 'Chủ đề:<span class="topic-title">%{topicTitle}</span>'
-      post: "đăng #%{postNumber}"
       close: "đóng"
       twitter: "Chia sẻ trên Twitter"
       facebook: "Chia sẻ trên Facebook"
@@ -1630,7 +1629,6 @@ vi:
       success: "Tài khoản của bạn đã được tạo và bây giờ bạn đã đăng nhập."
       name_label: "T"
       password_label: "Mật khẩu"
-      optional_description: "(tùy chọn)"
     password_reset:
       continue: "Tiếp tục truy cập %{site_name}"
     emoji_set:

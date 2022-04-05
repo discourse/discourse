@@ -120,7 +120,6 @@ sv:
       to_placeholder: "till-datum"
     share:
       topic_html: 'Ämne: <span class="topic-title">%{topicTitle}</span>'
-      post: "inlägg #%{postNumber}"
       close: "stäng"
       twitter: "Dela på Twitter"
       facebook: "Dela på Facebook"
@@ -1816,7 +1815,6 @@ sv:
       success: "Ditt konto har skapats och du är nu inloggad."
       name_label: "Namn"
       password_label: "Lösenord"
-      optional_description: "(valfri)"
     password_reset:
       continue: "Fortsätt till %{site_name}"
     emoji_set:
@@ -3649,7 +3647,6 @@ sv:
       unsupported_file_picked: "Du har valt en fil som inte stöds. Filtyper som stöds: %{types}."
     user_activity:
       no_activity_title: "Ingen aktivitet än"
-      no_activity_body: "Välkommen till vårt forum! Du är helt ny här och har ännu inte bidragit till diskussioner. Du kan börja med att gå till <a href='%{topUrl}'>Topp</a> eller <a href='%{categoriesUrl}'>Kategorier</a> och sätta igång att läsa! Välj %{heartIcon} på inlägg som du gillar eller vill lära dig mer om. Om du inte redan har gjort det kan du underlätta för andra att lära känna dig genom att lägga till en bild och en biografi i dina <a href='%{preferencesUrl}'>användarinställningar</a>."
       no_activity_others: "Ingen aktivitet."
       no_replies_title: "Du har inte svarat på några ämnen än"
       no_replies_others: "Inga svar."

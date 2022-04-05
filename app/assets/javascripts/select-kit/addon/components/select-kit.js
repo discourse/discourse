@@ -1118,6 +1118,7 @@ export default Component.extend(
         none: "options.none",
         rootNone: "options.none",
         disabled: "options.disabled",
+        isDisabled: "options.disabled",
         rootNoneLabel: "options.none",
         showFullTitle: "options.showFullTitle",
         title: "options.translatedNone",

@@ -118,7 +118,6 @@ hy:
       to_placeholder: "դեպի ամսաթիվ"
     share:
       topic_html: 'Թեմա՝ <span class="topic-title">%{topicTitle}</span>'
-      post: "գրառում #%{postNumber}"
       close: "փակել"
     action_codes:
       public_topic: "այս թեման դարձրել է հրապարակային %{when}"
@@ -1435,7 +1434,6 @@ hy:
       success: "Ձեր հաշիվը ստեղծված է, և այժմ Դուք մուտք եք գործել:"
       name_label: "Անուն"
       password_label: "Գաղտնաբառ"
-      optional_description: "(ընտրովի)"
     password_reset:
       continue: "Շարունակել դեպի %{site_name}"
     emoji_set:

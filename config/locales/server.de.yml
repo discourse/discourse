@@ -63,6 +63,7 @@ de:
       unrecognized_extension: "Unbekannte Dateiendung: %{extension}"
     import_error:
       generic: Beim Importieren dieses Themes ist ein Fehler aufgetreten
+      upload: "Fehler beim Erstellen des Upload-Assets: %{name}. %{errors}"
       about_json: "Importfehler: about.json existiert nicht oder ist ungültig. Bist du dir sicher, dass dies ein Discourse-Theme ist?"
       about_json_values: "about.json enthält ungültige Werte: %{errors}"
       modifier_values: "about.json-Modifikatoren enthalten ungültige Werte: %{errors}"
@@ -394,11 +395,13 @@ de:
   bookmarks:
     errors:
       already_bookmarked_post: "Du kannst denselben Beitrag nicht zweimal zu deinen Lesezeichen hinzufügen."
+      already_bookmarked: "Du kannst denselben %{type} nicht zweimal mit einem Lesezeichen versehen."
       too_many: "Entschuldige, leider kannst du nicht mehr als %{limit} Lesezeichen hinzufügen. Besuche <a href='%{user_bookmarks_url}'>%{user_bookmarks_url}</a>, um welche zu entfernen."
       cannot_set_past_reminder: "Du kannst keine Lesezeichen-Erinnerung in der Vergangenheit setzen."
       cannot_set_reminder_in_distant_future: "Du kannst keine Lesezeichen-Erinnerung einstellen, die mehr als 10 Jahre in der Zukunft liegt."
-      time_must_be_provided: "die Zeit muss für alle Erinnerungen angegeben werden"
+      time_must_be_provided: "Die Zeit muss für alle Erinnerungen angegeben werden"
       for_topic_must_use_first_post: "Du kannst nur den ersten Beitrag verwenden, um das Thema mit einem Lesezeichen zu versehen."
+      bookmarkable_id_type_required: "Der Name und Typ des Datensatzes, für den ein Lesezeichen erstellt werden soll, ist erforderlich."
     reminders:
       at_desktop: "Nächstes Mal, wenn ich an meinem PC bin"
       later_today: "Im Laufe des Tages"
@@ -1483,10 +1486,8 @@ de:
     summary_timeline_button: "Schaltfläche \"Zusammenfassen\" in der Zeitleiste anzeigen"
     enable_personal_messages: "Erlaube Benutzern mit der Vertrauensstufe 1 (konfigurierbar über die minimale Vertrauensstufe zum Senden von Nachrichten), Nachrichten zu erstellen und auf Nachrichten zu antworten. Beachte, dass das Team immer Nachrichten senden kann."
     enable_system_message_replies: "Erlaube Benutzern, auf Systemnachrichten zu antworten, auch wenn persönliche Nachrichten deaktiviert sind"
-    enable_long_polling: "Nachrichtenbus für Benachrichtigungen kann Long Polling nutzen."
     enable_chunked_encoding: "Aktiviere „chunked encoding“-Antworten durch den Server. Diese Funktion ist mit den meisten Set-ups kompatibel, aber einige Proxys können puffern, wodurch die Antworten verzögert werden"
     long_polling_base_url: "Basis-URL für Long Polling (wenn zum Ausliefern von dynamischen Inhalten ein CDN verwendet wird, setze dies auf Origin-Pull), z. B. http://origin.site.com"
-    long_polling_interval: "Wartezeit, bevor der Server auf Clients reagiert, wenn keine Daten gesendet werden müssen (nur für angemeldete Benutzer)"
     polling_interval: "Polling-Intervall in Millisekunden für angemeldete Clients, wenn Long Polling nicht verwendet wird."
     anon_polling_interval: "Polling-Intervall in Millisekunden für anonyme Clients."
     background_polling_interval: "Polling-Intervall in Millisekunden für Clients, wenn sich das Browser-Fenster im Hintergrund befindet."
@@ -4369,6 +4370,12 @@ de:
         other: '„%{tag_name}“ ist beschränkt auf folgende Kategorien: %{category_names}'
       synonym: 'Synonyme sind nicht erlaubt. Verwende stattdessen „%{tag_name}“.'
       has_synonyms: 'Schlagwort „%{tag_name}“ kann nicht verwendet werden, da es Synonyme hat.'
+      restricted_tags_cannot_be_used_in_category:
+        one: 'Das Tag "%{tags}" kann nicht in der Kategorie "%{category}" verwendet werden. Bitte entferne es.'
+        other: 'Die folgenden Schlagwörter können nicht in der Kategorie "%{category}" verwendet werden: %{tags}. Bitte entferne sie.'
+      category_does_not_allow_tags:
+        one: 'In der Kategorie "%{category}" ist das Tag "%{tags}" nicht zulässig. Bitte entferne es.'
+        other: 'In der Kategorie "%{category}" sind die folgenden Schlagwörter nicht zulässig: "%{tags}“. Bitte entferne sie.'
     required_tags_from_group:
       one: "Du musst mindestens %{count} „%{tag_group_name}“-Schlagwort hinzufügen. Die Schlagwörter in dieser Gruppe sind: %{tags}."
       other: "Du musst mindestens %{count} „%{tag_group_name}“-Schlagwörter hinzufügen. Die Schlagwörter in dieser Gruppe sind: %{tags}."

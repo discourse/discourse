@@ -47,7 +47,13 @@
 {{/styleguide-example}}
 
 {{#styleguide-example title="dropdown-select-box"}}
-  {{dropdown-select-box content=dummy.options title="Something" onChange=(action "dummy")}}
+  {{dropdown-select-box
+    content=dummy.options
+    onChange=(action "dummy")
+    options=(hash
+      translatedNone="Something"
+    )
+  }}
 {{/styleguide-example}}
 
 {{#styleguide-example title="future-date-input-selector"}}

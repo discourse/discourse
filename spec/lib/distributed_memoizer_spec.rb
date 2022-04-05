@@ -1,35 +1,25 @@
 # frozen_string_literal: true
 
 describe DistributedMemoizer do
-
-  before do
+  after do
     Discourse.redis.del(DistributedMemoizer.redis_key("hello"))
     Discourse.redis.del(DistributedMemoizer.redis_lock_key("hello"))
-    Discourse.redis.unwatch
   end
-
-  # NOTE we could use a mock redis here, but I think it makes sense to test the real thing
-  # let(:mock_redis) { MockRedis.new }
 
   def memoize(&block)
     DistributedMemoizer.memoize("hello", duration = 120, &block)
   end
 
   it "returns the value of a block" do
-    expect(memoize do
-      "abc"
-    end).to eq("abc")
+    expect(memoize { "abc" }).to eq("abc")
   end
 
   it "return the old value once memoized" do
-
     memoize do
       "abc"
     end
 
-    expect(memoize do
-      "world"
-    end).to eq("abc")
+    expect(memoize { "world" }).to eq("abc")
   end
 
   it "memoizes correctly when used concurrently" do
@@ -48,7 +38,5 @@ describe DistributedMemoizer do
     threads.each(&:join)
     expect(results.uniq.length).to eq(1)
     expect(results.count).to eq(5)
-
   end
-
 end
