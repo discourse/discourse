@@ -120,7 +120,6 @@ ur:
       to_placeholder: "اِس تاریخ تک"
     share:
       topic_html: 'ٹاپک: <span class="topic-title">%{topicTitle}</span>'
-      post: "پوسٹ #%{postNumber}"
       close: "بند کریں"
       twitter: "ٹویٹر پر شیئر کریں"
       facebook: "فیس بک پر شیئر کریں"
@@ -1804,7 +1803,6 @@ ur:
       success: "آپ کا اکاؤنٹ بنا دیا گیا ہے اور اب آپ لاگ اِن کر سکتے ہیں۔"
       name_label: "نام"
       password_label: "پاسورڈ"
-      optional_description: "(اختیاری)"
     password_reset:
       continue: "%{site_name} پر جاری رکھیں"
     emoji_set:
@@ -3641,7 +3639,6 @@ ur:
       unsupported_file_picked: "آپ نے غیر معاونت شدہ فائل منتخب کی ہے۔ معاون فائل کی اقسام — %{types}."
     user_activity:
       no_activity_title: "ابھی تک کوئی سرگرمی نہیں"
-      no_activity_body: "ہماری کمیونٹی میں خوش آمدید! آپ یہاں بالکل نئے ہیں اور ابھی تک بات چیت میں حصہ نہیں لیا ہے۔ پہلے قدم کے طور پر، <a href='%{topUrl}'>ٹاپ</a> یا <a href='%{categoriesUrl}'>زمرہ جات</a> پر جائیں اور بس پڑھنا شروع کریں! جن پوسٹس کو آپ پسند کرتے ہیں یا جن کے بارے میں مزید جاننا چاہتے ہیں ان پر %{heartIcon} کو منتخب کریں۔ اگر آپ نے پہلے ہی ایسا نہیں کیا ہے، تو اپنی <a href='%{preferencesUrl}'>صارف کی ترجیحات</a>میں تصویر اور بائیو شامل کر کے آپ کو جاننے میں دوسروں کی مدد کریں۔"
       no_activity_others: "کوئی سرگرمی نہیں۔"
       no_replies_title: "آپ نے ابھی تک کسی بھی عنوان کا جواب نہیں دیا ہے"
       no_replies_others: "کوئی جوابات نہیں۔"

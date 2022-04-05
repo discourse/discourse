@@ -120,7 +120,7 @@ fa_IR:
       to_placeholder: "تا تاریخ"
     share:
       topic_html: 'موضوع: <span class="topic-title">%{topicTitle}</span>'
-      post: "نوشته #%{postNumber}"
+      post: "نوشته #%{postNumber} توسط @%{username}"
       close: "بستن"
       twitter: "در توییتر به اشتراک بگذارید"
       facebook: "در فیس‌بوک به اشتراک بگذارید"
@@ -1690,7 +1690,6 @@ fa_IR:
       success: "حساب‌کاربری شما با موفقیت ایجاد شد و می‌توانید وارد سایت شوید."
       name_label: "نام"
       password_label: "رمزعبور"
-      optional_description: "(اختیاری)"
     password_reset:
       continue: "برو به %{site_name}"
     emoji_set:
@@ -3668,6 +3667,7 @@ fa_IR:
         time: "زمان"
         user: "کاربر"
         email_type: "نوع ایمیل"
+        details_title: "نمایش جزئیات ایمیل"
         to_address: "به آدرس"
         test_email_address: "آدرس ایمیل برای آزمایش"
         send_test: "ارسال ایمیل آزمایشی"

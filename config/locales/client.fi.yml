@@ -118,7 +118,6 @@ fi:
       to_placeholder: "päivämäärään"
     share:
       topic_html: 'Ketju: <span class="topic-title">%{topicTitle}</span>'
-      post: "%{postNumber}. viesti"
       close: "sulje"
       twitter: "Jaa Twitterissä"
       facebook: "Jaa Facebookissa"
@@ -1757,7 +1756,6 @@ fi:
       success: "Tili luotiin, ja olet nyt kirjautunut sisään."
       name_label: "Nimi"
       password_label: "Salasana"
-      optional_description: "(valinnainen)"
     password_reset:
       continue: "Jatka sivustolle %{site_name}"
     emoji_set:

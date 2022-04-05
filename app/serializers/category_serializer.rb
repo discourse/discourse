@@ -37,8 +37,8 @@ class CategorySerializer < SiteCategorySerializer
         .category_groups
         .joins(:group)
         .includes(:group)
-        .merge(Group.visible_groups(scope&.user))
-        .order("groups.name").map do |cg|
+        .merge(Group.visible_groups(scope&.user, "groups.name ASC"))
+        .map do |cg|
           {
             permission_type: cg.permission_type,
             group_name: cg.group.name

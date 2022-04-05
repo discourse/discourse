@@ -25,11 +25,7 @@
     <%= theme_lookup("header") %>
     <header>
       <a href="<%= path "/" %>">
-        <%- if SiteSetting.site_logo_url.present? %>
-          <img src="<%=SiteSetting.site_logo_url%>" alt="<%=SiteSetting.title%>" id="site-logo" style="max-width: 150px;">
-        <%- else %>
-          <h1><%=SiteSetting.title%></h1>
-        <% end %>
+        <h1><%=SiteSetting.title%></h1>
       </a>
     </header>
     <div id="main-outlet" class="wrap">

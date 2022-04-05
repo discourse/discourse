@@ -426,12 +426,12 @@ export function extractDataAttribute(str) {
     return null;
   }
 
-  const key = `data-${str.substr(0, sep)}`.toLowerCase();
+  const key = `data-${str.slice(0, sep)}`.toLowerCase();
   if (!/^[A-Za-z]+[\w\-\:\.]*$/.test(key)) {
     return null;
   }
 
-  const value = str.substr(sep + 1);
+  const value = str.slice(sep + 1);
   return [key, value];
 }
 

@@ -273,7 +273,7 @@ class User < ActiveRecord::Base
   end
 
   def self.normalize_username(username)
-    username.unicode_normalize.downcase if username.present?
+    username.to_s.unicode_normalize.downcase if username.present?
   end
 
   def self.username_available?(username, email = nil, allow_reserved_username: false)

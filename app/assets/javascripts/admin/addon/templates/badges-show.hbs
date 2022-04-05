@@ -68,7 +68,9 @@
         value=buffered.badge_type_id
         content=badgeTypes
         onChange=(action (mut buffered.badge_type_id))
-        isDisabled=readOnly
+        options=(hash
+          disabled=readOnly
+        )
       }}
     </div>
 
@@ -155,7 +157,9 @@
             value=buffered.trigger
             content=badgeTriggers
             onChange=(action (mut buffered.trigger))
-            disabled=readOnly
+            options=(hash
+              disabled=readOnly
+            )
           }}
         </div>
       {{/if}}

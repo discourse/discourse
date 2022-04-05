@@ -228,6 +228,7 @@ da:
     disabled_errors:
       discourse_connect_enabled: "Invitationer er deaktiveret, fordi DiscourseConnect er aktiveret."
       invalid_access: "Du har ikke tilladelse til at se den ønskede ressource."
+    domain_not_allowed: "Din e-mail kan ikke bruges til at indløse denne invitation."
   bulk_invite:
     file_should_be_csv: "Den overførte fil skal være i csv format."
     max_rows: "De første %{max_bulk_invites} invitationer er blevet sendt. Prøv at opdele filen i mindre dele."
@@ -263,6 +264,7 @@ da:
   invalid_whisper_access: "Enten er hvisken ikke aktiveret, eller du har ikke adgang til at oprette hviskende indlæg"
   not_in_group:
     title_topic: "Du skal anmode om medlemskab af gruppen '%{group}' for at se dette emne."
+    title_category: "Du skal anmode om medlemskab til gruppen %{group}, for at se denne kategori."
     request_membership: "Anmod om medlemskab"
     join_group: "Bliv medlem af gruppen"
   deleted_topic: "Ups! Dette emne er blevet slettet og er ikke længere tilgængeligt."
@@ -378,7 +380,6 @@ da:
       already_bookmarked_post: "Du kan ikke bogmærke det samme indlæg to gange."
       cannot_set_past_reminder: "Du kan ikke oprette en bogmærke-påmindelse i fortiden."
       cannot_set_reminder_in_distant_future: "Du kan ikke oprette en bogmærke-påmindelse længere end 10 år ud i fremtiden"
-      time_must_be_provided: "Der skal angives tid for alle påmindelser"
     reminders:
       at_desktop: "Næste gang jeg er på mit skrivebord"
       later_today: "Senere i dag"
@@ -1334,7 +1335,7 @@ da:
     allow_uncategorized_topics: "Tillad at emner kan oprettes uden et kategori. ADVARSEL: Hvis der er nogen ikke-kategoriserede emner, skal du først kategorisere dem inden du deaktiverer dette."
     allow_duplicate_topic_titles: "Tillad emner med identiske titler ."
     unique_posts_mins: "Hvor mange minutter der skal gå før en bruger kan skrive et indlæg med det samme indhold igen."
-    educate_until_posts: "When the user starts typing their first (n) new posts, show the pop-up new user education panel in the composer."
+    educate_until_posts: "Når brugeren begynder at skrive deres første (n) nye indlæg, skal pop op panel med ny bruger undervisning vises i editoren."
     title: "Sitets navn, som anvendt i tittel."
     site_description: "Beskriv denne side i én sætning, som anvendt i meta beskrivelsen."
     short_site_description: "Kort beskrivelse, som bruges i titelmærket på websiden."
@@ -1375,9 +1376,7 @@ da:
     summary_percent_filter: "Når en bruger kllikker 'Opsummer dette Emne' vises top % af indlæg"
     summary_max_results: "Maksimum antal indlæg returneret af 'Opsummer dette emne'"
     enable_system_message_replies: "Tillader brugere at svare på systemmeddelelser, også selvom personlige meddelelser er deaktiveret"
-    enable_long_polling: "Message bus til underretninger kan bruge long polling"
     long_polling_base_url: "URL anvendt for afsteminger (når CDN leverer dynamisk indhold, så sæt dette til oprindelig / orginal) f.eks: http://origin.site.com"
-    long_polling_interval: "Mængde tid før serveren bør vente før den svarer klienter når der ikke er ny data at sende (kun for brugere der er logget ind)"
     polling_interval: "Når der ikke hentes data langsomt, hvor tit skal en klient der er logget på hente ny data i millisekunder"
     anon_polling_interval: "Hvor ofte skal anonyme brugere polle, i millisekunder."
     background_polling_interval: "Hvor tit skal klienter hente data i millisekunder (når vinduet er i baggrunden)"

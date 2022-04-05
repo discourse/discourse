@@ -58,10 +58,12 @@
       <div class="controls controls-dropdown">
         {{combo-box
           valueProperty="value"
-          filterable=true
           content=digestFrequencies
           value=model.user_option.digest_after_minutes
           onChange=(action (mut model.user_option.digest_after_minutes))
+          options=(hash
+            filterable=true
+          )
         }}
       </div>
       {{preference-checkbox labelKey="user.include_tl0_in_digests" disabled=model.user_option.mailing_list_mode checked=model.user_option.include_tl0_in_digests}}

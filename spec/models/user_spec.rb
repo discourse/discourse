@@ -50,6 +50,12 @@ describe User do
         expect(user.errors.full_messages.first)
           .to include(user_error_message(:username, :same_as_password))
       end
+
+      describe 'when a username is an integer' do
+        it 'is converted to a string on normalization' do
+          expect(User.normalize_username(123)).to eq("123") # This is possible via the API
+        end
+      end
     end
 
     describe 'name' do

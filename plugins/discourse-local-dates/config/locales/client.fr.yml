@@ -31,6 +31,7 @@ fr:
           format_title: Format de la date
           timezone: Fuseau horaire
           until: Jusqu'à…
+          current_timezone: "Fuseau horaire actuel :"
           recurring:
             every_day: "Tous les jours"
             every_week: "Toutes les semaines"

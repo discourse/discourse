@@ -120,7 +120,7 @@ tr_TR:
       to_placeholder: "şimdiye kadar"
     share:
       topic_html: 'Konu: <span class="topic-title">%{topicTitle}</span>'
-      post: "gönderi #%{postNumber}"
+      post: "%{username} kullanıcısının #%{postNumber} numaralı gönderisi"
       close: "kapat"
       twitter: "Twitter'da paylaş"
       facebook: "Facebook'ta paylaş"
@@ -285,6 +285,8 @@ tr_TR:
         unbookmark_with_reminder: "Bu konudaki tüm yer imlerini ve anımsatıcıları kaldırmak için tıklayın."
     bookmarks:
       created: "Bu gönderiyi yer imlerine eklediniz. %{name}"
+      create_for: "%{type} için yer işareti oluştur"
+      edit_for: "%{type} için yer işaretini düzenle"
       not_bookmarked: "bu gönderiyi yer imlerine ekle"
       remove_reminder_keep_bookmark: "Anımsatıcıyı kaldır ve yer imini tut"
       created_with_reminder: "Bu gönderiye %{date} hatırlatıcısı ile yer imlerine eklediniz. %{name}"
@@ -1806,7 +1808,6 @@ tr_TR:
       success: "Hesabın oluşturuldu ve şimdi giriş yaptın."
       name_label: "Ad"
       password_label: "Parola"
-      optional_description: "(isteğe bağlı)"
     password_reset:
       continue: "%{site_name} sitesine gitmeyi sürdür"
     emoji_set:
@@ -2775,7 +2776,13 @@ tr_TR:
       show_hidden: "Yok sayılan içeriği görüntüleyin."
       deleted_by_author_simple: "(gönderi yazarı tarafından silindi)"
       collapse: "daralt"
+      sr_collapse_replies: "Gömülü yanıtları kapat"
+      sr_expand_replies:
+        one: "Bu gönderide %{count} yanıt var. Genişletmek için tıklayın"
+        other: "Bu gönderide %{count} yanıt var. Genişletmek için tıklayın"
       expand_collapse: "genişlet/daralt"
+      sr_below_embedded_posts_description: "#%{post_number} numaralı gönderiye gelen yanıtlar"
+      sr_embedded_reply_description: "#%{post_number} numaralı gönderiye @%{username} kullanıcısının yanıtı"
       locked: "personel bu yayının düzenlenmesini kilitledi"
       gap:
         one: "gizlenen %{count} yorumu gör"
@@ -2796,6 +2803,12 @@ tr_TR:
       has_likes_title_you:
         one: "siz ve %{count} diğer kişi bu gönderiyi beğendi"
         other: "sen ve %{count} kişi bu gönderiyi beğendi"
+      sr_post_like_count_button:
+        one: "%{count} kişi bu gönderiyi beğendi. Görüntülemek için tıklayın"
+        other: "%{count} kişi bu gönderiyi beğendi. Görüntülemek için tıklayın"
+      sr_post_read_count_button:
+        one: "%{count} kişi bu yazıyı okudu. Görüntülemek için tıklayın"
+        other: "%{count} kişi bu yazıyı okudu. Görüntülemek için tıklayın"
       filtered_replies_hint:
         one: "Bu gönderiyi ve yanıtını görüntüleyin"
         other: "Bu gönderiyi ve %{count} yanıtını görüntüleyin"
@@ -2897,6 +2910,8 @@ tr_TR:
           read_capped:
             one: "ve %{count} tanesini daha okuyun"
             other: "ve %{count}tanesini daha okuyun"
+          sr_post_likers_list_description: "bu gönderiyi beğenen kullanıcılar"
+          sr_post_readers_list_description: "bu gönderiyi okuyan kullanıcılar"
         by_you:
           off_topic: "Bunu bayrakla \"konu dışı\" olarak işaretledin"
           spam: "Bunu bayrakla \"istenmeyen e-posta\" olarak işaretledin"
@@ -3624,6 +3639,7 @@ tr_TR:
       unsupported_file_picked: "Desteklenmeyen bir dosya seçtiniz. Desteklenen dosya türleri şunlardır– %{types}."
     user_activity:
       no_activity_title: "Henüz etkinlik yok"
+      no_activity_body: "Topluluğumuza hoş geldiniz! Burada çok yenisiniz ve tartışmalara henüz katkıda bulunmadınız. İlk adım olarak <a href='%{topUrl}'>en çok okunanları</a> veya <a href='%{categoriesUrl}'>kategorileri</a> ziyaret edebilir ve okumaya başlayabilirsiniz! Beğendiğiniz veya hakkında daha fazla bilgi edinmek istediğiniz gönderilerde lütfen %{heartIcon} kullanarak beğeninizi belirtin. Paylaşımlara katıldıkça, etkinliğiniz burada listelenecek."
       no_activity_others: "Etkinlik yok."
       no_replies_title: "Henüz hiçbir konuyu yanıtlamadınız."
       no_replies_others: "Yanıt yok."
@@ -4351,6 +4367,7 @@ tr_TR:
         time: "Saat"
         user: "Kullanıcı"
         email_type: "E-posta Türü"
+        details_title: "E-posta detaylarını göster"
         to_address: "Gönderi Adresi"
         test_email_address: "test için e-posta adresi"
         send_test: "Test E-postası Gönder"

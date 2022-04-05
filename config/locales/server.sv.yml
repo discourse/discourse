@@ -397,7 +397,6 @@ sv:
       too_many: "Tyvärr kan du inte lägga till fler än %{limit} bokmärken, gå till <a href='%{user_bookmarks_url}'>%{user_bookmarks_url}</a> för att ta bort några."
       cannot_set_past_reminder: "Du kan inte sätta en påminnelse för bokmärke i det förflutna."
       cannot_set_reminder_in_distant_future: "Du kan inte sätta en påminnelse för bokmärke mer än 10 år framåt i tiden."
-      time_must_be_provided: "tid måste anges för alla påminnelser"
       for_topic_must_use_first_post: "Du kan bara använda det första inlägget för att bokmärka ämnet."
     reminders:
       at_desktop: "Nästa gång jag är vid datorn"
@@ -1463,10 +1462,8 @@ sv:
     summary_timeline_button: "Visa en \"Sammanfatta\"-knapp på tidslinjen"
     enable_personal_messages: "Tillåt användare med förtroendenivå 1 (konfigurera genom minsta förtroendenivå för att skicka meddelanden) att skapa meddelanden och svara på meddelanden. Notera att personalen alltid kan skicka meddelanden oavsett."
     enable_system_message_replies: "Tillåter användare att svara på systemmeddelanden, även om personliga meddelanden har inaktiverats"
-    enable_long_polling: "Meddelande-buss som används för avisering kan använda long polling"
     enable_chunked_encoding: "Aktivera packade kodningssvar (chunked) från servern. Den här funktionen fungerar på de flesta inställningar, men vissa proxyservrar kan buffra, vilket gör att svaren fördröjs"
     long_polling_base_url: "URL som används för long polling (när en CDN levererar dynamiskt innehåll, kontrollera att det här är inställt till origin pull) se: http://origin.site.com"
-    long_polling_interval: "Tid som servern bör vänta innan den svarar på klienter när det inte finns någon data att skicka (endast loggad på användare)"
     polling_interval: "När long polling inte har aktiverats, hur ofta bör inloggade klienter polla i millisekunder"
     anon_polling_interval: "Hur ofta bör anonyma klienter polla i millisekunder"
     background_polling_interval: "Hur ofta bör klienter polla i millisekunder (när fönstret är i bakgrunden)"

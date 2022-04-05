@@ -387,7 +387,6 @@ fi:
       too_many: "Et voi lisätä enempää kuin %{limit} kirjanmerkkiä. Voit poistaa kirjanmerkkejä kohdassa <a href='%{user_bookmarks_url}'>%{user_bookmarks_url}</a>."
       cannot_set_past_reminder: "Kirjanmerkkimuistutusta ei voi asettaa menneisyyteen."
       cannot_set_reminder_in_distant_future: "Kirjanmerkkimuistutusta ei voi asettaa yli 10 vuoden päähän tulevaisuuteen."
-      time_must_be_provided: "kaikkiin muistutuksiin on asetettava kellonaika"
     reminders:
       at_desktop: "Ensi kerralla kun olen työpöytälaitteellani"
       later_today: "Myöhemmin tänään"
@@ -1444,10 +1443,8 @@ fi:
     summary_percent_filter: "Kun käyttäjä klikkaa 'Näytä ketjun tiivistelmä', näytä paras % viesteistä"
     summary_max_results: "Maksimimäärä viestejä, jotka näytetään ketjun tiivistelmässä"
     enable_system_message_replies: "Sallii käyttäjien vastata järjestelmän viesteihin, vaikka yksityisviestit eivät olisikaan käytössä"
-    enable_long_polling: "Ilmoitusten käyttämä viestiväylä voi käyttää long pollingia"
     enable_chunked_encoding: "Ota käyttöön palvelimen joukkokoodausvastaukset. Tämä ominaisuus toimii useimmissa määrityksissä, mutta jotkin välityspalvelimet saattavat puskuroida, mikä aiheuttaa vastausten viivästymisen"
     long_polling_base_url: "Perus-URL, jota käytetään long pollingissa (kun CDN tarjoaa dynaamista sisältöä, varmista että tämä on asetettu noudoksi lähteestä) esim: http://lähde.sivusto.com"
-    long_polling_interval: "Kuinka kauan palvelimen pitäisi odottaa ennen vastaamista asiakkaalle, kun lähetettävää dataa ei ole (vain kirjautuneille käyttäjille)"
     polling_interval: "Kun long polling ei ole käytössä, kuinka usein kirjautuneet käyttäjät pollaavat millisekunneissa."
     anon_polling_interval: "Kuinka usein anonyymit käyttäjät pollaavat millisekunneissa"
     background_polling_interval: "Kuinka usein asiakkaat pollaavat, millisekunneissa (kun ikkuna ei ole aktiivisena)"

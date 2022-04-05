@@ -834,7 +834,6 @@ cs:
     unique_posts_mins: "Kolik minut musí uplynout, než může uživatel zaslat příspěvek se stejným obsahem"
     manifest_screenshots: "Snímky obrazovky, které na stránce s výzvou k instalaci předvádějí funkce vaší instance a funkce. Všechny obrázky by měly být lokálně nahrávány a mít stejné rozměry."
     email_custom_headers: "Seznam vlastních hlaviček emailů, oddělený svislítkem"
-    enable_long_polling: "'Message bus' smí používat dlouhé výzvy"
     anon_polling_interval: "Jak často se mají zasílat výzvy anonymním uživatelům v milisekundách"
     post_menu: "Určuje, které položky se zobrazí v menu u příspěvku a v jakém pořadí. Příklad: like|edit|flag|delete|share|bookmark|reply"
     send_welcome_message: "Poslat všem novým uživatelům uvítací zprávu s rychlým návodem jak začít."

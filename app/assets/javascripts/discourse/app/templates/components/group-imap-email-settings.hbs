@@ -28,9 +28,11 @@
             value=group.imap_mailbox_name
             valueProperty="value"
             content=mailboxes
-            none="groups.manage.email.mailboxes.disabled"
             tabindex="10"
             onChange=(action (mut group.imap_mailbox_name))
+            options=(hash
+              none="groups.manage.email.mailboxes.disabled"
+            )
           }}
         {{/if}}
       </div>

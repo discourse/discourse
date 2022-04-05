@@ -147,6 +147,23 @@ describe UsersController do
         expect(response).to redirect_to(destination_url)
       end
     end
+
+    context 'when cookies does not contain a destination URL but users was invited to topic' do
+      let(:invite) { Fabricate(:invite) }
+      let(:topic) { Fabricate(:topic) }
+
+      before do
+        TopicInvite.create!(topic: topic, invite: invite)
+        Fabricate(:invited_user, invite: invite, user: email_token.user)
+        invite.reload
+      end
+
+      it 'should redirect to the topic' do
+        put "/u/activate-account/#{email_token.token}"
+
+        expect(response).to redirect_to(topic.relative_url)
+      end
+    end
   end
 
   describe '#password_reset' do

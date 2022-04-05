@@ -135,7 +135,6 @@ ro:
       placeholder: dată
     share:
       topic_html: 'Subiect: <span class="topic-title">%{topicTitle}</span>'
-      post: "Distribuie postarea #%{postNumber}"
       close: "Închide"
       twitter: "Distribuie pe Twitter"
       facebook: "Distribuie pe Facebook"
@@ -1512,7 +1511,6 @@ ro:
       success: "Contul tău a fost creat și acum ești logat."
       name_label: "Nume"
       password_label: "Parolă"
-      optional_description: "(opțional)"
     password_reset:
       continue: "Continuă la %{site_name}"
     emoji_set:

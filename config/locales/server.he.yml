@@ -63,6 +63,7 @@ he:
       unrecognized_extension: "סיומת הקובץ אינה מוכרת: %{extension}"
     import_error:
       generic: אירעה שגיאה בעת ייבוא ערכת העיצוב הזו
+      upload: "שגיאה ביצירת משאב להעלאה: %{name}. %{errors}"
       about_json: "שגיאת ייבוא: about.json לא קיים או שהוא שגוי. האם אכן מדובר בערכת עיצוב של Discourse?"
       about_json_values: "about.json מכיל ערכים שגויים: %{errors}"
       modifier_values: "המחליפים ב־about.json מכילים ערכים שגויים: %{errors}"
@@ -436,11 +437,13 @@ he:
   bookmarks:
     errors:
       already_bookmarked_post: "אי אפשר לסמן את אותו הפוסט פעמיים"
+      already_bookmarked: "אי אפשר לסמן את אותו %{type} פעמיים."
       too_many: "לא ניתן להוסיף למעלה מ־%{limit} סימניות, נא לבקר ב<a href='%{user_bookmarks_url}'>%{user_bookmarks_url}</a> כדי להסיר כמה מהנוכחיות."
       cannot_set_past_reminder: "אי אפשר להגדיר תזכורת סימנייה למועד שעבר."
       cannot_set_reminder_in_distant_future: "לא ניתן להגדיר תזכורת סימנייה למעבר ל־10 שנים בעתיד."
-      time_must_be_provided: "יש לספק זמן לכל התזכורות"
+      time_must_be_provided: "יש לציין זמן לכל התזכורות"
       for_topic_must_use_first_post: "מותר להשתמש רק בפוסט הראשון כדי להוסיף את הנושא לסימניות."
+      bookmarkable_id_type_required: "דרושים שם וסוג הרשומה לסימון."
     reminders:
       at_desktop: "בשימוש הבא דרך שולחן העבודה"
       later_today: "בהמשך היום"
@@ -1566,10 +1569,8 @@ he:
     summary_timeline_button: "הצגת כפתור ‚סיכום’ בציר הזמן"
     enable_personal_messages: "לאפשר למשתמשים בדרגת אמון 1 (ניתן להגדרה דרך אמון מזערי לשליחת הודעות) ליצור הודעות ולענות להודעות. נא לשים לב שהסגל תמיד יכול לשלוח הודעות, ללא קשר."
     enable_system_message_replies: "מאפשר למשתמשים להגיב להודעות מערכת אפילו כשהודעות אישיות מושבתות"
-    enable_long_polling: "באס הודעות שמשמש להתראות יכול להשתמש בתשאול ארוך (long polling)"
     enable_chunked_encoding: "הפעלת תגובות קידוד מחולקות מצד השרת. תכונה זו עובדת ברוב התצורות אך חלק מהמתווכים עשויים לכלוא כצעד ביניים, מה שעלול לגרום להאטה"
     long_polling_base_url: "כתובת הבסיס שמשמשת לתשאול ארוך (כאשר CDN מגיש תוכן דינמי, יש להגדיר זאת למשיכה המקורית) למשל: http://origin.site.com"
-    long_polling_interval: "כמות הזמן שהשרת צריך לחכות לפני שעונה ללקוחות, כאשר אין מידע לשליחה (משתמשים רשומים מחוברים למערכת בלבד)"
     polling_interval: "כאשר לא מבצעים תשאול ארוך (long polling), כל כמה זמן לקוחות מחוברים למערכת יבצעו poll, במילי-שניות"
     anon_polling_interval: "באיזו תכיפות לקוחות אלמוניים יתשאלו, במילישניות"
     background_polling_interval: "באיזו תכיפות צריכים לקוחות לבצע תשאול (poll) במילישניות (כאשר החלון נמצא ברקע)"

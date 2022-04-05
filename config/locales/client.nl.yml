@@ -120,7 +120,6 @@ nl:
       to_placeholder: "tot datum"
     share:
       topic_html: 'Topic: <span class="topic-title">%{topicTitle}</span>'
-      post: "bericht #%{postNumber}"
       close: "sluiten"
       twitter: "Delen op Twitter"
       facebook: "Delen op Facebook"
@@ -1758,7 +1757,6 @@ nl:
       success: "Uw account is gemaakt en u bent nu aangemeld."
       name_label: "Naam"
       password_label: "Wachtwoord"
-      optional_description: "(optioneel)"
     password_reset:
       continue: "Doorgaan naar %{site_name}"
     emoji_set:
@@ -3511,7 +3509,6 @@ nl:
         leader: "leider"
     user_activity:
       no_activity_title: "Nog geen activiteit"
-      no_activity_body: "Welkom bij onze gemeenschap! U bent hier gloednieuw en hebt nog niet bijgedragen aan discussies. Als een eerste stap, bezoek <a href='%{topUrl}'>Top</a> of <a href='%{categoriesUrl}'>Categorieën</a> en begin maar met lezen! Selecteer %{heartIcon} op berichten die u leuk vindt of waarover u meer wilt weten. Indien u dat nog niet gedaan hebt, help anderen u beter te leren kennen door een foto en een bio toe te voegen in uw <a href='%{preferencesUrl}'>gebruikersvoorkeuren</a>."
       no_activity_others: "Geen activiteit."
       no_replies_others: "Geen antwoorden."
       no_likes_others: "Geen gelikete berichten."

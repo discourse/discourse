@@ -1,4 +1,5 @@
 body.crawler {
+  font-family: serif;
   a {
     // we want all links to look like links
     color: blue !important;
@@ -7,7 +8,6 @@ body.crawler {
       color: purple !important;
     }
   }
-
   > header {
     // site header
     box-sizing: border-box;
@@ -23,7 +23,20 @@ body.crawler {
     display: none;
   }
 
+
   // topic list
+
+  div#main-outlet {
+    padding: 10px;
+    div.post {
+      word-break: break-word;
+      img {
+        max-width: 100%;
+        height: auto;
+      }
+    }
+  }
+
 
   .topic-list {
     table-layout: fixed;
@@ -54,7 +67,18 @@ body.crawler {
       }
     }
 
+    td {
+      padding: 10px 0;
+      &.posters {
+        padding: 10px 20px;
+      }
+    }
+    th:first-of-type {
+      padding-left: 0;
+    }
+
     @media (max-width: 850px) {
+      table-layout: auto;
       td {
         word-break: break-all;
         &.posters {

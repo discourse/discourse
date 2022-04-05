@@ -164,7 +164,7 @@ he:
       to_placeholder: "עד תאריך"
     share:
       topic_html: 'נושא: <span class="topic-title">%{topicTitle}</span>'
-      post: "פוסט מס׳ %{postNumber}"
+      post: "פוסט מס׳ %{postNumber} מאת ‎@%{username}"
       close: "סגירה"
       twitter: "שיתוף בטוויטר"
       facebook: "שיתוף בפייסבוק"
@@ -339,6 +339,8 @@ he:
         unbookmark_with_reminder: "יש ללחוץ כדי להסיר את כל הסימניות והתזכורות בנושא זה."
     bookmarks:
       created: "הוספת את הפוסט הזה לסימניות. %{name}"
+      create_for: "יצירת סימנייה אל %{type}"
+      edit_for: "עריכת סימנייה אל %{type}"
       not_bookmarked: "סמנו פוסט זה עם סימנייה"
       remove_reminder_keep_bookmark: "הסרת תזכורת ושמירת הסימנייה"
       created_with_reminder: "סימנת את הפוסט הזה עם תזכורת %{date}. %{name}"
@@ -1951,7 +1953,6 @@ he:
       success: "החשבון נוצר ונכנסת אליו."
       name_label: "שם"
       password_label: "ססמה"
-      optional_description: "(רשות)"
     password_reset:
       continue: "המשיכו ל-%{site_name}"
     emoji_set:
@@ -3030,7 +3031,15 @@ he:
       show_hidden: "צפייה בתוכן שמיועד להתעלמות."
       deleted_by_author_simple: "(הפוסט נמחק על ידי הכותב)"
       collapse: "צמצום"
+      sr_collapse_replies: "צמצום תשובות מוטמעות"
+      sr_expand_replies:
+        one: "לפוסט הזה יש תגובה %{count}. יורחב בלחיצה"
+        two: "לפוסט הזה יש %{count} תגובות. יורחב בלחיצה"
+        many: "לפוסט הזה יש %{count} תגובות. יורחב בלחיצה"
+        other: "לפוסט הזה יש %{count} תגובות. יורחב בלחיצה"
       expand_collapse: "הרחב/צמצם"
+      sr_below_embedded_posts_description: "תגובות לפוסט מס׳ %{post_number}"
+      sr_embedded_reply_description: "תגובה מאת ‎@%{username} לפוסט %{post_number}"
       locked: "חבר סגל נעל את האפשרות לערוך את הפוסט הזה"
       gap:
         one: "הצג תגובה אחת שהוסתרה"
@@ -3059,6 +3068,16 @@ he:
         two: "אתם ו %{count} אנשים אחרים אהבתם את הפוסט הזה"
         many: "אתם ו %{count} אנשים אחרים אהבתם את הפוסט הזה"
         other: "אתם ו %{count} אנשים אחרים אהבתם את הפוסט הזה"
+      sr_post_like_count_button:
+        one: "מישהו או מישהי (%{count}) אהבו את הפוסט הזה. לחיצה תציג מי"
+        two: "%{count} אנשים אהבו את הפוסט הזה. לחיצה תציג מי"
+        many: "%{count} אנשים אהבו את הפוסט הזה. לחיצה תציג מי"
+        other: "%{count} אנשים אהבו את הפוסט הזה. לחיצה תציג מי"
+      sr_post_read_count_button:
+        one: "מישהו או מישהי (%{count}) קראו את הפוסט הזה. לחיצה תציג מי"
+        two: "%{count} אנשים קראו את הפוסט הזה. לחיצה תציג מי"
+        many: "%{count} אנשים קראו את הפוסט הזה. לחיצה תציג מי"
+        other: "%{count} אנשים קראו את הפוסט הזה. לחיצה תציג מי"
       filtered_replies_hint:
         one: "הצגת הפוסט הזה ואת התגובה עליו"
         two: "הצגת הפוסט הזה ואת %{count} התגובות עליו"
@@ -3180,6 +3199,8 @@ he:
             two: "ו־%{count} נוספים קראו את זה"
             many: "ו־%{count} נוספים קראו את זה"
             other: "ו־%{count} נוספים קראו את זה"
+          sr_post_likers_list_description: "משתמשים שאהבו את הפוסט הזה"
+          sr_post_readers_list_description: "משתמשים שקראו את הפוסט הזה"
         by_you:
           off_topic: "דיגלתם פרסום זה כאוף-טופיק"
           spam: "דיגלתם את זה כספאם"
@@ -3970,7 +3991,7 @@ he:
       unsupported_file_picked: "בחרת קובץ שאינו נתמך. סוגי קבצים נתמכים - %{types}."
     user_activity:
       no_activity_title: "אין פעילות עדיין"
-      no_activity_body: "ברוך בואך לקהילה שלנו! הצטרפת ממש לא מזמן וטרם תרמת לדיונים. כצעד ראשון, כדאי לבקר ב<a href='%{topUrl}'>מובילים</a> או ב<a href='%{categoriesUrl}'>קטגוריות</a> ופשוט להתחיל לקרוא. ניתן לבחור ב־%{heartIcon} בפוסטים שנשאו חן בעיניך או שמעניין אותך ללמוד עליהם יותר. אם טרם עשית זאת, ניתן לסייע לאחרים להכיר אותך על ידי הוספת תמונה ותיאור עצמי ב<a href='%{preferencesUrl}'>העדפות המשתמש</a> שלך."
+      no_activity_body: "ברוך בואך לקהילה שלנו! הצטרפת ממש לא מזמן וטרם תרמת לדיונים. כצעד ראשון, כדאי לבקר ב<a href='%{topUrl}'>מובילים</a> או ב<a href='%{categoriesUrl}'>קטגוריות</a> ופשוט להתחיל לקרוא. ניתן לבחור ב־%{heartIcon} בפוסטים שנשאו חן בעיניך או שמעניין אותך ללמוד עליהם יותר. הפעילות שלך תופיע כאן."
       no_activity_others: "אין פעילות."
       no_replies_title: "עדיין לא הגבת לאף נושא"
       no_replies_others: "אין תגובות."
@@ -4728,6 +4749,7 @@ he:
         time: "זמן"
         user: "משתמש"
         email_type: "סוג דוא״ל"
+        details_title: "הצגת פרטי דוא״ל"
         to_address: "לכתובת"
         test_email_address: "כתובת דוא״ל לבדיקה"
         send_test: "שליחת הודעת דוא״ל בדיקה"

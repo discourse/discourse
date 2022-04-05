@@ -152,7 +152,6 @@ sk:
       next_month: "Nasledujúci mesiac"
       placeholder: Dátum
     share:
-      post: "príspevok #%{postNumber}"
       close: "zatvoriť"
     action_codes:
       public_topic: "téma je verejná%{when}"
@@ -1240,7 +1239,6 @@ sk:
       success: "Váš účet bol vytvorený a ste prihlásený."
       name_label: "Meno"
       password_label: "Heslo"
-      optional_description: "(nepovinné)"
     password_reset:
       continue: "Pokračujte na %{site_name}"
     emoji_set:
