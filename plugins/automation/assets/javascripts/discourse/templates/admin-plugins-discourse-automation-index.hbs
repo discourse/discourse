@@ -12,20 +12,16 @@
     </thead>
     <tbody>
       {{#each model as |automation|}}
-        {{#if automation.script.not_found}}
-          <tr>
-            <td colspan="7" class="alert alert-danger">
+        <tr>
+          {{#if automation.script.not_found}}
+            <td colspan="5" class="alert alert-danger">
               {{i18n "discourse_automation.scriptables.not_found" script=automation.script.id automation=automation.name}}
             </td>
-          </tr>
-        {{else if automation.trigger.not_found}}
-          <tr>
-            <td colspan="7" class="alert alert-danger">
+          {{else if automation.trigger.not_found}}
+            <td colspan="5" class="alert alert-danger">
               {{i18n "discourse_automation.triggerables.not_found" trigger=automation.trigger.id automation=automation.name}}
             </td>
-          </tr>
-        {{else}}
-          <tr>
+          {{else}}
             <td role="button" {{on "click" (fn this.editAutomation automation)}}>{{format-enabled-automation automation.enabled automation.trigger}}</td>
             <td tabindex="0" role="button" {{on "keypress" (fn this.editAutomation automation)}} {{on "click" (fn this.editAutomation automation)}}>{{automation.name}}</td>
             <td role="button" {{on "click" (fn this.editAutomation automation)}}>{{if automation.trigger.id automation.trigger.name "-"}}</td>
@@ -36,15 +32,16 @@
               </a>
               {{format-date automation.updated_at leaveAgo="true"}}
             </td>
-            <td>
-              {{d-button
-                icon="trash-alt"
-                class="btn-danger"
-                action=(action "destroyAutomation" automation)
-              }}
-            </td>
-          </tr>
-        {{/if}}
+          {{/if}}
+
+          <td>
+            {{d-button
+              icon="trash-alt"
+              class="btn-danger"
+              action=(action "destroyAutomation" automation)
+            }}
+          </td>
+        </tr>
       {{/each}}
     </tbody>
   </table>
