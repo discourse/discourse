@@ -15,7 +15,7 @@ module UserGuardian
     return true if user_avatar.contains_upload?(upload.id)
     return true if upload.user_id == user_avatar.user_id || upload.user_id == user.id
 
-    UploadReference.exists?(upload: upload, target: user)
+    UserUpload.exists?(upload_id: upload.id, user_id: user.id)
   end
 
   def can_edit_user?(user)

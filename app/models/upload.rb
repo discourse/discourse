@@ -26,7 +26,7 @@ class Upload < ActiveRecord::Base
   has_many :post_hotlinked_media, dependent: :destroy, class_name: "PostHotlinkedMedia"
 
   has_many :optimized_images, dependent: :destroy
-  has_many :upload_references, dependent: :destroy
+  has_many :user_uploads, dependent: :destroy
   has_many :topic_thumbnails
 
   attr_accessor :for_group_message

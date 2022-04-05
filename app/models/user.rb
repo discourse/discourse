@@ -22,7 +22,7 @@ class User < ActiveRecord::Base
   has_many :email_change_requests, dependent: :destroy
   has_many :email_tokens, dependent: :destroy
   has_many :topic_links, dependent: :destroy
-  has_many :upload_references, as: :target, dependent: :destroy
+  has_many :user_uploads, dependent: :destroy
   has_many :user_emails, dependent: :destroy, autosave: true
   has_many :user_associated_accounts, dependent: :destroy
   has_many :oauth2_user_infos, dependent: :destroy

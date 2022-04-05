@@ -24,8 +24,8 @@ RSpec.describe UploadCreator do
         expect(upload.extension).to eq('txt')
         expect(File.extname(upload.url)).to eq('.txt')
         expect(upload.original_filename).to eq('utf-8.txt')
-        expect(user.upload_references.count).to eq(1)
-        expect(upload.upload_references.count).to eq(1)
+        expect(user.user_uploads.count).to eq(1)
+        expect(upload.user_uploads.count).to eq(1)
 
         user2 = Fabricate(:user)
 
@@ -33,9 +33,9 @@ RSpec.describe UploadCreator do
           UploadCreator.new(file, "utf-8\n.txt").create_for(user2.id)
         end.to change { Upload.count }.by(0)
 
-        expect(user.upload_references.count).to eq(1)
-        expect(user2.upload_references.count).to eq(1)
-        expect(upload.upload_references.count).to eq(2)
+        expect(user.user_uploads.count).to eq(1)
+        expect(user2.user_uploads.count).to eq(1)
+        expect(upload.user_uploads.count).to eq(2)
       end
 
       let(:longextension) { "fake.long-FileExtension" }
@@ -383,9 +383,9 @@ RSpec.describe UploadCreator do
         expect(result.original_sha1).to eq(nil)
       end
 
-      it "creates a upload reference record" do
+      it "creates a userupload record" do
         result
-        expect(UploadReference.exists?(upload: existing_upload, target: user)).to eq(true)
+        expect(UserUpload.exists?(user_id: user.id, upload_id: existing_upload.id)).to eq(true)
       end
 
       context "when the existing upload URL is blank (it has failed)" do

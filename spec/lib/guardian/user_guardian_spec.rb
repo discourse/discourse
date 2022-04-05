@@ -23,13 +23,13 @@ describe UserGuardian do
   end
 
   let :already_uploaded do
-    u = Upload.new(user: Fabricate(:user), id: 2)
+    u = Upload.new(user_id: 9999, id: 2)
     user_avatar.custom_upload_id = u.id
     u
   end
 
   let :not_my_upload do
-    Upload.new(user: Fabricate(:user), id: 3)
+    Upload.new(user_id: 9999, id: 3)
   end
 
   let(:moderator_upload) do
@@ -58,9 +58,9 @@ describe UserGuardian do
         expect(guardian.can_pick_avatar?(user_avatar, users_upload)).to eq(true)
         expect(guardian.can_pick_avatar?(user_avatar, already_uploaded)).to eq(true)
 
-        UploadReference.create!(
+        UserUpload.create!(
           upload_id: not_my_upload.id,
-          target: not_my_upload.user
+          user_id: not_my_upload.user_id
         )
 
         expect(guardian.can_pick_avatar?(user_avatar, not_my_upload)).to eq(false)
@@ -68,9 +68,9 @@ describe UserGuardian do
       end
 
       it "can handle uploads that are associated but not directly owned" do
-        UploadReference.create!(
+        UserUpload.create!(
           upload_id: not_my_upload.id,
-          target: user_avatar.user
+          user_id: user_avatar.user_id
         )
 
         expect(guardian.can_pick_avatar?(user_avatar, not_my_upload))
