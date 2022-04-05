@@ -22,8 +22,6 @@ export default Component.extend({
   fileInputClass: null,
   classNames: ["pick-files-button"],
   acceptedFormatsOverride: null,
-
-  allowUpload: true,
   allowMultiple: false,
   showButton: false,
 
