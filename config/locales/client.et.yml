@@ -113,7 +113,6 @@ et:
       placeholder: kuupäev
     share:
       topic_html: 'Teema: <span class="topic-title">%{topicTitle}</span>'
-      post: "post nr%{postNumber}"
       close: "Sulge"
       twitter: "Jaga Twitteris"
       facebook: "Jaga Facebookis"
@@ -1290,7 +1289,6 @@ et:
       success: "Teie konto on loodud ning olete nüüd sisse logitud."
       name_label: "Nimi"
       password_label: "Parool"
-      optional_description: "(valikuline)"
     password_reset:
       continue: "Edasi saidile %{site_name}"
     emoji_set:

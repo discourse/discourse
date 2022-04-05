@@ -118,7 +118,6 @@ el:
       to_placeholder: "μέχρι σήμερα"
     share:
       topic_html: 'Θέμα: <span class="topic-title">%{topicTitle}</span>'
-      post: "ανάρτηση #%{postNumber}"
       close: "κλείσιμο"
       twitter: "Κοινοποιήστε στο Twitter"
       facebook: "Μοιραστείτε στο Facebook"
@@ -1546,7 +1545,6 @@ el:
       success: "Ο λογαριασμός σας έχει δημιουργηθεί και έχετε συνδεθεί. "
       name_label: "Όνομα"
       password_label: "Κωδικός Πρόσβασης"
-      optional_description: "(προεραιτικό)"
     password_reset:
       continue: "Συνεχίστε στην %{site_name}"
     emoji_set:

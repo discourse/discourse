@@ -140,7 +140,6 @@ bs_BA:
       to_placeholder: "do datuma"
     share:
       topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
-      post: "dijeli post #%{postNumber}"
       close: "zatvori"
       twitter: "Podijeli na Twitter"
       facebook: "Podijeli na Facebooku"
@@ -1589,7 +1588,6 @@ bs_BA:
       success: "Vaš račun je napravljen i sada ste prijavljeni."
       name_label: "Ime"
       password_label: "Lozinka"
-      optional_description: "(opciono)"
     password_reset:
       continue: "Nastavi ka %{site_name}"
     emoji_set:

@@ -120,7 +120,6 @@ hu:
       to_placeholder: "eddig:"
     share:
       topic_html: 'Téma: <span class="topic-title">%{topicTitle}</span>'
-      post: "bejegyzés #%{postNumber}"
       close: "bezárás"
       twitter: "Megosztás Twitteren"
       facebook: "Megosztás Facebookon"
@@ -1805,7 +1804,6 @@ hu:
       success: "A fiók elkészült, és most már be van jelentkezve."
       name_label: "Név"
       password_label: "Jelszó"
-      optional_description: "(nem kötelező)"
     password_reset:
       continue: "Tovább a(z) %{site_name} oldalra"
     emoji_set:

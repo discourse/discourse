@@ -323,7 +323,6 @@ lt:
       already_bookmarked_post: "Negalite du kartus pažymėti to paties įrašo."
       cannot_set_past_reminder: "Negalite nustatyti žymių priminimo praeityje."
       cannot_set_reminder_in_distant_future: "Negalite nustatyti žymės priminimo daugiau nei 10 metų ateityje."
-      time_must_be_provided: "turi būti numatytas laikas visiems priminimams"
       for_topic_must_use_first_post: "Norėdami pažymėti temą, galite naudoti tik pirmąjį įrašą."
     reminders:
       later_today: "Šiandien vėliau"
@@ -1283,7 +1282,6 @@ lt:
     summary_timeline_button: "Rodyti mygtuką “Apibendrinti” laiko juostoje"
     enable_personal_messages: "Leisti 1 patikimumo lygio (konfigūruojamas naudojant minimalų patikimumą, kad būtų išsiųstas pranešimas) vartotojams kurti pranešimus ir atsakyti į pranešimus. Atminkite, kad darbuotojai visada gali siųsti žinutes."
     enable_system_message_replies: "Leidžia vartotojams atsakyti į sistemos pranešimus, net jei asmeniniai pranešimai yra išjungti"
-    long_polling_interval: "Kiek laiko serveris turi palaukti prieš atsakydamas klientams, kai nėra duomenų, kuriuos reikia siųsti (tik prisijungę vartotojai)"
     polling_interval: "Kai apklausa trunka neilgai, kaip dažnai reikia prisijungti prie klientų apklausos milisekundėmis"
     hide_post_sensitivity: "Tikimybė, kad pažymėtas įrašas bus paslėptas"
     silence_new_user_sensitivity: "Tikimybė, kad naujas vartotojas bus nutildytas remiantis šlamšto vėliavomis"

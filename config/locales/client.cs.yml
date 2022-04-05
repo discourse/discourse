@@ -157,7 +157,6 @@ cs:
       to_placeholder: "do data"
     share:
       topic_html: 'Téma: <span class="topic-title">%{topicTitle}</span>'
-      post: "příspěvek #%{postNumber}"
       close: "zavřít"
       twitter: "Sdílet na Twitteru"
       facebook: "Sdílet na Facebooku"
@@ -1466,7 +1465,6 @@ cs:
       success: "Váš účet byl vytvořen a nyní jste přihlášeni."
       name_label: "Jméno"
       password_label: "Heslo"
-      optional_description: "(volitelné)"
     password_reset:
       continue: "Pokračovat na %{site_name}"
     emoji_set:
