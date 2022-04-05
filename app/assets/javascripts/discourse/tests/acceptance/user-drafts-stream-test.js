@@ -2,6 +2,7 @@ import {
   acceptance,
   count,
   exists,
+  normalizeHtml,
   query,
   queryAll,
   visible,
@@ -54,8 +55,13 @@ acceptance("User Drafts", function (needs) {
       "meta"
     );
     assert.strictEqual(
-      query(".user-stream-item:nth-child(3) .excerpt").innerHTML.trim(),
-      `here goes a reply to a PM <img src="/images/emoji/google_classic/slight_smile.png?v=${IMAGE_VERSION}" title=":slight_smile:" class="emoji" alt=":slight_smile:" loading="lazy" width="20" height="20" style="aspect-ratio: 20 / 20;">`
+      normalizeHtml(
+        query(".user-stream-item:nth-child(3) .excerpt").innerHTML.trim()
+      ),
+      normalizeHtml(
+        `here goes a reply to a PM <img src="/images/emoji/google_classic/slight_smile.png?v=${IMAGE_VERSION}" title=":slight_smile:" class="emoji" alt=":slight_smile:" loading="lazy" width="20" height="20" style="aspect-ratio: 20 / 20;">`
+      ),
+      "shows the excerpt"
     );
   });
 });
