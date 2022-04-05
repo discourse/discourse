@@ -29,6 +29,17 @@ describe Sitemap do
       expect(first_page.enabled).to eq(true)
     end
 
+    it "only counts topics from unrestricted categories" do
+      restricted_category = Fabricate(:category, read_restricted: true)
+      topic.update!(category: restricted_category)
+      Category.update_stats
+
+      described_class.regenerate_sitemaps
+      first_page = Sitemap.find_by(name: '1')
+
+      expect(first_page).to be_nil
+    end
+
     it 'disable empty pages' do
       unused_page = Sitemap.touch('10')
 

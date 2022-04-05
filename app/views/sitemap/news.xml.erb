@@ -9,16 +9,16 @@
         http://www.google.com/schemas/sitemap-news/0.9/sitemap-news.xsd
         http://www.google.com/schemas/sitemap-image/1.1
         http://www.google.com/schemas/sitemap-image/1.1/sitemap-image.xsd">
-    <% @topics.each do |topic| %>
+    <% @topics.each do |(id, title, slug, created_at)| %>
       <url>
-          <loc><%= Discourse.base_url %>/t/<%= topic[2] %>/<%= topic[0] %></loc>
+          <loc><%= build_sitemap_topic_url(slug, id) %></loc>
           <news:news>
               <news:publication>
                   <news:name><%= SiteSetting.title %></news:name>
                   <news:language><%= @locale %></news:language>
               </news:publication>
-              <news:publication_date><%= topic[3].xmlschema %></news:publication_date>
-              <news:title><%= topic[1] %></news:title>
+              <news:publication_date><%= created_at.xmlschema %></news:publication_date>
+              <news:title><%= title %></news:title>
           </news:news>
       </url>
     <% end %>

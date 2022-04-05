@@ -5,7 +5,9 @@ class SitemapController < ApplicationController
   skip_before_action :preload_json, :check_xhr
 
   def index
-    @sitemaps = Sitemap.where(enabled: true)
+    @sitemaps = Sitemap
+      .where(enabled: true)
+      .where.not(name: Sitemap::NEWS_SITEMAP_NAME)
 
     render :index
   end
@@ -47,4 +49,18 @@ class SitemapController < ApplicationController
 
     render plain: @output, content_type: 'text/xml; charset=UTF-8' unless performed?
   end
+
+  private
+
+  def build_sitemap_topic_url(slug, id, posts_count = nil)
+    base_url = [Discourse.base_url, 't', slug, id].join('/')
+    return base_url if posts_count.nil?
+
+    page, mod = posts_count.divmod(TopicView.chunk_size)
+    page += 1 if mod > 0
+
+    page > 1 ? "#{base_url}?page=#{page}" : base_url
+  end
+  helper_method :build_sitemap_topic_url
+
 end

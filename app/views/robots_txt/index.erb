@@ -12,7 +12,7 @@ Disallow: <%= path %>
 
 <% end %>
 
-<%- if SiteSetting.publish_sitemaps? && !SiteSetting.login_required? %>
+<%- if SiteSetting.enable_sitemap? && !SiteSetting.login_required? %>
 Sitemap: <%= request.protocol %><%= request.host_with_port %>/sitemap.xml
 <% end %>
 

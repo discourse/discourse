@@ -5,7 +5,7 @@ module Jobs
     every 1.hour
 
     def execute(_args)
-      Sitemap.regenerate_sitemaps if SiteSetting.publish_sitemaps?
+      Sitemap.regenerate_sitemaps if SiteSetting.enable_sitemap?
     end
   end
 end

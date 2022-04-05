@@ -360,7 +360,7 @@ basic:
     default: "arial"
     enum: "BaseFontSetting"
     refresh: true
-  publish_sitemaps:
+  enable_sitemap:
     default: true
   sitemap_page_size:
     default: 10000

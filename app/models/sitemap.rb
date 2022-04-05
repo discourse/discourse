@@ -10,10 +10,10 @@ class Sitemap < ActiveRecord::Base
 
       names_used.each { |name| touch(name) }
 
-      count = indexable_topics.count
+      count = Category.where(read_restricted: false).sum(:topic_count)
       max_page_size = SiteSetting.sitemap_page_size
-      size = count / max_page_size
-      size += 1 if count % max_page_size > 0
+      size, mod = count.divmod(max_page_size)
+      size += 1 if mod > 0
 
       size.times do |index|
         page_name = (index + 1).to_s
@@ -31,13 +31,6 @@ class Sitemap < ActiveRecord::Base
           enabled: true
         )
       end
-    end
-
-    def indexable_topics
-      Topic
-        .where(visible: true)
-        .joins(:category)
-        .where(categories: { read_restricted: false })
     end
   end
 
@@ -62,16 +55,19 @@ class Sitemap < ActiveRecord::Base
   private
 
   def sitemap_topics
-    base = self.class.indexable_topics
+    indexable_topics = Topic
+      .where(visible: true)
+      .joins(:category)
+      .where(categories: { read_restricted: false })
 
     if name == RECENT_SITEMAP_NAME
-      base.where('bumped_at > ?', 3.days.ago).order(bumped_at: :desc)
+      indexable_topics.where('bumped_at > ?', 3.days.ago).order(bumped_at: :desc)
     elsif name == NEWS_SITEMAP_NAME
-      base.where('bumped_at > ?', 72.hours.ago).order(bumped_at: :desc)
+      indexable_topics.where('bumped_at > ?', 72.hours.ago).order(bumped_at: :desc)
     else
       offset = (name.to_i - 1) * max_page_size
 
-      base.limit(max_page_size).offset(offset)
+      indexable_topics.limit(max_page_size).offset(offset)
     end
   end
 end

@@ -135,7 +135,7 @@ RSpec.describe RobotsTxtController do
       let(:sitemap_line) { "Sitemap: #{Discourse.base_protocol}://#{Discourse.current_hostname}/sitemap.xml" }
 
       it 'include sitemap location when enabled' do
-        SiteSetting.publish_sitemaps = true
+        SiteSetting.enable_sitemap = true
         SiteSetting.login_required = false
 
         get '/robots.txt'
@@ -144,7 +144,7 @@ RSpec.describe RobotsTxtController do
       end
 
       it "doesn't include sitemap location when disabled" do
-        SiteSetting.publish_sitemaps = false
+        SiteSetting.enable_sitemap = false
         SiteSetting.login_required = false
 
         get '/robots.txt'
@@ -153,7 +153,7 @@ RSpec.describe RobotsTxtController do
       end
 
       it "doesn't include sitemap location when site has login_required enabled" do
-        SiteSetting.publish_sitemaps = true
+        SiteSetting.enable_sitemap = true
         SiteSetting.login_required = true
 
         get '/robots.txt'
