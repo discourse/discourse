@@ -18,10 +18,23 @@ class SearchIndexer
   end
 
   def self.update_index(table: , id: , a_weight: nil, b_weight: nil, c_weight: nil, d_weight: nil)
-    raw_data = [a_weight, b_weight, c_weight, d_weight]
+    raw_data = {
+      a: a_weight,
+      b: b_weight,
+      c: c_weight,
+      d: d_weight,
+    }
 
-    search_data = raw_data.map do |data|
+    # The version used in excerpts
+    search_data = raw_data.transform_values do |data|
       Search.prepare_data(data || "", :index)
+    end
+
+    # The version used to build the index
+    indexed_data = search_data.transform_values do |data|
+      data.gsub(/\S+/) { |word|
+        word[0...SiteSetting.search_max_indexed_word_length]
+      }
     end
 
     table_name = "#{table}_search_data"
@@ -37,14 +50,7 @@ class SearchIndexer
       setweight(to_tsvector('#{stemmer}', #{Search.wrap_unaccent("coalesce(:d,''))")}, 'D')
     SQL
 
-    ranked_params = {
-      a: search_data[0],
-      b: search_data[1],
-      c: search_data[2],
-      d: search_data[3],
-    }
-
-    tsvector = DB.query_single("SELECT #{ranked_index}", ranked_params)[0]
+    tsvector = DB.query_single("SELECT #{ranked_index}", indexed_data)[0]
     additional_lexemes = []
 
     tsvector.scan(/'(([a-zA-Z0-9]+\.)+[a-zA-Z0-9]+)'\:([\w+,]+)/).reduce(additional_lexemes) do |array, (lexeme, _, positions)|
@@ -68,9 +74,9 @@ class SearchIndexer
 
     indexed_data =
       if table.to_s == "post"
-        clean_post_raw_data!(ranked_params[:d])
+        clean_post_raw_data!(search_data[:d])
       else
-        search_data.select { |d| d.length > 0 }.join(' ')
+        search_data.values.select { |d| d.length > 0 }.join(' ')
       end
 
     params = {
