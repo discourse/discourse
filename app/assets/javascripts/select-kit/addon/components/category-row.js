@@ -110,7 +110,7 @@ export default SelectKitRowComponent.extend({
 
   _formatDescription(description) {
     const limit = 200;
-    return `${description.substr(0, limit)}${
+    return `${description.slice(0, limit)}${
       description.length > limit ? "&hellip;" : ""
     }`;
   },

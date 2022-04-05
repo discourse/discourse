@@ -120,7 +120,6 @@ bg:
       to_placeholder: "до дата"
     share:
       topic_html: 'Тема: <span class="topic-title">%{topicTitle}</span>'
-      post: "публикации #%{postNumber}"
       close: "затвори"
       twitter: "Споделете в Twitter"
       facebook: "Споделете във Facebook"
@@ -348,8 +347,7 @@ bg:
     switch_to_anon: "Влез в Анонимен режим. "
     switch_from_anon: "Излез от Анонимен режим."
     banner:
-      close: "Премахнете банера"
-      edit: "Редактирай този банер >>"
+      edit: "Редактирай"
     pwa:
       install_banner: "Искате ли <a href>да инсталирате %{title} на това устройство?</a>"
     choose_topic:
@@ -1719,7 +1717,6 @@ bg:
       success: "Профилът ви е създаден и вече сте влезли в него."
       name_label: "Име"
       password_label: "Парола"
-      optional_description: "(по избор)"
     password_reset:
       continue: "Продължете към %{site_name}"
     emoji_set:
@@ -3215,7 +3212,6 @@ bg:
         delete: "Изтрий"
         color: "Цвят"
         opacity: "Прозрачност"
-        copy: "Копирай"
         email_templates:
           title: "Имейл"
           subject: "Тема"

@@ -1,7 +1,9 @@
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { getAbsoluteURL } from "discourse-common/lib/get-url";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed, {
+  afterRender,
+} from "discourse-common/utils/decorators";
 import { longDateNoYear } from "discourse/lib/formatter";
 import Sharing from "discourse/lib/sharing";
 import showModal from "discourse/lib/show-modal";
@@ -9,7 +11,6 @@ import { bufferedProperty } from "discourse/mixins/buffered-content";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import I18n from "I18n";
 import Category from "discourse/models/category";
-import { scheduleOnce } from "@ember/runloop";
 import { getOwner } from "discourse-common/lib/get-owner";
 
 export default Controller.extend(
@@ -19,7 +20,6 @@ export default Controller.extend(
     topic: null,
     post: null,
     allowInvites: false,
-    restrictedGroups: null,
 
     onShow() {
       this.setProperties({
@@ -28,14 +28,32 @@ export default Controller.extend(
         allowInvites: false,
       });
 
-      if (this.model && this.model.read_restricted) {
-        this.restrictedGroupWarning();
-      }
-
-      scheduleOnce("afterRender", this, this.selectUrl);
+      this._showRestrictedGroupWarning();
+      this._selectUrl();
     },
 
-    selectUrl() {
+    @afterRender
+    _showRestrictedGroupWarning() {
+      if (!this.model) {
+        return;
+      }
+
+      Category.reloadBySlugPath(this.model.slug).then((result) => {
+        const groups = result.category.group_permissions.mapBy("group_name");
+        if (groups && !groups.any((group) => group === "everyone")) {
+          this.flash(
+            I18n.t("topic.share.restricted_groups", {
+              count: groups.length,
+              groupNames: groups.join(", "),
+            }),
+            "warning"
+          );
+        }
+      });
+    },
+
+    @afterRender
+    _selectUrl() {
       const input = document.querySelector("input.invite-link");
       if (input && !this.site.mobileView) {
         // if the input is auto-focused on mobile, iOS requires two taps of the copy button
@@ -104,25 +122,6 @@ export default Controller.extend(
       const topicController = getOwner(this).lookup("controller:topic");
       topicController.actions.replyAsNewTopic.call(topicController, post);
       this.send("closeModal");
-    },
-
-    restrictedGroupWarning() {
-      this.appEvents.on("modal:body-shown", () => {
-        let restrictedGroups;
-        Category.reloadBySlugPath(this.model.slug).then((result) => {
-          restrictedGroups = result.category.group_permissions.map(
-            (g) => g.group_name
-          );
-
-          if (restrictedGroups) {
-            const message = I18n.t("topic.share.restricted_groups", {
-              count: restrictedGroups.length,
-              groupNames: restrictedGroups.join(", "),
-            });
-            this.flash(message, "warning");
-          }
-        });
-      });
     },
   }
 );

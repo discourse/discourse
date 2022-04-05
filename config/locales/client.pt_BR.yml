@@ -120,7 +120,6 @@ pt_BR:
       to_placeholder: "até agora"
     share:
       topic_html: 'Tópico: <span class="topic-title">%{topicTitle}</span>'
-      post: "postagem #%{postNumber}"
       close: "fechar"
       twitter: "Compartilhar no Twitter"
       facebook: "Compartilhar no Facebook"
@@ -355,8 +354,8 @@ pt_BR:
     switch_to_anon: "Entrar no Modo anônimo"
     switch_from_anon: "Sair do Modo anônimo"
     banner:
-      close: "Descarte este banner."
-      edit: "Editar este banner >>"
+      close: "Descarte este banner"
+      edit: "Editar"
     pwa:
       install_banner: "Você quer <a href>instalar %{title} no seu dispositivo?</a>"
     choose_topic:
@@ -1802,7 +1801,6 @@ pt_BR:
       success: "Sua conta foi criada e você já entrou."
       name_label: "Nome"
       password_label: "Senha"
-      optional_description: "(opcional)"
     password_reset:
       continue: "Continuar para %{site_name}"
     emoji_set:
@@ -3624,7 +3622,6 @@ pt_BR:
       unsupported_file_picked: "Você escolheu um arquivo incompatível. Tipos de arquivos compatíveis: %{types}."
     user_activity:
       no_activity_title: "Nenhuma atividade ainda."
-      no_activity_body: "Boas-vindas à nossa comunidade! É a sua primeira vez aqui, e você ainda não contribuiu para nenhuma discussão. Para começar, acesse <a href='%{topUrl}'>Melhores</a> ou <a href='%{categoriesUrl}'>Categorias</a> e comece a ler! Selecione %{heartIcon} nas postagens de que você gosta ou quer saber mais. Se ainda não tiver feito isso, ajude os(as) outros(as) a conhecê-lo(a) ao adicionar uma imagem e biografia nas suas <a href='%{preferencesUrl}'>preferências de usuário(a)</a>."
       no_activity_others: "Nenhuma atividade."
       no_replies_title: "Você ainda não respondeu a nenhum tópico."
       no_replies_others: "Sem respostas."
@@ -4085,7 +4082,6 @@ pt_BR:
         delete_confirm: 'Você tem certeza de que deseja excluir "%{theme_name}"?'
         color: "Cor"
         opacity: "Opacidade"
-        copy: "Copiar"
         copy_to_clipboard: "Copiar para área de transferência"
         copied_to_clipboard: "Copiou para área de transferência"
         copy_to_clipboard_error: "Erro ao copiar dados para a área de transferência"

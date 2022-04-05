@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'jobs/regular/process_post'
-
 describe Jobs::FeatureTopicUsers do
 
   it "raises an error without a topic_id" do

@@ -933,6 +933,10 @@ class Category < ActiveRecord::Base
     end
   end
 
+  def has_restricted_tags?
+    tags.count > 0 || tag_groups.count > 0
+  end
+
   private
 
   def should_update_reviewables?

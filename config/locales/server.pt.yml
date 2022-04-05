@@ -376,7 +376,6 @@ pt:
       too_many: "Desculpe, você não pode adicionar mais de %{limit} favoritos, visite <a href='%{user_bookmarks_url}'>%{user_bookmarks_url}</a> para remover alguns."
       cannot_set_past_reminder: "Você não pode definir um lembrete de favoritos no passado."
       cannot_set_reminder_in_distant_future: "Você não pode definir um lembrete de favoritos para mais de 10 anos no futuro."
-      time_must_be_provided: "tempo deve ser fornecido para todos os lembretes"
     reminders:
       at_desktop: "Da próxima vez que eu estiver no meu desktop"
       later_today: "Hoje, mais tarde"
@@ -1010,9 +1009,7 @@ pt:
     force_https: "Forçar o site a usar apenas HTTPS. ALERTA: NÃO active esta opção enquanto não verificar que o HTTPS está completamente configurado e funcional absolutamente em todo o lado! Verificou a sua CDN, todos os logins por rede social, e quaisquer logos ou outras dependências externas para garantir que também são compatíveis com HTTPS?"
     summary_score_threshold: "Pontuação mínima necessária para que uma mensagem seja incluída em 'Resumir Este Tópico'"
     summary_percent_filter: "Quando um utilizador clica em 'Resumir Este Tópico', mostrar as melhores % de mensagens"
-    enable_long_polling: "O sistema de mensagens usado para notificações pode fazer solicitações longas"
     long_polling_base_url: "URL base utilizado para sondar o servidor (quando um CDN serve conteúdo dinâmico, certifique-se de definir isto para a \"pull\" original) por exemplo: http://origem.site.com"
-    long_polling_interval: "O tempo que um servidor deverá aguardar antes de responder aos clientes quando não existirem dados para serem enviados (apenas utilizadores autenticados)"
     polling_interval: "Quando não está a ocorrer uma solicitação ao servidor, com que frequência devem os clientes ligados requerer uma atualização, em milissegundos"
     anon_polling_interval: "Com que frequência os clientes anónimos podem sondar o servidor em milisegundos"
     background_polling_interval: "Com que frequência deverão os clientes solicitar o servidor, em milissegundos (quando a janela está em plano de fundo)"

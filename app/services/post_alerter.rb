@@ -719,6 +719,13 @@ class PostAlerter
       # email to the user who was just added by CC. In this case the OP probably
       # replied and CC'd some people, and they are the only other topic users.
       return if post.incoming_email.cc_addresses_split.include?(to_address)
+
+      # We don't want to create an email storm if someone emails the group and
+      # CC's 50 support addresses from various places, which all then respond
+      # with auto-responders saying they have received our email. Any auto-generated
+      # emails should not propagate notifications to anyone else, not even
+      # the regular topic user notifications.
+      return email_addresses.dup.uniq if post.incoming_email.is_auto_generated?
     end
 
     # Send a single email using group SMTP settings to cut down on the

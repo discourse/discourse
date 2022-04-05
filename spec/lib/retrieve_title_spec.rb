@@ -136,6 +136,12 @@ describe RetrieveTitle do
 
       expect(RetrieveTitle.crawl("https://cat.com/meow/no-onebox")).to be_blank
     end
+
+    it "doesn't return a title if response is unsuccessful" do
+      stub_request(:get, "https://example.com").to_return(status: 404, body: "")
+
+      expect(RetrieveTitle.crawl("https://example.com")).to eq(nil)
+    end
   end
 
   context 'fetch_title' do

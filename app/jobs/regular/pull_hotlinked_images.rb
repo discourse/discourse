@@ -16,6 +16,7 @@ module Jobs
       post = Post.find_by(id: @post_id)
       return if post.blank?
       return if post.topic.blank?
+      return if post.cook_method == Post.cook_methods[:raw_html]
 
       raw = post.raw.dup
       start_raw = raw.dup

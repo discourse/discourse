@@ -288,25 +288,31 @@ acceptance("Tag info", function (needs) {
       });
     });
 
-    server.get("/tags/c/faq/4/planters/l/latest.json", () => {
-      return helper.response({
-        users: [],
-        primary_groups: [],
-        topic_list: {
-          can_create_topic: true,
-          draft: null,
-          draft_key: "new_topic",
-          draft_sequence: 1,
-          per_page: 30,
-          tags: [
-            {
-              id: 1,
-              name: "planters",
-              topic_count: 1,
-            },
-          ],
-          topics: [],
-        },
+    [
+      "/tags/c/faq/4/planters/l/latest.json",
+      "/tags/c/feature/2/planters/l/latest.json",
+      "/tags/c/feature/2/none/planters/l/latest.json",
+    ].forEach((url) => {
+      server.get(url, () => {
+        return helper.response({
+          users: [],
+          primary_groups: [],
+          topic_list: {
+            can_create_topic: true,
+            draft: null,
+            draft_key: "new_topic",
+            draft_sequence: 1,
+            per_page: 30,
+            tags: [
+              {
+                id: 1,
+                name: "planters",
+                topic_count: 1,
+              },
+            ],
+            topics: [],
+          },
+        });
       });
     });
 
@@ -482,6 +488,20 @@ acceptance("Tag info", function (needs) {
     await click('.category-breadcrumb .category-row[data-name="faq"]');
 
     assert.strictEqual(currentURL(), "/tags/c/faq/4/planters");
+  });
+
+  test("can switch between all/none subcategories", async function (assert) {
+    await visit("/tag/planters");
+
+    await click(".category-breadcrumb .category-drop-header");
+    await click('.category-breadcrumb .category-row[data-name="feature"]');
+    assert.strictEqual(currentURL(), "/tags/c/feature/2/planters");
+
+    await click(".category-breadcrumb li:nth-of-type(2) .category-drop-header");
+    await click(
+      '.category-breadcrumb li:nth-of-type(2) .category-row[data-name="none"]'
+    );
+    assert.strictEqual(currentURL(), "/tags/c/feature/2/none/planters");
   });
 
   test("admin can manage tags", async function (assert) {

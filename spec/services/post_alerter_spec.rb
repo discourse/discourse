@@ -1710,6 +1710,16 @@ describe PostAlerter do
       )
     end
 
+    it "does not send a group smtp email for anyone if the reply post originates from an incoming email that is auto generated" do
+      incoming_email_post = create_post_with_incoming
+      topic = incoming_email_post.topic
+      post = Fabricate(:post, topic: topic)
+      Fabricate(:incoming_email, post: post, topic: topic, is_auto_generated: true)
+      expect_not_enqueued_with(job: :group_smtp_email) do
+        expect { PostAlerter.new.after_save_post(post, true) }.to change { ActionMailer::Base.deliveries.size }.by(0)
+      end
+    end
+
     it "skips sending a notification email to the group and all other email addresses that are _not_ members of the group,
     sends a group_smtp_email instead" do
       NotificationEmailer.enable

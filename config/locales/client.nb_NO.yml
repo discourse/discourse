@@ -120,7 +120,6 @@ nb_NO:
       to_placeholder: "til dato"
     share:
       topic_html: 'Emne: <span class="topic-title">%{topicTitle}</span>'
-      post: "innlegg #%{postNumber}"
       close: "lukk"
       twitter: "Del på Twitter"
       facebook: "Del på Facebook"
@@ -347,8 +346,8 @@ nb_NO:
     switch_to_anon: "Start inkognitomodus"
     switch_from_anon: "Avslutt inkognitomodus"
     banner:
-      close: "Fjern dette banneret."
-      edit: "Endre dette banneret >>"
+      close: "Fjern dette banneret"
+      edit: "Rediger"
     pwa:
       install_banner: "Ønsker du å <a href>installere %{title} på denne enheten</a>?"
     choose_topic:
@@ -1743,7 +1742,6 @@ nb_NO:
       success: "Kontoen din har blitt opprettet og du er nå logget inn."
       name_label: "Navn"
       password_label: "Passord"
-      optional_description: "(valgfritt)"
     password_reset:
       continue: "Fortsett til %{site_name}"
     emoji_set:
@@ -3806,7 +3804,6 @@ nb_NO:
         delete_confirm: 'Er du sikker på at du vil slette "%{theme_name}?'
         color: "Farge"
         opacity: "Opacity"
-        copy: "Kopier"
         copy_to_clipboard: "Kopier til utklippstavle"
         copied_to_clipboard: "Kopiert til utklippstavle"
         copy_to_clipboard_error: "Feil ved kopiering av data til utklippstavle"

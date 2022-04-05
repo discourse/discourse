@@ -120,7 +120,6 @@ es:
       to_placeholder: "hasta hoy"
     share:
       topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
-      post: "publicación núm. %{postNumber}"
       close: "cerrar"
       twitter: "Compartir en Twitter"
       facebook: "Compartir en Facebook"
@@ -287,6 +286,8 @@ es:
         unbookmark_with_reminder: "Haz clic para eliminar todos los marcadores y recordatorios de este tema."
     bookmarks:
       created: "Has guardado esta publicación en marcadores. %{name}"
+      create_for: "Crear marcador para %{type}"
+      edit_for: "Editar marcador para %{type}"
       not_bookmarked: "guarda esta publicación en marcadores"
       remove_reminder_keep_bookmark: "Quitar recordatorio y mantener marcador"
       created_with_reminder: "Has marcado esta publicación con un recordatorio %{date}. %{name}"
@@ -300,7 +301,11 @@ es:
       list_permission_denied: "No tienes permiso para ver los marcadores de este usuario."
       no_user_bookmarks: "No tienes publicaciones guardadas en marcadores; guardar en marcadores permite que vuelvas a los temas rápidamente."
       auto_delete_preference:
+        label: "Después de ser notificado"
+        never: "Mantener el marcador"
         when_reminder_sent: "Eliminar marcador"
+        on_owner_reply: "Borrar el marcador cuando responda"
+        clear_reminder: "Mantener el marcador, pero quitar recordatorio"
       search_placeholder: "Buscar marcadores por nombre, título del tema o contenido de la publicación"
       search: "Buscar"
       reminders:
@@ -362,8 +367,8 @@ es:
     switch_to_anon: "Entrar en modo anónimo"
     switch_from_anon: "Salir del modo anónimo"
     banner:
-      close: "Descartar este banner."
-      edit: "Editar este banner >>"
+      close: "Descartar este banner"
+      edit: "Editar"
     pwa:
       install_banner: "¿Quieres <a href>instalar %{title} en este dispositivo?</a>"
     choose_topic:
@@ -1811,7 +1816,6 @@ es:
       success: "Tu cuenta ha sido creada y has iniciado sesión."
       name_label: "Nombre"
       password_label: "Contraseña"
-      optional_description: "(opcional)"
     password_reset:
       continue: "Continuar a %{site_name}"
     emoji_set:
@@ -1828,6 +1832,7 @@ es:
       categories_and_top_topics: "Categorías y temas destacados"
       categories_boxes: "Cajas con subcategorías"
       categories_boxes_with_topics: "Cajas con temas destacados"
+      subcategories_with_featured_topics: "Subcategorías con temas destacados"
     shortcut_modifier_key:
       shift: "Mayús"
       ctrl: "Ctrl"
@@ -2826,6 +2831,7 @@ es:
         edit: "Lo sentimos, se produjo un error al editar tu publicación. Inténtalo de nuevo."
         upload: "Lo sentimos, se ha producido un error al cargar este archivo. Inténtalo de nuevo."
         file_too_large: "Lo sentimos, ese archivo es demasiado grande (el tamaño máximo es %{max_size_kb} kb). ¿Por qué no lo subes a un servicio de almacenamiento en la nube y compartes el enlace luego?"
+        file_size_zero: "Lo sentimos, algo ha ido mal. El archivo que estás intentando cargar ocupa 0 bytes. Inténtalo de nuevo."
         file_too_large_humanized: "Lo sentimos, el archivo es demasiado grande (el tamaño máximo es %{max_size}). Podrías probar a subirlo a una plataforma en la nube, compartirlo y pegar el enlace."
         too_many_uploads: "Lo sentimos, solo puedes cargar un archivo a la vez."
         too_many_dragged_and_dropped_files:
@@ -2978,6 +2984,9 @@ es:
           edit_bookmark:
             name: "Editar marcador"
             description: "Editar el nombre del marcador o cambia la fecha y hora del recordatorio"
+          clear_bookmark_reminder:
+            name: "Quitar recordatorio"
+            description: "Quitar la fecha y hora del recordatorio"
           pin_bookmark:
             name: "Anclar marcador"
             description: "Anclar el marcador. Esto hará que aparezca al principio de tu lista de marcadores."
@@ -3237,15 +3246,20 @@ es:
        other {}}
     original_post: "Publicación original"
     views: "Vistas"
+    sr_views: "Ordenar por núm. de visitas"
     views_lowercase:
       one: "visita"
       other: "vistas"
     replies: "Respuestas"
+    sr_replies: "Ordenar por núm. de respuestas"
     views_long:
       one: "este tema se ha visto %{count} vez"
       other: "este tema se ha visto %{number} veces"
     activity: "Actividad"
+    sr_activity: "Ordenar por fecha de actividad"
     likes: "Me gusta"
+    sr_likes: "Ordenar por núm. de me gusta"
+    sr_op_likes: "Ordenar por núm. de me gusta de la primera publicación"
     likes_lowercase:
       one: "me gusta"
       other: "me gusta"
@@ -3341,6 +3355,7 @@ es:
       readonly: "Ver"
     lightbox:
       download: "descargar"
+      open: "imagen original"
       previous: "Anterior (flecha izquierda)"
       next: "Siguiente (flecha derecha)"
       counter: "%curr% de %total%"
@@ -3638,7 +3653,6 @@ es:
       unsupported_file_picked: "Has elegido un tipo de archivo no admitido. Tipos de archivo admitidos: %{types}."
     user_activity:
       no_activity_title: "Todavía no hay actividad"
-      no_activity_body: "¡Te damos la bienvenida a la comunidad! Acabas de llegar y todavía no has empezado a participar. Como primer paso, echa un vistazo a los temas <a href='%{topUrl}'>Destacados</a> o las <a href='%{categoriesUrl}'>Categorías</a> y lee un poco. Dale a %{heartIcon} en los mensajes que te gusten o interesen. Si todavía no lo has hecho, puedes ayudar a que los demás te reconozcan si subes una foto y escribes algo sobre ti en tus <a href='%{preferencesUrl}'>preferencias</a>."
       no_activity_others: "Sin actividad."
       no_replies_title: "Todavía no has respondido a ningún tema"
       no_replies_others: "No hay respuestas."
@@ -3648,9 +3662,13 @@ es:
       no_likes_body: "Una buena manera de empezar a contribuir es ir leyendo los temas ya publicados y darle a %{heartIcon} en lo que te guste"
       no_likes_others: "No le ha dado me gusta a ninguna publicación."
       no_topics_title: "Todavía no has empezado ningún tema"
+      no_topics_title_others: "%{username} no ha creado ningún tema todavía"
       no_read_topics_title: "Todavía no has leído ningún tema"
       no_read_topics_body: "Cuando empieces a leer temas, los verás aquí en una lista. Puedes empezar a buscar temas que te interesen en <a href='%{topUrl}'>Destacados</a>, la lista de <a href='%{categoriesUrl}'>Categorías</a> o buscando palabras %{searchIcon}"
     no_group_messages_title: "No hay ningún mensaje en el grupo"
+    topic_entrance:
+      sr_jump_top_button: "Ir a la primera publicación"
+      sr_jump_bottom_button: "Ir a la última publicación"
     fullscreen_table:
       expand_btn: "Expandir tabla"
     second_factor_auth:
@@ -3878,10 +3896,14 @@ es:
             topics:
               read: Leer un tema o una publicación específica del mismo. También usando RSS.
               write: Crear un nuevo tema o publicar en uno existente.
+              update: Actualizar un tema. Cambiar el título, categoría, etiquetas, etc.
               read_lists: Lea listas de temas como destacados, nuevos, recientes, etc. También se admite RSS.
               wordpress: Necesario para que el plugin para WordPress wp-discourse funcione.
             posts:
               edit: Edita cualquier publicación o una específica.
+            categories:
+              list: Obtener la lista de categorías.
+              show: Obtener una sola categoría por id.
             uploads:
               create: Subir un nuevo archivo o iniciar subidas directas de uno o varios archivos al almacenamiento externo.
             users:
@@ -4103,7 +4125,7 @@ es:
         delete_confirm: '¿Seguro que quieres eliminar «%{theme_name}»?'
         color: "Color"
         opacity: "Opacidad"
-        copy: "Copiar"
+        copy: "Duplicar"
         copy_to_clipboard: "Copiar al portapapeles"
         copied_to_clipboard: "Copiado al portapapeles"
         copy_to_clipboard_error: "Error al copiar datos al portapapeles"

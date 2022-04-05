@@ -327,7 +327,7 @@ export function applyDefaultHandlers(pretender) {
   });
 
   pretender.get("/posts/:id/replies", () => {
-    return response([{ id: 1234, cooked: "wat" }]);
+    return response([{ id: 1234, cooked: "wat", username: "somebody" }]);
   });
 
   // TODO: Remove this old path when no longer using old ember

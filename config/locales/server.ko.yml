@@ -369,7 +369,6 @@ ko:
       too_many: "죄송합니다. 북마크를 %{limit}개 이상 추가 할 수 없습니다. <a href='%{user_bookmarks_url}'>%{user_bookmarks_url}</a> 을 방문하여 일부를 제거하십시오."
       cannot_set_past_reminder: "과거에는 북마크 미리 알림을 설정할 수 없습니다."
       cannot_set_reminder_in_distant_future: "앞으로 10 년 이상 책갈피 알림을 설정할 수 없습니다."
-      time_must_be_provided: "모든 알림은 시간이 설정되어야합니다."
     reminders:
       at_desktop: "다음에 저는 데스크탑에 있습니다"
       later_today: "오늘 늦게"
@@ -1417,10 +1416,8 @@ ko:
     summary_timeline_button: "타임라인에 '요약' 버튼 표시"
     enable_personal_messages: "회원레벨1 사용자가 메시지를 작성하고 메시지에 답장할 수 있도록 허용합니다. 관리자는 언제든지 메시지를 보낼 수 있습니다."
     enable_system_message_replies: "개인 메시지가 비활성화 된 경우에도 사용자가 시스템 메시지에 회신 할 수 있습니다"
-    enable_long_polling: "Message bus used for notification can use long polling"
     enable_chunked_encoding: "서버에서 청크 분할 인코딩 응답을 활성화합니다. 이 기능은 대부분의 설정에서 작동하지만 일부 프록시는 버퍼링되어 응답이 지연될 수 있습니다."
     long_polling_base_url: "long polling에 사용 될 Base URL (CDN이 동적 콘텐트를 제공할 시에는 origin pull로 설정) eg: http://origin.site.com"
-    long_polling_interval: "보낼 데이터가 없을 때 응답 전에 서버가 기다려야하는 시간 (로그인된 유저 전용)"
     polling_interval: "long polling을 안 쓸 때 로그인된 클라이언트가 몇 밀리초마다 poll해야 하는 지"
     anon_polling_interval: "How often should anonymous clients poll in milliseconds"
     background_polling_interval: "(페이지를 안 보고 있을 때) 클라이언트가 몇 밀리초마다 poll해야 하는 지"

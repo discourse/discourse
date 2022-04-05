@@ -109,7 +109,6 @@ sq:
       previous_month: "Muaji i kaluar"
       next_month: "Muaji i ardhshëm"
     share:
-      post: "postim #%{postNumber}"
       close: "mbylle"
     action_codes:
       public_topic: "e bëri këtë temë publike %{when}"
@@ -246,8 +245,8 @@ sq:
     switch_to_anon: "Filloni sesionin anonim"
     switch_from_anon: "Shkëputu nga sesioni anonim"
     banner:
-      close: "Hiq këtë banderolë."
-      edit: "Modifiko këtë banderolë >>"
+      close: "Hiq këtë banderolë"
+      edit: "Redakto"
     choose_topic:
       none_found: "Asnjë temë nuk u gjet."
     review:
@@ -2138,7 +2137,6 @@ sq:
         delete: "Fshij"
         color: "Ngjyra"
         opacity: "Opaciteti"
-        copy: "Kopjo"
         email_templates:
           title: "Email"
           subject: "Subjekti"

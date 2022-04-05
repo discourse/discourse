@@ -359,7 +359,6 @@ nl:
       already_bookmarked_post: "U kunt geen twee bladwijzers voor hetzelfde bericht maken."
       cannot_set_past_reminder: "U kunt geen bladwijzerherinnering in het verleden instellen."
       cannot_set_reminder_in_distant_future: "U kunt geen bladwijzerherinnering later dan over 10 jaar instellen."
-      time_must_be_provided: "tijd moet voor alle herinneringen worden opgegeven"
     reminders:
       at_desktop: "De volgende keer vanaf mijn computer"
       later_today: "Later vandaag"
@@ -1350,10 +1349,8 @@ nl:
     summary_percent_filter: "Wanneer een gebruiker op 'Dit topic samenvatten' klikt, de top % van berichten tonen"
     summary_max_results: "Maximale aantal weergegeven berichten door 'Dit topic samenvatten'"
     enable_system_message_replies: "Toestaan dat gebruikers op systeemberichten kunnen antwoorden, zelfs als persoonlijke berichten zijn uitgeschakeld"
-    enable_long_polling: "Gebruikte 'message bus' voor melding kan 'long polling' gebruiken"
     enable_chunked_encoding: "Gesegmenteerde coderingsantwoorden van de server inschakelen. Deze functie werkt in de meeste configuraties, hoewel sommige proxy's kunnen bufferen, waardoor reacties worden vertraagd"
     long_polling_base_url: "Basis-URL voor 'long polling' (als een CDN dynamische inhoud aanbiedt, zorg er dan voor dat dit op 'origin pull' is ingesteld), zoals http://origin.site.com"
-    long_polling_interval: "De hoeveelheid tijd die de server hoort te wachten voordat op clients wordt gereageerd als er geen gegevens te verzenden zijn (alleen aangemelde gebruikers)"
     polling_interval: "Als geen 'long polling' wordt toegepast, hoe vaak aangemelde clients moeten pollen in milliseconden"
     anon_polling_interval: "Hoe vaak anonieme clients moeten pollen in milliseconden"
     background_polling_interval: "Hoe vaak clients moeten pollen in milliseconden (als het venster in de achtergrond staat)"
@@ -2722,6 +2719,8 @@ nl:
     good_topic:
       name: Goed topic
       description: Heeft 25 likes op een topic ontvangen
+      long_description: |
+        Deze badge wordt toegekend wanneer je topic 25 likes krijgt. Je startte een levendig gesprek waar de gemeenschap zich omheen verzamelde.
     great_topic:
       name: Geweldig topic
       description: Heeft 50 likes op een topic ontvangen

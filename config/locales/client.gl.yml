@@ -118,7 +118,6 @@ gl:
       to_placeholder: "ata a data"
     share:
       topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
-      post: "publicación #%{postNumber}"
       close: "pechar"
       twitter: "Compartir no Twitter"
       facebook: "Compartir no Facebook"
@@ -336,8 +335,8 @@ gl:
     switch_to_anon: "Entrar no modo anónimo"
     switch_from_anon: "Saír do modo anónimo"
     banner:
-      close: "Desbotar este báner."
-      edit: "Editar este báner »"
+      close: "Desbotar este báner"
+      edit: "Editar"
     pwa:
       install_banner: "Quere <a href>instalar %{title} neste dispositivo?</a>"
     choose_topic:
@@ -1698,7 +1697,6 @@ gl:
       success: "A súa conta acaba de ser creada e ten a sesión iniciada."
       name_label: "Nome"
       password_label: "Contrasinal"
-      optional_description: "(opcional)"
     password_reset:
       continue: "Continuar en %{site_name}"
     emoji_set:
@@ -3787,7 +3785,6 @@ gl:
         delete_confirm: 'Confirma a eliminación de «%{theme_name}»?'
         color: "Cor"
         opacity: "Opacidade"
-        copy: "Copiar"
         copy_to_clipboard: "Copiar ao portapapeis"
         copied_to_clipboard: "Copiado ao portapapeis"
         copy_to_clipboard_error: "Erro ao copiar os datos ao portapapeis"

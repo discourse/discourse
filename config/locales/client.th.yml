@@ -96,7 +96,6 @@ th:
       to_placeholder: "ไปวันที่"
     share:
       topic_html: 'กระทู้: <span class="topic-title">%{topicTitle}</span>'
-      post: "โพสต์ #%{postNumber}"
       close: "ปิด"
     action_codes:
       public_topic: "ทำให้กระทู้นี้เป็นสาธารณะ %{when} "
@@ -280,8 +279,7 @@ th:
     switch_to_anon: "เข้าสู่โหมดไม่ระบุชื่อ"
     switch_from_anon: "ออกจากโหมดไม่ระบุชื่อ"
     banner:
-      close: "ปิดแบนเนอร์นี้"
-      edit: "แก้ไขแบนเนอร์นี้ >>"
+      edit: "แก้ไข"
     pwa:
       install_banner: "คุณต้องการ<a href>ติดตั้ง%{title}บนอุปกรณ์นี้ใช่ไหม</a>"
     choose_topic:
@@ -1256,7 +1254,6 @@ th:
       success: "บัญชีของคุณถูกสร้าง คุณได้เข้าสู่ระบบแล้ว"
       name_label: "ชื่อ"
       password_label: "รหัสผ่าน"
-      optional_description: "(ทางเลือก)"
     password_reset:
       continue: "ดำเนินการต่อไปยัง %{site_name}"
     emoji_set:
@@ -2608,7 +2605,6 @@ th:
         delete: "ลบ"
         delete_confirm: 'คุณแน่ใจหรือว่าต้องการลบ "%{theme_name}"'
         color: "สี"
-        copy: "คัดลอก"
         theme_owner: "ไม่สามารถแก้ไขได้ เป็นเจ้าของโดย:"
         email_templates:
           title: "อีเมล"

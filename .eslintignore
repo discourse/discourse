@@ -16,3 +16,4 @@ app/assets/javascripts/discourse/tests/test-boot-rails.js
 app/assets/javascripts/discourse/tests/fixtures
 node_modules/
 dist/
+tmp/

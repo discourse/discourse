@@ -64,7 +64,6 @@ const ORIGINAL_SETTINGS = {
   allow_profile_backgrounds: true,
   allow_uploaded_avatars: "0",
   tl1_requires_read_posts: 30,
-  enable_long_polling: true,
   polling_interval: 3000,
   anon_polling_interval: 30000,
   flush_timings_secs: 5,

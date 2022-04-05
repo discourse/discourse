@@ -113,7 +113,6 @@ et:
       placeholder: kuupäev
     share:
       topic_html: 'Teema: <span class="topic-title">%{topicTitle}</span>'
-      post: "post nr%{postNumber}"
       close: "Sulge"
       twitter: "Jaga Twitteris"
       facebook: "Jaga Facebookis"
@@ -312,8 +311,8 @@ et:
     switch_to_anon: "Sisene anonüümsesse režiimi"
     switch_from_anon: "Välju anonüümsest režiimist"
     banner:
-      close: "Sulge see bänner."
-      edit: "Muuda seda bännerit >>"
+      close: "Sulge see bänner"
+      edit: "Muuda"
     pwa:
       install_banner: "Kas soovid <a href>sellesse seadmesse %{title} paigaldada?</a>"
     choose_topic:
@@ -1290,7 +1289,6 @@ et:
       success: "Teie konto on loodud ning olete nüüd sisse logitud."
       name_label: "Nimi"
       password_label: "Parool"
-      optional_description: "(valikuline)"
     password_reset:
       continue: "Edasi saidile %{site_name}"
     emoji_set:
@@ -2826,7 +2824,6 @@ et:
         delete: "Kustuta"
         color: "Värv"
         opacity: "Läbipaistvus"
-        copy: "Kopeeri"
         copy_to_clipboard: "Kopeeri lõikelauale"
         copied_to_clipboard: "Kopeeritud lõikelauale"
         copy_to_clipboard_error: "Tõrge kopeerimisel"

@@ -62,6 +62,8 @@ module RetrieveTitle
 
     fd.get do |_response, chunk, uri|
       unless Net::HTTPRedirection === _response
+        throw :done if uri.blank?
+
         if current
           current << chunk
         else

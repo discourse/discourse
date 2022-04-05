@@ -157,7 +157,6 @@ cs:
       to_placeholder: "do data"
     share:
       topic_html: 'Téma: <span class="topic-title">%{topicTitle}</span>'
-      post: "příspěvek #%{postNumber}"
       close: "zavřít"
       twitter: "Sdílet na Twitteru"
       facebook: "Sdílet na Facebooku"
@@ -388,8 +387,8 @@ cs:
     switch_to_anon: "Vstoupit do anonymního módu"
     switch_from_anon: "Opustit anonymní mód"
     banner:
-      close: "Odmítnout tento banner."
-      edit: "Editujte tento banner >>"
+      close: "Odmítnout tento banner"
+      edit: "Upravit"
     pwa:
       install_banner: "Chcete <a href>nainstalovat %{title} na toto zařízení?</a>"
     choose_topic:
@@ -1466,7 +1465,6 @@ cs:
       success: "Váš účet byl vytvořen a nyní jste přihlášeni."
       name_label: "Jméno"
       password_label: "Heslo"
-      optional_description: "(volitelné)"
     password_reset:
       continue: "Pokračovat na %{site_name}"
     emoji_set:
@@ -3118,7 +3116,6 @@ cs:
         delete: "Smazat"
         color: "Barva"
         opacity: "Neprůhlednost"
-        copy: "Kopírovat"
         copy_to_clipboard: "Kopírovat do schránky"
         copied_to_clipboard: "Zkopírováno do schránky"
         copy_to_clipboard_error: "Při kopírování dat do schránky došlo k chybě"

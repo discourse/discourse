@@ -45,7 +45,7 @@ class DiscourseCLI < Thor
     puts "THIS TASK WILL REWRITE DATA, ARE YOU SURE (type YES)"
     puts "WILL RUN ON ALL #{RailsMultisite::ConnectionManagement.all_dbs.length} DBS" if options[:global]
     text = STDIN.gets
-    if text.strip != "YES"
+    if text.strip.upcase != "YES"
       puts "aborting."
       exit 1
     end

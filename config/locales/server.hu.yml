@@ -2145,6 +2145,7 @@ hu:
         title: "Elutasítás"
   notification_level:
     ignore_error: "Sajnáljuk, de nem tilthatod le ezt a felhasználót"
+    invalid_value: 'A(z) „%{value}” nem érvényes értesítési szint.'
   old_keys_reminder:
     body: |
       Szia! Ez egy szokásos éves biztonsági emlékeztető a Discourse példányától.

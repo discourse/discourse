@@ -147,6 +147,23 @@ describe UsersController do
         expect(response).to redirect_to(destination_url)
       end
     end
+
+    context 'when cookies does not contain a destination URL but users was invited to topic' do
+      let(:invite) { Fabricate(:invite) }
+      let(:topic) { Fabricate(:topic) }
+
+      before do
+        TopicInvite.create!(topic: topic, invite: invite)
+        Fabricate(:invited_user, invite: invite, user: email_token.user)
+        invite.reload
+      end
+
+      it 'should redirect to the topic' do
+        put "/u/activate-account/#{email_token.token}"
+
+        expect(response).to redirect_to(topic.relative_url)
+      end
+    end
   end
 
   describe '#password_reset' do
@@ -2873,6 +2890,16 @@ describe UsersController do
         delete "/u/#{user1.username}.json"
         expect(response.status).to eq(200)
       end
+    end
+  end
+
+  describe "#notification_level" do
+    it 'raises an error when `notification_level` param is not a valid value' do
+      sign_in(user)
+      invalid_arg = "invalid"
+      put "/u/#{user.username}/notification_level.json", params: { notification_level: invalid_arg }
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["errors"].first).to eq(I18n.t("notification_level.invalid_value", value: invalid_arg))
     end
   end
 

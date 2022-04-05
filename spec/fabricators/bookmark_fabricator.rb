@@ -6,6 +6,15 @@ Fabricator(:bookmark) do
   name "This looked interesting"
   reminder_at { 1.day.from_now.iso8601 }
   reminder_set_at { Time.zone.now }
+
+  # TODO (martin) [POLYBOOK] Not relevant once polymorphic bookmarks are implemented.
+  before_create do |bookmark|
+    if bookmark.bookmarkable_id.present? || bookmark.bookmarkable.present?
+      bookmark.post = nil
+      bookmark.post_id = nil
+      bookmark.for_topic = false
+    end
+  end
 end
 
 Fabricator(:bookmark_next_business_day_reminder, from: :bookmark) do

@@ -11,7 +11,8 @@ const DEFER_PRIORITY = 500;
 export default {
   name: "topic-footer-buttons",
 
-  initialize() {
+  initialize(container) {
+    const siteSettings = container.lookup("site-settings:main");
     registerTopicFooterButton({
       id: "share-and-invite",
       icon: "d-topic-share",
@@ -98,9 +99,14 @@ export default {
         if (this.topic.bookmarkCount === 0) {
           return I18n.t("bookmarked.help.bookmark");
         } else if (this.topic.bookmarkCount === 1) {
-          if (
-            this.topic.bookmarks.filter((bookmark) => bookmark.for_topic).length
-          ) {
+          // TODO (martin) [POLYBOOK] Not relevant once polymorphic bookmarks are implemented.
+          const anyTopicBookmarks = this.topic.bookmarks.some((bookmark) => {
+            return siteSettings.use_polymorphic_bookmarks
+              ? bookmark.for_topic
+              : bookmark.bookmarkable_type === "Topic";
+          });
+
+          if (anyTopicBookmarks) {
             return I18n.t("bookmarked.help.edit_bookmark_for_topic");
           } else {
             return I18n.t("bookmarked.help.edit_bookmark");
@@ -113,7 +119,10 @@ export default {
           return I18n.t("bookmarked.help.unbookmark");
         }
       },
-      action: "toggleBookmark",
+      // TODO (martin) [POLYBOOK] Not relevant once polymorphic bookmarks are implemented.
+      action: siteSettings.use_polymorphic_bookmarks
+        ? "toggleBookmarkPolymorphic"
+        : "toggleBookmark",
       dropdown() {
         return this.site.mobileView;
       },

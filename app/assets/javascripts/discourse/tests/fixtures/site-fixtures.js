@@ -461,6 +461,7 @@ export default {
           show_subcategory_list: true,
           default_view: "latest",
           subcategory_list_style: "boxes",
+          default_list_filter: "all",
         },
         {
           id: 240,

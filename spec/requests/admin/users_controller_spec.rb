@@ -1075,6 +1075,24 @@ RSpec.describe Admin::UsersController do
       expect(user.ip_address).to be_blank
     end
 
+    it "triggers :sync_sso DiscourseEvent" do
+      sso.name = "Bob The Bob"
+      sso.username = "bob"
+      sso.email = "bob@bob.com"
+      sso.external_id = "1"
+
+      user = DiscourseConnect.parse(sso.payload, secure_session: read_secure_session).lookup_or_create_user
+
+      sso.name = "Bill"
+      sso.username = "Hokli$$!!"
+      sso.email = "bob2@bob.com"
+
+      events = DiscourseEvent.track_events do
+        post "/admin/users/sync_sso.json", params: Rack::Utils.parse_query(sso.payload)
+      end
+      expect(events).to include(event_name: :sync_sso, params: [user])
+    end
+
     it 'should return the right message if the record is invalid' do
       sso.email = ""
       sso.name = ""
