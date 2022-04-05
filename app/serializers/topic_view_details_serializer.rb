@@ -112,7 +112,7 @@ class TopicViewDetailsSerializer < ApplicationSerializer
   end
 
   def include_can_permanently_delete?
-    SiteSetting.can_permanently_delete && object.topic.deleted_at
+    SiteSetting.can_permanently_delete && scope.is_admin? && object.topic.deleted_at
   end
 
   def include_can_recover?

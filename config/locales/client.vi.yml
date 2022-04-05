@@ -96,7 +96,6 @@ vi:
       to_placeholder: "đến nay"
     share:
       topic_html: 'Chủ đề:<span class="topic-title">%{topicTitle}</span>'
-      post: "đăng #%{postNumber}"
       close: "đóng"
       twitter: "Chia sẻ trên Twitter"
       facebook: "Chia sẻ trên Facebook"
@@ -260,10 +259,7 @@ vi:
       list_permission_denied: "Bạn không có quyền xem chỉ mục của người dùng này"
       no_user_bookmarks: "Bạn không có bài viết nào được đánh dấu; dấu trang cho phép bạn nhanh chóng tham khảo các bài viết cụ thể."
       auto_delete_preference:
-        label: "Tự động xóa"
-        never: "Không bao giờ"
-        when_reminder_sent: "Sau khi lời nhắc được gửi đi"
-        on_owner_reply: "Sau khi tôi trả lời chủ đề này"
+        when_reminder_sent: "Xóa dấu trang"
       search_placeholder: "Tìm kiếm dấu trang theo tên, tiêu đề chủ đề hoặc nội dung bài đăng"
       search: "Tìm kiếm"
       reminders:
@@ -318,8 +314,8 @@ vi:
     switch_to_anon: "Vào chế độ Ẩn danh"
     switch_from_anon: "Thoát chế độ Ẩn danh"
     banner:
-      close: "Ẩn banner này."
-      edit: "Sửa banner này >>"
+      close: "Ẩn banner này"
+      edit: "Sửa"
     pwa:
       install_banner: "Bạn có muốn <a href>cài đặt %{title} trên thiết bị này?</a> "
     choose_topic:
@@ -1633,7 +1629,6 @@ vi:
       success: "Tài khoản của bạn đã được tạo và bây giờ bạn đã đăng nhập."
       name_label: "T"
       password_label: "Mật khẩu"
-      optional_description: "(tùy chọn)"
     password_reset:
       continue: "Tiếp tục truy cập %{site_name}"
     emoji_set:
@@ -3620,7 +3615,6 @@ vi:
         delete_confirm: 'Bạn có chắc chắn muốn xóa "%{theme_name}" không?'
         color: "Màu sắc"
         opacity: "Độ mờ"
-        copy: "Sao chép"
         copy_to_clipboard: "Sao chép vào clipboard"
         copied_to_clipboard: "Sao chép vào Clipboard"
         copy_to_clipboard_error: "Lỗi sao chép dữ liệu vào Clipboard"

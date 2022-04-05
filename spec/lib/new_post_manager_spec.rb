@@ -52,6 +52,53 @@ describe NewPostManager do
       expect(result.post).to be_a(Post)
     end
 
+    it "doesn't enqueue topic if it doesn't meet the tag restrictions of the category" do
+      tag1 = Fabricate(:tag)
+      tag2 = Fabricate(:tag)
+      tag3 = Fabricate(:tag)
+      tag_group = Fabricate(:tag_group, tags: [tag2])
+      category = Fabricate(:category, tags: [tag1], tag_groups: [tag_group])
+      category.custom_fields[Category::REQUIRE_TOPIC_APPROVAL] = true
+      category.save!
+
+      manager = NewPostManager.new(
+        user,
+        raw: 'this is a new post',
+        title: 'this is a new post',
+        category: category.id,
+        tags: [tag1.name, tag3.name]
+      )
+      result = manager.perform
+      expect(result.success?).to eq(false)
+      expect(result.reviewable.persisted?).to eq(false)
+      expect(result.errors.full_messages).to contain_exactly(
+        I18n.t(
+          "tags.forbidden.category_does_not_allow_tags",
+          count: 1,
+          category: category.name,
+          tags: tag3.name
+        )
+      )
+
+      manager = NewPostManager.new(
+        user,
+        raw: 'this is a new post',
+        title: 'this is a new post',
+        category: category.id,
+        tags: [tag2.name, tag3.name]
+      )
+      result = manager.perform
+      expect(result.success?).to eq(false)
+      expect(result.reviewable.persisted?).to eq(false)
+      expect(result.errors.full_messages).to contain_exactly(
+        I18n.t(
+          "tags.forbidden.category_does_not_allow_tags",
+          count: 1,
+          category: category.name,
+          tags: tag3.name
+        )
+      )
+    end
   end
 
   context "default handler" do

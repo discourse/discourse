@@ -109,16 +109,12 @@ async function runAllTests() {
     const message = response["args"][0].value;
 
     // Not finished yet, don't add a newline
-    if (message && message.startsWith && message.startsWith("↪")) {
+    if (message?.startsWith?.("↪")) {
       process.stdout.write(message);
-    } else if (
-      message &&
-      message.startsWith &&
-      message.startsWith("AUTOSPEC:")
-    ) {
+    } else if (message?.startsWith?.("AUTOSPEC:")) {
       fs.appendFileSync(QUNIT_RESULT, `${message.slice(10)}\n`);
     } else {
-      console.log(message);
+      console.log(...response["args"].map((m) => m.value));
     }
   });
 
@@ -132,7 +128,7 @@ async function runAllTests() {
     const urlObj = new URL(url);
     Fetch.requestPaused((data) => {
       const requestURL = new URL(data.request.url);
-      if (requestURL.hostname != urlObj.hostname) {
+      if (requestURL.hostname !== urlObj.hostname) {
         Fetch.continueRequest({
           requestId: data.requestId,
         });
@@ -211,6 +207,7 @@ runAllTests().catch((e) => {
 // The following functions are converted to strings
 // And then sent to chrome to be evaluated
 function logQUnit() {
+  const QUnit = window.QUnit;
   let testErrors = [];
   let assertionErrors = [];
 
@@ -323,6 +320,7 @@ function logQUnit() {
 
     window.qunitDone = context;
   });
+
   QUnit.start();
 }
 let qunit_script = logQUnit.toString();

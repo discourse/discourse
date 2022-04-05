@@ -9,7 +9,7 @@ class PostsController < ApplicationController
     :by_date,
     :short_link,
     :reply_history,
-    :replyIids,
+    :reply_ids,
     :revisions,
     :latest_revision,
     :expand_embed,
@@ -31,7 +31,7 @@ class PostsController < ApplicationController
   MARKDOWN_TOPIC_PAGE_SIZE ||= 100
 
   def markdown_id
-    markdown Post.find(params[:id].to_i)
+    markdown Post.find_by(id: params[:id].to_i)
   end
 
   def markdown_num
@@ -55,14 +55,6 @@ class PostsController < ApplicationController
         MD
       end
       render plain: content.join
-    end
-  end
-
-  def markdown(post)
-    if post && guardian.can_see?(post)
-      render plain: post.raw
-    else
-      raise Discourse::NotFound
     end
   end
 
@@ -92,6 +84,7 @@ class PostsController < ApplicationController
         .includes(:reply_to_user)
         .limit(50)
       rss_description = I18n.t("rss_description.posts")
+      @use_canonical = true
     end
 
     # Remove posts the user doesn't have permission to see
@@ -168,10 +161,12 @@ class PostsController < ApplicationController
   end
 
   def short_link
-    post = Post.find(params[:post_id].to_i)
+    post = Post.find_by(id: params[:post_id].to_i)
+    raise Discourse::NotFound unless post
+
     # Stuff the user in the request object, because that's what IncomingLink wants
     if params[:user_id]
-      user = User.find(params[:user_id].to_i)
+      user = User.find_by(id: params[:user_id].to_i)
       request['u'] = user.username_lower if user
     end
 
@@ -315,6 +310,8 @@ class PostsController < ApplicationController
   end
 
   def all_reply_ids
+    Discourse.deprecate("/posts/:id/reply-ids/all is deprecated.", drop_from: "3.0")
+
     post = find_post_from_params
     render json: post.reply_ids(guardian, only_replies_to_single_post: false).to_json
   end
@@ -540,9 +537,9 @@ class PostsController < ApplicationController
     params.require(:post_id)
 
     bookmark_id = Bookmark.where(post_id: params[:post_id], user_id: current_user.id).pluck_first(:id)
-    result = BookmarkManager.new(current_user).destroy(bookmark_id)
+    destroyed_bookmark = BookmarkManager.new(current_user).destroy(bookmark_id)
 
-    render json: success_json.merge(result)
+    render json: success_json.merge(BookmarkManager.bookmark_metadata(destroyed_bookmark, current_user))
   end
 
   def wiki
@@ -628,6 +625,14 @@ class PostsController < ApplicationController
   end
 
   protected
+
+  def markdown(post)
+    if post && guardian.can_see?(post)
+      render plain: post.raw
+    else
+      raise Discourse::NotFound
+    end
+  end
 
   # We can't break the API for making posts. The new, queue supporting API
   # doesn't return the post as the root JSON object, but as a nested object.
@@ -869,7 +874,7 @@ class PostsController < ApplicationController
     post = finder.with_deleted.first
     raise Discourse::NotFound unless post
 
-    post.topic = Topic.with_deleted.find(post.topic_id)
+    post.topic = Topic.with_deleted.find_by(id: post.topic_id)
 
     if !post.topic ||
        (

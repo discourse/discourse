@@ -9,18 +9,20 @@
 
   <div class="control-group bookmark-name-wrap">
     {{input id="bookmark-name" value=model.name name="bookmark-name" class="bookmark-name" enter=(action "saveAndClose") placeholder=(i18n "post.bookmarks.name_placeholder") maxlength="100"}}
-    {{d-button icon="cog" action=(action "toggleOptionsPanel") class="bookmark-options-button" ariaLabel="post.bookmarks.options"}}
+    {{d-button icon="cog" action=(action "toggleShowOptions") class="bookmark-options-button" ariaLabel="post.bookmarks.options"}}
   </div>
 
-  <div class="bookmark-options-panel">
-    <label class="control-label" for="bookmark_auto_delete_preference">{{i18n "bookmarks.auto_delete_preference.label"}}</label>
-    {{combo-box
-    content=autoDeletePreferences
-    value=autoDeletePreference
-    class="bookmark-option-selector"
-    onChange=(action (mut autoDeletePreference))
-    }}
-  </div>
+  {{#if showOptions}}
+    <div class="bookmark-options-panel">
+      <label class="control-label" for="bookmark_auto_delete_preference">{{i18n "bookmarks.auto_delete_preference.label"}}</label>
+      {{combo-box
+      content=autoDeletePreferences
+      value=autoDeletePreference
+      class="bookmark-option-selector"
+      onChange=(action (mut autoDeletePreference))
+      }}
+    </div>
+  {{/if}}
 
   {{#if showExistingReminderAt }}
     <div class="alert alert-info existing-reminder-at-alert">
@@ -36,9 +38,9 @@
 
     {{#if userHasTimezoneSet}}
       {{time-shortcut-picker
+        timeShortcuts=timeOptions
         prefilledDatetime=prefilledDatetime
         onTimeSelected=(action "onTimeSelected")
-        customOptions=customTimeShortcutOptions
         hiddenOptions=hiddenTimeShortcutOptions
         customLabels=customTimeShortcutLabels
         _itsatrap=_itsatrap

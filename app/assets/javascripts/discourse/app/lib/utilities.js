@@ -349,6 +349,15 @@ const toArray = (items) => {
   return items;
 };
 
+const gifInDisguise = (clipboard) => {
+  return (
+    clipboard.files.length === 1 &&
+    clipboard.files[0].type === "image/png" &&
+    clipboard.types.every((e) => ["text/html", "Files"].includes(e)) &&
+    /<img.*src=.*\.gif/.test(clipboard.getData("text/html"))
+  );
+};
+
 export function clipboardHelpers(e, opts) {
   const clipboard =
     e.clipboardData ||
@@ -365,7 +374,9 @@ export function clipboardHelpers(e, opts) {
 
   let canUpload = files && opts.canUpload && types.includes("Files");
   const canUploadImage =
-    canUpload && files.filter((f) => f.type.match("^image/"))[0];
+    canUpload &&
+    files.filter((f) => f.type.match("^image/"))[0] &&
+    !gifInDisguise(clipboard);
   const canPasteHtml =
     opts.siteSettings.enable_rich_text_paste &&
     types.includes("text/html") &&
@@ -471,7 +482,7 @@ export function inCodeBlock(text, pos) {
   // Character at position `pos` can be in a code block that is unfinished.
   // To check this case, we look for any open code blocks after the last closed
   // code block.
-  const lastOpenBlock = text.substr(end).search(OPEN_CODE_BLOCKS_REGEX);
+  const lastOpenBlock = text.slice(end).search(OPEN_CODE_BLOCKS_REGEX);
   return lastOpenBlock !== -1 && pos >= end + lastOpenBlock;
 }
 
@@ -495,7 +506,9 @@ export function translateModKey(string) {
   return string;
 }
 
-// http://github.com/feross/clipboard-copy
+// Use this version of clipboardCopy if you already have the text to
+// be copied in memory, and you do not need to make an AJAX call to
+// the API to generate any text. See clipboardCopyAsync for the latter.
 export function clipboardCopy(text) {
   // Use the Async Clipboard API when available.
   // Requires a secure browsing context (i.e. HTTPS)
@@ -508,7 +521,39 @@ export function clipboardCopy(text) {
   }
 
   // ...Otherwise, use document.execCommand() fallback
+  return clipboardCopyFallback(text);
+}
 
+// Use this verison of clipboardCopy if you must use an AJAX call
+// to retrieve/generate server-side text to copy to the clipboard,
+// otherwise this write function will error in certain browsers, because
+// the time taken from the user event to the clipboard text being copied
+// will be too long.
+//
+// Note that the promise passed in should return a Blob with type of
+// text/plain.
+export function clipboardCopyAsync(promise) {
+  // Use the Async Clipboard API when available.
+  // Requires a secure browsing context (i.e. HTTPS)
+  if (navigator.clipboard) {
+    return navigator.clipboard
+      .write([new window.ClipboardItem({ "text/plain": promise() })])
+      .catch(function (err) {
+        throw err !== undefined
+          ? err
+          : new DOMException("The request is not allowed", "NotAllowedError");
+      });
+  }
+
+  // ...Otherwise, use document.execCommand() fallback
+  return promise().then((textBlob) => {
+    textBlob.text().then((text) => {
+      return clipboardCopyFallback(text);
+    });
+  });
+}
+
+function clipboardCopyFallback(text) {
   // Put the text to copy into a <span>
   const span = document.createElement("span");
   span.textContent = text;

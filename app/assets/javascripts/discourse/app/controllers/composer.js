@@ -412,7 +412,7 @@ export default Controller.extend({
   // true or topic is provided
   @action
   focusComposer(opts = {}) {
-    this._openComposerForFocus(opts).then(() => {
+    return this._openComposerForFocus(opts).then(() => {
       this._focusAndInsertText(opts.insertText);
     });
   },
@@ -1331,6 +1331,7 @@ export default Controller.extend({
                 this.close();
               })
               .finally(() => {
+                this.appEvents.trigger("composer:cancelled");
                 resolve();
               });
           },
@@ -1338,6 +1339,7 @@ export default Controller.extend({
             this._saveDraft();
             this.model.clearState();
             this.close();
+            this.appEvents.trigger("composer:cancelled");
             resolve();
           },
           // needed to resume saving drafts if composer stays open
@@ -1351,6 +1353,7 @@ export default Controller.extend({
             this.close();
           })
           .finally(() => {
+            this.appEvents.trigger("composer:cancelled");
             resolve();
           });
       }

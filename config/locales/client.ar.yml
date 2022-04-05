@@ -208,7 +208,6 @@ ar:
       to_placeholder: "إلى التاريخ"
     share:
       topic_html: 'الموضوع: <span class="topic-title">%{topicTitle}</span>'
-      post: "المنشور #%{postNumber}"
       close: "إغلاق"
       twitter: "المشاركة على Twitter"
       facebook: "المشاركة على Facebook"
@@ -398,10 +397,7 @@ ar:
       list_permission_denied: "ليس لديك إذن بعرض الإشارات المرجعية لهذا المستخدم."
       no_user_bookmarks: "ليس لديك منشورات موضوع عليها إشارة مرجعية. تتيح لك الإشارات المرجعية الرجوع إلى المنشورات التي تريدها بسرعة."
       auto_delete_preference:
-        label: "الحذف التلقائي"
-        never: "أبدًا"
-        when_reminder_sent: "بعد إرسال التذكير"
-        on_owner_reply: "بعد أن أردَّ على هذا الموضوع"
+        when_reminder_sent: "حذف الإشارة المرجعية"
       search_placeholder: "البحث عن الإشارات المرجعية بالاسم أو عنوان الموضوع أو محتوى المنشور"
       search: "البحث"
       reminders:
@@ -481,8 +477,7 @@ ar:
     switch_to_anon: "دخول وضع التخفي"
     switch_from_anon: "الخروج من وضع التخفي"
     banner:
-      close: "إزالة هذا البانر"
-      edit: "تعديل هذا البانر >>"
+      edit: "تعديل"
     pwa:
       install_banner: "هل تريد <a href>تثبيت %{title} على هذا الجهاز؟</a>"
     choose_topic:
@@ -2070,7 +2065,6 @@ ar:
       success: "تم إنشاء حسابك وتسجيل دخولك."
       name_label: "الاسم"
       password_label: "كلمة المرور"
-      optional_description: "(اختياري)"
     password_reset:
       continue: "المتابعة إلى %{site_name}"
     emoji_set:
@@ -3009,16 +3003,6 @@ ar:
           few: "مرئي فقط لأعضاء المجموعة: %{groupNames}"
           many: "مرئي فقط لأعضاء المجموعة: %{groupNames}"
           other: "مرئي فقط لأعضاء المجموعات: %{groupNames}"
-        notify_users:
-          title: "إرسال إشعار"
-          instructions: "إرسال إشعار بشأن هذا الموضوع إلى المستخدمين التاليين:"
-          success:
-            zero: "تم إرسال إشعار بشأن هذا الموضوع إلى جميع المستخدمين بنجاح."
-            one: "تم إرسال إشعار بشأن هذا الموضوع إلى %{username} بنجاح."
-            two: "تم إرسال إشعار بشأن هذا الموضوع إلى جميع المستخدمين بنجاح."
-            few: "تم إرسال إشعار بشأن هذا الموضوع إلى جميع المستخدمين بنجاح."
-            many: "تم إرسال إشعار بشأن هذا الموضوع إلى جميع المستخدمين بنجاح."
-            other: "تم إرسال إشعار بشأن هذا الموضوع إلى جميع المستخدمين بنجاح."
         invite_users: "دعوة"
       print:
         title: "الطباعة"
@@ -4265,7 +4249,6 @@ ar:
       unsupported_file_picked: "لقد اخترت ملفًا غير مدعوم. أنواع الملفات المدعومة - %{types}."
     user_activity:
       no_activity_title: "لا يوجد نشاط."
-      no_activity_body: "مرحبًا بكم في مجتمعنا. أنت جديد تمامًا هنا ولم تساهم بعد في المناقشات. كخطوة أولى، قم بزيارة <a href='%{topUrl}'>أعلى</a> أو <a href='%{categoriesUrl}'>فئات</a> وابدأ القراءة فقط! حدّد %{heartIcon} على المشاركات التي تعجبك أو تريد معرفة المزيد عنها. إذا لم تكن قد فعلت ذلك فعلًا، ساعد الآخرين على التعرّف عليك عن طريق إضافة صورة وسيرة ذاتية في <a href='%{preferencesUrl}'>تفضيلات المستخدم</a>."
       no_activity_others: "لا يوجد نشاط."
       no_replies_title: "لم ترد على أي مواضيع حتى الآن"
       no_replies_others: "لا توجد ردود."
@@ -4746,7 +4729,6 @@ ar:
         delete_confirm: 'هل تريد بالتأكيد حذف السمة "%{theme_name}"؟'
         color: "اللون"
         opacity: "الشفافية"
-        copy: "نسخ"
         copy_to_clipboard: "نسخ الى الحافظة"
         copied_to_clipboard: "تم النسخ إلى الحافظة"
         copy_to_clipboard_error: "حدث خطأ في نسخ البيانات إلى الحافظة"

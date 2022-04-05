@@ -32,6 +32,13 @@
     max-width: 250px;
     @include ellipsis;
   }
+
+  .email-details {
+    text-align: right;
+    a {
+      color: var(--primary-high);
+    }
+  }
 }
 
 .incoming-emails {

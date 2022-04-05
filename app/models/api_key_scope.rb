@@ -106,22 +106,26 @@ class ApiKeyScope < ActiveRecord::Base
       urls = []
 
       if actions.present?
-        routes = Rails.application.routes.routes.to_a
+        route_sets = [Rails.application.routes]
         Rails::Engine.descendants.each do |engine|
           next if engine == Rails::Application # abstract engine, can't call routes on it
           next if engine == Discourse::Application # equiv. to Rails.application
-          routes.concat(engine.routes.routes.to_a)
+          route_sets << engine.routes
         end
 
-        routes.each do |route|
-          defaults = route.defaults
-          action = "#{defaults[:controller].to_s}##{defaults[:action]}"
-          path = route.path.spec.to_s.gsub(/\(\.:format\)/, '')
-          api_supported_path = path.end_with?('.rss') || route.path.requirements[:format]&.match?('json')
-          excluded_paths = %w[/new-topic /new-message /exception]
+        route_sets.each do |set|
+          engine_mount_path = set.find_script_name({}).presence
+          engine_mount_path = nil if engine_mount_path == "/"
+          set.routes.each do |route|
+            defaults = route.defaults
+            action = "#{defaults[:controller].to_s}##{defaults[:action]}"
+            path = route.path.spec.to_s.gsub(/\(\.:format\)/, '')
+            api_supported_path = path.end_with?('.rss') || route.path.requirements[:format]&.match?('json')
+            excluded_paths = %w[/new-topic /new-message /exception]
 
-          if actions.include?(action) && api_supported_path && !excluded_paths.include?(path)
-            urls << "#{path} (#{route.verb})"
+            if actions.include?(action) && api_supported_path && !excluded_paths.include?(path)
+              urls << "#{engine_mount_path}#{path} (#{route.verb})"
+            end
           end
         end
       end

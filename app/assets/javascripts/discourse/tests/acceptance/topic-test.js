@@ -21,10 +21,14 @@ import { test } from "qunit";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import topicFixtures from "discourse/tests/fixtures/topic";
 import { cloneJSON } from "discourse-common/lib/object";
+import CategoryFixtures from "discourse/tests/fixtures/category-fixtures";
 
 acceptance("Topic", function (needs) {
   needs.user();
   needs.pretender((server, helper) => {
+    server.get("/c/feature/find_by_slug.json", () => {
+      return helper.response(200, CategoryFixtures["/c/1/show.json"]);
+    });
     server.put("/posts/398/wiki", () => {
       return helper.response({});
     });
@@ -74,7 +78,7 @@ acceptance("Topic", function (needs) {
     await visit("/t/internationalization-localization/280");
     await click(".topic-post:first-child button.share");
 
-    assert.ok(exists("#share-link"), "it shows the share modal");
+    assert.ok(exists(".share-topic-modal"), "it shows the share modal");
   });
 
   test("Showing and hiding the edit controls", async function (assert) {

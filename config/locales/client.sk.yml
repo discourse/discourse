@@ -152,7 +152,6 @@ sk:
       next_month: "Nasledujúci mesiac"
       placeholder: Dátum
     share:
-      post: "príspevok #%{postNumber}"
       close: "zatvoriť"
     action_codes:
       public_topic: "téma je verejná%{when}"
@@ -291,8 +290,6 @@ sk:
       remove: "Odstrániť záložku"
       confirm_clear: "Ste si istý, že chcete odstrániť všetky záložky z tejto témy?"
       save: "Uložiť"
-      auto_delete_preference:
-        never: "Nikdy"
       search: "Hľadať"
     drafts:
       label: "Koncepty"
@@ -346,8 +343,8 @@ sk:
     switch_to_anon: "Vstúpiť do anonymného režimu"
     switch_from_anon: "Opustiť anonymný režim"
     banner:
-      close: "Zamietnuť tento banner."
-      edit: "Upraviť tento banner >>"
+      close: "Zamietnuť tento banner"
+      edit: "Upraviť"
     choose_topic:
       none_found: "Nenašli sa žiadne témy."
     choose_message:
@@ -1242,7 +1239,6 @@ sk:
       success: "Váš účet bol vytvorený a ste prihlásený."
       name_label: "Meno"
       password_label: "Heslo"
-      optional_description: "(nepovinné)"
     password_reset:
       continue: "Pokračujte na %{site_name}"
     emoji_set:
@@ -2507,7 +2503,6 @@ sk:
         delete: "Odstrániť"
         color: "Farba"
         opacity: "Nepriesvitnosť"
-        copy: "Kopírovať"
         copied_to_clipboard: "Skopírované do schránky"
         copy_to_clipboard_error: "Chyba pri kopírovaní dát do schránky"
         email_templates:

@@ -922,6 +922,8 @@ class TopicsController < ApplicationController
     end
 
     discourse_expires_in 1.minute
+
+    response.headers['X-Robots-Tag'] = 'noindex, nofollow'
     render 'topics/show', formats: [:rss]
   end
 
@@ -1116,12 +1118,17 @@ class TopicsController < ApplicationController
       raise(SiteSetting.detailed_404 ? ex : Discourse::NotFound)
     end
 
+    opts = params.slice(:page, :print, :filter_top_level_replies)
+    opts.delete(:page) if params[:page] == 0
+
     url = topic.relative_url
     url << "/#{post_number}" if post_number.to_i > 0
     url << ".json" if request.format.json?
 
-    page = params[:page]
-    url << "?page=#{page}" if page != 0
+    opts.each do |k, v|
+      s = url.include?('?') ? '&' : '?'
+      url << "#{s}#{k}=#{v}"
+    end
 
     redirect_to url, status: 301
   end

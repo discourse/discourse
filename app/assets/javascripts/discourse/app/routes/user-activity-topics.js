@@ -23,8 +23,15 @@ export default UserTopicListRoute.extend({
   },
 
   emptyState() {
+    const user = this.modelFor("user");
+    const title = this.isCurrentUser(user)
+      ? I18n.t("user_activity.no_topics_title")
+      : I18n.t("user_activity.no_topics_title_others", {
+          username: user.username,
+        });
+
     return {
-      title: I18n.t("user_activity.no_topics_title"),
+      title,
       body: "",
     };
   },

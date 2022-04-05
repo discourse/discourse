@@ -397,7 +397,6 @@ sv:
       too_many: "Tyvärr kan du inte lägga till fler än %{limit} bokmärken, gå till <a href='%{user_bookmarks_url}'>%{user_bookmarks_url}</a> för att ta bort några."
       cannot_set_past_reminder: "Du kan inte sätta en påminnelse för bokmärke i det förflutna."
       cannot_set_reminder_in_distant_future: "Du kan inte sätta en påminnelse för bokmärke mer än 10 år framåt i tiden."
-      time_must_be_provided: "tid måste anges för alla påminnelser"
       for_topic_must_use_first_post: "Du kan bara använda det första inlägget för att bokmärka ämnet."
     reminders:
       at_desktop: "Nästa gång jag är vid datorn"
@@ -1319,7 +1318,7 @@ sv:
       labels:
         user: Användare
         qtt_like: Mottagna gillningar
-      description: "Topp 10 användare som har fått fler gillningar."
+      description: "Topp 10-användare som har fått gillningar."
     top_users_by_likes_received_from_inferior_trust_level:
       title: "Toppanvändare efter gillningar givna av en användare med lägre förtroendenivå"
       labels:
@@ -1332,7 +1331,7 @@ sv:
       labels:
         user: Användare
         qtt_like: Mottagna gillningar
-      description: "Topp 10 användare som har haft gillningar från ett brett spektrum av personer."
+      description: "Topp 10-användare som har fått gillningar från ett brett spektrum av personer."
   dashboard:
     group_email_credentials_warning: 'Det uppstod ett problem med autentiseringsuppgifterna för gruppen <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. Inga e-postmeddelanden skickas från gruppinkorgen förrän problemet är åtgärdat. %{error}'
     rails_env_warning: "Din server kör i %{env}-läge."
@@ -1463,10 +1462,8 @@ sv:
     summary_timeline_button: "Visa en \"Sammanfatta\"-knapp på tidslinjen"
     enable_personal_messages: "Tillåt användare med förtroendenivå 1 (konfigurera genom minsta förtroendenivå för att skicka meddelanden) att skapa meddelanden och svara på meddelanden. Notera att personalen alltid kan skicka meddelanden oavsett."
     enable_system_message_replies: "Tillåter användare att svara på systemmeddelanden, även om personliga meddelanden har inaktiverats"
-    enable_long_polling: "Meddelande-buss som används för avisering kan använda long polling"
     enable_chunked_encoding: "Aktivera packade kodningssvar (chunked) från servern. Den här funktionen fungerar på de flesta inställningar, men vissa proxyservrar kan buffra, vilket gör att svaren fördröjs"
     long_polling_base_url: "URL som används för long polling (när en CDN levererar dynamiskt innehåll, kontrollera att det här är inställt till origin pull) se: http://origin.site.com"
-    long_polling_interval: "Tid som servern bör vänta innan den svarar på klienter när det inte finns någon data att skicka (endast loggad på användare)"
     polling_interval: "När long polling inte har aktiverats, hur ofta bör inloggade klienter polla i millisekunder"
     anon_polling_interval: "Hur ofta bör anonyma klienter polla i millisekunder"
     background_polling_interval: "Hur ofta bör klienter polla i millisekunder (när fönstret är i bakgrunden)"
@@ -1682,6 +1679,7 @@ sv:
     use_site_small_logo_as_system_avatar: "Använd webbplatsens lilla logotyp istället för systemanvändarens avatar. Kräver att logotypen är närvarande."
     restrict_letter_avatar_colors: "En lista med sexsiffriga hexadecimala färgvärden som ska användas för bakgrund av avatarer i brev."
     enable_listing_suspended_users_on_search: "Tillåt att vanliga användare hittar avstängda användare."
+    selectable_avatars_mode: "Tillåt att användare väljer en avatar från selectable_avatars-listan och begränsar uppladdningar av anpassade avatarer till vald förtroendenivå."
     selectable_avatars: "Lista på avatarer som användare kan välja från"
     allow_all_attachments_for_group_messages: "Tillåt alla e-postbilagor för gruppmeddelanden."
     png_to_jpg_quality: "Den konverterade JPG-filens kvalitet (1 för den lägsta kvaliten, 99 för den bästa kvaliten, 100 för att inaktivera)."
@@ -2299,6 +2297,9 @@ sv:
     challenge_not_found: "Det gick inte att hitta en 2FA-utmaning i din nuvarande session."
     challenge_expired: "Det har gått för lång tid sedan 2FA-utmaningen arrangerades och den är inte längre giltig. Var god försök igen."
     challenge_not_completed: "Du har inte slutfört 2FA-utmaningen för att utföra den här åtgärden. Vänligen slutför 2FA-utmaningen och försök igen."
+    actions:
+      grant_admin:
+        description: "För ytterligare säkerhetsåtgärder måste du bekräfta din 2FA innan %{username} beviljas administratörsåtkomst."
   admin:
     email:
       sent_test: "skickat!"
@@ -3452,6 +3453,7 @@ sv:
     external_upload_not_found: "Uppladdningen hittades inte i den externa butiken. %{additional_detail}"
     checksum_mismatch_failure: "Kontrollsumman för den uppladdade filen stämmer inte. Filens innehåll kan ha ändrats under uppladdning. Försök igen."
     cannot_promote_failure: "Uppladdningen kan inte slutföras. Kanske har den redan slutförts eller misslyckats tidigare."
+    size_zero_failure: "Tyvärr verkar det som om något har gått fel. Filen du försöker ladda upp är 0 bytes. Försök igen."
     attachments:
       too_large: "Tyvärr är filen som du försöker ladda upp för stor (maxstorlek är %{max_size_kb} kB)."
       too_large_humanized: "Tyvärr är filen som du försöker ladda upp för stor (maximal storlek är %{max_size})."
@@ -4295,6 +4297,7 @@ sv:
   notification_level:
     ignore_error: "Tyvärr kan du inte ignorera den användaren."
     mute_error: "Tyvärr kan du inte tysta den användaren."
+    error: "Tyvärr kan du inte ändra aviseringsnivån för den användaren."
   discord:
     not_in_allowed_guild: "Autentisering misslyckades. Du är inte medlem i ett tillåtet Discord-sällskap."
   old_keys_reminder:

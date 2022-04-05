@@ -63,6 +63,7 @@ he:
       unrecognized_extension: "סיומת הקובץ אינה מוכרת: %{extension}"
     import_error:
       generic: אירעה שגיאה בעת ייבוא ערכת העיצוב הזו
+      upload: "שגיאה ביצירת משאב להעלאה: %{name}. %{errors}"
       about_json: "שגיאת ייבוא: about.json לא קיים או שהוא שגוי. האם אכן מדובר בערכת עיצוב של Discourse?"
       about_json_values: "about.json מכיל ערכים שגויים: %{errors}"
       modifier_values: "המחליפים ב־about.json מכילים ערכים שגויים: %{errors}"
@@ -436,11 +437,13 @@ he:
   bookmarks:
     errors:
       already_bookmarked_post: "אי אפשר לסמן את אותו הפוסט פעמיים"
+      already_bookmarked: "אי אפשר לסמן את אותו %{type} פעמיים."
       too_many: "לא ניתן להוסיף למעלה מ־%{limit} סימניות, נא לבקר ב<a href='%{user_bookmarks_url}'>%{user_bookmarks_url}</a> כדי להסיר כמה מהנוכחיות."
       cannot_set_past_reminder: "אי אפשר להגדיר תזכורת סימנייה למועד שעבר."
       cannot_set_reminder_in_distant_future: "לא ניתן להגדיר תזכורת סימנייה למעבר ל־10 שנים בעתיד."
-      time_must_be_provided: "יש לספק זמן לכל התזכורות"
+      time_must_be_provided: "יש לציין זמן לכל התזכורות"
       for_topic_must_use_first_post: "מותר להשתמש רק בפוסט הראשון כדי להוסיף את הנושא לסימניות."
+      bookmarkable_id_type_required: "דרושים שם וסוג הרשומה לסימון."
     reminders:
       at_desktop: "בשימוש הבא דרך שולחן העבודה"
       later_today: "בהמשך היום"
@@ -1421,7 +1424,7 @@ he:
       labels:
         user: משתמש
         qtt_like: לייקים שהתקבלו
-      description: "10 המשתמשים המובילים שקיבלו יותר לייקים."
+      description: "10 המשתמשים המובילים שקיבלו לייקים."
     top_users_by_likes_received_from_inferior_trust_level:
       title: "משתמשים מובילים לפי לייקים שהתקבלו ממשתמש בדרגת אמון נמוכה יותר"
       labels:
@@ -1566,10 +1569,8 @@ he:
     summary_timeline_button: "הצגת כפתור ‚סיכום’ בציר הזמן"
     enable_personal_messages: "לאפשר למשתמשים בדרגת אמון 1 (ניתן להגדרה דרך אמון מזערי לשליחת הודעות) ליצור הודעות ולענות להודעות. נא לשים לב שהסגל תמיד יכול לשלוח הודעות, ללא קשר."
     enable_system_message_replies: "מאפשר למשתמשים להגיב להודעות מערכת אפילו כשהודעות אישיות מושבתות"
-    enable_long_polling: "באס הודעות שמשמש להתראות יכול להשתמש בתשאול ארוך (long polling)"
     enable_chunked_encoding: "הפעלת תגובות קידוד מחולקות מצד השרת. תכונה זו עובדת ברוב התצורות אך חלק מהמתווכים עשויים לכלוא כצעד ביניים, מה שעלול לגרום להאטה"
     long_polling_base_url: "כתובת הבסיס שמשמשת לתשאול ארוך (כאשר CDN מגיש תוכן דינמי, יש להגדיר זאת למשיכה המקורית) למשל: http://origin.site.com"
-    long_polling_interval: "כמות הזמן שהשרת צריך לחכות לפני שעונה ללקוחות, כאשר אין מידע לשליחה (משתמשים רשומים מחוברים למערכת בלבד)"
     polling_interval: "כאשר לא מבצעים תשאול ארוך (long polling), כל כמה זמן לקוחות מחוברים למערכת יבצעו poll, במילי-שניות"
     anon_polling_interval: "באיזו תכיפות לקוחות אלמוניים יתשאלו, במילישניות"
     background_polling_interval: "באיזו תכיפות צריכים לקוחות לבצע תשאול (poll) במילישניות (כאשר החלון נמצא ברקע)"
@@ -2441,6 +2442,9 @@ he:
     challenge_not_found: "לא ניתן למצוא אתגר אימות דו־שלבי בהפעלה הנוכחית שלך."
     challenge_expired: "עבר יותר מדי זמן מאז שאתגר האימות הדו־שלבי הוצג ואינו תקף עוד. נא לנסות שוב."
     challenge_not_completed: "לא השלמת את אתגר האימות הדו־שלבי כדי לבצע את הפעולה הזאת. נא להשלים את אתר האימות הדו־שלבי ואז לנסות שוב."
+    actions:
+      grant_admin:
+        description: "ליתר ביטחון, עליך לאשר את האימות הדו־שלבי שלך לפני שתוענק למשתמש %{username} גישת ניהול."
   admin:
     email:
       sent_test: "נשלח!"
@@ -3776,6 +3780,7 @@ he:
     external_upload_not_found: "ההעלאה לא נמצאה באחסון החיצוני. %{additional_detail}"
     checksum_mismatch_failure: "בדיקת התקינות של הקובץ שהעלית שגויה. יכול להיות שתוכן הקובץ השתנה במהלך ההעלאה. נא לנסות שוב."
     cannot_promote_failure: "לא ניתן להשלים את ההעלאה, יתכן שהיא כבר הושלמה או נכשלה בעבר."
+    size_zero_failure: "נראה שמשהו השתבש, הקובץ שניסית להעלות הוא בגודל 0 בתים. נא לנסות שוב, עמך הסליחה."
     attachments:
       too_large: "מצטערים, הקובץ שאתם מנסים להעלות גדול מידי (הגודל המקסימלי המותר הוא %{max_size_kb}KB)."
       too_large_humanized: "הקובץ המועמד לשליחה גדול מדי (הגודל המרבי המותר הוא %{max_size}), עמך הסליחה."
@@ -4505,6 +4510,16 @@ he:
         other: '„%{tag_name}” מוגבלת לקטגוריות הבאות: %{category_names}'
       synonym: 'אסור להשתמש במילים נרדפות. יש להשתמש ב־„%{tag_name}” במקום.'
       has_synonyms: 'לא ניתן להשתמש ב־„%{tag_name}” כיוון שיש לו מילים נרדפות.'
+      restricted_tags_cannot_be_used_in_category:
+        one: 'לא ניתן להשתמש בתגית „%{tags}” בקטגוריה „%{category}”. נא להסיר אותה.'
+        two: 'לא ניתן להשתמש בתגיות הבאות בקטגוריה „%{category}”: %{tags}. נא להסיר אותן.'
+        many: 'לא ניתן להשתמש בתגיות הבאות בקטגוריה „%{category}”: %{tags}. נא להסיר אותן.'
+        other: 'לא ניתן להשתמש בתגיות הבאות בקטגוריה „%{category}”: %{tags}. נא להסיר אותן.'
+      category_does_not_allow_tags:
+        one: 'בקטגוריה „%{category}” אסור להשתמש בתגית „%{tags}”. נא להסיר אותה.'
+        two: 'בקטגוריה „%{category}” אסור להשתמש בתגיות הבאות: „%{tags}”. נא להסיר אותן.'
+        many: 'בקטגוריה „%{category}” אסור להשתמש בתגיות הבאות: „%{tags}”. נא להסיר אותן.'
+        other: 'בקטגוריה „%{category}” אסור להשתמש בתגיות הבאות: „%{tags}”. נא להסיר אותן.'
     required_tags_from_group:
       one: "עליך לכלול לפחות תגית %{tag_group_name} %{count}. התגיות בקבוצה הזאת הן: %{tags}."
       two: "עליך לכלול לפחות %{count} תגיות %{tag_group_name}. התגיות בקבוצה הזאת הן: %{tags}."
@@ -4816,6 +4831,8 @@ he:
   notification_level:
     ignore_error: "אין אפשרות להתעלם מהמשתמש הזה, עמך הסליחה."
     mute_error: "אין אפשרות להשתיק את המשתמש הזה, עמך הסליחה."
+    error: "אין לך אפשרות להחליף את רמת ההתראות למשתמש הזה, עמך הסליחה."
+    invalid_value: '„%{value}” אינה רמת התראות חוקית.'
   discord:
     not_in_allowed_guild: "האימות נכשל. הגילדה ב־Discord אליה הצטרפת אינה מורשית לגשת."
   old_keys_reminder:

@@ -48,6 +48,27 @@ acceptance("Keyboard Shortcuts - Anonymous Users", function (needs) {
     await triggerKeyEvent(document, "keypress", "s".charCodeAt(0));
     assert.strictEqual(currentURL(), "/t/keyboard-shortcuts-are-awesome/27331");
   });
+
+  test("j/k navigation moves selection up/down", async function (assert) {
+    await visit("/t/this-is-a-test-topic/9");
+    await triggerKeyEvent(document, "keypress", "j".charCodeAt(0));
+    assert.ok(
+      exists(".post-stream .topic-post.selected #post_1"),
+      "first post is selected"
+    );
+
+    await triggerKeyEvent(document, "keypress", "j".charCodeAt(0));
+    assert.ok(
+      exists(".post-stream .topic-post.selected #post_2"),
+      "pressing j moves selection to next post"
+    );
+
+    await triggerKeyEvent(document, "keypress", "k".charCodeAt(0));
+    assert.ok(
+      exists(".post-stream .topic-post.selected #post_1"),
+      "pressing k moves selection to previous post"
+    );
+  });
 });
 
 acceptance("Keyboard Shortcuts - Authenticated Users", function (needs) {

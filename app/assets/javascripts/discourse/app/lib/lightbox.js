@@ -34,6 +34,8 @@ export default function (elem, siteSettings) {
       mainClass: "mfp-zoom-in",
       tClose: I18n.t("lightbox.close"),
       tLoading: spinnerHTML,
+      // eslint-disable-next-line no-undef
+      prependTo: Ember.testing && document.getElementById("ember-testing"),
 
       gallery: {
         enabled: true,
@@ -106,6 +108,14 @@ export default function (elem, siteSettings) {
                 "</a>"
             );
           }
+          src.push(
+            '<a class="image-source-link" href="' +
+              item.src +
+              '">' +
+              renderIcon("string", "image") +
+              I18n.t("lightbox.open") +
+              "</a>"
+          );
           return src.join(" &middot; ");
         },
       },

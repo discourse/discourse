@@ -51,6 +51,7 @@ describe Notification do
         expect(@types[:event_invitation]).to eq(28)
         expect(@types[:chat_mention]).to eq(29)
         expect(@types[:chat_message]).to eq(30)
+        expect(@types[:assigned]).to eq(34)
       end
     end
   end
@@ -339,10 +340,9 @@ describe Notification do
       expect(Notification.count).to eq(2)
     end
 
-    it 'does not delete chat_message notifications' do
+    it 'does not delete notifications that do not have a topic_id' do
       Notification.create!(read: false, user_id: user.id, topic_id: nil, post_number: nil, data: '[]',
-                           notification_type: Notification.types[:chat_mention])
-
+                           notification_type: Notification.types[:chat_mention], high_priority: true)
       expect {
         Notification.ensure_consistency!
       }.to_not change { Notification.count }

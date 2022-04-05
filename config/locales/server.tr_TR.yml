@@ -63,6 +63,7 @@ tr_TR:
       unrecognized_extension: "Tanınmayan dosya uzantısı: %{extension}"
     import_error:
       generic: Bu tema içe aktarılırken bir hata oluştu
+      upload: "Yükleme öğesi oluşturulurken hata oluştu: %{name}. %{errors}"
       about_json: "İçe Aktarma Hatası: about.json mevcut değil veya geçersiz. Bunun bir Discourse Teması olduğundan emin misiniz?"
       about_json_values: "about.json geçersiz değerler içeriyor: %{errors}"
       modifier_values: "about.json değiştiricileri geçersiz değerler içeriyor: %{errors}"
@@ -391,11 +392,13 @@ tr_TR:
   bookmarks:
     errors:
       already_bookmarked_post: "Aynı gönderiyi iki kez işaretleyemezsiniz."
+      already_bookmarked: "Aynı %{type} iki kez işaretlenemez."
       too_many: "Ne yazık ki %{limit} adetten fazla yer imi ekleyemezsiniz; var olanlardan bazılarını kaldırmak için <a href='%{user_bookmarks_url}'>%{user_bookmarks_url}</a> adresini ziyaret edin."
       cannot_set_past_reminder: "Geçmişte bir yer imi anımsatıcısı ayarlayamazsınız."
       cannot_set_reminder_in_distant_future: "10 yıldan uzun bir gelecek için bir yer imi hatırlatıcısı ayarlayamazsınız."
-      time_must_be_provided: "tüm hatırlatıcılar için zaman belirtilmelidir"
+      time_must_be_provided: "Tüm hatırlatıcılar için zaman belirtilmelidir"
       for_topic_must_use_first_post: "Konuyu işaretlemek için yalnızca ilk gönderiyi kullanabilirsiniz."
+      bookmarkable_id_type_required: "İşaretlenecek kaydın adı ve türü zorunludur."
     reminders:
       at_desktop: "Bir dahaki sefere masaüstümdeyim"
       later_today: "Bugün ilerleyen saatlerde"
@@ -1329,7 +1332,6 @@ tr_TR:
       labels:
         user: Kullanıcı
         qtt_like: Alınan Beğeniler
-      description: "En fazla beğeni alan ilk 10 kullanıcı."
     top_users_by_likes_received_from_inferior_trust_level:
       title: "Daha düşük güven düzeyine sahip bir kullanıcıdan alınan beğenilere göre En İyi Kullanıcılar"
       labels:
@@ -1342,7 +1344,6 @@ tr_TR:
       labels:
         user: Kullanıcı
         qtt_like: Alınan Beğeniler
-      description: "Çok çeşitli kullanıcılardan beğeni alan ilk 10 kullanıcı."
   dashboard:
     group_email_credentials_warning: '<a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>grubu için e-posta kimlik bilgileriyle ilgili bir sorun oluştu. Bu sorun çözülene kadar grup gelen kutusundan hiçbir e-posta gönderilmeyecektir. %{error}'
     rails_env_warning: "Sunucunuz %{env} modunda çalışıyor."
@@ -1472,10 +1473,8 @@ tr_TR:
     summary_timeline_button: "Zaman çizelgesinde 'Özetle' düğmesi göster"
     enable_personal_messages: "Güven düzeyi 1 (ileti göndermek için minimum güven düzeyi ile yapılandırılabilir) kullanıcıların ileti oluşturmasına ve iletileri yanıtlamasına izin verin. Personelin ne olursa olsun her zaman ileti gönderebileceğini unutmayın."
     enable_system_message_replies: "Kişisel iletiler devre dışı bırakılsa bile kullanıcıların sistem iletilerini yanıtlamasına izin verir"
-    enable_long_polling: "Bildiri için kullanılan ileti yolu uzun sorgular yapabilir"
     enable_chunked_encoding: "Sunucu tarafından yığınlanmış kodlama yanıtlarını etkinleştirin. Bu özellik çoğu kurulumda çalışır, ancak bazı proxy'ler arabelleğe alabilir ve yanıtların gecikmesine neden olabilir"
     long_polling_base_url: "Uzun sorgular için kullanılan baz URL (CDN dinamik içerik sunuyorsa bunu origin olarak ayarladığınıza emin olun) örn: http://origin.site.com."
-    long_polling_interval: "Gönderilecek bilgi olmadığı zaman sunucunun kullanıcılara geri dönmeden önce beklemesi gereken zaman (sadece giriş yapmış kullanıcın için)"
     polling_interval: "Uzun sorgular yapılmadığı zaman, kaç mili saniyede bir giriş yapmış kullanıcılar poll yapmalı"
     anon_polling_interval: "Kaç mili saniyede bir anonim kullanıcılar sorgu yapmalı"
     background_polling_interval: "(Pencere arkaplanda olduğu zaman) kaç mili saniyede bir kullanıcılan sorgu yapmalı"
@@ -3430,6 +3429,7 @@ tr_TR:
     complete_multipart_failure: "Harici depoda çok parçalı yükleme tamamlanamadı."
     external_upload_not_found: "Yükleme harici depoda bulunamadı. %{additional_detail}"
     cannot_promote_failure: "Yükleme tamamlanamıyor, zaten tamamlanmış veya daha önce başarısız olmuş olabilir."
+    size_zero_failure: "Üzgünüz, bir şeyler ters gitmiş gibi görünüyor, yüklemeye çalıştığınız dosya 0 bayt. Lütfen tekrar deneyin."
     attachments:
       too_large: "Üzgünüz, yüklemeye çalıştığınız dosya çok büyük (en fazla %{max_size_kb}KB olabilir)."
       too_large_humanized: "Maalesef yüklemeye çalıştığınız dosya çok büyük (maksimum boyut %{max_size})."
@@ -3727,7 +3727,7 @@ tr_TR:
       name: İlk Bahsetme
       description: Bir gönderide bir kullanıcıdan bahsetti
       long_description: |
-        Bu rozet, gönderinizde birisinin @kullanıcıadından ilk kez bahsettiğinizde verilir. Her bir bahsetme, söz konusu kişiye bir bildirim oluşturur. Herhangi bir kullanıcıdan veya izin veriliyorsa gruptan bahsetmek için @(takmaad) yazın. - dikkatlerini çekmek için kullanışlı bir yol.
+        Bu rozet, gönderinizde birisinin @kullanıcıadından ilk kez bahsettiğinizde verilir. Her bir bahsetme, söz konusu kişiye bir bildirim oluşturur. Herhangi bir kullanıcıdan veya izin veriliyorsa gruptan bahsetmek için @(takmaad) yazın. - dikkatlerini çekmek için kullanışlı bir yoldur.
     first_onebox:
       name: İlk Kutulama
       description: Kutulanmış bir bağlantı gönderdi
@@ -4094,6 +4094,7 @@ tr_TR:
   notification_level:
     ignore_error: "Üzgünüz, o kullanıcıyı görmezden gelemezsiniz."
     mute_error: "Üzgünüz, o kullanıcıyı sessize alamazsınız."
+    invalid_value: '"%{value}" geçerli bir bildirim düzeyi değil.'
   discord:
     not_in_allowed_guild: "Kimlik doğrulama başarısız oldu. İzin verilen bir Discord guildinin üyesi değilsiniz."
   old_keys_reminder:

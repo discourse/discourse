@@ -223,6 +223,7 @@
                 recoverPost=(action "recoverPost")
                 expandHidden=(action "expandHidden")
                 toggleBookmark=(action "toggleBookmark")
+                toggleBookmarkPolymorphic=(action "toggleBookmarkPolymorphic")
                 togglePostType=(action "togglePostType")
                 rebakePost=(action "rebakePost")
                 changePostOwner=(action "changePostOwner")
@@ -362,6 +363,7 @@
             convertToPublicTopic=(action "convertToPublicTopic")
             convertToPrivateMessage=(action "convertToPrivateMessage")
             toggleBookmark=(action "toggleBookmark")
+            toggleBookmarkPolymorphic=(action "toggleBookmarkPolymorphic")
             showFlagTopic=(route-action "showFlagTopic")
             toggleArchiveMessage=(action "toggleArchiveMessage")
             editFirstPost=(action "editFirstPost")
@@ -405,8 +407,6 @@
       {{/conditional-loading-spinner}}
     </div>
   {{/if}}
-
-  {{share-popup topic=model replyAsNewTopic=(action "replyAsNewTopic")}}
 
   {{quote-button
     quoteState=quoteState

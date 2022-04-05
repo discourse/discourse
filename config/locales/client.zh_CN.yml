@@ -98,7 +98,6 @@ zh_CN:
       to_placeholder: "截至日期"
     share:
       topic_html: '话题：<span class="topic-title">%{topicTitle}</span>'
-      post: "帖子 #%{postNumber}"
       close: "关闭"
       twitter: "分享到 Twitter"
       facebook: "分享到 Facebook"
@@ -141,6 +140,7 @@ zh_CN:
     skip_to_main_content: "跳转到主要内容"
     wizard_required: "欢迎来到全新的 Discourse！让我们跟随<a href='%{url}' data-auto-route='true'>设置向导</a>开始吧 ✨"
     emails_are_disabled: "所有外发电子邮件已被管理员全局禁用。任何类型的电子邮件通知都不会发出。"
+    emails_are_disabled_non_staff: "非管理员用户无法向外发送电子邮件。"
     software_update_prompt:
       message: "我们已经更新此站点，请 <span>刷新页面</span>，否则可能会遇到意外行为。"
       dismiss: "关闭"
@@ -260,6 +260,8 @@ zh_CN:
         unbookmark_with_reminder: "点击以移除此话题中的所有书签和提醒。"
     bookmarks:
       created: "您已将此帖子加入书签。%{name}"
+      create_for: "为 %{type} 创建书签"
+      edit_for: "为 %{type} 编辑书签"
       not_bookmarked: "将此帖子加入书签"
       remove_reminder_keep_bookmark: "删除提醒并保留收藏"
       created_with_reminder: "您已将此帖子加入书签，并于 %{date}设置了一个提醒。%{name}"
@@ -273,10 +275,11 @@ zh_CN:
       list_permission_denied: "您没有权限查看此用户的书签。"
       no_user_bookmarks: "您没有已加入书签的帖子；书签让您可以快速定位特定帖子。"
       auto_delete_preference:
-        label: "自动删除"
-        never: "从不"
-        when_reminder_sent: "发送提醒后"
-        on_owner_reply: "在我回复此话题后"
+        label: "在你收到通知后"
+        never: "保留书签"
+        when_reminder_sent: "删除书签"
+        on_owner_reply: "删除书签，一旦我回复"
+        clear_reminder: "保留书签并清除提醒"
       search_placeholder: "按名称、话题标题或帖子内容搜索书签"
       search: "搜索"
       reminders:
@@ -286,6 +289,8 @@ zh_CN:
         existing_reminder: "您为此书签设置的提醒将在%{at_date_time}发送"
     copy_codeblock:
       copied: "已复制！"
+      copy: "将代码复制到剪贴板"
+      fullscreen: "全屏显示代码"
     drafts:
       label: "草稿"
       label_with_count: "草稿 (%{count})"
@@ -331,8 +336,8 @@ zh_CN:
     switch_to_anon: "进入匿名模式"
     switch_from_anon: "退出匿名模式"
     banner:
-      close: "关闭此横幅。"
-      edit: "编辑此横幅 >>"
+      close: "关闭此横幅"
+      edit: "编辑"
     pwa:
       install_banner: "要<a href>在此设备上安装%{title}</a> 吗？"
     choose_topic:
@@ -1743,7 +1748,6 @@ zh_CN:
       success: "您的帐户已创建，您现在已登录。"
       name_label: "姓名"
       password_label: "密码"
-      optional_description: "（可选）"
     password_reset:
       continue: "继续访问 %{site_name}"
     emoji_set:
@@ -1760,6 +1764,7 @@ zh_CN:
       categories_and_top_topics: "类别和热门话题"
       categories_boxes: "带子类别的框"
       categories_boxes_with_topics: "带精选话题的框"
+      subcategories_with_featured_topics: "有特色主题的子类别"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -2498,11 +2503,6 @@ zh_CN:
         copied: "话题链接已复制。"
         restricted_groups:
           other: "仅对 %{groupNames} 群组成员可见"
-        notify_users:
-          title: "通知"
-          instructions: "通知以下用户有关此话题的信息："
-          success:
-            other: "已成功通知所有用户有关此话题的信息。"
         invite_users: "邀请"
       print:
         title: "打印"
@@ -2708,6 +2708,7 @@ zh_CN:
         edit: "抱歉，编辑您的帖子时出错。请重试。"
         upload: "抱歉，上传该文件时出错。请重试。"
         file_too_large: "抱歉，该文件太大（最大大小为 %{max_size_kb}KB）。为什么不将您的大文件上传到云共享服务，然后粘贴链接呢？"
+        file_size_zero: "抱歉，好像出了点问题，您要上传的文件大小是 0 字节。请再试一次。"
         file_too_large_humanized: "抱歉，该文件太大（最大大小为 %{max_size}KB）。为什么不将您的大文件上传到云共享服务，然后粘贴链接呢？"
         too_many_uploads: "抱歉，一次只能上传一个文件。"
         too_many_dragged_and_dropped_files:
@@ -2850,6 +2851,9 @@ zh_CN:
           edit_bookmark:
             name: "编辑书签"
             description: "编辑书签名称或更改提醒的日期和时间"
+          clear_bookmark_reminder:
+            name: "清除提醒"
+            description: "清除提醒日期和时间"
           pin_bookmark:
             name: "置顶书签"
             description: "置顶该书签。这会将使其显示在您的书签列表的顶部。"
@@ -3104,13 +3108,18 @@ zh_CN:
         other {}}
     original_post: "原始帖子"
     views: "浏览量"
+    sr_views: "按浏览量排序"
     views_lowercase:
       other: "浏览量"
     replies: "回复"
+    sr_replies: "按回复排序"
     views_long:
       other: "此话题已被浏览 %{number} 次"
     activity: "活动"
+    sr_activity: "按活动排序"
     likes: "赞"
+    sr_likes: "按赞排序"
+    sr_op_likes: "按原帖点赞排序"
     likes_lowercase:
       other: "赞"
     users: "用户"
@@ -3198,6 +3207,7 @@ zh_CN:
       readonly: "查看"
     lightbox:
       download: "下载"
+      open: "原始图像"
       previous: "上一个（左方向键）"
       next: "下一个（右方向键）"
       counter: "%curr%/%total%"
@@ -3483,7 +3493,6 @@ zh_CN:
       unsupported_file_picked: "您选择了不受支持的文件。支持的文件类型 – %{types}。"
     user_activity:
       no_activity_title: "尚无活动"
-      no_activity_body: "欢迎来到我们的社区！您是新来的，还没有参与讨论。作为第一步，请访问 <a href='%{topUrl}'>置顶内容</a> 或 <a href='%{categoriesUrl}'>类别</a> 并开始阅读！在您喜欢或想了解更多信息的帖子上选择 %{heartIcon} <a href='%{preferencesUrl}'>用户选项</a>添加图片和个人简介，以帮助其他人了解您。"
       no_activity_others: "无活动。"
       no_replies_title: "您还没有回复任何话题"
       no_replies_others: "无回复。"
@@ -3493,9 +3502,13 @@ zh_CN:
       no_likes_body: "加入并开始贡献的一个好方法是阅读已有的主题，并在您喜欢的帖子上点击 %{heartIcon}"
       no_likes_others: "没有赞过的帖子。"
       no_topics_title: "您还没有开始任何话题"
+      no_topics_title_others: "%{username} 还没有开始任何话题"
       no_read_topics_title: "您还没有阅读任何话题。"
       no_read_topics_body: "开始阅读讨论后，您将在此处看到一个列表。要开始阅读，请在 <a href='%{topUrl}'>置顶</a> 或 <a href='%{categoriesUrl}'>类别</a> 或按关键字搜索 %{searchIcon}"
     no_group_messages_title: "未找到群组消息"
+    topic_entrance:
+      sr_jump_top_button: "跳到第一个帖子"
+      sr_jump_bottom_button: "跳到最后一个帖子"
     fullscreen_table:
       expand_btn: "展开表格"
     second_factor_auth:
@@ -3720,10 +3733,14 @@ zh_CN:
             topics:
               read: 阅读一个话题或其中的一个帖子。也支持 RSS。
               write: 创建一个新话题或发布到现有话题。
+              update: 更新一个话题。更改标题、类别、标签等。
               read_lists: 阅读诸如热门、新、最新等话题列表。也支持 RSS。
               wordpress: WordPress wp-discourse 插件正常工作所必需。
             posts:
               edit: 编辑任意帖子或特定帖子。
+            categories:
+              list: 获取类别列表。
+              show: 通过 id 获取单个类别。
             uploads:
               create: 上传一个新文件或启动单个或多个部分直接上传至外部存储。
             users:
@@ -4214,6 +4231,7 @@ zh_CN:
         time: "时间"
         user: "用户"
         email_type: "电子邮件类型"
+        details_title: "显示电子邮件详情"
         to_address: "目标地址"
         test_email_address: "要测试的电子邮件地址"
         send_test: "发送测试电子邮件"

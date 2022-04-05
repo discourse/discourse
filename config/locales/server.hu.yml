@@ -863,7 +863,6 @@ hu:
       labels:
         user: Felhasználó
         qtt_like: Kapott kedvelések
-      description: "A 10 legnépszerűbb felhasználó, akik a legtöbb kedvelést kapták."
     top_users_by_likes_received_from_inferior_trust_level:
       title: "Legnépszerűbb felhasználók az alacsonyabb szintű felhasználóktól kapott kedvelések alapján"
       labels:
@@ -876,7 +875,6 @@ hu:
       labels:
         user: Felhasználó
         qtt_like: Kapott kedvelések
-      description: "A 10 legnépszerűbb felhasználó, akiket sokféle ember kedvelt."
   dashboard:
     rails_env_warning: "A kiszolgáló jelenleg %{env} módban fut."
     host_names_warning: "A config/database.yml fájl az alapértelmezett „localhost” domaint használja. Állítsa be az oldala saját domain nevét."
@@ -1721,6 +1719,7 @@ hu:
   deleted: "törölt"
   image: "kép"
   upload:
+    size_zero_failure: "Sajnáljuk, úgy tűnik, hogy valami hiba történt, a feltöltendő fájl 0 bájtos. Próbálja újra."
     images:
       size_not_found: "Sajnáljuk, de nem tudtuk megállapítani a kép méretét. Lehet, hogy a kép sérült?"
   skipped_email_log:
@@ -2146,6 +2145,7 @@ hu:
         title: "Elutasítás"
   notification_level:
     ignore_error: "Sajnáljuk, de nem tilthatod le ezt a felhasználót"
+    invalid_value: 'A(z) „%{value}” nem érvényes értesítési szint.'
   old_keys_reminder:
     body: |
       Szia! Ez egy szokásos éves biztonsági emlékeztető a Discourse példányától.

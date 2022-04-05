@@ -554,7 +554,7 @@ users:
   reserved_usernames:
     type: list
     list_type: compact
-    default: "admin|moderator|administrator|mod|sys|system|community|info|you|name|username|user|nickname|discourse|discourseorg|discourseforum|support"
+    default: "admin|moderator|administrator|mod|sys|system|community|info|you|name|username|user|nickname|discourse|discourseorg|discourseforum|support|all|here"
   min_password_length:
     client: true
     default: 10
@@ -1605,7 +1605,7 @@ security:
   enable_escaped_fragments: true
   allow_index_in_robots_txt: true
   allow_indexing_non_canonical_urls:
-    default: false
+    default: true
     hidden: true
   moderators_manage_categories_and_groups: false
   moderators_change_post_ownership:
@@ -1883,18 +1883,10 @@ developer:
   port:
     hidden: true
     default: ""
-  enable_long_polling:
-    hidden: true
-    client: true
-    default: true
   enable_chunked_encoding:
     hidden: true
     client: true
     default: true
-  long_polling_interval:
-    hidden: true
-    default: 25000
-    max: 25000
   long_polling_base_url:
     hidden: true
     client: true
@@ -2384,6 +2376,11 @@ uncategorized:
     default: true
 
   allow_changing_staged_user_tracking: false
+
+  use_polymorphic_bookmarks:
+    client: true
+    default: false
+    hidden: true
 
 user_preferences:
   default_email_digest_frequency:

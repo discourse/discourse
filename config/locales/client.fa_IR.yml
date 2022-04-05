@@ -120,7 +120,7 @@ fa_IR:
       to_placeholder: "تا تاریخ"
     share:
       topic_html: 'موضوع: <span class="topic-title">%{topicTitle}</span>'
-      post: "نوشته #%{postNumber}"
+      post: "نوشته #%{postNumber} توسط @%{username}"
       close: "بستن"
       twitter: "در توییتر به اشتراک بگذارید"
       facebook: "در فیس‌بوک به اشتراک بگذارید"
@@ -290,11 +290,6 @@ fa_IR:
       invalid_custom_datetime: "تاریخ و ساعت ارائه شده معتبر نیست، لطفا دوباره امتحان کنید."
       list_permission_denied: "شما اجازه‌ی مشاهده نشانک‌های این کاربر را ندارید."
       no_user_bookmarks: "شما هیچ نوشته نشانک‌ شده‌ای ندارید؛ نشانک‌‌ها به شما اجازه می‌دهد به سرعت به نوشته‌های خاص مراجعه کنید."
-      auto_delete_preference:
-        label: "حذف خودکار"
-        never: "هرگز"
-        when_reminder_sent: "هنگامی که یادآوری فرستاده شد"
-        on_owner_reply: "بعد از اینکه به این موضوع پاسخ دادم"
       search_placeholder: "جستجو در نشانک‌ها بر اساس نام، عنوان موضوع یا محتوای نوشته"
       search: "جستجو"
       reminders:
@@ -356,8 +351,8 @@ fa_IR:
     switch_to_anon: "ورود به حالت ناشناس"
     switch_from_anon: "خروج از حالت ناشناس"
     banner:
-      close: "این بنر را ببند."
-      edit: "این بنر را ویرایش کنید >>"
+      close: "این بنر را ببند"
+      edit: "ویرایش"
     pwa:
       install_banner: "ایامایل هستید تا <a href>، %{title} را بر‌روی دستگاه شما نصب کند؟</a>"
     choose_topic:
@@ -1695,7 +1690,6 @@ fa_IR:
       success: "حساب‌کاربری شما با موفقیت ایجاد شد و می‌توانید وارد سایت شوید."
       name_label: "نام"
       password_label: "رمزعبور"
-      optional_description: "(اختیاری)"
     password_reset:
       continue: "برو به %{site_name}"
     emoji_set:
@@ -3308,6 +3302,8 @@ fa_IR:
           global: جهانی
           action: اقدام
           descriptions:
+            topics:
+              update: به‌روزرسانی موضوع. تغییر عنوان، دسته‌بندی، برچسب‌ها و غیره.
             badges:
               create: ایجاد نشان جدید
               update: به‌روزرسانی نشان
@@ -3491,7 +3487,6 @@ fa_IR:
         delete_confirm: 'آیا از حذف "%{theme_name}" مطمئن هستید؟ '
         color: "رنگ"
         opacity: "تاری"
-        copy: "کپی"
         copy_to_clipboard: "کپی در clipboard"
         copied_to_clipboard: "کپی شد"
         copy_to_clipboard_error: "خطا در کپی اطلاعات"
@@ -3672,6 +3667,7 @@ fa_IR:
         time: "زمان"
         user: "کاربر"
         email_type: "نوع ایمیل"
+        details_title: "نمایش جزئیات ایمیل"
         to_address: "به آدرس"
         test_email_address: "آدرس ایمیل برای آزمایش"
         send_test: "ارسال ایمیل آزمایشی"

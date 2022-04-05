@@ -111,7 +111,7 @@ describe RetrieveTitle do
       expect(RetrieveTitle.crawl("http://foobar.com/amazing")).to eq(nil)
     end
 
-    it "returns title if 'midway redirect' is blocked but final redirect uri is not blocked" do
+    it "doesn't return title if a blocked domain is encountered anywhere in the redirect chain" do
       SiteSetting.blocked_onebox_domains = "wikipedia.com"
 
       stub_request(:get, "http://foobar.com/amazing")
@@ -123,7 +123,24 @@ describe RetrieveTitle do
       stub_request(:get, "https://cat.com/meow")
         .to_return(status: 200, body: "<html><title>very amazing</title>", headers: {})
 
-      expect(RetrieveTitle.crawl("http://foobar.com/amazing")).to eq("very amazing")
+      expect(RetrieveTitle.crawl("http://foobar.com/amazing")).to be_blank
+    end
+
+    it "doesn't return title if the Discourse-No-Onebox header == 1" do
+      stub_request(:get, "https://cat.com/meow/no-onebox")
+        .to_return(
+          status: 200,
+          body: "<html><title>discourse stay away</title>",
+          headers: { "Discourse-No-Onebox" => "1" }
+        )
+
+      expect(RetrieveTitle.crawl("https://cat.com/meow/no-onebox")).to be_blank
+    end
+
+    it "doesn't return a title if response is unsuccessful" do
+      stub_request(:get, "https://example.com").to_return(status: 404, body: "")
+
+      expect(RetrieveTitle.crawl("https://example.com")).to eq(nil)
     end
   end
 

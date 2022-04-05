@@ -1,3 +1,5 @@
+/* global andThen */
+
 import { TestModuleForComponent, render } from "@ember/test-helpers";
 import MessageBus from "message-bus-client";
 import EmberObject from "@ember/object";
@@ -10,6 +12,7 @@ import { autoLoadModules } from "discourse/initializers/auto-load-modules";
 import createStore from "discourse/tests/helpers/create-store";
 import { currentSettings } from "discourse/tests/helpers/site-settings";
 import QUnit, { test } from "qunit";
+import KeyValueStore from "discourse/lib/key-value-store";
 
 const LEGACY_ENV = !EmberSetupRenderingTest;
 
@@ -63,6 +66,7 @@ export default function (name, opts) {
 
     let owner = LEGACY_ENV ? this.registry : this.owner;
     let store;
+
     if (LEGACY_ENV) {
       this.registry.register("site-settings:main", currentSettings(), {
         instantiate: false,
@@ -75,6 +79,11 @@ export default function (name, opts) {
       this.registry.register("session:main", this.session, {
         instantiate: false,
       });
+      const keyValueStore = new KeyValueStore("discourse_");
+      this.registry.register("key-value-store:main", keyValueStore, {
+        instantiate: false,
+      });
+
       this.registry.injection(
         "component",
         "siteSettings",
@@ -85,6 +94,20 @@ export default function (name, opts) {
       this.registry.injection("component", "site", "site:main");
       this.registry.injection("component", "session", "session:main");
       this.registry.injection("component", "messageBus", "message-bus:main");
+      this.registry.injection(
+        "component",
+        "keyValueStore",
+        "key-value-store:main"
+      );
+
+      this.registry.injection("service", "session", "session:main");
+      this.registry.injection("service", "messageBus", "message-bus:main");
+      this.registry.injection("service", "siteSettings", "site-settings:main");
+      this.registry.injection(
+        "service",
+        "keyValueStore",
+        "key-value-store:main"
+      );
 
       this.siteSettings = currentSettings();
       store = createStore();
@@ -93,6 +116,7 @@ export default function (name, opts) {
       this.container = owner;
       store = this.container.lookup("service:store");
     }
+
     autoLoadModules(this.container, this.registry);
 
     if (!opts.anonymous) {
@@ -106,17 +130,35 @@ export default function (name, opts) {
       owner.register("current-user:main", currentUser, {
         instantiate: false,
       });
+
       if (LEGACY_ENV) {
         owner.injection("component", "currentUser", "current-user:main");
+        owner.injection("service", "currentUser", "current-user:main");
       } else {
         owner.inject("component", "currentUser", "current-user:main");
+        owner.inject("service", "currentUser", "current-user:main");
       }
+
       owner.unregister("topic-tracking-state:main");
       owner.register(
         "topic-tracking-state:main",
         TopicTrackingState.create({ currentUser }),
         { instantiate: false }
       );
+
+      if (LEGACY_ENV) {
+        owner.injection(
+          "service",
+          "topicTrackingState",
+          "topic-tracking-state:main"
+        );
+      } else {
+        owner.inject(
+          "service",
+          "topicTrackingState",
+          "topic-tracking-state:main"
+        );
+      }
     }
 
     if (opts.beforeEach) {

@@ -22,9 +22,9 @@
   {{#if showFutureDateInput}}
     <label class="control-label">{{i18n "topic.topic_status_update.when"}}</label>
     {{time-shortcut-picker
+      timeShortcuts=timeOptions
       prefilledDatetime=topicTimer.execute_at
       onTimeSelected=onTimeSelected
-      customOptions=customTimeShortcutOptions
       hiddenOptions=hiddenTimeShortcutOptions
       _itsatrap=_itsatrap
     }}

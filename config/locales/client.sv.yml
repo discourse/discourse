@@ -120,7 +120,6 @@ sv:
       to_placeholder: "till-datum"
     share:
       topic_html: 'Ämne: <span class="topic-title">%{topicTitle}</span>'
-      post: "inlägg #%{postNumber}"
       close: "stäng"
       twitter: "Dela på Twitter"
       facebook: "Dela på Facebook"
@@ -163,6 +162,7 @@ sv:
     skip_to_main_content: "Hoppa till huvudinnehållet"
     wizard_required: "Välkommen till din nya Discourse! Låt oss komma igång med hjälp av <a href='%{url}' data-auto-route='true'>konfigureringsguiden</a> ✨"
     emails_are_disabled: "All utgående e-post har blivit globalt inaktiverad av en administratör. Inga e-postaviseringar av något slag kommer att skickas ut."
+    emails_are_disabled_non_staff: "Utgående e-post har inaktiverats för användare som inte är anställda."
     software_update_prompt:
       message: "Vi har uppdaterat den här webbplatsen, och <span>ber dig uppdatera sidan</span>, annars kan du uppleva oväntad funktion."
       dismiss: "Avfärda"
@@ -299,10 +299,11 @@ sv:
       list_permission_denied: "Du har inte behörighet att visa bokmärken för denna användare."
       no_user_bookmarks: "Du har inga bokmärkta inlägg; bokmärken tillåter dig att snabbt hänvisa till ett specifikt inlägg."
       auto_delete_preference:
-        label: "Radera automatiskt"
-        never: "Aldrig"
-        when_reminder_sent: "När påminnelsen har skickats"
-        on_owner_reply: "Efter att jag svarat på detta ämne"
+        label: "Efter att du har aviserats"
+        never: "Behåll bokmärke"
+        when_reminder_sent: "Radera bokmärke"
+        on_owner_reply: "Radera bokmärke, när jag har svarat"
+        clear_reminder: "Behåll bokmärke och rensa påminnelse"
       search_placeholder: "Sök i bokmärken efter namn, ämnestitel eller postinnehåll"
       search: "Sök"
       reminders:
@@ -312,6 +313,8 @@ sv:
         existing_reminder: "Du har en påminnelse inställd för detta bokmärke som kommer att skickas %{at_date_time}"
     copy_codeblock:
       copied: "kopierad!"
+      copy: "kopiera kod till urklipp"
+      fullscreen: "visa kod i helskärmsläge"
     drafts:
       label: "Utkast"
       label_with_count: "Utkast (%{count})"
@@ -362,8 +365,7 @@ sv:
     switch_to_anon: "Starta anonymt läge"
     switch_from_anon: "Avsluta anonymt läge"
     banner:
-      close: "Stäng denna banderoll"
-      edit: "Redigera denna banderoll >>"
+      edit: "Redigera"
     pwa:
       install_banner: "Vill du <a href>installera %{title} på denna enhet?</a>"
     choose_topic:
@@ -1267,6 +1269,7 @@ sv:
         upload_title: "Ladda upp din bild"
         image_is_not_a_square: "Varning: vi beskar din bild; bredden och höjden var inte lika stora."
         logo_small: "Webbplatsens lilla logotyp. Används som standard."
+        use_custom: "Eller ladda upp en anpassad avatar:"
       change_profile_background:
         title: "Profilrubrik"
         instructions: "Profilrubriken kommer att centreras, samt ha en standardbredd på 1110px."
@@ -1812,7 +1815,6 @@ sv:
       success: "Ditt konto har skapats och du är nu inloggad."
       name_label: "Namn"
       password_label: "Lösenord"
-      optional_description: "(valfri)"
     password_reset:
       continue: "Fortsätt till %{site_name}"
     emoji_set:
@@ -1829,6 +1831,7 @@ sv:
       categories_and_top_topics: "Kategorier och toppämnen"
       categories_boxes: "Boxar med underkategorier"
       categories_boxes_with_topics: "Boxar med utvalda ämnen"
+      subcategories_with_featured_topics: "Underkategorier med utvalda ämnen"
     shortcut_modifier_key:
       shift: "Skift"
       ctrl: "Ctrl"
@@ -2605,12 +2608,6 @@ sv:
         restricted_groups:
           one: "Endast synligt för medlemmar i grupp: %{groupNames}"
           other: "Endast synligt för medlemmar i grupperna: %{groupNames}"
-        notify_users:
-          title: "Avisera"
-          instructions: "Avisera följande användare om det här ämnet:"
-          success:
-            one: "Aviserade %{username} om det här ämnet."
-            other: "Aviserade alla användare om det här ämnet."
         invite_users: "Bjud in"
       print:
         title: "Skriv ut"
@@ -2833,6 +2830,7 @@ sv:
         edit: "Tyvärr uppstod det ett fel under ändringen av ditt inlägg. Vi ber dig försöka igen."
         upload: "Tyvärr uppstod det ett fel under uppladdandet av den filen. Vi ber dig försöka igen."
         file_too_large: "Tyvärr är den filen för stor (maximal filstorlek är %{max_size_kb}kb). Varför inte ladda upp din stora fil till en moln-delningstjänst och sedan dela länken?"
+        file_size_zero: "Tyvärr verkar det som om något har gått fel. Filen du försöker ladda upp är 0 bytes. Försök igen."
         file_too_large_humanized: "Tyvärr är den filen för stor (maximal storlek är %{max_size}). Varför inte ladda upp din stora fil till en molndelningstjänst och sedan klistra in länken här?"
         too_many_uploads: "Tyvärr kan du bara ladda upp en bild i taget."
         too_many_dragged_and_dropped_files:
@@ -2985,6 +2983,9 @@ sv:
           edit_bookmark:
             name: "Redigera bokmärke"
             description: "Redigera bokmärkets namn eller ändra påminnelsens datum och tid."
+          clear_bookmark_reminder:
+            name: "Rensa påminnelse"
+            description: "Rensa påminnelsens datum och tid"
           pin_bookmark:
             name: "Fäst bokmärke"
             description: "Fäst bokmärket. Detta gör att det visas högst upp i din bokmärkeslista."
@@ -3348,6 +3349,7 @@ sv:
       readonly: "Se"
     lightbox:
       download: "ladda ned"
+      open: "originalbild"
       previous: "Föregående (Vänster piltangent)"
       next: "Nästa (höger piltangent)"
       counter: "%curr% av %total%"
@@ -3645,7 +3647,6 @@ sv:
       unsupported_file_picked: "Du har valt en fil som inte stöds. Filtyper som stöds: %{types}."
     user_activity:
       no_activity_title: "Ingen aktivitet än"
-      no_activity_body: "Välkommen till vårt forum! Du är helt ny här och har ännu inte bidragit till diskussioner. Du kan börja med att gå till <a href='%{topUrl}'>Topp</a> eller <a href='%{categoriesUrl}'>Kategorier</a> och sätta igång att läsa! Välj %{heartIcon} på inlägg som du gillar eller vill lära dig mer om. Om du inte redan har gjort det kan du underlätta för andra att lära känna dig genom att lägga till en bild och en biografi i dina <a href='%{preferencesUrl}'>användarinställningar</a>."
       no_activity_others: "Ingen aktivitet."
       no_replies_title: "Du har inte svarat på några ämnen än"
       no_replies_others: "Inga svar."
@@ -3886,10 +3887,14 @@ sv:
             topics:
               read: Läs ett ämne eller ett specifikt inlägg i det. RSS stöds också.
               write: Skapa ett nytt ämne eller inlägg till en befintligt sådan.
+              update: Uppdatera ett ämne. Ändra titel, kategori, taggar, etc.
               read_lists: Läs ämneslistor som topp, ny, senaste osv. RSS stöds också.
               wordpress: Nödvändigt för att WordPress-tillägget wp-discourse ska fungera.
             posts:
               edit: Redigera ett inlägg eller ett specifikt inlägg.
+            categories:
+              list: Hämta en lista över kategorier.
+              show: Hämta en enskild kategori efter id.
             uploads:
               create: Ladda upp en ny fil eller påbörja enstaka eller flerdelade direktuppladdningar till extern lagring.
             users:
@@ -4111,7 +4116,6 @@ sv:
         delete_confirm: 'Är du säker på att du vill radera "%{theme_name}"?'
         color: "Färg"
         opacity: "Opacitet"
-        copy: "Kopiera"
         copy_to_clipboard: "Kopiera till urklipp"
         copied_to_clipboard: "Kopierad till urklipp"
         copy_to_clipboard_error: "Fel vid kopiering av data till urklipp"

@@ -120,7 +120,7 @@ tr_TR:
       to_placeholder: "şimdiye kadar"
     share:
       topic_html: 'Konu: <span class="topic-title">%{topicTitle}</span>'
-      post: "gönderi #%{postNumber}"
+      post: "%{username} kullanıcısının #%{postNumber} numaralı gönderisi"
       close: "kapat"
       twitter: "Twitter'da paylaş"
       facebook: "Facebook'ta paylaş"
@@ -274,7 +274,7 @@ tr_TR:
       contact: "Bize Ulaşın"
       contact_info: "Bu siteyi etkileyen ciddi bir sorun veya acil bir durum oluştuğunda, lütfen %{contact_info} adresi üzerinden bizimle iletişime geçin."
     bookmarked:
-      title: "İşaret"
+      title: "Yer İmi"
       edit_bookmark: "Yer İmini Düzenle"
       clear_bookmarks: "Yer İmlerini Temizle"
       help:
@@ -285,6 +285,8 @@ tr_TR:
         unbookmark_with_reminder: "Bu konudaki tüm yer imlerini ve anımsatıcıları kaldırmak için tıklayın."
     bookmarks:
       created: "Bu gönderiyi yer imlerine eklediniz. %{name}"
+      create_for: "%{type} için yer işareti oluştur"
+      edit_for: "%{type} için yer işaretini düzenle"
       not_bookmarked: "bu gönderiyi yer imlerine ekle"
       remove_reminder_keep_bookmark: "Anımsatıcıyı kaldır ve yer imini tut"
       created_with_reminder: "Bu gönderiye %{date} hatırlatıcısı ile yer imlerine eklediniz. %{name}"
@@ -298,10 +300,11 @@ tr_TR:
       list_permission_denied: "Bu kullanıcının yer imlerini görüntüleme izniniz yok."
       no_user_bookmarks: "Yer işaretli gönderiniz yok; yer imleri, belirli gönderilere hızlı bir şekilde başvurmanızı sağlar."
       auto_delete_preference:
-        label: "Otomatik olarak sil"
-        never: "Asla"
-        when_reminder_sent: "Hatırlatıcı gönderildikten sonra"
-        on_owner_reply: "Bu konuyu yanıtladıktan sonra"
+        label: "Size bildirildikten sonra"
+        never: "Yer işaretini koru"
+        when_reminder_sent: "Yer imini sil"
+        on_owner_reply: "Yanıtladıktan sonra yer imini sil"
+        clear_reminder: "Yer işaretini koru ve hatırlatıcıyı temizle"
       search_placeholder: "Yer imlerini ada, konu başlığına veya gönderi içeriğine göre arayın"
       search: "Arama"
       reminders:
@@ -363,8 +366,8 @@ tr_TR:
     switch_to_anon: "Anonim Moda Geç"
     switch_from_anon: "Anonim Moddan Çık"
     banner:
-      close: "Bu pankartı artık anımsatma"
-      edit: "Bu pankartı düzenle >>"
+      close: "Bu bannerı devre dışı bırak"
+      edit: "Düzenle"
     pwa:
       install_banner: "Bu cihazda <a href>güncellemek %{title} ister misiniz?</a>"
     choose_topic:
@@ -1025,7 +1028,7 @@ tr_TR:
       no_notifications_page_title: "Henüz herhangi bir bildiriminiz yok"
       no_notifications_page_body: >
         Konu ve iletilerinize verilen yanıtlar da dahil olmak üzere, doğrudan sizle ilgili etkinlik olduğunda, biri size <b>@mention</b> attığında veya sizi alıntıladığında bu panelde bildirilecektir. Bir süredir giriş yapmadığınızda da bildirimler e-posta olarak gönderilecektir. <br><br> Hangi konular, kategoriler ve etiketler hakkında bilgilendirilmek istediğinize karar vermek için %{icon} ikonuna bakın. Daha fazlası için <a href='%{preferencesUrl}'>bildirim tercihlerinize bakın</a>.
-      first_notification: "İlk bildirimin! Başlamak için seç."
+      first_notification: "İlk bildiriminiz! Başlamak için bunu seçin.."
       dynamic_favicon: "Sayacı, tarayıcı ikonu üzerinde göster"
       skip_new_user_tips:
         description: "Yeni kullanıcı katılımı ipuçlarını ve rozetlerini atlayın"
@@ -1805,7 +1808,6 @@ tr_TR:
       success: "Hesabın oluşturuldu ve şimdi giriş yaptın."
       name_label: "Ad"
       password_label: "Parola"
-      optional_description: "(isteğe bağlı)"
     password_reset:
       continue: "%{site_name} sitesine gitmeyi sürdür"
     emoji_set:
@@ -2008,7 +2010,7 @@ tr_TR:
         edit: Düzenle
         reply_to_post:
           label: Bir gönderiyi %{postUsername} ile yanıtla
-          desc: İlgili gönderiyi yanıtla
+          desc: Belirli bir gönderiyi yanıtla
         reply_as_new_topic:
           label: Bağlantılı konu olarak yanıtla
           desc: Bu konuyla bağlantılı yeni bir konu oluştur
@@ -2586,19 +2588,13 @@ tr_TR:
         help: "bu konunun bağlantısını paylaş"
         instructions: "Bu konunun bağlantısını paylaş:"
         copied: "Konu bağlantısı kopyalandı."
-        notify_users:
-          title: "Haber ver"
-          instructions: "Aşağıdaki kullanıcıları bu konu hakkında bilgilendirin:"
-          success:
-            one: "Bu konu %{username} kullanıcısına başarıyla bildirildi."
-            other: "Bu konu tüm kullanıcılara başarıyla bildirildi."
         invite_users: "Davet"
       print:
         title: "Yazdır"
         help: "Bu konunun yazıcı dostu olan sürümünü aç"
       flag_topic:
-        title: "Bayrakla işaretle"
-        help: "bu gönderiyi denetlenmesi için özel olarak bayrakla imle veya bununla ilgili özel bir bildirim gönder"
+        title: "Bayrak Koy"
+        help: "Bu gönderiyi denetlenmesi için özel olarak bayrakla imle veya bununla ilgili özel bir bildirim gönder"
         success_message: "Bu konuyu başarıyla bayrakla işaretledin"
       make_public:
         title: "Herkese Açık Konuya Dönüştür"
@@ -2780,7 +2776,13 @@ tr_TR:
       show_hidden: "Yok sayılan içeriği görüntüleyin."
       deleted_by_author_simple: "(gönderi yazarı tarafından silindi)"
       collapse: "daralt"
+      sr_collapse_replies: "Gömülü yanıtları kapat"
+      sr_expand_replies:
+        one: "Bu gönderide %{count} yanıt var. Genişletmek için tıklayın"
+        other: "Bu gönderide %{count} yanıt var. Genişletmek için tıklayın"
       expand_collapse: "genişlet/daralt"
+      sr_below_embedded_posts_description: "#%{post_number} numaralı gönderiye gelen yanıtlar"
+      sr_embedded_reply_description: "#%{post_number} numaralı gönderiye @%{username} kullanıcısının yanıtı"
       locked: "personel bu yayının düzenlenmesini kilitledi"
       gap:
         one: "gizlenen %{count} yorumu gör"
@@ -2801,6 +2803,12 @@ tr_TR:
       has_likes_title_you:
         one: "siz ve %{count} diğer kişi bu gönderiyi beğendi"
         other: "sen ve %{count} kişi bu gönderiyi beğendi"
+      sr_post_like_count_button:
+        one: "%{count} kişi bu gönderiyi beğendi. Görüntülemek için tıklayın"
+        other: "%{count} kişi bu gönderiyi beğendi. Görüntülemek için tıklayın"
+      sr_post_read_count_button:
+        one: "%{count} kişi bu yazıyı okudu. Görüntülemek için tıklayın"
+        other: "%{count} kişi bu yazıyı okudu. Görüntülemek için tıklayın"
       filtered_replies_hint:
         one: "Bu gönderiyi ve yanıtını görüntüleyin"
         other: "Bu gönderiyi ve %{count} yanıtını görüntüleyin"
@@ -2814,6 +2822,7 @@ tr_TR:
         edit: "Üzgünüz, gönderiniz düzenlenirken bir hata oluştu. Lütfen yeniden deneyin."
         upload: "Üzgünüz, dosya yüklenirken bir hata oluştu. Lütfen yeniden deneyin."
         file_too_large: "Üzgünüz, bu dosya çok büyük (en fazla %{max_size_kb}kb). Neden paylaşımını bir bulut sağlayıcısına yükleyip bağlantısını paylaşmıyorsun ?"
+        file_size_zero: "Üzgünüz, bir şeyler ters gitmiş gibi görünüyor, yüklemeye çalıştığınız dosya 0 bayt. Lütfen tekrar deneyin."
         file_too_large_humanized: "Üzgünüz, bu dosya çok büyük (en fazla %{max_size} olabilir). Neden dosyanı bir bulut sağlayıcısına yükleyip bağlantısını paylaşmıyorsun?"
         too_many_uploads: "Üzgünüz, aynı anda yalnızca tek dosya yüklenebilir."
         too_many_dragged_and_dropped_files:
@@ -2901,6 +2910,8 @@ tr_TR:
           read_capped:
             one: "ve %{count} tanesini daha okuyun"
             other: "ve %{count}tanesini daha okuyun"
+          sr_post_likers_list_description: "bu gönderiyi beğenen kullanıcılar"
+          sr_post_readers_list_description: "bu gönderiyi okuyan kullanıcılar"
         by_you:
           off_topic: "Bunu bayrakla \"konu dışı\" olarak işaretledin"
           spam: "Bunu bayrakla \"istenmeyen e-posta\" olarak işaretledin"
@@ -2966,6 +2977,9 @@ tr_TR:
           edit_bookmark:
             name: "Yer imini düzenle"
             description: "Yer imi adını düzenleyin veya hatırlatıcı tarih ve saatini değiştirin"
+          clear_bookmark_reminder:
+            name: "Hatırlatıcıyı temizle"
+            description: "Anımsatıcı tarih ve saatini temizle"
           pin_bookmark:
             name: "Yer imini sabitle"
             description: "Yer imini sabitleyin; böylece yer imleri listenizin en üstünde görünür."
@@ -3128,7 +3142,7 @@ tr_TR:
       colors_disabled: "Category style olarak none belirlenmiş olduğundan renk seçemezsiniz."
     flagging:
       title: "Topluluğumuzun nezaket kuralları içerisinde kalmasına sağladığın destek için teşekkürler!"
-      action: "Gönderiyi Bayrakla İşaretle"
+      action: "Gönderiye Bayrak Koy"
       take_action: "Harekete Geç..."
       take_action_options:
         default:
@@ -3170,7 +3184,7 @@ tr_TR:
           other: "%{count} kaldı"
     flagging_topic:
       title: "Topluluğumuzun nezaket kuralları içerisinde kalmasına verdiğin destek için teşekkürler!"
-      action: "Konuyu Bayrakla İşaretle"
+      action: "Konuya Bayrak Koy"
       notify_action: "Mesaj"
     topic_map:
       title: "Konu Özeti"
@@ -3222,15 +3236,20 @@ tr_TR:
       other {}} {count, plural, one {1 yanıt} other {# yanıt}} var
     original_post: "Orjinal Gönderi"
     views: "Görüntüleme"
+    sr_views: "Görüntüleme sayısına göre sırala"
     views_lowercase:
       one: "gösterim"
       other: "görüntülenenler"
     replies: "Yanıtlar"
+    sr_replies: "Cevap sayısına göre sırala"
     views_long:
       one: "bu konu %{count} defa görüntülendi"
       other: "bu konu %{number} defa görüntülendi"
     activity: "Etkinlik"
+    sr_activity: "Aktiviteye göre sırala"
     likes: "Beğeni"
+    sr_likes: "Beğeni sayısına göre sırala"
+    sr_op_likes: "Orijinal gönderi beğenilerine göre sırala"
     likes_lowercase:
       one: "beğeni"
       other: "beğeni"
@@ -3326,6 +3345,7 @@ tr_TR:
       readonly: "Bak"
     lightbox:
       download: "indir"
+      open: "orijinal imaj"
       previous: "Önceki (Sol ok tuşu)"
       next: "Sonraki (Sağ ok tuşu)"
       counter: "%curr% of %total%"
@@ -3500,7 +3520,7 @@ tr_TR:
         other: "Bu etiketi silmek ve atanmış olduğu %{count} konularından kaldırmak istediğinizden emin misiniz?"
       delete_confirm_no_topics: "Bu etiketi silmek istediğinize emin misiniz?"
       delete_confirm_synonyms:
-        one: "Eş anlamlısı da silinecek."
+        one: "Eşanlamlısı da silinecek."
         other: "%{count} tane eşanlamlısı da silinecek."
       edit_tag: "Etiket adını ve açıklamasını düzenle"
       description: "Açıklama"
@@ -3619,6 +3639,7 @@ tr_TR:
       unsupported_file_picked: "Desteklenmeyen bir dosya seçtiniz. Desteklenen dosya türleri şunlardır– %{types}."
     user_activity:
       no_activity_title: "Henüz etkinlik yok"
+      no_activity_body: "Topluluğumuza hoş geldiniz! Burada çok yenisiniz ve tartışmalara henüz katkıda bulunmadınız. İlk adım olarak <a href='%{topUrl}'>en çok okunanları</a> veya <a href='%{categoriesUrl}'>kategorileri</a> ziyaret edebilir ve okumaya başlayabilirsiniz! Beğendiğiniz veya hakkında daha fazla bilgi edinmek istediğiniz gönderilerde lütfen %{heartIcon} kullanarak beğeninizi belirtin. Paylaşımlara katıldıkça, etkinliğiniz burada listelenecek."
       no_activity_others: "Etkinlik yok."
       no_replies_title: "Henüz hiçbir konuyu yanıtlamadınız."
       no_replies_others: "Yanıt yok."
@@ -3626,8 +3647,12 @@ tr_TR:
       no_likes_title: "Henüz hiçbir konuyu beğenmedin"
       no_likes_others: "Beğenilen gönderi yok."
       no_topics_title: "Henüz herhangi bir konu başlatmadın"
+      no_topics_title_others: "%{username} kullanıcısı henüz herhangi bir konu başlatmadı"
       no_read_topics_title: "Henüz herhangi bir konu okumadın"
     no_group_messages_title: "Grup mesajı bulunamadı"
+    topic_entrance:
+      sr_jump_top_button: "İlk gönderiye atla"
+      sr_jump_bottom_button: "Son gönderiye atla"
     fullscreen_table:
       expand_btn: "Tabloyu Genişlet"
   admin_js:
@@ -3850,6 +3875,7 @@ tr_TR:
             topics:
               read: Bir konuyu veya içinde belirli bir gönderiyi okuyun. RSS de desteklenir.
               write: Yeni bir konu oluşturun veya mevcut bir konuya yazın.
+              update: Bir konuyu güncelleyin. Başlığı, kategoriyi, etiketleri vb. değiştirin.
               read_lists: En iyi, yeni, en son vb. gibi konu listelerini okuyun. RSS de desteklenir.
               wordpress: WordPress wp-discourse eklentisinin çalışması için gereklidir.
             posts:
@@ -4070,7 +4096,6 @@ tr_TR:
         delete_confirm: '"%{theme_name}" silmek istediğinizden emin misiniz?'
         color: "Renk"
         opacity: "Saydam"
-        copy: "Kopyala"
         copy_to_clipboard: "Kopyala"
         copied_to_clipboard: "Kopyalandı"
         copy_to_clipboard_error: "Panoya veri kopyalama hatası"
@@ -4342,6 +4367,7 @@ tr_TR:
         time: "Saat"
         user: "Kullanıcı"
         email_type: "E-posta Türü"
+        details_title: "E-posta detaylarını göster"
         to_address: "Gönderi Adresi"
         test_email_address: "test için e-posta adresi"
         send_test: "Test E-postası Gönder"
@@ -4579,7 +4605,7 @@ tr_TR:
           block: "Engelle"
           censor: "Sansür"
           require_approval: "Onay gerektir"
-          flag: "Bayrakla işaretle"
+          flag: "Bayrak Koy"
           replace: "Değiştir"
           tag: "Etiket"
           silence: "Sustur"

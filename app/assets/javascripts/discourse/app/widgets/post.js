@@ -68,16 +68,20 @@ export function avatarImg(wanted, attrs) {
   return h("img", properties);
 }
 
-export function avatarFor(wanted, attrs) {
+export function avatarFor(wanted, attrs, linkAttrs) {
+  const attributes = {
+    href: attrs.url,
+    "data-user-card": attrs.username,
+    "aria-hidden": true,
+  };
+  if (linkAttrs) {
+    Object.assign(attributes, linkAttrs);
+  }
   return h(
     "a",
     {
       className: `trigger-user-card ${attrs.className || ""}`,
-      attributes: {
-        href: attrs.url,
-        "data-user-card": attrs.username,
-        "aria-hidden": true,
-      },
+      attributes,
     },
     avatarImg(wanted, attrs)
   );
@@ -180,14 +184,21 @@ createWidget("post-avatar", {
     if (!attrs.user_id) {
       body = iconNode("far-trash-alt", { class: "deleted-user-avatar" });
     } else {
-      body = avatarFor.call(this, this.settings.size, {
-        template: attrs.avatar_template,
-        username: attrs.username,
-        name: attrs.name,
-        url: attrs.usernameUrl,
-        className: `main-avatar ${hideFromAnonUser ? "non-clickable" : ""}`,
-        hideTitle: true,
-      });
+      body = avatarFor.call(
+        this,
+        this.settings.size,
+        {
+          template: attrs.avatar_template,
+          username: attrs.username,
+          name: attrs.name,
+          url: attrs.usernameUrl,
+          className: `main-avatar ${hideFromAnonUser ? "non-clickable" : ""}`,
+          hideTitle: true,
+        },
+        {
+          tabindex: "-1",
+        }
+      );
     }
 
     const postAvatarBody = [body];
@@ -280,21 +291,6 @@ createWidget("post-meta-data", {
       );
     }
 
-    const lastWikiEdit =
-      attrs.wiki && attrs.lastWikiEdit && new Date(attrs.lastWikiEdit);
-    const createdAt = new Date(attrs.created_at);
-    const date = lastWikiEdit ? dateNode(lastWikiEdit) : dateNode(createdAt);
-    const attributes = {
-      class: "post-date",
-      href: attrs.shareUrl,
-      "data-share-url": attrs.shareUrl,
-      "data-post-number": attrs.post_number,
-    };
-
-    if (lastWikiEdit) {
-      attributes["class"] += " last-wiki-edit";
-    }
-
     if (attrs.via_email) {
       postInfo.push(this.attach("post-email-indicator", attrs));
     }
@@ -315,7 +311,7 @@ createWidget("post-meta-data", {
       postInfo.push(this.attach("reply-to-tab", attrs));
     }
 
-    postInfo.push(h("div.post-info.post-date", h("a", { attributes }, date)));
+    postInfo.push(this.attach("post-date", attrs));
 
     postInfo.push(
       h(
@@ -349,6 +345,29 @@ createWidget("expand-hidden", {
 
   click() {
     this.sendWidgetAction("expandHidden");
+  },
+});
+
+createWidget("post-date", {
+  tagName: "div.post-info.post-date",
+
+  html(attrs) {
+    const attributes = { class: "post-date" };
+    let date;
+    if (attrs.wiki && attrs.lastWikiEdit) {
+      attributes["class"] += " last-wiki-edit";
+      date = new Date(attrs.lastWikiEdit);
+    } else {
+      date = new Date(attrs.created_at);
+    }
+    return h("a", { attributes }, dateNode(date));
+  },
+
+  click() {
+    const post = this.findAncestorModel();
+    const topic = post.topic;
+    const controller = showModal("share-topic", { model: topic.category });
+    controller.setProperties({ topic, post });
   },
 });
 
@@ -452,7 +471,16 @@ createWidget("post-contents", {
       result.push(
         h("section.embedded-posts.bottom", [
           repliesBelow.map((p) => {
-            return this.attach("embedded-post", p, { model: p.asPost });
+            return this.attach("embedded-post", p, {
+              model: p.asPost,
+              state: {
+                role: "region",
+                "aria-label": I18n.t("post.sr_embedded_reply_description", {
+                  post_number: attrs.post_number,
+                  username: p.username,
+                }),
+              },
+            });
           }),
           this.attach("button", {
             title: "post.collapse",
@@ -460,6 +488,7 @@ createWidget("post-contents", {
             action: "toggleRepliesBelow",
             actionParam: "true",
             className: "btn collapse-up",
+            translatedAriaLabel: I18n.t("post.sr_collapse_replies"),
           }),
         ])
       );
@@ -644,6 +673,7 @@ createWidget("post-article", {
     return {
       "aria-label": I18n.t("share.post", {
         postNumber: attrs.post_number,
+        username: attrs.username,
       }),
       role: "region",
       "data-post-id": attrs.id,
@@ -654,8 +684,8 @@ createWidget("post-article", {
 
   html(attrs, state) {
     const rows = [
-      h("a.tabLoc", {
-        attributes: { href: "", "aria-hidden": true, tabindex: -1 },
+      h("span.tabLoc", {
+        attributes: { "aria-hidden": true, tabindex: -1 },
       }),
     ];
     if (state.repliesAbove.length) {

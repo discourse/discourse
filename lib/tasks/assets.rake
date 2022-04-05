@@ -14,11 +14,15 @@ task 'assets:precompile:before' do
   end
 
   if EMBER_CLI && !(ENV["EMBER_CLI_COMPILE_DONE"] == "1")
-    # Using exec to free up Rails app memory during ember build
-    exec <<~SH
-      NODE_OPTIONS='--max-old-space-size=2048' yarn --cwd app/assets/javascripts/discourse run ember build -prod && \
-      EMBER_CLI_COMPILE_DONE=1 bin/rake assets:precompile
-    SH
+    compile_command = "NODE_OPTIONS='--max-old-space-size=2048' yarn --cwd app/assets/javascripts/discourse run ember build -prod"
+    only_assets_precompile_remaining = (ARGV.last == "assets:precompile")
+
+    if only_assets_precompile_remaining
+      # Using exec to free up Rails app memory during ember build
+      exec "#{compile_command} && EMBER_CLI_COMPILE_DONE=1 bin/rake assets:precompile"
+    else
+      system compile_command
+    end
   end
 
   # Ensure we ALWAYS do a clean build
@@ -95,7 +99,14 @@ end
 
 def is_ember_cli_asset?(name)
   return false if !EMBER_CLI
-  %w(application.js admin.js ember_jquery.js pretty-text-bundle.js start-discourse.js vendor.js).include?(name)
+  %w(
+    application.js
+    admin.js
+    ember_jquery.js
+    pretty-text-bundle.js
+    start-discourse.js
+    vendor.js
+  ).include?(name) || name.start_with?("chunk.")
 end
 
 def assets_path

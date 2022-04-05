@@ -55,8 +55,6 @@ require 'pry-rails' if Rails.env.development?
 
 require 'discourse_fonts'
 
-require_relative '../lib/zeitwerk_config.rb'
-
 if defined?(Bundler)
   bundler_groups = [:default]
 
@@ -68,6 +66,8 @@ if defined?(Bundler)
 
   Bundler.require(*bundler_groups)
 end
+
+require_relative '../lib/require_dependency_backward_compatibility'
 
 module Discourse
   class Application < Rails::Application
@@ -110,9 +110,6 @@ module Discourse
     config.autoloader = :zeitwerk
 
     # Custom directories with classes and modules you want to be autoloadable.
-    config.autoload_paths += Dir["#{config.root}/app"]
-    config.autoload_paths += Dir["#{config.root}/app/jobs"]
-    config.autoload_paths += Dir["#{config.root}/app/serializers"]
     config.autoload_paths += Dir["#{config.root}/lib"]
     config.autoload_paths += Dir["#{config.root}/lib/common_passwords"]
     config.autoload_paths += Dir["#{config.root}/lib/highlight_js"]
@@ -177,6 +174,7 @@ module Discourse
       onpopstate-handler.js
       embed-application.js
       discourse/tests/active-plugins.js
+      admin-plugins.js
       discourse/tests/test_starter.js
     }
 

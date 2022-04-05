@@ -136,7 +136,7 @@ en:
       to_placeholder: "to date"
     share:
       topic_html: 'Topic: <span class="topic-title">%{topicTitle}</span>'
-      post: "post #%{postNumber}"
+      post: "post #%{postNumber} by @%{username}"
       close: "close"
       twitter: "Share on Twitter"
       facebook: "Share on Facebook"
@@ -317,6 +317,8 @@ en:
 
     bookmarks:
       created: "You've bookmarked this post. %{name}"
+      create_for: "Create bookmark for %{type}"
+      edit_for: "Edit bookmark for %{type}"
       not_bookmarked: "bookmark this post"
       remove_reminder_keep_bookmark: "Remove reminder and keep bookmark"
       created_with_reminder: "You've bookmarked this post with a reminder %{date}. %{name}"
@@ -330,10 +332,11 @@ en:
       list_permission_denied: "You do not have permission to view this user's bookmarks."
       no_user_bookmarks: "You have no bookmarked posts; bookmarks allow you to quickly refer to specific posts."
       auto_delete_preference:
-        label: "Automatically delete"
-        never: "Never"
-        when_reminder_sent: "Once the reminder is sent"
-        on_owner_reply: "After I reply to this topic"
+        label: "After you are notified"
+        never: "Keep bookmark"
+        when_reminder_sent: "Delete bookmark"
+        on_owner_reply: "Delete bookmark, once I reply"
+        clear_reminder: "Keep bookmark and clear reminder"
       search_placeholder: "Search bookmarks by name, topic title, or post content"
       search: "Search"
       reminders:
@@ -410,8 +413,8 @@ en:
     switch_from_anon: "Exit Anonymous Mode"
 
     banner:
-      close: "Dismiss this banner."
-      edit: "Edit this banner >>"
+      close: "Dismiss this banner"
+      edit: "Edit"
 
     pwa:
       install_banner: "Do you want to <a href>install %{title} on this device?</a>"
@@ -1996,7 +1999,6 @@ en:
       success: "Your account has been created and you're now logged in."
       name_label: "Name"
       password_label: "Password"
-      optional_description: "(optional)"
 
     password_reset:
       continue: "Continue to %{site_name}"
@@ -3062,7 +3064,13 @@ en:
       show_hidden: "View ignored content."
       deleted_by_author_simple: "(post deleted by author)"
       collapse: "collapse"
+      sr_collapse_replies: "Collapse embedded replies"
+      sr_expand_replies:
+        one: "This post has %{count} reply. Click to expand"
+        other: "This post has %{count} replies. Click to expand"
       expand_collapse: "expand/collapse"
+      sr_below_embedded_posts_description: "post #%{post_number} replies"
+      sr_embedded_reply_description: "reply by @%{username} to post #%{post_number}"
       locked: "a staff member has locked this post from being edited"
       gap:
         one: "view %{count} hidden reply"
@@ -3088,6 +3096,12 @@ en:
         one: "you and %{count} other person liked this post"
         other: "you and %{count} other people liked this post"
 
+      sr_post_like_count_button:
+        one: "%{count} person liked this post. Click to view"
+        other: "%{count} people liked this post. Click to view"
+      sr_post_read_count_button:
+        one: "%{count} person read this post. Click to view"
+        other: "%{count} people read this post. Click to view"
       filtered_replies_hint:
         one: "View this post and its reply"
         other: "View this post and its %{count} replies"
@@ -3104,6 +3118,7 @@ en:
         edit: "Sorry, there was an error editing your post. Please try again."
         upload: "Sorry, there was an error uploading that file. Please try again."
         file_too_large: "Sorry, that file is too big (maximum size is %{max_size_kb}kb). Why not upload your large file to a cloud sharing service, then paste the link?"
+        file_size_zero: "Sorry, it looks like something has gone wrong, the file you are trying to upload is 0 bytes. Please try again."
         file_too_large_humanized: "Sorry, that file is too big (maximum size is %{max_size}). Why not upload your large file to a cloud sharing service, then paste the link?"
         too_many_uploads: "Sorry, you can only upload one file at a time."
         too_many_dragged_and_dropped_files:
@@ -3197,6 +3212,8 @@ en:
           read_capped:
             one: "and %{count} other read this"
             other: "and %{count} others read this"
+          sr_post_likers_list_description: "users who liked this post"
+          sr_post_readers_list_description: "users who read this post"
         by_you:
           off_topic: "You flagged this as off-topic"
           spam: "You flagged this as spam"
@@ -3267,6 +3284,9 @@ en:
           edit_bookmark:
             name: "Edit bookmark"
             description: "Edit the bookmark name or change the reminder date and time"
+          clear_bookmark_reminder:
+            name: "Clear reminder"
+            description: "Clear the reminder date and time"
           pin_bookmark:
             name: "Pin bookmark"
             description: "Pin the bookmark. This will make it appear at the top of your bookmarks list."
@@ -3537,15 +3557,20 @@ en:
         other {}}
     original_post: "Original Post"
     views: "Views"
+    sr_views: "Sort by views"
     views_lowercase:
       one: "view"
       other: "views"
     replies: "Replies"
+    sr_replies: "Sort by replies"
     views_long:
       one: "this topic has been viewed %{count} time"
-      other: "this topic has been viewed %{number} times"
+      other: "this topic has been viewed %{count} times"
     activity: "Activity"
+    sr_activity: "Sort by activity"
     likes: "Likes"
+    sr_likes: "Sort by likes"
+    sr_op_likes: "Sort by original post likes"
     likes_lowercase:
       one: "like"
       other: "likes"
@@ -3647,6 +3672,7 @@ en:
 
     lightbox:
       download: "download"
+      open: "original image"
       previous: "Previous (Left arrow key)"
       next: "Next (Right arrow key)"
       counter: "%curr% of %total%"
@@ -3961,7 +3987,7 @@ en:
 
     user_activity:
       no_activity_title: "No activity yet"
-      no_activity_body: "Welcome to our community! You are brand new here and have not yet contributed to discussions. As a first step, visit <a href='%{topUrl}'>Top</a> or <a href='%{categoriesUrl}'>Categories</a> and just start reading! Select %{heartIcon} on posts that you like or want to learn more about. If you have not already done so, help others get to know you by adding a picture and bio in your <a href='%{preferencesUrl}'>user preferences</a>."
+      no_activity_body: "Welcome to our community! You are brand new here and have not yet contributed to discussions. As a first step, visit <a href='%{topUrl}'>Top</a> or <a href='%{categoriesUrl}'>Categories</a> and just start reading! Select %{heartIcon} on posts that you like or want to learn more about. As you participate, your activity will be listed here."
       no_activity_others: "No activity."
       no_replies_title: "You have not replied to any topics yet"
       no_replies_others: "No replies."
@@ -3971,11 +3997,15 @@ en:
       no_likes_body: "A great way to jump in and start contributing is to start reading conversations that have already taken place, and select the %{heartIcon} on posts that you like!"
       no_likes_others: "No liked posts."
       no_topics_title: "You have not started any topics yet"
+      no_topics_title_others: "%{username} has not started any topics yet"
       no_read_topics_title: "You haven’t read any topics yet"
       no_read_topics_body: "Once you start reading discussions, you’ll see a list here. To start reading, look for topics that interest you in <a href='%{topUrl}'>Top</a> or <a href='%{categoriesUrl}'>Categories</a> or search by keyword %{searchIcon}"
 
     no_group_messages_title: "No group messages found"
 
+    topic_entrance:
+      sr_jump_top_button: "Jump to the first post"
+      sr_jump_bottom_button: "Jump to the last post"
     fullscreen_table:
       expand_btn: "Expand Table"
 
@@ -4448,7 +4478,7 @@ en:
         delete_confirm: 'Are you sure you want to delete "%{theme_name}"?'
         color: "Color"
         opacity: "Opacity"
-        copy: "Copy"
+        copy: "Duplicate"
         copy_to_clipboard: "Copy to Clipboard"
         copied_to_clipboard: "Copied to Clipboard"
         copy_to_clipboard_error: "Error copying data to Clipboard"
@@ -4727,6 +4757,7 @@ en:
         time: "Time"
         user: "User"
         email_type: "Email Type"
+        details_title: "Show email details"
         to_address: "To Address"
         test_email_address: "email address to test"
         send_test: "Send Test Email"

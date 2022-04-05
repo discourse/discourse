@@ -1,12 +1,20 @@
 {{#if visible}}
   <div class="row">
     <div id="banner" class={{overlay}}>
-      {{d-button icon="times" action=(action "dismiss") class="btn btn-flat close" title="banner.close"}}
+      <div class="floated-buttons">
+        {{#if currentUser.staff}}
+          <a href={{banner.url}} class="btn btn-flat edit-banner">
+            {{d-icon "pencil-alt"}}
+            {{#unless site.mobileView}}
+              {{html-safe (i18n "banner.edit")}}
+            {{/unless}}
+          </a>
+        {{/if}}
+
+        {{d-button icon="times" action=(action "dismiss") class="btn btn-flat close" title="banner.close"}}
+      </div>
       <div id="banner-content">
         {{html-safe content}}
-        {{#if currentUser.staff}}
-          <p><a href={{banner.url}}>{{html-safe (i18n "banner.edit")}}</a></p>
-        {{/if}}
       </div>
     </div>
   </div>

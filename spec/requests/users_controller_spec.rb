@@ -147,6 +147,23 @@ describe UsersController do
         expect(response).to redirect_to(destination_url)
       end
     end
+
+    context 'when cookies does not contain a destination URL but users was invited to topic' do
+      let(:invite) { Fabricate(:invite) }
+      let(:topic) { Fabricate(:topic) }
+
+      before do
+        TopicInvite.create!(topic: topic, invite: invite)
+        Fabricate(:invited_user, invite: invite, user: email_token.user)
+        invite.reload
+      end
+
+      it 'should redirect to the topic' do
+        put "/u/activate-account/#{email_token.token}"
+
+        expect(response).to redirect_to(topic.relative_url)
+      end
+    end
   end
 
   describe '#password_reset' do
@@ -2876,6 +2893,16 @@ describe UsersController do
     end
   end
 
+  describe "#notification_level" do
+    it 'raises an error when `notification_level` param is not a valid value' do
+      sign_in(user)
+      invalid_arg = "invalid"
+      put "/u/#{user.username}/notification_level.json", params: { notification_level: invalid_arg }
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["errors"].first).to eq(I18n.t("notification_level.invalid_value", value: invalid_arg))
+    end
+  end
+
   describe '#ignore' do
     it 'raises an error when not logged in' do
       put "/u/#{user1.username}/notification_level.json", params: { notification_level: "" }
@@ -2925,8 +2952,43 @@ describe UsersController do
 
       context 'when changing notification level to ignore' do
         it 'changes notification level to ignore' do
-          put "/u/#{another_user.username}/notification_level.json", params: { notification_level: "ignore" }
+          put "/u/#{another_user.username}/notification_level.json", params: {
+            notification_level: "ignore",
+            expiring_at: 3.days.from_now
+          }
+          expect(response.status).to eq(200)
           expect(MutedUser.count).to eq(0)
+          expect(IgnoredUser.find_by(user_id: user.id, ignored_user_id: another_user.id)).to be_present
+        end
+
+        it "allows admin to change the ignore status for a source user" do
+          ignored_user.destroy!
+          sign_in(Fabricate(:user, admin: true))
+          put "/u/#{another_user.username}/notification_level.json", params: {
+            notification_level: "ignore",
+            acting_user_id: user.id,
+            expiring_at: 3.days.from_now
+          }
+          expect(response.status).to eq(200)
+          expect(IgnoredUser.find_by(user_id: user.id, ignored_user_id: another_user.id)).to be_present
+        end
+
+        it "does not allow a regular user to change the ignore status for anyone but themself" do
+          ignored_user.destroy!
+          acting_user = Fabricate(:user)
+          put "/u/#{another_user.username}/notification_level.json", params: {
+            notification_level: "ignore",
+            acting_user_id: acting_user.id,
+            expiring_at: 3.days.from_now
+          }
+          expect(response.status).to eq(422)
+          expect(IgnoredUser.find_by(user_id: acting_user.id, ignored_user_id: another_user.id)).to eq(nil)
+
+          put "/u/#{another_user.username}/notification_level.json", params: {
+            notification_level: "ignore",
+            expiring_at: 3.days.from_now
+          }
+          expect(response.status).to eq(200)
           expect(IgnoredUser.find_by(user_id: user.id, ignored_user_id: another_user.id)).to be_present
         end
 

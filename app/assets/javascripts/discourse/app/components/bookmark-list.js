@@ -4,6 +4,7 @@ import { schedule } from "@ember/runloop";
 import bootbox from "bootbox";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { openBookmarkModal } from "discourse/controllers/bookmark";
+import { ajax } from "discourse/lib/ajax";
 import {
   openLinkInNewTab,
   shouldOpenInNewTab,
@@ -92,18 +93,32 @@ export default Component.extend(Scrolling, {
 
   @action
   editBookmark(bookmark) {
-    openBookmarkModal(bookmark, {
-      onAfterSave: (savedData) => {
-        this.appEvents.trigger(
-          "bookmarks:changed",
-          savedData,
-          bookmark.attachedTo()
-        );
-        this.reload();
+    openBookmarkModal(
+      bookmark,
+      {
+        onAfterSave: (savedData) => {
+          this.appEvents.trigger(
+            "bookmarks:changed",
+            savedData,
+            bookmark.attachedTo()
+          );
+          this.reload();
+        },
+        onAfterDelete: () => {
+          this.reload();
+        },
       },
-      onAfterDelete: () => {
-        this.reload();
-      },
+      { use_polymorphic_bookmarks: this.siteSettings.use_polymorphic_bookmarks }
+    );
+  },
+
+  @action
+  clearBookmarkReminder(bookmark) {
+    return ajax(`/bookmarks/${bookmark.id}`, {
+      type: "PUT",
+      data: { reminder_at: null },
+    }).then(() => {
+      bookmark.set("reminder_at", null);
     });
   },
 

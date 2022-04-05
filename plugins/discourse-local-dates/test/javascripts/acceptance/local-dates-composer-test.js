@@ -1,6 +1,11 @@
-import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import {
+  acceptance,
+  query,
+  queryAll,
+} from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
 import { click, fillIn, visit } from "@ember/test-helpers";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 acceptance("Local Dates - composer", function (needs) {
   needs.user();
@@ -60,5 +65,20 @@ acceptance("Local Dates - composer", function (needs) {
       "it has the correct date"
     );
     assert.notOk(getAttr("time"), "it doesn’t have time");
+  });
+
+  test("date modal", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+    await click(".d-editor-button-bar .local-dates");
+
+    const timezoneChooser = selectKit(".timezone-input");
+    await timezoneChooser.expand();
+    await timezoneChooser.selectRowByValue("Asia/Macau");
+
+    assert.ok(
+      query(".preview .discourse-local-date").textContent.includes("Macau"),
+      "it outputs a preview date in selected timezone"
+    );
   });
 });

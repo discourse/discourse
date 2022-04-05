@@ -93,7 +93,6 @@ zh_TW:
       to_placeholder: "至今"
     share:
       topic_html: '話題：<span class="topic-title">%{topicTitle}</span>'
-      post: "貼文 #%{postNumber} "
       close: "關閉"
       twitter: "分享到 Twitter"
       facebook: "分享到 Facebook"
@@ -254,11 +253,6 @@ zh_TW:
       no_timezone: '您尚未設定時區。將無法設定提醒事項。在<a href="%{basePath}/my/preferences/profile">您的設定檔</a>中設定一個 。'
       list_permission_denied: "您沒有權限查看此用戶的書籤。"
       no_user_bookmarks: "您沒有加入書籤的貼文，書籤能夠讓您快速的找到特定貼文。"
-      auto_delete_preference:
-        label: "自動刪除"
-        never: "永不"
-        when_reminder_sent: "一旦發送提醒"
-        on_owner_reply: "在我回复這個話題之後"
       search: "搜索"
       reminders:
         today_with_time: "今天 %{time}"
@@ -312,8 +306,7 @@ zh_TW:
     switch_to_anon: "進入匿名模式"
     switch_from_anon: "離開匿名模式"
     banner:
-      close: "關閉此橫幅"
-      edit: "編輯此橫幅 >>"
+      edit: "編輯"
     pwa:
       install_banner: "你希望在此裝置上 <a href>安裝 %{title} 嗎？</a>"
     choose_topic:
@@ -1440,7 +1433,6 @@ zh_TW:
       success: "你的帳號已被建立，且您已經登入了。"
       name_label: "姓名"
       password_label: "密碼"
-      optional_description: "(選擇性)"
     password_reset:
       continue: "繼續連接至 %{site_name}"
     emoji_set:
@@ -3092,7 +3084,6 @@ zh_TW:
         delete_confirm: '你確定要刪除%{theme_name}嗎？'
         color: "顏色"
         opacity: "不透明度"
-        copy: "複製"
         copy_to_clipboard: "複製至剪貼簿"
         copied_to_clipboard: "已複製至剪貼簿"
         copy_to_clipboard_error: "複製資料到剪貼簿時發生錯誤"

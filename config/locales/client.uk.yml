@@ -164,7 +164,6 @@ uk:
       to_placeholder: "дата"
     share:
       topic_html: 'Тема: <span class="topic-title">%{topicTitle}</span>'
-      post: "допис #%{postNumber}"
       close: "сховати"
       twitter: "Поділитися в Twitter"
       facebook: "Поділитися у Facebook"
@@ -347,10 +346,7 @@ uk:
       list_permission_denied: "У Вас немає прав для перегляду закладок цього користувача."
       no_user_bookmarks: "У вас немає публікацій у закладках. Закладки дозволяють швидко переходити до обраних дискусій."
       auto_delete_preference:
-        label: "Автоматичне видалення"
-        never: "Ніколи"
-        when_reminder_sent: "Після надсилання нагадування"
-        on_owner_reply: "Після того, як я відповім на цю тему"
+        when_reminder_sent: "Видалити закладку"
       search_placeholder: "Пошук закладок за назвою, назвою теми або вмістом публікації"
       search: "Пошук"
       reminders:
@@ -420,8 +416,8 @@ uk:
     switch_to_anon: "Увійти в анонімний режим"
     switch_from_anon: "Полишити анонімний режим"
     banner:
-      close: "Прибрати цей банер."
-      edit: "Редагувати цей банер >>"
+      close: "Прибрати цей банер"
+      edit: "Редагувати"
     pwa:
       install_banner: "Чи хочете ви <a href> встановити %{title} на цей пристрій?</a>"
     choose_topic:
@@ -1939,7 +1935,6 @@ uk:
       success: "Ваш аккаунт створений та ви можете тепер увійти."
       name_label: "Ім'я"
       password_label: "Пароль"
-      optional_description: "(опціонально)"
     password_reset:
       continue: "Продовжити на %{site_name}"
     emoji_set:
@@ -2807,14 +2802,6 @@ uk:
           few: "Видиме лише для членів груп: %{groupNames}"
           many: "Видиме лише для членів груп: %{groupNames}"
           other: "Видиме лише для членів груп: %{groupNames}"
-        notify_users:
-          title: "Повідомляти"
-          instructions: "Повідомте таких користувачів про цю тему:"
-          success:
-            one: "Успішно повідомлено %{username} про цю тему."
-            few: "Успішно повідомлено %{username} про цю тему."
-            many: "Успішно повідомлено %{username} про цю тему."
-            other: "Успішно повідомлено всіх користувачів про цю тему."
         invite_users: "Запрошення"
       print:
         title: "Друк"
@@ -3954,7 +3941,6 @@ uk:
       unsupported_file_picked: "Ви вибрали непідтримуваний файл. Підтримуються такі типи файлів – %{types}."
     user_activity:
       no_activity_title: "Ще немає активності"
-      no_activity_body: "Ласкаво просимо до нашої спільноти! Ви тут зовсім новачок і ще не долучилися до обговорень. Як перший крок, відвідайте <a href='%{topUrl}'>Топ</a> або <a href='%{categoriesUrl}'>Категорії</a> і просто почніть читати! Позначте %{heartIcon} публікації, які вам подобаються або про які потрібно дізнатися більше. Якщо ви цього ще не зробили, допоможіть іншим познайомитися з вами, додавши зображення та коротку інформацію про себе у <a href='%{preferencesUrl}'>профілі користувача</a>."
       no_activity_others: "Немає активностей."
       no_replies_title: "Ви ще не відповіли на жодну тему"
       no_replies_others: "Немає відповідей"
@@ -4425,7 +4411,6 @@ uk:
         delete_confirm: 'Ви впевнені, що хочете видалити "%{theme_name}"?'
         color: "Колір"
         opacity: "Непрозорість"
-        copy: "Копіювати"
         copy_to_clipboard: "Скопіювати в буфер"
         copied_to_clipboard: "Скопійовано у буфер обміну"
         copy_to_clipboard_error: "Помилка під час копіювання даних у буфер обміну"

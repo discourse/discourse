@@ -3,6 +3,8 @@ import { PUBLIC_JS_VERSIONS } from "discourse/lib/public-js-versions";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import { run } from "@ember/runloop";
+import { isTesting } from "discourse-common/config/environment";
+import { registerWaiter } from "@ember/test";
 
 const _loaded = {};
 const _loading = {};
@@ -13,8 +15,9 @@ function loadWithTag(path, cb) {
   let finished = false;
   let s = document.createElement("script");
   s.src = path;
-  if (Ember.Test) {
-    Ember.Test.registerWaiter(() => finished);
+
+  if (isTesting()) {
+    registerWaiter(() => finished);
   }
 
   s.onload = s.onreadystatechange = function (_, abort) {

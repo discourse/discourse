@@ -157,7 +157,9 @@ export default ComboBoxComponent.extend(TagsMixin, {
       .map((r) => {
         const content = context.defaultItem(r.id, r.text);
         content.targetTagId = r.target_tag || r.id;
-        content.count = r.count;
+        if (!context.currentCategory) {
+          content.count = r.count;
+        }
         content.pmCount = r.pm_count;
         return content;
       });

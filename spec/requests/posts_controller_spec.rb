@@ -16,6 +16,12 @@ shared_examples 'finding and showing post' do
     expect(response.status).to eq(200)
   end
 
+  it "returns 404 when post's topic is deleted" do
+    post.topic.destroy!
+    get url
+    expect(response.status).to eq(404)
+  end
+
   context "deleted post" do
     before do
       post.trash!(user)
@@ -161,6 +167,28 @@ describe PostsController do
       expect(json[0]['id']).to eq(parent.id)
       expect(json[0]['user_custom_fields']['hello']).to eq('world')
       expect(json[0]['user_custom_fields']['hidden']).to be_blank
+    end
+  end
+
+  describe '#reply_ids' do
+    include_examples 'finding and showing post' do
+      let(:url) { "/posts/#{post.id}/reply-ids.json" }
+    end
+
+    it "returns ids of post's replies" do
+      post = Fabricate(:post)
+      reply1 = Fabricate(:post, topic: post.topic, reply_to_post_number: post.post_number)
+      reply2 = Fabricate(:post, topic: post.topic, reply_to_post_number: post.post_number)
+      PostReply.create(post_id: post.id, reply_post_id: reply1.id)
+      PostReply.create(post_id: post.id, reply_post_id: reply2.id)
+
+      get "/posts/#{post.id}/reply-ids.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body).to eq([
+        { "id" => reply1.id, "level" => 1 },
+        { "id" => reply2.id, "level" => 1 },
+      ])
     end
   end
 
@@ -1925,6 +1953,12 @@ describe PostsController do
       expect(response.status).to eq(200)
       expect(response.body).to eq("123456789")
     end
+
+    it "renders a 404 page" do
+      get "/posts/0/raw"
+      expect(response.status).to eq(404)
+      expect(response.body).to include(I18n.t("page_not_found.title"))
+    end
   end
 
   describe '#markdown_num' do
@@ -1961,6 +1995,12 @@ describe PostsController do
       post = Fabricate(:private_message_post)
       get "/p/#{post.id}.json"
       expect(response).to be_forbidden
+    end
+
+    it "renders a 404 page" do
+      get "/p/0"
+      expect(response.status).to eq(404)
+      expect(response.body).to include(I18n.t("page_not_found.title"))
     end
   end
 
@@ -2073,7 +2113,10 @@ describe PostsController do
 
         body = response.body
 
-        expect(body).to include(public_post.url)
+        # we cache in redis, in rare cases this can cause a flaky test
+        PostsHelper.clear_canonical_cache!(public_post)
+
+        expect(body).to include(public_post.canonical_url)
         expect(body).to_not include(private_post.url)
       end
 

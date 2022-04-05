@@ -16,6 +16,7 @@ module Jobs
       post = Post.find_by(id: @post_id)
       return if post.blank?
       return if post.topic.blank?
+      return if post.cook_method == Post.cook_methods[:raw_html]
 
       raw = post.raw.dup
       start_raw = raw.dup
@@ -110,7 +111,11 @@ module Jobs
           tmp_file_name: "discourse-hotlinked",
           follow_redirect: true
         )
-      rescue
+      rescue => e
+        if SiteSetting.verbose_upload_logging
+          Rails.logger.warn("Verbose Upload Logging: Error '#{e.message}' while downloading #{src}")
+        end
+
         if (retries -= 1) > 0 && !Rails.env.test?
           sleep 1
           retry

@@ -166,13 +166,58 @@ module DiscourseTagging
           "tags.required_tags_from_group",
           count: category.min_tags_from_required_group,
           tag_group_name: category.required_tag_group.name,
-          tags: category.required_tag_group.tags.pluck(:name).join(", ")
+          tags: category.required_tag_group.tags.order(:id).pluck(:name).join(", ")
         )
       )
       false
     else
       true
     end
+  end
+
+  def self.validate_category_restricted_tags(guardian, model, category, tags = [])
+    return true if tags.blank? || category.blank?
+
+    tags = tags.map(&:name) if Tag === tags[0]
+    tags_restricted_to_categories = Hash.new { |h, k| h[k] = Set.new }
+
+    query = Tag.where(name: tags)
+    query.joins(tag_groups: :categories).pluck(:name, 'categories.id').each do |(tag, cat_id)|
+      tags_restricted_to_categories[tag] << cat_id
+    end
+    query.joins(:categories).pluck(:name, 'categories.id').each do |(tag, cat_id)|
+      tags_restricted_to_categories[tag] << cat_id
+    end
+
+    unallowed_tags = tags_restricted_to_categories.keys.select do |tag|
+      !tags_restricted_to_categories[tag].include?(category.id)
+    end
+
+    if unallowed_tags.present?
+      msg = I18n.t(
+        "tags.forbidden.restricted_tags_cannot_be_used_in_category",
+        count: unallowed_tags.size,
+        tags: unallowed_tags.sort.join(", "),
+        category: category.name
+      )
+      model.errors.add(:base, msg)
+      return false
+    end
+
+    if !category.allow_global_tags && category.has_restricted_tags?
+      unrestricted_tags = tags - tags_restricted_to_categories.keys
+      if unrestricted_tags.present?
+        msg = I18n.t(
+          "tags.forbidden.category_does_not_allow_tags",
+          count: unrestricted_tags.size,
+          tags: unrestricted_tags.sort.join(", "),
+          category: category.name
+        )
+        model.errors.add(:base, msg)
+        return false
+      end
+    end
+    true
   end
 
   TAG_GROUP_RESTRICTIONS_SQL ||= <<~SQL

@@ -315,30 +315,37 @@ class PostAlerter
     end
   end
 
-  def notify_group_summary(user, post)
+  def notify_group_summary(user, topic, acting_user_id: nil)
     @group_stats ||= {}
-    stats = (@group_stats[post.topic_id] ||= group_stats(post.topic))
+    stats = (@group_stats[topic.id] ||= group_stats(topic))
     return unless stats
 
-    group_id = post.topic
+    group_id = topic
       .topic_allowed_groups
       .where(group_id: user.groups.pluck(:id))
       .pluck_first(:group_id)
 
     stat = stats.find { |s| s[:group_id] == group_id }
-    return unless stat && stat[:inbox_count] > 0
+    return unless stat
 
     DistributedMutex.synchronize("group_message_notify_#{user.id}") do
-      Notification.consolidate_or_create!(
-        notification_type: Notification.types[:group_message_summary],
-        user_id: user.id,
-        data: {
-          group_id: stat[:group_id],
-          group_name: stat[:group_name],
-          inbox_count: stat[:inbox_count],
-          username: user.username_lower
-        }.to_json
-      )
+      if stat[:inbox_count] > 0
+        Notification.consolidate_or_create!(
+          notification_type: Notification.types[:group_message_summary],
+          user_id: user.id,
+          read: user.id === acting_user_id ? true : false,
+          data: {
+            group_id: stat[:group_id],
+            group_name: stat[:group_name],
+            inbox_count: stat[:inbox_count],
+            username: user.username_lower
+          }.to_json
+        )
+      else
+        Notification.where(user_id: user.id, notification_type: Notification.types[:group_message_summary])
+          .where("data::json ->> 'group_id' = ?", stat[:group_id].to_s)
+          .delete_all
+      end
     end
 
     # TODO decide if it makes sense to also publish a desktop notification
@@ -652,7 +659,7 @@ class PostAlerter
         if is_replying?(user, reply_to_user, quoted_users)
           create_pm_notification(user, post, emails_to_skip_send)
         else
-          notify_group_summary(user, post)
+          notify_group_summary(user, post.topic)
         end
       when TopicUser.notification_levels[:regular]
         if is_replying?(user, reply_to_user, quoted_users)
@@ -712,6 +719,13 @@ class PostAlerter
       # email to the user who was just added by CC. In this case the OP probably
       # replied and CC'd some people, and they are the only other topic users.
       return if post.incoming_email.cc_addresses_split.include?(to_address)
+
+      # We don't want to create an email storm if someone emails the group and
+      # CC's 50 support addresses from various places, which all then respond
+      # with auto-responders saying they have received our email. Any auto-generated
+      # emails should not propagate notifications to anyone else, not even
+      # the regular topic user notifications.
+      return email_addresses.dup.uniq if post.incoming_email.is_auto_generated?
     end
 
     # Send a single email using group SMTP settings to cut down on the

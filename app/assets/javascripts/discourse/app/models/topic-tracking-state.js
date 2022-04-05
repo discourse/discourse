@@ -441,7 +441,7 @@ const TopicTrackingState = EmberObject.extend({
   },
 
   _generateCallbackId() {
-    return Math.random().toString(12).substr(2, 9);
+    return Math.random().toString(12).slice(2, 11);
   },
 
   onStateChange(cb) {

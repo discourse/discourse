@@ -62,7 +62,7 @@ class CategoryList
 
     category_featured_topics = CategoryFeaturedTopic.select([:category_id, :topic_id]).order(:rank)
 
-    @all_topics = Topic.where(id: category_featured_topics.map(&:topic_id))
+    @all_topics = Topic.where(id: category_featured_topics.map(&:topic_id)).includes(:shared_draft, :category)
 
     if @guardian.authenticated?
       @all_topics = @all_topics

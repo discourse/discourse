@@ -26,20 +26,15 @@ RSpec.describe BookmarkReminderNotificationHandler do
       expect(data["bookmark_name"]).to eq(bookmark.name)
     end
 
-    it "clears the reminder" do
-      subject.send_notification(bookmark)
-      expect(bookmark.reload.no_reminder?).to eq(true)
-    end
-
     context "when the topic is deleted" do
       before do
         bookmark.topic.trash!
         bookmark.reload
       end
 
-      it "does not send a notification and clears the reminder" do
+      it "does not send a notification and updates last notification attempt time" do
         expect { subject.send_notification(bookmark) }.not_to change { Notification.count }
-        expect(bookmark.reload.no_reminder?).to eq(true)
+        expect(bookmark.reload.reminder_last_sent_at).not_to be_blank
       end
     end
 
@@ -49,9 +44,9 @@ RSpec.describe BookmarkReminderNotificationHandler do
         bookmark.reload
       end
 
-      it "does not send a notification and clears the reminder" do
+      it "does not send a notification and updates last notification attempt time" do
         expect { subject.send_notification(bookmark) }.not_to change { Notification.count }
-        expect(bookmark.reload.no_reminder?).to eq(true)
+        expect(bookmark.reload.reminder_last_sent_at).not_to be_blank
       end
     end
 
@@ -83,12 +78,24 @@ RSpec.describe BookmarkReminderNotificationHandler do
       end
     end
 
+    context "when the auto_delete_preference is clear_reminder" do
+      before do
+        TopicUser.create!(topic: bookmark.topic, user: user, bookmarked: true)
+        bookmark.update(auto_delete_preference: Bookmark.auto_delete_preferences[:clear_reminder])
+      end
+
+      it "resets reminder_at after the reminder gets sent" do
+        subject.send_notification(bookmark)
+        expect(Bookmark.find_by(id: bookmark.id).reminder_at).to eq(nil)
+      end
+    end
+
     context "when the post has been deleted" do
-      it "clears the reminder and does not send a notification" do
+      it "does not send a notification" do
         bookmark.post.trash!
         bookmark.reload
-        subject.send_notification(bookmark)
-        expect(bookmark.reload.no_reminder?).to eq(true)
+        expect { subject.send_notification(bookmark) }.not_to change { Notification.count }
+        expect(bookmark.reload.reminder_last_sent_at).not_to be_blank
       end
     end
   end

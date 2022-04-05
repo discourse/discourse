@@ -15,6 +15,8 @@ module.exports = function (defaults) {
   let vendorJs = discourseRoot + "/vendor/assets/javascripts/";
 
   const isProduction = EmberApp.env().includes("production");
+  const isTest = EmberApp.env().includes("test");
+
   let app = new EmberApp(defaults, {
     autoRun: false,
     "ember-qunit": {
@@ -91,7 +93,15 @@ module.exports = function (defaults) {
       sourceMapConfig: false,
     });
 
-    return mergeTrees([tests, testHelpers]);
+    if (isTest) {
+      return mergeTrees([
+        tests,
+        testHelpers,
+        discourseScss(`${discourseRoot}/app/assets/stylesheets`, "testem.scss"),
+      ]);
+    } else {
+      return mergeTrees([tests, testHelpers]);
+    }
   };
 
   // WARNING: We should only import scripts here if they are not in NPM.
@@ -110,7 +120,6 @@ module.exports = function (defaults) {
   );
 
   const mergedTree = mergeTrees([
-    discourseScss(`${discourseRoot}/app/assets/stylesheets`, "testem.scss"),
     createI18nTree(discourseRoot, vendorJs),
     app.toTree(),
     funnel(`${discourseRoot}/public/javascripts`, { destDir: "javascripts" }),

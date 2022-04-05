@@ -15,12 +15,12 @@
     "start": "ember serve"
   },
   "dependencies": {
-    "@uppy/aws-s3": "^2.0.4",
-    "@uppy/aws-s3-multipart": "^2.1.0",
-    "@uppy/core": "^2.1.0",
-    "@uppy/drop-target": "^1.1.0",
-    "@uppy/utils": "^4.0.3",
-    "@uppy/xhr-upload": "^2.0.4",
+    "@uppy/aws-s3": "^2.0.8",
+    "@uppy/aws-s3-multipart": "^2.2.1",
+    "@uppy/core": "^2.1.6",
+    "@uppy/drop-target": "^1.1.2",
+    "@uppy/utils": "^4.0.5",
+    "@uppy/xhr-upload": "^2.0.7",
     "ember-auto-import": "^2.2.4",
     "ember-cli-babel": "^7.13.0",
     "ember-cli-htmlbars": "^4.2.0",

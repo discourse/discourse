@@ -140,7 +140,6 @@ bs_BA:
       to_placeholder: "do datuma"
     share:
       topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
-      post: "dijeli post #%{postNumber}"
       close: "zatvori"
       twitter: "Podijeli na Twitter"
       facebook: "Podijeli na Facebooku"
@@ -297,10 +296,7 @@ bs_BA:
       list_permission_denied: "Nemate dozvolu za pregled zabilješki ovog korisnika."
       no_user_bookmarks: "Nemate zabilježene postove; zabilješke omogućuju brzo pozivanje na određene postove."
       auto_delete_preference:
-        label: "Automatsko brisanje"
-        never: "Nikad"
-        when_reminder_sent: "Nakon slanja podsjetnika"
-        on_owner_reply: "Nakon što odgovorim na ovu temu"
+        when_reminder_sent: "Obriši zabilješku"
       search_placeholder: "Pretražite zabilješke po imenu, naslovu teme ili sadržaju objave"
       search: "Pretraži"
       reminders:
@@ -357,8 +353,8 @@ bs_BA:
     switch_to_anon: "Uđi u privatni način rada"
     switch_from_anon: "Izađi iz privatnog načina rada"
     banner:
-      close: "Odkaži ovu zastavicu."
-      edit: "Uredite ovu zastavicu >>"
+      close: "Odkaži ovu zastavicu"
+      edit: "Izmijeni"
     pwa:
       install_banner: "Da li želite <a href>instalirati %{title} na ovaj uređaj?</a>"
     choose_topic:
@@ -1592,7 +1588,6 @@ bs_BA:
       success: "Vaš račun je napravljen i sada ste prijavljeni."
       name_label: "Ime"
       password_label: "Lozinka"
-      optional_description: "(opciono)"
     password_reset:
       continue: "Nastavi ka %{site_name}"
     emoji_set:
@@ -3454,7 +3449,6 @@ bs_BA:
         delete_confirm: 'Jeste li sigurni da želite izbrisati "%{theme_name}"?'
         color: "Color"
         opacity: "Opacity"
-        copy: "Copy"
         copy_to_clipboard: "Kopirati u clipboard"
         copied_to_clipboard: "Kopirano u međuspremnik"
         copy_to_clipboard_error: "Pogreška pri kopiranju podataka u međuspremnik"

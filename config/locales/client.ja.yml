@@ -98,7 +98,6 @@ ja:
       to_placeholder: "日付"
     share:
       topic_html: 'トピック: <span class="topic-title">%{topicTitle}</span>'
-      post: "投稿 #%{postNumber}"
       close: "閉じる"
       twitter: "Twitter で共有"
       facebook: "Facebook で共有"
@@ -268,10 +267,7 @@ ja:
       list_permission_denied: "このユーザーのブックマークを表示する権限がありません。"
       no_user_bookmarks: "ブックマークした投稿はありません。ブックマークを使用すると、特定の投稿を素早く参照できます。"
       auto_delete_preference:
-        label: "自動的に削除"
-        never: "削除しない"
-        when_reminder_sent: "リマインダーが送信されたとき"
-        on_owner_reply: "このトピックに返信した後"
+        when_reminder_sent: "ブックマークを削除"
       search_placeholder: "名前、トピックタイトル、または投稿コンテンツでブックマークを検索する"
       search: "検索"
       reminders:
@@ -326,8 +322,7 @@ ja:
     switch_to_anon: "匿名モードを開始"
     switch_from_anon: "匿名モードを終了"
     banner:
-      close: "バナーを閉じる。"
-      edit: "このバナーを編集 >>"
+      edit: "編集"
     pwa:
       install_banner: "<a href>このデバイスに %{title} をインストール</a>しますか？"
     choose_topic:
@@ -1732,7 +1727,6 @@ ja:
       success: "あなたのアカウントが作成され、ログインしました。"
       name_label: "名前"
       password_label: "パスワード"
-      optional_description: "(オプション)"
     password_reset:
       continue: "%{site_name} に進む"
     emoji_set:
@@ -2448,11 +2442,6 @@ ja:
         help: "このトピックのリンクを共有する"
         instructions: "このトピックへのリンクを共有します:"
         copied: "トピックのリンクをコピーしました。"
-        notify_users:
-          title: "通知"
-          instructions: "このトピックについて次のユーザーに通知します:"
-          success:
-            other: "このトピックについてすべてのユーザーに正常に通知しました。"
         invite_users: "招待"
       print:
         title: "印刷"
@@ -3831,7 +3820,6 @@ ja:
         delete_confirm: '"%{theme_name}" を削除してもよろしいですか？'
         color: "色"
         opacity: "透明度"
-        copy: "コピー"
         copy_to_clipboard: "クリップボードにコピー"
         copied_to_clipboard: "クリップボードにコピーしました"
         copy_to_clipboard_error: "データをクリップボードにコピーする際にエラーが発生しました"

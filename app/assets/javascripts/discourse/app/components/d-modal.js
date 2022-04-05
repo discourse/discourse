@@ -158,6 +158,7 @@ export default Component.extend({
     }
     if (event.key === "Enter" && this.triggerClickOnEnter(event)) {
       this.element?.querySelector(".modal-footer .btn-primary")?.click();
+      event.preventDefault();
     }
     if (event.key === "Tab") {
       this._trapTab(event);

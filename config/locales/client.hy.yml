@@ -118,7 +118,6 @@ hy:
       to_placeholder: "դեպի ամսաթիվ"
     share:
       topic_html: 'Թեմա՝ <span class="topic-title">%{topicTitle}</span>'
-      post: "գրառում #%{postNumber}"
       close: "փակել"
     action_codes:
       public_topic: "այս թեման դարձրել է հրապարակային %{when}"
@@ -268,7 +267,7 @@ hy:
       list_permission_denied: "Դուք իրավունք չունեք դիտելու այս օգտատիրոջ էջանշանները: "
       no_user_bookmarks: "Դուք էջանշած գրառումներ չունեք; էջանշումները թույլ են տալիս Ձեզ արագորեն տեղափոխվել դեպի որոշակի գրառում:"
       auto_delete_preference:
-        never: "Երբեք"
+        when_reminder_sent: "Ջնջել էջանշանը"
       search: "Որոնում"
       reminders:
         today_with_time: "այսօր %{time}"
@@ -317,8 +316,7 @@ hy:
     switch_to_anon: "Սկսել Անանուն Ռեժիմը"
     switch_from_anon: "Ավարտել Անանուն Ռեժիմը"
     banner:
-      close: "Փակել այս բանները"
-      edit: "Խմբագրել այս բանները >>"
+      edit: "Խմբագրել"
     pwa:
       install_banner: "Դուք ցանկանու՞մ եք <a href>տեղադրել %{title}-ը այս սարքի վրա?</a>"
     choose_topic:
@@ -1436,7 +1434,6 @@ hy:
       success: "Ձեր հաշիվը ստեղծված է, և այժմ Դուք մուտք եք գործել:"
       name_label: "Անուն"
       password_label: "Գաղտնաբառ"
-      optional_description: "(ընտրովի)"
     password_reset:
       continue: "Շարունակել դեպի %{site_name}"
     emoji_set:
@@ -3265,7 +3262,6 @@ hy:
         delete_confirm: 'Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել <<%{theme_name}>> :'
         color: "Գույն"
         opacity: "Թափանցիկություն"
-        copy: "Կրկնօրինակել"
         copy_to_clipboard: "Կրկնօրինակել Փոխանակման Հարթակում"
         copied_to_clipboard: "Կրկնօրինակված է Փոխանակման Հարթակում"
         copy_to_clipboard_error: "Փոխանակման Հարթակում տվյալների կրկնօրինակման սխալ"

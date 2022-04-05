@@ -164,7 +164,7 @@ he:
       to_placeholder: "עד תאריך"
     share:
       topic_html: 'נושא: <span class="topic-title">%{topicTitle}</span>'
-      post: "פוסט מס׳ %{postNumber}"
+      post: "פוסט מס׳ %{postNumber} מאת ‎@%{username}"
       close: "סגירה"
       twitter: "שיתוף בטוויטר"
       facebook: "שיתוף בפייסבוק"
@@ -207,6 +207,7 @@ he:
     skip_to_main_content: "דילוג לתוכן הראשי"
     wizard_required: "ברוך בואך ל־Discourse החדש שלך! נתחיל עם <a href='%{url}' data-auto-route='true'>אשף ההתקנה</a> ✨"
     emails_are_disabled: "כל הדוא״ל היוצא נוטרל באופן גורף על ידי מנהל אתר. שום הודעת דוא״ל, מכל סוג שהוא, לא תשלח."
+    emails_are_disabled_non_staff: "דוא״ל יוצא הושבת עבור משתמשים שאינם מהסגל."
     software_update_prompt:
       message: "עדכנו את האתר הזה, <span>נא לרענן</span> או שיתכן שתופענה כל מיני תופעות בלתי מוסברות."
       dismiss: "התעלמות"
@@ -338,6 +339,8 @@ he:
         unbookmark_with_reminder: "יש ללחוץ כדי להסיר את כל הסימניות והתזכורות בנושא זה."
     bookmarks:
       created: "הוספת את הפוסט הזה לסימניות. %{name}"
+      create_for: "יצירת סימנייה אל %{type}"
+      edit_for: "עריכת סימנייה אל %{type}"
       not_bookmarked: "סמנו פוסט זה עם סימנייה"
       remove_reminder_keep_bookmark: "הסרת תזכורת ושמירת הסימנייה"
       created_with_reminder: "סימנת את הפוסט הזה עם תזכורת %{date}. %{name}"
@@ -351,10 +354,11 @@ he:
       list_permission_denied: "אין לך הרשאה לצפות בסימניות של המשתמש הזה."
       no_user_bookmarks: "לא הוספת פוסטים לסימניות, סימניות מאפשרות לך לפנות במהירות לפוסטים מסוימים."
       auto_delete_preference:
-        label: "למחוק אוטומטית"
-        never: "לעולם לא"
-        when_reminder_sent: "לאחר שליחת התזכורת"
-        on_owner_reply: "לאחר שהגבתי לנושא הזה"
+        label: "לאחר שקיבלת התראה"
+        never: "לשמור על הסימנייה"
+        when_reminder_sent: "מחיקת סימנייה"
+        on_owner_reply: "מחיקת מסד נתונים, לאחר התגובה"
+        clear_reminder: "לשמור על הסימנייה ולפנות את התזכורת"
       search_placeholder: "חיפוש סימניות לפי שם, כותרת הנושא או תוכן הפוסט"
       search: "חיפוש"
       reminders:
@@ -426,8 +430,8 @@ he:
     switch_to_anon: "כניסה למצב אלמוני"
     switch_from_anon: "יציאה ממצב אלמוני"
     banner:
-      close: "שחרור באנר זה."
-      edit: "עריכת הבאנר הזה >>"
+      close: "התעלמות מהכרזה"
+      edit: "עריכה"
     pwa:
       install_banner: "<a href>להתקין את %{title} על המכשיר הזה?</a>"
     choose_topic:
@@ -1949,7 +1953,6 @@ he:
       success: "החשבון נוצר ונכנסת אליו."
       name_label: "שם"
       password_label: "ססמה"
-      optional_description: "(רשות)"
     password_reset:
       continue: "המשיכו ל-%{site_name}"
     emoji_set:
@@ -1966,6 +1969,7 @@ he:
       categories_and_top_topics: "קטגוריות ונושאים מובילים"
       categories_boxes: "תיבות עם תתי קטגוריות"
       categories_boxes_with_topics: "תיבות עם נושאים מומלצים"
+      subcategories_with_featured_topics: "תת־קטגוריות עם נושאים מובילים"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -2817,14 +2821,6 @@ he:
           two: "גלוי רק לחברי הקבוצות: %{groupNames}"
           many: "גלוי רק לחברי הקבוצות: %{groupNames}"
           other: "גלוי רק לחברי הקבוצות: %{groupNames}"
-        notify_users:
-          title: "להודיע"
-          instructions: "להודיע למשתמשים הבאים על הנושא הזה:"
-          success:
-            one: "נשלחה הודעה אל %{username} על הנושא הזה."
-            two: "נשלחה הודעה לכולם על הנושא הזה."
-            many: "נשלחה הודעה לכולם על הנושא הזה."
-            other: "נשלחה הודעה לכולם על הנושא הזה."
         invite_users: "להזמין"
       print:
         title: "הדפסה"
@@ -3035,7 +3031,15 @@ he:
       show_hidden: "צפייה בתוכן שמיועד להתעלמות."
       deleted_by_author_simple: "(הפוסט נמחק על ידי הכותב)"
       collapse: "צמצום"
+      sr_collapse_replies: "צמצום תשובות מוטמעות"
+      sr_expand_replies:
+        one: "לפוסט הזה יש תגובה %{count}. יורחב בלחיצה"
+        two: "לפוסט הזה יש %{count} תגובות. יורחב בלחיצה"
+        many: "לפוסט הזה יש %{count} תגובות. יורחב בלחיצה"
+        other: "לפוסט הזה יש %{count} תגובות. יורחב בלחיצה"
       expand_collapse: "הרחב/צמצם"
+      sr_below_embedded_posts_description: "תגובות לפוסט מס׳ %{post_number}"
+      sr_embedded_reply_description: "תגובה מאת ‎@%{username} לפוסט %{post_number}"
       locked: "חבר סגל נעל את האפשרות לערוך את הפוסט הזה"
       gap:
         one: "הצג תגובה אחת שהוסתרה"
@@ -3044,7 +3048,7 @@ he:
         other: "הצגת %{count} תגובות שהוסתרו"
       notice:
         new_user: "זהו הפרסום הראשון מאת %{user} - הבה נקבל את פניו/ה לקהילה שלנו!"
-        returning_user: "עבר זמן מה מאז שראינו במחוזותינו את %{user} - הפרסום האחרון שלו/ה היה ב־%{time}."
+        returning_user: "עבר זמן מה מאז שראינו במחוזותינו את %{user} - הפרסום האחרון שלו/ה היה %{time}."
       unread: "הפוסט טרם נקרא"
       has_replies:
         one: "תגובה אחת"
@@ -3064,6 +3068,16 @@ he:
         two: "אתם ו %{count} אנשים אחרים אהבתם את הפוסט הזה"
         many: "אתם ו %{count} אנשים אחרים אהבתם את הפוסט הזה"
         other: "אתם ו %{count} אנשים אחרים אהבתם את הפוסט הזה"
+      sr_post_like_count_button:
+        one: "מישהו או מישהי (%{count}) אהבו את הפוסט הזה. לחיצה תציג מי"
+        two: "%{count} אנשים אהבו את הפוסט הזה. לחיצה תציג מי"
+        many: "%{count} אנשים אהבו את הפוסט הזה. לחיצה תציג מי"
+        other: "%{count} אנשים אהבו את הפוסט הזה. לחיצה תציג מי"
+      sr_post_read_count_button:
+        one: "מישהו או מישהי (%{count}) קראו את הפוסט הזה. לחיצה תציג מי"
+        two: "%{count} אנשים קראו את הפוסט הזה. לחיצה תציג מי"
+        many: "%{count} אנשים קראו את הפוסט הזה. לחיצה תציג מי"
+        other: "%{count} אנשים קראו את הפוסט הזה. לחיצה תציג מי"
       filtered_replies_hint:
         one: "הצגת הפוסט הזה ואת התגובה עליו"
         two: "הצגת הפוסט הזה ואת %{count} התגובות עליו"
@@ -3081,6 +3095,7 @@ he:
         edit: "אירעה שגיאה בעריכת הפוסט שלך. נא לנסות שוב, עמך הסליחה."
         upload: "סליחה, הייתה שגיאה בהעלאת הקובץ שלך. אנא נסו שנית"
         file_too_large: "הקובץ הזה גדול מדי (הגודל המרבי הוא %{max_size_kb} ק״ב), עמך הסליחה. למה שלא להעלות את הקובץ שלך לשירות שיתוף בענן ואז להדביק את הקישור?"
+        file_size_zero: "נראה שמשהו השתבש, הקובץ שניסית להעלות הוא בגודל 0 בתים. נא לנסות שוב, עמך הסליחה."
         file_too_large_humanized: "הקובץ הזה גדול מדי (הגודל המרבי הוא %{max_size}), עמך הסליחה. למה שלא להעלות את הקובץ שלך לשירות שיתוף בענן ואז להדביק את הקישור?"
         too_many_uploads: "סליחה, אך ניתן להעלות רק קובץ אחת כל פעם."
         too_many_dragged_and_dropped_files:
@@ -3184,6 +3199,8 @@ he:
             two: "ו־%{count} נוספים קראו את זה"
             many: "ו־%{count} נוספים קראו את זה"
             other: "ו־%{count} נוספים קראו את זה"
+          sr_post_likers_list_description: "משתמשים שאהבו את הפוסט הזה"
+          sr_post_readers_list_description: "משתמשים שקראו את הפוסט הזה"
         by_you:
           off_topic: "דיגלתם פרסום זה כאוף-טופיק"
           spam: "דיגלתם את זה כספאם"
@@ -3253,6 +3270,9 @@ he:
           edit_bookmark:
             name: "עריכת סימנייה"
             description: "עריכת שם הסימנייה או החלפת מועד התזכורת"
+          clear_bookmark_reminder:
+            name: "פינוי התזכורת"
+            description: "פינוי התאריך והשעה של התזכורת"
           pin_bookmark:
             name: "הצמדת הסימנייה"
             description: "הצמדת הסימנייה. פעולה זו תגרום לה להופיע בראש רשימת הסימניות שלך."
@@ -3522,19 +3542,24 @@ he:
         other {}}
     original_post: "פוסט מקורי"
     views: "צפיות"
+    sr_views: "מיון לפי תצוגות"
     views_lowercase:
       one: "צפיה"
       two: "צפיות"
       many: "צפיות"
       other: "צפיות"
     replies: "תגובות"
+    sr_replies: "מיון לפי תגובות"
     views_long:
       one: "נושא זה נצפה פעם %{count}"
       two: "נושא זה נצפה %{number} פעמים"
       many: "נושא זה נצפה %{number} פעמים"
       other: "נושא זה נצפה %{number} פעמים"
     activity: "פעילות"
+    sr_activity: "מיון לפי פעילות"
     likes: "לייקים"
+    sr_likes: "מיון לפי לייקים"
+    sr_op_likes: "מיון לפי לייקים בפוסט המקורי"
     likes_lowercase:
       one: "לייק"
       two: "לייקים"
@@ -3644,6 +3669,7 @@ he:
       readonly: "צפה"
     lightbox:
       download: "הורדה"
+      open: "תמונה מקורית"
       previous: "הקודם (מקש שמאלה)"
       next: "הבא (מקש ימינה)"
       counter: "%curr% מתוך %total%"
@@ -3965,7 +3991,7 @@ he:
       unsupported_file_picked: "בחרת קובץ שאינו נתמך. סוגי קבצים נתמכים - %{types}."
     user_activity:
       no_activity_title: "אין פעילות עדיין"
-      no_activity_body: "ברוך בואך לקהילה שלנו! הצטרפת ממש לא מזמן וטרם תרמת לדיונים. כצעד ראשון, כדאי לבקר ב<a href='%{topUrl}'>מובילים</a> או ב<a href='%{categoriesUrl}'>קטגוריות</a> ופשוט להתחיל לקרוא. ניתן לבחור ב־%{heartIcon} בפוסטים שנשאו חן בעיניך או שמעניין אותך ללמוד עליהם יותר. אם טרם עשית זאת, ניתן לסייע לאחרים להכיר אותך על ידי הוספת תמונה ותיאור עצמי ב<a href='%{preferencesUrl}'>העדפות המשתמש</a> שלך."
+      no_activity_body: "ברוך בואך לקהילה שלנו! הצטרפת ממש לא מזמן וטרם תרמת לדיונים. כצעד ראשון, כדאי לבקר ב<a href='%{topUrl}'>מובילים</a> או ב<a href='%{categoriesUrl}'>קטגוריות</a> ופשוט להתחיל לקרוא. ניתן לבחור ב־%{heartIcon} בפוסטים שנשאו חן בעיניך או שמעניין אותך ללמוד עליהם יותר. הפעילות שלך תופיע כאן."
       no_activity_others: "אין פעילות."
       no_replies_title: "עדיין לא הגבת לאף נושא"
       no_replies_others: "אין תגובות."
@@ -3975,9 +4001,13 @@ he:
       no_likes_body: "דרך נפלאה לקפוץ ישירות פנימה ולהתחיל לתרום היא להתחיל לקרוא דיונים שכבר נערכו ולבחור בסמל %{heartIcon} על פוסטים שאהבת!"
       no_likes_others: "אין פוסטים שנעשה להם לייק."
       no_topics_title: "עדיין לא פתחת אף נושא"
+      no_topics_title_others: "לא נפתח עוד אף נושא על ידי %{username}"
       no_read_topics_title: "טרם קראת נושאים"
       no_read_topics_body: "עם תחילת קריאת הדיונים, תופיע כאן רשימה. כדי להתחיל לקרוא, כדאי לחפש נושאים שמעניינים אותך תחת <a href='%{topUrl}'>עליונים</a> או <a href='%{categoriesUrl}'>קטגוריות</a> או לחפש אחר מילת מפתח %{searchIcon}"
     no_group_messages_title: "לא נמצאו הודעות קבוצתיות"
+    topic_entrance:
+      sr_jump_top_button: "קפיצה לפוסט הראשון"
+      sr_jump_bottom_button: "קפיצה לפוסט האחרון"
     fullscreen_table:
       expand_btn: "הרחבת טבלה"
     second_factor_auth:
@@ -4212,10 +4242,14 @@ he:
             topics:
               read: קריאת נושא או פוסט מסוים בתוכו. יש גם תמיכה ב־RSS.
               write: יצירת נושא חדש או פרסום לאחד קיים.
+              update: עדכון נושא. החלפת הכותרת, הקטגוריה, התגיות וכו׳.
               read_lists: לקרוא רשימת נושאים כמו מובילים, חדשים, אחרונים וכו׳. יש גם תמיכה ב־RSS.
               wordpress: נחוץ כדי שהתוסף wp-discourse ל־WordPress יעבוד.
             posts:
               edit: לערוך כל פוסט שהוא או אחד מסוים.
+            categories:
+              list: קבלת רשימת קטגוריות.
+              show: קבלת קטגוריה יחידה לפי מזהה.
             uploads:
               create: להעלות קובץ חדש או להפעיל העלאות ישירות יחידניות או מרובות חלקים לאחסון חיצוני.
             users:
@@ -4441,7 +4475,7 @@ he:
         delete_confirm: 'למחוק את „%{theme_name}”?'
         color: "צבע"
         opacity: "שקיפות"
-        copy: "העתקה"
+        copy: "שכפול"
         copy_to_clipboard: "העתקה ללוח"
         copied_to_clipboard: "הועתק ללוח"
         copy_to_clipboard_error: "שגיאה בהעתקת מידע ללוח"
@@ -4715,6 +4749,7 @@ he:
         time: "זמן"
         user: "משתמש"
         email_type: "סוג דוא״ל"
+        details_title: "הצגת פרטי דוא״ל"
         to_address: "לכתובת"
         test_email_address: "כתובת דוא״ל לבדיקה"
         send_test: "שליחת הודעת דוא״ל בדיקה"

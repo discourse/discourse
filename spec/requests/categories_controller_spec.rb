@@ -159,6 +159,42 @@ describe CategoriesController do
       expect(category_response["subcategory_list"][0]["id"]).to eq(subcategory.id)
     end
 
+    it "does not n+1 with multiple topics" do
+      category1 = Fabricate(:category)
+      category2 = Fabricate(:category)
+      topic1 = Fabricate(:topic, category: category1)
+
+      CategoryFeaturedTopic.feature_topics
+      SiteSetting.desktop_category_page_style = "categories_with_featured_topics"
+
+      # warmup
+      get "/categories.json"
+      expect(response.status).to eq(200)
+
+      first_request_queries = track_sql_queries do
+        get "/categories.json"
+        expect(response.status).to eq(200)
+      end
+
+      category_response = response.parsed_body["category_list"]["categories"].find { |c| c["id"] == category1.id }
+      expect(category_response["topics"].count).to eq(1)
+
+      topic2 = Fabricate(:topic, category: category2)
+      CategoryFeaturedTopic.feature_topics
+
+      second_request_queries = track_sql_queries do
+        get "/categories.json"
+        expect(response.status).to eq(200)
+      end
+
+      category1_response = response.parsed_body["category_list"]["categories"].find { |c| c["id"] == category1.id }
+      category2_response = response.parsed_body["category_list"]["categories"].find { |c| c["id"] == category2.id }
+      expect(category1_response["topics"].size).to eq(1)
+      expect(category2_response["topics"].size).to eq(1)
+
+      expect(first_request_queries.count).to eq(second_request_queries.count)
+    end
+
     it 'does not show uncategorized unless allow_uncategorized_topics' do
       SiteSetting.desktop_category_page_style = "categories_boxes_with_topics"
 

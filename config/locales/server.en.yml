@@ -72,6 +72,7 @@ en:
       unrecognized_extension: "Unrecognized file extension: %{extension}"
     import_error:
       generic: An error occurred while importing that theme
+      upload: "Error creating upload asset: %{name}. %{errors}"
       about_json: "Import Error: about.json does not exist, or is invalid. Are you sure this is a Discourse Theme?"
       about_json_values: "about.json contains invalid values: %{errors}"
       modifier_values: "about.json modifiers contain invalid values: %{errors}"
@@ -429,11 +430,13 @@ en:
   bookmarks:
     errors:
       already_bookmarked_post: "You cannot bookmark the same post twice."
+      already_bookmarked: "You cannot bookmark the same %{type} twice."
       too_many: "Sorry, you cannot add more than %{limit} bookmarks, visit <a href='%{user_bookmarks_url}'>%{user_bookmarks_url}</a> to remove some."
       cannot_set_past_reminder: "You cannot set a bookmark reminder in the past."
       cannot_set_reminder_in_distant_future: "You cannot set a bookmark reminder more than 10 years in the future."
-      time_must_be_provided: "time must be provided for all reminders"
+      time_must_be_provided: "Time must be provided for all reminders"
       for_topic_must_use_first_post: "You can only use the first post to bookmark the topic."
+      bookmarkable_id_type_required: "The name and type of the record to bookmark is required."
 
     reminders:
       at_desktop: "Next time I'm at my desktop"
@@ -1421,7 +1424,7 @@ en:
       labels:
         user: User
         qtt_like: Likes Received
-      description: "Top 10 users who have been received more likes."
+      description: "Top 10 users who have received likes."
     top_users_by_likes_received_from_inferior_trust_level:
       title: "Top Users by likes received from a user with a lower trust level"
       labels:
@@ -1434,7 +1437,7 @@ en:
       labels:
         user: User
         qtt_like: Likes Received
-      description: "Top 10 users who have had the likes from a wide range of people."
+      description: "Top 10 users who have had likes from a wide range of people."
 
   dashboard:
     group_email_credentials_warning: 'There was an issue with the email credentials for the group <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. No emails will send from the group inbox until this problem is addressed. %{error}'
@@ -1572,10 +1575,8 @@ en:
 
     enable_personal_messages: "Allow trust level 1 (configurable via min trust to send messages) users to create messages and reply to messages. Note that staff can always send messages no matter what."
     enable_system_message_replies: "Allows users to reply to system messages, even if personal messages are disabled"
-    enable_long_polling: "Message bus used for notification can use long polling"
     enable_chunked_encoding: "Enable chunked encoding responses by the server. This feature works on most setups however some proxies may buffer, causing responses to be delayed"
     long_polling_base_url: "Base URL used for long polling (when a CDN is serving dynamic content, be sure to set this to origin pull) eg: http://origin.site.com"
-    long_polling_interval: "Amount of time the server should wait before responding to clients when there is no data to send (logged on users only)"
     polling_interval: "When not long polling, how often should logged on clients poll in milliseconds"
     anon_polling_interval: "How often should anonymous clients poll in milliseconds"
     background_polling_interval: "How often should the clients poll in milliseconds (when the window is in the background)"
@@ -4088,6 +4089,7 @@ en:
     external_upload_not_found: "The upload was not found in the external store. %{additional_detail}"
     checksum_mismatch_failure: "The checksum of the file you uploaded does not match. The file contents may have changed on upload. Please try again."
     cannot_promote_failure: "The upload cannot be completed, it may have already completed or previously failed."
+    size_zero_failure: "Sorry, it looks like something has gone wrong, the file you are trying to upload is 0 bytes. Please try again."
     attachments:
       too_large: "Sorry, the file you are trying to upload is too big (maximum size is %{max_size_kb}KB)."
       too_large_humanized: "Sorry, the file you are trying to upload is too big (maximum size is %{max_size})."
@@ -4809,6 +4811,12 @@ en:
         other: '"%{tag_name}" is restricted to the following categories: %{category_names}'
       synonym: 'Synonyms are not allowed. Use "%{tag_name}" instead.'
       has_synonyms: '"%{tag_name}" cannot be used because it has synonyms.'
+      restricted_tags_cannot_be_used_in_category:
+        one: 'The "%{tags}" tag cannot be used in the "%{category}" category. Please remove it.'
+        other: 'The following tags cannot be used in the "%{category}" category: %{tags}. Please remove them.'
+      category_does_not_allow_tags:
+        one: 'The "%{category}" category does not allow the "%{tags}" tag. Please remove it.'
+        other: 'The "%{category}" category does not allow the following tags: "%{tags}". Please remove them.'
     required_tags_from_group:
       one: "You must include at least %{count} %{tag_group_name} tag. The tags in this group are: %{tags}."
       other: "You must include at least %{count} %{tag_group_name} tags. The tags in this group are: %{tags}."
@@ -5152,6 +5160,8 @@ en:
   notification_level:
     ignore_error: "Sorry, you can't ignore that user."
     mute_error: "Sorry, you can't mute that user."
+    error: "Sorry, you cannot change the notification level for that user."
+    invalid_value: '"%{value}" is not a valid notification level.'
 
   discord:
     not_in_allowed_guild: "Authentication failed. You are not a member of a permitted Discord guild."

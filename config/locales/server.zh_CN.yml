@@ -373,11 +373,13 @@ zh_CN:
   bookmarks:
     errors:
       already_bookmarked_post: "您不能将同一个帖子加入书签两次。"
+      already_bookmarked: "您不能将同一个 %{type} 添加书签两次。"
       too_many: "抱歉，您不能添加超过 %{limit} 个书签，请访问 <a href='%{user_bookmarks_url}'>%{user_bookmarks_url}</a> 移除一些书签。"
       cannot_set_past_reminder: "您不能设置时间为过去的书签提醒。"
       cannot_set_reminder_in_distant_future: "您不能设置时间距离现在超过 10 年以后的书签提醒。"
       time_must_be_provided: "必须为所有提醒设置时间"
       for_topic_must_use_first_post: "只能使用最早发布的内容来为主题创建书签"
+      bookmarkable_id_type_required: "添加书签的名称和类型是必须的。"
     reminders:
       at_desktop: "下次我使用桌面设备时"
       later_today: "今天晚些时候"
@@ -1288,7 +1290,7 @@ zh_CN:
       labels:
         user: 用户
         qtt_like: 获赞
-      description: "获得更多喜欢的前10名用户。"
+      description: "获得最多赞的前 10 名用户。"
     top_users_by_likes_received_from_inferior_trust_level:
       title: "收到最多来自低信任级别用户喜欢的用户"
       labels:
@@ -1301,8 +1303,9 @@ zh_CN:
       labels:
         user: 用户
         qtt_like: 获赞
-      description: "前10位有很多人喜欢的用户。"
+      description: "获得广泛喜欢的前10名用户。"
   dashboard:
+    group_email_credentials_warning: '群组的电子邮件凭证有问题 <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>。在此问题解决之前，不会从群组收件箱发送电子邮件。 %{error}'
     rails_env_warning: "您的服务器正在以%{env}模式运行。"
     host_names_warning: "您的 config/database.yml 文件使用的是默认的 localhost 主机名。请更新为您的站点主机名。"
     sidekiq_warning: 'Sidekiq 未运行。许多任务，例如发送电子邮件，是通过 Sidekiq 异步执行的。请确保至少运行一个 Sidekiq进程。<a href="https://github.com/mperham/sidekiq" target="_blank">在此处了解 Sidekiq</a>。'
@@ -1329,6 +1332,7 @@ zh_CN:
     unreachable_themes: "我们无法检查以下主题的更新："
     watched_word_regexp_error: "'%{action}' 关注词的正则表达式无效。请检查您的<a href='%{base_path}/admin/customize/watched_words'>关注词设置</a>，或禁用“关注词正则表达式”站点设置。"
   site_settings:
+    allow_bulk_invite: "允许通过上传CSV文件进行批量邀请"
     disabled: "已"
     display_local_time_in_user_card: "打开用户卡片时，根据用户的时区显示当地时间。"
     censored_words: "将被自动替换为 &#9632;&#9632;&#9632;&#9632; 的字词"
@@ -1426,10 +1430,8 @@ zh_CN:
     summary_timeline_button: "在时间线中显示“总结”按钮"
     enable_personal_messages: "允许信任级别 1（可通过最小信任级别配置来发送消息）用户创建消息和回复消息。注意：管理人员不受限制。"
     enable_system_message_replies: "即使禁用了个人消息，也允许用户回复系统消息"
-    enable_long_polling: "用于通知的消息总线可以使用长轮询"
     enable_chunked_encoding: "启用服务器的分块编码响应。此功能适用于大多数设置，但某些代理可能会缓冲，导致响应延迟"
     long_polling_base_url: "用于长轮询的基础 URL（当 CDN 提供动态内容时，请务必将其设置为来源拉取）例如：http://origin.site.com"
-    long_polling_interval: "当没有数据要发送时，服务器在响应客户端之前应该等待的时间（仅限登录用户）"
     polling_interval: "当不再长轮询时，登录客户端多久应该轮询一次（以毫秒为单位）"
     anon_polling_interval: "匿名客户端应多久进行一次轮询（以毫秒为单位）"
     background_polling_interval: "客户端应进行轮询的频率（当窗口在后台时）（以毫秒为单位）"
@@ -2081,6 +2083,8 @@ zh_CN:
       unicode_usernames_avatars: "内部系统头像不支持 Unicode 用户名。"
       list_value_count: "该列表必须恰好包含 %{count} 个值。"
       google_oauth2_hd_groups: "在启用此设置之前，您必须先设置 “google oauth2 hd”。"
+      search_tokenize_chinese_enabled: "在启用此设置之前，你必须禁用'search_tokenize_chinese'。"
+      search_tokenize_japanese_enabled: "在启用此设置之前，你必须禁用'search_tokenize_japanese'。"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2223,6 +2227,10 @@ zh_CN:
     second_factor_toggle:
       totp: "改用身份验证器应用或安全密钥"
       backup_code: "改用备份代码"
+  second_factor_auth:
+    actions:
+      grant_admin:
+        description: "对于额外的安全措施，你需要先确认 2FA，然后才能授予 %{username} 管理员访问权限。"
   admin:
     email:
       sent_test: "已发送！"
@@ -2389,6 +2397,21 @@ zh_CN:
   test_mailer:
     title: "测试邮件"
     subject_template: "[%{email_prefix}] 电子邮件能否递送成功测试"
+    text_body_template: |
+      这是一封测试邮件，来自
+
+      [**%{base_url}**][0]
+
+      我们希望你能顺利收到这封测试邮件。
+
+      下面是一个[验证电子邮件发送配置的方便检查表][1]。
+
+      祝你好运，
+
+      你在 [Discourse]的朋友(https://www.discourse.org)
+
+      [0]: %{base_url}
+      [1]: https://meta.discourse.org/t/email-delivery-configuration-checklist/209839
   new_version_mailer:
     title: "新版本邮件"
     subject_template: "[%{email_prefix}] 新 Discourse 版本，有可用更新"
@@ -2426,6 +2449,11 @@ zh_CN:
     inappropriate: "您的帖子被举报为**不当言论**：社区认为它有冒犯或者侮辱的意味，亦或违反了[我们的社区准则](%{base_path}/guidelines)。"
     spam: "您的帖子被举报为**垃圾信息**：社区认为它是广告，像是在过度地推广着什么，而不是预期中与话题有关的内容。"
     notify_moderators: "您的帖子被举报为**需要版主注意**：社区认为帖子需要管理人员手动干预。"
+    responder:
+      off_topic: "该帖子被标记为**偏离话题**：鉴于话题标题和第一个帖子，社区成员认为它不适合该话题。"
+      inappropriate: "该帖子被标记为**不合适**：社区成员认为它具有攻击性、辱骂性，或违反了[我们的社区准则](%{base_path}/guidelines)。"
+      spam: "该帖子被标记为**垃圾信息**：社区成员认为它是一个广告，是过度宣传性质的东西，而不是像预期的那样对主题有用或相关。"
+      notify_moderators: "该帖子被标记为**需版主关注**：社区成员认为该帖子的某些内容需要工作人员手动干预。"
   flags_dispositions:
     agreed: "感谢通知我们。我们认为这是个问题，正在进行调查。"
     agreed_and_deleted: "感谢通知我们。我们认为这是个问题，并且已将该帖子移除。"
@@ -2435,6 +2463,10 @@ zh_CN:
   temporarily_closed_due_to_flags:
     other: "由于大量社区举报，此话题被临时关闭至少 %{count} 小时。"
   system_messages:
+    reviewables_reminder:
+      subject_template: "审核队列中有一些需要审核的项目"
+      text_body_template:
+        other: "%{mentions} 项目是在 %{count} 小时前提交的。[请审查它们](%{base_url}/review)。"
     private_topic_title: "话题 #%{id}"
     contents_hidden: "请访问帖子以查看内容。"
     post_hidden:
@@ -2516,6 +2548,27 @@ zh_CN:
         请阅读我们的[社区准则](%{base_url}/guidelines)以了解详情。
     flags_agreed_and_post_deleted_for_responders:
       title: "回复被管理人员从举报帖子中删除"
+      subject_template: "工作人员从被标记的帖子中删除了回复"
+      text_body_template: |
+        你好，
+
+        这是一条来自 %{site_name} 的自动信息，让你知道你回复的 [post](%{base_url}%{url}) 已被删除。
+
+        %{flag_reason}
+
+        这个帖子被社区成员标记了问题，一个工作人员选择了删除它。
+
+        ``markdown
+        %{flagged_post_raw_content}
+        ``
+
+        你对它的回应
+
+        ``markdown
+        %{flagged_post_response_raw_content}
+        ``
+
+        关于删除原因的详细信息，请查看我们的[社区指南](%{base_url}/guidelines)。
     usage_tips:
       text_body_template: |
         有关作为新用户入门的一些快速提示，请[查看此博文](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/)。
@@ -3169,7 +3222,7 @@ zh_CN:
         %{respond_instructions}
     user_group_mentioned_pm:
       title: "私信提及的用户群组"
-      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      subject_template: "[%{email_prefix}] [私信] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -3180,7 +3233,7 @@ zh_CN:
         %{respond_instructions}
     user_group_mentioned_pm_group:
       title: "私信提及的用户群组"
-      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      subject_template: "[%{email_prefix}] [私信] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -3506,14 +3559,18 @@ zh_CN:
     external_upload_not_found: "在外部存储中未找到上传。 %{additional_detail}"
     checksum_mismatch_failure: "您上传的文件的校验和不匹配。在上传时文件内容可能已更改。请再试一次。"
     cannot_promote_failure: "上传无法完成，可能已经完成或失败了。"
+    size_zero_failure: "抱歉，好像出了点问题，您要上传的文件大小是 0 字节。请再试一次。"
     attachments:
       too_large: "抱歉，您尝试上传的文件过大（最大大小为 %{max_size_kb}KB）。"
+      too_large_humanized: "抱歉，你要上传的文件太大(最大尺寸是 %{max_size})。"
     images:
       too_large: "抱歉，您尝试上传的图片过大（最大大小为 %{max_size_kb}KB），请调整大小并重试。"
+      too_large_humanized: "对不起，你要上传的图片太大(最大尺寸为 %{max_size})，请调整大小后再试。"
       larger_than_x_megapixels: "抱歉，您尝试上传的图片过大（最大大小为 %{max_image_megapixels}00 万像素），请调整大小并重试。"
       size_not_found: "抱歉，我们无法确定图片的大小。也许您的图片已被损坏？"
     placeholders:
       too_large: "（图片大小超过 %{max_size_kb}KB）"
+      too_large_humanized: "(图像大于 %{max_size})"
   avatar:
     missing: "抱歉，我们找不到与该电子邮件地址关联的任何头像。您可以尝试重新上传吗？"
   flag_reason:
@@ -4207,6 +4264,10 @@ zh_CN:
         other: '“%{tag_name}”仅限于以下类别：%{category_names}'
       synonym: '不允许使用同义词。改用“%{tag_name}”。'
       has_synonyms: '无法使用“%{tag_name}”，因为有同义词。'
+      restricted_tags_cannot_be_used_in_category:
+        other: '以下标签不能在 "%{category}" 类别中使用： %{tags}。请删除它们。'
+      category_does_not_allow_tags:
+        other: '“%{category}”类别不允许使用以下标签：“%{tags}”。请删除它们。'
     required_tags_from_group:
       other: "您必须至少包含 %{count} 个%{tag_group_name}标签。此组中的标签包括：%{tags}。"
     invalid_target_tag: "不能是同义词的同义词"
@@ -4249,8 +4310,10 @@ zh_CN:
             label: "您社区的名称"
             placeholder: "朱桦的环聊"
           site_description:
+            label: "用一句话描述你的社区(用于搜索结果和社会媒体)。"
             placeholder: "朱桦和她的朋友讨论新奇事物的地方"
           short_site_description:
+            label: "用几个字描述你的社区(用于主页标题)"
             placeholder: "有史以来最好的社区"
       introduction:
         title: "介绍"
@@ -4409,12 +4472,20 @@ zh_CN:
     missing_version: "您必须提供版本参数"
     conflict: "有一个更新冲突阻止您执行该操作。"
     reasons:
+      post_count: "每个用户的前几个帖子都必须得到工作人员的批准。见 %{link}。"
+      trust_level: "低信任度的用户必须由工作人员批准回复。见 %{link}。"
+      new_topics_unless_trust_level: "低信任级别的用户必须有工作人员批准的主题。见 %{link}。"
       fast_typer: "新用户输入第一个帖子的速度快得可疑，怀疑是机器人或广告用户所为。请参阅 %{link}。"
       auto_silence_regex: "第一个帖子匹配 %{link} 设置的新用户。"
       watched_word: "这篇主题包括一个关注词。检查你的设置： %{link}。"
       staged: "暂存用户的新主题和帖子必须得到管理人员的批准。见 %{link}。"
       category: "发布于此类别的帖子需要工作人员手动批准。见 %{link}。"
+      must_approve_users: "所有新用户都必须经过工作人员的审核。见 %{link}。"
+      invite_only: "所有的新用户都应该被邀请。见 %{link}。"
       email_auth_res_enqueue: "此电子邮件未通过 DMARC 检查，它很可能不是来自表面看起来的人。检查原始电子邮件标头以获取更多信息。"
+      email_spam: "此电子邮件被 %{link} 中定义的标头标记为垃圾邮件。"
+      suspect_user: "这个新用户在没有阅读任何主题或帖子的情况下输入了个人资料信息，这强烈表明他们可能是垃圾邮件发送者。见 %{link}。"
+      contains_media: "这个帖子帖子包含嵌入式媒体。见 %{link}。"
       queued_by_staff: "一名管理人员认为此帖子需要审核。在此之前，它将保持隐藏。"
       links:
         watched_word: 列出关注的关键字
@@ -4502,6 +4573,8 @@ zh_CN:
   notification_level:
     ignore_error: "抱歉，您不能忽略该用户。"
     mute_error: "抱歉，您无法将该用户设为免打扰。"
+    error: "对不起，你不能改变该用户的通知级别。"
+    invalid_value: '"%{value}" 不是一个有效的通知级别。'
   discord:
     not_in_allowed_guild: "身份验证失败。您不是允许的 Discord 公会的成员。"
   old_keys_reminder:

@@ -56,6 +56,20 @@ describe CookedPostProcessor do
 
       before do
         SiteSetting.enable_inline_onebox_on_all_domains = true
+        Oneboxer.stubs(:cached_onebox).with(url).returns <<~HTML
+          <aside class="onebox allowlistedgeneric" data-onebox-src="https://meta.discourse.org/t/mini-inline-onebox-support-rfc/66400">
+            <header class="source">
+              <a href="https://meta.discourse.org/t/mini-inline-onebox-support-rfc/66400" target="_blank" rel="noopener">meta.discourse.org</a>
+            </header>
+            <article class="onebox-body">
+              <h3><a href="https://meta.discourse.org/t/mini-inline-onebox-support-rfc/66400" target="_blank" rel="noopener">some title</a></h3>
+              <p>some description</p>
+            </article>
+            <div class="onebox-metadata"></div>
+            <div style="clear: both"></div>
+          </aside>
+        HTML
+        Oneboxer.stubs(:cached_onebox).with(not_oneboxed_url).returns(nil)
 
         %i{head get}.each do |method|
           stub_request(method, url).to_return(
@@ -90,11 +104,11 @@ describe CookedPostProcessor do
           count: 2
         )
 
-        expect(cpp.html).to have_tag('aside.onebox a', text: title, count: 2)
+        expect(cpp.html).to have_tag('aside.onebox a', text: title, count: 1)
 
         expect(cpp.html).to have_tag('aside.onebox a',
           text: url_hostname,
-          count: 2
+          count: 1
         )
 
         expect(cpp.html).to have_tag('a',

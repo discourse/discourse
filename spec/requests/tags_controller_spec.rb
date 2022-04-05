@@ -285,6 +285,19 @@ describe TagsController do
         expect(response.parsed_body['topic_list']['more_topics_url'])
           .to start_with("/tags/c/#{category.slug_path.join('/')}/#{category.id}/#{tag.name}")
       end
+
+      it "should 404 for invalid category path" do
+        get "/tags/c/#{category.slug_path.join("/")}/#{category.id}/somerandomstring/#{tag.name}.json?per_page=1"
+
+        expect(response.status).to eq(404)
+      end
+
+      it "should 404 for secure categories" do
+        c = Fabricate(:private_category, group: Fabricate(:group))
+        get "/tags/c/#{c.slug_path.join("/")}/#{c.id}/#{tag.name}.json"
+
+        expect(response.status).to eq(404)
+      end
     end
 
     context "with a subcategory in the path" do

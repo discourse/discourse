@@ -661,8 +661,8 @@ export default {
         .toArray()
         .find((article) =>
           direction > 0
-            ? article.getBoundingClientRect().top > offset
-            : article.getBoundingClientRect().bottom > offset
+            ? article.getBoundingClientRect().top >= offset
+            : article.getBoundingClientRect().bottom >= offset
         );
       if (!$selected) {
         $selected = $articles[$articles.length - 1];
@@ -772,7 +772,7 @@ export default {
   },
 
   _onScrollEndsCallback() {
-    document.querySelector(".topic-post.selected a.tabLoc")?.focus();
+    document.querySelector(".topic-post.selected span.tabLoc")?.focus();
   },
 
   categoriesTopicsList() {

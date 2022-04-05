@@ -31,11 +31,25 @@ describe "category tag restrictions" do
     end
 
     it "tags belonging to that category can only be used there" do
-      post = create_post(category: category_with_tags, tags: [tag1.name, tag2.name, tag3.name])
-      expect(post.topic.tags).to contain_exactly(tag1, tag2)
+      msg = I18n.t(
+        "tags.forbidden.category_does_not_allow_tags",
+        count: 1,
+        tags: tag3.name,
+        category: category_with_tags.name
+      )
+      expect {
+        create_post(category: category_with_tags, tags: [tag1.name, tag2.name, tag3.name])
+      }.to raise_error(StandardError, msg)
 
-      post = create_post(category: other_category, tags: [tag1.name, tag2.name, tag3.name])
-      expect(post.topic.tags).to contain_exactly(tag3)
+      msg = I18n.t(
+        "tags.forbidden.restricted_tags_cannot_be_used_in_category",
+        count: 2,
+        tags: [tag1, tag2].map(&:name).sort.join(", "),
+        category: other_category.name
+      )
+      expect {
+        create_post(category: other_category, tags: [tag1.name, tag2.name, tag3.name])
+      }.to raise_error(StandardError, msg)
     end
 
     it "search can show only permitted tags" do
@@ -55,10 +69,19 @@ describe "category tag restrictions" do
     end
 
     it "can't create new tags in a restricted category" do
-      post = create_post(category: category_with_tags, tags: [tag1.name, "newtag"])
-      expect_same_tag_names(post.topic.tags, [tag1])
-      post = create_post(category: category_with_tags, tags: [tag1.name, "newtag"], user: admin)
-      expect_same_tag_names(post.topic.tags, [tag1])
+      msg = I18n.t(
+        "tags.forbidden.category_does_not_allow_tags",
+        count: 1,
+        tags: "newtag",
+        category: category_with_tags.name
+      )
+      expect {
+        create_post(category: category_with_tags, tags: [tag1.name, "newtag"])
+      }.to raise_error(StandardError, msg)
+
+      expect {
+        create_post(category: category_with_tags, tags: [tag1.name, "newtag"], user: admin)
+      }.to raise_error(StandardError, msg)
     end
 
     it "can create new tags in a non-restricted category" do
@@ -149,8 +172,15 @@ describe "category tag restrictions" do
     end
 
     it "enforces restrictions when creating a topic" do
-      post = create_post(category: category, tags: [tag1.name, "newtag"])
-      expect(post.topic.tags.map(&:name)).to eq([tag1.name])
+      msg = I18n.t(
+        "tags.forbidden.category_does_not_allow_tags",
+        count: 1,
+        tags: "newtag",
+        category: category.name
+      )
+      expect {
+        create_post(category: category, tags: [tag1.name, "newtag"])
+      }.to raise_error(StandardError, msg)
     end
 
     it "handles colons" do

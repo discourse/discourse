@@ -106,6 +106,12 @@
         },
         "chat_quoted": {
           "type": "integer"
+        },
+        "assigned": {
+          "type": "integer"
+        },
+        "question_answer_user_commented": {
+          "type": "integer"
         }
       },
       "required": [

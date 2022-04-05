@@ -10,7 +10,7 @@ function isGUID(value) {
 }
 
 export function markdownNameFromFileName(fileName) {
-  let name = fileName.substr(0, fileName.lastIndexOf("."));
+  let name = fileName.slice(0, fileName.lastIndexOf("."));
 
   if (isAppleDevice() && isGUID(name)) {
     name = I18n.t("upload_selector.default_image_alt_text");
@@ -114,6 +114,13 @@ export function validateUploadedFile(file, opts) {
       );
       return false;
     }
+  }
+
+  if (file.size === 0) {
+    /* eslint-disable no-console */
+    console.warn("File with a 0 byte size detected, cancelling upload.", file);
+    bootbox.alert(I18n.t("post.errors.file_size_zero"));
+    return false;
   }
 
   // everything went fine
