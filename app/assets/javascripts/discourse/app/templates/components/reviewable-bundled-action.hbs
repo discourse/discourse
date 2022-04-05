@@ -2,13 +2,13 @@
   {{dropdown-select-box
     class="reviewable-action-dropdown"
     nameProperty="label"
-    title=bundle.label
     content=bundle.actions
     onChange=(action "performById")
     options=(hash
       icon=bundle.icon
       disabled=reviewableUpdating
       placement=placement
+      translatedNone=bundle.label
     )
   }}
 {{else}}

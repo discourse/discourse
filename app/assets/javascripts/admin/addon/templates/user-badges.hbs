@@ -17,10 +17,12 @@
         <div class="control-group">
           <label>{{i18n "admin.badges.badge"}}</label>
           {{combo-box
-            filterable=true
             value=selectedBadgeId
             content=grantableBadges
             onChange=(action (mut selectedBadgeId))
+            options=(hash
+              filterable=true
+            )
           }}
         </div>
         <div class="control-group">
