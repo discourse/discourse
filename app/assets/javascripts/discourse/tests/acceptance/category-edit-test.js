@@ -1,5 +1,7 @@
 import {
   acceptance,
+  count,
+  exists,
   queryAll,
   visible,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -11,7 +13,7 @@ import { test } from "qunit";
 
 acceptance("Category Edit", function (needs) {
   needs.user();
-  needs.settings({ email_in: true });
+  needs.settings({ email_in: true, tagging_enabled: true });
 
   test("Editing the category", async function (assert) {
     await visit("/c/bug");
@@ -68,6 +70,31 @@ acceptance("Category Edit", function (needs) {
       DiscourseURL.routeTo.calledWith("/c/bug/edit/security"),
       "tab routing works"
     );
+  });
+
+  test("Editing required tag groups", async function (assert) {
+    await visit("/c/bug/edit/tags");
+
+    assert.ok(exists(".required-tag-groups"));
+    assert.strictEqual(count(".required-tag-group-row"), 0);
+
+    await click(".add-required-tag-group");
+    assert.strictEqual(count(".required-tag-group-row"), 1);
+
+    await click(".add-required-tag-group");
+    assert.strictEqual(count(".required-tag-group-row"), 2);
+
+    await click(".delete-required-tag-group");
+    assert.strictEqual(count(".required-tag-group-row"), 1);
+
+    const tagGroupChooser = selectKit(
+      ".required-tag-group-row .tag-group-chooser"
+    );
+    await tagGroupChooser.expand();
+    await tagGroupChooser.selectRowByValue("TagGroup1");
+
+    await click("#save-category");
+    assert.strictEqual(count(".required-tag-group-row"), 1);
   });
 
   test("Index Route", async function (assert) {

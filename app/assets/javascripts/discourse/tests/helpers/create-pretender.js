@@ -356,7 +356,7 @@ export function applyDefaultHandlers(pretender) {
   );
 
   pretender.put("/categories/:category_id", (request) => {
-    const category = parsePostData(request.requestBody);
+    const category = JSON.parse(request.requestBody);
     category.id = parseInt(request.params.category_id, 10);
 
     if (category.email_in === "duplicate@example.com") {
@@ -1121,6 +1121,10 @@ export function applyDefaultHandlers(pretender) {
       ],
     });
   });
+
+  pretender.get("/tag_groups/filter/search", () =>
+    response(fixturesByUrl["/tag_groups/filter/search"])
+  );
 }
 
 export function resetPretender() {

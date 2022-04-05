@@ -493,8 +493,10 @@ describe CategoriesController do
             },
             minimum_required_tags: "",
             allow_global_tags: 'true',
-            required_tag_group_name: tag_group.name,
-            min_tags_from_required_group: 2
+            required_tag_groups: [{
+              name: tag_group.name,
+              min_count: 2
+            }]
           }
 
           expect(response.status).to eq(200)
@@ -509,8 +511,9 @@ describe CategoriesController do
           expect(category.custom_fields).to eq("dancing" => "frogs")
           expect(category.minimum_required_tags).to eq(0)
           expect(category.allow_global_tags).to eq(true)
-          expect(category.required_tag_group_id).to eq(tag_group.id)
-          expect(category.min_tags_from_required_group).to eq(2)
+          expect(category.category_required_tag_groups.count).to eq(1)
+          expect(category.category_required_tag_groups.first.tag_group.id).to eq(tag_group.id)
+          expect(category.category_required_tag_groups.first.min_count).to eq(2)
         end
 
         it 'logs the changes correctly' do
@@ -558,19 +561,19 @@ describe CategoriesController do
 
         it "can remove required tag group" do
           SiteSetting.tagging_enabled = true
-          category.update!(required_tag_group: Fabricate(:tag_group))
+          category.update!(category_required_tag_groups: [ CategoryRequiredTagGroup.new(tag_group: Fabricate(:tag_group)) ])
           put "/categories/#{category.id}.json", params: {
             name: category.name,
             color: category.color,
             text_color: category.text_color,
             allow_global_tags: 'false',
             min_tags_from_required_group: 1,
-            required_tag_group_name: ''
+            required_tag_groups: []
           }
 
           expect(response.status).to eq(200)
           category.reload
-          expect(category.required_tag_group).to be_nil
+          expect(category.category_required_tag_groups).to be_empty
         end
 
         it "does not update other fields" do
@@ -581,7 +584,7 @@ describe CategoriesController do
           category.update!(
             allowed_tags: ["hello", "world"],
             allowed_tag_groups: [tag_group_1.name],
-            required_tag_group_name: tag_group_2.name,
+            category_required_tag_groups: [ CategoryRequiredTagGroup.new(tag_group: tag_group_2) ],
             custom_fields: { field_1: 'hello', field_2: 'hello' }
           )
 
@@ -590,7 +593,7 @@ describe CategoriesController do
           category.reload
           expect(category.tags.pluck(:name)).to contain_exactly("hello", "world")
           expect(category.tag_groups.pluck(:name)).to contain_exactly(tag_group_1.name)
-          expect(category.required_tag_group).to eq(tag_group_2)
+          expect(category.category_required_tag_groups.first.tag_group).to eq(tag_group_2)
           expect(category.custom_fields).to eq({ 'field_1' => 'hello', 'field_2' => 'hello' })
 
           put "/categories/#{category.id}.json", params: { allowed_tags: [], custom_fields: { field_1: nil } }
@@ -598,15 +601,15 @@ describe CategoriesController do
           category.reload
           expect(category.tags).to be_blank
           expect(category.tag_groups.pluck(:name)).to contain_exactly(tag_group_1.name)
-          expect(category.required_tag_group).to eq(tag_group_2)
+          expect(category.category_required_tag_groups.first.tag_group).to eq(tag_group_2)
           expect(category.custom_fields).to eq({ 'field_2' => 'hello' })
 
-          put "/categories/#{category.id}.json", params: { allowed_tags: [], allowed_tag_groups: [], required_tag_group_name: nil, custom_fields: { field_1: 'hi', field_2: nil } }
+          put "/categories/#{category.id}.json", params: { allowed_tags: [], allowed_tag_groups: [], required_tag_groups: [], custom_fields: { field_1: 'hi', field_2: nil } }
           expect(response.status).to eq(200)
           category.reload
           expect(category.tags).to be_blank
           expect(category.tag_groups).to be_blank
-          expect(category.required_tag_group).to eq(nil)
+          expect(category.category_required_tag_groups).to eq([])
           expect(category.custom_fields).to eq({ 'field_1' => 'hi' })
         end
       end

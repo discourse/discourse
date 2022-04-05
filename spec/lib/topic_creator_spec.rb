@@ -159,7 +159,7 @@ describe TopicCreator do
 
       context 'required tag group' do
         fab!(:tag_group) { Fabricate(:tag_group, tags: [tag1]) }
-        fab!(:category) { Fabricate(:category, name: "beta", required_tag_group: tag_group, min_tags_from_required_group: 1) }
+        fab!(:category) { Fabricate(:category, name: "beta", category_required_tag_groups: [CategoryRequiredTagGroup.new(tag_group: tag_group, min_count: 1)]) }
 
         it "when no tags are not present" do
           expect(

@@ -28,12 +28,6 @@ export default MultiSelectComponent.extend(TagsMixin, {
       .map((t) => this.defaultItem(t, t));
   }),
 
-  actions: {
-    onChange(value) {
-      this.set("tagGroups", value);
-    },
-  },
-
   search(query) {
     const data = {
       q: query,

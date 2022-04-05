@@ -155,24 +155,27 @@ module DiscourseTagging
   end
 
   def self.validate_required_tags_from_group(guardian, model, category, tags = [])
-    if !guardian.is_staff? &&
-        category &&
-        category.required_tag_group &&
-        (tags.length < category.min_tags_from_required_group ||
-          category.required_tag_group.tags.where("tags.id in (?)", tags.map(&:id)).count < category.min_tags_from_required_group)
+    return true if guardian.is_staff? || category.nil?
 
-      model.errors.add(:base,
-        I18n.t(
-          "tags.required_tags_from_group",
-          count: category.min_tags_from_required_group,
-          tag_group_name: category.required_tag_group.name,
-          tags: category.required_tag_group.tags.order(:id).pluck(:name).join(", ")
+    success = true
+    category.category_required_tag_groups.each do |crtg|
+      if tags.length < crtg.min_count ||
+        crtg.tag_group.tags.where("tags.id in (?)", tags.map(&:id)).count < crtg.min_count
+
+        success = false
+
+        model.errors.add(:base,
+          I18n.t(
+            "tags.required_tags_from_group",
+            count: crtg.min_count,
+            tag_group_name: crtg.tag_group.name,
+            tags: crtg.tag_group.tags.order(:id).pluck(:name).join(", ")
+          )
         )
-      )
-      false
-    else
-      true
+      end
     end
+
+    success
   end
 
   def self.validate_category_restricted_tags(guardian, model, category, tags = [])
@@ -363,12 +366,16 @@ module DiscourseTagging
     # or for staff when
     # - there are more available tags than the query limit
     # - and no search term has been included
-    filter_required_tags = category&.required_tag_group && (filter_for_non_staff || (term.blank? && category&.required_tag_group&.tags.size >= opts[:limit].to_i))
-
-    if opts[:for_input] && filter_required_tags
-      required_tag_ids = category.required_tag_group.tags.pluck(:id)
-      if (required_tag_ids & selected_tag_ids).size < category.min_tags_from_required_group
-        builder.where("id IN (?)", required_tag_ids)
+    required_tag_ids = nil
+    if opts[:for_input] && category&.category_required_tag_groups.present? && (filter_for_non_staff || term.blank?)
+      category.category_required_tag_groups.each do |crtg|
+        group_tags = crtg.tag_group.tags.pluck(:id)
+        next if (group_tags & selected_tag_ids).size >= crtg.min_count
+        if filter_for_non_staff || group_tags.size >= opts[:limit].to_i
+          required_tag_ids = group_tags
+          builder.where("id IN (?)", required_tag_ids)
+        end
+        break
       end
     end
 
