@@ -5,6 +5,6 @@
   {{#if acceptsAllFormats}}
     <input type="file" id={{fileInputId}} class={{fileInputClass}} multiple={{allowMultiple}}>
   {{else}}
-    <input type="file" id={{fileInputId}} class={{fileInputClass}} accept={{acceptedFileTypesString}} multiple={{allowMultiple}}>
+    <input type="file" id={{fileInputId}} class={{fileInputClass}} accept={{acceptedFormats}} multiple={{allowMultiple}}>
   {{/if}}
 {{/if}}
