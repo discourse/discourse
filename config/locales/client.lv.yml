@@ -128,7 +128,6 @@ lv:
       placeholder: datums
     share:
       topic_html: 'Temats: <span class="topic-title">%{topicTitle}</span>'
-      post: "ieraksts #%{postNumber}"
       close: "aizvērt"
       twitter: "Kopīgojiet vietnē Twitter"
       facebook: "Dalīties Facebook"
@@ -1658,7 +1657,6 @@ lv:
       success: "Jūsu konts ir izveidots un jūs esat ielogojies "
       name_label: "Vārds"
       password_label: "Parole"
-      optional_description: "(pēc izvēles)"
     password_reset:
       continue: "Turpināt %{site_name}"
     emoji_set:

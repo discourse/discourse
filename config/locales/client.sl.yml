@@ -162,7 +162,6 @@ sl:
       to_placeholder: "na datum"
     share:
       topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
-      post: "prispevek #%{postNumber}"
       close: "zapri"
       twitter: "Deli na Twitterju"
       facebook: "Deli na Facebooku"
@@ -1715,7 +1714,6 @@ sl:
       success: "Vaš račun je ustvarjen in vi ste prijavljeni."
       name_label: "Ime"
       password_label: "Geslo"
-      optional_description: "(neobvezno)"
     password_reset:
       continue: "Nadaljujte na %{site_name}"
     emoji_set:

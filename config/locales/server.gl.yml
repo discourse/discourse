@@ -372,7 +372,6 @@ gl:
       already_bookmarked_post: "Non pode gardar a mesma publicación nos marcadores dúas veces."
       cannot_set_past_reminder: "Non pode estabelecer un recordatorio de marcador no pasado."
       cannot_set_reminder_in_distant_future: "Non pode estabelecer un recordatorio de marcador máis de 10 anos cara ao futuro."
-      time_must_be_provided: "débese facilitar o período para todos os recordatorios"
     reminders:
       at_desktop: "A vindeira vez que estea no meu ordenador"
       later_today: "Hoxe, máis tarde"
@@ -1400,10 +1399,8 @@ gl:
     summary_percent_filter: "Cando un usuario preme en «Resumir este tema» mostrar a porcentaxe de publicacións destacadas"
     summary_max_results: "Número máximo de publicacións que devolve a opción «Resumir este tema»"
     enable_system_message_replies: "Permitirlles aos usuarios responder mensaxes do sistema, mesmo aínda que as mensaxes persoais estean desactivadas"
-    enable_long_polling: "O bus de mensaxes utilizado para a notificación pode utilizar «long polling»"
     enable_chunked_encoding: "Active as respostas mediante codificación fragmentaria do servidor. Esta funcionalidade serve na maioría das configuracións, pero algúns servidores intermedios poden retelas, o que provocaría o atraso nas respostas"
     long_polling_base_url: "URL base empregado para o «long polling» (cando unha rede de distribución de contido serve contido dinámico, asegúrese de axustalo como «origin pull»); por exemplo: http://origin.site.com"
-    long_polling_interval: "Tempo que o servidor debe de esperar antes de responderlles aos clientes que non hai datos para enviar (soamente usuarios con sesión iniciada)."
     polling_interval: "Se non se utilizar «long polling», con que frecuencia -en milisegundos- deben iniciar sesión os clientes"
     anon_polling_interval: "Con que frecuencia -en milisegundos- deberían recoller mostras os clientes anónimos"
     background_polling_interval: "Con que frecuencia -en milisegundos- deberían recoller mostras os clientes (se a xanela está en segundo plano)"

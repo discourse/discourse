@@ -159,7 +159,6 @@ lt:
       to_placeholder: "iki šiol"
     share:
       topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
-      post: "įrašas #%{postNumber}"
       close: "uždaryti"
       twitter: "Bendrinkite „Twitter“"
       facebook: "Dalintis „Facebook“"
@@ -1734,7 +1733,6 @@ lt:
       success: "Jūsų paskyra sukurta ir dabar esate prisijungę."
       name_label: "Vardas"
       password_label: "Slaptažodis"
-      optional_description: "(pasoronktinai)"
     password_reset:
       continue: "Tėsti į %{site_name}"
     emoji_set:
