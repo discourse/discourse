@@ -68,7 +68,6 @@ module EmailHelper
 
         [dm='dark-img'] {
           display: block !important;
-          opacity: 0.7 !important;
         }
 
         [dm='text-color'] {
