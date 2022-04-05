@@ -48,9 +48,6 @@ SQL
       rval
     end
 
+    ActiveRecord::Migration.prepend(self)
   end
-end
-
-class ActiveRecord::Migration
-  prepend FreedomPatches::SchemaMigrationDetails
 end
