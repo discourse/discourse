@@ -11,7 +11,7 @@ module DiscourseAutomation
         triggerables = DiscourseAutomation::Triggerable.all
       end
 
-      triggerables.map! do |s|
+      triggerables = triggerables.map do |s|
         id = s.to_s.gsub(/^__triggerable_/, '')
         {
           id: id,
