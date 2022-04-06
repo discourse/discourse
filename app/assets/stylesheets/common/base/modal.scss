@@ -747,6 +747,17 @@
 
   .btn-group {
     margin-top: 0;
+    display: flex;
+    align-items: stretch;
+    gap: 0.5em;
+
+    .btn {
+      padding-block: 0.65em;
+
+      .d-icon {
+        margin-right: 0;
+      }
+    }
   }
 
   .json-editor-btn-delete {

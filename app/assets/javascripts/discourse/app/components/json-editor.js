@@ -71,7 +71,7 @@ export default Component.extend({
 class DiscourseJsonSchemaEditorIconlib {
   constructor() {
     this.mapping = {
-      delete: "times",
+      delete: "trash-alt",
       add: "plus",
       moveup: "arrow-up",
       movedown: "arrow-down",
