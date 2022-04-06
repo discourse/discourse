@@ -647,7 +647,7 @@ class Category < ActiveRecord::Base
     self.category_required_tag_groups = tag_groups.map do |tag_group|
       attrs = map[tag_group.name]
       CategoryRequiredTagGroup.new(tag_group: tag_group, **attrs)
-    end.sort_by { |crtg| crtg.order }
+    end.sort_by(&:order)
   end
 
   def downcase_email
