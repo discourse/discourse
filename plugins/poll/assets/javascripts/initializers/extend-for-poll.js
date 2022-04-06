@@ -71,9 +71,10 @@ function initializePolls(api) {
   });
 
   function attachPolls(elem, helper) {
-    const pollNodes = [...elem.querySelectorAll(".poll")].filter(function (pollNode) {
-      return pollNode.parentNode.tagName !== "BLOCKQUOTE";
-    });
+    let pollNodes = [...elem.querySelectorAll(".poll")];
+    pollNodes = pollNodes.filter(
+      (node) => node.parentNode.tagName !== "BLOCKQUOTE"
+    );
     if (!pollNodes.length || !helper) {
       return;
     }
