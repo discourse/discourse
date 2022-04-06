@@ -1372,8 +1372,10 @@ describe PostAlerter do
         tag = Fabricate(:tag)
         topic = Fabricate(:topic, tags: [tag])
         post = Fabricate(:post, topic: topic)
-        tag_group = Fabricate(:tag_group, tags: [tag])
-        Fabricate(:tag_group_permission, tag_group: tag_group, group: group)
+
+        tag_group = TagGroup.new(name: 'Only visible to group', tag_names: [tag.name])
+        tag_group.permissions = [[group.id, TagGroupPermission.permission_types[:full]]]
+        tag_group.save!
 
         TagUser.change(user.id, tag.id, TagUser.notification_levels[:watching])
 
