@@ -517,6 +517,15 @@ describe Upload do
     end
   end
 
+  describe '.extract_upload_ids' do
+    let(:upload) { Fabricate(:upload) }
+
+    it 'from short URLs' do
+      ids = Upload.extract_upload_ids("This URL #{upload.short_url} is an upload")
+      expect(ids).to contain_exactly(upload.id)
+    end
+  end
+
   def enable_secure_media
     setup_s3
     SiteSetting.secure_media = true
