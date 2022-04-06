@@ -69,7 +69,7 @@ class ApiKey < ActiveRecord::Base
   end
 
   def update_last_used!(now = Time.zone.now)
-    return if last_used > 1.minute.ago
+    return if last_used_at && (last_used_at > 1.minute.ago)
 
     # using update_column to avoid the AR transaction
     update_column(:last_used_at, now)
