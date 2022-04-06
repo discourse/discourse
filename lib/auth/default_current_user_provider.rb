@@ -385,7 +385,9 @@ class Auth::DefaultCurrentUserProvider
         end
 
       if user && can_write?
-        api_key.update_columns(last_used_at: Time.zone.now)
+        Scheduler::Defer.later "Updating api_key last_used" do
+          api_key.update_last_used!
+        end
       end
 
       user
