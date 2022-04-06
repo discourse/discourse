@@ -103,7 +103,7 @@ class ApiKeyScope < ActiveRecord::Base
     end
 
     def find_urls(actions:, methods:)
-      urls = []
+      urls = Set.new
 
       if actions.present?
         route_sets = [Rails.application.routes]
@@ -140,7 +140,7 @@ class ApiKeyScope < ActiveRecord::Base
         end
       end
 
-      urls
+      urls.to_a
     end
   end
 
