@@ -1,12 +1,14 @@
+// IMPORTANT: This stylesheet needs to work for super old browsers, including those
+// without support for `var()`. Therefore every color definition needs to define a simple
+// value first, as a fallback
+
 body.crawler {
   font-family: serif;
   a {
     // we want all links to look like links
     color: blue !important;
+    color: var(--tertiary) !important;
     text-decoration: underline !important;
-    &:visited {
-      color: purple !important;
-    }
   }
   > header {
     // site header
@@ -14,9 +16,11 @@ body.crawler {
     width: 100%;
     top: 0;
     background-color: #fff;
+    background-color: var(--header_background);
     padding: 10px;
     box-shadow: none;
     border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--header_primary-medium);
   }
 
   .header-buttons {
@@ -43,6 +47,7 @@ body.crawler {
 
     thead {
       border-bottom: 1px solid #ddd;
+      border-bottom: 1px solid var(--primary_low);
       th {
         padding: 0 0 0.5em;
       }
@@ -109,6 +114,7 @@ body.crawler {
 
     .topic-list-item {
       border-bottom: 1px solid #eee;
+      border-bottom: 1px solid var(--primary-low);
       > * {
         padding: 0.75em 0;
       }
@@ -149,6 +155,7 @@ body.crawler {
     margin-bottom: 2em;
     padding-top: 1.5em;
     border-top: 1px solid #eee;
+    border-top: 1px solid var(--primary-low);
   }
 
   .crawler-post-meta {
@@ -183,6 +190,7 @@ body.crawler {
       display: block;
       padding: 0.5em 0;
       border-top: 1px solid #ddd;
+      border-top: 1px solid var(--primary-low);
     }
   }
 
@@ -206,11 +214,13 @@ body.crawler {
   blockquote,
   aside.quote .title {
     background: #eee;
+    background: var(--primary-low);
   }
 
   .md-table {
     tr {
       border: 1px solid #ddd;
+      border: 1px solid var(--primary-low);
     }
     th {
       font-weight: bold;
@@ -219,6 +229,7 @@ body.crawler {
     th {
       padding: 0.25em;
       border-right: 1px solid #ddd;
+      border-right: 1px solid var(--primary-low);
     }
   }
 
