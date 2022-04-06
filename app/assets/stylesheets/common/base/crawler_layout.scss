@@ -2,7 +2,8 @@
 // without support for `var()`. Therefore every color definition needs to define a simple
 // value first, as a fallback
 
-body.crawler {
+body.crawler,
+body > noscript {
   font-family: serif;
   a {
     // we want all links to look like links
