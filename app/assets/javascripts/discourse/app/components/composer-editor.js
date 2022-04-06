@@ -1,8 +1,4 @@
-import {
-  authorizedExtensions,
-  authorizesAllExtensions,
-  authorizesOneOrMoreImageExtensions,
-} from "discourse/lib/uploads";
+import { authorizesOneOrMoreImageExtensions } from "discourse/lib/uploads";
 import { alias } from "@ember/object/computed";
 import { BasePlugin } from "@uppy/core";
 import { resolveAllShortUrls } from "pretty-text/upload-short-url";
@@ -199,24 +195,6 @@ export default Component.extend(ComposerUploadUppy, {
       categoryId,
       includeGroups: true,
     });
-  },
-
-  @discourseComputed()
-  acceptsAllFormats() {
-    return (
-      this.capabilities.isIOS ||
-      authorizesAllExtensions(this.currentUser.staff, this.siteSettings)
-    );
-  },
-
-  @discourseComputed()
-  acceptedFormats() {
-    const extensions = authorizedExtensions(
-      this.currentUser.staff,
-      this.siteSettings
-    );
-
-    return extensions.map((ext) => `.${ext}`).join();
   },
 
   @bind

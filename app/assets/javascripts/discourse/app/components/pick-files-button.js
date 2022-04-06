@@ -1,25 +1,46 @@
 import Component from "@ember/component";
-import { action } from "@ember/object";
-import { empty } from "@ember/object/computed";
-import computed, { bind } from "discourse-common/utils/decorators";
-import I18n from "I18n";
 import bootbox from "bootbox";
+import { isBlank } from "@ember/utils";
+import {
+  authorizedExtensions,
+  authorizesAllExtensions,
+} from "discourse/lib/uploads";
+import { action } from "@ember/object";
+import discourseComputed, { bind } from "discourse-common/utils/decorators";
+import I18n from "I18n";
 
+// This picker is intended to be used with UppyUploadMixin or with
+// ComposerUploadUppy, which is why there are no change events registered
+// for the input. They are handled by the uppy mixins directly.
+//
+// However, if you provide an onFilesPicked action to this component, the change
+// binding will still be added, and the file type will be validated here. This
+// is sometimes useful if you need to do something outside the uppy upload with
+// the file, such as directly using JSON or CSV data from a file in JS.
 export default Component.extend({
+  fileInputId: null,
+  fileInputClass: null,
   classNames: ["pick-files-button"],
-  acceptedFileTypes: null,
-  acceptAnyFile: empty("acceptedFileTypes"),
+  acceptedFormatsOverride: null,
+  allowMultiple: false,
+  showButton: false,
 
   didInsertElement() {
     this._super(...arguments);
-    const fileInput = this.element.querySelector("input");
-    this.set("fileInput", fileInput);
-    fileInput.addEventListener("change", this.onChange, false);
+
+    if (this.onFilesPicked) {
+      const fileInput = this.element.querySelector("input");
+      this.set("fileInput", fileInput);
+      fileInput.addEventListener("change", this.onChange, false);
+    }
   },
 
   willDestroyElement() {
     this._super(...arguments);
-    this.fileInput.removeEventListener("change", this.onChange);
+
+    if (this.onFilesPicked) {
+      this.fileInput.removeEventListener("change", this.onChange);
+    }
   },
 
   @bind
@@ -28,33 +49,27 @@ export default Component.extend({
     this._filesPicked(files);
   },
 
-  @computed
-  acceptedFileTypesString() {
-    if (!this.acceptedFileTypes) {
-      return null;
-    }
-
-    return this.acceptedFileTypes.join(",");
+  @discourseComputed()
+  acceptsAllFormats() {
+    return (
+      this.capabilities.isIOS ||
+      authorizesAllExtensions(this.currentUser.staff, this.siteSettings)
+    );
   },
 
-  @computed
-  acceptedExtensions() {
-    if (!this.acceptedFileTypes) {
-      return null;
+  @discourseComputed()
+  acceptedFormats() {
+    // the acceptedFormatsOverride can be a list of extensions or mime types
+    if (!isBlank(this.acceptedFormatsOverride)) {
+      return this.acceptedFormatsOverride;
     }
 
-    return this.acceptedFileTypes
-      .filter((type) => type.startsWith("."))
-      .map((type) => type.substring(1));
-  },
+    const extensions = authorizedExtensions(
+      this.currentUser.staff,
+      this.siteSettings
+    );
 
-  @computed
-  acceptedMimeTypes() {
-    if (!this.acceptedFileTypes) {
-      return null;
-    }
-
-    return this.acceptedFileTypes.filter((type) => !type.startsWith("."));
+    return extensions.map((ext) => `.${ext}`).join();
   },
 
   @action
@@ -79,25 +94,18 @@ export default Component.extend({
 
   _haveAcceptedTypes(files) {
     for (const file of files) {
-      if (
-        !(this._hasAcceptedExtension(file) || this._hasAcceptedMimeType(file))
-      ) {
+      if (!this._hasAcceptedExtensionOrType(file)) {
         return false;
       }
     }
     return true;
   },
 
-  _hasAcceptedExtension(file) {
+  _hasAcceptedExtensionOrType(file) {
     const extension = this._fileExtension(file.name);
     return (
-      !this.acceptedExtensions || this.acceptedExtensions.includes(extension)
-    );
-  },
-
-  _hasAcceptedMimeType(file) {
-    return (
-      !this.acceptedMimeTypes || this.acceptedMimeTypes.includes(file.type)
+      this.acceptedFormats.includes(`.${extension}`) ||
+      this.acceptedFormats.includes(file.type)
     );
   },
 
