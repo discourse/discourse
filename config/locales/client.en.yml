@@ -1875,6 +1875,7 @@ en:
     create_account:
       header_title: "Welcome!"
       subheader_title: "Let's create your account"
+      signup_with: "Signup with"
       disclaimer: "By registering, you agree to the <a href='%{privacy_link}' target='blank'>privacy policy</a> and <a href='%{tos_link}' target='blank'>terms of service</a>."
       title: "Create your account"
       failed: "Something went wrong, perhaps this email is already registered, try the forgot password link"
@@ -1915,6 +1916,7 @@ en:
     login:
       header_title: "Welcome back"
       subheader_title: "Log in to your account"
+      login_with: "Log in with"
       title: "Log in"
       username: "User"
       password: "Password"
@@ -1962,27 +1964,27 @@ en:
       not_approved: "Your account hasn't been approved yet. You will be notified by email when you are ready to log in."
       google_oauth2:
         name: "Google"
-        title: "with Google"
+        title: "Google"
         sr_title: "Login with Google"
       twitter:
         name: "Twitter"
-        title: "with Twitter"
+        title: "Twitter"
         sr_title: "Login with Twitter"
       instagram:
         name: "Instagram"
-        title: "with Instagram"
+        title: "Instagram"
         sr_title: "Login with Instagram"
       facebook:
         name: "Facebook"
-        title: "with Facebook"
+        title: "Facebook"
         sr_title: "Login with Facebook"
       github:
         name: "GitHub"
-        title: "with GitHub"
+        title: "GitHub"
         sr_title: "Login with GitHub"
       discord:
         name: "Discord"
-        title: "with Discord"
+        title: "Discord"
         sr_title: "Login with Discord"
       second_factor_toggle:
         totp: "Use an authenticator app instead"
