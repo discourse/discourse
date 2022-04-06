@@ -6,6 +6,8 @@ class Reporter {
     this._tapReporter = new TapReporter(...arguments);
   }
 
+  failReports = [];
+
   reportMetadata(tag, metadata) {
     if (tag === "summary-line") {
       process.stdout.write(`\n${metadata.message}\n`);
@@ -15,11 +17,24 @@ class Reporter {
   }
 
   report(prefix, data) {
+    if (data.failed) {
+      this.failReports.push([prefix, data]);
+    }
     this._tapReporter.report(prefix, data);
   }
 
   finish() {
     this._tapReporter.finish();
+
+    if (this.failReports.length > 0) {
+      process.stdout.write("\nFailures:\n\n");
+      this.failReports.forEach(([prefix, data]) => {
+        if (process.env.GITHUB_ACTIONS) {
+          process.stdout.write(`::error ::QUnit Test Failure: ${data.name}\n`);
+        }
+        this.report(prefix, data);
+      });
+    }
   }
 }
 
