@@ -231,16 +231,16 @@ describe DiscoursePoll::Poll do
       RAW
 
       expect(DiscoursePoll::Poll.extract(raw, 2)).to contain_exactly({
-        "name"=>"poll",
-        "options"=>[{
-          "html"=>"3",
-          "id"=>"68b434ff88aeae7054e42cd05a4d9056"
+        "name" => "poll",
+        "options" => [{
+          "html" => "3",
+          "id" => "68b434ff88aeae7054e42cd05a4d9056"
         }, {
-          "html"=>"4",
-          "id"=>"aa2393b424f2f395abb63bf785760a3b"
+          "html" => "4",
+          "id" => "aa2393b424f2f395abb63bf785760a3b"
         }],
-        "status"=>"open",
-        "type"=>"regular"
+        "status" => "open",
+        "type" => "regular"
       })
     end
   end
