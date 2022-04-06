@@ -320,7 +320,7 @@ class ImportScripts::Base
       opts[:username] = UserNameSuggester.suggest(opts[:username].presence || opts[:name].presence || opts[:email])
     end
 
-    unless opts[:email][EmailValidator.email_regex]
+    if !EmailAddressValidator.valid_value?(opts[:email])
       opts[:email] = fake_email
       puts "Invalid email '#{original_email}' for '#{opts[:username]}'. Using '#{opts[:email]}'"
     end
@@ -331,6 +331,10 @@ class ImportScripts::Base
     opts[:active] = opts.fetch(:active, true)
     opts[:import_mode] = true
     opts[:last_emailed_at] = opts.fetch(:last_emailed_at, Time.now)
+
+    if (date_of_birth = opts[:date_of_birth]).is_a?(Date) && date_of_birth.year != 1904
+      opts[:date_of_birth] = Date.new(1904, date_of_birth.month, date_of_birth.day)
+    end
 
     u = User.new(opts)
     (opts[:custom_fields] || {}).each { |k, v| u.custom_fields[k] = v }
@@ -362,6 +366,7 @@ class ImportScripts::Base
       # try based on email
       if e.try(:record).try(:errors).try(:messages).try(:[], :primary_email).present?
         if existing = User.find_by_email(opts[:email].downcase)
+          existing.created_at = opts[:created_at] if opts[:created_at]
           existing.custom_fields["import_id"] = import_id
           existing.save!
           u = existing
@@ -621,6 +626,35 @@ class ImportScripts::Base
       end
 
       print_status(created + skipped + (opts[:offset] || 0), total, get_start_time("bookmarks"))
+    end
+
+    [created, skipped]
+  end
+
+  def create_likes(results, opts = {})
+    created = 0
+    skipped = 0
+    total = opts[:total] || results.count
+
+    results.each do |result|
+      params = yield(result)
+
+      if params.nil?
+        skipped += 1
+      else
+        created_by = User.find_by(id: user_id_from_imported_user_id(params[:user_id]))
+        post = Post.find_by(id: post_id_from_imported_post_id(params[:post_id]))
+
+        if created_by && post
+          PostActionCreator.create(created_by, post, :like, created_at: params[:created_at])
+          created += 1
+        else
+          skipped += 1
+          puts "Skipping like for user id #{params[:user_id]} and post id #{params[:post_id]}"
+        end
+      end
+
+      print_status(created + skipped + (opts[:offset] || 0), total, get_start_time("likes"))
     end
 
     [created, skipped]

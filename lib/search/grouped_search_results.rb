@@ -87,7 +87,7 @@ class Search
         blurb_length: @blurb_length
       }
 
-      if post.post_search_data.version > SearchIndexer::MIN_POST_REINDEX_VERSION && !Search.segment_cjk?
+      if post.post_search_data.version > SearchIndexer::MIN_POST_REINDEX_VERSION && !Search.segment_chinese? && !Search.segment_japanese?
         if SiteSetting.use_pg_headlines_for_excerpt
           scrubbed_headline = post.headline.gsub(SCRUB_HEADLINE_REGEXP, '\1')
           prefix_omission = scrubbed_headline.start_with?(post.leading_raw_data) ? '' : OMISSION
@@ -120,7 +120,7 @@ class Search
       blurb = nil
 
       if scrub
-        cooked = SearchIndexer.scrub_html_for_search(cooked)
+        cooked = SearchIndexer::HtmlScrubber.scrub(cooked)
 
         urls = Set.new
         cooked.scan(Discourse::Utils::URI_REGEXP) { urls << $& }

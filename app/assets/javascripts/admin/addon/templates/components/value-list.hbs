@@ -15,19 +15,32 @@
           class="value-input"
           focus-out=(action "changeValue" index)
         }}
+
+        {{#if showUpDownButtons}}
+          {{d-button
+            action=(action "shift" -1 index)
+            icon="arrow-up"
+            class="shift-up-value-btn btn-small"
+          }}
+          {{d-button
+            action=(action "shift" 1 index)
+            icon="arrow-down"
+            class="shift-down-value-btn btn-small"
+          }}
+        {{/if}}
       </div>
     {{/each}}
   </div>
 {{/if}}
 
 {{combo-box
-  options=(hash
-    allowAny=true
-  )
-  none=noneKey
   valueProperty=null
   nameProperty=null
   value=newValue
   content=filteredChoices
   onChange=(action "selectChoice")
+  options=(hash
+    allowAny=true
+    none=noneKey
+  )
 }}

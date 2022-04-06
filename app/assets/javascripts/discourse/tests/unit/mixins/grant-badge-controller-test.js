@@ -60,11 +60,11 @@ module("Unit | Mixin | grant-badge-controller", function (hooks) {
       .get("grantableBadges")
       .map((badge) => badge.name);
 
-    assert.not(
+    assert.notOk(
       badgeNames.includes(this.badgeDisabled),
       "excludes disabled badges"
     );
-    assert.not(
+    assert.notOk(
       badgeNames.includes(this.badgeAutomatic),
       "excludes automatic badges"
     );
@@ -73,7 +73,7 @@ module("Unit | Mixin | grant-badge-controller", function (hooks) {
 
   test("selectedBadgeGrantable", function (assert) {
     this.subject.set("selectedBadgeId", this.badgeDisabled.id);
-    assert.not(this.subject.get("selectedBadgeGrantable"));
+    assert.notOk(this.subject.get("selectedBadgeGrantable"));
 
     this.subject.set("selectedBadgeId", this.badgeFirst.id);
     assert.ok(this.subject.get("selectedBadgeGrantable"));

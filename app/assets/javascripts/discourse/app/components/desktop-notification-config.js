@@ -86,7 +86,7 @@ export default Component.extend({
     if (!this.site.mobileView) {
       return false;
     }
-    return isPushNotificationsSupported(this.site.mobileView);
+    return isPushNotificationsSupported();
   },
 
   actions: {

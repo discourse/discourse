@@ -86,6 +86,12 @@ pl_PL:
       "10":
         quote: "Każda rzecz, którą umysł ludzki może pojąć i w nią uwierzyć, może on osiągnąć."
         author: "Napoleon Hill"
+      "11":
+        quote: "Pokój w domu, pokój na świecie."
+      "12":
+        quote: "Edukacja nie jest sposobem na wyrwanie się z ubóstwa, to jest sposób na walkę z nim."
+      "13":
+        quote: "Podróż o długości tysiąca mil musi rozpocząć się od jednego kroku."
       results: |-
         > :left_speech_bubble: _%{quote}_ &mdash; %{author}
     magic_8_ball:
@@ -217,7 +223,7 @@ pl_PL:
 
           - lub, naciśnij przycisk <kbd><b>B</b></kbd> lub <kbd><i>I</i></kbd> w edytorze
         reply: |-
-          Dobra robota! BBCode i HTML również pracują nad formatowaniem - aby dowiedzieć się więcej [rozpocznij ten tutorial](http://commonmark.org/help) :nerd:
+          Dobra robota! BBCode i HTML również pracują nad formatowaniem - aby dowiedzieć się więcej [rozpocznij ten tutorial](https://commonmark.org/help) :nerd:
         not_found: |-
           Uuu, nie znalazłem żadnego formatowania tekstu w odpowiedzi. :pencil2:
 

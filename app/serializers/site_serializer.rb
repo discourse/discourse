@@ -21,6 +21,7 @@ class SiteSerializer < ApplicationSerializer
     :can_tag_pms,
     :tags_filter_regexp,
     :top_tags,
+    :can_associate_groups,
     :wizard_required,
     :topic_featured_link_allowed_category_ids,
     :user_themes,
@@ -31,7 +32,8 @@ class SiteSerializer < ApplicationSerializer
     :custom_emoji_translation,
     :watched_words_replace,
     :watched_words_link,
-    :categories
+    :categories,
+    :markdown_additional_options
   )
 
   has_many :archetypes, embed: :objects, serializer: ArchetypeSerializer
@@ -42,7 +44,7 @@ class SiteSerializer < ApplicationSerializer
     cache_fragment("user_themes") do
       Theme.where('id = :default OR user_selectable',
                     default: SiteSetting.default_theme_id)
-        .order(:name)
+        .order("lower(name)")
         .pluck(:id, :name, :color_scheme_id)
         .map { |id, n, cs| { theme_id: id, name: n, default: id == SiteSetting.default_theme_id, color_scheme_id: cs } }
         .as_json
@@ -134,6 +136,14 @@ class SiteSerializer < ApplicationSerializer
     scope.can_tag_pms?
   end
 
+  def can_associate_groups
+    scope.can_associate_groups?
+  end
+
+  def include_can_associate_groups?
+    scope.is_admin?
+  end
+
   def include_tags_filter_regexp?
     SiteSetting.tagging_enabled
   end
@@ -192,6 +202,10 @@ class SiteSerializer < ApplicationSerializer
 
   def categories
     object.categories.map { |c| c.to_h }
+  end
+
+  def markdown_additional_options
+    Site.markdown_additional_options
   end
 
   private

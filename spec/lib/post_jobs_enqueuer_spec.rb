@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 RSpec.describe PostJobsEnqueuer do
   let!(:post) { Fabricate(:post, topic: topic) }
   let!(:topic) { Fabricate(:topic) }

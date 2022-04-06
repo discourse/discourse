@@ -19,7 +19,7 @@ module UploadsHelpers
   end
 
   def stub_upload(upload)
-    url = "https://#{SiteSetting.s3_upload_bucket}.s3.#{SiteSetting.s3_region}.amazonaws.com/original/1X/#{upload.sha1}.#{upload.extension}?acl"
+    url = %r{https://#{SiteSetting.s3_upload_bucket}.s3.#{SiteSetting.s3_region}.amazonaws.com/original/\d+X.*#{upload.sha1}.#{upload.extension}\?acl}
     stub_request(:put, url)
   end
 

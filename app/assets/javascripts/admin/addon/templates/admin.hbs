@@ -7,7 +7,7 @@
           {{#if currentUser.admin}}
             {{nav-item route="adminSiteSettings" label="admin.site_settings.title"}}
           {{/if}}
-          {{nav-item route="adminUsersList" label="admin.users.title"}}
+          {{nav-item route="adminUsers" label="admin.users.title"}}
           {{#if showGroups}}
             {{nav-item route="groups" label="admin.groups.title"}}
           {{/if}}
@@ -26,7 +26,7 @@
             {{/if}}
           {{/if}}
           {{nav-item route="adminPlugins" label="admin.plugins.title"}}
-          {{plugin-outlet name="admin-menu" connectorTagName="" tagName=""}}
+          {{plugin-outlet name="admin-menu"}}
         </ul>
       </div>
 

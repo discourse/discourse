@@ -32,7 +32,7 @@ module Autospec
     # Discourse specific
     reload(%r{^discourse/tests/javascripts/fixtures/.+_fixtures\.js(\.es6)?$})
     reload(%r{^discourse/tests/javascripts/(helpers|mixins)/.+\.js(\.es6)?$})
-    reload("app/assets/javascripts/discoruse/tests/javascripts/test_helper.js")
+    reload("app/assets/javascripts/discoruse/tests/javascripts/test-boot-rails.js")
 
     watch(%r{^plugins/.*/test/.+\.js(\.es6)?$})
 
@@ -152,7 +152,7 @@ module Autospec
 
     def try_to_find_module_name(file)
       file, _ = file.split(/:\d+$/)
-      return unless File.exists?(file)
+      return unless File.exist?(file)
       File.open(file, "r").each_line do |line|
         if m = /module\(['"]([^'"]+)/i.match(line)
           return m[1]

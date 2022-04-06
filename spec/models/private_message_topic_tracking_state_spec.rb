@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe PrivateMessageTopicTrackingState do
   fab!(:user) { Fabricate(:user) }
   fab!(:user_2) { Fabricate(:user) }

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Onebox::Engine::GoogleDriveOnebox do
   let(:link) { "https://drive.google.com/file/d/1FgMt06wENEUfC6_-1tImXaNCH7vM9QsA/view" }
   let(:html) { described_class.new(link).to_html }

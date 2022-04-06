@@ -1,8 +1,6 @@
 # coding: utf-8
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe ApplicationHelper do
 
   describe "preload_script" do
@@ -11,6 +9,22 @@ describe ApplicationHelper do
           <link rel="preload" href="#{url}" as="script">
           <script src="#{url}"></script>
       HTML
+    end
+
+    it "sends crawler content to old mobiles" do
+      controller.stubs(:use_crawler_layout?).returns(false)
+
+      helper.request.user_agent = "Mozilla/5.0 (iPhone; CPU iPhone OS 6_0 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10A5376e Safari/8536.25"
+
+      expect(helper.include_crawler_content?).to eq(true)
+    end
+
+    it "does not send crawler content to new mobiles" do
+      controller.stubs(:use_crawler_layout?).returns(false)
+
+      helper.request.user_agent = "Mozilla/5.0 (Linux; Android 6.0.1; Nexus 5X Build/MMB29P) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.60 Mobile Safari/537.36 (compatible"
+
+      expect(helper.include_crawler_content?).to eq(false)
     end
 
     it "provides brotli links to brotli cdn" do

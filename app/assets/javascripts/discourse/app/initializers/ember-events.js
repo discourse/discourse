@@ -5,14 +5,14 @@ export default {
 
   initialize() {
     // By default Ember listens to too many events. This tells it the only events
-    // we're interested in. (it removes mousemove and touchmove)
+    // we're interested in. (it removes mousemove, touchstart and touchmove)
     if (initializedOnce) {
       return;
     }
 
+    // eslint-disable-next-line no-undef
     Ember.EventDispatcher.reopen({
       events: {
-        touchstart: "touchStart",
         touchend: "touchEnd",
         touchcancel: "touchCancel",
         keydown: "keyDown",

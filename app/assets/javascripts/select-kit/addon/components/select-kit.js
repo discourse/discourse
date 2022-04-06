@@ -27,9 +27,7 @@ const SELECT_KIT_OPTIONS = Mixin.create({
 });
 
 function isDocumentRTL() {
-  return (
-    window.getComputedStyle(document.querySelector("html")).direction === "rtl"
-  );
+  return document.documentElement.classList.contains("rtl");
 }
 
 export default Component.extend(
@@ -291,6 +289,9 @@ export default Component.extend(
       focusAfterOnChange: true,
       triggerOnChangeOnTab: true,
       autofocus: false,
+      placementStrategy: null,
+      mobilePlacementStrategy: null,
+      desktopPlacementStrategy: null,
     },
 
     autoFilterable: computed("content.[]", "selectKit.filter", function () {
@@ -446,7 +447,10 @@ export default Component.extend(
         resolve(items);
       }).finally(() => {
         if (!this.isDestroying && !this.isDestroyed) {
-          if (this.selectKit.options.closeOnChange) {
+          if (
+            this.selectKit.options.closeOnChange ||
+            (isPresent(value) && this.selectKit.options.maximum === 1)
+          ) {
             this.selectKit.close(event);
           }
 
@@ -710,7 +714,7 @@ export default Component.extend(
         rowContainer = this.element.querySelector(".select-kit-row.is-none");
       }
 
-      rowContainer && rowContainer.focus({ preventScroll });
+      rowContainer?.focus({ preventScroll });
     },
 
     _highlightLast() {
@@ -848,33 +852,43 @@ export default Component.extend(
       }
 
       this.selectKit.mainElement().open = true;
-
       this.clearErrors();
-
-      const inModal = this.element.closest("#discourse-modal");
-
       this.selectKit.onOpen(event);
 
       if (!this.popper) {
+        const inModal = this.element.closest("#discourse-modal");
         const anchor = document.querySelector(
           `#${this.selectKit.uniqueID}-header`
         );
         const popper = document.querySelector(
           `#${this.selectKit.uniqueID}-body`
         );
-
-        const placementStrategy = this?.site?.mobileView ? "absolute" : "fixed";
-        const verticalOffset = 3;
+        const strategy = this._computePlacementStrategy();
 
         this.popper = createPopper(anchor, popper, {
           eventsEnabled: false,
-          strategy: placementStrategy,
+          strategy,
           placement: this.selectKit.options.placement,
           modifiers: [
             {
+              name: "flip",
+              enabled: !inModal,
+              options: {
+                padding: {
+                  top:
+                    parseInt(
+                      document.documentElement.style.getPropertyValue(
+                        "--header-offset"
+                      ),
+                      10
+                    ) || 0,
+                },
+              },
+            },
+            {
               name: "offset",
               options: {
-                offset: [0, verticalOffset],
+                offset: [0, 3],
               },
             },
             {
@@ -884,7 +898,11 @@ export default Component.extend(
               fn({ state }) {
                 if (!inModal) {
                   let { x } = state.elements.reference.getBoundingClientRect();
-                  state.modifiersData.popperOffsets.x = -x + 10;
+                  if (strategy === "fixed") {
+                    state.modifiersData.popperOffsets.x = 0 + 10;
+                  } else {
+                    state.modifiersData.popperOffsets.x = -x + 10;
+                  }
                 }
               },
             },
@@ -986,7 +1004,7 @@ export default Component.extend(
         }
 
         if (highlighted) {
-          this._scrollToRow(highlighted);
+          this._scrollToRow(highlighted, false);
           this.set("selectKit.highlighted", highlighted);
         }
       }
@@ -1032,13 +1050,31 @@ export default Component.extend(
       this._deprecateOptions();
     },
 
+    _computePlacementStrategy() {
+      let placementStrategy = this.selectKit.options.placementStrategy;
+
+      if (placementStrategy) {
+        return placementStrategy;
+      }
+
+      if (this.capabilities?.isIpadOS || this.site?.mobileView) {
+        placementStrategy =
+          this.selectKit.options.mobilePlacementStrategy || "absolute";
+      } else {
+        placementStrategy =
+          this.selectKit.options.desktopPlacementStrategy || "fixed";
+      }
+
+      return placementStrategy;
+    },
+
     _deprecated(text) {
       const discourseSetup = document.getElementById("data-discourse-setup");
       if (
         discourseSetup &&
         discourseSetup.getAttribute("data-environment") === "development"
       ) {
-        deprecated(text, { since: "v2.4.0" });
+        deprecated(text, { since: "v2.4.0", dropFrom: "2.9.0.beta1" });
       }
     },
 
@@ -1082,6 +1118,7 @@ export default Component.extend(
         none: "options.none",
         rootNone: "options.none",
         disabled: "options.disabled",
+        isDisabled: "options.disabled",
         rootNoneLabel: "options.none",
         showFullTitle: "options.showFullTitle",
         title: "options.translatedNone",

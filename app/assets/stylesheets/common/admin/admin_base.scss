@@ -10,9 +10,9 @@ $mobile-breakpoint: 700px;
   display: inline-flex;
   position: relative;
   width: 100%;
-  height: auto;
   overflow: hidden;
   height: 100%;
+
   @include breakpoint(tablet) {
     width: calc(100% + 10px);
     margin-left: -10px;
@@ -229,13 +229,33 @@ $mobile-breakpoint: 700px;
     button.edit {
       float: right;
     }
+
+    $maxHeight: 8 * 1.4em;
+    $gradientHeight: 2.2em;
+
     .site-text-value {
       margin: 0.5em 5em 0.5em 0;
-      @include breakpoint(medium, min-width) {
-        max-height: 100px;
+      max-height: $maxHeight;
+      overflow: hidden;
+      position: relative;
+      &::after {
+        content: " ";
+        position: absolute;
+        background-color: red;
+        left: 0;
+        right: 0;
+        top: $maxHeight - $gradientHeight;
+        height: $gradientHeight;
+        background: linear-gradient(
+          to top,
+          rgba(var(--secondary-rgb), 1),
+          rgba(var(--secondary-rgb), 0.15)
+        );
       }
       @include breakpoint(mobile-extra-large) {
         word-wrap: break-word;
+        max-width: 80vw;
+        margin-right: 3em;
       }
       color: var(--primary-medium);
     }
@@ -835,6 +855,19 @@ table#user-badges {
     .remove-value-btn {
       @include value-btn;
       margin-right: 0.25em;
+    }
+
+    .shift-up-value-btn,
+    .shift-down-value-btn {
+      display: none;
+      margin-inline: 0.25em;
+    }
+
+    &:hover {
+      .shift-up-value-btn,
+      .shift-down-value-btn {
+        display: block;
+      }
     }
   }
   .values {

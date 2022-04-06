@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 # rubocop:disable Discourse/NoJsonParseResponse
 
-require 'rails_helper'
-
 RSpec.describe MetadataController do
 
   describe 'manifest.webmanifest' do
@@ -94,7 +92,7 @@ RSpec.describe MetadataController do
       expect(response.status).to eq(200)
       manifest = JSON.parse(response.body)
       expect(manifest["shortcuts"].size).to be > 0
-      expect { URI.parse(manifest["shortcuts"][0]["icons"][0]["src"]) }.not_to raise_error
+      expect { URI.parse(manifest["shortcuts"][0]["url"]) }.not_to raise_error
     end
   end
 
@@ -125,13 +123,13 @@ RSpec.describe MetadataController do
     end
 
     it 'returns the right output' do
-      SiteSetting.app_association_android = <<~EOF
+      SiteSetting.app_association_android = <<~JSON
         [{
           "relation": ["delegate_permission/common.handle_all_urls"],
           "target" : { "namespace": "android_app", "package_name": "com.example.app",
                        "sha256_cert_fingerprints": ["hash_of_app_certificate"] }
         }]
-      EOF
+      JSON
       get "/.well-known/assetlinks.json"
 
       expect(response.headers["Cache-Control"]).to eq('max-age=60, private')
@@ -150,13 +148,13 @@ RSpec.describe MetadataController do
     end
 
     it 'returns the right output' do
-      SiteSetting.app_association_ios = <<~EOF
+      SiteSetting.app_association_ios = <<~JSON
         {
           "applinks": {
             "apps": []
           }
         }
-      EOF
+      JSON
       get "/apple-app-site-association"
 
       expect(response.status).to eq(200)

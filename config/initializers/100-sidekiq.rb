@@ -1,14 +1,5 @@
 # frozen_string_literal: true
 
-# Ensure that scheduled jobs are loaded before mini_scheduler is configured.
-if Rails.env == "development"
-  require "jobs/base"
-
-  Dir.glob("#{Rails.root}/app/jobs/scheduled/*.rb") do |f|
-    require(f)
-  end
-end
-
 require "sidekiq/pausable"
 
 Sidekiq.configure_client do |config|
@@ -21,28 +12,6 @@ Sidekiq.configure_server do |config|
   config.server_middleware do |chain|
     chain.add Sidekiq::Pausable
   end
-end
-
-MiniScheduler.configure do |config|
-
-  config.redis = Discourse.redis
-
-  config.job_exception_handler do |ex, context|
-    Discourse.handle_job_exception(ex, context)
-  end
-
-  config.job_ran do |stat|
-    DiscourseEvent.trigger(:scheduled_job_ran, stat)
-  end
-
-  config.skip_schedule { Sidekiq.paused? }
-
-  config.before_sidekiq_web_request do
-    RailsMultisite::ConnectionManagement.establish_connection(
-      db: RailsMultisite::ConnectionManagement::DEFAULT
-    )
-  end
-
 end
 
 if Sidekiq.server?
@@ -81,7 +50,16 @@ if Sidekiq.server?
   end
 end
 
-Sidekiq.logger.level = Logger::WARN
+# Sidekiq#logger= applies patches to whichever logger we pass it.
+# Therefore something like Sidekiq.logger = Rails.logger will break
+# all logging in the application.
+#
+# Instead, this patch adds a dedicated logger instance and patches
+# the #add method to forward messages to Rails.logger.
+Sidekiq.logger = Logger.new(nil)
+Sidekiq.logger.define_singleton_method(:add) do |severity, message = nil, progname = nil, &blk|
+  Rails.logger.add(severity, message, progname, &blk)
+end
 
 class SidekiqLogsterReporter < Sidekiq::ExceptionHandler::Logger
   def call(ex, context = {})
@@ -111,8 +89,36 @@ class SidekiqLogsterReporter < Sidekiq::ExceptionHandler::Logger
   end
 end
 
-unless Rails.env.development?
-  Sidekiq.error_handlers.clear
-end
-
+Sidekiq.error_handlers.clear
 Sidekiq.error_handlers << SidekiqLogsterReporter.new
+
+Sidekiq.strict_args!
+
+Rails.application.config.to_prepare do
+  # Ensure that scheduled jobs are loaded before mini_scheduler is configured.
+  if Rails.env.development?
+    Dir.glob("#{Rails.root}/app/jobs/scheduled/*.rb") do |f|
+      require(f)
+    end
+  end
+
+  MiniScheduler.configure do |config|
+    config.redis = Discourse.redis
+
+    config.job_exception_handler do |ex, context|
+      Discourse.handle_job_exception(ex, context)
+    end
+
+    config.job_ran do |stat|
+      DiscourseEvent.trigger(:scheduled_job_ran, stat)
+    end
+
+    config.skip_schedule { Sidekiq.paused? }
+
+    config.before_sidekiq_web_request do
+      RailsMultisite::ConnectionManagement.establish_connection(
+        db: RailsMultisite::ConnectionManagement::DEFAULT
+      )
+    end
+  end
+end

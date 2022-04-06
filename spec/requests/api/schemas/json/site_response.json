@@ -97,6 +97,21 @@
         },
         "chat_message": {
           "type": "integer"
+        },
+        "chat_invitation": {
+          "type": "integer"
+        },
+        "chat_group_mention": {
+          "type": "integer"
+        },
+        "chat_quoted": {
+          "type": "integer"
+        },
+        "assigned": {
+          "type": "integer"
+        },
+        "question_answer_user_commented": {
+          "type": "integer"
         }
       },
       "required": [
@@ -128,7 +143,10 @@
         "votes_released",
         "event_reminder",
         "event_invitation",
-        "chat_mention"
+        "chat_mention",
+        "chat_message",
+        "chat_invitation",
+        "chat_group_mention"
       ]
     },
     "post_types": {
@@ -358,6 +376,9 @@
     "wizard_required": {
       "type": "boolean"
     },
+    "can_associate_groups": {
+      "type": "boolean"
+    },
     "topic_featured_link_allowed_category_ids": {
       "type": "array",
       "items": [
@@ -453,6 +474,9 @@
         "string",
         "null"
       ]
+    },
+    "markdown_additional_options" : {
+      "type": "object"
     },
     "categories": {
       "type": "array",
@@ -569,13 +593,25 @@
             "allow_global_tags": {
               "type": "boolean"
             },
-            "min_tags_from_required_group": {
-              "type": "integer"
-            },
-            "required_tag_group_name": {
-              "type": [
-                "string",
-                "null"
+            "required_tag_groups": {
+              "type": "array",
+              "items": [
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "min_count": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "min_count"
+                  ]
+                }
               ]
             },
             "read_only_banner": {
@@ -631,8 +667,7 @@
             "allowed_tags",
             "allowed_tag_groups",
             "allow_global_tags",
-            "min_tags_from_required_group",
-            "required_tag_group_name",
+            "required_tag_groups",
             "read_only_banner",
             "uploaded_logo",
             "uploaded_background",

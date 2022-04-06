@@ -295,6 +295,7 @@ export default {
         day_6_end_time: 1020,
       },
       timezone: "Australia/Brisbane",
+      has_topic_draft: true
     },
   },
   "/u/eviltrout/card.json": {
@@ -3473,4 +3474,11 @@ export default {
       timezone: "Australia/Brisbane",
     },
   },
+  "/u/recent-searches": {
+    success: "OK",
+    recent_searches: [
+      "yellow",
+      "blue"
+    ]
+  }
 };

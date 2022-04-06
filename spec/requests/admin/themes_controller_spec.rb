@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe Admin::ThemesController do
   fab!(:admin) { Fabricate(:admin) }
 
@@ -149,7 +147,18 @@ describe Admin::ThemesController do
 
       expect(json["theme"]["name"]).to eq("Sam's Simple Theme")
       expect(json["theme"]["theme_fields"].length).to eq(2)
+      expect(json["theme"]["auto_update"]).to eq(false)
       expect(UserHistory.where(action: UserHistory.actions[:change_theme]).count).to eq(1)
+    end
+
+    it 'fails to import with an error if uploads are not allowed' do
+      SiteSetting.theme_authorized_extensions = "nothing"
+
+      expect do
+        post "/admin/themes/import.json", params: { theme: theme_archive }
+      end.to change { Theme.count }.by (0)
+
+      expect(response.status).to eq(422)
     end
 
     it 'imports a theme from an archive' do
@@ -163,6 +172,7 @@ describe Admin::ThemesController do
 
       expect(json["theme"]["name"]).to eq("Header Icons")
       expect(json["theme"]["theme_fields"].length).to eq(5)
+      expect(json["theme"]["auto_update"]).to eq(false)
       expect(UserHistory.where(action: UserHistory.actions[:change_theme]).count).to eq(1)
     end
 
@@ -219,6 +229,7 @@ describe Admin::ThemesController do
       expect(json["theme"]["name"]).to eq("Header Icons")
       expect(json["theme"]["id"]).not_to eq(existing_theme.id)
       expect(json["theme"]["theme_fields"].length).to eq(5)
+      expect(json["theme"]["auto_update"]).to eq(false)
       expect(UserHistory.where(action: UserHistory.actions[:change_theme]).count).to eq(1)
     end
   end
@@ -647,7 +658,7 @@ describe Admin::ThemesController do
       expect(response.parsed_body["bg"]).to eq("green")
 
       theme.reload
-      expect(theme.included_settings[:bg]).to eq("green")
+      expect(theme.cached_settings[:bg]).to eq("green")
       user_history = UserHistory.last
 
       expect(user_history.action).to eq(
@@ -660,7 +671,7 @@ describe Admin::ThemesController do
       theme.reload
 
       expect(response.status).to eq(200)
-      expect(theme.included_settings[:bg]).to eq("")
+      expect(theme.cached_settings[:bg]).to eq("")
     end
   end
 end

@@ -1,19 +1,14 @@
-import {
-  LATER_TODAY_CUTOFF_HOUR,
-  MOMENT_THURSDAY,
-  laterToday,
-  now,
-  parseCustomDatetime,
-  startOfDay,
-  tomorrow,
-} from "discourse/lib/time-utils";
+import { now, parseCustomDatetime, startOfDay } from "discourse/lib/time-utils";
 import { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
 import Component from "@ember/component";
 import I18n from "I18n";
 import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
 import ItsATrap from "@discourse/itsatrap";
 import { Promise } from "rsvp";
-import { TIME_SHORTCUT_TYPES } from "discourse/lib/time-shortcut";
+import {
+  TIME_SHORTCUT_TYPES,
+  defaultTimeShortcuts,
+} from "discourse/lib/time-shortcut";
 import { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import bootbox from "bootbox";
@@ -63,11 +58,10 @@ export default Component.extend({
       userTimezone: this.currentUser.resolvedTimezone(this.currentUser),
       showOptions: false,
       _itsatrap: new ItsATrap(),
+      autoDeletePreference: this.model.autoDeletePreference || 0,
     });
 
     this.registerOnCloseHandler(this._onModalClose);
-
-    this._loadBookmarkOptions();
     this._bindKeyboardShortcuts();
 
     if (this.editingExistingBookmark) {
@@ -87,8 +81,8 @@ export default Component.extend({
 
     // we want to make sure the options panel opens so the user
     // knows they have set these options previously.
-    if (this.autoDeletePreference) {
-      this.toggleOptionsPanel();
+    if (this.model.id) {
+      this.set("showOptions", true);
     }
   },
 
@@ -104,21 +98,6 @@ export default Component.extend({
 
       this.set("selectedDatetime", parsedDatetime);
     }
-  },
-
-  _loadBookmarkOptions() {
-    this.set(
-      "autoDeletePreference",
-      this.model.autoDeletePreference || this._preferredDeleteOption() || 0
-    );
-  },
-
-  _preferredDeleteOption() {
-    let preferred = localStorage.bookmarkDeleteOption;
-    if (preferred && preferred !== "") {
-      preferred = parseInt(preferred, 10);
-    }
-    return preferred;
   },
 
   _bindKeyboardShortcuts() {
@@ -165,16 +144,26 @@ export default Component.extend({
       }
     }
 
-    localStorage.bookmarkDeleteOption = this.autoDeletePreference;
+    this.currentUser.set(
+      "bookmark_auto_delete_preference",
+      this.autoDeletePreference
+    );
 
     const data = {
       reminder_at: reminderAtISO,
       name: this.model.name,
-      post_id: this.model.postId,
       id: this.model.id,
       auto_delete_preference: this.autoDeletePreference,
-      for_topic: this.model.forTopic,
     };
+
+    if (this.siteSettings.use_polymorphic_bookmarks) {
+      data.bookmarkable_id = this.model.bookmarkableId;
+      data.bookmarkable_type = this.model.bookmarkableType;
+    } else {
+      // TODO (martin) [POLYBOOK] Not relevant once polymorphic bookmarks are implemented.
+      data.post_id = this.model.postId;
+      data.for_topic = this.model.forTopic;
+    }
 
     if (this.editingExistingBookmark) {
       return ajax(`/bookmarks/${this.model.id}`, {
@@ -194,15 +183,25 @@ export default Component.extend({
     if (!this.afterSave) {
       return;
     }
-    this.afterSave({
+
+    const data = {
       reminder_at: reminderAtISO,
-      for_topic: this.model.forTopic,
       auto_delete_preference: this.autoDeletePreference,
-      post_id: this.model.postId,
       id: this.model.id || response.id,
       name: this.model.name,
-      topic_id: this.model.topicId,
-    });
+    };
+
+    if (this.siteSettings.use_polymorphic_bookmarks) {
+      data.bookmarkable_id = this.model.bookmarkableId;
+      data.bookmarkable_type = this.model.bookmarkableType;
+    } else {
+      // TODO (martin) [POLYBOOK] Not relevant once polymorphic bookmarks are implemented.
+      data.post_id = this.model.postId;
+      data.for_topic = this.model.forTopic;
+      data.topic_id = this.model.topicId;
+    }
+
+    this.afterSave(data);
   },
 
   _deleteBookmark() {
@@ -295,24 +294,22 @@ export default Component.extend({
     });
   },
 
-  @discourseComputed()
-  customTimeShortcutOptions() {
-    let customOptions = [];
+  @discourseComputed("userTimezone")
+  timeOptions(userTimezone) {
+    const options = defaultTimeShortcuts(userTimezone);
 
     if (this.showPostLocalDate) {
-      customOptions.push({
+      options.push({
         icon: "globe-americas",
         id: TIME_SHORTCUT_TYPES.POST_LOCAL_DATE,
         label: "time_shortcut.post_local_date",
         time: this._postLocalDate(),
-        timeFormatted: this._postLocalDate().format(
-          I18n.t("dates.long_no_year")
-        ),
+        timeFormatKey: "dates.long_no_year",
         hidden: false,
       });
     }
 
-    return customOptions;
+    return options;
   },
 
   @discourseComputed("existingBookmarkHasReminder")
@@ -330,36 +327,11 @@ export default Component.extend({
     editingExistingBookmark,
     existingBookmarkHasReminder
   ) {
-    if (!editingExistingBookmark) {
-      return [];
-    }
-
-    if (!existingBookmarkHasReminder) {
+    if (editingExistingBookmark && !existingBookmarkHasReminder) {
       return [TIME_SHORTCUT_TYPES.NONE];
     }
 
     return [];
-  },
-
-  @discourseComputed()
-  additionalTimeShortcutOptions() {
-    let additional = [];
-
-    if (
-      !laterToday(this.userTimezone).isSame(
-        tomorrow(this.userTimezone),
-        "date"
-      ) &&
-      now(this.userTimezone).hour() < LATER_TODAY_CUTOFF_HOUR
-    ) {
-      additional.push(TIME_SHORTCUT_TYPES.LATER_TODAY);
-    }
-
-    if (now(this.userTimezone).day() < MOMENT_THURSDAY) {
-      additional.push(TIME_SHORTCUT_TYPES.LATER_THIS_WEEK);
-    }
-
-    return additional;
   },
 
   @discourseComputed("model.reminderAt")
@@ -382,12 +354,7 @@ export default Component.extend({
   },
 
   @action
-  toggleOptionsPanel() {
-    if (this.showOptions) {
-      $(".bookmark-options-panel").slideUp("fast");
-    } else {
-      $(".bookmark-options-panel").slideDown("fast");
-    }
+  toggleShowOptions() {
     this.toggleProperty("showOptions");
   },
 

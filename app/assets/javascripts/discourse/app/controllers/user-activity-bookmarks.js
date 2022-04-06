@@ -1,12 +1,12 @@
 import Controller, { inject as controller } from "@ember/controller";
+import EmberObject, { action, computed } from "@ember/object";
+import { equal, notEmpty } from "@ember/object/computed";
 import { iconHTML } from "discourse-common/lib/icon-library";
+import discourseComputed from "discourse-common/utils/decorators";
+import { ajax } from "discourse/lib/ajax";
 import Bookmark from "discourse/models/bookmark";
 import I18n from "I18n";
 import { Promise } from "rsvp";
-import EmberObject, { action, computed } from "@ember/object";
-import discourseComputed from "discourse-common/utils/decorators";
-import { equal, notEmpty } from "@ember/object/computed";
-import { ajax } from "discourse/lib/ajax";
 
 export default Controller.extend({
   queryParams: ["q"],
@@ -102,6 +102,7 @@ export default Controller.extend({
     if (response.bookmarks) {
       const bookmarkModels = response.bookmarks.map(this.transform);
       this.model.bookmarks.pushObjects(bookmarkModels);
+      this.session.set("bookmarksModel", this.model);
     }
   },
 

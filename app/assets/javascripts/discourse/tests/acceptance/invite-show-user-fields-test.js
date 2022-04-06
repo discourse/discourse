@@ -67,7 +67,7 @@ acceptance("Accept Invite - User Fields", function (needs) {
     );
 
     await click(".user-field input[type=checkbox]");
-    assert.not(
+    assert.notOk(
       exists(".invites-show .btn-primary:disabled"),
       "submit is enabled because field is checked"
     );

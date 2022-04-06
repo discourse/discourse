@@ -225,7 +225,7 @@ In addition to ImageMagick we also need to install some other image related
 software:
 
 ```sh
-brew install jpegoptim optipng jhead
+brew install jpegoptim optipng oxipng jhead
 npm install -g svgo
 ```
 

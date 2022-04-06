@@ -55,9 +55,10 @@
   .badge-notification {
     position: relative;
     top: -2px;
+
     &.new-topic {
       top: -1px;
-      padding-left: 5px;
+      padding-left: 2px;
     }
   }
 
@@ -183,13 +184,9 @@ button.dismiss-read {
 
 .category-breadcrumb {
   // only target the top-level li, not dropdowns
-  > li {
-    height: 100%;
-  }
   .select-kit {
     align-self: stretch;
     height: 100%;
-    margin-bottom: var(--nav-space);
   }
 }
 
@@ -233,6 +230,10 @@ button.dismiss-read {
     }
     // show only the first poster
     .topic-list-data.posters {
+      a:first-child .avatar.latest:not(.single) {
+        top: 0px;
+        left: 0px;
+      }
       a:not(.latest) {
         display: none;
       }

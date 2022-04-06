@@ -4,6 +4,9 @@ const fs = require("fs");
 const concat = require("broccoli-concat");
 const mergeTrees = require("broccoli-merge-trees");
 const MessageFormat = require("messageformat");
+const deepmerge = require("deepmerge");
+const glob = require("glob");
+const { shouldLoadPluginTestJs } = require("discourse/lib/plugin-js");
 
 let built = false;
 
@@ -18,6 +21,10 @@ class TranslationPlugin extends Plugin {
   }
 
   replaceMF(formats, input, path = []) {
+    if (!input) {
+      return;
+    }
+
     Object.keys(input).forEach((key) => {
       let value = input[key];
 
@@ -40,10 +47,14 @@ class TranslationPlugin extends Plugin {
       return;
     }
 
-    let file = this.inputPaths[0] + "/" + this.inputFile;
+    let parsed = {};
 
-    let yaml = fs.readFileSync(file, { encoding: "UTF-8" });
-    let parsed = Yaml.load(yaml);
+    this.inputPaths.forEach((path) => {
+      let file = path + "/" + this.inputFile;
+      let yaml = fs.readFileSync(file, { encoding: "UTF-8" });
+      let loaded = Yaml.load(yaml, { json: true });
+      parsed = deepmerge(parsed, loaded);
+    });
 
     let extras = {
       en: {
@@ -82,10 +93,17 @@ module.exports = function translatePlugin(...params) {
 };
 
 module.exports.createI18nTree = function (discourseRoot, vendorJs) {
-  let en = new TranslationPlugin(
-    [discourseRoot + "/config/locales"],
-    "client.en.yml"
-  );
+  let translations = [discourseRoot + "/config/locales"];
+
+  if (shouldLoadPluginTestJs()) {
+    translations = translations.concat(
+      glob
+        .sync(discourseRoot + "/plugins/*/config/locales/client.en.yml")
+        .map((f) => f.replace(/\/client\.en\.yml$/, ""))
+    );
+  }
+
+  let en = new TranslationPlugin(translations, "client.en.yml");
 
   return concat(
     mergeTrees([

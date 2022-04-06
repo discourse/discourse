@@ -11,7 +11,7 @@ class UserOption < ActiveRecord::Base
 
   after_save :update_tracked_topics
 
-  enum default_calendar: { none_selected: 0, ics: 1, google: 2 }
+  enum default_calendar: { none_selected: 0, ics: 1, google: 2 }, _scopes: false
 
   def self.ensure_consistency!
     sql = <<~SQL
@@ -106,7 +106,7 @@ class UserOption < ActiveRecord::Base
     Discourse.redis.expire(key, delay)
 
     # delay the update
-    Jobs.enqueue_in(delay / 2, :update_top_redirection, user_id: self.user_id, redirected_at: Time.zone.now)
+    Jobs.enqueue_in(delay / 2, :update_top_redirection, user_id: self.user_id, redirected_at: Time.zone.now.to_s)
   end
 
   def should_be_redirected_to_top
@@ -259,6 +259,8 @@ end
 #  skip_new_user_tips               :boolean          default(FALSE), not null
 #  color_scheme_id                  :integer
 #  default_calendar                 :integer          default("none_selected"), not null
+#  oldest_search_log_date           :datetime
+#  bookmark_auto_delete_preference  :integer          default(3), not null
 #
 # Indexes
 #

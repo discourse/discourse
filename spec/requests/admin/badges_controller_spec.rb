@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe Admin::BadgesController do
   context "while logged in as an admin" do
     fab!(:admin) { Fabricate(:admin) }

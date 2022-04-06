@@ -8,7 +8,7 @@ import Composer from "discourse/models/composer";
 import KeyEnterEscape from "discourse/mixins/key-enter-escape";
 import afterTransition from "discourse/lib/after-transition";
 import discourseDebounce from "discourse-common/lib/debounce";
-import { headerHeight } from "discourse/components/site-header";
+import { headerOffset } from "discourse/lib/offset-calculator";
 import positioningWorkaround from "discourse/lib/safari-hacks";
 
 const START_DRAG_EVENTS = ["touchstart", "mousedown"];
@@ -112,7 +112,9 @@ export default Component.extend(KeyEnterEscape, {
     START_DRAG_EVENTS.forEach((startDragEvent) => {
       this.element
         .querySelector(".grippie")
-        ?.addEventListener(startDragEvent, this.startDragHandler);
+        ?.addEventListener(startDragEvent, this.startDragHandler, {
+          passive: false,
+        });
     });
 
     if (this._visualViewportResizing()) {
@@ -128,7 +130,7 @@ export default Component.extend(KeyEnterEscape, {
     const currentMousePos = mouseYPos(event);
     let size = this.origComposerSize + (this.lastMousePos - currentMousePos);
 
-    size = Math.min(size, window.innerHeight - headerHeight());
+    size = Math.min(size, window.innerHeight - headerOffset());
     this.movePanels(size);
     this.element.style.height = size ? `${size}px` : "";
   },

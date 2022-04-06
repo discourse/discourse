@@ -19,7 +19,14 @@ class DiscourseJsProcessor
 
     # add sourceURL until we can do proper source maps
     unless Rails.env.production?
-      data = "eval(#{data.inspect} + \"\\n//# sourceURL=#{logical_path}\");\n"
+      plugin_name = root_path[/\/plugins\/([\w-]+)\/assets/, 1]
+      source_url = if plugin_name
+        "plugins/#{plugin_name}/assets/javascripts/#{logical_path}"
+      else
+        logical_path
+      end
+
+      data = "eval(#{data.inspect} + \"\\n//# sourceURL=#{source_url}\");\n"
     end
 
     { data: data }

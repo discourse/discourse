@@ -7,6 +7,7 @@
 id:
   js:
     styleguide:
+      title: "Styleguide"
       welcome: "Untuk memulai, pilih bagian dari menu di sebelah kiri."
       categories:
         atoms: Atom
@@ -25,12 +26,23 @@ id:
           title: "Warna"
         icons:
           title: "Ikon"
+          full_list: "Lihat daftar lengkap Font Awesome Icons"
+        input_fields:
+          title: "Bidang Masukan"
         buttons:
           title: "Tombol"
+        dropdowns:
+          title: "Dropdown"
         categories:
           title: "Kategori"
         navigation:
           title: "Navigasi"
+        categories_list:
+          title: "Daftar Kategori"
+        topic_link:
+          title: "Tautan Topik"
+        topic_list:
+          title: "Daftar Topik"
         post:
           title: "Postingan"
         suggested_topics:

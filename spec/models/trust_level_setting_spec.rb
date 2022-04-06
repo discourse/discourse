@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe TrustLevelSetting do
   describe ".values" do
     after do

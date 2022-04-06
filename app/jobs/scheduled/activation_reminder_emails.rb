@@ -13,11 +13,13 @@ module Jobs
         user.custom_fields['activation_reminder'] = true
         user.save_custom_fields
 
-        email_token = user.email_tokens.create!(email: user.email)
-        ::Jobs.enqueue(:user_email,
-                     type: :activation_reminder,
-                     user_id: user.id,
-                     email_token: email_token.token)
+        email_token = user.email_tokens.create!(email: user.email, scope: EmailToken.scopes[:signup])
+        ::Jobs.enqueue(
+          :user_email,
+          type: "activation_reminder",
+          user_id: user.id,
+          email_token: email_token.token
+        )
       end
     end
   end

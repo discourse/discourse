@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 require 'csv'
-require 'rails_helper'
-
 RSpec.describe Admin::WatchedWordsController do
   fab!(:admin) { Fabricate(:admin) }
 

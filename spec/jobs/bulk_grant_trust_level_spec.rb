@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe Jobs::BulkGrantTrustLevel do
 
   it "raises an error when trust_level is missing" do

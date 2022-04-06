@@ -46,6 +46,9 @@ class Post < ActiveRecord::Base
   has_many :uploads, through: :post_uploads
 
   has_one :post_stat
+
+  # When we are ready we can add as: :bookmarkable here to use the
+  # polymorphic association.
   has_many :bookmarks
 
   has_one :incoming_email
@@ -543,12 +546,17 @@ class Post < ActiveRecord::Base
     self.hidden_at = Time.zone.now
     self.hidden_reason_id = reason
     self.skip_unique_check = true
-    save!
 
-    Topic.where(
-      "id = :topic_id AND NOT EXISTS(SELECT 1 FROM POSTS WHERE topic_id = :topic_id AND NOT hidden)",
-      topic_id: topic_id
-    ).update_all(visible: false)
+    Post.transaction do
+      save!
+
+      Topic.where(
+        "id = :topic_id AND NOT EXISTS(SELECT 1 FROM POSTS WHERE topic_id = :topic_id AND NOT hidden)",
+        topic_id: topic_id
+      ).update_all(visible: false)
+
+      UserStatCountUpdater.decrement!(self)
+    end
 
     # inform user
     if user.present?
@@ -571,16 +579,20 @@ class Post < ActiveRecord::Base
         5.seconds,
         :send_system_message,
         user_id: user.id,
-        message_type: message,
+        message_type: message.to_s,
         message_options: options
       )
     end
   end
 
   def unhide!
-    self.update(hidden: false)
-    self.topic.update(visible: true) if is_first_post?
-    save(validate: false)
+    Post.transaction do
+      self.update!(hidden: false)
+      self.topic.update(visible: true) if is_first_post?
+      UserStatCountUpdater.increment!(self)
+      save(validate: false)
+    end
+
     publish_change_to_clients!(:acted)
   end
 
@@ -596,6 +608,18 @@ class Post < ActiveRecord::Base
     else
       "/404"
     end
+  end
+
+  def canonical_url
+    topic_view = TopicView.new(topic, nil, post_number: post_number)
+
+    page = ""
+
+    if topic_view.page > 1
+      page = "?page=#{topic_view.page}"
+    end
+
+    "#{topic.url}#{page}#post_#{post_number}"
   end
 
   def unsubscribe_url(user)

@@ -109,12 +109,19 @@ module("Unit | Model | report", function () {
   });
 
   test("thirtyDaysCountTitle", function (assert) {
-    const report = reportWithData([5, 5, 5, 5]);
+    let report = reportWithData([5, 5, 5, 5]);
     report.set("prev30Days", 10);
-    const title = report.get("thirtyDaysCountTitle");
+    let title = report.get("thirtyDaysCountTitle");
 
     assert.ok(title.indexOf("+50%") !== -1);
     assert.ok(title.match(/Was 10/));
+
+    report = reportWithData([5, 5, 5, 5]);
+    report.set("prev_period", 20);
+    title = report.get("thirtyDaysCountTitle");
+
+    assert.ok(title.indexOf("-25%") !== -1);
+    assert.ok(title.match(/Was 20/));
   });
 
   test("sevenDaysTrend", function (assert) {

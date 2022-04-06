@@ -1,3 +1,4 @@
+import domFromString from "discourse-common/lib/dom-from-string";
 import {
   failedCache,
   lookupCache,
@@ -74,11 +75,8 @@ function loadNext(ajax) {
     },
   })
     .then(
-      (html) => {
-        let template = document.createElement("template");
-        template.innerHTML = html.trim();
-        const node = template.content.firstChild;
-
+      (template) => {
+        const node = domFromString(template)[0];
         setLocalCache(normalize(url), node);
         elem.replaceWith(node);
         applySquareGenericOnebox(node);

@@ -56,6 +56,10 @@ export default Component.extend(UtilsMixin, {
     }
   },
 
+  mouseDown() {
+    return false;
+  },
+
   click(event) {
     event.preventDefault();
     event.stopPropagation();
@@ -70,7 +74,7 @@ export default Component.extend(UtilsMixin, {
   },
 
   keyDown(event) {
-    if (this.selectKit.isDisabled) {
+    if (this.selectKit.isDisabled || this.selectKit.options.disabled) {
       return;
     }
 

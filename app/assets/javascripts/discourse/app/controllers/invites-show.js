@@ -1,4 +1,4 @@
-import { alias, notEmpty, or, readOnly } from "@ember/object/computed";
+import { alias, not, or, readOnly } from "@ember/object/computed";
 import Controller, { inject as controller } from "@ember/controller";
 import DiscourseURL from "discourse/lib/url";
 import EmberObject from "@ember/object";
@@ -33,7 +33,7 @@ export default Controller.extend(
     emailVerifiedByLink: alias("model.email_verified_by_link"),
     differentExternalEmail: alias("model.different_external_email"),
     accountUsername: alias("model.username"),
-    passwordRequired: notEmpty("accountPassword"),
+    passwordRequired: not("externalAuthsOnly"),
     successMessage: null,
     errorMessage: null,
     userFields: null,
@@ -100,9 +100,19 @@ export default Controller.extend(
       );
     },
 
-    @discourseComputed("externalAuthsOnly", "discourseConnectEnabled")
-    showSocialLoginAvailable(externalAuthsOnly, discourseConnectEnabled) {
-      return !externalAuthsOnly && !discourseConnectEnabled;
+    @discourseComputed(
+      "externalAuthsEnabled",
+      "externalAuthsOnly",
+      "discourseConnectEnabled"
+    )
+    showSocialLoginAvailable(
+      externalAuthsEnabled,
+      externalAuthsOnly,
+      discourseConnectEnabled
+    ) {
+      return (
+        externalAuthsEnabled && !externalAuthsOnly && !discourseConnectEnabled
+      );
     },
 
     @discourseComputed(

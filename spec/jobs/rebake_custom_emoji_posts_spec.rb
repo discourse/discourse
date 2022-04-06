@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 RSpec.describe Jobs::RebakeCustomEmojiPosts do
   it 'should rebake posts that are using a given custom emoji' do
     upload = Fabricate(:upload)
@@ -10,7 +8,7 @@ RSpec.describe Jobs::RebakeCustomEmojiPosts do
     post = Fabricate(:post, raw: 'some post with :test: yay')
 
     expect(post.reload.cooked).to eq(
-      "<p>some post with <img src=\"#{upload.url}?v=#{Emoji::EMOJI_VERSION}\" title=\":test:\" class=\"emoji emoji-custom\" alt=\":test:\"> yay</p>"
+      "<p>some post with <img src=\"#{upload.url}?v=#{Emoji::EMOJI_VERSION}\" title=\":test:\" class=\"emoji emoji-custom\" alt=\":test:\" loading=\"lazy\" width=\"20\" height=\"20\"> yay</p>"
     )
 
     custom_emoji.destroy!

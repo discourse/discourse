@@ -135,7 +135,6 @@ ro:
       placeholder: dată
     share:
       topic_html: 'Subiect: <span class="topic-title">%{topicTitle}</span>'
-      post: "Distribuie postarea #%{postNumber}"
       close: "Închide"
       twitter: "Distribuie pe Twitter"
       facebook: "Distribuie pe Facebook"
@@ -186,7 +185,6 @@ ro:
     bootstrap_mode_disabled: "Modul bootstrap va fi dezactivat în următoarele 24 de ore"
     themes:
       default_description: "Implicit"
-      broken_theme_alert: "Este posibil ca site-ul dvs. să nu funcționeze, deoarece tema / componenta %{theme} are erori. Dezactivați-l la %{path}."
     s3:
       regions:
         ap_northeast_1: "Asia Pacific (Tokyo)"
@@ -304,10 +302,7 @@ ro:
       list_permission_denied: "Nu ai permisiuni de acces la link-urile preferate ale acestui utilizator"
       no_user_bookmarks: "Nu ai link-uri de postări salvate; link-urile salvate îți permit revenirea la postări specifice"
       auto_delete_preference:
-        label: "Ștergere automată"
-        never: "Niciodată"
-        when_reminder_sent: "Imediat ce memento-ul este trimis"
-        on_owner_reply: "După ce răspund la acest subiect"
+        when_reminder_sent: "Ștergere semn de carte"
       search_placeholder: "Căutați marcaje după nume, titlul subiectului sau conținutul postării"
       search: "Caută"
       reminders:
@@ -369,8 +364,8 @@ ro:
     switch_to_anon: "Intrați în Modul anonim"
     switch_from_anon: "Ieșiți din Modul anonim"
     banner:
-      close: "Ignoră acest banner."
-      edit: "Editează acest banner."
+      close: "Ignoră acest banner"
+      edit: "Editează"
     pwa:
       install_banner: "Vrei să <a href>instalezi %{title} pe acest dispozitiv?</a>"
     choose_topic:
@@ -1205,10 +1200,8 @@ ro:
         every_month: "în fiecare lună"
         every_six_months: "la fiecare șase luni"
       email_level:
-        title: "Trimite un email când cineva mă citează, îmi răspunde la o postare, menționează numele meu de utilizator, sau mă invită la un subiect."
         always: "întotdeauna"
         never: "niciodată"
-      email_messages_level: "Trimite-mi un email când cineva îmi trimite un mesaj."
       include_tl0_in_digests: "Include conținut de la utilizatori noi în rezumatul de pe email."
       email_in_reply_to: "Include un fragment din răspunsurile la postare în emailuri"
       other_settings: "Altele"
@@ -1518,7 +1511,6 @@ ro:
       success: "Contul tău a fost creat și acum ești logat."
       name_label: "Nume"
       password_label: "Parolă"
-      optional_description: "(opțional)"
     password_reset:
       continue: "Continuă la %{site_name}"
     emoji_set:
@@ -1575,9 +1567,6 @@ ro:
         one: "Prin menționarea %{group}, urmează să notifici <a href='%{group_link}'>o persoană</a> – ești sigur?"
         few: "Prin menționarea %{group}, urmează să notifici <a href='%{group_link}'>%{count} persoane</a> – ești sigur?"
         other: "Prin menționarea %{group}, urmează să notifici <a href='%{group_link}'>%{count} de persoane</a> – ești sigur?"
-      cannot_see_mention:
-        category: "Ai menționat utilizatorii: %{username}. Însă ei nu vor notificați pentru că nu au acces la această categorie. Va trebui să îi adaugi la într-un grup care are acces la aceasta categorie."
-        private: "Ai menționat utilizatorii: %{username}. Însă ei nu vor fi notificați pentru că nu au posibilitatea să vadă acest mesaj personal. Va trebui să îi inviți la acest MP. "
       duplicate_link: "Se pare că link-ul dv. către <b>%{domain}</b> a fost deja postat în cadrul discuției de către <b>@%{username}</b> în <a href='%{post_url}'> un răspuns %{ago} în urmă</a> – sunteți sigur că vreți să îl postați din nou?"
       error:
         title_missing: "Trebuie un titlu"
@@ -1684,6 +1673,9 @@ ro:
       watching_first_post: "<span>Subiect nou</span> %{description}"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
+      dismiss_confirmation:
+        dismiss: "Înlătură"
+        cancel: "Anulează"
       popup:
         mentioned: '%{username} te-a menţionat în "%{topic}" - %{site_title}'
         group_mentioned: '%{username} te-a menţionat în "%{topic}" - %{site_title}'
@@ -1788,7 +1780,7 @@ ro:
         select_all: "Selectează tot"
         clear_all: "Deselectează tot"
         unlist_topics: "Elimină subiecte din listă"
-        reset_read: "Resetează citite"
+        defer: "Amânare"
         delete: "Șterge subiectele"
         dismiss: "Abandonează"
         dismiss_read: "Abandonează toate necitite"
@@ -1942,16 +1934,9 @@ ro:
         replies_short: "%{current} / %{total}"
       progress:
         title: Evoluția subiectului
-        go_top: "început"
-        go_bottom: "sfârșit"
-        go: "mergi"
-        jump_bottom: "sari la ultimul mesaj"
         jump_prompt: "sari la..."
         jump_prompt_long: "Sari la..."
-        jump_bottom_with_number: "sari la mesajul %{post_number}"
         jump_prompt_or: "sau"
-        total: toate postările
-        current: Postarea curentă
       notifications:
         title: schimbă frecvența cu care vei fi notificat despre acest subiect
         reasons:
@@ -2018,7 +2003,6 @@ ro:
         title: "Răspunde"
         help: "începe să scrii un răspuns la acest subiect"
       share:
-        title: "Distribuie"
         help: "distribuie un link cu acest subiect"
         invite_users: "Invită"
       print:
@@ -2485,6 +2469,9 @@ ro:
       unlisted:
         help: "Acest subiect este invizibil; nu va fi afișat în listele de subiecte și va putea fi accesat numai prin link direct"
     posts: "Postări"
+    pending_posts:
+      label: "În așteptare"
+      label_with_count: "În așteptare: (%{count})"
     original_post: "Postare inițială"
     views: "Vizualizări"
     views_lowercase:
@@ -2703,8 +2690,7 @@ ro:
         few: "Ești sigur că vrei să ștergi această etichetă și să o scoți din %{count} subiecte care o folosesc?"
         other: "Ești sigur că vrei să ștergi această etichetă și să o scoți din %{count} subiecte care o folosesc?"
       delete_confirm_no_topics: "Ești sigur că vrei să ștergi această etichetă?"
-      rename_tag: "Redenumire etichetă"
-      rename_instructions: "Alege un nume nou pentru etichetă:"
+      description: "Descriere"
       sort_by: "Sortat după:"
       sort_by_count: "contor"
       sort_by_name: "nume"
@@ -3048,7 +3034,6 @@ ro:
         delete: "Șterge"
         color: "Culoare"
         opacity: "Opacitate"
-        copy: "Copiază"
         copy_to_clipboard: "Copiază în clipboard"
         copied_to_clipboard: "Copiat în clipboard"
         copy_to_clipboard_error: "Eroare la copierea datelor în clipboard"
@@ -3316,9 +3301,6 @@ ro:
         screened_ips:
           title: "IP-uri filtrate"
           delete_confirm: "Ești sigur că vrei să anulezi regula pentru %{ip_address}?"
-          roll_up_confirm: "Ești sigur că vrei să consolidezi adresele IP monitorizate în mod obișnuit în subrețele?"
-          rolled_up_some_subnets: "S-au consolidat cu succes înregistrările de IP-uri blocate pe următoarele subrețele: %{subnets}."
-          rolled_up_no_subnet: "Nu e nimic de consolidat"
           actions:
             block: "Blochează"
             do_nothing: "Permite"

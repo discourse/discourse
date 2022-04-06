@@ -65,9 +65,10 @@ const TopicTrackingState = EmberObject.extend({
    * @method establishChannels
    */
   establishChannels() {
-    this.messageBus.subscribe("/new", this._processChannelPayload);
     this.messageBus.subscribe("/latest", this._processChannelPayload);
     if (this.currentUser) {
+      this.messageBus.subscribe("/new", this._processChannelPayload);
+      this.messageBus.subscribe(`/unread`, this._processChannelPayload);
       this.messageBus.subscribe(
         `/unread/${this.currentUser.id}`,
         this._processChannelPayload
@@ -194,6 +195,7 @@ const TopicTrackingState = EmberObject.extend({
 
     const filter = this.filter;
     const filterCategory = this.filterCategory;
+    const filterTag = this.filterTag;
     const categoryId = data.payload && data.payload.category_id;
 
     // if we have a filter category currently and it is not the
@@ -207,6 +209,10 @@ const TopicTrackingState = EmberObject.extend({
       ) {
         return;
       }
+    }
+
+    if (filterTag && !data.payload.tags.includes(filterTag)) {
+      return;
     }
 
     // always count a new_topic as incoming
@@ -275,25 +281,34 @@ const TopicTrackingState = EmberObject.extend({
    * @method trackIncoming
    * @param {String} filter - Valid values are all, categories, and any topic list
    *                          filters e.g. latest, unread, new. As well as this
-   *                          specific category and tag URLs like /tag/test/l/latest
-   *                          or c/cat/subcat/6/l/latest.
+   *                          specific category and tag URLs like tag/test/l/latest,
+   *                          c/cat/subcat/6/l/latest or tags/c/cat/subcat/6/test/l/latest.
    */
   trackIncoming(filter) {
     this.newIncoming = [];
 
-    if (filter.startsWith("c/")) {
-      const categoryId = filter.match(/\/(\d*)\//);
-      const category = Category.findById(parseInt(categoryId[1], 10));
-      this.set("filterCategory", category);
+    let category, tag;
 
+    if (filter.startsWith("c/") || filter.startsWith("tags/c/")) {
+      const categoryId = filter.match(/\/(\d*)\//);
+      category = Category.findById(parseInt(categoryId[1], 10));
       const split = filter.split("/");
+
+      if (filter.startsWith("tags/c/")) {
+        tag = split[split.indexOf(categoryId[1]) + 1];
+      }
+
       if (split.length >= 4) {
         filter = split[split.length - 1];
       }
-    } else {
-      this.set("filterCategory", null);
+    } else if (filter.startsWith("tag/")) {
+      const split = filter.split("/");
+      filter = split[split.length - 1];
+      tag = split[1];
     }
 
+    this.set("filterCategory", category);
+    this.set("filterTag", tag);
     this.set("filter", filter);
     this.set("incomingCount", 0);
   },
@@ -426,7 +441,7 @@ const TopicTrackingState = EmberObject.extend({
   },
 
   _generateCallbackId() {
-    return Math.random().toString(12).substr(2, 9);
+    return Math.random().toString(12).slice(2, 11);
   },
 
   onStateChange(cb) {
@@ -458,8 +473,10 @@ const TopicTrackingState = EmberObject.extend({
     const subcategoryIds = noSubcategories
       ? new Set([categoryId])
       : this.getSubCategoryIds(categoryId);
-    const mutedCategoryIds =
-      this.currentUser && this.currentUser.muted_category_ids;
+
+    const mutedCategoryIds = this.currentUser?.muted_category_ids?.concat(
+      this.currentUser.indirectly_muted_category_ids
+    );
     let filterFn = type === "new" ? isNew : isUnread;
 
     return Array.from(this.states.values()).filter(
@@ -489,7 +506,7 @@ const TopicTrackingState = EmberObject.extend({
   },
 
   /**
-   * Calls the provided callback for each of the currenty tracked topics
+   * Calls the provided callback for each of the currently tracked topics
    * we have in state.
    *
    * @method forEachTracked
@@ -758,10 +775,13 @@ const TopicTrackingState = EmberObject.extend({
     }
 
     if (["new_topic", "latest"].includes(data.message_type)) {
-      const muted_category_ids = User.currentProp("muted_category_ids");
+      const mutedCategoryIds = User.currentProp("muted_category_ids")?.concat(
+        User.currentProp("indirectly_muted_category_ids")
+      );
+
       if (
-        muted_category_ids &&
-        muted_category_ids.includes(data.payload.category_id)
+        mutedCategoryIds &&
+        mutedCategoryIds.includes(data.payload.category_id)
       ) {
         return;
       }
@@ -794,22 +814,34 @@ const TopicTrackingState = EmberObject.extend({
     if (["new_topic", "unread", "read"].includes(data.message_type)) {
       this.notifyIncoming(data);
       if (!deepEqual(old, data.payload)) {
-        if (data.message_type === "read") {
-          let mergeData = {};
+        // The 'unread' and 'read' payloads are deliberately incomplete
+        // for efficiency. We rebuild them by using any existing state
+        // we have, and then substitute inferred values for last_read_post_number
+        // and notification_level. Any errors will be corrected when a
+        // topic-list is loaded which includes the topic.
 
-          // we have to do this because the "read" event does not
-          // include tags; we don't want them to be overridden
-          if (old) {
-            mergeData = {
-              tags: old.tags,
-              topic_tag_ids: old.topic_tag_ids,
-            };
+        let payload = data.payload;
+
+        if (old) {
+          payload = deepMerge(old, data.payload);
+        }
+
+        if (data.message_type === "unread") {
+          if (payload.last_read_post_number === undefined) {
+            // If we didn't already have state for this topic,
+            // we're probably only 1 post behind.
+            payload.last_read_post_number = payload.highest_post_number - 1;
           }
 
-          this.modifyState(data, deepMerge(data.payload, mergeData));
-        } else {
-          this.modifyState(data, data.payload);
+          if (payload.notification_level === undefined) {
+            // /unread messages will only have been published to us
+            // if we are tracking or watching the topic.
+            // Let's guess TRACKING for now:
+            payload.notification_level = NotificationLevels.TRACKING;
+          }
         }
+
+        this.modifyState(data, payload);
         this.incrementMessageCount();
       }
     }

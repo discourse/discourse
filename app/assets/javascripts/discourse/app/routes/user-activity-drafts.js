@@ -1,5 +1,6 @@
 import DiscourseRoute from "discourse/routes/discourse";
 import I18n from "I18n";
+import { action } from "@ember/object";
 
 export default DiscourseRoute.extend({
   model() {
@@ -10,7 +11,7 @@ export default DiscourseRoute.extend({
     return draftsStream.findItems(this.site).then(() => {
       return {
         stream: draftsStream,
-        isAnotherUsersPage: this.isAnotherUsersPage(user),
+        isAnotherUsersPage: !this.isCurrentUser(user),
         emptyState: this.emptyState(),
       };
     });
@@ -38,10 +39,9 @@ export default DiscourseRoute.extend({
     this.appEvents.off("draft:destroyed", this, this.refresh);
   },
 
-  actions: {
-    didTransition() {
-      this.controllerFor("user-activity")._showFooter();
-      return true;
-    },
+  @action
+  didTransition() {
+    this.controllerFor("user-activity")._showFooter();
+    return true;
   },
 });

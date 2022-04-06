@@ -17,7 +17,7 @@ class InlineUploads
     end
 
     cooked_fragment = Nokogiri::HTML5::fragment(PrettyText.cook(markdown, disable_emojis: true))
-    link_occurences = []
+    link_occurrences = []
 
     cooked_fragment.traverse do |node|
       if node.name == "img"
@@ -29,9 +29,9 @@ class InlineUploads
 
       if seen_link = matched_uploads(node).first
         if (actual_link = (node.attributes["href"]&.value || node.attributes["src"]&.value))
-          link_occurences << { link: actual_link, is_valid: true }
+          link_occurrences << { link: actual_link, is_valid: true }
         elsif node.name != "p"
-          link_occurences << { link: seen_link, is_valid: false }
+          link_occurrences << { link: seen_link, is_valid: false }
         end
       end
     end
@@ -104,7 +104,7 @@ class InlineUploads
       .sort { |a, b| a[3] <=> b[3] }
       .each do |match, link, replace_with, _index|
 
-      node_info = link_occurences.shift
+      node_info = link_occurrences.shift
       next unless node_info&.dig(:is_valid)
 
       if link.include?(node_info[:link])
@@ -204,16 +204,10 @@ class InlineUploads
 
       if src && (external_src || matched_uploads(src).present?)
         upload = uploads&.[](src)
-
-        text = upload&.original_filename || node.attributes["alt"]&.value
-        width = (node.attributes["width"]&.value || upload&.width).to_i
-        height = (node.attributes["height"]&.value || upload&.height).to_i
-        title = node.attributes["title"]&.value
-        text = "#{text}|#{width}x#{height}" if width > 0 && height > 0
-        url = upload&.short_url || PLACEHOLDER
+        node["src"] = upload&.short_url || PLACEHOLDER
 
         spaces_before = match[1].present? ? match[1][/ +$/].size : 0
-        replacement = +"#{" " * spaces_before}![#{text}](#{url}#{title.present? ? " \"#{title}\"" : ""})"
+        replacement = +"#{" " * spaces_before}#{node.to_s}"
 
         yield(match[2], src, replacement, $~.offset(0)[0]) if block_given?
       end

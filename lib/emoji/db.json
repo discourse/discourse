@@ -26,7 +26,7 @@
     },
     {
       "code": "1f604",
-      "name": "grinning_face_with_smiling_eyes"
+      "name": "smile"
     },
     {
       "code": "1f605",
@@ -59,10 +59,6 @@
     {
       "code": "263a",
       "name": "relaxed"
-    },
-    {
-      "code": "263b",
-      "name": "slight_smile"
     },
     {
       "code": "1f60b",
@@ -189,12 +185,12 @@
       "name": "confused"
     },
     {
-      "code": "2639",
-      "name": "frowning"
-    },
-    {
       "code": "1f641",
       "name": "slightly_frowning_face"
+    },
+    {
+      "code": "2639",
+      "name": "frowning_face"
     },
     {
       "code": "1f623",
@@ -238,7 +234,7 @@
     },
     {
       "code": "1f626",
-      "name": "frowning_face_with_open_mouth"
+      "name": "frowning_with_open_mouth"
     },
     {
       "code": "1f627",
@@ -778,7 +774,7 @@
     },
     {
       "code": "1f935",
-      "name": "man_in_tuxedo"
+      "name": "person_in_tuxedo"
     },
     {
       "code": "1f3c3-200d-2640-fe0f",
@@ -914,7 +910,7 @@
     },
     {
       "code": "1f491",
-      "name": "couple_with_heart_woman_man"
+      "name": "couple_with_heart"
     },
     {
       "code": "1f469-200d-2764-fe0f-200d-1f469",
@@ -938,7 +934,7 @@
     },
     {
       "code": "1f46a",
-      "name": "family_man_woman_boy"
+      "name": "family"
     },
     {
       "code": "1f468-200d-1f469-200d-1f467",
@@ -1322,7 +1318,7 @@
     },
     {
       "code": "1f41e",
-      "name": "beetle"
+      "name": "lady_beetle"
     },
     {
       "code": "1f41c",
@@ -3665,10 +3661,6 @@
       "name": "heart"
     },
     {
-      "code": "2661",
-      "name": "white_heart_suit"
-    },
-    {
       "code": "1f49b",
       "name": "yellow_heart"
     },
@@ -5814,7 +5806,7 @@
     },
     {
       "code": "1f9dc",
-      "name": "mermaid"
+      "name": "merperson"
     },
     {
       "code": "1f9dc-200d-2642-fe0f",
@@ -6093,11 +6085,11 @@
       "name": "superhero"
     },
     {
-      "code": "1f9b8-200d-2642",
+      "code": "1f9b8-200d-2642-fe0f",
       "name": "man_superhero"
     },
     {
-      "code": "1f9b8-200d-2640",
+      "code": "1f9b8-200d-2640-fe0f",
       "name": "woman_superhero"
     },
     {
@@ -6105,11 +6097,11 @@
       "name": "supervillain"
     },
     {
-      "code": "1f9b9-200d-2640",
+      "code": "1f9b9-200d-2640-fe0f",
       "name": "woman_supervillain"
     },
     {
-      "code": "1f9b9-200d-2642",
+      "code": "1f9b9-200d-2642-fe0f",
       "name": "man_supervillain"
     },
     {
@@ -6585,27 +6577,27 @@
       "name": "man_with_probing_cane"
     },
     {
-      "code": "1f9ce-200d-2640",
+      "code": "1f9ce-200d-2640-fe0f",
       "name": "woman_kneeling"
     },
     {
-      "code": "1f9ce-200d-2642",
+      "code": "1f9ce-200d-2642-fe0f",
       "name": "man_kneeling"
     },
     {
-      "code": "1f9cd-200d-2642",
+      "code": "1f9cd-200d-2642-fe0f",
       "name": "man_standing"
     },
     {
-      "code": "1f9cd-200d-2640",
+      "code": "1f9cd-200d-2640-fe0f",
       "name": "woman_standing"
     },
     {
-      "code": "1f9cf-200d-2640",
+      "code": "1f9cf-200d-2640-fe0f",
       "name": "deaf_woman"
     },
     {
-      "code": "1f9cf-200d-2642",
+      "code": "1f9cf-200d-2642-fe0f",
       "name": "deaf_man"
     },
     {
@@ -6631,6 +6623,802 @@
     {
       "code": "1f3f3-fe0f-200d-26a7",
       "name": "transgender_flag"
+    },
+    {
+      "code": "1f972",
+      "name": "smiling_face_with_tear"
+    },
+    {
+      "code": "1f978",
+      "name": "disguised_face"
+    },
+    {
+      "code": "1f90c",
+      "name": "pinched_fingers"
+    },
+    {
+      "code": "1fac0",
+      "name": "anatomical_heart"
+    },
+    {
+      "code": "1fac1",
+      "name": "lungs"
+    },
+    {
+      "code": "1f977",
+      "name": "ninja"
+    },
+    {
+      "code": "1f9d1-200d-1f384",
+      "name": "mx_claus"
+    },
+    {
+      "code": "1fac2",
+      "name": "people_hugging"
+    },
+    {
+      "code": "1f408-200d-2b1b",
+      "name": "black_cat"
+    },
+    {
+      "code": "1f9ac",
+      "name": "bison"
+    },
+    {
+      "code": "1f9a3",
+      "name": "mammoth"
+    },
+    {
+      "code": "1f9ab",
+      "name": "beaver"
+    },
+    {
+      "code": "1f9a4",
+      "name": "dodo"
+    },
+    {
+      "code": "1fab6",
+      "name": "feather"
+    },
+    {
+      "code": "1f9ad",
+      "name": "seal"
+    },
+    {
+      "code": "1fab2",
+      "name": "beetle"
+    },
+    {
+      "code": "1fab3",
+      "name": "cockroach"
+    },
+    {
+      "code": "1fab0",
+      "name": "fly"
+    },
+    {
+      "code": "1fab1",
+      "name": "worm"
+    },
+    {
+      "code": "1fab4",
+      "name": "potted_plant"
+    },
+    {
+      "code": "1fad0",
+      "name": "blueberries"
+    },
+    {
+      "code": "1fad2",
+      "name": "olive"
+    },
+    {
+      "code": "1fad1",
+      "name": "bell_pepper"
+    },
+    {
+      "code": "1fad3",
+      "name": "flatbread"
+    },
+    {
+      "code": "1fad4",
+      "name": "tamale"
+    },
+    {
+      "code": "1fad5",
+      "name": "fondue"
+    },
+    {
+      "code": "1fad6",
+      "name": "teapot"
+    },
+    {
+      "code": "1f9cb",
+      "name": "bubble_tea"
+    },
+    {
+      "code": "1faa8",
+      "name": "rock"
+    },
+    {
+      "code": "1fab5",
+      "name": "wood"
+    },
+    {
+      "code": "1f6d6",
+      "name": "hut"
+    },
+    {
+      "code": "1f6fb",
+      "name": "pickup_truck"
+    },
+    {
+      "code": "1f6fc",
+      "name": "roller_skate"
+    },
+    {
+      "code": "1fa84",
+      "name": "magic_wand"
+    },
+    {
+      "code": "1fa85",
+      "name": "piñata"
+    },
+    {
+      "code": "1fa86",
+      "name": "nesting_dolls"
+    },
+    {
+      "code": "1faa1",
+      "name": "sewing_needle"
+    },
+    {
+      "code": "1faa2",
+      "name": "knot"
+    },
+    {
+      "code": "1fa74",
+      "name": "thong_sandal"
+    },
+    {
+      "code": "1fa96",
+      "name": "military_helmet"
+    },
+    {
+      "code": "1fa97",
+      "name": "accordion"
+    },
+    {
+      "code": "1fa98",
+      "name": "long_drum"
+    },
+    {
+      "code": "1fa99",
+      "name": "coin"
+    },
+    {
+      "code": "1fa83",
+      "name": "boomerang"
+    },
+    {
+      "code": "1fa9a",
+      "name": "carpentry_saw"
+    },
+    {
+      "code": "1fa9b",
+      "name": "screwdriver"
+    },
+    {
+      "code": "1fa9d",
+      "name": "hook"
+    },
+    {
+      "code": "1fa9c",
+      "name": "ladder"
+    },
+    {
+      "code": "1fa9e",
+      "name": "mirror"
+    },
+    {
+      "code": "1fa9f",
+      "name": "window"
+    },
+    {
+      "code": "1faa0",
+      "name": "plunger"
+    },
+    {
+      "code": "1faa4",
+      "name": "mouse_trap"
+    },
+    {
+      "code": "1faa3",
+      "name": "bucket"
+    },
+    {
+      "code": "1faa5",
+      "name": "toothbrush"
+    },
+    {
+      "code": "1faa6",
+      "name": "headstone"
+    },
+    {
+      "code": "1faa7",
+      "name": "placard"
+    },
+    {
+      "code": "26a7",
+      "name": "transgender_symbol"
+    },
+    {
+      "code": "1f468-200d-1f37c",
+      "name": "man_feeding_baby"
+    },
+    {
+      "code": "1f9d1-200d-1f37c",
+      "name": "person_feeding_baby"
+    },
+    {
+      "code": "1f43b-200d-2744",
+      "name": "polar_bear"
+    },
+    {
+      "code": "1fae0",
+      "name": "melting_face"
+    },
+    {
+      "code": "263a",
+      "name": "smiling_face"
+    },
+    {
+      "code": "1fae2",
+      "name": "face_with_open_eyes_and_hand_over_mouth"
+    },
+    {
+      "code": "1fae3",
+      "name": "face_with_peeking_eye"
+    },
+    {
+      "code": "1fae1",
+      "name": "saluting_face"
+    },
+    {
+      "code": "1fae5",
+      "name": "dotted_line_face"
+    },
+    {
+      "code": "1f636-200d-1f32b",
+      "name": "face_in_clouds"
+    },
+    {
+      "code": "1f62e-200d-1f4a8",
+      "name": "face_exhaling"
+    },
+    {
+      "code": "1f635-200d-1f4ab",
+      "name": "face_with_spiral_eyes"
+    },
+    {
+      "code": "1fae4",
+      "name": "face_with_diagonal_mouth"
+    },
+    {
+      "code": "2639",
+      "name": "frowning_face"
+    },
+    {
+      "code": "1f979",
+      "name": "face_holding_back_tears"
+    },
+    {
+      "code": "2764-fe0f-200d-1f525",
+      "name": "heart_on_fire"
+    },
+    {
+      "code": "2764-fe0f-200d-1fa79",
+      "name": "mending_heart"
+    },
+    {
+      "code": "1f441-fe0f-200d-1f5e8",
+      "name": "eye_in_speech_bubble"
+    },
+    {
+      "code": "1faf1",
+      "name": "rightwards_hand"
+    },
+    {
+      "code": "1faf2",
+      "name": "leftwards_hand"
+    },
+    {
+      "code": "1faf3",
+      "name": "palm_down_hand"
+    },
+    {
+      "code": "1faf4",
+      "name": "palm_up_hand"
+    },
+    {
+      "code": "1faf0",
+      "name": "hand_with_index_finger_and_thumb_crossed"
+    },
+    {
+      "code": "1faf5",
+      "name": "index_pointing_at_the_viewer"
+    },
+    {
+      "code": "1faf6",
+      "name": "heart_hands"
+    },
+    {
+      "code": "1fae6",
+      "name": "biting_lip"
+    },
+    {
+      "code": "1f9d4-200d-2642",
+      "name": "man_beard"
+    },
+    {
+      "code": "1f9d4-200d-2640",
+      "name": "woman_beard"
+    },
+    {
+      "code": "1f9d1-200d-1f9b0",
+      "name": "person_red_hair"
+    },
+    {
+      "code": "1f9d1-200d-1f9b1",
+      "name": "person_curly_hair"
+    },
+    {
+      "code": "1f9d1-200d-1f9b3",
+      "name": "person_white_hair"
+    },
+    {
+      "code": "1f9d1-200d-1f9b2",
+      "name": "person_bald"
+    },
+    {
+      "code": "1f471-200d-2642-fe0f",
+      "name": "man_blond_hair"
+    },
+    {
+      "code": "1f64d",
+      "name": "person_frowning"
+    },
+    {
+      "code": "1f64e",
+      "name": "person_pouting"
+    },
+    {
+      "code": "1f645",
+      "name": "person_gesturing_no"
+    },
+    {
+      "code": "1f646",
+      "name": "person_gesturing_ok"
+    },
+    {
+      "code": "1f481",
+      "name": "person_tipping_hand"
+    },
+    {
+      "code": "1f64b",
+      "name": "person_raising_hand"
+    },
+    {
+      "code": "1f9cf",
+      "name": "deaf_person"
+    },
+    {
+      "code": "1f647-200d-2642-fe0f",
+      "name": "man_bowing"
+    },
+    {
+      "code": "1f926",
+      "name": "person_facepalming"
+    },
+    {
+      "code": "1f937",
+      "name": "person_shrugging"
+    },
+    {
+      "code": "1f9d1-200d-2695-fe0f",
+      "name": "health_worker"
+    },
+    {
+      "code": "1f9d1-200d-1f393",
+      "name": "student"
+    },
+    {
+      "code": "1f9d1-200d-1f3eb",
+      "name": "teacher"
+    },
+    {
+      "code": "1f9d1-200d-2696-fe0f",
+      "name": "judge"
+    },
+    {
+      "code": "1f9d1-200d-1f33e",
+      "name": "farmer"
+    },
+    {
+      "code": "1f9d1-200d-1f373",
+      "name": "cook"
+    },
+    {
+      "code": "1f9d1-200d-1f527",
+      "name": "mechanic"
+    },
+    {
+      "code": "1f9d1-200d-1f3ed",
+      "name": "factory_worker"
+    },
+    {
+      "code": "1f9d1-200d-1f4bc",
+      "name": "office_worker"
+    },
+    {
+      "code": "1f9d1-200d-1f52c",
+      "name": "scientist"
+    },
+    {
+      "code": "1f9d1-200d-1f4bb",
+      "name": "technologist"
+    },
+    {
+      "code": "1f9d1-200d-1f3a4",
+      "name": "singer"
+    },
+    {
+      "code": "1f9d1-200d-1f3a8",
+      "name": "artist"
+    },
+    {
+      "code": "1f9d1-200d-2708-fe0f",
+      "name": "pilot"
+    },
+    {
+      "code": "1f9d1-200d-1f680",
+      "name": "astronaut"
+    },
+    {
+      "code": "1f9d1-200d-1f692",
+      "name": "firefighter"
+    },
+    {
+      "code": "1f46e-200d-2642-fe0f",
+      "name": "man_police_officer"
+    },
+    {
+      "code": "1f575-fe0f-200d-2642-fe0f",
+      "name": "man_detective"
+    },
+    {
+      "code": "1f482-200d-2642-fe0f",
+      "name": "man_guard"
+    },
+    {
+      "code": "1f477-200d-2642-fe0f",
+      "name": "man_construction_worker"
+    },
+    {
+      "code": "1fac5",
+      "name": "person_with_crown"
+    },
+    {
+      "code": "1f473-200d-2642-fe0f",
+      "name": "man_wearing_turban"
+    },
+    {
+      "code": "1f935-200d-2642-fe0f",
+      "name": "man_in_tuxedo"
+    },
+    {
+      "code": "1f935-200d-2640-fe0f",
+      "name": "woman_in_tuxedo"
+    },
+    {
+      "code": "1f470-200d-2642-fe0f",
+      "name": "man_with_veil"
+    },
+    {
+      "code": "1f470-200d-2640-fe0f",
+      "name": "woman_with_veil"
+    },
+    {
+      "code": "1fac3",
+      "name": "pregnant_man"
+    },
+    {
+      "code": "1fac4",
+      "name": "pregnant_person"
+    },
+    {
+      "code": "1f469-200d-1f37c",
+      "name": "woman_feeding_baby"
+    },
+    {
+      "code": "1f9d9-200d-2642-fe0f",
+      "name": "man_mage"
+    },
+    {
+      "code": "1f9da-200d-2642-fe0f",
+      "name": "man_fairy"
+    },
+    {
+      "code": "1f9da-200d-2640-fe0f",
+      "name": "woman_fairy"
+    },
+    {
+      "code": "1f9db-200d-2642-fe0f",
+      "name": "man_vampire"
+    },
+    {
+      "code": "1f9db-200d-2640-fe0f",
+      "name": "woman_vampire"
+    },
+    {
+      "code": "1f9dc-200d-2640-fe0f",
+      "name": "mermaid"
+    },
+    {
+      "code": "1f9dd-200d-2642-fe0f",
+      "name": "man_elf"
+    },
+    {
+      "code": "1f9dd-200d-2640-fe0f",
+      "name": "woman_elf"
+    },
+    {
+      "code": "1f9de-200d-2642",
+      "name": "man_genie"
+    },
+    {
+      "code": "1f9df-200d-2642",
+      "name": "man_zombie"
+    },
+    {
+      "code": "1f9cc",
+      "name": "troll"
+    },
+    {
+      "code": "1f486",
+      "name": "person_getting_massage"
+    },
+    {
+      "code": "1f487",
+      "name": "person_getting_haircut"
+    },
+    {
+      "code": "1f6b6-200d-2642-fe0f",
+      "name": "man_walking"
+    },
+    {
+      "code": "1f9cd",
+      "name": "person_standing"
+    },
+    {
+      "code": "1f9ce",
+      "name": "person_kneeling"
+    },
+    {
+      "code": "1f9d1-200d-1f9af",
+      "name": "person_with_white_cane"
+    },
+    {
+      "code": "1f9d1-200d-1f9bc",
+      "name": "person_in_motorized_wheelchair"
+    },
+    {
+      "code": "1f9d1-200d-1f9bd",
+      "name": "person_in_manual_wheelchair"
+    },
+    {
+      "code": "1f3c3-200d-2642-fe0f",
+      "name": "man_running"
+    },
+    {
+      "code": "1f46f-200d-2640",
+      "name": "women_with_bunny_ears"
+    },
+    {
+      "code": "1f9d6-200d-2642-fe0f",
+      "name": "man_in_steamy_room"
+    },
+    {
+      "code": "1f9d7-200d-2642-fe0f",
+      "name": "man_climbing"
+    },
+    {
+      "code": "1f3cc-fe0f-200d-2642-fe0f",
+      "name": "man_golfing"
+    },
+    {
+      "code": "1f3c4-200d-2642-fe0f",
+      "name": "man_surfing"
+    },
+    {
+      "code": "1f6a3-200d-2642-fe0f",
+      "name": "man_rowing_boat"
+    },
+    {
+      "code": "1f3ca-200d-2642-fe0f",
+      "name": "man_swimming"
+    },
+    {
+      "code": "26f9-fe0f-200d-2642-fe0f",
+      "name": "man_bouncing_ball"
+    },
+    {
+      "code": "1f3cb-fe0f-200d-2642-fe0f",
+      "name": "man_lifting_weights"
+    },
+    {
+      "code": "1f6b4-200d-2642-fe0f",
+      "name": "man_biking"
+    },
+    {
+      "code": "1f6b5-200d-2642-fe0f",
+      "name": "man_mountain_biking"
+    },
+    {
+      "code": "1f938",
+      "name": "person_cartwheeling"
+    },
+    {
+      "code": "1f93c",
+      "name": "people_wrestling"
+    },
+    {
+      "code": "1f93d",
+      "name": "person_playing_water_polo"
+    },
+    {
+      "code": "1f93e",
+      "name": "person_playing_handball"
+    },
+    {
+      "code": "1f939",
+      "name": "person_juggling"
+    },
+    {
+      "code": "1f9d8-200d-2642-fe0f",
+      "name": "man_in_lotus_position"
+    },
+    {
+      "code": "1f469-200d-2764-fe0f-200d-1f48b-200d-1f468",
+      "name": "kiss_woman_man"
+    },
+    {
+      "code": "1f469-200d-2764-fe0f-200d-1f468",
+      "name": "couple_with_heart_woman_man"
+    },
+    {
+      "code": "1f468-200d-1f469-200d-1f466",
+      "name": "family_man_woman_boy"
+    },
+    {
+      "code": "1f9b0",
+      "name": "red_hair"
+    },
+    {
+      "code": "1f9b1",
+      "name": "curly_hair"
+    },
+    {
+      "code": "1f9b3",
+      "name": "white_hair"
+    },
+    {
+      "code": "1f9b2",
+      "name": "bald"
+    },
+    {
+      "code": "1fab8",
+      "name": "coral"
+    },
+    {
+      "code": "1fab7",
+      "name": "lotus"
+    },
+    {
+      "code": "1fab9",
+      "name": "empty_nest"
+    },
+    {
+      "code": "1faba",
+      "name": "nest_with_eggs"
+    },
+    {
+      "code": "1fad8",
+      "name": "beans"
+    },
+    {
+      "code": "1fad7",
+      "name": "pouring_liquid"
+    },
+    {
+      "code": "1fad9",
+      "name": "jar"
+    },
+    {
+      "code": "1f6dd",
+      "name": "playground_slide"
+    },
+    {
+      "code": "1f6de",
+      "name": "wheel"
+    },
+    {
+      "code": "1f6df",
+      "name": "ring_buoy"
+    },
+    {
+      "code": "1faac",
+      "name": "hamsa"
+    },
+    {
+      "code": "1faa9",
+      "name": "mirror_ball"
+    },
+    {
+      "code": "1faab",
+      "name": "low_battery"
+    },
+    {
+      "code": "1fa7c",
+      "name": "crutch"
+    },
+    {
+      "code": "1fa7b",
+      "name": "xray"
+    },
+    {
+      "code": "1f6d7",
+      "name": "elevator"
+    },
+    {
+      "code": "1fae7",
+      "name": "bubbles"
+    },
+    {
+      "code": "1faaa",
+      "name": "identification_card"
+    },
+    {
+      "code": "23cf",
+      "name": "eject_button"
+    },
+    {
+      "code": "2640",
+      "name": "female_sign"
+    },
+    {
+      "code": "2642",
+      "name": "male_sign"
+    },
+    {
+      "code": "1f7f0",
+      "name": "heavy_equals_sign"
+    },
+    {
+      "code": "2695",
+      "name": "medical_symbol"
+    },
+    {
+      "code": "1f3f4-e0067-e0062-e0065-e006e-e0067-e007f",
+      "name": "england"
+    },
+    {
+      "code": "1f3f4-e0067-e0062-e0073-e0063-e0074-e007f",
+      "name": "scotland"
+    },
+    {
+      "code": "1f3f4-e0067-e0062-e0077-e006c-e0073-e007f",
+      "name": "wales"
     }
   ],
   "tonableEmojis": [
@@ -6651,6 +7439,7 @@
     "open_hands",
     "muscle",
     "pray",
+    "handshake",
     "point_up",
     "point_up_2",
     "point_down",
@@ -6724,13 +7513,16 @@
     "princess",
     "prince",
     "bride_with_veil",
-    "man_in_tuxedo",
+    "person_in_tuxedo",
     "running_woman",
     "running_man",
     "walking_woman",
     "walking_man",
     "dancer",
     "man_dancing",
+    "couple",
+    "two_men_holding_hands",
+    "two_women_holding_hands",
     "bowing_woman",
     "bowing_man",
     "man_facepalming",
@@ -6789,7 +7581,7 @@
     "woman_mage",
     "fairy",
     "vampire",
-    "mermaid",
+    "merperson",
     "merman",
     "elf",
     "person_in_steamy_room",
@@ -6799,208 +7591,726 @@
     "person_in_lotus_position",
     "woman_in_lotus_position",
     "love_you_gesture",
-    "palms_up_together"
+    "palms_up_together",
+    "man_red_haired",
+    "man_curly_haired",
+    "man_white_haired",
+    "man_bald",
+    "woman_red_haired",
+    "woman_curly_haired",
+    "woman_white_haired",
+    "woman_bald",
+    "superhero",
+    "man_superhero",
+    "woman_superhero",
+    "supervillain",
+    "woman_supervillain",
+    "man_supervillain",
+    "leg",
+    "foot",
+    "pinching_hand",
+    "people_holding_hands",
+    "woman_in_manual_wheelchair",
+    "man_in_manual_wheelchair",
+    "woman_in_motorized_wheelchair",
+    "man_in_motorized_wheelchair",
+    "woman_with_probing_cane",
+    "man_with_probing_cane",
+    "woman_kneeling",
+    "man_kneeling",
+    "man_standing",
+    "woman_standing",
+    "deaf_woman",
+    "deaf_man",
+    "hear_with_hearing_aid",
+    "pinched_fingers",
+    "ninja",
+    "mx_claus",
+    "man_feeding_baby",
+    "person_feeding_baby",
+    "person_red_hair",
+    "person_curly_hair",
+    "person_white_hair",
+    "person_bald",
+    "man_blond_hair",
+    "person_frowning",
+    "person_pouting",
+    "person_gesturing_no",
+    "person_gesturing_ok",
+    "person_tipping_hand",
+    "person_raising_hand",
+    "deaf_person",
+    "man_bowing",
+    "person_facepalming",
+    "person_shrugging",
+    "health_worker",
+    "student",
+    "teacher",
+    "judge",
+    "farmer",
+    "cook",
+    "mechanic",
+    "factory_worker",
+    "office_worker",
+    "scientist",
+    "technologist",
+    "singer",
+    "artist",
+    "pilot",
+    "astronaut",
+    "firefighter",
+    "man_police_officer",
+    "man_detective",
+    "man_guard",
+    "man_construction_worker",
+    "man_wearing_turban",
+    "man_in_tuxedo",
+    "woman_in_tuxedo",
+    "man_with_veil",
+    "woman_with_veil",
+    "woman_feeding_baby",
+    "man_mage",
+    "man_fairy",
+    "woman_fairy",
+    "man_vampire",
+    "woman_vampire",
+    "mermaid",
+    "man_elf",
+    "woman_elf",
+    "person_getting_massage",
+    "person_getting_haircut",
+    "man_walking",
+    "person_standing",
+    "person_kneeling",
+    "person_with_white_cane",
+    "person_in_motorized_wheelchair",
+    "person_in_manual_wheelchair",
+    "man_running",
+    "man_in_steamy_room",
+    "man_climbing",
+    "man_golfing",
+    "man_surfing",
+    "man_rowing_boat",
+    "man_swimming",
+    "man_bouncing_ball",
+    "man_lifting_weights",
+    "man_biking",
+    "man_mountain_biking",
+    "person_cartwheeling",
+    "person_playing_water_polo",
+    "person_playing_handball",
+    "person_juggling",
+    "man_in_lotus_position"
   ],
   "aliases": {
-    "right_anger_bubble": ["anger_right"],
-    "ballot_box": ["ballot_box_with_ballot"],
-    "basketball_man": ["basketball_player", "person_with_ball"],
-    "beach_umbrella": ["umbrella_on_ground", "beach", "beach_with_umbrella"],
-    "parasol_on_ground": ["umbrella_on_ground"],
-    "bellhop_bell": ["bellhop"],
-    "biohazard": ["biohazard_sign"],
-    "bow_and_arrow": ["archery"],
-    "spiral_calendar": ["calendar_spiral", "spiral_calendar_pad"],
-    "card_file_box": ["card_box"],
-    "champagne": ["bottle_with_popping_cork"],
-    "cheese": ["cheese_wedge"],
-    "city_sunset": ["city_dusk"],
-    "couch_and_lamp": ["couch"],
-    "crayon": ["lower_left_crayon"],
-    "cricket_bat_and_ball": ["cricket_bat_ball"],
-    "latin_cross": ["cross"],
-    "dagger": ["dagger_knife"],
-    "desktop_computer": ["desktop"],
-    "card_index_dividers": ["dividers"],
-    "dove": ["dove_of_peace"],
-    "footprints": ["feet"],
-    "fire": ["flame"],
-    "black_flag": ["flag_black", "waving_black_flag"],
-    "cn": ["flag_cn"],
-    "de": ["flag_de"],
-    "es": ["flag_es"],
-    "fr": ["flag_fr"],
-    "uk": ["gb", "flag_gb"],
-    "it": ["flag_it"],
-    "jp": ["flag_jp"],
-    "kr": ["flag_kr"],
-    "ru": ["flag_ru"],
-    "us": ["flag_us"],
-    "white_flag": ["flag_white", "waving_white_flag"],
-    "plate_with_cutlery": ["fork_knife_plate", "fork_and_knife_with_plate"],
-    "framed_picture": ["frame_photo", "frame_with_picture"],
-    "hammer_and_pick": ["hammer_pick"],
+    "right_anger_bubble": [
+      "anger_right"
+    ],
+    "ballot_box": [
+      "ballot_box_with_ballot"
+    ],
+    "basketball_man": [
+      "basketball_player",
+      "person_with_ball"
+    ],
+    "beach_umbrella": [
+      "umbrella_on_ground",
+      "beach",
+      "beach_with_umbrella"
+    ],
+    "parasol_on_ground": [
+      "umbrella_on_ground"
+    ],
+    "bellhop_bell": [
+      "bellhop"
+    ],
+    "biohazard": [
+      "biohazard_sign"
+    ],
+    "bow_and_arrow": [
+      "archery"
+    ],
+    "spiral_calendar": [
+      "calendar_spiral",
+      "spiral_calendar_pad"
+    ],
+    "card_file_box": [
+      "card_box"
+    ],
+    "champagne": [
+      "bottle_with_popping_cork"
+    ],
+    "cheese": [
+      "cheese_wedge"
+    ],
+    "city_sunset": [
+      "city_dusk"
+    ],
+    "couch_and_lamp": [
+      "couch"
+    ],
+    "crayon": [
+      "lower_left_crayon"
+    ],
+    "cricket_bat_and_ball": [
+      "cricket_bat_ball"
+    ],
+    "latin_cross": [
+      "cross"
+    ],
+    "dagger": [
+      "dagger_knife"
+    ],
+    "desktop_computer": [
+      "desktop"
+    ],
+    "card_index_dividers": [
+      "dividers"
+    ],
+    "dove": [
+      "dove_of_peace"
+    ],
+    "footprints": [
+      "feet"
+    ],
+    "fire": [
+      "flame"
+    ],
+    "black_flag": [
+      "flag_black",
+      "waving_black_flag"
+    ],
+    "cn": [
+      "flag_cn"
+    ],
+    "de": [
+      "flag_de"
+    ],
+    "es": [
+      "flag_es"
+    ],
+    "fr": [
+      "flag_fr"
+    ],
+    "uk": [
+      "gb",
+      "flag_gb"
+    ],
+    "it": [
+      "flag_it"
+    ],
+    "jp": [
+      "flag_jp"
+    ],
+    "kr": [
+      "flag_kr"
+    ],
+    "ru": [
+      "flag_ru"
+    ],
+    "us": [
+      "flag_us"
+    ],
+    "white_flag": [
+      "flag_white",
+      "waving_white_flag"
+    ],
+    "plate_with_cutlery": [
+      "fork_knife_plate",
+      "fork_and_knife_with_plate"
+    ],
+    "framed_picture": [
+      "frame_photo",
+      "frame_with_picture"
+    ],
+    "hammer_and_pick": [
+      "hammer_pick"
+    ],
     "heavy_heart_exclamation": [
       "heart_exclamation",
       "heavy_heart_exclamation_mark_ornament"
     ],
-    "houses": ["homes", "house_buildings"],
-    "hotdog": ["hot_dog"],
-    "derelict_house": ["house_abandoned", "derelict_house_building"],
-    "desert_island": ["island"],
-    "old_key": ["key2"],
-    "laughing": ["satisfied"],
-    "business_suit_levitating": ["levitate", "man_in_business_suit_levitating"],
-    "weight_lifting_man": ["lifter", "weight_lifter"],
-    "medal_sports": ["medal", "sports_medal"],
-    "metal": ["sign_of_the_horns"],
-    "fu": ["middle_finger", "reversed_hand_with_middle_finger_extended"],
-    "motorcycle": ["racing_motorcycle"],
-    "mountain_snow": ["snow_capped_mountain"],
-    "newspaper_roll": ["newspaper2", "rolled_up_newspaper"],
-    "spiral_notepad": ["notepad_spiral", "spiral_note_pad"],
-    "oil_drum": ["oil"],
-    "older_woman": ["grandma"],
-    "paintbrush": ["lower_left_paintbrush"],
-    "paperclips": ["linked_paperclips"],
-    "pause_button": ["double_vertical_bar"],
-    "peace_symbol": ["peace"],
-    "fountain_pen": ["pen_fountain", "lower_left_fountain_pen"],
-    "ping_pong": ["table_tennis"],
-    "place_of_worship": ["worship_symbol"],
-    "poop": ["shit", "hankey", "poo"],
-    "radioactive": ["radioactive_sign"],
-    "railway_track": ["railroad_track"],
-    "robot": ["robot_face"],
-    "skull": ["skeleton"],
-    "skull_and_crossbones": ["skull_crossbones"],
-    "speaking_head": ["speaking_head_in_silhouette"],
-    "male_detective": ["spy", "sleuth_or_spy"],
-    "thinking": ["thinking_face"],
-    "-1": ["thumbsdown"],
-    "+1": ["thumbsup"],
+    "houses": [
+      "homes",
+      "house_buildings"
+    ],
+    "hotdog": [
+      "hot_dog"
+    ],
+    "derelict_house": [
+      "house_abandoned",
+      "derelict_house_building"
+    ],
+    "desert_island": [
+      "island"
+    ],
+    "old_key": [
+      "key2"
+    ],
+    "laughing": [
+      "satisfied"
+    ],
+    "business_suit_levitating": [
+      "levitate",
+      "man_in_business_suit_levitating"
+    ],
+    "weight_lifting_man": [
+      "lifter",
+      "weight_lifter"
+    ],
+    "medal_sports": [
+      "medal",
+      "sports_medal"
+    ],
+    "metal": [
+      "sign_of_the_horns"
+    ],
+    "fu": [
+      "middle_finger",
+      "reversed_hand_with_middle_finger_extended"
+    ],
+    "motorcycle": [
+      "racing_motorcycle"
+    ],
+    "mountain_snow": [
+      "snow_capped_mountain"
+    ],
+    "newspaper_roll": [
+      "newspaper2",
+      "rolled_up_newspaper"
+    ],
+    "spiral_notepad": [
+      "notepad_spiral",
+      "spiral_note_pad"
+    ],
+    "oil_drum": [
+      "oil"
+    ],
+    "older_woman": [
+      "grandma"
+    ],
+    "paintbrush": [
+      "lower_left_paintbrush"
+    ],
+    "paperclips": [
+      "linked_paperclips"
+    ],
+    "pause_button": [
+      "double_vertical_bar"
+    ],
+    "peace_symbol": [
+      "peace"
+    ],
+    "fountain_pen": [
+      "pen_fountain",
+      "lower_left_fountain_pen"
+    ],
+    "ping_pong": [
+      "table_tennis"
+    ],
+    "place_of_worship": [
+      "worship_symbol"
+    ],
+    "poop": [
+      "shit",
+      "hankey",
+      "poo"
+    ],
+    "radioactive": [
+      "radioactive_sign"
+    ],
+    "railway_track": [
+      "railroad_track"
+    ],
+    "robot": [
+      "robot_face"
+    ],
+    "skull": [
+      "skeleton"
+    ],
+    "skull_and_crossbones": [
+      "skull_crossbones"
+    ],
+    "speaking_head": [
+      "speaking_head_in_silhouette"
+    ],
+    "male_detective": [
+      "spy",
+      "sleuth_or_spy"
+    ],
+    "thinking": [
+      "thinking_face"
+    ],
+    "-1": [
+      "thumbsdown"
+    ],
+    "+1": [
+      "thumbsup"
+    ],
     "cloud_with_lightning_and_rain": [
       "thunder_cloud_rain",
       "thunder_cloud_and_rain"
     ],
-    "tickets": ["admission_tickets"],
-    "next_track_button": ["track_next", "next_track"],
-    "previous_track_button": ["track_previous", "previous_track"],
-    "unicorn": ["unicorn_face"],
-    "funeral_urn": ["urn"],
-    "sun_behind_large_cloud": ["white_sun_cloud", "white_sun_behind_cloud"],
+    "tickets": [
+      "admission_tickets"
+    ],
+    "next_track_button": [
+      "track_next",
+      "next_track"
+    ],
+    "previous_track_button": [
+      "track_previous",
+      "previous_track"
+    ],
+    "unicorn": [
+      "unicorn_face"
+    ],
+    "funeral_urn": [
+      "urn"
+    ],
+    "sun_behind_large_cloud": [
+      "white_sun_cloud",
+      "white_sun_behind_cloud"
+    ],
     "sun_behind_rain_cloud": [
       "white_sun_rain_cloud",
       "white_sun_behind_cloud_with_rain"
     ],
-    "partly_sunny": ["white_sun_small_cloud", "white_sun_with_small_cloud"],
-    "open_umbrella": ["umbrella2"],
-    "hammer_and_wrench": ["tools"],
-    "face_with_thermometer": ["thermometer_face"],
-    "timer_clock": ["timer"],
-    "keycap_ten": ["ten"],
-    "memo": ["pencil"],
-    "rescue_worker_helmet": ["helmet_with_cross", "helmet_with_white_cross"],
-    "slightly_smiling_face": ["slightly_smiling", "slight_smile"],
-    "construction_worker_man": ["construction_worker"],
-    "upside_down_face": ["upside_down"],
-    "money_mouth_face": ["money_mouth"],
-    "nerd_face": ["nerd"],
-    "hugs": ["hugging", "hugging_face"],
-    "roll_eyes": ["rolling_eyes", "face_with_rolling_eyes"],
-    "slightly_frowning_face": ["slight_frown"],
-    "frowning_face": ["frowning2", "white_frowning_face"],
-    "zipper_mouth_face": ["zipper_mouth"],
-    "face_with_head_bandage": ["head_bandage"],
-    "raised_hand_with_fingers_splayed": ["hand_splayed"],
-    "raised_hand": ["hand"],
+    "partly_sunny": [
+      "white_sun_small_cloud",
+      "white_sun_with_small_cloud"
+    ],
+    "open_umbrella": [
+      "umbrella2"
+    ],
+    "hammer_and_wrench": [
+      "tools"
+    ],
+    "face_with_thermometer": [
+      "thermometer_face"
+    ],
+    "timer_clock": [
+      "timer"
+    ],
+    "keycap_ten": [
+      "ten"
+    ],
+    "memo": [
+      "pencil"
+    ],
+    "rescue_worker_helmet": [
+      "helmet_with_cross",
+      "helmet_with_white_cross"
+    ],
+    "slightly_smiling_face": [
+      "slightly_smiling",
+      "slight_smile"
+    ],
+    "construction_worker_man": [
+      "construction_worker"
+    ],
+    "upside_down_face": [
+      "upside_down"
+    ],
+    "money_mouth_face": [
+      "money_mouth"
+    ],
+    "nerd_face": [
+      "nerd"
+    ],
+    "hugs": [
+      "hugging",
+      "hugging_face"
+    ],
+    "roll_eyes": [
+      "rolling_eyes",
+      "face_with_rolling_eyes"
+    ],
+    "slightly_frowning_face": [
+      "frowning",
+      "slight_frown"
+    ],
+    "frowning_face": [
+      "frowning2",
+      "white_frowning_face"
+    ],
+    "zipper_mouth_face": [
+      "zipper_mouth"
+    ],
+    "face_with_head_bandage": [
+      "head_bandage"
+    ],
+    "raised_hand_with_fingers_splayed": [
+      "hand_splayed"
+    ],
+    "raised_hand": [
+      "hand"
+    ],
     "vulcan_salute": [
       "vulcan",
       "raised_hand_with_part_between_middle_and_ring_fingers"
     ],
-    "policeman": ["cop"],
-    "running_man": ["runner"],
-    "walking_man": ["walking"],
-    "bowing_man": ["bow"],
-    "no_good_woman": ["no_good"],
-    "raising_hand_woman": ["raising_hand"],
-    "pouting_woman": ["person_with_pouting_face"],
-    "frowning_woman": ["person_frowning"],
-    "haircut_woman": ["haircut"],
-    "massage_woman": ["massage"],
-    "tshirt": ["shirt"],
-    "biking_man": ["bicyclist"],
-    "mountain_biking_man": ["mountain_bicyclist"],
-    "passenger_ship": ["cruise_ship"],
-    "motor_boat": ["motorboat", "boat"],
-    "flight_arrival": ["airplane_arriving"],
-    "flight_departure": ["airplane_departure"],
-    "small_airplane": ["airplane_small"],
-    "racing_car": ["race_car"],
-    "family_man_woman_boy_boy": ["family_man_woman_boys"],
-    "family_man_woman_girl_girl": ["family_man_woman_girls"],
-    "family_woman_woman_boy": ["family_women_boy"],
-    "family_woman_woman_girl": ["family_women_girl"],
-    "family_woman_woman_girl_boy": ["family_women_girl_boy"],
-    "family_woman_woman_boy_boy": ["family_women_boys"],
-    "family_woman_woman_girl_girl": ["family_women_girls"],
-    "family_man_man_boy": ["family_men_boy"],
-    "family_man_man_girl": ["family_men_girl"],
-    "family_man_man_girl_boy": ["family_men_girl_boy"],
-    "family_man_man_boy_boy": ["family_men_boys"],
-    "family_man_man_girl_girl": ["family_men_girls"],
-    "cloud_with_lightning": ["cloud_lightning"],
-    "tornado": ["cloud_tornado", "cloud_with_tornado"],
-    "cloud_with_rain": ["cloud_rain"],
-    "cloud_with_snow": ["cloud_snow"],
-    "asterisk": ["keycap_star"],
-    "studio_microphone": ["microphone2"],
-    "medal_military": ["military_medal"],
-    "couple_with_heart_woman_woman": ["female_couple_with_heart"],
-    "couple_with_heart_man_man": ["male_couple_with_heart"],
-    "couplekiss_woman_woman": ["female_couplekiss"],
-    "couplekiss_man_man": ["male_couplekiss"],
-    "honeybee": ["bee"],
-    "lion": ["lion_face"],
-    "artificial_satellite": ["satellite_orbital"],
-    "computer_mouse": ["mouse_three_button", "three_button_mouse"],
-    "hocho": ["knife"],
-    "swimming_man": ["swimmer"],
-    "wind_face": ["wind_blowing_face"],
-    "golfing_man": ["golfer"],
-    "facepunch": ["punch"],
-    "building_construction": ["construction_site"],
-    "family_man_woman_girl_boy": ["family"],
-    "ice_hockey": ["hockey"],
-    "snowman_with_snow": ["snowman2"],
-    "play_or_pause_button": ["play_pause"],
-    "film_projector": ["projector"],
-    "shopping": ["shopping_bags"],
-    "open_book": ["book"],
-    "national_park": ["park"],
-    "world_map": ["map"],
-    "pen": ["pen_ballpoint", "lower_left_ballpoint_pen"],
-    "email": ["envelope", "e-mail"],
-    "phone": ["telephone"],
-    "atom_symbol": ["atom"],
-    "mantelpiece_clock": ["clock"],
-    "camera_flash": ["camera_with_flash"],
-    "film_strip": ["film_frames"],
-    "balance_scale": ["scales"],
-    "surfing_man": ["surfer"],
-    "couplekiss_man_woman": ["couplekiss"],
-    "couple_with_heart_woman_man": ["couple_with_heart"],
-    "clamp": ["compression"],
-    "dancing_women": ["dancers"],
-    "blonde_man": ["person_with_blond_hair"],
-    "sleeping_bed": ["sleeping_accommodation"],
-    "om": ["om_symbol"],
-    "tipping_hand_woman": ["information_desk_person"],
-    "rowing_man": ["rowboat"],
-    "new_moon": ["moon"],
-    "oncoming_automobile": ["car", "automobile"],
-    "fleur_de_lis": ["fleur-de-lis"],
-    "face_vomiting": ["puke"]
+    "policeman": [
+      "cop"
+    ],
+    "running_man": [
+      "runner"
+    ],
+    "walking_man": [
+      "walking"
+    ],
+    "bowing_man": [
+      "bow"
+    ],
+    "no_good_woman": [
+      "no_good"
+    ],
+    "raising_hand_woman": [
+      "raising_hand"
+    ],
+    "pouting_woman": [
+      "person_with_pouting_face"
+    ],
+    "frowning_woman": [
+      "person_frowning"
+    ],
+    "haircut_woman": [
+      "haircut"
+    ],
+    "massage_woman": [
+      "massage"
+    ],
+    "tshirt": [
+      "shirt"
+    ],
+    "biking_man": [
+      "bicyclist"
+    ],
+    "mountain_biking_man": [
+      "mountain_bicyclist"
+    ],
+    "passenger_ship": [
+      "cruise_ship"
+    ],
+    "motor_boat": [
+      "motorboat",
+      "boat"
+    ],
+    "flight_arrival": [
+      "airplane_arriving"
+    ],
+    "flight_departure": [
+      "airplane_departure"
+    ],
+    "small_airplane": [
+      "airplane_small"
+    ],
+    "racing_car": [
+      "race_car"
+    ],
+    "family_man_woman_boy_boy": [
+      "family_man_woman_boys"
+    ],
+    "family_man_woman_girl_girl": [
+      "family_man_woman_girls"
+    ],
+    "family_woman_woman_boy": [
+      "family_women_boy"
+    ],
+    "family_woman_woman_girl": [
+      "family_women_girl"
+    ],
+    "family_woman_woman_girl_boy": [
+      "family_women_girl_boy"
+    ],
+    "family_woman_woman_boy_boy": [
+      "family_women_boys"
+    ],
+    "family_woman_woman_girl_girl": [
+      "family_women_girls"
+    ],
+    "family_man_man_boy": [
+      "family_men_boy"
+    ],
+    "family_man_man_girl": [
+      "family_men_girl"
+    ],
+    "family_man_man_girl_boy": [
+      "family_men_girl_boy"
+    ],
+    "family_man_man_boy_boy": [
+      "family_men_boys"
+    ],
+    "family_man_man_girl_girl": [
+      "family_men_girls"
+    ],
+    "cloud_with_lightning": [
+      "cloud_lightning"
+    ],
+    "tornado": [
+      "cloud_tornado",
+      "cloud_with_tornado"
+    ],
+    "cloud_with_rain": [
+      "cloud_rain"
+    ],
+    "cloud_with_snow": [
+      "cloud_snow"
+    ],
+    "asterisk": [
+      "keycap_star"
+    ],
+    "studio_microphone": [
+      "microphone2"
+    ],
+    "medal_military": [
+      "military_medal"
+    ],
+    "couple_with_heart_woman_woman": [
+      "female_couple_with_heart"
+    ],
+    "couple_with_heart_man_man": [
+      "male_couple_with_heart"
+    ],
+    "couplekiss_woman_woman": [
+      "female_couplekiss"
+    ],
+    "couplekiss_man_man": [
+      "male_couplekiss"
+    ],
+    "honeybee": [
+      "bee"
+    ],
+    "lion": [
+      "lion_face"
+    ],
+    "artificial_satellite": [
+      "satellite_orbital"
+    ],
+    "computer_mouse": [
+      "mouse_three_button",
+      "three_button_mouse"
+    ],
+    "hocho": [
+      "knife"
+    ],
+    "swimming_man": [
+      "swimmer"
+    ],
+    "wind_face": [
+      "wind_blowing_face"
+    ],
+    "golfing_man": [
+      "golfer"
+    ],
+    "facepunch": [
+      "punch"
+    ],
+    "building_construction": [
+      "construction_site"
+    ],
+    "family_man_woman_girl_boy": [
+      "family"
+    ],
+    "ice_hockey": [
+      "hockey"
+    ],
+    "snowman_with_snow": [
+      "snowman2"
+    ],
+    "play_or_pause_button": [
+      "play_pause"
+    ],
+    "film_projector": [
+      "projector"
+    ],
+    "shopping": [
+      "shopping_bags"
+    ],
+    "open_book": [
+      "book"
+    ],
+    "national_park": [
+      "park"
+    ],
+    "world_map": [
+      "map"
+    ],
+    "pen": [
+      "pen_ballpoint",
+      "lower_left_ballpoint_pen"
+    ],
+    "email": [
+      "envelope",
+      "e-mail"
+    ],
+    "phone": [
+      "telephone"
+    ],
+    "atom_symbol": [
+      "atom"
+    ],
+    "mantelpiece_clock": [
+      "clock"
+    ],
+    "camera_flash": [
+      "camera_with_flash"
+    ],
+    "film_strip": [
+      "film_frames"
+    ],
+    "balance_scale": [
+      "scales"
+    ],
+    "surfing_man": [
+      "surfer"
+    ],
+    "couplekiss_man_woman": [
+      "couplekiss"
+    ],
+    "couple_with_heart_woman_man": [
+      "couple_with_heart"
+    ],
+    "clamp": [
+      "compression"
+    ],
+    "dancing_women": [
+      "dancers"
+    ],
+    "blonde_man": [
+      "person_with_blond_hair"
+    ],
+    "sleeping_bed": [
+      "sleeping_accommodation"
+    ],
+    "om": [
+      "om_symbol"
+    ],
+    "tipping_hand_woman": [
+      "information_desk_person"
+    ],
+    "rowing_man": [
+      "rowboat"
+    ],
+    "new_moon": [
+      "moon"
+    ],
+    "oncoming_automobile": [
+      "car",
+      "automobile"
+    ],
+    "fleur_de_lis": [
+      "fleur-de-lis"
+    ],
+    "face_vomiting": [
+      "puke"
+    ],
+    "smile": [
+      "grinning_face_with_smiling_eyes"
+    ],
+    "frowning_with_open_mouth": [
+      "frowning_face_with_open_mouth"
+    ]
   },
   "searchAliases": {
     "sad": [
@@ -7008,9 +8318,8944 @@
       "slightly_frowning_face",
       "sob",
       "crying_cat_face",
+      "cry",
+      "face_holding_back_tears"
+    ],
+    "cry": [
+      "sob",
+      "crying_cat_face",
+      "face_holding_back_tears"
+    ],
+    "face": [
+      "grinning",
+      "grimacing",
+      "grin",
+      "joy",
+      "rofl",
+      "smiley",
+      "smile",
+      "sweat_smile",
+      "laughing",
+      "innocent",
+      "wink",
+      "blush",
+      "slightly_smiling_face",
+      "upside_down_face",
+      "yum",
+      "relieved",
+      "heart_eyes",
+      "kissing_heart",
+      "kissing",
+      "kissing_smiling_eyes",
+      "kissing_closed_eyes",
+      "stuck_out_tongue_winking_eye",
+      "stuck_out_tongue_closed_eyes",
+      "stuck_out_tongue",
+      "money_mouth_face",
+      "nerd_face",
+      "sunglasses",
+      "clown_face",
+      "cowboy_hat_face",
+      "hugs",
+      "smirk",
+      "no_mouth",
+      "neutral_face",
+      "expressionless",
+      "unamused",
+      "roll_eyes",
+      "thinking",
+      "lying_face",
+      "flushed",
+      "disappointed",
+      "worried",
+      "angry",
+      "rage",
+      "pensive",
+      "confused",
+      "slightly_frowning_face",
+      "persevere",
+      "confounded",
+      "tired_face",
+      "weary",
+      "triumph",
+      "open_mouth",
+      "scream",
+      "fearful",
+      "cold_sweat",
+      "hushed",
+      "frowning_with_open_mouth",
+      "anguished",
+      "cry",
+      "disappointed_relieved",
+      "drooling_face",
+      "sleepy",
+      "sweat",
+      "sob",
+      "dizzy_face",
+      "astonished",
+      "zipper_mouth_face",
+      "nauseated_face",
+      "sneezing_face",
+      "mask",
+      "face_with_thermometer",
+      "face_with_head_bandage",
+      "sleeping",
+      "poop",
+      "smiling_imp",
+      "imp",
+      "japanese_ogre",
+      "japanese_goblin",
+      "skull",
+      "ghost",
+      "alien",
+      "robot",
+      "smiley_cat",
+      "smile_cat",
+      "joy_cat",
+      "heart_eyes_cat",
+      "smirk_cat",
+      "kissing_cat",
+      "scream_cat",
+      "crying_cat_face",
+      "pouting_cat",
+      "eyes",
+      "speaking_head",
+      "angel",
+      "rescue_worker_helmet",
+      "dog",
+      "cat",
+      "mouse",
+      "hamster",
+      "rabbit",
+      "fox_face",
+      "bear",
+      "panda_face",
+      "koala",
+      "tiger",
+      "lion",
+      "cow",
+      "pig",
+      "pig_nose",
+      "frog",
+      "monkey_face",
+      "see_no_evil",
+      "hear_no_evil",
+      "speak_no_evil",
+      "wolf",
+      "horse",
+      "unicorn",
+      "whale",
+      "dragon_face",
+      "new_moon_with_face",
+      "full_moon_with_face",
+      "first_quarter_moon_with_face",
+      "last_quarter_moon_with_face",
+      "sun_with_face",
+      "wind_face",
+      "space_invader",
+      "skull_and_crossbones",
+      "moyai",
+      "star_struck",
+      "face_with_monocle",
+      "disguised_face",
+      "smiling_face",
+      "frowning_face",
+      "person_facepalming",
+      "person_getting_massage"
+    ],
+    "grin": [
+      "grinning",
+      "smile_cat"
+    ],
+    "grinning face": [
+      "grinning"
+    ],
+    "grimace": [
+      "grimacing"
+    ],
+    "grimacing face": [
+      "grimacing"
+    ],
+    "beaming face with smiling eyes": [
+      "grin"
+    ],
+    "eye": [
+      "grin",
+      "smile",
+      "blush",
+      "heart_eyes",
+      "kissing_smiling_eyes",
+      "kissing_closed_eyes",
+      "stuck_out_tongue_winking_eye",
+      "stuck_out_tongue_closed_eyes",
+      "smile_cat",
+      "heart_eyes_cat",
+      "kissing_cat",
+      "eyes",
+      "eyeglasses",
+      "dark_sunglasses",
+      "crazy_face"
+    ],
+    "smile": [
+      "grin",
+      "smiley",
+      "sweat_smile",
+      "laughing",
+      "blush",
+      "slightly_smiling_face",
+      "yum",
+      "heart_eyes",
+      "kissing_smiling_eyes",
+      "smiling_imp",
+      "smiley_cat",
+      "smile_cat",
+      "heart_eyes_cat",
+      "smirk_cat",
+      "smiling_face"
+    ],
+    "face with tears of joy": [
+      "joy"
+    ],
+    "laugh": [
+      "joy",
+      "rofl",
+      "laughing"
+    ],
+    "tear": [
+      "joy",
+      "cry",
+      "sob",
+      "joy_cat",
+      "crying_cat_face",
+      "smiling_face_with_tear"
+    ],
+    "floor": [
+      "rofl"
+    ],
+    "rolling": [
+      "rofl",
+      "roll_eyes"
+    ],
+    "rolling on the floor laughing": [
+      "rofl"
+    ],
+    "rotfl": [
+      "rofl"
+    ],
+    "grinning face with big eyes": [
+      "smiley"
+    ],
+    "mouth": [
+      "smiley",
+      "smile",
+      "laughing",
+      "money_mouth_face",
+      "no_mouth",
+      "open_mouth",
+      "frowning_with_open_mouth",
+      "zipper_mouth_face",
+      "smiley_cat",
+      "lips"
+    ],
+    "open": [
+      "smiley",
+      "smile",
+      "sweat_smile",
+      "open_mouth",
+      "frowning_with_open_mouth",
+      "smiley_cat",
+      "open_hands",
+      "mailbox_with_mail",
+      "mailbox_with_no_mail",
+      "open_file_folder",
+      "open_book",
+      "unlock"
+    ],
+    "grinning face with smiling eyes": [
+      "smile"
+    ],
+    "cold": [
+      "sweat_smile",
+      "cold_sweat",
+      "sweat",
+      "mask",
+      "snowflake",
+      "cloud_with_snow",
+      "snowman",
+      "snowman_with_snow",
+      "droplet",
+      "mountain_snow",
+      "cold_face",
+      "ice_cube"
+    ],
+    "grinning face with sweat": [
+      "sweat_smile"
+    ],
+    "sweat": [
+      "sweat_smile",
+      "cold_sweat",
+      "droplet",
+      "sweat_drops"
+    ],
+    "grinning squinting face": [
+      "laughing"
+    ],
+    "satisfied": [
+      "laughing"
+    ],
+    "angel": [
+      "innocent"
+    ],
+    "fantasy": [
+      "innocent",
+      "smiling_imp",
+      "imp",
+      "japanese_ogre",
+      "japanese_goblin",
+      "ghost",
+      "alien",
+      "angel",
+      "princess",
+      "crystal_ball",
+      "troll"
+    ],
+    "halo": [
+      "innocent"
+    ],
+    "smiling face with halo": [
+      "innocent"
+    ],
+    "winking face": [
+      "wink"
+    ],
+    "smiling face with smiling eyes": [
+      "blush"
+    ],
+    "upside-down": [
+      "upside_down_face"
+    ],
+    "upside-down face": [
+      "upside_down_face"
+    ],
+    "delicious": [
+      "yum"
+    ],
+    "face savoring food": [
+      "yum"
+    ],
+    "savouring": [
+      "yum"
+    ],
+    "relieved face": [
+      "relieved"
+    ],
+    "love": [
+      "heart_eyes",
+      "heart_eyes_cat",
+      "couple_with_heart",
+      "love_hotel",
+      "love_letter",
+      "two_hearts",
+      "hand_with_index_finger_and_thumb_crossed",
+      "heart_hands"
+    ],
+    "smiling face with heart-eyes": [
+      "heart_eyes"
+    ],
+    "face blowing a kiss": [
+      "kissing_heart"
+    ],
+    "kiss": [
+      "kissing_heart",
+      "kissing",
+      "kissing_smiling_eyes",
+      "kissing_closed_eyes",
+      "kissing_cat",
+      "couplekiss_man_woman"
+    ],
+    "kissing face": [
+      "kissing"
+    ],
+    "kissing face with smiling eyes": [
+      "kissing_smiling_eyes"
+    ],
+    "closed": [
+      "kissing_closed_eyes",
+      "mailbox_closed",
+      "mailbox",
+      "closed_book",
+      "closed_lock_with_key",
+      "lock"
+    ],
+    "kissing face with closed eyes": [
+      "kissing_closed_eyes"
+    ],
+    "joke": [
+      "stuck_out_tongue_winking_eye"
+    ],
+    "tongue": [
+      "stuck_out_tongue_winking_eye",
+      "stuck_out_tongue_closed_eyes",
+      "stuck_out_tongue"
+    ],
+    "wink": [
+      "stuck_out_tongue_winking_eye"
+    ],
+    "winking face with tongue": [
+      "stuck_out_tongue_winking_eye"
+    ],
+    "horrible": [
+      "stuck_out_tongue_closed_eyes"
+    ],
+    "squinting face with tongue": [
+      "stuck_out_tongue_closed_eyes"
+    ],
+    "taste": [
+      "stuck_out_tongue_closed_eyes"
+    ],
+    "face with tongue": [
+      "stuck_out_tongue"
+    ],
+    "money": [
+      "money_mouth_face",
+      "money_with_wings",
+      "dollar",
+      "yen",
+      "euro",
+      "pound",
+      "moneybag",
+      "credit_card",
+      "chart",
+      "heavy_dollar_sign",
+      "currency_exchange",
+      "red_gift_envelope",
+      "coin",
+      "hand_with_index_finger_and_thumb_crossed"
+    ],
+    "money-mouth face": [
+      "money_mouth_face"
+    ],
+    "geek": [
+      "nerd_face"
+    ],
+    "nerd": [
+      "nerd_face"
+    ],
+    "bright": [
+      "sunglasses",
+      "full_moon_with_face",
+      "sun_with_face",
+      "sunny",
+      "high_brightness"
+    ],
+    "cool": [
+      "sunglasses"
+    ],
+    "smiling face with sunglasses": [
+      "sunglasses"
+    ],
+    "sun": [
+      "sunglasses",
+      "sunflower",
+      "sun_with_face",
+      "sunny",
+      "sun_behind_small_cloud",
+      "partly_sunny",
+      "sun_behind_large_cloud",
+      "sun_behind_rain_cloud",
+      "sunrise",
+      "sunrise_over_mountains",
+      "city_sunrise",
+      "parasol_on_ground"
+    ],
+    "clown": [
+      "clown_face"
+    ],
+    "cowboy": [
+      "cowboy_hat_face"
+    ],
+    "cowgirl": [
+      "cowboy_hat_face"
+    ],
+    "hat": [
+      "cowboy_hat_face",
+      "man_with_gua_pi_mao",
+      "construction_worker_man",
+      "womans_hat",
+      "tophat",
+      "rescue_worker_helmet",
+      "mortar_board",
+      "partying_face"
+    ],
+    "hug": [
+      "hugs",
+      "people_hugging"
+    ],
+    "hugging": [
+      "hugs"
+    ],
+    "open hands": [
+      "hugs"
+    ],
+    "smiling face": [
+      "hugs"
+    ],
+    "smiling face with open hands": [
+      "hugs"
+    ],
+    "smirking face": [
+      "smirk"
+    ],
+    "face without mouth": [
+      "no_mouth"
+    ],
+    "quiet": [
+      "no_mouth",
+      "mute",
+      "no_bell",
+      "shushing_face"
+    ],
+    "silent": [
+      "no_mouth",
+      "mute",
+      "no_bell"
+    ],
+    "deadpan": [
+      "neutral_face"
+    ],
+    "meh": [
+      "neutral_face",
+      "expressionless",
+      "confused",
+      "face_with_diagonal_mouth"
+    ],
+    "neutral": [
+      "neutral_face"
+    ],
+    "inexpressive": [
+      "expressionless"
+    ],
+    "unexpressive": [
+      "expressionless"
+    ],
+    "expressionless face": [
+      "expressionless"
+    ],
+    "unhappy": [
+      "unamused"
+    ],
+    "unamused face": [
+      "unamused"
+    ],
+    "eyeroll": [
+      "roll_eyes"
+    ],
+    "eyes": [
+      "roll_eyes",
+      "star_struck"
+    ],
+    "face with rolling eyes": [
+      "roll_eyes"
+    ],
+    "thinking face": [
+      "thinking"
+    ],
+    "lie": [
+      "lying_face"
+    ],
+    "pinocchio": [
+      "lying_face"
+    ],
+    "dazed": [
+      "flushed"
+    ],
+    "flushed face": [
+      "flushed"
+    ],
+    "disappointed face": [
+      "disappointed"
+    ],
+    "worried face": [
+      "worried"
+    ],
+    "anger": [
+      "angry"
+    ],
+    "mad": [
+      "angry",
+      "rage",
+      "anger",
+      "right_anger_bubble"
+    ],
+    "angry face": [
+      "angry"
+    ],
+    "angry": [
+      "rage",
+      "anger",
+      "right_anger_bubble",
+      "face_holding_back_tears"
+    ],
+    "enraged": [
+      "rage"
+    ],
+    "pouting": [
+      "rage",
+      "pouting_cat",
+      "person_pouting"
+    ],
+    "red": [
+      "rage",
+      "apple",
+      "cherries",
+      "izakaya_lantern",
+      "o",
+      "arrow_up_small",
+      "arrow_down_small",
+      "red_circle",
+      "small_red_triangle",
+      "small_red_triangle_down",
+      "mahjong",
+      "red_square"
+    ],
+    "enraged face": [
+      "rage"
+    ],
+    "dejected": [
+      "pensive"
+    ],
+    "pensive face": [
+      "pensive"
+    ],
+    "confused face": [
+      "confused"
+    ],
+    "frown": [
+      "slightly_frowning_face",
+      "frowning_with_open_mouth",
+      "frowning_face",
+      "person_frowning"
+    ],
+    "persevering face": [
+      "persevere"
+    ],
+    "confounded face": [
+      "confounded"
+    ],
+    "tired": [
+      "tired_face",
+      "weary",
+      "yawning_face"
+    ],
+    "weary face": [
+      "weary"
+    ],
+    "face with steam from nose": [
+      "triumph"
+    ],
+    "won": [
+      "triumph"
+    ],
+    "face with open mouth": [
+      "open_mouth"
+    ],
+    "sympathy": [
+      "open_mouth"
+    ],
+    "face screaming in fear": [
+      "scream"
+    ],
+    "fear": [
+      "scream",
+      "fearful",
+      "biting_lip"
+    ],
+    "munch": [
+      "scream"
+    ],
+    "scared": [
+      "scream",
+      "fearful",
+      "face_with_open_eyes_and_hand_over_mouth"
+    ],
+    "fearful face": [
+      "fearful"
+    ],
+    "anxious face with sweat": [
+      "cold_sweat"
+    ],
+    "blue": [
+      "cold_sweat",
+      "blue_book",
+      "blue_heart",
+      "large_blue_circle",
+      "small_blue_diamond",
+      "large_blue_diamond",
+      "blue_square",
+      "blueberries"
+    ],
+    "rushed": [
+      "cold_sweat"
+    ],
+    "stunned": [
+      "hushed"
+    ],
+    "surprised": [
+      "hushed",
+      "scream_cat"
+    ],
+    "hushed face": [
+      "hushed"
+    ],
+    "frowning face with open mouth": [
+      "frowning_with_open_mouth"
+    ],
+    "anguished face": [
+      "anguished"
+    ],
+    "crying face": [
       "cry"
     ],
-    "cry": ["sob"]
+    "disappointed": [
+      "disappointed_relieved",
+      "face_with_diagonal_mouth"
+    ],
+    "relieved": [
+      "disappointed_relieved",
+      "smiling_face_with_tear"
+    ],
+    "sad but relieved face": [
+      "disappointed_relieved"
+    ],
+    "whew": [
+      "disappointed_relieved"
+    ],
+    "drooling": [
+      "drooling_face"
+    ],
+    "good night": [
+      "sleepy",
+      "sleeping",
+      "zzz",
+      "sleeping_bed"
+    ],
+    "sleep": [
+      "sleepy",
+      "sleeping",
+      "zzz",
+      "sleeping_bed",
+      "bed"
+    ],
+    "sleepy face": [
+      "sleepy"
+    ],
+    "downcast face with sweat": [
+      "sweat"
+    ],
+    "loudly crying face": [
+      "sob"
+    ],
+    "crossed-out eyes": [
+      "dizzy_face"
+    ],
+    "dead": [
+      "dizzy_face"
+    ],
+    "face with crossed-out eyes": [
+      "dizzy_face"
+    ],
+    "knocked out": [
+      "dizzy_face"
+    ],
+    "shocked": [
+      "astonished",
+      "exploding_head"
+    ],
+    "totally": [
+      "astonished"
+    ],
+    "astonished face": [
+      "astonished"
+    ],
+    "zipper": [
+      "zipper_mouth_face"
+    ],
+    "zipper-mouth face": [
+      "zipper_mouth_face"
+    ],
+    "nauseated": [
+      "nauseated_face"
+    ],
+    "vomit": [
+      "nauseated_face",
+      "face_vomiting"
+    ],
+    "gesundheit": [
+      "sneezing_face"
+    ],
+    "sneeze": [
+      "sneezing_face"
+    ],
+    "doctor": [
+      "mask",
+      "hospital",
+      "pill",
+      "lab_coat",
+      "stethoscope",
+      "xray"
+    ],
+    "face with medical mask": [
+      "mask"
+    ],
+    "sick": [
+      "mask",
+      "face_with_thermometer",
+      "pill",
+      "syringe",
+      "face_vomiting"
+    ],
+    "ill": [
+      "face_with_thermometer"
+    ],
+    "thermometer": [
+      "face_with_thermometer"
+    ],
+    "bandage": [
+      "face_with_head_bandage",
+      "adhesive_bandage"
+    ],
+    "face with head-bandage": [
+      "face_with_head_bandage"
+    ],
+    "hurt": [
+      "face_with_head_bandage",
+      "crutch"
+    ],
+    "injury": [
+      "face_with_head_bandage",
+      "drop_of_blood"
+    ],
+    "sleeping face": [
+      "sleeping"
+    ],
+    "ZZZ": [
+      "sleeping",
+      "zzz"
+    ],
+    "comic": [
+      "zzz",
+      "muscle",
+      "dizzy",
+      "boom",
+      "dash",
+      "droplet",
+      "sweat_drops",
+      "bulb",
+      "bomb",
+      "anger",
+      "diamond_shape_with_a_dot_inside",
+      "thought_balloon",
+      "speech_balloon"
+    ],
+    "dung": [
+      "poop"
+    ],
+    "monster": [
+      "poop",
+      "japanese_ogre",
+      "japanese_goblin",
+      "skull",
+      "ghost",
+      "robot",
+      "space_invader",
+      "skull_and_crossbones",
+      "troll"
+    ],
+    "pile of poo": [
+      "poop"
+    ],
+    "poo": [
+      "poop"
+    ],
+    "fairy tale": [
+      "smiling_imp",
+      "japanese_ogre",
+      "japanese_goblin",
+      "skull",
+      "ghost",
+      "angel",
+      "princess",
+      "dragon",
+      "dragon_face",
+      "crystal_ball",
+      "troll"
+    ],
+    "horns": [
+      "smiling_imp",
+      "metal"
+    ],
+    "smiling face with horns": [
+      "smiling_imp"
+    ],
+    "angry face with horns": [
+      "imp"
+    ],
+    "demon": [
+      "imp"
+    ],
+    "devil": [
+      "imp"
+    ],
+    "creature": [
+      "japanese_ogre",
+      "japanese_goblin",
+      "ghost",
+      "alien",
+      "space_invader"
+    ],
+    "ogre": [
+      "japanese_ogre"
+    ],
+    "goblin": [
+      "japanese_goblin"
+    ],
+    "death": [
+      "skull",
+      "skull_and_crossbones",
+      "coffin",
+      "funeral_urn"
+    ],
+    "extraterrestrial": [
+      "alien",
+      "space_invader"
+    ],
+    "ufo": [
+      "alien",
+      "space_invader"
+    ],
+    "cat": [
+      "smiley_cat",
+      "smile_cat",
+      "joy_cat",
+      "heart_eyes_cat",
+      "smirk_cat",
+      "kissing_cat",
+      "scream_cat",
+      "crying_cat_face",
+      "pouting_cat",
+      "cat2",
+      "black_cat"
+    ],
+    "grinning": [
+      "smiley_cat",
+      "star_struck"
+    ],
+    "grinning cat": [
+      "smiley_cat"
+    ],
+    "grinning cat with smiling eyes": [
+      "smile_cat"
+    ],
+    "cat with tears of joy": [
+      "joy_cat"
+    ],
+    "joy": [
+      "joy_cat"
+    ],
+    "heart": [
+      "heart_eyes_cat",
+      "love_letter",
+      "heart_decoration",
+      "stethoscope",
+      "white_heart",
+      "brown_heart",
+      "anatomical_heart",
+      "hand_with_index_finger_and_thumb_crossed"
+    ],
+    "smiling cat with heart-eyes": [
+      "heart_eyes_cat"
+    ],
+    "cat with wry smile": [
+      "smirk_cat"
+    ],
+    "ironic": [
+      "smirk_cat"
+    ],
+    "wry": [
+      "smirk_cat"
+    ],
+    "oh": [
+      "scream_cat"
+    ],
+    "weary": [
+      "scream_cat"
+    ],
+    "weary cat": [
+      "scream_cat"
+    ],
+    "crying cat": [
+      "crying_cat_face"
+    ],
+    "celebration": [
+      "raised_hands",
+      "mrs_claus",
+      "santa",
+      "mortar_board",
+      "christmas_tree",
+      "bamboo",
+      "tanabata_tree",
+      "jack_o_lantern",
+      "birthday",
+      "medal_military",
+      "reminder_ribbon",
+      "rice_scene",
+      "sparkler",
+      "fireworks",
+      "balloon",
+      "flags",
+      "ribbon",
+      "gift",
+      "confetti_ball",
+      "tada",
+      "dolls",
+      "wind_chime",
+      "crossed_flags",
+      "partying_face",
+      "piñata"
+    ],
+    "gesture": [
+      "raised_hands",
+      "bowing_man",
+      "person_frowning",
+      "person_pouting",
+      "person_gesturing_no",
+      "person_gesturing_ok",
+      "person_raising_hand"
+    ],
+    "hand": [
+      "raised_hands",
+      "clap",
+      "wave",
+      "call_me_hand",
+      "+1",
+      "-1",
+      "facepunch",
+      "fist",
+      "v",
+      "ok_hand",
+      "raised_hand",
+      "open_hands",
+      "pray",
+      "handshake",
+      "point_up",
+      "point_up_2",
+      "point_down",
+      "point_left",
+      "point_right",
+      "fu",
+      "raised_hand_with_fingers_splayed",
+      "metal",
+      "crossed_fingers",
+      "vulcan_salute",
+      "writing_hand",
+      "couple",
+      "two_women_holding_hands",
+      "love_you_gesture",
+      "gloves",
+      "people_holding_hands",
+      "rightwards_hand",
+      "leftwards_hand",
+      "person_gesturing_no",
+      "person_gesturing_ok",
+      "person_tipping_hand",
+      "person_raising_hand",
+      "hamsa"
+    ],
+    "hooray": [
+      "raised_hands"
+    ],
+    "raised": [
+      "raised_hands",
+      "raised_back_of_hand",
+      "person_raising_hand"
+    ],
+    "raising hands": [
+      "raised_hands"
+    ],
+    "clapping hands": [
+      "clap"
+    ],
+    "waving": [
+      "wave",
+      "white_flag",
+      "black_flag"
+    ],
+    "waving hand": [
+      "wave"
+    ],
+    "call": [
+      "call_me_hand"
+    ],
+    "hang loose": [
+      "call_me_hand"
+    ],
+    "Shaka": [
+      "call_me_hand"
+    ],
+    "thumb": [
+      "+1",
+      "-1"
+    ],
+    "thumbs up": [
+      "+1"
+    ],
+    "up": [
+      "+1",
+      "point_up",
+      "point_up_2",
+      "top"
+    ],
+    "down": [
+      "-1",
+      "point_down",
+      "chart_with_downwards_trend",
+      "arrow_down_small",
+      "arrow_double_down",
+      "arrow_down",
+      "arrow_heading_down",
+      "small_red_triangle_down"
+    ],
+    "thumbs down": [
+      "-1"
+    ],
+    "clenched": [
+      "facepunch",
+      "fist"
+    ],
+    "fist": [
+      "facepunch",
+      "fist_left",
+      "fist_right"
+    ],
+    "oncoming fist": [
+      "facepunch"
+    ],
+    "punch": [
+      "facepunch",
+      "fist"
+    ],
+    "raised fist": [
+      "fist"
+    ],
+    "left-facing fist": [
+      "fist_left"
+    ],
+    "leftwards": [
+      "fist_left"
+    ],
+    "right-facing fist": [
+      "fist_right"
+    ],
+    "rightwards": [
+      "fist_right"
+    ],
+    "victory": [
+      "v"
+    ],
+    "victory hand": [
+      "v"
+    ],
+    "OK": [
+      "ok_hand",
+      "ok",
+      "saluting_face",
+      "person_gesturing_ok"
+    ],
+    "OK hand": [
+      "ok_hand"
+    ],
+    "high 5": [
+      "raised_hand",
+      "pray"
+    ],
+    "high five": [
+      "raised_hand",
+      "pray"
+    ],
+    "backhand": [
+      "raised_back_of_hand",
+      "point_up_2",
+      "point_down",
+      "point_left",
+      "point_right"
+    ],
+    "biceps": [
+      "muscle"
+    ],
+    "flex": [
+      "muscle"
+    ],
+    "flexed biceps": [
+      "muscle"
+    ],
+    "ask": [
+      "pray"
+    ],
+    "folded hands": [
+      "pray"
+    ],
+    "please": [
+      "pray"
+    ],
+    "thanks": [
+      "pray",
+      "people_hugging"
+    ],
+    "agreement": [
+      "handshake"
+    ],
+    "meeting": [
+      "handshake"
+    ],
+    "shake": [
+      "handshake"
+    ],
+    "finger": [
+      "point_up",
+      "point_up_2",
+      "point_down",
+      "point_left",
+      "point_right",
+      "fu",
+      "raised_hand_with_fingers_splayed",
+      "metal",
+      "crossed_fingers",
+      "vulcan_salute"
+    ],
+    "index": [
+      "point_up",
+      "point_left",
+      "point_right",
+      "card_index",
+      "card_index_dividers"
+    ],
+    "index pointing up": [
+      "point_up"
+    ],
+    "point": [
+      "point_up",
+      "point_up_2",
+      "point_down",
+      "point_left",
+      "point_right",
+      "index_pointing_at_the_viewer"
+    ],
+    "backhand index pointing up": [
+      "point_up_2"
+    ],
+    "backhand index pointing down": [
+      "point_down"
+    ],
+    "backhand index pointing left": [
+      "point_left"
+    ],
+    "backhand index pointing right": [
+      "point_right"
+    ],
+    "middle finger": [
+      "fu"
+    ],
+    "hand with fingers splayed": [
+      "raised_hand_with_fingers_splayed"
+    ],
+    "splayed": [
+      "raised_hand_with_fingers_splayed"
+    ],
+    "rock-on": [
+      "metal"
+    ],
+    "sign of the horns": [
+      "metal"
+    ],
+    "cross": [
+      "crossed_fingers",
+      "rescue_worker_helmet",
+      "church",
+      "crossed_flags",
+      "latin_cross",
+      "orthodox_cross",
+      "x"
+    ],
+    "luck": [
+      "crossed_fingers"
+    ],
+    "spock": [
+      "vulcan_salute"
+    ],
+    "vulcan": [
+      "vulcan_salute"
+    ],
+    "write": [
+      "writing_hand"
+    ],
+    "camera": [
+      "selfie",
+      "camera_flash",
+      "video_camera",
+      "movie_camera",
+      "cinema"
+    ],
+    "phone": [
+      "selfie",
+      "iphone",
+      "calling",
+      "telephone_receiver",
+      "mobile_phone_off",
+      "vibration_mode",
+      "no_mobile_phones",
+      "signal_strength"
+    ],
+    "care": [
+      "nail_care"
+    ],
+    "cosmetics": [
+      "nail_care",
+      "lipstick"
+    ],
+    "manicure": [
+      "nail_care"
+    ],
+    "nail": [
+      "nail_care"
+    ],
+    "polish": [
+      "nail_care"
+    ],
+    "nail polish": [
+      "nail_care"
+    ],
+    "body": [
+      "tongue",
+      "ear",
+      "nose",
+      "eye"
+    ],
+    "bust": [
+      "bust_in_silhouette",
+      "busts_in_silhouette"
+    ],
+    "silhouette": [
+      "bust_in_silhouette",
+      "busts_in_silhouette",
+      "speaking_head"
+    ],
+    "head": [
+      "speaking_head"
+    ],
+    "speak": [
+      "speaking_head",
+      "speak_no_evil"
+    ],
+    "speaking": [
+      "speaking_head"
+    ],
+    "young": [
+      "baby",
+      "boy",
+      "girl",
+      "seedling",
+      "child"
+    ],
+    "Virgo": [
+      "girl",
+      "virgo"
+    ],
+    "zodiac": [
+      "girl",
+      "two_men_holding_hands",
+      "lion",
+      "scorpion",
+      "crab",
+      "snake",
+      "fish",
+      "ox",
+      "goat",
+      "ram",
+      "bow_and_arrow",
+      "balance_scale",
+      "amphora",
+      "ophiuchus",
+      "aries",
+      "taurus",
+      "gemini",
+      "cancer",
+      "leo",
+      "virgo",
+      "libra",
+      "scorpius",
+      "sagittarius",
+      "capricorn",
+      "aquarius",
+      "pisces"
+    ],
+    "adult": [
+      "man",
+      "woman",
+      "older_man",
+      "older_woman",
+      "older_adult"
+    ],
+    "blond": [
+      "blonde_man"
+    ],
+    "blond-haired person": [
+      "blonde_man"
+    ],
+    "hair": [
+      "blonde_man",
+      "white_hair"
+    ],
+    "person: blond hair": [
+      "blonde_man"
+    ],
+    "man": [
+      "older_man",
+      "man_farmer",
+      "man_cook",
+      "man_student",
+      "man_singer",
+      "man_teacher",
+      "man_factory_worker",
+      "man_technologist",
+      "man_office_worker",
+      "man_mechanic",
+      "man_scientist",
+      "man_artist",
+      "man_firefighter",
+      "man_astronaut",
+      "man_dancing",
+      "couple",
+      "two_men_holding_hands",
+      "mans_shoe",
+      "mens",
+      "man_in_manual_wheelchair",
+      "man_in_motorized_wheelchair",
+      "man_with_probing_cane",
+      "man_feeding_baby",
+      "male_sign"
+    ],
+    "old": [
+      "older_man",
+      "older_woman",
+      "old_key",
+      "older_adult",
+      "white_hair"
+    ],
+    "old man": [
+      "older_man"
+    ],
+    "woman": [
+      "older_woman",
+      "woman_farmer",
+      "woman_cook",
+      "woman_student",
+      "woman_singer",
+      "woman_teacher",
+      "woman_factory_worker",
+      "woman_technologist",
+      "woman_office_worker",
+      "woman_mechanic",
+      "woman_scientist",
+      "woman_artist",
+      "woman_firefighter",
+      "woman_astronaut",
+      "pregnant_woman",
+      "dancer",
+      "couple",
+      "womans_clothes",
+      "high_heel",
+      "sandal",
+      "boot",
+      "womans_hat",
+      "womens",
+      "woman_in_manual_wheelchair",
+      "woman_in_motorized_wheelchair",
+      "woman_with_probing_cane",
+      "woman_feeding_baby",
+      "female_sign"
+    ],
+    "old woman": [
+      "older_woman"
+    ],
+    "cap": [
+      "man_with_gua_pi_mao",
+      "mortar_board"
+    ],
+    "gua pi mao": [
+      "man_with_gua_pi_mao"
+    ],
+    "person": [
+      "man_with_gua_pi_mao",
+      "bride_with_veil",
+      "person_in_tuxedo",
+      "business_suit_levitating",
+      "adult",
+      "bearded_person",
+      "people_holding_hands",
+      "person_feeding_baby"
+    ],
+    "person with skullcap": [
+      "man_with_gua_pi_mao"
+    ],
+    "skullcap": [
+      "man_with_gua_pi_mao"
+    ],
+    "person wearing turban": [
+      "man_with_turban"
+    ],
+    "turban": [
+      "man_with_turban"
+    ],
+    "cop": [
+      "policeman"
+    ],
+    "officer": [
+      "policeman"
+    ],
+    "police": [
+      "policeman",
+      "police_car",
+      "rotating_light",
+      "oncoming_police_car"
+    ],
+    "police officer": [
+      "policeman"
+    ],
+    "construction": [
+      "construction_worker_man",
+      "building_construction"
+    ],
+    "worker": [
+      "construction_worker_man",
+      "woman_factory_worker",
+      "man_factory_worker",
+      "factory_worker"
+    ],
+    "construction worker": [
+      "construction_worker_man"
+    ],
+    "guard": [
+      "guardsman"
+    ],
+    "detective": [
+      "male_detective"
+    ],
+    "sleuth": [
+      "male_detective"
+    ],
+    "spy": [
+      "male_detective"
+    ],
+    "farmer": [
+      "woman_farmer",
+      "man_farmer"
+    ],
+    "gardener": [
+      "woman_farmer",
+      "man_farmer",
+      "farmer"
+    ],
+    "rancher": [
+      "woman_farmer",
+      "man_farmer",
+      "farmer"
+    ],
+    "chef": [
+      "woman_cook",
+      "man_cook",
+      "cook"
+    ],
+    "cook": [
+      "woman_cook",
+      "man_cook"
+    ],
+    "graduate": [
+      "woman_student",
+      "man_student",
+      "student"
+    ],
+    "student": [
+      "woman_student",
+      "man_student"
+    ],
+    "actor": [
+      "woman_singer",
+      "man_singer",
+      "singer"
+    ],
+    "entertainer": [
+      "woman_singer",
+      "man_singer",
+      "singer"
+    ],
+    "rock": [
+      "woman_singer",
+      "man_singer",
+      "curling_stone",
+      "singer"
+    ],
+    "singer": [
+      "woman_singer",
+      "man_singer"
+    ],
+    "star": [
+      "woman_singer",
+      "man_singer",
+      "star2",
+      "dizzy",
+      "sparkles",
+      "night_with_stars",
+      "stars",
+      "star_of_david",
+      "six_pointed_star",
+      "eight_pointed_black_star",
+      "star_struck",
+      "singer"
+    ],
+    "instructor": [
+      "woman_teacher",
+      "man_teacher",
+      "teacher"
+    ],
+    "professor": [
+      "woman_teacher",
+      "man_teacher",
+      "teacher"
+    ],
+    "teacher": [
+      "woman_teacher",
+      "man_teacher"
+    ],
+    "assembly": [
+      "woman_factory_worker",
+      "man_factory_worker",
+      "factory_worker"
+    ],
+    "factory": [
+      "woman_factory_worker",
+      "man_factory_worker",
+      "factory_worker"
+    ],
+    "industrial": [
+      "woman_factory_worker",
+      "man_factory_worker",
+      "factory_worker"
+    ],
+    "coder": [
+      "woman_technologist",
+      "man_technologist",
+      "technologist"
+    ],
+    "developer": [
+      "woman_technologist",
+      "man_technologist",
+      "technologist"
+    ],
+    "inventor": [
+      "woman_technologist",
+      "man_technologist",
+      "technologist"
+    ],
+    "software": [
+      "woman_technologist",
+      "man_technologist",
+      "technologist"
+    ],
+    "technologist": [
+      "woman_technologist",
+      "man_technologist"
+    ],
+    "architect": [
+      "woman_office_worker",
+      "man_office_worker",
+      "office_worker"
+    ],
+    "business": [
+      "woman_office_worker",
+      "man_office_worker",
+      "business_suit_levitating",
+      "office_worker"
+    ],
+    "manager": [
+      "woman_office_worker",
+      "man_office_worker",
+      "office_worker"
+    ],
+    "white-collar": [
+      "woman_office_worker",
+      "man_office_worker",
+      "office_worker"
+    ],
+    "electrician": [
+      "woman_mechanic",
+      "man_mechanic",
+      "mechanic"
+    ],
+    "mechanic": [
+      "woman_mechanic",
+      "man_mechanic",
+      "toolbox"
+    ],
+    "plumber": [
+      "woman_mechanic",
+      "man_mechanic",
+      "plunger",
+      "mechanic"
+    ],
+    "tradesperson": [
+      "woman_mechanic",
+      "man_mechanic",
+      "mechanic"
+    ],
+    "biologist": [
+      "woman_scientist",
+      "man_scientist",
+      "petri_dish",
+      "dna",
+      "scientist"
+    ],
+    "chemist": [
+      "woman_scientist",
+      "man_scientist",
+      "test_tube",
+      "scientist"
+    ],
+    "engineer": [
+      "woman_scientist",
+      "man_scientist",
+      "scientist"
+    ],
+    "physicist": [
+      "woman_scientist",
+      "man_scientist",
+      "scientist"
+    ],
+    "scientist": [
+      "woman_scientist",
+      "man_scientist",
+      "lab_coat"
+    ],
+    "artist": [
+      "woman_artist",
+      "man_artist"
+    ],
+    "palette": [
+      "woman_artist",
+      "man_artist",
+      "art",
+      "artist"
+    ],
+    "firefighter": [
+      "woman_firefighter",
+      "man_firefighter"
+    ],
+    "firetruck": [
+      "woman_firefighter",
+      "man_firefighter",
+      "firefighter"
+    ],
+    "astronaut": [
+      "woman_astronaut",
+      "man_astronaut"
+    ],
+    "rocket": [
+      "woman_astronaut",
+      "man_astronaut",
+      "astronaut"
+    ],
+    "Christmas": [
+      "mrs_claus",
+      "santa",
+      "christmas_tree"
+    ],
+    "claus": [
+      "mrs_claus",
+      "santa"
+    ],
+    "mother": [
+      "mrs_claus"
+    ],
+    "Mrs.": [
+      "mrs_claus"
+    ],
+    "Mrs. Claus": [
+      "mrs_claus"
+    ],
+    "father": [
+      "santa"
+    ],
+    "Santa Claus": [
+      "santa"
+    ],
+    "baby": [
+      "angel",
+      "baby_chick",
+      "hatching_chick",
+      "hatched_chick",
+      "baby_bottle",
+      "baby_symbol",
+      "breast_feeding",
+      "man_feeding_baby",
+      "person_feeding_baby",
+      "woman_feeding_baby"
+    ],
+    "baby angel": [
+      "angel"
+    ],
+    "pregnant": [
+      "pregnant_woman",
+      "pregnant_man",
+      "pregnant_person"
+    ],
+    "bride": [
+      "bride_with_veil"
+    ],
+    "person with veil": [
+      "bride_with_veil"
+    ],
+    "veil": [
+      "bride_with_veil"
+    ],
+    "wedding": [
+      "bride_with_veil"
+    ],
+    "groom": [
+      "person_in_tuxedo"
+    ],
+    "tuxedo": [
+      "person_in_tuxedo"
+    ],
+    "marathon": [
+      "running_man"
+    ],
+    "person running": [
+      "running_man"
+    ],
+    "running": [
+      "running_man",
+      "dash",
+      "running_shirt_with_sash"
+    ],
+    "hike": [
+      "walking_man"
+    ],
+    "person walking": [
+      "walking_man"
+    ],
+    "walk": [
+      "walking_man"
+    ],
+    "walking": [
+      "walking_man"
+    ],
+    "dance": [
+      "dancer",
+      "man_dancing",
+      "ballet_shoes",
+      "mirror_ball"
+    ],
+    "dancing": [
+      "dancer",
+      "man_dancing"
+    ],
+    "woman dancing": [
+      "dancer"
+    ],
+    "bunny ear": [
+      "dancing_women"
+    ],
+    "dancer": [
+      "dancing_women"
+    ],
+    "partying": [
+      "dancing_women"
+    ],
+    "people with bunny ears": [
+      "dancing_women"
+    ],
+    "hold": [
+      "couple",
+      "people_holding_hands"
+    ],
+    "holding hands": [
+      "couple",
+      "two_men_holding_hands",
+      "two_women_holding_hands",
+      "people_holding_hands"
+    ],
+    "woman and man holding hands": [
+      "couple"
+    ],
+    "couple": [
+      "two_men_holding_hands",
+      "two_women_holding_hands",
+      "couple_with_heart",
+      "couplekiss_man_woman",
+      "people_holding_hands"
+    ],
+    "Gemini": [
+      "two_men_holding_hands",
+      "gemini"
+    ],
+    "men": [
+      "two_men_holding_hands"
+    ],
+    "men holding hands": [
+      "two_men_holding_hands"
+    ],
+    "twins": [
+      "two_men_holding_hands",
+      "gemini"
+    ],
+    "women": [
+      "two_women_holding_hands"
+    ],
+    "women holding hands": [
+      "two_women_holding_hands"
+    ],
+    "apology": [
+      "bowing_man"
+    ],
+    "bow": [
+      "bowing_man",
+      "bow_and_arrow"
+    ],
+    "person bowing": [
+      "bowing_man"
+    ],
+    "sorry": [
+      "bowing_man"
+    ],
+    "clothing": [
+      "womans_clothes",
+      "tshirt",
+      "jeans",
+      "necktie",
+      "dress",
+      "bikini",
+      "kimono",
+      "footprints",
+      "high_heel",
+      "sandal",
+      "boot",
+      "mans_shoe",
+      "athletic_shoe",
+      "womans_hat",
+      "tophat",
+      "mortar_board",
+      "crown",
+      "pouch",
+      "purse",
+      "handbag",
+      "eyeglasses",
+      "closed_umbrella",
+      "open_umbrella",
+      "umbrella",
+      "prayer_beads",
+      "sari"
+    ],
+    "woman’s clothes": [
+      "womans_clothes"
+    ],
+    "shirt": [
+      "tshirt",
+      "running_shirt_with_sash"
+    ],
+    "t-shirt": [
+      "tshirt"
+    ],
+    "pants": [
+      "jeans",
+      "shorts"
+    ],
+    "trousers": [
+      "jeans"
+    ],
+    "tie": [
+      "necktie",
+      "knot"
+    ],
+    "swim": [
+      "bikini",
+      "swimming_man"
+    ],
+    "makeup": [
+      "lipstick"
+    ],
+    "kiss mark": [
+      "kiss"
+    ],
+    "lips": [
+      "kiss"
+    ],
+    "footprint": [
+      "footprints"
+    ],
+    "print": [
+      "footprints",
+      "paw_prints"
+    ],
+    "heel": [
+      "high_heel"
+    ],
+    "high-heeled shoe": [
+      "high_heel"
+    ],
+    "shoe": [
+      "high_heel",
+      "sandal",
+      "boot",
+      "mans_shoe",
+      "athletic_shoe"
+    ],
+    "woman’s sandal": [
+      "sandal"
+    ],
+    "woman’s boot": [
+      "boot"
+    ],
+    "man’s shoe": [
+      "mans_shoe"
+    ],
+    "athletic": [
+      "athletic_shoe"
+    ],
+    "running shoe": [
+      "athletic_shoe"
+    ],
+    "sneaker": [
+      "athletic_shoe"
+    ],
+    "woman’s hat": [
+      "womans_hat"
+    ],
+    "top": [
+      "tophat"
+    ],
+    "top hat": [
+      "tophat"
+    ],
+    "aid": [
+      "rescue_worker_helmet"
+    ],
+    "helmet": [
+      "rescue_worker_helmet",
+      "military_helmet"
+    ],
+    "rescue worker’s helmet": [
+      "rescue_worker_helmet"
+    ],
+    "graduation": [
+      "mortar_board"
+    ],
+    "graduation cap": [
+      "mortar_board"
+    ],
+    "king": [
+      "crown"
+    ],
+    "queen": [
+      "crown"
+    ],
+    "backpack": [
+      "school_satchel"
+    ],
+    "bag": [
+      "school_satchel",
+      "pouch",
+      "handbag",
+      "moneybag",
+      "shopping"
+    ],
+    "rucksack": [
+      "school_satchel"
+    ],
+    "satchel": [
+      "school_satchel"
+    ],
+    "school": [
+      "school_satchel"
+    ],
+    "clutch bag": [
+      "pouch"
+    ],
+    "coin": [
+      "purse"
+    ],
+    "purse": [
+      "handbag"
+    ],
+    "eyewear": [
+      "eyeglasses",
+      "dark_sunglasses"
+    ],
+    "glasses": [
+      "eyeglasses",
+      "dark_sunglasses",
+      "disguised_face"
+    ],
+    "dark": [
+      "dark_sunglasses",
+      "new_moon"
+    ],
+    "sunglasses": [
+      "dark_sunglasses"
+    ],
+    "diamond": [
+      "ring",
+      "gem",
+      "diamond_shape_with_a_dot_inside",
+      "small_orange_diamond",
+      "small_blue_diamond",
+      "large_orange_diamond",
+      "large_blue_diamond"
+    ],
+    "rain": [
+      "closed_umbrella",
+      "sun_behind_rain_cloud",
+      "cloud_with_rain",
+      "cloud_with_lightning_and_rain",
+      "open_umbrella",
+      "umbrella",
+      "rainbow",
+      "parasol_on_ground"
+    ],
+    "umbrella": [
+      "closed_umbrella",
+      "open_umbrella",
+      "beach_umbrella",
+      "parasol_on_ground"
+    ],
+    "pet": [
+      "dog",
+      "cat",
+      "hamster",
+      "rabbit",
+      "dog2",
+      "cat2",
+      "rabbit2"
+    ],
+    "dog face": [
+      "dog"
+    ],
+    "cat face": [
+      "cat"
+    ],
+    "mouse face": [
+      "mouse"
+    ],
+    "bunny": [
+      "rabbit",
+      "rabbit2"
+    ],
+    "rabbit face": [
+      "rabbit"
+    ],
+    "fox": [
+      "fox_face"
+    ],
+    "panda": [
+      "panda_face"
+    ],
+    "marsupial": [
+      "koala",
+      "kangaroo"
+    ],
+    "tiger face": [
+      "tiger"
+    ],
+    "Leo": [
+      "lion",
+      "leo"
+    ],
+    "cow face": [
+      "cow"
+    ],
+    "pig face": [
+      "pig"
+    ],
+    "nose": [
+      "pig_nose",
+      "disguised_face"
+    ],
+    "pig": [
+      "pig_nose",
+      "boar",
+      "pig2"
+    ],
+    "food": [
+      "squid",
+      "shrimp",
+      "kiwi_fruit",
+      "avocado",
+      "cucumber",
+      "carrot",
+      "potato",
+      "peanuts",
+      "croissant",
+      "baguette_bread",
+      "egg",
+      "bacon",
+      "pancakes",
+      "stuffed_flatbread",
+      "green_salad",
+      "shallow_pan_of_food",
+      "olive",
+      "beans"
+    ],
+    "molusc": [
+      "squid"
+    ],
+    "shellfish": [
+      "shrimp"
+    ],
+    "small": [
+      "shrimp",
+      "crazy_face"
+    ],
+    "monkey": [
+      "monkey_face",
+      "see_no_evil",
+      "hear_no_evil",
+      "speak_no_evil"
+    ],
+    "evil": [
+      "see_no_evil",
+      "hear_no_evil",
+      "speak_no_evil",
+      "black_heart",
+      "supervillain"
+    ],
+    "forbidden": [
+      "see_no_evil",
+      "hear_no_evil",
+      "speak_no_evil",
+      "no_entry",
+      "no_entry_sign",
+      "no_pedestrians",
+      "do_not_litter",
+      "no_bicycles",
+      "no_mobile_phones",
+      "no_smoking",
+      "no_bell",
+      "person_gesturing_no"
+    ],
+    "see": [
+      "see_no_evil"
+    ],
+    "see-no-evil monkey": [
+      "see_no_evil"
+    ],
+    "hear": [
+      "hear_no_evil",
+      "deaf_person"
+    ],
+    "hear-no-evil monkey": [
+      "hear_no_evil"
+    ],
+    "speak-no-evil monkey": [
+      "speak_no_evil"
+    ],
+    "bird": [
+      "chicken",
+      "penguin",
+      "baby_chick",
+      "hatching_chick",
+      "hatched_chick",
+      "duck",
+      "eagle",
+      "owl",
+      "rooster",
+      "turkey",
+      "dove",
+      "swan",
+      "peacock",
+      "parrot",
+      "feather"
+    ],
+    "chick": [
+      "baby_chick",
+      "hatching_chick",
+      "hatched_chick"
+    ],
+    "hatching": [
+      "hatching_chick"
+    ],
+    "front-facing baby chick": [
+      "hatched_chick"
+    ],
+    "wise": [
+      "owl"
+    ],
+    "vampire": [
+      "bat"
+    ],
+    "horse face": [
+      "horse"
+    ],
+    "bee": [
+      "honeybee"
+    ],
+    "insect": [
+      "honeybee",
+      "bug",
+      "butterfly",
+      "lady_beetle",
+      "ant",
+      "spider",
+      "beetle",
+      "cockroach"
+    ],
+    "pretty": [
+      "butterfly"
+    ],
+    "beetle": [
+      "lady_beetle"
+    ],
+    "ladybird": [
+      "lady_beetle"
+    ],
+    "ladybug": [
+      "lady_beetle"
+    ],
+    "scorpio": [
+      "scorpion"
+    ],
+    "Scorpio": [
+      "scorpion",
+      "scorpius"
+    ],
+    "Cancer": [
+      "crab",
+      "cancer"
+    ],
+    "bearer": [
+      "snake",
+      "ophiuchus",
+      "aquarius"
+    ],
+    "Ophiuchus": [
+      "snake",
+      "ophiuchus"
+    ],
+    "serpent": [
+      "snake",
+      "ophiuchus"
+    ],
+    "reptile": [
+      "lizard"
+    ],
+    "terrapin": [
+      "turtle"
+    ],
+    "tortoise": [
+      "turtle"
+    ],
+    "fish": [
+      "tropical_fish",
+      "blowfish",
+      "shark",
+      "fish_cake",
+      "fishing_pole_and_fish",
+      "pisces"
+    ],
+    "tropical": [
+      "tropical_fish",
+      "tropical_drink",
+      "mango",
+      "flamingo"
+    ],
+    "Pisces": [
+      "fish",
+      "pisces"
+    ],
+    "flipper": [
+      "dolphin"
+    ],
+    "spouting": [
+      "whale"
+    ],
+    "spouting whale": [
+      "whale"
+    ],
+    "whale": [
+      "whale2"
+    ],
+    "tiger": [
+      "tiger2"
+    ],
+    "buffalo": [
+      "water_buffalo",
+      "bison"
+    ],
+    "water": [
+      "water_buffalo",
+      "ocean",
+      "gun",
+      "shower",
+      "aquarius",
+      "non-potable_water",
+      "wc",
+      "potable_water",
+      "person_playing_water_polo"
+    ],
+    "bull": [
+      "ox",
+      "taurus"
+    ],
+    "Taurus": [
+      "ox",
+      "taurus"
+    ],
+    "cow": [
+      "cow2"
+    ],
+    "camel": [
+      "dromedary_camel"
+    ],
+    "dromedary": [
+      "dromedary_camel"
+    ],
+    "hump": [
+      "dromedary_camel",
+      "camel"
+    ],
+    "bactrian": [
+      "camel"
+    ],
+    "two-hump camel": [
+      "camel"
+    ],
+    "Capricorn": [
+      "goat",
+      "capricorn"
+    ],
+    "Aries": [
+      "ram",
+      "aries"
+    ],
+    "male": [
+      "ram"
+    ],
+    "sheep": [
+      "ram"
+    ],
+    "ewe": [
+      "sheep"
+    ],
+    "female": [
+      "sheep"
+    ],
+    "equestrian": [
+      "racehorse"
+    ],
+    "horse": [
+      "racehorse",
+      "horse_racing",
+      "carousel_horse"
+    ],
+    "racing": [
+      "racehorse",
+      "horse_racing",
+      "racing_car",
+      "motorcycle",
+      "checkered_flag"
+    ],
+    "sow": [
+      "pig2"
+    ],
+    "mouse": [
+      "mouse2"
+    ],
+    "fly": [
+      "dove",
+      "money_with_wings",
+      "kite"
+    ],
+    "peace": [
+      "dove",
+      "peace_symbol"
+    ],
+    "dog": [
+      "dog2",
+      "poodle",
+      "service_dog"
+    ],
+    "rabbit": [
+      "rabbit2"
+    ],
+    "squirrel": [
+      "chipmunk"
+    ],
+    "feet": [
+      "paw_prints"
+    ],
+    "paw": [
+      "paw_prints"
+    ],
+    "dragon": [
+      "dragon_face"
+    ],
+    "plant": [
+      "cactus",
+      "shamrock",
+      "chestnut",
+      "rosette",
+      "potted_plant"
+    ],
+    "tree": [
+      "christmas_tree",
+      "evergreen_tree",
+      "deciduous_tree",
+      "palm_tree",
+      "tanabata_tree"
+    ],
+    "Christmas tree": [
+      "christmas_tree"
+    ],
+    "deciduous": [
+      "deciduous_tree"
+    ],
+    "shedding": [
+      "deciduous_tree"
+    ],
+    "palm": [
+      "palm_tree",
+      "coconut",
+      "person_facepalming"
+    ],
+    "leaf": [
+      "herb",
+      "four_leaf_clover",
+      "leaves",
+      "fallen_leaf",
+      "maple_leaf",
+      "beginner"
+    ],
+    "4": [
+      "four_leaf_clover",
+      "clock4",
+      "clock430"
+    ],
+    "clover": [
+      "four_leaf_clover"
+    ],
+    "four": [
+      "four_leaf_clover",
+      "clock4",
+      "clock430"
+    ],
+    "four-leaf clover": [
+      "four_leaf_clover"
+    ],
+    "Japanese": [
+      "bamboo",
+      "tanabata_tree",
+      "rice_ball",
+      "dango",
+      "japanese_castle",
+      "post_office",
+      "dolls",
+      "crossed_flags",
+      "u7a7a",
+      "u5272",
+      "u6709",
+      "u7121",
+      "u7533",
+      "u55b6",
+      "u6708",
+      "accept",
+      "ideograph_advantage",
+      "secret",
+      "congratulations",
+      "u5408",
+      "u6e80",
+      "u7981",
+      "beginner",
+      "u6307",
+      "sa",
+      "koko",
+      "flower_playing_cards"
+    ],
+    "pine": [
+      "bamboo"
+    ],
+    "pine decoration": [
+      "bamboo"
+    ],
+    "banner": [
+      "tanabata_tree"
+    ],
+    "blow": [
+      "leaves",
+      "wind_face"
+    ],
+    "flutter": [
+      "leaves"
+    ],
+    "leaf fluttering in wind": [
+      "leaves"
+    ],
+    "wind": [
+      "leaves",
+      "wind_face",
+      "wind_chime"
+    ],
+    "falling": [
+      "fallen_leaf",
+      "maple_leaf",
+      "stars"
+    ],
+    "maple": [
+      "maple_leaf"
+    ],
+    "ear": [
+      "ear_of_rice",
+      "corn",
+      "deaf_person"
+    ],
+    "grain": [
+      "ear_of_rice"
+    ],
+    "rice": [
+      "ear_of_rice",
+      "curry",
+      "rice_ball",
+      "rice_cracker"
+    ],
+    "sheaf of rice": [
+      "ear_of_rice"
+    ],
+    "flower": [
+      "hibiscus",
+      "sunflower",
+      "rose",
+      "wilted_flower",
+      "tulip",
+      "blossom",
+      "cherry_blossom",
+      "bouquet",
+      "white_flower",
+      "flower_playing_cards",
+      "lotus"
+    ],
+    "wilted": [
+      "wilted_flower"
+    ],
+    "blossom": [
+      "cherry_blossom"
+    ],
+    "cherry": [
+      "cherry_blossom",
+      "cherries"
+    ],
+    "toadstool": [
+      "mushroom"
+    ],
+    "halloween": [
+      "jack_o_lantern"
+    ],
+    "jack": [
+      "jack_o_lantern"
+    ],
+    "jack-o-lantern": [
+      "jack_o_lantern"
+    ],
+    "lantern": [
+      "jack_o_lantern",
+      "izakaya_lantern"
+    ],
+    "spiral": [
+      "shell",
+      "spiral_calendar",
+      "spiral_notepad",
+      "face_with_spiral_eyes"
+    ],
+    "spiral shell": [
+      "shell"
+    ],
+    "spider": [
+      "spider_web"
+    ],
+    "web": [
+      "spider_web"
+    ],
+    "Americas": [
+      "earth_americas"
+    ],
+    "earth": [
+      "earth_americas",
+      "earth_africa",
+      "earth_asia",
+      "globe_with_meridians"
+    ],
+    "globe": [
+      "earth_americas",
+      "earth_africa",
+      "earth_asia",
+      "globe_with_meridians"
+    ],
+    "globe showing Americas": [
+      "earth_americas"
+    ],
+    "world": [
+      "earth_americas",
+      "earth_africa",
+      "earth_asia",
+      "world_map",
+      "globe_with_meridians"
+    ],
+    "Africa": [
+      "earth_africa"
+    ],
+    "Europe": [
+      "earth_africa"
+    ],
+    "globe showing Europe-Africa": [
+      "earth_africa"
+    ],
+    "Asia": [
+      "earth_asia"
+    ],
+    "Australia": [
+      "earth_asia",
+      "kangaroo"
+    ],
+    "globe showing Asia-Australia": [
+      "earth_asia"
+    ],
+    "full": [
+      "full_moon",
+      "full_moon_with_face",
+      "100",
+      "pregnant_man",
+      "pregnant_person"
+    ],
+    "moon": [
+      "full_moon",
+      "waning_gibbous_moon",
+      "last_quarter_moon",
+      "waning_crescent_moon",
+      "new_moon",
+      "waxing_crescent_moon",
+      "first_quarter_moon",
+      "waxing_gibbous_moon",
+      "new_moon_with_face",
+      "full_moon_with_face",
+      "first_quarter_moon_with_face",
+      "last_quarter_moon_with_face",
+      "crescent_moon",
+      "rice_scene"
+    ],
+    "gibbous": [
+      "waning_gibbous_moon",
+      "waxing_gibbous_moon"
+    ],
+    "waning": [
+      "waning_gibbous_moon",
+      "waning_crescent_moon"
+    ],
+    "quarter": [
+      "last_quarter_moon",
+      "first_quarter_moon",
+      "first_quarter_moon_with_face",
+      "last_quarter_moon_with_face"
+    ],
+    "crescent": [
+      "waning_crescent_moon",
+      "waxing_crescent_moon",
+      "crescent_moon"
+    ],
+    "waxing": [
+      "waxing_crescent_moon",
+      "waxing_gibbous_moon"
+    ],
+    "new moon face": [
+      "new_moon_with_face"
+    ],
+    "full moon face": [
+      "full_moon_with_face"
+    ],
+    "first quarter moon face": [
+      "first_quarter_moon_with_face"
+    ],
+    "last quarter moon face": [
+      "last_quarter_moon_with_face"
+    ],
+    "glittery": [
+      "star2"
+    ],
+    "glow": [
+      "star2"
+    ],
+    "glowing star": [
+      "star2"
+    ],
+    "shining": [
+      "star2"
+    ],
+    "sparkle": [
+      "star2",
+      "sparkles",
+      "sparkler",
+      "sparkling_heart"
+    ],
+    "*": [
+      "sparkles",
+      "eight_pointed_black_star",
+      "sparkle",
+      "eight_spoked_asterisk"
+    ],
+    "space": [
+      "comet",
+      "rocket",
+      "artificial_satellite",
+      "milky_way"
+    ],
+    "rays": [
+      "sunny"
+    ],
+    "cloud": [
+      "sun_behind_small_cloud",
+      "partly_sunny",
+      "sun_behind_large_cloud",
+      "sun_behind_rain_cloud",
+      "cloud_with_rain",
+      "cloud_with_lightning_and_rain",
+      "cloud_with_lightning",
+      "cloud_with_snow",
+      "wind_face",
+      "tornado",
+      "fog"
+    ],
+    "sun behind cloud": [
+      "partly_sunny"
+    ],
+    "weather": [
+      "cloud",
+      "thermometer"
+    ],
+    "thunder": [
+      "cloud_with_lightning_and_rain"
+    ],
+    "lightning": [
+      "cloud_with_lightning",
+      "zap"
+    ],
+    "danger": [
+      "zap"
+    ],
+    "electric": [
+      "zap",
+      "railway_car",
+      "electric_plug",
+      "bulb",
+      "flashlight"
+    ],
+    "high voltage": [
+      "zap"
+    ],
+    "voltage": [
+      "zap"
+    ],
+    "flame": [
+      "fire"
+    ],
+    "tool": [
+      "fire",
+      "anchor",
+      "clamp",
+      "flashlight",
+      "wrench",
+      "hammer",
+      "hammer_and_pick",
+      "hammer_and_wrench",
+      "pick",
+      "nut_and_bolt",
+      "gear",
+      "gun",
+      "hocho",
+      "crystal_ball",
+      "alembic",
+      "telescope",
+      "microscope",
+      "scissors",
+      "mag",
+      "mag_right",
+      "trident",
+      "toolbox",
+      "carpentry_saw",
+      "screwdriver"
+    ],
+    "collision": [
+      "boom"
+    ],
+    "snow": [
+      "snowflake",
+      "cloud_with_snow",
+      "snowman",
+      "snowman_with_snow",
+      "ski",
+      "skier",
+      "snowboarder",
+      "mountain_snow"
+    ],
+    "snowman without snow": [
+      "snowman"
+    ],
+    "snowman": [
+      "snowman_with_snow"
+    ],
+    "dashing away": [
+      "dash"
+    ],
+    "whirlwind": [
+      "tornado"
+    ],
+    "drop": [
+      "umbrella",
+      "droplet",
+      "palm_down_hand"
+    ],
+    "umbrella with rain drops": [
+      "umbrella"
+    ],
+    "splashing": [
+      "sweat_drops"
+    ],
+    "sweat droplets": [
+      "sweat_drops"
+    ],
+    "wave": [
+      "ocean"
+    ],
+    "water wave": [
+      "ocean"
+    ],
+    "apple": [
+      "green_apple"
+    ],
+    "fruit": [
+      "green_apple",
+      "apple",
+      "pear",
+      "tangerine",
+      "lemon",
+      "banana",
+      "watermelon",
+      "grapes",
+      "strawberry",
+      "melon",
+      "cherries",
+      "peach",
+      "pineapple",
+      "kiwi_fruit",
+      "avocado",
+      "tomato",
+      "mango"
+    ],
+    "green": [
+      "green_apple",
+      "green_salad",
+      "green_book",
+      "green_heart",
+      "green_square",
+      "green_circle"
+    ],
+    "red apple": [
+      "apple"
+    ],
+    "orange": [
+      "tangerine",
+      "orange_book",
+      "small_orange_diamond",
+      "large_orange_diamond",
+      "orange_heart",
+      "orange_square",
+      "orange_circle"
+    ],
+    "citrus": [
+      "lemon"
+    ],
+    "grape": [
+      "grapes"
+    ],
+    "berry": [
+      "strawberry",
+      "blueberries"
+    ],
+    "berries": [
+      "cherries"
+    ],
+    "kiwi": [
+      "kiwi_fruit"
+    ],
+    "vegetable": [
+      "tomato",
+      "eggplant",
+      "cucumber",
+      "carrot",
+      "potato",
+      "peanuts",
+      "bell_pepper"
+    ],
+    "aubergine": [
+      "eggplant"
+    ],
+    "pickle": [
+      "cucumber"
+    ],
+    "hot": [
+      "hot_pepper",
+      "coffee",
+      "hotsprings",
+      "hot_face"
+    ],
+    "pepper": [
+      "hot_pepper",
+      "bell_pepper"
+    ],
+    "ear of corn": [
+      "corn"
+    ],
+    "maize": [
+      "corn"
+    ],
+    "maze": [
+      "corn"
+    ],
+    "potato": [
+      "sweet_potato"
+    ],
+    "roasted": [
+      "sweet_potato"
+    ],
+    "sweet": [
+      "sweet_potato",
+      "honey_pot",
+      "dango",
+      "shaved_ice",
+      "ice_cream",
+      "icecream",
+      "cake",
+      "birthday",
+      "custard",
+      "candy",
+      "lollipop",
+      "chocolate_bar",
+      "doughnut",
+      "cookie",
+      "cupcake",
+      "beverage_box"
+    ],
+    "roasted sweet potato": [
+      "sweet_potato"
+    ],
+    "nut": [
+      "peanuts",
+      "nut_and_bolt"
+    ],
+    "peanut": [
+      "peanuts"
+    ],
+    "honey": [
+      "honey_pot"
+    ],
+    "honeypot": [
+      "honey_pot"
+    ],
+    "pot": [
+      "honey_pot",
+      "stew",
+      "fondue",
+      "teapot"
+    ],
+    "bread": [
+      "croissant",
+      "baguette_bread",
+      "sandwich"
+    ],
+    "breakfast": [
+      "croissant",
+      "egg",
+      "bacon",
+      "pancakes",
+      "fried_egg",
+      "doughnut",
+      "bowl_with_spoon",
+      "bagel",
+      "waffle"
+    ],
+    "french": [
+      "croissant",
+      "baguette_bread",
+      "fries"
+    ],
+    "roll": [
+      "croissant"
+    ],
+    "loaf": [
+      "bread"
+    ],
+    "baguette": [
+      "baguette_bread"
+    ],
+    "cheese wedge": [
+      "cheese"
+    ],
+    "meat": [
+      "bacon",
+      "meat_on_bone"
+    ],
+    "crêpe": [
+      "pancakes"
+    ],
+    "hotcake": [
+      "pancakes"
+    ],
+    "pancake": [
+      "pancakes"
+    ],
+    "bone": [
+      "poultry_leg",
+      "meat_on_bone"
+    ],
+    "chicken": [
+      "poultry_leg"
+    ],
+    "drumstick": [
+      "poultry_leg"
+    ],
+    "leg": [
+      "poultry_leg"
+    ],
+    "poultry": [
+      "poultry_leg"
+    ],
+    "fried": [
+      "fried_shrimp"
+    ],
+    "prawn": [
+      "fried_shrimp"
+    ],
+    "shrimp": [
+      "fried_shrimp"
+    ],
+    "tempura": [
+      "fried_shrimp"
+    ],
+    "cooking": [
+      "fried_egg",
+      "fork_and_knife",
+      "plate_with_cutlery",
+      "hocho",
+      "amphora"
+    ],
+    "egg": [
+      "fried_egg"
+    ],
+    "frying": [
+      "fried_egg"
+    ],
+    "pan": [
+      "fried_egg",
+      "shallow_pan_of_food"
+    ],
+    "burger": [
+      "hamburger"
+    ],
+    "french fries": [
+      "fries"
+    ],
+    "falafel": [
+      "stuffed_flatbread"
+    ],
+    "flatbread": [
+      "stuffed_flatbread"
+    ],
+    "gyro": [
+      "stuffed_flatbread"
+    ],
+    "kebab": [
+      "stuffed_flatbread",
+      "oden"
+    ],
+    "stuffed": [
+      "stuffed_flatbread",
+      "teddy_bear"
+    ],
+    "frankfurter": [
+      "hotdog"
+    ],
+    "hot dog": [
+      "hotdog"
+    ],
+    "sausage": [
+      "hotdog"
+    ],
+    "cheese": [
+      "pizza",
+      "fondue"
+    ],
+    "slice": [
+      "pizza",
+      "cake"
+    ],
+    "pasta": [
+      "spaghetti"
+    ],
+    "mexican": [
+      "taco",
+      "burrito",
+      "tamale"
+    ],
+    "wrap": [
+      "burrito"
+    ],
+    "salad": [
+      "green_salad"
+    ],
+    "casserole": [
+      "shallow_pan_of_food"
+    ],
+    "paella": [
+      "shallow_pan_of_food"
+    ],
+    "shallow": [
+      "shallow_pan_of_food"
+    ],
+    "bowl": [
+      "ramen"
+    ],
+    "noodle": [
+      "ramen"
+    ],
+    "steaming": [
+      "ramen",
+      "coffee",
+      "hotsprings"
+    ],
+    "steaming bowl": [
+      "ramen"
+    ],
+    "pot of food": [
+      "stew"
+    ],
+    "cake": [
+      "fish_cake",
+      "birthday"
+    ],
+    "fish cake with swirl": [
+      "fish_cake"
+    ],
+    "pastry": [
+      "fish_cake",
+      "cake",
+      "birthday",
+      "pie"
+    ],
+    "swirl": [
+      "fish_cake"
+    ],
+    "box": [
+      "bento",
+      "gift",
+      "package",
+      "inbox_tray",
+      "outbox_tray",
+      "card_file_box",
+      "ballot_box",
+      "ballot_box_with_check",
+      "beverage_box"
+    ],
+    "bento box": [
+      "bento"
+    ],
+    "curry rice": [
+      "curry"
+    ],
+    "ball": [
+      "rice_ball",
+      "soccer",
+      "basketball",
+      "football",
+      "baseball",
+      "tennis",
+      "volleyball",
+      "rugby_football",
+      "8ball",
+      "golfing_man",
+      "ping_pong",
+      "field_hockey",
+      "cricket_bat_and_ball",
+      "basketball_man",
+      "bowling",
+      "crystal_ball",
+      "confetti_ball",
+      "softball",
+      "lacrosse",
+      "yarn",
+      "person_playing_handball"
+    ],
+    "cooked": [
+      "rice"
+    ],
+    "cooked rice": [
+      "rice"
+    ],
+    "cracker": [
+      "rice_cracker"
+    ],
+    "seafood": [
+      "oden",
+      "lobster"
+    ],
+    "skewer": [
+      "oden",
+      "dango"
+    ],
+    "stick": [
+      "oden",
+      "dango",
+      "ice_hockey",
+      "field_hockey",
+      "lacrosse",
+      "crutch"
+    ],
+    "dessert": [
+      "dango",
+      "shaved_ice",
+      "ice_cream",
+      "icecream",
+      "cake",
+      "birthday",
+      "custard",
+      "candy",
+      "lollipop",
+      "chocolate_bar",
+      "doughnut",
+      "cookie"
+    ],
+    "ice": [
+      "shaved_ice",
+      "ice_cream",
+      "icecream",
+      "ice_hockey",
+      "ice_skate",
+      "ice_cube"
+    ],
+    "shaved": [
+      "shaved_ice"
+    ],
+    "cream": [
+      "ice_cream",
+      "icecream"
+    ],
+    "soft": [
+      "icecream",
+      "speaker"
+    ],
+    "soft ice cream": [
+      "icecream"
+    ],
+    "shortcake": [
+      "cake"
+    ],
+    "birthday cake": [
+      "birthday"
+    ],
+    "pudding": [
+      "custard"
+    ],
+    "candy": [
+      "lollipop"
+    ],
+    "bar": [
+      "chocolate_bar",
+      "beer",
+      "beers",
+      "wine_glass",
+      "cocktail",
+      "tropical_drink",
+      "champagne",
+      "sake",
+      "izakaya_lantern",
+      "bar_chart",
+      "signal_strength",
+      "pause_button",
+      "soap"
+    ],
+    "chocolate": [
+      "chocolate_bar",
+      "fondue"
+    ],
+    "donut": [
+      "doughnut"
+    ],
+    "drink": [
+      "milk_glass",
+      "beer",
+      "beers",
+      "clinking_glasses",
+      "wine_glass",
+      "cocktail",
+      "tropical_drink",
+      "champagne",
+      "sake",
+      "tea",
+      "coffee",
+      "baby_bottle",
+      "amphora",
+      "maté",
+      "teapot",
+      "pouring_liquid"
+    ],
+    "glass": [
+      "milk_glass",
+      "clinking_glasses",
+      "wine_glass",
+      "tumbler_glass",
+      "cocktail",
+      "mag",
+      "mag_right",
+      "pouring_liquid"
+    ],
+    "glass of milk": [
+      "milk_glass"
+    ],
+    "milk": [
+      "milk_glass",
+      "baby_bottle",
+      "bubble_tea"
+    ],
+    "mug": [
+      "beer",
+      "beers"
+    ],
+    "beer mug": [
+      "beer"
+    ],
+    "beer": [
+      "beers"
+    ],
+    "clink": [
+      "beers",
+      "clinking_glasses"
+    ],
+    "clinking beer mugs": [
+      "beers"
+    ],
+    "celebrate": [
+      "clinking_glasses"
+    ],
+    "beverage": [
+      "wine_glass",
+      "sake",
+      "tea",
+      "coffee",
+      "beverage_box"
+    ],
+    "wine": [
+      "wine_glass"
+    ],
+    "liquor": [
+      "tumbler_glass"
+    ],
+    "shot": [
+      "tumbler_glass",
+      "syringe"
+    ],
+    "tumbler": [
+      "tumbler_glass"
+    ],
+    "whisky": [
+      "tumbler_glass"
+    ],
+    "cocktail glass": [
+      "cocktail"
+    ],
+    "bottle": [
+      "champagne",
+      "sake",
+      "baby_bottle"
+    ],
+    "bottle with popping cork": [
+      "champagne"
+    ],
+    "cork": [
+      "champagne"
+    ],
+    "popping": [
+      "champagne"
+    ],
+    "cup": [
+      "sake",
+      "tea"
+    ],
+    "teacup": [
+      "tea"
+    ],
+    "teacup without handle": [
+      "tea"
+    ],
+    "tea": [
+      "coffee",
+      "teapot",
+      "bubble_tea"
+    ],
+    "hot beverage": [
+      "coffee"
+    ],
+    "tableware": [
+      "spoon"
+    ],
+    "cutlery": [
+      "fork_and_knife"
+    ],
+    "fork": [
+      "fork_and_knife",
+      "plate_with_cutlery"
+    ],
+    "knife": [
+      "fork_and_knife",
+      "plate_with_cutlery",
+      "hocho",
+      "dagger"
+    ],
+    "fork and knife with plate": [
+      "plate_with_cutlery"
+    ],
+    "plate": [
+      "plate_with_cutlery"
+    ],
+    "football": [
+      "soccer",
+      "rugby_football"
+    ],
+    "soccer ball": [
+      "soccer"
+    ],
+    "hoop": [
+      "basketball"
+    ],
+    "american": [
+      "football"
+    ],
+    "american football": [
+      "football"
+    ],
+    "racquet": [
+      "tennis",
+      "badminton"
+    ],
+    "game": [
+      "volleyball",
+      "8ball",
+      "ping_pong",
+      "badminton",
+      "ice_hockey",
+      "field_hockey",
+      "cricket_bat_and_ball",
+      "video_game",
+      "dart",
+      "game_die",
+      "slot_machine",
+      "bowling",
+      "joystick",
+      "black_joker",
+      "mahjong",
+      "spades",
+      "clubs",
+      "hearts",
+      "diamonds",
+      "flower_playing_cards",
+      "curling_stone"
+    ],
+    "rugby": [
+      "rugby_football"
+    ],
+    "8": [
+      "8ball",
+      "clock8",
+      "clock830"
+    ],
+    "billiard": [
+      "8ball"
+    ],
+    "eight": [
+      "8ball",
+      "clock8",
+      "clock830"
+    ],
+    "pool 8 ball": [
+      "8ball"
+    ],
+    "flag in hole": [
+      "golf"
+    ],
+    "hole": [
+      "golf"
+    ],
+    "golf": [
+      "golfing_man"
+    ],
+    "person golfing": [
+      "golfing_man"
+    ],
+    "bat": [
+      "ping_pong",
+      "cricket_bat_and_ball"
+    ],
+    "paddle": [
+      "ping_pong"
+    ],
+    "table tennis": [
+      "ping_pong"
+    ],
+    "birdie": [
+      "badminton"
+    ],
+    "shuttlecock": [
+      "badminton"
+    ],
+    "goal": [
+      "goal_net",
+      "lacrosse"
+    ],
+    "net": [
+      "goal_net"
+    ],
+    "hockey": [
+      "ice_hockey",
+      "field_hockey"
+    ],
+    "puck": [
+      "ice_hockey"
+    ],
+    "field": [
+      "field_hockey"
+    ],
+    "cricket game": [
+      "cricket_bat_and_ball"
+    ],
+    "skis": [
+      "ski"
+    ],
+    "ski": [
+      "skier",
+      "snowboarder"
+    ],
+    "snowboard": [
+      "snowboarder"
+    ],
+    "fencer": [
+      "person_fencing"
+    ],
+    "fencing": [
+      "person_fencing"
+    ],
+    "sword": [
+      "person_fencing"
+    ],
+    "skate": [
+      "ice_skate",
+      "roller_skate"
+    ],
+    "archer": [
+      "bow_and_arrow",
+      "sagittarius"
+    ],
+    "arrow": [
+      "bow_and_arrow",
+      "calling",
+      "envelope_with_arrow",
+      "cupid",
+      "arrow_forward",
+      "next_track_button",
+      "play_or_pause_button",
+      "previous_track_button",
+      "fast_forward",
+      "rewind",
+      "twisted_rightwards_arrows",
+      "repeat",
+      "repeat_one",
+      "arrow_backward",
+      "arrow_up_small",
+      "arrow_down_small",
+      "arrow_double_up",
+      "arrow_double_down",
+      "arrow_right",
+      "arrow_left",
+      "arrow_up",
+      "arrow_down",
+      "arrow_upper_right",
+      "arrow_lower_right",
+      "arrow_lower_left",
+      "arrow_upper_left",
+      "arrow_up_down",
+      "left_right_arrow",
+      "arrows_counterclockwise",
+      "arrow_right_hook",
+      "leftwards_arrow_with_hook",
+      "arrow_heading_up",
+      "arrow_heading_down",
+      "arrows_clockwise",
+      "end",
+      "back",
+      "on",
+      "top",
+      "soon"
+    ],
+    "Sagittarius": [
+      "bow_and_arrow",
+      "sagittarius"
+    ],
+    "fishing pole": [
+      "fishing_pole_and_fish"
+    ],
+    "pole": [
+      "fishing_pole_and_fish",
+      "barber"
+    ],
+    "boxing": [
+      "boxing_glove"
+    ],
+    "glove": [
+      "boxing_glove",
+      "softball"
+    ],
+    "judo": [
+      "martial_arts_uniform"
+    ],
+    "karate": [
+      "martial_arts_uniform"
+    ],
+    "martial arts": [
+      "martial_arts_uniform"
+    ],
+    "taekwondo": [
+      "martial_arts_uniform"
+    ],
+    "uniform": [
+      "martial_arts_uniform"
+    ],
+    "boat": [
+      "rowing_man",
+      "sailboat",
+      "motor_boat",
+      "speedboat",
+      "ferry",
+      "canoe",
+      "ship"
+    ],
+    "person rowing boat": [
+      "rowing_man"
+    ],
+    "rowboat": [
+      "rowing_man"
+    ],
+    "person swimming": [
+      "swimming_man"
+    ],
+    "person surfing": [
+      "surfing_man"
+    ],
+    "surfing": [
+      "surfing_man"
+    ],
+    "bathtub": [
+      "bath"
+    ],
+    "person taking bath": [
+      "bath"
+    ],
+    "person bouncing ball": [
+      "basketball_man"
+    ],
+    "lifter": [
+      "weight_lifting_man"
+    ],
+    "person lifting weights": [
+      "weight_lifting_man"
+    ],
+    "weight": [
+      "weight_lifting_man"
+    ],
+    "bicycle": [
+      "biking_man",
+      "mountain_biking_man",
+      "bike",
+      "no_bicycles"
+    ],
+    "biking": [
+      "biking_man"
+    ],
+    "cyclist": [
+      "biking_man",
+      "mountain_biking_man"
+    ],
+    "person biking": [
+      "biking_man"
+    ],
+    "bicyclist": [
+      "mountain_biking_man"
+    ],
+    "bike": [
+      "mountain_biking_man",
+      "no_bicycles"
+    ],
+    "mountain": [
+      "mountain_biking_man",
+      "mountain_cableway",
+      "mountain_railway",
+      "mountain_snow",
+      "mount_fuji",
+      "volcano",
+      "sunrise_over_mountains"
+    ],
+    "person mountain biking": [
+      "mountain_biking_man"
+    ],
+    "jockey": [
+      "horse_racing"
+    ],
+    "racehorse": [
+      "horse_racing"
+    ],
+    "person in suit levitating": [
+      "business_suit_levitating"
+    ],
+    "suit": [
+      "business_suit_levitating"
+    ],
+    "prize": [
+      "trophy"
+    ],
+    "athletics": [
+      "running_shirt_with_sash"
+    ],
+    "sash": [
+      "running_shirt_with_sash"
+    ],
+    "running shirt": [
+      "running_shirt_with_sash"
+    ],
+    "medal": [
+      "medal_sports",
+      "medal_military",
+      "1st_place_medal",
+      "2nd_place_medal",
+      "3rd_place_medal"
+    ],
+    "sports medal": [
+      "medal_sports"
+    ],
+    "military": [
+      "medal_military",
+      "military_helmet"
+    ],
+    "military medal": [
+      "medal_military"
+    ],
+    "first": [
+      "1st_place_medal"
+    ],
+    "gold": [
+      "1st_place_medal",
+      "coin"
+    ],
+    "second": [
+      "2nd_place_medal"
+    ],
+    "silver": [
+      "2nd_place_medal",
+      "coin"
+    ],
+    "bronze": [
+      "3rd_place_medal"
+    ],
+    "third": [
+      "3rd_place_medal"
+    ],
+    "reminder": [
+      "reminder_ribbon"
+    ],
+    "ribbon": [
+      "reminder_ribbon",
+      "gift_heart"
+    ],
+    "admission": [
+      "ticket",
+      "tickets"
+    ],
+    "admission tickets": [
+      "tickets"
+    ],
+    "ticket": [
+      "tickets"
+    ],
+    "art": [
+      "performing_arts",
+      "framed_picture"
+    ],
+    "mask": [
+      "performing_arts"
+    ],
+    "performing": [
+      "performing_arts"
+    ],
+    "theater": [
+      "performing_arts"
+    ],
+    "theatre": [
+      "performing_arts"
+    ],
+    "artist palette": [
+      "art"
+    ],
+    "museum": [
+      "art",
+      "framed_picture"
+    ],
+    "painting": [
+      "art",
+      "framed_picture",
+      "paintbrush"
+    ],
+    "circus": [
+      "circus_tent"
+    ],
+    "tent": [
+      "circus_tent"
+    ],
+    "karaoke": [
+      "microphone"
+    ],
+    "mic": [
+      "microphone",
+      "studio_microphone"
+    ],
+    "earbud": [
+      "headphones"
+    ],
+    "headphone": [
+      "headphones"
+    ],
+    "music": [
+      "musical_score",
+      "musical_keyboard",
+      "drum",
+      "saxophone",
+      "trumpet",
+      "guitar",
+      "violin",
+      "studio_microphone",
+      "level_slider",
+      "control_knobs",
+      "musical_note",
+      "notes",
+      "banjo"
+    ],
+    "score": [
+      "musical_score",
+      "100"
+    ],
+    "instrument": [
+      "musical_keyboard",
+      "saxophone",
+      "trumpet",
+      "guitar",
+      "violin"
+    ],
+    "keyboard": [
+      "musical_keyboard"
+    ],
+    "piano": [
+      "musical_keyboard"
+    ],
+    "drumsticks": [
+      "drum"
+    ],
+    "sax": [
+      "saxophone"
+    ],
+    "clapper board": [
+      "clapper"
+    ],
+    "movie": [
+      "clapper",
+      "movie_camera",
+      "film_projector",
+      "film_strip",
+      "cinema"
+    ],
+    "controller": [
+      "video_game"
+    ],
+    "alien": [
+      "space_invader"
+    ],
+    "alien monster": [
+      "space_invader"
+    ],
+    "bullseye": [
+      "dart"
+    ],
+    "direct hit": [
+      "dart"
+    ],
+    "hit": [
+      "dart"
+    ],
+    "target": [
+      "dart"
+    ],
+    "dice": [
+      "game_die"
+    ],
+    "die": [
+      "game_die"
+    ],
+    "slot": [
+      "slot_machine"
+    ],
+    "automobile": [
+      "red_car",
+      "oncoming_automobile"
+    ],
+    "car": [
+      "red_car",
+      "racing_car",
+      "police_car",
+      "rotating_light",
+      "oncoming_police_car",
+      "oncoming_automobile",
+      "aerial_tramway",
+      "railway_car",
+      "train",
+      "mountain_railway"
+    ],
+    "vehicle": [
+      "taxi",
+      "bus",
+      "ambulance",
+      "tractor",
+      "monorail",
+      "helicopter"
+    ],
+    "recreational": [
+      "blue_car"
+    ],
+    "sport utility": [
+      "blue_car"
+    ],
+    "sport utility vehicle": [
+      "blue_car"
+    ],
+    "bus": [
+      "trolleybus",
+      "minibus",
+      "oncoming_bus",
+      "busstop"
+    ],
+    "tram": [
+      "trolleybus",
+      "railway_car",
+      "train"
+    ],
+    "trolley": [
+      "trolleybus",
+      "shopping_cart"
+    ],
+    "patrol": [
+      "police_car"
+    ],
+    "engine": [
+      "fire_engine",
+      "steam_locomotive"
+    ],
+    "fire": [
+      "fire_engine",
+      "fire_extinguisher"
+    ],
+    "truck": [
+      "fire_engine",
+      "articulated_lorry",
+      "pickup_truck"
+    ],
+    "delivery": [
+      "truck"
+    ],
+    "delivery truck": [
+      "truck"
+    ],
+    "lorry": [
+      "articulated_lorry"
+    ],
+    "semi": [
+      "articulated_lorry"
+    ],
+    "kick": [
+      "kick_scooter",
+      "leg",
+      "foot"
+    ],
+    "scooter": [
+      "kick_scooter",
+      "motor_scooter"
+    ],
+    "motor": [
+      "motor_scooter"
+    ],
+    "beacon": [
+      "rotating_light"
+    ],
+    "light": [
+      "rotating_light",
+      "vertical_traffic_light",
+      "traffic_light",
+      "bulb",
+      "flashlight",
+      "candle",
+      "izakaya_lantern",
+      "feather"
+    ],
+    "revolving": [
+      "rotating_light",
+      "revolving_hearts"
+    ],
+    "police car light": [
+      "rotating_light"
+    ],
+    "oncoming": [
+      "oncoming_police_car",
+      "oncoming_bus",
+      "oncoming_automobile",
+      "oncoming_taxi"
+    ],
+    "taxi": [
+      "oncoming_taxi"
+    ],
+    "aerial": [
+      "aerial_tramway"
+    ],
+    "cable": [
+      "aerial_tramway",
+      "mountain_cableway"
+    ],
+    "gondola": [
+      "aerial_tramway",
+      "mountain_cableway"
+    ],
+    "tramway": [
+      "aerial_tramway"
+    ],
+    "railway": [
+      "suspension_railway",
+      "railway_car",
+      "bullettrain_side",
+      "bullettrain_front",
+      "light_rail",
+      "mountain_railway",
+      "steam_locomotive",
+      "train2",
+      "station",
+      "railway_track"
+    ],
+    "suspension": [
+      "suspension_railway"
+    ],
+    "train": [
+      "railway_car",
+      "bullettrain_side",
+      "bullettrain_front",
+      "steam_locomotive",
+      "train2",
+      "station",
+      "railway_track"
+    ],
+    "trolleybus": [
+      "railway_car",
+      "train",
+      "tram"
+    ],
+    "tram car": [
+      "train"
+    ],
+    "high-speed train": [
+      "bullettrain_side"
+    ],
+    "shinkansen": [
+      "bullettrain_side",
+      "bullettrain_front"
+    ],
+    "speed": [
+      "bullettrain_side",
+      "bullettrain_front"
+    ],
+    "bullet": [
+      "bullettrain_front"
+    ],
+    "bullet train": [
+      "bullettrain_front"
+    ],
+    "locomotive": [
+      "steam_locomotive"
+    ],
+    "steam": [
+      "steam_locomotive"
+    ],
+    "subway": [
+      "metro"
+    ],
+    "aeroplane": [
+      "small_airplane",
+      "airplane",
+      "flight_departure",
+      "flight_arrival"
+    ],
+    "airplane": [
+      "small_airplane",
+      "flight_departure",
+      "flight_arrival"
+    ],
+    "check-in": [
+      "flight_departure"
+    ],
+    "departure": [
+      "flight_departure"
+    ],
+    "departures": [
+      "flight_departure"
+    ],
+    "airplane departure": [
+      "flight_departure"
+    ],
+    "airplane arrival": [
+      "flight_arrival"
+    ],
+    "arrivals": [
+      "flight_arrival"
+    ],
+    "arriving": [
+      "flight_arrival"
+    ],
+    "landing": [
+      "flight_arrival"
+    ],
+    "resort": [
+      "sailboat"
+    ],
+    "sea": [
+      "sailboat"
+    ],
+    "yacht": [
+      "sailboat"
+    ],
+    "motorboat": [
+      "motor_boat"
+    ],
+    "passenger": [
+      "ferry",
+      "passenger_ship",
+      "ship"
+    ],
+    "ship": [
+      "passenger_ship",
+      "anchor",
+      "trident"
+    ],
+    "satellite": [
+      "artificial_satellite"
+    ],
+    "chair": [
+      "seat"
+    ],
+    "barrier": [
+      "construction"
+    ],
+    "diesel": [
+      "fuelpump"
+    ],
+    "fuel": [
+      "fuelpump"
+    ],
+    "gas": [
+      "fuelpump"
+    ],
+    "pump": [
+      "fuelpump"
+    ],
+    "station": [
+      "fuelpump"
+    ],
+    "fuel pump": [
+      "fuelpump"
+    ],
+    "stop": [
+      "busstop",
+      "stop_sign",
+      "stop_button"
+    ],
+    "bus stop": [
+      "busstop"
+    ],
+    "signal": [
+      "vertical_traffic_light",
+      "traffic_light"
+    ],
+    "traffic": [
+      "vertical_traffic_light",
+      "traffic_light",
+      "no_entry",
+      "children_crossing"
+    ],
+    "horizontal traffic light": [
+      "traffic_light"
+    ],
+    "checkered": [
+      "checkered_flag"
+    ],
+    "chequered": [
+      "checkered_flag"
+    ],
+    "chequered flag": [
+      "checkered_flag"
+    ],
+    "amusement park": [
+      "ferris_wheel",
+      "roller_coaster",
+      "playground_slide"
+    ],
+    "ferris": [
+      "ferris_wheel"
+    ],
+    "wheel": [
+      "ferris_wheel",
+      "wheel_of_dharma"
+    ],
+    "coaster": [
+      "roller_coaster"
+    ],
+    "roller": [
+      "roller_coaster",
+      "roller_skate"
+    ],
+    "carousel": [
+      "carousel_horse"
+    ],
+    "fog": [
+      "foggy"
+    ],
+    "Tokyo": [
+      "tokyo_tower"
+    ],
+    "tower": [
+      "tokyo_tower"
+    ],
+    "Tokyo tower": [
+      "tokyo_tower"
+    ],
+    "building": [
+      "factory",
+      "office",
+      "bank",
+      "hotel",
+      "school"
+    ],
+    "ceremony": [
+      "rice_scene"
+    ],
+    "moon viewing ceremony": [
+      "rice_scene"
+    ],
+    "snow-capped mountain": [
+      "mountain_snow"
+    ],
+    "fuji": [
+      "mount_fuji"
+    ],
+    "eruption": [
+      "volcano"
+    ],
+    "Japan": [
+      "japan"
+    ],
+    "map": [
+      "japan",
+      "world_map"
+    ],
+    "map of Japan": [
+      "japan"
+    ],
+    "camping": [
+      "tent",
+      "hiking_boot"
+    ],
+    "park": [
+      "national_park"
+    ],
+    "highway": [
+      "motorway"
+    ],
+    "road": [
+      "motorway"
+    ],
+    "morning": [
+      "sunrise",
+      "sunrise_over_mountains"
+    ],
+    "sunrise": [
+      "sunrise_over_mountains"
+    ],
+    "beach": [
+      "beach_umbrella"
+    ],
+    "beach with umbrella": [
+      "beach_umbrella"
+    ],
+    "desert": [
+      "desert_island"
+    ],
+    "island": [
+      "desert_island"
+    ],
+    "dusk": [
+      "city_sunrise",
+      "city_sunset"
+    ],
+    "sunset": [
+      "city_sunrise",
+      "city_sunset"
+    ],
+    "city": [
+      "city_sunset",
+      "cityscape"
+    ],
+    "cityscape at dusk": [
+      "city_sunset"
+    ],
+    "evening": [
+      "city_sunset"
+    ],
+    "landscape": [
+      "city_sunset"
+    ],
+    "night": [
+      "night_with_stars",
+      "bridge_at_night"
+    ],
+    "bridge": [
+      "bridge_at_night"
+    ],
+    "shooting": [
+      "stars"
+    ],
+    "shooting star": [
+      "stars"
+    ],
+    "fireworks": [
+      "sparkler",
+      "firecracker"
+    ],
+    "castle": [
+      "european_castle",
+      "japanese_castle"
+    ],
+    "European": [
+      "european_castle",
+      "european_post_office"
+    ],
+    "Japanese castle": [
+      "japanese_castle"
+    ],
+    "liberty": [
+      "statue_of_liberty"
+    ],
+    "statue": [
+      "statue_of_liberty",
+      "moyai"
+    ],
+    "Statue of Liberty": [
+      "statue_of_liberty"
+    ],
+    "home": [
+      "house",
+      "house_with_garden"
+    ],
+    "garden": [
+      "house_with_garden"
+    ],
+    "house": [
+      "house_with_garden",
+      "derelict_house",
+      "potted_plant",
+      "hut"
+    ],
+    "derelict": [
+      "derelict_house"
+    ],
+    "office building": [
+      "office"
+    ],
+    "department": [
+      "department_store"
+    ],
+    "store": [
+      "department_store",
+      "convenience_store",
+      "jar"
+    ],
+    "Japanese post office": [
+      "post_office"
+    ],
+    "post": [
+      "post_office",
+      "european_post_office",
+      "postal_horn",
+      "triangular_flag_on_post"
+    ],
+    "post office": [
+      "european_post_office"
+    ],
+    "medicine": [
+      "hospital",
+      "pill",
+      "syringe",
+      "stethoscope",
+      "drop_of_blood",
+      "medical_symbol"
+    ],
+    "convenience": [
+      "convenience_store"
+    ],
+    "hotel": [
+      "love_hotel",
+      "couch_and_lamp",
+      "sleeping_bed",
+      "bed",
+      "bellhop_bell",
+      "shopping"
+    ],
+    "chapel": [
+      "wedding"
+    ],
+    "romance": [
+      "wedding"
+    ],
+    "classical": [
+      "classical_building"
+    ],
+    "Christian": [
+      "church",
+      "latin_cross",
+      "orthodox_cross"
+    ],
+    "religion": [
+      "church",
+      "mosque",
+      "synagogue",
+      "kaaba",
+      "shinto_shrine",
+      "prayer_beads",
+      "latin_cross",
+      "star_and_crescent",
+      "om",
+      "wheel_of_dharma",
+      "star_of_david",
+      "menorah",
+      "yin_yang",
+      "orthodox_cross",
+      "place_of_worship"
+    ],
+    "islam": [
+      "mosque",
+      "kaaba",
+      "star_and_crescent"
+    ],
+    "Muslim": [
+      "mosque",
+      "kaaba",
+      "star_and_crescent"
+    ],
+    "Jew": [
+      "synagogue",
+      "star_of_david"
+    ],
+    "Jewish": [
+      "synagogue",
+      "star_of_david"
+    ],
+    "temple": [
+      "synagogue",
+      "hindu_temple"
+    ],
+    "shinto": [
+      "shinto_shrine"
+    ],
+    "shrine": [
+      "shinto_shrine"
+    ],
+    "clock": [
+      "watch",
+      "stopwatch",
+      "timer_clock",
+      "alarm_clock",
+      "mantelpiece_clock",
+      "clock1",
+      "clock2",
+      "clock3",
+      "clock4",
+      "clock5",
+      "clock6",
+      "clock7",
+      "clock8",
+      "clock9",
+      "clock10",
+      "clock11",
+      "clock12",
+      "clock130",
+      "clock230",
+      "clock330",
+      "clock430",
+      "clock530",
+      "clock630",
+      "clock730",
+      "clock830",
+      "clock930",
+      "clock1030",
+      "clock1130",
+      "clock1230"
+    ],
+    "cell": [
+      "iphone",
+      "calling",
+      "mobile_phone_off",
+      "vibration_mode",
+      "no_mobile_phones",
+      "signal_strength"
+    ],
+    "mobile": [
+      "iphone",
+      "calling",
+      "mobile_phone_off",
+      "vibration_mode",
+      "no_mobile_phones",
+      "signal_strength"
+    ],
+    "telephone": [
+      "iphone",
+      "telephone_receiver",
+      "phone",
+      "mobile_phone_off",
+      "vibration_mode"
+    ],
+    "mobile phone": [
+      "iphone"
+    ],
+    "mobile phone with arrow": [
+      "calling"
+    ],
+    "receive": [
+      "calling",
+      "incoming_envelope",
+      "inbox_tray"
+    ],
+    "laptop": [
+      "computer"
+    ],
+    "pc": [
+      "computer"
+    ],
+    "personal": [
+      "computer"
+    ],
+    "computer": [
+      "keyboard",
+      "desktop_computer",
+      "printer",
+      "computer_mouse",
+      "trackball",
+      "minidisc",
+      "floppy_disk",
+      "cd",
+      "dvd"
+    ],
+    "desktop": [
+      "desktop_computer"
+    ],
+    "video game": [
+      "joystick"
+    ],
+    "compress": [
+      "clamp"
+    ],
+    "vice": [
+      "clamp"
+    ],
+    "disk": [
+      "minidisc",
+      "floppy_disk",
+      "cd",
+      "dvd"
+    ],
+    "minidisk": [
+      "minidisc"
+    ],
+    "optical": [
+      "minidisc",
+      "cd",
+      "dvd"
+    ],
+    "computer disk": [
+      "minidisc"
+    ],
+    "floppy": [
+      "floppy_disk"
+    ],
+    "CD": [
+      "cd"
+    ],
+    "optical disk": [
+      "cd"
+    ],
+    "Blu-ray": [
+      "dvd"
+    ],
+    "DVD": [
+      "dvd"
+    ],
+    "tape": [
+      "vhs"
+    ],
+    "video": [
+      "vhs",
+      "camera",
+      "camera_flash",
+      "video_camera",
+      "film_projector",
+      "tv",
+      "radio"
+    ],
+    "videocassette": [
+      "vhs"
+    ],
+    "camera with flash": [
+      "camera_flash"
+    ],
+    "flash": [
+      "camera_flash"
+    ],
+    "cinema": [
+      "movie_camera",
+      "film_projector",
+      "film_strip"
+    ],
+    "film": [
+      "film_projector",
+      "film_strip",
+      "cinema"
+    ],
+    "projector": [
+      "film_projector"
+    ],
+    "frames": [
+      "film_strip"
+    ],
+    "film frames": [
+      "film_strip"
+    ],
+    "receiver": [
+      "telephone_receiver"
+    ],
+    "fax machine": [
+      "fax"
+    ],
+    "television": [
+      "tv"
+    ],
+    "microphone": [
+      "studio_microphone"
+    ],
+    "studio": [
+      "studio_microphone"
+    ],
+    "level": [
+      "level_slider"
+    ],
+    "slider": [
+      "level_slider"
+    ],
+    "control": [
+      "control_knobs",
+      "passport_control"
+    ],
+    "knobs": [
+      "control_knobs"
+    ],
+    "timer": [
+      "timer_clock",
+      "hourglass_flowing_sand",
+      "hourglass"
+    ],
+    "alarm": [
+      "alarm_clock"
+    ],
+    "hourglass": [
+      "hourglass_flowing_sand"
+    ],
+    "hourglass not done": [
+      "hourglass_flowing_sand"
+    ],
+    "sand": [
+      "hourglass_flowing_sand",
+      "hourglass"
+    ],
+    "hourglass done": [
+      "hourglass"
+    ],
+    "antenna": [
+      "satellite",
+      "signal_strength"
+    ],
+    "dish": [
+      "satellite"
+    ],
+    "satellite antenna": [
+      "satellite"
+    ],
+    "electricity": [
+      "electric_plug"
+    ],
+    "plug": [
+      "electric_plug"
+    ],
+    "idea": [
+      "bulb"
+    ],
+    "light bulb": [
+      "bulb"
+    ],
+    "torch": [
+      "flashlight"
+    ],
+    "drum": [
+      "oil_drum",
+      "long_drum"
+    ],
+    "oil": [
+      "oil_drum",
+      "diya_lamp"
+    ],
+    "banknote": [
+      "money_with_wings",
+      "dollar",
+      "yen",
+      "euro",
+      "pound"
+    ],
+    "bill": [
+      "money_with_wings",
+      "dollar",
+      "yen",
+      "euro",
+      "pound"
+    ],
+    "wings": [
+      "money_with_wings"
+    ],
+    "currency": [
+      "dollar",
+      "yen",
+      "euro",
+      "pound",
+      "heavy_dollar_sign",
+      "currency_exchange"
+    ],
+    "note": [
+      "dollar",
+      "yen",
+      "euro",
+      "pound",
+      "spiral_notepad",
+      "musical_note",
+      "notes"
+    ],
+    "dollar banknote": [
+      "dollar"
+    ],
+    "yen banknote": [
+      "yen"
+    ],
+    "euro banknote": [
+      "euro"
+    ],
+    "pound banknote": [
+      "pound"
+    ],
+    "dollar": [
+      "moneybag",
+      "heavy_dollar_sign"
+    ],
+    "money bag": [
+      "moneybag"
+    ],
+    "card": [
+      "credit_card",
+      "card_index",
+      "card_file_box",
+      "card_index_dividers",
+      "black_joker",
+      "spades",
+      "clubs",
+      "hearts",
+      "diamonds",
+      "flower_playing_cards"
+    ],
+    "credit": [
+      "credit_card"
+    ],
+    "gem stone": [
+      "gem"
+    ],
+    "jewel": [
+      "gem"
+    ],
+    "balance": [
+      "balance_scale",
+      "libra",
+      "person_juggling"
+    ],
+    "justice": [
+      "balance_scale",
+      "libra"
+    ],
+    "Libra": [
+      "balance_scale",
+      "libra"
+    ],
+    "scale": [
+      "balance_scale"
+    ],
+    "spanner": [
+      "wrench",
+      "hammer_and_wrench"
+    ],
+    "hammer": [
+      "hammer_and_pick",
+      "hammer_and_wrench"
+    ],
+    "pick": [
+      "hammer_and_pick"
+    ],
+    "wrench": [
+      "hammer_and_wrench"
+    ],
+    "mining": [
+      "pick"
+    ],
+    "bolt": [
+      "nut_and_bolt"
+    ],
+    "cog": [
+      "gear"
+    ],
+    "cogwheel": [
+      "gear"
+    ],
+    "chain": [
+      "chains"
+    ],
+    "handgun": [
+      "gun"
+    ],
+    "pistol": [
+      "gun"
+    ],
+    "revolver": [
+      "gun"
+    ],
+    "weapon": [
+      "gun",
+      "hocho",
+      "dagger",
+      "crossed_swords",
+      "shield"
+    ],
+    "water pistol": [
+      "gun"
+    ],
+    "kitchen knife": [
+      "hocho"
+    ],
+    "crossed": [
+      "crossed_swords",
+      "crossed_flags",
+      "twisted_rightwards_arrows"
+    ],
+    "swords": [
+      "crossed_swords"
+    ],
+    "cigarette": [
+      "smoking"
+    ],
+    "crossbones": [
+      "skull_and_crossbones"
+    ],
+    "skull": [
+      "skull_and_crossbones"
+    ],
+    "ashes": [
+      "funeral_urn"
+    ],
+    "funeral": [
+      "funeral_urn"
+    ],
+    "urn": [
+      "funeral_urn"
+    ],
+    "Aquarius": [
+      "amphora",
+      "aquarius"
+    ],
+    "jug": [
+      "amphora"
+    ],
+    "crystal": [
+      "crystal_ball"
+    ],
+    "fortune": [
+      "crystal_ball",
+      "six_pointed_star"
+    ],
+    "beads": [
+      "prayer_beads"
+    ],
+    "necklace": [
+      "prayer_beads"
+    ],
+    "prayer": [
+      "prayer_beads",
+      "palms_up_together"
+    ],
+    "haircut": [
+      "barber",
+      "person_getting_haircut"
+    ],
+    "barber pole": [
+      "barber"
+    ],
+    "chemistry": [
+      "alembic",
+      "test_tube"
+    ],
+    "science": [
+      "telescope",
+      "microscope",
+      "test_tube"
+    ],
+    "needle": [
+      "syringe",
+      "thread",
+      "sewing_needle"
+    ],
+    "mark": [
+      "bookmark",
+      "bookmark_tabs",
+      "heavy_heart_exclamation",
+      "x",
+      "exclamation",
+      "grey_exclamation",
+      "question",
+      "grey_question",
+      "bangbang",
+      "interrobang",
+      "part_alternation_mark",
+      "negative_squared_cross_mark",
+      "white_check_mark",
+      "up",
+      "heavy_check_mark",
+      "tm",
+      "on"
+    ],
+    "bath": [
+      "bathtub"
+    ],
+    "lock": [
+      "key",
+      "old_key",
+      "closed_lock_with_key",
+      "unlock",
+      "lock_with_ink_pen"
+    ],
+    "password": [
+      "key"
+    ],
+    "clue": [
+      "old_key",
+      "jigsaw"
+    ],
+    "key": [
+      "old_key",
+      "closed_lock_with_key"
+    ],
+    "couch": [
+      "couch_and_lamp"
+    ],
+    "lamp": [
+      "couch_and_lamp",
+      "diya_lamp"
+    ],
+    "person in bed": [
+      "sleeping_bed"
+    ],
+    "bell": [
+      "bellhop_bell",
+      "wind_chime",
+      "no_bell"
+    ],
+    "bellhop": [
+      "bellhop_bell"
+    ],
+    "frame": [
+      "framed_picture",
+      "window"
+    ],
+    "picture": [
+      "framed_picture"
+    ],
+    "umbrella on ground": [
+      "parasol_on_ground"
+    ],
+    "moai": [
+      "moyai"
+    ],
+    "shopping bags": [
+      "shopping"
+    ],
+    "cart": [
+      "shopping_cart"
+    ],
+    "shopping": [
+      "shopping_cart"
+    ],
+    "carp": [
+      "flags"
+    ],
+    "streamer": [
+      "flags"
+    ],
+    "carp streamer": [
+      "flags"
+    ],
+    "present": [
+      "gift"
+    ],
+    "wrapped": [
+      "gift",
+      "tamale"
+    ],
+    "wrapped gift": [
+      "gift"
+    ],
+    "confetti": [
+      "confetti_ball"
+    ],
+    "party": [
+      "tada",
+      "partying_face",
+      "piñata",
+      "mirror_ball"
+    ],
+    "popper": [
+      "tada"
+    ],
+    "party popper": [
+      "tada"
+    ],
+    "doll": [
+      "dolls",
+      "nesting_dolls"
+    ],
+    "festival": [
+      "dolls",
+      "moon_cake"
+    ],
+    "Japanese dolls": [
+      "dolls"
+    ],
+    "chime": [
+      "wind_chime"
+    ],
+    "red paper lantern": [
+      "izakaya_lantern"
+    ],
+    "envelope": [
+      "email",
+      "envelope_with_arrow",
+      "incoming_envelope"
+    ],
+    "letter": [
+      "email",
+      "incoming_envelope",
+      "e-mail",
+      "love_letter",
+      "inbox_tray",
+      "outbox_tray"
+    ],
+    "e-mail": [
+      "envelope_with_arrow",
+      "incoming_envelope"
+    ],
+    "email": [
+      "envelope_with_arrow",
+      "incoming_envelope",
+      "e-mail"
+    ],
+    "outgoing": [
+      "envelope_with_arrow"
+    ],
+    "incoming": [
+      "incoming_envelope"
+    ],
+    "mail": [
+      "e-mail",
+      "love_letter",
+      "postbox",
+      "mailbox_closed",
+      "mailbox",
+      "mailbox_with_mail",
+      "mailbox_with_no_mail",
+      "inbox_tray",
+      "outbox_tray"
+    ],
+    "mailbox": [
+      "postbox",
+      "mailbox_closed",
+      "mailbox_with_mail",
+      "mailbox_with_no_mail"
+    ],
+    "closed mailbox with lowered flag": [
+      "mailbox_closed"
+    ],
+    "lowered": [
+      "mailbox_closed",
+      "mailbox_with_no_mail"
+    ],
+    "postbox": [
+      "mailbox_closed",
+      "mailbox",
+      "mailbox_with_mail",
+      "mailbox_with_no_mail"
+    ],
+    "closed mailbox with raised flag": [
+      "mailbox"
+    ],
+    "open mailbox with raised flag": [
+      "mailbox_with_mail"
+    ],
+    "open mailbox with lowered flag": [
+      "mailbox_with_no_mail"
+    ],
+    "parcel": [
+      "package"
+    ],
+    "horn": [
+      "postal_horn",
+      "partying_face"
+    ],
+    "postal": [
+      "postal_horn"
+    ],
+    "inbox": [
+      "inbox_tray"
+    ],
+    "tray": [
+      "inbox_tray",
+      "outbox_tray"
+    ],
+    "outbox": [
+      "outbox_tray"
+    ],
+    "sent": [
+      "outbox_tray"
+    ],
+    "paper": [
+      "scroll",
+      "newspaper_roll",
+      "newspaper"
+    ],
+    "curl": [
+      "page_with_curl",
+      "loop",
+      "curly_loop"
+    ],
+    "document": [
+      "page_with_curl",
+      "page_facing_up"
+    ],
+    "page": [
+      "page_with_curl",
+      "page_facing_up"
+    ],
+    "bookmark": [
+      "bookmark_tabs"
+    ],
+    "marker": [
+      "bookmark_tabs"
+    ],
+    "tabs": [
+      "bookmark_tabs"
+    ],
+    "chart": [
+      "bar_chart",
+      "chart_with_upwards_trend",
+      "chart_with_downwards_trend"
+    ],
+    "graph": [
+      "bar_chart",
+      "chart_with_upwards_trend",
+      "chart_with_downwards_trend",
+      "chart"
+    ],
+    "chart increasing": [
+      "chart_with_upwards_trend"
+    ],
+    "growth": [
+      "chart_with_upwards_trend",
+      "chart"
+    ],
+    "trend": [
+      "chart_with_upwards_trend",
+      "chart_with_downwards_trend"
+    ],
+    "upward": [
+      "chart_with_upwards_trend"
+    ],
+    "chart decreasing": [
+      "chart_with_downwards_trend"
+    ],
+    "calendar": [
+      "date",
+      "spiral_calendar"
+    ],
+    "tear-off calendar": [
+      "calendar"
+    ],
+    "pad": [
+      "spiral_calendar",
+      "spiral_notepad"
+    ],
+    "rolodex": [
+      "card_index"
+    ],
+    "file": [
+      "card_file_box",
+      "file_cabinet",
+      "file_folder",
+      "open_file_folder"
+    ],
+    "ballot": [
+      "ballot_box"
+    ],
+    "ballot box with ballot": [
+      "ballot_box"
+    ],
+    "cabinet": [
+      "file_cabinet"
+    ],
+    "filing": [
+      "file_cabinet"
+    ],
+    "folder": [
+      "file_folder",
+      "open_file_folder"
+    ],
+    "dividers": [
+      "card_index_dividers"
+    ],
+    "news": [
+      "newspaper_roll",
+      "newspaper"
+    ],
+    "newspaper": [
+      "newspaper_roll"
+    ],
+    "rolled": [
+      "newspaper_roll"
+    ],
+    "rolled-up newspaper": [
+      "newspaper_roll"
+    ],
+    "book": [
+      "closed_book",
+      "green_book",
+      "blue_book",
+      "orange_book",
+      "notebook_with_decorative_cover",
+      "books",
+      "open_book"
+    ],
+    "cover": [
+      "notebook_with_decorative_cover"
+    ],
+    "decorated": [
+      "notebook_with_decorative_cover"
+    ],
+    "notebook": [
+      "notebook_with_decorative_cover",
+      "ledger"
+    ],
+    "link": [
+      "paperclips"
+    ],
+    "linked paperclips": [
+      "paperclips"
+    ],
+    "paperclip": [
+      "paperclips"
+    ],
+    "cutting": [
+      "scissors"
+    ],
+    "ruler": [
+      "triangular_ruler",
+      "straight_ruler"
+    ],
+    "set": [
+      "triangular_ruler"
+    ],
+    "triangle": [
+      "triangular_ruler",
+      "arrow_forward",
+      "next_track_button",
+      "play_or_pause_button",
+      "previous_track_button",
+      "arrow_backward"
+    ],
+    "straight edge": [
+      "straight_ruler"
+    ],
+    "pin": [
+      "pushpin",
+      "round_pushpin"
+    ],
+    "pushpin": [
+      "round_pushpin"
+    ],
+    "triangular flag": [
+      "triangular_flag_on_post"
+    ],
+    "locked with key": [
+      "closed_lock_with_key"
+    ],
+    "secure": [
+      "closed_lock_with_key"
+    ],
+    "locked": [
+      "lock"
+    ],
+    "unlocked": [
+      "unlock"
+    ],
+    "ink": [
+      "lock_with_ink_pen"
+    ],
+    "locked with pen": [
+      "lock_with_ink_pen"
+    ],
+    "nib": [
+      "lock_with_ink_pen",
+      "black_nib"
+    ],
+    "pen": [
+      "lock_with_ink_pen",
+      "fountain_pen",
+      "black_nib"
+    ],
+    "privacy": [
+      "lock_with_ink_pen"
+    ],
+    "ballpoint": [
+      "pen"
+    ],
+    "fountain": [
+      "fountain_pen"
+    ],
+    "pencil": [
+      "memo",
+      "pencil2"
+    ],
+    "magnifying": [
+      "mag",
+      "mag_right"
+    ],
+    "magnifying glass tilted left": [
+      "mag"
+    ],
+    "search": [
+      "mag",
+      "mag_right"
+    ],
+    "magnifying glass tilted right": [
+      "mag_right"
+    ],
+    "red heart": [
+      "heart"
+    ],
+    "yellow": [
+      "yellow_heart",
+      "yellow_square",
+      "yellow_circle"
+    ],
+    "purple": [
+      "purple_heart",
+      "purple_square",
+      "purple_circle"
+    ],
+    "black": [
+      "black_heart",
+      "black_cat"
+    ],
+    "wicked": [
+      "black_heart"
+    ],
+    "break": [
+      "broken_heart"
+    ],
+    "broken": [
+      "broken_heart"
+    ],
+    "exclamation": [
+      "heavy_heart_exclamation",
+      "grey_exclamation",
+      "bangbang",
+      "interrobang"
+    ],
+    "heart exclamation": [
+      "heavy_heart_exclamation"
+    ],
+    "punctuation": [
+      "heavy_heart_exclamation",
+      "exclamation",
+      "grey_exclamation",
+      "question",
+      "grey_question",
+      "interrobang",
+      "wavy_dash"
+    ],
+    "beating": [
+      "heartbeat"
+    ],
+    "beating heart": [
+      "heartbeat"
+    ],
+    "pulsating": [
+      "heartbeat"
+    ],
+    "excited": [
+      "heartpulse",
+      "sparkling_heart"
+    ],
+    "growing": [
+      "heartpulse"
+    ],
+    "growing heart": [
+      "heartpulse"
+    ],
+    "nervous": [
+      "heartpulse",
+      "biting_lip"
+    ],
+    "pulse": [
+      "heartpulse",
+      "anatomical_heart"
+    ],
+    "heart with arrow": [
+      "cupid"
+    ],
+    "heart with ribbon": [
+      "gift_heart"
+    ],
+    "valentine": [
+      "gift_heart"
+    ],
+    "Hindu": [
+      "om"
+    ],
+    "Buddhist": [
+      "wheel_of_dharma"
+    ],
+    "dharma": [
+      "wheel_of_dharma"
+    ],
+    "David": [
+      "star_of_david"
+    ],
+    "star of David": [
+      "star_of_david"
+    ],
+    "dotted six-pointed star": [
+      "six_pointed_star"
+    ],
+    "candelabrum": [
+      "menorah"
+    ],
+    "candlestick": [
+      "menorah"
+    ],
+    "tao": [
+      "yin_yang"
+    ],
+    "taoist": [
+      "yin_yang"
+    ],
+    "yang": [
+      "yin_yang"
+    ],
+    "yin": [
+      "yin_yang"
+    ],
+    "worship": [
+      "place_of_worship"
+    ],
+    "snake": [
+      "ophiuchus"
+    ],
+    "ram": [
+      "aries"
+    ],
+    "ox": [
+      "taurus"
+    ],
+    "crab": [
+      "cancer"
+    ],
+    "lion": [
+      "leo"
+    ],
+    "scales": [
+      "libra"
+    ],
+    "scorpion": [
+      "scorpius"
+    ],
+    "goat": [
+      "capricorn"
+    ],
+    "ID": [
+      "id",
+      "identification_card"
+    ],
+    "ID button": [
+      "id"
+    ],
+    "identity": [
+      "id"
+    ],
+    "atheist": [
+      "atom_symbol"
+    ],
+    "atom": [
+      "atom_symbol"
+    ],
+    "“vacancy”": [
+      "u7a7a"
+    ],
+    "ideograph": [
+      "u7a7a",
+      "u5272",
+      "u6709",
+      "u7121",
+      "u7533",
+      "u55b6",
+      "u6708",
+      "accept",
+      "ideograph_advantage",
+      "secret",
+      "congratulations",
+      "u5408",
+      "u6e80",
+      "u7981",
+      "u6307"
+    ],
+    "Japanese “vacancy” button": [
+      "u7a7a"
+    ],
+    "空": [
+      "u7a7a"
+    ],
+    "“discount”": [
+      "u5272"
+    ],
+    "Japanese “discount” button": [
+      "u5272"
+    ],
+    "割": [
+      "u5272"
+    ],
+    "sign": [
+      "radioactive",
+      "biohazard",
+      "stop_sign",
+      "heavy_plus_sign",
+      "heavy_minus_sign",
+      "heavy_division_sign",
+      "heavy_multiplication_x",
+      "placard"
+    ],
+    "off": [
+      "mobile_phone_off"
+    ],
+    "mode": [
+      "vibration_mode"
+    ],
+    "vibration": [
+      "vibration_mode"
+    ],
+    "“not free of charge”": [
+      "u6709"
+    ],
+    "Japanese “not free of charge” button": [
+      "u6709"
+    ],
+    "有": [
+      "u6709"
+    ],
+    "“free of charge”": [
+      "u7121"
+    ],
+    "Japanese “free of charge” button": [
+      "u7121"
+    ],
+    "無": [
+      "u7121"
+    ],
+    "“application”": [
+      "u7533"
+    ],
+    "Japanese “application” button": [
+      "u7533"
+    ],
+    "申": [
+      "u7533"
+    ],
+    "“open for business”": [
+      "u55b6"
+    ],
+    "Japanese “open for business” button": [
+      "u55b6"
+    ],
+    "営": [
+      "u55b6"
+    ],
+    "“monthly amount”": [
+      "u6708"
+    ],
+    "Japanese “monthly amount” button": [
+      "u6708"
+    ],
+    "月": [
+      "u6708"
+    ],
+    "eight-pointed star": [
+      "eight_pointed_black_star"
+    ],
+    "versus": [
+      "vs"
+    ],
+    "VS": [
+      "vs"
+    ],
+    "VS button": [
+      "vs"
+    ],
+    "“acceptable”": [
+      "accept"
+    ],
+    "Japanese “acceptable” button": [
+      "accept"
+    ],
+    "可": [
+      "accept"
+    ],
+    "“bargain”": [
+      "ideograph_advantage"
+    ],
+    "Japanese “bargain” button": [
+      "ideograph_advantage"
+    ],
+    "得": [
+      "ideograph_advantage"
+    ],
+    "“secret”": [
+      "secret"
+    ],
+    "Japanese “secret” button": [
+      "secret"
+    ],
+    "秘": [
+      "secret"
+    ],
+    "“congratulations”": [
+      "congratulations"
+    ],
+    "Japanese “congratulations” button": [
+      "congratulations"
+    ],
+    "祝": [
+      "congratulations"
+    ],
+    "“passing grade”": [
+      "u5408"
+    ],
+    "Japanese “passing grade” button": [
+      "u5408"
+    ],
+    "合": [
+      "u5408"
+    ],
+    "“no vacancy”": [
+      "u6e80"
+    ],
+    "Japanese “no vacancy” button": [
+      "u6e80"
+    ],
+    "満": [
+      "u6e80"
+    ],
+    "“prohibited”": [
+      "u7981"
+    ],
+    "Japanese “prohibited” button": [
+      "u7981"
+    ],
+    "禁": [
+      "u7981"
+    ],
+    "A": [
+      "a"
+    ],
+    "A button (blood type)": [
+      "a"
+    ],
+    "blood type": [
+      "a",
+      "b",
+      "ab",
+      "o2"
+    ],
+    "B": [
+      "b"
+    ],
+    "B button (blood type)": [
+      "b"
+    ],
+    "AB": [
+      "ab"
+    ],
+    "AB button (blood type)": [
+      "ab"
+    ],
+    "CL": [
+      "cl"
+    ],
+    "CL button": [
+      "cl"
+    ],
+    "O": [
+      "o2"
+    ],
+    "O button (blood type)": [
+      "o2"
+    ],
+    "help": [
+      "sos",
+      "person_tipping_hand"
+    ],
+    "SOS": [
+      "sos"
+    ],
+    "SOS button": [
+      "sos"
+    ],
+    "entry": [
+      "no_entry",
+      "no_entry_sign"
+    ],
+    "no": [
+      "no_entry",
+      "no_entry_sign",
+      "no_pedestrians",
+      "do_not_litter",
+      "no_bicycles",
+      "no_mobile_phones",
+      "no_smoking"
+    ],
+    "not": [
+      "no_entry",
+      "no_entry_sign",
+      "no_pedestrians",
+      "do_not_litter",
+      "no_smoking"
+    ],
+    "prohibited": [
+      "no_entry",
+      "no_entry_sign",
+      "no_pedestrians",
+      "do_not_litter",
+      "no_bicycles",
+      "underage",
+      "no_smoking",
+      "person_gesturing_no"
+    ],
+    "badge": [
+      "name_badge"
+    ],
+    "name": [
+      "name_badge"
+    ],
+    "×": [
+      "x",
+      "negative_squared_cross_mark",
+      "heavy_multiplication_x"
+    ],
+    "cancel": [
+      "x",
+      "heavy_multiplication_x"
+    ],
+    "multiplication": [
+      "x",
+      "heavy_multiplication_x"
+    ],
+    "multiply": [
+      "x",
+      "heavy_multiplication_x"
+    ],
+    "cross mark": [
+      "x"
+    ],
+    "circle": [
+      "o",
+      "m",
+      "record_button",
+      "white_circle",
+      "black_circle",
+      "red_circle",
+      "large_blue_circle",
+      "brown_circle",
+      "purple_circle",
+      "green_circle",
+      "yellow_circle",
+      "orange_circle",
+      "wheel"
+    ],
+    "hollow red circle": [
+      "o"
+    ],
+    "large": [
+      "o",
+      "crazy_face",
+      "mammoth",
+      "dodo"
+    ],
+    "octagonal": [
+      "stop_sign"
+    ],
+    "anger symbol": [
+      "anger"
+    ],
+    "springs": [
+      "hotsprings"
+    ],
+    "hot springs": [
+      "hotsprings"
+    ],
+    "pedestrian": [
+      "no_pedestrians",
+      "children_crossing"
+    ],
+    "litter": [
+      "do_not_litter",
+      "put_litter_in_its_place"
+    ],
+    "no littering": [
+      "do_not_litter"
+    ],
+    "non-drinking": [
+      "non-potable_water"
+    ],
+    "non-potable": [
+      "non-potable_water"
+    ],
+    "18": [
+      "underage"
+    ],
+    "age restriction": [
+      "underage"
+    ],
+    "eighteen": [
+      "underage"
+    ],
+    "no one under eighteen": [
+      "underage"
+    ],
+    "!": [
+      "exclamation",
+      "grey_exclamation",
+      "bangbang",
+      "interrobang"
+    ],
+    "red exclamation mark": [
+      "exclamation"
+    ],
+    "outlined": [
+      "grey_exclamation",
+      "grey_question",
+      "white_square_button",
+      "smiling_face"
+    ],
+    "white exclamation mark": [
+      "grey_exclamation"
+    ],
+    "?": [
+      "question",
+      "grey_question",
+      "interrobang"
+    ],
+    "red question mark": [
+      "question"
+    ],
+    "question": [
+      "grey_question",
+      "interrobang"
+    ],
+    "white question mark": [
+      "grey_question"
+    ],
+    "!!": [
+      "bangbang"
+    ],
+    "double exclamation mark": [
+      "bangbang"
+    ],
+    "!?": [
+      "interrobang"
+    ],
+    "exclamation question mark": [
+      "interrobang"
+    ],
+    "hundred": [
+      "100"
+    ],
+    "hundred points": [
+      "100"
+    ],
+    "brightness": [
+      "low_brightness",
+      "high_brightness"
+    ],
+    "dim": [
+      "low_brightness"
+    ],
+    "dim button": [
+      "low_brightness"
+    ],
+    "low": [
+      "low_brightness"
+    ],
+    "bright button": [
+      "high_brightness"
+    ],
+    "anchor": [
+      "trident"
+    ],
+    "emblem": [
+      "trident"
+    ],
+    "trident emblem": [
+      "trident"
+    ],
+    "fleur-de-lis": [
+      "fleur_de_lis"
+    ],
+    "part": [
+      "part_alternation_mark"
+    ],
+    "child": [
+      "children_crossing"
+    ],
+    "crossing": [
+      "children_crossing"
+    ],
+    "chevron": [
+      "beginner"
+    ],
+    "Japanese symbol for beginner": [
+      "beginner"
+    ],
+    "recycling symbol": [
+      "recycle"
+    ],
+    "“reserved”": [
+      "u6307"
+    ],
+    "Japanese “reserved” button": [
+      "u6307"
+    ],
+    "指": [
+      "u6307"
+    ],
+    "chart increasing with yen": [
+      "chart"
+    ],
+    "yen": [
+      "chart"
+    ],
+    "asterisk": [
+      "eight_spoked_asterisk"
+    ],
+    "eight-spoked asterisk": [
+      "eight_spoked_asterisk"
+    ],
+    "cross mark button": [
+      "negative_squared_cross_mark"
+    ],
+    "square": [
+      "negative_squared_cross_mark",
+      "stop_button",
+      "black_small_square",
+      "white_small_square",
+      "black_large_square",
+      "white_large_square",
+      "black_medium_square",
+      "white_medium_square",
+      "black_medium_small_square",
+      "white_medium_small_square",
+      "black_square_button",
+      "white_square_button",
+      "brown_square",
+      "purple_square",
+      "blue_square",
+      "green_square",
+      "yellow_square",
+      "orange_square",
+      "red_square"
+    ],
+    "x": [
+      "negative_squared_cross_mark",
+      "heavy_multiplication_x"
+    ],
+    "✓": [
+      "white_check_mark",
+      "heavy_check_mark",
+      "ballot_box_with_check"
+    ],
+    "button": [
+      "white_check_mark",
+      "arrow_up_small",
+      "arrow_down_small",
+      "radio_button",
+      "black_square_button",
+      "white_square_button"
+    ],
+    "check": [
+      "white_check_mark",
+      "heavy_check_mark",
+      "ballot_box_with_check"
+    ],
+    "check mark button": [
+      "white_check_mark"
+    ],
+    "diamond with a dot": [
+      "diamond_shape_with_a_dot_inside"
+    ],
+    "geometric": [
+      "diamond_shape_with_a_dot_inside",
+      "radio_button",
+      "white_circle",
+      "black_circle",
+      "red_circle",
+      "large_blue_circle",
+      "small_orange_diamond",
+      "small_blue_diamond",
+      "large_orange_diamond",
+      "large_blue_diamond",
+      "small_red_triangle",
+      "black_small_square",
+      "white_small_square",
+      "black_large_square",
+      "white_large_square",
+      "small_red_triangle_down",
+      "black_medium_square",
+      "white_medium_square",
+      "black_medium_small_square",
+      "white_medium_small_square",
+      "black_square_button",
+      "white_square_button"
+    ],
+    "inside": [
+      "diamond_shape_with_a_dot_inside"
+    ],
+    "dizzy": [
+      "cyclone",
+      "woozy_face",
+      "face_with_spiral_eyes"
+    ],
+    "hurricane": [
+      "cyclone"
+    ],
+    "twister": [
+      "cyclone"
+    ],
+    "typhoon": [
+      "cyclone"
+    ],
+    "double": [
+      "loop",
+      "pause_button",
+      "fast_forward",
+      "rewind",
+      "arrow_double_up",
+      "arrow_double_down"
+    ],
+    "double curly loop": [
+      "loop"
+    ],
+    "meridians": [
+      "globe_with_meridians"
+    ],
+    "circled M": [
+      "m"
+    ],
+    "M": [
+      "m"
+    ],
+    "ATM": [
+      "atm"
+    ],
+    "ATM sign": [
+      "atm"
+    ],
+    "automated": [
+      "atm"
+    ],
+    "bank": [
+      "atm",
+      "currency_exchange"
+    ],
+    "teller": [
+      "atm"
+    ],
+    "“service charge”": [
+      "sa"
+    ],
+    "Japanese “service charge” button": [
+      "sa"
+    ],
+    "katakana": [
+      "sa",
+      "koko"
+    ],
+    "サ": [
+      "sa"
+    ],
+    "passport": [
+      "passport_control"
+    ],
+    "baggage": [
+      "baggage_claim",
+      "left_luggage"
+    ],
+    "claim": [
+      "baggage_claim"
+    ],
+    "locker": [
+      "left_luggage"
+    ],
+    "luggage": [
+      "left_luggage"
+    ],
+    "access": [
+      "wheelchair"
+    ],
+    "wheelchair symbol": [
+      "wheelchair"
+    ],
+    "smoking": [
+      "no_smoking"
+    ],
+    "bathroom": [
+      "wc",
+      "mens",
+      "womens",
+      "restroom",
+      "toothbrush"
+    ],
+    "closet": [
+      "wc"
+    ],
+    "lavatory": [
+      "wc",
+      "mens",
+      "womens",
+      "restroom"
+    ],
+    "restroom": [
+      "wc",
+      "mens",
+      "womens"
+    ],
+    "toilet": [
+      "wc",
+      "mens",
+      "womens",
+      "restroom",
+      "plunger"
+    ],
+    "WC": [
+      "wc",
+      "mens",
+      "womens",
+      "restroom"
+    ],
+    "water closet": [
+      "wc"
+    ],
+    "P": [
+      "parking"
+    ],
+    "P button": [
+      "parking"
+    ],
+    "drinking": [
+      "potable_water"
+    ],
+    "potable": [
+      "potable_water"
+    ],
+    "men’s room": [
+      "mens"
+    ],
+    "women’s room": [
+      "womens"
+    ],
+    "changing": [
+      "baby_symbol"
+    ],
+    "litter bin": [
+      "put_litter_in_its_place"
+    ],
+    "litter in bin sign": [
+      "put_litter_in_its_place"
+    ],
+    "antenna bars": [
+      "signal_strength"
+    ],
+    "“here”": [
+      "koko"
+    ],
+    "Japanese “here” button": [
+      "koko"
+    ],
+    "ココ": [
+      "koko"
+    ],
+    "NG": [
+      "ng"
+    ],
+    "NG button": [
+      "ng"
+    ],
+    "OK button": [
+      "ok"
+    ],
+    "UP": [
+      "up"
+    ],
+    "UP!": [
+      "up"
+    ],
+    "UP! button": [
+      "up"
+    ],
+    "COOL": [
+      "cool"
+    ],
+    "COOL button": [
+      "cool"
+    ],
+    "NEW": [
+      "new"
+    ],
+    "NEW button": [
+      "new"
+    ],
+    "FREE": [
+      "free"
+    ],
+    "FREE button": [
+      "free"
+    ],
+    "input": [
+      "1234",
+      "abc",
+      "abcd",
+      "capital_abcd",
+      "symbols"
+    ],
+    "numbers": [
+      "1234"
+    ],
+    "input numbers": [
+      "1234"
+    ],
+    "play": [
+      "arrow_forward",
+      "play_or_pause_button",
+      "playground_slide"
+    ],
+    "play button": [
+      "arrow_forward"
+    ],
+    "right": [
+      "arrow_forward",
+      "play_or_pause_button",
+      "rightwards_hand"
+    ],
+    "pause": [
+      "pause_button",
+      "play_or_pause_button"
+    ],
+    "vertical": [
+      "pause_button"
+    ],
+    "next scene": [
+      "next_track_button"
+    ],
+    "next track": [
+      "next_track_button"
+    ],
+    "record": [
+      "record_button"
+    ],
+    "last track button": [
+      "previous_track_button"
+    ],
+    "previous scene": [
+      "previous_track_button"
+    ],
+    "previous track": [
+      "previous_track_button"
+    ],
+    "fast": [
+      "fast_forward"
+    ],
+    "fast-forward button": [
+      "fast_forward"
+    ],
+    "forward": [
+      "fast_forward"
+    ],
+    "fast reverse button": [
+      "rewind"
+    ],
+    "shuffle tracks button": [
+      "twisted_rightwards_arrows"
+    ],
+    "clockwise": [
+      "repeat",
+      "repeat_one",
+      "arrows_clockwise"
+    ],
+    "repeat button": [
+      "repeat"
+    ],
+    "once": [
+      "repeat_one"
+    ],
+    "repeat single button": [
+      "repeat_one"
+    ],
+    "left": [
+      "arrow_backward",
+      "leftwards_hand"
+    ],
+    "reverse": [
+      "arrow_backward"
+    ],
+    "reverse button": [
+      "arrow_backward"
+    ],
+    "upwards button": [
+      "arrow_up_small"
+    ],
+    "downwards button": [
+      "arrow_down_small"
+    ],
+    "fast up button": [
+      "arrow_double_up"
+    ],
+    "fast down button": [
+      "arrow_double_down"
+    ],
+    "cardinal": [
+      "arrow_right",
+      "arrow_left",
+      "arrow_up",
+      "arrow_down"
+    ],
+    "direction": [
+      "arrow_right",
+      "arrow_left",
+      "arrow_up",
+      "arrow_down",
+      "arrow_upper_right",
+      "arrow_lower_right",
+      "arrow_lower_left",
+      "arrow_upper_left"
+    ],
+    "east": [
+      "arrow_right"
+    ],
+    "right arrow": [
+      "arrow_right"
+    ],
+    "left arrow": [
+      "arrow_left"
+    ],
+    "west": [
+      "arrow_left"
+    ],
+    "north": [
+      "arrow_up"
+    ],
+    "up arrow": [
+      "arrow_up"
+    ],
+    "south": [
+      "arrow_down"
+    ],
+    "down arrow": [
+      "arrow_down"
+    ],
+    "intercardinal": [
+      "arrow_upper_right",
+      "arrow_lower_right",
+      "arrow_lower_left",
+      "arrow_upper_left"
+    ],
+    "northeast": [
+      "arrow_upper_right"
+    ],
+    "up-right arrow": [
+      "arrow_upper_right"
+    ],
+    "down-right arrow": [
+      "arrow_lower_right"
+    ],
+    "southeast": [
+      "arrow_lower_right"
+    ],
+    "down-left arrow": [
+      "arrow_lower_left"
+    ],
+    "southwest": [
+      "arrow_lower_left"
+    ],
+    "northwest": [
+      "arrow_upper_left"
+    ],
+    "up-left arrow": [
+      "arrow_upper_left"
+    ],
+    "up-down arrow": [
+      "arrow_up_down"
+    ],
+    "left-right arrow": [
+      "left_right_arrow"
+    ],
+    "anticlockwise": [
+      "arrows_counterclockwise"
+    ],
+    "counterclockwise": [
+      "arrows_counterclockwise"
+    ],
+    "counterclockwise arrows button": [
+      "arrows_counterclockwise"
+    ],
+    "withershins": [
+      "arrows_counterclockwise"
+    ],
+    "left arrow curving right": [
+      "arrow_right_hook"
+    ],
+    "right arrow curving left": [
+      "leftwards_arrow_with_hook"
+    ],
+    "right arrow curving up": [
+      "arrow_heading_up"
+    ],
+    "right arrow curving down": [
+      "arrow_heading_down"
+    ],
+    "i": [
+      "information_source"
+    ],
+    "information": [
+      "information_source",
+      "person_tipping_hand"
+    ],
+    "alphabet": [
+      "abc"
+    ],
+    "latin": [
+      "abc",
+      "abcd",
+      "capital_abcd"
+    ],
+    "letters": [
+      "abc",
+      "abcd",
+      "capital_abcd"
+    ],
+    "input latin letters": [
+      "abc"
+    ],
+    "lowercase": [
+      "abcd"
+    ],
+    "input latin lowercase": [
+      "abcd"
+    ],
+    "ABCD": [
+      "capital_abcd"
+    ],
+    "uppercase": [
+      "capital_abcd"
+    ],
+    "input latin uppercase": [
+      "capital_abcd"
+    ],
+    "〒♪&%": [
+      "symbols"
+    ],
+    "input symbols": [
+      "symbols"
+    ],
+    "musical notes": [
+      "notes"
+    ],
+    "dash": [
+      "wavy_dash"
+    ],
+    "wavy": [
+      "wavy_dash"
+    ],
+    "loop": [
+      "curly_loop"
+    ],
+    "check mark": [
+      "heavy_check_mark"
+    ],
+    "clockwise vertical arrows": [
+      "arrows_clockwise"
+    ],
+    "reload": [
+      "arrows_clockwise"
+    ],
+    "+": [
+      "heavy_plus_sign"
+    ],
+    "math": [
+      "heavy_plus_sign",
+      "heavy_minus_sign",
+      "heavy_division_sign",
+      "heavy_equals_sign"
+    ],
+    "plus": [
+      "heavy_plus_sign"
+    ],
+    "-": [
+      "heavy_minus_sign"
+    ],
+    "−": [
+      "heavy_minus_sign"
+    ],
+    "minus": [
+      "heavy_minus_sign"
+    ],
+    "÷": [
+      "heavy_division_sign"
+    ],
+    "divide": [
+      "heavy_division_sign"
+    ],
+    "division": [
+      "heavy_division_sign"
+    ],
+    "exchange": [
+      "currency_exchange"
+    ],
+    "C": [
+      "copyright"
+    ],
+    "R": [
+      "registered"
+    ],
+    "TM": [
+      "tm"
+    ],
+    "trade mark": [
+      "tm"
+    ],
+    "trademark": [
+      "tm"
+    ],
+    "END": [
+      "end"
+    ],
+    "END arrow": [
+      "end"
+    ],
+    "BACK": [
+      "back"
+    ],
+    "BACK arrow": [
+      "back"
+    ],
+    "ON": [
+      "on"
+    ],
+    "ON!": [
+      "on"
+    ],
+    "ON! arrow": [
+      "on"
+    ],
+    "TOP": [
+      "top"
+    ],
+    "TOP arrow": [
+      "top"
+    ],
+    "SOON": [
+      "soon"
+    ],
+    "SOON arrow": [
+      "soon"
+    ],
+    "check box with check": [
+      "ballot_box_with_check"
+    ],
+    "radio": [
+      "radio_button"
+    ],
+    "blue circle": [
+      "large_blue_circle"
+    ],
+    "red triangle pointed up": [
+      "small_red_triangle"
+    ],
+    "red triangle pointed down": [
+      "small_red_triangle_down"
+    ],
+    "black medium-small square": [
+      "black_medium_small_square"
+    ],
+    "white medium-small square": [
+      "white_medium_small_square"
+    ],
+    "speaker low volume": [
+      "speaker"
+    ],
+    "medium": [
+      "sound"
+    ],
+    "speaker medium volume": [
+      "sound"
+    ],
+    "loud": [
+      "loud_sound",
+      "loudspeaker"
+    ],
+    "speaker high volume": [
+      "loud_sound"
+    ],
+    "muted speaker": [
+      "mute"
+    ],
+    "speaker": [
+      "mute"
+    ],
+    "cheering": [
+      "mega"
+    ],
+    "megaphone": [
+      "mega"
+    ],
+    "public address": [
+      "loudspeaker"
+    ],
+    "bell with slash": [
+      "no_bell"
+    ],
+    "mute": [
+      "no_bell"
+    ],
+    "joker": [
+      "black_joker"
+    ],
+    "wildcard": [
+      "black_joker"
+    ],
+    "mahjong red dragon": [
+      "mahjong"
+    ],
+    "spade suit": [
+      "spades"
+    ],
+    "club suit": [
+      "clubs"
+    ],
+    "heart suit": [
+      "hearts"
+    ],
+    "diamond suit": [
+      "diamonds"
+    ],
+    "playing": [
+      "flower_playing_cards"
+    ],
+    "balloon": [
+      "thought_balloon",
+      "right_anger_bubble",
+      "speech_balloon",
+      "left_speech_bubble"
+    ],
+    "bubble": [
+      "thought_balloon",
+      "right_anger_bubble",
+      "speech_balloon",
+      "left_speech_bubble",
+      "bubble_tea"
+    ],
+    "thought": [
+      "thought_balloon"
+    ],
+    "dialog": [
+      "speech_balloon",
+      "left_speech_bubble"
+    ],
+    "speech": [
+      "speech_balloon",
+      "left_speech_bubble"
+    ],
+    "00": [
+      "clock1",
+      "clock2",
+      "clock3",
+      "clock4",
+      "clock5",
+      "clock6",
+      "clock7",
+      "clock8",
+      "clock9",
+      "clock10",
+      "clock11",
+      "clock12"
+    ],
+    "1": [
+      "clock1",
+      "clock130"
+    ],
+    "1:00": [
+      "clock1"
+    ],
+    "o’clock": [
+      "clock1",
+      "clock2",
+      "clock3",
+      "clock4",
+      "clock5",
+      "clock6",
+      "clock7",
+      "clock8",
+      "clock9",
+      "clock10",
+      "clock11",
+      "clock12"
+    ],
+    "one": [
+      "clock1",
+      "clock130"
+    ],
+    "one o’clock": [
+      "clock1"
+    ],
+    "2": [
+      "clock2",
+      "clock230"
+    ],
+    "2:00": [
+      "clock2"
+    ],
+    "two": [
+      "clock2",
+      "clock230"
+    ],
+    "two o’clock": [
+      "clock2"
+    ],
+    "3": [
+      "clock3",
+      "clock330"
+    ],
+    "3:00": [
+      "clock3"
+    ],
+    "three": [
+      "clock3",
+      "clock330"
+    ],
+    "three o’clock": [
+      "clock3"
+    ],
+    "4:00": [
+      "clock4"
+    ],
+    "four o’clock": [
+      "clock4"
+    ],
+    "5": [
+      "clock5",
+      "clock530"
+    ],
+    "5:00": [
+      "clock5"
+    ],
+    "five": [
+      "clock5",
+      "clock530"
+    ],
+    "five o’clock": [
+      "clock5"
+    ],
+    "6": [
+      "clock6",
+      "clock630"
+    ],
+    "6:00": [
+      "clock6"
+    ],
+    "six": [
+      "clock6",
+      "clock630"
+    ],
+    "six o’clock": [
+      "clock6"
+    ],
+    "7": [
+      "clock7",
+      "clock730"
+    ],
+    "7:00": [
+      "clock7"
+    ],
+    "seven": [
+      "clock7",
+      "clock730"
+    ],
+    "seven o’clock": [
+      "clock7"
+    ],
+    "8:00": [
+      "clock8"
+    ],
+    "eight o’clock": [
+      "clock8"
+    ],
+    "9": [
+      "clock9",
+      "clock930"
+    ],
+    "9:00": [
+      "clock9"
+    ],
+    "nine": [
+      "clock9",
+      "clock930"
+    ],
+    "nine o’clock": [
+      "clock9"
+    ],
+    "10": [
+      "clock10",
+      "clock1030"
+    ],
+    "10:00": [
+      "clock10"
+    ],
+    "ten": [
+      "clock10",
+      "clock1030"
+    ],
+    "ten o’clock": [
+      "clock10"
+    ],
+    "11": [
+      "clock11",
+      "clock1130"
+    ],
+    "11:00": [
+      "clock11"
+    ],
+    "eleven": [
+      "clock11",
+      "clock1130"
+    ],
+    "eleven o’clock": [
+      "clock11"
+    ],
+    "12": [
+      "clock12",
+      "clock1230"
+    ],
+    "12:00": [
+      "clock12"
+    ],
+    "twelve": [
+      "clock12",
+      "clock1230"
+    ],
+    "twelve o’clock": [
+      "clock12"
+    ],
+    "1:30": [
+      "clock130"
+    ],
+    "one-thirty": [
+      "clock130"
+    ],
+    "thirty": [
+      "clock130",
+      "clock230",
+      "clock330",
+      "clock430",
+      "clock530",
+      "clock630",
+      "clock730",
+      "clock830",
+      "clock930",
+      "clock1030",
+      "clock1130",
+      "clock1230"
+    ],
+    "2:30": [
+      "clock230"
+    ],
+    "two-thirty": [
+      "clock230"
+    ],
+    "3:30": [
+      "clock330"
+    ],
+    "three-thirty": [
+      "clock330"
+    ],
+    "4:30": [
+      "clock430"
+    ],
+    "four-thirty": [
+      "clock430"
+    ],
+    "5:30": [
+      "clock530"
+    ],
+    "five-thirty": [
+      "clock530"
+    ],
+    "6:30": [
+      "clock630"
+    ],
+    "six-thirty": [
+      "clock630"
+    ],
+    "7:30": [
+      "clock730"
+    ],
+    "seven-thirty": [
+      "clock730"
+    ],
+    "8:30": [
+      "clock830"
+    ],
+    "eight-thirty": [
+      "clock830"
+    ],
+    "9:30": [
+      "clock930"
+    ],
+    "nine-thirty": [
+      "clock930"
+    ],
+    "10:30": [
+      "clock1030"
+    ],
+    "ten-thirty": [
+      "clock1030"
+    ],
+    "11:30": [
+      "clock1130"
+    ],
+    "eleven-thirty": [
+      "clock1130"
+    ],
+    "12:30": [
+      "clock1230"
+    ],
+    "twelve-thirty": [
+      "clock1230"
+    ],
+    "star-struck": [
+      "star_struck"
+    ],
+    "distrust": [
+      "face_with_raised_eyebrow"
+    ],
+    "skeptic": [
+      "face_with_raised_eyebrow"
+    ],
+    "mind blown": [
+      "exploding_head"
+    ],
+    "goofy": [
+      "crazy_face"
+    ],
+    "zany face": [
+      "crazy_face"
+    ],
+    "face with symbols on mouth": [
+      "face_with_symbols_over_mouth"
+    ],
+    "swearing": [
+      "face_with_symbols_over_mouth"
+    ],
+    "puke": [
+      "face_vomiting"
+    ],
+    "shush": [
+      "shushing_face"
+    ],
+    "whoops": [
+      "face_with_hand_over_mouth"
+    ],
+    "monocle": [
+      "face_with_monocle"
+    ],
+    "stuffy": [
+      "face_with_monocle"
+    ],
+    "gender-neutral": [
+      "child",
+      "adult",
+      "older_adult"
+    ],
+    "unspecified gender": [
+      "child",
+      "adult",
+      "older_adult"
+    ],
+    "older person": [
+      "older_adult"
+    ],
+    "headscarf": [
+      "woman_with_headscarf"
+    ],
+    "hijab": [
+      "woman_with_headscarf"
+    ],
+    "mantilla": [
+      "woman_with_headscarf"
+    ],
+    "tichel": [
+      "woman_with_headscarf"
+    ],
+    "beard": [
+      "bearded_person"
+    ],
+    "person: beard": [
+      "bearded_person"
+    ],
+    "breast": [
+      "breast_feeding"
+    ],
+    "breast-feeding": [
+      "breast_feeding"
+    ],
+    "nursing": [
+      "breast_feeding",
+      "man_feeding_baby",
+      "person_feeding_baby",
+      "woman_feeding_baby"
+    ],
+    "sorcerer": [
+      "mage"
+    ],
+    "sorceress": [
+      "mage"
+    ],
+    "witch": [
+      "mage",
+      "broom",
+      "magic_wand"
+    ],
+    "wizard": [
+      "mage",
+      "magic_wand"
+    ],
+    "Oberon": [
+      "fairy"
+    ],
+    "Puck": [
+      "fairy"
+    ],
+    "Titania": [
+      "fairy"
+    ],
+    "Dracula": [
+      "vampire"
+    ],
+    "undead": [
+      "vampire",
+      "zombie"
+    ],
+    "mermaid": [
+      "merperson"
+    ],
+    "merman": [
+      "merperson"
+    ],
+    "merwoman": [
+      "merperson"
+    ],
+    "magical": [
+      "elf"
+    ],
+    "djinn": [
+      "genie"
+    ],
+    "walking dead": [
+      "zombie"
+    ],
+    "sauna": [
+      "person_in_steamy_room"
+    ],
+    "steam room": [
+      "person_in_steamy_room"
+    ],
+    "climber": [
+      "person_climbing"
+    ],
+    "meditation": [
+      "person_in_lotus_position"
+    ],
+    "yoga": [
+      "person_in_lotus_position"
+    ],
+    "ILY": [
+      "love_you_gesture"
+    ],
+    "love-you gesture": [
+      "love_you_gesture"
+    ],
+    "intelligent": [
+      "brain"
+    ],
+    "neck": [
+      "scarf"
+    ],
+    "jacket": [
+      "coat"
+    ],
+    "stocking": [
+      "socks"
+    ],
+    "baseball cap": [
+      "billed_cap"
+    ],
+    "stripe": [
+      "zebra"
+    ],
+    "spots": [
+      "giraffe"
+    ],
+    "spiny": [
+      "hedgehog"
+    ],
+    "brachiosaurus": [
+      "sauropod"
+    ],
+    "brontosaurus": [
+      "sauropod"
+    ],
+    "diplodocus": [
+      "sauropod"
+    ],
+    "T-Rex": [
+      "t_rex"
+    ],
+    "Tyrannosaurus Rex": [
+      "t_rex"
+    ],
+    "grasshopper": [
+      "cricket"
+    ],
+    "piña colada": [
+      "coconut"
+    ],
+    "wild cabbage": [
+      "broccoli"
+    ],
+    "twisted": [
+      "pretzel"
+    ],
+    "chop": [
+      "cut_of_meat",
+      "axe"
+    ],
+    "lambchop": [
+      "cut_of_meat"
+    ],
+    "porkchop": [
+      "cut_of_meat"
+    ],
+    "steak": [
+      "cut_of_meat"
+    ],
+    "cereal": [
+      "bowl_with_spoon"
+    ],
+    "congee": [
+      "bowl_with_spoon"
+    ],
+    "can": [
+      "canned_food"
+    ],
+    "empanada": [
+      "dumpling"
+    ],
+    "gyōza": [
+      "dumpling"
+    ],
+    "jiaozi": [
+      "dumpling"
+    ],
+    "pierogi": [
+      "dumpling"
+    ],
+    "potsticker": [
+      "dumpling"
+    ],
+    "prophecy": [
+      "fortune_cookie"
+    ],
+    "oyster pail": [
+      "takeout_box"
+    ],
+    "filling": [
+      "pie"
+    ],
+    "juice": [
+      "cup_with_straw",
+      "beverage_box"
+    ],
+    "soda": [
+      "cup_with_straw"
+    ],
+    "hashi": [
+      "chopsticks"
+    ],
+    "UFO": [
+      "flying_saucer"
+    ],
+    "sledge": [
+      "sled"
+    ],
+    "sleigh": [
+      "sled"
+    ],
+    "adore": [
+      "smiling_face_with_three_hearts"
+    ],
+    "crush": [
+      "smiling_face_with_three_hearts"
+    ],
+    "hearts": [
+      "smiling_face_with_three_hearts"
+    ],
+    "in love": [
+      "smiling_face_with_three_hearts"
+    ],
+    "smiling face with hearts": [
+      "smiling_face_with_three_hearts"
+    ],
+    "feverish": [
+      "hot_face"
+    ],
+    "heat stroke": [
+      "hot_face"
+    ],
+    "red-faced": [
+      "hot_face"
+    ],
+    "sweating": [
+      "hot_face"
+    ],
+    "blue-faced": [
+      "cold_face"
+    ],
+    "freezing": [
+      "cold_face"
+    ],
+    "frostbite": [
+      "cold_face"
+    ],
+    "icicles": [
+      "cold_face"
+    ],
+    "intoxicated": [
+      "woozy_face"
+    ],
+    "tipsy": [
+      "woozy_face"
+    ],
+    "uneven eyes": [
+      "woozy_face"
+    ],
+    "wavy mouth": [
+      "woozy_face"
+    ],
+    "begging": [
+      "pleading_face"
+    ],
+    "mercy": [
+      "pleading_face"
+    ],
+    "puppy eyes": [
+      "pleading_face"
+    ],
+    "good": [
+      "superhero"
+    ],
+    "hero": [
+      "superhero"
+    ],
+    "heroine": [
+      "superhero"
+    ],
+    "superpower": [
+      "superhero",
+      "supervillain"
+    ],
+    "criminal": [
+      "supervillain"
+    ],
+    "villain": [
+      "supervillain"
+    ],
+    "limb": [
+      "leg"
+    ],
+    "stomp": [
+      "foot"
+    ],
+    "skeleton": [
+      "bone",
+      "xray"
+    ],
+    "dentist": [
+      "tooth"
+    ],
+    "eye protection": [
+      "goggles"
+    ],
+    "swimming": [
+      "goggles"
+    ],
+    "welding": [
+      "goggles"
+    ],
+    "experiment": [
+      "lab_coat",
+      "test_tube"
+    ],
+    "backpacking": [
+      "hiking_boot"
+    ],
+    "boot": [
+      "hiking_boot"
+    ],
+    "hiking": [
+      "hiking_boot"
+    ],
+    "ballet flat": [
+      "flat_shoe"
+    ],
+    "slip-on": [
+      "flat_shoe"
+    ],
+    "slipper": [
+      "flat_shoe"
+    ],
+    "curious": [
+      "raccoon"
+    ],
+    "sly": [
+      "raccoon"
+    ],
+    "alpaca": [
+      "llama"
+    ],
+    "guanaco": [
+      "llama"
+    ],
+    "vicuña": [
+      "llama"
+    ],
+    "wool": [
+      "llama"
+    ],
+    "hippo": [
+      "hippopotamus"
+    ],
+    "joey": [
+      "kangaroo"
+    ],
+    "jump": [
+      "kangaroo"
+    ],
+    "honey badger": [
+      "badger"
+    ],
+    "pester": [
+      "badger"
+    ],
+    "cygnet": [
+      "swan"
+    ],
+    "ugly duckling": [
+      "swan"
+    ],
+    "ostentatious": [
+      "peacock"
+    ],
+    "peahen": [
+      "peacock"
+    ],
+    "proud": [
+      "peacock",
+      "smiling_face_with_tear",
+      "face_holding_back_tears"
+    ],
+    "pirate": [
+      "parrot"
+    ],
+    "talk": [
+      "parrot"
+    ],
+    "bisque": [
+      "lobster"
+    ],
+    "claws": [
+      "lobster"
+    ],
+    "disease": [
+      "mosquito",
+      "fly"
+    ],
+    "fever": [
+      "mosquito"
+    ],
+    "malaria": [
+      "mosquito"
+    ],
+    "pest": [
+      "mosquito",
+      "cockroach",
+      "fly"
+    ],
+    "virus": [
+      "mosquito",
+      "microbe"
+    ],
+    "amoeba": [
+      "microbe"
+    ],
+    "bacteria": [
+      "microbe",
+      "petri_dish"
+    ],
+    "bok choy": [
+      "leafy_green"
+    ],
+    "cabbage": [
+      "leafy_green"
+    ],
+    "kale": [
+      "leafy_green"
+    ],
+    "lettuce": [
+      "leafy_green"
+    ],
+    "bakery": [
+      "bagel",
+      "cupcake"
+    ],
+    "schmear": [
+      "bagel"
+    ],
+    "condiment": [
+      "salt",
+      "jar"
+    ],
+    "shaker": [
+      "salt"
+    ],
+    "autumn": [
+      "moon_cake"
+    ],
+    "yuèbǐng": [
+      "moon_cake"
+    ],
+    "magnetic": [
+      "compass",
+      "magnet"
+    ],
+    "navigation": [
+      "compass"
+    ],
+    "orienteering": [
+      "compass"
+    ],
+    "bricks": [
+      "brick"
+    ],
+    "clay": [
+      "brick"
+    ],
+    "mortar": [
+      "brick"
+    ],
+    "wall": [
+      "brick"
+    ],
+    "board": [
+      "skateboard"
+    ],
+    "packing": [
+      "luggage"
+    ],
+    "travel": [
+      "luggage"
+    ],
+    "dynamite": [
+      "firecracker"
+    ],
+    "explosive": [
+      "firecracker"
+    ],
+    "gift": [
+      "red_gift_envelope"
+    ],
+    "good luck": [
+      "red_gift_envelope"
+    ],
+    "hóngbāo": [
+      "red_gift_envelope"
+    ],
+    "lai see": [
+      "red_gift_envelope"
+    ],
+    "red envelope": [
+      "red_gift_envelope"
+    ],
+    "underarm": [
+      "softball"
+    ],
+    "ultimate": [
+      "flying_disc"
+    ],
+    "bead": [
+      "nazar_amulet"
+    ],
+    "charm": [
+      "nazar_amulet"
+    ],
+    "evil-eye": [
+      "nazar_amulet"
+    ],
+    "nazar": [
+      "nazar_amulet"
+    ],
+    "talisman": [
+      "nazar_amulet"
+    ],
+    "interlocking": [
+      "jigsaw"
+    ],
+    "piece": [
+      "jigsaw"
+    ],
+    "puzzle": [
+      "jigsaw"
+    ],
+    "puzzle piece": [
+      "jigsaw"
+    ],
+    "plaything": [
+      "teddy_bear"
+    ],
+    "plush": [
+      "teddy_bear"
+    ],
+    "toy": [
+      "teddy_bear",
+      "yo-yo"
+    ],
+    "chess": [
+      "chess_pawn"
+    ],
+    "dupe": [
+      "chess_pawn"
+    ],
+    "expendable": [
+      "chess_pawn"
+    ],
+    "sewing": [
+      "thread",
+      "sewing_needle"
+    ],
+    "spool": [
+      "thread"
+    ],
+    "string": [
+      "thread"
+    ],
+    "crochet": [
+      "yarn"
+    ],
+    "knit": [
+      "yarn"
+    ],
+    "calculation": [
+      "abacus"
+    ],
+    "accounting": [
+      "receipt"
+    ],
+    "bookkeeping": [
+      "receipt"
+    ],
+    "evidence": [
+      "receipt"
+    ],
+    "proof": [
+      "receipt"
+    ],
+    "chest": [
+      "toolbox"
+    ],
+    "attraction": [
+      "magnet"
+    ],
+    "horseshoe": [
+      "magnet"
+    ],
+    "lab": [
+      "test_tube",
+      "petri_dish"
+    ],
+    "biology": [
+      "petri_dish"
+    ],
+    "culture": [
+      "petri_dish"
+    ],
+    "evolution": [
+      "dna"
+    ],
+    "gene": [
+      "dna"
+    ],
+    "genetics": [
+      "dna"
+    ],
+    "life": [
+      "dna"
+    ],
+    "lotion": [
+      "lotion_bottle"
+    ],
+    "moisturizer": [
+      "lotion_bottle"
+    ],
+    "shampoo": [
+      "lotion_bottle"
+    ],
+    "sunscreen": [
+      "lotion_bottle"
+    ],
+    "diaper": [
+      "safety_pin"
+    ],
+    "punk rock": [
+      "safety_pin"
+    ],
+    "cleaning": [
+      "broom",
+      "soap",
+      "sponge"
+    ],
+    "sweeping": [
+      "broom"
+    ],
+    "farming": [
+      "basket"
+    ],
+    "laundry": [
+      "basket"
+    ],
+    "picnic": [
+      "basket"
+    ],
+    "paper towels": [
+      "roll_of_toilet_paper"
+    ],
+    "roll of paper": [
+      "roll_of_toilet_paper"
+    ],
+    "toilet paper": [
+      "roll_of_toilet_paper"
+    ],
+    "bathing": [
+      "soap"
+    ],
+    "lather": [
+      "soap"
+    ],
+    "soapdish": [
+      "soap"
+    ],
+    "absorbing": [
+      "sponge"
+    ],
+    "porous": [
+      "sponge"
+    ],
+    "extinguish": [
+      "fire_extinguisher"
+    ],
+    "quench": [
+      "fire_extinguisher"
+    ],
+    "forever": [
+      "infinity"
+    ],
+    "unbounded": [
+      "infinity"
+    ],
+    "universal": [
+      "infinity"
+    ],
+    "indecisive": [
+      "waffle"
+    ],
+    "iron": [
+      "waffle"
+    ],
+    "fishing": [
+      "otter"
+    ],
+    "playful": [
+      "otter"
+    ],
+    "lazy": [
+      "sloth"
+    ],
+    "slow": [
+      "sloth"
+    ],
+    "iceberg": [
+      "ice_cube"
+    ],
+    "ringed planet": [
+      "ringer_planet"
+    ],
+    "saturn": [
+      "ringer_planet"
+    ],
+    "saturnine": [
+      "ringer_planet"
+    ],
+    "flamboyant": [
+      "flamingo"
+    ],
+    "bored": [
+      "yawning_face"
+    ],
+    "yawn": [
+      "yawning_face"
+    ],
+    "small amount": [
+      "pinching_hand"
+    ],
+    "accessibility": [
+      "service_dog",
+      "probing_cane",
+      "motorized_wheelchair",
+      "manual_wheelchair",
+      "guide_dog",
+      "woman_in_manual_wheelchair",
+      "man_in_manual_wheelchair",
+      "woman_in_motorized_wheelchair",
+      "man_in_motorized_wheelchair",
+      "woman_with_probing_cane",
+      "man_with_probing_cane",
+      "hear_with_hearing_aid",
+      "mechanical_leg",
+      "mechanical_arm",
+      "deaf_person",
+      "person_with_white_cane",
+      "person_in_motorized_wheelchair",
+      "person_in_manual_wheelchair",
+      "elevator"
+    ],
+    "assistance": [
+      "service_dog"
+    ],
+    "service": [
+      "service_dog"
+    ],
+    "ape": [
+      "orangutan"
+    ],
+    "tuk tuk": [
+      "auto_rickshaw"
+    ],
+    "hang-glide": [
+      "parachute"
+    ],
+    "parasail": [
+      "parachute"
+    ],
+    "skydive": [
+      "parachute"
+    ],
+    "fluctuate": [
+      "yo-yo"
+    ],
+    "soar": [
+      "kite"
+    ],
+    "brown": [
+      "brown_square",
+      "brown_circle",
+      "brown_heart"
+    ],
+    "sharp": [
+      "razor"
+    ],
+    "shave": [
+      "razor"
+    ],
+    "seat": [
+      "chair"
+    ],
+    "sit": [
+      "chair"
+    ],
+    "bleed": [
+      "drop_of_blood"
+    ],
+    "blood donation": [
+      "drop_of_blood"
+    ],
+    "menstruation": [
+      "drop_of_blood"
+    ],
+    "blind": [
+      "probing_cane",
+      "guide_dog",
+      "woman_with_probing_cane",
+      "man_with_probing_cane",
+      "person_with_white_cane"
+    ],
+    "white cane": [
+      "probing_cane"
+    ],
+    "hatchet": [
+      "axe"
+    ],
+    "split": [
+      "axe"
+    ],
+    "wood": [
+      "axe"
+    ],
+    "diya": [
+      "diya_lamp"
+    ],
+    "stringed": [
+      "banjo"
+    ],
+    "ballet": [
+      "ballet_shoes"
+    ],
+    "bathing suit": [
+      "shorts",
+      "briefs",
+      "one_piece_swimsuit"
+    ],
+    "underwear": [
+      "shorts",
+      "briefs"
+    ],
+    "one-piece": [
+      "briefs"
+    ],
+    "swimsuit": [
+      "briefs"
+    ],
+    "one-piece swimsuit": [
+      "one_piece_swimsuit"
+    ],
+    "dress": [
+      "sari"
+    ],
+    "emergency": [
+      "safety_vest"
+    ],
+    "safety": [
+      "safety_vest",
+      "ring_buoy"
+    ],
+    "vest": [
+      "safety_vest"
+    ],
+    "diving": [
+      "diving_mask",
+      "oyster"
+    ],
+    "scuba": [
+      "diving_mask"
+    ],
+    "snorkeling": [
+      "diving_mask"
+    ],
+    "hindu": [
+      "hindu_temple"
+    ],
+    "mate": [
+      "maté"
+    ],
+    "straw": [
+      "beverage_box"
+    ],
+    "pearl": [
+      "oyster",
+      "bubble_tea"
+    ],
+    "dairy": [
+      "butter"
+    ],
+    "chickpea": [
+      "falafel"
+    ],
+    "meatball": [
+      "falafel"
+    ],
+    "flavoring": [
+      "onion",
+      "garlic"
+    ],
+    "stink": [
+      "skunk"
+    ],
+    "guide": [
+      "guide_dog"
+    ],
+    "wheelchair": [
+      "woman_in_manual_wheelchair",
+      "man_in_manual_wheelchair",
+      "woman_in_motorized_wheelchair",
+      "man_in_motorized_wheelchair",
+      "person_in_motorized_wheelchair",
+      "person_in_manual_wheelchair"
+    ],
+    "woman with white cane": [
+      "woman_with_probing_cane"
+    ],
+    "man with white cane": [
+      "man_with_probing_cane"
+    ],
+    "ear with hearing aid": [
+      "hear_with_hearing_aid"
+    ],
+    "hard of hearing": [
+      "hear_with_hearing_aid"
+    ],
+    "prosthetic": [
+      "mechanical_leg",
+      "mechanical_arm"
+    ],
+    "white": [
+      "white_heart",
+      "white_hair"
+    ],
+    "grateful": [
+      "smiling_face_with_tear"
+    ],
+    "smiling": [
+      "smiling_face_with_tear"
+    ],
+    "touched": [
+      "smiling_face_with_tear"
+    ],
+    "disguise": [
+      "disguised_face"
+    ],
+    "incognito": [
+      "disguised_face"
+    ],
+    "fingers": [
+      "pinched_fingers"
+    ],
+    "hand gesture": [
+      "pinched_fingers"
+    ],
+    "interrogation": [
+      "pinched_fingers"
+    ],
+    "pinched": [
+      "pinched_fingers"
+    ],
+    "sarcastic": [
+      "pinched_fingers"
+    ],
+    "anatomical": [
+      "anatomical_heart"
+    ],
+    "cardiology": [
+      "anatomical_heart"
+    ],
+    "organ": [
+      "anatomical_heart",
+      "lungs"
+    ],
+    "breath": [
+      "lungs"
+    ],
+    "exhalation": [
+      "lungs"
+    ],
+    "inhalation": [
+      "lungs"
+    ],
+    "respiration": [
+      "lungs"
+    ],
+    "fighter": [
+      "ninja"
+    ],
+    "hidden": [
+      "ninja"
+    ],
+    "stealth": [
+      "ninja"
+    ],
+    "Claus, christmas": [
+      "mx_claus"
+    ],
+    "goodbye": [
+      "people_hugging"
+    ],
+    "hello": [
+      "people_hugging"
+    ],
+    "unlucky": [
+      "black_cat"
+    ],
+    "herd": [
+      "bison"
+    ],
+    "wisent": [
+      "bison"
+    ],
+    "extinction": [
+      "mammoth",
+      "dodo"
+    ],
+    "tusk": [
+      "mammoth"
+    ],
+    "woolly": [
+      "mammoth"
+    ],
+    "dam": [
+      "beaver"
+    ],
+    "Mauritius": [
+      "dodo"
+    ],
+    "flight": [
+      "feather"
+    ],
+    "plumage": [
+      "feather"
+    ],
+    "sea lion": [
+      "seal"
+    ],
+    "bug": [
+      "beetle"
+    ],
+    "roach": [
+      "cockroach"
+    ],
+    "maggot": [
+      "fly"
+    ],
+    "rotting": [
+      "fly"
+    ],
+    "annelid": [
+      "worm"
+    ],
+    "earthworm": [
+      "worm"
+    ],
+    "parasite": [
+      "worm"
+    ],
+    "boring": [
+      "potted_plant"
+    ],
+    "grow": [
+      "potted_plant"
+    ],
+    "nurturing": [
+      "potted_plant"
+    ],
+    "useless": [
+      "potted_plant"
+    ],
+    "bilberry": [
+      "blueberries"
+    ],
+    "blueberry": [
+      "blueberries"
+    ],
+    "capsicum": [
+      "bell_pepper"
+    ],
+    "arepa": [
+      "flatbread"
+    ],
+    "lavash": [
+      "flatbread"
+    ],
+    "naan": [
+      "flatbread"
+    ],
+    "pita": [
+      "flatbread"
+    ],
+    "melted": [
+      "fondue"
+    ],
+    "Swiss": [
+      "fondue"
+    ],
+    "boulder": [
+      "rock"
+    ],
+    "heavy": [
+      "rock"
+    ],
+    "solid": [
+      "rock"
+    ],
+    "stone": [
+      "rock"
+    ],
+    "log": [
+      "wood"
+    ],
+    "lumber": [
+      "wood",
+      "carpentry_saw"
+    ],
+    "timber": [
+      "wood"
+    ],
+    "roundhouse": [
+      "hut"
+    ],
+    "yurt": [
+      "hut"
+    ],
+    "pick-up": [
+      "pickup_truck"
+    ],
+    "pickup": [
+      "pickup_truck"
+    ],
+    "magic": [
+      "magic_wand"
+    ],
+    "nesting": [
+      "nesting_dolls",
+      "empty_nest",
+      "nest_with_eggs"
+    ],
+    "russia": [
+      "nesting_dolls"
+    ],
+    "embroidery": [
+      "sewing_needle"
+    ],
+    "stitches": [
+      "sewing_needle"
+    ],
+    "sutures": [
+      "sewing_needle"
+    ],
+    "tailoring": [
+      "sewing_needle"
+    ],
+    "rope": [
+      "knot"
+    ],
+    "tangled": [
+      "knot"
+    ],
+    "twine": [
+      "knot"
+    ],
+    "twist": [
+      "knot"
+    ],
+    "beach sandals": [
+      "thong_sandal"
+    ],
+    "sandals": [
+      "thong_sandal"
+    ],
+    "thong sandals": [
+      "thong_sandal"
+    ],
+    "thongs": [
+      "thong_sandal"
+    ],
+    "zōri": [
+      "thong_sandal"
+    ],
+    "army": [
+      "military_helmet"
+    ],
+    "soldier": [
+      "military_helmet"
+    ],
+    "warrior": [
+      "military_helmet"
+    ],
+    "concertina": [
+      "accordion"
+    ],
+    "squeeze box": [
+      "accordion"
+    ],
+    "beat": [
+      "long_drum"
+    ],
+    "conga": [
+      "long_drum"
+    ],
+    "rhythm": [
+      "long_drum"
+    ],
+    "metal": [
+      "coin"
+    ],
+    "treasure": [
+      "coin"
+    ],
+    "australia": [
+      "boomerang"
+    ],
+    "rebound": [
+      "boomerang"
+    ],
+    "repercussion": [
+      "boomerang"
+    ],
+    "carpenter": [
+      "carpentry_saw"
+    ],
+    "saw": [
+      "carpentry_saw"
+    ],
+    "screw": [
+      "screwdriver"
+    ],
+    "catch": [
+      "hook",
+      "palm_up_hand"
+    ],
+    "crook": [
+      "hook"
+    ],
+    "curve": [
+      "hook"
+    ],
+    "ensnare": [
+      "hook"
+    ],
+    "selling point": [
+      "hook"
+    ],
+    "climb": [
+      "ladder"
+    ],
+    "rung": [
+      "ladder"
+    ],
+    "step": [
+      "ladder"
+    ],
+    "reflection": [
+      "mirror"
+    ],
+    "reflector": [
+      "mirror"
+    ],
+    "speculum": [
+      "mirror"
+    ],
+    "fresh air": [
+      "window"
+    ],
+    "opening": [
+      "window"
+    ],
+    "transparent": [
+      "window"
+    ],
+    "view": [
+      "window"
+    ],
+    "force cup": [
+      "plunger"
+    ],
+    "suction": [
+      "plunger"
+    ],
+    "bait": [
+      "mouse_trap"
+    ],
+    "mousetrap": [
+      "mouse_trap"
+    ],
+    "snare": [
+      "mouse_trap"
+    ],
+    "trap": [
+      "mouse_trap"
+    ],
+    "cask": [
+      "bucket"
+    ],
+    "pail": [
+      "bucket"
+    ],
+    "vat": [
+      "bucket"
+    ],
+    "brush": [
+      "toothbrush"
+    ],
+    "clean": [
+      "toothbrush",
+      "bubbles"
+    ],
+    "dental": [
+      "toothbrush"
+    ],
+    "hygiene": [
+      "toothbrush"
+    ],
+    "teeth": [
+      "toothbrush"
+    ],
+    "cemetery": [
+      "headstone"
+    ],
+    "grave": [
+      "headstone"
+    ],
+    "graveyard": [
+      "headstone"
+    ],
+    "tombstone": [
+      "headstone"
+    ],
+    "demonstration": [
+      "placard"
+    ],
+    "picket": [
+      "placard"
+    ],
+    "protest": [
+      "placard"
+    ],
+    "transgender": [
+      "transgender_symbol"
+    ],
+    "feeding": [
+      "man_feeding_baby",
+      "person_feeding_baby",
+      "woman_feeding_baby"
+    ],
+    "disappear": [
+      "melting_face",
+      "dotted_line_face"
+    ],
+    "dissolve": [
+      "melting_face"
+    ],
+    "liquid": [
+      "melting_face"
+    ],
+    "melt": [
+      "melting_face"
+    ],
+    "relaxed": [
+      "smiling_face"
+    ],
+    "amazement": [
+      "face_with_open_eyes_and_hand_over_mouth"
+    ],
+    "awe": [
+      "face_with_open_eyes_and_hand_over_mouth"
+    ],
+    "disbelief": [
+      "face_with_open_eyes_and_hand_over_mouth",
+      "person_facepalming"
+    ],
+    "embarrass": [
+      "face_with_open_eyes_and_hand_over_mouth"
+    ],
+    "surprise": [
+      "face_with_open_eyes_and_hand_over_mouth"
+    ],
+    "captivated": [
+      "face_with_peeking_eye"
+    ],
+    "peep": [
+      "face_with_peeking_eye"
+    ],
+    "stare": [
+      "face_with_peeking_eye"
+    ],
+    "salute": [
+      "saluting_face"
+    ],
+    "sunny": [
+      "saluting_face"
+    ],
+    "troops": [
+      "saluting_face"
+    ],
+    "yes": [
+      "saluting_face"
+    ],
+    "depressed": [
+      "dotted_line_face"
+    ],
+    "hide": [
+      "dotted_line_face"
+    ],
+    "introvert": [
+      "dotted_line_face"
+    ],
+    "invisible": [
+      "dotted_line_face"
+    ],
+    "exhale": [
+      "face_exhaling"
+    ],
+    "gasp": [
+      "face_exhaling"
+    ],
+    "groan": [
+      "face_exhaling"
+    ],
+    "relief": [
+      "face_exhaling"
+    ],
+    "whisper": [
+      "face_exhaling"
+    ],
+    "whistle": [
+      "face_exhaling"
+    ],
+    "hypnotized": [
+      "face_with_spiral_eyes"
+    ],
+    "trouble": [
+      "face_with_spiral_eyes"
+    ],
+    "whoa": [
+      "face_with_spiral_eyes"
+    ],
+    "skeptical": [
+      "face_with_diagonal_mouth"
+    ],
+    "unsure": [
+      "face_with_diagonal_mouth"
+    ],
+    "resist": [
+      "face_holding_back_tears"
+    ],
+    "rightward": [
+      "rightwards_hand"
+    ],
+    "leftward": [
+      "leftwards_hand"
+    ],
+    "dismiss": [
+      "palm_down_hand"
+    ],
+    "shoo": [
+      "palm_down_hand"
+    ],
+    "beckon": [
+      "palm_up_hand"
+    ],
+    "come": [
+      "palm_up_hand"
+    ],
+    "offer": [
+      "palm_up_hand"
+    ],
+    "expensive": [
+      "hand_with_index_finger_and_thumb_crossed"
+    ],
+    "snap": [
+      "hand_with_index_finger_and_thumb_crossed"
+    ],
+    "you": [
+      "index_pointing_at_the_viewer"
+    ],
+    "anxious": [
+      "biting_lip"
+    ],
+    "flirting": [
+      "biting_lip"
+    ],
+    "uncomfortable": [
+      "biting_lip"
+    ],
+    "worried": [
+      "biting_lip"
+    ],
+    "person gesturing NO": [
+      "person_gesturing_no"
+    ],
+    "person gesturing OK": [
+      "person_gesturing_ok"
+    ],
+    "sassy": [
+      "person_tipping_hand"
+    ],
+    "tipping": [
+      "person_tipping_hand"
+    ],
+    "happy": [
+      "person_raising_hand"
+    ],
+    "deaf": [
+      "deaf_person"
+    ],
+    "exasperation": [
+      "person_facepalming"
+    ],
+    "doubt": [
+      "person_shrugging"
+    ],
+    "ignorance": [
+      "person_shrugging"
+    ],
+    "indifference": [
+      "person_shrugging"
+    ],
+    "shrug": [
+      "person_shrugging"
+    ],
+    "monarch": [
+      "person_with_crown"
+    ],
+    "noble": [
+      "person_with_crown"
+    ],
+    "regal": [
+      "person_with_crown"
+    ],
+    "royalty": [
+      "person_with_crown"
+    ],
+    "belly": [
+      "pregnant_man",
+      "pregnant_person"
+    ],
+    "bloated": [
+      "pregnant_man",
+      "pregnant_person"
+    ],
+    "massage": [
+      "person_getting_massage"
+    ],
+    "salon": [
+      "person_getting_massage"
+    ],
+    "barber": [
+      "person_getting_haircut"
+    ],
+    "beauty": [
+      "person_getting_haircut"
+    ],
+    "parlor": [
+      "person_getting_haircut"
+    ],
+    "stand": [
+      "person_standing"
+    ],
+    "standing": [
+      "person_standing"
+    ],
+    "kneel": [
+      "person_kneeling"
+    ],
+    "kneeling": [
+      "person_kneeling"
+    ],
+    "cartwheel": [
+      "person_cartwheeling"
+    ],
+    "gymnastics": [
+      "person_cartwheeling"
+    ],
+    "wrestle": [
+      "people_wrestling"
+    ],
+    "wrestler": [
+      "people_wrestling"
+    ],
+    "polo": [
+      "person_playing_water_polo"
+    ],
+    "handball": [
+      "person_playing_handball"
+    ],
+    "juggle": [
+      "person_juggling"
+    ],
+    "multitask": [
+      "person_juggling"
+    ],
+    "skill": [
+      "person_juggling"
+    ],
+    "ginger": [
+      "red_hair"
+    ],
+    "redhead": [
+      "red_hair"
+    ],
+    "afro": [
+      "curly_hair"
+    ],
+    "curly": [
+      "curly_hair"
+    ],
+    "ringlets": [
+      "curly_hair"
+    ],
+    "gray": [
+      "white_hair"
+    ],
+    "chemotherapy": [
+      "bald"
+    ],
+    "hairless": [
+      "bald"
+    ],
+    "no hair": [
+      "bald"
+    ],
+    "shaven": [
+      "bald"
+    ],
+    "ocean": [
+      "coral"
+    ],
+    "reef": [
+      "coral"
+    ],
+    "Buddhism": [
+      "lotus"
+    ],
+    "Hinduism": [
+      "lotus"
+    ],
+    "India": [
+      "lotus"
+    ],
+    "purity": [
+      "lotus"
+    ],
+    "Vietnam": [
+      "lotus"
+    ],
+    "kidney": [
+      "beans"
+    ],
+    "legume": [
+      "beans"
+    ],
+    "empty": [
+      "pouring_liquid",
+      "jar"
+    ],
+    "spill": [
+      "pouring_liquid"
+    ],
+    "container": [
+      "jar"
+    ],
+    "sauce": [
+      "jar"
+    ],
+    "tire": [
+      "wheel"
+    ],
+    "turn": [
+      "wheel"
+    ],
+    "float": [
+      "ring_buoy"
+    ],
+    "life preserver": [
+      "ring_buoy"
+    ],
+    "life saver": [
+      "ring_buoy"
+    ],
+    "rescue": [
+      "ring_buoy"
+    ],
+    "amulet": [
+      "hamsa"
+    ],
+    "Fatima": [
+      "hamsa"
+    ],
+    "Mary": [
+      "hamsa"
+    ],
+    "Miriam": [
+      "hamsa"
+    ],
+    "protection": [
+      "hamsa"
+    ],
+    "disco": [
+      "mirror_ball"
+    ],
+    "glitter": [
+      "mirror_ball"
+    ],
+    "electronic": [
+      "low_battery"
+    ],
+    "low energy": [
+      "low_battery"
+    ],
+    "cane": [
+      "crutch"
+    ],
+    "disability": [
+      "crutch"
+    ],
+    "mobility aid": [
+      "crutch"
+    ],
+    "bones": [
+      "xray"
+    ],
+    "medical": [
+      "xray"
+    ],
+    "x-ray": [
+      "xray"
+    ],
+    "hoist": [
+      "elevator"
+    ],
+    "lift": [
+      "elevator"
+    ],
+    "burp": [
+      "bubbles"
+    ],
+    "soap": [
+      "bubbles"
+    ],
+    "underwater": [
+      "bubbles"
+    ],
+    "credentials": [
+      "identification_card"
+    ],
+    "license": [
+      "identification_card"
+    ],
+    "security": [
+      "identification_card"
+    ],
+    "eject": [
+      "eject_button"
+    ],
+    "equality": [
+      "heavy_equals_sign"
+    ],
+    "aesculapius": [
+      "medical_symbol"
+    ],
+    "staff": [
+      "medical_symbol"
+    ]
   },
   "translations": {
     ":)": "slight_smile",

@@ -33,8 +33,10 @@ class TopicView
     :message_bus_last_id,
     :queued_posts_enabled,
     :personal_message,
-    :can_review_topic
+    :can_review_topic,
+    :page
   )
+  alias queued_posts_enabled? queued_posts_enabled
 
   attr_accessor(
     :draft,
@@ -44,6 +46,9 @@ class TopicView
     :post_custom_fields,
     :post_number
   )
+
+  delegate :category, to: :topic, allow_nil: true, private: true
+  delegate :require_reply_approval?, to: :category, prefix: true, allow_nil: true, private: true
 
   def self.print_chunk_size
     1000
@@ -79,6 +84,25 @@ class TopicView
     @custom_filters || {}
   end
 
+  # Configure a default scope to be applied to @filtered_posts.
+  # The registered block is called with @filtered_posts and an instance of
+  # `TopicView`.
+  #
+  # This API should be considered experimental until it is exposed in
+  # `Plugin::Instance`.
+  def self.apply_custom_default_scope(&block)
+    custom_default_scopes << block
+  end
+
+  def self.custom_default_scopes
+    @custom_default_scopes ||= []
+  end
+
+  # For testing
+  def self.reset_custom_default_scopes
+    @custom_default_scopes = nil
+  end
+
   def initialize(topic_or_topic_id, user = nil, options = {})
     @topic = find_topic(topic_or_topic_id)
     @user = user
@@ -108,7 +132,7 @@ class TopicView
     @page = @page.to_i > 1 ? @page.to_i : calculate_page
 
     setup_filtered_posts
-    @filtered_posts = apply_default_order(@filtered_posts)
+    @filtered_posts = apply_default_scope(@filtered_posts)
     filter_posts(options)
 
     if @posts && !@skip_custom_fields
@@ -127,7 +151,7 @@ class TopicView
     @draft_sequence = DraftSequence.current(@user, @draft_key)
 
     @can_review_topic = @guardian.can_review_topic?(@topic)
-    @queued_posts_enabled = NewPostManager.queue_enabled?
+    @queued_posts_enabled = NewPostManager.queue_enabled? || category_require_reply_approval?
     @personal_message = @topic.private_message?
   end
 
@@ -160,7 +184,7 @@ class TopicView
       if is_mega_topic?
         nil
       else
-        Gaps.new(filtered_post_ids, apply_default_order(unfiltered_posts).pluck(:id))
+        Gaps.new(filtered_post_ids, apply_default_scope(unfiltered_posts).pluck(:id))
       end
     end
   end
@@ -287,8 +311,10 @@ class TopicView
     elsif opts[:post_ids].present?
       filter_posts_by_ids(opts[:post_ids])
     elsif opts[:filter_post_number].present?
+      # Only used for megatopics where we do not load the entire post stream
       filter_posts_by_post_number(opts[:filter_post_number], opts[:asc])
     elsif opts[:best].present?
+      # Only used for wordpress
       filter_best(opts[:best], opts)
     else
       filter_posts_paged(@page)
@@ -387,9 +413,15 @@ class TopicView
   end
 
   def bookmarks
-    @bookmarks ||= @topic.bookmarks.where(user: @user).joins(:topic).select(
-      :id, :post_id, "topics.id AS topic_id", :for_topic, :reminder_at, :name, :auto_delete_preference
-    )
+    if SiteSetting.use_polymorphic_bookmarks
+      @bookmarks ||= Bookmark.for_user_in_topic(@user, @topic.id).select(
+        :id, :bookmarkable_id, :bookmarkable_type, :reminder_at, :name, :auto_delete_preference
+      )
+    else
+      @bookmarks ||= @topic.bookmarks.where(user: @user).joins(:topic).select(
+        :id, :post_id, "topics.id AS topic_id", :for_topic, :reminder_at, :name, :auto_delete_preference
+      )
+    end
   end
 
   MAX_PARTICIPANTS = 24
@@ -484,10 +516,6 @@ class TopicView
 
   def links
     @links ||= TopicLink.topic_map(@guardian, @topic.id)
-  end
-
-  def user_post_bookmarks
-    @user_post_bookmarks ||= @topic.bookmarks.where(user: @user)
   end
 
   def reviewable_counts
@@ -738,7 +766,7 @@ class TopicView
         :image_upload
       )
 
-    @posts = apply_default_order(@posts)
+    @posts = apply_default_scope(@posts)
     @posts = filter_post_types(@posts)
     @posts = @posts.with_deleted if @guardian.can_see_deleted_posts?(@topic.category)
     @posts
@@ -762,8 +790,14 @@ class TopicView
     result
   end
 
-  def apply_default_order(scope)
-    scope.order(sort_order: :asc)
+  def apply_default_scope(scope)
+    scope = scope.order(sort_order: :asc)
+
+    self.class.custom_default_scopes.each do |block|
+      scope = block.call(scope, self)
+    end
+
+    scope
   end
 
   def setup_filtered_posts
@@ -827,6 +861,14 @@ class TopicView
         OR posts.id IN (SELECT pr.reply_post_id FROM post_replies pr WHERE pr.post_id = :post_id)', { post_number: @replies_to_post_number.to_i, post_id: post_id })
 
       @contains_gaps = true
+    end
+
+    # Show Only Top Level Replies
+    if @filter_top_level_replies.present?
+      @filtered_posts = @filtered_posts.where('
+        posts.post_number > 1
+        AND posts.reply_to_post_number IS NULL
+      ')
     end
 
     # Filtering upwards

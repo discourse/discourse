@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe SpamRule::FlagSockpuppets do
 
   fab!(:user1) { Fabricate(:user, ip_address: '182.189.119.174') }

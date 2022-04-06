@@ -17,11 +17,6 @@ class ForumsController < ActionController::Base
       end
     end
 
-    if $shutdown # rubocop:disable Style/GlobalVars
-      render plain: "shutting down", status: (params[:shutdown_ok] ? 200 : 500)
-    else
-      render plain: "ok"
-    end
+    render plain: "ok"
   end
-
 end

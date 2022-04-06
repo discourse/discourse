@@ -3,8 +3,8 @@ import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
 
 discourseModule("Unit | Controller | create-account", function () {
-  test("basicUsernameValidation", async function (assert) {
-    const testInvalidUsername = async (username, expectedReason) => {
+  test("basicUsernameValidation", function (assert) {
+    const testInvalidUsername = (username, expectedReason) => {
       const controller = this.getController("create-account");
       controller.set("accountUsername", username);
 
@@ -24,8 +24,7 @@ discourseModule("Unit | Controller | create-account", function () {
       I18n.t("user.username.too_long")
     );
 
-    const controller = await this.owner.lookup("controller:create-account");
-    controller.setProperties({
+    const controller = this.getController("create-account", {
       accountUsername: "porkchops",
       prefilledUsername: "porkchops",
     });
@@ -39,7 +38,7 @@ discourseModule("Unit | Controller | create-account", function () {
     );
   });
 
-  test("passwordValidation", async function (assert) {
+  test("passwordValidation", function (assert) {
     const controller = this.getController("create-account");
 
     controller.set("authProvider", "");
@@ -49,12 +48,12 @@ discourseModule("Unit | Controller | create-account", function () {
     controller.set("accountPassword", "b4fcdae11f9167");
 
     assert.strictEqual(
-      controller.get("passwordValidation.ok"),
+      controller.passwordValidation.ok,
       true,
       "Password is ok"
     );
     assert.strictEqual(
-      controller.get("passwordValidation.reason"),
+      controller.passwordValidation.reason,
       I18n.t("user.password.ok"),
       "Password is valid"
     );
@@ -63,12 +62,12 @@ discourseModule("Unit | Controller | create-account", function () {
       controller.set("accountPassword", password);
 
       assert.strictEqual(
-        controller.get("passwordValidation.failed"),
+        controller.passwordValidation.failed,
         true,
         "password should be invalid: " + password
       );
       assert.strictEqual(
-        controller.get("passwordValidation.reason"),
+        controller.passwordValidation.reason,
         expectedReason,
         "password validation reason: " + password + ", " + expectedReason
       );
@@ -83,8 +82,8 @@ discourseModule("Unit | Controller | create-account", function () {
     );
   });
 
-  test("authProviderDisplayName", async function (assert) {
-    const controller = this.owner.lookup("controller:create-account");
+  test("authProviderDisplayName", function (assert) {
+    const controller = this.getController("create-account");
 
     assert.strictEqual(
       controller.authProviderDisplayName("facebook"),

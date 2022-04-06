@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe Post do
+  fab!(:coding_horror) { Fabricate(:coding_horror) }
+
   before { Oneboxer.stubs :onebox }
 
   let(:upload_path) { Discourse.store.upload_path }
@@ -195,7 +195,7 @@ describe Post do
 
   describe 'flagging helpers' do
     fab!(:post) { Fabricate(:post) }
-    fab!(:user) { Fabricate(:coding_horror) }
+    fab!(:user) { coding_horror }
     fab!(:admin) { Fabricate(:admin) }
 
     it 'is_flagged? is accurate' do
@@ -736,7 +736,7 @@ describe Post do
     end
 
     describe 'rate limiter' do
-      let(:changed_by) { Fabricate(:coding_horror) }
+      let(:changed_by) { coding_horror }
 
       it "triggers a rate limiter" do
         EditRateLimiter.any_instance.expects(:performed!)
@@ -745,7 +745,7 @@ describe Post do
     end
 
     describe 'with a new body' do
-      let(:changed_by) { Fabricate(:coding_horror) }
+      let(:changed_by) { coding_horror }
       let!(:result) { post.revise(changed_by, raw: 'updated body') }
 
       it 'acts correctly' do
@@ -836,7 +836,7 @@ describe Post do
     describe 'a new reply' do
 
       fab!(:topic) { Fabricate(:topic) }
-      let(:other_user) { Fabricate(:coding_horror) }
+      let(:other_user) { coding_horror }
       let(:reply_text) { "[quote=\"Evil Trout, post:1\"]\nhello\n[/quote]\nHmmm!" }
       let!(:post) { PostCreator.new(topic.user, raw: Fabricate.build(:post).raw, topic_id: topic.id).create }
       let!(:reply) { PostCreator.new(other_user, raw: reply_text, topic_id: topic.id, reply_to_post_number: post.post_number).create }
@@ -1232,7 +1232,6 @@ describe Post do
 
   describe "#set_owner" do
     fab!(:post) { Fabricate(:post) }
-    fab!(:coding_horror) { Fabricate(:coding_horror) }
 
     it "will change owner of a post correctly" do
       post.set_owner(coding_horror, Discourse.system_user)
@@ -1301,22 +1300,44 @@ describe Post do
     end
   end
 
-  describe ".hide!" do
+  describe "#hide!" do
+    fab!(:post) { Fabricate(:post) }
+
     after do
       Discourse.redis.flushdb
     end
 
-    it "should ignore the duplicate check" do
-      p1 = Fabricate(:post)
-      p2 = Fabricate(:post, user: p1.user)
+    it "should ignore the unique post validator when hiding a post with similar content as a recent post" do
+      post_2 = Fabricate(:post, user: post.user)
       SiteSetting.unique_posts_mins = 10
-      p1.store_unique_post_key
-      p2.reload.hide!(PostActionType.types[:off_topic])
-      expect(p2).to be_hidden
+      post.store_unique_post_key
+
+      expect(post_2.valid?).to eq(false)
+      expect(post_2.errors.full_messages.to_s).to include(I18n.t(:just_posted_that))
+
+      post_2.hide!(PostActionType.types[:off_topic])
+
+      expect(post_2.reload.hidden).to eq(true)
+    end
+
+    it 'should decrease user_stat topic_count for first post' do
+      expect do
+        post.hide!(PostActionType.types[:off_topic])
+      end.to change { post.user.user_stat.reload.topic_count }.from(1).to(0)
+    end
+
+    it 'should decrease user_stat post_count' do
+      post_2 = Fabricate(:post, topic: post.topic, user: post.user)
+
+      expect do
+        post_2.hide!(PostActionType.types[:off_topic])
+      end.to change { post_2.user.user_stat.reload.post_count }.from(1).to(0)
     end
   end
 
-  describe ".unhide!" do
+  describe "#unhide!" do
+    fab!(:post) { Fabricate(:post) }
+
     before { SiteSetting.unique_posts_mins = 5 }
 
     it "will unhide the first post & make the topic visible" do
@@ -1337,6 +1358,23 @@ describe Post do
 
       expect(post.hidden).to eq(false)
       expect(hidden_topic.visible).to eq(true)
+    end
+
+    it 'should increase user_stat topic_count for first post' do
+      post.hide!(PostActionType.types[:off_topic])
+
+      expect do
+        post.unhide!
+      end.to change { post.user.user_stat.reload.topic_count }.from(0).to(1)
+    end
+
+    it 'should decrease user_stat post_count' do
+      post_2 = Fabricate(:post, topic: post.topic, user: post.user)
+      post_2.hide!(PostActionType.types[:off_topic])
+
+      expect do
+        post_2.unhide!
+      end.to change { post_2.user.user_stat.reload.post_count }.from(0).to(1)
     end
   end
 
@@ -1771,6 +1809,30 @@ describe Post do
 
     it 'returns nothing if different admin' do
       expect(post.cannot_permanently_delete_reason(Fabricate(:admin))).to eq(nil)
+    end
+  end
+
+  describe "#canonical_url" do
+    it 'is able to determine correct canonical urls' do
+
+      # ugly, but no interface to set this and we don't want to create
+      # 100 posts to test this thing
+      TopicView.stubs(:chunk_size).returns(2)
+
+      post1 = Fabricate(:post)
+      topic = post1.topic
+
+      post2 = Fabricate(:post, topic: topic)
+      post3 = Fabricate(:post, topic: topic)
+      post4 = Fabricate(:post, topic: topic)
+
+      topic_url = post1.topic.url
+
+      expect(post1.canonical_url).to eq("#{topic_url}#post_#{post1.post_number}")
+      expect(post2.canonical_url).to eq("#{topic_url}#post_#{post2.post_number}")
+
+      expect(post3.canonical_url).to eq("#{topic_url}?page=2#post_#{post3.post_number}")
+      expect(post4.canonical_url).to eq("#{topic_url}?page=2#post_#{post4.post_number}")
     end
   end
 end

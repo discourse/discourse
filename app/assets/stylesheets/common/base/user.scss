@@ -7,7 +7,7 @@
   display: grid;
   grid-template-columns: 1fr 5fr;
   grid-template-rows: auto auto 1fr auto;
-  grid-row-gap: 20px;
+  grid-gap: 20px;
   .user-primary-navigation {
     grid-column-start: 1;
     grid-column-end: 3;
@@ -744,14 +744,6 @@
         margin: 0;
       }
     }
-  }
-}
-
-.qr-code-container {
-  display: flex;
-  .qr-code {
-    padding: 5px 5px 0 5px;
-    background-color: white;
   }
 }
 

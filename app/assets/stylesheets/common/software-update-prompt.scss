@@ -3,6 +3,7 @@
   flex: 1;
   right: 0;
   left: 0;
+  top: var(--header-offset, 60px);
   background-color: var(--tertiary-low);
   color: var(--tertiary);
   max-height: 0;
@@ -21,6 +22,12 @@
   .update-prompt-message {
     cursor: pointer;
     padding: 0.75em 0;
+
+    .d-icon {
+      margin-right: 0.33em;
+      font-size: 0.9em;
+    }
+
     span {
       text-decoration: underline;
     }
@@ -34,17 +41,15 @@
 
     span {
       cursor: pointer;
-      display: inline;
       height: 100%;
       display: flex;
       align-items: center;
       padding-left: 20px;
-    }
-  }
 
-  .d-icon {
-    margin-right: 0.33em;
-    font-size: 0.9em;
+      &:hover {
+        color: var(--tertiary-hover);
+      }
+    }
   }
 
   &.require-software-refresh {

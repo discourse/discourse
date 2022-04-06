@@ -150,37 +150,32 @@ class GroupsController < ApplicationController
 
   def update
     group = Group.find(params[:id])
-    guardian.ensure_can_edit!(group) unless guardian.can_admin_group?(group)
+    guardian.ensure_can_edit!(group) if !guardian.can_admin_group?(group)
 
-    params_with_permitted = group_params(automatic: group.automatic)
-    clear_disabled_email_settings(group, params_with_permitted)
+    group_attributes = group_params(automatic: group.automatic)
+    reset_group_email_settings_if_disabled!(group, group_attributes)
 
     categories, tags = []
     if !group.automatic || current_user.admin
-      notification_level, categories, tags = user_default_notifications(group, params_with_permitted)
+      notification_level, categories, tags = user_default_notifications(group, group_attributes)
 
       if params[:update_existing_users].blank?
         user_count = count_existing_users(group.group_users, notification_level, categories, tags)
-
-        if user_count > 0
-          render json: { user_count: user_count }
-          return
-        end
+        return render status: 422, json: { user_count: user_count, errors: [I18n.t('invalid_params', message: :update_existing_users)] } if user_count > 0
       end
     end
 
-    if group.update(params_with_permitted)
+    if group.update(group_attributes)
       GroupActionLogger.new(current_user, group).log_change_group_settings
       group.record_email_setting_changes!(current_user)
       group.expire_imap_mailbox_cache
       update_existing_users(group.group_users, notification_level, categories, tags) if params[:update_existing_users] == "true"
+      AdminDashboardData.clear_found_problem("group_#{group.id}_email_credentials")
 
-      if guardian.can_see?(group)
-        render json: success_json
-      else
-        # They can no longer see the group after changing permissions
-        render json: { route_to: '/g' }
-      end
+      # Redirect user to groups index page if they can no longer see the group
+      return redirect_with_client_support groups_path if !guardian.can_see?(group)
+
+      render json: success_json
     else
       render_json_error(group)
     end
@@ -250,7 +245,7 @@ class GroupsController < ApplicationController
       Discourse.deprecate(":desc is deprecated please use :asc instead", output_in_test: true, drop_from: '2.9.0')
       dir = (params[:desc] && params[:desc].present?) ? 'DESC' : 'ASC'
     end
-    order = ""
+    order = "NOT group_users.owner"
 
     if params[:requesters]
       guardian.ensure_can_edit!(group)
@@ -304,21 +299,15 @@ class GroupsController < ApplicationController
       end
     end
 
-    users = users.joins(:user_option).select('users.*, user_options.timezone, group_users.created_at as added_at')
-
-    members = users
-      .order('NOT group_users.owner')
+    users = users
+      .includes(:primary_group)
+      .joins(:user_option)
+      .select('users.*, user_options.timezone, group_users.created_at as added_at')
       .order(order)
       .order(username_lower: dir)
-      .limit(limit)
-      .offset(offset)
-      .includes(:primary_group)
 
-    owners = users
-      .order(order)
-      .order(username_lower: dir)
-      .where('group_users.owner')
-      .includes(:primary_group)
+    members = users.limit(limit).offset(offset)
+    owners = users.where('group_users.owner')
 
     render json: {
       members: serialize_data(members, GroupUserSerializer),
@@ -663,82 +652,74 @@ class GroupsController < ApplicationController
   end
 
   def group_params(automatic: false)
-    permitted_params =
-      if automatic
-        %i{
-          visibility_level
-          mentionable_level
-          messageable_level
-          default_notification_level
-          bio_raw
-          flair_icon
-          flair_upload_id
-          flair_bg_color
-          flair_color
-        }
-      else
-        default_params = %i{
-          mentionable_level
-          messageable_level
-          title
-          flair_icon
-          flair_upload_id
-          flair_bg_color
-          flair_color
-          bio_raw
-          public_admission
-          public_exit
-          allow_membership_requests
-          full_name
-          default_notification_level
-          membership_request_template
-        }
+    attributes = %i{
+      bio_raw
+      default_notification_level
+      messageable_level
+      mentionable_level
+      flair_bg_color
+      flair_color
+      flair_icon
+      flair_upload_id
+    }
 
-        if current_user.staff?
-          default_params.push(*[
-            :incoming_email,
-            :smtp_server,
-            :smtp_port,
-            :smtp_ssl,
-            :smtp_enabled,
-            :smtp_updated_by,
-            :smtp_updated_at,
-            :imap_server,
-            :imap_port,
-            :imap_ssl,
-            :imap_mailbox_name,
-            :imap_enabled,
-            :imap_updated_by,
-            :imap_updated_at,
-            :email_username,
-            :email_password,
-            :primary_group,
-            :visibility_level,
-            :members_visibility_level,
-            :name,
-            :grant_trust_level,
-            :automatic_membership_email_domains,
-            :publish_read_state,
-            :allow_unknown_sender_topic_replies
-          ])
+    if automatic
+      attributes.push(:visibility_level)
+    else
+      attributes.push(
+        :title,
+        :allow_membership_requests,
+        :full_name,
+        :public_exit,
+        :public_admission,
+        :membership_request_template
+      )
+    end
 
-          custom_fields = DiscoursePluginRegistry.editable_group_custom_fields
-          default_params << { custom_fields: custom_fields } unless custom_fields.blank?
-        end
+    if !automatic && current_user.staff?
+      attributes.push(
+        :incoming_email,
+        :smtp_server,
+        :smtp_port,
+        :smtp_ssl,
+        :smtp_enabled,
+        :smtp_updated_by,
+        :smtp_updated_at,
+        :imap_server,
+        :imap_port,
+        :imap_ssl,
+        :imap_mailbox_name,
+        :imap_enabled,
+        :imap_updated_by,
+        :imap_updated_at,
+        :email_username,
+        :email_password,
+        :email_from_alias,
+        :primary_group,
+        :visibility_level,
+        :members_visibility_level,
+        :name,
+        :grant_trust_level,
+        :automatic_membership_email_domains,
+        :publish_read_state,
+        :allow_unknown_sender_topic_replies
+      )
 
-        default_params
-      end
+      custom_fields = DiscoursePluginRegistry.editable_group_custom_fields
+      attributes << { custom_fields: custom_fields } if custom_fields.present?
+    end
 
     if !automatic || current_user.admin
       [:muted, :regular, :tracking, :watching, :watching_first_post].each do |level|
-        permitted_params << { "#{level}_category_ids" => [] }
-        permitted_params << { "#{level}_tags" => [] }
+        attributes << { "#{level}_category_ids" => [] }
+        attributes << { "#{level}_tags" => [] }
       end
     end
 
-    permitted_params = permitted_params | DiscoursePluginRegistry.group_params
+    attributes << { associated_group_ids: [] } if guardian.can_associate_groups?
+    attributes.concat(DiscoursePluginRegistry.group_params)
 
-    params.require(:group).permit(*permitted_params)
+    params.require(:group).permit(*attributes)
   end
 
   def find_group(param_name, ensure_can_see: true)
@@ -767,23 +748,23 @@ class GroupsController < ApplicationController
     users
   end
 
-  def clear_disabled_email_settings(group, params_with_permitted)
-    should_clear_imap = group.imap_enabled && params_with_permitted.key?(:imap_enabled) && params_with_permitted[:imap_enabled] == "false"
-    should_clear_smtp = group.smtp_enabled && params_with_permitted.key?(:smtp_enabled) && params_with_permitted[:smtp_enabled] == "false"
+  def reset_group_email_settings_if_disabled!(group, attributes)
+    should_clear_imap = group.imap_enabled && attributes[:imap_enabled] == "false"
+    should_clear_smtp = group.smtp_enabled && attributes[:smtp_enabled] == "false"
 
     if should_clear_imap || should_clear_smtp
-      params_with_permitted[:imap_server] = nil
-      params_with_permitted[:imap_ssl] = false
-      params_with_permitted[:imap_port] = nil
-      params_with_permitted[:imap_mailbox_name] = ""
+      attributes[:imap_server] = nil
+      attributes[:imap_ssl] = false
+      attributes[:imap_port] = nil
+      attributes[:imap_mailbox_name] = ""
     end
 
     if should_clear_smtp
-      params_with_permitted[:smtp_server] = nil
-      params_with_permitted[:smtp_ssl] = false
-      params_with_permitted[:smtp_port] = nil
-      params_with_permitted[:email_username] = nil
-      params_with_permitted[:email_password] = nil
+      attributes[:smtp_server] = nil
+      attributes[:smtp_ssl] = false
+      attributes[:smtp_port] = nil
+      attributes[:email_username] = nil
+      attributes[:email_password] = nil
     end
   end
 

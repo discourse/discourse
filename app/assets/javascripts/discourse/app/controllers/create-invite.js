@@ -1,21 +1,24 @@
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
-import { empty, notEmpty } from "@ember/object/computed";
+import { not } from "@ember/object/computed";
 import discourseComputed from "discourse-common/utils/decorators";
 import { extractError } from "discourse/lib/ajax-error";
 import { getNativeContact } from "discourse/lib/pwa-utils";
+import { emailValid, hostnameValid } from "discourse/lib/utilities";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import Group from "discourse/models/group";
 import Invite from "discourse/models/invite";
 import I18n from "I18n";
 import { FORMAT } from "select-kit/components/future-date-input-selector";
+import { sanitize } from "discourse/lib/text";
 
 export default Controller.extend(
   ModalFunctionality,
   bufferedProperty("invite"),
   {
     allGroups: null,
+    topics: null,
 
     flashText: null,
     flashClass: null,
@@ -28,8 +31,17 @@ export default Controller.extend(
     inviteToTopic: false,
     limitToEmail: false,
 
-    isLink: empty("buffered.email"),
-    isEmail: notEmpty("buffered.email"),
+    @discourseComputed("buffered.emailOrDomain")
+    isEmail(emailOrDomain) {
+      return emailValid(emailOrDomain);
+    },
+
+    @discourseComputed("buffered.emailOrDomain")
+    isDomain(emailOrDomain) {
+      return hostnameValid(emailOrDomain);
+    },
+
+    isLink: not("isEmail"),
 
     onShow() {
       Group.findAll().then((groups) => {
@@ -37,6 +49,7 @@ export default Controller.extend(
       });
 
       this.setProperties({
+        topics: [],
         flashText: null,
         flashClass: null,
         flashLink: false,
@@ -61,11 +74,20 @@ export default Controller.extend(
     },
 
     setInvite(invite) {
-      this.set("invite", invite);
+      this.setProperties({ invite, topics: invite.topics });
     },
 
     save(opts) {
       const data = { ...this.buffered.buffer };
+
+      if (data.emailOrDomain) {
+        if (emailValid(data.emailOrDomain)) {
+          data.email = data.emailOrDomain;
+        } else if (hostnameValid(data.emailOrDomain)) {
+          data.domain = data.emailOrDomain;
+        }
+        delete data.emailOrDomain;
+      }
 
       if (data.groupIds !== undefined) {
         data.group_ids = data.groupIds.length > 0 ? data.groupIds : "";
@@ -99,7 +121,7 @@ export default Controller.extend(
 
       return this.invite
         .save(data)
-        .then((result) => {
+        .then(() => {
           this.rollbackBuffer();
 
           if (
@@ -109,27 +131,19 @@ export default Controller.extend(
             this.invites.unshiftObject(this.invite);
           }
 
-          if (result.warnings) {
+          if (this.isEmail && opts.sendEmail) {
+            this.send("closeModal");
+          } else {
             this.setProperties({
-              flashText: result.warnings.join(","),
-              flashClass: "warning",
+              flashText: sanitize(I18n.t("user.invited.invite.invite_saved")),
+              flashClass: "success",
               flashLink: !this.editing,
             });
-          } else {
-            if (this.isEmail && opts.sendEmail) {
-              this.send("closeModal");
-            } else {
-              this.setProperties({
-                flashText: I18n.t("user.invited.invite.invite_saved"),
-                flashClass: "success",
-                flashLink: !this.editing,
-              });
-            }
           }
         })
         .catch((e) =>
           this.setProperties({
-            flashText: extractError(e),
+            flashText: sanitize(extractError(e)),
             flashClass: "error",
             flashLink: false,
           })
@@ -180,6 +194,12 @@ export default Controller.extend(
       getNativeContact(this.capabilities, ["email"], false).then((result) => {
         this.set("buffered.email", result[0].email[0]);
       });
+    },
+
+    @action
+    onChangeTopic(topicId, topic) {
+      this.set("topics", [topic]);
+      this.set("buffered.topicId", topicId);
     },
   }
 );

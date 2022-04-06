@@ -26,14 +26,10 @@ module Onebox
         if fragment
           fragment = Addressable::URI.unencode(fragment)
 
-          if html_doc.css('.Box.md')
-            # For links to markdown docs
+          # For links to markdown and rdoc
+          if html_doc.css(".Box.md, .Box.rdoc").present?
             node = html_doc.css('a.anchor').find { |n| n['href'] == "##{fragment}" }
             subtitle = node&.parent&.text
-          elsif html_doc.css('.Box.rdoc')
-            # For links to rdoc docs
-            node = html_doc.css('h3').find { |n| n['id'] == "user-content-#{fragment.downcase}" }
-            subtitle = node&.css('text()')&.first&.text
           end
 
           title = "#{title} - #{subtitle}" if subtitle

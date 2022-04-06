@@ -59,9 +59,26 @@
       onChange=(action "onChangeEmailDomainsSetting")
       options=(hash allowAny=true)
     }}
+
+    {{#if showAssociatedGroups}}
+      <label for="automatic_membership_associated_groups">
+        {{i18n "admin.groups.manage.membership.automatic_membership_associated_groups"}}
+      </label>
+
+      {{list-setting
+        name="automatic_membership_associated_groups"
+        class="group-form-automatic-membership-associated-groups"
+        value=model.associatedGroupIds
+        choices=associatedGroups
+        settingName="name"
+        nameProperty="label"
+        valueProperty="id"
+        onChange=(action (mut model.associated_group_ids))
+      }}
+    {{/if}}
   </div>
 
-  {{plugin-outlet name="groups-form-membership-below-automatic"
+  {{plugin-outlet name="groups-form-membership-below-automatic" tagName="span" connectorTagName="div"
                   args=(hash model=model)}}
 
   <div class="control-group">

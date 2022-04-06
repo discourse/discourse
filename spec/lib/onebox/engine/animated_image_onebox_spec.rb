@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Onebox::Engine::AnimatedImageOnebox do
   let(:giphy) { "http://gph.is/15bRbWf" }
   let(:direct_gif) { "https://media4.giphy.com/media/Zatyu5LBO2zCyhiAAs/giphy.gif" }

@@ -30,4 +30,4 @@
 {{~#if topicInvisible~}}
   <span title={{invisibleTitle}} class="topic-status">{{invisibleIcon}}</span>
 {{~/if~}}
-{{plugin-outlet name="after-topic-status" tagName="" args=(hash topic=topic)~}}
+{{plugin-outlet name="after-topic-status" connectorTagName="div" args=(hash topic=topic)~}}

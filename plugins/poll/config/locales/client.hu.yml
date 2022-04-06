@@ -43,6 +43,9 @@ hu:
       show-results:
         title: "Eredmények megjelenítése"
         label: "Eredmények megjelenítése"
+      remove-vote:
+        title: "Saját szavazat eltávolítása"
+        label: "Szavazat eltávolítása"
       hide-results:
         title: "Vissza a szavazataihoz"
         label: "Szavazás megjelenítése"

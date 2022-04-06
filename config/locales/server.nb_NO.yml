@@ -221,7 +221,6 @@ nb_NO:
   too_many_links:
     one: "Beklager, nye brukere kan bare legge til én lenke i et innlegg."
     other: "Beklager, nye brukere kan bare legge til %{count} lenker i et innlegg."
-  contains_blocked_word: "Innlegget ditt inneholder et ord som ikke er tillatt: %{word}"
   spamming_host: "Beklager, du kan ikke lenke til det domenet."
   user_is_suspended: "Utestengte brukere kan ikke skrive innlegg."
   topic_not_found: "Noe gikk galt. Kanskje emnet ble lukket eller slettet mens du leste det?"
@@ -599,12 +598,6 @@ nb_NO:
       title: "Lik"
       description: "Liker dette innlegget"
       short_description: "Lik dette innlegget"
-  user_activity:
-    no_bookmarks:
-      self: "Du har ingen bokmerkede innlegg; bokmerker lar deg raskt slå opp spesifike innlegg."
-      others: "Ingen bokmerker."
-    no_drafts:
-      self: "Du har ingen utkast; når du begynner å forfatte et svar på et emne vil det automatisk lagres som et nytt utkast."
   topic_flag_types:
     spam:
       title: "Spam"
@@ -909,6 +902,18 @@ nb_NO:
       labels:
         filename: Filnavn
         author: Forfatter
+    top_users_by_likes_received:
+      labels:
+        user: Bruker
+        qtt_like: Likes mottatt
+    top_users_by_likes_received_from_inferior_trust_level:
+      labels:
+        user: Bruker
+        qtt_like: Likes mottatt
+    top_users_by_likes_received_from_a_variety_of_people:
+      labels:
+        user: Bruker
+        qtt_like: Likes mottatt
   dashboard:
     rails_env_warning: "Serveren din kjører i %{env] modus."
     host_names_warning: "Din config/database.yml-fil bruker forvalgt lokalvert-vertsnavn. Oppdater det til å bruke din sides vertsnavn."
@@ -941,7 +946,6 @@ nb_NO:
     min_personal_message_title_length: "Minste lengde i antall tegn for en meldingstittel"
     max_emojis_in_title: "Maksimalt antall emojier i en emnetittel"
     min_search_term_length: "Minimum lengde på søkeord i tegn"
-    search_tokenize_chinese_japanese_korean: "Tving søk til å tokenisere Kinesisk/Japansk/Koreansk selv på nettsteder uten KJK"
     search_prefer_recent_posts: "Hvis søking er tregt på et stort forum, vil dette valget forsøke å søke i en index av de nyeste innleggene først"
     search_recent_posts_size: "Hvor mange innlegg som beholdes i indeksen"
     log_search_queries: "Logg søkeord som benyttes av brukerne"
@@ -973,7 +977,6 @@ nb_NO:
     show_pinned_excerpt_mobile: "Vis utdrag fra festede emner i mobil visning."
     show_pinned_excerpt_desktop: "Vis utdrag fra festede emner i desktop visning."
     post_onebox_maxlength: "Maksimal lengde på et onebox Discourse innlegg i antall tegn."
-    blocked_onebox_domains: "En liste over domener som aldri vil bli forsøkt oneboxet."
     allowed_inline_onebox_domains: "En liste over domener hvor onebox brukes i miniatyrstørrelse hvis lenken ikke har en tittel"
     max_oneboxes_per_post: "Maksimalt antall oneboxer i hvert innlegg."
     notification_email: "Adressen som skal brukes som avsender: på alle viktige system e-poster. Domenet som spesifiseres her må ha SPF, DKIM og reverse PTR record satt korrekt for at e-post skal nå frem."

@@ -1,6 +1,6 @@
 {{#create-account email=accountEmail disabled=submitDisabled action=(action "createAccount")}}
   {{#unless complete}}
-    {{plugin-outlet name="create-account-before-modal-body"}}
+    {{plugin-outlet name="create-account-before-modal-body" tagName="span" connectorTagName="div"}}
     {{#d-modal-body class=modalBodyClasses preventModalAlertHiding=true}}
       <div class="create-account-form">
         <div class="login-welcome-header" id="create-account-title">
@@ -49,7 +49,7 @@
                   maxlength=maxUsernameLength
                   aria-describedby="username-validation"
                   aria-invalid=usernameValidation.failed
-                  autocomplete="discourse"
+                  autocomplete="off"
                 }}
                 <label class="alt-placeholder" for="new-account-username">
                   {{i18n "user.username.title"}}
@@ -88,7 +88,6 @@
 
               {{plugin-outlet
                   name="create-account-before-password"
-                  noTags=true
                   args=(hash
                     accountName=accountName
                     accountUsername=accountUsername
@@ -141,7 +140,6 @@
 
               {{plugin-outlet
                 name="create-account-after-password"
-                noTags=true
                 args=(hash
                   accountName=accountName
                   accountUsername=accountUsername
@@ -184,7 +182,7 @@
             </div>
           </div>
 
-          {{plugin-outlet name="create-account-after-modal-footer" tagName=""}}
+          {{plugin-outlet name="create-account-after-modal-footer" connectorTagName="div"}}
 
         {{/if}}
         {{#unless hasAuthOptions}}

@@ -1,5 +1,4 @@
 import DiscourseURL from "discourse/lib/url";
-import Handlebars from "handlebars";
 import { isDevelopment } from "discourse-common/config/environment";
 
 //  Use the message bus for live reloading of components for faster development.
@@ -51,10 +50,6 @@ export default {
     messageBus.subscribe(
       "/file-change",
       (data) => {
-        if (Handlebars.compile && !Ember.TEMPLATES.empty) {
-          // hbs notifications only happen in dev
-          Ember.TEMPLATES.empty = Handlebars.compile("<div></div>");
-        }
         data.forEach((me) => {
           if (me === "refresh") {
             // Refresh if necessary

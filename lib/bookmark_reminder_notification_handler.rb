@@ -7,6 +7,9 @@ class BookmarkReminderNotificationHandler
       # we don't send reminders for deleted posts or topics,
       # just as we don't allow creation of bookmarks for deleted
       # posts or topics
+      #
+      # TODO (martin) [POLYBOOK] This will need to be restructured for polymorphic
+      # bookmarks when reminders are handled.
       if bookmark.post.blank? || bookmark.topic.blank?
         clear_reminder(bookmark)
       else
@@ -25,6 +28,10 @@ class BookmarkReminderNotificationHandler
     Rails.logger.debug(
       "Clearing bookmark reminder for bookmark_id #{bookmark.id}. reminder at: #{bookmark.reminder_at}"
     )
+
+    if bookmark.auto_clear_reminder_when_reminder_sent?
+      bookmark.reminder_at = nil
+    end
 
     bookmark.clear_reminder!
   end

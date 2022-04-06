@@ -8,12 +8,10 @@
 
 #reply-control {
   z-index: z("mobile-composer");
+
   .reply-area {
-    padding: 0 10px;
-    padding-bottom: env(safe-area-inset-bottom);
-    @media screen and (max-width: 374px) {
-      padding: 0 5px;
-    }
+    padding: 6px;
+    padding-bottom: unquote("max(env(safe-area-inset-bottom), 6px)");
     flex-grow: 1;
   }
 
@@ -25,15 +23,20 @@
   }
 
   .keyboard-visible &.open {
-    height: calc(var(--composer-vh, 1vh) * 100);
+    height: 100%; // Android: Reduces composer jumpiness when the keyboard toggles
   }
 
-  .keyboard-visible body.ios-safari-composer-hacks &.open .reply-area {
-    padding-bottom: 0px;
+  .keyboard-visible body.ios-safari-composer-hacks &.open {
+    height: calc(var(--composer-vh, 1vh) * 100);
+    .reply-area {
+      padding-bottom: 6px;
+    }
   }
 
   .reply-to {
-    margin: 5px 0;
+    justify-content: space-between;
+    margin-bottom: 6px;
+
     .reply-details {
       max-width: calc(100% - 75px);
     }
@@ -52,6 +55,7 @@
 
       .composer-controls {
         align-self: flex-start;
+        gap: 6px;
       }
     }
   }
@@ -68,7 +72,7 @@
 
     .toggle-toolbar,
     .toggle-minimize {
-      top: 8px;
+      top: 6px;
     }
     .draft-text {
       width: calc(100% - 40px);
@@ -78,17 +82,21 @@
 
   #reply-title {
     width: calc(100% - 20px);
+    margin-bottom: 6px;
   }
 
-  .category-input {
-    margin-bottom: 5px;
+  .category-input,
+  .with-tags .category-input {
+    margin-bottom: 6px;
+    max-width: calc(50% - 3px);
   }
 
   .submit-panel {
-    margin-bottom: 5px;
-    align-items: baseline;
+    margin-top: 6px;
+
     .save-or-cancel {
       flex: 1 1 auto;
+
       #draft-status,
       #file-uploading {
         margin-left: 6px;
@@ -115,10 +123,6 @@
     .mobile-preview {
       margin-left: 0.25em;
     }
-  }
-
-  .d-editor-textarea-wrapper {
-    width: 100%;
   }
 
   &.show-preview {
@@ -175,7 +179,7 @@
   .user-selector {
     margin: 0;
     .users-input {
-      margin-bottom: 5px;
+      margin-bottom: 6px;
     }
   }
 
@@ -183,7 +187,11 @@
     .mini-tag-chooser,
     .category-chooser {
       z-index: z("base");
-      margin-bottom: 5px;
+    }
+
+    .mini-tag-chooser {
+      margin: 0 0 6px 6px;
+      max-width: calc(50% - 3px);
     }
 
     .selected-name {
@@ -202,7 +210,7 @@
 
   .without-tags {
     .category-input {
-      margin-left: 5px;
+      margin-left: 6px;
     }
   }
 
@@ -215,11 +223,15 @@
     width: 100%;
   }
 
+  .users-input .select-kit.multi-select {
+    width: 100%;
+  }
+
   .add-warning {
-    margin: 0 0 5px 5px;
+    margin-bottom: 6px;
   }
 
   .whisper {
-    margin-right: 5px;
+    margin-right: 6px;
   }
 }

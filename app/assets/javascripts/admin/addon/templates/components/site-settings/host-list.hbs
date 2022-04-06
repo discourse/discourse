@@ -1,3 +1,12 @@
-{{value-list values=value addKey="admin.site_settings.add_host"}}
+{{list-setting
+  value=settingValue
+  settingName=setting.setting
+  choices=settingValue
+  onChange=(action "onChange")
+  options=(hash
+    allowAny=allowAny
+  )
+}}
+
 {{setting-validation-message message=validationMessage}}
 <div class="desc">{{html-safe setting.description}}</div>

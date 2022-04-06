@@ -1,0 +1,268 @@
+{
+  "type": "array",
+  "minItems": 1,
+  "uniqueItems": true,
+  "items": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "integer"
+      },
+      "name": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "username": {
+        "type": "string"
+      },
+      "avatar_template": {
+        "type": "string"
+      },
+      "created_at": {
+        "type": "string"
+      },
+      "cooked": {
+        "type": "string"
+      },
+      "post_number": {
+        "type": "integer"
+      },
+      "post_type": {
+        "type": "integer"
+      },
+      "updated_at": {
+        "type": "string"
+      },
+      "reply_count": {
+        "type": "integer"
+      },
+      "reply_to_post_number": {
+        "type": "integer"
+      },
+      "quote_count": {
+        "type": "integer"
+      },
+      "incoming_link_count": {
+        "type": "integer"
+      },
+      "reads": {
+        "type": "integer"
+      },
+      "readers_count": {
+        "type": "integer"
+      },
+      "score": {
+        "type": "integer"
+      },
+      "yours": {
+        "type": "boolean"
+      },
+      "topic_id": {
+        "type": "integer"
+      },
+      "topic_slug": {
+        "type": "string"
+      },
+      "display_username": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "primary_group_name": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "flair_name": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "flair_url": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "flair_bg_color": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "flair_color": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "version": {
+        "type": "integer"
+      },
+      "can_edit": {
+        "type": "boolean"
+      },
+      "can_delete": {
+        "type": "boolean"
+      },
+      "can_recover": {
+        "type": "boolean"
+      },
+      "can_wiki": {
+        "type": "boolean"
+      },
+      "user_title": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "reply_to_user": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "username": {
+            "type": "string"
+          },
+          "avatar_template": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "username",
+          "avatar_template"
+        ]
+      },
+      "bookmarked": {
+        "type": "boolean"
+      },
+      "actions_summary": {
+        "type": "array",
+        "items": [
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "integer"
+              },
+              "can_act": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "id",
+              "can_act"
+            ]
+          }
+        ]
+      },
+      "moderator": {
+        "type": "boolean"
+      },
+      "admin": {
+        "type": "boolean"
+      },
+      "staff": {
+        "type": "boolean"
+      },
+      "user_id": {
+        "type": "integer"
+      },
+      "hidden": {
+        "type": "boolean"
+      },
+      "trust_level": {
+        "type": "integer"
+      },
+      "deleted_at": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "user_deleted": {
+        "type": "boolean"
+      },
+      "edit_reason": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "can_view_edit_history": {
+        "type": "boolean"
+      },
+      "wiki": {
+        "type": "boolean"
+      },
+      "reviewable_id": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "reviewable_score_count": {
+        "type": "integer"
+      },
+      "reviewable_score_pending_count": {
+        "type": "integer"
+      }
+    },
+    "required": [
+      "id",
+      "name",
+      "username",
+      "avatar_template",
+      "created_at",
+      "cooked",
+      "post_number",
+      "post_type",
+      "updated_at",
+      "reply_count",
+      "reply_to_post_number",
+      "quote_count",
+      "incoming_link_count",
+      "reads",
+      "readers_count",
+      "score",
+      "yours",
+      "topic_id",
+      "topic_slug",
+      "display_username",
+      "primary_group_name",
+      "flair_name",
+      "flair_url",
+      "flair_bg_color",
+      "flair_color",
+      "version",
+      "can_edit",
+      "can_delete",
+      "can_recover",
+      "can_wiki",
+      "user_title",
+      "reply_to_user",
+      "bookmarked",
+      "actions_summary",
+      "moderator",
+      "admin",
+      "staff",
+      "user_id",
+      "hidden",
+      "trust_level",
+      "deleted_at",
+      "user_deleted",
+      "edit_reason",
+      "can_view_edit_history",
+      "wiki",
+      "reviewable_id",
+      "reviewable_score_count",
+      "reviewable_score_pending_count"
+    ]
+  }
+}

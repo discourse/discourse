@@ -63,7 +63,34 @@ describe 'users' do
         expected_response_schema = load_spec_schema('user_get_response')
         schema expected_response_schema
 
-        let(:username) { 'system' }
+        let(:username) { Fabricate(:user).username }
+
+        it_behaves_like "a JSON endpoint", 200 do
+          let(:expected_response_schema) { expected_response_schema }
+          let(:expected_request_schema) { expected_request_schema }
+        end
+      end
+    end
+
+    put 'Update a user' do
+      tags 'Users'
+      operationId 'updateUser'
+      consumes 'application/json'
+
+      parameter name: 'Api-Key', in: :header, type: :string, required: true
+      parameter name: 'Api-Username', in: :header, type: :string, required: true
+      expected_request_schema = load_spec_schema('user_update_request')
+      parameter name: :username, in: :path, type: :string, required: true
+      parameter name: :params, in: :body, schema: expected_request_schema
+
+      produces 'application/json'
+      response '200', 'user updated' do
+        expected_response_schema = load_spec_schema('user_update_response')
+        schema expected_response_schema
+
+        let(:username) { Fabricate(:user).username }
+        let(:params) { { 'name' => 'user' } }
+
         it_behaves_like "a JSON endpoint", 200 do
           let(:expected_response_schema) { expected_response_schema }
           let(:expected_request_schema) { expected_request_schema }
@@ -175,7 +202,6 @@ describe 'users' do
   end
 
   path '/u/{username}/preferences/email.json' do
-
     put 'Update email' do
       tags 'Users'
       operationId 'updateEmail'
@@ -200,7 +226,33 @@ describe 'users' do
         end
       end
     end
+  end
 
+  path '/u/{username}/preferences/username.json' do
+    put 'Update username' do
+      tags 'Users'
+      operationId 'updateUsername'
+      consumes 'application/json'
+      expected_request_schema = load_spec_schema('user_update_username_request')
+
+      parameter name: :username, in: :path, type: :string, required: true
+      parameter name: :params, in: :body, schema: expected_request_schema
+
+      produces 'application/json'
+      response '200', 'username updated' do
+
+        let(:user) { Fabricate(:user) }
+        let(:username) { user.username }
+        let(:params) { { 'new_username' => "#{user.username}1" } }
+
+        expected_response_schema = nil
+
+        it_behaves_like "a JSON endpoint", 200 do
+          let(:expected_response_schema) { expected_response_schema }
+          let(:expected_request_schema) { expected_request_schema }
+        end
+      end
+    end
   end
 
   path '/directory_items.json' do
@@ -567,11 +619,36 @@ describe 'users' do
         expected_response_schema = nil
 
         let(:user) { Fabricate(:user) }
-        let(:token) { user.email_tokens.create(email: user.email).token }
-        let(:params) { {
-          'username' => user.username,
-          'password' => 'NH8QYbxYS5Zv5qEFzA4jULvM'
-        } }
+        let(:token) { Fabricate(:email_token, user: user, scope: EmailToken.scopes[:password_reset]).token }
+        let(:params) do
+          {
+            'username' => user.username,
+            'password' => 'NH8QYbxYS5Zv5qEFzA4jULvM'
+          }
+        end
+
+        it_behaves_like "a JSON endpoint", 200 do
+          let(:expected_response_schema) { expected_response_schema }
+          let(:expected_request_schema) { expected_request_schema }
+        end
+      end
+    end
+  end
+
+  path '/u/{username}/emails.json' do
+    get 'Get email addresses belonging to a user' do
+      tags 'Users'
+      operationId 'getUserEmails'
+      consumes 'application/json'
+      expected_request_schema = nil
+      parameter name: :username, in: :path, type: :string, required: true
+
+      produces 'application/json'
+      response '200', 'success response' do
+        expected_response_schema = load_spec_schema('user_emails_response')
+        schema expected_response_schema
+
+        let(:username) { Fabricate(:user).username }
 
         it_behaves_like "a JSON endpoint", 200 do
           let(:expected_response_schema) { expected_response_schema }

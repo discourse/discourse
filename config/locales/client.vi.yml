@@ -96,7 +96,6 @@ vi:
       to_placeholder: "đến nay"
     share:
       topic_html: 'Chủ đề:<span class="topic-title">%{topicTitle}</span>'
-      post: "đăng #%{postNumber}"
       close: "đóng"
       twitter: "Chia sẻ trên Twitter"
       facebook: "Chia sẻ trên Facebook"
@@ -145,7 +144,6 @@ vi:
     bootstrap_mode_disabled: "Chế độ bootstrap sẽ bị vô hiệu trong 24 giờ tới."
     themes:
       default_description: "Mặc định"
-      broken_theme_alert: "Site của bạn có thể không hoạt động vì theme / component %{theme} bị lỗi. Tắt nó ở %{path}"
     s3:
       regions:
         ap_northeast_1: "Châu Á Thái Bình Dương (Tokyo)"
@@ -261,10 +259,7 @@ vi:
       list_permission_denied: "Bạn không có quyền xem chỉ mục của người dùng này"
       no_user_bookmarks: "Bạn không có bài viết nào được đánh dấu; dấu trang cho phép bạn nhanh chóng tham khảo các bài viết cụ thể."
       auto_delete_preference:
-        label: "Tự động xóa"
-        never: "Không bao giờ"
-        when_reminder_sent: "Sau khi lời nhắc được gửi đi"
-        on_owner_reply: "Sau khi tôi trả lời chủ đề này"
+        when_reminder_sent: "Xóa dấu trang"
       search_placeholder: "Tìm kiếm dấu trang theo tên, tiêu đề chủ đề hoặc nội dung bài đăng"
       search: "Tìm kiếm"
       reminders:
@@ -319,8 +314,8 @@ vi:
     switch_to_anon: "Vào chế độ Ẩn danh"
     switch_from_anon: "Thoát chế độ Ẩn danh"
     banner:
-      close: "Ẩn banner này."
-      edit: "Sửa banner này >>"
+      close: "Ẩn banner này"
+      edit: "Sửa"
     pwa:
       install_banner: "Bạn có muốn <a href>cài đặt %{title} trên thiết bị này?</a> "
     choose_topic:
@@ -1264,11 +1259,9 @@ vi:
         every_month: "mỗi tháng"
         every_six_months: "mỗi sáu tháng"
       email_level:
-        title: "Gửi cho tôi một email khi có người trích dẫn, trả lời cho bài viết của tôi, đề cập đến @username của tôi, hoặc mời tôi đến một chủ đề"
         always: "luôn luôn"
         only_when_away: "chỉ khi rời xa"
         never: "không bao giờ"
-      email_messages_level: "Gửi cho tôi email khi có ai đó nhắn tin cho tôi"
       include_tl0_in_digests: "Bao gồm nội dung của những thành viên mới trong email tóm tắt."
       email_in_reply_to: "Kèm theo đoạn dẫn trích trả lời bài viết trong email"
       other_settings: "Khác"
@@ -1347,22 +1340,19 @@ vi:
         invite:
           new_title: "Tạo lời mời"
           edit_title: "Chỉnh sửa lời mời"
-          instructions: "Chia sẻ liên kết này để cấp quyền truy cập ngay lập tức vào trang web này"
+          instructions: "Chia sẻ liên kết này để cấp quyền truy cập ngay lập tức vào trang web này:"
           copy_link: "sao chép liên kết"
           expires_in_time: "Hết hạn trong %{time}"
           expired_at_time: "Đã hết hạn vào lúc %{time}"
           show_advanced: "Hiển thị các tùy chọn nâng cao"
           hide_advanced: "Ẩn các tùy chọn nâng cao"
-          restrict_email: "Giới hạn đến một địa chỉ email"
           max_redemptions_allowed: "Sử dụng tối đa"
           add_to_groups: "Thêm vào nhóm"
-          invite_to_topic: "Đến chủ đề này"
           expires_at: "Hết hạn sau"
           custom_message: "Tin nhắn cá nhân tùy chọn"
           send_invite_email: "Lưu và Gửi Email"
           save_invite: "Lưu lời mời"
           invite_saved: "Đã lưu lời mời."
-          invite_copied: "Đã sao chép liên kết mời."
         bulk_invite:
           none: "Không có lời mời để hiển thị trên trang này."
           text: "Mời hàng loạt"
@@ -1639,7 +1629,6 @@ vi:
       success: "Tài khoản của bạn đã được tạo và bây giờ bạn đã đăng nhập."
       name_label: "T"
       password_label: "Mật khẩu"
-      optional_description: "(tùy chọn)"
     password_reset:
       continue: "Tiếp tục truy cập %{site_name}"
     emoji_set:
@@ -1737,9 +1726,6 @@ vi:
         other: "<b>Cảnh báo!</b> Bạn đã đề cập <a href='%{group_link}'>%{group}</a>, tuy nhiên nhóm này có nhiều thành viên hơn giới hạn đề cập của quản trị viên là %{count} người dùng. Không ai sẽ được thông báo."
       group_mentioned:
         other: "Bằng cách đề cập đến số %{group}, bạn sắp thông báo cho <a href='%{group_link}'>%{count} người</a> - bạn có chắc không?"
-      cannot_see_mention:
-        category: "Bạn đã đề cập đến %{username} nhưng họ sẽ không được thông báo vì họ không có quyền truy cập vào danh mục này. Bạn sẽ cần thêm họ vào một nhóm có quyền truy cập vào danh mục này."
-        private: "Bạn đã đề cập đến %{username} nhưng họ sẽ không được thông báo vì họ không thể xem tin nhắn cá nhân này. Bạn sẽ cần phải mời họ đến tin nhắn này."
       duplicate_link: "Có vẻ như liên kết của bạn đến <b>%{domain}</b> đã được đăng trong chủ đề bởi <b>@%{username}</b> in <a href='%{post_url}'>một câu trả lời trên %{ago}</a> - bạn có chắc chắn muốn đăng lại không?"
       reference_topic_title: "Trả lời đến: %{title}"
       error:
@@ -1898,6 +1884,9 @@ vi:
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - hoàn thành"
+      dismiss_confirmation:
+        dismiss: "Hủy bỏ"
+        cancel: "Hủy"
       group_message_summary:
         other: "%{count} thư trong %{group_name} hộp thư đến của bạn"
       popup:
@@ -2043,7 +2032,7 @@ vi:
         clear_all: "Xoá hết"
         unlist_topics: "Chủ đề không công khai"
         relist_topics: "Chủ đề liên quan"
-        reset_read: "Đặt lại lượt đọc"
+        defer: "Hoãn"
         delete: "Xóa chủ đề"
         dismiss: "Bỏ qua"
         dismiss_read: "Bỏ qua tất cả thư chưa đọc"
@@ -2233,19 +2222,12 @@ vi:
         replies_short: "%{current} / %{total}"
       progress:
         title: tiến trình của chủ đề
-        go_top: "trên cùng"
-        go_bottom: "dưới cùng"
-        go: "đi tới"
-        jump_bottom: "nhảy tới bài viết cuối cùng"
         jump_prompt: "Nhảy đến..."
         jump_prompt_of:
           other: "của %{count} bài viết"
         jump_prompt_long: "Chuyển đến ..."
-        jump_bottom_with_number: "nhảy tới bài viết %{post_number}"
         jump_prompt_to_date: "đến nay"
         jump_prompt_or: "hoặc"
-        total: tổng số bài viết
-        current: bài viết hiện tại
       notifications:
         title: thay đổi tần suất bạn nhận được thông báo về chủ đề này
         reasons:
@@ -2315,7 +2297,6 @@ vi:
         title: "Trả lời"
         help: "bắt đầu soạn phản hồi cho chủ đề này"
       share:
-        title: "Chia sẻ"
         extended_title: "Chia sẻ một liên kết"
         help: "Chia sẻ một liên kết đến chủ đề này"
         invite_users: "Mời"
@@ -2736,7 +2717,6 @@ vi:
       default_list_filter: "Bộ lọc danh sách mặc định:"
       allow_badges_label: "Cho phép thưởng huy hiệu trong chuyên mục này"
       edit_permissions: "Sửa quyền"
-      reviewable_by_group: "Ngoài nhân viên, nội dung trong danh mục này cũng có thể được kiểm duyệt bởi:"
       review_group_name: "Nhóm tên"
       require_topic_approval: "Yêu cầu người kiểm duyệt phê duyệt tất cả các chủ đề mới"
       require_reply_approval: "Yêu cầu người kiểm duyệt phê duyệt tất cả các câu trả lời mới"
@@ -2875,6 +2855,9 @@ vi:
         title: "Chủ đề này là một tin nhắn cá nhân"
         help: "Chủ đề này là một tin nhắn cá nhân"
     posts: "Bài viết"
+    pending_posts:
+      label: "Đang treo"
+      label_with_count: "Đang xử lý (%{count})"
     posts_likes_MF: |
       Chủ đề này có {count, plural, one {# trả lời} other {# trả lời}} {ratio, select,
         low {với tỷ lệ like trên post cao}
@@ -3100,6 +3083,7 @@ vi:
       tags: "Thẻ"
       choose_for_topic: "thẻ không bắt buộc"
       info: "Thông tin"
+      default_info: "Thẻ này không bị giới hạn đối với bất kỳ danh mục nào và không có từ đồng nghĩa."
       category_restricted: "Thẻ này bị hạn chế đối với các danh mục bạn không có quyền truy cập."
       synonyms: "Từ đồng nghĩa"
       synonyms_description: "Khi các thẻ sau được sử dụng, chúng sẽ được thay thế bằng <b>%{base_tag_name}</b>."
@@ -3107,7 +3091,6 @@ vi:
         other: "Thẻ này thuộc các nhóm sau: %{tag_groups}."
       category_restrictions:
         other: "Nó chỉ có thể được sử dụng trong các danh mục sau:"
-      edit_synonyms: "Quản lý từ đồng nghĩa"
       add_synonyms_label: "Thêm từ đồng nghĩa:"
       add_synonyms: "Thêm"
       add_synonyms_explanation:
@@ -3121,8 +3104,7 @@ vi:
       delete_confirm_no_topics: "Bạn có chắc chắn muốn xóa thẻ này không?"
       delete_confirm_synonyms:
         other: "%{count} từ đồng nghĩa của nó cũng sẽ bị xóa."
-      rename_tag: "Đổi tên thẻ"
-      rename_instructions: "Chọn tên mới cho thẻ:"
+      description: "Mô tả"
       sort_by: "Xếp theo:"
       sort_by_count: "đếm"
       sort_by_name: "tên"
@@ -3633,7 +3615,6 @@ vi:
         delete_confirm: 'Bạn có chắc chắn muốn xóa "%{theme_name}" không?'
         color: "Màu sắc"
         opacity: "Độ mờ"
-        copy: "Sao chép"
         copy_to_clipboard: "Sao chép vào clipboard"
         copied_to_clipboard: "Sao chép vào Clipboard"
         copy_to_clipboard_error: "Lỗi sao chép dữ liệu vào Clipboard"
@@ -4061,9 +4042,6 @@ vi:
           title: "Screened IPs"
           description: 'Địa chỉ IP đang được theo dõi. Sử dụng "Cho phép" để cho phép địa chỉ IP.'
           delete_confirm: "Bạn có chắc chắn muốn xóa quy tắc cho %{ip_address}?"
-          roll_up_confirm: "Bạn có chắc chắn muốn cuộn các địa chỉ IP thông thường vào các mạng con?"
-          rolled_up_some_subnets: "Cuộn thành công các IP cấm vào các mạng con: %{subnets}."
-          rolled_up_no_subnet: "Không có gì để cuộn lên."
           actions:
             block: "Khóa"
             do_nothing: "Cho phép"

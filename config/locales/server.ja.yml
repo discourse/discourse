@@ -217,8 +217,6 @@ ja:
       <p>パスワードを覚えている場合は、<a href="%{base_url}/login">ログイン</a>してください。</p>
 
       <p>そうでない場合は、<a href="%{base_url}/password-reset">パスワードをリセット</a>してください。</p>
-    not_found_template_link: |
-      <p><a href="%{base_url}">%{site_name}</a> への招待を引き換えられなくなりました。あなたを招待した人に新しい招待を送るようリクエストしてください。</p>
     user_exists: "<b>%{email}</b> を招待する必要はありません。 <a href='%{base_path}/u/%{username}/summary'> のアカウントはすでに存在します！</a>"
     invite_exists: "<b>%{email}</b> はすでに招待済みです。"
     invalid_email: "%{email} は有効なメールアドレスではありません。"
@@ -229,7 +227,6 @@ ja:
     disabled_errors:
       discourse_connect_enabled: "DiscourseConnect が有効であるため、招待は無効です。"
       invalid_access: "リクエストしたリソースの閲覧が許可されていません。"
-    requires_groups: "招待を保存しました。指定されたトピックへのアクセスを許可するには、次のいずれかのグループを追加してください: %{groups}。"
   bulk_invite:
     file_should_be_csv: "アップロードファイルは csv 形式である必要があります。"
     max_rows: "最初の %{max_bulk_invites} 件の招待が送信されました。ファイルをより小さく分割してください。"
@@ -314,8 +311,6 @@ ja:
   links_require_trust: "投稿にリンクを含めることはできません。"
   too_many_links:
     other: "新規ユーザーは投稿につき %{count} 件のリンクしか追加できません。"
-  contains_blocked_word: "投稿に許可されていない言葉が含まれています: %{word}"
-  contains_blocked_words: "投稿に許可されていない語が複数含まれています: %{words}"
   spamming_host: "このホストへのリンクを投稿できません。"
   user_is_suspended: "凍結中のユーザーは投稿できません。"
   topic_not_found: "問題が発生しました。トピックがクローズしたか、閲覧中に削除された可能性があります。"
@@ -371,7 +366,6 @@ ja:
       too_many: "ブックマークを %{limit} 件以上追加できません。<a href='%{user_bookmarks_url}'>%{user_bookmarks_url}</a>にアクセスして、いくつか削除してください。"
       cannot_set_past_reminder: "ブックマークリマインダーを過去の時間に設定できません。"
       cannot_set_reminder_in_distant_future: "ブックマークリマインダーは 10 年以上先の日時に設定できません。"
-      time_must_be_provided: "すべてのリマインダーには時間の指定が必要です。"
     reminders:
       at_desktop: "次にデスクトップに戻ったとき"
       later_today: "今日の後程"
@@ -829,13 +823,6 @@ ja:
   draft_backup:
     pm_title: "進行中のトピックのバックアップ下書き"
     pm_body: "バックアップの下書きを含むトピック"
-  user_activity:
-    no_bookmarks:
-      self: "ブックマークした投稿はありません。ブックマークを使用すると、特定の投稿を素早く参照できます。"
-      search: "指定された検索クエリでブックマークは見つかりませんでした。"
-      others: "ブックマークはありません。"
-    no_drafts:
-      self: "下書きはありません。トピックで返信の作成を始めると、新しい下書きとして自動保存されます。"
   email_settings:
     pop3_authentication_error: "指定された POP3 の資格情報に問題がありました。ユーザー名とパスワードを確認して、もう一度お試しください。"
     imap_authentication_error: "指定された IMAP の資格情報に問題がありました。ユーザー名とパスワードを確認して、もう一度お試しください。"
@@ -1274,6 +1261,18 @@ ja:
         ignores_count: 無視数
         mutes_count: ミュート数
       description: "多数のユーザーによってミュートまたは無視されたユーザー。"
+    top_users_by_likes_received:
+      labels:
+        user: ユーザー
+        qtt_like: '「いいね！」された数'
+    top_users_by_likes_received_from_inferior_trust_level:
+      labels:
+        user: ユーザー
+        qtt_like: '「いいね！」された数'
+    top_users_by_likes_received_from_a_variety_of_people:
+      labels:
+        user: ユーザー
+        qtt_like: '「いいね！」された数'
   dashboard:
     rails_env_warning: "サーバーは %{env} モードで実行中です。"
     host_names_warning: "現在 config/database.yml ファイルは、デフォルトの localhost をホスト名として使用しています。あなたのサイトのホスト名に更新してください。"
@@ -1321,7 +1320,6 @@ ja:
     min_personal_message_title_length: "メッセージのタイトルの最小文字数"
     max_emojis_in_title: "トピックタイトルに許可される最大絵文字数"
     min_search_term_length: "有効な検索語の最小文字数"
-    search_tokenize_chinese_japanese_korean: "CJK 以外のサイトでも強制検索で中国語/日本語/韓国語をトークン化する"
     search_prefer_recent_posts: "大規模なフォーラムの検索が遅い場合、このオプションは先により直近の投稿のインデックスを試す"
     search_recent_posts_size: "インデックスに保持する直近の投稿の数"
     log_search_queries: "ユーザーが実行した検索クエリをログに記録する"
@@ -1364,7 +1362,6 @@ ja:
     show_pinned_excerpt_mobile: "モバイルビューで固定トピックの抜粋を表示する。"
     show_pinned_excerpt_desktop: "デスクトップビューで固定トピックの抜粋を表示する。"
     post_onebox_maxlength: "Discourse OneBox 投稿の最大文字数。"
-    blocked_onebox_domains: "ワンボックス化されないドメインのリスト。"
     allowed_inline_onebox_domains: "タイトルなしでリンクされた場合、ミニチュア形式でワンボックス化されるドメインのリスト"
     enable_inline_onebox_on_all_domains: "inline_onebox_domain_allowlist サイト設定を無視し、すべてのドメインでインラインのワンボックスを許可する。"
     force_custom_user_agent_hosts: "すべてのリクエストでカスタムワンボックスユーザーエージェントを使用するホスト (特にユーザーエージェントごとにアクセスを制限するホストで役立ちます)。"
@@ -1396,10 +1393,8 @@ ja:
     summary_percent_filter: "「このトピックを要約」をクリックしたとき表示される上位投稿の割合%"
     summary_max_results: "'このトピックを要約' が返す最大投稿数"
     enable_system_message_replies: "個人メッセージが無効である場合でも、ユーザーによるシステムメッセージへの返信を許可する"
-    enable_long_polling: "通知用のメッセージバスによるロングポーリングの利用を許可する"
     enable_chunked_encoding: "サーバーによるチャンク形式エンコーディング応答を有効にする。この機能はほとんどのセットアップで動作しますが、一部のプロキシではバッファリングが生じ、応答が遅延する可能性があります。"
     long_polling_base_url: "ロングポーリングのベース URL (CDN が動的コンテンツを配信している場合、これを origin pull に指定してください) 例: http://origin.site.com"
-    long_polling_interval: "送信するデータが存在しない場合に、サーバーがクライアントに応答するまで待機する時間 (ログインユーザーのみ)"
     polling_interval: "ロングポーリングではないときの、ログイン済みクライアントのポーリング間隔 (ミリ秒)"
     anon_polling_interval: "匿名クライアントのポーリング間隔 (ミリ秒)"
     background_polling_interval: "ウィンドウがバックグラウンド時のクライアントのポーリング間隔 (ミリ秒)"
@@ -1449,7 +1444,6 @@ ja:
     allowed_iframes: "Discourse が投稿で安全に許可できる iframe src ドメインプレフィックスのリスト"
     allowed_crawler_user_agents: "サイトへのアクセスを許可する必要のあるウェブクローラーのユーザーエージェント。警告！これを設定すると、ここにリストされていないすべてのクローラーが拒否されます！"
     blocked_crawler_user_agents: "サイトへのアクセスを許可してはいけないウェブクローラーを識別する、ユーザーエージェント文字列の大文字と小文字を区別しない一意の語。ホワイトリストが定義されている場合は適用されません。"
-    slow_down_crawler_user_agents: "Crawl-delay ディレクティブを使用して robots.txt でレート制限する必要があるウェブクローラーのユーザーエージェント"
     slow_down_crawler_rate: "このレートに slow_down_crawler_user_agents が指定されている場合、このレートはすべてのクローラーに適用されます (リクエスト間の遅延秒数)"
     content_security_policy: "Content-Security-Policy を有効にする"
     content_security_policy_report_only: "Content-Security-Policy-Report-Only を有効にする"
@@ -1487,7 +1481,6 @@ ja:
     blocked_email_domains: "ユーザーがアカウント登録をすることができないメールドメインの、パイプ区切りのリスト。例: mailinator.com|trashmail.net"
     allowed_email_domains: "ユーザー登録に必要なメールドメインのパイプ区切りのリスト。警告: 指定したメールドメイン以外のユーザーの登録は許可されません！"
     auto_approve_email_domains: "このドメインリストのメールアドレスを持つユーザーは自動的に承認されます。"
-    hide_email_address_taken: "登録中およびパスワード忘れのフォームを使用中に、指定されたメールアドレスのアカウントが既に存在することをユーザーに通知しない。"
     log_out_strict: "ログアウトした際に、そのユーザーの全デバイスのセッションをログアウトする"
     version_checks: "Discourse に Ping してバージョン更新を確認し、<a href='%{base_path}/admin' target='_blank'>/admin</a> ダッシュボードに新しいバージョンに関するメッセージを表示する"
     new_version_emails: "Discourse の新しいバージョンが利用可能になった際に contact_email アドレスにメールで通知する"
@@ -1609,7 +1602,6 @@ ja:
     external_emoji_url: "絵文字画像の外部サービスの URL。無効にするには空のままにします。"
     use_site_small_logo_as_system_avatar: "システムユーザーのアバターの代わりにサイトの small logo を使用する。ロゴが存在する必要があります。"
     restrict_letter_avatar_colors: "文字アバターの背景に使用される 6 桁の 16 進数の色値のリスト。"
-    selectable_avatars_enabled: "ユーザーにリストからアバターを選択するように強制する。"
     selectable_avatars: "ユーザーが選択できるアバターのリスト。"
     allow_all_attachments_for_group_messages: "グループメッセージのメールの添付ファイルをすべて許可する。"
     png_to_jpg_quality: "変換された JPG ファイルの品質 (1 は最低品質、99 は最高品質、100 は無効)。"
@@ -1878,7 +1870,6 @@ ja:
     display_name_on_posts: "投稿に、@username に加えてユーザーのフルネームを表示します。"
     show_time_gap_days: "2 つの投稿の作成日の間が指定された日数以上の場合、トピックに時間の差を表示します。"
     short_progress_text_threshold: "トピック内の投稿数が指定された数字を超えると、プログレスバーに現在の投稿番号のみを表示します。プログレスバーの幅を変更すると、この値を変更する必要がある場合があります。"
-    default_code_lang: "Github コードブロックにデフォルトで適用されるプログラム言語シンタックスハイライト (auto、nohighlight、ruby、python など)"
     warn_reviving_old_topic_age: "最後の返信が指定された日数より古いトピックに返信し始めると、警告を表示します。0 に設定すると無効になります。"
     autohighlight_all_code: "明示的に言語を指定しなくても、すべての整形済みのコードブロックにコードハイライトを強制的に適用します。"
     highlighted_languages: "シンタックスハイライトルールが含まれる。(警告: 多くの言語を含めすぎると、パフォーマンスに影響を与える可能性があります) デモは、<a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> をご覧ください。"
@@ -2247,11 +2238,6 @@ ja:
     already_suspended: "ユーザーは %{staff} によって %{time_ago}に凍結されています。"
     cannot_delete_has_posts:
       other: "ユーザー %{username} には公開トピックまたは個人メッセージに %{count} 件の投稿があるため、削除できません。"
-  reviewables_reminder:
-    submitted:
-      other: "%{count} 時間前に項目が送信されました。[レビューしてください](%{base_path}/review)。"
-    subject_template:
-      other: "%{count} 個の項目にレビューが必要です"
   unsubscribe_mailer:
     title: "購読解除メーラー"
     subject_template: "今後 %{site_title} からの更新メールの受信を希望しないことを確認してください"
@@ -2356,47 +2342,6 @@ ja:
   test_mailer:
     title: "テストメーラー"
     subject_template: "[%{email_prefix}] メール配信可能性テスト"
-    text_body_template: |
-      これは次から送信されたテストメールです。
-
-      [**%{base_url}**][0]
-
-      メールの配信可能性は複雑な課題です。最初に確認すべき重要な事項を以下に示します。
-
-      - `notification email` の from: アドレスがサイト設定で正しく設定されていることを*確認してください*。**送信するメールの "from" アドレスに指定されたドメインがメールの検証対象のドメインです**。
-
-      - メールクライアントでメールの生のソースを表示する方法を確認してください。メールのヘッダーを調査すると、重要な手がかりを得ることができます。Gmail では、各メールの右上にあるドロップダウンメニューに含まれる "メッセージのソースを表示" オプションを使用できます。
-
-      - **重要:** あなたの ISP には、メールの送信元のドメイン名と IP アドレスを関連付ける逆引き DNS レコードが入力されていますか？こちらで[逆引き PTR レコードをテストしてください][2]。あなたの ISP が適切な逆引き DNS ポインターレコードを登録しない場合、メールが配信される可能性はほぼありません。
-
-      - あなたのドメインの [SPF レコード][8]は正しいですか？こちらで [SPF レコードをテストしてください][1]。TXT は SPF の正しい正式なレコードタイプであることに注意してください。
-
-      - ドメインの [DKIM レコード][3]は正しいですか？これによりメールの配信可能性が大幅に改善されます。こちらで [DKIM レコードをテストしてください][7]。
-
-      - 独自のメールサーバーを実行している場合は、メールサーバーの IP が[どのメールのブロックリストにも追加されていない][4]ことを確認してください。また、HELO メッセージで DNS に解決する完全修飾ホスト名を確実に送信していることを確認してください。送信していない場合は、多数のメールサーバーによってメールが拒否されることになります。
-
-      - **テストメールを [mail-tester.com][mt] に送信**して、上記すべてが正しく機能していることを確認することを強くお勧めします。
-
-      ([SendGrid][sg]、[SparkPost][sp]、[Mailgun][mg]、または [Mailjet][mj] でアカウントを作成するのが*簡単*な方法です。これらは安価なメールプランを提供しており、小規模のコミュニティに最適です。ただし、DNS に SPF と DKIM レコードをセットアップする必要はあります！)
-
-      このメールの配信可能性テストがあなたのところに届きますように！
-
-      それでは幸運を。
-
-      [Discourse](https://www.discourse.org) 一同より
-
-      [0]: %{base_url}
-      [1]: https://www.kitterman.com/spf/validate.html
-      [2]: https://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: https://whatismyipaddress.com/blacklist-check
-      [7]: https://www.mail-tester.com/spf-dkim-check
-      [8]: http://www.openspf.org/SPF_Record_Syntax
-      [sg]: https://goo.gl/r1WMF6
-      [sp]: https://www.sparkpost.com/
-      [mg]: https://www.mailgun.com/
-      [mj]: https://www.mailjet.com/pricing/
-      [mt]: https://www.mail-tester.com/
   new_version_mailer:
     title: "新しいバージョンメーラー"
     subject_template: "[%{email_prefix}] 新しい Discourse バージョン、更新が利用可能になりました"

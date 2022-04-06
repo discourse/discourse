@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 RSpec.describe EmailController do
   fab!(:user) { Fabricate(:user) }
   fab!(:topic) { Fabricate(:topic) }

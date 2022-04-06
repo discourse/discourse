@@ -116,10 +116,10 @@ nb_NO:
       previous_month: "Forrige måned"
       next_month: "Neste måned"
       placeholder: dato
+      from_placeholder: "fra dato"
       to_placeholder: "til dato"
     share:
       topic_html: 'Emne: <span class="topic-title">%{topicTitle}</span>'
-      post: "innlegg #%{postNumber}"
       close: "lukk"
       twitter: "Del på Twitter"
       facebook: "Del på Facebook"
@@ -127,6 +127,7 @@ nb_NO:
       url: "Kopier og del URL"
     action_codes:
       public_topic: "gjorde dette emnet offentlig %{when}"
+      open_topic: "konverterte dette til et emne %{when}"
       private_topic: "gjorde dette emnet om til en personlig melding %{when}"
       split_topic: "del opp dette emnet %{when}"
       invited_user: "inviterte %{who} %{when}"
@@ -158,6 +159,7 @@ nb_NO:
         disabled: "fjernet dette banneret %{when}. Det vil ikke lenger vises på toppen av hver side."
       forwarded: "videresendte e-posten voer"
     topic_admin_menu: "handlinger for tråd"
+    skip_to_main_content: "Gå til hovedinnhold"
     wizard_required: "Velkommen til ditt nye Discourse! Kom i gang med <a href='%{url}' data-auto-route='true'>oppstartsveiviseren</a> ✨"
     emails_are_disabled: "All utgående e-post har blitt deaktivert globalt av en administrator. Ingen e-postvarslinger vil bli sendt."
     software_update_prompt:
@@ -166,7 +168,6 @@ nb_NO:
     bootstrap_mode_disabled: "Oppstartsmodus vil bli deaktivert i løpet av 24 timer."
     themes:
       default_description: "Forvalg"
-      broken_theme_alert: "Du kan oppleve at siden din ikke fungerer fordi temaet eller komponenten %{theme} har feil. Deaktiver temaet eller komponenten her: %{path}."
     s3:
       regions:
         ap_northeast_1: "Asia/Stillehavsregionen (Tokyo)"
@@ -285,10 +286,7 @@ nb_NO:
       list_permission_denied: "Du har ikke tillatelse til å se brukerens bokmerker."
       no_user_bookmarks: "Du har ingen bokmerkede innlegg; bokmerker lar deg raskt slå opp spesifike innlegg."
       auto_delete_preference:
-        label: "Slett automatisk"
-        never: "Aldri"
-        when_reminder_sent: "Når påminnelsen er sendt"
-        on_owner_reply: "Etter at jeg har svart på dette emnet"
+        when_reminder_sent: "Slett bokmerke"
       search_placeholder: "Søk i bokmerker etter navn, emnetittel eller innleggsinnhold"
       search: "Søk"
       reminders:
@@ -348,8 +346,8 @@ nb_NO:
     switch_to_anon: "Start inkognitomodus"
     switch_from_anon: "Avslutt inkognitomodus"
     banner:
-      close: "Fjern dette banneret."
-      edit: "Endre dette banneret >>"
+      close: "Fjern dette banneret"
+      edit: "Rediger"
     pwa:
       install_banner: "Ønsker du å <a href>installere %{title} på denne enheten</a>?"
     choose_topic:
@@ -1353,11 +1351,9 @@ nb_NO:
         every_month: "hver måned"
         every_six_months: "hver sjette måned"
       email_level:
-        title: "Send meg en e-post når noen siterer meg, svarer på innlegget mitt, nevner @brukernavnet mitt eller inviterer meg til et emne"
         always: "alltid"
         only_when_away: "bare når du er borte"
         never: "aldri"
-      email_messages_level: "Motta en e-post når noen sender meg en melding"
       include_tl0_in_digests: "Inkluder innhold fra nye brukere i oppsummerings-eposter"
       email_in_reply_to: "Inkluder et utdrag i e-poster av innlegget man svarer på"
       other_settings: "Annet"
@@ -1438,22 +1434,19 @@ nb_NO:
         invite:
           new_title: "Opprett invitasjon"
           edit_title: "Rediger invitasjon"
-          instructions: "Del denne lenken for å gi tilgang til dette nettstedet umiddelbart"
+          instructions: "Del denne lenken for å gi tilgang til dette nettstedet umiddelbart:"
           copy_link: "kopier link"
           expires_in_time: "Utløper om %{time}"
           expired_at_time: "Utløpt kl. %{time}"
           show_advanced: "Vis avanserte innstillinger"
           hide_advanced: "Skjul avanserte alternativer"
-          restrict_email: "Begrens til en e-postadresse"
           max_redemptions_allowed: "Maks antall bruk"
           add_to_groups: "Legg til i grupper"
-          invite_to_topic: "Kom til dette emnet"
           expires_at: "Utløper etter"
           custom_message: "Valgfri personlig melding"
           send_invite_email: "Lagre og send e-post"
           save_invite: "Lagre invitasjon"
           invite_saved: "Invitasjon lagret."
-          invite_copied: "Invitasjonslenken er kopiert."
         bulk_invite:
           none: "Ingen invitasjoner til å vise på denne siden."
           text: "Bulk invitasjon"
@@ -1749,7 +1742,6 @@ nb_NO:
       success: "Kontoen din har blitt opprettet og du er nå logget inn."
       name_label: "Navn"
       password_label: "Passord"
-      optional_description: "(valgfritt)"
     password_reset:
       continue: "Fortsett til %{site_name}"
     emoji_set:
@@ -1852,9 +1844,6 @@ nb_NO:
       group_mentioned:
         one: "Ved å nevne %{group}, er du i ferd med å henvende deg til <a href='%{group_link}'>%{count} én person</a> – er du sikker?"
         other: "Ved å nevne %{group}, er du i ferd med å henvende deg til <a href='%{group_link}'>%{count} folk</a> – er du sikker?"
-      cannot_see_mention:
-        category: "Du nevnte %{username}, men de vil ikke ikke bli varslet fordi de ikke har tilgang til denne kategorien. Du må legge dem til en gruppe som har tilgang til denne kategorien."
-        private: "Du nevnte %{username}, men de vil ikke bli varslet fordi de ikke kan se denne samtalen. Du må invitere dem til denne private samtalen."
       duplicate_link: "Det ser ut til at lenken din til <b>%{domain}</b> allerede ble publisert i emnet av <b>@%{username}</b> i <a href='%{post_url}'>et svar %{ago}</a>. Er du sikker på at du vil publisere den igjen?"
       reference_topic_title: "RE: %{title}"
       error:
@@ -2008,6 +1997,9 @@ nb_NO:
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - fullført"
+      dismiss_confirmation:
+        dismiss: "Avslå"
+        cancel: "Avbryt"
       group_message_summary:
         one: "%{count} melding i din %{group_name} innboks"
         other: "%{count} meldinger i din innboks for %{group_name}"
@@ -2155,7 +2147,7 @@ nb_NO:
         clear_all: "Fjern alle"
         unlist_topics: "Fjern emner fra lister"
         relist_topics: "Før opp igjen emner i lister"
-        reset_read: "Nullstill lest"
+        defer: "Utsett"
         delete: "Slett emner"
         dismiss: "Avslå"
         dismiss_read: "Forkast alle uleste"
@@ -2370,17 +2362,10 @@ nb_NO:
         replies_short: "%{current} / %{total}"
       progress:
         title: fremgang i emne
-        go_top: "topp"
-        go_bottom: "bunn"
-        go: "gå"
-        jump_bottom: "Hopp til nyeste innlegg"
         jump_prompt: "hopp til…"
         jump_prompt_long: "Hopp til…"
-        jump_bottom_with_number: "hopp til innlegg %{post_number}"
         jump_prompt_to_date: "til dato"
         jump_prompt_or: "eller"
-        total: innlegg totalt
-        current: gjeldende innlegg
       notifications:
         title: endre hvor ofte du blir varslet om dette emnet
         reasons:
@@ -2454,17 +2439,10 @@ nb_NO:
         title: "Svar"
         help: "begynn å skrive et svar i dette emnet"
       share:
-        title: "Del"
         extended_title: "Del en lenke"
         help: "del en lenke til dette emnet"
         instructions: "Del en lenke til dette emnet:"
         copied: "Emnelink kopiert."
-        notify_users:
-          title: "Varsle"
-          instructions: "Varsle følgende brukere om dette emnet:"
-          success:
-            one: "Vellykket varsling av %{username} om dette emnet."
-            other: "Vellykket varsling av alle brukere om dette emnet."
         invite_users: "Inviter"
       print:
         title: "Skriv ut"
@@ -2919,7 +2897,6 @@ nb_NO:
       default_list_filter: "Standard listefilter:"
       allow_badges_label: "Tillat merker å bli tildelt i denne kategorien"
       edit_permissions: "Rediger tillatelser"
-      reviewable_by_group: "I tillegg til de ansatte, kan innholdet i denne kategorien også gjennomgås ved å:"
       review_group_name: "gruppenavn"
       require_topic_approval: "Krev godkjennelse fra moderator for alle nye emner"
       require_reply_approval: "Krev godkjennelse fra moderator for alle nye svar"
@@ -3069,6 +3046,9 @@ nb_NO:
         title: "Dette emnet er en personlig melding"
         help: "Dette emnet er en personlig melding"
     posts: "Innlegg"
+    pending_posts:
+      label: "På vent"
+      label_with_count: "Ventende (%{count})"
     posts_likes_MF: |
       Dette emnet har {count, plural, one {1 svar} other {# svar}} {ratio, select,
       low {med mange likes i forhold til innlegg}
@@ -3313,7 +3293,6 @@ nb_NO:
       tags: "Stikkord"
       choose_for_topic: "valgfrie stikkord"
       info: "Informasjon"
-      default_info: "Denne taggen er ikke begrenset til noen kategorier, og har ingen synonymer. For å legge til restriksjoner, legg til denne taggen i en <a href=%{basePath}/tag_groups>tagg gruppe</a>."
       category_restricted: "Denne taggen er begrenset til kategorier du ikke har tilgang til tilgang."
       synonyms: "Synonymer"
       synonyms_description: "Når følgende merkelapper brukes, vil de bli erstattet med <b>%{base_tag_name}</b>."
@@ -3323,7 +3302,6 @@ nb_NO:
       category_restrictions:
         one: "Den kan bare brukes i denne kategorien:"
         other: "Den kan kun brukes i disse kategoriene:"
-      edit_synonyms: "Administrer synonymer"
       add_synonyms_label: "Legg til synonymer:"
       add_synonyms: "Legg til"
       add_synonyms_explanation:
@@ -3340,8 +3318,7 @@ nb_NO:
       delete_confirm_synonyms:
         one: "Synonymen vil også bli slettet."
         other: "Dets %{count} synonymer vil også bli slettet."
-      rename_tag: "Gi stikkord nytt navn"
-      rename_instructions: "Velg et nytt navn for dette stikkordet:"
+      description: "Beskrivelse"
       sort_by: "Sorter etter:"
       sort_by_count: "antall"
       sort_by_name: "navn"
@@ -3827,7 +3804,6 @@ nb_NO:
         delete_confirm: 'Er du sikker på at du vil slette "%{theme_name}?'
         color: "Farge"
         opacity: "Opacity"
-        copy: "Kopier"
         copy_to_clipboard: "Kopier til utklippstavle"
         copied_to_clipboard: "Kopiert til utklippstavle"
         copy_to_clipboard_error: "Feil ved kopiering av data til utklippstavle"
@@ -4214,9 +4190,6 @@ nb_NO:
         screened_ips:
           title: "Kontrollerte IP-er"
           delete_confirm: "Er du sikker på at du vil fjerne regelen for %{ip_address}?"
-          roll_up_confirm: "Er du sikker på at du vil rulle opp vanligvis undersøkte IP-adresser i delnett?"
-          rolled_up_some_subnets: "Fullførte sammenslåingen av blokkerte IP-adresser til disse subnettene: %{subnets}."
-          rolled_up_no_subnet: "Det var ingenting å slå sammen."
           actions:
             block: "Blokker"
             do_nothing: "Tillat"

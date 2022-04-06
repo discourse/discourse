@@ -96,10 +96,6 @@ export default MultiSelectComponent.extend(TagsMixin, {
       results = results.sort((a, b) => a.text.localeCompare(b.text));
     }
 
-    return results
-      .filter((r) => !makeArray(context.tags).includes(r.id))
-      .map((result) => {
-        return { id: result.text, name: result.text, count: result.count };
-      });
+    return results.filter((r) => !makeArray(context.tags).includes(r.id));
   },
 });

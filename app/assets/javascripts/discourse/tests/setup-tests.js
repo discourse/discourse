@@ -2,6 +2,8 @@ import {
   applyPretender,
   exists,
   resetSite,
+  testsInitialized,
+  testsTornDown,
 } from "discourse/tests/helpers/qunit-helpers";
 import pretender, {
   applyDefaultHandlers,
@@ -23,6 +25,7 @@ import QUnit from "qunit";
 import { ScrollingDOMMethods } from "discourse/mixins/scrolling";
 import Session from "discourse/models/session";
 import User from "discourse/models/user";
+import Site from "discourse/models/site";
 import bootbox from "bootbox";
 import { buildResolver } from "discourse-common/resolver";
 import { createHelperContext } from "discourse-common/lib/helpers";
@@ -32,6 +35,7 @@ import { registerObjects } from "discourse/pre-initializers/inject-discourse-obj
 import sinon from "sinon";
 import { run } from "@ember/runloop";
 import { isLegacyEmber } from "discourse-common/config/environment";
+import { disableCloaking } from "discourse/widgets/post-stream";
 import { clearState as clearPresenceState } from "discourse/tests/helpers/presence-pretender";
 
 const Plugin = $.fn.modal;
@@ -73,11 +77,37 @@ function createApplication(config, settings) {
   setApplication(app);
   setResolver(buildResolver("discourse").create({ namespace: app }));
 
+  // Modern Ember only sets up a container when the ApplicationInstance
+  // is booted. We have legacy code which relies on having access to a container
+  // before boot (e.g. during pre-initializers)
+  //
+  // This hack sets up a container early, then stubs the container setup method
+  // so that Ember will use the same container instance when it boots the ApplicationInstance
+  //
+  // Note that this hack is not required in production because we use the default `autoboot` flag,
+  // which triggers the internal `_globalsMode` flag, which sets up an ApplicationInstance immediately when
+  // an Application is initialized (via the `_buildDeprecatedInstance` method).
+  //
+  // In the future, we should move away from relying on the `container` before the ApplicationInstance
+  // is booted, and then remove this hack.
   let container = app.__registry__.container();
   app.__container__ = container;
   setDefaultOwner(container);
+  sinon
+    .stub(Object.getPrototypeOf(app.__registry__), "container")
+    .callsFake((opts) => {
+      container.owner = opts.owner;
+      container.registry = opts.owner.__registry__;
+      return container;
+    });
 
   if (!started) {
+    app.instanceInitializer({
+      name: "test-helper",
+      initialize: testsInitialized,
+      teardown: testsTornDown,
+    });
+
     app.start();
     started = true;
   }
@@ -155,6 +185,8 @@ function writeSummaryLine(message) {
 }
 
 function setupTestsCommon(application, container, config) {
+  disableCloaking();
+
   QUnit.config.hidepassed = true;
 
   application.rootElement = "#ember-testing";
@@ -238,11 +270,11 @@ function setupTestsCommon(application, container, config) {
 
     const cdn = setupData ? setupData.cdn : null;
     const baseUri = setupData ? setupData.baseUri : "";
-    setupURL(cdn, "http://localhost:3000", baseUri);
+    setupURL(cdn, "http://localhost:3000", baseUri, { snapshot: true });
     if (setupData && setupData.s3BaseUrl) {
-      setupS3CDN(setupData.s3BaseUrl, setupData.s3Cdn);
+      setupS3CDN(setupData.s3BaseUrl, setupData.s3Cdn, { snapshot: true });
     } else {
-      setupS3CDN(null, null);
+      setupS3CDN(null, null, { snapshot: true });
     }
 
     server = pretender;
@@ -288,14 +320,28 @@ function setupTestsCommon(application, container, config) {
       session.highlightJsPath = setupData.highlightJsPath;
     }
     User.resetCurrent();
-    let site = resetSite(settings);
+
     createHelperContext({
-      siteSettings: settings,
+      get siteSettings() {
+        if (isLegacyEmber() && container.isDestroyed) {
+          return settings;
+        } else {
+          return container.lookup("site-settings:main");
+        }
+      },
       capabilities: {},
-      site,
+      get site() {
+        if (isLegacyEmber() && container.isDestroyed) {
+          return Site.current();
+        } else {
+          return container.lookup("site:main") || Site.current();
+        }
+      },
+      registry: app.__registry__,
     });
 
     PreloadStore.reset();
+    resetSite(settings);
 
     sinon.stub(ScrollingDOMMethods, "screenNotFull");
     sinon.stub(ScrollingDOMMethods, "bindOnScroll");
@@ -310,8 +356,20 @@ function setupTestsCommon(application, container, config) {
     resetPretender();
     clearPresenceState();
 
-    // Destroy any modals
-    $(".modal-backdrop").remove();
+    // Clean up the DOM. Some tests might leave extra classes or elements behind.
+    Array.from(document.getElementsByClassName("modal-backdrop")).forEach((e) =>
+      e.remove()
+    );
+    document.body.removeAttribute("class");
+    let html = document.documentElement;
+    html.removeAttribute("class");
+    html.removeAttribute("style");
+    let testing = document.getElementById("ember-testing");
+    testing.removeAttribute("class");
+    testing.removeAttribute("style");
+    let testContainer = document.getElementById("ember-testing-container");
+    testContainer.scrollTop = 0;
+
     flushMap();
 
     MessageBus.unsubscribe("*");
@@ -386,6 +444,11 @@ export function setupTestsLegacy(application) {
   setResolver(buildResolver("discourse").create({ namespace: app }));
   setupTestsCommon(application, app.__container__);
 
+  app.instanceInitializer({
+    name: "test-helper",
+    initialize: testsInitialized,
+    teardown: testsTornDown,
+  });
   app.SiteSettings = currentSettings();
   app.start();
 }
@@ -394,6 +457,7 @@ export default function setupTests(config) {
   let settings = resetSettings();
   app = createApplication(config, settings);
   setupTestsCommon(app, app.__container__, config);
+  sinon.restore();
 }
 
 function getUrlParameter(name) {

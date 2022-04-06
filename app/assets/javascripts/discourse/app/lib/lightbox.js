@@ -1,6 +1,5 @@
 import {
   escapeExpression,
-  isAppWebview,
   postRNWebviewMessage,
 } from "discourse/lib/utilities";
 import I18n from "I18n";
@@ -9,9 +8,18 @@ import loadScript from "discourse/lib/load-script";
 import { renderIcon } from "discourse-common/lib/icon-library";
 import { spinnerHTML } from "discourse/helpers/loading-spinner";
 import { helperContext } from "discourse-common/lib/helpers";
+import { isTesting } from "discourse-common/config/environment";
 
 export default function (elem, siteSettings) {
   if (!elem) {
+    return;
+  }
+
+  const lightboxes = elem.querySelectorAll(
+    "*:not(.spoiler):not(.spoiled) a.lightbox"
+  );
+
+  if (!lightboxes.length) {
     return;
   }
 
@@ -19,17 +27,15 @@ export default function (elem, siteSettings) {
   const imageClickNavigation = caps.touch;
 
   loadScript("/javascripts/jquery.magnific-popup.min.js").then(function () {
-    const lightboxes = elem.querySelectorAll(
-      "*:not(.spoiler):not(.spoiled) a.lightbox"
-    );
-
     $(lightboxes).magnificPopup({
       type: "image",
       closeOnContentClick: false,
-      removalDelay: 300,
+      removalDelay: isTesting() ? 0 : 300,
       mainClass: "mfp-zoom-in",
       tClose: I18n.t("lightbox.close"),
       tLoading: spinnerHTML,
+      // eslint-disable-next-line no-undef
+      prependTo: Ember.testing && document.getElementById("ember-testing"),
 
       gallery: {
         enabled: true,
@@ -59,7 +65,7 @@ export default function (elem, siteSettings) {
             });
           }
 
-          if (isAppWebview()) {
+          if (caps.isAppWebview) {
             postRNWebviewMessage(
               "headerBg",
               $(".mfp-bg").css("background-color")
@@ -72,7 +78,7 @@ export default function (elem, siteSettings) {
         beforeClose() {
           this.wrap.off("click.pinhandler");
           this.wrap.removeClass("mfp-force-scrollbars");
-          if (isAppWebview()) {
+          if (caps.isAppWebview) {
             postRNWebviewMessage(
               "headerBg",
               $(".d-header").css("background-color")
@@ -102,6 +108,14 @@ export default function (elem, siteSettings) {
                 "</a>"
             );
           }
+          src.push(
+            '<a class="image-source-link" href="' +
+              item.src +
+              '">' +
+              renderIcon("string", "image") +
+              I18n.t("lightbox.open") +
+              "</a>"
+          );
           return src.join(" &middot; ");
         },
       },

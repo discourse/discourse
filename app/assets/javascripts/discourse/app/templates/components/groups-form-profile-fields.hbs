@@ -35,5 +35,5 @@
 {{#if canEdit}}
   {{yield}}
 
-  {{plugin-outlet name="group-edit" args=(hash group=model)}}
+  {{plugin-outlet name="group-edit" tagName="span" connectorTagName="div" args=(hash group=model)}}
 {{/if}}

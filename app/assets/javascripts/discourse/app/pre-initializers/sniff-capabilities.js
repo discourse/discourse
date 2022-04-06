@@ -1,4 +1,9 @@
 // Initializes an object that lets us know about browser's capabilities
+
+const APPLE_NAVIGATOR_PLATFORMS = /iPhone|iPod|iPad|Macintosh|MacIntel/;
+
+const APPLE_USERAGENTDATA_PLATFORM = /macOS/;
+
 export default {
   name: "sniff-capabilities",
 
@@ -28,9 +33,25 @@ export default {
       (/iPhone|iPod/.test(navigator.userAgent) || caps.isIpadOS) &&
       !window.MSStream;
 
+    caps.isApple =
+      APPLE_NAVIGATOR_PLATFORMS.test(navigator.platform) ||
+      (navigator.userAgentData &&
+        APPLE_USERAGENTDATA_PLATFORM.test(navigator.userAgentData.platform));
+
     caps.hasContactPicker =
       "contacts" in navigator && "ContactsManager" in window;
     caps.canVibrate = "vibrate" in navigator;
+    caps.isPwa =
+      window.matchMedia("(display-mode: standalone)").matches ||
+      window.navigator.standalone ||
+      document.referrer.includes("android-app://");
+
+    caps.isiOSPWA = caps.isPwa && caps.isIOS;
+
+    caps.wasLaunchedFromDiscourseHub = window.location.search.includes(
+      "discourse_app=1"
+    );
+    caps.isAppWebview = window.ReactNativeWebView !== undefined;
 
     // Inject it
     app.register("capabilities:main", caps, { instantiate: false });

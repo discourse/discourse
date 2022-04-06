@@ -8,6 +8,7 @@ export default {
       return;
     }
 
+    // eslint-disable-next-line no-undef
     Ember.LinkComponent.reopen({
       attributeBindings: ["name"],
     });

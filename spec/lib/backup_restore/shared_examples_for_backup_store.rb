@@ -174,7 +174,7 @@ shared_examples "backup store" do
           destination_path = File.join(path, File.basename(filename))
           store.download_file(filename, destination_path)
 
-          expect(File.exists?(destination_path)).to eq(true)
+          expect(File.exist?(destination_path)).to eq(true)
           expect(File.size(destination_path)).to eq(backup1.size)
         end
       end

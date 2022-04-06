@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe UserOption do
 
   describe "#ensure_consistency!" do
@@ -125,7 +123,7 @@ describe UserOption do
             end
 
             after do
-              $redis.flushdb
+              Discourse.redis.flushdb
             end
 
             it "should have a reason for the first visit" do

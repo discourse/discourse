@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe CategoriesController do
   let(:admin) { Fabricate(:admin) }
   let!(:category) { Fabricate(:category, user: admin) }
@@ -115,6 +113,86 @@ describe CategoriesController do
 
       subcategories_for_category = category_list["categories"][1]["subcategory_list"]
       expect(subcategories_for_category).to eq(nil)
+    end
+
+    it 'includes topics for categories, subcategories and subsubcategories when requested' do
+      SiteSetting.max_category_nesting = 3
+      subcategory = Fabricate(:category, user: admin, parent_category: category)
+      subsubcategory = Fabricate(:category, user: admin, parent_category: subcategory)
+
+      topic1 = Fabricate(:topic, category: category)
+      topic2 = Fabricate(:topic, category: subcategory)
+      topic3 = Fabricate(:topic, category: subsubcategory)
+      CategoryFeaturedTopic.feature_topics
+
+      get "/categories.json?include_subcategories=true&include_topics=true"
+      expect(response.status).to eq(200)
+
+      category_list = response.parsed_body["category_list"]
+
+      category_response = category_list["categories"].find { |c| c["id"] == category.id }
+      expect(category_response["topics"].map { |c| c['id'] }).to contain_exactly(topic1.id)
+
+      subcategory_response = category_response["subcategory_list"][0]
+      expect(subcategory_response["topics"].map { |c| c['id'] }).to contain_exactly(topic2.id)
+
+      subsubcategory_response = subcategory_response["subcategory_list"][0]
+      expect(subsubcategory_response["topics"].map { |c| c['id'] }).to contain_exactly(topic3.id)
+    end
+
+    it 'includes subcategories and topics by default when view is subcategories_with_featured_topics' do
+      SiteSetting.max_category_nesting = 3
+      subcategory = Fabricate(:category, user: admin, parent_category: category)
+
+      topic1 = Fabricate(:topic, category: category)
+      CategoryFeaturedTopic.feature_topics
+
+      SiteSetting.desktop_category_page_style = "subcategories_with_featured_topics"
+      get "/categories.json"
+      expect(response.status).to eq(200)
+
+      category_list = response.parsed_body["category_list"]
+
+      category_response = category_list["categories"].find { |c| c["id"] == category.id }
+      expect(category_response["topics"].map { |c| c['id'] }).to contain_exactly(topic1.id)
+
+      expect(category_response["subcategory_list"][0]["id"]).to eq(subcategory.id)
+    end
+
+    it "does not n+1 with multiple topics" do
+      category1 = Fabricate(:category)
+      category2 = Fabricate(:category)
+      topic1 = Fabricate(:topic, category: category1)
+
+      CategoryFeaturedTopic.feature_topics
+      SiteSetting.desktop_category_page_style = "categories_with_featured_topics"
+
+      # warmup
+      get "/categories.json"
+      expect(response.status).to eq(200)
+
+      first_request_queries = track_sql_queries do
+        get "/categories.json"
+        expect(response.status).to eq(200)
+      end
+
+      category_response = response.parsed_body["category_list"]["categories"].find { |c| c["id"] == category1.id }
+      expect(category_response["topics"].count).to eq(1)
+
+      topic2 = Fabricate(:topic, category: category2)
+      CategoryFeaturedTopic.feature_topics
+
+      second_request_queries = track_sql_queries do
+        get "/categories.json"
+        expect(response.status).to eq(200)
+      end
+
+      category1_response = response.parsed_body["category_list"]["categories"].find { |c| c["id"] == category1.id }
+      category2_response = response.parsed_body["category_list"]["categories"].find { |c| c["id"] == category2.id }
+      expect(category1_response["topics"].size).to eq(1)
+      expect(category2_response["topics"].size).to eq(1)
+
+      expect(first_request_queries.count).to eq(second_request_queries.count)
     end
 
     it 'does not show uncategorized unless allow_uncategorized_topics' do
@@ -415,8 +493,10 @@ describe CategoriesController do
             },
             minimum_required_tags: "",
             allow_global_tags: 'true',
-            required_tag_group_name: tag_group.name,
-            min_tags_from_required_group: 2
+            required_tag_groups: [{
+              name: tag_group.name,
+              min_count: 2
+            }]
           }
 
           expect(response.status).to eq(200)
@@ -431,8 +511,9 @@ describe CategoriesController do
           expect(category.custom_fields).to eq("dancing" => "frogs")
           expect(category.minimum_required_tags).to eq(0)
           expect(category.allow_global_tags).to eq(true)
-          expect(category.required_tag_group_id).to eq(tag_group.id)
-          expect(category.min_tags_from_required_group).to eq(2)
+          expect(category.category_required_tag_groups.count).to eq(1)
+          expect(category.category_required_tag_groups.first.tag_group.id).to eq(tag_group.id)
+          expect(category.category_required_tag_groups.first.min_count).to eq(2)
         end
 
         it 'logs the changes correctly' do
@@ -480,19 +561,19 @@ describe CategoriesController do
 
         it "can remove required tag group" do
           SiteSetting.tagging_enabled = true
-          category.update!(required_tag_group: Fabricate(:tag_group))
+          category.update!(category_required_tag_groups: [ CategoryRequiredTagGroup.new(tag_group: Fabricate(:tag_group)) ])
           put "/categories/#{category.id}.json", params: {
             name: category.name,
             color: category.color,
             text_color: category.text_color,
             allow_global_tags: 'false',
             min_tags_from_required_group: 1,
-            required_tag_group_name: ''
+            required_tag_groups: []
           }
 
           expect(response.status).to eq(200)
           category.reload
-          expect(category.required_tag_group).to be_nil
+          expect(category.category_required_tag_groups).to be_empty
         end
 
         it "does not update other fields" do
@@ -503,7 +584,7 @@ describe CategoriesController do
           category.update!(
             allowed_tags: ["hello", "world"],
             allowed_tag_groups: [tag_group_1.name],
-            required_tag_group_name: tag_group_2.name,
+            category_required_tag_groups: [ CategoryRequiredTagGroup.new(tag_group: tag_group_2) ],
             custom_fields: { field_1: 'hello', field_2: 'hello' }
           )
 
@@ -512,7 +593,7 @@ describe CategoriesController do
           category.reload
           expect(category.tags.pluck(:name)).to contain_exactly("hello", "world")
           expect(category.tag_groups.pluck(:name)).to contain_exactly(tag_group_1.name)
-          expect(category.required_tag_group).to eq(tag_group_2)
+          expect(category.category_required_tag_groups.first.tag_group).to eq(tag_group_2)
           expect(category.custom_fields).to eq({ 'field_1' => 'hello', 'field_2' => 'hello' })
 
           put "/categories/#{category.id}.json", params: { allowed_tags: [], custom_fields: { field_1: nil } }
@@ -520,15 +601,15 @@ describe CategoriesController do
           category.reload
           expect(category.tags).to be_blank
           expect(category.tag_groups.pluck(:name)).to contain_exactly(tag_group_1.name)
-          expect(category.required_tag_group).to eq(tag_group_2)
+          expect(category.category_required_tag_groups.first.tag_group).to eq(tag_group_2)
           expect(category.custom_fields).to eq({ 'field_2' => 'hello' })
 
-          put "/categories/#{category.id}.json", params: { allowed_tags: [], allowed_tag_groups: [], required_tag_group_name: nil, custom_fields: { field_1: 'hi', field_2: nil } }
+          put "/categories/#{category.id}.json", params: { allowed_tags: [], allowed_tag_groups: [], required_tag_groups: [], custom_fields: { field_1: 'hi', field_2: nil } }
           expect(response.status).to eq(200)
           category.reload
           expect(category.tags).to be_blank
           expect(category.tag_groups).to be_blank
-          expect(category.required_tag_group).to eq(nil)
+          expect(category.category_required_tag_groups).to eq([])
           expect(category.custom_fields).to eq({ 'field_1' => 'hi' })
         end
       end

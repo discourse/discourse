@@ -95,28 +95,17 @@ class TwitterApi
     protected
 
     def link_handles_in(text)
-      text.scan(/(?:^|\s)@(\w+)/).flatten.uniq.each do |handle|
-        text.gsub!(/(?:^|\s)@#{handle}/, [
-          " <a href='https://twitter.com/#{handle}' target='_blank'>",
-            "@#{handle}",
-          "</a>"
-        ].join)
-      end
-
-      text.strip
+      text.gsub(/(?:^|\s)@\w+/) do |match|
+        handle = match.strip[1..]
+        "<a href='https://twitter.com/#{handle}' target='_blank'>@#{handle}</a>"
+      end.strip
     end
 
     def link_hashtags_in(text)
-      text.scan(/(?:^|\s)#(\w+)/).flatten.uniq.each do |hashtag|
-        text.gsub!(/(?:^|\s)##{hashtag}/, [
-          " <a href='https://twitter.com/search?q=%23#{hashtag}' ",
-          "target='_blank'>",
-            "##{hashtag}",
-          "</a>"
-        ].join)
-      end
-
-      text.strip
+      text.gsub(/(?:^|\s)#\w+/) do |match|
+        hashtag = match.strip[1..]
+        "<a href='https://twitter.com/search?q=%23#{hashtag}' target='_blank'>##{hashtag}</a>"
+      end.strip
     end
 
     def user_timeline_uri_for(screen_name)

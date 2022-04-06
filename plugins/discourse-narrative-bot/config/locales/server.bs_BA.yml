@@ -169,7 +169,7 @@ bs_BA:
         instructions: |-
           Možete li napraviti neke riječi ** bold ** ili _italic_ u vašem odgovoru? - upišite `** bold **` ili `_italic_` - ili pritisnite gumbe <kbd><b>B</b></kbd> ili <kbd><i>I</i></kbd> u editoru
         reply: |-
-          Odličan posao! HTML i BBCode također rade za formatiranje - da biste saznali više, [probajte ovaj vodič] (http://commonmark.org/help): nerd:
+          Odličan posao! HTML i BBCode također rade za formatiranje - da biste saznali više, [probajte ovaj vodič] (https://commonmark.org/help): nerd:
         not_found: |-
           Aww, nisam pronašao nikakvo formatiranje u vašem odgovoru. : pencil2: Možete li pokušati ponovo? Koristite tipke <kbd><b>B</b></kbd> podebljano ili <kbd><i>I</i></kbd> kurziv u uređivaču ako zapnete.
       quoting:

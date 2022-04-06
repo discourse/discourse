@@ -24,33 +24,36 @@ class UserStat < ActiveRecord::Base
     SET first_unread_pm_at = COALESCE(Z.min_date, :now)
     FROM (
       SELECT
-        Y.user_id,
-        Y.min_date
-      FROM (
+        u1.id user_id,
+        X.min_date
+      FROM users u1
+      LEFT JOIN (
         SELECT
-          u1.id user_id,
-          X.min_date
-        FROM users u1
-        LEFT JOIN (
-          SELECT
-            tau.user_id,
-            MIN(t.updated_at) min_date
-          FROM topic_allowed_users tau
-          INNER JOIN topics t ON t.id = tau.topic_id
-          INNER JOIN users u ON u.id = tau.user_id
-          LEFT JOIN topic_users tu ON t.id = tu.topic_id AND tu.user_id = tau.user_id
-          WHERE t.deleted_at IS NULL
-          AND t.archetype = :archetype
-          AND tu.last_read_post_number < CASE
-                                         WHEN u.admin OR u.moderator
-                                         THEN t.highest_staff_post_number
-                                         ELSE t.highest_post_number
-                                         END
-          AND (COALESCE(tu.notification_level, 1) >= 2)
-          GROUP BY tau.user_id
-        ) AS X ON X.user_id = u1.id
-      ) AS Y
-      WHERE Y.user_id IN (
+          tau.user_id,
+          MIN(t.updated_at) min_date
+        FROM topic_allowed_users tau
+        INNER JOIN topics t ON t.id = tau.topic_id
+        INNER JOIN users u ON u.id = tau.user_id
+        LEFT JOIN topic_users tu ON t.id = tu.topic_id AND tu.user_id = tau.user_id
+        WHERE t.deleted_at IS NULL
+        AND t.archetype = :archetype
+        AND tu.last_read_post_number < CASE
+                                       WHEN u.admin OR u.moderator
+                                       THEN t.highest_staff_post_number
+                                       ELSE t.highest_post_number
+                                       END
+        AND (COALESCE(tu.notification_level, 1) >= 2)
+        AND tau.user_id IN (
+          SELECT id
+          FROM users
+          WHERE last_seen_at IS NOT NULL
+          AND last_seen_at > :last_seen
+          ORDER BY last_seen_at DESC
+          LIMIT :limit
+        )
+        GROUP BY tau.user_id
+      ) AS X ON X.user_id = u1.id
+      WHERE u1.id IN (
         SELECT id
         FROM users
         WHERE last_seen_at IS NOT NULL
@@ -204,16 +207,19 @@ class UserStat < ActiveRecord::Base
 
   def self.update_draft_count(user_id = nil)
     if user_id.present?
-      draft_count = DB.query_single <<~SQL, user_id: user_id
+      draft_count, has_topic_draft = DB.query_single <<~SQL, user_id: user_id, new_topic: Draft::NEW_TOPIC
         UPDATE user_stats
         SET draft_count = (SELECT COUNT(*) FROM drafts WHERE user_id = :user_id)
         WHERE user_id = :user_id
-        RETURNING draft_count
+        RETURNING draft_count, (SELECT 1 FROM drafts WHERE user_id = :user_id AND draft_key = :new_topic)
       SQL
 
       MessageBus.publish(
         '/user',
-        { draft_count: draft_count.first },
+        {
+          draft_count: draft_count,
+          has_topic_draft: !!has_topic_draft
+        },
         user_ids: [user_id]
       )
     else
@@ -288,6 +294,16 @@ class UserStat < ActiveRecord::Base
     Discourse.redis.setex(last_seen_key(id), MAX_TIME_READ_DIFF, val)
   end
 
+  def update_pending_posts
+    update(pending_posts_count: user.pending_posts.count)
+    MessageBus.publish(
+      "/u/#{user.username_lower}/counters",
+      { pending_posts_count: pending_posts_count },
+      user_ids: [user.id],
+      group_ids: [Group::AUTO_GROUPS[:staff]]
+    )
+  end
+
   protected
 
   def trigger_badges
@@ -320,5 +336,7 @@ end
 #  distinct_badge_count     :integer          default(0), not null
 #  first_unread_pm_at       :datetime         not null
 #  digest_attempted_at      :datetime
-#  draft_count              :integer          default(0), not null
 #  post_edits_count         :integer
+#  draft_count              :integer          default(0), not null
+#  pending_posts_count      :integer          default(0), not null
+#

@@ -206,6 +206,8 @@ sv:
       local_login_cannot_be_disabled_if_second_factor_enforced: "Du kan inte inaktivera lokal inloggning om 2FA har genomdrivits. Inaktivera genomdriven 2FA innan du inaktiverar lokala inloggningar."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "Du kan inte aktivera S3-uppladdningar eftersom S3-uppladdningar redan är aktiverade globalt, och aktivering av denna webbplatsnivå kan orsaka kritiska problem med uppladdningar"
       cors_origins_should_not_have_trailing_slash: "Du bör inte lägga till det avslutande snedstrecket (/) till CORS-ursprung."
+      slow_down_crawler_user_agent_must_be_at_least_3_characters: "Användaragenter måste vara minst 3 tecken långt för att undvika felaktiga hastighetsbegränsning för mänskliga användare."
+      slow_down_crawler_user_agent_cannot_be_popular_browsers: "Du kan inte lägga till något av följande värden till inställningen: %{values}."
     conflicting_google_user_id: 'Google-konto-ID:et för det här kontot har ändrats och av säkerhetsskäl krävs personalens ingripande. Kontakta personalen och hänvisa dem till <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
       invalid_address: "Tyvärr kunde vi inte generera en förhandsvisning av den här webbsidan eftersom servern '%{hostname}' inte kunde hittas. I stället för en förhandsvisning visas enbart en länk i ditt inlägg. :cry:"
@@ -227,7 +229,7 @@ sv:
 
       <p>Annars ber vi dig att <a href="%{base_url}/password-reset">återställa lösenordet</a>.</p>
     not_found_template_link: |
-      <p>Inbjudan till <a href="%{base_url}">%{site_name}</a> kan inte längre lösas in. Be personen som bjöd in dig att skicka en ny inbjudan till dig.</p>l
+      <p>Denna inbjudan till <a href="%{base_url}">%{site_name}</a> kan inte längre lösas in. Be personen som bjöd in dig att skicka en ny inbjudan till dig.</p>
     user_exists: "Det finns inget behov av att bjuda in <b>%{email}</b>: De har <a href='%{base_path}/u/%{username}/summary'>redan ett konto!</a>"
     invite_exists: "Du har redan bjudit in <b>%{email}</b>."
     invalid_email: "%{email} är inte en giltig e-postadress."
@@ -239,7 +241,8 @@ sv:
     disabled_errors:
       discourse_connect_enabled: "Inbjudningar är inaktiverade eftersom DiscourseConnect har aktiverats."
       invalid_access: "Du har inte behörighet att visa den efterfrågade resursen."
-    requires_groups: "Inbjudan sparad. För att ge tillgång till det angivna ämnet lägger du till en av följande grupper: %{groups}."
+    requires_groups: "Inbjudan sparades inte eftersom det angivna ämnet är otillgängligt. Lägg till en av följande grupper: %{groups}."
+    domain_not_allowed: "Din e-post kan inte användas för att lösa in denna inbjudan."
   bulk_invite:
     file_should_be_csv: "De uppladdade filerna skall vara i csv-format."
     max_rows: "De första %{max_bulk_invites} inbjudningarna har skickats ut. Prova att dela upp filen i mindre delar."
@@ -335,8 +338,8 @@ sv:
   too_many_links:
     one: "Tyvärr kan nya användare bara ha en länk i ett inlägg."
     other: "Tyvärr kan nya användare bara ha %{count} länkar i ett inlägg."
-  contains_blocked_word: "Ditt inlägg innehåller ett ord som inte är tillåtet: %{word}"
-  contains_blocked_words: "Ditt inlägg innehåller flera ord som inte är tillåtna: %{words}"
+  contains_blocked_word: "Tyvärr, du kan inte använda ordet '%{word}'; det är inte tillåtet."
+  contains_blocked_words: "Tyvärr, du kan inte skriva det. Ej tillåtet: %{words}."
   spamming_host: "Tyvärr kan du inte publicera en länk till den värden."
   user_is_suspended: "Avstängda användare har inte tillåtelse att göra inlägg"
   topic_not_found: "Något har gått fel. Kanske har ämnet stängts eller raderats medan du tittade på det?"
@@ -394,7 +397,6 @@ sv:
       too_many: "Tyvärr kan du inte lägga till fler än %{limit} bokmärken, gå till <a href='%{user_bookmarks_url}'>%{user_bookmarks_url}</a> för att ta bort några."
       cannot_set_past_reminder: "Du kan inte sätta en påminnelse för bokmärke i det förflutna."
       cannot_set_reminder_in_distant_future: "Du kan inte sätta en påminnelse för bokmärke mer än 10 år framåt i tiden."
-      time_must_be_provided: "tid måste anges för alla påminnelser"
       for_topic_must_use_first_post: "Du kan bara använda det första inlägget för att bokmärka ämnet."
     reminders:
       at_desktop: "Nästa gång jag är vid datorn"
@@ -624,6 +626,7 @@ sv:
       permission_conflict: "En grupp som tillåts behörighet till en underkategori måste också ha behörighet till huvudkategorin. Följande grupper har behörighet till en underkategori, men saknar behörighet till huvudkategorin: %{group_names}."
       disallowed_topic_tags: "Detta ämne har taggar som inte tillåts för kategorin: '%{tags}'"
       disallowed_tags_generic: "Detta ämne har otillåtna taggar."
+      slug_contains_non_ascii_chars: "innehåller icke-ascii tecken"
     cannot_delete:
       uncategorized: "Denna kategori är speciell. Den är avsedd för att innehålla ämnen som inte har en kategori; den kan inte raderas."
       has_subcategories: "Du kan inte ta bort den här kategorin eftersom den har underkategorier."
@@ -639,6 +642,7 @@ sv:
   post:
     image_placeholder:
       broken: "Den här bilden är trasig"
+    hidden_bidi_character: "Dubbelriktade tecken kan ändra ordningen som text renderas. Detta kan användas för att dölja skadlig kod."
     has_likes:
       one: "%{count} gillning"
       other: "%{count} gillningar"
@@ -869,12 +873,7 @@ sv:
     pm_title: "Säkerhetskopiera utkast från pågående ämnen"
     pm_body: "Ämne som innehåller säkerhetskopierade utkast"
   user_activity:
-    no_bookmarks:
-      self: "Du har inga bokmärkta inlägg; med bokmärken kan du snabbt hänvisa till ett specifikt inlägg."
-      search: "Det hittades inga bokmärken med den angivna sökfrågan."
-      others: "Inga bokmärken."
-    no_drafts:
-      self: "Du har inga utkast; börja att skriva ett svar i ett ämne så sparas det automatiskt som ett nytt utkast."
+    no_log_search_queries: "Sökloggsfrågor är för närvarande inaktiverade (en administratör kan aktivera dem i webbplatsinställningarna)."
   email_settings:
     pop3_authentication_error: "Det uppstod ett problem med de angivna POP3-autentiseringsuppgifterna. Kontrollera användarnamn och lösenord och försök igen."
     imap_authentication_error: "Det uppstod ett problem med de angivna IMAP-autentiseringsuppgifterna. Kontrollera användarnamn och lösenord och försök igen."
@@ -1314,7 +1313,27 @@ sv:
         ignores_count: Räknade ignoreringar
         mutes_count: Räknade tystningar
       description: "Användare som har tystats och/eller ignorerats av många andra användare."
+    top_users_by_likes_received:
+      title: "Toppanvändare efter mottagna gillningar"
+      labels:
+        user: Användare
+        qtt_like: Mottagna gillningar
+      description: "Topp 10-användare som har fått gillningar."
+    top_users_by_likes_received_from_inferior_trust_level:
+      title: "Toppanvändare efter gillningar givna av en användare med lägre förtroendenivå"
+      labels:
+        user: Användare
+        trust_level: Förtroendenivå
+        qtt_like: Mottagna gillningar
+      description: "Topp 10 användare i en högre förtroendenivå som gillas av personer med en lägre förtroendenivå."
+    top_users_by_likes_received_from_a_variety_of_people:
+      title: "Toppanvändare efter gillningar utifrån en mängd olika personer"
+      labels:
+        user: Användare
+        qtt_like: Mottagna gillningar
+      description: "Topp 10-användare som har fått gillningar från ett brett spektrum av personer."
   dashboard:
+    group_email_credentials_warning: 'Det uppstod ett problem med autentiseringsuppgifterna för gruppen <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. Inga e-postmeddelanden skickas från gruppinkorgen förrän problemet är åtgärdat. %{error}'
     rails_env_warning: "Din server kör i %{env}-läge."
     host_names_warning: "Din config/database.yml-fil använder lokalvärdens standard-värdnamn. Uppdatera den till att använda din webbplats värdnamn."
     sidekiq_warning: 'Sidekiq körs inte. Många uppgifter, som att skicka e-post, utförs asynkront av sidekiq. Se till att minst en sidekiq-process körs. <a href="https://github.com/mperham/sidekiq">Läs mer om Sidekiq här</a>.'
@@ -1342,6 +1361,7 @@ sv:
     unreachable_themes: "Vi kunde inte kontrollera uppdateringar för följande teman:"
     watched_word_regexp_error: "Det reguljära uttrycket för '%{action}'-bevakade ord är ogiltigt. Kontrollera dina <a href='%{base_path}/admin/customize/watched_words'>inställningar för bevakade ord</a> eller inaktivera webbplatsinställningen 'Reguljära uttryck för bevakade ord'."
   site_settings:
+    allow_bulk_invite: "Tillåt massinbjudningar genom att ladda upp en CSV-fil"
     disabled: "inaktiverade"
     display_local_time_in_user_card: "Visa den lokala tiden baserat på en användares tidszon när deras användarkort öppnas."
     censored_words: "Ord som automatiskt ersätts med &#9632;&#9632;&#9632;&#9632;"
@@ -1362,7 +1382,8 @@ sv:
     min_personal_message_title_length: "Lägst tillåtna längd på rubrik för ett meddelande uttryckt i tecken"
     max_emojis_in_title: "Maximalt antal tillåtna emojier i ämnesrubriken"
     min_search_term_length: "Lägsta giltiga teckenlängd på sökterm"
-    search_tokenize_chinese_japanese_korean: "Framtvinga sökning för att koda kinesiska/japanska/koreanska även på webbplatser som inte är på dessa språk"
+    search_tokenize_chinese: "Tvinga sökning att tokenisera kinesiska även på icke-kinesiska webbplatser"
+    search_tokenize_japanese: "Tvinga sökning att tokenisera japanska även på icke-japanska webbplatser"
     search_prefer_recent_posts: "Om sökningar på ditt stora forum går långsamt, försök detta alternativ som är ett index av de senaste inläggen först."
     search_recent_posts_size: "Hur många nya inlägg som ska behållas i index"
     log_search_queries: "Logga sökfrågor utförda av användare"
@@ -1393,6 +1414,7 @@ sv:
     tl2_post_edit_time_limit: "En författare på fn2+ kan redigera eller radera sitt inlägg i (n) minuter efter att ha lagt upp ett inlägg. Ange 0 för att alltid tillåta."
     edit_history_visible_to_public: "Tillåt att alla ser tidigare versioner av ett redigerat inlägg. Om detta inaktiveras kan endast personal se detta."
     delete_removed_posts_after: "Inlägg som tagits bort av författaren kommer automatiskt att raderas efter (n) timmar. Ange 0 för att omedelbart ta bort inlägg."
+    notify_users_after_responses_deleted_on_flagged_post: "När ett inlägg flaggas och sedan tas bort kommer alla användare som har svarat på inlägget och fått sina svar borttagna att meddelas."
     max_image_width: "Maxbredd för bildikoner i ett inlägg"
     max_image_height: "Maxhöjd för bildikoner i ett inlägg"
     responsive_post_image_sizes: "Ändra storlek på förhandsgranskningsbilder i Lightbox för att möjliggöra höga DPI-skärmar med följande pixelkvot. Ta bort alla värden för att inaktivera responsiva bilder."
@@ -1405,7 +1427,7 @@ sv:
     show_pinned_excerpt_mobile: "Visa utdrag för fästa ämnen i mobilen."
     show_pinned_excerpt_desktop: "Visa utdrag för fästa ämnen på datorn."
     post_onebox_maxlength: "Maximal teckenlängd för ett Discourse-inlägg i onebox."
-    blocked_onebox_domains: "En lista över domäner som aldrig placeras i onebox."
+    blocked_onebox_domains: "En lista över domäner som aldrig kommer att oneboxas t.ex. wikipedia.org\n(Jokertecken * ? stöds inte)"
     allowed_inline_onebox_domains: "En lista över domäner som placeras i onebox i miniatyrform om de länkas utan en rubrik"
     enable_inline_onebox_on_all_domains: "Ignorera webbplatsinställningen inline_onebox_domain_allowlist och tillåt infogad onebox på alla domäner."
     force_custom_user_agent_hosts: "Värdar för vilka anpassad användaragent för onebox ska användas vid alla förfrågningar. (särskilt användbart för värdar som begränsar åtkomst av användaragent)."
@@ -1440,10 +1462,8 @@ sv:
     summary_timeline_button: "Visa en \"Sammanfatta\"-knapp på tidslinjen"
     enable_personal_messages: "Tillåt användare med förtroendenivå 1 (konfigurera genom minsta förtroendenivå för att skicka meddelanden) att skapa meddelanden och svara på meddelanden. Notera att personalen alltid kan skicka meddelanden oavsett."
     enable_system_message_replies: "Tillåter användare att svara på systemmeddelanden, även om personliga meddelanden har inaktiverats"
-    enable_long_polling: "Meddelande-buss som används för avisering kan använda long polling"
     enable_chunked_encoding: "Aktivera packade kodningssvar (chunked) från servern. Den här funktionen fungerar på de flesta inställningar, men vissa proxyservrar kan buffra, vilket gör att svaren fördröjs"
     long_polling_base_url: "URL som används för long polling (när en CDN levererar dynamiskt innehåll, kontrollera att det här är inställt till origin pull) se: http://origin.site.com"
-    long_polling_interval: "Tid som servern bör vänta innan den svarar på klienter när det inte finns någon data att skicka (endast loggad på användare)"
     polling_interval: "När long polling inte har aktiverats, hur ofta bör inloggade klienter polla i millisekunder"
     anon_polling_interval: "Hur ofta bör anonyma klienter polla i millisekunder"
     background_polling_interval: "Hur ofta bör klienter polla i millisekunder (när fönstret är i bakgrunden)"
@@ -1459,6 +1479,9 @@ sv:
     tl2_additional_edits_per_day_multiplier: "Öka gränsen för ändringar per dag för tl2 (medlem) genom att multiplicera med detta tal"
     tl3_additional_edits_per_day_multiplier: "Öka gränsen för ändringar per dag för tl3 (regelbundna) genom att multiplicera med detta tal"
     tl4_additional_edits_per_day_multiplier: "Öka gränsen för ändringar per dag för tl4 (ledare) genom att multiplicera med detta tal"
+    tl2_additional_flags_per_day_multiplier: "Öka gränsen för flaggningar per dag för tl2 (medlem) genom att multiplicera med detta nummer"
+    tl3_additional_flags_per_day_multiplier: "Öka gränsen för flaggningar per dag för tl3 (vanlig) genom att multiplicera med detta nummer"
+    tl4_additional_flags_per_day_multiplier: "Öka gränsen för flaggningar per dag för tl4 (ledare) genom att multiplicera med detta nummer"
     num_users_to_silence_new_user: "Om en ny användares inlägg får num_spam_flags_to_silence_new_user skräppost-flaggor från detta antalet olika användare, dölj alla deras inlägg och förhindra framtida inlägg. 0 för att inaktivera."
     num_tl3_flags_to_silence_new_user: "Om en ny användares inlägg får så här många flaggningar från num_tl3_users_to_silence_new_user olika användare med förtroendenivå 3, dölj alla deras inlägg och förhindra framtida inlägg. Ange 0 för att inaktivera."
     num_tl3_users_to_silence_new_user: "Om en ny användares inlägg får num_tl3_flags_to_silence_new_user flaggningar från så här många olika användare med förtroendenivå 3, dölj alla deras inlägg och förhindra framtida inlägg. 0 för att inaktivera."
@@ -1493,7 +1516,7 @@ sv:
     allowed_iframes: "En lista med iframekällors domänprefix som Discourse säkert kan tillåta i inlägg"
     allowed_crawler_user_agents: "Användaragenter för sökrobotar som ska få åtkomst till webbplatsen. VARNING! INSTÄLLNING AV DETTA FÖRBJUDER ALLA SÖKMOTORER SOM INTE LISTAS HÄR!"
     blocked_crawler_user_agents: "Unikt fall av känsligt ord i användaragent-strängen som identifierar webbsökare som inte bör få åtkomst till webbplatsen. Gäller inte om vitlista har definierats."
-    slow_down_crawler_user_agents: "Användaragenter för webbsökare som bör begränsas i robots.txt med hjälp av Crawl-delay-direktivet"
+    slow_down_crawler_user_agents: 'Användaragenter för sökrobotar som ska vara hastighetsbegränsade vilket konfigurerats i inställningen "sakta ned sökrobots hastighet". Varje värde måste vara minst 3 tecken långt.'
     slow_down_crawler_rate: "Om slow_down_crawler_user_agents anges kommer denna hastighet att gälla för alla sökrobotar (fördröjning mellan förfrågningarna uttryckt i sekunder)"
     content_security_policy: "Aktivera säkerhetspolicy för innehåll"
     content_security_policy_report_only: "Aktivera enbart säkerhetspolicy för innehåll"
@@ -1530,8 +1553,9 @@ sv:
     allow_index_in_robots_txt: "Ange i robots.txt att den här webbplatsen får indexeras av webbsökmotorer. I undantagsfall kan du permanent <a href='%{base_path}/admin/customize/robots'>åsidosätta robots.txt</a>."
     blocked_email_domains: "En textfil avgränsad med vertikalstreck med alla e-postdomäner som användare inte tillåts registrera konton med. Exempel: mailinator.com|trashmail.net"
     allowed_email_domains: "En textfil avgränsad med vertikalstreck med alla e-postdomäner som användare MÅSTE registrera konton med. VARNING: Användare med andra e-postdomäner än de som anges kommer inte att tillåtas!"
+    normalize_emails: "Kontrollera om normaliserad e-post är unik. Normaliserad e-post tar bort alla punkter från användarnamnet och allt mellan symbolerna + och @."
     auto_approve_email_domains: "Användare med e-postadresser som finns i denna lista av domäner kommer automatiskt att godkännas."
-    hide_email_address_taken: "Informera inte användare om att det finns ett konto med en given e-postadress vid registreringen eller från det glömda lösenordsformuläret."
+    hide_email_address_taken: "Informera inte användarna om att det finns ett konto med en given e-postadress under registreringen eller under flödet för glömda lösenord. Kräv fullständig e-post vid begäran om \"glömt lösenord\"."
     log_out_strict: "Vid utloggning, logga ut ALLA sessioner för den användaren på alla apparater"
     version_checks: "Pinga Discourse Hub för versionuppdateringar och visa nya versionsmeddelanden på instrumentpanelen <a href='%{base_path}/admin' target='_blank'>/admin</a>"
     new_version_emails: "Skicka e-post till contact_email när en ny version av Discourse finns tillgängligt."
@@ -1576,6 +1600,7 @@ sv:
     google_oauth2_client_secret: "Klienthemlighet för din Google-applikation."
     google_oauth2_prompt: "En valfri mellanrumsavgränsad lista över strängvärden som anger huruvida auktoriseringsservern ber användaren om omautentisering och samtycke. Se möjliga värden i <a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a>."
     google_oauth2_hd: "En valfri Google Apps Hosted-domän som inloggningen kommer att begränsas till. Se mer information på <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a>."
+    google_oauth2_hd_groups: "(experimentell) Hämta användarnas Google-grupper på värddomänen vid autentisering. Hämtade Google-grupper kan användas för att bevilja automatiskt medlemskap i grupper inom Discourse (se gruppinställningar)."
     enable_twitter_logins: "Aktivera Twitter-autentisering, kräver twitter_consumer_key och twitter_consumer_secret. Se <a href='https://meta.discourse.org/t/13395' target='_blank'>Konfigurera Twitter-inloggning (och formaterade inbäddningar) för Discourse</a>."
     twitter_consumer_key: "Konsumentnyckel för Twitter-autentisering, registrerad på <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
     twitter_consumer_secret: "Konsumenthemlighet för Twitter-autentisering, registrerad på <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
@@ -1654,7 +1679,7 @@ sv:
     use_site_small_logo_as_system_avatar: "Använd webbplatsens lilla logotyp istället för systemanvändarens avatar. Kräver att logotypen är närvarande."
     restrict_letter_avatar_colors: "En lista med sexsiffriga hexadecimala färgvärden som ska användas för bakgrund av avatarer i brev."
     enable_listing_suspended_users_on_search: "Tillåt att vanliga användare hittar avstängda användare."
-    selectable_avatars_enabled: "Tvinga användare att välja en avatar från listan."
+    selectable_avatars_mode: "Tillåt att användare väljer en avatar från selectable_avatars-listan och begränsar uppladdningar av anpassade avatarer till vald förtroendenivå."
     selectable_avatars: "Lista på avatarer som användare kan välja från"
     allow_all_attachments_for_group_messages: "Tillåt alla e-postbilagor för gruppmeddelanden."
     png_to_jpg_quality: "Den konverterade JPG-filens kvalitet (1 för den lägsta kvaliten, 99 för den bästa kvaliten, 100 för att inaktivera)."
@@ -1719,6 +1744,9 @@ sv:
     max_mentions_per_post: "Max antal @namn-aviseringar vem som helst kan göra i ett inlägg."
     max_users_notified_per_group_mention: "Maximalt antal användare som kan få ett meddelande om en grupp anges (om tröskeln har uppfyllts kommer inga aviseringar att skickas)"
     enable_mentions: "Tillåt användare att nämna andra användare."
+    here_mention: "Namn som används för ett @omnämnande för att tillåta privilegierade användare att meddela upp till 'max_here_mentioned' personer som deltar i ämnet. Får inte vara ett befintligt användarnamn."
+    max_here_mentioned: "Maximalt antal omnämnda personer genom @namn."
+    min_trust_level_for_here_mention: "Lägsta förtroendenivå som krävs för att omnämna genom @namn."
     create_thumbnails: "Skapa miniatyrer och \"lightboxa\" bilder som är för stora för att passa in i ett inlägg."
     email_time_window_mins: "Vänta (n) minuter innan e-postaviseringar skickas ut, för att ge användare chansen att redigera och slutföra deras inlägg."
     personal_email_time_window_seconds: "Vänta (n) sekunder innan en privat e-postavisering skickas ut för att ge användare chansen att redigera och slutföra deras meddelande."
@@ -1926,7 +1954,7 @@ sv:
     display_name_on_posts: "Visa en användares fullständiga namn på deras inlägg som tillägg till deras @användarnamn."
     show_time_gap_days: "Om två inlägg är gjorda med så här många dagar emellan, visa tidsskillnaden i ämnet."
     short_progress_text_threshold: "Efter att antalet inlägg i ett ämne överstiger den här siffran kommer förloppsmätaren endast att visa nuvarande antal inlägg. Om du ändrar förloppsmätarens bredd så kanske du behöver ändra det här värdet."
-    default_code_lang: "Standardprogrameringsspråk för syntaxmarkering som appliceras på kodblock från GitHub (auto, nohighlight, ruby, python etc)."
+    default_code_lang: "Standard programmeringsspråks syntax markering tillämpas på kodblock (auto, nohighlight, ruby, python etc). Detta värde måste också finnas i webbplatsinställningen `highlighted languages`."
     warn_reviving_old_topic_age: "En varning visas när någon börjar skriva ett svar på ett ämne och senaste inlägget är äldre än så här många dagar. Ange 0 för att inaktivera."
     autohighlight_all_code: "Tvångstillämpa syntaxmarkering på alla förformatterade kodblock även när de inte uttryckligt har specificerat språket."
     highlighted_languages: "Inkluderade syntax-markeringsregler (Varning: att inkludera för många språk kan påverka prestanda). Demonstration: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a>"
@@ -2052,10 +2080,12 @@ sv:
     share_quote_visibility: "Avgör när du ska visa citatdelningsknappar: aldrig, endast till anonyma användare eller för alla användare. "
     create_revision_on_bulk_topic_moves: "Skapa ny version av första inlägg när ämnen flyttas till en ny kategori i bulk."
     allow_changing_staged_user_tracking: "Tillåt att aviseringsinställningar för en arrangerad användares kategori och tagg kan ändras av en administratörsanvändare."
+    use_email_for_username_and_name_suggestions: "Använd den första delen av e-postadresser för användarnamn och namnförslag. Observera att detta gör det lättare för allmänheten att gissa användares fullständiga e-postadresser (eftersom en stor del av människor delar gemensamma tjänster som `gmail.com`)."
     errors:
       invalid_css_color: "Ogiltig färg. Ange ett färgnamn eller ett hexvärde."
       invalid_email: "Felaktig e-postadress."
       invalid_username: "Det finns ingen användare med detta användarnamn."
+      valid_username: "Det finns redan en användare med det användarnamnet."
       invalid_group: "Det finns ingen grupp med det namnet."
       invalid_integer_min_max: "Värdet måste vara mellan %{min} och %{max}."
       invalid_integer_min: "Värdet måste vara %{min} eller större."
@@ -2070,6 +2100,7 @@ sv:
       invalid_json: "Ogiltig JSON."
       invalid_reply_by_email_address: "Värdet måste innehålla '%{reply_key}' och vara annorlunda från e-postaviseringen."
       invalid_alternative_reply_by_email_addresses: "Alla värden måste innehålla '%{reply_key}' och vara annorlunda från e-postaviseringen."
+      invalid_domain_hostname: "Får inte innehålla * eller ? tecken."
       pop3_polling_host_is_empty: "Du måste ställa in en 'pop3 polling host' innan du aktiverar POP3-polling."
       pop3_polling_username_is_empty: "Du måste ställa in ett 'pop3 polling username' innan du aktiverar POP3-polling."
       pop3_polling_password_is_empty: "Du måste ställa in ett 'pop3 polling password' innan du aktiverar POP3-polling."
@@ -2098,6 +2129,9 @@ sv:
         leading_trailing_slash: "Det reguljära uttrycket får inte börja och sluta med ett snedstreck."
       unicode_usernames_avatars: "De interna systemavatarerna stöder inte Unicode-användarnamn."
       list_value_count: "Listan måste innehålla exakt %{count} värden."
+      google_oauth2_hd_groups: "Du måste först ange 'google oauth2 hd' innan du aktiverar denna inställning."
+      search_tokenize_chinese_enabled: "Du måste inaktivera 'search_tokenize_chinese' innan du aktiverar den här inställningen."
+      search_tokenize_japanese_enabled: "Du måste inaktivera 'search_tokenize_japanese' innan du aktiverar den här inställningen."
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.exempel.se"
@@ -2259,6 +2293,13 @@ sv:
     second_factor_toggle:
       totp: "Använd en autentiseringsapp eller säkerhetsnyckel istället"
       backup_code: "Använd en reservkod istället"
+  second_factor_auth:
+    challenge_not_found: "Det gick inte att hitta en 2FA-utmaning i din nuvarande session."
+    challenge_expired: "Det har gått för lång tid sedan 2FA-utmaningen arrangerades och den är inte längre giltig. Var god försök igen."
+    challenge_not_completed: "Du har inte slutfört 2FA-utmaningen för att utföra den här åtgärden. Vänligen slutför 2FA-utmaningen och försök igen."
+    actions:
+      grant_admin:
+        description: "För ytterligare säkerhetsåtgärder måste du bekräfta din 2FA innan %{username} beviljas administratörsåtkomst."
   admin:
     email:
       sent_test: "skickat!"
@@ -2320,13 +2361,6 @@ sv:
     cannot_delete_has_posts:
       one: "Användaren %{username} har %{count} inlägg i ett offentligt ämne eller personligt meddelande, så den kan inte tas bort."
       other: "Användaren %{username} har %{count} inlägg i ett offentligt ämne eller personligt meddelande, så de kan inte tas bort."
-  reviewables_reminder:
-    submitted:
-      one: "Artiklar skickades in över %{count} timme sedan. [Vi ber dig granska dem] (%{base_path}/review)."
-      other: "Artiklar skickades in över %{count} timmar sedan. [Vi ber dig granska dem] (%{base_path}/review)."
-    subject_template:
-      one: "%{count} föremål behöver granskas"
-      other: "%{count} föremål behöver granskas"
   unsubscribe_mailer:
     title: "Avprenumeration per e-post"
     subject_template: "Bekräfta att du inte längre vill motta e-postuppdateringar från %{site_title}"
@@ -2424,46 +2458,20 @@ sv:
     title: "Test per e-post"
     subject_template: "[%{email_prefix}] Leveranstest för e-post"
     text_body_template: |
-      Detta är ett e-posttest från
+      Det här är ett testmeddelande från
 
       [**%{base_url}**][0]
 
-      E-postleverans är komplicerat. Här är några viktiga saker som du bör kontrollera först:
+      Vi hoppas att du har fått detta leveranstest av e-post OK!
 
-      - Var *säker* på att ange från-adressen för `notification email` korrekt i dina webbplatsinställningar. **Den domän som anges i "från"-adressen för e-postmeddelanden du skickar är den domän som din e-post kommer att valideras mot**.
+      Här är en [händig checklista för att verifiera konfigurationen av e-postleverans][1].
 
-      - Ha kunskap om hur du ser e-postmeddelandets i rå-text för din e-postklient, så att du kan undersöka e-posthuvudena efter viktiga ledtrådar. I Gmail görs detta genom alternativet "visa original" i rullgardinsmenyn längst upp till höger i varje e-post.
-
-      - **VIKTIGT:** Har din ISP en omvänd DNS-post angiven för att koppla de domännamn och IP-adresser som du skickar e-post från? [Testa din omvända PTR-data][2] här. Om din ISP inte anger rätt omvänd DNS-pekardata är det mycket osannolikt att något av dina e-postmeddelanden kommer att levereras.
-
-      - Är din domäns [SPF-data][8] korrekt? [Testa din SPF-data][1] här. Observera att TXT är rätt officiell posttyp för SPF.
-
-      - Är din domäns [DKIM-data][3] korrekt? Detta kommer att förbättra e-postleveransen avsevärt. [Testa din DKIM-data][7] här.
-
-      - Om du kör din egen e-postserver, kontrollera att din e-postservers IP-adresser inte är [svartlistade][4]. Kontrollera också att den definitivt skickar ett fullt kvalificerat värdnamn som omvandlas till DNS i HELO-meddelandet. Annars kommer din e-post att avvisas av många e-posttjänster.
-
-      - Vi rekommenderar starkt att du **skickar ett testmeddelande till [mail-tester.com][mt]** för att verifiera att allt ovan fungerar korrekt.
-
-       (Det *enkla* sättet är att skapa ett konto på [SendGrid][sg], [SparkPost][sp], [Mailgun][mg] eller [Mailjet][mj], som har billiga e-postpaket och är tillräckligt för mindre gemenskaper. Du måste dock ställa in SPF- och DKIM-data för din DNS!)
-
-      Vi hoppas att detta e-postleveranstest kom fram!
-
-      Lycka till!
+      Lycka till,
 
       Dina vänner på [Discourse](https://www.discourse.org)
 
       [0]: %{base_url}
-      [1]: https://www.kitterman.com/spf/validate.html
-      [2]: https://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: https://whatismyipaddress.com/blacklist-check
-      [7]: https://www.mail-tester.com/spf-dkim-check
-      [8]: http://www.openspf.org/SPF_Record_Syntax
-      [sg]: https://goo.gl/r1WMF6
-      [sp]: https://www.sparkpost.com/
-      [mg]: https://www.mailgun.com/
-      [mj]: https://www.mailjet.com/pricing/
-      [mt]: https://www.mail-tester.com/
+      [1]: https://meta.discourse.org/t/email-delivery-configuration-checklist/209839
   new_version_mailer:
     title: "E-post om ny version"
     subject_template: "[%{email_prefix}] Ny version av Discourse, uppdatering tillgänglig"
@@ -2491,6 +2499,11 @@ sv:
     inappropriate: "Ditt inlägg blev flaggat som **olämpligt**. Medlemmarna i forumet kände att det är störande, kränkande eller att det strider mot [våra riktlinjer](%{base_path}/guidelines)."
     spam: "Ditt inlägg blev flaggat som **skräppost**. Medlemmarna i forumet kände att det är reklam, något som är överdrivet säljande istället för att vara nyttigt eller relevant för ämnet."
     notify_moderators: "Ditt inlägg blev flaggat **för moderators uppmärksamhet**. Medlemmarna i forumet kände att något i inlägget kräver manuellt ingripande av personal."
+    responder:
+      off_topic: "Inlägget flaggades som **off-topic**: gemenskapen tycker inte att det passar in i ämnet, vilket för närvarande definieras av titeln samt det första inlägget."
+      inappropriate: "Inlägget flaggades som **olämpligt**: gemenskapen tycker att det är stötande, kränkande eller ett brott mot [våra riktlinjer för gemenskapen](%{base_path}/guidelines)."
+      spam: "Inlägget flaggades som **skräppost**: gemenskapen tycker att det är en reklam, något som är överdrivet marknadsföringsmässigt i stället för att vara användbart eller relevant för ämnet vilket förväntas."
+      notify_moderators: "Inlägget flaggades **för moderators uppmärksamhet**: gemenskapen anser att något med inlägget kräver manuellt ingripande av en medarbetare."
   flags_dispositions:
     agreed: "Tack för att du meddelade oss. Vi håller med om att det finns ett problem och vi undersöker det."
     agreed_and_deleted: "Tack för att du meddelade oss. Vi håller med om att det finns ett problem och vi har raderat inlägget."
@@ -2501,6 +2514,11 @@ sv:
     one: "Detta ämne är tillfälligt stängt i minst %{count} timme på grund av ett stort antal forumflaggor."
     other: "Detta ämne är tillfälligt stängt i minst %{count} timmar på grund av ett stort antal flaggor."
   system_messages:
+    reviewables_reminder:
+      subject_template: "Det finns saker i granskningskön som behöver granskas"
+      text_body_template:
+        one: "%{mentions} Artiklar skickades in över %{count} timme sedan. [Vi ber dig granska dem] (%{base_url}/review)."
+        other: "%{mentions} Artiklar skickades in över %{count} timmar sedan. [Vi ber dig granska dem] (%{base_url}/review)."
     private_topic_title: "Ämne #%{id}"
     contents_hidden: "Gå till inlägget för att se dess innehåll."
     post_hidden:
@@ -2581,6 +2599,29 @@ sv:
         ```
 
         Läs mer ingående information i våra [forumriktlinjer](%{base_url}/guidelines).
+    flags_agreed_and_post_deleted_for_responders:
+      title: "Svar borttaget från flaggat inlägg av personal"
+      subject_template: "Svar borttaget från flaggat inlägg av personal"
+      text_body_template: |
+        Hej,
+
+        Detta är ett automatiskt meddelande från %{site_name} att låta dig veta att en [post](%{base_url}%{url}) du svarade på togs bort.
+
+        %{flag_reason}
+
+        Det här inlägget flaggades av gemenskapen och personalen valde att ta bort det.
+
+        ``` markdown
+        %{flagged_post_raw_content}
+        ```
+
+        där du svarade följande
+
+        ``` markdown
+        %{flagged_post_response_raw_content}
+        ```
+
+        För mer information om orsaken till borttagningen, läs våra [riktlinjer för communityn](%{base_url}/riktlinjer).
     usage_tips:
       text_body_template: |
         För att få ett par tips och förslag hur du kommer igång som ny användare, [gå till detta blogginlägg](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
@@ -3412,6 +3453,7 @@ sv:
     external_upload_not_found: "Uppladdningen hittades inte i den externa butiken. %{additional_detail}"
     checksum_mismatch_failure: "Kontrollsumman för den uppladdade filen stämmer inte. Filens innehåll kan ha ändrats under uppladdning. Försök igen."
     cannot_promote_failure: "Uppladdningen kan inte slutföras. Kanske har den redan slutförts eller misslyckats tidigare."
+    size_zero_failure: "Tyvärr verkar det som om något har gått fel. Filen du försöker ladda upp är 0 bytes. Försök igen."
     attachments:
       too_large: "Tyvärr är filen som du försöker ladda upp för stor (maxstorlek är %{max_size_kb} kB)."
       too_large_humanized: "Tyvärr är filen som du försöker ladda upp för stor (maximal storlek är %{max_size})."
@@ -4255,6 +4297,7 @@ sv:
   notification_level:
     ignore_error: "Tyvärr kan du inte ignorera den användaren."
     mute_error: "Tyvärr kan du inte tysta den användaren."
+    error: "Tyvärr kan du inte ändra aviseringsnivån för den användaren."
   discord:
     not_in_allowed_guild: "Autentisering misslyckades. Du är inte medlem i ett tillåtet Discord-sällskap."
   old_keys_reminder:

@@ -159,7 +159,16 @@ class PostRevisor
       end
     end
 
-    return false unless should_revise?
+    if !should_revise?
+      # the draft sequence is advanced here to handle the edge case where a
+      # user opens the composer to edit a post and makes some changes (which
+      # saves a draft), but then un-does the changes and clicks save. In this
+      # case, should_revise? returns false because nothing has really changed
+      # in the post, but we want to get rid of the draft so we advance the
+      # sequence.
+      advance_draft_sequence if !opts[:keep_existing_draft]
+      return false
+    end
 
     @post.acting_user = @editor
     @topic.acting_user = @editor
@@ -204,7 +213,7 @@ class PostRevisor
       plugin_callbacks
 
       revise_topic
-      advance_draft_sequence
+      advance_draft_sequence if !opts[:keep_existing_draft]
     end
 
     # Lock the post by default if the appropriate setting is true
@@ -271,7 +280,6 @@ class PostRevisor
         return true
       end
     end
-    advance_draft_sequence
     false
   end
 
@@ -437,22 +445,19 @@ class PostRevisor
       private_message = @topic.private_message?
 
       prev_owner_user_stat = prev_owner.user_stat
+
       unless private_message
-        prev_owner_user_stat.post_count -= 1 if @post.post_type == Post.types[:regular]
-        prev_owner_user_stat.topic_count -= 1 if @post.is_first_post?
+        UserStatCountUpdater.decrement!(@post, user_stat: prev_owner_user_stat) if !@post.trashed?
         prev_owner_user_stat.likes_received -= likes
       end
 
       if @post.created_at == prev_owner.user_stat.first_post_created_at
-        prev_owner_user_stat.first_post_created_at = prev_owner.posts.order('created_at ASC').first.try(:created_at)
+        prev_owner_user_stat.update!(first_post_created_at: prev_owner.posts.order('created_at ASC').first.try(:created_at))
       end
-
-      prev_owner_user_stat.save!
 
       new_owner_user_stat = new_owner.user_stat
       unless private_message
-        new_owner_user_stat.post_count += 1 if @post.post_type == Post.types[:regular]
-        new_owner_user_stat.topic_count += 1 if @post.is_first_post?
+        UserStatCountUpdater.increment!(@post, user_stat: new_owner_user_stat) if !@post.trashed?
         new_owner_user_stat.likes_received += likes
       end
       new_owner_user_stat.save!

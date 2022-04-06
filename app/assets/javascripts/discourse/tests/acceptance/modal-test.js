@@ -5,11 +5,10 @@ import {
   exists,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, triggerKeyEvent, visit } from "@ember/test-helpers";
-import { skip, test } from "qunit";
+import { click, settled, triggerKeyEvent, visit } from "@ember/test-helpers";
+import { test } from "qunit";
 import I18n from "I18n";
 import hbs from "htmlbars-inline-precompile";
-import { run } from "@ember/runloop";
 import showModal from "discourse/lib/show-modal";
 
 acceptance("Modal", function (needs) {
@@ -30,7 +29,7 @@ acceptance("Modal", function (needs) {
     I18n.translations = _translations;
   });
 
-  skip("modal", async function (assert) {
+  test("modal", async function (assert) {
     await visit("/");
 
     assert.ok(!exists(".d-modal:visible"), "there is no modal at first");
@@ -51,14 +50,16 @@ acceptance("Modal", function (needs) {
     await click(".login-button");
     assert.strictEqual(count(".d-modal:visible"), 1, "modal should reappear");
 
-    await triggerKeyEvent("#main-outlet", "keyup", 27);
+    await triggerKeyEvent("#main-outlet", "keydown", 27);
     assert.ok(!exists(".d-modal:visible"), "ESC should close the modal");
 
+    // eslint-disable-next-line no-undef
     Ember.TEMPLATES[
       "modal/not-dismissable"
     ] = hbs`{{#d-modal-body title="" class="" dismissable=false}}test{{/d-modal-body}}`;
 
-    run(() => showModal("not-dismissable", {}));
+    showModal("not-dismissable", {});
+    await settled();
 
     assert.strictEqual(count(".d-modal:visible"), 1, "modal should appear");
 
@@ -77,6 +78,7 @@ acceptance("Modal", function (needs) {
   });
 
   test("rawTitle in modal panels", async function (assert) {
+    // eslint-disable-next-line no-undef
     Ember.TEMPLATES["modal/test-raw-title-panels"] = hbs``;
     const panels = [
       { id: "test1", rawTitle: "Test 1" },
@@ -84,7 +86,8 @@ acceptance("Modal", function (needs) {
     ];
 
     await visit("/");
-    run(() => showModal("test-raw-title-panels", { panels }));
+    showModal("test-raw-title-panels", { panels });
+    await settled();
 
     assert.strictEqual(
       queryAll(".d-modal .modal-tab:first-child").text().trim(),
@@ -94,14 +97,17 @@ acceptance("Modal", function (needs) {
   });
 
   test("modal title", async function (assert) {
+    // eslint-disable-next-line no-undef
     Ember.TEMPLATES["modal/test-title"] = hbs``;
+    // eslint-disable-next-line no-undef
     Ember.TEMPLATES[
       "modal/test-title-with-body"
     ] = hbs`{{#d-modal-body}}test{{/d-modal-body}}`;
 
     await visit("/");
 
-    run(() => showModal("test-title", { title: "test_title" }));
+    showModal("test-title", { title: "test_title" });
+    await settled();
     assert.strictEqual(
       queryAll(".d-modal .title").text().trim(),
       "Test title",
@@ -110,7 +116,8 @@ acceptance("Modal", function (needs) {
 
     await click(".d-modal .close");
 
-    run(() => showModal("test-title-with-body", { title: "test_title" }));
+    showModal("test-title-with-body", { title: "test_title" });
+    await settled();
     assert.strictEqual(
       queryAll(".d-modal .title").text().trim(),
       "Test title",
@@ -119,7 +126,8 @@ acceptance("Modal", function (needs) {
 
     await click(".d-modal .close");
 
-    run(() => showModal("test-title"));
+    showModal("test-title");
+    await settled();
     assert.ok(
       !exists(".d-modal .title"),
       "it should not re-use the previous title"

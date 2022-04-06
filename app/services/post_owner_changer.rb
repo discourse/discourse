@@ -9,7 +9,9 @@ class PostOwnerChanger
     @acting_user = params[:acting_user]
     @skip_revision = params[:skip_revision] || false
 
-    raise ArgumentError unless @post_ids && @topic && @new_owner && @acting_user
+    [:post_ids, :topic, :new_owner, :acting_user].each do |arg|
+      raise ArgumentError.new(arg) if self.instance_variable_get("@#{arg}").blank?
+    end
   end
 
   def change_owner!
@@ -26,7 +28,7 @@ class PostOwnerChanger
       PostActionDestroyer.destroy(@new_owner, post, :like, skip_delete_check: true)
 
       level = post.is_first_post? ? :watching : :tracking
-      TopicUser.change(@new_owner.id, @topic.id, notification_level: NotificationLevels.topic_levels[level])
+      TopicUser.change(@new_owner.id, @topic.id, notification_level: NotificationLevels.topic_levels[level], posted: true)
 
       if post == @topic.posts.order("post_number DESC").where("NOT hidden AND posts.deleted_at IS NULL").first
         @topic.last_poster = @new_owner

@@ -355,6 +355,9 @@ module SiteSettingExtension
     old_val = current[name]
     provider.destroy(name)
     current[name] = defaults.get(name, default_locale)
+
+    return if current[name] == old_val
+
     clear_uploads_cache(name)
     clear_cache!
     DiscourseEvent.trigger(:site_setting_changed, name, old_val, current[name]) if old_val != current[name]
@@ -369,6 +372,9 @@ module SiteSettingExtension
     sanitized_val = sanitize_override ? sanitize_field(val) : val
     provider.save(name, sanitized_val, type)
     current[name] = type_supervisor.to_rb_value(name, sanitized_val)
+
+    return if current[name] == old_val
+
     clear_uploads_cache(name)
     notify_clients!(name) if client_settings.include? name
     clear_cache!
@@ -501,6 +507,8 @@ module SiteSettingExtension
           refresh!
           value = current[name]
         end
+
+        return [] if value.empty?
 
         value = value.split("|").map(&:to_i)
         uploads_list = Upload.where(id: value).to_a

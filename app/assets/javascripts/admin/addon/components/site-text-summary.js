@@ -19,7 +19,6 @@ export default Component.extend({
         }
       );
     }
-    $(this.element.querySelector(".site-text-value")).ellipsis();
   },
 
   click() {

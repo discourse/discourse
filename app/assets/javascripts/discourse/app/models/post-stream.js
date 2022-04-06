@@ -1,4 +1,4 @@
-import { and, not, or } from "@ember/object/computed";
+import { and, equal, not, or } from "@ember/object/computed";
 import DiscourseURL from "discourse/lib/url";
 import I18n from "I18n";
 import PostsWithPlaceholders from "discourse/lib/posts-with-placeholders";
@@ -37,7 +37,6 @@ export default RestModel.extend({
   posts: null,
   stream: null,
   userFilters: null,
-  summary: null,
   loaded: null,
   loadingAbove: null,
   loadingBelow: null,
@@ -48,6 +47,7 @@ export default RestModel.extend({
   timelineLookup: null,
   filterRepliesToPostNumber: null,
   filterUpwardsPostID: null,
+  filter: null,
 
   init() {
     this._identityMap = {};
@@ -62,7 +62,6 @@ export default RestModel.extend({
       postsWithPlaceholders,
       stream: [],
       userFilters: [],
-      summary: false,
       filterRepliesToPostNumber:
         parseInt(this.get("topic.replies_to_post_number"), 10) || false,
       filterUpwardsPostID: false,
@@ -77,6 +76,8 @@ export default RestModel.extend({
 
   loading: or("loadingAbove", "loadingBelow", "loadingFilter", "stagingPost"),
   notLoading: not("loading"),
+
+  summary: equal("filter", "summary"),
 
   @discourseComputed(
     "isMegaTopic",
@@ -137,7 +138,7 @@ export default RestModel.extend({
     params for the stream.
   **/
   @discourseComputed(
-    "summary",
+    "filter",
     "userFilters.[]",
     "filterRepliesToPostNumber",
     "filterUpwardsPostID"
@@ -145,8 +146,8 @@ export default RestModel.extend({
   streamFilters() {
     const result = {};
 
-    if (this.summary) {
-      result.filter = "summary";
+    if (this.filter) {
+      result.filter = this.filter;
     }
 
     const userFilters = this.userFilters;
@@ -235,10 +236,10 @@ export default RestModel.extend({
   cancelFilter() {
     this.setProperties({
       userFilters: [],
-      summary: false,
       filterRepliesToPostNumber: false,
       filterUpwardsPostID: false,
       mixedHiddenPosts: false,
+      filter: null,
     });
   },
 
@@ -252,7 +253,7 @@ export default RestModel.extend({
 
   showSummary() {
     this.cancelFilter();
-    this.set("summary", true);
+    this.set("filter", "summary");
     return this.refreshAndJumptoSecondVisible();
   },
 
@@ -266,11 +267,13 @@ export default RestModel.extend({
   filterReplies(postNumber, postId) {
     this.cancelFilter();
     this.set("filterRepliesToPostNumber", postNumber);
+
     this.appEvents.trigger("post-stream:filter-replies", {
       topic_id: this.get("topic.id"),
       post_number: postNumber,
       post_id: postId,
     });
+
     return this.refresh({ refreshInPlace: true }).then(() => {
       const element = document.querySelector(`#post_${postNumber}`);
 
@@ -280,16 +283,13 @@ export default RestModel.extend({
         : null;
 
       this.appEvents.trigger("post-stream:refresh");
+
       DiscourseURL.jumpToPost(postNumber, {
         originalTopOffset,
       });
 
-      const replyPostNumbers = this.posts.mapBy("post_number");
-      replyPostNumbers.splice(0, 2);
       schedule("afterRender", () => {
-        replyPostNumbers.forEach((postNum) => {
-          highlightPost(postNum);
-        });
+        highlightPost(postNumber);
       });
     });
   },
@@ -681,8 +681,8 @@ export default RestModel.extend({
     });
   },
 
-  /* mainly for backwards compatability with plugins, used in quick messages plugin
-   * TODO: remove July 2021
+  /* mainly for backwards compatibility with plugins, used in quick messages plugin
+   * TODO: remove July 2022
    * */
   triggerNewPostInStream(postId, opts) {
     deprecated(
@@ -1215,17 +1215,21 @@ export default RestModel.extend({
 
   // Handles an error loading a topic based on a HTTP status code. Updates
   // the text to the correct values.
-  errorLoading(result) {
+  errorLoading(error) {
     const topic = this.topic;
     this.set("loadingFilter", false);
     topic.set("errorLoading", true);
 
-    const json = result.jqXHR.responseJSON;
+    if (!error.jqXHR) {
+      throw error;
+    }
+
+    const json = error.jqXHR.responseJSON;
     if (json && json.extras && json.extras.html) {
       topic.set("errorHtml", json.extras.html);
     } else {
       topic.set("errorMessage", I18n.t("topic.server_error.description"));
-      topic.set("noRetry", result.jqXHR.status === 403);
+      topic.set("noRetry", error.jqXHR.status === 403);
     }
   },
 

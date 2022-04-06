@@ -138,7 +138,7 @@ class ImportScripts::VBulletin < ImportScripts::Base
       upload = UploadCreator.new(file, picture["filename"]).create_for(imported_user.id)
     else
       filename = File.join(AVATAR_DIR, picture['filename'])
-      unless File.exists?(filename)
+      unless File.exist?(filename)
         puts "Avatar file doesn't exist: #{filename}"
         return nil
       end
@@ -366,7 +366,7 @@ class ImportScripts::VBulletin < ImportScripts::Base
       real_filename = upload['filename']
       real_filename.prepend SecureRandom.hex if real_filename[0] == '.'
 
-      unless File.exists?(filename)
+      unless File.exist?(filename)
         # attachments can be on filesystem or in database
         # try to retrieve from database if the file did not exist on filesystem
         if upload['dbsize'].to_i == 0

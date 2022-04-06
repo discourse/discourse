@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe EmojiSerializer do
   fab!(:custom_emoji) do
     CustomEmoji.create!(name: 'trout', upload: Fabricate(:upload))

@@ -40,6 +40,13 @@ es:
     user_cant_post_in_topic: "No puedes votar porque no puedes publicar en este tema."
     topic_must_be_open_to_vote: "El tema debe estar abierto para votar."
     poll_must_be_open_to_vote: "La encuesta debe estar abierta para votar."
+    one_vote_per_user: "Solo puedes votar una vez en esta encuesta."
+    max_vote_per_user:
+      one: Votar %{count} vez en esta encuesta.
+      other: Solo puedes votar %{count} veces en esta encuesta.
+    min_vote_per_user:
+      one: En esta encuesta hace falta %{count} voto.
+      other: En esta encuesta hacen falta %{count} votos.
     topic_must_be_open_to_toggle_status: "El tema debe estar abierto para cambiar el estado."
     only_staff_or_op_can_toggle_status: "Solo un miembro del equipo o la persona que realizó la publicación original pueden cambiar el estado de una encuesta."
     insufficient_rights_to_create: "No tienes permitido crear encuestas."

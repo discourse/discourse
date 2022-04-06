@@ -47,6 +47,9 @@ class Guardian
     def silenced?
       false
     end
+    def is_system_user?
+      false
+    end
     def secure_category_ids
       []
     end
@@ -54,6 +57,9 @@ class Guardian
       []
     end
     def has_trust_level?(level)
+      false
+    end
+    def has_trust_level_or_staff?(level)
       false
     end
     def email
@@ -362,7 +368,6 @@ class Guardian
 
   def can_invite_to_forum?(groups = nil)
     authenticated? &&
-    (is_staff? || !SiteSetting.must_approve_users?) &&
     (is_staff? || SiteSetting.max_invites_per_day.to_i.positive?) &&
     (is_staff? || @user.has_trust_level?(SiteSetting.min_trust_level_to_allow_invite.to_i)) &&
     (is_admin? || groups.blank? || groups.all? { |g| can_edit_group?(g) })
@@ -420,6 +425,7 @@ class Guardian
   def can_send_private_message?(target, notify_moderators: false)
     is_user = target.is_a?(User)
     is_group = target.is_a?(Group)
+    from_system = @user.is_system_user?
 
     (is_group || is_user) &&
     # User is authenticated
@@ -433,7 +439,7 @@ class Guardian
     # Can't send PMs to suspended users
     (is_staff? || is_group || !target.suspended?) &&
     # Check group messageable level
-    (is_staff? || is_user || Group.messageable(@user).where(id: target.id).exists? || notify_moderators) &&
+    (from_system || is_user || Group.messageable(@user).where(id: target.id).exists? || notify_moderators) &&
     # Silenced users can only send PM to staff
     (!is_silenced? || target.staff?)
   end
@@ -444,9 +450,7 @@ class Guardian
     # User is authenticated
     return false if !authenticated?
     # User is trusted enough
-    return is_admin? if SiteSetting.min_trust_to_send_email_messages.to_s == 'admin'
-    return is_staff? if SiteSetting.min_trust_to_send_email_messages.to_s == 'staff'
-    SiteSetting.enable_personal_messages && @user.has_trust_level?(SiteSetting.min_trust_to_send_email_messages.to_i)
+    SiteSetting.enable_personal_messages && @user.has_trust_level_or_staff?(SiteSetting.min_trust_to_send_email_messages)
   end
 
   def can_export_entity?(entity)
@@ -541,6 +545,19 @@ class Guardian
     UserAuthToken.hash_token(token) if token
   end
 
+  def can_mention_here?
+    return false if SiteSetting.here_mention.blank?
+    return false if SiteSetting.max_here_mentioned < 1
+    return false if !authenticated?
+    return false if User.where(username_lower: SiteSetting.here_mention).exists?
+
+    @user.has_trust_level_or_staff?(SiteSetting.min_trust_level_for_here_mention)
+  end
+
+  def is_me?(other)
+    other && authenticated? && other.is_a?(User) && @user == other
+  end
+
   private
 
   def is_my_own?(obj)
@@ -551,10 +568,6 @@ class Guardian
     end
 
     false
-  end
-
-  def is_me?(other)
-    other && authenticated? && other.is_a?(User) && @user == other
   end
 
   def is_not_me?(other)

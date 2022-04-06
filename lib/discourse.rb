@@ -1,13 +1,9 @@
 # frozen_string_literal: true
-# rubocop:disable Style/GlobalVars
 
 require 'cache'
 require 'open3'
-require_dependency 'route_format'
 require_dependency 'plugin/instance'
-require_dependency 'auth/default_current_user_provider'
 require_dependency 'version'
-require 'digest/sha1'
 
 module Discourse
   DB_POST_MIGRATE_PATH ||= "db/post_migrate"
@@ -341,11 +337,6 @@ module Discourse
     path = request.fullpath
     result[:path] = path if path.present?
 
-    # When we bootstrap using the JSON method, we want to be able to filter assets on
-    # the path we're bootstrapping for.
-    asset_path = request.headers["HTTP_X_DISCOURSE_ASSET_PATH"]
-    result[:path] = asset_path if asset_path.present?
-
     result
   end
 
@@ -660,49 +651,33 @@ module Discourse
     end
   end
 
-  def self.ensure_version_file_loaded
-    unless @version_file_loaded
-      version_file = "#{Rails.root}/config/version.rb"
-      require version_file if File.exists?(version_file)
-      @version_file_loaded = true
+  def self.git_version
+    @git_version ||= begin
+      git_cmd = 'git rev-parse HEAD'
+      self.try_git(git_cmd, Discourse::VERSION::STRING)
     end
   end
 
-  def self.git_version
-    ensure_version_file_loaded
-    $git_version ||=
-      begin
-        git_cmd = 'git rev-parse HEAD'
-        self.try_git(git_cmd, Discourse::VERSION::STRING)
-      end # rubocop:disable Style/GlobalVars
-  end
-
   def self.git_branch
-    ensure_version_file_loaded
-    $git_branch ||=
-      begin
-        git_cmd = 'git rev-parse --abbrev-ref HEAD'
-        self.try_git(git_cmd, 'unknown')
-      end
+    @git_branch ||= begin
+      git_cmd = 'git rev-parse --abbrev-ref HEAD'
+      self.try_git(git_cmd, 'unknown')
+    end
   end
 
   def self.full_version
-    ensure_version_file_loaded
-    $full_version ||=
-      begin
-        git_cmd = 'git describe --dirty --match "v[0-9]*"'
-        self.try_git(git_cmd, 'unknown')
-      end
+    @full_version ||= begin
+      git_cmd = 'git describe --dirty --match "v[0-9]*" 2> /dev/null'
+      self.try_git(git_cmd, 'unknown')
+    end
   end
 
   def self.last_commit_date
-    ensure_version_file_loaded
-    $last_commit_date ||=
-      begin
-        git_cmd = 'git log -1 --format="%ct"'
-        seconds = self.try_git(git_cmd, nil)
-        seconds.nil? ? nil : DateTime.strptime(seconds, '%s')
-      end
+    @last_commit_date ||= begin
+      git_cmd = 'git log -1 --format="%ct"'
+      seconds = self.try_git(git_cmd, nil)
+      seconds.nil? ? nil : DateTime.strptime(seconds, '%s')
+    end
   end
 
   def self.try_git(git_cmd, default_value)
@@ -860,7 +835,7 @@ module Discourse
       # logster
       Rails.logger.add_with_opts(
         ::Logger::Severity::WARN,
-        "#{message} : #{e}",
+        "#{message} : #{e.class.name} : #{e}",
         "discourse-exception",
         backtrace: e.backtrace.join("\n"),
         env: env
@@ -896,7 +871,7 @@ module Discourse
     digest = Digest::MD5.hexdigest(warning)
     redis_key = "deprecate-notice-#{digest}"
 
-    if !Discourse.redis.without_namespace.get(redis_key)
+    if Rails.logger && !Discourse.redis.without_namespace.get(redis_key)
       Rails.logger.warn(warning)
       begin
         Discourse.redis.without_namespace.setex(redis_key, 3600, "x")
@@ -1021,9 +996,7 @@ module Discourse
     @preloaded_rails = true
   end
 
-  def self.redis
-    $redis
-  end
+  mattr_accessor :redis
 
   def self.is_parallel_test?
     ENV['RAILS_ENV'] == "test" && ENV['TEST_ENV_NUMBER']
@@ -1051,5 +1024,3 @@ module Discourse
     Rails.env.development? || ENV["ALLOW_DEV_POPULATE"] == "1"
   end
 end
-
-# rubocop:enable Style/GlobalVars

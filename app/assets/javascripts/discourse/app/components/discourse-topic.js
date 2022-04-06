@@ -1,3 +1,4 @@
+import { isBlank } from "@ember/utils";
 import { later, schedule, scheduleOnce, throttle } from "@ember/runloop";
 import AddArchetypeClass from "discourse/mixins/add-archetype-class";
 import ClickTrack from "discourse/lib/click-track";
@@ -48,8 +49,10 @@ export default Component.extend(
       }
     },
 
-    _highlightPost(postNumber) {
-      scheduleOnce("afterRender", null, highlightPost, postNumber);
+    _highlightPost(postNumber, options = {}) {
+      if (isBlank(options.jump) || options.jump !== false) {
+        scheduleOnce("afterRender", null, highlightPost, postNumber);
+      }
     },
 
     _hideTopicInHeader() {
@@ -95,7 +98,7 @@ export default Component.extend(
     didInsertElement() {
       this._super(...arguments);
 
-      this.bindScrolling({ name: "topic-view" });
+      this.bindScrolling();
       window.addEventListener("resize", this.scrolled);
       $(this.element).on(
         "click.discourse-redirect",
@@ -110,7 +113,7 @@ export default Component.extend(
     willDestroyElement() {
       this._super(...arguments);
 
-      this.unbindScrolling("topic-view");
+      this.unbindScrolling();
       window.removeEventListener("resize", this.scrolled);
 
       // Unbind link tracking

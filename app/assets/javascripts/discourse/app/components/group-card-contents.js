@@ -41,11 +41,13 @@ export default Component.extend(CardContentsBase, CleansUp, {
   },
 
   _showCallback(username, $target) {
-    this.store
+    this._positionCard($target);
+    this.setProperties({ visible: true, loading: true });
+
+    return this.store
       .find("group", username)
       .then((group) => {
-        this.setProperties({ group, visible: true });
-        this._positionCard($target);
+        this.setProperties({ group });
         if (!group.flair_url && !group.flair_bg_color) {
           group.set("flair_url", "fa-users");
         }

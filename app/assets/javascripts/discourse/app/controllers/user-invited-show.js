@@ -45,6 +45,13 @@ export default Controller.extend({
   inviteExpired: equal("filter", "expired"),
   invitePending: equal("filter", "pending"),
 
+  @discourseComputed("model")
+  hasEmailInvites(model) {
+    return model.invites.some((invite) => {
+      return invite.email;
+    });
+  },
+
   @discourseComputed("filter")
   showBulkActionButtons(filter) {
     return (
@@ -57,9 +64,9 @@ export default Controller.extend({
   canInviteToForum: reads("currentUser.can_invite_to_forum"),
   canBulkInvite: reads("currentUser.admin"),
 
-  @discourseComputed("invitesCount.total")
-  showSearch(invitesCountTotal) {
-    return invitesCountTotal > 0;
+  @discourseComputed("invitesCount", "filter")
+  showSearch(invitesCount, filter) {
+    return invitesCount[filter] > 5;
   },
 
   @action

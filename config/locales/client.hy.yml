@@ -118,7 +118,6 @@ hy:
       to_placeholder: "դեպի ամսաթիվ"
     share:
       topic_html: 'Թեմա՝ <span class="topic-title">%{topicTitle}</span>'
-      post: "գրառում #%{postNumber}"
       close: "փակել"
     action_codes:
       public_topic: "այս թեման դարձրել է հրապարակային %{when}"
@@ -160,7 +159,6 @@ hy:
     bootstrap_mode_disabled: "Սկզբնաբեռնման(Bootstrap) ռեժիմը կանջատվի 24 ժամվա ընթացքում:"
     themes:
       default_description: "Լռելյայն"
-      broken_theme_alert: "Դուք չեք կարող աշխատել, որովհետև թեմայի կամ կոպոնենտի մեջ %{theme} սխալ կա: Անջահել այն %{path}."
     s3:
       regions:
         ap_northeast_1: "Asia Pacific (Tokyo)"
@@ -269,7 +267,7 @@ hy:
       list_permission_denied: "Դուք իրավունք չունեք դիտելու այս օգտատիրոջ էջանշանները: "
       no_user_bookmarks: "Դուք էջանշած գրառումներ չունեք; էջանշումները թույլ են տալիս Ձեզ արագորեն տեղափոխվել դեպի որոշակի գրառում:"
       auto_delete_preference:
-        never: "Երբեք"
+        when_reminder_sent: "Ջնջել էջանշանը"
       search: "Որոնում"
       reminders:
         today_with_time: "այսօր %{time}"
@@ -318,8 +316,7 @@ hy:
     switch_to_anon: "Սկսել Անանուն Ռեժիմը"
     switch_from_anon: "Ավարտել Անանուն Ռեժիմը"
     banner:
-      close: "Փակել այս բանները"
-      edit: "Խմբագրել այս բանները >>"
+      edit: "Խմբագրել"
     pwa:
       install_banner: "Դուք ցանկանու՞մ եք <a href>տեղադրել %{title}-ը այս սարքի վրա?</a>"
     choose_topic:
@@ -1122,11 +1119,9 @@ hy:
         every_month: "ամիսը մեկ"
         every_six_months: "վեց ամիսը մեկ"
       email_level:
-        title: "Ուղարկել ինձ էլ, նամակ, երբ որևէ մեկը մեջբերում է ինձ, պատասխանում է իմ գրառմանը, նշում է իմ @օգտանունը կամ հրավիրում է ինձ թեմայի:"
         always: "միշտ"
         only_when_away: "միայն երբ հեռու եմ"
         never: "երբեք"
-      email_messages_level: "Ուղարկել ինձ էլ. նամակ, երբ որևէ մեկը հաղորդագրություն է գրում ինձ:"
       include_tl0_in_digests: "Ներառել նոր օգտատերերի կողմից ավելացվածը ամփոփիչ էլ. նամակներում"
       email_in_reply_to: "Ներառել գրառումների պատասխանների քաղվածք էլ. նամակներում"
       other_settings: "Այլ"
@@ -1439,7 +1434,6 @@ hy:
       success: "Ձեր հաշիվը ստեղծված է, և այժմ Դուք մուտք եք գործել:"
       name_label: "Անուն"
       password_label: "Գաղտնաբառ"
-      optional_description: "(ընտրովի)"
     password_reset:
       continue: "Շարունակել դեպի %{site_name}"
     emoji_set:
@@ -1521,9 +1515,6 @@ hy:
       group_mentioned:
         one: "Նշելով %{group} ՝ Դուք ծանուցում եք <a href='%{group_link}'>%{count} person</a> . Դուք համոզվա՞ծ եք:"
         other: "Հիշատակելով %{group}-ը՝ Դուք ծանուցում կուղարկեք <a href='%{group_link}'>%{count} օգտագիրոջ</a>: Համոզվա՞ծ եք:"
-      cannot_see_mention:
-        category: "Դուք հիշատակել եք %{username}-ին, բայց նա ծանուցում չի ստանա, քանի որ այս կատեգորիան նրան հասանելի չէ: Դուք պետք է ավելացնեք նրան որևէ խմբում, որը թուլտվություն ունի այս կատեգորիային:"
-        private: "Դուք հիշատակել եք %{username}-ին, բայց նա ծանուցում չի ստանա, քանի որ չի կարող տեսնել այս անձնական նամակը: Դուք պետք է հրավիրեք նրան այս անձնական նամակագրությանը:"
       duplicate_link: "Կարծես թե դեպի <b>%{domain}</b> Ձեր հղումն արդեն իսկ հրապարակված է թեմայում <b>@%{username}</b>-ի <a href='%{post_url}'>պատասխանում %{ago}</a>: Դուք համոզվա՞ծ եք, որ ցանկանում եք այն կրկին հրապարակել:"
       reference_topic_title: "RE: %{title}"
       error:
@@ -1661,6 +1652,9 @@ hy:
       membership_request_accepted: "Անդամակցության հարցումը ընդունվել է՝ '%{group_name}'"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
+      dismiss_confirmation:
+        dismiss: "Չեղարկել"
+        cancel: "Չեղարկել"
       group_message_summary:
         one: "%{count} հաղորդագրություն Ձեր %{group_name} մուտքային արկղում"
         other: "%{count} հաղորդագրություն Ձեր %{group_name}-ի մուտքային արկղում"
@@ -1796,7 +1790,7 @@ hy:
         clear_all: "Ջնջել Բոլորը"
         unlist_topics: "Թեմաները Ցանկից Հանել"
         relist_topics: "Վերացանկավորել Թեմաները"
-        reset_read: "Զրոյացնել Կարդացածները (Reset Read)"
+        defer: "Հետաձգել"
         delete: "Ջնջել Թեմաները"
         dismiss: "Չեղարկել"
         dismiss_read: "Չեղարկել բոլոր չկարդացածները"
@@ -1954,17 +1948,10 @@ hy:
         replies_short: "%{current} / %{total}"
       progress:
         title: թեմայի ընթացքը
-        go_top: "վերև"
-        go_bottom: "ներքև"
-        go: "գնալ"
-        jump_bottom: "ցատկել դեպի վերջին գրառում"
         jump_prompt: "ցատկել դեպի..."
         jump_prompt_long: "Ցատկել դեպի.."
-        jump_bottom_with_number: "ցատկել դեպի %{post_number}գրառումը"
         jump_prompt_to_date: "դեպի ամսաթիվ"
         jump_prompt_or: "կամ"
-        total: ընդհանուր գրառումներ
-        current: ընթացիկ գրառումը
       notifications:
         title: Փոխել, թե որքան հաճախ եք Դուք ծանուցում ստանում այս թեմայի մասին
         reasons:
@@ -2034,7 +2021,6 @@ hy:
         title: "Պատասխանել"
         help: "այս թեմային պատասխան գրել"
       share:
-        title: "Կիսվել"
         extended_title: "Կիսվել հղումով"
         help: "կիսվել այս թեմայի հղումով"
         invite_users: "Հրավիրել"
@@ -2563,6 +2549,9 @@ hy:
         title: "Այս թեման անձնական հաղորդագրություն է"
         help: "Այս թեման անձնական հաղորդագրություն է"
     posts: "Գրառումներ"
+    pending_posts:
+      label: "Սպասող"
+      label_with_count: "Սպասող (%{count})"
     original_post: "Սկզբնական Գրառումը"
     views: "Դիտում"
     views_lowercase:
@@ -2792,13 +2781,13 @@ hy:
       tags: "Թեգեր"
       choose_for_topic: "ընտրովի թեգեր"
       info: "Ինֆորմացիա"
+      default_info: "Այս տեգը չի սահմանափակվում որևէ կատեգորիայով և չունի հոմանիշ:"
       category_restricted: "Այս տեգը սահմանափակված է այն կատեգորիաներով, որոնցում մուտքի թույլտվություն չունեք:"
       synonyms: "Հոմանիշներ"
       synonyms_description: "Հետևյալ տեգերի օգտագործման դեպքում, դրանք կփոխարինվեն <b>%{base_tag_name}</b> -ով:"
       tag_groups_info:
         one: 'Այս պիտակը պատկանում է «%{tag_groups}» խմբին:'
         other: "Այս թեգը պատկանում է այս խմբերին՝ %{tag_groups}"
-      edit_synonyms: "Կարգավորել Հոմանիշները"
       add_synonyms_label: "Ավելացնել հոմանիշներ."
       add_synonyms: "Ավելացնել"
       add_synonyms_failed: "Այս տեգերը չեն կարող ավելացվել որպես հոմանիշներ՝ <b>%{tag_names}</b> : Համոզվեք, որ դրանք հոմանիշներ չունեն և մեկ այլ տեգի հոմանիշներ չեն:"
@@ -2809,8 +2798,7 @@ hy:
         one: "Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել այս թեգը և հեռացնել այն %{count} թեմայից, որին այն վերագրված է:"
         other: "Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել այս թեգը և հեռացնել այն %{count} թեմայից, որոնց այն վերագրված է:"
       delete_confirm_no_topics: "Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել այս թեգը:"
-      rename_tag: "Վերանվանել Թեգը"
-      rename_instructions: "Ընտրեք նոր անուն թեգի համար՝ "
+      description: "Նկարագրույթուն"
       sort_by: "Դասավորել ըստ՝ "
       sort_by_count: "քանակի"
       sort_by_name: "անվան"
@@ -3274,7 +3262,6 @@ hy:
         delete_confirm: 'Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել <<%{theme_name}>> :'
         color: "Գույն"
         opacity: "Թափանցիկություն"
-        copy: "Կրկնօրինակել"
         copy_to_clipboard: "Կրկնօրինակել Փոխանակման Հարթակում"
         copied_to_clipboard: "Կրկնօրինակված է Փոխանակման Հարթակում"
         copy_to_clipboard_error: "Փոխանակման Հարթակում տվյալների կրկնօրինակման սխալ"
@@ -3689,9 +3676,6 @@ hy:
         screened_ips:
           title: "Ցուցադրված IP-ներ"
           delete_confirm: "Դուք համոզվա՞ծ եք, որ ցանկանում եք հեռացնել կանոնը %{ip_address} -ի համար:"
-          roll_up_confirm: "Դուք համոզվա՞ծ եք, որ ցանկանում եք խմբավորել ընդհանուր ցուցադրված IP հասցեները սուբնեթերում:"
-          rolled_up_some_subnets: "IP արգելքի մուտքերը հաջողությամբ խմբավորված են հետևյալ սուբնեթերում՝ %{subnets} :"
-          rolled_up_no_subnet: "Խմբավորման ենթակա ոչինչ չկա:"
           actions:
             block: "Արգելել"
             do_nothing: "Թույլատրել"

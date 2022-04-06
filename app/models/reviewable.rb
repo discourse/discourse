@@ -80,7 +80,7 @@ class Reviewable < ActiveRecord::Base
   # Generate `pending?`, `rejected?`, etc helper methods
   statuses.each do |name, id|
     define_method("#{name}?") { status == id }
-    self.class.define_method(name) { where(status: id) }
+    singleton_class.define_method(name) { where(status: id) }
   end
 
   def self.default_visible

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe PostAction do
   it { is_expected.to rate_limit }
 
@@ -456,6 +454,16 @@ describe PostAction do
       expect(notification.notification_type).to eq(Notification.types[:liked])
     end
 
+    it 'should not increase topic like count when liking a whisper' do
+      SiteSetting.set(:enable_whispers, true)
+      post.revise(admin, post_type: Post.types[:whisper])
+
+      PostActionCreator.like(admin, post)
+
+      expect(post.reload.like_count).to eq(1)
+      expect(post.topic.like_count).to eq(0)
+    end
+
     it 'should increase the `like_count` and `like_score` when a user likes something' do
       freeze_time Date.today
 
@@ -492,7 +500,7 @@ describe PostAction do
     it "shouldn't change given_likes unless likes are given or removed" do
       freeze_time(Time.zone.now)
 
-      PostActionCreator.like(codinghorror, Fabricate(:post))
+      PostActionCreator.like(codinghorror, post)
       expect(value_for(codinghorror.id, Date.today)).to eq(1)
 
       PostActionType.types.each do |type_name, type_id|
@@ -513,20 +521,17 @@ describe PostAction do
   describe 'flagging' do
 
     it 'does not allow you to flag stuff twice, even if the reason is different' do
-      post = Fabricate(:post)
       expect(PostActionCreator.spam(eviltrout, post)).to be_success
       expect(PostActionCreator.off_topic(eviltrout, post)).to be_failed
     end
 
     it 'allows you to flag stuff again if your previous flag was removed' do
-      post = Fabricate(:post)
       PostActionCreator.spam(eviltrout, post)
       PostActionDestroyer.destroy(eviltrout, post, :spam)
       expect(PostActionCreator.spam(eviltrout, post)).to be_success
     end
 
     it 'should update counts when you clear flags' do
-      post = Fabricate(:post)
       reviewable = PostActionCreator.spam(eviltrout, post).reviewable
 
       expect(post.reload.spam_count).to eq(1)
@@ -874,7 +879,6 @@ describe PostAction do
   describe ".lookup_for" do
     it "returns the correct map" do
       user = Fabricate(:user)
-      post = Fabricate(:post)
       post_action = PostActionCreator.create(user, post, :bookmark).post_action
       map = PostAction.lookup_for(user, [post.topic], post_action.post_action_type_id)
 
@@ -898,7 +902,6 @@ describe PostAction do
 
     it "should create a notification in the related topic" do
       Jobs.run_immediately!
-      post = Fabricate(:post)
       user = Fabricate(:user)
       stub_image_size
       result = PostActionCreator.create(user, post, :spam, message: "WAT")
@@ -915,7 +918,6 @@ describe PostAction do
 
     skip "should not add a moderator post when post is flagged via private message" do
       Jobs.run_immediately!
-      post = Fabricate(:post)
       user = Fabricate(:user)
       result = PostActionCreator.create(user, post, :notify_user, message: "WAT")
       action = result.post_action
@@ -933,28 +935,49 @@ describe PostAction do
 
   describe "rate limiting" do
 
-    def limiter(tl)
+    def limiter(tl, type)
       user = Fabricate.build(:user)
       user.trust_level = tl
-      action = PostAction.new(user: user, post_action_type_id: PostActionType.types[:like])
+      action = PostAction.new(user: user, post_action_type_id: PostActionType.types[type])
       action.post_action_rate_limiter
     end
 
-    it "should scale up like limits depending on liker" do
-      expect(limiter(0).max).to eq SiteSetting.max_likes_per_day
-      expect(limiter(1).max).to eq SiteSetting.max_likes_per_day
-      expect(limiter(2).max).to eq (SiteSetting.max_likes_per_day * SiteSetting.tl2_additional_likes_per_day_multiplier).to_i
-      expect(limiter(3).max).to eq (SiteSetting.max_likes_per_day * SiteSetting.tl3_additional_likes_per_day_multiplier).to_i
-      expect(limiter(4).max).to eq (SiteSetting.max_likes_per_day * SiteSetting.tl4_additional_likes_per_day_multiplier).to_i
+    it "should scale up likes limits depending on trust level" do
+      expect(limiter(0, :like).max).to eq SiteSetting.max_likes_per_day
+      expect(limiter(1, :like).max).to eq SiteSetting.max_likes_per_day
+      expect(limiter(2, :like).max).to eq (SiteSetting.max_likes_per_day * SiteSetting.tl2_additional_likes_per_day_multiplier).to_i
+      expect(limiter(3, :like).max).to eq (SiteSetting.max_likes_per_day * SiteSetting.tl3_additional_likes_per_day_multiplier).to_i
+      expect(limiter(4, :like).max).to eq (SiteSetting.max_likes_per_day * SiteSetting.tl4_additional_likes_per_day_multiplier).to_i
 
       SiteSetting.tl2_additional_likes_per_day_multiplier = -1
-      expect(limiter(2).max).to eq SiteSetting.max_likes_per_day
+      expect(limiter(2, :like).max).to eq SiteSetting.max_likes_per_day
 
       SiteSetting.tl2_additional_likes_per_day_multiplier = 0.8
-      expect(limiter(2).max).to eq SiteSetting.max_likes_per_day
+      expect(limiter(2, :like).max).to eq SiteSetting.max_likes_per_day
 
       SiteSetting.tl2_additional_likes_per_day_multiplier = "bob"
-      expect(limiter(2).max).to eq SiteSetting.max_likes_per_day
+      expect(limiter(2, :like).max).to eq SiteSetting.max_likes_per_day
+    end
+
+    it "should scale up flag limits depending on trust level" do
+      %i(off_topic inappropriate spam notify_moderators).each do |type|
+        SiteSetting.tl2_additional_flags_per_day_multiplier = 1.5
+
+        expect(limiter(0, type).max).to eq SiteSetting.max_flags_per_day
+        expect(limiter(1, type).max).to eq SiteSetting.max_flags_per_day
+        expect(limiter(2, type).max).to eq (SiteSetting.max_flags_per_day * SiteSetting.tl2_additional_flags_per_day_multiplier).to_i
+        expect(limiter(3, type).max).to eq (SiteSetting.max_flags_per_day * SiteSetting.tl3_additional_flags_per_day_multiplier).to_i
+        expect(limiter(4, type).max).to eq (SiteSetting.max_flags_per_day * SiteSetting.tl4_additional_flags_per_day_multiplier).to_i
+
+        SiteSetting.tl2_additional_flags_per_day_multiplier = -1
+        expect(limiter(2, type).max).to eq SiteSetting.max_flags_per_day
+
+        SiteSetting.tl2_additional_flags_per_day_multiplier = 0.8
+        expect(limiter(2, type).max).to eq SiteSetting.max_flags_per_day
+
+        SiteSetting.tl2_additional_flags_per_day_multiplier = "bob"
+        expect(limiter(2, type).max).to eq SiteSetting.max_flags_per_day
+      end
     end
 
   end
@@ -986,8 +1009,6 @@ describe PostAction do
   end
 
   describe "triggers Discourse events" do
-    fab!(:post) { Fabricate(:post) }
-
     it 'triggers a flag_created event' do
       event = DiscourseEvent.track(:flag_created) { PostActionCreator.spam(eviltrout, post) }
       expect(event).to be_present

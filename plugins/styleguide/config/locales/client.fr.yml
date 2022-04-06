@@ -85,3 +85,5 @@ fr:
           title: "Icônes d'en-tête"
         spinners:
           title: "Icônes de chargement"
+        empty_state:
+          title: "État vide"

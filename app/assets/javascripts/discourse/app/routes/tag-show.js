@@ -16,106 +16,124 @@ import { escapeExpression } from "discourse/lib/utilities";
 import { makeArray } from "discourse-common/lib/helpers";
 import { setTopicList } from "discourse/lib/topic-list-tracker";
 import showModal from "discourse/lib/show-modal";
+import { action } from "@ember/object";
 
 export default DiscourseRoute.extend(FilterModeMixin, {
   navMode: "latest",
 
   queryParams,
 
-  renderTemplate() {
-    const controller = this.controllerFor("tag.show");
-    this.render("tags.show", { controller });
-  },
+  controllerName: "tag.show",
+  templateName: "tag.show",
 
-  model(params) {
-    const tag = this.store.createRecord("tag", {
-      id: escapeExpression(params.tag_id),
-    });
-    if (params.additional_tags) {
-      this.set(
-        "additionalTags",
-        params.additional_tags.split("/").map((t) => {
-          return this.store.createRecord("tag", {
-            id: escapeExpression(t),
-          }).id;
-        })
-      );
-    } else {
-      this.set("additionalTags", null);
-    }
-
-    this.set("filterType", this.navMode.split("/")[0]);
-
-    this.set("categorySlugPathWithID", params.category_slug_path_with_id);
-
-    if (tag && tag.get("id") !== "none" && this.currentUser) {
-      // If logged in, we should get the tag's user settings
-      return this.store
-        .find("tagNotification", tag.get("id").toLowerCase())
-        .then((tn) => {
-          this.set("tagNotification", tn);
-          return tag;
-        });
-    }
-
-    return tag;
-  },
-
-  afterModel(tag, transition) {
+  beforeModel() {
     const controller = this.controllerFor("tag.show");
     controller.setProperties({
       loading: true,
       showInfo: false,
     });
+  },
 
-    const params = filterQueryParams(transition.to.queryParams, {});
-    const category = this.categorySlugPathWithID
-      ? Category.findBySlugPathWithID(this.categorySlugPathWithID)
+  async model(params, transition) {
+    const tag = this.store.createRecord("tag", {
+      id: escapeExpression(params.tag_id),
+    });
+
+    let additionalTags;
+
+    if (params.additional_tags) {
+      additionalTags = params.additional_tags.split("/").map((t) => {
+        return this.store.createRecord("tag", {
+          id: escapeExpression(t),
+        }).id;
+      });
+    }
+
+    const filterType = this.navMode.split("/")[0];
+
+    let tagNotification;
+    if (tag && tag.id !== "none" && this.currentUser) {
+      // If logged in, we should get the tag's user settings
+      tagNotification = await this.store.find(
+        "tagNotification",
+        tag.id.toLowerCase()
+      );
+    }
+
+    const category = params.category_slug_path_with_id
+      ? Category.findBySlugPathWithID(params.category_slug_path_with_id)
       : null;
+    const filteredQueryParams = filterQueryParams(
+      transition.to.queryParams,
+      {}
+    );
     const topicFilter = this.navMode;
     const tagId = tag ? tag.id.toLowerCase() : "none";
     let filter;
 
     if (category) {
       category.setupGroupsAndPermissions();
-      this.set("category", category);
       filter = `tags/c/${Category.slugFor(category)}/${category.id}`;
 
-      if (this.noSubcategories) {
-        filter += "/none";
+      if (this.noSubcategories !== undefined) {
+        filter += this.noSubcategories ? "/none" : "/all";
       }
 
       filter += `/${tagId}/l/${topicFilter}`;
-    } else if (this.additionalTags) {
-      this.set("category", null);
-      filter = `tags/intersection/${tagId}/${this.additionalTags.join("/")}`;
+    } else if (additionalTags) {
+      filter = `tags/intersection/${tagId}/${additionalTags.join("/")}`;
     } else {
-      this.set("category", null);
       filter = `tag/${tagId}/l/${topicFilter}`;
     }
 
-    return findTopicList(this.store, this.topicTrackingState, filter, params, {
-      cached: this.isPoppedState(transition),
-    }).then((list) => {
-      if (list.topic_list.tags && list.topic_list.tags.length === 1) {
-        // Update name of tag (case might be different)
-        tag.setProperties({
-          id: list.topic_list.tags[0].name,
-          staff: list.topic_list.tags[0].staff,
-        });
+    const list = await findTopicList(
+      this.store,
+      this.topicTrackingState,
+      filter,
+      filteredQueryParams,
+      {
+        cached: this.isPoppedState(transition),
       }
+    );
 
-      setTopicList(list);
-
-      controller.setProperties({
-        list,
-        canCreateTopic: list.get("can_create_topic"),
-        loading: false,
-        canCreateTopicOnCategory:
-          this.get("category.permission") === PermissionType.FULL,
-        canCreateTopicOnTag: !tag.get("staff") || this.get("currentUser.staff"),
+    if (list.topic_list.tags && list.topic_list.tags.length === 1) {
+      // Update name of tag (case might be different)
+      tag.setProperties({
+        id: list.topic_list.tags[0].name,
+        staff: list.topic_list.tags[0].staff,
       });
+    }
+
+    setTopicList(list);
+
+    return {
+      tag,
+      category,
+      list,
+      additionalTags,
+      filterType,
+      tagNotification,
+      canCreateTopic: list.can_create_topic,
+      canCreateTopicOnCategory: category?.permission === PermissionType.FULL,
+      canCreateTopicOnTag: !tag.staff || this.currentUser?.staff,
+    };
+  },
+
+  setupController(controller, model) {
+    const noSubcategories =
+      this.noSubcategories === undefined
+        ? model.category?.default_list_filter === "none"
+        : this.noSubcategories;
+
+    this.controllerFor("tag.show").setProperties({
+      model: model.tag,
+      ...model,
+      period: model.list.for_period,
+      navMode: this.navMode,
+      noSubcategories,
+      loading: false,
     });
+    this.searchService.set("searchContext", model.tag.searchContext);
   },
 
   titleToken() {
@@ -124,24 +142,24 @@ export default DiscourseRoute.extend(FilterModeMixin, {
     );
     const controller = this.controllerFor("tag.show");
 
-    if (controller.get("model.id")) {
-      if (this.category) {
+    if (controller.tag?.id) {
+      if (controller.category) {
         return I18n.t("tagging.filters.with_category", {
           filter: filterText,
-          tag: controller.get("model.id"),
-          category: this.get("category.name"),
+          tag: controller.tag.id,
+          category: controller.category.name,
         });
       } else {
         return I18n.t("tagging.filters.without_category", {
           filter: filterText,
-          tag: controller.get("model.id"),
+          tag: controller.tag.id,
         });
       }
     } else {
-      if (this.category) {
+      if (controller.category) {
         return I18n.t("tagging.filters.untagged_with_category", {
           filter: filterText,
-          category: this.get("category.name"),
+          category: controller.category.name,
         });
       } else {
         return I18n.t("tagging.filters.untagged_without_category", {
@@ -151,85 +169,77 @@ export default DiscourseRoute.extend(FilterModeMixin, {
     }
   },
 
-  setupController(controller, model) {
-    this.controllerFor("tag.show").setProperties({
-      model,
-      tag: model,
-      additionalTags: this.additionalTags,
-      category: this.category,
-      filterType: this.filterType,
-      navMode: this.navMode,
-      tagNotification: this.tagNotification,
-      noSubcategories: this.noSubcategories,
-    });
-    this.searchService.set("searchContext", model.get("searchContext"));
-  },
-
   deactivate() {
     this._super(...arguments);
     this.searchService.set("searchContext", null);
   },
 
-  actions: {
-    renameTag(tag) {
-      showModal("rename-tag", { model: tag });
-    },
+  @action
+  renameTag(tag) {
+    showModal("rename-tag", { model: tag });
+  },
 
-    createTopic() {
-      if (this.get("currentUser.has_topic_draft")) {
-        this.openTopicDraft();
-      } else {
-        const controller = this.controllerFor("tag.show");
-        const composerController = this.controllerFor("composer");
-        composerController
-          .open({
-            categoryId: controller.get("category.id"),
-            action: Composer.CREATE_TOPIC,
-            draftKey: Composer.NEW_TOPIC_KEY,
-          })
-          .then(() => {
-            // Pre-fill the tags input field
-            if (composerController.canEditTags && controller.get("model.id")) {
-              const composerModel = this.controllerFor("composer").get("model");
-              composerModel.set(
-                "tags",
-                [
-                  controller.get("model.id"),
-                  ...makeArray(controller.additionalTags),
-                ].filter(Boolean)
-              );
-            }
-          });
-      }
-    },
-
-    dismissReadTopics(dismissTopics) {
-      const operationType = dismissTopics ? "topics" : "posts";
-      this.send("dismissRead", operationType);
-    },
-
-    dismissRead(operationType) {
-      const controller = this.controllerFor("tags-show");
-      let options = {
-        tagName: controller.get("tag.id"),
-      };
-      const categoryId = controller.get("category.id");
-
-      if (categoryId) {
-        options = Object.assign({}, options, {
-          categoryId,
-          includeSubcategories: !controller.noSubcategories,
+  @action
+  createTopic() {
+    if (this.currentUser?.has_topic_draft) {
+      this.openTopicDraft();
+    } else {
+      const controller = this.controllerFor("tag.show");
+      const composerController = this.controllerFor("composer");
+      composerController
+        .open({
+          categoryId: controller.category?.id,
+          action: Composer.CREATE_TOPIC,
+          draftKey: Composer.NEW_TOPIC_KEY,
+        })
+        .then(() => {
+          // Pre-fill the tags input field
+          if (composerController.canEditTags && controller.tag?.id) {
+            const composerModel = this.controllerFor("composer").model;
+            composerModel.set(
+              "tags",
+              [
+                controller.get("model.id"),
+                ...makeArray(controller.additionalTags),
+              ].filter(Boolean)
+            );
+          }
         });
-      }
+    }
+  },
 
-      controller.send("dismissRead", operationType, options);
-    },
+  @action
+  dismissReadTopics(dismissTopics) {
+    const operationType = dismissTopics ? "topics" : "posts";
+    this.send("dismissRead", operationType);
+  },
 
-    resetParams,
+  @action
+  dismissRead(operationType) {
+    const controller = this.controllerFor("tags-show");
+    let options = {
+      tagName: controller.tag?.id,
+    };
+    const categoryId = controller.category?.id;
 
-    didTransition() {
-      this.controllerFor("tag.show")._showFooter();
-      return true;
-    },
+    if (categoryId) {
+      options = Object.assign({}, options, {
+        categoryId,
+        includeSubcategories: !controller.noSubcategories,
+      });
+    }
+
+    controller.send("dismissRead", operationType, options);
+  },
+
+  @action
+  resetParams(skipParams = []) {
+    resetParams.call(this, skipParams);
+  },
+
+  @action
+  didTransition() {
+    this.controllerFor("tag.show")._showFooter();
+    return true;
   },
 });

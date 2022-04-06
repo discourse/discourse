@@ -5,6 +5,19 @@ require 'nokogiri'
 require 'erb'
 
 module PrettyText
+  DANGEROUS_BIDI_CHARACTERS = [
+    "\u202A",
+    "\u202B",
+    "\u202C",
+    "\u202D",
+    "\u202E",
+    "\u2066",
+    "\u2067",
+    "\u2068",
+    "\u2069",
+  ].freeze
+  DANGEROUS_BIDI_REGEXP = Regexp.new(DANGEROUS_BIDI_CHARACTERS.join("|")).freeze
+
   @mutex = Mutex.new
   @ctx_init = Mutex.new
 
@@ -69,10 +82,18 @@ module PrettyText
 
     ctx.eval("window = {}; window.devicePixelRatio = 2;") # hack to make code think stuff is retina
 
-    if Rails.env.development? || Rails.env.test?
-      ctx.attach("console.log", proc { |l| p l })
-      ctx.eval('window.console = console;')
-    end
+    ctx.attach("rails.logger.info", proc { |err| Rails.logger.info(err.to_s) })
+    ctx.attach("rails.logger.warn", proc { |err| Rails.logger.warn(err.to_s) })
+    ctx.attach("rails.logger.error", proc { |err| Rails.logger.error(err.to_s) })
+    ctx.eval <<~JS
+      console = {
+        prefix: "[PrettyText] ",
+        log: function(...args){ rails.logger.info(console.prefix + args.join(" ")); },
+        warn: function(...args){ rails.logger.warn(console.prefix + args.join(" ")); },
+        error: function(...args){ rails.logger.error(console.prefix + args.join(" ")); }
+      }
+    JS
+
     ctx.eval("__PRETTY_TEXT = true")
 
     PrettyText::Helpers.instance_methods.each do |method|
@@ -81,7 +102,6 @@ module PrettyText
 
     ctx_load(ctx, "#{Rails.root}/app/assets/javascripts/discourse-loader.js")
     ctx_load(ctx, "#{Rails.root}/app/assets/javascripts/handlebars-shim.js")
-    ctx_load(ctx, "vendor/assets/javascripts/lodash.js")
     ctx_load(ctx, "vendor/assets/javascripts/xss.min.js")
     ctx.load("#{Rails.root}/lib/pretty_text/vendor-shims.js")
     ctx_load_manifest(ctx, "pretty-text-bundle.js")
@@ -143,6 +163,19 @@ module PrettyText
     end
   end
 
+  # Acceptable options:
+  #
+  #  disable_emojis    - Disables the emoji markdown engine.
+  #  features          - A hash where the key is the markdown feature name and the value is a boolean to enable/disable the markdown feature.
+  #                      The hash is merged into the default features set in pretty-text.js which can be used to add new features or disable existing features.
+  #  features_override - An array of markdown feature names to override the default markdown feature set. Currently used by plugins to customize what features should be enabled
+  #                      when rendering markdown.
+  #  markdown_it_rules - An array of markdown rule names which will be applied to the markdown-it engine. Currently used by plugins to customize what markdown-it rules should be
+  #                      enabled when rendering markdown.
+  #  topic_id          - Topic id for the post being cooked.
+  #  user_id           - User id for the post being cooked.
+  #  force_quote_link  - Always create the link to the quoted topic for [quote] bbcode. Normally this only happens
+  #                      if the topic_id provided is different from the [quote topic:X].
   def self.markdown(text, opts = {})
     # we use the exact same markdown converter as the client
     # TODO: use the same extensions on both client and server (in particular the template for mentions)
@@ -155,6 +188,9 @@ module PrettyText
       custom_emoji = {}
       Emoji.custom.map { |e| custom_emoji[e.name] = e.url }
 
+      # note, any additional options added to __optInput here must be
+      # also be added to the buildOptions function in pretty-text.js,
+      # otherwise they will be discarded
       buffer = +<<~JS
         __optInput = {};
         __optInput.siteSettings = #{SiteSetting.client_settings_json};
@@ -162,6 +198,8 @@ module PrettyText
         __paths = #{paths_json};
         __optInput.getURL = __getURL;
         #{"__optInput.features = #{opts[:features].to_json};" if opts[:features]}
+        #{"__optInput.featuresOverride = #{opts[:features_override].to_json};" if opts[:features_override]}
+        #{"__optInput.markdownItRules = #{opts[:markdown_it_rules].to_json};" if opts[:markdown_it_rules]}
         __optInput.getCurrentUser = __getCurrentUser;
         __optInput.lookupAvatar = __lookupAvatar;
         __optInput.lookupPrimaryUserGroup = __lookupPrimaryUserGroup;
@@ -175,10 +213,15 @@ module PrettyText
         __optInput.censoredRegexp = #{WordWatcher.word_matcher_regexp(:censor)&.source.to_json};
         __optInput.watchedWordsReplace = #{WordWatcher.word_matcher_regexps(:replace).to_json};
         __optInput.watchedWordsLink = #{WordWatcher.word_matcher_regexps(:link).to_json};
+        __optInput.additionalOptions = #{Site.markdown_additional_options.to_json};
       JS
 
-      if opts[:topicId]
-        buffer << "__optInput.topicId = #{opts[:topicId].to_i};\n"
+      if opts[:topic_id]
+        buffer << "__optInput.topicId = #{opts[:topic_id].to_i};\n"
+      end
+
+      if opts[:force_quote_link]
+        buffer << "__optInput.forceQuoteLink = #{opts[:force_quote_link]};\n"
       end
 
       if opts[:user_id]
@@ -266,10 +309,6 @@ module PrettyText
 
   def self.cook(text, opts = {})
     options = opts.dup
-
-    # we have a minor inconsistency
-    options[:topicId] = opts[:topic_id]
-
     working_text = text.dup
 
     sanitized = markdown(working_text, options)
@@ -278,6 +317,7 @@ module PrettyText
 
     add_nofollow = !options[:omit_nofollow] && SiteSetting.add_rel_nofollow_to_user_content
     add_rel_attributes_to_user_content(doc, add_nofollow)
+    strip_hidden_unicode_bidirectional_characters(doc)
 
     if SiteSetting.enable_mentions
       add_mentions(doc, user_id: opts[:user_id])
@@ -288,6 +328,24 @@ module PrettyText
     end
     loofah_fragment = Loofah.fragment(doc.to_html)
     loofah_fragment.scrub!(scrubber).to_html
+  end
+
+  def self.strip_hidden_unicode_bidirectional_characters(doc)
+    return if !DANGEROUS_BIDI_REGEXP.match?(doc.content)
+
+    doc.css("code,pre").each do |code_tag|
+      next if !DANGEROUS_BIDI_REGEXP.match?(code_tag.content)
+
+      DANGEROUS_BIDI_CHARACTERS.each do |bidi|
+        next if !code_tag.content.include?(bidi)
+
+        formatted = "&lt;U+#{bidi.ord.to_s(16).upcase}&gt;"
+        code_tag.inner_html = code_tag.inner_html.gsub(
+          bidi,
+          "<span class=\"bidi-warning\" title=\"#{I18n.t("post.hidden_bidi_character")}\">#{formatted}</span>"
+        )
+      end
+    end
   end
 
   def self.add_rel_attributes_to_user_content(doc, add_nofollow)
@@ -329,6 +387,9 @@ module PrettyText
 
     # remove href inside quotes & oneboxes & elided part
     doc.css("aside.quote a, aside.onebox a, .elided a").remove
+
+    # remove hotlinked images
+    doc.css("a.onebox > img").each { |img| img.parent.remove }
 
     # extract all links
     doc.css("a").each do |a|

@@ -1,50 +1,44 @@
 import Component from "@ember/component";
-import { observes } from "discourse-common/utils/decorators";
 import { scheduleOnce } from "@ember/runloop";
 
-export default Component.extend({
-  _slug: null,
+export default class extends Component {
+  tagName = "";
+  currentClasses = new Set();
 
-  didInsertElement() {
-    this._super(...arguments);
-    this.refreshClass();
-  },
+  didReceiveAttrs() {
+    scheduleOnce("afterRender", this, this._updateClasses);
+  }
 
-  _updateClass() {
+  willDestroyElement() {
+    scheduleOnce("afterRender", this, this._removeClasses);
+  }
+
+  _updateClasses() {
     if (this.isDestroying || this.isDestroyed) {
       return;
     }
-    const slug = this.get("category.fullSlug");
-    const tags = this.tags;
 
-    this._removeClass();
+    const desiredClasses = new Set();
 
-    let classes = [];
+    const slug = this.category?.fullSlug;
     if (slug) {
-      classes.push("category");
-      classes.push(`category-${slug}`);
+      desiredClasses.add("category");
+      desiredClasses.add(`category-${slug}`);
     }
-    if (tags) {
-      tags.forEach((t) => classes.push(`tag-${t}`));
-    }
-    if (classes.length > 0) {
-      $("body").addClass(classes.join(" "));
-    }
-  },
+    this.tags?.forEach((t) => desiredClasses.add(`tag-${t}`));
 
-  @observes("category.fullSlug", "tags")
-  refreshClass() {
-    scheduleOnce("afterRender", this, this._updateClass);
-  },
+    document.body.classList.add(...desiredClasses);
 
-  _removeClass() {
-    $("body").removeClass((_, css) =>
-      (css.match(/\b(?:category|tag)-\S+|( category )/g) || []).join(" ")
+    const removeClasses = [...this.currentClasses].filter(
+      (c) => !desiredClasses.has(c)
     );
-  },
 
-  willDestroyElement() {
-    this._super(...arguments);
-    this._removeClass();
-  },
-});
+    document.body.classList.remove(...removeClasses);
+
+    this.currentClasses = desiredClasses;
+  }
+
+  _removeClasses() {
+    document.body.classList.remove(...this.currentClasses);
+  }
+}

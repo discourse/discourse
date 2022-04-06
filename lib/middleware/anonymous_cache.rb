@@ -49,6 +49,12 @@ module Middleware
       ACCEPT_ENCODING  = "HTTP_ACCEPT_ENCODING"
       DISCOURSE_RENDER = "HTTP_DISCOURSE_RENDER"
 
+      REDIS_STORE_SCRIPT = DiscourseRedis::EvalHelper.new <<~LUA
+        local current = redis.call("incr", KEYS[1])
+        redis.call("expire",KEYS[1],ARGV[1])
+        return current
+      LUA
+
       def initialize(env, request = nil)
         @env = env
         @request = request || Rack::Request.new(@env)
@@ -259,11 +265,7 @@ module Middleware
         if status == 200 && cache_duration
 
           if GlobalSetting.anon_cache_store_threshold > 1
-            count = Discourse.redis.eval(<<~REDIS, [cache_key_count], [cache_duration])
-              local current = redis.call("incr", KEYS[1])
-              redis.call("expire",KEYS[1],ARGV[1])
-              return current
-            REDIS
+            count = REDIS_STORE_SCRIPT.eval(Discourse.redis, [cache_key_count], [cache_duration])
 
             # technically lua will cast for us, but might as well be
             # prudent here, hence the to_i

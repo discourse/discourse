@@ -25,10 +25,10 @@ function resizeWithAspect(
   };
 }
 
-function logIfDebug(message) {
+function logIfDebug(...messages) {
   if (DedicatedWorkerGlobalScope.debugMode) {
     // eslint-disable-next-line no-console
-    console.log(message);
+    console.log(...messages);
   }
 }
 
@@ -148,8 +148,12 @@ onmessage = async function (e) {
       }
       break;
     case "install":
-      await loadLibs(e.data.settings);
-      postMessage({ type: "installed" });
+      try {
+        await loadLibs(e.data.settings);
+        postMessage({ type: "installed" });
+      } catch (error) {
+        postMessage({ type: "installFailed", errorMessage: error.message });
+      }
       break;
     default:
       logIfDebug(`Sorry, we are out of ${e}.`);

@@ -1,6 +1,6 @@
 <form class="groups-form form-vertical groups-notifications-form">
 
-  {{plugin-outlet name="before-manage-group-tags" args=(hash model=model) tagName=""}}
+  {{plugin-outlet name="before-manage-group-tags" connectorTagName="div" args=(hash model=model)}}
 
   <div class="control-group">
     <label class="control-label">{{i18n "groups.manage.tags.long_title"}}</label>
@@ -13,9 +13,11 @@
     {{tag-chooser
       tags=model.watching_tags
       blacklist=selectedTags
-      allowCreate=false
       everyTag=true
       unlimitedTagCount=true
+      options=(hash
+        allowAny=false
+      )
     }}
 
     <div class="control-instructions">
@@ -29,9 +31,11 @@
     {{tag-chooser
       tags=model.tracking_tags
       blacklist=selectedTags
-      allowCreate=false
       everyTag=true
       unlimitedTagCount=true
+      options=(hash
+        allowAny=false
+      )
     }}
 
     <div class="control-instructions">
@@ -45,9 +49,11 @@
     {{tag-chooser
       tags=model.watching_first_post_tags
       blacklist=selectedTags
-      allowCreate=false
       everyTag=true
       unlimitedTagCount=true
+      options=(hash
+        allowAny=false
+      )
     }}
 
     <div class="control-instructions">
@@ -61,9 +67,11 @@
     {{tag-chooser
       tags=model.regular_tags
       blacklist=selectedTags
-      allowCreate=false
       everyTag=true
       unlimitedTagCount=true
+      options=(hash
+        allowAny=false
+      )
     }}
 
     <div class="control-instructions">
@@ -77,9 +85,11 @@
     {{tag-chooser
       tags=model.muted_tags
       blacklist=selectedTags
-      allowCreate=false
       everyTag=true
       unlimitedTagCount=true
+      options=(hash
+        allowAny=false
+      )
     }}
 
     <div class="control-instructions">

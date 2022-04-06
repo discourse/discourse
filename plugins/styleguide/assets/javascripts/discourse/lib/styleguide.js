@@ -29,6 +29,7 @@ export function allCategories() {
   let paths = CATEGORIES.join("|");
 
   // Find a list of sections based on what templates are available
+  // eslint-disable-next-line no-undef
   Object.keys(Ember.TEMPLATES).forEach((e) => {
     let regexp = new RegExp(`styleguide\/(${paths})\/(\\d+)?\\-?([^\\/]+)$`);
     let matches = e.match(regexp);

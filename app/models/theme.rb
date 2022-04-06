@@ -91,9 +91,15 @@ class Theme < ActiveRecord::Base
     update_javascript_cache!
 
     remove_from_cache!
-    clear_cached_settings!
     DB.after_commit { ColorScheme.hex_cache.clear }
     notify_theme_change(with_scheme: notify_with_scheme)
+
+    if theme_setting_requests_refresh
+      DB.after_commit do
+        Discourse.request_refresh!
+        self.theme_setting_requests_refresh = false
+      end
+    end
   end
 
   def update_child_components
@@ -108,7 +114,12 @@ class Theme < ActiveRecord::Base
   end
 
   def update_javascript_cache!
-    all_extra_js = theme_fields.where(target_id: Theme.targets[:extra_js]).pluck(:value_baked).join("\n")
+    all_extra_js = theme_fields
+      .where(target_id: Theme.targets[:extra_js])
+      .order(:name, :id)
+      .pluck(:value_baked)
+      .join("\n")
+
     if all_extra_js.present?
       js_compiler = ThemeJavascriptCompiler.new(id, name)
       js_compiler.append_raw_script(all_extra_js)
@@ -123,7 +134,6 @@ class Theme < ActiveRecord::Base
 
   after_destroy do
     remove_from_cache!
-    clear_cached_settings!
     if SiteSetting.default_theme_id == self.id
       Theme.clear_default!
     end
@@ -145,7 +155,7 @@ class Theme < ActiveRecord::Base
     SvgSprite.expire_cache
   end
 
-  BASE_COMPILER_VERSION = 51
+  BASE_COMPILER_VERSION = 55
   def self.compiler_version
     get_set_cache "compiler_version" do
       dependencies = [
@@ -382,7 +392,7 @@ class Theme < ActiveRecord::Base
       end
       caches = JavascriptCache.where(theme_id: theme_ids)
       caches = caches.sort_by { |cache| theme_ids.index(cache.theme_id) }
-      return caches.map { |c| "<script src='#{c.url}'></script>" }.join("\n")
+      return caches.map { |c| "<script src='#{c.url}' data-theme-id='#{c.theme_id}'></script>" }.join("\n")
     end
     list_baked_fields(theme_ids, target, name).map { |f| f.value_baked || f.value }.join("\n")
   end
@@ -460,16 +470,6 @@ class Theme < ActiveRecord::Base
     end
   end
 
-  def all_theme_variables
-    fields = {}
-    ids = Theme.transform_ids(id)
-    ThemeField.find_by_theme_ids(ids).where(type_id: ThemeField.theme_var_type_ids).each do |field|
-      next if fields.key?(field.name)
-      fields[field.name] = field
-    end
-    fields.values
-  end
-
   def add_relative_theme!(kind, theme)
     new_relation = if kind == :child
       child_theme_relation.new(child_theme_id: theme.id)
@@ -517,13 +517,13 @@ class Theme < ActiveRecord::Base
   end
 
   def cached_settings
-    Discourse.cache.fetch("settings_for_theme_#{self.id}", expires_in: 30.minutes) do
+    Theme.get_set_cache "settings_for_theme_#{self.id}" do
       build_settings_hash
     end
   end
 
   def cached_default_settings
-    Discourse.cache.fetch("default_settings_for_theme_#{self.id}", expires_in: 30.minutes) do
+    Theme.get_set_cache "default_settings_for_theme_#{self.id}" do
       settings_hash = {}
       self.settings.each do |setting|
         settings_hash[setting.name] = setting.default
@@ -549,29 +549,15 @@ class Theme < ActiveRecord::Base
     hash
   end
 
-  def clear_cached_settings!
-    DB.after_commit do
-      Discourse.cache.delete("settings_for_theme_#{self.id}")
-      Discourse.cache.delete("default_settings_for_theme_#{self.id}")
-    end
-  end
-
-  def included_settings
-    hash = {}
-
-    Theme.where(id: Theme.transform_ids(id)).each do |theme|
-      hash.merge!(theme.cached_settings)
-    end
-
-    hash.merge!(self.cached_settings)
-    hash
-  end
-
   def update_setting(setting_name, new_value)
     target_setting = settings.find { |setting| setting.name == setting_name }
     raise Discourse::NotFound unless target_setting
 
     target_setting.value = new_value
+
+    if target_setting.requests_refresh?
+      self.theme_setting_requests_refresh = true
+    end
   end
 
   def update_translation(translation_key, new_value)
@@ -647,11 +633,14 @@ class Theme < ActiveRecord::Base
   end
 
   def scss_variables
-    return if all_theme_variables.empty? && included_settings.empty?
+    settings_hash = build_settings_hash
+    theme_variable_fields = var_theme_fields
+
+    return if theme_variable_fields.empty? && settings_hash.empty?
 
     contents = +""
 
-    all_theme_variables&.each do |field|
+    theme_variable_fields&.each do |field|
       if field.type_id == ThemeField.types[:theme_upload_var]
         if upload = field.upload
           url = upload_cdn_path(upload.url)
@@ -662,7 +651,7 @@ class Theme < ActiveRecord::Base
       end
     end
 
-    included_settings&.each do |name, value|
+    settings_hash&.each do |name, value|
       next if name == "theme_uploads"
       contents << to_scss_variable(name, value)
     end
@@ -726,6 +715,8 @@ class Theme < ActiveRecord::Base
   end
 
   private
+
+  attr_accessor :theme_setting_requests_refresh
 
   def to_scss_variable(name, value)
     escaped = SassC::Script::Value::String.quote(value, sass: true)

@@ -1,8 +1,6 @@
 # encoding: UTF-8
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe Topic do
   let(:job_klass) { Jobs::CloseTopic }
 

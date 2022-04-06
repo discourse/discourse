@@ -1,4 +1,4 @@
-import { isAppWebview, postRNWebviewMessage } from "discourse/lib/utilities";
+import { postRNWebviewMessage } from "discourse/lib/utilities";
 import MobileScrollDirection from "discourse/mixins/mobile-scroll-direction";
 import MountWidget from "discourse/components/mount-widget";
 import Scrolling from "discourse/mixins/scrolling";
@@ -32,7 +32,7 @@ const FooterNavComponent = MountWidget.extend(
       this._super(...arguments);
       this.appEvents.on("page:changed", this, "_routeChanged");
 
-      if (isAppWebview()) {
+      if (this.capabilities.isAppWebview) {
         this.appEvents.on("modal:body-shown", this, "_modalOn");
         this.appEvents.on("modal:body-dismissed", this, "_modalOff");
       }
@@ -40,7 +40,7 @@ const FooterNavComponent = MountWidget.extend(
       if (this.capabilities.isIpadOS) {
         document.body.classList.add("footer-nav-ipad");
       } else {
-        this.bindScrolling({ name: "footer-nav" });
+        this.bindScrolling();
         window.addEventListener("resize", this.scrolled, false);
         this.appEvents.on("composer:opened", this, "_composerOpened");
         this.appEvents.on("composer:closed", this, "_composerClosed");
@@ -52,7 +52,7 @@ const FooterNavComponent = MountWidget.extend(
       this._super(...arguments);
       this.appEvents.off("page:changed", this, "_routeChanged");
 
-      if (isAppWebview()) {
+      if (this.capabilities.isAppWebview) {
         this.appEvents.off("modal:body-shown", this, "_modalOn");
         this.appEvents.off("modal:body-removed", this, "_modalOff");
       }
@@ -60,7 +60,7 @@ const FooterNavComponent = MountWidget.extend(
       if (this.capabilities.isIpadOS) {
         document.body.classList.remove("footer-nav-ipad");
       } else {
-        this.unbindScrolling("footer-nav");
+        this.unbindScrolling();
         window.removeEventListener("resize", this.scrolled);
         this.appEvents.off("composer:opened", this, "_composerOpened");
         this.appEvents.off("composer:closed", this, "_composerClosed");

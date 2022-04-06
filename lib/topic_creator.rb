@@ -30,9 +30,10 @@ class TopicCreator
       existing_tags = tags.present? ? Tag.where(name: tags) : []
       valid_tags = guardian.can_create_tag? ? tags : existing_tags
 
-      # both add to topic.errors
+      # all add to topic.errors
       DiscourseTagging.validate_min_required_tags_for_category(guardian, topic, category, valid_tags)
       DiscourseTagging.validate_required_tags_from_group(guardian, topic, category, existing_tags)
+      DiscourseTagging.validate_category_restricted_tags(guardian, topic, category, valid_tags)
     end
 
     DiscourseEvent.trigger(:after_validate_topic, topic, self)
@@ -111,7 +112,7 @@ class TopicCreator
       visible: @opts[:visible]
     }
 
-    [:subtype, :archetype, :meta_data, :import_mode].each do |key|
+    [:subtype, :archetype, :meta_data, :import_mode, :advance_draft].each do |key|
       topic_params[key] = @opts[key] if @opts[key].present?
     end
 
@@ -137,6 +138,7 @@ class TopicCreator
     topic_params[:created_at] = convert_time(@opts[:created_at]) if @opts[:created_at].present?
     topic_params[:pinned_at] = convert_time(@opts[:pinned_at]) if @opts[:pinned_at].present?
     topic_params[:pinned_globally] = @opts[:pinned_globally] if @opts[:pinned_globally].present?
+    topic_params[:external_id] = @opts[:external_id] if @opts[:external_id].present?
     topic_params[:featured_link] = @opts[:featured_link]
 
     topic_params

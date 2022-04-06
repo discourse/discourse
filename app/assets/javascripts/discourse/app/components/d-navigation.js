@@ -3,6 +3,7 @@ import FilterModeMixin from "discourse/mixins/filter-mode";
 import NavItem from "discourse/models/nav-item";
 import bootbox from "bootbox";
 import discourseComputed from "discourse-common/utils/decorators";
+import { NotificationLevels } from "discourse/lib/notification-levels";
 import { inject as service } from "@ember/service";
 
 export default Component.extend(FilterModeMixin, {
@@ -14,12 +15,32 @@ export default Component.extend(FilterModeMixin, {
   // the `categories` property into this component
   @discourseComputed("site.categoriesList")
   categories(categoriesList) {
-    return categoriesList;
+    if (this.currentUser?.indirectly_muted_category_ids) {
+      return categoriesList.filter(
+        (category) =>
+          !this.currentUser.indirectly_muted_category_ids.includes(category.id)
+      );
+    } else {
+      return categoriesList;
+    }
   },
 
   @discourseComputed("category")
   showCategoryNotifications(category) {
     return category && this.currentUser;
+  },
+
+  @discourseComputed("category.notification_level")
+  categoryNotificationLevel(notificationLevel) {
+    if (
+      this.currentUser?.indirectly_muted_category_ids?.includes(
+        this.category.id
+      )
+    ) {
+      return NotificationLevels.MUTED;
+    } else {
+      return notificationLevel;
+    }
   },
 
   // don't show tag notification menu on tag intersections
@@ -59,11 +80,13 @@ export default Component.extend(FilterModeMixin, {
 
   @discourseComputed("categoryReadOnlyBanner", "hasDraft")
   createTopicClass(categoryReadOnlyBanner, hasDraft) {
-    if (categoryReadOnlyBanner && !hasDraft) {
-      return "btn-default disabled";
-    } else {
-      return "btn-default";
+    let classNames = ["btn-default"];
+    if (hasDraft) {
+      classNames.push("open-draft");
+    } else if (categoryReadOnlyBanner) {
+      classNames.push("disabled");
     }
+    return classNames.join(" ");
   },
 
   @discourseComputed("hasDraft")

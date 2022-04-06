@@ -31,6 +31,7 @@ zh_CN:
           format_title: 日期格式
           timezone: 时区
           until: 直到…
+          current_timezone: "当前时区："
           recurring:
             every_day: "每天"
             every_week: "每周"
@@ -40,3 +41,4 @@ zh_CN:
             every_three_months: "每三个月"
             every_six_months: "每六个月"
             every_year: "每年"
+      default_title: "%{site_name} 事件"

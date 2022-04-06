@@ -6,7 +6,7 @@ import {
   isSkinTonableEmoji,
 } from "pretty-text/emoji";
 import { emojiUnescape, emojiUrlFor } from "discourse/lib/text";
-import { escapeExpression, safariHacksDisabled } from "discourse/lib/utilities";
+import { escapeExpression } from "discourse/lib/utilities";
 import { later, schedule } from "@ember/runloop";
 import Component from "@ember/component";
 import { createPopper } from "@popperjs/core";
@@ -17,14 +17,13 @@ import { underscore } from "@ember/string";
 function customEmojis() {
   const list = extendedEmojiList();
   const groups = [];
-  Object.keys(list).forEach((code) => {
-    const emoji = list[code];
+  for (const [code, emoji] of list.entries()) {
     groups[emoji.group] = groups[emoji.group] || [];
     groups[emoji.group].push({
       code,
       src: emojiUrlFor(code),
     });
-  });
+  }
   return groups;
 }
 
@@ -36,13 +35,13 @@ export default Component.extend({
   recentEmojis: null,
   hoveredEmoji: null,
   isActive: false,
-  isLoading: true,
+  usePopper: true,
+  initialFilter: "",
 
   init() {
     this._super(...arguments);
 
     this.set("customEmojis", customEmojis());
-    this.set("recentEmojis", this.emojiStore.favorites);
     this.set("selectedDiversity", this.emojiStore.diversity);
 
     if ("IntersectionObserver" in window) {
@@ -78,9 +77,10 @@ export default Component.extend({
 
   @action
   onShow() {
-    this.set("isLoading", true);
+    this.set("recentEmojis", this.emojiStore.favorites);
 
     schedule("afterRender", () => {
+      this._applyFilter(this.initialFilter);
       document.addEventListener("click", this.handleOutsideClick);
 
       const emojiPicker = document.querySelector(".emoji-picker");
@@ -88,37 +88,52 @@ export default Component.extend({
         return;
       }
 
-      if (!this.site.isMobileDevice) {
-        this._popper = createPopper(
-          document.querySelector(".d-editor-textarea-wrapper"),
-          emojiPicker,
+      const textareaWrapper = document.querySelector(
+        ".d-editor-textarea-wrapper"
+      );
+
+      if (!this.site.isMobileDevice && this.usePopper && textareaWrapper) {
+        const modifiers = [
           {
-            placement: "auto",
-            modifiers: [
-              {
-                name: "preventOverflow",
-              },
-              {
-                name: "offset",
-                options: {
-                  offset: [5, 5],
-                },
-              },
-            ],
-          }
-        );
+            name: "preventOverflow",
+          },
+          {
+            name: "offset",
+            options: {
+              offset: [5, 5],
+            },
+          },
+        ];
+
+        if (window.innerWidth < textareaWrapper.clientWidth * 2) {
+          modifiers.push({
+            name: "computeStyles",
+            enabled: true,
+            fn({ state }) {
+              state.styles.popper = {
+                ...state.styles.popper,
+                position: "fixed",
+                left: `${(window.innerWidth - state.rects.popper.width) / 2}px`,
+                top: "50%",
+                transform: "translateY(-50%)",
+              };
+
+              return state;
+            },
+          });
+        }
+
+        this._popper = createPopper(textareaWrapper, emojiPicker, {
+          placement: "auto",
+          modifiers,
+        });
       }
 
       // this is a low-tech trick to prevent appending hundreds of emojis
       // of blocking the rendering of the picker
       later(() => {
-        this.set("isLoading", false);
-
         schedule("afterRender", () => {
-          if (
-            (!this.site.isMobileDevice || this.isEditorFocused) &&
-            !safariHacksDisabled()
-          ) {
+          if (!this.site.isMobileDevice || this.isEditorFocused) {
             const filter = emojiPicker.querySelector("input.filter");
             filter && filter.focus();
 
@@ -138,9 +153,10 @@ export default Component.extend({
   },
 
   @action
-  onClose() {
+  onClose(event) {
+    event?.stopPropagation();
     document.removeEventListener("click", this.handleOutsideClick);
-    this.onEmojiPickerClose && this.onEmojiPickerClose();
+    this.onEmojiPickerClose && this.onEmojiPickerClose(event);
   },
 
   diversityScales: computed("selectedDiversity", function () {
@@ -201,12 +217,12 @@ export default Component.extend({
 
     this.emojiSelected(code);
 
-    if (!img.parentNode.parentNode.classList.contains("recent")) {
-      this._trackEmojiUsage(code);
-    }
+    this._trackEmojiUsage(code, {
+      refresh: !img.parentNode.parentNode.classList.contains("recent"),
+    });
 
     if (this.site.isMobileDevice) {
-      this.onClose();
+      this.onClose(event);
     }
   },
 
@@ -219,13 +235,25 @@ export default Component.extend({
   },
 
   @action
-  onFilter(event) {
+  keydown(event) {
+    if (event.code === "Escape") {
+      this.onClose(event);
+      return false;
+    }
+  },
+
+  @action
+  onFilterChange(event) {
+    this._applyFilter(event.target.value);
+  },
+
+  _applyFilter(filter) {
     const emojiPicker = document.querySelector(".emoji-picker");
     const results = document.querySelector(".emoji-picker-emoji-area .results");
     results.innerHTML = "";
 
-    if (event.target.value) {
-      results.innerHTML = emojiSearch(event.target.value.toLowerCase(), {
+    if (filter) {
+      results.innerHTML = emojiSearch(filter.toLowerCase(), {
         maxResults: 20,
         diversity: this.emojiStore.diversity,
       })
@@ -239,9 +267,12 @@ export default Component.extend({
     }
   },
 
-  _trackEmojiUsage(code) {
+  _trackEmojiUsage(code, options = {}) {
     this.emojiStore.track(code);
-    this.set("recentEmojis", this.emojiStore.favorites.slice(0, 10));
+
+    if (options.refresh) {
+      this.set("recentEmojis", [...this.emojiStore.favorites]);
+    }
   },
 
   _replaceEmoji(code) {
@@ -304,7 +335,7 @@ export default Component.extend({
   handleOutsideClick(event) {
     const emojiPicker = document.querySelector(".emoji-picker");
     if (emojiPicker && !emojiPicker.contains(event.target)) {
-      this.onClose();
+      this.onClose(event);
     }
   },
 });

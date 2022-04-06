@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe UserNotificationsHelper do
   let(:upload_path) { Discourse.store.upload_path }
 
@@ -35,7 +33,7 @@ describe UserNotificationsHelper do
     let(:lightbox_image) do
       <<~HTML
         <p><div class="lightbox-wrapper"><a class="lightbox" href="//localhost:3000/uploads/default/original/1X/123456.jpeg" data-download-href="//localhost:3000/uploads/default/123456" title="giant-meteor-2020"><img src="//localhost:3000/uploads/default/original/1X/123456.jpeg" alt="giant-meteor-2020" data-base62-sha1="3jcR88161od6Uthq1ixWKJh2ejp" width="517" height="152" data-small-upload="//localhost:3000/uploads/default/optimized/1X/123456_2_10x10.png"><div class="meta">
-        <svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use xlink:href="#far-image"></use></svg><span class="filename">giant-meteor-2020</span><span class="informations">851×251 44 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use xlink:href="#discourse-expand"></use></svg>
+        <svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use href="#far-image"></use></svg><span class="filename">giant-meteor-2020</span><span class="informations">851×251 44 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use href="#discourse-expand"></use></svg>
         </div></a></div></p>
       HTML
     end
@@ -55,7 +53,7 @@ describe UserNotificationsHelper do
     end
 
     it "doesn't count emoji images" do
-      with_emoji = "<p>Hi <img src=\"/images/emoji/twitter/smile.png?v=#{Emoji::EMOJI_VERSION}\" title=\":smile:\" class=\"emoji\" alt=\":smile:\"></p>"
+      with_emoji = "<p>Hi <img src=\"/images/emoji/twitter/smile.png?v=#{Emoji::EMOJI_VERSION}\" title=\":smile:\" class=\"emoji\" alt=\":smile:\" loading=\"lazy\" width=\"20\" height=\"20\"></p>"
       arg = ([with_emoji] + paragraphs).join("\n")
       SiteSetting.digest_min_excerpt_length = 50
       expect(helper.email_excerpt(arg)).to eq([with_emoji, paragraphs[0]].join)

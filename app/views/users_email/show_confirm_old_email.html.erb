@@ -27,7 +27,7 @@
     </p>
 
     <%=form_tag(u_confirm_old_email_path, method: :put) do %>
-      <%= hidden_field_tag 'token', @token.token %>
+      <%= hidden_field_tag 'token', params[:token] %>
       <%= submit_tag t('change_email.confirm'), class: "btn btn-primary" %>
     <% end %>
   <% end %>

@@ -53,24 +53,29 @@ task "themes:install" => :environment do |task, args|
 end
 
 def update_themes
-  Theme.where(auto_update: true, enabled: true).find_each do |theme|
+  Theme.includes(:remote_theme).where(enabled: true, auto_update: true).find_each do |theme|
     begin
-      if theme.remote_theme.present?
-        puts "Updating '#{theme.name}' for '#{RailsMultisite::ConnectionManagement.current_db}'..."
-        theme.remote_theme.update_from_remote
+      remote_theme = theme.remote_theme
+      next if remote_theme.blank? || remote_theme.remote_url.blank?
+
+      print "Checking '#{theme.name}' for '#{RailsMultisite::ConnectionManagement.current_db}'... "
+      remote_theme.update_remote_version
+      if remote_theme.out_of_date?
+        puts "updating from #{remote_theme.local_version[0..7]} to #{remote_theme.remote_version[0..7]}"
+        remote_theme.update_from_remote
         theme.save!
-        unless theme.remote_theme.last_error_text.nil?
-          puts "Error updating '#{theme.name}': #{theme.remote_theme.last_error_text}"
-          exit 1
-        end
+      else
+        puts "up to date"
       end
+
+      raise RemoteTheme::ImportError.new(remote_theme.last_error_text) if remote_theme.last_error_text.present?
     rescue => e
-      STDERR.puts "Failed to update '#{theme.name}'"
-      STDERR.puts e
-      STDERR.puts e.backtrace
-      exit 1
+      STDERR.puts "Failed to update '#{theme.name}': #{e}"
+      raise if ENV["RAISE_THEME_ERRORS"] == "1"
     end
   end
+
+  true
 end
 
 desc "Update themes & theme components"
@@ -113,7 +118,7 @@ task "themes:qunit", :type, :value do |t, args|
   type = args[:type]
   value = args[:value]
   if !%w(name url id).include?(type) || value.blank?
-    raise <<~MSG
+    raise <<~TEXT
       Wrong arguments type:#{type.inspect}, value:#{value.inspect}"
       Usage:
         `bundle exec rake "themes:qunit[url,<theme_url>]"`
@@ -121,7 +126,7 @@ task "themes:qunit", :type, :value do |t, args|
         `bundle exec rake "themes:qunit[name,<theme_name>]"`
         OR
         `bundle exec rake "themes:qunit[id,<theme_id>]"`
-    MSG
+    TEXT
   end
   ENV["THEME_#{type.upcase}"] = value.to_s
   ENV["QUNIT_RAILS_ENV"] ||= 'development' # qunit:test will switch to `test` by default
@@ -146,7 +151,7 @@ task "themes:isolated_test" => :environment do |t, args|
 
   redis = TemporaryRedis.new
   redis.start
-  $redis = redis.instance # rubocop:disable Style/GlobalVars
+  Discourse.redis = redis.instance
   db = TemporaryDb.new
   db.start
   db.migrate

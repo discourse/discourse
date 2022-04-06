@@ -225,8 +225,6 @@ fi:
       <p>Jos muistat salasanasi, voit <a href="%{base_url}/login">kirjautua sisään</a>.</p>
 
       <p>Muussa tapauksessa <a href="%{base_url}/password-reset">vaihda salasanasi</a>.</p>
-    not_found_template_link: |
-      <p>Kutsua sivustolle <a href="%{base_url}">%{site_name}</a> ei voida enää käyttää. Pyydä henkilöä, joka kutsui sinut, lähettämään sinulle uusi kutsu.</p>
     user_exists: "Osoitteeseen <b>%{email}</b> ei tarvitse lähettää kutsua, sillä kutsuttavalla <a href='%{base_path}/u/%{username}/summary'>on jo tili!</a>"
     invite_exists: "Olet jo lähettänyt kutsun osoitteeseen <b>%{email}</b>."
     invalid_email: "%{email} ei ole kelvollinen sähköpostiosoite."
@@ -238,7 +236,6 @@ fi:
     disabled_errors:
       discourse_connect_enabled: "Kutsut on poistettu käytöstä, koska DiscourseConnect on aktiivinen."
       invalid_access: "Sinulla ei ole oikeutta nähdä pyydettyä resurssia."
-    requires_groups: "Kutsu tallennettu. Jos haluat antaa määritetyn alueen käyttöoikeuden, lisää yksi seuraavista ryhmistä: %{groups}."
   bulk_invite:
     file_should_be_csv: "Ladattavan tiedoston tulee olla CSV-muodossa."
     max_rows: "Ensimmäiset %{max_bulk_invites} kutsua lähetettiin. Jaa tiedosto pienempiin osiin."
@@ -333,8 +330,6 @@ fi:
   too_many_links:
     one: "Uudet käyttäjät voivat lisätä vain yhden linkin viestiin."
     other: "Uudet käyttäjät voivat lisätä vain %{count} linkkiä viestiin."
-  contains_blocked_word: "Viestissäsi on kielletty sana: %{word}"
-  contains_blocked_words: "Viestissäsi on kiellettyjä sanoja: %{words}"
   spamming_host: "Et voi lisätä linkkiä tähän isäntään."
   user_is_suspended: "Hyllytetyt käyttäjät eivät saa luoda viestejä."
   topic_not_found: "Jokin on mennyt pieleen. Ehkä tämä ketju on suljettu tai poistettu sillä välin, kun katselit sitä?"
@@ -392,7 +387,6 @@ fi:
       too_many: "Et voi lisätä enempää kuin %{limit} kirjanmerkkiä. Voit poistaa kirjanmerkkejä kohdassa <a href='%{user_bookmarks_url}'>%{user_bookmarks_url}</a>."
       cannot_set_past_reminder: "Kirjanmerkkimuistutusta ei voi asettaa menneisyyteen."
       cannot_set_reminder_in_distant_future: "Kirjanmerkkimuistutusta ei voi asettaa yli 10 vuoden päähän tulevaisuuteen."
-      time_must_be_provided: "kaikkiin muistutuksiin on asetettava kellonaika"
     reminders:
       at_desktop: "Ensi kerralla kun olen työpöytälaitteellani"
       later_today: "Myöhemmin tänään"
@@ -880,13 +874,6 @@ fi:
   draft_backup:
     pm_title: "Varmuuskopiot käynnissä olevien ketjujen luonnoksista"
     pm_body: "Ketju, joka sisältää varmuuskopioluonnoksia"
-  user_activity:
-    no_bookmarks:
-      self: "Kirjanmerkeissäsi ei ole mitään. Kirjanmerkitsemällä viestejä löydät ne myöhemmin helposti."
-      search: "Kirjanmerkkejä ei löytynyt näillä hakusanoilla."
-      others: "Ei kirjanmerkkejä."
-    no_drafts:
-      self: "Sinulla ei ole luonnoksia. Aloita kirjoittamaan vastausta mihin tahansa ketjuun, niin se tallentuu automaattiseksi uudeksi luonnokseksi."
   email_settings:
     pop3_authentication_error: "Annetuissa POP3-tunnistetiedoissa oli ongelma, tarkista käyttäjätunnus ja salasana ja yritä uudelleen."
     imap_authentication_error: "Annetuissa IMAP-tunnistetiedoissa oli ongelma, tarkista käyttäjätunnus ja salasana ja yritä uudelleen."
@@ -1325,6 +1312,18 @@ fi:
         ignores_count: Estojen määrä
         mutes_count: Vaimennusten määrä
       description: "Käyttäjät, jotka monet muista on vaimentaneet tai estäneet."
+    top_users_by_likes_received:
+      labels:
+        user: Käyttäjä
+        qtt_like: Saatuja tykkäyksiä
+    top_users_by_likes_received_from_inferior_trust_level:
+      labels:
+        user: Käyttäjä
+        qtt_like: Saatuja tykkäyksiä
+    top_users_by_likes_received_from_a_variety_of_people:
+      labels:
+        user: Käyttäjä
+        qtt_like: Saatuja tykkäyksiä
   dashboard:
     rails_env_warning: "Palvelintasi ajetaan tilassa %{env}."
     host_names_warning: "Sivuston config/database.yml tiedosto käyttää oletusarvoista localhost-isäntänimeä. Päivitä se käyttämään sivuston isäntänimeä."
@@ -1372,7 +1371,6 @@ fi:
     min_personal_message_title_length: "Yksityisviestin otsikon vähimmäismerkkimäärä"
     max_emojis_in_title: "Kuinka monta emojia enintään otsikossa"
     min_search_term_length: "Haun merkkien minimimäärä"
-    search_tokenize_chinese_japanese_korean: "Pakota haku käsittelemään kiinaa/japania/koreaa myös muunkielisillä sivustoilla"
     search_prefer_recent_posts: "Jos hakeminen suurelta foorumilta on hidasta, tämä asetus kokeilee indeksiä, jossa tuoreimmat viestit ovat ensin"
     search_recent_posts_size: "Kuinka monta tuoretta viestiä pidetään indeksissä"
     log_search_queries: "Pidä lokia käyttäjien tekemistä hauista"
@@ -1414,7 +1412,6 @@ fi:
     show_pinned_excerpt_mobile: "Näytä katkelma kiinnitetyistä ketjuista mobiilinäkymässä."
     show_pinned_excerpt_desktop: "Näytä katkelma kiinnitetyistä ketjuista työpöytänäkymässä."
     post_onebox_maxlength: "Discourse-viestin Onebox-esikatselun merkkien maksimimäärä."
-    blocked_onebox_domains: "Verkko-osoitteet, joista ei luoda Onebox-esikatselua."
     allowed_inline_onebox_domains: "Verkko-osoitteet, joista luodaan minimoitu Onebox-esikatselu, jos niihin linkitetään määrittämättä otsikkoa."
     enable_inline_onebox_on_all_domains: "Ohita inline_onebox_domain_whitelist-asetus ja salli Onebox-esikatselut kaikista verkko-osoitteista."
     force_custom_user_agent_hosts: "Isännät, joille käytetään mukautettua onebox-käyttäjäagenttia kaikissa pyynnöissä. (Erityisen hyödyllinen isännille, jotka rajoittavat käyttäjäagentin pääsyä)."
@@ -1446,10 +1443,8 @@ fi:
     summary_percent_filter: "Kun käyttäjä klikkaa 'Näytä ketjun tiivistelmä', näytä paras % viesteistä"
     summary_max_results: "Maksimimäärä viestejä, jotka näytetään ketjun tiivistelmässä"
     enable_system_message_replies: "Sallii käyttäjien vastata järjestelmän viesteihin, vaikka yksityisviestit eivät olisikaan käytössä"
-    enable_long_polling: "Ilmoitusten käyttämä viestiväylä voi käyttää long pollingia"
     enable_chunked_encoding: "Ota käyttöön palvelimen joukkokoodausvastaukset. Tämä ominaisuus toimii useimmissa määrityksissä, mutta jotkin välityspalvelimet saattavat puskuroida, mikä aiheuttaa vastausten viivästymisen"
     long_polling_base_url: "Perus-URL, jota käytetään long pollingissa (kun CDN tarjoaa dynaamista sisältöä, varmista että tämä on asetettu noudoksi lähteestä) esim: http://lähde.sivusto.com"
-    long_polling_interval: "Kuinka kauan palvelimen pitäisi odottaa ennen vastaamista asiakkaalle, kun lähetettävää dataa ei ole (vain kirjautuneille käyttäjille)"
     polling_interval: "Kun long polling ei ole käytössä, kuinka usein kirjautuneet käyttäjät pollaavat millisekunneissa."
     anon_polling_interval: "Kuinka usein anonyymit käyttäjät pollaavat millisekunneissa"
     background_polling_interval: "Kuinka usein asiakkaat pollaavat, millisekunneissa (kun ikkuna ei ole aktiivisena)"
@@ -1498,7 +1493,6 @@ fi:
     allowed_iframes: "Iframe src -verkkotunnusten etuliitteet, jotka Discourse voi turvallisesti sallia viesteissä"
     allowed_crawler_user_agents: "Hakurobottien käyttäjäagentit, jotka saavat tulla sivustolle. VAROITUS! TÄMÄ ASETUS ESTÄÄ KAIKKI HAKUROBOTIT, JOITA EI LISTATA TÄSSÄ!"
     blocked_crawler_user_agents: "Käyttäjäagentin nimessä oleva kirjainkoosta riippumaton yksilöllinen merkkijono, jolla tunnistetaan estettävät hakurobotit. Ei sovelleta, jos sallittujen hakurobottien luettelo on määriteltynä."
-    slow_down_crawler_user_agents: "Hakurobottien käyttäjäagentit, joiden toiminnan nopeutta rajoitetaan hakuviivemääräyksen (Crawl-delay directive) mukaisesti"
     slow_down_crawler_rate: "Jos slow_down_crawler_user_agents on määritelty, tämä nopeusrajoitus koskee kaikkia hakurobotteja (kuinka monta sekuntia pitää kulua pyyntöjen välillä)"
     content_security_policy: "Ota käyttöön epäilyttävän sisällön seulonta (Content-Security-Policy)"
     content_security_policy_report_only: "Ota käyttöön epäilyttävästä sisällöstä raportointi (Content-Security-Policy-Report-Only)"
@@ -1536,7 +1530,6 @@ fi:
     blocked_email_domains: "Pystyviivalla eroteltu luettelo sähköpostiverkkotunnuksista, joilla käyttäjät eivät voi luoda tiliä. Esimerkiksi mailinator.com|trashmail.net"
     allowed_email_domains: "Pystyviivalla eroteltu luettelo sähköpostiverkkotunnuksista, joilla käyttäjien TÄYTYY luoda tilinsä. VAROITUS: käyttäjiä, joiden sähköpostiverkkotunnus ei ole luettelossa, ei sallita!"
     auto_approve_email_domains: "Käyttäjät, joilla on sähköpostiosoite tästä verkkotunnusten luettelosta, hyväksytään automaattisesti."
-    hide_email_address_taken: "Älä kerro käyttäjälle, että käyttäjätili annetulla sähköpostiosoitteella on jo olemassa, kun hän liittyy palstalle tai pyytää salasanan palauttamista."
     log_out_strict: "Kun kirjaudutaan ulos, kirjaa käyttäjä ulos KAIKILTA laitteilta"
     version_checks: "Pingaa Discourse Hubia päivityksistä ja näytä ilmoitus <a href='%{base_path}/admin' target='_blank'>/ylläpitäjän</a> hallintapaneelissa, kun uusi versio on saatavilla"
     new_version_emails: "Lähetä sähköposti contact_email-osoitteeseen, kun uusi versio Discoursesta on saatavilla."
@@ -1652,7 +1645,6 @@ fi:
     external_emoji_url: "Emoji-kuvien ulkoisen palvelun URL-osoite. Poista käytöstä jättämällä tyhjäksi."
     use_site_small_logo_as_system_avatar: "Käytä sivuston pientä logoa järjestelmäkäyttäjän avatarin sijasta. Edellyttää, että logo on asetettu."
     restrict_letter_avatar_colors: "Luettelo kuusinumeroisista heksadesimaalisista väriarvoista, joita käytetään kirjainavatareja luotaessa."
-    selectable_avatars_enabled: "Pakota käyttäjä valitsemaan avatarinsa listalta."
     selectable_avatars: "Avatarit, joista käyttäjä voi valita."
     allow_all_attachments_for_group_messages: "Salli kaikki sähköpostiliitteet ryhmäviesteissä."
     png_to_jpg_quality: "Muunnetun JPG-tiedoston laatu (1 on huonoin laatu, 99 on paras laatu, 100 poistaa käytöstä)."
@@ -1920,7 +1912,6 @@ fi:
     display_name_on_posts: "Näytä käyttäjän koko nimi viesteissä @käyttäjätunnuksen lisäksi."
     show_time_gap_days: "Jos kahden viestin välissä on kulunut näin monta päivää, näytä aikaväli ketjussa."
     short_progress_text_threshold: "Kuinka monen viestin jälkeen ketjun edistyspalkissa näytetään vain nykyisen viestin numero. Jos muutat palkin leveyttä, voit joutua muuttamaan tätä arvoa."
-    default_code_lang: "Oletusarvoinen ohjelmointikieli syntaksin korostukseen GitHub-koodilohkoissa (auto, nohighlight, ruby, python jne.)"
     warn_reviving_old_topic_age: "Kun käyttäjä alkaa kirjoittamaan vastausta ketjuun, jonka uusin viesti on tätä vanhempi päivissä, näytetään varoitus. Poista käytöstä asettamalla arvoksi 0."
     autohighlight_all_code: "Pakota koodin korostus kaikkiin esimuotoiltuihin koodilohkoihin, vaikka käyttäjä ei määrittelisi kieltä."
     highlighted_languages: "Mitä syntaksikorostussääntöjä on käytössä. (Varoitus: liian monen kielen käyttöönotto voi vaikuttaa suorituskykyyn.) Ks. demo: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a>"
@@ -2309,13 +2300,6 @@ fi:
     cannot_delete_has_posts:
       one: "Käyttäjällä %{username} on %{count} viesti julkisessa ketjussa tai yksityisviestissä, joten häntä ei voida poistaa."
       other: "Käyttäjällä %{username} on %{count} viestiä julkisessa ketjussa tai yksityisviestissä, joten häntä ei voida poistaa."
-  reviewables_reminder:
-    submitted:
-      one: "Kohteet lähetettiin yli %{count} tunti sitten. [Tarkasta ne](%{base_path}/review)."
-      other: "Kohteet lähetettiin yli %{count} tuntia sitten. [Tarkasta ne](%{base_path}/review)."
-    subject_template:
-      one: "%{count} kohde odottaa tarkastusta"
-      other: "%{count} kodetta odottaa tarkastusta"
   unsubscribe_mailer:
     title: "Peru sähköpostimuistukset"
     subject_template: "Vahvista, ettet enää halua, että %{site_title} lähettää sinulle sähköpostimuistutuksia."
@@ -2425,47 +2409,6 @@ fi:
   test_mailer:
     title: "Sähköpostipalvelun testaus"
     subject_template: "[%{email_prefix}] Sähköpostin toimitettavuustesti"
-    text_body_template: |
-      Tämä on testiviesti sivustolta
-
-      [**%{base_url}**][0]
-
-      Sähköpostien toimittaminen on monimutkaista. Tässä on muutamia tärkeitä asioita, jotka sinun tulisi tarkistaa ensin:
-
-      – *Varmista*, että asetat "notification email" -asetuksen lähettäjän osoitteen oikein sivustosi asetuksissa. **Lähettämiesi sähköpostien lähettäjäosoitteessa määritetty verkkotunnus on se verkkotunnus, jota vastaan sähköpostisi tarkistetaan**.
-
-      – Tiedä, miten voit tarkastella sähköpostin raakaa lähdettä sähköpostiohjelmassasi, jotta voit etsiä tärkeitä vihjeitä sähköpostien otsikkotiedoista. Gmailissa se on "näytä alkuperäinen" -valinta avattavassa valikossa jokaisen postin oikeassa yläkulmassa.
-
-      – **TÄRKEÄÄ:** Onko internetpalveluntarjoajallasi käänteinen DNS-tietue, joka yhdistää verkkotunnukset ja IP-osoitteet, joista lähetät sähköpostia? [Testaa käänteinen PTR- tietueesi][2] täällä. Jos internetpalveluntarjoaja ei anna asianmukaista käänteistä DNS-osoitustietuetta, sähköpostiviestisi toimittaminen on erittäin epätodennäköistä.
-
-      – Onko verkkotunnuksesi [SPF-tietue][8] oikein? [Testaa SPF-tietueesi][1] täällä. Huomaa, että TXT on oikea virallinen tietuetyyppi SPF:lle.
-
-      – Onko verkkotunnuksesi [DKIM-tietue][3] oikein? Tämä parantaa merkittävästi sähköpostien toimitusta. [Testaa DKIM-tietueesi][7] täällä.
-
-      – Jos käytät omaa sähköpostipalvelintasi, tarkista, etteivät sähköpostipalvelimesi IP-osoitteet [eivät ole millään sähköpostien estolistalla][4]. Varmista myös, että se lähettää täysin pätevän isäntänimen, joka selvittää DNS:nsä HELO-viestissään. Jos näin ei ole, monet postipalvelut hylkäävät sähköpostiviestisi.
-
-      – Suosittelemme **lähettämään testisähköpostin osoitteeseen [mail-tester.com][mt]** varmistaaksesi, että kaikki edellä mainitut toimivat oikein.
-
-      (*Helppo* tapa on luoda tili [SendGridissä][sg], [SparkPostissa][sp], [Mailgunissa][mg] tai [Mailjetissä][mj], joilla on edullisia postituspaketteja ja soveltuvat pienille yhteisöille. Sinun täytyy kuitenkin vielä määrittää SPF- ja DKIM-tietueet DNS:ssäsi!)
-
-      Toivomme, että tämä sähköpostien toimitettavuustesti tuli perille ongelmitta!
-
-      Onnea,
-
-      Ystäväsi [Discoursella](https://www. iscourse.org)
-
-      [0]: %{base_url}
-      [1]: https://www.kitterman.com/spf/validate.html
-      [2]: https://mxtoolbox.com/ReverseLookup. spx
-      [3]: http://www.dkim.org/
-      [4]: https://whatismyipaddress.com/blacklist-check
-      [7]: https://www.mail-tester. om/spf-dkim-check
-      [8]: http://www.openspf.org/SPF_Record_Syntax
-      [sg]: https://goo.gl/r1WMF6
-      [sp]: https://www. parkpost.com/
-      [mg]: https://www.mailgun.com/
-      [mj]: https://www.mailjet.com/pricing/
-      [mt]: https://www.mail-tester.com/
   new_version_mailer:
     title: "Uusi versio"
     subject_template: "[%{email_prefix}] Uusi Discourse-versio, päivitys saatavilla"

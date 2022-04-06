@@ -11,14 +11,16 @@ const url = args[0];
 
 console.log(`Starting Discourse Smoke Test for ${url}`);
 
-const puppeteer = require("puppeteer");
+const chromeLauncher = require("chrome-launcher");
+const puppeteer = require("puppeteer-core");
 const path = require("path");
 
 (async () => {
   const browser = await puppeteer.launch({
+    executablePath: chromeLauncher.Launcher.getInstallations()[0],
     // when debugging locally setting the SHOW_BROWSER env variable can be very helpful
     headless: process.env.SHOW_BROWSER === undefined,
-    args: ["--disable-local-storage", "--no-sandbox"]
+    args: ["--disable-local-storage", "--no-sandbox"],
   });
   const page = await browser.newPage();
 
@@ -74,6 +76,13 @@ const path = require("path");
       console.log(
         "FAILED HTTP REQUEST TO " + resp.url() + " Status is: " + resp.status()
       );
+      if (resp.status() === 429) {
+        const headers = resp.headers();
+        console.log("Response headers:");
+        Object.keys(headers).forEach((key) => {
+          console.log(`${key}: ${headers[key]}`);
+        });
+      }
     }
     return resp;
   });

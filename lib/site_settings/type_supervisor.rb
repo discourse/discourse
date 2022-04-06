@@ -164,6 +164,10 @@ class SiteSettings::TypeSupervisor
       end
     end
 
+    if type == :list
+      result[:allow_any] = @allow_any[name]
+    end
+
     result[:choices] = @choices[name] if @choices.has_key? name
     result[:list_type] = @list_type[name] if @list_type.has_key? name
     result[:textarea] = @textareas[name] if @textareas.has_key? name
@@ -269,6 +273,8 @@ class SiteSettings::TypeSupervisor
       RegexSettingValidator
     when self.class.types[:string], self.class.types[:list], self.class.types[:enum]
       StringSettingValidator
+    when self.class.types[:host_list]
+      HostListSettingValidator
     else nil
     end
   end

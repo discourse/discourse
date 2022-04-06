@@ -32,8 +32,6 @@ module.exports = function prettierBytes (num) {
 }
 
 },{}],2:[function(require,module,exports){
-"use strict";
-
 function _classPrivateFieldLooseBase(receiver, privateKey) { if (!Object.prototype.hasOwnProperty.call(receiver, privateKey)) { throw new TypeError("attempted to use private field on non-instance"); } return receiver; }
 
 var id = 0;
@@ -185,7 +183,6 @@ class MultipartUploader {
     this.partsInProgress = 0;
     this.chunks = null;
     this.chunkState = null;
-    this.lockedCandidatesForBatch = [];
 
     _classPrivateFieldLooseBase(this, _initChunks)[_initChunks]();
 
@@ -217,8 +214,14 @@ class MultipartUploader {
     this.isPaused = true;
   }
 
-  abort(opts = undefined) {
-    if (opts != null && opts.really) _classPrivateFieldLooseBase(this, _abortUpload)[_abortUpload]();else this.pause();
+  abort(opts) {
+    var _opts;
+
+    if (opts === void 0) {
+      opts = undefined;
+    }
+
+    if ((_opts = opts) != null && _opts.really) _classPrivateFieldLooseBase(this, _abortUpload)[_abortUpload]();else this.pause();
   }
 
 }
@@ -329,8 +332,6 @@ function _uploadParts2() {
   const candidates = [];
 
   for (let i = 0; i < this.chunkState.length; i++) {
-    // eslint-disable-next-line no-continue
-    if (this.lockedCandidatesForBatch.includes(i)) continue;
     const state = this.chunkState[i]; // eslint-disable-next-line no-continue
 
     if (state.done || state.busy) continue;
@@ -360,11 +361,12 @@ function _uploadParts2() {
   });
 }
 
-function _retryable2({
-  before,
-  attempt,
-  after
-}) {
+function _retryable2(_ref) {
+  let {
+    before,
+    attempt,
+    after
+  } = _ref;
   const {
     retryDelays
   } = this.options;
@@ -407,12 +409,18 @@ function _retryable2({
 }
 
 async function _prepareUploadParts2(candidates) {
-  this.lockedCandidatesForBatch.push(...candidates);
+  candidates.forEach(i => {
+    this.chunkState[i].busy = true;
+  });
   const result = await _classPrivateFieldLooseBase(this, _retryable)[_retryable]({
     attempt: () => this.options.prepareUploadParts({
       key: this.key,
       uploadId: this.uploadId,
-      partNumbers: candidates.map(index => index + 1)
+      partNumbers: candidates.map(index => index + 1),
+      chunks: candidates.reduce((chunks, candidate) => ({ ...chunks,
+        // Use the part number as the index
+        [candidate + 1]: this.chunks[candidate]
+      }), {})
     })
   });
 
@@ -591,9 +599,7 @@ function _onError2(err) {
 }
 
 module.exports = MultipartUploader;
-},{"@uppy/utils/lib/AbortController":23,"@uppy/utils/lib/delay":29}],3:[function(require,module,exports){
-"use strict";
-
+},{"@uppy/utils/lib/AbortController":26,"@uppy/utils/lib/delay":32}],3:[function(require,module,exports){
 var _class, _temp;
 
 const BasePlugin = require('@uppy/core/lib/BasePlugin');
@@ -614,7 +620,7 @@ const {
   RateLimitedQueue
 } = require('@uppy/utils/lib/RateLimitedQueue');
 
-const Uploader = require('./MultipartUploader');
+const MultipartUploader = require('./MultipartUploader');
 
 function assertServerError(res) {
   if (res && res.error) {
@@ -661,7 +667,11 @@ module.exports = (_temp = _class = class AwsS3Multipart extends BasePlugin {
    */
 
 
-  resetUploaderReferences(fileID, opts = {}) {
+  resetUploaderReferences(fileID, opts) {
+    if (opts === void 0) {
+      opts = {};
+    }
+
     if (this.uploaders[fileID]) {
       this.uploaders[fileID].abort({
         really: opts.abort || false
@@ -701,30 +711,33 @@ module.exports = (_temp = _class = class AwsS3Multipart extends BasePlugin {
     }).then(assertServerError);
   }
 
-  listParts(file, {
-    key,
-    uploadId
-  }) {
+  listParts(file, _ref) {
+    let {
+      key,
+      uploadId
+    } = _ref;
     this.assertHost('listParts');
     const filename = encodeURIComponent(key);
     return this.client.get(`s3/multipart/${uploadId}?key=${filename}`).then(assertServerError);
   }
 
-  prepareUploadParts(file, {
-    key,
-    uploadId,
-    partNumbers
-  }) {
+  prepareUploadParts(file, _ref2) {
+    let {
+      key,
+      uploadId,
+      partNumbers
+    } = _ref2;
     this.assertHost('prepareUploadParts');
     const filename = encodeURIComponent(key);
     return this.client.get(`s3/multipart/${uploadId}/batch?key=${filename}&partNumbers=${partNumbers.join(',')}`).then(assertServerError);
   }
 
-  completeMultipartUpload(file, {
-    key,
-    uploadId,
-    parts
-  }) {
+  completeMultipartUpload(file, _ref3) {
+    let {
+      key,
+      uploadId,
+      parts
+    } = _ref3;
     this.assertHost('completeMultipartUpload');
     const filename = encodeURIComponent(key);
     const uploadIdEnc = encodeURIComponent(uploadId);
@@ -733,10 +746,11 @@ module.exports = (_temp = _class = class AwsS3Multipart extends BasePlugin {
     }).then(assertServerError);
   }
 
-  abortMultipartUpload(file, {
-    key,
-    uploadId
-  }) {
+  abortMultipartUpload(file, _ref4) {
+    let {
+      key,
+      uploadId
+    } = _ref4;
     this.assertHost('abortMultipartUpload');
     const filename = encodeURIComponent(key);
     const uploadIdEnc = encodeURIComponent(uploadId);
@@ -799,7 +813,7 @@ module.exports = (_temp = _class = class AwsS3Multipart extends BasePlugin {
         this.uppy.emit('s3-multipart:part-uploaded', cFile, part);
       };
 
-      const upload = new Uploader(file.data, {
+      const upload = new MultipartUploader(file.data, {
         // .bind to pass the file object to each handler.
         createMultipartUpload: this.opts.createMultipartUpload.bind(this, file),
         listParts: this.opts.listParts.bind(this, file),
@@ -928,7 +942,7 @@ module.exports = (_temp = _class = class AwsS3Multipart extends BasePlugin {
       this.uploaderEvents[file.id] = new EventTracker(this.uppy);
       this.onFileRemove(file.id, () => {
         queuedRequest.abort();
-        socket.send('pause', {});
+        socket.send('cancel', {});
         this.resetUploaderReferences(file.id, {
           abort: true
         });
@@ -955,7 +969,7 @@ module.exports = (_temp = _class = class AwsS3Multipart extends BasePlugin {
       });
       this.onCancelAll(file.id, () => {
         queuedRequest.abort();
-        socket.send('pause', {});
+        socket.send('cancel', {});
         this.resetUploaderReferences(file.id);
         resolve(`upload ${file.id} was canceled`);
       });
@@ -1103,10 +1117,8 @@ module.exports = (_temp = _class = class AwsS3Multipart extends BasePlugin {
     this.uppy.removeUploader(this.upload);
   }
 
-}, _class.VERSION = "2.1.1", _temp);
-},{"./MultipartUploader":2,"@uppy/companion-client":12,"@uppy/core/lib/BasePlugin":14,"@uppy/utils/lib/EventTracker":24,"@uppy/utils/lib/RateLimitedQueue":27,"@uppy/utils/lib/emitSocketProgress":30,"@uppy/utils/lib/getSocketHost":41}],4:[function(require,module,exports){
-"use strict";
-
+}, _class.VERSION = "2.2.1", _temp);
+},{"./MultipartUploader":2,"@uppy/companion-client":13,"@uppy/core/lib/BasePlugin":15,"@uppy/utils/lib/EventTracker":27,"@uppy/utils/lib/RateLimitedQueue":30,"@uppy/utils/lib/emitSocketProgress":33,"@uppy/utils/lib/getSocketHost":44}],4:[function(require,module,exports){
 var _getOptions, _addEventHandlerForFile, _addEventHandlerIfFileStillExists, _uploadLocalFile, _uploadRemoteFile;
 
 function _classPrivateFieldLooseBase(receiver, privateKey) { if (!Object.prototype.hasOwnProperty.call(receiver, privateKey)) { throw new TypeError("attempted to use private field on non-instance"); } return receiver; }
@@ -1117,7 +1129,7 @@ function _classPrivateFieldLooseKey(name) { return "__private_" + id++ + "_" + n
 
 const {
   nanoid
-} = require('nanoid');
+} = require('nanoid/non-secure');
 
 const {
   Provider,
@@ -1420,13 +1432,13 @@ function _uploadRemoteFile2(file) {
     });
 
     _classPrivateFieldLooseBase(this, _addEventHandlerForFile)[_addEventHandlerForFile]('file-removed', file.id, () => {
-      socket.send('pause', {});
+      socket.send('cancel', {});
       queuedRequest.abort();
       resolve(`upload ${file.id} was removed`);
     });
 
     _classPrivateFieldLooseBase(this, _addEventHandlerIfFileStillExists)[_addEventHandlerIfFileStillExists]('cancel-all', file.id, () => {
-      socket.send('pause', {});
+      socket.send('cancel', {});
       queuedRequest.abort();
       resolve(`upload ${file.id} was canceled`);
     });
@@ -1481,9 +1493,7 @@ function _uploadRemoteFile2(file) {
     return Promise.reject(err);
   }));
 }
-},{"@uppy/companion-client":12,"@uppy/utils/lib/EventTracker":24,"@uppy/utils/lib/NetworkError":25,"@uppy/utils/lib/ProgressTimeout":26,"@uppy/utils/lib/RateLimitedQueue":27,"@uppy/utils/lib/emitSocketProgress":30,"@uppy/utils/lib/getSocketHost":41,"@uppy/utils/lib/isNetworkError":45,"nanoid":53}],5:[function(require,module,exports){
-"use strict";
-
+},{"@uppy/companion-client":13,"@uppy/utils/lib/EventTracker":27,"@uppy/utils/lib/NetworkError":28,"@uppy/utils/lib/ProgressTimeout":29,"@uppy/utils/lib/RateLimitedQueue":30,"@uppy/utils/lib/emitSocketProgress":33,"@uppy/utils/lib/getSocketHost":44,"@uppy/utils/lib/isNetworkError":48,"nanoid/non-secure":57}],5:[function(require,module,exports){
 var _class, _client, _requests, _uploader, _handleUpload, _temp;
 
 function _classPrivateFieldLooseBase(receiver, privateKey) { if (!Object.prototype.hasOwnProperty.call(receiver, privateKey)) { throw new TypeError("attempted to use private field on non-instance"); } return receiver; }
@@ -1525,8 +1535,6 @@ const {
   internalRateLimitedQueue
 } = require('@uppy/utils/lib/RateLimitedQueue');
 
-const settle = require('@uppy/utils/lib/settle');
-
 const {
   RequestClient
 } = require('@uppy/companion-client');
@@ -1534,6 +1542,8 @@ const {
 const MiniXHRUpload = require('./MiniXHRUpload');
 
 const isXml = require('./isXml');
+
+const locale = require('./locale');
 
 function resolveUrl(origin, link) {
   return new URL(link, origin || undefined).toString();
@@ -1641,7 +1651,7 @@ module.exports = (_temp = (_client = /*#__PURE__*/_classPrivateFieldLooseKey("cl
         });
 
         const numberOfFiles = fileIDs.length;
-        return settle(fileIDs.map((id, index) => {
+        return Promise.allSettled(fileIDs.map((id, index) => {
           paramsPromises[id] = getUploadParameters(this.uppy.getFile(id));
           return paramsPromises[id].then(params => {
             delete paramsPromises[id];
@@ -1675,6 +1685,7 @@ module.exports = (_temp = (_client = /*#__PURE__*/_classPrivateFieldLooseKey("cl
             delete paramsPromises[id];
             const file = this.uppy.getFile(id);
             this.uppy.emit('upload-error', file, error);
+            return Promise.reject(error);
           });
         })).finally(() => {
           // cleanup.
@@ -1685,11 +1696,7 @@ module.exports = (_temp = (_client = /*#__PURE__*/_classPrivateFieldLooseKey("cl
     this.type = 'uploader';
     this.id = this.opts.id || 'AwsS3';
     this.title = 'AWS S3';
-    this.defaultLocale = {
-      strings: {
-        timedOut: 'Upload stalled for %{seconds} seconds, aborting.'
-      }
-    };
+    this.defaultLocale = locale;
     const defaultOptions = {
       timeout: 30 * 1000,
       limit: 0,
@@ -1795,10 +1802,8 @@ module.exports = (_temp = (_client = /*#__PURE__*/_classPrivateFieldLooseKey("cl
     this.uppy.removeUploader(_classPrivateFieldLooseBase(this, _handleUpload)[_handleUpload]);
   }
 
-}), _class.VERSION = "2.0.5", _temp);
-},{"./MiniXHRUpload":4,"./isXml":6,"@uppy/companion-client":12,"@uppy/core/lib/BasePlugin":14,"@uppy/utils/lib/RateLimitedQueue":27,"@uppy/utils/lib/settle":47}],6:[function(require,module,exports){
-"use strict";
-
+}), _class.VERSION = "2.0.8", _temp);
+},{"./MiniXHRUpload":4,"./isXml":6,"./locale":7,"@uppy/companion-client":13,"@uppy/core/lib/BasePlugin":15,"@uppy/utils/lib/RateLimitedQueue":30}],6:[function(require,module,exports){
 /**
  * Remove parameters like `charset=utf-8` from the end of a mime type string.
  *
@@ -1839,6 +1844,12 @@ function isXml(content, xhr) {
 
 module.exports = isXml;
 },{}],7:[function(require,module,exports){
+module.exports = {
+  strings: {
+    timedOut: 'Upload stalled for %{seconds} seconds, aborting.'
+  }
+};
+},{}],8:[function(require,module,exports){
 'use strict';
 
 class AuthError extends Error {
@@ -1851,7 +1862,7 @@ class AuthError extends Error {
 }
 
 module.exports = AuthError;
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 'use strict';
 
 const RequestClient = require('./RequestClient');
@@ -1875,7 +1886,8 @@ module.exports = class Provider extends RequestClient {
   }
 
   headers() {
-    return Promise.all([super.headers(), this.getAuthToken()]).then(([headers, token]) => {
+    return Promise.all([super.headers(), this.getAuthToken()]).then(_ref => {
+      let [headers, token] = _ref;
       const authHeaders = {};
 
       if (token) {
@@ -1912,31 +1924,53 @@ module.exports = class Provider extends RequestClient {
   getAuthToken() {
     return this.uppy.getPlugin(this.pluginId).storage.getItem(this.tokenKey);
   }
+  /**
+   * Ensure we have a preauth token if necessary. Attempts to fetch one if we don't,
+   * or rejects if loading one fails.
+   */
 
-  authUrl(queries = {}) {
-    if (this.preAuthToken) {
-      queries.uppyPreAuthToken = this.preAuthToken;
+
+  async ensurePreAuth() {
+    if (this.companionKeysParams && !this.preAuthToken) {
+      await this.fetchPreAuthToken();
+
+      if (!this.preAuthToken) {
+        throw new Error('Could not load authentication data required for third-party login. Please try again later.');
+      }
+    }
+  }
+
+  authUrl(queries) {
+    if (queries === void 0) {
+      queries = {};
     }
 
-    return `${this.hostname}/${this.id}/connect?${new URLSearchParams(queries)}`;
+    const params = new URLSearchParams(queries);
+
+    if (this.preAuthToken) {
+      params.set('uppyPreAuthToken', this.preAuthToken);
+    }
+
+    return `${this.hostname}/${this.id}/connect?${params}`;
   }
 
   fileUrl(id) {
     return `${this.hostname}/${this.id}/get/${id}`;
   }
 
-  fetchPreAuthToken() {
+  async fetchPreAuthToken() {
     if (!this.companionKeysParams) {
-      return Promise.resolve();
+      return;
     }
 
-    return this.post(`${this.id}/preauth/`, {
-      params: this.companionKeysParams
-    }).then(res => {
+    try {
+      const res = await this.post(`${this.id}/preauth/`, {
+        params: this.companionKeysParams
+      });
       this.preAuthToken = res.token;
-    }).catch(err => {
+    } catch (err) {
       this.uppy.log(`[CompanionClient] unable to fetch preAuthToken ${err}`, 'warning');
-    });
+    }
   }
 
   list(directory) {
@@ -1944,7 +1978,10 @@ module.exports = class Provider extends RequestClient {
   }
 
   logout() {
-    return this.get(`${this.id}/logout`).then(response => Promise.all([response, this.uppy.getPlugin(this.pluginId).storage.removeItem(this.tokenKey)])).then(([response]) => response);
+    return this.get(`${this.id}/logout`).then(response => Promise.all([response, this.uppy.getPlugin(this.pluginId).storage.removeItem(this.tokenKey)])).then(_ref2 => {
+      let [response] = _ref2;
+      return response;
+    });
   }
 
   static initPlugin(plugin, opts, defaultOpts) {
@@ -1980,7 +2017,7 @@ module.exports = class Provider extends RequestClient {
   }
 
 };
-},{"./RequestClient":9,"./tokenStorage":13}],9:[function(require,module,exports){
+},{"./RequestClient":10,"./tokenStorage":14}],10:[function(require,module,exports){
 'use strict';
 
 var _class, _getPostResponseFunc, _getUrl, _errorHandler, _temp;
@@ -2099,7 +2136,8 @@ module.exports = (_temp = (_getPostResponseFunc = /*#__PURE__*/_classPrivateFiel
   }
 
   preflightAndHeaders(path) {
-    return Promise.all([this.preflight(path), this.headers()]).then(([allowedHeaders, headers]) => {
+    return Promise.all([this.preflight(path), this.headers()]).then(_ref => {
+      let [allowedHeaders, headers] = _ref;
       // filter to keep only allowed Headers
       Object.keys(headers).forEach(header => {
         if (!allowedHeaders.includes(header.toLowerCase())) {
@@ -2140,7 +2178,7 @@ module.exports = (_temp = (_getPostResponseFunc = /*#__PURE__*/_classPrivateFiel
     })).then(_classPrivateFieldLooseBase(this, _getPostResponseFunc)[_getPostResponseFunc](skipPostResponse)).then(handleJSONResponse).catch(_classPrivateFieldLooseBase(this, _errorHandler)[_errorHandler](method, path));
   }
 
-}), _class.VERSION = "2.0.3", _class.defaultHeaders = {
+}), _class.VERSION = "2.0.5", _class.defaultHeaders = {
   Accept: 'application/json',
   'Content-Type': 'application/json',
   'Uppy-Versions': `@uppy/companion-client=${_class.VERSION}`
@@ -2167,7 +2205,7 @@ function _errorHandler2(method, path) {
     return Promise.reject(err);
   };
 }
-},{"./AuthError":7,"@uppy/utils/lib/fetchWithNetworkError":31}],10:[function(require,module,exports){
+},{"./AuthError":8,"@uppy/utils/lib/fetchWithNetworkError":34}],11:[function(require,module,exports){
 'use strict';
 
 const RequestClient = require('./RequestClient');
@@ -2195,9 +2233,7 @@ module.exports = class SearchProvider extends RequestClient {
   }
 
 };
-},{"./RequestClient":9}],11:[function(require,module,exports){
-"use strict";
-
+},{"./RequestClient":10}],12:[function(require,module,exports){
 var _queued, _emitter, _isOpen, _socket, _handleMessage;
 
 let _Symbol$for, _Symbol$for2;
@@ -2315,7 +2351,7 @@ module.exports = (_queued = /*#__PURE__*/_classPrivateFieldLooseKey("queued"), _
   }
 
 });
-},{"namespace-emitter":52}],12:[function(require,module,exports){
+},{"namespace-emitter":56}],13:[function(require,module,exports){
 'use strict';
 /**
  * Manages communications with Companion
@@ -2335,7 +2371,7 @@ module.exports = {
   SearchProvider,
   Socket
 };
-},{"./Provider":8,"./RequestClient":9,"./SearchProvider":10,"./Socket":11}],13:[function(require,module,exports){
+},{"./Provider":9,"./RequestClient":10,"./SearchProvider":11,"./Socket":12}],14:[function(require,module,exports){
 'use strict';
 /**
  * This module serves as an Async wrapper for LocalStorage
@@ -2358,9 +2394,7 @@ module.exports.removeItem = key => {
     resolve();
   });
 };
-},{}],14:[function(require,module,exports){
-"use strict";
-
+},{}],15:[function(require,module,exports){
 /**
  * Core plugin logic that all plugins share.
  *
@@ -2372,7 +2406,11 @@ module.exports.removeItem = key => {
 const Translator = require('@uppy/utils/lib/Translator');
 
 module.exports = class BasePlugin {
-  constructor(uppy, opts = {}) {
+  constructor(uppy, opts) {
+    if (opts === void 0) {
+      opts = {};
+    }
+
     this.uppy = uppy;
     this.opts = opts;
   }
@@ -2450,9 +2488,169 @@ module.exports = class BasePlugin {
   afterUpdate() {}
 
 };
-},{"@uppy/utils/lib/Translator":28}],15:[function(require,module,exports){
-"use strict";
+},{"@uppy/utils/lib/Translator":31}],16:[function(require,module,exports){
+/* eslint-disable max-classes-per-file, class-methods-use-this */
 
+/* global AggregateError */
+const prettierBytes = require('@transloadit/prettier-bytes');
+
+const match = require('mime-match');
+
+const defaultOptions = {
+  maxFileSize: null,
+  minFileSize: null,
+  maxTotalFileSize: null,
+  maxNumberOfFiles: null,
+  minNumberOfFiles: null,
+  allowedFileTypes: null,
+  requiredMetaFields: []
+};
+
+class RestrictionError extends Error {
+  constructor() {
+    super(...arguments);
+    this.isRestriction = true;
+  }
+
+}
+
+if (typeof AggregateError === 'undefined') {
+  // eslint-disable-next-line no-global-assign
+  // TODO: remove this "polyfill" in the next major.
+  globalThis.AggregateError = class AggregateError extends Error {
+    constructor(errors, message) {
+      super(message);
+      this.errors = errors;
+    }
+
+  };
+}
+
+class Restricter {
+  constructor(getOpts, i18n) {
+    this.i18n = i18n;
+
+    this.getOpts = () => {
+      const opts = getOpts();
+
+      if (opts.restrictions.allowedFileTypes != null && !Array.isArray(opts.restrictions.allowedFileTypes)) {
+        throw new TypeError('`restrictions.allowedFileTypes` must be an array');
+      }
+
+      return opts;
+    };
+  }
+
+  validate(file, files) {
+    const {
+      maxFileSize,
+      minFileSize,
+      maxTotalFileSize,
+      maxNumberOfFiles,
+      allowedFileTypes
+    } = this.getOpts().restrictions;
+
+    if (maxNumberOfFiles && files.length + 1 > maxNumberOfFiles) {
+      throw new RestrictionError(`${this.i18n('youCanOnlyUploadX', {
+        smart_count: maxNumberOfFiles
+      })}`);
+    }
+
+    if (allowedFileTypes) {
+      const isCorrectFileType = allowedFileTypes.some(type => {
+        // check if this is a mime-type
+        if (type.includes('/')) {
+          if (!file.type) return false;
+          return match(file.type.replace(/;.*?$/, ''), type);
+        } // otherwise this is likely an extension
+
+
+        if (type[0] === '.' && file.extension) {
+          return file.extension.toLowerCase() === type.substr(1).toLowerCase();
+        }
+
+        return false;
+      });
+
+      if (!isCorrectFileType) {
+        const allowedFileTypesString = allowedFileTypes.join(', ');
+        throw new RestrictionError(this.i18n('youCanOnlyUploadFileTypes', {
+          types: allowedFileTypesString
+        }));
+      }
+    } // We can't check maxTotalFileSize if the size is unknown.
+
+
+    if (maxTotalFileSize && file.size != null) {
+      const totalFilesSize = files.reduce((total, f) => total + f.size, file.size);
+
+      if (totalFilesSize > maxTotalFileSize) {
+        throw new RestrictionError(this.i18n('exceedsSize', {
+          size: prettierBytes(maxTotalFileSize),
+          file: file.name
+        }));
+      }
+    } // We can't check maxFileSize if the size is unknown.
+
+
+    if (maxFileSize && file.size != null && file.size > maxFileSize) {
+      throw new RestrictionError(this.i18n('exceedsSize', {
+        size: prettierBytes(maxFileSize),
+        file: file.name
+      }));
+    } // We can't check minFileSize if the size is unknown.
+
+
+    if (minFileSize && file.size != null && file.size < minFileSize) {
+      throw new RestrictionError(this.i18n('inferiorSize', {
+        size: prettierBytes(minFileSize)
+      }));
+    }
+  }
+
+  validateMinNumberOfFiles(files) {
+    const {
+      minNumberOfFiles
+    } = this.getOpts().restrictions;
+
+    if (Object.keys(files).length < minNumberOfFiles) {
+      throw new RestrictionError(this.i18n('youHaveToAtLeastSelectX', {
+        smart_count: minNumberOfFiles
+      }));
+    }
+  }
+
+  getMissingRequiredMetaFields(file) {
+    const error = new RestrictionError(this.i18n('missingRequiredMetaFieldOnFile', {
+      fileName: file.name
+    }));
+    const {
+      requiredMetaFields
+    } = this.getOpts().restrictions; // TODO: migrate to Object.hasOwn in the next major.
+
+    const own = Object.prototype.hasOwnProperty;
+    const missingFields = [];
+
+    for (const field of requiredMetaFields) {
+      if (!own.call(file.meta, field) || file.meta[field] === '') {
+        missingFields.push(field);
+      }
+    }
+
+    return {
+      missingFields,
+      error
+    };
+  }
+
+}
+
+module.exports = {
+  Restricter,
+  defaultOptions,
+  RestrictionError
+};
+},{"@transloadit/prettier-bytes":1,"mime-match":55}],17:[function(require,module,exports){
 function _classPrivateFieldLooseBase(receiver, privateKey) { if (!Object.prototype.hasOwnProperty.call(receiver, privateKey)) { throw new TypeError("attempted to use private field on non-instance"); } return receiver; }
 
 var id = 0;
@@ -2477,7 +2675,11 @@ const BasePlugin = require('./BasePlugin');
 function debounce(fn) {
   let calling = null;
   let latestArgs = null;
-  return (...args) => {
+  return function () {
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
     latestArgs = args;
 
     if (!calling) {
@@ -2505,8 +2707,8 @@ function debounce(fn) {
 var _updateUI = /*#__PURE__*/_classPrivateFieldLooseKey("updateUI");
 
 class UIPlugin extends BasePlugin {
-  constructor(...args) {
-    super(...args);
+  constructor() {
+    super(...arguments);
     Object.defineProperty(this, _updateUI, {
       writable: true,
       value: void 0
@@ -2617,7 +2819,9 @@ class UIPlugin extends BasePlugin {
 }
 
 module.exports = UIPlugin;
-},{"./BasePlugin":14,"@uppy/utils/lib/findDOMElement":32,"preact":55}],16:[function(require,module,exports){
+},{"./BasePlugin":15,"@uppy/utils/lib/findDOMElement":35,"preact":58}],18:[function(require,module,exports){
+/* eslint-disable max-classes-per-file */
+
 /* global AggregateError */
 'use strict';
 
@@ -2635,13 +2839,9 @@ const ee = require('namespace-emitter');
 
 const {
   nanoid
-} = require('nanoid');
+} = require('nanoid/non-secure');
 
 const throttle = require('lodash.throttle');
-
-const prettierBytes = require('@transloadit/prettier-bytes');
-
-const match = require('mime-match');
 
 const DefaultStore = require('@uppy/store-default');
 
@@ -2658,35 +2858,16 @@ const getFileName = require('./getFileName');
 const {
   justErrorsLogger,
   debugLogger
-} = require('./loggers'); // Exported from here.
+} = require('./loggers');
 
+const {
+  Restricter,
+  defaultOptions: defaultRestrictionOptions,
+  RestrictionError
+} = require('./Restricter');
 
-class RestrictionError extends Error {
-  constructor(...args) {
-    super(...args);
-    this.isRestriction = true;
-  }
+const locale = require('./locale'); // Exported from here.
 
-}
-
-if (typeof AggregateError === 'undefined') {
-  // eslint-disable-next-line no-global-assign
-  globalThis.AggregateError = class AggregateError extends Error {
-    constructor(message, errors) {
-      super(message);
-      this.errors = errors;
-    }
-
-  };
-}
-
-class AggregateRestrictionError extends AggregateError {
-  constructor(...args) {
-    super(...args);
-    this.isRestriction = true;
-  }
-
-}
 /**
  * Uppy Core module.
  * Manages plugins, state updates, acts as an event bus,
@@ -2695,6 +2876,8 @@ class AggregateRestrictionError extends AggregateError {
 
 
 var _plugins = /*#__PURE__*/_classPrivateFieldLooseKey("plugins");
+
+var _restricter = /*#__PURE__*/_classPrivateFieldLooseKey("restricter");
 
 var _storeUnsubscribe = /*#__PURE__*/_classPrivateFieldLooseKey("storeUnsubscribe");
 
@@ -2706,13 +2889,11 @@ var _uploaders = /*#__PURE__*/_classPrivateFieldLooseKey("uploaders");
 
 var _postProcessors = /*#__PURE__*/_classPrivateFieldLooseKey("postProcessors");
 
-var _checkRestrictions = /*#__PURE__*/_classPrivateFieldLooseKey("checkRestrictions");
+var _informAndEmit = /*#__PURE__*/_classPrivateFieldLooseKey("informAndEmit");
 
-var _checkMinNumberOfFiles = /*#__PURE__*/_classPrivateFieldLooseKey("checkMinNumberOfFiles");
+var _checkRequiredMetaFieldsOnFile = /*#__PURE__*/_classPrivateFieldLooseKey("checkRequiredMetaFieldsOnFile");
 
 var _checkRequiredMetaFields = /*#__PURE__*/_classPrivateFieldLooseKey("checkRequiredMetaFields");
-
-var _showOrLogErrorAndThrow = /*#__PURE__*/_classPrivateFieldLooseKey("showOrLogErrorAndThrow");
 
 var _assertNewUploadAllowed = /*#__PURE__*/_classPrivateFieldLooseKey("assertNewUploadAllowed");
 
@@ -2770,21 +2951,22 @@ class Uppy {
     Object.defineProperty(this, _assertNewUploadAllowed, {
       value: _assertNewUploadAllowed2
     });
-    Object.defineProperty(this, _showOrLogErrorAndThrow, {
-      value: _showOrLogErrorAndThrow2
-    });
     Object.defineProperty(this, _checkRequiredMetaFields, {
       value: _checkRequiredMetaFields2
     });
-    Object.defineProperty(this, _checkMinNumberOfFiles, {
-      value: _checkMinNumberOfFiles2
+    Object.defineProperty(this, _checkRequiredMetaFieldsOnFile, {
+      value: _checkRequiredMetaFieldsOnFile2
     });
-    Object.defineProperty(this, _checkRestrictions, {
-      value: _checkRestrictions2
+    Object.defineProperty(this, _informAndEmit, {
+      value: _informAndEmit2
     });
     Object.defineProperty(this, _plugins, {
       writable: true,
       value: Object.create(null)
+    });
+    Object.defineProperty(this, _restricter, {
+      writable: true,
+      value: void 0
     });
     Object.defineProperty(this, _storeUnsubscribe, {
       writable: true,
@@ -2810,60 +2992,7 @@ class Uppy {
       writable: true,
       value: this.updateOnlineStatus.bind(this)
     });
-    this.defaultLocale = {
-      strings: {
-        addBulkFilesFailed: {
-          0: 'Failed to add %{smart_count} file due to an internal error',
-          1: 'Failed to add %{smart_count} files due to internal errors'
-        },
-        youCanOnlyUploadX: {
-          0: 'You can only upload %{smart_count} file',
-          1: 'You can only upload %{smart_count} files'
-        },
-        youHaveToAtLeastSelectX: {
-          0: 'You have to select at least %{smart_count} file',
-          1: 'You have to select at least %{smart_count} files'
-        },
-        exceedsSize: '%{file} exceeds maximum allowed size of %{size}',
-        missingRequiredMetaField: 'Missing required meta fields',
-        missingRequiredMetaFieldOnFile: 'Missing required meta fields in %{fileName}',
-        inferiorSize: 'This file is smaller than the allowed size of %{size}',
-        youCanOnlyUploadFileTypes: 'You can only upload: %{types}',
-        noMoreFilesAllowed: 'Cannot add more files',
-        noDuplicates: 'Cannot add the duplicate file \'%{fileName}\', it already exists',
-        companionError: 'Connection with Companion failed',
-        authAborted: 'Authentication aborted',
-        companionUnauthorizeHint: 'To unauthorize to your %{provider} account, please go to %{url}',
-        failedToUpload: 'Failed to upload %{file}',
-        noInternetConnection: 'No Internet connection',
-        connectedToInternet: 'Connected to the Internet',
-        // Strings for remote providers
-        noFilesFound: 'You have no files or folders here',
-        selectX: {
-          0: 'Select %{smart_count}',
-          1: 'Select %{smart_count}'
-        },
-        allFilesFromFolderNamed: 'All files from folder %{name}',
-        openFolderNamed: 'Open folder %{name}',
-        cancel: 'Cancel',
-        logOut: 'Log out',
-        filter: 'Filter',
-        resetFilter: 'Reset filter',
-        loading: 'Loading...',
-        authenticateWithTitle: 'Please authenticate with %{pluginName} to select files',
-        authenticateWith: 'Connect to %{pluginName}',
-        signInWithGoogle: 'Sign in with Google',
-        searchImages: 'Search for images',
-        enterTextToSearch: 'Enter text to search for images',
-        backToSearch: 'Back to Search',
-        emptyFolderAdded: 'No files were added from empty folder',
-        folderAlreadyAdded: 'The folder "%{folder}" was already added',
-        folderAdded: {
-          0: 'Added %{smart_count} file from %{folder}',
-          1: 'Added %{smart_count} files from %{folder}'
-        }
-      }
-    };
+    this.defaultLocale = locale;
     const defaultOptions = {
       id: 'uppy',
       autoProceed: false,
@@ -2874,15 +3003,7 @@ class Uppy {
       allowMultipleUploads: true,
       allowMultipleUploadBatches: true,
       debug: false,
-      restrictions: {
-        maxFileSize: null,
-        minFileSize: null,
-        maxTotalFileSize: null,
-        maxNumberOfFiles: null,
-        minNumberOfFiles: null,
-        allowedFileTypes: null,
-        requiredMetaFields: []
-      },
+      restrictions: defaultRestrictionOptions,
       meta: {},
       onBeforeFileAdded: currentFile => currentFile,
       onBeforeUpload: files => files,
@@ -2907,11 +3028,6 @@ class Uppy {
     }
 
     this.log(`Using Core v${this.constructor.VERSION}`);
-
-    if (this.opts.restrictions.allowedFileTypes && this.opts.restrictions.allowedFileTypes !== null && !Array.isArray(this.opts.restrictions.allowedFileTypes)) {
-      throw new TypeError('`restrictions.allowedFileTypes` must be an array');
-    }
-
     this.i18nInit(); // ___Why throttle at 500ms?
     //    - We must throttle at >250ms for superfocus in Dashboard to work well
     //    (because animation takes 0.25s, and we want to wait for all animations to be over before refocusing).
@@ -2941,6 +3057,7 @@ class Uppy {
       info: [],
       recoveredState: null
     });
+    _classPrivateFieldLooseBase(this, _restricter)[_restricter] = new Restricter(() => this.opts, this.i18n);
     _classPrivateFieldLooseBase(this, _storeUnsubscribe)[_storeUnsubscribe] = this.store.subscribe((prevState, nextState, patch) => {
       this.emit('state-update', prevState, nextState, patch);
       this.updateAll(nextState);
@@ -2953,7 +3070,11 @@ class Uppy {
     _classPrivateFieldLooseBase(this, _addListeners)[_addListeners]();
   }
 
-  emit(event, ...args) {
+  emit(event) {
+    for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+      args[_key - 1] = arguments[_key];
+    }
+
     _classPrivateFieldLooseBase(this, _emitter)[_emitter].emit(event, ...args);
   }
 
@@ -3185,9 +3306,12 @@ class Uppy {
       error
     } = this.getState();
     const files = Object.values(filesObject);
-    const inProgressFiles = files.filter(({
-      progress
-    }) => !progress.uploadComplete && progress.uploadStarted);
+    const inProgressFiles = files.filter(_ref => {
+      let {
+        progress
+      } = _ref;
+      return !progress.uploadComplete && progress.uploadStarted;
+    });
     const newFiles = files.filter(file => !file.progress.uploadStarted);
     const startedFiles = files.filter(file => file.progress.uploadStarted || file.progress.preprocess || file.progress.postprocess);
     const uploadStartedFiles = files.filter(file => file.progress.uploadStarted);
@@ -3214,19 +3338,28 @@ class Uppy {
       isSomeGhost: files.some(file => file.isGhost)
     };
   }
-  /**
-   * A public wrapper for _checkRestrictions — checks if a file passes a set of restrictions.
-   * For use in UI pluigins (like Providers), to disallow selecting files that won’t pass restrictions.
-   *
-   * @param {object} file object to check
-   * @param {Array} [files] array to check maxNumberOfFiles and maxTotalFileSize
-   * @returns {object} { result: true/false, reason: why file didn’t pass restrictions }
-   */
+  /*
+  * @constructs
+  * @param { Error } error
+  * @param { undefined } file
+  */
+
+  /*
+  * @constructs
+  * @param { RestrictionError } error
+  * @param { UppyFile | undefined } file
+  */
 
 
   validateRestrictions(file, files) {
+    if (files === void 0) {
+      files = this.getFiles();
+    }
+
+    // TODO: directly return the Restriction error in next major version.
+    // we create RestrictionError's just to discard immediately, which doesn't make sense.
     try {
-      _classPrivateFieldLooseBase(this, _checkRestrictions)[_checkRestrictions](file, files);
+      _classPrivateFieldLooseBase(this, _restricter)[_restricter].validate(file, files);
 
       return {
         result: true
@@ -3238,15 +3371,6 @@ class Uppy {
       };
     }
   }
-  /**
-   * Check if file passes a set of restrictions set in options: maxFileSize, minFileSize,
-   * maxNumberOfFiles and allowedFileTypes.
-   *
-   * @param {object} file object to check
-   * @param {Array} [files] array to check maxNumberOfFiles and maxTotalFileSize
-   * @private
-   */
-
 
   checkIfFileAlreadyExists(fileID) {
     const {
@@ -3451,7 +3575,11 @@ class Uppy {
     }
   }
 
-  removeFile(fileID, reason = null) {
+  removeFile(fileID, reason) {
+    if (reason === void 0) {
+      reason = null;
+    }
+
     this.removeFiles([fileID], reason);
   }
 
@@ -3837,7 +3965,15 @@ class Uppy {
    */
 
 
-  info(message, type = 'info', duration = 3000) {
+  info(message, type, duration) {
+    if (type === void 0) {
+      type = 'info';
+    }
+
+    if (duration === void 0) {
+      duration = 3000;
+    }
+
     const isComplexMessage = typeof message === 'object';
     this.setState({
       info: [...this.getState().info, {
@@ -3901,8 +4037,8 @@ class Uppy {
    */
 
 
-  [_Symbol$for2](...args) {
-    return _classPrivateFieldLooseBase(this, _createUpload)[_createUpload](...args);
+  [_Symbol$for2]() {
+    return _classPrivateFieldLooseBase(this, _createUpload)[_createUpload](...arguments);
   }
 
   /**
@@ -3968,12 +4104,19 @@ class Uppy {
       });
     }
 
-    return Promise.resolve().then(() => {
-      _classPrivateFieldLooseBase(this, _checkMinNumberOfFiles)[_checkMinNumberOfFiles](files);
+    return Promise.resolve().then(() => _classPrivateFieldLooseBase(this, _restricter)[_restricter].validateMinNumberOfFiles(files)).catch(err => {
+      _classPrivateFieldLooseBase(this, _informAndEmit)[_informAndEmit](err);
 
-      _classPrivateFieldLooseBase(this, _checkRequiredMetaFields)[_checkRequiredMetaFields](files);
+      throw err;
+    }).then(() => {
+      if (!_classPrivateFieldLooseBase(this, _checkRequiredMetaFields)[_checkRequiredMetaFields](files)) {
+        throw new RestrictionError(this.i18n('missingRequiredMetaField'));
+      }
     }).catch(err => {
-      _classPrivateFieldLooseBase(this, _showOrLogErrorAndThrow)[_showOrLogErrorAndThrow](err);
+      // Doing this in a separate catch because we already emited and logged
+      // all the errors in `checkRequiredMetaFields` so we only throw a generic
+      // missing fields error here.
+      throw err;
     }).then(() => {
       const {
         currentUploads
@@ -3993,170 +4136,61 @@ class Uppy {
 
       return _classPrivateFieldLooseBase(this, _runUpload)[_runUpload](uploadID);
     }).catch(err => {
-      _classPrivateFieldLooseBase(this, _showOrLogErrorAndThrow)[_showOrLogErrorAndThrow](err, {
-        showInformer: false
-      });
+      this.emit('error', err);
+      this.log(err, 'error');
+      throw err;
     });
   }
 
 }
 
-function _checkRestrictions2(file, files = this.getFiles()) {
+function _informAndEmit2(error, file) {
   const {
-    maxFileSize,
-    minFileSize,
-    maxTotalFileSize,
-    maxNumberOfFiles,
-    allowedFileTypes
-  } = this.opts.restrictions;
+    message,
+    details = ''
+  } = error;
 
-  if (maxNumberOfFiles) {
-    if (files.length + 1 > maxNumberOfFiles) {
-      throw new RestrictionError(`${this.i18n('youCanOnlyUploadX', {
-        smart_count: maxNumberOfFiles
-      })}`);
-    }
+  if (error.isRestriction) {
+    this.emit('restriction-failed', file, error);
+  } else {
+    this.emit('error', error);
   }
 
-  if (allowedFileTypes) {
-    const isCorrectFileType = allowedFileTypes.some(type => {
-      // check if this is a mime-type
-      if (type.indexOf('/') > -1) {
-        if (!file.type) return false;
-        return match(file.type.replace(/;.*?$/, ''), type);
-      } // otherwise this is likely an extension
-
-
-      if (type[0] === '.' && file.extension) {
-        return file.extension.toLowerCase() === type.substr(1).toLowerCase();
-      }
-
-      return false;
-    });
-
-    if (!isCorrectFileType) {
-      const allowedFileTypesString = allowedFileTypes.join(', ');
-      throw new RestrictionError(this.i18n('youCanOnlyUploadFileTypes', {
-        types: allowedFileTypesString
-      }));
-    }
-  } // We can't check maxTotalFileSize if the size is unknown.
-
-
-  if (maxTotalFileSize && file.size != null) {
-    let totalFilesSize = 0;
-    totalFilesSize += file.size;
-    files.forEach(f => {
-      totalFilesSize += f.size;
-    });
-
-    if (totalFilesSize > maxTotalFileSize) {
-      throw new RestrictionError(this.i18n('exceedsSize', {
-        size: prettierBytes(maxTotalFileSize),
-        file: file.name
-      }));
-    }
-  } // We can't check maxFileSize if the size is unknown.
-
-
-  if (maxFileSize && file.size != null) {
-    if (file.size > maxFileSize) {
-      throw new RestrictionError(this.i18n('exceedsSize', {
-        size: prettierBytes(maxFileSize),
-        file: file.name
-      }));
-    }
-  } // We can't check minFileSize if the size is unknown.
-
-
-  if (minFileSize && file.size != null) {
-    if (file.size < minFileSize) {
-      throw new RestrictionError(this.i18n('inferiorSize', {
-        size: prettierBytes(minFileSize)
-      }));
-    }
-  }
+  this.info({
+    message,
+    details
+  }, 'error', this.opts.infoTimeout);
+  this.log(`${message} ${details}`.trim(), 'error');
 }
 
-function _checkMinNumberOfFiles2(files) {
+function _checkRequiredMetaFieldsOnFile2(file) {
   const {
-    minNumberOfFiles
-  } = this.opts.restrictions;
+    missingFields,
+    error
+  } = _classPrivateFieldLooseBase(this, _restricter)[_restricter].getMissingRequiredMetaFields(file);
 
-  if (Object.keys(files).length < minNumberOfFiles) {
-    throw new RestrictionError(`${this.i18n('youHaveToAtLeastSelectX', {
-      smart_count: minNumberOfFiles
-    })}`);
+  if (missingFields.length > 0) {
+    this.setFileState(file.id, {
+      missingRequiredMetaFields: missingFields
+    });
+    this.log(error.message);
+    this.emit('restriction-failed', file, error);
+    return false;
   }
+
+  return true;
 }
 
 function _checkRequiredMetaFields2(files) {
-  const {
-    requiredMetaFields
-  } = this.opts.restrictions;
-  const {
-    hasOwnProperty
-  } = Object.prototype;
-  const errors = [];
+  let success = true;
 
-  for (const fileID of Object.keys(files)) {
-    const file = this.getFile(fileID);
-
-    for (let i = 0; i < requiredMetaFields.length; i++) {
-      if (!hasOwnProperty.call(file.meta, requiredMetaFields[i]) || file.meta[requiredMetaFields[i]] === '') {
-        const err = new RestrictionError(`${this.i18n('missingRequiredMetaFieldOnFile', {
-          fileName: file.name
-        })}`);
-        errors.push(err);
-
-        _classPrivateFieldLooseBase(this, _showOrLogErrorAndThrow)[_showOrLogErrorAndThrow](err, {
-          file,
-          showInformer: false,
-          throwErr: false
-        });
-      }
+  for (const file of Object.values(files)) {
+    if (!_classPrivateFieldLooseBase(this, _checkRequiredMetaFieldsOnFile)[_checkRequiredMetaFieldsOnFile](file)) {
+      success = false;
     }
   }
 
-  if (errors.length) {
-    throw new AggregateRestrictionError(`${this.i18n('missingRequiredMetaField')}`, errors);
-  }
-}
-
-function _showOrLogErrorAndThrow2(err, {
-  showInformer = true,
-  file = null,
-  throwErr = true
-} = {}) {
-  const message = typeof err === 'object' ? err.message : err;
-  const details = typeof err === 'object' && err.details ? err.details : ''; // Restriction errors should be logged, but not as errors,
-  // as they are expected and shown in the UI.
-
-  let logMessageWithDetails = message;
-
-  if (details) {
-    logMessageWithDetails += ` ${details}`;
-  }
-
-  if (err.isRestriction) {
-    this.log(logMessageWithDetails);
-    this.emit('restriction-failed', file, err);
-  } else {
-    this.log(logMessageWithDetails, 'error');
-  } // Sometimes informer has to be shown manually by the developer,
-  // for example, in `onBeforeFileAdded`.
-
-
-  if (showInformer) {
-    this.info({
-      message,
-      details
-    }, 'error', this.opts.infoTimeout);
-  }
-
-  if (throwErr) {
-    throw typeof err === 'object' ? err : new Error(err);
-  }
+  return success;
 }
 
 function _assertNewUploadAllowed2(file) {
@@ -4165,9 +4199,11 @@ function _assertNewUploadAllowed2(file) {
   } = this.getState();
 
   if (allowNewUpload === false) {
-    _classPrivateFieldLooseBase(this, _showOrLogErrorAndThrow)[_showOrLogErrorAndThrow](new RestrictionError(this.i18n('noMoreFilesAllowed')), {
-      file
-    });
+    const error = new RestrictionError(this.i18n('noMoreFilesAllowed'));
+
+    _classPrivateFieldLooseBase(this, _informAndEmit)[_informAndEmit](error, file);
+
+    throw error;
   }
 }
 
@@ -4185,9 +4221,9 @@ function _checkAndCreateFileStateObject2(files, fileDescriptor) {
       fileName
     }));
 
-    _classPrivateFieldLooseBase(this, _showOrLogErrorAndThrow)[_showOrLogErrorAndThrow](error, {
-      file: fileDescriptor
-    });
+    _classPrivateFieldLooseBase(this, _informAndEmit)[_informAndEmit](error, fileDescriptor);
+
+    throw error;
   }
 
   const meta = fileDescriptor.meta || {};
@@ -4221,10 +4257,9 @@ function _checkAndCreateFileStateObject2(files, fileDescriptor) {
 
   if (onBeforeFileAddedResult === false) {
     // Don’t show UI info for this error, as it should be done by the developer
-    _classPrivateFieldLooseBase(this, _showOrLogErrorAndThrow)[_showOrLogErrorAndThrow](new RestrictionError('Cannot add the file because onBeforeFileAdded returned false.'), {
-      showInformer: false,
-      fileDescriptor
-    });
+    const error = new RestrictionError('Cannot add the file because onBeforeFileAdded returned false.');
+    this.emit('restriction-failed', fileDescriptor, error);
+    throw error;
   } else if (typeof onBeforeFileAddedResult === 'object' && onBeforeFileAddedResult !== null) {
     newFile = onBeforeFileAddedResult;
   }
@@ -4232,11 +4267,11 @@ function _checkAndCreateFileStateObject2(files, fileDescriptor) {
   try {
     const filesArray = Object.keys(files).map(i => files[i]);
 
-    _classPrivateFieldLooseBase(this, _checkRestrictions)[_checkRestrictions](newFile, filesArray);
+    _classPrivateFieldLooseBase(this, _restricter)[_restricter].validate(newFile, filesArray);
   } catch (err) {
-    _classPrivateFieldLooseBase(this, _showOrLogErrorAndThrow)[_showOrLogErrorAndThrow](err, {
-      file: newFile
-    });
+    _classPrivateFieldLooseBase(this, _informAndEmit)[_informAndEmit](err, newFile);
+
+    throw err;
   }
 
   return newFile;
@@ -4296,13 +4331,9 @@ function _addListeners2() {
         file: file.name
       });
 
-      _classPrivateFieldLooseBase(this, _showOrLogErrorAndThrow)[_showOrLogErrorAndThrow](newError, {
-        throwErr: false
-      });
+      _classPrivateFieldLooseBase(this, _informAndEmit)[_informAndEmit](newError);
     } else {
-      _classPrivateFieldLooseBase(this, _showOrLogErrorAndThrow)[_showOrLogErrorAndThrow](error, {
-        throwErr: false
-      });
+      _classPrivateFieldLooseBase(this, _informAndEmit)[_informAndEmit](error);
     }
   });
   this.on('upload', () => {
@@ -4418,6 +4449,11 @@ function _addListeners2() {
   this.on('restored', () => {
     // Files may have changed--ensure progress is still accurate.
     this.calculateTotalProgress();
+  });
+  this.on('dashboard:file-edit-complete', file => {
+    if (file) {
+      _classPrivateFieldLooseBase(this, _checkRequiredMetaFieldsOnFile)[_checkRequiredMetaFieldsOnFile](file);
+    }
   }); // show informer if offline
 
   if (typeof window !== 'undefined' && window.addEventListener) {
@@ -4427,7 +4463,11 @@ function _addListeners2() {
   }
 }
 
-function _createUpload2(fileIDs, opts = {}) {
+function _createUpload2(fileIDs, opts) {
+  if (opts === void 0) {
+    opts = {};
+  }
+
   // uppy.retryAll sets this to true — when retrying we want to ignore `allowNewUpload: false`
   const {
     forceAllowNewUpload = false
@@ -4506,8 +4546,6 @@ async function _runUpload2(uploadID) {
       currentUpload = currentUploads[uploadID];
     }
   } catch (err) {
-    this.emit('error', err);
-
     _classPrivateFieldLooseBase(this, _removeUpload)[_removeUpload](uploadID);
 
     throw err;
@@ -4565,11 +4603,9 @@ async function _runUpload2(uploadID) {
   return result;
 }
 
-Uppy.VERSION = "2.1.1";
+Uppy.VERSION = "2.1.6";
 module.exports = Uppy;
-},{"./getFileName":17,"./loggers":19,"./supportsUploadProgress":20,"@transloadit/prettier-bytes":1,"@uppy/store-default":22,"@uppy/utils/lib/Translator":28,"@uppy/utils/lib/generateFileID":33,"@uppy/utils/lib/getFileNameAndExtension":39,"@uppy/utils/lib/getFileType":40,"lodash.throttle":50,"mime-match":51,"namespace-emitter":52,"nanoid":53}],17:[function(require,module,exports){
-"use strict";
-
+},{"./Restricter":16,"./getFileName":19,"./locale":21,"./loggers":22,"./supportsUploadProgress":23,"@uppy/store-default":25,"@uppy/utils/lib/Translator":31,"@uppy/utils/lib/generateFileID":36,"@uppy/utils/lib/getFileNameAndExtension":42,"@uppy/utils/lib/getFileType":43,"lodash.throttle":54,"namespace-emitter":56,"nanoid/non-secure":57}],19:[function(require,module,exports){
 module.exports = function getFileName(fileType, fileDescriptor) {
   if (fileDescriptor.name) {
     return fileDescriptor.name;
@@ -4581,7 +4617,7 @@ module.exports = function getFileName(fileType, fileDescriptor) {
 
   return 'noname';
 };
-},{}],18:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 'use strict';
 
 const Uppy = require('./Uppy');
@@ -4599,9 +4635,62 @@ module.exports.Uppy = Uppy;
 module.exports.UIPlugin = UIPlugin;
 module.exports.BasePlugin = BasePlugin;
 module.exports.debugLogger = debugLogger;
-},{"./BasePlugin":14,"./UIPlugin":15,"./Uppy":16,"./loggers":19}],19:[function(require,module,exports){
-"use strict";
-
+},{"./BasePlugin":15,"./UIPlugin":17,"./Uppy":18,"./loggers":22}],21:[function(require,module,exports){
+module.exports = {
+  strings: {
+    addBulkFilesFailed: {
+      0: 'Failed to add %{smart_count} file due to an internal error',
+      1: 'Failed to add %{smart_count} files due to internal errors'
+    },
+    youCanOnlyUploadX: {
+      0: 'You can only upload %{smart_count} file',
+      1: 'You can only upload %{smart_count} files'
+    },
+    youHaveToAtLeastSelectX: {
+      0: 'You have to select at least %{smart_count} file',
+      1: 'You have to select at least %{smart_count} files'
+    },
+    exceedsSize: '%{file} exceeds maximum allowed size of %{size}',
+    missingRequiredMetaField: 'Missing required meta fields',
+    missingRequiredMetaFieldOnFile: 'Missing required meta fields in %{fileName}',
+    inferiorSize: 'This file is smaller than the allowed size of %{size}',
+    youCanOnlyUploadFileTypes: 'You can only upload: %{types}',
+    noMoreFilesAllowed: 'Cannot add more files',
+    noDuplicates: "Cannot add the duplicate file '%{fileName}', it already exists",
+    companionError: 'Connection with Companion failed',
+    authAborted: 'Authentication aborted',
+    companionUnauthorizeHint: 'To unauthorize to your %{provider} account, please go to %{url}',
+    failedToUpload: 'Failed to upload %{file}',
+    noInternetConnection: 'No Internet connection',
+    connectedToInternet: 'Connected to the Internet',
+    // Strings for remote providers
+    noFilesFound: 'You have no files or folders here',
+    selectX: {
+      0: 'Select %{smart_count}',
+      1: 'Select %{smart_count}'
+    },
+    allFilesFromFolderNamed: 'All files from folder %{name}',
+    openFolderNamed: 'Open folder %{name}',
+    cancel: 'Cancel',
+    logOut: 'Log out',
+    filter: 'Filter',
+    resetFilter: 'Reset filter',
+    loading: 'Loading...',
+    authenticateWithTitle: 'Please authenticate with %{pluginName} to select files',
+    authenticateWith: 'Connect to %{pluginName}',
+    signInWithGoogle: 'Sign in with Google',
+    searchImages: 'Search for images',
+    enterTextToSearch: 'Enter text to search for images',
+    search: 'Search',
+    emptyFolderAdded: 'No files were added from empty folder',
+    folderAlreadyAdded: 'The folder "%{folder}" was already added',
+    folderAdded: {
+      0: 'Added %{smart_count} file from %{folder}',
+      1: 'Added %{smart_count} files from %{folder}'
+    }
+  }
+};
+},{}],22:[function(require,module,exports){
 /* eslint-disable no-console */
 const getTimeStamp = require('@uppy/utils/lib/getTimeStamp'); // Swallow all logs, except errors.
 // default if logger is not set or debug: false
@@ -4610,22 +4699,44 @@ const getTimeStamp = require('@uppy/utils/lib/getTimeStamp'); // Swallow all log
 const justErrorsLogger = {
   debug: () => {},
   warn: () => {},
-  error: (...args) => console.error(`[Uppy] [${getTimeStamp()}]`, ...args)
+  error: function () {
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    return console.error(`[Uppy] [${getTimeStamp()}]`, ...args);
+  }
 }; // Print logs to console with namespace + timestamp,
 // set by logger: Uppy.debugLogger or debug: true
 
 const debugLogger = {
-  debug: (...args) => console.debug(`[Uppy] [${getTimeStamp()}]`, ...args),
-  warn: (...args) => console.warn(`[Uppy] [${getTimeStamp()}]`, ...args),
-  error: (...args) => console.error(`[Uppy] [${getTimeStamp()}]`, ...args)
+  debug: function () {
+    for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+      args[_key2] = arguments[_key2];
+    }
+
+    return console.debug(`[Uppy] [${getTimeStamp()}]`, ...args);
+  },
+  warn: function () {
+    for (var _len3 = arguments.length, args = new Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+      args[_key3] = arguments[_key3];
+    }
+
+    return console.warn(`[Uppy] [${getTimeStamp()}]`, ...args);
+  },
+  error: function () {
+    for (var _len4 = arguments.length, args = new Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
+      args[_key4] = arguments[_key4];
+    }
+
+    return console.error(`[Uppy] [${getTimeStamp()}]`, ...args);
+  }
 };
 module.exports = {
   justErrorsLogger,
   debugLogger
 };
-},{"@uppy/utils/lib/getTimeStamp":42}],20:[function(require,module,exports){
-"use strict";
-
+},{"@uppy/utils/lib/getTimeStamp":45}],23:[function(require,module,exports){
 // Edge 15.x does not fire 'progress' events on uploads.
 // See https://github.com/transloadit/uppy/issues/945
 // And https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/12224510/
@@ -4659,9 +4770,7 @@ module.exports = function supportsUploadProgress(userAgent) {
 
   return false;
 };
-},{}],21:[function(require,module,exports){
-"use strict";
-
+},{}],24:[function(require,module,exports){
 var _class, _temp;
 
 const BasePlugin = require('@uppy/core/lib/BasePlugin');
@@ -4699,36 +4808,69 @@ module.exports = (_temp = _class = class DropTarget extends BasePlugin {
       }
     };
 
+    this.isFileTransfer = event => {
+      var _event$dataTransfer$t;
+
+      const transferTypes = (_event$dataTransfer$t = event.dataTransfer.types) != null ? _event$dataTransfer$t : [];
+      return transferTypes.some(type => type === 'Files');
+    };
+
     this.handleDrop = async event => {
       var _this$opts$onDrop, _this$opts;
 
+      if (!this.isFileTransfer(event)) {
+        return;
+      }
+
       event.preventDefault();
       event.stopPropagation();
-      clearTimeout(this.removeDragOverClassTimeout); // 2. Remove dragover class
+      clearTimeout(this.removeDragOverClassTimeout); // Remove dragover class
 
       event.currentTarget.classList.remove('uppy-is-drag-over');
       this.setPluginState({
         isDraggingOver: false
-      }); // 3. Add all dropped files
+      }); // Let any acquirer plugin (Url/Webcam/etc.) handle drops to the root
 
-      this.uppy.log('[DropTarget] Files were dropped');
+      this.uppy.iteratePlugins(plugin => {
+        if (plugin.type === 'acquirer') {
+          // Every Plugin with .type acquirer can define handleRootDrop(event)
+          plugin.handleRootDrop == null ? void 0 : plugin.handleRootDrop(event);
+        }
+      }); // Add all dropped files, handle errors
+
+      let executedDropErrorOnce = false;
 
       const logDropError = error => {
-        this.uppy.log(error, 'error');
+        this.uppy.log(error, 'error'); // In practice all drop errors are most likely the same,
+        // so let's just show one to avoid overwhelming the user
+
+        if (!executedDropErrorOnce) {
+          this.uppy.info(error.message, 'error');
+          executedDropErrorOnce = true;
+        }
       };
 
       const files = await getDroppedFiles(event.dataTransfer, {
         logDropError
       });
-      this.addFiles(files);
+
+      if (files.length > 0) {
+        this.uppy.log('[DropTarget] Files were dropped');
+        this.addFiles(files);
+      }
+
       (_this$opts$onDrop = (_this$opts = this.opts).onDrop) == null ? void 0 : _this$opts$onDrop.call(_this$opts, event);
     };
 
     this.handleDragOver = event => {
       var _this$opts$onDragOver, _this$opts2;
 
+      if (!this.isFileTransfer(event)) {
+        return;
+      }
+
       event.preventDefault();
-      event.stopPropagation(); // 1. Add a small (+) icon on drop
+      event.stopPropagation(); // Add a small (+) icon on drop
       // (and prevent browsers from interpreting this as files being _moved_ into the browser,
       // https://github.com/transloadit/uppy/issues/1978)
 
@@ -4743,6 +4885,10 @@ module.exports = (_temp = _class = class DropTarget extends BasePlugin {
 
     this.handleDragLeave = event => {
       var _this$opts$onDragLeav, _this$opts3;
+
+      if (!this.isFileTransfer(event)) {
+        return;
+      }
 
       event.preventDefault();
       event.stopPropagation();
@@ -4818,8 +4964,8 @@ module.exports = (_temp = _class = class DropTarget extends BasePlugin {
     this.removeListeners();
   }
 
-}, _class.VERSION = "1.1.1", _temp);
-},{"@uppy/core/lib/BasePlugin":14,"@uppy/utils/lib/getDroppedFiles":34,"@uppy/utils/lib/toArray":48}],22:[function(require,module,exports){
+}, _class.VERSION = "1.1.2", _temp);
+},{"@uppy/core/lib/BasePlugin":15,"@uppy/utils/lib/getDroppedFiles":37,"@uppy/utils/lib/toArray":51}],25:[function(require,module,exports){
 "use strict";
 
 function _classPrivateFieldLooseBase(receiver, privateKey) { if (!Object.prototype.hasOwnProperty.call(receiver, privateKey)) { throw new TypeError("attempted to use private field on non-instance"); } return receiver; }
@@ -4867,18 +5013,22 @@ class DefaultStore {
 
 }
 
-function _publish2(...args) {
+function _publish2() {
+  for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+    args[_key] = arguments[_key];
+  }
+
   this.callbacks.forEach(listener => {
     listener(...args);
   });
 }
 
-DefaultStore.VERSION = "2.0.2";
+DefaultStore.VERSION = "2.0.3";
 
 module.exports = function defaultStore() {
   return new DefaultStore();
 };
-},{}],23:[function(require,module,exports){
+},{}],26:[function(require,module,exports){
 "use strict";
 
 /**
@@ -4887,8 +5037,14 @@ module.exports = function defaultStore() {
 exports.AbortController = globalThis.AbortController;
 exports.AbortSignal = globalThis.AbortSignal;
 
-exports.createAbortError = (message = 'Aborted') => new DOMException(message, 'AbortError');
-},{}],24:[function(require,module,exports){
+exports.createAbortError = function (message) {
+  if (message === void 0) {
+    message = 'Aborted';
+  }
+
+  return new DOMException(message, 'AbortError');
+};
+},{}],27:[function(require,module,exports){
 "use strict";
 
 var _emitter, _events;
@@ -4929,11 +5085,15 @@ module.exports = (_emitter = /*#__PURE__*/_classPrivateFieldLooseKey("emitter"),
   }
 
 });
-},{}],25:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 "use strict";
 
 class NetworkError extends Error {
-  constructor(error, xhr = null) {
+  constructor(error, xhr) {
+    if (xhr === void 0) {
+      xhr = null;
+    }
+
     super(`This looks like a network error, the endpoint might be blocked by an internet provider or a firewall.`);
     this.cause = error;
     this.isNetworkError = true;
@@ -4943,7 +5103,7 @@ class NetworkError extends Error {
 }
 
 module.exports = NetworkError;
-},{}],26:[function(require,module,exports){
+},{}],29:[function(require,module,exports){
 "use strict";
 
 function _classPrivateFieldLooseBase(receiver, privateKey) { if (!Object.prototype.hasOwnProperty.call(receiver, privateKey)) { throw new TypeError("attempted to use private field on non-instance"); } return receiver; }
@@ -5011,7 +5171,7 @@ class ProgressTimeout {
 }
 
 module.exports = ProgressTimeout;
-},{}],27:[function(require,module,exports){
+},{}],30:[function(require,module,exports){
 "use strict";
 
 function _classPrivateFieldLooseBase(receiver, privateKey) { if (!Object.prototype.hasOwnProperty.call(receiver, privateKey)) { throw new TypeError("attempted to use private field on non-instance"); } return receiver; }
@@ -5028,6 +5188,16 @@ var _activeRequests = /*#__PURE__*/_classPrivateFieldLooseKey("activeRequests");
 
 var _queuedHandlers = /*#__PURE__*/_classPrivateFieldLooseKey("queuedHandlers");
 
+var _paused = /*#__PURE__*/_classPrivateFieldLooseKey("paused");
+
+var _pauseTimer = /*#__PURE__*/_classPrivateFieldLooseKey("pauseTimer");
+
+var _downLimit = /*#__PURE__*/_classPrivateFieldLooseKey("downLimit");
+
+var _upperLimit = /*#__PURE__*/_classPrivateFieldLooseKey("upperLimit");
+
+var _rateLimitingTimer = /*#__PURE__*/_classPrivateFieldLooseKey("rateLimitingTimer");
+
 var _call = /*#__PURE__*/_classPrivateFieldLooseKey("call");
 
 var _queueNext = /*#__PURE__*/_classPrivateFieldLooseKey("queueNext");
@@ -5037,6 +5207,10 @@ var _next = /*#__PURE__*/_classPrivateFieldLooseKey("next");
 var _queue = /*#__PURE__*/_classPrivateFieldLooseKey("queue");
 
 var _dequeue = /*#__PURE__*/_classPrivateFieldLooseKey("dequeue");
+
+var _resume = /*#__PURE__*/_classPrivateFieldLooseKey("resume");
+
+var _increaseLimit = /*#__PURE__*/_classPrivateFieldLooseKey("increaseLimit");
 
 class RateLimitedQueue {
   constructor(limit) {
@@ -5063,6 +5237,52 @@ class RateLimitedQueue {
       writable: true,
       value: []
     });
+    Object.defineProperty(this, _paused, {
+      writable: true,
+      value: false
+    });
+    Object.defineProperty(this, _pauseTimer, {
+      writable: true,
+      value: void 0
+    });
+    Object.defineProperty(this, _downLimit, {
+      writable: true,
+      value: 1
+    });
+    Object.defineProperty(this, _upperLimit, {
+      writable: true,
+      value: void 0
+    });
+    Object.defineProperty(this, _rateLimitingTimer, {
+      writable: true,
+      value: void 0
+    });
+    Object.defineProperty(this, _resume, {
+      writable: true,
+      value: () => this.resume()
+    });
+    Object.defineProperty(this, _increaseLimit, {
+      writable: true,
+      value: () => {
+        if (_classPrivateFieldLooseBase(this, _paused)[_paused]) {
+          _classPrivateFieldLooseBase(this, _rateLimitingTimer)[_rateLimitingTimer] = setTimeout(_classPrivateFieldLooseBase(this, _increaseLimit)[_increaseLimit], 0);
+          return;
+        }
+
+        _classPrivateFieldLooseBase(this, _downLimit)[_downLimit] = this.limit;
+        this.limit = Math.ceil((_classPrivateFieldLooseBase(this, _upperLimit)[_upperLimit] + _classPrivateFieldLooseBase(this, _downLimit)[_downLimit]) / 2);
+
+        for (let i = _classPrivateFieldLooseBase(this, _downLimit)[_downLimit]; i <= this.limit; i++) {
+          _classPrivateFieldLooseBase(this, _queueNext)[_queueNext]();
+        }
+
+        if (_classPrivateFieldLooseBase(this, _upperLimit)[_upperLimit] - _classPrivateFieldLooseBase(this, _downLimit)[_downLimit] > 3) {
+          _classPrivateFieldLooseBase(this, _rateLimitingTimer)[_rateLimitingTimer] = setTimeout(_classPrivateFieldLooseBase(this, _increaseLimit)[_increaseLimit], 2000);
+        } else {
+          _classPrivateFieldLooseBase(this, _downLimit)[_downLimit] = Math.floor(_classPrivateFieldLooseBase(this, _downLimit)[_downLimit] / 2);
+        }
+      }
+    });
 
     if (typeof limit !== 'number' || limit === 0) {
       this.limit = Infinity;
@@ -5072,7 +5292,7 @@ class RateLimitedQueue {
   }
 
   run(fn, queueOptions) {
-    if (_classPrivateFieldLooseBase(this, _activeRequests)[_activeRequests] < this.limit) {
+    if (!_classPrivateFieldLooseBase(this, _paused)[_paused] && _classPrivateFieldLooseBase(this, _activeRequests)[_activeRequests] < this.limit) {
       return _classPrivateFieldLooseBase(this, _call)[_call](fn);
     }
 
@@ -5080,10 +5300,16 @@ class RateLimitedQueue {
   }
 
   wrapPromiseFunction(fn, queueOptions) {
-    return (...args) => {
+    var _this = this;
+
+    return function () {
+      for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+        args[_key] = arguments[_key];
+      }
+
       let queuedRequest;
       const outerPromise = new Promise((resolve, reject) => {
-        queuedRequest = this.run(() => {
+        queuedRequest = _this.run(() => {
           let cancelError;
           let innerPromise;
 
@@ -5120,6 +5346,60 @@ class RateLimitedQueue {
 
       return outerPromise;
     };
+  }
+
+  resume() {
+    _classPrivateFieldLooseBase(this, _paused)[_paused] = false;
+    clearTimeout(_classPrivateFieldLooseBase(this, _pauseTimer)[_pauseTimer]);
+
+    for (let i = 0; i < this.limit; i++) {
+      _classPrivateFieldLooseBase(this, _queueNext)[_queueNext]();
+    }
+  }
+
+  /**
+   * Freezes the queue for a while or indefinitely.
+   *
+   * @param {number | null } [duration] Duration for the pause to happen, in milliseconds.
+   *                                    If omitted, the queue won't resume automatically.
+   */
+  pause(duration) {
+    if (duration === void 0) {
+      duration = null;
+    }
+
+    _classPrivateFieldLooseBase(this, _paused)[_paused] = true;
+    clearTimeout(_classPrivateFieldLooseBase(this, _pauseTimer)[_pauseTimer]);
+
+    if (duration != null) {
+      _classPrivateFieldLooseBase(this, _pauseTimer)[_pauseTimer] = setTimeout(_classPrivateFieldLooseBase(this, _resume)[_resume], duration);
+    }
+  }
+  /**
+   * Pauses the queue for a duration, and lower the limit of concurrent requests
+   * when the queue resumes. When the queue resumes, it tries to progressively
+   * increase the limit in `this.#increaseLimit` until another call is made to
+   * `this.rateLimit`.
+   * Call this function when using the RateLimitedQueue for network requests and
+   * the remote server responds with 429 HTTP code.
+   *
+   * @param {number} duration in milliseconds.
+   */
+
+
+  rateLimit(duration) {
+    clearTimeout(_classPrivateFieldLooseBase(this, _rateLimitingTimer)[_rateLimitingTimer]);
+    this.pause(duration);
+
+    if (this.limit > 1 && Number.isFinite(this.limit)) {
+      _classPrivateFieldLooseBase(this, _upperLimit)[_upperLimit] = this.limit - 1;
+      this.limit = _classPrivateFieldLooseBase(this, _downLimit)[_downLimit];
+      _classPrivateFieldLooseBase(this, _rateLimitingTimer)[_rateLimitingTimer] = setTimeout(_classPrivateFieldLooseBase(this, _increaseLimit)[_increaseLimit], duration);
+    }
+  }
+
+  get isPaused() {
+    return _classPrivateFieldLooseBase(this, _paused)[_paused];
   }
 
 }
@@ -5163,7 +5443,7 @@ function _queueNext2() {
 }
 
 function _next2() {
-  if (_classPrivateFieldLooseBase(this, _activeRequests)[_activeRequests] >= this.limit) {
+  if (_classPrivateFieldLooseBase(this, _paused)[_paused] || _classPrivateFieldLooseBase(this, _activeRequests)[_activeRequests] >= this.limit) {
     return;
   }
 
@@ -5182,7 +5462,11 @@ function _next2() {
   next.done = handler.done;
 }
 
-function _queue2(fn, options = {}) {
+function _queue2(fn, options) {
+  if (options === void 0) {
+    options = {};
+  }
+
   const handler = {
     fn,
     priority: options.priority || 0,
@@ -5219,7 +5503,7 @@ module.exports = {
   RateLimitedQueue,
   internalRateLimitedQueue: Symbol('__queue')
 };
-},{}],28:[function(require,module,exports){
+},{}],31:[function(require,module,exports){
 "use strict";
 
 var _apply;
@@ -5390,7 +5674,7 @@ function _apply2(locale) {
   };
   this.locale.pluralize = locale.pluralize || prevLocale.pluralize;
 }
-},{"./hasProperty":43}],29:[function(require,module,exports){
+},{"./hasProperty":46}],32:[function(require,module,exports){
 "use strict";
 
 const {
@@ -5437,7 +5721,7 @@ module.exports = function delay(ms, opts) {
     return undefined;
   });
 };
-},{"./AbortController":23}],30:[function(require,module,exports){
+},{"./AbortController":26}],33:[function(require,module,exports){
 "use strict";
 
 const throttle = require('lodash.throttle');
@@ -5463,7 +5747,7 @@ module.exports = throttle(emitSocketProgress, 300, {
   leading: true,
   trailing: true
 });
-},{"lodash.throttle":50}],31:[function(require,module,exports){
+},{"lodash.throttle":54}],34:[function(require,module,exports){
 "use strict";
 
 const NetworkError = require('./NetworkError');
@@ -5472,8 +5756,8 @@ const NetworkError = require('./NetworkError');
  */
 
 
-module.exports = function fetchWithNetworkError(...options) {
-  return fetch(...options).catch(err => {
+module.exports = function fetchWithNetworkError() {
+  return fetch(...arguments).catch(err => {
     if (err.name === 'AbortError') {
       throw err;
     } else {
@@ -5481,7 +5765,7 @@ module.exports = function fetchWithNetworkError(...options) {
     }
   });
 };
-},{"./NetworkError":25}],32:[function(require,module,exports){
+},{"./NetworkError":28}],35:[function(require,module,exports){
 "use strict";
 
 const isDOMElement = require('./isDOMElement');
@@ -5493,7 +5777,11 @@ const isDOMElement = require('./isDOMElement');
  */
 
 
-module.exports = function findDOMElement(element, context = document) {
+module.exports = function findDOMElement(element, context) {
+  if (context === void 0) {
+    context = document;
+  }
+
   if (typeof element === 'string') {
     return context.querySelector(element);
   }
@@ -5504,7 +5792,7 @@ module.exports = function findDOMElement(element, context = document) {
 
   return null;
 };
-},{"./isDOMElement":44}],33:[function(require,module,exports){
+},{"./isDOMElement":47}],36:[function(require,module,exports){
 "use strict";
 
 function encodeCharacter(character) {
@@ -5554,7 +5842,7 @@ module.exports = function generateFileID(file) {
 
   return id;
 };
-},{}],34:[function(require,module,exports){
+},{}],37:[function(require,module,exports){
 "use strict";
 
 const webkitGetAsEntryApi = require('./utils/webkitGetAsEntryApi/index');
@@ -5576,10 +5864,12 @@ const fallbackApi = require('./utils/fallbackApi');
  */
 
 
-module.exports = function getDroppedFiles(dataTransfer, {
-  logDropError = () => {}
-} = {}) {
+module.exports = function getDroppedFiles(dataTransfer, _temp) {
   var _dataTransfer$items;
+
+  let {
+    logDropError = () => {}
+  } = _temp === void 0 ? {} : _temp;
 
   // Get all files from all subdirs. Works (at least) in Chrome, Mozilla, and Safari
   if ((_dataTransfer$items = dataTransfer.items) != null && _dataTransfer$items[0] && 'webkitGetAsEntry' in dataTransfer.items[0]) {
@@ -5588,7 +5878,7 @@ module.exports = function getDroppedFiles(dataTransfer, {
 
   return fallbackApi(dataTransfer);
 };
-},{"./utils/fallbackApi":35,"./utils/webkitGetAsEntryApi/index":38}],35:[function(require,module,exports){
+},{"./utils/fallbackApi":38,"./utils/webkitGetAsEntryApi/index":41}],38:[function(require,module,exports){
 "use strict";
 
 const toArray = require('../../toArray'); // .files fallback, should be implemented in any browser
@@ -5598,7 +5888,7 @@ module.exports = function fallbackApi(dataTransfer) {
   const files = toArray(dataTransfer.files);
   return Promise.resolve(files);
 };
-},{"../../toArray":48}],36:[function(require,module,exports){
+},{"../../toArray":51}],39:[function(require,module,exports){
 "use strict";
 
 /**
@@ -5609,9 +5899,10 @@ module.exports = function fallbackApi(dataTransfer) {
  * @param {Function} logDropError
  * @param {Function} callback - called with ([ all files and directories in that directoryReader ])
  */
-module.exports = function getFilesAndDirectoriesFromDirectory(directoryReader, oldEntries, logDropError, {
-  onSuccess
-}) {
+module.exports = function getFilesAndDirectoriesFromDirectory(directoryReader, oldEntries, logDropError, _ref) {
+  let {
+    onSuccess
+  } = _ref;
   directoryReader.readEntries(entries => {
     const newEntries = [...oldEntries, ...entries]; // According to the FileSystem API spec, getFilesAndDirectoriesFromDirectory()
     // must be called until it calls the onSuccess with an empty array.
@@ -5631,7 +5922,7 @@ module.exports = function getFilesAndDirectoriesFromDirectory(directoryReader, o
     onSuccess(oldEntries);
   });
 };
-},{}],37:[function(require,module,exports){
+},{}],40:[function(require,module,exports){
 "use strict";
 
 /**
@@ -5652,7 +5943,7 @@ module.exports = function getRelativePath(fileEntry) {
 
   return fileEntry.fullPath;
 };
-},{}],38:[function(require,module,exports){
+},{}],41:[function(require,module,exports){
 "use strict";
 
 const toArray = require('../../../toArray');
@@ -5703,7 +5994,7 @@ module.exports = function webkitGetAsEntryApi(dataTransfer, logDropError) {
   });
   return Promise.all(rootPromises).then(() => files);
 };
-},{"../../../toArray":48,"./getFilesAndDirectoriesFromDirectory":36,"./getRelativePath":37}],39:[function(require,module,exports){
+},{"../../../toArray":51,"./getFilesAndDirectoriesFromDirectory":39,"./getRelativePath":40}],42:[function(require,module,exports){
 "use strict";
 
 /**
@@ -5727,7 +6018,7 @@ module.exports = function getFileNameAndExtension(fullFileName) {
     extension: fullFileName.slice(lastDot + 1)
   };
 };
-},{}],40:[function(require,module,exports){
+},{}],43:[function(require,module,exports){
 "use strict";
 
 const getFileNameAndExtension = require('./getFileNameAndExtension');
@@ -5748,7 +6039,7 @@ module.exports = function getFileType(file) {
 
   return 'application/octet-stream';
 };
-},{"./getFileNameAndExtension":39,"./mimeTypes":46}],41:[function(require,module,exports){
+},{"./getFileNameAndExtension":42,"./mimeTypes":49}],44:[function(require,module,exports){
 "use strict";
 
 module.exports = function getSocketHost(url) {
@@ -5758,7 +6049,7 @@ module.exports = function getSocketHost(url) {
   const socketProtocol = /^http:\/\//i.test(url) ? 'ws' : 'wss';
   return `${socketProtocol}://${host}`;
 };
-},{}],42:[function(require,module,exports){
+},{}],45:[function(require,module,exports){
 "use strict";
 
 /**
@@ -5782,13 +6073,13 @@ module.exports = function getTimeStamp() {
   const seconds = pad(date.getSeconds());
   return `${hours}:${minutes}:${seconds}`;
 };
-},{}],43:[function(require,module,exports){
+},{}],46:[function(require,module,exports){
 "use strict";
 
 module.exports = function has(object, key) {
   return Object.prototype.hasOwnProperty.call(object, key);
 };
-},{}],44:[function(require,module,exports){
+},{}],47:[function(require,module,exports){
 "use strict";
 
 /**
@@ -5799,7 +6090,7 @@ module.exports = function has(object, key) {
 module.exports = function isDOMElement(obj) {
   return (obj == null ? void 0 : obj.nodeType) === Node.ELEMENT_NODE;
 };
-},{}],45:[function(require,module,exports){
+},{}],48:[function(require,module,exports){
 "use strict";
 
 function isNetworkError(xhr) {
@@ -5811,7 +6102,7 @@ function isNetworkError(xhr) {
 }
 
 module.exports = isNetworkError;
-},{}],46:[function(require,module,exports){
+},{}],49:[function(require,module,exports){
 "use strict";
 
 // ___Why not add the mime-types package?
@@ -5869,7 +6160,7 @@ module.exports = {
   gz: 'application/gzip',
   dmg: 'application/x-apple-diskimage'
 };
-},{}],47:[function(require,module,exports){
+},{}],50:[function(require,module,exports){
 "use strict";
 
 module.exports = function settle(promises) {
@@ -5892,14 +6183,14 @@ module.exports = function settle(promises) {
     };
   });
 };
-},{}],48:[function(require,module,exports){
+},{}],51:[function(require,module,exports){
 "use strict";
 
 /**
  * Converts list into array
  */
 module.exports = Array.from;
-},{}],49:[function(require,module,exports){
+},{}],52:[function(require,module,exports){
 "use strict";
 
 var _class, _temp;
@@ -5908,7 +6199,7 @@ const BasePlugin = require('@uppy/core/lib/BasePlugin');
 
 const {
   nanoid
-} = require('nanoid');
+} = require('nanoid/non-secure');
 
 const {
   Provider,
@@ -5934,6 +6225,8 @@ const {
 const NetworkError = require('@uppy/utils/lib/NetworkError');
 
 const isNetworkError = require('@uppy/utils/lib/isNetworkError');
+
+const locale = require('./locale');
 
 function buildResponseError(xhr, err) {
   let error = err; // No error message
@@ -5978,11 +6271,7 @@ module.exports = (_temp = _class = class XHRUpload extends BasePlugin {
     this.type = 'uploader';
     this.id = this.opts.id || 'XHRUpload';
     this.title = 'XHRUpload';
-    this.defaultLocale = {
-      strings: {
-        timedOut: 'Upload stalled for %{seconds} seconds, aborting.'
-      }
-    }; // Default options
+    this.defaultLocale = locale; // Default options
 
     const defaultOptions = {
       formData: true,
@@ -6262,6 +6551,7 @@ module.exports = (_temp = _class = class XHRUpload extends BasePlugin {
   uploadRemote(file) {
     const opts = this.getOptions(file);
     return new Promise((resolve, reject) => {
+      this.uppy.emit('upload-started', file);
       const fields = {};
       const metaFields = Array.isArray(opts.metaFields) ? opts.metaFields // Send along all fields by default.
       : Object.keys(file.meta);
@@ -6289,12 +6579,12 @@ module.exports = (_temp = _class = class XHRUpload extends BasePlugin {
         });
         this.uploaderEvents[file.id] = new EventTracker(this.uppy);
         this.onFileRemove(file.id, () => {
-          socket.send('pause', {});
+          socket.send('cancel', {});
           queuedRequest.abort();
           resolve(`upload ${file.id} was removed`);
         });
         this.onCancelAll(file.id, () => {
-          socket.send('pause', {});
+          socket.send('cancel', {});
           queuedRequest.abort();
           resolve(`upload ${file.id} was canceled`);
         });
@@ -6557,8 +6847,17 @@ module.exports = (_temp = _class = class XHRUpload extends BasePlugin {
     this.uppy.removeUploader(this.handleUpload);
   }
 
-}, _class.VERSION = "2.0.5", _temp);
-},{"@uppy/companion-client":12,"@uppy/core/lib/BasePlugin":14,"@uppy/utils/lib/EventTracker":24,"@uppy/utils/lib/NetworkError":25,"@uppy/utils/lib/ProgressTimeout":26,"@uppy/utils/lib/RateLimitedQueue":27,"@uppy/utils/lib/emitSocketProgress":30,"@uppy/utils/lib/getSocketHost":41,"@uppy/utils/lib/isNetworkError":45,"@uppy/utils/lib/settle":47,"nanoid":53}],50:[function(require,module,exports){
+}, _class.VERSION = "2.0.7", _temp);
+},{"./locale":53,"@uppy/companion-client":13,"@uppy/core/lib/BasePlugin":15,"@uppy/utils/lib/EventTracker":27,"@uppy/utils/lib/NetworkError":28,"@uppy/utils/lib/ProgressTimeout":29,"@uppy/utils/lib/RateLimitedQueue":30,"@uppy/utils/lib/emitSocketProgress":33,"@uppy/utils/lib/getSocketHost":44,"@uppy/utils/lib/isNetworkError":48,"@uppy/utils/lib/settle":50,"nanoid/non-secure":57}],53:[function(require,module,exports){
+"use strict";
+
+module.exports = {
+  strings: {
+    // Shown in the Informer if an upload is being canceled because it stalled for too long.
+    timedOut: 'Upload stalled for %{seconds} seconds, aborting.'
+  }
+};
+},{}],54:[function(require,module,exports){
 (function (global){(function (){
 /**
  * lodash (Custom Build) <https://lodash.com/>
@@ -7001,7 +7300,7 @@ function toNumber(value) {
 module.exports = throttle;
 
 }).call(this)}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],51:[function(require,module,exports){
+},{}],55:[function(require,module,exports){
 var wildcard = require('wildcard');
 var reMimePartSplit = /[\/\+\.]/;
 
@@ -7027,7 +7326,7 @@ module.exports = function(target, pattern) {
   return pattern ? test(pattern.split(';')[0]) : test;
 };
 
-},{"wildcard":57}],52:[function(require,module,exports){
+},{"wildcard":59}],56:[function(require,module,exports){
 /**
 * Create an event emitter with namespaces
 * @name createNamespaceEmitter
@@ -7165,313 +7464,43 @@ module.exports = function createNamespaceEmitter () {
   return emitter
 }
 
-},{}],53:[function(require,module,exports){
-(function (process){(function (){
-// This file replaces `index.js` in bundlers like webpack or Rollup,
-// according to `browser` config in `package.json`.
-
-let { urlAlphabet } = require('./url-alphabet/index.cjs')
-
-if (process.env.NODE_ENV !== 'production') {
-  // All bundlers will remove this block in the production bundle.
-  if (
-    typeof navigator !== 'undefined' &&
-    navigator.product === 'ReactNative' &&
-    typeof crypto === 'undefined'
-  ) {
-    throw new Error(
-      'React Native does not have a built-in secure random generator. ' +
-        'If you don’t need unpredictable IDs use `nanoid/non-secure`. ' +
-        'For secure IDs, import `react-native-get-random-values` ' +
-        'before Nano ID.'
-    )
-  }
-  if (typeof msCrypto !== 'undefined' && typeof crypto === 'undefined') {
-    throw new Error(
-      'Import file with `if (!window.crypto) window.crypto = window.msCrypto`' +
-        ' before importing Nano ID to fix IE 11 support'
-    )
-  }
-  if (typeof crypto === 'undefined') {
-    throw new Error(
-      'Your browser does not have secure random generator. ' +
-        'If you don’t need unpredictable IDs, you can use nanoid/non-secure.'
-    )
-  }
-}
-
-let random = bytes => crypto.getRandomValues(new Uint8Array(bytes))
-
-let customRandom = (alphabet, size, getRandom) => {
-  // First, a bitmask is necessary to generate the ID. The bitmask makes bytes
-  // values closer to the alphabet size. The bitmask calculates the closest
-  // `2^31 - 1` number, which exceeds the alphabet size.
-  // For example, the bitmask for the alphabet size 30 is 31 (00011111).
-  // `Math.clz32` is not used, because it is not available in browsers.
-  let mask = (2 << (Math.log(alphabet.length - 1) / Math.LN2)) - 1
-  // Though, the bitmask solution is not perfect since the bytes exceeding
-  // the alphabet size are refused. Therefore, to reliably generate the ID,
-  // the random bytes redundancy has to be satisfied.
-
-  // Note: every hardware random generator call is performance expensive,
-  // because the system call for entropy collection takes a lot of time.
-  // So, to avoid additional system calls, extra bytes are requested in advance.
-
-  // Next, a step determines how many random bytes to generate.
-  // The number of random bytes gets decided upon the ID size, mask,
-  // alphabet size, and magic number 1.6 (using 1.6 peaks at performance
-  // according to benchmarks).
-
-  // `-~f => Math.ceil(f)` if f is a float
-  // `-~i => i + 1` if i is an integer
-  let step = -~((1.6 * mask * size) / alphabet.length)
-
-  return () => {
-    let id = ''
-    while (true) {
-      let bytes = getRandom(step)
-      // A compact alternative for `for (var i = 0; i < step; i++)`.
-      let j = step
-      while (j--) {
-        // Adding `|| ''` refuses a random byte that exceeds the alphabet size.
-        id += alphabet[bytes[j] & mask] || ''
-        if (id.length === size) return id
-      }
-    }
-  }
-}
-
-let customAlphabet = (alphabet, size) => customRandom(alphabet, size, random)
-
-let nanoid = (size = 21) => {
-  let id = ''
-  let bytes = crypto.getRandomValues(new Uint8Array(size))
-
-  // A compact alternative for `for (var i = 0; i < step; i++)`.
-  while (size--) {
-    // It is incorrect to use bytes exceeding the alphabet size.
-    // The following mask reduces the random byte in the 0-255 value
-    // range to the 0-63 value range. Therefore, adding hacks, such
-    // as empty string fallback or magic numbers, is unneccessary because
-    // the bitmask trims bytes down to the alphabet size.
-    let byte = bytes[size] & 63
-    if (byte < 36) {
-      // `0-9a-z`
-      id += byte.toString(36)
-    } else if (byte < 62) {
-      // `A-Z`
-      id += (byte - 26).toString(36).toUpperCase()
-    } else if (byte < 63) {
-      id += '_'
-    } else {
-      id += '-'
-    }
-  }
-  return id
-}
-
-module.exports = { nanoid, customAlphabet, customRandom, urlAlphabet, random }
-
-}).call(this)}).call(this,require('_process'))
-},{"./url-alphabet/index.cjs":54,"_process":56}],54:[function(require,module,exports){
+},{}],57:[function(require,module,exports){
 // This alphabet uses `A-Za-z0-9_-` symbols. The genetic algorithm helped
 // optimize the gzip compression for this alphabet.
 let urlAlphabet =
   'ModuleSymbhasOwnPr-0123456789ABCDEFGHNRVfgctiUvz_KqYTJkLxpZXIjQW'
 
-module.exports = { urlAlphabet }
+let customAlphabet = (alphabet, size) => {
+  return () => {
+    let id = ''
+    // A compact alternative for `for (var i = 0; i < step; i++)`.
+    let i = size
+    while (i--) {
+      // `| 0` is more compact and faster than `Math.floor()`.
+      id += alphabet[(Math.random() * alphabet.length) | 0]
+    }
+    return id
+  }
+}
 
-},{}],55:[function(require,module,exports){
+let nanoid = (size = 21) => {
+  let id = ''
+  // A compact alternative for `for (var i = 0; i < step; i++)`.
+  let i = size
+  while (i--) {
+    // `| 0` is more compact and faster than `Math.floor()`.
+    id += urlAlphabet[(Math.random() * 64) | 0]
+  }
+  return id
+}
+
+module.exports = { nanoid, customAlphabet }
+
+},{}],58:[function(require,module,exports){
 var n,l,u,t,i,o,r,f,e={},c=[],s=/acit|ex(?:s|g|n|p|$)|rph|grid|ows|mnc|ntw|ine[ch]|zoo|^ord|itera/i;function a(n,l){for(var u in l)n[u]=l[u];return n}function p(n){var l=n.parentNode;l&&l.removeChild(n)}function v(l,u,t){var i,o,r,f={};for(r in u)"key"==r?i=u[r]:"ref"==r?o=u[r]:f[r]=u[r];if(arguments.length>2&&(f.children=arguments.length>3?n.call(arguments,2):t),"function"==typeof l&&null!=l.defaultProps)for(r in l.defaultProps)void 0===f[r]&&(f[r]=l.defaultProps[r]);return h(l,f,i,o,null)}function h(n,t,i,o,r){var f={type:n,props:t,key:i,ref:o,__k:null,__:null,__b:0,__e:null,__d:void 0,__c:null,__h:null,constructor:void 0,__v:null==r?++u:r};return null!=l.vnode&&l.vnode(f),f}function y(n){return n.children}function d(n,l){this.props=n,this.context=l}function _(n,l){if(null==l)return n.__?_(n.__,n.__.__k.indexOf(n)+1):null;for(var u;l<n.__k.length;l++)if(null!=(u=n.__k[l])&&null!=u.__e)return u.__e;return"function"==typeof n.type?_(n):null}function k(n){var l,u;if(null!=(n=n.__)&&null!=n.__c){for(n.__e=n.__c.base=null,l=0;l<n.__k.length;l++)if(null!=(u=n.__k[l])&&null!=u.__e){n.__e=n.__c.base=u.__e;break}return k(n)}}function x(n){(!n.__d&&(n.__d=!0)&&i.push(n)&&!b.__r++||r!==l.debounceRendering)&&((r=l.debounceRendering)||o)(b)}function b(){for(var n;b.__r=i.length;)n=i.sort(function(n,l){return n.__v.__b-l.__v.__b}),i=[],n.some(function(n){var l,u,t,i,o,r;n.__d&&(o=(i=(l=n).__v).__e,(r=l.__P)&&(u=[],(t=a({},i)).__v=i.__v+1,I(r,i,t,l.__n,void 0!==r.ownerSVGElement,null!=i.__h?[o]:null,u,null==o?_(i):o,i.__h),T(u,i),i.__e!=o&&k(i)))})}function m(n,l,u,t,i,o,r,f,s,a){var p,v,d,k,x,b,m,A=t&&t.__k||c,P=A.length;for(u.__k=[],p=0;p<l.length;p++)if(null!=(k=u.__k[p]=null==(k=l[p])||"boolean"==typeof k?null:"string"==typeof k||"number"==typeof k||"bigint"==typeof k?h(null,k,null,null,k):Array.isArray(k)?h(y,{children:k},null,null,null):k.__b>0?h(k.type,k.props,k.key,null,k.__v):k)){if(k.__=u,k.__b=u.__b+1,null===(d=A[p])||d&&k.key==d.key&&k.type===d.type)A[p]=void 0;else for(v=0;v<P;v++){if((d=A[v])&&k.key==d.key&&k.type===d.type){A[v]=void 0;break}d=null}I(n,k,d=d||e,i,o,r,f,s,a),x=k.__e,(v=k.ref)&&d.ref!=v&&(m||(m=[]),d.ref&&m.push(d.ref,null,k),m.push(v,k.__c||x,k)),null!=x?(null==b&&(b=x),"function"==typeof k.type&&null!=k.__k&&k.__k===d.__k?k.__d=s=g(k,s,n):s=w(n,k,d,A,x,s),a||"option"!==u.type?"function"==typeof u.type&&(u.__d=s):n.value=""):s&&d.__e==s&&s.parentNode!=n&&(s=_(d))}for(u.__e=b,p=P;p--;)null!=A[p]&&("function"==typeof u.type&&null!=A[p].__e&&A[p].__e==u.__d&&(u.__d=_(t,p+1)),L(A[p],A[p]));if(m)for(p=0;p<m.length;p++)z(m[p],m[++p],m[++p])}function g(n,l,u){var t,i;for(t=0;t<n.__k.length;t++)(i=n.__k[t])&&(i.__=n,l="function"==typeof i.type?g(i,l,u):w(u,i,i,n.__k,i.__e,l));return l}function w(n,l,u,t,i,o){var r,f,e;if(void 0!==l.__d)r=l.__d,l.__d=void 0;else if(null==u||i!=o||null==i.parentNode)n:if(null==o||o.parentNode!==n)n.appendChild(i),r=null;else{for(f=o,e=0;(f=f.nextSibling)&&e<t.length;e+=2)if(f==i)break n;n.insertBefore(i,o),r=o}return void 0!==r?r:i.nextSibling}function A(n,l,u,t,i){var o;for(o in u)"children"===o||"key"===o||o in l||C(n,o,null,u[o],t);for(o in l)i&&"function"!=typeof l[o]||"children"===o||"key"===o||"value"===o||"checked"===o||u[o]===l[o]||C(n,o,l[o],u[o],t)}function P(n,l,u){"-"===l[0]?n.setProperty(l,u):n[l]=null==u?"":"number"!=typeof u||s.test(l)?u:u+"px"}function C(n,l,u,t,i){var o;n:if("style"===l)if("string"==typeof u)n.style.cssText=u;else{if("string"==typeof t&&(n.style.cssText=t=""),t)for(l in t)u&&l in u||P(n.style,l,"");if(u)for(l in u)t&&u[l]===t[l]||P(n.style,l,u[l])}else if("o"===l[0]&&"n"===l[1])o=l!==(l=l.replace(/Capture$/,"")),l=l.toLowerCase()in n?l.toLowerCase().slice(2):l.slice(2),n.l||(n.l={}),n.l[l+o]=u,u?t||n.addEventListener(l,o?H:$,o):n.removeEventListener(l,o?H:$,o);else if("dangerouslySetInnerHTML"!==l){if(i)l=l.replace(/xlink[H:h]/,"h").replace(/sName$/,"s");else if("href"!==l&&"list"!==l&&"form"!==l&&"tabIndex"!==l&&"download"!==l&&l in n)try{n[l]=null==u?"":u;break n}catch(n){}"function"==typeof u||(null!=u&&(!1!==u||"a"===l[0]&&"r"===l[1])?n.setAttribute(l,u):n.removeAttribute(l))}}function $(n){this.l[n.type+!1](l.event?l.event(n):n)}function H(n){this.l[n.type+!0](l.event?l.event(n):n)}function I(n,u,t,i,o,r,f,e,c){var s,p,v,h,_,k,x,b,g,w,A,P=u.type;if(void 0!==u.constructor)return null;null!=t.__h&&(c=t.__h,e=u.__e=t.__e,u.__h=null,r=[e]),(s=l.__b)&&s(u);try{n:if("function"==typeof P){if(b=u.props,g=(s=P.contextType)&&i[s.__c],w=s?g?g.props.value:s.__:i,t.__c?x=(p=u.__c=t.__c).__=p.__E:("prototype"in P&&P.prototype.render?u.__c=p=new P(b,w):(u.__c=p=new d(b,w),p.constructor=P,p.render=M),g&&g.sub(p),p.props=b,p.state||(p.state={}),p.context=w,p.__n=i,v=p.__d=!0,p.__h=[]),null==p.__s&&(p.__s=p.state),null!=P.getDerivedStateFromProps&&(p.__s==p.state&&(p.__s=a({},p.__s)),a(p.__s,P.getDerivedStateFromProps(b,p.__s))),h=p.props,_=p.state,v)null==P.getDerivedStateFromProps&&null!=p.componentWillMount&&p.componentWillMount(),null!=p.componentDidMount&&p.__h.push(p.componentDidMount);else{if(null==P.getDerivedStateFromProps&&b!==h&&null!=p.componentWillReceiveProps&&p.componentWillReceiveProps(b,w),!p.__e&&null!=p.shouldComponentUpdate&&!1===p.shouldComponentUpdate(b,p.__s,w)||u.__v===t.__v){p.props=b,p.state=p.__s,u.__v!==t.__v&&(p.__d=!1),p.__v=u,u.__e=t.__e,u.__k=t.__k,u.__k.forEach(function(n){n&&(n.__=u)}),p.__h.length&&f.push(p);break n}null!=p.componentWillUpdate&&p.componentWillUpdate(b,p.__s,w),null!=p.componentDidUpdate&&p.__h.push(function(){p.componentDidUpdate(h,_,k)})}p.context=w,p.props=b,p.state=p.__s,(s=l.__r)&&s(u),p.__d=!1,p.__v=u,p.__P=n,s=p.render(p.props,p.state,p.context),p.state=p.__s,null!=p.getChildContext&&(i=a(a({},i),p.getChildContext())),v||null==p.getSnapshotBeforeUpdate||(k=p.getSnapshotBeforeUpdate(h,_)),A=null!=s&&s.type===y&&null==s.key?s.props.children:s,m(n,Array.isArray(A)?A:[A],u,t,i,o,r,f,e,c),p.base=u.__e,u.__h=null,p.__h.length&&f.push(p),x&&(p.__E=p.__=null),p.__e=!1}else null==r&&u.__v===t.__v?(u.__k=t.__k,u.__e=t.__e):u.__e=j(t.__e,u,t,i,o,r,f,c);(s=l.diffed)&&s(u)}catch(n){u.__v=null,(c||null!=r)&&(u.__e=e,u.__h=!!c,r[r.indexOf(e)]=null),l.__e(n,u,t)}}function T(n,u){l.__c&&l.__c(u,n),n.some(function(u){try{n=u.__h,u.__h=[],n.some(function(n){n.call(u)})}catch(n){l.__e(n,u.__v)}})}function j(l,u,t,i,o,r,f,c){var s,a,v,h=t.props,y=u.props,d=u.type,k=0;if("svg"===d&&(o=!0),null!=r)for(;k<r.length;k++)if((s=r[k])&&(s===l||(d?s.localName==d:3==s.nodeType))){l=s,r[k]=null;break}if(null==l){if(null===d)return document.createTextNode(y);l=o?document.createElementNS("http://www.w3.org/2000/svg",d):document.createElement(d,y.is&&y),r=null,c=!1}if(null===d)h===y||c&&l.data===y||(l.data=y);else{if(r=r&&n.call(l.childNodes),a=(h=t.props||e).dangerouslySetInnerHTML,v=y.dangerouslySetInnerHTML,!c){if(null!=r)for(h={},k=0;k<l.attributes.length;k++)h[l.attributes[k].name]=l.attributes[k].value;(v||a)&&(v&&(a&&v.__html==a.__html||v.__html===l.innerHTML)||(l.innerHTML=v&&v.__html||""))}if(A(l,y,h,o,c),v)u.__k=[];else if(k=u.props.children,m(l,Array.isArray(k)?k:[k],u,t,i,o&&"foreignObject"!==d,r,f,r?r[0]:t.__k&&_(t,0),c),null!=r)for(k=r.length;k--;)null!=r[k]&&p(r[k]);c||("value"in y&&void 0!==(k=y.value)&&(k!==l.value||"progress"===d&&!k)&&C(l,"value",k,h.value,!1),"checked"in y&&void 0!==(k=y.checked)&&k!==l.checked&&C(l,"checked",k,h.checked,!1))}return l}function z(n,u,t){try{"function"==typeof n?n(u):n.current=u}catch(n){l.__e(n,t)}}function L(n,u,t){var i,o;if(l.unmount&&l.unmount(n),(i=n.ref)&&(i.current&&i.current!==n.__e||z(i,null,u)),null!=(i=n.__c)){if(i.componentWillUnmount)try{i.componentWillUnmount()}catch(n){l.__e(n,u)}i.base=i.__P=null}if(i=n.__k)for(o=0;o<i.length;o++)i[o]&&L(i[o],u,"function"!=typeof n.type);t||null==n.__e||p(n.__e),n.__e=n.__d=void 0}function M(n,l,u){return this.constructor(n,u)}function N(u,t,i){var o,r,f;l.__&&l.__(u,t),r=(o="function"==typeof i)?null:i&&i.__k||t.__k,f=[],I(t,u=(!o&&i||t).__k=v(y,null,[u]),r||e,e,void 0!==t.ownerSVGElement,!o&&i?[i]:r?null:t.firstChild?n.call(t.childNodes):null,f,!o&&i?i:r?r.__e:t.firstChild,o),T(f,u)}n=c.slice,l={__e:function(n,l){for(var u,t,i;l=l.__;)if((u=l.__c)&&!u.__)try{if((t=u.constructor)&&null!=t.getDerivedStateFromError&&(u.setState(t.getDerivedStateFromError(n)),i=u.__d),null!=u.componentDidCatch&&(u.componentDidCatch(n),i=u.__d),i)return u.__E=u}catch(l){n=l}throw n}},u=0,t=function(n){return null!=n&&void 0===n.constructor},d.prototype.setState=function(n,l){var u;u=null!=this.__s&&this.__s!==this.state?this.__s:this.__s=a({},this.state),"function"==typeof n&&(n=n(a({},u),this.props)),n&&a(u,n),null!=n&&this.__v&&(l&&this.__h.push(l),x(this))},d.prototype.forceUpdate=function(n){this.__v&&(this.__e=!0,n&&this.__h.push(n),x(this))},d.prototype.render=y,i=[],o="function"==typeof Promise?Promise.prototype.then.bind(Promise.resolve()):setTimeout,b.__r=0,f=0,exports.render=N,exports.hydrate=function n(l,u){N(l,u,n)},exports.createElement=v,exports.h=v,exports.Fragment=y,exports.createRef=function(){return{current:null}},exports.isValidElement=t,exports.Component=d,exports.cloneElement=function(l,u,t){var i,o,r,f=a({},l.props);for(r in u)"key"==r?i=u[r]:"ref"==r?o=u[r]:f[r]=u[r];return arguments.length>2&&(f.children=arguments.length>3?n.call(arguments,2):t),h(l.type,f,i||l.key,o||l.ref,null)},exports.createContext=function(n,l){var u={__c:l="__cC"+f++,__:n,Consumer:function(n,l){return n.children(l)},Provider:function(n){var u,t;return this.getChildContext||(u=[],(t={})[l]=this,this.getChildContext=function(){return t},this.shouldComponentUpdate=function(n){this.props.value!==n.value&&u.some(x)},this.sub=function(n){u.push(n);var l=n.componentWillUnmount;n.componentWillUnmount=function(){u.splice(u.indexOf(n),1),l&&l.call(n)}}),n.children}};return u.Provider.__=u.Consumer.contextType=u},exports.toChildArray=function n(l,u){return u=u||[],null==l||"boolean"==typeof l||(Array.isArray(l)?l.some(function(l){n(l,u)}):u.push(l)),u},exports.options=l;
 
 
-},{}],56:[function(require,module,exports){
-// shim for using process in browser
-var process = module.exports = {};
-
-// cached from whatever global is present so that test runners that stub it
-// don't break things.  But we need to wrap it in a try catch in case it is
-// wrapped in strict mode code which doesn't define any globals.  It's inside a
-// function because try/catches deoptimize in certain engines.
-
-var cachedSetTimeout;
-var cachedClearTimeout;
-
-function defaultSetTimout() {
-    throw new Error('setTimeout has not been defined');
-}
-function defaultClearTimeout () {
-    throw new Error('clearTimeout has not been defined');
-}
-(function () {
-    try {
-        if (typeof setTimeout === 'function') {
-            cachedSetTimeout = setTimeout;
-        } else {
-            cachedSetTimeout = defaultSetTimout;
-        }
-    } catch (e) {
-        cachedSetTimeout = defaultSetTimout;
-    }
-    try {
-        if (typeof clearTimeout === 'function') {
-            cachedClearTimeout = clearTimeout;
-        } else {
-            cachedClearTimeout = defaultClearTimeout;
-        }
-    } catch (e) {
-        cachedClearTimeout = defaultClearTimeout;
-    }
-} ())
-function runTimeout(fun) {
-    if (cachedSetTimeout === setTimeout) {
-        //normal enviroments in sane situations
-        return setTimeout(fun, 0);
-    }
-    // if setTimeout wasn't available but was latter defined
-    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
-        cachedSetTimeout = setTimeout;
-        return setTimeout(fun, 0);
-    }
-    try {
-        // when when somebody has screwed with setTimeout but no I.E. maddness
-        return cachedSetTimeout(fun, 0);
-    } catch(e){
-        try {
-            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
-            return cachedSetTimeout.call(null, fun, 0);
-        } catch(e){
-            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
-            return cachedSetTimeout.call(this, fun, 0);
-        }
-    }
-
-
-}
-function runClearTimeout(marker) {
-    if (cachedClearTimeout === clearTimeout) {
-        //normal enviroments in sane situations
-        return clearTimeout(marker);
-    }
-    // if clearTimeout wasn't available but was latter defined
-    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
-        cachedClearTimeout = clearTimeout;
-        return clearTimeout(marker);
-    }
-    try {
-        // when when somebody has screwed with setTimeout but no I.E. maddness
-        return cachedClearTimeout(marker);
-    } catch (e){
-        try {
-            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
-            return cachedClearTimeout.call(null, marker);
-        } catch (e){
-            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
-            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
-            return cachedClearTimeout.call(this, marker);
-        }
-    }
-
-
-
-}
-var queue = [];
-var draining = false;
-var currentQueue;
-var queueIndex = -1;
-
-function cleanUpNextTick() {
-    if (!draining || !currentQueue) {
-        return;
-    }
-    draining = false;
-    if (currentQueue.length) {
-        queue = currentQueue.concat(queue);
-    } else {
-        queueIndex = -1;
-    }
-    if (queue.length) {
-        drainQueue();
-    }
-}
-
-function drainQueue() {
-    if (draining) {
-        return;
-    }
-    var timeout = runTimeout(cleanUpNextTick);
-    draining = true;
-
-    var len = queue.length;
-    while(len) {
-        currentQueue = queue;
-        queue = [];
-        while (++queueIndex < len) {
-            if (currentQueue) {
-                currentQueue[queueIndex].run();
-            }
-        }
-        queueIndex = -1;
-        len = queue.length;
-    }
-    currentQueue = null;
-    draining = false;
-    runClearTimeout(timeout);
-}
-
-process.nextTick = function (fun) {
-    var args = new Array(arguments.length - 1);
-    if (arguments.length > 1) {
-        for (var i = 1; i < arguments.length; i++) {
-            args[i - 1] = arguments[i];
-        }
-    }
-    queue.push(new Item(fun, args));
-    if (queue.length === 1 && !draining) {
-        runTimeout(drainQueue);
-    }
-};
-
-// v8 likes predictible objects
-function Item(fun, array) {
-    this.fun = fun;
-    this.array = array;
-}
-Item.prototype.run = function () {
-    this.fun.apply(null, this.array);
-};
-process.title = 'browser';
-process.browser = true;
-process.env = {};
-process.argv = [];
-process.version = ''; // empty string to avoid regexp issues
-process.versions = {};
-
-function noop() {}
-
-process.on = noop;
-process.addListener = noop;
-process.once = noop;
-process.off = noop;
-process.removeListener = noop;
-process.removeAllListeners = noop;
-process.emit = noop;
-process.prependListener = noop;
-process.prependOnceListener = noop;
-
-process.listeners = function (name) { return [] }
-
-process.binding = function (name) {
-    throw new Error('process.binding is not supported');
-};
-
-process.cwd = function () { return '/' };
-process.chdir = function (dir) {
-    throw new Error('process.chdir is not supported');
-};
-process.umask = function() { return 0; };
-
-},{}],57:[function(require,module,exports){
+},{}],59:[function(require,module,exports){
 /* jshint node: true */
 'use strict';
 
@@ -7566,7 +7595,7 @@ module.exports = function(text, test, separator) {
   return matcher;
 };
 
-},{}],58:[function(require,module,exports){
+},{}],60:[function(require,module,exports){
 // We need a custom build of Uppy because we do not use webpack for
 // our JS modules/build. The only way to get what you want from Uppy
 // is to use the webpack modules or to include the entire Uppy project
@@ -7578,5 +7607,10 @@ Uppy.XHRUpload = require('@uppy/xhr-upload')
 Uppy.AwsS3 = require('@uppy/aws-s3')
 Uppy.AwsS3Multipart = require('@uppy/aws-s3-multipart')
 Uppy.DropTarget = require('@uppy/drop-target')
+Uppy.Utils = {
+  delay: require('@uppy/utils/lib/delay'),
+  EventTracker: require('@uppy/utils/lib/EventTracker'),
+  AbortControllerLib: require('@uppy/utils/lib/AbortController')
+}
 
-},{"@uppy/aws-s3":5,"@uppy/aws-s3-multipart":3,"@uppy/core":18,"@uppy/drop-target":21,"@uppy/xhr-upload":49}]},{},[58]);
+},{"@uppy/aws-s3":5,"@uppy/aws-s3-multipart":3,"@uppy/core":20,"@uppy/drop-target":24,"@uppy/utils/lib/AbortController":26,"@uppy/utils/lib/EventTracker":27,"@uppy/utils/lib/delay":32,"@uppy/xhr-upload":52}]},{},[60]);

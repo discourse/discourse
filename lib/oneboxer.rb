@@ -321,7 +321,7 @@ module Oneboxer
       args = {
         topic_id: topic.id,
         post_number: post.post_number,
-        avatar: PrettyText.avatar_img(post.user.avatar_template, "tiny"),
+        avatar: PrettyText.avatar_img(post.user.avatar_template_url, "tiny"),
         original_url: url,
         title: PrettyText.unescape_emoji(CGI::escapeHTML(topic.title)),
         category_html: CategoryBadge.html_for(topic.category),
@@ -379,10 +379,6 @@ module Oneboxer
     end
   end
 
-  def self.blocked_domains
-    SiteSetting.blocked_onebox_domains.split("|")
-  end
-
   def self.preserve_fragment_url_hosts
     @preserve_fragment_url_hosts ||= ['http://github.com']
   end
@@ -401,8 +397,13 @@ module Oneboxer
       available_strategies ||= Oneboxer.ordered_strategies(uri.hostname)
       strategy = available_strategies.shift
 
-      fd = FinalDestination.new(url, get_final_destination_options(url, strategy))
+      fd = FinalDestination.new(
+        url,
+        get_final_destination_options(url, strategy).merge(stop_at_blocked_pages: true)
+      )
       uri = fd.resolve
+
+      return blank_onebox if fd.status == :blocked_page
 
       if fd.status != :resolved
         args = { link: url }
@@ -420,7 +421,7 @@ module Oneboxer
         return error_box
       end
 
-      return blank_onebox if uri.blank? || blocked_domains.any? { |hostname| uri.hostname.match?(hostname) }
+      return blank_onebox if uri.blank?
 
       onebox_options = {
         max_width: 695,
@@ -538,7 +539,6 @@ module Oneboxer
   def self.get_final_destination_options(url, strategy = nil)
     fd_options = {
       ignore_redirects: ignore_redirects,
-      ignore_hostnames: blocked_domains,
       force_get_hosts: force_get_hosts,
       force_custom_user_agent_hosts: force_custom_user_agent_hosts,
       preserve_fragment_url_hosts: preserve_fragment_url_hosts,

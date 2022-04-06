@@ -51,10 +51,10 @@
     // accounts for menu "ears" 4px + border 1px
     padding: 0.75em calc(0.5em + 4px + 1px);
     margin: 0.25em;
-    @media screen and (max-height: 380px) {
+    @media screen and (max-height: 500px) {
       // reduce padding to avoid scroll
-      padding-top: 0.5em;
-      padding-bottom: 0.5em;
+      padding-top: 0.25em;
+      padding-bottom: 0.25em;
     }
   }
 }

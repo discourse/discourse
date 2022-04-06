@@ -5,6 +5,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import {
   postUrl,
   selectedElement,
+  selectedRange,
   selectedText,
   setCaretPosition,
   translateModKey,
@@ -19,7 +20,7 @@ import { alias } from "@ember/object/computed";
 import discourseComputed from "discourse-common/utils/decorators";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { getAbsoluteURL } from "discourse-common/lib/get-url";
-import { schedule } from "@ember/runloop";
+import { next, schedule } from "@ember/runloop";
 import toMarkdown from "discourse/lib/to-markdown";
 
 function getQuoteTitle(element) {
@@ -48,8 +49,13 @@ function regexSafeStr(str) {
 
 export default Component.extend(KeyEnterEscape, {
   classNames: ["quote-button"],
-  classNameBindings: ["visible", "_displayFastEditInput:fast-editing"],
+  classNameBindings: [
+    "visible",
+    "_displayFastEditInput:fast-editing",
+    "animated",
+  ],
   visible: false,
+  animated: false,
   privateCategory: alias("topic.category.read_restricted"),
   editPost: null,
 
@@ -69,11 +75,50 @@ export default Component.extend(KeyEnterEscape, {
   _hideButton() {
     this.quoteState.clear();
     this.set("visible", false);
+    this.set("animated", false);
 
     this.set("_isFastEditable", false);
     this.set("_displayFastEditInput", false);
     this.set("_fastEditInitalSelection", null);
     this.set("_fastEditNewSelection", null);
+  },
+
+  _getRangeBoundaryRect(range, atEnd) {
+    // Don't mess with the original range as it results in weird behaviours
+    // where certain browsers will deselect the selection
+    const clone = range.cloneRange(range);
+
+    // create a marker element containing a single invisible character
+    const markerElement = document.createElement("span");
+    markerElement.appendChild(document.createTextNode("\ufeff"));
+
+    // on mobile, collapse the range at the end of the selection
+    if (atEnd) {
+      clone.collapse();
+    }
+    // insert the marker
+    clone.insertNode(markerElement);
+
+    // retrieve the position of the marker
+    const boundaryRect = markerElement.getBoundingClientRect();
+    boundaryRect.x += document.documentElement.scrollLeft;
+    boundaryRect.y += document.documentElement.scrollTop;
+
+    // remove the marker
+    const parent = markerElement.parentNode;
+    parent.removeChild(markerElement);
+
+    // merge back all text nodes so they don't get messed up
+    parent.normalize();
+
+    // work around Safari that would sometimes lose the selection
+    if (this.capabilities.isSafari) {
+      this._reselected = true;
+      window.getSelection().removeAllRanges();
+      window.getSelection().addRange(range);
+    }
+
+    return boundaryRect;
   },
 
   _selectionChanged() {
@@ -120,10 +165,14 @@ export default Component.extend(KeyEnterEscape, {
     const cooked =
       $selectedElement.find(".cooked")[0] ||
       $selectedElement.closest(".cooked")[0];
-    const postBody = toMarkdown(cooked.innerHTML);
 
+    // computing markdown takes a lot of time on long posts
+    // this code attempts to compute it only when we can't fast track
     let opts = {
-      full: _selectedText === postBody,
+      full:
+        selectedRange().startOffset > 0
+          ? false
+          : _selectedText === toMarkdown(cooked.innerHTML),
     };
 
     for (
@@ -148,22 +197,24 @@ export default Component.extend(KeyEnterEscape, {
         this.topic.postStream.findLoadedPost(postId)?.can_edit
       );
 
-      const regexp = new RegExp(regexSafeStr(quoteState.buffer), "gi");
-      const matches = postBody.match(regexp);
+      if (this._canEditPost) {
+        const regexp = new RegExp(regexSafeStr(quoteState.buffer), "gi");
+        const matches = cooked.innerHTML.match(regexp);
 
-      if (
-        quoteState.buffer.length < 1 ||
-        quoteState.buffer.includes("|") || // tables are too complex
-        quoteState.buffer.match(/\n/g) || // linebreaks are too complex
-        matches?.length > 1 // duplicates are too complex
-      ) {
-        this.set("_isFastEditable", false);
-        this.set("_fastEditInitalSelection", null);
-        this.set("_fastEditNewSelection", null);
-      } else if (matches?.length === 1) {
-        this.set("_isFastEditable", true);
-        this.set("_fastEditInitalSelection", quoteState.buffer);
-        this.set("_fastEditNewSelection", quoteState.buffer);
+        if (
+          quoteState.buffer.length < 1 ||
+          quoteState.buffer.includes("|") || // tables are too complex
+          quoteState.buffer.match(/\n/g) || // linebreaks are too complex
+          matches?.length > 1 // duplicates are too complex
+        ) {
+          this.set("_isFastEditable", false);
+          this.set("_fastEditInitalSelection", null);
+          this.set("_fastEditNewSelection", null);
+        } else if (matches?.length === 1) {
+          this.set("_isFastEditable", true);
+          this.set("_fastEditInitalSelection", quoteState.buffer);
+          this.set("_fastEditNewSelection", quoteState.buffer);
+        }
       }
     }
 
@@ -178,42 +229,10 @@ export default Component.extend(KeyEnterEscape, {
     // on Desktop, shows the button at the beginning of the selection
     // on Mobile, shows the button at the end of the selection
     const isMobileDevice = this.site.isMobileDevice;
-    const { isIOS, isAndroid, isSafari, isOpera } = this.capabilities;
+    const { isIOS, isAndroid, isOpera } = this.capabilities;
     const showAtEnd = isMobileDevice || isIOS || isAndroid || isOpera;
 
-    // Don't mess with the original range as it results in weird behaviours
-    // where certain browsers will deselect the selection
-    const clone = firstRange.cloneRange();
-
-    // create a marker element containing a single invisible character
-    const markerElement = document.createElement("span");
-    markerElement.appendChild(document.createTextNode("\ufeff"));
-
-    // on mobile, collapse the range at the end of the selection
-    if (showAtEnd) {
-      clone.collapse();
-    }
-    // insert the marker
-    clone.insertNode(markerElement);
-
-    // retrieve the position of the marker
-    const $markerElement = $(markerElement);
-    const markerOffset = $markerElement.offset();
-    const parentScrollLeft = $markerElement.parent().scrollLeft();
-    const $quoteButton = $(this.element);
-
-    // remove the marker
-    const parent = markerElement.parentNode;
-    parent.removeChild(markerElement);
-    // merge back all text nodes so they don't get messed up
-    parent.normalize();
-
-    // work around Safari that would sometimes lose the selection
-    if (isSafari) {
-      this._reselected = true;
-      selection.removeAllRanges();
-      selection.addRange(clone);
-    }
+    const boundaryPosition = this._getRangeBoundaryRect(firstRange, showAtEnd);
 
     // change the position of the button
     schedule("afterRender", () => {
@@ -221,19 +240,91 @@ export default Component.extend(KeyEnterEscape, {
         return;
       }
 
-      let top = markerOffset.top;
-      let left = markerOffset.left + Math.max(0, parentScrollLeft);
+      let top = 0;
+      let left = 0;
+      const pxFromSelection = 5;
+
       if (showAtEnd) {
-        top = top + 25;
-        left = Math.min(
-          left + 10,
-          window.innerWidth - this.element.clientWidth - 10
-        );
+        // The selection-handles on iOS have a hit area of ~50px radius
+        // so we need to make sure our buttons are outside that radius
+        // Apply the same logic on all mobile devices for consistency
+
+        top = boundaryPosition.bottom + pxFromSelection;
+        left = boundaryPosition.left;
+
+        const safeRadius = 50;
+
+        const topicArea = document
+          .querySelector(".topic-area")
+          .getBoundingClientRect();
+        topicArea.x += document.documentElement.scrollLeft;
+        topicArea.y += document.documentElement.scrollTop;
+
+        const endHandlePosition = boundaryPosition;
+        const width = this.element.clientWidth;
+
+        const possiblePositions = [
+          {
+            // move to left
+            top,
+            left: left - width - safeRadius,
+          },
+          {
+            // move to right
+            top,
+            left: left + safeRadius,
+          },
+          {
+            // centered below end handle
+            top: top + safeRadius,
+            left: left - width / 2,
+          },
+        ];
+
+        for (const pos of possiblePositions) {
+          // Ensure buttons are entirely within the .topic-area
+          pos.left = Math.max(topicArea.left, pos.left);
+          pos.left = Math.min(topicArea.right - width, pos.left);
+
+          let clearOfStartHandle = true;
+          if (isAndroid) {
+            // On android, the start-selection handle extends below the line, so we need to avoid it as well:
+            const startHandlePosition = this._getRangeBoundaryRect(
+              firstRange,
+              false
+            );
+
+            clearOfStartHandle =
+              pos.top - startHandlePosition.bottom >= safeRadius ||
+              pos.left + width <= startHandlePosition.left - safeRadius ||
+              pos.left >= startHandlePosition.left + safeRadius;
+          }
+
+          const clearOfEndHandle =
+            pos.top - endHandlePosition.top >= safeRadius ||
+            pos.left + width <= endHandlePosition.left - safeRadius ||
+            pos.left >= endHandlePosition.left + safeRadius;
+
+          if (clearOfStartHandle && clearOfEndHandle) {
+            left = pos.left;
+            top = pos.top;
+            break;
+          }
+        }
       } else {
-        top = top - $quoteButton.outerHeight() - 5;
+        // Desktop
+        top =
+          boundaryPosition.top - this.element.clientHeight - pxFromSelection;
+        left = boundaryPosition.left;
       }
 
-      $quoteButton.offset({ top, left });
+      Object.assign(this.element.style, { top: `${top}px`, left: `${left}px` });
+
+      if (!this.animated) {
+        // We only enable CSS transitions after the initial positioning
+        // otherwise the button can appear to fly in from off-screen
+        next(() => this.set("animated", true));
+      }
     });
   },
 

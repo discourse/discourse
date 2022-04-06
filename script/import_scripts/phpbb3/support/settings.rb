@@ -24,6 +24,7 @@ module ImportScripts::PhpBB3
     attr_reader :import_polls
     attr_reader :import_bookmarks
     attr_reader :import_passwords
+    attr_reader :import_likes
 
     attr_reader :import_uploaded_avatars
     attr_reader :import_remote_avatars
@@ -38,6 +39,7 @@ module ImportScripts::PhpBB3
 
     attr_reader :username_as_name
     attr_reader :emojis
+    attr_reader :custom_fields
 
     attr_reader :database
 
@@ -47,7 +49,7 @@ module ImportScripts::PhpBB3
       @site_name = import_settings['site_name']
 
       @new_categories = import_settings['new_categories']
-      @category_mappings = import_settings['category_mappings']
+      @category_mappings = import_settings.fetch('category_mappings', []).to_h { |m| [m[:source_category_id].to_s, m] }
       @tag_mappings = import_settings['tag_mappings']
       @rank_mapping = import_settings['rank_mapping']
 
@@ -57,6 +59,7 @@ module ImportScripts::PhpBB3
       @import_polls = import_settings['polls']
       @import_bookmarks = import_settings['bookmarks']
       @import_passwords = import_settings['passwords']
+      @import_likes = import_settings['likes']
 
       avatar_settings = import_settings['avatars']
       @import_uploaded_avatars = avatar_settings['uploaded']
@@ -72,6 +75,7 @@ module ImportScripts::PhpBB3
 
       @username_as_name = import_settings['username_as_name']
       @emojis = import_settings.fetch('emojis', [])
+      @custom_fields = import_settings.fetch('custom_fields', [])
 
       @database = DatabaseSettings.new(yaml['database'])
     end

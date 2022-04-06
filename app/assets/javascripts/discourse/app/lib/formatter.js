@@ -25,7 +25,7 @@ export function tinyDateYear(date) {
 // TODO: locale support ?
 export function toTitleCase(str) {
   return str.replace(/\w\S*/g, function (txt) {
-    return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+    return txt.charAt(0).toUpperCase() + txt.slice(1).toLowerCase();
   });
 }
 
@@ -55,6 +55,7 @@ export function updateRelativeAge(elems) {
     elems = elems.toArray();
     deprecated("updateRelativeAge now expects a DOM NodeList", {
       since: "2.8.0.beta7",
+      dropFrom: "2.9.0.beta1",
     });
   }
 

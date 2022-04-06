@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe BackupRestore::Backuper do
   it 'returns a non-empty parameterized title when site title contains unicode' do
     SiteSetting.title = 'Ɣ'
@@ -41,7 +39,7 @@ describe BackupRestore::Backuper do
       SiteSetting.max_post_length = 250
 
       silence_stdout do
-        backuper = silence_stdout { BackupRestore::Backuper.new(Discourse.system_user.id) }
+        backuper = BackupRestore::Backuper.new(Discourse.system_user.id)
 
         expect { backuper.send(:notify_user) }
           .to change { Topic.private_messages.count }.by(1)

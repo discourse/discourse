@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe Jobs::EnqueueDigestEmails do
 
   describe '#target_users' do
@@ -91,7 +89,7 @@ describe Jobs::EnqueueDigestEmails do
     end
 
     context 'regular users' do
-      let!(:user) { Fabricate(:active_user, last_seen_at: 360.days.ago) }
+      let!(:user) { Fabricate(:active_user, last_seen_at: (SiteSetting.suppress_digest_email_after_days - 1).days.ago) }
 
       it "returns the user" do
         expect(Jobs::EnqueueDigestEmails.new.target_user_ids).to eq([user.id])

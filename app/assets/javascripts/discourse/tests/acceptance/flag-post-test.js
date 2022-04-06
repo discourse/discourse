@@ -4,11 +4,10 @@ import {
   exists,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, fillIn, visit } from "@ember/test-helpers";
+import { click, fillIn, settled, visit } from "@ember/test-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { skip, test } from "qunit";
+import { test } from "qunit";
 import userFixtures from "discourse/tests/fixtures/user-fixtures";
-import { run } from "@ember/runloop";
 
 async function openFlagModal() {
   if (exists(".topic-post:first-child button.show-more-actions")) {
@@ -17,21 +16,21 @@ async function openFlagModal() {
   await click(".topic-post:first-child button.create-flag");
 }
 
-function pressEnter(element, modifier) {
+async function pressEnter(element, modifier) {
   const event = document.createEvent("Event");
   event.initEvent("keydown", true, true);
   event.key = "Enter";
   event.keyCode = 13;
   event[modifier] = true;
-  run(() => element.dispatchEvent(event));
+  element.dispatchEvent(event);
+  await settled();
 }
 
 acceptance("flagging", function (needs) {
   needs.user();
   needs.pretender((server, helper) => {
-    const userResponse = Object.assign({}, userFixtures["/u/charlie.json"]);
     server.get("/u/uwe_keim.json", () => {
-      return helper.response(userResponse);
+      return helper.response(userFixtures["/u/charlie.json"]);
     });
     server.get("/admin/users/255.json", () => {
       return helper.response({
@@ -154,35 +153,35 @@ acceptance("flagging", function (needs) {
     assert.ok(!exists(".bootbox.modal:visible"));
   });
 
-  skip("CTRL + ENTER accepts the modal", async function (assert) {
+  test("CTRL + ENTER accepts the modal", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await openFlagModal();
 
     const modal = query("#discourse-modal");
-    pressEnter(modal, "ctrlKey");
+    await pressEnter(modal, "ctrlKey");
     assert.ok(
       exists("#discourse-modal:visible"),
       "The modal wasn't closed because the accept button was disabled"
     );
 
     await click("#radio_inappropriate"); // this enables the accept button
-    pressEnter(modal, "ctrlKey");
+    await pressEnter(modal, "ctrlKey");
     assert.ok(!exists("#discourse-modal:visible"), "The modal was closed");
   });
 
-  skip("CMD or WINDOWS-KEY + ENTER accepts the modal", async function (assert) {
+  test("CMD or WINDOWS-KEY + ENTER accepts the modal", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await openFlagModal();
 
     const modal = query("#discourse-modal");
-    pressEnter(modal, "metaKey");
+    await pressEnter(modal, "metaKey");
     assert.ok(
       exists("#discourse-modal:visible"),
       "The modal wasn't closed because the accept button was disabled"
     );
 
     await click("#radio_inappropriate"); // this enables the accept button
-    pressEnter(modal, "ctrlKey");
+    await pressEnter(modal, "ctrlKey");
     assert.ok(!exists("#discourse-modal:visible"), "The modal was closed");
   });
 });

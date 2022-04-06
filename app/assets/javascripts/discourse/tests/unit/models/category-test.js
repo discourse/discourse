@@ -227,8 +227,7 @@ module("Unit | Model | category", function () {
     let foo = store.createRecord("category", {
       id: 1,
       slug: "foo",
-      required_tag_groups: ["bar"],
-      min_tags_from_required_group: 2,
+      required_tag_groups: [{ name: "bar", min_count: 2 }],
     });
 
     assert.equal(foo.minimumRequiredTags, 2);
@@ -259,7 +258,7 @@ module("Unit | Model | category", function () {
     foo = store.createRecord("category", {
       id: 5,
       slug: "foo",
-      min_tags_from_required_group: 2,
+      required_tag_groups: [],
     });
 
     assert.equal(foo.minimumRequiredTags, null);
@@ -276,9 +275,17 @@ module("Unit | Model | category", function () {
         id: 2,
         name: "middle term",
         slug: "another-different-slug",
+      }),
+      subcategory = store.createRecord("category", {
+        id: 3,
+        name: "middle term",
+        slug: "another-different-slug2",
+        parent_category_id: 2,
       });
 
-    sinon.stub(Category, "listByActivity").returns([category1, category2]);
+    sinon
+      .stub(Category, "listByActivity")
+      .returns([category1, category2, subcategory]);
 
     assert.deepEqual(
       Category.search("term", { limit: 0 }),
@@ -292,22 +299,28 @@ module("Unit | Model | category", function () {
     );
     assert.deepEqual(
       Category.search("term"),
-      [category1, category2],
+      [category1, category2, subcategory],
       "orders by activity"
     );
 
     category2.set("name", "TeRm start");
     assert.deepEqual(
       Category.search("tErM"),
-      [category2, category1],
+      [category2, category1, subcategory],
       "ignores case of category name and search term"
     );
 
     category2.set("name", "term start");
     assert.deepEqual(
       Category.search("term"),
-      [category2, category1],
+      [category2, category1, subcategory],
       "orders matching begin with and then contains"
+    );
+
+    assert.deepEqual(
+      Category.search("term", { parentCategoryId: 2 }),
+      [subcategory],
+      "search only subcategories belonging to specific parent category"
     );
 
     sinon.restore();

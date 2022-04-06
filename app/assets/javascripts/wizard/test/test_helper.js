@@ -39,6 +39,7 @@ if (window.Logster) {
 } else {
   window.Logster = { enabled: false };
 }
+// eslint-disable-next-line no-undef
 Ember.Test.adapter = window.QUnitAdapter.create();
 
 let createPretendServer = requirejs(

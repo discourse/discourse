@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe Invite do
   fab!(:user) { Fabricate(:user) }
+  let(:xss_email) { "<b onmouseover=alert('wufff!')>email</b><script>alert('test');</script>@test.com" }
+  let(:escaped_email) { "&lt;b onmouseover=alert(&#39;wufff!&#39;)&gt;email&lt;/b&gt;&lt;script&gt;alert(&#39;test&#39;);&lt;/script&gt;@test.com" }
 
   context 'validators' do
     it { is_expected.to validate_presence_of :invited_by_id }
@@ -14,10 +14,11 @@ describe Invite do
       expect(invite).to be_valid
     end
 
-    it 'does not allow invites with invalid emails' do
-      invite = Fabricate.build(:invite, email: 'John Doe <john.doe@example.com>')
+    it 'escapes the invalid email before attaching the error message' do
+      invite = Fabricate.build(:invite, email: xss_email)
+
       expect(invite.valid?).to eq(false)
-      expect(invite.errors.full_messages).to include(I18n.t('invite.invalid_email', email: invite.email))
+      expect(invite.errors.full_messages).to include(I18n.t('invite.invalid_email', email: escaped_email))
     end
 
     it 'does not allow an invite with the same email as an existing user' do
@@ -37,6 +38,14 @@ describe Invite do
       invite = Fabricate.build(:invite, email: 'asjdso')
       expect(invite.valid?).to eq(false)
       expect(invite.errors.full_messages).to include(I18n.t('invite.invalid_email', email: invite.email))
+    end
+
+    it 'allows only valid domains' do
+      invite = Fabricate.build(:invite, domain: 'example', invited_by: user)
+      expect(invite).not_to be_valid
+
+      invite = Fabricate.build(:invite, domain: 'example.com', invited_by: user)
+      expect(invite).to be_valid
     end
   end
 
@@ -72,6 +81,20 @@ describe Invite do
     it 'raises an error when inviting an existing user' do
       expect { Invite.generate(user, email: user.email) }
         .to raise_error(Invite::UserExists)
+    end
+
+    it 'escapes the email_address when raising an existing user error' do
+      user.email = xss_email
+      user.save(validate: false)
+
+      expect { Invite.generate(user, email: user.email) }
+        .to raise_error(
+          Invite::UserExists,
+          I18n.t(
+            'invite.user_exists',
+            email: escaped_email, username: user.username, base_path: Discourse.base_path
+          )
+        )
     end
 
     context 'via email' do
@@ -402,29 +425,6 @@ describe Invite do
       invite.resend_invite
       expect(invite).not_to be_expired
       expect(invite.invalidated_at).to be_nil
-    end
-  end
-
-  describe '#warnings' do
-    fab!(:admin) { Fabricate(:admin) }
-    fab!(:invite) { Fabricate(:invite) }
-    fab!(:group) { Fabricate(:group) }
-    fab!(:secured_category) do
-      secured_category = Fabricate(:category)
-      secured_category.permissions = { group.name => :full }
-      secured_category.save!
-      secured_category
-    end
-
-    it 'does not return any warnings for simple invites' do
-      expect(invite.warnings(admin.guardian)).to be_blank
-    end
-
-    it 'returns a warning if topic is private' do
-      topic = Fabricate(:topic, category: secured_category)
-      TopicInvite.create!(topic: topic, invite: invite)
-
-      expect(invite.warnings(admin.guardian)).to contain_exactly(I18n.t("invite.requires_groups", groups: group.name))
     end
   end
 end

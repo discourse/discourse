@@ -262,8 +262,6 @@ ca:
   too_many_links:
     one: "Els usuaris nous només poden incloure un enllaç en una publicació."
     other: "Els usuaris nous només poden incloure %{count} enllaços en una publicació."
-  contains_blocked_word: "La vostra publicació té una paraula que no és permesa: %{word}"
-  contains_blocked_words: "La vostra publicació conté diverses paraules no admeses: %{words}"
   spamming_host: "No podeu publicar un enllaç a aquest amfitrió."
   user_is_suspended: "Els usuaris suspesos no tenen permís per a publicar."
   topic_not_found: "Alguna cosa ha fallat. Potser el tema ha estat tancat o suprimit mentre el consultàveu."
@@ -733,12 +731,6 @@ ca:
   draft_backup:
     pm_title: "Esborranys de còpia de seguretat de temes en curs"
     pm_body: "Tema que conté esborranys de còpia de seguretat"
-  user_activity:
-    no_bookmarks:
-      self: "No teniu publicacions en els preferits. Els preferits us permeten referir-vos fàcilment a publicacions específiques. "
-      others: "Sense preferits."
-    no_drafts:
-      self: "No teniu cap esborrany. Comenceu a redactar una resposta en qualsevol tema i es desarà com a esborrany nou."
   webauthn:
     validation:
       invalid_type_error: "El tipus de webauthn proporcionat no era vàlid. Els tipus vàlids són webauthn.get i webauthn.create."
@@ -1151,6 +1143,18 @@ ca:
         ignores_count: Recompte d'ignorats
         mutes_count: Recompte de silenciats
       description: "Usuaris que han estat silenciats i/o ignorats per molts altres usuaris."
+    top_users_by_likes_received:
+      labels:
+        user: Usuari
+        qtt_like: '''M''agrada'' rebuts'
+    top_users_by_likes_received_from_inferior_trust_level:
+      labels:
+        user: Usuari
+        qtt_like: '''M''agrada'' rebuts'
+    top_users_by_likes_received_from_a_variety_of_people:
+      labels:
+        user: Usuari
+        qtt_like: '''M''agrada'' rebuts'
   dashboard:
     rails_env_warning: "El vostre servidor s'executa en mode %{env}."
     host_names_warning: "El vostre fitxer config/database.yml empra el nom d'amfitrió local per defecte. Actualitzeu-lo per a fer servir el nom del vostre lloc web."
@@ -1190,7 +1194,6 @@ ca:
     min_personal_message_title_length: "Longitud mínima permesa de títol de tema en caràcters per a un missatge"
     max_emojis_in_title: "Emojis màxims permesos en el títol del tema"
     min_search_term_length: "Longitud mínima vàlida del terme de cerca en caràcters"
-    search_tokenize_chinese_japanese_korean: "Força la cerca per a segmentar xinès/japonès/coreà fins i tot en llocs web no-CJK."
     search_prefer_recent_posts: "Si la cerca en el vostre fòrum és lenta, aquesta opció prova primer amb un índex de publicacions més recents."
     search_recent_posts_size: "Quantes publicacions recents es mantenen en l'índex"
     log_search_queries: "Registra les cerques fetes pels usuaris"
@@ -1229,7 +1232,6 @@ ca:
     show_pinned_excerpt_mobile: "Mostra l'extracte en els temes afixats en la vista per a mòbils."
     show_pinned_excerpt_desktop: "Mostra l'extracte en els temes afixats en la vista d'escriptori."
     post_onebox_maxlength: "Longitud màxima en caràcters d'una publicació en onebox de Discourse."
-    blocked_onebox_domains: "Llista de dominis que no es posaran mai en onebox."
     allowed_inline_onebox_domains: "Llista de dominis que es mostraran en miniatura 'onebox' si s'enllacen sense títol"
     max_oneboxes_per_post: "Nombre màxim de onebox en una publicació"
     logo: "La imatge del logotip a la part superior esquerra del vostre lloc web. Utilitzeu una imatge rectangular ampla amb una alçada de 120 i una relació d'aspecte superior a 3: 1. Si es deixa en blanc, es mostrarà el text del títol del lloc web."
@@ -1252,9 +1254,7 @@ ca:
     summary_percent_filter: "Quan un usuari fa clic en 'Resumeix aquest tema', mostra el % superior de les publicacions"
     summary_max_results: "Nombre màxim de publicacions retornades per \"Resumeix aquest tema\""
     enable_system_message_replies: "Permet als usuaris respondre als missatges del sistema, fins i tot si els missatges personals estan desactivats"
-    enable_long_polling: "El bus de missatges emprat per a notificar pot utilitzar 'long polling'"
     long_polling_base_url: "URL base emprat per a 'long polling' (quan una xarxa de CDN serveix contingut dinàmic, assegureu-vos que ho heu configurat com a 'origin pull'), p. ex. http://origin.site.com"
-    long_polling_interval: "Quantitat de temps que el servidor hauria d'esperar abans de respondre a clients quan no hi ha dades per a enviar (només usuaris que han iniciat sessió)"
     polling_interval: "Si no hi ha 'long polling', amb quina freqüència haurien de mostrejar els clients que han iniciat sessió en mil·lisegons."
     anon_polling_interval: "Amb quina freqüència en mil·lisegons haurien de mostrejar els clients anònims"
     background_polling_interval: "Amb quina freqüència en mil·lisegons haurien de mostrejar els clients (quan la finestra és en segon pla)"
@@ -1287,7 +1287,6 @@ ca:
     allowed_internal_hosts: "Llista d'amfitrions interns que Discourse pot rastrejar de manera segura per a onebox i altres finalitats."
     allowed_iframes: "Llista dels prefixos de domini en el codi d'iframe que Discourse pot permetre de manera segura en les publicacions"
     allowed_crawler_user_agents: "Agents d'usuari dels rastrejadors web als quals es permet accedir al lloc web. ATENCIÓ! ESTABLIR AIXÒ IMPEDIRÀ ACTUAR A TOTS ELS RASTREJADORS NO LLISTATS AQUÍ!"
-    slow_down_crawler_user_agents: "Agents d'usuari dels rastrejadors web que haurien de ser limitats en robots.txt utilitzant la directiva de retard (Crawl-delay)."
     slow_down_crawler_rate: "Si s'especifica slow_down_crawler_user_agents, aquesta ràtio s'aplicarà a tots els rastrejadors (nombre de segons de retard entre les sol·licituds)."
     content_security_policy: "Activa Content-Security-Policy (CSP)"
     content_security_policy_report_only: "Activa Content-Security-Policy-Report-Only"
@@ -1319,7 +1318,6 @@ ca:
     allow_index_in_robots_txt: "Especifiqueu en robots.txt que els motors de cerca web poden indexar aquest lloc. En casos excepcionals, podeu <a href='%{base_path}/admin/customize/robots'>substituir robots.txt</a> de manera permanent."
     blocked_email_domains: "Llista de dominis de correu delimitada amb barres verticals amb els quals  els usuaris no poden registrar comptes. Exemple: mailinator.com|trashmail.net"
     allowed_email_domains: "Llista de dominis de correu delimitada amb barres verticals amb els quals els usuaris HAN DE registrar els comptes. ATENCIÓ: Els usuaris amb dominis de correu diferents dels llistats no són autoritzats!"
-    hide_email_address_taken: "No informis els usuaris que hi ha un compte amb una adreça de correu determinada durant el registre i des del formulari de contrasenya oblidada."
     log_out_strict: "Quan es tanca la sessió, tanca TOTES les sessions de l'usuari en tots els dispositius"
     version_checks: "Fes ping al Discourse Hub per a actualitzacions de versions i per a mostrar missatges de versió nova en el tauler <a href='%{base_path}/admin' target='_blank'>/admin</a>."
     new_version_emails: "Envia un correu a contact_email address quan hi hagi una nova versió del Discourse disponible."
@@ -1406,7 +1404,6 @@ ca:
     external_system_avatars_enabled: "Fes servir un servei extern de sistema d'avatars."
     external_system_avatars_url: "URL del sistema extern de servei d'avatars. Les substitucions permeses són {username} {first_letter} {color} {size}"
     restrict_letter_avatar_colors: "Llista de valors de color hexadecimal de 6 dígits que s'utilitzaran per al fons de l'avatar de lletres."
-    selectable_avatars_enabled: "Obliga els usuaris a triar un avatar de la llista."
     selectable_avatars: "Llista dels avatars que els usuaris poden triar."
     allow_all_attachments_for_group_messages: "Permet tots els adjunts de correu per a missatges de grup."
     png_to_jpg_quality: "La qualitat del fitxer JPG convertit (1 és la qualitat més baixa, 99 és la qualitat més alta, 100 per a desactivar)."
@@ -1937,13 +1934,6 @@ ca:
       fixed_primary_email: "S'ha corregit el correu electrònic primari per a l'usuari fictici"
       same_ip_address: "La mateixa adreça IP (%{ip_address}) que altres usuaris"
       inactive_user: "Usuari inactiu"
-  reviewables_reminder:
-    submitted:
-      one: "S'han enviat elements al llarg de %{count} hores. [Reviseu-los](%{base_path}/review)."
-      other: "S'han enviat elements al llarg de %{count} hores. [Reviseu-los](%{base_path}/review)."
-    subject_template:
-      one: "Cal revisar %{count} element"
-      other: "Cal revisar %{count} elements"
   unsubscribe_mailer:
     title: "Cancel·lació de subscripció"
     subject_template: "Confirmeu que no voleu rebre més actualitzacions per correu de %{site_title}"

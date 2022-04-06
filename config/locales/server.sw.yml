@@ -167,7 +167,6 @@ sw:
   no_attachments_allowed: "Samahani watumiaji wapya hawawezi kuambatanisha picha, sauti, video au dokument kwenye machapisho."
   no_links_allowed: "Samahani watumiaji wapya hawawezi kuweka viungo kwenye machapisho."
   links_require_trust: "Samahani, hauwezi kuweka viungo kwenye machapisho yako."
-  contains_blocked_word: "Chapisho lako lina neno lisiloruhusiwa: %{word}"
   spamming_host: "Samahani hauwezi kuchapisha kiungo kwenye computer hiyo."
   user_is_suspended: "Watumiaji waliosimamishwa hawaruhusiwi kuchapisha."
   topic_not_found: "Kuna tatizo limetokea. Labda hii mada ilifungwa au kufutwa ukiwa unaangalia?"
@@ -480,9 +479,6 @@ sw:
       title: "Penda"
       description: "Penda chapisho hili"
       short_description: "Penda chapisho hili"
-  user_activity:
-    no_bookmarks:
-      others: "Hakuna mialamisho."
   topic_flag_types:
     spam:
       title: "Barua Taka"
@@ -745,6 +741,18 @@ sw:
     top_uploads:
       labels:
         filename: Jina la faili
+    top_users_by_likes_received:
+      labels:
+        user: Mtumiaji
+        qtt_like: Umepokea Likes
+    top_users_by_likes_received_from_inferior_trust_level:
+      labels:
+        user: Mtumiaji
+        qtt_like: Umepokea Likes
+    top_users_by_likes_received_from_a_variety_of_people:
+      labels:
+        user: Mtumiaji
+        qtt_like: Umepokea Likes
   dashboard:
     rails_env_warning: "Seva inafanyakazi ndani ya %{env} halitumizi."
     host_names_warning: "Fili lako la config/database.yml linatumia localhost hostname. Sasisha ili itumie hostname ya tovuti yako."
@@ -785,7 +793,6 @@ sw:
     max_image_width: "Kiwango cha juu cha upana wa kijipicha za picha kwenye chapisho"
     max_image_height: "Kiwango cha juu cha urefu wa kijipicha za picha kwenye chapisho"
     add_rel_nofollow_to_user_content: 'Ongeza rel nofollow kwenye maandishi yote mtumiaji aliyotoa, isipokuwa viungo vya ndani (pamoja na kikoa baba). Ukibadilisha hii, lazima urebake machapisho yote na: "rake machapishi:rebake"'
-    blocked_onebox_domains: "Orodha ya anwani za mitandao ambazo hazijawekwa kwenye boxi."
     allowed_inline_onebox_domains: "Orodha za anwani za mtandao ambazo zitawekwa kwenye boxi kama zikiunganishwa bila kichwa cha habari"
     summary_score_threshold: "Alama ya chini ambayo mada inahitaji kabla ya kuwekwa ndani ya 'Fupisha Hii Mada' "
     summary_percent_filter: "Mtumiaji akibonyeza 'Fupisha Hii Mada', onyesha % machapisho ya juu"

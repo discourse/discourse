@@ -1,6 +1,7 @@
+import Component from "@ember/component";
 import computed from "discourse-common/utils/decorators";
 
-export default Ember.Component.extend({
+export default Component.extend({
   tagName: "section",
   classNameBindings: [":styleguide-section", "sectionClass"],
 

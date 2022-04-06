@@ -72,8 +72,10 @@ class UploadCreator
         extract_image_info!
         return @upload if @upload.errors.present?
 
-        if @image_info.type.to_s == "svg"
+        if @image_info.type == :svg
           clean_svg!
+        elsif @image_info.type == :ico
+          convert_favicon_to_png!
         elsif !Rails.env.test? || @opts[:force_optimize]
           convert_to_jpeg! if convert_png_to_jpeg? || should_alter_quality?
           fix_orientation! if should_fix_orientation?
@@ -261,6 +263,33 @@ class UploadCreator
   MIN_CONVERT_TO_JPEG_BYTES_SAVED = 75_000
   MIN_CONVERT_TO_JPEG_SAVING_RATIO = 0.70
 
+  def convert_favicon_to_png!
+    png_tempfile = Tempfile.new(["image", ".png"])
+
+    from = @file.path
+    to = png_tempfile.path
+
+    OptimizedImage.ensure_safe_paths!(from, to)
+
+    from = OptimizedImage.prepend_decoder!(from, nil, filename: "image.#{@image_info.type}")
+    to = OptimizedImage.prepend_decoder!(to)
+
+    from = "#{from}[-1]" # We only want the last(largest) image of the .ico file
+
+    opts = { flatten: false } # Preserve transparency
+
+    begin
+      execute_convert(from, to, opts)
+    rescue
+      # retry with debugging enabled
+      execute_convert(from, to, opts.merge(debug: true))
+    end
+
+    @file.respond_to?(:close!) ? @file.close! : @file.close
+    @file = png_tempfile
+    extract_image_info!
+  end
+
   def convert_to_jpeg!
     return if @opts[:for_site_setting]
     return if filesize < MIN_CONVERT_TO_JPEG_BYTES_SAVED
@@ -331,8 +360,8 @@ class UploadCreator
       "-auto-orient",
       "-background", "white",
       "-interlace", "none",
-      "-flatten"
     ]
+    command << "-flatten" unless opts[:flatten] == false
     command << "-debug" << "all" if opts[:debug]
     command << "-quality" << opts[:quality].to_s if opts[:quality]
     command << to
@@ -405,9 +434,6 @@ class UploadCreator
     doc.css('use').each do |use_el|
       if use_el.attr('href')
         use_el.remove_attribute('href') unless use_el.attr('href').starts_with?('#')
-      end
-      if use_el.attr('xlink:href')
-        use_el.remove_attribute('xlink:href') unless use_el.attr('xlink:href').starts_with?('#')
       end
     end
     File.write(@file.path, doc.to_s)

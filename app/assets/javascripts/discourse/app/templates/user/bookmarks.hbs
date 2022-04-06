@@ -2,19 +2,19 @@
   {{#if permissionDenied}}
     <div class="alert alert-info">{{i18n "bookmarks.list_permission_denied"}}</div>
   {{else if userDoesNotHaveBookmarks}}
-    <div class="empty-state">
-      <span class="empty-state-title">{{i18n "user.no_bookmarks_title"}}</span>
-      <div class="empty-state-body">
-        <p>{{emptyStateBody}}</p>
-      </div>
-    </div>
+    <EmptyState
+      @title={{i18n "user.no_bookmarks_title"}}
+      @body={{emptyStateBody}}
+    />
   {{else}}
     <div class="inline-form full-width bookmark-search-form">
       {{input type="text"
         value=searchTerm
         placeholder=(i18n "bookmarks.search_placeholder")
         enter=(action "search")
-        id="bookmark-search" autocomplete="discourse"}}
+        id="bookmark-search"
+        autocomplete="off"
+      }}
       {{d-button
         class="btn-primary"
         action=(action "search")

@@ -214,8 +214,6 @@ pt:
       <p>Se você se lembrar da sua senha, você pode <a href="%{base_url}/login">Efetuar Login</a>.</p>
 
       <p>Caso contrário, <a href="%{base_url}/password-reset">Redefinir senha</a>.</p>
-    not_found_template_link: |
-      <p>O convite para <a href="%{base_url}">%{site_name}</a> não pode mais ser resgatado. Peça à pessoa que o convidou para enviar um novo convite.</p>
     user_exists: "Não há necessidade de convidar <b>%{email}</b>, eles <a href='%{base_path}/u/%{username}/summary'>já têm uma conta!</a>"
     invite_exists: "Você já convidou <b>%{email}</b>."
     invalid_email: "%{email} não é um endereço de email válido."
@@ -321,8 +319,6 @@ pt:
   too_many_links:
     one: "Pedimos desculpa, novos utilizadores podem colocar apenas %{count} hiperligação numa mensagem."
     other: "Pedimos desculpa, novos utilizadores podem colocar apenas %{count} hiperligações numa mensagem."
-  contains_blocked_word: "Sua postagem contém uma palavra que não é permitida: %{word}"
-  contains_blocked_words: "Sua postagem contém algumas palavras que não são permitidas: %{words}"
   spamming_host: "Pedimos desculpa, não pode colocar uma hiperligação para esse servidor."
   user_is_suspended: "Utilizadores suspensos não têm permissão para publicar."
   topic_not_found: "Algo de errado ocorreu. Talvez este tópico tenha sido fechado ou eliminado enquanto olhava para ele?"
@@ -372,7 +368,7 @@ pt:
   too_late_to_edit: "Essa mensagem foi criada há muito tempo. Já não pode ser editada ou apagada."
   edit_conflict: "Essa postagem foi editada por outro usuário e suas alterações não podem mais ser salvas."
   revert_version_same: "A versão actual é o mesma versão para a qual está a tentar reverter."
-  cannot_edit_on_slow_mode: "Este tópico está em modo lento. Para incentivar uma discussão ponderada e respeitada, a edição de postagens antigas neste tópico não é permitida enquanto em modo lento."
+  cannot_edit_on_slow_mode: "Este tópico está em modo lento. Para incentivar uma discussão ponderada e respeitada, a edição de posts antigos neste tópico não é permitida enquanto em modo lento."
   excerpt_image: "imagem"
   bookmarks:
     errors:
@@ -380,7 +376,6 @@ pt:
       too_many: "Desculpe, você não pode adicionar mais de %{limit} favoritos, visite <a href='%{user_bookmarks_url}'>%{user_bookmarks_url}</a> para remover alguns."
       cannot_set_past_reminder: "Você não pode definir um lembrete de favoritos no passado."
       cannot_set_reminder_in_distant_future: "Você não pode definir um lembrete de favoritos para mais de 10 anos no futuro."
-      time_must_be_provided: "tempo deve ser fornecido para todos os lembretes"
     reminders:
       at_desktop: "Da próxima vez que eu estiver no meu desktop"
       later_today: "Hoje, mais tarde"
@@ -667,10 +662,6 @@ pt:
       title: "Gostar"
       description: "Gostar desta mensagem"
       short_description: "Gostar desta publicação"
-  user_activity:
-    no_bookmarks:
-      self: "Você não tem posts marcados; os favoritos permitem-lhe consultar rapidamente posts específicos."
-      others: "Sem marcadores."
   topic_flag_types:
     spam:
       title: "Spam"
@@ -946,6 +937,18 @@ pt:
     top_uploads:
       labels:
         filename: Nome do ficheiro
+    top_users_by_likes_received:
+      labels:
+        user: Utilizador
+        qtt_like: Gostos Recebidos
+    top_users_by_likes_received_from_inferior_trust_level:
+      labels:
+        user: Utilizador
+        qtt_like: Gostos Recebidos
+    top_users_by_likes_received_from_a_variety_of_people:
+      labels:
+        user: Utilizador
+        qtt_like: Gostos Recebidos
   dashboard:
     rails_env_warning: "O seu servidor está a executar em modo %{env}."
     host_names_warning: "O ficheiro config/database.yml está a utilizar o nome do servidor local por defeito. Modifique para usar o nome do servidor do seu sítio."
@@ -973,7 +976,6 @@ pt:
     max_topic_title_length: "Tamanho máximo permitido por título de cada tópico, em caracteres"
     min_personal_message_title_length: "Tamanho mínimo permitido por título nas mensagens, em caracteres"
     min_search_term_length: "Tamanho mínimo válido para termos de pesquisa, em caracteres"
-    search_tokenize_chinese_japanese_korean: "Forçar pesquisa para atomizar Chinês/Japonês/Coreano mesmo em sites que não sejam CJC"
     search_prefer_recent_posts: "Se pesquisar no seu fórum vasto é lento, esta opção tenta usar um índex de publicações recentes primeiro"
     search_recent_posts_size: "Quantas publicações recentes a manter no índex"
     search_query_log_max_size: "O número máximo de consultas de pesquisa a serem mantidas"
@@ -1000,7 +1002,6 @@ pt:
     show_pinned_excerpt_mobile: "Mostrar excerto em publicações afixadas na vista móvel."
     show_pinned_excerpt_desktop: "Mostar excerto em publicações afixadas na vista de desktop."
     post_onebox_maxlength: "Tamanho máximo de uma mensagem Discourse de caixa única, em caracteres."
-    blocked_onebox_domains: "Uma lista de domínios para a qual nunca serão geradas pré-visualizações."
     max_oneboxes_per_post: "Número máximo de pré-visualizações numa publicação."
     manifest_screenshots: "Capturas de tela que mostrem os recursos e a funcionalidade da instância na página de incentivo à instalação. Todas as imagens devem ser envios locais e das mesmas dimensões."
     notification_email: "Para: endereço de email usado ao enviar emails essenciais do sistema. O domínio especificado aqui deverá ter SPF, DKIM e registos PTR inversos configurados corretamente para a chegada do email."
@@ -1008,9 +1009,7 @@ pt:
     force_https: "Forçar o site a usar apenas HTTPS. ALERTA: NÃO active esta opção enquanto não verificar que o HTTPS está completamente configurado e funcional absolutamente em todo o lado! Verificou a sua CDN, todos os logins por rede social, e quaisquer logos ou outras dependências externas para garantir que também são compatíveis com HTTPS?"
     summary_score_threshold: "Pontuação mínima necessária para que uma mensagem seja incluída em 'Resumir Este Tópico'"
     summary_percent_filter: "Quando um utilizador clica em 'Resumir Este Tópico', mostrar as melhores % de mensagens"
-    enable_long_polling: "O sistema de mensagens usado para notificações pode fazer solicitações longas"
     long_polling_base_url: "URL base utilizado para sondar o servidor (quando um CDN serve conteúdo dinâmico, certifique-se de definir isto para a \"pull\" original) por exemplo: http://origem.site.com"
-    long_polling_interval: "O tempo que um servidor deverá aguardar antes de responder aos clientes quando não existirem dados para serem enviados (apenas utilizadores autenticados)"
     polling_interval: "Quando não está a ocorrer uma solicitação ao servidor, com que frequência devem os clientes ligados requerer uma atualização, em milissegundos"
     anon_polling_interval: "Com que frequência os clientes anónimos podem sondar o servidor em milisegundos"
     background_polling_interval: "Com que frequência deverão os clientes solicitar o servidor, em milissegundos (quando a janela está em plano de fundo)"
@@ -2080,8 +2079,7 @@ pt:
     reader:
       name: Leitor
       description: Ler todas as respostas num tópico com mais de 100 respostas
-      long_description: |2
-
+      long_description: |
         Este distintivo é concedido pela primeira vez que lê um tópico alongado com mais de 100 respostas. Ler uma discussão atentamente ajuda-o a acompanhar uma discussão, compreender diferentes pontos de vista, e leva a discussões mais interessantes. Quanto mais lê, melhor fica a discussão. Como costumamos dizer, Ler é Fundamental! :slight_smile:
     popular_link:
       name: Ligação Popular
@@ -2092,8 +2090,7 @@ pt:
     hot_link:
       name: Ligação Quente
       description: Publicou uma ligação externa com 300 cliques
-      long_description: |2
-
+      long_description: |
         Este distintivo é concedido quando uma ligação que partilhou obtém 300 cliques. Obrigado por publicar uma ligação fascinante que empurrou a conversa para a frente e iluminou a discussão!
     famous_link:
       name: Ligação Famosa

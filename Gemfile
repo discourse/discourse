@@ -18,7 +18,7 @@ else
   # this allows us to include the bits of rails we use without pieces we do not.
   #
   # To issue a rails update bump the version number here
-  rails_version = '6.1.4.1'
+  rails_version = '6.1.4.7'
   gem 'actionmailer', rails_version
   gem 'actionpack', rails_version
   gem 'actionview', rails_version
@@ -105,9 +105,7 @@ gem 'omniauth-oauth2', require: false
 
 gem 'omniauth-google-oauth2'
 
-# Pinning oj until https://github.com/ohler55/oj/issues/699 is resolved.
-# Segfaults and stuck processes after upgrading.
-gem 'oj', '3.13.2'
+gem 'oj'
 
 gem 'pg'
 gem 'mini_sql'
@@ -135,6 +133,14 @@ gem 'cose', require: false
 gem 'addressable'
 gem 'json_schemer'
 
+if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new("3.1")
+  # net-smtp, net-imap and net-pop were removed from default gems in Ruby 3.1
+  gem "net-smtp", "~> 0.2.1", require: false
+  gem "net-imap", "~> 0.2.1", require: false
+  gem "net-pop", "~> 0.1.1", require: false
+  gem "digest", "3.0.0", require: false
+end
+
 # Gems used only for assets and not required in production environments by default.
 # Allow everywhere for now cause we are allowing asset debugging in production
 group :assets do
@@ -152,7 +158,6 @@ end
 
 group :test, :development do
   gem 'rspec'
-  gem 'mock_redis'
   gem 'listen', require: false
   gem 'certified', require: false
   gem 'fabrication', require: false

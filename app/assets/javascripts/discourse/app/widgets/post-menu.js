@@ -5,32 +5,33 @@ import { formattedReminderTime } from "discourse/lib/bookmark";
 import { h } from "virtual-dom";
 import showModal from "discourse/lib/show-modal";
 import { smallUserAtts } from "discourse/widgets/actions-summary";
+import I18n from "I18n";
 
 const LIKE_ACTION = 2;
 const VIBRATE_DURATION = 5;
 
 const _builders = {};
-const _extraButtons = {};
+let _extraButtons = {};
 export let apiExtraButtons = {};
+let _buttonsToRemove = {};
 
 export function addButton(name, builder) {
   _extraButtons[name] = builder;
 }
 
 export function resetPostMenuExtraButtons() {
-  Object.keys(apiExtraButtons).forEach((button) => {
-    removeButton(button);
-  });
-
+  _buttonsToRemove = {};
   apiExtraButtons = {};
+  _extraButtons = {};
 }
 
-export function removeButton(name) {
-  if (_extraButtons[name]) {
-    delete _extraButtons[name];
-  }
-  if (_builders[name]) {
-    delete _builders[name];
+export function removeButton(name, callback) {
+  if (callback) {
+    _buttonsToRemove[name] = callback;
+  } else {
+    _buttonsToRemove[name] = () => {
+      return true;
+    };
   }
 }
 
@@ -40,8 +41,22 @@ function registerButton(name, builder) {
 
 export function buildButton(name, widget) {
   let { attrs, state, siteSettings, settings, currentUser } = widget;
+
+  let shouldAddButton = true;
+
+  if (_buttonsToRemove[name]) {
+    shouldAddButton = !_buttonsToRemove[name](
+      attrs,
+      state,
+      siteSettings,
+      settings,
+      currentUser
+    );
+  }
+
   let builder = _builders[name];
-  if (builder) {
+
+  if (shouldAddButton && builder) {
     let button = builder(attrs, state, siteSettings, settings, currentUser);
     if (button && !button.id) {
       button.id = name;
@@ -50,10 +65,14 @@ export function buildButton(name, widget) {
   }
 }
 
-registerButton("read-count", (attrs) => {
+registerButton("read-count", (attrs, state) => {
   if (attrs.showReadIndicator) {
     const count = attrs.readCount;
     if (count > 0) {
+      let ariaPressed = "false";
+      if (state?.readers && state.readers.length > 0) {
+        ariaPressed = "true";
+      }
       return {
         action: "toggleWhoRead",
         title: "post.controls.read_indicator",
@@ -61,6 +80,10 @@ registerButton("read-count", (attrs) => {
         contents: count,
         iconRight: true,
         addContainer: false,
+        translatedAriaLabel: I18n.t("post.sr_post_read_count_button", {
+          count,
+        }),
+        ariaPressed,
       };
     }
   }
@@ -79,7 +102,7 @@ registerButton("read", (attrs) => {
   }
 });
 
-function likeCount(attrs) {
+function likeCount(attrs, state) {
   const count = attrs.likeCount;
 
   if (count > 0) {
@@ -97,6 +120,10 @@ function likeCount(attrs) {
       addContainer = true;
     }
 
+    let ariaPressed = "false";
+    if (state?.likedUsers && state.likedUsers.length > 0) {
+      ariaPressed = "true";
+    }
     return {
       action: "toggleWhoLiked",
       title,
@@ -106,6 +133,8 @@ function likeCount(attrs) {
       iconRight: true,
       addContainer,
       titleOptions: { count: attrs.liked ? count - 1 : count },
+      translatedAriaLabel: I18n.t("post.sr_post_like_count_button", { count }),
+      ariaPressed,
     };
   }
 }
@@ -241,6 +270,10 @@ registerButton("replies", (attrs, state, siteSettings) => {
     return;
   }
 
+  let ariaPressed;
+  if (!siteSettings.enable_filtered_replies_view) {
+    ariaPressed = state.repliesShown ? "true" : "false";
+  }
   return {
     action,
     icon,
@@ -254,19 +287,20 @@ registerButton("replies", (attrs, state, siteSettings) => {
     labelOptions: { count: replyCount },
     label: attrs.mobileView ? "post.has_replies_count" : "post.has_replies",
     iconRight: !siteSettings.enable_filtered_replies_view || attrs.mobileView,
+    disabled: !!attrs.deleted,
+    translatedAriaLabel: I18n.t("post.sr_expand_replies", {
+      count: replyCount,
+    }),
+    ariaPressed,
   };
 });
 
-registerButton("share", (attrs) => {
+registerButton("share", () => {
   return {
     action: "share",
     className: "share",
     title: "post.controls.share",
     icon: "d-post-share",
-    data: {
-      "share-url": attrs.shareUrl,
-      "post-number": attrs.post_number,
-    },
   };
 });
 
@@ -291,7 +325,7 @@ registerButton("reply", (attrs, state, siteSettings, postMenuSettings) => {
 
 registerButton(
   "bookmark",
-  (attrs, _state, _siteSettings, _settings, currentUser) => {
+  (attrs, _state, siteSettings, _settings, currentUser) => {
     if (!attrs.canBookmark) {
       return;
     }
@@ -321,7 +355,9 @@ registerButton(
 
     return {
       id: attrs.bookmarked ? "unbookmark" : "bookmark",
-      action: "toggleBookmark",
+      action: siteSettings.use_polymorphic_bookmarks
+        ? "toggleBookmarkPolymorphic"
+        : "toggleBookmark",
       title,
       titleOptions,
       className: classNames.join(" "),
@@ -498,7 +534,19 @@ export default createWidget("post-menu", {
     }
 
     Object.values(_extraButtons).forEach((builder) => {
-      if (builder) {
+      let shouldAddButton = true;
+
+      if (_buttonsToRemove[name]) {
+        shouldAddButton = !_buttonsToRemove[name](
+          attrs,
+          this.state,
+          this.siteSettings,
+          this.settings,
+          this.currentUser
+        );
+      }
+
+      if (shouldAddButton && builder) {
         const buttonAtts = builder(
           attrs,
           this.state,
@@ -605,6 +653,9 @@ export default createWidget("post-menu", {
           listClassName: "who-read",
           description,
           count,
+          ariaLabel: I18n.t(
+            "post.actions.people.sr_post_readers_list_description"
+          ),
         })
       );
     }
@@ -624,6 +675,9 @@ export default createWidget("post-menu", {
           listClassName: "who-liked",
           description,
           count,
+          ariaLabel: I18n.t(
+            "post.actions.people.sr_post_likers_list_description"
+          ),
         })
       );
     }

@@ -1,4 +1,5 @@
 const TapReporter = require("testem/lib/reporters/tap_reporter");
+const { shouldLoadPluginTestJs } = require("discourse/lib/plugin-js");
 
 class Reporter {
   constructor() {
@@ -25,15 +26,15 @@ class Reporter {
 module.exports = {
   test_page: "tests/index.html?hidepassed",
   disable_watching: true,
-  launch_in_ci: ["Chrome", "Firefox", "Headless Firefox"], // Firefox is old ESR version, Headless Firefox is up-to-date evergreen version
-  launch_in_dev: ["Chrome"],
-  tap_failed_tests_only: process.env.CI,
+  launch_in_ci: ["Chrome"],
+  // launch_in_dev: ["Chrome"] // Ember-CLI always launches testem in 'CI' mode
+  tap_failed_tests_only: false,
   parallel: 1, // disable parallel tests for stability
   browser_start_timeout: 120,
   browser_args: {
     Chrome: [
       // --no-sandbox is needed when running Chrome inside a container
-      process.env.CI || process.env.EMBER_CLI ? "--no-sandbox" : null,
+      process.env.CI ? "--no-sandbox" : null,
       "--headless",
       "--disable-dev-shm-usage",
       "--disable-software-rasterizer",
@@ -51,3 +52,18 @@ module.exports = {
   },
   reporter: Reporter,
 };
+
+if (shouldLoadPluginTestJs()) {
+  const target = `http://localhost:${process.env.UNICORN_PORT || "3000"}`;
+  module.exports.proxies = {
+    "/assets/discourse/tests/active-plugins.js": {
+      target,
+    },
+    "/assets/admin-plugins.js": {
+      target,
+    },
+    "/assets/discourse/tests/plugin-tests.js": {
+      target,
+    },
+  };
+}

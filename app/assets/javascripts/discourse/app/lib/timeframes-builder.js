@@ -33,7 +33,7 @@ const TIMEFRAMES = [
   buildTimeframe({
     id: "later_this_week",
     format: "ddd, h a",
-    enabled: (opts) => !opts.canScheduleToday && opts.day > 0 && opts.day < 4,
+    enabled: (opts) => opts.day > 0 && opts.day < 4,
     when: (time, timeOfDay) => time.add(2, "day").hour(timeOfDay).minute(0),
   }),
   buildTimeframe({
@@ -68,7 +68,7 @@ const TIMEFRAMES = [
   buildTimeframe({
     id: "two_months",
     format: "MMM D",
-    enabled: (opts) => opts.includeMidFuture,
+    enabled: () => true,
     when: (time, timeOfDay) =>
       time.add(2, "month").startOf("month").hour(timeOfDay).minute(0),
     icon: "briefcase",
@@ -76,7 +76,7 @@ const TIMEFRAMES = [
   buildTimeframe({
     id: "three_months",
     format: "MMM D",
-    enabled: (opts) => opts.includeMidFuture,
+    enabled: () => true,
     when: (time, timeOfDay) =>
       time.add(3, "month").startOf("month").hour(timeOfDay).minute(0),
     icon: "briefcase",
@@ -84,7 +84,7 @@ const TIMEFRAMES = [
   buildTimeframe({
     id: "four_months",
     format: "MMM D",
-    enabled: (opts) => opts.includeMidFuture,
+    enabled: () => true,
     when: (time, timeOfDay) =>
       time.add(4, "month").startOf("month").hour(timeOfDay).minute(0),
     icon: "briefcase",
@@ -92,7 +92,7 @@ const TIMEFRAMES = [
   buildTimeframe({
     id: "six_months",
     format: "MMM D",
-    enabled: (opts) => opts.includeMidFuture,
+    enabled: () => true,
     when: (time, timeOfDay) =>
       time.add(6, "month").startOf("month").hour(timeOfDay).minute(0),
     icon: "briefcase",

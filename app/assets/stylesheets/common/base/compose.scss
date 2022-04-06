@@ -30,9 +30,10 @@
   .saving-text,
   .draft-text {
     display: none;
-    padding-left: 10px;
+    padding-left: 8px;
+
     .spinner {
-      margin-left: 5px;
+      margin-left: 8px;
       border-color: var(--secondary);
       border-right-color: transparent;
     }
@@ -59,14 +60,17 @@
     background: var(--tertiary);
     color: var(--secondary);
     flex-direction: row;
-    width: 100%;
+    justify-content: space-between;
+
     .composer-controls {
-      margin-left: auto;
       display: flex;
-      padding-right: 5px;
+      gap: 8px;
+      padding-right: 8px;
+
       .toggle-toolbar {
         display: none;
       }
+
       .d-icon {
         color: var(--secondary);
       }
@@ -94,15 +98,16 @@
 
   .reply-to {
     color: var(--primary-high);
-    margin: 5px 0 10px 0;
+    margin-bottom: 8px;
     display: flex;
     align-items: center;
+    justify-content: flex-end;
 
     .reply-details {
-      max-width: calc(100% - 175px);
-      flex: 1 1 auto;
+      flex: 1;
       display: flex;
       align-items: center;
+      min-width: 0;
       white-space: nowrap;
 
       .d-icon {
@@ -110,7 +115,7 @@
       }
     }
     .composer-action-title {
-      display: inline-flex;
+      display: flex;
       align-items: center;
       width: auto;
       max-width: 100%;
@@ -127,7 +132,7 @@
       .topic-link,
       .user-link,
       .post-link {
-        margin-right: 5px;
+        margin-right: 8px;
       }
 
       .username {
@@ -140,16 +145,23 @@
       }
 
       .d-icon {
-        margin-right: 5px;
+        margin-right: 8px;
       }
 
       img.avatar {
         margin-right: 3px;
       }
     }
+
     .composer-controls {
       display: flex;
-      margin-left: auto;
+      gap: 8px;
+      margin-left: 8px;
+
+      .d-icon {
+        color: var(--primary-medium);
+      }
+
       .toggle-minimize {
         order: 2;
       }
@@ -189,11 +201,11 @@
     display: flex;
     width: 100%;
     align-items: center;
-    margin-bottom: 5px;
     position: relative;
-    &.with-preview {
-      width: 50%;
-    }
+  }
+
+  .user-selector {
+    margin-bottom: 8px;
   }
 
   .title-input {
@@ -223,20 +235,20 @@
     display: flex;
     flex: 1 0 40%;
     max-width: 40%;
-    margin: 0 0 5px 10px;
-    @media screen and (max-width: 955px) {
-      flex: 1 0 100%;
-      margin-left: 0;
-    }
+    margin: 0 0 8px 8px;
+
     .category-chooser {
       display: flex;
       flex: 1 0 auto;
       max-width: 100%;
       width: auto;
+
       .select-kit-header {
+        color: var(--primary-high);
         white-space: nowrap;
         text-overflow: ellipsis;
       }
+
       // below needed for text-overflow: ellipsis;
       .selected-name {
         max-width: 100%;
@@ -262,46 +274,46 @@
     .title-and-category {
       flex-wrap: wrap;
     }
+
     .category-input {
       margin-left: 0;
-      margin-bottom: 0px;
+      margin-bottom: 8px;
       min-width: 0; // allows flex to shrink
       flex-wrap: wrap;
-      max-width: 50%;
-      @media screen and (max-width: 920px) {
-        flex-basis: 100%;
-        margin-right: 0;
-      }
+      max-width: calc(50% - 4px);
     }
   }
 
   .add-warning {
-    margin-left: 0.75em;
+    color: var(--primary-high);
+    padding-left: 8px;
     margin-bottom: 0;
     display: flex;
+
     input {
-      margin-right: 5px;
+      margin-right: 8px;
     }
   }
 
   #reply-title {
-    margin: 0 0 5px 0;
+    margin-bottom: 8px;
     flex-basis: 50%;
     width: unset;
+
     &:focus {
       box-shadow: none;
     }
   }
 
   .mini-tag-chooser {
-    width: 49%;
-    margin: 0 0 0 auto;
-    background: var(--secondary);
+    flex-grow: 1;
+    max-width: calc(50% - 4px);
+    margin: 0 0 8px 8px;
     z-index: z("composer", "dropdown");
-  }
 
-  .popup-tip {
-    z-index: z("composer", "dropdown") + 1;
+    .select-kit-header {
+      color: var(--primary-high);
+    }
   }
 
   .wmd-controls {
@@ -313,30 +325,36 @@
   }
 
   .submit-panel {
+    align-items: center;
     display: flex;
     flex-shrink: 0;
-    margin: 7px 0 3px 0;
+    margin-top: 8px;
   }
 
   .save-or-cancel {
-    flex-basis: 50%;
-    display: flex;
     align-items: center;
-    margin-right: auto;
+    display: flex;
+    flex: 1 1 auto;
+
     .btn-primary {
       flex: 0 0 auto;
     }
+
     .cancel {
+      align-items: center;
+      display: flex;
       margin-left: 1.25em;
       line-height: normal;
       color: var(--primary-high);
       transition: color 250ms;
+
       &:hover,
       &:focus {
         outline: none;
         color: var(--danger);
       }
     }
+
     #draft-status,
     #file-uploading {
       margin-left: 25px;
@@ -536,8 +554,18 @@ body:not(.ios-safari-composer-hacks) {
 }
 
 .toggle-preview {
+  margin-left: 8px;
   transition: all 0.33s ease-out;
+
   &.active {
     transform: rotate(180deg);
   }
+
+  .d-icon {
+    color: var(--primary-medium);
+  }
+}
+
+.draft-error {
+  color: var(--danger);
 }

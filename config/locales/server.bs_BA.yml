@@ -356,9 +356,6 @@ bs_BA:
       title: "Like"
       description: "Lajkuj ovaj post"
       short_description: "Lajkuj ovaj post"
-  user_activity:
-    no_bookmarks:
-      self: "Nemate zabilježene postove; zabilješke omogućuju brzo pozivanje na određene postove."
   topic_flag_types:
     spam:
       title: "Spam"
@@ -587,6 +584,18 @@ bs_BA:
     top_uploads:
       labels:
         filename: Filename
+    top_users_by_likes_received:
+      labels:
+        user: User
+        qtt_like: Likes Received
+    top_users_by_likes_received_from_inferior_trust_level:
+      labels:
+        user: User
+        qtt_like: Likes Received
+    top_users_by_likes_received_from_a_variety_of_people:
+      labels:
+        user: User
+        qtt_like: Likes Received
   dashboard:
     rails_env_warning: "Your server is running in %{env} mode."
     host_names_warning: "Your config/database.yml file is using the default localhost hostname. Update it to use your site's hostname."
@@ -626,8 +635,6 @@ bs_BA:
     email_custom_headers: "A pipe-delimited list of custom email headers"
     summary_score_threshold: "The minimum score required for a post to be included in 'Summarize This Topic'"
     summary_percent_filter: "When a user clicks 'Summarize This Topic', show the top % of posts"
-    enable_long_polling: "Message bus used for notification can use long polling"
-    long_polling_interval: "Interval before a new long poll is issued in milliseconds "
     polling_interval: "How often should logged in user clients poll in milliseconds"
     anon_polling_interval: "How often should anonymous clients poll in milliseconds"
     cooldown_minutes_after_hiding_posts: "Number of minutes a user must wait before they can edit a post hidden via community flagging"

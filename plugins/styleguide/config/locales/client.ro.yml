@@ -7,8 +7,8 @@
 ro:
   js:
     styleguide:
-      title: "Ghid de stil"
-      welcome: "Pentru a începe, alege o secțiune din meniul din stânga."
+      title: "Ghid stilistic"
+      welcome: "Pentru a începe, alegeți o secțiune din meniul din stânga."
       categories:
         atoms: Atomi
         molecules: Molecule

@@ -16,6 +16,7 @@ import { inject as service } from "@ember/service";
 import showModal from "discourse/lib/show-modal";
 
 export default Controller.extend(CanCheckEmails, {
+  router: service(),
   adminTools: service(),
   originalPrimaryGroupId: null,
   customGroupIdsBuffer: null,
@@ -221,14 +222,18 @@ export default Controller.extend(CanCheckEmails, {
         .then((result) => {
           if (result.email_confirmation_required) {
             bootbox.alert(I18n.t("admin.user.grant_admin_confirm"));
-          } else {
-            const controller = showModal("grant-admin-second-factor", {
-              model: this.model,
-            });
-            controller.setResult(result);
           }
         })
-        .catch(popupAjaxError);
+        .catch((error) => {
+          const nonce = error.jqXHR?.responseJSON.second_factor_challenge_nonce;
+          if (nonce) {
+            this.router.transitionTo("second-factor-auth", {
+              queryParams: { nonce },
+            });
+          } else {
+            popupAjaxError(error);
+          }
+        });
     },
     revokeModeration() {
       return this.model.revokeModeration();

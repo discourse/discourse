@@ -93,7 +93,6 @@ zh_TW:
       to_placeholder: "至今"
     share:
       topic_html: '話題：<span class="topic-title">%{topicTitle}</span>'
-      post: "貼文 #%{postNumber} "
       close: "關閉"
       twitter: "分享到 Twitter"
       facebook: "分享到 Facebook"
@@ -143,7 +142,6 @@ zh_TW:
     bootstrap_mode_disabled: "初始模式將會在 24 小時後自動禁用。"
     themes:
       default_description: "預設"
-      broken_theme_alert: "您的網站可能無法正常工作，因為話題/組件 %{theme} 有錯誤。在 %{path} 處停用它。"
     s3:
       regions:
         ap_northeast_1: "亞太地區 (東京)"
@@ -255,11 +253,6 @@ zh_TW:
       no_timezone: '您尚未設定時區。將無法設定提醒事項。在<a href="%{basePath}/my/preferences/profile">您的設定檔</a>中設定一個 。'
       list_permission_denied: "您沒有權限查看此用戶的書籤。"
       no_user_bookmarks: "您沒有加入書籤的貼文，書籤能夠讓您快速的找到特定貼文。"
-      auto_delete_preference:
-        label: "自動刪除"
-        never: "永不"
-        when_reminder_sent: "一旦發送提醒"
-        on_owner_reply: "在我回复這個話題之後"
       search: "搜索"
       reminders:
         today_with_time: "今天 %{time}"
@@ -313,8 +306,7 @@ zh_TW:
     switch_to_anon: "進入匿名模式"
     switch_from_anon: "離開匿名模式"
     banner:
-      close: "關閉此橫幅"
-      edit: "編輯此橫幅 >>"
+      edit: "編輯"
     pwa:
       install_banner: "你希望在此裝置上 <a href>安裝 %{title} 嗎？</a>"
     choose_topic:
@@ -1154,11 +1146,9 @@ zh_TW:
         every_month: "每個月"
         every_six_months: "每半年"
       email_level:
-        title: "當有人引用、回覆我的發文，或以 @使用者名稱 提及我時，請以電子郵件通知我。"
         always: "總是"
         only_when_away: "只在離開時"
         never: "永不"
-      email_messages_level: "當有人寄給我私人訊息時，以電子郵件通知我。"
       include_tl0_in_digests: "摘要郵件中包含新使用者的內容"
       email_in_reply_to: "郵件中包含回覆你的內容節選"
       other_settings: "其它"
@@ -1443,7 +1433,6 @@ zh_TW:
       success: "你的帳號已被建立，且您已經登入了。"
       name_label: "姓名"
       password_label: "密碼"
-      optional_description: "(選擇性)"
     password_reset:
       continue: "繼續連接至 %{site_name}"
     emoji_set:
@@ -1526,9 +1515,6 @@ zh_TW:
         other: "<b>提醒</b>你提及了<a href='%{group_link}'>%{group}</a>，但此群組的人數多於管理員配置的提及人數上限（%{count}位），因此不會有任何人收到通知。"
       group_mentioned:
         other: "提及 %{group} 時，你將通知 <a href='%{group_link}'>%{count} 人</a> － 確定嗎？"
-      cannot_see_mention:
-        category: "您提及了%{userrname}，但他們不能進入該分類，所以他們不會收到通知。您必須把他們加入到有權限進入該分類的群組中。"
-        private: "您提及了%{username}，但他們不能看到私人訊息，所以他們不會收到通知。您必須把他們邀請至私訊對話中。"
       duplicate_link: "您連到<b>%{domain}</b>的連結已被<b>@%{username}</b><a href='%{post_url}'>於%{ago}前發在其他話題下的回覆</a>，確定要再次發佈嗎？"
       error:
         title_missing: "標題為必填欄位"
@@ -1663,6 +1649,9 @@ zh_TW:
       watching_first_post: "<span>新話題</span> %{description}"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}、%{username2}</span> %{description}"
+      dismiss_confirmation:
+        dismiss: "忽略"
+        cancel: "取消"
       group_message_summary:
         other: "您的收件匣中有%{count}則訊息"
       popup:
@@ -1775,7 +1764,7 @@ zh_TW:
         clear_all: "清除全部"
         unlist_topics: "未在列表中的話題"
         relist_topics: "討論話題"
-        reset_read: "重設閱讀"
+        defer: "延遲"
         delete: "刪除話題"
         dismiss: "忽略"
         dismiss_read: "忽略所有未讀話題"
@@ -1920,19 +1909,12 @@ zh_TW:
         replies_short: "%{current} / %{total}"
       progress:
         title: 主題進度
-        go_top: "頂部"
-        go_bottom: "底部"
-        go: "前往"
-        jump_bottom: "跳至最後一則貼文"
         jump_prompt: "跳到..."
         jump_prompt_of:
           other: "%{count} 貼文"
         jump_prompt_long: "跳到..."
-        jump_bottom_with_number: "跳至第 %{post_number} 篇貼文"
         jump_prompt_to_date: "至今"
         jump_prompt_or: "或"
-        total: 所有貼文
-        current: 目前的貼文
       notifications:
         title: 改變你收到該話題通知的頻率
         reasons:
@@ -2002,7 +1984,6 @@ zh_TW:
         title: "回覆"
         help: "開始編寫對此話題的回覆"
       share:
-        title: "分享"
         extended_title: "分享連結"
         help: "分享此話題的連結"
         invite_users: "邀請"
@@ -2478,6 +2459,9 @@ zh_TW:
       unlisted:
         help: "此話題已被隱藏，不會顯示於話題列表，只能由直接連結存取。"
     posts: "貼文"
+    pending_posts:
+      label: "申請中"
+      label_with_count: "等待中 (%{count})"
     original_post: "原始貼文"
     views: "觀看"
     views_lowercase:
@@ -2671,8 +2655,7 @@ zh_TW:
       delete_confirm:
         other: "您確定要刪除此標籤並將它從%{count}個話題中移除嗎？"
       delete_confirm_no_topics: "您是否確定要刪除這個標籤？"
-      rename_tag: "重命名標籤"
-      rename_instructions: "標籤的新名稱："
+      description: "描述"
       sort_by: "排序方式："
       sort_by_count: "總數"
       sort_by_name: "名稱"
@@ -3101,7 +3084,6 @@ zh_TW:
         delete_confirm: '你確定要刪除%{theme_name}嗎？'
         color: "顏色"
         opacity: "不透明度"
-        copy: "複製"
         copy_to_clipboard: "複製至剪貼簿"
         copied_to_clipboard: "已複製至剪貼簿"
         copy_to_clipboard_error: "複製資料到剪貼簿時發生錯誤"
@@ -3477,9 +3459,6 @@ zh_TW:
         screened_ips:
           title: "過濾的 IP 位址"
           delete_confirm: "你確定要刪除 %{ip_address} 的規則嗎?"
-          roll_up_confirm: "您確定要將常用的 IP 地址歸類為子網域位址嗎？"
-          rolled_up_some_subnets: "成功地 roll up 了 IP 封鎖記錄至這些子網域： %{subnets}。"
-          rolled_up_no_subnet: "無法 roll up"
           actions:
             block: "封鎖"
             do_nothing: "允許"

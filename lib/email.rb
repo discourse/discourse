@@ -3,9 +3,14 @@
 require 'mail'
 
 module Email
+  # See https://www.iana.org/assignments/smtp-enhanced-status-codes/smtp-enhanced-status-codes.xhtml#smtp-enhanced-status-codes-1
+  SMTP_STATUS_SUCCESS = "2."
+  SMTP_STATUS_TRANSIENT_FAILURE = "4."
+  SMTP_STATUS_PERMANENT_FAILURE = "5."
+
   def self.is_valid?(email)
     return false unless String === email
-    !!(EmailValidator.email_regex =~ email)
+    EmailAddressValidator.valid_value?(email)
   end
 
   def self.downcase(email)
@@ -52,20 +57,7 @@ module Email
     SiteSetting.email_site_title.presence || SiteSetting.title
   end
 
-  # https://tools.ietf.org/html/rfc850#section-2.1.7
-  def self.message_id_rfc_format(message_id)
-    message_id.present? && !is_message_id_rfc?(message_id) ? "<#{message_id}>" : message_id
-  end
-
-  def self.message_id_clean(message_id)
-    message_id.present? && is_message_id_rfc?(message_id) ? message_id.gsub(/^<|>$/, "") : message_id
-  end
-
   private
-
-  def self.is_message_id_rfc?(message_id)
-    message_id.start_with?('<') && message_id.include?('@') && message_id.end_with?('>')
-  end
 
   def self.obfuscate_part(part)
     if part.size < 3

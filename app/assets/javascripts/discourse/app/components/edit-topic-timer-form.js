@@ -14,13 +14,11 @@ import I18n from "I18n";
 import { action } from "@ember/object";
 import Component from "@ember/component";
 import { isEmpty } from "@ember/utils";
-import {
-  MOMENT_MONDAY,
-  now,
-  startOfDay,
-  thisWeekend,
-} from "discourse/lib/time-utils";
 import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
+import {
+  TIME_SHORTCUT_TYPES,
+  timeShortcuts,
+} from "discourse/lib/time-shortcut";
 import ItsATrap from "@discourse/itsatrap";
 
 export default Component.extend({
@@ -85,35 +83,29 @@ export default Component.extend({
   },
 
   @discourseComputed()
-  customTimeShortcutOptions() {
+  timeOptions() {
+    const timezone = this.currentUser.resolvedTimezone(this.currentUser);
+    const shortcuts = timeShortcuts(timezone);
+
     return [
-      {
-        icon: "bed",
-        id: "this_weekend",
-        label: "time_shortcut.this_weekend",
-        time: thisWeekend(),
-        timeFormatKey: "dates.time_short_day",
-      },
-      {
-        icon: "far-clock",
-        id: "two_weeks",
-        label: "time_shortcut.two_weeks",
-        time: startOfDay(now().add(2, "weeks").day(MOMENT_MONDAY)),
-        timeFormatKey: "dates.long_no_year",
-      },
-      {
-        icon: "far-calendar-plus",
-        id: "six_months",
-        label: "time_shortcut.six_months",
-        time: startOfDay(now().add(6, "months").startOf("month")),
-        timeFormatKey: "dates.long_no_year",
-      },
+      shortcuts.laterToday(),
+      shortcuts.tomorrow(),
+      shortcuts.laterThisWeek(),
+      shortcuts.thisWeekend(),
+      shortcuts.monday(),
+      shortcuts.twoWeeks(),
+      shortcuts.nextMonth(),
+      shortcuts.sixMonths(),
     ];
   },
 
   @discourseComputed
   hiddenTimeShortcutOptions() {
-    return ["none"];
+    return [
+      TIME_SHORTCUT_TYPES.NONE,
+      TIME_SHORTCUT_TYPES.LATER_TODAY,
+      TIME_SHORTCUT_TYPES.LATER_THIS_WEEK,
+    ];
   },
 
   isCustom: equal("timerType", "custom"),

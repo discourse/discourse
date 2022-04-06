@@ -13,6 +13,7 @@ acceptance("Keyboard Shortcuts - Anonymous Users", function (needs) {
   needs.pretender((server, helper) => {
     server.get("/t/27331/4.json", () => helper.response({}));
     server.get("/t/27331.json", () => helper.response({}));
+    server.get("/t/27331/last.json", () => helper.response({}));
 
     // No suggested topics exist.
     server.get("/t/9/last.json", () => helper.response({}));
@@ -46,6 +47,27 @@ acceptance("Keyboard Shortcuts - Anonymous Users", function (needs) {
     await triggerKeyEvent(document, "keypress", "g".charCodeAt(0));
     await triggerKeyEvent(document, "keypress", "s".charCodeAt(0));
     assert.strictEqual(currentURL(), "/t/keyboard-shortcuts-are-awesome/27331");
+  });
+
+  test("j/k navigation moves selection up/down", async function (assert) {
+    await visit("/t/this-is-a-test-topic/9");
+    await triggerKeyEvent(document, "keypress", "j".charCodeAt(0));
+    assert.ok(
+      exists(".post-stream .topic-post.selected #post_1"),
+      "first post is selected"
+    );
+
+    await triggerKeyEvent(document, "keypress", "j".charCodeAt(0));
+    assert.ok(
+      exists(".post-stream .topic-post.selected #post_2"),
+      "pressing j moves selection to next post"
+    );
+
+    await triggerKeyEvent(document, "keypress", "k".charCodeAt(0));
+    assert.ok(
+      exists(".post-stream .topic-post.selected #post_1"),
+      "pressing k moves selection to previous post"
+    );
   });
 });
 

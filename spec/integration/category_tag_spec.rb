@@ -1,8 +1,6 @@
 # encoding: UTF-8
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe "category tag restrictions" do
 
   def filter_allowed_tags(opts = {})
@@ -33,11 +31,25 @@ describe "category tag restrictions" do
     end
 
     it "tags belonging to that category can only be used there" do
-      post = create_post(category: category_with_tags, tags: [tag1.name, tag2.name, tag3.name])
-      expect(post.topic.tags).to contain_exactly(tag1, tag2)
+      msg = I18n.t(
+        "tags.forbidden.category_does_not_allow_tags",
+        count: 1,
+        tags: tag3.name,
+        category: category_with_tags.name
+      )
+      expect {
+        create_post(category: category_with_tags, tags: [tag1.name, tag2.name, tag3.name])
+      }.to raise_error(StandardError, msg)
 
-      post = create_post(category: other_category, tags: [tag1.name, tag2.name, tag3.name])
-      expect(post.topic.tags).to contain_exactly(tag3)
+      msg = I18n.t(
+        "tags.forbidden.restricted_tags_cannot_be_used_in_category",
+        count: 2,
+        tags: [tag1, tag2].map(&:name).sort.join(", "),
+        category: other_category.name
+      )
+      expect {
+        create_post(category: other_category, tags: [tag1.name, tag2.name, tag3.name])
+      }.to raise_error(StandardError, msg)
     end
 
     it "search can show only permitted tags" do
@@ -57,10 +69,19 @@ describe "category tag restrictions" do
     end
 
     it "can't create new tags in a restricted category" do
-      post = create_post(category: category_with_tags, tags: [tag1.name, "newtag"])
-      expect_same_tag_names(post.topic.tags, [tag1])
-      post = create_post(category: category_with_tags, tags: [tag1.name, "newtag"], user: admin)
-      expect_same_tag_names(post.topic.tags, [tag1])
+      msg = I18n.t(
+        "tags.forbidden.category_does_not_allow_tags",
+        count: 1,
+        tags: "newtag",
+        category: category_with_tags.name
+      )
+      expect {
+        create_post(category: category_with_tags, tags: [tag1.name, "newtag"])
+      }.to raise_error(StandardError, msg)
+
+      expect {
+        create_post(category: category_with_tags, tags: [tag1.name, "newtag"], user: admin)
+      }.to raise_error(StandardError, msg)
     end
 
     it "can create new tags in a non-restricted category" do
@@ -75,7 +96,7 @@ describe "category tag restrictions" do
 
     context 'required tags from tag group' do
       fab!(:tag_group) { Fabricate(:tag_group, tags: [tag1, tag3]) }
-      before { category_with_tags.update!(required_tag_group: tag_group, min_tags_from_required_group: 1) }
+      before { category_with_tags.update!(category_required_tag_groups: [CategoryRequiredTagGroup.new(tag_group: tag_group, min_count: 1)]) }
 
       it "search only returns the allowed tags" do
         expect_same_tag_names(filter_allowed_tags(for_input: true, category: category_with_tags), [tag1])
@@ -109,7 +130,7 @@ describe "category tag restrictions" do
 
       context 'required tags from tag group' do
         fab!(:tag_group) { Fabricate(:tag_group, tags: [tag1, tag3]) }
-        before { category_with_tags.update!(required_tag_group: tag_group, min_tags_from_required_group: 1) }
+        before { category_with_tags.update!(category_required_tag_groups: [CategoryRequiredTagGroup.new(tag_group: tag_group, min_count: 1)]) }
 
         it "search only returns the allowed tags" do
           expect_same_tag_names(filter_allowed_tags(for_input: true, category: category_with_tags), [tag1, tag3])
@@ -151,8 +172,15 @@ describe "category tag restrictions" do
     end
 
     it "enforces restrictions when creating a topic" do
-      post = create_post(category: category, tags: [tag1.name, "newtag"])
-      expect(post.topic.tags.map(&:name)).to eq([tag1.name])
+      msg = I18n.t(
+        "tags.forbidden.category_does_not_allow_tags",
+        count: 1,
+        tags: "newtag",
+        category: category.name
+      )
+      expect {
+        create_post(category: category, tags: [tag1.name, "newtag"])
+      }.to raise_error(StandardError, msg)
     end
 
     it "handles colons" do
@@ -162,7 +190,7 @@ describe "category tag restrictions" do
 
     context 'required tags from tag group' do
       fab!(:tag_group) { Fabricate(:tag_group, tags: [tag1, tag3]) }
-      before { category.update!(required_tag_group: tag_group, min_tags_from_required_group: 1) }
+      before { category.update!(category_required_tag_groups: [CategoryRequiredTagGroup.new(tag_group: tag_group, min_count: 1)]) }
 
       it "search only returns the allowed tags" do
         expect_same_tag_names(filter_allowed_tags(for_input: true, category: category), [tag1])
@@ -196,7 +224,7 @@ describe "category tag restrictions" do
 
       context 'required tags from tag group' do
         fab!(:tag_group) { Fabricate(:tag_group, tags: [tag1, tag3]) }
-        before { category.update!(required_tag_group: tag_group, min_tags_from_required_group: 1) }
+        before { category.update!(category_required_tag_groups: [CategoryRequiredTagGroup.new(tag_group: tag_group, min_count: 1)]) }
 
         it "search only returns the allowed tags" do
           expect_same_tag_names(filter_allowed_tags(for_input: true, category: category), [tag1, tag3])
@@ -292,7 +320,7 @@ describe "category tag restrictions" do
 
     context 'required tags from tag group' do
       fab!(:tag_group) { Fabricate(:tag_group, tags: [tag1, tag2]) }
-      fab!(:category) { Fabricate(:category, required_tag_group: tag_group, min_tags_from_required_group: 1) }
+      fab!(:category) { Fabricate(:category, category_required_tag_groups: [CategoryRequiredTagGroup.new(tag_group: tag_group, min_count: 1)]) }
 
       it "search only returns the allowed tags" do
         tag_group_with_parent = Fabricate(:tag_group, parent_tag_id: tag1.id, tags: [tag3, tag4])

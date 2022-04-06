@@ -90,7 +90,7 @@ function getEmojiName(content, pos, state, inlineEmoji) {
 
     if (content.charCodeAt(pos + length) === 58) {
       // check for t2-t6
-      if (content.substr(pos + length + 1, 3).match(/t[2-6]:/)) {
+      if (content.slice(pos + length + 1, pos + length + 4).match(/t[2-6]:/)) {
         length += 3;
       }
       break;
@@ -105,7 +105,7 @@ function getEmojiName(content, pos, state, inlineEmoji) {
     return;
   }
 
-  return content.substr(pos, length);
+  return content.slice(pos, pos + length);
 }
 
 // straight forward :smile: to emoji image
@@ -118,6 +118,9 @@ function getEmojiTokenByName(name, state) {
       ["title", info.title],
       ["class", info.classes],
       ["alt", info.title],
+      ["loading", "lazy"],
+      ["width", "20"],
+      ["height", "20"],
     ];
 
     return token;
@@ -345,5 +348,8 @@ export function setup(helper) {
     "img[class=emoji emoji-custom]",
     "img[class=emoji emoji-custom only-emoji]",
     "img[class=emoji only-emoji]",
+    "img[loading=lazy]",
+    "img[width=20]",
+    "img[height=20]",
   ]);
 }

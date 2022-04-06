@@ -52,8 +52,34 @@ $topic-progress-height: 42px;
       margin-left: 1em;
       z-index: z("timeline");
 
+      &.with-topic-progress {
+        align-self: end;
+      }
+
       &.topic-progress-expanded {
         z-index: z("fullscreen");
+      }
+    }
+
+    .topic-navigation-popup {
+      box-sizing: border-box;
+      position: absolute;
+      top: 0;
+      overflow-y: auto;
+      z-index: z("timeline");
+      padding: 10px 10px 35px 10px;
+      box-shadow: shadow("dropdown");
+      background: var(--tertiary-low);
+
+      .close {
+        display: flex;
+        align-items: center;
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        color: var(--primary);
+        opacity: 0.5;
+        font-size: var(--font-up-1);
       }
     }
   }
@@ -131,7 +157,7 @@ $topic-progress-height: 42px;
   &:not(.docked) {
     @media screen and (min-width: $reply-area-max-width) {
       // position to right side of composer
-      right: 50%;
+      right: calc(50% + 10px);
       margin-right: calc(#{$reply-area-max-width} / 2 * -1);
     }
   }

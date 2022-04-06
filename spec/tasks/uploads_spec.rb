@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 RSpec.describe "tasks/uploads" do
   before do
     Rake::Task.clear

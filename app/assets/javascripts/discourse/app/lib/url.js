@@ -12,7 +12,7 @@ import { setOwner } from "@ember/application";
 import { isTesting } from "discourse-common/config/environment";
 
 const rewrites = [];
-export const TOPIC_URL_REGEXP = /\/t\/([^\/]+)\/(\d+)\/?(\d+)?/;
+export const TOPIC_URL_REGEXP = /\/t\/([^\/]*[^\d\/][^\/]*)\/(\d+)\/?(\d+)?/;
 
 // We can add links here that have server side responses but not client side.
 const SERVER_SIDE_ONLY = [
@@ -178,22 +178,15 @@ const DiscourseURL = EmberObject.extend({
     });
   },
 
-  // Browser aware replaceState. Will only be invoked if the browser supports it.
   replaceState(path) {
-    if (
-      window.history &&
-      window.history.pushState &&
-      window.history.replaceState &&
-      window.location.pathname !== path
-    ) {
+    if (this.router.currentURL !== path) {
       // Always use replaceState in the next runloop to prevent weird routes changing
       // while URLs are loading. For example, while a topic loads it sets `currentPost`
       // which triggers a replaceState even though the topic hasn't fully loaded yet!
       next(() => {
-        const location = this.get("router.location");
-        if (location && location.replaceURL) {
-          location.replaceURL(path);
-        }
+        // Using the private `_routerMicrolib` is not ideal, but Ember doesn't provide
+        // any other way for us to do `history.replaceState` without a full transition
+        this.router._routerMicrolib.replaceURL(path);
       });
     }
   },
@@ -249,7 +242,8 @@ const DiscourseURL = EmberObject.extend({
       return this.replaceState(path);
     }
 
-    const oldPath = `${window.location.pathname}${window.location.search}`;
+    const oldPath = this.router.currentURL;
+
     path = path.replace(/(https?\:)?\/\/[^\/]+/, "");
 
     // Rewrite /my/* urls
@@ -507,7 +501,9 @@ export function getCategoryAndTagUrl(category, subcategories, tag) {
 
   if (category) {
     url = category.path;
-    if (!subcategories) {
+    if (subcategories && category.default_list_filter === "none") {
+      url += "/all";
+    } else if (!subcategories && category.default_list_filter === "all") {
       url += "/none";
     }
   }

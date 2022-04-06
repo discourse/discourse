@@ -190,6 +190,7 @@
       width: calc(100% - 2em);
       position: sticky;
       position: -webkit-sticky;
+      z-index: z("header");
       top: 0;
       background-color: var(--secondary);
     }
@@ -255,5 +256,8 @@
 .invites-show {
   .col-image {
     display: none;
+  }
+  h1.login-title {
+    font-size: $font-up-3;
   }
 }

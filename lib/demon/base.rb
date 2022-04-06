@@ -151,7 +151,7 @@ class Demon::Base
   end
 
   def already_running?
-    if File.exists? pid_file
+    if File.exist? pid_file
       pid = File.read(pid_file).to_i
       if Demon::Base.alive?(pid)
         return pid

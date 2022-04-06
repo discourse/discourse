@@ -1,14 +1,35 @@
-import { isAppWebview } from "discourse/lib/utilities";
-import { later, run, schedule, throttle } from "@ember/runloop";
+import { bind } from "discourse-common/utils/decorators";
+import discourseDebounce from "discourse-common/lib/debounce";
+import { later, run, throttle } from "@ember/runloop";
 import {
   nextTopicUrl,
   previousTopicUrl,
 } from "discourse/lib/topic-list-tracker";
 import Composer from "discourse/models/composer";
 import DiscourseURL from "discourse/lib/url";
+import domUtils from "discourse-common/utils/dom-utils";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import { ajax } from "discourse/lib/ajax";
-import { minimumOffset } from "discourse/lib/offset-calculator";
+import { headerOffset } from "discourse/lib/offset-calculator";
+import { helperContext } from "discourse-common/lib/helpers";
+
+let extraKeyboardShortcutsHelp = {};
+function addExtraKeyboardShortcutHelp(help) {
+  const category = help.category;
+  if (extraKeyboardShortcutsHelp[category]) {
+    extraKeyboardShortcutsHelp[category] = extraKeyboardShortcutsHelp[
+      category
+    ].concat([help]);
+  } else {
+    extraKeyboardShortcutsHelp[category] = [help];
+  }
+}
+
+export function clearExtraKeyboardShortcutHelp() {
+  extraKeyboardShortcutsHelp = {};
+}
+
+export { extraKeyboardShortcutsHelp as extraKeyboardShortcutsHelp };
 
 const DEFAULT_BINDINGS = {
   "!": { postAction: "showFlags" },
@@ -100,6 +121,13 @@ function preventKeyboardEvent(event) {
 
 export default {
   init(keyTrapper, container) {
+    // Sometimes the keyboard shortcut initializer is not torn down. This makes sure
+    // we clear any previous test state.
+    if (this.keyTrapper) {
+      this.keyTrapper.destroy();
+      this.keyTrapper = null;
+    }
+
     this.keyTrapper = new keyTrapper();
     this.container = container;
     this._stopCallback();
@@ -171,7 +199,6 @@ export default {
       this.keyTrapper.paused = true;
       return;
     }
-
     combinations.forEach((combo) => this.keyTrapper.unbind(combo));
   },
 
@@ -200,6 +227,16 @@ export default {
    * - path       - a specific path to limit the shortcut to .e.g /latest
    * - postAction - binds the shortcut to fire the specified post action when a
    *                post is selected
+   * - help       - adds the shortcut to the keyboard shortcuts modal. `help` is an object
+   *                with key/value pairs
+   *                {
+   *                  category: String,
+   *                  name: String,
+   *                  definition: (See function `buildShortcut` in
+   *                    app/assets/javascripts/discourse/app/controllers/keyboard-shortcuts-help.js
+   *                    for definition structure)
+   *                }
+   *
    * - click      - allows to provide a selector on which a click event
    *                will be triggered, eg: { click: ".topic.last .title" }
    **/
@@ -209,6 +246,9 @@ export default {
     shortcut = shortcut.trim();
     let newBinding = Object.assign({ handler: callback }, opts);
     this.bindKey(shortcut, newBinding);
+    if (opts.help) {
+      addExtraKeyboardShortcutHelp(opts.help);
+    }
   },
 
   // unbinds all the shortcuts in a key binding object e.g.
@@ -404,16 +444,11 @@ export default {
 
   focusComposer(event) {
     const composer = this.container.lookup("controller:composer");
-    if (composer.get("model.viewOpen")) {
-      preventKeyboardEvent(event);
-
-      schedule("afterRender", () => {
-        const input = document.querySelector("textarea.d-editor-input");
-        input && input.focus();
-      });
-    } else {
-      composer.openIfDraft(event);
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
     }
+    composer.focusComposer(event);
   },
 
   fullscreenComposer() {
@@ -608,7 +643,7 @@ export default {
     // Discard selection if it is not in viewport, so users can combine
     // keyboard shortcuts with mouse scrolling.
     if ($selected.length !== 0 && !fast) {
-      const offset = minimumOffset();
+      const offset = headerOffset();
       const beginScreen = $(window).scrollTop() - offset;
       const endScreen = beginScreen + window.innerHeight + offset;
       const beginArticle = $selected.offset().top;
@@ -621,13 +656,13 @@ export default {
     // If still nothing is selected, select the first post that is
     // visible and cancel move operation.
     if (!$selected || $selected.length === 0) {
-      const offset = minimumOffset();
+      const offset = headerOffset();
       $selected = $articles
         .toArray()
         .find((article) =>
           direction > 0
-            ? article.getBoundingClientRect().top > offset
-            : article.getBoundingClientRect().bottom > offset
+            ? article.getBoundingClientRect().top >= offset
+            : article.getBoundingClientRect().bottom >= offset
         );
       if (!$selected) {
         $selected = $articles[$articles.length - 1];
@@ -636,32 +671,32 @@ export default {
     }
 
     const index = $articles.index($selected);
-    let $article = $articles.eq(index);
+    let article = $articles.eq(index)[0];
 
     // Try doing a page scroll in the context of current post.
-    if (!fast && direction !== 0 && $article.length > 0) {
+    if (!fast && direction !== 0 && article) {
       // The beginning of first article is the beginning of the page.
       const beginArticle =
-        $article.is(".topic-post") && $article.find("#post_1").length
+        article.classList.contains("topic-post") &&
+        article.querySelector("#post_1")
           ? 0
-          : $article.offset().top;
-      const endArticle =
-        $article.offset().top + $article[0].getBoundingClientRect().height;
+          : domUtils.offset(article).top;
+      const endArticle = domUtils.offset(article).top + article.offsetHeight;
 
-      const beginScreen = $(window).scrollTop();
+      const beginScreen = window.scrollY;
       const endScreen = beginScreen + window.innerHeight;
 
       if (direction < 0 && beginScreen > beginArticle) {
         return this._scrollTo(
           Math.max(
-            beginScreen - window.innerHeight + 3 * minimumOffset(), // page up
-            beginArticle - minimumOffset() // beginning of article
+            beginScreen - window.innerHeight + 3 * headerOffset(), // page up
+            beginArticle - headerOffset() // beginning of article
           )
         );
-      } else if (direction > 0 && endScreen < endArticle - minimumOffset()) {
+      } else if (direction > 0 && endScreen < endArticle - headerOffset()) {
         return this._scrollTo(
           Math.min(
-            endScreen - 3 * minimumOffset(), // page down
+            endScreen - 3 * headerOffset(), // page down
             endArticle - window.innerHeight // end of article
           )
         );
@@ -678,69 +713,66 @@ export default {
       }
     }
 
-    $article = $articles.eq(index + direction);
-    if ($article.length > 0) {
-      $articles.removeClass("selected");
-      $article.addClass("selected");
-
-      const articleRect = $article[0].getBoundingClientRect();
-      if (!fast && direction < 0 && articleRect.height > window.innerHeight) {
-        // Scrolling to the last "page" of the previous post if post has multiple
-        // "pages" (if its height does not fit in the screen).
-        return this._scrollTo(
-          $article.offset().top + articleRect.height - window.innerHeight
-        );
-      } else if ($article.is(".topic-post")) {
-        return this._scrollTo(
-          $article.find("#post_1").length > 0
-            ? 0
-            : $article.offset().top - minimumOffset(),
-          () => $("a.tabLoc", $article).focus()
-        );
-      }
-
-      // Otherwise scroll through the suggested topic list.
-      this._scrollList($article, direction);
+    article = $articles.eq(index + direction)[0];
+    if (!article) {
+      return;
     }
-  },
 
-  _scrollTo(scrollTop, complete) {
-    $("html, body")
-      .stop(true, true)
-      .animate({ scrollTop }, { duration: animationDuration, complete });
-  },
+    $articles.removeClass("selected");
+    article.classList.add("selected");
 
-  _scrollList($article) {
-    // Try to keep the article on screen
-    const pos = $article.offset();
-    const height = $article.height();
-    const headerHeight = $("header.d-header").height();
-    const scrollTop = $(window).scrollTop();
-    const windowHeight = $(window).height();
+    this.appEvents.trigger("keyboard:move-selection", {
+      articles: $articles.get(),
+      selectedArticle: article,
+    });
 
-    // skip if completely on screen
+    const articleTop = domUtils.offset(article).top,
+      articleTopPosition = articleTop - headerOffset();
+    if (!fast && direction < 0 && article.offsetHeight > window.innerHeight) {
+      // Scrolling to the last "page" of the previous post if post has multiple
+      // "pages" (if its height does not fit in the screen).
+      return this._scrollTo(
+        articleTop + article.offsetHeight - window.innerHeight
+      );
+    } else if (article.classList.contains("topic-post")) {
+      return this._scrollTo(
+        article.querySelector("#post_1") ? 0 : articleTopPosition,
+        { focusTabLoc: true }
+      );
+    }
+
+    // Otherwise scroll through the topic list.
     if (
-      pos.top - headerHeight > scrollTop &&
-      pos.top + height < scrollTop + windowHeight
+      articleTopPosition > window.pageYOffset &&
+      articleTop + article.offsetHeight <
+        window.pageYOffset + window.innerHeight
     ) {
       return;
     }
 
-    let scrollPos = pos.top + height / 2 - windowHeight * 0.5;
-    if (height > windowHeight - headerHeight) {
-      scrollPos = pos.top - headerHeight;
-    }
-    if (scrollPos < 0) {
-      scrollPos = 0;
-    }
+    const scrollRatio = direction > 0 ? 0.2 : 0.7;
+    this._scrollTo(articleTopPosition - window.innerHeight * scrollRatio);
+  },
 
-    if (this._scrollAnimation) {
-      this._scrollAnimation.stop();
+  _scrollTo(scrollTop, opts = {}) {
+    window.scrollTo({
+      top: scrollTop,
+      behavior: "smooth",
+    });
+
+    if (opts.focusTabLoc) {
+      window.addEventListener("scroll", this._onScrollEnds, { passive: true });
     }
-    this._scrollAnimation = $("html, body").animate(
-      { scrollTop: scrollPos + "px" },
-      animationDuration
-    );
+  },
+
+  @bind
+  _onScrollEnds() {
+    window.removeEventListener("scroll", this._onScrollEnds, { passive: true });
+    discourseDebounce(this, this._onScrollEndsCallback, animationDuration);
+  },
+
+  _onScrollEndsCallback() {
+    document.querySelector(".topic-post.selected span.tabLoc")?.focus();
   },
 
   categoriesTopicsList() {
@@ -824,13 +856,13 @@ export default {
   },
 
   webviewKeyboardBack() {
-    if (isAppWebview()) {
+    if (helperContext().capabilities.isAppWebview) {
       window.history.back();
     }
   },
 
   webviewKeyboardForward() {
-    if (isAppWebview()) {
+    if (helperContext().capabilities.isAppWebview) {
       window.history.forward();
     }
   },

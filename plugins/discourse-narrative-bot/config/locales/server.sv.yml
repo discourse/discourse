@@ -84,6 +84,15 @@ sv:
       "10":
         quote: "Oavsett vad människans sinne kan tänka och tro, kan det uppnås."
         author: "Napoleon Hill"
+      "11":
+        quote: "Fred hemma, fred i världen."
+        author: "Mustafa Kemal Atatürk"
+      "12":
+        quote: "Utbildning är inte ett sätt att undkomma fattigdomen, det är ett sätt att bekämpa den."
+        author: "Julius Nyerere"
+      "13":
+        quote: "En resa på tusen mil måste börja med ett enda steg."
+        author: "Lao Tzu"
       results: |-
         > :left_speech_bubble: _%{quote}_ &mdash; %{author}
     magic_8_ball:
@@ -214,7 +223,7 @@ sv:
 
           - eller, tryck på knappen <kbd><b>B</b></kbd> eller <kbd><i>I</i></kbd> i redigeraren
         reply: |-
-          Bra jobbat! HTML eller BBCode fungerar också för formatering – för att lära dig mer, [testa denna handledning](http://commonmark.org/help) :nerd:
+          Bra jobbat! HTML eller BBCode fungerar också för formatering – för att lära dig mer, [testa denna handledning](https://commonmark.org/help) :nerd:
         not_found: |-
           Äsch, jag kunde inte hitta någon formatering i ditt svar. :pencil2:
 

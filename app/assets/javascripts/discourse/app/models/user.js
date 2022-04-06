@@ -98,6 +98,7 @@ let userOptionFields = [
   "timezone",
   "skip_new_user_tips",
   "default_calendar",
+  "bookmark_auto_delete_preference",
 ];
 
 export function addSaveableUserOptionField(fieldName) {
@@ -334,13 +335,16 @@ const User = RestModel.extend({
       userFields.filter((uf) => !fields || fields.indexOf(uf) !== -1)
     );
 
+    let filteredUserOptionFields = [];
     if (fields) {
-      userOptionFields = userOptionFields.filter(
+      filteredUserOptionFields = userOptionFields.filter(
         (uo) => fields.indexOf(uo) !== -1
       );
+    } else {
+      filteredUserOptionFields = userOptionFields;
     }
 
-    userOptionFields.forEach((s) => {
+    filteredUserOptionFields.forEach((s) => {
       data[s] = this.get(`user_option.${s}`);
     });
 
@@ -379,6 +383,10 @@ const User = RestModel.extend({
       }
     });
 
+    return this._saveUserData(data, updatedState);
+  },
+
+  _saveUserData(data, updatedState) {
     // TODO: We can remove this when migrated fully to rest model.
     this.set("isSaving", true);
     return ajax(userPath(`${this.username_lower}.json`), {
@@ -429,7 +437,7 @@ const User = RestModel.extend({
   changePassword() {
     return ajax("/session/forgot_password", {
       dataType: "json",
-      data: { login: this.username },
+      data: { login: this.email || this.username },
       type: "POST",
     });
   },
@@ -752,8 +760,8 @@ const User = RestModel.extend({
   },
 
   @discourseComputed("watched_first_post_category_ids")
-  watchedFirstPostCategories(wachedFirstPostCategoryIds) {
-    return Category.findByIds(wachedFirstPostCategoryIds);
+  watchedFirstPostCategories(watchedFirstPostCategoryIds) {
+    return Category.findByIds(watchedFirstPostCategoryIds);
   },
 
   @discourseComputed("can_delete_account")
@@ -772,18 +780,25 @@ const User = RestModel.extend({
     }
   },
 
-  updateNotificationLevel(level, expiringAt) {
+  updateNotificationLevel({ level, expiringAt = null, actingUser = null }) {
+    if (!actingUser) {
+      actingUser = User.current();
+    }
     return ajax(`${userPath(this.username)}/notification_level.json`, {
       type: "PUT",
-      data: { notification_level: level, expiring_at: expiringAt },
+      data: {
+        notification_level: level,
+        expiring_at: expiringAt,
+        acting_user_id: actingUser.id,
+      },
     }).then(() => {
-      const currentUser = User.current();
-      if (currentUser) {
-        if (level === "normal" || level === "mute") {
-          currentUser.ignored_users.removeObject(this.username);
-        } else if (level === "ignore") {
-          currentUser.ignored_users.addObject(this.username);
-        }
+      if (!actingUser.ignored_users) {
+        actingUser.ignored_users = [];
+      }
+      if (level === "normal" || level === "mute") {
+        actingUser.ignored_users.removeObject(this.username);
+      } else if (level === "ignore") {
+        actingUser.ignored_users.addObject(this.username);
       }
     });
   },
@@ -1070,6 +1085,14 @@ User.reopenClass(Singleton, {
 
   checkEmail(email) {
     return ajax(userPath("check_email"), { data: { email } });
+  },
+
+  loadRecentSearches() {
+    return ajax(`/u/recent-searches`);
+  },
+
+  resetRecentSearches() {
+    return ajax(`/u/recent-searches`, { type: "DELETE" });
   },
 
   groupStats(stats) {

@@ -16,6 +16,7 @@ class Auth::GoogleOAuth2Authenticator < Auth::ManagedAuthenticator
   end
 
   def register_middleware(omniauth)
+    strategy_class = Auth::OmniAuthStrategies::DiscourseGoogleOauth2
     options = {
       setup: lambda { |env|
         strategy = env["omniauth.strategy"]
@@ -35,8 +36,25 @@ class Auth::GoogleOAuth2Authenticator < Auth::ManagedAuthenticator
         # the JWT can fail due to clock skew, so let's skip it completely.
         # https://github.com/zquestz/omniauth-google-oauth2/pull/392
         strategy.options[:skip_jwt] = true
+        strategy.options[:request_groups] = provides_groups?
+
+        if provides_groups?
+          strategy.options[:scope] = "#{strategy_class::DEFAULT_SCOPE},#{strategy_class::GROUPS_SCOPE}"
+        end
       }
     }
-    omniauth.provider :google_oauth2, options
+    omniauth.provider strategy_class, options
+  end
+
+  def after_authenticate(auth_token, existing_account: nil)
+    result = super
+    if provides_groups? && (groups = auth_token[:extra][:raw_groups])
+      result.associated_groups = groups.map { |group| group.slice(:id, :name) }
+    end
+    result
+  end
+
+  def provides_groups?
+    SiteSetting.google_oauth2_hd.present? && SiteSetting.google_oauth2_hd_groups
   end
 end

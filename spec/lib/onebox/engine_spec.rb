@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Onebox::Engine do
   class OneboxEngineExample
     include Onebox::Engine
@@ -47,6 +45,18 @@ describe Onebox::Engine do
     it "returns true if argument matches the matcher" do
       result = OneboxEngineTripleEqual === URI("http://www.example.com/product/5?var=foo&bar=5")
       expect(result).to eq(true)
+    end
+  end
+
+  describe "origins_to_regexes" do
+    it "converts URLs to regexes" do
+      result = Onebox::Engine.origins_to_regexes(["https://example.com", "https://example2.com"])
+      expect(result).to eq([/\Ahttps:\/\/example\.com/i, /\Ahttps:\/\/example2\.com/i])
+    end
+
+    it "treats '*' as a catch-all" do
+      result = Onebox::Engine.origins_to_regexes(["https://example.com", "*", "https://example2.com"])
+      expect(result).to eq([/.*/])
     end
   end
 

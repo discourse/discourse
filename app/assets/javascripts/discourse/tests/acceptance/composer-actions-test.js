@@ -2,6 +2,7 @@ import {
   acceptance,
   count,
   exists,
+  query,
   queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -187,7 +188,7 @@ acceptance("Composer Actions", function (needs) {
     assert.deepEqual(privateMessageUsers.header().value(), "foo,foo_group");
   });
 
-  test("hide component if no content", async function (assert) {
+  test("allow switching back to New Topic", async function (assert) {
     await visit("/");
     await click("button#create-topic");
 
@@ -195,27 +196,33 @@ acceptance("Composer Actions", function (needs) {
     await composerActions.expand();
     await composerActions.selectRowByValue("reply_as_private_message");
 
-    assert.ok(composerActions.el().hasClass("is-hidden"));
-    assert.strictEqual(composerActions.el().children().length, 0);
+    assert.strictEqual(
+      query(".action-title").innerText,
+      I18n.t("topic.private_message")
+    );
 
-    await click("button#create-topic");
     await composerActions.expand();
-    assert.strictEqual(composerActions.rows().length, 2);
+    await composerActions.selectRowByValue("create_topic");
+
+    assert.strictEqual(
+      query(".action-title").innerText,
+      I18n.t("topic.create_long")
+    );
   });
 
   test("interactions", async function (assert) {
     const composerActions = selectKit(".composer-actions");
     const quote = "Life is like riding a bicycle.";
 
-    await visit("/t/internationalization-localization/280");
-    await click("article#post_3 button.reply");
+    await visit("/t/short-topic-with-two-posts/54077");
+    await click("article#post_2 button.reply");
     await fillIn(".d-editor-input", quote);
     await composerActions.expand();
     await composerActions.selectRowByValue("reply_to_topic");
 
     assert.strictEqual(
       queryAll(".action-title").text().trim(),
-      "Internationalization / localization"
+      "Short topic with two posts"
     );
     assert.strictEqual(queryAll(".d-editor-input").val(), quote);
 
@@ -243,7 +250,7 @@ acceptance("Composer Actions", function (needs) {
     assert.ok(exists(".action-title img.avatar"));
     assert.strictEqual(
       queryAll(".action-title .user-link").text().trim(),
-      "codinghorror"
+      "tms"
     );
     assert.strictEqual(queryAll(".d-editor-input").val(), quote);
     assert.strictEqual(
@@ -302,8 +309,8 @@ acceptance("Composer Actions", function (needs) {
   test("replying to post - toggle_topic_bump", async function (assert) {
     const composerActions = selectKit(".composer-actions");
 
-    await visit("/t/internationalization-localization/280");
-    await click("article#post_3 button.reply");
+    await visit("/t/short-topic-with-two-posts/54077");
+    await click("article#post_2 button.reply");
 
     assert.ok(
       !exists(".composer-actions svg.d-icon-anchor"),
@@ -345,15 +352,15 @@ acceptance("Composer Actions", function (needs) {
   test("replying to post - whisper and no bump", async function (assert) {
     const composerActions = selectKit(".composer-actions");
 
-    await visit("/t/internationalization-localization/280");
-    await click("article#post_3 button.reply");
+    await visit("/t/short-topic-with-two-posts/54077");
+    await click("article#post_2 button.reply");
 
     assert.ok(
       !exists(".composer-actions svg.d-icon-far-eye-slash"),
       "whisper icon is not visible"
     );
     assert.ok(
-      !exists(".composer-fields .whisper .d-icon-anchor"),
+      !exists(".reply-details .whisper .d-icon-anchor"),
       "no-bump icon is not visible"
     );
     assert.strictEqual(
@@ -373,7 +380,7 @@ acceptance("Composer Actions", function (needs) {
       "whisper icon is visible"
     );
     assert.strictEqual(
-      count(".composer-fields .no-bump .d-icon-anchor"),
+      count(".reply-details .no-bump .d-icon-anchor"),
       1,
       "no-bump icon is visible"
     );

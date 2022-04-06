@@ -75,7 +75,7 @@ createWidget("topic-participant", {
       }),
     ];
 
-    if (attrs.post_count > 2) {
+    if (attrs.post_count > 1) {
       linkContents.push(h("span.post-count", attrs.post_count.toString()));
     }
 
@@ -284,7 +284,7 @@ createWidget("topic-map-link", {
     const truncateLength = 85;
 
     if (content.length > truncateLength) {
-      content = `${content.substr(0, truncateLength).trim()}...`;
+      content = `${content.slice(0, truncateLength).trim()}...`;
     }
 
     return attrs.title ? replaceEmoji(content) : content;

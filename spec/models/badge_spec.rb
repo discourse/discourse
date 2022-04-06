@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe Badge do
 
   it 'has a valid system attribute for new badges' do

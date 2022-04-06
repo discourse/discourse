@@ -3,8 +3,10 @@ import { isPresent } from "@ember/utils";
 export const START_OF_DAY_HOUR = 8;
 export const LATER_TODAY_CUTOFF_HOUR = 17;
 export const LATER_TODAY_MAX_HOUR = 18;
+export const MOMENT_SUNDAY = 0;
 export const MOMENT_MONDAY = 1;
 export const MOMENT_THURSDAY = 4;
+export const MOMENT_FRIDAY = 5;
 export const MOMENT_SATURDAY = 6;
 
 export function now(timezone) {
@@ -39,6 +41,14 @@ export function laterThisWeek(timezone) {
 
 export function nextMonth(timezone) {
   return startOfDay(now(timezone).add(1, "month").startOf("month"));
+}
+
+export function twoWeeks(timezone) {
+  return startOfDay(now(timezone).add(2, "weeks").day(MOMENT_MONDAY));
+}
+
+export function sixMonths(timezone) {
+  return startOfDay(now(timezone).add(6, "months").startOf("month"));
 }
 
 export function nextBusinessWeekStart(timezone) {

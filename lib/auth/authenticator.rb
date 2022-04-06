@@ -65,4 +65,9 @@ class Auth::Authenticator
   def revoke(user, skip_remote: false)
     raise NotImplementedError
   end
+
+  # provider has implemented user group membership (or equivalent) request
+  def provides_groups?
+    false
+  end
 end

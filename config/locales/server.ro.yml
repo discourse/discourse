@@ -502,10 +502,6 @@ ro:
       title: "Apreciere"
       description: "Apreciază această postare"
       short_description: "Apreciază această postare"
-  user_activity:
-    no_bookmarks:
-      self: "Nu ai link-uri de postări salvate; link-urile salvate îți permit revenirea la postări specifice"
-      others: "Nu există semne de carte."
   topic_flag_types:
     spam:
       title: "Spam"
@@ -774,6 +770,18 @@ ro:
     top_uploads:
       labels:
         filename: Numele fișierului
+    top_users_by_likes_received:
+      labels:
+        user: Utilizatori
+        qtt_like: Aprecieri primite
+    top_users_by_likes_received_from_inferior_trust_level:
+      labels:
+        user: Utilizatori
+        qtt_like: Aprecieri primite
+    top_users_by_likes_received_from_a_variety_of_people:
+      labels:
+        user: Utilizatori
+        qtt_like: Aprecieri primite
   dashboard:
     rails_env_warning: "Serverul funcționează în modul %{env}."
     host_names_warning: "Fișierul config/database.yml folosește numele implicit al localhost. Actualizează pentru a folosi numele de gazdă al site-ului."
@@ -802,7 +810,6 @@ ro:
     max_topic_title_length: "Maximul de caractere permis în titlul unui subiect"
     min_personal_message_title_length: "Numărul minim de caractere permis în titlul unui mesaj"
     min_search_term_length: "Lungimea minimă a unui termen de căutare valid, în caractere."
-    search_tokenize_chinese_japanese_korean: "Forțează căutarea să utilizeze tokens chineză/japoneză/coreană chiar și pe site-uri care nu sunt CJK."
     search_prefer_recent_posts: "Dacă ai un forum mare și căutarea este prea lentă, această opțiune încearcă să indexeze mai multe postări recente întâi."
     search_recent_posts_size: "Câte postări recente să fie ținute în index"
     allow_uncategorized_topics: "Permite crearea de subiecte fără categorie. ATENȚIE: Dacă o să ai postări fără categorie, va trebui să le identifici înainte să poți dezactiva din nou această setare."
@@ -827,16 +834,13 @@ ro:
     show_pinned_excerpt_mobile: "Arată fragmente din subiectele fixate în vizualizarea de mobil."
     show_pinned_excerpt_desktop: "Arată fragmente din subiectele fixate în vizualizarea de desktop."
     post_onebox_maxlength: "Lungimea maximă a unei postări afișate în Onebox (în caractere)"
-    blocked_onebox_domains: "O listă cu domenii care nu vor putea fi utilizate cu onebox."
     max_oneboxes_per_post: "Numărul maxim de utilizări onebox per post."
     notification_email: "Adresă expeditor: adresa de email folosită când se trimit toate emailurile esențiale ale sistemului. Domeniul specificat aici trebuie să aibă setate corect SPF, DKIM și reverse PTR pentru ca emailul să poată fi livrat."
     email_custom_headers: "O listă delimitată cu simbolul | (pipe) a header-elor personalizate de email"
     force_https: "Forțează site-ul să folosească exclusiv HTTPS. ATENȚIE: NU activa această opțiune până nu ai verificat dacă HTTPS este configurat în întregime și funcționează absolut peste tot. Ai verificat, de asemenea, dacă și CND-ul, toate autentificările cu cont pe rețele de socializaer și toate logo-urile și dependențele externe sunt compatibile cu HTTPS?"
     summary_score_threshold: "Scorul minim necesar pentru ca o postare să fie inclusă în 'Rezumă acest subiect'"
     summary_percent_filter: "Când un utilizator face click pe 'Rezumatul acestui subiect', arată primele % de postări"
-    enable_long_polling: "Bus-ul de mesaje folosit pentru notificări poate utiliza long polling."
     long_polling_base_url: "URL de bază folosit pentru long polling (atunci când un CDN servește conținut dinamic, asigură-te că setezi asta pe origin pull) ex: http://origin.site.com"
-    long_polling_interval: "Durata cât serverul va trebui să aștepte înainte de a răspunde clienților atunci când nu există date de trimis (exclusiv utilizatori autentificați)"
     polling_interval: "Atunci când nu se face long polling, cât de des ar trebui clienții autentificați să facă interogări, în milisecunde."
     anon_polling_interval: "Cât de frecvent să interogheze clienții anonimi, în milisecunde"
     background_polling_interval: "Cât de des să interogheze clienții, în milisecunde (când fereastra este fundal)"

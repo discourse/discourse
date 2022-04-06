@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-require 'jobs/regular/create_linked_topic'
-
 describe Jobs::CreateLinkedTopic do
 
   it "returns when the post cannot be found" do

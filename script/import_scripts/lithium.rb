@@ -842,7 +842,7 @@ SQL
     filename = attachment_id.to_s.rjust(4, "0")
     filename = File.join(ATTACHMENT_DIR, "000#{filename[0]}/#{filename}.dat")
 
-    unless File.exists?(filename)
+    unless File.exist?(filename)
       puts "Attachment file doesn't exist: #{filename}"
       return nil
     end
@@ -953,9 +953,9 @@ SQL
         # check to see if we have it
         if File.exist?(png)
           image = png
-        elsif File.exists?(jpg)
+        elsif File.exist?(jpg)
           image = jpg
-        elsif File.exists?(gif)
+        elsif File.exist?(gif)
           image = gif
         end
 

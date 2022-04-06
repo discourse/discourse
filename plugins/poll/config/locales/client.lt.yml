@@ -18,9 +18,14 @@ lt:
         many: "balsų iš viso"
         other: "balsų iš viso"
       average_rating: "Vidutinis reitingas: <strong>%{average}</strong>."
+      public:
+        title: "Balsai yra <strong>vieši</strong>."
       results:
         groups:
           title: "Jūs turite būti %{groups} narys, norėdami balsuoti šioje apklausoje."
+      multiple:
+        help:
+          between_min_and_max_options: "Pasirinkite tarp <strong>%{min}</strong> ir <strong>%{max}</strong> parinkčių."
       cast-votes:
         title: "Apskaičiuoti tavo balsus"
         label: "Balsuoti dabar!"
@@ -47,12 +52,16 @@ lt:
         title: "Uždaryti balsavimą"
         label: "Uždaryti"
         confirm: "Ar tikrai norite uždaryti šį balsavimą?"
+      automatic_close:
+        closes_in: "Užsidaro po <strong>%{timeLeft}</strong>."
+        age: "Uždaryta <strong>%{age}</strong>"
       breakdown:
         title: "Apklausos rezultatai"
         votes: "%{count} balsų"
         percentage: "Procentas"
         count: "Skaičiuoti"
       error_while_toggling_status: "Atsiprašome, perjungiant šios apklausos būseną įvyko klaida."
+      error_while_casting_votes: "Atsiprašome, balsuojant įvyko klaida."
       error_while_fetching_voters: "Atsiprašome, rodant rinkėjus įvyko klaida."
       error_while_exporting_results: "Apgailestaujame, eksportuojant apklausos rezultatus įvyko klaida."
       ui_builder:
@@ -78,6 +87,8 @@ lt:
           label: Balsavimo apribojimas šioms grupėms
         poll_chart_type:
           label: Rezultatų diagrama
+          bar: Juosta
+          pie: Pyragas
         poll_config:
           max: Maksimalūs pasirinkimai
           min: Minimalūs pasirinkimai

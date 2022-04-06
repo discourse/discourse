@@ -1,8 +1,6 @@
 # encoding: utf-8
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe Category do
   fab!(:user) { Fabricate(:user) }
 
@@ -361,6 +359,19 @@ describe Category do
       @cat.slug = "#{@cat.id}-category"
       expect(@cat).to be_valid
       expect(@cat.errors[:slug]).not_to be_present
+    end
+
+    context 'if SiteSettings.slug_generation_method = ascii' do
+      before do
+        SiteSetting.slug_generation_method = 'ascii'
+      end
+
+      it 'fails if slug contains non-ascii characters' do
+        c = Fabricate.build(:category, name: "Sem acentuação", slug: "sem-acentuação")
+        expect(c).not_to be_valid
+
+        expect(c.errors[:slug]).to be_present
+      end
     end
   end
 

@@ -34,7 +34,7 @@ class Admin::SiteSettingsController < Admin::AdminController
     end
 
     update_existing_users = params[:update_existing_user].present?
-    previous_value = SiteSetting.send(id) || "" if update_existing_users
+    previous_value = SiteSetting.public_send(id) || "" if update_existing_users
 
     SiteSetting.set_and_log(id, value, current_user)
 

@@ -38,6 +38,8 @@ class User < ActiveRecord::Base
   has_many :reviewable_scores, dependent: :destroy
   has_many :invites, foreign_key: :invited_by_id, dependent: :destroy
   has_many :user_custom_fields, dependent: :destroy
+  has_many :user_associated_groups, dependent: :destroy
+  has_many :pending_posts, -> { merge(Reviewable.pending) }, class_name: 'ReviewableQueuedPost', foreign_key: :created_by_id
 
   has_one :user_option, dependent: :destroy
   has_one :user_avatar, dependent: :destroy
@@ -82,6 +84,7 @@ class User < ActiveRecord::Base
   has_many :topics_allowed, through: :topic_allowed_users, source: :topic
   has_many :groups, through: :group_users
   has_many :secure_categories, through: :groups, source: :categories
+  has_many :associated_groups, through: :user_associated_groups, dependent: :destroy
 
   # deleted in user_second_factors relationship
   has_many :totps, -> {
@@ -270,7 +273,7 @@ class User < ActiveRecord::Base
   end
 
   def self.normalize_username(username)
-    username.unicode_normalize.downcase if username.present?
+    username.to_s.unicode_normalize.downcase if username.present?
   end
 
   def self.username_available?(username, email = nil, allow_reserved_username: false)
@@ -284,6 +287,8 @@ class User < ActiveRecord::Base
 
   def self.reserved_username?(username)
     username = normalize_username(username)
+
+    return true if SiteSetting.here_mention == username
 
     SiteSetting.reserved_usernames.unicode_normalize.split("|").any? do |reserved|
       username.match?(/^#{Regexp.escape(reserved).gsub('\*', '.*')}$/)
@@ -423,7 +428,7 @@ class User < ActiveRecord::Base
       user_id: id,
       message_type: 'welcome_staff',
       message_options: {
-        role: role
+        role: role.to_s
       }
     )
   end
@@ -590,6 +595,8 @@ class User < ActiveRecord::Base
   end
 
   def publish_notifications_state
+    return if !self.allow_live_notifications?
+
     # publish last notification json with the message so we can apply an update
     notification = notifications.visible.order('notifications.created_at desc').first
     json = NotificationSerializer.new(notification).as_json if notification
@@ -691,6 +698,10 @@ class User < ActiveRecord::Base
 
   def seen_before?
     last_seen_at.present?
+  end
+
+  def seen_since?(datetime)
+    seen_before? && last_seen_at >= datetime
   end
 
   def create_visit_record!(date, opts = {})
@@ -1015,6 +1026,12 @@ class User < ActiveRecord::Base
     admin? || moderator? || staged? || TrustLevel.compare(trust_level, level)
   end
 
+  def has_trust_level_or_staff?(level)
+    return admin? if level.to_s == 'admin'
+    return staff? if level.to_s == 'staff'
+    has_trust_level?(level.to_i)
+  end
+
   # a touch faster than automatic
   def admin?
     admin
@@ -1035,11 +1052,9 @@ class User < ActiveRecord::Base
   end
 
   def activate
-    if email_token = self.email_tokens.active.where(email: self.email).first
-      EmailToken.confirm(email_token.token, skip_reviewable: true)
-    end
-    self.update!(active: true)
-    create_reviewable
+    email_token = self.email_tokens.create!(email: self.email, scope: EmailToken.scopes[:signup])
+    EmailToken.confirm(email_token.token, scope: EmailToken.scopes[:signup])
+    reload
   end
 
   def deactivate(performed_by)
@@ -1136,7 +1151,7 @@ class User < ActiveRecord::Base
   end
 
   def find_email
-    last_sent_email_address.present? && EmailValidator.email_regex =~ last_sent_email_address ? last_sent_email_address : email
+    last_sent_email_address.present? && EmailAddressValidator.valid_value?(last_sent_email_address) ? last_sent_email_address : email
   end
 
   def tl3_requirements
@@ -1246,7 +1261,7 @@ class User < ActiveRecord::Base
   end
 
   def set_random_avatar
-    if SiteSetting.selectable_avatars_enabled?
+    if SiteSetting.selectable_avatars_mode != "disabled"
       if upload = SiteSetting.selectable_avatars.sample
         update_column(:uploaded_avatar_id, upload.id)
         UserAvatar.create!(user_id: id, custom_upload_id: upload.id)
@@ -1438,6 +1453,14 @@ class User < ActiveRecord::Base
     ShelvedNotification.joins(:notification).where("notifications.user_id = ?", self.id)
   end
 
+  def allow_live_notifications?
+    seen_since?(30.days.ago)
+  end
+
+  def username_equals_to?(another_username)
+    username_lower == User.normalize_username(another_username)
+  end
+
   protected
 
   def badge_grant
@@ -1477,7 +1500,7 @@ class User < ActiveRecord::Base
   end
 
   def create_email_token
-    email_tokens.create!(email: email)
+    email_tokens.create!(email: email, scope: EmailToken.scopes[:signup])
   end
 
   def ensure_password_is_hashed

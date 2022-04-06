@@ -19,6 +19,14 @@ const idleThresholdTime = 1000 * 10; // 10 seconds
 const context = "discourse_desktop_notifications_";
 const keyValueStore = new KeyValueStore(context);
 
+let desktopNotificationHandlers = [];
+export function registerDesktopNotificationHandler(handler) {
+  desktopNotificationHandlers.push(handler);
+}
+export function clearDesktopNotificationHandlers() {
+  desktopNotificationHandlers = [];
+}
+
 // Called from an initializer
 function init(messageBus, appEvents) {
   liveEnabled = false;
@@ -176,11 +184,14 @@ function onNotification(data, siteSettings, user) {
       icon: notificationIcon,
       tag: notificationTag,
     });
-
     notification.onclick = () => {
       DiscourseURL.routeTo(data.post_url);
       notification.close();
     };
+
+    desktopNotificationHandlers.forEach((handler) =>
+      handler(data, siteSettings, user)
+    );
   });
 }
 

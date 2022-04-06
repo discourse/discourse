@@ -16,7 +16,7 @@ acceptance("User's bookmarks", function (needs) {
     await dropdown.expand();
     await dropdown.selectRowByValue("remove");
 
-    assert.not(exists(".bootbox.modal"), "it should not show the modal");
+    assert.notOk(exists(".bootbox.modal"), "it should not show the modal");
   });
 
   test("it renders search controls if there are bookmarks", async function (assert) {
@@ -34,6 +34,10 @@ acceptance("User's bookmarks - reminder", function (needs) {
       json.user_bookmark_list.bookmarks[0].reminder_at = "2028-01-01T08:00";
       return helper.response(json);
     });
+
+    server.put("/bookmarks/:id", () => {
+      return helper.response({});
+    });
   });
 
   test("removing a bookmark with a reminder shows a confirmation", async function (assert) {
@@ -46,7 +50,19 @@ acceptance("User's bookmarks - reminder", function (needs) {
     assert.ok(exists(".bootbox.modal"), "it asks for delete confirmation");
 
     await click(".bootbox.modal a.btn-primary");
-    assert.not(exists(".bootbox.modal"));
+    assert.notOk(exists(".bootbox.modal"));
+  });
+
+  test("bookmarks with reminders have a clear reminder option", async function (assert) {
+    await visit("/u/eviltrout/activity/bookmarks");
+
+    assert.ok(exists(".bookmark-reminder"));
+
+    const dropdown = selectKit(".bookmark-actions-dropdown");
+    await dropdown.expand();
+    await dropdown.selectRowByValue("clear_reminder");
+
+    assert.not(exists(".bookmark-reminder"));
   });
 });
 

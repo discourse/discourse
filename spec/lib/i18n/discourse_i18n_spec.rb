@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
 require 'i18n/backend/discourse_i18n'
 require 'translation_override'
 
@@ -44,11 +43,6 @@ describe I18n::Backend::DiscourseI18n do
   end
 
   describe 'fallbacks' do
-    it 'uses fallback locales for searching' do
-      expect(backend.search(:de, 'bar')).to eq('bar' => 'Bar in :de')
-      expect(backend.search(:de, 'foo')).to eq('foo' => 'Foo in :en')
-    end
-
     it 'uses fallback locales for translating' do
       expect(backend.translate(:de, 'bar')).to eq('Bar in :de')
       expect(backend.translate(:de, 'foo')).to eq('Foo in :en')

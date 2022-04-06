@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-require 'rails_helper'
 require 'email/receiver'
 
 describe GroupSmtpMailer do
@@ -28,7 +27,7 @@ describe GroupSmtpMailer do
   end
 
   let(:email) do
-    <<~EOF
+    <<~EMAIL
     Delivered-To: bugs@gmail.com
     MIME-Version: 1.0
     From: John Doe <john@doe.com>
@@ -41,7 +40,7 @@ describe GroupSmtpMailer do
     Hello,
 
     How are you doing?
-    EOF
+    EMAIL
   end
 
   let(:receiver) do

@@ -213,7 +213,7 @@ ja:
 
           - または、エディタの <kbd><b>B</b></kbd> または <kbd><i>I</i></kbd> ボタンを押すこともできます。
         reply: |-
-          よくできました！HTML と BBCode はフォーマットにも使用できます。さらに詳しくは、[こちらのチュートリアルを試してみましょう](http://commonmark.org/help) :nerd:
+          よくできました！HTML と BBCode はフォーマットにも使用できます。さらに詳しくは、[こちらのチュートリアルを試してみましょう](https://commonmark.org/help) :nerd:
         not_found: |-
           あれれ？返信にフォーマットが付けられていないようです。:pencil2:
 

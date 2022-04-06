@@ -8,7 +8,7 @@ export default Controller.extend({
   actions: {
     goNext(response) {
       const next = this.get("step.next");
-      if (response.refresh_required) {
+      if (response && response.refresh_required) {
         if (this.get("step.id") === "locale") {
           document.location = getUrl(`/wizard/steps/${next}`);
           return;
@@ -16,7 +16,9 @@ export default Controller.extend({
           this.send("refresh");
         }
       }
-      this.transitionToRoute("step", next);
+      if (response && response.success) {
+        this.transitionToRoute("step", next);
+      }
     },
     goBack() {
       this.transitionToRoute("step", this.get("step.previous"));

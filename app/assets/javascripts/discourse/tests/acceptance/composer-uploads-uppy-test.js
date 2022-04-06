@@ -1,14 +1,17 @@
 import {
   acceptance,
+  createFile,
   loggedInUser,
-  queryAll,
+  paste,
+  query,
 } from "discourse/tests/helpers/qunit-helpers";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import bootbox from "bootbox";
 import { authorizedExtensions } from "discourse/lib/uploads";
-import { click, fillIn, visit } from "@ember/test-helpers";
+import { click, fillIn, settled, visit } from "@ember/test-helpers";
 import I18n from "I18n";
 import { skip, test } from "qunit";
+import { Promise } from "rsvp";
 
 function pretender(server, helper) {
   server.post("/uploads/lookup-urls", () => {
@@ -46,21 +49,12 @@ function pretender(server, helper) {
   );
 }
 
-function createFile(name, type = "image/png") {
-  // the blob content doesn't matter at all, just want it to be random-ish
-  const file = new Blob([(Math.random() + 1).toString(36).substring(2)], {
-    type,
-  });
-  file.name = name;
-  return file;
-}
-
 acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
   needs.user();
   needs.pretender(pretender);
   needs.settings({
-    enable_experimental_composer_uploader: true,
     simultaneous_uploads: 2,
+    enable_rich_text_paste: true,
   });
 
   test("should insert the Uploading placeholder then the complete image placeholder", async function (assert) {
@@ -72,7 +66,7 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
 
     appEvents.on("composer:all-uploads-complete", () => {
       assert.strictEqual(
-        queryAll(".d-editor-input").val(),
+        query(".d-editor-input").value,
         "The image:\n![avatar.PNG|690x320](upload://yoj8pf9DdIeHRRULyw7i57GAYdz.jpeg)\n"
       );
       done();
@@ -80,7 +74,7 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
 
     appEvents.on("composer:upload-started", () => {
       assert.strictEqual(
-        queryAll(".d-editor-input").val(),
+        query(".d-editor-input").value,
         "The image:\n[Uploading: avatar.png...]()\n"
       );
     });
@@ -99,7 +93,7 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
     const done = assert.async();
     appEvents.on("composer:uploads-aborted", async () => {
       assert.strictEqual(
-        queryAll(".bootbox .modal-body").html(),
+        query(".bootbox .modal-body").innerHTML,
         I18n.t("post.errors.too_many_dragged_and_dropped_files", {
           count: 2,
         }),
@@ -123,7 +117,7 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
 
     appEvents.on("composer:uploads-aborted", async () => {
       assert.strictEqual(
-        queryAll(".bootbox .modal-body").html(),
+        query(".bootbox .modal-body").innerHTML,
         I18n.t("post.errors.upload_not_authorized", {
           authorized_extensions: authorizedExtensions(
             false,
@@ -141,46 +135,240 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
     appEvents.trigger("composer:add-files", [jsonFile]);
   });
 
-  // TODO: Had to comment this out for now; it works fine in Ember CLI but lagging
-  // UI updates sink it for the old Ember for some reason. Will re-enable
-  // when we make Ember CLI the primary.
+  test("cancelling uploads clears the placeholders out", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+    await fillIn(".d-editor-input", "The image:\n");
 
-  skip("cancelling uploads clears the placeholders out", async function (assert) {
+    const image = createFile("avatar.png");
+    const image2 = createFile("avatar2.png");
+
+    const appEvents = loggedInUser().appEvents;
+    let uploadStarted = 0;
+    appEvents.on("composer:upload-started", () => {
+      uploadStarted++;
+
+      if (uploadStarted === 2) {
+        assert.strictEqual(
+          query(".d-editor-input").value,
+          "The image:\n[Uploading: avatar.png...]()\n[Uploading: avatar2.png...]()\n",
+          "it should show the upload placeholders when the upload starts"
+        );
+      }
+    });
+    appEvents.on("composer:uploads-cancelled", () => {
+      assert.strictEqual(
+        query(".d-editor-input").value,
+        "The image:\n",
+        "it should clear the cancelled placeholders"
+      );
+    });
+
+    await new Promise(function (resolve) {
+      appEvents.on("composer:uploads-preprocessing-complete", function () {
+        resolve();
+      });
+      appEvents.trigger("composer:add-files", [image, image2]);
+    });
+    await click("#cancel-file-upload");
+  });
+
+  test("should insert a newline before and after an image when pasting in the end of the line", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+    await fillIn(".d-editor-input", "The image:");
+    const appEvents = loggedInUser().appEvents;
+    const done = assert.async();
+
+    appEvents.on("composer:upload-started", () => {
+      assert.strictEqual(
+        query(".d-editor-input").value,
+        "The image:\n[Uploading: avatar.png...]()\n"
+      );
+    });
+
+    appEvents.on("composer:all-uploads-complete", () => {
+      assert.strictEqual(
+        query(".d-editor-input").value,
+        "The image:\n![avatar.PNG|690x320](upload://yoj8pf9DdIeHRRULyw7i57GAYdz.jpeg)\n"
+      );
+      done();
+    });
+
+    const image = createFile("avatar.png");
+    appEvents.trigger("composer:add-files", image);
+  });
+
+  test("should insert a newline before and after an image when pasting in the middle of the line", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+    await fillIn(".d-editor-input", "The image: Text after the image.");
+    const textArea = query(".d-editor-input");
+    textArea.selectionStart = 10;
+    textArea.selectionEnd = 10;
+
+    const appEvents = loggedInUser().appEvents;
+    const done = assert.async();
+
+    appEvents.on("composer:upload-started", () => {
+      assert.strictEqual(
+        query(".d-editor-input").value,
+        "The image:\n[Uploading: avatar.png...]()\n Text after the image."
+      );
+    });
+
+    appEvents.on("composer:all-uploads-complete", () => {
+      assert.strictEqual(
+        query(".d-editor-input").value,
+        "The image:\n![avatar.PNG|690x320](upload://yoj8pf9DdIeHRRULyw7i57GAYdz.jpeg)\n Text after the image."
+      );
+      done();
+    });
+
+    const image = createFile("avatar.png");
+    appEvents.trigger("composer:add-files", image);
+  });
+
+  test("should insert a newline before and after an image when pasting with text selected", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+    await fillIn(
+      ".d-editor-input",
+      "The image: [paste here] Text after the image."
+    );
+    const textArea = query(".d-editor-input");
+    textArea.selectionStart = 10;
+    textArea.selectionEnd = 23;
+
+    const appEvents = loggedInUser().appEvents;
+    const done = assert.async();
+
+    appEvents.on("composer:upload-started", () => {
+      assert.strictEqual(
+        query(".d-editor-input").value,
+        "The image:\n[Uploading: avatar.png...]()\n Text after the image."
+      );
+    });
+
+    appEvents.on("composer:all-uploads-complete", () => {
+      assert.strictEqual(
+        query(".d-editor-input").value,
+        "The image:\n![avatar.PNG|690x320](upload://yoj8pf9DdIeHRRULyw7i57GAYdz.jpeg)\n Text after the image."
+      );
+      done();
+    });
+
+    const image = createFile("avatar.png");
+    appEvents.trigger("composer:add-files", image);
+  });
+
+  test("should insert a newline only after an image when pasting into an empty composer", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+    const appEvents = loggedInUser().appEvents;
+    const done = assert.async();
+
+    appEvents.on("composer:upload-started", () => {
+      assert.strictEqual(
+        query(".d-editor-input").value,
+        "[Uploading: avatar.png...]()\n"
+      );
+    });
+
+    appEvents.on("composer:all-uploads-complete", () => {
+      assert.strictEqual(
+        query(".d-editor-input").value,
+        "![avatar.PNG|690x320](upload://yoj8pf9DdIeHRRULyw7i57GAYdz.jpeg)\n"
+      );
+      done();
+    });
+
+    const image = createFile("avatar.png");
+    appEvents.trigger("composer:add-files", image);
+  });
+
+  test("should insert a newline only after an image when pasting into a blank line", async function (assert) {
     await visit("/");
     await click("#create-topic");
     await fillIn(".d-editor-input", "The image:\n");
     const appEvents = loggedInUser().appEvents;
     const done = assert.async();
 
-    appEvents.on("composer:uploads-cancelled", () => {
+    appEvents.on("composer:upload-started", () => {
       assert.strictEqual(
-        queryAll(".d-editor-input").val(),
-        "The image:\n",
-        "it should clear the cancelled placeholders"
+        query(".d-editor-input").value,
+        "The image:\n[Uploading: avatar.png...]()\n"
+      );
+    });
+
+    appEvents.on("composer:all-uploads-complete", () => {
+      assert.strictEqual(
+        query(".d-editor-input").value,
+        "The image:\n![avatar.PNG|690x320](upload://yoj8pf9DdIeHRRULyw7i57GAYdz.jpeg)\n"
       );
       done();
     });
 
-    let uploadStarted = 0;
-    appEvents.on("composer:upload-started", async () => {
-      uploadStarted++;
+    const image = createFile("avatar.png");
+    appEvents.trigger("composer:add-files", image);
+  });
 
-      if (uploadStarted === 2) {
-        assert.strictEqual(
-          queryAll(".d-editor-input").val(),
-          "The image:\n[Uploading: avatar.png...]()\n[Uploading: avatar2.png...]()\n",
-          "it should show the upload placeholders when the upload starts"
-        );
-      }
-    });
+  skip("should place cursor properly after inserting a placeholder", async function (assert) {
+    const appEvents = loggedInUser().appEvents;
+    const done = assert.async();
 
-    appEvents.on("composer:uploads-preprocessing-complete", async () => {
-      await click("#cancel-file-upload");
+    await visit("/");
+    await click("#create-topic");
+    await fillIn(".d-editor-input", "The image:\ntext after image");
+    const input = query(".d-editor-input");
+    input.selectionStart = 10;
+    input.selectionEnd = 10;
+
+    appEvents.on("composer:all-uploads-complete", () => {
+      // after uploading we have this in the textarea:
+      // "The image:\n![avatar.PNG|690x320](upload://yoj8pf9DdIeHRRULyw7i57GAYdz.jpeg)\ntext after image"
+      // cursor should be just before "text after image":
+      assert.equal(input.selectionStart, 76);
+      assert.equal(input.selectionEnd, 76);
+      done();
     });
 
     const image = createFile("avatar.png");
-    const image2 = createFile("avatar2.png");
-    appEvents.trigger("composer:add-files", [image, image2]);
+    appEvents.trigger("composer:add-files", image);
+  });
+
+  test("should be able to paste a table with files and not upload the files", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+    const appEvents = loggedInUser().appEvents;
+    const done = assert.async();
+
+    let uppyEventFired = false;
+
+    appEvents.on("composer:upload-started", () => {
+      uppyEventFired = true;
+    });
+
+    let element = query(".d-editor");
+    let inputElement = query(".d-editor-input");
+    inputElement.focus();
+    await paste(element, "\ta\tb\n1\t2\t3", {
+      types: ["text/plain", "Files"],
+      files: [createFile("avatar.png")],
+    });
+    await settled();
+
+    assert.strictEqual(
+      inputElement.value,
+      "||a|b|\n|---|---|---|\n|1|2|3|\n",
+      "only the plain text table is pasted"
+    );
+    assert.strictEqual(
+      uppyEventFired,
+      false,
+      "uppy does not start uploading the file"
+    );
+    done();
   });
 });
 
@@ -197,7 +385,6 @@ acceptance("Uppy Composer Attachment - Upload Error", function (needs) {
     });
   });
   needs.settings({
-    enable_experimental_composer_uploader: true,
     simultaneous_uploads: 2,
   });
 
@@ -210,7 +397,7 @@ acceptance("Uppy Composer Attachment - Upload Error", function (needs) {
 
     appEvents.on("composer:upload-error", async () => {
       assert.strictEqual(
-        queryAll(".bootbox .modal-body").html(),
+        query(".bootbox .modal-body").innerHTML,
         "There was an error uploading the file, the gif was way too cool.",
         "it should show the error message from the server"
       );
@@ -229,13 +416,16 @@ acceptance("Uppy Composer Attachment - Upload Handler", function (needs) {
   needs.user();
   needs.pretender(pretender);
   needs.settings({
-    enable_experimental_composer_uploader: true,
     simultaneous_uploads: 2,
   });
   needs.hooks.beforeEach(() => {
     withPluginApi("0.8.14", (api) => {
-      api.addComposerUploadHandler(["png"], (file) => {
-        bootbox.alert(`This is an upload handler test for ${file.name}`);
+      api.addComposerUploadHandler(["png"], (files) => {
+        const file = files[0];
+        const isNativeFile = file instanceof File ? "WAS" : "WAS NOT";
+        bootbox.alert(
+          `This is an upload handler test for ${file.name}. The file ${isNativeFile} a native file object.`
+        );
       });
     });
   });
@@ -249,8 +439,8 @@ acceptance("Uppy Composer Attachment - Upload Handler", function (needs) {
 
     appEvents.on("composer:uploads-aborted", async () => {
       assert.strictEqual(
-        queryAll(".bootbox .modal-body").html(),
-        "This is an upload handler test for handlertest.png",
+        query(".bootbox .modal-body").innerHTML,
+        "This is an upload handler test for handlertest.png. The file WAS a native file object.",
         "it should show the bootbox triggered by the upload handler"
       );
       await click(".modal-footer .btn");

@@ -5,6 +5,47 @@ class BookmarkManager
 
   def initialize(user)
     @user = user
+    @guardian = Guardian.new(user)
+  end
+
+  def self.bookmark_metadata(bookmark, user)
+    data = {}
+    if SiteSetting.use_polymorphic_bookmarks
+      if bookmark.bookmarkable_type == "Topic"
+        data[:topic_bookmarked] = Bookmark.for_user_in_topic(user.id, bookmark.bookmarkable.id).exists?
+      elsif bookmark.bookmarkable_type == "Post"
+        data[:topic_bookmarked] = Bookmark.for_user_in_topic(user.id, bookmark.bookmarkable.topic.id).exists?
+      end
+    else
+      data[:topic_bookmarked] = Bookmark.for_user_in_topic(user.id, bookmark.topic.id).exists?
+    end
+    data
+  end
+
+  # TODO (martin) [POLYBOOK] This will be used in place of #create once
+  # polymorphic bookmarks are implemented.
+  def create_for(bookmarkable_id:, bookmarkable_type:, name: nil, reminder_at: nil, options: {})
+    raise NotImplementedError if !SiteSetting.use_polymorphic_bookmarks
+
+    bookmarkable = bookmarkable_type.constantize.find_by(id: bookmarkable_id)
+    self.send("validate_bookmarkable_#{bookmarkable_type.downcase}", bookmarkable)
+
+    bookmark = Bookmark.create(
+      {
+        user_id: @user.id,
+        bookmarkable: bookmarkable,
+        name: name,
+        reminder_at: reminder_at,
+        reminder_set_at: Time.zone.now
+      }.merge(options)
+    )
+
+    return add_errors_from(bookmark) if bookmark.errors.any?
+
+    self.send("after_create_bookmarkable_#{bookmarkable_type.downcase}", bookmarkable)
+    update_user_option(bookmark)
+
+    bookmark
   end
 
   ##
@@ -33,23 +74,15 @@ class BookmarkManager
   #                        See Bookmark.auto_delete_preferences,
   #                        this is used to determine when to delete a bookmark
   #                        automatically.
-  # TODO (martin) (2021-12-01) Remove reminder_type keyword argument once plugins are not using it.
   def create(
     post_id:,
     name: nil,
-    reminder_type: nil,
     reminder_at: nil,
     for_topic: false,
     options: {}
   )
     post = Post.find_by(id: post_id)
-
-    # no bookmarking deleted posts or topics
-    raise Discourse::InvalidAccess if post.blank? || post.topic.blank?
-
-    if !Guardian.new(@user).can_see_post?(post) || !Guardian.new(@user).can_see_topic?(post.topic)
-      raise Discourse::InvalidAccess
-    end
+    validate_bookmarkable_post(post)
 
     bookmark = Bookmark.create(
       {
@@ -67,6 +100,7 @@ class BookmarkManager
     end
 
     update_topic_user_bookmarked(post.topic)
+    update_user_option(bookmark)
 
     bookmark
   end
@@ -76,9 +110,13 @@ class BookmarkManager
 
     bookmark.destroy
 
-    bookmarks_remaining_in_topic = update_topic_user_bookmarked(bookmark.topic)
+    if SiteSetting.use_polymorphic_bookmarks
+      self.send("after_destroy_bookmarkable_#{bookmark.bookmarkable_type.downcase}", bookmark)
+    else
+      update_topic_user_bookmarked(bookmark.topic)
+    end
 
-    { topic_bookmarked: bookmarks_remaining_in_topic }
+    bookmark
   end
 
   def destroy_for_topic(topic, filter = {}, opts = {})
@@ -87,7 +125,7 @@ class BookmarkManager
 
     Bookmark.transaction do
       topic_bookmarks.each do |bookmark|
-        raise Discourse::InvalidAccess.new if !Guardian.new(@user).can_delete?(bookmark)
+        raise Discourse::InvalidAccess.new if !@guardian.can_delete?(bookmark)
         bookmark.destroy
       end
 
@@ -100,21 +138,26 @@ class BookmarkManager
     BookmarkReminderNotificationHandler.send_notification(bookmark)
   end
 
-  # TODO (martin) (2021-12-01) Remove reminder_type keyword argument once plugins are not using it.
-  def update(bookmark_id:, name:, reminder_at:, reminder_type: nil, options: {})
+  def update(bookmark_id:, name:, reminder_at:, options: {})
     bookmark = find_bookmark_and_check_access(bookmark_id)
+
+    if bookmark.reminder_at != reminder_at
+      bookmark.reminder_at = reminder_at
+      bookmark.reminder_last_sent_at = nil
+    end
 
     success = bookmark.update(
       {
         name: name,
-        reminder_at: reminder_at,
-        reminder_set_at: Time.zone.now
+        reminder_set_at: Time.zone.now,
       }.merge(options)
     )
 
     if bookmark.errors.any?
       return add_errors_from(bookmark)
     end
+
+    update_user_option(bookmark)
 
     success
   end
@@ -136,17 +179,45 @@ class BookmarkManager
   def find_bookmark_and_check_access(bookmark_id)
     bookmark = Bookmark.find_by(id: bookmark_id)
     raise Discourse::NotFound if !bookmark
-    raise Discourse::InvalidAccess.new if !Guardian.new(@user).can_edit?(bookmark)
+    raise Discourse::InvalidAccess.new if !@guardian.can_edit?(bookmark)
     bookmark
   end
 
   def update_topic_user_bookmarked(topic, opts = {})
     # PostCreator can specify whether auto_track is enabled or not, don't want to
     # create a TopicUser in that case
-    bookmarks_remaining_in_topic = Bookmark.for_user_in_topic(@user.id, topic.id).exists?
-    return bookmarks_remaining_in_topic if opts.key?(:auto_track) && !opts[:auto_track]
+    return if opts.key?(:auto_track) && !opts[:auto_track]
+    TopicUser.change(@user.id, topic, bookmarked: Bookmark.for_user_in_topic(@user.id, topic.id).exists?)
+  end
 
-    TopicUser.change(@user.id, topic, bookmarked: bookmarks_remaining_in_topic)
-    bookmarks_remaining_in_topic
+  def update_user_option(bookmark)
+    @user.user_option.update!(bookmark_auto_delete_preference: bookmark.auto_delete_preference)
+  end
+
+  def after_create_bookmarkable_post(post, opts = {})
+    update_topic_user_bookmarked(post.topic, opts)
+  end
+
+  def after_create_bookmarkable_topic(topic, opts = {})
+    update_topic_user_bookmarked(topic, opts)
+  end
+
+  def after_destroy_bookmarkable_post(bookmark)
+    update_topic_user_bookmarked(bookmark.bookmarkable.topic)
+  end
+
+  def after_destroy_bookmarkable_topic(bookmark)
+    update_topic_user_bookmarked(bookmark.bookmarkable)
+  end
+
+  def validate_bookmarkable_post(post)
+    # no bookmarking deleted posts or topics
+    raise Discourse::InvalidAccess if post.blank? || !@guardian.can_see_post?(post)
+    validate_bookmarkable_topic(post.topic)
+  end
+
+  def validate_bookmarkable_topic(topic)
+    # no bookmarking deleted posts or topics
+    raise Discourse::InvalidAccess if topic.blank? || !@guardian.can_see_topic?(topic)
   end
 end

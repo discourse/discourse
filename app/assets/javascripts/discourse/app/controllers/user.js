@@ -168,14 +168,19 @@ export default Controller.extend(CanCheckEmails, {
     "currentUser.ignored_ids",
     "model.ignored",
     "model.muted",
-    function () {
-      if (this.get("model.ignored")) {
-        return "changeToIgnored";
-      } else if (this.get("model.muted")) {
-        return "changeToMuted";
-      } else {
-        return "changeToNormal";
-      }
+    {
+      get() {
+        if (this.get("model.ignored")) {
+          return "changeToIgnored";
+        } else if (this.get("model.muted")) {
+          return "changeToMuted";
+        } else {
+          return "changeToNormal";
+        }
+      },
+      set(key, value) {
+        return value;
+      },
     }
   ),
 
@@ -249,9 +254,8 @@ export default Controller.extend(CanCheckEmails, {
       bootbox.dialog(message, buttons, { classes: "delete-user-modal" });
     },
 
-    updateNotificationLevel(level) {
-      const user = this.model;
-      return user.updateNotificationLevel(level);
+    updateNotificationLevel(params) {
+      return this.model.updateNotificationLevel(params);
     },
   },
 });

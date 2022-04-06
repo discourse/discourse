@@ -70,7 +70,7 @@ module Jobs
       dirname = "#{UserExport.base_directory}/#{filename}"
 
       # ensure directory exists
-      FileUtils.mkdir_p(dirname) unless Dir.exists?(dirname)
+      FileUtils.mkdir_p(dirname) unless Dir.exist?(dirname)
 
       # Generate a compressed CSV file
       zip_filename = nil
@@ -261,15 +261,16 @@ module Jobs
 
       CategoryUser
         .where(user_id: @current_user.id)
-        .select(:category_id, :notification_level, :last_seen_at)
+        .includes(:category)
+        .merge(Category.secured(guardian))
         .each do |cu|
-        yield [
-          cu.category_id,
-          piped_category_name(cu.category_id),
-          NotificationLevels.all[cu.notification_level],
-          cu.last_seen_at
-        ]
-      end
+          yield [
+            cu.category_id,
+            piped_category_name(cu.category_id, cu.category),
+            NotificationLevels.all[cu.notification_level],
+            cu.last_seen_at
+          ]
+        end
     end
 
     def flags_export
@@ -408,10 +409,9 @@ module Jobs
       @guardian ||= Guardian.new(@current_user)
     end
 
-    def piped_category_name(category_id)
-      return "-" unless category_id
-      category = Category.find_by(id: category_id)
-      return "#{category_id}" unless category
+    def piped_category_name(category_id, category)
+      return "#{category_id}" if category_id && !category
+      return "-" if !guardian.can_see_category?(category)
       categories = [category.name]
       while category.parent_category_id && category = category.parent_category
         categories << category.name
@@ -433,10 +433,10 @@ module Jobs
       user_archive_array = []
       topic_data = user_archive.topic
       user_archive = user_archive.as_json
-      topic_data = Topic.with_deleted.find_by(id: user_archive['topic_id']) if topic_data.nil?
+      topic_data = Topic.with_deleted.includes(:category).find_by(id: user_archive['topic_id']) if topic_data.nil?
       return user_archive_array if topic_data.nil?
 
-      categories = piped_category_name(topic_data.category_id)
+      categories = piped_category_name(topic_data.category_id, topic_data.category)
       is_pm = topic_data.archetype == "private_message" ? I18n.t("csv_export.boolean_yes") : I18n.t("csv_export.boolean_no")
       url = "#{Discourse.base_url}/t/#{topic_data.slug}/#{topic_data.id}/#{user_archive['post_number']}"
 

@@ -1,8 +1,8 @@
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
+import { action } from "@ember/object";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { isEmpty } from "@ember/utils";
-import { next, schedule } from "@ember/runloop";
 import { searchForTerm } from "discourse/lib/search";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 
@@ -26,7 +26,7 @@ export default Component.extend({
 
     if (this.loadOnInit && !isEmpty(this.additionalFilters)) {
       searchForTerm(this.additionalFilters, {}).then((results) => {
-        if (results && results.posts && results.posts.length > 0) {
+        if (results?.posts?.length > 0) {
           this.set(
             "topics",
             results.posts
@@ -42,18 +42,18 @@ export default Component.extend({
 
   didInsertElement() {
     this._super(...arguments);
-    schedule("afterRender", () => {
-      $("#choose-topic-title").keydown((e) => {
-        if (e.key === "Enter") {
-          return false;
-        }
-      });
-    });
+
+    document
+      .getElementById("choose-topic-title")
+      .addEventListener("keydown", this._handleEnter);
   },
 
   willDestroyElement() {
     this._super(...arguments);
-    $("#choose-topic-title").off("keydown");
+
+    document
+      .getElementById("choose-topic-title")
+      .removeEventListener("keydown", this._handleEnter);
   },
 
   @observes("topicTitle")
@@ -97,12 +97,13 @@ export default Component.extend({
 
     if (isEmpty(title) && isEmpty(this.additionalFilters)) {
       this.setProperties({ topics: null, loading: false });
+      this.onSearchEmptied?.();
       return;
     }
 
     const currentTopicId = this.currentTopicId;
     const titleWithFilters = `${title} ${this.additionalFilters}`;
-    let searchParams = {};
+    const searchParams = {};
 
     if (!isEmpty(title)) {
       searchParams.typeFilter = "topic";
@@ -116,7 +117,7 @@ export default Component.extend({
       if (title !== this.topicTitle) {
         return;
       }
-      if (results && results.posts && results.posts.length > 0) {
+      if (results?.posts?.length > 0) {
         this.set(
           "topics",
           results.posts.mapBy("topic").filter((t) => t.id !== currentTopicId)
@@ -130,15 +131,18 @@ export default Component.extend({
     });
   },
 
-  actions: {
-    chooseTopic(topic) {
-      this.set("selectedTopicId", topic.id);
-      next(() => {
-        document.getElementById(`choose-topic-${topic.id}`).checked = true;
-      });
-      if (this.topicChangedCallback) {
-        this.topicChangedCallback(topic);
-      }
-    },
+  @action
+  chooseTopic(topic) {
+    this.set("selectedTopicId", topic.id);
+
+    if (this.topicChangedCallback) {
+      this.topicChangedCallback(topic);
+    }
+  },
+
+  _handleEnter(event) {
+    if (event.key === "Enter") {
+      event.preventDefault();
+    }
   },
 });

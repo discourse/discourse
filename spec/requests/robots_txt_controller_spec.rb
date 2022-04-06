@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 RSpec.describe RobotsTxtController do
   describe '#builder' do
     it "returns json information for building a robots.txt" do
@@ -53,17 +51,6 @@ RSpec.describe RobotsTxtController do
 
         get '/robots.txt'
         expect(response.body).to include("\nDisallow: /forum/email/")
-      end
-    end
-
-    context 'crawl delay' do
-      it 'allows you to set crawl delay on particular bots' do
-        SiteSetting.allow_index_in_robots_txt = true
-        SiteSetting.slow_down_crawler_rate = 17
-        SiteSetting.slow_down_crawler_user_agents = 'bingbot|googlebot'
-        get '/robots.txt'
-        expect(response.body).to include("\nUser-agent: bingbot\nCrawl-delay: 17")
-        expect(response.body).to include("\nUser-agent: googlebot\nCrawl-delay: 17")
       end
     end
 

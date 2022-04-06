@@ -59,7 +59,7 @@ class Admin::ThemesController < Admin::AdminController
       json = JSON::parse(params[:theme].read)
       theme = json['theme']
 
-      @theme = Theme.new(name: theme["name"], user_id: theme_user.id)
+      @theme = Theme.new(name: theme["name"], user_id: theme_user.id, auto_update: false)
       theme["theme_fields"]&.each do |field|
 
         if field["raw_upload"]
@@ -116,7 +116,14 @@ class Admin::ThemesController < Admin::AdminController
       update_components = params[:components]
       match_theme_by_name = !!params[:bundle] && !params.key?(:theme_id) # Old theme CLI behavior, match by name. Remove Jan 2020
       begin
-        @theme = RemoteTheme.update_zipped_theme(bundle.path, bundle.original_filename, match_theme: match_theme_by_name, user: theme_user, theme_id: theme_id, update_components: update_components)
+        @theme = RemoteTheme.update_zipped_theme(
+          bundle.path,
+          bundle.original_filename,
+          match_theme: match_theme_by_name,
+          user: theme_user,
+          theme_id: theme_id,
+          update_components: update_components
+        )
         log_theme_change(nil, @theme)
         render json: @theme, status: :created
       rescue RemoteTheme::ImportError => e

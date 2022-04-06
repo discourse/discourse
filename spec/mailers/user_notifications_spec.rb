@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe UserNotifications do
 
   let(:user) { Fabricate(:admin) }
@@ -121,7 +119,7 @@ describe UserNotifications do
   end
 
   describe '.email_login' do
-    let(:email_token) { user.email_tokens.create!(email: user.email).token }
+    let(:email_token) { Fabricate(:email_token, user: user, scope: EmailToken.scopes[:email_login]).token }
     subject { UserNotifications.email_login(user, email_token: email_token) }
 
     it "generates the right email" do

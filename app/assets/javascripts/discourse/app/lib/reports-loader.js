@@ -19,7 +19,7 @@ const DEBOUNCING_DELAY = 50;
 
 export default {
   enqueue(type, params, callback) {
-    // makes sures the queue is not filling indefinitely
+    // makes sure the queue is not filling indefinitely
     if (_queue.length >= MAX_QUEUE_SIZE) {
       const removedJobs = _queue.splice(0, 1)[0];
       removedJobs.forEach((job) => {

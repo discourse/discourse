@@ -40,7 +40,7 @@ class RemoteTheme < ActiveRecord::Base
 
     existing = true
     if theme.blank?
-      theme = Theme.new(user_id: user&.id || -1, name: theme_info["name"])
+      theme = Theme.new(user_id: user&.id || -1, name: theme_info["name"], auto_update: false)
       existing = false
     end
 
@@ -112,6 +112,10 @@ class RemoteTheme < ActiveRecord::Base
     self.joined_remotes.where("last_error_text IS NOT NULL").pluck("themes.name", "themes.id")
   end
 
+  def out_of_date?
+    commits_behind > 0 || remote_version != local_version
+  end
+
   def update_remote_version
     return unless is_git?
     importer = ThemeStore::GitImporter.new(remote_url, private_key: private_key, branch: branch)
@@ -158,6 +162,11 @@ class RemoteTheme < ActiveRecord::Base
         new_path = "#{File.dirname(path)}/#{SecureRandom.hex}#{File.extname(path)}"
         File.rename(path, new_path) # OptimizedImage has strict file name restrictions, so rename temporarily
         upload = UploadCreator.new(File.open(new_path), File.basename(relative_path), for_theme: true).create_for(theme.user_id)
+
+        if !upload.errors.empty?
+          raise ImportError, I18n.t("themes.import_error.upload", name: name, errors: upload.errors.full_messages.join(","))
+        end
+
         updated_fields << theme.set_field(target: :common, name: name, type: :theme_upload_var, upload_id: upload.id)
       end
     end

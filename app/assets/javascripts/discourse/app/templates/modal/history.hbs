@@ -5,7 +5,7 @@
       {{#link-to "user" model.username}}
         {{bound-avatar-template model.avatar_template "small"}} {{model.username}}
       {{/link-to}}
-      {{plugin-outlet name="revision-user-details-after" noTags=true args=(hash model=model)}}
+      {{plugin-outlet name="revision-user-details-after" args=(hash model=model)}}
       <span class="date">{{bound-date model.created_at}}</span>
       {{#if model.edit_reason}}
         &mdash; <span class="edit-reason">{{model.edit_reason}}</span>
@@ -84,12 +84,12 @@
       <div class="row">
         {{i18n "tagging.changed"}}
         {{#each previousTagChanges as |t|}}
-          {{discourse-tag t}}
+          {{discourse-tag t.name style=(if t.deleted "diff-del")}}
         {{/each}}
         &rarr;
         &nbsp;
         {{#each currentTagChanges as |t|}}
-          {{discourse-tag t}}
+          {{discourse-tag t.name style=(if t.inserted "diff-ins")}}
         {{/each}}
       </div>
     {{/if}}
@@ -101,7 +101,7 @@
       </div>
     {{/if}}
 
-    {{plugin-outlet name="post-revisions" args=(hash model=model)}}
+    {{plugin-outlet name="post-revisions" tagName="span" connectorTagName="div" args=(hash model=model)}}
 
     {{#links-redirect class="row"}}
       {{html-safe bodyDiff}}

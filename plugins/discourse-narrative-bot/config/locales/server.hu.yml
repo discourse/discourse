@@ -84,6 +84,15 @@ hu:
       "10":
         quote: "Amit az emberi elme el tud képzelni és hinni, elérheti."
         author: "Napoleon Hill"
+      "11":
+        quote: "Béke otthon, béke a világban."
+        author: "Mustafa Kemal Atatürk"
+      "12":
+        quote: "Az oktatás nem a szegénység előli menekülés, hanem az ellene folytatott küzdelem módja."
+        author: "Julius Nyerere"
+      "13":
+        quote: "Az ezer mérföldes utazásnak is egyetlen lépéssel kell kezdődnie."
+        author: "Lao-ce"
       results: |-
         > :left_speech_bubble: _%{quote}_ &mdash; %{author}
     magic_8_ball:
@@ -214,7 +223,7 @@ hu:
 
           - vagy kattintson a szerkesztő <kbd><b>B</b></kbd> vagy <kbd><i>I</i></kbd> gombjaira
         reply: |-
-          Nagyszerű munka! HTML és BBCode is használható formázáshoz – további információkért [próbálja ki ezt az oktatóanyagot](http://commonmark.org/help) :nerd:
+          Nagyszerű munka! HTML és BBCode is használható formázáshoz – további információkért [próbálja ki ezt az oktatóanyagot](https://commonmark.org/help) :nerd:
         not_found: |-
           Ó, nem találtam formázást a válaszában. :pencil2:
 
@@ -276,15 +285,37 @@ hu:
 
           (És igen, _disco_ van a nevemben, mint a 70-es évekbeli táncőrület. Tényleg [imádom az éjszakai életet!](https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
       flag:
+        instructions: |-
+          A barátságos beszélgetéseket szeretjük, és szükségünk van a segítségére, hogy a dolgok civilizáltak maradjanak](%{guidelines_url}). Ha problémát lát, akkor tudassa privát módon a szerzővel vagy a [segítőkész stábunkkal](%{about_url}). Számos oka lehet, amiért jelentene egy bejegyzést, közdve az ártatlan, új témát szóba hozó javaslatokkal, egészen a közösségi szabályok egyértelmű megsértéséig. Ha a **Valami más** lehetőséget választja, akkor privát beszélgetést kezd a moderátorokkal, ahol további kérdéseket tehet fel.
+
+          > :imp: Valami csúnyát írtam ide
+
+          Menjen, és **jelentse ezt a bejegyzést** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> és válassza az **Ez ide nem illő** indokot!
         reply: |-
           A [stáb](%{base_uri}/groups/staff) privátban értesítve lesz a bejelentéséről. Ha elegendő közösségi tag jelent be egy bejegyzést, akkor az elővigyázatosságból automatikusan el is lesz rejtve. (Mivel valójában nem írtam csúnya bejegyzést :angel:, ezért egyelőre eltávolítottam a jelzőt.)
+        not_found: |-
+          Ó jaj, a csúnya bejegyzésem még nem lett ide nem illőként jelentve. :worried: Tudja jelenteni ide nem illőként a **jelentés** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> gombbal? Ne feledja, hogy használnia kell a továbbiak megjelenítése <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> gombot, hogy megjelenítése a további műveleteket a bejegyzéseknél.
       search:
+        instructions: |-
+          _psszt_… Elrejtettem egy meglepetést a témában. Ha készen áll a kihívásra, akkor **válassza a keresés ikont** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> jobbra fent &#8599;, hogy megkeresse.
+
+          Próbáljon a „kapi&#8203;bara" kifejezésre keresni a témában.
         hidden_message: |-
           Hogyan is hagyhatta ki ezt a vízidisznót? :wink:
 
           <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
 
           Észrevette, hogy most újra az elején van? Etesse meg ezt a szegény éhes vízidisznót azzal, hogy **ezzel `%{search_answer}` az emodzsival válaszol**, és így automatikusan a végére ugorhat!
+        reply: |-
+          Igen, megtalálta :tada:
+
+          - A részletesebb kereséshez ugorjon a [teljes keresés oldalra](%{search_url}).
+
+          - Hogy bárhova odaugorjon egy hosszú beszélgetésben, próbálja ki a téma idővonalvezérlőjét a jobb oldalon (vagy lent, ha telefont használ).
+
+          - Ha van fizikai :keyboard:, nyomja meg a <kbd>?</kbd> gombot, hogy megtekintse a hasznos gyorsbillentyűket.
+        not_found: |-
+          Hmm… úgy tűnik gondja van. Sajnálom. Erre keresett <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> rá: **kapi&#8203;bara**?
       end:
         message: |-
           Köszönöm, hogy velem tartott @%{username}! Ezt Önnek készítettem, azt hiszem, kiérdemelte:
@@ -310,11 +341,21 @@ hu:
           Mindenki követ el hibákat. De ne aggódjon, bármikor szerkesztheti a bejegyzéseit, hogy kijavítsa őket!
 
           Elkezdené azzal, hogy **megpróbálja szerkeszteni** a bejegyzést, amelyet épp most hoztam létre Önnek?
+        not_found: |-
+          Úgy tűnik, hogy még nem szerkesztette a [bejegyzést](%{url}), amit Önnek hoztam létre. Megpróbálná újra?
+
+          Használja a <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-pencil.png" width="16" height="16"> ikont, hogy előhozza a szerkesztőt.
         reply: |-
           Nagyszerű munka!
 
           Ne feledje, hogy az 5 perc elteltével végrehajtott szerkesztések nyilvános szerkesztési verzióként jelennek meg, és a jobb felső sarokban egy kis ceruza ikon jelenik meg a változatok számával.
       delete:
+        instructions: |-
+          Ha vissza szeretne vonni egy bejegyzését, akkor törölheti azt.
+
+          Menjen, és **törölje** bármelyik fenti bejegyzését a <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> **törlés** művelettel. De ne törölje a legelső bejegyzést!
+        not_found: |-
+          Még nem látok törölt bejegyzéseket? Ne feledje, hogy a <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> továbbiak megjelenítése fogja felfedni a <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> törlést.
         reply: |-
           Hűha! :boom:
 
@@ -325,20 +366,38 @@ hu:
           Óh ne! Úgy tűnik, véletlenül töröltem egy új bejegyzést, amelyet most készítettem Önnek.
 
           Megtenne nekem egy szívességet, és <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> **visszavonná a törlést**?
+        not_found: |-
+          Gondja van? Ne feledje, hogy a <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> több lehetőséget jelenít meg, és felfedi a <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> törlés visszavonását.
         reply: |-
           Fú, ez szoros volt! Köszönöm, hogy kijavította :wink:
 
           Ne feledje, hogy csak %{deletion_after} órája van a bejegyzés törlésének visszavonására.
       category_hashtag:
+        instructions: |-
+          Tudta, hogy a bejegyzésében hivatkozhat kategóriákra és címkékre? Látta például a(z) %{category} kategóriát?
+
+          Írja be a „#” karaktert a mondat közepén, és válasszon egy kategóriát vagy címkét.
         not_found: |-
           Hmm, sehol nem látok kategóriát. Vegye figyelembe, hogy a „#” nem lehet az első karakter. Be tudja másolni ezt a következő válaszába?
 
           ```text
           Kategóriahivatkozásokat tudok létrehozni a # használatával
           ```
+        reply: |-
+          Kiváló! Ne feledje, hogy ez a kategóriákkal _és_ címkékkel is működik, ha a címkék engedélyezettek.
       change_topic_notification_level:
+        instructions: |-
+          Minden témának van egy értesítési szintje. Kezdetben „normál”, ami azt jelenti, hogy csak akkor kap értesítést, ha valaki közvetlenül Önhöz beszél.
+
+          Alapértelmezés szerint a privát üzenetek a legmagasabb szintre, „figyelésre” vannak állítva, ami azt jelenti, hogy minden új választól értesítve lesz. De felülírhatja _bármely_ téma értesítési szintjét a következőkre: „figyelés”, „követés” vagy „némított”.
+
+          Próbálja ki e téma értesítési szintjének módosítását. A téma alján talál egy gombot, amely azt mutatja, hogy **figyeli** ezt a témát. Át tudja állítani arra, hogy **követi**?
+        not_found: |-
+          Új néz ki, hogy még mindig figyeli :eyes: ezt a témát! Ha nem találja, akkor az értesítési szint gombja a téma alján található.
         reply: "Nagyszerű munka! Remélem, hogy nem némította le ezt a témát, sajnos néha kicsit fecsegős vagyok :grin:. \n\nNe feledje, hogy amikor egy témára válaszol, vagy egy témát néhány percnél tovább olvas, akkor azt automatikusan elkezdi követni is. Ezt megváltoztathatja a [felhasználói beállításokban](%{base_uri}/my/preferences)."
       poll:
+        instructions: |-
+          Tudta hogy bármelyik bejegyzéshez adhat hozzá szavazást? Próbálja ki a <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> fogaskereket a szerkesztőben, hogy **szavazást hozzon létre**.
         not_found: |-
           Hoppá! A válaszában nem volt szavazás.
 
@@ -382,5 +441,14 @@ hu:
           ```
         reply: |-
           Nagyszerű munka — a _részletekre_ figyelése elismerésre méltó!
+      end:
+        message: |-
+          Úgy átszaladt ezen, mint egy valóban _haladó felhasználó_ :bow:
+
+          %{certificate}
+
+          Ez mind, amim az Ön számára volt.
+
+          Egyelőre viszlát! Ha szeretne velem újra beszélni, akkor küldjön egy üzenetet, amikor csak tetszik :sunglasses:
       certificate:
         alt: "Haladó felhasználói eligazítás elvégzési tanúsítványa"

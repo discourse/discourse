@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
 require 'json_schemer'
 
 # Require schema files
@@ -14,7 +13,7 @@ def load_spec_schema(name)
 end
 
 def api_docs_description
-  <<~HEREDOC
+  <<~MD
     This page contains the documentation on how to use Discourse through API calls.
 
     > Note: For any endpoints not listed you can follow the
@@ -71,7 +70,19 @@ def api_docs_description
 
     If an endpoint accepts a boolean be sure to specify it as a lowercase
     `true` or `false` value unless noted otherwise.
-  HEREDOC
+  MD
+end
+
+def direct_uploads_disclaimer
+  <<~MD
+    You must have the correct permissions and CORS settings configured in your
+    external provider. We support AWS S3 as the default. See:
+
+    https://meta.discourse.org/t/-/210469#s3-multipart-direct-uploads-4.
+
+    An external file store must be set up and `enable_direct_s3_uploads` must
+    be set to true for this endpoint to function.
+  MD
 end
 
 RSpec.configure do |config|

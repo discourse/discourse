@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 RSpec.describe Jobs::CleanUpInactiveUsers do
   it "should clean up new users that have been inactive" do
     SiteSetting.clean_up_inactive_users_after_days = 0

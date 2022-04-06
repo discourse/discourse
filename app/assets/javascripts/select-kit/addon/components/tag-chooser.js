@@ -126,8 +126,6 @@ export default MultiSelectComponent.extend(TagsMixin, {
       results = results.sort((a, b) => a.id > b.id);
     }
 
-    return results.uniqBy("text").map((result) => {
-      return { id: result.text, name: result.text, count: result.count };
-    });
+    return results.uniqBy("id");
   },
 });

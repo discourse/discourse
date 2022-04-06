@@ -16,7 +16,7 @@ export default DiscourseRoute.extend(ViewingActionType, {
 
     return {
       stream,
-      isAnotherUsersPage: this.isAnotherUsersPage(user),
+      isAnotherUsersPage: !this.isCurrentUser(user),
       emptyState: this.emptyState(),
       emptyStateOthers: this.emptyStateOthers,
     };

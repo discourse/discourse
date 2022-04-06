@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 RSpec.describe Imap::Providers::Detector do
   it "returns the gmail provider if the gmail imap server is used" do
     config = {

@@ -13,10 +13,10 @@
     {{#unless status.uploaded}}
       {{d-button
         icon=(if isEmail "envelope" "link")
-        translatedLabel=(if status.uploading (i18n "user.invited.bulk_invite.progress" progress=status.progress)
+        translatedLabel=(if status.uploading (i18n "user.invited.bulk_invite.progress" progress=status.uploadProgress)
                                              (i18n "user.invited.bulk_invite.text"))
         class="btn-primary"
-        action=(action "submit" status.data)
+        action=status.startUpload
         disabled=status.submitDisabled
       }}
     {{/unless}}

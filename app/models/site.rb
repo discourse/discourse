@@ -7,6 +7,20 @@ class Site
   cattr_accessor :preloaded_category_custom_fields
   self.preloaded_category_custom_fields = Set.new
 
+  ##
+  # Sometimes plugins need to have additional data or options available
+  # when rendering custom markdown features/rules that are not available
+  # on the default opts.discourse object. These additional options should
+  # be namespaced to the plugin adding them.
+  #
+  # ```
+  # Site.markdown_additional_options["chat"] = { limited_pretty_text_markdown_rules: [] }
+  # ```
+  #
+  # These are passed down to markdown rules on opts.discourse.additionalOptions.
+  cattr_accessor :markdown_additional_options
+  self.markdown_additional_options = {}
+
   def self.add_categories_callbacks(&block)
     categories_callbacks << block
   end
@@ -51,7 +65,7 @@ class Site
     # corresponding ActiveRecord callback to clear the categories cache.
     Discourse.cache.fetch(categories_cache_key, expires_in: 30.minutes) do
       categories = Category
-        .includes(:uploaded_logo, :uploaded_background, :tags, :tag_groups, :required_tag_group)
+        .includes(:uploaded_logo, :uploaded_background, :tags, :tag_groups, category_required_tag_groups: :tag_group)
         .joins('LEFT JOIN topics t on t.id = categories.topic_id')
         .select('categories.*, t.slug topic_slug')
         .order(:position)

@@ -5,16 +5,18 @@ import {
   queryAll,
   selectDate,
   visible,
-  waitFor,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
-import { skip, test } from "qunit";
+import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
+import { test } from "qunit";
 import {
   SEARCH_TYPE_CATS_TAGS,
   SEARCH_TYPE_DEFAULT,
   SEARCH_TYPE_USERS,
 } from "discourse/controllers/full-page-search";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+
+let lastBody;
+let searchResultClickTracked = false;
 
 acceptance("Search - Full Page", function (needs) {
   needs.user();
@@ -91,6 +93,20 @@ acceptance("Search - Full Page", function (needs) {
         ],
       });
     });
+
+    server.put("/topics/bulk", (request) => {
+      lastBody = helper.parsePostData(request.requestBody);
+      return helper.response({ topic_ids: [130] });
+    });
+
+    server.post("/search/click", () => {
+      searchResultClickTracked = true;
+      return helper.response({ success: "OK" });
+    });
+
+    needs.hooks.afterEach(() => {
+      searchResultClickTracked = false;
+    });
   });
 
   test("perform various searches", async function (assert) {
@@ -141,45 +157,6 @@ acceptance("Search - Full Page", function (needs) {
       ),
       "it escapes search term"
     );
-  });
-
-  skip("update username through advanced search ui", async function (assert) {
-    await visit("/search");
-    await fillIn(".search-query", "none");
-    await fillIn(".search-advanced-options .user-selector", "admin");
-    await click(".search-advanced-options .user-selector");
-    await triggerKeyEvent(
-      ".search-advanced-options .user-selector",
-      "keydown",
-      8
-    );
-
-    waitFor(assert, async () => {
-      assert.ok(
-        visible(".search-advanced-options .autocomplete"),
-        '"autocomplete" popup is visible'
-      );
-      assert.ok(
-        exists(
-          '.search-advanced-options .autocomplete ul li a span.username:contains("admin")'
-        ),
-        '"autocomplete" popup has an entry for "admin"'
-      );
-
-      await click(
-        ".search-advanced-options .autocomplete ul li a:nth-of-type(1)"
-      );
-
-      assert.ok(
-        exists('.search-advanced-options span:contains("admin")'),
-        'has "admin" pre-populated'
-      );
-      assert.strictEqual(
-        queryAll(".search-query").val(),
-        "none @admin",
-        'has updated search term to "none user:admin"'
-      );
-    });
   });
 
   test("update category through advanced search ui", async function (assert) {
@@ -247,7 +224,7 @@ acceptance("Search - Full Page", function (needs) {
 
     await fillIn(".search-query", "none in:titleasd");
 
-    assert.not(
+    assert.notOk(
       exists(".search-advanced-options .in-title:checked"),
       "does not populate title only checkbox"
     );
@@ -287,7 +264,7 @@ acceptance("Search - Full Page", function (needs) {
 
     await fillIn(".search-query", "none in:personal-direct");
 
-    assert.not(
+    assert.notOk(
       exists(".search-advanced-options .in-private:checked"),
       "does not populate messages checkbox"
     );
@@ -311,7 +288,7 @@ acceptance("Search - Full Page", function (needs) {
 
     await fillIn(".search-query", "none in:seenasdan");
 
-    assert.not(
+    assert.notOk(
       exists(".search-advanced-options .in-seen:checked"),
       "does not populate seen checkbox"
     );
@@ -479,7 +456,7 @@ acceptance("Search - Full Page", function (needs) {
 
     await fillIn(".search-query", "in:likesasdas");
 
-    assert.not(
+    assert.notOk(
       exists(".search-advanced-options .in-likes:checked"),
       "does not populate the likes checkbox"
     );
@@ -562,15 +539,15 @@ acceptance("Search - Full Page", function (needs) {
     await fillIn(".search-query", "none");
     await click(".search-cta");
 
-    assert.ok(
-      !visible(".search-advanced-options"),
+    assert.notOk(
+      exists(".advanced-filters[open]"),
       "launching a search collapses advanced filters"
     );
 
     await visit("/search");
 
-    assert.ok(
-      !visible(".search-advanced-options"),
+    assert.notOk(
+      exists(".advanced-filters[open]"),
       "filters are collapsed when query param is not present"
     );
 
@@ -579,5 +556,40 @@ acceptance("Search - Full Page", function (needs) {
       visible(".search-advanced-options"),
       "clicking on element expands filters"
     );
+  });
+
+  test("bulk operations work", async function (assert) {
+    await visit("/search");
+    await fillIn(".search-query", "discourse");
+    await click(".search-cta");
+    await click(".bulk-select"); // toggle bulk
+    await click(".bulk-select-visible .btn:nth-child(2)"); // select all
+    await click(".bulk-select-btn"); // show bulk actions
+    await click(".topic-bulk-actions-modal .btn:nth-child(2)"); // close topics
+    assert.equal(lastBody["topic_ids[]"], 130);
+  });
+
+  test("adds visited class to visited topics", async function (assert) {
+    await visit("/search");
+
+    await fillIn(".search-query", "discourse");
+    await click(".search-cta");
+    assert.equal(queryAll(".visited").length, 0);
+
+    await fillIn(".search-query", "discourse visited");
+    await click(".search-cta");
+    assert.equal(queryAll(".visited").length, 1);
+  });
+
+  test("result link click tracking is invoked", async function (assert) {
+    await visit("/search");
+
+    await fillIn(".search-query", "discourse");
+    await click(".search-cta");
+
+    await click("a.search-link:first-child");
+
+    assert.strictEqual(currentURL(), "/t/lorem-ipsum-dolor-sit-amet/130");
+    assert.ok(searchResultClickTracked);
   });
 });

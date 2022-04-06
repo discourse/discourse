@@ -1,7 +1,7 @@
 {{#load-more selector=".directory .user" action=(action "loadMore")}}
   <div class="container">
     <div class="users-directory directory">
-      {{plugin-outlet name="users-top" connectorTagName="div" args=(hash model=model)}}
+      {{plugin-outlet name="users-top" tagName="span" connectorTagName="div" args=(hash model=model)}}
 
       <div class="directory-controls">
         {{period-chooser period=period onChange=(action (mut period)) fullDay=false}}
@@ -33,7 +33,7 @@
             }}
           {{/if}}
         </div>
-        {{plugin-outlet name="users-directory-controls" connectorTagName="" tagName="" args=(hash model=model)}}
+        {{plugin-outlet name="users-directory-controls" args=(hash model=model)}}
       </div>
 
       {{#conditional-loading-spinner condition=isLoading}}

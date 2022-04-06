@@ -63,7 +63,7 @@ acceptance("Topic move posts", function (needs) {
       "it opens move to modal"
     );
 
-    assert.not(
+    assert.notOk(
       queryAll(".choose-topic-modal .radios")
         .html()
         .includes(I18n.t("topic.split_topic.radio_label")),
@@ -77,7 +77,7 @@ acceptance("Topic move posts", function (needs) {
       "it shows an option to move to existing topic"
     );
 
-    assert.not(
+    assert.notOk(
       queryAll(".choose-topic-modal .radios")
         .html()
         .includes(I18n.t("topic.move_to_new_message.radio_label")),

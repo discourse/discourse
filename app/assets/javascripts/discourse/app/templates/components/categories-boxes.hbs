@@ -1,5 +1,6 @@
 {{#each categories as |c|}}
-  <div style={{unless noCategoryStyle (border-color c.color)}} data-category-id={{c.id}} data-notification-level={{c.notificationLevelString}} data-url={{c.url}} class="category category-box category-box-{{c.slug}} {{if c.isMuted "muted"}} {{if noCategoryStyle "no-category-boxes-style"}}">
+  {{plugin-outlet name="category-box-before-each-box" args=(hash category=c)}}
+  <div style={{unless noCategoryStyle (concat (border-color c.color) (category-color-variable c.color))}} data-category-id={{c.id}} data-notification-level={{c.notificationLevelString}} data-url={{c.url}} class="category category-box category-box-{{c.slug}} {{if c.isMuted "muted"}} {{if noCategoryStyle "no-category-boxes-style"}}">
     <div class="category-box-inner">
       {{#unless c.isMuted}}
         <div class="category-logo">
@@ -20,7 +21,7 @@
             <h3>
               {{category-title-before category=c}}
               {{#if c.read_restricted}}
-                {{d-icon "lock"}}
+                {{d-icon lockIcon}}
               {{/if}}
               {{c.name}}
             </h3>
@@ -70,7 +71,8 @@
           {{/if}}
         {{/unless}}
       </div>
-      {{plugin-outlet name="category-box-below-each-category" connectorTagName="" tagName="" args=(hash category=c)}}
+      {{plugin-outlet name="category-box-below-each-category" args=(hash category=c)}}
     </div>
   </div>
+  {{plugin-outlet name="category-box-after-each-box" args=(hash category=c)}}
 {{/each}}

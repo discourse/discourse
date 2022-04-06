@@ -8,6 +8,7 @@ import { downloadCalendar } from "discourse/lib/download-calendar";
 import { renderIcon } from "discourse-common/lib/icon-library";
 import I18n from "I18n";
 
+// Import applyLocalDates from discourse/lib/local-dates instead
 export function applyLocalDates(dates, siteSettings) {
   if (!siteSettings.discourse_local_dates_enabled) {
     return;
@@ -24,7 +25,7 @@ export function applyLocalDates(dates, siteSettings) {
       "beforeend",
       `
         <svg class="fa d-icon d-icon-globe-americas svg-icon" xmlns="http://www.w3.org/2000/svg">
-          <use xlink:href="#globe-americas"></use>
+          <use href="#globe-americas"></use>
         </svg>
         <span class="relative-time">${localDateBuilder.formated}</span>
       `
@@ -69,6 +70,16 @@ function _rangeElements(element) {
   if (!element.parentElement) {
     return [];
   }
+
+  // TODO: element.parentElement.children.length !== 2 is a fallback to old solution for ranges
+  // Condition can be removed after migration to [date-range]
+  if (
+    element.dataset.range !== "true" &&
+    element.parentElement.children.length !== 2
+  ) {
+    return [element];
+  }
+
   return Array.from(element.parentElement.children).filter(
     (span) => span.dataset.date
   );
@@ -76,31 +87,9 @@ function _rangeElements(element) {
 
 function initializeDiscourseLocalDates(api) {
   const siteSettings = api.container.lookup("site-settings:main");
-  const chat = api.container.lookup("service:chat");
   const defaultTitle = I18n.t("discourse_local_dates.default_title", {
     site_name: siteSettings.title,
   });
-
-  if (chat) {
-    chat.addToolbarButton({
-      title: "discourse_local_dates.title",
-      id: "local-dates",
-      icon: "calendar-alt",
-      action: "insertDiscourseLocalDate",
-    });
-
-    api.modifyClass("component:chat-composer", {
-      pluginId: "discourse-local-dates",
-      actions: {
-        insertDiscourseLocalDate() {
-          const insertDate = this.addText.bind(this);
-          showModal("discourse-local-dates-create-modal").setProperties({
-            insertDate,
-          });
-        },
-      },
-    });
-  }
 
   api.decorateCookedElement(
     (elem, helper) => {

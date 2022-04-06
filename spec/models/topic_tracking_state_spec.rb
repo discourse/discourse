@@ -1,12 +1,8 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe TopicTrackingState do
 
-  fab!(:user) do
-    Fabricate(:user)
-  end
+  fab!(:user) { Fabricate(:user) }
 
   let(:post) do
     create_post
@@ -79,7 +75,7 @@ describe TopicTrackingState do
 
   describe '#publish_unread' do
     it "can correctly publish unread" do
-      message = MessageBus.track_publish(described_class.unread_channel_key(post.user.id)) do
+      message = MessageBus.track_publish("/unread") do
         TopicTrackingState.publish_unread(post)
       end.first
 
@@ -94,7 +90,7 @@ describe TopicTrackingState do
 
     it "is not erroring when user_stat is missing" do
       post.user.user_stat.destroy!
-      message = MessageBus.track_publish(described_class.unread_channel_key(post.user.id)) do
+      message = MessageBus.track_publish("/unread") do
         TopicTrackingState.publish_unread(post)
       end.first
 
@@ -106,7 +102,7 @@ describe TopicTrackingState do
     it "does not publish whisper post to non-staff users" do
       post.update!(post_type: Post.types[:whisper])
 
-      messages = MessageBus.track_publish(described_class.unread_channel_key(post.user_id)) do
+      messages = MessageBus.track_publish("/unread") do
         TopicTrackingState.publish_unread(post)
       end
 
@@ -114,7 +110,7 @@ describe TopicTrackingState do
 
       post.user.grant_admin!
 
-      message = MessageBus.track_publish(described_class.unread_channel_key(post.user_id)) do
+      message = MessageBus.track_publish("/unread") do
         TopicTrackingState.publish_unread(post)
       end.first
 
@@ -128,7 +124,7 @@ describe TopicTrackingState do
 
       post.topic.update!(category: category)
 
-      messages = MessageBus.track_publish(described_class.unread_channel_key(post.user_id)) do
+      messages = MessageBus.track_publish("/unread") do
         TopicTrackingState.publish_unread(post)
       end
 
@@ -136,7 +132,7 @@ describe TopicTrackingState do
 
       group.add(post.user)
 
-      message = MessageBus.track_publish(described_class.unread_channel_key(post.user_id)) do
+      message = MessageBus.track_publish("/unread") do
         TopicTrackingState.publish_unread(post)
       end.first
 
@@ -335,8 +331,6 @@ describe TopicTrackingState do
   end
 
   it "correctly handles muted categories" do
-
-    user = Fabricate(:user)
     post
 
     report = TopicTrackingState.report(user)
@@ -358,14 +352,28 @@ describe TopicTrackingState do
     expect(report.length).to eq(1)
   end
 
-  it "correctly handles category_users with null notification level" do
-    user = Fabricate(:user)
-    post
+  it "correctly handles indirectly muted categories" do
+    parent_category = Fabricate(:category)
+    sub_category = Fabricate(:category, parent_category_id: parent_category.id)
+    create_post(category: sub_category)
 
     report = TopicTrackingState.report(user)
     expect(report.length).to eq(1)
 
-    CategoryUser.create!(user_id: user.id, category_id: post.topic.category_id)
+    CategoryUser.create!(
+      user_id: user.id,
+      notification_level: CategoryUser.notification_levels[:muted],
+      category_id: parent_category.id
+    )
+
+    report = TopicTrackingState.report(user)
+    expect(report.length).to eq(0)
+
+    CategoryUser.create!(
+      user_id: user.id,
+      notification_level: CategoryUser.notification_levels[:regular],
+      category_id: sub_category.id
+    )
 
     report = TopicTrackingState.report(user)
     expect(report.length).to eq(1)
@@ -374,7 +382,6 @@ describe TopicTrackingState do
   it "works when categories are default muted" do
     SiteSetting.mute_all_categories_by_default = true
 
-    user = Fabricate(:user)
     post
 
     report = TopicTrackingState.report(user)
@@ -394,7 +401,6 @@ describe TopicTrackingState do
   context 'muted tags' do
     it "remove_muted_tags_from_latest is set to always" do
       SiteSetting.remove_muted_tags_from_latest = 'always'
-      user = Fabricate(:user)
       tag1 = Fabricate(:tag)
       tag2 = Fabricate(:tag)
       Fabricate(:topic_tag, tag: tag1, topic: topic)
@@ -420,7 +426,6 @@ describe TopicTrackingState do
 
     it "remove_muted_tags_from_latest is set to only_muted" do
       SiteSetting.remove_muted_tags_from_latest = 'only_muted'
-      user = Fabricate(:user)
       tag1 = Fabricate(:tag)
       tag2 = Fabricate(:tag)
       Fabricate(:topic_tag, tag: tag1, topic: topic)
@@ -454,7 +459,6 @@ describe TopicTrackingState do
 
     it "remove_muted_tags_from_latest is set to never" do
       SiteSetting.remove_muted_tags_from_latest = 'never'
-      user = Fabricate(:user)
       tag1 = Fabricate(:tag)
       Fabricate(:topic_tag, tag: tag1, topic: topic)
       post
@@ -474,7 +478,7 @@ describe TopicTrackingState do
 
   it "correctly handles dismissed topics" do
     freeze_time 1.minute.ago
-    user = Fabricate(:user)
+    user.update!(created_at: Time.now)
     post
 
     report = TopicTrackingState.report(user)
@@ -492,8 +496,6 @@ describe TopicTrackingState do
   end
 
   it "correctly handles capping" do
-    user = Fabricate(:user)
-
     post1 = create_post
     Fabricate(:post, topic: post1.topic)
 

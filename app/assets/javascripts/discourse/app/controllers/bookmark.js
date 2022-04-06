@@ -1,4 +1,5 @@
 import Controller from "@ember/controller";
+import I18n from "I18n";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { action } from "@ember/object";
 import { Promise } from "rsvp";
@@ -10,28 +11,53 @@ export function openBookmarkModal(
     onCloseWithoutSaving: null,
     onAfterSave: null,
     onAfterDelete: null,
+  },
+  options = {
+    use_polymorphic_bookmarks: false,
   }
 ) {
   return new Promise((resolve) => {
     const modalTitle = () => {
-      if (bookmark.for_topic) {
-        return bookmark.id
-          ? "post.bookmarks.edit_for_topic"
-          : "post.bookmarks.create_for_topic";
+      if (options.use_polymorphic_bookmarks) {
+        return I18n.t(
+          bookmark.id ? "bookmarks.edit_for" : "bookmarks.create_for",
+          {
+            type: bookmark.bookmarkable_type,
+          }
+        );
+      } else if (bookmark.for_topic) {
+        return I18n.t(
+          bookmark.id
+            ? "post.bookmarks.edit_for_topic"
+            : "post.bookmarks.create_for_topic"
+        );
+      } else {
+        return I18n.t(
+          bookmark.id ? "post.bookmarks.edit" : "post.bookmarks.create"
+        );
       }
-      return bookmark.id ? "post.bookmarks.edit" : "post.bookmarks.create";
     };
+
+    const model = {
+      id: bookmark.id,
+      reminderAt: bookmark.reminder_at,
+      autoDeletePreference: bookmark.auto_delete_preference,
+      name: bookmark.name,
+    };
+
+    if (options.use_polymorphic_bookmarks) {
+      model.bookmarkableId = bookmark.bookmarkable_id;
+      model.bookmarkableType = bookmark.bookmarkable_type;
+    } else {
+      // TODO (martin) [POLYBOOK] Not relevant once polymorphic bookmarks are implemented.
+      model.postId = bookmark.post_id;
+      model.topicId = bookmark.topic_id;
+      model.forTopic = bookmark.for_topic;
+    }
+
     let modalController = showModal("bookmark", {
-      model: {
-        postId: bookmark.post_id,
-        topicId: bookmark.topic_id,
-        id: bookmark.id,
-        reminderAt: bookmark.reminder_at,
-        autoDeletePreference: bookmark.auto_delete_preference,
-        name: bookmark.name,
-        forTopic: bookmark.for_topic,
-      },
-      title: modalTitle(),
+      model,
+      titleTranslated: modalTitle(),
       modalClass: "bookmark-with-reminder",
     });
     modalController.setProperties({

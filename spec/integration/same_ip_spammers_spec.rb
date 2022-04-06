@@ -1,8 +1,6 @@
 # encoding: UTF-8
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe "spammers on same IP" do
 
   let(:ip_address)  { '182.189.119.174' }

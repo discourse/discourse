@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 RSpec.describe Jobs::SyncTopicUserBookmarked do
   it "corrects all topic_users.bookmarked records for the topic" do
     topic = Fabricate(:topic)

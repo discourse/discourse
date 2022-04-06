@@ -1,4 +1,4 @@
-import Category from "discourse/models/category";
+import categoryFromId from "discourse-common/utils/category-macro";
 import I18n from "I18n";
 import { Promise } from "rsvp";
 import RestModel from "discourse/models/rest";
@@ -14,6 +14,7 @@ import { none } from "@ember/object/computed";
 
 export const AUTO_DELETE_PREFERENCES = {
   NEVER: 0,
+  CLEAR_REMINDER: 3,
   WHEN_REMINDER_SENT: 1,
   ON_OWNER_REPLY: 2,
 };
@@ -37,6 +38,14 @@ const Bookmark = RestModel.extend({
   },
 
   attachedTo() {
+    if (this.siteSettings.use_polymorphic_bookmarks) {
+      return {
+        target: this.bookmarkable_type.toLowerCase(),
+        targetId: this.bookmarkable_id,
+      };
+    }
+
+    // TODO (martin) [POLYBOOK] Not relevant once polymorphic bookmarks are implemented.
     if (this.for_topic) {
       return { target: "topic", targetId: this.topic_id };
     }
@@ -119,10 +128,7 @@ const Bookmark = RestModel.extend({
     return newTags;
   },
 
-  @discourseComputed("category_id")
-  category(categoryId) {
-    return Category.findById(categoryId);
-  },
+  category: categoryFromId("category_id"),
 
   @discourseComputed("reminder_at", "currentUser")
   formattedReminder(bookmarkReminderAt, currentUser) {
@@ -130,6 +136,11 @@ const Bookmark = RestModel.extend({
       bookmarkReminderAt,
       currentUser.resolvedTimezone(currentUser)
     ).capitalize();
+  },
+
+  @discourseComputed("reminder_at")
+  reminderAtExpired(bookmarkReminderAt) {
+    return moment(bookmarkReminderAt) < moment();
   },
 
   @discourseComputed()

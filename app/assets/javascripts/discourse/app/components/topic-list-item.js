@@ -1,4 +1,7 @@
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import discourseComputed, {
+  bind,
+  observes,
+} from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import DiscourseURL from "discourse/lib/url";
 import I18n from "I18n";
@@ -58,6 +61,13 @@ export default Component.extend({
         if (this.selected && this.selected.includes(this.topic)) {
           this.element.querySelector("input.bulk-select").checked = true;
         }
+        if (this._shouldFocusLastVisited()) {
+          const title = this._titleElement();
+          if (title) {
+            title.addEventListener("focus", this._onTitleFocus);
+            title.addEventListener("blur", this._onTitleBlur);
+          }
+        }
       });
     }
   },
@@ -97,6 +107,13 @@ export default Component.extend({
 
     if (this.includeUnreadIndicator) {
       this.messageBus.unsubscribe(this.unreadIndicatorChannel);
+    }
+    if (this._shouldFocusLastVisited()) {
+      const title = this._titleElement();
+      if (title) {
+        title.removeEventListener("focus", this._onTitleFocus);
+        title.removeEventListener("blur", this._onTitleBlur);
+      }
     }
   },
 
@@ -195,11 +212,6 @@ export default Component.extend({
     return false;
   },
 
-  @discourseComputed("expandPinned", "hideMobileAvatar")
-  showMobileAvatar(expandPinned, hideMobileAvatar) {
-    return !(hideMobileAvatar || expandPinned);
-  },
-
   showEntrance,
 
   click(e) {
@@ -209,25 +221,44 @@ export default Component.extend({
     }
 
     const topic = this.topic;
-    const target = $(e.target);
-    if (target.hasClass("bulk-select")) {
+    if (e.target.classList.contains("bulk-select")) {
       const selected = this.selected;
 
-      if (target.is(":checked")) {
+      if (e.target.checked) {
         selected.addObject(topic);
+
+        if (this.lastChecked && e.shiftKey) {
+          const bulkSelects = Array.from(
+              document.querySelectorAll("input.bulk-select")
+            ),
+            from = bulkSelects.indexOf(e.target),
+            to = bulkSelects.findIndex((el) => el.id === this.lastChecked.id),
+            start = Math.min(from, to),
+            end = Math.max(from, to);
+
+          bulkSelects
+            .slice(start, end)
+            .filter((el) => el.checked !== true)
+            .forEach((checkbox) => {
+              checkbox.click();
+            });
+        }
+
+        this.set("lastChecked", e.target);
       } else {
         selected.removeObject(topic);
+        this.set("lastChecked", null);
       }
     }
 
-    if (target.hasClass("raw-topic-link")) {
+    if (e.target.classList.contains("raw-topic-link")) {
       if (wantsNewWindow(e)) {
         return true;
       }
-      return this.navigateToTopic(topic, target.attr("href"));
+      return this.navigateToTopic(topic, e.target.getAttribute("href"));
     }
 
-    if (target.closest("a.topic-status").length === 1) {
+    if (e.target.closest("a.topic-status")) {
       this.topic.togglePinnedForUser();
       return false;
     }
@@ -245,12 +276,17 @@ export default Component.extend({
         return;
       }
 
-      const $topic = $(this.element);
-      $topic
-        .addClass("highlighted")
-        .attr("data-islastviewedtopic", opts.isLastViewedTopic);
-
-      $topic.on("animationend", () => $topic.removeClass("highlighted"));
+      this.element.classList.add("highlighted");
+      this.element.setAttribute(
+        "data-islastviewedtopic",
+        opts.isLastViewedTopic
+      );
+      this.element.addEventListener("animationend", () => {
+        this.element.classList.remove("highlighted");
+      });
+      if (opts.isLastViewedTopic && this._shouldFocusLastVisited()) {
+        this._titleElement()?.focus();
+      }
     });
   },
 
@@ -265,4 +301,30 @@ export default Component.extend({
       this.highlight();
     }
   }),
+
+  @bind
+  _onTitleFocus() {
+    if (this.element && !this.isDestroying && !this.isDestroyed) {
+      this._mainLinkElement().classList.add("focused");
+    }
+  },
+
+  @bind
+  _onTitleBlur() {
+    if (this.element && !this.isDestroying && !this.isDestroyed) {
+      this._mainLinkElement().classList.remove("focused");
+    }
+  },
+
+  _shouldFocusLastVisited() {
+    return !this.site.mobileView && this.focusLastVisitedTopic;
+  },
+
+  _mainLinkElement() {
+    return this.element.querySelector(".main-link");
+  },
+
+  _titleElement() {
+    return this.element.querySelector(".main-link .title");
+  },
 });

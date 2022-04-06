@@ -74,18 +74,6 @@
         "badge_count": {
           "type": "integer"
         },
-        "email": {
-          "type": "string"
-        },
-        "secondary_emails": {
-          "type": "array"
-        },
-        "unconfirmed_emails": {
-          "type": "array"
-        },
-        "associated_accounts": {
-          "type": "array"
-        },
         "second_factor_backup_enabled": {
           "type": "boolean"
         },
@@ -204,6 +192,9 @@
           "type": "boolean"
         },
         "pending_count": {
+          "type": "integer"
+        },
+        "pending_posts_count": {
           "type": "integer"
         },
         "profile_view_count": {
@@ -778,6 +769,9 @@
             },
             "default_calendar": {
               "type": "string"
+            },
+            "oldest_search_log_date": {
+              "type": ["string", "null"]
             }
           },
           "required": [

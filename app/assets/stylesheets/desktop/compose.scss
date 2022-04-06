@@ -1,13 +1,13 @@
 #reply-control {
   .reply-area {
     margin: 0 auto;
-    padding: 5px 15px;
+    padding: 8px;
     box-sizing: border-box;
     height: calc(100% - 11px);
     width: 100%;
+
     .submit-panel {
       flex-wrap: wrap;
-      align-items: center;
     }
   }
 
@@ -20,9 +20,9 @@
       .title-and-category {
         flex-wrap: nowrap; // force title and tags on same line for PMs
         .mini-tag-chooser {
-          margin-bottom: 5px; // match title input margin
+          margin-bottom: 8px; // match title input margin
           flex: 0 0 auto;
-          margin-left: 1%; // matches margin between category and tag input
+          margin-left: 8px; // matches margin between category and tag input
           width: 39%;
         }
       }
@@ -46,35 +46,6 @@
         @include ellipsis;
       }
     }
-
-    &.show-preview {
-      .user-selector {
-        width: 50%;
-      }
-    }
-  }
-}
-
-.edit-title {
-  --overflow-buffer: 1em;
-  // this gives text little space to overflow without being cropped (e.g., Õ in headings)
-
-  .d-editor-preview-wrapper {
-    margin-top: calc(-41px - var(--overflow-buffer));
-    padding-top: var(--overflow-buffer);
-  }
-  &:not(.private-message) {
-    .d-editor-preview-wrapper {
-      @media screen and (max-width: 955px) {
-        margin-top: calc(-75px - var(--overflow-buffer));
-      }
-    }
-  }
-
-  .with-tags {
-    .d-editor-preview-wrapper {
-      margin-top: calc(-75px - var(--overflow-buffer));
-    }
   }
 }
 
@@ -89,12 +60,13 @@
     cursor: row-resize;
     padding: 4px 0;
     background: var(--tertiary);
+
     &:before {
       content: "";
       display: block;
-      width: 27px;
+      width: 24px;
       margin: auto;
-      border-top: 3px double var(--secondary);
+      border-top: 3px double var(--tertiary-medium);
     }
   }
 }
@@ -103,32 +75,23 @@
   .open {
     .grippie {
       padding: 7px 0;
+      margin-top: -17px;
     }
   }
-}
-
-.composer-popup-container {
-  max-width: 1500px;
-  margin-left: auto;
-  margin-right: auto;
 }
 
 .composer-popup {
   box-sizing: border-box;
   position: absolute;
-  width: calc(50% - 30px);
-  max-width: 724px;
-  top: 21px; // grippie height + .reply-to margin-top + .reply-area padding-top
-  bottom: 10px;
-  left: 51%;
+  width: calc(50% - 16px);
+  top: 19px; // grippie (11px) + .reply-area padding (8px)
+  bottom: 8px;
+  right: 8px;
   overflow-y: auto;
-  z-index: z("composer", "popover");
-  padding: 10px 10px 35px 10px;
+  z-index: z("composer", "dropdown") + 1;
+  padding: 1.5em;
   box-shadow: shadow("dropdown");
   background: var(--highlight-medium);
-  .hide-preview & {
-    z-index: z("composer", "dropdown") + 1;
-  }
 
   &.urgent {
     background: var(--danger-low);
@@ -152,10 +115,6 @@
   }
 
   h3 {
-    margin-bottom: 10px;
-  }
-
-  p {
     margin-bottom: 10px;
   }
 
@@ -258,7 +217,6 @@
 }
 
 .composer-popup:nth-of-type(2) {
-  margin-left: 10px;
   width: calc(50% - 65px);
 }
 
@@ -282,26 +240,28 @@ a.toggle-preview {
   .profiler-results {
     display: none;
   }
+
   #reply-control {
     &.fullscreen {
       // important needed because of inline styles when height is changed manually with grippie
       height: 100vh !important;
       max-height: 100%; // prevents devices from miscalculating using vh
+      z-index: z("header") + 1;
+
       @supports (--custom: property) {
         height: calc(var(--composer-vh, 1vh) * 100) !important;
       }
-      z-index: z("header") + 1;
+
       .d-editor-preview-wrapper {
         margin-top: 1%;
       }
+
       .reply-to {
         border-bottom: 1px solid var(--primary-low);
-        padding-bottom: 3px;
-        margin: 0;
-        .composer-controls {
-          margin-right: 0;
-        }
+        margin-bottom: 0;
+        padding-bottom: 8px;
       }
+
       .d-editor-textarea-wrapper {
         border: none;
       }

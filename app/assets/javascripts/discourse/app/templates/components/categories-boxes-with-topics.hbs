@@ -1,5 +1,5 @@
 {{#each categories as |c|}}
-  <div data-notification-level={{c.notificationLevelString}} style={{unless noCategoryStyle (border-color c.color)}} class="category category-box category-box-{{c.slug}} {{if c.isMuted "muted"}} {{if noCategoryStyle "no-category-boxes-style"}}">
+  <div data-notification-level={{c.notificationLevelString}} style={{unless noCategoryStyle (concat (border-color c.color) (category-color-variable c.color))}} class="category category-box category-box-{{c.slug}} {{if c.isMuted "muted"}} {{if noCategoryStyle "no-category-boxes-style"}}">
     <div class="category-box-inner">
       <div class="category-box-heading">
         <a href={{c.url}}>
@@ -17,7 +17,7 @@
           <h3>
             {{category-title-before category=c}}
             {{#if c.read_restricted}}
-              {{d-icon "lock"}}
+              {{d-icon lockIcon}}
             {{/if}}
             {{c.name}}
           </h3>
@@ -35,7 +35,7 @@
           {{/if}}
         </div>
       {{/unless}}
-      {{plugin-outlet name="category-box-below-each-category" connectorTagName="" tagName="" args=(hash category=c)}}
+      {{plugin-outlet name="category-box-below-each-category" args=(hash category=c)}}
     </div>
   </div>
 {{/each}}

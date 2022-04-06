@@ -12,6 +12,7 @@ lt:
     discourse_narrative_bot_disable_public_replies: "Išjunkite viešus atsakymus naudodami „Discourse Narrative Bot“"
     discourse_narrative_bot_welcome_post_type: "Sveikinimo įrašo tipas, kurį turėtų išsiųsti Discourse pasakojimo robotas"
     discourse_narrative_bot_welcome_post_delay: "Palaukite (n) sekundžių prieš siųsdami „Discourse Narrative Bot“ pasveikinimo įrašą."
+    discourse_narrative_bot_skip_tutorials: "Discourse Narrative Bot konsultacijos, kuriuos reikia praleisti"
   badges:
     certified:
       name: Sertifikuota
@@ -19,37 +20,69 @@ lt:
       long_description: |
         Šis ženklelis suteikiamas sėkmingai užbaigus interaktyvią naują vartotojo pamoką. Jūs ėmėtės iniciatyvos išmokti pagrindines diskusijų priemones, o dabar esate sertifikuotas!
     licensed:
+      name: Licencijuota
       description: "Baigėme pažengusio vartotojo vadovą"
       long_description: |
         Šis ženklelis suteikiamas sėkmingai baigus interaktyvią pažengusio vartotojo mokymo programą. Įvaldėte pažangias diskusijų priemones - dabar esate visiškai licencijuotas!
   discourse_narrative_bot:
-    bio: "Sveiki, nesu tikras žmogus. Aš esu robotas, galintis jus išmokyti apie šią svetainę. Norėdami su manimi bendrauti, atsiųskite man žinutę arba paminėkite mane vardu."
+    bio: "Sveiki, aš nesu tikras žmogus. Aš esu robotas, galintis jus išmokyti apie šią svetainę. Norėdami su manimi bendrauti, atsiųskite man žinutę arba paminėkite mane vardu."
     tl2_promotion_message:
       subject_template: "Dabar, kai esate paaukštintas, atėjo laikas sužinoti apie kai kurias išplėstines funkcijas!"
       text_body_template: |
         Atsakykite į šį pranešimą naudodami „@%{discobot_username} %{reset_trigger}“, kad sužinotumėte daugiau apie tai, ką galite padaryti.
+    timeout:
+      message: |-
+        Ei,%{username}, tik tikrinu, nes kurį laiką apie tave negirdėjau.
+
+        - Jei norite tęsti, atsakykite man bet kuriuo metu.
+
+        - Jei norite praleisti šį veiksmą, pasakykite „%{skip_trigger}“.
+
+        - Norėdami pradėti iš naujo, pasakykite „%{reset_trigger}“.
+
+        Jei nenorite, tai taip pat gerai. Aš robotas. Tu nepakenksi mano jausmams. :sob:
     dice:
+      trigger: "ridenimas"
       invalid: |-
         Atsiprašau, matematiškai neįmanoma mesti to kauliukų derinio. :confounded:
+      out_of_range: |-
+        Ar žinojote, kad [didžiausias pusių skaičius](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) matematiškai teisingas kauliukas yra 120?
+      results: |-
+        > :game_die: %{results}
     quote:
       trigger: "citata"
       "1":
+        quote: "Kiekvieno sudėtingumo viduryje slypi galimybė"
         author: "Albertas Einšteinas"
+      "2":
+        quote: "Laisvės neverta turėti, jei ji nereiškia laisvės klysti."
+        author: "Mahatma Gandhi"
+      "3":
+        quote: "Neverk, nes viskas baigėsi, šypsokis, nes taip atsitiko."
+        author: "Dr Seuss"
       "4":
+        quote: "Jei norite, kad kažkas būtų padaryta teisingai, padarykite tai patys."
         author: "Charles-Guillaume Étienne"
       "5":
+        quote: "Tikėk, kad gali, ir tu jau pusiaukelėje."
         author: "Teodoras Ruzveltas"
       "6":
         quote: "Gyvenimas yra kaip šokolado dėžutė. Niekada nežinai, ką gausi."
+        author: "Forresto Gumpo mama"
       "7":
+        quote: "Tai vienas mažas žingsnelis žmogui, milžiniškas šuolis žmonijai."
         author: "Neilas Armstrongas"
       "8":
         quote: "Kasdien darykite vieną dalyką, kuris jus gąsdina."
+        author: "Eleanor Roosevelt"
       "9":
         quote: "Klaidos visada atleidžiamos, jei žmogus turi drąsos jas pripažinti."
         author: "Bruce Lee"
       "10":
+        quote: "Ką žmogaus protas gali įsivaizduoti ir kuo tikėti, tą jis gali ir pasiekti."
         author: "Napoleono kalnas"
+      results: |-
+        > :left_speech_bubble: _%{quote}_ &mdash; %{author}
     magic_8_ball:
       trigger: "likimas"
       answers:
@@ -82,37 +115,222 @@ lt:
       random_mention:
         reply: |-
           Sveiki! Norėdami sužinoti, ką galiu padaryti, pasakykite „@%{discobot_username} %{help_trigger}“.
+        tracks: |-
+          Šiuo metu žinau, kaip atlikti šiuos dalykus:
+
+          `@%{discobot_username} %{reset_trigger} {name-of-tutorial}`
+          > Pradeda interaktyvią mokymo programą, skirtą tik jums, asmenine žinute. „{name-of-tutorial}“ gali būti vienas iš: „%{tracks}“.
+        bot_actions: |-
+          `@%{discobot_username} %{dice_trigger} 2d6`
+          > :game_die: 3, 6
+
+          ` @%{discobot_username} %{quote_trigger}`
+          %{quote_sample}
+
+          ` @%{discobot_username} %{magic_8_ball_trigger}`
+          > :crystal_ball: Galite juo pasikliauti
+      do_not_understand:
+        first_response: |-
+          Ei, ačiū už atsakymą!
+
+          Deja, kaip blogai užprogramuotas robotas, aš negaliu to suprasti. :frowning:
+        track_response: Galite bandyti dar kartą arba, jei norite praleisti šį veiksmą, pasakykite „%{skip_trigger}“. Priešingu atveju, norėdami pradėti iš naujo, pasakykite „%{reset_trigger}“.
+        second_response: |-
+          O, atsiprašau. Vis dar nesuprantu. :anguished:
+
+          Esu tik robotas, bet jei norite susisiekti su tikru asmeniu, žr. [mūsų kontaktų puslapį](%{base_path}/apie).
+
+          Tuo tarpu aš nepasirodysiu tau kelyje.
     new_user_narrative:
       reset_trigger: "pamoka"
+      title: "Naujo vartotojo mokymo programos užbaigimo sertifikatas"
       hello:
         title: "Sveikinimai!"
+        message: |-
+          Ačiū, kad prisijungėte prie %{title}ir sveiki atvykę!
+
+          – Aš esu tik robotas, bet [mūsų draugiški darbuotojai] (%{base_uri}/apie) taip pat yra pasiruošę padėti, jei reikia susisiekti su asmeniu.
+
+          – Saugumo sumetimais laikinai apribojame, ką nauji naudotojai gali daryti. Kai susipažinsime su jumis, įgysite [naujų gebėjimų](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) (ir [badges](%{base_uri}/ženkleliai)).
+
+          – Mes visada tikime [civilizuotu bendruomenės elgesiu] (%{base_uri}/gairės).
+      onebox:
+        instructions: |-
+          Kitas, ar galite pasidalinti su manimi viena iš šių nuorodų? Atsakykite naudodami **nuorodą eilutėje** ir ji automatiškai išsiplės.
+
+          Norėdami nukopijuoti bet kurią nuorodą, bakstelėkite ir palaikykite mobiliajame telefone arba paspauskite dešinį pelės mygtuką:
+
+          <https://en.wikipedia.org/wiki/Inherently_funny_word>
+          <https://en.wikipedia.org/wiki/Death_by_coconut>
+          <https://en.wikipedia.org/wiki/Calculator_spelling>
+        reply: |-
+          Šaunu! Tai veiks daugumai <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> nuorodų. Atminkite, kad tai turi būti ant linijos _viskas savaime_, be nieko kito priekyje ar gale.
+      images:
+        instructions: |-
+          Štai vienaragio nuotrauka:
+
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
+
+          Jei jums tai patinka (o kam nepatiktų!), eikite į priekį ir paspauskite :heart: mygtuką, esantį po šiuo įrašu, kad praneštumėte man.
+
+          Ar galite **atsakyti su nuotrauka?** Tiks bet kuri nuotrauka! Nuvilkite ir numeskite, paspauskite įkėlimo mygtuką arba net nukopijuokite ir įklijuokite.
+        reply: |-
+          Puikus paveikslėlis – paspaudžiau mygtuką „Patinka :heart: “, kad praneščiau, kaip tai vertinu :heart_eyes:
+        like_not_found: |-
+          Ar pamiršote pamėgti :heart: mano [įrašą?] (%{url}) :crying_cat_face:
+        not_found: |-
+          Panašu, kad neįkėlėte paveikslėlio, todėl pasirinkau nuotrauką, kuri Jums tikrai patiks.
+
+          <%{image_url}>
+
+          Pabandykite įkelti tą kitą arba įklijuoti nuorodą į eilutę!
       likes:
+        instructions: |-
+          Štai vienaragio nuotrauka:
+
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
+
+          Jei jums tai patinka (o kam nepatiktų!), eikite į priekį ir paspauskite :heart: mygtuką, esantį po šiuo įrašu, kad praneštumėte man.
         reply: |-
           Ačiū, kad patinka mano įrašas!
         not_found: |-
           Ar pamiršote pamėgti :heart: mano [įrašą?] (%{url}) :crying_cat_face:
+      formatting:
+        instructions: |-
+          Ar galite atsakyme parašyti keletą žodžių **paryškintu** arba _pasvirusiu_?
+
+          – įveskite „**paryškintas**“ arba „_pasviręs_“
+
+          – arba paspauskite mygtukus <kbd><b>B</b></kbd> arba <kbd><i>I</i></kbd>
+        reply: |-
+          Puikus darbas! HTML ir BBCode taip pat tinka formatavimui – norėdami sužinoti daugiau, [išbandykite šią mokymo programą](https://commonmark.org/help) :nerd:
       quoting:
+        instructions: |-
+          Ar galite pabandyti pacituoti mane, kai atsakote, kad tiksliai žinočiau, į kurią dalį atsakote?
+
+          > Jei tai kava, atneškite man arbatos; bet jei tai arbata, atnešk man kavos.
+          >
+          > Vienas iš pokalbio su savimi pranašumų yra tai, kad žinai, kad bent kažkas klauso.
+          >
+          > Kai kurie žmonės turi kelią su žodžiais, o kiti… oh, uh, neturi kelio.
+
+          Pasirinkite tekstą kuri norite pasirinkti &uarr; citatą, tada paspauskite mygtuką **Citata**, kuris pasirodo virš jūsų pasirinkimo, arba mygtuką **Atsakyti** šio įrašo apačioje.
+
+          Po citata įveskite žodį ar du, kodėl pasirinkote ją, nes man įdomu :thinking:
         reply: |-
           Puikus darbas, pasirinkote mano mėgstamiausią citatą! :left_speech_bubble:
+        not_found: |-
+          Hmm, panašu, kad savo atsakyme manęs nepacitavote?
+
+          Pasirinkus bet kokį tekstą mano įraše, bus rodomas mygtukas <kbd>**Citata**</kbd> Taip pat veiks paspaudus **Atsakyti** su pasirinktu tekstu! Ar galite pabandyti dar kartą?
+      bookmark:
+        instructions: |-
+          Jei norite sužinoti daugiau, pasirinkite žemiau esantį <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **pažymėkite šią asmeninę žinutę**. Jei tai padarysite, jūsų ateityje gali laukti :gift:
+        reply: |-
+          Puiku! Dabar galite bet kada lengvai grįžti į mūsų privatų pokalbį tiesiai iš [profilio žymių skirtuko] (%{bookmark_url}). Tiesiog pasirinkite savo profilio nuotrauką viršutiniame dešiniajame kampe &#8599;
+        not_found: |-
+          Oi, nematau jokių žymių šioje temoje. Ar radote žymę po kiekvienu įrašu? Jei reikia, naudokite Rodyti daugiau <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> kad atskleistumėte papildomus veiksmus.
+      emoji:
+        reply: |-
+          Tai :sparkles: _fantastika!_ :sparkles:
       mention:
+        instructions: |-
+          Kartais galbūt norėsite atkreipti asmens dėmesį, net jei neatsakote į juos tiesiogiai. Įveskite `@`, tada užpildykite savo vartotojo vardą, kad juos paminėtumėte.
+
+          Ar galite paminėti **`@%{discobot_username}`** savo atsakyme?
         reply: |-
           _Ar kas nors pasakė mano vardą!? _ :raised_hand: Tikiu, kad pasakėte! :wave: Na, aš čia! Ačiū, kad paminėjote mane. :ok_hand:
+        not_found: |-
+          Niekur nematau savo vardo :frowning: Ar galite pabandyti dar kartą paminėti mane kaip “@%{discobot_username}”?
+
+          (Ir taip, mano vartotojo vardas parašytas _disco_, kaip 1970-ųjų šokių traku. Aš [myliu naktinį gyvenimą!] (https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
+      flag:
+        reply: |-
+          [Mūsų darbuotojai] (%{base_uri}/grupių/darbuotojų) bus asmeniškai informuoti apie jūsų vėliavą. Jei pakankamai bendruomenės narių pažymi įrašą, jis taip pat bus automatiškai paslėptas dėl atsargumo. (Kadangi iš tikrųjų neparašiau bjauraus įrašo :angel:, kol kas pašalinau vėliavėlę.)
+        not_found: |-
+          Oi ne, mano bjaurus pranešimas dar nebuvo pažymėtas kaip netinkamas. :worried: Ar galite pažymėti jį kaip netinkamą naudojant **vėliavą** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Nepamirškite naudoti Rodyti daugiau mygtuko <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> , kad atskleistumėte daugiau veiksmų kiekvienam įrašui.
+      search:
+        instructions: |-
+          _psst_ … Šioje temoje paslėpiau staigmeną. Jei pasiruošę iššūkiui, **pasirinkite paieškos piktogramą** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> viršuje dešinėje &#8599; ir ieškokite jos.
+
+          Pabandykite šioje temoje ieškoti termino „capy&#8203;bara“.
+        hidden_message: |-
+          Kaip jūs praleidote šį capybara? :wink:
+
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
+
+          Ar pastebėjote, kad dabar grįžote į pradžią? Pamaitinkite šią vargšę, alkaną kapibarą, **atsakydami `%{search_answer}` jaustuku** ir jūs būsite automatiškai nukreipti į pabaigą.
+        reply: |-
+          Yay, radote tai :tada:
+
+          – Norėdami atlikti išsamesnes paieškas, eikite į [visą paieškos puslapį](%{search_url}).
+
+          – Norėdami peršokti bet kur ilgoje diskusijoje, išbandykite temos laiko juostos valdiklius dešinėje (ir apačioje, mobiliajame telefone).
+
+          - Jei turite fizinę :keyboard:, paspauskite <kbd>?</kbd> kad peržiūrėtumėte mūsų patogius sparčiuosius klavišus.
+      end:
+        message: |-
+          Ačiū, kad palaikote mane @%{username}! Sukūriau tai jums, manau, jūs to nusipelnėte:
+
+          %{certificate}
+
+          Kol kas tai viskas! Peržiūrėkite [**naujausias mūsų diskusijų temas**](%{base_uri}/naujausias) arba [**diskusijų kategorijas**](%{base_uri}/kategorijos). :sunglasses:
+
+          (Jei norite dar kartą su manimi pasikalbėti ir sužinoti daugiau, bet kuriuo metu parašykite ar pažymėkite `@%{discobot_username}` !)
       certificate:
         alt: "Pasiekimo pažymėjimas"
     advanced_user_narrative:
       reset_trigger: "išplėstinė pamoka"
+      cert_title: "Sėkmingai baigus pažangaus vartotojo mokymo programą"
       title: ":arrow_up: Išplėstinės vartotojo funkcijos"
+      start_message: |-
+        Kaip _pažengęs_ vartotojas, ar jau lankėtės [jūsų nuostatų puslapyje](%{base_uri}/my/preferences) @%{username}? Yra daug būdų pritaikyti savo patirtį, pavyzdžiui, pasirinkti tamsią arba šviesią temą.
+
+        Bet aš nukrypstu, pradėkime!
       edit:
+        bot_created_post_raw: "@%{discobot_username} yra pats šauniausias mano žinomas robotas :wink:"
+        instructions: |-
+          Visi daro klaidų. Bet nesijaudinkite, visada galite redaguoti savo įrašus, kad juos pataisytumėte!
+
+          Ar galite pradėti nuo **redagavimo** įrašo, kurį ką tik sukūriau jūsų vardu?
+        not_found: |-
+          Panašu, kad dar neredagavote [post](%{url}), kurį sukūriau jums. Ar galite pabandyti dar kartą?
+
+          Norėdami iškviesti redaktorių, <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-pencil.png" width="16" height="16">
         reply: |-
           Puikus darbas!
 
           Atminkite, kad po 5 minučių atlikti pakeitimai bus rodomi kaip viešos redagavimo peržiūros, o viršutiniame dešiniajame kampe bus rodoma pieštuko piktograma su peržiūrų skaičiumi.
+      recover:
+        deleted_post_raw: "Kodėl @%{discobot_username} ištrynė mano įrašą? :anguished:"
+        instructions: |-
+          O ne! Panašu, kad netyčia ištryniau naują įrašą, kurį ką tik sukūriau jums.
+
+          Ar galite padaryti man paslaugą ir <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> **atšaukti ištrynimą**?
       category_hashtag:
+        instructions: |-
+          Ar žinojote, kad savo įraše galite nurodyti kategorijas ir žymas? Pavyzdžiui, ar matėte %{category} kategoriją?
+
+          Įveskite „#“ sakinio viduryje ir pasirinkite bet kurią kategoriją arba žymą.
+        not_found: |-
+          Hmm, niekur nematau kategorijos. Atminkite, kad „#“ negali būti pirmasis simbolis. Ar galite tai nukopijuoti kitame atsakyme?
+
+          ```tekstas
+          Galiu sukurti kategorijos nuorodą per #
+          ```
         reply: |-
           Puikiai! Atminkite, kad tai veikia abiejų kategorijų _ir_ žymas, jei žymės įjungtos.
       change_topic_notification_level:
         not_found: |-
           Panašu, kad vis dar žiūrite :eyes: šią temą! Jei jums sunku rasti, pranešimo lygio mygtukas yra temos apačioje.
+      poll:
+        reply: |-
+          Sveiki, gera apklausa! Kaip man sekėsi tave mokyti?
+
+          [poll]
+          * :+1:
+          * :-1:
+          [/poll]
       details:
         not_found: |-
           Kyla sunkumų kuriant išsamios informacijos valdiklį? Į kitą atsakymą pabandykite įtraukti:

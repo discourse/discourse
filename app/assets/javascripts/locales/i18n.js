@@ -168,7 +168,7 @@ I18n.translate = function(scope, options) {
   try {
     return this.interpolate(translation, options);
   } catch (error) {
-    return this.missingTranslation(scope);
+    return this.missingTranslation(scope, null, options);
   }
 };
 
@@ -201,8 +201,9 @@ I18n.toNumber = function(number, options) {
   number = parts[0];
 
   while (number.length > 0) {
-    buffer.unshift(number.substr(Math.max(0, number.length - 3), 3));
-    number = number.substr(0, number.length - 3);
+    var pos = Math.max(0, number.length - 3);
+    buffer.unshift(number.slice(pos, pos + 3));
+    number = number.slice(0, -3);
   }
 
   formattedNumber = buffer.join(options.delimiter);
@@ -297,11 +298,17 @@ I18n.pluralize = function(translation, scope, options) {
   return this.missingTranslation(scope, keys[0]);
 };
 
-I18n.missingTranslation = function(scope, key) {
+I18n.missingTranslation = function(scope, key, options) {
   var message = "[" + this.currentLocale() + this.SEPARATOR + scope;
+
   if (key) {
     message += this.SEPARATOR + key;
   }
+
+  if (options && options.hasOwnProperty("count")) {
+    message += " count=" + JSON.stringify(options.count);
+  }
+
   return message + "]";
 };
 

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 RSpec.describe UploadSerializer do
   fab!(:upload) { Fabricate(:upload) }
   let(:subject) { UploadSerializer.new(upload, root: false) }

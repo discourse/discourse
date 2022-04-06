@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe LocaleSiteSetting do
   def core_locales
     pattern = File.join(Rails.root, 'config', 'locales', 'client.*.yml')

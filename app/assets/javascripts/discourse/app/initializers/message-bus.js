@@ -46,7 +46,7 @@ export default {
 
     messageBus.alwaysLongPoll = !isProduction();
     messageBus.shouldLongPollCallback = () =>
-      userPresent(LONG_POLL_AFTER_UNSEEN_TIME);
+      userPresent({ userUnseenTime: LONG_POLL_AFTER_UNSEEN_TIME });
 
     // we do not want to start anything till document is complete
     messageBus.stop();
@@ -56,7 +56,11 @@ export default {
     // When 20 minutes pass we stop long polling due to "shouldLongPollCallback".
     onPresenceChange({
       unseenTime: LONG_POLL_AFTER_UNSEEN_TIME,
-      callback: () => document.dispatchEvent(new Event("visibilitychange")),
+      callback: (present) => {
+        if (present && messageBus.onVisibilityChange) {
+          messageBus.onVisibilityChange();
+        }
+      },
     });
 
     if (siteSettings.login_required && !user) {

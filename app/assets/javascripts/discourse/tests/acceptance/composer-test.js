@@ -1,9 +1,11 @@
-import { run } from "@ember/runloop";
-import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
+import { click, currentURL, fillIn, settled, visit } from "@ember/test-helpers";
 import { toggleCheckDraftPopup } from "discourse/controllers/composer";
 import LinkLookup from "discourse/lib/link-lookup";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import { CREATE_TOPIC, NEW_TOPIC_KEY } from "discourse/models/composer";
+import Composer, {
+  CREATE_TOPIC,
+  NEW_TOPIC_KEY,
+} from "discourse/models/composer";
 import Draft from "discourse/models/draft";
 import {
   acceptance,
@@ -17,7 +19,7 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import I18n from "I18n";
-import { skip, test } from "qunit";
+import { test } from "qunit";
 import { Promise } from "rsvp";
 import sinon from "sinon";
 
@@ -43,7 +45,7 @@ acceptance("Composer", function (needs) {
     });
   });
 
-  skip("Tests the Composer controls", async function (assert) {
+  test("composer controls", async function (assert) {
     await visit("/");
     assert.ok(exists("#create-topic"), "the create button is visible");
 
@@ -58,13 +60,13 @@ acceptance("Composer", function (needs) {
       "body errors are hidden by default"
     );
 
-    await click("a.toggle-preview");
+    await click(".toggle-preview");
     assert.ok(
       !exists(".d-editor-preview:visible"),
       "clicking the toggle hides the preview"
     );
 
-    await click("a.toggle-preview");
+    await click(".toggle-preview");
     assert.ok(
       exists(".d-editor-preview:visible"),
       "clicking the toggle shows the preview again"
@@ -106,7 +108,8 @@ acceptance("Composer", function (needs) {
     event.key = "B";
     event.keyCode = 66;
 
-    run(() => textarea.dispatchEvent(event));
+    textarea.dispatchEvent(event);
+    await settled();
 
     const example = I18n.t(`composer.bold_text`);
     assert.strictEqual(
@@ -116,9 +119,9 @@ acceptance("Composer", function (needs) {
     );
 
     await click("#reply-control a.cancel");
-    assert.ok(exists(".bootbox.modal"), "it pops up a confirmation dialog");
+    assert.ok(exists(".d-modal"), "it pops up a confirmation dialog");
 
-    await click(".modal-footer a:nth-of-type(2)");
+    await click(".modal-footer .discard-draft");
     assert.ok(!exists(".bootbox.modal"), "the confirmation can be cancelled");
   });
 
@@ -202,7 +205,7 @@ acceptance("Composer", function (needs) {
     await click("#reply-control button.create");
     assert.strictEqual(
       queryAll(".cooked:last p").text(),
-      "If you use gettext format you could leverage Launchpad 13 translations and the community behind it."
+      "this is the content of my reply"
     );
   });
 
@@ -386,24 +389,6 @@ acceptance("Composer", function (needs) {
     assert.strictEqual(count(".topic-post.staged"), 0);
   });
 
-  skip("Editing a post can rollback to old content", async function (assert) {
-    await visit("/t/internationalization-localization/280");
-    await click(".topic-post:nth-of-type(1) button.show-more-actions");
-    await click(".topic-post:nth-of-type(1) button.edit");
-
-    await fillIn(".d-editor-input", "this will 409");
-    await fillIn("#reply-title", "This is the new text for the title");
-    await click("#reply-control button.create");
-
-    assert.ok(!exists(".topic-post.staged"));
-    assert.strictEqual(
-      query(".topic-post .cooked").innerText,
-      "Any plans to support localization of UI elements, so that I (for example) could set up a completely German speaking forum?"
-    );
-
-    await click(".bootbox.modal .btn-primary");
-  });
-
   test("Composer can switch between edits", async function (assert) {
     await visit("/t/this-is-a-test-topic/9");
 
@@ -563,7 +548,7 @@ acceptance("Composer", function (needs) {
 
     await click("#create-topic");
     assert.ok(
-      !exists(".composer-fields .whisper .d-icon-far-eye-slash"),
+      !exists(".reply-details .whisper .d-icon-far-eye-slash"),
       "it should reset the state of the composer's model"
     );
 
@@ -573,9 +558,9 @@ acceptance("Composer", function (needs) {
     );
 
     assert.ok(
-      queryAll(".composer-fields .unlist")
-        .text()
-        .indexOf(I18n.t("composer.unlist")) > 0,
+      query(".reply-details .unlist").innerText.includes(
+        I18n.t("composer.unlist")
+      ),
       "it sets the topic to unlisted"
     );
 
@@ -583,7 +568,7 @@ acceptance("Composer", function (needs) {
 
     await click(".topic-post:nth-of-type(1) button.reply");
     assert.ok(
-      !exists(".composer-fields .whisper"),
+      !exists(".reply-details .whisper"),
       "it should reset the state of the composer's model"
     );
   });
@@ -834,7 +819,7 @@ acceptance("Composer", function (needs) {
     );
   });
 
-  skip("Shows duplicate_link notice", async function (assert) {
+  test("Shows duplicate_link notice", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-buttons .create");
 
@@ -933,6 +918,102 @@ acceptance("Composer - Customizations", function (needs) {
     assert.strictEqual(
       query(".save-or-cancel button").innerText,
       I18n.t("composer.emoji")
+    );
+  });
+});
+
+acceptance("Composer - Focus Open and Closed", function (needs) {
+  needs.user();
+
+  test("Focusing a composer which is not open with create topic", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+
+    const composer = this.container.lookup("controller:composer");
+    await composer.focusComposer({ fallbackToNewTopic: true });
+
+    await settled();
+    assert.strictEqual(
+      document.activeElement.classList.contains("d-editor-input"),
+      true,
+      "composer is opened and focused"
+    );
+    assert.strictEqual(composer.model.action, Composer.CREATE_TOPIC);
+  });
+
+  test("Focusing a composer which is not open with create topic and append text", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+
+    const composer = this.container.lookup("controller:composer");
+    await composer.focusComposer({
+      fallbackToNewTopic: true,
+      insertText: "this is appended",
+    });
+
+    await settled();
+    assert.strictEqual(
+      document.activeElement.classList.contains("d-editor-input"),
+      true,
+      "composer is opened and focused"
+    );
+    assert.strictEqual(
+      query("textarea.d-editor-input").value.trim(),
+      "this is appended"
+    );
+  });
+
+  test("Focusing a composer which is already open", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+
+    const composer = this.container.lookup("controller:composer");
+    await composer.focusComposer();
+
+    await settled();
+    assert.strictEqual(
+      document.activeElement.classList.contains("d-editor-input"),
+      true,
+      "composer is opened and focused"
+    );
+  });
+
+  test("Focusing a composer which is already open and append text", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+
+    const composer = this.container.lookup("controller:composer");
+    await composer.focusComposer({ insertText: "this is some appended text" });
+
+    await settled();
+    assert.strictEqual(
+      document.activeElement.classList.contains("d-editor-input"),
+      true,
+      "composer is opened and focused"
+    );
+    assert.strictEqual(
+      query("textarea.d-editor-input").value.trim(),
+      "this is some appended text"
+    );
+  });
+
+  test("Focusing a composer which is not open that has a draft", async function (assert) {
+    await visit("/t/this-is-a-test-topic/9");
+
+    await click(".topic-post:nth-of-type(1) button.edit");
+    await fillIn(".d-editor-input", "This is a dirty reply");
+    await click(".toggle-minimize");
+
+    const composer = this.container.lookup("controller:composer");
+    await composer.focusComposer({ insertText: "this is some appended text" });
+
+    await settled();
+    assert.strictEqual(
+      document.activeElement.classList.contains("d-editor-input"),
+      true,
+      "composer is opened and focused"
+    );
+    assert.strictEqual(
+      query("textarea.d-editor-input").value.trim(),
+      "This is a dirty reply\n\nthis is some appended text"
     );
   });
 });

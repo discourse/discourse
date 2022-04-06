@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe DiscourseNarrativeBot::TrackSelector do
   let(:user) { Fabricate(:user) }
   let(:narrative_bot) { ::DiscourseNarrativeBot::Base.new }

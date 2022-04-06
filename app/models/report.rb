@@ -46,6 +46,9 @@ class Report
   include Reports::ModeratorWarningPrivateMessages
   include Reports::ProfileViews
   include Reports::TopUploads
+  include Reports::TopUsersByLikesReceived
+  include Reports::TopUsersByLikesReceivedFromInferiorTrustLevel
+  include Reports::TopUsersByLikesReceivedFromAVarietyOfPeople
 
   attr_accessor :type, :data, :total, :prev30Days, :start_date,
                 :end_date, :labels, :prev_period, :facets, :limit, :average,

@@ -1,5 +1,5 @@
 <div class="user-profile-avatar">
   {{bound-avatar @user "huge"}}
   {{user-avatar-flair user=@user}}
-  {{plugin-outlet name="user-profile-avatar-flair" args=(hash model=@user) tagName="div"}}
+  {{plugin-outlet name="user-profile-avatar-flair" connectorTagName="div" args=(hash model=@user) tagName="div"}}
 </div>

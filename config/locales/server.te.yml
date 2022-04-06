@@ -523,6 +523,18 @@ te:
     top_uploads:
       labels:
         filename: దస్త్రం పేరు
+    top_users_by_likes_received:
+      labels:
+        user: సభ్యుడు
+        qtt_like: అందుకున్న ఇష్టాలు
+    top_users_by_likes_received_from_inferior_trust_level:
+      labels:
+        user: సభ్యుడు
+        qtt_like: అందుకున్న ఇష్టాలు
+    top_users_by_likes_received_from_a_variety_of_people:
+      labels:
+        user: సభ్యుడు
+        qtt_like: అందుకున్న ఇష్టాలు
   dashboard:
     rails_env_warning: "మీ సర్వరు %(env) రీతిలో నడుస్తోంది"
     host_names_warning: "మీ config/database.yml దస్త్రం అప్రమేయ లోకల్ హోస్ట్ వాడుతున్నది. దాన్ని మీ సైటు పేరుకు మార్చగలరు. "

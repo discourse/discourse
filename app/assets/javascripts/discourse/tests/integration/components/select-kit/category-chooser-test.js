@@ -141,7 +141,7 @@ discourseModule(
       },
     });
 
-    componentTest("with allowUncategorized=null rootNone=true", {
+    componentTest("with allowUncategorized=null none=true", {
       template: hbs`
         {{category-chooser
           value=value
@@ -306,7 +306,7 @@ discourseModule(
         store.createRecord("category", {
           id: 1,
           name: "cat-with-entities",
-          description: "baz &quot;bar ‘foo’",
+          description_text: "baz &quot;bar ‘foo’",
         });
       },
 

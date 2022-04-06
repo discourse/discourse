@@ -23,6 +23,24 @@
   }
 }
 
+.navigation-categories .category-list.subcategory-list {
+  margin-bottom: 1em;
+}
+
+.subcategory-list {
+  .parent-category {
+    h3 {
+      display: inline;
+    }
+    .category-text-title {
+      display: inline-flex;
+    }
+    .stat {
+      margin-left: 0.5em;
+    }
+  }
+}
+
 .category-boxes,
 .category-boxes-with-topics {
   display: flex;

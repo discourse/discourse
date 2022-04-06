@@ -13,13 +13,6 @@
     "avatar_template": {
       "type": "string"
     },
-    "email": {
-      "type": "string"
-    },
-    "secondary_emails": {
-      "type": "array",
-      "items": []
-    },
     "active": {
       "type": "boolean"
     },
@@ -493,6 +486,9 @@
           ]
         }
       ]
+    },
+    "external_ids": {
+      "type": "object"
     }
   },
   "required": [
@@ -554,6 +550,7 @@
     "approved_by",
     "suspended_by",
     "silenced_by",
-    "groups"
+    "groups",
+    "external_ids"
   ]
 }

@@ -32,11 +32,13 @@ class GroupShowSerializer < BasicGroupSerializer
                    :imap_updated_by,
                    :email_username,
                    :email_password,
+                   :email_from_alias,
                    :imap_last_error,
                    :imap_old_emails,
                    :imap_new_emails,
                    :message_count,
-                   :allow_unknown_sender_topic_replies
+                   :allow_unknown_sender_topic_replies,
+                   :associated_group_ids
 
   def self.admin_or_owner_attributes(*attrs)
     attributes(*attrs)
@@ -119,6 +121,14 @@ class GroupShowSerializer < BasicGroupSerializer
     define_method("#{level}_tags") do
       group_tag_notifications[NotificationLevels.all[level]] || []
     end
+  end
+
+  def associated_group_ids
+    object.associated_groups.map(&:id)
+  end
+
+  def include_associated_group_ids?
+    scope.can_associate_groups?
   end
 
   private

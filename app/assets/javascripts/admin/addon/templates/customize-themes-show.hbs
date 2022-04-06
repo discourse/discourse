@@ -1,5 +1,5 @@
 <div class="show-current-style">
-  {{plugin-outlet name="admin-customize-themes-show-top" args=(hash theme=model)}}
+  {{plugin-outlet name="admin-customize-themes-show-top" tagName="span" connectorTagName="div" args=(hash theme=model)}}
   <div class="title">
     {{#if editingName}}
       {{text-field value=model.name autofocus="true"}}
@@ -159,10 +159,12 @@
         <div class="setting-value">
           {{color-palettes
             content=colorSchemes
-            filterable=true
-            forceEscape=true
             value=colorSchemeId
-            icon="paint-brush"}}
+            icon="paint-brush"
+            options=(hash
+              filterable=true
+            )
+          }}
 
           <div class="desc">{{i18n "admin.customize.theme.color_scheme_select"}}</div>
         </div>

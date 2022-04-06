@@ -10,16 +10,18 @@
         {{#d-section class="user-invite-buttons"}}
           {{d-button class="btn-default" icon="plus" action=(action "createInvite") label="user.invited.create"}}
           {{#if canBulkInvite}}
-            {{#unless site.mobileView}}
-              {{d-button class="btn-default" icon="upload" action=(action "createInviteCsv") label="user.invited.bulk_invite.text"}}
-            {{/unless}}
+            {{#if siteSettings.allow_bulk_invite}}
+              {{#unless site.mobileView}}
+                {{d-button class="btn-flat" icon="upload" action=(action "createInviteCsv") label="user.invited.bulk_invite.text"}}
+              {{/unless}}
+            {{/if}}
           {{/if}}
           {{#if showBulkActionButtons}}
             {{#if inviteExpired}}
               {{#if removedAll}}
-                <li>
+                <span class="removed-all">
                   {{i18n "user.invited.removed_all"}}
-                </li>
+                </span>
               {{else}}
                 {{d-button icon="times" action=(action "destroyAllExpired") label="user.invited.remove_all"}}
               {{/if}}
@@ -27,10 +29,10 @@
 
             {{#if invitePending}}
               {{#if reinvitedAll}}
-                <li>
-                  {{i18n "user.invited.reinvited_all"}}
-                </li>
-              {{else}}
+                <span class="reinvited-all">
+                  {{d-button icon="check" disabled=true label="user.invited.reinvited_all"}}
+                </span>
+              {{else if hasEmailInvites}}
                 {{d-button class="btn-default" icon="sync" action=(action "reinviteAll") label="user.invited.reinvite_all"}}
               {{/if}}
             {{/if}}

@@ -19,7 +19,7 @@ def gather_uploads_for_all_sites
 end
 
 def file_exists?(path)
-  File.exists?(path) && File.size(path) > 0
+  File.exist?(path) && File.size(path) > 0
 rescue
   false
 end
@@ -165,11 +165,11 @@ def clean_up_uploads
     exit 1
   end
 
-  puts <<~OUTPUT
+  puts <<~TEXT
   This task will remove upload records and files permanently.
 
   Would you like to take a full backup before the clean up? (Y/N)
-  OUTPUT
+  TEXT
 
   if STDIN.gets.chomp.downcase == 'y'
     puts "Starting backup..."
@@ -188,7 +188,7 @@ def clean_up_uploads
   Upload.find_each do |upload|
     path = File.join(public_directory, upload.url)
 
-    if !File.exists?(path)
+    if !File.exist?(path)
       upload.destroy!
       putc "#"
     else
@@ -200,7 +200,7 @@ def clean_up_uploads
   OptimizedImage.find_each do |optimized_image|
     path = File.join(public_directory, optimized_image.url)
 
-    if !File.exists?(path)
+    if !File.exist?(path)
       optimized_image.destroy!
       putc "#"
     else
@@ -326,9 +326,9 @@ def regenerate_missing_optimized
       thumbnail = "#{public_directory}#{optimized_image.url}"
       original = "#{public_directory}#{upload.url}"
 
-      if !File.exists?(thumbnail) || File.size(thumbnail) <= 0
+      if !File.exist?(thumbnail) || File.size(thumbnail) <= 0
         # make sure the original image exists locally
-        if (!File.exists?(original) || File.size(original) <= 0) && upload.origin.present?
+        if (!File.exist?(original) || File.size(original) <= 0) && upload.origin.present?
           # try to fix it by redownloading it
           begin
             downloaded = FileHelper.download(
@@ -346,7 +346,7 @@ def regenerate_missing_optimized
           end
         end
 
-        if File.exists?(original) && File.size(original) > 0
+        if File.exist?(original) && File.size(original) > 0
           FileUtils.mkdir_p(File.dirname(thumbnail))
           OptimizedImage.resize(original, thumbnail, optimized_image.width, optimized_image.height)
           putc "#"
@@ -420,7 +420,7 @@ task "uploads:analyze", [:cache_path, :limit] => :environment do |_, args|
   uploads_count = Upload.count
   optimized_images_count = OptimizedImage.count
 
-  puts <<~REPORT
+  puts <<~TEXT
   Report for '#{current_db}'
   -----------#{'-' * current_db.length}
   Number of `Upload` records in DB: #{uploads_count}
@@ -430,7 +430,7 @@ task "uploads:analyze", [:cache_path, :limit] => :environment do |_, args|
   Number of images in uploads folder: #{paths_count}
   ------------------------------------#{'-' * paths_count.to_s.length}
 
-  REPORT
+  TEXT
 
   helper = Class.new do
     include ActionView::Helpers::NumberHelper
@@ -1010,15 +1010,26 @@ def fix_missing_s3
     next if !upload
 
     tempfile = nil
+    downloaded_from = nil
 
     begin
       tempfile = FileHelper.download(upload.url, max_file_size: 30.megabyte, tmp_file_name: "#{SecureRandom.hex}.#{upload.extension}")
+      downloaded_from = upload.url
     rescue => e
-      puts "Failed to download #{upload.url} #{e}"
+      if upload.origin.present?
+        begin
+          tempfile = FileHelper.download(upload.origin, max_file_size: 30.megabyte, tmp_file_name: "#{SecureRandom.hex}.#{upload.extension}")
+          downloaded_from = upload.origin
+        rescue => e
+          puts "Failed to download #{upload.origin} #{e}"
+        end
+      else
+        puts "Failed to download #{upload.url} #{e}"
+      end
     end
 
     if tempfile
-      puts "Successfully downloaded upload id: #{upload.id} - #{upload.url} fixing upload"
+      puts "Successfully downloaded upload id: #{upload.id} - #{downloaded_from} fixing upload"
 
       fixed_upload = nil
       fix_error = nil

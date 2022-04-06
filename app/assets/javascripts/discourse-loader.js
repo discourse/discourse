@@ -47,6 +47,7 @@ var define, requirejs;
         setProperties: Ember.setProperties,
         computed: Ember.computed,
         defineProperty: Ember.defineProperty,
+        observer: Ember.observer,
       },
       "@ember/object/computed": {
         alias: Ember.computed.alias,
@@ -162,6 +163,10 @@ var define, requirejs;
       },
       "@ember/object/internals": {
         guidFor: Ember.guidFor,
+      },
+      "@ember/test": {
+        registerWaiter: Ember.Test && Ember.Test.registerWaiter,
+        unregisterWaiter: Ember.Test && Ember.Test.unregisterWaiter,
       },
       I18n: {
         // eslint-disable-next-line

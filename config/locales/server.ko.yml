@@ -216,8 +216,6 @@ ko:
       <p>비밀번호가 기억 나시면 <a href="%{base_url}/login">로그인</a>을 하십시오.</p>
 
       <p>그렇지 않으면 <a href="%{base_url}/password-reset">비밀번호 재설정</a>을 하십시오.</p>
-    not_found_template_link: |
-      <p> <a href="%{base_url}">%{site_name}</a>의 초대장은 더 이상 사용할 수 없습니다. 초대 한 사람에게 새 초대장을 보내달라고 요청하십시오.</p>
     user_exists: "<b>%{email}</b>님은 초대하지 않아도 됩니다. <a href='%{base_path}/u/%{username}/summary'>이미 회원이거든요!</a>"
     invite_exists: "<b>%{email}</b> 이메일로 이미 초대되었습니다."
     invalid_email: "%{email} 은 유효한 이메일 주소가 아닙니다."
@@ -228,7 +226,7 @@ ko:
     disabled_errors:
       discourse_connect_enabled: "DiscourseConnect가 활성화되어 있기 때문에 초대가 비활성화됩니다."
       invalid_access: "요청한 리소스를 볼 수 없습니다."
-    requires_groups: "초대가 저장되었습니다. 지정된 글에 대한 접근 권한을 부여하려면 다음 그룹 중 하나를 추가하십시오: %{groups}."
+    domain_not_allowed: "사용자님의 이메일은 이 초대를 사용하는데 사용할 수 없습니다."
   bulk_invite:
     file_should_be_csv: "업로드 파일은 CSV형식이어야 합니다."
     max_rows: "첫 번째 %{max_bulk_invites} 초대가 전송되었습니다. 파일을 작은 부분으로 분할하십시오."
@@ -254,6 +252,7 @@ ko:
   not_found: "요청한 URL이나 리소스를 찾지 못했습니다."
   invalid_access: "요청한 리소스를 볼 권한이 없습니다."
   authenticator_not_found: "인증 방법이 존재하지 않거나 비활성화되었습니다."
+  authenticator_no_connect: "이 인증 공급자는 기존 포럼 계정에 대한 연결을 허용하지 않습니다."
   invalid_api_credentials: "요청한 리소스를 볼 수 없습니다. API 사용자 이름 또는 키가 유효하지 않습니다."
   provider_not_enabled: "요청한 리소스를 볼 수 없습니다. 인증 공급자가 활성화되어 있지 않습니다."
   provider_not_found: "요청한 리소스를 볼 수 없습니다. 인증 제공자가 존재하지 않습니다."
@@ -313,8 +312,8 @@ ko:
   links_require_trust: "죄송합니다. 게시물에 링크를 포함 할 수 없습니다."
   too_many_links:
     other: "죄송합니다. 신규회원은 글 하나에 링크를 %{count}개까지 넣을 수 있습니다."
-  contains_blocked_word: "게시물에 허용되지 않는 단어가 포함되어 있습니다 : %{word}"
-  contains_blocked_words: "게시물에 허용되지 않는 단어가 여러 개 있습니다 : %{words}"
+  contains_blocked_word: "죄송합니다. '%{word}' 는 금지된 단어로 사용할 수 없습니다."
+  contains_blocked_words: "죄송합니다. 허용되지 않는 단어로 글을 게시할 수 없습니다: %{words}."
   spamming_host: "죄송합니다. 회원님은 링크를 첨부할 수 없습니다."
   user_is_suspended: "가입이 보류된 회원은 글을 쓸 수 없습니다."
   topic_not_found: "뭔가 잘못됐네요. 아마 읽려는 도중에 토픽이 닫혔거나 지워진 건 아닐까요?"
@@ -370,7 +369,6 @@ ko:
       too_many: "죄송합니다. 북마크를 %{limit}개 이상 추가 할 수 없습니다. <a href='%{user_bookmarks_url}'>%{user_bookmarks_url}</a> 을 방문하여 일부를 제거하십시오."
       cannot_set_past_reminder: "과거에는 북마크 미리 알림을 설정할 수 없습니다."
       cannot_set_reminder_in_distant_future: "앞으로 10 년 이상 책갈피 알림을 설정할 수 없습니다."
-      time_must_be_provided: "모든 알림은 시간이 설정되어야합니다."
     reminders:
       at_desktop: "다음에 저는 데스크탑에 있습니다"
       later_today: "오늘 늦게"
@@ -619,6 +617,7 @@ ko:
       permission_conflict: "하위 범주에 액세스 할 수있는 모든 그룹도 상위 범주에 액세스 할 수 있어야합니다. 다음 그룹은 하위 카테고리 중 하나에 액세스 할 수 있지만 상위 카테고리에는 액세스 할 수 없습니다 : %{group_names}."
       disallowed_topic_tags: "이 주제에는 허용되지 않는 태그가 있습니다 : &#39;%{tags}&#39;"
       disallowed_tags_generic: "이 주제는 태그를 허용하지 않습니다."
+      slug_contains_non_ascii_chars: "비 ASCII 문자 포함"
     cannot_delete:
       uncategorized: "이 카테고리는 특별합니다. 카테고리가없는 주제의 보관 영역으로 사용됩니다. 삭제할 수 없습니다."
       has_subcategories: "하위 카테고리가 있어, 삭제할 수 없습니다."
@@ -838,12 +837,7 @@ ko:
     pm_title: "진행중인 주제의 백업 초안"
     pm_body: "백업 초안이 포함 된 주제"
   user_activity:
-    no_bookmarks:
-      self: "북마크된 게시물이 없습니다. 북마크를 사용하면 특정 게시물을 빠르게 확인 할 수 있습니다."
-      search: "검색어와 일치하는 북마크를 찾을 수 없습니다."
-      others: "북마크가 없습니다"
-    no_drafts:
-      self: "임시 저장 글이 없습니다. 글에 대한 댓글 작성을 시작하면 새 초안으로 자동 저장됩니다."
+    no_log_search_queries: "검색 로그 쿼리는 현재 비활성화되어 있습니다. (관리자가 사이트 설정에서 활성화할 수 있음)"
   email_settings:
     pop3_authentication_error: "제공된 POP3 자격 증명에 문제가 있습니다. 사용자 이름과 비밀번호를 확인하고 다시 시도하세요."
     imap_authentication_error: "제공된 IMAP 자격 증명에 문제가 있습니다. 사용자 이름과 비밀번호를 확인하고 다시 시도하세요."
@@ -1283,6 +1277,21 @@ ko:
         ignores_count: 카운트 무시
         mutes_count: 음소거 수
       description: "다른 많은 사용자가 음소거하거나 무시한 사용자"
+    top_users_by_likes_received:
+      title: "좋아요를 많이 받은 사용자"
+      labels:
+        user: 사용자
+        qtt_like: '''좋아요'' 받은 횟수'
+    top_users_by_likes_received_from_inferior_trust_level:
+      labels:
+        user: 사용자
+        trust_level: 회원 레벨
+        qtt_like: '''좋아요'' 받은 횟수'
+    top_users_by_likes_received_from_a_variety_of_people:
+      title: "여러 사람들로부터 좋아요를 받은 상위 사용자"
+      labels:
+        user: 사용자
+        qtt_like: '''좋아요'' 받은 횟수'
   dashboard:
     rails_env_warning: "당신의 서버는 %{env} 모드에서 실행되고 있습니다."
     host_names_warning: "당신의 config/database.yml 파일은 기본 호스트네임을 사용하고 있습니다. 사이트의 호스트네임으로 업데이트 하세요."
@@ -1309,6 +1318,7 @@ ko:
     out_of_date_themes: "다음 테마에 대한 업데이트가 제공됩니다."
     unreachable_themes: "다음 테마에 대한 업데이트를 확인할 수 없습니다."
   site_settings:
+    allow_bulk_invite: "CSV 파일을 업로드하여 대량 초대 허용"
     disabled: "비활성"
     display_local_time_in_user_card: "사용자 카드 페이지가 열릴 때 사용자의 시간대를 기준으로 현지 시간을 표시합니다."
     censored_words: "단어는 자동적으로 `&#9632;&#9632;&#9632;&#9632;` 로 대체 됩니다."
@@ -1329,7 +1339,7 @@ ko:
     min_personal_message_title_length: "메세지 제목의 최소 길이"
     max_emojis_in_title: "제목에 허용되는 최대 이모티콘"
     min_search_term_length: "검색을 하기 위한 최소 글자 수"
-    search_tokenize_chinese_japanese_korean: "CJK(한중일) 설정이 되어 있지 않은 사이트라도, 검색시 한중일 언어를 토크나이징하도록 강제합니다."
+    search_tokenize_chinese: "중국어가 아닌 사이트에서도 중국어를 토큰화하도록 강제 검색"
     search_prefer_recent_posts: "이 옵션을 켜면, 포럼이 너무 커서 검색이 느리게 작동할 때 최근의 포스트부터 먼저 검색합니다."
     search_recent_posts_size: "대문에 실을 최신 포스트 수"
     log_search_queries: "사용자에 의해 발생된 로그 탐색 쿼리"
@@ -1360,6 +1370,7 @@ ko:
     tl2_post_edit_time_limit: "tl2 + 작성자는 게시 후 (n) 분 동안 게시물을 편집 할 수 있습니다. 영원히 0으로 설정하십시오."
     edit_history_visible_to_public: "모든 사용자가 글의 수정 내역을 볼 수 있도록 허용. 비활성화시 스태프 맴버만 수정 내역을 볼 수 있음."
     delete_removed_posts_after: "작성자에 의해 삭제된 글은 (n) 시간 뒤 자동으로 삭제됩니다. 0으로 설정 시, 즉시 삭제됩니다."
+    notify_users_after_responses_deleted_on_flagged_post: "게시물이 신고로 삭제되면 게시물에 답글을 작성했거나 댓글이 삭제된 모든 사용자에게 알림이 전송됩니다."
     max_image_width: "글에서 사용할 수 있는 썸네일 이미지의 최대 너비"
     max_image_height: "글에서 사용할 수 있는 썸네일 이미지의 최대 높이"
     responsive_post_image_sizes: "라이트 박스 미리보기 이미지의 크기를 조정하여 다음 픽셀 비율의 높은 DPI 화면을 허용합니다. 반응 형 이미지를 비활성화하려면 모든 값을 제거하십시오."
@@ -1372,7 +1383,6 @@ ko:
     show_pinned_excerpt_mobile: "모바일 뷰에서 고정 토픽의 발췌 내용을 보여주기"
     show_pinned_excerpt_desktop: "데스크톱 뷰에서 고정 토픽의 발췌 내용을 보여주기"
     post_onebox_maxlength: "onebox가 적용된 Discourse 글에 허용되는 최대 글자수"
-    blocked_onebox_domains: "원박스화에서 제외 할 도메인 목록입니다."
     allowed_inline_onebox_domains: "제목없이 링크 된 경우 미니어처 형식으로 oneboxed 될 도메인 목록"
     enable_inline_onebox_on_all_domains: "inline_onebox_domain_whitelist 사이트 설정을 무시하고 모든 도메인에서 인라인 onebox를 허용하십시오."
     force_custom_user_agent_hosts: "모든 요청에서 사용자 정의 onebox 사용자 에이전트를 사용할 호스트. (특히 사용자 에이전트의 액세스를 제한하는 호스트에 유용합니다)."
@@ -1406,10 +1416,8 @@ ko:
     summary_timeline_button: "타임라인에 '요약' 버튼 표시"
     enable_personal_messages: "회원레벨1 사용자가 메시지를 작성하고 메시지에 답장할 수 있도록 허용합니다. 관리자는 언제든지 메시지를 보낼 수 있습니다."
     enable_system_message_replies: "개인 메시지가 비활성화 된 경우에도 사용자가 시스템 메시지에 회신 할 수 있습니다"
-    enable_long_polling: "Message bus used for notification can use long polling"
     enable_chunked_encoding: "서버에서 청크 분할 인코딩 응답을 활성화합니다. 이 기능은 대부분의 설정에서 작동하지만 일부 프록시는 버퍼링되어 응답이 지연될 수 있습니다."
     long_polling_base_url: "long polling에 사용 될 Base URL (CDN이 동적 콘텐트를 제공할 시에는 origin pull로 설정) eg: http://origin.site.com"
-    long_polling_interval: "보낼 데이터가 없을 때 응답 전에 서버가 기다려야하는 시간 (로그인된 유저 전용)"
     polling_interval: "long polling을 안 쓸 때 로그인된 클라이언트가 몇 밀리초마다 poll해야 하는 지"
     anon_polling_interval: "How often should anonymous clients poll in milliseconds"
     background_polling_interval: "(페이지를 안 보고 있을 때) 클라이언트가 몇 밀리초마다 poll해야 하는 지"
@@ -1425,6 +1433,9 @@ ko:
     tl2_additional_edits_per_day_multiplier: "tl2 (회원) 에 대해 이 숫자를 곱하여 일일 편집 제한을 늘립니다."
     tl3_additional_edits_per_day_multiplier: "tl3 (일반) 에 대해 이 숫자를 곱하여 일일 편집 제한을 늘립니다."
     tl4_additional_edits_per_day_multiplier: "tl4 (리더) 의 일일 편집 한도를 이 숫자에 곱하여 늘립니다."
+    tl2_additional_flags_per_day_multiplier: "이 숫자를 곱하여 tl2(회원)에 대한 하루 신고 제한을 늘립니다."
+    tl3_additional_flags_per_day_multiplier: "이 숫자를 곱하여 tl3(일반)에 대한 하루 신고 제한을 늘립니다."
+    tl4_additional_flags_per_day_multiplier: "이 숫자를 곱하여 tl4(리더)에 대한 하루 신고 제한을 늘립니다."
     num_users_to_silence_new_user: "새 사용자의 게시물에이 많은 다른 사용자로부터 num_spam_flags_to_silence_new_user 스팸 플래그가 표시되면 모든 게시물을 숨기고 향후 게시를 방지하십시오. 비활성화하려면 0입니다."
     num_tl3_flags_to_silence_new_user: "새 사용자의 게시물이 num_tl3_users_to_silence_new_user 다른 신뢰 수준 3 사용자로부터이 많은 플래그를 얻는 경우 모든 게시물을 숨기고 향후 게시를 방지하십시오. 비활성화하려면 0입니다."
     num_tl3_users_to_silence_new_user: "새 사용자의 게시물이이 많은 다른 신뢰 수준 3 사용자로부터 num_tl3_flags_to_silence_new_user 플래그를 얻는 경우 모든 게시물을 숨기고 향후 게시를 방지하십시오. 비활성화하려면 0입니다."
@@ -1459,7 +1470,6 @@ ko:
     allowed_iframes: "Discourse가 안전한 게시물로 허용 할 수있는 iframe src 도메인 접두사 목록"
     allowed_crawler_user_agents: "사이트에 대한 액세스를 허용해야하는 웹 크롤러의 사용자 에이전트입니다. 경고! 이것을 설정하면 여기에 나열되지 않은 모든 크롤러가 비활성화됩니다!"
     blocked_crawler_user_agents: "사이트 액세스를 허용해서는 안되는 웹 크롤러를 식별하는 사용자 에이전트 문자열에서 대소 문자를 구분하지 않는 고유 한 단어입니다. 허용 목록이 정의 된 경우 적용되지 않습니다."
-    slow_down_crawler_user_agents: "Crawls-delay 지시문을 사용하여 robots.txt에서 속도를 제한해야하는 웹 크롤러의 사용자 에이전트"
     slow_down_crawler_rate: "slow_down_crawler_user_agents를 지정하면이 비율이 모든 크롤러에 적용됩니다 (요청 사이의 지연 시간 (초))."
     content_security_policy: "콘텐츠 보안 정책 사용"
     content_security_policy_report_only: "콘텐츠 보안 정책 보고서 만 사용"
@@ -1497,7 +1507,7 @@ ko:
     blocked_email_domains: "사용자가 계정을 등록 할 수없는 파이프- 로 구분 된 이메일 도메인 목록입니다. 예: mailinator.com | trashmail.net"
     allowed_email_domains: "사용자가 계정 등록에 사용해야하는 파이프로 구분 된 이메일 도메인 목록입니다. 경고: 나열된 것 이외의 이메일 도메인을 가진 사용자는 허용되지 않습니다!"
     auto_approve_email_domains: "이 도메인 목록의 이메일 주소를 가진 사용자는 자동으로 승인됩니다."
-    hide_email_address_taken: "가입하는 동안 및 비밀번호를 잊어 버린 양식에서 지정된 이메일 주소로 계정이 존재한다고 사용자에게 알리지 마십시오."
+    hide_email_address_taken: "가입하는 동안 또는 비밀번호 찾기 과정에서 입력한 이메일 주소를 사용하는 계정이 있다는 사실을 사용자에게 알리지 마세요. '비밀번호 찾기' 요청에는 전체 이메일이 필요합니다."
     log_out_strict: "로그아웃 할때, 모든 장치에서 다같이 로그아웃"
     version_checks: "버전 관리를 위해 Discourse Hub를 핑 (Ping)하여 <a href='%{base_path}/admin' target='_blank'>/ admin</a> 대시 보드에 새 버전 메시지를 표시합니다."
     new_version_emails: "사용가능한 새로운 업데이트가 있으면 등록된 contact_email 주소로 메일을 발송하여 알려줍니다."
@@ -1616,7 +1626,6 @@ ko:
     use_site_small_logo_as_system_avatar: "시스템 사용자 아바타 대신 사이트의 작은 로고를 사용하십시오. 로고가 있어야 합니다."
     restrict_letter_avatar_colors: "문자 아바타 배경에 사용되는 6 자리 16 진수 색상 값 목록입니다."
     enable_listing_suspended_users_on_search: "일반 사용자가 일시 중지된 사용자를 찾을 수 있도록 합니다."
-    selectable_avatars_enabled: "사용자가 목록에서 아바타를 선택하도록합니다."
     selectable_avatars: "사용자가 선택할 수있는 아바타 목록."
     allow_all_attachments_for_group_messages: "그룹 메시지에 모든 이메일 첨부 허용"
     png_to_jpg_quality: "변환된 JPG 파일의 퀄리티(1은 최하, 99는 최상, 100은 해제)"
@@ -1864,6 +1873,7 @@ ko:
     global_notice: "모든 방문자에게 긴급, 긴급, 무시할 수없는 글로벌 배너 통지를 표시하고 숨기려면 공백으로 변경하십시오 (HTML 허용)."
     disable_system_edit_notifications: "'download_remote_images_to_local'가 활성화되있으면 시스템 사용자에 의한 수정 알림을 비활성화합니다."
     disable_category_edit_notifications: "글의 카테고리 편집 알림을 비활성화합니다."
+    disable_tags_edit_notifications: "글의 태그 수정 알림을 비활성화합니다."
     notification_consolidation_threshold: "알림이 단일 알림으로 통합되기 전에 수신 된 좋아요 또는 회원 요청 알림 수 비활성화하려면 0으로 설정하십시오."
     likes_notification_consolidation_window_mins: "임계 값에 도달하면 선호 알림이 단일 알림으로 통합되는 시간 (분)입니다. 임계 값은`SiteSetting.notification_consolidation_threshold`를 통해 구성 할 수 있습니다."
     automatically_unpin_topics: "사용자가 하단에 도달하면 토픽 고정을 자동 해제."
@@ -1882,10 +1892,10 @@ ko:
     display_name_on_posts: "글에 @username 뿐만 아니라 사용자의 전체 이름도 보여준다."
     show_time_gap_days: "두 글의 일차를 보여주기 위해 두 글이 떨어져 있어야 할 일수"
     short_progress_text_threshold: "글타래의 글 개수가 이 값을 넘어서면, 글 프로그래스바는 오직 현재 글 넘버만 보여준다. 만약 글 프로그래스바의 넓이는 변경하면, 이 숫자도 변경해야합니다."
-    default_code_lang: "GitHub 코드 블록에 적용된 기본 프로그래밍 언어 구문 강조 표시 (auto, nohighlight, ruby, python 등)"
     warn_reviving_old_topic_age: "이 값보다 오래된 글타래에 답글을 달면, 오래된 토론이라는 것을 상기시키기 위해 주의 알림이 보여진다. 비활성화 값음 0 이다. "
     autohighlight_all_code: "형식이 지정되기 전의(되지 않은) 모든 코드 블럭들에 대해, 사용자가 언어를 지정하지 않아도 강제로 code highlighting이 적용된다."
     highlighted_languages: "구문 강조 규칙이 포함되었습니다. (경고 : 너무 많은 언어를 포함하면 성능에 영향을 줄 수 있습니다.) 데모는 <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> 를 참조하십시오."
+    show_copy_button_on_codeblocks: "코드 블록에 버튼을 추가하여 블록 내용을 사용자의 클립보드에 복사합니다."
     embed_any_origin: "출처와 상관없이 퍼갈 수있는 콘텐츠를 허용합니다. 정적 HTML을 사용하는 모바일 앱에 필요합니다."
     embed_topics_list: "주제 목록의 HTML 임베딩 지원"
     embed_set_canonical_url: "포함된 글의 표준 URL을 포함된 콘텐츠의 URL로 설정합니다."
@@ -2009,6 +2019,7 @@ ko:
       invalid_css_color: "잘못된 색상입니다. 색상 이름 또는 16진수 값을 입력해야 합니다."
       invalid_email: "유효하지 않은 이메일 주소입니다."
       invalid_username: "해당 이름의 사용자가 없습니다."
+      valid_username: "해당 아이디의 사용자가 없습니다."
       invalid_group: "그 이름을 가진 그룹이 없습니다."
       invalid_integer_min_max: "%{min}이상 %{max}이하이어야 합니다."
       invalid_integer_min: "%{min}이상 이어야 합니다."
@@ -2023,6 +2034,7 @@ ko:
       invalid_json: "잘못된 JSON입니다."
       invalid_reply_by_email_address: "값이 반드시 '%{reply_key}'를 갖고 있어야하며 알림 이메일과 달라야합니다."
       invalid_alternative_reply_by_email_addresses: "모든 값은 &#39;%{reply_key}&#39;을 포함해야하며 알림 이메일과 달라야합니다."
+      invalid_domain_hostname: "문자에 * 또는? 를 포함해서는 안 됩니다."
       pop3_polling_host_is_empty: "POP3 폴링을 활성화하기 전에 &#39;pop3 폴링 호스트&#39;를 설정해야합니다."
       pop3_polling_username_is_empty: "POP3 폴링을 활성화하기 전에 &#39;pop3 폴링 사용자 이름&#39;을 설정해야합니다."
       pop3_polling_password_is_empty: "POP3 폴링을 활성화하기 전에 &#39;pop3 폴링 비밀번호&#39;를 설정해야합니다."
@@ -2051,6 +2063,9 @@ ko:
         leading_trailing_slash: "정규식은 슬래시로 시작하거나 끝나서는 안됩니다."
       unicode_usernames_avatars: "내부 시스템 아바타는 유니 코드 사용자 이름을 지원하지 않습니다."
       list_value_count: "목록에는 정확히 %{count} 값이 포함되어야합니다."
+      google_oauth2_hd_groups: "이 설정을 활성화하기 전에 먼저 'google oauth2 hd'를 설정해야 합니다."
+      search_tokenize_chinese_enabled: "이 설정을 활성화하기 전에 'search_tokenize_chinese '를 비활성화해야 합니다."
+      search_tokenize_japanese_enabled: "이 설정을 활성화하기 전에 'search_tokenize_japanese'를 비활성화해야 합니다."
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2252,11 +2267,6 @@ ko:
     already_suspended: "사용자의 계정이 이미 %{time_ago}전 %{staff}의해 일시 중지되었습니다."
     cannot_delete_has_posts:
       other: "사용자 %{username}님은 %{count}개의 게시물이 있으므로 삭제할 수 없습니다."
-  reviewables_reminder:
-    submitted:
-      other: "항목이 %{count}시간 전에 제출되었습니다. [검토해주세요] (%{base_path}/review)."
-    subject_template:
-      other: "%{count}개 항목을 검토해야합니다."
   unsubscribe_mailer:
     title: "메일링 구독해지"
     subject_template: "더 이상 %{site_title}에서 이메일 업데이트를 수신하지 않기를 확인하십시오"
@@ -2367,47 +2377,6 @@ ko:
   test_mailer:
     title: "메일러 테스트"
     subject_template: "[%{email_prefix}] 이메일 전달 테스트"
-    text_body_template: |
-      이것은 다음의 테스트 이메일 입니다.
-
-      [**%{base_url}**][0]
-
-      이메일 전달은 복잡합니다. 다음은 먼저 확인해야 할 몇 가지 중요한 사항입니다:
-
-      - '알림 이메일의 발신' from: 주소를 사이트 설정에서 올바르게 설정했는지 *확인*하십시오. **보내는 이메일의 "보낸 사람" 주소에 지정된 도메인은 이메일의 유효성을 검사 할 도메인입니다**.
-
-      -메일 클라이언트에서 이메일의 중요한 단서를 찾기 위해 이메일 헤더를 조사 할 수 있습니다. Gmail에서는 각 메일의 오른쪽 상단에있는 드롭 다운 메뉴에있는 "원본보기" 옵션입니다.
-
-      -**중요: ** ISP에 메일을 보내는 도메인 이름과 IP 주소를 연결하기 위해 입력된 역 DNS 레코드가 있습니까? [Reverse PTR record 테스트][2]. 사용자님의 ISP에 적절한 역방향 DNS 포인터 레코드를 입력하지 않으면 이메일이 전달 될 가능성이 거의 없습니다.
-
-      -도메인의 [SPF 레코드][8]가 맞습니까? [SPF 레코드 테스트][1]. TXT는 SPF의 올바른 공식 레코드 유형입니다.
-
-      -도메인의 [DKIM 레코드][3]가 맞습니까? 이것은 이메일 전달성을 크게 향상시킵니다. [DKIM 레코드 테스트][7].
-
-      -자체 메일 서버를 운영하는 경우 메일 서버의 IP가 [이메일 차단 목록에 없음][4] 을 확인하십시오. 또한 HELO 메시지의 DNS에서 확인되는 정규화 된 호스트 이름을 확실히 보내고 있는지 확인합니다. 그렇지 않으면 많은 메일 서비스에서 이메일이 거부됩니다.
-
-      -위의 모든 사항이 올바르게 작동하는지 확인하려면 **[mail-tester.com][mt]**로 테스트 이메일을 보내는 것이 좋습니다.
-
-      (*쉬운* 방법은 [SendGrid][sg], [SparkPost][sp], [Mailgun][mg] 또는 [Mailjet][mj]에 계정을 만드는 것입니다. 이 계정은 저렴한 메일링 계획을 가지고 있으며 괜찮습니다. 소규모 커뮤니티의 경우에도 DNS에 SPF 및 DKIM 레코드를 설정해야합니다!)
-
-      이 이메일 전달성 테스트를 성공하셨기를 바랍니다!
-
-      행운을 빕니다,
-
-      사용자님의 친구들 [Discourse](https://www.discourse.org)
-
-      [0]: %{base_url}
-      [1]: https://www.kitterman.com/spf/validate.html
-      [2]: https://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: https://whatismyipaddress.com/blacklist-check
-      [7]: https://www.mail-tester.com/spf-dkim-check
-      [8]: http://www.openspf.org/SPF_Record_Syntax
-      [sg]: https://goo.gl/r1WMF6
-      [sp]: https://www.sparkpost.com/
-      [mg]: https://www.mailgun.com/
-      [mj]: https://www.mailjet.com/pricing/
-      [mt]: https://www.mail-tester.com/
   new_version_mailer:
     title: "새 버전 메일러"
     subject_template: "[%{email_prefix}] 새로운 담화 버전, 업데이트 가능"
@@ -2454,6 +2423,8 @@ ko:
   temporarily_closed_due_to_flags:
     other: "이 글은 많은 신고로 인해 최소 %{count}시간 동안 일시적으로 닫힙니다."
   system_messages:
+    reviewables_reminder:
+      subject_template: "검토 대기열에 검토가 필요한 항목이 있습니다."
     private_topic_title: "주제 # %{id}"
     contents_hidden: "내용을 보려면 게시물을 방문하십시오."
     post_hidden:
@@ -2533,6 +2504,9 @@ ko:
         ```
 
         [커뮤니티 가이드라인](%{base_url}/guidelines)을 참조하시기 바랍니다.
+    flags_agreed_and_post_deleted_for_responders:
+      title: "관리자가 신고한 게시물을 삭제했습니다."
+      subject_template: "관리자가 신고한 게시물을 삭제했습니다."
     usage_tips:
       text_body_template: |
         신규 사용자를 위한 몇 가지 간단한 도움말은 [이 블로그 게시물](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/)을 참조하세요.
@@ -4105,8 +4079,10 @@ ko:
             label: "커뮤니티 이름"
             placeholder: "빠오 소굴"
           site_description:
+            label: "짧은 문장으로 커뮤니티를 설명하십시오 (검색 결과 및 소셜 미디어에 사용)"
             placeholder: "빠오가 친구와 함께 재밌는 일들에 대하여 이야기나누는 곳"
           short_site_description:
+            label: "커뮤니티를 몇 마디로 설명하십시오 (홈페이지 제목에 사용)"
             placeholder: "최고의 커뮤니티"
       introduction:
         title: "소개"

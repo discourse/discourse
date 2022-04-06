@@ -49,10 +49,7 @@ class UserAuthenticator
   private
 
   def confirm_email
-    if authenticated?
-      EmailToken.confirm(@user.email_tokens.first.token)
-      @user.set_automatic_groups
-    end
+    @user.activate if authenticated?
   end
 
   def authenticator

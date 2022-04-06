@@ -2,7 +2,7 @@
   <div id="modal-alert" role="alert" class="alert alert-{{flashClass}}">
     {{#if flashLink}}
       <div class="input-group invite-link">
-        <label for="invite-link">{{flashText}} {{i18n "user.invited.invite.instructions"}}</label>
+        <label for="invite-link">{{html-safe flashText}} {{i18n "user.invited.invite.instructions"}}</label>
         <div class="link-share-container">
           {{input
             name="invite-link"
@@ -14,7 +14,7 @@
         </div>
       </div>
     {{else}}
-      {{flashText}}
+      {{html-safe flashText}}
     {{/if}}
   </div>
 {{/if}}
@@ -37,12 +37,21 @@
     {{/if}}
 
     <div class="input-group input-email">
-      <label for="invite-email">{{d-icon "envelope"}}{{i18n "user.invited.invite.restrict_email"}}</label>
+      <label for="invite-email">
+        {{d-icon "envelope"}}
+        {{#if isEmail}}
+          {{i18n "user.invited.invite.restrict_email"}}
+        {{else if isDomain}}
+          {{i18n "user.invited.invite.restrict_domain"}}
+        {{else}}
+          {{i18n "user.invited.invite.restrict"}}
+        {{/if}}
+      </label>
       <div class="invite-email-container">
         {{input
           id="invite-email"
-          value=buffered.email
-          placeholderKey="topic.invite_reply.email_placeholder"
+          value=buffered.emailOrDomain
+          placeholderKey="user.invited.invite.email_or_domain_placeholder"
         }}
         {{#if capabilities.hasContactPicker}}
           {{d-button
@@ -76,12 +85,14 @@
 
     {{#if currentUser.staff}}
       <div class="input-group invite-to-topic">
-        {{choose-topic
-          selectedTopicId=buffered.topicId
-          topicTitle=buffered.topicTitle
-          additionalFilters="status:public"
-          labelIcon="hand-point-right"
-          label="user.invited.invite.invite_to_topic"
+        <label for="invite-topic">{{d-icon "hand-point-right"}}{{i18n "user.invited.invite.invite_to_topic"}}</label>
+        {{topic-chooser
+          value=buffered.topicId
+          content=topics
+          onChange=(action "onChangeTopic")
+          options=(hash
+            additionalFilters="status:public"
+          )
         }}
       </div>
     {{else if buffered.topicTitle}}
@@ -115,7 +126,6 @@
           displayLabel=(i18n "user.invited.invite.expires_at")
           statusType="close"
           includeDateTime=true
-          includeMidFuture=true
           clearable=true
           input=buffered.expires_at
           onChangeInput=(action (mut buffered.expires_at))

@@ -1,0 +1,19 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "part_numbers": {
+      "type": "array",
+      "description": "The part numbers to generate the presigned URLs for, must be between 1 and 10000.",
+      "example": [1, 2, 3]
+    },
+    "unique_identifier": {
+      "type": "string",
+      "description": "The unique identifier returned in the original /create-multipart request.",
+      "example": "66e86218-80d9-4bda-b4d5-2b6def968705"
+    }
+  },
+  "required": [
+    "part_numbers",
+    "unique_identifier"
+  ]
+}

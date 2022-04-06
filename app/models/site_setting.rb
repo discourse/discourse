@@ -7,11 +7,6 @@ class SiteSetting < ActiveRecord::Base
   validates_presence_of :name
   validates_presence_of :data_type
 
-  after_save do |site_setting|
-    DiscourseEvent.trigger(:site_setting_saved, site_setting)
-    true
-  end
-
   def self.load_settings(file, plugin: nil)
     SiteSettings::YamlLoader.new(file).load do |category, name, default, opts|
       setting(name, default, opts.merge(category: category, plugin: plugin))
@@ -20,7 +15,7 @@ class SiteSetting < ActiveRecord::Base
 
   load_settings(File.join(Rails.root, 'config', 'site_settings.yml'))
 
-  unless Rails.env.test? && ENV['LOAD_PLUGINS'] != "1"
+  if GlobalSetting.load_plugins?
     Dir[File.join(Rails.root, "plugins", "*", "config", "settings.yml")].each do |file|
       load_settings(file, plugin: file.split("/")[-3])
     end
@@ -106,23 +101,33 @@ class SiteSetting < ActiveRecord::Base
     :markdown_typographer_quotation_marks
   ]
 
-  def self.reset_cached_settings!
-    @blocked_attachment_content_types_regex = nil
-    @blocked_attachment_filenames_regex = nil
-    @allowed_unicode_username_regex = nil
-  end
-
   def self.blocked_attachment_content_types_regex
-    @blocked_attachment_content_types_regex ||= Regexp.union(SiteSetting.blocked_attachment_content_types.split("|"))
+    current_db = RailsMultisite::ConnectionManagement.current_db
+
+    @blocked_attachment_content_types_regex ||= {}
+    @blocked_attachment_content_types_regex[current_db] ||= begin
+      Regexp.union(SiteSetting.blocked_attachment_content_types.split("|"))
+    end
   end
 
   def self.blocked_attachment_filenames_regex
-    @blocked_attachment_filenames_regex ||= Regexp.union(SiteSetting.blocked_attachment_filenames.split("|"))
+    current_db = RailsMultisite::ConnectionManagement.current_db
+
+    @blocked_attachment_filenames_regex ||= {}
+    @blocked_attachment_filenames_regex[current_db] ||= begin
+      Regexp.union(SiteSetting.blocked_attachment_filenames.split("|"))
+    end
   end
 
   def self.allowed_unicode_username_characters_regex
-    @allowed_unicode_username_regex ||= SiteSetting.allowed_unicode_username_characters.present? \
-      ? Regexp.new(SiteSetting.allowed_unicode_username_characters) : nil
+    current_db = RailsMultisite::ConnectionManagement.current_db
+
+    @allowed_unicode_username_regex ||= {}
+    @allowed_unicode_username_regex[current_db] ||= begin
+      if SiteSetting.allowed_unicode_username_characters.present?
+        Regexp.new(SiteSetting.allowed_unicode_username_characters)
+      end
+    end
   end
 
   # helpers for getting s3 settings that fallback to global
@@ -243,13 +248,23 @@ class SiteSetting < ActiveRecord::Base
 
   ALLOWLIST_DEPRECATED_SITE_SETTINGS.each_pair do |old_method, new_method|
     self.define_singleton_method(old_method) do
-      Discourse.deprecate("#{old_method.to_s} is deprecated, use the #{new_method.to_s}.", drop_from: "2.6")
+      Discourse.deprecate("#{old_method.to_s} is deprecated, use the #{new_method.to_s}.", drop_from: "2.6", raise_error: true)
       send(new_method)
     end
     self.define_singleton_method("#{old_method}=") do |args|
-      Discourse.deprecate("#{old_method.to_s} is deprecated, use the #{new_method.to_s}.", drop_from: "2.6")
+      Discourse.deprecate("#{old_method.to_s} is deprecated, use the #{new_method.to_s}.", drop_from: "2.6", raise_error: true)
       send("#{new_method}=", args)
     end
+  end
+
+  protected
+
+  def self.clear_cache!
+    super
+
+    @blocked_attachment_content_types_regex = nil
+    @blocked_attachment_filenames_regex = nil
+    @allowed_unicode_username_regex = nil
   end
 end
 

@@ -112,7 +112,7 @@ unless $? == 0
   abort "Apache Bench is not installed. Try: apt-get install apache2-utils or brew install ab"
 end
 
-unless File.exists?("config/database.yml")
+unless File.exist?("config/database.yml")
   puts "Copying database.yml.development.sample to database.yml"
   `cp config/database.yml.development-sample config/database.yml`
 end

@@ -3,7 +3,7 @@
   <ul class='nav-pills' role='navigation' itemscope itemtype='http://schema.org/SiteNavigationElement'>
     <% unless SiteSetting.login_required? && current_user.nil? %>
       <li class="nav-item-about"><%= link_to t('js.about.simple_title'), about_index_path %></a></li>
-      <% if @faq_overriden %>
+      <% if @faq_overridden %>
         <li class='nav-item-guidelines'><a class='<%= @page == 'faq' ? 'active' : '' %>' href='<%= guidelines_path %>'><%= t 'js.guidelines' %></a></li>
         <li class='nav-item-faq'><a href='<%= faq_path %>'><%= t 'js.faq' %></a></li>
       <% else %>
@@ -17,7 +17,7 @@
   <% if staff? %>
     <p><a href='<%= @topic.url %>'>
       <svg class="fa d-icon d-icon-pencil-alt svg-icon" xmlns="http://www.w3.org/2000/svg">
-        <use xlink:href="#pencil-alt"></use>
+        <use href="#pencil-alt"></use>
       </svg>
       <%= t 'edit_this_page' %>
     </a></p>

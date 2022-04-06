@@ -3,14 +3,21 @@ import {
   setup as setupIt,
 } from "pretty-text/engines/discourse-markdown-it";
 import { deepMerge } from "discourse-common/lib/object";
+import deprecated from "discourse-common/lib/deprecated";
 
 export function registerOption() {
-  // TODO next major version deprecate this
-  // if (window.console) {
-  //   window.console.log("registerOption is deprecated");
-  // }
+  deprecated(
+    "`registerOption() from `pretty-text` is deprecated. Use `helper.registerOptions()` instead.",
+    {
+      since: "2.8.0.beta9",
+      dropFrom: "2.9.0.beta1",
+    }
+  );
 }
 
+// see also: __optInput in PrettyText#cook and PrettyText#markdown,
+// the options are passed here and must be explicitly allowed with
+// the const options & state below
 export function buildOptions(state) {
   const {
     siteSettings,
@@ -19,6 +26,7 @@ export function buildOptions(state) {
     lookupPrimaryUserGroup,
     getTopicInfo,
     topicId,
+    forceQuoteLink,
     categoryHashtagLookup,
     userId,
     getCurrentUser,
@@ -29,26 +37,17 @@ export function buildOptions(state) {
     emojiUnicodeReplacer,
     lookupUploadUrls,
     previewing,
-    linkify,
     censoredRegexp,
     disableEmojis,
     customEmojiTranslation,
     watchedWordsReplace,
     watchedWordsLink,
+    featuresOverride,
+    markdownItRules,
+    additionalOptions,
   } = state;
 
-  let features = {
-    "bold-italics": true,
-    "auto-link": true,
-    mentions: true,
-    bbcode: true,
-    quote: true,
-    html: true,
-    "category-hashtag": true,
-    onebox: true,
-    linkify: linkify !== false,
-    newline: !siteSettings.traditional_markdown_linebreaks,
-  };
+  let features = {};
 
   if (state.features) {
     features = deepMerge(features, state.features);
@@ -62,6 +61,7 @@ export function buildOptions(state) {
     lookupPrimaryUserGroup,
     getTopicInfo,
     topicId,
+    forceQuoteLink,
     categoryHashtagLookup,
     userId,
     getCurrentUser,
@@ -80,12 +80,13 @@ export function buildOptions(state) {
       ? siteSettings.allowed_iframes.split("|")
       : [],
     markdownIt: true,
-    injectLineNumbersToPreview:
-      siteSettings.enable_advanced_editor_preview_sync,
     previewing,
     disableEmojis,
     watchedWordsReplace,
     watchedWordsLink,
+    featuresOverride,
+    markdownItRules,
+    additionalOptions,
   };
 
   // note, this will mutate options due to the way the API is designed

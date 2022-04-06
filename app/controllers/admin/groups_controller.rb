@@ -180,6 +180,10 @@ class Admin::GroupsController < Admin::AdminController
     custom_fields = DiscoursePluginRegistry.editable_group_custom_fields
     permitted << { custom_fields: custom_fields } unless custom_fields.blank?
 
+    if guardian.can_associate_groups?
+      permitted << { associated_group_ids: [] }
+    end
+
     permitted = permitted | DiscoursePluginRegistry.group_params
 
     params.require(:group).permit(permitted)

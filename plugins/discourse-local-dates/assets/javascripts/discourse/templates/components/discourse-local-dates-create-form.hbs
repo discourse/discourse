@@ -7,7 +7,8 @@
     {{#if isValid}}
       {{#if timezoneIsDifferentFromUserTimezone}}
         <div class="preview alert alert-info">
-          <b>{{formatedCurrentUserTimezone}} </b>{{currentPreview}}
+          {{i18n "discourse_local_dates.create.form.current_timezone"}}
+          <b>{{formatedCurrentUserTimezone}}</b>{{currentPreview}}
         </div>
       {{/if}}
     {{else}}
@@ -93,7 +94,10 @@
                 class="recurrence-input"
                 value=recurring
                 onChange=(action (mut recurring))
-                none="discourse_local_dates.create.form.recurring_none"}}
+                options=(hash
+                  none="discourse_local_dates.create.form.recurring_none"
+                )
+              }}
             </div>
           </div>
         {{/unless}}
@@ -133,10 +137,12 @@
               valueProperty=null
               nameProperty=null
               class="timezones-input"
-              allowAny=false
-              maximum=5
               content=allTimezones
               value=timezones
+              options=(hash
+                allowAny=false
+                maximum=5
+              )
             }}
           </div>
         </div>

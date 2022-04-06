@@ -1,8 +1,11 @@
 import discourseComputed, { bind } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
-import I18n from "I18n";
 import { alias } from "@ember/object/computed";
 import { later, scheduleOnce } from "@ember/runloop";
+import { action } from "@ember/object";
+import { isTesting } from "discourse-common/config/environment";
+
+const CSS_TRANSITION_DELAY = isTesting() ? 0 : 500;
 
 export default Component.extend({
   elementId: "topic-progress-wrapper",
@@ -12,23 +15,6 @@ export default Component.extend({
   progressPosition: null,
   postStream: alias("topic.postStream"),
   _streamPercentage: null,
-
-  @discourseComputed("progressPosition")
-  jumpTopDisabled(progressPosition) {
-    return progressPosition <= 3;
-  },
-
-  @discourseComputed(
-    "postStream.filteredPostsCount",
-    "topic.highest_post_number",
-    "progressPosition"
-  )
-  jumpBottomDisabled(filteredPostsCount, highestPostNumber, progressPosition) {
-    return (
-      progressPosition >= filteredPostsCount ||
-      progressPosition >= highestPostNumber
-    );
-  },
 
   @discourseComputed(
     "postStream.loaded",
@@ -45,17 +31,6 @@ export default Component.extend({
     return (
       filteredPostsCount >= this.siteSettings.short_progress_text_threshold
     );
-  },
-
-  @discourseComputed("hugeNumberOfPosts", "topic.highest_post_number")
-  jumpToBottomTitle(hugeNumberOfPosts, highestPostNumber) {
-    if (hugeNumberOfPosts) {
-      return I18n.t("topic.progress.jump_bottom_with_number", {
-        post_number: highestPostNumber,
-      });
-    } else {
-      return I18n.t("topic.progress.jump_bottom");
-    }
   },
 
   @discourseComputed("progressPosition", "topic.last_read_post_id")
@@ -102,7 +77,7 @@ export default Component.extend({
 
     // start CSS transitions a tiny bit later
     // to avoid jumpiness on initial topic load
-    later(this._addCssTransitions, 500);
+    later(this._addCssTransitions, CSS_TRANSITION_DELAY);
   },
 
   willDestroyElement() {
@@ -159,22 +134,35 @@ export default Component.extend({
       return;
     }
 
+    const composerH =
+      document.querySelector("#reply-control")?.clientHeight || 0;
+
+    // on desktop, pin this element to the composer
+    // otherwise the grid layout will change too much when toggling the composer
+    // and jitter when the viewport is near the topic bottom
+    if (!this.site.mobileView && composerH) {
+      this.set("docked", false);
+      this.element.style.setProperty("bottom", `${composerH}px`);
+      return;
+    }
+
     if (entries[0].isIntersecting === true) {
       this.set("docked", true);
+      this.element.style.removeProperty("bottom");
     } else {
       if (entries[0].boundingClientRect.top > 0) {
         this.set("docked", false);
-        const wrapper = document.querySelector("#topic-progress-wrapper");
-        const composerH =
-          document.querySelector("#reply-control")?.clientHeight || 0;
         if (composerH === 0) {
           const filteredPostsHeight =
             document.querySelector(".posts-filtered-notice")?.clientHeight || 0;
           filteredPostsHeight === 0
-            ? wrapper.style.removeProperty("bottom")
-            : wrapper.style.setProperty("bottom", `${filteredPostsHeight}px`);
+            ? this.element.style.removeProperty("bottom")
+            : this.element.style.setProperty(
+                "bottom",
+                `${filteredPostsHeight}px`
+              );
         } else {
-          wrapper.style.setProperty("bottom", `${composerH}px`);
+          this.element.style.setProperty("bottom", `${composerH}px`);
         }
       }
     }
@@ -182,17 +170,12 @@ export default Component.extend({
 
   click(e) {
     if (e.target.closest("#topic-progress")) {
-      this.send("toggleExpansion");
+      this.toggleProperty("expanded");
     }
   },
 
-  actions: {
-    toggleExpansion() {
-      this.toggleProperty("expanded");
-    },
-
-    goBack() {
-      this.attrs.jumpToPost(this.get("topic.last_read_post_number"));
-    },
+  @action
+  goBack() {
+    this.attrs.jumpToPost(this.get("topic.last_read_post_number"));
   },
 });

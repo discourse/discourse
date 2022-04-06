@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe Draft do
 
   fab!(:user) do
@@ -179,17 +177,21 @@ describe Draft do
   end
 
   it 'updates draft count when a draft is created or destroyed' do
+    Draft.set(Fabricate(:user), Draft::NEW_TOPIC, 0, "data")
+
     messages = MessageBus.track_publish("/user") do
-      Draft.set(user, "test", 0, "data")
+      Draft.set(user, Draft::NEW_TOPIC, 0, "data")
     end
 
     expect(messages.first.data[:draft_count]).to eq(1)
+    expect(messages.first.data[:has_topic_draft]).to eq(true)
 
     messages = MessageBus.track_publish("/user") do
       Draft.where(user: user).destroy_all
     end
 
     expect(messages.first.data[:draft_count]).to eq(0)
+    expect(messages.first.data[:has_topic_draft]).to eq(false)
   end
 
   describe '#stream' do
@@ -223,7 +225,7 @@ describe Draft do
   context 'key expiry' do
     it 'nukes new topic draft after a topic is created' do
       Draft.set(user, Draft::NEW_TOPIC, 0, 'my draft')
-      _t = Fabricate(:topic, user: user)
+      _t = Fabricate(:topic, user: user, advance_draft: true)
       s = DraftSequence.current(user, Draft::NEW_TOPIC)
       expect(Draft.get(user, Draft::NEW_TOPIC, s)).to eq nil
       expect(Draft.count).to eq 0
@@ -231,7 +233,7 @@ describe Draft do
 
     it 'nukes new pm draft after a pm is created' do
       Draft.set(user, Draft::NEW_PRIVATE_MESSAGE, 0, 'my draft')
-      t = Fabricate(:topic, user: user, archetype: Archetype.private_message, category_id: nil)
+      t = Fabricate(:topic, user: user, archetype: Archetype.private_message, category_id: nil, advance_draft: true)
       s = DraftSequence.current(t.user, Draft::NEW_PRIVATE_MESSAGE)
       expect(Draft.get(user, Draft::NEW_PRIVATE_MESSAGE, s)).to eq nil
     end
@@ -248,7 +250,7 @@ describe Draft do
 
       Draft.set(user, topic.draft_key, 0, 'hello')
 
-      p = PostCreator.new(user, raw: Fabricate.build(:post).raw, topic_id: topic.id).create
+      p = PostCreator.new(user, raw: Fabricate.build(:post).raw, topic_id: topic.id, advance_draft: true).create
 
       expect(Draft.get(p.user, p.topic.draft_key, DraftSequence.current(p.user, p.topic.draft_key))).to eq nil
     end

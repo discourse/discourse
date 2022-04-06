@@ -6,7 +6,7 @@ import {
   authorizesOneOrMoreExtensions,
   uploadIcon,
 } from "discourse/lib/uploads";
-import { cancel, run } from "@ember/runloop";
+import { cancel, run, scheduleOnce } from "@ember/runloop";
 import {
   cannotPostAgain,
   durationTextFromSeconds,
@@ -296,15 +296,6 @@ export default Controller.extend({
     return option;
   },
 
-  @discourseComputed()
-  composerComponent() {
-    const defaultComposer = "composer-editor";
-    if (this.siteSettings.enable_experimental_composer_uploader) {
-      return "composer-editor-uppy";
-    }
-    return defaultComposer;
-  },
-
   @discourseComputed("model.requiredCategoryMissing", "model.replyLength")
   disableTextarea(requiredCategoryMissing, replyLength) {
     return requiredCategoryMissing && replyLength === 0;
@@ -405,6 +396,75 @@ export default Controller.extend({
     return uploadIcon(this.currentUser.staff, this.siteSettings);
   },
 
+  // Use this to open the composer when you are not sure whether it is
+  // already open and whether it already has a draft being worked on. Supports
+  // options to append text once the composer is open if required.
+  //
+  // opts:
+  //
+  // - topic: if this is present, the composer will be opened with the reply
+  // action and the current topic key and draft sequence
+  // - fallbackToNewTopic: if true, and there is no draft and no topic,
+  // the composer will be opened with the create_topic action and a new
+  // topic draft key
+  // - insertText: the text to append to the composer once it is opened
+  // - openOpts: this object will be passed to this.open if fallbackToNewTopic is
+  // true or topic is provided
+  @action
+  focusComposer(opts = {}) {
+    return this._openComposerForFocus(opts).then(() => {
+      this._focusAndInsertText(opts.insertText);
+    });
+  },
+
+  _openComposerForFocus(opts) {
+    if (this.get("model.viewOpen")) {
+      return Promise.resolve();
+    } else {
+      const opened = this.openIfDraft();
+      if (opened) {
+        return Promise.resolve();
+      }
+
+      if (opts.topic) {
+        return this.open(
+          Object.assign(
+            {
+              action: Composer.REPLY,
+              draftKey: opts.topic.get("draft_key"),
+              draftSequence: opts.topic.get("draft_sequence"),
+              topic: opts.topic,
+            },
+            opts.openOpts || {}
+          )
+        );
+      }
+
+      if (opts.fallbackToNewTopic) {
+        return this.open(
+          Object.assign(
+            {
+              action: Composer.CREATE_TOPIC,
+              draftKey: Composer.NEW_TOPIC_KEY,
+            },
+            opts.openOpts || {}
+          )
+        );
+      }
+    }
+  },
+
+  _focusAndInsertText(insertText) {
+    scheduleOnce("afterRender", () => {
+      const input = document.querySelector("textarea.d-editor-input");
+      input && input.focus();
+
+      if (insertText) {
+        this.model.appendText(insertText, null, { new_line: true });
+      }
+    });
+  },
+
   @action
   openIfDraft(event) {
     if (this.get("model.viewDraft")) {
@@ -416,7 +476,10 @@ export default Controller.extend({
       }
 
       this.set("model.composeState", Composer.OPEN);
+      return true;
     }
+
+    return false;
   },
 
   actions: {
@@ -641,7 +704,9 @@ export default Controller.extend({
 
     save(ignore, event) {
       this.save(false, {
-        jump: !event?.shiftKey && !this.skipJumpOnSave,
+        jump:
+          !(event?.shiftKey && this.get("model.replyingToTopic")) &&
+          !this.skipJumpOnSave,
       });
     },
 
@@ -705,17 +770,24 @@ export default Controller.extend({
 
     cannotSeeMention(mentions) {
       mentions.forEach((mention) => {
-        const translation = this.get("model.topic.isPrivateMessage")
-          ? "composer.cannot_see_mention.private"
-          : "composer.cannot_see_mention.category";
-        const body = I18n.t(translation, {
-          username: `@${mention.name}`,
-        });
         this.appEvents.trigger("composer-messages:create", {
           extraClass: "custom-body",
           templateName: "custom-body",
-          body,
+          body: I18n.t(`composer.cannot_see_mention.${mention.reason}`, {
+            username: mention.name,
+          }),
         });
+      });
+    },
+
+    hereMention(count) {
+      this.appEvents.trigger("composer-messages:create", {
+        extraClass: "custom-body",
+        templateName: "custom-body",
+        body: I18n.t("composer.here_mention", {
+          here: this.siteSettings.here_mention,
+          count,
+        }),
       });
     },
 
@@ -892,7 +964,11 @@ export default Controller.extend({
 
         if (result.responseJson.action === "create_post") {
           this.appEvents.trigger("composer:created-post");
-          this.appEvents.trigger("post:highlight", result.payload.post_number);
+          this.appEvents.trigger(
+            "post:highlight",
+            result.payload.post_number,
+            options
+          );
         }
 
         if (this.get("model.draftKey") === Composer.NEW_TOPIC_KEY) {
@@ -1255,6 +1331,7 @@ export default Controller.extend({
                 this.close();
               })
               .finally(() => {
+                this.appEvents.trigger("composer:cancelled");
                 resolve();
               });
           },
@@ -1262,6 +1339,7 @@ export default Controller.extend({
             this._saveDraft();
             this.model.clearState();
             this.close();
+            this.appEvents.trigger("composer:cancelled");
             resolve();
           },
           // needed to resume saving drafts if composer stays open
@@ -1275,6 +1353,7 @@ export default Controller.extend({
             this.close();
           })
           .finally(() => {
+            this.appEvents.trigger("composer:cancelled");
             resolve();
           });
       }
@@ -1356,17 +1435,12 @@ export default Controller.extend({
   tagValidation(category, tags, lastValidatedAt) {
     const tagsArray = tags || [];
     if (this.site.can_tag_topics && !this.currentUser.staff && category) {
-      if (
-        category.minimum_required_tags > tagsArray.length ||
-        (category.required_tag_groups &&
-          category.min_tags_from_required_group > tagsArray.length)
-      ) {
+      // category.minimumRequiredTags incorporates both minimum_required_tags, and required_tag_groups
+      if (category.minimumRequiredTags > tagsArray.length) {
         return EmberObject.create({
           failed: true,
           reason: I18n.t("composer.error.tags_missing", {
-            count:
-              category.minimum_required_tags ||
-              category.min_tags_from_required_group,
+            count: category.minimumRequiredTags,
           }),
           lastShownAt: lastValidatedAt,
         });
@@ -1395,6 +1469,7 @@ export default Controller.extend({
 
     const elem = document.querySelector("html");
     elem.classList.remove("fullscreen-composer");
+    elem.classList.remove("composer-open");
 
     document.activeElement && document.activeElement.blur();
     this.setProperties({ model: null, lastValidatedAt: null });
@@ -1412,5 +1487,9 @@ export default Controller.extend({
   @discourseComputed("model.composeState")
   visible(state) {
     return state && state !== "closed";
+  },
+
+  clearLastValidatedAt() {
+    this.set("lastValidatedAt", null);
   },
 });

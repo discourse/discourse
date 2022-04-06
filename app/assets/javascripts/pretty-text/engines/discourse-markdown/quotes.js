@@ -23,12 +23,12 @@ const rule = {
       let i;
       for (i = 1; i < split.length; i++) {
         if (split[i].indexOf("post:") === 0) {
-          postNumber = parseInt(split[i].substr(5), 10);
+          postNumber = parseInt(split[i].slice(5), 10);
           continue;
         }
 
         if (split[i].indexOf("topic:") === 0) {
-          topicId = parseInt(split[i].substr(6), 10);
+          topicId = parseInt(split[i].slice(6), 10);
           continue;
         }
 
@@ -90,11 +90,11 @@ const rule = {
     }
 
     if (username) {
+      let forOtherTopic = options.topicId && topicId !== options.topicId;
       let offTopicQuote =
-        options.topicId &&
         postNumber &&
         options.getTopicInfo &&
-        topicId !== options.topicId;
+        (forOtherTopic || options.forceQuoteLink);
 
       // on topic quote
       token = state.push("quote_header_open", "div", 1);
@@ -127,6 +127,7 @@ const rule = {
               emojiCDNUrl: options.emojiCDNUrl,
               enableEmojiShortcuts: options.enableEmojiShortcuts,
               inlineEmoji: options.inlineEmoji,
+              lazy: true,
             });
           }
 
@@ -170,7 +171,7 @@ export function setup(helper) {
     md.block.bbcode.ruler.push("quotes", rule);
   });
 
-  helper.allowList(["img[class=avatar]"]);
+  helper.allowList(["img[class=avatar]", "img[loading=lazy]"]);
   helper.allowList({
     custom(tag, name, value) {
       if (tag === "aside" && name === "class") {

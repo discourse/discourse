@@ -3,7 +3,7 @@
     <table class="category-list {{if showTopics "with-topics"}}">
       <thead>
         <tr>
-          <th class="category"><span aria-role="heading" aria-level="2" id="categories-only-category">{{i18n "categories.category"}}</span></th>
+          <th class="category"><span role="heading" aria-level="2" id="categories-only-category">{{i18n "categories.category"}}</span></th>
           <th class="topics">{{i18n "categories.topics"}}</th>
           {{#if showTopics}}
             <th class="latest">{{i18n "categories.latest"}}</th>
@@ -29,14 +29,14 @@
       <table class="category-list {{if showTopics "with-topics"}} {{unless showMutedCategories "hidden"}}">
         <thead>
           <tr>
-            <th class="category"><span aria-role="heading" aria-level="2" id="categories-only-category">{{i18n "categories.category"}}</span></th>
+            <th class="category"><span role="heading" aria-level="2" id="categories-only-category-muted">{{i18n "categories.category"}}</span></th>
             <th class="topics">{{i18n "categories.topics"}}</th>
             {{#if showTopics}}
               <th class="latest">{{i18n "categories.latest"}}</th>
             {{/if}}
           </tr>
         </thead>
-        <tbody aria-labelledby="categories-only-category">
+        <tbody aria-labelledby="categories-only-category-muted">
           {{#each categories as |category|}}
             {{parent-category-row category=category showTopics=showTopics listType="muted"}}
           {{/each}}
@@ -46,4 +46,4 @@
   {{/if}}
 {{/if}}
 
-{{plugin-outlet name="below-categories-only" tagName="" args=(hash categories=categories showTopics=showTopics)}}
+{{plugin-outlet name="below-categories-only" connectorTagName="div" args=(hash categories=categories showTopics=showTopics)}}

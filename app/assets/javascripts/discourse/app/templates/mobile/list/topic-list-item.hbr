@@ -1,55 +1,51 @@
 <td class="topic-list-data">
   {{~raw-plugin-outlet name="topic-list-before-columns"}}
-  {{~#if showMobileAvatar}}
   <div class='pull-left'>
-    <a href="{{topic.lastPostUrl}}" data-user-card="{{topic.last_poster_username}}">{{avatar topic.lastPosterUser imageSize="large"}}</a>
+    <a href="{{topic.lastPostUrl}}" data-user-card="{{topic.lastPosterUser.username}}">{{avatar topic.lastPosterUser imageSize="large"}}</a>
   </div>
   <div class='right'>
-    {{else}}
-      <div>
-        {{/if~}}
-        {{!--
-          The `~` syntax strip spaces between the elements, making it produce
-          `<a class=topic-post-badges>Some text</a><span class=topic-post-badges>`,
-          with no space between them.
-          This causes the topic-post-badge to be considered the same word as "text"
-          at the end of the link, preventing it from line wrapping onto its own line.
-        --}}
-        {{~raw-plugin-outlet name="topic-list-before-link"}}
-        <div class='main-link'>
-          {{~raw-plugin-outlet name="topic-list-before-status"}}
-          {{~raw "topic-status" topic=topic~}}
-          {{~topic-link topic class="raw-link raw-topic-link"}}
-          {{~#if topic.featured_link~}}
-          {{~topic-featured-link topic~}}
-          {{~/if~}}
-          {{~raw-plugin-outlet name="topic-list-after-title"}}
-          {{~#if topic.unseen~}}
-            <span class="topic-post-badges">&nbsp;<span class="badge-notification new-topic"></span></span>
-          {{~/if~}}
-          {{~#if expandPinned~}}
-          {{~raw "list/topic-excerpt" topic=topic~}}
-          {{~/if~}}
+    {{!--
+      The `~` syntax strip spaces between the elements, making it produce
+      `<a class=topic-post-badges>Some text</a><span class=topic-post-badges>`,
+      with no space between them.
+      This causes the topic-post-badge to be considered the same word as "text"
+      at the end of the link, preventing it from line wrapping onto its own line.
+    --}}
+    {{~raw-plugin-outlet name="topic-list-before-link"}}
+    <div class='main-link'>
+      {{~raw-plugin-outlet name="topic-list-before-status"}}
+      {{~raw "topic-status" topic=topic~}}
+      {{~topic-link topic class="raw-link raw-topic-link"}}
+      {{~#if topic.featured_link~}}
+      {{~topic-featured-link topic~}}
+      {{~/if~}}
+      {{~raw-plugin-outlet name="topic-list-after-title"}}
+      {{~#if topic.unseen~}}
+        <span class="topic-post-badges">&nbsp;<span class="badge-notification new-topic"></span></span>
+      {{~/if~}}
+      {{~#if expandPinned~}}
+      {{~raw "list/topic-excerpt" topic=topic~}}
+      {{~/if~}}
+    </div>
+    <div class='pull-right'>
+      {{raw "list/post-count-or-badges" topic=topic postBadgesEnabled=showTopicPostBadges}}
+    </div>
+    <div class="topic-item-stats clearfix">
+      {{#unless hideCategory}}
+        {{~raw-plugin-outlet name="topic-list-before-category"}}
+        <div class='category'>
+          {{category-link topic.category}}
         </div>
-        <div class='pull-right'>
-          {{raw "list/post-count-or-badges" topic=topic postBadgesEnabled=showTopicPostBadges}}
-        </div>
-        <div class="topic-item-stats clearfix">
-          {{#unless hideCategory}}
-            {{~raw-plugin-outlet name="topic-list-before-category"}}
-            <div class='category'>
-              {{category-link topic.category}}
-            </div>
-          {{/unless}}
-          {{discourse-tags topic mode="list"}}
-          <div class="pull-right">
-            <div class='num activity last'>
-              <span class="age activity" title="{{topic.bumpedAtTitle}}"><a
-                 href="{{topic.lastPostUrl}}">{{format-date topic.bumpedAt format="tiny" noTitle="true"}}</a>
-              </span>
-            </div>
-          </div>
-          <div class="clearfix"></div>
+      {{/unless}}
+      {{discourse-tags topic mode="list"}}
+      <div class="pull-right">
+        <div class='num activity last'>
+          <span class="age activity" title="{{topic.bumpedAtTitle}}"><a
+              href="{{topic.lastPostUrl}}">{{format-date topic.bumpedAt format="tiny" noTitle="true"}}</a>
+          </span>
         </div>
       </div>
+      <div class="clearfix"></div>
+    </div>
+  </div>
 </td>

@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
 require 'stringio'
 
 describe TopicEmbed do
@@ -379,12 +378,24 @@ describe TopicEmbed do
   end
 
   describe '.absolutize_urls' do
-    let(:invalid_url) { 'http://source.com/#double#anchor' }
-    let(:contents) { "hello world new post <a href='/hello'>hello</a>" }
-
     it "handles badly formed URIs" do
+      invalid_url = 'http://source.com/#double#anchor'
+      contents = "hello world new post <a href='/hello'>hello</a>"
+
       raw = TopicEmbed.absolutize_urls(invalid_url, contents)
       expect(raw).to eq("hello world new post <a href=\"http://source.com/hello\">hello</a>")
+    end
+
+    it "handles malformed links" do
+      url = "https://somesource.com"
+
+      contents = <<~HTML
+      hello world new post <a href="mailto:somemail@somewhere.org>">hello</a>
+      some image <img src="https:/><invalidimagesrc/">
+      HTML
+
+      raw = TopicEmbed.absolutize_urls(url, contents)
+      expect(raw).to eq(contents)
     end
   end
 

@@ -705,6 +705,20 @@ $bubbles-mask: svg-uri(
 '
 );
 
+@keyframes bump {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.05);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
 body.wizard {
   background-color: var(--secondary);
   background-repeat: repeat;
@@ -977,6 +991,7 @@ body.wizard {
       color: var(--secondary-or-primary);
       z-index: 13;
       left: 1.5em;
+      line-height: 1.4em;
     }
 
     .screen {
@@ -1196,37 +1211,28 @@ body.wizard {
   }
 }
 
-.textarea-field {
-  textarea {
-    width: 100%;
-    height: 10em;
-    background: var(--secondary);
-  }
-
-  &.invalid {
-    textarea {
-      padding: 3px;
-      border: 4px solid var(--danger);
-    }
-  }
+.textarea-field textarea {
+  width: 100%;
+  height: 10em;
+  padding: 6px;
+  background: var(--secondary);
 }
 
-.text-field {
-  input {
-    width: 100%;
-    font-size: $font-up-1;
-    padding: 6px;
-    background-color: var(--secondary);
-    border: 1px solid var(--primary-low-mid);
-    transition: border-color 0.5s;
-  }
+.text-field input {
+  width: 100%;
+  font-size: $font-up-1;
+  padding: 6px;
+  background-color: var(--secondary);
+  border: 1px solid var(--primary-low-mid);
+  transition: border-color 0.5s;
+}
 
-  &.invalid {
-    input {
-      padding: 3px;
-      border: 4px solid var(--danger);
-    }
-  }
+.textarea-field.invalid textarea,
+.text-field.invalid input {
+  outline: 0;
+  border: 3px solid var(--danger);
+  animation: bump 0.25s ease-in-out;
+  animation-iteration-count: 2;
 }
 
 .radio-field-choice {

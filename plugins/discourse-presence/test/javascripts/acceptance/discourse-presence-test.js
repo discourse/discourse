@@ -193,12 +193,7 @@ acceptance("Discourse Presence Plugin", function (needs) {
     await click("#topic-footer-buttons .btn.create");
     assert.ok(exists(".d-editor-input"), "the composer input is visible");
 
-    const avatarSelector =
-      ".composer-fields-outlet.presence .presence-avatars .avatar";
-    assert.ok(
-      exists(".composer-fields-outlet.presence"),
-      "includes the presence component"
-    );
+    const avatarSelector = ".reply-to .presence-avatars .avatar";
     assert.strictEqual(count(avatarSelector), 0, "no avatars displayed");
 
     await joinChannel("/discourse-presence/reply/280", {

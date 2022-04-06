@@ -756,6 +756,18 @@ sk:
     top_uploads:
       labels:
         filename: Názov súboru
+    top_users_by_likes_received:
+      labels:
+        user: Používateľ
+        qtt_like: Obdržaných 'páči sa mi'
+    top_users_by_likes_received_from_inferior_trust_level:
+      labels:
+        user: Používateľ
+        qtt_like: Obdržaných 'páči sa mi'
+    top_users_by_likes_received_from_a_variety_of_people:
+      labels:
+        user: Používateľ
+        qtt_like: Obdržaných 'páči sa mi'
   dashboard:
     rails_env_warning: "Váš server beží v %{env} móde"
     host_names_warning: "Váš súbor config/database.yml používa lokálne meno hostiteľa. Aktualizujte ho menom Vašej stránky."
@@ -776,7 +788,6 @@ sk:
     max_topic_title_length: "Maximálny povolený počet znakov v názve témy"
     min_personal_message_title_length: "Minimálny povolený počet znakov v správe"
     min_search_term_length: "Minimálny povolený počet znakov vo vyhľadávaní"
-    search_tokenize_chinese_japanese_korean: "Prinúť vyhľádávanie rozložiť Čínštinu/Japončinu/Kórejčinu dokonca i pre nie CJK stránky"
     allow_uncategorized_topics: "Pvoliť vytváranie tém bez kategórií. UPOZORNENIE: Pokiaľ existujú nekategorizované témy, musíte ich zaradiť do kategórii skôr než túto možnosť vypnete."
     allow_duplicate_topic_titles: "Povoliť témy s rovnakými, duplikovanými názvami"
     unique_posts_mins: "Koľko minút musí byť medzi dvomi rovnakými príspevkami od jedného používateľa."
@@ -801,9 +812,7 @@ sk:
     email_custom_headers: "Zoznam voliteľných emailových hlavičiek oddelených |"
     summary_score_threshold: "Minimálne požadované skóre príspevku na to aby bol zahrnutý do 'Sumarizuj túto tému'"
     summary_percent_filter: "Ak používateľ klikne na 'Sumarizuj túto tému', zobraz najlepších % príspevkov"
-    enable_long_polling: "Zbernica správ pre upozornenia môže používať techniku long-polling"
     long_polling_base_url: "Base URL used for long polling (when a CDN is serving dynamic content, be sure to set this to origin pull) eg: http://origin.site.com"
-    long_polling_interval: "Ako dlho má server čakať pred odpovedaním klientom ak nie sú na zaslanie žiadne dáta (iba pre prihlásených používateľov)"
     polling_interval: "Ak sa nepoužíva technika long-polling, ako často majú byť klienti dotazovaný v milisekundách"
     anon_polling_interval: "Ako často majú byť dotazovaný anonymný klienti v milisekundách"
     background_polling_interval: "Ako často majú byť dotazovaný klienti v milisekundách (ak je okno v pozadí)"

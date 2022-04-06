@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe InlineOneboxController do
 
   it "requires the user to be logged in" do

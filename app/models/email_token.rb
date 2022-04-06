@@ -1,97 +1,109 @@
 # frozen_string_literal: true
 
 class EmailToken < ActiveRecord::Base
+  class TokenAccessError < StandardError; end
+
   belongs_to :user
 
-  validates :token, :user_id, :email, presence: true
+  validates :user_id, :email, :token_hash, presence: true
 
-  before_validation(on: :create) do
-    self.token = EmailToken.generate_token
-    self.email = self.email.downcase if self.email
-  end
+  scope :unconfirmed, -> { where(confirmed: false) }
+  scope :active, -> { where(expired: false).where('created_at >= ?', SiteSetting.email_token_valid_hours.hours.ago) }
 
-  after_create do
-    # Expire the previous tokens
-    EmailToken.where(user_id: self.user_id)
-      .where("id != ?", self.id)
-      .update_all(expired: true)
-  end
-
-  def self.token_length
-    16
-  end
-
-  def self.valid_after
-    SiteSetting.email_token_valid_hours.hours.ago
-  end
-
-  def self.unconfirmed
-    where(confirmed: false)
-  end
-
-  def self.active
-    where(expired: false).where('created_at > ?', valid_after)
-  end
-
-  def self.generate_token
-    SecureRandom.hex(EmailToken.token_length)
-  end
-
-  def self.valid_token_format?(token)
-    token.present? && token =~ /\h{#{token.length / 2}}/i
-  end
-
-  def self.atomic_confirm(token)
-    failure = { success: false }
-    return failure unless valid_token_format?(token)
-
-    email_token = confirmable(token)
-    return failure if email_token.blank?
-
-    user = email_token.user
-    failure[:user] = user
-    row_count = EmailToken.where(confirmed: false, id: email_token.id, expired: false).update_all 'confirmed = true'
-
-    if row_count == 1
-      { success: true, user: user, email_token: email_token }
-    else
-      failure
+  after_initialize do
+    if self.token_hash.blank?
+      @token ||= SecureRandom.hex
+      self.token_hash = self.class.hash_token(@token)
     end
   end
 
-  def self.confirm(token, skip_reviewable: false)
-    User.transaction do
-      result = atomic_confirm(token)
-      user = result[:user]
-      if result[:success]
-        # If we are activating the user, send the welcome message
-        user.send_welcome_message = !user.active?
-        user.email = result[:email_token].email
-        user.active = true
-        user.custom_fields.delete('activation_reminder')
-        user.save!
-        user.create_reviewable unless skip_reviewable
-        user.set_automatic_groups
-        DiscourseEvent.trigger(:user_confirmed_email, user)
-      end
+  after_create do
+    EmailToken
+      .where(user_id: self.user_id)
+      .where(scope: [nil, self.scope])
+      .where.not(id: self.id)
+      .update_all(expired: true)
+  end
 
-      if user
-        if Invite.redeem_from_email(user.email).present?
-          user.reload
-        end
-        user
-      end
+  before_validation do
+    self.email = self.email.downcase if self.email
+  end
+
+  before_save do
+    if self.scope.blank?
+      Discourse.deprecate("EmailToken#scope cannot be empty.", output_in_test: true)
+    end
+  end
+
+  # TODO(2022-01-01): Remove
+  self.ignored_columns = %w{token}
+
+  def self.scopes
+    @scopes ||= Enum.new(
+      signup: 1,
+      password_reset: 2,
+      email_login: 3,
+      email_update: 4,
+    )
+  end
+
+  def token
+    raise TokenAccessError.new if @token.blank?
+
+    @token
+  end
+
+  def self.confirm(token, scope: nil, skip_reviewable: false)
+    User.transaction do
+      email_token = confirmable(token, scope: scope)
+      return if email_token.blank?
+
+      email_token.update!(confirmed: true)
+
+      user = email_token.user
+      user.send_welcome_message = !user.active?
+      user.email = email_token.email
+      user.active = true
+      user.custom_fields.delete('activation_reminder')
+      user.save!
+      user.create_reviewable if !skip_reviewable
+      user.set_automatic_groups
+      DiscourseEvent.trigger(:user_confirmed_email, user)
+      Invite.redeem_from_email(user.email)
+
+      user.reload
     end
   rescue ActiveRecord::RecordInvalid
     # If the user's email is already taken, just return nil (failure)
   end
 
-  def self.confirmable(token)
-    EmailToken.where(token: token)
-      .where(expired: false, confirmed: false)
-      .where("created_at >= ?", EmailToken.valid_after)
+  def self.confirmable(token, scope: nil)
+    return nil if token.blank?
+
+    relation = unconfirmed.active
       .includes(:user)
-      .first
+      .where(token_hash: hash_token(token))
+
+    # TODO(2022-01-01): All email tokens should have scopes by now
+    if !scope
+      relation.first
+    else
+      relation.where(scope: scope).first || relation.where(scope: nil).first
+    end
+  end
+
+  def self.enqueue_signup_email(email_token, to_address: nil)
+    Jobs.enqueue(
+      :critical_user_email,
+      type: "signup",
+      user_id: email_token.user_id,
+      email_token: email_token.token,
+      to_address: to_address
+    )
+  end
+
+  def self.hash_token(token)
+    Digest::SHA256.hexdigest(token)
   end
 end
 
@@ -102,14 +114,15 @@ end
 #  id         :integer          not null, primary key
 #  user_id    :integer          not null
 #  email      :string           not null
-#  token      :string           not null
 #  confirmed  :boolean          default(FALSE), not null
 #  expired    :boolean          default(FALSE), not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  token_hash :string           not null
+#  scope      :integer
 #
 # Indexes
 #
-#  index_email_tokens_on_token    (token) UNIQUE
-#  index_email_tokens_on_user_id  (user_id)
+#  index_email_tokens_on_token_hash  (token_hash) UNIQUE
+#  index_email_tokens_on_user_id     (user_id)
 #

@@ -200,6 +200,10 @@ class UploadsController < ApplicationController
   end
 
   def validate_file_size(file_name:, file_size:)
+    if file_size.zero?
+      raise ExternalUploadValidationError.new(I18n.t("upload.size_zero_failure"))
+    end
+
     if file_size_too_big?(file_name, file_size)
       raise ExternalUploadValidationError.new(
         I18n.t(

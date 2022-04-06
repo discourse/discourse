@@ -211,12 +211,14 @@ const Composer = RestModel.extend({
 
     if (this.composeState === OPEN) {
       this.set("composerOpened", oldOpen || new Date());
+      elem.classList.add("composer-open");
     } else {
       if (oldOpen) {
         const oldTotal = this.composerTotalOpened || 0;
         this.set("composerTotalOpened", oldTotal + (new Date() - oldOpen));
       }
       this.set("composerOpened", null);
+      elem.classList.remove("composer-open");
     }
   },
 
@@ -655,6 +657,14 @@ const Composer = RestModel.extend({
       }
       if (after.length > 0 && !after[0].match(/\s/)) {
         after = " " + after;
+      }
+    }
+
+    if (opts && opts.new_line) {
+      if (before.length > 0) {
+        text = "\n\n" + text.trim();
+      } else {
+        text = text.trim();
       }
     }
 
@@ -1223,16 +1233,19 @@ const Composer = RestModel.extend({
       data.originalText = this.originalText;
     }
 
+    const draftSequence = this.draftSequence;
+    this.set("draftSequence", this.draftSequence + 1);
+
     return Draft.save(
       this.draftKey,
-      this.draftSequence,
+      draftSequence,
       data,
       this.messageBus.clientId,
       { forceSave: this.draftForceSave }
     )
       .then((result) => {
-        if (result.draft_sequence) {
-          this.draftSequence = result.draft_sequence;
+        if ("draft_sequence" in result) {
+          this.set("draftSequence", result.draft_sequence);
         }
         if (result.conflict_user) {
           this.setProperties({

@@ -27,12 +27,21 @@ class BootstrapController < ApplicationController
       add_style(mobile_view? ? :mobile : :desktop)
     end
     add_style(:admin) if staff?
+
+    assets_fake_request = ActionDispatch::Request.new(request.env.dup)
+    assets_for_url = params[:for_url]
+    if assets_for_url
+      path, query = assets_for_url.split("?", 2)
+      assets_fake_request.env["PATH_INFO"] = path
+      assets_fake_request.env["QUERY_STRING"] = query
+    end
+
     Discourse.find_plugin_css_assets(
       include_official: allow_plugins?,
       include_unofficial: allow_third_party_plugins?,
       mobile_view: mobile_view?,
       desktop_view: !mobile_view?,
-      request: request
+      request: assets_fake_request
     ).each do |file|
       add_style(file, plugin: true)
     end
@@ -49,7 +58,7 @@ class BootstrapController < ApplicationController
     plugin_js = Discourse.find_plugin_js_assets(
       include_official: allow_plugins?,
       include_unofficial: allow_third_party_plugins?,
-      request: request
+      request: assets_fake_request
     ).map { |f| script_asset_path(f) }
 
     bootstrap = {
@@ -60,7 +69,7 @@ class BootstrapController < ApplicationController
       locale_script: locale,
       stylesheets: @stylesheets,
       plugin_js: plugin_js,
-      plugin_test_js: [script_asset_path("plugin_tests")],
+      plugin_test_js: [script_asset_path("plugin-tests")],
       setup_data: client_side_setup_data,
       preloaded: @preloaded,
       html: create_html,

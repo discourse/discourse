@@ -1,16 +1,11 @@
 # encoding: utf-8
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe ThemeField do
-  after do
-    ThemeField.destroy_all
-  end
+  fab!(:theme) { Fabricate(:theme) }
 
   describe "scope: find_by_theme_ids" do
     it "returns result in the specified order" do
-      theme = Fabricate(:theme)
       theme2 = Fabricate(:theme)
       theme3 = Fabricate(:theme)
 
@@ -80,7 +75,7 @@ describe ThemeField do
 
     theme_field = ThemeField.create!(theme_id: 1, target_id: 0, name: "header", value: html)
     theme_field.ensure_baked!
-    expect(theme_field.value_baked).to include("<script src=\"#{theme_field.javascript_cache.url}\"></script>")
+    expect(theme_field.value_baked).to include("<script src=\"#{theme_field.javascript_cache.url}\" data-theme-id=\"1\"></script>")
     expect(theme_field.value_baked).to include("external-script.js")
     expect(theme_field.value_baked).to include('<script type="text/template"')
     expect(theme_field.javascript_cache.content).to include('a = "inline discourse plugin"')
@@ -95,10 +90,10 @@ describe ThemeField do
       <script>var b = 10</script>
     HTML
 
-    extracted = <<~JavaScript
+    extracted = <<~JS
       var a = 10
       var b = 10
-    JavaScript
+    JS
 
     theme_field = ThemeField.create!(theme_id: 1, target_id: 0, name: "header", value: html)
     theme_field.ensure_baked!
@@ -115,7 +110,7 @@ HTML
     field = ThemeField.create!(theme_id: 1, target_id: 0, name: "header", value: html)
     field.ensure_baked!
     expect(field.error).not_to eq(nil)
-    expect(field.value_baked).to include("<script src=\"#{field.javascript_cache.url}\"></script>")
+    expect(field.value_baked).to include("<script src=\"#{field.javascript_cache.url}\" data-theme-id=\"1\"></script>")
     expect(field.javascript_cache.content).to include("Theme Transpilation Error:")
 
     field.update!(value: '')
@@ -135,7 +130,7 @@ HTML
     theme_field.ensure_baked!
     javascript_cache = theme_field.javascript_cache
 
-    expect(theme_field.value_baked).to include("<script src=\"#{javascript_cache.url}\"></script>")
+    expect(theme_field.value_baked).to include("<script src=\"#{javascript_cache.url}\" data-theme-id=\"1\"></script>")
     expect(javascript_cache.content).to include("testing-div")
     expect(javascript_cache.content).to include("string_setting")
     expect(javascript_cache.content).to include("test text \\\" 123!")
@@ -159,7 +154,6 @@ HTML
   end
 
   it "allows importing scss files" do
-    theme = Fabricate(:theme)
     main_field = theme.set_field(target: :common, name: :scss, value: ".class1{color: red}\n@import 'rootfile1';\n@import 'rootfile3';")
     theme.set_field(target: :extra_scss, name: "rootfile1", value: ".class2{color:green}\n@import 'foldername/subfile1';")
     theme.set_field(target: :extra_scss, name: "rootfile2", value: ".class3{color:green} ")
@@ -179,7 +173,6 @@ HTML
   end
 
   it "correctly handles extra JS fields" do
-    theme = Fabricate(:theme)
     js_field = theme.set_field(target: :extra_js, name: "discourse/controllers/discovery.js.es6", value: "import 'discourse/lib/ajax'; console.log('hello from .js.es6');")
     js_2_field = theme.set_field(target: :extra_js, name: "discourse/controllers/discovery-2.js", value: "import 'discourse/lib/ajax'; console.log('hello from .js');")
     hbs_field = theme.set_field(target: :extra_js, name: "discourse/templates/discovery.hbs", value: "{{hello-world}}")
@@ -235,7 +228,6 @@ HTML
   let(:key) { "themes.settings_errors" }
 
   it "forces re-transpilation of theme JS when settings YAML changes" do
-    theme = Fabricate(:theme)
     settings_field = ThemeField.create!(theme: theme, target_id: Theme.targets[:settings], name: "yaml", value: "setting: 5")
 
     html = <<~HTML
@@ -386,7 +378,7 @@ HTML
     describe "javascript cache" do
       it "is generated correctly" do
         fr1.ensure_baked!
-        expect(fr1.value_baked).to include("<script src='#{fr1.javascript_cache.url}'></script>")
+        expect(fr1.value_baked).to include("<script src='#{fr1.javascript_cache.url}' data-theme-id='#{fr1.theme_id}'></script>")
         expect(fr1.javascript_cache.content).to include("bonjourworld")
         expect(fr1.javascript_cache.content).to include("helloworld")
         expect(fr1.javascript_cache.content).to include("enval1")

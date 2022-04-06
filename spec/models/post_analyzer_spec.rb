@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe PostAnalyzer do
 
   let(:default_topic_id) { 12 }
@@ -59,6 +57,25 @@ describe PostAnalyzer do
     it "does interpret Markdown when not cook_method is set" do
       cooked = post_analyzer.cook('*this is italic*')
       expect(cooked).to eq('<p><em>this is italic</em></p>')
+    end
+
+    it 'should respect SiteSetting.max_oneboxes_per_post' do
+      SiteSetting.max_oneboxes_per_post = 2
+      Oneboxer.expects(:cached_onebox).with(url).returns('something').twice
+
+      cooked = post_analyzer.cook(<<~RAW)
+        #{url}
+
+        #{url}
+
+        #{url}
+      RAW
+
+      expect(cooked).to match_html(<<~HTML)
+        <p>something</p>
+        <p>something</p>
+        <p><a href="#{url}" class="onebox" target="_blank" rel="noopener nofollow ugc">#{url}</a></p>
+      HTML
     end
   end
 

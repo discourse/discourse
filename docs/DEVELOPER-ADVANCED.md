@@ -14,6 +14,12 @@ To get your Ubuntu 16.04 or 18.04 LTS install up and running to develop Discours
     sudo apt-get -yqq update
     sudo apt-get -yqq install software-properties-common vim curl expect debconf-utils git-core build-essential zlib1g-dev libssl-dev openssl libcurl4-openssl-dev libreadline6-dev libpcre3 libpcre3-dev imagemagick redis-server advancecomp jhead jpegoptim libjpeg-turbo-progs optipng pngcrush pngquant gnupg2
 
+    # oxipng
+    mkdir /tmp/oxipng-install && cd /tmp/oxipng-install
+    wget https://github.com/shssoichiro/oxipng/releases/download/v5.0.1/oxipng-5.0.1-x86_64-unknown-linux-musl.tar.gz
+    tar -xzf oxipng-5.0.1-x86_64-unknown-linux-musl.tar.gz && cd oxipng-5.0.1-x86_64-unknown-linux-musl
+    cp oxipng /usr/local/bin
+
     # Ruby
     curl -sSL https://rvm.io/mpapis.asc | gpg2 --import -
     curl -sSL https://rvm.io/pkuczynski.asc | gpg2 --import -
@@ -22,8 +28,8 @@ To get your Ubuntu 16.04 or 18.04 LTS install up and running to develop Discours
 
     # exit the terminal and open it again to activate RVM
 
-    rvm install 2.6.2
-    rvm --default use 2.6.2 # If this error out check https://rvm.io/integration/gnome-terminal
+    rvm install 2.7.2
+    rvm --default use 2.7.2 # If this error out check https://rvm.io/integration/gnome-terminal
     gem install bundler rake
 
     # Download and install postgresql-10 from https://wiki.postgresql.org/wiki/Apt

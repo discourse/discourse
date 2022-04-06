@@ -6,7 +6,7 @@ import bootbox from "bootbox";
 import discourseComputed from "discourse-common/utils/decorators";
 import { isEmpty } from "@ember/utils";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import showModal from "discourse/lib/show-modal";
+import { inject as service } from "@ember/service";
 
 export default Component.extend({
   tagName: "",
@@ -16,6 +16,10 @@ export default Component.extend({
   showEditControls: false,
   canAdminTag: reads("currentUser.staff"),
   editSynonymsMode: and("canAdminTag", "showEditControls"),
+  editing: false,
+  newTagName: null,
+  newTagDescription: null,
+  router: service(),
 
   @discourseComputed("tagInfo.tag_group_names")
   tagGroupsInfo(tagGroupNames) {
@@ -39,6 +43,13 @@ export default Component.extend({
   )
   nothingToShow(tagGroupNames, categories, synonyms) {
     return isEmpty(tagGroupNames) && isEmpty(categories) && isEmpty(synonyms);
+  },
+
+  @discourseComputed("newTagName")
+  updateDisabled(newTagName) {
+    const filterRegexp = new RegExp(this.site.tags_filter_regexp, "g");
+    newTagName = newTagName ? newTagName.replace(filterRegexp, "").trim() : "";
+    return newTagName.length === 0;
   },
 
   didInsertElement() {
@@ -69,8 +80,33 @@ export default Component.extend({
       this.toggleProperty("showEditControls");
     },
 
-    renameTag() {
-      showModal("rename-tag", { model: this.tag });
+    edit() {
+      this.setProperties({
+        editing: true,
+        newTagName: this.tag.id,
+        newTagDescription: this.tagInfo.description,
+      });
+    },
+
+    cancelEditing() {
+      this.set("editing", false);
+    },
+
+    finishedEditing() {
+      const oldTagName = this.tag.id;
+      this.tag
+        .update({ id: this.newTagName, description: this.newTagDescription })
+        .then((result) => {
+          this.set("editing", false);
+          this.tagInfo.set("description", this.newTagDescription);
+          if (
+            result.responseJson.tag &&
+            oldTagName !== result.responseJson.tag.id
+          ) {
+            this.router.transitionTo("tag.show", result.responseJson.tag.id);
+          }
+        })
+        .catch(popupAjaxError);
     },
 
     deleteTag() {

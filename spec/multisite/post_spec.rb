@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 RSpec.describe 'Multisite Post', type: :multisite do
   describe '#each_upload_url' do
     let(:upload1) { Fabricate(:upload_s3) }

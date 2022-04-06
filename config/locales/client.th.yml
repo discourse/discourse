@@ -96,7 +96,6 @@ th:
       to_placeholder: "ไปวันที่"
     share:
       topic_html: 'กระทู้: <span class="topic-title">%{topicTitle}</span>'
-      post: "โพสต์ #%{postNumber}"
       close: "ปิด"
     action_codes:
       public_topic: "ทำให้กระทู้นี้เป็นสาธารณะ %{when} "
@@ -236,9 +235,7 @@ th:
       invalid_custom_datetime: "วันและเวลาที่คุณกรอกไม่ถูกต้อง กรุณาลองอีกครั้ง"
       list_permission_denied: "คุณไม่ได้รับอนุญาตให้ดูบุ๊กมาร์กของผู้ใช้งานนี้"
       auto_delete_preference:
-        label: "ลบโดยอัตโนมัติ"
-        never: "ไม่เคย"
-        on_owner_reply: "หลังจากฉันตอบกลับกระทู้นี้"
+        when_reminder_sent: "ลบบุ๊กมาร์ก"
       search: "ค้นหา"
       reminders:
         today_with_time: "วันนี้ตอน%{time}"
@@ -282,8 +279,7 @@ th:
     switch_to_anon: "เข้าสู่โหมดไม่ระบุชื่อ"
     switch_from_anon: "ออกจากโหมดไม่ระบุชื่อ"
     banner:
-      close: "ปิดแบนเนอร์นี้"
-      edit: "แก้ไขแบนเนอร์นี้ >>"
+      edit: "แก้ไข"
     pwa:
       install_banner: "คุณต้องการ<a href>ติดตั้ง%{title}บนอุปกรณ์นี้ใช่ไหม</a>"
     choose_topic:
@@ -974,10 +970,8 @@ th:
         every_month: "ทุกเดือน"
         every_six_months: "ทุกหกเดือน"
       email_level:
-        title: "ส่งอีเมลเมื่อมีบางคนอ้างอิงถึงฉัน ตอบโพสต์ฉัน กล่าวถึงฉัน @ชื่อผู้ใช้ หรือเชิญฉันเข้าไปในกระทู้"
         always: "เสมอ"
         never: "ไม่เคย"
-      email_messages_level: "ส่งอีเมลหาฉันเมื่อมีคนส่งข้อความส่วนตัวมาหาฉัน"
       include_tl0_in_digests: "รวมเนื้อหาจากผู้ใช้ใหม่ในอีเมลสรุป"
       email_in_reply_to: "เพิ่มการตอบในโพสท์ที่คัดกรองแล้วในอีเมล"
       other_settings: "อื่นๆ"
@@ -1260,7 +1254,6 @@ th:
       success: "บัญชีของคุณถูกสร้าง คุณได้เข้าสู่ระบบแล้ว"
       name_label: "ชื่อ"
       password_label: "รหัสผ่าน"
-      optional_description: "(ทางเลือก)"
     password_reset:
       continue: "ดำเนินการต่อไปยัง %{site_name}"
     emoji_set:
@@ -1462,6 +1455,9 @@ th:
       membership_request_accepted: "ถูกรับเป็นสมาชิกในกลุ่ม '%{group_name}'"
       reaction: "<span>%{username}</span>%{description}"
       reaction_2: "<span>%{username}, %{username2}</span>%{description}"
+      dismiss_confirmation:
+        dismiss: "ซ่อน"
+        cancel: "ยกเลิก"
       group_message_summary:
         other: "%{count}ข้อความในกล่องขาเข้าของกลุ่ม %{group_name}"
       popup:
@@ -1577,7 +1573,6 @@ th:
         select_all: "เลือกทั้งหมด"
         clear_all: "ล้างทั้งหมด"
         unlist_topics: "กระทู้ที่ไม่ได้แสดง"
-        reset_read: "ล้างจำนวนการอ่าน"
         delete: "ลบกระทู้"
         dismiss: "ซ่อน"
         dismiss_read: "ซ่อนทั้งหมดที่ไม่ได้อ่าน"
@@ -1714,19 +1709,12 @@ th:
         back_description: "กลับไปยังโพสต์ล่าสุดที่ยังไม่ได้อ่าน"
         replies_short: "%{current} / %{total}"
       progress:
-        go_top: "ด้านบน"
-        go_bottom: "ปุ่ม"
-        go: "ไป"
-        jump_bottom: "ข้ามไปยังโพสต์ล่าสุด"
         jump_prompt: "ข้ามไปยัง..."
         jump_prompt_of:
           other: "ของ %{count} โพสต์"
         jump_prompt_long: "ข้ามไปยัง..."
-        jump_bottom_with_number: "ข้ามไปยังโพสต์ %{post_number}"
         jump_prompt_to_date: "ไปวันที่"
         jump_prompt_or: "หรือ"
-        total: โพสต์ทั้งหมด
-        current: โพสต์ปัจจุบัน
       notifications:
         title: เปลี่ยนความถี่ในการรับการแจ้งเตือนเกี่ยวกระทู้นี้
         reasons:
@@ -1791,7 +1779,6 @@ th:
         title: "ตอบ"
         help: "เริ่มเขียนตอบกระทู้นี้"
       share:
-        title: "แบ่งปัน"
         extended_title: "แบ่งปันลิงก์"
         help: "แบ่งปันลิงก์ไปยังกระทู้นี้"
         invite_users: "เชิญ"
@@ -2171,6 +2158,9 @@ th:
         title: "กระทู้นี้เป็นข้อความส่วนตัว"
         help: "กระทู้นี้เป็นข้อความส่วนตัว"
     posts: "โพสต์"
+    pending_posts:
+      label: "อยู่ระหว่างการพิจารณา"
+      label_with_count: "กำลังรอ (%{count})"
     original_post: "โพสต์ต้นฉบับ"
     views: "ดู"
     views_lowercase:
@@ -2368,8 +2358,7 @@ th:
       add_synonyms: "เพิ่ม"
       delete_tag: "ลบแท็ก"
       delete_confirm_no_topics: "คุณแน่ใจหรือว่าต้องการลบแท็กนี้"
-      rename_tag: "เปลี่ยนชื่อแท็ก"
-      rename_instructions: "เลือกชื่อใหม่สำหรับแท็ก:"
+      description: "รายละเอียด"
       sort_by: "เรียงโดย:"
       sort_by_count: "นับ"
       sort_by_name: "ชื่อ"
@@ -2616,7 +2605,6 @@ th:
         delete: "ลบ"
         delete_confirm: 'คุณแน่ใจหรือว่าต้องการลบ "%{theme_name}"'
         color: "สี"
-        copy: "คัดลอก"
         theme_owner: "ไม่สามารถแก้ไขได้ เป็นเจ้าของโดย:"
         email_templates:
           title: "อีเมล"

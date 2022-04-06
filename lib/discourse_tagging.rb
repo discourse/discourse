@@ -77,6 +77,9 @@ module DiscourseTagging
           only_tag_names: tag_names
         )
 
+        # keep existent tags that current user cannot use
+        tags += Tag.where(name: old_tag_names & tag_names)
+
         tags = Tag.where(id: tags.map(&:id)).all.to_a if tags.size > 0
 
         if tags.size < tag_names.size && (category.nil? || category.allow_global_tags || (category.tags.count == 0 && category.tag_groups.count == 0))
@@ -152,24 +155,72 @@ module DiscourseTagging
   end
 
   def self.validate_required_tags_from_group(guardian, model, category, tags = [])
-    if !guardian.is_staff? &&
-        category &&
-        category.required_tag_group &&
-        (tags.length < category.min_tags_from_required_group ||
-          category.required_tag_group.tags.where("tags.id in (?)", tags.map(&:id)).count < category.min_tags_from_required_group)
+    return true if guardian.is_staff? || category.nil?
 
-      model.errors.add(:base,
-        I18n.t(
-          "tags.required_tags_from_group",
-          count: category.min_tags_from_required_group,
-          tag_group_name: category.required_tag_group.name,
-          tags: category.required_tag_group.tags.pluck(:name).join(", ")
+    success = true
+    category.category_required_tag_groups.each do |crtg|
+      if tags.length < crtg.min_count ||
+        crtg.tag_group.tags.where("tags.id in (?)", tags.map(&:id)).count < crtg.min_count
+
+        success = false
+
+        model.errors.add(:base,
+          I18n.t(
+            "tags.required_tags_from_group",
+            count: crtg.min_count,
+            tag_group_name: crtg.tag_group.name,
+            tags: crtg.tag_group.tags.order(:id).pluck(:name).join(", ")
+          )
         )
-      )
-      false
-    else
-      true
+      end
     end
+
+    success
+  end
+
+  def self.validate_category_restricted_tags(guardian, model, category, tags = [])
+    return true if tags.blank? || category.blank?
+
+    tags = tags.map(&:name) if Tag === tags[0]
+    tags_restricted_to_categories = Hash.new { |h, k| h[k] = Set.new }
+
+    query = Tag.where(name: tags)
+    query.joins(tag_groups: :categories).pluck(:name, 'categories.id').each do |(tag, cat_id)|
+      tags_restricted_to_categories[tag] << cat_id
+    end
+    query.joins(:categories).pluck(:name, 'categories.id').each do |(tag, cat_id)|
+      tags_restricted_to_categories[tag] << cat_id
+    end
+
+    unallowed_tags = tags_restricted_to_categories.keys.select do |tag|
+      !tags_restricted_to_categories[tag].include?(category.id)
+    end
+
+    if unallowed_tags.present?
+      msg = I18n.t(
+        "tags.forbidden.restricted_tags_cannot_be_used_in_category",
+        count: unallowed_tags.size,
+        tags: unallowed_tags.sort.join(", "),
+        category: category.name
+      )
+      model.errors.add(:base, msg)
+      return false
+    end
+
+    if !category.allow_global_tags && category.has_restricted_tags?
+      unrestricted_tags = tags - tags_restricted_to_categories.keys
+      if unrestricted_tags.present?
+        msg = I18n.t(
+          "tags.forbidden.category_does_not_allow_tags",
+          count: unrestricted_tags.size,
+          tags: unrestricted_tags.sort.join(", "),
+          category: category.name
+        )
+        model.errors.add(:base, msg)
+        return false
+      end
+    end
+    true
   end
 
   TAG_GROUP_RESTRICTIONS_SQL ||= <<~SQL
@@ -253,7 +304,7 @@ module DiscourseTagging
     end
 
     sql << <<~SQL
-      SELECT #{distinct_clause} t.id, t.name, t.topic_count, t.pm_topic_count,
+      SELECT #{distinct_clause} t.id, t.name, t.topic_count, t.pm_topic_count, t.description,
         tgr.tgm_id as tgm_id, tgr.tag_group_id as tag_group_id, tgr.parent_tag_id as parent_tag_id,
         tgr.one_per_topic as one_per_topic, t.target_tag_id
       FROM tags t
@@ -315,12 +366,16 @@ module DiscourseTagging
     # or for staff when
     # - there are more available tags than the query limit
     # - and no search term has been included
-    filter_required_tags = category&.required_tag_group && (filter_for_non_staff || (term.blank? && category&.required_tag_group&.tags.size >= opts[:limit].to_i))
-
-    if opts[:for_input] && filter_required_tags
-      required_tag_ids = category.required_tag_group.tags.pluck(:id)
-      if (required_tag_ids & selected_tag_ids).size < category.min_tags_from_required_group
-        builder.where("id IN (?)", required_tag_ids)
+    required_tag_ids = nil
+    if opts[:for_input] && category&.category_required_tag_groups.present? && (filter_for_non_staff || term.blank?)
+      category.category_required_tag_groups.each do |crtg|
+        group_tags = crtg.tag_group.tags.pluck(:id)
+        next if (group_tags & selected_tag_ids).size >= crtg.min_count
+        if filter_for_non_staff || group_tags.size >= opts[:limit].to_i
+          required_tag_ids = group_tags
+          builder.where("id IN (?)", required_tag_ids)
+        end
+        break
       end
     end
 

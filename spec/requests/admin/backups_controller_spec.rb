@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 RSpec.describe Admin::BackupsController do
   fab!(:admin) { Fabricate(:admin) }
   let(:backup_filename) { "2014-02-10-065935.tar.gz" }
@@ -37,7 +35,7 @@ RSpec.describe Admin::BackupsController do
   after do
     Discourse.redis.flushdb
 
-    @paths&.each { |path| File.delete(path) if File.exists?(path) }
+    @paths&.each { |path| File.delete(path) if File.exist?(path) }
     @paths = nil
   end
 
@@ -133,14 +131,14 @@ RSpec.describe Admin::BackupsController do
       begin
         path = backup_path(backup_filename)
         create_backup_files(backup_filename)
-        expect(File.exists?(path)).to eq(true)
+        expect(File.exist?(path)).to eq(true)
 
         expect do
           delete "/admin/backups/#{backup_filename}.json"
         end.to change { UserHistory.where(action: UserHistory.actions[:backup_destroy]).count }.by(1)
 
         expect(response.status).to eq(200)
-        expect(File.exists?(path)).to eq(false)
+        expect(File.exist?(path)).to eq(false)
       end
     end
 
@@ -454,14 +452,14 @@ RSpec.describe Admin::BackupsController do
         BackupRestore::S3BackupStore.any_instance.stubs(:temporary_upload_path).returns(
           "temp/default/#{test_bucket_prefix}/28fccf8259bbe75b873a2bd2564b778c/2u98j832nx93272x947823.gz"
         )
-        create_multipart_result = <<~BODY
+        create_multipart_result = <<~XML
         <?xml version=\"1.0\" encoding=\"UTF-8\"?>\n
         <InitiateMultipartUploadResult>
            <Bucket>s3-backup-bucket</Bucket>
            <Key>temp/default/#{test_bucket_prefix}/28fccf8259bbe75b873a2bd2564b778c/2u98j832nx93272x947823.gz</Key>
            <UploadId>#{mock_multipart_upload_id}</UploadId>
         </InitiateMultipartUploadResult>
-        BODY
+        XML
         stub_request(:post, "https://s3-backup-bucket.s3.us-west-1.amazonaws.com/temp/default/#{test_bucket_prefix}/28fccf8259bbe75b873a2bd2564b778c/2u98j832nx93272x947823.gz?uploads").
           to_return(status: 200, body: create_multipart_result)
       end
