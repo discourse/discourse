@@ -331,6 +331,10 @@ class SearchIndexer
         if node["href"] == node.text || MENTION_CLASSES.include?(node["class"])
           node.remove_attribute("href")
         end
+
+        if node["class"] == "anchor" && node["href"].starts_with?("#")
+          node.remove_attribute("href")
+        end
       end
 
       html_scrubber = new
