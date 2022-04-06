@@ -568,8 +568,8 @@ class ThemeField < ActiveRecord::Base
     if (will_save_change_to_value? || will_save_change_to_upload_id?) && !will_save_change_to_value_baked?
       self.value_baked = nil
     end
-    if will_save_change_to_upload_id?
-      if upload && upload.extension == "js"
+    if upload && upload.extension == "js"
+      if will_save_change_to_upload_id? || !javascript_cache
         javascript_cache ||= build_javascript_cache
         javascript_cache.content = upload.content
       end
