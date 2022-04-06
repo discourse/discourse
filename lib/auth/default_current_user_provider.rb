@@ -385,7 +385,7 @@ class Auth::DefaultCurrentUserProvider
         end
 
       if user && can_write?
-        api_key.update_columns(last_used_at: Time.zone.now)
+        api_key.update_last_used!
       end
 
       user
