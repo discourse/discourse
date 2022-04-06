@@ -59,7 +59,7 @@ describe TranslationOverride do
             translation_override = TranslationOverride.upsert!(
               I18n.locale,
               "not_a_notification",
-              "Overriden %{key1} %{topic_title_url_encoded}",
+              "Overridden %{key1} %{topic_title_url_encoded}",
             )
             expect(translation_override.errors.full_messages).to include(I18n.t(
               "activerecord.errors.models.translation_overrides.attributes.value.invalid_interpolation_keys",

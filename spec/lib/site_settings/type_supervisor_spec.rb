@@ -276,7 +276,7 @@ describe SiteSettings::TypeSupervisor do
     end
 
     describe '#to_rb_value' do
-      it 'the type can be overriden by a parameter' do
+      it 'the type can be overridden by a parameter' do
         expect(settings.type_supervisor.to_rb_value(:type_null, '1', SiteSetting.types[:integer])).to eq(1)
       end
 
