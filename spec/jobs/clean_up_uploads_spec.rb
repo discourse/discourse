@@ -320,7 +320,7 @@ describe Jobs::CleanUpUploads do
     upload = fabricate_upload
     upload2 = fabricate_upload
 
-    Draft.set(Fabricate(:user), "test", 0, "#{upload.sha1}\n#{upload2.short_url}")
+    Draft.set(Fabricate(:user), "test", 0, "upload://#{upload.sha1}\n#{upload2.short_url}")
 
     Jobs::CleanUpUploads.new.execute(nil)
 

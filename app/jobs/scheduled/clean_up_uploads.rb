@@ -39,7 +39,6 @@ module Jobs
         if upload.sha1.present?
           encoded_sha = Base62.encode(upload.sha1.hex)
           next if ReviewableQueuedPost.pending.where("payload->>'raw' LIKE '%#{upload.sha1}%' OR payload->>'raw' LIKE '%#{encoded_sha}%'").exists?
-          next if Draft.where("data LIKE '%#{upload.sha1}%' OR data LIKE '%#{encoded_sha}%'").exists?
           next if UserProfile.where("bio_raw LIKE '%#{upload.sha1}%' OR bio_raw LIKE '%#{encoded_sha}%'").exists?
 
           next if Upload.in_use_callbacks&.any? { |callback| callback.call(upload) }
