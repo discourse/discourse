@@ -121,6 +121,7 @@ class SessionController < ApplicationController
   end
 
   def sso_login
+    return render_sso_error(text: I18n.t("read_only_mode_enabled"), status: 503) if @readonly_mode
     raise Discourse::NotFound.new unless SiteSetting.enable_discourse_connect
 
     params.require(:sso)

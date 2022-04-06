@@ -1112,6 +1112,20 @@ describe SessionController do
         expect(logged_on_user.email).to eq(@user.email)
       end
     end
+
+    context "in readonly mode" do
+      use_redis_snapshotting
+
+      before do
+        Discourse.enable_readonly_mode
+      end
+
+      it "disallows requests" do
+        get "/session/sso_login"
+
+        expect(response.status).to eq(503)
+      end
+    end
   end
 
   describe '#sso_provider' do
