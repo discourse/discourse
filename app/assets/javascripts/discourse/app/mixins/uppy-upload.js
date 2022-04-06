@@ -214,6 +214,11 @@ export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
         this._completeExternalUpload(file)
           .then((completeResponse) => {
             this._removeInProgressUpload(file.id);
+            this.appEvents.trigger(
+              `upload-mixin:${this.id}:upload-success`,
+              file.name,
+              completeResponse
+            );
             this.uploadDone(
               deepMerge(completeResponse, { file_name: file.name })
             );
@@ -226,9 +231,13 @@ export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
           });
       } else {
         this._removeInProgressUpload(file.id);
-        this.uploadDone(
-          deepMerge(response?.body || {}, { file_name: file.name })
+        const upload = response?.body || {};
+        this.appEvents.trigger(
+          `upload-mixin:${this.id}:upload-success`,
+          file.name,
+          upload
         );
+        this.uploadDone(deepMerge(upload, { file_name: file.name }));
         this._checkInProgressUploads();
       }
     });
@@ -237,6 +246,21 @@ export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
       this._removeInProgressUpload(file.id);
       displayErrorForUpload(response || error, this.siteSettings, file.name);
       this._reset();
+    });
+
+    this._uppyInstance.on("file-removed", (file, reason) => {
+      run(() => {
+        // we handle the cancel-all event specifically, so no need
+        // to do anything here. this event is also fired when some files
+        // are handled by an upload handler
+        if (reason === "cancel-all") {
+          return;
+        }
+        this.appEvents.trigger(
+          `upload-mixin:${this.id}:upload-cancelled`,
+          file.id
+        );
+      });
     });
 
     // TODO (martin) preventDirectS3Uploads is necessary because some of
@@ -265,8 +289,10 @@ export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
 
     this._uppyInstance.on("cancel-all", () => {
       this.appEvents.trigger(`upload-mixin:${this.id}:uploads-cancelled`);
-      this.set("inProgressUploads", []);
-      this._triggerInProgressUploadsEvent();
+      if (!this.isDestroyed && !this.isDestroying) {
+        this.set("inProgressUploads", []);
+        this._triggerInProgressUploadsEvent();
+      }
     });
 
     this.appEvents.on(`upload-mixin:${this.id}:add-files`, this._addFiles);
@@ -441,6 +467,10 @@ export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
   },
 
   _removeInProgressUpload(fileId) {
+    if (this.isDestroyed || this.isDestroying) {
+      return;
+    }
+
     this.set(
       "inProgressUploads",
       this.inProgressUploads.filter((upl) => upl.id !== fileId)
