@@ -1,4 +1,3 @@
-import deprecated from "discourse-common/lib/deprecated";
 // to match:
 // abcd
 // abcd[test]
@@ -25,14 +24,6 @@ export default class AllowLister {
 
   allowListFeature(feature, info) {
     this._rawFeatures.push([feature, info]);
-  }
-
-  whiteListFeature(feature, info) {
-    deprecated("`whiteListFeature` has been replaced with `allowListFeature`", {
-      since: "2.6.0.beta.4",
-      dropFrom: "2.7.0",
-    });
-    this.allowListFeature(feature, info);
   }
 
   disable(feature) {
@@ -103,14 +94,6 @@ export default class AllowLister {
   getAllowList() {
     this._ensureCache();
     return this._cache.allowList;
-  }
-
-  getWhiteList() {
-    deprecated("`getWhiteList` has been replaced with `getAllowList`", {
-      since: "2.6.0.beta.4",
-      dropFrom: "2.7.0",
-    });
-    return this.getAllowList();
   }
 
   getCustom() {
