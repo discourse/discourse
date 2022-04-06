@@ -110,7 +110,7 @@ class ThemeStore::GitImporter
       else
         Discourse::Utils.execute_command(git_ssh_command, "git", "clone", @url, @temp_folder)
       end
-    rescue RuntimeError => err
+    rescue RuntimeError
       raise RemoteTheme::ImportError.new(I18n.t("themes.import_error.git"))
     end
   ensure

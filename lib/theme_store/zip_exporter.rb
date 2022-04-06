@@ -53,8 +53,7 @@ class ThemeStore::ZipExporter
       raise RuntimeError.new("Theme exporter tried to leave directory") unless path.to_s.starts_with?(destination_folder)
 
       if ThemeField.types[field.type_id] == :theme_upload_var
-        filename = Discourse.store.path_for(field.upload)
-        content = filename ? File.read(filename) : Discourse.store.download(field.upload).read
+        content = field.upload.content
       else
         content = field.value
       end

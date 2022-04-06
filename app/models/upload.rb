@@ -171,6 +171,22 @@ class Upload < ActiveRecord::Base
     end
   end
 
+  def content
+    original_path = Discourse.store.path_for(self)
+    external_copy = nil
+
+    if original_path.blank?
+      external_copy = Discourse.store.download(self)
+      original_path = external_copy.path
+    end
+
+    File.read(original_path)
+  ensure
+    if external_copy
+      File.unlink(external_copy.path)
+    end
+  end
+
   def fix_image_extension
     return false if extension == "unknown"
 
