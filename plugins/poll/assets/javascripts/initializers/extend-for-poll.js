@@ -71,8 +71,8 @@ function initializePolls(api) {
   });
 
   function attachPolls(elem, helper) {
-    const pollNodes = elem.querySelectorAll(".poll").filter(function () {
-      return this.parentNode.tagName !== "BLOCKQUOTE";
+    const pollNodes = [...elem.querySelectorAll(".poll")].filter(function (pollNode) {
+      return pollNode.parentNode.tagName !== "BLOCKQUOTE";
     });
     if (!pollNodes.length || !helper) {
       return;
