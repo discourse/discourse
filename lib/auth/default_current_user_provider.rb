@@ -385,7 +385,7 @@ class Auth::DefaultCurrentUserProvider
         end
 
       if user && can_write?
-        Scheduler::Defer.later "Updating Last Used" do
+        Scheduler::Defer.later "Updating api_key last_used" do
           api_key.update_last_used!
         end
       end

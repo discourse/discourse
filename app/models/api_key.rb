@@ -17,8 +17,6 @@ class ApiKey < ActiveRecord::Base
 
   after_initialize :generate_key
 
-  LAST_SEEN_UPDATE_INTERVAL = 60
-
   def generate_key
     if !self.key_hash
       @key ||= SecureRandom.hex(32) # Not saved to DB
@@ -70,19 +68,8 @@ class ApiKey < ActiveRecord::Base
     api_key_scopes.blank? || api_key_scopes.any? { |s| s.permits?(env) }
   end
 
-  def last_seen_redis_key(now)
-    now_date = now.to_date
-    "api_key:#{id}:last_seen:#{now_date}"
-  end
-
   def update_last_used!(now = Time.zone.now)
-    redis_key = last_seen_redis_key(now)
-
-    return if !Discourse.redis.set(
-      redis_key, "1",
-      nx: true,
-      ex: LAST_SEEN_UPDATE_INTERVAL
-    )
+    return if last_used > 1.minute.ago
 
     # using update_column to avoid the AR transaction
     update_column(:last_used_at, now)
