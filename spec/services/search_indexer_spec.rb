@@ -269,6 +269,22 @@ describe SearchIndexer do
       expect(post.post_search_data.search_data).to include('œuvr')
       expect(post.post_search_data.search_data).to include('oeuvr')
     end
+
+    it 'truncates long words in the index' do
+      SiteSetting.search_max_indexed_word_length = 4
+      title = 'A title that is long enough'
+      contents = 'I am the best beige object http://example.com/long/url'
+
+      topic.update!(title: title)
+      post.update!(raw: contents)
+      post_search_data = post.post_search_data
+      post_search_data.reload
+
+      expect(post_search_data.raw_data).to eq(contents)
+
+      words = post_search_data.search_data.scan(/'([^']*)'/).map { |match| match[0] }
+      expect(words).to contain_exactly('best', 'beig', 'obj', 'http', 'titl', 'long', 'enou', 'unca')
+    end
   end
 
   describe '.queue_post_reindex' do
