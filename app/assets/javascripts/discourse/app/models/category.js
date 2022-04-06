@@ -35,21 +35,13 @@ const Category = RestModel.extend({
     }
   },
 
-  @on("init")
-  setupRequiredTagGroups() {
-    if (this.required_tag_group_name) {
-      this.set("required_tag_groups", [this.required_tag_group_name]);
-    }
-  },
-
-  @discourseComputed(
-    "required_tag_groups",
-    "min_tags_from_required_group",
-    "minimum_required_tags"
-  )
+  @discourseComputed("required_tag_groups", "minimum_required_tags")
   minimumRequiredTags() {
-    if (this.required_tag_groups) {
-      return this.min_tags_from_required_group;
+    if (this.required_tag_groups?.length > 0) {
+      return this.required_tag_groups.reduce(
+        (sum, rtg) => sum + rtg.min_count,
+        0
+      );
     } else {
       return this.minimum_required_tags > 0 ? this.minimum_required_tags : null;
     }
@@ -200,7 +192,8 @@ const Category = RestModel.extend({
     const url = id ? `/categories/${id}` : "/categories";
 
     return ajax(url, {
-      data: {
+      contentType: "application/json",
+      data: JSON.stringify({
         name: this.name,
         slug: this.slug,
         color: this.color,
@@ -234,11 +227,7 @@ const Category = RestModel.extend({
             ? this.allowed_tag_groups
             : null,
         allow_global_tags: this.allow_global_tags,
-        required_tag_group_name:
-          this.required_tag_groups && this.required_tag_groups.length > 0
-            ? this.required_tag_groups[0]
-            : null,
-        min_tags_from_required_group: this.min_tags_from_required_group,
+        required_tag_groups: this.required_tag_groups,
         sort_order: this.sort_order,
         sort_ascending: this.sort_ascending,
         topic_featured_link_allowed: this.topic_featured_link_allowed,
@@ -255,7 +244,7 @@ const Category = RestModel.extend({
         reviewable_by_group_name: this.reviewable_by_group_name,
         read_only_banner: this.read_only_banner,
         default_list_filter: this.default_list_filter,
-      },
+      }),
       type: id ? "PUT" : "POST",
     });
   },
