@@ -10,7 +10,7 @@ export const FORMAT = "YYYY-MM-DD HH:mmZ";
 export default ComboBoxComponent.extend({
   pluginApiIdentifiers: ["future-date-input-selector"],
   classNames: ["future-date-input-selector"],
-  isCustom: equal("value", "pick_date_and_time"),
+  isCustom: equal("value", "custom"),
   userTimezone: null,
 
   selectKitOptions: {
@@ -48,7 +48,7 @@ export default ComboBoxComponent.extend({
 
   actions: {
     onChange(value) {
-      if (value !== "pick_date_and_time" && !isEmpty(value)) {
+      if (value !== "custom" && !isEmpty(value)) {
         const { time } = this.content.find((x) => x.id === value);
         if (time) {
           this.attrs.onChangeInput &&

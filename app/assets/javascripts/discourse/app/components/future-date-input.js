@@ -8,7 +8,7 @@ import { FORMAT } from "select-kit/components/future-date-input-selector";
 export default Component.extend({
   selection: null,
   includeDateTime: true,
-  isCustom: equal("selection", "pick_date_and_time"),
+  isCustom: equal("selection", "custom"),
   displayDateAndTimePicker: and("includeDateTime", "isCustom"),
   displayLabel: null,
   labelClasses: null,
@@ -29,7 +29,7 @@ export default Component.extend({
         this.set("selection", closestTimeframe.id);
       } else {
         this.setProperties({
-          selection: "pick_date_and_time",
+          selection: "custom",
           _date: dateTime.format("YYYY-MM-DD"),
           _time: dateTime.format("HH:mm"),
         });
