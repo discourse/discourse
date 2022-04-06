@@ -298,12 +298,12 @@ describe Jobs::CleanUpUploads do
     upload3 = fabricate_upload
 
     Fabricate(:reviewable_queued_post_topic, payload: {
-      raw: "#{upload.sha1}\n#{upload2.short_url}"
+      raw: "#{upload.short_url}\n#{upload2.short_url}"
     })
 
     Fabricate(:reviewable_queued_post_topic,
       payload: {
-        raw: "#{upload3.sha1}"
+        raw: "#{upload3.short_url}"
       },
       status: Reviewable.statuses[:rejected]
     )
