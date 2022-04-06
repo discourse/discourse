@@ -1692,7 +1692,7 @@ describe User do
     end
   end
 
-  context "when user preferences are overriden" do
+  context "when user preferences are overridden" do
 
     fab!(:category0) { Fabricate(:category) }
     fab!(:category1) { Fabricate(:category) }
@@ -1724,7 +1724,7 @@ describe User do
       SiteSetting.default_categories_regular = category4.id.to_s
     end
 
-    it "has overriden preferences" do
+    it "has overridden preferences" do
       user = Fabricate(:user)
       options = user.user_option
       expect(options.mailing_list_mode).to eq(true)
