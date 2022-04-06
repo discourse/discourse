@@ -119,8 +119,10 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 p > code,
 li > code,
 pre > code {
-  color: var(--primary-very-high);
-  background: var(--hljs-bg);
+  color: var(--danger);
+  background: var(--secondary-very-high);
+  padding: 3px 5px 2px 5px;
+  border-radius: 5px;
 }
 
 // removed some unnecessary styles here
