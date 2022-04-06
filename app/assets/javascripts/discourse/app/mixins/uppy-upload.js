@@ -154,7 +154,6 @@ export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
 
     // droptarget is a UI plugin, only preprocessors must call _useUploadPlugin
     this._uppyInstance.use(DropTarget, this._uploadDropTargetOptions());
-    this._useUploadPlugin(UppyChecksum, { capabilities: this.capabilities });
 
     this._uppyInstance.on("progress", (progress) => {
       if (this.isDestroying || this.isDestroyed) {
@@ -165,6 +164,7 @@ export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
     });
 
     this._uppyInstance.on("upload", (data) => {
+      this._addNeedProcessing(data.fileIDs.length);
       const files = data.fileIDs.map((fileId) =>
         this._uppyInstance.getFile(fileId)
       );
@@ -182,6 +182,7 @@ export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
             id: file.id,
             progress: 0,
             extension: file.extension,
+            processing: false,
           })
         );
         this.appEvents.trigger(
@@ -268,6 +269,12 @@ export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
       this._cancelSingleUpload
     );
     this._uppyReady();
+
+    // It is important that the UppyChecksum preprocessor is the last one to
+    // be added; the preprocessors are run in order and since other preprocessors
+    // may modify the file (e.g. the UppyMediaOptimization one), we need to
+    // checksum once we are sure the file data has "settled".
+    this._useUploadPlugin(UppyChecksum, { capabilities: this.capabilities });
   },
 
   _checkInProgressUploads() {
@@ -377,6 +384,7 @@ export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
   @bind
   _cancelSingleUpload(data) {
     this._uppyInstance.removeFile(data.fileId);
+    this._removeInProgressUpload(data.fileId);
   },
 
   @bind
