@@ -152,10 +152,6 @@ after_initialize do
       delete '/user-global-notices/:id' => 'user_global_notices#destroy'
     end
 
-    scope format: :json, constraints: AdminConstraint.new do
-      post '/automations/:id/trigger' => 'automations#trigger'
-    end
-
     scope '/admin/plugins/discourse-automation', as: 'admin_discourse_automation', constraints: AdminConstraint.new do
       scope format: false do
         get '/' => 'admin_discourse_automation#index'
