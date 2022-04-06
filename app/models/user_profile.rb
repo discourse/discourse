@@ -18,8 +18,8 @@ class UserProfile < ActiveRecord::Base
   after_save :pull_hotlinked_image
 
   after_save do
-    if saved_change_to_profile_background_upload_id? || saved_change_to_card_background_upload_id?
-      upload_ids = [self.profile_background_upload_id, self.card_background_upload_id]
+    if saved_change_to_profile_background_upload_id? || saved_change_to_card_background_upload_id? || saved_change_to_bio_raw?
+      upload_ids = [self.profile_background_upload_id, self.card_background_upload_id] + Upload.extract_upload_ids(self.bio_raw)
       UploadReference.ensure_exist!(upload_ids: upload_ids, target: self)
     end
   end
