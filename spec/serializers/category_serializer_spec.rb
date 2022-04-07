@@ -100,7 +100,19 @@ describe CategorySerializer do
         expect(json[:group_permissions]).to eq([
           { permission_type: CategoryGroup.permission_types[:readonly], group_name: group.name },
           { permission_type: CategoryGroup.permission_types[:full], group_name: private_group.name },
-          { permission_type: CategoryGroup.permission_types[:full], group_name: user_group.name }
+          { permission_type: CategoryGroup.permission_types[:full], group_name: user_group.name },
+          { permission_type: CategoryGroup.permission_types[:readonly], group_name: 'everyone' },
+        ])
+      end
+
+      it "returns the group permissions for everyone group too" do
+        category.set_permissions(everyone: :readonly)
+        category.save!
+
+        json = described_class.new(category, scope: Guardian.new(admin), root: false).as_json
+
+        expect(json[:group_permissions]).to eq([
+          { permission_type: CategoryGroup.permission_types[:readonly], group_name: 'everyone' },
         ])
       end
     end
