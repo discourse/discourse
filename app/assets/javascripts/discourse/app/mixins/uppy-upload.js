@@ -223,11 +223,11 @@ export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
               deepMerge(completeResponse, { file_name: file.name })
             );
 
-            this._checkInProgressUploads();
+            this._triggerInProgressUploadsEvent();
           })
           .catch((errResponse) => {
             displayErrorForUpload(errResponse, this.siteSettings, file.name);
-            this._checkInProgressUploads();
+            this._triggerInProgressUploadsEvent();
           });
       } else {
         this._removeInProgressUpload(file.id);
@@ -238,7 +238,7 @@ export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
           upload
         );
         this.uploadDone(deepMerge(upload, { file_name: file.name }));
-        this._checkInProgressUploads();
+        this._triggerInProgressUploadsEvent();
       }
     });
 
@@ -260,6 +260,13 @@ export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
           `upload-mixin:${this.id}:upload-cancelled`,
           file.id
         );
+      });
+    });
+
+    this._uppyInstance.on("complete", () => {
+      run(() => {
+        this.appEvents.trigger(`upload-mixin:${this.id}:all-uploads-complete`);
+        this._reset();
       });
     });
 
@@ -314,13 +321,6 @@ export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
       `upload-mixin:${this.id}:in-progress-uploads`,
       this.inProgressUploads
     );
-  },
-
-  _checkInProgressUploads() {
-    this._triggerInProgressUploadsEvent();
-    if (this.inProgressUploads.length === 0) {
-      this._reset();
-    }
   },
 
   // This should be overridden in a child component if you need to
