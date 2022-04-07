@@ -116,9 +116,9 @@ export default Controller.extend(CanCheckEmails, {
     );
   },
 
-  @discourseComputed("viewingSelf", "currentUser.staff")
-  showNotificationsTab(viewingSelf, staff) {
-    return viewingSelf || staff;
+  @discourseComputed("viewingSelf", "currentUser.admin")
+  showNotificationsTab(viewingSelf, isAdmin) {
+    return viewingSelf || isAdmin;
   },
 
   @discourseComputed("model.name")

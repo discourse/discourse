@@ -8,6 +8,7 @@ import {
   exists,
   query,
   queryAll,
+  updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, currentRouteName, visit } from "@ember/test-helpers";
 import { cloneJSON } from "discourse-common/lib/object";
@@ -55,6 +56,14 @@ acceptance("User Routes", function (needs) {
         "/u/eviltrout/notifications/likes-received?acting_username=aquaman"
       )
     );
+
+    updateCurrentUser({ moderator: true, admin: false });
+    await visit("/u/charlie/summary");
+    assert.notOk($(".user-nav > .user-notifications").length, "does not have the notifications tab");
+
+    updateCurrentUser({ moderator: false, admin: true });
+    await visit("/u/charlie/summary");
+    assert.ok($(".user-nav > .user-notifications").length, "has the notifications tab");
   });
 
   test("Root URL - Viewing Self", async function (assert) {
