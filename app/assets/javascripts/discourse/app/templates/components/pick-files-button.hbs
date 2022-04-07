@@ -2,7 +2,7 @@
   {{d-button action=(action "openSystemFilePicker") label=label icon=icon}}
 {{/if}}
 {{#if acceptsAllFormats}}
-  <input type="file" id={{fileInputId}} class={{fileInputClass}} multiple={{allowMultiple}}>
+  <input type="file" id={{fileInputId}} class={{fileInputClass}} multiple={{allowMultiple}} disabled={{fileInputDisabled}}>
 {{else}}
-  <input type="file" id={{fileInputId}} class={{fileInputClass}} accept={{acceptedFormats}} multiple={{allowMultiple}}>
+  <input type="file" id={{fileInputId}} class={{fileInputClass}} accept={{acceptedFormats}} multiple={{allowMultiple}} disabled={{fileInputDisabled}}>
 {{/if}}

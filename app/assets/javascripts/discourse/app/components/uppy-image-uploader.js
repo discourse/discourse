@@ -50,6 +50,12 @@ export default Component.extend(UppyUploadMixin, {
     return { imagesOnly: true };
   },
 
+  _uppyReady() {
+    this._onPreProcessComplete(() => {
+      this.set("processing", false);
+    });
+  },
+
   uploadDone(upload) {
     this.setProperties({
       imageFilesize: upload.human_filesize,
