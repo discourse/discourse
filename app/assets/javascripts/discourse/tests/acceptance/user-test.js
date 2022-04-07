@@ -59,7 +59,7 @@ acceptance("User Routes", function (needs) {
 
     updateCurrentUser({ moderator: true, admin: false });
     await visit("/u/charlie/summary");
-    assert.notOk($(".user-nav > .user-notifications").length, "does not have the notifications tab");
+    assert.notOk(exists(".user-nav > .user-notifications"), "does not have the notifications tab");
 
     updateCurrentUser({ moderator: false, admin: true });
     await visit("/u/charlie/summary");
