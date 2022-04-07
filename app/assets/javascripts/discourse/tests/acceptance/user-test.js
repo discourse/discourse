@@ -63,7 +63,7 @@ acceptance("User Routes", function (needs) {
 
     updateCurrentUser({ moderator: false, admin: true });
     await visit("/u/charlie/summary");
-    assert.ok($(".user-nav > .user-notifications").length, "has the notifications tab");
+    assert.ok(exists(".user-nav > .user-notifications"), "has the notifications tab");
   });
 
   test("Root URL - Viewing Self", async function (assert) {
