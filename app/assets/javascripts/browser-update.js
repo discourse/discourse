@@ -37,7 +37,7 @@
           result += noscriptElements[i].childNodes[j].nodeValue;
         }
 
-        mainElement.innerHTML = result;
+        mainElement.outerHTML = result;
         break;
       }
     }
