@@ -173,7 +173,7 @@ RSpec.describe SecondFactorManager do
         expect(user.authenticate_second_factor(params, secure_session).ok).to eq(true)
       end
 
-      it "keeps used_2fa_method nil because no authenticate is done" do
+      it "keeps used_2fa_method nil because no authentication is done" do
         expect(user.authenticate_second_factor(params, secure_session).used_2fa_method).to eq(nil)
       end
     end
