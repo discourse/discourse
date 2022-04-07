@@ -93,7 +93,7 @@ which outcome the auth manager has picked and render a different response based
 on the outcome.
 
 The results object also has a `data` method that returns the return value of
-the the hook/method of your action class. For example, if
+the hook/method of your action class. For example, if
 `second_factor_auth_required!` is called and it returns a hash object, you can
 get that hash object by calling the `data` method of the results object.
 
