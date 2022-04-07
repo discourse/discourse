@@ -88,6 +88,26 @@ describe PostSerializer do
     end
   end
 
+  context "a post by a suspended user" do
+    def subject
+      PostSerializer.new(post, scope: Guardian.new(Fabricate(:admin)), root: false).as_json
+    end
+
+    it "serializes correctly" do
+      expect(subject[:suspended]).to be_nil
+
+      post.user.update!(
+        suspended_till: 1.month.from_now,
+      )
+
+      expect(subject[:suspended]).to eq(true)
+
+      freeze_time (2.months.from_now)
+
+      expect(subject[:suspended]).to be_nil
+    end
+  end
+
   context "display_username" do
     let(:user) { post.user }
     let(:serializer) { PostSerializer.new(post, scope: Guardian.new, root: false) }

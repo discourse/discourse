@@ -240,6 +240,12 @@ acceptance("Topic", function (needs) {
     assert.ok(exists(".category-moderator"), "it has a class applied");
     assert.ok(exists(".d-icon-shield-alt"), "it shows an icon");
   });
+
+  test("Suspended user posts", async function (assert) {
+    await visit("/t/topic-from-suspended-user/54077");
+
+    assert.ok(exists(".suspended"), "it has a class applied");
+  });
 });
 
 acceptance("Topic featured links", function (needs) {
