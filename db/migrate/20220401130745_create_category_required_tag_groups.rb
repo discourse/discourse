@@ -17,7 +17,8 @@ class CreateCategoryRequiredTagGroups < ActiveRecord::Migration[6.1]
       (category_id, tag_group_id, min_count, updated_at, created_at)
       SELECT c.id, c.required_tag_group_id, c.min_tags_from_required_group, NOW(), NOW()
       FROM categories c
-      WHERE c.required_tag_group_id IS NOT NULL
+      INNER JOIN tag_groups tg ON tg.id = c.required_tag_group_id
+      WHERE tg.id IS NOT NULL
     SQL
   end
 
