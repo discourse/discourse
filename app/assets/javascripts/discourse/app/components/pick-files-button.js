@@ -20,6 +20,7 @@ import I18n from "I18n";
 export default Component.extend({
   fileInputId: null,
   fileInputClass: null,
+  fileInputDisabled: false,
   classNames: ["pick-files-button"],
   acceptedFormatsOverride: null,
   allowMultiple: false,
