@@ -550,7 +550,7 @@ class PostSerializer < BasicPostSerializer
     can_review_topic?
   end
 
-  def suspended
+  def user_suspended
     true
   end
 
