@@ -4,7 +4,7 @@ class AdminUserIndexQuery
 
   def initialize(params = {}, klass = User, trust_levels = TrustLevel.levels)
     @params = params
-    @query = initialize_query_with_order(klass.joins(:primary_email))
+    @query = initialize_query_with_order(klass)
     @trust_levels = trust_levels
   end
 
@@ -53,7 +53,7 @@ class AdminUserIndexQuery
 
     if !custom_order.present?
       if params[:query] == "active"
-        order << "COALESCE(users.last_seen_at, to_date('1970-01-01', 'YYYY-MM-DD')) DESC"
+        order << "users.last_seen_at DESC NULLS LAST"
       else
         order << "users.created_at DESC"
       end
@@ -93,7 +93,7 @@ class AdminUserIndexQuery
 
   def filter_by_search
     if params[:email].present?
-      return @query.where('user_emails.email = ?', params[:email].downcase)
+      return @query.joins(:primary_email).where('user_emails.email = ?', params[:email].downcase)
     end
 
     filter = params[:filter]
