@@ -94,17 +94,17 @@ describe PostSerializer do
     end
 
     it "serializes correctly" do
-      expect(subject[:suspended]).to be_nil
+      expect(subject[:user_suspended]).to be_nil
 
       post.user.update!(
         suspended_till: 1.month.from_now,
       )
 
-      expect(subject[:suspended]).to eq(true)
+      expect(subject[:user_suspended]).to eq(true)
 
       freeze_time (2.months.from_now)
 
-      expect(subject[:suspended]).to be_nil
+      expect(subject[:user_suspended]).to be_nil
     end
   end
 
