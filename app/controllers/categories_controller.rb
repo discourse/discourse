@@ -2,9 +2,9 @@
 
 class CategoriesController < ApplicationController
 
-  requires_login except: [:index, :categories_and_latest, :categories_and_top, :show, :redirect, :find_by_slug]
+  requires_login except: [:index, :categories_and_latest, :categories_and_top, :show, :redirect, :find_by_slug, :visible_groups]
 
-  before_action :fetch_category, only: [:show, :update, :destroy]
+  before_action :fetch_category, only: [:show, :update, :destroy, :visible_groups]
   before_action :initialize_staff_action_logger, only: [:create, :update, :destroy]
   skip_before_action :check_xhr, only: [:index, :categories_and_latest, :categories_and_top, :redirect]
 
@@ -120,6 +120,7 @@ class CategoriesController < ApplicationController
     if Category.topic_create_allowed(guardian).where(id: @category.id).exists?
       @category.permission = CategoryGroup.permission_types[:full]
     end
+
     render_serialized(@category, CategorySerializer)
   end
 
@@ -252,6 +253,11 @@ class CategoriesController < ApplicationController
     render_serialized(@category, CategorySerializer)
   end
 
+  def visible_groups
+    @guardian.ensure_can_see!(@category)
+    render json: success_json.merge(groups: @category.groups.merge(Group.visible_groups(current_user)).pluck("name"))
+  end
+
   private
 
   def self.topics_per_page
@@ -368,6 +374,7 @@ class CategoriesController < ApplicationController
 
   def fetch_category
     @category = Category.find_by_slug(params[:id]) || Category.find_by(id: params[:id].to_i)
+    raise Discourse::NotFound if @category.blank?
   end
 
   def initialize_staff_action_logger
