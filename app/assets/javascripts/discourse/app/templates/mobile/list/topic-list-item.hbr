@@ -5,10 +5,9 @@
       <label for="bulk-select-{{topic.id}}">
         <input type="checkbox" class="bulk-select" id="bulk-select-{{topic.id}}">
       </label>
-    {{/if}}
-    {{#unless bulkSelectEnabled}}
+    {{else}}
       <a href="{{topic.lastPostUrl}}" data-user-card="{{topic.lastPosterUser.username}}">{{avatar topic.lastPosterUser imageSize="large"}}</a>
-    {{/unless}}
+    {{/if}}
   </div>
   <div class='right'>
     {{!--

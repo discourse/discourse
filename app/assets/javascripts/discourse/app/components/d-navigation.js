@@ -134,7 +134,7 @@ export default Component.extend(FilterModeMixin, {
   @discourseComputed()
   canBulk() {
     const controller = getOwner(this).lookup("controller:discovery/topics");
-    return controller.get("canBulkSelect");
+    return controller.canBulkSelect;
   },
 
   actions: {
