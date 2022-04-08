@@ -1,6 +1,7 @@
 import {
   acceptance,
   fakeTime,
+  loggedInUser,
   queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -28,7 +29,7 @@ acceptance("Topic - Set Slow Mode", function (needs) {
   });
 
   needs.hooks.beforeEach(() => {
-    const timezone = moment.tz.guess();
+    const timezone = loggedInUser().resolvedTimezone(loggedInUser());
     clock = fakeTime("2100-05-03T08:00:00", timezone, true); // Monday morning
   });
 
@@ -54,7 +55,7 @@ acceptance("Topic - Set Slow Mode", function (needs) {
       I18n.t("time_shortcut.later_today"),
       I18n.t("time_shortcut.tomorrow"),
       I18n.t("time_shortcut.later_this_week"),
-      I18n.t("time_shortcut.start_of_next_business_week"),
+      I18n.t("time_shortcut.start_of_next_business_week_alt"),
       I18n.t("time_shortcut.two_weeks"),
       I18n.t("time_shortcut.next_month"),
       I18n.t("time_shortcut.two_months"),
