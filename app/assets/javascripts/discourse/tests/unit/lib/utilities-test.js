@@ -325,9 +325,12 @@ discourseModule("Unit | Utilities | clipboard", function (hooks) {
   }
 
   test("clipboardCopyAsync - browser does not support window.ClipboardItem", function (assert) {
-    const done = assert.async();
-    sinon.stub(window, "ClipboardItem").value(null);
+    // without this check the stubbing will fail on Firefox
+    if (window.ClipboardItem) {
+      sinon.stub(window, "ClipboardItem").value(null);
+    }
 
+    const done = assert.async();
     clipboardCopyAsync(getPromiseFunction()).then(() => {
       assert.strictEqual(
         mockClipboard.writeText.calledWith("some text to copy"),
@@ -339,6 +342,13 @@ discourseModule("Unit | Utilities | clipboard", function (hooks) {
   });
 
   test("clipboardCopyAsync - browser does support window.ClipboardItem", function (assert) {
+    // without this check the test will fail on Firefox -- it cannot
+    // possibly pass because ClipboardItem is nonexistent there
+    if (!window.ClipboardItem) {
+      assert.strictEqual(true, true);
+      return;
+    }
+
     const done = assert.async();
     clipboardCopyAsync(getPromiseFunction()).then(() => {
       assert.strictEqual(
