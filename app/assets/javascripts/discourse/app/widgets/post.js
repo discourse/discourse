@@ -849,7 +849,7 @@ export default createWidget("post", {
     } else {
       classNames.push("regular");
     }
-    if (attrs.user_suspended) {
+    if (attrs.userSuspended) {
       classNames.push("user-suspended");
     }
     if (addPostClassesCallbacks) {
