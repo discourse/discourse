@@ -53,6 +53,10 @@ class CategorySerializer < SiteCategorySerializer
     end
   end
 
+  def include_group_permissions?
+    scope&.can_edit?(object)
+  end
+
   def include_available_groups?
     scope && scope.can_edit?(object)
   end
