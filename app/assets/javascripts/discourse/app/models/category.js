@@ -515,6 +515,10 @@ Category.reopenClass({
     return category;
   },
 
+  fetchVisibleGroups(id) {
+    return ajax(`/c/${id}/visible_groups.json`);
+  },
+
   reloadById(id) {
     return ajax(`/c/${id}/show.json`);
   },
