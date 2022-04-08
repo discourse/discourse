@@ -104,12 +104,17 @@
 
 <section class="user-content">
   <div class="list-actions">
-    {{#if (and site.mobileView showNewPM)}}
-      {{d-button
-        class="btn-primary new-private-message"
-        action=(route-action "composePrivateMessage")
-        icon="envelope"
-        label="user.new_private_message"}}
+    {{#if site.mobileView}}
+      {{#if showNewPM}}
+        {{d-button
+          class="btn-primary new-private-message"
+          action=(route-action "composePrivateMessage")
+          icon="envelope"
+          label="user.new_private_message"}}
+      {{/if}}
+      {{#if (or viewingSelf currentUser.admin)}}
+        {{bulk-select-toggle parentController="user-topics-list"}}
+      {{/if}}
     {{/if}}
   </div>
 
