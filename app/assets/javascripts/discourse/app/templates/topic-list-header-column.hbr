@@ -13,7 +13,7 @@
       </span>
     {{/if ~}}
   {{/if ~}}
-  {{view.localizedName}}
+  <span>{{view.localizedName}}</span>
   {{~#if view.isSorting}}
     {{d-icon view.sortIcon}}
   {{/if ~}}

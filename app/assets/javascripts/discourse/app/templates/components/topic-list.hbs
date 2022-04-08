@@ -1,21 +1,19 @@
-{{#unless skipHeader}}
-  <thead class="topic-list-header">
-    {{raw "topic-list-header"
-      canBulkSelect=canBulkSelect
-      toggleInTitle=toggleInTitle
-      hideCategory=hideCategory
-      showPosters=showPosters
-      showLikes=showLikes
-      showOpLikes=showOpLikes
-      order=order
-      ascending=ascending
-      sortable=sortable
-      listTitle=listTitle
-      bulkSelectEnabled=bulkSelectEnabled
-      canDoBulkActions=canDoBulkActions
-    }}
-  </thead>
-{{/unless}}
+<thead class="topic-list-header">
+  {{raw "topic-list-header"
+    canBulkSelect=canBulkSelect
+    toggleInTitle=toggleInTitle
+    hideCategory=hideCategory
+    showPosters=showPosters
+    showLikes=showLikes
+    showOpLikes=showOpLikes
+    order=order
+    ascending=ascending
+    sortable=sortable
+    listTitle=listTitle
+    bulkSelectEnabled=bulkSelectEnabled
+    canDoBulkActions=canDoBulkActions
+  }}
+</thead>
 
 {{plugin-outlet
   name="before-topic-list-body"

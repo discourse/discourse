@@ -6,6 +6,9 @@
 {{/unless}}
 
 <div class="navigation-controls">
+  {{#if (and notCategories site.mobileView)}}
+    {{bulk-select-toggle}}
+  {{/if}}
 
   {{#if showCategoryAdmin}}
     {{categories-admin-dropdown

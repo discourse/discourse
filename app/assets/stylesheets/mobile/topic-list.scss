@@ -468,3 +468,45 @@ td .main-link {
 .muted-categories-link {
   margin-left: 0;
 }
+
+// work in progress for bulk select
+
+.sticky-header .topic-list-header {
+  z-index: 9;
+}
+
+.topic-list-header {
+  display: none;
+}
+
+.sticky-header {
+  .topic-list-header {
+    display: table-header-group;
+  }
+  th {
+    display: none;
+  }
+  th.default {
+    display: flex;
+    span:not(.bulk-select-topics) {
+      display: none;
+    }
+  }
+}
+
+.bulk-select-topics {
+  display: flex;
+  .btn {
+    margin-right: 0.5em;
+  }
+}
+
+.pull-left {
+  label {
+    display: flex;
+    width: 45px;
+    height: 45px;
+    justify-content: center;
+    align-items: center;
+  }
+}

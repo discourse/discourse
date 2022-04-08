@@ -18,15 +18,20 @@ model=model showResetNew=showResetNew showDismissRead=showDismissRead resetNew=(
     {{topic-list
       highlightLastVisited=true
       showPosters=true
+      canBulkSelect=canBulkSelect
+      toggleBulkSelect=(action "toggleBulkSelect")
+      updateAutoAddTopicsToBulkSelect=(action "updateAutoAddTopicsToBulkSelect")
       hideCategory=model.hideCategory
       order=order
-      ascending=ascending
-      topics=model.topics
+      bulkSelectEnabled=bulkSelectEnabled
+      bulkSelectAction=(action "refresh")
+      selected=selected
       expandGloballyPinned=expandGloballyPinned
       expandAllPinned=expandAllPinned
+      category=category
+      topics=model.topics
       scrollOnLoad=true
-      onScroll=discoveryTopicList.saveScrollPosition
-      category=category}}
+      onScroll=discoveryTopicList.saveScrollPosition}}
   {{/if}}
 {{/discovery-topics-list}}
 
