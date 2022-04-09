@@ -29,7 +29,7 @@
     "jquery": "3.5.1",
     "magnific-popup": "1.1.0",
     "markdown-it": "10.0.0",
-    "moment": "2.29.1",
+    "moment": "2.29.2",
     "moment-timezone": "0.5.31",
     "pikaday": "1.8.0",
     "workbox-cacheable-response": "^4.3.1",
