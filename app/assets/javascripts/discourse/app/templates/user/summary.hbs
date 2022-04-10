@@ -1,5 +1,6 @@
 {{#d-section pageClass="user-summary" tagName=""}}
   <div class="user-content">
+    {{plugin-outlet name="above-user-summary-stats" args=(hash model=model user=user)}}
     {{#if model.can_see_summary_stats}}
       <div class="top-section stats-section">
         <h3 class="stats-title">{{i18n "user.summary.stats"}}</h3>
