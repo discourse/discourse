@@ -65,6 +65,21 @@ export const WidgetMouseOverHook = buildHook(MOUSE_OVER_ATTRIBUTE_NAME);
 export const WidgetMouseOutHook = buildHook(MOUSE_OUT_ATTRIBUTE_NAME);
 export const WidgetTouchEndHook = buildHook(TOUCH_END_ATTRIBUTE_NAME);
 
+export class WidgetClickElementHook extends WidgetBaseHook {
+  constructor(widget, handler) {
+    super(widget);
+    this.handler = handler.bind(widget);
+  }
+
+  hook(node) {
+    node.addEventListener("click", this.handler);
+  }
+
+  unhook(node) {
+    node.removeEventListener("click", this.handler);
+  }
+}
+
 // `touchstart` and `touchmove` events are particularly performance sensitive because
 // they block scrolling on mobile. Therefore we want to avoid registering global non-passive
 // listeners for these events.

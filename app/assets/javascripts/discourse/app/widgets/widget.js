@@ -1,5 +1,6 @@
 import {
   WidgetChangeHook,
+  WidgetClickElementHook,
   WidgetClickHook,
   WidgetClickOutsideHook,
   WidgetDoubleClickHook,
@@ -418,6 +419,12 @@ export default class Widget {
     }
     if (this.click) {
       properties["widget-click"] = new WidgetClickHook(this);
+    }
+    if (this.clickElement) {
+      properties["widget-test"] = new WidgetClickElementHook(
+        this,
+        this.clickElement
+      );
     }
     if (this.doubleClick) {
       properties["widget-double-click"] = new WidgetDoubleClickHook(this);

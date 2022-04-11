@@ -23,6 +23,7 @@ import { transformBasicPost } from "discourse/lib/transform-post";
 import autoGroupFlairForUser from "discourse/lib/avatar-flair";
 import showModal from "discourse/lib/show-modal";
 import { nativeShare } from "discourse/lib/pwa-utils";
+import { wantsNewWindow } from "discourse/lib/intercept-click";
 
 function transformWithCallbacks(post) {
   let transformed = transformBasicPost(post);
@@ -311,7 +312,9 @@ createWidget("post-meta-data", {
       postInfo.push(this.attach("reply-to-tab", attrs));
     }
 
-    postInfo.push(this.attach("post-date", attrs));
+    postInfo.push(
+      h("div.post-info.post-date", this.attach("post-date-link", attrs))
+    );
 
     postInfo.push(
       h(
@@ -348,26 +351,33 @@ createWidget("expand-hidden", {
   },
 });
 
-createWidget("post-date", {
-  tagName: "div.post-info.post-date",
+createWidget("post-date-link", {
+  tagName: "a",
 
-  html(attrs) {
-    const attributes = { class: "post-date" };
-    let date;
-    if (attrs.wiki && attrs.lastWikiEdit) {
+  buildAttributes(attrs) {
+    const attributes = { href: attrs.shareUrl, class: "post-date" };
+    if (attrs.lastWikiEdit) {
       attributes["class"] += " last-wiki-edit";
-      date = new Date(attrs.lastWikiEdit);
-    } else {
-      date = new Date(attrs.created_at);
     }
-    return h("a", { attributes }, dateNode(date));
+    return attributes;
   },
 
-  click() {
+  html(attrs) {
+    const date = attrs.lastWikiEdit ? attrs.lastWikiEdit : attrs.created_at;
+    return dateNode(new Date(date));
+  },
+
+  clickElement(event) {
+    if (wantsNewWindow(event)) {
+      return;
+    }
+
     const post = this.findAncestorModel();
     const topic = post.topic;
     const controller = showModal("share-topic", { model: topic.category });
     controller.setProperties({ topic, post });
+
+    event.preventDefault();
   },
 });
 
