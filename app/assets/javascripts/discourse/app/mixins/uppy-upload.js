@@ -72,10 +72,7 @@ export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
     });
     this.set("allowMultipleFiles", this.fileInputEl.multiple);
     this.set("inProgressUploads", []);
-    this.appEvents.trigger(
-      `upload-mixin:${this.id}:in-progress-uploads`,
-      this.inProgressUploads
-    );
+    this._triggerInProgressUploadsEvent();
 
     this._bindFileInputChange();
 
@@ -185,10 +182,7 @@ export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
             processing: false,
           })
         );
-        this.appEvents.trigger(
-          `upload-mixin:${this.id}:in-progress-uploads`,
-          this.inProgressUploads
-        );
+        this._triggerInProgressUploadsEvent();
       });
     });
 
@@ -475,10 +469,7 @@ export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
       "inProgressUploads",
       this.inProgressUploads.filter((upl) => upl.id !== fileId)
     );
-    this.appEvents.trigger(
-      `upload-mixin:${this.id}:in-progress-uploads`,
-      this.inProgressUploads
-    );
+    this._triggerInProgressUploadsEvent();
   },
 
   // target must be provided as a DOM element, however the
