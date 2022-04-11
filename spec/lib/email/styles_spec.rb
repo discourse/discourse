@@ -162,13 +162,14 @@ describe Email::Styles do
     end
 
     it "adds dark_mode_styles when site setting active" do
-      # add test here
-      styler = Email::Styles.new()
+      frag = html_fragment('<div class="body">test</div>')
+      styler = Email::Styles.new(frag)
       styler.format_basic
       styler.format_html
       @frag = Nokogiri::HTML5.fragment(styler.to_s)
 
-      expect(@frag.css('[dm]')).to be_present
+      # dark mode attribute
+      expect(@frag.css('[dm="body"]')).to be_present
     end
   end
 
