@@ -5,11 +5,13 @@
     {{else}}
       <p>
         {{combo-box
-          filterable=true
           value=selectedBadgeId
           content=grantableBadges
-          none="badges.none"
           onChange=(action (mut selectedBadgeId))
+          options=(hash
+            filterable=true
+            none="badges.none"
+          )
         }}
       </p>
     {{/if}}

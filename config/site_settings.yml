@@ -1274,7 +1274,7 @@ files:
     default: 50000
     max: 1024000
   theme_authorized_extensions:
-    default: "jpg|jpeg|png|woff|woff2|svg|eot|ttf|otf|gif|webp|js"
+    default: "wasm|jpg|jpeg|png|woff|woff2|svg|eot|ttf|otf|gif|webp|js"
     type: list
     list_type: compact
   authorized_extensions:
@@ -1883,18 +1883,10 @@ developer:
   port:
     hidden: true
     default: ""
-  enable_long_polling:
-    hidden: true
-    client: true
-    default: true
   enable_chunked_encoding:
     hidden: true
     client: true
     default: true
-  long_polling_interval:
-    hidden: true
-    default: 25000
-    max: 25000
   long_polling_base_url:
     hidden: true
     client: true
@@ -2036,6 +2028,9 @@ search:
     default: false
     hidden: true
     client: true
+  search_max_indexed_word_length:
+    default: 100
+    hidden: true
   search_ranking_normalization:
     default: "0"
     hidden: true
@@ -2384,6 +2379,11 @@ uncategorized:
     default: true
 
   allow_changing_staged_user_tracking: false
+
+  use_polymorphic_bookmarks:
+    client: true
+    default: false
+    hidden: true
 
 user_preferences:
   default_email_digest_frequency:

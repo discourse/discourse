@@ -394,7 +394,6 @@ pt_BR:
       too_many: "Desculpe, não é possível adicionar mais de %{limit} favoritos, acesse <a href='%{user_bookmarks_url}'>%{user_bookmarks_url}</a> para remover alguns."
       cannot_set_past_reminder: "Você não pode definir um lembrete de favorito em uma data passada."
       cannot_set_reminder_in_distant_future: "Você não pode definir um lembrete de favorito mais de dez anos posteriormente."
-      time_must_be_provided: "a hora deve ser informada para todos os lembretes"
       for_topic_must_use_first_post: "Você só pode usar a primeira postagem para adicionar o tópico aos favoritos."
     reminders:
       at_desktop: "Da próxima vez que estiver em meu desktop"
@@ -1473,10 +1472,8 @@ pt_BR:
     summary_timeline_button: "Exibir um botão \"Resumir\" na linha do tempo"
     enable_personal_messages: "Permita que usuários(as) do nível de confiança 1 (configurável por meio do nível mínimo para enviar mensagens) criem e respondam a mensagens. Nove que a equipe sempre pode enviar mensagens."
     enable_system_message_replies: "Permite que os(as) usuários(as) respondam às mensagens do sistema, mesmo se as mensagens pessoais estiverem desativadas"
-    enable_long_polling: "O sistema de mensagens das notificações pode fazer sondagens longas."
     enable_chunked_encoding: "Ative respostas de codificação em bloco no servidor. Esse recurso funciona na maioria das configurações, mas alguns proxies podem ser armazenados em buffer, atrasando as respostas"
     long_polling_base_url: "URL de base utilizada para \"sondagem longa\" (auando um CDN for configurado, verifique se essa configuração é a padrão). Por exemplo: http://origin.site.com"
-    long_polling_interval: "Tempo que o servidor deve aguardar antes de responder aos clientes quando não houver dados para enviar (apenas usuários(as) que entraram com a conta)"
     polling_interval: "Frequência com que clientes devem entrar com a conta, em milisegundos, quando não fizerem sondagem longa"
     anon_polling_interval: "Frequência com que clientes anônimos(as) podem sondar o servidor em milisegundos"
     background_polling_interval: "Frequência com que clientes devem sondar o servidor em milisegundos (com a janela em segundo plano)"

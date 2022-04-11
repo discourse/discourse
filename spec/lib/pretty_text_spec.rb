@@ -2144,7 +2144,7 @@ HTML
   end
 
   context "enabling/disabling features" do
-    it "allows features to be overriden" do
+    it "allows features to be overridden" do
       cooked = PrettyText.cook(':grin: @mention', features_override: [])
 
       expect(cooked).to eq("<p>:grin: @mention</p>")

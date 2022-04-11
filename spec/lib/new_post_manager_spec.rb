@@ -577,7 +577,7 @@ describe NewPostManager do
           let(:tag) { Fabricate(:tag) }
           before do
             TagGroupMembership.create(tag: tag, tag_group: tag_group)
-            category.update(min_tags_from_required_group: 1, required_tag_group_id: tag_group.id)
+            category.update(category_required_tag_groups: [CategoryRequiredTagGroup.new(tag_group: tag_group, min_count: 1)])
           end
 
           it "errors when there are no tags from the group provided" do
@@ -593,8 +593,8 @@ describe NewPostManager do
             expect(result.errors.full_messages).to include(
               I18n.t(
                 "tags.required_tags_from_group",
-                count: category.min_tags_from_required_group,
-                tag_group_name: category.required_tag_group.name,
+                count: category.category_required_tag_groups.first.min_count,
+                tag_group_name: category.category_required_tag_groups.first.tag_group.name,
                 tags: tag.name
               )
             )

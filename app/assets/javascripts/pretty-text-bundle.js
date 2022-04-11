@@ -7,7 +7,6 @@
 //= require ./pretty-text/addon/engines/discourse-markdown-it
 //= require xss.min
 //= require ./pretty-text/addon/allow-lister
-//= require ./pretty-text/addon/white-lister
 //= require ./pretty-text/addon/sanitizer
 //= require ./pretty-text/addon/oneboxer
 //= require ./pretty-text/addon/oneboxer-cache

@@ -10,6 +10,7 @@ import { iconNode } from "discourse-common/lib/icon-library";
 import { schedule } from "@ember/runloop";
 import { scrollTop } from "discourse/mixins/scroll-top";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
+import { logSearchLinkClick } from "discourse/lib/search";
 
 const _extraHeaderIcons = [];
 
@@ -426,14 +427,7 @@ export default createWidget("header", {
 
       const { searchLogId, searchResultId, searchResultType } = attrs;
       if (searchLogId && searchResultId && searchResultType) {
-        ajax("/search/click", {
-          type: "POST",
-          data: {
-            search_log_id: searchLogId,
-            search_result_id: searchResultId,
-            search_result_type: searchResultType,
-          },
-        });
+        logSearchLinkClick({ searchLogId, searchResultId, searchResultType });
       }
     }
 

@@ -164,7 +164,6 @@ uk:
       to_placeholder: "дата"
     share:
       topic_html: 'Тема: <span class="topic-title">%{topicTitle}</span>'
-      post: "допис #%{postNumber}"
       close: "сховати"
       twitter: "Поділитися в Twitter"
       facebook: "Поділитися у Facebook"
@@ -1936,7 +1935,6 @@ uk:
       success: "Ваш аккаунт створений та ви можете тепер увійти."
       name_label: "Ім'я"
       password_label: "Пароль"
-      optional_description: "(опціонально)"
     password_reset:
       continue: "Продовжити на %{site_name}"
     emoji_set:
@@ -3943,7 +3941,6 @@ uk:
       unsupported_file_picked: "Ви вибрали непідтримуваний файл. Підтримуються такі типи файлів – %{types}."
     user_activity:
       no_activity_title: "Ще немає активності"
-      no_activity_body: "Ласкаво просимо до нашої спільноти! Ви тут зовсім новачок і ще не долучилися до обговорень. Як перший крок, відвідайте <a href='%{topUrl}'>Топ</a> або <a href='%{categoriesUrl}'>Категорії</a> і просто почніть читати! Позначте %{heartIcon} публікації, які вам подобаються або про які потрібно дізнатися більше. Якщо ви цього ще не зробили, допоможіть іншим познайомитися з вами, додавши зображення та коротку інформацію про себе у <a href='%{preferencesUrl}'>профілі користувача</a>."
       no_activity_others: "Немає активностей."
       no_replies_title: "Ви ще не відповіли на жодну тему"
       no_replies_others: "Немає відповідей"

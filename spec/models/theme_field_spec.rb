@@ -174,7 +174,7 @@ HTML
 
   it "correctly handles extra JS fields" do
     js_field = theme.set_field(target: :extra_js, name: "discourse/controllers/discovery.js.es6", value: "import 'discourse/lib/ajax'; console.log('hello from .js.es6');")
-    js_2_field = theme.set_field(target: :extra_js, name: "discourse/controllers/discovery-2.js", value: "import 'discourse/lib/ajax'; console.log('hello from .js');")
+    _js_2_field = theme.set_field(target: :extra_js, name: "discourse/controllers/discovery-2.js", value: "import 'discourse/lib/ajax'; console.log('hello from .js');")
     hbs_field = theme.set_field(target: :extra_js, name: "discourse/templates/discovery.hbs", value: "{{hello-world}}")
     raw_hbs_field = theme.set_field(target: :extra_js, name: "discourse/templates/discovery.hbr", value: "{{hello-world}}")
     hbr_field = theme.set_field(target: :extra_js, name: "discourse/templates/other_discovery.hbr", value: "{{hello-world}}")
@@ -426,6 +426,92 @@ HTML
     it 'crashes gracefully when svg is invalid' do
       FileStore::LocalStore.any_instance.stubs(:path_for).returns(nil)
       expect(theme_field.validate_svg_sprite_xml).to match("Error with icons-sprite")
+    end
+  end
+
+  context 'local js assets' do
+
+    let :js_content do
+      "// not transpiled; console.log('hello world');"
+    end
+
+    let :upload_file do
+      tmp = Tempfile.new(["jsfile", ".js"])
+      File.write(tmp.path, js_content)
+      tmp
+    end
+
+    after do
+      upload_file.unlink
+    end
+
+    it "correctly handles local JS asset caching" do
+
+      upload = UploadCreator.new(upload_file, "test.js", for_theme: true)
+        .create_for(Discourse::SYSTEM_USER_ID)
+
+      js_field = theme.set_field(
+        target: :common,
+        type_id: ThemeField.types[:theme_upload_var],
+        name: 'test_js',
+        upload_id: upload.id
+      )
+
+      common_field = theme.set_field(
+        target: :common,
+        name: "head_tag",
+        value: "<script>let c = 'd';</script>",
+        type: :html
+      )
+
+      theme.set_field(
+        target: :settings,
+        type: :yaml,
+        name: "yaml",
+        value: "hello: world"
+      )
+
+      theme.set_field(
+        target: :extra_js,
+        name: "discourse/controllers/discovery.js.es6",
+        value: "import 'discourse/lib/ajax'; console.log('hello from .js.es6');"
+      )
+
+      theme.save!
+
+      # a bit fragile, but at least we test it properly
+      [theme.reload.javascript_cache.content, common_field.reload.javascript_cache.content].each do |js|
+        js_to_eval = <<~JS
+          var settings;
+          var window = {};
+          var require = function(name) {
+            if(name == "discourse/lib/theme-settings-store") {
+              return({
+                registerSettings: function(id, s) {
+                  settings = s;
+                }
+              });
+            }
+          }
+          window.require = require;
+          #{js}
+          settings
+        JS
+
+        ctx = MiniRacer::Context.new
+        val = ctx.eval(js_to_eval)
+        ctx.dispose
+
+        expect(val["theme_uploads"]["test_js"]).to eq(js_field.upload.url)
+        expect(val["theme_uploads_local"]["test_js"]).to eq(js_field.javascript_cache.local_url)
+
+      end
+
+      # this is important, we do not want local_js_urls to leak into scss
+      expect(theme.scss_variables).to include("$hello: unquote(\"world\");")
+      expect(theme.scss_variables).to include("$test_js: unquote(\"#{upload.url}\");")
+
+      expect(theme.scss_variables).not_to include("theme_uploads")
     end
   end
 

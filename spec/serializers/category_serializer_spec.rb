@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 describe CategorySerializer do
+  fab!(:user) { Fabricate(:user) }
+  fab!(:admin) { Fabricate(:admin) }
   fab!(:group) { Fabricate(:group) }
   fab!(:category) { Fabricate(:category, reviewable_by_group_id: group.id) }
 
@@ -33,8 +35,6 @@ describe CategorySerializer do
   end
 
   describe "user notification level" do
-    fab!(:user) { Fabricate(:user) }
-
     it "includes the user's notification level" do
       CategoryUser.set_notification_level_for_category(user, NotificationLevels.all[:watching], category.id)
       json = described_class.new(category, scope: Guardian.new(user), root: false).as_json
@@ -42,10 +42,56 @@ describe CategorySerializer do
     end
   end
 
-  describe "available groups" do
-    fab!(:user) { Fabricate(:user) }
-    fab!(:admin) { Fabricate(:admin) }
+  describe '#group_permissions' do
+    fab!(:private_group) { Fabricate(:group, visibility_level: Group.visibility_levels[:staff], name: 'bbb') }
 
+    fab!(:user_group) do
+      Fabricate(:group, visibility_level: Group.visibility_levels[:members], name: 'ccc').tap do |g|
+        g.add(user)
+      end
+    end
+
+    before do
+      group.update!(name: 'aaa')
+
+      category.set_permissions(
+        :everyone => :readonly,
+        group.name => :readonly,
+        user_group.name => :full,
+        private_group.name => :full,
+      )
+
+      category.save!
+    end
+
+    it "does not include the attribute for an anon user" do
+      json = described_class.new(category, scope: Guardian.new, root: false).as_json
+
+      expect(json[:group_permissions]).to eq(nil)
+    end
+
+    it "does not include the attribute for a regular user" do
+      json = described_class.new(category, scope: Guardian.new(user), root: false).as_json
+
+      expect(json[:group_permissions]).to eq(nil)
+    end
+
+    it "returns the right category group permissions for a user that can edit the category" do
+      SiteSetting.moderators_manage_categories_and_groups = true
+      user.update!(moderator: true)
+
+      json = described_class.new(category, scope: Guardian.new(user), root: false).as_json
+
+      expect(json[:group_permissions]).to eq([
+        { permission_type: CategoryGroup.permission_types[:readonly], group_name: group.name },
+        { permission_type: CategoryGroup.permission_types[:full], group_name: private_group.name },
+        { permission_type: CategoryGroup.permission_types[:full], group_name: user_group.name },
+        { permission_type: CategoryGroup.permission_types[:readonly], group_name: 'everyone' },
+      ])
+    end
+  end
+
+  describe "available groups" do
     it "not included for a regular user" do
       json = described_class.new(category, scope: Guardian.new(user), root: false).as_json
       expect(json[:available_groups]).to eq(nil)

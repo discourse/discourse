@@ -151,6 +151,16 @@ describe Admin::ThemesController do
       expect(UserHistory.where(action: UserHistory.actions[:change_theme]).count).to eq(1)
     end
 
+    it 'fails to import with an error if uploads are not allowed' do
+      SiteSetting.theme_authorized_extensions = "nothing"
+
+      expect do
+        post "/admin/themes/import.json", params: { theme: theme_archive }
+      end.to change { Theme.count }.by (0)
+
+      expect(response.status).to eq(422)
+    end
+
     it 'imports a theme from an archive' do
       _existing_theme = Fabricate(:theme, name: "Header Icons")
 
@@ -452,7 +462,7 @@ describe Admin::ThemesController do
       put "/admin/themes/#{theme.id}.json", params: {
         theme: {
           translations: {
-            "somegroup.somestring" => "overridenstring"
+            "somegroup.somestring" => "overriddenstring"
           }
         }
       }
@@ -460,7 +470,7 @@ describe Admin::ThemesController do
       # Response correct
       expect(response.status).to eq(200)
       json = response.parsed_body
-      expect(json["theme"]["translations"][0]["value"]).to eq("overridenstring")
+      expect(json["theme"]["translations"][0]["value"]).to eq("overriddenstring")
 
       # Database correct
       theme.reload

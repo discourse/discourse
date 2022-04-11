@@ -574,3 +574,12 @@ export async function paste(element, text, otherClipboardData = {}) {
   await settled();
   return e;
 }
+
+// The order of attributes can vary in diffferent browsers. When comparing
+// HTML strings from the DOM, this function helps to normalize them to make
+// comparison work cross-browser
+export function normalizeHtml(html) {
+  const resultElement = document.createElement("template");
+  resultElement.innerHTML = html;
+  return resultElement.innerHTML;
+}

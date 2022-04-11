@@ -26,6 +26,12 @@ import CategoryFixtures from "discourse/tests/fixtures/category-fixtures";
 acceptance("Topic", function (needs) {
   needs.user();
   needs.pretender((server, helper) => {
+    server.get("/c/2/visible_groups.json", () =>
+      helper.response(200, {
+        groups: [],
+      })
+    );
+
     server.get("/c/feature/find_by_slug.json", () => {
       return helper.response(200, CategoryFixtures["/c/1/show.json"]);
     });

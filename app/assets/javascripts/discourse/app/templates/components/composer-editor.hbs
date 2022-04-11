@@ -23,9 +23,5 @@
 {{/d-editor}}
 
 {{#if allowUpload}}
-  {{#if acceptsAllFormats}}
-    <input type="file" id="file-uploader" multiple>
-  {{else}}
-    <input type="file" id="file-uploader" accept={{acceptedFormats}} multiple>
-  {{/if}}
+  {{pick-files-button fileInputId="file-uploader" allowMultiple=true}}
 {{/if}}

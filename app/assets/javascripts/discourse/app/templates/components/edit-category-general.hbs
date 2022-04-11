@@ -15,10 +15,10 @@
         value=category.parent_category_id
         categories=parentCategories
         allowSubCategories=true
-        allowUncategorized=false
         allowRestrictedCategories=true
         onChange=(action (mut category.parent_category_id))
         options=(hash
+          allowUncategorized=false
           excludeCategoryId=category.id
           none=true
         )

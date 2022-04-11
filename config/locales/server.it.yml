@@ -63,6 +63,7 @@ it:
       unrecognized_extension: "Estensione del file non riconosciuta: %{extension}"
     import_error:
       generic: Errore durante l'importazione del tema
+      upload: "Errore nella creazione della risorsa di caricamento: %{name}. %{errors}"
       about_json: "Errore di importazione: about.json non esiste o non è valido. Sei sicuro che questo sia un tema di Discourse?"
       about_json_values: "about.json contiene valori non validi: %{errors}"
       modifier_values: "I modificatori about.json contengono valori non validi: %{errors}"
@@ -393,11 +394,13 @@ it:
   bookmarks:
     errors:
       already_bookmarked_post: "Non puoi aggiungere due volte lo stesso messaggio nei segnalibri."
+      already_bookmarked: "Non puoi aggiungere due volte lo stesso %{type} ai segnalibri."
       too_many: "Siamo spiacenti, non puoi aggiungere più di %{limit} segnalibri, visita <a href='%{user_bookmarks_url}'>%{user_bookmarks_url}</a> per rimuoverne alcuni."
       cannot_set_past_reminder: "Non è possibile impostare un promemoria per un segnalibro nel passato."
       cannot_set_reminder_in_distant_future: "Non è possibile impostare un promemoria per un segnalibro per più di 10 anni nel futuro."
-      time_must_be_provided: "l'orario deve essere fornito per tutti i promemoria"
+      time_must_be_provided: "L'orario deve essere fornito per tutti i promemoria"
       for_topic_must_use_first_post: "Puoi usare solo il primo messaggio per aggiungere un segnalibro all'argomento."
+      bookmarkable_id_type_required: "Sono richiesti sia il nome sia il tipo di segnalibro."
     reminders:
       at_desktop: "La prossima volta che sarò al mio desktop"
       later_today: "Più tardi oggi"
@@ -1474,10 +1477,8 @@ it:
     summary_max_results: "Messaggi massimi restituiti da 'Riassumi questo argomento'."
     enable_personal_messages: "Autorizza gli utenti con livello di attendibilità 1 (configurabile attraverso \"min livello di attendibilità per l'invio di messaggi\") a creare e rispondere ai messaggi. Nota che lo staff può inviare messaggi in ogni caso."
     enable_system_message_replies: "Consente agli utenti di rispondere ai messaggi di sistema, anche se i messaggi personali sono disabilitati"
-    enable_long_polling: "Il message bus per le notifiche può usare il long polling"
     enable_chunked_encoding: "Abilita le risposte di codifica in blocchi dal server. Questa funzionalità va bene sulla maggior parte delle configurazioni, tuttavia alcuni proxy possono eseguire la bufferizzazione, provocando un ritardo nelle risposte"
     long_polling_base_url: "URL di base usato per il long polling (quando una CDN serve contenuto dinamico, bisogna impostarlo come origin pull) es. http://origin.site.com"
-    long_polling_interval: "Tempo di attesa prima che il server risponda ai client che non ci sono dati da trasmettere (solo per utenti autenticati)"
     polling_interval: "Se non si esegue il long polling, quanto spesso i client autenticati devono fare poll in millisecondi"
     anon_polling_interval: "Frequenza in millisecondi con cui client anonimi effettuano il poll"
     background_polling_interval: "Quanto spesso i client devono fare poll in millisecondi (quando la finestra è in background)"
@@ -3870,6 +3871,9 @@ it:
         other: '"%{tag_name}" è limitato alle seguenti categorie: %{category_names}'
       synonym: 'I sinonimi non sono ammessi. Utilizza invece "%{tag_name}".'
       has_synonyms: '"%{tag_name}" non può essere utilizzato perché ha dei sinonimi.'
+      category_does_not_allow_tags:
+        one: 'La categoria "%{category}" non consente l''etichetta "%{tags}". Si prega di rimuoverla.'
+        other: 'La categoria "%{category}" non consente le seguenti etichette: "%{tags}". Si prega di rimuoverle.'
     required_tags_from_group:
       one: "Devi includere almeno %{count} etichetta %{tag_group_name}. Le etichette in questo gruppo sono: %{tags}."
       other: "Devi includere almeno %{count} etichette %{tag_group_name}. Le etichette in questo gruppo sono: %{tags}."
@@ -4165,6 +4169,7 @@ it:
     ignore_error: "Spiacenti, non puoi ignorare questo utente."
     mute_error: "Spiacenti, non puoi silenziate questo utente."
     error: "Non si può modificare il livello di notifica per questo utente."
+    invalid_value: '"%{value}" non è un livello di notifica valido.'
   discord:
     not_in_allowed_guild: "Autenticazione non riuscita. Non sei un membro di una gilda Discord consentita."
   old_keys_reminder:

@@ -63,7 +63,7 @@ jobs:
           sudo -u postgres psql -c "CREATE ROLE $PGUSER LOGIN SUPERUSER PASSWORD '$PGPASSWORD';"
 
       - name: Bundler cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: vendor/bundle
           key: ${{ runner.os }}-gem-${{ hashFiles('**/Gemfile.lock') }}
@@ -84,7 +84,7 @@ jobs:
         run: echo "::set-output name=dir::$(yarn cache dir)"
 
       - name: Yarn cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         id: yarn-cache
         with:
           path: ${{ steps.yarn-cache-dir.outputs.dir }}
@@ -104,7 +104,7 @@ jobs:
         run: bin/rake plugin:pull_compatible_all
 
       - name: Fetch app state cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         id: app-cache
         with:
           path: tmp/app-cache
@@ -220,7 +220,7 @@ jobs:
         run: echo "::set-output name=dir::$(yarn cache dir)"
 
       - name: Yarn cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         id: yarn-cache
         with:
           path: ${{ steps.yarn-cache-dir.outputs.dir }}
@@ -239,16 +239,19 @@ jobs:
           sudo -E -u discourse -H yarn ember build --environment=test  -o /tmp/emberbuild
 
       - name: Core QUnit 1
+        if: ${{ always() }}
         working-directory: ./app/assets/javascripts/discourse
         run: sudo -E -u discourse -H yarn ember exam --path /tmp/emberbuild --split=3 --partition=1 --launch "${{ matrix.browser }}" --random
         timeout-minutes: 20
 
       - name: Core QUnit 2
+        if: ${{ always() }}
         working-directory: ./app/assets/javascripts/discourse
         run: sudo -E -u discourse -H yarn ember exam --path /tmp/emberbuild --split=3 --partition=2 --launch "${{ matrix.browser }}" --random
         timeout-minutes: 20
 
       - name: Core QUnit 3
+        if: ${{ always() }}
         working-directory: ./app/assets/javascripts/discourse
         run: sudo -E -u discourse -H yarn ember exam --path /tmp/emberbuild --split=3 --partition=3 --launch "${{ matrix.browser }}" --random
         timeout-minutes: 20

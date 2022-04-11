@@ -244,3 +244,14 @@ export function updateRecentSearches(currentUser, term) {
   recentSearches.unshiftObject(term);
   currentUser.set("recent_searches", recentSearches);
 }
+
+export function logSearchLinkClick(params) {
+  ajax("/search/click", {
+    type: "POST",
+    data: {
+      search_log_id: params.searchLogId,
+      search_result_id: params.searchResultId,
+      search_result_type: params.searchResultType,
+    },
+  });
+}

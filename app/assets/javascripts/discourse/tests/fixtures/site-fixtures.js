@@ -366,6 +366,7 @@ export default {
           can_edit: true,
           show_subcategory_list: false,
           default_view: "latest",
+          required_tag_groups: [],
         },
         {
           id: 17,

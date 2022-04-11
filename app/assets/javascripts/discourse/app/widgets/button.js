@@ -45,6 +45,14 @@ export const ButtonClass = {
       attributes["role"] = attrs.role;
     }
 
+    if (attrs.translatedAriaLabel) {
+      attributes["aria-label"] = attrs.translatedAriaLabel;
+    }
+
+    if (attrs.ariaPressed) {
+      attributes["aria-pressed"] = attrs.ariaPressed;
+    }
+
     if (attrs.tabAttrs) {
       const tab = attrs.tabAttrs;
       attributes["aria-selected"] = tab["aria-selected"];

@@ -41,7 +41,7 @@ export function getURLWithCDN(url) {
 }
 
 export function getAbsoluteURL(path) {
-  return baseUrl + path;
+  return baseUrl + withoutPrefix(path);
 }
 
 export function isAbsoluteURL(url) {

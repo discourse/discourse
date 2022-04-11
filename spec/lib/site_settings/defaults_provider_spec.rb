@@ -61,7 +61,7 @@ describe SiteSettings::DefaultsProvider do
     end
 
     describe '.set_regardless_of_locale' do
-      let(:val) { 'env_overriden' }
+      let(:val) { 'env_overridden' }
 
       it 'sets the default value to a site setting regardless the locale' do
         settings.defaults.set_regardless_of_locale(:test_override, val)

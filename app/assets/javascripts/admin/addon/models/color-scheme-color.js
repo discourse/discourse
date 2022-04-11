@@ -76,17 +76,17 @@ const ColorSchemeColor = EmberObject.extend({
     if (hex.length === 6 || hex.length === 3) {
       if (hex.length === 3) {
         hex =
-          hex.substr(0, 1) +
-          hex.substr(0, 1) +
-          hex.substr(1, 1) +
-          hex.substr(1, 1) +
-          hex.substr(2, 1) +
-          hex.substr(2, 1);
+          hex.slice(0, 1) +
+          hex.slice(0, 1) +
+          hex.slice(1, 2) +
+          hex.slice(1, 2) +
+          hex.slice(2, 3) +
+          hex.slice(2, 3);
       }
       return Math.round(
-        (parseInt(hex.substr(0, 2), 16) * 299 +
-          parseInt(hex.substr(2, 2), 16) * 587 +
-          parseInt(hex.substr(4, 2), 16) * 114) /
+        (parseInt(hex.slice(0, 2), 16) * 299 +
+          parseInt(hex.slice(2, 4), 16) * 587 +
+          parseInt(hex.slice(4, 6), 16) * 114) /
           1000
       );
     }

@@ -499,7 +499,7 @@ acceptance("Tag info", function (needs) {
 
     await click(".category-breadcrumb li:nth-of-type(2) .category-drop-header");
     await click(
-      '.category-breadcrumb li:nth-of-type(2) .category-row[data-name="none"]'
+      '.category-breadcrumb li:nth-of-type(2) .category-row[data-value="no-categories"]'
     );
     assert.strictEqual(currentURL(), "/tags/c/feature/2/none/planters");
   });
