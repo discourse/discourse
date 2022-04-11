@@ -197,16 +197,6 @@
     }
   }
 
-  &.facebook {
-    .d-icon {
-      color: $facebook;
-    }
-    &:hover {
-      .d-icon {
-        color: $facebook;
-      }
-    }
-  }
   &.cas {
     .d-icon {
       color: var(--cas);
