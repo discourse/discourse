@@ -20,7 +20,10 @@ import {
 import sinon from "sinon";
 import { test } from "qunit";
 import Handlebars from "handlebars";
-import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
+import {
+  chromeTest,
+  discourseModule,
+} from "discourse/tests/helpers/qunit-helpers";
 
 discourseModule("Unit | Utilities", function () {
   test("escapeExpression", function (assert) {
@@ -288,29 +291,13 @@ discourseModule("Unit | Utilities", function () {
 });
 
 discourseModule("Unit | Utilities | clipboard", function (hooks) {
-  // We may want to extract this out into a helper at some point.
-  // The reason that sinon.stub() cannot be used for window.navigator
-  // and window.navigator.clipboard is that those are read-only on
-  // the window, and cannot be overridden. Using __defineGetter__
-  // gets around that, but means that we must remember to restore
-  // the real clipboard after each test (not that the real clipboard
-  // is useful in the test environment anyway...)
-  let realClipboard;
   let mockClipboard;
   hooks.beforeEach(function () {
-    realClipboard = window.navigator.clipboard;
     mockClipboard = {
       writeText: sinon.stub().resolves(true),
       write: sinon.stub().resolves(true),
     };
-    window.navigator.__defineGetter__("clipboard", function () {
-      return mockClipboard;
-    });
-  });
-  hooks.afterEach(function () {
-    window.navigator.__defineGetter__("clipboard", function () {
-      return realClipboard;
-    });
+    sinon.stub(window.navigator, "clipboard").get(() => mockClipboard);
   });
 
   function getPromiseFunction() {
@@ -324,39 +311,29 @@ discourseModule("Unit | Utilities | clipboard", function (hooks) {
       });
   }
 
-  test("clipboardCopyAsync - browser does not support window.ClipboardItem", function (assert) {
+  test("clipboardCopyAsync - browser does not support window.ClipboardItem", async function (assert) {
     // without this check the stubbing will fail on Firefox
     if (window.ClipboardItem) {
       sinon.stub(window, "ClipboardItem").value(null);
     }
 
-    const done = assert.async();
-    clipboardCopyAsync(getPromiseFunction()).then(() => {
-      assert.strictEqual(
-        mockClipboard.writeText.calledWith("some text to copy"),
-        true,
-        "it writes to the clipboard using writeText instead of write"
-      );
-      done();
-    });
+    await clipboardCopyAsync(getPromiseFunction());
+    assert.strictEqual(
+      mockClipboard.writeText.calledWith("some text to copy"),
+      true,
+      "it writes to the clipboard using writeText instead of write"
+    );
   });
 
-  test("clipboardCopyAsync - browser does support window.ClipboardItem", function (assert) {
-    // without this check the test will fail on Firefox -- it cannot
-    // possibly pass because ClipboardItem is nonexistent there
-    if (!window.ClipboardItem) {
-      assert.strictEqual(true, true);
-      return;
-    }
-
-    const done = assert.async();
-    clipboardCopyAsync(getPromiseFunction()).then(() => {
+  chromeTest(
+    "clipboardCopyAsync - browser does support window.ClipboardItem",
+    async function (assert) {
+      await clipboardCopyAsync(getPromiseFunction());
       assert.strictEqual(
         mockClipboard.write.called,
         true,
         "it writes to the clipboard using write"
       );
-      done();
-    });
-  });
+    }
+  );
 });
