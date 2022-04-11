@@ -1117,6 +1117,8 @@ export function applyDefaultHandlers(pretender) {
       ],
     });
   });
+
+  pretender.get("/c/:id/visible_groups.json", () => response({ groups: [] }));
 }
 
 export function resetPretender() {
