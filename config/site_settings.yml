@@ -283,6 +283,9 @@ basic:
     type: enum
     enum: "ColorSchemeSetting"
     client: true
+  dark_mode_emails_active:
+    default: false
+    hidden: true    
   relative_date_duration:
     client: true
     default: 30
