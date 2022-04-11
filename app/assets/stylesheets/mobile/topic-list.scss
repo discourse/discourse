@@ -123,15 +123,21 @@
     z-index: z("base") + 1; // Intentionally overlapping category to create bigger tap target
     font-size: var(--font-up-1);
     a.title {
+      display: block;
       color: var(--primary);
-      padding: 0.5em 0 1.2em 0;
+      padding: 0;
     }
     .topic-statuses {
+      padding: 0 0 0.5em 0;
       a {
         line-height: 0.8;
         color: var(--primary-medium);
       }
     }
+  }
+
+  .topic-featured-link {
+    padding: 0;
   }
 
   .badge-notification,
@@ -161,9 +167,12 @@
   }
 
   .topic-item-stats {
+    pointer-events: none;
     position: relative;
-    margin-top: 0.5em;
+    display: flex;
+    align-items: baseline;
     z-index: z("base");
+    margin-top: 0.5em;
     .category,
     .num,
     .last-poster {
@@ -177,14 +186,22 @@
     a:visited {
       color: var(--primary-med-or-secondary-med);
     }
+    .activity {
+      margin-left: auto;
+    }
+    .discourse-tags {
+      display: flex;
+      flex-wrap: nowrap;
+      flex: 0 1 auto;
+      overflow: hidden;
+    }
   }
 
   .age {
     white-space: nowrap;
     a {
-      // let's make all ages dim on mobile so we're not
-      // overwhelming people with info about each topic
-      color: var(--primary-low-mid-or-secondary-high) !important;
+      color: var(--primary-500);
+      font-size: var(--font-down-1);
     }
   }
 }
@@ -441,7 +458,7 @@ td .main-link {
     }
   }
   .num.activity a {
-    padding: 0;
+    padding: 0.5em 0;
   }
   // so the topic excerpt is full width
   // as the containing div is 80%
