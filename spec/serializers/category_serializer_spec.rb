@@ -43,64 +43,51 @@ describe CategorySerializer do
   end
 
   describe '#group_permissions' do
-    context "category without group permissions configured" do
-      it "returns the right category group permissions for an anon user" do
-        json = described_class.new(category, scope: Guardian.new, root: false).as_json
+    fab!(:private_group) { Fabricate(:group, visibility_level: Group.visibility_levels[:staff], name: 'bbb') }
 
-        expect(json[:group_permissions]).to eq([
-          { permission_type: CategoryGroup.permission_types[:full], group_name: Group[:everyone]&.name }
-        ])
+    fab!(:user_group) do
+      Fabricate(:group, visibility_level: Group.visibility_levels[:members], name: 'ccc').tap do |g|
+        g.add(user)
       end
     end
 
-    context "category with group permissions configured" do
-      fab!(:private_group) { Fabricate(:group, visibility_level: Group.visibility_levels[:staff], name: 'bbb') }
+    before do
+      group.update!(name: 'aaa')
 
-      fab!(:user_group) do
-        Fabricate(:group, visibility_level: Group.visibility_levels[:members], name: 'ccc').tap do |g|
-          g.add(user)
-        end
-      end
+      category.set_permissions(
+        :everyone => :readonly,
+        group.name => :readonly,
+        user_group.name => :full,
+        private_group.name => :full,
+      )
 
-      before do
-        group.update!(name: 'aaa')
+      category.save!
+    end
 
-        category.set_permissions(
-          :everyone => :readonly,
-          group.name => :readonly,
-          user_group.name => :full,
-          private_group.name => :full,
-        )
+    it "does not include the attribute for an anon user" do
+      json = described_class.new(category, scope: Guardian.new, root: false).as_json
 
-        category.save!
-      end
+      expect(json[:group_permissions]).to eq(nil)
+    end
 
-      it "returns the right category group permissions for an anon user" do
-        json = described_class.new(category, scope: Guardian.new, root: false).as_json
+    it "does not include the attribute for a regular user" do
+      json = described_class.new(category, scope: Guardian.new(user), root: false).as_json
 
-        expect(json[:group_permissions]).to eq([
-          { permission_type: CategoryGroup.permission_types[:readonly], group_name: group.name },
-        ])
-      end
+      expect(json[:group_permissions]).to eq(nil)
+    end
 
-      it "returns the right category group permissions for a regular user ordered by ascending group name" do
-        json = described_class.new(category, scope: Guardian.new(user), root: false).as_json
+    it "returns the right category group permissions for a user that can edit the category" do
+      SiteSetting.moderators_manage_categories_and_groups = true
+      user.update!(moderator: true)
 
-        expect(json[:group_permissions]).to eq([
-          { permission_type: CategoryGroup.permission_types[:readonly], group_name: group.name },
-          { permission_type: CategoryGroup.permission_types[:full], group_name: user_group.name },
-        ])
-      end
+      json = described_class.new(category, scope: Guardian.new(user), root: false).as_json
 
-      it "returns the right category group permission for a staff user ordered by ascending group name" do
-        json = described_class.new(category, scope: Guardian.new(admin), root: false).as_json
-
-        expect(json[:group_permissions]).to eq([
-          { permission_type: CategoryGroup.permission_types[:readonly], group_name: group.name },
-          { permission_type: CategoryGroup.permission_types[:full], group_name: private_group.name },
-          { permission_type: CategoryGroup.permission_types[:full], group_name: user_group.name }
-        ])
-      end
+      expect(json[:group_permissions]).to eq([
+        { permission_type: CategoryGroup.permission_types[:readonly], group_name: group.name },
+        { permission_type: CategoryGroup.permission_types[:full], group_name: private_group.name },
+        { permission_type: CategoryGroup.permission_types[:full], group_name: user_group.name },
+        { permission_type: CategoryGroup.permission_types[:readonly], group_name: 'everyone' },
+      ])
     end
   end
 

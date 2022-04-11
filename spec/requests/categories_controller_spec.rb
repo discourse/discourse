@@ -733,4 +733,61 @@ describe CategoriesController do
       end
     end
   end
+
+  describe '#visible_groups' do
+    fab!(:public_group) { Fabricate(:group, visibility_level: Group.visibility_levels[:public], name: 'aaa') }
+    fab!(:private_group) { Fabricate(:group, visibility_level: Group.visibility_levels[:staff], name: 'bbb') }
+    fab!(:user_only_group) { Fabricate(:group, visibility_level: Group.visibility_levels[:members], name: 'ccc') }
+
+    it 'responds with 404 when id param is invalid' do
+      get "/c/-9999/visible_groups.json"
+
+      expect(response.status).to eq(404)
+    end
+
+    it "responds with 403 when category is restricted to the current user" do
+      category.set_permissions(private_group.name => :full)
+      category.save!
+
+      get "/c/#{category.id}/visible_groups.json"
+
+      expect(response.status).to eq(403)
+    end
+
+    it "returns the names of the groups that are visible to an admin" do
+      sign_in(admin)
+
+      category.set_permissions(
+        "everyone" => :readonly,
+        private_group.name => :full,
+        public_group.name => :full,
+        user_only_group.name => :full,
+      )
+
+      category.save!
+
+      get "/c/#{category.id}/visible_groups.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["groups"]).to eq([public_group.name, private_group.name, user_only_group.name])
+    end
+
+    it "returns the names of the groups that are visible to a user and excludes the everyone group" do
+      sign_in(user)
+
+      category.set_permissions(
+        "everyone" => :readonly,
+        private_group.name => :full,
+        public_group.name => :full,
+        user_only_group.name => :full,
+      )
+
+      category.save!
+
+      get "/c/#{category.id}/visible_groups.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["groups"]).to eq([public_group.name])
+    end
+  end
 end

@@ -38,13 +38,12 @@ export default Controller.extend(
         return;
       }
 
-      Category.reloadBySlugPath(this.model.slug).then((result) => {
-        const groups = result.category.group_permissions.mapBy("group_name");
-        if (groups && !groups.any((group) => group === "everyone")) {
+      Category.fetchVisibleGroups(this.model.id).then((result) => {
+        if (result.groups.length > 0) {
           this.flash(
             I18n.t("topic.share.restricted_groups", {
-              count: groups.length,
-              groupNames: groups.join(", "),
+              count: result.groups.length,
+              groupNames: result.groups.join(", "),
             }),
             "warning"
           );

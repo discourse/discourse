@@ -722,6 +722,7 @@ Discourse::Application.routes.draw do
     get "categories_and_top" => "categories#categories_and_top"
 
     get "c/:id/show" => "categories#show"
+    get "c/:id/visible_groups" => "categories#visible_groups"
 
     get "c/*category_slug/find_by_slug" => "categories#find_by_slug"
     get "c/*category_slug/edit(/:tab)" => "categories#find_by_slug", constraints: { format: 'html' }
