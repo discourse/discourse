@@ -1125,6 +1125,8 @@ export function applyDefaultHandlers(pretender) {
   pretender.get("/tag_groups/filter/search", () =>
     response(fixturesByUrl["/tag_groups/filter/search"])
   );
+
+  pretender.get("/c/:id/visible_groups.json", () => response({ groups: [] }));
 }
 
 export function resetPretender() {
