@@ -1274,7 +1274,7 @@ files:
     default: 50000
     max: 1024000
   theme_authorized_extensions:
-    default: "jpg|jpeg|png|woff|woff2|svg|eot|ttf|otf|gif|webp|js"
+    default: "wasm|jpg|jpeg|png|woff|woff2|svg|eot|ttf|otf|gif|webp|js"
     type: list
     list_type: compact
   authorized_extensions:
@@ -2028,6 +2028,9 @@ search:
     default: false
     hidden: true
     client: true
+  search_max_indexed_word_length:
+    default: 100
+    hidden: true
   search_ranking_normalization:
     default: "0"
     hidden: true

@@ -13,6 +13,8 @@ export default Component.extend({
   attributeBindings: ["data-username"],
   size: "small",
   "data-username": alias("user.username"),
+  includeLink: true,
+  includeAvatar: true,
 
   @discourseComputed("user.username")
   userPath(username) {

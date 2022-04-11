@@ -33,7 +33,7 @@ const TIMEFRAMES = [
   buildTimeframe({
     id: "later_this_week",
     format: "ddd, h a",
-    enabled: (opts) => !opts.canScheduleToday && opts.day > 0 && opts.day < 4,
+    enabled: (opts) => opts.day > 0 && opts.day < 4,
     when: (time, timeOfDay) => time.add(2, "day").hour(timeOfDay).minute(0),
   }),
   buildTimeframe({

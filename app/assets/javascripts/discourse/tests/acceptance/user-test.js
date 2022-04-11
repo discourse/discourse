@@ -8,6 +8,7 @@ import {
   exists,
   query,
   queryAll,
+  updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, currentRouteName, visit } from "@ember/test-helpers";
 import { cloneJSON } from "discourse-common/lib/object";
@@ -54,6 +55,20 @@ acceptance("User Routes", function (needs) {
       $links[2].href.includes(
         "/u/eviltrout/notifications/likes-received?acting_username=aquaman"
       )
+    );
+
+    updateCurrentUser({ moderator: true, admin: false });
+    await visit("/u/charlie/summary");
+    assert.notOk(
+      exists(".user-nav > .user-notifications"),
+      "does not have the notifications tab"
+    );
+
+    updateCurrentUser({ moderator: false, admin: true });
+    await visit("/u/charlie/summary");
+    assert.ok(
+      exists(".user-nav > .user-notifications"),
+      "has the notifications tab"
     );
   });
 

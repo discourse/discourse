@@ -103,7 +103,8 @@ export default MountWidget.extend({
     const slack = Math.round(windowHeight * 5);
     const onscreen = [];
     const nearby = [];
-    const windowTop = document.documentElement.scrollTop;
+    const windowTop =
+      document.documentElement.scrollTop || document.body.scrollTop;
     const postsWrapperTop = domUtils.offset(
       document.querySelector(".posts-wrapper")
     ).top;

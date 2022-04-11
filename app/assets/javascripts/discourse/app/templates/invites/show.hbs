@@ -97,10 +97,11 @@
                     {{password-field value=accountPassword class=(value-entered accountPassword) type="password" id="new-account-password" capsLockOn=capsLockOn}}
                     <label class="alt-placeholder" for="new-account-password">
                       {{i18n "invites.password_label"}}
+                      <span class="required">*</span>
                     </label>
                     {{input-tip validation=passwordValidation}}
                     <div class="instructions">
-                      {{passwordInstructions}} {{i18n "invites.optional_description"}}
+                      {{passwordInstructions}}
                       <div class="caps-lock-warning {{unless capsLockOn "invisible"}}">
                         {{d-icon "exclamation-triangle"}} {{i18n "login.caps_lock_warning"}}
                       </div>

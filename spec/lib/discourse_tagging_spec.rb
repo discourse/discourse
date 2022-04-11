@@ -129,7 +129,7 @@ describe DiscourseTagging do
 
       context 'with required tags from tag group' do
         fab!(:tag_group) { Fabricate(:tag_group, tags: [tag1, tag2]) }
-        fab!(:category) { Fabricate(:category, required_tag_group: tag_group, min_tags_from_required_group: 1) }
+        fab!(:category) { Fabricate(:category, category_required_tag_groups: [ CategoryRequiredTagGroup.new(tag_group: tag_group, min_count: 1) ]) }
 
         it "returns the required tags if none have been selected" do
           tags = DiscourseTagging.filter_allowed_tags(Guardian.new(user),
@@ -151,7 +151,7 @@ describe DiscourseTagging do
         end
 
         it "returns required tags if not enough are selected" do
-          category.update!(min_tags_from_required_group: 2)
+          category.category_required_tag_groups.first.update!(min_count: 2)
           tags = DiscourseTagging.filter_allowed_tags(Guardian.new(user),
             for_input: true,
             category: category,
@@ -171,6 +171,36 @@ describe DiscourseTagging do
           expect(sorted_tag_names(tags)).to eq(sorted_tag_names([tag1, tag2, tag3]))
         end
 
+        it "handles multiple required tag groups in sequence" do
+          tag4 = Fabricate(:tag)
+          tag_group_2 = Fabricate(:tag_group, tags: [tag4])
+          CategoryRequiredTagGroup.create!(category: category, tag_group: tag_group_2, min_count: 1, order: 2)
+
+          category.reload
+
+          # In the beginning, show tags for tag_group
+          tags = DiscourseTagging.filter_allowed_tags(Guardian.new(user),
+            for_input: true,
+            category: category,
+          ).to_a
+          expect(sorted_tag_names(tags)).to eq(sorted_tag_names([tag1, tag2]))
+
+          # Once a tag_group tag has been selected, move on to tag_group_2 tags
+          tags = DiscourseTagging.filter_allowed_tags(Guardian.new(user),
+            for_input: true,
+            category: category,
+            selected_tags: [tag1.name],
+          ).to_a
+          expect(sorted_tag_names(tags)).to eq(sorted_tag_names([tag4]))
+
+          # Once all requirements are satisfied, show all tags
+          tags = DiscourseTagging.filter_allowed_tags(Guardian.new(user),
+            for_input: true,
+            category: category,
+            selected_tags: [tag1.name, tag4.name],
+          ).to_a
+          expect(sorted_tag_names(tags)).to eq(sorted_tag_names([tag2, tag3]))
+        end
       end
 
       context 'with many required tags in a tag group' do
@@ -179,7 +209,7 @@ describe DiscourseTagging do
         fab!(:tag6) { Fabricate(:tag, name: "T6") }
         fab!(:tag7) { Fabricate(:tag, name: "T7") }
         fab!(:tag_group) { Fabricate(:tag_group, tags: [tag1, tag2, tag4, tag5, tag6, tag7]) }
-        fab!(:category) { Fabricate(:category, required_tag_group: tag_group, min_tags_from_required_group: 1) }
+        fab!(:category) { Fabricate(:category, category_required_tag_groups: [CategoryRequiredTagGroup.new(tag_group: tag_group, min_count: 1)]) }
 
         it "returns required tags for staff by default" do
           tags = DiscourseTagging.filter_allowed_tags(Guardian.new(admin),
@@ -500,8 +530,7 @@ describe DiscourseTagging do
       before do
         tag_group.tags = [tag1, tag2]
         category.update(
-          required_tag_group: tag_group,
-          min_tags_from_required_group: 1
+          category_required_tag_groups: [CategoryRequiredTagGroup.new(tag_group: tag_group, min_count: 1)],
         )
       end
 

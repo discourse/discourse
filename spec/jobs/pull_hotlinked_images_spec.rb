@@ -197,6 +197,18 @@ describe Jobs::PullHotlinkedImages do
       expect(post.uploads).to contain_exactly(upload)
     end
 
+    it "skips raw_html posts" do
+      raw = "<img src=\"#{image_url}\">"
+      post = Fabricate(:post, raw: raw, cook_method: Post.cook_methods[:raw_html])
+      stub_image_size
+      expect do
+        post.rebake!
+        post.reload
+      end.not_to change { Upload.count }
+
+      expect(post.raw).to eq(raw)
+    end
+
     context "when secure media enabled for an upload that has already been downloaded and exists" do
       it "doesnt redownload the secure upload" do
         setup_s3

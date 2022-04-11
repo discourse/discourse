@@ -593,13 +593,25 @@
             "allow_global_tags": {
               "type": "boolean"
             },
-            "min_tags_from_required_group": {
-              "type": "integer"
-            },
-            "required_tag_group_name": {
-              "type": [
-                "string",
-                "null"
+            "required_tag_groups": {
+              "type": "array",
+              "items": [
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "min_count": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "min_count"
+                  ]
+                }
               ]
             },
             "read_only_banner": {
@@ -655,8 +667,7 @@
             "allowed_tags",
             "allowed_tag_groups",
             "allow_global_tags",
-            "min_tags_from_required_group",
-            "required_tag_group_name",
+            "required_tag_groups",
             "read_only_banner",
             "uploaded_logo",
             "uploaded_background",

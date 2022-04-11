@@ -12,8 +12,10 @@
       <label class="control-label">{{i18n "topic.topic_status_update.publish_to"}}</label>
       {{category-chooser
         value=topicTimer.category_id
-        excludeCategoryId=excludeCategoryId
         onChange=(action (mut topicTimer.category_id))
+        options=(hash
+          excludeCategoryId=excludeCategoryId
+        )
       }}
     </div>
   {{/if}}

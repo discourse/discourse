@@ -393,7 +393,11 @@ module ApplicationHelper
   end
 
   def include_crawler_content?
-    crawler_layout? || !mobile_view?
+    crawler_layout? || !mobile_view? || !modern_mobile_device?
+  end
+
+  def modern_mobile_device?
+    MobileDetection.modern_mobile_device?(request.user_agent)
   end
 
   def mobile_device?

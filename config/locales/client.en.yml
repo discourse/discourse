@@ -395,6 +395,7 @@ en:
 
     upload: "Upload"
     uploading: "Uploading..."
+    processing: "Processing..."
     uploading_filename: "Uploading: %{filename}..."
     processing_filename: "Processing: %{filename}..."
     clipboard: "clipboard"
@@ -1999,7 +2000,6 @@ en:
       success: "Your account has been created and you're now logged in."
       name_label: "Name"
       password_label: "Password"
-      optional_description: "(optional)"
 
     password_reset:
       continue: "Continue to %{site_name}"
@@ -3325,10 +3325,11 @@ en:
       tag_groups_placeholder: "(Optional) list of allowed tag groups"
       manage_tag_groups_link: "Manage tag groups"
       allow_global_tags_label: "Also allow other tags"
-      tag_group_selector_placeholder: "(Optional) Tag group"
-      required_tag_group_description: "Require new topics to have tags from a tag group:"
-      min_tags_from_required_group_label: "Num Tags:"
-      required_tag_group_label: "Tag group:"
+      required_tag_group:
+        description: "Require new topics to have tags from tag groups:"
+        delete: "Delete"
+        add: "Add required tag group"
+        placeholder: "select tag group..."
       topic_featured_link_allowed: "Allow featured links in this category"
       delete: "Delete Category"
       create: "New Category"
@@ -3988,7 +3989,7 @@ en:
 
     user_activity:
       no_activity_title: "No activity yet"
-      no_activity_body: "Welcome to our community! You are brand new here and have not yet contributed to discussions. As a first step, visit <a href='%{topUrl}'>Top</a> or <a href='%{categoriesUrl}'>Categories</a> and just start reading! Select %{heartIcon} on posts that you like or want to learn more about. If you have not already done so, help others get to know you by adding a picture and bio in your <a href='%{preferencesUrl}'>user preferences</a>."
+      no_activity_body: "Welcome to our community! You are brand new here and have not yet contributed to discussions. As a first step, visit <a href='%{topUrl}'>Top</a> or <a href='%{categoriesUrl}'>Categories</a> and just start reading! Select %{heartIcon} on posts that you like or want to learn more about. As you participate, your activity will be listed here."
       no_activity_others: "No activity."
       no_replies_title: "You have not replied to any topics yet"
       no_replies_others: "No replies."

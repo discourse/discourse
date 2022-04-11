@@ -118,7 +118,6 @@ gl:
       to_placeholder: "ata a data"
     share:
       topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
-      post: "publicación #%{postNumber}"
       close: "pechar"
       twitter: "Compartir no Twitter"
       facebook: "Compartir no Facebook"
@@ -1698,7 +1697,6 @@ gl:
       success: "A súa conta acaba de ser creada e ten a sesión iniciada."
       name_label: "Nome"
       password_label: "Contrasinal"
-      optional_description: "(opcional)"
     password_reset:
       continue: "Continuar en %{site_name}"
     emoji_set:

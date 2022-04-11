@@ -14,8 +14,16 @@ acceptance("Share and Invite modal", function (needs) {
   needs.user();
 
   needs.pretender((server, helper) => {
-    server.get("/c/feature/find_by_slug.json", () =>
-      helper.response(200, CategoryFixtures["/c/1/show.json"])
+    server.get(`/c/2481/visible_groups.json`, () =>
+      helper.response(200, {
+        groups: ["group_name_1", "group_name_2"],
+      })
+    );
+
+    server.get(`/c/2/visible_groups.json`, () =>
+      helper.response(200, {
+        groups: [],
+      })
     );
   });
 
@@ -30,6 +38,7 @@ acceptance("Share and Invite modal", function (needs) {
     await click("#topic-footer-button-share-and-invite");
 
     assert.ok(exists(".share-topic-modal"), "it shows the modal");
+
     assert.notOk(
       exists("#modal-alert.alert-warning"),
       "it does not show the alert with restricted groups"
@@ -73,8 +82,8 @@ acceptance("Share and Invite modal", function (needs) {
     assert.strictEqual(
       query("#modal-alert.alert-warning").innerText,
       I18n.t("topic.share.restricted_groups", {
-        count: 1,
-        groupNames: "moderators",
+        count: 2,
+        groupNames: "group_name_1, group_name_2",
       }),
       "it shows correct restricted group name"
     );
@@ -84,12 +93,6 @@ acceptance("Share and Invite modal", function (needs) {
 acceptance("Share and Invite modal - mobile", function (needs) {
   needs.user();
   needs.mobileView();
-
-  needs.pretender((server, helper) => {
-    server.get("/c/feature/find_by_slug.json", () =>
-      helper.response(200, CategoryFixtures["/c/1/show.json"])
-    );
-  });
 
   test("Topic footer mobile button", async function (assert) {
     await visit("/t/internationalization-localization/280");

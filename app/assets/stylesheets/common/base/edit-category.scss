@@ -162,6 +162,23 @@ div.edit-category {
   .category-default-slow-mode-seconds {
     width: 200px;
   }
+
+  .required-tag-groups {
+    .required-tag-group-row {
+      display: flex;
+      gap: 0.5em;
+
+      > * {
+        margin: 0;
+      }
+
+      input[type="number"] {
+        width: 4em;
+      }
+
+      margin-bottom: 1em;
+    }
+  }
 }
 
 .category-permissions-table {

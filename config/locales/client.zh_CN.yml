@@ -98,7 +98,6 @@ zh_CN:
       to_placeholder: "截至日期"
     share:
       topic_html: '话题：<span class="topic-title">%{topicTitle}</span>'
-      post: "帖子 #%{postNumber}"
       close: "关闭"
       twitter: "分享到 Twitter"
       facebook: "分享到 Facebook"
@@ -261,6 +260,8 @@ zh_CN:
         unbookmark_with_reminder: "点击以移除此话题中的所有书签和提醒。"
     bookmarks:
       created: "您已将此帖子加入书签。%{name}"
+      create_for: "为 %{type} 创建书签"
+      edit_for: "为 %{type} 编辑书签"
       not_bookmarked: "将此帖子加入书签"
       remove_reminder_keep_bookmark: "删除提醒并保留收藏"
       created_with_reminder: "您已将此帖子加入书签，并于 %{date}设置了一个提醒。%{name}"
@@ -1747,7 +1748,6 @@ zh_CN:
       success: "您的帐户已创建，您现在已登录。"
       name_label: "姓名"
       password_label: "密码"
-      optional_description: "（可选）"
     password_reset:
       continue: "继续访问 %{site_name}"
     emoji_set:
@@ -3108,13 +3108,18 @@ zh_CN:
         other {}}
     original_post: "原始帖子"
     views: "浏览量"
+    sr_views: "按浏览量排序"
     views_lowercase:
       other: "浏览量"
     replies: "回复"
+    sr_replies: "按回复排序"
     views_long:
       other: "此话题已被浏览 %{number} 次"
     activity: "活动"
+    sr_activity: "按活动排序"
     likes: "赞"
+    sr_likes: "按赞排序"
+    sr_op_likes: "按原帖点赞排序"
     likes_lowercase:
       other: "赞"
     users: "用户"
@@ -3488,7 +3493,6 @@ zh_CN:
       unsupported_file_picked: "您选择了不受支持的文件。支持的文件类型 – %{types}。"
     user_activity:
       no_activity_title: "尚无活动"
-      no_activity_body: "欢迎来到我们的社区！您是新来的，还没有参与讨论。作为第一步，请访问 <a href='%{topUrl}'>置顶内容</a> 或 <a href='%{categoriesUrl}'>类别</a> 并开始阅读！在您喜欢或想了解更多信息的帖子上选择 %{heartIcon} <a href='%{preferencesUrl}'>用户选项</a>添加图片和个人简介，以帮助其他人了解您。"
       no_activity_others: "无活动。"
       no_replies_title: "您还没有回复任何话题"
       no_replies_others: "无回复。"
@@ -3498,9 +3502,13 @@ zh_CN:
       no_likes_body: "加入并开始贡献的一个好方法是阅读已有的主题，并在您喜欢的帖子上点击 %{heartIcon}"
       no_likes_others: "没有赞过的帖子。"
       no_topics_title: "您还没有开始任何话题"
+      no_topics_title_others: "%{username} 还没有开始任何话题"
       no_read_topics_title: "您还没有阅读任何话题。"
       no_read_topics_body: "开始阅读讨论后，您将在此处看到一个列表。要开始阅读，请在 <a href='%{topUrl}'>置顶</a> 或 <a href='%{categoriesUrl}'>类别</a> 或按关键字搜索 %{searchIcon}"
     no_group_messages_title: "未找到群组消息"
+    topic_entrance:
+      sr_jump_top_button: "跳到第一个帖子"
+      sr_jump_bottom_button: "跳到最后一个帖子"
     fullscreen_table:
       expand_btn: "展开表格"
     second_factor_auth:
@@ -3725,6 +3733,7 @@ zh_CN:
             topics:
               read: 阅读一个话题或其中的一个帖子。也支持 RSS。
               write: 创建一个新话题或发布到现有话题。
+              update: 更新一个话题。更改标题、类别、标签等。
               read_lists: 阅读诸如热门、新、最新等话题列表。也支持 RSS。
               wordpress: WordPress wp-discourse 插件正常工作所必需。
             posts:
@@ -3951,6 +3960,7 @@ zh_CN:
         delete_confirm: '确定要删除“%{theme_name}”吗？'
         color: "颜色"
         opacity: "不透明度"
+        copy: "复制"
         copy_to_clipboard: "复制到剪贴板"
         copied_to_clipboard: "已复制到剪贴板"
         copy_to_clipboard_error: "复制到剪贴板时出错"
@@ -4221,6 +4231,7 @@ zh_CN:
         time: "时间"
         user: "用户"
         email_type: "电子邮件类型"
+        details_title: "显示电子邮件详情"
         to_address: "目标地址"
         test_email_address: "要测试的电子邮件地址"
         send_test: "发送测试电子邮件"

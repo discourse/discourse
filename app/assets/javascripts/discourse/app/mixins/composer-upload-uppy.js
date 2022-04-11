@@ -234,7 +234,10 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
         if (reason === "cancel-all") {
           return;
         }
-
+        this.appEvents.trigger(
+          `${this.composerEventPrefix}:upload-cancelled`,
+          file.id
+        );
         file.meta.cancelled = true;
         this._removeInProgressUpload(file.id);
         this._resetUpload(file, { removePlaceholder: true });
