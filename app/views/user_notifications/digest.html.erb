@@ -325,6 +325,13 @@
           <%= category_badge(t.category, inline_style: true, absolute_url: true) %>
         </p>
       </td>
+      <td class="digest-new-topic-posters with-dir" style="padding:8px;">
+        <% t.posters_summary[0,2].each do |ps| %>
+          <% if ps.user %>
+            <img src="<%= ps.user.small_avatar_url -%>" style="height:20px;width:20px;margin:<%= rtl? ? '0 0 5px 5px' : '0 5px 5px 0' %>;border-radius:50%;clear:both;display:inline-block;outline:0;text-decoration:none;" alt="<%= ps.user.username -%>">
+          <% end %>
+        <% end %>
+      </td>
       <td class="digest-new-topic-stat with-dir" style="padding:8px;">
         <img class="digest-icon" src="<%= email_image_url 'heart.png' -%>" style="clear:both;display:inline-block;float:<%= rtl? ? 'right' : 'left' %>;height:20px;margin:0;max-width:100%;opacity:.4;outline:0;text-decoration:none;width:auto" alt="likes" dm="light-img">
         <img class="digest-icon" src="<%= email_image_url 'heart_dark.png' -%>" style="clear:both;display:inline-block;float:<%= rtl? ? 'right' : 'left' %>;height:20px;margin:0;max-width:100%;opacity:.4;outline:0;text-decoration:none;width:auto;display:none;" alt="likes" dm="dark-img">
