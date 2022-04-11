@@ -42,7 +42,7 @@ class UserBookmarkList
   # on the type, and we want the associations all loaded ahead of time to make
   # sure we are not doing N1s.
   def preload_polymorphic_associations
-    @topics = Topic.includes(:topic_users).where(
+    @topics = Topic.includes(:topic_users, :posts).where(
       id: Bookmark.select_type(@bookmarks, "Topic").map(&:bookmarkable_id)
     ).where(topic_users: { user_id: @user.id })
 
@@ -56,7 +56,7 @@ class UserBookmarkList
         :"@#{registered_bookmarkable.table_name}",
         registered_bookmarkable.preload_associations(bookmarkable_ids)
       )
-      self.class.send(:attr_reader, registered_bookmarkable.table_name)
+      self.class.public_send(:attr_reader, registered_bookmarkable.table_name)
     end
   end
 end

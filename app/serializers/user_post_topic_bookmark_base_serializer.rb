@@ -4,6 +4,7 @@ require_relative 'post_item_excerpt'
 
 class UserPostTopicBookmarkBaseSerializer < UserBookmarkBaseSerializer
   include TopicTagsMixin
+  include PostItemExcerpt
 
   attributes :topic_id,
              :linked_post_number,
@@ -56,15 +57,22 @@ class UserPostTopicBookmarkBaseSerializer < UserBookmarkBaseSerializer
     topic_user&.last_read_post_number
   end
 
-  def topic_user
-    @topic_user ||= topic.topic_users.find { |tu| tu.user_id == scope.user.id }
-  end
-
   def bumped_at
     topic.bumped_at
   end
 
   def slug
     topic.slug
+  end
+
+  # TODO: Do away with this if we go the register_bookmarkable for topic/post
+  def bookmarkable_url
+    Discourse.base_url
+  end
+
+  private
+
+  def topic_user
+    @topic_user ||= topic.topic_users.find { |tu| tu.user_id == scope.user.id }
   end
 end

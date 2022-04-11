@@ -51,8 +51,8 @@
                   {{discourse-tags bookmark mode="list" tagsForUser=tagsForUser}}
                 </div>
               {{/if}}
-              {{#if (and site.mobileView bookmark.excerpt bookmark.bookmarkable_user_avatar_template)}}
-                <a href={{bookmark.bookmarkableUser.path}} data-user-card={{bookmark.bookmarkable_user_username}} class="avatar">
+              {{#if (and site.mobileView bookmark.excerpt bookmark.user.avatar_template)}}
+                <a href={{bookmark.bookmarkableUser.path}} data-user-card={{bookmark.user.username}} class="avatar">
                   {{avatar bookmark.bookmarkableUser avatarTemplatePath="avatar_template" usernamePath="username" namePath="name" imageSize="small"}}
                 </a>
               {{/if}}
@@ -61,9 +61,9 @@
             </td>
             {{#unless site.mobileView}}
               <td class="topic-list-data">
-                {{#if bookmark.bookmarkable_user_avatar_template}}
-                  <a href={{bookmark.bookmarkableUser.path}} data-user-card={{bookmark.bookmarkable_user_username}} class="avatar">
-                    {{avatar bookmark.bookmarkableUser avatarTemplatePath="avatar_template" usernamePath="username" namePath="name" imageSize="small"}}
+                {{#if bookmark.user.avatar_template}}
+                  <a href={{bookmark.user.path}} data-user-card={{bookmark.user.username}} class="avatar">
+                    {{avatar bookmark.user avatarTemplatePath="avatar_template" usernamePath="username" namePath="name" imageSize="small"}}
                   </a>
                 {{/if}}
               </td>

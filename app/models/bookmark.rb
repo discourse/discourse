@@ -100,7 +100,7 @@ class Bookmark < ActiveRecord::Base
     if: Proc.new { |b| b.will_save_change_to_post_id? || b.will_save_change_to_for_topic? }
 
   validate :polymorphic_columns_present, on: [:create, :update]
-  validate :polymorphic_type_ok, on: [:create, :update]
+  validate :valid_bookmarkable_type, on: [:create, :update]
 
   validate :unique_per_bookmarkable,
     on: [:create, :update],
@@ -172,7 +172,7 @@ class Bookmark < ActiveRecord::Base
     )
   end
 
-  def polymorphic_type_ok
+  def valid_bookmarkable_type
     return if !SiteSetting.use_polymorphic_bookmarks
     return if Bookmark.valid_bookmarkable_types.include?(self.bookmarkable_type)
     return if ["Post", "Topic"].include?(self.bookmarkable_type)

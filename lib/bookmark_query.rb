@@ -100,7 +100,7 @@ class BookmarkQuery
     # to further filter results securely using merges, though this is not necessary just
     # yet.
 
-    results = Bookmark.select("bookmarks.*").from(
+    Bookmark.select("bookmarks.*").from(
       "(#{topic_results.to_sql} UNION #{post_results.to_sql} UNION #{other_bookmarks.to_sql}) as bookmarks"
     )
   end
