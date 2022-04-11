@@ -167,6 +167,7 @@
   }
 
   .topic-item-stats {
+    // disabling clicks because these targets are too small on mobile
     pointer-events: none;
     position: relative;
     display: flex;
