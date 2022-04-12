@@ -155,3 +155,9 @@ sub sub {
     }
   }
 }
+
+.container.posts .topic-navigation {
+  // better positioning for the docked progress bar on large screens using mobile view
+  grid-area: posts;
+  grid-row: 2;
+}
