@@ -58,24 +58,6 @@ export default MountWidget.extend({
     );
   },
 
-  beforePatch() {
-    this.prevHeight = document.body.clientHeight;
-    this.prevScrollTop = document.body.scrollTop;
-  },
-
-  afterPatch() {
-    const height = document.body.clientHeight;
-
-    // This hack is for when swapping out many cloaked views at once
-    // when using keyboard navigation. It could suddenly move the scroll
-    if (
-      this.prevHeight === height &&
-      document.body.scrollTop !== this.prevScrollTop
-    ) {
-      document.body.scroll({ left: 0, top: this.prevScrollTop });
-    }
-  },
-
   scrolled() {
     if (this.isDestroyed || this.isDestroying) {
       return;
@@ -103,6 +85,7 @@ export default MountWidget.extend({
     const slack = Math.round(windowHeight * 5);
     const onscreen = [];
     const nearby = [];
+    // body.scrollTop fallback here is for iOS 12 support
     const windowTop =
       document.documentElement.scrollTop || document.body.scrollTop;
     const postsWrapperTop = domUtils.offset(
@@ -203,9 +186,7 @@ export default MountWidget.extend({
         const elem = postsNodes.item(onscreen[0]);
         const elemId = elem.id;
         const elemPos = domUtils.position(elem);
-        const distToElement = elemPos
-          ? document.body.scrollTop - elemPos.top
-          : 0;
+        const distToElement = elemPos?.top || 0;
 
         const topRefresh = () => {
           refresh(() => {
@@ -214,7 +195,7 @@ export default MountWidget.extend({
             // Quickly going back might mean the element is destroyed
             const position = domUtils.position(refreshedElem);
             if (position && position.top) {
-              let whereY = position.top + distToElement;
+              let whereY = position.top - distToElement;
               document.documentElement.scroll({ top: whereY, left: 0 });
 
               // This seems weird, but somewhat infrequently a rerender
