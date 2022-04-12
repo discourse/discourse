@@ -65,9 +65,10 @@ class UserPostTopicBookmarkBaseSerializer < UserBookmarkBaseSerializer
     topic.slug
   end
 
-  # TODO: Do away with this if we go the register_bookmarkable for topic/post
+  # Note: This is nil because in the UI there are special topic-status and
+  # topic-link components to display the topic URL, and this is not used.
   def bookmarkable_url
-    Discourse.base_url
+    nil
   end
 
   private
