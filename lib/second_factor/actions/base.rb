@@ -9,8 +9,7 @@ module SecondFactor::Actions
       @guardian = guardian
       @current_user = guardian.user
       @request = request
-      @opts = HashWithIndifferentAccess.new
-      @opts.merge!(opts) if opts
+      @opts = HashWithIndifferentAccess.new(opts)
     end
 
     def skip_second_factor_auth?(params)
