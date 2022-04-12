@@ -85,9 +85,7 @@ export default MountWidget.extend({
     const slack = Math.round(windowHeight * 5);
     const onscreen = [];
     const nearby = [];
-    // body.scrollTop fallback here is for iOS 12 support
-    const windowTop =
-      document.documentElement.scrollTop || document.body.scrollTop;
+    const windowTop = document.scrollingElement.scrollTop;
     const postsWrapperTop = domUtils.offset(
       document.querySelector(".posts-wrapper")
     ).top;
