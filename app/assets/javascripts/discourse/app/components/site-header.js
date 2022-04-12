@@ -441,6 +441,5 @@ export default SiteHeaderComponent.extend({
 
 export function headerTop() {
   const header = document.querySelector("header.d-header");
-  const headerOffsetTop = header.offsetTop ? header.offsetTop : 0;
-  return headerOffsetTop - document.body.scrollTop;
+  return header.offsetTop ? header.offsetTop : 0;
 }
