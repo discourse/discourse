@@ -147,6 +147,20 @@ describe Jobs::UserEmail do
       )
     end
 
+    it "doesn't send an email even if email_level is set to always if `ignore_core_email_preferences` arg is true" do
+      user.user_option.update(email_level: UserOption.email_level_types[:always])
+      PostTiming.create!(topic_id: post.topic_id, post_number: post.post_number, user_id: user.id, msecs: 100)
+
+      Jobs::UserEmail.new.execute(
+        type: :user_replied,
+        user_id: user.id,
+        post_id: post.id,
+        notification_id: notification.id,
+        force_skip_if_seen_recently: true
+      )
+      expect(ActionMailer::Base.deliveries).to eq([])
+    end
+
     it "sends an email with no gsub substitution bugs" do
       upload = Fabricate(:upload)
 
