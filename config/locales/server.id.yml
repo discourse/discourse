@@ -16,6 +16,7 @@ id:
       date_only: "%B %-d, %Y"
       long: "%B %-d, %Y, %l:%M%P"
       no_day: "%Y %B"
+      calendar_ics: "%Y%m%dT%H%M%SZ"
   date:
     month_names:
     - null
@@ -40,6 +41,7 @@ id:
   topics: "Topik"
   posts: "post"
   loading: "Memuat"
+  powered_by_html: 'Didukung oleh <a href="https://www.discourse.org">Discourse</a>, paling baik dilihat dengan JavaScript diaktifkan'
   sign_up: "Mendaftar"
   log_in: "Log In"
   submit: "Kirimkan"
@@ -47,31 +49,44 @@ id:
   disable_remote_images_download_reason: "Unduh gambar jarak jauh dimatikan karena ruang penyimpanan di server tidak cukup."
   anonymous: "Anonim"
   remove_posts_deleted_by_author: "Dihapus oleh penulis"
+  redirect_warning: "Kami tidak dapat memverifikasi bahwa tautan yang Anda pilih benar-benar diposkan ke forum. Jika Anda tetap ingin melanjutkan, pilih tautan di bawah ini."
   on_another_topic: "Di topik lain"
+  inline_oneboxer:
+    topic_page_title_post_number: "#%{post_number}"
+    topic_page_title_post_number_by_user: "#%{post_number} oleh %{username}"
   themes:
+    bad_color_scheme: "Tidak dapat memperbarui tema, palet warna tidak valid"
     other_error: "Terjadi masalah saat memperbarui tema"
     compile_error:
       unrecognized_extension: "Ekstensi file tidak dikenal: %{extension}"
     import_error:
+      generic: Terjadi kesalahan saat mengimpor tema itu
       unpack_failed: "Gagal membongkar berkas"
       file_too_big: "Berkas yang tidak dikompresi terlalu besar."
     settings_errors:
+      invalid_yaml: "YAML yang diberikan tidak valid."
       number_value_not_valid_min_max: "Itu harus antara %{min} dan %{max}."
       number_value_not_valid_min: "Itu harus lebih besar dari atau sama dengan %{min}."
       number_value_not_valid_max: "Itu harus lebih kecil dari atau sama dengan %{max}."
       string_value_not_valid: "Panjang nilai baru tidak berada dalam rentang yang diizinkan."
       string_value_not_valid_min_max: "Panjangnya harus antara %{min} dan %{max} karakter."
       string_value_not_valid_min: "Panjangnya minimal %{min} karakter."
+    locale_errors:
+      invalid_yaml: "Terjemahan YAML tidak valid"
   emails:
     incoming:
       default_subject: "Topik ini membutuhkan judul"
       show_trimmed_content: "Tampilkan konten yang dipersingkat"
+      no_subject: "(tidak ada subjek)"
       errors:
         empty_email_error: "Terjadi bila surel mentah yang kami terima tidak berisi apapun (kosong)."
         no_message_id_error: "Terjadi bila surel tidak memiliki header 'Message-Id'."
         auto_generated_email_error: "Terjadi bila 'precedence' header ditentukan sebagai: list, junk, bulk atau auto_reply, atau ketika header lainnya mengandung: kumpulkan otomatis, balas otomatis, atau buat otomatis."
         inactive_user_error: "Terjadi bila pengirim sedang tidak aktif"
         silenced_user_error: "Terjadi bila pengirim telah dibungkam"
+        screened_email_error: "Terjadi ketika alamat email pengirim sudah disaring."
+        unsubscribe_not_allowed: "Terjadi ketika berhenti berlangganan melalui email tidak diperbolehkan untuk pengguna ini."
+        email_not_allowed: "Terjadi ketika alamat email tidak ada dalam daftar yang diizinkan atau ada di daftar blokir."
       unrecognized_error: "Kesalahan Tidak Dikenali"
   errors: &errors
     messages:

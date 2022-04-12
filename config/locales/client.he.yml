@@ -416,6 +416,7 @@ he:
     saved: "נשמר!"
     upload: "העלאה"
     uploading: "בהליכי העלאה..."
+    processing: "מתבצע עיבוד…"
     uploading_filename: "מעלה: %{filename}..."
     processing_filename: "מתבצע עיבוד: %{filename}…"
     clipboard: "לוח"
@@ -1916,27 +1917,27 @@ he:
       not_approved: "החשבון שלך עדיין לא אושר. תישלח אליך הודעה בדוא״ל כשיתאפשר לך להיכנס למערכת."
       google_oauth2:
         name: "Google"
-        title: "עם Google"
+        title: "כניסה עם Google"
         sr_title: "כניסה עם Google"
       twitter:
         name: "Twitter"
-        title: "עם Twitter"
+        title: "כניסה עם טוויטר"
         sr_title: "כניסה עם טוויטר"
       instagram:
         name: "Instagram"
-        title: "עם אינסטגרם"
+        title: "כניסה עם אינסטגרם"
         sr_title: "כניסה עם אינסטגרם"
       facebook:
         name: "Facebook"
-        title: "עם Facebook"
+        title: "כניסה עם פייסבוק"
         sr_title: "כניסה עם פייסבוק"
       github:
         name: "GitHub"
-        title: "עם GitHub"
+        title: "כניסה עם GitHub"
         sr_title: "כניסה עם GitHub"
       discord:
         name: "Discord"
-        title: "עם Discord"
+        title: "כניסה עם Discord"
         sr_title: "כניסה עם Discord"
       second_factor_toggle:
         totp: "להשתמש ביישומון אימות במקום"
@@ -3307,10 +3308,11 @@ he:
       tag_groups_placeholder: "(רשות) רשימת קבוצות תגיות"
       manage_tag_groups_link: "ניהול קבוצות תגיות"
       allow_global_tags_label: "לאפשר גם תגיות אחרות"
-      tag_group_selector_placeholder: "(רשות) קבוצת תגיות"
-      required_tag_group_description: "לדרוש שלנושאים חדשים יהיו תגיות מקבוצת תגיות:"
-      min_tags_from_required_group_label: "מס׳ תגיות:"
-      required_tag_group_label: "קבוצת תגיות:"
+      required_tag_group:
+        description: "לדרוש שלנושאים חדשים יהיו תגיות מקבוצות תגיות:"
+        delete: "הסרה"
+        add: "הוספת קבוצת תגיות נדרשת"
+        placeholder: "בחירת קבוצת תגיות…"
       topic_featured_link_allowed: "אפשרו קישורים מומלצים בקטגוריה זו"
       delete: "מחיקת קטגוריה"
       create: "קטגוריה חדשה"

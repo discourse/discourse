@@ -1721,27 +1721,23 @@ nl:
       not_approved: "Uw account is nog niet goedgekeurd. U ontvangt een melding via e-mail zodra u zich kunt aanmelden."
       google_oauth2:
         name: "Google"
-        title: "met Google"
-        sr_title: "Inloggen met Google"
       twitter:
         name: "Twitter"
-        title: "met Twitter"
-        sr_title: "Inloggen met Twitter"
       instagram:
         name: "Instagram"
-        title: "met Instagram"
+        title: "Inloggen met Instagram"
         sr_title: "Inloggen met Instagram"
       facebook:
         name: "Facebook"
-        title: "met Facebook"
+        title: "Inloggen met Facebook"
         sr_title: "Inloggen met Facebook"
       github:
         name: "GitHub"
-        title: "met GitHub"
+        title: "Inloggen met GitHub"
         sr_title: "Inloggen met GitHub"
       discord:
         name: "Discord"
-        title: "met Discord"
+        title: "Inloggen met Discord"
         sr_title: "Inloggen met Discord"
       second_factor_toggle:
         totp: "Een authenticator-app gebruiken"
@@ -2903,10 +2899,8 @@ nl:
       tag_groups_placeholder: "(Optioneel) lijst van toegestane tag-groepen"
       manage_tag_groups_link: "Tag-groepen beheren"
       allow_global_tags_label: "Ook andere tags toestaan"
-      tag_group_selector_placeholder: "(Optioneel) Tag-groep"
-      required_tag_group_description: "Nieuwe topics moeten tags hebben uit een tag-groep:"
-      min_tags_from_required_group_label: "Aantal tags:"
-      required_tag_group_label: "Tag-groep:"
+      required_tag_group:
+        delete: "Verwijderen"
       topic_featured_link_allowed: "Aanbevolen koppelingen in deze categorie toestaan"
       delete: "Categorie verwijderen"
       create: "Nieuwe categorie"

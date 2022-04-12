@@ -1782,27 +1782,23 @@ de:
       not_approved: "Dein Benutzerkonto wurde noch nicht genehmigt. Du wirst per E-Mail benachrichtigt, sobald du dich anmelden kannst."
       google_oauth2:
         name: "Google"
-        title: "mit Google"
-        sr_title: "Mit Google anmelden"
       twitter:
         name: "Twitter"
-        title: "mit Twitter"
-        sr_title: "Mit Twitter anmelden"
       instagram:
         name: "Instagram"
-        title: "mit Instagram"
+        title: "Mit Instagram anmelden"
         sr_title: "Mit Instagram anmelden"
       facebook:
         name: "Facebook"
-        title: "mit Facebook"
+        title: "Mit Facebook anmelden"
         sr_title: "Mit Facebook anmelden"
       github:
         name: "GitHub"
-        title: "mit GitHub"
+        title: "Mit GitHub anmelden"
         sr_title: "Mit GitHub anmelden"
       discord:
         name: "Discord"
-        title: "mit Discord"
+        title: "Mit Discord anmelden"
         sr_title: "Mit Discord anmelden"
       second_factor_toggle:
         totp: "Benutze stattdessen eine Authentifizierungs-App"
@@ -3038,10 +3034,8 @@ de:
       tag_groups_placeholder: "(Optional) Liste erlaubter Schlagwortgruppen"
       manage_tag_groups_link: "Schlagwortgruppen verwalten"
       allow_global_tags_label: "Erlaube auch andere Schlagwörter."
-      tag_group_selector_placeholder: "(Optional) Schlagwortgruppe"
-      required_tag_group_description: "Neue Themen müssen Schlagwörter aus einer Schlagwortgruppe haben:"
-      min_tags_from_required_group_label: "Anz. Schlagwörter:"
-      required_tag_group_label: "Schlagwortgruppe:"
+      required_tag_group:
+        delete: "Löschen"
       topic_featured_link_allowed: "Erlaube hervorgehobene Links in dieser Kategorie"
       delete: "Kategorie löschen"
       create: "Neue Kategorie"

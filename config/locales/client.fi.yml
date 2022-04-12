@@ -1726,22 +1726,16 @@ fi:
       not_approved: "Tiliäsi ei ole vielä hyväksytty. Saat ilmoituksen sähköpostilla, kun voit kirjautua sisään."
       google_oauth2:
         name: "Google"
-        title: "Googlella"
       twitter:
         name: "Twitter"
-        title: "Twitterillä"
       instagram:
         name: "Instagram"
-        title: "Instagramilla"
       facebook:
         name: "Facebook"
-        title: "Facebookilla"
       github:
         name: "GitHub"
-        title: "GitHubilla"
       discord:
         name: "Discord"
-        title: "Discordilla"
       second_factor_toggle:
         totp: "Käytä todentajasovellusta tämän sijaan"
         backup_code: "Käytä varakoodia tämän sijaan"
@@ -2880,10 +2874,8 @@ fi:
       tag_groups_placeholder: "(Valinnainen) lista sallituista tunnisteryhmistä"
       manage_tag_groups_link: "Hallitse tunnisteryhmiä"
       allow_global_tags_label: "Salli myös muut tunnisteet"
-      tag_group_selector_placeholder: "(Valinnainen) tunnisteryhmä"
-      required_tag_group_description: "Edellytä, että uudella ketjulla on tunnisteita tunnisteryhmästä:"
-      min_tags_from_required_group_label: "Tunnisteiden määrä:"
-      required_tag_group_label: "Tunnisteryhmä:"
+      required_tag_group:
+        delete: "Poista"
       topic_featured_link_allowed: "Salli ketjulinkit tällä alueella"
       delete: "Poista alue"
       create: "Uusi alue"

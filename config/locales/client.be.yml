@@ -762,16 +762,8 @@ be:
       not_approved: "Ваш рахунак яшчэ не было прынята. Вы атрымаеце апавяшчэнне па электроннай пошце, калі зможаце ўвайсці ў сістэму."
       google_oauth2:
         name: "Google"
-        title: "з Google"
       twitter:
         name: "Twitter"
-        title: "праз Twitter"
-      instagram:
-        title: "праз Instagram"
-      facebook:
-        title: "праз Facebook"
-      github:
-        title: "праз GitHub"
       second_factor_toggle:
         totp: "Выкарыстоўвайце прыкладанне аутентификационное замест"
         backup_code: "Выкарыстоўваць рэзервовы код замест"
@@ -1120,6 +1112,8 @@ be:
       general: "Агульныя"
       settings: "Налады"
       tags: "Тэгі"
+      required_tag_group:
+        delete: "Выдаліць"
       delete: "выдаліць катэгорыю"
       create: "Новая катэгорыя"
       create_long: "стварыць катэгорыю"

@@ -1684,22 +1684,16 @@ sl:
       not_approved: "Vaš uporabniški račun še ni bil potrjen. Ko bo pripravljen za prijavo boste obveščeni preko e-sporočila."
       google_oauth2:
         name: "Google"
-        title: "Google"
       twitter:
         name: "Twitter"
-        title: "Twitter"
       instagram:
         name: "Instagram"
-        title: "z Instagramom"
       facebook:
         name: "Facebook"
-        title: "s Facebookom"
       github:
         name: "GitHub"
-        title: "z GitHubom"
       discord:
         name: "Discord"
-        title: "z Discordom"
       second_factor_toggle:
         totp: "Namesto tega uporabite authenticator aplikacijo"
         backup_code: "Namesto tega uporabite rezervno potrditveno kodo"
@@ -2785,6 +2779,8 @@ sl:
       tags_placeholder: "(neobvezno) seznam dovoljenih oznak"
       tag_groups_placeholder: "(neobvezno) seznam dovoljenih oznak skupin"
       allow_global_tags_label: "Dovoli tudi druge oznake"
+      required_tag_group:
+        delete: "Izbriši"
       topic_featured_link_allowed: "Dovoli najboljše povezave v tej kategoriji"
       delete: "Izbriši kategorijo"
       create: "Nova kategorija"

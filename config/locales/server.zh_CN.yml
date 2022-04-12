@@ -1890,6 +1890,7 @@ zh_CN:
     permalink_normalizations: "在匹配永久链接之前应用以下正则表达式，例如：/(topic.*)\\?.*/\\1 将从话题路由中去除查询字符串。格式为正则表达式+字符串。使用 \\1 等访问捕获"
     global_notice: "向所有访客显示紧急、突发、不可关闭的全局横幅通知，更改为空将隐藏（允许使用 HTML）。"
     disable_system_edit_notifications: "当 'download_remote_images_to_local' 启用时禁用系统用户的编辑通知。"
+    disable_category_edit_notifications: "禁用话题分类编辑通知"
     disable_tags_edit_notifications: "禁用话题标签编辑通知"
     notification_consolidation_threshold: "合并通知前，收到的赞或成员资格请求通知的数量。设置为 0 将禁用。"
     likes_notification_consolidation_window_mins: "以分钟计的持续时间，被赞的通知在达到此阈值后会被合并到单个通知中。可以通过 `SiteSetting.notification_consolidation_threshold` 配置阈值。"
@@ -1910,9 +1911,11 @@ zh_CN:
     display_name_on_posts: "在帖子中显示用户的全名以及他们的用户名。"
     show_time_gap_days: "如果两个帖子间隔此天数，在话题中显示时间间隔。"
     short_progress_text_threshold: "当一个话题的帖子数量超过此数值后，进度条将只显示当前帖子数量。如果更改进度条的宽度，则可能需要更改此值。"
+    default_code_lang: "应用于代码块的默认编程语言语法高亮(auto, nohighlight, ruby, python 等)。这个值也必须存在于 \"高亮语言 \"的站点设置中。"
     warn_reviving_old_topic_age: "当有人开始回复上次回复时间超过此天数的话题时，将显示警告。设置为 0 将禁用。"
     autohighlight_all_code: "即使未显式声明语言，也强制向所有预格式化代码块应用代码高亮显示。"
     highlighted_languages: "包括语法高亮显示规则。（警告：包含太多语言可能会影响性能）请参阅：<a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> 查看演示"
+    show_copy_button_on_codeblocks: "为代码块添加一个按钮，将块的内容复制到用户的剪贴板上。"
     embed_any_origin: "允许嵌入任意来源的内容。这对于带有静态 HTML 的移动应用是必需的。"
     embed_topics_list: "支持话题列表的 HTML 嵌入"
     embed_set_canonical_url: "将嵌入话题的规范 URL 设置为嵌入内容的 URL。"
@@ -2034,6 +2037,7 @@ zh_CN:
     share_quote_visibility: "确定何时显示引用分享按钮：从不、仅匿名用户或所有用户。"
     create_revision_on_bulk_topic_moves: "当话题被批量移入新类别时，为第一个帖子创建修订。"
     allow_changing_staged_user_tracking: "允许管理员用户更改暂存用户的类别和标签通知偏好设置。"
+    use_email_for_username_and_name_suggestions: "使用电子邮件地址的第一部分作为用户名和名字的建议。请注意，这使得公众更容易猜到完整的用户电子邮件地址(因为很大一部分人共享共同的服务，如`gmail.com')。"
     errors:
       invalid_css_color: "颜色无效。输入颜色名称或十六进制值。"
       invalid_email: "无效的电子邮件地址。"
@@ -2228,9 +2232,12 @@ zh_CN:
       totp: "改用身份验证器应用或安全密钥"
       backup_code: "改用备份代码"
   second_factor_auth:
+    challenge_not_found: "在当前会话中找不到双重身份验证。"
+    challenge_expired: "自双重身份验证开始以来已经过去了太多时间，它已经失效。请再试一次。"
+    challenge_not_completed: "你还没有完成双重身份验证来执行这个动作。请完成双重身份验证后重试。"
     actions:
       grant_admin:
-        description: "对于额外的安全措施，你需要先确认 2FA，然后才能授予 %{username} 管理员访问权限。"
+        description: "对于额外的安全措施，你需要先确认双重身份验证，然后才能授予 %{username} 管理员访问权限。"
   admin:
     email:
       sent_test: "已发送！"

@@ -337,6 +337,7 @@ fa_IR:
     saved: "ذخیره شد!"
     upload: "بارگذاری"
     uploading: "در حال بارگذاری..."
+    processing: "در حال پردازش..."
     uploading_filename: "بارگذاری %{filename}..."
     processing_filename: "در حال پردازش: %{filename}..."
     clipboard: "کلیپ بورد"
@@ -1654,27 +1655,27 @@ fa_IR:
       not_approved: "حساب کاربری شما هنوز تایید نشده. بعد از تایید با ایمیل به شما اطلاع داده خواهد شد."
       google_oauth2:
         name: "گوگل"
-        title: "با گوگل"
+        title: "ورود با گوگل"
         sr_title: "ورود با گوگل"
       twitter:
         name: "توئیتر"
-        title: "با توییتر"
+        title: "ورود با توییتر"
         sr_title: "ورود با توییتر"
       instagram:
         name: "اینستاگرام"
-        title: "با اینستاگرام"
+        title: "ورود با اینستاگرام"
         sr_title: "ورود با اینستاگرام"
       facebook:
         name: "فیس بوک"
-        title: "با فیسبوک"
+        title: "ورود با فیسبوک"
         sr_title: "ورود با فیسبوک"
       github:
         name: "گیت هاب"
-        title: "با گیت‌هاب"
+        title: "ورود با گیت‌هاب"
         sr_title: "ورود با گیت‌هاب"
       discord:
         name: "دیسکورد"
-        title: "با دیسکورد"
+        title: "ورود با دیسکورد"
         sr_title: "ورود با دیسکورد"
       second_factor_toggle:
         totp: "استفاده از روش ورود با اپ کدساز"
@@ -2649,6 +2650,9 @@ fa_IR:
       tags_placeholder: "(اختیاری) فهرست برچسب‌های قابل استفاده"
       tag_groups_placeholder: "(اختیاری) لیست برچسب‌های قابل استفاده‌ی گروه"
       allow_global_tags_label: "اجازه‌ی برچسب‌های دیگر را هم بده"
+      required_tag_group:
+        delete: "حذف"
+        placeholder: "انتخاب گروه برچسب..."
       topic_featured_link_allowed: "اجازه‌ی لینک‌های برجسته در این دسته‌بندی"
       delete: "حذف دسته‌بندی"
       create: "دسته‌بندی جدید"

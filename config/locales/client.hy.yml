@@ -1404,22 +1404,16 @@ hy:
       not_approved: "Ձեր հաշիվը դեռևս չի հաստատվել: Դուք կստանաք ծանուցում էլ. նամակի միջոցով, երբ այն հաստատվի:"
       google_oauth2:
         name: "Google"
-        title: "Google-ով"
       twitter:
         name: "Twitter"
-        title: "Twitter-ով"
       instagram:
         name: "Instagram"
-        title: "Instagram-ով"
       facebook:
         name: "Facebook"
-        title: "Facebook-ով"
       github:
         name: "GitHub"
-        title: "GitHub-ով"
       discord:
         name: "Discord"
-        title: "Discord-ով"
       second_factor_toggle:
         totp: "Փոխարենը օգտագործել նույնականացման հավելվածը"
         backup_code: "Փոխարենը օգտագործել պահուստային կոդը"
@@ -2358,10 +2352,8 @@ hy:
       tags_tab_description: "Այստեղ սահմանված թեգերը և թեգերի խմբերը հասանելի կլինեն միայն այս կատեգորիայում և այլ կատեգորիաներում, որոնք նույնպես սահմանում են դրանք: Դրանք հասանելի չեն լինի օգտագործման համար այլ կատեգորիաներում:"
       tag_groups_placeholder: "(Ընտրովի) թույլատրված թեգերի խմբերի ցանկը"
       allow_global_tags_label: "Նաև թույլ տալ այլ տեգեր "
-      tag_group_selector_placeholder: "(Ընտրովի) Թեգերի խումբ"
-      required_tag_group_description: "Պահանջել, որ նոր թեմաների տեգերը լինեն տեգերի խմբից:"
-      min_tags_from_required_group_label: "Թեգի Համարը."
-      required_tag_group_label: "Թեգերի խումբ."
+      required_tag_group:
+        delete: "Ջնջել"
       topic_featured_link_allowed: "Թույլատրել հանրահայտ հղումները այս կատեգորիայում"
       delete: "Ջնջել Կատեգորիան"
       create: "Նոր Կատեգորիա"

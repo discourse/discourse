@@ -1752,27 +1752,23 @@ da:
       not_approved: "Din konto er endnu ikke blevet godkendt. Du får besked via e-mail når du kan logge ind."
       google_oauth2:
         name: "Google"
-        title: "med google"
-        sr_title: "Log ind med Google"
       twitter:
         name: "Twitter"
-        title: "med Twitter"
-        sr_title: "Log ind med Twitter"
       instagram:
         name: "Instagram"
-        title: "med Instagram"
+        title: "Log ind med Instagram"
         sr_title: "Log ind med Instagram"
       facebook:
         name: "Facebook"
-        title: "med Facebook"
+        title: "Log ind med Facebook"
         sr_title: "Log ind med Facebook"
       github:
         name: "GitHub"
-        title: "med GitHub"
+        title: "Log ind med GitHub"
         sr_title: "Log ind med GitHub"
       discord:
         name: "Discord"
-        title: "med Discord"
+        title: "Log ind med Discord"
         sr_title: "Log ind med Discord"
       second_factor_toggle:
         totp: "Brug en godkendelsesapp i stedet"
@@ -2933,10 +2929,8 @@ da:
       tag_groups_placeholder: "(Valgfri) liste af tiladte mærkegrupper"
       manage_tag_groups_link: "Administrer mærkegrupper"
       allow_global_tags_label: "Tillad også andre mærker"
-      tag_group_selector_placeholder: "(Valgfrit) Mærkegruppe"
-      required_tag_group_description: "Kræv at nye emner skal have mærker fra en mærkegruppe:"
-      min_tags_from_required_group_label: "Antal Mærker:"
-      required_tag_group_label: "Mærkegruppe:"
+      required_tag_group:
+        delete: "Slet"
       topic_featured_link_allowed: "Tillad fremhævede links i denne kategori"
       delete: "Slet kategori"
       create: "Ny kategori"
