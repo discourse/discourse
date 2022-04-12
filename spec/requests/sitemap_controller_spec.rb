@@ -3,6 +3,17 @@
 require 'rails_helper'
 
 describe SitemapController do
+  describe 'before_action :check_sitemap_enabled' do
+    it 'returns a 404 if sitemap is disabled' do
+      Sitemap.touch(Sitemap::RECENT_SITEMAP_NAME)
+      SiteSetting.enable_sitemap = false
+
+      get '/sitemap.xml'
+
+      expect(response.status).to eq(404)
+    end
+  end
+
   describe '#index' do
     it "lists no sitemaps if we haven't generated them yet" do
       get '/sitemap.xml'

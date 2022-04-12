@@ -3,6 +3,7 @@
 class SitemapController < ApplicationController
   layout false
   skip_before_action :preload_json, :check_xhr
+  before_action :check_sitemap_enabled
 
   def index
     @sitemaps = Sitemap
@@ -51,6 +52,10 @@ class SitemapController < ApplicationController
   end
 
   private
+
+  def check_sitemap_enabled
+    raise Discourse::NotFound if !SiteSetting.enable_sitemap
+  end
 
   def build_sitemap_topic_url(slug, id, posts_count = nil)
     base_url = [Discourse.base_url, 't', slug, id].join('/')
