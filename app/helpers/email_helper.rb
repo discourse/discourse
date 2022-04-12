@@ -58,7 +58,7 @@ module EmailHelper
         h5,
         h6,
         p,
-        span, 
+        span,
         td {
           color: #dddddd !important;
         }
