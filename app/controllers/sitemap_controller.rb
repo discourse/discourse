@@ -18,7 +18,7 @@ class SitemapController < ApplicationController
     sitemap = Sitemap.find_by(enabled: true, name: index.to_s)
     raise Discourse::NotFound if sitemap.nil?
 
-    @output = Rails.cache.fetch("sitemap/#{index}/#{sitemap.max_page_size}", expires_in: 24.hours) do
+    @output = Rails.cache.fetch("sitemap/#{sitemap.name}/#{sitemap.max_page_size}", expires_in: 24.hours) do
       @topics = sitemap.topics
       render :page, content_type: 'text/xml; charset=UTF-8'
     end
