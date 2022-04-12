@@ -47,7 +47,7 @@ class UserDestroyer
       # Add info about the user to staff action logs
       UserHistory.staff_action_records(
         Discourse.system_user, acting_user: user.username
-      ).find_each do |log|
+      ).unscope(:order).find_each do |log|
         log.details ||= ''
         log.details = (log.details.split("\n") +
             ["user_id: #{user.id}", "username: #{user.username}"]
