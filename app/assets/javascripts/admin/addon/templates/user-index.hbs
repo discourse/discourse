@@ -734,7 +734,7 @@
     {{#if model.active}}
       {{#if model.can_impersonate}}
         {{d-button
-          class="btn-danger"
+          class="btn-danger btn-impersonate"
           action=(action "impersonate")
           icon="crosshairs"
           label="admin.impersonate.title"
@@ -745,21 +745,21 @@
     {{#if model.can_be_anonymized}}
       {{d-button label="admin.user.anonymize"
                  icon="exclamation-triangle"
-                 class="btn-danger"
+                 class="btn-danger btn-anonymize"
                  action=(action "anonymize")}}
     {{/if}}
 
     {{#if model.canBeDeleted}}
       {{d-button label="admin.user.delete"
                  icon="trash-alt"
-                 class="btn-danger"
+                 class="btn-danger btn-user-delete"
                  action=(action "destroy")}}
     {{/if}}
 
     {{#if model.can_be_merged}}
       {{d-button label="admin.user.merge.button"
                  icon="arrows-alt-h"
-                 class="btn-danger"
+                 class="btn-danger btn-user-merge"
                  action=(action "promptTargetUser")}}
     {{/if}}
   </div>
