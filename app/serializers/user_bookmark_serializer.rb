@@ -154,18 +154,4 @@ class UserBookmarkSerializer < ApplicationSerializer
   def post_user_name
     post_user.name
   end
-
-  # Note...these are just stub methods for compatability with the user-bookmark-list.hbs
-  # changes in a transition period for polymorphic bookmarks.
-  def bookmarkable_user_username
-    post_user.username
-  end
-
-  def bookmarkable_user_avatar_template
-    post_user.avatar_template
-  end
-
-  def bookmarkable_user_name
-    post_user.name
-  end
 end
