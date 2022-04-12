@@ -565,22 +565,22 @@ acceptance("Prioritize Username", function (needs) {
   });
 
   test("Reply to post use username", async function (assert) {
-    await visit("/t/internationalization-localization/280");
-    await click("article#post_3 button.reply");
+    await visit("/t/short-topic-with-two-posts/54079");
+    await click("article#post_2 button.reply");
 
     assert.strictEqual(
       queryAll(".action-title .user-link").text().trim(),
-      "codinghorror"
+      "james_john"
     );
   });
 
   test("Quotes use username", async function (assert) {
-    await visit("/t/internationalization-localization/280");
-    await selectText("#post_3 p");
+    await visit("/t/short-topic-with-two-posts/54079");
+    await selectText("#post_2 p");
     await click(".insert-quote");
     assert.strictEqual(
       queryAll(".d-editor-input").val().trim(),
-      '[quote="codinghorror, post:3, topic:280"]\nYep, all strings are going through a lookup table.*\n[/quote]'
+      '[quote="james_john, post:2, topic:54079, full:true"]\nThis is a short topic.\n[/quote]'
     );
   });
 });
@@ -593,22 +593,22 @@ acceptance("Prioritize Full Name", function (needs) {
   });
 
   test("Reply to post use full name", async function (assert) {
-    await visit("/t/internationalization-localization/280");
-    await click("article#post_3 button.reply");
+    await visit("/t/short-topic-with-two-posts/54079");
+    await click("article#post_2 button.reply");
 
     assert.strictEqual(
       queryAll(".action-title .user-link").text().trim(),
-      "Jeff Atwood"
+      "james, john, the third"
     );
   });
 
   test("Quotes use full name", async function (assert) {
-    await visit("/t/internationalization-localization/280");
-    await selectText("#post_3 p");
+    await visit("/t/short-topic-with-two-posts/54079");
+    await selectText("#post_2 p");
     await click(".insert-quote");
     assert.strictEqual(
       queryAll(".d-editor-input").val().trim(),
-      '[quote="Jeff Atwood, post:3, topic:280, username:codinghorror"]\nYep, all strings are going through a lookup table.*\n[/quote]'
+      '[quote="james, john, the third, post:2, topic:54079, full:true, username:james_john"]\nThis is a short topic.\n[/quote]'
     );
   });
 });
