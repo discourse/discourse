@@ -34,7 +34,6 @@ module SecondFactor::Actions
         description: I18n.t(
           "second_factor_auth.actions.discourse_connect_provider.description",
           hostname: hostname,
-          sso_return_url: sso.return_sso_url
         )
       }
     end

@@ -198,7 +198,6 @@ describe SecondFactor::Actions::DiscourseConnectProvider do
       expect(output[:description]).to eq(I18n.t(
         "second_factor_auth.actions.discourse_connect_provider.description",
         hostname: "hobbit.shire.com",
-        sso_return_url: "http://hobbit.shire.com/sso"
       ))
     end
   end
