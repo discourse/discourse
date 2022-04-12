@@ -20,7 +20,7 @@ class UserBookmarkList
   end
 
   def load
-    @bookmarks = BookmarkQuery.new(user: @user, guardian: @guardian, params: @params).list_all
+    @bookmarks = BookmarkQuery.new(user: @user, guardian: @guardian, params: @params).list_all.to_a
     if SiteSetting.use_polymorphic_bookmarks
       preload_polymorphic_associations
     end
@@ -42,13 +42,13 @@ class UserBookmarkList
   # on the type, and we want the associations all loaded ahead of time to make
   # sure we are not doing N1s.
   def preload_polymorphic_associations
-    @topics = Topic.includes(:topic_users, :posts).where(
-      id: Bookmark.select_type(@bookmarks, "Topic").map(&:bookmarkable_id)
-    ).where(topic_users: { user_id: @user.id })
+    ActiveRecord::Associations::Preloader.new.preload(
+      Bookmark.select_type(@bookmarks, "Topic"), [{ bookmarkable: :topic_users, bookmarkable: :posts }]
+    )
 
-    @posts = Post.includes(topic: :topic_users).where(
-      id: Bookmark.select_type(@bookmarks, "Post").map(&:bookmarkable_id)
-    ).where(topic_users: { user_id: @user.id })
+    ActiveRecord::Associations::Preloader.new.preload(
+      Bookmark.select_type(@bookmarks, "Post"), [{ bookmarkable: [{ topic: :topic_users }] }]
+    )
 
     Bookmark.registered_bookmarkables.each do |registered_bookmarkable|
       bookmarkable_ids = Bookmark.select_type(@bookmarks, registered_bookmarkable.model.name).map(&:bookmarkable_id)

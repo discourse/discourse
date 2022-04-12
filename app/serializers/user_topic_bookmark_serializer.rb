@@ -1,13 +1,6 @@
 # frozen_string_literal: true
 
 class UserTopicBookmarkSerializer < UserPostTopicBookmarkBaseSerializer
-  attr_reader :topic
-
-  def initialize(obj, topic, opts)
-    super(obj, opts)
-    @topic = topic
-  end
-
   # it does not matter what the linked post number is for topic bookmarks,
   # on the client we always take the user to the last unread post in the
   # topic when the bookmark URL is clicked
@@ -55,5 +48,11 @@ class UserTopicBookmarkSerializer < UserPostTopicBookmarkBaseSerializer
 
   def bookmarkable_user
     @bookmarkable_user ||= first_post.user
+  end
+
+  private
+
+  def topic
+    object.bookmarkable
   end
 end

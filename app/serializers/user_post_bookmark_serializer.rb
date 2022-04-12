@@ -1,14 +1,7 @@
 # frozen_string_literal: true
 
 class UserPostBookmarkSerializer < UserPostTopicBookmarkBaseSerializer
-  attr_reader :post, :post_id
-
-  def initialize(obj, post, opts)
-    super(obj, opts)
-    @post = post
-  end
-
-  delegate :topic, to: :post
+  attr_reader :post_id
 
   def post_id
     post.id
@@ -36,5 +29,15 @@ class UserPostBookmarkSerializer < UserPostTopicBookmarkBaseSerializer
 
   def bookmarkable_user
     @bookmarkable_user ||= post.user
+  end
+
+  private
+
+  def topic
+    object.bookmarkable.topic
+  end
+
+  def post
+    object.bookmarkable
   end
 end

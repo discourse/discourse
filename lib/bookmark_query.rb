@@ -63,7 +63,6 @@ class BookmarkQuery
     end
 
     results = results.limit(@limit)
-
     BookmarkQuery.preload(results, self)
     results
   end
@@ -100,9 +99,11 @@ class BookmarkQuery
     # to further filter results securely using merges, though this is not necessary just
     # yet.
 
-    Bookmark.select("bookmarks.*").from(
-      "(#{topic_results.to_sql} UNION #{post_results.to_sql} UNION #{other_bookmarks.to_sql}) as bookmarks"
-    )
+    union_sql = "#{topic_results.to_sql} UNION #{post_results.to_sql}"
+    if Bookmark.registered_bookmarkables.any?
+      union_sql += " UNION #{other_bookmarks.to_sql}"
+    end
+    Bookmark.select("bookmarks.*").from("(#{union_sql}) as bookmarks").includes(bookmarkable: :bookmarkable_relation)
   end
 
   def base_bookmarks
