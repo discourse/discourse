@@ -41,7 +41,7 @@ const rule = {
         // then assign the name to be the displayName
         if (split[i].indexOf("username:") === 0) {
           displayName = split[0];
-          // strip key of 'username:' and return name 
+          // strip key of 'username:' and return name
           username = split.slice(split[i].slice(9), split[i++]);
           continue;
         }
