@@ -342,6 +342,8 @@ module Email
       style(".digest-content, .header-popular-posts, .spacer, .popular-post-spacer, .popular-post-meta, .digest-new-header, .digest-new-topic, .body", nil, dm: "body")
       style(".with-accent-colors, .digest-content-header", nil, dm: "body_primary")
       style(".summary-footer", nil, dm: "text-color")
+      style(".digest-topic-body", "border-bottom: 1px solid #454545 !important;")
+      style('div.secure-media-notice', 'border: 5px solid #454545 !important;')
     end
 
     def replace_relative_urls
