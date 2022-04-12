@@ -360,6 +360,10 @@ basic:
     default: "arial"
     enum: "BaseFontSetting"
     refresh: true
+  enable_sitemap:
+    default: true
+  sitemap_page_size:
+    default: 10000
 
 login:
   invite_only:
