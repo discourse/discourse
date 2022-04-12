@@ -1515,22 +1515,16 @@ el:
       not_approved: "Ο λογαριασμός σας δεν έχει εγκριθεί ακόμα. Θα ειδοποιηθείτε με email όταν είστε έτοιμοι να συνδεθείτε."
       google_oauth2:
         name: "Google"
-        title: "μέσω της Google"
       twitter:
         name: "Twitter"
-        title: "μέσω του Twitter"
       instagram:
         name: "Instagram"
-        title: "μέσω του Instagram"
       facebook:
         name: "Facebook"
-        title: "μέσω του Facebook"
       github:
         name: "GitHub"
-        title: "μέσω του GitHub"
       discord:
         name: "Discord"
-        title: "με το Discord"
       second_factor_toggle:
         totp: "Χρησιμοποιήστε αντ 'αυτού μια εφαρμογή ελέγχου ταυτότητας"
         backup_code: "Χρησιμοποιήστε αντ 'αυτού έναν εφεδρικό κωδικό"
@@ -2527,10 +2521,8 @@ el:
       tags_tab_description: "Οι ετικέτες και οι ομάδες ετικετών που καθορίζονται παραπάνω θα είναι διαθέσιμες μόνο σε αυτήν την κατηγορία και άλλες κατηγορίες που τις καθορίζουν επίσης. Δε θα είναι διαθέσιμες για χρήση σε άλλες κατηγορίες."
       tag_groups_placeholder: "(Προαιρετική) λίστα επιτρεπόμενων ομάδων ετικετών"
       allow_global_tags_label: "Επιτρέψτε επίσης άλλες ετικέτες"
-      tag_group_selector_placeholder: "(Προαιρετικό) Ομάδα ετικετών"
-      required_tag_group_description: "Απαιτήστε τα νέα θέματα να έχουν ετικέτες από μια ομάδα ετικετών:"
-      min_tags_from_required_group_label: "Αριθμός ετικετών:"
-      required_tag_group_label: "Ομάδα ετικετών:"
+      required_tag_group:
+        delete: "Σβήσιμο"
       topic_featured_link_allowed: "Επίτρεψε προτεινόμενους συνδέσμους σε αυτή την κατηγορία"
       delete: "Διαγραφή Κατηγορίας"
       create: "Νέα Κατηγορία"

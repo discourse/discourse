@@ -1767,27 +1767,23 @@ fr:
       not_approved: "Votre compte n'a pas encore été approuvé. Vous recevrez une notification par courriel lorsque vous pourrez vous connecter."
       google_oauth2:
         name: "Google"
-        title: "via Google"
-        sr_title: "Se connecter avec Google"
       twitter:
         name: "Twitter"
-        title: "via Twitter"
-        sr_title: "Se connecter avec Twitter"
       instagram:
         name: "Instagram"
-        title: "via Instagram"
+        title: "Se connecter avec Instagram"
         sr_title: "Se connecter avec Instagram"
       facebook:
         name: "Facebook"
-        title: "via Facebook"
+        title: "Se connecter avec Facebook"
         sr_title: "Se connecter avec Facebook"
       github:
         name: "GitHub"
-        title: "via GitHub"
+        title: "Se connecter avec GitHub"
         sr_title: "Se connecter avec GitHub"
       discord:
         name: "Discord"
-        title: "via Discord"
+        title: "Se connecter avec Discord"
         sr_title: "Se connecter avec Discord"
       second_factor_toggle:
         totp: "Utilisez plutôt une application d'authentification"
@@ -2972,10 +2968,8 @@ fr:
       tag_groups_placeholder: "(Facultatif) liste des groupes d'étiquettes autorisées"
       manage_tag_groups_link: "Gérer les groupes d'étiquettes"
       allow_global_tags_label: "Permettre aussi d'autres étiquettes"
-      tag_group_selector_placeholder: "(Facultatif) Groupe d'étiquettes"
-      required_tag_group_description: "Exiger que les nouveaux sujets aient des étiquettes d'un groupe d’étiquettes :"
-      min_tags_from_required_group_label: "Nombre d'étiquettes :"
-      required_tag_group_label: "Groupe d'étiquettes :"
+      required_tag_group:
+        delete: "Supprimer"
       topic_featured_link_allowed: "Autoriser les liens à la une dans cette catégorie"
       delete: "Supprimer la catégorie"
       create: "Nouvelle catégorie"

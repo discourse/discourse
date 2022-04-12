@@ -1766,27 +1766,23 @@ ur:
       not_approved: "آپ کا اکاؤنٹ ابھی تک منظور نہیں کیا گیا ہے۔ جب آپ لاگ اِن کر سکیں گو اِی میل کے ذریعے آپ کو مطلع کر دیا جائے گا۔"
       google_oauth2:
         name: "گُوگَل"
-        title: "گوگل سے"
-        sr_title: "گوگل کے ساتھ لاگ ان کریں"
       twitter:
         name: "Twitter"
-        title: "ٹویٹر سے"
-        sr_title: "ٹویٹر کے ساتھ لاگ ان کریں"
       instagram:
         name: "اِنسٹاگرام"
-        title: "اِنسٹاگرام سے"
+        title: "انسٹاگرام کے ساتھ لاگ ان کریں"
         sr_title: "انسٹاگرام کے ساتھ لاگ ان کریں"
       facebook:
         name: "فَیسبُک"
-        title: "فیس بک سے"
+        title: "فیس بک کے ساتھ لاگ ان کریں"
         sr_title: "فیس بک کے ساتھ لاگ ان کریں"
       github:
         name: "گِٹ ہَب"
-        title: "گِٹ ہَب سے"
+        title: "گٹ ہب کے ساتھ لاگ ان کریں"
         sr_title: "گٹ ہب کے ساتھ لاگ ان کریں"
       discord:
         name: "ڈِسکَورڈ"
-        title: "ڈِسکَورڈ کے ساتھ"
+        title: "ڈسکورڈ کے ساتھ لاگ ان کریں"
         sr_title: "ڈسکورڈ کے ساتھ لاگ ان کریں"
       second_factor_toggle:
         totp: "بجائے ایک اَوتھینٹیکَیٹر اَیپ کا استعمال کریں"
@@ -3007,10 +3003,8 @@ ur:
       tag_groups_placeholder: "(اختیاری) اجازت والے ٹیگ گروپس کی فہرست"
       manage_tag_groups_link: "ٹیگ گروپوں کا انتظام"
       allow_global_tags_label: "دوسرے ٹیگز کی بھی اجازت دیں"
-      tag_group_selector_placeholder: "(اختیاری) ٹیگ گروپ"
-      required_tag_group_description: "ٹیگ گروپ سے ٹیگز رکھنے کے لیے نئے عنوانات کی ضرورت ہے:"
-      min_tags_from_required_group_label: "ٹیگز کےنمبر:"
-      required_tag_group_label: "ٹیگ گروپ:"
+      required_tag_group:
+        delete: "مٹائیں"
       topic_featured_link_allowed: "اس زمرہ میں نمایاں لنکس کو اجازت دیں"
       delete: "زمرہ مٹائیں"
       create: "نیا زمرہ"

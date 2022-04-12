@@ -1779,27 +1779,23 @@ es:
       not_approved: "Tu cuenta aún no ha sido aprobada. Se te notificará por correo electrónico cuando todo esté listo para que inicies sesión."
       google_oauth2:
         name: "Google"
-        title: "con Google"
-        sr_title: "Iniciar sesión con Google"
       twitter:
         name: "Twitter"
-        title: "con Twitter"
-        sr_title: "Iniciar sesión con Twitter"
       instagram:
         name: "Instagram"
-        title: "con Instagram"
+        title: "Iniciar sesión con Instagram"
         sr_title: "Iniciar sesión con Instagram"
       facebook:
         name: "Facebook"
-        title: "con Facebook"
+        title: "Iniciar sesión con Facebook"
         sr_title: "Iniciar sesión con Facebook"
       github:
         name: "GitHub"
-        title: "con GitHub"
+        title: "Iniciar sesión con GitHub"
         sr_title: "Iniciar sesión con GitHub"
       discord:
         name: "Discord"
-        title: "con Discord"
+        title: "Iniciar sesión con Discord"
         sr_title: "Iniciar sesión con Discord"
       second_factor_toggle:
         totp: "Usar una aplicación de autenticación en su lugar"
@@ -3021,10 +3017,8 @@ es:
       tag_groups_placeholder: "(Opcional) lista de grupos de etiquetas permitidos"
       manage_tag_groups_link: "Gestionar grupos de etiquetas"
       allow_global_tags_label: "Permitir también otras etiquetas"
-      tag_group_selector_placeholder: "(Opcional) Grupo de etiquetas"
-      required_tag_group_description: "Requerir que los nuevos temas tengan etiquetas de un grupo de etiquetas:"
-      min_tags_from_required_group_label: "Número de etiquetas:"
-      required_tag_group_label: "Grupo de etiquetas:"
+      required_tag_group:
+        delete: "Eliminar"
       topic_featured_link_allowed: "Permitir enlaces destacados en esta categoría"
       delete: "Eliminar categoría"
       create: "Nueva categoría"

@@ -1696,27 +1696,23 @@ ko:
       not_approved: "계정이 아직 승인되지 않았습니다. 승인 되면 이메일로 알림을 받게 됩니다."
       google_oauth2:
         name: "구글"
-        title: "구글 사용"
-        sr_title: "구글로 로그인"
       twitter:
         name: "트위터"
-        title: "트위터 사용"
-        sr_title: "트위터로 로그인"
       instagram:
         name: "인스타그램"
-        title: "인스타그램 사용"
+        title: "인스타그램으로 로그인"
         sr_title: "인스타그램으로 로그인"
       facebook:
         name: "페이스북"
-        title: "페이스북 사용"
+        title: "페이스북으로 로그인"
         sr_title: "페이스북으로 로그인"
       github:
         name: "GitHub"
-        title: "GitHub 사용"
+        title: "GitHub로 로그인"
         sr_title: "GitHub로 로그인"
       discord:
         name: "디스코드"
-        title: "디스코드 사용"
+        title: "디스코드로 로그인"
         sr_title: "디스코드로 로그인"
       second_factor_toggle:
         totp: "대신 인증 자 앱을 사용하십시오."
@@ -2862,10 +2858,8 @@ ko:
       tag_groups_placeholder: "(선택사항) 허용된 태그 그룹 목록"
       manage_tag_groups_link: "태그 그룹 관리"
       allow_global_tags_label: "다른 태그도 허용"
-      tag_group_selector_placeholder: "(선택 사항) 태그 그룹"
-      required_tag_group_description: "새 글은 태그 그룹의 태그를 포함:"
-      min_tags_from_required_group_label: "태그 수:"
-      required_tag_group_label: "태그 그룹 :"
+      required_tag_group:
+        delete: "삭제"
       topic_featured_link_allowed: "이 카테고리에 주요 링크 허용"
       delete: "카테고리 삭제"
       create: "새 카테고리"

@@ -1261,19 +1261,14 @@ id:
       submit_new_email: "Perbarui Alamat Email"
       google_oauth2:
         name: "Google"
-        title: "dengan Google"
       twitter:
         name: "Twitter"
-        title: "dengan Twitter"
       instagram:
         name: "Instagram"
-        title: "dengan Instagram"
       facebook:
         name: "Facebook"
-        title: "dengan Facebook"
       github:
         name: "GitHub"
-        title: "dengan GitHub"
       discord:
         name: "Discord"
     invites:
@@ -1582,6 +1577,8 @@ id:
       edit: "Ubah"
       settings: "Pengaturan"
       tags: "Label"
+      required_tag_group:
+        delete: "Hapus"
       name: "Nama Kategori"
       permissions:
         reply: "Balas"

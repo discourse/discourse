@@ -2029,27 +2029,23 @@ ar:
       not_approved: "لم تتم الموافقة على حسابك حتى الآن. سيتم إعلامك عبر البريد الإلكتروني عندما تكون مستعدًا لتسجيل الدخول."
       google_oauth2:
         name: "Google"
-        title: "باستخدام Google"
-        sr_title: "تسجيل الدخول باستخدام جوجل"
       twitter:
         name: "Twitter"
-        title: "باستخدام Twitter"
-        sr_title: "تسجيل الدخول باستخدام تويتر"
       instagram:
         name: "Instagram"
-        title: "باستخدام Instagram"
+        title: "تسجيل الدخول باستخدام Instagram"
         sr_title: "تسجيل الدخول باستخدام Instagram"
       facebook:
         name: "Facebook"
-        title: "باستخدام Facebook"
+        title: "تسجيل الدخول باستخدام فيسبوك"
         sr_title: "تسجيل الدخول باستخدام فيسبوك"
       github:
         name: "GitHub"
-        title: "باستخدام GitHub"
+        title: "تسجيل الدخول باستخدام GitHub"
         sr_title: "تسجيل الدخول باستخدام GitHub"
       discord:
         name: "Discord"
-        title: "باستخدام Discord"
+        title: "تسجيل الدخول باستخدام ديسكورد"
         sr_title: "تسجيل الدخول باستخدام ديسكورد"
       second_factor_toggle:
         totp: "استخدام تطبيق مصادقة بدلًا من ذلك"
@@ -3516,10 +3512,8 @@ ar:
       tag_groups_placeholder: "(اختياري) قائمة مجموعات الوسوم المسموح بها"
       manage_tag_groups_link: "إدارة مجموعات الوسوم"
       allow_global_tags_label: "السماح بالوسوم الأخرى أيضًا"
-      tag_group_selector_placeholder: "(اختياري) مجموعة وسوم"
-      required_tag_group_description: "طلب أن تحمل الموضوعات الجديدة وسومًا من مجموعة وسوم:"
-      min_tags_from_required_group_label: "عدد الوسوم:"
-      required_tag_group_label: "مجموعة الوسوم:"
+      required_tag_group:
+        delete: "حذف"
       topic_featured_link_allowed: "السماح بالروابط المميزة في هذه الفئة."
       delete: "حذف الفئة"
       create: "فئة جديدة"

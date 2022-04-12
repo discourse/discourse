@@ -1485,22 +1485,16 @@ ro:
       not_approved: "Contul tău încă nu a fost aprobat. Vei primi notificarea prin email când ești gata de logare."
       google_oauth2:
         name: "Google"
-        title: "Google"
       twitter:
         name: "Twitter"
-        title: "Twitter"
       instagram:
         name: "Instagram"
-        title: "Instagram"
       facebook:
         name: "Facebook"
-        title: "Facebook"
       github:
         name: "GitHub"
-        title: "GitHub"
       discord:
         name: "Discord"
-        title: "cu Discord"
     invites:
       accept_title: "Initație"
       welcome_to: "Bine ai venit la %{site_name}!"
@@ -2301,6 +2295,8 @@ ro:
       tags: "Etichete"
       tags_placeholder: "(Opțional) lista etichetelor permise"
       tag_groups_placeholder: "(Opțional) lista grupurilor de etichete permise"
+      required_tag_group:
+        delete: "Șterge"
       topic_featured_link_allowed: "Permite link-uri promovate în această categorie."
       delete: "Șterge categorie"
       create: "Categorie nouă"

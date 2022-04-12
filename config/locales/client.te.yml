@@ -694,14 +694,8 @@ te:
       sent_activation_email_again: "మీకు <b>%{currentEmail}</b> మరో చేతన ఈమెయిల్ పంపాము. అది చేరుకోడానికి కొద్ది నిమిషాలు పట్టవచ్చు. ఇంకా స్పామ్ ఫోల్డరు చూడటం మర్చిపోకండి సుమా. "
       google_oauth2:
         name: "గూగుల్"
-        title: "గూగుల్ తో"
       twitter:
         name: "ట్విట్టర్"
-        title: "ట్విట్టరు తో"
-      facebook:
-        title: "ఫేస్ బుక్ తో"
-      github:
-        title: "గిట్ హబ్ తో"
     invites:
       accept_title: "ఆహ్వానం"
       welcome_to: "%{site_name} కు సుస్వాగతం!"
@@ -1081,6 +1075,8 @@ te:
       general: "సాధారణ"
       settings: "అమరికలు"
       tags: "ట్యాగులు"
+      required_tag_group:
+        delete: "తొలగించు"
       delete: "వర్గం తొలగించు"
       create: "కొత్త వర్గం"
       save: "వర్గం దాచు"

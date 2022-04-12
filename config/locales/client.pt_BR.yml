@@ -1765,27 +1765,23 @@ pt_BR:
       not_approved: "Sua conta ainda não foi aprovada. Você será notificado(a) por e-mail quando tudo estiver pronto para entrar."
       google_oauth2:
         name: "Google"
-        title: "com o Google"
-        sr_title: "Entrar com o Google"
       twitter:
         name: "Twitter"
-        title: "com o Twitter"
-        sr_title: "Entrar com o Twitter"
       instagram:
         name: "Instagram"
-        title: "com o Instagram"
+        title: "Entrar com o Instagram"
         sr_title: "Entrar com o Instagram"
       facebook:
         name: "Facebook"
-        title: "com o Facebook"
+        title: "Entrar com o Facebook"
         sr_title: "Entrar com o Facebook"
       github:
         name: "GitHub"
-        title: "com o GitHub"
+        title: "Entrar com o GitHub"
         sr_title: "Entrar com o GitHub"
       discord:
         name: "Discord"
-        title: "com o Discord"
+        title: "Entrar com o Discord"
         sr_title: "Entrar com o Discord"
       second_factor_toggle:
         totp: "Use um aplicativo autenticador"
@@ -2997,10 +2993,8 @@ pt_BR:
       tag_groups_placeholder: "(Opcional) lista de grupos de etiquetas permitidos"
       manage_tag_groups_link: "Gerenciar grupos de etiquetas"
       allow_global_tags_label: "Permitir também outras etiquetas"
-      tag_group_selector_placeholder: "(Opcional) grupo de etiquetas"
-      required_tag_group_description: "Exigir que novos tópicos tenham etiquetas de um grupo de etiquetas:"
-      min_tags_from_required_group_label: "Número de etiquetas:"
-      required_tag_group_label: "Grupo de etiquetas:"
+      required_tag_group:
+        delete: "Excluir"
       topic_featured_link_allowed: "Permitir links em destaque nesta categoria"
       delete: "Excluir categoria"
       create: "Nova categoria"

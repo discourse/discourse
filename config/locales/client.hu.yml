@@ -1768,27 +1768,23 @@ hu:
       not_approved: "A fiók még nem lett elfogadva. E-mailben értesítjük, ha bejelentkezhet."
       google_oauth2:
         name: "Google"
-        title: "Google-lel"
-        sr_title: "Bejelentkezés a Google-lel"
       twitter:
         name: "Twitter"
-        title: "Twitterrel"
-        sr_title: "Bejelentkezés a Twitterrel"
       instagram:
         name: "Instagram"
-        title: "Instagrammal"
+        title: "Bejelentkezés az Instagrammal"
         sr_title: "Bejelentkezés az Instagrammal"
       facebook:
         name: "Facebook"
-        title: "Facebookkal"
+        title: "Bejelentkezés a Facebookkal"
         sr_title: "Bejelentkezés a Facebookkal"
       github:
         name: "GitHub"
-        title: "GitHubbal"
+        title: "Bejelentkezés a GitHubbal"
         sr_title: "Bejelentkezés a GitHubbal"
       discord:
         name: "Discord"
-        title: "Discorddal"
+        title: "Bejelentkezés a Discorddal"
         sr_title: "Bejelentkezés a Discorddal"
       second_factor_toggle:
         totp: "Helyette hitelesítő alkalmazás használata"
@@ -2840,6 +2836,8 @@ hu:
       settings: "Beállítások"
       topic_template: "Téma sablonja"
       tags: "Címkék"
+      required_tag_group:
+        delete: "Törlés"
       topic_featured_link_allowed: "Kiemelt hivatkozások engedélyezése ebben a kategóriában"
       delete: "Kategória törlése"
       create: "Új kategória"

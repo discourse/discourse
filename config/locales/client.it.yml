@@ -350,6 +350,7 @@ it:
     saved: "Salvato!"
     upload: "Carica"
     uploading: "In caricamento..."
+    processing: "Elaborazione..."
     uploading_filename: "In caricamento: %{filename}..."
     processing_filename: "In elaborazione: %{filename}..."
     clipboard: "appunti"
@@ -1776,27 +1777,23 @@ it:
       not_approved: "Il tuo account non è ancora stato approvato. Verrai avvertito via email quando potrai collegarti."
       google_oauth2:
         name: "Google"
-        title: "con Google"
-        sr_title: "Accedi con Google"
       twitter:
         name: "Twitter"
-        title: "con Twitter"
-        sr_title: "Accedi con Twitter"
       instagram:
         name: "Instagram"
-        title: "con Instagram"
+        title: "Accedi con Instagram"
         sr_title: "Accedi con Instagram"
       facebook:
         name: "Facebook"
-        title: "con Facebook"
+        title: "Accedi con Facebook"
         sr_title: "Accedi con Facebook"
       github:
         name: "GitHub"
-        title: "con GitHub"
+        title: "Accedi con GitHub"
         sr_title: "Accedi con GitHub"
       discord:
         name: "Discord"
-        title: "con Discord"
+        title: "Accedi con Discord"
         sr_title: "Accedi con Discord"
       second_factor_toggle:
         totp: "Utilizzare un'app di autenticazione"
@@ -3017,10 +3014,11 @@ it:
       tag_groups_placeholder: "Elenco (opzionale) dei gruppi di etichette permessi"
       manage_tag_groups_link: "Gestisci gruppi di etichette"
       allow_global_tags_label: "Consenti anche ulteriori Etichette"
-      tag_group_selector_placeholder: "(Facoltativo) Gruppo di Etichette"
-      required_tag_group_description: "Rendi obbligatorio per i nuovi argomenti avere un'Etichetta da un Gruppo di Etichette:"
-      min_tags_from_required_group_label: "Numero Etichette:"
-      required_tag_group_label: "Gruppo di Etichette:"
+      required_tag_group:
+        description: "Richiedi che i nuovi argomenti abbiano etichette dai seguenti gruppi:"
+        delete: "Cancella"
+        add: "Aggiungi il gruppo di etichette richiesto"
+        placeholder: "seleziona il gruppo di etichette"
       topic_featured_link_allowed: "Consenti collegamenti in primo piano in questa categoria"
       delete: "Elimina Categoria"
       create: "Crea Categoria"
