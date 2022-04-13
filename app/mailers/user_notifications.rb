@@ -556,7 +556,7 @@ class UserNotifications < ActionMailer::Base
       participant_list = []
 
       post.topic.allowed_groups.each do |g|
-        participant_list.push "[#{g.name} (#{g.users.count})](#{Discourse.base_url}/groups/#{g.name})"
+        participant_list.push "[#{g.name} (#{g.users.count})](#{g.full_url})"
       end
 
       post.topic.allowed_users.each do |u|
