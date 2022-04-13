@@ -577,7 +577,7 @@ export default Component.extend(TextareaTextManipulation, {
           return resolve(options);
         })
           .then((list) => {
-            if (list === "skip") {
+            if (list === SKIP) {
               return [];
             }
 
