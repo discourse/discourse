@@ -43,20 +43,15 @@ class UserBookmarkList
   # sure we are not doing N1s.
   def preload_polymorphic_associations
     ActiveRecord::Associations::Preloader.new.preload(
-      Bookmark.select_type(@bookmarks, "Topic"), [{ bookmarkable: [:topic_users, :posts] }]
+      Bookmark.select_type(@bookmarks, "Topic"), { bookmarkable: [:topic_users, :posts] }
     )
 
     ActiveRecord::Associations::Preloader.new.preload(
-      Bookmark.select_type(@bookmarks, "Post"), [{ bookmarkable: [{ topic: :topic_users }] }]
+      Bookmark.select_type(@bookmarks, "Post"), { bookmarkable: [{ topic: :topic_users }] }
     )
 
     Bookmark.registered_bookmarkables.each do |registered_bookmarkable|
-      bookmarkable_ids = Bookmark.select_type(@bookmarks, registered_bookmarkable.model.name).map(&:bookmarkable_id)
-      self.instance_variable_set(
-        :"@#{registered_bookmarkable.table_name}",
-        registered_bookmarkable.preload_associations(bookmarkable_ids)
-      )
-      self.class.public_send(:attr_reader, registered_bookmarkable.table_name)
+      registered_bookmarkable.preload_associations(@bookmarks)
     end
   end
 end

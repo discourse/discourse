@@ -40,12 +40,10 @@ class Bookmark < ActiveRecord::Base
       end
     end
 
-    def preload_associations(bookmarkable_ids)
-      relation = model
-      preload_includes.each do |preload_include|
-        relation = relation.includes(preload_include)
-      end
-      relation.where(id: bookmarkable_ids)
+    def preload_associations(bookmarks)
+      ActiveRecord::Associations::Preloader.new.preload(
+        Bookmark.select_type(bookmarks, model.name), { bookmarkable: preload_includes }
+      )
     end
   end
 
