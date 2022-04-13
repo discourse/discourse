@@ -2002,7 +2002,7 @@ describe CookedPostProcessor do
     end
   end
 
-  context "prioritizes full name after cooked" do
+  context "prioritizes full name in quotes" do
     fab!(:user) { Fabricate(:user, name: "james, john, the third") }
     fab!(:topic) { Fabricate(:topic) }
     let!(:post) { Fabricate(:post, user: user, topic: topic, raw: 'this is the "first" post') }
@@ -2012,7 +2012,7 @@ describe CookedPostProcessor do
       SiteSetting.prioritize_username_in_ux = false
     end
 
-    it "escapes attributes" do
+    it "maintains full name post processing" do
       reply = Fabricate(:post, user: user, topic: topic, raw: <<~RAW.strip)
         [quote="#{user.name}, post:#{post.id}, topic:#{topic.id}, username:#{user.username}"]
           quoting a post with a quote
