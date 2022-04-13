@@ -1870,6 +1870,138 @@ describe CookedPostProcessor do
     end
   end
 
+  context "full quote on direct reply with full name prioritization" do
+    fab!(:user) { Fabricate(:user, name: "james, john, the third") }
+    fab!(:topic) { Fabricate(:topic) }
+    let!(:post) { Fabricate(:post, user: user, topic: topic, raw: 'this is the "first" post') }
+
+    let(:raw) do
+      <<~RAW.strip
+      [quote="#{post.user.name}, post:#{post.post_number}, topic:#{topic.id}, username:#{post.user.username}"]
+
+      this is the “first” post
+
+      [/quote]
+
+      and this is the third reply
+      RAW
+    end
+
+    let(:raw2) do
+      <<~RAW.strip
+      and this is the third reply
+
+      [quote="#{post.user.name}, post:#{post.post_number}, topic:#{topic.id}, username:#{post.user.username}"]
+      this is the ”first” post
+      [/quote]
+      RAW
+    end
+
+    let(:raw3) do
+      <<~RAW.strip
+      [quote="#{post.user.name}, post:#{post.post_number}, topic:#{topic.id}, username:#{post.user.username}"]
+
+      this is the “first” post
+
+      [/quote]
+
+      [quote="#{post.user.name}, post:#{post.post_number}, topic:#{topic.id}, username:#{post.user.username}"]
+
+      this is the “first” post
+
+      [/quote]
+
+      and this is the third reply
+      RAW
+    end
+
+    before do
+      SiteSetting.remove_full_quote = true
+      SiteSetting.display_name_on_posts = true
+      SiteSetting.prioritize_username_in_ux = false
+    end
+
+    it 'works' do
+      hidden = Fabricate(:post, topic: topic, hidden: true, raw: "this is the second post after")
+      small_action = Fabricate(:post, topic: topic, post_type: Post.types[:small_action])
+      reply = Fabricate(:post, topic: topic, raw: raw)
+
+      freeze_time do
+        topic.bumped_at = 1.day.ago
+        CookedPostProcessor.new(reply).remove_full_quote_on_direct_reply
+
+        expect(topic.ordered_posts.pluck(:id))
+          .to eq([post.id, hidden.id, small_action.id, reply.id])
+
+        expect(topic.bumped_at).to eq_time(1.day.ago)
+        expect(reply.raw).to eq("and this is the third reply")
+        expect(reply.revisions.count).to eq(1)
+        expect(reply.revisions.first.modifications["raw"]).to eq([raw, reply.raw])
+        expect(reply.revisions.first.modifications["edit_reason"][1]).to eq(I18n.t(:removed_direct_reply_full_quotes))
+      end
+    end
+
+    it 'does nothing if there are multiple quotes' do
+      reply = Fabricate(:post, topic: topic, raw: raw3)
+      CookedPostProcessor.new(reply).remove_full_quote_on_direct_reply
+      expect(topic.ordered_posts.pluck(:id)).to eq([post.id, reply.id])
+      expect(reply.raw).to eq(raw3)
+    end
+
+    it 'does not delete quote if not first paragraph' do
+      reply = Fabricate(:post, topic: topic, raw: raw2)
+      CookedPostProcessor.new(reply).remove_full_quote_on_direct_reply
+      expect(topic.ordered_posts.pluck(:id)).to eq([post.id, reply.id])
+      expect(reply.raw).to eq(raw2)
+    end
+
+    it "does nothing when 'remove_full_quote' is disabled" do
+      SiteSetting.remove_full_quote = false
+
+      reply = Fabricate(:post, topic: topic, raw: raw)
+
+      CookedPostProcessor.new(reply).remove_full_quote_on_direct_reply
+      expect(reply.raw).to eq(raw)
+    end
+
+    it "does not generate a blank HTML document" do
+      post = Fabricate(:post, topic: topic, raw: "<sunday><monday>")
+      cp = CookedPostProcessor.new(post)
+      cp.post_process
+      expect(cp.html).to eq("<p></p>")
+    end
+
+    it "works only on new posts" do
+      Fabricate(:post, topic: topic, hidden: true, raw: "this is the second post after")
+      Fabricate(:post, topic: topic, post_type: Post.types[:small_action])
+      reply = PostCreator.create!(topic.user, topic_id: topic.id, raw: raw)
+
+      stub_image_size
+      CookedPostProcessor.new(reply).post_process
+      expect(reply.raw).to eq(raw)
+
+      PostRevisor.new(reply).revise!(Discourse.system_user, raw: raw, edit_reason: "put back full quote")
+
+      stub_image_size
+      CookedPostProcessor.new(reply).post_process(new_post: true)
+      expect(reply.raw).to eq("and this is the third reply")
+    end
+
+    it "works with nested quotes" do
+      reply1 = Fabricate(:post, topic: topic, raw: raw)
+      reply2 = Fabricate(:post, topic: topic, raw: <<~RAW.strip)
+        [quote="#{reply1.user.username}, post:#{reply1.post_number}, topic:#{topic.id}"]
+        #{raw}
+        [/quote]
+
+        quoting a post with a quote
+      RAW
+
+      CookedPostProcessor.new(reply2).remove_full_quote_on_direct_reply
+      expect(reply2.raw).to eq('quoting a post with a quote')
+    end
+  end
+
   context "#html" do
     it "escapes attributes" do
       post = Fabricate(:post, raw: '<img alt="<something>">')
