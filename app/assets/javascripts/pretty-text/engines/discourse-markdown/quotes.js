@@ -42,7 +42,13 @@ const rule = {
         if (split[i].indexOf("username:") === 0) {
           // return users name by selecting all values from the first index to the post
           // this protects us from when a user has a `,` in their name
-          displayName = split.slice(split[0], split.slice(0, split.indexOf(`post:${postNumber}`)))
+          displayName = split.slice(0, split.indexOf(`post:${postNumber}`));
+
+          // preserve `,` in a users name if they exist
+          if (displayName.length > 1) {
+            displayName = displayName.join(", ");
+          }
+
           // strip key of 'username:' and return username
           username = split[i].slice(9);
           continue;

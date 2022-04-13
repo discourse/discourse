@@ -1921,7 +1921,7 @@ describe CookedPostProcessor do
       SiteSetting.prioritize_username_in_ux = false
     end
 
-    it 'works' do
+    it 'removes direct reply with full quotes' do
       hidden = Fabricate(:post, topic: topic, hidden: true, raw: "this is the second post after")
       small_action = Fabricate(:post, topic: topic, post_type: Post.types[:small_action])
       reply = Fabricate(:post, topic: topic, raw: raw)
@@ -1988,9 +1988,9 @@ describe CookedPostProcessor do
     end
 
     it "works with nested quotes" do
-      reply1 = Fabricate(:post, topic: topic, raw: raw)
+      reply1 = Fabricate(:post, user: user, topic: topic, raw: raw)
       reply2 = Fabricate(:post, topic: topic, raw: <<~RAW.strip)
-        [quote="#{reply1.user.username}, post:#{reply1.post_number}, topic:#{topic.id}"]
+        [quote="#{reply1.user.name}, post:#{reply1.post_number}, topic:#{topic.id}, username:#{reply1.user.username}"]
         #{raw}
         [/quote]
 
@@ -2002,6 +2002,29 @@ describe CookedPostProcessor do
     end
   end
 
+  context "prioritizes full name after cooked" do
+    fab!(:user) { Fabricate(:user, name: "james, john, the third") }
+    fab!(:topic) { Fabricate(:topic) }
+    let!(:post) { Fabricate(:post, user: user, topic: topic, raw: 'this is the "first" post') }
+
+    before do
+      SiteSetting.display_name_on_posts = true
+      SiteSetting.prioritize_username_in_ux = false
+    end
+
+    it "escapes attributes" do
+      reply = Fabricate(:post, user: user, topic: topic, raw: <<~RAW.strip)
+        [quote="#{user.name}, post:#{post.id}, topic:#{topic.id}, username:#{user.username}"]
+          quoting a post with a quote
+        [/quote]
+
+        quoting a post with a quote
+      RAW
+      doc = Nokogiri::HTML5::fragment(CookedPostProcessor.new(reply).html)
+      expect(doc.css('.title').text).to eq("\n\n #{user.name}:")
+    end
+  end
+
   context "#html" do
     it "escapes attributes" do
       post = Fabricate(:post, raw: '<img alt="<something>">')
@@ -2009,5 +2032,4 @@ describe CookedPostProcessor do
       expect(CookedPostProcessor.new(post).html).to eq('<p><img alt="&lt;something&gt;"></p>')
     end
   end
-
 end
