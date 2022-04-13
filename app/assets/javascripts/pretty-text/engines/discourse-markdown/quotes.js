@@ -40,9 +40,11 @@ const rule = {
         // if we have the additional attribute of username: because we are prioritizing full name
         // then assign the name to be the displayName
         if (split[i].indexOf("username:") === 0) {
-          displayName = split[0];
-          // strip key of 'username:' and return username 
-          username = split.slice(split[i].slice(9), split[i++]);
+          // return users name by selecting all values from the first index to the post
+          // this protects us from when a user has a `,` in their name
+          displayName = split.slice(split[0], split.slice(0, split.indexOf(`post:${postNumber}`)))
+          // strip key of 'username:' and return username
+          username = split[i].slice(9);
           continue;
         }
       }
