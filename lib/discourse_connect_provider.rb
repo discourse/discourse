@@ -2,6 +2,7 @@
 
 class DiscourseConnectProvider < DiscourseConnectBase
   class BlankSecret < RuntimeError; end
+  class BlankReturnUrl < RuntimeError; end
 
   def self.parse(payload, sso_secret = nil)
     set_return_sso_url(payload)

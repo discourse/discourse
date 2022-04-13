@@ -18,8 +18,16 @@ describe SecondFactor::Actions::GrantAdmin do
     ActionController::Parameters.new(hash)
   end
 
-  def create_instance(user)
-    SecondFactor::Actions::GrantAdmin.new(Guardian.new(user))
+  def create_request(request_method: "GET", path: "/")
+    ActionDispatch::TestRequest.create({
+      "REQUEST_METHOD" => request_method,
+      "PATH_INFO" => path
+    })
+  end
+
+  def create_instance(user, request = nil)
+    request ||= create_request
+    SecondFactor::Actions::GrantAdmin.new(Guardian.new(user), request)
   end
 
   describe "#no_second_factors_enabled!" do
@@ -40,11 +48,11 @@ describe SecondFactor::Actions::GrantAdmin do
   end
 
   describe "#second_factor_auth_required!" do
-    it "returns a hash with callback_params, redirect_path and a description" do
+    it "returns a hash with callback_params, redirect_url and a description" do
       instance = create_instance(admin)
       hash = instance.second_factor_auth_required!(params({ user_id: user.id }))
       expect(hash[:callback_params]).to eq({ user_id: user.id })
-      expect(hash[:redirect_path]).to eq("/admin/users/#{user.id}/#{user.username}")
+      expect(hash[:redirect_url]).to eq("/admin/users/#{user.id}/#{user.username}")
       expect(hash[:description]).to eq(
         I18n.t(
           "second_factor_auth.actions.grant_admin.description",
