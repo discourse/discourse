@@ -117,27 +117,26 @@
     max-width: 300px;
   }
 
+  .avatar {
+    padding-top: 0.15em;
+  }
+
   .main-link {
     line-height: $line-height-medium;
     position: relative;
     z-index: z("base") + 1; // Intentionally overlapping category to create bigger tap target
     font-size: var(--font-up-1);
     a.title {
-      display: block;
       color: var(--primary);
       padding: 0;
     }
     .topic-statuses {
-      padding: 0 0 0.5em 0;
+      padding: 0;
       a {
         line-height: 0.8;
         color: var(--primary-medium);
       }
     }
-  }
-
-  .topic-featured-link {
-    padding: 0;
   }
 
   .badge-notification,
