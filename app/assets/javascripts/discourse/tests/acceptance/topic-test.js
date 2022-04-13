@@ -244,7 +244,10 @@ acceptance("Topic", function (needs) {
   test("Suspended user posts", async function (assert) {
     await visit("/t/topic-from-suspended-user/54077");
 
-    assert.ok(exists(".topic-post.user-suspended > #post_1"), "it has a class applied");
+    assert.ok(
+      exists(".topic-post.user-suspended > #post_1"),
+      "it has a class applied"
+    );
   });
 });
 
