@@ -1,6 +1,6 @@
 import CategoryFixtures from "discourse/tests/fixtures/category-fixtures";
 import I18n from "I18n";
-import { click, visit } from "@ember/test-helpers";
+import { click, currentURL, visit } from "@ember/test-helpers";
 import {
   acceptance,
   exists,
@@ -59,14 +59,19 @@ acceptance("Share and Invite modal", function (needs) {
 
   test("Post date link", async function (assert) {
     await visit("/t/short-topic-with-two-posts/54077");
-    await click("#post_2 .post-info.post-date");
     assert.ok(
       query("#post_2 .post-info.post-date a").href.endsWith(
         "/t/short-topic-with-two-posts/54077/2?u=eviltrout"
       )
     );
 
+    await click("#post_2 a.post-date");
     assert.ok(exists(".share-topic-modal"), "it shows the share modal");
+    assert.deepEqual(
+      currentURL(),
+      "/t/short-topic-with-two-posts/54077",
+      "it does not route to post #2"
+    );
   });
 
   test("Share topic in a restricted category", async function (assert) {
