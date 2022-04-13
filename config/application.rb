@@ -147,6 +147,7 @@ module Discourse
     end
 
     config.assets.precompile += %w{
+      application.js
       vendor.js
       admin.js
       browser-detect.js
