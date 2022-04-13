@@ -258,18 +258,6 @@ export default Component.extend({
       return this.navigateToTopic(topic, e.target.getAttribute("href"));
     }
 
-    // make full row click target on mobile, due to size constraints
-    if (
-      this.site.mobileView &&
-      (e.target.classList.contains("right") ||
-        e.target.classList.contains("topic-item-stats"))
-    ) {
-      if (wantsNewWindow(e)) {
-        return true;
-      }
-      return this.navigateToTopic(topic, topic.lastUnreadUrl);
-    }
-
     if (e.target.closest("a.topic-status")) {
       this.topic.togglePinnedForUser();
       return false;
