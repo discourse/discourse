@@ -34,6 +34,8 @@ class UserBookmarkBaseSerializer < ApplicationSerializer
     raise NotImplementedError
   end
 
+  # Note: This assumes that the bookmarkable has a user attached to it,
+  # we may need to revisit this assumption at some point.
   has_one :user, serializer: BasicUserSerializer, embed: :objects
 
   def user
