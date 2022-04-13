@@ -19,6 +19,7 @@ import { iconNode } from "discourse-common/lib/icon-library";
 import { postTransformCallbacks } from "discourse/widgets/post-stream";
 import { prioritizeNameInUx } from "discourse/lib/settings";
 import { relativeAgeMediumSpan } from "discourse/lib/formatter";
+import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { transformBasicPost } from "discourse/lib/transform-post";
 import autoGroupFlairForUser from "discourse/lib/avatar-flair";
 import showModal from "discourse/lib/show-modal";
@@ -352,22 +353,25 @@ createWidget("post-date", {
   tagName: "div.post-info.post-date",
 
   html(attrs) {
-    const attributes = { class: "post-date" };
-    let date;
-    if (attrs.wiki && attrs.lastWikiEdit) {
+    const attributes = { href: attrs.shareUrl, class: "post-date" };
+    let date = attrs.created_at;
+    if (attrs.lastWikiEdit) {
       attributes["class"] += " last-wiki-edit";
-      date = new Date(attrs.lastWikiEdit);
-    } else {
-      date = new Date(attrs.created_at);
+      date = attrs.lastWikiEdit;
     }
-    return h("a", { attributes }, dateNode(date));
+    return h("a", { attributes }, dateNode(new Date(date)));
   },
 
   click() {
+    if (wantsNewWindow(event)) {
+      return;
+    }
+
     const post = this.findAncestorModel();
     const topic = post.topic;
     const controller = showModal("share-topic", { model: topic.category });
     controller.setProperties({ topic, post });
+    event.preventDefault();
   },
 });
 

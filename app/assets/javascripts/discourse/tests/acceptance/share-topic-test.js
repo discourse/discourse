@@ -59,7 +59,12 @@ acceptance("Share and Invite modal", function (needs) {
 
   test("Post date link", async function (assert) {
     await visit("/t/short-topic-with-two-posts/54077");
-    await click("#post_2 .post-info.post-date a");
+    await click("#post_2 .post-info.post-date");
+    assert.ok(
+      query("#post_2 .post-info.post-date a").href.endsWith(
+        "/t/short-topic-with-two-posts/54077/2?u=eviltrout"
+      )
+    );
 
     assert.ok(exists(".share-topic-modal"), "it shows the share modal");
   });
