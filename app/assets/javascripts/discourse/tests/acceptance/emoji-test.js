@@ -1,9 +1,10 @@
 import {
   acceptance,
+  exists,
   normalizeHtml,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, fillIn, visit } from "@ember/test-helpers";
+import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
 
@@ -35,5 +36,24 @@ acceptance("Emoji", function (needs) {
         `<p>this is an emoji <img src="/images/emoji/google_classic/blonde_woman/5.png?v=${v}" title=":blonde_woman:t5:" class="emoji" alt=":blonde_woman:t5:" loading="lazy" width="20" height="20" style="aspect-ratio: 20 / 20;"></p>`
       )
     );
+  });
+
+  needs.settings({
+    emoji_autocomplete_min_chars: 2,
+  });
+
+  test("siteSetting:emoji_autocomplete_min_chars", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await click("#topic-footer-buttons .btn.create");
+
+    await fillIn(".d-editor-input", ":s");
+    await triggerKeyEvent(".d-editor-input", "keyup", 40); // ensures a keyup is triggered
+
+    assert.notOk(exists(".autocomplete.ac-emoji"));
+
+    await fillIn(".d-editor-input", ":sw");
+    await triggerKeyEvent(".d-editor-input", "keyup", 40); // ensures a keyup is triggered
+
+    assert.ok(exists(".autocomplete.ac-emoji"));
   });
 });
