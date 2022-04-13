@@ -215,30 +215,49 @@ RSpec.configure do |config|
 
     SiteSetting.refresh!
 
-    Capybara.server_host = "test.localhost"
-    Capybara.server_port = 31337
-    Capybara.app_host = "http://test.localhost:31337"
+    # The selenium app host and port must be used with the SiteSetting.force_hostname
+    # option, so the test server runs at the target host IP address (or wherever
+    # SELENIUM_APP_HOST is if that's specified), so the remote docker container
+    # can access the test server running on the host.
+    selenium_app_host = ENV.fetch("SELENIUM_APP_HOST") do
+      Socket.ip_address_list
+        .find(&:ipv4_private?)
+        .ip_address
+    end
+    Capybara.configure do |capybara_config|
+      capybara_config.server_host = selenium_app_host
+      capybara_config.server_port = 31337
+    end
 
-    chrome_binary_path = `which #{ChromeInstalledChecker.binary_name}`.chomp
-    puts "Using chrome binary at #{chrome_binary_path}"
-    Capybara.register_driver :selenium_chrome_headless do |app|
-      browser_options = ::Selenium::WebDriver::Chrome::Options.new(profile: nil, binary: chrome_binary_path).tap do |opts|
-        # these are the default options defined within capybara
-        opts.add_argument('--headless')
-        opts.add_argument('--disable-gpu') if Gem.win_platform?
-        opts.add_argument('--disable-site-isolation-trials')
-
-        # this is added for CI, otherwise we get
-        # > DevToolsActivePort file doesn't exist
-        opts.add_argument('--user-data-dir=~/.config/google-chrome')
-        opts.add_argument("--remote-debugging-port=9222")
-        opts.add_argument("--no-sandbox")
+    Capybara.register_driver :remote_selenium_headless do |app|
+      browser_options = ::Selenium::WebDriver::Chrome::Options.new.tap do |options|
+        options.add_argument("--headless")
+        options.add_argument("--window-size=1400,1400")
+        options.add_argument("--no-sandbox")
+        options.add_argument("--disable-dev-shm-usage")
       end
 
-      chromedriver_binary_path = `which chromedriver`.chomp
-      puts "Using chromedriver binary at #{chromedriver_binary_path}"
-      Selenium::WebDriver::Chrome::Service.driver_path = chromedriver_binary_path
-      Capybara::Selenium::Driver.new(app, browser: :chrome, capabilities: browser_options)
+      Capybara::Selenium::Driver.new(
+        app,
+        browser: :chrome,
+        url: "#{ENV['SELENIUM_HOST']}:4442/wd/hub",
+        capabilities: browser_options,
+      )
+    end
+
+    Capybara.register_driver :remote_selenium do |app|
+      browser_options = Selenium::WebDriver::Chrome::Options.new.tap do |options|
+        options.add_argument("--window-size=1400,1400")
+        options.add_argument("--no-sandbox")
+        options.add_argument("--disable-dev-shm-usage")
+      end
+
+      Capybara::Selenium::Driver.new(
+        app,
+        browser: :chrome,
+        url: "#{ENV["SELENIUM_HOST"]}:4442/wd/hub",
+        capabilities: browser_options
+      )
     end
 
     # Rebase defaults
@@ -253,7 +272,15 @@ RSpec.configure do |config|
 
     SiteSetting.provider = TestLocalProcessProvider.new
 
-    allowed_sites = ["test.localhost", "test.localhost:31337", "localhost", %r{127\.0\.0\.1:(\d{0,4})}]
+    allowed_sites = [
+      "test.localhost",
+      "test.localhost:31337",
+      "localhost:#{Capybara.server_port}",
+      "#{selenium_app_host}:#{Capybara.server_port}",
+      "localhost",
+      %r{127\.0\.0\.1:(\d{0,4})},
+      /chromedriver/
+    ]
     WebMock.disable_net_connect!(allow: allowed_sites)
 
     if ENV['ELEVATED_UPLOADS_ID']
@@ -314,6 +341,22 @@ RSpec.configure do |config|
   # Match the request hostname to the value in `database.yml`
   config.before(:all, type: [:request, :multisite, :system]) { host! "test.localhost" }
   config.before(:each, type: [:request, :multisite, :system]) { host! "test.localhost" }
+
+  config.before(:each, type: :system) do |example|
+    Capybara.app_host = "http://#{Capybara.server_host}:#{Capybara.server_port}"
+
+    driver = \
+      if example.metadata[:js]
+        locality = ENV["SELENIUM_HOST"].present? ? :remote : :local
+        headless = "_headless" if ENV["DISABLE_HEADLESS"].blank?
+
+        "#{locality}_selenium#{headless}".to_sym
+      else
+        :rack_test
+      end
+
+    driven_by driver
+  end
 
   config.before(:each, type: :multisite) do
     Rails.configuration.multisite = true # rubocop:disable Discourse/NoDirectMultisiteManipulation
