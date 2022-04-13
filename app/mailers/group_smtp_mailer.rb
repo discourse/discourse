@@ -83,18 +83,10 @@ class GroupSmtpMailer < ActionMailer::Base
     post.topic.allowed_users.each do |u|
       next if u.id == recipient_user.id
 
-      if SiteSetting.prioritize_username_in_ux?
-        if u.staged?
-          list.push("#{u.email}")
-        else
-          list.push("[#{u.username}](#{Discourse.base_url}/u/#{u.username_lower})")
-        end
+      if u.staged?
+        list.push("#{u.email}")
       else
-        if u.staged?
-          list.push("#{u.email}")
-        else
-          list.push("[#{u.name.blank? ? u.username : u.name}](#{Discourse.base_url}/u/#{u.username_lower})")
-        end
+        list.push("[#{u.display_name}](#{u.full_url})")
       end
     end
 
