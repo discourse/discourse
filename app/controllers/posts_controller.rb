@@ -132,7 +132,7 @@ class PostsController < ApplicationController
       format.rss do
         @posts = posts
         @title = "#{SiteSetting.title} - #{I18n.t("rss_description.user_posts", username: user.username)}"
-        @link = "#{Discourse.base_url}/u/#{user.username}/activity"
+        @link = "#{user.full_url}/activity"
         @description = I18n.t("rss_description.user_posts", username: user.username)
         render 'posts/latest', formats: [:rss]
       end
