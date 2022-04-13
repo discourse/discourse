@@ -77,7 +77,7 @@ class GroupSmtpMailer < ActionMailer::Base
     list = []
 
     post.topic.allowed_groups.each do |g|
-      list.push("[#{g.name_full_preferred}](#{Discourse.base_url}/groups/#{g.name})")
+      list.push("[#{g.name_full_preferred}](#{g.full_url})")
     end
 
     post.topic.allowed_users.each do |u|

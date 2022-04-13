@@ -606,7 +606,7 @@ describe UserNotifications do
         notification_data_hash: notification.data_hash
       )
 
-      expect(mail.body).to include("[group1 (2)](http://test.localhost/groups/group1), [group2 (1)](http://test.localhost/groups/group2), [one](http://test.localhost/u/one), [two](http://test.localhost/u/two)")
+      expect(mail.body).to include("[group1 (2)](http://test.localhost/g/group1), [group2 (1)](http://test.localhost/g/group2), [one](http://test.localhost/u/one), [two](http://test.localhost/u/two)")
     end
 
     context "when SiteSetting.group_name_in_subject is true" do

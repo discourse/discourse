@@ -936,6 +936,10 @@ class Group < ActiveRecord::Base
     TopicAllowedGroup.where(group_id: self.id).joins(:topic).count
   end
 
+  def full_url
+    "#{Discourse.base_url}/g/#{UrlHelper.encode_component(self.name)}"
+  end
+
   protected
 
   def name_format_validator
