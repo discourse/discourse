@@ -43,7 +43,7 @@ class UserBookmarkList
   # sure we are not doing N1s.
   def preload_polymorphic_associations
     ActiveRecord::Associations::Preloader.new.preload(
-      Bookmark.select_type(@bookmarks, "Topic"), [{ bookmarkable: :topic_users, bookmarkable: :posts }]
+      Bookmark.select_type(@bookmarks, "Topic"), [{ bookmarkable: [:topic_users, :posts] }]
     )
 
     ActiveRecord::Associations::Preloader.new.preload(

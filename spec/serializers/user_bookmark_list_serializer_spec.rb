@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe UserBookmarkListSerializer do
-  class UserTestBookmarkSerializer < ApplicationSerializer
+  class UserTestBookmarkSerializer < UserBookmarkBaseSerializer
     def initialize(obj, user, opts)
       super(obj, opts)
       @user = user
