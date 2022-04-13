@@ -142,7 +142,9 @@ RSpec.describe BookmarkQuery do
               search_fields: ["username"]
             )
           end
+          
           let!(:bookmark5) { Fabricate(:bookmark, user: user, bookmarkable: Fabricate(:user, username: "bookmarkqueen")) }
+
           after do
             Bookmark.registered_bookmarkables = []
           end
@@ -247,6 +249,7 @@ RSpec.describe BookmarkQuery do
         )
         BookmarkQuery.preloaded_custom_fields << "test_field"
       end
+
       after do
         BookmarkQuery.preloaded_custom_fields.clear
       end

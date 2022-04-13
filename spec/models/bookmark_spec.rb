@@ -42,6 +42,7 @@ describe Bookmark do
       before do
         SiteSetting.use_polymorphic_bookmarks = true
       end
+
       after do
         Bookmark.registered_bookmarkables = []
       end
@@ -72,8 +73,7 @@ describe Bookmark do
           serializer: stub,
           search_fields: ["file_name"]
         )
-        bm = Bookmark.create(bookmarkable_type: "Upload", bookmarkable: Fabricate(:upload), user: user)
-        expect(bm.errors.empty?).to eq(true)
+        expect(bm.valid?).to eq(true)
       end
     end
   end
