@@ -84,6 +84,7 @@ export function transformBasicPost(post) {
     readCount: post.readers_count,
     canPublishPage: false,
     trustLevel: post.trust_level,
+    userSuspended: post.user_suspended,
   };
 
   _additionalAttributes.forEach((a) => (postAtts[a] = post[a]));
