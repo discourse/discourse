@@ -3066,6 +3066,7 @@ en:
       deleted_by_author_simple: "(post deleted by author)"
       collapse: "collapse"
       sr_collapse_replies: "Collapse embedded replies"
+      sr_date: "Post date"
       sr_expand_replies:
         one: "This post has %{count} reply. Click to expand"
         other: "This post has %{count} replies. Click to expand"
