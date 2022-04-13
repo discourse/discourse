@@ -241,7 +241,7 @@ RSpec.configure do |config|
       Capybara::Selenium::Driver.new(
         app,
         browser: :chrome,
-        url: "#{ENV['SELENIUM_HOST']}:4444/wd/hub",
+        url: "#{ENV['SELENIUM_HOST']}:#{ENV['SELENIUM_PORT']}/wd/hub",
         capabilities: browser_options,
       )
     end
@@ -256,7 +256,7 @@ RSpec.configure do |config|
       Capybara::Selenium::Driver.new(
         app,
         browser: :chrome,
-        url: "#{ENV["SELENIUM_HOST"]}:4444/wd/hub",
+        url: "#{ENV["SELENIUM_HOST"]}:#{ENV['SELENIUM_PORT']}/wd/hub",
         capabilities: browser_options
       )
     end
@@ -277,7 +277,7 @@ RSpec.configure do |config|
       "test.localhost",
       "test.localhost:31337",
       "localhost:#{Capybara.server_port}",
-      "selenium:#{Capybara.server_port}",
+      "#{ENV['SELENIUM_HOST']}:#{ENV['SELENIUM_PORT']}",
       "#{selenium_app_host}:#{Capybara.server_port}",
       "localhost",
       %r{127\.0\.0\.1:(\d{0,4})},
