@@ -224,6 +224,7 @@ RSpec.configure do |config|
         .find(&:ipv4_private?)
         .ip_address
     end
+    puts "SELENIUM APP HOST IS #{selenium_app_host}"
     Capybara.configure do |capybara_config|
       capybara_config.server_host = selenium_app_host
       capybara_config.server_port = 31337
@@ -240,7 +241,7 @@ RSpec.configure do |config|
       Capybara::Selenium::Driver.new(
         app,
         browser: :chrome,
-        url: "#{ENV['SELENIUM_HOST']}:4442/wd/hub",
+        url: "#{ENV['SELENIUM_HOST']}:4444/wd/hub",
         capabilities: browser_options,
       )
     end
@@ -255,7 +256,7 @@ RSpec.configure do |config|
       Capybara::Selenium::Driver.new(
         app,
         browser: :chrome,
-        url: "#{ENV["SELENIUM_HOST"]}:4442/wd/hub",
+        url: "#{ENV["SELENIUM_HOST"]}:4444/wd/hub",
         capabilities: browser_options
       )
     end

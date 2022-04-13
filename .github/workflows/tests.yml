@@ -30,8 +30,6 @@ jobs:
     services:
       selenium:
         image: selenium/standalone-chrome-debug
-        ports:
-          - 4442:4444
 
     strategy:
       fail-fast: false
@@ -161,7 +159,7 @@ jobs:
 
       - name: Core RSpec System Specs
         if: matrix.build_type == 'backend' && matrix.target == 'core'
-        run: SELENIUM_HOST=http://localhost bin/rspec -P spec/system/**/*_spec.rb --profile
+        run: SELENIUM_HOST=http://selenium bin/rspec -P spec/system/**/*_spec.rb --profile
 
       - name: Core QUnit (Legacy)
         if: matrix.build_type == 'frontend-legacy' && matrix.target == 'core'
