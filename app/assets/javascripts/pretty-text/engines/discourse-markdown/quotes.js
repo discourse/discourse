@@ -76,9 +76,9 @@ const rule = {
     }
 
     if (options.formatUsername) {
-      displayName ||= options.formatUsername(username);
+      displayName = displayName || options.formatUsername(username);
     } else {
-      displayName ||= username;
+      displayName = displayName || username;
     }
 
     let token = state.push("bbcode_open", "aside", 1);

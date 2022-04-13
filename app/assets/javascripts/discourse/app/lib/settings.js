@@ -14,7 +14,7 @@ export function prioritizeNameFallback(name, username) {
     siteSettings.display_name_on_posts &&
     !siteSettings.prioritize_username_in_ux
   ) {
-    return name ? name : username;
+    return name || username;
   } else {
     return username;
   }
