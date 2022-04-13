@@ -277,6 +277,7 @@ RSpec.configure do |config|
       "test.localhost",
       "test.localhost:31337",
       "localhost:#{Capybara.server_port}",
+      "selenium:#{Capybara.server_port}",
       "#{selenium_app_host}:#{Capybara.server_port}",
       "localhost",
       %r{127\.0\.0\.1:(\d{0,4})},
