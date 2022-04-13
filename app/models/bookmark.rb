@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Bookmark < ActiveRecord::Base
+  SPECIAL_BOOKMARKABLE_TYPES = ["Post", "Topic"]
+
   # these columns were here for a very short amount of time,
   # hence the very short ignore time
   self.ignored_columns = [
@@ -173,7 +175,7 @@ class Bookmark < ActiveRecord::Base
   def valid_bookmarkable_type
     return if !SiteSetting.use_polymorphic_bookmarks
     return if Bookmark.valid_bookmarkable_types.include?(self.bookmarkable_type)
-    return if ["Post", "Topic"].include?(self.bookmarkable_type)
+    return if Bookmark::SPECIAL_BOOKMARKABLE_TYPES.include?(self.bookmarkable_type)
 
     self.errors.add(:base, I18n.t("bookmarks.errors.invalid_bookmarkable", type: self.bookmarkable_type))
   end

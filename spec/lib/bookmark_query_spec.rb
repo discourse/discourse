@@ -142,7 +142,7 @@ RSpec.describe BookmarkQuery do
               search_fields: ["username"]
             )
           end
-          
+
           let!(:bookmark5) { Fabricate(:bookmark, user: user, bookmarkable: Fabricate(:user, username: "bookmarkqueen")) }
 
           after do
@@ -239,28 +239,6 @@ RSpec.describe BookmarkQuery do
       let(:params) { { limit: 1 } }
       it "is respected" do
         expect(bookmark_query.list_all.count).to eq(1)
-      end
-    end
-
-    context "when there are topic custom fields to preload" do
-      before do
-        TopicCustomField.create(
-          topic_id: bookmark1.topic.id, name: 'test_field', value: 'test'
-        )
-        BookmarkQuery.preloaded_custom_fields << "test_field"
-      end
-
-      after do
-        BookmarkQuery.preloaded_custom_fields.clear
-      end
-
-      it "preloads them" do
-        Topic.expects(:preload_custom_fields)
-        expect(
-          bookmark_query.list_all.find do |b|
-            b.topic.id = bookmark1.topic.id
-          end.topic.custom_fields['test_field']
-        ).not_to eq(nil)
       end
     end
   end

@@ -5,16 +5,34 @@
 # in the user/activity/bookmarks page.
 
 class BookmarkQuery
-  cattr_accessor :preloaded_custom_fields
-  self.preloaded_custom_fields = Set.new
-
   def self.on_preload(&blk)
     (@preload ||= Set.new) << blk
   end
 
   def self.preload(bookmarks, object)
+    if SiteSetting.use_polymorphic_bookmarks
+      preload_polymorphic_associations(bookmarks)
+    end
     if @preload
       @preload.each { |preload| preload.call(bookmarks, object) }
+    end
+  end
+
+  # These polymorphic associations are loaded to make the UserBookmarkListSerializer's
+  # life easier, which conditionally chooses the bookmark serializer to use based
+  # on the type, and we want the associations all loaded ahead of time to make
+  # sure we are not doing N+1s.
+  def self.preload_polymorphic_associations(bookmarks)
+    ActiveRecord::Associations::Preloader.new.preload(
+      Bookmark.select_type(bookmarks, "Topic"), { bookmarkable: [:topic_users, :posts] }
+    )
+
+    ActiveRecord::Associations::Preloader.new.preload(
+      Bookmark.select_type(bookmarks, "Post"), { bookmarkable: [{ bookmarkable_relation: :topic_users }] }
+    )
+
+    Bookmark.registered_bookmarkables.each do |registered_bookmarkable|
+      registered_bookmarkable.preload_associations(bookmarks)
     end
   end
 
@@ -62,7 +80,7 @@ class BookmarkQuery
       results = results.offset(@page * @params[:per_page])
     end
 
-    results = results.limit(@limit)
+    results = results.limit(@limit).to_a
     BookmarkQuery.preload(results, self)
     results
   end
@@ -73,11 +91,6 @@ class BookmarkQuery
     results = base_bookmarks.merge(topics.or(pms))
     results = results.merge(Post.secured(@guardian))
     results = @guardian.filter_allowed_categories(results)
-
-    if BookmarkQuery.preloaded_custom_fields.any?
-      Topic.preload_custom_fields(results, BookmarkQuery.preloaded_custom_fields)
-    end
-
     results
   end
 
@@ -90,11 +103,6 @@ class BookmarkQuery
     topic_results = @guardian.filter_allowed_categories(topic_results)
     post_results = @guardian.filter_allowed_categories(post_results)
 
-    if BookmarkQuery.preloaded_custom_fields.any?
-      Topic.preload_custom_fields(topic_results, BookmarkQuery.preloaded_custom_fields)
-      Topic.preload_custom_fields(post_results, BookmarkQuery.preloaded_custom_fields)
-    end
-
     # TODO: At some point we may want to introduce ways for other Bookmarkable types
     # to further filter results securely using merges, though this is not necessary just
     # yet.
@@ -103,7 +111,7 @@ class BookmarkQuery
     if Bookmark.registered_bookmarkables.any?
       union_sql += " UNION #{other_bookmarks.to_sql}"
     end
-    Bookmark.select("bookmarks.*").from("(#{union_sql}) as bookmarks").includes(bookmarkable: :bookmarkable_relation)
+    Bookmark.select("bookmarks.*").from("(#{union_sql}) as bookmarks")
   end
 
   def base_bookmarks
@@ -132,7 +140,7 @@ class BookmarkQuery
   end
 
   def other_bookmarks
-    Bookmark.where(user: @user).where.not(bookmarkable_type: ["Post", "Topic"])
+    Bookmark.where(user: @user).where.not(bookmarkable_type: Bookmark::SPECIAL_BOOKMARKABLE_TYPES)
   end
 
   def search(results, term)

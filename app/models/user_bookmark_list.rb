@@ -20,38 +20,11 @@ class UserBookmarkList
   end
 
   def load
-    @bookmarks = BookmarkQuery.new(user: @user, guardian: @guardian, params: @params).list_all.to_a
-    if SiteSetting.use_polymorphic_bookmarks
-      preload_polymorphic_associations
-    end
+    @bookmarks = BookmarkQuery.new(user: @user, guardian: @guardian, params: @params).list_all
     @bookmarks
   end
 
   def per_page
     @per_page ||= @params[:per_page]
-  end
-
-  private
-
-  # We have already confirmed the user has access to these records at
-  # this point in BookmarkQuery, so it is safe to load them directly
-  # without any further security checks.
-  #
-  # These polymorphic associations are loaded to make the UserBookmarkListSerializer's
-  # life easier, which conditionally chooses the bookmark serializer to use based
-  # on the type, and we want the associations all loaded ahead of time to make
-  # sure we are not doing N1s.
-  def preload_polymorphic_associations
-    ActiveRecord::Associations::Preloader.new.preload(
-      Bookmark.select_type(@bookmarks, "Topic"), { bookmarkable: [:topic_users, :posts] }
-    )
-
-    ActiveRecord::Associations::Preloader.new.preload(
-      Bookmark.select_type(@bookmarks, "Post"), { bookmarkable: [{ topic: :topic_users }] }
-    )
-
-    Bookmark.registered_bookmarkables.each do |registered_bookmarkable|
-      registered_bookmarkable.preload_associations(@bookmarks)
-    end
   end
 end
