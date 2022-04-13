@@ -48,10 +48,5 @@ RSpec.describe UserBookmarkList do
       list.load
       expect(list.bookmarks.map(&:id)).to match_array([post_bookmark.id, topic_bookmark.id, user_bookmark.id])
     end
-
-    it "registeres an attr_reader and fills it with the preloaded association" do
-      list.load
-      expect(list.users).to eq([user_bookmark.bookmarkable])
-    end
   end
 end

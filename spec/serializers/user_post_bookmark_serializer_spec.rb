@@ -16,7 +16,7 @@ RSpec.describe UserPostBookmarkSerializer do
     Fabricate(:whisper, topic: topic)
     topic.reload
     bookmark.reload
-    serializer = UserPostBookmarkSerializer.new(bookmark, post, scope: Guardian.new(user))
+    serializer = UserPostBookmarkSerializer.new(bookmark, scope: Guardian.new(user))
 
     expect(serializer.highest_post_number).to eq(3)
 

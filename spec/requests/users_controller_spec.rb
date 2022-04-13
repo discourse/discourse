@@ -5286,11 +5286,6 @@ describe UsersController do
 
     context "for polymorphic bookmarks" do
       class UserTestBookmarkSerializer < UserBookmarkBaseSerializer
-        def initialize(obj, user, opts)
-          super(obj, opts)
-          @user = user
-        end
-
         def title
           fancy_title
         end
@@ -5304,16 +5299,22 @@ describe UsersController do
         end
 
         def bookmarkable_user
-          @bookmarkable_user ||= @user
+          @bookmarkable_user ||= user
         end
 
         def bookmarkable_url
-          "#{Discourse.base_url}/u/#{@user.username}"
+          "#{Discourse.base_url}/u/#{user.username}"
         end
 
         def excerpt
           return nil unless cooked
           @excerpt ||= PrettyText.excerpt(cooked, 300, keep_emoji_images: true)
+        end
+
+        private
+
+        def user
+          object.bookmarkable
         end
       end
 

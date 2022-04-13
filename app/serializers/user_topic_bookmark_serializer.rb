@@ -35,15 +35,18 @@ class UserTopicBookmarkSerializer < UserPostTopicBookmarkBaseSerializer
 
   def for_topic_cooked_post
     post_number = [last_read_post_number + 1, highest_post_number].min
-    first_unread_cooked = topic.posts.sort_by(&:post_number).select do |post|
-      post.post_type == Post.types[:regular] && post.post_number >= post_number
-    end.first&.cooked
+    sorted_regular_posts = topic.posts.sort_by(&:post_number).select do |post|
+      post.post_type == Post.types[:regular]
+    end
+    first_unread_post = sorted_regular_posts.find do |post|
+      post.post_number >= post_number
+    end
 
     # if first_unread_cooked is blank this likely means that the last
     # read post was either deleted or is a small action post.
     # in this case we should just get the last regular post and
     # use that for the cooked value so we have something to show
-    first_unread_cooked || topic.posts.last.cooked
+    (first_unread_post || sorted_regular_posts.last).cooked
   end
 
   def bookmarkable_user

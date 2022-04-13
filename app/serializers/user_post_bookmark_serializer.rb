@@ -34,7 +34,7 @@ class UserPostBookmarkSerializer < UserPostTopicBookmarkBaseSerializer
   private
 
   def topic
-    object.bookmarkable.topic
+    post.topic
   end
 
   def post
