@@ -63,6 +63,10 @@ module EmailHelper
           color: #dddddd !important;
         }
 
+        [data-stripped-secure-media] {
+          border-color: #454545 !important;
+        }
+
         [dm='text-color'] {
           color: #dddddd;
         }
@@ -85,17 +89,13 @@ module EmailHelper
           color: #dddddd !important;
         }
 
-        [dm='secure-media-notice'] {
-          border-color: #454545 !important;
-        }
-
         [dm='body_primary'] {
           background: #062e3d !important;
           color: #dddddd !important;
         }
 
         [dm='bg'] {
-          background: #232323 !important;
+          background: #323232 !important;
           border-color: #454545 !important;
         }
       }
