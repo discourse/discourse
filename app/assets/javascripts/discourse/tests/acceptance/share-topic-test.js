@@ -67,7 +67,7 @@ acceptance("Share and Invite modal", function (needs) {
 
     await click("#post_2 a.post-date");
     assert.ok(exists(".share-topic-modal"), "it shows the share modal");
-    assert.equal(
+    assert.strictEqual(
       currentURL(),
       "/t/short-topic-with-two-posts/54077",
       "it does not route to post #2"
