@@ -77,7 +77,7 @@ describe TopicTrackingState do
     let(:other_user) { Fabricate(:user) }
 
     before do
-      Fabricate(:topic_user, topic: topic, notification_level: NotificationLevels.topic_levels[:watching], user: other_user)
+      Fabricate(:topic_user_watching, topic: topic, user: other_user)
     end
 
     it "can correctly publish unread, excluding the user who created the post" do
