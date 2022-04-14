@@ -343,10 +343,10 @@ module Email
       style(".with-accent-colors, .digest-content-header", nil, dm: "body_primary")
       style(".summary-footer", nil, dm: "text-color")
       style(".digest-topic-body", "border-bottom: 1px solid #454545 !important;")
-      style(".secure-media-notice", "border: 5px solid #454545 !important;")
+      style("div['data-stripped-secure-media']", "border: 5px solid #454545 !important;")
       style("code", "background-color: #454545 !important;")
       style("pre code", "background-color: #454545 !important;")
-      style("blockquote", "background-color: #454545; !important")
+      style("blockquote", "background-color: #454545 !important; border-left: 5px solid #333333 !important;")
     end
 
     def replace_relative_urls
