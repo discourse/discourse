@@ -63,20 +63,16 @@ module EmailHelper
           color: #dddddd !important;
         }
 
-        [dm='light-img'] {
-          display: none !important;
-        }
-
-        [dm='dark-img'] {
-          display: block !important;
-        }
-
         [dm='text-color'] {
           color: #dddddd;
         }
 
         [dm='header'] {
           background: #151515 !important;
+        }
+
+        [dm='triangle'] {
+          border-top-color: #151515 !important;
         }
 
         [dm='body'] {
