@@ -12,6 +12,7 @@ module Middleware
       @@cache_key_segments ||= {
         m: 'key_is_mobile?',
         c: 'key_is_crawler?',
+        o: 'key_is_old_browser?',
         b: 'key_has_brotli?',
         t: 'key_cache_theme_ids',
         ca: 'key_compress_anon',
@@ -113,6 +114,10 @@ module Middleware
         @is_crawler == :true
       end
       alias_method :key_is_crawler?, :is_crawler?
+
+      def key_is_old_browser?
+        CrawlerDetection.show_browser_update?(@env[USER_AGENT]) if @env[USER_AGENT]
+      end
 
       def cache_key
         return @cache_key if defined?(@cache_key)
