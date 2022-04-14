@@ -164,7 +164,6 @@ uk:
       to_placeholder: "дата"
     share:
       topic_html: 'Тема: <span class="topic-title">%{topicTitle}</span>'
-      post: "допис #%{postNumber}"
       close: "сховати"
       twitter: "Поділитися в Twitter"
       facebook: "Поділитися у Facebook"
@@ -1900,27 +1899,23 @@ uk:
       not_approved: "Ваш обліковий запис ще не було схвалено. Ви отримаєте сповіщення на електронну скриньку, коли зможете увійти."
       google_oauth2:
         name: "Google"
-        title: "з Google"
-        sr_title: "Увійти через Google"
       twitter:
         name: "Twitter"
-        title: "через Twitter"
-        sr_title: "Увійти через Twitter"
       instagram:
         name: "Instagram"
-        title: "через Instagram"
+        title: "Увійти через Instagram"
         sr_title: "Увійти через Instagram"
       facebook:
         name: "Facebook"
-        title: "через Facebook"
+        title: "Увійти через Facebook"
         sr_title: "Увійти через Facebook"
       github:
         name: "GitHub"
-        title: "через GitHub"
+        title: "Увійти через GitHub"
         sr_title: "Увійти через GitHub"
       discord:
         name: "Discord"
-        title: "з Discord"
+        title: "Увійти за допомогою Discord"
         sr_title: "Увійти за допомогою Discord"
       second_factor_toggle:
         totp: "Замість цього використовуйте додаток для перевірки автентичності"
@@ -1936,7 +1931,6 @@ uk:
       success: "Ваш аккаунт створений та ви можете тепер увійти."
       name_label: "Ім'я"
       password_label: "Пароль"
-      optional_description: "(опціонально)"
     password_reset:
       continue: "Продовжити на %{site_name}"
     emoji_set:
@@ -3263,10 +3257,8 @@ uk:
       tag_groups_placeholder: "(Необов'язково) список дозволених груп міток"
       manage_tag_groups_link: "Керування групами тегів"
       allow_global_tags_label: "Також дозволити інші мітки"
-      tag_group_selector_placeholder: "(Необов’язково) Група тегів"
-      required_tag_group_description: "Потрібні нові теми, щоб мати теги з групи тегів:"
-      min_tags_from_required_group_label: "Кількість тегів:"
-      required_tag_group_label: "Група тегів:"
+      required_tag_group:
+        delete: "Вилучити"
       topic_featured_link_allowed: "Дозволити популярні посилання в цій категорії"
       delete: "Видалити категорію"
       create: "Нова категорія"
@@ -3943,7 +3935,6 @@ uk:
       unsupported_file_picked: "Ви вибрали непідтримуваний файл. Підтримуються такі типи файлів – %{types}."
     user_activity:
       no_activity_title: "Ще немає активності"
-      no_activity_body: "Ласкаво просимо до нашої спільноти! Ви тут зовсім новачок і ще не долучилися до обговорень. Як перший крок, відвідайте <a href='%{topUrl}'>Топ</a> або <a href='%{categoriesUrl}'>Категорії</a> і просто почніть читати! Позначте %{heartIcon} публікації, які вам подобаються або про які потрібно дізнатися більше. Якщо ви цього ще не зробили, допоможіть іншим познайомитися з вами, додавши зображення та коротку інформацію про себе у <a href='%{preferencesUrl}'>профілі користувача</a>."
       no_activity_others: "Немає активностей."
       no_replies_title: "Ви ще не відповіли на жодну тему"
       no_replies_others: "Немає відповідей"

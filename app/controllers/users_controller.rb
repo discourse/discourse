@@ -1065,10 +1065,27 @@ class UsersController < ApplicationController
         @user.enqueue_welcome_message('welcome_user') if @user.send_welcome_message
         log_on_user(@user)
 
+        # invites#perform_accept_invitation already sets destination_url, but
+        # sometimes it is lost (user changes browser, uses incognito, etc)
+        #
+        # The code below checks if the user was invited and redirects them to
+        # the topic they were originally invited to.
+        destination_url = cookies.delete(:destination_url)
+        if destination_url.blank?
+          topic = Invite
+            .joins(:invited_users)
+            .find_by(invited_users: { user_id: @user.id })
+            &.topics
+            &.first
+
+          if @user.guardian.can_see?(topic)
+            destination_url = path(topic.relative_url)
+          end
+        end
+
         if Wizard.user_requires_completion?(@user)
           return redirect_to(wizard_path)
-        elsif destination_url = cookies[:destination_url]
-          cookies[:destination_url] = nil
+        elsif destination_url.present?
           return redirect_to(destination_url)
         elsif SiteSetting.enable_discourse_connect_provider && payload = cookies.delete(:sso_payload)
           return redirect_to(session_sso_provider_url + "?" + payload)
@@ -1365,6 +1382,8 @@ class UsersController < ApplicationController
     elsif params[:notification_level] == "normal"
       MutedUser.where(user: acting_user, muted_user: target_user).delete_all
       IgnoredUser.where(user: acting_user, ignored_user: target_user).delete_all
+    else
+      return render_json_error(I18n.t("notification_level.invalid_value", value: params[:notification_level]))
     end
 
     render json: success_json

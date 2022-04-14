@@ -1877,6 +1877,12 @@ HTML
 
       ![upload](#{upload.short_url.gsub(".png", "")})
 
+      Inline img <img src="#{upload.short_url}">
+
+      <div>
+        Block img <img src="#{upload.short_url}">
+      </div>
+
       [some attachment](#{upload.short_url})
 
       [some attachment|attachment](#{upload.short_url})
@@ -1901,6 +1907,10 @@ HTML
         </li>
         </ul>
         <p><img src="#{cdn_url}" alt="upload" data-base62-sha1="#{upload.base62_sha1}"></p>
+        <p>Inline img <img src="#{cdn_url}" data-base62-sha1="#{upload.base62_sha1}"></p>
+        <div>
+          Block img <img src="#{cdn_url}" data-base62-sha1="#{upload.base62_sha1}">
+        </div>
         <p><a href="#{upload.short_path}">some attachment</a></p>
         <p><a class="attachment" href="#{upload.short_path}">some attachment</a></p>
         <p><a href="#{upload.short_path}">some attachment|random</a></p>
@@ -2134,7 +2144,7 @@ HTML
   end
 
   context "enabling/disabling features" do
-    it "allows features to be overriden" do
+    it "allows features to be overridden" do
       cooked = PrettyText.cook(':grin: @mention', features_override: [])
 
       expect(cooked).to eq("<p>:grin: @mention</p>")

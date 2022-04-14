@@ -1,5 +1,27 @@
 /* eslint-disable */
 
+// Needed for iOS <= 13.3
+if (!String.prototype.replaceAll) {
+  String.prototype.replaceAll = function (
+    pattern,
+    replacementStringOrFunction
+  ) {
+    let regex;
+
+    if (
+      Object.prototype.toString.call(pattern).toLowerCase() ===
+      "[object regexp]"
+    ) {
+      regex = pattern;
+    } else {
+      const escapedStr = pattern.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      regex = new RegExp(escapedStr, "g");
+    }
+
+    return this.replace(regex, replacementStringOrFunction);
+  };
+}
+
 // Needed for Safari 15.2 and below
 // from: https://github.com/iamdustan/smoothscroll
 (function () {

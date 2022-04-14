@@ -314,9 +314,9 @@ export function parseColor(color) {
   if (m) {
     const c = m[1];
     return [
-      parseInt(c.substr(0, 2), 16),
-      parseInt(c.substr(2, 2), 16),
-      parseInt(c.substr(4, 2), 16),
+      parseInt(c.slice(0, 2), 16),
+      parseInt(c.slice(2, 4), 16),
+      parseInt(c.slice(4, 6), 16),
     ];
   }
 
@@ -404,9 +404,9 @@ export function lighten(color, percent) {
 
   return (
     "#" +
-    (0 | ((1 << 8) + color[0])).toString(16).substr(1) +
-    (0 | ((1 << 8) + color[1])).toString(16).substr(1) +
-    (0 | ((1 << 8) + color[2])).toString(16).substr(1)
+    (0 | ((1 << 8) + color[0])).toString(16).slice(1) +
+    (0 | ((1 << 8) + color[1])).toString(16).slice(1) +
+    (0 | ((1 << 8) + color[2])).toString(16).slice(1)
   );
 }
 

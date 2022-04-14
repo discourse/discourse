@@ -273,7 +273,7 @@ class User < ActiveRecord::Base
   end
 
   def self.normalize_username(username)
-    username.unicode_normalize.downcase if username.present?
+    username.to_s.unicode_normalize.downcase if username.present?
   end
 
   def self.username_available?(username, email = nil, allow_reserved_username: false)
@@ -428,7 +428,7 @@ class User < ActiveRecord::Base
       user_id: id,
       message_type: 'welcome_staff',
       message_options: {
-        role: role
+        role: role.to_s
       }
     )
   end
@@ -1459,6 +1459,18 @@ class User < ActiveRecord::Base
 
   def username_equals_to?(another_username)
     username_lower == User.normalize_username(another_username)
+  end
+
+  def full_url
+    "#{Discourse.base_url}/u/#{encoded_username}"
+  end
+
+  def display_name
+    if SiteSetting.prioritize_username_in_ux?
+      username
+    else
+      name.presence || username
+    end
   end
 
   protected

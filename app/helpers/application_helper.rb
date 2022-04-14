@@ -393,7 +393,11 @@ module ApplicationHelper
   end
 
   def include_crawler_content?
-    crawler_layout? || !mobile_view?
+    crawler_layout? || !mobile_view? || !modern_mobile_device?
+  end
+
+  def modern_mobile_device?
+    MobileDetection.modern_mobile_device?(request.user_agent)
   end
 
   def mobile_device?
@@ -654,13 +658,7 @@ module ApplicationHelper
   end
 
   def rss_creator(user)
-    if user
-      if SiteSetting.prioritize_username_in_ux
-        "#{user.username}"
-      else
-        "#{user.name.presence || user.username }"
-      end
-    end
+    user&.display_name
   end
 
   def authentication_data

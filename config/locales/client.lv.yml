@@ -128,7 +128,6 @@ lv:
       placeholder: datums
     share:
       topic_html: 'Temats: <span class="topic-title">%{topicTitle}</span>'
-      post: "ieraksts #%{postNumber}"
       close: "aizvērt"
       twitter: "Kopīgojiet vietnē Twitter"
       facebook: "Dalīties Facebook"
@@ -1628,22 +1627,16 @@ lv:
       not_approved: "Jūsu konts vēl nav apstiprināts. Jums tiks paziņots e-pastā, kad varēsiet pieslēgties."
       google_oauth2:
         name: "Google"
-        title: "ar Google"
       twitter:
         name: "Twitter"
-        title: "ar Twitter"
       instagram:
         name: "Instagram"
-        title: "ar Instagram"
       facebook:
         name: "Facebook"
-        title: "ar Facebook"
       github:
         name: "GitHub"
-        title: "ar GitHub"
       discord:
         name: "Discord"
-        title: "ar Discord"
       second_factor_toggle:
         totp: "Tā vietā izmantojiet autentifikatora lietotni"
         backup_code: "Tā vietā izmantojiet rezerves kodu"
@@ -1658,7 +1651,6 @@ lv:
       success: "Jūsu konts ir izveidots un jūs esat ielogojies "
       name_label: "Vārds"
       password_label: "Parole"
-      optional_description: "(pēc izvēles)"
     password_reset:
       continue: "Turpināt %{site_name}"
     emoji_set:
@@ -2390,6 +2382,8 @@ lv:
       tags: "Tagi"
       tags_placeholder: "(Pēc izvēles) atļauto tagu saraksts"
       tag_groups_placeholder: "(Pēc izvēles) atļauto tagu grupu saraksts"
+      required_tag_group:
+        delete: "Dzēst"
       delete: "Dzēst sadaļu"
       create: "Jauna sadaļa"
       create_long: "Izveidot jaunu sadaļu"

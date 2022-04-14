@@ -153,9 +153,10 @@ export default Component.extend({
   },
 
   @action
-  onClose() {
+  onClose(event) {
+    event?.stopPropagation();
     document.removeEventListener("click", this.handleOutsideClick);
-    this.onEmojiPickerClose && this.onEmojiPickerClose();
+    this.onEmojiPickerClose && this.onEmojiPickerClose(event);
   },
 
   diversityScales: computed("selectedDiversity", function () {
@@ -221,7 +222,7 @@ export default Component.extend({
     });
 
     if (this.site.isMobileDevice) {
-      this.onClose();
+      this.onClose(event);
     }
   },
 
@@ -236,7 +237,7 @@ export default Component.extend({
   @action
   keydown(event) {
     if (event.code === "Escape") {
-      this.onClose();
+      this.onClose(event);
       return false;
     }
   },
@@ -334,7 +335,7 @@ export default Component.extend({
   handleOutsideClick(event) {
     const emojiPicker = document.querySelector(".emoji-picker");
     if (emojiPicker && !emojiPicker.contains(event.target)) {
-      this.onClose();
+      this.onClose(event);
     }
   },
 });

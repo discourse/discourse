@@ -98,7 +98,7 @@ zh_CN:
       to_placeholder: "截至日期"
     share:
       topic_html: '话题：<span class="topic-title">%{topicTitle}</span>'
-      post: "帖子 #%{postNumber}"
+      post: "%{username} 发布帖子 %{postNumber}"
       close: "关闭"
       twitter: "分享到 Twitter"
       facebook: "分享到 Facebook"
@@ -261,6 +261,8 @@ zh_CN:
         unbookmark_with_reminder: "点击以移除此话题中的所有书签和提醒。"
     bookmarks:
       created: "您已将此帖子加入书签。%{name}"
+      create_for: "为 %{type} 创建书签"
+      edit_for: "为 %{type} 编辑书签"
       not_bookmarked: "将此帖子加入书签"
       remove_reminder_keep_bookmark: "删除提醒并保留收藏"
       created_with_reminder: "您已将此帖子加入书签，并于 %{date}设置了一个提醒。%{name}"
@@ -321,6 +323,7 @@ zh_CN:
     saved: "已保存！"
     upload: "上传"
     uploading: "正在上传…"
+    processing: "正在处理..."
     uploading_filename: "正在上传：%{filename}…"
     processing_filename: "正在处理：%{filename}…"
     clipboard: "剪贴板"
@@ -1101,6 +1104,8 @@ zh_CN:
         warnings: "官方警告"
         read_more_in_group: "想阅读更多？浏览%{groupLink}或中的其他话题。"
         read_more: "想阅读更多内容？ 请在 <a href='%{basePath}/u/%{username}/messages/personal'>个人私信</a>中浏览其他消息。"
+        read_more_group_pm_MF: "还有{ UNREAD, plural, =0 {} other { <a href='{basePath}/unread'># 个未读</a>} }{ NEW, plural, =0 {} other {{BOTH, select, true{和} false {} other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># 个新</a>消息} }，或者浏览{groupLink}的其他消息"
+        read_more_personal_pm_MF: "还有{ UNREAD, plural, =0 {} other { <a href='{basePath}/u/{username}/messages/unread'># 个未读</a>} }{ NEW, plural, =0 {} other {{BOTH, select, true{和} false {} other{}} <a href='{basePath}/u/{username}/messages/new'># 个新</a>消息} }，或者浏览<a href='{basePath}/u/{username}/messages'>个人消息</a>"
       preferences_nav:
         account: "帐户"
         security: "安全性"
@@ -1710,27 +1715,23 @@ zh_CN:
       not_approved: "您的帐户尚未获得批准。一旦可以登录，您会收到电子邮件通知。"
       google_oauth2:
         name: "Google"
-        title: "通过 Google"
-        sr_title: "使用谷歌登录"
       twitter:
         name: "Twitter"
-        title: "通过 Twitter"
-        sr_title: "使用推特登录"
       instagram:
         name: "Instagram"
-        title: "通过 Instagram"
+        title: "使用 Instagram 登录"
         sr_title: "使用 Instagram 登录"
       facebook:
         name: "Facebook"
-        title: "通过 Facebook"
+        title: "用脸书登入"
         sr_title: "用脸书登入"
       github:
         name: "GitHub"
-        title: "通过 GitHub"
+        title: "使用 GitHub 登录"
         sr_title: "使用 GitHub 登录"
       discord:
         name: "Discord"
-        title: "通过 Discord"
+        title: "使用 Discord 登录"
         sr_title: "使用 Discord 登录"
       second_factor_toggle:
         totp: "改用身份验证器应用"
@@ -1747,7 +1748,6 @@ zh_CN:
       success: "您的帐户已创建，您现在已登录。"
       name_label: "姓名"
       password_label: "密码"
-      optional_description: "（可选）"
     password_reset:
       continue: "继续访问 %{site_name}"
     emoji_set:
@@ -2680,7 +2680,12 @@ zh_CN:
       show_hidden: "查看已忽略的内容。"
       deleted_by_author_simple: "（帖子已被作者删除）"
       collapse: "收起"
+      sr_collapse_replies: "折叠嵌入回复"
+      sr_expand_replies:
+        other: "这个帖子有 %{count} 个回复。点击展开"
       expand_collapse: "展开/收起"
+      sr_below_embedded_posts_description: "帖子#%{post_number} 回复"
+      sr_embedded_reply_description: "@%{username} 回复帖子 #%{post_number}"
       locked: "一名管理人员已将此帖子锁定为无法编辑"
       gap:
         other: "查看 %{count} 个隐藏回复"
@@ -2697,6 +2702,10 @@ zh_CN:
       has_likes_title_only_you: "您赞了此帖子"
       has_likes_title_you:
         other: "您和其他 %{count} 人赞了此帖子"
+      sr_post_like_count_button:
+        other: "%{count} 人点赞这个帖子。点击查看"
+      sr_post_read_count_button:
+        other: "%{count} 人阅读过这个帖子。点击查看"
       filtered_replies_hint:
         other: "查看此帖子及其 %{count} 个回复"
       filtered_replies_viewing:
@@ -2788,6 +2797,8 @@ zh_CN:
             other: "还有其他 %{count} 人赞了此帖子"
           read_capped:
             other: "还有其他 %{count} 人阅读了此帖子"
+          sr_post_likers_list_description: "喜欢这个帖子的用户"
+          sr_post_readers_list_description: "阅读此帖的用户"
         by_you:
           off_topic: "您将此帖子举报为偏离话题"
           spam: "您将此帖子举报为垃圾信息"
@@ -2888,10 +2899,11 @@ zh_CN:
       tag_groups_placeholder: "（可选）允许的标签组列表"
       manage_tag_groups_link: "管理标签组"
       allow_global_tags_label: "也允许其他标签"
-      tag_group_selector_placeholder: "（可选）标签组"
-      required_tag_group_description: "要求新话题包含标签组中的标签："
-      min_tags_from_required_group_label: "标签数量："
-      required_tag_group_label: "标签组："
+      required_tag_group:
+        description: "新主题要求必须有来自标签组的标签。"
+        delete: "删除"
+        add: "添加必需的标签组"
+        placeholder: "选择标签组..."
       topic_featured_link_allowed: "在此类别中允许精选链接"
       delete: "删除类别"
       create: "新建类别"
@@ -3108,13 +3120,18 @@ zh_CN:
         other {}}
     original_post: "原始帖子"
     views: "浏览量"
+    sr_views: "按浏览量排序"
     views_lowercase:
       other: "浏览量"
     replies: "回复"
+    sr_replies: "按回复排序"
     views_long:
       other: "此话题已被浏览 %{number} 次"
     activity: "活动"
+    sr_activity: "按活动排序"
     likes: "赞"
+    sr_likes: "按赞排序"
+    sr_op_likes: "按原帖点赞排序"
     likes_lowercase:
       other: "赞"
     users: "用户"
@@ -3488,7 +3505,7 @@ zh_CN:
       unsupported_file_picked: "您选择了不受支持的文件。支持的文件类型 – %{types}。"
     user_activity:
       no_activity_title: "尚无活动"
-      no_activity_body: "欢迎来到我们的社区！您是新来的，还没有参与讨论。作为第一步，请访问 <a href='%{topUrl}'>置顶内容</a> 或 <a href='%{categoriesUrl}'>类别</a> 并开始阅读！在您喜欢或想了解更多信息的帖子上选择 %{heartIcon} <a href='%{preferencesUrl}'>用户选项</a>添加图片和个人简介，以帮助其他人了解您。"
+      no_activity_body: "欢迎来到我们的社区！作为新人，你还未参与过讨论。第一步，请访问 <a href='%{topUrl}'>置顶</a>内容 或 <a href='%{categoriesUrl}'>分类</a> 并开始阅读！在你喜欢或想了解更多的帖子上选择 %{heartIcon} 。当你参与时，你的活动将被列在这里。"
       no_activity_others: "无活动。"
       no_replies_title: "您还没有回复任何话题"
       no_replies_others: "无回复。"
@@ -3498,9 +3515,13 @@ zh_CN:
       no_likes_body: "加入并开始贡献的一个好方法是阅读已有的主题，并在您喜欢的帖子上点击 %{heartIcon}"
       no_likes_others: "没有赞过的帖子。"
       no_topics_title: "您还没有开始任何话题"
+      no_topics_title_others: "%{username} 还没有开始任何话题"
       no_read_topics_title: "您还没有阅读任何话题。"
       no_read_topics_body: "开始阅读讨论后，您将在此处看到一个列表。要开始阅读，请在 <a href='%{topUrl}'>置顶</a> 或 <a href='%{categoriesUrl}'>类别</a> 或按关键字搜索 %{searchIcon}"
     no_group_messages_title: "未找到群组消息"
+    topic_entrance:
+      sr_jump_top_button: "跳到第一个帖子"
+      sr_jump_bottom_button: "跳到最后一个帖子"
     fullscreen_table:
       expand_btn: "展开表格"
     second_factor_auth:
@@ -3725,6 +3746,7 @@ zh_CN:
             topics:
               read: 阅读一个话题或其中的一个帖子。也支持 RSS。
               write: 创建一个新话题或发布到现有话题。
+              update: 更新一个话题。更改标题、类别、标签等。
               read_lists: 阅读诸如热门、新、最新等话题列表。也支持 RSS。
               wordpress: WordPress wp-discourse 插件正常工作所必需。
             posts:
@@ -3951,6 +3973,7 @@ zh_CN:
         delete_confirm: '确定要删除“%{theme_name}”吗？'
         color: "颜色"
         opacity: "不透明度"
+        copy: "复制"
         copy_to_clipboard: "复制到剪贴板"
         copied_to_clipboard: "已复制到剪贴板"
         copy_to_clipboard_error: "复制到剪贴板时出错"
@@ -4221,6 +4244,7 @@ zh_CN:
         time: "时间"
         user: "用户"
         email_type: "电子邮件类型"
+        details_title: "显示电子邮件详情"
         to_address: "目标地址"
         test_email_address: "要测试的电子邮件地址"
         send_test: "发送测试电子邮件"

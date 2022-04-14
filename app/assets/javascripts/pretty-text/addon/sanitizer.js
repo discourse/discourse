@@ -76,7 +76,7 @@ export function sanitize(text, allowLister) {
   }
 
   let result = xss(text, {
-    whiteList: allowList.tagList,
+    allowList: allowList.tagList,
     stripIgnoreTag: true,
     stripIgnoreTagBody: ["script", "table"],
 

@@ -72,6 +72,7 @@ en:
       unrecognized_extension: "Unrecognized file extension: %{extension}"
     import_error:
       generic: An error occurred while importing that theme
+      upload: "Error creating upload asset: %{name}. %{errors}"
       about_json: "Import Error: about.json does not exist, or is invalid. Are you sure this is a Discourse Theme?"
       about_json_values: "about.json contains invalid values: %{errors}"
       modifier_values: "about.json modifiers contain invalid values: %{errors}"
@@ -429,11 +430,13 @@ en:
   bookmarks:
     errors:
       already_bookmarked_post: "You cannot bookmark the same post twice."
+      already_bookmarked: "You cannot bookmark the same %{type} twice."
       too_many: "Sorry, you cannot add more than %{limit} bookmarks, visit <a href='%{user_bookmarks_url}'>%{user_bookmarks_url}</a> to remove some."
       cannot_set_past_reminder: "You cannot set a bookmark reminder in the past."
       cannot_set_reminder_in_distant_future: "You cannot set a bookmark reminder more than 10 years in the future."
-      time_must_be_provided: "time must be provided for all reminders"
+      time_must_be_provided: "Time must be provided for all reminders"
       for_topic_must_use_first_post: "You can only use the first post to bookmark the topic."
+      bookmarkable_id_type_required: "The name and type of the record to bookmark is required."
 
     reminders:
       at_desktop: "Next time I'm at my desktop"
@@ -1572,10 +1575,8 @@ en:
 
     enable_personal_messages: "Allow trust level 1 (configurable via min trust to send messages) users to create messages and reply to messages. Note that staff can always send messages no matter what."
     enable_system_message_replies: "Allows users to reply to system messages, even if personal messages are disabled"
-    enable_long_polling: "Message bus used for notification can use long polling"
     enable_chunked_encoding: "Enable chunked encoding responses by the server. This feature works on most setups however some proxies may buffer, causing responses to be delayed"
     long_polling_base_url: "Base URL used for long polling (when a CDN is serving dynamic content, be sure to set this to origin pull) eg: http://origin.site.com"
-    long_polling_interval: "Amount of time the server should wait before responding to clients when there is no data to send (logged on users only)"
     polling_interval: "When not long polling, how often should logged on clients poll in milliseconds"
     anon_polling_interval: "How often should anonymous clients poll in milliseconds"
     background_polling_interval: "How often should the clients poll in milliseconds (when the window is in the background)"
@@ -2334,6 +2335,9 @@ en:
     base_font: "Base font to use for most text on the site. Themes can override via the `--font-family` CSS custom property."
     heading_font: "Font to use for headings on the site. Themes can override via the `--heading-font-family` CSS custom property."
 
+    enable_sitemap: "Generate a sitemap for your site and include it in the robots.txt file."
+    sitemap_page_size: "Number of URLs to include in each sitemap page. Max 50.000"
+
     short_title: "The short title will be used on the user's home screen, launcher, or other places where space may be limited. It should be limited to 12 characters."
 
     dashboard_hidden_reports: "Allow to hide the specified reports from the dashboard."
@@ -2586,6 +2590,8 @@ en:
     actions:
       grant_admin:
         description: "For additional security measures, you need to confirm your 2FA before %{username} is granted admin access."
+      discourse_connect_provider:
+        description: "%{hostname} has requested that you confirm your 2FA. You'll be redirected back to the site once you confirm your 2FA."
   admin:
     email:
       sent_test: "sent!"
@@ -4810,6 +4816,12 @@ en:
         other: '"%{tag_name}" is restricted to the following categories: %{category_names}'
       synonym: 'Synonyms are not allowed. Use "%{tag_name}" instead.'
       has_synonyms: '"%{tag_name}" cannot be used because it has synonyms.'
+      restricted_tags_cannot_be_used_in_category:
+        one: 'The "%{tags}" tag cannot be used in the "%{category}" category. Please remove it.'
+        other: 'The following tags cannot be used in the "%{category}" category: %{tags}. Please remove them.'
+      category_does_not_allow_tags:
+        one: 'The "%{category}" category does not allow the "%{tags}" tag. Please remove it.'
+        other: 'The "%{category}" category does not allow the following tags: "%{tags}". Please remove them.'
     required_tags_from_group:
       one: "You must include at least %{count} %{tag_group_name} tag. The tags in this group are: %{tags}."
       other: "You must include at least %{count} %{tag_group_name} tags. The tags in this group are: %{tags}."
@@ -5154,6 +5166,7 @@ en:
     ignore_error: "Sorry, you can't ignore that user."
     mute_error: "Sorry, you can't mute that user."
     error: "Sorry, you cannot change the notification level for that user."
+    invalid_value: '"%{value}" is not a valid notification level.'
 
   discord:
     not_in_allowed_guild: "Authentication failed. You are not a member of a permitted Discord guild."

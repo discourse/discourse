@@ -306,6 +306,21 @@ describe Admin::EmailController do
         expect(json["error"]).to eq(error_message)
       end
 
+      it 'returns an incoming email sent to the notification_email address' do
+        SiteSetting.reply_by_email_address = "replies+%{reply_key}@subdomain.example.com"
+        Fabricate(:incoming_email,
+                  is_bounce: true,
+                  error: error_message,
+                  to_addresses: "subdomain+verp-#{email_log.bounce_key}@example.com"
+        )
+
+        get "/admin/email/incoming_from_bounced/#{email_log.id}.json"
+        expect(response.status).to eq(200)
+
+        json = response.parsed_body
+        expect(json["error"]).to eq(error_message)
+      end
+
       it 'raises an error if the bounce_key is blank' do
         email_log.update(bounce_key: nil)
 

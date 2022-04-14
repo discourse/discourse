@@ -120,7 +120,7 @@ de:
       to_placeholder: "zu Datum"
     share:
       topic_html: 'Thema: <span class="topic-title">%{topicTitle}</span>'
-      post: "Beitrag #%{postNumber}"
+      post: "Beitrag Nr.%{postNumber} von @%{username}"
       close: "Schließen"
       twitter: "Auf Twitter teilen"
       facebook: "Auf Facebook teilen"
@@ -287,6 +287,8 @@ de:
         unbookmark_with_reminder: "Klicke, um alle Lesezeichen und Erinnerungen in diesem Thema zu entfernen."
     bookmarks:
       created: "Du hast diesen Beitrag mit einem Lesezeichen versehen. %{name}"
+      create_for: "Lesezeichen für %{type} erstellen"
+      edit_for: "Lesezeichen für %{type} bearbeiten"
       not_bookmarked: "diesen Beitrag mit Lesezeichen versehen"
       remove_reminder_keep_bookmark: "Erinnerung entfernen und Lesezeichen behalten"
       created_with_reminder: "Du wirst %{date} an dieses Lesezeichen erinnert. %{name}"
@@ -1780,27 +1782,23 @@ de:
       not_approved: "Dein Benutzerkonto wurde noch nicht genehmigt. Du wirst per E-Mail benachrichtigt, sobald du dich anmelden kannst."
       google_oauth2:
         name: "Google"
-        title: "mit Google"
-        sr_title: "Mit Google anmelden"
       twitter:
         name: "Twitter"
-        title: "mit Twitter"
-        sr_title: "Mit Twitter anmelden"
       instagram:
         name: "Instagram"
-        title: "mit Instagram"
+        title: "Mit Instagram anmelden"
         sr_title: "Mit Instagram anmelden"
       facebook:
         name: "Facebook"
-        title: "mit Facebook"
+        title: "Mit Facebook anmelden"
         sr_title: "Mit Facebook anmelden"
       github:
         name: "GitHub"
-        title: "mit GitHub"
+        title: "Mit GitHub anmelden"
         sr_title: "Mit GitHub anmelden"
       discord:
         name: "Discord"
-        title: "mit Discord"
+        title: "Mit Discord anmelden"
         sr_title: "Mit Discord anmelden"
       second_factor_toggle:
         totp: "Benutze stattdessen eine Authentifizierungs-App"
@@ -1817,7 +1815,6 @@ de:
       success: "Dein Konto wurde erstellt und du bist jetzt angemeldet."
       name_label: "Name"
       password_label: "Passwort"
-      optional_description: "(optional)"
     password_reset:
       continue: "Weiter zu %{site_name}"
     emoji_set:
@@ -2799,7 +2796,13 @@ de:
       show_hidden: "Ignorierte Inhalte anzeigen."
       deleted_by_author_simple: "(Beitrag vom Verfasser gelöscht)"
       collapse: "zuklappen"
+      sr_collapse_replies: "Eingebettete Antworten einklappen"
+      sr_expand_replies:
+        one: "Dieser Beitrag hat %{count} Antwort. Zum Erweitern klicken"
+        other: "Dieser Beitrag hat %{count} Antworten. Zum Erweitern klicken"
       expand_collapse: "erweitern/zuklappen"
+      sr_below_embedded_posts_description: "Beitrag #%{post_number} Antworten"
+      sr_embedded_reply_description: "Antwort von @%{username} auf Beitrag #%{post_number}"
       locked: "ein Team-Mitglied hat diesen Beitrag für die weitere Bearbeitung gesperrt"
       gap:
         one: "%{count} versteckten Beitrag anzeigen"
@@ -2820,6 +2823,12 @@ de:
       has_likes_title_you:
         one: "dir und %{count} weiteren Person gefällt dieser Beitrag"
         other: "dir und %{count} weiteren Personen gefällt dieser Beitrag"
+      sr_post_like_count_button:
+        one: "%{count} Person mochte diesen Beitrag. Zum Ansehen klicken"
+        other: "%{count} Personen gefällt dieser Beitrag. Zum Anzeigen klicken"
+      sr_post_read_count_button:
+        one: "%{count} Person hat diesen Beitrag gelesen. Zur Ansicht klicken"
+        other: "%{count} Personen lesen diesen Beitrag. Zur Ansicht klicken"
       filtered_replies_hint:
         one: "Diesen Beitrag und seine Antwort ansehen"
         other: "Diesen Beitrag und seine %{count} Antworten ansehen"
@@ -2921,6 +2930,8 @@ de:
           read_capped:
             one: "and %{count} anderer haben dies gelesen"
             other: "und %{count} andere haben dies gelesen"
+          sr_post_likers_list_description: "Benutzer, denen dieser Beitrag gefällt"
+          sr_post_readers_list_description: "Benutzer, die diesen Beitrag gelesen haben"
         by_you:
           off_topic: "Du hast das als „am Thema vorbei“ gemeldet"
           spam: "Du hast das als Spam gemeldet"
@@ -3023,10 +3034,8 @@ de:
       tag_groups_placeholder: "(Optional) Liste erlaubter Schlagwortgruppen"
       manage_tag_groups_link: "Schlagwortgruppen verwalten"
       allow_global_tags_label: "Erlaube auch andere Schlagwörter."
-      tag_group_selector_placeholder: "(Optional) Schlagwortgruppe"
-      required_tag_group_description: "Neue Themen müssen Schlagwörter aus einer Schlagwortgruppe haben:"
-      min_tags_from_required_group_label: "Anz. Schlagwörter:"
-      required_tag_group_label: "Schlagwortgruppe:"
+      required_tag_group:
+        delete: "Löschen"
       topic_featured_link_allowed: "Erlaube hervorgehobene Links in dieser Kategorie"
       delete: "Kategorie löschen"
       create: "Neue Kategorie"
@@ -3248,15 +3257,20 @@ de:
         other {}}
     original_post: "Original-Beitrag"
     views: "Aufrufe"
+    sr_views: "Nach Ansichten sortieren"
     views_lowercase:
       one: "Aufruf"
       other: "Aufrufe"
     replies: "Antworten"
+    sr_replies: "Nach Antworten sortieren"
     views_long:
       one: "dieses Thema wurde %{count}-mal betrachtet"
       other: "dieses Thema wurde %{number}-mal betrachtet"
     activity: "Aktivität"
+    sr_activity: "Nach Aktivität sortieren"
     likes: "„Gefällt mir“"
+    sr_likes: "Nach Likes sortieren"
+    sr_op_likes: "Nach Likes des Originalbeitrags sortieren"
     likes_lowercase:
       one: "„Gefällt mir“"
       other: "„Gefällt mir“"
@@ -3650,7 +3664,7 @@ de:
       unsupported_file_picked: "Du hast eine nicht unterstützte Datei ausgewählt. Unterstützte Dateitypen – %{types}."
     user_activity:
       no_activity_title: "Noch keine Aktivität"
-      no_activity_body: "Willkommen in unserer Community! Du bist hier ganz neu und hast noch nicht an Diskussionen teilgenommen. Besuche als ersten Schritt <a href='%{topUrl}'>Top</a> oder <a href='%{categoriesUrl}'>Kategorien</a> und beginne mit dem Lesen! Wähle %{heartIcon} auf Beiträgen, die dir gefallen oder über die du mehr erfahren möchtest. Wenn Du dies noch nicht getan hast, dann hilf bitte anderen Dich durch Hinzufügen eines Bildes und einer Bio in Deinen <a href='%{preferencesUrl}'>Benutzereinstellungen</a> kennen zu lernen."
+      no_activity_body: "Willkommen in unserer Community! Du bist ganz neu hier und hast noch nicht an Diskussionen teilgenommen. Besuche als ersten Schritt <a href='%{topUrl}'>Top</a> oder <a href='%{categoriesUrl}'>Kategorien</a> und fang einfach an zu lesen! Wähle %{heartIcon} bei Beiträgen aus, die Dir gefallen oder über die Du mehr erfahren möchtest. Wenn Du teilnimmst, wird Deine Aktivität hier aufgelistet."
       no_activity_others: "Keine Aktivität."
       no_replies_title: "Du hast noch keine Themen beantwortet"
       no_replies_others: "Keine Antworten."
@@ -3660,9 +3674,13 @@ de:
       no_likes_body: "Eine großartige Möglichkeit einzusteigen und Beiträge zu leisten, besteht darin, bereits stattgefundene Konversationen zu lesen und die %{heartIcon} bei Beiträgen auszuwählen, die Dir gefallen!"
       no_likes_others: "Keine Beiträge mit „Gefällt mir“."
       no_topics_title: "Du hast noch keine Themen begonnen"
+      no_topics_title_others: "%{username} hat noch keine Themen begonnen"
       no_read_topics_title: "Du hast noch keine Themen gelesen"
       no_read_topics_body: "Sobald Du mit dem Lesen von Diskussionen beginnst, siehst Du hier eine Liste. Zum Lesen suche nach Themen, die Du in <a href='%{topUrl}'>Top</a> oder <a href='%{categoriesUrl}'>Kategorien</a> oder suche nach dem Stichwort %{searchIcon}"
     no_group_messages_title: "Keine Gruppennachrichten gefunden"
+    topic_entrance:
+      sr_jump_top_button: "Zum ersten Beitrag springen"
+      sr_jump_bottom_button: "Zum letzten Beitrag springen"
     fullscreen_table:
       expand_btn: "Tabelle erweitern"
     second_factor_auth:
@@ -4392,6 +4410,7 @@ de:
         time: "Zeit"
         user: "Benutzer"
         email_type: "E-Mail-Typ"
+        details_title: "E-Mail-Details anzeigen"
         to_address: "Empfänger"
         test_email_address: "E-Mail-Adresse für Test"
         send_test: "Test-E-Mail senden"

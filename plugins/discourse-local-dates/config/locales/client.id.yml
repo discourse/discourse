@@ -11,6 +11,8 @@ id:
         today: Hari ini 1 %{time}
         tomorrow: Besok 1 %{time}
         yesterday: Kemarin 1 %{time}
+        countdown:
+          passed: tanggal telah berlalu
       title: Masukkan tanggal / waktu
       create:
         form:
@@ -24,6 +26,7 @@ id:
           format_title: Format tanggal
           timezone: Zona Waktu
           until: Sampai...
+          current_timezone: "Zona waktu saat ini:"
           recurring:
             every_day: "Setiap hari"
             every_week: "Setiap pekan"
@@ -33,3 +36,4 @@ id:
             every_three_months: "Setiap tiga bulan"
             every_six_months: "Setiap enam bulan"
             every_year: "Setiap tahun"
+      default_title: "%{site_name} Acara"

@@ -231,7 +231,7 @@ describe PostValidator do
   end
 
   describe "unique_post_validator" do
-    fab!(:user) { Fabricate(:user, id: 999) }
+    fab!(:user) { Fabricate(:user) }
     fab!(:post) { Fabricate(:post, user: user, topic: topic) }
 
     before do

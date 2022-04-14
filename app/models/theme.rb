@@ -539,12 +539,19 @@ class Theme < ActiveRecord::Base
     end
 
     theme_uploads = {}
+    theme_uploads_local = {}
+
     upload_fields.each do |field|
       if field.upload&.url
         theme_uploads[field.name] = Discourse.store.cdn_url(field.upload.url)
       end
+      if field.javascript_cache
+        theme_uploads_local[field.name] = field.javascript_cache.local_url
+      end
     end
+
     hash['theme_uploads'] = theme_uploads if theme_uploads.present?
+    hash['theme_uploads_local'] = theme_uploads_local if theme_uploads_local.present?
 
     hash
   end
@@ -652,7 +659,7 @@ class Theme < ActiveRecord::Base
     end
 
     settings_hash&.each do |name, value|
-      next if name == "theme_uploads"
+      next if name == "theme_uploads" || name == "theme_uploads_local"
       contents << to_scss_variable(name, value)
     end
 

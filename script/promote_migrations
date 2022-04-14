@@ -16,12 +16,13 @@ require 'fileutils'
 VERSION_REGEX = %r{\/(\d+)_}
 
 DRY_RUN = !!ARGV.delete('--dry-run')
+PLUGINS = false
 
 if i = ARGV.find_index('--plugins-base')
   ARGV.delete_at(i)
   PLUGINS = true
   PLUGINS_BASE = ARGV.delete_at(i)
-elsif ARV.delete('--plugins')
+elsif ARGV.delete('--plugins')
   PLUGINS = true
   PLUGINS_BASE = 'plugins'
 end

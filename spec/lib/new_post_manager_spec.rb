@@ -52,6 +52,53 @@ describe NewPostManager do
       expect(result.post).to be_a(Post)
     end
 
+    it "doesn't enqueue topic if it doesn't meet the tag restrictions of the category" do
+      tag1 = Fabricate(:tag)
+      tag2 = Fabricate(:tag)
+      tag3 = Fabricate(:tag)
+      tag_group = Fabricate(:tag_group, tags: [tag2])
+      category = Fabricate(:category, tags: [tag1], tag_groups: [tag_group])
+      category.custom_fields[Category::REQUIRE_TOPIC_APPROVAL] = true
+      category.save!
+
+      manager = NewPostManager.new(
+        user,
+        raw: 'this is a new post',
+        title: 'this is a new post',
+        category: category.id,
+        tags: [tag1.name, tag3.name]
+      )
+      result = manager.perform
+      expect(result.success?).to eq(false)
+      expect(result.reviewable.persisted?).to eq(false)
+      expect(result.errors.full_messages).to contain_exactly(
+        I18n.t(
+          "tags.forbidden.category_does_not_allow_tags",
+          count: 1,
+          category: category.name,
+          tags: tag3.name
+        )
+      )
+
+      manager = NewPostManager.new(
+        user,
+        raw: 'this is a new post',
+        title: 'this is a new post',
+        category: category.id,
+        tags: [tag2.name, tag3.name]
+      )
+      result = manager.perform
+      expect(result.success?).to eq(false)
+      expect(result.reviewable.persisted?).to eq(false)
+      expect(result.errors.full_messages).to contain_exactly(
+        I18n.t(
+          "tags.forbidden.category_does_not_allow_tags",
+          count: 1,
+          category: category.name,
+          tags: tag3.name
+        )
+      )
+    end
   end
 
   context "default handler" do
@@ -530,7 +577,7 @@ describe NewPostManager do
           let(:tag) { Fabricate(:tag) }
           before do
             TagGroupMembership.create(tag: tag, tag_group: tag_group)
-            category.update(min_tags_from_required_group: 1, required_tag_group_id: tag_group.id)
+            category.update(category_required_tag_groups: [CategoryRequiredTagGroup.new(tag_group: tag_group, min_count: 1)])
           end
 
           it "errors when there are no tags from the group provided" do
@@ -546,8 +593,8 @@ describe NewPostManager do
             expect(result.errors.full_messages).to include(
               I18n.t(
                 "tags.required_tags_from_group",
-                count: category.min_tags_from_required_group,
-                tag_group_name: category.required_tag_group.name,
+                count: category.category_required_tag_groups.first.min_count,
+                tag_group_name: category.category_required_tag_groups.first.tag_group.name,
                 tags: tag.name
               )
             )

@@ -1123,7 +1123,7 @@ describe PostRevisor do
             fab!(:tag2) { Fabricate(:tag) }
             fab!(:tag3) { Fabricate(:tag) }
             fab!(:tag_group) { Fabricate(:tag_group, tags: [tag1, tag2]) }
-            fab!(:category) { Fabricate(:category, name: "beta", required_tag_group: tag_group, min_tags_from_required_group: 1) }
+            fab!(:category) { Fabricate(:category, name: "beta", category_required_tag_groups: [CategoryRequiredTagGroup.new(tag_group: tag_group, min_count: 1)]) }
 
             before do
               post.topic.update(category: category)

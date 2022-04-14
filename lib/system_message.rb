@@ -62,7 +62,7 @@ class SystemMessage
     {
       site_name: SiteSetting.title,
       username: @recipient.username,
-      user_preferences_url: "#{Discourse.base_url}/u/#{@recipient.username_lower}/preferences",
+      user_preferences_url: "#{@recipient.full_url}/preferences",
       new_user_tips: I18n.with_locale(@recipient.effective_locale) { I18n.t('system_messages.usage_tips.text_body_template', base_url: Discourse.base_url) },
       site_password: "",
       base_url: Discourse.base_url,

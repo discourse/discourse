@@ -1,8 +1,11 @@
 # frozen_string_literal: true
 
-class DropBookmarkPolymorphicColumns < ActiveRecord::Migration[6.1]
+class DropCategoryRequiredTagGroupColumns < ActiveRecord::Migration[6.1]
   DROPPED_COLUMNS ||= {
-    bookmarks: %i{bookmarkable_id bookmarkable_type}
+    categories: %i{
+      required_tag_group_id
+      min_tags_from_required_group
+    }
   }
 
   def up

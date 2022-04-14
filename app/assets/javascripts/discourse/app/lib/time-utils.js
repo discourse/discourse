@@ -43,6 +43,14 @@ export function nextMonth(timezone) {
   return startOfDay(now(timezone).add(1, "month").startOf("month"));
 }
 
+export function twoWeeks(timezone) {
+  return startOfDay(now(timezone).add(2, "weeks").day(MOMENT_MONDAY));
+}
+
+export function sixMonths(timezone) {
+  return startOfDay(now(timezone).add(6, "months").startOf("month"));
+}
+
 export function nextBusinessWeekStart(timezone) {
   return startOfDay(now(timezone).add(7, "days")).day(MOMENT_MONDAY);
 }

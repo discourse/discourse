@@ -104,7 +104,7 @@
   </tbody>
 </table>
 
-<table class="with-dir" style="vertical-align:top;width:100%">
+<table class="digest-topic-title-wrapper with-dir" style="vertical-align:top;width:100%">
   <tbody>
     <tr>
       <td class="with-dir" style="padding:<%= rtl? ? '0 16px 8px 8px' : '0 8px 8px 16px' %>;width:100%;">
@@ -121,7 +121,7 @@
   </tbody>
 </table>
 
-<table class="with-dir" style="padding:0;position:relative;vertical-align:top;width:100%">
+<table class="digest-topic-title-wrapper with-dir" style="padding:0;position:relative;vertical-align:top;width:100%">
   <tbody>
     <tr>
       <td class="digest-topic-op" style="color:#0a0a0a;line-height:1.3;margin:0 auto;padding:<%= rtl? ? '0 16px 0 0' : '0 0 0 16px' %>;width:50px;vertical-align:top;">
@@ -156,23 +156,18 @@
 </table>
 <%- end %>
 
-<table class="digest-topic-stats with-dir" style="padding:0;vertical-align:top;width:100%; margin-top:20px;">
+<table class="digest-topic-stats with-dir" style="padding:0;vertical-align:top;width:100%; padding-top:20px;">
   <tbody>
     <tr>
       <td class="digest-topic-stat" style="padding:<%= rtl? ? '0 16px 16px 8px' : '0 8px 16px 16px' %>;white-space:nowrap;vertical-align:top;width:75px">
-        <img class="digest-icon" src="<%= email_image_url 'heart.png' -%>" style="clear:both;display:inline-block;float:<%= rtl? ? 'right' : 'left' %>;height:20px;margin:0;max-width:100%;opacity:.4;outline:0;text-decoration:none;width:auto" alt="likes">
+        <img class="digest-icon" src="<%= email_image_url 'heart.png' -%>" style="clear:both;display:inline-block;float:<%= rtl? ? 'right' : 'left' %>;height:20px;margin:0;max-width:100%;opacity:.4;outline:0;text-decoration:none;width:auto" alt="likes" dm="light-img">
+        <img class="digest-icon" src="<%= email_image_url 'heart_dark.png' -%>" style="clear:both;display:inline-block;float:<%= rtl? ? 'right' : 'left' %>;height:20px;margin:0;max-width:100%;opacity:.4;outline:0;text-decoration:none;width:auto;display:none;" alt="likes" dm="dark-img">
         <span style="color:#8f8f8f;float:<%= rtl? ? 'right' : 'left' %>;line-height:1.3;margin:0 5px 10px 5px;padding:0;font-weight:400;">&nbsp;<%= t.like_count -%></span>
       </td>
       <td class="digest-topic-stat" style="padding:0 8px 16px 8px;white-space:nowrap;vertical-align:top;width:75px">
-        <img class="digest-icon" src="<%= email_image_url 'comment.png' -%>" style="clear:none;display:inline-block;float:<%= rtl? ? 'right' : 'left' %>;height:20px;margin:0;max-width:100%;opacity:.4;outline:0;text-decoration:none;width:auto" alt="replies">
+        <img class="digest-icon" src="<%= email_image_url 'comment.png' -%>" style="clear:none;display:inline-block;float:<%= rtl? ? 'right' : 'left' %>;height:20px;margin:0;max-width:100%;opacity:.4;outline:0;text-decoration:none;width:auto" alt="replies" dm="light-img">
+        <img class="digest-icon" src="<%= email_image_url 'comment_dark.png' -%>" style="clear:both;display:inline-block;float:<%= rtl? ? 'right' : 'left' %>;height:20px;margin:0;max-width:100%;opacity:.4;outline:0;text-decoration:none;width:auto;display:none;" alt="likes" dm="dark-img">
         <span style="color:#8f8f8f;float:<%= rtl? ? 'right' : 'left' %>;line-height:1.3;margin:0 5px 10px 5px;padding:0;font-weight:400;">&nbsp;<%= t.posts_count - 1 -%></span>
-      </td>
-      <td class="digest-topic-posters" style="padding:0 8px 16px 8px;white-space:nowrap;vertical-align:top;">
-        <% t.posters_summary.each do |ps| %>
-          <% if ps.user %>
-            <img src="<%= ps.user.small_avatar_url -%>" style="border-radius:50%;clear:both;display:inline-block;height:20px;width:20px;outline:0;text-decoration:none;" height="20" width="20" alt="<%= ps.user.username -%>">
-          <% end %>
-        <% end %>
       </td>
       <td class="digest-read-more-wrap" style="line-height:1.3;padding:<%= rtl? ? '0 8px 0 16px' : '0 16px 0 8px' %>;text-align:<%= rtl? ? 'left' : 'right' %>;white-space:nowrap;vertical-align:top;">
         <span class="with_accent-colors mso-accent-link">
@@ -245,7 +240,8 @@
   <tbody>
     <tr>
       <td style="border-spacing:0;padding:0;color:#0a0a0a;line-height:1.3;padding:<%= rtl? ? '0 65px 0 0' : '0 0 0 65px' %>;">
-        <img src="<%= email_image_url 'right_triangle.png' -%>" style="clear:both;display:block;height:20px;width:20px;outline:0;text-decoration:none;" alt="">
+        <img src="<%= email_image_url 'right_triangle.png' -%>" style="clear:both;display:block;height:20px;width:20px;outline:0;text-decoration:none;" alt="" dm="light-img">
+        <img src="<%= email_image_url 'right_triangle_dark.png' -%>" style="clear:both;display:block;height:20px;width:20px;outline:0;text-decoration:none;display:none;" alt="" dm="dark-img">
       </td>
     </tr>
   </tbody>
@@ -322,19 +318,14 @@
           <%= category_badge(t.category, inline_style: true, absolute_url: true) %>
         </p>
       </td>
-      <td class="digest-new-topic-posters with-dir" style="padding:8px;">
-        <% t.posters_summary[0,2].each do |ps| %>
-          <% if ps.user %>
-            <img src="<%= ps.user.small_avatar_url -%>" style="height:20px;width:20px;margin:<%= rtl? ? '0 0 5px 5px' : '0 5px 5px 0' %>;border-radius:50%;clear:both;display:inline-block;outline:0;text-decoration:none;" alt="<%= ps.user.username -%>">
-          <% end %>
-        <% end %>
-      </td>
       <td class="digest-new-topic-stat with-dir" style="padding:8px;">
-        <img class="digest-icon" src="<%= email_image_url 'heart.png' -%>" style="clear:both;display:inline-block;float:<%= rtl? ? 'right' : 'left' %>;height:20px;margin:0;max-width:100%;opacity:.4;outline:0;text-decoration:none;width:auto" alt="likes">
+        <img class="digest-icon" src="<%= email_image_url 'heart.png' -%>" style="clear:both;display:inline-block;float:<%= rtl? ? 'right' : 'left' %>;height:20px;margin:0;max-width:100%;opacity:.4;outline:0;text-decoration:none;width:auto" alt="likes" dm="light-img">
+        <img class="digest-icon" src="<%= email_image_url 'heart_dark.png' -%>" style="clear:both;display:inline-block;float:<%= rtl? ? 'right' : 'left' %>;height:20px;margin:0;max-width:100%;opacity:.4;outline:0;text-decoration:none;width:auto;display:none;" alt="likes" dm="dark-img">
         <p style="color:#8f8f8f;float:<%= rtl? ? 'right' : 'left' %>;line-height:1.3;margin:0 5px 10px 5px;padding:0;font-weight:400;"><%= t.like_count -%></p>
       </td>
       <td class="digest-new-topic-stat digest-replies with-dir" style="padding:8px;">
-        <img class="digest-icon" src="<%= email_image_url 'comment.png' -%>" style="clear:none;display:inline-block;float:<%= rtl? ? 'right' : 'left' %>;height:20px;margin:0;max-width:100%;opacity:.4;outline:0;text-decoration:none;width:auto" alt="replies">
+        <img class="digest-icon" src="<%= email_image_url 'comment.png' -%>" style="clear:none;display:inline-block;float:<%= rtl? ? 'right' : 'left' %>;height:20px;margin:0;max-width:100%;opacity:.4;outline:0;text-decoration:none;width:auto" alt="replies" dm="light-img">
+        <img class="digest-icon" src="<%= email_image_url 'comment_dark.png' -%>" style="clear:none;display:inline-block;float:<%= rtl? ? 'right' : 'left' %>;height:20px;margin:0;max-width:100%;opacity:.4;outline:0;text-decoration:none;width:auto;display:none;" alt="replies" dm="dark-img">
         <p style="color:#8f8f8f;float:<%= rtl? ? 'right' : 'left' %>;line-height:1.3;margin:0 5px 10px 5px;padding:0;font-weight:400;"><%= t.posts_count - 1 -%></p>
       </td>
     </tr>

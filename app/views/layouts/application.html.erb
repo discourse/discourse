@@ -73,25 +73,15 @@
 
     <%= render_google_tag_manager_body_code %>
     <noscript data-path="<%= request.env['PATH_INFO'] %>">
-      <%= render partial: 'header' %>
+      <%= render partial: "layouts/noscript_header" %>
+
       <div id="main-outlet" class="wrap" role="main">
         <!-- preload-content: -->
         <%= yield %>
         <!-- :preload-content -->
-        <footer class="noscript-footer-nav">
-          <nav itemscope itemtype='http://schema.org/SiteNavigationElement'>
-            <a href='<%= path "/" %>'><%= t 'home_title' %></a>
-            <%= link_to t('js.filters.categories.title'), path("/categories") %>
-            <%= link_to t('guidelines_topic.title'), path("/guidelines") %>
-            <%= link_to t('tos_topic.title'), path("/tos") %>
-            <%= link_to t('privacy_topic.title'), path("/privacy") %>
-          </nav>
-        </footer>
       </div>
 
-      <footer id='noscript-footer'>
-        <p><%= t 'powered_by_html' %></p>
-      </footer>
+      <%= render partial: "layouts/noscript_footer" %>
     </noscript>
 
     <%- unless customization_disabled? %>

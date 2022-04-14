@@ -158,7 +158,7 @@ export default Component.extend({
     }
 
     // TODO pass the 200 in from somewhere
-    const raw = (composer.get("reply") || "").substr(0, 200);
+    const raw = (composer.get("reply") || "").slice(0, 200);
     const title = composer.get("title") || "";
 
     // Ensure we have at least a title

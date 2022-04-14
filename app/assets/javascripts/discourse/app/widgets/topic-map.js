@@ -284,7 +284,7 @@ createWidget("topic-map-link", {
     const truncateLength = 85;
 
     if (content.length > truncateLength) {
-      content = `${content.substr(0, truncateLength).trim()}...`;
+      content = `${content.slice(0, truncateLength).trim()}...`;
     }
 
     return attrs.title ? replaceEmoji(content) : content;

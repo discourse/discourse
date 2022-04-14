@@ -871,6 +871,21 @@ export default Component.extend(
           placement: this.selectKit.options.placement,
           modifiers: [
             {
+              name: "flip",
+              enabled: !inModal,
+              options: {
+                padding: {
+                  top:
+                    parseInt(
+                      document.documentElement.style.getPropertyValue(
+                        "--header-offset"
+                      ),
+                      10
+                    ) || 0,
+                },
+              },
+            },
+            {
               name: "offset",
               options: {
                 offset: [0, 3],
@@ -1103,6 +1118,7 @@ export default Component.extend(
         none: "options.none",
         rootNone: "options.none",
         disabled: "options.disabled",
+        isDisabled: "options.disabled",
         rootNoneLabel: "options.none",
         showFullTitle: "options.showFullTitle",
         title: "options.translatedNone",

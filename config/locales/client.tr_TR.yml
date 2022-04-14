@@ -120,7 +120,7 @@ tr_TR:
       to_placeholder: "şimdiye kadar"
     share:
       topic_html: 'Konu: <span class="topic-title">%{topicTitle}</span>'
-      post: "gönderi #%{postNumber}"
+      post: "%{username} kullanıcısının #%{postNumber} numaralı gönderisi"
       close: "kapat"
       twitter: "Twitter'da paylaş"
       facebook: "Facebook'ta paylaş"
@@ -274,7 +274,7 @@ tr_TR:
       contact: "Bize Ulaşın"
       contact_info: "Bu siteyi etkileyen ciddi bir sorun veya acil bir durum oluştuğunda, lütfen %{contact_info} adresi üzerinden bizimle iletişime geçin."
     bookmarked:
-      title: "İşaret"
+      title: "Yer İmi"
       edit_bookmark: "Yer İmini Düzenle"
       clear_bookmarks: "Yer İmlerini Temizle"
       help:
@@ -285,6 +285,8 @@ tr_TR:
         unbookmark_with_reminder: "Bu konudaki tüm yer imlerini ve anımsatıcıları kaldırmak için tıklayın."
     bookmarks:
       created: "Bu gönderiyi yer imlerine eklediniz. %{name}"
+      create_for: "%{type} için yer işareti oluştur"
+      edit_for: "%{type} için yer işaretini düzenle"
       not_bookmarked: "bu gönderiyi yer imlerine ekle"
       remove_reminder_keep_bookmark: "Anımsatıcıyı kaldır ve yer imini tut"
       created_with_reminder: "Bu gönderiye %{date} hatırlatıcısı ile yer imlerine eklediniz. %{name}"
@@ -350,6 +352,7 @@ tr_TR:
     saved: "Kaydedildi!"
     upload: "Yükle"
     uploading: "Yükleniyor..."
+    processing: "İşleniyor..."
     uploading_filename: "Yükleniyor: %{filename}..."
     processing_filename: "İşleniyor: %{filename}..."
     clipboard: "pano"
@@ -1770,27 +1773,27 @@ tr_TR:
       not_approved: "Hesabın henüz onaylanmış değil. Onaylandığında e--posta ile bilgilendirileceksin."
       google_oauth2:
         name: "Google"
-        title: "Google ile"
+        title: "Google ile giriş yapın"
         sr_title: "Google ile giriş yapın"
       twitter:
         name: "Twitter"
-        title: "Twitter ile"
+        title: "Twitter ile giriş yapın"
         sr_title: "Twitter ile giriş yapın"
       instagram:
         name: "Instagram"
-        title: "Instagram ile"
+        title: "Instagram ile giriş yapın"
         sr_title: "Instagram ile giriş yapın"
       facebook:
         name: "Facebook"
-        title: "Facebook ile"
+        title: "Facebook ile giriş yapın"
         sr_title: "Facebook ile giriş yapın"
       github:
         name: "GitHub"
-        title: "GitHub ile"
+        title: "GitHub ile Giriş Yapın"
         sr_title: "GitHub ile Giriş Yapın"
       discord:
         name: "Discord"
-        title: "Discord ile"
+        title: "Discord ile Giriş Yapın"
         sr_title: "Discord ile Giriş Yapın"
       second_factor_toggle:
         totp: "Bunun yerine bir doğrulama uygulaması kullanın"
@@ -1806,7 +1809,6 @@ tr_TR:
       success: "Hesabın oluşturuldu ve şimdi giriş yaptın."
       name_label: "Ad"
       password_label: "Parola"
-      optional_description: "(isteğe bağlı)"
     password_reset:
       continue: "%{site_name} sitesine gitmeyi sürdür"
     emoji_set:
@@ -2592,8 +2594,8 @@ tr_TR:
         title: "Yazdır"
         help: "Bu konunun yazıcı dostu olan sürümünü aç"
       flag_topic:
-        title: "Bayrakla işaretle"
-        help: "bu gönderiyi denetlenmesi için özel olarak bayrakla imle veya bununla ilgili özel bir bildirim gönder"
+        title: "Bayrak Koy"
+        help: "Bu gönderiyi denetlenmesi için özel olarak bayrakla imle veya bununla ilgili özel bir bildirim gönder"
         success_message: "Bu konuyu başarıyla bayrakla işaretledin"
       make_public:
         title: "Herkese Açık Konuya Dönüştür"
@@ -2775,7 +2777,13 @@ tr_TR:
       show_hidden: "Yok sayılan içeriği görüntüleyin."
       deleted_by_author_simple: "(gönderi yazarı tarafından silindi)"
       collapse: "daralt"
+      sr_collapse_replies: "Gömülü yanıtları kapat"
+      sr_expand_replies:
+        one: "Bu gönderide %{count} yanıt var. Genişletmek için tıklayın"
+        other: "Bu gönderide %{count} yanıt var. Genişletmek için tıklayın"
       expand_collapse: "genişlet/daralt"
+      sr_below_embedded_posts_description: "#%{post_number} numaralı gönderiye gelen yanıtlar"
+      sr_embedded_reply_description: "#%{post_number} numaralı gönderiye @%{username} kullanıcısının yanıtı"
       locked: "personel bu yayının düzenlenmesini kilitledi"
       gap:
         one: "gizlenen %{count} yorumu gör"
@@ -2796,6 +2804,12 @@ tr_TR:
       has_likes_title_you:
         one: "siz ve %{count} diğer kişi bu gönderiyi beğendi"
         other: "sen ve %{count} kişi bu gönderiyi beğendi"
+      sr_post_like_count_button:
+        one: "%{count} kişi bu gönderiyi beğendi. Görüntülemek için tıklayın"
+        other: "%{count} kişi bu gönderiyi beğendi. Görüntülemek için tıklayın"
+      sr_post_read_count_button:
+        one: "%{count} kişi bu yazıyı okudu. Görüntülemek için tıklayın"
+        other: "%{count} kişi bu yazıyı okudu. Görüntülemek için tıklayın"
       filtered_replies_hint:
         one: "Bu gönderiyi ve yanıtını görüntüleyin"
         other: "Bu gönderiyi ve %{count} yanıtını görüntüleyin"
@@ -2897,6 +2911,8 @@ tr_TR:
           read_capped:
             one: "ve %{count} tanesini daha okuyun"
             other: "ve %{count}tanesini daha okuyun"
+          sr_post_likers_list_description: "bu gönderiyi beğenen kullanıcılar"
+          sr_post_readers_list_description: "bu gönderiyi okuyan kullanıcılar"
         by_you:
           off_topic: "Bunu bayrakla \"konu dışı\" olarak işaretledin"
           spam: "Bunu bayrakla \"istenmeyen e-posta\" olarak işaretledin"
@@ -2996,10 +3012,11 @@ tr_TR:
       tag_groups_placeholder: "(Seçmeli) izin verilen etiket gruplarının listesi"
       manage_tag_groups_link: "Etiket gruplarını yönetin"
       allow_global_tags_label: "Diğer etiketlere de izin ver"
-      tag_group_selector_placeholder: "(Opsiyonel) Etiket grubu"
-      required_tag_group_description: "Bir etiket grubundaki etiketleresahip olmak için için yeni konular gerekiyor:"
-      min_tags_from_required_group_label: "Etiketler:"
-      required_tag_group_label: "Etiket grubu:"
+      required_tag_group:
+        description: "Yeni konuların etiket gruplarından bir etiket bulundurmasını zorunlu yap"
+        delete: "Sil"
+        add: "Zorunlu etiket grubu ekle"
+        placeholder: "bir etiket grubu seçin..."
       topic_featured_link_allowed: "Bu kategoride özellikli bağlantılara izin ver"
       delete: "Kategoriyi Sil"
       create: "Yeni Kategori"
@@ -3127,7 +3144,7 @@ tr_TR:
       colors_disabled: "Category style olarak none belirlenmiş olduğundan renk seçemezsiniz."
     flagging:
       title: "Topluluğumuzun nezaket kuralları içerisinde kalmasına sağladığın destek için teşekkürler!"
-      action: "Gönderiyi Bayrakla İşaretle"
+      action: "Gönderiye Bayrak Koy"
       take_action: "Harekete Geç..."
       take_action_options:
         default:
@@ -3169,7 +3186,7 @@ tr_TR:
           other: "%{count} kaldı"
     flagging_topic:
       title: "Topluluğumuzun nezaket kuralları içerisinde kalmasına verdiğin destek için teşekkürler!"
-      action: "Konuyu Bayrakla İşaretle"
+      action: "Konuya Bayrak Koy"
       notify_action: "Mesaj"
     topic_map:
       title: "Konu Özeti"
@@ -3221,15 +3238,20 @@ tr_TR:
       other {}} {count, plural, one {1 yanıt} other {# yanıt}} var
     original_post: "Orjinal Gönderi"
     views: "Görüntüleme"
+    sr_views: "Görüntüleme sayısına göre sırala"
     views_lowercase:
       one: "gösterim"
       other: "görüntülenenler"
     replies: "Yanıtlar"
+    sr_replies: "Cevap sayısına göre sırala"
     views_long:
       one: "bu konu %{count} defa görüntülendi"
       other: "bu konu %{number} defa görüntülendi"
     activity: "Etkinlik"
+    sr_activity: "Aktiviteye göre sırala"
     likes: "Beğeni"
+    sr_likes: "Beğeni sayısına göre sırala"
+    sr_op_likes: "Orijinal gönderi beğenilerine göre sırala"
     likes_lowercase:
       one: "beğeni"
       other: "beğeni"
@@ -3619,6 +3641,7 @@ tr_TR:
       unsupported_file_picked: "Desteklenmeyen bir dosya seçtiniz. Desteklenen dosya türleri şunlardır– %{types}."
     user_activity:
       no_activity_title: "Henüz etkinlik yok"
+      no_activity_body: "Topluluğumuza hoş geldiniz! Burada çok yenisiniz ve tartışmalara henüz katkıda bulunmadınız. İlk adım olarak <a href='%{topUrl}'>en çok okunanları</a> veya <a href='%{categoriesUrl}'>kategorileri</a> ziyaret edebilir ve okumaya başlayabilirsiniz! Beğendiğiniz veya hakkında daha fazla bilgi edinmek istediğiniz gönderilerde lütfen %{heartIcon} kullanarak beğeninizi belirtin. Paylaşımlara katıldıkça, etkinliğiniz burada listelenecek."
       no_activity_others: "Etkinlik yok."
       no_replies_title: "Henüz hiçbir konuyu yanıtlamadınız."
       no_replies_others: "Yanıt yok."
@@ -3626,8 +3649,12 @@ tr_TR:
       no_likes_title: "Henüz hiçbir konuyu beğenmedin"
       no_likes_others: "Beğenilen gönderi yok."
       no_topics_title: "Henüz herhangi bir konu başlatmadın"
+      no_topics_title_others: "%{username} kullanıcısı henüz herhangi bir konu başlatmadı"
       no_read_topics_title: "Henüz herhangi bir konu okumadın"
     no_group_messages_title: "Grup mesajı bulunamadı"
+    topic_entrance:
+      sr_jump_top_button: "İlk gönderiye atla"
+      sr_jump_bottom_button: "Son gönderiye atla"
     fullscreen_table:
       expand_btn: "Tabloyu Genişlet"
   admin_js:
@@ -4342,6 +4369,7 @@ tr_TR:
         time: "Saat"
         user: "Kullanıcı"
         email_type: "E-posta Türü"
+        details_title: "E-posta detaylarını göster"
         to_address: "Gönderi Adresi"
         test_email_address: "test için e-posta adresi"
         send_test: "Test E-postası Gönder"
@@ -4579,7 +4607,7 @@ tr_TR:
           block: "Engelle"
           censor: "Sansür"
           require_approval: "Onay gerektir"
-          flag: "Bayrakla işaretle"
+          flag: "Bayrak Koy"
           replace: "Değiştir"
           tag: "Etiket"
           silence: "Sustur"

@@ -318,7 +318,7 @@ class CategoriesController < ApplicationController
       if SiteSetting.tagging_enabled
         params[:allowed_tags] = params[:allowed_tags].presence || [] if params[:allowed_tags]
         params[:allowed_tag_groups] = params[:allowed_tag_groups].presence || [] if params[:allowed_tag_groups]
-        params[:required_tag_group_name] = params[:required_tag_group_name].presence || '' if params[:required_tag_group_name]
+        params[:required_tag_groups] = params[:required_tag_groups].presence || [] if params[:required_tag_groups]
       end
 
       if SiteSetting.enable_category_group_moderation?
@@ -357,8 +357,6 @@ class CategoriesController < ApplicationController
         :navigate_to_first_post_after_read,
         :search_priority,
         :allow_global_tags,
-        :required_tag_group_name,
-        :min_tags_from_required_group,
         :read_only_banner,
         :default_list_filter,
         :reviewable_by_group_id,
@@ -366,7 +364,12 @@ class CategoriesController < ApplicationController
         permissions: [*p.try(:keys)],
         allowed_tags: [],
         allowed_tag_groups: [],
+        required_tag_groups: [:name, :min_count]
       )
+
+      if result[:required_tag_groups] && !result[:required_tag_groups].is_a?(Array)
+        raise Discourse::InvalidParameters.new(:required_tag_groups)
+      end
 
       result
     end

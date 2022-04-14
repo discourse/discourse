@@ -18,7 +18,7 @@ export function transformBasicPost(post) {
     deleted: post.get("deleted"),
     deleted_at: post.deleted_at,
     user_deleted: post.user_deleted,
-    isDeleted: post.deleted_at || post.user_deleted, // xxxxx
+    isDeleted: post.deleted_at || post.user_deleted,
     deletedByAvatarTemplate: null,
     deletedByUsername: null,
     primary_group_name: post.primary_group_name,
@@ -84,6 +84,7 @@ export function transformBasicPost(post) {
     readCount: post.readers_count,
     canPublishPage: false,
     trustLevel: post.trust_level,
+    userSuspended: post.user_suspended,
   };
 
   _additionalAttributes.forEach((a) => (postAtts[a] = post[a]));

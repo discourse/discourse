@@ -3,7 +3,7 @@
 module CookedProcessorMixin
 
   def post_process_oneboxes
-    limit = SiteSetting.max_oneboxes_per_post
+    limit = SiteSetting.max_oneboxes_per_post - @doc.css("aside.onebox, a.inline-onebox").size
     oneboxes = {}
     inlineOneboxes = {}
 

@@ -55,8 +55,6 @@ require 'pry-rails' if Rails.env.development?
 
 require 'discourse_fonts'
 
-require_relative '../lib/zeitwerk_config.rb'
-
 if defined?(Bundler)
   bundler_groups = [:default]
 
@@ -68,6 +66,8 @@ if defined?(Bundler)
 
   Bundler.require(*bundler_groups)
 end
+
+require_relative '../lib/require_dependency_backward_compatibility'
 
 module Discourse
   class Application < Rails::Application
@@ -110,9 +110,6 @@ module Discourse
     config.autoloader = :zeitwerk
 
     # Custom directories with classes and modules you want to be autoloadable.
-    config.autoload_paths += Dir["#{config.root}/app"]
-    config.autoload_paths += Dir["#{config.root}/app/jobs"]
-    config.autoload_paths += Dir["#{config.root}/app/serializers"]
     config.autoload_paths += Dir["#{config.root}/lib"]
     config.autoload_paths += Dir["#{config.root}/lib/common_passwords"]
     config.autoload_paths += Dir["#{config.root}/lib/highlight_js"]
@@ -145,11 +142,12 @@ module Discourse
     config.assets.skip_minification = []
 
     # explicitly precompile any images in plugins ( /assets/images ) path
-    config.assets.precompile += [lambda do |filename, path|
-      path =~ /assets\/images/ && !%w(.js .css).include?(File.extname(filename))
-    end]
+    Dir.glob("#{config.root}/plugins/*/assets/images/**/*").each do |filename|
+      config.assets.precompile << filename if !%w(.js .css).include?(File.extname(filename))
+    end
 
     config.assets.precompile += %w{
+      application.js
       vendor.js
       admin.js
       browser-detect.js
@@ -193,25 +191,6 @@ module Discourse
     unless GlobalSetting.try(:omit_base_locales)
       Dir.glob("#{config.root}/app/assets/javascripts/locales/*.js.erb").each do |file|
         config.assets.precompile << "locales/#{file.match(/([a-z_A-Z]+\.js)\.erb$/)[1]}"
-      end
-    end
-
-    # out of the box sprockets 3 grabs loose files that are hanging in assets,
-    # the exclusion list does not include hbs so you double compile all this stuff
-    initializer :fix_sprockets_loose_file_searcher, after: :set_default_precompile do |app|
-      app.config.assets.precompile.delete(Sprockets::Railtie::LOOSE_APP_ASSETS)
-
-      # We don't want application from node_modules, only from the root
-      app.config.assets.precompile.delete(/(?:\/|\\|\A)application\.(css|js)$/)
-      app.config.assets.precompile += ['application.js']
-
-      start_path = ::Rails.root.join("app/assets").to_s
-      exclude = ['.es6', '.hbs', '.hbr', '.js', '.css', '.lock', '.json', '.log', '.html', '']
-      app.config.assets.precompile << lambda do |logical_path, filename|
-        filename.start_with?(start_path) &&
-        !filename.include?("/node_modules/") &&
-        !filename.include?("/dist/") &&
-        !exclude.include?(File.extname(logical_path))
       end
     end
 
@@ -292,6 +271,11 @@ module Discourse
 
     Sprockets.register_mime_type 'application/javascript', extensions: ['.js', '.es6', '.js.es6'], charset: :unicode
     Sprockets.register_postprocessor 'application/javascript', DiscourseJsProcessor
+
+    # This class doesn't exist in Sprockets 4, but ember-rails tries to 'autoload' it
+    # Define an empty class to prevent an error
+    class Sprockets::Engines
+    end
 
     require 'discourse_redis'
     require 'logster/redis_store'

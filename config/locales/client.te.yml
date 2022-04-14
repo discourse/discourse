@@ -98,7 +98,6 @@ te:
       next_month: "తరువాత నెల"
       placeholder: తేదీ
     share:
-      post: "#%{postNumber} టపా"
       close: "మూసివేయి"
     emails_are_disabled: "బయటకు వెళ్లే అన్ని ఈమెయిల్లూ అధికారి నిశేధించాడు. ఇప్పుడు ఎటువంటి ఈమెయిల్ ప్రకటనలూ పంపవీలవదు."
     themes:
@@ -695,20 +694,13 @@ te:
       sent_activation_email_again: "మీకు <b>%{currentEmail}</b> మరో చేతన ఈమెయిల్ పంపాము. అది చేరుకోడానికి కొద్ది నిమిషాలు పట్టవచ్చు. ఇంకా స్పామ్ ఫోల్డరు చూడటం మర్చిపోకండి సుమా. "
       google_oauth2:
         name: "గూగుల్"
-        title: "గూగుల్ తో"
       twitter:
         name: "ట్విట్టర్"
-        title: "ట్విట్టరు తో"
-      facebook:
-        title: "ఫేస్ బుక్ తో"
-      github:
-        title: "గిట్ హబ్ తో"
     invites:
       accept_title: "ఆహ్వానం"
       welcome_to: "%{site_name} కు సుస్వాగతం!"
       name_label: "పేరు"
       password_label: "సంకేతపదం"
-      optional_description: "(ఐచ్ఛికం)"
     password_reset:
       continue: "%{site_name} కు కొనసాగండి"
     emoji_set:
@@ -1083,6 +1075,8 @@ te:
       general: "సాధారణ"
       settings: "అమరికలు"
       tags: "ట్యాగులు"
+      required_tag_group:
+        delete: "తొలగించు"
       delete: "వర్గం తొలగించు"
       create: "కొత్త వర్గం"
       save: "వర్గం దాచు"

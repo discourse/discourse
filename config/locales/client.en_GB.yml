@@ -6,6 +6,9 @@
 
 en_GB:
   js:
+    number:
+      format:
+        separator: "."
     dates:
       time: "HH:mm"
       time_with_zone: "HH:mm (z)"
@@ -113,6 +116,15 @@ en_GB:
           color_definitions:
             text: "Colour Definitions"
             title: "Enter custom colour definitions (advanced users only)"
+            placeholder: |2-
+
+              Use this stylesheet to add custom colours to the list of CSS custom properties.
+
+              Example:
+
+              %{example}
+
+              Prefixing the property names is highly recommended to avoid conflicts with plugins and/or core.
         colors:
           select_base:
             title: "Select base colour palette"

@@ -120,7 +120,6 @@ bg:
       to_placeholder: "до дата"
     share:
       topic_html: 'Тема: <span class="topic-title">%{topicTitle}</span>'
-      post: "публикации #%{postNumber}"
       close: "затвори"
       twitter: "Споделете в Twitter"
       facebook: "Споделете във Facebook"
@@ -1682,27 +1681,23 @@ bg:
       not_approved: "Вашият профил все още не е одобрен. Ще бъдете уведомени с имейл, когато е възможно влизането Ви. "
       google_oauth2:
         name: "Google"
-        title: "с Google"
-        sr_title: "Влезте с Google"
       twitter:
         name: "Twitter"
-        title: "с Twitter"
-        sr_title: "Влезте с Twitter"
       instagram:
         name: "Instagram"
-        title: "чрез Instagram"
+        title: "Влезте с Instagram"
         sr_title: "Влезте с Instagram"
       facebook:
         name: "Facebook"
-        title: "със Facebook"
+        title: "Влезте с Facebook"
         sr_title: "Влезте с Facebook"
       github:
         name: "GitHub"
-        title: " с Github"
+        title: "Влезте с GitHub"
         sr_title: "Влезте с GitHub"
       discord:
         name: "Discord"
-        title: "с Discord"
+        title: "Влезте с Discord"
         sr_title: "Влезте с Discord"
       second_factor_toggle:
         totp: "Вместо това използвайте приложение за удостоверяване"
@@ -1718,7 +1713,6 @@ bg:
       success: "Профилът ви е създаден и вече сте влезли в него."
       name_label: "Име"
       password_label: "Парола"
-      optional_description: "(по избор)"
     password_reset:
       continue: "Продължете към %{site_name}"
     emoji_set:
@@ -2622,6 +2616,8 @@ bg:
       topic_template: "Шаблон на темата"
       tags: "Етикети"
       tags_placeholder: "(По желание) списък на позволените етикети"
+      required_tag_group:
+        delete: "Изтрий"
       topic_featured_link_allowed: "Разрешаване на включени връзки в тази категория"
       delete: "Изтрий категорията"
       create: "Нова категория"

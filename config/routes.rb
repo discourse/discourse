@@ -26,6 +26,13 @@ Discourse::Application.routes.draw do
     post "webhooks/sendgrid" => "webhooks#sendgrid"
     post "webhooks/sparkpost" => "webhooks#sparkpost"
 
+    scope path: nil, constraints: { format: :xml } do
+      resources :sitemap, only: [:index]
+      get "/sitemap_:page" => "sitemap#page", page: /[1-9][0-9]*/
+      get "/sitemap_recent" => "sitemap#recent"
+      get "/news" => "sitemap#news"
+    end
+
     scope path: nil, constraints: { format: /.*/ } do
       if Rails.env.development?
         mount Sidekiq::Web => "/sidekiq"

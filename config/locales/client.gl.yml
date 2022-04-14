@@ -118,7 +118,6 @@ gl:
       to_placeholder: "ata a data"
     share:
       topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
-      post: "publicación #%{postNumber}"
       close: "pechar"
       twitter: "Compartir no Twitter"
       facebook: "Compartir no Facebook"
@@ -1668,22 +1667,16 @@ gl:
       not_approved: "A súa conta non foi aínda aprobada. Notificaráselle por correo electrónico cando poida iniciar a sesión."
       google_oauth2:
         name: "Google"
-        title: "con Google"
       twitter:
         name: "Twitter"
-        title: "co Twitter"
       instagram:
         name: "Instagram"
-        title: "con Instagram"
       facebook:
         name: "Facebook"
-        title: "co Facebook"
       github:
         name: "GitHub"
-        title: "con GitHub"
       discord:
         name: "Discord"
-        title: "con Discord"
       second_factor_toggle:
         totp: "Usar unha app autenticadora no seu lugar"
         backup_code: "Usar no seu lugar un código de copia de seguranza"
@@ -1698,7 +1691,6 @@ gl:
       success: "A súa conta acaba de ser creada e ten a sesión iniciada."
       name_label: "Nome"
       password_label: "Contrasinal"
-      optional_description: "(opcional)"
     password_reset:
       continue: "Continuar en %{site_name}"
     emoji_set:
@@ -2792,10 +2784,8 @@ gl:
       tag_groups_placeholder: "lista de grupos de etiquetas permitidos (opcional)"
       manage_tag_groups_link: "Xestionar grupos de etiquetas"
       allow_global_tags_label: "Permitir tamén outras etiquetas"
-      tag_group_selector_placeholder: "Grupo de etiquetas (opcional)"
-      required_tag_group_description: "Requirir que os novos temas teñan etiquetas dun grupo de etiquetas:"
-      min_tags_from_required_group_label: "Número de etiquetas:"
-      required_tag_group_label: "Grupo de etiquetas:"
+      required_tag_group:
+        delete: "Eliminar"
       topic_featured_link_allowed: "Permitir ligazóns de actualidade nesta categoría"
       delete: "Eliminar categoría"
       create: "Nova categoría"

@@ -394,11 +394,13 @@ es:
   bookmarks:
     errors:
       already_bookmarked_post: "No puedes guardar la misma publicación en marcadores dos veces."
+      already_bookmarked: "No puedes añadir a marcadores el mismo %{type} dos veces."
       too_many: "Lo sentimos, pero no puedes añadir más de %{limit} publicaciones a marcadores. Visita <a href='%{user_bookmarks_url}'>%{user_bookmarks_url}</a> para quitar algunos."
       cannot_set_past_reminder: "No puedes establecer un recordatorio de marcador en el pasado."
       cannot_set_reminder_in_distant_future: "No puedes establecer un recordatorio de marcador más de 10 años en el futuro."
-      time_must_be_provided: "se debe indicar el tiempo para todos los recordatorios"
+      time_must_be_provided: "Hay que poner un tiempo para todos recordatorios"
       for_topic_must_use_first_post: "Solo puedes usar la primera publicación para añadir el tema a marcadores."
+      bookmarkable_id_type_required: "El nombre y el tipo del elemento a añadir a marcadores es obligatorio."
     reminders:
       at_desktop: "La próxima vez que esté en mi ordenador"
       later_today: "Más tarde durante el día de hoy"
@@ -1483,10 +1485,8 @@ es:
     summary_timeline_button: "Mostrar un botón para «Resumir» en la línea de tiempo"
     enable_personal_messages: "Permitir que los usuarios con nivel de confianza 1 (configurable a través del ajuste min trust to send messages) puedan crear y responder mensajes. Ten en cuenta que el personal siempre puede mandar mensajes, sin importar los ajustes."
     enable_system_message_replies: "Permite a los usuarios responder a los mensajes del sistema, incluso si los mensajes personales están desactivados."
-    enable_long_polling: "Los mensajes usados para notificaciones pueden usar el long polling"
     enable_chunked_encoding: "Activar respuestas en lotes del servidor. Esta funcionalidad debería funcionar en casi todos los entornos, pero algunos proxies pueden causar que las respuestas tarden"
     long_polling_base_url: "URL base usada para el long polling (cuando un CDN esta sirviendo contenido dinámico, asegúrate de ajustar esto al pull de origen) ejemplo: http://origin.site.com"
-    long_polling_interval: "Cantidad de tiempo que el servidor debe de esperar antes de responder a los clientes que no hay datos para enviar (solamente usuarios con sesión iniciada)."
     polling_interval: "Cuando no este en long polling, frecuencia con la que los clientes con sesión iniciada hacen poll en milisegundos"
     anon_polling_interval: "Frecuencia en milisegundos con la que los clientes anónimos hacen poll"
     background_polling_interval: "Frecuencia en milisegundos con la que los clientes con sesión iniciada hacen poll (mientras que la ventana está en segundo plano)"
@@ -4370,6 +4370,12 @@ es:
         other: '«%{tag_name}» está restringida a las siguientes categorías: %{category_names}'
       synonym: 'Los sinónimos no están permitidos. Utiliza "%{tag_name}" en su lugar.'
       has_synonyms: '"%{tag_name}" no se puede utilizar porque tiene sinónimos.'
+      restricted_tags_cannot_be_used_in_category:
+        one: 'La etiqueta «%{tags}» no puede usarse en la categoría «%{category}». Por favor, quítala.'
+        other: 'Las siguientes etiquetas no pueden usarse en la categoría «%{category}»: %{tags}. Por favor, quítalas.'
+      category_does_not_allow_tags:
+        one: 'La categoría «%{category}» no permite la etiqueta «%{tags}». Por favor, quítala.'
+        other: 'La categoría «%{category}» no permite las siguientes etiquetas: «%{tags}». Por favor, quítalas.'
     required_tags_from_group:
       one: "Debes incluir al menos %{count} etiqueta de %{tag_group_name}. Las etiquetas en este grupo son: %{tags}."
       other: "Debes incluir al menos %{count} etiquetas de %{tag_group_name}. Las etiquetas en este grupo son: %{tags}."
@@ -4678,6 +4684,7 @@ es:
     ignore_error: "Lo sentimos, pero no puedes ignorar a este usuario."
     mute_error: "Lo sentimos, pero no puedes silenciar a este usuario."
     error: "Lo siento, no puedes cambiar el nivel de notificación de ese usuario."
+    invalid_value: '«%{value}» no es un nivel de notificaciones válido.'
   discord:
     not_in_allowed_guild: "La autenticación falló. No eres miembro de ningún clan de Discord permitido."
   old_keys_reminder:

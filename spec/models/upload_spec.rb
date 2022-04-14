@@ -204,6 +204,13 @@ describe Upload do
         setup_s3
       end
 
+      it "can download an s3 upload" do
+        stub_request(:get, upload.url)
+          .to_return(status: 200, body: "hello", headers: {})
+
+        expect(upload.content).to eq("hello")
+      end
+
       it "should return the right upload when using base url (not CDN) for s3" do
         upload
         expect(Upload.get_from_url(upload.url)).to eq(upload)

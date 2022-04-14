@@ -111,7 +111,7 @@ export default Controller.extend({
       if (newList.length === 0) {
         this.refreshModel();
       } else {
-        this.set("reviewables", newList);
+        this.reviewables.setObjects(newList);
       }
     },
 

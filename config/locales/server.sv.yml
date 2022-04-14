@@ -63,6 +63,7 @@ sv:
       unrecognized_extension: "Okänt filnamnstillägg: %{extension}"
     import_error:
       generic: Det uppstod ett fel vid import av det temat
+      upload: "Det uppstod ett fel under skapandet av uppladdningstillgång: %{name}. %{errors}"
       about_json: "Importfel: about.json finns inte eller är ogiltig. Är du säker på att detta är ett Discourse-tema?"
       about_json_values: "about.json innehåller ogiltiga värden: %{errors}"
       modifier_values: "about.json-modifierare innehåller ogiltiga värden: %{errors}"
@@ -394,11 +395,13 @@ sv:
   bookmarks:
     errors:
       already_bookmarked_post: "Du kan inte bokmärka samma inlägg två gånger."
+      already_bookmarked: "Du kan inte bokmärka samma %{type} två gånger."
       too_many: "Tyvärr kan du inte lägga till fler än %{limit} bokmärken, gå till <a href='%{user_bookmarks_url}'>%{user_bookmarks_url}</a> för att ta bort några."
       cannot_set_past_reminder: "Du kan inte sätta en påminnelse för bokmärke i det förflutna."
       cannot_set_reminder_in_distant_future: "Du kan inte sätta en påminnelse för bokmärke mer än 10 år framåt i tiden."
-      time_must_be_provided: "tid måste anges för alla påminnelser"
+      time_must_be_provided: "Tid måste anges för alla påminnelser"
       for_topic_must_use_first_post: "Du kan bara använda det första inlägget för att bokmärka ämnet."
+      bookmarkable_id_type_required: "Namnet och typen av post som ska bokmärkas krävs."
     reminders:
       at_desktop: "Nästa gång jag är vid datorn"
       later_today: "Senare idag"
@@ -1463,10 +1466,8 @@ sv:
     summary_timeline_button: "Visa en \"Sammanfatta\"-knapp på tidslinjen"
     enable_personal_messages: "Tillåt användare med förtroendenivå 1 (konfigurera genom minsta förtroendenivå för att skicka meddelanden) att skapa meddelanden och svara på meddelanden. Notera att personalen alltid kan skicka meddelanden oavsett."
     enable_system_message_replies: "Tillåter användare att svara på systemmeddelanden, även om personliga meddelanden har inaktiverats"
-    enable_long_polling: "Meddelande-buss som används för avisering kan använda long polling"
     enable_chunked_encoding: "Aktivera packade kodningssvar (chunked) från servern. Den här funktionen fungerar på de flesta inställningar, men vissa proxyservrar kan buffra, vilket gör att svaren fördröjs"
     long_polling_base_url: "URL som används för long polling (när en CDN levererar dynamiskt innehåll, kontrollera att det här är inställt till origin pull) se: http://origin.site.com"
-    long_polling_interval: "Tid som servern bör vänta innan den svarar på klienter när det inte finns någon data att skicka (endast loggad på användare)"
     polling_interval: "När long polling inte har aktiverats, hur ofta bör inloggade klienter polla i millisekunder"
     anon_polling_interval: "Hur ofta bör anonyma klienter polla i millisekunder"
     background_polling_interval: "Hur ofta bör klienter polla i millisekunder (när fönstret är i bakgrunden)"
@@ -3993,6 +3994,12 @@ sv:
         other: '"%{tag_name}" är begränsad till följande kategorier: %{category_names}'
       synonym: 'Synonymer tillåts inte. Använd "%{tag_name}" istället.'
       has_synonyms: '"%{tag_name}" kan inte användas eftersom den har synonymer.'
+      restricted_tags_cannot_be_used_in_category:
+        one: 'Taggen "%{tags}" kan inte användas i kategorin "%{category}". Ta bort den.'
+        other: 'Följande taggar kan inte användas i kategorin "%{category}": %{tags}. Ta bort dem.'
+      category_does_not_allow_tags:
+        one: 'Kategorin "%{category}" tillåter inte taggen "%{tags}". Ta bort den.'
+        other: 'Kategorin "%{category}" tillåter inte följande taggar: "%{tags}". Ta bort dem.'
     required_tags_from_group:
       one: "Du måste omfatta minst %{count} %{tag_group_name}-tagg. Taggarna i den här gruppen är: %{tags}."
       other: "Du måste omfatta minst %{count} %{tag_group_name}-taggar. Taggarna i den här gruppen är: %{tags}."
@@ -4301,6 +4308,7 @@ sv:
     ignore_error: "Tyvärr kan du inte ignorera den användaren."
     mute_error: "Tyvärr kan du inte tysta den användaren."
     error: "Tyvärr kan du inte ändra aviseringsnivån för den användaren."
+    invalid_value: '"%{value}" är inte en giltig aviseringsnivå.'
   discord:
     not_in_allowed_guild: "Autentisering misslyckades. Du är inte medlem i ett tillåtet Discord-sällskap."
   old_keys_reminder:

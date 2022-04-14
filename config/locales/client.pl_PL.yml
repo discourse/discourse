@@ -164,7 +164,6 @@ pl_PL:
       to_placeholder: "do daty"
     share:
       topic_html: 'Temat: <span class="topic-title">%{topicTitle}</span>'
-      post: "post #%{postNumber}"
       close: "zamknij"
       twitter: "Udostępnij na Twitterze"
       facebook: "Udostępnij na Facebooku"
@@ -1904,27 +1903,23 @@ pl_PL:
       not_approved: "Twoje konto nie zostało jeszcze aktywowane. Zostaniesz powiadomiony emailem gdy będziesz mógł/mogła się zalogować."
       google_oauth2:
         name: "Google"
-        title: "przez Google"
-        sr_title: "Zaloguj się przez Google"
       twitter:
         name: "Twitter"
-        title: "przez Twitter"
-        sr_title: "Zaloguj się przez Twitter"
       instagram:
         name: "Instagram"
-        title: "z Instagramem"
+        title: "Zaloguj się przez Instagram"
         sr_title: "Zaloguj się przez Instagram"
       facebook:
         name: "Facebook"
-        title: "przez Facebook"
+        title: "Zaloguj się przez facebook"
         sr_title: "Zaloguj się przez facebook"
       github:
         name: "GitHub"
-        title: "przez GitHub"
+        title: "Zaloguj się przez GitHub"
         sr_title: "Zaloguj się przez GitHub"
       discord:
         name: "Discord"
-        title: "z Discordem"
+        title: "Zaloguj się przez Discord"
         sr_title: "Zaloguj się przez Discord"
       second_factor_toggle:
         totp: "Zamiast tego użyj aplikacji uwierzytelniającej"
@@ -1941,7 +1936,6 @@ pl_PL:
       success: "Twoje konto zostało utworzone i jesteś teraz zalogowany."
       name_label: "Nazwa"
       password_label: "Hasło"
-      optional_description: "(opcjonalne)"
     password_reset:
       continue: "Przejdź do %{site_name}"
     emoji_set:
@@ -2800,6 +2794,7 @@ pl_PL:
         title: "Odpowiedz"
         help: "zacznij tworzyć odpowiedź do tego tematu"
       share:
+        title: "Udostępnij temat"
         extended_title: "Udostępnij link"
         help: "udostępnij odnośnik do tego tematu"
         instructions: "Udostępnij link do tego tematu:"
@@ -3268,10 +3263,8 @@ pl_PL:
       tag_groups_placeholder: "(Opcjonalnie) lista dozwolonych grup tagów"
       manage_tag_groups_link: "Zarządzaj grupami tagów"
       allow_global_tags_label: "Zezwól dodatkowo na inne tagi"
-      tag_group_selector_placeholder: "(Opcjonalnie) Grupa znaczników"
-      required_tag_group_description: "Wymagaj, aby nowe tematy miały znaczniki z grupy znaczników:"
-      min_tags_from_required_group_label: "Liczba tagów:"
-      required_tag_group_label: "Grupa tagów:"
+      required_tag_group:
+        delete: "Usuń"
       topic_featured_link_allowed: "Zezwól na wybrane linki w tej kategorii"
       delete: "Usuń kategorię"
       create: "Nowa kategoria"
@@ -3627,6 +3620,7 @@ pl_PL:
       readonly: "przeglądać"
     lightbox:
       download: "pobierz"
+      open: "oryginalny obraz"
       previous: "Poprzedni (klawisz strzałki w lewo)"
       next: "Następny (klawisz strzałki w prawo)"
       counter: "%curr% z %total%"
@@ -3948,7 +3942,6 @@ pl_PL:
       unsupported_file_picked: "Wybrałeś nieobsługiwany plik. Obsługiwane typy plików – %{types}."
     user_activity:
       no_activity_title: "Brak aktywności"
-      no_activity_body: "Witaj w naszej społeczności! Jesteś tu zupełnie nowy i nie przyczyniłeś się jeszcze do dyskusji. W pierwszym kroku odwiedź <a href='%{topUrl}'>Popularne</a> lub <a href='%{categoriesUrl}'>Kategorie</a> i zacznij czytać! Kliknij %{heartIcon} dla wpisów, które lubisz lub chcesz dowiedzieć się więcej. Jeśli jeszcze tego nie zrobiłeś, pomóż innym cię poznać, dodając zdjęcie i bio w swoich <a href='%{preferencesUrl}'>preferencjach użytkownika</a>."
       no_activity_others: "Brak aktywności"
       no_replies_title: "Nie odpowiedziałeś jeszcze na żadne tematy"
       no_replies_others: "Brak odpowiedzi."

@@ -50,6 +50,12 @@ describe User do
         expect(user.errors.full_messages.first)
           .to include(user_error_message(:username, :same_as_password))
       end
+
+      describe 'when a username is an integer' do
+        it 'is converted to a string on normalization' do
+          expect(User.normalize_username(123)).to eq("123") # This is possible via the API
+        end
+      end
     end
 
     describe 'name' do
@@ -1686,7 +1692,7 @@ describe User do
     end
   end
 
-  context "when user preferences are overriden" do
+  context "when user preferences are overridden" do
 
     fab!(:category0) { Fabricate(:category) }
     fab!(:category1) { Fabricate(:category) }
@@ -1718,7 +1724,7 @@ describe User do
       SiteSetting.default_categories_regular = category4.id.to_s
     end
 
-    it "has overriden preferences" do
+    it "has overridden preferences" do
       user = Fabricate(:user)
       options = user.user_option
       expect(options.mailing_list_mode).to eq(true)

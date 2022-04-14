@@ -120,7 +120,6 @@ nl:
       to_placeholder: "tot datum"
     share:
       topic_html: 'Topic: <span class="topic-title">%{topicTitle}</span>'
-      post: "bericht #%{postNumber}"
       close: "sluiten"
       twitter: "Delen op Twitter"
       facebook: "Delen op Facebook"
@@ -1722,27 +1721,23 @@ nl:
       not_approved: "Uw account is nog niet goedgekeurd. U ontvangt een melding via e-mail zodra u zich kunt aanmelden."
       google_oauth2:
         name: "Google"
-        title: "met Google"
-        sr_title: "Inloggen met Google"
       twitter:
         name: "Twitter"
-        title: "met Twitter"
-        sr_title: "Inloggen met Twitter"
       instagram:
         name: "Instagram"
-        title: "met Instagram"
+        title: "Inloggen met Instagram"
         sr_title: "Inloggen met Instagram"
       facebook:
         name: "Facebook"
-        title: "met Facebook"
+        title: "Inloggen met Facebook"
         sr_title: "Inloggen met Facebook"
       github:
         name: "GitHub"
-        title: "met GitHub"
+        title: "Inloggen met GitHub"
         sr_title: "Inloggen met GitHub"
       discord:
         name: "Discord"
-        title: "met Discord"
+        title: "Inloggen met Discord"
         sr_title: "Inloggen met Discord"
       second_factor_toggle:
         totp: "Een authenticator-app gebruiken"
@@ -1758,7 +1753,6 @@ nl:
       success: "Uw account is gemaakt en u bent nu aangemeld."
       name_label: "Naam"
       password_label: "Wachtwoord"
-      optional_description: "(optioneel)"
     password_reset:
       continue: "Doorgaan naar %{site_name}"
     emoji_set:
@@ -2905,10 +2899,8 @@ nl:
       tag_groups_placeholder: "(Optioneel) lijst van toegestane tag-groepen"
       manage_tag_groups_link: "Tag-groepen beheren"
       allow_global_tags_label: "Ook andere tags toestaan"
-      tag_group_selector_placeholder: "(Optioneel) Tag-groep"
-      required_tag_group_description: "Nieuwe topics moeten tags hebben uit een tag-groep:"
-      min_tags_from_required_group_label: "Aantal tags:"
-      required_tag_group_label: "Tag-groep:"
+      required_tag_group:
+        delete: "Verwijderen"
       topic_featured_link_allowed: "Aanbevolen koppelingen in deze categorie toestaan"
       delete: "Categorie verwijderen"
       create: "Nieuwe categorie"
@@ -3511,7 +3503,6 @@ nl:
         leader: "leider"
     user_activity:
       no_activity_title: "Nog geen activiteit"
-      no_activity_body: "Welkom bij onze gemeenschap! U bent hier gloednieuw en hebt nog niet bijgedragen aan discussies. Als een eerste stap, bezoek <a href='%{topUrl}'>Top</a> of <a href='%{categoriesUrl}'>Categorieën</a> en begin maar met lezen! Selecteer %{heartIcon} op berichten die u leuk vindt of waarover u meer wilt weten. Indien u dat nog niet gedaan hebt, help anderen u beter te leren kennen door een foto en een bio toe te voegen in uw <a href='%{preferencesUrl}'>gebruikersvoorkeuren</a>."
       no_activity_others: "Geen activiteit."
       no_replies_others: "Geen antwoorden."
       no_likes_others: "Geen gelikete berichten."

@@ -135,7 +135,6 @@ ro:
       placeholder: dată
     share:
       topic_html: 'Subiect: <span class="topic-title">%{topicTitle}</span>'
-      post: "Distribuie postarea #%{postNumber}"
       close: "Închide"
       twitter: "Distribuie pe Twitter"
       facebook: "Distribuie pe Facebook"
@@ -1486,22 +1485,16 @@ ro:
       not_approved: "Contul tău încă nu a fost aprobat. Vei primi notificarea prin email când ești gata de logare."
       google_oauth2:
         name: "Google"
-        title: "Google"
       twitter:
         name: "Twitter"
-        title: "Twitter"
       instagram:
         name: "Instagram"
-        title: "Instagram"
       facebook:
         name: "Facebook"
-        title: "Facebook"
       github:
         name: "GitHub"
-        title: "GitHub"
       discord:
         name: "Discord"
-        title: "cu Discord"
     invites:
       accept_title: "Initație"
       welcome_to: "Bine ai venit la %{site_name}!"
@@ -1512,7 +1505,6 @@ ro:
       success: "Contul tău a fost creat și acum ești logat."
       name_label: "Nume"
       password_label: "Parolă"
-      optional_description: "(opțional)"
     password_reset:
       continue: "Continuă la %{site_name}"
     emoji_set:
@@ -2303,6 +2295,8 @@ ro:
       tags: "Etichete"
       tags_placeholder: "(Opțional) lista etichetelor permise"
       tag_groups_placeholder: "(Opțional) lista grupurilor de etichete permise"
+      required_tag_group:
+        delete: "Șterge"
       topic_featured_link_allowed: "Permite link-uri promovate în această categorie."
       delete: "Șterge categorie"
       create: "Categorie nouă"

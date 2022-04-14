@@ -96,7 +96,6 @@ vi:
       to_placeholder: "đến nay"
     share:
       topic_html: 'Chủ đề:<span class="topic-title">%{topicTitle}</span>'
-      post: "đăng #%{postNumber}"
       close: "đóng"
       twitter: "Chia sẻ trên Twitter"
       facebook: "Chia sẻ trên Facebook"
@@ -1600,22 +1599,16 @@ vi:
       not_approved: "Tài khoản của bạn chưa được kiểm duyệt. Bạn sẽ nhận được email thông báo khi bạn được phép đăng nhập."
       google_oauth2:
         name: "Goole"
-        title: "với Google"
       twitter:
         name: "Twitter"
-        title: "với Twitter"
       instagram:
         name: "Instagram"
-        title: "với Instagram"
       facebook:
         name: "Facebook"
-        title: "với Facebook"
       github:
         name: "GitHub"
-        title: "với GitHub"
       discord:
         name: "Discord"
-        title: "với Discord"
       second_factor_toggle:
         totp: "Sử dụng ứng dụng xác thực thay thế"
         backup_code: "Sử dụng mã dự phòng để thay thế"
@@ -1630,7 +1623,6 @@ vi:
       success: "Tài khoản của bạn đã được tạo và bây giờ bạn đã đăng nhập."
       name_label: "T"
       password_label: "Mật khẩu"
-      optional_description: "(tùy chọn)"
     password_reset:
       continue: "Tiếp tục truy cập %{site_name}"
     emoji_set:
@@ -2656,10 +2648,8 @@ vi:
       tag_groups_placeholder: "(Tùy chọn) danh sách các nhóm thẻ được phép"
       manage_tag_groups_link: "Quản lý nhóm thẻ"
       allow_global_tags_label: "Đồng thời cho phép các thẻ khác"
-      tag_group_selector_placeholder: "(Tùy chọn) Nhóm thẻ"
-      required_tag_group_description: "Yêu cầu các chủ đề mới có thẻ từ nhóm thẻ:"
-      min_tags_from_required_group_label: "Số thẻ:"
-      required_tag_group_label: "Nhóm thẻ:"
+      required_tag_group:
+        delete: "Xóa"
       topic_featured_link_allowed: "Cho phép các liên kết nổi bật trong danh mục này"
       delete: "Xóa chuyên mục"
       create: "Chuyên mục mới"
