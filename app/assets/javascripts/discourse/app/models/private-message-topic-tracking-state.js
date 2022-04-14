@@ -107,6 +107,10 @@ const PrivateMessageTopicTrackingState = EmberObject.extend({
     this._afterStateChange();
   },
 
+  findState(topicId) {
+    return this.states.get(topicId);
+  },
+
   _userChannel() {
     return `${this.CHANNEL_PREFIX}/user/${this.currentUser.id}`;
   },
@@ -159,13 +163,14 @@ const PrivateMessageTopicTrackingState = EmberObject.extend({
   _processMessage(message) {
     switch (message.message_type) {
       case "new_topic":
-        this._modifyState(message.topic_id, message.payload);
-
-        if (
-          [NEW_FILTER, INBOX_FILTER].includes(this.filter) &&
-          this._shouldDisplayMessageForInbox(message)
-        ) {
-          this._notifyIncoming(message.topic_id);
+        if (message.payload.created_by_user_id !== this.currentUser.id) {
+          this._modifyState(message.topic_id, message.payload);
+          if (
+            [NEW_FILTER, INBOX_FILTER].includes(this.filter) &&
+            this._shouldDisplayMessageForInbox(message)
+          ) {
+            this._notifyIncoming(message.topic_id);
+          }
         }
 
         break;
@@ -174,6 +179,11 @@ const PrivateMessageTopicTrackingState = EmberObject.extend({
 
         break;
       case "unread":
+        // Note: At some point we may want to make the same peformance optimisation
+        // here as we did with the other topic tracking state, where we only send
+        // one 'unread' update to all users, not a more accurate unread update to
+        // each individual user with their own read state. In this case, we need to
+        // ignore unread updates which are triggered by the current user.
         this._modifyState(message.topic_id, message.payload);
 
         if (
@@ -235,7 +245,7 @@ const PrivateMessageTopicTrackingState = EmberObject.extend({
   },
 
   _modifyState(topicId, data, opts = {}) {
-    const oldState = this.states.get(topicId);
+    const oldState = this.findState(topicId);
     let newState = data;
 
     if (oldState && !deepEqual(oldState, newState)) {
