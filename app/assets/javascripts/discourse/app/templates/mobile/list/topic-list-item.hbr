@@ -38,14 +38,10 @@
         </div>
       {{/unless}}
       {{discourse-tags topic mode="list"}}
-      <div class="pull-right">
-        <div class='num activity last'>
-          <span class="age activity" title="{{topic.bumpedAtTitle}}"><a
-              href="{{topic.lastPostUrl}}">{{format-date topic.bumpedAt format="tiny" noTitle="true"}}</a>
-          </span>
-        </div>
+      <div class='num activity last'>
+        <span class="age activity" title="{{topic.bumpedAtTitle}}"><a
+            href="{{topic.lastPostUrl}}">{{format-date topic.bumpedAt format="tiny" noTitle="true"}}</a>
+        </span>
       </div>
-      <div class="clearfix"></div>
-    </div>
   </div>
 </td>
