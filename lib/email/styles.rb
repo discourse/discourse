@@ -338,15 +338,13 @@ module Email
       # When we ship the email template and its styles we strip all css classes so to give our
       # dark mode styles we are including in the template a selector we add a data-attr of 'dm=value' to
       # the appropriate place
-      style(".digest-header, .digest-topic, .digest-topic-body, .digest-topic-title-wrapper, .digest-topic-stats, .popular-post-excerpt", nil, dm: "header")
+      style(".digest-header, .digest-topic, .digest-topic-title-wrapper, .digest-topic-stats, .popular-post-excerpt", nil, dm: "header")
       style(".digest-content, .header-popular-posts, .spacer, .popular-post-spacer, .popular-post-meta, .digest-new-header, .digest-new-topic, .body", nil, dm: "body")
       style(".with-accent-colors, .digest-content-header", nil, dm: "body_primary")
+      style(".digest-topic-body", nil, dm: "topic-body")
       style(".summary-footer", nil, dm: "text-color")
-      style(".digest-topic-body", "border-bottom: 1px solid #454545 !important;")
-      style(".secure-media-notice", "border: 5px solid #454545 !important;")
-      style("code", "background-color: #454545 !important;")
-      style("pre code", "background-color: #454545 !important;")
-      style("blockquote", "background-color: #454545; !important")
+      style(".secure-media-notice", nil, dm: "secure-media-notice")
+      style("code, pre code, blockquote", nil, dm: "bg")
     end
 
     def replace_relative_urls
