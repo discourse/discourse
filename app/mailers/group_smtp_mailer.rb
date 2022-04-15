@@ -21,12 +21,8 @@ class GroupSmtpMailer < ActionMailer::Base
       enable_starttls_auto: from_group.smtp_ssl
     }
 
-    user_name = post.user.username
-    if SiteSetting.enable_names && SiteSetting.display_name_on_email_from
-      user_name = post.user.name unless post.user.name.blank?
-    end
-
     group_name = from_group.name_full_preferred
+
     build_email(
       to_address,
       message: post.raw,
@@ -49,7 +45,7 @@ class GroupSmtpMailer < ActionMailer::Base
       locale: SiteSetting.default_locale,
       delivery_method_options: delivery_options,
       from: from_group.smtp_from_address,
-      from_alias: I18n.t('email_from_without_site', user_name: group_name),
+      from_alias: I18n.t('email_from_without_site', group_name: group_name),
       html_override: html_override(post),
       cc: cc_addresses
     )
