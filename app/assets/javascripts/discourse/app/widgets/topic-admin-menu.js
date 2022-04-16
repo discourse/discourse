@@ -357,7 +357,9 @@ export default createWidget("topic-admin-menu", {
       this.state
     );
 
-    const actionButtons = attrs.actionButtons.concat(extraButtons);
+    const actionButtons = attrs.actionButtons
+      .concat(extraButtons)
+      .filter(Boolean);
 
     const buttonMap = actionButtons.reduce(
       (prev, current) =>
