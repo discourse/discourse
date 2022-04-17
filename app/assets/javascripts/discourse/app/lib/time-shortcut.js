@@ -46,6 +46,24 @@ export function defaultTimeShortcuts(timezone) {
   ];
 }
 
+export function extendedDefaultTimeShortcuts(timezone) {
+  const shortcuts = timeShortcuts(timezone);
+  return [
+    shortcuts.laterToday(),
+    shortcuts.tomorrow(),
+    shortcuts.laterThisWeek(),
+    shortcuts.monday(),
+    shortcuts.twoWeeks(),
+    shortcuts.nextMonth(),
+    shortcuts.twoMonths(),
+    shortcuts.threeMonths(),
+    shortcuts.fourMonths(),
+    shortcuts.sixMonths(),
+    shortcuts.oneYear(),
+    shortcuts.forever(),
+  ];
+}
+
 export function specialShortcutOptions() {
   const shortcuts = timeShortcuts();
   return [shortcuts.lastCustom(), shortcuts.custom(), shortcuts.none()];

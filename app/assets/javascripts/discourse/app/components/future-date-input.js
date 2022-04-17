@@ -1,9 +1,18 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
 import { and, empty, equal } from "@ember/object/computed";
-import buildTimeframes from "discourse/lib/timeframes-builder";
+import {
+  formatTime,
+  processDynamicTimeframes,
+} from "discourse/lib/timeframes-builder";
 import I18n from "I18n";
 import { FORMAT } from "select-kit/components/future-date-input-selector";
+import discourseComputed from "discourse-common/utils/decorators";
+import {
+  extendedDefaultTimeShortcuts,
+  TIME_SHORTCUT_TYPES,
+  timeShortcuts,
+} from "discourse/lib/time-shortcut";
 
 export default Component.extend({
   selection: null,
@@ -24,12 +33,12 @@ export default Component.extend({
 
     if (this.input) {
       const dateTime = moment(this.input);
-      const closestTimeframe = this.findClosestTimeframe(dateTime);
-      if (closestTimeframe) {
-        this.set("selection", closestTimeframe.id);
+      const closestShortcut = this._findClosestShortcut(dateTime);
+      if (closestShortcut) {
+        this.set("selection", closestShortcut.id);
       } else {
         this.setProperties({
-          selection: "custom",
+          selection: TIME_SHORTCUT_TYPES.CUSTOM,
           _date: dateTime.format("YYYY-MM-DD"),
           _time: dateTime.format("HH:mm"),
         });
@@ -43,6 +52,39 @@ export default Component.extend({
     if (this.label) {
       this.set("displayLabel", I18n.t(this.label));
     }
+  },
+
+  @discourseComputed("customShortcuts")
+  shortcuts(customShortcuts) {
+    let shortcuts;
+    if (customShortcuts && customShortcuts.length) {
+      shortcuts = customShortcuts;
+    } else {
+      shortcuts = extendedDefaultTimeShortcuts(this.userTimezone);
+    }
+
+    const shortcutsFactory = timeShortcuts(this.userTimezone);
+    if (this.includeDateTime) {
+      shortcuts.push(shortcutsFactory.custom());
+    }
+    if (this.includeNow) {
+      shortcuts.push(shortcutsFactory.now());
+    }
+
+    processDynamicTimeframes(shortcuts, this.userTimezone);
+    formatTime(shortcuts);
+
+    return shortcuts
+      .filter((t) => !t.hidden)
+      .map((tf) => {
+        return {
+          id: tf.id,
+          name: I18n.t(tf.label),
+          time: tf.time,
+          timeFormatted: tf.timeFormatted,
+          icon: tf.icons,
+        };
+      });
   },
 
   @action
@@ -73,15 +115,8 @@ export default Component.extend({
     }
   },
 
-  findClosestTimeframe(dateTime) {
-    const options = {
-      includeWeekend: this.includeWeekend,
-      includeFarFuture: this.includeFarFuture,
-      includeDateTime: this.includeDateTime,
-      canScheduleNow: this.includeNow || false,
-    };
-
-    return buildTimeframes(this.userTimezone, options).find((tf) => {
+  _findClosestShortcut(dateTime) {
+    return this.shortcuts.find((tf) => {
       if (tf.time) {
         const diff = tf.time.diff(dateTime);
         return 0 <= diff && diff < 60 * 1000;

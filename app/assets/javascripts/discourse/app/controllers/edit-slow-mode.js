@@ -7,6 +7,7 @@ import { action } from "@ember/object";
 import discourseComputed from "discourse-common/utils/decorators";
 import { equal, or } from "@ember/object/computed";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { timeShortcuts } from "discourse/lib/time-shortcut";
 
 export default Controller.extend(ModalFunctionality, {
   selectedSlowMode: null,
@@ -105,6 +106,24 @@ export default Controller.extend(ModalFunctionality, {
     return slowModeEnabled
       ? "topic.slow_mode_update.update"
       : "topic.slow_mode_update.enable";
+  },
+
+  @discourseComputed
+  timeShortcuts() {
+    const timezone = this.currentUser.resolvedTimezone(this.currentUser);
+    const shortcuts = timeShortcuts(timezone);
+    return [
+      shortcuts.laterToday(),
+      shortcuts.tomorrow(),
+      shortcuts.laterThisWeek(),
+      shortcuts.monday(),
+      shortcuts.twoWeeks(),
+      shortcuts.nextMonth(),
+      shortcuts.twoMonths(),
+      shortcuts.threeMonths(),
+      shortcuts.fourMonths(),
+      shortcuts.sixMonths(),
+    ];
   },
 
   _setFromSeconds(seconds) {

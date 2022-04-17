@@ -1,9 +1,6 @@
 import ComboBoxComponent from "select-kit/components/combo-box";
-import { computed } from "@ember/object";
 import { equal } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
-import buildTimeframes from "discourse/lib/timeframes-builder";
-import I18n from "I18n";
 
 export const FORMAT = "YYYY-MM-DD HH:mmZ";
 
@@ -27,25 +24,6 @@ export default ComboBoxComponent.extend({
   modifyComponentForRow() {
     return "future-date-input-selector/future-date-input-selector-row";
   },
-
-  content: computed("statusType", function () {
-    const opts = {
-      includeWeekend: this.includeWeekend,
-      includeFarFuture: this.includeFarFuture,
-      includeDateTime: this.includeDateTime,
-      canScheduleNow: this.includeNow || false,
-    };
-
-    return buildTimeframes(this.userTimezone, opts).map((tf) => {
-      return {
-        id: tf.id,
-        name: I18n.t(tf.label),
-        time: tf.time,
-        timeFormatted: tf.timeFormatted,
-        icon: tf.icon,
-      };
-    });
-  }),
 
   actions: {
     onChange(value) {
