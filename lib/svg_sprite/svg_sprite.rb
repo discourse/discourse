@@ -258,7 +258,7 @@ module SvgSprite
             }
           rescue => e
             name = Theme.find(child_theme_id).name rescue nil
-            Discourse.warn_exception(e, "#{name} theme contains a corrupt svg upload")
+            Discourse.warn_exception(e, message: "#{name} theme contains a corrupt svg upload")
           end
 
         end
