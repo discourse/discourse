@@ -78,7 +78,7 @@ class ApiKeyScope < ActiveRecord::Base
         wordpress: {
           publishing: { actions: %w[site#site posts#create topics#update topics#status topics#show] },
           commenting: { actions: %w[topics#wordpress] },
-          discourse_connect: { actions: %w[admin/users#sync_sso admin/users#log_out admin/users#index] },
+          discourse_connect: { actions: %w[admin/users#sync_sso admin/users#log_out admin/users#index users#show] },
           utilities: { actions: %w[users#create groups#index] }
         }
       }
