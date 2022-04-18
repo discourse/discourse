@@ -131,14 +131,14 @@ module Jobs
       end
 
       seen_recently = (user.last_seen_at.present? && user.last_seen_at > SiteSetting.email_time_window_mins.minutes.ago)
-      if !args[:force_skip_if_seen_recently] &&
+      if !args[:force_respect_seen_recently] &&
           (always_email_regular?(user, type) || always_email_private_message?(user, type) || user.staged)
         seen_recently = false
       end
 
       email_args = {}
 
-      if (post || notification || notification_type || args[:force_skip_if_seen_recently]) &&
+      if (post || notification || notification_type || args[:force_respect_seen_recently]) &&
          (seen_recently && !user.suspended?)
 
         return skip_message(SkippedEmailLog.reason_types[:user_email_seen_recently])
