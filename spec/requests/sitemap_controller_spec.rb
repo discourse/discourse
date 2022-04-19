@@ -12,6 +12,12 @@ describe SitemapController do
 
       expect(response.status).to eq(404)
     end
+
+    it "returns a 404 if the request does't have a format" do
+      get '/news'
+
+      expect(response.status).to eq(404)
+    end
   end
 
   describe '#index' do
