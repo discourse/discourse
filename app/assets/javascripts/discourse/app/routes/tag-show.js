@@ -134,16 +134,33 @@ export default DiscourseRoute.extend(FilterModeMixin, {
       loading: false,
     });
 
-    this.controllerFor("navigation/tag").setProperties({
-      filterType: this.context.filterType,
+    let topicOpts = {
+      model: this.context.list,
+      category: this.category,
+      period:
+        this.context.list.get("for_period") ||
+        (model.modelParams && model.modelParams.period),
+      selected: [],
+      noSubcategories:
+        this.context.params && !!this.context.params.no_subcategories,
+      expandAllPinned: true,
       canCreateTopic: this.context.canCreateTopic,
-      noSubcategories: this.context.noSubcategories,
-      tagNotification: this.context.tagNotification,
-      additionalTags: this.context.additionalTags,
-      showInfo: this.context.showInfo,
-      canCreateTopicOnTag: this.context.canCreateTopicOnTag,
-      category: this.context.category,
-      tag: this.context.tag,
+      canCreateTopicOnCategory: this.context.canCreateTopicOnCategory,
+      filterType: this.context.filterType,
+    };
+
+    this.controllerFor("discovery/topics").setProperties(topicOpts);
+
+    this.controllerFor("navigation/tag").setProperties({
+      filterType: controller.filterType,
+      canCreateTopic: controller.canCreateTopic,
+      noSubcategories: controller.noSubcategories,
+      tagNotification: controller.tagNotification,
+      additionalTags: controller.additionalTags,
+      showInfo: controller.showInfo,
+      canCreateTopicOnTag: controller.canCreateTopicOnTag,
+      category: controller.category,
+      tag: controller.tag,
     });
 
     this.searchService.set("searchContext", model.tag.searchContext);
@@ -187,6 +204,11 @@ export default DiscourseRoute.extend(FilterModeMixin, {
       into: "tag.show",
       outlet: "navigation-bar",
     });
+
+    this.render("discovery/topics", {
+      into: "tag.show",
+      outlet: "list-container",
+    });
   },
 
   deactivate() {
@@ -218,6 +240,15 @@ export default DiscourseRoute.extend(FilterModeMixin, {
   @action
   toggleInfo() {
     this.controller.toggleProperty("showInfo");
+  },
+
+  @action
+  changeSort(order) {
+    if (order === this.order) {
+      this.toggleProperty("ascending");
+    } else {
+      this.setProperties({ order, ascending: false });
+    }
   },
 
   @action

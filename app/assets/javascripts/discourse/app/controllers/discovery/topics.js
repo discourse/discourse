@@ -156,11 +156,16 @@ const controllerOpts = {
     if (!allLoaded) {
       return;
     }
-
+    const tag = this.model.topic_list.tags[0];
     const category = this.category;
+
     if (category) {
       return I18n.t("topics.bottom.category", {
         category: category.get("name"),
+      });
+    } else if (tag) {
+      return I18n.t("topics.bottom.tag", {
+        tag: tag.name,
       });
     } else {
       const split = (this.get("model.filter") || "").split("/");
