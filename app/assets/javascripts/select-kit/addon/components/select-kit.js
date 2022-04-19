@@ -888,7 +888,7 @@ export default Component.extend(
             {
               name: "preventOverflow",
               options: {
-                altAxis: true,
+                altAxis: !this?.site?.mobileView,
               },
             },
             {
