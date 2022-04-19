@@ -133,9 +133,21 @@ export default DiscourseRoute.extend(FilterModeMixin, {
       noSubcategories,
       loading: false,
     });
+
+    this.controllerFor("navigation/tag").setProperties({
+      filterType: this.context.filterType,
+      canCreateTopic: this.context.canCreateTopic,
+      noSubcategories: this.context.noSubcategories,
+      tagNotification: this.context.tagNotification,
+      additionalTags: this.context.additionalTags,
+      showInfo: this.context.showInfo,
+      canCreateTopicOnTag: this.context.canCreateTopicOnTag,
+      category: this.context.category,
+      tag: this.context.tag,
+    });
+
     this.searchService.set("searchContext", model.tag.searchContext);
   },
-
   titleToken() {
     const filterText = I18n.t(
       `filters.${this.navMode.replace("/", ".")}.title`
@@ -169,6 +181,14 @@ export default DiscourseRoute.extend(FilterModeMixin, {
     }
   },
 
+  renderTemplate() {
+    this.render("tag.show");
+    this.render("navigation/tag", {
+      into: "tag.show",
+      outlet: "navigation-bar",
+    });
+  },
+
   deactivate() {
     this._super(...arguments);
     this.searchService.set("searchContext", null);
@@ -177,6 +197,27 @@ export default DiscourseRoute.extend(FilterModeMixin, {
   @action
   renameTag(tag) {
     showModal("rename-tag", { model: tag });
+  },
+
+  @action
+  changeTagNotificationLevel(notificationLevel) {
+    this.controller.tagNotification
+      .update({ notification_level: notificationLevel })
+      .then((response) => {
+        this.currentUser.set(
+          "muted_tag_ids",
+          this.currentUser.calculateMutedIds(
+            notificationLevel,
+            response.responseJson.tag_id,
+            "muted_tag_ids"
+          )
+        );
+      });
+  },
+
+  @action
+  toggleInfo() {
+    this.controller.toggleProperty("showInfo");
   },
 
   @action

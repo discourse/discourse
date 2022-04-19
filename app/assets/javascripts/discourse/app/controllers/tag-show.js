@@ -130,11 +130,6 @@ export default DiscoverySortableController.extend(
     },
 
     @action
-    toggleInfo() {
-      this.toggleProperty("showInfo");
-    },
-
-    @action
     refresh() {
       return this.store
         .findFiltered("topicList", {
@@ -174,22 +169,6 @@ export default DiscoverySortableController.extend(
           .then(() => this.transitionToRoute("tags.index"))
           .catch(() => bootbox.alert(I18n.t("generic_error")));
       });
-    },
-
-    @action
-    changeTagNotificationLevel(notificationLevel) {
-      this.tagNotification
-        .update({ notification_level: notificationLevel })
-        .then((response) => {
-          this.currentUser.set(
-            "muted_tag_ids",
-            this.currentUser.calculateMutedIds(
-              notificationLevel,
-              response.responseJson.tag_id,
-              "muted_tag_ids"
-            )
-          );
-        });
     },
   }
 );

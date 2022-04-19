@@ -8,29 +8,7 @@
   <div class="list-controls">
     {{plugin-outlet name="discovery-navigation-bar-above" connectorTagName="div"}}
     <div class="container">
-      <section class="navigation-container tag-navigation">
-        {{d-navigation
-          filterMode=filterMode
-          canCreateTopic=canCreateTopic
-          hasDraft=currentUser.has_topic_draft
-          createTopic=(route-action "createTopic")
-          category=category
-          tag=tag
-          noSubcategories=noSubcategories
-          tagNotification=tagNotification
-          additionalTags=additionalTags
-          showInfo=showInfo
-          canCreateTopicOnTag=canCreateTopicOnTag
-          changeTagNotificationLevel=(action "changeTagNotificationLevel")
-          toggleInfo=(action "toggleInfo")
-        }}
-
-        {{plugin-outlet
-          name="tag-navigation"
-          connectorTagName="div"
-          args=(hash category=category tag=tag)
-        }}
-      </section>
+      {{outlet "navigation-bar" }}
     </div>
   </div>
 

@@ -1,0 +1,23 @@
+{{#d-section class="navigation-container tag-navigation"}}
+  {{d-navigation
+    filterMode=filterMode
+    canCreateTopic=canCreateTopic
+    hasDraft=currentUser.has_topic_draft
+    createTopic=(route-action "createTopic")
+    category=category
+    tag=tag
+    noSubcategories=noSubcategories
+    tagNotification=tagNotification
+    additionalTags=additionalTags
+    showInfo=showInfo
+    canCreateTopicOnTag=canCreateTopicOnTag
+    changeTagNotificationLevel=(route-action "changeTagNotificationLevel")
+    toggleInfo=(route-action "toggleInfo")
+  }}
+
+  {{plugin-outlet
+    name="tag-navigation"
+    connectorTagName="div"
+    args=(hash category=category tag=tag)
+  }}
+{{/d-section}}
