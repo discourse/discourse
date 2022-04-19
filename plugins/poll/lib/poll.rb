@@ -286,6 +286,7 @@ class DiscoursePoll::Poll
   def self.extract(raw, topic_id, user_id = nil)
     # TODO: we should fix the callback mess so that the cooked version is available
     # in the validators instead of cooking twice
+    raw = raw.sub(/\[quote.+\/quote\]/m, '')
     cooked = PrettyText.cook(raw, topic_id: topic_id, user_id: user_id)
 
     Nokogiri::HTML5(cooked).css("div.poll").map do |p|

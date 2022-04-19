@@ -758,7 +758,6 @@ describe CategoriesController do
       sign_in(admin)
 
       category.set_permissions(
-        "everyone" => :readonly,
         private_group.name => :full,
         public_group.name => :full,
         user_only_group.name => :full,
@@ -773,6 +772,24 @@ describe CategoriesController do
     end
 
     it "returns the names of the groups that are visible to a user and excludes the everyone group" do
+      private_group.add(user)
+      sign_in(user)
+
+      category.set_permissions(
+        private_group.name => :full,
+        public_group.name => :full,
+        user_only_group.name => :full,
+      )
+
+      category.save!
+
+      get "/c/#{category.id}/visible_groups.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["groups"]).to eq([public_group.name])
+    end
+
+    it "returns no groups if everyone can see it" do
       sign_in(user)
 
       category.set_permissions(
@@ -787,7 +804,7 @@ describe CategoriesController do
       get "/c/#{category.id}/visible_groups.json"
 
       expect(response.status).to eq(200)
-      expect(response.parsed_body["groups"]).to eq([public_group.name])
+      expect(response.parsed_body["groups"]).to eq([])
     end
   end
 end

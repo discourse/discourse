@@ -63,12 +63,8 @@ module EmailHelper
           color: #dddddd !important;
         }
 
-        [dm='light-img'] {
-          display: none !important;
-        }
-
-        [dm='dark-img'] {
-          display: block !important;
+        [data-stripped-secure-media] {
+          border-color: #454545 !important;
         }
 
         [dm='text-color'] {
@@ -79,6 +75,15 @@ module EmailHelper
           background: #151515 !important;
         }
 
+        [dm='topic-body'] {
+          background: #151515 !important;
+          border-bottom: 1px solid #454545 !important;
+        }
+
+        [dm='triangle'] {
+          border-top-color: #151515 !important;
+        }
+
         [dm='body'] {
           background: #222222 !important;
           color: #dddddd !important;
@@ -87,6 +92,11 @@ module EmailHelper
         [dm='body_primary'] {
           background: #062e3d !important;
           color: #dddddd !important;
+        }
+
+        [dm='bg'] {
+          background: #323232 !important;
+          border-color: #454545 !important;
         }
       }
     </style>

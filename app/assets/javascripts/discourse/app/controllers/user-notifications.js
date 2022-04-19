@@ -1,8 +1,9 @@
 import Controller, { inject as controller } from "@ember/controller";
+import getURL from "discourse-common/lib/get-url";
+import { iconHTML } from "discourse-common/lib/icon-library";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import { ajax } from "discourse/lib/ajax";
-import { iconHTML } from "discourse-common/lib/icon-library";
-import getURL from "discourse-common/lib/get-url";
+import showModal from "discourse/lib/show-modal";
 import I18n from "I18n";
 
 export default Controller.extend({
@@ -45,11 +46,26 @@ export default Controller.extend({
     }).htmlSafe();
   },
 
+  markRead() {
+    return ajax("/notifications/mark-read", { type: "PUT" }).then(() => {
+      this.model.forEach((n) => n.set("read", true));
+    });
+  },
+
   actions: {
-    resetNew() {
-      ajax("/notifications/mark-read", { type: "PUT" }).then(() => {
-        this.model.forEach((n) => n.set("read", true));
-      });
+    async resetNew() {
+      const unreadHighPriorityNotifications = this.currentUser.get(
+        "unread_high_priority_notifications"
+      );
+
+      if (unreadHighPriorityNotifications > 0) {
+        showModal("dismiss-notification-confirmation").setProperties({
+          count: unreadHighPriorityNotifications,
+          dismissNotifications: () => this.markRead(),
+        });
+      } else {
+        this.markRead();
+      }
     },
 
     loadMore() {
