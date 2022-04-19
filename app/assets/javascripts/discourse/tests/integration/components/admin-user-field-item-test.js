@@ -15,11 +15,11 @@ discourseModule(
   function (hooks) {
     setupRenderingTest(hooks);
 
-    componentTest("editing mode when not userField id", {
+    componentTest("user field without an id", {
       template: hbs`{{admin-user-field-item userField=userField}}`,
 
       async test(assert) {
-        assert.ok(exists(".btn-primary"));
+        assert.ok(exists(".save"), "displays editing mode");
       },
     });
 
@@ -50,7 +50,7 @@ discourseModule(
       },
     });
 
-    componentTest("not editing mode when userField id", {
+    componentTest("user field with an id", {
       template: hbs`{{admin-user-field-item userField=userField}}`,
 
       beforeEach() {
@@ -63,8 +63,11 @@ discourseModule(
       },
 
       async test(assert) {
-        assert.equal(query(".name").innerText, "foo");
-        assert.equal(query(".description").innerText, "what is foo");
+        assert.equal(query(".name").innerText, this.userField.name);
+        assert.equal(
+          query(".description").innerText,
+          this.userField.description
+        );
         assert.equal(
           query(".field-type").innerText,
           I18n.t("admin.user_fields.field_types.text")
