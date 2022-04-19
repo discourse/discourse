@@ -433,25 +433,25 @@ describe Upload do
         enable_secure_media
       end
 
-      it 'does not mark an image upload as not secure when there is no access control post id, to avoid unintentional exposure' do
+      it "does not mark an image upload as not secure when there is no access control post id, to avoid unintentional exposure" do
         upload.update!(secure: true)
         upload.update_secure_status
         expect(upload.secure).to eq(true)
       end
 
-      it 'marks the upload as not secure if its access control post is a public post' do
+      it "marks the upload as not secure if its access control post is a public post" do
         upload.update!(secure: true, access_control_post: Fabricate(:post))
         upload.update_secure_status
         expect(upload.secure).to eq(false)
       end
 
-      it 'leaves the upload as secure if its access control post is a PM post' do
+      it "leaves the upload as secure if its access control post is a PM post" do
         upload.update!(secure: true, access_control_post: Fabricate(:private_message_post))
         upload.update_secure_status
         expect(upload.secure).to eq(true)
       end
 
-      it 'marks an image upload as secure if login_required is enabled' do
+      it "marks an image upload as secure if login_required is enabled" do
         SiteSetting.login_required = true
         upload.update!(secure: false)
 
@@ -461,15 +461,15 @@ describe Upload do
         expect(upload.reload.secure).to eq(true)
       end
 
-      it 'does not mark an upload used for a custom emoji as secure' do
+      it "does not mark an upload used for a custom emoji as secure" do
         SiteSetting.login_required = true
         upload.update!(secure: false)
-        CustomEmoji.create(name: 'meme', upload: upload)
+        CustomEmoji.create(name: "meme", upload: upload)
         upload.update_secure_status
         expect(upload.reload.secure).to eq(false)
       end
 
-      it 'does not mark an upload whose origin matches a regular emoji as secure (sometimes emojis are downloaded in pull_hotlinked_images)' do
+      it "does not mark an upload whose origin matches a regular emoji as secure (sometimes emojis are downloaded in pull_hotlinked_images)" do
         SiteSetting.login_required = true
         falafel = Emoji.all.find { |e| e.url == "/images/emoji/twitter/falafel.png?v=#{Emoji::EMOJI_VERSION}" }
         upload.update!(secure: false, origin: "http://localhost:3000#{falafel.url}")
@@ -477,7 +477,7 @@ describe Upload do
         expect(upload.reload.secure).to eq(false)
       end
 
-      it 'does not mark any upload with origin containing images/emoji in the URL' do
+      it "does not mark any upload with origin containing images/emoji in the URL" do
         SiteSetting.login_required = true
         upload.update!(secure: false, origin: "http://localhost:3000/images/emoji/test.png")
         upload.update_secure_status
@@ -490,6 +490,29 @@ describe Upload do
         )
         upload.update!(secure: true, access_control_post: Fabricate(:private_message_post))
         expect { upload.update_secure_status }.not_to raise_error
+      end
+
+      it "succeeds even if the extension of the upload is not authorized" do
+        upload.update!(secure: false, access_control_post: Fabricate(:private_message_post))
+        SiteSetting.login_required = true
+        SiteSetting.authorized_extensions = ""
+        upload.update_secure_status
+        upload.reload
+        expect(upload.secure).to eq(true)
+      end
+
+      it "respects the authorized extensions when creating a new upload, no matter its secure status" do
+        SiteSetting.login_required = true
+        SiteSetting.authorized_extensions = ""
+        expect do
+          upl = Fabricate(
+            :upload,
+            access_control_post: Fabricate(:private_message_post),
+            security_last_changed_at: Time.zone.now,
+            security_last_changed_reason: "test",
+            secure: true
+          )
+        end.to raise_error(ActiveRecord::RecordInvalid)
       end
     end
   end
