@@ -5,3 +5,92 @@
 # https://translate.discourse.org/
 
 sv:
+  js:
+    discourse_automation:
+      title: Automatisering
+      create: Skapa
+      update: Uppdatera
+      select_script: Välj ett skript
+      select_trigger: Välj en utlösare
+      confirm_automation_reset: Den här åtgärden återställer skriptet och utlösningsalternativen, det nya tillståndet sparas, vill du fortsätta?
+      confirm_automation_trigger: Denna åtgärd kommer att utlösa automatisering, vill du fortsätta?
+      no_automation_yet: Du har inte skapat någon automatisering ännu.
+      edit_automation:
+        trigger_section:
+          forced: Denna utlösare tvingas av skript.
+          next_pending_automation: "Nästa automatisering kommer att utlösas vid: %{date}"
+          trigger_now: "Utlös nu"
+          title: När/Vad...
+        fields_section:
+          title: Skriptalternativ
+      destroy_automation:
+        confirm: "Är du säker på att du vill ta bort `%{name}`?"
+      fields:
+        key_value:
+          label: Konfigurera
+        user:
+          label: Användare
+        pm:
+          title:
+            label: Titel
+          raw:
+            label: Kropp
+        pms:
+          confirm_remove_pm: "Är du säker på att du vill ta bort detta PM?"
+          placeholder_title: PM-titel
+          add_pm: Lägg till PM
+          no_pm_created: Du har inte skapat någon PM än. PM kommer att skickas när din automatisering utlöses.
+          title:
+            label: Titel
+          raw:
+            label: Kropp
+          delay:
+            label: Fördröjning (minuter)
+          encrypt:
+            label: Krypterar PM om tillgängligt
+        group:
+          label: Grupp
+        text:
+          label: Text
+      triggerables:
+        not_found: Kunde inte hitta utlösaren `%{trigger}` för automatisering `%{automation}`, se till att det tillhörande insticksprogrammet är installerat.
+        stalled_topic:
+          durations:
+            PT1H: "En timme"
+            P1D: "En dag"
+            P1W: "En vecka"
+            P2W: "Två veckor"
+            P1M: "En månad"
+            P3M: "Tre månader"
+            P6M: "Sex månader"
+            P1Y: "Ett år"
+          fields:
+            categories:
+              label: Begränsat till kategorier
+            tags:
+              label: Begränsat till taggar
+            stalled_after:
+              label: Stannade efter
+        recurring:
+          recurrences:
+            every_minute: Varje minut
+            every_hour: Varje timme
+            every_day: Varje dag
+            every_weekday: Varje vardag
+            every_week: Varje vecka
+            every_other_week: Varannan vecka
+            every_month: Varje månad
+            every_year: Varje år
+          fields:
+            recurrence:
+              label: Upprepning
+            start_date:
+              label: Startdatum
+        stalled_wiki:
+          durations:
+            PT1H: "En timme"
+      scriptables:
+        auto_responder:
+          fields:
+            word_answer_list:
+              description: "Definierar en lista över nyckel/värdegrupper, där `key` är den sökta termen och `value` svarstexten. Observera att `value` accepterar `%%KEY%%` som platshållare som ska ersättas med värdet `key` i svaret. Observera att `key` kommer att utvärderas som en regex, och speciella tecken som `.` bör undvikas om du faktiskt menar en punkt, t.ex.: `\\.`"
