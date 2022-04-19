@@ -1,7 +1,7 @@
 import Controller, { inject as controller } from "@ember/controller";
 import { alias } from "@ember/object/computed";
 import discourseComputed from "discourse-common/utils/decorators";
-import { durationTiny } from "discourse/lib/formatter";
+import { duration } from "discourse/lib/formatter";
 
 // should be kept in sync with 'UserSummary::MAX_BADGES'
 const MAX_BADGES = 6;
@@ -17,7 +17,12 @@ export default Controller.extend({
 
   @discourseComputed("model.time_read")
   timeRead(timeReadSeconds) {
-    return durationTiny(timeReadSeconds);
+    return duration(timeReadSeconds, { format: "tiny" });
+  },
+
+  @discourseComputed("model.time_read")
+  timeReadMedium(timeReadSeconds) {
+    return duration(timeReadSeconds, { format: "medium" });
   },
 
   @discourseComputed("model.time_read", "model.recent_time_read")
@@ -28,7 +33,14 @@ export default Controller.extend({
   @discourseComputed("model.recent_time_read")
   recentTimeRead(recentTimeReadSeconds) {
     return recentTimeReadSeconds > 0
-      ? durationTiny(recentTimeReadSeconds)
+      ? duration(recentTimeReadSeconds, { format: "tiny" })
+      : null;
+  },
+
+  @discourseComputed("model.recent_time_read")
+  recentTimeReadMedium(recentTimeReadSeconds) {
+    return recentTimeReadSeconds > 0
+      ? duration(recentTimeReadSeconds, { format: "medium" })
       : null;
   },
 });
