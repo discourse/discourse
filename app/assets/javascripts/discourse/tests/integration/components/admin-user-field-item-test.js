@@ -38,7 +38,7 @@ discourseModule(
     });
 
     componentTest("edit action", {
-      template: hbs`{{admin-user-field-item isEditing=isEditing destroyAction=destroyAction userField=userField}}`,
+      template: hbs`{{admin-user-field-item destroyAction=destroyAction userField=userField}}`,
 
       beforeEach() {
         this.set("userField", { id: 1, field_type: "text" });
