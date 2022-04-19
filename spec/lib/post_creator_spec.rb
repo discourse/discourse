@@ -142,15 +142,19 @@ describe PostCreator do
 
         admin = Fabricate(:user)
         admin.grant_admin!
+        other_admin = Fabricate(:user)
+        other_admin.grant_admin!
 
         cat = Fabricate(:category)
         cat.set_permissions(admins: :full)
         cat.save
 
         created_post = nil
+        other_user_tracking_topic = nil
 
         messages = MessageBus.track_publish do
           created_post = PostCreator.new(admin, basic_topic_params.merge(category: cat.id)).create
+          Fabricate(:topic_user_tracking, topic: created_post.topic, user: other_admin)
           _reply = PostCreator.new(admin, raw: "this is my test reply 123 testing", topic_id: created_post.topic_id, advance_draft: true).create
         end
 
@@ -177,7 +181,7 @@ describe PostCreator do
         )
 
         admin_ids = [Group[:admins].id]
-        expect(messages.any? { |m| m.group_ids != admin_ids && m.user_ids != [admin.id] }).to eq(false)
+        expect(messages.any? { |m| m.group_ids != admin_ids && (!m.user_ids.include?(other_admin.id) && !m.user_ids.include?(admin.id)) }).to eq(false)
       end
 
       it 'generates the correct messages for a normal topic' do

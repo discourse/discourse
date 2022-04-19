@@ -74,6 +74,12 @@ describe TopicTrackingState do
   end
 
   describe '#publish_unread' do
+    let(:other_user) { Fabricate(:user) }
+
+    before do
+      Fabricate(:topic_user_watching, topic: topic, user: other_user)
+    end
+
     it "can correctly publish unread" do
       message = MessageBus.track_publish("/unread") do
         TopicTrackingState.publish_unread(post)
@@ -81,8 +87,21 @@ describe TopicTrackingState do
 
       data = message.data
 
-      expect(message.user_ids).to contain_exactly(post.user.id)
+      expect(message.user_ids).to contain_exactly(other_user.id)
       expect(message.group_ids).to eq(nil)
+      expect(data["topic_id"]).to eq(topic.id)
+      expect(data["message_type"]).to eq(described_class::UNREAD_MESSAGE_TYPE)
+      expect(data["payload"]["archetype"]).to eq(Archetype.default)
+    end
+
+    it "does not publish unread to the user who created the post" do
+      message = MessageBus.track_publish("/unread") do
+        TopicTrackingState.publish_unread(post)
+      end.first
+
+      data = message.data
+
+      expect(message.user_ids).not_to include(post.user_id)
       expect(data["topic_id"]).to eq(topic.id)
       expect(data["message_type"]).to eq(described_class::UNREAD_MESSAGE_TYPE)
       expect(data["payload"]["archetype"]).to eq(Archetype.default)
@@ -96,7 +115,7 @@ describe TopicTrackingState do
 
       data = message.data
 
-      expect(message.user_ids).to contain_exactly(post.user.id)
+      expect(message.user_ids).to contain_exactly(other_user.id)
     end
 
     it "does not publish whisper post to non-staff users" do
@@ -108,13 +127,13 @@ describe TopicTrackingState do
 
       expect(messages).to eq([])
 
-      post.user.grant_admin!
+      other_user.grant_admin!
 
       message = MessageBus.track_publish("/unread") do
         TopicTrackingState.publish_unread(post)
       end.first
 
-      expect(message.user_ids).to contain_exactly(post.user_id)
+      expect(message.user_ids).to contain_exactly(other_user.id)
       expect(message.group_ids).to eq(nil)
     end
 
@@ -130,13 +149,13 @@ describe TopicTrackingState do
 
       expect(messages).to eq([])
 
-      group.add(post.user)
+      group.add(other_user)
 
       message = MessageBus.track_publish("/unread") do
         TopicTrackingState.publish_unread(post)
       end.first
 
-      expect(message.user_ids).to contain_exactly(post.user_id)
+      expect(message.user_ids).to contain_exactly(other_user.id)
       expect(message.group_ids).to eq(nil)
     end
 
