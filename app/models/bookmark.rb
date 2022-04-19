@@ -4,6 +4,8 @@ class Bookmark < ActiveRecord::Base
   # these columns were here for a very short amount of time,
   # hence the very short ignore time
   self.ignored_columns = [
+    "bookmarkable_id", # TODO 2022-04-01 remove
+    "bookmarkable_type", # TODO 2022-04-01 remove
     "topic_id", # TODO 2022-04-01: remove
     "reminder_type" # TODO 2021-04-01: remove
   ]
@@ -223,12 +225,9 @@ end
 #  auto_delete_preference :integer          default(0), not null
 #  pinned                 :boolean          default(FALSE)
 #  for_topic              :boolean          default(FALSE), not null
-#  bookmarkable_id        :integer
-#  bookmarkable_type      :string
 #
 # Indexes
 #
-#  idx_bookmarks_user_polymorphic_unique                 (user_id,bookmarkable_type,bookmarkable_id) UNIQUE
 #  index_bookmarks_on_post_id                            (post_id)
 #  index_bookmarks_on_reminder_at                        (reminder_at)
 #  index_bookmarks_on_reminder_set_at                    (reminder_set_at)
