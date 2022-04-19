@@ -886,6 +886,12 @@ export default Component.extend(
               },
             },
             {
+              name: "preventOverflow",
+              options: {
+                altAxis: true,
+              },
+            },
+            {
               name: "offset",
               options: {
                 offset: [0, 3],
