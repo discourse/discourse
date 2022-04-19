@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 if !defined?(EMBER_CLI)
-  EMBER_CLI = ENV["EMBER_CLI_PROD_ASSETS"] != "0"
+  EMBER_CLI = EmberCli.enabled?
 end
 
 task 'assets:precompile:before' do
@@ -52,10 +52,10 @@ task 'assets:precompile:before' do
   require 'digest/sha1'
 
   if EMBER_CLI
-    # Remove the assets that Ember CLI will handle for us
-    Rails.configuration.assets.precompile.reject! do |asset|
-      asset.is_a?(String) && is_ember_cli_asset?(asset)
-    end
+    # Add ember cli chunks
+    Rails.configuration.assets.precompile.push(
+      *EmberCli.script_chunks.values.flatten
+    )
   end
 end
 
@@ -100,7 +100,7 @@ end
 def is_ember_cli_asset?(name)
   return false if !EMBER_CLI
   %w(
-    application.js
+    discourse.js
     admin.js
     ember_jquery.js
     pretty-text-bundle.js
@@ -261,80 +261,7 @@ def copy_maxmind(from_path, to_path)
   end
 end
 
-def copy_ember_cli_assets
-  ember_dir = "app/assets/javascripts/discourse"
-  ember_cli_assets = "#{ember_dir}/dist/assets/"
-  assets = {}
-  files = {}
-
-  # Copy assets and generate manifest data
-  log_task_duration('Copy assets and generate manifest data') {
-    Dir["#{ember_cli_assets}**/*"].each do |f|
-      if File.file?(f)
-        rel_file = f.sub(ember_cli_assets, "")
-        file_digest = Digest::SHA384.digest(File.read(f))
-        digest = if f =~ /\-([a-f0-9]+)\./
-          Regexp.last_match[1]
-        else
-          Digest.hexencode(file_digest)[0...32]
-        end
-
-        dest = "public/assets"
-        dest_sub = dest
-        if rel_file =~ /^([a-z\-\_]+)\//
-          dest_sub = "#{dest}/#{Regexp.last_match[1]}"
-        end
-
-        FileUtils.mkdir_p(dest_sub) unless Dir.exist?(dest_sub)
-        log_file = File.basename(rel_file).sub("-#{digest}", "")
-
-        # We need a few hacks here to move what Ember uses to what Rails wants
-        case log_file
-        when "discourse.js"
-          log_file = "application.js"
-          rel_file.sub!(/^discourse/, "application")
-        when "test-support.js"
-          log_file = "discourse/tests/test-support-rails.js"
-          rel_file = "discourse/tests/test-support-rails-#{digest}.js"
-        when "test-helpers.js"
-          log_file = "discourse/tests/test-helpers-rails.js"
-          rel_file = "discourse/tests/test-helpers-rails-#{digest}.js"
-        end
-
-        res = FileUtils.cp(f, "#{dest}/#{rel_file}")
-
-        assets[log_file] = rel_file
-        files[rel_file] = {
-          "logical_path" => log_file,
-          "mtime" => File.mtime(f).iso8601(9),
-          "size" => File.size(f),
-          "digest" => digest,
-          "integrity" => "sha384-#{Base64.encode64(file_digest).chomp}"
-        }
-      end
-    end
-  }
-
-  # Update manifest file
-  log_task_duration('Update manifest file') {
-    manifest_result = Dir["public/assets/.sprockets-manifest-*.json"]
-    if manifest_result && manifest_result.size == 1
-      json = JSON.parse(File.read(manifest_result[0]))
-      json['files'].merge!(files)
-      json['assets'].merge!(assets)
-      File.write(manifest_result[0], json.to_json)
-    end
-  }
-end
-
-task 'test_ember_cli_copy' do
-  copy_ember_cli_assets
-end
-
 task 'assets:precompile' => 'assets:precompile:before' do
-
-  copy_ember_cli_assets if EMBER_CLI
-
   refresh_days = GlobalSetting.refresh_maxmind_db_during_precompile_days
 
   if refresh_days.to_i > 0

@@ -135,25 +135,19 @@ module ApplicationHelper
     path
   end
 
-  def preload_vendor_scripts
-    scripts = ["vendor"]
+  def preload_script(script)
+    script = EmberCli.transform_name(script)
 
-    if ENV["EMBER_CLI_PROD_ASSETS"] != "0"
-      @@vendor_chunks ||= begin
-        all_assets = ActionController::Base.helpers.assets_manifest.assets
-        all_assets.keys.filter_map { |name| name[/\A(chunk\..*)\.js\z/, 1] }
-      end
-      scripts.push(*@@vendor_chunks)
+    scripts = [script]
+
+    if EmberCli.enabled? && chunks = EmberCli.script_chunks[script]
+      scripts.push(*chunks)
     end
 
     scripts.map do |name|
-      preload_script(name)
+      path = script_asset_path(name)
+      preload_script_url(path)
     end.join("\n").html_safe
-  end
-
-  def preload_script(script)
-    path = script_asset_path(script)
-    preload_script_url(path)
   end
 
   def preload_script_url(url)

@@ -2355,7 +2355,7 @@ RSpec.describe TopicsController do
 
         body = response.body
 
-        expect(body).to have_tag(:script, src: '/assets/application.js')
+        expect(body).to have_tag(:script, src: "/assets/#{EmberCli.transform_name("application")}.js")
         expect(body).to have_tag(:meta, with: { name: 'fragment' })
       end
     end
@@ -2631,7 +2631,7 @@ RSpec.describe TopicsController do
           body = response.body
 
           expect(response.status).to eq(200)
-          expect(body).to have_tag(:script, with: { src: '/assets/application.js' })
+          expect(body).to have_tag(:script, with: { src: "/assets/#{EmberCli.transform_name("application")}.js" })
           expect(body).to_not have_tag(:meta, with: { name: 'fragment' })
         end
       end
@@ -2646,7 +2646,7 @@ RSpec.describe TopicsController do
 
           body = response.body
 
-          expect(body).to have_tag(:script, with: { src: '/assets/application.js' })
+          expect(body).to have_tag(:script, with: { src: "/assets/#{EmberCli.transform_name("application")}.js" })
           expect(body).to have_tag(:meta, with: { name: 'fragment' })
         end
 
@@ -4320,7 +4320,7 @@ RSpec.describe TopicsController do
 
         body = response.body
 
-        expect(body).to have_tag(:script, with: { src: '/assets/application.js' })
+        expect(body).to have_tag(:script, with: { src: "/assets/#{EmberCli.transform_name("application")}.js" })
         expect(body).to have_tag(:meta, with: { name: 'fragment' })
       end
     end
