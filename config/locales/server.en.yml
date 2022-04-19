@@ -1625,7 +1625,7 @@ en:
     ga_universal_auto_link_domains: "Enable Google Universal Analytics cross-domain tracking. Outgoing links to these domains will have the client id added to them. See <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Google's Cross-Domain Tracking guide.</a>"
     gtm_container_id: "Google Tag Manager container id. eg: GTM-ABCDEF. <br/>Note: Third-party scripts loaded by GTM may need to be allowlisted in 'content security policy script src'."
     enable_escaped_fragments: "Fall back to Google's Ajax-Crawling API if no webcrawler is detected. See <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
-    moderators_manage_categories_and_groups: "Allow moderators to manage categories and groups"
+    moderators_manage_categories_and_groups: "Allow moderators to create and manage categories and groups"
     moderators_change_post_ownership: "Allow moderators to change post ownership"
     cors_origins: "Allowed origins for cross-origin requests (CORS). Each origin must include http:// or https://. The DISCOURSE_ENABLE_CORS env variable must be set to true to enable CORS."
     use_admin_ip_allowlist: "Admins can only log in if they are at an IP address defined in the Screened IPs list (Admin > Logs > Screened Ips)."
