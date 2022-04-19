@@ -184,6 +184,8 @@ const PrivateMessageTopicTrackingState = EmberObject.extend({
         // one 'unread' update to all users, not a more accurate unread update to
         // each individual user with their own read state. In this case, we need to
         // ignore unread updates which are triggered by the current user.
+        //
+        // cf. f6c852bf8e7f4dea519425ba87a114f22f52a8f4
         this._modifyState(message.topic_id, message.payload);
 
         if (

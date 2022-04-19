@@ -124,6 +124,8 @@ class PrivateMessageTopicTrackingState
     # here as we did with the other topic tracking state, where we only send
     # one 'unread' update to all users, not a more accurate unread update to
     # each individual user with their own read state.
+    #
+    # cf. f6c852bf8e7f4dea519425ba87a114f22f52a8f4
     scope
       .select([:user_id, :last_read_post_number, :notification_level])
       .each do |tu|

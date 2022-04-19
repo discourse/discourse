@@ -82,7 +82,7 @@ discourseModule(
       assert.deepEqual(
         pmTopicTrackingState.findState(4398),
         payload,
-        "the new topic created by a a different user is loaded into state"
+        "the new topic created by a different user is loaded into state"
       );
 
       payload = {
