@@ -1403,7 +1403,6 @@ nl:
     send_tl2_promotion_message: "Nieuwe gebruikers met vertrouwensniveau 2 een bericht over promotie sturen."
     suppress_reply_directly_below: "Het uitvouwbare aantal antwoorden bij een bericht niet tonen als er maar één antwoord direct onder dit bericht staat."
     suppress_reply_directly_above: "Het uitvouwbare 'in antwoord op' bij een bericht niet tonen als er maar één antwoord direct boven dit bericht staat."
-    remove_full_quote: "Volledige citaten bij directe antwoorden automatisch verwijderen."
     suppress_reply_when_quoting: "Het uitvouwbare 'in antwoord op' bij een bericht niet tonen als het bericht een antwoord citeert."
     max_reply_history: "Maximale aantal uit te vouwen antwoorden bij uitvouwen van 'in antwoord op'"
     topics_per_period_in_top_summary: "Aantal getoonde toptopics in het standaard toptopics-overzicht."

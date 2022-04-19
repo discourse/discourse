@@ -1539,7 +1539,7 @@ sv:
     send_tl2_promotion_message: "Skicka ett meddelande om uppgradering till nya Förtroendenivå 2-användare."
     suppress_reply_directly_below: "Visa inte den utvidgade inläggsräknaren på ett inlägg när det bara finns ett svar direkt nedanför det här inlägget."
     suppress_reply_directly_above: "Visa inte den utvidgade som-svar-till på ett inlägg när det endast finns ett svar direkt ovanför det här inlägget."
-    remove_full_quote: "Ta automatiskt bort fullständiga citattecken vid direkta svar."
+    remove_full_quote: "Ta automatiskt bort citatet om (a) det visas i början av ett inlägg, (b) det är ett helt inlägg och (c) det är från det omedelbart föregående inlägget. För detaljer, se <a href='https://meta.discourse.org/t/removal-of-full-quotes-from-direct-replies/106857' target='_blank'>Borttagning av fullständiga citat från direkta svar</a>"
     suppress_reply_when_quoting: "Visa inte den utvidgade som-svar-till på ett inlägg när inlägget citerar ett svar."
     max_reply_history: "Högsta antal svar för att utvidga vid utvidgning av som-svar-till"
     topics_per_period_in_top_summary: "Standardinställning för antal toppämnen som visas i toppämnessammanfattningen."
@@ -2073,6 +2073,8 @@ sv:
     push_notifications_icon: "Utmärkelseikonen som visas i aviseringshörnet. En svartvit 96 x 96 stor PNG med genomskinlighet rekommenderas."
     base_font: "Bastypsnitt att använda för de flesta texter på webbplatsen. Teman kan åsidosätta via CSS-anpassade egenskapen `--font-family`."
     heading_font: "Typsnitt som används för rubriker på webbplatsen. Teman kan åsidosätta via CSS-anpassade egenskapen `--heading-font-family`."
+    enable_sitemap: "Skapa en webbplatskarta för din webbplats och inkludera den i filen robots.txt."
+    sitemap_page_size: "Antal webbadresser som ska inkluderas på varje webbplatskartsida. Max 50.000"
     short_title: "Den korta titeln kommer att användas på användarens startskärm, startapparat eller andra platser där utrymmet kan vara begränsat. Den bör begränsas till 12 tecken."
     dashboard_hidden_reports: "Tillåt att de specificerade rapporterna döljs från översiktspanelen."
     dashboard_visible_tabs: "Välj vilka flikar på översiktspanelen som ska vara synliga."
@@ -2133,6 +2135,7 @@ sv:
         leading_trailing_slash: "Det reguljära uttrycket får inte börja och sluta med ett snedstreck."
       unicode_usernames_avatars: "De interna systemavatarerna stöder inte Unicode-användarnamn."
       list_value_count: "Listan måste innehålla exakt %{count} värden."
+      markdown_linkify_tlds: "Du kan inte inkludera ett värde av '*'."
       google_oauth2_hd_groups: "Du måste först ange 'google oauth2 hd' innan du aktiverar denna inställning."
       search_tokenize_chinese_enabled: "Du måste inaktivera 'search_tokenize_chinese' innan du aktiverar den här inställningen."
       search_tokenize_japanese_enabled: "Du måste inaktivera 'search_tokenize_japanese' innan du aktiverar den här inställningen."
@@ -2304,6 +2307,8 @@ sv:
     actions:
       grant_admin:
         description: "För ytterligare säkerhetsåtgärder måste du bekräfta din 2FA innan %{username} beviljas administratörsåtkomst."
+      discourse_connect_provider:
+        description: "%{hostname} har begärt att du ska bekräfta ditt 2FA. Du kommer att omdirigeras tillbaka till webbplatsen när du har bekräftat ditt 2FA."
   admin:
     email:
       sent_test: "skickat!"

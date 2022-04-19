@@ -1434,7 +1434,6 @@ da:
     send_welcome_message: "Send alle nye brugere en velkomstbesked, med en hurtig start guide."
     send_tl1_welcome_message: "Send nye tillidsniveau 1 brugere en velkomst meddelelse."
     send_tl2_promotion_message: "Send nye brugere af tillidsniveau 2 en besked om forfremmelse."
-    remove_full_quote: "Fjern automatisk fulde citater ved direkte svar."
     topics_per_period_in_top_summary: "Antallet af top emner der vises som standard i top emner"
     topics_per_period_in_top_page: "Antallet af top emner der vises når 'Vis Mere' er aktiveret."
     redirect_users_to_top_page: "Automatisk omdirigere af nye og længere tids fraværende brugere til top siden."

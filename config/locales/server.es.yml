@@ -63,6 +63,7 @@ es:
       unrecognized_extension: "Extensión de archivo no reconocida: %{extension}"
     import_error:
       generic: Ha ocurrido un error al importar el tema
+      upload: "Error al crear el recurso: %{name}. %{errors}"
       about_json: "Error de importación: about.json no existe o no es válido. ¿Seguro que este es un tema de Discourse?"
       about_json_values: "about.json contiene valores no válidos: %{errors}"
       modifier_values: "los modificadores about.json contienen valores no válidos: %{errors}"
@@ -1558,7 +1559,6 @@ es:
     send_tl2_promotion_message: "Enviar un mensaje a los nuevos usuarios de nivel de confianza 2 cuando suban de nivel."
     suppress_reply_directly_below: "No mostrar el contador de respuestas desplegable en una publicación si solo hay una única respuesta justo debajo de esta publicación."
     suppress_reply_directly_above: "No mostrar el desplegable en-respuesta-a en una publicación cuando solo hay una sola respuesta justo encima de esta publicación."
-    remove_full_quote: "Quitar automáticamente citas completas en respuestas directas"
     suppress_reply_when_quoting: "No mostrar el desplegable en-respuesta-a en una publicación cuando la publicación cite la respuesta."
     max_reply_history: "Número máximo de respuestas que se muestran al expandir en-respuesta-a"
     topics_per_period_in_top_summary: "Número de temas destacados que se muestran en el resumen de temas destacados."
@@ -2092,6 +2092,8 @@ es:
     push_notifications_icon: "El icono de la insignia que aparece en el menú de notificaciones. Se recomienda un PNG monocromático de 96 × 96 con transparencia."
     base_font: "Fuente base para la mayoría de texto en el sitio. Los temas lo pueden sobrescribir a través de la propiedad personalizada de CSS «--font-family»."
     heading_font: "Fuente a usar para los encabezados del sitio. Los temas lo pueden sobrescribir a través de la propiedad personalizada de CSS «--heading-font-family»."
+    enable_sitemap: "Generar un sitemap para el sitio e incluirlo en el archivo robots.txt."
+    sitemap_page_size: "Número de URLs que incluir en cada página del sitemap. Máximo de 50.000"
     short_title: "El título corto se utilizará en la pantalla de inicio del usuario, el iniciador u otros lugares donde el espacio puede ser limitado. Debe limitarse a 12 caracteres."
     dashboard_hidden_reports: "Permitir ocultar los informes especificados del panel de control."
     dashboard_visible_tabs: "Elige qué pestañas del panel de control se mostrarán."
@@ -2152,6 +2154,7 @@ es:
         leading_trailing_slash: "La expresión regular no puede empezar y terminar con una barra."
       unicode_usernames_avatars: "El sistema interno de avatares no soporta nombres de usuario Unicode."
       list_value_count: "La lista debe contener exactamente %{count} valores."
+      markdown_linkify_tlds: "No puedes incluir el valor «*»"
       google_oauth2_hd_groups: "Rellena el ajuste «google oauth2 hd» antes de activar esta opción."
       search_tokenize_chinese_enabled: "Debes desactivar el ajuste «search_tokenize_chinese» antes de activar este."
       search_tokenize_japanese_enabled: "Debes desactivar el ajuste «search_tokenize_japanese» antes de activar este."
@@ -2323,6 +2326,8 @@ es:
     actions:
       grant_admin:
         description: "Por motivos de seguridad, confirma tu autenticación de dos factores (2FA) antes de darle permisos de administrador a %{username}."
+      discourse_connect_provider:
+        description: "%{hostname} ha pedido que confirmes tu autenticación de dos factores. Te redireccionaremos de vuelta cuando la confirmes."
   admin:
     email:
       sent_test: "¡enviado!"

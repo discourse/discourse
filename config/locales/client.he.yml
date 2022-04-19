@@ -3033,6 +3033,7 @@ he:
       deleted_by_author_simple: "(הפוסט נמחק על ידי הכותב)"
       collapse: "צמצום"
       sr_collapse_replies: "צמצום תשובות מוטמעות"
+      sr_date: "תאריך פרסום"
       sr_expand_replies:
         one: "לפוסט הזה יש תגובה %{count}. יורחב בלחיצה"
         two: "לפוסט הזה יש %{count} תגובות. יורחב בלחיצה"
