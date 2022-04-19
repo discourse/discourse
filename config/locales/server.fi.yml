@@ -1511,7 +1511,6 @@ fi:
     send_tl2_promotion_message: "Lähetä uusille luottamustason 2 käyttäjille viesti ylennyksestä."
     suppress_reply_directly_below: "Älä näytä vastausten lukumäärää viestissä,, jos viestin alapuolella on vain yksi vastaus."
     suppress_reply_directly_above: "Älä näytä vastauksena-merkintää viestissä, jos viestin yläpuolella on vain yksi vastaus."
-    remove_full_quote: "Poista koko viestin lainaukset suorista vastauksista automaattisesti."
     suppress_reply_when_quoting: "Älä näytä vastauksena-painiketta viestissä, kun viestissä on lainaus."
     max_reply_history: "Maksimimäärä laajennettavia vastauksia, kun \"vastauksena\" laajennetaan"
     topics_per_period_in_top_summary: "Ketjujen lukumäärä, joka näytetään oletuksena Suositut-listauksissa."

@@ -1715,8 +1715,12 @@ zh_CN:
       not_approved: "您的帐户尚未获得批准。一旦可以登录，您会收到电子邮件通知。"
       google_oauth2:
         name: "Google"
+        title: "使用 Google 登录"
+        sr_title: "使用 Google 登录"
       twitter:
         name: "Twitter"
+        title: "使用 Twitter 登录"
+        sr_title: "使用 Twitter 登录"
       instagram:
         name: "Instagram"
         title: "使用 Instagram 登录"
@@ -2681,6 +2685,7 @@ zh_CN:
       deleted_by_author_simple: "（帖子已被作者删除）"
       collapse: "收起"
       sr_collapse_replies: "折叠嵌入回复"
+      sr_date: "发布日期"
       sr_expand_replies:
         other: "这个帖子有 %{count} 个回复。点击展开"
       expand_collapse: "展开/收起"

@@ -1542,7 +1542,6 @@ pt_BR:
     send_tl2_promotion_message: "Envie a usuários(as) de nível de confiança 2 uma mensagem sobre promoção."
     suppress_reply_directly_below: "Não exiba a contagem de respostas expansível em um postagem quando há apenas uma única resposta direto abaixo desta postagem."
     suppress_reply_directly_above: "Não exiba a \"em resposta a\" expansível em uma postagem quando há apenas uma única resposta direto acima desta postagem."
-    remove_full_quote: "Remova automaticamente citações completas nas respostas diretas."
     suppress_reply_when_quoting: "Não exiba a \"em resposta a\" expansível em uma postagem quando a postagem citar a resposta."
     max_reply_history: "Quantidade máxima de respostas para expandir ao expandir \"em resposta a\""
     topics_per_period_in_top_summary: "Quantidade de melhores tópicos exibidos no resumo de melhores tópicos padrão."

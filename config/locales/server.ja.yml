@@ -1462,7 +1462,6 @@ ja:
     send_tl2_promotion_message: "新しい信頼レベル 2 ユーザーに昇格に関するメッセージを送信します。"
     suppress_reply_directly_below: "投稿に返信が 1 つしかない場合、投稿の展開可能な返信数を表示しない。"
     suppress_reply_directly_above: "投稿に返信が 1 つしかない場合、投稿の展開可能な in-reply-to を表示しない。"
-    remove_full_quote: "ダイレクト返信の完全な引用を自動的に削除します。"
     suppress_reply_when_quoting: "投稿が引用返信だった場合、投稿の展開可能な in-reply-to を表示しない。"
     max_reply_history: "in-reply-toを展開するときに展開する返信の最大数"
     topics_per_period_in_top_summary: "デフォルトの人気トピックの要約に表示される人気トピックの数"

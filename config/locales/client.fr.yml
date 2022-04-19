@@ -1767,8 +1767,12 @@ fr:
       not_approved: "Votre compte n'a pas encore été approuvé. Vous recevrez une notification par courriel lorsque vous pourrez vous connecter."
       google_oauth2:
         name: "Google"
+        title: "Connectez-vous avec Google"
+        sr_title: "Connectez-vous avec Google"
       twitter:
         name: "Twitter"
+        title: "Connectez-vous avec Twitter"
+        sr_title: "Connectez-vous avec Twitter"
       instagram:
         name: "Instagram"
         title: "Se connecter avec Instagram"
@@ -2733,6 +2737,7 @@ fr:
       deleted_by_author_simple: "(message supprimé par son auteur)"
       collapse: "réduire"
       sr_collapse_replies: "Masquer les réponses"
+      sr_date: "Date de publication"
       sr_expand_replies:
         one: "Ce message a reçu %{count} réponse. Cliquez pour développer l'affichage"
         other: "Ce message a reçu %{count} réponses. Cliquez pour développer l'affichage"

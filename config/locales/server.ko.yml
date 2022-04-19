@@ -1488,7 +1488,6 @@ ko:
     send_tl2_promotion_message: "새 회원레벨 2 사용자에게 프로모션에 대한 메시지를 보냅니다."
     suppress_reply_directly_below: "글의 바로 아래에 단 하나의 댓글만 있는 경우 '댓글 수'를 보여주지 않음"
     suppress_reply_directly_above: "단 하나의 댓글 위의 글이 하나 있는 상황에서 '~에 대한 댓글'을 보여주지 않음."
-    remove_full_quote: "직접 답장에서 전체 따옴표를 자동으로 제거합니다."
     suppress_reply_when_quoting: "글안에 답글이 인용될 때 in-reply-to를 보여주지 않습니다."
     max_reply_history: "확장시 보여지는 최대 댓글 수"
     topics_per_period_in_top_summary: "인기 글타래 요약에 기본으로 보여질 글타래 수"
