@@ -51,7 +51,6 @@ const rule = {
 
           // strip key of 'username:' and return username
           username = split[i].slice(9);
-          debugger
           continue;
         }
       }
