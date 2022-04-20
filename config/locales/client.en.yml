@@ -92,15 +92,33 @@ en:
         # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
         date_year: "MMM 'YY"
       medium:
+        less_than_x_minutes:
+          one: "less than %{count} min"
+          other: "less than %{count} mins"
         x_minutes:
           one: "%{count} min"
           other: "%{count} mins"
         x_hours:
           one: "%{count} hour"
           other: "%{count} hours"
+        about_x_hours:
+          one: "about %{count} hour"
+          other: "about %{count} hours"
         x_days:
           one: "%{count} day"
           other: "%{count} days"
+        x_months:
+          one: "%{count} month"
+          other: "%{count} months"
+        about_x_years:
+          one: "about %{count} year"
+          other: "about %{count} years"
+        over_x_years:
+          one: "over %{count} year"
+          other: "over %{count} years"
+        almost_x_years:
+          one: "almost %{count} year"
+          other: "almost %{count} years"
         # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
         date_year: "MMM D, 'YY"
       medium_with_ago:

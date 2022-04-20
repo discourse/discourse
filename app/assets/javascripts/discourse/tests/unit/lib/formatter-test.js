@@ -1,5 +1,6 @@
 import {
   autoUpdatingRelativeAge,
+  duration,
   durationTiny,
   longDate,
   number,
@@ -358,6 +359,114 @@ discourseModule("Unit | Utility | formatter", function (hooks) {
       durationTiny(86400 * 822),
       "> 2y",
       "822 days shows as > 2y"
+    );
+  });
+
+  test("duration (medium format)", function (assert) {
+    assert.strictEqual(
+      duration(undefined, { format: "medium" }),
+      "&mdash;",
+      "undefined is a dash"
+    );
+    assert.strictEqual(
+      duration(null, { format: "medium" }),
+      "&mdash;",
+      "null is a dash"
+    );
+    assert.strictEqual(
+      duration(0, { format: "medium" }),
+      "less than 1 min",
+      "0 seconds shows as less than 1 min"
+    );
+    assert.strictEqual(
+      duration(59, { format: "medium" }),
+      "less than 1 min",
+      "59 seconds shows as less than 1 min"
+    );
+    assert.strictEqual(
+      duration(60, { format: "medium" }),
+      "1 min",
+      "60 seconds shows as 1 min"
+    );
+    assert.strictEqual(
+      duration(90, { format: "medium" }),
+      "2 mins",
+      "90 seconds shows as 2 mins"
+    );
+    assert.strictEqual(
+      duration(120, { format: "medium" }),
+      "2 mins",
+      "120 seconds shows as 2 mins"
+    );
+    assert.strictEqual(
+      duration(60 * 45, { format: "medium" }),
+      "about 1 hour",
+      "45 minutes shows as about 1 hour"
+    );
+    assert.strictEqual(
+      duration(60 * 60, { format: "medium" }),
+      "about 1 hour",
+      "60 minutes shows as about 1 hour"
+    );
+    assert.strictEqual(
+      duration(60 * 90, { format: "medium" }),
+      "about 2 hours",
+      "90 minutes shows as about 2 hours"
+    );
+    assert.strictEqual(
+      duration(3600 * 23, { format: "medium" }),
+      "about 23 hours",
+      "23 hours shows as about 23 hours"
+    );
+    assert.strictEqual(
+      duration(3600 * 24 - 29, { format: "medium" }),
+      "1 day",
+      "23 hours 31 mins shows as 1 day"
+    );
+    assert.strictEqual(
+      duration(3600 * 24 * 89, { format: "medium" }),
+      "89 days",
+      "89 days shows as 89 days"
+    );
+    assert.strictEqual(
+      duration(60 * (525600 - 1), { format: "medium" }),
+      "12 months",
+      "364 days shows as 12 months"
+    );
+    assert.strictEqual(
+      duration(60 * 525600, { format: "medium" }),
+      "about 1 year",
+      "365 days shows as about 1 year"
+    );
+    assert.strictEqual(
+      duration(86400 * 456, { format: "medium" }),
+      "about 1 year",
+      "456 days shows as about 1 year"
+    );
+    assert.strictEqual(
+      duration(86400 * 457, { format: "medium" }),
+      "over 1 year",
+      "457 days shows as over 1 year"
+    );
+    assert.strictEqual(
+      duration(86400 * 638, { format: "medium" }),
+      "over 1 year",
+      "638 days shows as over 1 year"
+    );
+    assert.strictEqual(
+      duration(86400 * 639, { format: "medium" }),
+      "almost 2 years",
+      "639 days shows as almost 2 years"
+    );
+    assert.strictEqual(
+      duration(86400 * 821, { format: "medium" }),
+      "about 2 years",
+      "821 days shows as about 2 years"
+    );
+    assert.strictEqual(
+      duration(86400 * 822, { format: "medium" }),
+      "over 2 years",
+      "822 days shows as over 2 years"
     );
   });
 });
