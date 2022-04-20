@@ -17,6 +17,10 @@ export default function (text, element) {
     return;
   }
 
+  if (text) {
+    element.value = text;
+  }
+
   let newRange = document.createRange();
   newRange.selectNode(element);
   const selection = window.getSelection();
