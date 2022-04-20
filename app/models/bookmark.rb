@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class Bookmark < ActiveRecord::Base
-  SPECIAL_BOOKMARKABLE_TYPES = ["Post", "Topic"]
-
   # these columns were here for a very short amount of time,
   # hence the very short ignore time
   self.ignored_columns = [
@@ -10,56 +8,73 @@ class Bookmark < ActiveRecord::Base
     "reminder_type" # TODO 2021-04-01: remove
   ]
 
-  # Should only be created via the Bookmark.register_bookmarkable
-  # method; this is used to let the BookmarkQuery class query and
-  # search additional bookmarks for the user bookmark list, and
-  # also to enumerate on the registered Bookmarkable types.
-  #
-  # Anything other than types registered in this way will throw an error
-  # when trying to save the Bookmark record  (excluding Post and Topic
-  # bookmarkables, which have special logic handled directly in core.)
-  class Bookmarkable
-    attr_reader :model, :serializer, :search_fields, :preload_includes
-    delegate :table_name, to: :@model
-
-    def initialize(model:, serializer:, search_fields:, preload_includes: [])
-      @model = model
-      @serializer = serializer
-      @search_fields = search_fields
-      @preload_includes = preload_includes
-    end
-
-    def search_join(ar_relation)
-      ar_relation.joins(
-        "LEFT JOIN #{table_name} ON #{table_name}.id = bookmarks.bookmarkable_id
-        AND bookmarks.bookmarkable_type = '#{model.name}'"
-      )
-    end
-
-    def search_filters
-      search_fields.map do |field|
-        "#{table_name}.#{field} ILIKE :q"
-      end
-    end
-
-    def preload_associations(bookmarks)
-      ActiveRecord::Associations::Preloader.new.preload(
-        Bookmark.select_type(bookmarks, model.name), { bookmarkable: preload_includes }
-      )
-    end
-  end
-
   cattr_accessor :registered_bookmarkables
   self.registered_bookmarkables = []
 
-  def self.register_bookmarkable(model:, serializer:, search_fields:, preload_includes: [])
+  def self.register_bookmarkable(
+    model:, serializer:, list_query:, search_query:, preload_associations: []
+  )
     Bookmark.registered_bookmarkables << Bookmarkable.new(
       model: model,
       serializer: serializer,
-      search_fields: search_fields,
-      preload_includes: preload_includes
+      list_query: list_query,
+      search_query: search_query,
+      preload_associations: preload_associations
     )
   end
+
+  def self.reset_bookmarkables
+    return if !SiteSetting.use_polymorphic_bookmarks
+    self.registered_bookmarkables = []
+    Bookmark.register_bookmarkable(
+      model: Post,
+      serializer: UserPostBookmarkSerializer,
+      list_query: lambda do |user, guardian|
+        topics = Topic.listable_topics.secured(guardian)
+        pms = Topic.private_messages_for_user(user)
+        post_bookmarks = user
+          .bookmarks
+          .joins("INNER JOIN posts ON posts.id = bookmarks.bookmarkable_id AND bookmarks.bookmarkable_type = 'Post'")
+          .joins("LEFT JOIN topics ON topics.id = posts.topic_id")
+          .joins("LEFT JOIN topic_users ON topic_users.topic_id = topics.id")
+          .where("topic_users.user_id = ?", user.id)
+          .where(bookmarkable_type: "Post")
+        guardian.filter_allowed_categories(
+          post_bookmarks.merge(topics.or(pms)).merge(Post.secured(guardian))
+        )
+      end,
+      search_query: lambda do |bookmarks, query, ts_query|
+        bookmarks
+          .joins("LEFT JOIN post_search_data ON post_search_data.post_id = bookmarks.bookmarkable_id AND
+                 bookmarks.bookmarkable_type = 'Post'")
+          .where("#{ts_query} @@ post_search_data.search_data")
+      end,
+      preload_associations: [{ topic: :topic_users }]
+    )
+    Bookmark.register_bookmarkable(
+      model: Topic,
+      serializer: UserTopicBookmarkSerializer,
+      list_query: lambda do |user, guardian|
+        topics = Topic.listable_topics.secured(guardian)
+        pms = Topic.private_messages_for_user(user)
+        topic_bookmarks = user
+          .bookmarks
+          .joins("INNER JOIN topics ON topics.id = bookmarks.bookmarkable_id AND bookmarks.bookmarkable_type = 'Topic'")
+          .joins("LEFT JOIN topic_users ON topic_users.topic_id = topics.id")
+          .where("topic_users.user_id = ?", user.id)
+          .where(bookmarkable_type: "Topic")
+        guardian.filter_allowed_categories(topic_bookmarks.merge(topics.or(pms)))
+      end,
+      search_query: lambda do |bookmarks, query, ts_query|
+        bookmarks
+          .joins("LEFT JOIN posts ON posts.topic_id = topics.id AND posts.post_number = 1")
+          .joins("LEFT JOIN post_search_data ON post_search_data.post_id = posts.id")
+          .where("#{ts_query} @@ post_search_data.search_data")
+      end,
+      preload_associations: [:topic_users, :posts]
+    )
+  end
+  reset_bookmarkables
 
   def self.valid_bookmarkable_types
     Bookmark.registered_bookmarkables.map(&:model).map(&:to_s)
@@ -175,7 +190,6 @@ class Bookmark < ActiveRecord::Base
   def valid_bookmarkable_type
     return if !SiteSetting.use_polymorphic_bookmarks
     return if Bookmark.valid_bookmarkable_types.include?(self.bookmarkable_type)
-    return if Bookmark::SPECIAL_BOOKMARKABLE_TYPES.include?(self.bookmarkable_type)
 
     self.errors.add(:base, I18n.t("bookmarks.errors.invalid_bookmarkable", type: self.bookmarkable_type))
   end
