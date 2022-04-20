@@ -29,8 +29,8 @@ module EmailHelper
     EmailStyle.new.html
       .sub('%{email_content}') { capture { yield } }
       .gsub('%{html_lang}', html_lang)
-      .gsub('%{dark_mode_meta_tags}', SiteSetting.dark_mode_emails_active ? dark_mode_meta_tags : "")
-      .gsub('%{dark_mode_styles}', SiteSetting.dark_mode_emails_active ? dark_mode_styles : "")
+      .gsub('%{dark_mode_meta_tags}', dark_mode_meta_tags)
+      .gsub('%{dark_mode_styles}', dark_mode_styles)
       .html_safe
   end
 
