@@ -1260,6 +1260,9 @@ email:
     client: true
     default: true
     hidden: true
+  max_participant_names:
+    default: 10
+    hidden: true
 
 files:
   max_image_size_kb:

@@ -3520,6 +3520,9 @@ en:
     posted_by: "Posted by %{username} on %{post_date}"
 
     pm_participants: "Participants: %{participants}"
+    more_pm_participants:
+      one: "%{participants} and %{count} other"
+      other: "%{participants} and %{count} others"
 
     invited_group_to_private_message_body: |
       %{username} invited @%{group_name} to a message

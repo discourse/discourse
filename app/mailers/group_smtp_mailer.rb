@@ -36,7 +36,7 @@ class GroupSmtpMailer < ActionMailer::Base
       only_reply_by_email: true,
       use_from_address_for_reply_to: SiteSetting.enable_smtp && from_group.smtp_enabled?,
       private_reply: post.topic.private_message?,
-      participants: participants(post, recipient_user),
+      participants: UserNotifications.participants(post, recipient_user, reveal_staged_email: true),
       include_respond_instructions: true,
       template: 'user_notifications.user_posted_pm',
       use_topic_title_subject: true,
@@ -67,25 +67,5 @@ class GroupSmtpMailer < ActionMailer::Base
         reply_above_line: true
       }
     )
-  end
-
-  def participants(post, recipient_user)
-    list = []
-
-    post.topic.allowed_groups.each do |g|
-      list.push("[#{g.name_full_preferred}](#{g.full_url})")
-    end
-
-    post.topic.allowed_users.each do |u|
-      next if u.id == recipient_user.id
-
-      if u.staged?
-        list.push("#{u.email}")
-      else
-        list.push("[#{u.display_name}](#{u.full_url})")
-      end
-    end
-
-    list.join(', ')
   end
 end

@@ -594,7 +594,7 @@ describe UserNotifications do
       group2 = Fabricate(:group, name: "group2")
 
       user1 = Fabricate(:user, username: "one", groups: [group1, group2])
-      user2 = Fabricate(:user, username: "two", groups: [group1])
+      user2 = Fabricate(:user, username: "two", groups: [group1], staged: true)
 
       topic.allowed_users = [user, user1, user2]
       topic.allowed_groups = [group1, group2]
@@ -1085,5 +1085,103 @@ describe UserNotifications do
       end
     end
 
+  end
+
+  describe "#participants" do
+    fab!(:group1) { Fabricate(:group, name: "group1") }
+    fab!(:group2) { Fabricate(:group, name: "group2") }
+    fab!(:group3) { Fabricate(:group, name: "group3") }
+    fab!(:user1) { Fabricate(:user, username: "one", name: nil, groups: [group1, group2]) }
+    fab!(:user2) { Fabricate(:user, username: "two", name: nil, groups: [group1]) }
+    fab!(:user3) { Fabricate(:user, username: "three", name: nil, groups: [group3]) }
+    fab!(:user4) { Fabricate(:user, username: "four", name: nil, groups: [group1, group3]) }
+    fab!(:admin) { Fabricate(:admin, username: "admin", name: nil) }
+
+    fab!(:topic) do
+      t = Fabricate(:private_message_topic, title: "Super cool topic")
+      t.allowed_users = [user1, user2, user3, user4, admin]
+      t.allowed_groups = [group1]
+      t
+    end
+    fab!(:posts) do
+      [
+        Fabricate(:post, topic: topic, post_number: 1, user: user2),
+        Fabricate(:post, topic: topic, post_number: 2, user: user1),
+        Fabricate(:post, topic: topic, post_number: 3, user: user2),
+        Fabricate(:small_action, topic: topic, post_number: 4, user: admin),
+        Fabricate(:post, topic: topic, post_number: 5, user: user4),
+        Fabricate(:post, topic: topic, post_number: 6, user: user3),
+        Fabricate(:post, topic: topic, post_number: 7, user: user4)
+      ]
+    end
+
+    it "returns a list of participants (except for the recipient), groups first, followed by users in order of their last reply" do
+      expect(UserNotifications.participants(posts.last, user3)).to eq("[group1 (3)](http://test.localhost/g/group1), " \
+        "[four](http://test.localhost/u/four), [two](http://test.localhost/u/two), [one](http://test.localhost/u/one), " \
+        "[admin](http://test.localhost/u/admin)")
+    end
+
+    it "caps the list according to site setting" do
+      SiteSetting.max_participant_names = 3
+      list = "[group1 (3)](http://test.localhost/g/group1), [four](http://test.localhost/u/four), [two](http://test.localhost/u/two)"
+      expect(UserNotifications.participants(posts.last, user3)).to eq(I18n.t("user_notifications.more_pm_participants", participants: list, count: 2))
+    end
+
+    it "orders groups by user count" do
+      SiteSetting.max_participant_names = 3
+      topic.allowed_groups = [group1, group2, group3]
+
+      list = "[group1 (3)](http://test.localhost/g/group1), [group3 (2)](http://test.localhost/g/group3), [group2 (1)](http://test.localhost/g/group2)"
+      expect(UserNotifications.participants(posts.last, user3)).to eq(I18n.t("user_notifications.more_pm_participants", participants: list, count: 4))
+    end
+
+    it "orders users by their last reply and user id" do
+      expect(UserNotifications.participants(posts[-3], user4)).to eq("[group1 (3)](http://test.localhost/g/group1), " \
+        "[two](http://test.localhost/u/two), [one](http://test.localhost/u/one), [three](http://test.localhost/u/three), " \
+        "[admin](http://test.localhost/u/admin)")
+    end
+
+    it "prefers full group names when available" do
+      SiteSetting.max_participant_names = 2
+      topic.allowed_groups = [group1, group2]
+
+      group2.update!(full_name: "Awesome Group")
+
+      list = "[group1 (3)](http://test.localhost/g/group1), [Awesome Group (1)](http://test.localhost/g/group2)"
+      expect(UserNotifications.participants(posts.last, user3)).to eq(I18n.t("user_notifications.more_pm_participants", participants: list, count: 4))
+    end
+
+    it "always uses usernames when prioritize_username_in_ux is enabled" do
+      user4.update!(name: "James Bond")
+      user1.update!(name: "Indiana Jones")
+
+      SiteSetting.prioritize_username_in_ux = true
+      expect(UserNotifications.participants(posts.last, user3)).to eq("[group1 (3)](http://test.localhost/g/group1), " \
+        "[four](http://test.localhost/u/four), [two](http://test.localhost/u/two), [one](http://test.localhost/u/one), " \
+        "[admin](http://test.localhost/u/admin)")
+
+      SiteSetting.prioritize_username_in_ux = false
+      expect(UserNotifications.participants(posts.last, user3)).to eq("[group1 (3)](http://test.localhost/g/group1), " \
+        "[James Bond](http://test.localhost/u/four), [two](http://test.localhost/u/two), [Indiana Jones](http://test.localhost/u/one), " \
+        "[admin](http://test.localhost/u/admin)")
+    end
+
+    it "reveals the email address of staged users if enabled" do
+      user4.update!(staged: true, email: "james.bond@mi6.invalid")
+      user1.update!(staged: true, email: "indiana.jones@example.com")
+
+      SiteSetting.prioritize_username_in_ux = true
+      expect(UserNotifications.participants(posts.last, user3, reveal_staged_email: true)).to eq( \
+        "[group1 (3)](http://test.localhost/g/group1), james.bond@mi6.invalid, [two](http://test.localhost/u/two), " \
+        "indiana.jones@example.com, [admin](http://test.localhost/u/admin)")
+    end
+
+    it "does only include human users" do
+      topic.allowed_users << Discourse.system_user
+
+      expect(UserNotifications.participants(posts.last, user3)).to eq("[group1 (3)](http://test.localhost/g/group1), " \
+        "[four](http://test.localhost/u/four), [two](http://test.localhost/u/two), [one](http://test.localhost/u/one), " \
+        "[admin](http://test.localhost/u/admin)")
+    end
   end
 end
