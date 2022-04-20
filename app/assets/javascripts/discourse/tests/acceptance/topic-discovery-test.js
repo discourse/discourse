@@ -3,13 +3,16 @@ import {
   exists,
   publishToMessageBus,
   query,
-  queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import DiscourseURL from "discourse/lib/url";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import sinon from "sinon";
-import { test } from "qunit";
-import { click, currentURL, visit } from "@ember/test-helpers";
+import { skip, test } from "qunit";
+import { click, currentURL, settled, visit } from "@ember/test-helpers";
+import { cloneJSON } from "discourse-common/lib/object";
+import discoveryFixtures from "discourse/tests/fixtures/discovery-fixtures";
+import { ScrollingDOMMethods } from "discourse/mixins/scrolling";
+import { configureEyeline } from "discourse/lib/eyeline";
 
 acceptance("Topic Discovery", function (needs) {
   needs.settings({
@@ -18,18 +21,21 @@ acceptance("Topic Discovery", function (needs) {
 
   test("Visit Discovery Pages", async function (assert) {
     await visit("/");
-    assert.ok($("body.navigation-topics").length, "has the default navigation");
+    assert.ok(
+      document.querySelectorAll("body.navigation-topics").length,
+      "has the default navigation"
+    );
     assert.ok(exists(".topic-list"), "The list of topics was rendered");
     assert.ok(exists(".topic-list .topic-list-item"), "has topics");
 
     assert.strictEqual(
-      queryAll("a[data-user-card=eviltrout] img.avatar").attr("title"),
+      query("a[data-user-card=eviltrout] img.avatar").getAttribute("title"),
       "Evil Trout - Most Posts",
       "it shows user's full name in avatar title"
     );
 
     assert.strictEqual(
-      queryAll("a[data-user-card=eviltrout] img.avatar").attr("loading"),
+      query("a[data-user-card=eviltrout] img.avatar").getAttribute("loading"),
       "lazy",
       "it adds loading=`lazy` to topic list avatars"
     );
@@ -39,25 +45,28 @@ acceptance("Topic Discovery", function (needs) {
     assert.ok(exists(".topic-list .topic-list-item"), "has topics");
     assert.ok(!exists(".category-list"), "doesn't render subcategories");
     assert.ok(
-      $("body.category-bug").length,
+      document.querySelectorAll("body.category-bug").length,
       "has a custom css class for the category id on the body"
     );
 
     await visit("/categories");
-    assert.ok($("body.navigation-categories").length, "has the body class");
     assert.ok(
-      $("body.category-bug").length === 0,
+      document.querySelectorAll("body.navigation-categories").length,
+      "has the body class"
+    );
+    assert.ok(
+      document.querySelectorAll("body.category-bug").length === 0,
       "removes the custom category class"
     );
     assert.ok(exists(".category"), "has a list of categories");
     assert.ok(
-      $("body.categories-list").length,
+      document.querySelectorAll("body.categories-list").length,
       "has a custom class to indicate categories"
     );
 
     await visit("/top");
     assert.ok(
-      $("body.categories-list").length === 0,
+      document.querySelectorAll("body.categories-list").length === 0,
       "removes the `categories-list` class"
     );
     assert.ok(exists(".topic-list .topic-list-item"), "has topics");
@@ -177,5 +186,43 @@ acceptance("Topic Discovery", function (needs) {
 
     await click("#site-logo");
     assertShowingLatest();
+  });
+});
+
+acceptance("Topic Discovery | Footer", function (needs) {
+  needs.hooks.beforeEach(function () {
+    ScrollingDOMMethods.bindOnScroll.restore();
+    configureEyeline({
+      skipUpdate: false,
+      rootElement: "#ember-testing",
+    });
+  });
+
+  needs.hooks.afterEach(function () {
+    configureEyeline();
+  });
+
+  needs.pretender((server, helper) => {
+    server.get("/c/dev/7/l/latest.json", () => {
+      const json = cloneJSON(discoveryFixtures["/c/dev/7/l/latest.json"]);
+      json.topic_list.more_topics_url = "/c/dev/7/l/latest.json?page=2";
+      return helper.response(json);
+    });
+
+    server.get("/c/dev/7/l/latest.json?page=2", () => {
+      const json = cloneJSON(discoveryFixtures["/c/dev/7/l/latest.json"]);
+      json.topic_list.more_topics_url = null;
+      return helper.response(json);
+    });
+  });
+
+  // TODO: Needs scroll support in tests
+  skip("No footer, then shows footer when all loaded", async function (assert) {
+    await visit("/c/dev");
+    assert.ok(!exists(".custom-footer-content"));
+
+    document.querySelector("#ember-testing-container").scrollTop = 100000; // scroll to bottom
+    await settled();
+    assert.ok(exists(".custom-footer-content"));
   });
 });
