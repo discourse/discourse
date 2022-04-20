@@ -51,9 +51,9 @@ class UploadValidator < ActiveModel::Validator
   # where some cases e.g. have exemptions on the extension enforcement
   def changing_upload_security?(upload)
     !upload.new_record? && \
-      upload.secure_changed? && \
-      upload.security_last_changed_at_changed? && \
-      upload.security_last_changed_reason_changed?
+      upload.changed_attributes.keys.all? do |attribute|
+        %w(secure security_last_changed_at security_last_changed_reason).include?(attribute)
+      end
   end
 
   def is_authorized?(upload, extension)
