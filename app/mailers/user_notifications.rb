@@ -552,19 +552,7 @@ class UserNotifications < ActionMailer::Base
           I18n.t('subject_pm')
         end
 
-      participants = ""
-      participant_list = []
-
-      post.topic.allowed_groups.each do |g|
-        participant_list.push "[#{g.name} (#{g.users.count})](#{g.full_url})"
-      end
-
-      post.topic.allowed_users.each do |u|
-        next if u.id == user.id
-        participant_list.push "[#{u.display_name}](#{u.full_url})"
-      end
-
-      participants += participant_list.join(", ")
+      participants = self.class.participants(post, user)
     end
 
     if SiteSetting.private_email?
@@ -695,6 +683,51 @@ class UserNotifications < ActionMailer::Base
     TopicUser.change(user.id, post.topic_id, last_emailed_post_number: post.post_number)
 
     build_email(user.email, email_opts)
+  end
+
+  def self.participants(post, recipient_user, reveal_staged_email: false)
+    list = []
+
+    allowed_groups = post.topic.allowed_groups.order("user_count DESC")
+
+    allowed_groups.each do |g|
+      list.push("[#{g.name_full_preferred} (#{g.user_count})](#{g.full_url})")
+      break if list.size >= SiteSetting.max_participant_names
+    end
+
+    recent_posts_query = post.topic.posts
+      .select("user_id, MAX(post_number) AS post_number")
+      .where(post_type: Post.types[:regular], post_number: ..post.post_number)
+      .where.not(user_id: recipient_user.id)
+      .group(:user_id)
+      .order("post_number DESC")
+      .limit(SiteSetting.max_participant_names)
+      .to_sql
+
+    allowed_users = post.topic.allowed_users
+      .joins("LEFT JOIN (#{recent_posts_query}) pu ON topic_allowed_users.user_id = pu.user_id")
+      .order("post_number DESC NULLS LAST", :id)
+      .where.not(id: recipient_user.id)
+      .human_users
+
+    allowed_users.each do |u|
+      break if list.size >= SiteSetting.max_participant_names
+
+      if reveal_staged_email && u.staged?
+        list.push("#{u.email}")
+      else
+        list.push("[#{u.display_name}](#{u.full_url})")
+      end
+    end
+
+    participants = list.join(I18n.t("word_connector.comma"))
+    others_count = allowed_groups.size + allowed_users.size - list.size
+
+    if others_count > 0
+      I18n.t("user_notifications.more_pm_participants", participants: participants, count: others_count)
+    else
+      participants
+    end
   end
 
   private
