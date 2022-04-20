@@ -81,7 +81,7 @@ Launch the setup tool at
 Answer the following questions when prompted:
 
     Hostname for your Discourse? [discourse.example.com]: 
-    Email address for admin account(s)? [me@example.com,you@example.com]: 
+    Email address for admin account(s)? me@example.com,you@example.com: 
     SMTP server address? [smtp.example.com]: 
     SMTP port? [587]: 
     SMTP user name? [user@example.com]: 
