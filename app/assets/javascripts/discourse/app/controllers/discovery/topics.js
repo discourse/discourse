@@ -156,7 +156,7 @@ const controllerOpts = {
     if (!allLoaded) {
       return;
     }
-    const tag = this.model.topic_list.tags[0];
+    const tag = this.model.topic_list.tags ? this.model.topic_list.tags[0] : ""; // terrible temp
     const category = this.category;
 
     if (category) {

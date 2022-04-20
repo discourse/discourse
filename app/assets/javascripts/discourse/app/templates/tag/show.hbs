@@ -12,10 +12,6 @@
     </div>
   </div>
 
-  {{#if showInfo}}
-    {{tag-info tag=tag list=list deleteAction=(action "deleteTag")}}
-  {{/if}}
-
   {{plugin-outlet name="discovery-list-container-top" tagName="span" connectorTagName="div" args=(hash category=category)}}
 
   {{topic-dismiss-buttons position="top" selectedTopics=selected

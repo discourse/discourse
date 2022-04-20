@@ -11,8 +11,8 @@
     additionalTags=additionalTags
     showInfo=showInfo
     canCreateTopicOnTag=canCreateTopicOnTag
-    changeTagNotificationLevel=(route-action "changeTagNotificationLevel")
-    toggleInfo=(route-action "toggleInfo")
+    changeTagNotificationLevel=(action "changeTagNotificationLevel")
+    toggleInfo=(action "toggleInfo")
   }}
 
   {{plugin-outlet
@@ -21,3 +21,7 @@
     args=(hash category=category tag=tag)
   }}
 {{/d-section}}
+
+{{#if showInfo}}
+  {{tag-info tag=tag list=list deleteAction=(action "deleteTag")}}
+{{/if}}

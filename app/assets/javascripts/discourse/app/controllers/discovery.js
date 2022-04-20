@@ -35,12 +35,17 @@ export default Controller.extend({
 
   showMoreUrl(period) {
     let url = "",
-      category = this.category;
+      category = this.category,
+      tag = this.tag;
 
     if (category) {
       url = `/c/${Category.slugFor(category)}/${category.id}${
         this.noSubcategories ? "/none" : ""
       }/l`;
+    }
+
+    if (tag) {
+      url = `/tag/${tag.id}/l`;
     }
 
     url += "/top";

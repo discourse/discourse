@@ -3,6 +3,7 @@ import {
   findTopicList,
 } from "discourse/routes/build-topic-route";
 import {
+  changeSort,
   queryParams,
   resetParams,
 } from "discourse/controllers/discovery-sortable";
@@ -15,24 +16,14 @@ import PermissionType from "discourse/models/permission-type";
 import { escapeExpression } from "discourse/lib/utilities";
 import { makeArray } from "discourse-common/lib/helpers";
 import { setTopicList } from "discourse/lib/topic-list-tracker";
+import { scrollTop } from "discourse/mixins/scroll-top";
 import showModal from "discourse/lib/show-modal";
 import { action } from "@ember/object";
 
 export default DiscourseRoute.extend(FilterModeMixin, {
   navMode: "latest",
-
   queryParams,
-
-  controllerName: "tag.show",
-  templateName: "tag.show",
-
-  beforeModel() {
-    const controller = this.controllerFor("tag.show");
-    controller.setProperties({
-      loading: true,
-      showInfo: false,
-    });
-  },
+  controllerName: "discovery/latest",
 
   async model(params, transition) {
     const tag = this.store.createRecord("tag", {
@@ -128,10 +119,13 @@ export default DiscourseRoute.extend(FilterModeMixin, {
     this.controllerFor("tag.show").setProperties({
       model: model.tag,
       ...model,
-      period: model.list.for_period,
+    });
+
+    this.setProperties({
       navMode: this.navMode,
       noSubcategories,
       loading: false,
+      period: model.list.for_period,
     });
 
     let topicOpts = {
@@ -141,26 +135,24 @@ export default DiscourseRoute.extend(FilterModeMixin, {
         this.context.list.get("for_period") ||
         (model.modelParams && model.modelParams.period),
       selected: [],
-      noSubcategories:
-        this.context.params && !!this.context.params.no_subcategories,
+      noSubcategories: this.params && !!this.context.params.no_subcategories,
       expandAllPinned: true,
-      canCreateTopic: this.context.canCreateTopic,
-      canCreateTopicOnCategory: this.context.canCreateTopicOnCategory,
-      filterType: this.context.filterType,
+      canCreateTopic: this.canCreateTopic,
+      canCreateTopicOnCategory: this.canCreateTopicOnCategory,
+      tag: this.context.tag,
     };
 
     this.controllerFor("discovery/topics").setProperties(topicOpts);
-
     this.controllerFor("navigation/tag").setProperties({
-      filterType: controller.filterType,
-      canCreateTopic: controller.canCreateTopic,
-      noSubcategories: controller.noSubcategories,
-      tagNotification: controller.tagNotification,
-      additionalTags: controller.additionalTags,
-      showInfo: controller.showInfo,
-      canCreateTopicOnTag: controller.canCreateTopicOnTag,
-      category: controller.category,
-      tag: controller.tag,
+      filterType: this.context.filterType,
+      canCreateTopic: this.context.canCreateTopic,
+      noSubcategories: this.context.noSubcategories,
+      tagNotification: this.context.tagNotification,
+      additionalTags: this.context.additionalTags,
+      showInfo: this.context.showInfo,
+      canCreateTopicOnTag: this.context.canCreateTopicOnTag,
+      category: this.context.category,
+      tag: this.context.tag,
     });
 
     this.searchService.set("searchContext", model.tag.searchContext);
@@ -199,14 +191,13 @@ export default DiscourseRoute.extend(FilterModeMixin, {
   },
 
   renderTemplate() {
-    this.render("tag.show");
+    this.render("discovery");
     this.render("navigation/tag", {
-      into: "tag.show",
+      into: "discovery",
       outlet: "navigation-bar",
     });
-
     this.render("discovery/topics", {
-      into: "tag.show",
+      into: "discovery",
       outlet: "list-container",
     });
   },
@@ -222,33 +213,8 @@ export default DiscourseRoute.extend(FilterModeMixin, {
   },
 
   @action
-  changeTagNotificationLevel(notificationLevel) {
-    this.controller.tagNotification
-      .update({ notification_level: notificationLevel })
-      .then((response) => {
-        this.currentUser.set(
-          "muted_tag_ids",
-          this.currentUser.calculateMutedIds(
-            notificationLevel,
-            response.responseJson.tag_id,
-            "muted_tag_ids"
-          )
-        );
-      });
-  },
-
-  @action
-  toggleInfo() {
-    this.controller.toggleProperty("showInfo");
-  },
-
-  @action
-  changeSort(order) {
-    if (order === this.order) {
-      this.toggleProperty("ascending");
-    } else {
-      this.setProperties({ order, ascending: false });
-    }
+  changeSort(sortBy) {
+    changeSort.call(this, sortBy);
   },
 
   @action
@@ -288,30 +254,27 @@ export default DiscourseRoute.extend(FilterModeMixin, {
 
   @action
   dismissRead(operationType) {
-    const controller = this.controllerFor("tags-show");
-    let options = {
-      tagName: controller.tag?.id,
-    };
-    const categoryId = controller.category?.id;
+    const controller = this.controllerFor("discovery/topics");
+    controller.send("dismissRead", operationType, {
+      categoryId: controller.get("category.id"),
+      includeSubcategories: !controller.noSubcategories,
+    });
+  },
 
-    if (categoryId) {
-      options = Object.assign({}, options, {
-        categoryId,
-        includeSubcategories: !controller.noSubcategories,
-      });
+  @action
+  loadingComplete() {
+    this.controllerFor("discovery").loadingComplete();
+    if (!this.session.get("topicListScrollPosition")) {
+      scrollTop();
     }
+    this.set("loading", false);
+    // need to fix for new topic dismissal
 
-    controller.send("dismissRead", operationType, options);
+    return true;
   },
 
   @action
   resetParams(skipParams = []) {
     resetParams.call(this, skipParams);
-  },
-
-  @action
-  didTransition() {
-    this.controllerFor("tag.show")._showFooter();
-    return true;
   },
 });
