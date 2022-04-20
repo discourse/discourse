@@ -23,6 +23,7 @@ import deprecated from "discourse-common/lib/deprecated";
 import { isEmpty } from "@ember/utils";
 import { propertyNotEqual } from "discourse/lib/computed";
 import { throwAjaxError } from "discourse/lib/ajax-error";
+import { prioritizeNameFallback } from "discourse/lib/settings";
 
 let _customizations = [];
 export function registerCustomizationCallback(cb) {
@@ -362,9 +363,11 @@ const Composer = RestModel.extend({
         anchor: I18n.t("post.post_number", { number: postNumber }),
       };
 
+      const name = prioritizeNameFallback(post.name, post.username);
+
       options.userLink = {
         href: `${topic.url}/${postNumber}`,
-        anchor: post.username,
+        anchor: name,
       };
     }
 
