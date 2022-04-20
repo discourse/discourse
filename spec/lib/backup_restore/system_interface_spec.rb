@@ -107,12 +107,13 @@ describe BackupRestore::SystemInterface do
     end
 
     context "with Sidekiq workers" do
-      before { flush_sidekiq_redis_namespace }
-      after { flush_sidekiq_redis_namespace }
+      after do
+        flush_sidekiq_redis_namespace
+      end
 
       def flush_sidekiq_redis_namespace
         Sidekiq.redis do |redis|
-          redis.scan_each { |key| Discourse.redis.del(key) }
+          redis.scan_each { |key| redis.del(key) }
         end
       end
 
@@ -144,7 +145,7 @@ describe BackupRestore::SystemInterface do
             run_at: Time.now.to_i,
             payload: Sidekiq.dump_json(payload)
           )
-          conn.hmset("#{key}:workers", '444', data)
+          conn.hmset("#{key}:work", '444', data)
         end
       end
 
