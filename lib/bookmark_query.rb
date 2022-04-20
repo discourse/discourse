@@ -67,13 +67,14 @@ class BookmarkQuery
   def polymorphic_list_all
     search_term = @params[:q]
     ts_query = search_term.present? ? Search.ts_query(term: search_term) : nil
+    search_term_wildcard = search_term.present? ? "%#{search_term}%" : nil
 
     queries = Bookmark.registered_bookmarkables.map do |bookmarkable|
       interim_results = bookmarkable.perform_list_query(@user, @guardian)
 
       if search_term.present?
         interim_results = bookmarkable.perform_search_query(
-          interim_results, "%#{search_term}%", ts_query
+          interim_results, search_term_wildcard, ts_query
         )
       end
 
@@ -83,10 +84,8 @@ class BookmarkQuery
     end
 
     union_sql = queries.join("\n\nUNION\n\n")
-    results = Bookmark
-      .select("bookmarks.*")
-      .from("(\n\n#{union_sql}\n\n) as bookmarks")
-    results.order(
+    results = Bookmark.select("bookmarks.*").from("(\n\n#{union_sql}\n\n) as bookmarks")
+    results = results.order(
       "(CASE WHEN bookmarks.pinned THEN 0 ELSE 1 END),
         bookmarks.reminder_at ASC,
         bookmarks.updated_at DESC"

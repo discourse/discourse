@@ -5,7 +5,7 @@ class UserBookmarkList
 
   PER_PAGE = 20
 
-  attr_reader :bookmarks, :per_page, :posts, :topics
+  attr_reader :bookmarks, :per_page
   attr_accessor :more_bookmarks_url
 
   def initialize(user:, guardian:, params:)

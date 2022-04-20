@@ -8,8 +8,6 @@ class UserPostTopicBookmarkBaseSerializer < UserBookmarkBaseSerializer
 
   attributes :topic_id,
              :linked_post_number,
-             :title,
-             :fancy_title,
              :deleted,
              :hidden,
              :category_id,

@@ -25,7 +25,9 @@ class Bookmarkable
   end
 
   def perform_search_query(bookmarks, query, ts_query)
-    search_query.call(bookmarks, query, ts_query)
+    search_query.call(bookmarks, query, ts_query) do |bookmarks_joined, where_sql|
+      bookmarks_joined.where("#{where_sql} OR bookmarks.name ILIKE :q", q: query)
+    end
   end
 
   def perform_preload(bookmarks)

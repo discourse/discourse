@@ -41,7 +41,6 @@ class Post < ActiveRecord::Base
   has_many :post_actions, dependent: :destroy
   has_many :topic_links
   has_many :group_mentions, dependent: :destroy
-  belongs_to :bookmarkable_relation, class_name: "Topic", foreign_key: :topic_id
 
   has_many :post_uploads, dependent: :delete_all
   has_many :uploads, through: :post_uploads

@@ -43,13 +43,12 @@ class Bookmark < ActiveRecord::Base
           post_bookmarks.merge(topics.or(pms)).merge(Post.secured(guardian))
         )
       end,
-      search_query: lambda do |bookmarks, query, ts_query|
-        bookmarks
+      search_query: lambda do |bookmarks, query, ts_query, &blk|
+        blk.call(bookmarks
           .joins("LEFT JOIN post_search_data ON post_search_data.post_id = bookmarks.bookmarkable_id AND
-                 bookmarks.bookmarkable_type = 'Post'")
-          .where("#{ts_query} @@ post_search_data.search_data")
+                 bookmarks.bookmarkable_type = 'Post'"), "#{ts_query} @@ post_search_data.search_data")
       end,
-      preload_associations: [{ topic: :topic_users }]
+      preload_associations: [{ topic: [:topic_users, :tags] }, :user]
     )
     Bookmark.register_bookmarkable(
       model: Topic,
@@ -65,13 +64,13 @@ class Bookmark < ActiveRecord::Base
           .where(bookmarkable_type: "Topic")
         guardian.filter_allowed_categories(topic_bookmarks.merge(topics.or(pms)))
       end,
-      search_query: lambda do |bookmarks, query, ts_query|
-        bookmarks
+      search_query: lambda do |bookmarks, query, ts_query, &blk|
+        blk.call(
+          bookmarks
           .joins("LEFT JOIN posts ON posts.topic_id = topics.id AND posts.post_number = 1")
-          .joins("LEFT JOIN post_search_data ON post_search_data.post_id = posts.id")
-          .where("#{ts_query} @@ post_search_data.search_data")
+          .joins("LEFT JOIN post_search_data ON post_search_data.post_id = posts.id"), "#{ts_query} @@ post_search_data.search_data")
       end,
-      preload_associations: [:topic_users, :posts]
+      preload_associations: [:topic_users, :tags, { posts: :user }]
     )
   end
   reset_bookmarkables
