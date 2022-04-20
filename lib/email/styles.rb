@@ -238,7 +238,7 @@ module Email
 
       onebox_styles
       plugin_styles
-      dark_mode_styles if SiteSetting.dark_mode_emails_active
+      dark_mode_styles
 
       style('.post-excerpt img', "max-width: 50%; max-height: #{MAX_IMAGE_DIMENSION}px;")
 
