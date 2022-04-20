@@ -2778,6 +2778,7 @@ tr_TR:
       deleted_by_author_simple: "(gönderi yazarı tarafından silindi)"
       collapse: "daralt"
       sr_collapse_replies: "Gömülü yanıtları kapat"
+      sr_date: "Gönderi tarihi"
       sr_expand_replies:
         one: "Bu gönderide %{count} yanıt var. Genişletmek için tıklayın"
         other: "Bu gönderide %{count} yanıt var. Genişletmek için tıklayın"

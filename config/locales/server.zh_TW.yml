@@ -1190,7 +1190,6 @@ zh_TW:
     send_tl1_welcome_message: "向新使用者（信任級別1）發送歡迎消息。"
     suppress_reply_directly_below: "當貼文只有一個回覆時，不顯示貼文的回覆數量。"
     suppress_reply_directly_above: "當貼文只有一個回覆時，不顯示回覆到該帖的回覆。"
-    remove_full_quote: "直接引用將自動刪除內容的全部引號"
     suppress_reply_when_quoting: "當貼文引用回覆時，不顯示可展開的回覆到某帖的標記。"
     max_reply_history: "擴展回覆到某帖時顯示的最大回覆數量"
     topics_per_period_in_top_summary: "預設推薦話題的顯示數量"

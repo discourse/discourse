@@ -252,7 +252,7 @@ class OptimizedImage < ActiveRecord::Base
       -auto-orient
       -gravity north
       -background transparent
-      -#{thumbnail_or_resize} #{opts[:width]}
+      -#{thumbnail_or_resize} #{dimensions}^
       -crop #{dimensions}+0+0
       -unsharp 2x0.5+0.7+0
       -interlace none
@@ -290,7 +290,6 @@ class OptimizedImage < ActiveRecord::Base
   end
 
   def self.crop(from, to, width, height, opts = {})
-    opts[:width] = width
     optimize("crop", from, to, "#{width}x#{height}", opts)
   end
 

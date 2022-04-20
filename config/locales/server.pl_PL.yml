@@ -1651,7 +1651,6 @@ pl_PL:
     send_tl2_promotion_message: "Wyślij nowym użytkownikom poziomu zaufania 2 wiadomość o promocji."
     suppress_reply_directly_below: "Nie pokazuj rozwijanej liczby odpowiedzi przy wpisie, gdy jest tylko jedna odpowiedź bezpośrednio pod tym wpisem."
     suppress_reply_directly_above: "Nie pokazuj rozwijanego \"w odpowiedzi na\" przy wpisie, gdy jest tylko jedna odpowiedź bezpośrednio nad tym wpisem."
-    remove_full_quote: "Automatycznie usuwaj pełne cytaty z bezpośrednich odpowiedzi."
     suppress_reply_when_quoting: "Nie pokazuj rozwijanego \"w odpowiedzi na\" przy wpisie, gdy we wpisie zacytowano odpowiedź."
     max_reply_history: "Maksymalna liczba odpowiedzi, dla której \"w odpowiedzi na\" będzie się rozwijać."
     topics_per_period_in_top_summary: "Liczba tematów wyświetlanych w domyślnym podsumowaniu najbardziej popularnych tematów."
@@ -2442,6 +2441,10 @@ pl_PL:
     second_factor_toggle:
       totp: "Zamiast tego użyj aplikacji uwierzytelniającej lub klucza bezpieczeństwa"
       backup_code: "Zamiast tego użyj kodu zapasowego"
+  second_factor_auth:
+    actions:
+      discourse_connect_provider:
+        description: "%{hostname} poprosił Cię o potwierdzenie Twojego 2FA. Zostaniesz przekierowany z powrotem na stronę, gdy potwierdzisz swoją weryfikację dwuetapową."
   admin:
     email:
       sent_test: "wysłany!"
@@ -4412,7 +4415,7 @@ pl_PL:
       long_description: |
         Ta odznaka jest przyznawana, gdy masz co najmniej 20 polubionych wpisów i dałeś/łaś w zamian 10 lub więcej polubień. Gdy ktoś polubi twój wpis, znajdź czas, by polubić również wpisy innych użytkowników.
     gives_back:
-      name: Oddać
+      name: Daje coś od siebie
       description: Ma 100 polubionych wpisów i dał 100 polubień
       long_description: |
         Ta odznaka jest przyznawana, gdy masz co najmniej 100 polubionych wpisów i dałeś/łaś w zamian 100 lub więcej polubień. Dziękujemy za twoją aktywność!
@@ -4502,6 +4505,11 @@ pl_PL:
         few: 'Następujące tagi nie mogą być używane w kategorii "%{category}": %{tags}. Usuń je.'
         many: 'Następujące tagi nie mogą być używane w kategorii "%{category}": %{tags}. Usuń je.'
         other: 'Następujące tagi nie mogą być używane w kategorii "%{category}": %{tags}. Usuń je.'
+      category_does_not_allow_tags:
+        one: 'Kategoria "%{category}" nie pozwala na użycie tagu: "%{tags}". Proszę go usunąć.'
+        few: 'Kategoria "%{category}" nie pozwala na użycie tagów: "%{tags}". Proszę je usunąć.'
+        many: 'Kategoria "%{category}" nie pozwala na użycie tagów: "%{tags}". Proszę je usunąć.'
+        other: 'Kategoria "%{category}" nie pozwala na użycie tagów: "%{tags}". Proszę je usunąć.'
     required_tags_from_group:
       one: "Musisz dołączyć co najmniej %{count} %{tag_group_name} tag. Tagi w tej grupie to: %{tags}."
       few: "Musisz dołączyć co najmniej %{count} %{tag_group_name} tagi. Tagi w tej grupie to: %{tags}."

@@ -55,6 +55,8 @@ Discourse supports the **latest, stable releases** of all major browsers and pla
 | Microsoft Edge        |              |              |
 | Mozilla Firefox       |              |              |
 
+Additionally, we aim to support Safari on iOS 12.5+ until January 2023 (Discourse 3.0).
+
 ## Built With
 
 - [Ruby on Rails](https://github.com/rails/rails) &mdash; Our back end API is a Rails app. It responds to requests RESTfully in JSON.

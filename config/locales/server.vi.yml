@@ -103,6 +103,7 @@ vi:
         topic_closed_error: "Xảy ra khi trả lời đến từ chủ đề liên quan đã được đóng lại."
         bounced_email_error: "Email là một báo cáo email bị trả lại."
         screened_email_error: "Xảy ra khi địa chỉ email của người gửi đã được sàng lọc."
+    view_redacted_media: "Xem phương tiện"
   errors: &errors
     format: ! "%{attribute} %{message}"
     messages:
@@ -128,6 +129,8 @@ vi:
       not_an_integer: phải là một số nguyên
       odd: phải là số lẻ
       record_invalid: ! "Xác nhận thất bại: %{errors}"
+      emojis_disabled: "không thể có biểu tượng cảm xúc"
+      ip_address_already_screened: "đã được bao gồm trong một quy tắc hiện có"
       restrict_dependent_destroy:
         other: "Không thể xóa bản ghi bởi vì %{record} phụ thuộc tồn tại"
       too_long:
@@ -137,6 +140,7 @@ vi:
       wrong_length:
         other: độ dài không hợp lệ (nên đặt %{count} ký tự)
       other_than: "phải khác %{count}"
+      auth_overrides_username: "Tên người dùng cần được cập nhật ở phía nhà cung cấp xác thực, vì cài đặt `auth_overrides_username` được bật."
     template:
       body: ! "Đã có vấn đề với những trường sau:"
       header:
@@ -144,8 +148,13 @@ vi:
     embed:
       load_from_remote: "Đã xảy ra lỗi khi tải bài viết."
     site_settings:
+      invalid_category_id: "Bạn đã chỉ định một danh mục không tồn tại"
+      invalid_choice:
+        other: "Bạn đã chỉ định các lựa chọn không hợp lệ %{name}"
       default_categories_already_selected: "Bạn không thể chọn một danh mục được sử dụng trong danh sách khác."
+      default_tags_already_selected: "Bạn không thể chọn một thẻ được sử dụng trong danh sách khác."
       s3_upload_bucket_is_required: "Bạn không thể tải lên S3 mà chưa thiết lập 's3_upload_bucket'."
+      page_publishing_requirements: "Không thể bật xuất bản trang nếu phương tiện bảo mật được bật."
     onebox:
       invalid_address: "Xin lỗi, chúng tôi không thể tạo bản xem trước cho trang web này vì không thể tìm thấy máy chủ %{hostname}. Thay vì xem trước, chỉ một liên kết sẽ xuất hiện trong bài đăng của bạn :cry:"
       error_response: "Xin lỗi, chúng tôi không thể tạo bản xem trước cho trang web này vì máy chủ web trả về mã lỗi là %{status_code}. Thay vì xem trước, chỉ một liên kết sẽ xuất hiện trong bài đăng của bạn. :cry:"
@@ -940,6 +949,7 @@ vi:
     send_welcome_message: "Gửi tất cả các thành viên mới một thông điệp chào mừng kèm theo hướng dẫn nhanh."
     suppress_reply_directly_below: "Không hiện bộ đếm trả lời mở rộng cho bài viết chỉ có duy nhất một trả lời trực tiếp bên dưới bài viết này."
     suppress_reply_directly_above: "Không hiện trả lời mở rộng cho bài viết chỉ có duy nhất một trả lời trực tiếp bên trên bài viết này."
+    remove_full_quote: "Tự động xóa dấu ngoặc kép nếu (a) nó xuất hiện ở đầu bài đăng, (b) nó nằm trong toàn bộ bài đăng và (c) nó nằm ngay trước bài viết. Để biết chi tiết, hãy xem <a href='https://meta.discourse.org/t/removal-of-full-quotes-from-direct-replies/106857' target='_blank'>Xóa các trích dẫn đầy đủ khỏi các câu trả lời trực tiếp</a>"
     suppress_reply_when_quoting: "Không hiện trả lời mở rộng cho bài viết chỉ trích dẫn trả lời."
     max_reply_history: "Số tối đa trả lời được mở rộng khi trả lời mở rộng"
     topics_per_period_in_top_summary: "Số lượng chủ đề top hiển thị trong tóm tắt các chủ đề top theo mặc định."

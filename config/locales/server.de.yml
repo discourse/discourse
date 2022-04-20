@@ -1559,7 +1559,6 @@ de:
     send_tl2_promotion_message: "Sende neuen Benutzern der Vertrauensstufe 2 eine Nachricht über die Beförderung."
     suppress_reply_directly_below: "Zeige die erweiterbare Anzahl der Antworten auf einen Beitrag nicht, falls die einzige Antwort direkt darunter folgt."
     suppress_reply_directly_above: "Zeige das erweiterbare Element „In Antwort auf“ bei einem Beitrag nicht an, wenn es nur eine einzige Antwort direkt über diesem Beitrag gibt."
-    remove_full_quote: "Automatisch vollständige Zitate aus direkten Antworten entfernen."
     suppress_reply_when_quoting: "Zeige das erweiterbare Element „In Antwort auf“ bei einem Beitrag nicht an, wenn der Beitrag den beantworteten Beitrag zitiert."
     max_reply_history: "Maximale Anzahl an Antworten beim Ausklappen von „In Antwort auf“"
     topics_per_period_in_top_summary: "Anzahl der Themen, die in der Standard-Zusammenfassung der angesagten Themen angezeigt werden."
@@ -2093,6 +2092,8 @@ de:
     push_notifications_icon: "Das Abzeichensymbol, das in der Benachrichtigungsecke angezeigt wird. Ein monochromatisches PNG mit Transparenz (96 × 96) wird empfohlen."
     base_font: "Basisschriftart für die meisten Texte auf der Website. Themes können diese Schriftart mit der benutzerdefinierten CSS-Eigenschaft `--font-family` überschreiben."
     heading_font: "Schriftart für Überschriften auf der Website. Themes können diese Schriftart mit der benutzerdefinierten CSS-Eigenschaft `--heading-font-family` überschreiben."
+    enable_sitemap: "Generiere eine Sitemap für Deine Website und füge sie in die robots.txt-Datei ein."
+    sitemap_page_size: "Anzahl der URLs, die auf jeder Sitemap-Seite enthalten sein sollen. Max 50.000"
     short_title: "Der Kurztitel wird beim Benutzer auf dem Startbildschirm, im Startmenü oder an anderen Stellen mit begrenztem Platz verwendet. Er sollte auf 12 Zeichen begrenzt sein."
     dashboard_hidden_reports: "Erlaube das Ausblenden der angegebenen Berichte im Dashboard."
     dashboard_visible_tabs: "Wähle aus, welche Dashboard-Registerkarten sichtbar sind."
@@ -2153,6 +2154,7 @@ de:
         leading_trailing_slash: "Der reguläre Ausdruck darf nicht mit einem Schrägstrich beginnen und enden."
       unicode_usernames_avatars: "Die internen System-Avatare unterstützen keine Unicode-Benutzernamen."
       list_value_count: "Die Liste muss genau %{count} Werte enthalten."
+      markdown_linkify_tlds: "Du kannst den Wert „*“ nicht angeben."
       google_oauth2_hd_groups: "Vor Aktivierung dieser Einstellung musst zuerst \"google oauth2 hd\" eingeschaltet werden."
       search_tokenize_chinese_enabled: "Du musst „search_tokenize_chinese“ deaktivieren, bevor du diese Einstellung aktivierst."
       search_tokenize_japanese_enabled: "Du musst „search_tokenize_japanese“ deaktivieren, bevor du diese Einstellung aktivierst."
@@ -2324,6 +2326,8 @@ de:
     actions:
       grant_admin:
         description: "Für zusätzliche Sicherheitsmaßnahmen musst Di Deine 2FA bestätigen, bevor %{username} Administratorzugriff gewährt wird."
+      discourse_connect_provider:
+        description: "%{hostname} hat Dich aufgefordert, Deine 2FA zu bestätigen. Du wirst zur Website zurückgeleitet, sobald Du Deine 2FA bestätigt hast."
   admin:
     email:
       sent_test: "gesendet!"

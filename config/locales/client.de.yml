@@ -354,6 +354,7 @@ de:
     saved: "Gespeichert!"
     upload: "Hochladen"
     uploading: "Wird hochgeladen …"
+    processing: "Verarbeitung..."
     uploading_filename: "Wird hochgeladen: %{filename} …"
     processing_filename: "Wird verarbeitet: %{filename} …"
     clipboard: "Zwischenablage"
@@ -1782,8 +1783,12 @@ de:
       not_approved: "Dein Benutzerkonto wurde noch nicht genehmigt. Du wirst per E-Mail benachrichtigt, sobald du dich anmelden kannst."
       google_oauth2:
         name: "Google"
+        title: "Mit Google anmelden"
+        sr_title: "Mit Google anmelden"
       twitter:
         name: "Twitter"
+        title: "Mit Twitter anmelden"
+        sr_title: "Mit Twitter anmelden"
       instagram:
         name: "Instagram"
         title: "Mit Instagram anmelden"
@@ -2797,6 +2802,7 @@ de:
       deleted_by_author_simple: "(Beitrag vom Verfasser gelöscht)"
       collapse: "zuklappen"
       sr_collapse_replies: "Eingebettete Antworten einklappen"
+      sr_date: "Beitragsdatum"
       sr_expand_replies:
         one: "Dieser Beitrag hat %{count} Antwort. Zum Erweitern klicken"
         other: "Dieser Beitrag hat %{count} Antworten. Zum Erweitern klicken"
@@ -3035,7 +3041,10 @@ de:
       manage_tag_groups_link: "Schlagwortgruppen verwalten"
       allow_global_tags_label: "Erlaube auch andere Schlagwörter."
       required_tag_group:
+        description: "Neue Themen müssen Schlagwörter aus Schlagwortgruppen haben:"
         delete: "Löschen"
+        add: "Erforderliche Schlagwort-Gruppe hinzufügen"
+        placeholder: "Schlagwort-Gruppe auswählen..."
       topic_featured_link_allowed: "Erlaube hervorgehobene Links in dieser Kategorie"
       delete: "Kategorie löschen"
       create: "Neue Kategorie"
