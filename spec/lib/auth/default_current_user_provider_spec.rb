@@ -738,4 +738,22 @@ describe Auth::DefaultCurrentUserProvider do
     env = { "HTTP_COOKIE" => "_t=#{cookie}", "REMOTE_ADDR" => ip }
     expect(provider('/', env).current_user).to eq(nil)
   end
+
+  it "copes with json-serialized auth cookies" do
+    # We're switching to :json during the Rails 7 upgrade, but we want a clean revert path
+    # back to Rails 6 if needed
+
+    @provider = provider('/', { # The upcoming default
+      ActionDispatch::Cookies::COOKIES_SERIALIZER => :json,
+      method: "GET",
+    })
+    @provider.log_on_user(user, {}, @provider.cookie_jar)
+    cookie = @provider.cookie_jar["_t"]
+
+    ip = "10.0.0.1"
+    env = { "HTTP_COOKIE" => "_t=#{cookie}", "REMOTE_ADDR" => ip }
+    provider2 = provider('/', env)
+    expect(provider2.current_user).to eq(user)
+    expect(provider2.cookie_jar.encrypted["_t"].keys).to include("user_id", "token") # (strings)
+  end
 end
