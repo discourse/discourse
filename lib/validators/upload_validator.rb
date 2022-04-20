@@ -33,6 +33,8 @@ class UploadValidator < ActiveModel::Validator
       return true
     end
 
+    return true if changing_upload_security?(upload)
+
     if is_authorized?(upload, extension)
       if FileHelper.is_supported_image?(upload.original_filename)
         authorized_image_extension(upload, extension)
@@ -42,6 +44,16 @@ class UploadValidator < ActiveModel::Validator
         maximum_attachment_file_size(upload)
       end
     end
+  end
+
+  # this should only be run on existing records, and covers cases of
+  # upload.update_secure_status being run outside of the creation flow,
+  # where some cases e.g. have exemptions on the extension enforcement
+  def changing_upload_security?(upload)
+    !upload.new_record? && \
+      upload.changed_attributes.keys.all? do |attribute|
+        %w(secure security_last_changed_at security_last_changed_reason).include?(attribute)
+      end
   end
 
   def is_authorized?(upload, extension)
