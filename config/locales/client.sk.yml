@@ -1220,16 +1220,8 @@ sk:
       not_approved: "Váš účet zatiaľ nebol schválený. Ak bude pripravený na prihlásenie, dostanete upozorňujúci email."
       google_oauth2:
         name: "Google"
-        title: "pomocou Google"
       twitter:
         name: "Twitter"
-        title: "pomocou Twitter účtu"
-      instagram:
-        title: "so službou Instagram"
-      facebook:
-        title: "pomocou stránky Facebook"
-      github:
-        title: "pomocou GitHub"
       discord:
         name: "Discord"
     invites:
@@ -1864,6 +1856,8 @@ sk:
       tags: "Štítky"
       tags_placeholder: "(Voliteľné) zoznam povolených štítkov"
       tag_groups_placeholder: "(Voliteľné) zoznam povolených skupín štítkov"
+      required_tag_group:
+        delete: "Odstrániť"
       delete: "Odstrániť kategóriu"
       create: "Nová kategória"
       create_long: "Vytvoriť novú kategóriu"

@@ -1440,19 +1440,14 @@ cs:
       not_approved: "Váš účet zatím nebyl schválen. Až se tak stane, obdržíte oznámení emailem a budete se moci přihlásit."
       google_oauth2:
         name: "Google"
-        title: "přes Google"
       twitter:
         name: "Twitter"
-        title: "přes Twitter"
       instagram:
         name: "Instagram"
-        title: "s Instagramem"
       facebook:
         name: "Facebook"
-        title: "přes Facebook"
       github:
         name: "GitHub"
-        title: "přes GitHub"
       discord:
         name: "Discord"
     invites:
@@ -2332,6 +2327,8 @@ cs:
       tags: "Štítky"
       tags_placeholder: "(Volitelné) seznam dovolených štítků"
       tag_groups_placeholder: "(Volitelné) seznam dovolených skupin štítků"
+      required_tag_group:
+        delete: "Smazat"
       topic_featured_link_allowed: "Povolit zobrazené odkazy v této kategorii"
       delete: "Smazat kategorii"
       create: "Nová kategorie"

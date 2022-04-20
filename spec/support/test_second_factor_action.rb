@@ -6,7 +6,7 @@ class TestSecondFactorAction < SecondFactor::Actions::Base
 
   def second_factor_auth_required!(params)
     {
-      redirect_path: params[:redirect_path],
+      redirect_url: params[:redirect_url],
       callback_params: {
         saved_param_1: params[:saved_param_1],
         saved_param_2: params[:saved_param_2]

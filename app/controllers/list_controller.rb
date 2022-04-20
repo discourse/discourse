@@ -245,8 +245,8 @@ class ListController < ApplicationController
     ensure_can_see_profile!(target_user)
 
     @title = "#{SiteSetting.title} - #{I18n.t("rss_description.user_topics", username: target_user.username)}"
-    @link = "#{Discourse.base_url}/u/#{target_user.username}/activity/topics"
-    @atom_link = "#{Discourse.base_url}/u/#{target_user.username}/activity/topics.rss"
+    @link = "#{target_user.full_url}/activity/topics"
+    @atom_link = "#{target_user.full_url}/activity/topics.rss"
     @description = I18n.t("rss_description.user_topics", username: target_user.username)
 
     @topic_list = TopicQuery

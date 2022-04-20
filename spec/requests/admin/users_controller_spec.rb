@@ -384,7 +384,7 @@ RSpec.describe Admin::UsersController do
     it 'asks the acting admin for second factor if it is enabled' do
       Fabricate(:user_second_factor_totp, user: admin)
 
-      put "/admin/users/#{another_user.id}/grant_admin.json"
+      put "/admin/users/#{another_user.id}/grant_admin.json", xhr: true
 
       expect(response.parsed_body["second_factor_challenge_nonce"]).to be_present
       expect(another_user.reload.admin).to eq(false)
@@ -393,7 +393,7 @@ RSpec.describe Admin::UsersController do
     it 'grants admin if second factor is correct' do
       user_second_factor = Fabricate(:user_second_factor_totp, user: admin)
 
-      put "/admin/users/#{another_user.id}/grant_admin.json"
+      put "/admin/users/#{another_user.id}/grant_admin.json", xhr: true
       nonce = response.parsed_body["second_factor_challenge_nonce"]
       expect(nonce).to be_present
       expect(another_user.reload.admin).to eq(false)
@@ -408,7 +408,7 @@ RSpec.describe Admin::UsersController do
       expect(res["ok"]).to eq(true)
       expect(res["callback_method"]).to eq("PUT")
       expect(res["callback_path"]).to eq("/admin/users/#{another_user.id}/grant_admin.json")
-      expect(res["redirect_path"]).to eq("/admin/users/#{another_user.id}/#{another_user.username}")
+      expect(res["redirect_url"]).to eq("/admin/users/#{another_user.id}/#{another_user.username}")
       expect(another_user.reload.admin).to eq(false)
 
       put res["callback_path"], params: {
@@ -421,7 +421,7 @@ RSpec.describe Admin::UsersController do
     it 'does not grant admin if second factor auth is not successful' do
       user_second_factor = Fabricate(:user_second_factor_totp, user: admin)
 
-      put "/admin/users/#{another_user.id}/grant_admin.json"
+      put "/admin/users/#{another_user.id}/grant_admin.json", xhr: true
       nonce = response.parsed_body["second_factor_challenge_nonce"]
       expect(nonce).to be_present
       expect(another_user.reload.admin).to eq(false)
@@ -446,7 +446,7 @@ RSpec.describe Admin::UsersController do
     it 'does not grant admin if the acting admin loses permission in the middle of the process' do
       user_second_factor = Fabricate(:user_second_factor_totp, user: admin)
 
-      put "/admin/users/#{another_user.id}/grant_admin.json"
+      put "/admin/users/#{another_user.id}/grant_admin.json", xhr: true
       nonce = response.parsed_body["second_factor_challenge_nonce"]
       expect(nonce).to be_present
       expect(another_user.reload.admin).to eq(false)
@@ -461,7 +461,7 @@ RSpec.describe Admin::UsersController do
       expect(res["ok"]).to eq(true)
       expect(res["callback_method"]).to eq("PUT")
       expect(res["callback_path"]).to eq("/admin/users/#{another_user.id}/grant_admin.json")
-      expect(res["redirect_path"]).to eq("/admin/users/#{another_user.id}/#{another_user.username}")
+      expect(res["redirect_url"]).to eq("/admin/users/#{another_user.id}/#{another_user.username}")
       expect(another_user.reload.admin).to eq(false)
 
       admin.update!(admin: false)
@@ -476,7 +476,7 @@ RSpec.describe Admin::UsersController do
       Fabricate(:user_second_factor_totp, user: admin)
       Fabricate(:user_second_factor_backup, user: admin)
 
-      put "/admin/users/#{another_user.id}/grant_admin.json"
+      put "/admin/users/#{another_user.id}/grant_admin.json", xhr: true
       nonce = response.parsed_body["second_factor_challenge_nonce"]
       expect(nonce).to be_present
       expect(another_user.reload.admin).to eq(false)

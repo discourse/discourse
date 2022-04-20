@@ -1266,19 +1266,14 @@ et:
       not_approved: "Kontot pole veel kinnitatud. Teid teavitatakse e-post teel, kui sisselogimine on võimaldatud."
       google_oauth2:
         name: "Google"
-        title: "Google abil"
       twitter:
         name: "Twitter"
-        title: "Twitteri abil"
       instagram:
         name: "Instagram"
-        title: "Instagram'iga"
       facebook:
         name: "Facebook"
-        title: "Facebooki abil"
       github:
         name: "GitHub"
-        title: "GitHub abil"
     invites:
       accept_title: "Kutse"
       welcome_to: "Tere tulemast lehele %{site_name}!"
@@ -2099,6 +2094,8 @@ et:
       tags: "Sildid"
       tags_placeholder: "(Valikuline) loetelu lubatud silte"
       tag_groups_placeholder: "(Valikuline) loetelu lubatud siltide gruppe"
+      required_tag_group:
+        delete: "Kustuta"
       topic_featured_link_allowed: "Luba selles foorumis esiletõstetud linke "
       delete: "Kustuta foorum"
       create: "Uus foorum"

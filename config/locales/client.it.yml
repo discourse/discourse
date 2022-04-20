@@ -302,7 +302,11 @@ it:
       list_permission_denied: "Non sei autorizzato a visualizzare i segnalibri di questo utente."
       no_user_bookmarks: "Non hai nessun messaggio nei Segnalibri. I Segnalibri ti permettono di fare riferimento rapidamente a specifici messaggi."
       auto_delete_preference:
+        label: "Dopo aver ricevuto una notifica"
+        never: "Mantieni segnalibro"
         when_reminder_sent: "Cancella segnalibro"
+        on_owner_reply: "Elimina il segnalibro, una volta che ho risposto"
+        clear_reminder: "Mantieni il segnalibro e cancella il promemoria"
       search_placeholder: "Cerca nei segnalibri per nome, titolo dell'argomento o contenuto del messaggio"
       search: "Cerca"
       reminders:
@@ -350,6 +354,7 @@ it:
     saved: "Salvato!"
     upload: "Carica"
     uploading: "In caricamento..."
+    processing: "Elaborazione..."
     uploading_filename: "In caricamento: %{filename}..."
     processing_filename: "In elaborazione: %{filename}..."
     clipboard: "appunti"
@@ -1776,27 +1781,27 @@ it:
       not_approved: "Il tuo account non è ancora stato approvato. Verrai avvertito via email quando potrai collegarti."
       google_oauth2:
         name: "Google"
-        title: "con Google"
+        title: "Accedi con Google"
         sr_title: "Accedi con Google"
       twitter:
         name: "Twitter"
-        title: "con Twitter"
+        title: "Accedi con Twitter"
         sr_title: "Accedi con Twitter"
       instagram:
         name: "Instagram"
-        title: "con Instagram"
+        title: "Accedi con Instagram"
         sr_title: "Accedi con Instagram"
       facebook:
         name: "Facebook"
-        title: "con Facebook"
+        title: "Accedi con Facebook"
         sr_title: "Accedi con Facebook"
       github:
         name: "GitHub"
-        title: "con GitHub"
+        title: "Accedi con GitHub"
         sr_title: "Accedi con GitHub"
       discord:
         name: "Discord"
-        title: "con Discord"
+        title: "Accedi con Discord"
         sr_title: "Accedi con Discord"
       second_factor_toggle:
         totp: "Utilizzare un'app di autenticazione"
@@ -2792,6 +2797,7 @@ it:
       deleted_by_author_simple: "(messaggio eliminato dall'autore)"
       collapse: "comprimi"
       sr_collapse_replies: "Comprimi risposte incorporate"
+      sr_date: "Data di pubblicazione"
       expand_collapse: "espandi/comprimi"
       sr_below_embedded_posts_description: "risposte al messaggio n°%{post_number}"
       sr_embedded_reply_description: "risposta da @%{username} al messaggio n°%{post_number}"
@@ -2983,6 +2989,9 @@ it:
           edit_bookmark:
             name: "Modifica Segnalibro"
             description: "Modifica il nome del segnalibro o modifica la data e l'ora del promemoria"
+          clear_bookmark_reminder:
+            name: "Cancella promemoria"
+            description: "Cancella la data e l'ora del promemoria"
           pin_bookmark:
             name: "Blocca il segnalibro"
             description: "Blocca il segnalibro. Questo lo farà apparire in cima all'elenco dei segnalibri."
@@ -3017,10 +3026,11 @@ it:
       tag_groups_placeholder: "Elenco (opzionale) dei gruppi di etichette permessi"
       manage_tag_groups_link: "Gestisci gruppi di etichette"
       allow_global_tags_label: "Consenti anche ulteriori Etichette"
-      tag_group_selector_placeholder: "(Facoltativo) Gruppo di Etichette"
-      required_tag_group_description: "Rendi obbligatorio per i nuovi argomenti avere un'Etichetta da un Gruppo di Etichette:"
-      min_tags_from_required_group_label: "Numero Etichette:"
-      required_tag_group_label: "Gruppo di Etichette:"
+      required_tag_group:
+        description: "Richiedi che i nuovi argomenti abbiano etichette dai seguenti gruppi:"
+        delete: "Cancella"
+        add: "Aggiungi il gruppo di etichette richiesto"
+        placeholder: "seleziona il gruppo di etichette"
       topic_featured_link_allowed: "Consenti collegamenti in primo piano in questa categoria"
       delete: "Elimina Categoria"
       create: "Crea Categoria"
@@ -3351,6 +3361,7 @@ it:
       readonly: "Visualizza"
     lightbox:
       download: "scarica"
+      open: "immagine originale"
       previous: "Precedente (tasto freccia a sinistra)"
       next: "Successivo (tasto freccia a destra)"
       counter: "%curr% di %total%"

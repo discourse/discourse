@@ -416,6 +416,7 @@ ru:
     saved: "Сохранено!"
     upload: "Загрузить"
     uploading: "Загрузка..."
+    processing: "Обработка..."
     uploading_filename: "Загрузка %{filename}"
     processing_filename: "Обработка: %{filename}..."
     clipboard: "буфер обмена"
@@ -1524,7 +1525,7 @@ ru:
         never: "Никогда"
       email_messages_level: "Написать мне письмо, когда я отправляю личное сообщение"
       include_tl0_in_digests: "Включать в сводку контент от новых пользователей"
-      email_in_reply_to: "Включить в электронное письмо выдержку из ответов на сообщение"
+      email_in_reply_to: "Включать в электронное письмо выдержку из ответов на сообщение"
       other_settings: "Прочее"
       categories_settings: "Разделы"
       new_topic_duration:
@@ -1916,27 +1917,27 @@ ru:
       not_approved: "Ваша учётная запись ещё не прошла проверку. После успешной проверки мы отправим вам письмо с уведомлением, и вы сможете войти в свою учётную запись."
       google_oauth2:
         name: "Google"
-        title: "Google"
+        title: "Войти через Google"
         sr_title: "Войти через Google"
       twitter:
         name: "Twitter"
-        title: "Twitter"
+        title: "Войти через Twitter"
         sr_title: "Войти через Twitter"
       instagram:
         name: "Instagram"
-        title: "Instagram"
+        title: "Войти через Instagram"
         sr_title: "Войти через Instagram"
       facebook:
         name: "Facebook"
-        title: "Facebook"
+        title: "Войти через Facebook"
         sr_title: "Войти через Facebook"
       github:
         name: "GitHub"
-        title: "GitHub"
+        title: "Войти через GitHub"
         sr_title: "Войти через GitHub"
       discord:
         name: "Discord"
-        title: "Discord"
+        title: "Войти через Discord"
         sr_title: "Войти через Discord"
       second_factor_toggle:
         totp: "Вместо этого используйте приложение для проверки подлинности"
@@ -3033,6 +3034,7 @@ ru:
       deleted_by_author_simple: "(сообщение удалено автором)"
       collapse: "Свернуть"
       sr_collapse_replies: "Свернуть ответы на сообщение"
+      sr_date: "Дата сообщения"
       sr_expand_replies:
         one: "На это сообщение есть %{count} ответ. Нажмите для просмотра."
         few: "На это сообщение есть %{count} ответа. Нажмите для просмотра."
@@ -3308,10 +3310,11 @@ ru:
       tag_groups_placeholder: "(Необязат.) Доступные группы тегов"
       manage_tag_groups_link: "Управление группами тегов"
       allow_global_tags_label: "Также разрешить другие теги"
-      tag_group_selector_placeholder: "(Необязат.) Группа тегов"
-      required_tag_group_description: "Требовать, чтобы новые темы имели теги из группы тегов:"
-      min_tags_from_required_group_label: "Номер тега:"
-      required_tag_group_label: "Группа тегов:"
+      required_tag_group:
+        description: "Требовать, чтобы новые темы имели теги из группы тегов:"
+        delete: "Удалить"
+        add: "Добавить необходимую группу тегов"
+        placeholder: "Выберите группу тегов..."
       topic_featured_link_allowed: "Разрешить избранные ссылки в этом разделе"
       delete: "Удалить раздел"
       create: "Создать раздел"

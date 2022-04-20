@@ -1681,7 +1681,9 @@ en:
         title: "Summary"
         stats: "Stats"
         time_read: "read time"
+        time_read_title: "%{duration} (all time)"
         recent_time_read: "recent read time"
+        recent_time_read_title: "%{duration} (in the last 60 days)"
         topic_count:
           one: "topic created"
           other: "topics created"
@@ -3066,6 +3068,7 @@ en:
       deleted_by_author_simple: "(post deleted by author)"
       collapse: "collapse"
       sr_collapse_replies: "Collapse embedded replies"
+      sr_date: "Post date"
       sr_expand_replies:
         one: "This post has %{count} reply. Click to expand"
         other: "This post has %{count} replies. Click to expand"

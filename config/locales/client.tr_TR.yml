@@ -352,6 +352,7 @@ tr_TR:
     saved: "Kaydedildi!"
     upload: "Yükle"
     uploading: "Yükleniyor..."
+    processing: "İşleniyor..."
     uploading_filename: "Yükleniyor: %{filename}..."
     processing_filename: "İşleniyor: %{filename}..."
     clipboard: "pano"
@@ -1772,27 +1773,27 @@ tr_TR:
       not_approved: "Hesabın henüz onaylanmış değil. Onaylandığında e--posta ile bilgilendirileceksin."
       google_oauth2:
         name: "Google"
-        title: "Google ile"
+        title: "Google ile giriş yapın"
         sr_title: "Google ile giriş yapın"
       twitter:
         name: "Twitter"
-        title: "Twitter ile"
+        title: "Twitter ile giriş yapın"
         sr_title: "Twitter ile giriş yapın"
       instagram:
         name: "Instagram"
-        title: "Instagram ile"
+        title: "Instagram ile giriş yapın"
         sr_title: "Instagram ile giriş yapın"
       facebook:
         name: "Facebook"
-        title: "Facebook ile"
+        title: "Facebook ile giriş yapın"
         sr_title: "Facebook ile giriş yapın"
       github:
         name: "GitHub"
-        title: "GitHub ile"
+        title: "GitHub ile Giriş Yapın"
         sr_title: "GitHub ile Giriş Yapın"
       discord:
         name: "Discord"
-        title: "Discord ile"
+        title: "Discord ile Giriş Yapın"
         sr_title: "Discord ile Giriş Yapın"
       second_factor_toggle:
         totp: "Bunun yerine bir doğrulama uygulaması kullanın"
@@ -2777,6 +2778,7 @@ tr_TR:
       deleted_by_author_simple: "(gönderi yazarı tarafından silindi)"
       collapse: "daralt"
       sr_collapse_replies: "Gömülü yanıtları kapat"
+      sr_date: "Gönderi tarihi"
       sr_expand_replies:
         one: "Bu gönderide %{count} yanıt var. Genişletmek için tıklayın"
         other: "Bu gönderide %{count} yanıt var. Genişletmek için tıklayın"
@@ -3011,10 +3013,11 @@ tr_TR:
       tag_groups_placeholder: "(Seçmeli) izin verilen etiket gruplarının listesi"
       manage_tag_groups_link: "Etiket gruplarını yönetin"
       allow_global_tags_label: "Diğer etiketlere de izin ver"
-      tag_group_selector_placeholder: "(Opsiyonel) Etiket grubu"
-      required_tag_group_description: "Bir etiket grubundaki etiketleresahip olmak için için yeni konular gerekiyor:"
-      min_tags_from_required_group_label: "Etiketler:"
-      required_tag_group_label: "Etiket grubu:"
+      required_tag_group:
+        description: "Yeni konuların etiket gruplarından bir etiket bulundurmasını zorunlu yap"
+        delete: "Sil"
+        add: "Zorunlu etiket grubu ekle"
+        placeholder: "bir etiket grubu seçin..."
       topic_featured_link_allowed: "Bu kategoride özellikli bağlantılara izin ver"
       delete: "Kategoriyi Sil"
       create: "Yeni Kategori"

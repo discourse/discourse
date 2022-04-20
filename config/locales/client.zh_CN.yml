@@ -98,6 +98,7 @@ zh_CN:
       to_placeholder: "截至日期"
     share:
       topic_html: '话题：<span class="topic-title">%{topicTitle}</span>'
+      post: "%{username} 发布帖子 %{postNumber}"
       close: "关闭"
       twitter: "分享到 Twitter"
       facebook: "分享到 Facebook"
@@ -322,6 +323,7 @@ zh_CN:
     saved: "已保存！"
     upload: "上传"
     uploading: "正在上传…"
+    processing: "正在处理..."
     uploading_filename: "正在上传：%{filename}…"
     processing_filename: "正在处理：%{filename}…"
     clipboard: "剪贴板"
@@ -1102,6 +1104,8 @@ zh_CN:
         warnings: "官方警告"
         read_more_in_group: "想阅读更多？浏览%{groupLink}或中的其他话题。"
         read_more: "想阅读更多内容？ 请在 <a href='%{basePath}/u/%{username}/messages/personal'>个人私信</a>中浏览其他消息。"
+        read_more_group_pm_MF: "还有{ UNREAD, plural, =0 {} other { <a href='{basePath}/unread'># 个未读</a>} }{ NEW, plural, =0 {} other {{BOTH, select, true{和} false {} other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># 个新</a>消息} }，或者浏览{groupLink}的其他消息"
+        read_more_personal_pm_MF: "还有{ UNREAD, plural, =0 {} other { <a href='{basePath}/u/{username}/messages/unread'># 个未读</a>} }{ NEW, plural, =0 {} other {{BOTH, select, true{和} false {} other{}} <a href='{basePath}/u/{username}/messages/new'># 个新</a>消息} }，或者浏览<a href='{basePath}/u/{username}/messages'>个人消息</a>"
       preferences_nav:
         account: "帐户"
         security: "安全性"
@@ -1711,27 +1715,27 @@ zh_CN:
       not_approved: "您的帐户尚未获得批准。一旦可以登录，您会收到电子邮件通知。"
       google_oauth2:
         name: "Google"
-        title: "通过 Google"
-        sr_title: "使用谷歌登录"
+        title: "使用 Google 登录"
+        sr_title: "使用 Google 登录"
       twitter:
         name: "Twitter"
-        title: "通过 Twitter"
-        sr_title: "使用推特登录"
+        title: "使用 Twitter 登录"
+        sr_title: "使用 Twitter 登录"
       instagram:
         name: "Instagram"
-        title: "通过 Instagram"
+        title: "使用 Instagram 登录"
         sr_title: "使用 Instagram 登录"
       facebook:
         name: "Facebook"
-        title: "通过 Facebook"
+        title: "用脸书登入"
         sr_title: "用脸书登入"
       github:
         name: "GitHub"
-        title: "通过 GitHub"
+        title: "使用 GitHub 登录"
         sr_title: "使用 GitHub 登录"
       discord:
         name: "Discord"
-        title: "通过 Discord"
+        title: "使用 Discord 登录"
         sr_title: "使用 Discord 登录"
       second_factor_toggle:
         totp: "改用身份验证器应用"
@@ -2680,7 +2684,13 @@ zh_CN:
       show_hidden: "查看已忽略的内容。"
       deleted_by_author_simple: "（帖子已被作者删除）"
       collapse: "收起"
+      sr_collapse_replies: "折叠嵌入回复"
+      sr_date: "发布日期"
+      sr_expand_replies:
+        other: "这个帖子有 %{count} 个回复。点击展开"
       expand_collapse: "展开/收起"
+      sr_below_embedded_posts_description: "帖子#%{post_number} 回复"
+      sr_embedded_reply_description: "@%{username} 回复帖子 #%{post_number}"
       locked: "一名管理人员已将此帖子锁定为无法编辑"
       gap:
         other: "查看 %{count} 个隐藏回复"
@@ -2697,6 +2707,10 @@ zh_CN:
       has_likes_title_only_you: "您赞了此帖子"
       has_likes_title_you:
         other: "您和其他 %{count} 人赞了此帖子"
+      sr_post_like_count_button:
+        other: "%{count} 人点赞这个帖子。点击查看"
+      sr_post_read_count_button:
+        other: "%{count} 人阅读过这个帖子。点击查看"
       filtered_replies_hint:
         other: "查看此帖子及其 %{count} 个回复"
       filtered_replies_viewing:
@@ -2788,6 +2802,8 @@ zh_CN:
             other: "还有其他 %{count} 人赞了此帖子"
           read_capped:
             other: "还有其他 %{count} 人阅读了此帖子"
+          sr_post_likers_list_description: "喜欢这个帖子的用户"
+          sr_post_readers_list_description: "阅读此帖的用户"
         by_you:
           off_topic: "您将此帖子举报为偏离话题"
           spam: "您将此帖子举报为垃圾信息"
@@ -2888,10 +2904,11 @@ zh_CN:
       tag_groups_placeholder: "（可选）允许的标签组列表"
       manage_tag_groups_link: "管理标签组"
       allow_global_tags_label: "也允许其他标签"
-      tag_group_selector_placeholder: "（可选）标签组"
-      required_tag_group_description: "要求新话题包含标签组中的标签："
-      min_tags_from_required_group_label: "标签数量："
-      required_tag_group_label: "标签组："
+      required_tag_group:
+        description: "新主题要求必须有来自标签组的标签。"
+        delete: "删除"
+        add: "添加必需的标签组"
+        placeholder: "选择标签组..."
       topic_featured_link_allowed: "在此类别中允许精选链接"
       delete: "删除类别"
       create: "新建类别"
@@ -3493,6 +3510,7 @@ zh_CN:
       unsupported_file_picked: "您选择了不受支持的文件。支持的文件类型 – %{types}。"
     user_activity:
       no_activity_title: "尚无活动"
+      no_activity_body: "欢迎来到我们的社区！作为新人，你还未参与过讨论。第一步，请访问 <a href='%{topUrl}'>置顶</a>内容 或 <a href='%{categoriesUrl}'>分类</a> 并开始阅读！在你喜欢或想了解更多的帖子上选择 %{heartIcon} 。当你参与时，你的活动将被列在这里。"
       no_activity_others: "无活动。"
       no_replies_title: "您还没有回复任何话题"
       no_replies_others: "无回复。"

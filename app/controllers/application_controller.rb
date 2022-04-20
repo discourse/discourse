@@ -251,9 +251,13 @@ class ApplicationController < ActionController::Base
   end
 
   rescue_from SecondFactor::AuthManager::SecondFactorRequired do |e|
-    render json: {
-      second_factor_challenge_nonce: e.nonce
-    }, status: 403
+    if request.xhr?
+      render json: {
+        second_factor_challenge_nonce: e.nonce
+      }, status: 403
+    else
+      redirect_to session_2fa_path(nonce: e.nonce)
+    end
   end
 
   rescue_from SecondFactor::BadChallenge do |e|
@@ -482,6 +486,11 @@ class ApplicationController < ActionController::Base
   end
 
   def guardian
+    # sometimes we log on a user in the middle of a request so we should throw
+    # away the cached guardian instance when we do that
+    if (@guardian&.user).blank? && current_user.present?
+      @guardian = Guardian.new(current_user, request)
+    end
     @guardian ||= Guardian.new(current_user, request)
   end
 
@@ -978,13 +987,15 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def run_second_factor!(action_class)
-    action = action_class.new(guardian)
+  def run_second_factor!(action_class, action_data = nil)
+    action = action_class.new(guardian, request, action_data)
     manager = SecondFactor::AuthManager.new(guardian, action)
     yield(manager) if block_given?
     result = manager.run!(request, params, secure_session)
 
-    if !result.no_second_factors_enabled? && !result.second_factor_auth_completed?
+    if !result.no_second_factors_enabled? &&
+      !result.second_factor_auth_completed? &&
+      !result.second_factor_auth_skipped?
       # should never happen, but I want to know if somehow it does! (osama)
       raise "2fa process ended up in a bad state!"
     end

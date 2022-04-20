@@ -556,17 +556,12 @@ class UserNotifications < ActionMailer::Base
       participant_list = []
 
       post.topic.allowed_groups.each do |g|
-        participant_list.push "[#{g.name} (#{g.users.count})](#{Discourse.base_url}/groups/#{g.name})"
+        participant_list.push "[#{g.name} (#{g.users.count})](#{g.full_url})"
       end
 
       post.topic.allowed_users.each do |u|
         next if u.id == user.id
-
-        if SiteSetting.prioritize_username_in_ux?
-          participant_list.push "[#{u.username}](#{Discourse.base_url}/u/#{u.username_lower})"
-        else
-          participant_list.push "[#{u.name.blank? ? u.username : u.name}](#{Discourse.base_url}/u/#{u.username_lower})"
-        end
+        participant_list.push "[#{u.display_name}](#{u.full_url})"
       end
 
       participants += participant_list.join(", ")

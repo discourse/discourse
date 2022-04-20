@@ -35,6 +35,13 @@ html.discourse-no-touch {
   .btn-flat.delete.d-hover {
     background: var(--danger);
   }
+  .menu-links-header {
+    .btn-icon:hover {
+      .d-icon {
+        color: var(--primary);
+      }
+    }
+  }
 }
 
 html {

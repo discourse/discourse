@@ -1302,7 +1302,6 @@ ca:
     send_tl1_welcome_message: "Envieu als nous usuaris de nivell de confiança 1 un missatge de benvinguda."
     suppress_reply_directly_below: "No mostris el recompte de respostes desplegable en una publicació quan només hi hagi una resposta directa sota la publicació."
     suppress_reply_directly_above: "No mostris el desplegable \"en resposta a\" en una publicació quan només hi hagi una resposta directa per damunt d'aquesta publicació."
-    remove_full_quote: "Elimina automàticament les citacions completes en les respostes directes."
     suppress_reply_when_quoting: "No mostris el desplegable \"en resposta a\" en una publicació quan la publicació cita una resposta."
     max_reply_history: "Nombre màxim de respostes que cal expandir quan s'expandeix \"en resposta a\""
     topics_per_period_in_top_summary: "Nombre de temes principals en el resum per defecte de temes principals."

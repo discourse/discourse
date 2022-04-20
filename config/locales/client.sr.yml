@@ -1035,14 +1035,8 @@ sr:
       sent_activation_email_again: "Poslali smo vam drugi aktivacijski e-mail na: <b>%{currentEmail}</b>. Možda zatreba par minuta da stigne; svakako proverite nepoželjnu poštu."
       google_oauth2:
         name: "Google"
-        title: "pomoću Google-a"
       twitter:
         name: "Twitter"
-        title: "pomoću Twitter-a"
-      facebook:
-        title: "pomoću Facebook-a"
-      github:
-        title: "pomoću GitHuba"
     invites:
       welcome_to: "Dobrodošao na %{site_name}!"
       success: "Tvoj nalog je kreiran i sada si ulogovan."
@@ -1468,6 +1462,8 @@ sr:
       view: "Prikaži Teme u Kategoriji"
       general: "Opšti"
       settings: "Podešavanje"
+      required_tag_group:
+        delete: "Obriši"
       delete: "Obriši Kategoriju"
       create: "Nova Kategorija"
       save: "Sačuvaj Kategoriju"

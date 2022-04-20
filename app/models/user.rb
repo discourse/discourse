@@ -1461,6 +1461,18 @@ class User < ActiveRecord::Base
     username_lower == User.normalize_username(another_username)
   end
 
+  def full_url
+    "#{Discourse.base_url}/u/#{encoded_username}"
+  end
+
+  def display_name
+    if SiteSetting.prioritize_username_in_ux?
+      username
+    else
+      name.presence || username
+    end
+  end
+
   protected
 
   def badge_grant

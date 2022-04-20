@@ -8,11 +8,11 @@
             {{user-stat value=model.days_visited label="user.summary.days_visited"}}
           </li>
           <li class="stats-time-read">
-            {{user-stat value=timeRead label="user.summary.time_read" type="string"}}
+            {{user-stat value=timeRead label="user.summary.time_read" rawTitle=(i18n "user.summary.time_read_title" duration=timeReadMedium) type="string"}}
           </li>
           {{#if showRecentTimeRead}}
             <li class="stats-recent-read">
-              {{user-stat value=recentTimeRead label="user.summary.recent_time_read" type="string"}}
+              {{user-stat value=recentTimeRead label="user.summary.recent_time_read" rawTitle=(i18n "user.summary.recent_time_read_title" duration=recentTimeReadMedium) type="string"}}
             </li>
           {{/if}}
           <li class="stats-topics-entered">

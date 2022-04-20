@@ -120,6 +120,7 @@ es:
       to_placeholder: "hasta hoy"
     share:
       topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
+      post: "publicación n.º %{postNumber}, por @%{username}"
       close: "cerrar"
       twitter: "Compartir en Twitter"
       facebook: "Compartir en Facebook"
@@ -303,7 +304,7 @@ es:
       auto_delete_preference:
         label: "Después de ser notificado"
         never: "Mantener el marcador"
-        when_reminder_sent: "Eliminar marcador"
+        when_reminder_sent: "Eliminar el marcador"
         on_owner_reply: "Borrar el marcador cuando responda"
         clear_reminder: "Mantener el marcador, pero quitar recordatorio"
       search_placeholder: "Buscar marcadores por nombre, título del tema o contenido de la publicación"
@@ -315,7 +316,7 @@ es:
         existing_reminder: "Tienes un recordatorio para este marcador que se enviará %{at_date_time}"
     copy_codeblock:
       copied: "¡copiado!"
-      copy: "código copiado al portapapeles"
+      copy: "copiar código al portapapeles"
       fullscreen: "ver código en pantalla completa"
     drafts:
       label: "Borradores"
@@ -353,6 +354,7 @@ es:
     saved: "¡Guardado!"
     upload: "Subir"
     uploading: "Subiendo..."
+    processing: "Procesando…"
     uploading_filename: "Subiendo: %{filename}..."
     processing_filename: "Procesando: %{filename}..."
     clipboard: "portapapeles"
@@ -1779,32 +1781,32 @@ es:
       not_approved: "Tu cuenta aún no ha sido aprobada. Se te notificará por correo electrónico cuando todo esté listo para que inicies sesión."
       google_oauth2:
         name: "Google"
-        title: "con Google"
+        title: "Iniciar sesión con Google"
         sr_title: "Iniciar sesión con Google"
       twitter:
         name: "Twitter"
-        title: "con Twitter"
+        title: "Iniciar sesión con Twitter"
         sr_title: "Iniciar sesión con Twitter"
       instagram:
         name: "Instagram"
-        title: "con Instagram"
+        title: "Iniciar sesión con Instagram"
         sr_title: "Iniciar sesión con Instagram"
       facebook:
         name: "Facebook"
-        title: "con Facebook"
+        title: "Iniciar sesión con Facebook"
         sr_title: "Iniciar sesión con Facebook"
       github:
         name: "GitHub"
-        title: "con GitHub"
+        title: "Iniciar sesión con GitHub"
         sr_title: "Iniciar sesión con GitHub"
       discord:
         name: "Discord"
-        title: "con Discord"
+        title: "Iniciar sesión con Discord"
         sr_title: "Iniciar sesión con Discord"
       second_factor_toggle:
         totp: "Usar una aplicación de autenticación en su lugar"
         backup_code: "Usar un código de copia de seguridad en su lugar"
-        security_key: "Utilizar una clave de seguridad en su lugar"
+        security_key: "Usar una clave de seguridad en su lugar"
     invites:
       accept_title: "Invitación"
       emoji: "emoji de un sobre"
@@ -1929,7 +1931,7 @@ es:
         category: "Has mencionado a @%{username}, pero no le va a llegar una notificación porque no tiene acceso a esta categoría. Tendrás que añadirle a un grupo que sí tenga acceso."
         private: "Has mencionado a @%{username}, pero no le va a llegar una notificación porque no puede ver este mensaje. Tendrás que invitarle al mensaje."
         muted_topic: "Has mencionado a @%{username}, pero no le va a llegar una notificación porque ha silenciado este tema."
-        not_allowed: "Has mencionado a @%{username}, pero no le va a llegar una notificación porque no le han invitado a este tema."
+        not_allowed: "Has mencionado a @%{username}, pero no le va a llegar una notificación porque no está invitado a este tema."
       here_mention:
         one: "Al mencionar a <b>@%{here}</b> mencionarás a %{count} usuario – ¿quieres continuar?"
         other: "Al mencionar a <b>@%{here}</b> mencionarás a %{count} usuarios – ¿quieres continuar?"
@@ -2184,7 +2186,7 @@ es:
       search_google: "Intenta buscar con Google:"
       search_google_button: "Google"
       search_button: "Buscar"
-      search_term_label: "escribe lo que quieras buscar"
+      search_term_label: "escribe lo que quieres buscar"
       categories: "Categorías"
       tags: "Etiquetas"
       in: "en"
@@ -2797,7 +2799,14 @@ es:
       show_hidden: "Ver contenido ignorado."
       deleted_by_author_simple: "(publicación eliminada por su autor/a)"
       collapse: "contraer"
+      sr_collapse_replies: "Contraer respuestas inscrustadas"
+      sr_date: "Fecha de publicación"
+      sr_expand_replies:
+        one: "Esta publicación tiene %{count} respuesta. Haz clic para expandir"
+        other: "Esta publicación tiene %{count} respuestas. Haz clic para expandir"
       expand_collapse: "expandir/contraer"
+      sr_below_embedded_posts_description: "respuestas de la publicación n.º %{post_number}"
+      sr_embedded_reply_description: "respuesta de @%{username} a la publicación n.º %{post_number}"
       locked: "un miembro del equipo bloqueó la posibilidad de editar esta publicación"
       gap:
         one: "ver %{count} publicación oculta"
@@ -2818,6 +2827,12 @@ es:
       has_likes_title_you:
         one: "A ti y a %{count} persona os ha gustado esta publicación"
         other: "A ti y a otras %{count} personas os ha gustado esta publicación"
+      sr_post_like_count_button:
+        one: "%{count} persona le ha dado a me gusta en esta publicación. Haz clic para ver"
+        other: "%{count} personas le han dado a me gusta en esta publicación. Haz clic para ver"
+      sr_post_read_count_button:
+        one: "%{count} persona ha leído esta publicación. Haz clic para ver"
+        other: "%{count} personas han leído esta publicación. Haz clic para ver"
       filtered_replies_hint:
         one: "Ver esta publicación y su respuesta"
         other: "Ver esta publicación y sus %{count} respuestas"
@@ -2919,6 +2934,8 @@ es:
           read_capped:
             one: "y %{count} otro ha leído esto"
             other: "y %{count} otros han leído esto"
+          sr_post_likers_list_description: "usuarios que le han dado a me gusta en esta publicación"
+          sr_post_readers_list_description: "usuarios que han leído esta publicación"
         by_you:
           off_topic: "Denunciaste esto como sin relación con el tema"
           spam: "Denunciaste esto como spam"
@@ -3021,10 +3038,11 @@ es:
       tag_groups_placeholder: "(Opcional) lista de grupos de etiquetas permitidos"
       manage_tag_groups_link: "Gestionar grupos de etiquetas"
       allow_global_tags_label: "Permitir también otras etiquetas"
-      tag_group_selector_placeholder: "(Opcional) Grupo de etiquetas"
-      required_tag_group_description: "Requerir que los nuevos temas tengan etiquetas de un grupo de etiquetas:"
-      min_tags_from_required_group_label: "Número de etiquetas:"
-      required_tag_group_label: "Grupo de etiquetas:"
+      required_tag_group:
+        description: "Obligar a que los nuevos temas tengan etiquetas de los grupos:"
+        delete: "Eliminar"
+        add: "Añadir grupo de etiquetas obligado"
+        placeholder: "selecciona un grupo de etiquetas…"
       topic_featured_link_allowed: "Permitir enlaces destacados en esta categoría"
       delete: "Eliminar categoría"
       create: "Nueva categoría"
@@ -3653,6 +3671,7 @@ es:
       unsupported_file_picked: "Has elegido un tipo de archivo no admitido. Tipos de archivo admitidos: %{types}."
     user_activity:
       no_activity_title: "Todavía no hay actividad"
+      no_activity_body: "¡Te damos la bienvenida a la comunidad! Acabas de llegar, por lo que todavía no has participado. Como primer paso, visita los <a href='%{topUrl}'>Destacados</a> o las <a href='%{categoriesUrl}'>Categorías</a> y empieza a leer. Dale al botón %{heartIcon} en las publicaciones que te gusten o sobre las que quieras saber más. Aquí verás tu actividad una vez empieces a participar."
       no_activity_others: "Sin actividad."
       no_replies_title: "Todavía no has respondido a ningún tema"
       no_replies_others: "No hay respuestas."
@@ -4397,6 +4416,7 @@ es:
         time: "Hora"
         user: "Usuario"
         email_type: "Tipo de correo electrónico"
+        details_title: "Ver detalles del correo electrónico"
         to_address: "Destino"
         test_email_address: "dirección de correo electrónico de prueba"
         send_test: "Enviar correo electrónico de prueba"

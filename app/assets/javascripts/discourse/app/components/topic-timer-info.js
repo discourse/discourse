@@ -75,6 +75,11 @@ export default Component.extend({
     const duration = moment.duration(statusUpdateAt - moment());
     const minutesLeft = duration.asMinutes();
     if (minutesLeft > 0 || isDeleteRepliesType || this.basedOnLastPost) {
+      // We don't want to display a notice before a topic timer time has been set
+      if (!this.executeAt) {
+        return;
+      }
+
       let durationMinutes = parseInt(this.durationMinutes, 10) || 0;
 
       let options = {

@@ -255,7 +255,12 @@ class CategoriesController < ApplicationController
 
   def visible_groups
     @guardian.ensure_can_see!(@category)
-    render json: success_json.merge(groups: @category.groups.merge(Group.visible_groups(current_user)).pluck("name"))
+
+    groups = if !@category.groups.exists?(id: Group::AUTO_GROUPS[:everyone])
+      @category.groups.merge(Group.visible_groups(current_user)).pluck("name")
+    end
+
+    render json: success_json.merge(groups: groups || [])
   end
 
   private

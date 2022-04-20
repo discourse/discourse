@@ -1146,6 +1146,10 @@ blockquote > *:last-child {
 
     button {
       align-self: flex-start;
+      font-size: var(--font-up-1);
+      .d-icon {
+        font-size: var(--font-down-1);
+      }
     }
 
     .custom-message {

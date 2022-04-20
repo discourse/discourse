@@ -1220,6 +1220,8 @@ fa_IR:
     tag_style: "سبک بصری نشان برچسب‌ها."
     min_trust_level_to_tag_topics: "حداقل سطح اعتماد مورد نیاز برای برچسب زدن به موضوع"
     suppress_overlapping_tags_in_list: "اگر برچسب با عنوان موضوع دقیقا یکی بودند، برچسب را نشان نده."
+    enable_sitemap: "یک نقشه سایت برای سایت خود ایجاد کنید و آن را در پرونده robots.txt قرار دهید."
+    sitemap_page_size: "تعداد آدرس‌های اینترنتی که باید در هر صفحه نقشه سایت گنجانده شود. حداکثر ۵۰٫۰۰۰"
     errors:
       invalid_email: "آدرس ایمیل نامعتبر"
       invalid_username: "هیچ کاربری با این نام‌کاربری وجود ندارد."
@@ -1245,6 +1247,7 @@ fa_IR:
       invalid_regex: "الگوی regex نامعتبر یا غیر‌مجاز است."
       min_username_length_range: "شما نمیتوانید مقدار حداقل را بیشتر از حداکثر قرار دهید."
       max_username_length_range: "شما نمی‌توانید حداکثر را کمتر از حداقل قرار دهید."
+      markdown_linkify_tlds: "شما مقدار «*» را نمی‌توانید وارد کنید."
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"

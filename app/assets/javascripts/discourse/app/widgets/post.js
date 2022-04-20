@@ -352,18 +352,26 @@ createWidget("post-date", {
   tagName: "div.post-info.post-date",
 
   html(attrs) {
-    const attributes = { class: "post-date" };
-    let date;
+    let date,
+      linkClassName = "post-date";
+
     if (attrs.wiki && attrs.lastWikiEdit) {
-      attributes["class"] += " last-wiki-edit";
+      linkClassName += " last-wiki-edit";
       date = new Date(attrs.lastWikiEdit);
     } else {
       date = new Date(attrs.created_at);
     }
-    return h("a", { attributes }, dateNode(date));
+    return this.attach("link", {
+      rawLabel: dateNode(date),
+      className: linkClassName,
+      omitSpan: true,
+      title: "post.sr_date",
+      href: attrs.shareUrl,
+      action: "showShareModal",
+    });
   },
 
-  click() {
+  showShareModal() {
     const post = this.findAncestorModel();
     const topic = post.topic;
     const controller = showModal("share-topic", { model: topic.category });
@@ -848,6 +856,9 @@ export default createWidget("post", {
       classNames.push("moderator");
     } else {
       classNames.push("regular");
+    }
+    if (attrs.userSuspended) {
+      classNames.push("user-suspended");
     }
     if (addPostClassesCallbacks) {
       for (let i = 0; i < addPostClassesCallbacks.length; i++) {

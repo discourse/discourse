@@ -6251,6 +6251,7 @@ export default {
           edit_reason: null,
           can_view_edit_history: true,
           wiki: false,
+          user_suspended: true,
         },
         {
           id: 419,

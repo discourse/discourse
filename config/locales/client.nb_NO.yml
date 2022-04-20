@@ -1712,22 +1712,16 @@ nb_NO:
       not_approved: "Kontoen din har ikke blitt godkjent ennå. Du vil få beskjed via e-post når du er klar til å logge inn."
       google_oauth2:
         name: "Google"
-        title: "med Google"
       twitter:
         name: "Twitter"
-        title: "med Twitter"
       instagram:
         name: "Instagram"
-        title: "med Instagram"
       facebook:
         name: "Facebook"
-        title: "med Facebook"
       github:
         name: "GitHub"
-        title: "med GitHub"
       discord:
         name: "Discord"
-        title: "med Discord"
       second_factor_toggle:
         totp: "Bruk en autentiseringsapp i stedet"
         backup_code: "Bruk en sikkerhetskode i stedet"
@@ -2834,10 +2828,8 @@ nb_NO:
       tag_groups_placeholder: "(Valgfritt) liste over tillatte stikkordgrupper"
       manage_tag_groups_link: "Administrere tagg-grupper"
       allow_global_tags_label: "Tillat også andre stikkord"
-      tag_group_selector_placeholder: "(Valgfritt) stikkord gruppe"
-      required_tag_group_description: "Krev nye emner for å ha tagger fra en stikkord-gruppe:"
-      min_tags_from_required_group_label: "Antall stikkord:"
-      required_tag_group_label: "Stikkordgrupper:"
+      required_tag_group:
+        delete: "Slett"
       topic_featured_link_allowed: "Tillat fremhevede lenker i denne kategorien"
       delete: "Slett kategori"
       create: "Ny Kategori"

@@ -78,6 +78,20 @@ describe Middleware::AnonymousCache do
       end
     end
 
+    it "handles old browsers" do
+      SiteSetting.browser_update_user_agents = "my_old_browser"
+
+      key1 = new_helper("HTTP_USER_AGENT" => "my_old_browser").cache_key
+      key2 = new_helper("HTTP_USER_AGENT" => "my_new_browser").cache_key
+      expect(key1).not_to eq(key2)
+    end
+
+    it "handles modern mobile browsers" do
+      key1 = new_helper("HTTP_USER_AGENT" => "Safari (iPhone OS 7)").cache_key
+      key2 = new_helper("HTTP_USER_AGENT" => "Safari (iPhone OS 15)").cache_key
+      expect(key1).not_to eq(key2)
+    end
+
     context "cached" do
       let!(:helper) do
         new_helper("ANON_CACHE_DURATION" => 10)

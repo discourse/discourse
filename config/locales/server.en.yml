@@ -1626,7 +1626,7 @@ en:
     ga_universal_auto_link_domains: "Enable Google Universal Analytics cross-domain tracking. Outgoing links to these domains will have the client id added to them. See <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Google's Cross-Domain Tracking guide.</a>"
     gtm_container_id: "Google Tag Manager container id. eg: GTM-ABCDEF. <br/>Note: Third-party scripts loaded by GTM may need to be allowlisted in 'content security policy script src'."
     enable_escaped_fragments: "Fall back to Google's Ajax-Crawling API if no webcrawler is detected. See <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
-    moderators_manage_categories_and_groups: "Allow moderators to manage categories and groups"
+    moderators_manage_categories_and_groups: "Allow moderators to create and manage categories and groups"
     moderators_change_post_ownership: "Allow moderators to change post ownership"
     cors_origins: "Allowed origins for cross-origin requests (CORS). Each origin must include http:// or https://. The DISCOURSE_ENABLE_CORS env variable must be set to true to enable CORS."
     use_admin_ip_allowlist: "Admins can only log in if they are at an IP address defined in the Screened IPs list (Admin > Logs > Screened Ips)."
@@ -1655,7 +1655,7 @@ en:
     send_tl2_promotion_message: "Send new trust level 2 users a message about promotion."
     suppress_reply_directly_below: "Don't show the expandable reply count on a post when there is only a single reply directly below this post."
     suppress_reply_directly_above: "Don't show the expandable in-reply-to on a post when there is only a single reply directly above this post."
-    remove_full_quote: "Automatically remove full quotes on direct replies."
+    remove_full_quote: "Automatically remove quotation if (a) it appears at the start of a post, (b) it is of an entire post, and (c) it is from the immediately preceding post. For details, see <a href='https://meta.discourse.org/t/removal-of-full-quotes-from-direct-replies/106857' target='_blank'>Removal of full quotes from direct replies</a>"
     suppress_reply_when_quoting: "Don't show the expandable in-reply-to on a post when post quotes reply."
     max_reply_history: "Maximum number of replies to expand when expanding in-reply-to"
     topics_per_period_in_top_summary: "Number of top topics shown in the default top topics summary."
@@ -2336,6 +2336,9 @@ en:
     base_font: "Base font to use for most text on the site. Themes can override via the `--font-family` CSS custom property."
     heading_font: "Font to use for headings on the site. Themes can override via the `--heading-font-family` CSS custom property."
 
+    enable_sitemap: "Generate a sitemap for your site and include it in the robots.txt file."
+    sitemap_page_size: "Number of URLs to include in each sitemap page. Max 50.000"
+
     short_title: "The short title will be used on the user's home screen, launcher, or other places where space may be limited. It should be limited to 12 characters."
 
     dashboard_hidden_reports: "Allow to hide the specified reports from the dashboard."
@@ -2402,6 +2405,7 @@ en:
         leading_trailing_slash: "The regular expression must not start and end with a slash."
       unicode_usernames_avatars: "The internal system avatars do not support Unicode usernames."
       list_value_count: "The list must contain exactly %{count} values."
+      markdown_linkify_tlds: "You cannot include a value of '*'."
       google_oauth2_hd_groups: "You must first set 'google oauth2 hd' before enabling this setting."
       search_tokenize_chinese_enabled: "You must disable 'search_tokenize_chinese' before enabling this setting."
       search_tokenize_japanese_enabled: "You must disable 'search_tokenize_japanese' before enabling this setting."
@@ -2588,6 +2592,8 @@ en:
     actions:
       grant_admin:
         description: "For additional security measures, you need to confirm your 2FA before %{username} is granted admin access."
+      discourse_connect_provider:
+        description: "%{hostname} has requested that you confirm your 2FA. You'll be redirected back to the site once you confirm your 2FA."
   admin:
     email:
       sent_test: "sent!"

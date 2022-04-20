@@ -1547,7 +1547,6 @@ it:
     send_tl2_promotion_message: "Invia ai nuovi utenti del livello di attendibilità 2 un messaggio sulla promozione."
     suppress_reply_directly_below: "Non mostrare il conteggio espandibile delle risposte quando c'è una sola risposta sotto quel messaggio."
     suppress_reply_directly_above: "Non mostrare l'opzione \"in risposta a\" espandibile in un messaggio quando c'è una sola risposta sopra quel messaggio."
-    remove_full_quote: "Rimuovi automaticamente le citazioni complete dalle risposte dirette."
     suppress_reply_when_quoting: "Non mostrare l'opzione \"in risposta a\" espandibile in un messaggio quando il messaggio cita le risposte."
     max_reply_history: "Numero massimo di risposte da espandere quando si espande l'opzione \"in risposta a\""
     topics_per_period_in_top_summary: "Numero di argomenti popolari mostrati nel riepilogo di default."
@@ -2074,6 +2073,7 @@ it:
     push_notifications_icon: "L'icona del distintivo che appare nell'angolo delle notifiche. Si consiglia un'immagine PNG monocromatica 96×96 con trasparenza."
     base_font: "Tipo di carattere di base da utilizzare per la maggior parte del testo sul sito. I temi possono sovrascrivere questa impostazione tramite la proprietà personalizzata CSS `--font-family`."
     heading_font: "Tipo di carattere da utilizzare per le intestazioni del sito. I temi possono sovrascrivere questa impostazione tramite la proprietà personalizzata CSS `--heading-font-family`."
+    enable_sitemap: "Genera una sitemap per il tuo sito e includila nel file robots.txt."
     short_title: "Il titolo breve verrà utilizzato nella schermata iniziale dell'utente, nel programma di avvio o in altri contesti in cui lo spazio potrebbe essere limitato. Dovrebbe essere limitato a 12 caratteri."
     dashboard_hidden_reports: "Consenti di nascondere i report specificati dal dashboard."
     dashboard_visible_tabs: "Scegli quali schede del dashboard sono visibili."
@@ -2130,6 +2130,7 @@ it:
         leading_trailing_slash: "L'espressione regolare non può iniziare o terminare con una barra."
       unicode_usernames_avatars: "Gli avatar di sistema interni non supportano i nomi utente Unicode."
       list_value_count: "La lista deve contenere esattamente %{count} valori."
+      markdown_linkify_tlds: "Non è possibile includere il valore '*'."
       search_tokenize_chinese_enabled: "Devi disattivare \"search_tokenize_chinese\" prima di attivare questa impostazione."
       search_tokenize_japanese_enabled: "Devi disattivare \"search_tokenize_japanese\" prima di attivare questa impostazione."
     placeholder:
@@ -2260,6 +2261,7 @@ it:
     reset_not_allowed_from_ip_address: "Non puoi richiedere la reimpostazione della password da quell'indirizzo IP."
     suspended: "Non puoi collegarti fino a %{date}."
     suspended_with_reason: "Account sospeso fino a %{date}: %{reason}"
+    suspended_with_reason_forever: "Account sospeso: %{reason}"
     errors: "%{errors}"
     not_available: "Non disponibile. Provare %{suggestion}?"
     something_already_taken: "Qualcosa è andato storto, forse il nome utente o l'email sono già registrati. Prova a recuperare la password."
@@ -2294,6 +2296,9 @@ it:
       backup_code: "Utilizza un codice di backup"
   second_factor_auth:
     challenge_not_found: "Impossibile trovare una richiesta 2FA nella sessione corrente."
+    actions:
+      discourse_connect_provider:
+        description: "%{hostname} ha chiesto di confermare la tua autenticazione a due fattori (2FA). Sarai reindirizzato al sito una volta confermata la tua 2FA."
   admin:
     email:
       sent_test: "inviata!"

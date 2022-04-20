@@ -120,6 +120,7 @@ hu:
       to_placeholder: "eddig:"
     share:
       topic_html: 'Téma: <span class="topic-title">%{topicTitle}</span>'
+      post: "%{postNumber}. bejegyzés, szerző: %{username}"
       close: "bezárás"
       twitter: "Megosztás Twitteren"
       facebook: "Megosztás Facebookon"
@@ -286,6 +287,8 @@ hu:
         unbookmark_with_reminder: "Kattintson a téma valamennyi könyvjelzőjének és emlékeztetőjének törléséhez."
     bookmarks:
       created: "Könyvjelzőzte ezt a bejegyzést. %{name}"
+      create_for: "Könyvjelző létrehozása a következőhöz: %{type}"
+      edit_for: "A(z) %{type} könyvjelzőjének szerkesztése"
       not_bookmarked: "bejegyzés könyvjelzőzése"
       remove_reminder_keep_bookmark: "Emlékeztető eltávolítása és könyvjelző megtartása"
       created_with_reminder: "Könyvjelzőzte ezt a bejegyzést, és emlékeztetőt állított be ekkorra: %{date}. %{name}"
@@ -351,6 +354,7 @@ hu:
     saved: "Mentve!"
     upload: "Feltöltés"
     uploading: "Feltöltés…"
+    processing: "Feldolgozás…"
     uploading_filename: "Feltöltés: %{filename}…"
     processing_filename: "Feldolgozás: %{filename}…"
     clipboard: "vágólap"
@@ -1153,6 +1157,7 @@ hu:
         tags: "Címkék"
         warnings: "Hivatalos figyelmeztetések"
         read_more_in_group: "Szeretne többet olvasni? Nézzen meg más témákat itt: %{groupLink}."
+        read_more: "Szeretne többet olvasni? Böngésszen a többi üzenet között a <a href='%{basePath}/u/%{username}/messages'>személyes üzenetekben</a>."
         read_more_group_pm_MF: "{ UNREAD, plural, =0 {} other {<a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># olvasatlan</a> } } {BOTH, select, true{és} false {} other{}} { NEW, plural, =0 {} other { <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># új</a>} } üzenet van hátra, vagy böngésszen más üzeneteket ebben a csoportban: {groupLink}"
       preferences_nav:
         account: "Fiók"
@@ -1238,6 +1243,7 @@ hu:
           edit: "Biztonsági kulcs szerkesztése"
           save: "Mentés"
           edit_description: "Biztonsági kulcs neve"
+          name_required_error: "Meg kell adnia a biztonsági kulcs nevét."
       change_about:
         title: "Névjegy módosítása"
         error: "Hiba történt az érték módosításakor."
@@ -1267,6 +1273,8 @@ hu:
         uploaded_avatar_empty: "Egyéni kép hozzáadása"
         upload_title: "Saját kép feltöltése"
         image_is_not_a_square: "Figyelmeztetés: a kép vágásra került; a szélesség és a magaság nem volt egyforma."
+        logo_small: "Az oldal kis logója. Alapértelmezés szerint használt."
+        use_custom: "Vagy töltsön fel egy egyéni profilképet:"
       change_profile_background:
         title: "A profil borítóképe"
         instructions: "A profil borítóképe középre lesz igazítva, alapértelmezetten 1110 képpontos szélességgel."
@@ -1313,6 +1321,7 @@ hu:
         confirm_description:
           disconnect: "A meglévő „%{account_description}” %{provider}-fiókja le lesz választva."
           account_specific: "Az Ön „%{account_description}” %{provider}-fiókja lesz használva a hitelesítéshez."
+          generic: "Az Ön %{provider}-fiókját fogja használni a hitelesítéshez."
       name:
         title: "Név"
         instructions: "a teljes neve (nem kötelező)"
@@ -1366,6 +1375,7 @@ hu:
       website: "Weblap"
       email_settings: "E-mail-cím"
       hide_profile_and_presence: "A nyilvános profilom és a jelenlétem elrejtése"
+      enable_physical_keyboard: "Fizikai billentyűzet támogatásának engedélyezése az iPaden"
       text_size:
         title: "Szövegméret"
         smallest: "Legkisebb"
@@ -1486,11 +1496,13 @@ hu:
           expired_at_time: "Lejárt: %{time}"
           show_advanced: "Speciális beállítások megjelenítése"
           hide_advanced: "Speciális beállítások elrejtése"
+          restrict: "Korlátozás a következőkre:"
           restrict_email: "E-mail-címre korlátozás"
           restrict_domain: "Domainre korlátozás"
           email_or_domain_placeholder: "név@example.com vagy example.com"
           max_redemptions_allowed: "Maximális használat"
           add_to_groups: "Hozzáadás csoportokhoz"
+          invite_to_topic: "Érkezés a témához"
           expires_at: "Ennyi idő múlva lejár:"
           custom_message: "Nem kötelező személyes üzenet"
           send_invite_email: "Mentés és e-mail küldése"
@@ -1768,27 +1780,27 @@ hu:
       not_approved: "A fiók még nem lett elfogadva. E-mailben értesítjük, ha bejelentkezhet."
       google_oauth2:
         name: "Google"
-        title: "Google-lel"
+        title: "Bejelentkezés a Google-lel"
         sr_title: "Bejelentkezés a Google-lel"
       twitter:
         name: "Twitter"
-        title: "Twitterrel"
+        title: "Bejelentkezés a Twitterrel"
         sr_title: "Bejelentkezés a Twitterrel"
       instagram:
         name: "Instagram"
-        title: "Instagrammal"
+        title: "Bejelentkezés az Instagrammal"
         sr_title: "Bejelentkezés az Instagrammal"
       facebook:
         name: "Facebook"
-        title: "Facebookkal"
+        title: "Bejelentkezés a Facebookkal"
         sr_title: "Bejelentkezés a Facebookkal"
       github:
         name: "GitHub"
-        title: "GitHubbal"
+        title: "Bejelentkezés a GitHubbal"
         sr_title: "Bejelentkezés a GitHubbal"
       discord:
         name: "Discord"
-        title: "Discorddal"
+        title: "Bejelentkezés a Discorddal"
         sr_title: "Bejelentkezés a Discorddal"
       second_factor_toggle:
         totp: "Helyette hitelesítő alkalmazás használata"
@@ -2840,6 +2852,8 @@ hu:
       settings: "Beállítások"
       topic_template: "Téma sablonja"
       tags: "Címkék"
+      required_tag_group:
+        delete: "Törlés"
       topic_featured_link_allowed: "Kiemelt hivatkozások engedélyezése ebben a kategóriában"
       delete: "Kategória törlése"
       create: "Új kategória"

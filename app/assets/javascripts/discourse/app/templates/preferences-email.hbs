@@ -1,58 +1,60 @@
-<section class="user-preferences solo-preference">
-  <form class="form-horizontal">
+{{#d-section pageClass="user-preferences" tagName=""}}
+  <section class="user-preferences solo-preference">
+    <form class="form-horizontal">
 
-    <div class="control-group">
-      <div class="controls">
-        <h3>{{i18n (if new "user.add_email.title" "user.change_email.title")}}</h3>
-      </div>
-    </div>
-
-    {{#if success}}
       <div class="control-group">
         <div class="controls">
-          <div class="instructions">
-            <p>{{ successMessage }}</p>
-          </div>
+          <h3>{{i18n (if new "user.add_email.title" "user.change_email.title")}}</h3>
         </div>
       </div>
-    {{else}}
-      {{#if error}}
+
+      {{#if success}}
         <div class="control-group">
           <div class="controls">
-            <div class="alert alert-error">{{errorMessage}}</div>
+            <div class="instructions">
+              <p>{{ successMessage }}</p>
+            </div>
+          </div>
+        </div>
+      {{else}}
+        {{#if error}}
+          <div class="control-group">
+            <div class="controls">
+              <div class="alert alert-error">{{errorMessage}}</div>
+            </div>
+          </div>
+        {{/if}}
+
+        <div class="control-group">
+          <label class="control-label">{{i18n "user.email.title"}}</label>
+          <div class="controls">
+            {{text-field value=newEmail id="change-email" classNames="input-xxlarge" autofocus="autofocus"}}
+            {{input-tip validation=emailValidation}}
+          </div>
+          <div class="controls">
+            <div class="instructions">
+              {{#if taken}}
+                {{i18n "user.change_email.taken"}}
+              {{else}}
+                {{i18n "user.email.instructions"}}
+              {{/if}}
+            </div>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <div class="controls">
+            {{d-button
+              class="btn-primary"
+              action=(action "saveEmail")
+              type="submit"
+              disabled=saveDisabled
+              translatedLabel=saveButtonText
+            }}
           </div>
         </div>
       {{/if}}
 
-      <div class="control-group">
-        <label class="control-label">{{i18n "user.email.title"}}</label>
-        <div class="controls">
-          {{text-field value=newEmail id="change-email" classNames="input-xxlarge" autofocus="autofocus"}}
-          {{input-tip validation=emailValidation}}
-        </div>
-        <div class="controls">
-          <div class="instructions">
-            {{#if taken}}
-              {{i18n "user.change_email.taken"}}
-            {{else}}
-              {{i18n "user.email.instructions"}}
-            {{/if}}
-          </div>
-        </div>
-      </div>
-
-      <div class="control-group">
-        <div class="controls">
-          {{d-button
-            class="btn-primary"
-            action=(action "saveEmail")
-            type="submit"
-            disabled=saveDisabled
-            translatedLabel=saveButtonText
-          }}
-        </div>
-      </div>
-    {{/if}}
-
-  </form>
-</section>
+    </form>
+  </section>
+{{/d-section}}

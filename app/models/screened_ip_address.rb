@@ -13,6 +13,17 @@ class ScreenedIpAddress < ActiveRecord::Base
   validates :ip_address, ip_address_format: true, presence: true
   after_validation :check_for_match
 
+  ROLLED_UP_BLOCKS = [
+    # IPv4
+    [4, 32, 24],
+    # IPv6
+    [6, (65..128).to_a, 64],
+    [6, 64, 60],
+    [6, 60, 56],
+    [6, 56, 52],
+    [6, 52, 48],
+  ]
+
   def self.watch(ip_address, opts = {})
     match_for_ip_address(ip_address) || create(opts.slice(:action_type).merge(ip_address: ip_address))
   end
@@ -67,7 +78,8 @@ class ScreenedIpAddress < ActiveRecord::Base
     #
     #   http://www.postgresql.org/docs/9.1/static/datatype-net-types.html
     #   http://www.postgresql.org/docs/9.1/static/functions-net.html
-    order('masklen(ip_address) DESC').find_by("? <<= ip_address", ip_address.to_s)
+    ip_address = IPAddr === ip_address ? ip_address.to_cidr_s : ip_address.to_s
+    order('masklen(ip_address) DESC').find_by("? <<= ip_address", ip_address)
   end
 
   def self.should_block?(ip_address)
@@ -94,82 +106,57 @@ class ScreenedIpAddress < ActiveRecord::Base
     !exists_for_ip_address_and_action?(ip_address, actions[:allow_admin], record_match: false)
   end
 
-  def self.star_subnets_query
-    @star_subnets_query ||= <<~SQL
-      SELECT network(inet(host(ip_address) || '/24'))::text AS ip_range
+  def self.subnets(family, from_masklen, to_masklen)
+    sql = <<~SQL
+      WITH ips_and_subnets AS (
+        SELECT ip_address,
+               network(inet(host(ip_address) || '/' || :to_masklen))::text subnet
         FROM screened_ip_addresses
-       WHERE action_type = #{ScreenedIpAddress.actions[:block]}
-         AND family(ip_address) = 4
-         AND masklen(ip_address) = 32
-    GROUP BY ip_range
-      HAVING COUNT(*) >= :min_count
-    SQL
-  end
-
-  def self.star_star_subnets_query
-    @star_star_subnets_query ||= <<~SQL
-      WITH weighted_subnets AS (
-        SELECT network(inet(host(ip_address) || '/16'))::text AS ip_range,
-               CASE masklen(ip_address)
-                 WHEN 32 THEN 1
-                 WHEN 24 THEN :roll_up_weight
-                 ELSE 0
-               END AS weight
-          FROM screened_ip_addresses
-         WHERE action_type = #{ScreenedIpAddress.actions[:block]}
-           AND family(ip_address) = 4
+        WHERE family(ip_address) = :family AND
+              masklen(ip_address) IN (:from_masklen) AND
+              action_type = :blocked
       )
-      SELECT ip_range
-        FROM weighted_subnets
-    GROUP BY ip_range
-      HAVING SUM(weight) >= :min_count
+      SELECT subnet
+      FROM ips_and_subnets
+      GROUP BY subnet
+      HAVING COUNT(*) >= :min_ban_entries_for_roll_up
     SQL
-  end
 
-  def self.star_subnets
-    min_count = SiteSetting.min_ban_entries_for_roll_up
-    DB.query_single(star_subnets_query, min_count: min_count)
-  end
-
-  def self.star_star_subnets
-    weight = SiteSetting.min_ban_entries_for_roll_up
-    DB.query_single(star_star_subnets_query, min_count: 10, roll_up_weight: weight)
+    DB.query_single(
+      sql,
+      family: family,
+      from_masklen: from_masklen,
+      to_masklen: to_masklen,
+      blocked: ScreenedIpAddress.actions[:block],
+      min_ban_entries_for_roll_up: SiteSetting.min_ban_entries_for_roll_up,
+    )
   end
 
   def self.roll_up(current_user = Discourse.system_user)
-    subnets = [star_subnets, star_star_subnets].flatten
+    ROLLED_UP_BLOCKS.each do |family, from_masklen, to_masklen|
+      ScreenedIpAddress.subnets(family, from_masklen, to_masklen).map do |subnet|
+        next if ScreenedIpAddress.where("? <<= ip_address", subnet).exists?
 
-    StaffActionLogger.new(current_user).log_roll_up(subnets) unless subnets.blank?
+        old_ips = ScreenedIpAddress
+          .where(action_type: ScreenedIpAddress.actions[:block])
+          .where("ip_address << ?", subnet)
+          .where("family(ip_address) = ?", family)
+          .where("masklen(ip_address) IN (?)", from_masklen)
 
-    subnets.each do |subnet|
-      ScreenedIpAddress.create(ip_address: subnet) unless ScreenedIpAddress.where("? <<= ip_address", subnet).exists?
+        sum_match_count, max_last_match_at, min_created_at =
+          old_ips.pluck_first('SUM(match_count), MAX(last_match_at), MIN(created_at)')
 
-      sql = <<~SQL
-        UPDATE screened_ip_addresses
-           SET match_count   = sum_match_count
-             , created_at    = min_created_at
-             , last_match_at = max_last_match_at
-          FROM (
-            SELECT SUM(match_count)   AS sum_match_count
-                 , MIN(created_at)    AS min_created_at
-                 , MAX(last_match_at) AS max_last_match_at
-              FROM screened_ip_addresses
-             WHERE action_type = #{ScreenedIpAddress.actions[:block]}
-               AND family(ip_address) = 4
-               AND ip_address << :ip_address
-          ) s
-         WHERE ip_address = :ip_address
-      SQL
+        ScreenedIpAddress.create!(
+          ip_address: subnet,
+          match_count: sum_match_count,
+          last_match_at: max_last_match_at,
+          created_at: min_created_at,
+        )
 
-      DB.exec(sql, ip_address: subnet)
-
-      ScreenedIpAddress.where(action_type: ScreenedIpAddress.actions[:block])
-        .where("family(ip_address) = 4")
-        .where("ip_address << ?", subnet)
-        .delete_all
+        StaffActionLogger.new(current_user).log_roll_up(subnet, old_ips.map(&:ip_address))
+        old_ips.delete_all
+      end
     end
-
-    subnets
   end
 
 end

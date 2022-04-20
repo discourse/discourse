@@ -1691,27 +1691,23 @@ ja:
       not_approved: "あなたのアカウントはまだ承認されていません。ログインできるようになったら、メールで通知します。"
       google_oauth2:
         name: "Google"
-        title: "Google"
-        sr_title: "Google でログイン"
       twitter:
         name: "Twitter"
-        title: "Twitter"
-        sr_title: "Twitter でログイン"
       instagram:
         name: "Instagram"
-        title: "Instagram"
+        title: "Instagram でログイン"
         sr_title: "Instagram でログイン"
       facebook:
         name: "Facebook"
-        title: "Facebook"
+        title: "Facebook でログイン"
         sr_title: "Facebook でログイン"
       github:
         name: "GitHub"
-        title: "GitHub"
+        title: "GitHub でログイン"
         sr_title: "GitHub でログイン"
       discord:
         name: "Discord"
-        title: "Discord"
+        title: "Discord でログイン"
         sr_title: "Discord でログイン"
       second_factor_toggle:
         totp: "代わりに認証アプリを使用する"
@@ -2810,10 +2806,8 @@ ja:
       tag_groups_placeholder: "(オプション) 許可されたタググループのリスト"
       manage_tag_groups_link: "タググループの管理"
       allow_global_tags_label: "他のタグも許可"
-      tag_group_selector_placeholder: "(オプション) タググループ"
-      required_tag_group_description: "新しいトピックでタググループのタグの使用を必須とする:"
-      min_tags_from_required_group_label: "タグ数:"
-      required_tag_group_label: "タググループ:"
+      required_tag_group:
+        delete: "削除"
       topic_featured_link_allowed: "このカテゴリに注目のリンクを許可する"
       delete: "カテゴリを削除"
       create: "新規カテゴリ"

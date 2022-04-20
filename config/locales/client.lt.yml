@@ -1699,27 +1699,23 @@ lt:
       not_approved: "Jūsų paskyra dar nepatvirtinta. Jums bus pranešta elektroniniu paštu, kai būsite pasiruošę prisijungti."
       google_oauth2:
         name: "Google"
-        title: "per Google"
-        sr_title: "Prisijungti su Google"
       twitter:
         name: "Twitter"
-        title: "per Twitter"
-        sr_title: "Prisijungti su Twitter"
       instagram:
         name: "Instagram"
-        title: "su Instagram"
+        title: "Prisijungti su Instagram"
         sr_title: "Prisijungti su Instagram"
       facebook:
         name: "Facebook"
-        title: "per Facebook"
+        title: "Prisijungti su Facebook"
         sr_title: "Prisijungti su Facebook"
       github:
         name: "GitHub"
-        title: "per GitHub"
+        title: "Prisijunkite su GitHub"
         sr_title: "Prisijunkite su GitHub"
       discord:
         name: "Discord"
-        title: "su Discord"
+        title: "Prisijungti su Discord"
         sr_title: "Prisijungti su Discord"
       second_factor_toggle:
         totp: "Vietoj to naudokite autentifikavimo programą"
@@ -2827,10 +2823,8 @@ lt:
       tag_groups_placeholder: "(Neprivaloma) leidžiamų žymų grupių sąrašas"
       manage_tag_groups_link: "Tvarkykite žymų grupes"
       allow_global_tags_label: "Taip pat leiskite kitas žymas"
-      tag_group_selector_placeholder: "(Neprivaloma) Žymų grupė"
-      required_tag_group_description: "Reikalauti, kad naujose temose būtų žymų iš žymų grupės:"
-      min_tags_from_required_group_label: "Žymų skaičius:"
-      required_tag_group_label: "Žymų grupė:"
+      required_tag_group:
+        delete: "Pašalinti"
       topic_featured_link_allowed: "Leisti svarbiausias šios kategorijos nuorodas"
       delete: "Ištrinti kategoriją"
       create: "Nauja Kategorija"

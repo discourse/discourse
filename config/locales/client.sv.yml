@@ -120,6 +120,7 @@ sv:
       to_placeholder: "till-datum"
     share:
       topic_html: 'Ämne: <span class="topic-title">%{topicTitle}</span>'
+      post: "inlägg #%{postNumber} av %{username}"
       close: "stäng"
       twitter: "Dela på Twitter"
       facebook: "Dela på Facebook"
@@ -286,6 +287,8 @@ sv:
         unbookmark_with_reminder: "Klicka för att ta bort alla bokmärken och påminnelser i detta ämne."
     bookmarks:
       created: "Du har bokmärkt detta inlägg. %{name}"
+      create_for: "Skapa bokmärke för %{type}"
+      edit_for: "Redigera bokmärke för %{type}"
       not_bookmarked: "bokmärk detta inlägg"
       remove_reminder_keep_bookmark: "Ta bort påminnelsen och behåll bokmärket"
       created_with_reminder: "Du har bokmärkt detta inlägg med en påminnelse %{date}. %{name}"
@@ -351,6 +354,7 @@ sv:
     saved: "Sparat!"
     upload: "Ladda upp"
     uploading: "Laddar upp..."
+    processing: "Bearbetar..."
     uploading_filename: "Laddar upp: %{filename}..."
     processing_filename: "Bearbetar: %{filename}..."
     clipboard: "urklipp"
@@ -365,6 +369,7 @@ sv:
     switch_to_anon: "Starta anonymt läge"
     switch_from_anon: "Avsluta anonymt läge"
     banner:
+      close: "Avfärda denna banderoll"
       edit: "Redigera"
     pwa:
       install_banner: "Vill du <a href>installera %{title} på denna enhet?</a>"
@@ -1778,27 +1783,27 @@ sv:
       not_approved: "Ditt konto har inte godkänts än. Du kommer att aviseras via e-post när det är klart att logga in."
       google_oauth2:
         name: "Google"
-        title: "med Google"
+        title: "Logga in med Google"
         sr_title: "Logga in med Google"
       twitter:
         name: "Twitter"
-        title: "med Twitter"
+        title: "Logga in med Twitter"
         sr_title: "Logga in med Twitter"
       instagram:
         name: "Instagram"
-        title: "med Instagram"
+        title: "Logga in med Instagram"
         sr_title: "Logga in med Instagram"
       facebook:
         name: "Facebook"
-        title: "med Facebook"
+        title: "Logga in med Facebook"
         sr_title: "Logga in med Facebook"
       github:
         name: "GitHub"
-        title: "med GitHub"
+        title: "Logga in med GitHub"
         sr_title: "Logga in med GitHub"
       discord:
         name: "Discord"
-        title: "med Discord"
+        title: "Logga in med Discord"
         sr_title: "Logga in med Discord"
       second_factor_toggle:
         totp: "Använd en autentiseringsapp istället"
@@ -2796,7 +2801,14 @@ sv:
       show_hidden: "Visa ignorerat innehåll"
       deleted_by_author_simple: "(inlägg raderat av författaren)"
       collapse: "förminska"
+      sr_collapse_replies: "Förminska inbäddade svar"
+      sr_date: "Datum för inlägg"
+      sr_expand_replies:
+        one: "Detta inlägg har %{count} svar. Klicka för att utvidga"
+        other: "Detta inlägg har %{count} svar. Klicka för att utvidga"
       expand_collapse: "utvidga/förminska"
+      sr_below_embedded_posts_description: "inlägg #%{post_number} svar"
+      sr_embedded_reply_description: "svar från @%{username} på inlägg #%{post_number}"
       locked: "en i personalen har låst detta inlägg från att redigeras"
       gap:
         one: "visa %{count} dolt svar"
@@ -2817,6 +2829,12 @@ sv:
       has_likes_title_you:
         one: "du och %{count} annan person gillade det här inlägget"
         other: "du och %{count} andra personer gillade det här inlägget"
+      sr_post_like_count_button:
+        one: "%{count} person gillade det här inlägget. Klicka för att se"
+        other: "%{count} personer gillade det här inlägget. Klicka för att se"
+      sr_post_read_count_button:
+        one: "%{count} person läste det här inlägget. Klicka för att se"
+        other: "%{count} personer läste det här inlägget. Klicka för att se"
       filtered_replies_hint:
         one: "Visa detta inlägg och dess svar"
         other: "Visa detta inlägg och dess %{count} svar"
@@ -2918,6 +2936,8 @@ sv:
           read_capped:
             one: "och %{count} annan läste detta"
             other: "och %{count} andra läste detta"
+          sr_post_likers_list_description: "användare som gillade detta inlägg"
+          sr_post_readers_list_description: "användare som läste detta inlägg"
         by_you:
           off_topic: "Du flaggade detta som irrelevant"
           spam: "Du flaggade detta som skräppost"
@@ -3020,10 +3040,11 @@ sv:
       tag_groups_placeholder: "(Valfri) lista över tillåtna grupptaggar"
       manage_tag_groups_link: "Hantera tagg-grupper"
       allow_global_tags_label: "Tillåt även andra taggar"
-      tag_group_selector_placeholder: "(Valfri) tagg-grupp"
-      required_tag_group_description: "Kräv att nya ämnen har taggar från en tagg-grupp:"
-      min_tags_from_required_group_label: "Nummer-taggar:"
-      required_tag_group_label: "Tagg-grupp:"
+      required_tag_group:
+        description: "Kräv att nya ämnen har taggar från tagg-grupper:"
+        delete: "Radera"
+        add: "Lägg till obligatorisk tagg-grupp"
+        placeholder: "välj tagg-grupp..."
       topic_featured_link_allowed: "Tillåt utvalda länkar i denna kategori"
       delete: "Radera kategori"
       create: "Ny kategori"
@@ -3245,15 +3266,20 @@ sv:
         other {}}
     original_post: "Originalinlägg"
     views: "Visningar"
+    sr_views: "Sortera efter vyer"
     views_lowercase:
       one: "visning"
       other: "visningar"
     replies: "Svar"
+    sr_replies: "Sortera efter svar"
     views_long:
       one: "Detta ämnet har visats %{count} gång"
       other: "Detta ämne har visats %{number} gånger"
     activity: "Aktivitet"
+    sr_activity: "Sortera efter aktivitet"
     likes: "Gillningar"
+    sr_likes: "Sortera efter gillningar"
+    sr_op_likes: "Sortera efter originalinläggets gillningar"
     likes_lowercase:
       one: "gillar"
       other: "gillar"
@@ -3647,6 +3673,7 @@ sv:
       unsupported_file_picked: "Du har valt en fil som inte stöds. Filtyper som stöds: %{types}."
     user_activity:
       no_activity_title: "Ingen aktivitet än"
+      no_activity_body: "Välkommen till vårt forum! Du är helt ny här och har ännu inte bidragit i diskussioner. Du kan börja med att gå till <a href='%{topUrl}'>Topp</a> eller <a href='%{categoriesUrl}'>Kategorier</a> och sätta igång att läsa! Välj %{heartIcon} på inlägg som du gillar eller vill lära dig mer om. I takt med att du deltar kommer din aktivitet att visas här."
       no_activity_others: "Ingen aktivitet."
       no_replies_title: "Du har inte svarat på några ämnen än"
       no_replies_others: "Inga svar."
@@ -3656,9 +3683,13 @@ sv:
       no_likes_body: "Ett bra sätt att hoppa in och börja bidra är att börja läsa samtal som redan har ägt rum, och välja %{heartIcon} på inlägg som du gillar!"
       no_likes_others: "Inga gillade inlägg."
       no_topics_title: "Du har inte startat några ämnen än"
+      no_topics_title_others: "%{username} har inte startat några ämnen än"
       no_read_topics_title: "Du har inte läst några ämnen än"
       no_read_topics_body: "När du börjar läsa diskussioner ser du en lista här. Börja läsa genom att leta efter ämnen som du tycker är intressanta i <a href='%{topUrl}'>Topp</a> eller <a href='%{categoriesUrl}'>Kategorier</a> eller sök efter sökord %{searchIcon}"
     no_group_messages_title: "Inga gruppmeddelanden hittades"
+    topic_entrance:
+      sr_jump_top_button: "Hoppa till första inlägget"
+      sr_jump_bottom_button: "Hoppa till sista inlägget"
     fullscreen_table:
       expand_btn: "Expandera tabell"
     second_factor_auth:
@@ -4116,6 +4147,7 @@ sv:
         delete_confirm: 'Är du säker på att du vill radera "%{theme_name}"?'
         color: "Färg"
         opacity: "Opacitet"
+        copy: "Duplicera"
         copy_to_clipboard: "Kopiera till urklipp"
         copied_to_clipboard: "Kopierad till urklipp"
         copy_to_clipboard_error: "Fel vid kopiering av data till urklipp"
@@ -4387,6 +4419,7 @@ sv:
         time: "Tid"
         user: "Användare"
         email_type: "E-posttyp"
+        details_title: "Visa e-postdetaljer"
         to_address: "Till-adress"
         test_email_address: "e-postadress att testa"
         send_test: "Skicka e-posttest"

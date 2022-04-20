@@ -1642,7 +1642,7 @@ he:
     send_tl2_promotion_message: "לשלוח למשתמשים חדשים בדרגת אמון 2 הודעה על קידום."
     suppress_reply_directly_below: "אל תציגו את סך התגובות המצטבר בפוסט כאשר ישנה תגובה ישירה אחת לפוסט זה."
     suppress_reply_directly_above: "אל תציגו את את אפשרות ההרחבה \"בתגובה ל..\" לפוסט כאשר יש רק תגובה אחת ישירה מעל לפוסט זה."
-    remove_full_quote: "הסרת כל הציטוטים המלאים בתגובות ישירות."
+    remove_full_quote: "להסיר ציטוט אוטומטית אם (א) הוא מופיע בתחילת הפוסט, (ב) הוא על כל הפוסט ו־(ג) הוא מהפוסט הקודם. לפרטים: <a href='https://meta.discourse.org/t/removal-of-full-quotes-from-direct-replies/106857' target='_blank'>הסרת ציטטות מלאות מתגובות ישירות</a>"
     suppress_reply_when_quoting: "לא להציג „בתגובה אל” מתרחבת על פוסט כאשר פוסט מצטט תגובה."
     max_reply_history: "מספר התגובות המקסימלי להרחבה כאשר מרחיבים \"בתגובה ל\""
     topics_per_period_in_top_summary: "מספר הנושאים המוצגים בברירת המחדל של סיכום הנושאים."
@@ -2176,6 +2176,8 @@ he:
     push_notifications_icon: "סמל העיטור שמופיע בפינת ההתרעה. מומלץ PNG בצבעים אחידים עם שקיפות בגודל 96 × 96."
     base_font: "גופן בסיס לשימוש רוב הטקסט באתר. ערכות עיצוב יכולות לדרוס אותו באמצעות מאפיין ה־CSS‏ ‎`--font-family`‎."
     heading_font: "גופן לשימוש כותרות באתר. ערכות עיצוב יכולות לדרוס אותו באמצעות המאפיין ‎`--heading-font-family`‎"
+    enable_sitemap: "ליצור מפת אתר עבור האתר שלך ולכלול אותה בקובץ robots.txt."
+    sitemap_page_size: "מספר הכתובות שיתווספו בכל עמוד של מפת אתר. 50,000 לכל היותר"
     short_title: "בכותרת הקצרה ייעשה שימוש במסך הבית של המשתמש, במשגר או במקומות אחרים שבהם המקום מוגבל. אורכה לא יעלה על 12 תווים."
     dashboard_hidden_reports: "לאפשר להסתיר את הדוחות המסוימים בלוח הבקרה."
     dashboard_visible_tabs: "נא לבחור אילו לשוניות תופענה בלוח הבקרה."
@@ -2236,6 +2238,7 @@ he:
         leading_trailing_slash: "אסור שהביטוי הרגולרי יתחיל או יסתיים בלוכסן."
       unicode_usernames_avatars: "התמונות הייצוגיות הפנימיות של המערכת אינן תומכות בשמות משתמשים עם יוניקוד."
       list_value_count: "הרשימה חייבת להכיל בדיוק %{count} ערכים."
+      markdown_linkify_tlds: "לא ניתן לכלול ערך של ‚*’."
       google_oauth2_hd_groups: "עליך להגדיר את ‚google oauth2 hd’ בטרם הפעלת ההגדרה הזאת."
       search_tokenize_chinese_enabled: "עליך להשבית את ‚search_tokenize_chinese’ (חיפוש מפרק סינית) בטרם הפעלת הגדרה זו."
       search_tokenize_japanese_enabled: "עליך להשבית את ‚search_tokenize_japanese’ (חיפוש מפרק יפנית) בטרם הפעלת הגדרה זו."
@@ -2445,6 +2448,8 @@ he:
     actions:
       grant_admin:
         description: "ליתר ביטחון, עליך לאשר את האימות הדו־שלבי שלך לפני שתוענק למשתמש %{username} גישת ניהול."
+      discourse_connect_provider:
+        description: "%{hostname} ביקש ממך לאשר את האימות הדו־שלבי שלך. תתבצע הפניה בחזרה לאתר לאחר אישור האימות הדו־שלבי שלך."
   admin:
     email:
       sent_test: "נשלח!"

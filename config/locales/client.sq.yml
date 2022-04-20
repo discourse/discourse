@@ -968,16 +968,8 @@ sq:
       not_approved: "Llogaria juaj nuk është aprovuar ende. Do t'ju dërgojmë një email kur të aprovohet. "
       google_oauth2:
         name: "Google"
-        title: "me Google"
       twitter:
         name: "Twitter"
-        title: "me Twitter"
-      instagram:
-        title: "me Instagram"
-      facebook:
-        title: "me Facebook"
-      github:
-        title: "me GitHub"
     invites:
       accept_title: "Ftesë"
       welcome_to: "Mirë se vini tek %{site_name}!"
@@ -1540,6 +1532,8 @@ sq:
       tags: "Etiketat"
       tags_placeholder: "(Opsionale) lista e etiketave të lejuara"
       tag_groups_placeholder: "(Opsionale) lista e grupeve të etiketave"
+      required_tag_group:
+        delete: "Fshij"
       delete: "Fshini kategorinë"
       create: "Krijo kategorinë e re"
       create_long: "Krijo një kategori të re"
