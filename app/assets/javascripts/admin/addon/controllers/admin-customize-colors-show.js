@@ -1,18 +1,19 @@
 import Controller from "@ember/controller";
 import I18n from "I18n";
 import bootbox from "bootbox";
-import discourseComputed from "discourse-common/utils/decorators";
 import { later } from "@ember/runloop";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { clipboardCopy } from "discourse/lib/utilities";
 
 export default class AdminCustomizeColorsShowController extends Controller {
-  @discourseComputed("model.colors", "onlyOverridden")
-  colors(allColors, onlyOverridden) {
-    if (onlyOverridden) {
-      return allColors.filterBy("overridden");
+  onlyOverridden = false;
+
+  @computed("model.colors.[]", "onlyOverridden")
+  get colors() {
+    if (this.onlyOverridden) {
+      return this.model.colors?.filterBy("overridden");
     } else {
-      return allColors;
+      return this.model.colors;
     }
   }
 
