@@ -437,6 +437,7 @@ en:
       time_must_be_provided: "Time must be provided for all reminders"
       for_topic_must_use_first_post: "You can only use the first post to bookmark the topic."
       bookmarkable_id_type_required: "The name and type of the record to bookmark is required."
+      invalid_bookmarkable: "A %{type} cannot be bookmarked."
 
     reminders:
       at_desktop: "Next time I'm at my desktop"

@@ -2,10 +2,19 @@
 
 Fabricator(:bookmark) do
   user
-  post { Fabricate(:post) }
+  post {
+    if !SiteSetting.use_polymorphic_bookmarks
+      Fabricate(:post)
+    end
+  }
   name "This looked interesting"
   reminder_at { 1.day.from_now.iso8601 }
   reminder_set_at { Time.zone.now }
+  bookmarkable {
+    if SiteSetting.use_polymorphic_bookmarks
+      Fabricate(:post)
+    end
+  }
 
   # TODO (martin) [POLYBOOK] Not relevant once polymorphic bookmarks are implemented.
   before_create do |bookmark|

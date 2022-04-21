@@ -343,6 +343,10 @@ class User < ActiveRecord::Base
     end
   end
 
+  def bookmarks_of_type(type)
+    bookmarks.where(bookmarkable_type: type)
+  end
+
   EMAIL = %r{([^@]+)@([^\.]+)}
   FROM_STAGED = "from_staged"
 

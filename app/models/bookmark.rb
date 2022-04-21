@@ -8,12 +8,101 @@ class Bookmark < ActiveRecord::Base
     "reminder_type" # TODO 2021-04-01: remove
   ]
 
+  cattr_accessor :registered_bookmarkables
+  self.registered_bookmarkables = []
+
+  def self.registered_bookmarkable_from_type(type)
+    Bookmark.registered_bookmarkables.find { |bm| bm.model.name == type }
+  end
+
+  def self.register_bookmarkable(
+    model:, serializer:, list_query:, search_query:, preload_associations: []
+  )
+    Bookmark.registered_bookmarkables << Bookmarkable.new(
+      model: model,
+      serializer: serializer,
+      list_query: list_query,
+      search_query: search_query,
+      preload_associations: preload_associations
+    )
+  end
+
+  ##
+  # This is called when the app loads, similar to AdminDashboardData.reset_problem_checks,
+  # so the default Post and Topic bookmarkables are registered on
+  # boot.
+  #
+  # This method also can be used in testing to reset bookmarkables between
+  # tests. It will also fire multiple times in development mode because
+  # classes are not cached.
+  def self.reset_bookmarkables
+    self.registered_bookmarkables = []
+    Bookmark.register_bookmarkable(
+      model: Post,
+      serializer: UserPostBookmarkSerializer,
+      list_query: lambda do |user, guardian|
+        topics = Topic.listable_topics.secured(guardian)
+        pms = Topic.private_messages_for_user(user)
+        post_bookmarks = user
+          .bookmarks_of_type("Post")
+          .joins("INNER JOIN posts ON posts.id = bookmarks.bookmarkable_id AND bookmarks.bookmarkable_type = 'Post'")
+          .joins("LEFT JOIN topics ON topics.id = posts.topic_id")
+          .joins("LEFT JOIN topic_users ON topic_users.topic_id = topics.id")
+          .where("topic_users.user_id = ?", user.id)
+        guardian.filter_allowed_categories(
+          post_bookmarks.merge(topics.or(pms)).merge(Post.secured(guardian))
+        )
+      end,
+      search_query: lambda do |bookmarks, query, ts_query, &bookmarkable_search|
+        bookmarkable_search.call(
+          bookmarks.joins(
+            "LEFT JOIN post_search_data ON post_search_data.post_id = bookmarks.bookmarkable_id AND bookmarks.bookmarkable_type = 'Post'"
+          ),
+          "#{ts_query} @@ post_search_data.search_data"
+        )
+      end,
+      preload_associations: [{ topic: [:topic_users, :tags] }, :user]
+    )
+    Bookmark.register_bookmarkable(
+      model: Topic,
+      serializer: UserTopicBookmarkSerializer,
+      list_query: lambda do |user, guardian|
+        topics = Topic.listable_topics.secured(guardian)
+        pms = Topic.private_messages_for_user(user)
+        topic_bookmarks = user
+          .bookmarks_of_type("Topic")
+          .joins("INNER JOIN topics ON topics.id = bookmarks.bookmarkable_id AND bookmarks.bookmarkable_type = 'Topic'")
+          .joins("LEFT JOIN topic_users ON topic_users.topic_id = topics.id")
+          .where("topic_users.user_id = ?", user.id)
+        guardian.filter_allowed_categories(topic_bookmarks.merge(topics.or(pms)))
+      end,
+      search_query: lambda do |bookmarks, query, ts_query, &bookmarkable_search|
+        bookmarkable_search.call(
+          bookmarks
+          .joins("LEFT JOIN posts ON posts.topic_id = topics.id AND posts.post_number = 1")
+          .joins("LEFT JOIN post_search_data ON post_search_data.post_id = posts.id"),
+        "#{ts_query} @@ post_search_data.search_data"
+        )
+      end,
+      preload_associations: [:topic_users, :tags, { posts: :user }]
+    )
+  end
+  reset_bookmarkables
+
+  def self.valid_bookmarkable_types
+    Bookmark.registered_bookmarkables.map(&:model).map(&:to_s)
+  end
+
   belongs_to :user
   belongs_to :post
   has_one :topic, through: :post
   belongs_to :bookmarkable, polymorphic: true
 
-  delegate :topic_id, to: :post
+  # TODO (martin) [POLYBOOK] Not relevant once polymorphic bookmarks are implemented.
+  def topic_id
+    return if SiteSetting.use_polymorphic_bookmarks
+    post.topic_id
+  end
 
   def self.auto_delete_preferences
     @auto_delete_preferences ||= Enum.new(
@@ -22,6 +111,10 @@ class Bookmark < ActiveRecord::Base
       on_owner_reply: 2,
       clear_reminder: 3,
     )
+  end
+
+  def self.select_type(bookmarks_relation, type)
+    bookmarks_relation.select { |bm| bm.bookmarkable_type == type }
   end
 
   # TODO (martin) [POLYBOOK] Not relevant once polymorphic bookmarks are implemented.
@@ -35,6 +128,7 @@ class Bookmark < ActiveRecord::Base
     if: Proc.new { |b| b.will_save_change_to_post_id? || b.will_save_change_to_for_topic? }
 
   validate :polymorphic_columns_present, on: [:create, :update]
+  validate :valid_bookmarkable_type, on: [:create, :update]
 
   validate :unique_per_bookmarkable,
     on: [:create, :update],
@@ -104,6 +198,13 @@ class Bookmark < ActiveRecord::Base
         limit: SiteSetting.max_bookmarks_per_user
       )
     )
+  end
+
+  def valid_bookmarkable_type
+    return if !SiteSetting.use_polymorphic_bookmarks
+    return if Bookmark.valid_bookmarkable_types.include?(self.bookmarkable_type)
+
+    self.errors.add(:base, I18n.t("bookmarks.errors.invalid_bookmarkable", type: self.bookmarkable_type))
   end
 
   # TODO (martin) [POLYBOOK] Not relevant once polymorphic bookmarks are implemented.

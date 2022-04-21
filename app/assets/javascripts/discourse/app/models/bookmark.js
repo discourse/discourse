@@ -159,17 +159,12 @@ const Bookmark = RestModel.extend({
     });
   },
 
-  @discourseComputed(
-    "post_user_username",
-    "post_user_avatar_template",
-    "post_user_name"
-  )
-  postUser(post_user_username, avatarTemplate, name) {
-    return User.create({
-      username: post_user_username,
-      avatar_template: avatarTemplate,
-      name,
-    });
+  @discourseComputed("bookmarkable_type")
+  bookmarkableTopicAlike(bookmarkable_type) {
+    if (!this.siteSettings.use_polymorphic_bookmarks) {
+      return true;
+    }
+    return ["Topic", "Post"].includes(bookmarkable_type);
   },
 });
 
@@ -177,6 +172,7 @@ Bookmark.reopenClass({
   create(args) {
     args = args || {};
     args.currentUser = args.currentUser || User.current();
+    args.user = User.create(args.user);
     return this._super(args);
   },
 });
