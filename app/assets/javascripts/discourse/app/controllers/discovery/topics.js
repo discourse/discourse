@@ -169,7 +169,7 @@ const controllerOpts = {
       return I18n.t("topics.bottom.category", {
         category: category.get("name"),
       });
-    } else if (tags) {
+    } else if (tags.length) {
       return I18n.t("topics.bottom.tag", {
         tag: tagName,
       });
