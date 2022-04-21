@@ -20,6 +20,7 @@ import {
   twoMonths,
   twoWeeks,
 } from "discourse/lib/time-utils";
+import I18n from "I18n";
 
 export const TIME_SHORTCUT_TYPES = {
   LATER_TODAY: "later_today",
@@ -253,4 +254,12 @@ export function hideDynamicTimeShortcuts(shortcuts, timezone) {
   }
 
   return shortcuts.filter((s) => !shortcutsToHide.has(s.id));
+}
+
+export function formatTime(shortcut) {
+  if (!shortcut.time || !shortcut.timeFormatKey) {
+    return null;
+  }
+
+  return shortcut.time.format(I18n.t(shortcut.timeFormatKey));
 }

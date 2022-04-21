@@ -7,6 +7,7 @@ import {
 import {
   TIME_SHORTCUT_TYPES,
   defaultTimeShortcuts,
+  formatTime,
   hideDynamicTimeShortcuts,
   specialShortcutOptions,
 } from "discourse/lib/time-shortcut";
@@ -204,7 +205,7 @@ export default Component.extend({
     }
 
     this._applyCustomLabels(options, customLabels);
-    this._formatTime(options);
+    options.forEach((o) => (o.timeFormatted = formatTime(o)));
     return options;
   },
 
