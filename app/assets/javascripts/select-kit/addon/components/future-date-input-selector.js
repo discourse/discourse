@@ -42,6 +42,7 @@ export default ComboBoxComponent.extend({
         name: I18n.t(tf.label),
         time: tf.time,
         timeFormatted: tf.timeFormatted,
+        icon: tf.icon,
       };
     });
   }),
