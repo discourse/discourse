@@ -30,7 +30,7 @@ export function buildQuote(post, contents, opts = {}) {
   if (
     helperContext().siteSettings.display_name_on_posts &&
     !helperContext().siteSettings.prioritize_username_in_ux &&
-    post.name
+    fullName
   ) {
     params.push(`username:${opts.username || post.username}`);
   }

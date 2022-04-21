@@ -612,13 +612,13 @@ acceptance("Prioritize Full Name", function (needs) {
     );
   });
 
-  test("Quoting a nested quote returns the correct name", async function (assert) {
+  test("Quoting a nested quote returns the correct username", async function (assert) {
     await visit("/t/short-topic-with-two-posts/54079");
     await selectText("#post_4 p");
     await click(".insert-quote");
     assert.strictEqual(
       queryAll(".d-editor-input").val().trim(),
-      '[quote="James, John, the third", post:2, topic:54079, username:james_john"]\nThis is a short topic.\n[/quote]'
+      '[quote="james_john", post:2, topic:54079"]\nThis is a short topic.\n[/quote]'
     );
   });
 });
