@@ -155,6 +155,7 @@ class UserBookmarkSerializer < ApplicationSerializer
     post_user.name
   end
 
+  # TODO (martin) [POLYBOOK] Not relevant once polymorphic bookmarks are implemented.
   # Note...these are just stub methods for compatability with the user-bookmark-list.hbs
   # changes in a transition period for polymorphic bookmarks.
   def bookmarkable_user_username

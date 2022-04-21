@@ -5,6 +5,8 @@
 # search additional bookmarks for the user bookmark list, and
 # also to enumerate on the registered Bookmarkable types.
 #
+# Post and Topic bookmarkables are registered by default.
+#
 # Anything other than types registered in this way will throw an error
 # when trying to save the Bookmark record. All things that are bookmarkable
 # must be registered in this way.

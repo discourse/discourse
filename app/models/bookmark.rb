@@ -23,6 +23,14 @@ class Bookmark < ActiveRecord::Base
     )
   end
 
+  ##
+  # This is called when the app loads, similar to AdminDashboardData.reset_problem_checks,
+  # so the default Post and Topic bookmarkables are registered on
+  # boot.
+  #
+  # This method also can be used in testing to reset bookmarkables between
+  # tests. It will also fire multiple times in development mode because
+  # classes are not cached.
   def self.reset_bookmarkables
     self.registered_bookmarkables = []
     Bookmark.register_bookmarkable(
@@ -42,10 +50,13 @@ class Bookmark < ActiveRecord::Base
           post_bookmarks.merge(topics.or(pms)).merge(Post.secured(guardian))
         )
       end,
-      search_query: lambda do |bookmarks, query, ts_query, &blk|
-        blk.call(bookmarks
-          .joins("LEFT JOIN post_search_data ON post_search_data.post_id = bookmarks.bookmarkable_id AND
-                 bookmarks.bookmarkable_type = 'Post'"), "#{ts_query} @@ post_search_data.search_data")
+      search_query: lambda do |bookmarks, query, ts_query, &bookmarkable_search|
+        bookmarkable_search.call(
+          bookmarks.joins(
+            "LEFT JOIN post_search_data ON post_search_data.post_id = bookmarks.bookmarkable_id AND bookmarks.bookmarkable_type = 'Post'"
+          ),
+          "#{ts_query} @@ post_search_data.search_data"
+        )
       end,
       preload_associations: [{ topic: [:topic_users, :tags] }, :user]
     )
@@ -63,11 +74,13 @@ class Bookmark < ActiveRecord::Base
           .where(bookmarkable_type: "Topic")
         guardian.filter_allowed_categories(topic_bookmarks.merge(topics.or(pms)))
       end,
-      search_query: lambda do |bookmarks, query, ts_query, &blk|
-        blk.call(
+      search_query: lambda do |bookmarks, query, ts_query, &bookmarkable_search|
+        bookmarkable_search.call(
           bookmarks
           .joins("LEFT JOIN posts ON posts.topic_id = topics.id AND posts.post_number = 1")
-          .joins("LEFT JOIN post_search_data ON post_search_data.post_id = posts.id"), "#{ts_query} @@ post_search_data.search_data")
+          .joins("LEFT JOIN post_search_data ON post_search_data.post_id = posts.id"),
+        "#{ts_query} @@ post_search_data.search_data"
+        )
       end,
       preload_associations: [:topic_users, :tags, { posts: :user }]
     )
@@ -220,10 +233,6 @@ class Bookmark < ActiveRecord::Base
       reminder_last_sent_at: Time.zone.now,
       reminder_set_at: nil,
     )
-  end
-
-  scope :for_user_of_type, ->(user, type) do
-    where(bookmarkable_type: type, user: user)
   end
 
   scope :with_reminders, -> do
