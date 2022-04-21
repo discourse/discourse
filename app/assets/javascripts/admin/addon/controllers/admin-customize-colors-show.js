@@ -4,7 +4,7 @@ import bootbox from "bootbox";
 import discourseComputed from "discourse-common/utils/decorators";
 import { later } from "@ember/runloop";
 import { action } from "@ember/object";
-import copyText from "discourse/lib/copy-text";
+import { clipboardCopy } from "discourse/lib/utilities";
 
 export default class AdminCustomizeColorsShowController extends Controller {
   @discourseComputed("model.colors", "onlyOverridden")
@@ -28,14 +28,7 @@ export default class AdminCustomizeColorsShowController extends Controller {
 
   @action
   copyToClipboard() {
-    const colors = document.querySelector(".table.colors");
-    colors.style.display = "none";
-    colors.insertAdjacentHTML(
-      "afterend",
-      "<textarea id='copy-range'></textarea>"
-    );
-    const area = document.getElementById("copy-range");
-    if (copyText(this.model.schemeJson(), area)) {
+    if (clipboardCopy(this.model.schemeJson())) {
       this.set(
         "model.savingStatus",
         I18n.t("admin.customize.copied_to_clipboard")
@@ -50,8 +43,6 @@ export default class AdminCustomizeColorsShowController extends Controller {
     later(() => {
       this.set("model.savingStatus", null);
     }, 2000);
-
-    colors.style.display = "block";
   }
 
   @action
