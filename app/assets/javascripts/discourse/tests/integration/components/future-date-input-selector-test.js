@@ -29,7 +29,7 @@ discourseModule(
       template: hbs`
         {{future-date-input-selector
           options=(hash
-            none="topic.auto_update_input.none"
+            none="time_shortcut.select_timeframe"
           )
         }}
       `,
@@ -42,7 +42,7 @@ discourseModule(
 
         assert.ok(
           this.subject.header().label() ===
-            I18n.t("topic.auto_update_input.none"),
+            I18n.t("time_shortcut.select_timeframe"),
           "Default text is rendered"
         );
 
@@ -65,9 +65,7 @@ discourseModule(
       async test(assert) {
         await this.subject.expand();
         const options = getOptions();
-        const customDateAndTime = I18n.t(
-          "topic.auto_update_input.pick_date_and_time"
-        );
+        const customDateAndTime = I18n.t("time_shortcut.custom");
 
         assert.ok(options.includes(customDateAndTime));
       },

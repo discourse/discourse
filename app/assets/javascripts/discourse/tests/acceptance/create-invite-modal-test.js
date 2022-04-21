@@ -4,6 +4,7 @@ import {
   count,
   exists,
   fakeTime,
+  loggedInUser,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "I18n";
@@ -190,7 +191,7 @@ acceptance(
     });
 
     needs.hooks.beforeEach(() => {
-      const timezone = moment.tz.guess();
+      const timezone = loggedInUser().resolvedTimezone(loggedInUser());
       clock = fakeTime("2100-05-03T08:00:00", timezone, true); // Monday morning
     });
 
@@ -211,17 +212,17 @@ acceptance(
       );
 
       const expected = [
-        I18n.t("topic.auto_update_input.later_today"),
-        I18n.t("topic.auto_update_input.tomorrow"),
-        I18n.t("topic.auto_update_input.later_this_week"),
-        I18n.t("topic.auto_update_input.next_week"),
-        I18n.t("topic.auto_update_input.two_weeks"),
-        I18n.t("topic.auto_update_input.next_month"),
-        I18n.t("topic.auto_update_input.two_months"),
-        I18n.t("topic.auto_update_input.three_months"),
-        I18n.t("topic.auto_update_input.four_months"),
-        I18n.t("topic.auto_update_input.six_months"),
-        I18n.t("topic.auto_update_input.pick_date_and_time"),
+        I18n.t("time_shortcut.later_today"),
+        I18n.t("time_shortcut.tomorrow"),
+        I18n.t("time_shortcut.later_this_week"),
+        I18n.t("time_shortcut.start_of_next_business_week_alt"),
+        I18n.t("time_shortcut.two_weeks"),
+        I18n.t("time_shortcut.next_month"),
+        I18n.t("time_shortcut.two_months"),
+        I18n.t("time_shortcut.three_months"),
+        I18n.t("time_shortcut.four_months"),
+        I18n.t("time_shortcut.six_months"),
+        I18n.t("time_shortcut.custom"),
       ];
 
       assert.deepEqual(options, expected, "options are correct");
