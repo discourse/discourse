@@ -9,11 +9,12 @@ export function buildQuote(post, contents, opts = {}) {
     return "";
   }
 
-  let fullName;
-  // if post user matches the quote user, then fetch
+  let fullName = post.name;
+  // if the quote username data attr is present but it does not
+  // match the post username then fallback to the quote username instead of fetching
   // the full name from the post
-  if (post.username === opts.username) {
-    fullName = post.name;
+  if (opts.username && opts.username !== post.username) {
+    fullName = null;
   }
 
   const name = prioritizeNameFallback(fullName, opts.username || post.username);
