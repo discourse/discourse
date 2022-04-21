@@ -1310,6 +1310,10 @@ describe PrettyText do
     it "correctly strips VARIATION SELECTOR-16 character (ufe0f) from some emojis" do
       expect(PrettyText.cook("❤️💣")).to match(/<img src[^>]+bomb[^>]+>/)
     end
+
+    it "replaces Emoji from Unicode 14.0" do
+      expect(PrettyText.cook("🫣")).to match(/\:face_with_peeking_eye\:/)
+    end
   end
 
   describe "custom emoji" do
