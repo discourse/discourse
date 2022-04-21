@@ -292,7 +292,7 @@ createWidget("search-menu-results", {
       return h("div.no-results", I18n.t("search.no_results"));
     }
 
-    if (!term) {
+    if (!term && !attrs.inPMInboxContext) {
       return this.attach("search-menu-initial-options", { term });
     }
 
@@ -364,7 +364,9 @@ createWidget("search-menu-results", {
     const content = [];
 
     if (!searchTopics) {
-      content.push(this.attach("search-menu-initial-options", { term }));
+      if (!attrs.inPMInboxContext) {
+        content.push(this.attach("search-menu-initial-options", { term }));
+      }
     } else {
       if (mainResultsContent.length) {
         content.push(mainResultsContent);

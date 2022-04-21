@@ -105,7 +105,7 @@ acceptance("Search - Full Page", function (needs) {
     });
   });
 
-  needs.hooks.afterEach(function () {
+  needs.hooks.afterEach(() => {
     searchResultClickTracked = false;
   });
 
