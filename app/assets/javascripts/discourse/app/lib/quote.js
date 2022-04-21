@@ -1,7 +1,6 @@
 import { prioritizeNameFallback } from "discourse/lib/settings";
 import { helperContext } from "discourse-common/lib/helpers";
 import User from "discourse/models/user";
-import { Promise } from "rsvp";
 
 export const QUOTE_REGEXP = /\[quote=([^\]]*)\]((?:[\s\S](?!\[quote=[^\]]*\]))*?)\[\/quote\]/im;
 
@@ -41,4 +40,3 @@ async function lookupNameByUsername(username) {
     return user?.name;
   });
 }
-
