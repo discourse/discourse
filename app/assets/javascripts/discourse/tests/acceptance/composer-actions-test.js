@@ -618,7 +618,7 @@ acceptance("Prioritize Full Name", function (needs) {
     await click(".insert-quote");
     assert.strictEqual(
       queryAll(".d-editor-input").val().trim(),
-      '[quote="james_john", post:2, topic:54079"]\nThis is a short topic.\n[/quote]'
+      '[quote="james_john, post:2, topic:54079"]\nThis is a short topic.\n[/quote]'
     );
   });
 });
