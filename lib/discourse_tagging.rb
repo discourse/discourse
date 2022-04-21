@@ -367,11 +367,13 @@ module DiscourseTagging
     # - there are more available tags than the query limit
     # - and no search term has been included
     required_tag_ids = nil
+    required_category_tag_group = nil
     if opts[:for_input] && category&.category_required_tag_groups.present? && (filter_for_non_staff || term.blank?)
       category.category_required_tag_groups.each do |crtg|
         group_tags = crtg.tag_group.tags.pluck(:id)
         next if (group_tags & selected_tag_ids).size >= crtg.min_count
         if filter_for_non_staff || group_tags.size >= opts[:limit].to_i
+          required_category_tag_group = crtg
           required_tag_ids = group_tags
           builder.where("id IN (?)", required_tag_ids)
         end
@@ -441,6 +443,19 @@ module DiscourseTagging
     end
 
     result = builder.query(builder_params).uniq { |t| t.id }
+
+    if opts[:with_context]
+      context = {}
+      if required_category_tag_group
+        context[:required_tag_group] = {
+          name: required_category_tag_group.tag_group.name,
+          min_count: required_category_tag_group.min_count
+        }
+      end
+      [result, context]
+    else
+      result
+    end
   end
 
   def self.filter_visible(query, guardian = nil)

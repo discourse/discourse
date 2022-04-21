@@ -3836,6 +3836,9 @@ en:
       choose_for_topic_required:
         one: "select at least %{count} tag..."
         other: "select at least %{count} tags..."
+      choose_for_topic_required_group:
+        one: "select %{count} tag from '%{name}'..."
+        other: "select %{count} tags from '%{name}'..."
       info: "Info"
       default_info: "This tag isn't restricted to any categories, and has no synonyms."
       staff_info: "To add restrictions, put this tag in a <a href=%{basePath}/tag_groups>tag group</a>."
