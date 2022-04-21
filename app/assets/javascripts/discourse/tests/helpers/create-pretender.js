@@ -133,13 +133,26 @@ export function applyDefaultHandlers(pretender) {
 
   pretender.delete("/bookmarks/:id", () => response({}));
 
-  pretender.get("/tags/filter/search", () => {
-    return response({
+  pretender.get("/tags/filter/search", (request) => {
+    const responseBody = {
       results: [
         { id: "monkey", name: "monkey", count: 1 },
         { id: "gazelle", name: "gazelle", count: 2 },
       ],
-    });
+    };
+
+    if (
+      request.queryParams.categoryId === "1" &&
+      request.queryParams.q === "" &&
+      !request.queryParams.selected_tags.includes("monkey")
+    ) {
+      responseBody["required_tag_group"] = {
+        name: "monkey group",
+        min_count: 1,
+      };
+    }
+
+    return response(responseBody);
   });
 
   pretender.get(`/u/:username/emails.json`, (request) => {
