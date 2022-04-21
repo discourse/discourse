@@ -24,7 +24,6 @@ class Bookmark < ActiveRecord::Base
   end
 
   def self.reset_bookmarkables
-    return if !SiteSetting.use_polymorphic_bookmarks
     self.registered_bookmarkables = []
     Bookmark.register_bookmarkable(
       model: Post,
