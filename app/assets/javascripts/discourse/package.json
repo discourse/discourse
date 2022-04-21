@@ -37,6 +37,7 @@
     "discourse-hbr": "^1.0.0",
     "discourse-widget-hbs": "^1.0.0",
     "ember-auto-import": "^2.2.4",
+    "ember-auto-import-chunks-json-generator": "^1.0.0",
     "ember-buffered-proxy": "^2.0.0-beta.0",
     "ember-cached-decorator-polyfill": "^0.1.4",
     "ember-cli": "~3.25.3",

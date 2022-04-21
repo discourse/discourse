@@ -12,27 +12,14 @@ class QunitController < ApplicationController
     request.headers["HTTP_X_DISCOURSE_EMBER_CLI"] == "true"
   end
 
-  # only used in test / dev
+  # only used in non-ember-cli test / dev
   def index
-    raise Discourse::NotFound.new if is_ember_cli_proxy?
+    raise Discourse::NotFound.new if is_ember_cli_proxy? || EmberCli.enabled?
     raise Discourse::InvalidAccess.new if Rails.env.production?
   end
 
   def theme
     raise Discourse::NotFound.new if !can_see_theme_qunit?
-
-    @is_proxied = is_ember_cli_proxy?
-    @legacy_ember = if Rails.env.production?
-      ENV['EMBER_CLI_PROD_ASSETS'] == "0"
-    else
-      !@is_proxied
-    end
-
-    # In production mode all bundles use `application`
-    @app_bundle = "application"
-    if Rails.env.development? && @is_proxied
-      @app_bundle = "discourse"
-    end
 
     param_key = nil
     @suggested_themes = nil

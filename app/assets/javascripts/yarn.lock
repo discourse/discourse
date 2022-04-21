@@ -5943,6 +5943,16 @@ elliptic@^6.5.3:
     minimalistic-assert "^1.0.1"
     minimalistic-crypto-utils "^1.0.1"
 
+ember-auto-import-chunks-json-generator@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/ember-auto-import-chunks-json-generator/-/ember-auto-import-chunks-json-generator-1.0.0.tgz#c2ca9380854f3cfefc67e3a1bd7f7c7a124f45ec"
+  integrity sha512-4itBcVrK/oAjbS8rycgRFS/f07rGtRgliHQU4BLXGKFm5qPrB6D75H76yCY/tE9+R+yIBV8cfdkVhJcPR1jtwQ==
+  dependencies:
+    broccoli-merge-trees "^4.2.0"
+    broccoli-plugin "^4.0.7"
+    ember-cli-babel "^7.26.6"
+    ember-cli-htmlbars "^5.7.1"
+
 ember-auto-import@^1.10.1:
   version "1.11.2"
   resolved "https://registry.yarnpkg.com/ember-auto-import/-/ember-auto-import-1.11.2.tgz#b6e9a0dddd88a10692830ffa4f5dfd8c137c8919"
