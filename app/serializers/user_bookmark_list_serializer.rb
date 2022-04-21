@@ -6,14 +6,7 @@ class UserBookmarkListSerializer < ApplicationSerializer
   def bookmarks
     if SiteSetting.use_polymorphic_bookmarks
       object.bookmarks.map do |bm|
-        case bm.bookmarkable_type
-        when "Topic"
-          UserTopicBookmarkSerializer.new(bm, scope: scope, root: false)
-        when "Post"
-          UserPostBookmarkSerializer.new(bm, scope: scope, root: false)
-        else
-          serialize_registered_type(bm)
-        end
+        serialize_registered_type(bm)
       end
     else
       object.bookmarks.map { |bm| UserBookmarkSerializer.new(bm, scope: scope, root: false) }
@@ -27,7 +20,8 @@ class UserBookmarkListSerializer < ApplicationSerializer
   private
 
   def serialize_registered_type(bookmark)
-    bookmarkable = Bookmark.registered_bookmarkables.find { |bm| bm.model.name == bookmark.bookmarkable_type }
-    bookmarkable.serializer.new(bookmark, scope: scope, root: false)
+    Bookmark.registered_bookmarkable_from_type(
+      bookmark.bookmarkable_type
+    ).serializer.new(bookmark, scope: scope, root: false)
   end
 end

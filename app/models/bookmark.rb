@@ -11,6 +11,10 @@ class Bookmark < ActiveRecord::Base
   cattr_accessor :registered_bookmarkables
   self.registered_bookmarkables = []
 
+  def self.registered_bookmarkable_from_type(type)
+    Bookmark.registered_bookmarkables.find { |bm| bm.model.name == type }
+  end
+
   def self.register_bookmarkable(
     model:, serializer:, list_query:, search_query:, preload_associations: []
   )
@@ -40,12 +44,11 @@ class Bookmark < ActiveRecord::Base
         topics = Topic.listable_topics.secured(guardian)
         pms = Topic.private_messages_for_user(user)
         post_bookmarks = user
-          .bookmarks
+          .bookmarks_of_type("Post")
           .joins("INNER JOIN posts ON posts.id = bookmarks.bookmarkable_id AND bookmarks.bookmarkable_type = 'Post'")
           .joins("LEFT JOIN topics ON topics.id = posts.topic_id")
           .joins("LEFT JOIN topic_users ON topic_users.topic_id = topics.id")
           .where("topic_users.user_id = ?", user.id)
-          .where(bookmarkable_type: "Post")
         guardian.filter_allowed_categories(
           post_bookmarks.merge(topics.or(pms)).merge(Post.secured(guardian))
         )
@@ -67,11 +70,10 @@ class Bookmark < ActiveRecord::Base
         topics = Topic.listable_topics.secured(guardian)
         pms = Topic.private_messages_for_user(user)
         topic_bookmarks = user
-          .bookmarks
+          .bookmarks_of_type("Topic")
           .joins("INNER JOIN topics ON topics.id = bookmarks.bookmarkable_id AND bookmarks.bookmarkable_type = 'Topic'")
           .joins("LEFT JOIN topic_users ON topic_users.topic_id = topics.id")
           .where("topic_users.user_id = ?", user.id)
-          .where(bookmarkable_type: "Topic")
         guardian.filter_allowed_categories(topic_bookmarks.merge(topics.or(pms)))
       end,
       search_query: lambda do |bookmarks, query, ts_query, &bookmarkable_search|
