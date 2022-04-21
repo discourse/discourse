@@ -45,6 +45,20 @@ describe SiteSerializer do
     expect(c1[:required_tag_groups]).to eq([{ name: tag_group_2.name, min_count: 1 }])
   end
 
+  it "doesn't explode when category_required_tag_group is missing" do
+    tag = Fabricate(:tag)
+    tag_group = Fabricate(:tag_group)
+    crtg = CategoryRequiredTagGroup.new(tag_group: tag_group, min_count: 1)
+    category.update!(category_required_tag_groups: [ crtg ])
+
+    tag_group.delete # Bypassing hooks like this should never happen in the app
+
+    serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+    c1 = serialized[:categories].find { |c| c[:id] == category.id }
+
+    expect(c1[:required_tag_groups]).to eq([{ name: nil, min_count: 1 }])
+  end
+
   it "returns correct notification level for categories" do
     SiteSetting.mute_all_categories_by_default = true
     SiteSetting.default_categories_regular = category.id.to_s
