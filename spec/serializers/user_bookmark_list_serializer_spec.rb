@@ -11,7 +11,14 @@ RSpec.describe UserBookmarkListSerializer do
       Bookmark.register_bookmarkable(
         model: User,
         serializer: UserTestBookmarkSerializer,
-        search_fields: ["username"]
+        list_query: lambda do |user, guardian|
+          user.bookmarks.joins(
+            "INNER JOIN users ON users.id = bookmarks.bookmarkable_id AND bookmarks.bookmarkable_type = 'User'"
+          ).where(bookmarkable_type: "User")
+        end,
+        search_query: lambda do |bookmarks, query, ts_query|
+          bookmarks.where("users.username ILIKE ?", query)
+        end
       )
 
       Fabricate(:topic_user, user: user, topic: post_bookmark.bookmarkable.topic)

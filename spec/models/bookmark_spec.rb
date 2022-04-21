@@ -66,12 +66,19 @@ describe Bookmark do
 
       it "does not allow a user to create a bookmarkable for a type that has not been registered" do
         user = Fabricate(:user)
-        bm = Bookmark.create(bookmarkable_type: "Upload", bookmarkable: Fabricate(:upload), user: user)
-        expect(bm.errors.full_messages).to include(I18n.t("bookmarks.errors.invalid_bookmarkable", type: "Upload"))
+        bm = Bookmark.create(bookmarkable_type: "User", bookmarkable: Fabricate(:user), user: user)
+        expect(bm.errors.full_messages).to include(I18n.t("bookmarks.errors.invalid_bookmarkable", type: "User"))
         Bookmark.register_bookmarkable(
-          model: Upload,
-          serializer: stub,
-          search_fields: ["file_name"]
+          model: User,
+          serializer: UserBookmarkSerializer,
+          list_query: lambda do |bookmark_user, guardian|
+            bookmark_user.bookmarks.joins(
+              "INNER JOIN users ON users.id = bookmarks.bookmarkable_id AND bookmarks.bookmarkable_type = 'User'"
+            ).where(bookmarkable_type: "User")
+          end,
+          search_query: lambda do |bookmarks, query, ts_query|
+            bookmarks.where("users.username ILIKE ?", query)
+          end
         )
         expect(bm.valid?).to eq(true)
       end
