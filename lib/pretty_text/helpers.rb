@@ -27,6 +27,14 @@ module PrettyText
       UrlHelper.schemaless(UrlHelper.absolute(user.avatar_template))
     end
 
+    def lookup_name_by_username(username)
+      return "" unless username
+      user = User.find_by(username_lower: username.downcase)
+      return "" unless user.present?
+
+      user.name || ""
+    end
+
     def lookup_primary_user_group(username)
       return "" unless username
       user = User.find_by(username_lower: username.downcase)

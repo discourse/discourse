@@ -1,5 +1,7 @@
 import { prioritizeNameFallback } from "discourse/lib/settings";
 import { helperContext } from "discourse-common/lib/helpers";
+import User from "discourse/models/user";
+import { Promise } from "rsvp";
 
 export const QUOTE_REGEXP = /\[quote=([^\]]*)\]((?:[\s\S](?!\[quote=[^\]]*\]))*?)\[\/quote\]/im;
 
@@ -10,7 +12,7 @@ export function buildQuote(post, contents, opts = {}) {
   }
 
   const name = prioritizeNameFallback(
-    post.name,
+    lookupNameByUsername(opts.username) || post.name,
     opts.username || post.username
   );
 
@@ -33,3 +35,10 @@ export function buildQuote(post, contents, opts = {}) {
 
   return `[quote="${params.join(", ")}"]\n${contents.trim()}\n[/quote]\n\n`;
 }
+
+async function lookupNameByUsername(username) {
+  await User.findByUsername(username).then((user) => {
+    return user?.name;
+  });
+}
+
