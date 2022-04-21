@@ -111,57 +111,41 @@ export default DiscourseRoute.extend(FilterModeMixin, {
   },
 
   setupController(controller, model) {
-    const noSubcategories =
-      this.noSubcategories === undefined
-        ? model.category?.default_list_filter === "none"
-        : this.noSubcategories;
-
-    this.controllerFor("tag.show").setProperties({
-      model: model.tag,
-      ...model,
-    });
-
-    this.setProperties({
-      navMode: this.navMode,
-      noSubcategories,
-      loading: false,
-      period: model.list.for_period,
-    });
-
     let topicOpts = {
-      model: this.context.list,
-      category: this.category,
-      period:
-        this.context.list.get("for_period") ||
-        (model.modelParams && model.modelParams.period),
-      selected: [],
-      noSubcategories: this.params && !!this.context.params.no_subcategories,
-      expandAllPinned: true,
-      canCreateTopic: this.canCreateTopic,
-      canCreateTopicOnCategory: this.canCreateTopicOnCategory,
-      tag: this.context.tag,
+      filterType: model.filterType,
+      canCreateTopic: model.canCreateTopic,
+      noSubcategories: model.noSubcategories,
+      tagNotification: model.tagNotification,
+      additionalTags: model.additionalTags,
+      showInfo: model.showInfo,
+      canCreateTopicOnTag: model.canCreateTopicOnTag,
+      category: model.category,
+      tag: model.tag,
     };
 
-    this.controllerFor("discovery/topics").setProperties(topicOpts);
-    this.controllerFor("navigation/tag").setProperties({
-      filterType: this.context.filterType,
-      canCreateTopic: this.context.canCreateTopic,
-      noSubcategories: this.context.noSubcategories,
-      tagNotification: this.context.tagNotification,
-      additionalTags: this.context.additionalTags,
-      showInfo: this.context.showInfo,
-      canCreateTopicOnTag: this.context.canCreateTopicOnTag,
-      category: this.context.category,
-      tag: this.context.tag,
+    this.controllerFor("navigation/tag").setProperties(topicOpts);
+
+    this.controllerFor("discovery/topics").setProperties({
+      model: model.list,
+      category: model.category,
+      period:
+        model.list.get("for_period") ||
+        (model.modelParams && model.modelParams.period),
+      selected: [],
+      noSubcategories: model.params && !!model.context.params.no_subcategories,
+      expandAllPinned: true,
+      canCreateTopic: model.canCreateTopic,
+      canCreateTopicOnCategory: model.canCreateTopicOnCategory,
+      tag: model.tag,
     });
 
     this.searchService.set("searchContext", model.tag.searchContext);
   },
+
   titleToken() {
-    const filterText = I18n.t(
-      `filters.${this.navMode.replace("/", ".")}.title`
-    );
-    const controller = this.controllerFor("tag.show");
+    const navMode = this.navMode;
+    const filterText = I18n.t(`filters.${navMode.replace("/", ".")}.title`);
+    const controller = this.controllerFor("navigation/tag");
 
     if (controller.tag?.id) {
       if (controller.category) {
@@ -213,17 +197,13 @@ export default DiscourseRoute.extend(FilterModeMixin, {
   },
 
   @action
-  changeSort(sortBy) {
-    changeSort.call(this, sortBy);
-  },
-
-  @action
   createTopic() {
     if (this.currentUser?.has_topic_draft) {
       this.openTopicDraft();
     } else {
-      const controller = this.controllerFor("tag.show");
+      const controller = this.controllerFor("navigation/tag");
       const composerController = this.controllerFor("composer");
+
       composerController
         .open({
           categoryId: controller.category?.id,
@@ -237,7 +217,7 @@ export default DiscourseRoute.extend(FilterModeMixin, {
             composerModel.set(
               "tags",
               [
-                controller.get("model.id"),
+                controller.get("tag.id"),
                 ...makeArray(controller.additionalTags),
               ].filter(Boolean)
             );
@@ -254,7 +234,7 @@ export default DiscourseRoute.extend(FilterModeMixin, {
 
   @action
   dismissRead(operationType) {
-    const controller = this.controllerFor("discovery/topics");
+    const controller = this.controllerFor("navigation/tag");
     controller.send("dismissRead", operationType, {
       categoryId: controller.get("category.id"),
       includeSubcategories: !controller.noSubcategories,
@@ -271,6 +251,16 @@ export default DiscourseRoute.extend(FilterModeMixin, {
     // need to fix for new topic dismissal
 
     return true;
+  },
+
+  @action
+  triggerRefresh() {
+    this.refresh();
+  },
+
+  @action
+  changeSort(sortBy) {
+    changeSort.call(this, sortBy);
   },
 
   @action
