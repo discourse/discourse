@@ -1639,8 +1639,6 @@ en:
           title: "Invite Link"
           success: "Invite link generated successfully!"
           error: "There was an error generating Invite link"
-          max_redemptions_allowed_label: "How many people are allowed to register using this link?"
-          expires_at: "When will this invite link expire?"
 
         invite:
           new_title: "Create Invite"
