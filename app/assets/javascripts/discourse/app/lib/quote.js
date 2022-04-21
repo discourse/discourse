@@ -1,6 +1,5 @@
 import { prioritizeNameFallback } from "discourse/lib/settings";
 import { helperContext } from "discourse-common/lib/helpers";
-import User from "discourse/models/user";
 
 export const QUOTE_REGEXP = /\[quote=([^\]]*)\]((?:[\s\S](?!\[quote=[^\]]*\]))*?)\[\/quote\]/im;
 
@@ -10,10 +9,14 @@ export function buildQuote(post, contents, opts = {}) {
     return "";
   }
 
-  const name = prioritizeNameFallback(
-    lookupNameByUsername(opts.username) || post.name,
-    opts.username || post.username
-  );
+  let fullName;
+  // if post user matches the quote user, then fetch
+  // the full name from the post
+  if (post.username === opts.username) {
+    fullName = post.name;
+  }
+
+  const name = prioritizeNameFallback(fullName, opts.username || post.username);
 
   const params = [
     name,
@@ -33,10 +36,4 @@ export function buildQuote(post, contents, opts = {}) {
   }
 
   return `[quote="${params.join(", ")}"]\n${contents.trim()}\n[/quote]\n\n`;
-}
-
-async function lookupNameByUsername(username) {
-  await User.findByUsername(username).then((user) => {
-    return user?.name;
-  });
 }
