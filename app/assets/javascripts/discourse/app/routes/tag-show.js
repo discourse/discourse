@@ -16,7 +16,6 @@ import PermissionType from "discourse/models/permission-type";
 import { escapeExpression } from "discourse/lib/utilities";
 import { makeArray } from "discourse-common/lib/helpers";
 import { setTopicList } from "discourse/lib/topic-list-tracker";
-import { scrollTop } from "discourse/mixins/scroll-top";
 import showModal from "discourse/lib/show-modal";
 import { action } from "@ember/object";
 
@@ -229,28 +228,15 @@ export default DiscourseRoute.extend(FilterModeMixin, {
   @action
   dismissReadTopics(dismissTopics) {
     const operationType = dismissTopics ? "topics" : "posts";
-    this.send("dismissRead", operationType);
-  },
-
-  @action
-  dismissRead(operationType) {
-    const controller = this.controllerFor("navigation/tag");
-    controller.send("dismissRead", operationType, {
-      categoryId: controller.get("category.id"),
-      includeSubcategories: !controller.noSubcategories,
-    });
+    const controller = this.controllerFor("discovery/topics");
+    controller.send("dismissRead", operationType);
   },
 
   @action
   loadingComplete() {
-    this.controllerFor("discovery").loadingComplete();
-    if (!this.session.get("topicListScrollPosition")) {
-      scrollTop();
-    }
-    this.set("loading", false);
-    // need to fix for new topic dismissal
-
-    return true;
+    const controller = this.controllerFor("discovery");
+    controller.set("loading", false);
+    controller.set("application.showFooter", this.loadedAllItems);
   },
 
   @action

@@ -1,4 +1,4 @@
-{{#d-section class="navigation-container tag-navigation"}}
+{{#d-section class="navigation-container tag-navigation" pageClass="tags" bodyClass=(concat "tag-" tag.id (if category.slug (concat " category-" category.slug)) ""  (if additionalTags " tags-intersection"))}}
   {{d-navigation
     filterMode=filterMode
     canCreateTopic=canCreateTopic

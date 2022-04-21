@@ -156,16 +156,22 @@ const controllerOpts = {
     if (!allLoaded) {
       return;
     }
-    const tag = this.model.topic_list.tags ? this.model.topic_list.tags[0] : ""; // terrible temp
+
+    let tags = [];
+    this.model.topic_list.tags?.forEach((tag) => {
+      tags.push(tag.name);
+    });
+
+    let tagName = tags.join(" & ");
     const category = this.category;
 
     if (category) {
       return I18n.t("topics.bottom.category", {
         category: category.get("name"),
       });
-    } else if (tag) {
+    } else if (tags) {
       return I18n.t("topics.bottom.tag", {
-        tag: tag.name,
+        tag: tagName,
       });
     } else {
       const split = (this.get("model.filter") || "").split("/");
