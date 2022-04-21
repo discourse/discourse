@@ -3,14 +3,13 @@
 DiscourseAutomation::Triggerable::RECURRING = 'recurring'
 
 RECURRENCE_CHOICES = [
-  { id: 'every_minute', name: 'discourse_automation.triggerables.recurring.recurrences.every_minute' },
-  { id: 'every_hour', name: 'discourse_automation.triggerables.recurring.recurrences.every_hour' },
-  { id: 'every_day', name: 'discourse_automation.triggerables.recurring.recurrences.every_day' },
-  { id: 'every_weekday', name: 'discourse_automation.triggerables.recurring.recurrences.every_weekday' },
-  { id: 'every_week', name: 'discourse_automation.triggerables.recurring.recurrences.every_week' },
-  { id: 'every_other_week', name: 'discourse_automation.triggerables.recurring.recurrences.every_other_week' },
-  { id: 'every_month', name: 'discourse_automation.triggerables.recurring.recurrences.every_month' },
-  { id: 'every_year', name: 'discourse_automation.triggerables.recurring.recurrences.every_year' },
+  { id: 'minute', name: 'discourse_automation.triggerables.recurring.frequencies.minute' },
+  { id: 'hour', name: 'discourse_automation.triggerables.recurring.frequencies.hour' },
+  { id: 'day', name: 'discourse_automation.triggerables.recurring.frequencies.day' },
+  { id: 'weekday', name: 'discourse_automation.triggerables.recurring.frequencies.weekday' },
+  { id: 'week', name: 'discourse_automation.triggerables.recurring.frequencies.week' },
+  { id: 'month', name: 'discourse_automation.triggerables.recurring.frequencies.month' },
+  { id: 'year', name: 'discourse_automation.triggerables.recurring.frequencies.year' },
 ]
 
 def setup_pending_automation(automation, fields)
@@ -20,18 +19,23 @@ def setup_pending_automation(automation, fields)
   return if !start_date
   start_date = Time.parse(start_date)
 
-  expected_recurrence = fields.dig('recurrence', 'value')
-  return if !expected_recurrence
+  interval = fields.dig('recurrence', 'value', 'interval')
+  return if !interval
+
+  frequency = fields.dig('recurrence', 'value', 'frequency')
+  return if !frequency
 
   byday = start_date.strftime('%A').upcase[0, 2]
+  interval = interval.to_i
+  interval_end = interval + 1
 
-  case expected_recurrence
-  when 'every_day'
+  case frequency
+  when 'day'
     next_trigger_date = RRule::Rule
-      .new('FREQ=DAILY', dtstart: start_date)
-      .between(Time.now.end_of_day, 2.days.from_now)
+      .new("FREQ=DAILY;INTERVAL=#{interval}", dtstart: start_date)
+      .between(Time.now.end_of_day, interval_end.days.from_now)
       .first
-  when 'every_month'
+  when 'month'
     count = 0
     (start_date.beginning_of_month.to_date..start_date.end_of_month.to_date).each do |date|
       count += 1 if date.strftime('%A') == start_date.strftime('%A')
@@ -39,32 +43,27 @@ def setup_pending_automation(automation, fields)
     end
 
     next_trigger_date = RRule::Rule
-      .new("FREQ=MONTHLY;BYDAY=#{count}#{byday}", dtstart: start_date)
-      .between(Time.now, 2.months.from_now)
+      .new("FREQ=MONTHLY;INTERVAL=#{interval};BYDAY=#{count}#{byday}", dtstart: start_date)
+      .between(Time.now, interval_end.months.from_now)
       .first
-  when 'every_weekday'
+  when 'weekday'
     next_trigger_date = RRule::Rule
-      .new('FREQ=DAILY;BYDAY=MO,TU,WE,TH,FR', dtstart: start_date)
-      .between(Time.now.end_of_day, 3.days.from_now)
+      .new("FREQ=DAILY;INTERVAL=#{interval};BYDAY=MO,TU,WE,TH,FR", dtstart: start_date)
+      .between(Time.now.end_of_day, (interval_end + 1).days.from_now)
       .first
-  when 'every_week'
+  when 'week'
     next_trigger_date = RRule::Rule
-      .new("FREQ=WEEKLY;BYDAY=#{byday}", dtstart: start_date)
-      .between(Time.now.end_of_week, 2.weeks.from_now)
+      .new("FREQ=WEEKLY;INTERVAL=#{interval};BYDAY=#{byday}", dtstart: start_date)
+      .between(Time.now.end_of_week, interval_end.weeks.from_now)
       .first
-  when 'every_other_week'
+  when 'hour'
+    next_trigger_date = (Time.zone.now + interval.hour).beginning_of_hour
+  when 'minute'
+    next_trigger_date = (Time.zone.now + interval.minute).beginning_of_minute
+  when 'year'
     next_trigger_date = RRule::Rule
-      .new("FREQ=WEEKLY;INTERVAL=2;BYDAY=#{byday}", dtstart: start_date)
-      .between(Time.now, Time.now + 2.months)
-      .first
-  when 'every_hour'
-    next_trigger_date = (Time.zone.now + 1.hour).beginning_of_hour
-  when 'every_minute'
-    next_trigger_date = (Time.zone.now + 1.minute).beginning_of_minute
-  when 'every_year'
-    next_trigger_date = RRule::Rule
-      .new("FREQ=YEARLY", dtstart: start_date)
-      .between(Time.now, 2.years.from_now)
+      .new("FREQ=YEARLY;INTERVAL=#{interval}", dtstart: start_date)
+      .between(Time.now, interval_end.years.from_now)
       .first
   end
 
@@ -76,7 +75,7 @@ def setup_pending_automation(automation, fields)
 end
 
 DiscourseAutomation::Triggerable.add(DiscourseAutomation::Triggerable::RECURRING) do
-  field :recurrence, component: :choices, extra: { content: RECURRENCE_CHOICES }, required: true
+  field :recurrence, component: :period, extra: { content: RECURRENCE_CHOICES }, required: true
   field :start_date, component: :date_time, required: true
 
   on_update { |automation, fields| setup_pending_automation(automation, fields) }

@@ -1,0 +1,26 @@
+<div class="field period-field control-group">
+  {{fields/da-field-label label=label field=field}}
+
+  <div class="controls">
+    {{i18n "discourse_automation.triggerables.recurring.every"}}
+
+    {{input
+      type="number"
+      defaultValue=1
+      value=field.metadata.value.interval
+      input=(action (mut field.metadata.value.interval) value="target.value")
+      disabled=field.isDisabled
+      required=field.isRequired
+    }}
+
+    {{combo-box
+      value=field.metadata.value.frequency
+      content=replacedContent
+      onChange=(action (mut field.metadata.value.frequency))
+      options=(hash allowAny=false disabled=field.isDisabled)
+      required=field.isRequired
+    }}
+
+    {{fields/da-field-description description=description}}
+  </div>
+</div>

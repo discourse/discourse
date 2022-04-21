@@ -9,16 +9,26 @@ describe 'Recurring' do
     Fabricate(:automation, trigger: DiscourseAutomation::Triggerable::RECURRING, script: 'nothing_about_us')
   end
 
+  def upsert_period_field!(interval, frequency)
+    metadata = {
+      value: {
+        interval: interval,
+        frequency: frequency
+      }
+    }
+    automation.upsert_field!('recurrence', 'period', metadata, target: 'trigger')
+  end
+
   context 'updating trigger' do
     context 'date is in future' do
       before do
-        freeze_time Time.parse('2021-06-04 10:00')
+        freeze_time Time.parse('2021-06-04 10:00 UTC')
       end
 
       it 'creates a pending trigger' do
         expect {
           automation.upsert_field!('start_date', 'date_time', { value: 2.hours.from_now }, target: 'trigger')
-          automation.upsert_field!('recurrence', 'choices', { value: 'every_hour' }, target: 'trigger')
+          upsert_period_field!(1, 'hour')
         }.to change {
           DiscourseAutomation::PendingAutomation.count
         }.by(1)
@@ -42,7 +52,13 @@ describe 'Recurring' do
     before do
       freeze_time Time.zone.parse('2021-06-04 10:00')
       automation.fields.insert!(name: 'start_date', component: 'date_time', metadata: { value: 2.hours.ago }, target: 'trigger', created_at: Time.now, updated_at: Time.now)
-      automation.fields.insert!(name: 'recurrence', component: 'choices', metadata: { value: 'every_week' }, target: 'trigger', created_at: Time.now, updated_at: Time.now)
+      metadata = {
+        value: {
+          interval: "1",
+          frequency: "week"
+        }
+      }
+      automation.fields.insert!(name: 'recurrence', component: 'period', metadata: metadata, target: 'trigger', created_at: Time.now, updated_at: Time.now)
     end
 
     it 'creates the next iteration' do
@@ -60,7 +76,7 @@ describe 'Recurring' do
 
     context 'every_month' do
       before do
-        automation.upsert_field!('recurrence', 'choices', { value: 'every_month' }, target: 'trigger')
+        upsert_period_field!(1, 'month')
       end
 
       it 'creates the next iteration one month later' do
@@ -73,7 +89,7 @@ describe 'Recurring' do
 
     context 'every_day' do
       before do
-        automation.upsert_field!('recurrence', 'choices', { value: 'every_day' }, target: 'trigger')
+        upsert_period_field!(1, 'day')
       end
 
       it 'creates the next iteration one day later' do
@@ -87,7 +103,7 @@ describe 'Recurring' do
 
     context 'every_weekday' do
       before do
-        automation.upsert_field!('recurrence', 'choices', { value: 'every_weekday' }, target: 'trigger')
+        upsert_period_field!(1, 'weekday')
       end
 
       it 'creates the next iteration one day after without Saturday/Sunday' do
@@ -101,7 +117,7 @@ describe 'Recurring' do
 
     context 'every_hour' do
       before do
-        automation.upsert_field!('recurrence', 'choices', { value: 'every_hour' }, target: 'trigger')
+        upsert_period_field!(1, 'hour')
       end
 
       it 'creates the next iteration one hour later' do
@@ -114,7 +130,7 @@ describe 'Recurring' do
 
     context 'every_minute' do
       before do
-        automation.upsert_field!('recurrence', 'choices', { value: 'every_minute' }, target: 'trigger')
+        upsert_period_field!(1, 'minute')
       end
 
       it 'creates the next iteration one minute later' do
@@ -127,7 +143,7 @@ describe 'Recurring' do
 
     context 'every_year' do
       before do
-        automation.upsert_field!('recurrence', 'choices', { value: 'every_year' }, target: 'trigger')
+        upsert_period_field!(1, 'year')
       end
 
       it 'creates the next iteration one year later' do
@@ -141,10 +157,10 @@ describe 'Recurring' do
 
     context 'every_other_week' do
       before do
-        automation.upsert_field!('recurrence', 'choices', { value: 'every_other_week' }, target: 'trigger')
+        upsert_period_field!(2, 'week')
       end
 
-      it 'creates the next iteration one month later' do
+      it 'creates the next iteration two weeks later' do
         automation.trigger!
 
         pending_automation = DiscourseAutomation::PendingAutomation.last

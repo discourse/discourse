@@ -25,4 +25,18 @@ describe DiscourseAutomation::Field do
       expect(field).to_not be_valid
     end
   end
+
+  context 'period field' do
+    DiscourseAutomation::Scriptable.add('test_period_field') do
+      field :foo, component: :period
+    end
+
+    fab!(:automation) { Fabricate(:automation, script: 'test_period_field') }
+
+    it 'works with an object value' do
+      value = { interval: "2", frequency: "day" }
+      field = DiscourseAutomation::Field.create(automation: automation, component: 'period', name: 'foo', metadata: { value: value })
+      expect(field).to be_valid
+    end
+  end
 end

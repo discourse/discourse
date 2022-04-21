@@ -66,15 +66,15 @@ en:
             stalled_after:
               label: Stalled after
         recurring:
-          recurrences:
-            every_minute: Every minute
-            every_hour: Every hour
-            every_day: Every day
-            every_weekday: Every weekday
-            every_week: Every week
-            every_other_week: Every other week
-            every_month: Every month
-            every_year: Every year
+          every: Every
+          frequencies:
+            minute: minute
+            hour: hour
+            day: day
+            weekday: weekday
+            week: week
+            month: month
+            year: year
           fields:
             recurrence:
               label: Recurrence

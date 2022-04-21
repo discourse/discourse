@@ -160,6 +160,13 @@ module DiscourseAutomation
             }
           }
         ]
+      },
+      'period' => {
+        'type' => 'object',
+        'properties' => {
+          'interval' => { 'type' => 'integer' },
+          'frequency' => { 'type' => 'string' }
+        }
       }
     }
 

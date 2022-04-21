@@ -71,6 +71,7 @@
       margin: 0.25em 0.25em 0.25em 0;
       text-align: left;
       width: 180px;
+      line-height: 27px;
     }
 
     .controls {
@@ -129,6 +130,29 @@
       .select-kit,
       input[type="text"] {
         width: auto;
+      }
+    }
+
+    .period-field {
+      line-height: 34px;
+
+      .controls {
+        display: flex;
+      }
+
+      .select-kit {
+        width: 150px;
+        margin-left: 6px;
+
+        .select-kit-header {
+          height: 34px;
+        }
+      }
+
+      input {
+        width: 100px;
+        max-height: 34px;
+        margin: 0 0 0 6px;
       }
     }
 
