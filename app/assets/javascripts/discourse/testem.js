@@ -80,9 +80,6 @@ if (shouldLoadPluginTestJs()) {
     "/assets/discourse/tests/plugin-tests.js": {
       target,
     },
-    "/javascripts/": {
-      target,
-    },
     "/plugins/": {
       target,
     },
