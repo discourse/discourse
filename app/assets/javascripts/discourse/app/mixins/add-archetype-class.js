@@ -5,24 +5,26 @@ import { observes, on } from "discourse-common/utils/decorators";
 // This is used for keeping the `body` style in sync for the background image.
 export default {
   _cleanUp() {
-    $("body").removeClass((_, css) =>
-      (css.match(/\barchetype-\S+/g) || []).join(" ")
-    );
+    document.body.classList.forEach((name) => {
+      if (/\barchetype-\S+/g.test(name)) {
+        document.body.classList.remove(name);
+      }
+    });
   },
 
   @observes("archetype")
   @on("init")
   _archetypeChanged() {
-    const archetype = this.archetype;
     this._cleanUp();
 
-    if (archetype) {
-      $("body").addClass("archetype-" + archetype);
+    if (this.archetype) {
+      document.body.classList.add(`archetype-${this.archetype}`);
     }
   },
 
   willDestroyElement() {
     this._super(...arguments);
+
     this._cleanUp();
   },
 };
