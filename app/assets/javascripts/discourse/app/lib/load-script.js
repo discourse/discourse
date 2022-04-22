@@ -88,7 +88,7 @@ export default function loadScript(url, opts = {}) {
     const cb = function (data) {
       if (opts?.css) {
         const style = document.createElement("style");
-        style.innerHTML = data;
+        style.innerText = data;
         document.querySelector("head").appendChild(style);
       }
 
