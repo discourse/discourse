@@ -2409,6 +2409,7 @@ en:
       google_oauth2_hd_groups: "You must first set 'google oauth2 hd' before enabling this setting."
       search_tokenize_chinese_enabled: "You must disable 'search_tokenize_chinese' before enabling this setting."
       search_tokenize_japanese_enabled: "You must disable 'search_tokenize_japanese' before enabling this setting."
+      discourse_connect_cannot_be_enabled_if_second_factor_enforced:  "You cannot enable DiscourseConnect if 2FA is enforced."
 
     placeholder:
       discourse_connect_provider_secrets:
