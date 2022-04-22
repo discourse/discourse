@@ -1,3 +1,5 @@
+import domFromString from "discourse-common/lib/dom-from-string";
+
 const trimLeft = (text) => text.replace(/^\s+/, "");
 const trimRight = (text) => text.replace(/\s+$/, "");
 const countPipes = (text) =>
@@ -429,7 +431,7 @@ export class Tag {
           this.inline = true;
         }
 
-        text = $("<textarea />").html(text).text();
+        text = domFromString(`<textarea>${text}</textarea>`)[0].innerText;
         return super.decorate(text);
       }
     };
@@ -692,7 +694,9 @@ function putPlaceholders(html) {
   while (match) {
     const placeholder = `DISCOURSE_PLACEHOLDER_${placeholders.length + 1}`;
     let code = match[1];
-    code = $("<div />").html(code).text().replace(/^\n/, "").replace(/\n$/, "");
+    code = domFromString(`<div>${code}</div>`)[0]
+      .innerText.replace(/^\n/, "")
+      .replace(/\n$/, "");
     placeholders.push([placeholder, code]);
     html = html.replace(match[0], `<code>${placeholder}</code>`);
     match = codeRegEx.exec(origHtml);
