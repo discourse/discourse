@@ -20,6 +20,11 @@ function loadWithTag(path, cb) {
     registerWaiter(() => finished);
   }
 
+  // Don't leave it hanging if something goes wrong
+  s.onerror = function () {
+    finished = true;
+  };
+
   s.onload = s.onreadystatechange = function (_, abort) {
     finished = true;
     if (
