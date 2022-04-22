@@ -27,6 +27,10 @@ jobs:
       PGPASSWORD: discourse
       USES_PARALLEL_DATABASES: ${{ matrix.build_type == 'backend' && matrix.target == 'core' }}
 
+    services:
+      selenium:
+        image: selenium/standalone-chrome-debug
+
     strategy:
       fail-fast: false
 
@@ -155,7 +159,7 @@ jobs:
 
       - name: Core RSpec System Specs
         if: matrix.build_type == 'backend' && matrix.target == 'core'
-        run: bin/rspec -P spec/system/**/*_spec.rb
+        run: SELENIUM_PORT=4444 SELENIUM_HOST=http://selenium bin/rspec -P spec/system/**/*_spec.rb --profile
 
       - name: Core QUnit (Legacy)
         if: matrix.build_type == 'frontend-legacy' && matrix.target == 'core'
