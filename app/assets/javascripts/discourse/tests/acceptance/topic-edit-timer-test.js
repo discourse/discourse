@@ -370,4 +370,18 @@ acceptance("Topic - Edit timer", function (needs) {
 
     assert.deepEqual(options, expected);
   });
+
+  test("Does not show timer notice unless timer set", async function (assert) {
+    updateCurrentUser({ moderator: true });
+
+    await visit("/t/internationalization-localization");
+    await click(".toggle-admin-menu");
+    await click(".admin-topic-timer-update button");
+
+    const timerType = selectKit(".select-kit.timer-type");
+    await timerType.expand();
+    await timerType.selectRowByValue("close_after_last_post");
+
+    assert.notOk(exists(".topic-timer-heading"));
+  });
 });

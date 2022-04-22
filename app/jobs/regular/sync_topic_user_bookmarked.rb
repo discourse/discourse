@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 module Jobs
+
+  # TODO (martin) [POLYBOOK] This will need to be restructured for polymorphic
+  # bookmarks when edge cases are handled.
   class SyncTopicUserBookmarked < ::Jobs::Base
     def execute(args = {})
       topic_id = args[:topic_id]

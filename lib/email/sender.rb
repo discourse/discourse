@@ -466,8 +466,7 @@ module Email
       # via group SMTP and if reply by email site settings are configured
       return if !user_id || !post_id || !header_value(Email::MessageBuilder::ALLOW_REPLY_BY_EMAIL_HEADER).present?
 
-      # use safe variant here cause we tend to see concurrency issue
-      reply_key = PostReplyKey.find_or_create_by_safe!(
+      PostReplyKey.create_or_find_by!(
         post_id: post_id,
         user_id: user_id
       ).reply_key

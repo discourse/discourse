@@ -43,6 +43,34 @@ export function nextMonth(timezone) {
   return startOfDay(now(timezone).add(1, "month").startOf("month"));
 }
 
+export function twoWeeks(timezone) {
+  return startOfDay(now(timezone).add(2, "weeks").day(MOMENT_MONDAY));
+}
+
+export function twoMonths(timezone) {
+  return startOfDay(now(timezone).add(2, "months").startOf("month"));
+}
+
+export function threeMonths(timezone) {
+  return startOfDay(now(timezone).add(3, "months").startOf("month"));
+}
+
+export function fourMonths(timezone) {
+  return startOfDay(now(timezone).add(4, "months").startOf("month"));
+}
+
+export function sixMonths(timezone) {
+  return startOfDay(now(timezone).add(6, "months").startOf("month"));
+}
+
+export function oneYear(timezone) {
+  return startOfDay(now(timezone).add(1, "years").startOf("month"));
+}
+
+export function thousandYears(timezone) {
+  return startOfDay(now(timezone).add(1000, "years").startOf("month"));
+}
+
 export function nextBusinessWeekStart(timezone) {
   return startOfDay(now(timezone).add(7, "days")).day(MOMENT_MONDAY);
 }

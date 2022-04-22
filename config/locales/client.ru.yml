@@ -164,7 +164,7 @@ ru:
       to_placeholder: "по дату"
     share:
       topic_html: 'Тема: <span class="topic-title">%{topicTitle}</span>'
-      post: "сообщение #%{postNumber}"
+      post: "Сообщение #%{postNumber} от пользователя %{username}"
       close: "закрыть"
       twitter: "Поделиться в Твиттере"
       facebook: "Поделиться в Фейсбуке"
@@ -339,6 +339,8 @@ ru:
         unbookmark_with_reminder: "Удалить все закладки и напоминания из этой темы."
     bookmarks:
       created: "Вы добавили это сообщение в закладки под именем '%{name}'"
+      create_for: "Создать закладку для %{type}"
+      edit_for: "Изменить закладку для %{type}"
       not_bookmarked: "Добавить сообщение в закладки"
       remove_reminder_keep_bookmark: "Удалить напоминание, но оставить закладку"
       created_with_reminder: "Вы добавили это сообщение в закладки под именем '%{name}' с последующим напоминанием %{date}"
@@ -414,6 +416,7 @@ ru:
     saved: "Сохранено!"
     upload: "Загрузить"
     uploading: "Загрузка..."
+    processing: "Обработка..."
     uploading_filename: "Загрузка %{filename}"
     processing_filename: "Обработка: %{filename}..."
     clipboard: "буфер обмена"
@@ -1522,7 +1525,7 @@ ru:
         never: "Никогда"
       email_messages_level: "Написать мне письмо, когда я отправляю личное сообщение"
       include_tl0_in_digests: "Включать в сводку контент от новых пользователей"
-      email_in_reply_to: "Включить в электронное письмо выдержку из ответов на сообщение"
+      email_in_reply_to: "Включать в электронное письмо выдержку из ответов на сообщение"
       other_settings: "Прочее"
       categories_settings: "Разделы"
       new_topic_duration:
@@ -1914,27 +1917,27 @@ ru:
       not_approved: "Ваша учётная запись ещё не прошла проверку. После успешной проверки мы отправим вам письмо с уведомлением, и вы сможете войти в свою учётную запись."
       google_oauth2:
         name: "Google"
-        title: "Google"
+        title: "Войти через Google"
         sr_title: "Войти через Google"
       twitter:
         name: "Twitter"
-        title: "Twitter"
+        title: "Войти через Twitter"
         sr_title: "Войти через Twitter"
       instagram:
         name: "Instagram"
-        title: "Instagram"
+        title: "Войти через Instagram"
         sr_title: "Войти через Instagram"
       facebook:
         name: "Facebook"
-        title: "Facebook"
+        title: "Войти через Facebook"
         sr_title: "Войти через Facebook"
       github:
         name: "GitHub"
-        title: "GitHub"
+        title: "Войти через GitHub"
         sr_title: "Войти через GitHub"
       discord:
         name: "Discord"
-        title: "Discord"
+        title: "Войти через Discord"
         sr_title: "Войти через Discord"
       second_factor_toggle:
         totp: "Вместо этого используйте приложение для проверки подлинности"
@@ -1951,7 +1954,6 @@ ru:
       success: "Ваш аккаунт создан и теперь вы можете войти."
       name_label: "Имя"
       password_label: "Пароль"
-      optional_description: "(необязательно)"
     password_reset:
       continue: "Далее на %{site_name}"
     emoji_set:
@@ -3031,7 +3033,16 @@ ru:
       show_hidden: "Просмотр игнорируемого содержимого."
       deleted_by_author_simple: "(сообщение удалено автором)"
       collapse: "Свернуть"
+      sr_collapse_replies: "Свернуть ответы на сообщение"
+      sr_date: "Дата сообщения"
+      sr_expand_replies:
+        one: "На это сообщение есть %{count} ответ. Нажмите для просмотра."
+        few: "На это сообщение есть %{count} ответа. Нажмите для просмотра."
+        many: "На это сообщение есть %{count} ответов. Нажмите для просмотра."
+        other: "На это сообщение есть %{count} ответов. Нажмите для просмотра."
       expand_collapse: "Развернуть/Свернуть"
+      sr_below_embedded_posts_description: "Ответы на сообщение #%{post_number}"
+      sr_embedded_reply_description: "Ответ пользователя @%{username} на сообщение #%{post_number}"
       locked: "Модератор заблокировал это сообщение для редактирования"
       gap:
         one: "Просмотреть %{count} скрытый ответ"
@@ -3060,6 +3071,16 @@ ru:
         few: "Вам и ещё %{count} людям понравилось это сообщение"
         many: "Вам и ещё %{count} людям понравилось это сообщение"
         other: "Вам и ещё %{count} людям понравилось это сообщение"
+      sr_post_like_count_button:
+        one: "%{count} пользователю понравилось это сообщение. Нажмите для просмотра."
+        few: "%{count} пользователям понравилось это сообщение. Нажмите для просмотра."
+        many: "%{count} пользователям понравилось это сообщение. Нажмите для просмотра."
+        other: "%{count} пользователям понравилось это сообщение. Нажмите для просмотра."
+      sr_post_read_count_button:
+        one: "%{count} пользователь прочитал это сообщение. Нажмите для просмотра."
+        few: "%{count} пользователя прочитали это сообщение. Нажмите для просмотра."
+        many: "%{count} пользователей прочитали это сообщение. Нажмите для просмотра."
+        other: "%{count} пользователей прочитали это сообщение. Нажмите для просмотра."
       filtered_replies_hint:
         one: "Посмотреть это сообщение и ответ на него"
         few: "Посмотреть это сообщение и %{count} ответа"
@@ -3181,6 +3202,8 @@ ru:
             few: "и ещё %{count} прочитали"
             many: "и ещё %{count} прочитали"
             other: "и ещё %{count} прочитали"
+          sr_post_likers_list_description: "Пользователи, которым понравилось это сообщение"
+          sr_post_readers_list_description: "Пользователи, прочитавшие это сообщение"
         by_you:
           off_topic: "Помечено вами как оффтопик"
           spam: "Помечено вами как спам"
@@ -3287,10 +3310,11 @@ ru:
       tag_groups_placeholder: "(Необязат.) Доступные группы тегов"
       manage_tag_groups_link: "Управление группами тегов"
       allow_global_tags_label: "Также разрешить другие теги"
-      tag_group_selector_placeholder: "(Необязат.) Группа тегов"
-      required_tag_group_description: "Требовать, чтобы новые темы имели теги из группы тегов:"
-      min_tags_from_required_group_label: "Номер тега:"
-      required_tag_group_label: "Группа тегов:"
+      required_tag_group:
+        description: "Требовать, чтобы новые темы имели теги из группы тегов:"
+        delete: "Удалить"
+        add: "Добавить необходимую группу тегов"
+        placeholder: "Выберите группу тегов..."
       topic_featured_link_allowed: "Разрешить избранные ссылки в этом разделе"
       delete: "Удалить раздел"
       create: "Создать раздел"
@@ -3522,19 +3546,24 @@ ru:
       other {}}
     original_post: "Начальное сообщение"
     views: "Просм."
+    sr_views: "Сортировать по просмотрам"
     views_lowercase:
       one: "просмотр"
       few: "просмотра"
       many: "просмотров"
       other: "просмотров"
     replies: "Ответов"
+    sr_replies: "Сортировать по ответам"
     views_long:
       one: "Тема просмотрена %{count} раз"
       few: "Тема просмотрена %{number} раза"
       many: "Тема просмотрена %{number} раз"
       other: "Тема просмотрена %{number} раз"
     activity: "Активность"
+    sr_activity: "Сортировать по активности"
     likes: "Нрав."
+    sr_likes: "Сортировать по симпатиям"
+    sr_op_likes: "Сортировать по симпатиям первого сообщения"
     likes_lowercase:
       one: "симпатия"
       few: "симпатии"
@@ -3968,7 +3997,7 @@ ru:
       unsupported_file_picked: "Вы выбрали неподдерживаемый тип файла. Поддерживаемые типы файлов: %{types}."
     user_activity:
       no_activity_title: "Пока нет активности"
-      no_activity_body: "Добро пожаловать в наше сообщество! Вы здесь пока новичок и ещё не участвовали в обсуждениях. Для начала посмотрите <a href='%{topUrl}'>самые обсуждаемые темы</a> или ознакомьтесь с <a href='%{categoriesUrl}'>разделами</a> форума! Отметьте понравившиеся сообщения значком %{heartIcon}. И, если вы ещё этого не сделали, помогите другим участникам форума познакомиться с вами, добавив изображение и краткую информацию о себе в <a href='%{preferencesUrl}'>профиль пользователя</a>."
+      no_activity_body: "Добро пожаловать в наше сообщество! Вы здесь пока новичок и ещё не участвовали в обсуждениях. Для начала посмотрите <a href='%{topUrl}'>самые обсуждаемые темы</a> или ознакомьтесь с <a href='%{categoriesUrl}'>разделами</a> форума! Отметьте наиболее полезные или понравившиеся сообщения значком %{heartIcon}. Статистика Вашей активности будет отображаться на этой странице."
       no_activity_others: "Нет активности."
       no_replies_title: "Вы пока не ответили ни на какие сообщения"
       no_replies_others: "Нет ответов."
@@ -3978,9 +4007,13 @@ ru:
       no_likes_body: "Отличный способ принять участие и внести свой вклад - это начать читать обсуждения, и отмечать значком %{heartIcon} сообщения, которые вам понравились!"
       no_likes_others: "Симпатий пока нет."
       no_topics_title: "Вы пока ещё не начали ни одной темы"
+      no_topics_title_others: "Пользователь %{username} ещё не создал ни одной темы"
       no_read_topics_title: "Вы пока ещё не прочли ни одной темы"
       no_read_topics_body: "Когда вы начнете читать обсуждения, список читаемых тем появится здесь. Чтобы начать читать, поищите интересующие вас темы в разделе<a href='%{topUrl}'>Обсуждаемые</a>, в других <a href='%{categoriesUrl}'>разделах</a> форума, либо выполните поиск по ключевому слову %{searchIcon}"
     no_group_messages_title: "Групповые сообщения не найдены"
+    topic_entrance:
+      sr_jump_top_button: "Перейти к первому сообщению"
+      sr_jump_bottom_button: "Перейти к последнему сообщению"
     fullscreen_table:
       expand_btn: "Развернуть таблицу"
     second_factor_auth:
@@ -4714,6 +4747,7 @@ ru:
         time: "Время"
         user: "Пользователь"
         email_type: "Тип письма"
+        details_title: "Показать данные электронной почты"
         to_address: "Адресат"
         test_email_address: "Email-адрес тестового письма"
         send_test: "Отправить тестовое письмо"

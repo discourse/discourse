@@ -23,4 +23,19 @@ module MobileDetection
     user_agent =~ /iPad|iPhone|iPod/
   end
 
+  MODERN_MOBILE_REGEX = %r{
+    \(.*iPhone\ OS\ 1[3-9].*\)|
+    \(.*iPad.*OS\ 1[3-9].*\)|
+    Chrome\/8[89]|
+    Chrome\/9[0-9]|
+    Chrome\/1[0-9][0-9]|
+    Firefox\/8[5-9]|
+    Firefox\/9[0-9]|
+    Firefox\/1[0-9][0-9]
+  }x
+
+  def self.modern_mobile_device?(user_agent)
+    user_agent.match?(MODERN_MOBILE_REGEX)
+  end
+
 end

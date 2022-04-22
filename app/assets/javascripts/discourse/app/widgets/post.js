@@ -17,7 +17,10 @@ import { h } from "virtual-dom";
 import hbs from "discourse/widgets/hbs-compiler";
 import { iconNode } from "discourse-common/lib/icon-library";
 import { postTransformCallbacks } from "discourse/widgets/post-stream";
-import { prioritizeNameInUx } from "discourse/lib/settings";
+import {
+  prioritizeNameFallback,
+  prioritizeNameInUx,
+} from "discourse/lib/settings";
 import { relativeAgeMediumSpan } from "discourse/lib/formatter";
 import { transformBasicPost } from "discourse/lib/transform-post";
 import autoGroupFlairForUser from "discourse/lib/avatar-flair";
@@ -68,16 +71,20 @@ export function avatarImg(wanted, attrs) {
   return h("img", properties);
 }
 
-export function avatarFor(wanted, attrs) {
+export function avatarFor(wanted, attrs, linkAttrs) {
+  const attributes = {
+    href: attrs.url,
+    "data-user-card": attrs.username,
+    "aria-hidden": true,
+  };
+  if (linkAttrs) {
+    Object.assign(attributes, linkAttrs);
+  }
   return h(
     "a",
     {
       className: `trigger-user-card ${attrs.className || ""}`,
-      attributes: {
-        href: attrs.url,
-        "data-user-card": attrs.username,
-        "aria-hidden": true,
-      },
+      attributes,
     },
     avatarImg(wanted, attrs)
   );
@@ -136,16 +143,20 @@ createWidget("reply-to-tab", {
 
   html(attrs, state) {
     const icon = state.loading ? h("div.spinner.small") : iconNode("share");
+    const name = prioritizeNameFallback(
+      attrs.replyToName,
+      attrs.replyToUsername
+    );
 
     return [
       icon,
       " ",
       avatarImg("small", {
         template: attrs.replyToAvatarTemplate,
-        username: attrs.replyToUsername,
+        username: name,
       }),
       " ",
-      h("span", formatUsername(attrs.replyToUsername)),
+      h("span", formatUsername(name)),
     ];
   },
 
@@ -180,14 +191,21 @@ createWidget("post-avatar", {
     if (!attrs.user_id) {
       body = iconNode("far-trash-alt", { class: "deleted-user-avatar" });
     } else {
-      body = avatarFor.call(this, this.settings.size, {
-        template: attrs.avatar_template,
-        username: attrs.username,
-        name: attrs.name,
-        url: attrs.usernameUrl,
-        className: `main-avatar ${hideFromAnonUser ? "non-clickable" : ""}`,
-        hideTitle: true,
-      });
+      body = avatarFor.call(
+        this,
+        this.settings.size,
+        {
+          template: attrs.avatar_template,
+          username: attrs.username,
+          name: attrs.name,
+          url: attrs.usernameUrl,
+          className: `main-avatar ${hideFromAnonUser ? "non-clickable" : ""}`,
+          hideTitle: true,
+        },
+        {
+          tabindex: "-1",
+        }
+      );
     }
 
     const postAvatarBody = [body];
@@ -341,18 +359,26 @@ createWidget("post-date", {
   tagName: "div.post-info.post-date",
 
   html(attrs) {
-    const attributes = { class: "post-date" };
-    let date;
+    let date,
+      linkClassName = "post-date";
+
     if (attrs.wiki && attrs.lastWikiEdit) {
-      attributes["class"] += " last-wiki-edit";
+      linkClassName += " last-wiki-edit";
       date = new Date(attrs.lastWikiEdit);
     } else {
       date = new Date(attrs.created_at);
     }
-    return h("a", { attributes }, dateNode(date));
+    return this.attach("link", {
+      rawLabel: dateNode(date),
+      className: linkClassName,
+      omitSpan: true,
+      title: "post.sr_date",
+      href: attrs.shareUrl,
+      action: "showShareModal",
+    });
   },
 
-  click() {
+  showShareModal() {
     const post = this.findAncestorModel();
     const topic = post.topic;
     const controller = showModal("share-topic", { model: topic.category });
@@ -460,7 +486,16 @@ createWidget("post-contents", {
       result.push(
         h("section.embedded-posts.bottom", [
           repliesBelow.map((p) => {
-            return this.attach("embedded-post", p, { model: p.asPost });
+            return this.attach("embedded-post", p, {
+              model: p.asPost,
+              state: {
+                role: "region",
+                "aria-label": I18n.t("post.sr_embedded_reply_description", {
+                  post_number: attrs.post_number,
+                  username: p.username,
+                }),
+              },
+            });
           }),
           this.attach("button", {
             title: "post.collapse",
@@ -468,6 +503,7 @@ createWidget("post-contents", {
             action: "toggleRepliesBelow",
             actionParam: "true",
             className: "btn collapse-up",
+            translatedAriaLabel: I18n.t("post.sr_collapse_replies"),
           }),
         ])
       );
@@ -652,6 +688,7 @@ createWidget("post-article", {
     return {
       "aria-label": I18n.t("share.post", {
         postNumber: attrs.post_number,
+        username: attrs.username,
       }),
       role: "region",
       "data-post-id": attrs.id,
@@ -662,8 +699,8 @@ createWidget("post-article", {
 
   html(attrs, state) {
     const rows = [
-      h("a.tabLoc", {
-        attributes: { href: "", "aria-hidden": true, tabindex: -1 },
+      h("span.tabLoc", {
+        attributes: { "aria-hidden": true, tabindex: -1 },
       }),
     ];
     if (state.repliesAbove.length) {
@@ -826,6 +863,9 @@ export default createWidget("post", {
       classNames.push("moderator");
     } else {
       classNames.push("regular");
+    }
+    if (attrs.userSuspended) {
+      classNames.push("user-suspended");
     }
     if (addPostClassesCallbacks) {
       for (let i = 0; i < addPostClassesCallbacks.length; i++) {

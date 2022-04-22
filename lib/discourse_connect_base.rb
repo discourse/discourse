@@ -11,23 +11,26 @@ class DiscourseConnectBase
     avatar_url
     bio
     card_background_url
+    confirmed_2fa
     email
     external_id
     groups
     locale
     locale_force_update
+    location
     logout
     name
+    no_2fa_methods
     nonce
     profile_background_url
     remove_groups
+    require_2fa
     require_activation
     return_sso_url
     suppress_welcome_message
     title
     username
     website
-    location
   }
 
   FIXNUMS = []
@@ -35,9 +38,12 @@ class DiscourseConnectBase
   BOOLS = %i{
     admin
     avatar_force_update
+    confirmed_2fa
     locale_force_update
     logout
     moderator
+    no_2fa_methods
+    require_2fa
     require_activation
     suppress_welcome_message
   }

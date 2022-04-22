@@ -164,7 +164,7 @@ he:
       to_placeholder: "עד תאריך"
     share:
       topic_html: 'נושא: <span class="topic-title">%{topicTitle}</span>'
-      post: "פוסט מס׳ %{postNumber}"
+      post: "פוסט מס׳ %{postNumber} מאת ‎@%{username}"
       close: "סגירה"
       twitter: "שיתוף בטוויטר"
       facebook: "שיתוף בפייסבוק"
@@ -339,6 +339,8 @@ he:
         unbookmark_with_reminder: "יש ללחוץ כדי להסיר את כל הסימניות והתזכורות בנושא זה."
     bookmarks:
       created: "הוספת את הפוסט הזה לסימניות. %{name}"
+      create_for: "יצירת סימנייה אל %{type}"
+      edit_for: "עריכת סימנייה אל %{type}"
       not_bookmarked: "סמנו פוסט זה עם סימנייה"
       remove_reminder_keep_bookmark: "הסרת תזכורת ושמירת הסימנייה"
       created_with_reminder: "סימנת את הפוסט הזה עם תזכורת %{date}. %{name}"
@@ -414,6 +416,7 @@ he:
     saved: "נשמר!"
     upload: "העלאה"
     uploading: "בהליכי העלאה..."
+    processing: "מתבצע עיבוד…"
     uploading_filename: "מעלה: %{filename}..."
     processing_filename: "מתבצע עיבוד: %{filename}…"
     clipboard: "לוח"
@@ -1914,27 +1917,27 @@ he:
       not_approved: "החשבון שלך עדיין לא אושר. תישלח אליך הודעה בדוא״ל כשיתאפשר לך להיכנס למערכת."
       google_oauth2:
         name: "Google"
-        title: "עם Google"
+        title: "כניסה עם Google"
         sr_title: "כניסה עם Google"
       twitter:
         name: "Twitter"
-        title: "עם Twitter"
+        title: "כניסה עם טוויטר"
         sr_title: "כניסה עם טוויטר"
       instagram:
         name: "Instagram"
-        title: "עם אינסטגרם"
+        title: "כניסה עם אינסטגרם"
         sr_title: "כניסה עם אינסטגרם"
       facebook:
         name: "Facebook"
-        title: "עם Facebook"
+        title: "כניסה עם פייסבוק"
         sr_title: "כניסה עם פייסבוק"
       github:
         name: "GitHub"
-        title: "עם GitHub"
+        title: "כניסה עם GitHub"
         sr_title: "כניסה עם GitHub"
       discord:
         name: "Discord"
-        title: "עם Discord"
+        title: "כניסה עם Discord"
         sr_title: "כניסה עם Discord"
       second_factor_toggle:
         totp: "להשתמש ביישומון אימות במקום"
@@ -1951,7 +1954,6 @@ he:
       success: "החשבון נוצר ונכנסת אליו."
       name_label: "שם"
       password_label: "ססמה"
-      optional_description: "(רשות)"
     password_reset:
       continue: "המשיכו ל-%{site_name}"
     emoji_set:
@@ -3030,7 +3032,16 @@ he:
       show_hidden: "צפייה בתוכן שמיועד להתעלמות."
       deleted_by_author_simple: "(הפוסט נמחק על ידי הכותב)"
       collapse: "צמצום"
+      sr_collapse_replies: "צמצום תשובות מוטמעות"
+      sr_date: "תאריך פרסום"
+      sr_expand_replies:
+        one: "לפוסט הזה יש תגובה %{count}. יורחב בלחיצה"
+        two: "לפוסט הזה יש %{count} תגובות. יורחב בלחיצה"
+        many: "לפוסט הזה יש %{count} תגובות. יורחב בלחיצה"
+        other: "לפוסט הזה יש %{count} תגובות. יורחב בלחיצה"
       expand_collapse: "הרחב/צמצם"
+      sr_below_embedded_posts_description: "תגובות לפוסט מס׳ %{post_number}"
+      sr_embedded_reply_description: "תגובה מאת ‎@%{username} לפוסט %{post_number}"
       locked: "חבר סגל נעל את האפשרות לערוך את הפוסט הזה"
       gap:
         one: "הצג תגובה אחת שהוסתרה"
@@ -3039,7 +3050,7 @@ he:
         other: "הצגת %{count} תגובות שהוסתרו"
       notice:
         new_user: "זהו הפרסום הראשון מאת %{user} - הבה נקבל את פניו/ה לקהילה שלנו!"
-        returning_user: "עבר זמן מה מאז שראינו במחוזותינו את %{user} - הפרסום האחרון שלו/ה היה ב־%{time}."
+        returning_user: "עבר זמן מה מאז שראינו במחוזותינו את %{user} - הפרסום האחרון שלו/ה היה %{time}."
       unread: "הפוסט טרם נקרא"
       has_replies:
         one: "תגובה אחת"
@@ -3059,6 +3070,16 @@ he:
         two: "אתם ו %{count} אנשים אחרים אהבתם את הפוסט הזה"
         many: "אתם ו %{count} אנשים אחרים אהבתם את הפוסט הזה"
         other: "אתם ו %{count} אנשים אחרים אהבתם את הפוסט הזה"
+      sr_post_like_count_button:
+        one: "מישהו או מישהי (%{count}) אהבו את הפוסט הזה. לחיצה תציג מי"
+        two: "%{count} אנשים אהבו את הפוסט הזה. לחיצה תציג מי"
+        many: "%{count} אנשים אהבו את הפוסט הזה. לחיצה תציג מי"
+        other: "%{count} אנשים אהבו את הפוסט הזה. לחיצה תציג מי"
+      sr_post_read_count_button:
+        one: "מישהו או מישהי (%{count}) קראו את הפוסט הזה. לחיצה תציג מי"
+        two: "%{count} אנשים קראו את הפוסט הזה. לחיצה תציג מי"
+        many: "%{count} אנשים קראו את הפוסט הזה. לחיצה תציג מי"
+        other: "%{count} אנשים קראו את הפוסט הזה. לחיצה תציג מי"
       filtered_replies_hint:
         one: "הצגת הפוסט הזה ואת התגובה עליו"
         two: "הצגת הפוסט הזה ואת %{count} התגובות עליו"
@@ -3180,6 +3201,8 @@ he:
             two: "ו־%{count} נוספים קראו את זה"
             many: "ו־%{count} נוספים קראו את זה"
             other: "ו־%{count} נוספים קראו את זה"
+          sr_post_likers_list_description: "משתמשים שאהבו את הפוסט הזה"
+          sr_post_readers_list_description: "משתמשים שקראו את הפוסט הזה"
         by_you:
           off_topic: "דיגלתם פרסום זה כאוף-טופיק"
           spam: "דיגלתם את זה כספאם"
@@ -3286,10 +3309,11 @@ he:
       tag_groups_placeholder: "(רשות) רשימת קבוצות תגיות"
       manage_tag_groups_link: "ניהול קבוצות תגיות"
       allow_global_tags_label: "לאפשר גם תגיות אחרות"
-      tag_group_selector_placeholder: "(רשות) קבוצת תגיות"
-      required_tag_group_description: "לדרוש שלנושאים חדשים יהיו תגיות מקבוצת תגיות:"
-      min_tags_from_required_group_label: "מס׳ תגיות:"
-      required_tag_group_label: "קבוצת תגיות:"
+      required_tag_group:
+        description: "לדרוש שלנושאים חדשים יהיו תגיות מקבוצות תגיות:"
+        delete: "הסרה"
+        add: "הוספת קבוצת תגיות נדרשת"
+        placeholder: "בחירת קבוצת תגיות…"
       topic_featured_link_allowed: "אפשרו קישורים מומלצים בקטגוריה זו"
       delete: "מחיקת קטגוריה"
       create: "קטגוריה חדשה"
@@ -3521,19 +3545,24 @@ he:
         other {}}
     original_post: "פוסט מקורי"
     views: "צפיות"
+    sr_views: "מיון לפי תצוגות"
     views_lowercase:
       one: "צפיה"
       two: "צפיות"
       many: "צפיות"
       other: "צפיות"
     replies: "תגובות"
+    sr_replies: "מיון לפי תגובות"
     views_long:
       one: "נושא זה נצפה פעם %{count}"
       two: "נושא זה נצפה %{number} פעמים"
       many: "נושא זה נצפה %{number} פעמים"
       other: "נושא זה נצפה %{number} פעמים"
     activity: "פעילות"
+    sr_activity: "מיון לפי פעילות"
     likes: "לייקים"
+    sr_likes: "מיון לפי לייקים"
+    sr_op_likes: "מיון לפי לייקים בפוסט המקורי"
     likes_lowercase:
       one: "לייק"
       two: "לייקים"
@@ -3965,7 +3994,7 @@ he:
       unsupported_file_picked: "בחרת קובץ שאינו נתמך. סוגי קבצים נתמכים - %{types}."
     user_activity:
       no_activity_title: "אין פעילות עדיין"
-      no_activity_body: "ברוך בואך לקהילה שלנו! הצטרפת ממש לא מזמן וטרם תרמת לדיונים. כצעד ראשון, כדאי לבקר ב<a href='%{topUrl}'>מובילים</a> או ב<a href='%{categoriesUrl}'>קטגוריות</a> ופשוט להתחיל לקרוא. ניתן לבחור ב־%{heartIcon} בפוסטים שנשאו חן בעיניך או שמעניין אותך ללמוד עליהם יותר. אם טרם עשית זאת, ניתן לסייע לאחרים להכיר אותך על ידי הוספת תמונה ותיאור עצמי ב<a href='%{preferencesUrl}'>העדפות המשתמש</a> שלך."
+      no_activity_body: "ברוך בואך לקהילה שלנו! הצטרפת ממש לא מזמן וטרם תרמת לדיונים. כצעד ראשון, כדאי לבקר ב<a href='%{topUrl}'>מובילים</a> או ב<a href='%{categoriesUrl}'>קטגוריות</a> ופשוט להתחיל לקרוא. ניתן לבחור ב־%{heartIcon} בפוסטים שנשאו חן בעיניך או שמעניין אותך ללמוד עליהם יותר. הפעילות שלך תופיע כאן."
       no_activity_others: "אין פעילות."
       no_replies_title: "עדיין לא הגבת לאף נושא"
       no_replies_others: "אין תגובות."
@@ -3975,9 +4004,13 @@ he:
       no_likes_body: "דרך נפלאה לקפוץ ישירות פנימה ולהתחיל לתרום היא להתחיל לקרוא דיונים שכבר נערכו ולבחור בסמל %{heartIcon} על פוסטים שאהבת!"
       no_likes_others: "אין פוסטים שנעשה להם לייק."
       no_topics_title: "עדיין לא פתחת אף נושא"
+      no_topics_title_others: "לא נפתח עוד אף נושא על ידי %{username}"
       no_read_topics_title: "טרם קראת נושאים"
       no_read_topics_body: "עם תחילת קריאת הדיונים, תופיע כאן רשימה. כדי להתחיל לקרוא, כדאי לחפש נושאים שמעניינים אותך תחת <a href='%{topUrl}'>עליונים</a> או <a href='%{categoriesUrl}'>קטגוריות</a> או לחפש אחר מילת מפתח %{searchIcon}"
     no_group_messages_title: "לא נמצאו הודעות קבוצתיות"
+    topic_entrance:
+      sr_jump_top_button: "קפיצה לפוסט הראשון"
+      sr_jump_bottom_button: "קפיצה לפוסט האחרון"
     fullscreen_table:
       expand_btn: "הרחבת טבלה"
     second_factor_auth:
@@ -4719,6 +4752,7 @@ he:
         time: "זמן"
         user: "משתמש"
         email_type: "סוג דוא״ל"
+        details_title: "הצגת פרטי דוא״ל"
         to_address: "לכתובת"
         test_email_address: "כתובת דוא״ל לבדיקה"
         send_test: "שליחת הודעת דוא״ל בדיקה"

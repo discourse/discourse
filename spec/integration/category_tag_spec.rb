@@ -96,7 +96,7 @@ describe "category tag restrictions" do
 
     context 'required tags from tag group' do
       fab!(:tag_group) { Fabricate(:tag_group, tags: [tag1, tag3]) }
-      before { category_with_tags.update!(required_tag_group: tag_group, min_tags_from_required_group: 1) }
+      before { category_with_tags.update!(category_required_tag_groups: [CategoryRequiredTagGroup.new(tag_group: tag_group, min_count: 1)]) }
 
       it "search only returns the allowed tags" do
         expect_same_tag_names(filter_allowed_tags(for_input: true, category: category_with_tags), [tag1])
@@ -130,7 +130,7 @@ describe "category tag restrictions" do
 
       context 'required tags from tag group' do
         fab!(:tag_group) { Fabricate(:tag_group, tags: [tag1, tag3]) }
-        before { category_with_tags.update!(required_tag_group: tag_group, min_tags_from_required_group: 1) }
+        before { category_with_tags.update!(category_required_tag_groups: [CategoryRequiredTagGroup.new(tag_group: tag_group, min_count: 1)]) }
 
         it "search only returns the allowed tags" do
           expect_same_tag_names(filter_allowed_tags(for_input: true, category: category_with_tags), [tag1, tag3])
@@ -190,7 +190,7 @@ describe "category tag restrictions" do
 
     context 'required tags from tag group' do
       fab!(:tag_group) { Fabricate(:tag_group, tags: [tag1, tag3]) }
-      before { category.update!(required_tag_group: tag_group, min_tags_from_required_group: 1) }
+      before { category.update!(category_required_tag_groups: [CategoryRequiredTagGroup.new(tag_group: tag_group, min_count: 1)]) }
 
       it "search only returns the allowed tags" do
         expect_same_tag_names(filter_allowed_tags(for_input: true, category: category), [tag1])
@@ -224,7 +224,7 @@ describe "category tag restrictions" do
 
       context 'required tags from tag group' do
         fab!(:tag_group) { Fabricate(:tag_group, tags: [tag1, tag3]) }
-        before { category.update!(required_tag_group: tag_group, min_tags_from_required_group: 1) }
+        before { category.update!(category_required_tag_groups: [CategoryRequiredTagGroup.new(tag_group: tag_group, min_count: 1)]) }
 
         it "search only returns the allowed tags" do
           expect_same_tag_names(filter_allowed_tags(for_input: true, category: category), [tag1, tag3])
@@ -320,7 +320,7 @@ describe "category tag restrictions" do
 
     context 'required tags from tag group' do
       fab!(:tag_group) { Fabricate(:tag_group, tags: [tag1, tag2]) }
-      fab!(:category) { Fabricate(:category, required_tag_group: tag_group, min_tags_from_required_group: 1) }
+      fab!(:category) { Fabricate(:category, category_required_tag_groups: [CategoryRequiredTagGroup.new(tag_group: tag_group, min_count: 1)]) }
 
       it "search only returns the allowed tags" do
         tag_group_with_parent = Fabricate(:tag_group, parent_tag_id: tag1.id, tags: [tag3, tag4])

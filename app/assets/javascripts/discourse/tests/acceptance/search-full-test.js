@@ -6,7 +6,7 @@ import {
   selectDate,
   visible,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, fillIn, visit } from "@ember/test-helpers";
+import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import {
   SEARCH_TYPE_CATS_TAGS,
@@ -16,6 +16,7 @@ import {
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 let lastBody;
+let searchResultClickTracked = false;
 
 acceptance("Search - Full Page", function (needs) {
   needs.user();
@@ -95,7 +96,16 @@ acceptance("Search - Full Page", function (needs) {
 
     server.put("/topics/bulk", (request) => {
       lastBody = helper.parsePostData(request.requestBody);
-      return helper.response({ topic_ids: [7] });
+      return helper.response({ topic_ids: [130] });
+    });
+
+    server.post("/search/click", () => {
+      searchResultClickTracked = true;
+      return helper.response({ success: "OK" });
+    });
+
+    needs.hooks.afterEach(() => {
+      searchResultClickTracked = false;
     });
   });
 
@@ -556,7 +566,7 @@ acceptance("Search - Full Page", function (needs) {
     await click(".bulk-select-visible .btn:nth-child(2)"); // select all
     await click(".bulk-select-btn"); // show bulk actions
     await click(".topic-bulk-actions-modal .btn:nth-child(2)"); // close topics
-    assert.equal(lastBody["topic_ids[]"], 7);
+    assert.equal(lastBody["topic_ids[]"], 130);
   });
 
   test("adds visited class to visited topics", async function (assert) {
@@ -569,5 +579,17 @@ acceptance("Search - Full Page", function (needs) {
     await fillIn(".search-query", "discourse visited");
     await click(".search-cta");
     assert.equal(queryAll(".visited").length, 1);
+  });
+
+  test("result link click tracking is invoked", async function (assert) {
+    await visit("/search");
+
+    await fillIn(".search-query", "discourse");
+    await click(".search-cta");
+
+    await click("a.search-link:first-child");
+
+    assert.strictEqual(currentURL(), "/t/lorem-ipsum-dolor-sit-amet/130");
+    assert.ok(searchResultClickTracked);
   });
 });

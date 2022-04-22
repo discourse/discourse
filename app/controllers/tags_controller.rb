@@ -246,9 +246,10 @@ class TagsController < ::ApplicationController
       filter_params[:order_popularity] = true
     end
 
-    tags_with_counts = DiscourseTagging.filter_allowed_tags(
+    tags_with_counts, filter_result_context = DiscourseTagging.filter_allowed_tags(
       guardian,
-      filter_params
+      **filter_params,
+      with_context: true
     )
 
     tags = self.class.tag_counts_json(tags_with_counts, show_pm_tags: guardian.can_tag_pms?)
@@ -279,6 +280,10 @@ class TagsController < ::ApplicationController
           json_response[:forbidden_message] = I18n.t("tags.forbidden.in_this_category", tag_name: tag.name)
         end
       end
+    end
+
+    if required_tag_group = filter_result_context[:required_tag_group]
+      json_response[:required_tag_group] = required_tag_group
     end
 
     render json: json_response

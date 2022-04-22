@@ -58,12 +58,27 @@ id:
           options_min_count: Masukkan setidaknya 1 pilihan.
         poll_type:
           label: Tipe
+          regular: Pilihan Tunggal
+          multiple: Pilihan ganda
         poll_result:
+          label: Tampilkan Hasil...
           always: Selalu terlihat
           staff: Hanya staf
+        poll_chart_type:
+          bar: Batang
+          pie: Pai
+        poll_config:
+          max: Pilihan Maks
+          min: Pilihan Minimal
+          step: Langkah
         poll_public:
           label: Tunjukkan siapa yang memilih
         poll_title:
           label: Judul (opsional)
+        poll_options:
+          label: Pilihan (satu per baris)
+          add: Tambahkan opsi
         automatic_close:
           label: Tutup poll secara otomatis
+        show_advanced: "Tampilkan Opsi Lanjutan"
+        hide_advanced: "Sembunyikan Opsi Lanjutan"

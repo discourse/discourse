@@ -9,7 +9,7 @@
   let len = prefix.length;
   Object.keys(requirejs.entries).forEach(function (key) {
     if (key.indexOf(prefix) === 0) {
-      Ember.TEMPLATES[key.substr(len)] = require(key).default;
+      Ember.TEMPLATES[key.slice(len)] = require(key).default;
     } else if (key.indexOf(adminPrefix) === 0) {
       Ember.TEMPLATES[key] = require(key).default;
     }

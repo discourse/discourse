@@ -227,8 +227,7 @@ module("Unit | Model | category", function () {
     let foo = store.createRecord("category", {
       id: 1,
       slug: "foo",
-      required_tag_groups: ["bar"],
-      min_tags_from_required_group: 2,
+      required_tag_groups: [{ name: "bar", min_count: 2 }],
     });
 
     assert.equal(foo.minimumRequiredTags, 2);
@@ -259,7 +258,7 @@ module("Unit | Model | category", function () {
     foo = store.createRecord("category", {
       id: 5,
       slug: "foo",
-      min_tags_from_required_group: 2,
+      required_tag_groups: [],
     });
 
     assert.equal(foo.minimumRequiredTags, null);

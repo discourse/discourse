@@ -194,7 +194,11 @@ export default Controller.extend({
           type: response.callback_method,
           data: { second_factor_nonce: this.nonce },
         })
-          .then(() => DiscourseURL.routeTo(response.redirect_path))
+          .then((callbackResponse) => {
+            const redirectUrl =
+              callbackResponse.redirect_url || response.redirect_url;
+            DiscourseURL.routeTo(redirectUrl);
+          })
           .catch((error) => this.displayError(extractError(error)));
       })
       .catch((error) => {

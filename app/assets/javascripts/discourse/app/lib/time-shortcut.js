@@ -1,13 +1,20 @@
 import {
   MOMENT_MONDAY,
   MOMENT_SUNDAY,
+  fourMonths,
   laterThisWeek,
   laterToday,
   nextBusinessWeekStart,
   nextMonth,
   now,
+  oneYear,
+  sixMonths,
   thisWeekend,
+  thousandYears,
+  threeMonths,
   tomorrow,
+  twoMonths,
+  twoWeeks,
 } from "discourse/lib/time-utils";
 
 export const TIME_SHORTCUT_TYPES = {
@@ -15,87 +22,191 @@ export const TIME_SHORTCUT_TYPES = {
   TOMORROW: "tomorrow",
   THIS_WEEKEND: "this_weekend",
   NEXT_MONTH: "next_month",
+  ONE_YEAR: "one_year",
+  FOREVER: "forever",
   CUSTOM: "custom",
   RELATIVE: "relative",
   LAST_CUSTOM: "last_custom",
   NONE: "none",
+  NOW: "now",
   START_OF_NEXT_BUSINESS_WEEK: "start_of_next_business_week",
   LATER_THIS_WEEK: "later_this_week",
   POST_LOCAL_DATE: "post_local_date",
 };
 
-export function defaultShortcutOptions(timezone) {
+export function defaultTimeShortcuts(timezone) {
+  const shortcuts = timeShortcuts(timezone);
   return [
-    {
-      icon: "angle-right",
-      id: TIME_SHORTCUT_TYPES.LATER_TODAY,
-      label: "time_shortcut.later_today",
-      time: laterToday(timezone),
-      timeFormatKey: "dates.time",
-    },
-    {
-      icon: "far-sun",
-      id: TIME_SHORTCUT_TYPES.TOMORROW,
-      label: "time_shortcut.tomorrow",
-      time: tomorrow(timezone),
-      timeFormatKey: "dates.time_short_day",
-    },
-    {
-      icon: "angle-double-right",
-      id: TIME_SHORTCUT_TYPES.LATER_THIS_WEEK,
-      label: "time_shortcut.later_this_week",
-      time: laterThisWeek(timezone),
-      timeFormatKey: "dates.time_short_day",
-    },
-    {
-      icon: "bed",
-      id: TIME_SHORTCUT_TYPES.THIS_WEEKEND,
-      label: "time_shortcut.this_weekend",
-      time: thisWeekend(timezone),
-      timeFormatKey: "dates.time_short_day",
-    },
-    {
-      icon: "briefcase",
-      id: TIME_SHORTCUT_TYPES.START_OF_NEXT_BUSINESS_WEEK,
-      label:
-        now(timezone).day() === MOMENT_MONDAY ||
-        now(timezone).day() === MOMENT_SUNDAY
-          ? "time_shortcut.start_of_next_business_week_alt"
-          : "time_shortcut.start_of_next_business_week",
-      time: nextBusinessWeekStart(timezone),
-      timeFormatKey: "dates.long_no_year",
-    },
-    {
-      icon: "far-calendar-plus",
-      id: TIME_SHORTCUT_TYPES.NEXT_MONTH,
-      label: "time_shortcut.next_month",
-      time: nextMonth(timezone),
-      timeFormatKey: "dates.long_no_year",
-    },
+    shortcuts.laterToday(),
+    shortcuts.tomorrow(),
+    shortcuts.laterThisWeek(),
+    shortcuts.thisWeekend(),
+    shortcuts.monday(),
+    shortcuts.nextMonth(),
   ];
 }
 
 export function specialShortcutOptions() {
-  return [
-    {
-      icon: "undo",
-      id: TIME_SHORTCUT_TYPES.LAST_CUSTOM,
-      label: "time_shortcut.last_custom",
-      time: null,
-      hidden: true,
+  const shortcuts = timeShortcuts();
+  return [shortcuts.lastCustom(), shortcuts.custom(), shortcuts.none()];
+}
+
+export function timeShortcuts(timezone) {
+  return {
+    laterToday() {
+      return {
+        id: TIME_SHORTCUT_TYPES.LATER_TODAY,
+        icon: "angle-right",
+        label: "time_shortcut.later_today",
+        time: laterToday(timezone),
+        timeFormatKey: "dates.time",
+      };
     },
-    {
-      icon: "calendar-alt",
-      id: TIME_SHORTCUT_TYPES.CUSTOM,
-      label: "time_shortcut.custom",
-      time: null,
-      isCustomTimeShortcut: true,
+    tomorrow() {
+      return {
+        id: TIME_SHORTCUT_TYPES.TOMORROW,
+        icon: "far-sun",
+        label: "time_shortcut.tomorrow",
+        time: tomorrow(timezone),
+        timeFormatKey: "dates.time_short_day",
+      };
     },
-    {
-      icon: "ban",
-      id: TIME_SHORTCUT_TYPES.NONE,
-      label: "time_shortcut.none",
-      time: null,
+    laterThisWeek() {
+      return {
+        id: TIME_SHORTCUT_TYPES.LATER_THIS_WEEK,
+        icon: "angle-double-right",
+        label: "time_shortcut.later_this_week",
+        time: laterThisWeek(timezone),
+        timeFormatKey: "dates.time_short_day",
+      };
     },
-  ];
+    thisWeekend() {
+      return {
+        id: TIME_SHORTCUT_TYPES.THIS_WEEKEND,
+        icon: "bed",
+        label: "time_shortcut.this_weekend",
+        time: thisWeekend(timezone),
+        timeFormatKey: "dates.time_short_day",
+      };
+    },
+    monday() {
+      return {
+        id: TIME_SHORTCUT_TYPES.START_OF_NEXT_BUSINESS_WEEK,
+        icon: "briefcase",
+        label:
+          now(timezone).day() === MOMENT_MONDAY ||
+          now(timezone).day() === MOMENT_SUNDAY
+            ? "time_shortcut.start_of_next_business_week_alt"
+            : "time_shortcut.start_of_next_business_week",
+        time: nextBusinessWeekStart(timezone),
+        timeFormatKey: "dates.long_no_year",
+      };
+    },
+    nextMonth() {
+      return {
+        id: TIME_SHORTCUT_TYPES.NEXT_MONTH,
+        icon: "far-calendar-plus",
+        label: "time_shortcut.next_month",
+        time: nextMonth(timezone),
+        timeFormatKey: "dates.long_no_year",
+      };
+    },
+    twoWeeks() {
+      return {
+        id: "two_weeks",
+        icon: "far-clock",
+        label: "time_shortcut.two_weeks",
+        time: twoWeeks(timezone),
+        timeFormatKey: "dates.long_no_year",
+      };
+    },
+    twoMonths() {
+      return {
+        id: "two_months",
+        icon: "far-calendar-plus",
+        label: "time_shortcut.two_months",
+        time: twoMonths(timezone),
+        timeFormatKey: "dates.long_no_year",
+      };
+    },
+    threeMonths() {
+      return {
+        icon: "far-calendar-plus",
+        id: "three_months",
+        label: "time_shortcut.three_months",
+        time: threeMonths(timezone),
+        timeFormatKey: "dates.long_no_year",
+      };
+    },
+    fourMonths() {
+      return {
+        id: "four_months",
+        icon: "far-calendar-plus",
+        label: "time_shortcut.four_months",
+        time: fourMonths(timezone),
+        timeFormatKey: "dates.long_no_year",
+      };
+    },
+    sixMonths() {
+      return {
+        id: "six_months",
+        icon: "far-calendar-plus",
+        label: "time_shortcut.six_months",
+        time: sixMonths(timezone),
+        timeFormatKey: "dates.long_with_year",
+      };
+    },
+    oneYear() {
+      return {
+        id: TIME_SHORTCUT_TYPES.ONE_YEAR,
+        icon: "far-calendar-plus",
+        label: "time_shortcut.one_year",
+        time: oneYear(timezone),
+        timeFormatKey: "dates.long_with_year",
+      };
+    },
+    forever() {
+      return {
+        id: TIME_SHORTCUT_TYPES.FOREVER,
+        icon: "gavel",
+        label: "time_shortcut.forever",
+        time: thousandYears(timezone),
+        timeFormatKey: "dates.long_with_year",
+      };
+    },
+    custom() {
+      return {
+        icon: "calendar-alt",
+        id: TIME_SHORTCUT_TYPES.CUSTOM,
+        label: "time_shortcut.custom",
+        time: null,
+        isCustomTimeShortcut: true,
+      };
+    },
+    lastCustom() {
+      return {
+        icon: "undo",
+        id: TIME_SHORTCUT_TYPES.LAST_CUSTOM,
+        label: "time_shortcut.last_custom",
+        time: null,
+        hidden: true,
+      };
+    },
+    none() {
+      return {
+        icon: "ban",
+        id: TIME_SHORTCUT_TYPES.NONE,
+        label: "time_shortcut.none",
+        time: null,
+      };
+    },
+    now() {
+      return {
+        id: TIME_SHORTCUT_TYPES.NOW,
+        icon: "magic",
+        label: "time_shortcut.now",
+        time: now(timezone),
+      };
+    },
+  };
 }

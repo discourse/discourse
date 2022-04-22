@@ -140,7 +140,6 @@ bs_BA:
       to_placeholder: "do datuma"
     share:
       topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
-      post: "dijeli post #%{postNumber}"
       close: "zatvori"
       twitter: "Podijeli na Twitter"
       facebook: "Podijeli na Facebooku"
@@ -1560,22 +1559,16 @@ bs_BA:
       not_approved: "Vaš korisnički račun nije još uvijek odobren od strane administratora. Dobiti ćete email kada dobijete mogućnost da se ulogirate."
       google_oauth2:
         name: "Google"
-        title: "koristeći Google"
       twitter:
         name: "Twitter"
-        title: "koristeći Twitter"
       instagram:
         name: "Instagram"
-        title: "koristeći Instagram"
       facebook:
         name: "Facebook"
-        title: "koristeći Facebook"
       github:
         name: "GitHub"
-        title: "koristeći GitHub"
       discord:
         name: "Discord"
-        title: "koristeći Discord"
       second_factor_toggle:
         totp: "Umjesto toga koristite aplikaciju za provjeru autentičnosti"
         backup_code: "Umjesto toga koristite sigurnosni kod"
@@ -1589,7 +1582,6 @@ bs_BA:
       success: "Vaš račun je napravljen i sada ste prijavljeni."
       name_label: "Ime"
       password_label: "Lozinka"
-      optional_description: "(opciono)"
     password_reset:
       continue: "Nastavi ka %{site_name}"
     emoji_set:
@@ -2525,6 +2517,8 @@ bs_BA:
       tags_placeholder: "(Opcionalno) lista dozvoljenih oznaka"
       tag_groups_placeholder: "(Opcionalno) lista dozvoljenih grupa oznaka"
       allow_global_tags_label: "Takođe dozvolite druge oznake"
+      required_tag_group:
+        delete: "Delete"
       topic_featured_link_allowed: "Omogućite istaknute veze u ovoj kategoriji"
       delete: "Delete Category"
       create: "Nova kategorija"

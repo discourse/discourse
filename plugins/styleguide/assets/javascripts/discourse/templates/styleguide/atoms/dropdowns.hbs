@@ -47,7 +47,13 @@
 {{/styleguide-example}}
 
 {{#styleguide-example title="dropdown-select-box"}}
-  {{dropdown-select-box content=dummy.options title="Something" onChange=(action "dummy")}}
+  {{dropdown-select-box
+    content=dummy.options
+    onChange=(action "dummy")
+    options=(hash
+      translatedNone="Something"
+    )
+  }}
 {{/styleguide-example}}
 
 {{#styleguide-example title="future-date-input-selector"}}
@@ -56,7 +62,7 @@
     input=dummy.topicTimerUpdateDate
     includeWeekend=true
     includeForever=true
-    options=(hash none="topic.auto_update_input.none")
+    options=(hash none="time_shortcut.select_timeframe")
   }}
 {{/styleguide-example}}
 

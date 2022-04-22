@@ -63,6 +63,7 @@ tr_TR:
       unrecognized_extension: "Tanınmayan dosya uzantısı: %{extension}"
     import_error:
       generic: Bu tema içe aktarılırken bir hata oluştu
+      upload: "Yükleme öğesi oluşturulurken hata oluştu: %{name}. %{errors}"
       about_json: "İçe Aktarma Hatası: about.json mevcut değil veya geçersiz. Bunun bir Discourse Teması olduğundan emin misiniz?"
       about_json_values: "about.json geçersiz değerler içeriyor: %{errors}"
       modifier_values: "about.json değiştiricileri geçersiz değerler içeriyor: %{errors}"
@@ -391,11 +392,13 @@ tr_TR:
   bookmarks:
     errors:
       already_bookmarked_post: "Aynı gönderiyi iki kez işaretleyemezsiniz."
+      already_bookmarked: "Aynı %{type} iki kez işaretlenemez."
       too_many: "Ne yazık ki %{limit} adetten fazla yer imi ekleyemezsiniz; var olanlardan bazılarını kaldırmak için <a href='%{user_bookmarks_url}'>%{user_bookmarks_url}</a> adresini ziyaret edin."
       cannot_set_past_reminder: "Geçmişte bir yer imi anımsatıcısı ayarlayamazsınız."
       cannot_set_reminder_in_distant_future: "10 yıldan uzun bir gelecek için bir yer imi hatırlatıcısı ayarlayamazsınız."
-      time_must_be_provided: "tüm hatırlatıcılar için zaman belirtilmelidir"
+      time_must_be_provided: "Tüm hatırlatıcılar için zaman belirtilmelidir"
       for_topic_must_use_first_post: "Konuyu işaretlemek için yalnızca ilk gönderiyi kullanabilirsiniz."
+      bookmarkable_id_type_required: "İşaretlenecek kaydın adı ve türü zorunludur."
     reminders:
       at_desktop: "Bir dahaki sefere masaüstümdeyim"
       later_today: "Bugün ilerleyen saatlerde"
@@ -1470,10 +1473,8 @@ tr_TR:
     summary_timeline_button: "Zaman çizelgesinde 'Özetle' düğmesi göster"
     enable_personal_messages: "Güven düzeyi 1 (ileti göndermek için minimum güven düzeyi ile yapılandırılabilir) kullanıcıların ileti oluşturmasına ve iletileri yanıtlamasına izin verin. Personelin ne olursa olsun her zaman ileti gönderebileceğini unutmayın."
     enable_system_message_replies: "Kişisel iletiler devre dışı bırakılsa bile kullanıcıların sistem iletilerini yanıtlamasına izin verir"
-    enable_long_polling: "Bildiri için kullanılan ileti yolu uzun sorgular yapabilir"
     enable_chunked_encoding: "Sunucu tarafından yığınlanmış kodlama yanıtlarını etkinleştirin. Bu özellik çoğu kurulumda çalışır, ancak bazı proxy'ler arabelleğe alabilir ve yanıtların gecikmesine neden olabilir"
     long_polling_base_url: "Uzun sorgular için kullanılan baz URL (CDN dinamik içerik sunuyorsa bunu origin olarak ayarladığınıza emin olun) örn: http://origin.site.com."
-    long_polling_interval: "Gönderilecek bilgi olmadığı zaman sunucunun kullanıcılara geri dönmeden önce beklemesi gereken zaman (sadece giriş yapmış kullanıcın için)"
     polling_interval: "Uzun sorgular yapılmadığı zaman, kaç mili saniyede bir giriş yapmış kullanıcılar poll yapmalı"
     anon_polling_interval: "Kaç mili saniyede bir anonim kullanıcılar sorgu yapmalı"
     background_polling_interval: "(Pencere arkaplanda olduğu zaman) kaç mili saniyede bir kullanıcılan sorgu yapmalı"
@@ -1545,7 +1546,6 @@ tr_TR:
     send_tl2_promotion_message: "Yeni güven düzeyi 2 kullanıcılarına yükseltme hakkında bir ileti gönderin."
     suppress_reply_directly_below: "Bu gönderinin hemen altında yalnızca tek bir yanıt varsa gönderideki açılabilir yanıt sayısı bölümünü gösterme."
     suppress_reply_directly_above: "Bu gönderinin hemen üstünde yalnızca tek bir yanıt varsa gönderideki açılabilir hangi-yanıta-istinaden-yanıtla bölümünü gösterme."
-    remove_full_quote: "Doğrudan yanıtlardaki tüm alıntıları otomatik olarak kaldırın."
     suppress_reply_when_quoting: "Gönderi yanıtı alıntılarsa gönderideki açılabilir hangi-yanıta-istinaden-yanıta bölümünü gösterme."
     max_reply_history: "Hangi-yanıta-istinaden-yanıtla bölümü açılınca gösterilecek en fazla yanıt sayısı"
     topics_per_period_in_top_summary: "Gözde konular özetinde gösterilen gözde konu sayısı."
@@ -2061,6 +2061,8 @@ tr_TR:
     push_notifications_prompt: "Kullanıcı izni komut istemini görüntüle."
     base_font: "Sitedeki çoğu metin için kullanılacak temel yazı tipi. Temalar, `--font-family` CSS özel özelliği aracılığıyla bunu geçersiz kılabilir."
     heading_font: "Sitedeki çoğu başlık için kullanılacak temel yazı tipi. Temalar, `--heading-font-family` CSS özel özelliği aracılığıyla bunu geçersiz kılabilir."
+    enable_sitemap: "Siteniz için bir site haritası oluşturun ve bunu robots.txt dosyasına ekleyin."
+    sitemap_page_size: "Her site haritası sayfasına dahil edilecek URL sayısı. Maksimum 50.000"
     short_title: "Kısa başlık kullanıcının ana ekranında, başlatıcısında veya alanın sınırlı olabileceği diğer yerlerde kullanılır. En fazla 12 karakter olmalıdır."
     dashboard_hidden_reports: "Gösterge tablosundan belirtilen raporların gizlenmesine izin verin."
     dashboard_visible_tabs: "Hangi pano sekmelerinin görünür olacağını seçin."
@@ -2120,6 +2122,7 @@ tr_TR:
         leading_trailing_slash: "Normal ifade eğik çizgi ile başlamamalı ve bitmemelidir."
       unicode_usernames_avatars: "Dahili sistem avatarları Unicode kullanıcı adlarını desteklemez."
       list_value_count: "Liste tam olarak %{count} değerleri içermelidir."
+      markdown_linkify_tlds: "'*' değerini ekleyemezsiniz."
       google_oauth2_hd_groups: "Bu ayarı etkinleştirmeden önce 'google oauth2 hd'yi ayarlamalısınız."
       search_tokenize_chinese_enabled: "Bu ayarı etkinleştirmeden önce 'search_tokenize_chinese' özelliğini devre dışı bırakmalısınız."
       search_tokenize_japanese_enabled: "Bu ayarı etkinleştirmeden önce 'search_tokenize_japanese' özelliğini devre dışı bırakmalısınız."
@@ -4093,6 +4096,7 @@ tr_TR:
   notification_level:
     ignore_error: "Üzgünüz, o kullanıcıyı görmezden gelemezsiniz."
     mute_error: "Üzgünüz, o kullanıcıyı sessize alamazsınız."
+    invalid_value: '"%{value}" geçerli bir bildirim düzeyi değil.'
   discord:
     not_in_allowed_guild: "Kimlik doğrulama başarısız oldu. İzin verilen bir Discord guildinin üyesi değilsiniz."
   old_keys_reminder:

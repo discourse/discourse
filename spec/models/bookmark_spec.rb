@@ -37,6 +37,52 @@ describe Bookmark do
 
       expect(bookmark_3.valid?).to eq(false)
     end
+
+    describe "polymorphic bookmarks" do
+      before do
+        SiteSetting.use_polymorphic_bookmarks = true
+      end
+
+      after do
+        Bookmark.registered_bookmarkables = []
+      end
+
+      it "does not allow a user to create a bookmark with only one polymorphic column" do
+        user = Fabricate(:user)
+        bm = Bookmark.create(bookmarkable_id: post.id, user: user)
+        expect(bm.errors.full_messages).to include(I18n.t("bookmarks.errors.bookmarkable_id_type_required"))
+        bm = Bookmark.create(bookmarkable_type: "Post", user: user)
+        expect(bm.errors.full_messages).to include(I18n.t("bookmarks.errors.bookmarkable_id_type_required"))
+        bm = Bookmark.create(bookmarkable_type: "Post", bookmarkable_id: post.id, user: user)
+        expect(bm.errors.full_messages).to be_empty
+      end
+
+      it "does not allow a user to create a bookmark for the same record more than once" do
+        user = Fabricate(:user)
+        Bookmark.create(bookmarkable_type: "Post", bookmarkable_id: post.id, user: user)
+        bm = Bookmark.create(bookmarkable_type: "Post", bookmarkable_id: post.id, user: user)
+        expect(bm.errors.full_messages).to include(I18n.t("bookmarks.errors.already_bookmarked", type: "Post"))
+      end
+
+      it "does not allow a user to create a bookmarkable for a type that has not been registered" do
+        user = Fabricate(:user)
+        bm = Bookmark.create(bookmarkable_type: "User", bookmarkable: Fabricate(:user), user: user)
+        expect(bm.errors.full_messages).to include(I18n.t("bookmarks.errors.invalid_bookmarkable", type: "User"))
+        Bookmark.register_bookmarkable(
+          model: User,
+          serializer: UserBookmarkSerializer,
+          list_query: lambda do |bookmark_user, guardian|
+            bookmark_user.bookmarks.joins(
+              "INNER JOIN users ON users.id = bookmarks.bookmarkable_id AND bookmarks.bookmarkable_type = 'User'"
+            ).where(bookmarkable_type: "User")
+          end,
+          search_query: lambda do |bookmarks, query, ts_query|
+            bookmarks.where("users.username ILIKE ?", query)
+          end
+        )
+        expect(bm.valid?).to eq(true)
+      end
+    end
   end
 
   describe "#find_for_topic_by_user" do

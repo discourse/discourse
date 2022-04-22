@@ -237,24 +237,7 @@ module SvgSprite
 
       custom_sprite_paths = Dir.glob(plugin_paths)
 
-      if theme_id.present?
-        ThemeField.where(type_id: ThemeField.types[:theme_upload_var], name: THEME_SPRITE_VAR_NAME, theme_id: Theme.transform_ids(theme_id))
-          .pluck(:upload_id).each do |upload_id|
-
-          upload = Upload.find(upload_id) rescue nil
-
-          if Discourse.store.external?
-            external_copy = Discourse.store.download(upload) rescue nil
-            original_path = external_copy.try(:path)
-          else
-            original_path = Discourse.store.path_for(upload)
-          end
-
-          custom_sprite_paths << original_path if original_path.present?
-        end
-      end
-
-      custom_sprite_paths.map do |path|
+      custom_sprites = custom_sprite_paths.map do |path|
         if File.exist?(path)
           {
             filename: "#{File.basename(path, ".svg")}",
@@ -262,6 +245,25 @@ module SvgSprite
           }
         end
       end
+
+      if theme_id.present?
+        ThemeField.where(type_id: ThemeField.types[:theme_upload_var], name: THEME_SPRITE_VAR_NAME, theme_id: Theme.transform_ids(theme_id))
+          .pluck(:upload_id, :theme_id).each do |upload_id, child_theme_id|
+
+          begin
+            upload = Upload.find(upload_id)
+            custom_sprites << {
+              filename: "theme_#{theme_id}_#{upload_id}.svg",
+              sprite: upload.content
+            }
+          rescue => e
+            name = Theme.find(child_theme_id).name rescue nil
+            Discourse.warn_exception(e, message: "#{name} theme contains a corrupt svg upload")
+          end
+
+        end
+      end
+      custom_sprites
     end
   end
 
@@ -483,7 +485,7 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
 
     # Need to load full records for default values
     Theme.where(id: theme_ids).each do |theme|
-      settings = theme.cached_settings.each do |key, value|
+      _settings = theme.cached_settings.each do |key, value|
         if key.to_s.include?("_icon") && String === value
           theme_icon_settings |= value.split('|')
         end

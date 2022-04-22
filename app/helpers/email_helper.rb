@@ -29,10 +29,79 @@ module EmailHelper
     EmailStyle.new.html
       .sub('%{email_content}') { capture { yield } }
       .gsub('%{html_lang}', html_lang)
+      .gsub('%{dark_mode_meta_tags}', dark_mode_meta_tags)
+      .gsub('%{dark_mode_styles}', dark_mode_styles)
       .html_safe
   end
 
   protected
+
+  def dark_mode_meta_tags
+    "
+    <meta name='color-scheme' content='light dark' />
+    <meta name='supported-color-schemes' content='light dark' />
+    "
+  end
+
+  def dark_mode_styles
+    "
+    <style>
+      @media (prefers-color-scheme: dark) {
+        html {
+          background: #151515 !important;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6,
+        p,
+        span,
+        td {
+          color: #dddddd !important;
+        }
+
+        [data-stripped-secure-media] {
+          border-color: #454545 !important;
+        }
+
+        [dm='text-color'] {
+          color: #dddddd;
+        }
+
+        [dm='header'] {
+          background: #151515 !important;
+        }
+
+        [dm='topic-body'] {
+          background: #151515 !important;
+          border-bottom: 1px solid #454545 !important;
+        }
+
+        [dm='triangle'] {
+          border-top-color: #151515 !important;
+        }
+
+        [dm='body'] {
+          background: #222222 !important;
+          color: #dddddd !important;
+        }
+
+        [dm='body_primary'] {
+          background: #062e3d !important;
+          color: #dddddd !important;
+        }
+
+        [dm='bg'] {
+          background: #323232 !important;
+          border-color: #454545 !important;
+        }
+      }
+    </style>
+    "
+  end
 
   def extract_details(topic)
     if SiteSetting.private_email?

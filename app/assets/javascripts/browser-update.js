@@ -29,11 +29,16 @@
     // find the element with the "data-path" attribute set
     for (var i = 0; i < noscriptElements.length; ++i) {
       if (noscriptElements[i].getAttribute("data-path")) {
-        // noscriptElements[i].innerHTML contains encoded HTML
-        if (noscriptElements[i].childNodes.length > 0) {
-          mainElement.innerHTML = noscriptElements[i].childNodes[0].nodeValue;
-          break;
+        // noscriptElements[i].innerHTML contains encoded HTML, so we need to access
+        // the childNodes instead. Browsers seem to split very long content into multiple
+        // text childNodes.
+        var result = "";
+        for (var j = 0; j < noscriptElements[i].childNodes.length; j++) {
+          result += noscriptElements[i].childNodes[j].nodeValue;
         }
+
+        mainElement.outerHTML = result;
+        break;
       }
     }
 

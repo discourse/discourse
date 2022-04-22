@@ -6,7 +6,14 @@ module SecondFactorManager
   extend ActiveSupport::Concern
 
   SecondFactorAuthenticationResult = Struct.new(
-    :ok, :error, :reason, :backup_enabled, :security_key_enabled, :totp_enabled, :multiple_second_factor_methods
+    :ok,
+    :error,
+    :reason,
+    :backup_enabled,
+    :security_key_enabled,
+    :totp_enabled,
+    :multiple_second_factor_methods,
+    :used_2fa_method,
   )
 
   def create_totp(opts = {})
@@ -112,11 +119,26 @@ module SecondFactorManager
 
     case second_factor_method
     when UserSecondFactor.methods[:totp]
-      return authenticate_totp(second_factor_token) ? ok_result : invalid_totp_or_backup_code_result
+      if authenticate_totp(second_factor_token)
+        ok_result.used_2fa_method = UserSecondFactor.methods[:totp]
+        return ok_result
+      else
+        return invalid_totp_or_backup_code_result
+      end
     when UserSecondFactor.methods[:backup_codes]
-      return authenticate_backup_code(second_factor_token) ? ok_result : invalid_totp_or_backup_code_result
+      if authenticate_backup_code(second_factor_token)
+        ok_result.used_2fa_method = UserSecondFactor.methods[:backup_codes]
+        return ok_result
+      else
+        return invalid_totp_or_backup_code_result
+      end
     when UserSecondFactor.methods[:security_key]
-      return authenticate_security_key(secure_session, second_factor_token) ? ok_result : invalid_security_key_result
+      if authenticate_security_key(secure_session, second_factor_token)
+        ok_result.used_2fa_method = UserSecondFactor.methods[:security_key]
+        return ok_result
+      else
+        return invalid_security_key_result
+      end
     end
 
     # if we have gotten down to this point without being

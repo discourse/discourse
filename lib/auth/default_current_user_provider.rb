@@ -90,7 +90,7 @@ class Auth::DefaultCurrentUserProvider
       request = ActionDispatch::Request.new(env)
       # don't even initialize a cookie jar if we don't have a cookie at all
       if request.cookies[TOKEN_COOKIE].present?
-        request.cookie_jar.encrypted[TOKEN_COOKIE]
+        request.cookie_jar.encrypted[TOKEN_COOKIE]&.with_indifferent_access
       end
     end
   end
@@ -385,7 +385,9 @@ class Auth::DefaultCurrentUserProvider
         end
 
       if user && can_write?
-        api_key.update_columns(last_used_at: Time.zone.now)
+        Scheduler::Defer.later "Updating api_key last_used" do
+          api_key.update_last_used!
+        end
       end
 
       user

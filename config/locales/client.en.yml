@@ -92,15 +92,33 @@ en:
         # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
         date_year: "MMM 'YY"
       medium:
+        less_than_x_minutes:
+          one: "less than %{count} min"
+          other: "less than %{count} mins"
         x_minutes:
           one: "%{count} min"
           other: "%{count} mins"
         x_hours:
           one: "%{count} hour"
           other: "%{count} hours"
+        about_x_hours:
+          one: "about %{count} hour"
+          other: "about %{count} hours"
         x_days:
           one: "%{count} day"
           other: "%{count} days"
+        x_months:
+          one: "%{count} month"
+          other: "%{count} months"
+        about_x_years:
+          one: "about %{count} year"
+          other: "about %{count} years"
+        over_x_years:
+          one: "over %{count} year"
+          other: "over %{count} years"
+        almost_x_years:
+          one: "almost %{count} year"
+          other: "almost %{count} years"
         # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
         date_year: "MMM D, 'YY"
       medium_with_ago:
@@ -136,7 +154,7 @@ en:
       to_placeholder: "to date"
     share:
       topic_html: 'Topic: <span class="topic-title">%{topicTitle}</span>'
-      post: "post #%{postNumber}"
+      post: "post #%{postNumber} by @%{username}"
       close: "close"
       twitter: "Share on Twitter"
       facebook: "Share on Facebook"
@@ -317,6 +335,8 @@ en:
 
     bookmarks:
       created: "You've bookmarked this post. %{name}"
+      create_for: "Create bookmark for %{type}"
+      edit_for: "Edit bookmark for %{type}"
       not_bookmarked: "bookmark this post"
       remove_reminder_keep_bookmark: "Remove reminder and keep bookmark"
       created_with_reminder: "You've bookmarked this post with a reminder %{date}. %{name}"
@@ -393,6 +413,7 @@ en:
 
     upload: "Upload"
     uploading: "Uploading..."
+    processing: "Processing..."
     uploading_filename: "Uploading: %{filename}..."
     processing_filename: "Processing: %{filename}..."
     clipboard: "clipboard"
@@ -630,11 +651,17 @@ en:
       start_of_next_business_week_alt: "Next Monday"
       two_weeks: "Two weeks"
       next_month: "Next month"
+      two_months: "Two months"
+      three_months: "Three months"
+      four_months: "Four months"
       six_months: "Six months"
-      custom: "Custom date and time"
+      one_year: "One year"
+      forever: "Forever"
       relative: "Relative time"
       none: "None needed"
       last_custom: "Last custom datetime"
+      custom: "Custom date and time"
+      select_timeframe: "Select a timeframe"
 
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> posted <a href='%{topicUrl}'>the topic</a>"
@@ -1618,8 +1645,6 @@ en:
           title: "Invite Link"
           success: "Invite link generated successfully!"
           error: "There was an error generating Invite link"
-          max_redemptions_allowed_label: "How many people are allowed to register using this link?"
-          expires_at: "When will this invite link expire?"
 
         invite:
           new_title: "Create Invite"
@@ -1678,7 +1703,9 @@ en:
         title: "Summary"
         stats: "Stats"
         time_read: "read time"
+        time_read_title: "%{duration} (all time)"
         recent_time_read: "recent read time"
+        recent_time_read_title: "%{duration} (in the last 60 days)"
         topic_count:
           one: "topic created"
           other: "topics created"
@@ -1960,27 +1987,27 @@ en:
       not_approved: "Your account hasn't been approved yet. You will be notified by email when you are ready to log in."
       google_oauth2:
         name: "Google"
-        title: "with Google"
-        sr_title: "Login with Google"
+        title: "Sign in with Google"
+        sr_title: "Sign in with Google"
       twitter:
         name: "Twitter"
-        title: "with Twitter"
-        sr_title: "Login with Twitter"
+        title: "Sign in with Twitter"
+        sr_title: "Sign in with Twitter"
       instagram:
         name: "Instagram"
-        title: "with Instagram"
+        title: "Login with Instagram"
         sr_title: "Login with Instagram"
       facebook:
         name: "Facebook"
-        title: "with Facebook"
+        title: "Login with Facebook"
         sr_title: "Login with Facebook"
       github:
         name: "GitHub"
-        title: "with GitHub"
+        title: "Login with GitHub"
         sr_title: "Login with GitHub"
       discord:
         name: "Discord"
-        title: "with Discord"
+        title: "Login with Discord"
         sr_title: "Login with Discord"
       second_factor_toggle:
         totp: "Use an authenticator app instead"
@@ -1997,7 +2024,6 @@ en:
       success: "Your account has been created and you're now logged in."
       name_label: "Name"
       password_label: "Password"
-      optional_description: "(optional)"
 
     password_reset:
       continue: "Continue to %{site_name}"
@@ -2693,24 +2719,6 @@ en:
         min_duration: "Duration must be greater than 0"
         max_duration: "Duration must be less than 20 years"
         duration: "Duration"
-      auto_update_input:
-        none: "Select a timeframe"
-        now: "Now"
-        later_today: "Later today"
-        tomorrow: "Tomorrow"
-        later_this_week: "Later this week"
-        this_weekend: "This weekend"
-        next_week: "Next week"
-        two_weeks: "Two weeks"
-        next_month: "Next month"
-        two_months: "Two months"
-        three_months: "Three months"
-        four_months: "Four months"
-        six_months: "Six months"
-        one_year: "One year"
-        forever: "Forever"
-        pick_date_and_time: "Pick date and time"
-        set_based_on_last_post: "Close based on last post"
       publish_to_category:
         title: "Schedule Publishing"
       temp_open:
@@ -3063,7 +3071,14 @@ en:
       show_hidden: "View ignored content."
       deleted_by_author_simple: "(post deleted by author)"
       collapse: "collapse"
+      sr_collapse_replies: "Collapse embedded replies"
+      sr_date: "Post date"
+      sr_expand_replies:
+        one: "This post has %{count} reply. Click to expand"
+        other: "This post has %{count} replies. Click to expand"
       expand_collapse: "expand/collapse"
+      sr_below_embedded_posts_description: "post #%{post_number} replies"
+      sr_embedded_reply_description: "reply by @%{username} to post #%{post_number}"
       locked: "a staff member has locked this post from being edited"
       gap:
         one: "view %{count} hidden reply"
@@ -3089,6 +3104,12 @@ en:
         one: "you and %{count} other person liked this post"
         other: "you and %{count} other people liked this post"
 
+      sr_post_like_count_button:
+        one: "%{count} person liked this post. Click to view"
+        other: "%{count} people liked this post. Click to view"
+      sr_post_read_count_button:
+        one: "%{count} person read this post. Click to view"
+        other: "%{count} people read this post. Click to view"
       filtered_replies_hint:
         one: "View this post and its reply"
         other: "View this post and its %{count} replies"
@@ -3199,6 +3220,8 @@ en:
           read_capped:
             one: "and %{count} other read this"
             other: "and %{count} others read this"
+          sr_post_likers_list_description: "users who liked this post"
+          sr_post_readers_list_description: "users who read this post"
         by_you:
           off_topic: "You flagged this as off-topic"
           spam: "You flagged this as spam"
@@ -3309,10 +3332,11 @@ en:
       tag_groups_placeholder: "(Optional) list of allowed tag groups"
       manage_tag_groups_link: "Manage tag groups"
       allow_global_tags_label: "Also allow other tags"
-      tag_group_selector_placeholder: "(Optional) Tag group"
-      required_tag_group_description: "Require new topics to have tags from a tag group:"
-      min_tags_from_required_group_label: "Num Tags:"
-      required_tag_group_label: "Tag group:"
+      required_tag_group:
+        description: "Require new topics to have tags from tag groups:"
+        delete: "Delete"
+        add: "Add required tag group"
+        placeholder: "select tag group..."
       topic_featured_link_allowed: "Allow featured links in this category"
       delete: "Delete Category"
       create: "New Category"
@@ -3812,6 +3836,9 @@ en:
       choose_for_topic_required:
         one: "select at least %{count} tag..."
         other: "select at least %{count} tags..."
+      choose_for_topic_required_group:
+        one: "select %{count} tag from '%{name}'..."
+        other: "select %{count} tags from '%{name}'..."
       info: "Info"
       default_info: "This tag isn't restricted to any categories, and has no synonyms."
       staff_info: "To add restrictions, put this tag in a <a href=%{basePath}/tag_groups>tag group</a>."
@@ -3972,7 +3999,7 @@ en:
 
     user_activity:
       no_activity_title: "No activity yet"
-      no_activity_body: "Welcome to our community! You are brand new here and have not yet contributed to discussions. As a first step, visit <a href='%{topUrl}'>Top</a> or <a href='%{categoriesUrl}'>Categories</a> and just start reading! Select %{heartIcon} on posts that you like or want to learn more about. If you have not already done so, help others get to know you by adding a picture and bio in your <a href='%{preferencesUrl}'>user preferences</a>."
+      no_activity_body: "Welcome to our community! You are brand new here and have not yet contributed to discussions. As a first step, visit <a href='%{topUrl}'>Top</a> or <a href='%{categoriesUrl}'>Categories</a> and just start reading! Select %{heartIcon} on posts that you like or want to learn more about. As you participate, your activity will be listed here."
       no_activity_others: "No activity."
       no_replies_title: "You have not replied to any topics yet"
       no_replies_others: "No replies."
@@ -4742,6 +4769,7 @@ en:
         time: "Time"
         user: "User"
         email_type: "Email Type"
+        details_title: "Show email details"
         to_address: "To Address"
         test_email_address: "email address to test"
         send_test: "Send Test Email"

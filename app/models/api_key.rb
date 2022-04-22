@@ -67,6 +67,13 @@ class ApiKey < ActiveRecord::Base
 
     api_key_scopes.blank? || api_key_scopes.any? { |s| s.permits?(env) }
   end
+
+  def update_last_used!(now = Time.zone.now)
+    return if last_used_at && (last_used_at > 1.minute.ago)
+
+    # using update_column to avoid the AR transaction
+    update_column(:last_used_at, now)
+  end
 end
 
 # == Schema Information

@@ -63,6 +63,7 @@ de:
       unrecognized_extension: "Unbekannte Dateiendung: %{extension}"
     import_error:
       generic: Beim Importieren dieses Themes ist ein Fehler aufgetreten
+      upload: "Fehler beim Erstellen des Upload-Assets: %{name}. %{errors}"
       about_json: "Importfehler: about.json existiert nicht oder ist ungültig. Bist du dir sicher, dass dies ein Discourse-Theme ist?"
       about_json_values: "about.json enthält ungültige Werte: %{errors}"
       modifier_values: "about.json-Modifikatoren enthalten ungültige Werte: %{errors}"
@@ -394,11 +395,13 @@ de:
   bookmarks:
     errors:
       already_bookmarked_post: "Du kannst denselben Beitrag nicht zweimal zu deinen Lesezeichen hinzufügen."
+      already_bookmarked: "Du kannst denselben %{type} nicht zweimal mit einem Lesezeichen versehen."
       too_many: "Entschuldige, leider kannst du nicht mehr als %{limit} Lesezeichen hinzufügen. Besuche <a href='%{user_bookmarks_url}'>%{user_bookmarks_url}</a>, um welche zu entfernen."
       cannot_set_past_reminder: "Du kannst keine Lesezeichen-Erinnerung in der Vergangenheit setzen."
       cannot_set_reminder_in_distant_future: "Du kannst keine Lesezeichen-Erinnerung einstellen, die mehr als 10 Jahre in der Zukunft liegt."
-      time_must_be_provided: "die Zeit muss für alle Erinnerungen angegeben werden"
+      time_must_be_provided: "Die Zeit muss für alle Erinnerungen angegeben werden"
       for_topic_must_use_first_post: "Du kannst nur den ersten Beitrag verwenden, um das Thema mit einem Lesezeichen zu versehen."
+      bookmarkable_id_type_required: "Der Name und Typ des Datensatzes, für den ein Lesezeichen erstellt werden soll, ist erforderlich."
     reminders:
       at_desktop: "Nächstes Mal, wenn ich an meinem PC bin"
       later_today: "Im Laufe des Tages"
@@ -1483,10 +1486,8 @@ de:
     summary_timeline_button: "Schaltfläche \"Zusammenfassen\" in der Zeitleiste anzeigen"
     enable_personal_messages: "Erlaube Benutzern mit der Vertrauensstufe 1 (konfigurierbar über die minimale Vertrauensstufe zum Senden von Nachrichten), Nachrichten zu erstellen und auf Nachrichten zu antworten. Beachte, dass das Team immer Nachrichten senden kann."
     enable_system_message_replies: "Erlaube Benutzern, auf Systemnachrichten zu antworten, auch wenn persönliche Nachrichten deaktiviert sind"
-    enable_long_polling: "Nachrichtenbus für Benachrichtigungen kann Long Polling nutzen."
     enable_chunked_encoding: "Aktiviere „chunked encoding“-Antworten durch den Server. Diese Funktion ist mit den meisten Set-ups kompatibel, aber einige Proxys können puffern, wodurch die Antworten verzögert werden"
     long_polling_base_url: "Basis-URL für Long Polling (wenn zum Ausliefern von dynamischen Inhalten ein CDN verwendet wird, setze dies auf Origin-Pull), z. B. http://origin.site.com"
-    long_polling_interval: "Wartezeit, bevor der Server auf Clients reagiert, wenn keine Daten gesendet werden müssen (nur für angemeldete Benutzer)"
     polling_interval: "Polling-Intervall in Millisekunden für angemeldete Clients, wenn Long Polling nicht verwendet wird."
     anon_polling_interval: "Polling-Intervall in Millisekunden für anonyme Clients."
     background_polling_interval: "Polling-Intervall in Millisekunden für Clients, wenn sich das Browser-Fenster im Hintergrund befindet."
@@ -1558,7 +1559,6 @@ de:
     send_tl2_promotion_message: "Sende neuen Benutzern der Vertrauensstufe 2 eine Nachricht über die Beförderung."
     suppress_reply_directly_below: "Zeige die erweiterbare Anzahl der Antworten auf einen Beitrag nicht, falls die einzige Antwort direkt darunter folgt."
     suppress_reply_directly_above: "Zeige das erweiterbare Element „In Antwort auf“ bei einem Beitrag nicht an, wenn es nur eine einzige Antwort direkt über diesem Beitrag gibt."
-    remove_full_quote: "Automatisch vollständige Zitate aus direkten Antworten entfernen."
     suppress_reply_when_quoting: "Zeige das erweiterbare Element „In Antwort auf“ bei einem Beitrag nicht an, wenn der Beitrag den beantworteten Beitrag zitiert."
     max_reply_history: "Maximale Anzahl an Antworten beim Ausklappen von „In Antwort auf“"
     topics_per_period_in_top_summary: "Anzahl der Themen, die in der Standard-Zusammenfassung der angesagten Themen angezeigt werden."
@@ -2092,6 +2092,8 @@ de:
     push_notifications_icon: "Das Abzeichensymbol, das in der Benachrichtigungsecke angezeigt wird. Ein monochromatisches PNG mit Transparenz (96 × 96) wird empfohlen."
     base_font: "Basisschriftart für die meisten Texte auf der Website. Themes können diese Schriftart mit der benutzerdefinierten CSS-Eigenschaft `--font-family` überschreiben."
     heading_font: "Schriftart für Überschriften auf der Website. Themes können diese Schriftart mit der benutzerdefinierten CSS-Eigenschaft `--heading-font-family` überschreiben."
+    enable_sitemap: "Generiere eine Sitemap für Deine Website und füge sie in die robots.txt-Datei ein."
+    sitemap_page_size: "Anzahl der URLs, die auf jeder Sitemap-Seite enthalten sein sollen. Max 50.000"
     short_title: "Der Kurztitel wird beim Benutzer auf dem Startbildschirm, im Startmenü oder an anderen Stellen mit begrenztem Platz verwendet. Er sollte auf 12 Zeichen begrenzt sein."
     dashboard_hidden_reports: "Erlaube das Ausblenden der angegebenen Berichte im Dashboard."
     dashboard_visible_tabs: "Wähle aus, welche Dashboard-Registerkarten sichtbar sind."
@@ -2152,6 +2154,7 @@ de:
         leading_trailing_slash: "Der reguläre Ausdruck darf nicht mit einem Schrägstrich beginnen und enden."
       unicode_usernames_avatars: "Die internen System-Avatare unterstützen keine Unicode-Benutzernamen."
       list_value_count: "Die Liste muss genau %{count} Werte enthalten."
+      markdown_linkify_tlds: "Du kannst den Wert „*“ nicht angeben."
       google_oauth2_hd_groups: "Vor Aktivierung dieser Einstellung musst zuerst \"google oauth2 hd\" eingeschaltet werden."
       search_tokenize_chinese_enabled: "Du musst „search_tokenize_chinese“ deaktivieren, bevor du diese Einstellung aktivierst."
       search_tokenize_japanese_enabled: "Du musst „search_tokenize_japanese“ deaktivieren, bevor du diese Einstellung aktivierst."
@@ -2323,6 +2326,8 @@ de:
     actions:
       grant_admin:
         description: "Für zusätzliche Sicherheitsmaßnahmen musst Di Deine 2FA bestätigen, bevor %{username} Administratorzugriff gewährt wird."
+      discourse_connect_provider:
+        description: "%{hostname} hat Dich aufgefordert, Deine 2FA zu bestätigen. Du wirst zur Website zurückgeleitet, sobald Du Deine 2FA bestätigt hast."
   admin:
     email:
       sent_test: "gesendet!"
@@ -4369,6 +4374,12 @@ de:
         other: '„%{tag_name}“ ist beschränkt auf folgende Kategorien: %{category_names}'
       synonym: 'Synonyme sind nicht erlaubt. Verwende stattdessen „%{tag_name}“.'
       has_synonyms: 'Schlagwort „%{tag_name}“ kann nicht verwendet werden, da es Synonyme hat.'
+      restricted_tags_cannot_be_used_in_category:
+        one: 'Das Tag "%{tags}" kann nicht in der Kategorie "%{category}" verwendet werden. Bitte entferne es.'
+        other: 'Die folgenden Schlagwörter können nicht in der Kategorie "%{category}" verwendet werden: %{tags}. Bitte entferne sie.'
+      category_does_not_allow_tags:
+        one: 'In der Kategorie "%{category}" ist das Tag "%{tags}" nicht zulässig. Bitte entferne es.'
+        other: 'In der Kategorie "%{category}" sind die folgenden Schlagwörter nicht zulässig: "%{tags}“. Bitte entferne sie.'
     required_tags_from_group:
       one: "Du musst mindestens %{count} „%{tag_group_name}“-Schlagwort hinzufügen. Die Schlagwörter in dieser Gruppe sind: %{tags}."
       other: "Du musst mindestens %{count} „%{tag_group_name}“-Schlagwörter hinzufügen. Die Schlagwörter in dieser Gruppe sind: %{tags}."
@@ -4677,6 +4688,7 @@ de:
     ignore_error: "Entschuldige, du kannst diesen Benutzer nicht ignorieren."
     mute_error: "Entschuldige, du kannst diesen Benutzer nicht stummschalten."
     error: "Leider kannst Du die Benachrichtigungsebene für diesen Benutzer nicht ändern."
+    invalid_value: '„%{value}“ ist keine gültige Benachrichtigungsstufe.'
   discord:
     not_in_allowed_guild: "Authentifizierung fehlgeschlagen. Du bist kein Mitglied einer erlaubten Discord-Gilde."
   old_keys_reminder:

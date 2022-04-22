@@ -11,12 +11,10 @@ describe StaticController do
       UploadCreator.new(file, filename).create_for(Discourse.system_user.id)
     end
 
-    before_all do
-      DistributedMemoizer.flush!
-    end
-
     after do
-      DistributedMemoizer.flush!
+      Discourse.redis.scan_each(match: "memoize_*").each do |key|
+        Discourse.redis.del(key)
+      end
     end
 
     describe 'local store' do

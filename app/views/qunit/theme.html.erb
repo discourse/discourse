@@ -8,7 +8,7 @@
       <%= discourse_stylesheet_link_tag(:test_helper, theme_id: nil) %>
       <%= preload_script "locales/#{I18n.locale}" %>
       <%= vendor_theme_tests %>
-      <%= preload_script @app_bundle %>
+      <%= preload_script "application" %>
       <%= preload_script "admin" %>
       <%= preload_script "discourse/tests/active-plugins" %>
       <%= preload_script "admin-plugins" %>
@@ -31,7 +31,7 @@
   </head>
   <body>
     <%- if !@suggested_themes %>
-      <%- if @legacy_ember %>
+      <%- if !EmberCli.enabled? %>
         <div id="qunit"></div>
         <div id="qunit-fixture"></div>
       <%- end %>

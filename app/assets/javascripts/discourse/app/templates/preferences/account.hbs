@@ -154,8 +154,10 @@
       {{combo-box
         value=newTitleInput
         content=model.availableTitles
-        none="user.title.none"
         onChange=(action (mut newTitleInput))
+        options=(hash
+          none="user.title.none"
+        )
       }}
     </div>
     <div class="instructions">
@@ -171,8 +173,10 @@
       {{flair-chooser
         value=newFlairGroupId
         content=model.availableFlairs
-        none="user.flair.none"
         onChange=(action (mut newFlairGroupId))
+        options=(hash
+          none="user.flair.none"
+        )
       }}
     </div>
     <div class="instructions">
@@ -188,7 +192,10 @@
       {{combo-box
         value=newPrimaryGroupInput
         content=model.filteredGroups
-        none="user.primary_group.none"}}
+        options=(hash
+          none="user.primary_group.none"
+        )
+      }}
     </div>
   </div>
 {{/if}}

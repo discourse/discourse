@@ -164,7 +164,6 @@ pl_PL:
       to_placeholder: "do daty"
     share:
       topic_html: 'Temat: <span class="topic-title">%{topicTitle}</span>'
-      post: "post #%{postNumber}"
       close: "zamknij"
       twitter: "Udostępnij na Twitterze"
       facebook: "Udostępnij na Facebooku"
@@ -338,6 +337,8 @@ pl_PL:
         unbookmark_with_reminder: "Kliknij, aby usunąć wszystkie zakładki i przypomnienia w tym temacie."
     bookmarks:
       created: "Dodano post do zakładek. %{name}"
+      create_for: "Utwórz zakładkę dla %{type}"
+      edit_for: "Edytuj zakładkę dla %{type}"
       not_bookmarked: "dodaj do zakładek"
       remove_reminder_keep_bookmark: "Usuń przypomnienie i zachowaj zakładkę"
       created_with_reminder: "Dodano post do zakładek z przypomnieniem %{date}. %{name}"
@@ -351,7 +352,10 @@ pl_PL:
       list_permission_denied: "Nie masz uprawnień do przeglądania zakładek tego użytkownika."
       no_user_bookmarks: "Nie masz żadnych postów dodanych do zakładek. Zakładki pozwalają na szybkie odwoływanie się do konkretnych postów."
       auto_delete_preference:
+        never: "Zachowaj zakładkę"
         when_reminder_sent: "Usuń zakładkę"
+        on_owner_reply: "Usuń zakładkę, gdy odpowiem"
+        clear_reminder: "Zachowaj zakładkę i wyczyść przypomnienie"
       search_placeholder: "Wyszukiwanie zakładek według nazwy, tytułu tematu lub treści postu"
       search: "Wyszukaj"
       reminders:
@@ -361,6 +365,8 @@ pl_PL:
         existing_reminder: "Masz ustawione przypomnienie dla tej zakładki, które zostanie wysłane %{at_date_time}"
     copy_codeblock:
       copied: "skopiowane!"
+      copy: "skopiuj kod do schowka"
+      fullscreen: "pokaż kod na pełnym ekranie"
     drafts:
       label: "Szkice"
       label_with_count: "Szkice (%{count})"
@@ -407,6 +413,7 @@ pl_PL:
     saved: "Zapisano!"
     upload: "Prześlij"
     uploading: "Przesyłanie..."
+    processing: "Przetwarzanie..."
     uploading_filename: "Przesyłanie: %{filename}..."
     processing_filename: "Przetwarzanie: %{filename}..."
     clipboard: "schowek"
@@ -1372,6 +1379,7 @@ pl_PL:
         upload_title: "Wyślij swoją grafikę"
         image_is_not_a_square: "Uwaga: grafika została przycięta ponieważ jej wysokość i szerokość nie były równe. "
         logo_small: "Małe logo witryny. Używane domyślnie."
+        use_custom: "Lub prześlij własny awatar:"
       change_profile_background:
         title: "Nagłówek profilu"
         instructions: "Nagłówki profilu zostaną wyśrodkowane i będą miały domyślną szerokość 1110 pikseli."
@@ -1904,27 +1912,27 @@ pl_PL:
       not_approved: "Twoje konto nie zostało jeszcze aktywowane. Zostaniesz powiadomiony emailem gdy będziesz mógł/mogła się zalogować."
       google_oauth2:
         name: "Google"
-        title: "przez Google"
+        title: "Zaloguj się przez Google"
         sr_title: "Zaloguj się przez Google"
       twitter:
         name: "Twitter"
-        title: "przez Twitter"
+        title: "Zaloguj się przez Twitter"
         sr_title: "Zaloguj się przez Twitter"
       instagram:
         name: "Instagram"
-        title: "z Instagramem"
+        title: "Zaloguj się przez Instagram"
         sr_title: "Zaloguj się przez Instagram"
       facebook:
         name: "Facebook"
-        title: "przez Facebook"
+        title: "Zaloguj się przez facebook"
         sr_title: "Zaloguj się przez facebook"
       github:
         name: "GitHub"
-        title: "przez GitHub"
+        title: "Zaloguj się przez GitHub"
         sr_title: "Zaloguj się przez GitHub"
       discord:
         name: "Discord"
-        title: "z Discordem"
+        title: "Zaloguj się przez Discord"
         sr_title: "Zaloguj się przez Discord"
       second_factor_toggle:
         totp: "Zamiast tego użyj aplikacji uwierzytelniającej"
@@ -1941,7 +1949,6 @@ pl_PL:
       success: "Twoje konto zostało utworzone i jesteś teraz zalogowany."
       name_label: "Nazwa"
       password_label: "Hasło"
-      optional_description: "(opcjonalne)"
     password_reset:
       continue: "Przejdź do %{site_name}"
     emoji_set:
@@ -1958,6 +1965,7 @@ pl_PL:
       categories_and_top_topics: "Kategorie i najlepsze tematy"
       categories_boxes: "Pudełka z podkategoriami"
       categories_boxes_with_topics: "Pudełka z polecanymi tematami"
+      subcategories_with_featured_topics: "Podkategorie z polecanymi tematami"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -2800,6 +2808,7 @@ pl_PL:
         title: "Odpowiedz"
         help: "zacznij tworzyć odpowiedź do tego tematu"
       share:
+        title: "Udostępnij temat"
         extended_title: "Udostępnij link"
         help: "udostępnij odnośnik do tego tematu"
         instructions: "Udostępnij link do tego tematu:"
@@ -3019,6 +3028,7 @@ pl_PL:
       show_hidden: "Wyświetl ignorowaną treść."
       deleted_by_author_simple: "(post usunięty przez autora)"
       collapse: "zawalić się"
+      sr_collapse_replies: "Zwiń osadzone odpowiedzi"
       expand_collapse: "rozwiń/zwiń"
       locked: "członek zespołu zablokował edytowanie tego wpisu"
       gap:
@@ -3048,6 +3058,16 @@ pl_PL:
         few: "ty i %{count} inne osoby polubiły ten wpis"
         many: "ty i %{count} innych osób polubiło ten wpis"
         other: "ty i %{count} innych osób polubiło ten wpis"
+      sr_post_like_count_button:
+        one: "%{count} osoba polubiła ten post. Kliknij, aby zobaczyć"
+        few: "%{count} osoby polubiły ten post. Kliknij, aby zobaczyć"
+        many: "%{count} osób polubiło ten post. Kliknij, aby zobaczyć"
+        other: "%{count} osób polubiło ten post. Kliknij, aby zobaczyć"
+      sr_post_read_count_button:
+        one: "%{count} osoba przeczytała ten post. Kliknij, aby wyświetlić"
+        few: "%{count} osoby przeczytały ten post. Kliknij, aby wyświetlić"
+        many: "%{count} osób przeczytało ten post. Kliknij, aby wyświetlić"
+        other: "%{count} osób przeczytało ten post. Kliknij, aby wyświetlić"
       filtered_replies_hint:
         one: "Zobacz ten post i jego odpowiedź"
         few: "Zobacz ten post i jego %{count} odpowiedzi"
@@ -3065,6 +3085,7 @@ pl_PL:
         edit: "Przepraszamy, podczas edytowania twojego wpisu wystąpił błąd. Spróbuj ponownie."
         upload: "Przepraszamy, wystąpił błąd podczas wczytywania Twojego pliku. Proszę, spróbuj ponownie."
         file_too_large: "Przepraszamy, ten plik jest zbyt duży (maksymalny rozmiar to %{max_size_kb}kB). Dlaczego nie przesłać dużego pliku do usługi udostępniania w chmurze, a następnie wkleić link?"
+        file_size_zero: "Przepraszamy, wygląda na to, że coś poszło nie tak. Plik, który próbujesz przesłać, ma 0 bajtów. Spróbuj przesłać go ponownie."
         file_too_large_humanized: "Przepraszamy, ten plik jest za duży (maksymalny rozmiar to %{max_size}). Dlaczego nie przesłać dużego pliku do usługi udostępniania w chmurze, a następnie wkleić link?"
         too_many_uploads: "Przepraszamy, ale możesz wgrać tylko jeden plik naraz."
         too_many_dragged_and_dropped_files:
@@ -3168,6 +3189,8 @@ pl_PL:
             few: "i %{count} innych przeczytało to"
             many: "i %{count} innych przeczytało to"
             other: "i %{count} innych przeczytało to"
+          sr_post_likers_list_description: "użytkownicy, którzy polubili ten post"
+          sr_post_readers_list_description: "użytkownicy, którzy przeczytali ten post"
         by_you:
           off_topic: "Oznaczono jako nie-na-temat"
           spam: "Oflagowano jako spam"
@@ -3237,6 +3260,9 @@ pl_PL:
           edit_bookmark:
             name: "Edytuj zakładkę"
             description: "Edytuj nazwę zakładki lub zmień datę i godzinę przypomnienia"
+          clear_bookmark_reminder:
+            name: "Wyczyść przypomnienie"
+            description: "Wyczyść datę i godzinę przypomnienia"
           pin_bookmark:
             name: "Przypnij zakładkę"
             description: "Przypnij zakładkę. To sprawi, że pojawi się na górze listy zakładek."
@@ -3249,6 +3275,9 @@ pl_PL:
         viewing_summary: "Przeglądanie podsumowania tego tematu"
         post_number: "%{username}, post #%{post_number}"
         show_all: "Pokaż wszystkie"
+      share:
+        title: "Udostępnij post #%{post_number}"
+        instructions: "Udostępnij link do tego posta:"
     category:
       none: "(brak kategorii)"
       all: "Wszystkie kategorie"
@@ -3268,10 +3297,8 @@ pl_PL:
       tag_groups_placeholder: "(Opcjonalnie) lista dozwolonych grup tagów"
       manage_tag_groups_link: "Zarządzaj grupami tagów"
       allow_global_tags_label: "Zezwól dodatkowo na inne tagi"
-      tag_group_selector_placeholder: "(Opcjonalnie) Grupa znaczników"
-      required_tag_group_description: "Wymagaj, aby nowe tematy miały znaczniki z grupy znaczników:"
-      min_tags_from_required_group_label: "Liczba tagów:"
-      required_tag_group_label: "Grupa tagów:"
+      required_tag_group:
+        delete: "Usuń"
       topic_featured_link_allowed: "Zezwól na wybrane linki w tej kategorii"
       delete: "Usuń kategorię"
       create: "Nowa kategoria"
@@ -3503,19 +3530,23 @@ pl_PL:
         other {}}
     original_post: "Oryginalny wpis"
     views: "Odsłony"
+    sr_views: "Sortuj według wyświetleń"
     views_lowercase:
       one: "odsłona"
       few: "odsłony"
       many: "odsłon"
       other: "odsłon"
     replies: "Odpowiedzi"
+    sr_replies: "Sortuj według odpowiedzi"
     views_long:
       one: "ten temat był przeglądany %{count} raz"
       few: "ten temat był przeglądany %{number} razy"
       many: "ten temat był przeglądany %{number} razy"
       other: "ten temat był przeglądany %{number} razy"
     activity: "Aktywność"
+    sr_activity: "Sortuj według aktywności"
     likes: "Polubienia"
+    sr_likes: "Sortuj według polubień"
     likes_lowercase:
       one: "polubienie"
       few: "polubienia"
@@ -3627,6 +3658,7 @@ pl_PL:
       readonly: "przeglądać"
     lightbox:
       download: "pobierz"
+      open: "oryginalny obraz"
       previous: "Poprzedni (klawisz strzałki w lewo)"
       next: "Następny (klawisz strzałki w prawo)"
       counter: "%curr% z %total%"
@@ -3948,7 +3980,6 @@ pl_PL:
       unsupported_file_picked: "Wybrałeś nieobsługiwany plik. Obsługiwane typy plików – %{types}."
     user_activity:
       no_activity_title: "Brak aktywności"
-      no_activity_body: "Witaj w naszej społeczności! Jesteś tu zupełnie nowy i nie przyczyniłeś się jeszcze do dyskusji. W pierwszym kroku odwiedź <a href='%{topUrl}'>Popularne</a> lub <a href='%{categoriesUrl}'>Kategorie</a> i zacznij czytać! Kliknij %{heartIcon} dla wpisów, które lubisz lub chcesz dowiedzieć się więcej. Jeśli jeszcze tego nie zrobiłeś, pomóż innym cię poznać, dodając zdjęcie i bio w swoich <a href='%{preferencesUrl}'>preferencjach użytkownika</a>."
       no_activity_others: "Brak aktywności"
       no_replies_title: "Nie odpowiedziałeś jeszcze na żadne tematy"
       no_replies_others: "Brak odpowiedzi."
@@ -3961,6 +3992,9 @@ pl_PL:
       no_read_topics_title: "Nie przeczytałeś jeszcze żadnych tematów"
       no_read_topics_body: "Gdy zaczniesz czytać dyskusje, zobaczysz tutaj listę. Aby rozpocząć czytanie, poszukaj tematów, które Cię interesują w <a href='%{topUrl}'>popularnych</a> lub <a href='%{categoriesUrl}'>kategoriach</a> lub wyszukaj według słowa kluczowego %{searchIcon}"
     no_group_messages_title: "Nie znaleziono wiadomości grupowych"
+    topic_entrance:
+      sr_jump_top_button: "Przejdź do pierwszego posta"
+      sr_jump_bottom_button: "Przejdź do ostatniego posta"
     fullscreen_table:
       expand_btn: "Rozwiń tabelę"
     second_factor_auth:
@@ -4200,6 +4234,9 @@ pl_PL:
               wordpress: Niezbędne do działania wtyczki wp-discourse na WordPress.
             posts:
               edit: Edytuj dowolny post lub konkretny.
+            categories:
+              list: Uzyskaj listę kategorii.
+              show: Uzyskaj pojedynczą kategorię według identyfikatora.
             uploads:
               create: Prześlij nowy plik lub zainicjuj pojedyncze lub wieloczęściowe bezpośrednie wysyłanie do zewnętrznego magazynu.
             users:
@@ -4422,6 +4459,7 @@ pl_PL:
         delete_confirm: 'Czy na pewno chcesz usunąć "%{theme_name}"?'
         color: "Kolor"
         opacity: "Widoczność"
+        copy: "Powiel"
         copy_to_clipboard: "Skopiuj do schowka"
         copied_to_clipboard: "Tekst skopiowany do schowka."
         copy_to_clipboard_error: "Wystąpił błąd w trakcie kopiowania do schowka."

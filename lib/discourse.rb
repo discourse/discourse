@@ -990,6 +990,9 @@ module Discourse
       },
       Thread.new {
         SvgSprite.core_svgs
+      },
+      Thread.new {
+        EmberCli.script_chunks
       }
     ].each(&:join)
   ensure

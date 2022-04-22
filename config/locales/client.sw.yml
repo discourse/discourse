@@ -107,7 +107,6 @@ sw:
       next_month: "Mwezi Ujao"
       placeholder: tarehe
     share:
-      post: "taarifa #%{postNumber}"
       close: "funga"
     action_codes:
       public_topic: "ameifanya hii mada isiwe ya siri %{when}"
@@ -1110,19 +1109,14 @@ sw:
       not_approved: "Akaunti yako bado haijathibitishwa. Utapata ujumbe kwa barua pepe ukiwa tayari kuingia."
       google_oauth2:
         name: "Google"
-        title: "na Google"
       twitter:
         name: "Twitter"
-        title: "na Twitter"
       instagram:
         name: "Instagram"
-        title: "na Instagram"
       facebook:
         name: "Facebook"
-        title: "na Facebook"
       github:
         name: "GitHub"
-        title: "na Github"
       discord:
         name: "Matatizo"
     invites:
@@ -1135,7 +1129,6 @@ sw:
       success: "Akaunti yako imetengenezwa na sasa unaweza kuingia."
       name_label: "Jina"
       password_label: "Nywila"
-      optional_description: "(sio muhimu)"
     password_reset:
       continue: "endelea kwenye %{site_name}"
     emoji_set:
@@ -1881,6 +1874,8 @@ sw:
       tags: "Lebo"
       tags_placeholder: "(Sio muhimu) orodha ya lebo zilizoruhusiwa."
       tag_groups_placeholder: "(Sio muhimu) orodha ya vikundi vyenye lebo zilizoruhusiwa."
+      required_tag_group:
+        delete: "Futa"
       delete: "Futa Kategoria"
       create: "Kategoria Mpya"
       create_long: "Tengeneza kategoria mpya"

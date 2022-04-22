@@ -58,6 +58,10 @@ task "qunit:test", [:timeout, :qunit_path] do |_, args|
     "UNICORN_TIMEOUT" => "90",
   }
 
+  if !ember_cli
+    env["EMBER_CLI_PROD_ASSETS"] = "0"
+  end
+
   pid = Process.spawn(
     env,
     "#{Rails.root}/bin/unicorn",

@@ -12,4 +12,8 @@ Disallow: <%= path %>
 
 <% end %>
 
+<%- if SiteSetting.enable_sitemap? && !SiteSetting.login_required? %>
+Sitemap: <%= request.protocol %><%= request.host_with_port %>/sitemap.xml
+<% end %>
+
 <%= server_plugin_outlet "robots_txt_index" %>

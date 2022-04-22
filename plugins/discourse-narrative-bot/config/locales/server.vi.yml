@@ -68,9 +68,50 @@ vi:
       images:
         reply: |-
           Hình ảnh tiện lợi - Tôi nhấn nút like :heart: để cho bạn biết tôi đánh giá cao nó như thế nào :heart_eyes:
+      quoting:
+        reply: |-
+          Làm tốt lắm, bạn đã chọn câu nói yêu thích của tôi! :left_speech_bubble:
+        not_found: |-
+          Hmm có vẻ như bạn đã không trích dẫn tôi trong thư trả lời của bạn?
+
+          Chọn bất kỳ văn bản nào trong bài đăng của tôi sẽ hiển thị nút <kbd>**Trích dẫn**</kbd> . Và nhấn **Trả lời** với bất kỳ văn bản nào được chọn cũng sẽ hoạt động! Bạn có thể thử lại được không?
       bookmark:
         instructions: |-
           Nếu bạn muốn tìm hiểu thêm, hãy chọn nút <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> bên dưới và chọn <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> để **đánh dấu tin nhắn cá nhân này**. Nếu bạn làm như vậy, bạn có thể có một :gift: trong tương lai!
+        reply: |-
+          Tuyệt vời! Giờ đây, bạn có thể dễ dàng tìm đường quay lại cuộc trò chuyện riêng tư của chúng tôi bất kỳ lúc nào, ngay từ [tab dấu trang trên hồ sơ của bạn](%{bookmark_url}). Chỉ cần chọn ảnh hồ sơ của bạn ở phía trên bên phải &#8599;
+        not_found: |-
+          Rất tiếc, tôi không thấy bất kỳ dấu trang nào trong chủ đề này. Bạn có tìm thấy dấu trang dưới mỗi bài viết không? Sử dụng hiển thị thêm <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> để hiển thị các hành động bổ sung nếu cần.
+      emoji:
+        instructions: |-
+          Bạn có thể đã thấy tôi sử dụng những hình ảnh nhỏ trong câu trả lời của tôi :blue_car::dash: , những hình ảnh đó được gọi là [emoji](https://en.wikipedia.org/wiki/Emoji). Bạn có thể **thêm biểu tượng cảm xúc** vào câu trả lời của mình không? Bất kỳ cái nào trong số này sẽ hoạt động:
+
+          - Nhập `:) ;) :D :P :O`
+
+          - Nhập dấu hai chấm <kbd>:</kbd> rồi điền tên biểu tượng cảm xúc `:tada:`
+
+          - Nhấn nút biểu tượng cảm xúc <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> trong trình chỉnh sửa hoặc trên bàn phím di động
+        reply: |-
+          Đó là :sparkles: _emojitastic!_ :sparkles:
+        not_found: |-
+          Rất tiếc, tôi không thấy bất kỳ Biểu tượng cảm xúc nào trong câu trả lời của bạn? Ôi không! :sob:
+
+          Thử nhập dấu hai chấm <kbd>:</kbd> để hiển thị bộ chọn biểu tượng cảm xúc, sau đó nhập một vài chữ cái đầu tiên của những gì bạn muốn, chẳng hạn như `:bird:'`
+
+          Hoặc, nhấn nút biểu tượng cảm xúc <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> trong trình chỉnh sửa.
+
+          (Nếu bạn đang sử dụng thiết bị di động, bạn cũng có thể nhập Biểu tượng cảm xúc trực tiếp từ bàn phím của mình.)
+      mention:
+        instructions: |-
+          Đôi khi bạn có thể muốn thu hút sự chú ý của một người, ngay cả khi bạn không trực tiếp trả lời họ. Gõ `@` sau đó điền tên người dùng của họ để đề cập đến họ.
+
+          Bạn có thể đề cập đến **`@%{discobot_username}`** trong câu trả lời của mình không?
+        reply: |-
+          _Có ai đó nói tên tôi không !? _ :raised_hand: Tôi tin là bạn đã làm vậy! :wave: Chà, tôi đây! Cảm ơn vì đã nhắc đến tôi. :ok_hand:
+        not_found: |-
+          Tôi không thấy tên mình ở đâu cả :frowning: Bạn có thể thử nhắc lại tôi là `@%{discobot_username}` được không?
+
+          (Và vâng, tên người dùng của tôi được đánh vần là _disco_, như trong cơn sốt khiêu vũ của những năm 1970. Tôi [yêu cuộc sống về đêm!](https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
       flag:
         instructions: |-
           Chúng tôi thích các cuộc thảo luận của chúng tôi thân thiện và chúng tôi cần sự giúp đỡ của bạn để [giữ cho mọi thứ trở nên văn minh](%{guidelines_url}). Nếu bạn thấy vấn đề, vui lòng gắn cờ để cho tác giả hoặc [nhân viên hữu ích của chúng tôi](%{about_url}) biết về vấn đề đó một cách riêng tư. Có nhiều lý do bạn có thể muốn gắn cờ một bài đăng, từ một đề xuất tách chủ đề vô ích đến vi phạm tiêu chuẩn cộng đồng rõ ràng. Nếu bạn chọn **Cái gì đó khác**, bạn sẽ bắt đầu một cuộc thảo luận tin nhắn riêng tư với những người kiểm duyệt, nơi bạn có thể đặt thêm câu hỏi.

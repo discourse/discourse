@@ -1331,6 +1331,7 @@ export default Controller.extend({
                 this.close();
               })
               .finally(() => {
+                this.appEvents.trigger("composer:cancelled");
                 resolve();
               });
           },
@@ -1338,6 +1339,7 @@ export default Controller.extend({
             this._saveDraft();
             this.model.clearState();
             this.close();
+            this.appEvents.trigger("composer:cancelled");
             resolve();
           },
           // needed to resume saving drafts if composer stays open
@@ -1351,6 +1353,7 @@ export default Controller.extend({
             this.close();
           })
           .finally(() => {
+            this.appEvents.trigger("composer:cancelled");
             resolve();
           });
       }
@@ -1432,17 +1435,12 @@ export default Controller.extend({
   tagValidation(category, tags, lastValidatedAt) {
     const tagsArray = tags || [];
     if (this.site.can_tag_topics && !this.currentUser.staff && category) {
-      if (
-        category.minimum_required_tags > tagsArray.length ||
-        (category.required_tag_groups &&
-          category.min_tags_from_required_group > tagsArray.length)
-      ) {
+      // category.minimumRequiredTags incorporates both minimum_required_tags, and required_tag_groups
+      if (category.minimumRequiredTags > tagsArray.length) {
         return EmberObject.create({
           failed: true,
           reason: I18n.t("composer.error.tags_missing", {
-            count:
-              category.minimum_required_tags ||
-              category.min_tags_from_required_group,
+            count: category.minimumRequiredTags,
           }),
           lastShownAt: lastValidatedAt,
         });

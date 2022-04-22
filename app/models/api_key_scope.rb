@@ -103,7 +103,7 @@ class ApiKeyScope < ActiveRecord::Base
     end
 
     def find_urls(actions:, methods:)
-      urls = []
+      urls = Set.new
 
       if actions.present?
         route_sets = [Rails.application.routes]
@@ -120,7 +120,11 @@ class ApiKeyScope < ActiveRecord::Base
             defaults = route.defaults
             action = "#{defaults[:controller].to_s}##{defaults[:action]}"
             path = route.path.spec.to_s.gsub(/\(\.:format\)/, '')
-            api_supported_path = path.end_with?('.rss') || route.path.requirements[:format]&.match?('json')
+            api_supported_path = (
+              path.end_with?('.rss') ||
+              !route.path.requirements[:format] ||
+              route.path.requirements[:format].match?('json')
+            )
             excluded_paths = %w[/new-topic /new-message /exception]
 
             if actions.include?(action) && api_supported_path && !excluded_paths.include?(path)
@@ -136,7 +140,7 @@ class ApiKeyScope < ActiveRecord::Base
         end
       end
 
-      urls
+      urls.to_a
     end
   end
 

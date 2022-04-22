@@ -2,6 +2,7 @@
 
 require_relative 'post_item_excerpt'
 
+# TODO (martin) [POLYBOOK] Not relevant once polymorphic bookmarks are implemented.
 class UserBookmarkSerializer < ApplicationSerializer
   include PostItemExcerpt
   include TopicTagsMixin
@@ -30,7 +31,12 @@ class UserBookmarkSerializer < ApplicationSerializer
              :post_user_username,
              :post_user_avatar_template,
              :post_user_name,
-             :for_topic
+             :for_topic,
+             :bookmarkable_id,
+             :bookmarkable_type,
+             :bookmarkable_user_username,
+             :bookmarkable_user_avatar_template,
+             :bookmarkable_user_name,
 
   def topic_id
     post.topic_id
@@ -146,6 +152,21 @@ class UserBookmarkSerializer < ApplicationSerializer
   end
 
   def post_user_name
+    post_user.name
+  end
+
+  # TODO (martin) [POLYBOOK] Not relevant once polymorphic bookmarks are implemented.
+  # Note...these are just stub methods for compatability with the user-bookmark-list.hbs
+  # changes in a transition period for polymorphic bookmarks.
+  def bookmarkable_user_username
+    post_user.username
+  end
+
+  def bookmarkable_user_avatar_template
+    post_user.avatar_template
+  end
+
+  def bookmarkable_user_name
     post_user.name
   end
 end

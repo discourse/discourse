@@ -719,6 +719,13 @@ class PostAlerter
       # email to the user who was just added by CC. In this case the OP probably
       # replied and CC'd some people, and they are the only other topic users.
       return if post.incoming_email.cc_addresses_split.include?(to_address)
+
+      # We don't want to create an email storm if someone emails the group and
+      # CC's 50 support addresses from various places, which all then respond
+      # with auto-responders saying they have received our email. Any auto-generated
+      # emails should not propagate notifications to anyone else, not even
+      # the regular topic user notifications.
+      return email_addresses.dup.uniq if post.incoming_email.is_auto_generated?
     end
 
     # Send a single email using group SMTP settings to cut down on the
@@ -795,7 +802,12 @@ class PostAlerter
      LEFT JOIN tag_group_memberships tgm ON tag_users.tag_id = tgm.tag_id
      LEFT JOIN tag_group_permissions tgp ON tgm.tag_group_id = tgp.tag_group_id
      LEFT JOIN group_users gu ON gu.user_id = tag_users.user_id
-         WHERE (tgp.group_id IS NULL OR tgp.group_id = gu.group_id OR gu.group_id = :staff_group_id)
+         WHERE (
+            tgp.group_id IS NULL OR
+            tgp.group_id = gu.group_id OR
+            tgp.group_id = :everyone_group_id OR
+            gu.group_id = :staff_group_id
+          )
                AND (tag_users.notification_level = :watching
                     AND tag_users.tag_id IN (:tag_ids)
                     AND (tu.user_id IS NULL OR tu.notification_level = :watching))
@@ -807,7 +819,8 @@ class PostAlerter
       topic_id: post.topic_id,
       category_id: post.topic.category_id,
       tag_ids: tag_ids,
-      staff_group_id: Group::AUTO_GROUPS[:staff]
+      staff_group_id: Group::AUTO_GROUPS[:staff],
+      everyone_group_id: Group::AUTO_GROUPS[:everyone]
     )
 
     if group_ids.present?

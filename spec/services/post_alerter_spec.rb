@@ -1372,8 +1372,10 @@ describe PostAlerter do
         tag = Fabricate(:tag)
         topic = Fabricate(:topic, tags: [tag])
         post = Fabricate(:post, topic: topic)
-        tag_group = Fabricate(:tag_group, tags: [tag])
-        Fabricate(:tag_group_permission, tag_group: tag_group, group: group)
+
+        tag_group = TagGroup.new(name: 'Only visible to group', tag_names: [tag.name])
+        tag_group.permissions = [[group.id, TagGroupPermission.permission_types[:full]]]
+        tag_group.save!
 
         TagUser.change(user.id, tag.id, TagUser.notification_levels[:watching])
 
@@ -1708,6 +1710,16 @@ describe PostAlerter do
         },
         at: Time.zone.now + SiteSetting.personal_email_time_window_seconds.seconds
       )
+    end
+
+    it "does not send a group smtp email for anyone if the reply post originates from an incoming email that is auto generated" do
+      incoming_email_post = create_post_with_incoming
+      topic = incoming_email_post.topic
+      post = Fabricate(:post, topic: topic)
+      Fabricate(:incoming_email, post: post, topic: topic, is_auto_generated: true)
+      expect_not_enqueued_with(job: :group_smtp_email) do
+        expect { PostAlerter.new.after_save_post(post, true) }.to change { ActionMailer::Base.deliveries.size }.by(0)
+      end
     end
 
     it "skips sending a notification email to the group and all other email addresses that are _not_ members of the group,

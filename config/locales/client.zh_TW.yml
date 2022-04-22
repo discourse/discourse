@@ -93,7 +93,6 @@ zh_TW:
       to_placeholder: "至今"
     share:
       topic_html: '話題：<span class="topic-title">%{topicTitle}</span>'
-      post: "貼文 #%{postNumber} "
       close: "關閉"
       twitter: "分享到 Twitter"
       facebook: "分享到 Facebook"
@@ -1408,19 +1407,14 @@ zh_TW:
       not_approved: "您的帳號尚未通過審核。一旦您的帳號通過審核，就會傳送電子郵件通知您。"
       google_oauth2:
         name: "Google"
-        title: "使用 Google 帳號"
       twitter:
         name: "Twitter"
-        title: "使用 Twitter"
       instagram:
         name: "Instagram"
-        title: "用 Instagram 登入"
       facebook:
         name: "Facebook"
-        title: "使用 Facebook"
       github:
         name: "GitHub"
-        title: "使用 GitHub"
       second_factor_toggle:
         totp: "請改用身份驗證應用程式"
         backup_code: "請改用備用碼"
@@ -1434,7 +1428,6 @@ zh_TW:
       success: "你的帳號已被建立，且您已經登入了。"
       name_label: "姓名"
       password_label: "密碼"
-      optional_description: "(選擇性)"
     password_reset:
       continue: "繼續連接至 %{site_name}"
     emoji_set:
@@ -2284,6 +2277,8 @@ zh_TW:
       tags_placeholder: "（可選）允許使用的標籤列表"
       tag_groups_placeholder: "（可選）允許使用的標籤組列表"
       allow_global_tags_label: "也允許其他標籤（Tags）"
+      required_tag_group:
+        delete: "刪除"
       topic_featured_link_allowed: "允許在該分類中發布精選的連結標題"
       delete: "刪除分類"
       create: "新分類"

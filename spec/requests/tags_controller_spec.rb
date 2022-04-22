@@ -877,6 +877,28 @@ describe TagsController do
         expect(response.status).to eq(400)
         expect(response.parsed_body['errors'].first).to eq(I18n.t('invalid_params', message: 'limit'))
       end
+
+      it 'includes required tag group information' do
+        tag1 = Fabricate(:tag)
+        tag2 = Fabricate(:tag)
+
+        tag_group = Fabricate(:tag_group, tags: [tag1, tag2])
+        crtg = CategoryRequiredTagGroup.new(tag_group: tag_group, min_count: 1)
+        category = Fabricate(:category, category_required_tag_groups: [ crtg ])
+
+        get "/tags/filter/search.json", params: { q: '', categoryId: category.id, filterForInput: true }
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["results"].map { |t| t["name"] }).to contain_exactly(tag1.name, tag2.name)
+        expect(response.parsed_body["required_tag_group"]).to eq({
+          "name" => tag_group.name,
+          "min_count" => crtg.min_count
+        })
+
+        get "/tags/filter/search.json", params: { q: '', categoryId: category.id, filterForInput: true, selected_tags: [tag1.name] }
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["results"].map { |t| t["name"] }).to contain_exactly(tag2.name)
+        expect(response.parsed_body["required_tag_group"]).to eq(nil)
+      end
     end
   end
 

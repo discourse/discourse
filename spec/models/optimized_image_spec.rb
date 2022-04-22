@@ -7,23 +7,70 @@ describe OptimizedImage do
   describe '.crop' do
     it 'should produce cropped images (requires ImageMagick 7)' do
       tmp_path = "/tmp/cropped.png"
+      desired_width = 5
+      desired_height = 5
 
       begin
         OptimizedImage.crop(
           "#{Rails.root}/spec/fixtures/images/logo.png",
           tmp_path,
-          5,
-          5
+          desired_width,
+          desired_height
         )
 
-        # we don't want to deal with something new here every time image magick
-        # is upgraded or pngquant is upgraded, lets just test the basics ...
-        # cropped image should be less than 120 bytes
+        w, h = FastImage.size(tmp_path)
+        expect(w).to eq(desired_width)
+        expect(h).to eq(desired_height)
 
         cropped_size = File.size(tmp_path)
-
-        expect(cropped_size).to be < 120
+        expect(cropped_size).to be < 200
         expect(cropped_size).to be > 50
+
+      ensure
+        File.delete(tmp_path) if File.exist?(tmp_path)
+      end
+    end
+
+    it 'should correctly crop images vertically' do
+      tmp_path = "/tmp/cropped.png"
+      desired_width = 100
+      desired_height = 66
+
+      begin
+        OptimizedImage.crop(
+          "#{Rails.root}/spec/fixtures/images/logo.png", # 244x66px
+          tmp_path,
+          desired_width,
+          desired_height
+        )
+
+        w, h = FastImage.size(tmp_path)
+
+        expect(w).to eq(desired_width)
+        expect(h).to eq(desired_height)
+
+      ensure
+        File.delete(tmp_path) if File.exist?(tmp_path)
+      end
+    end
+
+    it 'should correctly crop images horizontally' do
+      tmp_path = "/tmp/cropped.png"
+      desired_width = 244
+      desired_height = 500
+
+      begin
+        OptimizedImage.crop(
+          "#{Rails.root}/spec/fixtures/images/logo.png", # 244x66px
+          tmp_path,
+          desired_width,
+          desired_height
+        )
+
+        w, h = FastImage.size(tmp_path)
+
+        expect(w).to eq(desired_width)
+        expect(h).to eq(desired_height)
 
       ensure
         File.delete(tmp_path) if File.exist?(tmp_path)

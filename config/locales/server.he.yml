@@ -63,6 +63,7 @@ he:
       unrecognized_extension: "סיומת הקובץ אינה מוכרת: %{extension}"
     import_error:
       generic: אירעה שגיאה בעת ייבוא ערכת העיצוב הזו
+      upload: "שגיאה ביצירת משאב להעלאה: %{name}. %{errors}"
       about_json: "שגיאת ייבוא: about.json לא קיים או שהוא שגוי. האם אכן מדובר בערכת עיצוב של Discourse?"
       about_json_values: "about.json מכיל ערכים שגויים: %{errors}"
       modifier_values: "המחליפים ב־about.json מכילים ערכים שגויים: %{errors}"
@@ -436,11 +437,13 @@ he:
   bookmarks:
     errors:
       already_bookmarked_post: "אי אפשר לסמן את אותו הפוסט פעמיים"
+      already_bookmarked: "אי אפשר לסמן את אותו %{type} פעמיים."
       too_many: "לא ניתן להוסיף למעלה מ־%{limit} סימניות, נא לבקר ב<a href='%{user_bookmarks_url}'>%{user_bookmarks_url}</a> כדי להסיר כמה מהנוכחיות."
       cannot_set_past_reminder: "אי אפשר להגדיר תזכורת סימנייה למועד שעבר."
       cannot_set_reminder_in_distant_future: "לא ניתן להגדיר תזכורת סימנייה למעבר ל־10 שנים בעתיד."
-      time_must_be_provided: "יש לספק זמן לכל התזכורות"
+      time_must_be_provided: "יש לציין זמן לכל התזכורות"
       for_topic_must_use_first_post: "מותר להשתמש רק בפוסט הראשון כדי להוסיף את הנושא לסימניות."
+      bookmarkable_id_type_required: "דרושים שם וסוג הרשומה לסימון."
     reminders:
       at_desktop: "בשימוש הבא דרך שולחן העבודה"
       later_today: "בהמשך היום"
@@ -1566,10 +1569,8 @@ he:
     summary_timeline_button: "הצגת כפתור ‚סיכום’ בציר הזמן"
     enable_personal_messages: "לאפשר למשתמשים בדרגת אמון 1 (ניתן להגדרה דרך אמון מזערי לשליחת הודעות) ליצור הודעות ולענות להודעות. נא לשים לב שהסגל תמיד יכול לשלוח הודעות, ללא קשר."
     enable_system_message_replies: "מאפשר למשתמשים להגיב להודעות מערכת אפילו כשהודעות אישיות מושבתות"
-    enable_long_polling: "באס הודעות שמשמש להתראות יכול להשתמש בתשאול ארוך (long polling)"
     enable_chunked_encoding: "הפעלת תגובות קידוד מחולקות מצד השרת. תכונה זו עובדת ברוב התצורות אך חלק מהמתווכים עשויים לכלוא כצעד ביניים, מה שעלול לגרום להאטה"
     long_polling_base_url: "כתובת הבסיס שמשמשת לתשאול ארוך (כאשר CDN מגיש תוכן דינמי, יש להגדיר זאת למשיכה המקורית) למשל: http://origin.site.com"
-    long_polling_interval: "כמות הזמן שהשרת צריך לחכות לפני שעונה ללקוחות, כאשר אין מידע לשליחה (משתמשים רשומים מחוברים למערכת בלבד)"
     polling_interval: "כאשר לא מבצעים תשאול ארוך (long polling), כל כמה זמן לקוחות מחוברים למערכת יבצעו poll, במילי-שניות"
     anon_polling_interval: "באיזו תכיפות לקוחות אלמוניים יתשאלו, במילישניות"
     background_polling_interval: "באיזו תכיפות צריכים לקוחות לבצע תשאול (poll) במילישניות (כאשר החלון נמצא ברקע)"
@@ -1641,7 +1642,7 @@ he:
     send_tl2_promotion_message: "לשלוח למשתמשים חדשים בדרגת אמון 2 הודעה על קידום."
     suppress_reply_directly_below: "אל תציגו את סך התגובות המצטבר בפוסט כאשר ישנה תגובה ישירה אחת לפוסט זה."
     suppress_reply_directly_above: "אל תציגו את את אפשרות ההרחבה \"בתגובה ל..\" לפוסט כאשר יש רק תגובה אחת ישירה מעל לפוסט זה."
-    remove_full_quote: "הסרת כל הציטוטים המלאים בתגובות ישירות."
+    remove_full_quote: "להסיר ציטוט אוטומטית אם (א) הוא מופיע בתחילת הפוסט, (ב) הוא על כל הפוסט ו־(ג) הוא מהפוסט הקודם. לפרטים: <a href='https://meta.discourse.org/t/removal-of-full-quotes-from-direct-replies/106857' target='_blank'>הסרת ציטטות מלאות מתגובות ישירות</a>"
     suppress_reply_when_quoting: "לא להציג „בתגובה אל” מתרחבת על פוסט כאשר פוסט מצטט תגובה."
     max_reply_history: "מספר התגובות המקסימלי להרחבה כאשר מרחיבים \"בתגובה ל\""
     topics_per_period_in_top_summary: "מספר הנושאים המוצגים בברירת המחדל של סיכום הנושאים."
@@ -2175,6 +2176,8 @@ he:
     push_notifications_icon: "סמל העיטור שמופיע בפינת ההתרעה. מומלץ PNG בצבעים אחידים עם שקיפות בגודל 96 × 96."
     base_font: "גופן בסיס לשימוש רוב הטקסט באתר. ערכות עיצוב יכולות לדרוס אותו באמצעות מאפיין ה־CSS‏ ‎`--font-family`‎."
     heading_font: "גופן לשימוש כותרות באתר. ערכות עיצוב יכולות לדרוס אותו באמצעות המאפיין ‎`--heading-font-family`‎"
+    enable_sitemap: "ליצור מפת אתר עבור האתר שלך ולכלול אותה בקובץ robots.txt."
+    sitemap_page_size: "מספר הכתובות שיתווספו בכל עמוד של מפת אתר. 50,000 לכל היותר"
     short_title: "בכותרת הקצרה ייעשה שימוש במסך הבית של המשתמש, במשגר או במקומות אחרים שבהם המקום מוגבל. אורכה לא יעלה על 12 תווים."
     dashboard_hidden_reports: "לאפשר להסתיר את הדוחות המסוימים בלוח הבקרה."
     dashboard_visible_tabs: "נא לבחור אילו לשוניות תופענה בלוח הבקרה."
@@ -2235,6 +2238,7 @@ he:
         leading_trailing_slash: "אסור שהביטוי הרגולרי יתחיל או יסתיים בלוכסן."
       unicode_usernames_avatars: "התמונות הייצוגיות הפנימיות של המערכת אינן תומכות בשמות משתמשים עם יוניקוד."
       list_value_count: "הרשימה חייבת להכיל בדיוק %{count} ערכים."
+      markdown_linkify_tlds: "לא ניתן לכלול ערך של ‚*’."
       google_oauth2_hd_groups: "עליך להגדיר את ‚google oauth2 hd’ בטרם הפעלת ההגדרה הזאת."
       search_tokenize_chinese_enabled: "עליך להשבית את ‚search_tokenize_chinese’ (חיפוש מפרק סינית) בטרם הפעלת הגדרה זו."
       search_tokenize_japanese_enabled: "עליך להשבית את ‚search_tokenize_japanese’ (חיפוש מפרק יפנית) בטרם הפעלת הגדרה זו."
@@ -2444,6 +2448,8 @@ he:
     actions:
       grant_admin:
         description: "ליתר ביטחון, עליך לאשר את האימות הדו־שלבי שלך לפני שתוענק למשתמש %{username} גישת ניהול."
+      discourse_connect_provider:
+        description: "%{hostname} ביקש ממך לאשר את האימות הדו־שלבי שלך. תתבצע הפניה בחזרה לאתר לאחר אישור האימות הדו־שלבי שלך."
   admin:
     email:
       sent_test: "נשלח!"
@@ -4509,6 +4515,16 @@ he:
         other: '„%{tag_name}” מוגבלת לקטגוריות הבאות: %{category_names}'
       synonym: 'אסור להשתמש במילים נרדפות. יש להשתמש ב־„%{tag_name}” במקום.'
       has_synonyms: 'לא ניתן להשתמש ב־„%{tag_name}” כיוון שיש לו מילים נרדפות.'
+      restricted_tags_cannot_be_used_in_category:
+        one: 'לא ניתן להשתמש בתגית „%{tags}” בקטגוריה „%{category}”. נא להסיר אותה.'
+        two: 'לא ניתן להשתמש בתגיות הבאות בקטגוריה „%{category}”: %{tags}. נא להסיר אותן.'
+        many: 'לא ניתן להשתמש בתגיות הבאות בקטגוריה „%{category}”: %{tags}. נא להסיר אותן.'
+        other: 'לא ניתן להשתמש בתגיות הבאות בקטגוריה „%{category}”: %{tags}. נא להסיר אותן.'
+      category_does_not_allow_tags:
+        one: 'בקטגוריה „%{category}” אסור להשתמש בתגית „%{tags}”. נא להסיר אותה.'
+        two: 'בקטגוריה „%{category}” אסור להשתמש בתגיות הבאות: „%{tags}”. נא להסיר אותן.'
+        many: 'בקטגוריה „%{category}” אסור להשתמש בתגיות הבאות: „%{tags}”. נא להסיר אותן.'
+        other: 'בקטגוריה „%{category}” אסור להשתמש בתגיות הבאות: „%{tags}”. נא להסיר אותן.'
     required_tags_from_group:
       one: "עליך לכלול לפחות תגית %{tag_group_name} %{count}. התגיות בקבוצה הזאת הן: %{tags}."
       two: "עליך לכלול לפחות %{count} תגיות %{tag_group_name}. התגיות בקבוצה הזאת הן: %{tags}."
@@ -4821,6 +4837,7 @@ he:
     ignore_error: "אין אפשרות להתעלם מהמשתמש הזה, עמך הסליחה."
     mute_error: "אין אפשרות להשתיק את המשתמש הזה, עמך הסליחה."
     error: "אין לך אפשרות להחליף את רמת ההתראות למשתמש הזה, עמך הסליחה."
+    invalid_value: '„%{value}” אינה רמת התראות חוקית.'
   discord:
     not_in_allowed_guild: "האימות נכשל. הגילדה ב־Discord אליה הצטרפת אינה מורשית לגשת."
   old_keys_reminder:

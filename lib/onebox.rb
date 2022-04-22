@@ -20,7 +20,7 @@ module Onebox
     load_paths: [File.join(Rails.root, "lib/onebox/templates")],
     allowed_ports: [80, 443],
     allowed_schemes: ["http", "https"],
-    sanitize_config: Sanitize::Config::ONEBOX,
+    sanitize_config: SanitizeConfig::ONEBOX,
     redirect_limit: 5
   }
 

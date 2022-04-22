@@ -119,7 +119,6 @@ ca:
       to_placeholder: "fins a la data"
     share:
       topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
-      post: "publicació #%{postNumber}"
       close: "tanca"
       twitter: "Comparteix en Twitter"
       facebook: "Comparteix en Facebook"
@@ -1482,22 +1481,16 @@ ca:
       not_approved: "El vostre compte encara no ha estat aprovat. Us notificarem per correu quan tingueu permís per a iniciar sessió."
       google_oauth2:
         name: "Google"
-        title: "amb Google"
       twitter:
         name: "Twitter"
-        title: "amb Twitter"
       instagram:
         name: "Instagram"
-        title: "amb Instagram"
       facebook:
         name: "Facebook"
-        title: "amb Facebook"
       github:
         name: "GitHub"
-        title: "amb GitHub"
       discord:
         name: "Discord"
-        title: "amb Discord"
       second_factor_toggle:
         totp: "Utilitzeu una aplicació d'autenticació en comptes d'això"
         backup_code: "Utilitzeu un codi de còpia de seguretat en comptes d'això"
@@ -1511,7 +1504,6 @@ ca:
       success: "S'ha creat el compte i ara heu iniciat la sessió."
       name_label: "Nom"
       password_label: "Contrasenya"
-      optional_description: "(opcional)"
     password_reset:
       continue: "Continua a %{site_name}"
     emoji_set:
@@ -2403,10 +2395,8 @@ ca:
       tags_placeholder: "Llista (opcional) d'etiquetes permeses"
       tag_groups_placeholder: "Llista (opcional) d'etiquetes de grup permeses"
       allow_global_tags_label: "Permet també altres etiquetes"
-      tag_group_selector_placeholder: "(Opcional) Grup d’etiquetes"
-      required_tag_group_description: "Requereix que els temes nous tinguin etiquetes d’un grup d’etiquetes:"
-      min_tags_from_required_group_label: "Etiquetes num.:"
-      required_tag_group_label: "Grup d'etiquetes:"
+      required_tag_group:
+        delete: "Suprimeix"
       topic_featured_link_allowed: "Permet enllaços destacats dins aquesta categoria"
       delete: "Suprimeix categoria"
       create: "Nova categoria"

@@ -31,17 +31,29 @@
                   {{#if bookmark.pinned}}
                     {{d-icon "thumbtack" class="bookmark-pinned"}}
                   {{/if}}
-                  {{~topic-status topic=bookmark.topicStatus~}}
-                  {{topic-link bookmark.topicForList}}
+                  {{#if bookmark.bookmarkableTopicAlike}}
+                    {{~topic-status topic=bookmark.topicStatus~}}
+                    {{topic-link bookmark.topicForList}}
+                  {{else}}
+                    <a href={{bookmark.bookmarkable_url}}
+                      role="heading"
+                      aria-level="2"
+                      class="title"
+                      data-topic-id="${topic.id}">
+                      {{bookmark.fancy_title}}
+                    </a>
+                  {{/if}}
                 </div>
               </span>
-              <div class="link-bottom-line">
-                {{category-link bookmark.category}}
-                {{discourse-tags bookmark mode="list" tagsForUser=tagsForUser}}
-              </div>
-              {{#if (and site.mobileView bookmark.excerpt bookmark.post_user_avatar_template)}}
-                <a href={{bookmark.postUser.path}} data-user-card={{bookmark.post_user_username}} class="avatar">
-                  {{avatar bookmark.postUser avatarTemplatePath="avatar_template" usernamePath="username" namePath="name" imageSize="small"}}
+              {{#if bookmark.bookmarkableTopicAlike}}
+                <div class="link-bottom-line">
+                  {{category-link bookmark.category}}
+                  {{discourse-tags bookmark mode="list" tagsForUser=tagsForUser}}
+                </div>
+              {{/if}}
+              {{#if (and site.mobileView bookmark.excerpt bookmark.user.avatar_template)}}
+                <a href={{bookmark.bookmarkableUser.path}} data-user-card={{bookmark.user.username}} class="avatar">
+                  {{avatar bookmark.bookmarkableUser avatarTemplatePath="avatar_template" usernamePath="username" namePath="name" imageSize="small"}}
                 </a>
               {{/if}}
               {{!-- template-lint-disable --}}
@@ -49,9 +61,9 @@
             </td>
             {{#unless site.mobileView}}
               <td class="topic-list-data">
-                {{#if bookmark.post_user_avatar_template}}
-                  <a href={{bookmark.postUser.path}} data-user-card={{bookmark.post_user_username}} class="avatar">
-                    {{avatar bookmark.postUser avatarTemplatePath="avatar_template" usernamePath="username" namePath="name" imageSize="small"}}
+                {{#if bookmark.user.avatar_template}}
+                  <a href={{bookmark.user.path}} data-user-card={{bookmark.user.username}} class="avatar">
+                    {{avatar bookmark.user avatarTemplatePath="avatar_template" usernamePath="username" namePath="name" imageSize="small"}}
                   </a>
                 {{/if}}
               </td>
