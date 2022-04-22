@@ -78,8 +78,20 @@ if (process.argv.includes("-t")) {
   module.exports.proxies[`/*/theme-qunit`] = {
     target: `${target}${testPage}`,
     ignorePath: true,
+    xfwd: true,
   };
-  module.exports.proxies["/*/*"] = { target };
+  module.exports.proxies["/*/*"] = { target, xfwd: true };
+
+  module.exports.middleware = [
+    function (app) {
+      // Make the testem.js file available under /assets
+      // so it's within the app's CSP
+      app.get("/assets/testem.js", function (req, res, next) {
+        req.url = "/testem.js";
+        next();
+      });
+    },
+  ];
 } else if (shouldLoadPluginTestJs()) {
   // Running with ember cli, but we want to pass through plugin request to Rails
   module.exports.proxies = {
