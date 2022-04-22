@@ -611,6 +611,16 @@ acceptance("Prioritize Full Name", function (needs) {
       '[quote="james, john, the third, post:2, topic:54079, full:true, username:james_john"]\nThis is a short topic.\n[/quote]'
     );
   });
+
+  test("Quoting a nested quote returns the correct username", async function (assert) {
+    await visit("/t/short-topic-with-two-posts/54079");
+    await selectText("#post_4 p");
+    await click(".insert-quote");
+    assert.strictEqual(
+      queryAll(".d-editor-input").val().trim(),
+      '[quote="james_john, post:2, topic:54079"]\nThis is a short topic.\n[/quote]'
+    );
+  });
 });
 
 acceptance("Prioritizing Name fall back", function (needs) {
