@@ -293,9 +293,6 @@ export function acceptance(name, optionsOrCallback) {
       }
       this.siteSettings = currentSettings();
 
-      clearOutletCache();
-      clearHTMLCache();
-
       resetSite(currentSettings(), siteChanges);
 
       if (LEGACY_ENV) {
