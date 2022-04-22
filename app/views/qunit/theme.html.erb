@@ -28,6 +28,9 @@
         }
       </style>
     <%- end %>
+    <%- if params['testem'] %>
+      <script src="/testem.js"></script>
+    <%- end %>
   </head>
   <body>
     <%- if !@suggested_themes %>

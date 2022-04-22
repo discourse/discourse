@@ -106,8 +106,16 @@ task "qunit:test", [:timeout, :qunit_path] do |_, args|
     puts "Rails server is warmed up"
 
     if ember_cli
-      cmd = ["env", "UNICORN_PORT=#{unicorn_port}", "yarn", "ember", "test", "--query", query]
-      cmd += ["--test-page", qunit_path.delete_prefix("/")] if qunit_path
+      cmd = ["env", "UNICORN_PORT=#{unicorn_port}"]
+      if qunit_path
+        # Bypass `ember test` - it only works properly for the `/tests` path.
+        # We have to trigger a `build` manually so that JS is available for rails to serve.
+        system("yarn", "ember", "build", chdir: "#{Rails.root}/app/assets/javascripts/discourse")
+        test_page = "#{qunit_path}?#{query}&testem=1"
+        cmd += ["yarn", "testem", "ci", "-f", "testem.js", "-t", test_page]
+      else
+        cmd += ["yarn", "ember", "test", "--query", query]
+      end
       system(*cmd, chdir: "#{Rails.root}/app/assets/javascripts/discourse")
     else
       cmd = "node #{test_path}/run-qunit.js http://localhost:#{port}#{qunit_path}"
