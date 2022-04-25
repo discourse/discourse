@@ -49,7 +49,7 @@ const DEFAULT_BINDINGS = {
   "command+right": { handler: "webviewKeyboardForward", anonymous: true },
   "command+]": { handler: "webviewKeyboardForward", anonymous: true },
   "mod+p": { handler: "printTopic", anonymous: true },
-  d: { postAction: "deletePost" },
+  d: { postAction: "deletePostWithConfirmation" },
   e: { handler: "editPost" },
   end: { handler: "goToLastPost", anonymous: true },
   "command+down": { handler: "goToLastPost", anonymous: true },
