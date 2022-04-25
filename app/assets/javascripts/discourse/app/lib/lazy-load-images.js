@@ -18,11 +18,16 @@ export function nativeLazyLoading(api) {
           if (!img.complete) {
             if (!img.onload) {
               img.onload = () => {
-                img.removeAttribute("style");
+                img.style.removeProperty("background-image");
+                img.style.removeProperty("background-size");
               };
             }
 
-            img.style = `background-image: url(${img.dataset.smallUpload}); background-size: cover;`;
+            img.style.setProperty(
+              "background-image",
+              `url(${img.dataset.smallUpload});`
+            );
+            img.style.setProperty("background-size", "cover");
           }
         }
       }),
