@@ -580,12 +580,6 @@ class ThemeField < ActiveRecord::Base
     dependent_fields.each(&:invalidate_baked!)
   end
 
-  after_commit do
-    # TODO message for mobile vs desktop
-    MessageBus.publish "/header-change/#{theme.id}", self.value if theme && self.name == "header"
-    MessageBus.publish "/footer-change/#{theme.id}", self.value if theme && self.name == "footer"
-  end
-
   after_destroy do
     if svg_sprite_field?
       DB.after_commit { SvgSprite.expire_cache }
