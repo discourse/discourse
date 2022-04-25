@@ -1243,6 +1243,7 @@ span.mention {
 }
 
 a.mention-group {
+  display: inline-block;
   font-weight: bold;
   font-size: 0.93em;
   color: var(--primary);
