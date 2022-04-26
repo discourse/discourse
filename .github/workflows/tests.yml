@@ -161,6 +161,12 @@ jobs:
         if: matrix.build_type == 'backend' && matrix.target == 'core'
         run: SELENIUM_PORT=4444 SELENIUM_HOST=http://selenium bin/rspec -P spec/system/**/*_spec.rb --profile
 
+      - uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: failed-selenium-screenshots
+          path: tmp/screenshots/*.png
+
       - name: Core QUnit (Legacy)
         if: matrix.build_type == 'frontend-legacy' && matrix.target == 'core'
         run: QUNIT_EMBER_CLI=0 bin/rake qunit:test['1200000']
