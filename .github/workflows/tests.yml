@@ -30,6 +30,8 @@ jobs:
     services:
       selenium:
         image: selenium/standalone-chrome
+        ports:
+          - 4444:4444
 
     strategy:
       fail-fast: false
