@@ -218,7 +218,7 @@ export default createWidget("search-menu", {
       if (searchContext?.type === "topic") {
         query += encodeURIComponent(` topic:${searchContext.id}`);
       } else if (searchContext?.type === "private_messages") {
-        query += encodeURIComponent(` in:personal`);
+        query += encodeURIComponent(` in:messages`);
       }
 
       if (query) {

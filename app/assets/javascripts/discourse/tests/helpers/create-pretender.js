@@ -271,7 +271,10 @@ export function applyDefaultHandlers(pretender) {
       const obj = JSON.parse(JSON.stringify(fixturesByUrl["/search.json"]));
       obj.topics.firstObject.visited = true;
       return response(obj);
-    } else if (request.queryParams.q === "discourse in:personal") {
+    } else if (
+      request.queryParams.q === "discourse in:personal" ||
+      request.queryParams.q === "discourse in:messages"
+    ) {
       const obj = JSON.parse(JSON.stringify(fixturesByUrl["/search.json"]));
       obj.topics.firstObject.archetype = "private_message";
       return response(obj);

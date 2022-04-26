@@ -527,7 +527,7 @@ describe Search do
 
       TopicAllowedGroup.create!(group_id: group.id, topic_id: topic.id)
 
-      ["mars in:personal", "mars IN:PERSONAL"].each do |query|
+      ["mars in:personal", "mars IN:PERSONAL", "in:messages mars", "IN:MESSAGES mars"].each do |query|
         results = Search.execute(query, guardian: Guardian.new(user))
         expect(results.posts).to contain_exactly(reply)
       end

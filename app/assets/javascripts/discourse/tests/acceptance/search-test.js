@@ -788,9 +788,9 @@ acceptance("Search - assistant", function (needs) {
     await triggerKeyEvent("#search-term", "keyup", 51);
     assert.strictEqual(query(firstTarget).innerText, "sam in:title");
 
-    await fillIn("#search-term", "in:pers");
+    await fillIn("#search-term", "in:mess");
     await triggerKeyEvent("#search-term", "keyup", 51);
-    assert.strictEqual(query(firstTarget).innerText, "in:personal");
+    assert.strictEqual(query(firstTarget).innerText, "in:messages");
   });
 
   test("shows users when typing @", async function (assert) {

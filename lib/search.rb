@@ -748,6 +748,9 @@ class Search
       elsif word =~ /^in:personal$/i
         @search_pms = true
         nil
+      elsif word =~ /^in:messages$/i
+        @search_pms = true
+        nil
       elsif word =~ /^in:personal-direct$/i
         @search_pms = true
         nil
