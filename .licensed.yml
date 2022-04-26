@@ -24,7 +24,10 @@ reviewed:
     - faraday-em_http # MIT
     - faraday-em_synchrony # MIT
     - faraday-excon # MIT
+    - faraday-httpclient # MIT
+    - faraday-patron # MIT
     - faraday-net_http # MIT
+    - faraday-rack # MIT
     - highline # GPL-2.0 OR Ruby terms
     - htmlentities # MIT
     - image_size # MIT
