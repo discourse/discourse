@@ -112,17 +112,18 @@ export default Controller.extend(ModalFunctionality, {
   timeShortcuts() {
     const timezone = this.currentUser.resolvedTimezone(this.currentUser);
     const shortcuts = timeShortcuts(timezone);
+
+    const nextWeek = shortcuts.monday();
+    nextWeek.label = "time_shortcut.next_week";
+
     return [
       shortcuts.laterToday(),
       shortcuts.tomorrow(),
-      shortcuts.laterThisWeek(),
-      shortcuts.monday(),
+      shortcuts.twoDays(),
+      nextWeek,
       shortcuts.twoWeeks(),
       shortcuts.nextMonth(),
       shortcuts.twoMonths(),
-      shortcuts.threeMonths(),
-      shortcuts.fourMonths(),
-      shortcuts.sixMonths(),
     ];
   },
 

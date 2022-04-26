@@ -642,6 +642,7 @@ en:
 
     time_shortcut:
       later_today: "Later today"
+      two_days: "Two days"
       next_business_day: "Next business day"
       tomorrow: "Tomorrow"
       post_local_date: "Date in post"
@@ -649,6 +650,7 @@ en:
       this_weekend: "This weekend"
       start_of_next_business_week: "Monday"
       start_of_next_business_week_alt: "Next Monday"
+      next_week: "Next week"
       two_weeks: "Two weeks"
       next_month: "Next month"
       two_months: "Two months"
