@@ -444,6 +444,7 @@ he:
       time_must_be_provided: "יש לציין זמן לכל התזכורות"
       for_topic_must_use_first_post: "מותר להשתמש רק בפוסט הראשון כדי להוסיף את הנושא לסימניות."
       bookmarkable_id_type_required: "דרושים שם וסוג הרשומה לסימון."
+      invalid_bookmarkable: "לא ניתן לסמן %{type}."
     reminders:
       at_desktop: "בשימוש הבא דרך שולחן העבודה"
       later_today: "בהמשך היום"
@@ -1613,7 +1614,7 @@ he:
     ga_universal_auto_link_domains: "הפעלת מעקב חוצה שמות תחום של Google Universal Analytics. לקישורים יוצאים לשמות תחום אלו יתווסף מזהה לקוח. ניתן לעיין ב<a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>במדריך למעקב חוצה שמות תחום של Google.</a>"
     gtm_container_id: "מזהה מכולה של Google Tag Manager. למשל: GTM-ABCDEF. <br/>לתשומת לבך: סקריפטים של צד‏־שלישי שנטענים על ידי GTM דורשים הוספה לרשימת ההיתר תחת ‚content security policy script src’."
     enable_escaped_fragments: "נסיגה ל־API של Google's Ajax-Crawling אם לא זוהה סורק אינטרנט. מידע נוסף בכתובת <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
-    moderators_manage_categories_and_groups: "לאפשר למפקחים לנהל קטגוריות וקבוצות"
+    moderators_manage_categories_and_groups: "לאפשר למפקחים ליצור ולנהל קטגוריות וקבוצות"
     moderators_change_post_ownership: "לאפשר למפקחים לשנות בעלות על פוסטים"
     cors_origins: "מקורות שאפשר לבצע להם בקשות קרוס-דומיין (Cross origin requests). כל מקור צריך לכלול את התחילית http:// או https:// . משתנה הסביבה DISCOURCE_ENABLE_CORS חייב להיות true כדי לאפשר CORS."
     use_admin_ip_allowlist: "מנהלים יכולים להיכנס רק אם הכתובת שלהם מופיעה ברשימת כתובות ה־IP המפוקחות (ניהול > יומנים > כתובות IP מפוקחות)."
@@ -2242,6 +2243,7 @@ he:
       google_oauth2_hd_groups: "עליך להגדיר את ‚google oauth2 hd’ בטרם הפעלת ההגדרה הזאת."
       search_tokenize_chinese_enabled: "עליך להשבית את ‚search_tokenize_chinese’ (חיפוש מפרק סינית) בטרם הפעלת הגדרה זו."
       search_tokenize_japanese_enabled: "עליך להשבית את ‚search_tokenize_japanese’ (חיפוש מפרק יפנית) בטרם הפעלת הגדרה זו."
+      discourse_connect_cannot_be_enabled_if_second_factor_enforced: "אי אפשר להפעיל את DiscourseConnect אם נאכף אימות דו־שלבי."
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -3281,7 +3283,7 @@ he:
   subject_re: "תגובה: "
   subject_pm: "[PM] "
   email_from: "%{user_name} דרך %{site_name}"
-  email_from_without_site: "%{user_name}"
+  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "תגובות קודמות"
     reached_limit:
@@ -3302,6 +3304,11 @@ he:
     reply_above_line: "## נא להקליד את התגובה שלך מעל לשורה הזאת. ##"
     posted_by: "פורסם על ידי %{username} ב %{post_date}"
     pm_participants: "משתתפים: %{participants}"
+    more_pm_participants:
+      one: "%{participants} ועוד %{count}"
+      two: "%{participants} ועוד %{count}"
+      many: "%{participants} ועוד %{count}"
+      other: "%{participants} ועוד %{count}"
     invited_group_to_private_message_body: "הקבוצה  @%{group_name} הוזמנה להתכתבות על ידי %{username} \n\n> **[%{topic_title}](%{topic_url})**\n>\n> %{topic_excerpt}\n\nבאתר\n\n> %{site_title} -- %{site_description}\n\nכדי להצטרף להודעה יש ללחוץ על הקישור שלהלן:\n\n%{topic_url}\n"
     invited_to_private_message_body: |
       הוזמנת להתכתב על ידי%{username}

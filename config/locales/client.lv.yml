@@ -516,10 +516,10 @@ lv:
       two_weeks: "Divas nedēļas"
       next_month: "Nākamā mēnesī"
       six_months: "Seši mēneši"
-      custom: "Pielāgots datums un laiks"
       relative: "Relatīvais laiks"
       none: "Neviens nav vajadzīgs"
       last_custom: "Pēdējais pielāgotais datuma laiks"
+      custom: "Pielāgots datums un laiks"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> pievienoja ierakstus <a href='%{topicUrl}'>tēmai</a>"
       you_posted_topic: "<a href='%{userUrl}'>Jūs</a> pievienojāt ierakstu <a href='%{topicUrl}'>tēmai</a>"
@@ -1356,8 +1356,6 @@ lv:
         invite_link:
           success: "Ielūguma saite gatava!"
           error: "Ģenerējot uzaicinājuma saiti, radās kļūda"
-          max_redemptions_allowed_label: "Cik cilvēkiem ir atļauts reģistrēties, izmantojot šo saiti?"
-          expires_at: "Kad beigsies šīs uzaicinājuma saites derīguma termiņš?"
         invite:
           new_title: "Izveidot ielūgumu"
           edit_title: "Rediģēt uzaicinājumu"
@@ -2024,15 +2022,6 @@ lv:
         publish_to: "Publicēt: "
         when: "Kad:"
         duration: "Ilgums"
-      auto_update_input:
-        later_today: "Vēlāk šodien"
-        tomorrow: "Rītdien"
-        later_this_week: "Vēlāk šonedēļ"
-        this_weekend: "Šajā nedēļas nogalē"
-        next_week: "Nākamā nedēļā"
-        next_month: "Nākamā mēnesī"
-        pick_date_and_time: "Izvēlēties datumu un laiku "
-        set_based_on_last_post: "Aizvērt, balstoties uz pēdējo ziņojumu "
       publish_to_category:
         title: "Ieplānot publicēšanu "
       temp_open:
@@ -2123,8 +2112,6 @@ lv:
         unpin: "Atspraust tēmu..."
         unarchive: "Izņemt tēmu no arhīva"
         archive: "Arhivēt tēmu"
-        invisible: "Izņemt tēmu no sarakstiem"
-        visible: "Atgriezt tēmu sarakstos"
         reset_read: "Atstatīt visu kā nelasītu"
       feature:
         pin: "Piespraust tēmu"

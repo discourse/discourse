@@ -150,6 +150,9 @@ hu:
     site_settings:
       default_categories_already_selected: "Nem választhat olyan kategóriát, amely már szerepel egy másik listában."
       s3_upload_bucket_is_required: "Nem lehet engedélyezni a feltöltést az S3-ba, amíg nincs megadva az „s3_upload_bucket”."
+      second_factor_cannot_be_enforced_with_disabled_local_login: "A 2FA nem kényszeríthető, ha a helyi bejelentkezés le van tiltva."
+      second_factor_cannot_be_enforced_with_discourse_connect_enabled: "A 2FA nem kényszeríthető, ha a DiscourseConnect engedélyezett."
+      local_login_cannot_be_disabled_if_second_factor_enforced: "A helyi bejelentkezés nem tiltható le, ha a 2FA kényszerítve van. A helyi bejelentkezések letiltása előtt tiltsa le a kényszerített 2FA-t."
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "A felhasználói ügynököknek legalább 3 karakteresnek kell lenniük, hogy elkerülje az emberi felhasználók téves korlátozását."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "A következő értékek egyikét sem adhatja hozzá a beállításhoz: %{values}."
     onebox:
@@ -258,6 +261,8 @@ hu:
   revert_version_same: "A jelenlegi verzió megegyezik azzal a verzióval amire vissza szeretne térni."
   excerpt_image: "kép"
   bookmarks:
+    errors:
+      invalid_bookmarkable: "A(z) %{type} nem könyvjelzőzhető."
     reminders:
       later_today: "A mai nap folyamán"
       next_business_day: "Következő munkanap"
@@ -946,6 +951,7 @@ hu:
       google_oauth2_hd_groups: "A beállítás engedélyezése előtt be kell ezt állítania: „google oauth2 hd”."
       search_tokenize_chinese_enabled: "A beállítás engedélyezése előtt le kell tiltania a „search_tokenize_chinese” beállítást."
       search_tokenize_japanese_enabled: "A beállítás engedélyezése előtt le kell tiltania a „search_tokenize_japanese” beállítást."
+      discourse_connect_cannot_be_enabled_if_second_factor_enforced: "A DiscourseConnect nem engedélyezhető, ha a 2FA kényszerítve van."
   search:
     within_post: "#%{post_number}, szerző: %{username}"
     types:
@@ -1350,6 +1356,7 @@ hu:
     Ha le szeretne iratkozni ezekről az e-mailekről, [kattints ide] (%{unsubscribe_url}).
   subject_re: "Re: "
   subject_pm: "[PÜ]"
+  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "Régebbi válaszok"
     in_reply_to: "Válasz"
@@ -1362,6 +1369,9 @@ hu:
     visit_link_to_respond: "[Látogasd meg a témát](%{base_url}%{url}) a válaszadáshoz."
     posted_by: "Beküldte: %{username}, ekkor: %{post_date}"
     pm_participants: "Résztvevők: %{participants}"
+    more_pm_participants:
+      one: "%{participants} és még %{count} fő"
+      other: "%{participants} és még %{count} fő"
     user_invited_to_private_message_pm_group:
       text_body_template: |2
 

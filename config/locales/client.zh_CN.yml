@@ -66,12 +66,24 @@ zh_CN:
         date_month: "M 月 D 日"
         date_year: "YY 年 M 月"
       medium:
+        less_than_x_minutes:
+          other: "小于 %{count} 分钟"
         x_minutes:
           other: "%{count} 分钟"
         x_hours:
           other: "%{count} 小时"
+        about_x_hours:
+          other: "大约 %{count} 小时"
         x_days:
           other: "%{count} 天"
+        x_months:
+          other: "%{count} 个月"
+        about_x_years:
+          other: "大约 %{count} 年"
+        over_x_years:
+          other: "超过 %{count} 年"
+        almost_x_years:
+          other: "将近 %{count} 年"
         date_year: "YY 年 M 月 D 日"
       medium_with_ago:
         x_minutes:
@@ -531,11 +543,17 @@ zh_CN:
       start_of_next_business_week_alt: "下周一"
       two_weeks: "两周"
       next_month: "下个月"
+      two_months: "两个月"
+      three_months: "三个月"
+      four_months: "四个月"
       six_months: "六个月"
-      custom: "自定义日期和时间"
+      one_year: "一年"
+      forever: "永远"
       relative: "相对时间"
       none: "不需要时间/日期"
       last_custom: "上次自定义日期时间"
+      custom: "自定义日期和时间"
+      select_timeframe: "选择时间范围"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> 发布了<a href='%{topicUrl}'>该话题</a>"
       you_posted_topic: "<a href='%{userUrl}'>您</a> 发布了<a href='%{topicUrl}'>该话题</a>"
@@ -1430,8 +1448,6 @@ zh_CN:
           title: "邀请链接"
           success: "邀请链接已成功生成！"
           error: "生成邀请链接时出错"
-          max_redemptions_allowed_label: "允许多少人通过此链接注册？"
-          expires_at: "此邀请链接何时到期？"
         invite:
           new_title: "创建邀请"
           edit_title: "编辑邀请"
@@ -1476,7 +1492,9 @@ zh_CN:
         title: "摘要"
         stats: "统计信息"
         time_read: "阅读时间"
+        time_read_title: "%{duration} (所有时间)"
         recent_time_read: "最近阅读时间"
+        recent_time_read_title: "%{duration} (在过去60天内)"
         topic_count:
           other: "创建的话题"
         post_count:
@@ -2358,24 +2376,6 @@ zh_CN:
         min_duration: "持续时间必须大于 0"
         max_duration: "持续时间必须小于 20 年"
         duration: "持续时间："
-      auto_update_input:
-        none: "选择时间范围"
-        now: "现在"
-        later_today: "今天晚些时候"
-        tomorrow: "明天"
-        later_this_week: "本周晚些时候"
-        this_weekend: "本周末"
-        next_week: "下周"
-        two_weeks: "两周"
-        next_month: "下个月"
-        two_months: "两个月"
-        three_months: "三个月"
-        four_months: "四个月"
-        six_months: "六个月"
-        one_year: "一年"
-        forever: "永远"
-        pick_date_and_time: "选择日期和时间"
-        set_based_on_last_post: "根据最后一个帖子关闭"
       publish_to_category:
         title: "排定发布时间表"
       temp_open:
@@ -2484,8 +2484,6 @@ zh_CN:
         unpin: "取消置顶话题…"
         unarchive: "取消归档话题"
         archive: "归档话题"
-        invisible: "设为取消公开"
-        visible: "设为公开"
         reset_read: "重置阅读数据"
         make_public: "设为公开话题..."
         make_private: "设为个人消息"
@@ -3370,6 +3368,8 @@ zh_CN:
       choose_for_topic: "可选标签"
       choose_for_topic_required:
         other: "您必须至少选择 %{count} 个标签。"
+      choose_for_topic_required_group:
+        other: "从 “%{name}” 中选择 %{count} 个标签..."
       info: "信息"
       default_info: "该标签不限于任何类别，并且没有同义词。"
       staff_info: "要添加限制，请将此标签放入 <a href=%{basePath}/tag_groups>标签组</a>。"

@@ -77,15 +77,33 @@ de:
         date_month: "D. MMM"
         date_year: "MMM 'YY"
       medium:
+        less_than_x_minutes:
+          one: "weniger als %{count} Min"
+          other: "weniger als %{count} Min"
         x_minutes:
           one: "%{count} Minute"
           other: "%{count} Minuten"
         x_hours:
           one: "%{count} Stunde"
           other: "%{count} Stunden"
+        about_x_hours:
+          one: "ungefähr %{count} Stunde"
+          other: "ungefähr %{count} Stunden"
         x_days:
           one: "%{count} Tag"
           other: "%{count} Tage"
+        x_months:
+          one: "%{count} Monat"
+          other: "%{count} Monate"
+        about_x_years:
+          one: "über %{count} Jahr"
+          other: "etwa %{count} Jahre"
+        over_x_years:
+          one: "über %{count} Jahr"
+          other: "über %{count} Jahre"
+        almost_x_years:
+          one: "fast %{count} Jahr"
+          other: "fast %{count} Jahre"
         date_year: "D. MMM 'YY"
       medium_with_ago:
         x_minutes:
@@ -575,11 +593,17 @@ de:
       start_of_next_business_week_alt: "Am kommenden Montag"
       two_weeks: "Zwei Wochen"
       next_month: "Nächsten Monat"
+      two_months: "Zwei Monate"
+      three_months: "Drei Monate"
+      four_months: "Vier Monate"
       six_months: "Sechs Monate"
-      custom: "Datum und Uhrzeit auswählen"
+      one_year: "Ein Jahr"
+      forever: "Für immer"
       relative: "Relative Zeit"
       none: "Nicht notwendig"
       last_custom: "Letztes benutzerdefiniertes Datum"
+      custom: "Datum und Uhrzeit auswählen"
+      select_timeframe: "Wähle einen Zeitrahmen aus"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> hat <a href='%{topicUrl}'>das Thema</a> verfasst"
       you_posted_topic: "<a href='%{userUrl}'>Du</a> hast <a href='%{topicUrl}'>das Thema</a> verfasst"
@@ -1487,8 +1511,6 @@ de:
           title: "Einladungslink"
           success: "Der Einladungslink wurde erfolgreich generiert!"
           error: "Beim Erstellen des Einladungslinks ist ein Fehler aufgetreten"
-          max_redemptions_allowed_label: "Wie viele Personen dürfen sich über diesen Link registrieren?"
-          expires_at: "Wann läuft dieser Einladungslink ab?"
         invite:
           new_title: "Einladung erstellen"
           edit_title: "Einladung bearbeiten"
@@ -1534,7 +1556,9 @@ de:
         title: "Zusammenfassung"
         stats: "Statistiken"
         time_read: "Lesezeit"
+        time_read_title: "%{duration} (die ganze Zeit)"
         recent_time_read: "aktuelle Lesezeit"
+        recent_time_read_title: "%{duration} (in den letzten 60 Tagen)"
         topic_count:
           one: "Thema erstellt"
           other: "Themen erstellt"
@@ -2460,24 +2484,6 @@ de:
         min_duration: "Dauer muss mehr als 0 betragen"
         max_duration: "Dauer muss weniger als 20 Jahre betragen"
         duration: "Dauer"
-      auto_update_input:
-        none: "Wähle einen Zeitrahmen aus"
-        now: "Jetzt"
-        later_today: "Im Laufe des Tages"
-        tomorrow: "Morgen"
-        later_this_week: "Später in dieser Woche"
-        this_weekend: "Dieses Wochenende"
-        next_week: "Nächste Woche"
-        two_weeks: "Zwei Wochen"
-        next_month: "Nächster Monat"
-        two_months: "Zwei Monate"
-        three_months: "Drei Monate"
-        four_months: "Vier Monate"
-        six_months: "Sechs Monate"
-        one_year: "Ein Jahr"
-        forever: "Für immer"
-        pick_date_and_time: "Datum und Zeit wählen"
-        set_based_on_last_post: "Schließen basierend auf dem letzten Beitrag"
       publish_to_category:
         title: "Veröffentlichung planen"
       temp_open:
@@ -2589,8 +2595,6 @@ de:
         unpin: "Thema loslösen …"
         unarchive: "Thema aus Archiv holen"
         archive: "Thema archivieren"
-        invisible: "Unsichtbar machen"
-        visible: "Sichtbar machen"
         reset_read: "„Gelesen“ zurücksetzen"
         make_public: "Öffentliches Thema erstellen..."
         make_private: "In persönliche Nachricht umwandeln"
@@ -3526,6 +3530,9 @@ de:
       choose_for_topic_required:
         one: "mindestens %{count} Schlagwort auswählen..."
         other: "mindestens %{count} Schlagwörter auswählen..."
+      choose_for_topic_required_group:
+        one: "wähle %{count} Schlagwort von '%{name}'..."
+        other: "wähle %{count} Schlagwörter von '%{name}'..."
       info: "Info"
       default_info: "Dieses Schlagwort ist nicht auf Kategorien beschränkt und hat keine Synonyme."
       staff_info: "Um Einschränkungen hinzuzufügen, füge dieses Schlagwort in eine <a href=%{basePath}/tag_groups>Tag-Gruppe</a>ein."

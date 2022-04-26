@@ -408,6 +408,7 @@ th:
       start_of_next_business_week: "วันจันทร์"
       start_of_next_business_week_alt: "วันจันทร์หน้า"
       next_month: "เดือนหน้า"
+      forever: "ตลอดไป"
       custom: "วันและเวลาที่กำหนดเอง"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> โพสต์ <a href='%{topicUrl}'>กระทู้</a>"
@@ -1032,8 +1033,6 @@ th:
           title: "ลิงก์คำเชิญ"
           success: "สร้างลิงก์คำเชิญสำเร็จแล้ว!"
           error: "มีข้อผิดพลาดในการสร้างลิงก์คำเชิญ"
-          max_redemptions_allowed_label: "มีกี่คนที่ได้รับอนุญาตให้ลงทะเบียนใช้ลิงก์นี้"
-          expires_at: "ลิงก์คำเชิญนี้จะหมดอายุเมื่อไร"
       password:
         title: "รหัสผ่าน"
         too_short: "รหัสผ่านสั้นเกินไป"
@@ -1663,16 +1662,6 @@ th:
         when: "เมื่อ:"
         time_frame_required: "กรุณาเลือกระยะเวลา"
         duration: "ช่วงเวลา"
-      auto_update_input:
-        now: "ตอนนี้"
-        later_today: "ภายหลังในวันนี้"
-        tomorrow: "พรุ่งนี้"
-        later_this_week: "ภายหลังในสัปดาห์นี้"
-        this_weekend: "สัปดาห์นี้"
-        next_week: "สัปดาห์หน้า"
-        next_month: "เดือนหน้า"
-        forever: "ตลอดไป"
-        pick_date_and_time: "เลือกวันและเวลา"
       temp_open:
         title: "เปิดชั่วคราว"
       temp_close:
@@ -1759,8 +1748,6 @@ th:
         unpin: "เลิกปักหมุดกระทู้"
         unarchive: "เลิกเก็บกระทู้เข้าคลัง"
         archive: "เก็บกระทู้เข้าคลัง"
-        invisible: "ทำให้ไม่แสดงในรายชื่อ"
-        visible: "ทำให้แสดงในรายชื่อ"
         reset_read: "ล้างข้อมูลการอ่าน"
         make_private: "สร้างข้อความส่วนตัว"
       feature:

@@ -416,6 +416,7 @@ sk:
       tomorrow: "Zajtra"
       this_weekend: "Tento víkend"
       next_month: "Budúci mesiac"
+      forever: "Vždy"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> založil <a href='%{topicUrl}'>tému</a>"
       you_posted_topic: "<a href='%{userUrl}'>Vy</a> ste založili <a href='%{topicUrl}'>tému</a>"
@@ -1521,13 +1522,6 @@ sk:
       topic_status_update:
         num_of_hours: "Počet hodín:"
         when: "Kedy:"
-      auto_update_input:
-        tomorrow: "Zajtra"
-        this_weekend: "Tento víkend"
-        next_week: "Budúci týždeň"
-        next_month: "Budúci mesiac"
-        forever: "Vždy"
-        pick_date_and_time: "Vyberte dátum a čas"
       temp_close:
         title: "Dočasne zatvoriť"
       auto_close:
@@ -1601,8 +1595,6 @@ sk:
         unpin: "Odopni tému...."
         unarchive: "Zruš archiváciu témy"
         archive: "Archívuj tému"
-        invisible: "Skyť"
-        visible: "Zobraziť"
         reset_read: "Zrušiť načítané údaje"
       feature:
         pin: "Pripni tému"

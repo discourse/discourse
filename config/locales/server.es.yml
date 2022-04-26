@@ -1530,7 +1530,6 @@ es:
     ga_universal_auto_link_domains: "Activar seguimiento multi-dominio de Google Universal Analytics. Los enlaces salientes a estos dominios tendrán la id de cliente añadida a ellos. Ver <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Google's Cross-Domain Tracking guide.</a>"
     gtm_container_id: "ID de contenedor de Google Tag Manager. Ej.: GTM-ABCDEF. <br/>Nota: puede que los scripts de terceros cargados por GTM tengan que ser añadidos a la lista de admitidos en «content security policy script src»."
     enable_escaped_fragments: "Ir a la API Ajax-Crawling de Google si no se detecta ningún webcrawler. Visita <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
-    moderators_manage_categories_and_groups: "Permitir a los moderadores administrar categorías y grupos"
     moderators_change_post_ownership: "Permitir que los moderadores cambien el autor de las publicaciones."
     cors_origins: "Orígenes permitidos para las solicitudes de origen cruzado (CORS). Cada origen debe incluir http:// or https://. La variable env DISCOURSE_ENABLE_CORS debe establecerse como verdadero para activar CORS."
     use_admin_ip_allowlist: "Los administradores solo pueden iniciar sesión si están en una dirección IP definida en la lista de direcciones IP revisadas (Administrados > Registros > Direcciones IP)."
@@ -3154,7 +3153,6 @@ es:
   subject_re: "Re:"
   subject_pm: "[MP]"
   email_from: "%{user_name} vía %{site_name}"
-  email_from_without_site: "%{user_name}"
   user_notifications:
     previous_discussion: "Respuestas anteriores"
     reached_limit:

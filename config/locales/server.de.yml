@@ -402,6 +402,7 @@ de:
       time_must_be_provided: "Die Zeit muss für alle Erinnerungen angegeben werden"
       for_topic_must_use_first_post: "Du kannst nur den ersten Beitrag verwenden, um das Thema mit einem Lesezeichen zu versehen."
       bookmarkable_id_type_required: "Der Name und Typ des Datensatzes, für den ein Lesezeichen erstellt werden soll, ist erforderlich."
+      invalid_bookmarkable: "Ein %{type} kann nicht mit einem Lesezeichen versehen werden."
     reminders:
       at_desktop: "Nächstes Mal, wenn ich an meinem PC bin"
       later_today: "Im Laufe des Tages"
@@ -1530,7 +1531,7 @@ de:
     ga_universal_auto_link_domains: "Aktiviere Cross-Domain-Tracking von Google Universal Analytics. Bei ausgehenden Links zu diesen Domains wird die Client-ID hinzugefügt. Siehe <a href='https://support.google.com/analytics/answer/1034342?hl=de' target='_blank'>Googles Cross-Domain-Tracking-Handbuch.</a>"
     gtm_container_id: "Google-Tag-Manager-Container-ID. Zum Beispiel: GTM-ABCDEF. <br/>Hinweis: Skripte von Drittanbietern, die von GTM geladen werden, müssen unter Umständen in der Liste „content security policy script src“ erlaubt werden (Positivliste)."
     enable_escaped_fragments: "Auf die Ajax-Crawling-API von Google zurückgreifen, wenn kein Webcrawler gefunden wird. Siehe <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
-    moderators_manage_categories_and_groups: "Moderatoren erlauben, Kategorien und Gruppen zu verwalten"
+    moderators_manage_categories_and_groups: "Moderatoren erlauben, Kategorien und Gruppen zu erstellen und zu verwalten"
     moderators_change_post_ownership: "Moderatoren erlauben, die Inhaberschaft des Beitrags zu ändern"
     cors_origins: "Erlaubte Adressen für Cross-Origin-Requests (CORS). Jede Adresse muss http:// oder https:// enthalten. Die Umgebungsvariable DISCOURSE_ENABLE_CORS muss gesetzt sein, um CORS zu aktivieren."
     use_admin_ip_allowlist: "Administratoren können sich nur anmelden, wenn sie eine IP-Adresse nutzen, die in der Liste der gefilterten IPs definiert ist (Administration > Protokolle > Gefilterte IPs)."
@@ -1559,6 +1560,7 @@ de:
     send_tl2_promotion_message: "Sende neuen Benutzern der Vertrauensstufe 2 eine Nachricht über die Beförderung."
     suppress_reply_directly_below: "Zeige die erweiterbare Anzahl der Antworten auf einen Beitrag nicht, falls die einzige Antwort direkt darunter folgt."
     suppress_reply_directly_above: "Zeige das erweiterbare Element „In Antwort auf“ bei einem Beitrag nicht an, wenn es nur eine einzige Antwort direkt über diesem Beitrag gibt."
+    remove_full_quote: "Automatisches Entfernen von Zitaten, wenn sie (a) am Anfang eines Beitrags stehen, (b) aus einem ganzen Beitrag stammen und (c) aus dem unmittelbar vorangegangenen Beitrag stammen. Für Details, siehe <a href='https://meta.discourse.org/t/removal-of-full-quotes-from-direct-replies/106857' target='_blank'>Entfernung von vollständigen Zitaten aus direkten Antworten</a>"
     suppress_reply_when_quoting: "Zeige das erweiterbare Element „In Antwort auf“ bei einem Beitrag nicht an, wenn der Beitrag den beantworteten Beitrag zitiert."
     max_reply_history: "Maximale Anzahl an Antworten beim Ausklappen von „In Antwort auf“"
     topics_per_period_in_top_summary: "Anzahl der Themen, die in der Standard-Zusammenfassung der angesagten Themen angezeigt werden."
@@ -2158,6 +2160,7 @@ de:
       google_oauth2_hd_groups: "Vor Aktivierung dieser Einstellung musst zuerst \"google oauth2 hd\" eingeschaltet werden."
       search_tokenize_chinese_enabled: "Du musst „search_tokenize_chinese“ deaktivieren, bevor du diese Einstellung aktivierst."
       search_tokenize_japanese_enabled: "Du musst „search_tokenize_japanese“ deaktivieren, bevor du diese Einstellung aktivierst."
+      discourse_connect_cannot_be_enabled_if_second_factor_enforced: "Du kannst DiscourseConnect nicht aktivieren, wenn 2FA erzwungen wird."
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -3153,7 +3156,7 @@ de:
   subject_re: "Re: "
   subject_pm: "[PN] "
   email_from: "%{user_name} via %{site_name}"
-  email_from_without_site: "%{user_name}"
+  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "Vorherige Antworten"
     reached_limit:
@@ -3172,6 +3175,9 @@ de:
     reply_above_line: "## Bitte gib deine Antwort oberhalb dieser Zeile ein. ##"
     posted_by: "Erstellt von %{username} am %{post_date}"
     pm_participants: "Teilnehmer: %{participants}"
+    more_pm_participants:
+      one: "%{participants} und %{count} andere"
+      other: "%{participants} und %{count} andere"
     invited_group_to_private_message_body: |
       %{username} hat @%{group_name} zu einer Unterhaltung eingeladen
 

@@ -1622,7 +1622,6 @@ pl_PL:
     ga_universal_auto_link_domains: "Włącz śledzenie w wielu domenach za pomocą Google Analythics. Wychodzące linki do tych domen będą miały dodatkowy identyfikator klienta. Zobacz <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>poradnik Cross-Domain Tracking od Google.</a>"
     gtm_container_id: "Identyfikator menedżera tagów Google. np .: GTM-ABCDEF. <br/>Uwaga: skrypty innych firm ładowane przez GTM mogą wymagać uwzględnienia w 'content security policy script src'."
     enable_escaped_fragments: "Wróć do Google Ajax-Crawling API, jeśli nie zostanie wykryty żaden webcrawler. Zobacz <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
-    moderators_manage_categories_and_groups: "Pozwól moderatorom zarządzać kategoriami i grupami"
     moderators_change_post_ownership: "Zezwalaj moderatorom na zmianę właściciela posta"
     cors_origins: "Dozwolone źródła dla zapytać cross-origin (CORS). Każde źródło musi zawierać http:// lub https://. Zmienna środowiskowa DISCOURSE_ENABLE_CORS musi być ustawiona na true żeby włączyć CORS."
     use_admin_ip_allowlist: "Administratorzy mogą się zalogować tylko wtedy, gdy używają adresu IP zdefiniowanego na liście ekranowanych adresów IP (Administrator > Logi > Ekranowane adresy IP)."
@@ -2242,6 +2241,7 @@ pl_PL:
       unicode_usernames_avatars: "Wewnętrzne awatary systemowe nie obsługują nazw użytkowników zawierających unicode."
       list_value_count: "Lista musi zawierać dokładnie %{count} wartości."
       google_oauth2_hd_groups: "Musisz najpierw ustawić 'google oauth2 hd' przed włączeniem tego ustawienia."
+      discourse_connect_cannot_be_enabled_if_second_factor_enforced: "Nie można włączyć DiscourseConnect, jeśli wymuszono 2FA."
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -3278,7 +3278,6 @@ pl_PL:
   subject_re: "Re: "
   subject_pm: "[PW] "
   email_from: "%{user_name} z %{site_name}"
-  email_from_without_site: "%{user_name}"
   user_notifications:
     previous_discussion: "Poprzednie odpowiedzi"
     reached_limit:

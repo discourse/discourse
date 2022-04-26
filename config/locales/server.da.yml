@@ -1412,7 +1412,6 @@ da:
     maximum_session_age: "Bruger vil forblive logget in for n hours siden sidste besøg"
     ga_version: "Version af Google Universal Analytics der skal benyttes: v3 (analytics.js), v4 (gtag)"
     ga_universal_tracking_code: "Google Universal Analytics tracking code ID, fx: UA-12345678-9; se <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
-    moderators_manage_categories_and_groups: "Tillad moderatorer at administrere kategorier og grupper"
     moderators_change_post_ownership: "Tillad moderatorer at ændre ejerskab af indlæg"
     use_admin_ip_allowlist: "Administratorer kan kun logge ind, hvis de kommer fra en IP-adresse, der er defineret i listen Screenede IP'er (Admin> Logs> Screenede Ip'er)."
     blocked_ip_blocks: "En liste over private IP-blokke, der aldrig bør gennemsøges af Discourse"
@@ -2473,7 +2472,6 @@ da:
     [Afmeld](%{unsubscribe_url}).
   subject_re: "Sv: "
   subject_pm: "[PM] "
-  email_from_without_site: "%{user_name}"
   user_notifications:
     previous_discussion: "Tidligere Svar"
     in_reply_to: "Som svar på"

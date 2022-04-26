@@ -1435,7 +1435,6 @@ gl:
     ga_universal_auto_link_domains: "Active o seguimento entre dominios de Google Universal Analytics. As ligazóns de saída a estes dominios engadirán o id do cliente. Consulte a <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Guía de seguimento entre dominios de Google.</a>"
     gtm_container_id: "Id do contedor de Google Tag Manager. Por exemplo: GTM-ABCDEF. <br/>Nota: pode ser que teñan que estar listados os scripts de terceiros cargados con GTM na «pantalla de script da política de seguridade de contido\"."
     enable_escaped_fragments: "Ir á API Ajax-Crawling de Google se non se detecta ningún rastrexador web. Véxase <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
-    moderators_manage_categories_and_groups: "Permitir que os moderadores administren categorías e grupos"
     cors_origins: "Orixes permitidas para as solicitudes de orixe cruzada (CORS). Cada orixe debe incluír http:// ou https://. A variábel env DISCOURSE_ENABLE_CORS débese estabelecer como verdadeira para activar CORS."
     use_admin_ip_allowlist: "Os administradores só poden iniciar sesión se están nun enderezo IP definido na listaxe de enderezos IP revisados (Administración > Rexistros > IP revisados)."
     blocked_ip_blocks: "Unha listaxe de bloques IP privados que Discourse nunca debería rastrexar"

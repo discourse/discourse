@@ -99,6 +99,11 @@ he:
         date_month: "D בMMM"
         date_year: "MMM YY"
       medium:
+        less_than_x_minutes:
+          one: "פחות מדקה (%{count})"
+          two: "פחות מ־%{count} דקות"
+          many: "פחות מ־%{count} דקות"
+          other: "פחות מ־%{count} דקות"
         x_minutes:
           one: "דקה"
           two: "%{count} דקות"
@@ -109,11 +114,36 @@ he:
           two: "שעתיים"
           many: "%{count} שעות"
           other: "%{count} שעות"
+        about_x_hours:
+          one: "בערך שעה (%{count})"
+          two: "בערך שעתיים (%{count})"
+          many: "בערך %{count} שעות"
+          other: "בערך %{count} שעות"
         x_days:
           one: "יום"
           two: "יומיים"
           many: "%{count} ימים"
           other: "%{count} ימים"
+        x_months:
+          one: "חודש (%{count})"
+          two: "חודשיים (%{count})"
+          many: "%{count} חודשים"
+          other: "%{count} חודשים"
+        about_x_years:
+          one: "בערך שנה (%{count})"
+          two: "בערך שנתיים (%{count})"
+          many: "בערך %{count} שנים"
+          other: "בערך %{count} שנים"
+        over_x_years:
+          one: "למעלה משנה (%{count})"
+          two: "למעלה משנתיים (%{count})"
+          many: "למעלה מ־%{count} שנים"
+          other: "למעלה מ־%{count} שנים"
+        almost_x_years:
+          one: "כמעט שנה (%{count})"
+          two: "כמעט שנתיים (%{count})"
+          many: "כמעט %{count} שנים"
+          other: "כמעט %{count} שנים"
         date_year: "D בMMM‏ YY"
       medium_with_ago:
         x_minutes:
@@ -663,11 +693,17 @@ he:
       start_of_next_business_week_alt: "יום שני הבא"
       two_weeks: "שבועיים"
       next_month: "חודש הבא"
+      two_months: "חודשיים"
+      three_months: "שלושה חודשים"
+      four_months: "ארבעה חודשים"
       six_months: "שישה חודשים"
-      custom: "תאריך ושעה מותאמים אישית"
+      one_year: "שנה"
+      forever: "לנצח"
       relative: "זמן יחסי"
       none: "אין צורך"
       last_custom: "התאריך והשעה האחרונים שהותאמו אישית"
+      custom: "תאריך ושעה מותאמים אישית"
+      select_timeframe: "נא לבחור טווח זמן"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> פרסם <a href='%{topicUrl}'>את הנושא</a>"
       you_posted_topic: "<a href='%{userUrl}'>את/ה</a> פרסמת <a href='%{topicUrl}'>את הנושא</a>"
@@ -1599,8 +1635,6 @@ he:
           title: "קישור הזמנה"
           success: "קישור הזמנה יוצר בהצלחה!"
           error: "אירעה שגיאה ביצירת קישור הזמנה."
-          max_redemptions_allowed_label: "לכמה אנשים מותר להירשם באמצעות הקישור הזה?"
-          expires_at: "מתי תוקף קישור ההזמנה יפוג?"
         invite:
           new_title: "יצירת הזמנה"
           edit_title: "עריכת הזמנה"
@@ -1648,7 +1682,9 @@ he:
         title: "סיכום"
         stats: "סטטיסטיקות"
         time_read: "זמן קריאה"
+        time_read_title: "%{duration} (כל הזמן)"
         recent_time_read: "זמן קריאה אחרון"
+        recent_time_read_title: "%{duration} (ב־60 הימים האחרונים)"
         topic_count:
           one: "נושא נוצר"
           two: "נושאים נוצרו"
@@ -2661,24 +2697,6 @@ he:
         min_duration: "משך הזמן חייב להיות גדול מ־0"
         max_duration: "משך הזמן חייב להיות פחות מ־20 שנה"
         duration: "משך"
-      auto_update_input:
-        none: "נא לבחור טווח זמן"
-        now: "כעת"
-        later_today: "בהמשך היום"
-        tomorrow: "מחר"
-        later_this_week: "בהמשך השבוע"
-        this_weekend: "בסוף שבוע זה"
-        next_week: "בשבוע הבא"
-        two_weeks: "שבועיים"
-        next_month: "חודש הבא"
-        two_months: "חודשיים"
-        three_months: "שלושה חודשים"
-        four_months: "ארבעה חודשים"
-        six_months: "שישה חודשים"
-        one_year: "שנה"
-        forever: "לנצח"
-        pick_date_and_time: "בחירת תאריך ושעה"
-        set_based_on_last_post: "סגירה מבוססת על הפוסט האחרון"
       publish_to_category:
         title: "תזמון פרסום"
       temp_open:
@@ -2796,8 +2814,6 @@ he:
         unpin: "שחרר נעיצת נושא..."
         unarchive: "הוצא נושא מארכיון"
         archive: "העבר נושא לארכיון"
-        invisible: "הסתרה"
-        visible: "גילוי"
         reset_read: "אפס מידע שנקרא"
         make_public: "הפיכת הנושא לפומבי…"
         make_private: "צור הודעה פרטית"

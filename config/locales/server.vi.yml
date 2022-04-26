@@ -240,6 +240,11 @@ vi:
   revert_version_same: "Phiên bản hiện tại giống với phiên bản mà bạn muốn hoàn nguyên."
   excerpt_image: "hình ảnh"
   bookmarks:
+    errors:
+      already_bookmarked: "Bạn không thể đánh dấu cùng một %{type} hai lần."
+      time_must_be_provided: "Thời gian phải được cung cấp cho tất cả các lời nhắc"
+      bookmarkable_id_type_required: "Tên và loại của bản ghi để đánh dấu là bắt buộc."
+      invalid_bookmarkable: "Một %{type} không thể được đánh dấu."
     reminders:
       at_desktop: "Lần sau tôi ở máy tính để bàn của tôi"
       later_today: "Sau ngày hôm nay"
@@ -1595,6 +1600,7 @@ vi:
     Để hủy đăng ký nhận các email này, [bấm vào đây] (%{unsubscribe_url}).
   subject_re: "Re:"
   subject_pm: "[PM]"
+  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "Các trả lời trước"
     reached_limit:
@@ -1611,6 +1617,8 @@ vi:
     visit_link_to_respond_pm: "[Truy cập Tin nhắn] (%{base_url}%{url}) để trả lời %{participants}."
     posted_by: "Đăng bởi %{{username} ngày %{post_date}"
     pm_participants: "Người tham gia: %{participants}"
+    more_pm_participants:
+      other: "%{participants} và %{count} khác"
     invited_group_to_private_message_body: |
       %{username} được mời @%{group_name} vào tin nhắn
 

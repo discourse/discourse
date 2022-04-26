@@ -480,7 +480,9 @@ hy:
       this_weekend: "Այս շաբաթ-կիրակի"
       start_of_next_business_week_alt: "Հաջորդ Երկուշաբթի: "
       next_month: "Հաջորդ ամիս"
+      forever: "Ընդմիշտ"
       custom: "Սահմանել հիշեցումների ամսաթիվն ու ժամանակը:"
+      select_timeframe: "Ընտրել ժամանակահատված"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a>-ը հրապարակել է <a href='%{topicUrl}'>այս թեման</a>"
       you_posted_topic: "<a href='%{userUrl}'>Դուք</a> հրապարակել եք <a href='%{topicUrl}'>այս թեման</a>"
@@ -1894,17 +1896,6 @@ hy:
         publish_to: "Հրատարակել."
         when: "Երբ."
         time_frame_required: "Խնդրում ենք ընտրել ժամանակահատված"
-      auto_update_input:
-        none: "Ընտրել ժամանակահատված"
-        later_today: "Այսօր, մի փոքր ուշ"
-        tomorrow: "Վաղը"
-        later_this_week: "Այս շաբաթ, մի փոքր ավելի ուշ"
-        this_weekend: "Այս շաբաթ-կիրակի"
-        next_week: "Հաջորդ շաբաթ"
-        next_month: "Հաջորդ ամիս"
-        forever: "Ընդմիշտ"
-        pick_date_and_time: "Ընտրել ամսաթիվ և ժամ"
-        set_based_on_last_post: "Փակել՝ կախված վերջին գրառումից"
       publish_to_category:
         title: "Պլանավորել Հրատարակումը"
       temp_open:
@@ -2001,8 +1992,6 @@ hy:
         unpin: "Ապակցել Թեման..."
         unarchive: "Ապարխիվացնել Թեման"
         archive: "Արխիվացնել Թեման"
-        invisible: "Դարձնել Չցուցակագրված"
-        visible: "Դարձնել Ցուցակագրված"
         reset_read: "Զրոյացնել Կարդացած Տվյալները"
         make_private: "Ստեղծել Անձնական Նամակ"
         reset_bump_date: "Վերահաստատել Բարձրացման Ամսաթիվը"

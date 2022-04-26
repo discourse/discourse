@@ -399,6 +399,7 @@ tr_TR:
       time_must_be_provided: "Tüm hatırlatıcılar için zaman belirtilmelidir"
       for_topic_must_use_first_post: "Konuyu işaretlemek için yalnızca ilk gönderiyi kullanabilirsiniz."
       bookmarkable_id_type_required: "İşaretlenecek kaydın adı ve türü zorunludur."
+      invalid_bookmarkable: "%{type} tipi işaretlenemez."
     reminders:
       at_desktop: "Bir dahaki sefere masaüstümdeyim"
       later_today: "Bugün ilerleyen saatlerde"
@@ -1517,7 +1518,7 @@ tr_TR:
     ga_universal_auto_link_domains: "Google Universal Analytics alan adları arası izlemeyi etkinleştirin. Bu alan adlarına giden bağlantılara istemci kimliği eklenecektir. <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Google'ın Web Alanları Arası İzleme kılavuzuna</a> bakın."
     gtm_container_id: "Google Etiket Yöneticisi kapsayıcı kimliği. örn: GTM-ABCDEF. <br/> Not: GTM tarafından yüklenen üçüncü taraf komut dosyalarının 'content security policy script src' içinde izin verilenler listesine eklenmesi gerekebilir."
     enable_escaped_fragments: "Eğer bir ağ gezgini algılanmazsa Google'ın Ajax Crawling API'ına geri dönün. Bkz. <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>Https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
-    moderators_manage_categories_and_groups: "Moderatörlerin kategorileri ve grupları yönetmesine izin ver"
+    moderators_manage_categories_and_groups: "Moderatörlerin kategorileri ve grupları yaratmasına ve yönetmesine izin ver"
     moderators_change_post_ownership: "Moderatörlerin gönderi sahipliğini değiştirmesine izin ver"
     cors_origins: "Cross-origin isteklerin (CORS) izin verilen originler. Her origin http:// veya https:// içermeli. CORS'u etkinleştirebilmek için DISCOURSE_ENABLE_CORS env değişkeni doğru olarak ayarlanmalı."
     use_admin_ip_allowlist: "Yöneticiler, sadece Taranmış IP listesinde tanımlanmış bir IP adresinden erişim sağlıyorlarsa giriş yapabilirler. (Yönetici > Kayıtlar > Taranmış IP'ler)"
@@ -2126,6 +2127,7 @@ tr_TR:
       google_oauth2_hd_groups: "Bu ayarı etkinleştirmeden önce 'google oauth2 hd'yi ayarlamalısınız."
       search_tokenize_chinese_enabled: "Bu ayarı etkinleştirmeden önce 'search_tokenize_chinese' özelliğini devre dışı bırakmalısınız."
       search_tokenize_japanese_enabled: "Bu ayarı etkinleştirmeden önce 'search_tokenize_japanese' özelliğini devre dışı bırakmalısınız."
+      discourse_connect_cannot_be_enabled_if_second_factor_enforced: "2FA zorunlu kılınmışsa DiscourseConnect'i etkinleştiremezsiniz."
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.örnek.com"
@@ -2526,9 +2528,9 @@ tr_TR:
       title: "Hoşgeldiniz GS1 Kullanıcı"
       subject_template: "Bizimle zaman geçirdiğiniz için teşekkürler"
       text_body_template: |
-        Selam. Okumakla meşgul olduğunuzu görüyoruz, bu harika bir şey, bu yüzden sizi bir [güven düzeyi!](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) yükselttik.
+        Merhaba. Forumda yazılanları takip ettiğinizi, bol bol okuduğunuzu görüyoruz, bu harika bir şey. Bu yüzden sizi bir [güven düzeyi!](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) yükselttik.
 
-        Bizimle zaman geçirdiğiniz için gerçekten mutluyuz ve sizinle ilgili daha fazla bilgi edinmek isteriz. [Profilinizi doldurun](%{base_url}/my/preferences/profile) için bir dakikanızı ayırın veya [yeni bir konu başlatmak](%{base_url}/categories) için çekinmeyin.
+        Bizimle zaman geçirdiğiniz için gerçekten mutluyuz ve sizinle ilgili daha fazla bilgi edinmek isteriz. [Profilinizi doldurmak](%{base_url}/my/preferences/profile) için bir dakikanızı ayırın veya [yeni bir konu başlatmak](%{base_url}/categories) için çekinmeyin.
     welcome_staff:
       title: "Hoşgeldiniz Yetkili"
       subject_template: "Tebrikler, size %{role} statüsü verildi!"
@@ -2977,7 +2979,7 @@ tr_TR:
   subject_re: "Cvp: "
   subject_pm: "[PM] "
   email_from: "%{user_name} ile %{site_name}"
-  email_from_without_site: "%{user_name}"
+  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "Önceki Yanıtlar"
     reached_limit:
@@ -2996,6 +2998,9 @@ tr_TR:
     reply_above_line: "## Lütfen yanıtınızı bu satırın üzerine yazın. ##"
     posted_by: "%{post_date} tarihinde %{username} tarafından gönderildi"
     pm_participants: "Katılımcılar: %{participants}"
+    more_pm_participants:
+      one: "%{participants} ve diğer %{count}"
+      other: "%{participants} ve diğer %{count}"
     invited_group_to_private_message_body: |
       %{username} sizi mesaja @%{group_name} davet etti.
       >**[%{topic_title}](%{topic_url})**

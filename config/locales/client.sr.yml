@@ -1246,12 +1246,6 @@ sr:
         remove: "Onemogući"
       topic_status_update:
         when: "Kada:"
-      auto_update_input:
-        later_today: "Kasnije ovog dana"
-        tomorrow: "Sutra"
-        later_this_week: "Kasnije ove sedmice"
-        next_week: "Sledeće sedmice"
-        next_month: "Naredni mesec"
       auto_close:
         error: "Molimo unesite validnu vrednost"
         based_on_last_post: "Nemoj zatvoriti dok poslednja poruka nije odprilike ovoliko stara."
@@ -1304,8 +1298,6 @@ sr:
         close: "Zatvori temu"
         unarchive: "Vrati temu iz arhiva"
         archive: "Arhiviraj temu"
-        invisible: "Ukloni temu s popisa"
-        visible: "Stavi na popis"
         reset_read: "Poništi podatke o pročitanom"
       feature:
         pin: "Zakači temu"

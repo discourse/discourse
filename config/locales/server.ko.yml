@@ -1460,7 +1460,6 @@ ko:
     ga_universal_auto_link_domains: "Google 유니버설 애널리틱스 교차 도메인 추적을 사용합니다. 이러한 도메인으로 나가는 링크에는 클라이언트 ID가 추가됩니다. <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Google의 교차 도메인 추적 가이드를 참조하세요.</a>"
     gtm_container_id: "Google 태그 관리자 컨테이너 ID 예 : GTM-ABCDEF. <br/> 참고 : GTM에서로드 한 타사 스크립트는 &#39;콘텐츠 보안 정책 스크립트 src&#39;에 허용 목록에 있어야합니다."
     enable_escaped_fragments: "웹 크롤러가 감지되지 않으면 Google의 Ajax-Crawling API로 폴백하십시오. <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more를</a> 참조 <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>하십시오.</a>"
-    moderators_manage_categories_and_groups: "관리자가 카테고리 및 그룹을 관리하도록 허용"
     moderators_change_post_ownership: "관리자가 게시물 소유권을 변경할 수 있도록 허용"
     cors_origins: "Allowed origins cross-origin requests (CORS). 각 origin은 반드시 http:// 나 https:// 를 포함해야합니다. DISCOURSE_ENABLE_CORS 환경 변수를 true로 지정해줘야 CORS를 활성화할 수 있습니다."
     use_admin_ip_allowlist: "관리자는 선별 된 IP 목록(관리자> 로그> 선별된 IP)에 있는 IP에서만 로그인 할 수 있습니다."
@@ -2977,7 +2976,6 @@ ko:
   subject_re: "덧: "
   subject_pm: "[PM] "
   email_from: "%{site_name}를 통한 %{user_name}"
-  email_from_without_site: "%{user_name}"
   user_notifications:
     previous_discussion: "이전 답글"
     reached_limit:

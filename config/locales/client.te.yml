@@ -876,11 +876,6 @@ te:
       slow_mode_update:
         enable: "చేతనం"
         remove: "అచేతనం"
-      auto_update_input:
-        tomorrow: "రేపు"
-        this_weekend: "ఈ వారాంతం"
-        next_week: "వచ్చే వారం"
-        next_month: "వచ్చే నెల"
       auto_close:
         error: "దయచేసి చెల్లే విలువ రాయండి"
         based_on_last_post: "ఈ విషయంలో చివరి టపా కనీసం ఇంత వయసు వచ్చేంతవరకూ విషయాన్ని మూయకు."
@@ -926,8 +921,6 @@ te:
         close: "విషయం మూయు"
         unarchive: "విషయాన్ని కట్టవిప్పు"
         archive: "విషయాన్ని కట్టకట్టు"
-        invisible: "అజ్జాబితాగా గుర్తించు"
-        visible: "జాబితాగా గుర్తించు"
         reset_read: "చదివిన గణాంకాలను రీసెట్ చేయి"
       feature:
         pin: "విషయం గుచ్చు"

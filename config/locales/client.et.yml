@@ -427,9 +427,11 @@ et:
       start_of_next_business_week: "Esmaspäev"
       start_of_next_business_week_alt: "Järgmisel esmaspäeval"
       next_month: "Järgmisel kuul"
-      custom: "Vali kuupäev ja kellaaeg"
+      forever: "Igavesti"
       relative: "Suhteline aeg"
       none: "Pole vaja"
+      custom: "Vali kuupäev ja kellaaeg"
+      select_timeframe: "Vali ajavahemik"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> postitas <a href='%{topicUrl}'>selle teema</a>"
       you_posted_topic: "<a href='%{userUrl}'>Sa</a> postitasid <a href='%{topicUrl}'>selle teema</a>"
@@ -1682,16 +1684,6 @@ et:
         remove: "Eemalda taimer"
         publish_to: "Avalda:"
         when: "Millal:"
-      auto_update_input:
-        none: "Vali ajavahemik"
-        later_today: "Täna hiljem"
-        tomorrow: "Homme"
-        later_this_week: "iljem sel nädalal"
-        this_weekend: "Sellel nädalavahetusel"
-        next_week: "Järgmisel nädalal"
-        next_month: "Järgmisel kuul"
-        forever: "Igavesti"
-        pick_date_and_time: "Vali kuupäev ja kellaaeg"
       publish_to_category:
         title: "Ajastatud avaldamine"
       temp_open:
@@ -1774,8 +1766,6 @@ et:
         unpin: "Eemalda teema esiletõstmine..."
         unarchive: "Taasta teema arhiivist"
         archive: "Arhiveeri teema"
-        invisible: "Ära avalda teemade nimekirjas"
-        visible: "Avalda teemade nimekirjas"
         reset_read: "Nulli andmed teema lugemise kohta"
         make_private: "Loo isiklik sõnum"
       feature:

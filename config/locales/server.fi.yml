@@ -1484,7 +1484,6 @@ fi:
     ga_universal_auto_link_domains: "Ota käyttöön Google Universal Analyticsin verkkotunnusten välinen seuranta. Asiakastunniste liitetään näihin verkkotunnuksiin ulospäin suuntautuvissa linkeissä. Tutustu <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Googlen Verkkotunnusten välisen seurannan määrittäminen ohjeeseen.</a>"
     gtm_container_id: "Google Tag Manager -säiliön tunnus, esim: GTM-ABCDEF. <br/>Huomautus: kolmansien osapuolien skriptit, joita GTM käyttää, voi joutua erikseen sallimaan asetuksessa \"content security policy script src\"."
     enable_escaped_fragments: "Käytä Googlen Ajax-sivustoille tarkoitettua APIa, jos webcrawleria ei tunnisteta. Katso <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
-    moderators_manage_categories_and_groups: "Salli valvojien hallita alueita ja ryhmiä"
     cors_origins: "Sallitut alkuperät eri alkuperät sisältäville pyynnöille (CORS). Jokaisen alkuperän täytyy sisältää http:// tai https://. DISCOURSE_ENABLE_CORS-ympäristömuuttuja täytyy olla asetettu todeksi CORSin käyttöönottamiseksi."
     use_admin_ip_allowlist: "Ylläpitäjät voivat kirjautua vain IP-osoitteista, jotka on määritetty Seulottavien IP:iden listassa (Ylläpito > Lokit > Seulottavat IP:t)"
     blocked_ip_blocks: "Luettelo yksityisistä IP-lohkoista, joita Discourse ei tulisi koskaan indeksoida"

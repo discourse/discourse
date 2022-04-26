@@ -1615,7 +1615,6 @@ uk:
     ga_universal_auto_link_domains: "Увімкніть міждоменне відстеження Google Universal Analytics. До вихідних посилань на ці домени буде додано ідентифікатор клієнта. Див. <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Посібник міждоменного відстеження Google.</a>"
     gtm_container_id: "Контейнер Google Tag Manager. Наприклад: GTM-ABCDEF. <br/>Примітка: Сторонні сценарії, завантажені GTM повинні бути дозволені в 'content security policy script src'."
     enable_escaped_fragments: "Поверніться до API Ajax-Crawling від Google, якщо веб-сканер не виявлено. Див. <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
-    moderators_manage_categories_and_groups: "Дозволити модераторам керувати категоріями та групами"
     moderators_change_post_ownership: "Дозволити модераторам змінювати право власності повідомлення"
     cors_origins: "Дозволити origins для запитів CORS. Кожне origin повинне містити http:// або https://. Змінна DISCOURSE_ENABLE_CORS env повинна бути true, щоб увімкнути CORS."
     use_admin_ip_allowlist: "Адміністратори можуть увійти в систему тільки в тому випадку, якщо їх IP-адреса вказана в білому списку (Адмінка > Логи > IP-адреси)."

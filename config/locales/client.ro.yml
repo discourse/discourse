@@ -552,7 +552,9 @@ ro:
       start_of_next_business_week: "Luni"
       start_of_next_business_week_alt: "Lunea viitoare"
       next_month: "Luna viitoare"
+      forever: "Pentru totdeanua"
       custom: "Data și ora personalizată"
+      select_timeframe: "Alege un interval de timp"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> a postat <a href='%{topicUrl}'>discuția</a>"
       you_posted_topic: "<a href='%{userUrl}'>ai</a> postat <a href='%{topicUrl}'>subiectul</a>"
@@ -1888,17 +1890,6 @@ ro:
         when: "Când:"
         time_frame_required: "Te rog selectează un interval de timp"
         duration: "Durată"
-      auto_update_input:
-        none: "Alege un interval de timp"
-        later_today: "Mai târziu azi"
-        tomorrow: "Mâine"
-        later_this_week: "Mai târziu săptămâna asta"
-        this_weekend: "Acest weekend"
-        next_week: "Săptămâna viitoare"
-        next_month: "Luna viitoare"
-        forever: "Pentru totdeanua"
-        pick_date_and_time: "Alege data și ora"
-        set_based_on_last_post: "Închide pe baza ultimei postări"
       publish_to_category:
         title: "Programează publicarea"
       temp_open:
@@ -1984,8 +1975,6 @@ ro:
         unpin: "Anulează subiect fixat..."
         unarchive: "Dezarhivează subiect"
         archive: "Arhivează subiect"
-        invisible: "Fă invizibil"
-        visible: "Fă vizibil"
         reset_read: "Resetează datele despre subiecte citite"
         make_private: "Transformă în mesaj privat"
       feature:

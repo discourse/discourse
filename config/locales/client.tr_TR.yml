@@ -86,6 +86,9 @@ tr_TR:
         x_days:
           one: "%{count} gün"
           other: "%{count} gün"
+        about_x_years:
+          one: "yaklaşık %{count} yıl"
+          other: "yaklaşık %{count} yıl"
         date_year: "D MMM 'YY"
       medium_with_ago:
         x_minutes:
@@ -573,11 +576,17 @@ tr_TR:
       start_of_next_business_week_alt: "Gelecek pazartesi"
       two_weeks: "İki hafta"
       next_month: "Gelecek ay"
+      two_months: "İki ay"
+      three_months: "Üç ay"
+      four_months: "Dört ay"
       six_months: "Altı ay"
-      custom: "Özel tarih ve saat"
+      one_year: "Bir yıl"
+      forever: "Sonsuza dek"
       relative: "Göreli zaman"
       none: "Hiçbiri"
       last_custom: "En son belirlenen özel tarih/saat"
+      custom: "Özel tarih ve saat"
+      select_timeframe: "Zaman aralığı seç"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a>, <a href='%{topicUrl}'>konusunu</a> açtı"
       you_posted_topic: "<a href='%{topicUrl}'>Bu konu</a> <a href='%{userUrl}'>sizin tarafınızdan</a> açıldı"
@@ -1480,8 +1489,6 @@ tr_TR:
           title: "Bağlantıyla davet et"
           success: "Davet bağlantısı başarılı bir şekilde oluşturuldu!"
           error: "Davet bağlantısı oluşturulurken bir hata meydana geldi"
-          max_redemptions_allowed_label: "Bu bağlantıyı kullanarak kaç kişinin kaydolmasına izin verilsin?"
-          expires_at: "Bu davet bağlantısının süresi ne zaman dolacak?"
         invite:
           new_title: "Davet oluştur"
           edit_title: "Daveti düzenle"
@@ -2327,7 +2334,7 @@ tr_TR:
         category: "%{category} konusu yok."
         top: "Popüler bir konu yok."
         educate:
-          new: '<p>Yeni konularınız burada görünecektir. Varsayılan olarak, konular yeni kabul edilir ve son 2 gün içinde oluşturulmuşlarsa <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> göstergesi gösterilir.</p><p>Bunu değiştirmek için <a href="%{userPrefsUrl}"> tercihinizi</a> ziyaret edin.</p>'
+          new: '<p>Yeni konularınız burada görünecektir. Varsayılan olarak, konular yeni kabul edilir ve son 2 gün içinde oluşturulmuşlarsa <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> göstergesi gösterilir.</p><p>Bunu değiştirmek için <a href="%{userPrefsUrl}"> tercihlerinizi</a> ziyaret edin.</p>'
           unread: '<p>Okunmamış konularınız burada görünür.</p><p>Konular varsayılan olarak okunmamış sayılır ve aşağıdaki durumlarda okunmamış ileti sayısı <span class="badge unread-posts badge-notification">1</span> gösterilir: </p><ul><li>Konuyu siz oluşturmuşsanız</li><li>Konuyu yanıtlamışsanız</li><li>Konuyu 4 dakikadan fazla okumuşsanız</li></ul><p>Konuyu her konunun altında bulunan bildirim denetim alanından İzleniyor veya Takip Ediliyor olarak seçmişseniz.</p><p><a href="%{userPrefsUrl}">Tercihler</a> sayfanızdan bu ayarları değiştirebilirsiniz.</p>'
       bottom:
         latest: "Daha fazla güncel konu yok."
@@ -2440,24 +2447,6 @@ tr_TR:
         min_duration: "Süre sıfırdan büyük olmalıdır"
         max_duration: "Süre 20 yıldan az olmalıdır"
         duration: "Süre"
-      auto_update_input:
-        none: "Zaman aralığı seç"
-        now: "Şimdi"
-        later_today: "Bugün ilerleyen saatlerde"
-        tomorrow: "Yarın"
-        later_this_week: "Bu hafta içinde"
-        this_weekend: "Bu hafta sonu"
-        next_week: "Gelecek hafta"
-        two_weeks: "İki hafta"
-        next_month: "Gelecek ay"
-        two_months: "İki ay"
-        three_months: "Üç ay"
-        four_months: "Dört ay"
-        six_months: "Altı ay"
-        one_year: "Bir yıl"
-        forever: "Sonsuza dek"
-        pick_date_and_time: "Tarih ve saat seç"
-        set_based_on_last_post: "Son gönderiye göre kapat"
       publish_to_category:
         title: "Program yayını"
       temp_open:
@@ -2569,8 +2558,6 @@ tr_TR:
         unpin: "Konuyu En Yukarıda Sabitleme..."
         unarchive: "Konuyu Arşivleme"
         archive: "Konuyu Arşivle"
-        invisible: "Listelenmemiş Yap"
-        visible: "Listelenmiş Yap"
         reset_read: "Görüntüleme Verilerini Sıfırla"
         make_public: "Herkese açık konu yap..."
         make_private: "Kişisel Mesaj Yap"
