@@ -234,7 +234,11 @@ export function timeShortcuts(timezone) {
   };
 }
 
-export function hideDynamicTimeShortcuts(shortcuts, timezone) {
+export function hideDynamicTimeShortcuts(
+  shortcuts,
+  timezone,
+  siteSettings = {}
+) {
   const shortcutsToHide = new Set();
   const _now = now(timezone);
   if (_now.hour() >= LATER_TODAY_CUTOFF_HOUR) {
@@ -246,6 +250,7 @@ export function hideDynamicTimeShortcuts(shortcuts, timezone) {
   }
 
   if (
+    !siteSettings.suggest_weekends_in_date_pickers ||
     _now.day() === MOMENT_FRIDAY ||
     _now.day() === MOMENT_SATURDAY ||
     _now.day() === MOMENT_SUNDAY

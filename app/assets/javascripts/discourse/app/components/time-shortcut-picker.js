@@ -182,7 +182,11 @@ export default Component.extend({
     } else {
       options = defaultTimeShortcuts(userTimezone);
     }
-    options = hideDynamicTimeShortcuts(options, userTimezone);
+    options = hideDynamicTimeShortcuts(
+      options,
+      userTimezone,
+      this.siteSettings
+    );
 
     let specialOptions = specialShortcutOptions();
     if (this.lastCustomDate && this.lastCustomTime) {

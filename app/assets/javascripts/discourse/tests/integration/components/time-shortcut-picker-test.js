@@ -47,7 +47,6 @@ discourseModule(
           I18n.t("time_shortcut.later_today"),
           I18n.t("time_shortcut.tomorrow"),
           I18n.t("time_shortcut.later_this_week"),
-          I18n.t("time_shortcut.this_weekend"),
           I18n.t("time_shortcut.start_of_next_business_week"),
           I18n.t("time_shortcut.next_month"),
           I18n.t("time_shortcut.custom"),

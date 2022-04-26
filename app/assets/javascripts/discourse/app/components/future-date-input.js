@@ -69,7 +69,11 @@ export default Component.extend({
       shortcuts.push(shortcutsFactory.now());
     }
 
-    shortcuts = hideDynamicTimeShortcuts(shortcuts, this.userTimezone);
+    shortcuts = hideDynamicTimeShortcuts(
+      shortcuts,
+      this.userTimezone,
+      this.siteSettings
+    );
 
     return shortcuts.map((s) => {
       return {
