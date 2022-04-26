@@ -24,12 +24,12 @@
   }
 
   .btn {
-    padding-top: 0.5em;
-    padding-bottom: 0.5em;
+    padding: 0.5rem;
 
     .d-icon {
       font-size: var(--font-down-1);
-      margin-top: 1px; // vertical alignment
+      margin-top: 2px; // vertical alignment
+      margin-right: 1rem;
     }
   }
 
@@ -42,7 +42,7 @@
       }
     }
     ul {
-      padding: 0.5em;
+      padding: 0.5rem;
       &:not(:last-of-type) {
         border-bottom: 1px solid var(--primary-low);
       }
@@ -51,7 +51,7 @@
 }
 
 .modal-body.feature-topic {
-  max-height: 70vh !important ;
+  max-height: 70vh !important;
   padding: 0 1em;
   input.date-picker {
     margin: 0;
