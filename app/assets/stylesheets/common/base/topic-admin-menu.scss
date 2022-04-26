@@ -22,6 +22,32 @@
   .mobile-view & {
     z-index: z("modal", "popover");
   }
+
+  .btn {
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+
+    .d-icon {
+      font-size: var(--font-down-1);
+      margin-top: 1px; // vertical alignment
+    }
+  }
+
+  ul {
+    li {
+      border: none;
+      &:not(:last-of-type) {
+        // so buttons don't appear "stuck" together when multiple are highlighted
+        margin-bottom: 2px;
+      }
+    }
+    ul {
+      padding: 0.5em;
+      &:not(:last-of-type) {
+        border-bottom: 1px solid var(--primary-low);
+      }
+    }
+  }
 }
 
 .modal-body.feature-topic {

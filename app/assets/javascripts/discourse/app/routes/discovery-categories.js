@@ -9,6 +9,7 @@ import TopicList from "discourse/models/topic-list";
 import { ajax } from "discourse/lib/ajax";
 import { defaultHomepage } from "discourse/lib/utilities";
 import { hash } from "rsvp";
+import { next } from "@ember/runloop";
 import showModal from "discourse/lib/show-modal";
 import getURL from "discourse-common/lib/get-url";
 import Session from "discourse/models/session";
@@ -151,6 +152,12 @@ const DiscoveryCategoriesRoute = DiscourseRoute.extend(OpenComposer, {
     } else {
       this.openComposer(this.controllerFor("discovery/categories"));
     }
+  },
+
+  @action
+  didTransition() {
+    next(() => this.controllerFor("application").set("showFooter", true));
+    return true;
   },
 });
 

@@ -199,7 +199,7 @@ module SiteSettings::Validations
   end
 
   def validate_enforce_second_factor(new_val)
-    if SiteSetting.enable_discourse_connect?
+    if new_val != "no" && SiteSetting.enable_discourse_connect?
       return validate_error :second_factor_cannot_be_enforced_with_discourse_connect_enabled
     end
     if new_val == "all" && Discourse.enabled_auth_providers.count > 0

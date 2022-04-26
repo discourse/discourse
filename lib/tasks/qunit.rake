@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 desc "Runs the qunit test suite"
-
 task "qunit:test", [:timeout, :qunit_path] do |_, args|
   require "socket"
   require "chrome_installed_checker"
@@ -107,11 +106,17 @@ task "qunit:test", [:timeout, :qunit_path] do |_, args|
     puts "Rails server is warmed up"
 
     if ember_cli
-      Dir.chdir("#{Rails.root}/app/assets/javascripts/discourse") do # rubocop:disable Discourse/NoChdir because this is not part of the app
-        cmd = ["env", "UNICORN_PORT=#{unicorn_port}", "yarn", "ember", "test", "--query", query]
-        cmd += ["--test-page", qunit_path.delete_prefix("/")] if qunit_path
-        system(*cmd)
+      cmd = ["env", "UNICORN_PORT=#{unicorn_port}"]
+      if qunit_path
+        # Bypass `ember test` - it only works properly for the `/tests` path.
+        # We have to trigger a `build` manually so that JS is available for rails to serve.
+        system("yarn", "ember", "build", chdir: "#{Rails.root}/app/assets/javascripts/discourse")
+        test_page = "#{qunit_path}?#{query}&testem=1"
+        cmd += ["yarn", "testem", "ci", "-f", "testem.js", "-t", test_page]
+      else
+        cmd += ["yarn", "ember", "test", "--query", query]
       end
+      system(*cmd, chdir: "#{Rails.root}/app/assets/javascripts/discourse")
     else
       cmd = "node #{test_path}/run-qunit.js http://localhost:#{port}#{qunit_path}"
       cmd += "?#{query.gsub('+', '%20').gsub("&", '\\\&')}"
@@ -131,5 +136,4 @@ task "qunit:test", [:timeout, :qunit_path] do |_, args|
     puts "\nTests Failed"
     exit(1)
   end
-
 end

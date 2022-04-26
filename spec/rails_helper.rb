@@ -264,6 +264,9 @@ RSpec.configure do |config|
       )
     end
 
+    Capybara.app_host = "http://#{Capybara.server_host}:#{Capybara.server_port}"
+    puts "CAPYBARA APP HOST IS #{Capybara.app_host}"
+
     # Rebase defaults
     #
     # We nuke the DB storage provider from site settings, so need to yank out the existing settings
@@ -347,9 +350,8 @@ RSpec.configure do |config|
   config.before(:all, type: [:request, :multisite, :system]) { host! "test.localhost" }
   config.before(:each, type: [:request, :multisite, :system]) { host! "test.localhost" }
 
+  last_driven_by = nil
   config.before(:each, type: :system) do |example|
-    Capybara.app_host = "http://#{Capybara.server_host}:#{Capybara.server_port}"
-
     driver = \
       if example.metadata[:js]
         locality = ENV["SELENIUM_HOST"].present? ? :remote : :local
@@ -360,6 +362,10 @@ RSpec.configure do |config|
         :rack_test
       end
 
+    if last_driven_by != driver
+      puts "SYSTEM TESTS DRIVEN BY #{driver}"
+      last_driven_by = driver
+    end
     driven_by driver
   end
 

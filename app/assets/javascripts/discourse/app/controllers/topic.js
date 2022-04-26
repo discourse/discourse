@@ -702,6 +702,19 @@ export default Controller.extend(bufferedProperty("model"), {
       }
     },
 
+    deletePostWithConfirmation(post, opts) {
+      bootbox.confirm(
+        I18n.t("post.confirm_delete"),
+        I18n.t("no_value"),
+        I18n.t("yes_value"),
+        (confirmed) => {
+          if (confirmed) {
+            this.send("deletePost", post, opts);
+          }
+        }
+      );
+    },
+
     permanentlyDeletePost(post) {
       return bootbox.confirm(
         I18n.t("post.controls.permanently_delete_confirmation"),
