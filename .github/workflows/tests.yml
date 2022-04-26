@@ -29,7 +29,7 @@ jobs:
 
     services:
       selenium:
-        image: selenium/standalone-chrome-debug
+        image: selenium/standalone-chrome
 
     strategy:
       fail-fast: false
