@@ -71,13 +71,15 @@ module ImportScripts::Mbox
 
           from_email, from_display_name = receiver.parse_from_field(parsed_email)
 
-          if @options.fix_mailman_via_addresses
-            if from_email =~ /lists.llvm.org/
+          if @settings.fix_mailman_via_addresses
+            # Detect cases like this and attempt to get actual sender from other headers:
+            #    From: Jane Smith via ListName <ListName@lists.example.com>
+
+            if receiver.mail['X-Mailman-Version'] && from_display_name =~ /\bvia \S+$/i
               email_from_from_line = opts[:from_line].scan(/From (\S+)/).flatten.first
               a = Mail::Address.new(email_from_from_line)
               from_email = a.address
               from_display_name = a.display_name
-
               # if name is not available there, look for it in Reply-To
               if from_display_name.nil?
                 reply_to = receiver.mail.to_s.scan(/[\n\r]Reply-To: ([^\r\n]+)/).flatten.first

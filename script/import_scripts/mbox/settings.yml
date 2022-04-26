@@ -50,8 +50,9 @@ remove_subject_prefixes:
   - "Re: "
   - "Fwd?: "
 
-# For emails that Mailman mislabels as being from the mailing list rather than the actual original sender,
-# attempt to get the sender's address from other available headers
+# For emails processed by mailman with this type of bogus header:
+#   From: Jane Smith via ListName <ListName@lists.example.com>
+# attempt to get the actual sender's address from other available headers like Reply-To or the /^From / line
 fix_mailman_via_addresses: false
 
 # Elide up to last occurence of = in addresses (BATV, etc)
