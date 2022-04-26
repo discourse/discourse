@@ -247,12 +247,9 @@ acceptance("Group - Authenticated", function (needs) {
     await click("#search-button");
     await fillIn("#search-term", "smth");
 
-    assert.strictEqual(
-      query(
-        ".search-menu .results .search-menu-assistant-item:first-child"
-      ).innerText.trim(),
-      "smth in:personal",
-      "contextual search is available as first option"
+    assert.ok(
+      query(".search-menu .btn.search-context"),
+      "'in messages' toggle is active by default"
     );
   });
 
