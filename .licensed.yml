@@ -1,12 +1,45 @@
 sources:
-  yarn: true
   bundler: true
 allowed:
-  - mit
+  - 0bsd
   - apache-2.0
   - bsd-2-clause
   - bsd-3-clause
   - cc0-1.0
   - isc
-  - other
-  - none  
+  - mit
+  - ruby
+
+ignored:
+  bundler:
+    - rchardet # Ruby terms
+
+reviewed:
+  bundler:
+    - activerecord # MIT
+    - coderay # MIT
+    - concurrent-ruby # MIT
+    - css_parser # MIT
+    - excon # MIT
+    - faraday-em_http # MIT
+    - faraday-em_synchrony # MIT
+    - faraday-excon # MIT
+    - faraday-net_http # MIT
+    - highline # GPL-2.0 OR Ruby terms
+    - htmlentities # MIT
+    - image_size # MIT
+    - json # Ruby terms
+    - jwt # MIT
+    - kgio # LGPL-2.1+
+    - logstash-event # Apache-2.0
+    - omniauth # MIT
+    - openssl # Ruby terms
+    - pg # Ruby terms
+    - r2 # Apache-2.0 (Twitter)
+    - racc # Ruby terms
+    - raindrops # LGPL-2.1+
+    - rubyzip # Ruby terms
+    - sidekiq # LGPL (Sidekiq)
+    - tilt
+    - unf # BSD-2-Clause
+    - unicorn
