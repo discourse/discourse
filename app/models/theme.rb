@@ -707,6 +707,7 @@ class Theme < ActiveRecord::Base
   def baked_js_tests_with_digest
     content = theme_fields
       .where(target_id: Theme.targets[:tests_js])
+      .order(name: :asc)
       .each(&:ensure_baked!)
       .map(&:value_baked)
       .join("\n")
