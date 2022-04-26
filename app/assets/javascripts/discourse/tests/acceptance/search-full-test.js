@@ -133,7 +133,7 @@ acceptance("Search - Full Page", function (needs) {
   test("search for personal messages", async function (assert) {
     await visit("/search");
 
-    await fillIn(".search-query", "discourse in:personal");
+    await fillIn(".search-query", "discourse in:messages");
     await click(".search-cta");
 
     assert.strictEqual(count(".fps-topic"), 1, "has one post");

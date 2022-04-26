@@ -20,7 +20,7 @@ const REGEXP_TAGS_REPLACE = /(^(tags?:|#(?=[a-z0-9\-]+::tag))|::tag\s?$)/gi;
 
 const REGEXP_SPECIAL_IN_LIKES_MATCH = /^in:likes$/gi;
 const REGEXP_SPECIAL_IN_TITLE_MATCH = /^in:title$/gi;
-const REGEXP_SPECIAL_IN_PERSONAL_MATCH = /^in:personal$/gi;
+const REGEXP_SPECIAL_IN_PERSONAL_MATCH = /^in:(personal|messages)$/gi;
 const REGEXP_SPECIAL_IN_SEEN_MATCH = /^in:seen$/gi;
 
 const REGEXP_CATEGORY_SLUG = /^(\#[a-zA-Z0-9\-:]+)/gi;
