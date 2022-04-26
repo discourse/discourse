@@ -61,15 +61,15 @@ he:
             tags:
               label: מוגבל לתגיות
         recurring:
-          recurrences:
-            every_minute: כל דקה
-            every_hour: כל שעה
-            every_day: כל יום
-            every_weekday: כל יום חול
-            every_week: כל שבוע
-            every_other_week: כל שבוע שני
-            every_month: כל חודש
-            every_year: כל שנה
+          every: כל
+          frequencies:
+            minute: דקה
+            hour: שעה
+            day: יום
+            weekday: יום חול
+            week: שבוע
+            month: חודש
+            year: שנה
           fields:
             recurrence:
               label: חזרתיות

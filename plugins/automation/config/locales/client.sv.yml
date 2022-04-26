@@ -72,15 +72,6 @@ sv:
             stalled_after:
               label: Stannade efter
         recurring:
-          recurrences:
-            every_minute: Varje minut
-            every_hour: Varje timme
-            every_day: Varje dag
-            every_weekday: Varje vardag
-            every_week: Varje vecka
-            every_other_week: Varannan vecka
-            every_month: Varje månad
-            every_year: Varje år
           fields:
             recurrence:
               label: Upprepning

@@ -50,14 +50,15 @@ fa_IR:
             tags:
               label: محدود شده به برچسب‌ها
         recurring:
-          recurrences:
-            every_minute: هر دقیقه
-            every_hour: هر ساعت
-            every_day: هر روز
-            every_weekday: هر روز هفته
-            every_week: هر هفته
-            every_month: هر ماه
-            every_year: هر سال
+          every: هر
+          frequencies:
+            minute: دقیقه
+            hour: ساعت
+            day: روز
+            weekday: روز هفته
+            week: هفته
+            month: ماه
+            year: سال
           fields:
             start_date:
               label: تاریخ شروع

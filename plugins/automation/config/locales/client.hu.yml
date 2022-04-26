@@ -71,15 +71,6 @@ hu:
             stalled_after:
               label: Ennyi idő után elakadt
         recurring:
-          recurrences:
-            every_minute: Percenként
-            every_hour: Óránként
-            every_day: Naponta
-            every_weekday: Hétköznaponként
-            every_week: Hetente
-            every_other_week: Kéthetente
-            every_month: Havonta
-            every_year: Évente
           fields:
             recurrence:
               label: Ismétlődés
