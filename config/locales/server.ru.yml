@@ -444,6 +444,7 @@ ru:
       time_must_be_provided: "Время должно быть установлено для всех напоминаний"
       for_topic_must_use_first_post: "Вы можете использовать только первое сообщение, чтобы добавить тему в закладки."
       bookmarkable_id_type_required: "Необходимо указать имя и тип записи для добавления в закладки."
+      invalid_bookmarkable: "%{type} не может быть закладкой."
     reminders:
       at_desktop: "При следующем посещении форума"
       later_today: "Сегодня, но позже"
@@ -1636,7 +1637,7 @@ ru:
     ga_universal_auto_link_domains: "Включить междоменное отслеживание Google Universal Analytics. К исходящим ссылкам на эти домены будет добавлен идентификатор клиента. См. <a href='https://support.google.com/analytics/answer/1034342?hl=ru' target='_blank'>Как настроить междоменное отслеживание</a>"
     gtm_container_id: "Идентификатор менеджера тегов Google, например: GTM-ABCDEF. <br/> Примечание: Сторонние скрипты, загруженные менеджером тегов, могут быть внесены в белый список в при помощи директивы `script-src` политики защиты контента (CSP)."
     enable_escaped_fragments: "Обратитесь к Google Ajax-Crawling API, если веб-сканер не обнаружен. См. <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>Https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
-    moderators_manage_categories_and_groups: "Разрешать модераторам управлять разделами и группами"
+    moderators_manage_categories_and_groups: "Разрешать модераторам создавать разделы / группы и управлять ими"
     moderators_change_post_ownership: "Разрешать модераторам менять владельца сообщения"
     cors_origins: "Разрешённые источники для кросс-доменных запросов (CORS). Каждый источник должен содержать http:// или https://. Для включения CORS переменная окружения DISCOURSE_ENABLE_CORS должна быть установлена в значение 'true'."
     use_admin_ip_allowlist: "Администраторы могут войти в систему только в том случае, если их IP-адрес указан в белом списке (Админка > Логи > IP-адреса)."
@@ -2265,6 +2266,7 @@ ru:
       google_oauth2_hd_groups: "Перед включением этого параметра необходимо настроить параметр 'google oauth2 hd'."
       search_tokenize_chinese_enabled: "Вы должны отключить «search_tokenize_chinese», прежде чем включить этот параметр."
       search_tokenize_japanese_enabled: "Вы должны отключить «search_tokenize_japanese», прежде чем включить этот параметр."
+      discourse_connect_cannot_be_enabled_if_second_factor_enforced: "Вы не можете включить DiscourseConnect, если принудительно включена двухфакторная аутентификация."
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -3300,7 +3302,7 @@ ru:
   subject_re: "Re:"
   subject_pm: "[ЛС]"
   email_from: "%{user_name} через %{site_name}"
-  email_from_without_site: "%{user_name}"
+  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "Предыдущие ответы"
     reached_limit:
@@ -3321,6 +3323,11 @@ ru:
     reply_above_line: "## Пожалуйста, напечатайте ответ над этой линией. ##"
     posted_by: "Отправлено пользователем %{username} %{post_date}"
     pm_participants: "Участники: %{participants}"
+    more_pm_participants:
+      one: "%{participants} и ещё %{count}"
+      few: "%{participants} и ещё %{count}"
+      many: "%{participants} и ещё %{count}"
+      other: "%{participants} и ещё %{count}"
     invited_group_to_private_message_body: |
       Пользователь %{username} приглашает группу @%{group_name} принять участие в личной беседе на тему:
 

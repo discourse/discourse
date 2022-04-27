@@ -1518,7 +1518,7 @@ it:
     ga_universal_auto_link_domains: "Abilita il monitoraggio tra domini di Google Universal Analytics. I collegamenti in uscita verso questi domini avranno l'ID del client aggiunto. Vedi <a href='https://support.google.com/analytics/answer/1034342?hl=it' target='_blank'>Impostare il monitoraggio tra domini.</a>"
     gtm_container_id: "ID del contenitore di Google Tag Manager. ad esempio: GTM-ABCDEF. <br/>Nota: potrebbe essere necessario inserire l'abilitazione degli script di terze parti caricati da GTM in \"Content Security Policy Script src\"."
     enable_escaped_fragments: "Tornare all'API Ajax-Crawling di Google se non viene rilevato alcun webcrawler. Vedi <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
-    moderators_manage_categories_and_groups: "Permetti ai moderatori di gestire categorie e gruppi"
+    moderators_manage_categories_and_groups: "Permetti ai moderatori di creare e gestire categorie e gruppi"
     moderators_change_post_ownership: "Consenti ai moderatori di modificare la proprietà del messaggio"
     cors_origins: "Origini permesse per richieste cross-origin (CORS). Ogni origine deve includere http:// o https://. La variabile d'ambiente DISCOURSE_ENABLE_CORS deve essere impostata come true per abilitare CORS."
     use_admin_ip_allowlist: "Gli amministratori possono effettuare l'accesso solo se usano un indirizzo IP definito nell'elenco degli IP scansionati (Amministratore > Log > IP scansionati)."
@@ -2133,6 +2133,7 @@ it:
       markdown_linkify_tlds: "Non è possibile includere il valore '*'."
       search_tokenize_chinese_enabled: "Devi disattivare \"search_tokenize_chinese\" prima di attivare questa impostazione."
       search_tokenize_japanese_enabled: "Devi disattivare \"search_tokenize_japanese\" prima di attivare questa impostazione."
+      discourse_connect_cannot_be_enabled_if_second_factor_enforced: "Non è possibile abilitare DiscourseConnect se è stata forzata l'autenticazione a due fattori 2FA."
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2968,6 +2969,7 @@ it:
   subject_re: "R:"
   subject_pm: "[MP]"
   email_from: "%{user_name} via %{site_name}"
+  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "Risposte Precedenti"
     reached_limit:
@@ -2986,6 +2988,9 @@ it:
     reply_above_line: "## Inserisci la tua risposta al di sopra di questa riga. ##"
     posted_by: "Pubblicato da %{username} il %{post_date}"
     pm_participants: "Partecipanti: %{participants}"
+    more_pm_participants:
+      one: "%{participants} e %{count} altro"
+      other: "%{participants} e %{count} altri"
     invited_group_to_private_message_body: |
       %{username} ha invitato @%{group_name} a partecipare al messaggio
 

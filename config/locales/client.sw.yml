@@ -336,6 +336,8 @@ sw:
       later_this_week: "Baada ya mda ndani ya wiki hii"
       this_weekend: "Wikiendi hii"
       next_month: "Mwezi ujao"
+      forever: "Milele"
+      select_timeframe: "Chagua fremu ya mda"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{mtumiaji}</a> amechapisha <a href='%{topicUrl}'>mada</a>"
       you_posted_topic: "<a href='%{userUrl}'>Ume</a> chapisha <a href='%{topicUrl}'>mada</a>"
@@ -1527,17 +1529,6 @@ sw:
         remove: "Ondoa Kipima Mda"
         publish_to: "Chapisha kwenda Kwa:"
         when: "Lini:"
-      auto_update_input:
-        none: "Chagua fremu ya mda"
-        later_today: "Baada ya mda leo"
-        tomorrow: "Kesho"
-        later_this_week: "Baada ya mda ndani ya wiki hii"
-        this_weekend: "Wikiendi hii"
-        next_week: "Wiki Ijayo"
-        next_month: "Mwezi ujao"
-        forever: "Milele"
-        pick_date_and_time: "Chagua tarehe na mda"
-        set_based_on_last_post: "Funga kulingana na chapisho la mwisho"
       publish_to_category:
         title: "Panga Uchapishaji"
       temp_open:
@@ -1623,8 +1614,6 @@ sw:
         unpin: "Ondoa Mada..."
         unarchive: "Ondoa Mada kwenye Nyaraka"
         archive: "Weka Mada kwenye Nyaraka"
-        invisible: "Ondoa Orodha"
-        visible: "Tengeneza Orodha"
         reset_read: "Anzisha Upya Usomaji wa Taarifa"
         make_private: "Tengeneza Ujumbe Binafsi"
       feature:

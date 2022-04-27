@@ -973,8 +973,6 @@ be:
         remove: "Адключыць"
       topic_status_update:
         when: "калі:"
-      auto_update_input:
-        tomorrow: "заўтра"
       auto_close:
         title: "Аўтаматычнае закрыццё тэмы"
         error: "Калі ласка, увядзіце карэктнае значэнне."
@@ -1020,7 +1018,6 @@ be:
         unpin: "Адмацаваць тэму ..."
         unarchive: "Разархіваваць тэму"
         archive: "Заархіваваць тэму"
-        invisible: "Выдаліць са спісу"
         reset_read: "Скінуць дадзеныя аб прочитанисть"
         make_private: "Стварыць асабістае паведамленне"
         reset_bump_date: "Скінуць Dump дату"

@@ -544,7 +544,9 @@ bs_BA:
       start_of_next_business_week: "Ponedjeljak"
       start_of_next_business_week_alt: "Sljedeći ponedjeljak"
       next_month: "Sljedeći mjesec"
+      forever: "Zauvijek"
       custom: "Precizirano vrijeme i datum"
+      select_timeframe: "Označi vremenski period"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> je objavio/la <a href='%{topicUrl}'>temu</a>"
       you_posted_topic: "<a href='%{userUrl}'>Vi</a> ste objavili <a href='%{topicUrl}'>temu</a>"
@@ -1317,8 +1319,6 @@ bs_BA:
           title: "Link pozivnice"
           success: "Link pozivnice je uspješno generisan!"
           error: "Došlo je do pogreške prilikom generiranja linka za pozivnicu"
-          max_redemptions_allowed_label: "Koliko se ljudi smije registrirati putem ovog linka?"
-          expires_at: "Kada će ovaj link za pozivnicu isteći?"
         bulk_invite:
           text: "Skupna pozivnica"
           error: "Oprostite, vaš fajl bi trebao biti u CSV formatu."
@@ -2054,17 +2054,6 @@ bs_BA:
         when: "Kada:"
         time_frame_required: "Odaberite vremenski okvir"
         duration: "Trajanje"
-      auto_update_input:
-        none: "Označi vremenski period"
-        later_today: "Na kraju dana"
-        tomorrow: "Sutra"
-        later_this_week: "Kasnije ove sedmice"
-        this_weekend: "Ovog vikenda"
-        next_week: "Sljedeće sedmice"
-        next_month: "Sljedeći mjesec"
-        forever: "Zauvijek"
-        pick_date_and_time: "Odaberi datum i vrijeme"
-        set_based_on_last_post: "Zatvori koristeći za bazu zadnju objavu"
       publish_to_category:
         title: "Vremenski organizuj objavljivanje"
       temp_open:
@@ -2159,8 +2148,6 @@ bs_BA:
         unpin: "Otkvači temu"
         unarchive: "Vrati temu iz arhiva"
         archive: "Arhiviraj temu"
-        invisible: "Ukloni temu s popisa"
-        visible: "Make Listed"
         reset_read: "Reset Read Data"
         make_private: "Pretvori u privatnu poruku"
         reset_bump_date: "Resetuj datum bumpa"

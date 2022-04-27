@@ -1304,8 +1304,6 @@ sq:
         unpin: "Çngjite temën..."
         unarchive: "Çarkivoje temën"
         archive: "Arkivoje temën"
-        invisible: "Hiqeni nga Listat"
-        visible: "Listojeni"
         reset_read: "Reset Read Data"
       feature:
         pin: "Ngjite temën"

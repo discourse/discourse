@@ -509,7 +509,9 @@ el:
       start_of_next_business_week: "Τη Δευτέρα"
       start_of_next_business_week_alt: "Την επόμενη Δευτέρα"
       next_month: "Τον άλλο μήνα"
+      forever: "Για Πάντα"
       custom: "Προσαρμοσμένη ημερομηνία και ώρα"
+      select_timeframe: "Επιλέξτε χρονικό περιθώριο"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> ανάρτησε <a href='%{topicUrl}'>το νήμα </a>"
       you_posted_topic: "<a href='%{userUrl}'>Ανάρτησες</a> αυτό <a href='%{topicUrl}'>το νήμα</a>"
@@ -1284,8 +1286,6 @@ el:
           title: "Σύνδεσμος πρόσκλησης"
           success: "Η δημιουργία του συνδέσμου πρόσκλησης έγινε επιτυχώς!"
           error: "Παρουσιάστηκε σφάλμα κατά τη δημιουργία συνδέσμου πρόσκλησης"
-          max_redemptions_allowed_label: "Πόσα άτομα επιτρέπεται να εγγραφούν χρησιμοποιώντας αυτόν τον σύνδεσμο;"
-          expires_at: "Πότε θα λήξει αυτός ο σύνδεσμος πρόσκλησης;"
         bulk_invite:
           text: "Μαζική πρόσκληση"
           error: "Λυπούμαστε, το αρχείο πρέπει να έχει την μορφή CSV."
@@ -2048,18 +2048,6 @@ el:
         when: "Πότε:"
         time_frame_required: "Παρακαλώ επιλέξτε ένα χρονικό πλαίσιο"
         duration: "Διάρκεια"
-      auto_update_input:
-        none: "Επιλέξτε χρονικό περιθώριο"
-        now: "Τώρα"
-        later_today: "Αργότερα σήμερα"
-        tomorrow: "Αύριο"
-        later_this_week: "Αργότερα αυτή την εβδομάδα"
-        this_weekend: "Αυτό το Σαββατοκύριακο"
-        next_week: "Την άλλη εβδομάδα"
-        next_month: "Τον άλλο μήνα"
-        forever: "Για Πάντα"
-        pick_date_and_time: "Επίλεξε ημερομηνία και ώρα"
-        set_based_on_last_post: "Κλείσε ανάλογα με την τελευταία ανάρτηση"
       publish_to_category:
         title: "Χρονοδιάγραμμα Δημοσιεύσεων"
       temp_open:
@@ -2156,8 +2144,6 @@ el:
         unpin: "Ξεκαρφίτσωμα Νήματος..."
         unarchive: "Επαναφορά Νήματος από Αρχείο"
         archive: "Αρχειοθέτηση Νήματος"
-        invisible: "Απόκρυψη Νήματος"
-        visible: "Εμφάνιση Νήματος"
         reset_read: "Μηδενισμός Διαβασμένων"
         make_private: "Κάνε προσωπικό μήνυμα"
         reset_bump_date: "Επαναφορά ημερομηνίας ώθησης"

@@ -381,6 +381,7 @@ zh_CN:
       time_must_be_provided: "必须为所有提醒设置时间"
       for_topic_must_use_first_post: "只能使用最早发布的内容来为主题创建书签"
       bookmarkable_id_type_required: "添加书签的名称和类型是必须的。"
+      invalid_bookmarkable: "无法将 %{type} 加入书签。"
     reminders:
       at_desktop: "下次我使用桌面设备时"
       later_today: "今天晚些时候"
@@ -1478,7 +1479,7 @@ zh_CN:
     ga_universal_auto_link_domains: "启用 Google Universal Analytics 跨网域跟踪。指向这些网域的出站链接将在其中添加客户端 ID。请参阅 <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Google 的跨网域跟踪指南</a>。"
     gtm_container_id: "Google 跟踪代码管理器容器 ID。例如：GTM-ABCDEF。<br/>注意：可能需要在 'content security policy script src' 中将 GTM 加载的第三方脚本列入许可名单。"
     enable_escaped_fragments: "如果未检测到网络抓取工具，则回退到 Google 的 Ajax-Crawling API。请参阅 <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
-    moderators_manage_categories_and_groups: "允许版主管理类别和群组"
+    moderators_manage_categories_and_groups: "允许版主创建和管理类别和群组"
     moderators_change_post_ownership: "允许版主更改帖子所有权"
     cors_origins: "允许跨源请求（CORS）。每个来源必须包括 http:// 或 https://。环境变量 DISCOURSE_ENABLE_CORS 必须设置为 true 才能启用 CORS。"
     use_admin_ip_allowlist: "只有使用“屏蔽的 IP 列表”（管理 > 日志 > 屏蔽的 IP）中的 IP 地址时，管理员才能登录。"
@@ -1488,6 +1489,7 @@ zh_CN:
     allowed_iframes: "Discourse 可以安全地在帖子中允许的 iframe src 网域前缀列表"
     allowed_crawler_user_agents: "应被允许访问站点的网络抓取工具的用户代理。警告！设置此项将禁止此处未列出的所有抓取工具！"
     blocked_crawler_user_agents: "用户代理字符串中唯一不区分大小写的字词，用于标识不应被允许访问站点的网抓取工具。如果定义了许可名单，则不适用。"
+    slow_down_crawler_user_agents: '网络爬虫的 User agents 应该按照“减慢爬虫速率”设置中的配置进行速率限制。每个值的长度必须至少为 3 个字符。'
     slow_down_crawler_rate: "如果指定了 slow_down_crawler_user_agents，则此速率将应用于所有抓取工具（请求之间的延迟秒数）"
     content_security_policy: "启用内容安全策略"
     content_security_policy_report_only: "启用仅内容安全策略报告"
@@ -1524,7 +1526,9 @@ zh_CN:
     allow_index_in_robots_txt: "在 robots.txt 中指定此站点允许被网络搜索引擎索引。在特殊情况下，您可以永久<a href='%{base_path}/admin/customize/robots'>替换 robots.txt</a>。"
     blocked_email_domains: "不允许用户用于注册帐户的以 | 分隔的电子邮件网域列表。示例：mailinator.com|trashmail.net"
     allowed_email_domains: "用户注册帐户时必须使用的以 | 分隔的电子邮件网域列表。警告：不允许使用除所列网域以外的电子邮件网域的用户！"
+    normalize_emails: "检查规范化的电子邮件是否是唯一的。正常化的电子邮件删除了用户名中的所有点以及 + 和 @ 符号之间的所有内容。"
     auto_approve_email_domains: "使用此网域列表中电子邮件地址的用户将自动获得批准。"
+    hide_email_address_taken: "在注册或忘记密码的过程中，不要告知用户有一个给定的电子邮件地址的账户存在。对于 \"忘记密码 \"的请求，需要完整的电子邮件。"
     log_out_strict: "退出时，退出用户在所有设备上的会话"
     version_checks: "Ping Discourse Hub 以获取版本更新并在 <a href='%{base_path}/admin' target='_blank'>/admin</a> 信息中心上显示新版本消息"
     new_version_emails: "当有新版本的 Discourse 时，向 contact_email 地址发送一封电子邮件。"
@@ -1569,6 +1573,7 @@ zh_CN:
     google_oauth2_client_secret: "您的 Google 应用的客户端密钥。"
     google_oauth2_prompt: "可选的以空格分隔的字符串值列表，指定授权服务器是否提示用户进行重新身份验证和同意。请参阅<a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'> https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> 了解可能的值。"
     google_oauth2_hd: "登录将受限的可选 Google Apps 托管网域。请参阅 <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a> 以了解详情。"
+    google_oauth2_hd_groups: "(实验性的)在认证时检索用户在托管域上的 Google groups。检索到的 Google groups 可以用来自动授予 Discourse 群组成员资格(见群组设置)。"
     enable_twitter_logins: "启用 Twitter 身份验证，需要 twitter_consumer_key 和 twitter_consumer_secret。请参阅<a href='https://meta.discourse.org/t/13395' target='_blank'>为 Discourse 配置 Twitter 登录（和丰富的嵌入）</a>。"
     twitter_consumer_key: "Twitter 身份验证的使用者密钥，在 <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a> 中注册"
     twitter_consumer_secret: "Twitter 身份验证的使用者密钥代码，在 <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a> 中注册"
@@ -1647,6 +1652,7 @@ zh_CN:
     use_site_small_logo_as_system_avatar: "使用站点的小徽标代替系统用户的头像。要求存在徽标。"
     restrict_letter_avatar_colors: "用于字母头像背景的 6 位十六进制颜色值列表。"
     enable_listing_suspended_users_on_search: "让普通用户能够找到被暂停的用户。"
+    selectable_avatars_mode: "允许用户从 selectable_avatars 列表中选择一个头像，并将自定义头像上传限制在选定的信任级别。"
     selectable_avatars: "用户可以选择的头像列表。"
     allow_all_attachments_for_group_messages: "允许群组消息的所有电子邮件附件。"
     png_to_jpg_quality: "转换后的 JPG 文件的质量（1 为最低质量，99 为最佳质量，100 为禁用）。"
@@ -1711,7 +1717,9 @@ zh_CN:
     max_mentions_per_post: "任何人可以在帖子中使用的提及通知的最大数量。"
     max_users_notified_per_group_mention: "当群组被提及时可能会收到通知的最大用户数（超过阈值后将不发送通知）"
     enable_mentions: "允许用户提及其他用户。"
+    here_mention: "用于 @ 提及的名称，允许特权用户通知参与该主题的最多 'max_here_mentioned' 人。必须不是一个现有的用户名。"
     max_here_mentioned: "@here 提到的最大人数."
+    min_trust_level_for_here_mention: "允许提及 @here 的最低信任级别。"
     create_thumbnails: "创建太大而无法放入帖子的缩略图和灯箱图片。"
     email_time_window_mins: "在发送任何通知电子邮件之前等待 (n) 分钟，让用户有机会编辑和完成他们的帖子。"
     personal_email_time_window_seconds: "在发送任何个人消息通知电子邮件之前等待 (n) 秒，让用户有机会编辑和完成他们的消息。"
@@ -2100,6 +2108,7 @@ zh_CN:
       google_oauth2_hd_groups: "在启用此设置之前，您必须先设置 “google oauth2 hd”。"
       search_tokenize_chinese_enabled: "在启用此设置之前，你必须禁用'search_tokenize_chinese'。"
       search_tokenize_japanese_enabled: "在启用此设置之前，你必须禁用'search_tokenize_japanese'。"
+      discourse_connect_cannot_be_enabled_if_second_factor_enforced: "如果强制执行 2FA，你不能启用 DiscourseConnect。"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2249,6 +2258,8 @@ zh_CN:
     actions:
       grant_admin:
         description: "对于额外的安全措施，你需要先确认双重身份验证，然后才能授予 %{username} 管理员访问权限。"
+      discourse_connect_provider:
+        description: "%{hostname} 已要求确认你的 2FA。一旦确认了你的 2FA，你就会被重定向到该网站。"
   admin:
     email:
       sent_test: "已发送！"
@@ -3065,7 +3076,7 @@ zh_CN:
   subject_re: "回复："
   subject_pm: "[PM]"
   email_from: "%{user_name} 通过 %{site_name}"
-  email_from_without_site: "%{user_name}"
+  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "以前的回复"
     reached_limit:
@@ -3083,6 +3094,8 @@ zh_CN:
     reply_above_line: "## 请在此行上方输入您的回复。##"
     posted_by: "由 %{username} 于 %{post_date}发表"
     pm_participants: "参与者：%{participants}"
+    more_pm_participants:
+      other: "%{participants} 和 %{count} 其他的"
     invited_group_to_private_message_body: |
       %{username} 邀请 @%{group_name} 加入消息
 

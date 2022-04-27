@@ -1510,7 +1510,6 @@ sv:
     ga_universal_auto_link_domains: "Aktivera Google Universal Analytics spårning över flera domäner. Utgående länkar till dessa domäner kommer att få klient-id tillagt till dem. Se <a href='https://support.google.com/analytics/answer/1034342?hl=sv' target='_blank'>Googles guide över domänspårning.</a>"
     gtm_container_id: "Innehålls-ID för Google Tag Manager. t.ex. GTM-ABCDEF. <br/>Notera: Skript från tredje part som laddats av GTM kan behöva vitlistas i 'content security policy script src'."
     enable_escaped_fragments: "Återgå till Googles Ajax-Crawling API om ingen sökrobot upptäcks. Se <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
-    moderators_manage_categories_and_groups: "Tillåt moderatorer att hantera kategorier och grupper"
     moderators_change_post_ownership: "Tillåt att moderatorer ändrar inläggsägarskap"
     cors_origins: "Tillåtna ursprung för cross-ursprungsbegäran (CORS). Varje ursprung måste inkludera http:// eller https://. Variabeln DISCOURSE_ENABLE_CORS env måste ställas in till true för att aktivera CORS."
     use_admin_ip_allowlist: "Administratörer kan bara logga in om de är på en IP-adress som definierats i listan över granskade IP-adresser (Admin > Loggar > Granskade IP-adresser)."
@@ -3034,7 +3033,6 @@ sv:
   subject_re: "Sv: "
   subject_pm: "[PM] "
   email_from: "%{user_name} via %{site_name}"
-  email_from_without_site: "%{user_name}"
   user_notifications:
     previous_discussion: "Föregående svar"
     reached_limit:

@@ -65,12 +65,24 @@ vi:
         date_month: "D MMM"
         date_year: "MMM 'YY"
       medium:
+        less_than_x_minutes:
+          other: "dưới %{count} phút"
         x_minutes:
           other: "%{count} phút"
         x_hours:
           other: "%{count} giờ"
+        about_x_hours:
+          other: "khoảng %{count} giờ"
         x_days:
           other: "%{count} ngày"
+        x_months:
+          other: "%{count} tháng"
+        about_x_years:
+          other: "khoảng %{count} năm"
+        over_x_years:
+          other: "hơn %{count} năm"
+        almost_x_years:
+          other: "gần %{count} năm"
         date_year: "D MMM 'YY"
       medium_with_ago:
         x_minutes:
@@ -526,11 +538,17 @@ vi:
       start_of_next_business_week_alt: "Thứ hai tới"
       two_weeks: "Hai tuần"
       next_month: "Tháng t"
+      two_months: "Hai tháng"
+      three_months: "Ba tháng"
+      four_months: "Bốn tháng"
       six_months: "Sáu tháng"
-      custom: "Ngày giờ tùy chỉnh"
+      one_year: "Một năm"
+      forever: "Mãi mãi"
       relative: "Thời gian tương đối"
       none: "Không cần thiết"
       last_custom: "Ngày giờ tùy chỉnh cuối cùng"
+      custom: "Ngày giờ tùy chỉnh"
+      select_timeframe: "Chọn khung thời gian"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> đã đăng <a href='%{topicUrl}'>chủ đề</a>"
       you_posted_topic: "<a href='%{userUrl}'>Bạn</a> đã đăng <a href='%{topicUrl}'>chủ đề</a>"
@@ -1376,8 +1394,6 @@ vi:
           title: "Liên kết mời"
           success: "Link mời đã được tạo thành công !"
           error: "Đã xảy ra lỗi khi tạo liên kết Mời"
-          max_redemptions_allowed_label: "Có bao nhiêu người được phép đăng ký bằng cách sử dụng liên kết này?"
-          expires_at: "Khi nào thì liên kết mời này hết hạn?"
         invite:
           new_title: "Tạo lời mời"
           edit_title: "Chỉnh sửa lời mời"
@@ -2259,23 +2275,6 @@ vi:
         when: "Khi:"
         time_frame_required: "Vui lòng chọn một khung thời gian"
         duration: "Thời lượng"
-      auto_update_input:
-        none: "Chọn khung thời gian"
-        now: "Bây giờ"
-        later_today: "Sau ngày hôm nay"
-        tomorrow: "Ngày mai"
-        later_this_week: "Cuối tuần này"
-        this_weekend: "Cuối tuần này"
-        next_week: "Tuần tới"
-        two_weeks: "Hai tuần"
-        next_month: "Tháng t"
-        two_months: "Hai tháng"
-        three_months: "Ba tháng"
-        four_months: "Bốn tháng"
-        six_months: "Sáu tháng"
-        forever: "Mãi mãi"
-        pick_date_and_time: "Chọn ngày và giờ"
-        set_based_on_last_post: "Đóng dựa trên bài viết cuối cùng"
       publish_to_category:
         title: "Lên lịch xuất bản"
       temp_open:
@@ -2373,8 +2372,6 @@ vi:
         unpin: "Bỏ-Ghim Chủ Đề..."
         unarchive: "Chủ đề Không Lưu Trữ"
         archive: "Chủ Đề Lưu Trữ"
-        invisible: "Make Unlisted"
-        visible: "Make Listed"
         reset_read: "Đặt lại dữ liệu đọc"
         make_private: "Gửi tin nhắn cá nhân"
         reset_bump_date: "Đặt lại ngày Bump"
@@ -3225,6 +3222,8 @@ vi:
       changed: "thẻ đã đổi:"
       tags: "Thẻ"
       choose_for_topic: "thẻ không bắt buộc"
+      choose_for_topic_required_group:
+        other: "chọn %{count} thẻ từ '%{name} '..."
       info: "Thông tin"
       default_info: "Thẻ này không bị giới hạn đối với bất kỳ danh mục nào và không có từ đồng nghĩa."
       category_restricted: "Thẻ này bị hạn chế đối với các danh mục bạn không có quyền truy cập."

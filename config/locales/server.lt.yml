@@ -1300,7 +1300,6 @@ lt:
     persistent_sessions: "Vartotojai liks prisijungę, kai interneto naršyklė bus uždaryta"
     maximum_session_age: "Vartotojas liks prisijungęs n valandų nuo paskutinio apsilankymo"
     ga_version: "Naudojama „Google Universal Analytics“ versija: v3 (analytics.js), v4 (gtag)"
-    moderators_manage_categories_and_groups: "Leisti moderatoriams valdyti kategorijas ir grupes"
     moderators_change_post_ownership: "Leisti moderatoriams pakeisti įrašo nuosavybę"
     use_admin_ip_allowlist: "Administratoriai gali prisijungti tik tuo atveju, jei yra IP adresas, apibrėžtas sąraše „Tikrinami IP“ (Administratorius> Žurnalai> Tikrinami IP)."
     blocked_ip_blocks: "Sąrašas privačių IP blokų, kurių niekada neturėtų tikrinti „Discourse“"
@@ -1950,7 +1949,6 @@ lt:
   subject_re: "Dar kartą:"
   subject_pm: "[AŽ]"
   email_from: "%{user_name} per %{site_name}"
-  email_from_without_site: "%{user_name}"
   user_notifications:
     previous_discussion: "Ankstesni atsakymai"
     in_reply_to: "Atsakant į"

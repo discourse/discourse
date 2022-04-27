@@ -1697,7 +1697,6 @@ ar:
     ga_universal_auto_link_domains: "تفعيل تتبُّع Google Universal Analytics عبر النطاقات. ستتم إضافة معرِّف العميل إلى الروابط الصادرة إلى هذه النطاقات. راجع <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>دليل التتبُّع عبر النطاقات من Google.</a>"
     gtm_container_id: "معرِّف حاوية إدارة العلامات من Google. على سبيل المثال: GTM-ABCDEF. <br/>ملاحظة: قد يلزم إدراج البرامج النصية المضمَّنة لجعة خارجية والتي تم تحميلها بواسطة GTM في قائمة السماح في `content security policy script src`."
     enable_escaped_fragments: "ارجع إلى واجهة برمجة تطبيقات Ajax-Crawling من Google إذا لم يتم اكتشاف زاحف ويب. راجع <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
-    moderators_manage_categories_and_groups: "السماح للمشرفين بإدارة الفئات والمجموعات"
     moderators_change_post_ownership: "السماح للمشرفين بتغيير ملكية المنشور"
     cors_origins: "الأصول المسموح بها لطلبات الموارد متعددة المصادر (CORS). بجب أن يتضمَّن كل مصدر http:// أو https://. ويجب ضبط متغير البيئة للقيمة DISCOURSE_ENABLE_CORS على True لتفعيل CORS."
     use_admin_ip_allowlist: "لا يمكن للمسؤولين تسجيل الدخول إلا إذا كانوا على عنوان IP محدَّد في قائمة عناوين IP الخاضعة للمراقبة (المسؤول > السجلات > عناوين IP الخاضعة للمراقبة)."
@@ -3267,7 +3266,6 @@ ar:
   subject_re: "بخصوص: "
   subject_pm: "[PM] "
   email_from: "%{user_name} عبر %{site_name}"
-  email_from_without_site: "%{user_name}"
   user_notifications:
     previous_discussion: "الردود السابقة"
     reached_limit:

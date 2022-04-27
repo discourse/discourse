@@ -1434,7 +1434,6 @@ ja:
     ga_universal_auto_link_domains: "Google Universal Analytics クロスドメイントラッキングを有効にする。これらのドメインへの発信リンクにはクライアント ID が追加されます。<a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Google のクロスドメイントラッキングガイド</a>をご覧ください。"
     gtm_container_id: "Google Tag Manager コンテナ ID。例: GTM-ABCDEF。<br/>注意: GTM が読み込むサードパーティスクリプトは、'content security policy script src' のホワイトリストに追加されている必要がある場合があります。"
     enable_escaped_fragments: "ウェブクローラーが検出されない場合、Google の Ajax-Crawling API にフォールバックする。<a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a> をご覧ください。"
-    moderators_manage_categories_and_groups: "モデレーターによるカテゴリとグループの管理を許可する"
     moderators_change_post_ownership: "モデレーターによる投稿の所有権の変更を許可する"
     cors_origins: "CORS を許可。オリジンは http:// か https:// を含む必要があります。CORS を有効にするには、環境変数　DISCOURSE_ENABLE_CORS に true を設定する必要があります。"
     use_admin_ip_allowlist: "管理者はスクリーン対象 IP リスト (管理者 > ログ > スクリーン対象 IP) に定義されている IP アドレスからのみログインできる。"

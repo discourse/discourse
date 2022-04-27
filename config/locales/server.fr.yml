@@ -402,6 +402,7 @@ fr:
       time_must_be_provided: "Un horaire doit être indiqué pour chaque rappel"
       for_topic_must_use_first_post: "Un signet peut seulement être associé au premier message d'un sujet."
       bookmarkable_id_type_required: "Le nom et le type de l'enregistrement à mettre en signet sont requis."
+      invalid_bookmarkable: "Un %{type} ne peut pas être mis en favoris."
     reminders:
       at_desktop: "La prochaine fois que je suis à mon bureau"
       later_today: "Plus tard dans la journée"
@@ -1530,7 +1531,7 @@ fr:
     ga_universal_auto_link_domains: "Activer le suivi de plusieurs domaines pour Google Universal Analytics. Les liens sortants vers ces domaines seront accompagnés de l'identifiant client. Voir le guide <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Configurer le suivi de plusieurs domaines</a>."
     gtm_container_id: "Identifiant de conteneur Google Tag Manager, par exemple : GTM-ABCDEF. <br/>Note : les scripts tiers chargés par GTM devront peut-être être ajoutés à la liste d'autorisation « content security policy script src »."
     enable_escaped_fragments: "Utiliser l'API Ajax-Crawling de Google si aucun robot n'est détecté. Voir <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
-    moderators_manage_categories_and_groups: "Autoriser les modérateurs à gérer les catégories et les groupes"
+    moderators_manage_categories_and_groups: "Autoriser les modérateurs à créer et gérer les catégories et les groupes"
     moderators_change_post_ownership: "Permettre aux modérateurs de modifier l'utilisateur propriétaire d'un message."
     cors_origins: "Requêtes cross-origin (CORS) autorisées. Chaque origine doit inclure http:// ou https://. La variable d'environnement DISCOURSE_ENABLE_CORS doit être renseignée sur la valeur « true » pour activer CORS."
     use_admin_ip_allowlist: "Les administrateurs ne peuvent se connecter que s'ils sont sur une adresse IP définie dans la liste des IP sous surveillance (Administration > Journaux > IP sous surveillance)."
@@ -3150,7 +3151,7 @@ fr:
   subject_re: "Re : "
   subject_pm: "[MD] "
   email_from: "%{user_name} via %{site_name}"
-  email_from_without_site: "%{user_name}"
+  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "Réponses précédentes"
     reached_limit:
@@ -3169,6 +3170,9 @@ fr:
     reply_above_line: "## Veuillez saisir votre réponse au-dessus de cette ligne. ##"
     posted_by: "Publié par %{username} le %{post_date}"
     pm_participants: "Participants : %{participants}"
+    more_pm_participants:
+      one: "%{participants} et %{count} autre"
+      other: "%{participants} et %{count} autres"
     invited_group_to_private_message_body: |
       %{username} a invité @%{group_name} à un message
 

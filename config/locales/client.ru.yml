@@ -99,6 +99,11 @@ ru:
         date_month: "D MMM"
         date_year: "MMM YYYY"
       medium:
+        less_than_x_minutes:
+          one: "менее %{count} минуты назад"
+          few: "менее %{count} минут назад"
+          many: "менее %{count} минут назад"
+          other: "менее %{count} минут назад"
         x_minutes:
           one: "%{count} мин"
           few: "%{count} мин"
@@ -109,11 +114,36 @@ ru:
           few: "%{count} часа"
           many: "%{count} часов"
           other: "%{count} часов"
+        about_x_hours:
+          one: "около %{count} часа"
+          few: "около %{count} часов"
+          many: "около %{count} часов"
+          other: "около %{count} часов"
         x_days:
           one: "%{count} день"
           few: "%{count} дня"
           many: "%{count} дней"
           other: "%{count} дней"
+        x_months:
+          one: "%{count} месяц"
+          few: "%{count} месяца"
+          many: "%{count} месяцев"
+          other: "%{count} месяцев"
+        about_x_years:
+          one: "около %{count} года"
+          few: "около %{count} лет"
+          many: "около %{count} лет"
+          other: "около %{count} лет"
+        over_x_years:
+          one: "более %{count} года"
+          few: "более %{count} лет"
+          many: "более %{count} лет"
+          other: "более %{count} лет"
+        almost_x_years:
+          one: "почти %{count} год"
+          few: "почти %{count} года"
+          many: "почти %{count} лет"
+          other: "почти %{count} лет"
         date_year: "D MMM, YYYY"
       medium_with_ago:
         x_minutes:
@@ -663,11 +693,17 @@ ru:
       start_of_next_business_week_alt: "В следующий понедельник"
       two_weeks: "Через 2 недели"
       next_month: "В следующем месяце"
+      two_months: "Через 2 месяца"
+      three_months: "Через 3 месяца"
+      four_months: "Через 4 месяца"
       six_months: "Через 6 месяцев"
-      custom: "Установить дату и время"
+      one_year: "Через год"
+      forever: "Навсегда"
       relative: "Через указанное время"
       none: "Не настраивать напоминание"
       last_custom: "Использовать ранее установленные дату и время"
+      custom: "Установить дату и время"
+      select_timeframe: "Выбор даты"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> создал <a href='%{topicUrl}'>тему</a>"
       you_posted_topic: "<a href='%{userUrl}'>Вы</a> создали <a href='%{topicUrl}'>тему</a>"
@@ -1601,8 +1637,6 @@ ru:
           title: "Ссылка на приглашение"
           success: "Ссылка на приглашение успешно создана!"
           error: "Произошла ошибка при создании ссылки на приглашение"
-          max_redemptions_allowed_label: "Сколько человек могут зарегистрироваться по этой ссылке?"
-          expires_at: "Когда истечёт срок действия этой ссылки?"
         invite:
           new_title: "Создать приглашение"
           edit_title: "Изменить приглашение"
@@ -1648,7 +1682,9 @@ ru:
         title: "Сводка"
         stats: "Статистика"
         time_read: "время чтения"
+        time_read_title: "%{duration} (за всё время)"
         recent_time_read: "время недавнего чтения"
+        recent_time_read_title: "%{duration} (за последние 60 дней)"
         topic_count:
           one: "тема создана"
           few: "темы созданы"
@@ -2473,7 +2509,7 @@ ru:
       bulk:
         select_all: "Выбрать всё"
         clear_all: "Отменить выбор"
-        unlist_topics: "Исключить из всех списков тем"
+        unlist_topics: "Скрыть темы"
         relist_topics: "Повторный Список Тем"
         defer: "Отложить"
         delete: "Удалить темы"
@@ -2662,24 +2698,6 @@ ru:
         min_duration: "Период времени должен быть больше 0"
         max_duration: "Период времени не должен быть более 20 лет."
         duration: "Продолжительность"
-      auto_update_input:
-        none: "Выбор даты"
-        now: "Сейчас"
-        later_today: "Сегодня, но позже"
-        tomorrow: "Завтра"
-        later_this_week: "Позже на этой неделе"
-        this_weekend: "В эти выходные"
-        next_week: "Через неделю"
-        two_weeks: "Через 2 недели"
-        next_month: "В следующем месяце"
-        two_months: "Через 2 месяца"
-        three_months: "Через 3 месяца"
-        four_months: "Через 4 месяца"
-        six_months: "Через 6 месяцев"
-        one_year: "Через год"
-        forever: "Навсегда"
-        pick_date_and_time: "Выбрать дату и время"
-        set_based_on_last_post: "Закрыть после последнего сообщения"
       publish_to_category:
         title: "Опубликовать в разделе..."
       temp_open:
@@ -2797,8 +2815,6 @@ ru:
         unpin: "Открепить тему..."
         unarchive: "Разархивировать тему"
         archive: "Архивировать тему"
-        invisible: "Скрыть тему"
-        visible: "Показать тему"
         reset_read: "Сбросить счётчики"
         make_public: "Превратить в публичную тему..."
         make_private: "Превратить в личное сообщение"
@@ -3015,6 +3031,7 @@ ru:
           other: "Вы выбрали <b>%{count}</b> сообщений."
       deleted_by_author_simple: "(тема удалена автором)"
     post:
+      confirm_delete: "Вы действительно хотите удалить это сообщение?"
       quote_reply: "Ответить с цитированием"
       quote_reply_shortcut: "Или нажмите q"
       quote_edit: "Отредактировать"
@@ -3836,6 +3853,11 @@ ru:
         few: "Вы должны выбрать как минимум %{count} тега"
         many: "Вы должны выбрать как минимум %{count} тегов"
         other: "Вы должны выбрать как минимум %{count} тегов"
+      choose_for_topic_required_group:
+        one: "выберите %{count} тег из '%{name}'..."
+        few: "выберите %{count} тега из '%{name}'..."
+        many: "выберите %{count} тегов из '%{name}'..."
+        other: "выберите %{count} тегов из '%{name}'..."
       info: "Информация"
       default_info: "Этот тег не ограничен никакими разделами и не имеет синонимов."
       staff_info: "Для добавления ограничения поместите этот тег в <a href=%{basePath}/tag_groups>группу тегов</a>."

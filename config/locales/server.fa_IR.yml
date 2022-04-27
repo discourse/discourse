@@ -185,6 +185,9 @@ fa_IR:
     replies:
       one: "%{count} پاسخ"
       other: "%{count} پاسخ"
+    likes:
+      one: "%{count} پسندیده"
+      other: "%{count} پسندیده"
     last_reply: "آخرین پاسخ"
     created: "ساخته شده"
     new_topic: "ایجاد موضوع جدید"
@@ -400,6 +403,9 @@ fa_IR:
     image_placeholder:
       broken: "عکس خراب شده است."
     hidden_bidi_character: "کارکترهای دو جهته می‌توانند، ترتیب رندر شدن متن را تغییر دهند. این می‌تواند برای پنهان کردن کدهای مخرب استفاده شود."
+    has_likes:
+      one: "%{count} پسندیده"
+      other: "%{count} پسندیده"
   rate_limiter:
     hours:
       one: "%{count} ساعت"
@@ -599,7 +605,7 @@ fa_IR:
         make: "این موضوع در حال حاضر بنر است. این در بالای در تمام صفحه ها نمایش داده می شود تا زمانی که توسط کاربر رد بشود. "
         remove: "این موضوع دیگر در بنر نیست. دیگر در بالای تمام صفحات به نمایش در نمی‌آید. "
   unsubscribed:
-    topic_description: "اشتراک مجدد در %{link}، استفاده از مدیریت اعلانات در قسمت پایین یا راست موضوع."
+    topic_description: "برای اشتراک مجدد در %{link}، از مدیریت آگاه‌سازی در قسمت پایین یا راست موضوع استفاده کنید."
   unsubscribe:
     title: "لغو اشتراک"
     stop_watching_topic: "این موضوع را مشاهده نکنید، %{link}"
@@ -1673,6 +1679,7 @@ fa_IR:
     برای لغو اشتراک از این ایمیل‌ها[کلیک کنید](%{unsubscribe_url}).
   subject_re: "پاسخ:"
   subject_pm: "[PM] "
+  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "پاسخ‌های قبلی"
     reached_limit:
@@ -1686,6 +1693,9 @@ fa_IR:
     only_reply_by_email: "برای پاسخدهی، به این ایمیل پاسخ دهید."
     visit_link_to_respond: "[موضوع را](%{base_url}%{url}) برای ارسال پاسخ ببینید."
     posted_by: "نوشته شده توسط {username}% در تاریخ {post_date}%"
+    more_pm_participants:
+      one: "%{participants} و %{count} نفر دیگر"
+      other: "%{participants} و %{count} نفر دیگر"
     user_invited_to_private_message_pm_group:
       title: "کاربر دعوت شده به پیام خصوصی"
       text_body_template: |
@@ -1734,7 +1744,7 @@ fa_IR:
         %{respond_instructions}
     user_replied_pm:
       title: "کاربر به پیام پاسخ داده"
-      subject_template: "[%{email_prefix}] [پیام] %{topic_title}"
+      subject_template: "«[%{email_prefix}»] [PM] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1745,7 +1755,7 @@ fa_IR:
         %{respond_instructions}
     user_quoted:
       title: "کاربر نقل‌قول شده"
-      subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template: "«%{email_prefix}» %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1756,7 +1766,7 @@ fa_IR:
         %{respond_instructions}
     user_linked:
       title: "کاربر لینک شده"
-      subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template: "«%{email_prefix}» %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1767,7 +1777,7 @@ fa_IR:
         %{respond_instructions}
     user_mentioned:
       title: "به کاربر اشاره شده"
-      subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template: "«%{email_prefix}» %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1777,7 +1787,7 @@ fa_IR:
 
         %{respond_instructions}
     user_mentioned_pm:
-      subject_template: "[%{email_prefix}] [پیام] %{topic_title}"
+      subject_template: "«%{email_prefix}» [PM] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1788,7 +1798,7 @@ fa_IR:
         %{respond_instructions}
     user_group_mentioned:
       title: "به کاربر گروه اشاره شده"
-      subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template: "«%{email_prefix}» %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1798,7 +1808,7 @@ fa_IR:
 
         %{respond_instructions}
     user_group_mentioned_pm:
-      subject_template: "[%{email_prefix}] [پیام] %{topic_title}"
+      subject_template: "«%{email_prefix}» [PM] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1808,7 +1818,7 @@ fa_IR:
 
         %{respond_instructions}
     user_group_mentioned_pm_group:
-      subject_template: "[%{email_prefix}] [پیام] %{topic_title}"
+      subject_template: "«%{email_prefix}» [PM] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1819,7 +1829,7 @@ fa_IR:
         %{respond_instructions}
     user_posted:
       title: "کاربر نوشته ارسال کرده"
-      subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template: "«%{email_prefix}» %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1830,7 +1840,7 @@ fa_IR:
         %{respond_instructions}
     user_watching_first_post:
       title: "کاربر در حال مشاهده‌ی نوشته‌ی اول است"
-      subject_template: "[%{email_prefix}] %{topic_title}"
+      subject_template: "«%{email_prefix}» %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1841,7 +1851,7 @@ fa_IR:
         %{respond_instructions}
     user_posted_pm:
       title: "کاربر پیام خصوصی ارسال کرده"
-      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      subject_template: "«%{email_prefix}» [PM] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1877,8 +1887,9 @@ fa_IR:
       join_the_discussion: "بیشتر بخوانید"
       popular_posts: "نوشته‌های محبوب"
       more_new: "جدید برای شما"
-      subject_template: "[%{email_prefix}] خلاصه"
+      subject_template: "«%{email_prefix}» خلاصه"
       click_here: "اینجا کلیک کنید"
+      from: "%{site_name}"
       preheader: "یک خلاصه مختصر به دلیل اینکه آخرین بازدیدتان در %{last_seen_at} بوده."
     forgot_password:
       title: "فراموشی رمز عبور"
@@ -2311,7 +2322,7 @@ fa_IR:
       posted: '%{username} در "%{topic}" - %{site_title} مطلبی نوشت'
       linked: '%{username} در "%{topic}" - %{site_title} به نوشته‌ی شما پیوندی قرار داد'
       watching_first_post: '%{username} یک مبحث جدید در "%{topic}" - %{site_title} ساخته'
-      confirm_title: "اعلانات فعال شد - %{site_title}"
+      confirm_title: "آگاه‌سازی فعال شد - %{site_title}"
       confirm_body: "موفق شدید. اگاهسازی‌ها فعال شدند."
       custom: "اعلان از طرف %{username} بر روی %{site_title}"
   reviewables:

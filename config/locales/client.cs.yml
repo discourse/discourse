@@ -511,7 +511,9 @@ cs:
       start_of_next_business_week: "Pondělí"
       start_of_next_business_week_alt: "Příští pondělí"
       next_month: "Další měsíc"
+      forever: "Navždy"
       custom: "Vlastní datum a čas"
+      select_timeframe: "Vyberte časové období"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> zaslal <a href='%{topicUrl}'>téma</a>"
       you_posted_topic: "Zaslal jste <a href='%{topicUrl}'>téma</a>"
@@ -1901,17 +1903,6 @@ cs:
         when: "Když:"
         time_frame_required: "Vyberte prosím časové období"
         duration: "Doba trvání"
-      auto_update_input:
-        none: "Vyberte časové období"
-        later_today: "Později během dnešního dne"
-        tomorrow: "Zítra"
-        later_this_week: "Později během tohoto týdne"
-        this_weekend: "Tento týden"
-        next_week: "Další týden"
-        next_month: "Další měsíc"
-        forever: "Navždy"
-        pick_date_and_time: "Vyberte datum a čas"
-        set_based_on_last_post: "Zavřít na základě posledního příspěvku"
       publish_to_category:
         title: "Naplánovat publikování"
       temp_open:
@@ -2004,8 +1995,6 @@ cs:
         unpin: "Odstranit připevnění"
         unarchive: "Navrátit z archivu"
         archive: "Archivovat téma"
-        invisible: "Zneviditelnit"
-        visible: "Zviditelnit"
         reset_read: "Vynulovat počet čtení"
         make_private: "Vytvořit soukromou zprávu "
         reset_bump_date: "Resetovat datum zvýraznění"
