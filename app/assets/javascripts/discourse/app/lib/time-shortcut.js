@@ -1,6 +1,10 @@
 import {
+  LATER_TODAY_CUTOFF_HOUR,
+  MOMENT_FRIDAY,
   MOMENT_MONDAY,
+  MOMENT_SATURDAY,
   MOMENT_SUNDAY,
+  MOMENT_THURSDAY,
   fourMonths,
   laterThisWeek,
   laterToday,
@@ -16,6 +20,7 @@ import {
   twoMonths,
   twoWeeks,
 } from "discourse/lib/time-utils";
+import I18n from "I18n";
 
 export const TIME_SHORTCUT_TYPES = {
   LATER_TODAY: "later_today",
@@ -43,6 +48,24 @@ export function defaultTimeShortcuts(timezone) {
     shortcuts.thisWeekend(),
     shortcuts.monday(),
     shortcuts.nextMonth(),
+  ];
+}
+
+export function extendedDefaultTimeShortcuts(timezone) {
+  const shortcuts = timeShortcuts(timezone);
+  return [
+    shortcuts.laterToday(),
+    shortcuts.tomorrow(),
+    shortcuts.laterThisWeek(),
+    shortcuts.monday(),
+    shortcuts.twoWeeks(),
+    shortcuts.nextMonth(),
+    shortcuts.twoMonths(),
+    shortcuts.threeMonths(),
+    shortcuts.fourMonths(),
+    shortcuts.sixMonths(),
+    shortcuts.oneYear(),
+    shortcuts.forever(),
   ];
 }
 
@@ -209,4 +232,34 @@ export function timeShortcuts(timezone) {
       };
     },
   };
+}
+
+export function hideDynamicTimeShortcuts(shortcuts, timezone) {
+  const shortcutsToHide = new Set();
+  const _now = now(timezone);
+  if (_now.hour() >= LATER_TODAY_CUTOFF_HOUR) {
+    shortcutsToHide.add(TIME_SHORTCUT_TYPES.LATER_TODAY);
+  }
+
+  if (_now.day === MOMENT_SUNDAY || _now.day() >= MOMENT_THURSDAY) {
+    shortcutsToHide.add(TIME_SHORTCUT_TYPES.LATER_THIS_WEEK);
+  }
+
+  if (
+    _now.day() === MOMENT_FRIDAY ||
+    _now.day() === MOMENT_SATURDAY ||
+    _now.day() === MOMENT_SUNDAY
+  ) {
+    shortcutsToHide.add(TIME_SHORTCUT_TYPES.THIS_WEEKEND);
+  }
+
+  return shortcuts.filter((s) => !shortcutsToHide.has(s.id));
+}
+
+export function formatTime(shortcut) {
+  if (!shortcut.time || !shortcut.timeFormatKey) {
+    return null;
+  }
+
+  return shortcut.time.format(I18n.t(shortcut.timeFormatKey));
 }

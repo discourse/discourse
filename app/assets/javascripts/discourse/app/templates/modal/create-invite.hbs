@@ -124,8 +124,7 @@
         {{future-date-input
           displayLabelIcon="far-clock"
           displayLabel=(i18n "user.invited.invite.expires_at")
-          statusType="close"
-          includeDateTime=true
+          customShortcuts=timeShortcuts
           clearable=true
           input=buffered.expires_at
           onChangeInput=(action (mut buffered.expires_at))
