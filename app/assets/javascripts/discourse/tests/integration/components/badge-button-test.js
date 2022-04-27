@@ -56,6 +56,14 @@ discourseModule("Integration | Component | badge-button", function (hooks) {
 
     async test(assert) {
       assert.equal(query(".user-badge").title, "a good run", "it strips html");
+
+      this.set("badge", { description: "a bad run" });
+
+      assert.equal(
+        query(".user-badge").title,
+        "a bad run",
+        "it updates title when changing description"
+      );
     },
   });
 

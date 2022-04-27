@@ -2002,6 +2002,13 @@ RSpec.describe TopicsController do
       expect(response.status).to eq(404)
     end
 
+    it "doesn't use print mode when print equals false" do
+      SiteSetting.max_prints_per_hour_per_user = 0
+
+      get "/t/#{topic.slug}/#{topic.id}.json?print=false"
+      expect(response.status).to eq(200)
+    end
+
     context 'a topic with nil slug exists' do
       before do
         nil_slug_topic = Fabricate(:topic)

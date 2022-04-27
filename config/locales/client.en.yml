@@ -2425,6 +2425,8 @@ en:
       in: "in"
       in_this_topic: "in this topic"
       in_this_topic_tooltip: "switch to searching all topics"
+      in_messages: "in messages"
+      in_messages_tooltip: "switch to searching regular topics"
       in_topics_posts: "in all topics and posts"
       enter_hint: "or press Enter"
       in_posts_by: "in posts by %{username}"
@@ -2835,8 +2837,8 @@ en:
         unpin: "Un-Pin Topic…"
         unarchive: "Unarchive Topic"
         archive: "Archive Topic"
-        invisible: "Make Unlisted"
-        visible: "Make Listed"
+        invisible: "Unlist Topic"
+        visible: "List Topic"
         reset_read: "Reset Read Data"
         make_public: "Make Public Topic..."
         make_private: "Make Personal Message"
@@ -3053,6 +3055,7 @@ en:
       deleted_by_author_simple: "(topic deleted by author)"
 
     post:
+      confirm_delete: "Are you sure you want to delete this post?"
       quote_reply: "Quote"
       quote_reply_shortcut: "Or press q"
       quote_edit: "Edit"

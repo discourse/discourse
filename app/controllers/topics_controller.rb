@@ -66,7 +66,7 @@ class TopicsController < ApplicationController
     opts = params.slice(:username_filters, :filter, :page, :post_number, :show_deleted, :replies_to_post_number, :filter_upwards_post_id, :filter_top_level_replies)
     username_filters = opts[:username_filters]
 
-    opts[:print] = true if params[:print].present?
+    opts[:print] = true if params[:print] == 'true'
     opts[:username_filters] = username_filters.split(',') if username_filters.is_a?(String)
 
     # Special case: a slug with a number in front should look by slug first before looking

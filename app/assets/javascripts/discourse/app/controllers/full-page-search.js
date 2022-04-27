@@ -211,7 +211,8 @@ export default Controller.extend({
     return (
       q &&
       this.currentUser &&
-      (q.indexOf("in:personal") > -1 ||
+      (q.indexOf("in:messages") > -1 ||
+        q.indexOf("in:personal") > -1 ||
         q.indexOf(
           `personal_messages:${this.currentUser.get("username_lower")}`
         ) > -1)
