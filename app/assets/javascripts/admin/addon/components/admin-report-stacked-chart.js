@@ -54,7 +54,13 @@ export default Component.extend({
 
     const context = chartCanvas.getContext("2d");
 
-    const chartData = makeArray(model.get("chartData") || model.get("data"));
+    const chartData = makeArray(model.chartData || model.data).map((cd) => {
+      return {
+        label: cd.label,
+        color: cd.color,
+        data: Report.collapse(model, cd.data),
+      };
+    });
 
     const data = {
       labels: chartData[0].data.mapBy("x"),
@@ -62,7 +68,7 @@ export default Component.extend({
         return {
           label: cd.label,
           stack: "pageviews-stack",
-          data: Report.collapse(model, cd.data),
+          data: cd.data,
           backgroundColor: cd.color,
         };
       }),
