@@ -48,6 +48,7 @@ module Jobs
       automation.trigger!(
         'kind' => DiscourseAutomation::Triggerable::STALLED_WIKI,
         'post' => post,
+        'topic' => post.topic,
         'usernames' => User.where(id: user_ids).pluck(:username),
         'placeholders' => {
           'wiki_url' => Discourse.base_url + post.url

@@ -208,6 +208,16 @@ en:
               label: PMs
             sender:
               label: PMs sender
+        close_topic:
+          fields:
+            topic:
+              label: Topic ID
+            message:
+              label: Closing message
+              description: "Optional message to show on the Topic Closed record"
+            user:
+              label: User
+              description: "The user closing the topic (default: system)"
       models:
         script:
           name:

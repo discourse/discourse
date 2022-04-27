@@ -112,6 +112,7 @@ after_initialize do
     '../app/lib/discourse_automation/scripts/auto_responder',
     '../app/lib/discourse_automation/scripts/banner_topic',
     '../app/lib/discourse_automation/scripts/suspend_user_by_email',
+    '../app/lib/discourse_automation/scripts/close_topic',
     '../app/lib/discourse_automation/scripts/pin_topic',
     '../app/lib/discourse_automation/scripts/user_global_notice',
     '../app/lib/discourse_automation/scripts/gift_exchange',

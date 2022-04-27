@@ -79,3 +79,6 @@ en:
         doc: Topic required words requires a topic. When a post is edited/created, the post will be validated against the list of words, at least one must be present.
         errors:
           must_include_word: "Post must include at least one of these words: %{words}"
+      close_topic:
+        title: Close Topic
+        description: Closes a topic with an optional closing message
