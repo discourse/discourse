@@ -116,11 +116,18 @@ class HealthyCache
 end
 
 def redis_healthcheck(host:, password:)
-  client = Redis.new(
+  client_opts = {
     host: host,
     password: password,
     timeout: 1,
-  )
+  }
+  if !nilempty(ENV['DISCOURSE_REDIS_USE_SSL']).nil? then
+    client_opts[:ssl] = true
+    client_opts[:ssl_params] = {
+      verify_mode: OpenSSL::SSL::VERIFY_NONE,
+    }
+  end
+  client = Redis.new(**client_opts)
   response = client.ping
   response == "PONG"
 rescue
