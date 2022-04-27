@@ -31,12 +31,6 @@
   .new-topic {
     margin-right: 0;
   }
-
-  .date {
-    color: var(--primary-med-or-secondary-med);
-    font-weight: normal;
-    margin-left: auto;
-  }
 }
 
 .share-twitter {
@@ -53,6 +47,12 @@
 // topic share modal
 
 .share-topic-modal {
+  .modal-header {
+    .subtitle {
+      color: var(--primary-med-or-secondary-med);
+    }
+  }
+
   form {
     margin-bottom: 0;
   }
