@@ -2309,6 +2309,21 @@ describe UsersController do
           expect(response).to be_forbidden
           expect(user.reload.name).not_to eq 'Jim Tom'
         end
+
+        context 'enabling experimental sidebar' do
+          before do
+            sign_in(user)
+          end
+
+          it "should be able to update UserOption#enable_experimental_sidebar" do
+            SiteSetting.enable_experimental_sidebar = true
+
+            put "/u/#{user.username}.json", params: { enable_experimental_sidebar: 'true' }
+
+            expect(response.status).to eq(200)
+            expect(user.user_option.enable_experimental_sidebar).to eq(true)
+          end
+        end
       end
     end
 
@@ -3881,6 +3896,23 @@ describe UsersController do
           topic_post_count = response.parsed_body.dig("user", "topic_post_count")
           expect(topic_post_count[topic.id.to_s]).to eq(2)
         end
+      end
+
+      it "includes UserOption#enable_experimental_sidebar when SiteSetting.enable_experimental_sidebar is true" do
+        SiteSetting.enable_experimental_sidebar = true
+        user1.user_option.update!(enable_experimental_sidebar: true)
+
+        get "/u/#{user1.username}.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["user"]["user_option"]["enable_experimental_sidebar"]).to eq(true)
+      end
+
+      it "does not include UserOption#enable_experimental_sidebar when SiteSetting.enable_experimental_sidebar is false" do
+        get "/u/#{user1.username}.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["user"]["user_option"]["enable_experimental_sidebar"]).to eq(nil)
       end
     end
 

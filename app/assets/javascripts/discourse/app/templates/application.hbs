@@ -25,6 +25,11 @@
       {{create-topics-notice}}
       {{plugin-outlet name="top-notices" connectorTagName="div" args=(hash currentPath=router._router.currentPath)}}
     </div>
+
+    {{#if currentUser.experimental_sidebar_enabled}}
+      <Sidebar />
+    {{/if}}
+
     {{outlet}}
     {{outlet "user-card"}}
   </div>
