@@ -17,6 +17,7 @@ import {
   thousandYears,
   threeMonths,
   tomorrow,
+  twoDays,
   twoMonths,
   twoWeeks,
 } from "discourse/lib/time-utils";
@@ -91,6 +92,15 @@ export function timeShortcuts(timezone) {
         icon: "far-sun",
         label: "time_shortcut.tomorrow",
         time: tomorrow(timezone),
+        timeFormatKey: "dates.time_short_day",
+      };
+    },
+    twoDays() {
+      return {
+        id: "two_days",
+        icon: "angle-right",
+        label: "time_shortcut.two_days",
+        time: twoDays(timezone),
         timeFormatKey: "dates.time_short_day",
       };
     },
