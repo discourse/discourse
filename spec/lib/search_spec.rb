@@ -673,6 +673,10 @@ describe Search do
 
           results = Search.execute("group_messages:#{group.name}", guardian: Guardian.new(non_participant))
           expect(results.posts.size).to eq(0)
+
+          # even for admins
+          results = Search.execute("group_messages:#{group.name}", guardian: Guardian.new(admin))
+          expect(results.posts.size).to eq(0)
         end
 
         it 'returns nothing if group has messages disabled' do
@@ -683,7 +687,7 @@ describe Search do
           expect(results.posts.size).to eq(0)
         end
 
-        it 'does not mix groups' do
+        it 'is correctly scoped to a given group' do
           wrong_group = Fabricate(:group, has_messages: true)
           pm = create_pm(users: [current, participant], group: group)
 
