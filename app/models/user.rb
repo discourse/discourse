@@ -114,6 +114,7 @@ class User < ActiveRecord::Base
   validates :name, user_full_name: true, if: :will_save_change_to_name?, length: { maximum: 255 }
   validates :ip_address, allowed_ip_address: { on: :create, message: :signup_not_allowed }
   validates :primary_email, presence: true
+  validates :custom_fields_values, watched_words: true
   validates_associated :primary_email, message: -> (_, user_email) { user_email[:value]&.errors[:email]&.first }
 
   after_initialize :add_trust_level
@@ -1790,6 +1791,10 @@ class User < ActiveRecord::Base
           up.id IS NULL
       )
     SQL
+  end
+
+  def custom_fields_values
+    custom_fields.values.join(" ")
   end
 end
 

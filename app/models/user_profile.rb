@@ -7,9 +7,11 @@ class UserProfile < ActiveRecord::Base
   belongs_to :granted_title_badge, class_name: "Badge"
   belongs_to :featured_topic, class_name: 'Topic'
 
-  validates :bio_raw, length: { maximum: 3000 }
+  validates :bio_raw, length: { maximum: 3000 }, watched_words: true
   validates :website, url: true, allow_blank: true, if: Proc.new { |c| c.new_record? || c.website_changed? }
   validates :user, presence: true
+  validates :location, watched_words: true
+
   before_save :cook
   after_save :trigger_badges
   after_save :pull_hotlinked_image
