@@ -4,18 +4,21 @@ on:
   pull_request:
   push:
     branches:
-      - master
       - main
+
+concurrency:
+  group: licenses-${{ format('{0}-{1}', github.head_ref || github.run_number, github.job) }}
+  cancel-in-progress: true
 
 jobs:
   build:
     name: run
     runs-on: ubuntu-latest
-    container: discourse/discourse_test:release
-    timeout-minutes: 30
+    container: discourse/discourse_test:slim
+    timeout-minutes: 10
 
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 1
 
@@ -25,7 +28,7 @@ jobs:
           git config --global user.name "Discourse CI"
 
       - name: Bundler cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: vendor/bundle
           key: ${{ runner.os }}-gem-${{ hashFiles('**/Gemfile.lock') }}
@@ -49,7 +52,7 @@ jobs:
         run: echo "::set-output name=dir::$(yarn cache dir)"
 
       - name: Yarn cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         id: yarn-cache
         with:
           path: ${{ steps.yarn-cache-dir.outputs.dir }}
@@ -69,5 +72,5 @@ jobs:
       - name: Check Yarn Licenses
         if: ${{ always() }}
         run: |
-          yarn add licensee
-          yarn exec licensee -- --errors-only
+          yarn global add licensee
+          licensee --errors-only
