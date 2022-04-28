@@ -133,6 +133,10 @@
 <fieldset class="control-group other">
   <legend class="control-label">{{i18n "user.other_settings"}}</legend>
 
+  {{#if siteSettings.enable_experimental_sidebar}}
+    {{preference-checkbox labelKey="user.enable_experimental_sidebar" checked=model.user_option.enable_experimental_sidebar class="pref-external-links"}}
+  {{/if}}
+
   {{preference-checkbox labelKey="user.external_links_in_new_tab" checked=model.user_option.external_links_in_new_tab class="pref-external-links"}}
   {{preference-checkbox labelKey="user.enable_quoting" checked=model.user_option.enable_quoting class="pref-enable-quoting"}}
   {{preference-checkbox labelKey="user.enable_defer" checked=model.user_option.enable_defer class="pref-defer-undread"}}
