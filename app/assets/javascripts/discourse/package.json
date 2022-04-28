@@ -55,7 +55,7 @@
     "ember-load-initializers": "^2.1.1",
     "ember-qunit": "^5.1.2",
     "ember-rfc176-data": "^0.3.17",
-    "ember-source": "~3.15.0",
+    "ember-source": "~3.25.0",
     "ember-test-selectors": "^6.0.0",
     "eslint": "^7.27.0",
     "html-entities": "^2.3.3",
