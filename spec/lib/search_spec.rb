@@ -582,10 +582,11 @@ describe Search do
       end
     end
 
-    context 'personal-direct flag' do
+    context 'personal-direct and group_messages flags' do
       let(:current) { Fabricate(:user, admin: true, username: "current_user") }
       let(:participant) { Fabricate(:user, username: "participant_1") }
       let(:participant_2) { Fabricate(:user, username: "participant_2") }
+      let(:non_participant) { Fabricate(:user, username: "non_participant") }
 
       let(:group) do
         group = Fabricate(:group, has_messages: true)
@@ -609,49 +610,89 @@ describe Search do
         pm.reload
       end
 
-      it 'can find all direct PMs of the current user' do
-        pm = create_pm(users: [current, participant])
-        _pm_2 = create_pm(users: [participant_2, participant])
-        pm_3 = create_pm(users: [participant, current])
-        pm_4 = create_pm(users: [participant_2, current])
+      context "personal-direct flag" do
+        it 'can find all direct PMs of the current user' do
+          pm = create_pm(users: [current, participant])
+          _pm_2 = create_pm(users: [participant_2, participant])
+          pm_3 = create_pm(users: [participant, current])
+          pm_4 = create_pm(users: [participant_2, current])
 
-        ["in:personal-direct", "In:PeRsOnAl-DiReCt"].each do |query|
-          results = Search.execute(query, guardian: Guardian.new(current))
+          ["in:personal-direct", "In:PeRsOnAl-DiReCt"].each do |query|
+            results = Search.execute(query, guardian: Guardian.new(current))
+            expect(results.posts.size).to eq(3)
+            expect(results.posts.map(&:topic_id)).to eq([pm_4.id, pm_3.id, pm.id])
+          end
+        end
+
+        it 'can filter direct PMs by @username' do
+          pm = create_pm(users: [current, participant])
+          pm_2 = create_pm(users: [participant, current])
+          pm_3 = create_pm(users: [participant_2, current])
+          [
+            "@#{participant.username} in:personal-direct",
+            "@#{participant.username} iN:pErSoNaL-dIrEcT",
+          ].each do |query|
+            results = Search.execute(query, guardian: Guardian.new(current))
+            expect(results.posts.size).to eq(2)
+            expect(results.posts.map(&:topic_id)).to contain_exactly(pm_2.id, pm.id)
+            expect(results.posts.map(&:user_id).uniq).to eq([participant.id])
+          end
+
+          results = Search.execute("@me in:personal-direct", guardian: Guardian.new(current))
           expect(results.posts.size).to eq(3)
-          expect(results.posts.map(&:topic_id)).to eq([pm_4.id, pm_3.id, pm.id])
+          expect(results.posts.map(&:topic_id)).to contain_exactly(pm_3.id, pm_2.id, pm.id)
+          expect(results.posts.map(&:user_id).uniq).to eq([current.id])
+        end
+
+        it "doesn't include PMs that have more than 2 participants" do
+          _pm = create_pm(users: [current, participant, participant_2])
+          results = Search.execute("@#{participant.username} in:personal-direct", guardian: Guardian.new(current))
+          expect(results.posts.size).to eq(0)
+        end
+
+        it "doesn't include PMs that have groups" do
+          _pm = create_pm(users: [current, participant], group: group)
+          results = Search.execute("@#{participant.username} in:personal-direct", guardian: Guardian.new(current))
+          expect(results.posts.size).to eq(0)
         end
       end
 
-      it 'can filter direct PMs by @username' do
-        pm = create_pm(users: [current, participant])
-        pm_2 = create_pm(users: [participant, current])
-        pm_3 = create_pm(users: [participant_2, current])
-        [
-          "@#{participant.username} in:personal-direct",
-          "@#{participant.username} iN:pErSoNaL-dIrEcT",
-        ].each do |query|
-          results = Search.execute(query, guardian: Guardian.new(current))
-          expect(results.posts.size).to eq(2)
-          expect(results.posts.map(&:topic_id)).to contain_exactly(pm_2.id, pm.id)
-          expect(results.posts.map(&:user_id).uniq).to eq([participant.id])
+      context "group_messages flag" do
+        it 'returns results correctly for a PM in a given group' do
+          pm = create_pm(users: [participant, participant_2], group: group)
+
+          results = Search.execute("group_messages:#{group.name}", guardian: Guardian.new(current))
+          expect(results.posts).to contain_exactly(pm.first_post)
+
+          results = Search.execute("secret group_messages:#{group.name}", guardian: Guardian.new(current))
+          expect(results.posts).to contain_exactly(pm.first_post)
         end
 
-        results = Search.execute("@me in:personal-direct", guardian: Guardian.new(current))
-        expect(results.posts.size).to eq(3)
-        expect(results.posts.map(&:topic_id)).to contain_exactly(pm_3.id, pm_2.id, pm.id)
-        expect(results.posts.map(&:user_id).uniq).to eq([current.id])
-      end
+        it 'returns nothing if user is not a group member' do
+          pm = create_pm(users: [current, participant], group: group)
 
-      it "doesn't include PMs that have more than 2 participants" do
-        _pm = create_pm(users: [current, participant, participant_2])
-        results = Search.execute("@#{participant.username} in:personal-direct", guardian: Guardian.new(current))
-        expect(results.posts.size).to eq(0)
-      end
+          results = Search.execute("group_messages:#{group.name}", guardian: Guardian.new(non_participant))
+          expect(results.posts.size).to eq(0)
+        end
 
-      it "doesn't include PMs that have groups" do
-        _pm = create_pm(users: [current, participant], group: group)
-        results = Search.execute("@#{participant.username} in:personal-direct", guardian: Guardian.new(current))
-        expect(results.posts.size).to eq(0)
+        it 'returns nothing if group has messages disabled' do
+          pm = create_pm(users: [current, participant], group: group)
+          group.update!(has_messages: false)
+
+          results = Search.execute("group_messages:#{group.name}", guardian: Guardian.new(current))
+          expect(results.posts.size).to eq(0)
+        end
+
+        it 'does not mix groups' do
+          wrong_group = Fabricate(:group, has_messages: true)
+          pm = create_pm(users: [current, participant], group: group)
+
+          results = Search.execute("group_messages:#{group.name}", guardian: Guardian.new(current))
+          expect(results.posts).to contain_exactly(pm.first_post)
+
+          results = Search.execute("group_messages:#{wrong_group.name}", guardian: Guardian.new(current))
+          expect(results.posts.size).to eq(0)
+        end
       end
     end
 

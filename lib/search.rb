@@ -609,6 +609,20 @@ class Search
     end
   end
 
+  advanced_filter(/^group_messages:(.+)$/i) do |posts, match|
+    group_id = Group
+      .visible_groups(@guardian.user)
+      .members_visible_groups(@guardian.user)
+      .where(has_messages: true)
+      .where('name ilike ? OR (id = ? AND id > 0)', match, match.to_i).pluck_first(:id)
+
+    if group_id
+      posts.where('posts.topic_id IN (SELECT topic_id FROM topic_allowed_groups WHERE group_id = ?)', group_id)
+    else
+      posts.where("1 = 0")
+    end
+  end
+
   advanced_filter(/^user:(.+)$/i) do |posts, match|
     user_id = User.where(staged: false).where('username_lower = ? OR id = ?', match.downcase, match.to_i).pluck_first(:id)
     if user_id
@@ -756,6 +770,9 @@ class Search
         nil
       elsif word =~ /^in:all-pms$/i
         @search_all_pms = true
+        nil
+      elsif word =~ /^group_messages:(.+)$/i
+        @search_pms = true
         nil
       elsif word =~ /^personal_messages:(.+)$/i
         if user = User.find_by_username($1)
