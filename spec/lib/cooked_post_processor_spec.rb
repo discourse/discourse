@@ -1080,8 +1080,7 @@ describe CookedPostProcessor do
         post = Fabricate(:post, raw: url)
         upload.update!(url: "https://test.s3.amazonaws.com/something.png")
 
-        post.custom_fields[Post::DOWNLOADED_IMAGES] = { "//image.com/avatar.png": upload.id }
-        post.save_custom_fields
+        PostHotlinkedMedia.create!(url: "//image.com/avatar.png", post: post, status: 'downloaded', upload: upload)
 
         cpp = CookedPostProcessor.new(post, invalidate_oneboxes: true)
         stub_image_size(width: 100, height: 200)
@@ -1113,8 +1112,7 @@ describe CookedPostProcessor do
           post = Fabricate(:post, raw: url)
           upload.update!(url: "https://test.s3.amazonaws.com/something.png")
 
-          post.custom_fields[Post::DOWNLOADED_IMAGES] = { "//image.com/avatar.png": upload.id }
-          post.save_custom_fields
+          PostHotlinkedMedia.create!(url: "//image.com/avatar.png", post: post, status: 'downloaded', upload: upload)
 
           cooked_url = "https://localhost/secure-media-uploads/test.png"
           UrlHelper.expects(:cook_url).with(upload.url, secure: true).returns(cooked_url)
@@ -1137,6 +1135,7 @@ describe CookedPostProcessor do
 
       post = Fabricate(:post, raw: url)
 
+      PostHotlinkedMedia.create!(url: "//image.com/avatar.png", post: post, status: 'too_large')
       post.custom_fields[Post::LARGE_IMAGES] = ["//image.com/avatar.png"]
       post.save_custom_fields
 

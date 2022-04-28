@@ -146,15 +146,15 @@ class CookedPostProcessor
   end
 
   def large_images
-    @large_images ||= @post&.custom_fields[Post::LARGE_IMAGES].presence || []
+    @large_images ||= @post&.post_hotlinked_media.select { |r| r.too_large? }.map(&:url)
   end
 
   def broken_images
-    @broken_images ||= @post&.custom_fields[Post::BROKEN_IMAGES].presence || []
+    @broken_images ||= @post&.post_hotlinked_media.select { |r| r.download_failed? }.map(&:url)
   end
 
   def downloaded_images
-    @downloaded_images ||= @post&.downloaded_images || []
+    @downloaded_images ||= @post&.post_hotlinked_media.select { |r| r.downloaded? }.map { |r| [r.url, r.upload_id] }.to_h
   end
 
   def convert_to_link!(img)

@@ -62,6 +62,8 @@ class Post < ActiveRecord::Base
 
   belongs_to :image_upload, class_name: "Upload"
 
+  has_many :post_hotlinked_media, dependent: :destroy, class_name: "PostHotlinkedMedia"
+
   validates_with PostValidator, unless: :skip_validation
 
   after_commit :index_search
@@ -78,6 +80,8 @@ class Post < ActiveRecord::Base
 
   SHORT_POST_CHARS ||= 1200
 
+  # TODO: Drop the data from these three custom fields,
+  # drop the indexes, and remove the relavent constants
   register_custom_field_type(LARGE_IMAGES, :json)
   register_custom_field_type(BROKEN_IMAGES, :json)
   register_custom_field_type(DOWNLOADED_IMAGES, :json)
