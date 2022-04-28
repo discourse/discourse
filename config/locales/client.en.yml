@@ -641,6 +641,7 @@ en:
       relative: "Relative"
 
     time_shortcut:
+      now: "Now"
       later_today: "Later today"
       two_days: "Two days"
       next_business_day: "Next business day"
