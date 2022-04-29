@@ -16,14 +16,17 @@ class Bookmark < ActiveRecord::Base
   end
 
   def self.register_bookmarkable(
-    model:, serializer:, list_query:, search_query:, preload_associations: []
+    model:, serializer:, list_query:, search_query:, reminder_handler:, preload_associations: [], reminder_conditions: nil
   )
+    return if Bookmark.registered_bookmarkable_from_type(model.name).present?
     Bookmark.registered_bookmarkables << Bookmarkable.new(
       model: model,
       serializer: serializer,
       list_query: list_query,
       search_query: search_query,
-      preload_associations: preload_associations
+      reminder_handler: reminder_handler,
+      preload_associations: preload_associations,
+      reminder_conditions: reminder_conditions
     )
   end
 
@@ -37,55 +40,9 @@ class Bookmark < ActiveRecord::Base
   # classes are not cached.
   def self.reset_bookmarkables
     self.registered_bookmarkables = []
-    Bookmark.register_bookmarkable(
-      model: Post,
-      serializer: UserPostBookmarkSerializer,
-      list_query: lambda do |user, guardian|
-        topics = Topic.listable_topics.secured(guardian)
-        pms = Topic.private_messages_for_user(user)
-        post_bookmarks = user
-          .bookmarks_of_type("Post")
-          .joins("INNER JOIN posts ON posts.id = bookmarks.bookmarkable_id AND bookmarks.bookmarkable_type = 'Post'")
-          .joins("LEFT JOIN topics ON topics.id = posts.topic_id")
-          .joins("LEFT JOIN topic_users ON topic_users.topic_id = topics.id")
-          .where("topic_users.user_id = ?", user.id)
-        guardian.filter_allowed_categories(
-          post_bookmarks.merge(topics.or(pms)).merge(Post.secured(guardian))
-        )
-      end,
-      search_query: lambda do |bookmarks, query, ts_query, &bookmarkable_search|
-        bookmarkable_search.call(
-          bookmarks.joins(
-            "LEFT JOIN post_search_data ON post_search_data.post_id = bookmarks.bookmarkable_id AND bookmarks.bookmarkable_type = 'Post'"
-          ),
-          "#{ts_query} @@ post_search_data.search_data"
-        )
-      end,
-      preload_associations: [{ topic: [:topic_users, :tags] }, :user]
-    )
-    Bookmark.register_bookmarkable(
-      model: Topic,
-      serializer: UserTopicBookmarkSerializer,
-      list_query: lambda do |user, guardian|
-        topics = Topic.listable_topics.secured(guardian)
-        pms = Topic.private_messages_for_user(user)
-        topic_bookmarks = user
-          .bookmarks_of_type("Topic")
-          .joins("INNER JOIN topics ON topics.id = bookmarks.bookmarkable_id AND bookmarks.bookmarkable_type = 'Topic'")
-          .joins("LEFT JOIN topic_users ON topic_users.topic_id = topics.id")
-          .where("topic_users.user_id = ?", user.id)
-        guardian.filter_allowed_categories(topic_bookmarks.merge(topics.or(pms)))
-      end,
-      search_query: lambda do |bookmarks, query, ts_query, &bookmarkable_search|
-        bookmarkable_search.call(
-          bookmarks
-          .joins("LEFT JOIN posts ON posts.topic_id = topics.id AND posts.post_number = 1")
-          .joins("LEFT JOIN post_search_data ON post_search_data.post_id = posts.id"),
-        "#{ts_query} @@ post_search_data.search_data"
-        )
-      end,
-      preload_associations: [:topic_users, :tags, { posts: :user }]
-    )
+
+    Post.register_as_bookmarkable
+    Topic.register_as_bookmarkable
   end
   reset_bookmarkables
 
@@ -139,6 +96,10 @@ class Bookmark < ActiveRecord::Base
   validate :ensure_sane_reminder_at_time, if: :will_save_change_to_reminder_at?
   validate :bookmark_limit_not_reached
   validates :name, length: { maximum: 100 }
+
+  def registered_bookmarkable
+    Bookmark.registered_bookmarkable_from_type(self.bookmarkable_type)
+  end
 
   def polymorphic_columns_present
     return if !SiteSetting.use_polymorphic_bookmarks

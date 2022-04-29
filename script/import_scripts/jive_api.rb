@@ -285,10 +285,14 @@ class ImportScripts::JiveApi < ImportScripts::Base
 
     loop do
       favorites = get("contents?#{fields}&filter=type(favorite)#{filter}&sort=dateCreatedAsc&count=#{POST_COUNT}&startIndex=#{start_index}")
-      favorites["list"].each do |favorite|
+      bookmarks_to_create = favorites["list"].map do |favorite|
         next unless user_id = user_id_from_imported_user_id(favorite["author"]["id"])
         next unless post_id = post_id_from_imported_post_id(favorite["favoriteObject"]["id"])
-        PostActionCreator.create(User.find(user_id), Post.find(post_id), :bookmark)
+        { user_id: user_id, post_id: post_id }
+      end.flatten
+
+      create_bookmarks(bookmarks_to_create) do |row|
+        row
       end
 
       break if favorites["list"].size < POST_COUNT || favorites.dig("links", "next").blank?

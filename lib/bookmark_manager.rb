@@ -135,7 +135,7 @@ class BookmarkManager
 
   def self.send_reminder_notification(id)
     bookmark = Bookmark.find_by(id: id)
-    BookmarkReminderNotificationHandler.send_notification(bookmark)
+    BookmarkReminderNotificationHandler.new(bookmark).send_notification
   end
 
   def update(bookmark_id:, name:, reminder_at:, options: {})

@@ -296,7 +296,7 @@ describe Jobs::ExportUserArchive do
       manager.create(post_id: post4.id, name: name)
       tau_record.destroy!
 
-      BookmarkReminderNotificationHandler.send_notification(pending_reminder)
+      BookmarkReminderNotificationHandler.new(pending_reminder).send_notification
 
       data, _csv_out = make_component_csv
 

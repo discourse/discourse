@@ -20,7 +20,7 @@ module Jobs
     def execute(args = nil)
       bookmarks = Bookmark.pending_reminders.includes(:user).order('reminder_at ASC')
       bookmarks.limit(BookmarkReminderNotifications.max_reminder_notifications_per_run).each do |bookmark|
-        BookmarkReminderNotificationHandler.send_notification(bookmark)
+        BookmarkReminderNotificationHandler.new(bookmark).send_notification
       end
     end
   end

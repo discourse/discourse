@@ -35,10 +35,10 @@ RSpec.describe Jobs::BookmarkReminderNotifications do
 
   it "will not send a reminder for a bookmark in the future" do
     bookmark4 = Fabricate(:bookmark, reminder_at: Time.zone.now + 1.day)
-    BookmarkReminderNotificationHandler.expects(:send_notification).with(bookmark1)
-    BookmarkReminderNotificationHandler.expects(:send_notification).with(bookmark2)
-    BookmarkReminderNotificationHandler.expects(:send_notification).with(bookmark3)
-    BookmarkReminderNotificationHandler.expects(:send_notification).with(bookmark4).never
+    BookmarkReminderNotificationHandler.any_instance.expects(:send_notification).with(bookmark1)
+    BookmarkReminderNotificationHandler.any_instance.expects(:send_notification).with(bookmark2)
+    BookmarkReminderNotificationHandler.any_instance.expects(:send_notification).with(bookmark3)
+    BookmarkReminderNotificationHandler.any_instance.expects(:send_notification).with(bookmark4).never
     subject.execute
     expect(bookmark4.reload.reminder_at).not_to eq(nil)
   end

@@ -10,12 +10,12 @@ RSpec.describe BookmarkReminderNotificationHandler do
   end
 
   describe "#send_notification" do
-    fab!(:bookmark) do
+    let!(:bookmark) do
       Fabricate(:bookmark_next_business_day_reminder, user: user)
     end
 
     it "creates a bookmark reminder notification with the correct details" do
-      subject.send_notification(bookmark)
+      subject.new(bookmark).send_notification
       notif = bookmark.user.notifications.last
       expect(notif.notification_type).to eq(Notification.types[:bookmark_reminder])
       expect(notif.topic_id).to eq(bookmark.topic_id)
@@ -33,7 +33,7 @@ RSpec.describe BookmarkReminderNotificationHandler do
       end
 
       it "does not send a notification and updates last notification attempt time" do
-        expect { subject.send_notification(bookmark) }.not_to change { Notification.count }
+        expect { subject.new(bookmark).send_notification }.not_to change { Notification.count }
         expect(bookmark.reload.reminder_last_sent_at).not_to be_blank
       end
     end
@@ -45,8 +45,42 @@ RSpec.describe BookmarkReminderNotificationHandler do
       end
 
       it "does not send a notification and updates last notification attempt time" do
-        expect { subject.send_notification(bookmark) }.not_to change { Notification.count }
+        expect { subject.new(bookmark).send_notification }.not_to change { Notification.count }
         expect(bookmark.reload.reminder_last_sent_at).not_to be_blank
+      end
+    end
+
+    context "using polymorphic bookmarks" do
+      before do
+        SiteSetting.use_polymorphic_bookmarks = true
+      end
+
+      let!(:bookmark) do
+        Fabricate(:bookmark_next_business_day_reminder, user: user, bookmarkable: Fabricate(:post))
+      end
+
+      it "creates a bookmark reminder notification with the correct details" do
+        subject.new(bookmark).send_notification
+        notif = bookmark.user.notifications.last
+        expect(notif.notification_type).to eq(Notification.types[:bookmark_reminder])
+        expect(notif.topic_id).to eq(bookmark.bookmarkable.topic_id)
+        expect(notif.post_number).to eq(bookmark.bookmarkable.post_number)
+        data = JSON.parse(notif.data)
+        expect(data["topic_title"]).to eq(bookmark.bookmarkable.topic.title)
+        expect(data["display_username"]).to eq(bookmark.user.username)
+        expect(data["bookmark_name"]).to eq(bookmark.name)
+      end
+
+      context "when the bookmarkable is deleted" do
+        before do
+          bookmark.bookmarkable.trash!
+          bookmark.reload
+        end
+
+        it "does not send a notification and updates last notification attempt time" do
+          expect { subject.new(bookmark).send_notification }.not_to change { Notification.count }
+          expect(bookmark.reload.reminder_last_sent_at).not_to be_blank
+        end
       end
     end
 
@@ -57,12 +91,12 @@ RSpec.describe BookmarkReminderNotificationHandler do
       end
 
       it "deletes the bookmark after the reminder gets sent" do
-        subject.send_notification(bookmark)
+        subject.new(bookmark).send_notification
         expect(Bookmark.find_by(id: bookmark.id)).to eq(nil)
       end
 
       it "changes the TopicUser bookmarked column to false" do
-        subject.send_notification(bookmark)
+        subject.new(bookmark).send_notification
         expect(TopicUser.find_by(topic: bookmark.topic, user: user).bookmarked).to eq(false)
       end
 
@@ -72,7 +106,7 @@ RSpec.describe BookmarkReminderNotificationHandler do
         end
 
         it "does not change the TopicUser bookmarked column to false" do
-          subject.send_notification(bookmark)
+          subject.new(bookmark).send_notification
           expect(TopicUser.find_by(topic: bookmark.topic, user: user).bookmarked).to eq(true)
         end
       end
@@ -85,7 +119,7 @@ RSpec.describe BookmarkReminderNotificationHandler do
       end
 
       it "resets reminder_at after the reminder gets sent" do
-        subject.send_notification(bookmark)
+        subject.new(bookmark).send_notification
         expect(Bookmark.find_by(id: bookmark.id).reminder_at).to eq(nil)
       end
     end
@@ -94,7 +128,7 @@ RSpec.describe BookmarkReminderNotificationHandler do
       it "does not send a notification" do
         bookmark.post.trash!
         bookmark.reload
-        expect { subject.send_notification(bookmark) }.not_to change { Notification.count }
+        expect { subject.new(bookmark).send_notification }.not_to change { Notification.count }
         expect(bookmark.reload.reminder_last_sent_at).not_to be_blank
       end
     end

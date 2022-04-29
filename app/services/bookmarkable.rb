@@ -14,15 +14,20 @@
 # See Bookmark#reset_bookmarkables for some examples on how registering
 # bookmarkables works.
 class Bookmarkable
-  attr_reader :model, :serializer, :list_query, :search_query, :preload_associations
+  attr_reader :model, :serializer, :list_query, :search_query, :reminder_handler, :preload_associations, :reminder_conditions
+
   delegate :table_name, to: :@model
 
-  def initialize(model:, serializer:, list_query:, search_query:, preload_associations: [])
+  def initialize(
+    model:, serializer:, list_query:, search_query:, reminder_handler:, preload_associations: [], reminder_conditions: nil
+  )
     @model = model
     @serializer = serializer
     @list_query = list_query
     @search_query = search_query
+    @reminder_handler = reminder_handler
     @preload_associations = preload_associations
+    @reminder_conditions = reminder_conditions
   end
 
   ##
@@ -76,5 +81,31 @@ class Bookmarkable
     ActiveRecord::Associations::Preloader
       .new(records: Bookmark.select_type(bookmarks, model.to_s), associations: [bookmarkable: preload_associations])
       .call
+  end
+
+  ##
+  # When sending bookmark reminders, we want to make sure that whatever we
+  # are sending the reminder for has not been deleted or is otherwise inaccessible.
+  # Most of the time we can just check if the bookmarkable record is present
+  # because it will be trashable, though in some cases there will be additional
+  # conditions in the form of a lambda that we should use instead.
+  #
+  # The logic around whether it is the right time to send a reminder does not belong
+  # here, that is done in the BookmarkReminderNotifications job.
+  #
+  # @param [Bookmark] bookmark The bookmark that we are considering sending a reminder for.
+  def can_send_reminder?(bookmark)
+    return reminder_conditions.call(bookmark) if reminder_conditions.present?
+    bookmark.bookmarkable.present?
+  end
+
+  ##
+  # Different bookmarkables may have different ways of notifying a user or presenting
+  # the reminder and what it is for, so it is up to the bookmarkable to register
+  # its preferred method of sending the reminder.
+  #
+  # @param [Bookmark] bookmark The bookmark that we are sending the reminder notification for.
+  def send_reminder_notification(bookmark)
+    reminder_handler.call(bookmark)
   end
 end
