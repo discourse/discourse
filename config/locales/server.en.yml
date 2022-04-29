@@ -2356,6 +2356,7 @@ en:
 
     allow_changing_staged_user_tracking: "Allow a staged user's category and tag notification preferences to be changed by an admin user."
     use_email_for_username_and_name_suggestions: "Use the first part of email addresses for username and name suggestions. Note that this makes it easier for the public to guess full user email addresses (because a large proportion of people share common services like `gmail.com`)."
+    use_name_for_username_suggestions: "Use a user's full name when suggesting usernames."
 
     errors:
       invalid_css_color: "Invalid color. Enter a color name or hex value."

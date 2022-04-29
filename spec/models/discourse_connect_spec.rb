@@ -450,6 +450,20 @@ describe DiscourseConnect do
     expect(user.username).to eq sso.name
   end
 
+  it "stops using name as a source for username suggestions when disabled" do
+    SiteSetting.use_name_for_username_suggestions = false
+
+    sso = new_discourse_sso
+    sso.external_id = "100"
+
+    sso.username = nil
+    sso.name = "John Smith"
+    sso.email = "mail@mail.com"
+
+    user = sso.lookup_or_create_user(ip_address)
+    expect(user.username).to eq "user"
+  end
+
   it "doesn't use email as a source for username suggestions by default" do
     sso = new_discourse_sso
     sso.external_id = "100"
