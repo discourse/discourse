@@ -8,14 +8,16 @@
                 showKeyboard=(route-action "showKeyboardShortcutsHelp")
                 toggleMobileView=(route-action "toggleMobileView")
                 toggleAnonymous=(route-action "toggleAnonymous")
-                logout=(route-action "logout")}}
+                logout=(route-action "logout")
+                toggleSidebar=(route-action "toggleSidebar")
+                }}
   {{software-update-prompt}}
 
   {{plugin-outlet name="below-site-header" connectorTagName="div" args=(hash currentPath=router._router.currentPath)}}
 
   <div id="main-outlet-wrapper" class="wrap" role="main">
     {{#if currentUser.experimental_sidebar_enabled}}
-      <Sidebar />
+      {{sidebar showSidebar=showSidebar}}
     {{/if}}
 
     <div id="main-outlet">

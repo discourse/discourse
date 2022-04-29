@@ -1,13 +1,6 @@
-<div class="sidebar-wrapper">
-  {{#if this.shouldDisplay}}
+{{#if @showSidebar}}
+  <div class="sidebar-wrapper">
     <div class="sidebar-container">
-      <button type="button" class="sidebar-toggle" {{on "click" this.hide}}>
-        {{d-icon "angle-double-left"}}
-      </button>
     </div>
-  {{else}}
-    <button type="button" class="sidebar-toggle" {{on "click" this.show}}>
-      {{d-icon "angle-double-right"}}
-    </button>
-  {{/if}}
-</div>
+  </div>
+{{/if}}
