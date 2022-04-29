@@ -50,7 +50,8 @@ module ImportScripts::Mbox
       create_categories(rows) do |row|
         {
           id: row['name'],
-          name: row['name']
+          name: row['name'],
+          parent_category_id: row['parent_category_id'].presence,
         }
       end
     end

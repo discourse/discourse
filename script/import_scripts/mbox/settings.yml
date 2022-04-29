@@ -49,3 +49,17 @@ tags:
 remove_subject_prefixes:
   - "Re: "
   - "Fwd?: "
+
+# For emails processed by mailman with this type of bogus header:
+#   From: Jane Smith via ListName <ListName@lists.example.com>
+# attempt to get the actual sender's address from other available headers like Reply-To or the /^From / line
+fix_mailman_via_addresses: false
+
+# Elide up to last occurence of = in addresses (BATV, etc)
+# ie. normalize these:
+#     prvs=00377ab9a2=someone@somewhere.com
+#     bounces+840901-dbd9-flang-dev=someone@somewhere.com
+#     blah=blih=bluh=someone@somewhere.com
+# into:
+#     someone@somewhere.com
+elide_equals_in_addresses: false
