@@ -649,8 +649,14 @@ table {
 
 // Special elements
 
+#main-outlet-wrapper {
+  display: grid;
+  grid-template-areas: "sidebar content";
+}
+
 #main-outlet {
   padding-top: 2.5em;
+  grid-area: content;
 }
 
 #main {
