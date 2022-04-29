@@ -212,7 +212,7 @@ async function buildFromBootstrap(proxy, baseURL, req, response, preload) {
 }
 
 async function handleRequest(proxy, baseURL, req, res) {
-  const originalHost = req.headers.host;
+  const originalHost = req.headers["x-forwarded-host"] || req.headers.host;
   req.headers.host = new URL(proxy).host;
 
   if (req.headers["Origin"]) {

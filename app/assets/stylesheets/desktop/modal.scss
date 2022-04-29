@@ -111,6 +111,15 @@
 .create-invite-modal,
 .create-invite-bulk-modal,
 .share-topic-modal {
+  .title {
+    align-items: center;
+    display: flex;
+
+    .subtitle {
+      margin-left: 0.5em;
+    }
+  }
+
   &.modal .modal-body {
     margin: 1em;
     padding: unset;

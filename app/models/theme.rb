@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'global_path'
 require 'csv'
 require 'json_schemer'
 

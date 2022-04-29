@@ -1,13 +1,11 @@
 # frozen_string_literal: true
 
 describe Jobs::ProcessPost do
-
   it "returns when the post cannot be found" do
     expect { Jobs::ProcessPost.new.perform(post_id: 1, sync_exec: true) }.not_to raise_error
   end
 
   context 'with a post' do
-
     fab!(:post) { Fabricate(:post) }
 
     it 'does not erase posts when CookedPostProcessor malfunctions' do
@@ -90,5 +88,4 @@ describe Jobs::ProcessPost do
       expect(post.topic.reload.excerpt).to eq("Some OP content")
     end
   end
-
 end

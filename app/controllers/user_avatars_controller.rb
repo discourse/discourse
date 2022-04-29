@@ -112,7 +112,7 @@ class UserAvatarsController < ApplicationController
     if !Discourse.avatar_sizes.include?(size) && Discourse.store.external?
       closest = Discourse.avatar_sizes.to_a.min { |a, b| (size - a).abs <=> (size - b).abs }
       avatar_url = UserAvatar.local_avatar_url(hostname, user.encoded_username(lower: true), upload_id, closest)
-      return redirect_to cdn_path(avatar_url)
+      return redirect_to cdn_path(avatar_url), allow_other_host: true
     end
 
     upload = Upload.find_by(id: upload_id) if user&.user_avatar&.contains_upload?(upload_id)
@@ -120,7 +120,7 @@ class UserAvatarsController < ApplicationController
 
     if user.uploaded_avatar && !upload
       avatar_url = UserAvatar.local_avatar_url(hostname, user.encoded_username(lower: true), user.uploaded_avatar_id, size)
-      return redirect_to cdn_path(avatar_url)
+      return redirect_to cdn_path(avatar_url), allow_other_host: true
     elsif upload && optimized = get_optimized_image(upload, size)
       if optimized.local?
         optimized_path = Discourse.store.path_for(optimized)

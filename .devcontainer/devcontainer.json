@@ -1,13 +1,13 @@
 {
-	"name": "Discourse",
-	"image": "discourse/discourse_dev:release",
-	"workspaceMount": "source=${localWorkspaceFolder}/../..,target=/var/www/discourse,type=bind",
-	"workspaceFolder": "/var/www/discourse",
-	"settings": { 
-		"terminal.integrated.shell.linux": "/bin/bash"
-	},
-	"postCreateCommand": "sudo /sbin/boot",
-	"extensions": ["rebornix.Ruby"],
-    "forwardPorts": [9292],
-	"remoteUser": "discourse"
+  "name": "Discourse",
+  "image": "discourse/discourse_dev:release",
+  "workspaceMount": "source=${localWorkspaceFolder}/../..,target=/var/www/discourse,type=bind",
+  "workspaceFolder": "/var/www/discourse",
+  "settings": {
+    "search.followSymlinks": false
+  },
+  "postCreateCommand": "sudo /sbin/boot",
+  "extensions": ["rebornix.Ruby"],
+  "forwardPorts": [9292],
+  "remoteUser": "discourse"
 }

@@ -37,8 +37,12 @@ export function laterToday(timezone) {
     : later.add(30, "minutes").startOf("hour");
 }
 
-export function laterThisWeek(timezone) {
+export function twoDays(timezone) {
   return startOfDay(now(timezone).add(2, "days"));
+}
+
+export function laterThisWeek(timezone) {
+  return twoDays(timezone);
 }
 
 export function nextMonth(timezone) {

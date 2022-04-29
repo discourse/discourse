@@ -30,14 +30,14 @@ if defined?(RailsFailover::ActiveRecord)
   return unless Rails.configuration.active_record_rails_failover
 
   if Rails.configuration.multisite
-    if ActiveRecord::Base.current_role == ActiveRecord::Base.reading_role
+    if ActiveRecord::Base.current_role == ActiveRecord.reading_role
       RailsMultisite::ConnectionManagement.default_connection_handler =
-        ActiveRecord::Base.connection_handlers[ActiveRecord::Base.reading_role]
+        ActiveRecord::Base.connection_handlers[ActiveRecord.reading_role]
     end
   end
 
   RailsFailover::ActiveRecord.on_failover do |role|
-    if role == ActiveRecord::Base.writing_role # Multisite master
+    if role == ActiveRecord.writing_role # Multisite master
       RailsMultisite::ConnectionManagement.each_connection do
         Discourse.enable_readonly_mode(Discourse::PG_READONLY_MODE_KEY)
       end
@@ -47,16 +47,16 @@ if defined?(RailsFailover::ActiveRecord)
       end
 
       # Test connection to the master, and trigger master failover if needed
-      ActiveRecord::Base.connected_to(role: ActiveRecord::Base.writing_role) do
+      ActiveRecord::Base.connected_to(role: ActiveRecord.writing_role) do
         ActiveRecord::Base.connection.active?
       rescue PG::ConnectionBad, PG::UnableToSend, PG::ServerError
-        RailsFailover::ActiveRecord.verify_primary(ActiveRecord::Base.writing_role)
+        RailsFailover::ActiveRecord.verify_primary(ActiveRecord.writing_role)
       end
     end
   end
 
   RailsFailover::ActiveRecord.on_fallback do |role|
-    if role == ActiveRecord::Base.writing_role # Multisite master
+    if role == ActiveRecord.writing_role # Multisite master
       RailsMultisite::ConnectionManagement.each_connection do
         Discourse.disable_readonly_mode(Discourse::PG_READONLY_MODE_KEY)
       end
@@ -68,7 +68,7 @@ if defined?(RailsFailover::ActiveRecord)
 
     if Rails.configuration.multisite
       RailsMultisite::ConnectionManagement.default_connection_handler =
-        ActiveRecord::Base.connection_handlers[ActiveRecord::Base.writing_role]
+        ActiveRecord::Base.connection_handlers[ActiveRecord.writing_role]
     end
   end
 

@@ -641,7 +641,9 @@ en:
       relative: "Relative"
 
     time_shortcut:
+      now: "Now"
       later_today: "Later today"
+      two_days: "Two days"
       next_business_day: "Next business day"
       tomorrow: "Tomorrow"
       post_local_date: "Date in post"
@@ -649,6 +651,7 @@ en:
       this_weekend: "This weekend"
       start_of_next_business_week: "Monday"
       start_of_next_business_week_alt: "Next Monday"
+      next_week: "Next week"
       two_weeks: "Two weeks"
       next_month: "Next month"
       two_months: "Two months"
@@ -1156,6 +1159,7 @@ en:
       external_links_in_new_tab: "Open all external links in a new tab"
       enable_quoting: "Enable quote reply for highlighted text"
       enable_defer: "Enable defer to mark topics unread"
+      enable_experimental_sidebar: "Enable experimental sidebar"
       change: "change"
       featured_topic: "Featured Topic"
       moderator: "%{user} is a moderator"

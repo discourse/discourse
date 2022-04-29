@@ -1957,6 +1957,10 @@ developer:
   enable_safe_mode:
     default: true
     client: true
+  enable_experimental_sidebar:
+    default: false
+    client: true
+    hidden: true
 
 embedding:
   embed_by_username:

@@ -8,22 +8,25 @@ GIT
 GEM
   remote: https://rubygems.org/
   specs:
-    actionmailer (6.1.4.7)
-      actionpack (= 6.1.4.7)
-      actionview (= 6.1.4.7)
-      activejob (= 6.1.4.7)
-      activesupport (= 6.1.4.7)
+    actionmailer (7.0.2.4)
+      actionpack (= 7.0.2.4)
+      actionview (= 7.0.2.4)
+      activejob (= 7.0.2.4)
+      activesupport (= 7.0.2.4)
       mail (~> 2.5, >= 2.5.4)
+      net-imap
+      net-pop
+      net-smtp
       rails-dom-testing (~> 2.0)
-    actionpack (6.1.4.7)
-      actionview (= 6.1.4.7)
-      activesupport (= 6.1.4.7)
-      rack (~> 2.0, >= 2.0.9)
+    actionpack (7.0.2.4)
+      actionview (= 7.0.2.4)
+      activesupport (= 7.0.2.4)
+      rack (~> 2.0, >= 2.2.0)
       rack-test (>= 0.6.3)
       rails-dom-testing (~> 2.0)
       rails-html-sanitizer (~> 1.0, >= 1.2.0)
-    actionview (6.1.4.7)
-      activesupport (= 6.1.4.7)
+    actionview (7.0.2.4)
+      activesupport (= 7.0.2.4)
       builder (~> 3.1)
       erubi (~> 1.4)
       rails-dom-testing (~> 2.0)
@@ -32,20 +35,19 @@ GEM
       actionview (>= 6.0.a)
     active_model_serializers (0.8.4)
       activemodel (>= 3.0)
-    activejob (6.1.4.7)
-      activesupport (= 6.1.4.7)
+    activejob (7.0.2.4)
+      activesupport (= 7.0.2.4)
       globalid (>= 0.3.6)
-    activemodel (6.1.4.7)
-      activesupport (= 6.1.4.7)
-    activerecord (6.1.4.7)
-      activemodel (= 6.1.4.7)
-      activesupport (= 6.1.4.7)
-    activesupport (6.1.4.7)
+    activemodel (7.0.2.4)
+      activesupport (= 7.0.2.4)
+    activerecord (7.0.2.4)
+      activemodel (= 7.0.2.4)
+      activesupport (= 7.0.2.4)
+    activesupport (7.0.2.4)
       concurrent-ruby (~> 1.0, >= 1.0.2)
       i18n (>= 1.6, < 2)
       minitest (>= 5.1)
       tzinfo (~> 2.0)
-      zeitwerk (~> 2.3)
     addressable (2.8.0)
       public_suffix (>= 2.0.2, < 5.0)
     annotate (3.2.0)
@@ -106,6 +108,7 @@ GEM
     debug_inspector (1.1.0)
     diff-lcs (1.5.0)
     diffy (3.4.0)
+    digest (3.1.0)
     discourse-ember-rails (0.18.6)
       active_model_serializers
       ember-data-source (>= 1.0.0.beta.5)
@@ -129,7 +132,7 @@ GEM
       sprockets (>= 3.3, < 4.1)
     ember-source (2.18.2)
     erubi (1.10.0)
-    excon (0.92.2)
+    excon (0.92.3)
     execjs (2.8.1)
     exifr (1.3.9)
     fabrication (2.28.0)
@@ -219,8 +222,8 @@ GEM
     logstash-event (1.2.02)
     logstash-logger (0.26.1)
       logstash-event (~> 1.2)
-    logster (2.11.0)
-    loofah (2.16.0)
+    logster (2.11.2)
+    loofah (2.17.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
     lru_redux (1.1.0)
@@ -246,6 +249,23 @@ GEM
     multi_xml (0.6.0)
     multipart-post (2.1.1)
     mustache (1.1.1)
+    net-http (0.2.0)
+      net-protocol
+      uri
+    net-imap (0.2.3)
+      digest
+      net-protocol
+      strscan
+    net-pop (0.1.1)
+      digest
+      net-protocol
+      timeout
+    net-protocol (0.1.3)
+      timeout
+    net-smtp (0.3.1)
+      digest
+      net-protocol
+      timeout
     nio4r (2.5.8)
     nokogiri (1.13.4)
       mini_portile2 (~> 2.8.0)
@@ -332,12 +352,13 @@ GEM
     rails_multisite (4.0.1)
       activerecord (> 5.0, < 7.1)
       railties (> 5.0, < 7.1)
-    railties (6.1.4.7)
-      actionpack (= 6.1.4.7)
-      activesupport (= 6.1.4.7)
+    railties (7.0.2.4)
+      actionpack (= 7.0.2.4)
+      activesupport (= 7.0.2.4)
       method_source
-      rake (>= 0.13)
+      rake (>= 12.2)
       thor (~> 1.0)
+      zeitwerk (~> 2.5)
     rainbow (3.1.1)
     raindrops (0.20.0)
     rake (13.0.6)
@@ -452,9 +473,11 @@ GEM
       sprockets (>= 3.0.0)
     sshkey (2.0.0)
     stackprof (0.2.19)
+    strscan (3.0.1)
     test-prof (1.0.8)
     thor (1.2.1)
     tilt (2.0.10)
+    timeout (0.2.0)
     tzinfo (2.0.4)
       concurrent-ruby (~> 1.0)
     uglifier (4.2.0)
@@ -467,6 +490,7 @@ GEM
       kgio (~> 2.6)
       raindrops (~> 0.7)
     uniform_notifier (1.16.0)
+    uri (0.11.0)
     uri_template (0.7.0)
     webmock (3.14.0)
       addressable (>= 2.8.0)
@@ -489,14 +513,14 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
-  actionmailer (= 6.1.4.7)
-  actionpack (= 6.1.4.7)
-  actionview (= 6.1.4.7)
+  actionmailer (= 7.0.2.4)
+  actionpack (= 7.0.2.4)
+  actionview (= 7.0.2.4)
   actionview_precompiler
   active_model_serializers (~> 0.8.3)
-  activemodel (= 6.1.4.7)
-  activerecord (= 6.1.4.7)
-  activesupport (= 6.1.4.7)
+  activemodel (= 7.0.2.4)
+  activerecord (= 7.0.2.4)
+  activesupport (= 7.0.2.4)
   addressable
   annotate
   aws-sdk-s3
@@ -556,6 +580,7 @@ DEPENDENCIES
   mocha
   multi_json
   mustache
+  net-http
   nokogiri
   oj
   omniauth
@@ -575,7 +600,7 @@ DEPENDENCIES
   rack-protection
   rails_failover
   rails_multisite
-  railties (= 6.1.4.7)
+  railties (= 7.0.2.4)
   rake
   rb-fsevent
   rbtrace

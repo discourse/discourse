@@ -13,6 +13,7 @@ allowed:
 ignored:
   bundler:
     - rchardet # Ruby terms
+    - strscan # Ruby
 
 reviewed:
   bundler:
@@ -31,10 +32,16 @@ reviewed:
     - highline # GPL-2.0 OR Ruby terms
     - htmlentities # MIT
     - image_size # MIT
+    - io-wait # Ruby terms
     - json # Ruby terms
     - jwt # MIT
     - kgio # LGPL-2.1+
     - logstash-event # Apache-2.0
+    - net-http # Ruby
+    - net-imap # Ruby
+    - net-pop # Ruby
+    - net-protocol # Ruby
+    - net-smtp # Ruby
     - omniauth # MIT
     - openssl # Ruby terms
     - pg # Ruby terms
@@ -44,5 +51,7 @@ reviewed:
     - rubyzip # Ruby terms
     - sidekiq # LGPL (Sidekiq)
     - tilt
+    - timeout # Ruby
     - unf # BSD-2-Clause
     - unicorn
+    - uri # Ruby

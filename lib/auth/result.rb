@@ -75,7 +75,7 @@ class Auth::Result
 
   def self.from_session_data(data, user:)
     result = new
-    data = data.symbolize_keys
+    data = data.with_indifferent_access
     SESSION_ATTRIBUTES.each { |att| result.public_send("#{att}=", data[att]) }
     result.user = user
     result

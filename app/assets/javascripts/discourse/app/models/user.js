@@ -99,6 +99,7 @@ let userOptionFields = [
   "skip_new_user_tips",
   "default_calendar",
   "bookmark_auto_delete_preference",
+  "enable_experimental_sidebar",
 ];
 
 export function addSaveableUserOptionField(fieldName) {
