@@ -291,4 +291,9 @@ html {
       color: var(--secondary);
     }
   }
+
+  .cooked mark,
+  .d-editor-preview mark {
+    background-color: yellow; // resets to browser default
+  }
 }
