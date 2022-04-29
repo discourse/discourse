@@ -346,6 +346,7 @@ acceptance("Topic - Edit timer", function (needs) {
   });
 
   test("Shows correct time frame options", async function (assert) {
+    this.siteSettings.suggest_weekends_in_date_pickers = true;
     updateCurrentUser({ moderator: true });
 
     await visit("/t/internationalization-localization");
@@ -354,6 +355,7 @@ acceptance("Topic - Edit timer", function (needs) {
 
     const expected = [
       I18n.t("time_shortcut.tomorrow"),
+      I18n.t("time_shortcut.this_weekend"),
       I18n.t("time_shortcut.start_of_next_business_week"),
       I18n.t("time_shortcut.two_weeks"),
       I18n.t("time_shortcut.next_month"),
