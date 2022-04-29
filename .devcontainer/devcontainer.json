@@ -9,5 +9,8 @@
   "postCreateCommand": "sudo /sbin/boot",
   "extensions": ["rebornix.Ruby"],
   "forwardPorts": [9292],
-  "remoteUser": "discourse"
+  "remoteUser": "discourse",
+  "remoteEnv": {
+    "DISCOURSE_DEV_HOSTS": ".githubpreview.dev"
+  }
 }
