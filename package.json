@@ -11,6 +11,7 @@
     "@discourse/moment-timezone-names-translations": "^1.0.0",
     "@highlightjs/cdn-assets": "^10.7.0",
     "@json-editor/json-editor": "^2.6.1",
+    "tippy.js": "^6.3.7",
     "@popperjs/core": "v2.10.2",
     "@uppy/aws-s3": "^2.0.8",
     "@uppy/aws-s3-multipart": "^2.2.1",

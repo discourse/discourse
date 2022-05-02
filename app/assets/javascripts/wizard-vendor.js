@@ -6,4 +6,5 @@
 //= require virtual-dom
 //= require virtual-dom-amd
 //= require popper.js
+//= require tippy.umd.js
 //= require wizard-shims
