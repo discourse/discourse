@@ -8,8 +8,8 @@
 }
 
 html.discourse-no-touch {
-  .btn-default,
-  .btn-icon {
+  .btn-default:not(.btn-flat),
+  .btn-icon:not(.btn-flat) {
     &.btn-default {
       .d-icon {
         color: var(--primary-medium);
