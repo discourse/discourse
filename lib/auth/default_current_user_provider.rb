@@ -227,7 +227,7 @@ class Auth::DefaultCurrentUserProvider
             u.update_last_seen!(Time.zone.now, force: true)
           end
         end
-        User.update_ip_address!(user_id, ip, old_ip)
+        User.update_ip_address!(user_id, new_ip: ip, old_ip: old_ip)
       end
     end
 
