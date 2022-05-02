@@ -250,7 +250,7 @@ export default {
       // TODO: remove this when rewriting preview as a component
       const parentPopover = event.target.closest("[data-tippy-root]");
       if (parentPopover?._tippy) {
-        parentPopover?._tippy.hide();
+        parentPopover._tippy.hide();
       }
 
       return;
