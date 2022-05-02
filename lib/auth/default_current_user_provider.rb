@@ -217,12 +217,17 @@ class Auth::DefaultCurrentUserProvider
     end
 
     if current_user && should_update_last_seen?
-      u = current_user
       ip = request.ip
+      user_id = current_user.id
+      old_ip = current_user.ip_address
 
       Scheduler::Defer.later "Updating Last Seen" do
-        u.update_last_seen!
-        u.update_ip_address!(ip)
+        if User.should_update_last_seen?(user_id)
+          if u = User.find_by(id: user_id)
+            u.update_last_seen!(Time.zone.now, force: true)
+          end
+        end
+        User.update_ip_address!(user_id, ip, old_ip)
       end
     end
 
