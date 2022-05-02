@@ -1,0 +1,29 @@
+{
+  "licenses": {
+    "blueOak": "bronze",
+    "spdx": [
+      "CC0-1.0",
+      "CC-BY-3.0",
+      "CC-BY-4.0",
+      "Apache-2.0 WITH LLVM-exception",
+      "ISC"
+    ]
+  },
+  "packages": {
+    "component-bind": "*",
+    "component-inherit": "*",
+    "duplex": "*",
+    "glob": "*",
+    "indexof": "*",
+    "inherits": "*",
+    "jsonify": "*",
+    "messageformat": "*",
+    "source-map": "*",
+    "sourcemap-validator": "*",
+    "xmldom": "*"
+  },
+  "corrections": true,
+  "ignore": [
+    {"author": "Discourse"}
+  ]
+}

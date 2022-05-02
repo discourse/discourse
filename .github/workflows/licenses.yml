@@ -74,3 +74,9 @@ jobs:
         run: |
           yarn global add licensee
           licensee --errors-only
+
+      - name: Check Ember CLI Workspace Licenses
+        if: ${{ always() }}
+        run: |
+          cd app/assets/javascripts
+          licensee --errors-only
