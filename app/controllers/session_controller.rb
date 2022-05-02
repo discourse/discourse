@@ -599,7 +599,8 @@ class SessionController < ApplicationController
 
   def scopes
     if is_api?
-      api_key = ApiKey.active.with_key(request.env['HTTP_API_KEY']).first
+      key = request.env[Auth::DefaultCurrentUserProvider::HEADER_API_KEY]
+      api_key = ApiKey.active.with_key(key).first
       render_serialized(api_key.api_key_scopes, ApiKeyScopeSerializer, root: 'scopes')
     else
       render body: nil, status: 404
