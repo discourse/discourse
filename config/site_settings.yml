@@ -2399,6 +2399,10 @@ uncategorized:
     default: false
     hidden: true
 
+  suggest_weekends_in_date_pickers:
+    client: true
+    default: true
+
 user_preferences:
   default_email_digest_frequency:
     enum: "DigestEmailSiteSetting"

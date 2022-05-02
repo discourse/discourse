@@ -125,6 +125,7 @@ acceptance("User Notifications - Users - Ignore User", function (needs) {
   });
 
   test("Shows correct timeframe options", async function (assert) {
+    this.siteSettings.suggest_weekends_in_date_pickers = true;
     await visit("/u/eviltrout/preferences/users");
 
     await click("div.user-notifications div div button");
