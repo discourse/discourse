@@ -1,12 +1,12 @@
 import deprecated from "discourse-common/lib/deprecated";
 import { getOwner } from "discourse-common/lib/get-owner";
-import { hidePopover, showPopover } from "discourse/lib/d-popover";
 import LocalDateBuilder from "../lib/local-date-builder";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import showModal from "discourse/lib/show-modal";
 import { downloadCalendar } from "discourse/lib/download-calendar";
 import { renderIcon } from "discourse-common/lib/icon-library";
 import I18n from "I18n";
+import { hidePopover, showPopover } from "discourse/lib/d-popover";
 
 // Import applyLocalDates from discourse/lib/local-dates instead
 export function applyLocalDates(dates, siteSettings) {
@@ -238,39 +238,37 @@ export default {
       return;
     }
 
-    const siteSettings = owner.lookup("site-settings:main");
-    if (event?.target?.classList?.contains("discourse-local-date")) {
-      if ($(document.getElementById("d-popover"))[0]) {
-        hidePopover(event);
-      } else {
-        showPopover(event, {
-          htmlContent: buildHtmlPreview(event.target, siteSettings),
-        });
-      }
-    } else if (event?.target?.classList?.contains("download-calendar")) {
+    if (event?.target?.classList?.contains("download-calendar")) {
       const dataset = event.target.dataset;
-      hidePopover(event);
       downloadCalendar(dataset.title, [
         {
           startsAt: dataset.startsAt,
           endsAt: dataset.endsAt,
         },
       ]);
-    } else {
-      hidePopover(event);
+      return;
     }
+
+    if (!event?.target?.classList?.contains("discourse-local-date")) {
+      return;
+    }
+
+    const siteSettings = owner.lookup("site-settings:main");
+
+    showPopover(event, {
+      trigger: "click",
+      content: buildHtmlPreview(event.target, siteSettings),
+      allowHTML: true,
+      interactive: true,
+      appendTo: "parent",
+    });
   },
 
   hideDatePopover(event) {
-    if (event?.target?.classList?.contains("discourse-local-date")) {
-      hidePopover(event);
-    }
+    hidePopover(event);
   },
 
   initialize(container) {
-    const router = container.lookup("router:main");
-    router.on("routeWillChange", hidePopover);
-
     window.addEventListener("click", this.showDatePopover);
 
     const siteSettings = container.lookup("site-settings:main");
