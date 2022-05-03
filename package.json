@@ -47,7 +47,7 @@
     "chrome-launcher": "^0.15.0",
     "chrome-remote-interface": "^0.31.2",
     "pretender": "^3.4.7",
-    "puppeteer-core": "^13.0.0",
+    "puppeteer-core": "^13.7.0",
     "qunit": "2.8.0",
     "route-recognizer": "^0.3.3",
     "sinon": "^13.0.1",
