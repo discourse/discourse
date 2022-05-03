@@ -15,19 +15,9 @@ class Bookmark < ActiveRecord::Base
     Bookmark.registered_bookmarkables.find { |bm| bm.model.name == type }
   end
 
-  def self.register_bookmarkable(
-    model:, serializer:, list_query:, search_query:, reminder_handler:, preload_associations: [], reminder_conditions: nil
-  )
-    return if Bookmark.registered_bookmarkable_from_type(model.name).present?
-    Bookmark.registered_bookmarkables << Bookmarkable.new(
-      model: model,
-      serializer: serializer,
-      list_query: list_query,
-      search_query: search_query,
-      reminder_handler: reminder_handler,
-      preload_associations: preload_associations,
-      reminder_conditions: reminder_conditions
-    )
+  def self.register_bookmarkable(bookmarkable_klass)
+    return if Bookmark.registered_bookmarkable_from_type(bookmarkable_klass::MODEL.name).present?
+    Bookmark.registered_bookmarkables << Bookmarkable.new(bookmarkable_klass)
   end
 
   ##
@@ -41,8 +31,8 @@ class Bookmark < ActiveRecord::Base
   def self.reset_bookmarkables
     self.registered_bookmarkables = []
 
-    Post.register_as_bookmarkable
-    Topic.register_as_bookmarkable
+    Bookmark.register_bookmarkable(PostBookmarkable)
+    Bookmark.register_bookmarkable(TopicBookmarkable)
   end
   reset_bookmarkables
 

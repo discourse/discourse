@@ -41,44 +41,6 @@ class Topic < ActiveRecord::Base
     [ self.share_thumbnail_size ] + DiscoursePluginRegistry.topic_thumbnail_sizes
   end
 
-  def self.register_as_bookmarkable
-    Bookmark.register_bookmarkable(
-      model: Topic,
-      serializer: UserTopicBookmarkSerializer,
-      list_query: lambda do |user, guardian|
-        topics = Topic.listable_topics.secured(guardian)
-        pms = Topic.private_messages_for_user(user)
-        topic_bookmarks = user
-          .bookmarks_of_type("Topic")
-          .joins("INNER JOIN topics ON topics.id = bookmarks.bookmarkable_id AND bookmarks.bookmarkable_type = 'Topic'")
-          .joins("LEFT JOIN topic_users ON topic_users.topic_id = topics.id")
-          .where("topic_users.user_id = ?", user.id)
-        guardian.filter_allowed_categories(topic_bookmarks.merge(topics.or(pms)))
-      end,
-      search_query: lambda do |bookmarks, query, ts_query, &bookmarkable_search|
-        bookmarkable_search.call(
-          bookmarks
-          .joins("LEFT JOIN posts ON posts.topic_id = topics.id AND posts.post_number = 1")
-          .joins("LEFT JOIN post_search_data ON post_search_data.post_id = posts.id"),
-        "#{ts_query} @@ post_search_data.search_data"
-        )
-      end,
-      reminder_handler: lambda do |bookmark|
-        bookmark.user.notifications.create!(
-          notification_type: Notification.types[:bookmark_reminder],
-          topic_id: bookmark.topic_id,
-          post_number: bookmark.post.post_number,
-          data: {
-            topic_title: bookmark.topic.title,
-            display_username: bookmark.user.username,
-            bookmark_name: bookmark.name
-          }.to_json
-        )
-      end,
-      preload_associations: [:topic_users, :tags, { posts: :user }]
-    )
-  end
-
   def thumbnail_job_redis_key(sizes)
     "generate_topic_thumbnail_enqueue_#{id}_#{sizes.inspect}"
   end

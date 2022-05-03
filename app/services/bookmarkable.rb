@@ -14,20 +14,13 @@
 # See Bookmark#reset_bookmarkables for some examples on how registering
 # bookmarkables works.
 class Bookmarkable
-  attr_reader :model, :serializer, :list_query, :search_query, :reminder_handler, :preload_associations, :reminder_conditions
+  attr_reader :bookmarkable
 
-  delegate :table_name, to: :@model
+  delegate :table_name, to: "@bookmarkable.model"
+  delegate :model, :serializer, to: :@bookmarkable
 
-  def initialize(
-    model:, serializer:, list_query:, search_query:, reminder_handler:, preload_associations: [], reminder_conditions: nil
-  )
-    @model = model
-    @serializer = serializer
-    @list_query = list_query
-    @search_query = search_query
-    @reminder_handler = reminder_handler
-    @preload_associations = preload_associations
-    @reminder_conditions = reminder_conditions
+  def initialize(bookmarkable_klass)
+    @bookmarkable = bookmarkable_klass.new
   end
 
   ##
@@ -40,7 +33,7 @@ class Bookmarkable
   # @param [User] user The user to perform the query for, this scopes the bookmarks returned.
   # @param [Guardian] guardian An instance of Guardian for the user to be used for security filters.
   def perform_list_query(user, guardian)
-    list_query.call(user, guardian)
+    bookmarkable.list_query(user, guardian)
   end
 
   ##
@@ -60,7 +53,7 @@ class Bookmarkable
   # @param [String] query The search query from the user surrounded by the %% wildcards
   # @param [String] ts_query The postgres TSQUERY string used for comparisons with full text search columns
   def perform_search_query(bookmarks, query, ts_query)
-    search_query.call(bookmarks, query, ts_query) do |bookmarks_joined, where_sql|
+    bookmarkable.search_query(bookmarks, query, ts_query) do |bookmarks_joined, where_sql|
       bookmarks_joined.where("#{where_sql} OR bookmarks.name ILIKE :q", q: query)
     end
   end
@@ -79,7 +72,10 @@ class Bookmarkable
   #                          array _not_ an ActiveRecord::Relation.
   def perform_preload(bookmarks)
     ActiveRecord::Associations::Preloader
-      .new(records: Bookmark.select_type(bookmarks, model.to_s), associations: [bookmarkable: preload_associations])
+      .new(
+        records: Bookmark.select_type(bookmarks, bookmarkable.model.to_s),
+        associations: [bookmarkable: bookmarkable.preload_associations]
+      )
       .call
   end
 
@@ -95,8 +91,7 @@ class Bookmarkable
   #
   # @param [Bookmark] bookmark The bookmark that we are considering sending a reminder for.
   def can_send_reminder?(bookmark)
-    return reminder_conditions.call(bookmark) if reminder_conditions.present?
-    bookmark.bookmarkable.present?
+    bookmarkable.reminder_conditions(bookmark)
   end
 
   ##
@@ -106,6 +101,6 @@ class Bookmarkable
   #
   # @param [Bookmark] bookmark The bookmark that we are sending the reminder notification for.
   def send_reminder_notification(bookmark)
-    reminder_handler.call(bookmark)
+    bookmarkable.reminder_handler(bookmark)
   end
 end
