@@ -10,17 +10,19 @@
     ]
   },
   "packages": {
-    "component-bind": "*",
-    "component-inherit": "*",
-    "duplex": "*",
-    "glob": "*",
-    "indexof": "*",
-    "inherits": "*",
-    "jsonify": "*",
-    "messageformat": "*",
-    "source-map": "*",
-    "sourcemap-validator": "*",
-    "xmldom": "*"
+    "component-bind": "1.0.0",
+    "component-inherit": "0.0.3",
+    "duplex": "1.0.0",
+    "glob": "3.1.21",
+    "indexof": "0.0.1",
+    "inherits": "1.0.2",
+    "jsonify": "0.0.0",
+    "messageformat": "0.1.5",
+    "line-stream": "0.0.0",
+    "regenerator-transform": "0.10.1",
+    "source-map": "0.1.43",
+    "sourcemap-validator": "1.1.1",
+    "xmldom": "0.1.31"
   },
   "corrections": true,
   "ignore": [

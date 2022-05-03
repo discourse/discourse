@@ -73,6 +73,7 @@ jobs:
         if: ${{ always() }}
         run: |
           yarn global add licensee
+          yarn global upgrade licensee
           licensee --errors-only
 
       - name: Check Ember CLI Workspace Licenses
