@@ -566,7 +566,9 @@ tr_TR:
         other: "yıl"
       relative: "Göreceli"
     time_shortcut:
+      now: "Şimdi"
       later_today: "Bugün ilerleyen saatlerde"
+      two_days: "İki gün"
       next_business_day: "Bir sonraki iş günü"
       tomorrow: "Yarın"
       post_local_date: "Gönderideki tarih"
@@ -574,6 +576,7 @@ tr_TR:
       this_weekend: "Bu hafta sonu"
       start_of_next_business_week: "Pazartesi"
       start_of_next_business_week_alt: "Gelecek pazartesi"
+      next_week: "Gelecek hafta"
       two_weeks: "İki hafta"
       next_month: "Gelecek ay"
       two_months: "İki ay"
@@ -1063,6 +1066,7 @@ tr_TR:
       external_links_in_new_tab: "Tüm dış bağlantıları yeni sekmede aç"
       enable_quoting: "Bahsedilen konu için yanıtlama özelliğini etkinleştir"
       enable_defer: "Okunmamış konuları işaretlemek için ertelemeyi aktif edin"
+      enable_experimental_sidebar: "Deneysel kenar çubuğunu etkinleştir"
       change: "değiştir"
       featured_topic: "Öne Çıkan Konu"
       moderator: "%{user} moderatördür"
@@ -2181,6 +2185,8 @@ tr_TR:
       in: "içinde"
       in_this_topic: "bu konuda"
       in_this_topic_tooltip: "tüm konuları aramaya geç"
+      in_messages: "mesajlarda"
+      in_messages_tooltip: "normal konuları aramaya geç"
       in_topics_posts: "tüm konularda ve gönderilerde"
       enter_hint: "veya Enter tuşuna basın"
       in_posts_by: "@%{username} kullancısına ait gönderilerde"
@@ -2558,6 +2564,8 @@ tr_TR:
         unpin: "Konuyu En Yukarıda Sabitleme..."
         unarchive: "Konuyu Arşivleme"
         archive: "Konuyu Arşivle"
+        invisible: "Konuları Listeleme"
+        visible: "Konuları Listele"
         reset_read: "Görüntüleme Verilerini Sıfırla"
         make_public: "Herkese açık konu yap..."
         make_private: "Kişisel Mesaj Yap"
@@ -2746,6 +2754,7 @@ tr_TR:
           other: "<b>%{count}</b> gönderi seçtin."
       deleted_by_author_simple: "(konu yazarı tarafından silindi)"
     post:
+      confirm_delete: "Bu gönderiyi silmek istediğinize emin misiniz?"
       quote_reply: "Alıntı"
       quote_reply_shortcut: "Veya q düğmesine basın"
       quote_edit: "Düzenle"
@@ -3867,7 +3876,6 @@ tr_TR:
               write: Yeni bir konu oluşturun veya mevcut bir konuya yazın.
               update: Bir konuyu güncelleyin. Başlığı, kategoriyi, etiketleri vb. değiştirin.
               read_lists: En iyi, yeni, en son vb. gibi konu listelerini okuyun. RSS de desteklenir.
-              wordpress: WordPress wp-discourse eklentisinin çalışması için gereklidir.
             posts:
               edit: Herhangi bir gönderiyi veya belirli bir gönderiyi düzenleyin.
             users:
@@ -3890,6 +3898,11 @@ tr_TR:
               list_user_badges: Kullanıcı rozetlerini listeleyin.
               assign_badge_to_user: Kullanıcıya bir rozet atayın.
               revoke_badge_from_user: Kullanıcıdan bir rozeti iptal edin.
+            wordpress:
+              publishing: WP Discourse eklentisi yayınlama özellikleri için gerekli (zorunlu).
+              commenting: WP Discourse eklentisi yorumlama özellikleri için gerekli.
+              discourse_connect: WP Discourse eklentisi DiscourseConnect özellikleri için gerekli.
+              utilities: WP Discourse eklentisinde Utilities kullanıyorsanız gerekli.
       web_hooks:
         title: "Web Kancaları"
         none: "Şu anda bir web kancası yok."

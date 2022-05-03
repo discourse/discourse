@@ -269,6 +269,7 @@ it:
   not_found: "L'URL o la risorsa richiesta non sono stati trovati."
   invalid_access: "Non hai il permesso di vedere la risorsa richiesta."
   authenticator_not_found: "Il metodo di autenticazione non esiste o è stato disabilitato."
+  authenticator_no_connect: "Questo provider di autenticazione non consente la connessione a un account del forum esistente."
   invalid_api_credentials: "Non ti è consentito visualizzare la risorsa richiesta. Il nome utente o la chiave API non sono validi."
   provider_not_enabled: "Non ti è consentito visualizzare la risorsa richiesta. Il provider di autenticazione non è abilitato."
   provider_not_found: "Non ti è consentito visualizzare la risorsa richiesta. Il provider di autenticazione non esiste."
@@ -401,6 +402,7 @@ it:
       time_must_be_provided: "L'orario deve essere fornito per tutti i promemoria"
       for_topic_must_use_first_post: "Puoi usare solo il primo messaggio per aggiungere un segnalibro all'argomento."
       bookmarkable_id_type_required: "Sono richiesti sia il nome sia il tipo di segnalibro."
+      invalid_bookmarkable: "Un %{type} non può essere aggiunto ai preferiti."
     reminders:
       at_desktop: "La prossima volta che sarò al mio desktop"
       later_today: "Più tardi oggi"
@@ -488,6 +490,8 @@ it:
       Puoi modificare la risposta precedente per aggiungere una citazione evidenziando il testo e selezionando il pulsante <b>Cita</b> che comparirà.
 
       E' più facile per chiunque leggere argomenti che hanno poche risposte ma più dettagliate, rispetto a molte brevi risposte singole.
+    dominating_topic: Hai postato più del %{percent}% delle risposte qui; c'è qualcun altro che vorresti sentire?
+    get_a_room: Abbiamo notato che hai già risposto %{count} volte a @%{reply_username}. Sapevi che puoi anche scambiare messaggi personali con questa persona tramite il forum?
     too_many_replies: |
       ### Hai raggiungo il limite di risposte per questo argomento
 
@@ -893,6 +897,8 @@ it:
   draft_backup:
     pm_title: "Copie di backup da argomenti in corso"
     pm_body: "Argomento contenente copie di backup"
+  user_activity:
+    no_log_search_queries: "Le query del registro di ricerca sono attualmente disabilitate (possono essere abilitate da un amministratore nelle impostazioni del sito)."
   email_settings:
     pop3_authentication_error: "Si è verificato un problema con le credenziali POP3 fornite. Controlla il nome utente e la password e riprova."
     imap_authentication_error: "Si è verificato un problema con le credenziali IMAP fornite. Controlla il nome utente e la password e riprova."
@@ -1380,6 +1386,7 @@ it:
     unreachable_themes: "Non è stato possibile verificare la presenza di aggiornamenti per i seguenti temi:"
     watched_word_regexp_error: "L'espressione regolare per le parole osservate %{action} non è valida. Per favore verifica le tue <a href='%{base_path}/admin/customize/watched_words'>Impostazioni sulle Parole Osservate</a>, o disabilita l'impostazione del sito 'watched words regular expressions'."
   site_settings:
+    allow_bulk_invite: "Consenti inviti di massa caricando un file CSV"
     disabled: "disabilitata"
     display_local_time_in_user_card: "Visualizza l'ora locale in base al fuso orario di un utente quando viene aperta la sua scheda utente."
     censored_words: "Parole che saranno automaticamente sostituite con &#9632;&#9632;&#9632;&#9632;"
@@ -1445,6 +1452,7 @@ it:
     show_pinned_excerpt_mobile: "Mostra estratti sugli argomenti appuntati nella visualizzazione in mobilità."
     show_pinned_excerpt_desktop: "Mostra estratti sugli argomenti appuntati nella vista desktop."
     post_onebox_maxlength: "Lunghezza massima in caratteri di un messaggio Discourse in Onebox."
+    blocked_onebox_domains: "Un elenco di domini che non saranno mai inseriti in una casella, ad esempio wikipedia.org\n(I simboli jolly *? non sono supportati)"
     allowed_inline_onebox_domains: "Un elenco di domini che saranno trasformati in onebox in forma di miniatura se collegati senza un titolo"
     enable_inline_onebox_on_all_domains: "Ignora l'impostazione del sito inline_onebox_domain_allowlist e consenti onebox in linea per tutti i domini."
     force_custom_user_agent_hosts: "Host per i quali utilizzare l'user agent onebox personalizzato su tutte le richieste. (Particolarmente utile per gli host che limitano l'accesso con user agent)."
@@ -1494,6 +1502,8 @@ it:
     tl2_additional_edits_per_day_multiplier: "Aumenta il limite di modifiche giornaliere per gli utenti con Livello di attendibilità 2 (Membro) moltiplicandolo per questo numero"
     tl3_additional_edits_per_day_multiplier: "Aumenta il limite di modifiche giornaliere per gli utenti con Livello di attendibilità 3 (Esperto) moltiplicandolo per questo numero"
     tl4_additional_edits_per_day_multiplier: "Aumenta il limite di modifiche giornaliere per gli utenti con Livello di attendibilità 4 (Veterano) moltiplicandolo per questo numero"
+    tl2_additional_flags_per_day_multiplier: "Aumenta il limite giornaliero di segnalazioni per gli utenti con livello di attendibilità 2 (Membro), moltiplicandolo per questo numero"
+    tl3_additional_flags_per_day_multiplier: "Aumenta il limite giornaliero di segnalazioni per gli utenti con livello di attendibilità 3 (Assiduo) moltiplicandolo per questo numero"
     num_users_to_silence_new_user: "Se i messaggi di un nuovo utente ricevono num_spam_flags_to_silence_new_user segnalazioni di spam da così tanti utenti diversi, nascondi tutti i suoi messaggi e impediscigli ulteriori invii. 0 per disabilitare. "
     num_tl3_flags_to_silence_new_user: "Se i messaggi di un nuovo utente ricevono questo numero di segnalazioni da num_tl3_users_to_silence_new_user differenti utenti a livello di attendibilità 3, nascondi tutti i messaggi e previenine la futura pubblicazione. 0 per disabilitare."
     num_tl3_users_to_silence_new_user: "Se i messaggi di un nuovo utente ricevono num_tl3_flags_to_silence_new_user segnalazioni da questo numero di utenti a livello di attendibilità 3, nascondi tutti i messaggi e previenine la futura pubblicazione. 0 per disabilitare."
@@ -1547,6 +1557,7 @@ it:
     send_tl2_promotion_message: "Invia ai nuovi utenti del livello di attendibilità 2 un messaggio sulla promozione."
     suppress_reply_directly_below: "Non mostrare il conteggio espandibile delle risposte quando c'è una sola risposta sotto quel messaggio."
     suppress_reply_directly_above: "Non mostrare l'opzione \"in risposta a\" espandibile in un messaggio quando c'è una sola risposta sopra quel messaggio."
+    remove_full_quote: "Rimuovi automaticamente la citazione se (a) appare all'inizio di un messaggio, (b) riprende un intero post e (c) è del post immediatamente precedente. Per maggiori dettagli, vedere <a href='https://meta.discourse.org/t/removal-of-full-quotes-from-direct-replies/106857' target='_blank'>Rimozione di citazioni complete dalle risposte dirette</a>"
     suppress_reply_when_quoting: "Non mostrare l'opzione \"in risposta a\" espandibile in un messaggio quando il messaggio cita le risposte."
     max_reply_history: "Numero massimo di risposte da espandere quando si espande l'opzione \"in risposta a\""
     topics_per_period_in_top_summary: "Numero di argomenti popolari mostrati nel riepilogo di default."
@@ -2085,9 +2096,12 @@ it:
     share_quote_visibility: "Determina quando mostrare i pulsanti di condivisione delle citazioni: mai, solo agli utenti anonimi o a tutti gli utenti. "
     create_revision_on_bulk_topic_moves: "Crea una revisione per i primi messaggi quando gli argomenti vengono spostati in blocco in una nuova categoria."
     allow_changing_staged_user_tracking: "Consenti a un utente amministratore di modificare le preferenze di notifica di etichette e categorie di utenti provvisori."
+    use_name_for_username_suggestions: "Usa il nome completo dell'utente durante il suggerimento di nomi utente."
+    suggest_weekends_in_date_pickers: "Includi i fine settimana (sabato e domenica) nei suggerimenti del selettore di date (disabilita questa opzione se usi Discourse solo nei giorni feriali, dal lunedì al venerdì)."
     errors:
       invalid_email: "Indirizzo email non valido."
       invalid_username: "Non c'è alcun utente con quel nome."
+      valid_username: "C'è un membro con questo nome utente."
       invalid_group: "Non esiste un gruppo con quel nome."
       invalid_integer_min_max: "Il valore deve essere tra %{min} e %{max}."
       invalid_integer_min: "Il valore deve essere %{min} o maggiore."
@@ -2102,6 +2116,7 @@ it:
       invalid_json: "JSON non valido."
       invalid_reply_by_email_address: "Il valore deve contenere '%{reply_key}' ed essere differente dalla email di notifica."
       invalid_alternative_reply_by_email_addresses: "Tutti i valori devono contenere '%{reply_key}' ed essere differenti dalla email di notifica."
+      invalid_domain_hostname: "Non deve includere i caratteri * o ?"
       pop3_polling_host_is_empty: "È necessario impostare 'pop3 polling host' prima di attivare il polling POP3."
       pop3_polling_username_is_empty: "È necessario impostare 'pop3 polling username' prima di attivare il polling POP3."
       pop3_polling_password_is_empty: "È necessario impostare 'pop3 polling password' prima di attivare il polling POP3."
@@ -2131,6 +2146,7 @@ it:
       unicode_usernames_avatars: "Gli avatar di sistema interni non supportano i nomi utente Unicode."
       list_value_count: "La lista deve contenere esattamente %{count} valori."
       markdown_linkify_tlds: "Non è possibile includere il valore '*'."
+      google_oauth2_hd_groups: "Prima di attivare questa impostazione, devi impostare 'google oauth2 hd'."
       search_tokenize_chinese_enabled: "Devi disattivare \"search_tokenize_chinese\" prima di attivare questa impostazione."
       search_tokenize_japanese_enabled: "Devi disattivare \"search_tokenize_japanese\" prima di attivare questa impostazione."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "Non è possibile abilitare DiscourseConnect se è stata forzata l'autenticazione a due fattori 2FA."
@@ -2615,12 +2631,30 @@ it:
     backup_failed:
       title: "Backup Fallito"
       subject_template: "Backup fallito"
+      text_body_template: |
+        Il backup non è riuscito.
+
+        Ecco il log:
+
+        %{logs}
     restore_succeeded:
       title: "Ripristino Riuscito"
       subject_template: "Il ripristino è avvenuto con successo."
+      text_body_template: |
+        Il ripristino è riuscito.
+
+        Ecco il log:
+
+        %{logs}
     restore_failed:
       title: "Ripristino Fallito"
       subject_template: "Ripristino fallito"
+      text_body_template: |
+        Il ripristino non è riuscito.
+
+        Ecco il log:
+
+        %{logs}
     bulk_invite_succeeded:
       title: "Invito di Massa Riuscito"
       subject_template: "Invito di massa processato con successo"
@@ -3215,6 +3249,10 @@ it:
     account_suspended_forever:
       title: "Account Sospeso"
       subject_template: "[%{email_prefix}] Il tuo account è stato sospeso"
+      text_body_template: |
+        Sei stato sospeso/a dal forum.
+
+        Motivo: %{reason}
     account_silenced:
       title: "Account Silenziato"
       subject_template: "[%{email_prefix}] Il tuo account è stato silenziato"
@@ -3225,6 +3263,10 @@ it:
     account_silenced_forever:
       title: "Account Silenziato"
       subject_template: "[%{email_prefix}] Il tuo account è stato silenziato"
+      text_body_template: |
+        Ti abbiamo silenziato/a sul forum.
+
+        Motivo: %{reason}.
     account_exists:
       title: "L'account esiste già"
       subject_template: "[%{email_prefix}] L'account esiste già"
@@ -3436,8 +3478,10 @@ it:
     store_failure: "Caricamento n. %{upload_id} fallito per l'utente n. %{user_id}."
     file_missing: "Spiacenti, devi fornire un file da caricare."
     empty: "Spiacenti, ma il file che hai fornito è vuoto."
+    failed: "Purtroppo, il tuo caricamento non è riuscito. Riprova."
     png_to_jpg_conversion_failure_message: "Si è verificato un errore durante la conversione da PNG a JPG."
     optimize_failure_message: "Si è verificato un errore nell'ottimizzare l'immagine caricata."
+    download_failure: "Il download del file dal provider esterno non è riuscito."
     create_multipart_failure: "Errore nel creare il caricamento multipart nell'archivio esterno."
     abort_multipart_failure: "Errore nell’annullare il caricamento multipart nell'archivio esterno."
     complete_multipart_failure: "Errore nel completare il caricamento multipart nell'archivio esterno."
@@ -3989,6 +4033,8 @@ it:
             placeholder: "San Francisco, California"
       styling:
         fields:
+          color_scheme:
+            label: "Combinazione di colori"
           body_font:
             label: "Carattere Corpo"
           heading_font:
@@ -3996,6 +4042,7 @@ it:
           styling_preview:
             label: "Anteprima"
           homepage_style:
+            label: "Stile homepage"
             choices:
               latest:
                 label: "Ultimi Argomenti"

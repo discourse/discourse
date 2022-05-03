@@ -415,6 +415,7 @@ sk:
     time_shortcut:
       tomorrow: "Zajtra"
       this_weekend: "Tento víkend"
+      next_week: "Budúci týždeň"
       next_month: "Budúci mesiac"
       forever: "Vždy"
     user_action:

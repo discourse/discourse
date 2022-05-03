@@ -543,6 +543,7 @@ bs_BA:
       this_weekend: "Ovog vikenda"
       start_of_next_business_week: "Ponedjeljak"
       start_of_next_business_week_alt: "Sljedeći ponedjeljak"
+      next_week: "Sljedeće sedmice"
       next_month: "Sljedeći mjesec"
       forever: "Zauvijek"
       custom: "Precizirano vrijeme i datum"

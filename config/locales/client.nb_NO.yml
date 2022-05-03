@@ -541,6 +541,7 @@ nb_NO:
         other: "det siste året"
       relative: "Relativ"
     time_shortcut:
+      now: "Nå"
       later_today: "Senere i dag"
       next_business_day: "Neste virkedag"
       tomorrow: "I morgen"
@@ -549,6 +550,7 @@ nb_NO:
       this_weekend: "Denne uken"
       start_of_next_business_week: "Mandag"
       start_of_next_business_week_alt: "Neste mandag"
+      next_week: "Neste uke"
       two_weeks: "To uker"
       next_month: "Neste måned"
       two_months: "To måneder"

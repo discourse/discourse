@@ -7,6 +7,10 @@
 vi:
   js:
     styleguide:
+      welcome: "Để bắt đầu, hãy chọn một phần từ menu bên trái."
+      categories:
+        atoms: Nguyên tử
+        molecules: Phân tử
       sections:
         typography:
           title: "Kiểu chữ"
@@ -52,12 +56,28 @@ vi:
           title: "Đăng ký CTA"
         topic_timer_info:
           title: "Bộ hẹn giờ chủ đề"
+        topic_footer_buttons:
+          title: "Các nút chân trang chủ đề"
+        topic_notifications:
+          title: "Thông báo chủ đề"
         post:
           title: "Bài đăng"
+        topic_map:
+          title: "Bản đồ chủ đề"
+        site_header:
+          title: "Tiêu đề trang web"
         suggested_topics:
           title: "Chủ đề tương tự"
+        post_menu:
+          title: "Menu Bài Đăng"
         modal:
           title: "Cửa sổ bật lên"
+          header: "Phương thức Tiêu đề"
+          footer: "Phương thức Chân trang"
+        user_about:
+          title: "Hộp Giới thiệu Người dùng"
+        header_icons:
+          title: "Biểu tượng tiêu đề"
         spinners:
           title: "Con quay"
         empty_state:

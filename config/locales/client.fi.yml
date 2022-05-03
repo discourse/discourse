@@ -537,6 +537,7 @@ fi:
         other: "vuotta"
       relative: "Suhteellinen"
     time_shortcut:
+      now: "Nyt"
       later_today: "Myöhemmin tänään"
       next_business_day: "Seuraavana arkipäivänä"
       tomorrow: "Huomenna"
@@ -545,6 +546,7 @@ fi:
       this_weekend: "Viikonloppuna"
       start_of_next_business_week: "Maanantaina"
       start_of_next_business_week_alt: "Seuraavana maanantaina"
+      next_week: "Ensi viikolla"
       two_weeks: "Kaksi viikkoa"
       next_month: "Ensi kuussa"
       two_months: "Kaksi kuukautta"
@@ -3670,7 +3672,6 @@ fi:
               read: Lue ketjua tai tiettyä sen viestiä. RSS on myös tuettu.
               write: Aloita uusi ketju tai kirjoita olemassa olevaan.
               read_lists: Lue ketjuluetteloita, kuten suositut, uudet, tuoreimmat jne. RSS on myös tuettu.
-              wordpress: Tarvitaan, jotta WordPress wp-discourse -lisäosa toimii.
             posts:
               edit: Muokkaa mitä tahansa viestiä tai tiettyä viestiä.
             users:

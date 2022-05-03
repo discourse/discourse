@@ -2075,6 +2075,7 @@ tr_TR:
     share_quote_visibility: "Alıntı paylaşma düğmelerinin ne zaman gösterileceğini belirleyin: asla, yalnızca anonim kullanıcılara veya tüm kullanıcılara. "
     create_revision_on_bulk_topic_moves: "Konular toplu olarak yeni bir kategoriye taşındığında ilk gönderiler için revizyon oluştur."
     use_email_for_username_and_name_suggestions: "Kullanıcı adları ve ad önerileri için e-posta adreslerinin ilk kısmını kullanın. Ama unutmayın bu yaklaşım, insanların e-posta adreslerinin tamamını tahmin etmelerini kolaylaştırır (çünkü insanların büyük bir kısmı \"gmail.com\" gibi ortak hizmetleri paylaşır)."
+    use_name_for_username_suggestions: "Kullanıcı adları önerirken kullanıcının tam adını kullanın."
     errors:
       invalid_css_color: "Geçersiz renk. Bir renk adı veya hex değer girin."
       invalid_email: "Geçersiz e-posta adresi."

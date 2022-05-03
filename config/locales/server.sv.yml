@@ -402,6 +402,7 @@ sv:
       time_must_be_provided: "Tid måste anges för alla påminnelser"
       for_topic_must_use_first_post: "Du kan bara använda det första inlägget för att bokmärka ämnet."
       bookmarkable_id_type_required: "Namnet och typen av post som ska bokmärkas krävs."
+      invalid_bookmarkable: "En %{type} kan inte bokmärkas."
     reminders:
       at_desktop: "Nästa gång jag är vid datorn"
       later_today: "Senare idag"
@@ -1510,6 +1511,7 @@ sv:
     ga_universal_auto_link_domains: "Aktivera Google Universal Analytics spårning över flera domäner. Utgående länkar till dessa domäner kommer att få klient-id tillagt till dem. Se <a href='https://support.google.com/analytics/answer/1034342?hl=sv' target='_blank'>Googles guide över domänspårning.</a>"
     gtm_container_id: "Innehålls-ID för Google Tag Manager. t.ex. GTM-ABCDEF. <br/>Notera: Skript från tredje part som laddats av GTM kan behöva vitlistas i 'content security policy script src'."
     enable_escaped_fragments: "Återgå till Googles Ajax-Crawling API om ingen sökrobot upptäcks. Se <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
+    moderators_manage_categories_and_groups: "Tillåt moderatorer att skapa och hantera kategorier och grupper"
     moderators_change_post_ownership: "Tillåt att moderatorer ändrar inläggsägarskap"
     cors_origins: "Tillåtna ursprung för cross-ursprungsbegäran (CORS). Varje ursprung måste inkludera http:// eller https://. Variabeln DISCOURSE_ENABLE_CORS env måste ställas in till true för att aktivera CORS."
     use_admin_ip_allowlist: "Administratörer kan bara logga in om de är på en IP-adress som definierats i listan över granskade IP-adresser (Admin > Loggar > Granskade IP-adresser)."
@@ -2086,6 +2088,7 @@ sv:
     create_revision_on_bulk_topic_moves: "Skapa ny version av första inlägg när ämnen flyttas till en ny kategori i bulk."
     allow_changing_staged_user_tracking: "Tillåt att aviseringsinställningar för en arrangerad användares kategori och tagg kan ändras av en administratörsanvändare."
     use_email_for_username_and_name_suggestions: "Använd den första delen av e-postadresser för användarnamn och namnförslag. Observera att detta gör det lättare för allmänheten att gissa användares fullständiga e-postadresser (eftersom en stor del av människor delar gemensamma tjänster som `gmail.com`)."
+    use_name_for_username_suggestions: "Använd en användares fullständiga namn när det föreslås användarnamn."
     errors:
       invalid_css_color: "Ogiltig färg. Ange ett färgnamn eller ett hexvärde."
       invalid_email: "Felaktig e-postadress."
@@ -2138,6 +2141,7 @@ sv:
       google_oauth2_hd_groups: "Du måste först ange 'google oauth2 hd' innan du aktiverar denna inställning."
       search_tokenize_chinese_enabled: "Du måste inaktivera 'search_tokenize_chinese' innan du aktiverar den här inställningen."
       search_tokenize_japanese_enabled: "Du måste inaktivera 'search_tokenize_japanese' innan du aktiverar den här inställningen."
+      discourse_connect_cannot_be_enabled_if_second_factor_enforced: "Du kan inte aktivera DiscourseConnect om 2FA är obligatoriskt."
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.exempel.se"
@@ -3033,6 +3037,7 @@ sv:
   subject_re: "Sv: "
   subject_pm: "[PM] "
   email_from: "%{user_name} via %{site_name}"
+  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "Föregående svar"
     reached_limit:
@@ -3051,6 +3056,9 @@ sv:
     reply_above_line: "## Vi ber dig skriva ditt svar ovanför denna rad. ##"
     posted_by: "Publicerat av %{username} den %{post_date}"
     pm_participants: "Deltagare: %{participants}"
+    more_pm_participants:
+      one: "%{participants} och %{count} andra"
+      other: "%{participants} och %{count} andra"
     invited_group_to_private_message_body: "%{username} bjöd in @%{group_name} till ett meddelande\n\n> **[%{topic_title}](%{topic_url})**\n>\n> %{topic_excerpt}\n\nvid \n\n> %{site_title} -- %{site_description}\n\nOm du är intresserad, klicka på länken nedan:\n\n%{topic_url}\n"
     invited_to_private_message_body: "%{username} bjöd in dig till ett meddelande\n\n> **[%{topic_title}](%{topic_url})**\n>\n> %{topic_excerpt}\n\nvid \n\n> %{site_title} -- %{site_description}\n\nOm du är intresserad, klicka på länken nedan:\n\n%{topic_url}\n"
     invited_to_topic_body: "%{username} bjöd in dig till en diskussion\n\n> **[%{topic_title}](%{topic_url})**\n>\n> %{topic_excerpt}\n\nvid \n\n> %{site_title} -- %{site_description}\n\nOm du är intresserad, klicka på länken nedan:\n\n%{topic_url}\n"

@@ -473,6 +473,7 @@ id:
       this_weekend: "Akhir pekan ini"
       start_of_next_business_week: "Senin"
       start_of_next_business_week_alt: "Senin Depan"
+      next_week: "Minggu depan"
       two_weeks: "Dua pekan"
       next_month: "Bulan depan"
       six_months: "Enam bulan"

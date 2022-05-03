@@ -402,6 +402,7 @@ es:
       time_must_be_provided: "Hay que poner un tiempo para todos recordatorios"
       for_topic_must_use_first_post: "Solo puedes usar la primera publicación para añadir el tema a marcadores."
       bookmarkable_id_type_required: "El nombre y el tipo del elemento a añadir a marcadores es obligatorio."
+      invalid_bookmarkable: "No puedes añadir a favoritos: %{type}"
     reminders:
       at_desktop: "La próxima vez que esté en mi ordenador"
       later_today: "Más tarde durante el día de hoy"
@@ -1530,6 +1531,7 @@ es:
     ga_universal_auto_link_domains: "Activar seguimiento multi-dominio de Google Universal Analytics. Los enlaces salientes a estos dominios tendrán la id de cliente añadida a ellos. Ver <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Google's Cross-Domain Tracking guide.</a>"
     gtm_container_id: "ID de contenedor de Google Tag Manager. Ej.: GTM-ABCDEF. <br/>Nota: puede que los scripts de terceros cargados por GTM tengan que ser añadidos a la lista de admitidos en «content security policy script src»."
     enable_escaped_fragments: "Ir a la API Ajax-Crawling de Google si no se detecta ningún webcrawler. Visita <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
+    moderators_manage_categories_and_groups: "Permitir que los moderadores creen y gestionen grupos y categorías"
     moderators_change_post_ownership: "Permitir que los moderadores cambien el autor de las publicaciones."
     cors_origins: "Orígenes permitidos para las solicitudes de origen cruzado (CORS). Cada origen debe incluir http:// or https://. La variable env DISCOURSE_ENABLE_CORS debe establecerse como verdadero para activar CORS."
     use_admin_ip_allowlist: "Los administradores solo pueden iniciar sesión si están en una dirección IP definida en la lista de direcciones IP revisadas (Administrados > Registros > Direcciones IP)."
@@ -1558,6 +1560,7 @@ es:
     send_tl2_promotion_message: "Enviar un mensaje a los nuevos usuarios de nivel de confianza 2 cuando suban de nivel."
     suppress_reply_directly_below: "No mostrar el contador de respuestas desplegable en una publicación si solo hay una única respuesta justo debajo de esta publicación."
     suppress_reply_directly_above: "No mostrar el desplegable en-respuesta-a en una publicación cuando solo hay una sola respuesta justo encima de esta publicación."
+    remove_full_quote: "Recortar cita automáticamente si: (a) aparece al principio de la publicación, (b) es una cita de una publicación entera y (c) es de la publicación anterior. Para más detalles, ver <a href='https://meta.discourse.org/t/removal-of-full-quotes-from-direct-replies/106857' target='_blank'>Removal of full quotes from direct replies</a>"
     suppress_reply_when_quoting: "No mostrar el desplegable en-respuesta-a en una publicación cuando la publicación cite la respuesta."
     max_reply_history: "Número máximo de respuestas que se muestran al expandir en-respuesta-a"
     topics_per_period_in_top_summary: "Número de temas destacados que se muestran en el resumen de temas destacados."
@@ -2105,6 +2108,7 @@ es:
     create_revision_on_bulk_topic_moves: "Crear edición para las primeras publicaciones cuando los temas se mueven a una nueva categoría en masa."
     allow_changing_staged_user_tracking: "Permitir que los usuarios con permisos de administración cambien las preferencias de notificación de categorías y etiquetas de los usuarios temporales."
     use_email_for_username_and_name_suggestions: "Usar la primera parte de las direcciones de correo electrónico para las sugerencias de nombre de usuario y nombre. Ten en cuenta que esto facilita que el público adivine las direcciones de correo electrónico completas de los usuarios (porque una gran proporción de personas usan servicios como `gmail.com`)."
+    use_name_for_username_suggestions: "Usar el nombre completo para sugerir nombres de usuario"
     errors:
       invalid_css_color: "Color no válido. Introduce el nombre de un color o su valor hexadecimal."
       invalid_email: "Dirección de correo electrónico no válida."
@@ -2157,6 +2161,7 @@ es:
       google_oauth2_hd_groups: "Rellena el ajuste «google oauth2 hd» antes de activar esta opción."
       search_tokenize_chinese_enabled: "Debes desactivar el ajuste «search_tokenize_chinese» antes de activar este."
       search_tokenize_japanese_enabled: "Debes desactivar el ajuste «search_tokenize_japanese» antes de activar este."
+      discourse_connect_cannot_be_enabled_if_second_factor_enforced: "No puedes activar DiscourseConnect si la autenticación de dos factores (2FA) es obligatoria."
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.ejemplo.com"
@@ -3153,6 +3158,7 @@ es:
   subject_re: "Re:"
   subject_pm: "[MP]"
   email_from: "%{user_name} vía %{site_name}"
+  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "Respuestas anteriores"
     reached_limit:
@@ -3171,6 +3177,9 @@ es:
     reply_above_line: "## Escribe tu respuesta sobre esta línea. ##"
     posted_by: "Publicado por %{username} el %{post_date}"
     pm_participants: "Participantes: %{participants}"
+    more_pm_participants:
+      one: "%{participants} y %{count} más"
+      other: "%{participants} y %{count} más"
     invited_group_to_private_message_body: |
       %{username} invitó a @%{group_name} a un mensaje
 

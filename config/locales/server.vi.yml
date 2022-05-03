@@ -1182,6 +1182,7 @@ vi:
     default_categories_regular: "Danh sách các danh mục không bị tắt tiếng theo mặc định. Hữu ích khi cài đặt trang web `mute_all_categories_by_default` được bật."
     heading_font: "Phông chữ để sử dụng cho các tiêu đề trên trang web. Chủ đề có thể ghi đè thông qua thuộc tính tùy chỉnh CSS `--heading-font-family`."
     short_title: "Tiêu đề ngắn sẽ được sử dụng trên màn hình chính, trình khởi chạy của người dùng hoặc những nơi khác mà không gian có thể bị hạn chế. Nó nên được giới hạn trong 12 ký tự."
+    suggest_weekends_in_date_pickers: "Bao gồm các ngày cuối tuần (Thứ Bảy và Chủ Nhật) trong đề xuất chọn ngày (tắt tính năng này nếu bạn chỉ sử dụng Discourse vào các ngày trong tuần, thứ Hai đến thứ Sáu)."
     errors:
       invalid_email: "Địa chỉ email sai"
       invalid_username: "Không có thành viên với tên đăng nhập này"

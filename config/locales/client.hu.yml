@@ -583,6 +583,7 @@ hu:
         other: "év"
       relative: "Relatív"
     time_shortcut:
+      now: "Most"
       later_today: "Ma később"
       next_business_day: "Következő munkanap"
       tomorrow: "Holnap"
@@ -591,6 +592,7 @@ hu:
       this_weekend: "Hétvégén"
       start_of_next_business_week: "Hétfő"
       start_of_next_business_week_alt: "Jövő hétfő"
+      next_week: "Jövő héten"
       two_weeks: "Két hét"
       next_month: "Jövő hónapban"
       two_months: "Két hónap"
@@ -2558,6 +2560,8 @@ hu:
         unpin: "Témakör kiemelésének megszüntetése..."
         unarchive: "Témakör archiválásának megszüntetése"
         archive: "Témakör archiválása"
+        invisible: "Téma listázásnak megszüntetése"
+        visible: "Téma listázása"
         reset_read: "Olvasási adatok visszaállítása"
         make_public: "Téma nyilvánossá tétele"
         make_private: "Személyes üzenet írása"
@@ -2703,6 +2707,7 @@ hu:
           one: Kijelöltél <b>%{count}</b> hozzászólást.
           other: "Kijelöltél <b>%{count}</b> hozzászólást."
     post:
+      confirm_delete: "Biztos, hogy törli ezt a bejegyzést?"
       quote_reply: "Idézet"
       quote_edit: "Szerkesztés"
       quote_share: "Megosztás"

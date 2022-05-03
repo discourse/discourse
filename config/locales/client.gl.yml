@@ -529,6 +529,7 @@ gl:
         other: "anos"
       relative: "Relativo"
     time_shortcut:
+      now: "Agora"
       later_today: "Hoxe, máis tarde"
       next_business_day: "O vindeiro día laborábel"
       tomorrow: "Mañá"
@@ -537,6 +538,7 @@ gl:
       this_weekend: "Esta fin de semana"
       start_of_next_business_week: "Luns"
       start_of_next_business_week_alt: "O vindeiro luns"
+      next_week: "A vindeira semana"
       two_weeks: "Dúas semanas"
       next_month: "O vindeiro mes"
       two_months: "Dous meses"
@@ -3561,7 +3563,6 @@ gl:
               read: Ler un tema ou unha publicación específica nel. O RSS tamén é compatíbel.
               write: Crear un tema novo ou publicalo nun xa existente.
               read_lists: Ler listaxes de temas como importantes, novos, últimos, etc. Tamén se admite RSS.
-              wordpress: Necesario para que funcione o complemento wp-discourse de WordPress.
             users:
               bookmarks: Listar os marcadores do usuario. Devolve recordatorios de marcadores ao usaren o formato ICS.
               sync_sso: Sincronizar un usuario usando SSO.

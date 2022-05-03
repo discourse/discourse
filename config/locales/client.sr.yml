@@ -462,6 +462,7 @@ sr:
       later_this_week: "Kasnije ove sedmice"
       start_of_next_business_week: "Ponedeljak"
       start_of_next_business_week_alt: "Naredni ponedeljak"
+      next_week: "Sledeće sedmice"
       next_month: "Naredni mesec"
       custom: "Prilagođen datum i vreme"
     user_action:

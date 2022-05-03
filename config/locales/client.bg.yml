@@ -532,6 +532,7 @@ bg:
         other: "дни "
       relative: "Относителна"
     time_shortcut:
+      now: "Сега"
       later_today: "По-късно днес"
       next_business_day: "Следващия работен ден"
       tomorrow: "Утре"
@@ -540,6 +541,7 @@ bg:
       this_weekend: "Този уикенд"
       start_of_next_business_week: "Понеделник"
       start_of_next_business_week_alt: "Следващия понеделник"
+      next_week: "Следваща седмица"
       two_weeks: "Две седмици"
       next_month: "Следващия месец"
       two_months: "Два месеца"

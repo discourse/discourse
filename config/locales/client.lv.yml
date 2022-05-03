@@ -513,6 +513,7 @@ lv:
       this_weekend: "Šajā nedēļas nogalē"
       start_of_next_business_week: "Pirmdiena"
       start_of_next_business_week_alt: "Nākošo pirmdien"
+      next_week: "Nākamā nedēļā"
       two_weeks: "Divas nedēļas"
       next_month: "Nākamā mēnesī"
       six_months: "Seši mēneši"

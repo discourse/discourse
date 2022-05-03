@@ -2108,6 +2108,7 @@ de:
     create_revision_on_bulk_topic_moves: "Erstelle eine Überarbeitung für die ersten Beiträge, wenn Themen massenweise in eine neue Kategorie verschoben werden."
     allow_changing_staged_user_tracking: "Erlauben Sie, dass die Kategorie- und Tag-Benachrichtigungseinstellungen eines bereitgestellten Benutzers von einem Administratorbenutzer geändert werden."
     use_email_for_username_and_name_suggestions: "Verwende den ersten Teil der E-Mail-Adressen für Vorschläge für Benutzernamen und Namen. Dies macht es für die Öffentlichkeit einfacher, die vollständigen E-Mail-Adressen der Nutzer/innen zu erraten (da ein großer Teil der Menschen gemeinsame Dienste wie \"gmail.com\" nutzt)."
+    use_name_for_username_suggestions: "Verwende den vollen Namen eines Benutzers, wenn du Benutzernamen vorschlägst."
     errors:
       invalid_css_color: "Ungültige Farbe. Gib einen Farbnamen oder einen Hexadezimalwert ein."
       invalid_email: "Ungültige E-Mail-Adresse."

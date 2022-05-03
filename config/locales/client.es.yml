@@ -77,15 +77,33 @@ es:
         date_month: "D MMM"
         date_year: "MMM 'YY"
       medium:
+        less_than_x_minutes:
+          one: "hace menos de %{count} min"
+          other: "hace menos de %{count} mins"
         x_minutes:
           one: "%{count} minuto"
           other: "%{count} minutos"
         x_hours:
           one: "%{count} hora"
           other: "%{count} horas"
+        about_x_hours:
+          one: "alrededor de %{count} hora"
+          other: "alrededor de %{count} horas"
         x_days:
           one: "%{count} día"
           other: "%{count} días"
+        x_months:
+          one: "%{count} mes"
+          other: "%{count} meses"
+        about_x_years:
+          one: "alrededor de %{count} año"
+          other: "alrededor de %{count} años"
+        over_x_years:
+          one: "más de %{count} año"
+          other: "más de %{count} años"
+        almost_x_years:
+          one: "casi %{count} año"
+          other: "casi %{count} años"
         date_year: "D MMM 'YY"
       medium_with_ago:
         x_minutes:
@@ -565,7 +583,9 @@ es:
         other: "años"
       relative: "Relativo"
     time_shortcut:
+      now: "Ahora"
       later_today: "Más tarde durante el día de hoy"
+      two_days: "Dos días"
       next_business_day: "Siguiente día hábil"
       tomorrow: "Mañana"
       post_local_date: "Fecha en la publicación"
@@ -573,6 +593,7 @@ es:
       this_weekend: "Este fin de semana"
       start_of_next_business_week: "Lunes"
       start_of_next_business_week_alt: "El próximo lunes"
+      next_week: "La próxima semana"
       two_weeks: "Dos semanas"
       next_month: "El próximo mes"
       two_months: "Dos meses"
@@ -1064,6 +1085,7 @@ es:
       external_links_in_new_tab: "Abrir todos los enlaces externos en una nueva pestaña"
       enable_quoting: "Activar respuesta citando el texto seleccionado"
       enable_defer: "Activar diferir para marcar temas no leídos"
+      enable_experimental_sidebar: "Activar barra lateral experimental"
       change: "cambio"
       featured_topic: "Tema destacado"
       moderator: "%{user} es un moderador"
@@ -1536,7 +1558,9 @@ es:
         title: "Resumen"
         stats: "Estadísticas"
         time_read: "tiempo de lectura"
+        time_read_title: "%{duration} (total)"
         recent_time_read: "tiempo de lectura reciente"
+        recent_time_read_title: "%{duration} (últimos 60 días)"
         topic_count:
           one: "tema creado"
           other: "temas creados"
@@ -2196,6 +2220,8 @@ es:
       in: "en"
       in_this_topic: "en este tema"
       in_this_topic_tooltip: "cambiar a buscar en todos los temas"
+      in_messages: "en mensajes"
+      in_messages_tooltip: "cambiar a búsqueda de temas normales"
       in_topics_posts: "en todos los temas y publicaciones"
       enter_hint: "o pulsa Intro"
       in_posts_by: "en publicaciones por %{username}"
@@ -2573,6 +2599,8 @@ es:
         unpin: "Desanclar tema…"
         unarchive: "Desarchivar tema"
         archive: "Archivar tema"
+        invisible: "Quitar de la lista"
+        visible: "Devolver a la lista"
         reset_read: "Restablecer datos de lectura"
         make_public: "Hacer el tema público…"
         make_private: "Crear mensaje personal"
@@ -2765,6 +2793,7 @@ es:
           other: "Has seleccionado <b>%{count}</b> publicaciones."
       deleted_by_author_simple: "(tema eliminado por su autor/a)"
     post:
+      confirm_delete: "¿Seguro que quieres eliminar esta publicación?"
       quote_reply: "Citar"
       quote_reply_shortcut: "O pulsa q"
       quote_edit: "Editar"
@@ -3508,6 +3537,9 @@ es:
       choose_for_topic_required:
         one: "selecciona al menos %{count} etiqueta…"
         other: "selecciona al menos %{count} etiquetas…"
+      choose_for_topic_required_group:
+        one: "selecciona %{count} etiqueta de «%{name}»…"
+        other: "selecciona %{count} etiquetas de «%{name}»…"
       info: "Info"
       default_info: "Esta etiqueta no está restringida a ninguna categoría, y no tiene sinónimos."
       staff_info: "Para añadir restricciones, mete la etiqueta a un <a href=%{basePath}/tag_groups>grupo de etiquetas</a>."
@@ -3901,7 +3933,6 @@ es:
               write: Crear un nuevo tema o publicar en uno existente.
               update: Actualizar un tema. Cambiar el título, categoría, etiquetas, etc.
               read_lists: Lea listas de temas como destacados, nuevos, recientes, etc. También se admite RSS.
-              wordpress: Necesario para que el plugin para WordPress wp-discourse funcione.
             posts:
               edit: Edita cualquier publicación o una específica.
             categories:

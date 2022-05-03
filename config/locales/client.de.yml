@@ -583,7 +583,9 @@ de:
         other: "Jahre"
       relative: "Relativ"
     time_shortcut:
+      now: "Jetzt"
       later_today: "Im Laufe des Tages"
+      two_days: "Zwei Tage"
       next_business_day: "Nächster Arbeitstag"
       tomorrow: "Morgen"
       post_local_date: "Datum im Beitrag"
@@ -591,6 +593,7 @@ de:
       this_weekend: "Dieses Wochenende"
       start_of_next_business_week: "Montag"
       start_of_next_business_week_alt: "Am kommenden Montag"
+      next_week: "Nächste Woche"
       two_weeks: "Zwei Wochen"
       next_month: "Nächsten Monat"
       two_months: "Zwei Monate"
@@ -1082,6 +1085,7 @@ de:
       external_links_in_new_tab: "Öffne alle externen Links in einer neuen Registerkarte"
       enable_quoting: "Aktiviere Zitatantwort mit dem hervorgehobenen Text"
       enable_defer: "Aufschieben aktivieren, um Themen als ungelesen zu markieren"
+      enable_experimental_sidebar: "Experimentelle Seitenleiste aktivieren"
       change: "ändern"
       featured_topic: "Hervorgehobenes Thema"
       moderator: "%{user} ist ein Moderator"
@@ -2218,6 +2222,8 @@ de:
       in: "in"
       in_this_topic: "in diesem Thema"
       in_this_topic_tooltip: "zur Suche in allen Themen wechseln"
+      in_messages: "in Nachrichten"
+      in_messages_tooltip: "zur Suche nach regulären Themen wechseln"
       in_topics_posts: "in allen Themen und Beiträgen"
       enter_hint: "oder drücke die Eingabetaste"
       in_posts_by: "in Beiträgen von %{username}"
@@ -2595,6 +2601,8 @@ de:
         unpin: "Thema loslösen …"
         unarchive: "Thema aus Archiv holen"
         archive: "Thema archivieren"
+        invisible: "Thema nicht auflisten"
+        visible: "Thema auflisten"
         reset_read: "„Gelesen“ zurücksetzen"
         make_public: "Öffentliches Thema erstellen..."
         make_private: "In persönliche Nachricht umwandeln"
@@ -2787,6 +2795,7 @@ de:
           other: "Du hast <b>%{count}</b> Beiträge ausgewählt."
       deleted_by_author_simple: "(Thema vom Verfasser gelöscht)"
     post:
+      confirm_delete: "Möchtest du wirklich diesen Beitrag löschen?"
       quote_reply: "Zitat"
       quote_reply_shortcut: "Oder drücke q"
       quote_edit: "Bearbeiten"
@@ -3927,7 +3936,6 @@ de:
               write: Erstelle ein neues Thema oder schreibe einen Beitrag zu einem bestehenden.
               update: Aktualisiere ein Thema. Ändere den Titel, die Kategorie, Tags usw.
               read_lists: Lies Themenlisten wie „Angesagt“, „Neu“, „Aktuell“ usw. RSS wird ebenfalls unterstützt.
-              wordpress: Notwendig, damit das „wp-discourse“-Plug-in für WordPress funktioniert.
             posts:
               edit: Bearbeite jeden Beitrag oder einen bestimmten.
             categories:

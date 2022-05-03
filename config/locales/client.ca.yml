@@ -535,6 +535,7 @@ ca:
       this_weekend: "Aquest cap de setmana"
       start_of_next_business_week: "Dilluns"
       start_of_next_business_week_alt: "Dilluns vinent"
+      next_week: "La setmana que ve"
       two_weeks: "Dues setmanes"
       next_month: "El mes que ve"
       six_months: "Sis mesos"

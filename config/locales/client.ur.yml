@@ -561,6 +561,7 @@ ur:
         other: "سال"
       relative: "تعلق"
     time_shortcut:
+      now: "ابھی"
       later_today: "آج بعد میں"
       next_business_day: "اگلے کاروباری دن"
       tomorrow: "کَل"
@@ -569,6 +570,7 @@ ur:
       this_weekend: "اس ہفتے کے آخر میں"
       start_of_next_business_week: "پیر"
       start_of_next_business_week_alt: "اگلے پیر"
+      next_week: "اگلے ہفتے"
       two_weeks: "دو ہفتے"
       next_month: "اگلے ماہ"
       two_months: "دو مہینے"
@@ -3863,7 +3865,6 @@ ur:
               write: ایک نیا موضوع بنائیں یا موجودہ موضوع پر پوسٹ کریں۔
               update: ایک موضوع کو اپ ڈیٹ کریں۔ عنوان، زمرہ، ٹیگز وغیرہ تبدیل کریں۔
               read_lists: ٹاپک، نیا، تازہ ترین، وغیرہ جیسے عنوانات کی فہرستیں پڑھیں۔ RSS بھی تعاون یافتہ ہے۔
-              wordpress: ورڈپریس wp-discourse پلگ ان کے کام کرنے کے لیے ضروری ہے۔
             posts:
               edit: کسی بھی پوسٹ یا مخصوص میں ترمیم کریں۔
             categories:

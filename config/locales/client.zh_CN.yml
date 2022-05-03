@@ -533,7 +533,9 @@ zh_CN:
         other: "年"
       relative: "相对"
     time_shortcut:
+      now: "现在"
       later_today: "今天晚些时候"
+      two_days: "两天"
       next_business_day: "下一个工作日"
       tomorrow: "明天"
       post_local_date: "帖子中的日期"
@@ -541,6 +543,7 @@ zh_CN:
       this_weekend: "本周末"
       start_of_next_business_week: "星期一"
       start_of_next_business_week_alt: "下周一"
+      next_week: "下周"
       two_weeks: "两周"
       next_month: "下个月"
       two_months: "两个月"
@@ -1025,6 +1028,7 @@ zh_CN:
       external_links_in_new_tab: "在新标签页中打开所有外部链接"
       enable_quoting: "为突出显示的文字启用引用回复"
       enable_defer: "启用延迟以将话题标记为未读"
+      enable_experimental_sidebar: "启用实验性侧边栏"
       change: "更改"
       featured_topic: "精选话题"
       moderator: "%{user} 是版主"
@@ -2121,6 +2125,8 @@ zh_CN:
       in: "在"
       in_this_topic: "在此主题中"
       in_this_topic_tooltip: "切换到搜索所有主题"
+      in_messages: "在消息中"
+      in_messages_tooltip: "切换到搜索常规话题"
       in_topics_posts: "在所有主题和帖子中"
       enter_hint: "或按 Enter"
       in_posts_by: "搜索 @%{username} 的帖子"
@@ -2484,6 +2490,8 @@ zh_CN:
         unpin: "取消置顶话题…"
         unarchive: "取消归档话题"
         archive: "归档话题"
+        invisible: "取消列出话题"
+        visible: "列出话题"
         reset_read: "重置阅读数据"
         make_public: "设为公开话题..."
         make_private: "设为个人消息"
@@ -2664,6 +2672,7 @@ zh_CN:
           other: "您已选择 <b>%{count}</b> 个帖子。"
       deleted_by_author_simple: "（话题已被作者删除）"
     post:
+      confirm_delete: "你确定你要删除这个帖子吗？"
       quote_reply: "引用"
       quote_reply_shortcut: "或者按 q"
       quote_edit: "编辑"
@@ -3736,6 +3745,7 @@ zh_CN:
             使用范围时，您可以将一个 API 密钥限制到一组特定的端点。
             您还可以定义允许哪些参数。使用逗号分隔多个值。
           title: 范围
+          granular: Granular
           read_only: 只读
           global: 全局范围
           global_description: API 密钥没有限制，所有终端节点均可访问。
@@ -3753,7 +3763,6 @@ zh_CN:
               write: 创建一个新话题或发布到现有话题。
               update: 更新一个话题。更改标题、类别、标签等。
               read_lists: 阅读诸如热门、新、最新等话题列表。也支持 RSS。
-              wordpress: WordPress wp-discourse 插件正常工作所必需。
             posts:
               edit: 编辑任意帖子或特定帖子。
             categories:

@@ -21,7 +21,7 @@ fa_IR:
     - null
     - ژانویه
     - فوریه
-    - مارچ
+    - مارس
     - آپریل
     - می
     - جون
@@ -529,7 +529,10 @@ fa_IR:
     error_staged: "خطایی در تغییر ایمیل رخ داده است. این ایمیل در حال حاضر در یک حساب‌کاربری خودکار استفاده می‌شود."
     already_done: "با عرض پوزش، پیوند تایید نامعتبر است. شاید ایمیل شما تغییر کرده؟"
     confirm: "تایید"
+    authorizing_new:
+      description_add: "لطفا تایید کنید که می‌خواهید یک آدرس ایمیل جایگزین اضافه کنید:"
     authorizing_old:
+      description_add: "لطفا تایید کنید که می‌خواهید یک آدرس ایمیل جایگزین اضافه کنید:"
       old_email: "ایمیل قدیمی: %{email}"
       new_email: "ایمیل جدید: %{email}"
   activation:
@@ -1228,6 +1231,7 @@ fa_IR:
     suppress_overlapping_tags_in_list: "اگر برچسب با عنوان موضوع دقیقا یکی بودند، برچسب را نشان نده."
     enable_sitemap: "یک نقشه سایت برای سایت خود ایجاد کنید و آن را در پرونده robots.txt قرار دهید."
     sitemap_page_size: "تعداد آدرس‌های اینترنتی که باید در هر صفحه نقشه سایت گنجانده شود. حداکثر ۵۰٫۰۰۰"
+    use_name_for_username_suggestions: "هنگام پیشنهاد نام‌کاربری از نام کامل، کاربر استفاده کنید."
     errors:
       invalid_email: "آدرس ایمیل نامعتبر"
       invalid_username: "هیچ کاربری با این نام‌کاربری وجود ندارد."
@@ -1260,7 +1264,7 @@ fa_IR:
   search:
     within_post: "#%{post_number} توسط %{username}"
     types:
-      category: "دسته‌ها"
+      category: "دسته‌بندی‌ها"
       topic: "نتایج"
       user: "کاربران"
     results_page: "نتایج جستجو برای '%{term}'"
@@ -2325,6 +2329,8 @@ fa_IR:
       confirm_title: "آگاه‌سازی فعال شد - %{site_title}"
       confirm_body: "موفق شدید. اگاهسازی‌ها فعال شدند."
       custom: "اعلان از طرف %{username} بر روی %{site_title}"
+  staff_action_logs:
+    unknown: "ناشناس"
   reviewables:
     priorities:
       low: "کم"
