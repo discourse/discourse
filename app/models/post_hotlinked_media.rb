@@ -8,7 +8,7 @@ class PostHotlinkedMedia < ActiveRecord::Base
     too_large: "too_large",
     download_failed: "download_failed",
     upload_create_failed: "upload_create_failed"
-  }, _scopes: false
+  }
 end
 
 # == Schema Information

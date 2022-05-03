@@ -718,8 +718,8 @@ class Post < ActiveRecord::Base
     end
 
     if invalidate_broken_images
-      custom_fields.delete(BROKEN_IMAGES)
-      save_custom_fields
+      post_hotlinked_media.download_failed.destroy_all
+      post_hotlinked_media.upload_create_failed.destroy_all
     end
 
     # Extracts urls from the body
