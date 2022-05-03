@@ -25,5 +25,5 @@ end
 #
 # Indexes
 #
-#  index_post_hotlinked_media_on_post_id_and_url  (post_id,url) UNIQUE
+#  index_post_hotlinked_media_on_post_id_and_url_md5  (post_id, md5((url)::text)) UNIQUE
 #
