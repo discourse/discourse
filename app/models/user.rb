@@ -752,12 +752,17 @@ class User < ActiveRecord::Base
     end
   end
 
-  def update_ip_address!(new_ip_address)
-    unless ip_address == new_ip_address || new_ip_address.blank?
-      update_column(:ip_address, new_ip_address)
+  def self.update_ip_address!(user_id, new_ip:, old_ip:)
+    unless old_ip == new_ip || new_ip.blank?
+
+      DB.exec(<<~SQL, user_id: user_id, ip_address: new_ip)
+        UPDATE users
+        SET ip_address = :ip_address
+        WHERE id = :user_id
+      SQL
 
       if SiteSetting.keep_old_ip_address_count > 0
-        DB.exec(<<~SQL, user_id: self.id, ip_address: new_ip_address, current_timestamp: Time.zone.now)
+        DB.exec(<<~SQL, user_id: user_id, ip_address: new_ip, current_timestamp: Time.zone.now)
         INSERT INTO user_ip_address_histories (user_id, ip_address, created_at, updated_at)
         VALUES (:user_id, :ip_address, :current_timestamp, :current_timestamp)
         ON CONFLICT (user_id, ip_address)
@@ -765,7 +770,7 @@ class User < ActiveRecord::Base
           UPDATE SET updated_at = :current_timestamp
         SQL
 
-        DB.exec(<<~SQL, user_id: self.id, offset: SiteSetting.keep_old_ip_address_count)
+        DB.exec(<<~SQL, user_id: user_id, offset: SiteSetting.keep_old_ip_address_count)
         DELETE FROM user_ip_address_histories
         WHERE id IN (
           SELECT
@@ -780,24 +785,36 @@ class User < ActiveRecord::Base
     end
   end
 
-  def last_seen_redis_key(now)
+  def update_ip_address!(new_ip_address)
+    User.update_ip_address!(id, new_ip: new_ip_address, old_ip: ip_address)
+  end
+
+  def self.last_seen_redis_key(user_id, now)
     now_date = now.to_date
-    "user:#{id}:#{now_date}"
+    "user:#{user_id}:#{now_date}"
+  end
+
+  def last_seen_redis_key(now)
+    User.last_seen_redis_key(id, now)
   end
 
   def clear_last_seen_cache!(now = Time.zone.now)
     Discourse.redis.del(last_seen_redis_key(now))
   end
 
-  def update_last_seen!(now = Time.zone.now)
-    redis_key = last_seen_redis_key(now)
+  def self.should_update_last_seen?(user_id, now = Time.zone.now)
+    return true if SiteSetting.active_user_rate_limit_secs <= 0
 
-    if SiteSetting.active_user_rate_limit_secs > 0
-      return if !Discourse.redis.set(
-        redis_key, "1",
-        nx: true,
-        ex: SiteSetting.active_user_rate_limit_secs
-      )
+    Discourse.redis.set(
+      last_seen_redis_key(user_id, now), "1",
+      nx: true,
+      ex: SiteSetting.active_user_rate_limit_secs
+    )
+  end
+
+  def update_last_seen!(now = Time.zone.now, force: false)
+    if !force
+      return if !User.should_update_last_seen?(self.id, now)
     end
 
     update_previous_visit(now)

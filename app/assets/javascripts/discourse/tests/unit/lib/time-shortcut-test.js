@@ -57,35 +57,69 @@ module(
     });
 
     test("hides 'This Weekend' on Fridays, Saturdays and Sundays", function (assert) {
+      const siteSettings = { suggest_weekends_in_date_pickers: true };
       const timezone = moment.tz.guess();
       const shortcuts = defaultTimeShortcuts(timezone);
 
       this.clock = fakeTime("2100-04-22 18:00:00", timezone, true); // Thursday
-      let result = hideDynamicTimeShortcuts(shortcuts, timezone).mapBy("id");
+      let result = hideDynamicTimeShortcuts(
+        shortcuts,
+        timezone,
+        siteSettings
+      ).mapBy("id");
       assert.ok(
         result.includes("this_weekend"),
         "shows this_weekend on Thursdays"
       );
 
       this.clock = fakeTime("2100-04-23 18:00:00", timezone, true); // Friday
-      result = hideDynamicTimeShortcuts(shortcuts, timezone).mapBy("id");
+      result = hideDynamicTimeShortcuts(
+        shortcuts,
+        timezone,
+        siteSettings
+      ).mapBy("id");
       assert.notOk(
         result.includes("this_weekend"),
         "doesn't show this_weekend on Fridays"
       );
 
       this.clock = fakeTime("2100-04-24 18:00:00", timezone, true); // Saturday
-      result = hideDynamicTimeShortcuts(shortcuts, timezone).mapBy("id");
+      result = hideDynamicTimeShortcuts(
+        shortcuts,
+        timezone,
+        siteSettings
+      ).mapBy("id");
       assert.notOk(
         result.includes("this_weekend"),
         "doesn't show this_weekend on Saturdays"
       );
 
       this.clock = fakeTime("2100-04-25 18:00:00", timezone, true); // Sunday
-      result = hideDynamicTimeShortcuts(shortcuts, timezone).mapBy("id");
+      result = hideDynamicTimeShortcuts(
+        shortcuts,
+        timezone,
+        siteSettings
+      ).mapBy("id");
       assert.notOk(
         result.includes("this_weekend"),
         "doesn't show this_weekend on Sundays"
+      );
+    });
+
+    test("hides 'This Weekend' when disabled in site settings", function (assert) {
+      const siteSettings = { suggest_weekends_in_date_pickers: false };
+      const timezone = moment.tz.guess();
+      const shortcuts = defaultTimeShortcuts(timezone);
+
+      this.clock = fakeTime("2100-04-19 18:00:00", timezone, true); // Monday
+      let result = hideDynamicTimeShortcuts(
+        shortcuts,
+        timezone,
+        siteSettings
+      ).mapBy("id");
+      assert.notOk(
+        result.includes("this_weekend"),
+        "shows this_weekend on Thursdays"
       );
     });
   }

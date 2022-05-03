@@ -213,7 +213,8 @@ module SvgSprite
     "user-times",
     "users",
     "wrench",
-    "spinner"
+    "spinner",
+    "tippy-rounded-arrow"
   ])
 
   FA_ICON_MAP = { 'far fa-' => 'far-', 'fab fa-' => 'fab-', 'fas fa-' => '', 'fa-' => '' }

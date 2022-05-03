@@ -346,6 +346,7 @@ acceptance("Topic - Edit timer", function (needs) {
   });
 
   test("Shows correct time frame options", async function (assert) {
+    this.siteSettings.suggest_weekends_in_date_pickers = true;
     updateCurrentUser({ moderator: true });
 
     await visit("/t/internationalization-localization");

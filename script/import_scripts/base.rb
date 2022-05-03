@@ -458,7 +458,16 @@ class ImportScripts::Base
         .where("LOWER(name) = ?", opts[:name].downcase.strip)
         .first
 
-    return existing if existing
+    if existing
+      if import_id && existing.custom_fields["import_id"] != import_id
+        existing.custom_fields["import_id"] = import_id
+        existing.save!
+
+        add_category(import_id, existing)
+      end
+
+      return existing
+    end
 
     post_create_action = opts.delete(:post_create_action)
 

@@ -196,7 +196,8 @@ class Auth::Result
   end
 
   def username_suggester_attributes
-    attributes = [username, name]
+    attributes = [username]
+    attributes << name if SiteSetting.use_name_for_username_suggestions
     attributes << email if SiteSetting.use_email_for_username_and_name_suggestions
     attributes
   end

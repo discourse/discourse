@@ -70,7 +70,7 @@ module Stylesheet
               end
 
               target = nil
-              target_match = long.match(/admin|desktop|mobile|publish|wizard/)
+              target_match = long.match(/admin|desktop|mobile|publish|wizard|wcag|color_definitions/)
               if target_match&.length
                 target = target_match[0]
               end
@@ -93,6 +93,11 @@ module Stylesheet
     end
 
     def core_assets_refresh(target)
+      if target.match(/wcag|color_definitions/)
+        Stylesheet::Manager.clear_color_scheme_cache!
+        return
+      end
+
       targets = target ? [target] : ["desktop", "mobile", "admin"]
       Stylesheet::Manager.clear_core_cache!(targets)
       message = targets.map! do |name|

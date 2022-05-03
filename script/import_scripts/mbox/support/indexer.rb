@@ -55,7 +55,8 @@ module ImportScripts::Mbox
 
       category = {
         name: metadata['name'].presence || File.basename(directory),
-        description: metadata['description']
+        description: metadata['description'],
+        parent_category_id: metadata['parent_category_id'].presence,
       }
 
       @database.insert_category(category)
@@ -67,7 +68,28 @@ module ImportScripts::Mbox
         begin
           msg_id = receiver.message_id
           parsed_email = receiver.mail
+
           from_email, from_display_name = receiver.parse_from_field(parsed_email)
+
+          if @settings.fix_mailman_via_addresses
+            # Detect cases like this and attempt to get actual sender from other headers:
+            #    From: Jane Smith via ListName <ListName@lists.example.com>
+
+            if receiver.mail['X-Mailman-Version'] && from_display_name =~ /\bvia \S+$/i
+              email_from_from_line = opts[:from_line].scan(/From (\S+)/).flatten.first
+              a = Mail::Address.new(email_from_from_line)
+              from_email = a.address
+              from_display_name = a.display_name
+              # if name is not available there, look for it in Reply-To
+              if from_display_name.nil?
+                reply_to = receiver.mail.to_s.scan(/[\n\r]Reply-To: ([^\r\n]+)/).flatten.first
+                from_display_name = Mail::Address.new(reply_to).display_name
+              end
+            end
+          end
+
+          from_email = from_email.sub(/^(.*)=/, '') if @settings.elide_equals_in_addresses
+
           body, elided, format = receiver.select_body
           reply_message_ids = extract_reply_message_ids(parsed_email)
 
@@ -125,11 +147,12 @@ module ImportScripts::Mbox
         puts "indexing #{filename}"
 
         if @split_regex.present?
-          each_mail(filename) do |raw_message, first_line_number, last_line_number|
+          each_mail(filename) do |raw_message, first_line_number, last_line_number, from_line|
             opts = {
               first_line_number: first_line_number,
               last_line_number: last_line_number,
-              start_time: monotonic_time
+              start_time: monotonic_time,
+              from_line: from_line,
             }
             receiver = read_mail_from_string(raw_message)
             yield receiver, filename, opts if receiver.present?
@@ -159,13 +182,17 @@ module ImportScripts::Mbox
       first_line_number = 1
       last_line_number = 0
 
+      from_line = nil
+
       each_line(filename) do |line|
         if line.scrub =~ @split_regex
           if last_line_number > 0
-            yield raw_message, first_line_number, last_line_number
+            yield raw_message, first_line_number, last_line_number, from_line
             raw_message = +''
             first_line_number = last_line_number + 1
           end
+
+          from_line = line
         else
           raw_message << line
         end
@@ -173,7 +200,7 @@ module ImportScripts::Mbox
         last_line_number += 1
       end
 
-      yield raw_message, first_line_number, last_line_number if raw_message.present?
+      yield raw_message, first_line_number, last_line_number, from_line if raw_message.present?
     end
 
     def each_line(filename)
@@ -202,7 +229,7 @@ module ImportScripts::Mbox
 
     def extract_subject(receiver, list_name)
       subject = receiver.subject
-      subject.blank? ? nil : subject.strip
+      subject.blank? ? nil : subject.strip.gsub(/\t+/, ' ')
     end
 
     def ignored_file?(path, checksums)

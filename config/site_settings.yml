@@ -691,6 +691,8 @@ users:
     hidden: true
   use_email_for_username_and_name_suggestions:
     default: false
+  use_name_for_username_suggestions:
+    default: true
 
 groups:
   enable_group_directory:
@@ -2396,6 +2398,10 @@ uncategorized:
     client: true
     default: false
     hidden: true
+
+  suggest_weekends_in_date_pickers:
+    client: true
+    default: true
 
 user_preferences:
   default_email_digest_frequency:

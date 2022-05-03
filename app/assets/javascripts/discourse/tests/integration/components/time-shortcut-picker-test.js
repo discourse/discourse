@@ -38,6 +38,7 @@ discourseModule(
       template,
 
       beforeEach() {
+        this.siteSettings.suggest_weekends_in_date_pickers = true;
         const tuesday = "2100-06-08T08:00:00";
         this.clock = fakeTime(tuesday, this.currentUser._timezone, true);
       },

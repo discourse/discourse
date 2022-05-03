@@ -598,6 +598,16 @@ class SessionController < ApplicationController
     }
   end
 
+  def scopes
+    if is_api?
+      key = request.env[Auth::DefaultCurrentUserProvider::HEADER_API_KEY]
+      api_key = ApiKey.active.with_key(key).first
+      render_serialized(api_key.api_key_scopes, ApiKeyScopeSerializer, root: 'scopes')
+    else
+      render body: nil, status: 404
+    end
+  end
+
   protected
 
   def normalized_login_param
