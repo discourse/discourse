@@ -50,7 +50,17 @@ module Jobs
       components = []
 
       COMPONENTS.each do |name|
-        h = { name: name, method: :"#{name}_export" }
+        export_method = \
+          if name == "bookmarks"
+            if SiteSetting.use_polymorphic_bookmarks
+              "bookmarks_polymorphic_export"
+            else
+              "bookmarks_export"
+            end
+          else
+            "#{name}_export"
+          end
+        h = { name: name, method: :"#{export_method}" }
         h[:filetype] = :csv
         filetype_method = :"#{name}_filetype"
         if respond_to? filetype_method
@@ -233,10 +243,14 @@ module Jobs
     def bookmarks_polymorphic_export
       return enum_for(:bookmarks_polymorphic_export) unless block_given?
 
-      @current_user.bookmarks.order(:id).each do |bkmk|
+      @current_user.bookmarks.where.not(bookmarkable_type: nil).order(:id).each do |bkmk|
         link = ''
         if guardian.can_see_bookmarkable?(bkmk)
-          link = bkmk.bookmarkable.full_url
+          if bkmk.bookmarkable.respond_to?(:full_url)
+            link = bkmk.bookmarkable.full_url
+          else
+            link = bkmk.bookmarkable.url
+          end
         end
 
         yield [
