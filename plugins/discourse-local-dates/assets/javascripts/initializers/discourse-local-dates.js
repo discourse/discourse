@@ -268,6 +268,9 @@ export default {
       allowHTML: true,
       interactive: true,
       appendTo: "parent",
+      onHidden: (instance) => {
+        instance.destroy();
+      },
     });
   },
 
