@@ -453,6 +453,8 @@ class Search
     end
   end
 
+  # TODO (martin) [POLYBOOK] Make a separate PR for advanced searched in:bookmarks
+  # functionality as the bookmarkables will have to define this.
   advanced_filter(/^in:(bookmarks)$/i) do |posts, match|
     if @guardian.user
       posts.where("posts.id IN (SELECT post_id FROM bookmarks WHERE bookmarks.user_id = #{@guardian.user.id})")

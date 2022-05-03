@@ -221,6 +221,8 @@ class Bookmark < ActiveRecord::Base
     end
   end
 
+  # TODO (martin) [POLYBOOK] Make a separate PR for reports
+  # functionality as the bookmarkables will have to define this.
   def self.count_per_day(opts = nil)
     opts ||= {}
     result = where('bookmarks.created_at >= ?', opts[:start_date] || (opts[:since_days_ago] || 30).days.ago)
