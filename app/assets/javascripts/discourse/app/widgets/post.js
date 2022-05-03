@@ -436,8 +436,11 @@ createWidget("post-contents", {
     if (this.siteSettings.enable_filtered_replies_view) {
       const topicController = this.register.lookup("controller:topic");
 
-      defaultState.filteredRepliesShown =
-        topicController.replies_to_post_number === attrs.post_number.toString();
+      if (attrs.post_number) {
+        defaultState.filteredRepliesShown =
+          topicController.replies_to_post_number ===
+          attrs.post_number.toString();
+      }
     }
 
     return defaultState;
