@@ -46,6 +46,7 @@ class CreatePostHotlinkedMedia < ActiveRecord::Migration[6.1]
           JOIN json_each_text(pcf.value::json) obj ON true
           JOIN uploads ON obj.value::bigint = uploads.id
           WHERE name='downloaded_images'
+          ON CONFLICT (post_id, md5(url::text)) DO NOTHING
         SQL
 
         execute <<~SQL
