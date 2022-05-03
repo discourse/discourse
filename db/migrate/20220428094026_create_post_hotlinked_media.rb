@@ -22,8 +22,14 @@ class CreatePostHotlinkedMedia < ActiveRecord::Migration[6.1]
       t.bigint :upload_id
       t.timestamps
 
-      t.index [:post_id, :url], unique: true
+      # Failed on some installations due to index size. Repaired in 20220428094027
+      # t.index [:post_id, :url], unique: true
     end
+
+    execute <<~SQL
+      CREATE UNIQUE INDEX index_post_hotlinked_media_on_post_id_and_url_md5
+      ON post_hotlinked_media (post_id, md5(url));
+    SQL
 
     reversible do |dir|
       dir.up do
