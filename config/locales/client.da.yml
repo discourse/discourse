@@ -556,6 +556,7 @@ da:
         other: "år"
       relative: "Relativ"
     time_shortcut:
+      now: "Nu"
       later_today: "Senere i dag"
       next_business_day: "Næste hverdag"
       tomorrow: "I morgen"
@@ -564,6 +565,7 @@ da:
       this_weekend: "Denne weekend"
       start_of_next_business_week: "Mandag"
       start_of_next_business_week_alt: "Næste mandag"
+      next_week: "Næste uge"
       two_weeks: "To uger"
       next_month: "Næste måned"
       two_months: "To måneder"
@@ -3758,7 +3760,6 @@ da:
               read: Læs et emne eller et bestemt indlæg i det. RSS understøttes også.
               write: Opret et nyt emne eller et nyt indlæg i et eksisterende emne.
               read_lists: Læse emnelister som top, nye, nyeste osv. RSS understøttes også.
-              wordpress: Nødvendigt for at WordPress wp-discourse-plugin fungerer.
             categories:
               list: Hent en liste over kategorier.
               show: Hent en enkelt kategori efter id.

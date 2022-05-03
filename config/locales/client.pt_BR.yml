@@ -559,6 +559,7 @@ pt_BR:
         other: "anos"
       relative: "Relativo"
     time_shortcut:
+      now: "Agora"
       later_today: "Hoje mais tarde"
       next_business_day: "Próximo dia útil"
       tomorrow: "Amanhã"
@@ -567,6 +568,7 @@ pt_BR:
       this_weekend: "Neste fim de semana"
       start_of_next_business_week: "Segunda-feira"
       start_of_next_business_week_alt: "Próxima segunda-feira"
+      next_week: "Próxima semana"
       two_weeks: "Duas semanas"
       next_month: "Próximo mês"
       two_months: "Dois meses"
@@ -3848,7 +3850,6 @@ pt_BR:
               read: Leia um tópico ou uma postagem específica nele. RSS também é compatível.
               write: Crie um novo tópico ou poste em algum que já existe.
               read_lists: Leia listas de tópico como melhores, novidades, mais recentes. RSS também é compatível.
-              wordpress: Necessário para que o plug-in wp-discourse do WordPress funcione.
             posts:
               edit: Edite qualquer postagem ou especifique uma.
             uploads:

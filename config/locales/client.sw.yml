@@ -335,6 +335,7 @@ sw:
       tomorrow: "Kesho"
       later_this_week: "Baada ya mda ndani ya wiki hii"
       this_weekend: "Wikiendi hii"
+      next_week: "Wiki Ijayo"
       next_month: "Mwezi ujao"
       forever: "Milele"
       select_timeframe: "Chagua fremu ya mda"

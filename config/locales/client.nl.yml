@@ -543,6 +543,7 @@ nl:
         other: "jaar"
       relative: "Relatief"
     time_shortcut:
+      now: "Nu"
       later_today: "Later vandaag"
       next_business_day: "Volgende werkdag"
       tomorrow: "Morgen"
@@ -551,6 +552,7 @@ nl:
       this_weekend: "Dit weekend"
       start_of_next_business_week: "Maandag"
       start_of_next_business_week_alt: "Volgende maandag"
+      next_week: "Volgende week"
       two_weeks: "Twee weken"
       next_month: "Volgende maand"
       two_months: "Twee maanden"
@@ -3709,7 +3711,6 @@ nl:
               read: Een topic of een specifiek bericht erin lezen. RSS wordt ook ondersteund.
               write: Een nieuw topic maken of bericht in een bestaand topic plaatsen.
               read_lists: Topiclijsten zoals Top, Nieuw, Nieuwste, etc. lezen. RSS wordt ook ondersteund.
-              wordpress: Noodzakelijk om de WordPress wp-discourse-plug-in te laten werken.
             users:
               bookmarks: Bladwijzers van gebruiker weergeven. Geeft bladwijzerherinneringen terug bij gebruik van de ICS-indeling.
               sync_sso: Een gebruiker synchroniseren met DiscourseConnect.

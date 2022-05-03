@@ -650,6 +650,7 @@ pl_PL:
         other: "lat"
       relative: "Względny"
     time_shortcut:
+      now: "Teraz"
       later_today: "Później dzisiaj"
       next_business_day: "Następny dzień roboczy"
       tomorrow: "Jutro"
@@ -658,6 +659,7 @@ pl_PL:
       this_weekend: "W ten weekend"
       start_of_next_business_week: "Poniedziałek"
       start_of_next_business_week_alt: "Następny poniedziałek"
+      next_week: "Następny tydzień"
       two_weeks: "Dwa tygodnie"
       next_month: "Następny miesiąc"
       two_months: "Dwa miesiące"
@@ -4215,7 +4217,6 @@ pl_PL:
               write: Utwórz nowy temat lub post w istniejącym.
               update: Zaktualizuj temat. Zmień tytuł, kategorię, tagi itp.
               read_lists: Czytaj listy tematów, takie jak najpopularniejsze, nowe, najnowsze itp. Obsługiwany jest również format RSS.
-              wordpress: Niezbędne do działania wtyczki wp-discourse na WordPress.
             posts:
               edit: Edytuj dowolny post lub konkretny.
             categories:

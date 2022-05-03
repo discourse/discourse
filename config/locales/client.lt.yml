@@ -554,6 +554,7 @@ lt:
         other: "dienos"
       relative: "Santykinis"
     time_shortcut:
+      now: "Dabar"
       later_today: "Šiandien vėliau"
       next_business_day: "Kitą darbo dieną"
       tomorrow: "Rytoj"
@@ -562,6 +563,7 @@ lt:
       this_weekend: "Šį savaitgalį"
       start_of_next_business_week: "Pirmadienis"
       start_of_next_business_week_alt: "Kitą pirmadienį"
+      next_week: "Kitą savaitę"
       two_weeks: "Dvi savaitės"
       next_month: "Kitą mėnesį"
       two_months: "Du mėnesiai"
@@ -3628,7 +3630,6 @@ lt:
               read: Perskaitykite temą ar konkretų įrašą. RSS taip pat palaikomas.
               write: Sukurkite naują temą arba paskelbkite esamą.
               read_lists: 'Skaitykite temų sąrašus, pvz.: populiariausias, naujas, naujausias ir t.t. RSS taip pat palaikomas.'
-              wordpress: Būtinas, kad „WordPress“ wp-diskurso papildinys veiktų.
             posts:
               edit: Redaguoti bet kokį įrašą arba konkretų.
             users:

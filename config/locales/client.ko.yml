@@ -513,6 +513,7 @@ ko:
         other: "년"
       relative: "상대적"
     time_shortcut:
+      now: "지금"
       later_today: "오늘 늦게"
       next_business_day: "다음 영업일"
       tomorrow: "내일"
@@ -521,6 +522,7 @@ ko:
       this_weekend: "이번 주말"
       start_of_next_business_week: "월요일"
       start_of_next_business_week_alt: "다음 월요일"
+      next_week: "다음 주"
       two_weeks: "2주"
       next_month: "다음 달"
       two_months: "2개월"
@@ -3661,7 +3663,6 @@ ko:
               read: 글 또는 특정 게시물을 읽으십시오. RSS도 지원됩니다.
               write: 새 글 또는 기존 글에 댓글을 작성합니다.
               read_lists: 주요 글, 새 글, 최근 글 등과 같은 글 목록을 읽으십시오. RSS도 지원됩니다.
-              wordpress: 워드프레스 wp-discourse 플러그인이 작동하는데 필요합니다.
             posts:
               edit: 게시물 또는 특정 게시물을 편집합니다.
             categories:

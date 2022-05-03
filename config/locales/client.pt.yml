@@ -548,6 +548,7 @@ pt:
         other: "anos"
       relative: "Relativo"
     time_shortcut:
+      now: "Agora"
       later_today: "Hoje, mais tarde"
       next_business_day: "Próximo dia útil"
       tomorrow: "Amanhã"
@@ -556,6 +557,7 @@ pt:
       this_weekend: "Este fim de semana"
       start_of_next_business_week: "Segunda-feira"
       start_of_next_business_week_alt: "Próxima Segunda-feira"
+      next_week: "Próxima semana"
       two_weeks: "Duas semanas"
       next_month: "Próximo mês"
       two_months: "Dois meses"

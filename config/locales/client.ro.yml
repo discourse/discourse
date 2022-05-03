@@ -551,6 +551,7 @@ ro:
       this_weekend: "Acest weekend"
       start_of_next_business_week: "Luni"
       start_of_next_business_week_alt: "Lunea viitoare"
+      next_week: "Săptămâna viitoare"
       next_month: "Luna viitoare"
       forever: "Pentru totdeanua"
       custom: "Data și ora personalizată"

@@ -638,6 +638,7 @@ uk:
         other: "років"
       relative: "Відносна"
     time_shortcut:
+      now: "Зараз"
       later_today: "Пізніше сьогодні"
       next_business_day: "Наступний робочий день"
       tomorrow: "Завтра"
@@ -646,6 +647,7 @@ uk:
       this_weekend: "В ці вихідні"
       start_of_next_business_week: "Понеділок"
       start_of_next_business_week_alt: "Наступного понеділка"
+      next_week: "На наступному тижні"
       two_weeks: "Два тижні"
       next_month: "В наступному місяці"
       two_months: "Два місяці"
@@ -4164,7 +4166,6 @@ uk:
               read: Читати тему або певні повідомлення в ньому. RSS також підтримується.
               write: Створіть нову тему чи допис у вже існуючій.
               read_lists: Читайте списки тем, як топ, нові, останні тощо. RSS також підтримується.
-              wordpress: Необхідний для роботи WordPress плагін wp-discourse.
             posts:
               edit: Редагування повідомлення.
             uploads:

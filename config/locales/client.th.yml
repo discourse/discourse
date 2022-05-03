@@ -400,6 +400,7 @@ th:
       days:
         other: "วัน"
     time_shortcut:
+      now: "ตอนนี้"
       later_today: "ภายหลังในวันนี้"
       next_business_day: "ในวันทำการถัดไป"
       tomorrow: "พรุ่งนี้"
@@ -407,6 +408,7 @@ th:
       this_weekend: "สัปดาห์นี้"
       start_of_next_business_week: "วันจันทร์"
       start_of_next_business_week_alt: "วันจันทร์หน้า"
+      next_week: "สัปดาห์หน้า"
       next_month: "เดือนหน้า"
       forever: "ตลอดไป"
       custom: "วันและเวลาที่กำหนดเอง"

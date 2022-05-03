@@ -77,15 +77,33 @@ sv:
         date_month: "D MMM"
         date_year: "MMM 'YY"
       medium:
+        less_than_x_minutes:
+          one: "mindre än %{count} min"
+          other: "mindre än %{count} minuter"
         x_minutes:
           one: "%{count} min"
           other: "%{count} min"
         x_hours:
           one: "%{count} timme"
           other: "%{count} timmar"
+        about_x_hours:
+          one: "ca %{count} timme"
+          other: "ungefär %{count} timmar"
         x_days:
           one: "%{count} dag"
           other: "%{count} dagar"
+        x_months:
+          one: "%{count} månad"
+          other: "%{count} månader"
+        about_x_years:
+          one: "ungefär %{count} år"
+          other: "ungefär %{count} år"
+        over_x_years:
+          one: "över %{count} år"
+          other: "över %{count} år"
+        almost_x_years:
+          one: "nästan %{count} år"
+          other: "nästan %{count} år"
         date_year: "D MMM, 'YY"
       medium_with_ago:
         x_minutes:
@@ -565,7 +583,9 @@ sv:
         other: "år"
       relative: "Relativ"
     time_shortcut:
+      now: "Nu"
       later_today: "Senare idag"
+      two_days: "Två dagar"
       next_business_day: "Nästa vardag"
       tomorrow: "Imorgon"
       post_local_date: "Datum i inlägget"
@@ -573,6 +593,7 @@ sv:
       this_weekend: "Detta veckoslut"
       start_of_next_business_week: "Måndag"
       start_of_next_business_week_alt: "Nästa måndag"
+      next_week: "Nästa vecka"
       two_weeks: "Två veckor"
       next_month: "Nästa månad"
       two_months: "Två månader"
@@ -1064,6 +1085,7 @@ sv:
       external_links_in_new_tab: "Öppna alla externa länkar i en ny flik"
       enable_quoting: "Aktivera citatsvar för markerad text"
       enable_defer: "Aktivera fördröjning för att markera ämnen som lästa"
+      enable_experimental_sidebar: "Aktivera experimentellt sidofält"
       change: "ändra"
       featured_topic: "Utvalt ämne"
       moderator: "%{user} är en moderator"
@@ -1538,7 +1560,9 @@ sv:
         title: "Sammanfattning"
         stats: "Statistik"
         time_read: "lästid"
+        time_read_title: "%{duration} (hela tiden)"
         recent_time_read: "senaste lästid"
+        recent_time_read_title: "%{duration} (de senaste 60 dagarna)"
         topic_count:
           one: "ämne skapat"
           other: "ämnen skapade"
@@ -2198,6 +2222,8 @@ sv:
       in: "i"
       in_this_topic: "i detta ämne"
       in_this_topic_tooltip: "växla till att söka i alla ämnen"
+      in_messages: "i meddelanden"
+      in_messages_tooltip: "växla till att söka på vanliga ämnen"
       in_topics_posts: "i alla ämnen och inlägg"
       enter_hint: "eller tryck Enter"
       in_posts_by: "i inlägg av %{username}"
@@ -2575,6 +2601,8 @@ sv:
         unpin: "Ta ner ämne..."
         unarchive: "Dearkivera ämne"
         archive: "Arkivera ämne"
+        invisible: "Avlista ämne"
+        visible: "Lista ämne"
         reset_read: "Återställ läsdata"
         make_public: "Gör ämnet offentligt..."
         make_private: "Skapa personligt meddelande"
@@ -2767,6 +2795,7 @@ sv:
           other: "Du har markerat <b>%{count}</b> inlägg."
       deleted_by_author_simple: "(ämne raderat av författaren)"
     post:
+      confirm_delete: "Är du säker på att du vill radera det här inlägget?"
       quote_reply: "Citat"
       quote_reply_shortcut: "Eller tryck på q"
       quote_edit: "Redigera"
@@ -3510,6 +3539,9 @@ sv:
       choose_for_topic_required:
         one: "välj minst %{count} tagg..."
         other: "välj minst %{count} taggar..."
+      choose_for_topic_required_group:
+        one: "välj %{count} tagg från '%{name}'..."
+        other: "välj %{count} taggar från%{name}'..."
       info: "Info"
       default_info: "Denna tagg är inte begränsad till någon kategori, och har inga synonymer."
       staff_info: "För att lägga till begränsningar, placera denna tagg i en <a href=%{basePath}/tag_groups>tagggrupp</a>."
@@ -3904,7 +3936,6 @@ sv:
               write: Skapa ett nytt ämne eller inlägg till en befintligt sådan.
               update: Uppdatera ett ämne. Ändra titel, kategori, taggar, etc.
               read_lists: Läs ämneslistor som topp, ny, senaste osv. RSS stöds också.
-              wordpress: Nödvändigt för att WordPress-tillägget wp-discourse ska fungera.
             posts:
               edit: Redigera ett inlägg eller ett specifikt inlägg.
             categories:

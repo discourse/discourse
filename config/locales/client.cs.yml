@@ -510,6 +510,7 @@ cs:
       this_weekend: "Tento týden"
       start_of_next_business_week: "Pondělí"
       start_of_next_business_week_alt: "Příští pondělí"
+      next_week: "Další týden"
       next_month: "Další měsíc"
       forever: "Navždy"
       custom: "Vlastní datum a čas"

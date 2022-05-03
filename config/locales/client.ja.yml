@@ -504,6 +504,7 @@ ja:
         other: "年"
       relative: "相対"
     time_shortcut:
+      now: "今"
       later_today: "今日の後程"
       next_business_day: "翌営業日"
       tomorrow: "明日"
@@ -512,6 +513,7 @@ ja:
       this_weekend: "今週末"
       start_of_next_business_week: "月曜日"
       start_of_next_business_week_alt: "来週の月曜日"
+      next_week: "来週"
       two_weeks: "2 週間"
       next_month: "来月"
       two_months: "2 か月"
@@ -3589,7 +3591,6 @@ ja:
               read: トピックまたはその中の特定の投稿を読み取ります。RSS もサポートされています。
               write: 新しいトピックまたは既存のトピックに投稿を作成します。
               read_lists: 人気、新規、最新などのトピックリストを読み取ります。RSS もサポートされています。
-              wordpress: WordPress wp-discourse プラグインが動作するために必要です。
             posts:
               edit: 任意の投稿または特定の投稿を編集します。
             users:

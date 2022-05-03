@@ -565,7 +565,9 @@ it:
         other: "anni"
       relative: "Relativo"
     time_shortcut:
+      now: "Adesso"
       later_today: "Più tardi oggi"
+      two_days: "Due giorni"
       next_business_day: "Il prossimo giorno lavorativo"
       tomorrow: "Domani"
       post_local_date: "Data nel messaggio"
@@ -573,6 +575,7 @@ it:
       this_weekend: "Questo fine settimana"
       start_of_next_business_week: "Lunedì"
       start_of_next_business_week_alt: "Lunedì prossimo"
+      next_week: "La prossima settimana"
       two_weeks: "Due settimane"
       next_month: "Il prossimo mese"
       two_months: "Due mesi"
@@ -1064,6 +1067,7 @@ it:
       external_links_in_new_tab: "Apri tutti i link esterni in nuove schede"
       enable_quoting: "Abilita \"rispondi citando\" il testo evidenziato"
       enable_defer: "Abilita opzione di contrassegnare gli argomenti da leggere in seguito"
+      enable_experimental_sidebar: "Abilita la barra laterale sperimentale"
       change: "cambia"
       featured_topic: "Argomento in primo piano"
       moderator: "%{user} è un moderatore"
@@ -1536,7 +1540,9 @@ it:
         title: "Riepilogo"
         stats: "Statistiche"
         time_read: "tempo di lettura"
+        time_read_title: "%{duration} (da sempre)"
         recent_time_read: "orario di lettura recente"
+        recent_time_read_title: "%{duration} (negli ultimi 60 giorni)"
         topic_count:
           one: "argomento creato"
           other: "argomenti creati"
@@ -2193,6 +2199,8 @@ it:
       in: "in"
       in_this_topic: "in questo argomento"
       in_this_topic_tooltip: "passa alla ricerca di tutti gli argomenti"
+      in_messages: "nei messaggi"
+      in_messages_tooltip: "passa alla ricerca di tutti gli argomenti"
       in_topics_posts: "in tutti gli argomenti e i messaggi"
       enter_hint: "o premi Invio"
       in_posts_by: "nei messaggi di @%{username}"
@@ -2570,8 +2578,8 @@ it:
         unpin: "Spunta Argomento..."
         unarchive: "Annulla archiviazione Argomento"
         archive: "Archivia Argomento"
-        invisible: "Nascondi Argomento"
-        visible: "Elenca Argomento"
+        invisible: "Nascondi argomento"
+        visible: "Metti l'argomento in elenco"
         reset_read: "Reimposta Dati di lettura"
         make_public: "Rendi l'argomento pubblico..."
         make_private: "Rendi Messaggio Personale"
@@ -2764,7 +2772,7 @@ it:
           other: "Hai selezionato <b>%{count}</b> messaggi."
       deleted_by_author_simple: "(argomento eliminato dall'autore)"
     post:
-      confirm_delete: "Sicuro di voler eliminare questo messaggio?"
+      confirm_delete: "Vuoi davvero eliminare questo messaggio?"
       quote_reply: "Cita"
       quote_reply_shortcut: "Oppure premi \"q\""
       quote_edit: "Modifica"
@@ -3643,6 +3651,7 @@ it:
       unsupported_file_picked: "Hai scelto un file non supportato. Tipi di file supportati: %{types}."
     user_activity:
       no_activity_title: "Ancora nessuna attività"
+      no_activity_body: "Ti diamo il benvenuto nella nostra comunità! Sei nuovo/a e non hai ancora contribuito a nessuna discussione. Per cominciare, clicca su <a href='%{topUrl}'>Popolari</a> o <a href='%{categoriesUrl}'>Categorie</a> e inizia a leggere! Seleziona %{heartIcon} sui post che ti piacciono o che vuoi approfondire. A mano a mano che partecipi, le tue attività saranno elencate qui."
       no_activity_others: "Nessuna attività."
       no_replies_title: "Non hai ancora risposto a nessun argomento"
       no_replies_others: "Nessuna risposta."
@@ -3652,6 +3661,7 @@ it:
       no_likes_body: "Un ottimo modo per iniziare a contribuire è mettersi a leggere le conversazioni già avvenute e assegnare un %{heartIcon} ai post che ti piacciono!"
       no_likes_others: "Nessun messaggio con \"Mi piace\"."
       no_topics_title: "Non hai ancora avviato nessun argomento"
+      no_topics_title_others: "%{username} non ha ancora iniziato nessun argomento"
       no_read_topics_title: "Non hai ancora letto nessun argomento"
       no_read_topics_body: "Una volta che avrai iniziato a leggere discussioni, ne vedrai un elenco qui. Per cominciare a leggere, cerca argomenti di tuo interesse alle pagine <a href='%{topUrl}'>Popolari</a> o <a href='%{categoriesUrl}'>Categorie</a>; oppure effettua una ricerca per parola chiave %{searchIcon}"
     no_group_messages_title: "Nessun messaggio di gruppo trovato"
@@ -3887,7 +3897,6 @@ it:
               write: Crea un nuovo argomento o pubblica un messaggio su uno esistente.
               update: Aggiorna un argomento. Modifica il titolo, la categoria, le etichette, ecc.
               read_lists: Leggi liste di argomenti come Popolari, Nuovi, Recenti, ecc. E' supportato anche l'RSS.
-              wordpress: Necessario al funzionamento del plugin wp-discourse di WordPress.
             posts:
               edit: Modifica qualsiasi messaggio o uno specifico.
             categories:
@@ -3915,6 +3924,11 @@ it:
               list_user_badges: Elenca i distintivi dell'utente.
               assign_badge_to_user: Assegna un distintivo ad un utente.
               revoke_badge_from_user: Revoca un distintivo ad un utente.
+            wordpress:
+              publishing: Necessario per le funzionalità di pubblicazione del plug-in WP Discourse (richiesto).
+              commenting: Necessario per le funzionalità di commento del plug-in WP Discourse.
+              discourse_connect: Necessario per le funzionalità del plug-in WP Discourse DiscourseConnect.
+              utilities: Necessario se usi le utility del plugin WP Discourse.
       web_hooks:
         title: "Webhook"
         none: "Non ci sono webhook disponibili adesso."
@@ -4114,6 +4128,7 @@ it:
         delete_confirm: 'Sei sicuro di voler eliminare "%{theme_name}"?'
         color: "Colore"
         opacity: "Opacità"
+        copy: "Duplica"
         copy_to_clipboard: "Copia negli Appunti"
         copied_to_clipboard: "Copiato negli Appunti"
         copy_to_clipboard_error: "Errore durante la copia negli appunti"

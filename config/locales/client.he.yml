@@ -683,7 +683,9 @@ he:
         other: "שנים"
       relative: "יחסי"
     time_shortcut:
+      now: "כעת"
       later_today: "בהמשך היום"
+      two_days: "יומיים"
       next_business_day: "יום העסקים הבא"
       tomorrow: "מחר"
       post_local_date: "תאריך בפוסט"
@@ -691,6 +693,7 @@ he:
       this_weekend: "בסוף שבוע זה"
       start_of_next_business_week: "יום שני"
       start_of_next_business_week_alt: "יום שני הבא"
+      next_week: "בשבוע הבא"
       two_weeks: "שבועיים"
       next_month: "חודש הבא"
       two_months: "חודשיים"
@@ -1196,6 +1199,7 @@ he:
       external_links_in_new_tab: "פתיחת כל הקישורים החיצוניים בלשונית חדשה"
       enable_quoting: "הפעלת תגובת ציטוט לטקסט מסומן"
       enable_defer: "הפעלת דחייה לאחר כך כדי לסמן נושאים כלא נקראו"
+      enable_experimental_sidebar: "הפעלת סרגל צד ניסיוני"
       change: "שנה"
       featured_topic: "נושא מומלץ"
       moderator: "ל־%{user} יש תפקיד פיקוח"
@@ -1866,7 +1870,7 @@ he:
     username: "שם משתמש"
     last_seen: "נצפה"
     created: "נוצר"
-    created_lowercase: "נוצר/ו"
+    created_lowercase: "נוצר"
     trust_level: "דרגת אמון"
     search_hint: "שם משתמש, דוא״ל או כתובת IP"
     create_account:
@@ -2410,6 +2414,8 @@ he:
       in: "בתוך"
       in_this_topic: "בנושא הזה"
       in_this_topic_tooltip: "מעבר לחיפוש בכל הנושאים"
+      in_messages: "בהודעות"
+      in_messages_tooltip: "מעבר לחיפוש בנושאים רגילים"
       in_topics_posts: "בכל הנושאים והפוסטים"
       enter_hint: "או ללחוץ על Enter"
       in_posts_by: "בפוסטים מאת %{username}"
@@ -2814,6 +2820,8 @@ he:
         unpin: "שחרר נעיצת נושא..."
         unarchive: "הוצא נושא מארכיון"
         archive: "העבר נושא לארכיון"
+        invisible: "הסתרת נושא"
+        visible: "הצגת נושא"
         reset_read: "אפס מידע שנקרא"
         make_public: "הפיכת הנושא לפומבי…"
         make_private: "צור הודעה פרטית"
@@ -3030,6 +3038,7 @@ he:
           other: "בחרתם <b>%{count}</b> פוסטים."
       deleted_by_author_simple: "(הנושא נמחק על ידי הכותב)"
     post:
+      confirm_delete: "למחוק את הפוסט הזה?"
       quote_reply: "ציטוט"
       quote_reply_shortcut: "או ללחוץ על q"
       quote_edit: "עריכה"
@@ -3849,6 +3858,11 @@ he:
         two: "נא לבחור ב־%{count} תגיות לפחות…"
         many: "נא לבחור ב־%{count} תגיות לפחות…"
         other: "נא לבחור ב־%{count} תגיות לפחות…"
+      choose_for_topic_required_group:
+        one: "בחירה בתגית %{count} מ־‚%{name}’…"
+        two: "בחירה ב־%{count} תגיות מ־‚%{name}’…"
+        many: "בחירה ב־%{count} תגיות מ־‚%{name}’…"
+        other: "בחירה ב־%{count} תגיות מ־‚%{name}’…"
       info: "פרטים"
       default_info: "תגית זו אינה מוגבלת לקטגוריות כלשהן ואין לה מילים נרדפות."
       staff_info: "כדי להוסיף הגבלות, יש לשים את התגית הזאת ב<a href=%{basePath}/tag_groups>קבוצת תגיות</a>."
@@ -4263,7 +4277,6 @@ he:
               write: יצירת נושא חדש או פרסום לאחד קיים.
               update: עדכון נושא. החלפת הכותרת, הקטגוריה, התגיות וכו׳.
               read_lists: לקרוא רשימת נושאים כמו מובילים, חדשים, אחרונים וכו׳. יש גם תמיכה ב־RSS.
-              wordpress: נחוץ כדי שהתוסף wp-discourse ל־WordPress יעבוד.
             posts:
               edit: לערוך כל פוסט שהוא או אחד מסוים.
             categories:
@@ -4291,6 +4304,11 @@ he:
               list_user_badges: הצגת עיטורי המשתמש.
               assign_badge_to_user: הקצאת עיטור למשתמש.
               revoke_badge_from_user: שלילת עיטור ממשתמש.
+            wordpress:
+              publishing: הכרחי לטובת יכולות הפרסום של תוסף ה־Discourse של WordPress (חובה).
+              commenting: הכרחי לטובת יכולות התגובות של תוסף ה־Discourse של WordPress.
+              discourse_connect: הכרחי לטובת יכולות ה־DiscourseConnect של תוסף ה־Discourse של WordPress.
+              utilities: הכרחי לטובת הכלים של תוסף ה־Discourse של WordPress.
       web_hooks:
         title: "Webhooks"
         none: "אין כרגע webhooks."

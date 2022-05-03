@@ -556,6 +556,7 @@ sl:
         few: "meseci"
         other: "mesecev"
     time_shortcut:
+      now: "Zdaj"
       later_today: "Kasneje danes"
       next_business_day: "Naslednji delovni dan"
       tomorrow: "Jutri"
@@ -564,6 +565,7 @@ sl:
       this_weekend: "Ta vikend"
       start_of_next_business_week: "Ponedeljek"
       start_of_next_business_week_alt: "Naslednji ponedeljek"
+      next_week: "Naslednji teden"
       next_month: "Naslednji mesec"
       forever: "Za vedno"
       relative: "Relativni čas"
@@ -3549,7 +3551,6 @@ sl:
             topics:
               write: Ustvarite novo temo ali objavite v obstoječi.
               read_lists: Preberite sezname tem, kot so najboljše, nove, najnovejše, itd. Podpira tudi RSS.
-              wordpress: Potrebno za delovanje vtičnika wp-discourse za WordPress.
             users:
               show: Pridobi informacije o uporabniku.
       web_hooks:

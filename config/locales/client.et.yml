@@ -426,6 +426,7 @@ et:
       this_weekend: "Sellel nädalavahetusel"
       start_of_next_business_week: "Esmaspäev"
       start_of_next_business_week_alt: "Järgmisel esmaspäeval"
+      next_week: "Järgmisel nädalal"
       next_month: "Järgmisel kuul"
       forever: "Igavesti"
       relative: "Suhteline aeg"

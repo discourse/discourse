@@ -724,6 +724,7 @@ ar:
         other: "عام"
       relative: "نسبي"
     time_shortcut:
+      now: "الآن"
       later_today: "لاحقًا اليوم"
       next_business_day: "يوم العمل التالي"
       tomorrow: "غدًا"
@@ -732,6 +733,7 @@ ar:
       this_weekend: "عطلة هذا الأسبوع"
       start_of_next_business_week: "الاثنين"
       start_of_next_business_week_alt: "الاثنين القادم"
+      next_week: "الأسبوع القادم"
       two_weeks: "أسبوعان"
       next_month: "الشهر القادم"
       two_months: "شهران"
@@ -4478,7 +4480,6 @@ ar:
               read: قراءة موضوع أو منشور محدَّد فيه. يتم دعم RSS أيضًا.
               write: إنشاء موضوع جديد أو النشر في موضوع موجود
               read_lists: قراءة قوائم الموضوعات مثل الأكثر نشاطًا، والجديدة، والحديثة، وما إلى ذلك. يتم دعم RSS أيضًا.
-              wordpress: ضرورية لكي يعمل المكوِّن الإضافي wp-discourse على WordPress.
             posts:
               edit: تعديل أي منشور أو منشور معيَّن.
             uploads:
