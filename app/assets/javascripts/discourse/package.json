@@ -89,8 +89,7 @@
   },
   "ember-addon": {
     "paths": [
-      "lib/bootstrap-json",
-      "lib/rfc176-shims"
+      "lib/bootstrap-json"
     ]
   },
   "devDependencies": {
