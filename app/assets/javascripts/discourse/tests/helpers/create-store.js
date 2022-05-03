@@ -37,7 +37,7 @@ export default function (customLookup = () => {}) {
             this._topicListAdapter || TopicListAdapter.create({ owner: this });
           return this._topicListAdapter;
         }
-        if (type === "key-value-store:main") {
+        if (type === "service:key-value-store-main") {
           this._kvs = this._kvs || new KeyValueStore();
           return this._kvs;
         }

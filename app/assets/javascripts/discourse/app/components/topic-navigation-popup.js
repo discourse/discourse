@@ -1,8 +1,11 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
 import discourseComputed from "discourse-common/utils/decorators";
+import { inject as service } from "@ember/service";
 
 export default Component.extend({
+  keyValueStore: service("key-value-store-main"),
+
   tagName: "",
   popupId: null,
   hidden: false,

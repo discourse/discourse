@@ -17,6 +17,7 @@ const GLOBAL_NOTICE_DISMISSED_PROMPT_KEY = "dismissed-global-notice-v2";
 
 const Notice = EmberObject.extend({
   logsNoticeService: service("logsNotice"),
+  keyValueStore: service("key-value-store-main"),
 
   text: null,
   id: null,

@@ -78,7 +78,11 @@ export default {
     app.register("location:discourse-location", DiscourseLocation);
 
     const keyValueStore = new KeyValueStore("discourse_");
+    // TODO: Deprecate the old style
     app.register("key-value-store:main", keyValueStore, { instantiate: false });
+    app.register("service:key-value-store-main", keyValueStore, {
+      instantiate: false,
+    });
 
     app.register("search-service:main", {
       create() {
@@ -107,6 +111,8 @@ export default {
       app.inject(t, "messageBus", "message-bus:main");
       app.inject(t, "siteSettings", "site-settings:main");
       app.inject(t, "topicTrackingState", "topic-tracking-state:main");
+
+      // TODO: This should not be used anymore, add deprecation if possible.
       app.inject(t, "keyValueStore", "key-value-store:main");
     });
 

@@ -18,6 +18,7 @@ const ALLOWED_AJAX_FAILURES = [405, 429, 500, 501, 502, 503, 504];
 
 export default class ScreenTrack extends Service {
   @service appEvents;
+  @service("key-value-store-main") keyValueStore;
 
   _consolidatedTimings = [];
   _lastTick = null;
