@@ -26,6 +26,7 @@ topic:
     max: 12
     overrides:
       # topic titles can be found in config/locales/faker.en.yml
+      # in the discourse_dev_assets gem
       - title: "Coolest thing you have seen today"
         count: 99
   tags:
@@ -36,5 +37,5 @@ user:
   count: 30
 
 new_user:
-   username: new_user
-   email: new_user@example.com
+  username: new_user
+  email: new_user@example.com

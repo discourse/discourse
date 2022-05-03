@@ -129,7 +129,7 @@ task 'multisite:migrate' => ['db:load_config', 'environment', 'set_locale'] do |
 
     SeedFu.quiet = true
 
-    def execute_concurently(concurrency, exceptions)
+    def execute_concurrently(concurrency, exceptions)
       queue = Queue.new
 
       RailsMultisite::ConnectionManagement.each_connection do |db|
@@ -180,7 +180,7 @@ task 'multisite:migrate' => ['db:load_config', 'environment', 'set_locale'] do |
       end
     end
 
-    execute_concurently(concurrency, exceptions) do |db|
+    execute_concurrently(concurrency, exceptions) do |db|
       puts "Migrating #{db}"
       ActiveRecord::Tasks::DatabaseTasks.migrate
     end
@@ -189,7 +189,7 @@ task 'multisite:migrate' => ['db:load_config', 'environment', 'set_locale'] do |
 
     SeedFu.seed(SeedHelper.paths, /001_refresh/)
 
-    execute_concurently(concurrency, exceptions) do |db|
+    execute_concurrently(concurrency, exceptions) do |db|
       puts "Seeding #{db}"
       SeedFu.seed(SeedHelper.paths, SeedHelper.filter)
 
