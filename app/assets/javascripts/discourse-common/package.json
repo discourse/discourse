@@ -47,7 +47,7 @@
     "ember-resolver": "^7.0.0",
     "ember-source": "~3.15.0",
     "ember-source-channel-url": "^2.0.1",
-    "ember-try": "^1.4.0",
+    "ember-try": "^2.0.0",
     "eslint-plugin-ember": "^7.7.1",
     "eslint-plugin-node": "^10.0.0",
     "loader.js": "^4.7.0"
