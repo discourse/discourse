@@ -1,5 +1,5 @@
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
-import Service from "@ember/service";
+import Service, { inject as service } from "@ember/service";
 import I18n from "I18n";
 import { autoUpdatingRelativeAge } from "discourse/lib/formatter";
 import getURL from "discourse-common/lib/get-url";
@@ -10,6 +10,8 @@ import { readOnly } from "@ember/object/computed";
 const LOGS_NOTICE_KEY = "logs-notice-text";
 
 export default Service.extend({
+  keyValueStore: service(),
+
   text: "",
 
   isAdmin: readOnly("currentUser.admin"),

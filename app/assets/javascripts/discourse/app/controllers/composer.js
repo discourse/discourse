@@ -26,7 +26,6 @@ import deprecated from "discourse-common/lib/deprecated";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { emojiUnescape } from "discourse/lib/text";
 import { escapeExpression } from "discourse/lib/utilities";
-import { getOwner } from "discourse-common/lib/get-owner";
 import getURL from "discourse-common/lib/get-url";
 import { isEmpty } from "@ember/utils";
 import { isTesting } from "discourse-common/config/environment";
@@ -95,6 +94,7 @@ export function addPopupMenuOptionsCallback(callback) {
 export default Controller.extend({
   topicController: controller("topic"),
   router: service(),
+  keyValueStore: service("key-value-store"),
 
   checkedMessages: false,
   messageCount: null,
@@ -185,8 +185,7 @@ export default Controller.extend({
 
   showToolbar: computed({
     get() {
-      const keyValueStore = getOwner(this).lookup("key-value-store:main");
-      const storedVal = keyValueStore.get("toolbar-enabled");
+      const storedVal = this.keyValueStore.get("toolbar-enabled");
       if (this._toolbarEnabled === undefined && storedVal === undefined) {
         // iPhone 6 is 375, anything narrower and toolbar should
         // be default disabled.
@@ -197,9 +196,8 @@ export default Controller.extend({
       return this._toolbarEnabled || storedVal === "true";
     },
     set(key, val) {
-      const keyValueStore = getOwner(this).lookup("key-value-store:main");
       this._toolbarEnabled = val;
-      keyValueStore.set({
+      this.keyValueStore.set({
         key: "toolbar-enabled",
         value: val ? "true" : "false",
       });

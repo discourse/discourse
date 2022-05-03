@@ -146,7 +146,7 @@ export default class Widget {
     this.capabilities = register.lookup("capabilities:main");
     this.store = register.lookup("service:store");
     this.appEvents = register.lookup("service:app-events");
-    this.keyValueStore = register.lookup("key-value-store:main");
+    this.keyValueStore = register.lookup("service:key-value-store");
 
     // We can inject services into widgets by passing a `services` parameter on creation
     (this.services || []).forEach((s) => {

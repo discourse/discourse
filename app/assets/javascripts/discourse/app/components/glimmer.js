@@ -67,6 +67,6 @@ export default class DiscourseGlimmerComponent extends GlimmerComponent {
   @cached
   get keyValueStore() {
     const applicationInstance = getOwner(this);
-    return applicationInstance.lookup("key-value-store:main");
+    return applicationInstance.lookup("service:key-value-store");
   }
 }

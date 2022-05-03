@@ -1,9 +1,12 @@
 import discourseComputed, { bind, on } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
+import { inject as service } from "@ember/service";
 
 const USER_DISMISSED_PROMPT_KEY = "dismissed-pwa-install-banner";
 
 export default Component.extend({
+  keyValueStore: service(),
+
   deferredInstallPromptEvent: null,
 
   @bind

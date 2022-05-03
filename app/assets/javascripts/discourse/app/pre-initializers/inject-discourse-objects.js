@@ -78,7 +78,23 @@ export default {
     app.register("location:discourse-location", DiscourseLocation);
 
     const keyValueStore = new KeyValueStore("discourse_");
-    app.register("key-value-store:main", keyValueStore, { instantiate: false });
+    app.register("service:key-value-store", keyValueStore, {
+      instantiate: false,
+    });
+    app.register("key-value-store:main", {
+      create() {
+        deprecated(
+          `"key-value-store:main" is deprecated, use "service:key-value-store" instead`
+        );
+
+        return container.lookup("service:key-value-store");
+      },
+    });
+    // This should only be used for the injection below. In this circumstance, we don't want to
+    // deprecate it ourselves since Ember deprecations will catch it.
+    app.register("key-value-store:non-deprecating", keyValueStore, {
+      instantiate: false,
+    });
 
     app.register("search-service:main", {
       create() {
@@ -107,7 +123,7 @@ export default {
       app.inject(t, "messageBus", "message-bus:main");
       app.inject(t, "siteSettings", "site-settings:main");
       app.inject(t, "topicTrackingState", "topic-tracking-state:main");
-      app.inject(t, "keyValueStore", "key-value-store:main");
+      app.inject(t, "keyValueStore", "key-value-store:non-deprecating");
     });
 
     if (currentUser) {
