@@ -49,4 +49,8 @@ class PostBookmarkable < BaseBookmarkable
   def reminder_conditions(bookmark)
     bookmark.bookmarkable.present? && bookmark.bookmarkable.topic.present?
   end
+
+  def can_see?(guardian, bookmark)
+    guardian.can_see_post?(bookmark.bookmarkable)
+  end
 end

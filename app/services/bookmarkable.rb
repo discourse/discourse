@@ -103,4 +103,15 @@ class Bookmarkable
   def send_reminder_notification(bookmark)
     bookmarkable.reminder_handler(bookmark)
   end
+
+  ##
+  # Access control is dependent on what has been bookmarked, the appropriate guardian
+  # can_see_X? method should be called from the bookmarkable class to determine
+  # whether the bookmarkable record (e.g. Post, Topic) is accessible by the guardian user.
+  #
+  # @param [Guardian] guardian The guardian class for the user that we are performing the access check for.
+  # @param [Bookmark] bookmark The bookmark which we are checking access for using the bookmarkable association.
+  def can_see?(guardian, bookmark)
+    bookmarkable.can_see?(guardian, bookmark)
+  end
 end

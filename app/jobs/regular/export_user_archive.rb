@@ -31,7 +31,9 @@ module Jobs
       auth_tokens: ['id', 'auth_token_hash', 'prev_auth_token_hash', 'auth_token_seen', 'client_ip', 'user_agent', 'seen_at', 'rotated_at', 'created_at', 'updated_at'],
       auth_token_logs: ['id', 'action', 'user_auth_token_id', 'client_ip', 'auth_token_hash', 'created_at', 'path', 'user_agent'],
       badges: ['badge_id', 'badge_name', 'granted_at', 'post_id', 'seq', 'granted_manually', 'notification_id', 'featured_rank'],
+      # TODO (martin) [POLYBOOK] - Remove the duplication when polymorphic bookmarks are implemented
       bookmarks: ['post_id', 'topic_id', 'post_number', 'link', 'name', 'created_at', 'updated_at', 'reminder_at', 'reminder_last_sent_at', 'reminder_set_at', 'auto_delete_preference'],
+      bookmarks_polymorphic: ['bookmarkable_id', 'bookmarkable_type', 'link', 'name', 'created_at', 'updated_at', 'reminder_at', 'reminder_last_sent_at', 'reminder_set_at', 'auto_delete_preference'],
       category_preferences: ['category_id', 'category_names', 'notification_level', 'dismiss_new_timestamp'],
       flags: ['id', 'post_id', 'flag_type', 'created_at', 'updated_at', 'deleted_at', 'deleted_by', 'related_post_id', 'targets_topic', 'was_take_action'],
       likes: ['id', 'post_id', 'topic_id', 'post_number', 'created_at', 'updated_at', 'deleted_at', 'deleted_by'],
@@ -228,18 +230,40 @@ module Jobs
       end
     end
 
+    def bookmarks_polymorphic_export
+      return enum_for(:bookmarks_polymorphic_export) unless block_given?
+
+      @current_user.bookmarks.order(:id).each do |bkmk|
+        link = ''
+        if guardian.can_see_bookmarkable?(bkmk)
+          link = bkmk.bookmarkable.full_url
+        end
+
+        yield [
+          bkmk.bookmarkable_id,
+          bkmk.bookmarkable_type,
+          link,
+          bkmk.name,
+          bkmk.created_at,
+          bkmk.updated_at,
+          bkmk.reminder_at,
+          bkmk.reminder_last_sent_at,
+          bkmk.reminder_set_at,
+          Bookmark.auto_delete_preferences[bkmk.auto_delete_preference],
+        ]
+      end
+    end
+
+    # TODO (martin) [POLYBOOK] No longer relevant after polymorphic bookmarks implemented
     def bookmarks_export
       return enum_for(:bookmarks_export) unless block_given?
 
-      Bookmark
-        .where(user_id: @current_user.id)
-        .joins(:post)
-        .order(:id)
-        .each do |bkmk|
+      @current_user.bookmarks.joins(:post).order(:id).each do |bkmk|
         link = ''
-        if guardian.can_see_post?(bkmk.post)
+        if guardian.can_see_bookmarkable?(bkmk)
           link = bkmk.post.full_url
         end
+
         yield [
           bkmk.post_id,
           bkmk.topic_id,
@@ -396,6 +420,12 @@ module Jobs
           end
         end
         header_array.push("group_names")
+      elsif entity == 'bookmarks'
+        if SiteSetting.use_polymorphic_bookmarks
+          header_array = HEADER_ATTRS_FOR['bookmarks_polymorphic']
+        else
+          header_array = HEADER_ATTRS_FOR['bookmarks']
+        end
       else
         header_array = HEADER_ATTRS_FOR[entity]
       end

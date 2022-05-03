@@ -8,4 +8,12 @@ module BookmarkGuardian
   def can_edit_bookmark?(bookmark)
     @user == bookmark.user
   end
+
+  def can_see_bookmarkable?(bookmark)
+    if !SiteSetting.use_polymorphic_bookmarks?
+      return self.can_see_post?(bookmark.post)
+    end
+
+    bookmark.registered_bookmarkable.can_see?(self, bookmark)
+  end
 end
