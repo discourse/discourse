@@ -21,15 +21,9 @@ module Jobs
       raw = post.raw.dup
       start_raw = raw.dup
 
-      large_image_urls = post.custom_fields[Post::LARGE_IMAGES] || []
-      broken_image_urls = post.custom_fields[Post::BROKEN_IMAGES] || []
-      downloaded_image_ids = post.custom_fields[Post::DOWNLOADED_IMAGES] || {}
+      hotlinked_map = post.post_hotlinked_media.map { |r| [r.url, r] }.to_h
 
-      upload_records = Upload.where(id: downloaded_image_ids.values)
-      upload_records = Hash[upload_records.map { |u| [u.id, u] }]
-
-      downloaded_images = {}
-      downloaded_image_ids.each { |url, id| downloaded_images[url] = upload_records[id] }
+      changed_hotlink_records = false
 
       extract_images_from(post.cooked).each do |node|
         download_src = original_src = node['src'] || node['href']
@@ -38,45 +32,38 @@ module Jobs
 
         next if !should_download_image?(download_src, post)
 
-        begin
-          already_attempted_download = downloaded_images.include?(normalized_src) || large_image_urls.include?(normalized_src) || broken_image_urls.include?(normalized_src)
-          if !already_attempted_download
-            downloaded_images[normalized_src] = attempt_download(download_src, post.user_id)
+        hotlink_record = hotlinked_map[normalized_src]
+
+        if hotlink_record.nil?
+          hotlinked_map[normalized_src] = hotlink_record = PostHotlinkedMedia.new(
+            post: post,
+            url: normalized_src
+          )
+          begin
+            hotlink_record.upload = attempt_download(download_src, post.user_id)
+            hotlink_record.status = :downloaded
+          rescue ImageTooLargeError
+            hotlink_record.status = :too_large
+          rescue ImageBrokenError
+            hotlink_record.status = :download_failed
+          rescue UploadCreateError
+            hotlink_record.status = :upload_create_failed
           end
-        rescue ImageTooLargeError
-          large_image_urls << normalized_src
-        rescue ImageBrokenError
-          broken_image_urls << normalized_src
+        end
+
+        if hotlink_record.changed?
+          changed_hotlink_records = true
+          hotlink_record.save!
         end
 
         # have we successfully downloaded that file?
-        if upload = downloaded_images[normalized_src]
+        if upload = hotlink_record&.upload
           raw = replace_in_raw(original_src: original_src, upload: upload, raw: raw)
         end
       rescue => e
         raise e if Rails.env.test?
         log(:error, "Failed to pull hotlinked image (#{download_src}) post: #{@post_id}\n" + e.message + "\n" + e.backtrace.join("\n"))
       end
-
-      large_image_urls.uniq!
-      broken_image_urls.uniq!
-      downloaded_images.compact!
-
-      post.custom_fields[Post::LARGE_IMAGES] = large_image_urls
-      post.custom_fields[Post::BROKEN_IMAGES] = broken_image_urls
-
-      downloaded_image_ids = {}
-      downloaded_images.each { |url, upload| downloaded_image_ids[url] = upload.id }
-      post.custom_fields[Post::DOWNLOADED_IMAGES] = downloaded_image_ids
-
-      [Post::LARGE_IMAGES, Post::BROKEN_IMAGES, Post::DOWNLOADED_IMAGES].each do |key|
-        post.custom_fields.delete(key) if !post.custom_fields[key].present?
-      end
-
-      custom_fields_updated = !post.custom_fields_clean?
-
-      # only save custom fields if they changed
-      post.save_custom_fields if custom_fields_updated
 
       # If post changed while we were downloading images, never apply edits
       post.reload
@@ -86,7 +73,7 @@ module Jobs
       if !post_changed_elsewhere && raw_changed_here
         changes = { raw: raw, edit_reason: I18n.t("upload.edit_reason") }
         post.revise(Discourse.system_user, changes, bypass_bump: true, skip_staff_log: true)
-      elsif custom_fields_updated
+      elsif changed_hotlink_records
         post.trigger_post_process(
           bypass_bump: true,
           skip_pull_hotlinked_images: true # Avoid an infinite loop of job scheduling
@@ -127,6 +114,7 @@ module Jobs
 
     class ImageTooLargeError < StandardError; end
     class ImageBrokenError < StandardError; end
+    class UploadCreateError < StandardError; end
 
     def attempt_download(src, user_id)
       # secure-media-uploads endpoint prevents anonymous downloads, so we
@@ -145,7 +133,7 @@ module Jobs
         upload
       else
         log(:info, "Failed to persist downloaded hotlinked image for post: #{@post_id}: #{src} - #{upload.errors.full_messages.join("\n")}")
-        nil
+        raise UploadCreateError
       end
     end
 

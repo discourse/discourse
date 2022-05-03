@@ -793,11 +793,10 @@ describe PostsController do
 
       it "will invalidate broken images cache" do
         sign_in(moderator)
-        post.custom_fields[Post::BROKEN_IMAGES] = ["https://example.com/image.jpg"]
-        post.save_custom_fields
+        PostHotlinkedMedia.create!(url: "https://example.com/image.jpg", post: post, status: 'download_failed')
         put "/posts/#{post.id}/rebake.json"
         post.reload
-        expect(post.custom_fields[Post::BROKEN_IMAGES]).to be_nil
+        expect(post.post_hotlinked_media).to eq([])
       end
     end
   end

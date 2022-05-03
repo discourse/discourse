@@ -1447,11 +1447,6 @@ describe Post do
 
     context "#link_post_uploads" do
       it "finds all the uploads in the post" do
-        post.custom_fields[Post::DOWNLOADED_IMAGES] = {
-          "/#{upload_path}/original/1X/1/1234567890123456.csv": attachment_upload.id
-        }
-
-        post.save_custom_fields
         post.link_post_uploads
 
         expect(PostUpload.where(post: post).pluck(:upload_id)).to contain_exactly(

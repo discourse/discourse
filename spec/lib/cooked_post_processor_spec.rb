@@ -1080,8 +1080,7 @@ describe CookedPostProcessor do
         post = Fabricate(:post, raw: url)
         upload.update!(url: "https://test.s3.amazonaws.com/something.png")
 
-        post.custom_fields[Post::DOWNLOADED_IMAGES] = { "//image.com/avatar.png": upload.id }
-        post.save_custom_fields
+        PostHotlinkedMedia.create!(url: "//image.com/avatar.png", post: post, status: 'downloaded', upload: upload)
 
         cpp = CookedPostProcessor.new(post, invalidate_oneboxes: true)
         stub_image_size(width: 100, height: 200)
@@ -1113,8 +1112,7 @@ describe CookedPostProcessor do
           post = Fabricate(:post, raw: url)
           upload.update!(url: "https://test.s3.amazonaws.com/something.png")
 
-          post.custom_fields[Post::DOWNLOADED_IMAGES] = { "//image.com/avatar.png": upload.id }
-          post.save_custom_fields
+          PostHotlinkedMedia.create!(url: "//image.com/avatar.png", post: post, status: 'downloaded', upload: upload)
 
           cooked_url = "https://localhost/secure-media-uploads/test.png"
           UrlHelper.expects(:cook_url).with(upload.url, secure: true).returns(cooked_url)
@@ -1137,14 +1135,30 @@ describe CookedPostProcessor do
 
       post = Fabricate(:post, raw: url)
 
-      post.custom_fields[Post::LARGE_IMAGES] = ["//image.com/avatar.png"]
-      post.save_custom_fields
+      PostHotlinkedMedia.create!(url: "//image.com/avatar.png", post: post, status: 'too_large')
 
       cpp = CookedPostProcessor.new(post, invalidate_oneboxes: true)
       cpp.post_process
 
       expect(cpp.doc.to_s).to match(/<div class="large-image-placeholder">/)
       expect(cpp.doc.to_s).to include(I18n.t("upload.placeholders.too_large_humanized", max_size: "4 MB"))
+    end
+
+    it "replaces broken image placeholder" do
+      url = 'https://image.com/my-avatar'
+      image_url = 'https://image.com/avatar.png'
+
+      Oneboxer.stubs(:onebox).with(url, anything).returns("<img class='onebox' src='#{image_url}' />")
+
+      post = Fabricate(:post, raw: url)
+
+      PostHotlinkedMedia.create!(url: "//image.com/avatar.png", post: post, status: 'download_failed')
+
+      cpp = CookedPostProcessor.new(post, invalidate_oneboxes: true)
+      cpp.post_process
+
+      expect(cpp.doc.to_s).to have_tag("span.broken-image")
+      expect(cpp.doc.to_s).to include(I18n.t("post.image_placeholder.broken"))
     end
   end
 
