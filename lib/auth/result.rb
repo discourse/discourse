@@ -83,8 +83,8 @@ class Auth::Result
 
   def apply_user_attributes!
     change_made = false
-    if (SiteSetting.auth_overrides_username? || overrides_username) && username.present?
-      change_made = UsernameChanger.override(user, username)
+    if (SiteSetting.auth_overrides_username? || overrides_username) && (resolved_username = resolve_username).present?
+      change_made = UsernameChanger.override(user, resolved_username)
     end
 
     if (SiteSetting.auth_overrides_email || overrides_email || user&.email&.ends_with?(".invalid")) &&
@@ -213,6 +213,6 @@ class Auth::Result
       end
     end
 
-    UserNameSuggester.suggest(*username_suggester_attributes)
+    UserNameSuggester.suggest(*username_suggester_attributes, current_username: user&.username)
   end
 end
