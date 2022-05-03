@@ -38,14 +38,15 @@ class PostBookmarkable < BaseBookmarkable
       topic_id: bookmark.bookmarkable.topic_id,
       post_number: bookmark.bookmarkable.post_number,
       data: {
-        topic_title: bookmark.bookmarkable.topic.title,
+        title: bookmark.bookmarkable.topic.title,
         display_username: bookmark.user.username,
-        bookmark_name: bookmark.name
+        bookmark_name: bookmark.name,
+        bookmarkable_url: bookmark.bookmarkable.url
       }.to_json
     )
   end
 
   def reminder_conditions(bookmark)
-    bookmark.bookmarkable.present?
+    bookmark.bookmarkable.present? && bookmark.bookmarkable.topic.present?
   end
 end

@@ -64,6 +64,10 @@ export const DefaultNotificationItem = createWidget(
       if (data.group_id) {
         return userPath(data.username + "/messages/group/" + data.group_name);
       }
+
+      if (data.bookmarkable_url) {
+        return getURL(data.bookmarkable_url);
+      }
     },
 
     description(data) {

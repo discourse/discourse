@@ -32,17 +32,18 @@ class TopicBookmarkable < BaseBookmarkable
   def reminder_handler(bookmark)
     bookmark.user.notifications.create!(
       notification_type: Notification.types[:bookmark_reminder],
-      topic_id: bookmark.topic_id,
-      post_number: bookmark.post.post_number,
+      topic_id: bookmark.bookmarkable_id,
+      post_number: 1,
       data: {
-        topic_title: bookmark.topic.title,
+        title: bookmark.bookmarkable.title,
         display_username: bookmark.user.username,
-        bookmark_name: bookmark.name
+        bookmark_name: bookmark.name,
+        bookmarkable_url: bookmark.bookmarkable.first_post.url
       }.to_json
     )
   end
 
   def reminder_conditions(bookmark)
-    bookmark.bookmarkable.present? && bookmark.bookmarkable.topic.present?
+    bookmark.bookmarkable.present?
   end
 end
