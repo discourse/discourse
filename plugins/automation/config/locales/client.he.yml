@@ -158,6 +158,12 @@ he:
               label: להציב ככרזה עד
             user:
               label: משתמש
+        close_topic:
+          fields:
+            topic:
+              label: מזהה נושא
+            user:
+              label: משתמש
       models:
         script:
           name:

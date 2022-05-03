@@ -84,3 +84,7 @@ hu:
           fields:
             word_answer_list:
               description: "Kulcs/érték csoportok listáját határoz meg, ahol a `kulcs` a keresett kifejezés, az `érték` pedig a válasz szövege. Vegye figyelembe, hogy az `érték` elfogadja a `%%KEY%%` helykitöltőt, amelybe a `kulcs` értéke lesz behelyettesítve a válaszban. Vegye figyelembe, hogy a `kulcs` reguláris kifejezésként lesz kiértékelve, így figyelembe kell vennie a speciális karaktereket, például ha a `.` karakterre gondol, akkor ezt kell megadnia: `\\.`."
+        close_topic:
+          fields:
+            user:
+              label: Felhasználó

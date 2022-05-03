@@ -100,6 +100,10 @@ fa_IR:
           fields:
             user:
               label: کاربر
+        close_topic:
+          fields:
+            user:
+              label: کاربر
       models:
         script:
           name:

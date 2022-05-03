@@ -5,3 +5,10 @@
 # https://translate.discourse.org/
 
 sv:
+  site_settings:
+    discourse_automation_enabled: "Aktivera discourse-automation plugin"
+  discourse_automation:
+    scriptables:
+      close_topic:
+        title: Stäng ämne
+        description: Stänger ett ämne med ett valfritt avslutningsmeddelande

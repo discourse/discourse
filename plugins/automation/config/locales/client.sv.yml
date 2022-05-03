@@ -72,6 +72,15 @@ sv:
             stalled_after:
               label: Stannade efter
         recurring:
+          every: Varje
+          frequencies:
+            minute: minut
+            hour: timme
+            day: dag
+            weekday: veckodag
+            week: vecka
+            month: månad
+            year: år
           fields:
             recurrence:
               label: Upprepning
@@ -80,8 +89,164 @@ sv:
         stalled_wiki:
           durations:
             PT1H: "En timme"
+            P1D: "En dag"
+            P1W: "En vecka"
+            P2W: "Två veckor"
+            P1M: "En månad"
+            P3M: "Tre månader"
+            P6M: "Sex månader"
+            P1Y: "Ett år"
+          fields:
+            restricted_category:
+              label: Begränsad till kategori
+            stalled_after:
+              label: Utlösningsfördröjning
+              description: Definierar fördröjning mellan senaste wiki-redigering och automatisk utlösare
+            retriggered_after:
+              label: Återaktivera fördröjning
+              description: Definierar fördröjning mellan första utlösaren och nästa utlösare, om wiki fortfarande inte har redigerats efter första utlösaren
+        user_added_to_group:
+          fields:
+            joined_group:
+              label: Spårad grupp
+        user_promoted:
+          fields:
+            restricted_group:
+              label: Begränsa till grupp
+            trust_level_transition:
+              label: Byte av tillits nivå
+          trust_levels:
+            ALL: "Alla förtroendenivåer"
+            TL01: "TL0 till TL1"
+            TL12: "TL1 till TL2"
+            TL23: "TL2 till TL3"
+            TL34: "TL3 till TL4"
+        point_in_time:
+          fields:
+            execute_at:
+              label: Utför vid
+        topic:
+          fields:
+            restricted_topic:
+              label: Ämnes-ID
+        post_created_edited:
+          fields:
+            valid_trust_levels:
+              label: Giltiga förtroendenivåer
+              description: Kommer att utlösa endast om inlägg skapas av användare i dessa förtroendenivåer, standard är alla förtroendenivåer
+            restricted_category:
+              label: Kategori
+              description: Valfritt, tillåter att begränsa utlösarens körning till denna kategori
       scriptables:
+        not_found: Kunde inte hitta skript `%{script}` för automatisering `%{automation}`, se till att den tillhörande pluginen är installerad
+        zapier_webhook:
+          fields:
+            webhook_url:
+              label: Webhook-URL
+              description: "Förväntar sig en giltig Zapier-webhook-URL, t.ex. https://hooks.zapier.com/hooks/catch/xxx/yyy/"
         auto_responder:
           fields:
             word_answer_list:
+              label: Lista över ord/svarspar
               description: "Definierar en lista över nyckel/värdegrupper, där `key` är den sökta termen och `value` svarstexten. Observera att `value` accepterar `%%KEY%%` som platshållare som ska ersättas med värdet `key` i svaret. Observera att `key` kommer att utvärderas som en regex, och speciella tecken som `.` bör undvikas om du faktiskt menar en punkt, t.ex.: `\\.`"
+            answering_user:
+              label: Svarande användare
+              description: Standard är systemanvändaren
+        user_global_notice:
+          fields:
+            level:
+              label: Nivå
+            notice:
+              label: Notis
+              description: Accepterar HTML, fyll inte detta med opålitlig inmatning!
+          levels:
+            warning: Varning
+            info: Information
+            success: Framgång
+            error: Fel
+        suspend_user_by_email:
+          fields:
+            suspend_until:
+              label: Stäng av tills (standard)
+            reason:
+              label: Orsak (standard)
+            actor:
+              label: Användare
+              description: "Användaren som är ansvarig för avstängningen (standard: system)"
+        pin_topic:
+          fields:
+            pinnable_topic:
+              label: Ämnes-ID
+            pinned_globally:
+              label: Fäst globalt
+            pinned_until:
+              label: Fäst tills
+        banner_topic:
+          fields:
+            topic_id:
+              label: Ämnes-ID
+            banner_until:
+              label: Skapa banner tills
+            user:
+              label: Användare
+              description: "Användaren som skapar bannern (standard: system)"
+        flag_post_on_words:
+          fields:
+            words:
+              label: Kontrollerade ord
+        topic_required_words:
+          fields:
+            words:
+              label: Lista över obligatoriska ord
+        gift_exchange:
+          fields:
+            gift_exchangers_group:
+              label: Deltagarnas gruppnamn
+            giftee_assignment_messages:
+              label: Meddelanden skickade till givare
+        send_pms:
+          add_a_pm_btn:
+            label: Lägg till PM
+          fields:
+            receiver:
+              label: PM-mottagare
+            sendable_pms:
+              label: PM
+            sender:
+              label: Avsändare för PM
+        close_topic:
+          fields:
+            topic:
+              label: Ämnes-ID
+            message:
+              label: Avslutningsmeddelande
+              description: "Valfritt meddelande att visa på tråden stängd post"
+            user:
+              label: Användare
+              description: "Användaren som stänger ämnet (standard: system)"
+      models:
+        script:
+          name:
+            label: Skript
+        trigger:
+          name:
+            label: Utlösare
+        automation:
+          name:
+            label: Namn
+          trigger:
+            label: Utlösare
+          script:
+            label: Skript
+          version:
+            label: Version
+          enabled:
+            label: Aktiverad
+          disabled:
+            label: Inaktiverad
+          placeholders:
+            label: Platshållare
+          last_updated_at:
+            label: Senaste uppdatering
+          last_updated_by:
+            label: Uppdaterad av
