@@ -66,9 +66,10 @@ RSpec.describe BookmarkReminderNotificationHandler do
         expect(notif.topic_id).to eq(bookmark.bookmarkable.topic_id)
         expect(notif.post_number).to eq(bookmark.bookmarkable.post_number)
         data = JSON.parse(notif.data)
-        expect(data["topic_title"]).to eq(bookmark.bookmarkable.topic.title)
+        expect(data["title"]).to eq(bookmark.bookmarkable.topic.title)
         expect(data["display_username"]).to eq(bookmark.user.username)
         expect(data["bookmark_name"]).to eq(bookmark.name)
+        expect(data["bookmarkable_url"]).to eq(bookmark.bookmarkable.url)
       end
 
       context "when the bookmarkable is deleted" do
