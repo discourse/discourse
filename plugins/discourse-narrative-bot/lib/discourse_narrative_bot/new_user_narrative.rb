@@ -243,6 +243,7 @@ module DiscourseNarrativeBot
       post
     end
 
+    # TODO (martin) [POLYBOOK] Fix up narrative bot bookmark interactions in a separate PR.
     def missing_bookmark
       return unless valid_topic?(@post.topic_id)
       return if @post.user_id == self.discobot_user.id
@@ -253,6 +254,7 @@ module DiscourseNarrativeBot
       false
     end
 
+    # TODO (martin) [POLYBOOK] Fix up narrative bot bookmark interactions in a separate PR.
     def reply_to_bookmark
       return unless valid_topic?(@post.topic_id)
       return unless @post.user_id == self.discobot_user.id

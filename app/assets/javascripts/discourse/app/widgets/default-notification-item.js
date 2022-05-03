@@ -94,7 +94,7 @@ export const DefaultNotificationItem = createWidget(
         return this.attrs.fancy_title;
       }
 
-      const description = data.topic_title;
+      const description = data.topic_title || data.title;
 
       return isEmpty(description) ? "" : escapeExpression(description);
     },

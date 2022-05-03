@@ -1720,6 +1720,7 @@ class UsersController < ApplicationController
           render_serialized(bookmark_list, UserBookmarkListSerializer)
         end
       end
+      # TODO (martin) Make a separate PR for .ics reminders for polymorphic bookmarks
       format.ics do
         @bookmark_reminders = Bookmark.with_reminders
           .where(user_id: user.id)

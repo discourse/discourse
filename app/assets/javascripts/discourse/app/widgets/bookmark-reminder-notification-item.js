@@ -30,14 +30,5 @@ createWidgetFrom(
         return "";
       }
     },
-
-    text(notificationName, data) {
-      // TODO (martin) [POLYBOOK] Not relevant once polymorphic bookmarks are implemented.
-      if (!this.siteSettings.use_polymorphic_bookmarks) {
-        return this.super(notificationName, data);
-      } else {
-        return data.title;
-      }
-    },
   }
 );

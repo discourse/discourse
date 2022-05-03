@@ -281,6 +281,7 @@ after_initialize do
     end
   end
 
+  # TODO (martin) [POLYBOOK] Fix up narrative bot bookmark interactions in a separate PR.
   self.add_model_callback(Bookmark, :after_commit, on: :create) do
     if self.post && self.user.enqueue_narrative_bot_job?
       Jobs.enqueue(:bot_input, user_id: self.user_id, post_id: self.post_id, input: "bookmark")
