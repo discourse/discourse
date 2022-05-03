@@ -60,6 +60,7 @@ class CreatePostHotlinkedMedia < ActiveRecord::Migration[6.1]
           FROM post_custom_fields pcf
           JOIN json_array_elements_text(pcf.value::json) url ON true
           WHERE name='broken_images'
+          ON CONFLICT (post_id, md5(url::text)) DO NOTHING
         SQL
 
         execute <<~SQL
@@ -74,6 +75,7 @@ class CreatePostHotlinkedMedia < ActiveRecord::Migration[6.1]
           FROM post_custom_fields pcf
           JOIN json_array_elements_text(pcf.value::json) url ON true
           WHERE name='large_images'
+          ON CONFLICT (post_id, md5(url::text)) DO NOTHING
         SQL
       end
     end
