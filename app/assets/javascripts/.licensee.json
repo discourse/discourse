@@ -26,6 +26,8 @@
   },
   "corrections": true,
   "ignore": [
-    {"author": "Discourse"}
+    {
+      "author": "Discourse"
+    }
   ]
 }
