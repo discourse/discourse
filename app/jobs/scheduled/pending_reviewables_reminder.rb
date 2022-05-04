@@ -3,7 +3,7 @@
 module Jobs
 
   class PendingReviewablesReminder < ::Jobs::Scheduled
-    every 1.hour
+    every 15.minutes
 
     attr_reader :sent_reminder
 
