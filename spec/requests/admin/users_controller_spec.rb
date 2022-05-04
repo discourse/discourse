@@ -39,6 +39,11 @@ RSpec.describe Admin::UsersController do
         end.to change { UserHistory.where(action: UserHistory.actions[:check_email], acting_user_id: admin.id).count }.by(1)
         expect(response.status).to eq(200)
       end
+
+      it "can be ordered by emails" do
+        get "/admin/users/list.json", params: { show_emails: "true", order: "email" }
+        expect(response.status).to eq(200)
+      end
     end
   end
 
