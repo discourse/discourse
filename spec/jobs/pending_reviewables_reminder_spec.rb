@@ -24,6 +24,20 @@ describe Jobs::PendingReviewablesReminder do
     end
   end
 
+  context "notify_about_flags_after accepts a float" do
+    before { SiteSetting.notify_about_flags_after = 0.25 }
+
+    it "doesn't send message when flags are less than 15 minutes old" do
+      create_flag(14.minutes.ago)
+      expect(execute.sent_reminder).to eq(true)
+    end
+
+    it "sends message when there is a flag older than 15 minutes" do
+      create_flag(16.minutes.ago)
+      expect(execute.sent_reminder).to eq(true)
+    end
+  end
+
   context "notify_about_flags_after is 48" do
     before do
       SiteSetting.notify_about_flags_after = 48
