@@ -25,7 +25,7 @@ describe Scheduler::Defer do
   it "supports timeout reporting" do
     @defer.timeout = 0.05
 
-    logger = track_log_messages do |logger|
+    logger = track_log_messages do |l|
       10.times do
         @defer.later("fast job") {}
       end
@@ -35,7 +35,7 @@ describe Scheduler::Defer do
       end
 
       wait_for(200) do
-        logger.errors.length == 1
+        l.errors.length == 1
       end
     end
 
