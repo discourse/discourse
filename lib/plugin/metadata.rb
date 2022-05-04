@@ -37,6 +37,7 @@ class Plugin::Metadata
     "discourse-follow",
     "discourse-fontawesome-pro",
     "discourse-footnote",
+    "discourse-gamification",
     "discourse-github",
     "discourse-gradle-issue",
     "discourse-graphviz",
