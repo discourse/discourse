@@ -69,6 +69,8 @@ class AdminUserIndexQuery
       query = query.includes(:user_stat)
     end
 
+    query = query.joins(:primary_email) if params[:show_emails]
+
     query
   end
 
