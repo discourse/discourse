@@ -54,18 +54,6 @@
     }
   }
 
-  .json-editor-btn-delete {
-    @extend .btn-danger !optional;
-    @extend .no-text !optional;
-  }
-
-  .json-editor-btn-delete,
-  .json-editor-btn-copy {
-    .d-icon + span {
-      display: none;
-    }
-  }
-
   .card-body > .btn-group {
     // !important needed to override inline style :-(
     display: block !important;
