@@ -34,7 +34,7 @@ import showModal from "discourse/lib/show-modal";
 import { siteDir } from "discourse/lib/text-direction";
 import { translations } from "pretty-text/emoji/data";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
-import { action, get } from "@ember/object";
+import { action } from "@ember/object";
 import TextareaTextManipulation, {
   getHead,
 } from "discourse/mixins/textarea-text-manipulation";
@@ -546,7 +546,7 @@ export default Component.extend(TextareaTextManipulation, {
 
           // note this will only work for emojis starting with :
           // eg: :-)
-          let emojiTranslation = get("site.custom_emoji_translation");
+          let emojiTranslation = this.get("site.custom_emoji_translation");
           if (emojiTranslation === undefined) {
             emojiTranslation = {};
           }
