@@ -5352,18 +5352,7 @@ describe UsersController do
 
       before do
         SiteSetting.use_polymorphic_bookmarks = true
-        Bookmark.register_bookmarkable(
-          model: User,
-          serializer: UserTestBookmarkSerializer,
-          list_query: lambda do |user, guardian|
-            user.bookmarks.joins(
-              "INNER JOIN users ON users.id = bookmarks.bookmarkable_id AND bookmarks.bookmarkable_type = 'User'"
-            ).where(bookmarkable_type: "User")
-          end,
-          search_query: lambda do |bookmarks, query, ts_query|
-            bookmarks.where("users.username ILIKE ?", query)
-          end
-        )
+        register_test_bookmarkable
         TopicUser.change(user1.id, bookmark1.bookmarkable.topic_id, total_msecs_viewed: 1)
         TopicUser.change(user1.id, bookmark2.bookmarkable_id, total_msecs_viewed: 1)
         Fabricate(:post, topic: bookmark2.bookmarkable)

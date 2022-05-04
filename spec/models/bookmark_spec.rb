@@ -68,18 +68,7 @@ describe Bookmark do
         user = Fabricate(:user)
         bm = Bookmark.create(bookmarkable_type: "User", bookmarkable: Fabricate(:user), user: user)
         expect(bm.errors.full_messages).to include(I18n.t("bookmarks.errors.invalid_bookmarkable", type: "User"))
-        Bookmark.register_bookmarkable(
-          model: User,
-          serializer: UserBookmarkSerializer,
-          list_query: lambda do |bookmark_user, guardian|
-            bookmark_user.bookmarks.joins(
-              "INNER JOIN users ON users.id = bookmarks.bookmarkable_id AND bookmarks.bookmarkable_type = 'User'"
-            ).where(bookmarkable_type: "User")
-          end,
-          search_query: lambda do |bookmarks, query, ts_query|
-            bookmarks.where("users.username ILIKE ?", query)
-          end
-        )
+        register_test_bookmarkable
         expect(bm.valid?).to eq(true)
       end
     end
