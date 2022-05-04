@@ -39,7 +39,6 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
 
     toggleSidebar() {
       this.controllerFor("application").toggleProperty("showSidebar");
-      document.querySelector("body").classList.toggle("hide-sidebar");
     },
 
     toggleMobileView() {
