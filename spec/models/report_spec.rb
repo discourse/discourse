@@ -209,7 +209,7 @@ describe Report do
       end
 
       context "with #{request_type}" do
-        before(:each) do
+        before do
           freeze_time DateTime.parse('2017-03-01 12:00')
           application_requests = [
             { date: 35.days.ago.to_time, req_type: ApplicationRequest.req_types[request_type.to_s], count: 35 },
@@ -893,7 +893,7 @@ describe Report do
 
       expect(report).to be_nil
 
-      expect(Rails.logger.errors).to eq([
+      expect(@fake_logger.errors).to eq([
         'Couldn’t create report `signups`: <ReportInitError x>'
       ])
     end
