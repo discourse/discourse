@@ -93,7 +93,7 @@ module Stylesheet
     end
 
     def core_assets_refresh(target)
-      if target.match(/wcag|color_definitions/)
+      if target&.match(/wcag|color_definitions/)
         Stylesheet::Manager.clear_color_scheme_cache!
         return
       end
