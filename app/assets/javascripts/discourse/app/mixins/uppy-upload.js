@@ -120,10 +120,8 @@ export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
       onBeforeUpload: (files) => {
         let tooMany = false;
         const fileCount = Object.keys(files).length;
-        let maxFiles = this.maxFiles;
-        if (maxFiles === undefined) {
-          maxFiles = this.siteSettings.simultaneous_uploads;
-        }
+        const maxFiles =
+          this.maxFiles || this.siteSettings.simultaneous_uploads;
 
         if (this.allowMultipleFiles) {
           tooMany = maxFiles > 0 && fileCount > maxFiles;
