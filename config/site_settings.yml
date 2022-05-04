@@ -2237,7 +2237,9 @@ uncategorized:
     default: -1
     hidden: true
 
-  notify_about_flags_after: 48
+  notify_about_flags_after:
+    type: float
+    default: 48
 
   show_create_topics_notice:
     client: true
