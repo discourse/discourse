@@ -2240,7 +2240,6 @@ uncategorized:
   notify_about_flags_after:
     type: float
     default: 48
-    min: 0.25
 
   show_create_topics_notice:
     client: true
