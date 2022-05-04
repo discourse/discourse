@@ -51,6 +51,15 @@ describe Auth::Result do
     expect(user.name).to eq(new_name)
   end
 
+  it "overrides username with suggested value if missing" do
+    SiteSetting.auth_overrides_username = true
+
+    result.username = nil
+    result.apply_user_attributes!
+
+    expect(user.username).to eq("New_Name")
+  end
+
   it "updates the user's email if currently invalid" do
     user.update!(email: "someemail@discourse.org")
     expect { result.apply_user_attributes! }.not_to change { user.email }
