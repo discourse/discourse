@@ -29,7 +29,7 @@ describe Jobs::PendingReviewablesReminder do
 
     it "doesn't send message when flags are less than 15 minutes old" do
       create_flag(14.minutes.ago)
-      expect(execute.sent_reminder).to eq(true)
+      expect(execute.sent_reminder).to eq(false)
     end
 
     it "sends message when there is a flag older than 15 minutes" do
