@@ -111,7 +111,7 @@ GEM
       railties (>= 3.1)
     discourse-ember-source (3.12.2.3)
     discourse-fonts (0.0.9)
-    discourse_dev_assets (0.0.3)
+    discourse_dev_assets (0.0.4)
       faker (~> 2.16)
       literate_randomizer
     docile (1.4.0)
