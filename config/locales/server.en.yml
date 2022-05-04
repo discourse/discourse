@@ -2387,7 +2387,7 @@ en:
       email_polling_disabled: "You must enable either manual or POP3 polling before enabling reply by email."
       user_locale_not_enabled: "You must first enable 'allow user locale' before enabling this setting."
       invalid_regex: "Regex is invalid or not allowed."
-      invalid_regex_with_message: "Regex %{regex} is invalid: %{message}"
+      invalid_regex_with_message: "The regular expression '%{regex}' contains the following error: %{message}"
       email_editable_enabled: "You must disable 'email editable' before enabling this setting."
       staged_users_disabled: "You must first enable 'staged users' before enabling this setting."
       reply_by_email_disabled: "You must first enable 'reply by email' before enabling this setting."
