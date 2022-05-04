@@ -145,7 +145,6 @@ end
 # Allow everywhere for now cause we are allowing asset debugging in production
 group :assets do
   gem 'uglifier'
-  gem 'rtlit', require: false # for css rtling
 end
 
 group :test do

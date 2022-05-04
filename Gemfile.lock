@@ -413,7 +413,6 @@ GEM
       activesupport (>= 3.1, < 7.1)
       json-schema (~> 2.2)
       railties (>= 3.1, < 7.1)
-    rtlit (0.0.5)
     rubocop (1.28.2)
       parallel (~> 1.10)
       parser (>= 3.1.0.0)
@@ -615,7 +614,6 @@ DEPENDENCIES
   rspec-rails
   rss
   rswag-specs
-  rtlit
   rubocop-discourse
   ruby-prof
   ruby-readability
