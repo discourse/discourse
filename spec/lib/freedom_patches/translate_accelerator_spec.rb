@@ -221,6 +221,19 @@ describe "translate accelerator" do
       override_translation('en', 'fish', 'fake fish')
       expect(Fish.model_name.human).to eq('Fish')
     end
+
+    it "works when the override contains an interpolation key" do
+      expect(I18n.t("foo_with_variable")).to eq("Foo in :en with %{variable}")
+      I18n.with_locale(:de) { expect(I18n.t("foo_with_variable")).to eq("Foo in :de with %{variable}") }
+
+      override_translation("en", "foo_with_variable", "Override in :en with %{variable}")
+      expect(I18n.t("foo_with_variable")).to eq("Override in :en with %{variable}")
+      I18n.with_locale(:de) { expect(I18n.t("foo_with_variable")).to eq("Foo in :de with %{variable}") }
+
+      override_translation("de", "foo_with_variable", "Override in :de with %{variable}")
+      expect(I18n.t("foo_with_variable")).to eq("Override in :en with %{variable}")
+      I18n.with_locale(:de) { expect(I18n.t("foo_with_variable")).to eq("Override in :de with %{variable}") }
+    end
   end
 
   context "translation precedence" do
