@@ -46,6 +46,7 @@ class CreatePostHotlinkedMedia < ActiveRecord::Migration[6.1]
           JOIN json_each_text(pcf.value::json) obj ON true
           JOIN uploads ON obj.value::bigint = uploads.id
           WHERE name='downloaded_images'
+          AND pcf.value LIKE '{%' -- JSON Object
           ON CONFLICT (post_id, md5(url::text)) DO NOTHING
         SQL
 
@@ -61,6 +62,7 @@ class CreatePostHotlinkedMedia < ActiveRecord::Migration[6.1]
           FROM post_custom_fields pcf
           JOIN json_array_elements_text(pcf.value::json) url ON true
           WHERE name='broken_images'
+          AND pcf.value LIKE '[%' -- JSON Array
           ON CONFLICT (post_id, md5(url::text)) DO NOTHING
         SQL
 
@@ -76,6 +78,7 @@ class CreatePostHotlinkedMedia < ActiveRecord::Migration[6.1]
           FROM post_custom_fields pcf
           JOIN json_array_elements_text(pcf.value::json) url ON true
           WHERE name='large_images'
+          AND pcf.value LIKE '[%' -- JSON Array
           ON CONFLICT (post_id, md5(url::text)) DO NOTHING
         SQL
       end
