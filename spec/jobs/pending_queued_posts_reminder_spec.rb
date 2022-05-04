@@ -17,24 +17,18 @@ describe Jobs::PendingQueuedPostsReminder do
   context "notify_about_queued_posts_after accepts a float" do
     before do
       SiteSetting.notify_about_queued_posts_after = 0.25
+      job.last_notified_id = nil
     end
 
-    context "when we haven't been notified in a while" do
-
-      before do
-        job.last_notified_id = nil
-      end
-
-      it "creates system message if there are new queued posts" do
-        Fabricate(:reviewable_queued_post, created_at: 16.minutes.ago)
-        Fabricate(:reviewable_queued_post, created_at: 14.minutes.ago)
-        # expect 16 minute post to be picked up but not 14 min post
-        expect { job.execute({}) }.to change { Post.count }.by(1)
-        expect(Topic.where(
-          subtype: TopicSubtype.system_message,
-          title: I18n.t('system_messages.queued_posts_reminder.subject_template', count: 1)
-        ).exists?).to eq(true)
-      end
+    it "creates system message if there are new queued posts" do
+      Fabricate(:reviewable_queued_post, created_at: 16.minutes.ago)
+      Fabricate(:reviewable_queued_post, created_at: 14.minutes.ago)
+      # expect 16 minute post to be picked up but not 14 min post
+      expect { job.execute({}) }.to change { Post.count }.by(1)
+      expect(Topic.where(
+        subtype: TopicSubtype.system_message,
+        title: I18n.t('system_messages.queued_posts_reminder.subject_template', count: 1)
+      ).exists?).to eq(true)
     end
   end
 
