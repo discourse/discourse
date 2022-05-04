@@ -989,6 +989,7 @@ posting:
   approve_unless_staged:
     default: false
   notify_about_queued_posts_after:
+    type: float
     default: 24
   auto_close_messages_post_count:
     default: 500
