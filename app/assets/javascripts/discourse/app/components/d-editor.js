@@ -546,10 +546,12 @@ export default Component.extend(TextareaTextManipulation, {
 
           // note this will only work for emojis starting with :
           // eg: :-)
+          const emojiTranslation =
+            this.get("site.custom_emoji_translation") || {};
           const allTranslations = Object.assign(
             {},
             translations,
-            this.getWithDefault("site.custom_emoji_translation", {})
+            emojiTranslation
           );
           if (allTranslations[full]) {
             return resolve([allTranslations[full]]);
