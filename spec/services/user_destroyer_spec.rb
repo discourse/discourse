@@ -85,10 +85,10 @@ describe UserDestroyer do
 
     context 'context is missing' do
       it "logs warning message if context is missing" do
-        messages = track_log_messages(level: Logger::WARN) do
+        logger = track_log_messages do
           UserDestroyer.new(admin).destroy(user)
         end
-        expect(messages[0][2]).to include("User destroyed without context from:")
+        expect(logger.warnings).to include(/User destroyed without context from:/)
       end
     end
 

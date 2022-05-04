@@ -591,11 +591,13 @@ describe SessionController do
       sso.external_id = '   '
       sso.username = 'sam'
 
-      messages = track_log_messages(level: Logger::WARN) do
+      logger = track_log_messages do
         get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
       end
 
-      expect(messages.length).to eq(0)
+      expect(logger.warnings.length).to eq(0)
+      expect(logger.errors.length).to eq(0)
+      expect(logger.fatals.length).to eq(0)
       expect(response.status).to eq(500)
       expect(response.body).to include(I18n.t('discourse_connect.blank_id_error'))
     end
@@ -607,11 +609,13 @@ describe SessionController do
       sso.external_id = '123'
       sso.username = 'sam'
 
-      messages = track_log_messages(level: Logger::WARN) do
+      logger = track_log_messages do
         get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
       end
 
-      expect(messages.length).to eq(0)
+      expect(logger.warnings.length).to eq(0)
+      expect(logger.errors.length).to eq(0)
+      expect(logger.fatals.length).to eq(0)
       expect(response.status).to eq(500)
       expect(response.body).to include(I18n.t("discourse_connect.email_error", email: ERB::Util.html_escape("test@test.com")))
     end

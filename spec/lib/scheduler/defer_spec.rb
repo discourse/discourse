@@ -25,21 +25,24 @@ describe Scheduler::Defer do
   it "supports timeout reporting" do
     @defer.timeout = 0.05
 
-    m = track_log_messages do |messages|
+    logger = track_log_messages do |logger|
       10.times do
         @defer.later("fast job") {}
       end
+
       @defer.later "weird slow job" do
         sleep
       end
 
       wait_for(200) do
-        messages.length == 1
+        logger.errors.length == 1
       end
     end
 
-    expect(m.length).to eq(1)
-    expect(m[0][2]).to include("weird slow job")
+    expect(logger.warnings.length).to eq(0)
+    expect(logger.fatals.length).to eq(0)
+    expect(logger.errors.length).to eq(1)
+    expect(logger.errors).to include(/'weird slow job' is still running/)
   end
 
   it "can pause and resume" do
