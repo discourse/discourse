@@ -394,10 +394,7 @@ export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
   },
 
   _xhrUploadUrl() {
-    let uploadUrl = this.get("uploadUrl");
-    if (uploadUrl === undefined) {
-      uploadUrl = this.uploadRootPath;
-    }
+    const uploadUrl = this.uploadUrl || this.uploadRootPath;
     return getUrl(uploadUrl) + ".json?client_id=" + this.messageBus?.clientId;
   },
 
