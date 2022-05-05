@@ -831,6 +831,25 @@ class StaffActionLogger
     )
   end
 
+  def log_group_deletetion(group)
+    raise Discourse::InvalidParameters.new(:group) if group.nil?
+
+    details = [
+      "name: #{group.name}",
+      "id: #{group.id}"
+    ]
+
+    if group.grant_trust_level
+      details << "grant_trust_level: #{group.grant_trust_level}"
+    end
+
+    UserHistory.create!(
+      acting_user_id: @admin.id,
+      action: UserHistory.actions[:delete_group],
+      details: details.join(', ')
+    )
+  end
+
   private
 
   def get_changes(changes)
