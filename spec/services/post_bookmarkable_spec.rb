@@ -19,7 +19,7 @@ describe PostBookmarkable do
   let!(:topic_user1) { Fabricate(:topic_user, user: user, topic: post1.topic) }
   let!(:topic_user2) { Fabricate(:topic_user, user: user, topic: post2.topic) }
 
-  subject { Bookmarkable.new(PostBookmarkable) }
+  subject { RegisteredBookmarkable.new(PostBookmarkable) }
 
   describe "#perform_list_query" do
     it "returns all the user's bookmarks" do

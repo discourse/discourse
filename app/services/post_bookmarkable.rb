@@ -1,15 +1,19 @@
 # frozen_string_literal: true
 
 class PostBookmarkable < BaseBookmarkable
-  MODEL = Post
-  SERIALIZER = UserPostBookmarkSerializer
-  PRELOAD_ASSOCIATIONS = [{ topic: [:topic_users, :tags] }, :user]
-
-  def initialize
-    super(MODEL, SERIALIZER, PRELOAD_ASSOCIATIONS)
+  def self.model
+    Post
   end
 
-  def list_query(user, guardian)
+  def self.serializer
+    UserPostBookmarkSerializer
+  end
+
+  def self.preload_associations
+    [{ topic: [:topic_users, :tags] }, :user]
+  end
+
+  def self.list_query(user, guardian)
     topics = Topic.listable_topics.secured(guardian)
     pms = Topic.private_messages_for_user(user)
     post_bookmarks = user
@@ -23,7 +27,7 @@ class PostBookmarkable < BaseBookmarkable
     )
   end
 
-  def search_query(bookmarks, query, ts_query, &bookmarkable_search)
+  def self.search_query(bookmarks, query, ts_query, &bookmarkable_search)
     bookmarkable_search.call(
       bookmarks.joins(
         "LEFT JOIN post_search_data ON post_search_data.post_id = bookmarks.bookmarkable_id AND bookmarks.bookmarkable_type = 'Post'"
@@ -32,7 +36,7 @@ class PostBookmarkable < BaseBookmarkable
     )
   end
 
-  def reminder_handler(bookmark)
+  def self.reminder_handler(bookmark)
     bookmark.user.notifications.create!(
       notification_type: Notification.types[:bookmark_reminder],
       topic_id: bookmark.bookmarkable.topic_id,
@@ -46,11 +50,11 @@ class PostBookmarkable < BaseBookmarkable
     )
   end
 
-  def reminder_conditions(bookmark)
+  def self.reminder_conditions(bookmark)
     bookmark.bookmarkable.present? && bookmark.bookmarkable.topic.present?
   end
 
-  def can_see?(guardian, bookmark)
+  def self.can_see?(guardian, bookmark)
     guardian.can_see_post?(bookmark.bookmarkable)
   end
 end

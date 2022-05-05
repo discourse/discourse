@@ -16,8 +16,8 @@ class Bookmark < ActiveRecord::Base
   end
 
   def self.register_bookmarkable(bookmarkable_klass)
-    return if Bookmark.registered_bookmarkable_from_type(bookmarkable_klass::MODEL.name).present?
-    Bookmark.registered_bookmarkables << Bookmarkable.new(bookmarkable_klass)
+    return if Bookmark.registered_bookmarkable_from_type(bookmarkable_klass.model.name).present?
+    Bookmark.registered_bookmarkables << RegisteredBookmarkable.new(bookmarkable_klass)
   end
 
   ##

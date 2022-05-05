@@ -20,7 +20,7 @@ describe TopicBookmarkable do
   let!(:topic_user1) { Fabricate(:topic_user, user: user, topic: topic1) }
   let!(:topic_user2) { Fabricate(:topic_user, user: user, topic: topic2) }
 
-  subject { Bookmarkable.new(TopicBookmarkable) }
+  subject { RegisteredBookmarkable.new(TopicBookmarkable) }
 
   describe "#perform_list_query" do
     it "returns all the user's bookmarks" do
