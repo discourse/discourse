@@ -182,16 +182,3 @@ input {
     min-width: 0;
   }
 }
-
-#main-outlet-wrapper {
-  display: grid;
-  grid-template-areas: "content";
-  grid-template-columns: 1fr;
-  gap: 0;
-
-  &.has-sidebar {
-    grid-template-areas: "sidebar content";
-    grid-template-columns: 240px 1fr;
-    gap: 0 2em;
-  }
-}
