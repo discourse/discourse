@@ -13,7 +13,7 @@ if ENV['COVERAGE']
 end
 
 require 'rubygems'
-require 'rbtrace'
+require 'rbtrace' if RUBY_ENGINE == "ruby"
 require 'pry'
 require 'pry-byebug'
 require 'pry-rails'
