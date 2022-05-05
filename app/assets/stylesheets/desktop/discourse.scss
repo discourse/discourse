@@ -184,6 +184,7 @@ input {
 }
 
 #main-outlet-wrapper {
+  box-sizing: border-box;
   width: 100%;
   display: grid;
   grid-template-areas: "content";
