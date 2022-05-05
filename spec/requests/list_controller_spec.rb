@@ -638,6 +638,26 @@ RSpec.describe ListController do
       expect(json["topic_list"]["topics"].size).to eq(2)
     end
 
+    context "unicode usernames" do
+      before do
+        SiteSetting.unicode_usernames = true
+      end
+
+      it "should return the more_topics_url in the encoded form" do
+        stub_const(TopicQuery, "DEFAULT_PER_PAGE_COUNT", 1) do
+          user.update!(username: "快快快")
+
+          get "/topics/created-by/#{UrlHelper.encode(user.username)}.json"
+
+          expect(response.status).to eq(200)
+
+          json = response.parsed_body
+
+          expect(json["topic_list"]["more_topics_url"]).to eq("/topics/created-by/%E5%BF%AB%E5%BF%AB%E5%BF%AB?page=1")
+        end
+      end
+    end
+
     context 'when `hide_profile_and_presence` is true' do
       before do
         user.user_option.update_columns(hide_profile_and_presence: true)
