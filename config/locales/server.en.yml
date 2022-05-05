@@ -4986,9 +4986,11 @@ en:
               categories_and_top_topics:
                 label: "Categories and Top Topics"
               categories_boxes:
-                label: "Categories boxes"
+                label: "Categories Boxes"
               categories_boxes_with_topics:
-                label: "Categories boxes with Topics"
+                label: "Categories Boxes with Topics"
+              subcategories_with_featured_topics:
+                label: "Subcategories with Featured Topics"
 
       logos:
         title: "Logos"
