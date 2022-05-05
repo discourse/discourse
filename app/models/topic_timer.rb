@@ -112,6 +112,10 @@ class TopicTimer < ActiveRecord::Base
     true
   end
 
+  def publishing_to_category?
+    self.status_type.to_i == TopicTimer.types[:publish_to_category]
+  end
+
   private
 
   def duration_in_range?
@@ -136,10 +140,6 @@ class TopicTimer < ActiveRecord::Base
     errors.add(:execute_at, I18n.t(
       'activerecord.errors.models.topic_timer.attributes.execute_at.in_the_past'
     ))
-  end
-
-  def publishing_to_category?
-    self.status_type.to_i == TopicTimer.types[:publish_to_category]
   end
 
   def schedule_auto_delete_replies_job

@@ -203,6 +203,14 @@ class TopicViewSerializer < ApplicationSerializer
   end
 
   def topic_timer
+    topic_timer = object.topic.public_topic_timer
+
+    return nil if topic_timer.blank?
+
+    if topic_timer.publishing_to_category?
+      return nil if !scope.can_see_category?(Category.find_by(id: topic_timer.category_id))
+    end
+
     TopicTimerSerializer.new(object.topic.public_topic_timer, root: false)
   end
 

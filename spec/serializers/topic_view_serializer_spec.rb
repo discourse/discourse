@@ -544,4 +544,54 @@ describe TopicViewSerializer do
       expect(json[:requested_group_name]).to eq(nil)
     end
   end
+
+  describe '#topic_timer' do
+    it 'does not include the attribute when topic does not have a topic timer' do
+      json = serialize_topic(topic, user)
+
+      expect(json[:topic_timer]).to eq(nil)
+    end
+
+    it 'includes the attribute when topic has a public topic timer' do
+      topic_timer = Fabricate(:topic_timer, topic: topic, execute_at: Time.utc(2022, 4, 6, 16, 23, 56))
+      json = serialize_topic(topic, user)
+
+      expect(json[:topic_timer][:id]).to eq(topic_timer.id)
+      expect(json[:topic_timer][:based_on_last_post]).to eq(false)
+      expect(json[:topic_timer][:category_id]).to eq(nil)
+      expect(json[:topic_timer][:duration_minutes]).to eq(nil)
+      expect(json[:topic_timer][:execute_at]).to eq('2022-04-06T16:23:56.000Z')
+      expect(json[:topic_timer][:status_type]).to eq("close")
+    end
+
+    it 'does not include the attribute for category topic timer where category is restricted to user' do
+      category = Fabricate(:category, read_restricted: true)
+
+      Fabricate(:topic_timer,
+        topic: topic,
+        category_id: category.id,
+        status_type:
+        TopicTimer.types[:publish_to_category]
+      )
+
+      json = serialize_topic(topic, user)
+
+      expect(json[:topic_timer]).to eq(nil)
+    end
+
+    it 'includes the attribute  for category topic timer where category is not restricted to user' do
+      category = Fabricate(:category, read_restricted: false)
+
+      topic_timer = Fabricate(:topic_timer,
+        topic: topic,
+        category_id: category.id,
+        status_type:
+        TopicTimer.types[:publish_to_category]
+      )
+
+      json = serialize_topic(topic, user)
+
+      expect(json[:topic_timer][:id]).to eq(topic_timer.id)
+    end
+  end
 end
