@@ -9,27 +9,6 @@ class Search
 
     class TextHelper
       extend ActionView::Helpers::TextHelper
-
-      private
-
-      # TODO: Remove when https://github.com/rails/rails/pull/39979 is merged
-      # For a 10_000 words string, speeds up excerpts by 85X.
-      def self.cut_excerpt_part(part_position, part, separator, options)
-        return "", "" unless part
-
-        radius   = options.fetch(:radius, 100)
-        omission = options.fetch(:omission, "...")
-
-        if separator != ""
-          part = part.split(separator)
-          part.delete("")
-        end
-
-        affix = part.length > radius ? omission : ""
-        part = part.public_send(part_position == :first ? :last : :first, radius)
-        part = part.join(separator) if separator != ""
-        [affix, part]
-      end
     end
 
     attr_reader(
