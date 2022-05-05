@@ -116,7 +116,7 @@ acceptance("User Notifications - Users - Ignore User", function (needs) {
   needs.user();
 
   needs.hooks.beforeEach(() => {
-    const timezone = loggedInUser().resolvedTimezone(loggedInUser());
+    const timezone = loggedInUser().timezone;
     clock = fakeTime("2100-05-03T08:00:00", timezone, true); // Monday morning
   });
 

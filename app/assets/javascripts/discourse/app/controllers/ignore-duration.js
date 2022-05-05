@@ -11,7 +11,7 @@ export default Controller.extend(ModalFunctionality, {
 
   @discourseComputed
   timeShortcuts() {
-    const timezone = this.currentUser.resolvedTimezone(this.currentUser);
+    const timezone = this.currentUser.timezone;
     const shortcuts = timeShortcuts(timezone);
     return [
       shortcuts.laterToday(),

@@ -180,7 +180,7 @@ export default Controller.extend(
 
     @discourseComputed
     timeShortcuts() {
-      const timezone = this.currentUser.resolvedTimezone(this.currentUser);
+      const timezone = this.currentUser.timezone;
       const shortcuts = timeShortcuts(timezone);
       return [
         shortcuts.laterToday(),

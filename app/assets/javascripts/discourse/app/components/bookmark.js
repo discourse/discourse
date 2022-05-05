@@ -55,7 +55,7 @@ export default Component.extend({
       postDetectedLocalTime: null,
       postDetectedLocalTimezone: null,
       prefilledDatetime: null,
-      userTimezone: this.currentUser.resolvedTimezone(this.currentUser),
+      userTimezone: this.currentUser.timezone,
       showOptions: false,
       _itsatrap: new ItsATrap(),
       autoDeletePreference: this.model.autoDeletePreference || 0,

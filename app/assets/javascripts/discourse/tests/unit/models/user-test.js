@@ -70,7 +70,7 @@ module("Unit | Model | user", function () {
     );
   });
 
-  test("resolvedTimezone", function (assert) {
+  test("timezone", function (assert) {
     const tz = "Australia/Brisbane";
     let user = User.create({ timezone: tz, username: "chuck", id: 111 });
 
@@ -79,7 +79,7 @@ module("Unit | Model | user", function () {
     let spy = sinon.spy(ajaxlib, "ajax");
 
     assert.strictEqual(
-      user.resolvedTimezone(user),
+      user.timezone,
       tz,
       "if the user already has a timezone return it"
     );
@@ -89,7 +89,7 @@ module("Unit | Model | user", function () {
     );
     user = User.create({ username: "chuck", id: 111 });
     assert.strictEqual(
-      user.resolvedTimezone(user),
+      user.timezone,
       "America/Chicago",
       "if the user has no timezone guess it with moment"
     );
@@ -104,7 +104,7 @@ module("Unit | Model | user", function () {
 
     let otherUser = User.create({ username: "howardhamlin", id: 999 });
     assert.strictEqual(
-      otherUser.resolvedTimezone(user),
+      otherUser.timezone,
       undefined,
       "if the user has no timezone and the user is not the current user, do NOT guess with moment"
     );
