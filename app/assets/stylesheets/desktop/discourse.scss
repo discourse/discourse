@@ -187,7 +187,7 @@ input {
   width: 100%;
   display: grid;
   grid-template-areas: "content";
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr);
   gap: 0;
 
   &.has-sidebar {
