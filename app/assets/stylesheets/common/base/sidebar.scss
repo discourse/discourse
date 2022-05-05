@@ -1,0 +1,42 @@
+.header-sidebar-toggle {
+  margin-right: 1em;
+  margin-left: -10px;
+
+  button {
+    position: relative;
+    font-size: var(--font-up-2);
+
+    .discourse-no-touch & {
+      &:hover {
+        background: var(--primary-low);
+        .d-icon {
+          color: var(--primary-medium);
+        }
+      }
+    }
+  }
+}
+
+#main-outlet-wrapper {
+  .sidebar-wrapper {
+    grid-area: sidebar;
+    position: sticky;
+    top: var(--header-offset);
+    height: calc(100vh - var(--header-offset));
+    align-self: start;
+    overflow-y: auto;
+    background-color: var(--primary-very-low);
+  }
+
+  .sidebar-container {
+    box-sizing: border-box;
+    height: 100%;
+    width: 240px;
+    padding: 1em;
+  }
+
+  .sidebar-toggle {
+    display: flex;
+    justify-content: flex-end;
+  }
+}
