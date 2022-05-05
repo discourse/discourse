@@ -6,6 +6,12 @@ export default Controller.extend({
   showTop: true,
   showFooter: false,
   router: service(),
+  showSidebar: true,
+
+  @discourseComputed("showSidebar", "currentUser.experimental_sidebar_enabled")
+  mainOutletWrapperClasses(showSidebar, experimentalSidebarEnabled) {
+    return showSidebar && experimentalSidebarEnabled ? "has-sidebar" : "";
+  },
 
   @discourseComputed
   canSignUp() {
