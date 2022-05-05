@@ -101,12 +101,12 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def ember_cli_required?
-    Rails.env.development? && ENV['NO_EMBER_CLI'] != '1' && request.headers['X-Discourse-Ember-CLI'] != 'true'
-  end
-
   def application_layout
-    ember_cli_required? ? "ember_cli" : "application"
+    if Rails.env.development? && ENV["EMBER_CLI_PROD_ASSETS"] != "0" && request.headers["X-Discourse-Ember-CLI"] != "true"
+      "ember_cli"
+    else
+      "application"
+    end
   end
 
   def set_layout
