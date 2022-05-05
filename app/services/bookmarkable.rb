@@ -32,6 +32,7 @@ class Bookmarkable
   #
   # @param [User] user The user to perform the query for, this scopes the bookmarks returned.
   # @param [Guardian] guardian An instance of Guardian for the user to be used for security filters.
+  # @return [Bookmark::ActiveRecord_AssociationRelation] Should be an approprialely scoped list of bookmarks for the user.
   def perform_list_query(user, guardian)
     bookmarkable.list_query(user, guardian)
   end
@@ -52,6 +53,8 @@ class Bookmarkable
   # @param [Bookmark::ActiveRecord_Relation] bookmarks The bookmark records returned by perform_list_query
   # @param [String] query The search query from the user surrounded by the %% wildcards
   # @param [String] ts_query The postgres TSQUERY string used for comparisons with full text search columns
+  # @return [Bookmark::ActiveRecord_AssociationRelation] The list of bookmarks from perform_list_query filtered further by
+  #                                                      the query parameter.
   def perform_search_query(bookmarks, query, ts_query)
     bookmarkable.search_query(bookmarks, query, ts_query) do |bookmarks_joined, where_sql|
       bookmarks_joined.where("#{where_sql} OR bookmarks.name ILIKE :q", q: query)
@@ -70,7 +73,10 @@ class Bookmarkable
   #
   # @param [Array] bookmarks The array of bookmarks after initial listing and filtering, note this is
   #                          array _not_ an ActiveRecord::Relation.
+  # @return [void]
   def perform_preload(bookmarks)
+    return if !bookmarkable.has_preloads?
+
     ActiveRecord::Associations::Preloader
       .new(
         records: Bookmark.select_type(bookmarks, bookmarkable.model.to_s),
@@ -90,6 +96,7 @@ class Bookmarkable
   # here, that is done in the BookmarkReminderNotifications job.
   #
   # @param [Bookmark] bookmark The bookmark that we are considering sending a reminder for.
+  # @return [Boolean]
   def can_send_reminder?(bookmark)
     bookmarkable.reminder_conditions(bookmark)
   end
@@ -100,6 +107,7 @@ class Bookmarkable
   # its preferred method of sending the reminder.
   #
   # @param [Bookmark] bookmark The bookmark that we are sending the reminder notification for.
+  # @return [void]
   def send_reminder_notification(bookmark)
     bookmarkable.reminder_handler(bookmark)
   end
@@ -111,6 +119,7 @@ class Bookmarkable
   #
   # @param [Guardian] guardian The guardian class for the user that we are performing the access check for.
   # @param [Bookmark] bookmark The bookmark which we are checking access for using the bookmarkable association.
+  # @return [Boolean]
   def can_see?(guardian, bookmark)
     bookmarkable.can_see?(guardian, bookmark)
   end

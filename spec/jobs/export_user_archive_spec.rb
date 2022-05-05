@@ -283,9 +283,9 @@ describe Jobs::ExportUserArchive do
     it 'properly includes bookmark records' do
       now = freeze_time '2017-03-01 12:00'
 
-      bkmk1 = manager.create(post_id: post1.id, name: name)
+      bookmark1 = manager.create(post_id: post1.id, name: name)
       update1_at = now + 1.hours
-      bkmk1.update(name: 'great food recipe', updated_at: update1_at)
+      bookmark1.update(name: 'great food recipe', updated_at: update1_at)
 
       manager.create(post_id: post2.id, name: name, reminder_at: reminder_at, options: { auto_delete_preference: Bookmark.auto_delete_preferences[:when_reminder_sent] })
       twelve_hr_ago = freeze_time now - 12.hours
@@ -329,9 +329,9 @@ describe Jobs::ExportUserArchive do
       it "properly includes bookmark records" do
         now = freeze_time '2017-03-01 12:00'
 
-        bkmk1 = manager.create_for(bookmarkable_id: post1.id, bookmarkable_type: "Post", name: name)
+        bookmark1 = manager.create_for(bookmarkable_id: post1.id, bookmarkable_type: "Post", name: name)
         update1_at = now + 1.hours
-        bkmk1.update(name: 'great food recipe', updated_at: update1_at)
+        bookmark1.update(name: 'great food recipe', updated_at: update1_at)
 
         manager.create_for(bookmarkable_id: post2.id, bookmarkable_type: "Post", name: name, reminder_at: reminder_at, options: { auto_delete_preference: Bookmark.auto_delete_preferences[:when_reminder_sent] })
         twelve_hr_ago = freeze_time now - 12.hours

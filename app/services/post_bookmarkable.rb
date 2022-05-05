@@ -3,10 +3,10 @@
 class PostBookmarkable < BaseBookmarkable
   MODEL = Post
   SERIALIZER = UserPostBookmarkSerializer
+  PRELOAD_ASSOCIATIONS = [{ topic: [:topic_users, :tags] }, :user]
 
   def initialize
-    super(MODEL, SERIALIZER)
-    @preload_associations = [{ topic: [:topic_users, :tags] }, :user]
+    super(MODEL, SERIALIZER, PRELOAD_ASSOCIATIONS)
   end
 
   def list_query(user, guardian)

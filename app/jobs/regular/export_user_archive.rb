@@ -243,27 +243,27 @@ module Jobs
     def bookmarks_polymorphic_export
       return enum_for(:bookmarks_polymorphic_export) unless block_given?
 
-      @current_user.bookmarks.where.not(bookmarkable_type: nil).order(:id).each do |bkmk|
+      @current_user.bookmarks.where.not(bookmarkable_type: nil).order(:id).each do |bookmark|
         link = ''
-        if guardian.can_see_bookmarkable?(bkmk)
-          if bkmk.bookmarkable.respond_to?(:full_url)
-            link = bkmk.bookmarkable.full_url
+        if guardian.can_see_bookmarkable?(bookmark)
+          if bookmark.bookmarkable.respond_to?(:full_url)
+            link = bookmark.bookmarkable.full_url
           else
-            link = bkmk.bookmarkable.url
+            link = bookmark.bookmarkable.url
           end
         end
 
         yield [
-          bkmk.bookmarkable_id,
-          bkmk.bookmarkable_type,
+          bookmark.bookmarkable_id,
+          bookmark.bookmarkable_type,
           link,
-          bkmk.name,
-          bkmk.created_at,
-          bkmk.updated_at,
-          bkmk.reminder_at,
-          bkmk.reminder_last_sent_at,
-          bkmk.reminder_set_at,
-          Bookmark.auto_delete_preferences[bkmk.auto_delete_preference],
+          bookmark.name,
+          bookmark.created_at,
+          bookmark.updated_at,
+          bookmark.reminder_at,
+          bookmark.reminder_last_sent_at,
+          bookmark.reminder_set_at,
+          Bookmark.auto_delete_preferences[bookmark.auto_delete_preference],
         ]
       end
     end
@@ -272,24 +272,24 @@ module Jobs
     def bookmarks_export
       return enum_for(:bookmarks_export) unless block_given?
 
-      @current_user.bookmarks.joins(:post).order(:id).each do |bkmk|
+      @current_user.bookmarks.joins(:post).order(:id).each do |bookmark|
         link = ''
-        if guardian.can_see_bookmarkable?(bkmk)
-          link = bkmk.post.full_url
+        if guardian.can_see_bookmarkable?(bookmark)
+          link = bookmark.post.full_url
         end
 
         yield [
-          bkmk.post_id,
-          bkmk.topic_id,
-          bkmk.post&.post_number,
+          bookmark.post_id,
+          bookmark.topic_id,
+          bookmark.post&.post_number,
           link,
-          bkmk.name,
-          bkmk.created_at,
-          bkmk.updated_at,
-          bkmk.reminder_at,
-          bkmk.reminder_last_sent_at,
-          bkmk.reminder_set_at,
-          Bookmark.auto_delete_preferences[bkmk.auto_delete_preference],
+          bookmark.name,
+          bookmark.created_at,
+          bookmark.updated_at,
+          bookmark.reminder_at,
+          bookmark.reminder_last_sent_at,
+          bookmark.reminder_set_at,
+          Bookmark.auto_delete_preferences[bookmark.auto_delete_preference],
         ]
       end
     end
