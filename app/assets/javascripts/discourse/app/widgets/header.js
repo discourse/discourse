@@ -400,12 +400,7 @@ export default createWidget("header", {
       return panels;
     };
 
-    let contentsAttrs = {
-      contents,
-      minimized: !!attrs.topic,
-      sidebarEnabled: this.currentUser?.experimental_sidebar_enabled,
-    };
-
+    let contentsAttrs = { contents, minimized: !!attrs.topic };
     return h(
       "div.wrap",
       this.attach("header-contents", Object.assign({}, attrs, contentsAttrs))
