@@ -15,17 +15,6 @@ Sidekiq.configure_server do |config|
 end
 
 if Sidekiq.server?
-
-  module Sidekiq
-    class CLI
-      private
-
-      def print_banner
-        # banner takes up too much space
-      end
-    end
-  end
-
   # defer queue should simply run in sidekiq
   Scheduler::Defer.async = false
 
