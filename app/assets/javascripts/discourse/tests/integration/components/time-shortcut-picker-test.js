@@ -40,7 +40,7 @@ discourseModule(
       beforeEach() {
         this.siteSettings.suggest_weekends_in_date_pickers = true;
         const tuesday = "2100-06-08T08:00:00";
-        this.clock = fakeTime(tuesday, this.currentUser._timezone, true);
+        this.clock = fakeTime(tuesday, this.currentUser.timezone, true);
       },
 
       async test(assert) {
@@ -70,7 +70,7 @@ discourseModule(
 
       beforeEach() {
         const monday = "2100-06-07T08:00:00";
-        this.clock = fakeTime(monday, this.currentUser._timezone, true);
+        this.clock = fakeTime(monday, this.currentUser.timezone, true);
       },
 
       test(assert) {
@@ -86,7 +86,7 @@ discourseModule(
 
       beforeEach() {
         const thursday = "2100-06-10T08:00:00";
-        this.clock = fakeTime(thursday, this.currentUser._timezone, true);
+        this.clock = fakeTime(thursday, this.currentUser.timezone, true);
       },
 
       test(assert) {
@@ -103,7 +103,7 @@ discourseModule(
       beforeEach() {
         this.clock = fakeTime(
           "2100-12-11T22:00:00", // + 3 hours is tomorrow
-          this.currentUser._timezone,
+          this.currentUser.timezone,
           true
         );
       },
@@ -122,7 +122,7 @@ discourseModule(
       beforeEach() {
         this.clock = fakeTime(
           "2100-12-11T16:50:00",
-          this.currentUser._timezone,
+          this.currentUser.timezone,
           true
         );
       },
@@ -138,7 +138,7 @@ discourseModule(
       beforeEach() {
         this.clock = fakeTime(
           "2100-12-11T17:00:00",
-          this.currentUser._timezone,
+          this.currentUser.timezone,
           true
         );
       },
@@ -165,7 +165,7 @@ discourseModule(
 
       beforeEach() {
         const sunday = "2100-01-24T08:00:00";
-        this.clock = fakeTime(sunday, this.currentUser._timezone, true);
+        this.clock = fakeTime(sunday, this.currentUser.timezone, true);
       },
 
       async test(assert) {
@@ -188,7 +188,7 @@ discourseModule(
 
       beforeEach() {
         const monday = "2100-01-25T08:00:00";
-        this.clock = fakeTime(monday, this.currentUser._timezone, true);
+        this.clock = fakeTime(monday, this.currentUser.timezone, true);
       },
 
       async test(assert) {
@@ -214,7 +214,7 @@ discourseModule(
         beforeEach() {
           this.clock = fakeTime(
             "2100-01-01T08:00:00",
-            this.currentUser._timezone,
+            this.currentUser.timezone,
             true
           );
         },
