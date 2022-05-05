@@ -75,7 +75,7 @@ export function setup(helper) {
 
     const cache = new Map();
 
-    md.core.ruler.push("watched-words", (state) => {
+    md.core.ruler.before("linkify", "watched-words", (state) => {
       for (let j = 0, l = state.tokens.length; j < l; j++) {
         if (state.tokens[j].type !== "inline") {
           continue;
