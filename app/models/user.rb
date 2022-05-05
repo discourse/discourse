@@ -1835,6 +1835,7 @@ end
 #  manual_locked_trust_level :integer
 #  secure_identifier         :string
 #  flair_group_id            :integer
+#  last_seen_reviewable_id   :integer
 #
 # Indexes
 #
