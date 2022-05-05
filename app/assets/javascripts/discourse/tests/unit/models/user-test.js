@@ -1,6 +1,4 @@
-import * as ajaxlib from "discourse/lib/ajax";
 import { module, test } from "qunit";
-import sinon from "sinon";
 import Group from "discourse/models/group";
 import User from "discourse/models/user";
 
@@ -67,54 +65,6 @@ module("Unit | Model | user", function () {
       user.canManageGroup(group),
       true,
       "a group owner should be able to manage the group"
-    );
-  });
-
-  test("timezone", function (assert) {
-    const tz = "Australia/Brisbane";
-    let user = User.create({ timezone: tz, username: "chuck", id: 111 });
-
-    sinon.stub(moment.tz, "guess").returns("America/Chicago");
-    sinon.stub(ajaxlib.ajax);
-    let spy = sinon.spy(ajaxlib, "ajax");
-
-    assert.strictEqual(
-      user.timezone,
-      tz,
-      "if the user already has a timezone return it"
-    );
-    assert.ok(
-      spy.notCalled,
-      "if the user already has a timezone do not call AJAX update"
-    );
-    user = User.create({ username: "chuck", id: 111 });
-    assert.strictEqual(
-      user.timezone,
-      "America/Chicago",
-      "if the user has no timezone guess it with moment"
-    );
-    assert.ok(
-      spy.calledWith("/u/chuck.json", {
-        type: "PUT",
-        dataType: "json",
-        data: { timezone: "America/Chicago" },
-      }),
-      "if the user has no timezone save it with an AJAX update"
-    );
-
-    let otherUser = User.create({ username: "howardhamlin", id: 999 });
-    assert.strictEqual(
-      otherUser.timezone,
-      undefined,
-      "if the user has no timezone and the user is not the current user, do NOT guess with moment"
-    );
-    assert.notOk(
-      spy.calledWith("/u/howardhamlin.json", {
-        type: "PUT",
-        dataType: "json",
-        data: { timezone: "America/Chicago" },
-      }),
-      "if the user has no timezone, and the user is not the current user, do NOT save it with an AJAX update"
     );
   });
 
