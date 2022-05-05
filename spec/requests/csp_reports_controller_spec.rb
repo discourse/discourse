@@ -50,7 +50,7 @@ describe CspReportsController do
 
     it 'logs the violation report' do
       send_report
-      expect(Rails.logger.warnings).to include("CSP Violation: 'http://suspicio.us/assets.js' \n\nconsole.log('unsafe')")
+      expect(@fake_logger.warnings).to include("CSP Violation: 'http://suspicio.us/assets.js' \n\nconsole.log('unsafe')")
     end
   end
 end

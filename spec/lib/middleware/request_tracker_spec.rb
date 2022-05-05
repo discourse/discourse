@@ -24,7 +24,6 @@ describe Middleware::RequestTracker do
   end
 
   context "full request" do
-
     it "can handle rogue user agents" do
       agent = (+"Evil Googlebot String \xc3\x28").force_encoding("Windows-1252")
 
@@ -35,12 +34,11 @@ describe Middleware::RequestTracker do
 
       expect(WebCrawlerRequest.where(user_agent: agent.encode('utf-8')).count).to eq(1)
     end
-
   end
 
   context "log_request" do
     before do
-      freeze_time Time.now
+      freeze_time
       ApplicationRequest.clear_cache!
     end
 
@@ -128,7 +126,7 @@ describe Middleware::RequestTracker do
       expect(ApplicationRequest.page_view_anon.first.count).to eq(1)
     end
 
-    context "ignore_anonymous_pageviews" do
+    context "ignore anonymous page views" do
       let(:anon_data) do
         Middleware::RequestTracker.get_data(env(
           "HTTP_USER_AGENT" => "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.72 Safari/537.36"
@@ -183,26 +181,13 @@ describe Middleware::RequestTracker do
   end
 
   context "rate limiting" do
-
-    class TestLogger
-      attr_accessor :warnings
-
-      def initialize
-        @warnings = 0
-      end
-
-      def warn(*args)
-        @warnings += 1
-      end
-    end
-
     before do
       RateLimiter.enable
       RateLimiter.clear_all_global!
       RateLimiter.clear_all!
 
-      @old_logger = Rails.logger
-      Rails.logger = TestLogger.new
+      @orig_logger = Rails.logger
+      Rails.logger = @fake_logger = FakeLogger.new
 
       # rate limiter tests depend on checks for retry-after
       # they can be sensitive to clock skew during test runs
@@ -210,7 +195,7 @@ describe Middleware::RequestTracker do
     end
 
     after do
-      Rails.logger = @old_logger
+      Rails.logger = @orig_logger
     end
 
     let :middleware do
@@ -244,7 +229,7 @@ describe Middleware::RequestTracker do
         status, _ = middleware.call(env1)
         status, _ = middleware.call(env1)
 
-        expect(Rails.logger.warnings).to eq(warn_count)
+        expect(@fake_logger.warnings.count { |w| w.include?("Global IP rate limit exceeded") }).to eq(warn_count)
         expect(status).to eq(429)
         warn_count += 1
       end
@@ -322,7 +307,7 @@ describe Middleware::RequestTracker do
         status, _ = middleware.call(env1)
         status, _ = middleware.call(env1)
 
-        expect(Rails.logger.warnings).to eq(0)
+        expect(@fake_logger.warnings.count { |w| w.include?("Global IP rate limit exceeded") }).to eq(0)
         expect(status).to eq(200)
       end
     end
@@ -334,7 +319,7 @@ describe Middleware::RequestTracker do
       status, _ = middleware.call(env)
       status, headers = middleware.call(env)
 
-      expect(Rails.logger.warnings).to eq(1)
+      expect(@fake_logger.warnings.count { |w| w.include?("Global IP rate limit exceeded") }).to eq(1)
       expect(status).to eq(429)
       expect(headers["Retry-After"]).to eq("10")
     end
@@ -346,7 +331,7 @@ describe Middleware::RequestTracker do
       status, _ = middleware.call(env)
       status, _ = middleware.call(env)
 
-      expect(Rails.logger.warnings).to eq(1)
+      expect(@fake_logger.warnings.count { |w| w.include?("Global IP rate limit exceeded") }).to eq(1)
       expect(status).to eq(200)
     end
 
@@ -577,7 +562,7 @@ describe Middleware::RequestTracker do
       end
     end
 
-    let :logger do
+    let(:logger) do
       ->(env, data) do
         @env = env
         @data = data
@@ -620,7 +605,6 @@ describe Middleware::RequestTracker do
     end
 
     it "can correctly log detailed data" do
-
       global_setting :enable_performance_http_headers, true
 
       # ensure pg is warmed up with the select 1 query

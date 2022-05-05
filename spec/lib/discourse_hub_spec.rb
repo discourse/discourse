@@ -91,11 +91,11 @@ describe DiscourseHub do
 
       DiscourseHub.collection_action(:get, '/test')
 
-      expect(Rails.logger.warnings).to eq([
+      expect(@fake_logger.warnings).to eq([
         DiscourseHub.response_status_log_message('/test', 500),
       ])
 
-      expect(Rails.logger.errors).to eq([
+      expect(@fake_logger.errors).to eq([
         DiscourseHub.response_body_log_message("")
       ])
     end
