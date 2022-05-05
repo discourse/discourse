@@ -1,15 +1,19 @@
 # frozen_string_literal: true
 
 class FakeLogger
-  attr_reader :warnings, :errors, :infos, :fatals
+  attr_reader :debug, :infos, :warnings, :errors, :fatals
   attr_accessor :level
 
   def initialize
-    @warnings = []
-    @errors = []
     @debug = []
     @infos = []
+    @warnings = []
+    @errors = []
     @fatals = []
+  end
+
+  def debug(message)
+    @debug << message
   end
 
   def info(message = nil)
@@ -26,10 +30,6 @@ class FakeLogger
 
   def fatal(message)
     @fatals << message
-  end
-
-  def debug(message)
-    @debug << message
   end
 
   def formatter
