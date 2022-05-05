@@ -1,13 +1,6 @@
 # frozen_string_literal: true
 
 class Bookmark < ActiveRecord::Base
-  # these columns were here for a very short amount of time,
-  # hence the very short ignore time
-  self.ignored_columns = [
-    "topic_id", # TODO 2022-04-01: remove
-    "reminder_type" # TODO 2021-04-01: remove
-  ]
-
   cattr_accessor :registered_bookmarkables
   self.registered_bookmarkables = []
 
