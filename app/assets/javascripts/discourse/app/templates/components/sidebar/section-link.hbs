@@ -1,0 +1,18 @@
+<div class="sidebar-section-link-wrapper">
+  <Sidebar::SectionLinkTo
+    @class={{concat "sidebar-section-link sidebar-section-link-" @linkName}}
+    @route={{@route}}
+    @query={{@query}}
+    @models={{if @model (array @model) (if @models @models (array))}}
+    @current-when={{@current-when}}
+    @title={{i18n (concat "sidebar.sections.links." @linkName ".title")}}
+  >
+    {{i18n (concat "sidebar.sections.links." @linkName ".content")}}
+
+    {{#if @badgeText}}
+      <span class="sidebar-section-link-content-badge">
+        {{@badgeText}}
+      </span>
+    {{/if}}
+  </Sidebar::SectionLinkTo>
+</div>
