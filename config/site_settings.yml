@@ -2578,8 +2578,6 @@ tags:
   tags_listed_by_group:
     client: true
     default: false
-  allow_staff_to_tag_pms:
-    default: false
   pm_tags_allowed_for_groups:
     client: true
     type: group_list
