@@ -80,9 +80,11 @@ require File.expand_path('../app/core_ext/plugin_instance', __FILE__)
 after_initialize do
   [
     '../app/queries/stalled_topic_finder',
+    '../app/services/discourse_automation/user_badge_granted_handler',
     '../app/lib/discourse_automation/triggers/stalled_wiki',
     '../app/lib/discourse_automation/triggers/stalled_topic',
     '../app/lib/discourse_automation/triggers/user_added_to_group',
+    '../app/lib/discourse_automation/triggers/user_badge_granted',
     '../app/lib/discourse_automation/triggers/point_in_time',
     '../app/lib/discourse_automation/triggers/post_created_edited',
     '../app/lib/discourse_automation/triggers/topic',
@@ -191,6 +193,15 @@ after_initialize do
         )
       end
     end
+  end
+
+  on(:user_badge_granted) do |badge_id, user_id|
+    name = DiscourseAutomation::Triggerable::USER_BADGE_GRANTED
+    DiscourseAutomation::Automation
+      .where(trigger: name, enabled: true)
+      .find_each do |automation|
+        DiscourseAutomation::UserBadgeGrantedHandler.handle(automation, badge_id, user_id)
+      end
   end
 
   on(:user_promoted) do |payload|

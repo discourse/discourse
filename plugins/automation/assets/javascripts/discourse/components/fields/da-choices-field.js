@@ -8,7 +8,7 @@ export default class ChoicesField extends BaseField {
     return (this.field.extra.content || []).map((r) => {
       return {
         id: r.id,
-        name: I18n.t(r.name),
+        name: r.translated_name || I18n.t(r.name),
       };
     });
   }

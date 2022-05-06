@@ -48,6 +48,12 @@ en:
           label: Text
       triggerables:
         not_found: Couldn’t find trigger `%{trigger}` for automation `%{automation}`, ensure the associated plugin is installed
+        user_badge_granted:
+          fields:
+            badge:
+              label: Badge
+            only_first_grant:
+              label: Only on first grant
         stalled_topic:
           durations:
             PT1H: "One hour"

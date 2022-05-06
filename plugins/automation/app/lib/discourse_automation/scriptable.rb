@@ -152,7 +152,7 @@ module DiscourseAutomation
         input = apply_report_placeholder(input)
 
         map.each do |key, value|
-          input = input.gsub("%%#{key.upcase}%%", value)
+          input = input.gsub("%%#{key.upcase}%%", value.to_s)
         end
 
         input

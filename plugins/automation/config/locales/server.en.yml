@@ -8,6 +8,9 @@ en:
         invalid_field: Field’s component `%{component}` is not usable on `%{target}:%{target_name}.`
         invalid_metadata: Data for `%{field}` is invalid or component `%{component}` is unknown.
     triggerables:
+      user_badge_granted:
+        title: User badge granted
+        doc: Triggers an automation when a user is granted a badge.
       stalled_topic:
         title: Stalled topic
         doc: Triggers an automation when the topic has not received a new reply from topic owner for a specified period of time. It is recommended to scope this trigger to a tag/category as the number of topics impacted can be very high. As a safety measure, the number of impacted topics is capped at 250.
