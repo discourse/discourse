@@ -43,11 +43,16 @@ createWidgetFrom(QuickAccessPanel, "quick-access-profile", {
   },
 
   _getItems() {
-    let items = this._getDefaultItems();
+    const items = [];
+
+    if (this.siteSettings.enable_user_status) {
+      items.push(this._userStatusButton());
+    }
+    items.push(...this._getDefaultItems());
     if (this._showToggleAnonymousButton()) {
       items.push(this._toggleAnonymousButton());
     }
-    items = items.concat(_extraItems);
+    items.push(..._extraItems);
 
     if (this.attrs.showLogoutButton) {
       items.push({ widget: "logout-item" });
@@ -129,5 +134,13 @@ createWidgetFrom(QuickAccessPanel, "quick-access-profile", {
           this.siteSettings.anonymous_posting_min_trust_level) ||
       this.currentUser.is_anonymous
     );
+  },
+
+  _userStatusButton() {
+    return {
+      action: "setUserStatus",
+      content: I18n.t("user_status.set_custom_status"),
+      icon: "plus-circle",
+    };
   },
 });

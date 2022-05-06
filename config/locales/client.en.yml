@@ -1783,6 +1783,9 @@ en:
         private_message: "message"
         the_topic: "the topic"
 
+    user_status:
+      set_custom_status: "Set custom status"
+
     loading: "Loading..."
     errors:
       prev_page: "while trying to load"
