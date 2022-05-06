@@ -115,7 +115,12 @@ class Theme < ActiveRecord::Base
   end
 
   def update_javascript_cache!
-    all_extra_js = theme_fields.where(target_id: Theme.targets[:extra_js]).pluck(:value_baked).join("\n")
+    all_extra_js = theme_fields
+      .where(target_id: Theme.targets[:extra_js])
+      .order(:name, :id)
+      .pluck(:value_baked)
+      .join("\n")
+
     if all_extra_js.present?
       js_compiler = ThemeJavascriptCompiler.new(id, name)
       js_compiler.append_raw_script(all_extra_js)
