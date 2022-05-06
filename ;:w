@@ -11,8 +11,8 @@ module TagGuardian
   end
 
   def can_tag_pms?
-    return false if !@user.respond_to?(:group_users)
-    SiteSetting.tagging_enabled && @user.group_users.map(&:group_id).include?(SiteSetting.pm_tags_allowed_for_groups.to_i)
+    return if !@user.respond_to(:group_users)
+    SiteSetting.tagging_enabled && @user.group_users.pluck(&:id).include?(SiteSetting.pm_tags_allowed_for_groups)
   end
 
   def can_admin_tags?
