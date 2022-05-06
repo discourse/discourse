@@ -254,7 +254,10 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
     },
 
     setUserStatus() {
-      bootbox.alert("setting user status");
+      showModal("user-status", {
+        title: "user_status.set_custom_status",
+        modalClass: "user-status",
+      });
     },
   },
 
