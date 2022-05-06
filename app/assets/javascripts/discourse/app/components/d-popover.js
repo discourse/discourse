@@ -10,6 +10,8 @@ export default class DiscoursePopover extends Component {
 
   options = null;
 
+  class = null;
+
   didInsertElement() {
     this._super(...arguments);
 
