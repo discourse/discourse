@@ -168,14 +168,18 @@ export default Component.extend(PanEvents, {
   },
 
   panStart(e) {
-    if (e.originalEvent.target.classList.contains("docked")) {
+    const target = e.originalEvent.target;
+
+    if (
+      target.classList.contains("docked") ||
+      !target.closest(".timeline-container")
+    ) {
       return;
     }
 
     e.originalEvent.preventDefault();
-    const center = e.center;
-    const $centeredElement = $(document.elementFromPoint(center.x, center.y));
-    if ($centeredElement.parents(".timeline-scrollarea-wrapper").length) {
+    const centeredElement = document.elementFromPoint(e.center.x, e.center.y);
+    if (centeredElement.closest(".timeline-scrollarea-wrapper").length) {
       this.isPanning = false;
     } else if (e.direction === "up" || e.direction === "down") {
       this.isPanning = true;
