@@ -179,7 +179,7 @@ export default Component.extend(PanEvents, {
 
     e.originalEvent.preventDefault();
     const centeredElement = document.elementFromPoint(e.center.x, e.center.y);
-    if (centeredElement.closest(".timeline-scrollarea-wrapper").length) {
+    if (centeredElement.closest(".timeline-scrollarea-wrapper")) {
       this.isPanning = false;
     } else if (e.direction === "up" || e.direction === "down") {
       this.isPanning = true;
