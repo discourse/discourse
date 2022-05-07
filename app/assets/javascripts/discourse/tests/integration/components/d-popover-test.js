@@ -73,12 +73,4 @@ discourseModule("Integration | Component | d-popover", function (hooks) {
       assert.ok(exists(".d-icon-chevron-up"));
     },
   });
-
-  componentTest("d-popover component accepts a class property", {
-    template: hbs`{{#d-popover class="foo"}}{{/d-popover}}`,
-
-    async test(assert) {
-      assert.ok(exists(".d-popover.foo"));
-    },
-  });
 });
