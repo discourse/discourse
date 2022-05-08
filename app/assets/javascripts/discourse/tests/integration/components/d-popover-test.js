@@ -39,16 +39,20 @@ discourseModule("Integration | Component | d-popover", function (hooks) {
   });
 
   componentTest("show/hide popover from component", {
-    template: hbs`{{#d-popover}}{{d-button icon="chevron-down"}}<ul><li class="test">foo</li></ul>{{/d-popover}}`,
+    template: hbs`{{#d-popover}}{{d-button class="trigger" icon="chevron-down"}}<ul><li class="test">foo</li><li>{{d-button icon="times" class="closer"}}</li></ul>{{/d-popover}}`,
 
     async test(assert) {
       assert.notOk(exists(".d-popover.is-expanded"));
       assert.notOk(exists(".test"));
 
-      await click(".btn");
+      await click(".trigger");
 
       assert.ok(exists(".d-popover.is-expanded"));
       assert.equal(query(".test").innerText.trim(), "foo");
+
+      await click(".closer");
+
+      assert.notOk(exists(".d-popover.is-expanded"));
     },
   });
 
