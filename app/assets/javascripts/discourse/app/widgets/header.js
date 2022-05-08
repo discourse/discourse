@@ -68,6 +68,14 @@ createWidget("header-notifications", {
       ),
     ];
 
+    if (this.currentUser.status) {
+      contents.push(
+        this.attach("user-status-bubble", {
+          emoji: this.currentUser.status.emoji,
+        })
+      );
+    }
+
     if (user.isInDoNotDisturb()) {
       contents.push(h("div.do-not-disturb-background", iconNode("moon")));
     } else {
