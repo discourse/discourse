@@ -794,8 +794,7 @@ describe GroupsController do
 
     context "when user is group admin" do
       before do
-        user.update!(admin: true)
-        sign_in(user)
+        sign_in(admin)
       end
 
       it 'should be able to update the group' do
@@ -839,7 +838,7 @@ describe GroupsController do
           .to eq(group.id)
       end
 
-      it "should be able to update an automatic group" do
+      it "they should be able to update an automatic group" do
         group = Group.find(Group::AUTO_GROUPS[:admins])
 
         group.update!(
@@ -861,7 +860,8 @@ describe GroupsController do
             default_notification_level: 1,
             tracking_category_ids: [category.id],
             tracking_tags: [tag.name]
-          }
+          },
+          update_existing_users: false
         }
 
         expect(response.status).to eq(200)

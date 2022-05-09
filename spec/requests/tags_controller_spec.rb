@@ -66,7 +66,7 @@ describe TagsController do
 
       context "disabled" do
         before do
-          SiteSetting.tagging_enabled = false
+          SiteSetting.pm_tags_allowed_for_groups = ""
           sign_in(admin)
         end
 
@@ -239,7 +239,7 @@ describe TagsController do
     end
 
     it "handles special tag 'none'" do
-      SiteSetting.pm_tags_allowed_for_groups = "#{Group::AUTO_GROUPS[:staff]}"
+      SiteSetting.pm_tags_allowed_for_groups = "1|2|3"
 
       sign_in(admin)
 
