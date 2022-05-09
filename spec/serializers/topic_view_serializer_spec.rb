@@ -200,7 +200,7 @@ describe TopicViewSerializer do
 
     before do
       SiteSetting.tagging_enabled = true
-      SiteSetting.allow_staff_to_tag_pms = true
+      SiteSetting.pm_tags_allowed_for_groups = "#{Group::AUTO_GROUPS[:staff]}"
     end
 
     it "should not include the tag for normal users" do
@@ -216,7 +216,7 @@ describe TopicViewSerializer do
     end
 
     it "should not include the tag if pm tags disabled" do
-      SiteSetting.allow_staff_to_tag_pms = false
+      SiteSetting.pm_tags_allowed_for_groups = "#{Group::AUTO_GROUPS[:staff]}"
 
       [moderator, admin].each do |user|
         json = serialize_topic(pm, user)

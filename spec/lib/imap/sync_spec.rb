@@ -6,7 +6,7 @@ describe Imap::Sync do
 
   before do
     SiteSetting.tagging_enabled = true
-    SiteSetting.allow_staff_to_tag_pms = true
+    SiteSetting.pm_tags_allowed_for_groups = "#{Group::AUTO_GROUPS[:staff]}"
 
     SiteSetting.enable_imap = true
 
@@ -103,7 +103,7 @@ describe Imap::Sync do
     context "when tagging not enabled" do
       before do
         SiteSetting.tagging_enabled = false
-        SiteSetting.allow_staff_to_tag_pms = false
+        SiteSetting.pm_tags_allowed_for_groups = "#{Group::AUTO_GROUPS[:staff]}"
       end
 
       it "creates a topic from an incoming email but with no tags added" do
