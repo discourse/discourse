@@ -62,6 +62,9 @@
           {{#if this.user.staged}}
             <h2 class="staged">{{i18n "user.staged"}}</h2>
           {{/if}}
+          {{#if siteSettings.enable_user_status}}
+            <h3 class="user-status">{{html-safe this.userStatus}}</h3>
+          {{/if}}
           {{plugin-outlet name="user-card-post-names" connectorTagName="div" args=(hash user=this.user) tagName="div"}}
         </div>
         <ul class="usercard-controls">
