@@ -847,12 +847,12 @@ export default RestModel.extend({
     return resolved;
   },
 
-  triggerLikedPost(postId, likesCount) {
+  triggerLikedPost(postId, likesCount, userID, eventType) {
     const resolved = Promise.resolve();
 
     const post = this.findLoadedPost(postId);
     if (post) {
-      post.updateLikeCount(likesCount);
+      post.updateLikeCount(likesCount, userID, eventType);
       this.storePost(post);
     }
 

@@ -161,7 +161,7 @@ private
 
   def notify_subscribers
     if @post_action_name == :like
-      @post.publish_change_to_clients! :liked, { likes_count: @post.like_count + 1 }
+      @post.publish_change_to_clients! :liked, { likes_count: @post.like_count + 1, user_id: @created_by.id }
     elsif self.class.notify_types.include?(@post_action_name)
       @post.publish_change_to_clients! :acted
     end

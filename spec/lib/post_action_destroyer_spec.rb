@@ -26,8 +26,9 @@ describe PostActionDestroyer do
           end
 
           message = messages.last.data
-          expect(message[:type]).to eq(:liked)
+          expect(message[:type]).to eq(:unliked)
           expect(message[:likes_count]).to eq(0)
+          expect(message[:user_id]).to eq(user.id)
         end
       end
 
