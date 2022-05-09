@@ -17,6 +17,45 @@ describe DiscourseRedis do
       raw_redis.flushdb
     end
 
+    describe 'pipelined / multi' do
+      let(:redis) { DiscourseRedis.new }
+
+      it 'should support multi commands' do
+        val = redis.multi do |transaction|
+          transaction.set 'foo', 'bar'
+          transaction.set 'bar', 'foo'
+          transaction.get 'bar'
+        end
+
+        expect(raw_redis.get('foo')).to eq(nil)
+        expect(raw_redis.get('bar')).to eq(nil)
+        expect(redis.get('foo')).to eq('bar')
+        expect(redis.get('bar')).to eq('foo')
+
+        expect(val).to eq(["OK", "OK", "foo"])
+      end
+
+      it 'should support pipelined commands' do
+        set, incr = nil
+        val = redis.pipelined do |pipeline|
+          set = pipeline.set "foo", "baz"
+          incr = pipeline.incr "baz"
+        end
+
+        expect(val).to eq(["OK", 1])
+
+        expect(set.value).to eq("OK")
+        expect(incr.value).to eq(1)
+
+        expect(raw_redis.get('foo')).to eq(nil)
+        expect(raw_redis.get('baz')).to eq(nil)
+
+        expect(redis.get('foo')).to eq("baz")
+        expect(redis.get('baz')).to eq("1")
+
+      end
+    end
+
     describe 'when namespace is enabled' do
       let(:redis) { DiscourseRedis.new }
 
