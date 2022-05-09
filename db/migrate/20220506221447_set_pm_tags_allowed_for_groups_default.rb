@@ -8,9 +8,9 @@ class SetPmTagsAllowedForGroupsDefault < ActiveRecord::Migration[7.0]
     allow_staff_to_tag_pms = DB.query_single("SELECT value FROM site_settings WHERE name = 'allow_staff_to_tag_pms'").first
 
     # Dynamically sets the default value
-    # if allow_staff_to_tag_pms == "t"
+    if allow_staff_to_tag_pms == "t"
       default = []
-      Group::AUTO_GROUPS.select do |group_key,id|
+      Group::AUTO_GROUPS.select do |group_key, id|
         if Group::STAFF_GROUPS.include?(group_key)
           default << id
         end
