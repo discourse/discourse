@@ -12,19 +12,19 @@
     <span class={{if nameFirst "name bold" "username bold"}}>
       {{#if includeLink}}
         <a href={{this.userPath}} data-user-card={{@user.username}}>
-          {{if nameFirst this.name (format-username @user.username)}}
+          {{if nameFirst @user.name (format-username @user.username)}}
         </a>
       {{else}}
-        {{if nameFirst this.name (format-username @user.username)}}
+        {{if nameFirst @user.name (format-username @user.username)}}
       {{/if}}
     </span>
     <span class={{if nameFirst "username margin" "name margin"}}>
       {{#if includeLink}}
         <a href={{this.userPath}} data-user-card={{@user.username}}>
-          {{if nameFirst (format-username @user.username) this.name}}
+          {{if nameFirst (format-username @user.username) @user.name}}
         </a>
       {{else}}
-        {{if nameFirst (format-username @user.username) this.name}}
+        {{if nameFirst (format-username @user.username) @user.name}}
       {{/if}}
     </span>
     {{plugin-outlet name="after-user-name" tagName="span" connectorTagName="span" args=(hash user=user)}}
