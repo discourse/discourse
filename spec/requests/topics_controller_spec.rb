@@ -417,7 +417,7 @@ RSpec.describe TopicsController do
         before { sign_in(admin) }
 
         it "returns success" do
-          SiteSetting.pm_tags_allowed_for_groups = "#{Group::AUTO_GROUPS[:staff]}"
+          SiteSetting.pm_tags_allowed_for_groups = "1|2|3"
 
           expect do
             post "/t/#{message.id}/move-posts.json", params: {
