@@ -7,7 +7,6 @@ import LoadMore from "discourse/mixins/load-more";
 import Post from "discourse/models/post";
 import { NEW_TOPIC_KEY } from "discourse/models/composer";
 import bootbox from "bootbox";
-import discourseDebounce from "discourse-common/lib/debounce";
 import { getOwner } from "discourse-common/lib/get-owner";
 import { observes } from "discourse-common/utils/decorators";
 import { on } from "@ember/object/evented";
@@ -74,18 +73,12 @@ export default Component.extend(LoadMore, {
   },
 
   _scrollToLastPosition() {
-    let scrollTo = this.session.userStreamScrollPosition;
-    if (scrollTo && scrollTo >= 0) {
+    const scrollTo = this.session.userStreamScrollPosition;
+    if (scrollTo > 0) {
       schedule("afterRender", () => {
-        discourseDebounce(
-          this,
-          function () {
-            if (this.element && !this.isDestroying && !this.isDestroyed) {
-              window.scrollTo(0, scrollTo + 1);
-            }
-          },
-          0
-        );
+        if (this.element && !this.isDestroying && !this.isDestroyed) {
+          window.scrollTo(0, scrollTo + 1);
+        }
       });
     }
   },

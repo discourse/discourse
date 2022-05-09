@@ -13,8 +13,8 @@ export default Component.extend(UrlRefresh, LoadMore, {
   @on("didInsertElement")
   @observes("model")
   _readjustScrollPosition() {
-    const scrollTo = this.session.get("topicListScrollPosition");
-    if (scrollTo && scrollTo >= 0) {
+    const scrollTo = this.session.topicListScrollPosition;
+    if (scrollTo > 0) {
       schedule("afterRender", () => $(window).scrollTop(scrollTo + 1));
     } else {
       scheduleOnce("afterRender", this, this.loadMoreUnlessFull);
