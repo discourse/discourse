@@ -1886,6 +1886,9 @@ rate_limits:
   max_allowed_secondary_emails:
     default: 10
     hidden: true
+  max_batch_presign_multipart_per_minute:
+    default: 20
+    hidden: true
 
 developer:
   force_hostname:
