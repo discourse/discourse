@@ -1471,6 +1471,34 @@ describe Search do
   end
 
   describe 'Advanced search' do
+    describe "bookmarks" do
+      fab!(:user) { Fabricate(:user) }
+      let!(:bookmark_post1) { Fabricate(:post, raw: 'boom this is a bookmarked post') }
+      let!(:bookmark_post2) { Fabricate(:post, raw: 'wow some other cool thing') }
+
+      def search_with_bookmarks
+        Search.execute('boom in:bookmarks', guardian: Guardian.new(user))
+      end
+
+      it "can filter by posts in the user's bookmarks" do
+        expect(search_with_bookmarks.posts.map(&:id)).to eq([])
+        Fabricate(:bookmark, user: user, post: bookmark_post1)
+        expect(search_with_bookmarks.posts.map(&:id)).to match_array([bookmark_post1.id])
+      end
+
+      context "using polymorphic bookmarks" do
+        before do
+          SiteSetting.use_polymorphic_bookmarks = true
+        end
+
+        it "can filter by posts in the user's bookmarks" do
+          expect(search_with_bookmarks.posts.map(&:id)).to eq([])
+          bm = Fabricate(:bookmark, user: user, bookmarkable: bookmark_post1)
+          expect(search_with_bookmarks.posts.map(&:id)).to match_array([bookmark_post1.id])
+        end
+      end
+    end
+
     it 'supports pinned' do
       Fabricate(:post, raw: 'hi this is a test 123 123', topic: topic)
       _post = Fabricate(:post, raw: 'boom boom shake the room', topic: topic)
