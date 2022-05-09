@@ -470,7 +470,7 @@ GEM
       sprockets (>= 3.0.0)
     sshkey (2.0.0)
     stackprof (0.2.19)
-    strscan (3.0.1)
+    strscan (3.0.2)
     test-prof (1.0.9)
     thor (1.2.1)
     tilt (2.0.10)
