@@ -248,7 +248,22 @@ describe DiscourseNarrativeBot::NewUserNarrative do
         end
       end
 
-      it 'should create the right reply when bookmarks with reminders are enabled' do
+      it 'adds an after commit model callback to bookmark' do
+        Jobs.run_later!
+        bookmark = Fabricate(:bookmark, post: Fabricate(:post))
+        expect_job_enqueued(job: :bot_input, args: { user_id: bookmark.user_id, post_id: bookmark.post_id, input: "bookmark" })
+      end
+
+      it 'adds an after commit model callback to bookmark for polymorphic bookmarks (but only for post polymorphic bookmarks)' do
+        SiteSetting.use_polymorphic_bookmarks = true
+        Jobs.run_later!
+        bookmark = Fabricate(:bookmark, bookmarkable: Fabricate(:post))
+        expect_job_enqueued(job: :bot_input, args: { user_id: bookmark.user_id, post_id: bookmark.bookmarkable_id, input: "bookmark" })
+        bookmark2 = Fabricate(:bookmark, bookmarkable: Fabricate(:topic))
+        expect_not_enqueued_with(job: :bot_input, args: { user_id: bookmark.user_id, post_id: kind_of(Integer), input: "bookmark" })
+      end
+
+      it 'should create the right reply when the bookmark is created' do
         post.update!(user: discobot_user)
         narrative.expects(:enqueue_timeout_job).with(user)
 
