@@ -407,7 +407,7 @@ module Imap
     end
 
     def tagging_enabled?
-      SiteSetting.tagging_enabled && Guardian.new.can_tag_pms?
+      SiteSetting.tagging_enabled && Guardian.new(Discourse.system_user).can_tag_pms?
     end
   end
 end
