@@ -4,10 +4,6 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { userPath } from "discourse/lib/url";
 import { prioritizeNameInUx } from "discourse/lib/settings";
 
-export function normalize(name) {
-  return name.replace(/[\-\_ \.]/g, "").toLowerCase();
-}
-
 export default Component.extend({
   classNameBindings: [":user-info", "size"],
   attributeBindings: ["data-username"],
