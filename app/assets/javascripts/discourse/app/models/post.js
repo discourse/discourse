@@ -361,7 +361,7 @@ const Post = RestModel.extend({
     let likeActionID = Site.current().post_action_types.find(
       (a) => a.name_key === "like"
     ).id;
-    let newActionObject = { id: likeActionID, count, acted: ownLike };
+    const newActionObject = { id: likeActionID, count, acted: ownLike };
 
     if (!this.actions_summary.find((entry) => entry.id === likeActionID)) {
       let json = Post.munge({
