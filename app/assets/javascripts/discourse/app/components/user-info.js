@@ -21,13 +21,6 @@ export default Component.extend({
     return userPath(username);
   },
 
-  @discourseComputed("user.name", "user.username")
-  name(name, username) {
-    if (name && normalize(username) !== normalize(name)) {
-      return name;
-    }
-  },
-
   @discourseComputed("user.name")
   nameFirst(name) {
     return prioritizeNameInUx(name);
