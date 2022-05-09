@@ -3923,6 +3923,7 @@ en:
           description: "You will not be notified of anything about new topics with this tag, and they will not appear on your unread tab."
 
       groups:
+        back_btn: "Back to all tags"
         title: "Tag Groups"
         about_heading: "Select a tag group or create a new one"
         about_heading_empty: "Create a new tag group to get started"
