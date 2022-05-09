@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "sidekiq/pausable"
+require 'sidekiq_logster_reporter'
 
 Sidekiq.configure_client do |config|
   config.redis = Discourse.sidekiq_redis_config
