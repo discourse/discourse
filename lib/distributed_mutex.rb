@@ -93,9 +93,9 @@ class DistributedMutex
         got_lock = false
       else
         result =
-          redis.multi do
-            redis.set key, expire_time.to_s
-            redis.expireat key, expire_time + 1
+          redis.multi do |transaction|
+            transaction.set key, expire_time.to_s
+            transaction.expireat key, expire_time + 1
           end
 
         got_lock = !result.nil?
@@ -112,9 +112,11 @@ class DistributedMutex
       current_expire_time = redis.get key
 
       if current_expire_time == expire_time.to_s
+        # MULTI is the way redis ensures the watched key
+        # has not changed by the time it is deleted
         result =
-          redis.multi do
-            redis.del key
+          redis.multi do |transaction|
+            transaction.del key
           end
         return !result.nil?
       else
