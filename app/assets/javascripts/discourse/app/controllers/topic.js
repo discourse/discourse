@@ -1712,9 +1712,15 @@ export default Controller.extend(bufferedProperty("model"), {
               .then(() => refresh({ id: data.id, refreshLikes: true }));
             break;
           }
-          case "liked": {
+          case "liked":
+          case "unliked": {
             postStream
-              .triggerLikedPost(data.id, data.likes_count)
+              .triggerLikedPost(
+                data.id,
+                data.likes_count,
+                data.user_id,
+                data.type
+              )
               .then(() => refresh({ id: data.id, refreshLikes: true }));
             break;
           }
