@@ -61,7 +61,7 @@ describe PostActionCreator do
     end
 
     it 'notifies subscribers' do
-      expect(post.reload.like_count).to eq(1)
+      expect(post.reload.like_count).to eq(0)
 
       messages = MessageBus.track_publish do
         PostActionCreator.new(user, post, like_type_id).perform
