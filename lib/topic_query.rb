@@ -793,9 +793,7 @@ class TopicQuery
 
     if (filter = (options[:filter] || options[:f])) && @user
       action =
-        if filter == "bookmarked"
-          PostActionType.types[:bookmark]
-        elsif filter == "liked"
+        if filter == "liked"
           PostActionType.types[:like]
         end
       if action

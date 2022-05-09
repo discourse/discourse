@@ -362,7 +362,7 @@ module Jobs
       # Most forums should not have post_action records other than flags and likes, but they are possible in historical oddities.
       PostAction
         .where(user_id: @current_user.id)
-        .where.not(post_action_type_id: PostActionType.flag_types.values + [PostActionType.types[:like], PostActionType.types[:bookmark]])
+        .where.not(post_action_type_id: PostActionType.flag_types.values + [PostActionType.types[:like]])
         .exists?
     end
 
@@ -371,7 +371,7 @@ module Jobs
       PostAction
         .with_deleted
         .where(user_id: @current_user.id)
-        .where.not(post_action_type_id: PostActionType.flag_types.values + [PostActionType.types[:like], PostActionType.types[:bookmark]])
+        .where.not(post_action_type_id: PostActionType.flag_types.values + [PostActionType.types[:like]])
         .order(:created_at)
         .each do |pa|
         yield [

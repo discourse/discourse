@@ -431,7 +431,6 @@ describe Guardian do
       guardian = Guardian.new(user)
       expect(guardian.can_see_post_actors?(nil, PostActionType.types[:like])).to be_falsey
       expect(guardian.can_see_post_actors?(topic, PostActionType.types[:like])).to be_truthy
-      expect(guardian.can_see_post_actors?(topic, PostActionType.types[:bookmark])).to be_falsey
       expect(guardian.can_see_post_actors?(topic, PostActionType.types[:off_topic])).to be_falsey
       expect(guardian.can_see_post_actors?(topic, PostActionType.types[:spam])).to be_falsey
       expect(guardian.can_see_post_actors?(topic, PostActionType.types[:notify_user])).to be_falsey
@@ -2011,21 +2010,6 @@ describe Guardian do
 
     end
 
-  end
-
-  context "can_delete_post_action?" do
-    fab!(:post) { Fabricate(:post) }
-
-    it "allows us to remove a bookmark" do
-      pa = PostActionCreator.bookmark(user, post).post_action
-      expect(Guardian.new(user).can_delete_post_action?(pa)).to eq(true)
-    end
-
-    it "allows us to remove a very old bookmark" do
-      pa = PostActionCreator.bookmark(user, post).post_action
-      pa.update(created_at: 2.years.ago)
-      expect(Guardian.new(user).can_delete_post_action?(pa)).to eq(true)
-    end
   end
 
   context 'can_delete?' do

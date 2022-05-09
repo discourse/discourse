@@ -19,7 +19,7 @@ class PostActionCreator
       ).perform
     end
 
-    [:like, :off_topic, :spam, :inappropriate, :bookmark].each do |action|
+    [:like, :off_topic, :spam, :inappropriate].each do |action|
       define_method(action) do |created_by, post, silent = false|
         create(created_by, post, action, silent: silent)
       end
@@ -285,7 +285,6 @@ private
     post_action
   rescue ActiveRecord::RecordNotUnique
     # can happen despite being .create
-    # since already bookmarked
     PostAction.where(where_attrs).first
   end
 

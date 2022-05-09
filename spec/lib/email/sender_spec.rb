@@ -755,6 +755,7 @@ describe Email::Sender do
         end
 
         it 'should create a post reply key' do
+          SiteSetting.email_custom_headers = "Precedence: bulk"
           expect { email_sender.send }.to change { PostReplyKey.count }.by(1)
           post_reply_key = PostReplyKey.last
 

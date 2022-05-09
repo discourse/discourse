@@ -876,7 +876,6 @@ describe PostDestroyer do
 
   describe "post actions" do
     let(:second_post) { Fabricate(:post, topic_id: post.topic_id) }
-    let!(:bookmark) { PostActionCreator.create(moderator, second_post, :bookmark).post_action }
     let(:flag_result) { PostActionCreator.off_topic(moderator, second_post) }
     let!(:flag) { flag_result.post_action }
 
@@ -888,14 +887,11 @@ describe PostDestroyer do
       url = second_post.url
       PostDestroyer.new(moderator, second_post).destroy
 
-      expect(PostAction.find_by(id: bookmark.id)).to eq(nil)
-
       off_topic = PostAction.find_by(id: flag.id)
       expect(off_topic).not_to eq(nil)
       expect(off_topic.agreed_at).not_to eq(nil)
 
       second_post.reload
-      expect(second_post.bookmark_count).to eq(0)
       expect(second_post.off_topic_count).to eq(1)
 
       jobs = Jobs::SendSystemMessage.jobs
@@ -948,11 +944,6 @@ describe PostDestroyer do
       expect(Jobs::SendSystemMessage.jobs.size).to eq(0)
       expect(ReviewableFlaggedPost.pending.count).to eq(0)
     end
-
-    it "should set the deleted_public_actions custom field" do
-      PostDestroyer.new(moderator, second_post).destroy
-      expect(second_post.custom_fields["deleted_public_actions"]).to eq("#{bookmark.id}")
-    end
   end
 
   describe "user actions" do
@@ -968,12 +959,10 @@ describe PostDestroyer do
     end
 
     it "should delete the user actions" do
-      bookmark = create_user_action(UserAction::BOOKMARK)
       like = create_user_action(UserAction::LIKE)
 
       PostDestroyer.new(moderator, second_post).destroy
 
-      expect(UserAction.find_by(id: bookmark.id)).to be_nil
       expect(UserAction.find_by(id: like.id)).to be_nil
     end
   end

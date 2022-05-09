@@ -110,7 +110,6 @@ private
   end
 
   def self.post_action_rows(post_action)
-    action = UserAction::BOOKMARK if post_action.is_bookmark?
     action = UserAction::LIKE if post_action.is_like?
     return [] unless action
 

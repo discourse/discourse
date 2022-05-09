@@ -10,7 +10,6 @@ class UserAction < ActiveRecord::Base
 
   LIKE = 1
   WAS_LIKED = 2
-  BOOKMARK = 3
   NEW_TOPIC = 4
   REPLY = 5
   RESPONSE = 6
@@ -32,7 +31,6 @@ class UserAction < ActiveRecord::Base
     WAS_LIKED,
     MENTION,
     QUOTE,
-    BOOKMARK,
     EDIT,
     SOLVED,
     ASSIGNED,
@@ -42,7 +40,8 @@ class UserAction < ActiveRecord::Base
     @types ||= Enum.new(
       like: 1,
       was_liked: 2,
-      bookmark: 3,
+      # NOTE: Previously type 3 was bookmark but this was removed when we
+      # changed to using the Bookmark model.
       new_topic: 4,
       reply: 5,
       response: 6,
@@ -414,10 +413,6 @@ class UserAction < ActiveRecord::Base
 
     unless (guardian.user && guardian.user.id == user_id) || guardian.is_staff?
       builder.where("t.visible")
-    end
-
-    unless guardian.can_see_notifications?(User.where(id: user_id).first)
-      builder.where("a.action_type not in (#{BOOKMARK})")
     end
 
     filter_private_messages(builder, user_id, guardian, ignore_private_messages)

@@ -265,31 +265,6 @@ describe User do
     end
   end
 
-  describe 'bookmark' do
-    before_all do
-      @post = Fabricate(:post)
-    end
-
-    it "creates a bookmark with the true parameter" do
-      expect {
-        PostActionCreator.create(@post.user, @post, :bookmark)
-      }.to change(PostAction, :count).by(1)
-    end
-
-    describe 'when removing a bookmark' do
-      before do
-        PostActionCreator.create(@post.user, @post, :bookmark)
-      end
-
-      it 'reduces the bookmark count of the post' do
-        active = PostAction.where(deleted_at: nil)
-        expect {
-          PostActionDestroyer.destroy(@post.user, @post, :bookmark)
-        }.to change(active, :count).by(-1)
-      end
-    end
-  end
-
   describe 'delete posts in batches' do
     fab!(:post1) { Fabricate(:post) }
     fab!(:user) { post1.user }
