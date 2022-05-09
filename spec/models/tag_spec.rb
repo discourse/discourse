@@ -166,7 +166,7 @@ describe Tag do
     end
 
     it "returns all pm tags if user is a staff and pm tagging is enabled" do
-      SiteSetting.pm_tags_allowed_for_groups = "#{Group::AUTO_GROUPS[:staff]}"
+      SiteSetting.pm_tags_allowed_for_groups = "1|2|3"
       tags = Tag.pm_tags(guardian: Guardian.new(admin), allowed_user: regular_user)
       expect(tags.length).to eq(2)
       expect(tags.map { |t| t[:id] }).to contain_exactly("tag-0", "tag-1")

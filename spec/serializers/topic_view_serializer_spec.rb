@@ -200,7 +200,7 @@ describe TopicViewSerializer do
 
     before do
       SiteSetting.tagging_enabled = true
-      SiteSetting.pm_tags_allowed_for_groups = "#{Group::AUTO_GROUPS[:staff]}"
+      SiteSetting.pm_tags_allowed_for_groups = "1|2|3"
     end
 
     it "should not include the tag for normal users" do

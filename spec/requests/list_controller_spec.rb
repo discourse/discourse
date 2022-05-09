@@ -148,7 +148,7 @@ RSpec.describe ListController do
 
     before do
       SiteSetting.tagging_enabled = true
-      SiteSetting.pm_tags_allowed_for_groups = "#{Group::AUTO_GROUPS[:staff]}"
+      SiteSetting.pm_tags_allowed_for_groups = "1|2|3"
       Fabricate(:topic_tag, tag: tag, topic: private_message)
     end
 
