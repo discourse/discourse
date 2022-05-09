@@ -48,6 +48,7 @@ export default Component.extend(LoadMore, {
       return ClickTrack.trackClick(e, this.siteSettings);
     });
     this._updateLastDecoratedElement();
+    this._scrollToLastPosition();
   }),
 
   // This view is being removed. Shut down operations
@@ -69,6 +70,22 @@ export default Component.extend(LoadMore, {
       return;
     }
     this._lastDecoratedElement = lastElement;
+  },
+
+  _scrollToLastPosition() {
+    const scrollTo = this.session.userStreamScrollPosition;
+    if (scrollTo > 0) {
+      schedule("afterRender", () => {
+        if (this.element && !this.isDestroying && !this.isDestroyed) {
+          window.scrollTo(0, scrollTo + 1);
+        }
+      });
+    }
+  },
+
+  scrolled() {
+    this._super(...arguments);
+    this.session.set("userStreamScrollPosition", window.scrollY);
   },
 
   actions: {
