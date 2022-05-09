@@ -11,7 +11,7 @@ module TagGuardian
   end
 
   def can_tag_pms?
-    return false if !@user.respond_to?(:group_users)
+    return false if @user.blank?
     SiteSetting.tagging_enabled && (@user.group_users.map(&:group_id) & SiteSetting.pm_tags_allowed_for_groups.to_s.split("|").map(&:to_i)).any?
   end
 
