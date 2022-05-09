@@ -2318,7 +2318,7 @@ en:
     tags_sort_alphabetically: "Show tags in alphabetical order. Default is to show in order of popularity."
     tags_listed_by_group: "List tags by tag group on the <a href='%{base_path}/tags' target='_blank'>Tags page</a>."
     tag_style: "Visual style for tag badges."
-    allow_staff_to_tag_pms: "Allow staff members to tag any personal message"
+    pm_tags_allowed_for_groups: "Allow members of included group(s) to tag any personal message"
     min_trust_level_to_tag_topics: "Minimum trust level required to tag topics"
     suppress_overlapping_tags_in_list: "If tags match exact words in topic titles, don't show the tag"
     remove_muted_tags_from_latest: "Don't show topics tagged only with muted tags in the latest topic list."
