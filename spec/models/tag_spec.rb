@@ -160,13 +160,13 @@ describe Tag do
       expect(Tag.pm_tags(guardian: Guardian.new(regular_user))).to be_empty
     end
 
-    it "returns nothing if allow_staff_to_tag_pms setting is disabled" do
-      SiteSetting.allow_staff_to_tag_pms = false
+    it "returns nothing if pm_tags_allowed_for_groups setting is empty" do
+      SiteSetting.pm_tags_allowed_for_groups = ""
       expect(Tag.pm_tags(guardian: Guardian.new(admin)).sort).to be_empty
     end
 
     it "returns all pm tags if user is a staff and pm tagging is enabled" do
-      SiteSetting.allow_staff_to_tag_pms = true
+      SiteSetting.pm_tags_allowed_for_groups = "1|2|3"
       tags = Tag.pm_tags(guardian: Guardian.new(admin), allowed_user: regular_user)
       expect(tags.length).to eq(2)
       expect(tags.map { |t| t[:id] }).to contain_exactly("tag-0", "tag-1")
