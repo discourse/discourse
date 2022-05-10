@@ -109,4 +109,50 @@ class BaseBookmarkable
   def self.can_see?(guardian, bookmark)
     raise NotImplementedError
   end
+
+  ##
+  # Some additional information about the bookmark or the surrounding relations
+  # may be required when the bookmark is created or destroyed. For example, when
+  # destroying a bookmark within a topic we need to know whether there are other
+  # bookmarks still remaining in the topic.
+  #
+  # @param [Bookmark] bookmark The bookmark that we are retrieving additional metadata for.
+  # @param [User] user The current user which is accessing the bookmark metadata.
+  # @return [Hash] (optional)
+  def self.bookmark_metadata(bookmark, user)
+    {}
+  end
+
+  ##
+  # Optional bookmarkable specific validations may need to be run before a bookmark is created
+  # via the BookmarkManager. From here an error should be raised if there is an issue
+  # with the bookmarkable.
+  #
+  # @param [Guardian] guardian The guardian for the user which is creating the bookmark.
+  # @param [Model] bookmarkable The ActiveRecord model which is acting as the bookmarkable for the new bookmark.
+  def self.validate_before_create(guardian, bookmarkable)
+    # noop
+  end
+
+  ##
+  # Optional additional actions may need to occur after a bookmark is created
+  # via the BookmarkManager.
+  #
+  # @param [Guardian] guardian The guardian for the user which is creating the bookmark.
+  # @param [Model] bookmark The bookmark which was created.
+  # @param [Hash] opts Additional options that may be passed down via BookmarkManager.
+  def self.after_create(guardian, bookmark, opts)
+    # noop
+  end
+
+  ##
+  # Optional additional actions may need to occur after a bookmark is destroyed
+  # via the BookmarkManager.
+  #
+  # @param [Guardian] guardian The guardian for the user which is destroying the bookmark.
+  # @param [Model] bookmark The bookmark which was destroyed.
+  # @param [Hash] opts Additional options that may be passed down via BookmarkManager.
+  def self.after_destroy(guardian, bookmark, opts)
+    # noop
+  end
 end
