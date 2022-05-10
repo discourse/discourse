@@ -1264,8 +1264,8 @@ describe PostMover do
           )).to eq(true)
         end
 
-        it "can add tags to new message when allow_staff_to_tag_pms is enabled" do
-          SiteSetting.allow_staff_to_tag_pms = true
+        it "can add tags to new message when staff group is included in pm_tags_allowed_for_groups" do
+          SiteSetting.pm_tags_allowed_for_groups = "1|2|3"
           personal_message.move_posts(admin, [p2.id, p5.id], title: "new testing message name", tags: ["tag1", "tag2"], archetype: "private_message")
 
           p2.reload

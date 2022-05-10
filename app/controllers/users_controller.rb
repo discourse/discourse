@@ -1704,6 +1704,7 @@ class UsersController < ApplicationController
   def bookmarks
     user = fetch_user_from_params
     guardian.ensure_can_edit!(user)
+    user_guardian = Guardian.new(user)
 
     respond_to do |format|
       format.json do
@@ -1720,12 +1721,22 @@ class UsersController < ApplicationController
           render_serialized(bookmark_list, UserBookmarkListSerializer)
         end
       end
-      # TODO (martin) Make a separate PR for .ics reminders for polymorphic bookmarks
       format.ics do
-        @bookmark_reminders = Bookmark.with_reminders
-          .where(user_id: user.id)
-          .includes(:topic)
-          .order(:reminder_at)
+        if SiteSetting.use_polymorphic_bookmarks
+          @bookmark_reminders = Bookmark.with_reminders
+            .where(user_id: user.id)
+            .order(:reminder_at)
+            .map do |bookmark|
+            bookmark.registered_bookmarkable.serializer.new(
+              bookmark, scope: user_guardian, root: false
+            )
+          end
+        else
+          @bookmark_reminders = Bookmark.with_reminders
+            .where(user_id: user.id)
+            .includes(:topic)
+            .order(:reminder_at)
+        end
       end
     end
   end

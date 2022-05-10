@@ -2104,6 +2104,7 @@ tr_TR:
       email_polling_disabled: "E-postayla yanıtı etkinleştirmeden önce manuel veya POP3 sorgulamasını etkinleştirmelisiniz."
       user_locale_not_enabled: "Bu ayarı etkinleştirmeden önce 'kullanıcı yerel ayarlarına izin ver' seçeneğini etkinleştirmeniz gerekir."
       invalid_regex: "Regex geçersiz veya izin verilmiyor."
+      invalid_regex_with_message: "'%{regex}' regex teriminde bir hata var: %{message}"
       email_editable_enabled: "Bu ayarı etkinleştirmeden önce 'düzenlenebilir e-posta' yı devre dışı bırakmanız gerekir."
       staged_users_disabled: "Bu ayarı etkinleştirmeden önce 'staged users' etkinleştirmelisiniz."
       reply_by_email_disabled: "Bu ayarı etkinleştirmeden önce 'e-posta ile yanıtla' yı etkinleştirmelisiniz."
@@ -3927,7 +3928,9 @@ tr_TR:
               categories_boxes:
                 label: "Kategori kutuları"
               categories_boxes_with_topics:
-                label: "Başlıkları olan kategori kutuları"
+                label: "Konu Etiketi İçeren Kategori Kutuları"
+              subcategories_with_featured_topics:
+                label: "Öne Çıkan Konular İçeren Alt Kategoriler"
       logos:
         title: "Görseller"
         fields:

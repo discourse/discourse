@@ -148,7 +148,7 @@ RSpec.describe ListController do
 
     before do
       SiteSetting.tagging_enabled = true
-      SiteSetting.allow_staff_to_tag_pms = true
+      SiteSetting.pm_tags_allowed_for_groups = "1|2|3"
       Fabricate(:topic_tag, tag: tag, topic: private_message)
     end
 
@@ -158,8 +158,8 @@ RSpec.describe ListController do
       expect(response.status).to eq(404)
     end
 
-    it 'should fail for staff users if disabled' do
-      SiteSetting.allow_staff_to_tag_pms = false
+    it 'should fail for staff users if empty' do
+      SiteSetting.pm_tags_allowed_for_groups = ""
 
       [moderator, admin].each do |user|
         sign_in(user)

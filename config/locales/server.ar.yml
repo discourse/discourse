@@ -4430,10 +4430,6 @@ ar:
                 label: "الفئات وأحدث الموضوعات"
               categories_and_top_topics:
                 label: "الفئات والموضوعات الأكثر نشاطًا"
-              categories_boxes:
-                label: "مربعات الفئات"
-              categories_boxes_with_topics:
-                label: "مربعات الفئات ذات الموضوعات"
       logos:
         title: "الشعارات"
         fields:

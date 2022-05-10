@@ -11,7 +11,7 @@ import { getOwner } from "discourse-common/lib/get-owner";
 import { observes } from "discourse-common/utils/decorators";
 import { on } from "@ember/object/evented";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { schedule } from "@ember/runloop";
+import { next, schedule } from "@ember/runloop";
 
 export default Component.extend(LoadMore, {
   tagName: "ul",
@@ -74,10 +74,10 @@ export default Component.extend(LoadMore, {
 
   _scrollToLastPosition() {
     const scrollTo = this.session.userStreamScrollPosition;
-    if (scrollTo > 0) {
+    if (scrollTo >= 0) {
       schedule("afterRender", () => {
         if (this.element && !this.isDestroying && !this.isDestroyed) {
-          window.scrollTo(0, scrollTo + 1);
+          next(() => window.scrollTo(0, scrollTo + 1));
         }
       });
     }

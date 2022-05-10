@@ -4,6 +4,7 @@ import tippy from "tippy.js";
 import { guidFor } from "@ember/object/internals";
 import { action } from "@ember/object";
 import { next } from "@ember/runloop";
+import { hideOnEscapePlugin } from "discourse/lib/d-popover";
 
 export default class DiscoursePopover extends Component {
   tagName = "";
@@ -50,6 +51,7 @@ export default class DiscoursePopover extends Component {
       allowHTML: false,
       appendTo: "parent",
       hideOnClick: true,
+      plugins: [hideOnEscapePlugin],
       content:
         this.options?.content ||
         document

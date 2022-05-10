@@ -2005,6 +2005,8 @@ vi:
                 label: "Các chuyên mục và chủ đề mới"
               categories_and_top_topics:
                 label: "Chuyên mục và Chủ đề nổi bật"
+              subcategories_with_featured_topics:
+                label: "Danh mục con với các chủ đề nổi bật"
   joined: "Đã tham gia"
   discourse_push_notifications:
     popup:

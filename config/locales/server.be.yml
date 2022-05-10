@@ -2474,10 +2474,6 @@ be:
                 label: "Катэгорыі і Апошнія тэмы"
               categories_and_top_topics:
                 label: "Катэгорыі і асноўныя тэмы"
-              categories_boxes:
-                label: "катэгорыі скрынкі"
-              categories_boxes_with_topics:
-                label: "Катэгорыі скрынка з Тэмай"
       logos:
         title: "лагатыпы"
         fields:
