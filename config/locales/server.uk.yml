@@ -3369,10 +3369,6 @@ uk:
                 label: "Розділи та список останніх тем форуму"
               categories_and_top_topics:
                 label: "Категорії та головні теми"
-              categories_boxes:
-                label: "Категорії в коробках"
-              categories_boxes_with_topics:
-                label: "Категорії в коробках з Темами"
       logos:
         title: "Логотипи"
         fields:

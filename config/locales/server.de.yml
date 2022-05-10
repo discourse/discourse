@@ -209,6 +209,7 @@ de:
       cors_origins_should_not_have_trailing_slash: "Du solltest den abschließenden Schrägstrich (/) nicht zu CORS-Ursprüngen hinzufügen."
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "Benutzeragenten müssen mindestens 3 Zeichen lang sein, um zu verhindern, dass menschliche Benutzer falsch eingeschätzt werden."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "Du kannst keinen der folgenden Werte zu der Einstellung hinzufügen: %{values}."
+      strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "Du kannst die Strip-Image-Metadaten nicht deaktivieren, wenn \"composer media optimization image enabled\" aktiviert ist. Deaktiviere \"composer media optimization image enabled\", bevor du Strip-Image-Metadaten deaktivierst."
     conflicting_google_user_id: 'Die Google-Konto-ID für dieses Konto hat sich geändert; das Einschreiten des Teams ist aus Sicherheitsgründen erforderlich. Bitte kontaktiere das Team und verweise es auf <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
       invalid_address: "Leider konnten wir keine Vorschau für diese Webseite erstellen, da der Server „%{hostname}“ nicht gefunden werden konnte. Statt einer Vorschau erscheint nur ein Link in deinem Beitrag. :cry:"
@@ -2109,6 +2110,7 @@ de:
     allow_changing_staged_user_tracking: "Erlauben Sie, dass die Kategorie- und Tag-Benachrichtigungseinstellungen eines bereitgestellten Benutzers von einem Administratorbenutzer geändert werden."
     use_email_for_username_and_name_suggestions: "Verwende den ersten Teil der E-Mail-Adressen für Vorschläge für Benutzernamen und Namen. Dies macht es für die Öffentlichkeit einfacher, die vollständigen E-Mail-Adressen der Nutzer/innen zu erraten (da ein großer Teil der Menschen gemeinsame Dienste wie \"gmail.com\" nutzt)."
     use_name_for_username_suggestions: "Verwende den vollen Namen eines Benutzers, wenn du Benutzernamen vorschlägst."
+    suggest_weekends_in_date_pickers: "Beziehe die Wochenenden (Samstag und Sonntag) in die Datumsvorschläge mit ein (deaktiviere dies, wenn du Discourse nur an Wochentagen von Montag bis Freitag benutzt)."
     errors:
       invalid_css_color: "Ungültige Farbe. Gib einen Farbnamen oder einen Hexadezimalwert ein."
       invalid_email: "Ungültige E-Mail-Adresse."
@@ -2137,6 +2139,7 @@ de:
       email_polling_disabled: "Du musst entweder manuelle oder POP3-Abfragen aktivieren, bevor Antworten per E-Mail aktiviert wird."
       user_locale_not_enabled: "Du musst erst „allow user locale“ aktivieren, bevor du diese Einstellung aktivierst."
       invalid_regex: "Regulärer Ausdruck ist ungültig oder nicht erlaubt."
+      invalid_regex_with_message: "Die Regex '%{regex}' hat einen Fehler: %{message}"
       email_editable_enabled: "Du musst „email editable“ deaktivieren, bevor du diese Einstellung aktivierst."
       staged_users_disabled: "Du musst erst „staged users“ aktivieren, bevor du diese Einstellung aktivierst."
       reply_by_email_disabled: "Du musst erst „reply by email“ aktivieren, bevor du diese Einstellung aktivierst."
@@ -4520,6 +4523,8 @@ de:
                 label: "Kategorie-Boxen"
               categories_boxes_with_topics:
                 label: "Kategorie-Boxen mit Themen"
+              subcategories_with_featured_topics:
+                label: "Unterkategorien mit hervorgehobenen Themen"
       logos:
         title: "Logos"
         fields:

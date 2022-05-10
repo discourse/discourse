@@ -2125,6 +2125,7 @@ it:
       email_polling_disabled: "È necessario attivare il polling manuale o POP3 prima di attivare la risposta via email."
       user_locale_not_enabled: "Prima di attivare questa impostazione, devi abilitare 'allow user locale'."
       invalid_regex: "Regex non è valido o non è consentito."
+      invalid_regex_with_message: "La regex '%{regex}' contiene un errore: %{message}"
       email_editable_enabled: "Prima di attivare questa impostazione, devi disabilitare 'email editable'."
       staged_users_disabled: "Devi abilitare 'staged users' prima di attivare questa impostazione."
       reply_by_email_disabled: "Devi abilitare 'reply by email' prima di attivare questa impostazione ."
@@ -4058,6 +4059,8 @@ it:
                 label: "Riquadri Categorie"
               categories_boxes_with_topics:
                 label: "Riquadri Categorie con Argomenti"
+              subcategories_with_featured_topics:
+                label: "Sottocategorie con argomenti in evidenza"
       logos:
         title: "Loghi"
         fields:

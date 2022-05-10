@@ -2086,6 +2086,7 @@ zh_CN:
       email_polling_disabled: "在启用通过电子邮件回复之前，您必须先启用手动或者 POP3 轮询。"
       user_locale_not_enabled: "在启用此设置之前，您必须先启用 'allow user locale'。"
       invalid_regex: "正则表达式无效或不被允许。"
+      invalid_regex_with_message: "正则表达式 '%{regex}' 有一个错误: %{message}"
       email_editable_enabled: "在启用此设置之前，您必须先禁用 'email editable'。"
       staged_users_disabled: "在启用此设置之前，您必须先启用 'staged users'。"
       reply_by_email_disabled: "在启用此设置之前，您必须先启用 'reply by email'。"
@@ -4433,6 +4434,8 @@ zh_CN:
                 label: "类别框"
               categories_boxes_with_topics:
                 label: "带有话题的类别框"
+              subcategories_with_featured_topics:
+                label: "有特色主题的子类别"
       logos:
         title: "徽标"
         fields:

@@ -223,6 +223,7 @@ ru:
       cors_origins_should_not_have_trailing_slash: "Не следует добавлять завершающую косую черту (/) к источникам кросс-доменных запросов (CORS)."
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "Значение «User agent» должно содержать не менее 3 символов для корректного ограничения скорости сканирования."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "Не допускается использование следующих значений: %{values}."
+      strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "В не можете отключить удаление метаданных из изображения, пока включена оптимизация загружаемых файлов изображений на стороне клиента. Отключите параметр 'composer media optimization image enabled' перед отключением параметра 'strip image metadata'."
     conflicting_google_user_id: 'Идентификатор учётной записи Google для этой учётной записи изменился; по соображениям безопасности требуется вмешательство персонала. Пожалуйста, свяжитесь с персоналом и укажите <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
       invalid_address: "К сожалению, нам не удалось создать предварительный просмотр этой веб-страницы, потому что сервер \"%{hostname}\" не может быть найден. Вместо предварительного просмотра в вашем сообщении будет отображаться только ссылка. :cry:"
@@ -2244,6 +2245,7 @@ ru:
       email_polling_disabled: "Перед включением ответа по эл. почте необходимо включить polling вручную или POP3."
       user_locale_not_enabled: "Перед включением данной настройки необходимо включить 'allow user locale'."
       invalid_regex: "Регулярное выражение недействительно или не разрешено."
+      invalid_regex_with_message: "В регулярном выражении '%{regex}' содержится ошибка: %{message}"
       email_editable_enabled: "Вы должны отключить «редактирование электронной почты» перед включением этого параметра."
       staged_users_disabled: "Перед включением этого параметра необходимо включить параметр 'Сымитированные пользователи'."
       reply_by_email_disabled: "Вы должны сначала включить параметр 'Ответить по электронной почте', прежде чем включить эту настройку."
@@ -4588,6 +4590,8 @@ ru:
                 label: "Блоки с подразделами"
               categories_boxes_with_topics:
                 label: "Блоки с избранными темами"
+              subcategories_with_featured_topics:
+                label: "Подразделы с избранными темами"
       logos:
         title: "Логотипы"
         fields:

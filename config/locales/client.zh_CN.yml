@@ -3790,6 +3790,11 @@ zh_CN:
               list_user_badges: 列出用户拥有的徽章。
               assign_badge_to_user: 授予用户徽章。
               revoke_badge_from_user: 撤销用户的徽章。
+            wordpress:
+              publishing: WP Discourse 插件发布功能所必需的(必需)。
+              commenting: WP Discourse 插件评论功能所必需的。
+              discourse_connect: WP Discourse 插件 DiscourseConnect 功能所必需的。
+              utilities: 如果你使用 WP Discourse 插件工具，则有必要。
       web_hooks:
         title: "网络钩子"
         none: "当前没有网络钩子。"
