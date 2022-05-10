@@ -1,6 +1,6 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
-import { schedule } from "@ember/runloop";
+import { next, schedule } from "@ember/runloop";
 import bootbox from "bootbox";
 import { openBookmarkModal } from "discourse/controllers/bookmark";
 import { ajax } from "discourse/lib/ajax";
@@ -28,10 +28,10 @@ export default Component.extend(Scrolling, {
 
   scrollToLastPosition() {
     const scrollTo = this.session.bookmarkListScrollPosition;
-    if (scrollTo > 0) {
+    if (scrollTo >= 0) {
       schedule("afterRender", () => {
         if (this.element && !this.isDestroying && !this.isDestroyed) {
-          window.scrollTo(0, scrollTo + 1);
+          next(() => window.scrollTo(0, scrollTo + 1));
         }
       });
     }

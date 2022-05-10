@@ -3,7 +3,7 @@ import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import LoadMore from "discourse/mixins/load-more";
 import { on } from "@ember/object/evented";
-import { schedule } from "@ember/runloop";
+import { next, schedule } from "@ember/runloop";
 import showModal from "discourse/lib/show-modal";
 
 export default Component.extend(LoadMore, {
@@ -75,10 +75,10 @@ export default Component.extend(LoadMore, {
     }
 
     const scrollTo = this.session.topicListScrollPosition;
-    if (scrollTo > 0) {
+    if (scrollTo >= 0) {
       schedule("afterRender", () => {
         if (this.element && !this.isDestroying && !this.isDestroyed) {
-          $(window).scrollTop(scrollTo + 1);
+          next(() => window.scrollTo(0, scrollTo + 1));
         }
       });
     }
