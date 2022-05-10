@@ -8,7 +8,8 @@ describe Bookmark do
       bookmark = Fabricate(:bookmark, post: post)
       user = bookmark.user
 
-      bookmark_2 = Fabricate.build(:bookmark,
+      bookmark_2 = Fabricate.build(
+        :bookmark,
         post: post,
         user: user
       )
@@ -21,7 +22,8 @@ describe Bookmark do
       bookmark = Fabricate(:bookmark, post: post, for_topic: false)
       user = bookmark.user
 
-      bookmark_2 = Fabricate(:bookmark,
+      bookmark_2 = Fabricate(
+        :bookmark,
         post: post,
         user: user,
         for_topic: true
@@ -29,7 +31,8 @@ describe Bookmark do
 
       expect(bookmark_2.valid?).to eq(true)
 
-      bookmark_3 = Fabricate.build(:bookmark,
+      bookmark_3 = Fabricate.build(
+        :bookmark,
         post: post,
         user: user,
         for_topic: true
@@ -142,51 +145,107 @@ describe Bookmark do
     describe "#count_per_day" do
       let(:category) { Fabricate(:category) }
       let(:topic_in_category) { Fabricate(:topic, category: category) }
-      let!(:bookmark1) { Fabricate(:bookmark, created_at: 1.day.ago) }
-      let!(:bookmark2) { Fabricate(:bookmark, created_at: 2.days.ago) }
-      let!(:bookmark3) { Fabricate(:bookmark, created_at: 3.days.ago) }
-      let!(:bookmark4) { Fabricate(:bookmark, post: Fabricate(:post, topic: topic_in_category), created_at: 3.days.ago) }
-      let!(:bookmark5) { Fabricate(:bookmark, created_at: 40.days.ago) }
 
-      it "gets the count of bookmarks grouped by date within the last 30 days by default" do
-        expect(Bookmark.count_per_day).to eq({
-          1.day.ago.to_date => 1,
-          2.days.ago.to_date => 1,
-          3.days.ago.to_date => 2
-        })
+      context "for non-polymorphic bookmarks" do
+        let!(:bookmark1) { Fabricate(:bookmark, created_at: 1.day.ago) }
+        let!(:bookmark2) { Fabricate(:bookmark, created_at: 2.days.ago) }
+        let!(:bookmark3) { Fabricate(:bookmark, created_at: 3.days.ago) }
+        let!(:bookmark4) { Fabricate(:bookmark, post: Fabricate(:post, topic: topic_in_category), created_at: 3.days.ago) }
+        let!(:bookmark5) { Fabricate(:bookmark, created_at: 40.days.ago) }
+
+        it "gets the count of bookmarks grouped by date within the last 30 days by default" do
+          expect(Bookmark.count_per_day).to eq({
+            1.day.ago.to_date => 1,
+            2.days.ago.to_date => 1,
+            3.days.ago.to_date => 2
+          })
+        end
+
+        it "respects the start_date option" do
+          expect(Bookmark.count_per_day(start_date: 1.day.ago - 1.hour)).to eq({
+            1.day.ago.to_date => 1,
+          })
+        end
+
+        it "respects the since_days_ago option" do
+          expect(Bookmark.count_per_day(since_days_ago: 2)).to eq({
+            1.day.ago.to_date => 1,
+          })
+        end
+
+        it "respects the end_date option" do
+          expect(Bookmark.count_per_day(end_date: 2.days.ago)).to eq({
+            2.days.ago.to_date => 1,
+            3.days.ago.to_date => 2,
+          })
+        end
+
+        it "respects the category_id option" do
+          expect(Bookmark.count_per_day(category_id: category.id)).to eq({
+            3.days.ago.to_date => 1,
+          })
+        end
+
+        it "does not include deleted posts or topics" do
+          bookmark4.post.trash!
+          expect(Bookmark.count_per_day(category_id: category.id)).to eq({})
+          bookmark4.post.recover!
+          bookmark4.topic.trash!
+          expect(Bookmark.count_per_day(category_id: category.id)).to eq({})
+        end
       end
 
-      it "respects the start_date option" do
-        expect(Bookmark.count_per_day(start_date: 1.day.ago - 1.hour)).to eq({
-          1.day.ago.to_date => 1,
-        })
-      end
+      context "for polymorphic bookmarks" do
+        before do
+          SiteSetting.use_polymorphic_bookmarks = true
+        end
 
-      it "respects the since_days_ago option" do
-        expect(Bookmark.count_per_day(since_days_ago: 2)).to eq({
-          1.day.ago.to_date => 1,
-        })
-      end
+        let!(:bookmark1) { Fabricate(:bookmark, created_at: 1.day.ago) }
+        let!(:bookmark2) { Fabricate(:bookmark, created_at: 2.days.ago) }
+        let!(:bookmark3) { Fabricate(:bookmark, created_at: 3.days.ago) }
+        let!(:bookmark4) { Fabricate(:bookmark, bookmarkable: Fabricate(:post, topic: topic_in_category), created_at: 3.days.ago) }
+        let!(:bookmark5) { Fabricate(:bookmark, created_at: 40.days.ago) }
 
-      it "respects the end_date option" do
-        expect(Bookmark.count_per_day(end_date: 2.days.ago)).to eq({
-          2.days.ago.to_date => 1,
-          3.days.ago.to_date => 2,
-        })
-      end
+        it "gets the count of bookmarks grouped by date within the last 30 days by default" do
+          expect(Bookmark.count_per_day).to eq({
+            1.day.ago.to_date => 1,
+            2.days.ago.to_date => 1,
+            3.days.ago.to_date => 2
+          })
+        end
 
-      it "respects the category_id option" do
-        expect(Bookmark.count_per_day(category_id: category.id)).to eq({
-          3.days.ago.to_date => 1,
-        })
-      end
+        it "respects the start_date option" do
+          expect(Bookmark.count_per_day(start_date: 1.day.ago - 1.hour)).to eq({
+            1.day.ago.to_date => 1,
+          })
+        end
 
-      it "does not include deleted posts or topics" do
-        bookmark4.post.trash!
-        expect(Bookmark.count_per_day(category_id: category.id)).to eq({})
-        bookmark4.post.recover!
-        bookmark4.topic.trash!
-        expect(Bookmark.count_per_day(category_id: category.id)).to eq({})
+        it "respects the since_days_ago option" do
+          expect(Bookmark.count_per_day(since_days_ago: 2)).to eq({
+            1.day.ago.to_date => 1,
+          })
+        end
+
+        it "respects the end_date option" do
+          expect(Bookmark.count_per_day(end_date: 2.days.ago)).to eq({
+            2.days.ago.to_date => 1,
+            3.days.ago.to_date => 2,
+          })
+        end
+
+        it "respects the category_id option" do
+          expect(Bookmark.count_per_day(category_id: category.id)).to eq({
+            3.days.ago.to_date => 1,
+          })
+        end
+
+        it "does not include deleted posts or topics" do
+          bookmark4.bookmarkable.trash!
+          expect(Bookmark.count_per_day(category_id: category.id)).to eq({})
+          bookmark4.bookmarkable.recover!
+          bookmark4.bookmarkable.topic.trash!
+          expect(Bookmark.count_per_day(category_id: category.id)).to eq({})
+        end
       end
     end
 
