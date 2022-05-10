@@ -3,6 +3,29 @@ import { run } from "@ember/runloop";
 import tippy from "tippy.js";
 import { iconHTML } from "discourse-common/lib/icon-library";
 
+export const hideOnEscapePlugin = {
+  name: "hideOnEscape",
+
+  defaultValue: true,
+
+  fn({ hide }) {
+    function onKeyDown(event) {
+      if (event.keyCode === 27) {
+        hide();
+      }
+    }
+
+    return {
+      onShow() {
+        document.addEventListener("keydown", onKeyDown);
+      },
+      onHide() {
+        document.removeEventListener("keydown", onKeyDown);
+      },
+    };
+  },
+};
+
 export function hidePopover(event) {
   if (event?.target?._tippy) {
     showPopover(event);
@@ -20,6 +43,7 @@ export function showPopover(event, options = {}) {
       trigger: "mouseenter click",
       hideOnClick: true,
       zIndex: 1400,
+      plugins: [hideOnEscapePlugin],
     },
     options
   );
