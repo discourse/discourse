@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class TopicBookmarkable < BaseBookmarkable
+  include TopicPostBookmarkableHelper
+
   def self.model
     Topic
   end
@@ -53,5 +55,21 @@ class TopicBookmarkable < BaseBookmarkable
 
   def self.can_see?(guardian, bookmark)
     guardian.can_see_topic?(bookmark.bookmarkable)
+  end
+
+  def self.bookmark_metadata(bookmark, user)
+    { topic_bookmarked: Bookmark.for_user_in_topic(user.id, bookmark.bookmarkable.id).exists? }
+  end
+
+  def self.validate_before_create(guardian, bookmarkable)
+    raise Discourse::InvalidAccess if bookmarkable.blank? || !guardian.can_see_topic?(bookmarkable)
+  end
+
+  def self.after_create(guardian, bookmark, opts)
+    sync_topic_user_bookmarked(guardian.user, bookmark.bookmarkable, opts)
+  end
+
+  def self.after_destroy(guardian, bookmark, opts)
+    sync_topic_user_bookmarked(guardian.user, bookmark.bookmarkable, opts)
   end
 end

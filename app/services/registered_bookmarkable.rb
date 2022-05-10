@@ -80,4 +80,20 @@ class RegisteredBookmarkable
   def can_see?(guardian, bookmark)
     bookmarkable_klass.can_see?(guardian, bookmark)
   end
+
+  def bookmark_metadata(bookmark, user)
+    bookmarkable_klass.bookmark_metadata(bookmark, user)
+  end
+
+  def validate_before_create(guardian, bookmarkable)
+    bookmarkable_klass.validate_before_create(guardian, bookmarkable)
+  end
+
+  def after_create(guardian, bookmark, opts = {})
+    bookmarkable_klass.after_create(guardian, bookmark, opts)
+  end
+
+  def after_destroy(guardian, bookmark, opts = {})
+    bookmarkable_klass.after_destroy(guardian, bookmark, opts)
+  end
 end
