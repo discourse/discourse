@@ -16,10 +16,30 @@ createWidgetFrom(QuickAccessItem, "logout-item", {
   html() {
     return this.attach("flat-button", {
       action: "logout",
-      content: I18n.t("user.log_out"),
       icon: "sign-out-alt",
       label: "user.log_out",
     });
+  },
+});
+
+createWidgetFrom(QuickAccessItem, "user-status-item", {
+  tagName: "li.user-status",
+
+  html() {
+    const userStatus = this.currentUser.status;
+    if (userStatus) {
+      return this.attach("flat-button", {
+        action: "setUserStatus",
+        emoji: userStatus.emoji,
+        translatedLabel: userStatus.description,
+      });
+    } else {
+      return this.attach("flat-button", {
+        action: "setUserStatus",
+        icon: "plus-circle",
+        label: "user_status.set_custom_status",
+      });
+    }
   },
 });
 
@@ -46,7 +66,7 @@ createWidgetFrom(QuickAccessPanel, "quick-access-profile", {
     const items = [];
 
     if (this.siteSettings.enable_user_status) {
-      items.push(this._userStatusButton());
+      items.push({ widget: "user-status-item" });
     }
     items.push(...this._getDefaultItems());
     if (this._showToggleAnonymousButton()) {
@@ -134,13 +154,5 @@ createWidgetFrom(QuickAccessPanel, "quick-access-profile", {
           this.siteSettings.anonymous_posting_min_trust_level) ||
       this.currentUser.is_anonymous
     );
-  },
-
-  _userStatusButton() {
-    return {
-      action: "setUserStatus",
-      content: I18n.t("user_status.set_custom_status"),
-      icon: "plus-circle",
-    };
   },
 });
