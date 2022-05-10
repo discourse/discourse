@@ -12,8 +12,13 @@ he:
       update: עדכון
       select_script: בחירת סקריפט
       select_trigger: בחירת גורם מפעיל
+      confirm_automation_trigger: פעולה זו תקפיץ את האוטומציה, להמשיך?
+      no_automation_yet: לא יצרת אף אוטומציה עדיין.
       edit_automation:
         trigger_section:
+          forced: הקפצה זו נאכפת על ידי סקריפט.
+          next_pending_automation: "האוטומציה הבאה תוקפץ ב־: %{date}"
+          trigger_now: "להקפיץ כעת"
           title: מתי/מה…
         fields_section:
           title: אפשרויות סקריפט
@@ -45,6 +50,12 @@ he:
           label: טקסט
       triggerables:
         not_found: לא ניתן למצוא את גורם ההקפצה `%{trigger}` לאוטומציה `%{automation}`, יש לוודא שהתוסף המשויך מותקן
+        user_badge_granted:
+          fields:
+            badge:
+              label: עיטור
+            only_first_grant:
+              label: רק עם ההענקה הראשונה
         stalled_topic:
           durations:
             PT1H: "שעה"
@@ -88,6 +99,10 @@ he:
           fields:
             restricted_category:
               label: מוגבל לקטגוריה
+        user_added_to_group:
+          fields:
+            joined_group:
+              label: קבוצה במעקב
         user_promoted:
           fields:
             restricted_group:
@@ -100,6 +115,10 @@ he:
             TL12: "דרגת אמון 1 ל־2"
             TL23: "דרגת אמון 2 ל־3"
             TL34: "דרגת אמון 3 ל־4"
+        point_in_time:
+          fields:
+            execute_at:
+              label: לבצע ב־
         topic:
           fields:
             restricted_topic:
@@ -108,6 +127,7 @@ he:
           fields:
             valid_trust_levels:
               label: דרגות אמון תקפות
+              description: יוקפץ רק אם הפוסט נוצר על ידי משתמש בדרגות האמון האלו, ברירת המחדל היא כל דרגת אמון
             restricted_category:
               label: קטגוריה
       scriptables:
@@ -121,6 +141,9 @@ he:
           fields:
             word_answer_list:
               label: רשימה של צמדי מילה/תשובה
+            answering_user:
+              label: משתמש שענה
+              description: ברירת המחדל היא משתמש המערכת
         user_global_notice:
           fields:
             level:
@@ -158,12 +181,25 @@ he:
               label: להציב ככרזה עד
             user:
               label: משתמש
+              description: "המשתמש יוצר את הכרזה (ברירת מחדל: מערכת)"
+        flag_post_on_words:
+          fields:
+            words:
+              label: מילים שנבדקות
+        topic_required_words:
+          fields:
+            words:
+              label: רשימת מילים נדרשות
         close_topic:
           fields:
             topic:
               label: מזהה נושא
+            message:
+              label: הודעת סגירה
+              description: "הודעת רשות שתופיע ברשומת סגירת הנושא"
             user:
               label: משתמש
+              description: "המשתמש שסגר את הנושא (ברירת מחדל: מערכת)"
       models:
         script:
           name:

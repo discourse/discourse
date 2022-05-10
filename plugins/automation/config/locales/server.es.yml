@@ -5,3 +5,84 @@
 # https://translate.discourse.org/
 
 es:
+  site_settings:
+    discourse_automation_enabled: "Activar el plugin discourse-automation"
+  discourse_automation:
+    models:
+      fields:
+        required_field: El campo `%{name}` debe rellenarse en `%{target}:%{target_name}`.
+        invalid_field: El componente del campo `%{component}` no es utilizable en `%{target}:%{target_name}.`
+        invalid_metadata: Los datos de `%{field}` no son válidos o el componente `%{component}` es desconocido.
+    triggerables:
+      stalled_topic:
+        title: Tema estancado
+        doc: Activa una automatización cuando el autor del tema no responde tras un periodo de tiempo especificado. Recomendamos limitarlo por etiqueta o categoría, ya que si no el número de temas impactados puede ser muy elevado. Como medida de seguridad, no podrá impactar a más de 250 temas.
+      api_call:
+        title: Llamada a la API
+        description: Hacer una petición POST para activar una automatización
+        doc: La petición POST debe hacerse a `/automations/:id/trigger.json` con una clave de API global.
+      recurring:
+        title: Periódico
+      point_in_time:
+        title: Fecha y hora
+        description: Cuando se alcance la fecha, se activará la automatización
+      user_added_to_group:
+        title: Usuario añadido a un grupo
+        description: Cuando un usuario sea añadido al grupo especificado, se activará la automatización
+      user_promoted:
+        title: Usuario sube de nivel de confianza
+        description: Cuando un usuario sube de un nivel de confianza a otro
+        transition_placeholder: "de %{from_level_name} a %{to_level_name}"
+      stalled_wiki:
+        title: Wiki estancada
+        description: Cuando un wiki no haya sido editado durante un periodo superior al definido, se activará la automatización
+      post_created_edited:
+        title: Publicación creada o editada
+        description: Cuando se edita o se crea una publicación válida, se activa la automatización
+      topic:
+        title: Tema
+        description: El script asociado solo se utilizará en el tema especificado. Por ejemplo, esto es útil para los scripts que hacen validaciones
+    scriptables:
+      flag_post_on_words:
+        title: Denunciar publicación según su contenido
+        description: Denuncia una publicación si contiene las palabras especificadas
+        flag_message: "La publicación contiene palabras no permitidas: %{words}"
+        doc: Las publicaciones que contengan todas las palabras a la vez serán denunciadas y ocultadas. Ten en cuenta que si defines varias palabras separadas por coma, todas ellas deberán estar presentes.
+      zapier_webhook:
+        title: Webhook de Zapier
+        description: Llama a un zap con el contexto de un activador como cuerpo
+      auto_responder:
+        title: Respuesta automática
+        description: Responde a un mensaje que incluya las palabras clave especificadas
+      pin_topic:
+        title: Fijar tema
+        description: Fija un tema específico en una fecha determinada
+      banner_topic:
+        title: Hacer tema de encabezado
+        description: Convertir un tema en un encabezado
+      gift_exchange:
+        title: Amigo invisible
+        description: Permite emparejar de forma anónima a los usuarios de un grupo para que se envíen un regalo entre ellos.
+        doc: El amigo invisible (intercambio de regalos) requiere un grupo existente con al menos 3 usuarios. En la fecha elegida, se emparejará a cada usuario con una persona a la que regalar (y otra distinta que le regalará).
+      send_pms:
+        title: Enviar mensajes privados
+        description: Permite enviar MPs (posiblemente con retardo).
+        doc: Permite enviar varios pms a un usuario. Cada PM acepta un retardo.
+      suspend_user_by_email:
+        title: Suspender usuario con un correo electrónico
+      user_global_notice:
+        title: Aviso global para un usuario
+        description: Permite mostrarle un aviso global a un usuario
+      suspend_user_by_email_with_api_call:
+        doc: Al activar `suspend_user_by_email` con una llamada API, se espera que haya un `email` válido en los parámetros enviados. También se pueden utilizar `reasons` y `suspend_until (formato ISO 8601)` para anular los valores de los campos por defecto.
+      user_global_notice_with_stalled_topic:
+        doc: Cuando se active a través de un tema estancado, el autor del tema recibirá el aviso global
+      topic_required_words:
+        title: Palabras requeridas en un tema
+        description: Permite definir una lista de palabras requeridas en un tema, al menos una debe ser utilizada en cada publicación.
+        doc: Palabras requeridas en un tema necesita un tema. Cuando se cree o edite una publicación, se verificará que incluya al menos una de las palabras requeridas.
+        errors:
+          must_include_word: "La publicación debe contener al menos una de las siguientes palabras: %{words}"
+      close_topic:
+        title: Cerrar tema
+        description: Cierra un tema y permite opcionalmente incluir un mensaje

@@ -7,5 +7,7 @@
 fa_IR:
   discourse_automation:
     triggerables:
+      user_badge_granted:
+        title: نشان کاربر اعطا شده
       topic:
         title: موضوع

@@ -9,10 +9,16 @@ he:
     discourse_automation_enabled: "הפעלת תוסף discourse-automation"
   discourse_automation:
     triggerables:
+      user_badge_granted:
+        title: עיטור משתמש הוענק
+        doc: מקפיץ אוטומציה כשמוענק עיטור למשתמש.
       api_call:
         title: קריאת API
+      recurring:
+        title: מחזורי
       point_in_time:
         title: נקודה בזמן
+        description: כאשר יגיע התאריך האוטומציה תוקפץ
       user_added_to_group:
         title: משתמש נוסף לקבוצה
       user_promoted:
@@ -24,7 +30,23 @@ he:
       topic:
         title: נושא
     scriptables:
+      flag_post_on_words:
+        title: סימון פוסט בדגל על המילים
+        description: מסמן פוסט בדגל אם מופיעות בו מילים מסוימות
+        flag_message: "הפוסט מכיל מילים אסורות: %{words}"
       zapier_webhook:
         title: התליה של Zapier
       auto_responder:
         title: משיב אוטומטי
+      pin_topic:
+        title: נעיצת נושא
+      banner_topic:
+        description: הפיכת נושא לכרזה
+      gift_exchange:
+        title: החלפת מתנות
+      topic_required_words:
+        errors:
+          must_include_word: "הפוסט חייב לכלול לפחות אחת מהמילים האלו: %{words}"
+      close_topic:
+        title: סגירת נושא
+        description: סגירת הנושא עם הודעת סגירה כרשות

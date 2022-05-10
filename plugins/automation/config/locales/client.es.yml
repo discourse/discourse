@@ -5,3 +5,232 @@
 # https://translate.discourse.org/
 
 es:
+  js:
+    discourse_automation:
+      title: Automatización
+      create: Crear
+      update: Actualizar
+      select_script: Selecciona un script
+      select_trigger: Selecciona un activador
+      confirm_automation_reset: Esta acción restablecerá las opciones del script y del activador, y se guardará el nuevo estado. ¿Quieres continuar?
+      confirm_automation_trigger: Esta acción activará la automatización. ¿Quieres continuar?
+      no_automation_yet: Todavía no has creado ninguna automatización.
+      edit_automation:
+        trigger_section:
+          forced: Este activador está forzado por script.
+          next_pending_automation: "La siguiente automatización se activará el: %{date}"
+          trigger_now: "Activar ahora"
+          title: Cuándo/qué…
+        fields_section:
+          title: Opciones del script
+      destroy_automation:
+        confirm: "¿Estás seguro de que quieres eliminar `%{name}`?"
+      fields:
+        key_value:
+          label: Configurar
+        user:
+          label: Usuario
+        pm:
+          title:
+            label: Título
+          raw:
+            label: Cuerpo
+        pms:
+          confirm_remove_pm: "¿Estás seguro de que quieres eliminar este MP?"
+          placeholder_title: Título del mensaje
+          add_pm: Añadir mensaje
+          no_pm_created: Todavía no has creado ningún MP. Los MP se enviarán una vez que se active tu automatización.
+          title:
+            label: Título
+          raw:
+            label: Cuerpo
+          delay:
+            label: Retardo (en minutos)
+          encrypt:
+            label: Cifrar el mensaje cuando sea posible
+        group:
+          label: Grupo
+        text:
+          label: Texto
+      triggerables:
+        not_found: No se ha podido encontrar el activador `%{trigger}` para la automatización `%{automation}`, asegúrate de que el plugin asociado está instalado
+        stalled_topic:
+          durations:
+            PT1H: "Una hora"
+            P1D: "Un día"
+            P1W: "Una semana"
+            P2W: "Dos semanas"
+            P1M: "Un mes"
+            P3M: "Tres meses"
+            P6M: "Seis meses"
+            P1Y: "Un año"
+          fields:
+            categories:
+              label: Limitado a las categorías
+            tags:
+              label: Limitado a las etiquetas
+            stalled_after:
+              label: Estancado tras
+        recurring:
+          every: Cada
+          frequencies:
+            minute: minuto
+            hour: hora
+            day: día
+            weekday: día laborable (lunes a viernes)
+            week: semana
+            month: mes
+            year: año
+          fields:
+            recurrence:
+              label: Frecuencia
+            start_date:
+              label: Fecha de inicio
+        stalled_wiki:
+          durations:
+            PT1H: "Una hora"
+            P1D: "Un día"
+            P1W: "Una semana"
+            P2W: "Dos semanas"
+            P1M: "Un mes"
+            P3M: "Tres meses"
+            P6M: "Seis meses"
+            P1Y: "Un año"
+          fields:
+            restricted_category:
+              label: Restringido a la categoría
+            stalled_after:
+              label: Retardo de activación
+            retriggered_after:
+              label: Retardo antes de volver a activar
+              description: Define el retraso entre la primera activación y la siguiente, si la wiki todavía no ha sido editada desde la primera activación
+        user_promoted:
+          fields:
+            restricted_group:
+              label: Restringir al grupo
+            trust_level_transition:
+              label: Transición a nivel de confianza
+          trust_levels:
+            ALL: "Todos los niveles de confianza"
+            TL01: "nivel 0 a nivel 1"
+            TL12: "nivel 1 a nivel 2"
+            TL23: "nivel 2 a nivel 3"
+            TL34: "nivel 3 a nivel 4"
+        topic:
+          fields:
+            restricted_topic:
+              label: ID del tema
+        post_created_edited:
+          fields:
+            valid_trust_levels:
+              label: Niveles de confianza válidos
+              description: Se activará solo si la publicación es creada por un usuario en estos niveles de confianza. Por defecto, cualquier nivel de confianza
+            restricted_category:
+              label: Categoría
+              description: Opcional, permite limitar la ejecución del activador a esta categoría
+      scriptables:
+        zapier_webhook:
+          fields:
+            webhook_url:
+              label: URL del webhook
+        auto_responder:
+          fields:
+            answering_user:
+              label: Usuario que responde
+              description: Por defecto, usuario del sistema
+        user_global_notice:
+          fields:
+            level:
+              label: Nivel
+            notice:
+              label: Aviso
+              description: Acepta HTML, ¡no incluyas contenido inseguro o de terceros!
+          levels:
+            warning: Advertencia
+            info: Información
+            success: Éxito
+            error: Error
+        suspend_user_by_email:
+          fields:
+            suspend_until:
+              label: Suspender hasta (por defecto)
+            reason:
+              label: Motivo (por defecto)
+            actor:
+              label: Usuario
+              description: "Usuario responsable de la suspensión (por defecto: system)"
+        pin_topic:
+          fields:
+            pinnable_topic:
+              label: ID del tema
+            pinned_globally:
+              label: Fijado globalmente
+            pinned_until:
+              label: Fijado hasta
+        banner_topic:
+          fields:
+            topic_id:
+              label: ID del tema
+            banner_until:
+              label: Hacer encabezado hasta
+            user:
+              label: Usuario
+              description: "Usuario que crea el banner (por defecto: system)"
+        flag_post_on_words:
+          fields:
+            words:
+              label: Palabras revisadas
+        topic_required_words:
+          fields:
+            words:
+              label: Lista de palabras necesarias
+        gift_exchange:
+          fields:
+            gift_exchangers_group:
+              label: Nombre del grupo de participantes
+            giftee_assignment_messages:
+              label: Mensajes enviados a quien regala
+        send_pms:
+          add_a_pm_btn:
+            label: Añadir un MP
+          fields:
+            receiver:
+              label: Destinatario del MP
+            sendable_pms:
+              label: MPs
+            sender:
+              label: Remitente del MP
+        close_topic:
+          fields:
+            topic:
+              label: ID del tema
+            message:
+              label: Mensaje de cierre
+              description: "Mensaje opcional para mostrar en el indicador al cerrar el tema"
+            user:
+              label: Usuario
+              description: "Usuario que cierra el tema (por defecto: system)"
+      models:
+        script:
+          name:
+            label: Script
+        trigger:
+          name:
+            label: Activar
+        automation:
+          name:
+            label: Nombre
+          trigger:
+            label: Activar
+          script:
+            label: Script
+          version:
+            label: Versión
+          enabled:
+            label: Activado
+          disabled:
+            label: Desactivado
+          last_updated_at:
+            label: Última actualización
+          last_updated_by:
+            label: Actualizado por
