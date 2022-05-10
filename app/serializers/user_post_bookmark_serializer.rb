@@ -31,6 +31,12 @@ class UserPostBookmarkSerializer < UserPostTopicBookmarkBaseSerializer
     @bookmarkable_user ||= post.user
   end
 
+  # NOTE: In the UI there are special topic-status and topic-link components to
+  # display the topic URL, this is only used for certain routes like the .ics bookmarks.
+  def bookmarkable_url
+    post.full_url
+  end
+
   private
 
   def topic

@@ -1,6 +1,38 @@
 # frozen_string_literal: true
 
-class UserTestBookmarkSerializer < UserBookmarkBaseSerializer; end
+class UserTestBookmarkSerializer < UserBookmarkBaseSerializer
+  def title
+    fancy_title
+  end
+
+  def fancy_title
+    @fancy_title ||= user.username
+  end
+
+  def cooked
+    user.user_profile&.bio_cooked
+  end
+
+  def bookmarkable_user
+    @bookmarkable_user ||= user
+  end
+
+  def bookmarkable_url
+    "#{Discourse.base_url}/u/#{user.username}"
+  end
+
+  def excerpt
+    return nil unless cooked
+    @excerpt ||= PrettyText.excerpt(cooked, 300, keep_emoji_images: true)
+  end
+
+  private
+
+  def user
+    object.bookmarkable
+  end
+end
+
 class UserTestBookmarkable < BaseBookmarkable
   def self.model
     User

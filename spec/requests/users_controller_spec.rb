@@ -5254,7 +5254,9 @@ describe UsersController do
         sign_in(user1)
         get "/u/#{user1.username}/bookmarks.json"
         expect(response.status).to eq(200)
-        expect(response.parsed_body['user_bookmark_list']['bookmarks'].map { |b| b['id'] }).to match_array([bookmark1.id, bookmark2.id])
+        expect(response.parsed_body['user_bookmark_list']['bookmarks'].map { |b| b['id'] }).to match_array(
+          [bookmark1.id, bookmark2.id]
+        )
       end
 
       it "returns an .ics file of bookmark reminders for the user in date order" do
@@ -5317,39 +5319,6 @@ describe UsersController do
     end
 
     context "for polymorphic bookmarks" do
-      class UserTestBookmarkSerializer < UserBookmarkBaseSerializer
-        def title
-          fancy_title
-        end
-
-        def fancy_title
-          @fancy_title ||= user.username
-        end
-
-        def cooked
-          "<p>Something cooked</p>"
-        end
-
-        def bookmarkable_user
-          @bookmarkable_user ||= user
-        end
-
-        def bookmarkable_url
-          "#{Discourse.base_url}/u/#{user.username}"
-        end
-
-        def excerpt
-          return nil unless cooked
-          @excerpt ||= PrettyText.excerpt(cooked, 300, keep_emoji_images: true)
-        end
-
-        private
-
-        def user
-          object.bookmarkable
-        end
-      end
-
       before do
         SiteSetting.use_polymorphic_bookmarks = true
         register_test_bookmarkable
@@ -5370,6 +5339,8 @@ describe UsersController do
 
       it "returns a list of serialized bookmarks for the user including custom registered bookmarkables" do
         sign_in(user1)
+        bookmark3.bookmarkable.user_profile.update!(bio_raw: "<p>Something cooked</p>")
+        bookmark3.bookmarkable.user_profile.rebake!
         get "/u/#{user1.username}/bookmarks.json"
         expect(response.status).to eq(200)
         response_bookmarks = response.parsed_body['user_bookmark_list']['bookmarks']
@@ -5377,6 +5348,49 @@ describe UsersController do
           [bookmark1.id, bookmark2.id, bookmark3.id]
         )
         expect(response_bookmarks.find { |b| b['id'] == bookmark3.id }['excerpt']).to eq('Something cooked')
+      end
+
+      it "returns an .ics file of bookmark reminders for the user in date order" do
+        bookmark1.update!(name: nil, reminder_at: 1.day.from_now)
+        bookmark2.update!(name: "Some bookmark note", reminder_at: 1.week.from_now)
+        bookmark3.update!(name: nil, reminder_at: 2.weeks.from_now)
+
+        sign_in(user1)
+        get "/u/#{user1.username}/bookmarks.ics"
+        expect(response.status).to eq(200)
+        expect(response.body.chomp).to eq(<<~ICS)
+        BEGIN:VCALENDAR
+        VERSION:2.0
+        PRODID:-//Discourse//#{Discourse.current_hostname}//#{Discourse.full_version}//EN
+        BEGIN:VEVENT
+        UID:bookmark_reminder_##{bookmark1.id}@#{Discourse.current_hostname}
+        DTSTAMP:#{bookmark1.updated_at.strftime(I18n.t("datetime_formats.formats.calendar_ics"))}
+        DTSTART:#{bookmark1.reminder_at_ics}
+        DTEND:#{bookmark1.reminder_at_ics(offset: 1.hour)}
+        SUMMARY:#{bookmark1.bookmarkable.topic.title}
+        DESCRIPTION:#{bookmark1.bookmarkable.full_url}
+        URL:#{bookmark1.bookmarkable.full_url}
+        END:VEVENT
+        BEGIN:VEVENT
+        UID:bookmark_reminder_##{bookmark2.id}@#{Discourse.current_hostname}
+        DTSTAMP:#{bookmark2.updated_at.strftime(I18n.t("datetime_formats.formats.calendar_ics"))}
+        DTSTART:#{bookmark2.reminder_at_ics}
+        DTEND:#{bookmark2.reminder_at_ics(offset: 1.hour)}
+        SUMMARY:Some bookmark note
+        DESCRIPTION:#{bookmark2.bookmarkable.url}
+        URL:#{bookmark2.bookmarkable.url}
+        END:VEVENT
+        BEGIN:VEVENT
+        UID:bookmark_reminder_##{bookmark3.id}@#{Discourse.current_hostname}
+        DTSTAMP:#{bookmark3.updated_at.strftime(I18n.t("datetime_formats.formats.calendar_ics"))}
+        DTSTART:#{bookmark3.reminder_at_ics}
+        DTEND:#{bookmark3.reminder_at_ics(offset: 1.hour)}
+        SUMMARY:#{bookmark3.bookmarkable.username}
+        DESCRIPTION:#{Discourse.base_url}/u/#{bookmark3.bookmarkable.username}
+        URL:#{Discourse.base_url}/u/#{bookmark3.bookmarkable.username}
+        END:VEVENT
+        END:VCALENDAR
+        ICS
       end
     end
   end
