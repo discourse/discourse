@@ -27,10 +27,10 @@ if Sidekiq.server?
     end
   end
 
-  # defer queue should simply run in sidekiq
-  Scheduler::Defer.async = false
-
   Rails.application.config.after_initialize do
+    # defer queue should simply run in sidekiq
+    Scheduler::Defer.async = false
+
     # warm up AR
     RailsMultisite::ConnectionManagement.safe_each_connection do
       (ActiveRecord::Base.connection.tables - %w[schema_migrations versions]).each do |table|
