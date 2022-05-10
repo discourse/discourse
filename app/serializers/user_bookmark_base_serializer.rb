@@ -59,4 +59,10 @@ class UserBookmarkBaseSerializer < ApplicationSerializer
   def user
     bookmarkable_user
   end
+
+  private
+
+  def bookmarkable
+    object.bookmarkable
+  end
 end

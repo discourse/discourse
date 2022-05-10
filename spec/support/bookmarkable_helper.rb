@@ -10,7 +10,7 @@ class UserTestBookmarkSerializer < UserBookmarkBaseSerializer
   end
 
   def cooked
-    user.bio_raw
+    user.user_profile&.bio_cooked
   end
 
   def bookmarkable_user

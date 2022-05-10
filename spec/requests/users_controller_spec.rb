@@ -5339,6 +5339,8 @@ describe UsersController do
 
       it "returns a list of serialized bookmarks for the user including custom registered bookmarkables" do
         sign_in(user1)
+        bookmark3.bookmarkable.user_profile.update!(bio_raw: "<p>Something cooked</p>")
+        bookmark3.bookmarkable.user_profile.rebake!
         get "/u/#{user1.username}/bookmarks.json"
         expect(response.status).to eq(200)
         response_bookmarks = response.parsed_body['user_bookmark_list']['bookmarks']
