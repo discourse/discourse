@@ -8,7 +8,7 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import hbs from "htmlbars-inline-precompile";
 import { showPopover } from "discourse/lib/d-popover";
-import { click } from "@ember/test-helpers";
+import { click, triggerKeyEvent } from "@ember/test-helpers";
 
 discourseModule("Integration | Component | d-popover", function (hooks) {
   setupRenderingTest(hooks);
@@ -83,6 +83,20 @@ discourseModule("Integration | Component | d-popover", function (hooks) {
 
     async test(assert) {
       assert.ok(exists(".d-popover.foo"));
+    },
+  });
+
+  componentTest("d-popover component closes on escape key", {
+    template: hbs`{{#d-popover as |state|}}{{d-button icon=(if state.isExpanded "chevron-up" "chevron-down")}}{{/d-popover}}`,
+
+    async test(assert) {
+      await click(".btn");
+
+      assert.ok(exists(".d-popover.is-expanded"));
+
+      await triggerKeyEvent(document, "keydown", 27);
+
+      assert.notOk(exists(".d-popover.is-expanded"));
     },
   });
 });
