@@ -214,8 +214,6 @@ class Bookmark < ActiveRecord::Base
     end
   end
 
-  # TODO (martin) [POLYBOOK] Make a separate PR for reports
-  # functionality as the bookmarkables will have to define this.
   def self.count_per_day(opts = nil)
     opts ||= {}
     result = where('bookmarks.created_at >= ?', opts[:start_date] || (opts[:since_days_ago] || 30).days.ago)
@@ -225,7 +223,15 @@ class Bookmark < ActiveRecord::Base
     end
 
     if opts[:category_id]
-      result = result.joins(:topic).merge(Topic.in_category_and_subcategories(opts[:category_id]))
+      if SiteSetting.use_polymorphic_bookmarks
+        result = result
+          .joins("LEFT JOIN posts ON posts.id = bookmarks.bookmarkable_id AND bookmarks.bookmarkable_type = 'Post'")
+          .joins("LEFT JOIN topics ON (topics.id = bookmarks.bookmarkable_id AND bookmarks.bookmarkable_type = 'Topic') OR (topics.id = posts.topic_id)")
+          .where("topics.deleted_at IS NULL AND posts.deleted_at IS NULL")
+          .merge(Topic.in_category_and_subcategories(opts[:category_id]))
+      else
+        result = result.joins(:topic).merge(Topic.in_category_and_subcategories(opts[:category_id]))
+      end
     end
 
     result.group('date(bookmarks.created_at)')
