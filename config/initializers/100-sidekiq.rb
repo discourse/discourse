@@ -49,17 +49,17 @@ if Sidekiq.server?
       end
     end
   end
-end
-
-# Sidekiq#logger= applies patches to whichever logger we pass it.
-# Therefore something like Sidekiq.logger = Rails.logger will break
-# all logging in the application.
-#
-# Instead, this patch adds a dedicated logger instance and patches
-# the #add method to forward messages to Rails.logger.
-Sidekiq.logger = Logger.new(nil)
-Sidekiq.logger.define_singleton_method(:add) do |severity, message = nil, progname = nil, &blk|
-  Rails.logger.add(severity, message, progname, &blk)
+else
+  # Sidekiq#logger= applies patches to whichever logger we pass it.
+  # Therefore something like Sidekiq.logger = Rails.logger will break
+  # all logging in the application.
+  #
+  # Instead, this patch adds a dedicated logger instance and patches
+  # the #add method to forward messages to Rails.logger.
+  Sidekiq.logger = Logger.new(nil)
+  Sidekiq.logger.define_singleton_method(:add) do |severity, message = nil, progname = nil, &blk|
+    Rails.logger.add(severity, message, progname, &blk)
+  end
 end
 
 Sidekiq.error_handlers.clear
