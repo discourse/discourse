@@ -2954,10 +2954,6 @@ nl:
                 label: "Categorieën en nieuwste topics"
               categories_and_top_topics:
                 label: "Categorieën en toptopics"
-              categories_boxes:
-                label: "Categorievakken"
-              categories_boxes_with_topics:
-                label: "Categorievakken met topics"
       logos:
         title: "Logo's"
         fields:

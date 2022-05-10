@@ -2107,6 +2107,7 @@ fr:
     create_revision_on_bulk_topic_moves: "Créer une révision pour les premiers messages lorsque les sujets sont déplacés en masse dans une nouvelle catégorie."
     allow_changing_staged_user_tracking: "Permettre aux administrateurs de modifier les préférences de notification relatives aux catégories et aux tags, pour les comptes d'utilisateurs distants."
     use_email_for_username_and_name_suggestions: "Utiliser la première moitié des adresses de courriel pour suggérer des noms d'utilisateur et des pseudos. Veuillez noter que cela permet à chacun de facilement deviner les adresses de courriel entières des utilisateurs (car une grande part de ceux-ci sont inscrits à des services communément utilisés tels que GMail)."
+    use_name_for_username_suggestions: "Utilisez le nom complet d'un utilisateur lorsque vous suggérez des noms d'utilisateur."
     errors:
       invalid_css_color: "Couleur non valide. Indiquez un nom de couleur ou une valeur hexadécimale."
       invalid_email: "Adresse courriel invalide."
@@ -4516,10 +4517,8 @@ fr:
                 label: "Catégories et sujets récents"
               categories_and_top_topics:
                 label: "Catégories et meilleurs sujets"
-              categories_boxes:
-                label: "Boîtes catégories"
-              categories_boxes_with_topics:
-                label: "Boîtes catégorie avec sujets"
+              subcategories_with_featured_topics:
+                label: "Sous-catégories avec sujets en vedette"
       logos:
         title: "Logos"
         fields:

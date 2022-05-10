@@ -95,10 +95,18 @@ ro:
           one: "%{count} oră"
           few: "%{count} ore"
           other: "%{count} de ore"
+        about_x_hours:
+          one: "aproximativ %{count} oră"
+          few: "aproximativ %{count} ore"
+          other: "aproximativ %{count} ore"
         x_days:
           one: "%{count} zi"
           few: "%{count} zile"
           other: "%{count} de zile"
+        about_x_years:
+          one: "aproximativ %{count} an"
+          few: "aproximativ %{count} ani"
+          other: "aproximativ %{count} ani"
         date_year: "D MM YYYY"
       medium_with_ago:
         x_minutes:
@@ -133,6 +141,8 @@ ro:
       previous_month: "Luna anterioară"
       next_month: "Luna următoare"
       placeholder: dată
+      from_placeholder: "din data"
+      to_placeholder: "la data"
     share:
       topic_html: 'Subiect: <span class="topic-title">%{topicTitle}</span>'
       close: "Închide"
@@ -173,6 +183,7 @@ ro:
         disabled: "a îndepărtat acest banner %{when}. Nu va mai apărea la începutul fiecărei pagini."
       forwarded: "a redirecționat e-mailul de mai sus"
     topic_admin_menu: "acțiuni subiect"
+    skip_to_main_content: "Treci la conținutul principal"
     wizard_required: "Bine ai venit la noul tău Discourse! Să începem cu <a href='%{url}' data-auto-route='true'>expertul de configurare</a> ✨"
     emails_are_disabled: "Trimiterea de emailuri a fost dezactivată global de către un administrator. Nu vor fi trimise notificări email de nici un fel."
     software_update_prompt:
@@ -284,12 +295,16 @@ ro:
       contact_info: "În cazul în care o problemă critică sau alt aspect urgent afectează site-ul, contactează-ne la %{contact_info}."
     bookmarked:
       title: "Semn de carte"
+      edit_bookmark: "Editați marcajul"
       clear_bookmarks: "Șterge semnele de carte"
       help:
         bookmark: "Click pentru a adăuga semn de carte la subiectul acesta"
+        edit_bookmark: "Faceți clic pentru a edita marcajul pe acest subiect"
+        edit_bookmark_for_topic: "Faceți clic pentru a edita marcajul pentru acest subiect"
         unbookmark: "Click pentru a șterge semnele de carte"
     bookmarks:
       created: "Ai marcat acestă postare %{name} ca semn de carte"
+      create_for: "Creați marcaj pentru %{type}"
       not_bookmarked: "marchează ca semn de carte acest post"
       created_with_reminder: "Ai marcat această postare cu un memento %{date}. %{name}"
       remove: "Șterge semn de carte"
@@ -302,7 +317,10 @@ ro:
       list_permission_denied: "Nu ai permisiuni de acces la link-urile preferate ale acestui utilizator"
       no_user_bookmarks: "Nu ai link-uri de postări salvate; link-urile salvate îți permit revenirea la postări specifice"
       auto_delete_preference:
+        label: "După ce sunteți notificat"
+        never: "Păstrați marcajul"
         when_reminder_sent: "Ștergere semn de carte"
+        on_owner_reply: "Șterge marcajul, după ce răspund"
       search_placeholder: "Căutați marcaje după nume, titlul subiectului sau conținutul postării"
       search: "Caută"
       reminders:
@@ -312,6 +330,8 @@ ro:
         existing_reminder: "Ai un memento setat pentru acest link salvat care va fi trimis %{at_date_time}"
     copy_codeblock:
       copied: "copiat!"
+      copy: "copiați codul în clipboard"
+      fullscreen: "afișați codul în ecran complet"
     drafts:
       label: "Ciorne"
       resume: "Reluați"
@@ -351,6 +371,7 @@ ro:
     saved: "Salvat!"
     upload: "Încarcă"
     uploading: "Se încarcă..."
+    processing: "Procesare..."
     uploading_filename: "Se încarcă: %{filename}..."
     clipboard: "memoria temporară"
     uploaded: "Încărcat!"
@@ -380,6 +401,7 @@ ro:
         placeholder: "scrie titlul mesajului, URL-ul sau id-ul aici"
     review:
       order_by: "Sortează după"
+      date_filter: "Postat între"
       in_reply_to: "ca răspuns pentru"
       explain:
         why: "explică de ce acest element a ajuns în coada de așteptare"
@@ -488,6 +510,7 @@ ro:
         priority:
           title: "Prioritate minimă"
           any: "(oricare)"
+          low: "Scăzut"
           medium: "Medie"
           high: "Ridicată"
       conversation:
@@ -544,7 +567,9 @@ ro:
         few: "Zile"
         other: "zile"
     time_shortcut:
+      now: "Acum"
       later_today: "Mai târziu azi"
+      two_days: "Doua zile"
       next_business_day: "Următoarea zi lucrătoare"
       tomorrow: "Mâine"
       later_this_week: "Mai târziu săptămâna asta"
@@ -552,7 +577,13 @@ ro:
       start_of_next_business_week: "Luni"
       start_of_next_business_week_alt: "Lunea viitoare"
       next_week: "Săptămâna viitoare"
+      two_weeks: "Două săptămâni"
       next_month: "Luna viitoare"
+      two_months: "Două luni"
+      three_months: "Trei luni"
+      four_months: "Patru luni"
+      six_months: "Șase luni"
+      one_year: "Un an"
       forever: "Pentru totdeanua"
       custom: "Data și ora personalizată"
       select_timeframe: "Alege un interval de timp"
@@ -595,6 +626,7 @@ ro:
         other: "%{count} de utilizatori"
       edit_columns:
         save: "Salvează"
+        reset_to_default: "Resetare la valorile implicite"
       group:
         all: "toate grupurile"
     group_histories:
@@ -2129,7 +2161,7 @@ ro:
         few: "vezi %{count} răspunsuri ascunse"
         other: "vezi %{count} de răspunsuri ascunse"
       notice:
-        new_user: "Este prima dată când %{user}a adăugat un comentariu. Să-i spunem bun venit în comunitate!"
+        new_user: "Este prima dată când %{user} a adăugat un comentariu. Să-i spunem bun venit în comunitate!"
       unread: "postarea nu a fost citită"
       has_replies:
         one: "Un răspuns"

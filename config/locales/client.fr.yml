@@ -562,6 +562,7 @@ fr:
     time_shortcut:
       now: "Maintenant"
       later_today: "Plus tard dans la journée"
+      two_days: "Deux jours"
       next_business_day: "Au prochain jour ouvré"
       tomorrow: "Demain"
       post_local_date: "Date indiquée dans le message"
@@ -2161,6 +2162,7 @@ fr:
       categories: "Catégories"
       tags: "Étiquettes"
       in_messages: "dans les messages"
+      in_messages_tooltip: "basculer vers la recherche de sujets réguliers"
       browser_tip_description: "à nouveau pour utiliser la fonction de recherche de votre navigateur"
       recent: "Recherches récentes"
       clear_recent: "Effacer les recherches récentes"
@@ -2211,7 +2213,7 @@ fr:
           label: et dont les sujets
           open: sont ouverts
           closed: sont fermés
-          public: sont publiques
+          public: sont publics
           archived: sont archivés
           noreplies: n'ont aucune réponse
           single_user: contiennent un unique utilisateur

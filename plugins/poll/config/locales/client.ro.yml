@@ -29,6 +29,10 @@ ro:
           title: "Rezultatele sunt afișate numai pentru <strong>membrii personalului</strong>."
       multiple:
         help:
+          at_least_min_options:
+            one: "Alegeți cel puțin <strong>%{count}</strong> opțiune."
+            few: "Alegeți cel puțin <strong>%{count}</strong> opțiuni."
+            other: "Alege cel puțin <strong>%{count}</strong> opțiuni."
           between_min_and_max_options: "Alege între <strong>%{min}</strong> și <strong>%{max}</strong> opțiuni."
       cast-votes:
         title: "Exprimă-ți votul"
@@ -36,6 +40,8 @@ ro:
       show-results:
         title: "Afişează rezultatele sondajului"
         label: "Afișează rezultate"
+      remove-vote:
+        label: "Eliminați votul"
       hide-results:
         title: "Înapoi la voturile tale"
         label: "Arată votul"
@@ -75,12 +81,21 @@ ro:
           multiple: Opțiune multiplă
           number: Ordonare numerică
         poll_result:
+          label: Afișați rezultatele...
           always: Întotdeauna vizibil
+          vote: Numai după vot
+          staff: Doar pentru personal
+        poll_groups:
+          label: Limitați votul la aceste grupuri
         poll_config:
           step: Pas
         poll_public:
           label: Arată cine a votat
         poll_title:
           label: Titlu (opţional)
+        poll_options:
+          add: Adaugă opțiune
         automatic_close:
           label: Închide sondaj automat
+        show_advanced: "Afișați opțiunile avansate"
+        hide_advanced: "Ascundeți opțiunile avansate"

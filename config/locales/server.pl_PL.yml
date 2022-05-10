@@ -2220,6 +2220,7 @@ pl_PL:
       email_polling_disabled: "Musisz włączyć manualne lub cykliczne przeglądanie POP3 przed włączeniem odpowiedzi przez email."
       user_locale_not_enabled: "Musisz najpierw włączyć ''pozwól na ustawienia lokalne\" przed włączeniem tych ustawień."
       invalid_regex: "Wyrażenie regularne jest niepoprawne lub niedozwolone."
+      invalid_regex_with_message: "Wyrażenie regularne '%{regex}' zawiera błąd: %{message}"
       email_editable_enabled: "Musisz wyłączyć 'możliwość edycji emaili' przed włączeniem tych ustawień."
       staged_users_disabled: "Przed włączeniem tego ustawienia musisz najpierw włączyć 'staged users'."
       reply_by_email_disabled: "Przed włączeniem tego ustawienia musisz najpierw włączyć opcję 'reply by email'."
@@ -4640,10 +4641,8 @@ pl_PL:
                 label: "Kategorie i ostatnie tematy"
               categories_and_top_topics:
                 label: "Kategorie i najlepsze tematy"
-              categories_boxes:
-                label: "Bloki kategorii"
-              categories_boxes_with_topics:
-                label: "Bloki kategorii z tematami"
+              subcategories_with_featured_topics:
+                label: "Podkategorie z polecanymi tematami"
       logos:
         title: "Loga"
         fields:

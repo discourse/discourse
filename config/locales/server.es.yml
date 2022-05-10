@@ -2109,6 +2109,7 @@ es:
     allow_changing_staged_user_tracking: "Permitir que los usuarios con permisos de administración cambien las preferencias de notificación de categorías y etiquetas de los usuarios temporales."
     use_email_for_username_and_name_suggestions: "Usar la primera parte de las direcciones de correo electrónico para las sugerencias de nombre de usuario y nombre. Ten en cuenta que esto facilita que el público adivine las direcciones de correo electrónico completas de los usuarios (porque una gran proporción de personas usan servicios como `gmail.com`)."
     use_name_for_username_suggestions: "Usar el nombre completo para sugerir nombres de usuario"
+    suggest_weekends_in_date_pickers: "Incluir fines de semana (sábados y domingos) en las sugerencias de los selectores de fecha (desactiva esto si solo usas Discourse de lunes a viernes)"
     errors:
       invalid_css_color: "Color no válido. Introduce el nombre de un color o su valor hexadecimal."
       invalid_email: "Dirección de correo electrónico no válida."
@@ -4517,10 +4518,8 @@ es:
                 label: "Categorías y temas recientes"
               categories_and_top_topics:
                 label: "Categorías y temas destacados"
-              categories_boxes:
-                label: "Cuadros de categorías"
-              categories_boxes_with_topics:
-                label: "Cuadros de categorías con temas"
+              subcategories_with_featured_topics:
+                label: "Subcategorías con temas destacados"
       logos:
         title: "Logos"
         fields:
