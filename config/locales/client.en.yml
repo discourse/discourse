@@ -1999,20 +1999,20 @@ en:
         sr_title: "Sign in with Twitter"
       instagram:
         name: "Instagram"
-        title: "Login with Instagram"
-        sr_title: "Login with Instagram"
+        title: "Log in with Instagram"
+        sr_title: "Log in with Instagram"
       facebook:
         name: "Facebook"
-        title: "Login with Facebook"
-        sr_title: "Login with Facebook"
+        title: "Log in with Facebook"
+        sr_title: "Log in with Facebook"
       github:
         name: "GitHub"
-        title: "Login with GitHub"
-        sr_title: "Login with GitHub"
+        title: "Log in with GitHub"
+        sr_title: "Log in with GitHub"
       discord:
         name: "Discord"
-        title: "Login with Discord"
-        sr_title: "Login with Discord"
+        title: "Log in with Discord"
+        sr_title: "Log in with Discord"
       second_factor_toggle:
         totp: "Use an authenticator app instead"
         backup_code: "Use a backup code instead"
