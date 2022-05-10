@@ -9,7 +9,6 @@ describe PostAction do
   fab!(:admin) { Fabricate(:admin) }
   fab!(:post) { Fabricate(:post) }
   fab!(:second_post) { Fabricate(:post, topic: post.topic) }
-  let(:bookmark) { PostAction.new(user_id: post.user_id, post_action_type_id: PostActionType.types[:bookmark] , post_id: post.id) }
 
   def value_for(user_id, dt)
     GivenDailyLike.find_for(user_id, dt).pluck(:likes_given)[0] || 0
@@ -131,31 +130,6 @@ describe PostAction do
 
       tu = TopicUser.get(post.topic, codinghorror)
       expect(tu.liked).to be true
-      expect(tu.bookmarked).to be false
-    end
-
-  end
-
-  describe "when a user bookmarks something" do
-    it "increases the post's bookmark count when saved" do
-      expect { bookmark.save; post.reload }.to change(post, :bookmark_count).by(1)
-    end
-
-    describe 'when deleted' do
-
-      before do
-        bookmark.save
-        post.reload
-        @topic = post.topic
-        @topic.reload
-        bookmark.deleted_at = DateTime.now
-        bookmark.save
-      end
-
-      it 'reduces the bookmark count of the post' do
-        expect { post.reload }.to change(post, :bookmark_count).by(-1)
-      end
-
     end
   end
 
@@ -879,7 +853,7 @@ describe PostAction do
   describe ".lookup_for" do
     it "returns the correct map" do
       user = Fabricate(:user)
-      post_action = PostActionCreator.create(user, post, :bookmark).post_action
+      post_action = PostActionCreator.create(user, post, :like).post_action
       map = PostAction.lookup_for(user, [post.topic], post_action.post_action_type_id)
 
       expect(map).to eq(post.topic_id => [post.post_number])

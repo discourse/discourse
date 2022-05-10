@@ -267,8 +267,6 @@ after_initialize do
           self.post_action_type_id == PostActionType.types[:inappropriate] ? "flag" : "reply"
         when PostActionType.types[:like]
           "like"
-        when PostActionType.types[:bookmark]
-          "bookmark"
         end
 
       if input

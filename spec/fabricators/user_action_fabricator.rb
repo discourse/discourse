@@ -2,5 +2,5 @@
 
 Fabricator(:user_action) do
   user
-  action_type UserAction::BOOKMARK
+  action_type UserAction::EDIT
 end

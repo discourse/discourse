@@ -104,18 +104,11 @@ class TopicList
     post_action_type =
       if @current_user
         if @opts[:filter].present?
-          if @opts[:filter] == "bookmarked"
-            PostActionType.types[:bookmark]
-          elsif @opts[:filter] == "liked"
+          if @opts[:filter] == "liked"
             PostActionType.types[:like]
           end
         end
       end
-
-    # Include bookmarks if you have bookmarked topics
-    if @current_user && !post_action_type
-      post_action_type = PostActionType.types[:bookmark] if @topic_lookup.any? { |_, tu| tu && tu.bookmarked }
-    end
 
     # Data for bookmarks or likes
     post_action_lookup = PostAction.lookup_for(@current_user, @topics, post_action_type) if post_action_type

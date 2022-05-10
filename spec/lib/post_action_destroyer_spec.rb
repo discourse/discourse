@@ -62,25 +62,5 @@ describe PostActionDestroyer do
         expect(messages.last.data[:type]).to eq(:acted)
       end
     end
-
-    context 'not notifyable type' do
-      before do
-        PostActionCreator.new(user, post, PostActionType.types[:bookmark]).perform
-      end
-
-      it 'destroys the post action' do
-        expect {
-          PostActionDestroyer.destroy(user, post, :bookmark)
-        }.to change { PostAction.count }.by(-1)
-      end
-
-      it 'doesn’t notify subscribers' do
-        messages = MessageBus.track_publish do
-          PostActionDestroyer.destroy(user, post, :bookmark)
-        end
-
-        expect(messages).to be_blank
-      end
-    end
   end
 end
