@@ -123,6 +123,10 @@ export default Controller.extend(
       return this.invite
         .save(data)
         .then(() => {
+          if (!this.invite.id) {
+            return;
+          }
+
           this.rollbackBuffer();
 
           if (
