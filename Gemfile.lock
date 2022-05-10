@@ -1,25 +1,25 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    actionmailer (7.0.2.4)
-      actionpack (= 7.0.2.4)
-      actionview (= 7.0.2.4)
-      activejob (= 7.0.2.4)
-      activesupport (= 7.0.2.4)
+    actionmailer (7.0.3)
+      actionpack (= 7.0.3)
+      actionview (= 7.0.3)
+      activejob (= 7.0.3)
+      activesupport (= 7.0.3)
       mail (~> 2.5, >= 2.5.4)
       net-imap
       net-pop
       net-smtp
       rails-dom-testing (~> 2.0)
-    actionpack (7.0.2.4)
-      actionview (= 7.0.2.4)
-      activesupport (= 7.0.2.4)
+    actionpack (7.0.3)
+      actionview (= 7.0.3)
+      activesupport (= 7.0.3)
       rack (~> 2.0, >= 2.2.0)
       rack-test (>= 0.6.3)
       rails-dom-testing (~> 2.0)
       rails-html-sanitizer (~> 1.0, >= 1.2.0)
-    actionview (7.0.2.4)
-      activesupport (= 7.0.2.4)
+    actionview (7.0.3)
+      activesupport (= 7.0.3)
       builder (~> 3.1)
       erubi (~> 1.4)
       rails-dom-testing (~> 2.0)
@@ -28,15 +28,15 @@ GEM
       actionview (>= 6.0.a)
     active_model_serializers (0.8.4)
       activemodel (>= 3.0)
-    activejob (7.0.2.4)
-      activesupport (= 7.0.2.4)
+    activejob (7.0.3)
+      activesupport (= 7.0.3)
       globalid (>= 0.3.6)
-    activemodel (7.0.2.4)
-      activesupport (= 7.0.2.4)
-    activerecord (7.0.2.4)
-      activemodel (= 7.0.2.4)
-      activesupport (= 7.0.2.4)
-    activesupport (7.0.2.4)
+    activemodel (7.0.3)
+      activesupport (= 7.0.3)
+    activerecord (7.0.3)
+      activemodel (= 7.0.3)
+      activesupport (= 7.0.3)
+    activesupport (7.0.3)
       concurrent-ruby (~> 1.0, >= 1.0.2)
       i18n (>= 1.6, < 2)
       minitest (>= 5.1)
@@ -349,9 +349,9 @@ GEM
     rails_multisite (4.0.1)
       activerecord (> 5.0, < 7.1)
       railties (> 5.0, < 7.1)
-    railties (7.0.2.4)
-      actionpack (= 7.0.2.4)
-      activesupport (= 7.0.2.4)
+    railties (7.0.3)
+      actionpack (= 7.0.3)
+      activesupport (= 7.0.3)
       method_source
       rake (>= 12.2)
       thor (~> 1.0)
@@ -509,14 +509,14 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
-  actionmailer (= 7.0.2.4)
-  actionpack (= 7.0.2.4)
-  actionview (= 7.0.2.4)
+  actionmailer (= 7.0.3)
+  actionpack (= 7.0.3)
+  actionview (= 7.0.3)
   actionview_precompiler
   active_model_serializers (~> 0.8.3)
-  activemodel (= 7.0.2.4)
-  activerecord (= 7.0.2.4)
-  activesupport (= 7.0.2.4)
+  activemodel (= 7.0.3)
+  activerecord (= 7.0.3)
+  activesupport (= 7.0.3)
   addressable
   annotate
   aws-sdk-s3
@@ -596,7 +596,7 @@ DEPENDENCIES
   rack-protection
   rails_failover
   rails_multisite
-  railties (= 7.0.2.4)
+  railties (= 7.0.3)
   rake
   rb-fsevent
   rbtrace
