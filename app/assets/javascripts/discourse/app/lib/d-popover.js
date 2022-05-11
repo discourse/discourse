@@ -54,7 +54,7 @@ export function showPopover(event, options = {}) {
   }
 }
 
-// target is the element trigger the display of the popover
+// target is the element that triggers the display of the popover
 // options accepts all tippy.js options as defined in their documentation
 // https://atomiks.github.io/tippyjs/v6/all-props/
 export default function setup(target, options) {
