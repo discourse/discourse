@@ -442,19 +442,28 @@ describe UserDestroyer do
         logger.log_site_setting_change(
           'site_description',
           'Our friendly community',
-          'My favourite community'
+          'My favourite community',
+        )
+        logger.log_site_setting_change(
+          'site_description',
+          'Our friendly community',
+          'My favourite community',
+          details: "existing details"
         )
       end
 
       it "should keep the staff action log and add the username" do
         username = user.username
-        log = UserHistory.staff_action_records(
+        ids = UserHistory.staff_action_records(
           Discourse.system_user,
           acting_user: username
-        ).to_a[0]
+        ).map(&:id)
         UserDestroyer.new(admin).destroy(user, delete_posts: true)
-        log.reload
-        expect(log.details).to include(username)
+        details = UserHistory.where(id: ids).map(&:details)
+        expect(details).to contain_exactly(
+          "\nuser_id: #{user.id}\nusername: #{username}",
+          "existing details\nuser_id: #{user.id}\nusername: #{username}"
+        )
       end
     end
 
