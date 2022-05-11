@@ -282,9 +282,9 @@ export default class PostCooked {
         this._updateQuoteElements($aside, "chevron-down");
         const $title = $(".title", $aside);
 
-        // If a username / topic title is not present then remove the quote-controls
+        // If only the quote-controls are present, and not a username / topic title then remove the quote-controls
         // and its parent
-        if ($title.length <= 1) {
+        if ($title.length === 1) {
           return $aside.find(".title").remove();
         }
 
