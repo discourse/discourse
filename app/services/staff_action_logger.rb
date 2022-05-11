@@ -455,6 +455,7 @@ class StaffActionLogger
 
     if old_custom_fields && category_params[:custom_fields]
       category_params[:custom_fields].each do |key, value|
+        next if old_custom_fields[key] == value
         changed_attributes["custom_fields[#{key}]"] = [old_custom_fields[key], value]
       end
     end
