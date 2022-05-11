@@ -387,6 +387,38 @@ describe StaffActionLogger do
       expect(UserHistory.count).to eq(1)
       expect(UserHistory.find_by_subject('name').category).to eq(category)
     end
+
+    it "logs custom fields changes" do
+      attributes = {
+        custom_fields: { "auto_populated" => "t" }
+      }
+      category.update!(attributes)
+
+      logger.log_category_settings_change(
+        category,
+        attributes,
+        old_permissions: category.permissions_params,
+        old_custom_fields: {}
+      )
+
+      expect(UserHistory.count).to eq(1)
+    end
+
+    it "does not log custom fields changes if value is unchanged" do
+      attributes = {
+        custom_fields: { "auto_populated" => "t" }
+      }
+      category.update!(attributes)
+
+      logger.log_category_settings_change(
+        category,
+        attributes,
+        old_permissions: category.permissions_params,
+        old_custom_fields: { "auto_populated" => "t" }
+      )
+
+      expect(UserHistory.count).to eq(0)
+    end
   end
 
   describe 'log_category_deletion' do
