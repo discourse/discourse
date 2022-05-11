@@ -5,9 +5,9 @@
     @query={{@query}}
     @models={{if @model (array @model) (if @models @models (array))}}
     @current-when={{@current-when}}
-    @title={{i18n (concat "sidebar.sections.links." @linkName ".title")}}
+    @title={{@title}}
   >
-    {{i18n (concat "sidebar.sections.links." @linkName ".content")}}
+    {{@content}}
 
     {{#if @badgeText}}
       <span class="sidebar-section-link-content-badge">
