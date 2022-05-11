@@ -1,0 +1,18 @@
+<Sidebar::Section
+  @sectionName="topics"
+  @headerRoute="discovery.latest"
+  @headerQuery={{hash f=undefined}}
+  @headerTitle="topics"
+  @headerActionIcon="plus"
+  @headerAction={{this.composeTopic}}>
+
+  <Sidebar::SectionLink
+    @linkName="everything"
+    @route={{this.everythingSectionLinkRoute}}
+    @query={{hash f=undefined}}
+    @current-when={{"discovery.latest discovery.new discovery.unread discovery.top"}}
+    @badgeText={{this.everythingSectionLinkBadgeText}} />
+
+  <Sidebar::SectionLink @linkName="tracked" @route="discovery.latest" @query={{hash f="tracked"}} />
+  <Sidebar::SectionLink @linkName="bookmarked" @route="userActivity.bookmarks" @model={{this.currentUser}} />
+</Sidebar::Section>

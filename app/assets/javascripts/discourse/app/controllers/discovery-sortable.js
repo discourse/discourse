@@ -22,7 +22,7 @@ const controllerOpts = {
   queryParams: Object.keys(queryParams),
 };
 
-// Default to `null`
+// Default to `undefined`
 controllerOpts.queryParams.forEach((p) => {
   controllerOpts[p] = queryParams[p].default;
 });
