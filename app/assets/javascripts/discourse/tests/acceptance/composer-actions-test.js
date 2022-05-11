@@ -567,9 +567,9 @@ acceptance("External instance quote handling", function (needs) {
       "[quote='random_guy, post:700, topic:225486']\nthis quote is not from discourse\n[/quote]";
     await fillIn(".d-editor-input", quote);
 
-    assert.strictEqual(
-      queryAll(".d-editor-preview .quote .title").text().trim(),
-      ""
+    assert.ok(
+      !exists(".d-editor-preview .quote .title"),
+      "title is not present"
     );
   });
 });
