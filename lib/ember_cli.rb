@@ -1,6 +1,15 @@
 # frozen_string_literal: true
 
 module EmberCli
+  ASSETS = %w(
+    discourse.js
+    admin.js
+    ember_jquery.js
+    pretty-text-bundle.js
+    start-discourse.js
+    vendor.js
+  )
+
   ALIASES ||= {
     "application" => "discourse",
     "discourse/tests/test-support-rails" => "test-support",
@@ -35,5 +44,10 @@ module EmberCli
   def self.transform_name(name)
     return name if !enabled?
     ALIASES[name] || name
+  end
+
+  def self.is_ember_cli_asset?(name)
+    return false if !enabled?
+    ASSETS.include?(name) || name.start_with?("chunk.")
   end
 end

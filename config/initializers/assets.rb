@@ -61,6 +61,7 @@ if EmberCli.enabled?
       scripts/discourse-test-listen-boot
       scripts/discourse-boot
     }
+  Rails.application.config.assets.precompile += EmberCli::ASSETS.map { |name| name.sub('.js', '.map') }
 else
   Rails.application.config.assets.precompile += %w{
     application.js
