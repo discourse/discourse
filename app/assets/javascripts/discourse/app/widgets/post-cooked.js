@@ -273,26 +273,35 @@ export default class PostCooked {
 
     $quotes.each((index, e) => {
       const $aside = $(e);
+
       if ($aside.data("post")) {
-        const quoteId = `quote-id-${$aside.data("topic")}-${$aside.data(
-          "post"
-        )}-${index}`;
-        $aside.find("blockquote").attr("id", quoteId);
+        ajax(`/posts/by_number/${$aside.data("topic")}/${$aside.data("post")}`)
+          .then(() => {
+            const quoteId = `quote-id-${$aside.data("topic")}-${$aside.data(
+              "post"
+            )}-${index}`;
+            $aside.find("blockquote").attr("id", quoteId);
 
-        this._updateQuoteElements($aside, "chevron-down");
-        const $title = $(".title", $aside);
+            this._updateQuoteElements($aside, "chevron-down");
+            const $title = $(".title", $aside);
 
-        // Unless it's a full quote, allow click to expand
-        if (!($aside.data("full") || $title.data("has-quote-controls"))) {
-          $title.on("click", (e2) => {
-            let $target = $(e2.target);
-            if ($target.closest("a").length) {
-              return true;
+            // Unless it's a full quote, allow click to expand
+            if (!($aside.data("full") || $title.data("has-quote-controls"))) {
+              $title.on("click", (e2) => {
+                let $target = $(e2.target);
+                if ($target.closest("a").length) {
+                  return true;
+                }
+                this._toggleQuote($aside);
+              });
+              $title.data("has-quote-controls", true);
             }
-            this._toggleQuote($aside);
+          })
+          .catch((error) => {
+            if ([403, 404].includes(error.jqXHR.status)) {
+              return $aside.find(".title").remove();
+            }
           });
-          $title.data("has-quote-controls", true);
-        }
       }
     });
   }

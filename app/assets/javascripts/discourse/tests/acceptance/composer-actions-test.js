@@ -557,6 +557,23 @@ acceptance("Composer Actions With New Topic Draft", function (needs) {
   });
 });
 
+acceptance("External instance quote handling", function (needs) {
+  needs.user();
+
+  test("Does not display user in title", async function (assert) {
+    await visit("/t/short-topic-with-two-posts/54079");
+    await click("article#post_2 button.reply");
+    const quote =
+      "[quote='random_guy, post:700, topic:225486']\nthis quote is not from discourse\n[/quote]";
+    await fillIn(".d-editor-input", quote);
+
+    assert.strictEqual(
+      queryAll(".d-editor-preview .quote .title").text().trim(),
+      ""
+    );
+  });
+});
+
 acceptance("Prioritize Username", function (needs) {
   needs.user();
   needs.settings({
