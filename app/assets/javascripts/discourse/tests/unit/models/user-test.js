@@ -1,6 +1,8 @@
 import { module, test } from "qunit";
 import Group from "discourse/models/group";
 import User from "discourse/models/user";
+import PreloadStore from "discourse/lib/preload-store";
+import sinon from "sinon";
 
 module("Unit | Model | user", function () {
   test("staff", function (assert) {
@@ -73,5 +75,31 @@ module("Unit | Model | user", function () {
 
     assert.deepEqual(user.calculateMutedIds(0, 1, "muted_category_ids"), [1]);
     assert.deepEqual(user.calculateMutedIds(1, 1, "muted_category_ids"), []);
+  });
+
+  test("createCurrent() guesses timezone if user doesn't have it set", function (assert) {
+    PreloadStore.store("currentUser", {
+      username: "eviltrout",
+      timezone: null,
+    });
+    const expectedTimezone = "Africa/Casablanca";
+    sinon.stub(moment.tz, "guess").returns(expectedTimezone);
+
+    const currentUser = User.createCurrent();
+
+    assert.deepEqual(currentUser.timezone, expectedTimezone);
+  });
+
+  test("createCurrent() doesn't guess timezone if user has it already set", function (assert) {
+    const timezone = "Africa/Casablanca";
+    PreloadStore.store("currentUser", {
+      username: "eviltrout",
+      timezone,
+    });
+    const spyMomentGuess = sinon.spy(moment.tz, "guess");
+
+    User.createCurrent();
+
+    assert.ok(spyMomentGuess.notCalled);
   });
 });
