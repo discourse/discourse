@@ -26,35 +26,18 @@ export const hideOnEscapePlugin = {
   },
 };
 
+// legacy, shouldn't be needed with setup
 export function hidePopover(event) {
   if (event?.target?._tippy) {
     showPopover(event);
   }
 }
 
-// options accepts all tippy.js options as defined in their documentation
-// https://atomiks.github.io/tippyjs/v6/all-props/
+// legacy, setup() should be used
 export function showPopover(event, options = {}) {
-  const tippyOptions = Object.assign(
-    {
-      arrow: iconHTML("tippy-rounded-arrow"),
-      content: options.textContent || options.htmlContent,
-      allowHTML: options?.htmlContent?.length,
-      trigger: "mouseenter click",
-      hideOnClick: true,
-      zIndex: 1400,
-      plugins: [hideOnEscapePlugin],
-    },
-    options
-  );
-
-  // legacy support
-  delete tippyOptions.textContent;
-  delete tippyOptions.htmlContent;
-
   const instance = event.target._tippy
     ? event.target._tippy
-    : tippy(event.target, tippyOptions);
+    : setup(event.target, options);
 
   // hangs on legacy ember
   if (!isLegacyEmber) {
@@ -69,4 +52,29 @@ export function showPopover(event, options = {}) {
   } else {
     instance.show();
   }
+}
+
+// target is the element that triggers the display of the popover
+// options accepts all tippy.js options as defined in their documentation
+// https://atomiks.github.io/tippyjs/v6/all-props/
+export default function setup(target, options) {
+  const tippyOptions = Object.assign(
+    {
+      arrow: iconHTML("tippy-rounded-arrow"),
+      content: options.textContent || options.htmlContent,
+      allowHTML: options?.htmlContent?.length,
+      trigger: "mouseenter click",
+      hideOnClick: true,
+      zIndex: 1400,
+      plugins: [hideOnEscapePlugin],
+      touch: ["hold", 500],
+    },
+    options
+  );
+
+  // legacy support
+  delete tippyOptions.textContent;
+  delete tippyOptions.htmlContent;
+
+  return tippy(target, tippyOptions);
 }
