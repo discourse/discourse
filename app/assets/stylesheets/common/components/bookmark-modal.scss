@@ -31,6 +31,10 @@
     }
   }
 
+  .title {
+    max-width: 300px;
+  }
+
   .existing-reminder-at-alert {
     display: flex;
     flex-direction: row;
