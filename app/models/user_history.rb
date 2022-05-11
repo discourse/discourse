@@ -116,7 +116,8 @@ class UserHistory < ActiveRecord::Base
       post_staff_note_create: 95,
       post_staff_note_destroy: 96,
       watched_word_create: 97,
-      watched_word_destroy: 98
+      watched_word_destroy: 98,
+      delete_group: 99
     )
   end
 
@@ -209,7 +210,8 @@ class UserHistory < ActiveRecord::Base
       :post_staff_note_create,
       :post_staff_note_destroy,
       :watched_word_create,
-      :watched_word_destroy
+      :watched_word_destroy,
+      :delete_group
     ]
   end
 

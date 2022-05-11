@@ -1,0 +1,23 @@
+<div class={{concat "sidebar-section-wrapper sidebar-section-" @sectionName}}>
+  <div class="sidebar-section-header">
+    <button type="button" class="sidebar-section-header-caret" title="toggle section" {{on "click" this.toggleSectionDisplay}}>
+      {{d-icon this.headerCaretIcon}}
+    </button>
+
+    <LinkTo @route={{@headerRoute}} @query={{@headerQuery}} @class="sidebar-section-header-link">
+      {{@headerTitle}}
+    </LinkTo>
+
+    {{#if @headerAction}}
+      <button type="button" class="sidebar-section-header-button" {{on "click" @headerAction}}>
+        {{d-icon @headerActionIcon}}
+      </button>
+    {{/if}}
+  </div>
+
+  {{#if this.displaySection}}
+    <div class="sidebar-section-content">
+      {{yield}}
+    </div>
+  {{/if}}
+</div>

@@ -333,7 +333,7 @@ describe CategoriesController do
 
     describe "logged in" do
       it "raises an exception if they don't have permission to see it" do
-        admin.update!(admin: false)
+        admin.update!(admin: false, group_users: [])
         sign_in(admin)
         get "/c/#{category.id}/show.json"
         expect(response.status).to eq(403)

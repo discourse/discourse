@@ -9,17 +9,11 @@ class BookmarkManager
   end
 
   def self.bookmark_metadata(bookmark, user)
-    data = {}
     if SiteSetting.use_polymorphic_bookmarks
-      if bookmark.bookmarkable_type == "Topic"
-        data[:topic_bookmarked] = Bookmark.for_user_in_topic(user.id, bookmark.bookmarkable.id).exists?
-      elsif bookmark.bookmarkable_type == "Post"
-        data[:topic_bookmarked] = Bookmark.for_user_in_topic(user.id, bookmark.bookmarkable.topic.id).exists?
-      end
+      bookmark.registered_bookmarkable.bookmark_metadata(bookmark, user)
     else
-      data[:topic_bookmarked] = Bookmark.for_user_in_topic(user.id, bookmark.topic.id).exists?
+      { topic_bookmarked: Bookmark.for_user_in_topic(user.id, bookmark.topic.id).exists? }
     end
-    data
   end
 
   # TODO (martin) [POLYBOOK] This will be used in place of #create once
@@ -28,7 +22,8 @@ class BookmarkManager
     raise NotImplementedError if !SiteSetting.use_polymorphic_bookmarks
 
     bookmarkable = bookmarkable_type.constantize.find_by(id: bookmarkable_id)
-    self.send("validate_bookmarkable_#{bookmarkable_type.downcase}", bookmarkable)
+    registered_bookmarkable = Bookmark.registered_bookmarkable_from_type(bookmarkable_type)
+    registered_bookmarkable.validate_before_create(@guardian, bookmarkable)
 
     bookmark = Bookmark.create(
       {
@@ -42,7 +37,7 @@ class BookmarkManager
 
     return add_errors_from(bookmark) if bookmark.errors.any?
 
-    self.send("after_create_bookmarkable_#{bookmarkable_type.downcase}", bookmarkable)
+    registered_bookmarkable.after_create(@guardian, bookmark, options)
     update_user_option(bookmark)
 
     bookmark
@@ -82,7 +77,12 @@ class BookmarkManager
     options: {}
   )
     post = Post.find_by(id: post_id)
-    validate_bookmarkable_post(post)
+    if post.blank? ||
+        post.topic.blank? ||
+        !@guardian.can_see_topic?(post.topic) ||
+        !@guardian.can_see_post?(post)
+      raise Discourse::InvalidAccess
+    end
 
     bookmark = Bookmark.create(
       {
@@ -111,7 +111,7 @@ class BookmarkManager
     bookmark.destroy
 
     if SiteSetting.use_polymorphic_bookmarks
-      self.send("after_destroy_bookmarkable_#{bookmark.bookmarkable_type.downcase}", bookmark)
+      bookmark.registered_bookmarkable.after_destroy(@guardian, bookmark)
     else
       update_topic_user_bookmarked(bookmark.topic)
     end
@@ -135,7 +135,7 @@ class BookmarkManager
 
   def self.send_reminder_notification(id)
     bookmark = Bookmark.find_by(id: id)
-    BookmarkReminderNotificationHandler.send_notification(bookmark)
+    BookmarkReminderNotificationHandler.new(bookmark).send_notification
   end
 
   def update(bookmark_id:, name:, reminder_at:, options: {})
@@ -192,32 +192,5 @@ class BookmarkManager
 
   def update_user_option(bookmark)
     @user.user_option.update!(bookmark_auto_delete_preference: bookmark.auto_delete_preference)
-  end
-
-  def after_create_bookmarkable_post(post, opts = {})
-    update_topic_user_bookmarked(post.topic, opts)
-  end
-
-  def after_create_bookmarkable_topic(topic, opts = {})
-    update_topic_user_bookmarked(topic, opts)
-  end
-
-  def after_destroy_bookmarkable_post(bookmark)
-    update_topic_user_bookmarked(bookmark.bookmarkable.topic)
-  end
-
-  def after_destroy_bookmarkable_topic(bookmark)
-    update_topic_user_bookmarked(bookmark.bookmarkable)
-  end
-
-  def validate_bookmarkable_post(post)
-    # no bookmarking deleted posts or topics
-    raise Discourse::InvalidAccess if post.blank? || !@guardian.can_see_post?(post)
-    validate_bookmarkable_topic(post.topic)
-  end
-
-  def validate_bookmarkable_topic(topic)
-    # no bookmarking deleted posts or topics
-    raise Discourse::InvalidAccess if topic.blank? || !@guardian.can_see_topic?(topic)
   end
 end

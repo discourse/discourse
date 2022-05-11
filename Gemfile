@@ -18,7 +18,7 @@ else
   # this allows us to include the bits of rails we use without pieces we do not.
   #
   # To issue a rails update bump the version number here
-  rails_version = '7.0.2.4'
+  rails_version = '7.0.3'
   gem 'actionmailer', rails_version
   gem 'actionpack', rails_version
   gem 'actionview', rails_version
@@ -230,7 +230,7 @@ gem 'cppjieba_rb', require: false
 gem 'lograge', require: false
 gem 'logstash-event', require: false
 gem 'logstash-logger', require: false
-gem 'logster', '2.11.0'
+gem 'logster'
 
 # NOTE: later versions of sassc are causing a segfault, possibly dependent on processer architecture
 # and until resolved should be locked at 2.0.1

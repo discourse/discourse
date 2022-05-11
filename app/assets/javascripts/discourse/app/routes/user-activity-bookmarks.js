@@ -12,7 +12,11 @@ export default DiscourseRoute.extend({
   model(params, transition) {
     const controller = this.controllerFor("user-activity-bookmarks");
 
-    if (this.isPoppedState(transition) && this.session.bookmarksModel) {
+    if (
+      this.isPoppedState(transition) &&
+      this.session.bookmarksModel &&
+      this.session.bookmarksModel.searchTerm === params.q
+    ) {
       return Promise.resolve(this.session.bookmarksModel);
     }
 

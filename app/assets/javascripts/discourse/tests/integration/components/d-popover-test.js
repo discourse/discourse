@@ -8,7 +8,7 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import hbs from "htmlbars-inline-precompile";
 import { showPopover } from "discourse/lib/d-popover";
-import { click } from "@ember/test-helpers";
+import { click, triggerKeyEvent } from "@ember/test-helpers";
 
 discourseModule("Integration | Component | d-popover", function (hooks) {
   setupRenderingTest(hooks);
@@ -39,16 +39,20 @@ discourseModule("Integration | Component | d-popover", function (hooks) {
   });
 
   componentTest("show/hide popover from component", {
-    template: hbs`{{#d-popover}}{{d-button icon="chevron-down"}}<ul><li class="test">foo</li></ul>{{/d-popover}}`,
+    template: hbs`{{#d-popover}}{{d-button class="trigger" icon="chevron-down"}}<ul><li class="test">foo</li><li>{{d-button icon="times" class="closer"}}</li></ul>{{/d-popover}}`,
 
     async test(assert) {
       assert.notOk(exists(".d-popover.is-expanded"));
       assert.notOk(exists(".test"));
 
-      await click(".btn");
+      await click(".trigger");
 
       assert.ok(exists(".d-popover.is-expanded"));
       assert.equal(query(".test").innerText.trim(), "foo");
+
+      await click(".closer");
+
+      assert.notOk(exists(".d-popover.is-expanded"));
     },
   });
 
@@ -71,6 +75,28 @@ discourseModule("Integration | Component | d-popover", function (hooks) {
       await click(".btn");
 
       assert.ok(exists(".d-icon-chevron-up"));
+    },
+  });
+
+  componentTest("d-popover component accepts a class property", {
+    template: hbs`{{#d-popover class="foo"}}{{/d-popover}}`,
+
+    async test(assert) {
+      assert.ok(exists(".d-popover.foo"));
+    },
+  });
+
+  componentTest("d-popover component closes on escape key", {
+    template: hbs`{{#d-popover as |state|}}{{d-button icon=(if state.isExpanded "chevron-up" "chevron-down")}}{{/d-popover}}`,
+
+    async test(assert) {
+      await click(".btn");
+
+      assert.ok(exists(".d-popover.is-expanded"));
+
+      await triggerKeyEvent(document, "keydown", 27);
+
+      assert.notOk(exists(".d-popover.is-expanded"));
     },
   });
 });

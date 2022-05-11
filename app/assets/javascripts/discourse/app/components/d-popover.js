@@ -2,6 +2,9 @@ import Component from "@ember/component";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import tippy from "tippy.js";
 import { guidFor } from "@ember/object/internals";
+import { action } from "@ember/object";
+import { next } from "@ember/runloop";
+import { hideOnEscapePlugin } from "discourse/lib/d-popover";
 
 export default class DiscoursePopover extends Component {
   tagName = "";
@@ -10,14 +13,33 @@ export default class DiscoursePopover extends Component {
 
   options = null;
 
+  class = null;
+
   didInsertElement() {
     this._super(...arguments);
 
-    this._setupTippy();
+    this._tippyInstance = this._setupTippy();
+  }
+
+  willDestroyElement() {
+    this._super(...arguments);
+
+    this._tippyInstance?.destroy();
   }
 
   get componentId() {
     return guidFor(this);
+  }
+
+  @action
+  close(event) {
+    event.preventDefault();
+
+    if (!this.isExpanded) {
+      return;
+    }
+
+    this._tippyInstance?.hide();
   }
 
   _setupTippy() {
@@ -28,6 +50,8 @@ export default class DiscoursePopover extends Component {
       interactive: true,
       allowHTML: false,
       appendTo: "parent",
+      hideOnClick: true,
+      plugins: [hideOnEscapePlugin],
       content:
         this.options?.content ||
         document
@@ -36,20 +60,27 @@ export default class DiscoursePopover extends Component {
             ":scope > .d-popover-content, :scope > div, :scope > ul"
           ),
       onShow: () => {
-        if (this.isDestroyed || this.isDestroying) {
-          return;
-        }
-        this.set("isExpanded", true);
+        next(() => {
+          if (this.isDestroyed || this.isDestroying) {
+            return;
+          }
+
+          this.set("isExpanded", true);
+        });
+        return true;
       },
       onHide: () => {
-        if (this.isDestroyed || this.isDestroying) {
-          return;
-        }
-        this.set("isExpanded", false);
+        next(() => {
+          if (this.isDestroyed || this.isDestroying) {
+            return;
+          }
+          this.set("isExpanded", false);
+        });
+        return true;
       },
     };
 
-    tippy(
+    const instance = tippy(
       document
         .getElementById(this.componentId)
         .querySelector(
@@ -57,5 +88,7 @@ export default class DiscoursePopover extends Component {
         ),
       Object.assign({}, baseOptions, this.options || {})
     );
+
+    return instance?.id ? instance : null;
   }
 }

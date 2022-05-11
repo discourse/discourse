@@ -299,6 +299,22 @@ describe PostValidator do
       end
     end
 
+    it "should allow category moderators to post more than 2 consecutive replies" do
+      SiteSetting.enable_category_group_moderation = true
+      group = Fabricate(:group)
+      GroupUser.create(group: group, user: user)
+      category = Fabricate(:category, reviewable_by_group_id: group.id)
+      topic.update!(category: category)
+
+      Post.create!(user: other_user, topic: topic, raw: "post number 1", post_number: 1)
+      Post.create!(user: user, topic: topic, raw: "post number 2", post_number: 2)
+      Post.create!(user: user, topic: topic, raw: "post number 3", post_number: 3)
+
+      post = Post.new(user: user, topic: topic, raw: "post number 4", post_number: 4)
+      validator.force_edit_last_validator(post)
+      expect(post.errors.count).to eq(0)
+    end
+
     it "should not allow posting more than 2 consecutive replies" do
       Post.create!(user: user, topic: topic, raw: "post number 2", post_number: 2)
       Post.create!(user: user, topic: topic, raw: "post number 3", post_number: 3)

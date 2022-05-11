@@ -1886,6 +1886,9 @@ rate_limits:
   max_allowed_secondary_emails:
     default: 10
     hidden: true
+  max_batch_presign_multipart_per_minute:
+    default: 20
+    hidden: true
 
 developer:
   force_hostname:
@@ -2578,8 +2581,13 @@ tags:
   tags_listed_by_group:
     client: true
     default: false
-  allow_staff_to_tag_pms:
-    default: false
+  pm_tags_allowed_for_groups:
+    client: true
+    type: group_list
+    list_type: compact
+    default: ""
+    allow_any: false
+    refresh: true
   suppress_overlapping_tags_in_list:
     default: false
     client: true

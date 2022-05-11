@@ -3066,10 +3066,6 @@ hy:
                 label: "Կատեգորիաները և Վերջին Թեմաները"
               categories_and_top_topics:
                 label: "Կատեգորիաները և Թոփ Թեմաները"
-              categories_boxes:
-                label: "Կատեգորիաների արկղեր"
-              categories_boxes_with_topics:
-                label: "Կատեգորիաների արկղեր Թեմաներով"
       logos:
         title: "Լոգոներ"
         fields:

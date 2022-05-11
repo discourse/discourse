@@ -12,21 +12,6 @@ RSpec.describe BookmarkQuery do
     BookmarkQuery.new(user: user || self.user, params: params || self.params)
   end
 
-  def register_user_bookmarkable
-    Bookmark.register_bookmarkable(
-      model: User,
-      serializer: UserBookmarkSerializer,
-      list_query: lambda do |user, guardian|
-        user.bookmarks.joins(
-          "INNER JOIN users ON users.id = bookmarks.bookmarkable_id AND bookmarks.bookmarkable_type = 'User'"
-        ).where(bookmarkable_type: "User")
-      end,
-      search_query: lambda do |bookmarks, query, ts_query|
-        bookmarks.where("users.username ILIKE ?", query)
-      end
-    )
-  end
-
   describe "#list_all" do
     fab!(:bookmark1) { Fabricate(:bookmark, user: user) }
     fab!(:bookmark2) { Fabricate(:bookmark, user: user) }
@@ -69,7 +54,7 @@ RSpec.describe BookmarkQuery do
       before do
         SiteSetting.use_polymorphic_bookmarks = true
         Bookmark.reset_bookmarkables
-        register_user_bookmarkable
+        register_test_bookmarkable
 
         Fabricate(:topic_user, user: user, topic: post_bookmark.bookmarkable.topic)
         Fabricate(:topic_user, user: user, topic: topic_bookmark.bookmarkable)
@@ -153,7 +138,7 @@ RSpec.describe BookmarkQuery do
 
         context "with custom bookmarkable fitering" do
           before do
-            register_user_bookmarkable
+            register_test_bookmarkable
           end
 
           let!(:bookmark5) { Fabricate(:bookmark, user: user, bookmarkable: Fabricate(:user, username: "bookmarkqueen")) }

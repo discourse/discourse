@@ -15,9 +15,7 @@
           </a>
         </span>
         <span class="name">
-          {{#unless userTemplate.hideName}}
-            {{#if userTemplate.prioritizeName}}{{userTemplate.username}}{{else}}{{userTemplate.name}}{{/if}}
-          {{/unless}}
+          {{#if userTemplate.prioritizeName}}{{userTemplate.username}}{{else}}{{userTemplate.name}}{{/if}}
         </span>
       </div>
       <div class="title">{{userTemplate.title}}</div>

@@ -239,6 +239,12 @@ module SiteSettings::Validations
     end
   end
 
+  def validate_strip_image_metadata(new_val)
+    return if new_val == "t"
+    return if SiteSetting.composer_media_optimization_image_enabled == false
+    validate_error :strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled
+  end
+
   private
 
   def validate_bucket_setting(setting_name, upload_bucket, backup_bucket)

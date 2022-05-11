@@ -3,7 +3,7 @@
 # Should only be created via the Bookmark.register_bookmarkable
 # method; this is used to let the BookmarkQuery class query and
 # search additional bookmarks for the user bookmark list, and
-# also to enumerate on the registered Bookmarkable types.
+# also to enumerate on the registered RegisteredBookmarkable types.
 #
 # Post and Topic bookmarkables are registered by default.
 #
@@ -13,37 +13,24 @@
 #
 # See Bookmark#reset_bookmarkables for some examples on how registering
 # bookmarkables works.
-class Bookmarkable
-  attr_reader :model, :serializer, :list_query, :search_query, :preload_associations
-  delegate :table_name, to: :@model
+#
+# See BaseBookmarkable for documentation on what return types should be
+# and what the arguments to the methods are.
+class RegisteredBookmarkable
+  attr_reader :bookmarkable_klass
 
-  def initialize(model:, serializer:, list_query:, search_query:, preload_associations: [])
-    @model = model
-    @serializer = serializer
-    @list_query = list_query
-    @search_query = search_query
-    @preload_associations = preload_associations
+  delegate :model, :serializer, to: :@bookmarkable_klass
+  delegate :table_name, to: :model
+
+  def initialize(bookmarkable_klass)
+    @bookmarkable_klass = bookmarkable_klass
   end
 
-  ##
-  # This is where the main query to filter the bookmarks by the provided bookmarkable
-  # type should occur. This should join on additional tables that are required later
-  # on to preload additional data for serializers, and also is the place where the
-  # bookmarks should be filtered based on security checks, which is why the Guardian
-  # instance is provided.
-  #
-  # @param [User] user The user to perform the query for, this scopes the bookmarks returned.
-  # @param [Guardian] guardian An instance of Guardian for the user to be used for security filters.
   def perform_list_query(user, guardian)
-    list_query.call(user, guardian)
+    bookmarkable_klass.list_query(user, guardian)
   end
 
   ##
-  # Called from BookmarkQuery when the initial results have been returned by
-  # perform_list_query. The search_query should join additional tables required
-  # to filter the bookmarks further, as well as defining a string used for
-  # where_sql, which can include comparisons with the :q parameter.
-  #
   # The block here warrants explanation -- when the search_query is called, we
   # call the provided block with the bookmark relation with additional joins
   # as well as the where_sql string, and then also add the additional OR bookmarks.name
@@ -51,11 +38,9 @@ class Bookmarkable
   # columns _as well as_ the bookmark name, because the bookmark name must always
   # be used in the search.
   #
-  # @param [Bookmark::ActiveRecord_Relation] bookmarks The bookmark records returned by perform_list_query
-  # @param [String] query The search query from the user surrounded by the %% wildcards
-  # @param [String] ts_query The postgres TSQUERY string used for comparisons with full text search columns
+  # See BaseBookmarkable#search_query for argument docs.
   def perform_search_query(bookmarks, query, ts_query)
-    search_query.call(bookmarks, query, ts_query) do |bookmarks_joined, where_sql|
+    bookmarkable_klass.search_query(bookmarks, query, ts_query) do |bookmarks_joined, where_sql|
       bookmarks_joined.where("#{where_sql} OR bookmarks.name ILIKE :q", q: query)
     end
   end
@@ -72,9 +57,43 @@ class Bookmarkable
   #
   # @param [Array] bookmarks The array of bookmarks after initial listing and filtering, note this is
   #                          array _not_ an ActiveRecord::Relation.
+  # @return [void]
   def perform_preload(bookmarks)
+    return if !bookmarkable_klass.has_preloads?
+
     ActiveRecord::Associations::Preloader
-      .new(records: Bookmark.select_type(bookmarks, model.to_s), associations: [bookmarkable: preload_associations])
+      .new(
+        records: Bookmark.select_type(bookmarks, bookmarkable_klass.model.to_s),
+        associations: [bookmarkable: bookmarkable_klass.preload_associations]
+      )
       .call
+  end
+
+  def can_send_reminder?(bookmark)
+    bookmarkable_klass.reminder_conditions(bookmark)
+  end
+
+  def send_reminder_notification(bookmark)
+    bookmarkable_klass.reminder_handler(bookmark)
+  end
+
+  def can_see?(guardian, bookmark)
+    bookmarkable_klass.can_see?(guardian, bookmark)
+  end
+
+  def bookmark_metadata(bookmark, user)
+    bookmarkable_klass.bookmark_metadata(bookmark, user)
+  end
+
+  def validate_before_create(guardian, bookmarkable)
+    bookmarkable_klass.validate_before_create(guardian, bookmarkable)
+  end
+
+  def after_create(guardian, bookmark, opts = {})
+    bookmarkable_klass.after_create(guardian, bookmark, opts)
+  end
+
+  def after_destroy(guardian, bookmark, opts = {})
+    bookmarkable_klass.after_destroy(guardian, bookmark, opts)
   end
 end

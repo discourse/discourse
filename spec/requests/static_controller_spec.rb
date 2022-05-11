@@ -420,7 +420,7 @@ describe StaticController do
       get "/service-worker.js"
       expect(response.status).to eq(200)
       expect(response.content_type).to start_with("application/javascript")
-      expect(response.body).to include("sourceMappingURL=/assets/service-worker-abcde.js.map")
+      expect(response.body).to include("sourceMappingURL=/assets/service-worker.js.map\n")
     end
   end
 end

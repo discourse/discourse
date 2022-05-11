@@ -11,7 +11,6 @@ class TopicListItemSerializer < ListableTopicSerializer
              :category_id,
              :op_like_count,
              :pinned_globally,
-             :bookmarked_post_numbers,
              :liked_post_numbers,
              :featured_link,
              :featured_link_root_domain,
@@ -46,10 +45,6 @@ class TopicListItemSerializer < ListableTopicSerializer
     object.participants_summary || []
   end
 
-  def include_bookmarked_post_numbers?
-    include_post_action? :bookmark
-  end
-
   def include_liked_post_numbers?
     include_post_action? :like
   end
@@ -62,10 +57,6 @@ class TopicListItemSerializer < ListableTopicSerializer
 
   def liked_post_numbers
     object.user_data.post_action_data[PostActionType.types[:like]]
-  end
-
-  def bookmarked_post_numbers
-    object.user_data.post_action_data[PostActionType.types[:bookmark]]
   end
 
   def include_participants?

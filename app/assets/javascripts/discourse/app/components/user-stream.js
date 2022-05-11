@@ -11,7 +11,7 @@ import { getOwner } from "discourse-common/lib/get-owner";
 import { observes } from "discourse-common/utils/decorators";
 import { on } from "@ember/object/evented";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { schedule } from "@ember/runloop";
+import { next, schedule } from "@ember/runloop";
 
 export default Component.extend(LoadMore, {
   tagName: "ul",
@@ -48,6 +48,7 @@ export default Component.extend(LoadMore, {
       return ClickTrack.trackClick(e, this.siteSettings);
     });
     this._updateLastDecoratedElement();
+    this._scrollToLastPosition();
   }),
 
   // This view is being removed. Shut down operations
@@ -69,6 +70,22 @@ export default Component.extend(LoadMore, {
       return;
     }
     this._lastDecoratedElement = lastElement;
+  },
+
+  _scrollToLastPosition() {
+    const scrollTo = this.session.userStreamScrollPosition;
+    if (scrollTo >= 0) {
+      schedule("afterRender", () => {
+        if (this.element && !this.isDestroying && !this.isDestroyed) {
+          next(() => window.scrollTo(0, scrollTo + 1));
+        }
+      });
+    }
+  },
+
+  scrolled() {
+    this._super(...arguments);
+    this.session.set("userStreamScrollPosition", window.scrollY);
   },
 
   actions: {

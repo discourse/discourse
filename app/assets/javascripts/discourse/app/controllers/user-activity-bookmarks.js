@@ -67,7 +67,7 @@ export default Controller.extend({
     this.set("loadingMore", true);
 
     return this._loadMoreBookmarks(this.q)
-      .then((response) => this._processLoadResponse(response))
+      .then((response) => this._processLoadResponse(this.q, response))
       .catch(() => this._bookmarksListDenied())
       .finally(() => this.set("loadingMore", false));
   },
@@ -91,12 +91,13 @@ export default Controller.extend({
     this.set("permissionDenied", true);
   },
 
-  _processLoadResponse(response) {
+  _processLoadResponse(searchTerm, response) {
     if (!response || !response.user_bookmark_list) {
       return;
     }
 
     response = response.user_bookmark_list;
+    this.model.searchTerm = searchTerm;
     this.model.loadMoreUrl = response.more_bookmarks_url;
 
     if (response.bookmarks) {

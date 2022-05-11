@@ -63,12 +63,6 @@ class UserPostTopicBookmarkBaseSerializer < UserBookmarkBaseSerializer
     topic.slug
   end
 
-  # Note: This is nil because in the UI there are special topic-status and
-  # topic-link components to display the topic URL, and this is not used.
-  def bookmarkable_url
-    nil
-  end
-
   private
 
   def topic_user

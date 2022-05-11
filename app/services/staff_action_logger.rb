@@ -455,6 +455,7 @@ class StaffActionLogger
 
     if old_custom_fields && category_params[:custom_fields]
       category_params[:custom_fields].each do |key, value|
+        next if old_custom_fields[key] == value
         changed_attributes["custom_fields[#{key}]"] = [old_custom_fields[key], value]
       end
     end
@@ -828,6 +829,25 @@ class StaffActionLogger
       acting_user_id: @admin.id,
       details: watched_word.action_log_details,
       context: WatchedWord.actions[watched_word.action]
+    )
+  end
+
+  def log_group_deletetion(group)
+    raise Discourse::InvalidParameters.new(:group) if group.nil?
+
+    details = [
+      "name: #{group.name}",
+      "id: #{group.id}"
+    ]
+
+    if group.grant_trust_level
+      details << "grant_trust_level: #{group.grant_trust_level}"
+    end
+
+    UserHistory.create!(
+      acting_user_id: @admin.id,
+      action: UserHistory.actions[:delete_group],
+      details: details.join(', ')
     )
   end
 

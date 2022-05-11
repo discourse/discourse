@@ -946,6 +946,7 @@ hu:
       invalid_string_min: "Nem lehet rövidebb, mint %{min} karakter."
       invalid_string_max: "Nem lehet hosszabb, mint %{max} karakter."
       invalid_domain_hostname: "Nem tartalmazhatja a * vagy a ? karaktereket."
+      invalid_regex_with_message: "A(z) „%{regex}” regexben hiba van: %{message}"
       min_username_length_range: "Nem lehet a legnagyobb értéknél nagyobb legkisebb értéket beállítani."
       max_username_length_range: "Nem lehet a legkisebb értéknél kisebb legnagyobb értéket beállítani."
       google_oauth2_hd_groups: "A beállítás engedélyezése előtt be kell ezt állítania: „google oauth2 hd”."

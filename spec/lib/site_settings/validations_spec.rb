@@ -368,4 +368,38 @@ describe SiteSettings::Validations do
       }.to raise_error(Discourse::InvalidParameters, popular_browser_message)
     end
   end
+
+  describe "strip image metadata and composer media optimization interplay" do
+    describe "#validate_strip_image_metadata" do
+      let(:error_message) { I18n.t("errors.site_settings.strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled") }
+
+      context "when the new value is false" do
+        context "when composer_media_optimization_image_enabled is enabled" do
+          before do
+            SiteSetting.composer_media_optimization_image_enabled = true
+          end
+
+          it "should raise an error" do
+            expect { subject.validate_strip_image_metadata("f") }.to raise_error(Discourse::InvalidParameters, error_message)
+          end
+        end
+
+        context "when composer_media_optimization_image_enabled is disabled" do
+          before do
+            SiteSetting.composer_media_optimization_image_enabled = false
+          end
+
+          it "should be ok" do
+            expect { subject.validate_strip_image_metadata("f") }.not_to raise_error
+          end
+        end
+      end
+
+      context "when the new value is true" do
+        it "should be ok" do
+          expect { subject.validate_strip_image_metadata("t") }.not_to raise_error
+        end
+      end
+    end
+  end
 end

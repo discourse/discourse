@@ -453,9 +453,22 @@ class Search
     end
   end
 
+  # NOTE: With polymorphic bookmarks it may make sense to possibly expand
+  # this at some point, as it only acts on posts at the moment. On the other
+  # hand, this may not be necessary, as the user bookmark list has advanced
+  # search based on a RegisteredBookmarkable's #search_query method.
   advanced_filter(/^in:(bookmarks)$/i) do |posts, match|
     if @guardian.user
-      posts.where("posts.id IN (SELECT post_id FROM bookmarks WHERE bookmarks.user_id = #{@guardian.user.id})")
+      if SiteSetting.use_polymorphic_bookmarks
+        posts.where(<<~SQL)
+          posts.id IN (
+            SELECT bookmarkable_id FROM bookmarks
+            WHERE bookmarks.user_id = #{@guardian.user.id} AND bookmarks.bookmarkable_type = 'Post'
+          )
+        SQL
+      else
+        posts.where("posts.id IN (SELECT post_id FROM bookmarks WHERE bookmarks.user_id = #{@guardian.user.id})")
+      end
     end
   end
 

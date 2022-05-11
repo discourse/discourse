@@ -1,8 +1,7 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
-import { schedule } from "@ember/runloop";
+import { next, schedule } from "@ember/runloop";
 import bootbox from "bootbox";
-import discourseDebounce from "discourse-common/lib/debounce";
 import { openBookmarkModal } from "discourse/controllers/bookmark";
 import { ajax } from "discourse/lib/ajax";
 import {
@@ -28,18 +27,12 @@ export default Component.extend(Scrolling, {
   },
 
   scrollToLastPosition() {
-    let scrollTo = this.session.bookmarkListScrollPosition;
-    if (scrollTo && scrollTo >= 0) {
+    const scrollTo = this.session.bookmarkListScrollPosition;
+    if (scrollTo >= 0) {
       schedule("afterRender", () => {
-        discourseDebounce(
-          this,
-          function () {
-            if (this.element && !this.isDestroying && !this.isDestroyed) {
-              window.scrollTo(0, scrollTo + 1);
-            }
-          },
-          0
-        );
+        if (this.element && !this.isDestroying && !this.isDestroyed) {
+          next(() => window.scrollTo(0, scrollTo + 1));
+        }
       });
     }
   },

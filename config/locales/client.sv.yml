@@ -3963,6 +3963,11 @@ sv:
               list_user_badges: Lista användarens märken.
               assign_badge_to_user: Tilldela ett märke till en användare.
               revoke_badge_from_user: Återkalla ett märke från en användare.
+            wordpress:
+              publishing: Nödvändigt för WP Discourse-tilläggets publiceringsfunktioner (krävs).
+              commenting: Nödvändigt för WP Discourse-tilläggets kommentarsfunktioner.
+              discourse_connect: Nödvändigt för WP Discourse-tilläggets DiscourseConnect-funktioner.
+              utilities: Nödvändigt om du använder WP Discourse-tillägget Utilities.
       web_hooks:
         title: "Webhookar"
         none: "Det finns inga webhookar just nu."

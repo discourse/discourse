@@ -1438,7 +1438,7 @@ describe PostAlerter do
 
       before do
         SiteSetting.tagging_enabled = true
-        SiteSetting.allow_staff_to_tag_pms = true
+        SiteSetting.pm_tags_allowed_for_groups = "1|2|3"
         Jobs.run_immediately!
         TopicUser.change(user.id, post.topic.id, notification_level: TopicUser.notification_levels[:watching])
         TopicUser.change(staged.id, post.topic.id, notification_level: TopicUser.notification_levels[:watching])

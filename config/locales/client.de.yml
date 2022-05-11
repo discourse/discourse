@@ -3963,6 +3963,11 @@ de:
               list_user_badges: Abzeichen eines Nutzers auflisten.
               assign_badge_to_user: Abzeichen einem Nutzer zuweisen.
               revoke_badge_from_user: Abzeichen einem Nutzer entziehen.
+            wordpress:
+              publishing: Erforderlich für die Veröffentlichungsfunktionen des WP Discourse-Plugins (erforderlich).
+              commenting: Erforderlich für die Kommentarfunktionen des WP Discourse-Plugins.
+              discourse_connect: Erforderlich für die DiscourseConnect-Funktionen des WP Discourse-Plugins.
+              utilities: Erforderlich, wenn du das WP Discourse Plugin Utilities verwendest.
       web_hooks:
         title: "Webhooks"
         none: "Aktuell gibt es keine Webhooks."

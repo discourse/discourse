@@ -66,8 +66,9 @@ class PostActionType < ActiveRecord::Base
 
     def types
       unless @types
+        # NOTE: Previously bookmark was type 1 but that has been superseded
+        # by the separate Bookmark model and functionality
         @types = Enum.new(
-          bookmark: 1,
           like: 2
         )
         @types.merge!(flag_settings.flag_types)

@@ -9,7 +9,11 @@ module BookmarkGuardian
     @user == bookmark.user
   end
 
-  def can_create_bookmark?(bookmark)
-    can_see_topic?(bookmark.topic)
+  def can_see_bookmarkable?(bookmark)
+    if SiteSetting.use_polymorphic_bookmarks?
+      return bookmark.registered_bookmarkable.can_see?(self, bookmark)
+    end
+
+    self.can_see_post?(bookmark.post)
   end
 end

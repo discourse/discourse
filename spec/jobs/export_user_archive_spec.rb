@@ -276,27 +276,27 @@ describe Jobs::ExportUserArchive do
     let(:post1) { Fabricate(:post, topic: topic1, post_number: 5) }
     let(:post2) { Fabricate(:post) }
     let(:post3) { Fabricate(:post) }
-    let(:message) { Fabricate(:private_message_topic) }
-    let(:post4) { Fabricate(:post, topic: message) }
+    let(:private_message_topic) { Fabricate(:private_message_topic) }
+    let(:post4) { Fabricate(:post, topic: private_message_topic) }
     let(:reminder_at) { 1.day.from_now }
 
     it 'properly includes bookmark records' do
       now = freeze_time '2017-03-01 12:00'
 
-      bkmk1 = manager.create(post_id: post1.id, name: name)
+      bookmark1 = manager.create(post_id: post1.id, name: name)
       update1_at = now + 1.hours
-      bkmk1.update(name: 'great food recipe', updated_at: update1_at)
+      bookmark1.update(name: 'great food recipe', updated_at: update1_at)
 
       manager.create(post_id: post2.id, name: name, reminder_at: reminder_at, options: { auto_delete_preference: Bookmark.auto_delete_preferences[:when_reminder_sent] })
       twelve_hr_ago = freeze_time now - 12.hours
       pending_reminder = manager.create(post_id: post3.id, name: name, reminder_at: now - 8.hours)
       freeze_time now
 
-      tau_record = message.topic_allowed_users.create!(user_id: user.id)
+      tau_record = private_message_topic.topic_allowed_users.create!(user_id: user.id)
       manager.create(post_id: post4.id, name: name)
       tau_record.destroy!
 
-      BookmarkReminderNotificationHandler.send_notification(pending_reminder)
+      BookmarkReminderNotificationHandler.new(pending_reminder).send_notification
 
       data, _csv_out = make_component_csv
 
@@ -316,10 +316,56 @@ describe Jobs::ExportUserArchive do
       expect(DateTime.parse(data[2]['reminder_last_sent_at'])).to eq(DateTime.parse(now.to_s))
       expect(data[2]['reminder_set_at']).to eq('')
 
-      expect(data[3]['topic_id']).to eq(message.id.to_s)
+      expect(data[3]['topic_id']).to eq(private_message_topic.id.to_s)
       expect(data[3]['link']).to eq('')
     end
 
+    context "for polymorphic bookmarks" do
+      let(:component) { 'bookmarks_polymorphic' }
+      before do
+        SiteSetting.use_polymorphic_bookmarks = true
+      end
+
+      it "properly includes bookmark records" do
+        now = freeze_time '2017-03-01 12:00'
+
+        bookmark1 = manager.create_for(bookmarkable_id: post1.id, bookmarkable_type: "Post", name: name)
+        update1_at = now + 1.hours
+        bookmark1.update(name: 'great food recipe', updated_at: update1_at)
+
+        manager.create_for(bookmarkable_id: post2.id, bookmarkable_type: "Post", name: name, reminder_at: reminder_at, options: { auto_delete_preference: Bookmark.auto_delete_preferences[:when_reminder_sent] })
+        twelve_hr_ago = freeze_time now - 12.hours
+        pending_reminder = manager.create_for(bookmarkable_id: post3.id, bookmarkable_type: "Post", name: name, reminder_at: now - 8.hours)
+        freeze_time now
+
+        tau_record = private_message_topic.topic_allowed_users.create!(user_id: user.id)
+        manager.create_for(bookmarkable_id: post4.id, bookmarkable_type: "Post", name: name)
+        tau_record.destroy!
+
+        BookmarkReminderNotificationHandler.new(pending_reminder).send_notification
+
+        data, _csv_out = make_component_csv
+
+        expect(data.length).to eq(4)
+
+        expect(data[0]['bookmarkable_id']).to eq(post1.id.to_s)
+        expect(data[0]['bookmarkable_type']).to eq("Post")
+        expect(data[0]['link']).to eq(post1.full_url)
+        expect(DateTime.parse(data[0]['updated_at'])).to eq(DateTime.parse(update1_at.to_s))
+
+        expect(data[1]['name']).to eq(name)
+        expect(DateTime.parse(data[1]['reminder_at'])).to eq(DateTime.parse(reminder_at.to_s))
+        expect(data[1]['auto_delete_preference']).to eq('when_reminder_sent')
+
+        expect(DateTime.parse(data[2]['created_at'])).to eq(DateTime.parse(twelve_hr_ago.to_s))
+        expect(DateTime.parse(data[2]['reminder_last_sent_at'])).to eq(DateTime.parse(now.to_s))
+        expect(data[2]['reminder_set_at']).to eq('')
+
+        expect(data[3]['bookmarkable_id']).to eq(post4.id.to_s)
+        expect(data[3]['bookmarkable_type']).to eq("Post")
+        expect(data[3]['link']).to eq('')
+      end
+    end
   end
 
   context 'category_preferences' do

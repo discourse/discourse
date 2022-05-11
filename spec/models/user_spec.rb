@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-describe User do
+RSpec.describe User do
   fab!(:group) { Fabricate(:group) }
 
-  let(:user) { Fabricate(:user, last_seen_at: 1.day.ago) }
+  subject(:user) { Fabricate(:user, last_seen_at: 1.day.ago) }
 
   def user_error_message(*keys)
     I18n.t(:"activerecord.errors.models.user.attributes.#{keys.join('.')}")
@@ -136,6 +136,29 @@ describe User do
         end
       end
     end
+
+    describe "#user_fields" do
+      fab!(:user_field) { Fabricate(:user_field) }
+      fab!(:watched_word) { Fabricate(:watched_word, word: "bad") }
+
+      before { user.set_user_field(user_field.id, value) }
+
+      context "when user fields contain watched words" do
+        let(:value) { "bad user field value" }
+
+        it "is not valid" do
+          user.valid?
+          expect(user.errors[:base].size).to eq(1)
+          expect(user.errors.messages[:base]).to include(/you can't post the word/)
+        end
+      end
+
+      context "when user fields do not contain watched words" do
+        let(:value) { "good user field value" }
+
+        it { is_expected.to be_valid }
+      end
+    end
   end
 
   describe '#count_by_signup_date' do
@@ -262,31 +285,6 @@ describe User do
 
       user.deactivate(admin)
       expect(reviewable.reload.rejected?).to eq(true)
-    end
-  end
-
-  describe 'bookmark' do
-    before_all do
-      @post = Fabricate(:post)
-    end
-
-    it "creates a bookmark with the true parameter" do
-      expect {
-        PostActionCreator.create(@post.user, @post, :bookmark)
-      }.to change(PostAction, :count).by(1)
-    end
-
-    describe 'when removing a bookmark' do
-      before do
-        PostActionCreator.create(@post.user, @post, :bookmark)
-      end
-
-      it 'reduces the bookmark count of the post' do
-        active = PostAction.where(deleted_at: nil)
-        expect {
-          PostActionDestroyer.destroy(@post.user, @post, :bookmark)
-        }.to change(active, :count).by(-1)
-      end
     end
   end
 

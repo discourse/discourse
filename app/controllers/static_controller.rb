@@ -206,7 +206,7 @@ class StaticController < ApplicationController
         content = Rails.application.assets_manifest.find_sources('service-worker.js').first
         content = content.sub(
           /^\/\/# sourceMappingURL=(service-worker-.+\.map)$/
-        ) { "//# sourceMappingURL=#{helpers.script_asset_path(Regexp.last_match(1))}" }
+        ) { "//# sourceMappingURL=#{helpers.script_asset_path('service-worker')}.map" }
         render(
           plain: content,
           content_type: 'application/javascript'

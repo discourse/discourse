@@ -12,12 +12,9 @@ describe Jobs::ActivationReminderEmails do
     expect { described_class.new.execute({}) }
       .to change { ActionMailer::Base.deliveries.size }.by(1)
       .and change { user.email_tokens.count }.by(1)
-
-    expect(user.custom_fields['activation_reminder']).to eq("t")
+      .and change { user.reload.custom_fields[:activation_reminder] }.to "t"
     expect { described_class.new.execute({}) }.to change { ActionMailer::Base.deliveries.size }.by(0)
-
-    user.activate
-    expect(user.reload.custom_fields['activation_reminder']).to eq(nil)
+    expect { user.activate }.to change { user.reload.custom_fields[:activation_reminder] }.to nil
   end
 
   it 'should not email active users' do

@@ -91,7 +91,7 @@ describe GroupsController do
         sign_in(user)
       end
 
-      fab!(:other_group) { Fabricate(:group, name: "other_group", users: [user, other_user]) }
+      fab!(:group_with_2_users) { Fabricate(:group, name: "other_group", users: [user, other_user]) }
 
       context "with default (descending) order" do
         it "sorts by name" do
@@ -102,7 +102,7 @@ describe GroupsController do
           body = response.parsed_body
 
           expect(body["groups"].map { |g| g["id"] }).to eq([
-            other_group.id, group.id, moderator_group_id
+            group_with_2_users.id, group.id, moderator_group_id
           ])
 
           expect(body["load_more_groups"]).to eq("/groups?order=name&page=1")
@@ -116,7 +116,7 @@ describe GroupsController do
           body = response.parsed_body
 
           expect(body["groups"].map { |g| g["id"] }).to eq([
-            other_group.id, group.id, moderator_group_id
+            group_with_2_users.id, moderator_group_id, group.id
           ])
 
           expect(body["load_more_groups"]).to eq("/groups?order=user_count&page=1")
@@ -132,7 +132,7 @@ describe GroupsController do
           body = response.parsed_body
 
           expect(body["groups"].map { |g| g["id"] }).to eq([
-            moderator_group_id, group.id, other_group.id
+            moderator_group_id, group.id, group_with_2_users.id
           ])
 
           expect(body["load_more_groups"]).to eq("/groups?asc=true&order=name&page=1")
@@ -146,7 +146,7 @@ describe GroupsController do
           body = response.parsed_body
 
           expect(body["groups"].map { |g| g["id"] }).to eq([
-            moderator_group_id, group.id, other_group.id
+            moderator_group_id, group.id, group_with_2_users.id
           ])
 
           expect(body["load_more_groups"]).to eq("/groups?asc=true&order=user_count&page=1")
@@ -297,18 +297,18 @@ describe GroupsController do
         end
 
         describe 'my groups' do
-          it 'should return the right response' do
-            expect_type_to_return_right_groups('my', [group.id])
+          it 'should return the groups admin is a member of' do
+            expect_type_to_return_right_groups('my', admin.group_users.map(&:group_id))
           end
         end
 
         describe 'owner groups' do
-          it 'should return the right response' do
+          it 'should return the groups admin is a owner of' do
             group2 = Fabricate(:group)
             _group3 = Fabricate(:group)
             group2.add_owner(admin)
 
-            expect_type_to_return_right_groups('owner', [group.id, group2.id])
+            expect_type_to_return_right_groups('owner', admin.group_users.where(owner: true).map(&:group_id))
           end
         end
 
@@ -794,8 +794,7 @@ describe GroupsController do
 
     context "when user is group admin" do
       before do
-        user.update!(admin: true)
-        sign_in(user)
+        sign_in(admin)
       end
 
       it 'should be able to update the group' do
@@ -839,7 +838,7 @@ describe GroupsController do
           .to eq(group.id)
       end
 
-      it "should be able to update an automatic group" do
+      it "they should be able to update an automatic group" do
         group = Group.find(Group::AUTO_GROUPS[:admins])
 
         group.update!(
@@ -861,7 +860,8 @@ describe GroupsController do
             default_notification_level: 1,
             tracking_category_ids: [category.id],
             tracking_tags: [tag.name]
-          }
+          },
+          update_existing_users: false
         }
 
         expect(response.status).to eq(200)
