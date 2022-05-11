@@ -36,6 +36,8 @@ class UserAction < ActiveRecord::Base
     ASSIGNED,
   ].each_with_index.to_a.flatten]
 
+  USER_ACTED_TYPES = [LIKE, NEW_TOPIC, REPLY, NEW_PRIVATE_MESSAGE]
+
   def self.types
     @types ||= Enum.new(
       like: 1,
@@ -137,7 +139,7 @@ class UserAction < ActiveRecord::Base
   def self.count_daily_engaged_users(start_date = nil, end_date = nil)
     result = select(:user_id)
       .distinct
-      .where(action_type: [LIKE, NEW_TOPIC, REPLY, NEW_PRIVATE_MESSAGE])
+      .where(action_type: USER_ACTED_TYPES)
 
     if start_date && end_date
       result = result.group('date(created_at)')
