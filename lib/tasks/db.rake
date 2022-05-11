@@ -215,7 +215,14 @@ task 'db:migrate' => ['load_config', 'environment', 'set_locale'] do |_, args|
     raise "Migration #{migrations.last.version} is timestamped in the future" if migrations.last.version > now_timestamp
     raise "Migration #{migrations.first.version} is timestamped before the epoch" if migrations.first.version < epoch_timestamp
 
-    %i[pg_trgm unaccent].each { |extension| DB.exec "CREATE EXTENSION IF NOT EXISTS #{extension}" }
+    %i[pg_trgm unaccent].each do |extension|
+      begin
+        DB.exec "CREATE EXTENSION IF NOT EXISTS #{extension}"
+      rescue => e
+        STDERR.puts "Cannot enable database extension #{extension}"
+        STDERR.puts e
+      end
+    end
 
     ActiveRecord::Tasks::DatabaseTasks.migrate
 
