@@ -226,6 +226,26 @@ module Email
       end
 
       MessageBuilder.custom_headers(SiteSetting.email_custom_headers).each do |key, _|
+        # Any custom headers added via MessageBuilder that are doubled up here
+        # with values that we determine should be set to the last value, which is
+        # the one we determined. Our header values should always override the email_custom_headers.
+        #
+        # While it is valid via RFC5322 to have more than one value for certain headers,
+        # we just want to keep it to one, especially in cases where the custom value
+        # would conflict with our own.
+        #
+        # See https://datatracker.ietf.org/doc/html/rfc5322#section-3.6 and
+        # https://github.com/mikel/mail/blob/8ef377d6a2ca78aa5bd7f739813f5a0648482087/lib/mail/header.rb#L109-L132
+        custom_header = @message.header[key]
+        if custom_header.is_a?(Array)
+          our_value = custom_header.last.value
+
+          # Must be set to nil first otherwise another value is just added
+          # to the array of values for the header.
+          @message.header[key] = nil
+          @message.header[key] = our_value
+        end
+
         value = header_value(key)
 
         # Remove Auto-Submitted header for group private message emails, it does
@@ -433,6 +453,15 @@ module Email
     def header_value(name)
       header = @message.header[name]
       return nil unless header
+
+      # NOTE: In most cases this is not a problem, but if a header has
+      # doubled up the header[] method will return an array. So we always
+      # get the last value of the array and assume that is the correct
+      # value.
+      #
+      # See https://github.com/mikel/mail/blob/8ef377d6a2ca78aa5bd7f739813f5a0648482087/lib/mail/header.rb#L109-L132
+      return header.last.value if header.is_a?(Array)
+
       header.value
     end
 
