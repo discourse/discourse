@@ -115,6 +115,11 @@ export default Component.extend({
     return _components[type];
   },
 
+  @discourseComputed("_updates.category_id", "reviewable.category.id")
+  tagCategoryId(updatedCategoryId, categoryId) {
+    return updatedCategoryId || categoryId;
+  },
+
   @bind
   _performConfirmed(action) {
     let reviewable = this.reviewable;
@@ -208,7 +213,7 @@ export default Component.extend({
 
     edit() {
       this.set("editing", true);
-      this._updates = { payload: {} };
+      this.set("_updates", { payload: {} });
     },
 
     cancelEdit() {
@@ -241,7 +246,7 @@ export default Component.extend({
         category = Category.findUncategorized();
       }
 
-      this._updates.category_id = category.id;
+      set(this._updates, "category_id", category.id);
     },
 
     valueChanged(fieldId, event) {
