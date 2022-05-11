@@ -37,7 +37,7 @@ export function hidePopover(event) {
 export function showPopover(event, options = {}) {
   const instance = event.target._tippy
     ? event.target._tippy
-    : this.setup(event.target, options);
+    : setup(event.target, options);
 
   // hangs on legacy ember
   if (!isLegacyEmber) {
