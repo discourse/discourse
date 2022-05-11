@@ -215,6 +215,8 @@ task 'db:migrate' => ['load_config', 'environment', 'set_locale'] do |_, args|
     raise "Migration #{migrations.last.version} is timestamped in the future" if migrations.last.version > now_timestamp
     raise "Migration #{migrations.first.version} is timestamped before the epoch" if migrations.first.version < epoch_timestamp
 
+    %i[pg_trgm unaccent].each { |extension| DB.exec "CREATE EXTENSION IF NOT EXISTS #{extension}" }
+
     ActiveRecord::Tasks::DatabaseTasks.migrate
 
     if !Discourse.is_parallel_test?
