@@ -78,9 +78,11 @@ class CookedPostProcessor
           q.css('blockquote').text
         )
 
-        if comparer.modified?
-          q['class'] = ((q['class'] || '') + " quote-modified").strip
-        end
+        q['class'] = if comparer.missing?
+          (q['class'] || '') + " quote-post-not-found"
+        elsif comparer.modified?
+          (q['class'] || '') + " quote-modified"
+        end.strip
       end
     end
   end
