@@ -12,14 +12,14 @@ describe "Outbound Email" do
   end
 
   context "email custom headers" do
-    it "discards the custom header if it is one that we have already set based on arguments" do
+    it "discards the custom header if it is one that has already been set based on arguments" do
       SiteSetting.email_custom_headers = "Precedence: bulk"
       post = Fabricate(:post)
       message, result = send_email(post_id: post.id, topic_id: post.topic_id)
       expect(message.header["Precedence"].value).to eq("list")
     end
 
-    it "does not discard unique custom headers" do
+    it "does send unique custom headers" do
       SiteSetting.email_custom_headers = "SuperUrgent: wow-cool"
       post = Fabricate(:post)
       message, result = send_email(post_id: post.id, topic_id: post.topic_id)

@@ -235,10 +235,13 @@ module Email
         # would conflict with our own.
         #
         # See https://datatracker.ietf.org/doc/html/rfc5322#section-3.6 and
-        # https://www.rubydoc.info/github/mikel/mail/Mail/Header
+        # https://github.com/mikel/mail/blob/8ef377d6a2ca78aa5bd7f739813f5a0648482087/lib/mail/header.rb#L109-L132
         custom_header = @message.header[key]
         if custom_header.is_a?(Array)
           our_value = custom_header.last.value
+
+          # Must be set to nil first otherwise another value is just added
+          # to the array of values for the header.
           @message.header[key] = nil
           @message.header[key] = our_value
         end
@@ -447,16 +450,18 @@ module Email
       end
     end
 
-    # NOTE: In most cases this is not a problem, but if a header has
-    # doubled up the header[] method will return an array. So we always
-    # get the last value of the array and assume that is the correct
-    # value.
-    #
-    # See https://www.rubydoc.info/github/mikel/mail/Mail/Header
     def header_value(name)
       header = @message.header[name]
       return nil unless header
+
+      # NOTE: In most cases this is not a problem, but if a header has
+      # doubled up the header[] method will return an array. So we always
+      # get the last value of the array and assume that is the correct
+      # value.
+      #
+      # See https://github.com/mikel/mail/blob/8ef377d6a2ca78aa5bd7f739813f5a0648482087/lib/mail/header.rb#L109-L132
       return header.last.value if header.is_a?(Array)
+
       header.value
     end
 
