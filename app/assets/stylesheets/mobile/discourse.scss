@@ -116,6 +116,11 @@ blockquote {
 
 // Special elements
 
+#main-outlet-wrapper {
+  margin-left: unset;
+  margin-right: unset;
+}
+
 #main-outlet {
   padding-top: 1.25em;
 }
