@@ -283,7 +283,7 @@ export default class PostCooked {
         const $title = $(".title", $aside);
 
         // If no title is present eg; username/topic title, then remove the quote-controls and its parent
-        if ($title.length === 0) {
+        if (!$title.text().trim()) {
           return $aside.find(".title").remove();
         }
 
