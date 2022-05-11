@@ -2039,6 +2039,35 @@ describe CookedPostProcessor do
     end
   end
 
+  context "External Discourse instances" do
+    fab!(:user) { Fabricate(:user, name: "james") }
+    fab!(:topic) { Fabricate(:topic) }
+    let!(:post) { Fabricate(:post, user: user, topic: topic, raw: 'this is the "first" post') }
+    let(:external_raw) do
+      <<~RAW.strip
+      [quote="random_guy, post:2004, topic:401"]
+
+      this quote is not from our discourse
+
+      [/quote]
+
+      and this is a reply
+      RAW
+    end
+
+    let(:external_quote_html) do
+      <<~HTML
+        "<aside class=\"quote no-group\" data-username=\"random_guy\" data-post=\"2004\" data-topic=\"401\">\n<blockquote>\n<p>this quote is not from our discourse</p>\n</blockquote>\n</aside>\n<p>and this is a reply</p>"
+      HTML
+    end
+
+    it "removes the title and quote-controls from quote" do
+      reply = Fabricate(:post, topic: topic, raw: external_raw)
+      CookedPostProcessor.new(reply).post_process
+      expect(reply.cooked).to eq(external_quote_html)
+    end
+  end
+
   context "#html" do
     it "escapes attributes" do
       post = Fabricate(:post, raw: '<img alt="<something>">')

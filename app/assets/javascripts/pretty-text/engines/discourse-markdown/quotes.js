@@ -112,7 +112,6 @@ const rule = {
         postNumber &&
         options.getTopicInfo &&
         (forOtherTopic || options.forceQuoteLink);
-      let externalInstanceQuote = !offTopicQuote;
 
       // on topic quote
       token = state.push("quote_header_open", "div", 1);
@@ -161,7 +160,7 @@ const rule = {
         }
       } else {
         token = state.push("text", "", 0);
-        token.content = externalInstanceQuote ? "" : ` ${displayName}:`;
+        token.content = ` ${displayName}:`;
       }
 
       state.push("quote_header_close", "div", -1);
