@@ -4035,6 +4035,9 @@ en:
       unread_count: "%{count} unread"
       new_count: "%{count} new"
       sections:
+        categories:
+          header_link_title: "all categories"
+          header_link_text: "Categories"
         topics:
           header_link_title: "home"
           header_link_text: "Topics"
