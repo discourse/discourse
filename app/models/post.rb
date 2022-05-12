@@ -72,20 +72,11 @@ class Post < ActiveRecord::Base
   # We can pass several creating options to a post via attributes
   attr_accessor :image_sizes, :quoted_post_numbers, :no_bump, :invalidate_oneboxes, :cooking_options, :skip_unique_check, :skip_validation
 
-  LARGE_IMAGES            ||= "large_images"
-  BROKEN_IMAGES           ||= "broken_images"
-  DOWNLOADED_IMAGES       ||= "downloaded_images"
   MISSING_UPLOADS         ||= "missing uploads"
   MISSING_UPLOADS_IGNORED ||= "missing uploads ignored"
   NOTICE                  ||= "notice"
 
   SHORT_POST_CHARS ||= 1200
-
-  # TODO: Drop the data from these three custom fields,
-  # drop the indexes, and remove the relavent constants
-  register_custom_field_type(LARGE_IMAGES, :json)
-  register_custom_field_type(BROKEN_IMAGES, :json)
-  register_custom_field_type(DOWNLOADED_IMAGES, :json)
 
   register_custom_field_type(MISSING_UPLOADS, :json)
   register_custom_field_type(MISSING_UPLOADS_IGNORED, :boolean)
