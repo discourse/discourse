@@ -7,7 +7,7 @@ describe QuoteComparer do
   describe "#missing?" do
     fab!(:post) { Fabricate(:post, raw: "This has **text** we _are_ matching") }
 
-    it "returns true for no missing topic and post" do
+    it "returns true for missing topic and post" do
       expect(QuoteComparer.new(nil, nil, "test")).to be_missing
     end
 
