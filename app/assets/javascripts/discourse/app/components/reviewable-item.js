@@ -3,7 +3,7 @@ import Component from "@ember/component";
 import I18n from "I18n";
 import { ajax } from "discourse/lib/ajax";
 import bootbox from "bootbox";
-import { dasherize } from "@ember/string";
+import { classify, dasherize } from "@ember/string";
 import discourseComputed, { bind } from "discourse-common/utils/decorators";
 import optionalService from "discourse/lib/optional-service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -168,7 +168,7 @@ export default Component.extend({
     };
 
     if (action.client_action) {
-      let actionMethod = this[`client${action.client_action.classify()}`];
+      let actionMethod = this[`client${classify(action.client_action)}`];
       if (actionMethod) {
         return actionMethod.call(this, reviewable, performAction);
       } else {
