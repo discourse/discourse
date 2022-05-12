@@ -11,28 +11,9 @@ export function openBookmarkModal(
     onCloseWithoutSaving: null,
     onAfterSave: null,
     onAfterDelete: null,
-  },
-  options = {
-    use_polymorphic_bookmarks: false,
   }
 ) {
   return new Promise((resolve) => {
-    const modalTitle = () => {
-      if (options.use_polymorphic_bookmarks) {
-        return I18n.t(bookmark.id ? "bookmarks.edit" : "bookmarks.create");
-      } else if (bookmark.for_topic) {
-        return I18n.t(
-          bookmark.id
-            ? "post.bookmarks.edit_for_topic"
-            : "post.bookmarks.create_for_topic"
-        );
-      } else {
-        return I18n.t(
-          bookmark.id ? "post.bookmarks.edit" : "post.bookmarks.create"
-        );
-      }
-    };
-
     const model = {
       id: bookmark.id,
       reminderAt: bookmark.reminder_at,
@@ -40,19 +21,14 @@ export function openBookmarkModal(
       name: bookmark.name,
     };
 
-    if (options.use_polymorphic_bookmarks) {
-      model.bookmarkableId = bookmark.bookmarkable_id;
-      model.bookmarkableType = bookmark.bookmarkable_type;
-    } else {
-      // TODO (martin) [POLYBOOK] Not relevant once polymorphic bookmarks are implemented.
-      model.postId = bookmark.post_id;
-      model.topicId = bookmark.topic_id;
-      model.forTopic = bookmark.for_topic;
-    }
+    model.bookmarkableId = bookmark.bookmarkable_id;
+    model.bookmarkableType = bookmark.bookmarkable_type;
 
     let modalController = showModal("bookmark", {
       model,
-      titleTranslated: modalTitle(),
+      titleTranslated: I18n.t(
+        bookmark.id ? "bookmarks.edit" : "bookmarks.create"
+      ),
       modalClass: "bookmark-with-reminder",
     });
     modalController.setProperties({

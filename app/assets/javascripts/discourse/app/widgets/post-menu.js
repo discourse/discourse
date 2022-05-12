@@ -355,9 +355,7 @@ registerButton(
 
     return {
       id: attrs.bookmarked ? "unbookmark" : "bookmark",
-      action: siteSettings.use_polymorphic_bookmarks
-        ? "toggleBookmarkPolymorphic"
-        : "toggleBookmark",
+      action: "toggleBookmark",
       title,
       titleOptions,
       className: classNames.join(" "),

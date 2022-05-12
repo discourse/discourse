@@ -9,18 +9,37 @@ class BookmarkManager
   end
 
   def self.bookmark_metadata(bookmark, user)
-    if SiteSetting.use_polymorphic_bookmarks
-      bookmark.registered_bookmarkable.bookmark_metadata(bookmark, user)
-    else
-      { topic_bookmarked: Bookmark.for_user_in_topic(user.id, bookmark.topic.id).exists? }
-    end
+    bookmark.registered_bookmarkable.bookmark_metadata(bookmark, user)
   end
 
-  # TODO (martin) [POLYBOOK] This will be used in place of #create once
-  # polymorphic bookmarks are implemented.
+  ##
+  # Creates a bookmark for a registered bookmarkable (see Bookmark.register_bookmarkable
+  # and RegisteredBookmarkable for details on this).
+  #
+  # Only allows creation of bookmarks for records the user
+  # can access via Guardian.
+  #
+  # Any ActiveModel validation errors raised by the Bookmark model are
+  # hoisted to the instance of this class for further reporting.
+  #
+  # Before creation validations, after create callbacks, and after delete
+  # callbacks are all RegisteredBookmarkable specific and should be defined
+  # there.
+  #
+  # @param [Integer] bookmarkable_id   The ID of the ActiveRecord model to attach the bookmark to.
+  # @param [String]  bookmarkable_type The class name of the ActiveRecord model to attach the bookmark to.
+  # @param [String]  name              A short note for the bookmark, shown on the user bookmark list
+  #                                    and on hover of reminder notifications.
+  # @param reminder_at                 The datetime when a bookmark reminder should be sent after.
+  #                                    Note this is not the exact time a reminder will be sent, as
+  #                                    we send reminders on a rolling schedule.
+  #                                    See Jobs::BookmarkReminderNotifications
+  # @params options                    Additional options when creating a bookmark
+  #                                    - auto_delete_preference:
+  #                                      See Bookmark.auto_delete_preferences,
+  #                                      this is used to determine when to delete a bookmark
+  #                                      automatically.
   def create_for(bookmarkable_id:, bookmarkable_type:, name: nil, reminder_at: nil, options: {})
-    raise NotImplementedError if !SiteSetting.use_polymorphic_bookmarks
-
     bookmarkable = bookmarkable_type.constantize.find_by(id: bookmarkable_id)
     registered_bookmarkable = Bookmark.registered_bookmarkable_from_type(bookmarkable_type)
     registered_bookmarkable.validate_before_create(@guardian, bookmarkable)
@@ -43,78 +62,12 @@ class BookmarkManager
     bookmark
   end
 
-  ##
-  # Creates a bookmark for a post where both the post and the topic are
-  # not deleted. Only allows creation of bookmarks for posts the user
-  # can access via Guardian.
-  #
-  # Any ActiveModel validation errors raised by the Bookmark model are
-  # hoisted to the instance of this class for further reporting.
-  #
-  # Also handles setting the associated TopicUser.bookmarked value for
-  # the post's topic for the user that is creating the bookmark.
-  #
-  # @param post_id       A post ID for a post that is not deleted.
-  # @param name          A short note for the bookmark, shown on the user bookmark list
-  #                      and on hover of reminder notifications.
-  # @param reminder_at   The datetime when a bookmark reminder should be sent after.
-  #                      Note this is not the exact time a reminder will be sent, as
-  #                      we send reminders on a rolling schedule.
-  #                      See Jobs::BookmarkReminderNotifications
-  # @param for_topic     Whether we are creating a topic-level bookmark which
-  #                      has different behaviour in the UI. Only bookmarks for
-  #                      posts with post_number 1 can be marked as for_topic.
-  # @params options      Additional options when creating a bookmark
-  #                      - auto_delete_preference:
-  #                        See Bookmark.auto_delete_preferences,
-  #                        this is used to determine when to delete a bookmark
-  #                        automatically.
-  def create(
-    post_id:,
-    name: nil,
-    reminder_at: nil,
-    for_topic: false,
-    options: {}
-  )
-    post = Post.find_by(id: post_id)
-    if post.blank? ||
-        post.topic.blank? ||
-        !@guardian.can_see_topic?(post.topic) ||
-        !@guardian.can_see_post?(post)
-      raise Discourse::InvalidAccess
-    end
-
-    bookmark = Bookmark.create(
-      {
-        user_id: @user.id,
-        post: post,
-        name: name,
-        reminder_at: reminder_at,
-        reminder_set_at: Time.zone.now,
-        for_topic: for_topic
-      }.merge(options)
-    )
-
-    if bookmark.errors.any?
-      return add_errors_from(bookmark)
-    end
-
-    update_topic_user_bookmarked(post.topic)
-    update_user_option(bookmark)
-
-    bookmark
-  end
-
   def destroy(bookmark_id)
     bookmark = find_bookmark_and_check_access(bookmark_id)
 
     bookmark.destroy
 
-    if SiteSetting.use_polymorphic_bookmarks
-      bookmark.registered_bookmarkable.after_destroy(@guardian, bookmark)
-    else
-      update_topic_user_bookmarked(bookmark.topic)
-    end
+    bookmark.registered_bookmarkable.after_destroy(@guardian, bookmark)
 
     bookmark
   end
@@ -134,8 +87,7 @@ class BookmarkManager
   end
 
   def self.send_reminder_notification(id)
-    bookmark = Bookmark.find_by(id: id)
-    BookmarkReminderNotificationHandler.new(bookmark).send_notification
+    BookmarkReminderNotificationHandler.new(Bookmark.find_by(id: id)).send_notification
   end
 
   def update(bookmark_id:, name:, reminder_at:, options: {})

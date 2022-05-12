@@ -459,16 +459,12 @@ class Search
   # search based on a RegisteredBookmarkable's #search_query method.
   advanced_filter(/^in:(bookmarks)$/i) do |posts, match|
     if @guardian.user
-      if SiteSetting.use_polymorphic_bookmarks
-        posts.where(<<~SQL)
-          posts.id IN (
-            SELECT bookmarkable_id FROM bookmarks
-            WHERE bookmarks.user_id = #{@guardian.user.id} AND bookmarks.bookmarkable_type = 'Post'
-          )
-        SQL
-      else
-        posts.where("posts.id IN (SELECT post_id FROM bookmarks WHERE bookmarks.user_id = #{@guardian.user.id})")
-      end
+      posts.where(<<~SQL)
+        posts.id IN (
+          SELECT bookmarkable_id FROM bookmarks
+          WHERE bookmarks.user_id = #{@guardian.user.id} AND bookmarks.bookmarkable_type = 'Post'
+        )
+      SQL
     end
   end
 
