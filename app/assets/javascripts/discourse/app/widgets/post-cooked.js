@@ -282,7 +282,7 @@ export default class PostCooked {
         this._updateQuoteElements($aside, "chevron-down");
         const $title = $(".title", $aside);
 
-        // If post / topic is not found for quote then remove the quote controls
+        // If post/topic is not found for quote then remove title and quote controls
         if ($aside.hasClass("quote-post-not-found")) {
           return $title.remove();
         }
