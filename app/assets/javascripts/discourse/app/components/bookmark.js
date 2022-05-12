@@ -113,8 +113,12 @@ export default Component.extend({
   },
 
   _loadPostLocalDates() {
+    if (this.model.bookmarkableType !== "Post") {
+      return;
+    }
+
     let postEl = document.querySelector(
-      `[data-post-id="${this.model.postId}"]`
+      `[data-post-id="${this.model.bookmarkableId}"]`
     );
     let localDateEl;
     if (postEl) {
