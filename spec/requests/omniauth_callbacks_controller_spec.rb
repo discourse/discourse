@@ -157,6 +157,17 @@ RSpec.describe Users::OmniauthCallbacksController do
       end
     end
 
+    context "in readonly mode" do
+      use_redis_snapshotting
+
+      it "should return a 503" do
+        Discourse.enable_readonly_mode
+
+        get "/auth/google_oauth2/callback"
+        expect(response.code).to eq("503")
+      end
+    end
+
     context "without an `omniauth.auth` env" do
       it "should return a 404" do
         get "/auth/eviltrout/callback"
