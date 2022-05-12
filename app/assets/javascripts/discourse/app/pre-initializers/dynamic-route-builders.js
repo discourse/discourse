@@ -4,6 +4,7 @@ import TagShowRoute from "discourse/routes/tag-show";
 import User from "discourse/models/user";
 import buildCategoryRoute from "discourse/routes/build-category-route";
 import buildTopicRoute from "discourse/routes/build-topic-route";
+import { capitalize } from "@ember/string";
 
 export default {
   after: "inject-discourse-objects",
@@ -24,7 +25,7 @@ export default {
 
     const site = Site.current();
     site.get("filters").forEach((filter) => {
-      const filterCapitalized = filter.capitalize();
+      const filterCapitalized = capitalize(filter);
       app[
         `Discovery${filterCapitalized}Controller`
       ] = DiscoverySortableController.extend();
@@ -66,17 +67,17 @@ export default {
     });
 
     site.get("filters").forEach(function (filter) {
-      app["TagShow" + filter.capitalize() + "Route"] = TagShowRoute.extend({
+      app["TagShow" + capitalize(filter) + "Route"] = TagShowRoute.extend({
         navMode: filter,
       });
       app[
-        "TagsShowCategory" + filter.capitalize() + "Route"
+        "TagsShowCategory" + capitalize(filter) + "Route"
       ] = TagShowRoute.extend({ navMode: filter });
       app[
-        "TagsShowCategoryNone" + filter.capitalize() + "Route"
+        "TagsShowCategoryNone" + capitalize(filter) + "Route"
       ] = TagShowRoute.extend({ navMode: filter, noSubcategories: true });
       app[
-        "TagsShowCategoryAll" + filter.capitalize() + "Route"
+        "TagsShowCategoryAll" + capitalize(filter) + "Route"
       ] = TagShowRoute.extend({ navMode: filter, noSubcategories: false });
     });
   },
