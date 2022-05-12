@@ -79,10 +79,10 @@ class CookedPostProcessor
         )
 
         q['class'] = if comparer.missing?
-          (q['class'] || '') + " quote-post-not-found"
-        elsif comparer.modified?
-          (q['class'] || '') + " quote-modified"
-        end.strip
+                       (q['class'] || '') + " quote-post-not-found"
+                     elsif comparer.modified?
+                       (q['class'] || '') + " quote-modified"
+                     end&.strip
       end
     end
   end

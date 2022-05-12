@@ -1753,6 +1753,22 @@ describe CookedPostProcessor do
       end
     end
 
+    context "external discourse instance quote" do
+      let(:external_raw) do
+        <<~RAW.strip
+        [quote="random_guy_not_from_our_discourse, post:2004, topic:401"]
+        this quote is not from our discourse
+        [/quote]
+        and this is a reply
+        RAW
+      end
+      let(:cp) { Fabricate(:post, raw: external_raw) }
+
+      it "it should be marked as missing" do
+        cpp.post_process_quotes
+        expect(cpp.doc.css('aside.quote.quote-post-not-found')).to be_present
+      end
+    end
   end
 
   context "full quote on direct reply" do
