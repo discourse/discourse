@@ -19,6 +19,10 @@ describe QuoteComparer do
       expect(QuoteComparer.new(post.topic_id, nil, "test")).to be_missing
     end
 
+    it "returns false for only missing text" do
+      expect(QuoteComparer.new(post.topic_id, post.post_number, nil)).to_not be_missing
+    end
+
     it "returns false for no missing topic and post" do
       expect(QuoteComparer.new(post.topic_id, post.post_number, "test")).to_not be_missing
     end
