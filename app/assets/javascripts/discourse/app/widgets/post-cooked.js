@@ -284,7 +284,7 @@ export default class PostCooked {
 
         // If post / topic is not found for quote then remove the quote controls
         if ($aside.hasClass("quote-post-not-found")) {
-          $aside.find(".title .quote-controls").remove();
+          return $aside.find(".title").remove();
         }
 
         // Unless it's a full quote, allow click to expand
