@@ -608,10 +608,9 @@ class TopicsController < ApplicationController
 
   def bookmark
     topic = Topic.find(params[:topic_id].to_i)
-    first_post = topic.ordered_posts.first
 
     bookmark_manager = BookmarkManager.new(current_user)
-    bookmark_manager.create(post_id: first_post.id)
+    bookmark_manager.create_for(bookmarkable_id: topic.id, bookmarkable_type: "Topic")
 
     if bookmark_manager.errors.any?
       return render_json_error(bookmark_manager, status: 400)

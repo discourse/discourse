@@ -649,7 +649,7 @@ describe PostsController do
 
   describe "#destroy_bookmark" do
     fab!(:post) { Fabricate(:post) }
-    fab!(:bookmark) { Fabricate(:bookmark, user: user, post: post) }
+    fab!(:bookmark) { Fabricate(:bookmark, user: user, bookmarkable: post) }
 
     before do
       sign_in(user)
@@ -663,7 +663,7 @@ describe PostsController do
 
     context "when the user still has bookmarks in the topic" do
       before do
-        Fabricate(:bookmark, user: user, post: Fabricate(:post, topic: post.topic))
+        Fabricate(:bookmark, user: user, bookmarkable: Fabricate(:post, topic: post.topic))
       end
       it "marks topic_bookmarked as true" do
         delete "/posts/#{post.id}/bookmark.json"

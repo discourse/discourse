@@ -141,9 +141,11 @@ class Bookmark < ActiveRecord::Base
 
   scope :for_user_in_topic, ->(user_id, topic_id) {
     joins("LEFT JOIN posts ON posts.id = bookmarks.bookmarkable_id AND bookmarks.bookmarkable_type = 'Post'")
-      .joins("LEFT JOIN topics ON topics.id = bookmarks.bookmarkable_id AND bookmarks.bookmarkable_type = 'Topic'")
+      .joins("LEFT JOIN topics ON (topics.id = bookmarks.bookmarkable_id AND bookmarks.bookmarkable_type = 'Topic') OR
+             (topics.id = posts.topic_id)")
       .where(
-        "bookmarks.user_id = :user_id AND (topics.id = :topic_id OR posts.topic_id = :topic_id)",
+        "bookmarks.user_id = :user_id AND (topics.id = :topic_id OR posts.topic_id = :topic_id)
+        AND posts.deleted_at IS NULL AND topics.deleted_at IS NULL",
         user_id: user_id, topic_id: topic_id
       )
   }

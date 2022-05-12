@@ -5323,7 +5323,7 @@ describe UsersController do
     end
 
     it "does not show another user's bookmarks" do
-      sign_in(user1)
+      sign_in(Fabricate(:user))
       get "/u/#{bookmark3.user.username}/bookmarks.json"
       expect(response.status).to eq(403)
     end
