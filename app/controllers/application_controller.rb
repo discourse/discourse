@@ -246,7 +246,14 @@ class ApplicationController < ActionController::Base
 
   rescue_from Discourse::ReadOnly do
     unless response_body
-      render_json_error I18n.t('read_only_mode_enabled'), type: :read_only, status: 503
+      respond_to do |format|
+        format.json do
+          render_json_error I18n.t('read_only_mode_enabled'), type: :read_only, status: 503
+        end
+        format.html do
+          render status: 503, layout: 'no_ember', template: 'exceptions/read_only'
+        end
+      end
     end
   end
 
