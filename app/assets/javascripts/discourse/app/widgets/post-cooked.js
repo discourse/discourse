@@ -282,6 +282,11 @@ export default class PostCooked {
         this._updateQuoteElements($aside, "chevron-down");
         const $title = $(".title", $aside);
 
+        // If post/topic is not found then display username, skip controls
+        if (e.classList.contains("quote-post-not-found")) {
+          return (e.querySelector(".title").innerHTML = e.dataset.username);
+        }
+
         // Unless it's a full quote, allow click to expand
         if (!($aside.data("full") || $title.data("has-quote-controls"))) {
           $title.on("click", (e2) => {
