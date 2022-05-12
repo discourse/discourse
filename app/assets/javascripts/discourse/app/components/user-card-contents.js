@@ -12,6 +12,7 @@ import { durationTiny } from "discourse/lib/formatter";
 import { getURLWithCDN } from "discourse-common/lib/get-url";
 import { isEmpty } from "@ember/utils";
 import { prioritizeNameInUx } from "discourse/lib/settings";
+import { dasherize } from "@ember/string";
 
 export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
   elementId: "user-card",
@@ -104,7 +105,7 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
         .filterBy("show_on_user_card", true)
         .sortBy("position")
         .map((field) => {
-          set(field, "dasherized_name", field.get("name").dasherize());
+          set(field, "dasherized_name", dasherize(field.get("name")));
           const value = userFields ? userFields[field.get("id")] : null;
           return isEmpty(value) ? null : EmberObject.create({ value, field });
         })
