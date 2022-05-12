@@ -34,7 +34,7 @@ export default Component.extend({
     "reviewable.target_created_by_trust_level"
   )
   customClasses(type, lastPerformingUsername, blurEnabled, trustLevel) {
-    let classes = type.dasherize();
+    let classes = dasherize(type);
 
     if (lastPerformingUsername) {
       classes = `${classes} reviewable-stale`;

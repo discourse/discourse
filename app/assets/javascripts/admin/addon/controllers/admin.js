@@ -28,7 +28,7 @@ export default Controller.extend({
           segment !== "admin"
         );
       })
-      .map(dasherize)
+      .map((i) => dasherize(i))
       .join(" ");
 
     // this is done to avoid breaking css customizations
