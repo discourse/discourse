@@ -19,12 +19,7 @@ export function openBookmarkModal(
   return new Promise((resolve) => {
     const modalTitle = () => {
       if (options.use_polymorphic_bookmarks) {
-        return I18n.t(
-          bookmark.id ? "bookmarks.edit_for" : "bookmarks.create_for",
-          {
-            type: bookmark.bookmarkable_type,
-          }
-        );
+        return I18n.t(bookmark.id ? "bookmarks.edit" : "bookmarks.create");
       } else if (bookmark.for_topic) {
         return I18n.t(
           bookmark.id

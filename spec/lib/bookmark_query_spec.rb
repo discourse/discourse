@@ -73,6 +73,20 @@ RSpec.describe BookmarkQuery do
         bookmarks = bookmark_query.list_all
         expect(bookmarks.map(&:id)).to match_array([post_bookmark.id, topic_bookmark.id, user_bookmark.id])
       end
+
+      it "handles the user not having permission for all of the bookmarks of a certain bookmarkable" do
+        UserTestBookmarkable.expects(:list_query).returns(nil)
+        bookmarks = bookmark_query.list_all
+        expect(bookmarks.map(&:id)).to match_array([post_bookmark.id, topic_bookmark.id])
+      end
+
+      it "handles the user not having permission to see any of their bookmarks" do
+        topic_bookmark.bookmarkable.update(category: Fabricate(:private_category, group: Fabricate(:group)))
+        post_bookmark.bookmarkable.topic.update(category: topic_bookmark.bookmarkable.category)
+        UserTestBookmarkable.expects(:list_query).returns(nil)
+        bookmarks = bookmark_query.list_all
+        expect(bookmarks.map(&:id)).to eq([])
+      end
     end
 
     context "when q param is provided" do
