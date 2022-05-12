@@ -282,8 +282,7 @@ export default class PostCooked {
         this._updateQuoteElements($aside, "chevron-down");
         const $title = $(".title", $aside);
 
-        // If post/topic is not found for quote then remove quote controls by
-        // overwriting the title contents with just username of the external quote
+        // If post/topic is not found then display username, skip controls
         if (e.classList.contains("quote-post-not-found")) {
           return (e.querySelector(".title").innerHTML = e.dataset.username);
         }
