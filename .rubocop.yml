@@ -1,9 +1,0 @@
-inherit_gem:
-  rubocop-discourse: default.yml
-
-# Still work to do in ensuring we don't link old files
-Discourse/NoAddReferenceOrAliasesActiveRecordMigration:
-  Enabled: false
-
-Discourse/NoResetColumnInformationInMigrations:
-  Enabled: true
