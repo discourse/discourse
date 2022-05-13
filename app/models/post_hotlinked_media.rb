@@ -9,6 +9,15 @@ class PostHotlinkedMedia < ActiveRecord::Base
     download_failed: "download_failed",
     upload_create_failed: "upload_create_failed"
   }
+
+  def self.normalize_src(src)
+    uri = Addressable::URI.heuristic_parse(src)
+    uri.normalize!
+    uri.scheme = nil
+    uri.to_s
+  rescue URI::Error, Addressable::URI::InvalidURIError
+    src
+  end
 end
 
 # == Schema Information
