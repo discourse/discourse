@@ -30,9 +30,7 @@ class SessionController < ApplicationController
 
     if SiteSetting.enable_discourse_connect?
       sso = DiscourseConnect.generate_sso(return_path, secure_session: secure_session)
-      if SiteSetting.verbose_discourse_connect_logging
-        Rails.logger.warn("Verbose SSO log: Started SSO process\n\n#{sso.diagnostics}")
-      end
+      connect_verbose_warn { "Verbose SSO log: Started SSO process\n\n#{sso.diagnostics}" }
       redirect_to sso_url(sso), allow_other_host: true
     else
       render body: nil, status: 404
@@ -131,25 +129,19 @@ class SessionController < ApplicationController
     begin
       sso = DiscourseConnect.parse(request.query_string, secure_session: secure_session)
     rescue DiscourseConnect::ParseError => e
-      if SiteSetting.verbose_discourse_connect_logging
-        Rails.logger.warn("Verbose SSO log: Signature parse error\n\n#{e.message}\n\n#{sso&.diagnostics}")
-      end
+      connect_verbose_warn { "Verbose SSO log: Signature parse error\n\n#{e.message}\n\n#{sso&.diagnostics}" }
 
       # Do NOT pass the error text to the client, it would give them the correct signature
       return render_sso_error(text: I18n.t("discourse_connect.login_error"), status: 422)
     end
 
     if !sso.nonce_valid?
-      if SiteSetting.verbose_discourse_connect_logging
-        Rails.logger.warn("Verbose SSO log: #{sso.nonce_error}\n\n#{sso.diagnostics}")
-      end
+      connect_verbose_warn { "Verbose SSO log: #{sso.nonce_error}\n\n#{sso.diagnostics}" }
       return render_sso_error(text: I18n.t("discourse_connect.timeout_expired"), status: 419)
     end
 
     if ScreenedIpAddress.should_block?(request.remote_ip)
-      if SiteSetting.verbose_discourse_connect_logging
-        Rails.logger.warn("Verbose SSO log: IP address is blocked #{request.remote_ip}\n\n#{sso.diagnostics}")
-      end
+      connect_verbose_warn { "Verbose SSO log: IP address is blocked #{request.remote_ip}\n\n#{sso.diagnostics}" }
       return render_sso_error(text: I18n.t("discourse_connect.unknown_error"), status: 500)
     end
 
@@ -227,8 +219,7 @@ class SessionController < ApplicationController
       end
     rescue ActiveRecord::RecordInvalid => e
 
-      if SiteSetting.verbose_discourse_connect_logging
-        Rails.logger.warn(<<~TEXT)
+      connect_verbose_warn { <<~TEXT }
         Verbose SSO log: Record was invalid: #{e.record.class.name} #{e.record.id}
         #{e.record.errors.to_h}
 
@@ -237,8 +228,7 @@ class SessionController < ApplicationController
 
         SSO Diagnostics:
         #{sso.diagnostics}
-        TEXT
-      end
+      TEXT
 
       text = nil
 
@@ -274,9 +264,7 @@ class SessionController < ApplicationController
   end
 
   def login_sso_user(sso, user)
-    if SiteSetting.verbose_discourse_connect_logging
-      Rails.logger.warn("Verbose SSO log: User was logged on #{user.username}\n\n#{sso.diagnostics}")
-    end
+    connect_verbose_warn { "Verbose SSO log: User was logged on #{user.username}\n\n#{sso.diagnostics}" }
     log_on_user(user) if user.id != current_user&.id
   end
 
@@ -633,6 +621,12 @@ class SessionController < ApplicationController
   end
 
   private
+
+  def connect_verbose_warn(&blk)
+    if SiteSetting.verbose_discourse_connect_logging
+      Rails.logger.warn(blk.call)
+    end
+  end
 
   def authenticate_second_factor(user)
     second_factor_authentication_result = user.authenticate_second_factor(params, secure_session)
