@@ -280,10 +280,10 @@
           "additionalProperties": false,
           "properties": {
             "id": {
-              "type": "integer"
+              "type": ["integer", "null"]
             },
             "name_key": {
-              "type": "string"
+              "type": ["string", "null"]
             },
             "name": {
               "type": "string"
@@ -320,10 +320,10 @@
           "additionalProperties": false,
           "properties": {
             "id": {
-              "type": "integer"
+              "type": ["integer", "null"]
             },
             "name_key": {
-              "type": "string"
+              "type": ["string", "null"]
             },
             "name": {
               "type": "string"

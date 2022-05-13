@@ -43,13 +43,13 @@
                   "type": "integer"
                 },
                 "description": {
-                  "type": "string"
+                  "type": ["string", "null"]
                 },
                 "description_text": {
-                  "type": "string"
+                  "type": ["string", "null"]
                 },
                 "description_excerpt": {
-                  "type": "string"
+                  "type": ["string", "null"]
                 },
                 "topic_url": {
                   "type": [
