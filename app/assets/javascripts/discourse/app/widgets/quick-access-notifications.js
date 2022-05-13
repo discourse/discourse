@@ -7,6 +7,7 @@ import { createWidget, createWidgetFrom } from "discourse/widgets/widget";
 import { h } from "virtual-dom";
 import I18n from "I18n";
 import { dasherize } from "@ember/string";
+import { htmlSafe } from "@ember/template";
 
 const ICON = "bell";
 
@@ -19,10 +20,12 @@ createWidget("no-quick-access-notifications", {
         new RawHtml({
           html:
             "<p>" +
-            I18n.t("user.no_notifications_body", {
-              preferencesUrl: getURL("/my/preferences/notifications"),
-              icon: iconHTML(ICON),
-            }).htmlSafe() +
+            htmlSafe(
+              I18n.t("user.no_notifications_body", {
+                preferencesUrl: getURL("/my/preferences/notifications"),
+                icon: iconHTML(ICON),
+              })
+            ) +
             "</p>",
         })
       ),

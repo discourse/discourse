@@ -5,6 +5,7 @@ import MultiSelectComponent from "select-kit/components/multi-select";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import { makeArray } from "discourse-common/lib/helpers";
 import { mapBy } from "@ember/object/computed";
+import { htmlSafe } from "@ember/template";
 
 export default MultiSelectComponent.extend({
   pluginApiIdentifiers: ["category-selector"],
@@ -70,11 +71,13 @@ export default MultiSelectComponent.extend({
               name: result[0].name,
               count: subcategoryIds.size - 1,
             }),
-            label: categoryBadgeHTML(result[0], {
-              link: false,
-              recursive: true,
-              plusSubcategories: subcategoryIds.size - 1,
-            }).htmlSafe(),
+            label: htmlSafe(
+              categoryBadgeHTML(result[0], {
+                link: false,
+                recursive: true,
+                plusSubcategories: subcategoryIds.size - 1,
+              })
+            ),
           })
         );
       }

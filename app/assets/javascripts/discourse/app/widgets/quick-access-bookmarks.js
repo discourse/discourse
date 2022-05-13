@@ -6,6 +6,7 @@ import { createWidget, createWidgetFrom } from "discourse/widgets/widget";
 import { h } from "virtual-dom";
 import { postUrl } from "discourse/lib/utilities";
 import I18n from "I18n";
+import { htmlSafe } from "@ember/template";
 
 const ICON = "bookmark";
 
@@ -18,9 +19,11 @@ createWidget("no-quick-access-bookmarks", {
         new RawHtml({
           html:
             "<p>" +
-            I18n.t("user.no_bookmarks_body", {
-              icon: iconHTML(ICON),
-            }).htmlSafe() +
+            htmlSafe(
+              I18n.t("user.no_bookmarks_body", {
+                icon: iconHTML(ICON),
+              })
+            ) +
             "</p>",
         })
       ),
