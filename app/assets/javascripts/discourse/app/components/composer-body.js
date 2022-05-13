@@ -62,6 +62,16 @@ export default Component.extend(KeyEnterEscape, {
     this.appEvents.trigger("composer:resized");
   },
 
+  @observes("composeState")
+  _setMainOutletPaddingBottom() {
+    const mainOutletElement = document.querySelector("#main-outlet");
+    if (this.composeState === Composer.OPEN) {
+      mainOutletElement.style.paddingBottom = "300px";
+    } else if (this.composeState === Composer.CLOSED) {
+      mainOutletElement.style.paddingBottom = "";
+    }
+  },
+
   @observes("composeState", "composer.{action,canEditTopicFeaturedLink}")
   resize() {
     schedule("afterRender", () => {
