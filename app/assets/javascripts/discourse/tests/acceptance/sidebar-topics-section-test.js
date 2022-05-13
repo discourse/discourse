@@ -64,15 +64,24 @@ acceptance("Sidebar - Topics Section", function (needs) {
     async function (assert) {
       await visit("/");
 
-      assert.ok(exists(".sidebar-section-content"), "shows content section");
+      assert.ok(
+        exists(".sidebar-section-topics .sidebar-section-content"),
+        "shows content section"
+      );
 
       await click(".sidebar-section-topics .sidebar-section-header-caret");
 
-      assert.ok(!exists(".sidebar-section-content"), "hides content section");
+      assert.ok(
+        !exists(".sidebar-section-topics .sidebar-section-content"),
+        "hides content section"
+      );
 
       await click(".sidebar-section-topics .sidebar-section-header-caret");
 
-      assert.ok(exists(".sidebar-section-content"), "shows content section");
+      assert.ok(
+        exists(".sidebar-section-topics .sidebar-section-content"),
+        "shows content section"
+      );
     }
   );
 
