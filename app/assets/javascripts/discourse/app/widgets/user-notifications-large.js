@@ -1,6 +1,7 @@
 import { createWidget } from "discourse/widgets/widget";
 import { dateNode } from "discourse/helpers/node";
 import { h } from "virtual-dom";
+import { dasherize } from "@ember/string";
 
 createWidget("large-notification-item", {
   tagName: "li",
@@ -20,7 +21,7 @@ createWidget("large-notification-item", {
 
     return [
       this.attach(
-        `${notificationName.dasherize()}-notification-item`,
+        `${dasherize(notificationName)}-notification-item`,
         attrs,
         {},
         {

@@ -12,6 +12,7 @@ import { isEmpty } from "@ember/utils";
 import optionalService from "discourse/lib/optional-service";
 import { prioritizeNameInUx } from "discourse/lib/settings";
 import { inject as service } from "@ember/service";
+import { dasherize } from "@ember/string";
 
 export default Controller.extend(CanCheckEmails, {
   router: service(),
@@ -147,7 +148,7 @@ export default Controller.extend(CanCheckEmails, {
         .filterBy("show_on_profile", true)
         .sortBy("position")
         .map((field) => {
-          set(field, "dasherized_name", field.get("name").dasherize());
+          set(field, "dasherized_name", dasherize(field.get("name")));
           const value = userFields
             ? userFields[field.get("id").toString()]
             : null;

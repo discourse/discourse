@@ -6,6 +6,7 @@ import { ajax } from "discourse/lib/ajax";
 import { createWidget, createWidgetFrom } from "discourse/widgets/widget";
 import { h } from "virtual-dom";
 import I18n from "I18n";
+import { dasherize } from "@ember/string";
 
 const ICON = "bell";
 
@@ -53,7 +54,7 @@ createWidgetFrom(QuickAccessPanel, "quick-access-notifications", {
     ];
 
     return this.attach(
-      `${notificationName.dasherize()}-notification-item`,
+      `${dasherize(notificationName)}-notification-item`,
       notification,
       {},
       { fallbackWidgetName: "default-notification-item" }
