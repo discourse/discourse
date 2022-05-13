@@ -30,6 +30,7 @@ import { isEmpty } from "@ember/utils";
 import { longDate } from "discourse/lib/formatter";
 import { url } from "discourse/lib/computed";
 import { userPath } from "discourse/lib/url";
+import { htmlSafe } from "@ember/template";
 
 export const SECOND_FACTOR_METHODS = {
   TOTP: 1,
@@ -176,9 +177,9 @@ const User = RestModel.extend({
   @discourseComputed("profile_background_upload_url")
   profileBackgroundUrl(bgUrl) {
     if (isEmpty(bgUrl) || !this.siteSettings.allow_profile_backgrounds) {
-      return "".htmlSafe();
+      return htmlSafe("");
     }
-    return ("background-image: url(" + getURLWithCDN(bgUrl) + ")").htmlSafe();
+    return htmlSafe("background-image: url(" + getURLWithCDN(bgUrl) + ")");
   },
 
   @discourseComputed()
