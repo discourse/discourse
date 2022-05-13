@@ -289,9 +289,9 @@ describe UserAnonymizer do
           "user_field_#{field2.id}": "bar",
           "another_field": "456"
         }
-        user.save
 
-        expect { make_anonymous }.to change { user.reload.custom_fields }.to "some_field" => "123", "another_field" => "456"
+        expect { make_anonymous }.to change { user.custom_fields }
+        expect(user.reload.custom_fields).to eq("some_field" => "123", "another_field" => "456")
       end
     end
   end
