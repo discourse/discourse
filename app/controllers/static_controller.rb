@@ -204,9 +204,11 @@ class StaticController < ApplicationController
           response.headers["Last-Modified"] = File.ctime(path).httpdate
         end
         content = Rails.application.assets_manifest.find_sources('service-worker.js').first
+
+        base_url = File.dirname(helpers.script_asset_path('service-worker'))
         content = content.sub(
           /^\/\/# sourceMappingURL=(service-worker-.+\.map)$/
-        ) { "//# sourceMappingURL=#{helpers.script_asset_path('service-worker')}.map" }
+        ) { "//# sourceMappingURL=#{base_url}/#{Regexp.last_match(1)}" }
         render(
           plain: content,
           content_type: 'application/javascript'

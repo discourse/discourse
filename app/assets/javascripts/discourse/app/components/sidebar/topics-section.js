@@ -47,11 +47,11 @@ export default class SidebarTopicsSection extends GlimmerComponent {
 
   get everythingSectionLinkBadgeText() {
     if (this.totalUnread > 0) {
-      return I18n.t("sidebar.sections.links.badge.unread_count", {
+      return I18n.t("sidebar.unread_count", {
         count: this.totalUnread,
       });
     } else if (this.totalNew > 0) {
-      return I18n.t("sidebar.sections.links.badge.new_count", {
+      return I18n.t("sidebar.new_count", {
         count: this.totalNew,
       });
     } else {

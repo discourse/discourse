@@ -7,6 +7,19 @@ class WordWatcher
     @raw = raw
   end
 
+  def self.disable_cache
+    @disabled = true
+  end
+
+  def self.enable_cache
+    @disabled = false
+  end
+
+  # Don't cache in tests mode
+  def self.cache_disabled?
+    @disabled
+  end
+
   def self.words_for_action(action)
     words = WatchedWord
       .where(action: WatchedWord.actions[action.to_sym])
@@ -24,8 +37,12 @@ class WordWatcher
   end
 
   def self.get_cached_words(action)
-    Discourse.cache.fetch(word_matcher_regexp_key(action), expires_in: 1.day) do
+    if cache_disabled?
       words_for_action(action).presence
+    else
+      Discourse.cache.fetch(word_matcher_regexp_key(action), expires_in: 1.day) do
+        words_for_action(action).presence
+      end
     end
   end
 

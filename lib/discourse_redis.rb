@@ -151,22 +151,26 @@ class DiscourseRedis
   end
 
   def multi
-    if block_given?
-      @redis.multi do |transaction|
-        yield DiscourseRedis.new(@config, namespace: @namespace, raw_redis: transaction)
+    DiscourseRedis.ignore_readonly do
+      if block_given?
+        @redis.multi do |transaction|
+          yield DiscourseRedis.new(@config, namespace: @namespace, raw_redis: transaction)
+        end
+      else
+        @redis.multi
       end
-    else
-      @redis.multi
     end
   end
 
   def pipelined
-    if block_given?
-      @redis.pipelined do |transaction|
-        yield DiscourseRedis.new(@config, namespace: @namespace, raw_redis: transaction)
+    DiscourseRedis.ignore_readonly do
+      if block_given?
+        @redis.pipelined do |transaction|
+          yield DiscourseRedis.new(@config, namespace: @namespace, raw_redis: transaction)
+        end
+      else
+        @redis.pipelined
       end
-    else
-      @redis.pipelined
     end
   end
 

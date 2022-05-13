@@ -4,12 +4,12 @@
       {{d-icon this.headerCaretIcon}}
     </button>
 
-    <LinkTo @route={{@headerRoute}} @query={{@headerQuery}} @class="sidebar-section-header-link">
-      {{@headerTitle}}
+    <LinkTo @route={{@headerRoute}} @query={{@headerQuery}} @class="sidebar-section-header-link" title={{@headerLinkTitle}}>
+      {{@headerLinkText}}
     </LinkTo>
 
     {{#if @headerAction}}
-      <button type="button" class="sidebar-section-header-button" {{on "click" @headerAction}}>
+      <button type="button" class="sidebar-section-header-button" {{on "click" @headerAction}} title={{@headerActionTitle}}>
         {{d-icon @headerActionIcon}}
       </button>
     {{/if}}

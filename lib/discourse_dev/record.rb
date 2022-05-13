@@ -69,8 +69,8 @@ module DiscourseDev
       model.count
     end
 
-    def self.populate!
-      self.new.populate!
+    def self.populate!(*args)
+      self.new(*args).populate!
     end
 
     def self.random(model, use_existing_records: true)

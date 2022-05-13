@@ -11,6 +11,7 @@ import { formattedReminderTime } from "discourse/lib/bookmark";
 import getURL from "discourse-common/lib/get-url";
 import { longDate } from "discourse/lib/formatter";
 import { none } from "@ember/object/computed";
+import { capitalize } from "@ember/string";
 
 export const AUTO_DELETE_PREFERENCES = {
   NEVER: 0,
@@ -132,10 +133,9 @@ const Bookmark = RestModel.extend({
 
   @discourseComputed("reminder_at", "currentUser")
   formattedReminder(bookmarkReminderAt, currentUser) {
-    return formattedReminderTime(
-      bookmarkReminderAt,
-      currentUser.timezone
-    ).capitalize();
+    return capitalize(
+      formattedReminderTime(bookmarkReminderAt, currentUser.timezone)
+    );
   },
 
   @discourseComputed("reminder_at")

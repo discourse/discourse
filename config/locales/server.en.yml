@@ -3025,6 +3025,8 @@ en:
       text_body_template: |
         We’ve promoted you up another [trust level](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)!
 
+        Achieving Trust Level 2 means that you have read and actively participated enough to be considered a member of this community.
+
         As an experienced user, you might appreciate [this list of handy tips and tricks](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
 
         We invite you to keep getting involved – we enjoy having you around.

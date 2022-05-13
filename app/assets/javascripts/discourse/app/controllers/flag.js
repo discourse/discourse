@@ -11,6 +11,7 @@ import discourseComputed, { bind } from "discourse-common/utils/decorators";
 import { not } from "@ember/object/computed";
 import optionalService from "discourse/lib/optional-service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { classify } from "@ember/string";
 
 export default Controller.extend(ModalFunctionality, {
   adminTools: optionalService(),
@@ -225,7 +226,7 @@ export default Controller.extend(ModalFunctionality, {
       };
 
       if (action.client_action) {
-        let actionMethod = this[`client${action.client_action.classify()}`];
+        let actionMethod = this[`client${classify(action.client_action)}`];
         if (actionMethod) {
           return actionMethod.call(this, () =>
             performAction({ skipClose: true })
