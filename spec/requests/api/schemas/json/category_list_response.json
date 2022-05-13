@@ -13,7 +13,7 @@
         },
         "categories": {
           "type": "array",
-          "items": [
+          "items":
             {
               "type": "object",
               "additionalProperties": false,
@@ -137,18 +137,18 @@
                 },
                 "subcategory_ids": {
                   "type": "array",
-                  "items": [
+                  "items": {
 
-                  ]
+                  }
                 },
                 "subcategory_list": {
                   "type": [
                     "array",
                     "null"
                   ],
-                  "items": [
+                  "items": {
 
-                  ]
+                  }
                 },
                 "uploaded_logo": {
                   "type": [
@@ -203,7 +203,6 @@
                 "uploaded_background"
               ]
             }
-          ]
         }
       },
       "required": [
