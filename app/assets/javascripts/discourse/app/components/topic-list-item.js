@@ -12,6 +12,7 @@ import { on } from "@ember/object/evented";
 import { schedule } from "@ember/runloop";
 import { topicTitleDecorators } from "discourse/components/topic-title";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
+import { htmlSafe } from "@ember/template";
 
 export function showEntrance(e) {
   let target = $(e.target);
@@ -55,7 +56,7 @@ export default Component.extend({
     if (template) {
       this.set(
         "topicListItemContents",
-        template(this, RUNTIME_OPTIONS).htmlSafe()
+        htmlSafe(template(this, RUNTIME_OPTIONS))
       );
       schedule("afterRender", () => {
         if (this.selected && this.selected.includes(this.topic)) {

@@ -1,5 +1,6 @@
 import Component from "@ember/component";
 import { iconHTML } from "discourse-common/lib/icon-library";
+import { htmlSafe } from "@ember/template";
 
 export default Component.extend({
   tagName: "th",
@@ -22,7 +23,7 @@ export default Component.extend({
   toggleChevron() {
     if (this.order === this.field) {
       let chevron = iconHTML(this.asc ? "chevron-up" : "chevron-down");
-      this.set("chevronIcon", `${chevron}`.htmlSafe());
+      this.set("chevronIcon", htmlSafe(`${chevron}`));
     } else {
       this.set("chevronIcon", null);
     }

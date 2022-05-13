@@ -6,6 +6,7 @@ import { getURLWithCDN } from "discourse-common/lib/get-url";
 import { isEmpty } from "@ember/utils";
 import lightbox from "discourse/lib/lightbox";
 import { next } from "@ember/runloop";
+import { htmlSafe } from "@ember/template";
 
 export default Component.extend(UppyUploadMixin, {
   classNames: ["image-uploader"],
@@ -19,15 +20,15 @@ export default Component.extend(UppyUploadMixin, {
   @discourseComputed("placeholderUrl")
   placeholderStyle(url) {
     if (isEmpty(url)) {
-      return "".htmlSafe();
+      return htmlSafe("");
     }
-    return `background-image: url(${url})`.htmlSafe();
+    return htmlSafe(`background-image: url(${url})`);
   },
 
   @discourseComputed("imageUrl")
   imageCDNURL(url) {
     if (isEmpty(url)) {
-      return "".htmlSafe();
+      return htmlSafe("");
     }
 
     return getURLWithCDN(url);
@@ -35,7 +36,7 @@ export default Component.extend(UppyUploadMixin, {
 
   @discourseComputed("imageCDNURL")
   backgroundStyle(url) {
-    return `background-image: url(${url})`.htmlSafe();
+    return htmlSafe(`background-image: url(${url})`);
   },
 
   @discourseComputed("imageUrl")
