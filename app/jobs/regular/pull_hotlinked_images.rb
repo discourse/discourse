@@ -237,12 +237,7 @@ module Jobs
     protected
 
     def normalize_src(src)
-      uri = Addressable::URI.heuristic_parse(src)
-      uri.normalize!
-      uri.scheme = nil
-      uri.to_s
-    rescue URI::Error, Addressable::URI::InvalidURIError
-      src
+      PostHotlinkedMedia.normalize_src(src)
     end
   end
 

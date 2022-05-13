@@ -48,18 +48,9 @@ module CookedProcessorMixin
       img_classes = (img["class"] || "").split(" ")
       link_classes = ((parent&.name == "a" && parent["class"]) || "").split(" ")
 
-      if img_classes.include?("onebox") || link_classes.include?("onebox")
-        next if add_image_placeholder!(img)
-      elsif large_images.include?(src) || broken_images.include?(src)
-        img.remove
-        next
-      end
-
-      upload_id = downloaded_images[src]
-      upload = Upload.find_by_id(upload_id) if upload_id
-
-      if upload.present?
-        img["src"] = UrlHelper.cook_url(upload.url, secure: @with_secure_media)
+      if respond_to?(:process_hotlinked_image, true)
+        still_an_image = process_hotlinked_image(img)
+        next if !still_an_image
       end
 
       # make sure we grab dimensions for oneboxed images
@@ -199,18 +190,6 @@ module CookedProcessorMixin
     uri = URI.parse(url)
     %w(http https).include? uri.scheme
   rescue URI::Error
-  end
-
-  def add_image_placeholder!(img)
-    src = img["src"].sub(/^https?:/i, "")
-
-    if large_images.include?(src)
-      return add_large_image_placeholder!(img)
-    elsif broken_images.include?(src)
-      return add_broken_image_placeholder!(img)
-    end
-
-    false
   end
 
   def add_large_image_placeholder!(img)

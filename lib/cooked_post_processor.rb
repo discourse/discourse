@@ -144,18 +144,6 @@ class CookedPostProcessor
     @doc.css(".onebox.githubfolder img")
   end
 
-  def large_images
-    @large_images ||= @post&.post_hotlinked_media.select { |r| r.too_large? }.map(&:url)
-  end
-
-  def broken_images
-    @broken_images ||= @post&.post_hotlinked_media.select { |r| r.download_failed? }.map(&:url)
-  end
-
-  def downloaded_images
-    @downloaded_images ||= @post&.post_hotlinked_media.select { |r| r.downloaded? }.map { |r| [r.url, r.upload_id] }.to_h
-  end
-
   def convert_to_link!(img)
     w, h = img["width"].to_i, img["height"].to_i
     user_width, user_height = (w > 0 && h > 0 && [w, h]) ||
@@ -412,8 +400,29 @@ class CookedPostProcessor
 
   def post_process_images
     extract_images.each do |img|
-      convert_to_link!(img) unless add_image_placeholder!(img)
+      still_an_image = process_hotlinked_image(img)
+      convert_to_link!(img) if still_an_image
     end
+  end
+
+  def process_hotlinked_image(img)
+    @hotlinked_map ||= @post.post_hotlinked_media.preload(:upload).map { |r| [r.url, r] }.to_h
+    normalized_src = PostHotlinkedMedia.normalize_src(img["src"])
+    info = @hotlinked_map[normalized_src]
+
+    still_an_image = true
+
+    if info&.too_large?
+      add_large_image_placeholder!(img)
+      still_an_image = false
+    elsif info&.download_failed?
+      add_broken_image_placeholder!(img)
+      still_an_image = false
+    elsif info&.downloaded? && upload = info&.upload
+      img["src"] = UrlHelper.cook_url(upload.url, secure: @with_secure_media)
+    end
+
+    still_an_image
   end
 
   def is_svg?(img)
