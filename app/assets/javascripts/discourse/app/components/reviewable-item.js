@@ -3,7 +3,7 @@ import Component from "@ember/component";
 import I18n from "I18n";
 import { ajax } from "discourse/lib/ajax";
 import bootbox from "bootbox";
-import { dasherize } from "@ember/string";
+import { classify, dasherize } from "@ember/string";
 import discourseComputed, { bind } from "discourse-common/utils/decorators";
 import optionalService from "discourse/lib/optional-service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -34,7 +34,7 @@ export default Component.extend({
     "reviewable.target_created_by_trust_level"
   )
   customClasses(type, lastPerformingUsername, blurEnabled, trustLevel) {
-    let classes = type.dasherize();
+    let classes = dasherize(type);
 
     if (lastPerformingUsername) {
       classes = `${classes} reviewable-stale`;
@@ -115,6 +115,11 @@ export default Component.extend({
     return _components[type];
   },
 
+  @discourseComputed("_updates.category_id", "reviewable.category.id")
+  tagCategoryId(updatedCategoryId, categoryId) {
+    return updatedCategoryId || categoryId;
+  },
+
   @bind
   _performConfirmed(action) {
     let reviewable = this.reviewable;
@@ -163,7 +168,7 @@ export default Component.extend({
     };
 
     if (action.client_action) {
-      let actionMethod = this[`client${action.client_action.classify()}`];
+      let actionMethod = this[`client${classify(action.client_action)}`];
       if (actionMethod) {
         return actionMethod.call(this, reviewable, performAction);
       } else {
@@ -208,7 +213,7 @@ export default Component.extend({
 
     edit() {
       this.set("editing", true);
-      this._updates = { payload: {} };
+      this.set("_updates", { payload: {} });
     },
 
     cancelEdit() {
@@ -241,7 +246,7 @@ export default Component.extend({
         category = Category.findUncategorized();
       }
 
-      this._updates.category_id = category.id;
+      set(this._updates, "category_id", category.id);
     },
 
     valueChanged(fieldId, event) {

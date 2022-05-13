@@ -105,6 +105,7 @@ module TestSetup
     UserActionManager.disable
     NotificationEmailer.disable
     SiteIconManager.disable
+    WordWatcher.disable_cache
 
     SiteSetting.provider.all.each do |setting|
       SiteSetting.remove_override!(setting.name)

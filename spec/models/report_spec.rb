@@ -520,11 +520,12 @@ describe Report do
 
       before do
         freeze_time
-
-        PostActionCreator.new(flagger, post, PostActionType.types[:spam], message: 'bad').perform
       end
 
       it "returns a report with data" do
+        result = PostActionCreator.new(flagger, post, PostActionType.types[:spam], message: 'bad').perform
+
+        expect(result.success).to eq(true)
         expect(report.data).to be_present
 
         row = report.data[0]

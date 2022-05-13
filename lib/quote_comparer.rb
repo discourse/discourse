@@ -15,12 +15,18 @@ class QuoteComparer
   # This algorithm is far from perfect, but it follows the Discourse
   # philosophy of "catch the obvious cases, leave moderation for the
   # complicated ones"
+  def missing?
+    return true if @parent_post.blank?
+  end
+
   def modified?
-    return true if @text.blank? || @parent_post.blank?
+    return true if @text.blank?
 
-    parent_text = Nokogiri::HTML5::fragment(@parent_post.cooked).text.delete(QuoteComparer.whitespace)
-    text = @text.delete(QuoteComparer.whitespace)
+    if @parent_post
+      parent_text = Nokogiri::HTML5::fragment(@parent_post.cooked).text.delete(QuoteComparer.whitespace)
+      text = @text.delete(QuoteComparer.whitespace)
 
-    !parent_text.include?(text)
+      !parent_text.include?(text)
+    end
   end
 end

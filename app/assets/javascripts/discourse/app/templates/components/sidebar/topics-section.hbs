@@ -2,17 +2,32 @@
   @sectionName="topics"
   @headerRoute="discovery.latest"
   @headerQuery={{hash f=undefined}}
-  @headerTitle="topics"
+  @headerLinkText={{i18n "sidebar.sections.topics.header_link_text"}}
+  @headerLinkTitle={{i18n "sidebar.sections.topics.header_link_title"}}
   @headerActionIcon="plus"
-  @headerAction={{this.composeTopic}}>
+  @headerAction={{this.composeTopic}}
+  @headerActionTitle={{i18n "sidebar.sections.topics.header_action_title"}}>
 
   <Sidebar::SectionLink
     @linkName="everything"
     @route={{this.everythingSectionLinkRoute}}
     @query={{hash f=undefined}}
+    @title={{i18n "sidebar.sections.topics.links.everything.title"}}
+    @content={{i18n "sidebar.sections.topics.links.everything.content"}}
     @current-when={{"discovery.latest discovery.new discovery.unread discovery.top"}}
     @badgeText={{this.everythingSectionLinkBadgeText}} />
 
-  <Sidebar::SectionLink @linkName="tracked" @route="discovery.latest" @query={{hash f="tracked"}} />
-  <Sidebar::SectionLink @linkName="bookmarked" @route="userActivity.bookmarks" @model={{this.currentUser}} />
+  <Sidebar::SectionLink
+    @linkName="tracked"
+    @route="discovery.latest"
+    @query={{hash f="tracked"}}
+    @title={{i18n "sidebar.sections.topics.links.tracked.title"}}
+    @content={{i18n "sidebar.sections.topics.links.tracked.content"}} />
+
+  <Sidebar::SectionLink
+    @linkName="bookmarked"
+    @route="userActivity.bookmarks"
+    @model={{this.currentUser}}
+    @title={{i18n "sidebar.sections.topics.links.bookmarked.title"}}
+    @content={{i18n "sidebar.sections.topics.links.bookmarked.content"}} />
 </Sidebar::Section>

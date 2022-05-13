@@ -14,7 +14,7 @@ module DiscourseDev
 
       category = topic.category
       @max_likes_count = DiscourseDev.config.post[:max_likes_count]
-      unless category.groups.blank?
+      if category&.groups.present?
         group_ids = category.groups.pluck(:id)
         @user_ids = ::GroupUser.where(group_id: group_ids).pluck(:user_id)
         @user_count = @user_ids.count
@@ -54,7 +54,7 @@ module DiscourseDev
     end
 
     def user
-      return User.random if topic.category.groups.blank?
+      return User.random if topic.category&.groups.blank?
       return Discourse.system_user if @user_ids.blank?
 
       position = Faker::Number.between(from: 0, to: @user_count - 1)
