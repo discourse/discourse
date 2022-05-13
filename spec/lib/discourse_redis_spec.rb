@@ -52,7 +52,39 @@ describe DiscourseRedis do
 
         expect(redis.get('foo')).to eq("baz")
         expect(redis.get('baz')).to eq("1")
+      end
 
+      it 'should noop pipelined commands against a readonly redis' do
+        redis.without_namespace
+          .expects(:pipelined)
+          .raises(Redis::CommandError.new("READONLY"))
+
+        set, incr = nil
+
+        val = redis.pipelined do |pipeline|
+          set = pipeline.set "foo", "baz"
+          incr = pipeline.incr "baz"
+        end
+
+        expect(val).to eq(nil)
+        expect(redis.get('foo')).to eq(nil)
+        expect(redis.get('baz')).to eq(nil)
+      end
+
+      it 'should noop multi commands against a readonly redis' do
+        redis.without_namespace
+          .expects(:multi)
+          .raises(Redis::CommandError.new("READONLY"))
+
+        val = redis.multi do |transaction|
+          transaction.set 'foo', 'bar'
+          transaction.set 'bar', 'foo'
+          transaction.get 'bar'
+        end
+
+        expect(val).to eq(nil)
+        expect(redis.get('foo')).to eq(nil)
+        expect(redis.get('bar')).to eq(nil)
       end
     end
 
