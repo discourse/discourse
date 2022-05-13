@@ -19,7 +19,7 @@ acceptance("User Card - Show Local Time", function (needs) {
   });
 
   test("user card local time - does not update timezone for another user", async function (assert) {
-    User.current().changeTimezone("Australia/Brisbane");
+    User.current().timezone = "Australia/Brisbane";
 
     await visit("/t/internationalization-localization/280");
     await click('a[data-user-card="charlie"]');

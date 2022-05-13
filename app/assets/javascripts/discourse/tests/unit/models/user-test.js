@@ -1,8 +1,8 @@
-import * as ajaxlib from "discourse/lib/ajax";
 import { module, test } from "qunit";
-import sinon from "sinon";
 import Group from "discourse/models/group";
 import User from "discourse/models/user";
+import PreloadStore from "discourse/lib/preload-store";
+import sinon from "sinon";
 
 module("Unit | Model | user", function () {
   test("staff", function (assert) {
@@ -70,58 +70,36 @@ module("Unit | Model | user", function () {
     );
   });
 
-  test("resolvedTimezone", function (assert) {
-    const tz = "Australia/Brisbane";
-    let user = User.create({ timezone: tz, username: "chuck", id: 111 });
-
-    sinon.stub(moment.tz, "guess").returns("America/Chicago");
-    sinon.stub(ajaxlib.ajax);
-    let spy = sinon.spy(ajaxlib, "ajax");
-
-    assert.strictEqual(
-      user.resolvedTimezone(user),
-      tz,
-      "if the user already has a timezone return it"
-    );
-    assert.ok(
-      spy.notCalled,
-      "if the user already has a timezone do not call AJAX update"
-    );
-    user = User.create({ username: "chuck", id: 111 });
-    assert.strictEqual(
-      user.resolvedTimezone(user),
-      "America/Chicago",
-      "if the user has no timezone guess it with moment"
-    );
-    assert.ok(
-      spy.calledWith("/u/chuck.json", {
-        type: "PUT",
-        dataType: "json",
-        data: { timezone: "America/Chicago" },
-      }),
-      "if the user has no timezone save it with an AJAX update"
-    );
-
-    let otherUser = User.create({ username: "howardhamlin", id: 999 });
-    assert.strictEqual(
-      otherUser.resolvedTimezone(user),
-      undefined,
-      "if the user has no timezone and the user is not the current user, do NOT guess with moment"
-    );
-    assert.notOk(
-      spy.calledWith("/u/howardhamlin.json", {
-        type: "PUT",
-        dataType: "json",
-        data: { timezone: "America/Chicago" },
-      }),
-      "if the user has no timezone, and the user is not the current user, do NOT save it with an AJAX update"
-    );
-  });
-
   test("muted ids", function (assert) {
     let user = User.create({ username: "chuck", muted_category_ids: [] });
 
     assert.deepEqual(user.calculateMutedIds(0, 1, "muted_category_ids"), [1]);
     assert.deepEqual(user.calculateMutedIds(1, 1, "muted_category_ids"), []);
+  });
+
+  test("createCurrent() guesses timezone if user doesn't have it set", function (assert) {
+    PreloadStore.store("currentUser", {
+      username: "eviltrout",
+      timezone: null,
+    });
+    const expectedTimezone = "Africa/Casablanca";
+    sinon.stub(moment.tz, "guess").returns(expectedTimezone);
+
+    const currentUser = User.createCurrent();
+
+    assert.deepEqual(currentUser.timezone, expectedTimezone);
+  });
+
+  test("createCurrent() doesn't guess timezone if user has it already set", function (assert) {
+    const timezone = "Africa/Casablanca";
+    PreloadStore.store("currentUser", {
+      username: "eviltrout",
+      timezone,
+    });
+    const spyMomentGuess = sinon.spy(moment.tz, "guess");
+
+    User.createCurrent();
+
+    assert.ok(spyMomentGuess.notCalled);
   });
 });

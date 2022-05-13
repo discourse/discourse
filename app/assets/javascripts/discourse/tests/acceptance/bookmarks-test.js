@@ -241,7 +241,7 @@ acceptance("Bookmarking", function (needs) {
 
   test("Editing a bookmark", async function (assert) {
     await visit("/t/internationalization-localization/280");
-    let now = moment.tz(loggedInUser().resolvedTimezone(loggedInUser()));
+    let now = moment.tz(loggedInUser().timezone);
     let tomorrow = now.add(1, "day").format("YYYY-MM-DD");
     await openBookmarkModal();
     await fillIn("input#bookmark-name", "Test name");
@@ -267,10 +267,7 @@ acceptance("Bookmarking", function (needs) {
 
   test("Using a post date for the reminder date", async function (assert) {
     await visit("/t/internationalization-localization/280");
-    let postDate = moment.tz(
-      "2036-01-15",
-      loggedInUser().resolvedTimezone(loggedInUser())
-    );
+    let postDate = moment.tz("2036-01-15", loggedInUser().timezone);
     let postDateFormatted = postDate.format("YYYY-MM-DD");
     await openBookmarkModal();
     await fillIn("input#bookmark-name", "Test name");

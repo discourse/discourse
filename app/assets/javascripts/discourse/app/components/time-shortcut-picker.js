@@ -76,7 +76,7 @@ export default Component.extend({
   _setupPicker() {
     this.setProperties({
       customTime: this.defaultCustomReminderTime,
-      userTimezone: this.currentUser.resolvedTimezone(this.currentUser),
+      userTimezone: this.currentUser.timezone,
       hiddenOptions: this.hiddenOptions || [],
       customOptions: this.customOptions || [],
       customLabels: this.customLabels || {},

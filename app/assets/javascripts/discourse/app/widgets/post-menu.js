@@ -340,7 +340,7 @@ registerButton(
       if (attrs.bookmarkReminderAt) {
         let formattedReminder = formattedReminderTime(
           attrs.bookmarkReminderAt,
-          currentUser.resolvedTimezone(currentUser)
+          currentUser.timezone
         );
         title = "bookmarks.created_with_reminder";
         titleOptions.date = formattedReminder;
