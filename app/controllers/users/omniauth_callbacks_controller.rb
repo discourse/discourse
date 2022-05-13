@@ -22,6 +22,7 @@ class Users::OmniauthCallbacksController < ApplicationController
   def complete
     auth = request.env["omniauth.auth"]
     raise Discourse::NotFound unless request.env["omniauth.auth"]
+    raise Discourse::ReadOnly if @readonly_mode
 
     auth[:session] = session
 
