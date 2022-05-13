@@ -17,6 +17,8 @@ class SessionController < ApplicationController
   end
 
   def sso
+    raise Discourse::NotFound unless SiteSetting.enable_discourse_connect?
+
     destination_url = cookies[:destination_url] || session[:destination_url]
     return_path = params[:return_path] || path('/')
 
@@ -28,20 +30,13 @@ class SessionController < ApplicationController
     session.delete(:destination_url)
     cookies.delete(:destination_url)
 
-    if SiteSetting.enable_discourse_connect?
-      sso = DiscourseConnect.generate_sso(return_path, secure_session: secure_session)
-      connect_verbose_warn { "Verbose SSO log: Started SSO process\n\n#{sso.diagnostics}" }
-      redirect_to sso_url(sso), allow_other_host: true
-    else
-      render body: nil, status: 404
-    end
+    sso = DiscourseConnect.generate_sso(return_path, secure_session: secure_session)
+    connect_verbose_warn { "Verbose SSO log: Started SSO process\n\n#{sso.diagnostics}" }
+    redirect_to sso_url(sso), allow_other_host: true
   end
 
   def sso_provider(payload = nil, confirmed_2fa_during_login = false)
-    if !SiteSetting.enable_discourse_connect_provider
-      render body: nil, status: 404
-      return
-    end
+    raise Discourse::NotFound unless SiteSetting.enable_discourse_connect_provider
 
     result = run_second_factor!(
       SecondFactor::Actions::DiscourseConnectProvider,
@@ -120,7 +115,7 @@ class SessionController < ApplicationController
   end
 
   def sso_login
-    raise Discourse::NotFound.new unless SiteSetting.enable_discourse_connect
+    raise Discourse::NotFound unless SiteSetting.enable_discourse_connect
     raise Discourse::ReadOnly if @readonly_mode
 
     params.require(:sso)
