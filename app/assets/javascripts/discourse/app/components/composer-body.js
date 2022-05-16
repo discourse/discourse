@@ -66,7 +66,8 @@ export default Component.extend(KeyEnterEscape, {
   _setMainOutletPaddingBottom() {
     const mainOutletElement = document.querySelector("#main-outlet");
     if (this.composeState === Composer.OPEN) {
-      mainOutletElement.style.paddingBottom = "300px";
+      mainOutletElement.style.paddingBottom =
+        this.element.style.height || "300px";
     } else if (this.composeState === Composer.CLOSED) {
       mainOutletElement.style.paddingBottom = "";
     }
