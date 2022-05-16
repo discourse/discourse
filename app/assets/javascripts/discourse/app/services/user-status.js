@@ -1,7 +1,9 @@
-import Service from "@ember/service";
+import Service, { inject as service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 
 export default class UserStatusService extends Service {
+  @service appEvents;
+
   async set(status) {
     await ajax({
       url: "/user-status.json",
@@ -10,6 +12,7 @@ export default class UserStatusService extends Service {
     });
 
     this.currentUser.status = status;
+    this.appEvents.trigger("do-not-disturb:changed");
   }
 
   async clear() {
@@ -19,5 +22,6 @@ export default class UserStatusService extends Service {
     });
 
     this.currentUser.status = null;
+    this.appEvents.trigger("do-not-disturb:changed");
   }
 }

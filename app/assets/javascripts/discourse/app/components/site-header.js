@@ -238,6 +238,8 @@ const SiteHeaderComponent = MountWidget.extend(
 
       this.appEvents.on("dom:clean", this, "_cleanDom");
 
+      this.appEvents.on("user-status:changed", () => this.queueRerender());
+
       if (
         this.currentUser &&
         !this.get("currentUser.read_first_notification")
