@@ -30,14 +30,14 @@ module Jobs
         rescue ImageBrokenError
           broken_image_urls << normalized_src
         end
-
-        # have we successfully downloaded that file?
-        if upload = downloaded_images[normalized_src]
-          user_profile.bio_raw = replace_in_raw(original_src: original_src, upload: upload, raw: user_profile.bio_raw)
-        end
       rescue => e
         raise e if Rails.env.test?
         log(:error, "Failed to pull hotlinked image (#{download_src}) user: #{@user_id}\n" + e.message + "\n" + e.backtrace.join("\n"))
+      end
+
+      user_profile.bio_raw = InlineUploads.replace_hotlinked_image_urls(raw: user_profile.bio_raw) do |match_src|
+        normalized_match_src = PostHotlinkedMedia.normalize_src(match_src)
+        downloaded_images[normalized_match_src]
       end
 
       user_profile.skip_pull_hotlinked_image = true

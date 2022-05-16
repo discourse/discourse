@@ -47,7 +47,6 @@ class CookedPostProcessor
       remove_user_ids
       update_post_image
       enforce_nofollow
-      pull_hotlinked_images
       grant_badges
       @post.link_post_uploads(fragments: @doc)
       DiscourseEvent.trigger(:post_process_cooked, @doc, @post)
@@ -359,41 +358,6 @@ class CookedPostProcessor
   def enforce_nofollow
     add_nofollow = !@omit_nofollow && SiteSetting.add_rel_nofollow_to_user_content
     PrettyText.add_rel_attributes_to_user_content(@doc, add_nofollow)
-  end
-
-  def pull_hotlinked_images
-    return if @opts[:skip_pull_hotlinked_images]
-    # have we enough disk space?
-    disable_if_low_on_disk_space # But still enqueue the job
-    # make sure no other job is scheduled
-    Jobs.cancel_scheduled_job(:pull_hotlinked_images, post_id: @post.id)
-    # schedule the job
-    delay = SiteSetting.editing_grace_period + 1
-    Jobs.enqueue_in(delay.seconds.to_i, :pull_hotlinked_images, post_id: @post.id)
-  end
-
-  def disable_if_low_on_disk_space
-    return if Discourse.store.external?
-    return if !SiteSetting.download_remote_images_to_local
-    return if available_disk_space >= SiteSetting.download_remote_images_threshold
-
-    SiteSetting.download_remote_images_to_local = false
-
-    # log the site setting change
-    reason = I18n.t("disable_remote_images_download_reason")
-    staff_action_logger = StaffActionLogger.new(Discourse.system_user)
-    staff_action_logger.log_site_setting_change("download_remote_images_to_local", true, false, details: reason)
-
-    # also send a private message to the site contact user notify_about_low_disk_space
-    notify_about_low_disk_space
-  end
-
-  def notify_about_low_disk_space
-    SystemMessage.create_from_system_user(Discourse.site_contact_user, :download_remote_images_disabled)
-  end
-
-  def available_disk_space
-    100 - DiskSpace.percent_free("#{Rails.root}/public/uploads")
   end
 
   private

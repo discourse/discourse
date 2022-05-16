@@ -67,6 +67,21 @@ describe Jobs::PullHotlinkedImages do
       expect(post.reload.raw).to eq("<img src=\"#{Upload.last.short_url}\">")
     end
 
+    it 'enqueues raw replacement job with a delay' do
+      Jobs.run_later!
+
+      post = Fabricate(:post, raw: "<img src='#{image_url}'>")
+      stub_image_size
+
+      freeze_time
+      Jobs.expects(:cancel_scheduled_job).with(:update_hotlinked_raw, post_id: post.id).once
+      delay = SiteSetting.editing_grace_period + 1
+
+      expect_enqueued_with(job: :update_hotlinked_raw, args: { post_id: post.id }, at: Time.zone.now + delay.seconds) do
+        Jobs::PullHotlinkedImages.new.execute(post_id: post.id)
+      end
+    end
+
     it 'removes downloaded images when they are no longer needed' do
       post = Fabricate(:post, raw: "<img src='#{image_url}'>")
       stub_image_size
@@ -196,14 +211,14 @@ describe Jobs::PullHotlinkedImages do
       expect(post.uploads).to contain_exactly(upload)
     end
 
-    it "skips raw_html posts" do
+    it "skips editing raw for raw_html posts" do
       raw = "<img src=\"#{image_url}\">"
       post = Fabricate(:post, raw: raw, cook_method: Post.cook_methods[:raw_html])
       stub_image_size
       expect do
         post.rebake!
         post.reload
-      end.not_to change { Upload.count }
+      end.to change { Upload.count }.by(1)
 
       expect(post.raw).to eq(raw)
     end
@@ -553,6 +568,43 @@ describe Jobs::PullHotlinkedImages do
       post.reload
 
       expect(post.raw).to eq("![alt](#{upload.short_url})")
+    end
+  end
+
+  context "#disable_if_low_on_disk_space" do
+    fab!(:post) { Fabricate(:post, created_at: 20.days.ago) }
+    let(:job) { Jobs::PullHotlinkedImages.new }
+
+    before do
+      SiteSetting.download_remote_images_to_local = true
+      SiteSetting.download_remote_images_threshold = 20
+      job.stubs(:available_disk_space).returns(50)
+    end
+
+    it "does nothing when there's enough disk space" do
+      SiteSetting.expects(:download_remote_images_to_local=).never
+      job.execute({ post_id: post.id })
+    end
+
+    context "when there's not enough disk space" do
+
+      before { SiteSetting.download_remote_images_threshold = 75 }
+
+      it "disables download_remote_images_threshold and send a notification to the admin" do
+        StaffActionLogger.any_instance.expects(:log_site_setting_change).once
+        SystemMessage.expects(:create_from_system_user).with(Discourse.site_contact_user, :download_remote_images_disabled).once
+        job.execute({ post_id: post.id })
+
+        expect(SiteSetting.download_remote_images_to_local).to eq(false)
+      end
+
+      it "doesn't disable download_remote_images_to_local if site uses S3" do
+        setup_s3
+        job.execute({ post_id: post.id })
+
+        expect(SiteSetting.download_remote_images_to_local).to eq(true)
+      end
+
     end
   end
 
