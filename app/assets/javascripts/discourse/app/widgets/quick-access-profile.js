@@ -26,21 +26,27 @@ createWidgetFrom(QuickAccessItem, "user-status-item", {
   tagName: "li.user-status",
 
   html() {
+    const action = "hideMenuAndSetStatus";
     const userStatus = this.currentUser.status;
     if (userStatus) {
       const emoji = userStatus.emoji ?? "mega";
       return this.attach("flat-button", {
-        action: "setUserStatus",
+        action,
         emoji,
         translatedLabel: userStatus.description,
       });
     } else {
       return this.attach("flat-button", {
-        action: "setUserStatus",
+        action,
         icon: "plus-circle",
         label: "user_status.set_custom_status",
       });
     }
+  },
+
+  hideMenuAndSetStatus() {
+    this.sendWidgetAction("toggleUserMenu");
+    this.sendWidgetAction("setUserStatus");
   },
 });
 
