@@ -1,3 +1,12 @@
+:root {
+  --composer-height: 300px;
+  --composer-height-title: 400px;
+}
+html.composer-open {
+  #main-outlet {
+    padding-bottom: var(--composer-height);
+  }
+}
 #reply-control {
   position: fixed;
   display: flex;
@@ -43,9 +52,9 @@
   }
 
   &.open {
-    height: 300px;
+    height: var(--composer-height);
     &.edit-title {
-      height: 400px; // more room when editing the title
+      height: var(--composer-height-title); // more room when editing the title
     }
   }
 
