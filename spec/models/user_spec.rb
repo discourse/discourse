@@ -146,17 +146,19 @@ RSpec.describe User do
       context "when user fields contain watched words" do
         let(:value) { "bad user field value" }
 
-        it "is not valid" do
-          user.valid?
-          expect(user.errors[:base].size).to eq(1)
-          expect(user.errors.messages[:base]).to include(/you can't post the word/)
+        context "when user field is public" do
+          it "is not valid" do
+            user.valid?
+            expect(user.errors[:base].size).to eq(1)
+            expect(user.errors.messages[:base]).to include(/you can't post the word/)
+          end
         end
-      end
 
-      context "when user fields do not contain watched words" do
-        let(:value) { "good user field value" }
+        context "when user field is private" do
+          before { user_field.update(show_on_profile: false) }
 
-        it { is_expected.to be_valid }
+          it { is_expected.to be_valid }
+        end
       end
 
       context "when private user fields contain watched words" do
