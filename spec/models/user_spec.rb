@@ -161,9 +161,8 @@ RSpec.describe User do
         end
       end
 
-      context "when private user fields contain watched words" do
-        before { user_field.update(show_on_profile: false) }
-        let(:value) { "bad user field value" }
+      context "when user fields do not contain watched words" do
+        let(:value) { "good user field value" }
 
         it { is_expected.to be_valid }
       end
