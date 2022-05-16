@@ -138,7 +138,7 @@ RSpec.describe User do
     end
 
     describe "#user_fields" do
-      fab!(:user_field) { Fabricate(:user_field) }
+      fab!(:user_field) { Fabricate(:user_field, show_on_profile: true) }
       fab!(:watched_word) { Fabricate(:watched_word, word: "bad") }
 
       before { user.set_user_field(user_field.id, value) }
@@ -146,10 +146,18 @@ RSpec.describe User do
       context "when user fields contain watched words" do
         let(:value) { "bad user field value" }
 
-        it "is not valid" do
-          user.valid?
-          expect(user.errors[:base].size).to eq(1)
-          expect(user.errors.messages[:base]).to include(/you can't post the word/)
+        context "when user field is public" do
+          it "is not valid" do
+            user.valid?
+            expect(user.errors[:base].size).to eq(1)
+            expect(user.errors.messages[:base]).to include(/you can't post the word/)
+          end
+        end
+
+        context "when user field is private" do
+          before { user_field.update(show_on_profile: false) }
+
+          it { is_expected.to be_valid }
         end
       end
 

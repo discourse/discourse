@@ -100,7 +100,7 @@ describe Jobs::BulkInvite do
       expect(User.where(staged: true).find_by_email('test@discourse.org')).to eq(nil)
       expect(user.user_fields[user_field.id.to_s]).to eq('value 1')
       expect(user.user_fields[user_field_color.id.to_s]).to eq('Blue')
-      expect(staged_user.reload.user_fields[user_field.id.to_s]).to eq('value 2')
+      expect(staged_user.user_fields[user_field.id.to_s]).to eq('value 2')
       expect(staged_user.user_fields[user_field_color.id.to_s]).to eq(nil)
       new_staged_user = User.where(staged: true).find_by_email('test2@discourse.org')
       expect(new_staged_user.user_fields[user_field.id.to_s]).to eq('value 3')
