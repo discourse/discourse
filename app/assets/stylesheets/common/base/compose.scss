@@ -5,6 +5,7 @@
 html.composer-open {
   #main-outlet {
     padding-bottom: var(--reply-composer-height);
+    transition: padding-bottom 250ms ease;
   }
 }
 #reply-control {
