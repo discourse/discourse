@@ -232,7 +232,6 @@ sv:
       <p>Annars ber vi dig att <a href="%{base_url}/password-reset">återställa lösenordet</a>.</p>
     not_found_template_link: |
       <p>Denna inbjudan till <a href="%{base_url}">%{site_name}</a> kan inte längre lösas in. Be personen som bjöd in dig att skicka en ny inbjudan till dig.</p>
-    user_exists: "Det finns inget behov av att bjuda in <b>%{email}</b>: De har <a href='%{base_path}/u/%{username}/summary'>redan ett konto!</a>"
     invite_exists: "Du har redan bjudit in <b>%{email}</b>."
     invalid_email: "%{email} är inte en giltig e-postadress."
     rate_limit:
@@ -2061,7 +2060,6 @@ sv:
     tags_sort_alphabetically: "Visa taggar i alfabetisk ordning. Standard är att visa i popularitetsordning."
     tags_listed_by_group: "Lista taggar per tagg-grupp från <a href='%{base_path}/tags' target='_blank'>tagg-sidan</a>."
     tag_style: "Visuell stil för tagg-utmärkelser."
-    allow_staff_to_tag_pms: "Tillåt personal tagga ett personligt meddelande"
     min_trust_level_to_tag_topics: "Lägsta förtroendenivå som krävs för att tagga ämnen"
     suppress_overlapping_tags_in_list: "Om taggen matchar orden i ämnets titel exakt visas inte taggen"
     remove_muted_tags_from_latest: "Visa inte ämnen som taggats med tystade taggar i listan med senaste ämnen."
@@ -2675,12 +2673,6 @@ sv:
       text_body_template: "Tack för att du tackade ja till din inbjudan till %{site_name} -- välkommen!\n\nVi har skapat ett nytt konto **%{username}** till dig. Du kan byta namn eller lösenord genom att besöka [din användarprofil][prefs].\n\n- När du loggar in ber vi dig **använda samma e-postadress som i din ursprungliga inbjudan** — annars kan vi inte bekräfta att det är du! \n\n%{new_user_tips}\n\nVi tror på ett [civiliserat beteende i forumet](%{base_url}/guidelines) vid alla tillfällen.\n\nNjut av din vistelse!\n\n[prefs]: %{user_preferences_url}\n"
     tl2_promotion_message:
       subject_template: "Grattis till din högre förtroendenivå!"
-      text_body_template: |
-        Vi har uppgraderat dig till en annan [tillitsnivå] (https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)!
-
-        Som erfaren användare kanske du uppskattar [denna lista med praktiska tips och tricks] (https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
-
-        Vi välkomnar dig att fortsätta engagera dig — vi tycker om att ha dig i närheten.
     backup_succeeded:
       title: "Säkerhetskopieringen var framgångsrik"
       subject_template: "Säkerhetskopia skapades utan problem"

@@ -212,7 +212,6 @@ nl:
       <p>Als u uw wachtwoord nog weet, kunt u zich <a href="%{base_url}/login">Aanmelden</a>.</p>
 
       <p>Zo niet, kunt u uw <a href="%{base_url}/password-reset">Wachtwoord herinitialiseren</a>.</p>
-    user_exists: "<b>%{email}</b> hoeft niet te worden uitgenodigd; hij of zij <a href='%{base_path}/u/%{username}/summary'>heeft al een account!</a>"
     invalid_email: "%{email} is geen geldig e-mailadres."
     confirm_email: "<p>U bent er bijna! We hebben een activeringsmail naar uw e-mailadres gestuurd. Volg de instructies in het e-mailbericht om uw account te activeren.</p><p>Als dit niet aankomt, controleer dan uw spammap.</p>"
     cant_invite_to_group: "U mag geen gebruikers uitnodigen voor bepaalde groepen. Zorg ervoor dat u eigenaar bent van de groep(en) waarvoor u probeert uit te nodigen."
@@ -1851,7 +1850,6 @@ nl:
     tags_sort_alphabetically: "Tags in alfabetische volgorde tonen. Standaard is de volgorde van populariteit."
     tags_listed_by_group: "Tags vermelden op tag-groep op de <a href='%{base_path}/tags' target='_blank'>pagina Tags</a>."
     tag_style: "Visuele stijl voor tagbadges."
-    allow_staff_to_tag_pms: "Stafleden mogen persoonlijke berichten taggen"
     min_trust_level_to_tag_topics: "Het minimale vertrouwensniveau dat nodig is om topics te taggen"
     suppress_overlapping_tags_in_list: "Als tags exacte overeenkomsten met woorden in topictitels hebben, de tag niet tonen"
     remove_muted_tags_from_latest: "Topics met alleen gedempt-tags niet in de lijst met nieuwste topics tonen."

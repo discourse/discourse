@@ -2267,6 +2267,19 @@ sk:
         leader: "vodca"
     user_activity:
       no_activity_others: "Žiadna aktivita"
+    sidebar:
+      unread_count: "%{count} neprečítaná"
+      new_count: "%{count} nová"
+      sections:
+        categories:
+          header_link_title: "všetky kategórie"
+          header_link_text: "Kategórie"
+        topics:
+          header_link_title: "domov"
+          header_link_text: "Témy"
+          links:
+            tracked:
+              content: "Pozorované"
   admin_js:
     type_to_filter: "zadajte, čo chcete filtrovať ..."
     admin:

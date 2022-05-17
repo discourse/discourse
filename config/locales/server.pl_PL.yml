@@ -246,7 +246,6 @@ pl_PL:
       <p>W przeciwnym razie <a href="%{base_url}/password-reset">zresetuj hasło</a>.</p>
     not_found_template_link: |
       <p>To zaproszenie do <a href="%{base_url}">%{site_name}</a> nie może już zostać zrealizowane. Poproś osobę, która Cię zaprosiła, aby wysłała Ci nowe zaproszenie.</p>
-    user_exists: "Nie ma potrzeby zapraszania <b>%{email}</b>, <a href='%{base_path}/u/%{username}/summary'>obecnie posiada konto!</a>"
     invite_exists: "Zaprosiłeś już <b>%{email}</b>."
     invalid_email: "%{email} nie jest prawidłowym adresem e-mail."
     rate_limit:
@@ -1440,6 +1439,7 @@ pl_PL:
       labels:
         user: Użytkownik
         qtt_like: Polubienia otrzymane
+      description: "Top 10 użytkowników, którzy otrzymali polubienia."
     top_users_by_likes_received_from_inferior_trust_level:
       title: "Najlepsi użytkownicy według polubień otrzymanych od użytkownika o niższym poziomie zaufania"
       labels:
@@ -1452,6 +1452,7 @@ pl_PL:
       labels:
         user: Użytkownik
         qtt_like: Polubienia otrzymane
+      description: "Top 10 użytkowników, którzy otrzymali polubienia od szerokiego grona osób."
   dashboard:
     group_email_credentials_warning: 'Wystąpił problem z poświadczeniami e-mail dla grupy <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. Żadne e-maile nie będą wysyłane ze skrzynki odbiorczej grupy, dopóki ten problem nie zostanie rozwiązany. %{error}'
     rails_env_warning: "Twój serwer działa w trybie %{env}"
@@ -1504,6 +1505,8 @@ pl_PL:
     min_personal_message_title_length: "Minimalna liczba znaków w temacie wiadomości "
     max_emojis_in_title: "Maksymalna liczba emoji w tytule tematu"
     min_search_term_length: "Minimalna długość wyszukiwanego tekstu, w znakach"
+    search_tokenize_chinese: "Wymuś na wyszukiwarce tokenizację języka chińskiego nawet na stronach, które nie są chińskie"
+    search_tokenize_japanese: "Wymuś na wyszukiwarce tokenizację języka japońskiego nawet na stronach, które nie są japońskie"
     search_prefer_recent_posts: "Jeśli wyszukiwanie na twoim dużym forum jest wolne, ta opcja pozwala zindeskować najpierw ostanie wpisy."
     search_recent_posts_size: "Jak dużo ostanich wpisów trzymać w indeksie"
     log_search_queries: "Dzienniki wyszukiwanych przez użytkowników treści"
@@ -1650,6 +1653,7 @@ pl_PL:
     send_tl2_promotion_message: "Wyślij nowym użytkownikom poziomu zaufania 2 wiadomość o promocji."
     suppress_reply_directly_below: "Nie pokazuj rozwijanej liczby odpowiedzi przy wpisie, gdy jest tylko jedna odpowiedź bezpośrednio pod tym wpisem."
     suppress_reply_directly_above: "Nie pokazuj rozwijanego \"w odpowiedzi na\" przy wpisie, gdy jest tylko jedna odpowiedź bezpośrednio nad tym wpisem."
+    remove_full_quote: "Automatycznie usuń cytat, jeśli (a) pojawia się na początku wpisu, (b) dotyczy całego wpisu i (c) pochodzi z bezpośrednio poprzedzającego wpisu. Aby uzyskać szczegółowe informacje, zobacz <a href='https://meta.discourse.org/t/removal-of-full-quotes-from-direct-replies/106857' target='_blank'>Usuwanie pełnych cytatów z bezpośrednich odpowiedzi</a>"
     suppress_reply_when_quoting: "Nie pokazuj rozwijanego \"w odpowiedzi na\" przy wpisie, gdy we wpisie zacytowano odpowiedź."
     max_reply_history: "Maksymalna liczba odpowiedzi, dla której \"w odpowiedzi na\" będzie się rozwijać."
     topics_per_period_in_top_summary: "Liczba tematów wyświetlanych w domyślnym podsumowaniu najbardziej popularnych tematów."
@@ -2166,7 +2170,6 @@ pl_PL:
     tags_sort_alphabetically: "Pokaż tagi w alfabetycznym porządku. Domyślne pokazywane są według popularności."
     tags_listed_by_group: "Wyświetl listę tagów według grup tagów na <a href='%{base_path}/tags' target='_blank'>liście tagów</a>."
     tag_style: "Styl etykiet tagów"
-    allow_staff_to_tag_pms: "Zezwalaj pracownikom na oznaczanie dowolnej wiadomości osobistej"
     min_trust_level_to_tag_topics: "Minimalny poziom zaufania wymagany do tagowania tematów"
     suppress_overlapping_tags_in_list: "Jeśli tagi dopasowane są dokładnie do słów w tytule tematu, nie pokazuj tagu"
     remove_muted_tags_from_latest: "Nie pokazuj tematów oznaczonych tylko wyciszonymi tagami na najnowszej liście tematów."
@@ -2241,6 +2244,7 @@ pl_PL:
         leading_trailing_slash: "Wyrażenie regularne nie może zaczynać się ani kończyć ukośnikiem."
       unicode_usernames_avatars: "Wewnętrzne awatary systemowe nie obsługują nazw użytkowników zawierających unicode."
       list_value_count: "Lista musi zawierać dokładnie %{count} wartości."
+      markdown_linkify_tlds: "Nie możesz uwzględnić wartości '*'."
       google_oauth2_hd_groups: "Musisz najpierw ustawić 'google oauth2 hd' przed włączeniem tego ustawienia."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "Nie można włączyć DiscourseConnect, jeśli wymuszono 2FA."
     placeholder:
@@ -2443,7 +2447,11 @@ pl_PL:
       totp: "Zamiast tego użyj aplikacji uwierzytelniającej lub klucza bezpieczeństwa"
       backup_code: "Zamiast tego użyj kodu zapasowego"
   second_factor_auth:
+    challenge_expired: "Upłynęło zbyt wiele czasu od wykonania wyzwania 2FA i nie jest ono już ważne. Spróbuj ponownie."
+    challenge_not_completed: "Nie ukończyłeś wyzwania 2FA, aby wykonać tę czynność. Ukończ wyzwanie 2FA i spróbuj ponownie."
     actions:
+      grant_admin:
+        description: "Aby zapewnić dodatkowe środki bezpieczeństwa, musisz potwierdzić swój kod 2FA, zanim %{username} uzyska dostęp administratora."
       discourse_connect_provider:
         description: "%{hostname} poprosił Cię o potwierdzenie Twojego 2FA. Zostaniesz przekierowany z powrotem na stronę, gdy potwierdzisz swoją weryfikację dwuetapową."
   admin:
@@ -2854,12 +2862,6 @@ pl_PL:
         [prefs]: %{user_preferences_url}
     tl2_promotion_message:
       subject_template: "Gratulujemy awansu na następny poziom zaufania!"
-      text_body_template: |
-        Awansowaliśmy Cię na kolejny [poziom zaufania] (https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)!
-
-        Jako doświadczony użytkownik możesz docenić [tą listę przydatnych porad i sztuczek] (https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
-
-        Zapraszamy do angażowania się — cieszymy się, że jesteś w pobliżu.
     backup_succeeded:
       title: "Kopia zapasowa została utworzona "
       subject_template: "Kopia zapasowa jest gotowa"
@@ -3299,6 +3301,11 @@ pl_PL:
     reply_above_line: "## Wpisz swoją odpowiedź powyżej tej linii. ##"
     posted_by: "Dodany przez %{username} w dniu %{post_date}"
     pm_participants: "Uczestnicy: %{participants}"
+    more_pm_participants:
+      one: "%{participants} i %{count} inny"
+      few: "%{participants} i %{count} inni"
+      many: "%{participants} i %{count} innych"
+      other: "%{participants} i %{count} innych"
     invited_group_to_private_message_body: |
       %{username} zaprosił @%{group_name} do wiadomości
 

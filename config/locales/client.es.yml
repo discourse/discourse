@@ -305,8 +305,8 @@ es:
         unbookmark_with_reminder: "Haz clic para eliminar todos los marcadores y recordatorios de este tema."
     bookmarks:
       created: "Has guardado esta publicación en marcadores. %{name}"
-      create_for: "Crear marcador para %{type}"
-      edit_for: "Editar marcador para %{type}"
+      create: "Crear marcador"
+      edit: "Editar marcador"
       not_bookmarked: "guarda esta publicación en marcadores"
       remove_reminder_keep_bookmark: "Quitar recordatorio y mantener marcador"
       created_with_reminder: "Has marcado esta publicación con un recordatorio %{date}. %{name}"
@@ -1185,6 +1185,8 @@ es:
         warnings: "Advertencias oficiales"
         read_more_in_group: "¿Quieres leer más? Consulta otros mensajes de %{groupLink}."
         read_more: "¿Quieres seguir leyendo? Echa un vistazo a otros mensajes en tus <a href='%{basePath}/u/%{username}/messages'>mensajes personales</a>."
+        read_more_group_pm_MF: "Hay {UNREAD, plural, =0{} one{<a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># mensaje sin leer</a>} other{<a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># mensajes sin leer</a>}}{BOTH, select, true{ y } false{} other{}}{NEW, plural, =0{} one{<a href='{basePath}/u/{username}/messages/group/{groupName}/new'># mensaje nuevo</a>} other{<a href='{basePath}/u/{username}/messages/group/{groupName}/new'># mensajes nuevos</a>}}. Puedes ver todos los mensajes en {groupLink}"
+        read_more_personal_pm_MF: "Tienes {UNREAD, plural, =0{} one{<a href='{basePath}/u/{username}/messages/unread'># mensaje sin leer</a>} other{<a href='{basePath}/u/{username}/messages/unread'># mensajes sin leer</a>}}{BOTH, select, true{ y } false{} other{}}{NEW, plural, =0{} one{<a href='{basePath}/u/{username}/messages/new'># mensaje nuevo</a>} other{<a href='{basePath}/u/{username}/messages/new'># mensajes nuevos</a>}}. <a href='{basePath}/u/{username}/messages'>Ver todos tus mensajes</a>"
       preferences_nav:
         account: "Cuenta"
         security: "Seguridad"
@@ -3708,6 +3710,27 @@ es:
       expand_btn: "Expandir tabla"
     second_factor_auth:
       redirect_after_success: "La autenticación de segundo factor se ha realizado con éxito. Redirigiendo a la página anterior…"
+    sidebar:
+      unread_count: "%{count} sin leer"
+      new_count: "%{count} nuevo"
+      sections:
+        categories:
+          header_link_title: "todas las categorías"
+          header_link_text: "Categorías"
+        topics:
+          header_link_title: "inicio"
+          header_link_text: "Temas"
+          header_action_title: "crear un nuevo tema"
+          links:
+            everything:
+              content: "Todo"
+              title: "Todos los temas"
+            tracked:
+              content: "Siguiendo"
+              title: "Todos los temas seguidos"
+            bookmarked:
+              content: "Añadidos a marcadores"
+              title: "Todos los temas enn marcadores"
   admin_js:
     type_to_filter: "filtrar opciones..."
     admin:
@@ -3960,6 +3983,11 @@ es:
               list_user_badges: Listar las medallas de los usuarios.
               assign_badge_to_user: Dar medallas a los usuarios.
               revoke_badge_from_user: Quitar medallas de los usuarios.
+            wordpress:
+              publishing: Necesario para las funcionalidades de publicación del plugin WP Discourse (obligatorio).
+              commenting: Necesario para las funcionalidades de comentarios del plugin WP Discourse.
+              discourse_connect: Necesario para las funcionalidades de DiscourseConnect del plugin WP Discourse.
+              utilities: Necesario si se usan las utilidades del plugin WP Discourse.
       web_hooks:
         title: "Webhooks"
         none: "Ahora mismo no hay webhooks."

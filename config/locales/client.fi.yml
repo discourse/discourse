@@ -273,6 +273,8 @@ fi:
         unbookmark_with_reminder: "Klikkaa poistaaksesi kaikki tämän ketjun kirjanmerkit ja muistutukset."
     bookmarks:
       created: "Olet kirjanmerkinnyt tämän viestin. %{name}"
+      create: "Luo kirjanmerkki"
+      edit: "Muokkaa kirjanmerkkiä"
       not_bookmarked: "lisää viesti kirjanmerkkeihin"
       created_with_reminder: "Olet kirjanmerkinnyt tämän viestin muistutuksen kera %{date}. %{name}"
       remove: "Poista kirjanmerkki"
@@ -3457,6 +3459,19 @@ fi:
       no_activity_others: "Ei toimintaa."
       no_replies_others: "Ei vastauksia."
       no_likes_others: "Ei tykättyjä viestejä."
+    sidebar:
+      unread_count: "%{count} lukematta"
+      new_count: "%{count} uusi"
+      sections:
+        categories:
+          header_link_title: "kaikki alueet"
+          header_link_text: "Alueet"
+        topics:
+          header_link_title: "aloitus"
+          header_link_text: "Ketjuja"
+          links:
+            tracked:
+              content: "Seuratut"
   admin_js:
     type_to_filter: "kirjoita suodattaaksesi..."
     admin:

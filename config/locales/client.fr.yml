@@ -283,8 +283,8 @@ fr:
         unbookmark_with_reminder: "Cliquez pour retirer tous les signets et rappels de ce sujet."
     bookmarks:
       created: "Vous avez mis un signet à ce message. %{name}"
-      create_for: "Créer un signet pour %{type}"
-      edit_for: "Modifier le signet pour %{type}"
+      create: "Ajouter un signet"
+      edit: "Modifier le signet"
       not_bookmarked: "mettre un signet à ce message"
       remove_reminder_keep_bookmark: "Supprimer le rappel et conserver le signet"
       created_with_reminder: "Vous avez mis un signet à ce message avec un rappel pour le %{date}. %{name}"
@@ -1784,20 +1784,12 @@ fr:
         sr_title: "Connectez-vous avec Twitter"
       instagram:
         name: "Instagram"
-        title: "Se connecter avec Instagram"
-        sr_title: "Se connecter avec Instagram"
       facebook:
         name: "Facebook"
-        title: "Se connecter avec Facebook"
-        sr_title: "Se connecter avec Facebook"
       github:
         name: "GitHub"
-        title: "Se connecter avec GitHub"
-        sr_title: "Se connecter avec GitHub"
       discord:
         name: "Discord"
-        title: "Se connecter avec Discord"
-        sr_title: "Se connecter avec Discord"
       second_factor_toggle:
         totp: "Utilisez plutôt une application d'authentification"
         backup_code: "Utilisez plutôt un code de secours"
@@ -3600,6 +3592,19 @@ fr:
     topic_entrance:
       sr_jump_top_button: "Aller au premier message"
       sr_jump_bottom_button: "Aller au dernier message"
+    sidebar:
+      unread_count: "%{count} non lu"
+      new_count: "%{count} nouveau"
+      sections:
+        categories:
+          header_link_title: "toutes les catégories"
+          header_link_text: "Catégories"
+        topics:
+          header_link_title: "accueil"
+          header_link_text: "Sujets"
+          links:
+            tracked:
+              content: "Suivies"
   admin_js:
     type_to_filter: "commencez votre saisie pour filtrer…"
     admin:

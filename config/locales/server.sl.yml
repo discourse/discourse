@@ -101,7 +101,6 @@ sl:
     site_settings:
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "2FA ne morete nastaviti kot zahtevano, če je omogočena možnost DiscourseConnect."
   invite:
-    user_exists: "Ni potrebe za povabilo <b>%{email}</b>, ker <a href='%{base_path}/u/%{username}/summary'>je že prijavljen!</a>"
     confirm_email: "<p>Ste skoraj na koncu! Poslali smo vam aktivacijsko e-sporočilo na vaš e-naslov. Sledite navodilom v e-sporočilu za aktivacijo računa.</p><p>Če e-sporočila ne prejmete, preverite predal z vsiljeno pošto.</p>"
     disabled_errors:
       discourse_connect_enabled: "Povabila so onemogočena, ker je omogočena možnost DiscourseConnect."

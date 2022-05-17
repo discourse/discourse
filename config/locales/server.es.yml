@@ -209,6 +209,7 @@ es:
       cors_origins_should_not_have_trailing_slash: "No deberías añadir una barra al final (/) a los CORS origins."
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "Los agentes de usuario deben tener al menos 3 caracteres para evitar limitar la velocidad a usuarios humanos por error."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "No puedes añadir ninguno de los siguientes valores a este ajuste: %{values}."
+      strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "No es posible desactivar «strip image metadata» si el ajuste «composer media optimization image enabled» está activado. Desactiva «composer media optimization image enabled» antes de desactivar «strip image metadata»."
     conflicting_google_user_id: 'El ID de la cuenta Google para esta cuenta ha cambiado; el personal debe intervenir por razones de seguridad. Ponte en contacto con el personal y envía esta referencia <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
       invalid_address: "Lo sentimos, no hemos podido generar una vista previa para esta página web porque el servidor '%{hostname}' no se ha encontrado. En lugar de una vista previa, solo aparecerá un enlace en tu publicación. :cry:"
@@ -231,7 +232,6 @@ es:
       <p>Si no, <a href="%{base_url}/password-reset">restablece tu contraseña</a>.</p>
     not_found_template_link: |
       <p>Esta invitación a <a href="%{base_url}">%{site_name}</a> ya no se puede usar. Por favor, pídele a la persona que te invitó que te vuelva a enviar una nueva invitación.</p>
-    user_exists: "No hay necesidad de invitar a <b>%{email}</b>, <a href='%{base_path}/u/%{username}/summary'>¡ya tienen una cuenta!</a>"
     invite_exists: "Ya has invitado a <b>%{email}</b>."
     invalid_email: "%{email} no es un correo electrónico válido."
     rate_limit:
@@ -2080,7 +2080,7 @@ es:
     tags_sort_alphabetically: "Mostrar etiquetas en orden alfabético. Por defecto se mostrarán por popularidad."
     tags_listed_by_group: "Listar etiquetas por grupo de etiquetas en la <a href='%{base_path}/tags' target='_blank'>página de etiquetas</a>."
     tag_style: "Estilo visual de las etiquetas."
-    allow_staff_to_tag_pms: "Permitir a los miembros del personal etiquetar cualquier mensaje personal"
+    pm_tags_allowed_for_groups: "Permitir que los miembros de los grupos incluidos etiqueten cualquier mensaje personal"
     min_trust_level_to_tag_topics: "Nivel mínimo de confianza requerido para etiquetar temas"
     suppress_overlapping_tags_in_list: "Si alguna etiqueta coincide con palabras en el título de los temas, ocultarla."
     remove_muted_tags_from_latest: "No muestre temas etiquetados unicamente con etiquetas silenciadas en la lista de temas más reciente."
@@ -2138,6 +2138,7 @@ es:
       email_polling_disabled: "Debes activar el polling sea manual o POP3 antes de activar la respuesta por correo electrónico."
       user_locale_not_enabled: "Debes activar primero «permitir usuario local» antes de activar esta opción."
       invalid_regex: "La expresión regular no es válida o no está permitida."
+      invalid_regex_with_message: "La expresión regular «%{regex}» contiene un error: %{message}"
       email_editable_enabled: "Debes desactivar primero «correo electrónico editable» antes de activar esta opción."
       staged_users_disabled: "Primero debes activar «usuarios provisionales» para poder activar esta configuración."
       reply_by_email_disabled: "Primero debes activar «responder por correo electrónico» antes de activar esta configuración."
@@ -2731,11 +2732,13 @@ es:
     tl2_promotion_message:
       subject_template: "¡Enhorabuena por llegar a un nivel de confianza más!"
       text_body_template: |
-        ¡Te hemos pasado al siguiente [nivel de confianza](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)!
+        ¡Le hemos promovido a otro [nivel de confianza](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)!
 
-        Ahora que ya tienes experiencia con nosotros, puede que te interese [esta lista con consejos útiles](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
+        Alcanzar el nivel de confianza 2 indica que usted ha leído y participado activamente, como para ser considerado miembro de esta comunidad
 
-        Te animamos a que sigas participando, nos gusta que estés por aquí.
+        Al ser un usuario con experiencia, puede que le interese [este listado de consejos y trucos útiles](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
+
+        Le invitamos a continuar participando: es un placer tenerle cerca.
     backup_succeeded:
       title: "Copia de seguridad realizada con éxito"
       subject_template: "La copia de seguridad se completó con éxito"
@@ -4518,6 +4521,10 @@ es:
                 label: "Categorías y temas recientes"
               categories_and_top_topics:
                 label: "Categorías y temas destacados"
+              categories_boxes:
+                label: "Cajas de categorías"
+              categories_boxes_with_topics:
+                label: "Cajas de categorías con temas"
               subcategories_with_featured_topics:
                 label: "Subcategorías con temas destacados"
       logos:

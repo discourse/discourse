@@ -165,7 +165,6 @@ zh_TW:
       s3_bucket_reused: "不能把同一個 Amazon bucket 同時使用 ‘s3_upload_bucket’ 及 ‘s3_backup_bucket’。請選擇不同的 bucket 或指定將每個 bucket 設定不同的路徑。"
     conflicting_google_user_id: '此 Google 帳戶 ID 出於安全原因已更改，請聯絡管理人員並將其<br><a href="https://meta.discourse.org/t/76575">指向 https://meta.discourse.org/t/76575 </a>'
   invite:
-    user_exists: "無需邀請 <b>%{email}</b>，他 <a href='%{base_path}/u/%{username}/summary'>已經有帳號了</a>！"
     confirm_email: "<p>快完成了！我們發送了一封啟用帳號郵件到你的信箱。請按照信件中的步驟來啟用你的帳號。</p><p>如果你沒有收到郵件，請檢查你的垃圾郵件\\b匣。"
     disabled_errors:
       invalid_access: "你不允許查看所請求的資源。"
@@ -1566,7 +1565,6 @@ zh_TW:
     tags_sort_alphabetically: "按照字母順序顯示標籤。預設按流行度顯示。"
     tags_listed_by_group: "按<a href='%{base_path}/tags' target='_blank'>標籤頁面</a>上的標籤群組列出標籤（Tags）。"
     tag_style: "標籤的視覺樣式。"
-    allow_staff_to_tag_pms: "允許工作人員（具有管理員權限）標記任何的個人訊息"
     min_trust_level_to_tag_topics: "給主題加標籤的最小信任等級"
     suppress_overlapping_tags_in_list: "如果標籤匹配了主題標題中的詞，不顯示該標籤"
     force_lowercase_tags: "強制所有新標籤完全小寫"

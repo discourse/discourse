@@ -179,7 +179,6 @@ ca:
   invite:
     not_found: "El testimoni d'invitació no és vàlid. <a href='%{base_url}/about'>Poseu-vos en contacte amb l'equip responsable</a>."
     not_found_json: "El testimoni d'invitació no és vàlid. Poseu-vos en contacte amb l'equip responsable."
-    user_exists: "No cal convidar <b>%{email}</b>, <a href='%{base_path}/u/%{username}/summary'>ja tenen un compte!</a>"
     confirm_email: "<p>Gairebé heu acabat! Hem enviat un missatge d'activació a la vostra adreça de correu. Seguiu les instruccions en el missatge per a activar el compte.</p><p>Si no arriba, comproveu la carpeta de correu brossa.</p>"
     disabled_errors:
       invalid_access: "No teniu permís per a veure el recurs sol·licitat."
@@ -1706,7 +1705,6 @@ ca:
     tags_sort_alphabetically: "Mostra les etiquetes per ordre alfabètic. Per defecte es mostren ordenades per popularitat."
     tags_listed_by_group: "Llista les etiquetes per grups d'etiquetes en la <a href='%{base_path}/tags' target='_blank'>pàgina d'etiquetes</a>."
     tag_style: "Estil visual per a insígnies d'etiqueta."
-    allow_staff_to_tag_pms: "Permet als membres de l'equip responsable etiquetar qualsevol missatge personal"
     min_trust_level_to_tag_topics: "Nivell de confiança mínim necessari per a etiquetar temes"
     suppress_overlapping_tags_in_list: "Si les etiquetes coincideixen exactament amb paraules en els títols dels temes, no mostris l'etiqueta."
     remove_muted_tags_from_latest: "No mostris temes etiquetats sols amb etiquetes silenciades en la llista de temes més recents."

@@ -2813,6 +2813,19 @@ cs:
         leader: "vůdce"
     user_activity:
       no_replies_others: "Žádné odpovědi."
+    sidebar:
+      unread_count: "%{count} nepřečtené"
+      new_count: "%{count} nové"
+      sections:
+        categories:
+          header_link_title: "všechny kategorie"
+          header_link_text: "Kategorie"
+        topics:
+          header_link_title: "domů"
+          header_link_text: "Témata"
+          links:
+            tracked:
+              content: "Sledované"
   admin_js:
     type_to_filter: "text pro filtrování..."
     admin:

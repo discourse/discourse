@@ -231,7 +231,7 @@ it:
       <p>In caso contrario, <a href="%{base_url}/password-reset">reimposta la password</a>.</p>
     not_found_template_link: |
       <p>L'invito a <a href="%{base_url}">%{site_name}</a> non può più essere riscattato. Chiedi alla persona che ti ha invitato di inviarti un nuovo invito.</p>
-    user_exists: "Non è necessario invitare <b>%{email}</b>, <a href='%{base_path}/u/%{username}/summary'>ha già un account!</a>"
+    user_exists: "Non c'è bisogno di invitare <b>%{email}</b>: ha già un account!"
     invite_exists: "Hai già invitato <b>%{email}</b>."
     invalid_email: "%{email} non è un indirizzo email valido."
     rate_limit:
@@ -2070,7 +2070,7 @@ it:
     tags_sort_alphabetically: "Mostra le etichette in ordine alfabetico. Per default vengono mostrate in ordine di popolarità."
     tags_listed_by_group: "Elenca le Etichette per gruppo di Etichette nella <a href='%{base_path}/tags' target='_blank'>pagina delle Etichette</a> ."
     tag_style: "Stile grafico dei distintivi relativi alle etichette."
-    allow_staff_to_tag_pms: "Consenti ai membri dello staff di etichettare qualsiasi messaggio personale"
+    pm_tags_allowed_for_groups: "Consenti ai membri dei gruppi inclusi di etichettare qualsiasi messaggio personale"
     min_trust_level_to_tag_topics: "Livello di attendibilità minimo richiesto per etichettare argomenti"
     suppress_overlapping_tags_in_list: "Se le etichette corrispondono alle esatte parole nei titoli degli argomenti, non mostrare l'etichetta"
     remove_muted_tags_from_latest: "Non mostrare argomenti etichettati solo con etichette silenziate nell'elenco degli argomenti più recenti."
@@ -2620,12 +2620,6 @@ it:
         [prefs]: %{user_preferences_url}
     tl2_promotion_message:
       subject_template: "Congratulazioni per la promozione a un livello di attendibilità superiore!"
-      text_body_template: |
-        Ti abbiamo promosso a un [livello di attendibilità](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) superiore!
-
-        Da utente esperto, potresti trovare interessante [questo elenco di utili suggerimenti e trucchi](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
-
-        Ti invitiamo a partecipare sempre più alle nostre attività: ci fa piacere vederti spesso qui.
     backup_succeeded:
       title: "Backup Riuscito"
       subject_template: "Backup completato correttamente"
