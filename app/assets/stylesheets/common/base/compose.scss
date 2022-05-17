@@ -1,10 +1,10 @@
 :root {
-  --composer-height: 300px;
-  --composer-height-title: 400px;
+  --reply-composer-height: 300px;
+  --new-topic-composer-height: 400px;
 }
 html.composer-open {
   #main-outlet {
-    padding-bottom: var(--composer-height);
+    padding-bottom: var(--reply-composer-height);
   }
 }
 #reply-control {
@@ -52,9 +52,10 @@ html.composer-open {
   }
 
   &.open {
-    height: var(--composer-height);
+    height: var(--reply-composer-height);
     &.edit-title {
-      height: var(--composer-height-title); // more room when editing the title
+      // more room when editing the title
+      height: var(--new-topic-composer-height);
     }
   }
 

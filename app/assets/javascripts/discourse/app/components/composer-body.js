@@ -103,13 +103,12 @@ export default Component.extend(KeyEnterEscape, {
 
     let size = this.origComposerSize + (this.lastMousePos - currentMousePos);
     size = Math.min(size, window.innerHeight - headerOffset());
-
     const minHeight = parseInt(getComputedStyle(this.element).minHeight, 10);
     size = Math.max(minHeight, size);
 
-    ["--composer-height", "--composer-height-title"].forEach((prop) => {
-      document.documentElement.style.setProperty(prop, size ? `${size}px` : "");
-    });
+    ["--reply-composer-height", "--new-topic-composer-height"].forEach((prop) =>
+      document.documentElement.style.setProperty(prop, size ? `${size}px` : "")
+    );
 
     this._triggerComposerResized();
   },
