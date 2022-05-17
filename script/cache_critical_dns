@@ -20,6 +20,9 @@ CRITICAL_HOST_ENV_VARS = %w{
   DISCOURSE_REDIS_SLAVE_HOST
   DISCOURSE_REDIS_REPLICA_HOST
 }
+
+DEFAULT_DB_NAME = "discourse"
+
 HOST_RESOLVER_CACHE = {}
 HOST_HEALTHY_CACHE = {}
 HOSTS_PATH = ENV['DISCOURSE_DNS_CACHE_HOSTS_FILE'] || "/etc/hosts"
@@ -171,15 +174,15 @@ HEALTH_CHECKS = {
   "DISCOURSE_DB_HOST": lambda { |addr|
     postgres_healthcheck(
       host: addr,
-      user: ENV["DISCOURSE_DB_USER_NAME"],
-      password: ENV["DISCOURSE_DB_PASSWORD"],
-      dbname: ENV["DISCOURSE_DB_NAME"])},
+      user: ENV["DISCOURSE_DB_USER_NAME"] || DEFAULT_DB_NAME,
+      dbname: ENV["DISCOURSE_DB_NAME"] || DEFAULT_DB_NAME,
+      password: ENV["DISCOURSE_DB_PASSWORD"])},
   "DISCOURSE_DB_REPLICA_HOST": lambda { |addr|
     postgres_healthcheck(
       host: addr,
-      user: ENV["DISCOURSE_DB_USER_NAME"],
-      password: ENV["DISCOURSE_DB_PASSWORD"],
-      dbname: ENV["DISCOURSE_DB_NAME"])},
+      user: ENV["DISCOURSE_DB_USER_NAME"] || DEFAULT_DB_NAME,
+      dbname: ENV["DISCOURSE_DB_NAME"] || DEFAULT_DB_NAME,
+      password: ENV["DISCOURSE_DB_PASSWORD"])},
   "DISCOURSE_REDIS_HOST": lambda { |addr|
     redis_healthcheck(
       host: addr,
