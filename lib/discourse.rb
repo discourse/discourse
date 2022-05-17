@@ -504,6 +504,9 @@ module Discourse
   USER_READONLY_MODE_KEY     ||= 'readonly_mode:user'
   PG_FORCE_READONLY_MODE_KEY ||= 'readonly_mode:postgres_force'
 
+  # Psuedo readonly mode, where staff can still write
+  STAFF_WRITES_ONLY_MODE_KEY ||= 'readonly_mode:staff_writes_only'
+
   READONLY_KEYS ||= [
     READONLY_MODE_KEY,
     PG_READONLY_MODE_KEY,
@@ -516,7 +519,7 @@ module Discourse
       Sidekiq.pause!("pg_failover") if !Sidekiq.paused?
     end
 
-    if key == USER_READONLY_MODE_KEY || key == PG_FORCE_READONLY_MODE_KEY
+    if [USER_READONLY_MODE_KEY, PG_FORCE_READONLY_MODE_KEY, STAFF_WRITES_ONLY_MODE_KEY].include?(key)
       Discourse.redis.set(key, 1)
     else
       ttl =
@@ -592,6 +595,10 @@ module Discourse
 
   def self.readonly_mode?(keys = READONLY_KEYS)
     recently_readonly? || Discourse.redis.exists?(*keys)
+  end
+
+  def self.staff_writes_only_mode?
+    Discourse.redis.get(STAFF_WRITES_ONLY_MODE_KEY).present?
   end
 
   def self.pg_readonly_mode?

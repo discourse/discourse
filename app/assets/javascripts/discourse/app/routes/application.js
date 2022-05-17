@@ -17,7 +17,17 @@ import showModal from "discourse/lib/show-modal";
 
 function unlessReadOnly(method, message) {
   return function () {
-    if (this.site.get("isReadOnly")) {
+    if (this.site.isReadOnly) {
+      bootbox.alert(message);
+    } else {
+      this[method]();
+    }
+  };
+}
+
+function unlessStrictlyReadOnly(method, message) {
+  return function () {
+    if (this.site.isReadOnly && !this.site.isStaffWritesOnly) {
       bootbox.alert(message);
     } else {
       this[method]();
@@ -114,7 +124,7 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
       return true;
     },
 
-    showLogin: unlessReadOnly(
+    showLogin: unlessStrictlyReadOnly(
       "handleShowLogin",
       I18n.t("read_only_mode.login_disabled")
     ),

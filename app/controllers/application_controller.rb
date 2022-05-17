@@ -8,7 +8,7 @@ class ApplicationController < ActionController::Base
   include JsonError
   include GlobalPath
   include Hijack
-  include ReadOnlyHeader
+  include ReadOnlyMixin
   include VaryHeader
 
   attr_reader :theme_id
@@ -631,6 +631,7 @@ class ApplicationController < ActionController::Base
     store_preloaded("banner", banner_json)
     store_preloaded("customEmoji", custom_emoji)
     store_preloaded("isReadOnly", @readonly_mode.to_s)
+    store_preloaded("isStaffWritesOnly", @staff_writes_only_mode.to_s)
     store_preloaded("activatedThemes", activated_themes_json)
   end
 
@@ -874,11 +875,6 @@ class ApplicationController < ActionController::Base
     disqualified_from_2fa_enforcement = request.format.json? || is_api? || current_user.anonymous?
     enforcing_2fa = ((SiteSetting.enforce_second_factor == 'staff' && current_user.staff?) || SiteSetting.enforce_second_factor == 'all')
     !disqualified_from_2fa_enforcement && enforcing_2fa && !current_user.has_any_second_factor_methods_enabled?
-  end
-
-  def block_if_readonly_mode
-    return if request.fullpath.start_with?(path "/admin/backups")
-    raise Discourse::ReadOnly.new if !(request.get? || request.head?) && @readonly_mode
   end
 
   def build_not_found_page(opts = {})
