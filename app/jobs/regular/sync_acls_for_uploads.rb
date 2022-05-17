@@ -18,7 +18,18 @@ module Jobs
         Rails.logger.warn("Syncing ACL for upload ids: #{args[:upload_ids].join(", ")}")
         Upload.includes(:optimized_images).where(id: args[:upload_ids]).find_in_batches do |uploads|
           uploads.each do |upload|
-            Discourse.store.update_upload_ACL(upload, optimized_images_preloaded: true)
+            begin
+              Discourse.store.update_upload_ACL(upload, optimized_images_preloaded: true)
+            rescue => err
+              Discourse.warn_exception(
+                err,
+                message: "Failed to update upload ACL",
+                env: {
+                  upload_id: upload.id,
+                  filename: upload.original_filename
+                }
+              )
+            end
           end
         end
         Rails.logger.warn("Completed syncing ACL for upload ids in #{time.to_s}. IDs: #{args[:upload_ids].join(", ")}")
