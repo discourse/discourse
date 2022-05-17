@@ -808,6 +808,25 @@
             "timezone",
             "skip_new_user_tips"
           ]
+        },
+        "status": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "description": {
+              "type": "string"
+            },
+            "emoji": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "description",
+            "emoji"
+          ]
         }
       },
       "required": [
@@ -883,7 +902,8 @@
         "invited_by",
         "groups",
         "group_users",
-        "user_option"
+        "user_option",
+        "status"
       ]
     }
   },
