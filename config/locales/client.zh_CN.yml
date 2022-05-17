@@ -273,8 +273,8 @@ zh_CN:
         unbookmark_with_reminder: "点击以移除此话题中的所有书签和提醒。"
     bookmarks:
       created: "您已将此帖子加入书签。%{name}"
-      create_for: "为 %{type} 创建书签"
-      edit_for: "为 %{type} 编辑书签"
+      create: "创建书签"
+      edit: "编辑书签"
       not_bookmarked: "将此帖子加入书签"
       remove_reminder_keep_bookmark: "删除提醒并保留收藏"
       created_with_reminder: "您已将此帖子加入书签，并于 %{date}设置了一个提醒。%{name}"
@@ -1749,8 +1749,8 @@ zh_CN:
         sr_title: "使用 Instagram 登录"
       facebook:
         name: "Facebook"
-        title: "用脸书登入"
-        sr_title: "用脸书登入"
+        title: "使用 Facebook 登录"
+        sr_title: "使用 Facebook 登录"
       github:
         name: "GitHub"
         title: "使用 GitHub 登录"
@@ -3446,6 +3446,7 @@ zh_CN:
           title: "已设为免打扰"
           description: "您不会收到有关带有此标签的新话题的任何通知，它们也不会出现在您的未读标签页上。"
       groups:
+        back_btn: "返回到所有标签"
         title: "标签组"
         about_heading: "选择一个标签组或创建一个新的标签组"
         about_heading_empty: "创建一个新的标签组以开始"
@@ -3540,6 +3541,27 @@ zh_CN:
       expand_btn: "展开表格"
     second_factor_auth:
       redirect_after_success: "双重认证验证成功。重定向到之前的页面…"
+    sidebar:
+      unread_count: "%{count} 未读"
+      new_count: "%{count} 新"
+      sections:
+        categories:
+          header_link_title: "所有类别"
+          header_link_text: "类别"
+        topics:
+          header_link_title: "首页"
+          header_link_text: "话题"
+          header_action_title: "创建新话题"
+          links:
+            everything:
+              content: "一切"
+              title: "所有话题"
+            tracked:
+              content: "已跟踪"
+              title: "所有跟踪的话题"
+            bookmarked:
+              content: "已加入书签"
+              title: "所有被列入书签的主题"
   admin_js:
     type_to_filter: "输入以筛选…"
     admin:

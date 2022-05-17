@@ -286,6 +286,8 @@ ur:
         unbookmark_with_reminder: "اس موضوع میں تمام بک مارکس اور یاد دہانیوں کو مٹانے کے لیے کلک کریں۔"
     bookmarks:
       created: "آپ نے اس %{name} پوسٹ کو بک مارک کیا ہے۔"
+      create: "بک مارک بنائیں"
+      edit: "بک مارک میں ترمیم"
       not_bookmarked: "اِس پوسٹ کو بُک مارک کریں"
       remove_reminder_keep_bookmark: "یاد دہانی کو ہٹا دیں اور بک مارک کو بچا کر رکھیں"
       created_with_reminder: "آپ نے اس پوسٹ کو ایک یاد دہانی %{date}, %{name} کے ساتھ بک مارک کیا ہے۔"
@@ -1776,20 +1778,12 @@ ur:
         name: "Twitter"
       instagram:
         name: "اِنسٹاگرام"
-        title: "انسٹاگرام کے ساتھ لاگ ان کریں"
-        sr_title: "انسٹاگرام کے ساتھ لاگ ان کریں"
       facebook:
         name: "فَیسبُک"
-        title: "فیس بک کے ساتھ لاگ ان کریں"
-        sr_title: "فیس بک کے ساتھ لاگ ان کریں"
       github:
         name: "گِٹ ہَب"
-        title: "گٹ ہب کے ساتھ لاگ ان کریں"
-        sr_title: "گٹ ہب کے ساتھ لاگ ان کریں"
       discord:
         name: "ڈِسکَورڈ"
-        title: "ڈسکورڈ کے ساتھ لاگ ان کریں"
-        sr_title: "ڈسکورڈ کے ساتھ لاگ ان کریں"
       second_factor_toggle:
         totp: "بجائے ایک اَوتھینٹیکَیٹر اَیپ کا استعمال کریں"
         backup_code: "بجائے ایک بیک اپ کوڈ استعمال کریں"
@@ -3639,6 +3633,19 @@ ur:
       expand_btn: "ٹیبل کو پھیلائیں"
     second_factor_auth:
       redirect_after_success: "دو فیکٹر کی توثیق کامیاب ہے۔ پچھلے صفحہ…پر ری ڈائریکٹ کیا جا رہا ہے۔"
+    sidebar:
+      unread_count: "%{count} بغیر پڑھا ہوا"
+      new_count: "%{count} نیا"
+      sections:
+        categories:
+          header_link_title: "تمام زُمرَہ جات"
+          header_link_text: "زُمرَہ جات"
+        topics:
+          header_link_title: "ہَوم"
+          header_link_text: "ٹاپک"
+          links:
+            tracked:
+              content: "ٹریک کیا ہوا"
   admin_js:
     type_to_filter: "فِلٹر کرنے کے لئے ٹائپ کریں..."
     admin:

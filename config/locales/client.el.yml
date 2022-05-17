@@ -261,6 +261,8 @@ el:
         unbookmark: "Πατήστε εδώ για να αφαιρεθούν όλοι οι σελιδοδείκτες από αυτό το θέμα."
     bookmarks:
       created: "Έχετε προσθέσει σελιδοδείκτη σε αυτήν την ανάρτηση. %{name}"
+      create: "Δημιουργία σελιδοδείκτη"
+      edit: "Επεξεργασία σελιδοδείκτη"
       not_bookmarked: "προσθέστε σελιδοδείκτη σε αυτήν την ανάρτηση"
       created_with_reminder: "Έχετε προσθέσει σελιδοδείκτη σε αυτήν την ανάρτηση με υπενθύμιση %{date}. %{name}"
       remove: "Αφαίρεση σελιδοδείκτη"
@@ -3059,6 +3061,19 @@ el:
       no_activity_others: "Χωρίς δραστηριότητα."
       no_replies_others: "Χωρίς απαντήσεις."
       no_likes_others: "Καμία αρεστή ανάρτηση."
+    sidebar:
+      unread_count: "%{count} μη αναγνωσμένο"
+      new_count: "%{count} νέο"
+      sections:
+        categories:
+          header_link_title: "όλες οι κατηγορίες"
+          header_link_text: "Κατηγορίες"
+        topics:
+          header_link_title: "αρχική Σελίδα"
+          header_link_text: "Θέματα"
+          links:
+            tracked:
+              content: "Παρακολουθείται"
   admin_js:
     type_to_filter: "γράψε εδώ για φιλτράρισμα..."
     admin:

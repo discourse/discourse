@@ -276,6 +276,8 @@ nl:
         unbookmark: "Klik om alle bladwijzers in dit topic te verwijderen"
     bookmarks:
       created: "U hebt een bladwijzer voor dit bericht gemaakt. %{name}"
+      create: "Bladwijzer maken"
+      edit: "Bladwijzer bewerken"
       not_bookmarked: "bladwijzer voor dit bericht maken"
       created_with_reminder: "U hebt een bladwijzer voor dit bericht gemaakt met een herinnering voor %{date}. %{name}"
       remove: "Bladwijzer verwijderen"
@@ -1731,20 +1733,12 @@ nl:
         name: "Twitter"
       instagram:
         name: "Instagram"
-        title: "Inloggen met Instagram"
-        sr_title: "Inloggen met Instagram"
       facebook:
         name: "Facebook"
-        title: "Inloggen met Facebook"
-        sr_title: "Inloggen met Facebook"
       github:
         name: "GitHub"
-        title: "Inloggen met GitHub"
-        sr_title: "Inloggen met GitHub"
       discord:
         name: "Discord"
-        title: "Inloggen met Discord"
-        sr_title: "Inloggen met Discord"
       second_factor_toggle:
         totp: "Een authenticator-app gebruiken"
         backup_code: "Een back-upcode gebruiken"
@@ -3493,6 +3487,19 @@ nl:
       no_replies_others: "Geen antwoorden."
       no_likes_others: "Geen gelikete berichten."
       no_read_topics_body: "Zodra u discussies gaat lezen, ziet u hier een lijst. Om te beginnen met lezen, zoek naar interessante topics onder <a href='%{topUrl}'>Top</a> of <a href='%{categoriesUrl}'>Categorieën</a> of zoek op trefwoord %{searchIcon}"
+    sidebar:
+      unread_count: "%{count} ongelezen"
+      new_count: "%{count} nieuw"
+      sections:
+        categories:
+          header_link_title: "alle categorieën"
+          header_link_text: "Categorieën"
+        topics:
+          header_link_title: "hoofdpagina"
+          header_link_text: "Topics"
+          links:
+            tracked:
+              content: "Gevolgd"
   admin_js:
     type_to_filter: "typ om te filteren..."
     admin:

@@ -287,8 +287,8 @@ it:
         unbookmark_with_reminder: "Clicca per rimuovere tutti i segnalibri e i promemoria a questo argomento."
     bookmarks:
       created: "Hai aggiunto questo messaggio ai segnalibri %{name}"
-      create_for: "Crea un segnalibro per %{type}"
-      edit_for: "Modifica il segnalibro per %{type}"
+      create: "Crea un segnalibro"
+      edit: "Modifica segnalibro"
       not_bookmarked: "aggiungi messaggio ai segnalibri"
       remove_reminder_keep_bookmark: "Rimuovi il promemoria e mantieni il segnalibro"
       created_with_reminder: "Hai aggiunto ai segnalibri questo messaggio con un promemoria %{date}. %{name}"
@@ -3578,6 +3578,7 @@ it:
           title: "Silenziato"
           description: "Non riceverai alcuna notifica per nuovi Argomenti con questa Etichetta, e non compariranno nella pagina dei messaggi non letti."
       groups:
+        back_btn: "Torna a tutte le etichette"
         title: "Gruppi Etichette"
         about_heading: "Seleziona un gruppo di etichette o creane uno nuovo"
         about_heading_empty: "Crea un nuovo gruppo di etichette per iniziare"
@@ -3672,6 +3673,27 @@ it:
       expand_btn: "Espandi Tabella"
     second_factor_auth:
       redirect_after_success: "Autenticazione a due fattori riuscita. Reindirizzamento alla pagina precedente…"
+    sidebar:
+      unread_count: "%{count} non letti"
+      new_count: "%{count} nuovi"
+      sections:
+        categories:
+          header_link_title: "tutte le categorie"
+          header_link_text: "Categorie"
+        topics:
+          header_link_title: "home"
+          header_link_text: "Argomenti"
+          header_action_title: "crea un nuovo argomento"
+          links:
+            everything:
+              content: "Tutti"
+              title: "Tutti gli argomenti"
+            tracked:
+              content: "Seguiti"
+              title: "Tutti gli argomenti seguiti"
+            bookmarked:
+              content: "Aggiunti ai segnalibri"
+              title: "Tutti gli argomenti aggiunti ai segnalibri"
   admin_js:
     type_to_filter: "digita per filtrare..."
     admin:

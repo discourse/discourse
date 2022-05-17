@@ -227,6 +227,8 @@ th:
         bookmark: "คลิกเพื่อ บุ๊คมาร์ค ที่โพสแรกของกระทู้นี้"
         unbookmark: "คลิกเพื่อลบบุ๊กมาร์กทั้งหมดในกระทู้นี้"
     bookmarks:
+      create: "สร้างบุ๊กมาร์ก"
+      edit: "แก้ไขบุ๊กมาร์ก"
       not_bookmarked: "บุ๊กมาร์กโพสต์นี้"
       remove: "ลบบุ๊กมาร์ก"
       delete: "ลบบุ๊กมาร์ก"
@@ -2398,6 +2400,19 @@ th:
       names:
         member: "สมาชิก"
         regular: "ทั่วไป"
+    sidebar:
+      unread_count: "%{count} ยังไม่อ่าน"
+      new_count: "%{count} ใหม่"
+      sections:
+        categories:
+          header_link_title: "ทุกหมวดหมู่"
+          header_link_text: "หมวดหมู่"
+        topics:
+          header_link_title: "หน้าแรก"
+          header_link_text: "กระทู้"
+          links:
+            tracked:
+              content: "ติดตาม"
   admin_js:
     type_to_filter: "พิมพ์เพื่อกรอง..."
     admin:

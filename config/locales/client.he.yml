@@ -369,8 +369,8 @@ he:
         unbookmark_with_reminder: "יש ללחוץ כדי להסיר את כל הסימניות והתזכורות בנושא זה."
     bookmarks:
       created: "הוספת את הפוסט הזה לסימניות. %{name}"
-      create_for: "יצירת סימנייה אל %{type}"
-      edit_for: "עריכת סימנייה אל %{type}"
+      create: "יצירת סימנייה"
+      edit: "עריכת סימנייה"
       not_bookmarked: "סמנו פוסט זה עם סימנייה"
       remove_reminder_keep_bookmark: "הסרת תזכורת ושמירת הסימנייה"
       created_with_reminder: "סימנת את הפוסט הזה עם תזכורת %{date}. %{name}"
@@ -3951,6 +3951,7 @@ he:
           title: "בהשתקה"
           description: "לא תופענה אצלך אף התראות בנוגע לנושאים חדשים עם התגית הזאת והן לא תופענה בלשונית הפריטים שלא נקראו."
       groups:
+        back_btn: "חזרה לכל התגיות"
         title: "תיוג קבוצות"
         about_heading: "נא לבחור קבוצת תגיות או ליצור אחת חדשה"
         about_heading_empty: "יש ליצור קבוצת תגיות חדשה כדי להתחיל"
@@ -4045,6 +4046,27 @@ he:
       expand_btn: "הרחבת טבלה"
     second_factor_auth:
       redirect_after_success: "האימות הדו־שלבי הצליח. מתבצעת הפניה לעמוד הקודם…"
+    sidebar:
+      unread_count: "לא נקרא (%{count})"
+      new_count: "חדש (%{count})"
+      sections:
+        categories:
+          header_link_title: "כל הקטגוריות"
+          header_link_text: "קטגוריות"
+        topics:
+          header_link_title: "בית"
+          header_link_text: "נושאים"
+          header_action_title: "יצירת נושא חדש"
+          links:
+            everything:
+              content: "הכול"
+              title: "כל הנושאים"
+            tracked:
+              content: "במעקב"
+              title: "כל הנושאים במעקב"
+            bookmarked:
+              content: "מסומן"
+              title: "כל הנושאים שסומנו"
   admin_js:
     type_to_filter: "הקלידו לסינון..."
     admin:

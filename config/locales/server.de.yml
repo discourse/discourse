@@ -232,7 +232,6 @@ de:
       <p>Ansonsten kannst du <a href="%{base_url}/password-reset">dein Passwort zurücksetzen</a>.</p>
     not_found_template_link: |
       <p>Diese Einladung zu <a href="%{base_url}">%{site_name}</a> kann nicht mehr eingelöst werden. Bitte die Person, die dich eingeladen hat, dir eine neue Einladung zu schicken.</p>
-    user_exists: "Es ist nicht nötig, <b>%{email}</b> einzuladen, die Person <a href='%{base_path}/u/%{username}/summary'>hat schon ein Konto!</a>"
     invite_exists: "Du hast <b>%{email}</b> bereits eingeladen."
     invalid_email: "%{email} ist keine gültige E-Mail-Adresse."
     rate_limit:
@@ -2081,7 +2080,7 @@ de:
     tags_sort_alphabetically: "Zeige Schlagwörter in alphabetischer Reihenfolge. Standardmäßig werden sie nach Beliebtheit sortiert."
     tags_listed_by_group: "Zeige Schlagwörter auf der <a href='%{base_path}/tags' target='_blank'>Schlagwort-Seite</a> geordnet nach Schlagwortgruppe an."
     tag_style: "Visueller Stil für Schlagwort-Abzeichen."
-    allow_staff_to_tag_pms: "Erlaube Team-Mitgliedern, jede Nachricht mit einem Schlagwort zu versehen."
+    pm_tags_allowed_for_groups: "Erlaube den Mitgliedern der einbezogenen Gruppe(n), jede persönliche Nachricht zu markieren"
     min_trust_level_to_tag_topics: "Minimale Vertrauensstufe, um Schlagwörter zu Themen hinzuzufügen."
     suppress_overlapping_tags_in_list: "Schlagwort nicht zeigen, wenn es genauso im Thementitel vorkommt"
     remove_muted_tags_from_latest: "Themen, die nur mit stummgeschalteten Tags versehen sind, nicht in der Liste der aktuellen Themen anzeigen"
@@ -2732,11 +2731,13 @@ de:
     tl2_promotion_message:
       subject_template: "Herzlichen Glückwunsch zur Beförderung deiner Vertrauensstufe!"
       text_body_template: |
-        Wir haben dich um eine weitere [Vertrauensstufe](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) befördert!
+        Wir haben dich eine weitere [Vertrauensstufe](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) aufsteigen lassen!
 
-        Als erfahrener Benutzer weißt du [diese Liste nützlicher Tipps und Tricks](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/) vielleicht zu schätzen.
+        Das Erreichen der Vertrauensstufe 2 bedeutet, dass du genug gelesen und aktiv mitgemacht hast, um als Mitglied dieser Gemeinschaft angesehen zu werden.
 
-        Wir laden dich ein, dich weiter zu engagieren – es ist schön, dass du da bist.
+        Als erfahrener Nutzer wirst du [diese Liste mit praktischen Tipps und Tricks](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/) zu schätzen wissen.
+
+        Wir laden dich ein, dich weiterhin einzubringen - wir freuen uns, dich hier zu haben.
     backup_succeeded:
       title: "Backup erfolgreich"
       subject_template: "Backup erfolgreich abgeschlossen"

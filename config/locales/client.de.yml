@@ -305,8 +305,8 @@ de:
         unbookmark_with_reminder: "Klicke, um alle Lesezeichen und Erinnerungen in diesem Thema zu entfernen."
     bookmarks:
       created: "Du hast diesen Beitrag mit einem Lesezeichen versehen. %{name}"
-      create_for: "Lesezeichen für %{type} erstellen"
-      edit_for: "Lesezeichen für %{type} bearbeiten"
+      create: "Lesezeichen erstellen"
+      edit: "Lesezeichen bearbeiten"
       not_bookmarked: "diesen Beitrag mit Lesezeichen versehen"
       remove_reminder_keep_bookmark: "Erinnerung entfernen und Lesezeichen behalten"
       created_with_reminder: "Du wirst %{date} an dieses Lesezeichen erinnert. %{name}"
@@ -3616,6 +3616,7 @@ de:
           title: "Stummgeschaltet"
           description: "Du wirst nicht über neue Themen mit diesem Schlagwort benachrichtigt und sie werden nicht unter „Ungelesen“ auftauchen."
       groups:
+        back_btn: "Zurück zu allen Schlagwörtern"
         title: "Schlagwortgruppen"
         about_heading: "Wähle eine Schlagwortgruppe oder erstelle eine neue."
         about_heading_empty: "Erstelle eine neue Schlagwortgruppe, um loszulegen"
@@ -3710,6 +3711,27 @@ de:
       expand_btn: "Tabelle erweitern"
     second_factor_auth:
       redirect_after_success: "Die Zwei-Faktor-Authentifizierung ist erfolgreich. Weiterleitung zur vorherigen Seite…"
+    sidebar:
+      unread_count: "%{count} ungelesenes"
+      new_count: "%{count} neues"
+      sections:
+        categories:
+          header_link_title: "alle Kategorien"
+          header_link_text: "Kategorien"
+        topics:
+          header_link_title: "startseite"
+          header_link_text: "Themen"
+          header_action_title: "ein neues Thema erstellen"
+          links:
+            everything:
+              content: "Alles"
+              title: "Alle Themen"
+            tracked:
+              content: "Verfolgt"
+              title: "Alle verfolgten Themen"
+            bookmarked:
+              content: "Mit einem Lesezeichen versehen"
+              title: "Alle mit Lesezeichen versehenen Themen"
   admin_js:
     type_to_filter: "zum Filtern hier eingeben …"
     admin:

@@ -1777,6 +1777,19 @@ sr:
         member: "član"
         regular: "stalni član"
         leader: "vođa"
+    sidebar:
+      unread_count: "%{count} nepročitana"
+      new_count: "%{count} nova"
+      sections:
+        categories:
+          header_link_title: "sve kategorije"
+          header_link_text: "Kategorije"
+        topics:
+          header_link_title: "home"
+          header_link_text: "Teme"
+          links:
+            tracked:
+              content: "Praćeno"
   admin_js:
     type_to_filter: "upiši za filtriranje"
     admin:

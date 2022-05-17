@@ -285,6 +285,8 @@ bs_BA:
         unbookmark: "Klikni za uklanjanje svih zabilješki sa ove teme"
     bookmarks:
       created: "Zabilježili ste ovu objavu. %{name}"
+      create: "Stvaranje zabilješke"
+      edit: "Izmijeni zabilješku"
       not_bookmarked: "zabilježi objavu"
       remove: "Ukloni zabilješku"
       delete: "Izbriši zabilješku"
@@ -3061,6 +3063,19 @@ bs_BA:
         leader: "vođa"
     user_activity:
       no_replies_others: "Nema odgovora."
+    sidebar:
+      unread_count: "%{count} nepročitana"
+      new_count: "%{count} novi"
+      sections:
+        categories:
+          header_link_title: "Sve kategorije"
+          header_link_text: "Kategorije"
+        topics:
+          header_link_title: "naslovnica"
+          header_link_text: "Tema"
+          links:
+            tracked:
+              content: "Praćeno"
   admin_js:
     type_to_filter: "kucaj da sortiraš..."
     admin:

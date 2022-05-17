@@ -161,7 +161,6 @@ vi:
       missing_data:
         other: "Xin lỗi, chúng tôi không thể tạo bản xem trước cho trang web này vì không thể tìm thấy các thẻ oEmbed / OpenGraph sau: %{missing_attributes}"
   invite:
-    user_exists: "Không cần mời <b>%{email}</b>, họ <a href='%{base_path}/u/%{username}/summary'>đã có tài khoản!</a>"
     disabled_errors:
       invalid_access: "Bạn không được phép xem tài nguyên đã yêu cầu."
   topic_invite:
@@ -441,6 +440,8 @@ vi:
   post:
     image_placeholder:
       broken: "Hình ảnh này bị hỏng"
+    cannot_permanently_delete:
+      many_posts: "Bạn không thể xóa vĩnh viễn chủ đề này vì có những bài viết khác."
   rate_limiter:
     slow_down: "Bạn đã thực hiện hành động này quá nhiều lần, vui lòng thử lại sau."
     too_many_requests: "Bạn đã thực hiện hành động này quá nhiều lần. Vui lòng đợi %{time_left} trước khi thử lại."
@@ -897,6 +898,7 @@ vi:
     min_first_post_length: "Chiều dài tối thiểu cho bài viết đầu tiên (nội dung chủ đề) tính theo ký tự."
     min_personal_message_post_length: "Số kí tự tối thiểu trong tin nhắn."
     max_post_length: "Số kí tự tối đa trong bài đăng."
+    min_topic_views_for_delete_confirm: "Số lượt xem tối thiểu mà một chủ đề phải có để cửa sổ bật lên xác nhận xuất hiện khi chủ đề bị xóa"
     min_topic_title_length: "Số kí tự tối thiểu trong tiêu đề chủ đề."
     max_topic_title_length: "Số kí tự tối đa trong tiêu đề chủ đề."
     min_personal_message_title_length: "Chiều dài tối thiểu cho phép theo số kí tự của một thông điệp"
@@ -1091,6 +1093,7 @@ vi:
     num_flaggers_to_close_topic: "Số lượng tối thiểu đánh dấu độc nhất để tự động tạm dừng một chủ đề để can thiệp."
     auto_respond_to_flag_actions: "Kích hoạt tính năng trả lời tự động khi xử lý một đánh dấu."
     min_first_post_typing_time: "Số lượng thời gian tối thiểu theo phần ngàn giây mà thành viên phải nhập trong bài viết đầu tiên, nếu ngưỡng không được đáp ứng sẽ tự động nhập vào hàng chờ duyệt. Đặt là 0 để tắt (không khuyến nghị)"
+    auto_silence_fast_typers_on_first_post: "Tự động tắt tiếng người dùng không đáp ứng min_first_post_typing_time"
     reply_by_email_enabled: "Cho phép trả lời chủ đề qua email."
     reply_by_email_address: "Mẫu để trả lời cho các địa chỉ email đến, ví dụ: %%{reply_key}@reply.example.com hoặc replies+%%{reply_key}@example.com"
     strip_images_from_short_emails: "Tất cả các ảnh từ email phải có kích cỡ nhỏ hơn 2800 Bytes"
@@ -1109,6 +1112,7 @@ vi:
     pop3_polling_host: "Máy chủ để poll email thông qua POP3."
     pop3_polling_username: "Tên truy cập của tài khoản POP3 để poll email."
     pop3_polling_password: "Mật khẩu của tài khoản POP3 để poll email."
+    pop3_polling_delete_from_server: "Xóa email khỏi máy chủ. LƯU Ý: Nếu bạn tắt tính năng này, bạn nên dọn dẹp hộp thư đến của mình theo cách thủ công"
     email_in_min_trust: "Bậc tin tưởng tối thiểu cho phép một thành viên gửi chủ đề mới qua email."
     imap_polling_period_mins: "Khoảng thời gian tính bằng phút giữa việc kiểm tra tài khoản IMAP cho email."
     imap_polling_old_emails: "Số lượng email cũ tối đa (đã xử lý) được cập nhật mỗi khi hộp IMAP được thăm dò (0 cho tất cả)."
@@ -1437,6 +1441,10 @@ vi:
         %{flagged_post_raw_content}
         ` ``
         [/details]
+    flags_agreed_and_post_deleted:
+      subject_template: "Nhân viên đã xóa bài đăng bị gắn cờ"
+    flags_agreed_and_post_deleted_for_responders:
+      subject_template: "Trả lời bị xóa khỏi bài đăng bị gắn cờ bởi nhân viên"
     welcome_user:
       subject_template: "Chào mừng đến với %{site_name}!"
       text_body_template: |
@@ -1783,6 +1791,8 @@ vi:
     sender_message_to_blank: "message.to rỗng"
     sender_text_part_body_blank: "text_part.body rỗng"
     sender_body_blank: "nội dung rỗng"
+    group_smtp_post_deleted: "bài đăng đã bị xóa"
+    group_smtp_topic_deleted: "chủ đề đã bị xóa"
   color_schemes:
     base_theme_name: "Cơ bản"
     default_theme_name: "Mặc định"
@@ -2036,6 +2046,8 @@ vi:
       medium: "Trung bình"
       high: "Cao"
     conflict: "Đã có xung đột cập nhật ngăn bạn làm điều đó."
+    reasons:
+      fast_typer: "Người dùng mới nhập bài đăng đầu tiên của họ nhanh một cách đáng ngờ, bị nghi ngờ là bot hoặc hành vi gửi thư rác. Xem %{link}."
     actions:
       agree_and_keep:
         title: "Giữ bài viết"
@@ -2049,15 +2061,27 @@ vi:
         title: "Người dùng im lặng"
       delete_single:
         title: "Xóa"
+      delete_and_ignore_replies:
+        confirm: "Bạn có chắc chắn muốn xóa các câu trả lời cho bài đăng không?"
       disagree:
         title: "Không đồng ý"
       ignore:
         title: "Bỏ qua"
       approve:
         title: "Duyệt"
+      approve_post:
+        title: "Phê duyệt bài đăng"
+      reject_post:
+        title: "Từ chối bài đăng"
+      approve_user:
+        title: "Phê duyệt người dùng"
       reject_user:
+        title: "Xóa người dùng..."
         delete:
           title: "Xóa tài khoản"
+        block:
+          title: "Xóa và Chặn Người Dùng"
+          description: "Người dùng sẽ bị xóa và chúng tôi sẽ chặn IP và địa chỉ email của họ."
       reject:
         title: "Từ chối"
       reject_and_keep_deleted:

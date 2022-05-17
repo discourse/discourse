@@ -231,7 +231,6 @@ fr:
       <p>Sinon, veuillez <a href="%{base_url}/password-reset">réinitialiser votre mot de passe</a>.</p>
     not_found_template_link: |
       <p>La date d'expiration de cette invitation à <a href="%{base_url}">%{site_name}</a> est dépassée. Nous vous invitons à demander à la personne qui vous a invité(e) de vous faire parvenir une nouvelle invitation.</p>
-    user_exists: "Inutile d'inviter <b>%{email}</b>, cette personne <a href='%{base_path}/u/%{username}/summary'>dispose déjà d'un compte !</a>"
     invite_exists: "Vous avez déjà invité <b>%{email}</b>."
     invalid_email: "%{email} n'est pas une adresse de courriel valable."
     rate_limit:
@@ -2079,7 +2078,6 @@ fr:
     tags_sort_alphabetically: "Afficher les étiquettes par ordre alphabétique. Par défaut, elles sont affichées par ordre de popularité."
     tags_listed_by_group: "Lister les étiquettes par groupe d'étiquettes sur la <a href='%{base_path}/tags' target='_blank'>page Étiquettes</a>."
     tag_style: "Style visuel pour les badges d'étiquette."
-    allow_staff_to_tag_pms: "Autoriser les responsables à étiqueter n'importe quel message direct"
     min_trust_level_to_tag_topics: "Niveau de confiance minimal requis pour étiqueter des sujets"
     suppress_overlapping_tags_in_list: "Si des étiquettes correspondent exactement à des mots du titre d'un sujet, ne pas afficher ces étiquettes"
     remove_muted_tags_from_latest: "Ne pas afficher les sujets avec des étiquettes mises en sourdine dans la liste des sujets récents."
@@ -2730,12 +2728,6 @@ fr:
         [prefs] : %{user_preferences_url}
     tl2_promotion_message:
       subject_template: "Félicitations pour votre promotion de niveau de confiance !"
-      text_body_template: |
-        Nous vous avons accordé un [niveau de confiance ](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) supérieur !
-
-        En votre qualité d'utilisateur(rice) expérimenté(e), vous apprécierez peut-être [ces différents trucs et astuces (en anglais)](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
-
-        Votre présence est appréciée et nous vous encourageons à continuer de vous impliquer.
     backup_succeeded:
       title: "Sauvegarde effectuée"
       subject_template: "Sauvegarde terminée avec succès"

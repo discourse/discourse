@@ -266,6 +266,8 @@ gl:
         unbookmark: "Prema para retirar todos os marcadores deste tema"
     bookmarks:
       created: "Fixou como marcador esta publicación. %{name}"
+      create: "Crear marcador"
+      edit: "Editar marcador"
       not_bookmarked: "marcar esta publicación"
       created_with_reminder: "Fixou como marcador esta publicación cun recordatorio %{date}. %{name}"
       remove: "Retirar marcador"
@@ -3348,6 +3350,19 @@ gl:
       no_activity_others: "Sen actividade."
       no_replies_others: "Sen respostas."
       no_likes_others: "Ningún Gústame en publicacións."
+    sidebar:
+      unread_count: "%{count} pendente de lectura"
+      new_count: "%{count} novo"
+      sections:
+        categories:
+          header_link_title: "todas as categorías"
+          header_link_text: "Categorías"
+        topics:
+          header_link_title: "inicio"
+          header_link_text: "Temas"
+          links:
+            tracked:
+              content: "Seguido"
   admin_js:
     type_to_filter: "escriba para filtrar..."
     admin:

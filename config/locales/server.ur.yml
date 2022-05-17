@@ -230,7 +230,6 @@ ur:
       <p>ورنہ براہ کرم <a href="%{base_url}/password-reset">پاس ورڈ ری سیٹ کریں</a>۔</p>
     not_found_template_link: |
       <p> <a href="%{base_url}">%{site_name}</a> پردی گئی اس دعوت کا فائدہ اٹھالیا گیا ہے۔ براہ کرم اس شخص سے پوچھیں جس نے آپ کو مدعو کیا ہے کہ وہ آپ کو ایک نیا دعوت نامہ بھیجے۔</p>
-    user_exists: "<b>%{email}</b>کو مدعو کرنے کی کوئی ضرورت نہیں ہے، اُن کا <a href='%{base_path}/u/%{username}/summary'>پہلے سے ہی ایک اکاؤنٹ ہے!</a>"
     invite_exists: "آپ نے پہلے ہی <b>%{email}</b>کو مدعو کر لیا"
     invalid_email: "%{email} ایک درست ای میل پتہ نہیں۔"
     rate_limit:
@@ -1971,7 +1970,6 @@ ur:
     tags_sort_alphabetically: "ٹَیگز کو حروف تہجی کی ترتیب میں دکھائیں۔ ڈِیفالٹ کے طور پر مقبولیت کے مطابق دکھائے جائیں گے۔"
     tags_listed_by_group: "<a href='%{base_path}/tags' target='_blank'>ٹیگز صفحے</a> پر ٹیگ گروپ کے حساب سے ٹیگز کو فہرست کریں۔"
     tag_style: "ٹَیگ بیَجوں کیلئے بصری سٹائل۔"
-    allow_staff_to_tag_pms: "سٹاف ممبران کو کسی بھی ذاتی پیغام پر ٹَیگ لگانے کی اجازت دیں"
     min_trust_level_to_tag_topics: "ٹاپکس پر ٹَیگ لگانے کیلئے کم از کم مطلوبہ ٹرسٹ لَیول"
     suppress_overlapping_tags_in_list: "اگر ٹَیگز ٹاپک عنوانات میں موجود مکمل الفاظ سے مَیچ کرتے ہوں، تو ٹَیگ مت دکھائیں"
     remove_muted_tags_from_latest: "تازہ ترین ٹاپک فہرست میں صرف خاموش شدہ ٹَیگز کے ساتھ ٹَیگ کردہ ٹاپکس مت دکھائیں۔"
