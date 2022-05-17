@@ -4065,6 +4065,7 @@ en:
   site_setting_missing: "`%{name}` site setting has to be set."
 
   page_not_found:
+    page_title: "Page Not Found"
     title: "Oops! That page doesn’t exist or is private."
     popular_topics: "Popular"
     recent_topics: "Recent"
