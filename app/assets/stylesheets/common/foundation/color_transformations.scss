@@ -154,7 +154,4 @@ $hljs-attribute: dark-light-choose(
 ) !default;
 $hljs-symbol: dark-light-choose(unquote("#990073"), unquote("#fbe")) !default;
 $hljs-bg: dark-light-choose(unquote("#f8f8f8"), unquote("#333")) !default;
-$hljs-builtin-name: dark-light-choose(
-  $tertiary-high,
-  unquote("#65b9db")
-) !default;
+$hljs-builtin-name: dark-light-choose($tertiary-high, $tertiary-hover) !default;
