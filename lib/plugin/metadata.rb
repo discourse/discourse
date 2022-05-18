@@ -41,6 +41,7 @@ class Plugin::Metadata
     "discourse-github",
     "discourse-gradle-issue",
     "discourse-graphviz",
+    "discourse-group-tracker",
     "discourse-invite-tokens",
     "discourse-local-dates",
     "discourse-login-with-amazon",
