@@ -111,7 +111,7 @@
   --hljs-attribute: #{$hljs-attribute};
   --hljs-symbol: #{$hljs-symbol};
   --hljs-bg: #{$hljs-bg};
-
+  --hljs-builtin-name: #{dark-light-choose(var(--tertiary-high), #65b9db)};
   --google: #{$google};
   --google-hover: #{$google-hover};
   --instagram: #{$instagram};
