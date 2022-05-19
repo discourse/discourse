@@ -145,6 +145,18 @@ describe StaffActionLogger do
     it "creates a new UserHistory record" do
       expect { logger.log_site_setting_change('title', 'Discourse', 'My Site') }.to change { UserHistory.count }.by(1)
     end
+
+    it "logs boolean values" do
+      log_record = logger.log_site_setting_change("allow_user_locale", true, false)
+      expect(log_record.previous_value).to eq("true")
+      expect(log_record.new_value).to eq("false")
+    end
+
+    it "logs nil values" do
+      log_record = logger.log_site_setting_change("title", nil, nil)
+      expect(log_record.previous_value).to be_nil
+      expect(log_record.new_value).to be_nil
+    end
   end
 
   describe "log_theme_change" do
