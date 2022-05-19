@@ -313,6 +313,24 @@ describe InlineOneboxer do
         expect(onebox[:title]).to be_blank
       end
     end
+
+    it "censors external oneboxes" do
+      Fabricate(:watched_word, action: WatchedWord.actions[:censor], word: "my")
+
+      SiteSetting.enable_inline_onebox_on_all_domains = true
+
+      stub_request(:get, "https://eviltrout.com/some-path").
+        to_return(status: 200, body: "<html><head><title>welcome to my blog</title></head></html>")
+
+      onebox = InlineOneboxer.lookup(
+        "https://eviltrout.com/some-path",
+        skip_cache: true
+      )
+
+      expect(onebox).to be_present
+      expect(onebox[:url]).to eq("https://eviltrout.com/some-path")
+      expect(onebox[:title]).to eq("welcome to ■■ blog")
+    end
   end
 
   context "register_local_handler" do
