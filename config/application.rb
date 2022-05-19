@@ -171,6 +171,9 @@ module Discourse
     require "middleware/discourse_public_exceptions"
     config.exceptions_app = Middleware::DiscoursePublicExceptions.new(Rails.public_path)
 
+    require "middleware/cookies_rotator"
+    config.middleware.insert_before ActionDispatch::Cookies, Middleware::CookiesRotator
+
     require "discourse_js_processor"
     require "discourse_sourcemapping_url_processor"
 
