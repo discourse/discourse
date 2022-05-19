@@ -1228,6 +1228,52 @@ describe Post do
       post.reload
       post.rebake!
     end
+
+    it "uses inline onebox cache by default" do
+      Jobs.run_immediately!
+      stub_request(:get, "http://testonebox.com/vvf").to_return(status: 200, body: <<~HTML)
+        <html><head>
+          <title>hello this is Testonebox!</title>
+        </head></html>
+      HTML
+      post = create_post(raw: <<~POST).reload
+        hello inline onebox http://testonebox.com/vvf
+      POST
+      expect(post.cooked).to include("hello this is Testonebox!")
+
+      stub_request(:get, "http://testonebox.com/vvf").to_return(status: 200, body: <<~HTML)
+        <html><head>
+          <title>hello this is updated Testonebox!</title>
+        </head></html>
+      HTML
+      post.rebake!
+      expect(post.reload.cooked).to include("hello this is Testonebox!")
+    ensure
+      InlineOneboxer.invalidate("http://testonebox.com/vvf")
+    end
+
+    it "passing invalidate_oneboxes: true ignores inline onebox cache" do
+      Jobs.run_immediately!
+      stub_request(:get, "http://testonebox.com/vvf22").to_return(status: 200, body: <<~HTML)
+        <html><head>
+          <title>hello this is Testonebox!</title>
+        </head></html>
+      HTML
+      post = create_post(raw: <<~POST).reload
+        hello inline onebox http://testonebox.com/vvf22
+      POST
+      expect(post.cooked).to include("hello this is Testonebox!")
+
+      stub_request(:get, "http://testonebox.com/vvf22").to_return(status: 200, body: <<~HTML)
+        <html><head>
+          <title>hello this is updated Testonebox!</title>
+        </head></html>
+      HTML
+      post.rebake!(invalidate_oneboxes: true)
+      expect(post.reload.cooked).to include("hello this is updated Testonebox!")
+    ensure
+      InlineOneboxer.invalidate("http://testonebox.com/vvf22")
+    end
   end
 
   describe "#set_owner" do
