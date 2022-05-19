@@ -12,51 +12,14 @@ class PostActionType < ActiveRecord::Base
   end
 
   class << self
-
-    def flag_settings
-      unless @flag_settings
-        @flag_settings = FlagSettings.new
-        @flag_settings.add(
-          3,
-          :off_topic,
-          notify_type: true,
-          auto_action_type: true,
-        )
-        @flag_settings.add(
-          4,
-          :inappropriate,
-          topic_type: true,
-          notify_type: true,
-          auto_action_type: true,
-        )
-        @flag_settings.add(
-          8,
-          :spam,
-          topic_type: true,
-          notify_type: true,
-          auto_action_type: true,
-        )
-        @flag_settings.add(
-          6,
-          :notify_user,
-          topic_type: false,
-          notify_type: false,
-          custom_type: true
-        )
-        @flag_settings.add(
-          7,
-          :notify_moderators,
-          topic_type: true,
-          notify_type: true,
-          custom_type: true
-        )
-      end
-
-      @flag_settings
-    end
+    attr_reader :flag_settings
 
     def replace_flag_settings(settings)
-      @flag_settings = settings
+      if settings
+        @flag_settings = settings
+      else
+        initialize_flag_settings
+      end
       @types = nil
     end
 
@@ -117,7 +80,49 @@ class PostActionType < ActiveRecord::Base
     def is_flag?(sym)
       flag_types.valid?(sym)
     end
+
+    private
+
+    def initialize_flag_settings
+      @flag_settings = FlagSettings.new
+      @flag_settings.add(
+        3,
+        :off_topic,
+        notify_type: true,
+        auto_action_type: true,
+        )
+      @flag_settings.add(
+        4,
+        :inappropriate,
+        topic_type: true,
+        notify_type: true,
+        auto_action_type: true,
+        )
+      @flag_settings.add(
+        8,
+        :spam,
+        topic_type: true,
+        notify_type: true,
+        auto_action_type: true,
+        )
+      @flag_settings.add(
+        6,
+        :notify_user,
+        topic_type: false,
+        notify_type: false,
+        custom_type: true
+      )
+      @flag_settings.add(
+        7,
+        :notify_moderators,
+        topic_type: true,
+        notify_type: true,
+        custom_type: true
+      )
+    end
   end
+
+  initialize_flag_settings
 end
 
 # == Schema Information
