@@ -28,9 +28,10 @@ createWidgetFrom(QuickAccessItem, "user-status-item", {
   html() {
     const userStatus = this.currentUser.status;
     if (userStatus) {
+      const emoji = userStatus.emoji ?? "mega";
       return this.attach("flat-button", {
         action: "setUserStatus",
-        emoji: userStatus.emoji,
+        emoji,
         translatedLabel: userStatus.description,
       });
     } else {
