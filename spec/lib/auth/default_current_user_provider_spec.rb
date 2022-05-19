@@ -261,7 +261,7 @@ describe Auth::DefaultCurrentUserProvider do
     let(:cookie) do
       new_provider = provider('/')
       new_provider.log_on_user(user, {}, new_provider.cookie_jar)
-      new_provider.cookie_jar["_t"]
+      CGI.escape(new_provider.cookie_jar["_t"])
     end
 
     before do
@@ -367,6 +367,7 @@ describe Auth::DefaultCurrentUserProvider do
 
     cookie = @provider.cookie_jar["_t"]
     unhashed_token = decrypt_auth_cookie(cookie)[:token]
+    cookie = CGI.escape(cookie)
 
     token = UserAuthToken.find_by(user_id: user.id)
 
@@ -431,6 +432,7 @@ describe Auth::DefaultCurrentUserProvider do
       @provider.log_on_user(user, {}, @provider.cookie_jar)
       cookie = @provider.cookie_jar["_t"]
       unhashed_token = decrypt_auth_cookie(cookie)[:token]
+      cookie = CGI.escape(cookie)
       freeze_time 20.minutes.from_now
       provider2 = provider("/", "HTTP_COOKIE" => "_t=#{cookie}")
       provider2.refresh_session(user, {}, provider2.cookie_jar)
@@ -442,6 +444,7 @@ describe Auth::DefaultCurrentUserProvider do
       @provider.log_on_user(user, {}, @provider.cookie_jar)
       cookie = @provider.cookie_jar["_t"]
       unhashed_token = decrypt_auth_cookie(cookie)[:token]
+      cookie = CGI.escape(cookie)
       freeze_time 2.minutes.from_now
       provider2 = provider("/", "HTTP_COOKIE" => "_t=#{cookie}")
       provider2.refresh_session(user, {}, provider2.cookie_jar)
@@ -748,7 +751,7 @@ describe Auth::DefaultCurrentUserProvider do
       method: "GET",
     })
     @provider.log_on_user(user, {}, @provider.cookie_jar)
-    cookie = @provider.cookie_jar["_t"]
+    cookie = CGI.escape(@provider.cookie_jar["_t"])
 
     ip = "10.0.0.1"
     env = { "HTTP_COOKIE" => "_t=#{cookie}", "REMOTE_ADDR" => ip }

@@ -4,7 +4,7 @@ describe 'multisite', type: [:multisite, :request] do
   it "works" do
     get "http://test.localhost/session/csrf.json"
     expect(response.status).to eq(200)
-    cookie = response.cookies["_forum_session"]
+    cookie = CGI.escape(response.cookies["_forum_session"])
     id1 = session["session_id"]
 
     get "http://test.localhost/session/csrf.json", headers: { "Cookie" => "_forum_session=#{cookie};" }
