@@ -449,17 +449,13 @@ module ApplicationHelper
     @all_connectors = Dir.glob("plugins/*/app/views/connectors/**/*.html.erb")
   end
 
-  def server_plugin_outlet(name)
-
-    # Don't evaluate plugins in test
-    return "" if Rails.env.test?
-
+  def server_plugin_outlet(name, locals: nil)
     matcher = Regexp.new("/connectors/#{name}/.*\.html\.erb$")
     erbs = ApplicationHelper.all_connectors.select { |c| c =~ matcher }
     return "" if erbs.blank?
 
     result = +""
-    erbs.each { |erb| result << render(inline: File.read(erb)) }
+    erbs.each { |erb| result << render(inline: File.read(erb), locals: locals) }
     result.html_safe
   end
 
