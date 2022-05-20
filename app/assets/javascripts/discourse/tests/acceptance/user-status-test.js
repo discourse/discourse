@@ -20,6 +20,8 @@ acceptance("User Status", function (needs) {
   const userStatus = "off to dentist";
 
   test("doesn't show the user status button on the menu by default", async function (assert) {
+    this.siteSettings.enable_user_status = false;
+
     await visit("/");
     await click(".header-dropdown-toggle.current-user");
     await click(".menu-links-row .user-preferences-link");
@@ -137,5 +139,29 @@ acceptance("User Status", function (needs) {
     await click(".btn.delete-status");
 
     assert.notOk(exists(".header-dropdown-toggle .user-status-background"));
+  });
+
+  test("shows the trash button when editing status that was set before", async function (assert) {
+    this.siteSettings.enable_user_status = true;
+    updateCurrentUser({ status: { description: userStatus } });
+
+    await visit("/");
+    await click(".header-dropdown-toggle.current-user");
+    await click(".menu-links-row .user-preferences-link");
+    await click(".user-status button");
+
+    assert.ok(exists(".btn.delete-status"));
+  });
+
+  test("doesn't show the trash button when status wasn't set before", async function (assert) {
+    this.siteSettings.enable_user_status = true;
+    updateCurrentUser({ status: null });
+
+    await visit("/");
+    await click(".header-dropdown-toggle.current-user");
+    await click(".menu-links-row .user-preferences-link");
+    await click(".user-status button");
+
+    assert.notOk(exists(".btn.delete-status"));
   });
 });

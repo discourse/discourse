@@ -17,7 +17,7 @@ export default Controller.extend(ModalFunctionality, {
     if (this.currentUser.status?.description) {
       this.setProperties({
         description: this.currentUser.status?.description,
-        showDeleteButton: true,
+        showDeleteButton: !!this.currentUser.status?.description,
       });
     }
   },
