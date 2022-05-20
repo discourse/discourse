@@ -103,7 +103,7 @@ class WordWatcher
 
     doc = Nokogiri::HTML5::fragment(html)
     doc.traverse do |node|
-      node.content = censor_text(node.content) if node.text?
+      node.content = censor_text_with_regexp(node.content, regexp) if node.text?
     end
     doc.to_s
   end
@@ -112,15 +112,7 @@ class WordWatcher
     regexp = WordWatcher.word_matcher_regexp(:censor)
     return text if regexp.blank?
 
-    text = text.gsub(regexp) do |match|
-      # the regex captures leading whitespaces
-      padding = match.size - match.lstrip.size
-      if padding > 0
-        match[0..padding - 1] + REPLACEMENT_LETTER * (match.size - padding)
-      else
-        REPLACEMENT_LETTER * match.size
-      end
-    end
+    censor_text_with_regexp(text, regexp)
   end
 
   def self.clear_cache!
@@ -176,5 +168,19 @@ class WordWatcher
 
   def word_matches?(word)
     Regexp.new(WordWatcher.word_to_regexp(word, whole: true), Regexp::IGNORECASE).match?(@raw)
+  end
+
+  private
+
+  def self.censor_text_with_regexp(text, regexp)
+    text.gsub(regexp) do |match|
+      # the regex captures leading whitespaces
+      padding = match.size - match.lstrip.size
+      if padding > 0
+        match[0..padding - 1] + REPLACEMENT_LETTER * (match.size - padding)
+      else
+        REPLACEMENT_LETTER * match.size
+      end
+    end
   end
 end
