@@ -450,6 +450,9 @@ module ApplicationHelper
   end
 
   def server_plugin_outlet(name, locals: {})
+    # Don't evaluate plugins in test
+    return "" if Rails.env.test?
+
     matcher = Regexp.new("/connectors/#{name}/.*\.html\.erb$")
     erbs = ApplicationHelper.all_connectors.select { |c| c =~ matcher }
     return "" if erbs.blank?
