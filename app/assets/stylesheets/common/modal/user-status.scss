@@ -1,8 +1,4 @@
 .user-status.modal {
-  .delete-status {
-    margin-left: auto;
-  }
-
   .modal-inner-container {
     box-sizing: border-box;
     min-width: 310px;
@@ -12,6 +8,11 @@
     margin: 0;
     border-top: 0;
     padding: 10px 0;
+
+    .delete-status {
+      margin-left: auto;
+      margin-right: 0;
+    }
   }
 
   .modal-body {
