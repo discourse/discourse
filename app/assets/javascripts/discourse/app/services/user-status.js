@@ -11,7 +11,7 @@ export default class UserStatusService extends Service {
       data: { description: status.description },
     });
 
-    this.currentUser.status = status;
+    this.currentUser.set("status", status);
     this.appEvents.trigger("do-not-disturb:changed");
   }
 
@@ -21,7 +21,7 @@ export default class UserStatusService extends Service {
       type: "DELETE",
     });
 
-    this.currentUser.status = null;
+    this.currentUser.set("status", null);
     this.appEvents.trigger("do-not-disturb:changed");
   }
 }
