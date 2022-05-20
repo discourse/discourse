@@ -1742,6 +1742,8 @@ onebox:
   facebook_app_access_token:
     default: ""
     secret: true
+  block_onebox_on_redirect:
+    default: false
   cache_onebox_response_body:
     default: false
     hidden: true
