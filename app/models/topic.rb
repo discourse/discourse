@@ -1191,11 +1191,26 @@ class Topic < ActiveRecord::Base
     }
   end
 
+  cattr_accessor :slug_computed_callbacks
+  self.slug_computed_callbacks = []
+
+  def slug_for_topic(title)
+    return '' unless title.present?
+    slug = Slug.for(title)
+
+    # this is a hook for plugins that need to modify the generated slug
+    self.class.slug_computed_callbacks.each do |callback|
+      slug = callback.call(self, slug, title)
+    end
+
+    slug
+  end
+
   # Even if the slug column in the database is null, topic.slug will return something:
   def slug
     unless slug = read_attribute(:slug)
       return '' unless title.present?
-      slug = Slug.for(title)
+      slug = slug_for_topic(title)
       if new_record?
         write_attribute(:slug, slug)
       else
@@ -1216,7 +1231,7 @@ class Topic < ActiveRecord::Base
   end
 
   def title=(t)
-    slug = Slug.for(t.to_s)
+    slug = slug_for_topic(t.to_s)
     write_attribute(:slug, slug)
     write_attribute(:fancy_title, nil)
     write_attribute(:title, t)
