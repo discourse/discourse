@@ -60,6 +60,7 @@ class SearchController < ApplicationController
 
     if rate_limit_errors
       result = Search::GroupedSearchResults.new(
+        type_filter: search_args[:type_filter],
         term: @search_term,
         search_context: context
       )
@@ -67,6 +68,7 @@ class SearchController < ApplicationController
       result.error = I18n.t("rate_limiter.slow_down")
     elsif site_overloaded?
       result = Search::GroupedSearchResults.new(
+        type_filter: search_args[:type_filter],
         term: @search_term,
         search_context: context
       )
@@ -120,6 +122,7 @@ class SearchController < ApplicationController
 
     if rate_limit_errors
       result = Search::GroupedSearchResults.new(
+        type_filter: search_args[:type_filter],
         term: params[:term],
         search_context: context
       )
@@ -127,6 +130,7 @@ class SearchController < ApplicationController
       result.error = I18n.t("rate_limiter.slow_down")
     elsif site_overloaded?
       result = GroupedSearchResults.new(
+        type_filter: search_args[:type_filter],
         term: params[:term],
         search_context: context
       )

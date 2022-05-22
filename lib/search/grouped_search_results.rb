@@ -12,6 +12,7 @@ class Search
     end
 
     attr_reader(
+      :type_filter,
       :posts,
       :categories,
       :users,
@@ -30,7 +31,8 @@ class Search
 
     BLURB_LENGTH = 200
 
-    def initialize(is_header_search: false, term:, search_context:, blurb_length: nil, blurb_term: nil)
+    def initialize(type_filter:, term:, search_context:, blurb_length: nil, blurb_term: nil, is_header_search: false)
+      @type_filter = type_filter
       @term = term
       @blurb_term = blurb_term || term
       @search_context = search_context
