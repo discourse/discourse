@@ -81,7 +81,7 @@ addBulkButton("resetBumpDateTopics", "reset_bump_dates", {
   class: "btn-default",
   buttonVisible() {
     return this.currentUser.canManageTopic;
-  }
+  },
 });
 addBulkButton("showTagTopics", "change_tags", {
   icon: "tag",
