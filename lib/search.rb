@@ -232,7 +232,7 @@ class Search
     end
 
     @results = GroupedSearchResults.new(
-      type_filter: @opts[:type_filter],
+      is_header_search: !use_full_page_limit,
       term: clean_term,
       blurb_term: term,
       search_context: @search_context,
@@ -241,7 +241,7 @@ class Search
   end
 
   def limit
-    if @opts[:type_filter].present? && @opts[:type_filter] != "exclude_topics"
+    if use_full_page_limit
       Search.per_filter + 1
     else
       Search.per_facet + 1
@@ -258,6 +258,10 @@ class Search
 
   def valid?
     @valid
+  end
+
+  def use_full_page_limit
+    @opts[:search_type] == :full_page || Topic === @search_context
   end
 
   def self.execute(term, opts = nil)
@@ -288,7 +292,7 @@ class Search
     end
 
     # If the term is a number or url to a topic, just include that topic
-    if @opts[:search_for_id] && ['topic', 'private_messages', 'all_topics'].include?(@results.type_filter)
+    if @opts[:search_for_id] && ['topic', 'private_messages', 'all_topics'].include?(@opts[:type_filter])
       if @term =~ /^\d+$/
         single_topic(@term.to_i)
       else
@@ -801,10 +805,10 @@ class Search
   end
 
   def find_grouped_results
-    if @results.type_filter.present?
-      raise Discourse::InvalidAccess.new("invalid type filter") unless Search.facets.include?(@results.type_filter)
+    if @opts[:type_filter].present?
+      raise Discourse::InvalidAccess.new("invalid type filter") unless Search.facets.include?(@opts[:type_filter])
       # calling protected methods
-      send("#{@results.type_filter}_search")
+      send("#{@opts[:type_filter]}_search")
     else
       if @term.present? && !@search_context
         user_search
