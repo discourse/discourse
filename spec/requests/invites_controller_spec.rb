@@ -296,34 +296,77 @@ describe InvitesController do
     end
 
     context 'email invite' do
-      it 'creates invite once and updates it on successive calls' do
+      subject(:create_invite) { post '/invites.json', params: params }
+
+      let(:params) { { email: email } }
+      let(:email) { 'test@example.com' }
+
+      before do
         sign_in(user)
-
-        post '/invites.json', params: { email: 'test@example.com' }
-        expect(response.status).to eq(200)
-        expect(Jobs::InviteEmail.jobs.size).to eq(1)
-
-        invite = Invite.last
-
-        post '/invites.json', params: { email: 'test@example.com' }
-        expect(response.status).to eq(200)
-        expect(response.parsed_body['id']).to eq(invite.id)
       end
 
-      it 'accept skip_email parameter' do
-        sign_in(user)
+      context 'when doing successive calls' do
+        let(:invite) { Invite.last }
 
-        post '/invites.json', params: { email: 'test@example.com', skip_email: true }
-        expect(response.status).to eq(200)
-        expect(Jobs::InviteEmail.jobs.size).to eq(0)
+        it 'creates invite once and updates it after' do
+          create_invite
+          expect(response).to have_http_status :ok
+          expect(Jobs::InviteEmail.jobs.size).to eq(1)
+
+          create_invite
+          expect(response).to have_http_status :ok
+          expect(response.parsed_body['id']).to eq(invite.id)
+        end
       end
 
-      it 'fails in case of validation failure' do
-        sign_in(admin)
+      context 'when "skip_email" parameter is provided' do
+        before do
+          params[:skip_email] = true
+        end
 
-        post '/invites.json', params: { email: 'test@mailinator.com' }
-        expect(response.status).to eq(422)
-        expect(response.parsed_body['errors']).to be_present
+        it 'accepts the parameter' do
+          create_invite
+          expect(response).to have_http_status :ok
+          expect(Jobs::InviteEmail.jobs.size).to eq(0)
+        end
+      end
+
+      context 'when validations fail' do
+        let(:email) { 'test@mailinator.com' }
+
+        it 'fails' do
+          create_invite
+          expect(response).to have_http_status :unprocessable_entity
+          expect(response.parsed_body['errors']).to be_present
+        end
+      end
+
+      context 'when providing an email belonging to an existing user' do
+        let(:email) { user.email }
+
+        before do
+          SiteSetting.hide_email_address_taken = hide_email_address_taken
+        end
+
+        context 'when "hide_email_address_taken" setting is disabled' do
+          let(:hide_email_address_taken) { false }
+
+          it 'returns an error' do
+            create_invite
+            expect(response).to have_http_status :unprocessable_entity
+            expect(body).to match(/no need to invite/)
+          end
+        end
+
+        context 'when "hide_email_address_taken" setting is enabled' do
+          let(:hide_email_address_taken) { true }
+
+          it 'doesn’t inform the user' do
+            create_invite
+            expect(response).to have_http_status :ok
+            expect(response.parsed_body).to be_blank
+          end
+        end
       end
     end
 
@@ -440,6 +483,34 @@ describe InvitesController do
 
         put "/invites/#{invite.id}.json", params: { email: 'test2@example.com' }
         expect(response.status).to eq(409)
+      end
+
+      context "when providing an email belonging to an existing user" do
+        subject(:update_invite) { put "/invites/#{invite.id}.json", params: { email: admin.email } }
+
+        before do
+          SiteSetting.hide_email_address_taken = hide_email_address_taken
+        end
+
+        context "when 'hide_email_address_taken' setting is disabled" do
+          let(:hide_email_address_taken) { false }
+
+          it "returns an error" do
+            update_invite
+            expect(response).to have_http_status :unprocessable_entity
+            expect(body).to match(/no need to invite/)
+          end
+        end
+
+        context "when 'hide_email_address_taken' setting is enabled" do
+          let(:hide_email_address_taken) { true }
+
+          it "doesn't inform the user" do
+            update_invite
+            expect(response).to have_http_status :ok
+            expect(response.parsed_body).to be_blank
+          end
+        end
       end
     end
   end

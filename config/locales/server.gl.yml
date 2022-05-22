@@ -219,7 +219,6 @@ gl:
       <p>Se lembra o seu contrasinal, pode<a href="%{base_url}/login">iniciar sesión</a></p>
 
       <p>Se non, <a href="%{base_url}/password-reset">restableza o contrasinal</a></p>
-    user_exists: "Non necesita invitar a <b>%{email}</b>, pois <a href='%{base_path}/u/%{username}/summary'>xa teñen unha conta!</a>"
     confirm_email: "<p>Xa case está! Enviámoslle un correo de activación ao seu enderezo electrónico. Siga as instrucións para activar a súa conta.</p><p>Se non lle chegan, comprobe o cartafol de correo lixo.</p>"
     cant_invite_to_group: "Non ten permisos para convidar a usuarios a grupo(s) específico(s). Asegúrese de ser o propietario do(s) grupo(s) a que está tentando convidar."
     disabled_errors:
@@ -1946,7 +1945,6 @@ gl:
     tags_sort_alphabetically: "Mostrar etiquetas en orde alfabética. Por defecto móstranse segundo a súa popularidade."
     tags_listed_by_group: "Listar etiquetas por grupos de etiquetas na <a href='%{base_path}/tags' target='_blank'>páxina de etiquetas</a>."
     tag_style: "Estilo visual para as insignias das etiquetas."
-    allow_staff_to_tag_pms: "Permitir que os membros do equipo etiqueten calquera mensaxe persoal"
     min_trust_level_to_tag_topics: "O nivel de confianza mínimo requirido para etiquetar temas"
     suppress_overlapping_tags_in_list: "Se unha etiqueta coincide con palabras exactas do título dun tema, non se mostrará"
     remove_muted_tags_from_latest: "Non mostrar na listaxe de temas máis recentes aqueles etiquetados unicamente con etiquetas silenciadas."
@@ -2491,12 +2489,6 @@ gl:
         [preferencias]: %{user_preferences_url}
     tl2_promotion_message:
       subject_template: "Parabéns pola súa promoción a un novo nivel de confianza!"
-      text_body_template: |
-        Promocionámolo a outro [nivel de confianza](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)!
-
-        Como usuario experimentado, debería valorar [esta listaxe de consellos e trucos](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
-
-        Animámolo a que siga participando. Gústanos telo por aquí.
     backup_succeeded:
       title: "Copia de seguranza feita correctamente"
       subject_template: "A copia de seguranza completouse correctamente"

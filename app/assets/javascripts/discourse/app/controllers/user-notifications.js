@@ -5,6 +5,7 @@ import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import { ajax } from "discourse/lib/ajax";
 import showModal from "discourse/lib/show-modal";
 import I18n from "I18n";
+import { htmlSafe } from "@ember/template";
 
 export default Controller.extend({
   application: controller(),
@@ -40,10 +41,12 @@ export default Controller.extend({
 
   @discourseComputed()
   emptyStateBody() {
-    return I18n.t("user.no_notifications_page_body", {
-      preferencesUrl: getURL("/my/preferences/notifications"),
-      icon: iconHTML("bell"),
-    }).htmlSafe();
+    return htmlSafe(
+      I18n.t("user.no_notifications_page_body", {
+        preferencesUrl: getURL("/my/preferences/notifications"),
+        icon: iconHTML("bell"),
+      })
+    );
   },
 
   markRead() {

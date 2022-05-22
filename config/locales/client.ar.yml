@@ -384,6 +384,8 @@ ar:
         unbookmark_with_reminder: "انقر لإزالة جميع الإشارات المرجعية والتذكيرات في هذا الموضوع."
     bookmarks:
       created: "لقد وضعت إشارة مرجعية على هذا المنشور. %{name}"
+      create: "إنشاء إشارة مرجعية"
+      edit: "تعديل الإشارة المرجعية"
       not_bookmarked: "وضع إشارة مرجعية على هذا المنشور"
       remove_reminder_keep_bookmark: "إزالة التذكير والاحتفاظ بالعلامة المرجعية"
       created_with_reminder: "لقد وضعت إشارة مرجعية على هذا المنشور وضبطت تذكيرًا في %{date}. ‏%{name}"
@@ -2039,20 +2041,12 @@ ar:
         name: "Twitter"
       instagram:
         name: "Instagram"
-        title: "تسجيل الدخول باستخدام Instagram"
-        sr_title: "تسجيل الدخول باستخدام Instagram"
       facebook:
         name: "Facebook"
-        title: "تسجيل الدخول باستخدام فيسبوك"
-        sr_title: "تسجيل الدخول باستخدام فيسبوك"
       github:
         name: "GitHub"
-        title: "تسجيل الدخول باستخدام GitHub"
-        sr_title: "تسجيل الدخول باستخدام GitHub"
       discord:
         name: "Discord"
-        title: "تسجيل الدخول باستخدام ديسكورد"
-        sr_title: "تسجيل الدخول باستخدام ديسكورد"
       second_factor_toggle:
         totp: "استخدام تطبيق مصادقة بدلًا من ذلك"
         backup_code: "استخدام رمز احتياطي بدلًا من ذلك"
@@ -4243,6 +4237,19 @@ ar:
     no_group_messages_title: "لم يتم العثور على أي رسالة من المجموعة"
     fullscreen_table:
       expand_btn: "توسيع الجدول"
+    sidebar:
+      unread_count: "%{count} غير مقروء"
+      new_count: "%{count} جديد"
+      sections:
+        categories:
+          header_link_title: "كل الفئات"
+          header_link_text: "الفئات"
+        topics:
+          header_link_title: "الصفحة الرئيسية"
+          header_link_text: "الموضوعات"
+          links:
+            tracked:
+              content: "المتتبَّعة"
   admin_js:
     type_to_filter: "اكتب للتصفية..."
     admin:

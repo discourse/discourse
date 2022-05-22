@@ -305,8 +305,8 @@ hu:
         unbookmark_with_reminder: "Kattintson a téma valamennyi könyvjelzőjének és emlékeztetőjének törléséhez."
     bookmarks:
       created: "Könyvjelzőzte ezt a bejegyzést. %{name}"
-      create_for: "Könyvjelző létrehozása a következőhöz: %{type}"
-      edit_for: "A(z) %{type} könyvjelzőjének szerkesztése"
+      create: "Könyvjelző létrehozása"
+      edit: "Könyvjelző szerkesztése"
       not_bookmarked: "bejegyzés könyvjelzőzése"
       remove_reminder_keep_bookmark: "Emlékeztető eltávolítása és könyvjelző megtartása"
       created_with_reminder: "Könyvjelzőzte ezt a bejegyzést, és emlékeztetőt állított be ekkorra: %{date}. %{name}"
@@ -1812,20 +1812,12 @@ hu:
         sr_title: "Bejelentkezés a Twitterrel"
       instagram:
         name: "Instagram"
-        title: "Bejelentkezés az Instagrammal"
-        sr_title: "Bejelentkezés az Instagrammal"
       facebook:
         name: "Facebook"
-        title: "Bejelentkezés a Facebookkal"
-        sr_title: "Bejelentkezés a Facebookkal"
       github:
         name: "GitHub"
-        title: "Bejelentkezés a GitHubbal"
-        sr_title: "Bejelentkezés a GitHubbal"
       discord:
         name: "Discord"
-        title: "Bejelentkezés a Discorddal"
-        sr_title: "Bejelentkezés a Discorddal"
       second_factor_toggle:
         totp: "Helyette hitelesítő alkalmazás használata"
         backup_code: "Helyette biztonsági kód használata"
@@ -3304,6 +3296,19 @@ hu:
       no_likes_others: "Nincsenek kedvelt bejegyzések."
     fullscreen_table:
       expand_btn: "Táblázat kibontása"
+    sidebar:
+      unread_count: "%{count} olvasatlan"
+      new_count: "%{count} új"
+      sections:
+        categories:
+          header_link_title: "összes kategória"
+          header_link_text: "Kategóriák"
+        topics:
+          header_link_title: "kezdőlap"
+          header_link_text: "Téma"
+          links:
+            tracked:
+              content: "Követett"
   admin_js:
     type_to_filter: "Írj ide a szűréshez.."
     admin:

@@ -304,7 +304,8 @@ ro:
         unbookmark: "Click pentru a șterge semnele de carte"
     bookmarks:
       created: "Ai marcat acestă postare %{name} ca semn de carte"
-      create_for: "Creați marcaj pentru %{type}"
+      create: "Creare semn de carte"
+      edit: "Editare semn de carte"
       not_bookmarked: "marchează ca semn de carte acest post"
       created_with_reminder: "Ai marcat această postare cu un memento %{date}. %{name}"
       remove: "Șterge semn de carte"
@@ -2778,6 +2779,19 @@ ro:
         leader: "lider"
     user_activity:
       no_likes_others: "Nu există postări apreciate."
+    sidebar:
+      unread_count: "%{count} necitit"
+      new_count: "%{count} nou"
+      sections:
+        categories:
+          header_link_title: "Toate categoriile"
+          header_link_text: "Categorii"
+        topics:
+          header_link_title: "acasă"
+          header_link_text: "Subiecte"
+          links:
+            tracked:
+              content: "Urmărite"
   admin_js:
     type_to_filter: "tastează pentru a filtra..."
     admin:

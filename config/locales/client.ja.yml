@@ -254,6 +254,8 @@ ja:
         unbookmark_with_reminder: "クリックしてこのトピック内のすべてのブックマークとリマインダーを削除します。"
     bookmarks:
       created: "この投稿をブックマークしました。%{name}"
+      create: "ブックマークを作成"
+      edit: "ブックマークを編集"
       not_bookmarked: "この投稿をブックマークする"
       remove_reminder_keep_bookmark: "リマインダーを削除してブックマークを保持"
       created_with_reminder: "%{date} のリマインダー付きでこの投稿をブックマークしました。%{name}"
@@ -1701,20 +1703,12 @@ ja:
         name: "Twitter"
       instagram:
         name: "Instagram"
-        title: "Instagram でログイン"
-        sr_title: "Instagram でログイン"
       facebook:
         name: "Facebook"
-        title: "Facebook でログイン"
-        sr_title: "Facebook でログイン"
       github:
         name: "GitHub"
-        title: "GitHub でログイン"
-        sr_title: "GitHub でログイン"
       discord:
         name: "Discord"
-        title: "Discord でログイン"
-        sr_title: "Discord でログイン"
       second_factor_toggle:
         totp: "代わりに認証アプリを使用する"
         backup_code: "代わりにバックアップコードを使用する"
@@ -3378,6 +3372,19 @@ ja:
       no_activity_others: "アクティビティがありません。"
       no_replies_others: "返信はありません。"
       no_likes_others: "「いいね！」した投稿はありません。"
+    sidebar:
+      unread_count: "未読 %{count}"
+      new_count: "新規 %{count}"
+      sections:
+        categories:
+          header_link_title: "すべてのカテゴリ"
+          header_link_text: "カテゴリ"
+        topics:
+          header_link_title: "ホーム"
+          header_link_text: "トピック"
+          links:
+            tracked:
+              content: "追跡中"
   admin_js:
     type_to_filter: "フィルタの種類..."
     admin:

@@ -113,6 +113,8 @@
               <% end %>
             </div>
          <% end %>
+
+         <%= server_plugin_outlet("after_post_body", locals: {post: post}) %>
       </div>
     <% end %>
   <% end %>

@@ -282,8 +282,8 @@ da:
         unbookmark_with_reminder: "Klik for at fjerne alle bogmærker og påmindelser i dette emne."
     bookmarks:
       created: "Du har sat et bogmærke for dette indlæg. %{name}"
-      create_for: "Opret bogmærke for %{type}"
-      edit_for: "Rediger bogmærke for %{type}"
+      create: "Opret bogmærke"
+      edit: "Rediger bogmærke"
       not_bookmarked: "bogmærk dette indlæg"
       remove_reminder_keep_bookmark: "Fjern påmindelse og behold bogmærke"
       created_with_reminder: "Du har sat et bogmærke med en påmindelse for dette indlæg %{date}. %{name}"
@@ -1762,20 +1762,12 @@ da:
         name: "Twitter"
       instagram:
         name: "Instagram"
-        title: "Log ind med Instagram"
-        sr_title: "Log ind med Instagram"
       facebook:
         name: "Facebook"
-        title: "Log ind med Facebook"
-        sr_title: "Log ind med Facebook"
       github:
         name: "GitHub"
-        title: "Log ind med GitHub"
-        sr_title: "Log ind med GitHub"
       discord:
         name: "Discord"
-        title: "Log ind med Discord"
-        sr_title: "Log ind med Discord"
       second_factor_toggle:
         totp: "Brug en godkendelsesapp i stedet"
         backup_code: "Brug en backup kode i stedet"
@@ -3542,6 +3534,19 @@ da:
       sr_jump_bottom_button: "Hop til det sidste indlæg"
     fullscreen_table:
       expand_btn: "Udvid Tabel"
+    sidebar:
+      unread_count: "%{count} ulæst"
+      new_count: "%{count} ny"
+      sections:
+        categories:
+          header_link_title: "alle kategorier"
+          header_link_text: "Kategorier"
+        topics:
+          header_link_title: "hjem"
+          header_link_text: "Emner"
+          links:
+            tracked:
+              content: "Sporet"
   admin_js:
     type_to_filter: "skriv for at filtrere…"
     admin:

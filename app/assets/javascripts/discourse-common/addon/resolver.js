@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-import { classify, dasherize } from "@ember/string";
+import { classify, dasherize, decamelize } from "@ember/string";
 import deprecated from "discourse-common/lib/deprecated";
 import { findHelper } from "discourse-common/lib/helpers";
 import { get } from "@ember/object";
@@ -239,7 +239,7 @@ export function buildResolver(baseName) {
     findTemplate(parsedName) {
       const withoutType = parsedName.fullNameWithoutType,
         slashedType = withoutType.replace(/\./g, "/"),
-        decamelized = withoutType.decamelize(),
+        decamelized = decamelize(withoutType),
         dashed = decamelized.replace(/\./g, "-").replace(/\_/g, "-"),
         templates = Ember.TEMPLATES;
 
@@ -258,7 +258,7 @@ export function buildResolver(baseName) {
     },
 
     findUnderscoredTemplate(parsedName) {
-      let decamelized = parsedName.fullNameWithoutType.decamelize();
+      let decamelized = decamelize(parsedName.fullNameWithoutType);
       let underscored = decamelized.replace(/\-/g, "_");
       return Ember.TEMPLATES[underscored];
     },
@@ -266,7 +266,7 @@ export function buildResolver(baseName) {
     // Try to find a template within a special admin namespace, e.g. adminEmail => admin/templates/email
     // (similar to how discourse lays out templates)
     findAdminTemplate(parsedName) {
-      let decamelized = parsedName.fullNameWithoutType.decamelize();
+      let decamelized = decamelize(parsedName.fullNameWithoutType);
       if (decamelized.indexOf("components") === 0) {
         let comPath = `admin/templates/${decamelized}`;
         const compTemplate =

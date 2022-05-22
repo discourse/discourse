@@ -228,7 +228,7 @@ tr_TR:
       <p>Eğer şifrenizi hatırlıyorsanız <a href="%{base_url}/login">giriş yapabilirsiniz</a>.</p>
 
       <p>Aksi takdirde lütfen <a href="%{base_url}/password-reset">şifrenizi sıfırlayın</a>.</p>
-    user_exists: "<b>%{email}</b> kişisinin <a href='%{base_path}/u/%{username}/summary'>zaten bir hesabı var!</a>"
+    user_exists: "<b>%{email}</b> adresini davet etmeye gerek yok, zaten hesapları var!"
     invite_exists: "<b>%{email}</b> adresini daha önce davet ettiniz."
     invalid_email: "%{email} geçerli bir e-posta adresi değil."
     rate_limit:
@@ -2049,7 +2049,7 @@ tr_TR:
     tags_sort_alphabetically: "Etiketleri harf sırasına göre sırala. Öntanımlı olarak gözdelik düzeyine göre gösterilir."
     tags_listed_by_group: "Etiketleri <a href='%{base_path}/tags' target='_blank'> Etiketler sayfasında </a>etiket grubuna göre listeleyin."
     tag_style: "Etiket rozetleri için görsel biçim."
-    allow_staff_to_tag_pms: "Yetkili üyelerin herhangi bir kişisel iletiyi etiketlemesine izin ver"
+    pm_tags_allowed_for_groups: "Dahil edilen grup(lar)ın üyelerinin herhangi bir kişisel mesajı etiketlemesine izin verin"
     min_trust_level_to_tag_topics: "Konulara etiket eklemek için gereken en az güven düzeyi."
     suppress_overlapping_tags_in_list: "Eğer etiketler konu adı içerisinde tam sözcük olarak bulunuyorsa etiketi gösterme"
     remove_muted_tags_from_latest: "En son ki konular listesinde yalnızca sessiz etiketlerle etiketlenmiş konuları gösterme."
@@ -2564,9 +2564,11 @@ tr_TR:
       text_body_template: |
         Sizi yeni bir [güven düzeyine](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) yükselttik!
 
-        Deneyimli bir kullanıcı olarak, [bu kullanışlı ipuçları ve püf noktaları listesini](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/) değerlendirmek isteyebilirsiniz.
+        Güven Düzeyi 2'ye ulaşmak, bu topluluğun bir üyesi olarak kabul edilmek için yeterince paylaşım okuduğunuz ve paylaşımlara aktif olarak katıldığınız anlamına geliyor.
 
-        Sizi bilgi alışverişini sürdürmeye davet ediyoruz - aramızda olduğun için mutluyuz.
+        Deneyimli bir kullanıcı olarak, [bu kullanışlı ipuçları ve püf noktaları listesini](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/) beğeneceğinizi düşünüyoruz.
+
+        Sizi aktif katılıma devam etmeye davet ediyoruz - bizimle olduğunuz için mutluyuz.
     backup_succeeded:
       title: "Yedekleme Başarılı"
       subject_template: "Yedekleme başarıyla tamamlandı"

@@ -130,7 +130,6 @@ cs:
       default_categories_already_selected: "Nemůžete vybrat kategorii používanou v jiném seznamu."
       s3_upload_bucket_is_required: "Nemůžete nahrávat na S3 dokud nezadáte 's3_upload_bucket'."
   invite:
-    user_exists: "Netřeba posílat pozvánku na <b>%{email}</b>. Tento email <a href='%{base_path}/u/%{username}/summary'>je veden u tohoto účtu!</a>"
     disabled_errors:
       invalid_access: "Nemáte oprávnění na zobrazení požadovaného zdroje."
   bulk_invite:

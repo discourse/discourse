@@ -1714,6 +1714,18 @@ id:
         member: "anggota"
         regular: "umum"
         leader: "pemimpin"
+    sidebar:
+      new_count: "%{count} baru"
+      sections:
+        categories:
+          header_link_title: "Semua kategori"
+          header_link_text: "Kategori"
+        topics:
+          header_link_title: "beranda"
+          header_link_text: "Topik"
+          links:
+            tracked:
+              content: "Dilacak"
   admin_js:
     type_to_filter: "ketik untuk memfilter..."
     admin:

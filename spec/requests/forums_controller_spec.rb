@@ -15,6 +15,13 @@ RSpec.describe ForumsController do
       expect(response.status).to eq(200)
       expect(response.headers['Discourse-Readonly']).to eq('true')
     end
+
+    it "returns a readonly header if the site is in staff-writes-only mode" do
+      Discourse.stubs(:staff_writes_only_mode?).returns(true)
+      get "/srv/status"
+      expect(response.status).to eq(200)
+      expect(response.headers['Discourse-Readonly']).to eq('true')
+    end
   end
 
   describe "cluster parameter" do

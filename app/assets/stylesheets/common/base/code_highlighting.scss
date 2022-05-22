@@ -90,7 +90,7 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 .lisp .hljs-title,
 .clojure .hljs-built_in,
 .hljs-builtin-name {
-  color: var(--tertiary-high);
+  color: var(--hljs-builtin-name);
 }
 
 .meta {

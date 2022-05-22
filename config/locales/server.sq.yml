@@ -96,7 +96,6 @@ sq:
     site_settings:
       default_categories_already_selected: "Nuk mund të zgjidhni një kategori të përdorur në një tjetër listë."
   invite:
-    user_exists: "Nuk keni nevojë të ftoni <b>%{email}</b>, ata <a href='%{base_path}/u/%{username}/summary'>kanë krijuar një llogari në faqe!</a>"
     disabled_errors:
       invalid_access: "Ju nuk jeni të drejta për të parë burimin e kërkuar."
   backup:

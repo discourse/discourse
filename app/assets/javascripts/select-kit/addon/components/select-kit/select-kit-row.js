@@ -6,6 +6,7 @@ import { guidFor } from "@ember/object/internals";
 import layout from "select-kit/templates/components/select-kit/select-kit-row";
 import { makeArray } from "discourse-common/lib/helpers";
 import { reads } from "@ember/object/computed";
+import { dasherize } from "@ember/string";
 
 export default Component.extend(UtilsMixin, {
   layout,
@@ -72,7 +73,7 @@ export default Component.extend(UtilsMixin, {
   }),
 
   dasherizedTitle: computed("title", function () {
-    return (this.title || "").replace(".", "-").dasherize();
+    return dasherize((this.title || "").replace(".", "-"));
   }),
 
   label: computed("rowLabel", "item.label", "title", "rowName", function () {

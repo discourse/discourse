@@ -244,6 +244,7 @@ zh_TW:
         unbookmark_with_reminder: "點擊以移除此話題所有書籤和提醒。"
     bookmarks:
       created: "你已將這篇文章加入書籤。 %{name}"
+      edit: "編輯書籤"
       not_bookmarked: "將此貼文加入書籤"
       remove: "移除書籤"
       delete: "刪除書籤"
@@ -2732,6 +2733,19 @@ zh_TW:
       no_activity_others: "無活動紀錄。"
       no_replies_others: "沒有回覆。"
       no_likes_others: "沒有被讚的貼文。"
+    sidebar:
+      unread_count: "%{count} 個未讀"
+      new_count: "%{count} 近期"
+      sections:
+        categories:
+          header_link_title: "所有分類"
+          header_link_text: "分類"
+        topics:
+          header_link_title: "主頁"
+          header_link_text: "話題"
+          links:
+            tracked:
+              content: "已追蹤"
   admin_js:
     type_to_filter: "輸入要搜尋的文字..."
     admin:

@@ -2538,6 +2538,7 @@ en:
         clear_all: "Clear All"
         unlist_topics: "Unlist Topics"
         relist_topics: "Relist Topics"
+        reset_bump_dates: "Reset bump dates"
         defer: "Defer"
         delete: "Delete Topics"
         dismiss: "Dismiss"
@@ -3923,6 +3924,7 @@ en:
           description: "You will not be notified of anything about new topics with this tag, and they will not appear on your unread tab."
 
       groups:
+        back_btn: "Back to all tags"
         title: "Tag Groups"
         about_heading: "Select a tag group or create a new one"
         about_heading_empty: "Create a new tag group to get started"
@@ -4035,6 +4037,9 @@ en:
       unread_count: "%{count} unread"
       new_count: "%{count} new"
       sections:
+        categories:
+          header_link_title: "all categories"
+          header_link_text: "Categories"
         topics:
           header_link_title: "home"
           header_link_text: "Topics"

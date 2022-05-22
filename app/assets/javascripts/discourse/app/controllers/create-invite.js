@@ -123,6 +123,10 @@ export default Controller.extend(
       return this.invite
         .save(data)
         .then(() => {
+          if (!this.invite.id) {
+            return;
+          }
+
           this.rollbackBuffer();
 
           if (
@@ -180,7 +184,7 @@ export default Controller.extend(
 
     @discourseComputed
     timeShortcuts() {
-      const timezone = this.currentUser.resolvedTimezone(this.currentUser);
+      const timezone = this.currentUser.timezone;
       const shortcuts = timeShortcuts(timezone);
       return [
         shortcuts.laterToday(),

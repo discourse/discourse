@@ -337,8 +337,8 @@ pl_PL:
         unbookmark_with_reminder: "Kliknij, aby usunąć wszystkie zakładki i przypomnienia w tym temacie."
     bookmarks:
       created: "Dodano post do zakładek. %{name}"
-      create_for: "Utwórz zakładkę dla %{type}"
-      edit_for: "Edytuj zakładkę dla %{type}"
+      create: "Utwórz zakładkę"
+      edit: "Edytuj zakładkę"
       not_bookmarked: "dodaj do zakładek"
       remove_reminder_keep_bookmark: "Usuń przypomnienie i zachowaj zakładkę"
       created_with_reminder: "Dodano post do zakładek z przypomnieniem %{date}. %{name}"
@@ -652,6 +652,7 @@ pl_PL:
     time_shortcut:
       now: "Teraz"
       later_today: "Później dzisiaj"
+      two_days: "Dwa dni"
       next_business_day: "Następny dzień roboczy"
       tomorrow: "Jutro"
       post_local_date: "Data w poście"
@@ -1930,8 +1931,8 @@ pl_PL:
         sr_title: "Zaloguj się przez Instagram"
       facebook:
         name: "Facebook"
-        title: "Zaloguj się przez facebook"
-        sr_title: "Zaloguj się przez facebook"
+        title: "Zaloguj się przez Facebook"
+        sr_title: "Zaloguj się przez Facebook"
       github:
         name: "GitHub"
         title: "Zaloguj się przez GitHub"
@@ -2375,6 +2376,8 @@ pl_PL:
       in: "w"
       in_this_topic: "w tym temacie"
       in_this_topic_tooltip: "przełącz się na przeszukiwanie wszystkich tematów"
+      in_messages: "w wiadomościach"
+      in_messages_tooltip: "przełącz się na wyszukiwanie regularnych tematów"
       in_topics_posts: "we wszystkich tematach i postach"
       enter_hint: "lub naciśnij Enter"
       in_posts_by: "w postach %{username}"
@@ -2780,6 +2783,8 @@ pl_PL:
         unpin: "Odepnij temat…"
         unarchive: "Przywróć z archiwum"
         archive: "Archiwizuj temat"
+        invisible: "Ukryj temat"
+        visible: "Pokaż temat"
         reset_read: "Zresetuj przeczytane dane"
         make_public: "Utwórz temat publiczny..."
         make_private: "Utwórz osobistą wiadomość"
@@ -2996,6 +3001,7 @@ pl_PL:
           other: "Wybrano <b>%{count}</b> wpisów."
       deleted_by_author_simple: "(temat usunięty przez autora)"
     post:
+      confirm_delete: "Czy na pewno chcesz usunąć ten post?"
       quote_reply: "Cytuj"
       quote_reply_shortcut: "Lub naciśnij q"
       quote_edit: "Edytuj"
@@ -3985,6 +3991,24 @@ pl_PL:
       expand_btn: "Rozwiń tabelę"
     second_factor_auth:
       redirect_after_success: "Uwierzytelnianie dwuskładnikowe powiodło się. Przekierowanie do poprzedniej strony…"
+    sidebar:
+      unread_count: "%{count} nieprzeczytany"
+      new_count: "%{count} nowy"
+      sections:
+        categories:
+          header_link_title: "wszystkie kategorie"
+          header_link_text: "Kategorie"
+        topics:
+          header_link_title: "strona główna"
+          header_link_text: "Tematy"
+          header_action_title: "utwórz nowy temat"
+          links:
+            everything:
+              content: "Wszystko"
+              title: "Wszystkie tematy"
+            tracked:
+              content: "Śledzone"
+              title: "Wszystkie śledzone tematy"
   admin_js:
     type_to_filter: "pisz, aby filtrować…"
     admin:
@@ -4718,6 +4742,7 @@ pl_PL:
         time: "Czas"
         user: "Użytkownik"
         email_type: "Typ emaila"
+        details_title: "Pokaż szczegóły e-maila"
         to_address: "Na adres"
         test_email_address: "adres email do testu"
         send_test: "Wyślij email testowy"

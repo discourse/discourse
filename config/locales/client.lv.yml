@@ -2799,6 +2799,19 @@ lv:
         newuser: "jauns lietotājs"
         member: "biedrs"
         regular: "regulārs"
+    sidebar:
+      unread_count: "%{count} nelasīta"
+      new_count: "%{count} jauna"
+      sections:
+        categories:
+          header_link_title: "visas sadaļas"
+          header_link_text: "Sadaļas"
+        topics:
+          header_link_title: "mājas"
+          header_link_text: "Tēmas"
+          links:
+            tracked:
+              content: "Sekots"
   admin_js:
     type_to_filter: "ievadiet, lai atlasītu..."
     admin:

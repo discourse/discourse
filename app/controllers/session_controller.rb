@@ -10,6 +10,8 @@ class SessionController < ApplicationController
 
   requires_login only: [:second_factor_auth_show, :second_factor_auth_perform]
 
+  allow_in_staff_writes_only_mode :create
+
   ACTIVATE_USER_KEY = "activate_user"
 
   def csrf
@@ -17,6 +19,8 @@ class SessionController < ApplicationController
   end
 
   def sso
+    raise Discourse::NotFound unless SiteSetting.enable_discourse_connect?
+
     destination_url = cookies[:destination_url] || session[:destination_url]
     return_path = params[:return_path] || path('/')
 
@@ -28,22 +32,13 @@ class SessionController < ApplicationController
     session.delete(:destination_url)
     cookies.delete(:destination_url)
 
-    if SiteSetting.enable_discourse_connect?
-      sso = DiscourseConnect.generate_sso(return_path, secure_session: secure_session)
-      if SiteSetting.verbose_discourse_connect_logging
-        Rails.logger.warn("Verbose SSO log: Started SSO process\n\n#{sso.diagnostics}")
-      end
-      redirect_to sso_url(sso), allow_other_host: true
-    else
-      render body: nil, status: 404
-    end
+    sso = DiscourseConnect.generate_sso(return_path, secure_session: secure_session)
+    connect_verbose_warn { "Verbose SSO log: Started SSO process\n\n#{sso.diagnostics}" }
+    redirect_to sso_url(sso), allow_other_host: true
   end
 
   def sso_provider(payload = nil, confirmed_2fa_during_login = false)
-    if !SiteSetting.enable_discourse_connect_provider
-      render body: nil, status: 404
-      return
-    end
+    raise Discourse::NotFound unless SiteSetting.enable_discourse_connect_provider
 
     result = run_second_factor!(
       SecondFactor::Actions::DiscourseConnectProvider,
@@ -99,6 +94,7 @@ class SessionController < ApplicationController
     def become
 
       raise Discourse::InvalidAccess if Rails.env.production?
+      raise Discourse::ReadOnly if @readonly_mode
 
       if ENV['DISCOURSE_DEV_ALLOW_ANON_TO_IMPERSONATE'] != "1"
         render(content_type: 'text/plain', inline: <<~TEXT)
@@ -121,8 +117,8 @@ class SessionController < ApplicationController
   end
 
   def sso_login
-    return render_sso_error(text: I18n.t("read_only_mode_enabled"), status: 503) if @readonly_mode
-    raise Discourse::NotFound.new unless SiteSetting.enable_discourse_connect
+    raise Discourse::NotFound unless SiteSetting.enable_discourse_connect
+    raise Discourse::ReadOnly if @readonly_mode && !staff_writes_only_mode?
 
     params.require(:sso)
     params.require(:sig)
@@ -130,25 +126,19 @@ class SessionController < ApplicationController
     begin
       sso = DiscourseConnect.parse(request.query_string, secure_session: secure_session)
     rescue DiscourseConnect::ParseError => e
-      if SiteSetting.verbose_discourse_connect_logging
-        Rails.logger.warn("Verbose SSO log: Signature parse error\n\n#{e.message}\n\n#{sso&.diagnostics}")
-      end
+      connect_verbose_warn { "Verbose SSO log: Signature parse error\n\n#{e.message}\n\n#{sso&.diagnostics}" }
 
       # Do NOT pass the error text to the client, it would give them the correct signature
       return render_sso_error(text: I18n.t("discourse_connect.login_error"), status: 422)
     end
 
     if !sso.nonce_valid?
-      if SiteSetting.verbose_discourse_connect_logging
-        Rails.logger.warn("Verbose SSO log: #{sso.nonce_error}\n\n#{sso.diagnostics}")
-      end
+      connect_verbose_warn { "Verbose SSO log: #{sso.nonce_error}\n\n#{sso.diagnostics}" }
       return render_sso_error(text: I18n.t("discourse_connect.timeout_expired"), status: 419)
     end
 
     if ScreenedIpAddress.should_block?(request.remote_ip)
-      if SiteSetting.verbose_discourse_connect_logging
-        Rails.logger.warn("Verbose SSO log: IP address is blocked #{request.remote_ip}\n\n#{sso.diagnostics}")
-      end
+      connect_verbose_warn { "Verbose SSO log: IP address is blocked #{request.remote_ip}\n\n#{sso.diagnostics}" }
       return render_sso_error(text: I18n.t("discourse_connect.unknown_error"), status: 500)
     end
 
@@ -159,6 +149,7 @@ class SessionController < ApplicationController
       invite = validate_invitiation!(sso)
 
       if user = sso.lookup_or_create_user(request.remote_ip)
+        raise Discourse::ReadOnly if staff_writes_only_mode? && !user&.staff?
 
         if user.suspended?
           render_sso_error(text: failed_to_login(user)[:error], status: 403)
@@ -226,8 +217,7 @@ class SessionController < ApplicationController
       end
     rescue ActiveRecord::RecordInvalid => e
 
-      if SiteSetting.verbose_discourse_connect_logging
-        Rails.logger.warn(<<~TEXT)
+      connect_verbose_warn { <<~TEXT }
         Verbose SSO log: Record was invalid: #{e.record.class.name} #{e.record.id}
         #{e.record.errors.to_h}
 
@@ -236,8 +226,7 @@ class SessionController < ApplicationController
 
         SSO Diagnostics:
         #{sso.diagnostics}
-        TEXT
-      end
+      TEXT
 
       text = nil
 
@@ -273,9 +262,7 @@ class SessionController < ApplicationController
   end
 
   def login_sso_user(sso, user)
-    if SiteSetting.verbose_discourse_connect_logging
-      Rails.logger.warn("Verbose SSO log: User was logged on #{user.username}\n\n#{sso.diagnostics}")
-    end
+    connect_verbose_warn { "Verbose SSO log: User was logged on #{user.username}\n\n#{sso.diagnostics}" }
     log_on_user(user) if user.id != current_user&.id
   end
 
@@ -286,6 +273,9 @@ class SessionController < ApplicationController
     return invalid_credentials if params[:password].length > User.max_password_length
 
     user = User.find_by_username_or_email(normalized_login_param)
+
+    raise Discourse::ReadOnly if staff_writes_only_mode? && !user&.staff?
+
     rate_limit_second_factor!(user)
 
     if user.present?
@@ -319,7 +309,11 @@ class SessionController < ApplicationController
       return render(json: @second_factor_failure_payload)
     end
 
-    (user.active && user.email_confirmed?) ? login(user, second_factor_auth_result) : not_activated(user)
+    if user.active && user.email_confirmed?
+      login(user, second_factor_auth_result)
+    else
+      not_activated(user)
+    end
   end
 
   def email_login_info
@@ -632,6 +626,12 @@ class SessionController < ApplicationController
   end
 
   private
+
+  def connect_verbose_warn(&blk)
+    if SiteSetting.verbose_discourse_connect_logging
+      Rails.logger.warn(blk.call)
+    end
+  end
 
   def authenticate_second_factor(user)
     second_factor_authentication_result = user.authenticate_second_factor(params, secure_session)

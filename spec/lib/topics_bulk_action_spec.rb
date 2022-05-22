@@ -318,6 +318,34 @@ describe TopicsBulkAction do
     end
   end
 
+  describe "reset_bump_dates" do
+    context "when the user can update bumped at" do
+      it "does reset the topic bump date" do
+        post_created_at = 1.day.ago
+        create_post(topic_id: topic.id, created_at: post_created_at)
+        topic.update!(bumped_at: 1.hour.ago)
+        Guardian.any_instance.expects(:can_update_bumped_at?).returns(true)
+        tba = TopicsBulkAction.new(topic.user, [topic.id], type: 'reset_bump_dates')
+        topic_ids = tba.perform!
+        expect(topic_ids).to eq([topic.id])
+        expect(topic.reload.bumped_at).to eq_time(post_created_at)
+      end
+    end
+
+    context "when the user can't update bumped at" do
+      it "doesn't reset the topic bump date" do
+        create_post(topic_id: topic.id, created_at: 1.day.ago)
+        bumped_at = 1.hour.ago
+        topic.update!(bumped_at: bumped_at)
+        Guardian.any_instance.expects(:can_update_bumped_at?).returns(false)
+        tba = TopicsBulkAction.new(topic.user, [topic.id], type: 'reset_bump_dates')
+        topic_ids = tba.perform!
+        expect(topic_ids).to eq([])
+        expect(topic.reload.bumped_at).to eq_time(bumped_at)
+      end
+    end
+  end
+
   describe "change_tags" do
     fab!(:tag1)  { Fabricate(:tag) }
     fab!(:tag2)  { Fabricate(:tag) }

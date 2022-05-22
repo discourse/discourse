@@ -178,7 +178,7 @@ export default {
       skip_new_user_tips: false,
       enable_quoting: true,
       muted_category_ids: [],
-      regular_category_ids: [],
+      regular_category_ids: [4],
       tracked_category_ids: [],
       watched_category_ids: [3],
       watched_first_post_category_ids: [],

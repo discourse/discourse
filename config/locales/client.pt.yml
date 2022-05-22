@@ -282,6 +282,8 @@ pt:
         unbookmark_with_reminder: "Clique para remover todos os favoritos e lembretes neste tópico."
     bookmarks:
       created: "Adicionou este post aos favoritos. %{name}"
+      create: "Criar favorito"
+      edit: "Editar favorito"
       not_bookmarked: "adicionar esta mensagem aos marcadores"
       remove_reminder_keep_bookmark: "Remover lembrete e manter marcador"
       created_with_reminder: "Você marcou este post com um lembrete %{date}. %{name}"
@@ -1736,20 +1738,12 @@ pt:
         name: "Twitter"
       instagram:
         name: "Instagram"
-        title: "Iniciar sessão com Instagram"
-        sr_title: "Iniciar sessão com Instagram"
       facebook:
         name: "Facebook"
-        title: "Iniciar sessão com o Facebook"
-        sr_title: "Iniciar sessão com o Facebook"
       github:
         name: "GitHub"
-        title: "Iniciar sessão com o GitHub"
-        sr_title: "Iniciar sessão com o GitHub"
       discord:
         name: "Discord"
-        title: "Iniciar sessão com o Discord"
-        sr_title: "Iniciar sessão com o Discord"
       second_factor_toggle:
         totp: "Use um aplicativo de autenticação"
         backup_code: "Use um código de backup"
@@ -3425,6 +3419,19 @@ pt:
       detailed_name: "%{level}: %{name}"
     user_activity:
       no_likes_others: "Sem publicações gostadas."
+    sidebar:
+      unread_count: "%{count} não lido"
+      new_count: "%{count} novo"
+      sections:
+        categories:
+          header_link_title: "todas as categorias"
+          header_link_text: "Categorias"
+        topics:
+          header_link_title: "início"
+          header_link_text: "Tópicos"
+          links:
+            tracked:
+              content: "Seguido"
   admin_js:
     type_to_filter: "digite para filtrar..."
     admin:

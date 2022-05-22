@@ -27,7 +27,7 @@ export default Component.extend({
 
   init() {
     this._super(...arguments);
-    this.userTimezone = this.currentUser.resolvedTimezone(this.currentUser);
+    this.userTimezone = this.currentUser.timezone;
 
     if (this.input) {
       const dateTime = moment(this.input);

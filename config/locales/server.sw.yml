@@ -131,7 +131,6 @@ sw:
       default_categories_already_selected: "Hauwezi kuchagua kikundi kinachotumika kwenye orodha nyingine."
     conflicting_google_user_id: 'Utambulisho wa Akaunti ya Google imebadilishwa; msaidizi ataipitia kwa ajili ya sababu za ulinzi. Tafadhali wasiliana na msaidizi na waonyeshe <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
   invite:
-    user_exists: "Hakuna haja ya kumualika <b>%{email}</b>, tayaru wana <a href='%{base_path}/u/%{username}/summary'>miliki akaunti!</a>"
     disabled_errors:
       invalid_access: "Hauna ruhusa kuona rasilimali uliyoomba kuona."
   bulk_invite:
@@ -943,7 +942,6 @@ sw:
     max_tags_per_topic: "Kiwango cha juu cha lebo ambazo zinaweza kuwekwa kwenye mada."
     max_tag_length: "kiwango cha juu cha herufi zinazoweza kutumika kwenye lebo."
     max_tag_search_results: "Utafutaji wa lebo, utaonyesha kiwango hiki cha juu cha majibu."
-    allow_staff_to_tag_pms: "Ruhusu wasaidizi walebo ujumbe wowote binafsi"
     min_trust_level_to_tag_topics: "Kiwango cha chini kabisa kinachohitajika kulebo mada"
     suppress_overlapping_tags_in_list: "Kama lebo zina maneno ambayo yapo kwenye vichwa vya mada, usionyeshe lebo"
     errors:

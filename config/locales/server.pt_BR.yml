@@ -230,7 +230,6 @@ pt_BR:
       <p>Caso contrário, <a href="%{base_url}/password-reset">redefina a senha</a>.</p>
     not_found_template_link: |
       <p>Este convite para <a href="%{base_url}">%{site_name}</a> não pode ser mais resgatado. Peça que enviem outro convite.</p>
-    user_exists: "Não há necessidade de convidar <b>%{email}</b>, <a href='%{base_path}/u/%{username}/summary'>já tem uma conta!</a>"
     invite_exists: "Você já convidou <b>%{email}</b>"
     invalid_email: "%{email}' não é um endereço de e-mail válido."
     rate_limit:
@@ -2057,7 +2056,6 @@ pt_BR:
     tags_sort_alphabetically: "Exiba as etiquetas em ordem alfabética. O padrão é mostrar em ordem de popularidade."
     tags_listed_by_group: "Listar etiquetas por grupo de etiquetas na <a href='%{base_path}/tags' target='_blank'>página de etiquetas</a>."
     tag_style: "Estilo de visual para emblemas de etiquetas."
-    allow_staff_to_tag_pms: "Permitir que membros da equipe etiquetem qualquer mensagem pessoal"
     min_trust_level_to_tag_topics: "Nível de confiança mínimo necessário para etiquetar tópicos"
     suppress_overlapping_tags_in_list: "Se as etiquetas corresponderem a palavras exatas em títulos de tópicos, não mostrar a etiqueta"
     remove_muted_tags_from_latest: "Não mostrar tópicos etiquetados apenas com etiquetas silenciadas na lista de tópicos mais recentes."
@@ -2683,12 +2681,6 @@ pt_BR:
         [prefs]: %{user_preferences_url}
     tl2_promotion_message:
       subject_template: "Parabéns pela sua promoção de nível de confiança!"
-      text_body_template: |
-        Elaboramos outro [nível de confiança](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)!
-
-        Sendo um(a) usuário(a) experiente, você pode gostar [desta lista de truques e dicas úteis](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
-
-        Incentivamos ainda mais a sua participação, gostamos de você.
     backup_succeeded:
       title: "Backup realizado com êxito"
       subject_template: "Backup concluído com êxito"

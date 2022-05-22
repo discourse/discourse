@@ -216,7 +216,6 @@ ko:
       <p>비밀번호가 기억 나시면 <a href="%{base_url}/login">로그인</a>을 하십시오.</p>
 
       <p>그렇지 않으면 <a href="%{base_url}/password-reset">비밀번호 재설정</a>을 하십시오.</p>
-    user_exists: "<b>%{email}</b>님은 초대하지 않아도 됩니다. <a href='%{base_path}/u/%{username}/summary'>이미 회원이거든요!</a>"
     invite_exists: "<b>%{email}</b> 이메일로 이미 초대되었습니다."
     invalid_email: "%{email} 은 유효한 이메일 주소가 아닙니다."
     rate_limit:
@@ -1989,7 +1988,6 @@ ko:
     tags_sort_alphabetically: "알파벳 순서로 태그를 표시합니다. 기본값은 인기순으로 표시하는 것입니다."
     tags_listed_by_group: "<a href='%{base_path}/tags' target='_blank'>태그 페이지</a> 에서 태그 그룹별로 태그를 나열 <a href='%{base_path}/tags' target='_blank'>하십시오</a> ."
     tag_style: "태그 배지 시각 스타일"
-    allow_staff_to_tag_pms: "직원이 개인 메시지에 태그를 지정할 수 있도록 허용"
     min_trust_level_to_tag_topics: "토픽에 태깅할 수 있는 최소 신뢰도"
     suppress_overlapping_tags_in_list: "태그가 글 제목의 단어와 정확히 일치하면 태그를 표시하지 않습니다."
     remove_muted_tags_from_latest: "최신 주제 목록에서 음소거 태그로만 태그 된 주제를 표시하지 마십시오."
@@ -2556,12 +2554,6 @@ ko:
         [prefs]: %{user_preferences_url}
     tl2_promotion_message:
       subject_template: "회원 레벨 승격을 축하합니다!"
-      text_body_template: |
-        사용자님의 [회원 레벨](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)을 한 단계 끌어 올렸습니다.
-
-        [유용한 팁과 요령 목록](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/)
-
-        우리는 여러분이 계속 참여하도록 초대합니다. 여러분과 함께하는 것을 즐깁니다.
     backup_succeeded:
       title: "백업 성공"
       subject_template: "백업 성공"

@@ -56,7 +56,7 @@ discourseModule("Unit | Lib | select-kit/future-date-input", function (hooks) {
 
     beforeEach() {
       const monday = "2100-12-13T08:00:00";
-      this.clock = fakeTime(monday, this.currentUser._timezone, true);
+      this.clock = fakeTime(monday, this.currentUser.timezone, true);
     },
 
     async test(assert) {

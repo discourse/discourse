@@ -274,6 +274,7 @@ bg:
         unbookmark_with_reminder: "Щракнете, за да премахнете всички отметки и напомняния в тази тема."
     bookmarks:
       created: "Отбелязахте тази публикация. %{name}"
+      edit: "Редактиране на отметката"
       not_bookmarked: "добавете тази публикация в Отметки"
       remove_reminder_keep_bookmark: "Премахнете напомнянето и запазете отметката"
       created_with_reminder: "Отбелязахте тази публикация с напомняне %{date}. %{name}"
@@ -1693,20 +1694,12 @@ bg:
         name: "Twitter"
       instagram:
         name: "Instagram"
-        title: "Влезте с Instagram"
-        sr_title: "Влезте с Instagram"
       facebook:
         name: "Facebook"
-        title: "Влезте с Facebook"
-        sr_title: "Влезте с Facebook"
       github:
         name: "GitHub"
-        title: "Влезте с GitHub"
-        sr_title: "Влезте с GitHub"
       discord:
         name: "Discord"
-        title: "Влезте с Discord"
-        sr_title: "Влезте с Discord"
       second_factor_toggle:
         totp: "Вместо това използвайте приложение за удостоверяване"
         backup_code: "Вместо това използвайте резервен код"
@@ -2992,6 +2985,19 @@ bg:
         member: "потребител"
         regular: "редовен"
         leader: "лидер"
+    sidebar:
+      unread_count: "%{count} непрочетен"
+      new_count: "%{count} нов"
+      sections:
+        categories:
+          header_link_title: "всички категории"
+          header_link_text: "Категории"
+        topics:
+          header_link_title: "начало"
+          header_link_text: "Теми"
+          links:
+            tracked:
+              content: "Следени"
   admin_js:
     type_to_filter: "филтрирай..."
     admin:

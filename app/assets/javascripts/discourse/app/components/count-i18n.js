@@ -1,5 +1,6 @@
 import Component from "@ember/component";
 import I18n from "I18n";
+import { htmlSafe } from "@ember/template";
 
 export default Component.extend({
   tagName: "span",
@@ -10,7 +11,7 @@ export default Component.extend({
     this._super(...arguments);
     this.set(
       "i18nCount",
-      I18n.t(this.key + (this.suffix || ""), { count: this.count }).htmlSafe()
+      htmlSafe(I18n.t(this.key + (this.suffix || ""), { count: this.count }))
     );
   },
 });

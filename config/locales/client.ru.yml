@@ -369,8 +369,8 @@ ru:
         unbookmark_with_reminder: "Удалить все закладки и напоминания из этой темы."
     bookmarks:
       created: "Вы добавили это сообщение в закладки под именем '%{name}'"
-      create_for: "Создать закладку для %{type}"
-      edit_for: "Изменить закладку для %{type}"
+      create: "Создать закладку"
+      edit: "Изменить закладку"
       not_bookmarked: "Добавить сообщение в закладки"
       remove_reminder_keep_bookmark: "Удалить напоминание, но оставить закладку"
       created_with_reminder: "Вы добавили это сообщение в закладки под именем '%{name}' с последующим напоминанием %{date}"
@@ -3954,6 +3954,7 @@ ru:
           title: "Без уведомлений"
           description: "Вы не будете получать уведомления о новых темах с этим тегом, и они не будут отображаться в секции 'Непрочитанные'."
       groups:
+        back_btn: "Назад ко всем тегам"
         title: "Группы тегов"
         about_heading: "Выберите группу тегов или создайте новую"
         about_heading_empty: "Для начала создайте новую группу тегов"
@@ -4048,6 +4049,27 @@ ru:
       expand_btn: "Развернуть таблицу"
     second_factor_auth:
       redirect_after_success: "Проверка подлинности второго фактора прошла успешно. Перенаправление на предыдущую страницу…"
+    sidebar:
+      unread_count: "%{count} непрочитанных"
+      new_count: "%{count} новых"
+      sections:
+        categories:
+          header_link_title: "Все разделы"
+          header_link_text: "Разделы"
+        topics:
+          header_link_title: "Темы"
+          header_link_text: "Темы"
+          header_action_title: "Cоздать новую тему"
+          links:
+            everything:
+              content: "Все"
+              title: "Все темы"
+            tracked:
+              content: "Отслеживаемые"
+              title: "Все отслеживаемые темы"
+            bookmarked:
+              content: "В закладках"
+              title: "Все темы с закладками"
   admin_js:
     type_to_filter: "Фильтрация настроек..."
     admin:
@@ -4961,8 +4983,8 @@ ru:
             post_staff_note_create: "Добавление комментария модератора"
             post_staff_note_destroy: "Удаление комментария модератора"
             delete_group: "Удаление группы"
-            watched_word_create: "Добавить контролируемое слово"
-            watched_word_destroy: "Удалить контролируемое слово"
+            watched_word_create: "Добавление контролируемого слова"
+            watched_word_destroy: "Удаление контролируемого слова"
         screened_emails:
           title: "Почтовые адреса"
           description: "Когда кто-то создаёт новую учётную запись, указанный пользователем почтовый адрес проверяется на соответствие с указанным ниже списком, и в случае совпадения регистрация блокируется или производятся другие дополнительные действия."
