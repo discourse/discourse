@@ -27,5 +27,11 @@ describe Jobs::SyncAclsForUploads do
       Discourse.store.expects(:update_upload_ACL).times(3)
       run_job
     end
+
+    it "handles updates throwing an exception" do
+      Discourse.store.expects(:update_upload_ACL).raises(StandardError).then.returns(true, true).times(3)
+      Discourse.expects(:warn_exception).once
+      run_job
+    end
   end
 end

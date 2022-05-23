@@ -65,6 +65,24 @@ RSpec.describe "tasks/uploads" do
           expect(upload3.reload.access_control_post).to eq(post3)
         end
 
+        it "sets everything attached to a post as secure and rebakes all those posts if login is required" do
+          SiteSetting.login_required = true
+          freeze_time
+
+          post1.update_columns(baked_at: 1.week.ago)
+          post2.update_columns(baked_at: 1.week.ago)
+          post3.update_columns(baked_at: 1.week.ago)
+
+          invoke_task
+
+          expect(post1.reload.baked_at).not_to eq_time(1.week.ago)
+          expect(post2.reload.baked_at).not_to eq_time(1.week.ago)
+          expect(post3.reload.baked_at).not_to eq_time(1.week.ago)
+          expect(upload2.reload.secure).to eq(true)
+          expect(upload1.reload.secure).to eq(true)
+          expect(upload3.reload.secure).to eq(true)
+        end
+
         it "sets the uploads that are media and attachments in the read restricted topic category to secure" do
           post3.topic.update(category: Fabricate(:private_category, group: Fabricate(:group)))
           invoke_task
@@ -192,8 +210,12 @@ RSpec.describe "tasks/uploads" do
     end
 
     it "updates the affected ACLs" do
-      FileStore::S3Store.any_instance.expects(:update_upload_ACL).times(4)
-      invoke_task
+      expect_enqueued_with(
+        job: :sync_acls_for_uploads,
+        args: { upload_ids: [upload1.id, upload2.id, upload3.id, upload4.id] },
+      ) do
+        invoke_task
+      end
     end
   end
 end
