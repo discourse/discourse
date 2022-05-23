@@ -34,12 +34,12 @@ class Admin::SiteSettingsController < Admin::AdminController
     end
 
     update_existing_users = params[:update_existing_user].present?
-    previous_value = SiteSetting.public_send(id) || "" if update_existing_users
+    previous_value = value_or_default(SiteSetting.public_send(id)) if update_existing_users
 
     SiteSetting.set_and_log(id, value, current_user)
 
     if update_existing_users
-      new_value = value || ""
+      new_value = value_or_default(value)
 
       if (user_option = user_options[id.to_sym]).present?
         if user_option == "text_size_key"
@@ -53,7 +53,7 @@ class Admin::SiteSettingsController < Admin::AdminController
         attrs = { user_option => new_value }
         attrs[:email_digests] = (new_value.to_i != 0) if id == "default_email_digest_frequency"
 
-        UserOption.where(user_option => previous_value).update_all(attrs)
+        UserOption.human_users.where(user_option => previous_value).update_all(attrs)
       elsif id.start_with?("default_categories_")
         previous_category_ids = previous_value.split("|")
         new_category_ids = new_value.split("|")
@@ -106,10 +106,10 @@ class Admin::SiteSettingsController < Admin::AdminController
     params.require(:site_setting_id)
     id = params[:site_setting_id]
     raise Discourse::NotFound unless id.start_with?("default_")
-    new_value = params[id] || ""
+    new_value = value_or_default(params[id])
 
     raise_access_hidden_setting(id)
-    previous_value = SiteSetting.send(id) || ""
+    previous_value = value_or_default(SiteSetting.public_send(id))
     json = {}
 
     if (user_option = user_options[id.to_sym]).present?
@@ -119,7 +119,7 @@ class Admin::SiteSettingsController < Admin::AdminController
         previous_value = UserOption.title_count_modes[previous_value.to_sym]
       end
 
-      json[:user_count] = UserOption.where(user_option => previous_value).count
+      json[:user_count] = UserOption.human_users.where(user_option => previous_value).count
     elsif id.start_with?("default_categories_")
       previous_category_ids = previous_value.split("|")
       new_category_ids = new_value.split("|")
@@ -219,5 +219,9 @@ class Admin::SiteSettingsController < Admin::AdminController
     when "default_categories_regular"
       NotificationLevels.all[:regular]
     end
+  end
+
+  def value_or_default(value)
+    value.nil? ? "" : value
   end
 end
