@@ -134,7 +134,10 @@ class ShrinkUploadedImage
 
     if existing_upload
       begin
-        PostUpload.where(upload_id: original_upload.id).update_all(upload_id: upload.id)
+        UploadReferences
+          .where(target_type: 'Post')
+          .where(upload_id: original_upload.id)
+          .update_all(upload_id: upload.id)
       rescue ActiveRecord::RecordNotUnique, PG::UniqueViolation
       end
     else

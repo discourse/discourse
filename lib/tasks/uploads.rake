@@ -529,7 +529,7 @@ task "uploads:disable_secure_media" => :environment do
 
     SiteSetting.secure_media = false
 
-    secure_uploads = Upload.joins(:post_uploads).where(secure: true)
+    secure_uploads = Upload.joins(:upload_references).where(upload_references: { target_type: 'Post' }).where(secure: true)
     secure_upload_count = secure_uploads.count
     secure_upload_ids = secure_uploads.pluck(:id)
 
@@ -541,7 +541,7 @@ task "uploads:disable_secure_media" => :environment do
     )
 
     post_ids_to_rebake = DB.query_single(
-      "SELECT DISTINCT post_id FROM post_uploads WHERE upload_id IN (?)", secure_upload_ids
+      "SELECT DISTINCT target_id FROM upload_references WHERE upload_id IN (?) AND target_type = 'Post'", secure_upload_ids
     )
     adjust_acls(secure_upload_ids)
     post_rebake_errors = rebake_upload_posts(post_ids_to_rebake)
@@ -621,8 +621,8 @@ def mark_all_as_secure_login_required
   post_upload_ids_marked_secure = DB.query_single(<<~SQL)
     WITH upl AS (
       SELECT DISTINCT ON (upload_id) upload_id
-      FROM post_uploads
-      INNER JOIN posts ON posts.id = post_uploads.post_id
+      FROM upload_references
+      INNER JOIN posts ON posts.id = upload_references.target_id AND upload_references.target_type = 'Post'
       INNER JOIN topics ON topics.id = posts.topic_id
     )
     UPDATE uploads
@@ -646,7 +646,7 @@ def mark_all_as_secure_login_required
   puts "Finished marking upload(s) as secure."
 
   post_ids_to_rebake = DB.query_single(
-    "SELECT DISTINCT post_id FROM post_uploads WHERE upload_id IN (?)", post_upload_ids_marked_secure
+    "SELECT DISTINCT target_id FROM upload_references WHERE upload_id IN (?) AND target_type = 'Post'", post_upload_ids_marked_secure
   )
   [post_ids_to_rebake, (post_upload_ids_marked_secure + upload_ids_marked_not_secure).uniq]
 end
@@ -665,8 +665,8 @@ def update_specific_upload_security_no_login_required
   post_upload_ids_marked_secure = DB.query_single(<<~SQL)
     WITH upl AS (
       SELECT DISTINCT ON (upload_id) upload_id
-      FROM post_uploads
-      INNER JOIN posts ON posts.id = post_uploads.post_id
+      FROM upload_references
+      INNER JOIN posts ON posts.id = upload_references.target_id AND upload_references.target_type = 'Post'
       INNER JOIN topics ON topics.id = posts.topic_id
       LEFT JOIN categories ON categories.id = topics.category_id
       WHERE (topics.category_id IS NOT NULL AND categories.read_restricted) OR
@@ -686,8 +686,8 @@ def update_specific_upload_security_no_login_required
   post_upload_ids_marked_not_secure = DB.query_single(<<~SQL)
     WITH upl AS (
       SELECT DISTINCT ON (upload_id) upload_id
-      FROM post_uploads
-      INNER JOIN posts ON posts.id = post_uploads.post_id
+      FROM upload_references
+      INNER JOIN posts ON posts.id = upload_references.target_id AND upload_references.target_type = 'Post'
       INNER JOIN topics ON topics.id = posts.topic_id
       LEFT JOIN categories ON categories.id = topics.category_id
       WHERE (topics.archetype = 'regular' AND topics.category_id IS NOT NULL AND NOT categories.read_restricted) OR
@@ -716,7 +716,7 @@ def update_specific_upload_security_no_login_required
   puts "Finished updating upload security. Marked #{upload_ids_marked_not_secure.length} uploads not linked to posts as not secure."
 
   all_upload_ids_changed = (upload_ids_changed + upload_ids_marked_not_secure).uniq
-  post_ids_to_rebake = DB.query_single("SELECT DISTINCT post_id FROM post_uploads WHERE upload_id IN (?)", upload_ids_changed)
+  post_ids_to_rebake = DB.query_single("SELECT DISTINCT target_id FROM upload_references WHERE upload_id IN (?) AND target_type = 'Post'", upload_ids_changed)
   [post_ids_to_rebake, all_upload_ids_changed]
 end
 
@@ -1029,7 +1029,7 @@ def fix_missing_s3
           puts "Failed to save upload #{save_error}"
         else
           OptimizedImage.where(upload_id: upload.id).destroy_all
-          rebake_ids = PostUpload.where(upload_id: upload.id).pluck(:post_id)
+          rebake_ids = UploadReferences.where(upload_id: upload.id).where(target_type: 'Post').pluck(:target_id)
 
           if rebake_ids.present?
             Post.where(id: rebake_ids).each do |post|
@@ -1047,11 +1047,12 @@ def fix_missing_s3
   puts "Rebaking posts with missing uploads, this can take a while as all rebaking runs inline"
 
   sql = <<~SQL
-    SELECT post_id
-    FROM post_uploads pu
-    JOIN uploads on uploads.id = pu.upload_id
+    SELECT target_id
+    FROM upload_references ur
+    JOIN uploads on uploads.id = ur.upload_id
+    WHERE ur.target_type = 'Post'
     WHERE verification_status = :invalid_etag
-    ORDER BY post_id DESC
+    ORDER BY target_id DESC
   SQL
 
   DB.query_single(sql, invalid_etag: Upload.verification_statuses[:invalid_etag]).each do |post_id|
