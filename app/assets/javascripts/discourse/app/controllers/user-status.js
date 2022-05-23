@@ -9,14 +9,14 @@ import bootbox from "bootbox";
 export default Controller.extend(ModalFunctionality, {
   userStatusService: service("user-status"),
 
-  description: "",
+  description: null,
   statusIsSet: notEmpty("description"),
   showDeleteButton: false,
 
   onShow() {
-    if (this.currentUser.status?.description) {
+    if (this.currentUser.status) {
       this.setProperties({
-        description: this.currentUser.status?.description,
+        description: this.currentUser.status.description,
         showDeleteButton: !!this.currentUser.status?.description,
       });
     }
@@ -27,7 +27,7 @@ export default Controller.extend(ModalFunctionality, {
     this.userStatusService
       .clear()
       .then(() => {
-        this.set("description", "");
+        this.set("description", null);
         this.send("closeModal");
       })
       .catch((e) => this._handleError(e));
