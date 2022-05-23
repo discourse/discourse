@@ -124,8 +124,10 @@ task 'multisite:migrate' => ['db:load_config', 'environment', 'set_locale'] do |
 
     exceptions = Queue.new
 
-    old_stdout = $stdout
-    $stdout = StdOutDemux.new($stdout)
+    if concurrency > 1
+      old_stdout = $stdout
+      $stdout = StdOutDemux.new($stdout)
+    end
 
     SeedFu.quiet = true
 
@@ -151,7 +153,7 @@ task 'multisite:migrate' => ['db:load_config', 'environment', 'set_locale'] do |
                 exceptions << [db, e]
               ensure
                 begin
-                  $stdout.finish_chunk
+                  $stdout.finish_chunk if concurrency > 1
                 rescue => ex
                   STDERR.puts ex.inspect
                   STDERR.puts ex.backtrace
@@ -198,7 +200,9 @@ task 'multisite:migrate' => ['db:load_config', 'environment', 'set_locale'] do |
       end
     end
 
-    $stdout = old_stdout
+    if concurrency > 1
+      $stdout = old_stdout
+    end
     check_exceptions(exceptions)
 
     Rake::Task['db:_dump'].invoke
