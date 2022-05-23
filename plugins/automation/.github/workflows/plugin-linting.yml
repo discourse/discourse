@@ -50,7 +50,7 @@ jobs:
 
       - name: Ember template lint
         if: ${{ always() }}
-        run: yarn ember-template-lint assets/javascripts
+        run: yarn ember-template-lint --no-error-on-unmatched-pattern assets/javascripts
 
       - name: Rubocop
         if: ${{ always() }}
