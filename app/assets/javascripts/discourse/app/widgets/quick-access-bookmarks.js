@@ -1,4 +1,8 @@
 import RawHtml from "discourse/widgets/raw-html";
+import {
+  NO_REMINDER_ICON,
+  WITH_REMINDER_ICON,
+} from "discourse/models/bookmark";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import QuickAccessPanel from "discourse/widgets/quick-access-panel";
 import { ajax } from "discourse/lib/ajax";
@@ -7,8 +11,6 @@ import { h } from "virtual-dom";
 import { postUrl } from "discourse/lib/utilities";
 import I18n from "I18n";
 import { htmlSafe } from "@ember/template";
-
-const ICON = "bookmark";
 
 createWidget("no-quick-access-bookmarks", {
   html() {
@@ -21,7 +23,7 @@ createWidget("no-quick-access-bookmarks", {
             "<p>" +
             htmlSafe(
               I18n.t("user.no_bookmarks_body", {
-                icon: iconHTML(ICON),
+                icon: iconHTML(NO_REMINDER_ICON),
               })
             ) +
             "</p>",
@@ -74,9 +76,9 @@ createWidgetFrom(QuickAccessPanel, "quick-access-bookmarks", {
 
   icon(bookmark) {
     if (bookmark.reminder_at) {
-      return "discourse-bookmark-clock";
+      return WITH_REMINDER_ICON;
     }
-    return ICON;
+    return NO_REMINDER_ICON;
   },
 
   loadBookmarksWithReminders() {

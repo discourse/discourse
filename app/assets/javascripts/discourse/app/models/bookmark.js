@@ -20,6 +20,9 @@ export const AUTO_DELETE_PREFERENCES = {
   ON_OWNER_REPLY: 2,
 };
 
+export const NO_REMINDER_ICON = "bookmark";
+export const WITH_REMINDER_ICON = "discourse-bookmark-clock";
+
 const Bookmark = RestModel.extend({
   newBookmark: none("id"),
 
