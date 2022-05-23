@@ -158,16 +158,18 @@ ensure
 end
 
 def postgres_healthcheck(host:, user:, password:, dbname:)
-  response = PG::Connection.ping(
+  client = PG::Connection.new(
     host: host,
     user: user,
     password: password,
     dbname: dbname,
     connect_timeout: 2,  # minimum
   )
-  response == PG::Constants::PQPING_OK
+  client.exec(';').none?
 rescue
   false
+ensure
+  client.close if client
 end
 
 HEALTH_CHECKS = {
