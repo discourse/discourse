@@ -17,7 +17,7 @@ export default Controller.extend(ModalFunctionality, {
     if (this.currentUser.status) {
       this.setProperties({
         description: this.currentUser.status.description,
-        showDeleteButton: !!this.currentUser.status?.description,
+        showDeleteButton: true,
       });
     }
   },
@@ -27,7 +27,7 @@ export default Controller.extend(ModalFunctionality, {
     this.userStatusService
       .clear()
       .then(() => {
-        this.set("description", null);
+        this._resetModal();
         this.send("closeModal");
       })
       .catch((e) => this._handleError(e));
@@ -52,5 +52,10 @@ export default Controller.extend(ModalFunctionality, {
     } else {
       popupAjaxError(e);
     }
+  },
+
+  _resetModal() {
+    this.set("description", null);
+    this.set("showDeleteButton", false);
   },
 });
