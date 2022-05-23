@@ -314,4 +314,18 @@ describe InlineOneboxer do
       end
     end
   end
+
+  context "register_local_handler" do
+    it "calls registered local handler" do
+      InlineOneboxer.register_local_handler('wizard') do |url, route|
+        { url: url, title: 'Custom Onebox for Wizard' }
+      end
+
+      url = "#{Discourse.base_url}/wizard"
+      results = InlineOneboxer.new([url], skip_cache: true).process
+      expect(results).to be_present
+      expect(results[0][:url]).to eq(url)
+      expect(results[0][:title]).to eq('Custom Onebox for Wizard')
+    end
+  end
 end

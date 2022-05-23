@@ -21,6 +21,14 @@ class InlineOneboxer
     Discourse.cache.read(cache_key(url))
   end
 
+  def self.local_handlers
+    @local_handlers ||= {}
+  end
+
+  def self.register_local_handler(controller, &handler)
+    local_handlers[controller] = handler
+  end
+
   def self.lookup(url, opts = nil)
     opts ||= {}
     opts = opts.with_indifferent_access
@@ -46,6 +54,8 @@ class InlineOneboxer
           # not permitted to see topic
           return nil
         end
+      elsif handler = local_handlers[route[:controller]]
+        return handler.call(url, route)
       end
     end
 

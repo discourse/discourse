@@ -641,4 +641,14 @@ describe Oneboxer do
     end
   end
 
+  context "register_local_handler" do
+    it "calls registered local handler" do
+      Oneboxer.register_local_handler('wizard') do |url, route|
+        'Custom Onebox for Wizard'
+      end
+
+      url = "#{Discourse.base_url}/wizard"
+      expect(Oneboxer.preview(url)).to eq('Custom Onebox for Wizard')
+    end
+  end
 end
