@@ -58,18 +58,7 @@ class Admin::SiteSettingsController < Admin::AdminController
         previous_category_ids = previous_value.split("|")
         new_category_ids = new_value.split("|")
 
-        case id
-        when "default_categories_watching"
-          notification_level = NotificationLevels.all[:watching]
-        when "default_categories_tracking"
-          notification_level = NotificationLevels.all[:tracking]
-        when "default_categories_muted"
-          notification_level = NotificationLevels.all[:muted]
-        when "default_categories_watching_first_post"
-          notification_level = NotificationLevels.all[:watching_first_post]
-        when "default_categories_regular"
-          notification_level = NotificationLevels.all[:regular]
-        end
+        notification_level = category_notification_level(id)
 
         categories_to_unwatch = previous_category_ids - new_category_ids
         CategoryUser.where(category_id: categories_to_unwatch, notification_level: notification_level).delete_all
@@ -94,16 +83,7 @@ class Admin::SiteSettingsController < Admin::AdminController
         new_tag_ids = Tag.where(name: new_value.split("|")).pluck(:id)
         now = Time.zone.now
 
-        case id
-        when "default_tags_watching"
-          notification_level = NotificationLevels.all[:watching]
-        when "default_tags_tracking"
-          notification_level = NotificationLevels.all[:tracking]
-        when "default_tags_muted"
-          notification_level = NotificationLevels.all[:muted]
-        when "default_tags_watching_first_post"
-          notification_level = NotificationLevels.all[:watching_first_post]
-        end
+        notification_level = tag_notification_level(id)
 
         TagUser.where(tag_id: (previous_tag_ids - new_tag_ids), notification_level: notification_level).delete_all
 
@@ -144,18 +124,7 @@ class Admin::SiteSettingsController < Admin::AdminController
       previous_category_ids = previous_value.split("|")
       new_category_ids = new_value.split("|")
 
-      case id
-      when "default_categories_watching"
-        notification_level = NotificationLevels.all[:watching]
-      when "default_categories_tracking"
-        notification_level = NotificationLevels.all[:tracking]
-      when "default_categories_muted"
-        notification_level = NotificationLevels.all[:muted]
-      when "default_categories_watching_first_post"
-        notification_level = NotificationLevels.all[:watching_first_post]
-      when "default_categories_regular"
-        notification_level = NotificationLevels.all[:regular]
-      end
+      notification_level = category_notification_level(id)
 
       user_ids = CategoryUser.where(category_id: previous_category_ids - new_category_ids, notification_level: notification_level).distinct.pluck(:user_id)
       user_ids += User
@@ -172,16 +141,7 @@ class Admin::SiteSettingsController < Admin::AdminController
       previous_tag_ids = Tag.where(name: previous_value.split("|")).pluck(:id)
       new_tag_ids = Tag.where(name: new_value.split("|")).pluck(:id)
 
-      case id
-      when "default_tags_watching"
-        notification_level = TagUser.notification_levels[:watching]
-      when "default_tags_tracking"
-        notification_level = TagUser.notification_levels[:tracking]
-      when "default_tags_muted"
-        notification_level = TagUser.notification_levels[:muted]
-      when "default_tags_watching_first_post"
-        notification_level = TagUser.notification_levels[:watching_first_post]
-      end
+      notification_level = tag_notification_level(id)
 
       user_ids = TagUser.where(tag_id: previous_tag_ids - new_tag_ids, notification_level: notification_level).distinct.pluck(:user_id)
       user_ids += User
@@ -233,4 +193,31 @@ class Admin::SiteSettingsController < Admin::AdminController
     end
   end
 
+  def tag_notification_level(id)
+    case id
+    when "default_tags_watching"
+      NotificationLevels.all[:watching]
+    when "default_tags_tracking"
+      NotificationLevels.all[:tracking]
+    when "default_tags_muted"
+      NotificationLevels.all[:muted]
+    when "default_tags_watching_first_post"
+      NotificationLevels.all[:watching_first_post]
+    end
+  end
+
+  def category_notification_level(id)
+    case id
+    when "default_categories_watching"
+      NotificationLevels.all[:watching]
+    when "default_categories_tracking"
+      NotificationLevels.all[:tracking]
+    when "default_categories_muted"
+      NotificationLevels.all[:muted]
+    when "default_categories_watching_first_post"
+      NotificationLevels.all[:watching_first_post]
+    when "default_categories_regular"
+      NotificationLevels.all[:regular]
+    end
+  end
 end
