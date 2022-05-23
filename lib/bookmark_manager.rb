@@ -40,8 +40,8 @@ class BookmarkManager
   #                                      this is used to determine when to delete a bookmark
   #                                      automatically.
   def create_for(bookmarkable_id:, bookmarkable_type:, name: nil, reminder_at: nil, options: {})
-    bookmarkable = bookmarkable_type.constantize.find_by(id: bookmarkable_id)
     registered_bookmarkable = Bookmark.registered_bookmarkable_from_type(bookmarkable_type)
+    bookmarkable = registered_bookmarkable.model.find_by(id: bookmarkable_id)
     registered_bookmarkable.validate_before_create(@guardian, bookmarkable)
 
     bookmark = Bookmark.create(
