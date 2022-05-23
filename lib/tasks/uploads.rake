@@ -602,7 +602,7 @@ task "uploads:secure_upload_analyse_and_update" => :environment do
 end
 
 def adjust_acls(upload_ids_to_adjust_acl_for)
-  jobs_to_create = upload_ids_to_adjust_acl_for.count / 100
+  jobs_to_create = (upload_ids_to_adjust_acl_for.count.to_f / 100.00).ceil
 
   if jobs_to_create > 1
     puts "Adjusting ACLs for #{upload_ids_to_adjust_acl_for} uploads. These will be batched across #{jobs_to_create} sync job(s)."
@@ -631,7 +631,7 @@ def mark_all_as_secure_login_required
         security_last_changed_at = NOW()
     FROM upl
     WHERE uploads.id = upl.upload_id AND NOT uploads.secure
-    RETURNING uploads.id;
+    RETURNING uploads.id
   SQL
   puts "Marked #{post_upload_ids_marked_secure.count} upload(s) as secure because login_required is true.", ""
   upload_ids_marked_not_secure = DB.query_single(<<~SQL, post_upload_ids_marked_secure)
@@ -640,7 +640,7 @@ def mark_all_as_secure_login_required
         security_last_changed_reason = 'upload security rake task mark as not secure',
         security_last_changed_at = NOW()
     WHERE id NOT IN (?) AND uploads.secure
-    RETURNING uploads.id;
+    RETURNING uploads.id
   SQL
   puts "Marked #{upload_ids_marked_not_secure.count} upload(s) as not secure because they are not linked to posts.", ""
   puts "Finished marking upload(s) as secure."
@@ -678,7 +678,7 @@ def update_specific_upload_security_no_login_required
         security_last_changed_at = NOW()
     FROM upl
     WHERE uploads.id = upl.upload_id AND NOT uploads.secure
-    RETURNING uploads.id;
+    RETURNING uploads.id
   SQL
   puts "Marked #{post_upload_ids_marked_secure.length} uploads as secure."
 
@@ -699,7 +699,7 @@ def update_specific_upload_security_no_login_required
         security_last_changed_at = NOW()
     FROM upl
     WHERE uploads.id = upl.upload_id AND uploads.secure
-    RETURNING uploads.id;
+    RETURNING uploads.id
   SQL
   puts "Marked #{post_upload_ids_marked_not_secure.length} uploads as not secure."
 
@@ -711,7 +711,7 @@ def update_specific_upload_security_no_login_required
         security_last_changed_reason = 'upload security rake task mark as not secure',
         security_last_changed_at = NOW()
     WHERE id NOT IN (?) AND uploads.secure
-    RETURNING uploads.id;
+    RETURNING uploads.id
   SQL
   puts "Finished updating upload security. Marked #{upload_ids_marked_not_secure.length} uploads not linked to posts as not secure."
 
@@ -728,7 +728,7 @@ def update_uploads_access_control_post
     UPDATE uploads
     SET access_control_post_id = upl.post_id
     FROM upl
-    WHERE uploads.id = upl.upload_id;
+    WHERE uploads.id = upl.upload_id
   SQL
 end
 
