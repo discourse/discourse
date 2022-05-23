@@ -338,7 +338,11 @@ class CurrentUserSerializer < BasicUserSerializer
     SiteSetting.enable_experimental_sidebar
   end
 
+  def include_status?
+    SiteSetting.enable_user_status
+  end
+
   def status
-    UserStatusSerializer.new(object.user_status, root: false) if SiteSetting.enable_user_status
+    UserStatusSerializer.new(object.user_status, root: false)
   end
 end

@@ -223,8 +223,12 @@ class UserCardSerializer < BasicUserSerializer
     object.card_background_upload&.url
   end
 
+  def include_status?
+    SiteSetting.enable_user_status
+  end
+
   def status
-    UserStatusSerializer.new(user.user_status, root: false) if SiteSetting.enable_user_status
+    UserStatusSerializer.new(user.user_status, root: false)
   end
 
   private

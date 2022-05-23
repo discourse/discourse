@@ -90,7 +90,7 @@ describe UserCardSerializer do
     it "doesn't serialize when disabled" do
       SiteSetting.enable_user_status = false
       json = serializer.as_json
-      expect(json[:status]).to be_nil
+      expect(json.keys).not_to include :status
     end
   end
 end
