@@ -1501,11 +1501,11 @@ class User < ActiveRecord::Base
     end
   end
 
-  def clear_status
+  def clear_status!
     user_status.destroy! if user_status
   end
 
-  def set_status(description)
+  def set_status!(description)
     now = Time.zone.now
     if user_status
       user_status.update!(description: description, set_at: now)
