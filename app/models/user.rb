@@ -1502,7 +1502,7 @@ class User < ActiveRecord::Base
   end
 
   def clear_status
-    user_status.destroy if user_status
+    user_status.destroy! if user_status
   end
 
   def set_status(description)
