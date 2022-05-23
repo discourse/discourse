@@ -12,20 +12,15 @@ class BookmarksController < ApplicationController
     ).performed!
 
     bookmark_manager = BookmarkManager.new(current_user)
-
-    create_params = {
+    bookmark = bookmark_manager.create_for(
+      bookmarkable_id: params[:bookmarkable_id],
+      bookmarkable_type: params[:bookmarkable_type],
       name: params[:name],
       reminder_at: params[:reminder_at],
       options: {
-        auto_delete_preference: params[:auto_delete_preference] || 0
+        auto_delete_preference: params[:auto_delete_preference] || 0,
+        save_user_preferences: true
       }
-    }
-
-    bookmark = bookmark_manager.create_for(
-      **create_params.merge(
-        bookmarkable_id: params[:bookmarkable_id],
-        bookmarkable_type: params[:bookmarkable_type]
-      )
     )
 
     if bookmark_manager.errors.empty?
@@ -50,7 +45,8 @@ class BookmarksController < ApplicationController
       name: params[:name],
       reminder_at: params[:reminder_at],
       options: {
-        auto_delete_preference: params[:auto_delete_preference] || 0
+        auto_delete_preference: params[:auto_delete_preference] || 0,
+        save_user_preferences: true
       }
     )
 

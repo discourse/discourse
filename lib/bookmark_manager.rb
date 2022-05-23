@@ -51,13 +51,13 @@ class BookmarkManager
         name: name,
         reminder_at: reminder_at,
         reminder_set_at: Time.zone.now
-      }.merge(options)
+      }.merge(options.slice(:auto_delete_preference))
     )
 
     return add_errors_from(bookmark) if bookmark.errors.any?
 
     registered_bookmarkable.after_create(@guardian, bookmark, options)
-    update_user_option(bookmark)
+    update_user_option(bookmark, options)
 
     bookmark
   end
@@ -102,14 +102,14 @@ class BookmarkManager
       {
         name: name,
         reminder_set_at: Time.zone.now,
-      }.merge(options)
+      }.merge(options.slice(:pinned, :auto_delete_preference))
     )
 
     if bookmark.errors.any?
       return add_errors_from(bookmark)
     end
 
-    update_user_option(bookmark)
+    update_user_option(bookmark, options)
 
     success
   end
@@ -142,7 +142,10 @@ class BookmarkManager
     TopicUser.change(@user.id, topic, bookmarked: Bookmark.for_user_in_topic(@user.id, topic.id).exists?)
   end
 
-  def update_user_option(bookmark)
-    @user.user_option.update!(bookmark_auto_delete_preference: bookmark.auto_delete_preference)
+  def update_user_option(bookmark, options)
+    return if !options[:save_user_preferences]
+    @user.user_option.update!(
+      bookmark_auto_delete_preference: bookmark.auto_delete_preference
+    )
   end
 end
