@@ -86,23 +86,19 @@ export default Component.extend(Scrolling, {
 
   @action
   editBookmark(bookmark) {
-    openBookmarkModal(
-      bookmark,
-      {
-        onAfterSave: (savedData) => {
-          this.appEvents.trigger(
-            "bookmarks:changed",
-            savedData,
-            bookmark.attachedTo()
-          );
-          this.reload();
-        },
-        onAfterDelete: () => {
-          this.reload();
-        },
+    openBookmarkModal(bookmark, {
+      onAfterSave: (savedData) => {
+        this.appEvents.trigger(
+          "bookmarks:changed",
+          savedData,
+          bookmark.attachedTo()
+        );
+        this.reload();
       },
-      { use_polymorphic_bookmarks: this.siteSettings.use_polymorphic_bookmarks }
-    );
+      onAfterDelete: () => {
+        this.reload();
+      },
+    });
   },
 
   @action

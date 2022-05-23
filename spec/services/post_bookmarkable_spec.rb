@@ -7,10 +7,6 @@ describe PostBookmarkable do
   fab!(:guardian) { Guardian.new(user) }
   fab!(:private_category) { Fabricate(:private_category, group: Fabricate(:group)) }
 
-  before do
-    SiteSetting.use_polymorphic_bookmarks = true
-  end
-
   let!(:post1) { Fabricate(:post) }
   let!(:post2) { Fabricate(:post) }
   let!(:bookmark1) { Fabricate(:bookmark, user: user, bookmarkable: post1, name: "something i gotta do") }

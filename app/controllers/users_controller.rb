@@ -1725,20 +1725,13 @@ class UsersController < ApplicationController
         end
       end
       format.ics do
-        if SiteSetting.use_polymorphic_bookmarks
-          @bookmark_reminders = Bookmark.with_reminders
-            .where(user_id: user.id)
-            .order(:reminder_at)
-            .map do |bookmark|
-            bookmark.registered_bookmarkable.serializer.new(
-              bookmark, scope: user_guardian, root: false
-            )
-          end
-        else
-          @bookmark_reminders = Bookmark.with_reminders
-            .where(user_id: user.id)
-            .includes(:topic)
-            .order(:reminder_at)
+        @bookmark_reminders = Bookmark.with_reminders
+          .where(user_id: user.id)
+          .order(:reminder_at)
+          .map do |bookmark|
+          bookmark.registered_bookmarkable.serializer.new(
+            bookmark, scope: user_guardian, root: false
+          )
         end
       end
     end

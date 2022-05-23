@@ -83,16 +83,15 @@ acceptance("Bookmarking", function (needs) {
     function handleRequest(request) {
       const data = helper.parsePostData(request.requestBody);
 
-      if (data.post_id === "398") {
-        if (data.for_topic === "true") {
-          return helper.response({ id: 3, success: "OK" });
-        } else {
-          return helper.response({ id: 1, success: "OK" });
-        }
-      } else if (data.post_id === "419") {
+      if (data.bookmarkable_id === "398" && data.bookmarkable_type === "Post") {
+        return helper.response({ id: 1, success: "OK" });
+      } else if (data.bookmarkable_type === "Topic") {
+        return helper.response({ id: 3, success: "OK" });
+      } else if (
+        data.bookmarkable_id === "419" &&
+        data.bookmarkable_type === "Post"
+      ) {
         return helper.response({ id: 2, success: "OK" });
-      } else {
-        throw new Error("Pretender: unknown post_id");
       }
     }
     server.post("/bookmarks", handleRequest);
@@ -368,13 +367,6 @@ acceptance("Bookmarking", function (needs) {
   test("Creating and editing a topic level bookmark", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-button-bookmark");
-
-    assert.strictEqual(
-      query("#discourse-modal-title").innerText,
-      I18n.t("post.bookmarks.create_for_topic"),
-      "The create modal says creating a topic bookmark"
-    );
-
     await click("#save-bookmark");
 
     assert.notOk(
@@ -389,13 +381,6 @@ acceptance("Bookmarking", function (needs) {
     );
 
     await click("#topic-footer-button-bookmark");
-
-    assert.strictEqual(
-      query("#discourse-modal-title").innerText,
-      I18n.t("post.bookmarks.edit_for_topic"),
-      "The edit modal says editing a topic bookmark"
-    );
-
     await fillIn("input#bookmark-name", "Test name");
     await click("#tap_tile_tomorrow");
 

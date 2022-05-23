@@ -6,7 +6,6 @@ RSpec.describe UserBookmarkListSerializer do
 
   context "for polymorphic bookmarks" do
     before do
-      SiteSetting.use_polymorphic_bookmarks = true
       register_test_bookmarkable
       Fabricate(:topic_user, user: user, topic: post_bookmark.bookmarkable.topic)
       Fabricate(:topic_user, user: user, topic: topic_bookmark.bookmarkable)

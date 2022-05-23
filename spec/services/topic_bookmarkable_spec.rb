@@ -7,10 +7,6 @@ describe TopicBookmarkable do
   fab!(:guardian) { Guardian.new(user) }
   fab!(:private_category) { Fabricate(:private_category, group: Fabricate(:group)) }
 
-  before do
-    SiteSetting.use_polymorphic_bookmarks = true
-  end
-
   let!(:topic1) { Fabricate(:topic) }
   let!(:topic2) { Fabricate(:topic) }
   let!(:post) { Fabricate(:post, topic: topic1) }
