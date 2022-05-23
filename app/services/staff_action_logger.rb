@@ -182,8 +182,8 @@ class StaffActionLogger
     UserHistory.create!(params(opts).merge(
       action: UserHistory.actions[:change_site_setting],
       subject: setting_name,
-      previous_value: previous_value,
-      new_value: new_value
+      previous_value: previous_value&.to_s,
+      new_value: new_value&.to_s
     ))
   end
 
