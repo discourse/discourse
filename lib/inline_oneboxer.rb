@@ -62,7 +62,14 @@ class InlineOneboxer
         uri.hostname.present? &&
         (always_allow || allowed_domains.include?(uri.hostname)) &&
         !Onebox::DomainChecker.is_blocked?(uri.hostname)
-        title = RetrieveTitle.crawl(url)
+        if SiteSetting.block_onebox_on_redirect
+          max_redirects = 0
+        end
+        title = RetrieveTitle.crawl(
+          url,
+          max_redirects: max_redirects,
+          initial_https_redirect_ignore_limit: SiteSetting.block_onebox_on_redirect
+        )
         title = nil if title && title.length < MIN_TITLE_LENGTH
         return onebox_for(url, title, opts)
       end

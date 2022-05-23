@@ -265,5 +265,53 @@ describe InlineOneboxer do
         expect(onebox[:title]).to be_blank
       end
     end
+
+    context "when block_onebox_on_redirect is enabled" do
+      before do
+        SiteSetting.block_onebox_on_redirect = true
+      end
+
+      after do
+        FinalDestination.clear_https_cache!("redirects.com")
+      end
+
+      it "doesn't onebox if the URL redirects" do
+        stub_request(:get, "https://redirects.com/blah/gg")
+          .to_return(
+            status: 301,
+            body: "",
+            headers: { "location" => "https://redirects.com/blah/gg/redirect" }
+          )
+        onebox = InlineOneboxer.lookup("https://redirects.com/blah/gg", skip_cache: true)
+        expect(onebox[:title]).to be_blank
+      end
+
+      it "allows an initial http -> https redirect if the redirect URL is identical to the original" do
+        stub_request(:get, "http://redirects.com/blah/gg")
+          .to_return(
+            status: 301,
+            body: "",
+            headers: { "location" => "https://redirects.com/blah/gg" }
+          )
+        stub_request(:get, "https://redirects.com/blah/gg")
+          .to_return(
+            status: 200,
+            body: "<html><head><title>The Redirects Website</title></head></html>"
+          )
+        onebox = InlineOneboxer.lookup("http://redirects.com/blah/gg", skip_cache: true)
+        expect(onebox[:title]).to eq("The Redirects Website")
+      end
+
+      it "doesn't allow an initial http -> https redirect if the redirect URL is different to the original" do
+        stub_request(:get, "http://redirects.com/blah/gg")
+          .to_return(
+            status: 301,
+            body: "",
+            headers: { "location" => "https://redirects.com/blah/gg/2" }
+          )
+        onebox = InlineOneboxer.lookup("http://redirects.com/blah/gg", skip_cache: true)
+        expect(onebox[:title]).to be_blank
+      end
+    end
   end
 end
