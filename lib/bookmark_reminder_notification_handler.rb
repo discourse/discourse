@@ -10,13 +10,10 @@ class BookmarkReminderNotificationHandler
   def send_notification
     return if bookmark.blank?
     Bookmark.transaction do
-      # TODO (martin) [POLYBOOK] Can probably change this to call the
-      # can_send_reminder? on the registered bookmarkable directly instead
-      # of having can_send_reminder?
-      if !can_send_reminder?
+      if !bookmark.registered_bookmarkable.can_send_reminder?(bookmark)
         clear_reminder
       else
-        create_notification
+        bookmark.registered_bookmarkable.send_reminder_notification(bookmark)
 
         if bookmark.auto_delete_when_reminder_sent?
           BookmarkManager.new(bookmark.user).destroy(bookmark.id)
@@ -39,30 +36,5 @@ class BookmarkReminderNotificationHandler
     end
 
     bookmark.clear_reminder!
-  end
-
-  def can_send_reminder?
-    if SiteSetting.use_polymorphic_bookmarks
-      bookmark.registered_bookmarkable.can_send_reminder?(bookmark)
-    else
-      bookmark.post.present? && bookmark.topic.present?
-    end
-  end
-
-  def create_notification
-    if SiteSetting.use_polymorphic_bookmarks
-      bookmark.registered_bookmarkable.send_reminder_notification(bookmark)
-    else
-      bookmark.user.notifications.create!(
-        notification_type: Notification.types[:bookmark_reminder],
-        topic_id: bookmark.topic_id,
-        post_number: bookmark.post.post_number,
-        data: {
-          topic_title: bookmark.topic.title,
-          display_username: bookmark.user.username,
-          bookmark_name: bookmark.name
-        }.to_json
-      )
-    end
   end
 end

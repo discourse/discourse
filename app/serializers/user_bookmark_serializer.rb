@@ -3,6 +3,9 @@
 require_relative 'post_item_excerpt'
 
 # TODO (martin) [POLYBOOK] Not relevant once polymorphic bookmarks are implemented.
+#
+# This must be deleted after the plugins relying on it are updated once
+# polymorphic bookmarks become the norm.
 class UserBookmarkSerializer < ApplicationSerializer
   include PostItemExcerpt
   include TopicTagsMixin

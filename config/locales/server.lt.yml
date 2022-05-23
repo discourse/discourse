@@ -1494,7 +1494,6 @@ lt:
     max_tag_search_results: "Ieškant žymų, maksimalus rodomų rezultatų skaičius."
     tags_sort_alphabetically: "Rodyti žymas abėcėlės tvarka. Numatytasis rodymas pagal populiarumą."
     tag_style: "Žymos ženklelių vizualinis stilius."
-    allow_staff_to_tag_pms: "Leiskite darbuotojams pažymėti bet kokią asmeninę žinutę"
     min_trust_level_to_tag_topics: "Minimalus patikimumo lygis, reikalingas žymėti temas"
     suppress_overlapping_tags_in_list: "Jei žymos atitinka tikslius žodžius temų pavadinimuose, nerodykite jų"
     remove_muted_tags_from_latest: "Naujausiame temų sąraše nerodykite temų, pažymėtų tik nutildytomis žymomis."

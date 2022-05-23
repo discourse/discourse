@@ -248,7 +248,7 @@ he:
       <p>אם לא אז נא <a href="%{base_url}/password-reset">לאפס ססמה</a>.</p>
     not_found_template_link: |
       <p>לא ניתן עוד לממש את ההזמנה הזאת שנשלחה אל <a href="%{base_url}">%{site_name}</a>. נא לבקש מיוזם או יוזמת ההזמנה לשלוח לך הזמנה חדשה.</p>
-    user_exists: "אין צורך להזמין את <b>%{email}</b>, כבר <a href='%{base_path}/u/%{username}/summary'>קיים חשבון לכתובת זו!</a>"
+    user_exists: "אין צורך להזמין את <b>%{email}</b>, יש כבר חשבון עם הכתובת הזאת!"
     invite_exists: "כבר הזמנת את <b>%{email}</b>."
     invalid_email: "%{email} אינה כתובת דוא״ל תקפה."
     rate_limit:
@@ -2164,7 +2164,7 @@ he:
     tags_sort_alphabetically: "הצגת תגיות בסדר אלפביתי. בררת המחדל היא להציג אותן לפי פופולאריות."
     tags_listed_by_group: "הצגת תגיות לפי קבוצת תגיות ב<a href='%{base_path}/tags' target='_blank'>עמוד התגיות</a>."
     tag_style: "סגנון ויזואלי לתג עיטורים."
-    allow_staff_to_tag_pms: "לאפשר לחברי הסגל לתייג כל הודעה אישית"
+    pm_tags_allowed_for_groups: "לאפשר לחברים מהקבוצות שנכללו לתייג כל הודעה פרטית שהיא"
     min_trust_level_to_tag_topics: "דרגת האמון המזערית שדרושה כדי לתייג נושאים"
     suppress_overlapping_tags_in_list: "אם תגיות תואמות מילים בכותרות נושאים באופן מדויק, לא להציג את התגית"
     remove_muted_tags_from_latest: "לא להציג נושאים שמתויגים רק בתגיות מושתקות ברשימת הנושאים האחרונים."
@@ -2856,6 +2856,8 @@ he:
       subject_template: "ברכותינו על התקדמותך בסולם דרגות האמון!"
       text_body_template: |
         קידמנו אותך ב[דרגת אמון](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) נוספת!
+
+        התקדמות לדרגת אמון 2 משמעותה שקראת והשתתפת בצורה משביעת רצון כדי לקבל מעמד חברות בקהילה הזאת.
 
         בזכות היכולות המתקדמות שרכשת, יכול להיות ש[רשימת העצות והתכסיסים השימושיים](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/) תעניין אותך.
 

@@ -157,7 +157,6 @@ nb_NO:
       s3_upload_bucket_is_required: "Du kan ikke aktivere opplasting til S3 hvis ikke du har satt innstillingen 's3_upload_bucket'."
     conflicting_google_user_id: 'Google Account ID for denne kontoen har endret seg; staben må manuelt godkjenne endringen av sikkerhetshensyn. Vennligst kontakt staben og pek dem til <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
   invite:
-    user_exists: "Det er ikke nødvendig å invitere <b>%{email}</b>, de <a href='%{base_path}/u/%{username}/summary'>har allerede en konto!</a>"
     disabled_errors:
       invalid_access: "Du har ingen tilgang til denne resurssen."
   bulk_invite:

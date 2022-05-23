@@ -807,13 +807,13 @@ describe PostCreator do
 
     context "when the user has bookmarks with auto_delete_preference on_owner_reply" do
       before do
-        Fabricate(:bookmark, user: user, post: Fabricate(:post, topic: topic), auto_delete_preference: Bookmark.auto_delete_preferences[:on_owner_reply])
-        Fabricate(:bookmark, user: user, post: Fabricate(:post, topic: topic), auto_delete_preference: Bookmark.auto_delete_preferences[:on_owner_reply])
+        Fabricate(:bookmark, user: user, bookmarkable: Fabricate(:post, topic: topic), auto_delete_preference: Bookmark.auto_delete_preferences[:on_owner_reply])
+        Fabricate(:bookmark, user: user, bookmarkable: Fabricate(:post, topic: topic), auto_delete_preference: Bookmark.auto_delete_preferences[:on_owner_reply])
         TopicUser.create!(topic: topic, user: user, bookmarked: true)
       end
 
       it "deletes the bookmarks, but not the ones without an auto_delete_preference" do
-        Fabricate(:bookmark, post: Fabricate(:post, topic: topic), user: user)
+        Fabricate(:bookmark, bookmarkable: Fabricate(:post, topic: topic), user: user)
         Fabricate(:bookmark, user: user)
         creator.create
         expect(Bookmark.where(user: user).count).to eq(2)

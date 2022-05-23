@@ -2403,7 +2403,7 @@ uncategorized:
 
   use_polymorphic_bookmarks:
     client: true
-    default: false
+    default: true
     hidden: true
 
   suggest_weekends_in_date_pickers:

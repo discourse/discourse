@@ -32,15 +32,15 @@ class PostAnalyzer
     end
 
     limit = SiteSetting.max_oneboxes_per_post
-    result = Oneboxer.apply(cooked) do |url|
-      next if limit <= 0
-      limit -= 1
-
-      @onebox_urls << url
+    result = Oneboxer.apply(cooked, extra_paths: ".inline-onebox-loading") do |url, element|
       if opts[:invalidate_oneboxes]
         Oneboxer.invalidate(url)
         InlineOneboxer.invalidate(url)
       end
+      next if element["class"] != Oneboxer::ONEBOX_CSS_CLASS
+      next if limit <= 0
+      limit -= 1
+      @onebox_urls << url
       onebox = Oneboxer.cached_onebox(url)
       @found_oneboxes = true if onebox.present?
       onebox

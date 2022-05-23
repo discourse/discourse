@@ -2251,6 +2251,19 @@ sw:
       no_activity_others: "Hakuna shughuli."
       no_replies_others: "Hakuna majibu."
       no_likes_others: "Hakuna machapisho yaliyopendwa."
+    sidebar:
+      unread_count: "%{count} haijasomwa"
+      new_count: "Mada mpya %{count}"
+      sections:
+        categories:
+          header_link_title: "kategoria zote"
+          header_link_text: "Kategoria"
+        topics:
+          header_link_title: "nyumbani"
+          header_link_text: "Mada"
+          links:
+            tracked:
+              content: "Imefuatiliwa"
   admin_js:
     type_to_filter: "andika kuchuja..."
     admin:

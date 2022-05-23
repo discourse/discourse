@@ -1482,20 +1482,8 @@ describe Search do
 
       it "can filter by posts in the user's bookmarks" do
         expect(search_with_bookmarks.posts.map(&:id)).to eq([])
-        Fabricate(:bookmark, user: user, post: bookmark_post1)
+        bm = Fabricate(:bookmark, user: user, bookmarkable: bookmark_post1)
         expect(search_with_bookmarks.posts.map(&:id)).to match_array([bookmark_post1.id])
-      end
-
-      context "using polymorphic bookmarks" do
-        before do
-          SiteSetting.use_polymorphic_bookmarks = true
-        end
-
-        it "can filter by posts in the user's bookmarks" do
-          expect(search_with_bookmarks.posts.map(&:id)).to eq([])
-          bm = Fabricate(:bookmark, user: user, bookmarkable: bookmark_post1)
-          expect(search_with_bookmarks.posts.map(&:id)).to match_array([bookmark_post1.id])
-        end
       end
     end
 

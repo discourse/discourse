@@ -90,10 +90,7 @@ describe Invite do
       expect { Invite.generate(user, email: user.email) }
         .to raise_error(
           Invite::UserExists,
-          I18n.t(
-            'invite.user_exists',
-            email: escaped_email, username: user.username, base_path: Discourse.base_path
-          )
+          I18n.t('invite.user_exists', email: escaped_email)
         )
     end
 

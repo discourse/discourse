@@ -1340,6 +1340,14 @@ be:
       no_activity_others: "Няма актыўнасці."
       no_replies_others: "Няма адказаў."
       no_likes_others: "Не спадабалася паведамленні."
+    sidebar:
+      sections:
+        categories:
+          header_link_title: "усе катэгорыі"
+          header_link_text: "катэгорыі"
+        topics:
+          header_link_title: "дома"
+          header_link_text: "Тэмы"
   admin_js:
     admin:
       moderator: "Мадэратар"

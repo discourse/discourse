@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe UserPostBookmarkSerializer do
-  before do
-    SiteSetting.use_polymorphic_bookmarks = true
-  end
-
   let(:user) { Fabricate(:user) }
   let(:post) { Fabricate(:post, user: user, topic: topic) }
   let(:topic) { Fabricate(:topic) }

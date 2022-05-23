@@ -256,6 +256,8 @@ hy:
         bookmark: "Սեղմեք՝ այս թեմայի առաջին գրառումն էջանշելու համար"
         unbookmark: "Սեղմեք՝ այս թեմայի բոլոր էջանշանները ջնջելու համար"
     bookmarks:
+      create: "Ստեղծել էջանշան"
+      edit: "Խմբագրել էջանշանը"
       not_bookmarked: "Էջանշել այս գրառումը"
       remove: "Հեռացնել էջանշանը"
       delete: "Ջնջել Էջանշանը"
@@ -2867,6 +2869,19 @@ hy:
       no_activity_others: "Ակտիվություն չկա:"
       no_replies_others: "Պատասխան չկա:"
       no_likes_others: "Հավանած գրառումներ չկան:"
+    sidebar:
+      unread_count: "%{count} չկարդացած"
+      new_count: "%{count} նոր"
+      sections:
+        categories:
+          header_link_title: "բոլոր կատեգորիաները"
+          header_link_text: "Կատեգորիաներ"
+        topics:
+          header_link_title: "գլխավոր էջ"
+          header_link_text: "Թեմաներ"
+          links:
+            tracked:
+              content: "Հետևած"
   admin_js:
     type_to_filter: "գրեք ֆիլտրելու համար..."
     admin:

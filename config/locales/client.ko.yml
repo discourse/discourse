@@ -257,6 +257,8 @@ ko:
         unbookmark_with_reminder: "이 항목의 모든 북마크 및 미리 알림을 제거하려면 클릭하십시오."
     bookmarks:
       created: "이 글을 북마크했습니다. %{name}"
+      create: "북마크 만들기"
+      edit: "북마크 수정"
       not_bookmarked: "이 글을 북마크"
       remove_reminder_keep_bookmark: "알림 제거 및 북마크 유지"
       created_with_reminder: "알림 %{date}으로 이 글을 북마크했습니다. %{name}"
@@ -1706,20 +1708,12 @@ ko:
         name: "트위터"
       instagram:
         name: "인스타그램"
-        title: "인스타그램으로 로그인"
-        sr_title: "인스타그램으로 로그인"
       facebook:
         name: "페이스북"
-        title: "페이스북으로 로그인"
-        sr_title: "페이스북으로 로그인"
       github:
         name: "GitHub"
-        title: "GitHub로 로그인"
-        sr_title: "GitHub로 로그인"
       discord:
         name: "디스코드"
-        title: "디스코드로 로그인"
-        sr_title: "디스코드로 로그인"
       second_factor_toggle:
         totp: "대신 인증 자 앱을 사용하십시오."
         backup_code: "대신 백업 코드 사용"
@@ -3443,6 +3437,19 @@ ko:
     no_group_messages_title: "그룹 메시지가 없습니다."
     fullscreen_table:
       expand_btn: "테이블 확장"
+    sidebar:
+      unread_count: "%{count} unread"
+      new_count: "%{count} new"
+      sections:
+        categories:
+          header_link_title: "모든 카테고리"
+          header_link_text: "카테고리"
+        topics:
+          header_link_title: "홈"
+          header_link_text: "글"
+          links:
+            tracked:
+              content: "팔로우중"
   admin_js:
     type_to_filter: "필터를 입력하세요"
     admin:

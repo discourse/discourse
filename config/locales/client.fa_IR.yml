@@ -281,8 +281,8 @@ fa_IR:
         unbookmark_with_reminder: "برای حذف همه نشانک‌ها و یادآورها در این موضوع کلیک کنید."
     bookmarks:
       created: "شما این نوشته را نشانک کردید. %{name}"
-      create_for: "ایجاد نشانک برای %{type}"
-      edit_for: "ویرایش نشانک برای %{type}"
+      create: "ایجاد نشانک"
+      edit: "ویرایش نشانک"
       not_bookmarked: "این نوشته را نشانک بزنید"
       remove_reminder_keep_bookmark: "حذف یادآوری و نگه داشتن نشانک"
       created_with_reminder: "شما این نوشته را با یادآوری %{date} نشانک کردید. %{name}"
@@ -418,7 +418,7 @@ fa_IR:
           title: "اولویت های بازنگری"
       moderation_history: "تاریخچه مدیریت"
       view_all: "نمایش همه"
-      grouped_by_topic: "دسته بندی مبحث ها"
+      grouped_by_topic: "گروه‌بندی براساس موضوع"
       none: "هیچ موردی برای بازنگری وجود ندارد"
       view_pending: "نمایش صف انتظار"
       topic_has_pending:
@@ -429,7 +429,7 @@ fa_IR:
       filtered_topic: "شما یک مبحث را بر حسب محتوای قابل بازنگری فیلتر کرده‌اید"
       filtered_user: "کاربر"
       filtered_reviewed_by: "بازبینی شده توسط"
-      show_all_topics: "نمایش همه ی مباحث"
+      show_all_topics: "نمایش همه‌ی موضوعات"
       deleted_post: "(نوشته حذف شده)"
       deleted_user: "(کاربر حذف شده)"
       user:
@@ -474,7 +474,7 @@ fa_IR:
         all_categories: "«تمام دسته‌بندی‌ها»"
         type:
           title: "نوع"
-          all: "(همه نوع)"
+          all: "«همه نوع‌ها»"
         minimum_score: "حداقل امتیاز :"
         refresh: "تازه کردن"
         status: "وضعیت"
@@ -514,7 +514,7 @@ fa_IR:
         reviewed:
           title: "(همه مرور شده)"
         all:
-          title: "(همه)"
+          title: "«همه چیز»"
       types:
         reviewable_flagged_post:
           title: "نوشته پرچم شده"
@@ -857,8 +857,8 @@ fa_IR:
       category: "دسته‌بندی"
       category_list: "نمایش فهرست دسته‌بندی"
       reorder:
-        title: "دوباره مرتب کردن دسته بندی‌ها"
-        title_long: "سازماندهی مجدد فهرست دسته بندی‌ها"
+        title: "مرتب کردن مجدد دسته‌بندی‌ها"
+        title_long: "سازماندهی مجدد فهرست دسته‌بندی‌ها"
         save: "ذخیره‌ی ترتیب"
         apply_all: "اعمال کردن"
         position: "موقعیت"
@@ -1481,7 +1481,7 @@ fa_IR:
         most_liked_users: "بیشترین پسندیده شده"
         most_replied_to_users: "بیشترین پاسخ به"
         no_likes: "بدون پسندیده شدن."
-        top_categories: "داغ ترین دسته بندی ها"
+        top_categories: "دسته‌بندی‌های برتر"
         topics: "موضوعات"
         replies: "پاسخ‌ها"
       ip_address:
@@ -1688,8 +1688,8 @@ fa_IR:
         sr_title: "ورود با اینستاگرام"
       facebook:
         name: "فیس بوک"
-        title: "ورود با فیسبوک"
-        sr_title: "ورود با فیسبوک"
+        title: "ورود با فیس‌بوک"
+        sr_title: "ورود با فیس‌بوک"
       github:
         name: "گیت‌هاب"
         title: "ورود با گیت‌هاب"
@@ -1725,7 +1725,7 @@ fa_IR:
       categories_only: "فقط دسته‌بندی‌ها"
       categories_with_featured_topics: "دسته‌بندی هایی که دارای موضوعات برجسته هستند"
       categories_and_latest_topics: "دسته‌بندی‌ها و آخرین موضوعات"
-      categories_and_top_topics: "دسته بندی ها و مباحث داغ"
+      categories_and_top_topics: "دسته‌بندی‌ها و موضوعات برتر"
       categories_boxes: "باکس هایی با زیر دسته بندی ها"
       categories_boxes_with_topics: "باکس هایی با مباحث ویژه"
     shortcut_modifier_key:
@@ -2100,6 +2100,7 @@ fa_IR:
     go_back: "برگردید"
     not_logged_in_user: "صفحه کاربر با خلاصه ای از فعالیت های و تنظیمات"
     current_user: "به صفحه‌ی کاربریتان بروید"
+    view_all: "نمایش همه %{tab}"
     topics:
       new_messages_marker: "آخرین بازدید"
       bulk:
@@ -2532,6 +2533,7 @@ fa_IR:
       has_likes_title_you:
         one: "شما و %{count} شخص دیگر این نوشته را پسندیده‌اید"
         other: "شما و %{count} شخص دیگر این نوشته را پسندیده‌اید"
+      view_all_posts: "نمایش همه نوشته‌ها"
       errors:
         create: "متأسفیم، در ایجاد نوشته‌ی شما خطایی روی داد. لطفاً دوباره تلاش کنید."
         edit: "متأسفیم، در ویرایش نوشته‌ی شما خطایی روی داد. لطفاً دوباره تلاش کنید."
@@ -2662,7 +2664,7 @@ fa_IR:
           pin_bookmark:
             name: "سنجاق کردن نشانک"
     category:
-      none: "(بدون دسته‌بندی)"
+      none: "«بدون دسته‌بندی»"
       all: "همه‌ی دسته‌بندی‌ها"
       edit: "ویرایش"
       edit_dialog_title: "ویرایش: %{categoryName}"
@@ -3126,6 +3128,7 @@ fa_IR:
         muted:
           title: "خاموش"
       groups:
+        back_btn: "بازگشت به همه برچسب‌ها"
         title: "برچسب گروه‌ها"
         new: "گروه جدید"
         tags_label: "برچسب‌های گروه"
@@ -3178,6 +3181,27 @@ fa_IR:
       no_replies_others: "بدون پاسخ"
       no_drafts_title: "شما هنوز هیچ پیش‌نویسی شروع نکرده‌اید"
       no_likes_others: "فرسته‌ی موردپسندیدی نیست."
+    sidebar:
+      unread_count: "%{count} خوانده نشده"
+      new_count: "%{count} تازه"
+      sections:
+        categories:
+          header_link_title: "همه‌ی دسته‌بندی‌ها"
+          header_link_text: "دسته‌بندی‌ها"
+        topics:
+          header_link_title: "خانه"
+          header_link_text: "موضوعات"
+          header_action_title: "ایجاد موضوع جدید"
+          links:
+            everything:
+              content: "همه چیز"
+              title: "همه موضوعات"
+            tracked:
+              content: "پی‌گیری شده"
+              title: "همه موضوعات پیگیری شده"
+            bookmarked:
+              content: "نشانک گذاری شده"
+              title: "همه موضوعات نشانک گذاری شده"
   admin_js:
     type_to_filter: "بنویسید تا فیلتر کنید..."
     admin:

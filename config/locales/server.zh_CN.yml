@@ -202,6 +202,7 @@ zh_CN:
       cors_origins_should_not_have_trailing_slash: "您不应该将尾部反斜杠 (/) 添加到 CORS 源。"
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "用户代理的长度至少为 3 个字符，以免错误地限制了人类用户的速率。"
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "您不能将以下任何值添加到设置中： %{values}。"
+      strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "如果启用了“composer media optimization image enabled”，则无法去除图片元数据。在去除图片元数据之前，禁用“已启用作曲家媒体优化图像”。"
     conflicting_google_user_id: '此帐户的 Google 帐号 ID 已更改；出于安全原因，需要管理人员干预。请联系管理人员并将他们指向 <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
       invalid_address: "抱歉，我们无法为此网页生成预览，因为找不到服务器 '%{hostname}'。您的帖子中只会显示链接，而不会显示预览。:cry:"
@@ -223,7 +224,7 @@ zh_CN:
       <p>否则，请<a href="%{base_url}/password-reset">重置密码</a>。</p>
     not_found_template_link: |
       <p>这个给<a href="%{base_url}">%{site_name}</a>发出的邀请无法再被兑换。请让邀请你的人给你发送新的邀请。</p>
-    user_exists: "不需要邀请 <b>%{email}</b>，他们<a href='%{base_path}/u/%{username}/summary'>已经拥有帐户！</a>"
+    user_exists: "不用邀请 <b>%{email}</b> 了，他们已经有一个账户了！"
     invite_exists: "您已经邀请 <b>%{email}</b>。"
     invalid_email: "%{email} 不是有效的电子邮件地址。"
     rate_limit:
@@ -2028,7 +2029,6 @@ zh_CN:
     tags_sort_alphabetically: "按照字母顺序显示标签。默认按流行度显示。"
     tags_listed_by_group: "在<a href='%{base_path}/tags' target='_blank'>标签页面</a>上按标签组列出标签。"
     tag_style: "标签徽章的视觉样式。"
-    allow_staff_to_tag_pms: "允许管理人员为任何个人消息添加标签"
     min_trust_level_to_tag_topics: "为话题添加标签所需的最低信任级别"
     suppress_overlapping_tags_in_list: "如果标签与话题标题中的字词完全匹配，则不显示标签"
     remove_muted_tags_from_latest: "不在最新话题列表中显示仅使用已被设为免打扰的标签标记的话题。"
@@ -2653,11 +2653,13 @@ zh_CN:
     tl2_promotion_message:
       subject_template: "恭喜您的信任级别提升！"
       text_body_template: |
-        我们已将您提升到另一个[信任级别](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)！
+        我们已经将你提升到另一个[信任等级](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)!
 
-        作为有经验的用户，您可能需要[这份方便的提示和技巧列表](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/)。
+        达到信任等级2意味着你已经阅读并积极参与，足以被视为这个社区的成员。
 
-        我们邀请您继续参与 - 我们很高兴有您在身边。
+        作为一个有经验的用户，你可能会欣赏[这个方便的技巧和窍门列表](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/)。
+
+        我们邀请你继续参与 - 我们喜欢有你在身边。
     backup_succeeded:
       title: "备份成功"
       subject_template: "备份成功完成"

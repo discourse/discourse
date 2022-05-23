@@ -76,6 +76,13 @@ addBulkButton("relistTopics", "relist_topics", {
   buttonVisible: (topics) =>
     topics.some((t) => !t.visible) && !topics.some((t) => t.isPrivateMessage),
 });
+addBulkButton("resetBumpDateTopics", "reset_bump_dates", {
+  icon: "anchor",
+  class: "btn-default",
+  buttonVisible() {
+    return this.currentUser.canManageTopic;
+  },
+});
 addBulkButton("showTagTopics", "change_tags", {
   icon: "tag",
   class: "btn-default",
@@ -288,6 +295,10 @@ export default Controller.extend(ModalFunctionality, {
 
     relistTopics() {
       this.forEachPerformed({ type: "relist" }, (t) => t.set("visible", true));
+    },
+
+    resetBumpDateTopics() {
+      this.performAndRefresh({ type: "reset_bump_dates" });
     },
 
     changeCategory() {

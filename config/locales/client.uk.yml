@@ -333,6 +333,8 @@ uk:
         unbookmark_with_reminder: "Натисніть, щоб видалити всі закладки та нагадування в цій темі."
     bookmarks:
       created: "Ви додали повідомлення в закладки. %{name}"
+      create: "Створити закладку"
+      edit: "Редагувати закладку"
       not_bookmarked: "додати цей допис до закладок"
       remove_reminder_keep_bookmark: "Вилучити нагадування, але зберегти закладку"
       created_with_reminder: "Ви додали цей допис в закладку із нагадуванням %{date}. %{name}"
@@ -1909,20 +1911,12 @@ uk:
         name: "Twitter"
       instagram:
         name: "Instagram"
-        title: "Увійти через Instagram"
-        sr_title: "Увійти через Instagram"
       facebook:
         name: "Facebook"
-        title: "Увійти через Facebook"
-        sr_title: "Увійти через Facebook"
       github:
         name: "GitHub"
-        title: "Увійти через GitHub"
-        sr_title: "Увійти через GitHub"
       discord:
         name: "Discord"
-        title: "Увійти за допомогою Discord"
-        sr_title: "Увійти за допомогою Discord"
       second_factor_toggle:
         totp: "Замість цього використовуйте додаток для перевірки автентичності"
         backup_code: "Замість цього використовуйте резервний код"
@@ -3935,6 +3929,19 @@ uk:
     no_group_messages_title: "Групових повідомлень не знайдено"
     fullscreen_table:
       expand_btn: "Розгорнути таблицю"
+    sidebar:
+      unread_count: "%{count} непрочитана"
+      new_count: "%{count} нова"
+      sections:
+        categories:
+          header_link_title: "усі розділи"
+          header_link_text: "Категорії"
+        topics:
+          header_link_title: "головна"
+          header_link_text: "Теми"
+          links:
+            tracked:
+              content: "Відстежувані"
   admin_js:
     type_to_filter: "введіть, щоб фільтрувати..."
     admin:

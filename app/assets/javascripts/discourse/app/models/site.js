@@ -129,6 +129,7 @@ Site.reopenClass(Singleton, {
     const store = getOwner(this).lookup("service:store");
     const siteAttributes = PreloadStore.get("site");
     siteAttributes["isReadOnly"] = PreloadStore.get("isReadOnly");
+    siteAttributes["isStaffWritesOnly"] = PreloadStore.get("isStaffWritesOnly");
     return store.createRecord("site", siteAttributes);
   },
 

@@ -250,6 +250,7 @@ et:
         unbookmark: "Kliki selle teema kõigi järjehoidjate eemaldamiseks"
     bookmarks:
       created: "Oled selle postituse järjehoidjatesse lisanud. %{name}"
+      edit: "Muuda järjehoidjat"
       not_bookmarked: "lisa sellele postitusele järjehoidja"
       created_with_reminder: "Olete selle postituse järjehoidjatesse lisanud meeldetuletusega %{date}. %{name}"
       remove: "Eemalda järjehoidja"
@@ -2528,6 +2529,19 @@ et:
       no_activity_others: "Tegevusi pole."
       no_replies_others: "Vastuseid pole."
       no_likes_others: "Meeldimisega postitusi veel pole."
+    sidebar:
+      unread_count: "%{count} lugemata"
+      new_count: "%{count} uus"
+      sections:
+        categories:
+          header_link_title: "kõik foorumid"
+          header_link_text: "Liigid"
+        topics:
+          header_link_title: "avaleht"
+          header_link_text: "Teemad"
+          links:
+            tracked:
+              content: "Jälgitud"
   admin_js:
     type_to_filter: "filtreerimiseks trüki..."
     admin:

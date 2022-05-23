@@ -176,6 +176,7 @@ export const DEFAULT_LIST = [
   "img[title]",
   "img[width]",
   "img[data-thumbnail]",
+  // img[src] handled by sanitizer.js
   "ins",
   "kbd",
   "li",
@@ -203,14 +204,13 @@ export const DEFAULT_LIST = [
   "sub",
   "sup",
   "source[data-orig-src]",
-  "source[src]",
-  "source[srcset]",
+  // source[src] and source[srcset] handled by sanitizer.js
   "source[type]",
   "track",
   "track[default]",
   "track[label]",
   "track[kind]",
-  "track[src]",
+  // track[src] handled by sanitizer.js
   "track[srclang]",
   "ul",
   "video",

@@ -273,8 +273,8 @@ vi:
         unbookmark_with_reminder: "Nhấp để xóa tất cả dấu trang và lời nhắc trong chủ đề này."
     bookmarks:
       created: "Bạn đã đánh dấu bài đăng này. %{name}"
-      create_for: "Tạo dấu trang cho %{type}"
-      edit_for: "Chỉnh sửa dấu trang cho %{type}"
+      create: "Tạo dấu trang"
+      edit: "Chỉnh sửa dấu trang"
       not_bookmarked: "đánh dấu bài viết này"
       remove_reminder_keep_bookmark: "Xóa lời nhắc và giữ lại dấu trang"
       created_with_reminder: "Bạn đã đánh dấu bài đăng này với lời nhắc %{date}. %{name}"
@@ -1733,20 +1733,12 @@ vi:
         sr_title: "Đăng nhập bằng Twitter"
       instagram:
         name: "Instagram"
-        title: "Đăng nhập bằng Instagram"
-        sr_title: "Đăng nhập bằng Instagram"
       facebook:
         name: "Facebook"
-        title: "Đăng nhập bằng Facebook"
-        sr_title: "Đăng nhập bằng Facebook"
       github:
         name: "GitHub"
-        title: "Đăng nhập bằng GitHub"
-        sr_title: "Đăng nhập bằng GitHub"
       discord:
         name: "Discord"
-        title: "Đăng nhập bằng Discord"
-        sr_title: "Đăng nhập bằng Discord"
       second_factor_toggle:
         totp: "Sử dụng ứng dụng xác thực thay thế"
         backup_code: "Sử dụng mã dự phòng để thay thế"
@@ -3462,6 +3454,19 @@ vi:
       expand_btn: "Mở rộng bảng"
     second_factor_auth:
       redirect_after_success: "Xác thực yếu tố thứ hai thành công. Chuyển hướng về trang trước…"
+    sidebar:
+      unread_count: "%{count} chưa đọc"
+      new_count: "%{count} mới"
+      sections:
+        categories:
+          header_link_title: "tất cả chuyên mục"
+          header_link_text: "Thư mục"
+        topics:
+          header_link_title: "trang chủ"
+          header_link_text: "Các chủ đề"
+          links:
+            tracked:
+              content: "Theo dõi"
   admin_js:
     type_to_filter: "gõ để lọc..."
     admin:

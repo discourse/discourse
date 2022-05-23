@@ -217,7 +217,6 @@ ja:
       <p>パスワードを覚えている場合は、<a href="%{base_url}/login">ログイン</a>してください。</p>
 
       <p>そうでない場合は、<a href="%{base_url}/password-reset">パスワードをリセット</a>してください。</p>
-    user_exists: "<b>%{email}</b> を招待する必要はありません。 <a href='%{base_path}/u/%{username}/summary'> のアカウントはすでに存在します！</a>"
     invite_exists: "<b>%{email}</b> はすでに招待済みです。"
     invalid_email: "%{email} は有効なメールアドレスではありません。"
     rate_limit:
@@ -1966,7 +1965,6 @@ ja:
     tags_sort_alphabetically: "タグをアルファベット順に表示する。デフォルトでは人気順に表示されます。"
     tags_listed_by_group: "<a href='%{base_path}/tags' target='_blank'>タグページ</a>にタググループごとにタグをリストする。"
     tag_style: "タグバッジの視覚的スタイル"
-    allow_staff_to_tag_pms: "スタッフメンバーが個人メッセージにタグ付けすることを許可する"
     min_trust_level_to_tag_topics: "トピックのタグ付けに必要な最低信頼レベル"
     suppress_overlapping_tags_in_list: "タグがトピックタイトルの語に完全に一致する場合、タグを表示しない"
     remove_muted_tags_from_latest: "ミュートされたタグのみがタグ付けされたトピックを最新のトピックリストに表示しない。"
@@ -2490,12 +2488,6 @@ ja:
         [prefs]: %{user_preferences_url}
     tl2_promotion_message:
       subject_template: "信頼レベルの昇格おめでとうございます！"
-      text_body_template: |
-        あなたの[信頼レベル](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)をもう 1 つ昇格しました！
-
-        経験豊富なユーザーとして、[便利なヒントとコツ](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/)が役に立つことと思います。
-
-        ぜひ参加し続けてください。あなたの投稿を楽しみにしています。
     backup_succeeded:
       title: "バックアップに成功しました"
       subject_template: "バックアップは正常に完了しました"

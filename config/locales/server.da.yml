@@ -220,7 +220,6 @@ da:
       <p>Hvis du husker din adgangskode, kan du <a href="%{base_url}/login">Log på</a>.</p>
 
       <p>Ellers bedes du <a href="%{base_url}/password-reset">Nulstille adgangskode</a>.</p>
-    user_exists: "Der er ingen grund til at invitere <b>%{email}</b>, personen <a href='%{base_path}/u/%{username}/summary'>har allerede en profil!</a>"
     invite_exists: "Du har allerede inviteret <b>%{email}</b>."
     invalid_email: "%{email} er ikke en gyldig e-mailadresse."
     rate_limit:
@@ -2147,12 +2146,6 @@ da:
         [prefs]: %{user_preferences_url}
     tl2_promotion_message:
       subject_template: "Tillykke med din tillidsniveau forfremmelse!"
-      text_body_template: |
-        Vi har forfremmet dig et andet [tillidsniveau](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)!
-
-        Som erfaren bruger kan det være at du vil sætte pris på [denne liste over praktiske tips og tricks](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
-
-        Vi inviterer dig til fortsat at blive involveret – vi nyder at have dig omkring os.
     backup_succeeded:
       title: "Sikkerhedskopiering Gennemført"
       subject_template: "Sikkerhedskopiering er gennemført"
@@ -2169,6 +2162,9 @@ da:
       title: "Tilføjet til gruppe som ejer"
     user_added_to_group_as_member:
       title: "Tilføjet til gruppen som medlem"
+      subject_template: "Du er blevet tilføjet som medlem af gruppen %{group_name}"
+      text_body_template: |
+        Du er blevet tilføjet som medlem af gruppen [%{group_name}](%{base_url}%{group_path}).
     csv_export_succeeded:
       title: "CSV Eksport Lykkedes"
       subject_template: "[%{export_title}] Dataeksport fuldført"

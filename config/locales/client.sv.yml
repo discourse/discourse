@@ -305,8 +305,8 @@ sv:
         unbookmark_with_reminder: "Klicka för att ta bort alla bokmärken och påminnelser i detta ämne."
     bookmarks:
       created: "Du har bokmärkt detta inlägg. %{name}"
-      create_for: "Skapa bokmärke för %{type}"
-      edit_for: "Redigera bokmärke för %{type}"
+      create: "Skapa bokmärke"
+      edit: "Redigera bokmärke"
       not_bookmarked: "bokmärk detta inlägg"
       remove_reminder_keep_bookmark: "Ta bort påminnelsen och behåll bokmärket"
       created_with_reminder: "Du har bokmärkt detta inlägg med en påminnelse %{date}. %{name}"
@@ -1819,20 +1819,12 @@ sv:
         sr_title: "Logga in med Twitter"
       instagram:
         name: "Instagram"
-        title: "Logga in med Instagram"
-        sr_title: "Logga in med Instagram"
       facebook:
         name: "Facebook"
-        title: "Logga in med Facebook"
-        sr_title: "Logga in med Facebook"
       github:
         name: "GitHub"
-        title: "Logga in med GitHub"
-        sr_title: "Logga in med GitHub"
       discord:
         name: "Discord"
-        title: "Logga in med Discord"
-        sr_title: "Logga in med Discord"
       second_factor_toggle:
         totp: "Använd en autentiseringsapp istället"
         backup_code: "Använd en reservkod istället"
@@ -3710,6 +3702,19 @@ sv:
       expand_btn: "Expandera tabell"
     second_factor_auth:
       redirect_after_success: "Andra faktorautentiseringen lyckades. Omdirigerar till föregående sida…"
+    sidebar:
+      unread_count: "%{count} oläst"
+      new_count: "%{count} ny"
+      sections:
+        categories:
+          header_link_title: "alla kategorier"
+          header_link_text: "Kategorier"
+        topics:
+          header_link_title: "hem"
+          header_link_text: "Ämnen"
+          links:
+            tracked:
+              content: "Följda"
   admin_js:
     type_to_filter: "skriv för att filtrera..."
     admin:

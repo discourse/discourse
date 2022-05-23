@@ -274,6 +274,8 @@ nb_NO:
         unbookmark_with_reminder: "Klikk for å fjerne alle bokmerkene og påminnelsene i dette emnet."
     bookmarks:
       created: "Du har bokmerket dette innlegget. %{name}"
+      create: "Opprett bokmerke"
+      edit: "Rediger bokmerke"
       not_bookmarked: "bokmerk dette innlegget"
       created_with_reminder: "Du har bokmerket dette innlegget med en påminnelse %{date} %{name}"
       remove: "Fjern bokmerke"
@@ -3415,6 +3417,19 @@ nb_NO:
       no_likes_others: "Ingen likte innlegg. "
     fullscreen_table:
       expand_btn: "Utvid tabell"
+    sidebar:
+      unread_count: "%{count} ulest"
+      new_count: "%{count} ny"
+      sections:
+        categories:
+          header_link_title: "alle kategorier"
+          header_link_text: "Kategorier"
+        topics:
+          header_link_title: "hjem"
+          header_link_text: "Emner"
+          links:
+            tracked:
+              content: "Overvåkes"
   admin_js:
     type_to_filter: "skriv for å filtrere…"
     admin:

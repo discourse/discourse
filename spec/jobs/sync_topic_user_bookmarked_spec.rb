@@ -13,8 +13,8 @@ RSpec.describe Jobs::SyncTopicUserBookmarked do
   fab!(:tu5) { Fabricate(:topic_user, topic: topic, bookmarked: true) }
 
   it "corrects all topic_users.bookmarked records for the topic" do
-    Fabricate(:bookmark, user: tu1.user, post: topic.posts.sample)
-    Fabricate(:bookmark, user: tu4.user, post: topic.posts.sample)
+    Fabricate(:bookmark, user: tu1.user, bookmarkable: topic.posts.sample)
+    Fabricate(:bookmark, user: tu4.user, bookmarkable: topic.posts.sample)
 
     subject.execute(topic_id: topic.id)
 
@@ -26,8 +26,8 @@ RSpec.describe Jobs::SyncTopicUserBookmarked do
   end
 
   it "does not consider topic as bookmarked if the bookmarked post is deleted" do
-    Fabricate(:bookmark, user: tu1.user, post: post1)
-    Fabricate(:bookmark, user: tu2.user, post: post1)
+    Fabricate(:bookmark, user: tu1.user, bookmarkable: post1)
+    Fabricate(:bookmark, user: tu2.user, bookmarkable: post1)
 
     post1.trash!
 
@@ -38,8 +38,8 @@ RSpec.describe Jobs::SyncTopicUserBookmarked do
   end
 
   it "works when no topic id is provided (runs for all topics)" do
-    Fabricate(:bookmark, user: tu1.user, post: topic.posts.sample)
-    Fabricate(:bookmark, user: tu4.user, post: topic.posts.sample)
+    Fabricate(:bookmark, user: tu1.user, bookmarkable: topic.posts.sample)
+    Fabricate(:bookmark, user: tu4.user, bookmarkable: topic.posts.sample)
 
     subject.execute
 
@@ -48,49 +48,5 @@ RSpec.describe Jobs::SyncTopicUserBookmarked do
     expect(tu3.reload.bookmarked).to eq(false)
     expect(tu4.reload.bookmarked).to eq(true)
     expect(tu5.reload.bookmarked).to eq(false)
-  end
-
-  context "for polymorphic bookmarks" do
-    before do
-      SiteSetting.use_polymorphic_bookmarks = true
-    end
-
-    it "corrects all topic_users.bookmarked records for the topic" do
-      Fabricate(:bookmark, user: tu1.user, bookmarkable: topic.posts.sample)
-      Fabricate(:bookmark, user: tu4.user, bookmarkable: topic.posts.sample)
-
-      subject.execute(topic_id: topic.id)
-
-      expect(tu1.reload.bookmarked).to eq(true)
-      expect(tu2.reload.bookmarked).to eq(false)
-      expect(tu3.reload.bookmarked).to eq(false)
-      expect(tu4.reload.bookmarked).to eq(true)
-      expect(tu5.reload.bookmarked).to eq(false)
-    end
-
-    it "does not consider topic as bookmarked if the bookmarked post is deleted" do
-      Fabricate(:bookmark, user: tu1.user, bookmarkable: post1)
-      Fabricate(:bookmark, user: tu2.user, bookmarkable: post1)
-
-      post1.trash!
-
-      subject.execute(topic_id: topic.id)
-
-      expect(tu1.reload.bookmarked).to eq(false)
-      expect(tu2.reload.bookmarked).to eq(false)
-    end
-
-    it "works when no topic id is provided (runs for all topics)" do
-      Fabricate(:bookmark, user: tu1.user, bookmarkable: topic.posts.sample)
-      Fabricate(:bookmark, user: tu4.user, bookmarkable: topic.posts.sample)
-
-      subject.execute
-
-      expect(tu1.reload.bookmarked).to eq(true)
-      expect(tu2.reload.bookmarked).to eq(false)
-      expect(tu3.reload.bookmarked).to eq(false)
-      expect(tu4.reload.bookmarked).to eq(true)
-      expect(tu5.reload.bookmarked).to eq(false)
-    end
   end
 end

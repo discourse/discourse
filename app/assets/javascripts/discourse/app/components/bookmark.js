@@ -113,8 +113,12 @@ export default Component.extend({
   },
 
   _loadPostLocalDates() {
+    if (this.model.bookmarkableType !== "Post") {
+      return;
+    }
+
     let postEl = document.querySelector(
-      `[data-post-id="${this.model.postId}"]`
+      `[data-post-id="${this.model.bookmarkableId}"]`
     );
     let localDateEl;
     if (postEl) {
@@ -156,14 +160,8 @@ export default Component.extend({
       auto_delete_preference: this.autoDeletePreference,
     };
 
-    if (this.siteSettings.use_polymorphic_bookmarks) {
-      data.bookmarkable_id = this.model.bookmarkableId;
-      data.bookmarkable_type = this.model.bookmarkableType;
-    } else {
-      // TODO (martin) [POLYBOOK] Not relevant once polymorphic bookmarks are implemented.
-      data.post_id = this.model.postId;
-      data.for_topic = this.model.forTopic;
-    }
+    data.bookmarkable_id = this.model.bookmarkableId;
+    data.bookmarkable_type = this.model.bookmarkableType;
 
     if (this.editingExistingBookmark) {
       return ajax(`/bookmarks/${this.model.id}`, {
@@ -191,15 +189,8 @@ export default Component.extend({
       name: this.model.name,
     };
 
-    if (this.siteSettings.use_polymorphic_bookmarks) {
-      data.bookmarkable_id = this.model.bookmarkableId;
-      data.bookmarkable_type = this.model.bookmarkableType;
-    } else {
-      // TODO (martin) [POLYBOOK] Not relevant once polymorphic bookmarks are implemented.
-      data.post_id = this.model.postId;
-      data.for_topic = this.model.forTopic;
-      data.topic_id = this.model.topicId;
-    }
+    data.bookmarkable_id = this.model.bookmarkableId;
+    data.bookmarkable_type = this.model.bookmarkableType;
 
     this.afterSave(data);
   },

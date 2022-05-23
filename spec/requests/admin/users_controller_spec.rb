@@ -308,7 +308,8 @@ RSpec.describe Admin::UsersController do
     it "also prevents use of any api keys" do
       api_key = Fabricate(:api_key, user: user)
       post "/bookmarks.json", params: {
-        post_id: Fabricate(:post).id
+        bookmarkable_id: Fabricate(:post).id,
+        bookmarkable_type: "Post"
       }, headers: { HTTP_API_KEY: api_key.key }
       expect(response.status).to eq(200)
 

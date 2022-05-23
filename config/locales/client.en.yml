@@ -2538,6 +2538,7 @@ en:
         clear_all: "Clear All"
         unlist_topics: "Unlist Topics"
         relist_topics: "Relist Topics"
+        reset_bump_dates: "Reset bump dates"
         defer: "Defer"
         delete: "Delete Topics"
         dismiss: "Dismiss"

@@ -3273,8 +3273,8 @@ RSpec.describe TopicsController do
 
       post = create_post
       post2 = create_post(topic_id: post.topic_id)
-      Fabricate(:bookmark, user: user, post: post)
-      Fabricate(:bookmark, user: user, post: post2)
+      Fabricate(:bookmark, user: user, bookmarkable: post)
+      Fabricate(:bookmark, user: user, bookmarkable: post2)
 
       put "/t/#{post.topic_id}/remove_bookmarks.json"
       expect(Bookmark.where(user: user).count).to eq(0)
@@ -3292,7 +3292,7 @@ RSpec.describe TopicsController do
       it "deletes all the bookmarks for the user in the topic" do
         sign_in(user)
         post = create_post
-        Fabricate(:bookmark, post: post, user: user)
+        Fabricate(:bookmark, bookmarkable: post, user: user)
         put "/t/#{post.topic_id}/remove_bookmarks.json"
         expect(Bookmark.for_user_in_topic(user.id, post.topic_id).count).to eq(0)
       end
@@ -3304,41 +3304,20 @@ RSpec.describe TopicsController do
       sign_in(user)
     end
 
-    it "should create a new bookmark on the first post of the topic" do
+    it "should create a new bookmark for the topic" do
       post = create_post
       post2 = create_post(topic_id: post.topic_id)
       put "/t/#{post.topic_id}/bookmark.json"
 
-      expect(Bookmark.find_by(user_id: user.id).post_id).to eq(post.id)
+      expect(Bookmark.find_by(user_id: user.id).bookmarkable_id).to eq(post.topic_id)
     end
 
     it "errors if the topic is already bookmarked for the user" do
       post = create_post
-      Bookmark.create(post: post, user: user)
+      Bookmark.create(bookmarkable: post.topic, user: user)
 
       put "/t/#{post.topic_id}/bookmark.json"
       expect(response.status).to eq(400)
-    end
-
-    context "bookmarks with reminders" do
-      it "should create a new bookmark on the first post of the topic" do
-        post = create_post
-        post2 = create_post(topic_id: post.topic_id)
-        put "/t/#{post.topic_id}/bookmark.json"
-        expect(response.status).to eq(200)
-
-        bookmarks_for_topic = Bookmark.for_user_in_topic(user.id, post.topic_id)
-        expect(bookmarks_for_topic.count).to eq(1)
-        expect(bookmarks_for_topic.first.post_id).to eq(post.id)
-      end
-
-      it "errors if the topic is already bookmarked for the user" do
-        post = create_post
-        Bookmark.create(post: post, user: user)
-
-        put "/t/#{post.topic_id}/bookmark.json"
-        expect(response.status).to eq(400)
-      end
     end
   end
 

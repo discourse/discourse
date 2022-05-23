@@ -327,6 +327,8 @@ lt:
         unbookmark_with_reminder: "Spustelėkite, kad pašalintumėte visas šios temos žymes ir priminimus."
     bookmarks:
       created: "Jūs pažymėjote šį įrašą. %{name}"
+      create: "Sukurti žymę"
+      edit: "Redaguoti žymę"
       not_bookmarked: "pažymėkite šį įrašą"
       remove_reminder_keep_bookmark: "Pašalinkite priminimą ir išsaugokite žymę"
       created_with_reminder: "Jūs pažymėjote šį įrašą priminimu %{date}. %{name}"
@@ -1709,20 +1711,12 @@ lt:
         name: "Twitter"
       instagram:
         name: "Instagram"
-        title: "Prisijungti su Instagram"
-        sr_title: "Prisijungti su Instagram"
       facebook:
         name: "Facebook"
-        title: "Prisijungti su Facebook"
-        sr_title: "Prisijungti su Facebook"
       github:
         name: "GitHub"
-        title: "Prisijunkite su GitHub"
-        sr_title: "Prisijunkite su GitHub"
       discord:
         name: "Discord"
-        title: "Prisijungti su Discord"
-        sr_title: "Prisijungti su Discord"
       second_factor_toggle:
         totp: "Vietoj to naudokite autentifikavimo programą"
         backup_code: "Vietoj to naudokite atsarginį kodą"
@@ -3422,6 +3416,19 @@ lt:
     no_group_messages_title: "Grupės pranešimų nerasta"
     fullscreen_table:
       expand_btn: "Išskleisti lentelę"
+    sidebar:
+      unread_count: "%{count} neperskaitytas"
+      new_count: "%{count} nauja"
+      sections:
+        categories:
+          header_link_title: "visos kategorijos"
+          header_link_text: "Kategorijos"
+        topics:
+          header_link_title: "pradinis"
+          header_link_text: "Temos"
+          links:
+            tracked:
+              content: "Sekami"
   admin_js:
     type_to_filter: "įrašyk kažką dėl filtro..."
     admin:
