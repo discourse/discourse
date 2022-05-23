@@ -81,7 +81,7 @@ acceptance("User Card - User Status", function (needs) {
   needs.user();
   needs.pretender((server, helper) => {
     const response = cloneJSON(userFixtures["/u/charlie/card.json"]);
-    response.status = { description: "off to dentist" };
+    response.user.status = { description: "off to dentist" };
     server.get("/u/charlie/card.json", () => helper.response(response));
   });
 
