@@ -2223,7 +2223,7 @@ describe Search do
       expect(results.more_full_page_results).to eq(nil)
     end
 
-    it 'returns more results flag' do
+    it 'returns more results flag for header searches' do
       results = Search.execute('hello', search_type: :header)
       expect(results.posts.length).to eq(Search.per_facet)
       expect(results.more_posts).to eq(nil) # not 6 posts yet
@@ -2246,7 +2246,7 @@ describe Search do
     let!(:post6) { Fabricate(:post, topic: topic, raw: 'hola hermano') }
     let!(:post7) { Fabricate(:post, topic: topic, raw: 'hola chiquito') }
 
-    it 'does not trigger pagination early' do
+    it 'does not use per_facet pagination' do
       search = Search.new('hola', search_type: :header, search_context: topic)
       results = search.execute
 
