@@ -200,6 +200,7 @@ lt:
     skip_to_main_content: "Pereiti prie pagrindinio turinio"
     wizard_required: "Sveiki, tai jūsų naujasis Discourse! Pradėkime nuo<a href='%{url}' data-auto-route='true'>Instliacijos</a>✨"
     emails_are_disabled: "Visos išeinančios elektroninės žinutės buvo uždraustos administratoriaus. Jokių papildų įspėjamųjų žinučių nebus išsiųsta"
+    emails_are_disabled_non_staff: "Siunčiamas el. laiškas buvo išjungtas ne darbuotojams."
     software_update_prompt:
       message: "Mes atnaujinome šią svetainę. <span>prašome perkrauti puslapį</span>, kitaip galite patirti nenumatytas klaidas."
       dismiss: "Praleisti"
@@ -211,6 +212,7 @@ lt:
     bootstrap_mode_disabled: "Paleidimo režimas bus išjungtas per 24 valandas."
     themes:
       default_description: "Numatytasis"
+      broken_theme_alert: "Jūsų svetainė gali neveikti, nes temoje / komponente yra klaidų."
     s3:
       regions:
         ap_northeast_1: "Asia Pacific (Tokyo)"
@@ -342,7 +344,9 @@ lt:
       list_permission_denied: "Neturite leidimo peržiūrėti šio vartotojo žymes."
       no_user_bookmarks: "Jūs neturite pažymėtų įrašų; žymos leidžia greitai nukreipti į konkrečius įrašus."
       auto_delete_preference:
+        never: "Išsaugoti žymę"
         when_reminder_sent: "Ištrinti žymę"
+        on_owner_reply: "Ištrinti žymę, kai atsakysiu"
       search_placeholder: "Ieškokite žymių pagal pavadinimą, temos pavadinimą ar įrašo turinį"
       search: "Paieška"
       reminders:
@@ -352,6 +356,7 @@ lt:
         existing_reminder: "Turite priminimų rinkinį šiai žymai, kuri bus išsiųsta %{at_date_time}"
     copy_codeblock:
       copied: "nukopijuota!"
+      fullscreen: "rodyti kodą per visą ekraną"
     drafts:
       label: "Juodraščiai"
       label_with_count: "Juodraščiai (%{count})"
@@ -378,6 +383,7 @@ lt:
     saved: "Išsaugota!"
     upload: "Įkelti"
     uploading: "Įkeliama..."
+    processing: "Apdorojimas..."
     uploading_filename: "Įkeliama: %{filename}..."
     processing_filename: "Apdorojama: %{filename}..."
     clipboard: "iškirptė"
@@ -431,6 +437,7 @@ lt:
         optional: "Galite pareikšti teises į šį elementą, kad kiti negalėtų jo peržiūrėti."
         required: "Turite pareikšti teises į elementus, kad galėtumėte juos peržiūrėti."
         claimed_by_you: "Pareiškėte teises į šį elementą ir galite jį peržiūrėti."
+        claimed_by_other: "Šį elementą gali peržiūrėti tik <b>%{username}</b>."
       unclaim:
         help: "pašalinti šį teiginį"
       awaiting_approval: "Laukiama patvirtinimo"
@@ -558,6 +565,7 @@ lt:
     time_shortcut:
       now: "Dabar"
       later_today: "Šiandien vėliau"
+      two_days: "Dvi dienos"
       next_business_day: "Kitą darbo dieną"
       tomorrow: "Rytoj"
       post_local_date: "Data įraše"
@@ -1242,6 +1250,7 @@ lt:
         upload_title: "Įkelti savo nuotrauką"
         image_is_not_a_square: "Įspėjimas: jūs ką tik apkirpote nuotrauką, tačiau plotis ir ilgis nėra vienodi."
         logo_small: "Mažas svetainės logotipas. Naudojamas pagal numatytuosius nustatymus."
+        use_custom: "Arba įkelkite pasirinktinį avatarą:"
       change_profile_background:
         title: "Profilio antraštė"
         instructions: "Profilio antraštės bus centre ir numatytasis plotis bus 1110 taškų."
@@ -1484,7 +1493,9 @@ lt:
         title: "Aprašymas"
         stats: "Statistika"
         time_read: "skaitymo laikas"
+        time_read_title: "%{duration} (visas laikas)"
         recent_time_read: "paskutinis skaitymo laikas"
+        recent_time_read_title: "%{duration} (per paskutines 60 dienų)"
         likes_given:
           one: "duota"
           few: "duota"
@@ -1707,19 +1718,31 @@ lt:
       not_approved: "Jūsų paskyra dar nepatvirtinta. Jums bus pranešta elektroniniu paštu, kai būsite pasiruošę prisijungti."
       google_oauth2:
         name: "Google"
+        title: "Prisijunkite naudodami “Google”"
+        sr_title: "Prisijunkite naudodami “Google”"
       twitter:
         name: "Twitter"
+        title: "Prisijunkite naudodami “Twitter”"
       instagram:
         name: "Instagram"
+        title: "Prisijunkite naudodami “Instagram”"
+        sr_title: "Prisijunkite naudodami “Instagram”"
       facebook:
         name: "Facebook"
+        title: "Prisijunkite naudodami “Facebook”"
+        sr_title: "Prisijunkite naudodami “Facebook”"
       github:
         name: "GitHub"
+        title: "Prisijunkite naudodami “GitHub”"
+        sr_title: "Prisijunkite naudodami „GitHub“."
       discord:
         name: "Discord"
+        title: "Prisijunkite naudodami „Discord“."
+        sr_title: "Prisijunkite naudodami „Discord“."
       second_factor_toggle:
         totp: "Vietoj to naudokite autentifikavimo programą"
         backup_code: "Vietoj to naudokite atsarginį kodą"
+        security_key: "Vietoj to naudokite saugos raktą"
     invites:
       accept_title: "Kvietimas"
       welcome_to: "Sveiki atvykę į %{site_name}!"
@@ -1750,6 +1773,12 @@ lt:
       enter: "Įeiti"
     conditional_loading_section:
       loading: Kraunasi...
+    category_row:
+      topic_count:
+        one: "%{count} tema šioje kategorijoje"
+        few: "%{count} temos šioje kategorijoje"
+        many: "%{count} temų šioje kategorijoje"
+        other: "%{count} temos šioje kategorijoje"
     select_kit:
       delete_item: "Ištrinti %{name}"
       filter_by: "Filtruoti pagal: %{name}"
@@ -1817,6 +1846,8 @@ lt:
       similar_topics: "Jūsų tema panaši į..."
       drafts_offline: "juodraščiai ne ryšio zonoje"
       edit_conflict: "redaguoti konfliktą"
+      cannot_see_mention:
+        private: "Paminėjote @%{username} , tačiau jiems nebus pranešta, nes jie negali matyti šio asmeninio pranešimo. Turėsite juos pakviesti į šią asmeninę žinutę."
       reference_topic_title: "RE: %{title}"
       error:
         title_missing: "Antraštė turi būti užpildyta"
@@ -2406,6 +2437,7 @@ lt:
         unpin: "Atsegti Temą..."
         unarchive: "Atstatyti archyvuotą Tema"
         archive: "Archyvuoti temą"
+        visible: "Sąrašo tema"
         reset_read: "Atkurti Perskaitymo Duomenis"
         make_public: "Padaryti viešą temą ..."
         make_private: "Rašykite asmeninę žinutę"
@@ -2632,6 +2664,11 @@ lt:
         few: "tau ir %{count} žmonėms patiko šis įrašas"
         many: "tau ir %{count} žmonėms patiko šis įrašas"
         other: "tau ir %{count} žmonėms patiko šis įrašas"
+      sr_post_like_count_button:
+        one: "%{count} asmeniui patiko šis pranešimas. Spustelėkite, jei norite peržiūrėti"
+        few: "%{count} asmenims patiko šis pranešimas. Spustelėkite, jei norite peržiūrėti"
+        many: "%{count} žmonių patiko šis įrašas. Spustelėkite norėdami peržiūrėti"
+        other: "%{count} žmonėms patiko šis pranešimas. Spustelėkite, jei norite peržiūrėti"
       in_reply_to: "Įkelti pirminį įrašą"
       view_all_posts: "Peržiūrėti visus įrašus"
       errors:
@@ -2706,6 +2743,7 @@ lt:
         delete_topic_error: "Ištrinant šią temą įvyko klaida"
         delete_topic: "ištrinti temą"
         add_post_notice: "Pridėti darbuotojų pranešimą..."
+        change_post_notice: "Pakeisti darbuotojų įspėjimą..."
         delete_post_notice: "Pašalinti darbuotojų pranešimą"
         remove_timer: "pašalinti laikmatį"
         edit_timer: "redaguoti laikmatį"
@@ -2721,6 +2759,8 @@ lt:
             few: "ir %{count}kitų mėgsta tai"
             many: "ir %{count}kitų mėgsta tai "
             other: "ir %{count} kitų mėgsta tai"
+          sr_post_likers_list_description: "vartotojai, kuriems patiko šis pranešimas"
+          sr_post_readers_list_description: "vartotojai, kurie perskaitė šį pranešimą"
         by_you:
           off_topic: "Tu pažymėjai tai kaip \"ne į temą\"."
           spam: "Tu pažymėjai tai, kaip šiukšlę"
@@ -2738,6 +2778,7 @@ lt:
           revert: "Grįžti prie %{revision}"
           edit_wiki: "Redaguoti Wiki"
           edit_post: "Redaguoti Įrašą"
+          comparing_previous_to_current_out_of_total: "<strong>%{previous}</strong> %{icon} <strong>%{current}</strong> %{total}"
         displays:
           inline:
             title: "Rodyti suteiktas paslaugas su priedais ir panaikinimais"
@@ -2773,6 +2814,8 @@ lt:
           edit_bookmark:
             name: "Redaguoti žymę"
             description: "Redaguokite žymės pavadinimą arba pakeiskite priminimo datą ir laiką"
+          clear_bookmark_reminder:
+            name: "Išvalyti priminimą."
           pin_bookmark:
             name: "Prisegti žymę"
             description: "Prisekite žymą. Taip ji bus rodomas žymių sąrašo viršuje."
@@ -3017,18 +3060,21 @@ lt:
       label_with_count: "Neperskaityti (%{count})"
     original_post: "Originalus įrašas"
     views: "Peržiūros"
+    sr_views: "Rūšiuoti pagal peržiūras"
     views_lowercase:
       one: "peržiūra"
       few: "peržiūros"
       many: "peržiūros"
       other: "peržiūros"
     replies: "Atsakymai"
+    sr_replies: "Rūšiuoti pagal atsakymus"
     views_long:
       one: "ši tema buvo peržiūrėta %{count} kartą"
       few: "ši tema buvo peržiūrėta %{number} kartus"
       many: "ši tema buvo peržiūrėta %{number}kartų"
       other: "ši tema buvo peržiūrėta %{number} kartus"
     activity: "Aktyvumas"
+    sr_activity: "Rūšiuoti pagal veiklą"
     likes: "Patikimai"
     likes_lowercase:
       one: "patikimas"
@@ -3139,9 +3185,12 @@ lt:
       readonly: "Peržiūrėti"
     lightbox:
       download: "atsisiųsti"
+      open: "originalus vaizdas"
+      previous: "Ankstesnis (rodyklės į kairę klavišas)"
       next: "Kitas (Dešinės rodyklės klavišas)"
       counter: "%curr% iš %total%"
       close: "Uždaryti (Esc)"
+      content_load_error: '<a href="%url%">Turinio</a> nepavyko įkelti.'
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
       shortcut_key_delimiter_plus: "+"
@@ -3414,8 +3463,13 @@ lt:
       no_topics_title: "Dar nepradėjote jokių temų"
       no_read_topics_title: "Dar neskaitėte jokių temų"
     no_group_messages_title: "Grupės pranešimų nerasta"
+    topic_entrance:
+      sr_jump_top_button: "Peršokti į pirmą įrašą"
+      sr_jump_bottom_button: "Peršokti į paskutinį įrašą"
     fullscreen_table:
       expand_btn: "Išskleisti lentelę"
+    second_factor_auth:
+      redirect_after_success: "Antrojo veiksnio autentifikavimas sėkmingas. Peradresavimas į ankstesnį puslapį…"
     sidebar:
       unread_count: "%{count} neperskaitytas"
       new_count: "%{count} nauja"
@@ -3426,9 +3480,16 @@ lt:
         topics:
           header_link_title: "pradinis"
           header_link_text: "Temos"
+          header_action_title: "sukurti naują temą"
           links:
+            everything:
+              content: "Viskas"
+              title: "Visos temos"
             tracked:
               content: "Sekami"
+              title: "Visos stebimos temos"
+            bookmarked:
+              content: "Pažymėta"
   admin_js:
     type_to_filter: "įrašyk kažką dėl filtro..."
     admin:

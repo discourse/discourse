@@ -3419,6 +3419,7 @@ fi:
     title: "Hups! Tämä sivu on yksityinen."
   site_setting_missing: "Asetus \"%{name}\" on pakollinen."
   page_not_found:
+    page_title: "Sivua ei löytynyt"
     title: "Hups! Sivua ei ole tai se on yksityinen."
     popular_topics: "Suosittuja"
     recent_topics: "Tuoreimpia"

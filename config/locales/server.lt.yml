@@ -188,6 +188,7 @@ lt:
   invite:
     not_found_json: "Jūsų kvietimo raktas netinkamas. Prašome susisiekti su personalu."
     not_matching_email: "Jūsų el. pašto adresas ir el. pašto adresas, susietas su pakvietimu, nesutampa. Prašome susisiekti su administracija."
+    user_exists: "Nereikia kviesti <b>%{email}</b>, jie jau turi paskyrą!"
     invalid_email: "%{email} nėra galiojantis el. pašto adresas."
     confirm_email: "<p>Beveik baigėte! Jūsų el. pašto adresu išsiuntėme aktyvavimo laišką. Norėdami suaktyvinti paskyrą, vadovaukitės laiške pateiktomis instrukcijomis.</p><p>Jei laiško negaunate, patikrinkite savo šlamšto aplanką.</p>"
     cant_invite_to_group: "Neleidžiama kviesti vartotojų į nurodytą grupę (-as). Įsitikinkite, kad esate grupės (-ų), į kurią bandote pakviesti, savininkas."
@@ -2327,6 +2328,7 @@ lt:
   page_forbidden:
     title: "Oi! Šis puslapis yra privatus."
   page_not_found:
+    page_title: "Puslapis nerastas"
     title: "Oi! Šis puslapis neegzistuoja arba yra privatus."
     popular_topics: "Populiaros"
     recent_topics: "Naujausios"

@@ -99,6 +99,11 @@ uk:
         date_month: "D MMM"
         date_year: "MMM 'YY"
       medium:
+        less_than_x_minutes:
+          one: "менше %{count} хвилини тому"
+          few: "менше %{count} хвилин тому"
+          many: "менше %{count} хвилин тому"
+          other: "менше %{count} хвилин тому"
         x_minutes:
           one: "%{count} хвилина"
           few: "%{count} хвилини"
@@ -109,11 +114,36 @@ uk:
           few: "%{count} години"
           many: "%{count} годин"
           other: "%{count} годин"
+        about_x_hours:
+          one: "близько %{count} години"
+          few: "близько %{count} годин"
+          many: "близько %{count} годин"
+          other: "близько %{count} годин"
         x_days:
           one: "%{count} день"
           few: "%{count} дні"
           many: "%{count} днів"
           other: "%{count} днів"
+        x_months:
+          one: "%{count} місяць"
+          few: "%{count} місяці"
+          many: "%{count} місяців"
+          other: "%{count} місяців"
+        about_x_years:
+          one: "близько %{count} року"
+          few: "близько %{count} роки"
+          many: "близько %{count} років"
+          other: "близько %{count} років"
+        over_x_years:
+          one: "більше %{count} року"
+          few: "більше %{count} роки"
+          many: "більше %{count} років"
+          other: "більше %{count} років"
+        almost_x_years:
+          one: "майже %{count} рік"
+          few: "майже %{count} роки"
+          many: "майже %{count} років"
+          other: "майже %{count} років"
         date_year: "D MMM 'YY"
       medium_with_ago:
         x_minutes:
@@ -164,6 +194,7 @@ uk:
       to_placeholder: "дата"
     share:
       topic_html: 'Тема: <span class="topic-title">%{topicTitle}</span>'
+      post: "пост №%{postNumber} від @%{username}"
       close: "сховати"
       twitter: "Поділитися в Twitter"
       facebook: "Поділитися у Facebook"
@@ -206,6 +237,7 @@ uk:
     skip_to_main_content: "Перейти до основного вмісту"
     wizard_required: "Запрошуємо до вашого нового Discourse! Давайте розпочнемо з <a href='%{url}' data-auto-route='true'>майстра налаштування</a> ✨"
     emails_are_disabled: "Надсилання повідомлень електронною поштою було глобально вимкнено адміністратором. Жодне сповіщення електронною поштою не буде надіслано."
+    emails_are_disabled_non_staff: "Вихідну електронну пошту було вимкнено для користувачів, які не є персоналом."
     software_update_prompt:
       message: "Ми оновили цей сайт, <span>оновіть</span>, інакше у вас може виникнути неочікувана поведінка."
       dismiss: "Відкласти"
@@ -217,6 +249,9 @@ uk:
     bootstrap_mode_disabled: "Режим Bootstrap буде вимкнено через 24 години."
     themes:
       default_description: "Промовчання"
+      broken_theme_alert: "Ваш сайт не може працювати, оскільки тема / компонент має помилки."
+      only_admins: "(це повідомлення відображається тільки адміністраторам сайту)"
+    broken_decorator_alert: "Повідомлення можуть відображатися неправильно, оскільки один з декораторів вмісту публікацій на вашому сайті викликав помилку."
     s3:
       regions:
         ap_northeast_1: "Азія (Токіо)"
@@ -348,7 +383,11 @@ uk:
       list_permission_denied: "У Вас немає прав для перегляду закладок цього користувача."
       no_user_bookmarks: "У вас немає публікацій у закладках. Закладки дозволяють швидко переходити до обраних дискусій."
       auto_delete_preference:
+        label: "Після отримання сповіщення"
+        never: "Зберегти закладку"
         when_reminder_sent: "Видалити закладку"
+        on_owner_reply: "Видалити закладку після моєї відповіді"
+        clear_reminder: "Залишити закладку та очистити нагадування"
       search_placeholder: "Пошук закладок за назвою, назвою теми або вмістом публікації"
       search: "Пошук"
       reminders:
@@ -358,6 +397,8 @@ uk:
         existing_reminder: "Нагадування для цієї закладки, буде надіслано %{at_date_time}"
     copy_codeblock:
       copied: "скопійовано!"
+      copy: "скопіювати код в буфер обміну"
+      fullscreen: "показати код на весь екран"
     drafts:
       label: "Чернетки"
       label_with_count: "Чернетки (%{count})"
@@ -404,6 +445,7 @@ uk:
     saved: "Збережено!"
     upload: "Завантажити"
     uploading: "Завантаження…"
+    processing: "Обробка..."
     uploading_filename: "Завантаження: %{filename}…"
     processing_filename: "Обробка: %{filename}..."
     clipboard: "буфер обміну"
@@ -642,6 +684,7 @@ uk:
     time_shortcut:
       now: "Зараз"
       later_today: "Пізніше сьогодні"
+      two_days: "Два дні"
       next_business_day: "Наступний робочий день"
       tomorrow: "Завтра"
       post_local_date: "Дата повідомлення"
@@ -784,6 +827,8 @@ uk:
             title: "Налаштування"
             allow_unknown_sender_topic_replies: "Дозволити у темі відповіді невідомого відправника."
             allow_unknown_sender_topic_replies_hint: "Дозволяє невідомим відправникам відповідати в групові теми. Якщо цю функцію не увімкнено, то відповіді від електронних адрес, які не запрошені до теми, створюватимуть нову тему."
+            from_alias: "Псевдо відправника"
+            from_alias_hint: "Псевдонім для використання як адреси відправника під час надсилання групових листів SMTP. Зважте, що це може підтримуватися не всіма провайдерами електронної пошти. Зверніться до документації вашого провайдера пошти."
           mailboxes:
             synchronized: "Синхронізована поштова скринька"
             none_found: "Не знайдено поштових скриньок в цьому обліковому записі."
@@ -1153,6 +1198,7 @@ uk:
       external_links_in_new_tab: "Відкривати всі зовнішні посилання у новій вкладці"
       enable_quoting: "Увімкнути відповіді на цитати для виділеного тексту"
       enable_defer: "Увімкнути відкладання позначення тем непрочитаними"
+      enable_experimental_sidebar: "Увімкнути експериментальну бічну панель"
       change: "змінити"
       featured_topic: "Закріплені теми"
       moderator: "%{user} є модератором"
@@ -1377,6 +1423,7 @@ uk:
         upload_title: "Завантажити своє зображення"
         image_is_not_a_square: "Увага: ми обрізали ваше зображення; ширина і висота були неоднакові."
         logo_small: "Маленький логотип сайту. Використовується за замовчуванням."
+        use_custom: "Або завантажте власний аватар:"
       change_profile_background:
         title: "Заголовок профілю"
         instructions: "Заголовки профілю будуть по центру та матимуть за замовчуванням ширину 1110 пікселів."
@@ -1638,7 +1685,9 @@ uk:
         title: "Підсумок"
         stats: "Статистика"
         time_read: "час читання"
+        time_read_title: "%{duration} (за весь час)"
         recent_time_read: "недавній час читання"
+        recent_time_read_title: "%{duration} (за останні 60 днів)"
         topic_count:
           one: "тему створив"
           few: "теми створив"
@@ -1907,19 +1956,32 @@ uk:
       not_approved: "Ваш обліковий запис ще не було схвалено. Ви отримаєте сповіщення на електронну скриньку, коли зможете увійти."
       google_oauth2:
         name: "Google"
+        title: "Увійти через Google"
+        sr_title: "Увійти через Google"
       twitter:
         name: "Twitter"
+        title: "Увійти через Twitter"
+        sr_title: "Увійти через Twitter"
       instagram:
         name: "Instagram"
+        title: "Увійти через Instagram"
+        sr_title: "Увійти через Instagram"
       facebook:
         name: "Facebook"
+        title: "Увійти через Facebook"
+        sr_title: "Увійти через Facebook"
       github:
         name: "GitHub"
+        title: "Увійти через GitHub"
+        sr_title: "Увійти через GitHub"
       discord:
         name: "Discord"
+        title: "Увійти через Discord"
+        sr_title: "Увійти через Discord"
       second_factor_toggle:
         totp: "Замість цього використовуйте додаток для перевірки автентичності"
         backup_code: "Замість цього використовуйте резервний код"
+        security_key: "Використати ключ безпеки"
     invites:
       accept_title: "Запрошення"
       emoji: "envelope emoji"
@@ -1947,6 +2009,7 @@ uk:
       categories_and_top_topics: "Категорії та головні теми"
       categories_boxes: "Коробки з підкатегорій"
       categories_boxes_with_topics: "Коробки з Обраними Темами"
+      subcategories_with_featured_topics: "Підкатегорії з обраними темами"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -2350,6 +2413,8 @@ uk:
       in: "в"
       in_this_topic: "в цій темі"
       in_this_topic_tooltip: "Перейти до пошуку у всіх темах"
+      in_messages: "у повідомленнях"
+      in_messages_tooltip: "перейти до пошуку у звичайних темах"
       in_topics_posts: "в усіх темах і повідомленнях"
       enter_hint: "Або натисніть Enter"
       in_posts_by: "в повідомленнях від %{username}"
@@ -2755,6 +2820,8 @@ uk:
         unpin: "Відмінити закріплення теми..."
         unarchive: "Розархівувати тему"
         archive: "Заархівувати тему"
+        invisible: "Вилучити тему"
+        visible: "Показати тему"
         reset_read: "Скинути дані про прочитаність"
         make_public: "Зробити тему публічною..."
         make_private: "Особисте повідомлення"
@@ -2769,6 +2836,7 @@ uk:
         title: "Відповісти"
         help: "почати складати відповідь на цю тему"
       share:
+        title: "Поділитися темою"
         extended_title: "Поділитися посиланням"
         help: "Поширити посилання на цю тему"
         instructions: "Поширити посилання на цю тему:"
@@ -2970,6 +3038,7 @@ uk:
           other: "Ви обрали дописів: <b>%{count}</b>."
       deleted_by_author_simple: "(тема, видалена автором)"
     post:
+      confirm_delete: "Ви справді бажаєте вилучити цей допис?"
       quote_reply: "Цитата"
       quote_reply_shortcut: "Або натисніть q"
       quote_edit: "Редагувати"
@@ -2988,7 +3057,15 @@ uk:
       show_hidden: "Перегляд ігнорованого вмісту."
       deleted_by_author_simple: "(повідомлення видалено автором)"
       collapse: "згорнути"
+      sr_collapse_replies: "Згорнути відповіді на допис"
+      sr_date: "Дата публікації"
+      sr_expand_replies:
+        one: "Цей допис має %{count} відповідь. Натисніть, щоб переглянути"
+        few: "Цей допис має %{count} відповіді. Натисніть, щоб переглянути"
+        many: "Цей допис має %{count} відповідей. Натисніть, щоб переглянути"
+        other: "Цей допис має %{count} відповідей. Натисніть, щоб переглянути"
       expand_collapse: "розгорнути/згорнути"
+      sr_below_embedded_posts_description: "Відповіді на допис #%{post_number}"
       locked: "співробітник заблокував це повідомлення для редагування"
       gap:
         one: "переглянути %{count} приховану відповідь"

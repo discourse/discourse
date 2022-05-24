@@ -1453,6 +1453,7 @@ it:
     show_pinned_excerpt_desktop: "Mostra estratti sugli argomenti appuntati nella vista desktop."
     post_onebox_maxlength: "Lunghezza massima in caratteri di un messaggio Discourse in Onebox."
     blocked_onebox_domains: "Un elenco di domini che non saranno mai inseriti in una casella, ad esempio wikipedia.org\n(I simboli jolly *? non sono supportati)"
+    block_onebox_on_redirect: "Blocca onebox per le URL che reindirizzano."
     allowed_inline_onebox_domains: "Un elenco di domini che saranno trasformati in onebox in forma di miniatura se collegati senza un titolo"
     enable_inline_onebox_on_all_domains: "Ignora l'impostazione del sito inline_onebox_domain_allowlist e consenti onebox in linea per tutti i domini."
     force_custom_user_agent_hosts: "Host per i quali utilizzare l'user agent onebox personalizzato su tutte le richieste. (Particolarmente utile per gli host che limitano l'accesso con user agent)."
@@ -3450,6 +3451,7 @@ it:
     title: "Ops! Quella pagina è privata."
   site_setting_missing: "L'impostazione del sito `%{name}` deve essere definita."
   page_not_found:
+    page_title: "Pagina Non Trovata"
     title: "Ops! La pagina richiesta non esiste oppure è privata."
     popular_topics: "Popolari"
     recent_topics: "Recenti"

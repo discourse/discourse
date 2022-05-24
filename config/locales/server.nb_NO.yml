@@ -1190,6 +1190,7 @@ nb_NO:
     set_password:
       title: "Sett passord"
   page_not_found:
+    page_title: "Side Ikke funnet"
     title: "Oisann! Den siden finnes ikke eller er privat."
     popular_topics: "Populært"
     recent_topics: "Nylig"

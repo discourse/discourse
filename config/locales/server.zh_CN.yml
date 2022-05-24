@@ -1402,6 +1402,7 @@ zh_CN:
     show_pinned_excerpt_desktop: "在桌面视图中显示置顶话题的摘录。"
     post_onebox_maxlength: "Onebox Discourse 帖子的最大长度（以字符为单位）。"
     blocked_onebox_domains: "一个永远不会被 onebox 的域名列表，例如：wikipedia.org\n(通配符 * ? 不支持)"
+    block_onebox_on_redirect: "阻止重定向 URL 的 Onebox。"
     allowed_inline_onebox_domains: "如果在没有标题的情况下链接，将以微型形式进行 Onebox 处理的网域列表"
     enable_inline_onebox_on_all_domains: "忽略 inline_onebox_domain_allowlist 站点设置并在所有网域上允许内联 Onebox。"
     force_custom_user_agent_hosts: "对所有请求使用自定义 Onebox 用户代理的主机。（对于限制用户代理访问的主机特别有用）。"
@@ -2029,6 +2030,7 @@ zh_CN:
     tags_sort_alphabetically: "按照字母顺序显示标签。默认按流行度显示。"
     tags_listed_by_group: "在<a href='%{base_path}/tags' target='_blank'>标签页面</a>上按标签组列出标签。"
     tag_style: "标签徽章的视觉样式。"
+    pm_tags_allowed_for_groups: "允许所包含的小组成员对任何个人信息进行标记"
     min_trust_level_to_tag_topics: "为话题添加标签所需的最低信任级别"
     suppress_overlapping_tags_in_list: "如果标签与话题标题中的字词完全匹配，则不显示标签"
     remove_muted_tags_from_latest: "不在最新话题列表中显示仅使用已被设为免打扰的标签标记的话题。"
@@ -3559,6 +3561,7 @@ zh_CN:
     title: "糟糕！该页面是一个不公开页面。"
   site_setting_missing: "必须设置 `%{name}` 站点设置。"
   page_not_found:
+    page_title: "找不到页面"
     title: "糟糕！该页面不存在或者是一个不公开页面。"
     popular_topics: "热门"
     recent_topics: "最近"

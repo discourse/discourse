@@ -1819,12 +1819,20 @@ sv:
         sr_title: "Logga in med Twitter"
       instagram:
         name: "Instagram"
+        title: "Logga in med Instagram"
+        sr_title: "Logga in med Instagram"
       facebook:
         name: "Facebook"
+        title: "Logga in med Facebook"
+        sr_title: "Logga in med Facebook"
       github:
         name: "GitHub"
+        title: "Logga in med GitHub"
+        sr_title: "Logga in med GitHub"
       discord:
         name: "Discord"
+        title: "Logga in med Discord"
+        sr_title: "Logga in med Discord"
       second_factor_toggle:
         totp: "Använd en autentiseringsapp istället"
         backup_code: "Använd en reservkod istället"
@@ -2317,6 +2325,7 @@ sv:
         clear_all: "Rensa alla"
         unlist_topics: "Avlista ämnen"
         relist_topics: "Lista om ämnen"
+        reset_bump_dates: "Återställ knuffdatum"
         defer: "Skjut upp"
         delete: "Ta bort ämnen"
         dismiss: "Avfärda"
@@ -3608,6 +3617,7 @@ sv:
           title: "Tystad"
           description: "Du aviseras inte om nya ämnen med den här taggen, och de kommer inte att visas på din \"oläst\"-flik."
       groups:
+        back_btn: "Tillbaka till alla taggar"
         title: "Taggrupper"
         about_heading: "Välj en taggrupp eller skapa en ny"
         about_heading_empty: "Skapa en ny taggrupp för att komma igång"
@@ -3710,11 +3720,19 @@ sv:
           header_link_title: "alla kategorier"
           header_link_text: "Kategorier"
         topics:
-          header_link_title: "hem"
+          header_link_title: "start"
           header_link_text: "Ämnen"
+          header_action_title: "skapa ett nytt ämne"
           links:
+            everything:
+              content: "Allting"
+              title: "Alla ämnen"
             tracked:
               content: "Följda"
+              title: "Alla spårade ämnen"
+            bookmarked:
+              content: "Bokmärkt"
+              title: "Alla bokmärkta ämnen"
   admin_js:
     type_to_filter: "skriv för att filtrera..."
     admin:

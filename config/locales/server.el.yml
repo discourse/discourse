@@ -2158,6 +2158,7 @@ el:
     post_approved:
       title: "Η ανάρτησή σας εγκρίθηκε"
   page_not_found:
+    page_title: "Η σελίδα δεν βρέθηκε"
     title: "Ουπς! Αυτή η σελίδα δεν υπάρχει ή είναι ιδιωτική."
     popular_topics: "Δημοφιλή"
     recent_topics: "Πρόσφατα"

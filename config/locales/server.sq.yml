@@ -1179,6 +1179,7 @@ sq:
 
         Nëse nuk arrini të klikoni në linkun më siper, provoni ta kopjoni dhe ta ngjisni në shfletuesin tuaj.
   page_not_found:
+    page_title: "Faqja nuk u gjet"
     popular_topics: "Popullore"
     recent_topics: "Më të fundit"
     see_more: "Më shumë"

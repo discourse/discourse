@@ -2517,6 +2517,7 @@ ru:
         clear_all: "Отменить выбор"
         unlist_topics: "Скрыть темы"
         relist_topics: "Показать темы"
+        reset_bump_dates: "Сбросить даты поднятия"
         defer: "Отложить"
         delete: "Удалить темы"
         dismiss: "Отложить"

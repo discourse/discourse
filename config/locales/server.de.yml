@@ -232,6 +232,7 @@ de:
       <p>Ansonsten kannst du <a href="%{base_url}/password-reset">dein Passwort zurücksetzen</a>.</p>
     not_found_template_link: |
       <p>Diese Einladung zu <a href="%{base_url}">%{site_name}</a> kann nicht mehr eingelöst werden. Bitte die Person, die dich eingeladen hat, dir eine neue Einladung zu schicken.</p>
+    user_exists: "Es ist nicht nötig, <b>%{email}</b>einzuladen, sie haben bereits ein Konto!"
     invite_exists: "Du hast <b>%{email}</b> bereits eingeladen."
     invalid_email: "%{email} ist keine gültige E-Mail-Adresse."
     rate_limit:
@@ -1453,6 +1454,7 @@ de:
     show_pinned_excerpt_desktop: "Zeige einen Auszug angehefteter Themen in der Desktop-Ansicht."
     post_onebox_maxlength: "Maximale Länge eines Onebox-Discourse-Beitrags in Zeichen."
     blocked_onebox_domains: "Eine Liste von Domains, die niemals in einer Onebox untergebracht werden, z.B. wikipedia.org\n(Wildcard-Symbole * ? nicht unterstützt)"
+    block_onebox_on_redirect: "Blockiere Onebox für URLs, die umleiten."
     allowed_inline_onebox_domains: "Eine Liste von Domains, die in verkleinerter Form in eine Onebox umgewandelt werden, wenn sie ohne Titel verlinkt werden"
     enable_inline_onebox_on_all_domains: "Ignoriere die Website-Einstellung `inline_onebox_domain_allowlist` und erlaube Inline-Oneboxen für alle Domains"
     force_custom_user_agent_hosts: "Hosts, bei denen der spezifische Onebox-Useragent für alle Anfragen genutzt wird. (Besonders hilfreich bei Hosts, die Zugriffe per Useragent limitieren.)"
@@ -3641,6 +3643,7 @@ de:
     title: "Hoppla! Diese Seite ist privat."
   site_setting_missing: "Website-Einstellung `%{name}` muss festgelegt werden."
   page_not_found:
+    page_title: "Seite nicht gefunden"
     title: "Hoppla! Diese Seite existiert nicht oder ist privat."
     popular_topics: "Beliebt"
     recent_topics: "Aktuell"
