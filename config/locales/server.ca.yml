@@ -2595,6 +2595,7 @@ ca:
     post_approved:
       title: "La vostra publicació ha estat aprovada"
   page_not_found:
+    page_title: "Pàgina no trobada"
     title: "Ai! Aquesta pàgina no existeix o és privada."
     popular_topics: "Populars"
     recent_topics: "Recents"

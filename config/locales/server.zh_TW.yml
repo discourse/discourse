@@ -2573,6 +2573,7 @@ zh_TW:
     post_approved:
       title: "你的貼文已通過"
   page_not_found:
+    page_title: "找不到頁面"
     title: "抱歉！這個頁面不存在或者是私密的。"
     popular_topics: "熱門"
     recent_topics: "最近"

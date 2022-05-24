@@ -1709,6 +1709,7 @@ sl:
     post_approved:
       title: "Vaš prispevek je bil odobren"
   page_not_found:
+    page_title: "stran ne obstaja"
     title: "Oops! Ta stran ne obstaja ali je zasebna."
     popular_topics: "Zanimivo"
     recent_topics: "Nedavno"

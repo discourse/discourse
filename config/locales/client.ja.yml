@@ -70,8 +70,14 @@ ja:
           other: "%{count} 分"
         x_hours:
           other: "%{count} 時間"
+        about_x_hours:
+          other: "約%{count} 時間"
         x_days:
           other: "%{count} 日"
+        x_months:
+          other: "%{count} ヶ月"
+        about_x_years:
+          other: "約%{count} 年"
         date_year: "'YY 年 MMM D 日"
       medium_with_ago:
         x_minutes:
@@ -1461,6 +1467,7 @@ ja:
         stats: "統計"
         time_read: "閲覧時間"
         recent_time_read: "最近の閲覧時間"
+        recent_time_read_title: "%{duration} （過去60日間）"
         topic_count:
           other: "作成したトピック数"
         post_count:
@@ -1703,15 +1710,23 @@ ja:
         name: "Twitter"
       instagram:
         name: "Instagram"
+        title: "Instagram でログイン"
+        sr_title: "Instagram でログイン"
       facebook:
         name: "Facebook"
+        title: "Facebook でログイン"
       github:
         name: "GitHub"
+        title: "GitHub でログイン"
+        sr_title: "GitHub でログイン"
       discord:
         name: "Discord"
+        title: "Discord でログイン"
+        sr_title: "Discord でログイン"
       second_factor_toggle:
         totp: "代わりに認証アプリを使用する"
         backup_code: "代わりにバックアップコードを使用する"
+        security_key: "代わりにセキュリティキーを使用する"
     invites:
       accept_title: "招待"
       emoji: "絵文字をエンベロープ"
@@ -1822,6 +1837,10 @@ ja:
         other: "<b>警告！</b> <a href='%{group_link}'>%{group}</a> をメンションしましたが、このグループのメンバー数は、管理者がメンション数制限として設定した %{count} 人を超えています。そのため誰にも通知されません。"
       group_mentioned:
         other: "%{group} をメンションすると、<a href='%{group_link}'>%{count} 人</a> へ通知されます。よろしいですか？"
+      cannot_see_mention:
+        category: "@%{username} をメンションしましたが、このカテゴリへのアクセス権がないため通知されません。このカテゴリにアクセスできるグループに追加してください。"
+        private: "@%{username} をメンションしましたが、この個人メッセージを見ることができないため通知されません。この個人メッセージに招待してください。"
+        muted_topic: "@%{username} をメンションしましたが、本ユーザがこのトピックをミュートしたため、通知されません。"
       here_mention:
         other: "<b>@%{here}</b> をメンションして %{count} 人のユーザーに通知しようとしています。よろしいですか？"
       duplicate_link: "<b>%{domain}</b> へのリンクは、すでに <b>@%{username}</b> が <a href='%{post_url}'>%{ago}</a> 前に投稿しています。もう一度投稿してもよろしいですか？"
@@ -2070,6 +2089,7 @@ ja:
       in_this_topic_tooltip: "全トピックの検索に切り替えます"
       in_topics_posts: "すべてのトピックと投稿"
       enter_hint: "または Enter キーを押します"
+      recent: "最近の検索"
       type:
         users: "ユーザー"
         categories: "カテゴリ"

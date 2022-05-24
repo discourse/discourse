@@ -1837,6 +1837,7 @@ pt:
     post_approved:
       title: "A sua publicação foi aprovada"
   page_not_found:
+    page_title: "Página Não Encontrada"
     title: "Oops! Essa página não existe or é privada."
     popular_topics: "Popular"
     recent_topics: "Recente"

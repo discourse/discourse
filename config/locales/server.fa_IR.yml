@@ -1975,6 +1975,7 @@ fa_IR:
 
         این یک پیغام خودکار از %{site_name} که به شما اطلاع می‌دهد، که [نوشته‌ی شما](%{base_url}%{post_url}) تایید شده است.
   page_not_found:
+    page_title: "صفحه پیدا نشد"
     title: "اوه! صفحه وجود ندارد یا خصوصی‌ است."
     popular_topics: "محبوب"
     recent_topics: "اخیر"

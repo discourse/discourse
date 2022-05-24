@@ -2587,6 +2587,7 @@ nl:
   page_forbidden:
     title: "Oeps! Die pagina is privé."
   page_not_found:
+    page_title: "Pagina niet gevonden"
     title: "Oeps! Die pagina bestaat niet of is privé."
     popular_topics: "Populair"
     recent_topics: "Recent"

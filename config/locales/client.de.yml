@@ -2325,6 +2325,7 @@ de:
         clear_all: "Auswahl aufheben"
         unlist_topics: "Themen unsichtbar machen"
         relist_topics: "Themen neu auflisten"
+        reset_bump_dates: "„Nach oben verschieben“-Zeitangaben zurücksetzen"
         defer: "Aufschieben"
         delete: "Themen löschen"
         dismiss: "Ignorieren"

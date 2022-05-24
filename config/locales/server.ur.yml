@@ -3118,6 +3118,7 @@ ur:
     post_approved:
       title: "آپ کی پوسٹ منظور ہو گئی تھی"
   page_not_found:
+    page_title: "صفحہ نہیں ملا"
     title: "افوہ! وہ صفحہ موجود نہیں یا ذاتی ہے۔"
     popular_topics: "مقبول"
     recent_topics: "حالیہ"

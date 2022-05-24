@@ -3454,6 +3454,7 @@ ko:
     title: "죄송합니다! 비공개 페이지 입니다."
   site_setting_missing: "`%{name}' 사이트 설정을 해야합니다."
   page_not_found:
+    page_title: "페이지를 찾을 수 없습니다"
     title: "이런! 그 페이지는 더 이상 존재하지 않거나 비공개 상태입니다."
     popular_topics: "인기"
     recent_topics: "최근"

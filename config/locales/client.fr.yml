@@ -41,6 +41,7 @@ fr:
       long_date_without_year_with_linebreak: "D MMM <br/>LT"
       long_date_with_year_with_linebreak: "D MMM 'YY <br/>LT"
       wrap_ago: "il y a %{date}"
+      wrap_on: "le %{date}"
       tiny:
         half_a_minute: "< 1 min"
         less_than_x_seconds:
@@ -85,6 +86,12 @@ fr:
         x_days:
           one: "%{count} jour"
           other: "%{count} jours"
+        x_months:
+          one: "%{count} mois"
+          other: "%{count} mois"
+        about_x_years:
+          one: "environ %{count} ans"
+          other: "environ %{count} ans"
         date_year: "D MMM 'YY"
       medium_with_ago:
         x_minutes:
@@ -1776,23 +1783,32 @@ fr:
       not_approved: "Votre compte n'a pas encore été approuvé. Vous recevrez une notification par courriel lorsque vous pourrez vous connecter."
       google_oauth2:
         name: "Google"
-        title: "Connectez-vous avec Google"
-        sr_title: "Connectez-vous avec Google"
+        title: "Se connecter avec Google"
+        sr_title: "Se connecter avec Google"
       twitter:
         name: "Twitter"
-        title: "Connectez-vous avec Twitter"
-        sr_title: "Connectez-vous avec Twitter"
+        title: "Se connecter avec Twitter"
+        sr_title: "Se connecter avec Twitter"
       instagram:
         name: "Instagram"
+        title: "Connectez-vous avec Instagram"
+        sr_title: "Connectez-vous avec Instagram"
       facebook:
         name: "Facebook"
+        title: "Connectez-vous avec Facebook"
+        sr_title: "Connectez-vous avec Facebook"
       github:
         name: "GitHub"
+        title: "Connectez-vous avec GitHub"
+        sr_title: "Connectez-vous avec GitHub"
       discord:
         name: "Discord"
+        title: "Connectez-vous avec Discord"
+        sr_title: "Connectez-vous avec Discord"
       second_factor_toggle:
         totp: "Utilisez plutôt une application d'authentification"
         backup_code: "Utilisez plutôt un code de secours"
+        security_key: "Utilisez plutôt une clé de sécurité"
     invites:
       accept_title: "Invitation"
       emoji: "émoji d'enveloppe"

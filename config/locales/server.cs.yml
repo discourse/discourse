@@ -992,6 +992,7 @@ cs:
     signup_after_approval:
       subject_template: "Byli jste schváleni na %{site_name}!"
   page_not_found:
+    page_title: "Stránka nenalezena"
     popular_topics: "Populární"
     recent_topics: "Nedávné"
     see_more: "Více"

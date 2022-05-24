@@ -3616,6 +3616,7 @@ es:
           title: "Silenciado"
           description: "No se te notificará sobre temas nuevos con esta etiqueta, ni aparecerán en tu pestaña de no leídos."
       groups:
+        back_btn: "Volver a todas las etiquetas"
         title: "Grupos de etiquetas"
         about_heading: "Selecciona un grupo de etiquetas, o crea uno nuevo"
         about_heading_empty: "Crea un nuevo grupo de etiquetas para empezar"
