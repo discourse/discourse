@@ -7,7 +7,7 @@ module Jobs
       raise Discourse::InvalidParameters.new(:user_id) if @user_id.blank?
 
       user_profile = UserProfile.find_by(user_id: @user_id)
-      return if user_profile.blank?
+      return if user_profile.blank? || user_profile.bio_cooked.nil?
 
       large_image_urls = []
       broken_image_urls = []
