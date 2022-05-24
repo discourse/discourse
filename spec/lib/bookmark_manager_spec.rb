@@ -227,6 +227,11 @@ RSpec.describe BookmarkManager do
       expect(tu.bookmarked).to eq(true)
     end
 
+    it "sets auto_delete_preference to never by default" do
+      bookmark = subject.create_for(bookmarkable_id: post.id, bookmarkable_type: "Post", name: name, reminder_at: reminder_at)
+      expect(bookmark.auto_delete_preference).to eq(Bookmark.auto_delete_preferences[:never])
+    end
+
     context "when a reminder time is provided" do
       it "saves the values correctly" do
         subject.create_for(bookmarkable_id: post.id, bookmarkable_type: "Post", name: name, reminder_at: reminder_at)
@@ -302,12 +307,41 @@ RSpec.describe BookmarkManager do
       end
     end
 
-    it "saves user's preference" do
-      subject.create_for(bookmarkable_id: post.id, bookmarkable_type: "Post", options: { auto_delete_preference: Bookmark.auto_delete_preferences[:when_reminder_sent] })
+    it "does not save user preference by default" do
+      user.user_option.update(bookmark_auto_delete_preference: Bookmark.auto_delete_preferences[:on_owner_reply])
+      subject.create_for(
+        bookmarkable_id: post.id,
+        bookmarkable_type: "Post",
+        options: { auto_delete_preference: Bookmark.auto_delete_preferences[:when_reminder_sent] }
+      )
+      expect(user.user_option.bookmark_auto_delete_preference).to eq(Bookmark.auto_delete_preferences[:on_owner_reply])
+
+      bookmark = Bookmark.find_by(user: user)
+      subject.update(
+        bookmark_id: bookmark.id,
+        name: "test",
+        reminder_at: 1.day.from_now,
+        options: { auto_delete_preference: Bookmark.auto_delete_preferences[:when_reminder_sent] }
+      )
+      expect(user.user_option.bookmark_auto_delete_preference).to eq(Bookmark.auto_delete_preferences[:on_owner_reply])
+    end
+
+    it "saves user's preference when save_user_preferences option is specified" do
+      user.user_option.update(bookmark_auto_delete_preference: Bookmark.auto_delete_preferences[:on_owner_reply])
+      subject.create_for(
+        bookmarkable_id: post.id,
+        bookmarkable_type: "Post",
+        options: { auto_delete_preference: Bookmark.auto_delete_preferences[:when_reminder_sent], save_user_preferences: true }
+      )
       expect(user.user_option.bookmark_auto_delete_preference).to eq(Bookmark.auto_delete_preferences[:when_reminder_sent])
 
       bookmark = Bookmark.find_by(user: user)
-      subject.update(bookmark_id: bookmark.id, name: "test", reminder_at: 1.day.from_now, options: { auto_delete_preference: Bookmark.auto_delete_preferences[:on_owner_reply] })
+      subject.update(
+        bookmark_id: bookmark.id,
+        name: "test",
+        reminder_at: 1.day.from_now,
+        options: { auto_delete_preference: Bookmark.auto_delete_preferences[:on_owner_reply], save_user_preferences: true }
+      )
       expect(user.user_option.bookmark_auto_delete_preference).to eq(Bookmark.auto_delete_preferences[:on_owner_reply])
     end
   end

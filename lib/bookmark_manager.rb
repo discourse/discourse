@@ -40,8 +40,8 @@ class BookmarkManager
   #                                      this is used to determine when to delete a bookmark
   #                                      automatically.
   def create_for(bookmarkable_id:, bookmarkable_type:, name: nil, reminder_at: nil, options: {})
-    bookmarkable = bookmarkable_type.constantize.find_by(id: bookmarkable_id)
     registered_bookmarkable = Bookmark.registered_bookmarkable_from_type(bookmarkable_type)
+    bookmarkable = registered_bookmarkable.model.find_by(id: bookmarkable_id)
     registered_bookmarkable.validate_before_create(@guardian, bookmarkable)
 
     bookmark = Bookmark.create(
@@ -51,13 +51,13 @@ class BookmarkManager
         name: name,
         reminder_at: reminder_at,
         reminder_set_at: Time.zone.now
-      }.merge(options)
+      }.merge(bookmark_model_options_with_defaults(options))
     )
 
     return add_errors_from(bookmark) if bookmark.errors.any?
 
     registered_bookmarkable.after_create(@guardian, bookmark, options)
-    update_user_option(bookmark)
+    update_user_option(bookmark, options)
 
     bookmark
   end
@@ -102,14 +102,14 @@ class BookmarkManager
       {
         name: name,
         reminder_set_at: Time.zone.now,
-      }.merge(options)
+      }.merge(bookmark_model_options_with_defaults(options))
     )
 
     if bookmark.errors.any?
       return add_errors_from(bookmark)
     end
 
-    update_user_option(bookmark)
+    update_user_option(bookmark, options)
 
     success
   end
@@ -142,7 +142,18 @@ class BookmarkManager
     TopicUser.change(@user.id, topic, bookmarked: Bookmark.for_user_in_topic(@user.id, topic.id).exists?)
   end
 
-  def update_user_option(bookmark)
-    @user.user_option.update!(bookmark_auto_delete_preference: bookmark.auto_delete_preference)
+  def update_user_option(bookmark, options)
+    return if !options[:save_user_preferences]
+    @user.user_option.update!(
+      bookmark_auto_delete_preference: bookmark.auto_delete_preference
+    )
+  end
+
+  def bookmark_model_options_with_defaults(options)
+    if options[:auto_delete_preference].blank?
+      options[:auto_delete_preference] = Bookmark.auto_delete_preferences[:never]
+    end
+
+    options.slice(:auto_delete_preference, :pinned)
   end
 end
