@@ -1,6 +1,11 @@
 # frozen_string_literal: true
 
 class Bookmark < ActiveRecord::Base
+  self.ignored_columns = [
+    "post_id", # TODO (martin) (2022-08-01) remove
+    "for_topic" # TODO (martin) (2022-08-01) remove
+  ]
+
   cattr_accessor :registered_bookmarkables
   self.registered_bookmarkables = []
 
@@ -201,7 +206,6 @@ end
 #
 #  id                     :bigint           not null, primary key
 #  user_id                :bigint           not null
-#  post_id                :bigint
 #  name                   :string(100)
 #  reminder_at            :datetime
 #  created_at             :datetime         not null
@@ -210,7 +214,6 @@ end
 #  reminder_set_at        :datetime
 #  auto_delete_preference :integer          default(0), not null
 #  pinned                 :boolean          default(FALSE)
-#  for_topic              :boolean          default(FALSE), not null
 #  bookmarkable_id        :integer
 #  bookmarkable_type      :string
 #
