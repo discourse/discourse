@@ -1,0 +1,31 @@
+.user-status-picker-wrap {
+  display: inline-flex;
+  width: 100%;
+  align-items: end;
+
+  .user-status-picker {
+    display: flex;
+    width: 100%;
+    border: 1px solid var(--primary-medium);
+
+    .btn-emoji {
+      margin-left: 3px;
+      margin-right: 3px;
+
+      .d-icon {
+        color: var(--primary-high);
+      }
+    }
+
+    .user-status-description {
+      width: 100%;
+      margin-bottom: 0;
+      border: none;
+      outline: none;
+    }
+  }
+
+  .user-status-picker.focused {
+    border: 2px solid var(--tertiary);
+  }
+}

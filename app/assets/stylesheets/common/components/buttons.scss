@@ -322,3 +322,19 @@
     }
   }
 }
+
+// Button with cleared default styles
+// --------------------------------------------------
+.btn-unstyled {
+  background: none;
+  border: 0;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  line-height: inherit;
+  margin: 0;
+  overflow: initial;
+  padding: 0;
+  text-align: initial;
+  vertical-align: initial;
+}

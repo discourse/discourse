@@ -56,9 +56,8 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
   },
 
   @discourseComputed("user.status")
-  userStatusEmoji() {
-    const emoji = this.user.status.emoji ?? "mega";
-    return emojiUnescape(`:${emoji}:`);
+  userStatusEmoji(status) {
+    return emojiUnescape(`:${status.emoji}:`);
   },
 
   isSuspendedOrHasBio: or("user.suspend_reason", "user.bio_excerpt"),
