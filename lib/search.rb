@@ -236,12 +236,13 @@ class Search
       term: clean_term,
       blurb_term: term,
       search_context: @search_context,
-      blurb_length: @blurb_length
+      blurb_length: @blurb_length,
+      is_header_search: !use_full_page_limit
     )
   end
 
   def limit
-    if @opts[:type_filter].present? && @opts[:type_filter] != "exclude_topics"
+    if use_full_page_limit
       Search.per_filter + 1
     else
       Search.per_facet + 1
@@ -258,6 +259,10 @@ class Search
 
   def valid?
     @valid
+  end
+
+  def use_full_page_limit
+    @opts[:search_type] == :full_page || Topic === @search_context
   end
 
   def self.execute(term, opts = nil)

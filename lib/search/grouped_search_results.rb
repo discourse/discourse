@@ -31,7 +31,7 @@ class Search
 
     BLURB_LENGTH = 200
 
-    def initialize(type_filter:, term:, search_context:, blurb_length: nil, blurb_term: nil)
+    def initialize(type_filter:, term:, search_context:, blurb_length: nil, blurb_term: nil, is_header_search: false)
       @type_filter = type_filter
       @term = term
       @blurb_term = blurb_term || term
@@ -43,6 +43,7 @@ class Search
       @tags = []
       @groups = []
       @error = nil
+      @is_header_search = is_header_search
     end
 
     def error=(error)
@@ -85,10 +86,9 @@ class Search
 
     def add(object)
       type = object.class.to_s.downcase.pluralize
-
-      if @type_filter.present? && public_send(type).length == Search.per_filter
+      if !@is_header_search && public_send(type).length == Search.per_filter
         @more_full_page_results = true
-      elsif !@type_filter.present? && public_send(type).length == Search.per_facet
+      elsif @is_header_search && public_send(type).length == Search.per_facet
         instance_variable_set("@more_#{type}".to_sym, true)
       else
         (self.public_send(type)) << object
