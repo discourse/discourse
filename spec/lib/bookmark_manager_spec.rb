@@ -227,6 +227,11 @@ RSpec.describe BookmarkManager do
       expect(tu.bookmarked).to eq(true)
     end
 
+    it "sets auto_delete_preference to never by default" do
+      bookmark = subject.create_for(bookmarkable_id: post.id, bookmarkable_type: "Post", name: name, reminder_at: reminder_at)
+      expect(bookmark.auto_delete_preference).to eq(Bookmark.auto_delete_preferences[:never])
+    end
+
     context "when a reminder time is provided" do
       it "saves the values correctly" do
         subject.create_for(bookmarkable_id: post.id, bookmarkable_type: "Post", name: name, reminder_at: reminder_at)

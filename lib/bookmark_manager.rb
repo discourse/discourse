@@ -51,7 +51,7 @@ class BookmarkManager
         name: name,
         reminder_at: reminder_at,
         reminder_set_at: Time.zone.now
-      }.merge(options.slice(:auto_delete_preference))
+      }.merge(bookmark_model_options_with_defaults(options))
     )
 
     return add_errors_from(bookmark) if bookmark.errors.any?
@@ -102,7 +102,7 @@ class BookmarkManager
       {
         name: name,
         reminder_set_at: Time.zone.now,
-      }.merge(options.slice(:pinned, :auto_delete_preference))
+      }.merge(bookmark_model_options_with_defaults(options))
     )
 
     if bookmark.errors.any?
@@ -147,5 +147,13 @@ class BookmarkManager
     @user.user_option.update!(
       bookmark_auto_delete_preference: bookmark.auto_delete_preference
     )
+  end
+
+  def bookmark_model_options_with_defaults(options)
+    if options[:auto_delete_preference].blank?
+      options[:auto_delete_preference] = Bookmark.auto_delete_preferences[:never]
+    end
+
+    options.slice(:auto_delete_preference, :pinned)
   end
 end
