@@ -115,13 +115,13 @@ class SearchIndexer
     )
   end
 
-  def self.update_posts_index(post_id:, topic_title:, category_name:, topic_tags:, cooked:, private_message:, allowed_users: nil)
+  def self.update_posts_index(post_id:, topic_title:, category_name:, topic_tags:, cooked:, private_message:)
     update_index(
       table: 'post',
       id: post_id,
       a_weight: topic_title,
       b_weight: category_name,
-      c_weight: "#{topic_tags} #{allowed_users&.join(" ")}",
+      c_weight: topic_tags,
       # The tsvector resulted from parsing a string can be double the size of
       # the original string. Since there is no way to estimate the length of
       # the expected tsvector, we limit the input to ~50% of the maximum
@@ -231,8 +231,7 @@ class SearchIndexer
           category_name: category_name,
           topic_tags: tag_names,
           cooked: obj.cooked,
-          private_message: topic.private_message?,
-          allowed_users: topic.allowed_users.pluck(:username, :name)
+          private_message: topic.private_message?
         )
 
         SearchIndexer.update_topics_index(topic.id, topic.title, obj.cooked) if obj.is_first_post?
@@ -255,8 +254,7 @@ class SearchIndexer
             category_name: category_name,
             topic_tags: tag_names,
             cooked: post.cooked,
-            private_message: obj.private_message?,
-            allowed_users: obj.allowed_users.pluck(:username, :name)
+            private_message: obj.private_message?
           )
 
           SearchIndexer.update_topics_index(obj.id, obj.title, post.cooked)
