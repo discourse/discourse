@@ -20,6 +20,6 @@ class UserStatusController < ApplicationController
   private
 
   def ensure_feature_enabled
-    raise ActionController::MethodNotAllowed.new if !SiteSetting.enable_user_status
+    raise ActionController::RoutingError.new("Not Found") if !SiteSetting.enable_user_status
   end
 end

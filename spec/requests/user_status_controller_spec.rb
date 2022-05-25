@@ -7,14 +7,14 @@ describe UserStatusController do
       expect(response.status).to eq(403)
     end
 
-    it "returns 405 'Method Not Allowed' if the feature is disabled" do
+    it "returns 404 if the feature is disabled" do
       user = Fabricate(:user)
       sign_in(user)
       SiteSetting.enable_user_status = false
 
       put "/user-status.json", params: { description: "off" }
 
-      expect(response.status).to eq(405)
+      expect(response.status).to eq(404)
     end
 
     describe 'feature is enabled and user is logged in' do
@@ -56,14 +56,14 @@ describe UserStatusController do
       expect(response.status).to eq(403)
     end
 
-    it "returns 405 'Method Not Allowed' if the feature is disabled" do
+    it "returns 404 if the feature is disabled" do
       user = Fabricate(:user)
       sign_in(user)
       SiteSetting.enable_user_status = false
 
       delete "/user-status.json"
 
-      expect(response.status).to eq(405)
+      expect(response.status).to eq(404)
     end
 
     describe 'feature is enabled and user is logged in' do
