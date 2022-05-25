@@ -5209,4 +5209,4 @@ en:
 
   user_status:
     errors:
-      ends_at_should_be_greater_than_set_at: "ends_at should be greater than set at"
+      ends_at_should_be_greater_than_set_at: "ends_at should be greater than set_at"
