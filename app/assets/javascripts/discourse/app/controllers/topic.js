@@ -767,38 +767,7 @@ export default Controller.extend(bufferedProperty("model"), {
       }
     },
 
-    // TODO (martin) [POLYBOOK] Not relevant once polymorphic bookmarks are implemented.
     toggleBookmark(post) {
-      if (!this.currentUser) {
-        return bootbox.alert(I18n.t("bookmarks.not_bookmarked"));
-      } else if (post) {
-        const bookmarkForPost = this.model.bookmarks.find(
-          (bookmark) => bookmark.post_id === post.id && !bookmark.for_topic
-        );
-        return this._modifyPostBookmark(
-          bookmarkForPost ||
-            Bookmark.create({
-              post_id: post.id,
-              topic_id: post.topic_id,
-              for_topic: false,
-              auto_delete_preference: this.currentUser
-                .bookmark_auto_delete_preference,
-            }),
-          post
-        );
-      } else {
-        return this._toggleTopicLevelBookmark().then((changedIds) => {
-          if (!changedIds) {
-            return;
-          }
-          changedIds.forEach((id) =>
-            this.appEvents.trigger("post-stream:refresh", { id })
-          );
-        });
-      }
-    },
-
-    toggleBookmarkPolymorphic(post) {
       if (!this.currentUser) {
         return bootbox.alert(I18n.t("bookmarks.not_bookmarked"));
       } else if (post) {
@@ -818,16 +787,14 @@ export default Controller.extend(bufferedProperty("model"), {
           post
         );
       } else {
-        return this._toggleTopicLevelBookmarkPolymorphic().then(
-          (changedIds) => {
-            if (!changedIds) {
-              return;
-            }
-            changedIds.forEach((id) =>
-              this.appEvents.trigger("post-stream:refresh", { id })
-            );
+        return this._toggleTopicLevelBookmark().then((changedIds) => {
+          if (!changedIds) {
+            return;
           }
-        );
+          changedIds.forEach((id) =>
+            this.appEvents.trigger("post-stream:refresh", { id })
+          );
+        });
       }
     },
 
@@ -1285,56 +1252,46 @@ export default Controller.extend(bufferedProperty("model"), {
   },
 
   _modifyTopicBookmark(bookmark) {
-    return openBookmarkModal(
-      bookmark,
-      {
-        onAfterSave: (savedData) => {
-          this._syncBookmarks(savedData);
-          this.model.set("bookmarking", false);
-          this.model.set("bookmarked", true);
-          this.model.incrementProperty("bookmarksWereChanged");
-          this.appEvents.trigger(
-            "bookmarks:changed",
-            savedData,
-            bookmark.attachedTo()
-          );
+    return openBookmarkModal(bookmark, {
+      onAfterSave: (savedData) => {
+        this._syncBookmarks(savedData);
+        this.model.set("bookmarking", false);
+        this.model.set("bookmarked", true);
+        this.model.incrementProperty("bookmarksWereChanged");
+        this.appEvents.trigger(
+          "bookmarks:changed",
+          savedData,
+          bookmark.attachedTo()
+        );
 
-          // TODO (martin) (2022-02-01) Remove these old bookmark events, replaced by bookmarks:changed.
-          this.appEvents.trigger("topic:bookmark-toggled");
-        },
-        onAfterDelete: (topicBookmarked, bookmarkId) => {
-          this.model.removeBookmark(bookmarkId);
-        },
+        // TODO (martin) (2022-02-01) Remove these old bookmark events, replaced by bookmarks:changed.
+        this.appEvents.trigger("topic:bookmark-toggled");
       },
-      { use_polymorphic_bookmarks: this.siteSettings.use_polymorphic_bookmarks }
-    );
+      onAfterDelete: (topicBookmarked, bookmarkId) => {
+        this.model.removeBookmark(bookmarkId);
+      },
+    });
   },
 
   _modifyPostBookmark(bookmark, post) {
-    return openBookmarkModal(
-      bookmark,
-      {
-        onCloseWithoutSaving: () => {
-          post.appEvents.trigger("post-stream:refresh", {
-            id: this.siteSettings.use_polymorphic_bookmarks
-              ? bookmark.bookmarkable_id
-              : bookmark.post_id,
-          });
-        },
-        onAfterSave: (savedData) => {
-          this._syncBookmarks(savedData);
-          this.model.set("bookmarking", false);
-          post.createBookmark(savedData);
-          this.model.afterPostBookmarked(post, savedData);
-          return [post.id];
-        },
-        onAfterDelete: (topicBookmarked, bookmarkId) => {
-          this.model.removeBookmark(bookmarkId);
-          post.deleteBookmark(topicBookmarked);
-        },
+    return openBookmarkModal(bookmark, {
+      onCloseWithoutSaving: () => {
+        post.appEvents.trigger("post-stream:refresh", {
+          id: bookmark.bookmarkable_id,
+        });
       },
-      { use_polymorphic_bookmarks: this.siteSettings.use_polymorphic_bookmarks }
-    );
+      onAfterSave: (savedData) => {
+        this._syncBookmarks(savedData);
+        this.model.set("bookmarking", false);
+        post.createBookmark(savedData);
+        this.model.afterPostBookmarked(post, savedData);
+        return [post.id];
+      },
+      onAfterDelete: (topicBookmarked, bookmarkId) => {
+        this.model.removeBookmark(bookmarkId);
+        post.deleteBookmark(topicBookmarked);
+      },
+    });
   },
 
   _syncBookmarks(data) {
@@ -1352,42 +1309,7 @@ export default Controller.extend(bufferedProperty("model"), {
     }
   },
 
-  // TODO (martin) [POLYBOOK] Not relevant once polymorphic bookmarks are implemented.
   async _toggleTopicLevelBookmark() {
-    if (this.model.bookmarking) {
-      return Promise.resolve();
-    }
-
-    if (this.model.bookmarkCount > 1) {
-      return this._maybeClearAllBookmarks();
-    }
-
-    if (this.model.bookmarkCount === 1) {
-      const forTopicBookmark = this.model.bookmarks.findBy("for_topic", true);
-      if (forTopicBookmark) {
-        return this._modifyTopicBookmark(forTopicBookmark);
-      } else {
-        const bookmark = this.model.bookmarks[0];
-        const post = await this.model.postById(bookmark.post_id);
-        return this._modifyPostBookmark(bookmark, post);
-      }
-    }
-
-    if (this.model.bookmarkCount === 0) {
-      const firstPost = await this.model.firstPost();
-      return this._modifyTopicBookmark(
-        Bookmark.create({
-          post_id: firstPost.id,
-          topic_id: this.model.id,
-          for_topic: true,
-          auto_delete_preference: this.currentUser
-            .bookmark_auto_delete_preference,
-        })
-      );
-    }
-  },
-
-  async _toggleTopicLevelBookmarkPolymorphic() {
     if (this.model.bookmarking) {
       return Promise.resolve();
     }

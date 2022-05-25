@@ -15,6 +15,11 @@
 # on the current secure? status, otherwise there would be a lot of additional
 # complex queries and joins to perform. Over time more of these specific
 # queries will be implemented.
+#
+# NOTE: When updating this to add more cases where uploads will be marked
+# secure, consider uploads:secure_upload_analyse_and_update as well, which
+# does not use this class directly but uses an SQL version of its rules for
+# efficient updating of many uploads in bulk.
 class UploadSecurity
   @@custom_public_types = []
 

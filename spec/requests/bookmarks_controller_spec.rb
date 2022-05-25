@@ -17,43 +17,18 @@ describe BookmarksController do
       RateLimiter.clear_all!
 
       post "/bookmarks.json", params: {
-        post_id: bookmark_post.id,
+        bookmarkable_id: bookmark_post.id,
+        bookmarkable_type: "Post",
         reminder_at: (Time.zone.now + 1.day).iso8601
       }
 
       expect(response.status).to eq(200)
 
       post "/bookmarks.json", params: {
-        post_id: Fabricate(:post).id
+        bookmarkable_id: bookmark_post.id,
+        bookmarkable_type: "Post",
       }
       expect(response.status).to eq(429)
-    end
-
-    # TODO (martin) [POLYBOOK] Not relevant once polymorphic bookmarks are implemented.
-    it "creates a for_topic bookmark" do
-      post "/bookmarks.json", params: {
-        post_id: bookmark_post.id,
-        reminder_type: "tomorrow",
-        reminder_at: (Time.zone.now + 1.day).iso8601,
-        for_topic: true
-      }
-      expect(response.status).to eq(200)
-      bookmark = Bookmark.find(response.parsed_body["id"])
-      expect(bookmark.for_topic).to eq(true)
-    end
-
-    # TODO (martin) [POLYBOOK] Not relevant once polymorphic bookmarks are implemented.
-    it "errors when trying to create a for_topic bookmark for post_number > 1" do
-      post "/bookmarks.json", params: {
-        post_id: Fabricate(:post, topic: bookmark_post.topic).id,
-        reminder_type: "tomorrow",
-        reminder_at: (Time.zone.now + 1.day).iso8601,
-        for_topic: true
-      }
-      expect(response.status).to eq(400)
-      expect(response.parsed_body['errors']).to include(
-        I18n.t("bookmarks.errors.for_topic_must_use_first_post")
-      )
     end
 
     context "if the user reached the max bookmark limit" do
@@ -63,11 +38,13 @@ describe BookmarksController do
 
       it "returns failed JSON with a 400 error" do
         post "/bookmarks.json", params: {
-          post_id: bookmark_post.id,
+          bookmarkable_id: bookmark_post.id,
+          bookmarkable_type: "Post",
           reminder_at: (Time.zone.now + 1.day).iso8601
         }
         post "/bookmarks.json", params: {
-          post_id: Fabricate(:post).id
+          bookmarkable_id: bookmark_post.id,
+          bookmarkable_type: "Post",
         }
 
         expect(response.status).to eq(400)
@@ -78,27 +55,8 @@ describe BookmarksController do
       end
     end
 
-    context "if the user already has bookmarked the post" do
+    context "if the user already has bookmarked the record" do
       before do
-        Fabricate(:bookmark, post: bookmark_post, user: bookmark_user)
-      end
-
-      it "returns failed JSON with a 400 error" do
-        post "/bookmarks.json", params: {
-          post_id: bookmark_post.id,
-          reminder_at: (Time.zone.now + 1.day).iso8601
-        }
-
-        expect(response.status).to eq(400)
-        expect(response.parsed_body['errors']).to include(
-          I18n.t("bookmarks.errors.already_bookmarked_post")
-        )
-      end
-    end
-
-    context "if the user already has bookmarked the record (polymorphic)" do
-      before do
-        SiteSetting.use_polymorphic_bookmarks = true
         Fabricate(:bookmark, bookmarkable: bookmark_post, user: bookmark_user)
         Fabricate(:bookmark, bookmarkable: bookmark_topic, user: bookmark_user)
       end
@@ -130,7 +88,7 @@ describe BookmarksController do
   end
 
   describe "#destroy" do
-    let!(:bookmark) { Fabricate(:bookmark, post: bookmark_post, user: bookmark_user) }
+    let!(:bookmark) { Fabricate(:bookmark, bookmarkable: bookmark_post, user: bookmark_user) }
 
     it "destroys the bookmark" do
       delete "/bookmarks/#{bookmark.id}.json"
@@ -141,33 +99,14 @@ describe BookmarksController do
       delete "/bookmarks/#{bookmark.id}.json"
       expect(Bookmark.find_by(id: bookmark.id)).to eq(nil)
       expect(response.parsed_body["topic_bookmarked"]).to eq(false)
-      bm2 = Fabricate(:bookmark, user: bookmark_user, post: Fabricate(:post, topic: bookmark_post.topic))
-      Fabricate(:bookmark, user: bookmark_user, post: Fabricate(:post, topic: bookmark_post.topic))
+      bm2 = Fabricate(:bookmark, user: bookmark_user, bookmarkable: Fabricate(:post, topic: bookmark_post.topic))
+      bm3 = Fabricate(:bookmark, user: bookmark_user, bookmarkable: bookmark_post.topic)
       delete "/bookmarks/#{bm2.id}.json"
       expect(Bookmark.find_by(id: bm2.id)).to eq(nil)
       expect(response.parsed_body["topic_bookmarked"]).to eq(true)
-    end
-
-    context "for polymorphic bookmarks" do
-      let!(:bookmark) { Fabricate(:bookmark, bookmarkable: bookmark_post, user: bookmark_user) }
-
-      before do
-        SiteSetting.use_polymorphic_bookmarks = true
-      end
-
-      it "returns an indication of whether there are still bookmarks in the topic" do
-        delete "/bookmarks/#{bookmark.id}.json"
-        expect(Bookmark.find_by(id: bookmark.id)).to eq(nil)
-        expect(response.parsed_body["topic_bookmarked"]).to eq(false)
-        bm2 = Fabricate(:bookmark, user: bookmark_user, bookmarkable: Fabricate(:post, topic: bookmark_post.topic))
-        bm3 = Fabricate(:bookmark, user: bookmark_user, bookmarkable: bookmark_post.topic)
-        delete "/bookmarks/#{bm2.id}.json"
-        expect(Bookmark.find_by(id: bm2.id)).to eq(nil)
-        expect(response.parsed_body["topic_bookmarked"]).to eq(true)
-        delete "/bookmarks/#{bm3.id}.json"
-        expect(Bookmark.find_by(id: bm3.id)).to eq(nil)
-        expect(response.parsed_body["topic_bookmarked"]).to eq(false)
-      end
+      delete "/bookmarks/#{bm3.id}.json"
+      expect(Bookmark.find_by(id: bm3.id)).to eq(nil)
+      expect(response.parsed_body["topic_bookmarked"]).to eq(false)
     end
 
     context "if the bookmark has already been destroyed" do

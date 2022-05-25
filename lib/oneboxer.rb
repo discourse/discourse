@@ -48,6 +48,14 @@ module Oneboxer
     @allowed_post_types ||= [Post.types[:regular], Post.types[:moderator_action]]
   end
 
+  def self.local_handlers
+    @local_handlers ||= {}
+  end
+
+  def self.register_local_handler(controller, &handler)
+    local_handlers[controller] = handler
+  end
+
   def self.preview(url, options = nil)
     options ||= {}
     invalidate(url) if options[:invalidate_oneboxes]
@@ -248,6 +256,10 @@ module Oneboxer
       when "topics"  then local_topic_html(url, route, opts)
       when "users"   then local_user_html(url, route)
       when "list"    then local_category_html(url, route)
+      else
+        if handler = local_handlers[route[:controller]]
+          handler.call(url, route)
+        end
       end
 
     html = html.presence || "<a href='#{URI(url).to_s}'>#{URI(url).to_s}</a>"
@@ -397,9 +409,16 @@ module Oneboxer
       available_strategies ||= Oneboxer.ordered_strategies(uri.hostname)
       strategy = available_strategies.shift
 
+      if SiteSetting.block_onebox_on_redirect
+        max_redirects = 0
+      end
       fd = FinalDestination.new(
         url,
-        get_final_destination_options(url, strategy).merge(stop_at_blocked_pages: true)
+        get_final_destination_options(url, strategy).merge(
+          stop_at_blocked_pages: true,
+          max_redirects: max_redirects,
+          initial_https_redirect_ignore_limit: SiteSetting.block_onebox_on_redirect
+        )
       )
       uri = fd.resolve
 

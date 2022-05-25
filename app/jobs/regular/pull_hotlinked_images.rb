@@ -10,16 +10,13 @@ module Jobs
     end
 
     def execute(args)
+      disable_if_low_on_disk_space
+
       @post_id = args[:post_id]
       raise Discourse::InvalidParameters.new(:post_id) if @post_id.blank?
 
       post = Post.find_by(id: @post_id)
-      return if post.blank?
-      return if post.topic.blank?
-      return if post.cook_method == Post.cook_methods[:raw_html]
-
-      raw = post.raw.dup
-      start_raw = raw.dup
+      return if post.nil? || post.topic.nil?
 
       hotlinked_map = post.post_hotlinked_media.map { |r| [r.url, r] }.to_h
 
@@ -55,29 +52,22 @@ module Jobs
           changed_hotlink_records = true
           hotlink_record.save!
         end
-
-        # have we successfully downloaded that file?
-        if upload = hotlink_record&.upload
-          raw = replace_in_raw(original_src: original_src, upload: upload, raw: raw)
-        end
       rescue => e
         raise e if Rails.env.test?
         log(:error, "Failed to pull hotlinked image (#{download_src}) post: #{@post_id}\n" + e.message + "\n" + e.backtrace.join("\n"))
       end
 
-      # If post changed while we were downloading images, never apply edits
-      post.reload
-      post_changed_elsewhere = (start_raw != post.raw)
-      raw_changed_here = (raw != post.raw)
-
-      if !post_changed_elsewhere && raw_changed_here
-        changes = { raw: raw, edit_reason: I18n.t("upload.edit_reason") }
-        post.revise(Discourse.system_user, changes, bypass_bump: true, skip_staff_log: true)
-      elsif changed_hotlink_records
+      if changed_hotlink_records
         post.trigger_post_process(
           bypass_bump: true,
           skip_pull_hotlinked_images: true # Avoid an infinite loop of job scheduling
         )
+      end
+
+      if hotlinked_map.size > 0
+        Jobs.cancel_scheduled_job(:update_hotlinked_raw, post_id: post.id)
+        update_raw_delay = SiteSetting.editing_grace_period + 1
+        Jobs.enqueue_in(update_raw_delay, :update_hotlinked_raw, post_id: post.id)
       end
     end
 
@@ -135,45 +125,6 @@ module Jobs
         log(:info, "Failed to persist downloaded hotlinked image for post: #{@post_id}: #{src} - #{upload.errors.full_messages.join("\n")}")
         raise UploadCreateError
       end
-    end
-
-    def replace_in_raw(original_src:, raw:, upload:)
-      raw = raw.dup
-      escaped_src = Regexp.escape(original_src)
-
-      replace_raw = ->(match, match_src, replacement, _index) {
-        if normalize_src(original_src) == normalize_src(match_src)
-          replacement =
-            if replacement.include?(InlineUploads::PLACEHOLDER)
-              replacement.sub(InlineUploads::PLACEHOLDER, upload.short_url)
-            elsif replacement.include?(InlineUploads::PATH_PLACEHOLDER)
-              replacement.sub(InlineUploads::PATH_PLACEHOLDER, upload.short_path)
-            end
-
-          raw = raw.gsub(
-            match,
-            replacement
-          )
-        end
-      }
-
-      # there are 6 ways to insert an image in a post
-      # HTML tag - <img src="http://...">
-      InlineUploads.match_img(raw, external_src: true, &replace_raw)
-
-      # BBCode tag - [img]http://...[/img]
-      InlineUploads.match_bbcode_img(raw, external_src: true, &replace_raw)
-
-      # Markdown linked image - [![alt](http://...)](http://...)
-      # Markdown inline - ![alt](http://...)
-      # Markdown inline - ![](http://... "image title")
-      # Markdown inline - ![alt](http://... "image title")
-      InlineUploads.match_md_inline_img(raw, external_src: true, &replace_raw)
-
-      # Direct link
-      raw.gsub!(/^#{escaped_src}(\s?)$/) { "![](#{upload.short_url})#{$1}" }
-
-      raw
     end
 
     def extract_images_from(html)
@@ -237,12 +188,31 @@ module Jobs
     protected
 
     def normalize_src(src)
-      uri = Addressable::URI.heuristic_parse(src)
-      uri.normalize!
-      uri.scheme = nil
-      uri.to_s
-    rescue URI::Error, Addressable::URI::InvalidURIError
-      src
+      PostHotlinkedMedia.normalize_src(src)
+    end
+
+    def disable_if_low_on_disk_space
+      return if Discourse.store.external?
+      return if !SiteSetting.download_remote_images_to_local
+      return if available_disk_space >= SiteSetting.download_remote_images_threshold
+
+      SiteSetting.download_remote_images_to_local = false
+
+      # log the site setting change
+      reason = I18n.t("disable_remote_images_download_reason")
+      staff_action_logger = StaffActionLogger.new(Discourse.system_user)
+      staff_action_logger.log_site_setting_change("download_remote_images_to_local", true, false, details: reason)
+
+      # also send a private message to the site contact user notify_about_low_disk_space
+      notify_about_low_disk_space
+    end
+
+    def notify_about_low_disk_space
+      SystemMessage.create_from_system_user(Discourse.site_contact_user, :download_remote_images_disabled)
+    end
+
+    def available_disk_space
+      100 - DiskSpace.percent_free("#{Rails.root}/public/uploads")
     end
   end
 

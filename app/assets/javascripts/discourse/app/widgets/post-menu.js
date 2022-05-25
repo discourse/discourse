@@ -6,6 +6,10 @@ import { h } from "virtual-dom";
 import showModal from "discourse/lib/show-modal";
 import { smallUserAtts } from "discourse/widgets/actions-summary";
 import I18n from "I18n";
+import {
+  NO_REMINDER_ICON,
+  WITH_REMINDER_ICON,
+} from "discourse/models/bookmark";
 
 const LIKE_ACTION = 2;
 const VIBRATE_DURATION = 5;
@@ -355,13 +359,11 @@ registerButton(
 
     return {
       id: attrs.bookmarked ? "unbookmark" : "bookmark",
-      action: siteSettings.use_polymorphic_bookmarks
-        ? "toggleBookmarkPolymorphic"
-        : "toggleBookmark",
+      action: "toggleBookmark",
       title,
       titleOptions,
       className: classNames.join(" "),
-      icon: attrs.bookmarkReminderAt ? "discourse-bookmark-clock" : "bookmark",
+      icon: attrs.bookmarkReminderAt ? WITH_REMINDER_ICON : NO_REMINDER_ICON,
     };
   }
 );

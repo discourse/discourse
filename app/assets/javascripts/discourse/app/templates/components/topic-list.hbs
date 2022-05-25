@@ -46,6 +46,11 @@
                       focusLastVisitedTopic=focusLastVisitedTopic
                       index=index}}
     {{raw "list/visited-line" lastVisitedTopic=lastVisitedTopic topic=topic}}
+    {{plugin-outlet
+      name="after-topic-list-item"
+      args=(hash topic=topic index=index)
+      connectorTagName="tr"
+    }}
   {{/each}}
 </tbody>
 

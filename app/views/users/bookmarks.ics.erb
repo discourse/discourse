@@ -1,4 +1,3 @@
-<% if SiteSetting.use_polymorphic_bookmarks %>
 BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//Discourse//<%= Discourse.current_hostname %>//<%= Discourse.full_version %>//EN
@@ -14,21 +13,3 @@ URL:<%= bookmark.bookmarkable_url %>
 END:VEVENT
 <% end %>
 END:VCALENDAR
-
-<% else %>
-BEGIN:VCALENDAR
-VERSION:2.0
-PRODID:-//Discourse//<%= Discourse.current_hostname %>//<%= Discourse.full_version %>//EN
-<% @bookmark_reminders.each do |bookmark| %>
-BEGIN:VEVENT
-UID:bookmark_reminder_#<%= bookmark.id %>@<%= Discourse.current_hostname %>
-DTSTAMP:<%= bookmark.updated_at.strftime(I18n.t("datetime_formats.formats.calendar_ics")) %>
-DTSTART:<%= bookmark.reminder_at_ics %>
-DTEND:<%= bookmark.reminder_at_ics(offset: 1.hour) %>
-SUMMARY:<%= bookmark.name.presence || bookmark.topic.title %>
-DESCRIPTION:<%= Discourse.base_url %>/t/-/<%= bookmark.topic_id %>
-URL:<%= Discourse.base_url %>/t/-/<%= bookmark.topic_id %>
-END:VEVENT
-<% end %>
-END:VCALENDAR
-<% end %>

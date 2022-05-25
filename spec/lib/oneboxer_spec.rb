@@ -243,6 +243,97 @@ describe Oneboxer do
       end
     end
 
+    context "when block_onebox_on_redirect setting is enabled" do
+      before do
+        Discourse.cache.clear
+        SiteSetting.block_onebox_on_redirect = true
+      end
+
+      after do
+        FinalDestination.clear_https_cache!("redirects2.com")
+        FinalDestination.clear_https_cache!("redirects3.com")
+        FinalDestination.clear_https_cache!("redirects4.com")
+      end
+
+      it "doesn't return onebox if the URL redirects" do
+        stub_request(:head, "https://redirects2.com/full-onebox")
+          .to_return(
+            status: 301,
+            body: "",
+            headers: { "location" => "https://redirects2.com/real-full-onebox" }
+          )
+        stub_request(:get, "https://redirects2.com/full-onebox")
+          .to_return(
+            status: 301,
+            body: "",
+            headers: { "location" => "https://redirects2.com/real-full-onebox" }
+          )
+        result = Oneboxer.external_onebox("https://redirects2.com/full-onebox")
+        expect(result[:onebox]).to be_blank
+      end
+
+      it "allows an initial http -> https redirect if the redirect URL is identical to the original" do
+        stub_request(:get, "http://redirects3.com/full-onebox")
+          .to_return(
+            status: 301,
+            body: "",
+            headers: { "location" => "https://redirects3.com/full-onebox" }
+          )
+        stub_request(:head, "http://redirects3.com/full-onebox")
+          .to_return(
+            status: 301,
+            body: "",
+            headers: { "location" => "https://redirects3.com/full-onebox" }
+          )
+
+        stub_request(:get, "https://redirects3.com/full-onebox")
+          .to_return(
+            status: 200,
+            body: html
+          )
+        stub_request(:head, "https://redirects3.com/full-onebox")
+          .to_return(
+            status: 200,
+            body: "",
+          )
+        result = Oneboxer.external_onebox("http://redirects3.com/full-onebox")
+        onebox = result[:onebox]
+        expect(onebox).to include("https://redirects3.com/full-onebox")
+        expect(onebox).to include("Cats")
+        expect(onebox).to include("Meow")
+      end
+
+      it "doesn't allow an initial http -> https redirect if the redirect URL is different to the original" do
+        stub_request(:get, "http://redirects4.com/full-onebox")
+          .to_return(
+            status: 301,
+            body: "",
+            headers: { "location" => "https://redirects4.com/full-onebox/2" }
+          )
+        stub_request(:head, "http://redirects4.com/full-onebox")
+          .to_return(
+            status: 301,
+            body: "",
+            headers: { "location" => "https://redirects4.com/full-onebox/2" }
+          )
+
+        stub_request(:get, "https://redirects4.com/full-onebox")
+          .to_return(
+            status: 301,
+            body: "",
+            headers: { "location" => "https://redirects4.com/full-onebox/2" }
+          )
+        stub_request(:head, "https://redirects4.com/full-onebox")
+          .to_return(
+            status: 301,
+            body: "",
+            headers: { "location" => "https://redirects4.com/full-onebox/2" }
+          )
+        result = Oneboxer.external_onebox("http://redirects4.com/full-onebox")
+        expect(result[:onebox]).to be_blank
+      end
+    end
+
     it "censors external oneboxes" do
       Fabricate(:watched_word, action: WatchedWord.actions[:censor], word: "bad word")
 
@@ -550,4 +641,14 @@ describe Oneboxer do
     end
   end
 
+  context "register_local_handler" do
+    it "calls registered local handler" do
+      Oneboxer.register_local_handler('wizard') do |url, route|
+        'Custom Onebox for Wizard'
+      end
+
+      url = "#{Discourse.base_url}/wizard"
+      expect(Oneboxer.preview(url)).to eq('Custom Onebox for Wizard')
+    end
+  end
 end
