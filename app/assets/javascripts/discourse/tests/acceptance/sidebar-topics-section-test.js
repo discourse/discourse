@@ -410,7 +410,40 @@ acceptance("Sidebar - Topics Section", function (needs) {
   );
 
   conditionalTest(
-    "adding section link via plugin API",
+    "adding section link via plugin API with Object",
+    !isLegacyEmber(),
+    async function (assert) {
+      withPluginApi("1.2.0", (api) => {
+        api.addTopicsSectionLink({
+          name: "unread",
+          route: "discovery.unread",
+          text: "unread topics",
+          title: "List of unread topics",
+        });
+      });
+
+      await visit("/");
+
+      assert.strictEqual(
+        query(".sidebar-section-link-unread").textContent.trim(),
+        "unread topics",
+        "displays the right text for the link"
+      );
+
+      assert.strictEqual(
+        query(".sidebar-section-link-unread").title,
+        "List of unread topics",
+        "displays the right title for the link"
+      );
+
+      await click(".sidebar-section-link-unread");
+
+      assert.strictEqual(currentURL(), "/unread", "links to the right URL");
+    }
+  );
+
+  conditionalTest(
+    "adding section link via plugin API with callback function",
     !isLegacyEmber(),
     async function (assert) {
       withPluginApi("1.2.0", (api) => {

@@ -1634,11 +1634,15 @@ class PluginApi {
    * api.addTopicsSectionLink((baseSectionLink) => {
    *   return class CustomSectionLink extends baseSectionLink {
    *     get name() {
-   *       returns "bookmarked"
+   *       returns "bookmarked";
    *     }
    *
    *     get route() {
-   *       returns "userActivity.bookmarks"
+   *       returns "userActivity.bookmarks";
+   *     }
+   *
+   *     get model() {
+   *       return this.currentUser;
    *     }
    *
    *     get title() {
@@ -1652,14 +1656,29 @@ class PluginApi {
    * })
    * ```
    *
-   * @callback addTopicsSectionLinkCallback
-   * @param {BaseSectionLink} baseSectionLink Factory class to inherit from.
-   * @returns {BaseSectionLink} A class that extends BaseSectionLink.
+   * or
    *
-   * @param {addTopicsSectionLinkCallback} callback
+   * ```
+   * api.addTopicsSectionLink({
+   *   name: "unread",
+   *   route: "discovery.unread",
+   *   title: I18n.t("some.unread.title"),
+   *   text: I18n.t("some.unread.text")
+   * })
+   * ```
+   *
+   * @callback addTopicsSectionLinkCallback
+   * @param {BaseSectionLink} baseSectionLink - Factory class to inherit from.
+   * @returns {BaseSectionLink} - A class that extends BaseSectionLink.
+   *
+   * @param {(addTopicsSectionLinkCallback|Object)} arg - A callback function or an Object.
+   * @param {string} arg.name - The name of the link. Needs to be dasherized and lowercase.
+   * @param {string} arg.route - The Ember route of the link.
+   * @param {string} arg.title - The title attribute for the link.
+   * @param {string} arg.text - The text to display for the link.
    */
-  async addTopicsSectionLink(callback) {
-    addSectionLink(callback);
+  addTopicsSectionLink(arg) {
+    addSectionLink(arg);
   }
 }
 
