@@ -3,10 +3,12 @@ is [DigitalOcean][do], but these steps will work on any **Docker-compatible** cl
 walkthrough will go through these in detail:
 
 **[Before you start](#before-you-start)**
+
 1. [Preparing your domain name](#1-preparing-your-domain-name)
 2. [Setting up email](#2-setting-up-email)
 
-**[Installing Discourse](#installing-discourse)**
+**[Installation](#installation)**
+
 3. [Create new cloud server](#3-create-new-cloud-server)
 4. [Access new cloud server](#4-access-your-cloud-server)
 5. [Install Discourse](#5-install-discourse)
@@ -44,7 +46,7 @@ walkthrough will go through these in detail:
 
 - If you're having trouble getting emails to work, follow our [Email Troubleshooting Guide](https://meta.discourse.org/t/troubleshooting-email-on-a-new-discourse-install/16326)
 
-## Installing Discourse
+## Installation
 
 ### 3. Create New Cloud Server
 
