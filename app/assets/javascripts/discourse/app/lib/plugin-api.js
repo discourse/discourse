@@ -94,6 +94,7 @@ import {
 import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
 import { downloadCalendar } from "discourse/lib/download-calendar";
 import { consolePrefix } from "discourse/lib/source-identifier";
+import { addSectionLink } from "discourse/lib/sidebar/custom-topics-section-links";
 
 // If you add any methods to the API ensure you bump up the version number
 // based on Semantic Versioning 2.0.0. Please update the changelog at
@@ -1621,6 +1622,44 @@ class PluginApi {
    */
   customizeComposerText(callbacks) {
     registerCustomizationCallback(callbacks);
+  }
+
+  /**
+   * EXPERIMENTAL. Do not use.
+   * Support for adding a link under Sidebar topics section by returning a class which extends from the BaseSectionLink
+   * class interface. See `lib/sidebar/topics-section/base-section-link.js` for documentation on the BaseSectionLink class
+   * interface.
+   *
+   * ```
+   * api.addTopicsSectionLink((baseSectionLink) => {
+   *   return class CustomSectionLink extends baseSectionLink {
+   *     get name() {
+   *       returns "bookmarked"
+   *     }
+   *
+   *     get route() {
+   *       returns "userActivity.bookmarks"
+   *     }
+   *
+   *     get title() {
+   *       return I18n.t("sidebar.sections.topics.links.bookmarked.title");
+   *     }
+   *
+   *     get text() {
+   *       return I18n.t("sidebar.sections.topics.links.bookmarked.content");
+   *     }
+   *   }
+   * })
+   * ```
+   *
+   * @callback addTopicsSectionLinkCallback
+   * @param {BaseSectionLink} baseSectionLink Factory class to inherit from.
+   * @returns {BaseSectionLink} A class that extends BaseSectionLink.
+   *
+   * @param {addTopicsSectionLinkCallback} callback
+   */
+  async addTopicsSectionLink(callback) {
+    addSectionLink(callback);
   }
 }
 

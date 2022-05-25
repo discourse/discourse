@@ -8,26 +8,15 @@
   @headerAction={{this.composeTopic}}
   @headerActionTitle={{i18n "sidebar.sections.topics.header_action_title"}}>
 
-  <Sidebar::SectionLink
-    @linkName="everything"
-    @route={{this.everythingSectionLinkRoute}}
-    @query={{hash f=undefined}}
-    @title={{i18n "sidebar.sections.topics.links.everything.title"}}
-    @content={{i18n "sidebar.sections.topics.links.everything.content"}}
-    @current-when={{"discovery.latest discovery.new discovery.unread discovery.top"}}
-    @badgeText={{this.everythingSectionLinkBadgeText}} />
-
-  <Sidebar::SectionLink
-    @linkName="tracked"
-    @route="discovery.latest"
-    @query={{hash f="tracked"}}
-    @title={{i18n "sidebar.sections.topics.links.tracked.title"}}
-    @content={{i18n "sidebar.sections.topics.links.tracked.content"}} />
-
-  <Sidebar::SectionLink
-    @linkName="bookmarked"
-    @route="userActivity.bookmarks"
-    @model={{this.currentUser}}
-    @title={{i18n "sidebar.sections.topics.links.bookmarked.title"}}
-    @content={{i18n "sidebar.sections.topics.links.bookmarked.content"}} />
+  {{#each this.sectionLinks as |sectionLink|}}
+    <Sidebar::SectionLink
+      @linkName={{sectionLink.name}}
+      @route={{sectionLink.route}}
+      @query={{sectionLink.query}}
+      @title={{sectionLink.title}}
+      @content={{sectionLink.text}}
+      @currentWhen={{sectionLink.currentWhen}}
+      @badgeText={{sectionLink.badgeText}}
+      @model={{sectionLink.model}} />
+  {{/each}}
 </Sidebar::Section>
