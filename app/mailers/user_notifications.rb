@@ -161,12 +161,13 @@ class UserNotifications < ActionMailer::Base
         reason: user_history.details
       )
     else
+      silenced_till = user.silenced_till.in_time_zone(user.user_option.timezone)
       build_email(
         user.email,
         template: "user_notifications.account_silenced",
         locale: user_locale(user),
         reason: user_history.details,
-        silenced_till: I18n.l(user.silenced_till, format: :long)
+        silenced_till: I18n.l(silenced_till, format: :long)
       )
     end
   end
