@@ -118,7 +118,7 @@ class UploadsController < ApplicationController
       if Discourse.store.internal?
         send_file_local_upload(upload)
       else
-        redirect_to Discourse.store.url_for(upload, force_download: force_download?)
+        redirect_to Discourse.store.url_for(upload, force_download: force_download?), allow_other_host: true
       end
     else
       render_404
@@ -149,7 +149,7 @@ class UploadsController < ApplicationController
     # private, so we don't want to go to the CDN url just yet otherwise we
     # will get a 403. if the upload is not secure we assume the ACL is public
     signed_secure_url = Discourse.store.signed_url_for_path(path_with_ext)
-    redirect_to upload.secure? ? signed_secure_url : Discourse.store.cdn_url(upload.url)
+    redirect_to upload.secure? ? signed_secure_url : Discourse.store.cdn_url(upload.url), allow_other_host: true
   end
 
   def handle_secure_upload_request(upload, path_with_ext = nil)
@@ -166,14 +166,14 @@ class UploadsController < ApplicationController
     # url_for figures out the full URL, handling multisite DBs,
     # and will return a presigned URL for the upload
     if path_with_ext.blank?
-      return redirect_to Discourse.store.url_for(upload, force_download: force_download?)
+      return redirect_to Discourse.store.url_for(upload, force_download: force_download?), allow_other_host: true
     end
 
     redirect_to Discourse.store.signed_url_for_path(
       path_with_ext,
       expires_in: S3Helper::DOWNLOAD_URL_EXPIRES_AFTER_SECONDS,
       force_download: force_download?
-    )
+    ), allow_other_host: true
   end
 
   def metadata

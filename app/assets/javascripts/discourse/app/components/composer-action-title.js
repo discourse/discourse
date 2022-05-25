@@ -11,6 +11,7 @@ import I18n from "I18n";
 import { alias } from "@ember/object/computed";
 import discourseComputed from "discourse-common/utils/decorators";
 import { iconHTML } from "discourse-common/lib/icon-library";
+import { htmlSafe } from "@ember/template";
 
 const TITLES = {
   [PRIVATE_MESSAGE]: "topic.private_message",
@@ -71,17 +72,19 @@ export default Component.extend({
       `;
     }
 
-    return editTitle.htmlSafe();
+    return htmlSafe(editTitle);
   },
 
   _formatReplyToTopic(link) {
-    return `<a class="topic-link" href="${link.href}" data-topic-id="${this.get(
-      "model.topic.id"
-    )}">${link.anchor}</a>`.htmlSafe();
+    return htmlSafe(
+      `<a class="topic-link" href="${link.href}" data-topic-id="${this.get(
+        "model.topic.id"
+      )}">${link.anchor}</a>`
+    );
   },
 
   _formatReplyToUserPost(avatar, link) {
     const htmlLink = `<a class="user-link" href="${link.href}">${link.anchor}</a>`;
-    return `${avatar}${htmlLink}`.htmlSafe();
+    return htmlSafe(`${avatar}${htmlLink}`);
   },
 });

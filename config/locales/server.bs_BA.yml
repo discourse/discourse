@@ -938,6 +938,7 @@ bs_BA:
     post_approved:
       title: "Vaš post je odobren"
   page_not_found:
+    page_title: "Stranica nije pronađena"
     popular_topics: "Popularno"
     recent_topics: "Nove"
     see_more: "Više"

@@ -3,10 +3,6 @@
 require "digest/sha1"
 
 class Upload < ActiveRecord::Base
-  self.ignored_columns = [
-    "verified" # TODO(2020-12-10): remove
-  ]
-
   include ActionView::Helpers::NumberHelper
   include HasUrl
 
@@ -26,6 +22,8 @@ class Upload < ActiveRecord::Base
 
   has_many :post_uploads, dependent: :destroy
   has_many :posts, through: :post_uploads
+
+  has_many :post_hotlinked_media, dependent: :destroy, class_name: "PostHotlinkedMedia"
 
   has_many :optimized_images, dependent: :destroy
   has_many :user_uploads, dependent: :destroy

@@ -45,6 +45,7 @@ Clone the [Official Discourse Docker Image][dd] into `/var/discourse`.
     sudo -s
     git clone https://github.com/discourse/discourse_docker.git /var/discourse
     cd /var/discourse
+    chmod 700 containers
 
 You will need to be root through the rest of the setup and bootstrap process.
 

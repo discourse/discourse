@@ -209,6 +209,7 @@ es:
       cors_origins_should_not_have_trailing_slash: "No deberías añadir una barra al final (/) a los CORS origins."
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "Los agentes de usuario deben tener al menos 3 caracteres para evitar limitar la velocidad a usuarios humanos por error."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "No puedes añadir ninguno de los siguientes valores a este ajuste: %{values}."
+      strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "No es posible desactivar «strip image metadata» si el ajuste «composer media optimization image enabled» está activado. Desactiva «composer media optimization image enabled» antes de desactivar «strip image metadata»."
     conflicting_google_user_id: 'El ID de la cuenta Google para esta cuenta ha cambiado; el personal debe intervenir por razones de seguridad. Ponte en contacto con el personal y envía esta referencia <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
       invalid_address: "Lo sentimos, no hemos podido generar una vista previa para esta página web porque el servidor '%{hostname}' no se ha encontrado. En lugar de una vista previa, solo aparecerá un enlace en tu publicación. :cry:"
@@ -231,7 +232,7 @@ es:
       <p>Si no, <a href="%{base_url}/password-reset">restablece tu contraseña</a>.</p>
     not_found_template_link: |
       <p>Esta invitación a <a href="%{base_url}">%{site_name}</a> ya no se puede usar. Por favor, pídele a la persona que te invitó que te vuelva a enviar una nueva invitación.</p>
-    user_exists: "No hay necesidad de invitar a <b>%{email}</b>, <a href='%{base_path}/u/%{username}/summary'>¡ya tienen una cuenta!</a>"
+    user_exists: "No hace falta que invites a <b>%{email}</b>, ¡ya tienen una cuenta!"
     invite_exists: "Ya has invitado a <b>%{email}</b>."
     invalid_email: "%{email} no es un correo electrónico válido."
     rate_limit:
@@ -402,6 +403,7 @@ es:
       time_must_be_provided: "Hay que poner un tiempo para todos recordatorios"
       for_topic_must_use_first_post: "Solo puedes usar la primera publicación para añadir el tema a marcadores."
       bookmarkable_id_type_required: "El nombre y el tipo del elemento a añadir a marcadores es obligatorio."
+      invalid_bookmarkable: "No puedes añadir a favoritos: %{type}"
     reminders:
       at_desktop: "La próxima vez que esté en mi ordenador"
       later_today: "Más tarde durante el día de hoy"
@@ -1530,7 +1532,7 @@ es:
     ga_universal_auto_link_domains: "Activar seguimiento multi-dominio de Google Universal Analytics. Los enlaces salientes a estos dominios tendrán la id de cliente añadida a ellos. Ver <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Google's Cross-Domain Tracking guide.</a>"
     gtm_container_id: "ID de contenedor de Google Tag Manager. Ej.: GTM-ABCDEF. <br/>Nota: puede que los scripts de terceros cargados por GTM tengan que ser añadidos a la lista de admitidos en «content security policy script src»."
     enable_escaped_fragments: "Ir a la API Ajax-Crawling de Google si no se detecta ningún webcrawler. Visita <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
-    moderators_manage_categories_and_groups: "Permitir a los moderadores administrar categorías y grupos"
+    moderators_manage_categories_and_groups: "Permitir que los moderadores creen y gestionen grupos y categorías"
     moderators_change_post_ownership: "Permitir que los moderadores cambien el autor de las publicaciones."
     cors_origins: "Orígenes permitidos para las solicitudes de origen cruzado (CORS). Cada origen debe incluir http:// or https://. La variable env DISCOURSE_ENABLE_CORS debe establecerse como verdadero para activar CORS."
     use_admin_ip_allowlist: "Los administradores solo pueden iniciar sesión si están en una dirección IP definida en la lista de direcciones IP revisadas (Administrados > Registros > Direcciones IP)."
@@ -1559,6 +1561,7 @@ es:
     send_tl2_promotion_message: "Enviar un mensaje a los nuevos usuarios de nivel de confianza 2 cuando suban de nivel."
     suppress_reply_directly_below: "No mostrar el contador de respuestas desplegable en una publicación si solo hay una única respuesta justo debajo de esta publicación."
     suppress_reply_directly_above: "No mostrar el desplegable en-respuesta-a en una publicación cuando solo hay una sola respuesta justo encima de esta publicación."
+    remove_full_quote: "Recortar cita automáticamente si: (a) aparece al principio de la publicación, (b) es una cita de una publicación entera y (c) es de la publicación anterior. Para más detalles, ver <a href='https://meta.discourse.org/t/removal-of-full-quotes-from-direct-replies/106857' target='_blank'>Removal of full quotes from direct replies</a>"
     suppress_reply_when_quoting: "No mostrar el desplegable en-respuesta-a en una publicación cuando la publicación cite la respuesta."
     max_reply_history: "Número máximo de respuestas que se muestran al expandir en-respuesta-a"
     topics_per_period_in_top_summary: "Número de temas destacados que se muestran en el resumen de temas destacados."
@@ -2078,7 +2081,7 @@ es:
     tags_sort_alphabetically: "Mostrar etiquetas en orden alfabético. Por defecto se mostrarán por popularidad."
     tags_listed_by_group: "Listar etiquetas por grupo de etiquetas en la <a href='%{base_path}/tags' target='_blank'>página de etiquetas</a>."
     tag_style: "Estilo visual de las etiquetas."
-    allow_staff_to_tag_pms: "Permitir a los miembros del personal etiquetar cualquier mensaje personal"
+    pm_tags_allowed_for_groups: "Permitir que los miembros de los grupos incluidos etiqueten cualquier mensaje personal"
     min_trust_level_to_tag_topics: "Nivel mínimo de confianza requerido para etiquetar temas"
     suppress_overlapping_tags_in_list: "Si alguna etiqueta coincide con palabras en el título de los temas, ocultarla."
     remove_muted_tags_from_latest: "No muestre temas etiquetados unicamente con etiquetas silenciadas en la lista de temas más reciente."
@@ -2106,6 +2109,8 @@ es:
     create_revision_on_bulk_topic_moves: "Crear edición para las primeras publicaciones cuando los temas se mueven a una nueva categoría en masa."
     allow_changing_staged_user_tracking: "Permitir que los usuarios con permisos de administración cambien las preferencias de notificación de categorías y etiquetas de los usuarios temporales."
     use_email_for_username_and_name_suggestions: "Usar la primera parte de las direcciones de correo electrónico para las sugerencias de nombre de usuario y nombre. Ten en cuenta que esto facilita que el público adivine las direcciones de correo electrónico completas de los usuarios (porque una gran proporción de personas usan servicios como `gmail.com`)."
+    use_name_for_username_suggestions: "Usar el nombre completo para sugerir nombres de usuario"
+    suggest_weekends_in_date_pickers: "Incluir fines de semana (sábados y domingos) en las sugerencias de los selectores de fecha (desactiva esto si solo usas Discourse de lunes a viernes)"
     errors:
       invalid_css_color: "Color no válido. Introduce el nombre de un color o su valor hexadecimal."
       invalid_email: "Dirección de correo electrónico no válida."
@@ -2134,6 +2139,7 @@ es:
       email_polling_disabled: "Debes activar el polling sea manual o POP3 antes de activar la respuesta por correo electrónico."
       user_locale_not_enabled: "Debes activar primero «permitir usuario local» antes de activar esta opción."
       invalid_regex: "La expresión regular no es válida o no está permitida."
+      invalid_regex_with_message: "La expresión regular «%{regex}» contiene un error: %{message}"
       email_editable_enabled: "Debes desactivar primero «correo electrónico editable» antes de activar esta opción."
       staged_users_disabled: "Primero debes activar «usuarios provisionales» para poder activar esta configuración."
       reply_by_email_disabled: "Primero debes activar «responder por correo electrónico» antes de activar esta configuración."
@@ -2158,6 +2164,7 @@ es:
       google_oauth2_hd_groups: "Rellena el ajuste «google oauth2 hd» antes de activar esta opción."
       search_tokenize_chinese_enabled: "Debes desactivar el ajuste «search_tokenize_chinese» antes de activar este."
       search_tokenize_japanese_enabled: "Debes desactivar el ajuste «search_tokenize_japanese» antes de activar este."
+      discourse_connect_cannot_be_enabled_if_second_factor_enforced: "No puedes activar DiscourseConnect si la autenticación de dos factores (2FA) es obligatoria."
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.ejemplo.com"
@@ -2726,11 +2733,13 @@ es:
     tl2_promotion_message:
       subject_template: "¡Enhorabuena por llegar a un nivel de confianza más!"
       text_body_template: |
-        ¡Te hemos pasado al siguiente [nivel de confianza](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)!
+        ¡Le hemos promovido a otro [nivel de confianza](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)!
 
-        Ahora que ya tienes experiencia con nosotros, puede que te interese [esta lista con consejos útiles](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
+        Alcanzar el nivel de confianza 2 indica que usted ha leído y participado activamente, como para ser considerado miembro de esta comunidad
 
-        Te animamos a que sigas participando, nos gusta que estés por aquí.
+        Al ser un usuario con experiencia, puede que le interese [este listado de consejos y trucos útiles](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
+
+        Le invitamos a continuar participando: es un placer tenerle cerca.
     backup_succeeded:
       title: "Copia de seguridad realizada con éxito"
       subject_template: "La copia de seguridad se completó con éxito"
@@ -3154,7 +3163,7 @@ es:
   subject_re: "Re:"
   subject_pm: "[MP]"
   email_from: "%{user_name} vía %{site_name}"
-  email_from_without_site: "%{user_name}"
+  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "Respuestas anteriores"
     reached_limit:
@@ -3173,6 +3182,9 @@ es:
     reply_above_line: "## Escribe tu respuesta sobre esta línea. ##"
     posted_by: "Publicado por %{username} el %{post_date}"
     pm_participants: "Participantes: %{participants}"
+    more_pm_participants:
+      one: "%{participants} y %{count} más"
+      other: "%{participants} y %{count} más"
     invited_group_to_private_message_body: |
       %{username} invitó a @%{group_name} a un mensaje
 
@@ -3630,6 +3642,7 @@ es:
     title: "¡Ups! Esa página es privada."
   site_setting_missing: "Debes rellenar el ajuste «%{name}»."
   page_not_found:
+    page_title: "Página no encontrada"
     title: "¡Ups! Esa página no existe o es privada."
     popular_topics: "Popular"
     recent_topics: "Recientes"
@@ -4511,9 +4524,11 @@ es:
               categories_and_top_topics:
                 label: "Categorías y temas destacados"
               categories_boxes:
-                label: "Cuadros de categorías"
+                label: "Cajas de categorías"
               categories_boxes_with_topics:
-                label: "Cuadros de categorías con temas"
+                label: "Cajas de categorías con temas"
+              subcategories_with_featured_topics:
+                label: "Subcategorías con temas destacados"
       logos:
         title: "Logos"
         fields:

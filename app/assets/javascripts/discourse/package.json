@@ -23,6 +23,7 @@
     "@ember/test-helpers": "^2.2.0",
     "@glimmer/component": "^1.0.4",
     "@glimmer/tracking": "^1.0.4",
+    "tippy.js": "^6.3.7",
     "@popperjs/core": "2.10.2",
     "@uppy/aws-s3": "^2.0.8",
     "@uppy/aws-s3-multipart": "^2.2.1",

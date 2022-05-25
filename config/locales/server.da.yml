@@ -220,7 +220,6 @@ da:
       <p>Hvis du husker din adgangskode, kan du <a href="%{base_url}/login">Log på</a>.</p>
 
       <p>Ellers bedes du <a href="%{base_url}/password-reset">Nulstille adgangskode</a>.</p>
-    user_exists: "Der er ingen grund til at invitere <b>%{email}</b>, personen <a href='%{base_path}/u/%{username}/summary'>har allerede en profil!</a>"
     invite_exists: "Du har allerede inviteret <b>%{email}</b>."
     invalid_email: "%{email} er ikke en gyldig e-mailadresse."
     rate_limit:
@@ -1412,7 +1411,6 @@ da:
     maximum_session_age: "Bruger vil forblive logget in for n hours siden sidste besøg"
     ga_version: "Version af Google Universal Analytics der skal benyttes: v3 (analytics.js), v4 (gtag)"
     ga_universal_tracking_code: "Google Universal Analytics tracking code ID, fx: UA-12345678-9; se <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
-    moderators_manage_categories_and_groups: "Tillad moderatorer at administrere kategorier og grupper"
     moderators_change_post_ownership: "Tillad moderatorer at ændre ejerskab af indlæg"
     use_admin_ip_allowlist: "Administratorer kan kun logge ind, hvis de kommer fra en IP-adresse, der er defineret i listen Screenede IP'er (Admin> Logs> Screenede Ip'er)."
     blocked_ip_blocks: "En liste over private IP-blokke, der aldrig bør gennemsøges af Discourse"
@@ -2148,12 +2146,6 @@ da:
         [prefs]: %{user_preferences_url}
     tl2_promotion_message:
       subject_template: "Tillykke med din tillidsniveau forfremmelse!"
-      text_body_template: |
-        Vi har forfremmet dig et andet [tillidsniveau](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)!
-
-        Som erfaren bruger kan det være at du vil sætte pris på [denne liste over praktiske tips og tricks](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
-
-        Vi inviterer dig til fortsat at blive involveret – vi nyder at have dig omkring os.
     backup_succeeded:
       title: "Sikkerhedskopiering Gennemført"
       subject_template: "Sikkerhedskopiering er gennemført"
@@ -2170,6 +2162,9 @@ da:
       title: "Tilføjet til gruppe som ejer"
     user_added_to_group_as_member:
       title: "Tilføjet til gruppen som medlem"
+      subject_template: "Du er blevet tilføjet som medlem af gruppen %{group_name}"
+      text_body_template: |
+        Du er blevet tilføjet som medlem af gruppen [%{group_name}](%{base_url}%{group_path}).
     csv_export_succeeded:
       title: "CSV Eksport Lykkedes"
       subject_template: "[%{export_title}] Dataeksport fuldført"
@@ -2473,7 +2468,6 @@ da:
     [Afmeld](%{unsubscribe_url}).
   subject_re: "Sv: "
   subject_pm: "[PM] "
-  email_from_without_site: "%{user_name}"
   user_notifications:
     previous_discussion: "Tidligere Svar"
     in_reply_to: "Som svar på"
@@ -2913,6 +2907,7 @@ da:
     post_approved:
       title: "Dit indlæg blev godkendt"
   page_not_found:
+    page_title: "Side ikke fundet"
     title: "Ups! Den side eksisterer ikke eller også er den privat."
     popular_topics: "Populære"
     recent_topics: "Nye"

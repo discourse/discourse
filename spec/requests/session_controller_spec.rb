@@ -6,6 +6,9 @@ describe SessionController do
   let(:user) { Fabricate(:user) }
   let(:email_token) { Fabricate(:email_token, user: user) }
 
+  fab!(:admin) { Fabricate(:admin) }
+  let(:admin_email_token) { Fabricate(:email_token, user: admin) }
+
   shared_examples 'failed to continue local login' do
     it 'should return the right response' do
       expect(response).not_to be_successful
@@ -549,6 +552,41 @@ describe SessionController do
       sso
     end
 
+    context 'in staff writes only mode' do
+      use_redis_snapshotting
+
+      before do
+        Discourse.enable_readonly_mode(Discourse::STAFF_WRITES_ONLY_MODE_KEY)
+      end
+
+      it 'allows staff to login' do
+        sso = get_sso('/a/')
+        sso.external_id = '666'
+        sso.email = 'bob@bob.com'
+        sso.name = 'Bob Bobson'
+        sso.username = 'bob'
+        sso.admin = true
+
+        get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
+
+        logged_on_user = Discourse.current_user_provider.new(request.env).current_user
+        expect(logged_on_user).not_to eq(nil)
+      end
+
+      it 'doesn\'t allow non-staff to login' do
+        sso = get_sso('/a/')
+        sso.external_id = '666'
+        sso.email = 'bob@bob.com'
+        sso.name = 'Bob Bobson'
+        sso.username = 'bob'
+
+        get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
+
+        logged_on_user = Discourse.current_user_provider.new(request.env).current_user
+        expect(logged_on_user).to eq(nil)
+      end
+    end
+
     it 'does not create superfluous auth tokens when already logged in' do
       user = Fabricate(:user)
       sign_in(user)
@@ -591,11 +629,13 @@ describe SessionController do
       sso.external_id = '   '
       sso.username = 'sam'
 
-      messages = track_log_messages(level: Logger::WARN) do
+      logger = track_log_messages do
         get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
       end
 
-      expect(messages.length).to eq(0)
+      expect(logger.warnings.length).to eq(0)
+      expect(logger.errors.length).to eq(0)
+      expect(logger.fatals.length).to eq(0)
       expect(response.status).to eq(500)
       expect(response.body).to include(I18n.t('discourse_connect.blank_id_error'))
     end
@@ -607,11 +647,13 @@ describe SessionController do
       sso.external_id = '123'
       sso.username = 'sam'
 
-      messages = track_log_messages(level: Logger::WARN) do
+      logger = track_log_messages do
         get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
       end
 
-      expect(messages.length).to eq(0)
+      expect(logger.warnings.length).to eq(0)
+      expect(logger.errors.length).to eq(0)
+      expect(logger.fatals.length).to eq(0)
       expect(response.status).to eq(500)
       expect(response.body).to include(I18n.t("discourse_connect.email_error", email: ERB::Util.html_escape("test@test.com")))
     end
@@ -1490,6 +1532,55 @@ describe SessionController do
   end
 
   describe '#create' do
+    context 'read only mode' do
+      use_redis_snapshotting
+
+      before do
+        Discourse.enable_readonly_mode
+        EmailToken.confirm(email_token.token)
+        EmailToken.confirm(admin_email_token.token)
+      end
+
+      it 'prevents login by regular users' do
+        post "/session.json", params: {
+          login: user.username, password: 'myawesomepassword'
+        }
+        expect(response.status).not_to eq(200)
+      end
+
+      it 'prevents login by admins' do
+        post "/session.json", params: {
+          login: user.username, password: 'myawesomepassword'
+        }
+        expect(response.status).not_to eq(200)
+      end
+    end
+
+    context 'staff writes only mode' do
+      use_redis_snapshotting
+
+      before do
+        Discourse.enable_readonly_mode(Discourse::STAFF_WRITES_ONLY_MODE_KEY)
+        EmailToken.confirm(email_token.token)
+        EmailToken.confirm(admin_email_token.token)
+      end
+
+      it 'allows admin login' do
+        post "/session.json", params: {
+          login: admin.username, password: 'myawesomepassword'
+        }
+        expect(response.status).to eq(200)
+        expect(response.parsed_body['error']).not_to be_present
+      end
+
+      it 'prevents login by regular users' do
+        post "/session.json", params: {
+          login: user.username, password: 'myawesomepassword'
+        }
+        expect(response.status).not_to eq(200)
+      end
+    end
+
     context 'local login is disabled' do
       before do
         SiteSetting.enable_local_logins = false
@@ -2626,6 +2717,35 @@ describe SessionController do
 
       post "/session/2fa/test-action", params: { second_factor_nonce: nonce }
       expect(response.status).to eq(401)
+    end
+  end
+
+  describe '#scopes' do
+    context "when not a valid api request" do
+      it "returns 404" do
+        get "/session/scopes.json"
+        expect(response.status).to eq(404)
+      end
+    end
+
+    context "when a valid api request" do
+      let(:admin) { Fabricate(:admin) }
+      let(:scope) { ApiKeyScope.new(resource: 'topics', action: 'read', allowed_parameters: { topic_id: '3' }) }
+      let(:api_key) { Fabricate(:api_key, user: admin, api_key_scopes: [scope]) }
+
+      it "returns the scopes of the api key" do
+        get "/session/scopes.json", headers: {
+          "Api-Key": api_key.key,
+          "Api-Username": admin.username
+        }
+        expect(response.status).to eq(200)
+
+        json = response.parsed_body
+        expect(json['scopes'].size).to eq(1)
+        expect(json['scopes'].first["resource"]).to eq("topics")
+        expect(json['scopes'].first["action"]).to eq("read")
+        expect(json['scopes'].first["allowed_parameters"]).to eq({ "topic_id": "3" }.as_json)
+      end
     end
   end
 end

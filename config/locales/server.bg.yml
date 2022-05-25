@@ -1105,6 +1105,7 @@ bg:
     signup_after_approval:
       subject_template: "Вие бяхте одобрени на %{site_name}!"
   page_not_found:
+    page_title: "Страницата не е намерена"
     popular_topics: "Популярни"
     recent_topics: "Скорошни"
     see_more: "Повече"

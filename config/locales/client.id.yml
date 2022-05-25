@@ -473,11 +473,12 @@ id:
       this_weekend: "Akhir pekan ini"
       start_of_next_business_week: "Senin"
       start_of_next_business_week_alt: "Senin Depan"
+      next_week: "Minggu depan"
       two_weeks: "Dua pekan"
       next_month: "Bulan depan"
       six_months: "Enam bulan"
-      custom: "Tanggal dan waktu tersuai"
       none: "Tidak dibutuhkan"
+      custom: "Tanggal dan waktu tersuai"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> memposting <a href='%{topicUrl}'>topik</a>"
       you_posted_topic: "<a href='%{userUrl}'>Anda</a> memposting <a href='%{topicUrl}'>the topic</a>"
@@ -1490,15 +1491,6 @@ id:
       topic_status_update:
         when: "Ketika:"
         duration: "Durasi"
-      auto_update_input:
-        later_today: "Nanti hari ini"
-        tomorrow: "Besok"
-        later_this_week: "Nanti pekan ini"
-        this_weekend: "Akhir pekan ini"
-        next_week: "Minggu depan"
-        two_weeks: "Dua pekan"
-        next_month: "Bulan depan"
-        six_months: "Enam bulan"
       progress:
         jump_prompt_or: "atau"
       notifications:
@@ -1722,6 +1714,18 @@ id:
         member: "anggota"
         regular: "umum"
         leader: "pemimpin"
+    sidebar:
+      new_count: "%{count} baru"
+      sections:
+        categories:
+          header_link_title: "Semua kategori"
+          header_link_text: "Kategori"
+        topics:
+          header_link_title: "beranda"
+          header_link_text: "Topik"
+          links:
+            tracked:
+              content: "Dilacak"
   admin_js:
     type_to_filter: "ketik untuk memfilter..."
     admin:

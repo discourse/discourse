@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_dependency "file_helper"
+require "file_helper"
 
 module Validators; end
 

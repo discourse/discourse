@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_dependency 'compression/zip'
+require 'compression/zip'
 
 module ThemeStore; end
 

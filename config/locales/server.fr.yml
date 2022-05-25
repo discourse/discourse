@@ -231,7 +231,6 @@ fr:
       <p>Sinon, veuillez <a href="%{base_url}/password-reset">réinitialiser votre mot de passe</a>.</p>
     not_found_template_link: |
       <p>La date d'expiration de cette invitation à <a href="%{base_url}">%{site_name}</a> est dépassée. Nous vous invitons à demander à la personne qui vous a invité(e) de vous faire parvenir une nouvelle invitation.</p>
-    user_exists: "Inutile d'inviter <b>%{email}</b>, cette personne <a href='%{base_path}/u/%{username}/summary'>dispose déjà d'un compte !</a>"
     invite_exists: "Vous avez déjà invité <b>%{email}</b>."
     invalid_email: "%{email} n'est pas une adresse de courriel valable."
     rate_limit:
@@ -402,6 +401,7 @@ fr:
       time_must_be_provided: "Un horaire doit être indiqué pour chaque rappel"
       for_topic_must_use_first_post: "Un signet peut seulement être associé au premier message d'un sujet."
       bookmarkable_id_type_required: "Le nom et le type de l'enregistrement à mettre en signet sont requis."
+      invalid_bookmarkable: "Un %{type} ne peut pas être mis en favoris."
     reminders:
       at_desktop: "La prochaine fois que je suis à mon bureau"
       later_today: "Plus tard dans la journée"
@@ -1530,7 +1530,7 @@ fr:
     ga_universal_auto_link_domains: "Activer le suivi de plusieurs domaines pour Google Universal Analytics. Les liens sortants vers ces domaines seront accompagnés de l'identifiant client. Voir le guide <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Configurer le suivi de plusieurs domaines</a>."
     gtm_container_id: "Identifiant de conteneur Google Tag Manager, par exemple : GTM-ABCDEF. <br/>Note : les scripts tiers chargés par GTM devront peut-être être ajoutés à la liste d'autorisation « content security policy script src »."
     enable_escaped_fragments: "Utiliser l'API Ajax-Crawling de Google si aucun robot n'est détecté. Voir <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
-    moderators_manage_categories_and_groups: "Autoriser les modérateurs à gérer les catégories et les groupes"
+    moderators_manage_categories_and_groups: "Autoriser les modérateurs à créer et gérer les catégories et les groupes"
     moderators_change_post_ownership: "Permettre aux modérateurs de modifier l'utilisateur propriétaire d'un message."
     cors_origins: "Requêtes cross-origin (CORS) autorisées. Chaque origine doit inclure http:// ou https://. La variable d'environnement DISCOURSE_ENABLE_CORS doit être renseignée sur la valeur « true » pour activer CORS."
     use_admin_ip_allowlist: "Les administrateurs ne peuvent se connecter que s'ils sont sur une adresse IP définie dans la liste des IP sous surveillance (Administration > Journaux > IP sous surveillance)."
@@ -2078,7 +2078,6 @@ fr:
     tags_sort_alphabetically: "Afficher les étiquettes par ordre alphabétique. Par défaut, elles sont affichées par ordre de popularité."
     tags_listed_by_group: "Lister les étiquettes par groupe d'étiquettes sur la <a href='%{base_path}/tags' target='_blank'>page Étiquettes</a>."
     tag_style: "Style visuel pour les badges d'étiquette."
-    allow_staff_to_tag_pms: "Autoriser les responsables à étiqueter n'importe quel message direct"
     min_trust_level_to_tag_topics: "Niveau de confiance minimal requis pour étiqueter des sujets"
     suppress_overlapping_tags_in_list: "Si des étiquettes correspondent exactement à des mots du titre d'un sujet, ne pas afficher ces étiquettes"
     remove_muted_tags_from_latest: "Ne pas afficher les sujets avec des étiquettes mises en sourdine dans la liste des sujets récents."
@@ -2106,6 +2105,7 @@ fr:
     create_revision_on_bulk_topic_moves: "Créer une révision pour les premiers messages lorsque les sujets sont déplacés en masse dans une nouvelle catégorie."
     allow_changing_staged_user_tracking: "Permettre aux administrateurs de modifier les préférences de notification relatives aux catégories et aux tags, pour les comptes d'utilisateurs distants."
     use_email_for_username_and_name_suggestions: "Utiliser la première moitié des adresses de courriel pour suggérer des noms d'utilisateur et des pseudos. Veuillez noter que cela permet à chacun de facilement deviner les adresses de courriel entières des utilisateurs (car une grande part de ceux-ci sont inscrits à des services communément utilisés tels que GMail)."
+    use_name_for_username_suggestions: "Utilisez le nom complet d'un utilisateur lorsque vous suggérez des noms d'utilisateur."
     errors:
       invalid_css_color: "Couleur non valide. Indiquez un nom de couleur ou une valeur hexadécimale."
       invalid_email: "Adresse courriel invalide."
@@ -2728,12 +2728,6 @@ fr:
         [prefs] : %{user_preferences_url}
     tl2_promotion_message:
       subject_template: "Félicitations pour votre promotion de niveau de confiance !"
-      text_body_template: |
-        Nous vous avons accordé un [niveau de confiance ](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) supérieur !
-
-        En votre qualité d'utilisateur(rice) expérimenté(e), vous apprécierez peut-être [ces différents trucs et astuces (en anglais)](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
-
-        Votre présence est appréciée et nous vous encourageons à continuer de vous impliquer.
     backup_succeeded:
       title: "Sauvegarde effectuée"
       subject_template: "Sauvegarde terminée avec succès"
@@ -3150,7 +3144,7 @@ fr:
   subject_re: "Re : "
   subject_pm: "[MD] "
   email_from: "%{user_name} via %{site_name}"
-  email_from_without_site: "%{user_name}"
+  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "Réponses précédentes"
     reached_limit:
@@ -3169,6 +3163,9 @@ fr:
     reply_above_line: "## Veuillez saisir votre réponse au-dessus de cette ligne. ##"
     posted_by: "Publié par %{username} le %{post_date}"
     pm_participants: "Participants : %{participants}"
+    more_pm_participants:
+      one: "%{participants} et %{count} autre"
+      other: "%{participants} et %{count} autres"
     invited_group_to_private_message_body: |
       %{username} a invité @%{group_name} à un message
 
@@ -3633,6 +3630,7 @@ fr:
     title: "Oups ! Cette page est privée."
   site_setting_missing: "Le paramètre « %{name} » doit être défini."
   page_not_found:
+    page_title: "Page introuvable"
     title: "Oups ! Cette page n'existe pas ou est privée."
     popular_topics: "Populaires"
     recent_topics: "Récents"
@@ -4512,10 +4510,8 @@ fr:
                 label: "Catégories et sujets récents"
               categories_and_top_topics:
                 label: "Catégories et meilleurs sujets"
-              categories_boxes:
-                label: "Boîtes catégories"
-              categories_boxes_with_topics:
-                label: "Boîtes catégorie avec sujets"
+              subcategories_with_featured_topics:
+                label: "Sous-catégories avec sujets en vedette"
       logos:
         title: "Logos"
         fields:

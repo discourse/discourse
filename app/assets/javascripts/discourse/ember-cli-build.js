@@ -22,7 +22,7 @@ module.exports = function (defaults) {
       insertContentForTestBody: false,
     },
     sourcemaps: {
-      // There seems to be a bug with brocolli-concat when sourcemaps are disabled
+      // There seems to be a bug with broccoli-concat when sourcemaps are disabled
       // that causes the `app.import` statements below to fail in production mode.
       // This forces the use of `fast-sourcemap-concat` which works in production.
       enabled: true,

@@ -74,20 +74,6 @@ describe Stylesheet::Compiler do
     end
   end
 
-  it "supports asset-url" do
-    css, _map = Stylesheet::Compiler.compile(".body{background-image: asset-url('/images/favicons/github.png');}", "test.scss")
-
-    expect(css).to include("url('/images/favicons/github.png')")
-    expect(css).not_to include('asset-url')
-  end
-
-  it "supports image-url" do
-    css, _map = Stylesheet::Compiler.compile(".body{background-image: image-url('/favicons/github.png');}", "test.scss")
-
-    expect(css).to include("url('/favicons/github.png')")
-    expect(css).not_to include('image-url')
-  end
-
   it "supports absolute-image-url" do
     scss = Stylesheet::Importer.new({}).prepended_scss
     scss += ".body{background-image: absolute-image-url('/favicons/github.png');}"

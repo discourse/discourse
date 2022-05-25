@@ -337,8 +337,8 @@ pl_PL:
         unbookmark_with_reminder: "Kliknij, aby usunąć wszystkie zakładki i przypomnienia w tym temacie."
     bookmarks:
       created: "Dodano post do zakładek. %{name}"
-      create_for: "Utwórz zakładkę dla %{type}"
-      edit_for: "Edytuj zakładkę dla %{type}"
+      create: "Utwórz zakładkę"
+      edit: "Edytuj zakładkę"
       not_bookmarked: "dodaj do zakładek"
       remove_reminder_keep_bookmark: "Usuń przypomnienie i zachowaj zakładkę"
       created_with_reminder: "Dodano post do zakładek z przypomnieniem %{date}. %{name}"
@@ -650,7 +650,9 @@ pl_PL:
         other: "lat"
       relative: "Względny"
     time_shortcut:
+      now: "Teraz"
       later_today: "Później dzisiaj"
+      two_days: "Dwa dni"
       next_business_day: "Następny dzień roboczy"
       tomorrow: "Jutro"
       post_local_date: "Data w poście"
@@ -658,13 +660,20 @@ pl_PL:
       this_weekend: "W ten weekend"
       start_of_next_business_week: "Poniedziałek"
       start_of_next_business_week_alt: "Następny poniedziałek"
+      next_week: "Następny tydzień"
       two_weeks: "Dwa tygodnie"
       next_month: "Następny miesiąc"
+      two_months: "Dwa miesiące"
+      three_months: "Trzy miesiące"
+      four_months: "Cztery miesiące"
       six_months: "Sześć miesięcy"
-      custom: "Niestandardowa data i godzina"
+      one_year: "Rok"
+      forever: "Zawsze"
       relative: "Względny czas"
       none: "Żadne nie są potrzebne"
       last_custom: "Ostatnia niestandardowa data i godzina"
+      custom: "Niestandardowa data i godzina"
+      select_timeframe: "Wybierz przedział czasowy"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> tworzy <a href='%{topicUrl}'>temat</a>"
       you_posted_topic: "<a href='%{userUrl}'>Dodajesz</a> <a href='%{topicUrl}'>temat</a>"
@@ -1596,8 +1605,6 @@ pl_PL:
           title: "Odnośnik z zaproszeniem"
           success: "Link z zaproszenie został poprawnie wygenerowany!"
           error: "Wystąpił błąd podczas generowania linku do zaproszenia"
-          max_redemptions_allowed_label: "Ile osób może zarejestrować się za pomocą tego linku?"
-          expires_at: "Kiedy ten link z zaproszeniem wygaśnie?"
         invite:
           new_title: "Utwórz zaproszenie"
           edit_title: "Edytuj zaproszenie"
@@ -1924,8 +1931,8 @@ pl_PL:
         sr_title: "Zaloguj się przez Instagram"
       facebook:
         name: "Facebook"
-        title: "Zaloguj się przez facebook"
-        sr_title: "Zaloguj się przez facebook"
+        title: "Zaloguj się przez Facebook"
+        sr_title: "Zaloguj się przez Facebook"
       github:
         name: "GitHub"
         title: "Zaloguj się przez GitHub"
@@ -2369,6 +2376,8 @@ pl_PL:
       in: "w"
       in_this_topic: "w tym temacie"
       in_this_topic_tooltip: "przełącz się na przeszukiwanie wszystkich tematów"
+      in_messages: "w wiadomościach"
+      in_messages_tooltip: "przełącz się na wyszukiwanie regularnych tematów"
       in_topics_posts: "we wszystkich tematach i postach"
       enter_hint: "lub naciśnij Enter"
       in_posts_by: "w postach %{username}"
@@ -2657,24 +2666,6 @@ pl_PL:
         min_duration: "Czas trwania musi być większy niż 0"
         max_duration: "Czas trwania musi być krótszy niż 20 lat"
         duration: "Czas trwania"
-      auto_update_input:
-        none: "Wybierz przedział czasowy"
-        now: "Teraz"
-        later_today: "Później dzisiaj"
-        tomorrow: "Jutro"
-        later_this_week: "Później w tym tygodniu"
-        this_weekend: "W ten weekend"
-        next_week: "Następny tydzień"
-        two_weeks: "Dwa tygodnie"
-        next_month: "Następny miesiąc"
-        two_months: "Dwa miesiące"
-        three_months: "Trzy miesiące"
-        four_months: "Cztery miesiące"
-        six_months: "Sześć miesięcy"
-        one_year: "Rok"
-        forever: "Zawsze"
-        pick_date_and_time: "Wybierz datę i czas"
-        set_based_on_last_post: "Zamknij na podstawie ostatniego wpisu"
       publish_to_category:
         title: "Zaplanuj publikację"
       temp_open:
@@ -2792,8 +2783,8 @@ pl_PL:
         unpin: "Odepnij temat…"
         unarchive: "Przywróć z archiwum"
         archive: "Archiwizuj temat"
-        invisible: "Ustaw jako niewidoczny"
-        visible: "Ustaw jako widoczny"
+        invisible: "Ukryj temat"
+        visible: "Pokaż temat"
         reset_read: "Zresetuj przeczytane dane"
         make_public: "Utwórz temat publiczny..."
         make_private: "Utwórz osobistą wiadomość"
@@ -3010,6 +3001,7 @@ pl_PL:
           other: "Wybrano <b>%{count}</b> wpisów."
       deleted_by_author_simple: "(temat usunięty przez autora)"
     post:
+      confirm_delete: "Czy na pewno chcesz usunąć ten post?"
       quote_reply: "Cytuj"
       quote_reply_shortcut: "Lub naciśnij q"
       quote_edit: "Edytuj"
@@ -3999,6 +3991,24 @@ pl_PL:
       expand_btn: "Rozwiń tabelę"
     second_factor_auth:
       redirect_after_success: "Uwierzytelnianie dwuskładnikowe powiodło się. Przekierowanie do poprzedniej strony…"
+    sidebar:
+      unread_count: "%{count} nieprzeczytany"
+      new_count: "%{count} nowy"
+      sections:
+        categories:
+          header_link_title: "wszystkie kategorie"
+          header_link_text: "Kategorie"
+        topics:
+          header_link_title: "strona główna"
+          header_link_text: "Tematy"
+          header_action_title: "utwórz nowy temat"
+          links:
+            everything:
+              content: "Wszystko"
+              title: "Wszystkie tematy"
+            tracked:
+              content: "Śledzone"
+              title: "Wszystkie śledzone tematy"
   admin_js:
     type_to_filter: "pisz, aby filtrować…"
     admin:
@@ -4231,7 +4241,6 @@ pl_PL:
               write: Utwórz nowy temat lub post w istniejącym.
               update: Zaktualizuj temat. Zmień tytuł, kategorię, tagi itp.
               read_lists: Czytaj listy tematów, takie jak najpopularniejsze, nowe, najnowsze itp. Obsługiwany jest również format RSS.
-              wordpress: Niezbędne do działania wtyczki wp-discourse na WordPress.
             posts:
               edit: Edytuj dowolny post lub konkretny.
             categories:
@@ -4733,6 +4742,7 @@ pl_PL:
         time: "Czas"
         user: "Użytkownik"
         email_type: "Typ emaila"
+        details_title: "Pokaż szczegóły e-maila"
         to_address: "Na adres"
         test_email_address: "adres email do testu"
         send_test: "Wyślij email testowy"

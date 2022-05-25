@@ -1,4 +1,8 @@
 import RawHtml from "discourse/widgets/raw-html";
+import {
+  NO_REMINDER_ICON,
+  WITH_REMINDER_ICON,
+} from "discourse/models/bookmark";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import QuickAccessPanel from "discourse/widgets/quick-access-panel";
 import { ajax } from "discourse/lib/ajax";
@@ -6,8 +10,7 @@ import { createWidget, createWidgetFrom } from "discourse/widgets/widget";
 import { h } from "virtual-dom";
 import { postUrl } from "discourse/lib/utilities";
 import I18n from "I18n";
-
-const ICON = "bookmark";
+import { htmlSafe } from "@ember/template";
 
 createWidget("no-quick-access-bookmarks", {
   html() {
@@ -18,9 +21,11 @@ createWidget("no-quick-access-bookmarks", {
         new RawHtml({
           html:
             "<p>" +
-            I18n.t("user.no_bookmarks_body", {
-              icon: iconHTML(ICON),
-            }).htmlSafe() +
+            htmlSafe(
+              I18n.t("user.no_bookmarks_body", {
+                icon: iconHTML(NO_REMINDER_ICON),
+              })
+            ) +
             "</p>",
         })
       ),
@@ -44,15 +49,25 @@ createWidgetFrom(QuickAccessPanel, "quick-access-bookmarks", {
     // for topic level bookmarks we want to jump to the last unread post
     // instead of the OP
     let postNumber;
-    if (bookmark.for_topic) {
+    if (bookmark.bookmarkable_type === "Topic") {
       postNumber = bookmark.last_read_post_number + 1;
     } else {
       postNumber = bookmark.linked_post_number;
     }
 
+    let href;
+    if (
+      bookmark.bookmarkable_type === "Topic" ||
+      bookmark.bookmarkable_type === "Post"
+    ) {
+      href = postUrl(bookmark.slug, bookmark.topic_id, postNumber);
+    } else {
+      href = bookmark.bookmarkable_type;
+    }
+
     return this.attach("quick-access-item", {
       icon: this.icon(bookmark),
-      href: postUrl(bookmark.slug, bookmark.topic_id, postNumber),
+      href,
       title: bookmark.name,
       content: bookmark.title,
       username: bookmark.post_user_username,
@@ -61,9 +76,9 @@ createWidgetFrom(QuickAccessPanel, "quick-access-bookmarks", {
 
   icon(bookmark) {
     if (bookmark.reminder_at) {
-      return "discourse-bookmark-clock";
+      return WITH_REMINDER_ICON;
     }
-    return ICON;
+    return NO_REMINDER_ICON;
   },
 
   loadBookmarksWithReminders() {

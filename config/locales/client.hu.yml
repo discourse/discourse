@@ -77,15 +77,33 @@ hu:
         date_month: "MMM D."
         date_year: "'YY. MMM"
       medium:
+        less_than_x_minutes:
+          one: "kevesebb mint %{count} perce"
+          other: "kevesebb mint %{count} perce"
         x_minutes:
           one: "%{count} perc"
           other: "%{count} perc"
         x_hours:
           one: "%{count} óra"
           other: "%{count} óra"
+        about_x_hours:
+          one: "körülbelül %{count} óra"
+          other: "körülbelül %{count} óra"
         x_days:
           one: "%{count} nap"
           other: "%{count} nap"
+        x_months:
+          one: "%{count} hónap"
+          other: "%{count} hónap"
+        about_x_years:
+          one: "körülbelül %{count} év"
+          other: "körülbelül %{count} év"
+        over_x_years:
+          one: "több mint %{count} év"
+          other: "több mint %{count} év"
+        almost_x_years:
+          one: "majdnem %{count} év"
+          other: "majdnem %{count} év"
         date_year: "'YY. MMM D."
       medium_with_ago:
         x_minutes:
@@ -287,8 +305,8 @@ hu:
         unbookmark_with_reminder: "Kattintson a téma valamennyi könyvjelzőjének és emlékeztetőjének törléséhez."
     bookmarks:
       created: "Könyvjelzőzte ezt a bejegyzést. %{name}"
-      create_for: "Könyvjelző létrehozása a következőhöz: %{type}"
-      edit_for: "A(z) %{type} könyvjelzőjének szerkesztése"
+      create: "Könyvjelző létrehozása"
+      edit: "Könyvjelző szerkesztése"
       not_bookmarked: "bejegyzés könyvjelzőzése"
       remove_reminder_keep_bookmark: "Emlékeztető eltávolítása és könyvjelző megtartása"
       created_with_reminder: "Könyvjelzőzte ezt a bejegyzést, és emlékeztetőt állított be ekkorra: %{date}. %{name}"
@@ -565,6 +583,7 @@ hu:
         other: "év"
       relative: "Relatív"
     time_shortcut:
+      now: "Most"
       later_today: "Ma később"
       next_business_day: "Következő munkanap"
       tomorrow: "Holnap"
@@ -573,13 +592,20 @@ hu:
       this_weekend: "Hétvégén"
       start_of_next_business_week: "Hétfő"
       start_of_next_business_week_alt: "Jövő hétfő"
+      next_week: "Jövő héten"
       two_weeks: "Két hét"
       next_month: "Jövő hónapban"
+      two_months: "Két hónap"
+      three_months: "Három hónap"
+      four_months: "Négy hónap"
       six_months: "Hat hónap"
-      custom: "Egyéni dátum és idő"
+      one_year: "Egy év"
+      forever: "Örökre"
       relative: "Relatív idő"
       none: "Nem szükséges"
       last_custom: "Legutóbbi egyéni dátum/idő"
+      custom: "Egyéni dátum és idő"
+      select_timeframe: "Válasszon egy időkeretet"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> közzétett <a href='%{topicUrl}'>egy témát</a>"
       you_posted_topic: "<a href='%{userUrl}'>Ön</a> közzétett <a href='%{topicUrl}'>egy témát</a>"
@@ -1485,8 +1511,6 @@ hu:
           title: "Meghívási hivatkozás"
           success: "Meghívási hivatkozás elkészült!"
           error: "Hiba történt a meghívási hivatkozás létrehozása során"
-          max_redemptions_allowed_label: "Hány ember regisztrálhat ezen a hivatkozáson keresztül?"
-          expires_at: "Mikor jár le ez a meghívási hivatkozás?"
         invite:
           new_title: "Meghívási hivatkozás létrehozása"
           edit_title: "Meghívó szerkesztése"
@@ -1788,20 +1812,12 @@ hu:
         sr_title: "Bejelentkezés a Twitterrel"
       instagram:
         name: "Instagram"
-        title: "Bejelentkezés az Instagrammal"
-        sr_title: "Bejelentkezés az Instagrammal"
       facebook:
         name: "Facebook"
-        title: "Bejelentkezés a Facebookkal"
-        sr_title: "Bejelentkezés a Facebookkal"
       github:
         name: "GitHub"
-        title: "Bejelentkezés a GitHubbal"
-        sr_title: "Bejelentkezés a GitHubbal"
       discord:
         name: "Discord"
-        title: "Bejelentkezés a Discorddal"
-        sr_title: "Bejelentkezés a Discorddal"
       second_factor_toggle:
         totp: "Helyette hitelesítő alkalmazás használata"
         backup_code: "Helyette biztonsági kód használata"
@@ -2447,24 +2463,6 @@ hu:
         min_duration: "Az időtartamnak 0-nál nagyobbnak kell lennie"
         max_duration: "Az időtartamnak 20 évnél rövidebbnek kell lennie"
         duration: "Időtartam"
-      auto_update_input:
-        none: "Válassz időkeretet"
-        now: "Most"
-        later_today: "A mai nap folyamán"
-        tomorrow: "Holnap"
-        later_this_week: "A hét folyamán"
-        this_weekend: "Hétvégén"
-        next_week: "Jövő hét"
-        two_weeks: "Két hét"
-        next_month: "Jövő hónap"
-        two_months: "Két hónap"
-        three_months: "Három hónap"
-        four_months: "Négy hónap"
-        six_months: "Hat hónap"
-        one_year: "Egy év"
-        forever: "Örökre"
-        pick_date_and_time: "Dátum és idő kiválasztása"
-        set_based_on_last_post: "Lezárás az utolsó bejegyzés alapján"
       publish_to_category:
         title: "Közzététel ütemezése"
       temp_open:
@@ -2554,8 +2552,8 @@ hu:
         unpin: "Témakör kiemelésének megszüntetése..."
         unarchive: "Témakör archiválásának megszüntetése"
         archive: "Témakör archiválása"
-        invisible: "Listázás törlése"
-        visible: "Listázás"
+        invisible: "Téma listázásnak megszüntetése"
+        visible: "Téma listázása"
         reset_read: "Olvasási adatok visszaállítása"
         make_public: "Téma nyilvánossá tétele"
         make_private: "Személyes üzenet írása"
@@ -2585,6 +2583,7 @@ hu:
         title: "Megjelölés"
         success_message: "Sikeresen megjelölted ezt a témát."
       feature_topic:
+        title: "Téma kiemelése"
         unpin: "Téma eltávolítása a %{categoryLink} kategória elejéről."
         not_pinned: "Nincsenek kiemelt %{categoryLink} témák. "
         confirm_pin_globally:
@@ -2700,6 +2699,7 @@ hu:
           one: Kijelöltél <b>%{count}</b> hozzászólást.
           other: "Kijelöltél <b>%{count}</b> hozzászólást."
     post:
+      confirm_delete: "Biztos, hogy törli ezt a bejegyzést?"
       quote_reply: "Idézet"
       quote_edit: "Szerkesztés"
       quote_share: "Megosztás"
@@ -3211,6 +3211,9 @@ hu:
       selector_no_tags: "címke nélküli"
       tags: "Címkék"
       choose_for_topic: "Megadható címke"
+      choose_for_topic_required_group:
+        one: "válasszon %{count} címkét innen: „%{name}”…"
+        other: "válasszon %{count} címkét innen: „%{name}”…"
       default_info: "Ez a címke nincs kategóriára korlátozva, és nincsenek szinonimái."
       staff_info: "Korlátozások hozzáadásához tegye ezt a címkét egy <a href=%{basePath}/tag_groups>címkecsoportba</a>."
       save: "Címke nevének és leírásának mentése"
@@ -3293,6 +3296,19 @@ hu:
       no_likes_others: "Nincsenek kedvelt bejegyzések."
     fullscreen_table:
       expand_btn: "Táblázat kibontása"
+    sidebar:
+      unread_count: "%{count} olvasatlan"
+      new_count: "%{count} új"
+      sections:
+        categories:
+          header_link_title: "összes kategória"
+          header_link_text: "Kategóriák"
+        topics:
+          header_link_title: "kezdőlap"
+          header_link_text: "Téma"
+          links:
+            tracked:
+              content: "Követett"
   admin_js:
     type_to_filter: "Írj ide a szűréshez.."
     admin:

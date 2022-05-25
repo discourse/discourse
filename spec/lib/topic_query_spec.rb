@@ -159,25 +159,6 @@ describe TopicQuery do
     end
   end
 
-  context 'bookmarks' do
-    it "filters and returns bookmarks correctly" do
-      post = Fabricate(:post)
-      reply = Fabricate(:post, topic: post.topic)
-
-      post2 = Fabricate(:post)
-
-      PostActionCreator.create(user, post, :bookmark)
-      PostActionCreator.create(user, reply, :bookmark)
-      TopicUser.change(user, post.topic, notification_level: 1)
-      TopicUser.change(user, post2.topic, notification_level: 1)
-
-      query = TopicQuery.new(user, filter: 'bookmarked').list_latest
-
-      expect(query.topics.length).to eq(1)
-      expect(query.topics.first.user_data.post_action_data).to eq(PostActionType.types[:bookmark] => [1, 2])
-    end
-  end
-
   context 'tracked' do
     it "filters tracked topics correctly" do
       SiteSetting.tagging_enabled = true

@@ -11,6 +11,7 @@ import { formattedReminderTime } from "discourse/lib/bookmark";
 import getURL from "discourse-common/lib/get-url";
 import { longDate } from "discourse/lib/formatter";
 import { none } from "@ember/object/computed";
+import { capitalize } from "@ember/string";
 
 export const AUTO_DELETE_PREFERENCES = {
   NEVER: 0,
@@ -18,6 +19,9 @@ export const AUTO_DELETE_PREFERENCES = {
   WHEN_REMINDER_SENT: 1,
   ON_OWNER_REPLY: 2,
 };
+
+export const NO_REMINDER_ICON = "bookmark";
+export const WITH_REMINDER_ICON = "discourse-bookmark-clock";
 
 const Bookmark = RestModel.extend({
   newBookmark: none("id"),
@@ -38,18 +42,10 @@ const Bookmark = RestModel.extend({
   },
 
   attachedTo() {
-    if (this.siteSettings.use_polymorphic_bookmarks) {
-      return {
-        target: this.bookmarkable_type.toLowerCase(),
-        targetId: this.bookmarkable_id,
-      };
-    }
-
-    // TODO (martin) [POLYBOOK] Not relevant once polymorphic bookmarks are implemented.
-    if (this.for_topic) {
-      return { target: "topic", targetId: this.topic_id };
-    }
-    return { target: "post", targetId: this.post_id };
+    return {
+      target: this.bookmarkable_type.toLowerCase(),
+      targetId: this.bookmarkable_id,
+    };
   },
 
   togglePin() {
@@ -132,10 +128,9 @@ const Bookmark = RestModel.extend({
 
   @discourseComputed("reminder_at", "currentUser")
   formattedReminder(bookmarkReminderAt, currentUser) {
-    return formattedReminderTime(
-      bookmarkReminderAt,
-      currentUser.resolvedTimezone(currentUser)
-    ).capitalize();
+    return capitalize(
+      formattedReminderTime(bookmarkReminderAt, currentUser.timezone)
+    );
   },
 
   @discourseComputed("reminder_at")
@@ -161,9 +156,6 @@ const Bookmark = RestModel.extend({
 
   @discourseComputed("bookmarkable_type")
   bookmarkableTopicAlike(bookmarkable_type) {
-    if (!this.siteSettings.use_polymorphic_bookmarks) {
-      return true;
-    }
     return ["Topic", "Post"].includes(bookmarkable_type);
   },
 });

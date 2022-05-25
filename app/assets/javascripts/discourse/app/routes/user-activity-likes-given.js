@@ -3,6 +3,7 @@ import UserActivityStreamRoute from "discourse/routes/user-activity-stream";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import I18n from "I18n";
 import { action } from "@ember/object";
+import { htmlSafe } from "@ember/template";
 
 export default UserActivityStreamRoute.extend({
   userActionType: UserAction.TYPES["likes_given"],
@@ -10,9 +11,11 @@ export default UserActivityStreamRoute.extend({
 
   emptyState() {
     const title = I18n.t("user_activity.no_likes_title");
-    const body = I18n.t("user_activity.no_likes_body", {
-      heartIcon: iconHTML("heart"),
-    }).htmlSafe();
+    const body = htmlSafe(
+      I18n.t("user_activity.no_likes_body", {
+        heartIcon: iconHTML("heart"),
+      })
+    );
 
     return { title, body };
   },

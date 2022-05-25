@@ -148,8 +148,18 @@ def dependencies
     }, {
       source: '@popperjs/core/dist/umd/popper.js.map',
       public_root: true
-    },
-    {
+    }, {
+      source: 'tippy.js/dist/tippy.umd.js'
+    }, {
+      source: 'tippy.js/dist/tippy.umd.js.map',
+      public_root: true
+    }, {
+      source: 'tippy.js/dist/tippy.css',
+      destination: '../../../app/assets/stylesheets/vendor'
+    }, {
+      source: 'tippy.js/dist/svg-arrow.css',
+      destination: '../../../app/assets/stylesheets/vendor'
+    }, {
       source: 'route-recognizer/dist/route-recognizer.js'
     }, {
       source: 'route-recognizer/dist/route-recognizer.js.map',
@@ -204,6 +214,14 @@ end
 
 def public_path_name(f)
   f[:destination] || node_package_name(f)
+end
+
+def absolute_sourcemap(dest)
+  File.open(dest) do |file|
+    contents = file.read
+    contents.gsub!(/sourceMappingURL=(.*)/, 'sourceMappingURL=/\1')
+    File.open(dest, "w+") { |d| d.write(contents) }
+  end
 end
 
 task 'javascript:update_constants' => :environment do
@@ -330,14 +348,12 @@ task 'javascript:update' => 'clean_up' do
       FileUtils.cp_r(src, dest)
     end
 
-    # use absolute path for popper.js's sourcemap
     # avoids noisy console warnings in dev environment for non-homepage paths
     if dest.end_with? "popper.js"
-      File.open(dest) do |file|
-        contents = file.read
-        contents.gsub!("sourceMappingURL=popper", "sourceMappingURL=/popper")
-        File.open(dest, "w+") { |d| d.write(contents) }
-      end
+      absolute_sourcemap(dest)
+    end
+    if dest.end_with? "tippy.umd.js"
+      absolute_sourcemap(dest)
     end
   end
 

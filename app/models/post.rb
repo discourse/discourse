@@ -47,9 +47,7 @@ class Post < ActiveRecord::Base
 
   has_one :post_stat
 
-  # When we are ready we can add as: :bookmarkable here to use the
-  # polymorphic association.
-  has_many :bookmarks
+  has_many :bookmarks, as: :bookmarkable
 
   has_one :incoming_email
 
@@ -62,6 +60,8 @@ class Post < ActiveRecord::Base
 
   belongs_to :image_upload, class_name: "Upload"
 
+  has_many :post_hotlinked_media, dependent: :destroy, class_name: "PostHotlinkedMedia"
+
   validates_with PostValidator, unless: :skip_validation
 
   after_commit :index_search
@@ -69,18 +69,11 @@ class Post < ActiveRecord::Base
   # We can pass several creating options to a post via attributes
   attr_accessor :image_sizes, :quoted_post_numbers, :no_bump, :invalidate_oneboxes, :cooking_options, :skip_unique_check, :skip_validation
 
-  LARGE_IMAGES            ||= "large_images"
-  BROKEN_IMAGES           ||= "broken_images"
-  DOWNLOADED_IMAGES       ||= "downloaded_images"
   MISSING_UPLOADS         ||= "missing uploads"
   MISSING_UPLOADS_IGNORED ||= "missing uploads ignored"
   NOTICE                  ||= "notice"
 
   SHORT_POST_CHARS ||= 1200
-
-  register_custom_field_type(LARGE_IMAGES, :json)
-  register_custom_field_type(BROKEN_IMAGES, :json)
-  register_custom_field_type(DOWNLOADED_IMAGES, :json)
 
   register_custom_field_type(MISSING_UPLOADS, :json)
   register_custom_field_type(MISSING_UPLOADS_IGNORED, :boolean)
@@ -714,8 +707,8 @@ class Post < ActiveRecord::Base
     end
 
     if invalidate_broken_images
-      custom_fields.delete(BROKEN_IMAGES)
-      save_custom_fields
+      post_hotlinked_media.download_failed.destroy_all
+      post_hotlinked_media.upload_create_failed.destroy_all
     end
 
     # Extracts urls from the body

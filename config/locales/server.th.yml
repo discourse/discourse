@@ -442,6 +442,7 @@ th:
     post_approved:
       title: "โพสต์ของคุณได้รับการอนุมัติ"
   page_not_found:
+    page_title: "ไม่พบหน้าดังกล่าว"
     popular_topics: "ยอดนิยม"
     see_more: "อื่น"
     search_title: "ค้นหาเว็บไซต์นี้"

@@ -266,6 +266,8 @@ gl:
         unbookmark: "Prema para retirar todos os marcadores deste tema"
     bookmarks:
       created: "Fixou como marcador esta publicación. %{name}"
+      create: "Crear marcador"
+      edit: "Editar marcador"
       not_bookmarked: "marcar esta publicación"
       created_with_reminder: "Fixou como marcador esta publicación cun recordatorio %{date}. %{name}"
       remove: "Retirar marcador"
@@ -529,6 +531,7 @@ gl:
         other: "anos"
       relative: "Relativo"
     time_shortcut:
+      now: "Agora"
       later_today: "Hoxe, máis tarde"
       next_business_day: "O vindeiro día laborábel"
       tomorrow: "Mañá"
@@ -537,12 +540,19 @@ gl:
       this_weekend: "Esta fin de semana"
       start_of_next_business_week: "Luns"
       start_of_next_business_week_alt: "O vindeiro luns"
+      next_week: "A vindeira semana"
       two_weeks: "Dúas semanas"
       next_month: "O vindeiro mes"
+      two_months: "Dous meses"
+      three_months: "Tres meses"
+      four_months: "Catro meses"
       six_months: "Seis meses"
-      custom: "Personalizar data e hora"
+      one_year: "Un ano"
+      forever: "Sempre"
       relative: "Tempo relativo"
       none: "Non se necesita"
+      custom: "Personalizar data e hora"
+      select_timeframe: "Seleccione un marco temporal"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> publicou <a href='%{topicUrl}'>o tema</a>"
       you_posted_topic: "<a href='%{userUrl}'>Vostede</a> publicou <a href='%{topicUrl}'>o tema</a>"
@@ -1391,8 +1401,6 @@ gl:
           title: "Ligazón do convite"
           success: "A ligazón do convite xerouse correctamente!"
           error: "Produciuse un erro ao xerar esta ligazón de convite"
-          max_redemptions_allowed_label: "Cantas persoas poden rexistrarse con esta ligazón?"
-          expires_at: "Cando caduca a ligazón deste convite?"
         invite:
           new_title: "Crear convite"
           edit_title: "Editar convite"
@@ -2252,24 +2260,6 @@ gl:
         min_duration: "A duración debe ser superior a 0"
         max_duration: "A duración debe de ser menor de 20 anos"
         duration: "Duración"
-      auto_update_input:
-        none: "Seleccione un marco temporal"
-        now: "Agora"
-        later_today: "Hoxe, máis tarde"
-        tomorrow: "Mañá"
-        later_this_week: "Máis tarde esta semana"
-        this_weekend: "Esta fin de semana"
-        next_week: "A vindeira semana"
-        two_weeks: "Dúas semanas"
-        next_month: "O vindeiro mes"
-        two_months: "Dous meses"
-        three_months: "Tres meses"
-        four_months: "Catro meses"
-        six_months: "Seis meses"
-        one_year: "Un ano"
-        forever: "Sempre"
-        pick_date_and_time: "Escolla unha data e hora"
-        set_based_on_last_post: "Peche baseado na última publicación"
       publish_to_category:
         title: "Programar publicación"
       temp_open:
@@ -2375,8 +2365,6 @@ gl:
         unpin: "Desprender tema…"
         unarchive: "Desarquivar tema"
         archive: "Arquivar tema"
-        invisible: "Retirar da listaxe"
-        visible: "Engadir á listaxe"
         reset_read: "Restabelecer datos de lecturas"
         make_private: "Facer privada a mensaxe"
         reset_bump_date: "Restabelecer data de promoción"
@@ -3362,6 +3350,19 @@ gl:
       no_activity_others: "Sen actividade."
       no_replies_others: "Sen respostas."
       no_likes_others: "Ningún Gústame en publicacións."
+    sidebar:
+      unread_count: "%{count} pendente de lectura"
+      new_count: "%{count} novo"
+      sections:
+        categories:
+          header_link_title: "todas as categorías"
+          header_link_text: "Categorías"
+        topics:
+          header_link_title: "inicio"
+          header_link_text: "Temas"
+          links:
+            tracked:
+              content: "Seguido"
   admin_js:
     type_to_filter: "escriba para filtrar..."
     admin:
@@ -3577,7 +3578,6 @@ gl:
               read: Ler un tema ou unha publicación específica nel. O RSS tamén é compatíbel.
               write: Crear un tema novo ou publicalo nun xa existente.
               read_lists: Ler listaxes de temas como importantes, novos, últimos, etc. Tamén se admite RSS.
-              wordpress: Necesario para que funcione o complemento wp-discourse de WordPress.
             users:
               bookmarks: Listar os marcadores do usuario. Devolve recordatorios de marcadores ao usaren o formato ICS.
               sync_sso: Sincronizar un usuario usando SSO.

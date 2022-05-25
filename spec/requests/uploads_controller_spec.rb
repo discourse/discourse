@@ -1056,23 +1056,22 @@ describe UploadsController do
       it "rate limits" do
         RateLimiter.enable
         RateLimiter.clear_all!
+        SiteSetting.max_batch_presign_multipart_per_minute = 1
 
-        stub_const(ExternalUploadHelpers, "BATCH_PRESIGN_RATE_LIMIT_PER_MINUTE", 1) do
-          stub_list_multipart_request
-          post "/uploads/batch-presign-multipart-parts.json", params: {
-            unique_identifier: external_upload_stub.unique_identifier,
-            part_numbers: [1, 2, 3]
-          }
+        stub_list_multipart_request
+        post "/uploads/batch-presign-multipart-parts.json", params: {
+          unique_identifier: external_upload_stub.unique_identifier,
+          part_numbers: [1, 2, 3]
+        }
 
-          expect(response.status).to eq(200)
+        expect(response.status).to eq(200)
 
-          post "/uploads/batch-presign-multipart-parts.json", params: {
-            unique_identifier: external_upload_stub.unique_identifier,
-            part_numbers: [1, 2, 3]
-          }
+        post "/uploads/batch-presign-multipart-parts.json", params: {
+          unique_identifier: external_upload_stub.unique_identifier,
+          part_numbers: [1, 2, 3]
+        }
 
-          expect(response.status).to eq(429)
-        end
+        expect(response.status).to eq(429)
       end
     end
 

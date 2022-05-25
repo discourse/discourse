@@ -45,10 +45,8 @@ class Admin::GroupsController < Admin::AdminController
     if group.automatic
       can_not_modify_automatic
     else
-      details = { name: group.name }
-      details[:grant_trust_level] = group.grant_trust_level if group.grant_trust_level
+      StaffActionLogger.new(current_user).log_group_deletetion(group)
 
-      StaffActionLogger.new(current_user).log_custom('delete_group', details)
       group.destroy!
       render json: success_json
     end

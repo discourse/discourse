@@ -267,8 +267,6 @@ after_initialize do
           self.post_action_type_id == PostActionType.types[:inappropriate] ? "flag" : "reply"
         when PostActionType.types[:like]
           "like"
-        when PostActionType.types[:bookmark]
-          "bookmark"
         end
 
       if input
@@ -282,8 +280,10 @@ after_initialize do
   end
 
   self.add_model_callback(Bookmark, :after_commit, on: :create) do
-    if self.post && self.user.enqueue_narrative_bot_job?
-      Jobs.enqueue(:bot_input, user_id: self.user_id, post_id: self.post_id, input: "bookmark")
+    if self.user.enqueue_narrative_bot_job?
+      if self.bookmarkable_type == "Post"
+        Jobs.enqueue(:bot_input, user_id: self.user_id, post_id: self.bookmarkable_id, input: "bookmark")
+      end
     end
   end
 

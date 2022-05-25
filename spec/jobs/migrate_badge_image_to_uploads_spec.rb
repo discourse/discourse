@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Jobs::MigrateBadgeImageToUploads do
+describe Jobs::MigrateBadgeImageToUploads do
   let(:image_url) { "https://omg.aws.somestack/test.png" }
   let(:badge) { Fabricate(:badge) }
 
@@ -35,8 +35,8 @@ RSpec.describe Jobs::MigrateBadgeImageToUploads do
   it 'should skip badges with invalid flair URLs' do
     DB.exec("UPDATE badges SET image = 'abc' WHERE id = ?", badge.id)
     described_class.new.execute_onceoff({})
-    expect(Rails.logger.warnings.count).to eq(0)
-    expect(Rails.logger.errors.count).to eq(0)
+    expect(@fake_logger.warnings.count).to eq(0)
+    expect(@fake_logger.errors.count).to eq(0)
   end
 
   # this case has a couple of hacks that are needed to test this behavior, so if it
@@ -58,6 +58,6 @@ RSpec.describe Jobs::MigrateBadgeImageToUploads do
     expect(badge.image_upload).to eq(nil)
     expect(badge.image_url).to eq(nil)
     expect(Badge.where(id: badge.id).select(:image).first[:image]).to eq(image_url)
-    expect(Rails.logger.warnings.count).to eq(3)
+    expect(@fake_logger.warnings.count).to eq(3)
   end
 end

@@ -282,8 +282,8 @@ da:
         unbookmark_with_reminder: "Klik for at fjerne alle bogmærker og påmindelser i dette emne."
     bookmarks:
       created: "Du har sat et bogmærke for dette indlæg. %{name}"
-      create_for: "Opret bogmærke for %{type}"
-      edit_for: "Rediger bogmærke for %{type}"
+      create: "Opret bogmærke"
+      edit: "Rediger bogmærke"
       not_bookmarked: "bogmærk dette indlæg"
       remove_reminder_keep_bookmark: "Fjern påmindelse og behold bogmærke"
       created_with_reminder: "Du har sat et bogmærke med en påmindelse for dette indlæg %{date}. %{name}"
@@ -556,6 +556,7 @@ da:
         other: "år"
       relative: "Relativ"
     time_shortcut:
+      now: "Nu"
       later_today: "Senere i dag"
       next_business_day: "Næste hverdag"
       tomorrow: "I morgen"
@@ -564,13 +565,20 @@ da:
       this_weekend: "Denne weekend"
       start_of_next_business_week: "Mandag"
       start_of_next_business_week_alt: "Næste mandag"
+      next_week: "Næste uge"
       two_weeks: "To uger"
       next_month: "Næste måned"
+      two_months: "To måneder"
+      three_months: "Tre måneder"
+      four_months: "Fire måneder"
       six_months: "Seks måneder"
-      custom: "Brugerdefineret dato og tid"
+      one_year: "Et år"
+      forever: "Forevigt"
       relative: "Relativ tid"
       none: "Ikke nødvendig"
       last_custom: "Sidste brugerdefineret dato"
+      custom: "Brugerdefineret dato og tid"
+      select_timeframe: "Vælg en tidsramme"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> oprettede <a href='%{topicUrl}'>emnet</a>"
       you_posted_topic: "<a href='%{userUrl}'>Du</a> oprettede <a href='%{topicUrl}'>emnet</a>"
@@ -742,7 +750,7 @@ da:
       allow_membership_requests: "Tillad brugere at sende medlemskabsanmodninger til gruppeejere (kræver offentligt synlig gruppe)"
       membership_request_template: "Brugerdefineret skabelon, der skal vises til brugere, når der sendes en medlemskabsanmodning"
       membership_request:
-        submit: "Send Admodning"
+        submit: "Send Anmodning"
         title: "Anmod om medlemskab af gruppen @%{group_name}"
         reason: "Fortæl gruppeejerne, hvorfor du tilhører denne gruppe"
       membership: "Medlemskab"
@@ -1462,8 +1470,6 @@ da:
           title: "Invitations Link"
           success: "Invitiationslinket blev genereret!"
           error: "Der opstod en fejl under generering af Invitationslink"
-          max_redemptions_allowed_label: "Hvor mange mennesker har lov til at registrere sig ved hjælp af dette link?"
-          expires_at: "Hvornår udløber dette invitationslink?"
         invite:
           new_title: "Opret Invitation"
           edit_title: "Rediger Invitation"
@@ -1756,20 +1762,12 @@ da:
         name: "Twitter"
       instagram:
         name: "Instagram"
-        title: "Log ind med Instagram"
-        sr_title: "Log ind med Instagram"
       facebook:
         name: "Facebook"
-        title: "Log ind med Facebook"
-        sr_title: "Log ind med Facebook"
       github:
         name: "GitHub"
-        title: "Log ind med GitHub"
-        sr_title: "Log ind med GitHub"
       discord:
         name: "Discord"
-        title: "Log ind med Discord"
-        sr_title: "Log ind med Discord"
       second_factor_toggle:
         totp: "Brug en godkendelsesapp i stedet"
         backup_code: "Brug en backup kode i stedet"
@@ -2374,24 +2372,6 @@ da:
         min_duration: "Varigheden skal være større end 0"
         max_duration: "Varigheden skal være mindre end 20 år"
         duration: "Varighed"
-      auto_update_input:
-        none: "Vælg en tidsramme"
-        now: "Nu"
-        later_today: "Senere i dag"
-        tomorrow: "I morgen"
-        later_this_week: "Senere på ugen"
-        this_weekend: "Denne weekend"
-        next_week: "Næste uge"
-        two_weeks: "To uger"
-        next_month: "Næste Måned"
-        two_months: "To måneder"
-        three_months: "Tre måneder"
-        four_months: "Fire måneder"
-        six_months: "Seks måneder"
-        one_year: "Et år"
-        forever: "Forevigt"
-        pick_date_and_time: "Vælg dato og tid"
-        set_based_on_last_post: "Luk baseret på seneste indlæg"
       publish_to_category:
         title: "Planlæg Udgivelse"
       temp_open:
@@ -2497,8 +2477,6 @@ da:
         unpin: "Fjern fastgøring af Emne..."
         unarchive: "Gendan emne fra arkiv"
         archive: "Arkivér emne"
-        invisible: "Gør ulistet"
-        visible: "Gør listet"
         reset_read: "Glem hvilke emner jeg har læst"
         make_public: "Gør til Offentligt Emne..."
         make_private: "Lav privat besked"
@@ -3556,6 +3534,19 @@ da:
       sr_jump_bottom_button: "Hop til det sidste indlæg"
     fullscreen_table:
       expand_btn: "Udvid Tabel"
+    sidebar:
+      unread_count: "%{count} ulæst"
+      new_count: "%{count} ny"
+      sections:
+        categories:
+          header_link_title: "alle kategorier"
+          header_link_text: "Kategorier"
+        topics:
+          header_link_title: "hjem"
+          header_link_text: "Emner"
+          links:
+            tracked:
+              content: "Sporet"
   admin_js:
     type_to_filter: "skriv for at filtrere…"
     admin:
@@ -3774,7 +3765,6 @@ da:
               read: Læs et emne eller et bestemt indlæg i det. RSS understøttes også.
               write: Opret et nyt emne eller et nyt indlæg i et eksisterende emne.
               read_lists: Læse emnelister som top, nye, nyeste osv. RSS understøttes også.
-              wordpress: Nødvendigt for at WordPress wp-discourse-plugin fungerer.
             categories:
               list: Hent en liste over kategorier.
               show: Hent en enkelt kategori efter id.

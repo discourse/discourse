@@ -41,6 +41,7 @@ fr:
       long_date_without_year_with_linebreak: "D MMM <br/>LT"
       long_date_with_year_with_linebreak: "D MMM 'YY <br/>LT"
       wrap_ago: "il y a %{date}"
+      wrap_on: "le %{date}"
       tiny:
         half_a_minute: "< 1 min"
         less_than_x_seconds:
@@ -85,6 +86,12 @@ fr:
         x_days:
           one: "%{count} jour"
           other: "%{count} jours"
+        x_months:
+          one: "%{count} mois"
+          other: "%{count} mois"
+        about_x_years:
+          one: "environ %{count} ans"
+          other: "environ %{count} ans"
         date_year: "D MMM 'YY"
       medium_with_ago:
         x_minutes:
@@ -283,8 +290,8 @@ fr:
         unbookmark_with_reminder: "Cliquez pour retirer tous les signets et rappels de ce sujet."
     bookmarks:
       created: "Vous avez mis un signet à ce message. %{name}"
-      create_for: "Créer un signet pour %{type}"
-      edit_for: "Modifier le signet pour %{type}"
+      create: "Ajouter un signet"
+      edit: "Modifier le signet"
       not_bookmarked: "mettre un signet à ce message"
       remove_reminder_keep_bookmark: "Supprimer le rappel et conserver le signet"
       created_with_reminder: "Vous avez mis un signet à ce message avec un rappel pour le %{date}. %{name}"
@@ -560,7 +567,9 @@ fr:
         other: "années"
       relative: "Relatif"
     time_shortcut:
+      now: "Maintenant"
       later_today: "Plus tard dans la journée"
+      two_days: "Deux jours"
       next_business_day: "Au prochain jour ouvré"
       tomorrow: "Demain"
       post_local_date: "Date indiquée dans le message"
@@ -568,13 +577,20 @@ fr:
       this_weekend: "Ce week-end"
       start_of_next_business_week: "Lundi"
       start_of_next_business_week_alt: "Lundi prochain"
+      next_week: "La semaine prochaine"
       two_weeks: "Deux semaines"
       next_month: "Le mois prochain"
+      two_months: "Dans deux mois"
+      three_months: "Dans trois mois"
+      four_months: "Dans quatre mois"
       six_months: "Six mois"
-      custom: "Date et heure personnalisées"
+      one_year: "Un an"
+      forever: "Pour toujours"
       relative: "Me le rappeler d'ici"
       none: "Ne pas me le rappeler"
       last_custom: "Date et heure personnalisées précédentes"
+      custom: "Date et heure personnalisées"
+      select_timeframe: "Sélectionner un intervalle de temps"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> a démarré <a href='%{topicUrl}'>le sujet</a>"
       you_posted_topic: "<a href='%{userUrl}'>Vous</a> avez démarré <a href='%{topicUrl}'>le sujet</a>"
@@ -1477,8 +1493,6 @@ fr:
           title: "Lien d'invitation"
           success: "Lien d'invitation généré avec succès !"
           error: "Une erreur est survenue lors de la génération du lien d'invitation"
-          max_redemptions_allowed_label: "Combien de personnes peuvent s'inscrire en utilisant ce lien ?"
-          expires_at: "Quand ce lien va-t-il expirer ?"
         invite:
           new_title: "Créer une invitation"
           edit_title: "Modifier l'invitation"
@@ -1519,7 +1533,9 @@ fr:
         title: "Résumé"
         stats: "Statistiques"
         time_read: "temps de lecture"
+        time_read_title: "%{duration} (tout le temps)"
         recent_time_read: "de lecture récente"
+        recent_time_read_title: "%{duration} (au cours des 60 derniers jours)"
         topic_count:
           one: "sujet créé"
           other: "sujets créés"
@@ -1767,31 +1783,32 @@ fr:
       not_approved: "Votre compte n'a pas encore été approuvé. Vous recevrez une notification par courriel lorsque vous pourrez vous connecter."
       google_oauth2:
         name: "Google"
-        title: "Connectez-vous avec Google"
-        sr_title: "Connectez-vous avec Google"
+        title: "Se connecter avec Google"
+        sr_title: "Se connecter avec Google"
       twitter:
         name: "Twitter"
-        title: "Connectez-vous avec Twitter"
-        sr_title: "Connectez-vous avec Twitter"
+        title: "Se connecter avec Twitter"
+        sr_title: "Se connecter avec Twitter"
       instagram:
         name: "Instagram"
-        title: "Se connecter avec Instagram"
-        sr_title: "Se connecter avec Instagram"
+        title: "Connectez-vous avec Instagram"
+        sr_title: "Connectez-vous avec Instagram"
       facebook:
         name: "Facebook"
-        title: "Se connecter avec Facebook"
-        sr_title: "Se connecter avec Facebook"
+        title: "Connectez-vous avec Facebook"
+        sr_title: "Connectez-vous avec Facebook"
       github:
         name: "GitHub"
-        title: "Se connecter avec GitHub"
-        sr_title: "Se connecter avec GitHub"
+        title: "Connectez-vous avec GitHub"
+        sr_title: "Connectez-vous avec GitHub"
       discord:
         name: "Discord"
-        title: "Se connecter avec Discord"
-        sr_title: "Se connecter avec Discord"
+        title: "Connectez-vous avec Discord"
+        sr_title: "Connectez-vous avec Discord"
       second_factor_toggle:
         totp: "Utilisez plutôt une application d'authentification"
         backup_code: "Utilisez plutôt un code de secours"
+        security_key: "Utilisez plutôt une clé de sécurité"
     invites:
       accept_title: "Invitation"
       emoji: "émoji d'enveloppe"
@@ -2152,6 +2169,8 @@ fr:
       search_button: "Recherche"
       categories: "Catégories"
       tags: "Étiquettes"
+      in_messages: "dans les messages"
+      in_messages_tooltip: "basculer vers la recherche de sujets réguliers"
       browser_tip_description: "à nouveau pour utiliser la fonction de recherche de votre navigateur"
       recent: "Recherches récentes"
       clear_recent: "Effacer les recherches récentes"
@@ -2202,7 +2221,7 @@ fr:
           label: et dont les sujets
           open: sont ouverts
           closed: sont fermés
-          public: sont publiques
+          public: sont publics
           archived: sont archivés
           noreplies: n'ont aucune réponse
           single_user: contiennent un unique utilisateur
@@ -2398,24 +2417,6 @@ fr:
         min_duration: "La durée doit être supérieure à 0"
         max_duration: "La durée doit être inférieure à 20 ans"
         duration: "Durée "
-      auto_update_input:
-        none: "Sélectionner un intervalle de temps"
-        now: "Maintenant"
-        later_today: "Plus tard dans la journée"
-        tomorrow: "Demain"
-        later_this_week: "Plus tard cette semaine"
-        this_weekend: "Ce week-end"
-        next_week: "La semaine prochaine"
-        two_weeks: "Dans deux semaines"
-        next_month: "Le mois prochain"
-        two_months: "Dans deux mois"
-        three_months: "Dans trois mois"
-        four_months: "Dans quatre mois"
-        six_months: "Dans six mois"
-        one_year: "Un an"
-        forever: "Pour toujours"
-        pick_date_and_time: "Choisir une date et une heure"
-        set_based_on_last_post: "Fermer selon le dernier message"
       publish_to_category:
         title: "Planifier la publication"
       temp_open:
@@ -2527,8 +2528,6 @@ fr:
         unpin: "Désépingler le sujet…"
         unarchive: "Désarchiver le sujet"
         archive: "Archiver le sujet"
-        invisible: "Rendre invisible"
-        visible: "Rendre visible"
         reset_read: "Réinitialiser les données de lecture"
         make_private: "Transformer en message direct"
         reset_bump_date: "Réinitialiser la date d'actualisation"
@@ -3451,6 +3450,9 @@ fr:
       choose_for_topic_required:
         one: "sélectionnez au moins %{count} étiquette..."
         other: "sélectionnez au moins %{count} étiquettes..."
+      choose_for_topic_required_group:
+        one: "sélectionner %{count} tag parmi '%{name}'..."
+        other: "sélectionner %{count} tags parmi '%{name}'..."
       info: "Détails"
       default_info: "Cette étiquette n'est pas limitée à une catégorie et n'a aucun synonyme."
       staff_info: "Pour y définir des restrictions d'utilisation, placez cette étiquette dans un <a href=%{basePath}/tag_groups>groupe d'étiquettes</a>."
@@ -3606,6 +3608,19 @@ fr:
     topic_entrance:
       sr_jump_top_button: "Aller au premier message"
       sr_jump_bottom_button: "Aller au dernier message"
+    sidebar:
+      unread_count: "%{count} non lu"
+      new_count: "%{count} nouveau"
+      sections:
+        categories:
+          header_link_title: "toutes les catégories"
+          header_link_text: "Catégories"
+        topics:
+          header_link_title: "accueil"
+          header_link_text: "Sujets"
+          links:
+            tracked:
+              content: "Suivies"
   admin_js:
     type_to_filter: "commencez votre saisie pour filtrer…"
     admin:
@@ -3822,7 +3837,6 @@ fr:
               read: Lire un sujet ou un message spécifique qu'il contient. Le RSS est aussi accepté.
               write: Créer un nouveau sujet ou publier sur un sujet existant.
               read_lists: Lire les listes de sujets comme top, nouveaux, récents, etc. Le RSS est aussi accepté.
-              wordpress: Nécessaire pour le fonctionnement de l'extension WordPress wp-discourse.
             posts:
               edit: Modifiez n'importe quel message ou un message spécifique.
             categories:

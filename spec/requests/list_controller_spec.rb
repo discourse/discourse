@@ -148,7 +148,7 @@ RSpec.describe ListController do
 
     before do
       SiteSetting.tagging_enabled = true
-      SiteSetting.allow_staff_to_tag_pms = true
+      SiteSetting.pm_tags_allowed_for_groups = "1|2|3"
       Fabricate(:topic_tag, tag: tag, topic: private_message)
     end
 
@@ -158,8 +158,8 @@ RSpec.describe ListController do
       expect(response.status).to eq(404)
     end
 
-    it 'should fail for staff users if disabled' do
-      SiteSetting.allow_staff_to_tag_pms = false
+    it 'should fail for staff users if empty' do
+      SiteSetting.pm_tags_allowed_for_groups = ""
 
       [moderator, admin].each do |user|
         sign_in(user)
@@ -636,6 +636,26 @@ RSpec.describe ListController do
       expect(response.status).to eq(200)
       json = response.parsed_body
       expect(json["topic_list"]["topics"].size).to eq(2)
+    end
+
+    context "unicode usernames" do
+      before do
+        SiteSetting.unicode_usernames = true
+      end
+
+      it "should return the more_topics_url in the encoded form" do
+        stub_const(TopicQuery, "DEFAULT_PER_PAGE_COUNT", 1) do
+          user.update!(username: "快快快")
+
+          get "/topics/created-by/#{UrlHelper.encode(user.username)}.json"
+
+          expect(response.status).to eq(200)
+
+          json = response.parsed_body
+
+          expect(json["topic_list"]["more_topics_url"]).to eq("/topics/created-by/%E5%BF%AB%E5%BF%AB%E5%BF%AB?page=1")
+        end
+      end
     end
 
     context 'when `hide_profile_and_presence` is true' do

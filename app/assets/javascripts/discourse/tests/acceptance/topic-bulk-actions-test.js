@@ -79,6 +79,13 @@ acceptance("Topic - Bulk Actions", function (needs) {
     assert.ok(
       queryAll(".bulk-buttons")
         .html()
+        .includes(I18n.t("topics.bulk.reset_bump_dates")),
+      "it shows an option to reset bump dates"
+    );
+
+    assert.ok(
+      queryAll(".bulk-buttons")
+        .html()
         .includes(I18n.t("topics.bulk.change_tags")),
       "it shows an option to replace tags"
     );

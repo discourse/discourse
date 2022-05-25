@@ -214,6 +214,40 @@ class InlineUploads
     end
   end
 
+  def self.replace_hotlinked_image_urls(raw:, &blk)
+    replace = Proc.new do |match, match_src, replacement, _index|
+      upload = blk.call(match_src)
+      next if !upload
+
+      replacement =
+        if replacement.include?(InlineUploads::PLACEHOLDER)
+          replacement.sub(InlineUploads::PLACEHOLDER, upload.short_url)
+        elsif replacement.include?(InlineUploads::PATH_PLACEHOLDER)
+          replacement.sub(InlineUploads::PATH_PLACEHOLDER, upload.short_path)
+        end
+
+      raw = raw.gsub(
+        match,
+        replacement
+      )
+    end
+
+    # there are 6 ways to insert an image in a post
+    # HTML tag - <img src="http://...">
+    InlineUploads.match_img(raw, external_src: true, &replace)
+
+    # BBCode tag - [img]http://...[/img]
+    InlineUploads.match_bbcode_img(raw, external_src: true, &replace)
+
+    # Markdown linked image - [![alt](http://...)](http://...)
+    # Markdown inline - ![alt](http://...)
+    # Markdown inline - ![](http://... "image title")
+    # Markdown inline - ![alt](http://... "image title")
+    InlineUploads.match_md_inline_img(raw, external_src: true, &replace)
+
+    raw
+  end
+
   def self.matched_uploads(node)
     upload_path = Discourse.store.upload_path
     base_url = Discourse.base_url.sub(/https?:\/\//, "(https?://)")

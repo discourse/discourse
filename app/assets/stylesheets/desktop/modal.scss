@@ -102,15 +102,18 @@
   }
 }
 
-.json-schema-editor-modal {
-  #json-editor-holder {
-    min-width: 500px;
-  }
-}
-
 .create-invite-modal,
 .create-invite-bulk-modal,
 .share-topic-modal {
+  .title {
+    align-items: center;
+    display: flex;
+
+    .subtitle {
+      margin-left: 0.5em;
+    }
+  }
+
   &.modal .modal-body {
     margin: 1em;
     padding: unset;
@@ -120,4 +123,9 @@
     width: 40em; // scale with user font-size
     max-width: 100vw; // prevent overflow if user font-size is enourmous
   }
+}
+
+.json-editor-btn-delete {
+  @extend .btn-danger !optional;
+  @extend .no-text !optional;
 }

@@ -2309,6 +2309,21 @@ describe UsersController do
           expect(response).to be_forbidden
           expect(user.reload.name).not_to eq 'Jim Tom'
         end
+
+        context 'enabling experimental sidebar' do
+          before do
+            sign_in(user)
+          end
+
+          it "should be able to update UserOption#enable_experimental_sidebar" do
+            SiteSetting.enable_experimental_sidebar = true
+
+            put "/u/#{user.username}.json", params: { enable_experimental_sidebar: 'true' }
+
+            expect(response.status).to eq(200)
+            expect(user.user_option.enable_experimental_sidebar).to eq(true)
+          end
+        end
       end
     end
 
@@ -3882,6 +3897,23 @@ describe UsersController do
           expect(topic_post_count[topic.id.to_s]).to eq(2)
         end
       end
+
+      it "includes UserOption#enable_experimental_sidebar when SiteSetting.enable_experimental_sidebar is true" do
+        SiteSetting.enable_experimental_sidebar = true
+        user1.user_option.update!(enable_experimental_sidebar: true)
+
+        get "/u/#{user1.username}.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["user"]["user_option"]["enable_experimental_sidebar"]).to eq(true)
+      end
+
+      it "does not include UserOption#enable_experimental_sidebar when SiteSetting.enable_experimental_sidebar is false" do
+        get "/u/#{user1.username}.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["user"]["user_option"]["enable_experimental_sidebar"]).to eq(nil)
+      end
     end
 
     it "should be able to view a user" do
@@ -5208,31 +5240,54 @@ describe UsersController do
   end
 
   describe "#bookmarks" do
-    context "when polymorphic bookmarks are not used" do
-      let(:bookmark1) { Fabricate(:bookmark, user: user1) }
-      let(:bookmark2) { Fabricate(:bookmark, user: user1) }
-      let(:bookmark3) { Fabricate(:bookmark) }
-      before do
-        TopicUser.change(user1.id, bookmark1.topic_id, total_msecs_viewed: 1)
-        TopicUser.change(user1.id, bookmark2.topic_id, total_msecs_viewed: 1)
-        bookmark3
-      end
+    before do
+      register_test_bookmarkable
+      TopicUser.change(user1.id, bookmark1.bookmarkable.topic_id, total_msecs_viewed: 1)
+      TopicUser.change(user1.id, bookmark2.bookmarkable_id, total_msecs_viewed: 1)
+      Fabricate(:post, topic: bookmark2.bookmarkable)
+      bookmark3 && bookmark4
+    end
 
-      it "returns a list of serialized bookmarks for the user" do
-        sign_in(user1)
-        get "/u/#{user1.username}/bookmarks.json"
-        expect(response.status).to eq(200)
-        expect(response.parsed_body['user_bookmark_list']['bookmarks'].map { |b| b['id'] }).to match_array([bookmark1.id, bookmark2.id])
-      end
+    after do
+      Bookmark.registered_bookmarkables = []
+    end
 
-      it "returns an .ics file of bookmark reminders for the user in date order" do
-        bookmark1.update!(name: nil, reminder_at: 1.day.from_now)
-        bookmark2.update!(name: "Some bookmark note", reminder_at: 1.week.from_now)
+    let(:bookmark1) { Fabricate(:bookmark, user: user1, bookmarkable: Fabricate(:post)) }
+    let(:bookmark2) { Fabricate(:bookmark, user: user1, bookmarkable: Fabricate(:topic)) }
+    let(:bookmark3) { Fabricate(:bookmark, user: user1, bookmarkable: Fabricate(:user)) }
+    let(:bookmark4) { Fabricate(:bookmark) }
 
-        sign_in(user1)
-        get "/u/#{user1.username}/bookmarks.ics"
-        expect(response.status).to eq(200)
-        expect(response.body).to eq(<<~ICS)
+    it "returns a list of serialized bookmarks for the user" do
+      sign_in(user1)
+      get "/u/#{user1.username}/bookmarks.json"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body['user_bookmark_list']['bookmarks'].map { |b| b['id'] }).to match_array(
+        [bookmark1.id, bookmark2.id, bookmark3.id]
+      )
+    end
+
+    it "returns a list of serialized bookmarks for the user including custom registered bookmarkables" do
+      sign_in(user1)
+      bookmark3.bookmarkable.user_profile.update!(bio_raw: "<p>Something cooked</p>")
+      bookmark3.bookmarkable.user_profile.rebake!
+      get "/u/#{user1.username}/bookmarks.json"
+      expect(response.status).to eq(200)
+      response_bookmarks = response.parsed_body['user_bookmark_list']['bookmarks']
+      expect(response_bookmarks.map { |b| b['id'] }).to match_array(
+        [bookmark1.id, bookmark2.id, bookmark3.id]
+      )
+      expect(response_bookmarks.find { |b| b['id'] == bookmark3.id }['excerpt']).to eq('Something cooked')
+    end
+
+    it "returns an .ics file of bookmark reminders for the user in date order" do
+      bookmark1.update!(name: nil, reminder_at: 1.day.from_now)
+      bookmark2.update!(name: "Some bookmark note", reminder_at: 1.week.from_now)
+      bookmark3.update!(name: nil, reminder_at: 2.weeks.from_now)
+
+      sign_in(user1)
+      get "/u/#{user1.username}/bookmarks.ics"
+      expect(response.status).to eq(200)
+      expect(response.body).to eq(<<~ICS)
         BEGIN:VCALENDAR
         VERSION:2.0
         PRODID:-//Discourse//#{Discourse.current_hostname}//#{Discourse.full_version}//EN
@@ -5241,9 +5296,9 @@ describe UsersController do
         DTSTAMP:#{bookmark1.updated_at.strftime(I18n.t("datetime_formats.formats.calendar_ics"))}
         DTSTART:#{bookmark1.reminder_at_ics}
         DTEND:#{bookmark1.reminder_at_ics(offset: 1.hour)}
-        SUMMARY:#{bookmark1.topic.title}
-        DESCRIPTION:#{Discourse.base_url}/t/-/#{bookmark1.topic_id}
-        URL:#{Discourse.base_url}/t/-/#{bookmark1.topic_id}
+        SUMMARY:#{bookmark1.bookmarkable.topic.title}
+        DESCRIPTION:#{bookmark1.bookmarkable.full_url}
+        URL:#{bookmark1.bookmarkable.full_url}
         END:VEVENT
         BEGIN:VEVENT
         UID:bookmark_reminder_##{bookmark2.id}@#{Discourse.current_hostname}
@@ -5251,112 +5306,45 @@ describe UsersController do
         DTSTART:#{bookmark2.reminder_at_ics}
         DTEND:#{bookmark2.reminder_at_ics(offset: 1.hour)}
         SUMMARY:Some bookmark note
-        DESCRIPTION:#{Discourse.base_url}/t/-/#{bookmark2.topic_id}
-        URL:#{Discourse.base_url}/t/-/#{bookmark2.topic_id}
+        DESCRIPTION:#{bookmark2.bookmarkable.url}
+        URL:#{bookmark2.bookmarkable.url}
+        END:VEVENT
+        BEGIN:VEVENT
+        UID:bookmark_reminder_##{bookmark3.id}@#{Discourse.current_hostname}
+        DTSTAMP:#{bookmark3.updated_at.strftime(I18n.t("datetime_formats.formats.calendar_ics"))}
+        DTSTART:#{bookmark3.reminder_at_ics}
+        DTEND:#{bookmark3.reminder_at_ics(offset: 1.hour)}
+        SUMMARY:#{bookmark3.bookmarkable.username}
+        DESCRIPTION:#{Discourse.base_url}/u/#{bookmark3.bookmarkable.username}
+        URL:#{Discourse.base_url}/u/#{bookmark3.bookmarkable.username}
         END:VEVENT
         END:VCALENDAR
-        ICS
-      end
-
-      it "does not show another user's bookmarks" do
-        sign_in(user1)
-        get "/u/#{bookmark3.user.username}/bookmarks.json"
-        expect(response.status).to eq(403)
-      end
-
-      it "shows a helpful message if no bookmarks are found" do
-        bookmark1.destroy
-        bookmark2.destroy
-        bookmark3.destroy
-        sign_in(user1)
-        get "/u/#{user1.username}/bookmarks.json"
-        expect(response.status).to eq(200)
-        expect(response.parsed_body['bookmarks']).to eq([])
-      end
-
-      it "shows a helpful message if no bookmarks are found for the search" do
-        sign_in(user1)
-        get "/u/#{user1.username}/bookmarks.json", params: {
-          q: 'badsearch'
-        }
-        expect(response.status).to eq(200)
-        expect(response.parsed_body['bookmarks']).to eq([])
-      end
+      ICS
     end
 
-    context "for polymorphic bookmarks" do
-      class UserTestBookmarkSerializer < UserBookmarkBaseSerializer
-        def title
-          fancy_title
-        end
+    it "does not show another user's bookmarks" do
+      sign_in(Fabricate(:user))
+      get "/u/#{bookmark3.user.username}/bookmarks.json"
+      expect(response.status).to eq(403)
+    end
 
-        def fancy_title
-          @fancy_title ||= user.username
-        end
+    it "shows a helpful message if no bookmarks are found" do
+      bookmark1.destroy
+      bookmark2.destroy
+      bookmark3.destroy
+      sign_in(user1)
+      get "/u/#{user1.username}/bookmarks.json"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body['bookmarks']).to eq([])
+    end
 
-        def cooked
-          "<p>Something cooked</p>"
-        end
-
-        def bookmarkable_user
-          @bookmarkable_user ||= user
-        end
-
-        def bookmarkable_url
-          "#{Discourse.base_url}/u/#{user.username}"
-        end
-
-        def excerpt
-          return nil unless cooked
-          @excerpt ||= PrettyText.excerpt(cooked, 300, keep_emoji_images: true)
-        end
-
-        private
-
-        def user
-          object.bookmarkable
-        end
-      end
-
-      before do
-        SiteSetting.use_polymorphic_bookmarks = true
-        Bookmark.register_bookmarkable(
-          model: User,
-          serializer: UserTestBookmarkSerializer,
-          list_query: lambda do |user, guardian|
-            user.bookmarks.joins(
-              "INNER JOIN users ON users.id = bookmarks.bookmarkable_id AND bookmarks.bookmarkable_type = 'User'"
-            ).where(bookmarkable_type: "User")
-          end,
-          search_query: lambda do |bookmarks, query, ts_query|
-            bookmarks.where("users.username ILIKE ?", query)
-          end
-        )
-        TopicUser.change(user1.id, bookmark1.bookmarkable.topic_id, total_msecs_viewed: 1)
-        TopicUser.change(user1.id, bookmark2.bookmarkable_id, total_msecs_viewed: 1)
-        Fabricate(:post, topic: bookmark2.bookmarkable)
-        bookmark3 && bookmark4
-      end
-
-      after do
-        Bookmark.registered_bookmarkables = []
-      end
-
-      let(:bookmark1) { Fabricate(:bookmark, user: user1, bookmarkable: Fabricate(:post)) }
-      let(:bookmark2) { Fabricate(:bookmark, user: user1, bookmarkable: Fabricate(:topic)) }
-      let(:bookmark3) { Fabricate(:bookmark, user: user1, bookmarkable: Fabricate(:user)) }
-      let(:bookmark4) { Fabricate(:bookmark) }
-
-      it "returns a list of serialized bookmarks for the user including custom registered bookmarkables" do
-        sign_in(user1)
-        get "/u/#{user1.username}/bookmarks.json"
-        expect(response.status).to eq(200)
-        response_bookmarks = response.parsed_body['user_bookmark_list']['bookmarks']
-        expect(response_bookmarks.map { |b| b['id'] }).to match_array(
-          [bookmark1.id, bookmark2.id, bookmark3.id]
-        )
-        expect(response_bookmarks.find { |b| b['id'] == bookmark3.id }['excerpt']).to eq('Something cooked')
-      end
+    it "shows a helpful message if no bookmarks are found for the search" do
+      sign_in(user1)
+      get "/u/#{user1.username}/bookmarks.json", params: {
+        q: 'badsearch'
+      }
+      expect(response.status).to eq(200)
+      expect(response.parsed_body['bookmarks']).to eq([])
     end
   end
 

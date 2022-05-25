@@ -462,6 +462,7 @@ sr:
       later_this_week: "Kasnije ove sedmice"
       start_of_next_business_week: "Ponedeljak"
       start_of_next_business_week_alt: "Naredni ponedeljak"
+      next_week: "Sledeće sedmice"
       next_month: "Naredni mesec"
       custom: "Prilagođen datum i vreme"
     user_action:
@@ -1246,12 +1247,6 @@ sr:
         remove: "Onemogući"
       topic_status_update:
         when: "Kada:"
-      auto_update_input:
-        later_today: "Kasnije ovog dana"
-        tomorrow: "Sutra"
-        later_this_week: "Kasnije ove sedmice"
-        next_week: "Sledeće sedmice"
-        next_month: "Naredni mesec"
       auto_close:
         error: "Molimo unesite validnu vrednost"
         based_on_last_post: "Nemoj zatvoriti dok poslednja poruka nije odprilike ovoliko stara."
@@ -1304,8 +1299,6 @@ sr:
         close: "Zatvori temu"
         unarchive: "Vrati temu iz arhiva"
         archive: "Arhiviraj temu"
-        invisible: "Ukloni temu s popisa"
-        visible: "Stavi na popis"
         reset_read: "Poništi podatke o pročitanom"
       feature:
         pin: "Zakači temu"
@@ -1784,6 +1777,19 @@ sr:
         member: "član"
         regular: "stalni član"
         leader: "vođa"
+    sidebar:
+      unread_count: "%{count} nepročitana"
+      new_count: "%{count} nova"
+      sections:
+        categories:
+          header_link_title: "sve kategorije"
+          header_link_text: "Kategorije"
+        topics:
+          header_link_title: "home"
+          header_link_text: "Teme"
+          links:
+            tracked:
+              content: "Praćeno"
   admin_js:
     type_to_filter: "upiši za filtriranje"
     admin:

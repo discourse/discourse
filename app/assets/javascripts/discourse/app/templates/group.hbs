@@ -1,6 +1,6 @@
 {{plugin-outlet name="before-group-container" tagName="span" connectorTagName="div" args=(hash group=model)}}
 
-<div class="container group {{model.name}}">
+<div class="container group group-{{model.name}}">
   {{#if showTooltip}}
     <div class="group-delete-tooltip">
       <p>{{i18n "admin.groups.delete_automatic_group"}}</p>

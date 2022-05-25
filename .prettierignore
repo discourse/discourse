@@ -24,6 +24,7 @@ public/
 vendor/
 app/assets/javascripts/discourse/tests/test-boot-rails.js
 app/assets/javascripts/discourse/tests/fixtures
+spec/
 node_modules/
 dist/
 **/*.rb

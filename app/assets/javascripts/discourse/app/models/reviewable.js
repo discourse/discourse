@@ -4,6 +4,7 @@ import { Promise } from "rsvp";
 import RestModel from "discourse/models/rest";
 import { ajax } from "discourse/lib/ajax";
 import discourseComputed from "discourse-common/utils/decorators";
+import { underscore } from "@ember/string";
 
 export const PENDING = 0;
 export const APPROVED = 1;
@@ -19,7 +20,7 @@ const Reviewable = RestModel.extend({
       type = "ReviewableQueuedTopic";
     }
 
-    return I18n.t(`review.types.${type.underscore()}.title`, {
+    return I18n.t(`review.types.${underscore(type)}.title`, {
       defaultValue: "",
     });
   },

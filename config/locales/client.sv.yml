@@ -77,15 +77,33 @@ sv:
         date_month: "D MMM"
         date_year: "MMM 'YY"
       medium:
+        less_than_x_minutes:
+          one: "mindre än %{count} min"
+          other: "mindre än %{count} minuter"
         x_minutes:
           one: "%{count} min"
           other: "%{count} min"
         x_hours:
           one: "%{count} timme"
           other: "%{count} timmar"
+        about_x_hours:
+          one: "ca %{count} timme"
+          other: "ungefär %{count} timmar"
         x_days:
           one: "%{count} dag"
           other: "%{count} dagar"
+        x_months:
+          one: "%{count} månad"
+          other: "%{count} månader"
+        about_x_years:
+          one: "ungefär %{count} år"
+          other: "ungefär %{count} år"
+        over_x_years:
+          one: "över %{count} år"
+          other: "över %{count} år"
+        almost_x_years:
+          one: "nästan %{count} år"
+          other: "nästan %{count} år"
         date_year: "D MMM, 'YY"
       medium_with_ago:
         x_minutes:
@@ -287,8 +305,8 @@ sv:
         unbookmark_with_reminder: "Klicka för att ta bort alla bokmärken och påminnelser i detta ämne."
     bookmarks:
       created: "Du har bokmärkt detta inlägg. %{name}"
-      create_for: "Skapa bokmärke för %{type}"
-      edit_for: "Redigera bokmärke för %{type}"
+      create: "Skapa bokmärke"
+      edit: "Redigera bokmärke"
       not_bookmarked: "bokmärk detta inlägg"
       remove_reminder_keep_bookmark: "Ta bort påminnelsen och behåll bokmärket"
       created_with_reminder: "Du har bokmärkt detta inlägg med en påminnelse %{date}. %{name}"
@@ -565,7 +583,9 @@ sv:
         other: "år"
       relative: "Relativ"
     time_shortcut:
+      now: "Nu"
       later_today: "Senare idag"
+      two_days: "Två dagar"
       next_business_day: "Nästa vardag"
       tomorrow: "Imorgon"
       post_local_date: "Datum i inlägget"
@@ -573,13 +593,20 @@ sv:
       this_weekend: "Detta veckoslut"
       start_of_next_business_week: "Måndag"
       start_of_next_business_week_alt: "Nästa måndag"
+      next_week: "Nästa vecka"
       two_weeks: "Två veckor"
       next_month: "Nästa månad"
+      two_months: "Två månader"
+      three_months: "Tre månader"
+      four_months: "Fyra månader"
       six_months: "Sex månader"
-      custom: "Anpassa datum och tid"
+      one_year: "Ett år"
+      forever: "För alltid"
       relative: "Relativ tid"
       none: "Ingen behövs"
       last_custom: "Senaste anpassade datumtid"
+      custom: "Anpassa datum och tid"
+      select_timeframe: "Välj en tidsram"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> skrev <a href='%{topicUrl}'>ämnet</a>"
       you_posted_topic: "<a href='%{userUrl}'>Du</a> skrev <a href='%{topicUrl}'>ämnet</a>"
@@ -1058,6 +1085,7 @@ sv:
       external_links_in_new_tab: "Öppna alla externa länkar i en ny flik"
       enable_quoting: "Aktivera citatsvar för markerad text"
       enable_defer: "Aktivera fördröjning för att markera ämnen som lästa"
+      enable_experimental_sidebar: "Aktivera experimentellt sidofält"
       change: "ändra"
       featured_topic: "Utvalt ämne"
       moderator: "%{user} är en moderator"
@@ -1487,8 +1515,6 @@ sv:
           title: "Inbjudningslänk"
           success: "Länk för inbjudan framgångsrikt skapad!"
           error: "Ett fel inträffade vid skapande av inbjudningslänk"
-          max_redemptions_allowed_label: "Hur många personer är tillåtna att registrera sig via denna länk?"
-          expires_at: "När ska denna inbjudningslänk upphöra?"
         invite:
           new_title: "Skapa inbjudan"
           edit_title: "Redigera inbjudan"
@@ -1534,7 +1560,9 @@ sv:
         title: "Sammanfattning"
         stats: "Statistik"
         time_read: "lästid"
+        time_read_title: "%{duration} (hela tiden)"
         recent_time_read: "senaste lästid"
+        recent_time_read_title: "%{duration} (de senaste 60 dagarna)"
         topic_count:
           one: "ämne skapat"
           other: "ämnen skapade"
@@ -2194,6 +2222,8 @@ sv:
       in: "i"
       in_this_topic: "i detta ämne"
       in_this_topic_tooltip: "växla till att söka i alla ämnen"
+      in_messages: "i meddelanden"
+      in_messages_tooltip: "växla till att söka på vanliga ämnen"
       in_topics_posts: "i alla ämnen och inlägg"
       enter_hint: "eller tryck Enter"
       in_posts_by: "i inlägg av %{username}"
@@ -2295,6 +2325,7 @@ sv:
         clear_all: "Rensa alla"
         unlist_topics: "Avlista ämnen"
         relist_topics: "Lista om ämnen"
+        reset_bump_dates: "Återställ knuffdatum"
         defer: "Skjut upp"
         delete: "Ta bort ämnen"
         dismiss: "Avfärda"
@@ -2460,24 +2491,6 @@ sv:
         min_duration: "Varaktigheten måste vara större än 0"
         max_duration: "Varaktigheten måste vara kortare än 20 år"
         duration: "Varaktighet"
-      auto_update_input:
-        none: "Välj en tidsram"
-        now: "Nu"
-        later_today: "Senare idag"
-        tomorrow: "Imorgon"
-        later_this_week: "Senare denna vecka"
-        this_weekend: "Detta veckoslut"
-        next_week: "Nästa vecka"
-        two_weeks: "Två veckor"
-        next_month: "Nästa månad"
-        two_months: "Två månader"
-        three_months: "Tre månader"
-        four_months: "Fyra månader"
-        six_months: "Sex månader"
-        one_year: "Ett år"
-        forever: "För alltid"
-        pick_date_and_time: "Välj datum och tid"
-        set_based_on_last_post: "Stäng baserat på senaste inlägg"
       publish_to_category:
         title: "Schemalägg publicering"
       temp_open:
@@ -2589,8 +2602,8 @@ sv:
         unpin: "Ta ner ämne..."
         unarchive: "Dearkivera ämne"
         archive: "Arkivera ämne"
-        invisible: "Markera som olistad"
-        visible: "Markera som listad"
+        invisible: "Avlista ämne"
+        visible: "Lista ämne"
         reset_read: "Återställ läsdata"
         make_public: "Gör ämnet offentligt..."
         make_private: "Skapa personligt meddelande"
@@ -2783,6 +2796,7 @@ sv:
           other: "Du har markerat <b>%{count}</b> inlägg."
       deleted_by_author_simple: "(ämne raderat av författaren)"
     post:
+      confirm_delete: "Är du säker på att du vill radera det här inlägget?"
       quote_reply: "Citat"
       quote_reply_shortcut: "Eller tryck på q"
       quote_edit: "Redigera"
@@ -3526,6 +3540,9 @@ sv:
       choose_for_topic_required:
         one: "välj minst %{count} tagg..."
         other: "välj minst %{count} taggar..."
+      choose_for_topic_required_group:
+        one: "välj %{count} tagg från '%{name}'..."
+        other: "välj %{count} taggar från%{name}'..."
       info: "Info"
       default_info: "Denna tagg är inte begränsad till någon kategori, och har inga synonymer."
       staff_info: "För att lägga till begränsningar, placera denna tagg i en <a href=%{basePath}/tag_groups>tagggrupp</a>."
@@ -3600,6 +3617,7 @@ sv:
           title: "Tystad"
           description: "Du aviseras inte om nya ämnen med den här taggen, och de kommer inte att visas på din \"oläst\"-flik."
       groups:
+        back_btn: "Tillbaka till alla taggar"
         title: "Taggrupper"
         about_heading: "Välj en taggrupp eller skapa en ny"
         about_heading_empty: "Skapa en ny taggrupp för att komma igång"
@@ -3694,6 +3712,27 @@ sv:
       expand_btn: "Expandera tabell"
     second_factor_auth:
       redirect_after_success: "Andra faktorautentiseringen lyckades. Omdirigerar till föregående sida…"
+    sidebar:
+      unread_count: "%{count} oläst"
+      new_count: "%{count} ny"
+      sections:
+        categories:
+          header_link_title: "alla kategorier"
+          header_link_text: "Kategorier"
+        topics:
+          header_link_title: "start"
+          header_link_text: "Ämnen"
+          header_action_title: "skapa ett nytt ämne"
+          links:
+            everything:
+              content: "Allting"
+              title: "Alla ämnen"
+            tracked:
+              content: "Följda"
+              title: "Alla spårade ämnen"
+            bookmarked:
+              content: "Bokmärkt"
+              title: "Alla bokmärkta ämnen"
   admin_js:
     type_to_filter: "skriv för att filtrera..."
     admin:
@@ -3920,7 +3959,6 @@ sv:
               write: Skapa ett nytt ämne eller inlägg till en befintligt sådan.
               update: Uppdatera ett ämne. Ändra titel, kategori, taggar, etc.
               read_lists: Läs ämneslistor som topp, ny, senaste osv. RSS stöds också.
-              wordpress: Nödvändigt för att WordPress-tillägget wp-discourse ska fungera.
             posts:
               edit: Redigera ett inlägg eller ett specifikt inlägg.
             categories:
@@ -3948,6 +3986,11 @@ sv:
               list_user_badges: Lista användarens märken.
               assign_badge_to_user: Tilldela ett märke till en användare.
               revoke_badge_from_user: Återkalla ett märke från en användare.
+            wordpress:
+              publishing: Nödvändigt för WP Discourse-tilläggets publiceringsfunktioner (krävs).
+              commenting: Nödvändigt för WP Discourse-tilläggets kommentarsfunktioner.
+              discourse_connect: Nödvändigt för WP Discourse-tilläggets DiscourseConnect-funktioner.
+              utilities: Nödvändigt om du använder WP Discourse-tillägget Utilities.
       web_hooks:
         title: "Webhookar"
         none: "Det finns inga webhookar just nu."

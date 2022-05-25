@@ -21,7 +21,6 @@ describe CookedPostProcessor do
       cpp.expects(:post_process_oneboxes).in_sequence(post_process)
       cpp.expects(:post_process_images).in_sequence(post_process)
       cpp.expects(:optimize_urls).in_sequence(post_process)
-      cpp.expects(:pull_hotlinked_images).in_sequence(post_process)
       cpp.post_process
 
       expect(PostUpload.exists?(post: post, upload: upload)).to eq(true)
@@ -1080,8 +1079,7 @@ describe CookedPostProcessor do
         post = Fabricate(:post, raw: url)
         upload.update!(url: "https://test.s3.amazonaws.com/something.png")
 
-        post.custom_fields[Post::DOWNLOADED_IMAGES] = { "//image.com/avatar.png": upload.id }
-        post.save_custom_fields
+        PostHotlinkedMedia.create!(url: "//image.com/avatar.png", post: post, status: 'downloaded', upload: upload)
 
         cpp = CookedPostProcessor.new(post, invalidate_oneboxes: true)
         stub_image_size(width: 100, height: 200)
@@ -1113,8 +1111,7 @@ describe CookedPostProcessor do
           post = Fabricate(:post, raw: url)
           upload.update!(url: "https://test.s3.amazonaws.com/something.png")
 
-          post.custom_fields[Post::DOWNLOADED_IMAGES] = { "//image.com/avatar.png": upload.id }
-          post.save_custom_fields
+          PostHotlinkedMedia.create!(url: "//image.com/avatar.png", post: post, status: 'downloaded', upload: upload)
 
           cooked_url = "https://localhost/secure-media-uploads/test.png"
           UrlHelper.expects(:cook_url).with(upload.url, secure: true).returns(cooked_url)
@@ -1137,14 +1134,30 @@ describe CookedPostProcessor do
 
       post = Fabricate(:post, raw: url)
 
-      post.custom_fields[Post::LARGE_IMAGES] = ["//image.com/avatar.png"]
-      post.save_custom_fields
+      PostHotlinkedMedia.create!(url: "//image.com/avatar.png", post: post, status: 'too_large')
 
       cpp = CookedPostProcessor.new(post, invalidate_oneboxes: true)
       cpp.post_process
 
       expect(cpp.doc.to_s).to match(/<div class="large-image-placeholder">/)
       expect(cpp.doc.to_s).to include(I18n.t("upload.placeholders.too_large_humanized", max_size: "4 MB"))
+    end
+
+    it "replaces broken image placeholder" do
+      url = 'https://image.com/my-avatar'
+      image_url = 'https://image.com/avatar.png'
+
+      Oneboxer.stubs(:onebox).with(url, anything).returns("<img class='onebox' src='#{image_url}' />")
+
+      post = Fabricate(:post, raw: url)
+
+      PostHotlinkedMedia.create!(url: "//image.com/avatar.png", post: post, status: 'download_failed')
+
+      cpp = CookedPostProcessor.new(post, invalidate_oneboxes: true)
+      cpp.post_process
+
+      expect(cpp.doc.to_s).to have_tag("span.broken-image")
+      expect(cpp.doc.to_s).to include(I18n.t("post.image_placeholder.broken"))
     end
   end
 
@@ -1529,102 +1542,6 @@ describe CookedPostProcessor do
     end
   end
 
-  context "#pull_hotlinked_images" do
-
-    let(:post) { build(:post, created_at: 20.days.ago) }
-    let(:cpp) { CookedPostProcessor.new(post) }
-
-    before { cpp.stubs(:available_disk_space).returns(90) }
-
-    it "runs even when download_remote_images_to_local is disabled" do
-      # We want to run it to pull hotlinked optimized images
-      SiteSetting.download_remote_images_to_local = false
-      expect { cpp.pull_hotlinked_images }.
-        to change { Jobs::PullHotlinkedImages.jobs.count }.by 1
-    end
-
-    context "when download_remote_images_to_local? is enabled" do
-      before do
-        SiteSetting.download_remote_images_to_local = true
-      end
-
-      it "disables download_remote_images if there is not enough disk space" do
-        cpp.expects(:available_disk_space).returns(5)
-        cpp.pull_hotlinked_images
-        expect(SiteSetting.download_remote_images_to_local).to eq(false)
-      end
-
-      it "does not run when requested to skip" do
-        CookedPostProcessor.new(post, skip_pull_hotlinked_images: true).pull_hotlinked_images
-        expect(Jobs::PullHotlinkedImages.jobs.size).to eq(0)
-      end
-
-      context "and there is enough disk space" do
-        before { cpp.expects(:disable_if_low_on_disk_space).at_least_once }
-
-        context "and the post has been updated by an actual user" do
-
-          before { post.id = 42 }
-
-          it "ensures only one job is scheduled right after the editing_grace_period" do
-            freeze_time
-
-            Jobs.expects(:cancel_scheduled_job).with(:pull_hotlinked_images, post_id: post.id).once
-
-            delay = SiteSetting.editing_grace_period + 1
-
-            expect_enqueued_with(job: :pull_hotlinked_images, args: { post_id: post.id }, at: Time.zone.now + delay.seconds) do
-              cpp.pull_hotlinked_images
-            end
-          end
-
-        end
-
-      end
-
-    end
-
-  end
-
-  context "#disable_if_low_on_disk_space" do
-
-    let(:post) { build(:post, created_at: 20.days.ago) }
-    let(:cpp) { CookedPostProcessor.new(post) }
-
-    before do
-      SiteSetting.download_remote_images_to_local = true
-      SiteSetting.download_remote_images_threshold = 20
-      cpp.stubs(:available_disk_space).returns(50)
-    end
-
-    it "does nothing when there's enough disk space" do
-      SiteSetting.expects(:download_remote_images_to_local=).never
-      cpp.disable_if_low_on_disk_space
-    end
-
-    context "when there's not enough disk space" do
-
-      before { SiteSetting.download_remote_images_threshold = 75 }
-
-      it "disables download_remote_images_threshold and send a notification to the admin" do
-        StaffActionLogger.any_instance.expects(:log_site_setting_change).once
-        SystemMessage.expects(:create_from_system_user).with(Discourse.site_contact_user, :download_remote_images_disabled).once
-        cpp.disable_if_low_on_disk_space
-
-        expect(SiteSetting.download_remote_images_to_local).to eq(false)
-      end
-
-      it "doesn't disable download_remote_images_to_local if site uses S3" do
-        setup_s3
-        cpp.disable_if_low_on_disk_space
-
-        expect(SiteSetting.download_remote_images_to_local).to eq(true)
-      end
-
-    end
-
-  end
-
   context "#is_a_hyperlink?" do
 
     let(:post) { build(:post) }
@@ -1739,6 +1656,22 @@ describe CookedPostProcessor do
       end
     end
 
+    context "external discourse instance quote" do
+      let(:external_raw) do
+        <<~RAW.strip
+        [quote="random_guy_not_from_our_discourse, post:2004, topic:401"]
+        this quote is not from our discourse
+        [/quote]
+        and this is a reply
+        RAW
+      end
+      let(:cp) { Fabricate(:post, raw: external_raw) }
+
+      it "it should be marked as missing" do
+        cpp.post_process_quotes
+        expect(cpp.doc.css('aside.quote.quote-post-not-found')).to be_present
+      end
+    end
   end
 
   context "full quote on direct reply" do

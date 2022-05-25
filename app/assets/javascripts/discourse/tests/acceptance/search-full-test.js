@@ -105,7 +105,7 @@ acceptance("Search - Full Page", function (needs) {
     });
   });
 
-  needs.hooks.afterEach(function () {
+  needs.hooks.afterEach(() => {
     searchResultClickTracked = false;
   });
 
@@ -133,7 +133,7 @@ acceptance("Search - Full Page", function (needs) {
   test("search for personal messages", async function (assert) {
     await visit("/search");
 
-    await fillIn(".search-query", "discourse in:personal");
+    await fillIn(".search-query", "discourse in:messages");
     await click(".search-cta");
 
     assert.strictEqual(count(".fps-topic"), 1, "has one post");
@@ -246,7 +246,7 @@ acceptance("Search - Full Page", function (needs) {
     );
   });
 
-  test("update in:personal filter through advanced search ui", async function (assert) {
+  test("update in:messages filter through advanced search ui", async function (assert) {
     await visit("/search");
     await fillIn(".search-query", "none");
     await click(".search-advanced-options .in-private");
@@ -258,8 +258,8 @@ acceptance("Search - Full Page", function (needs) {
 
     assert.strictEqual(
       queryAll(".search-query").val(),
-      "none in:personal",
-      'has updated search term to "none in:personal"'
+      "none in:messages",
+      'has updated search term to "none in:messages"'
     );
 
     await fillIn(".search-query", "none in:personal-direct");

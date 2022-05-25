@@ -9,27 +9,6 @@ class Search
 
     class TextHelper
       extend ActionView::Helpers::TextHelper
-
-      private
-
-      # TODO: Remove when https://github.com/rails/rails/pull/39979 is merged
-      # For a 10_000 words string, speeds up excerpts by 85X.
-      def self.cut_excerpt_part(part_position, part, separator, options)
-        return "", "" unless part
-
-        radius   = options.fetch(:radius, 100)
-        omission = options.fetch(:omission, "...")
-
-        if separator != ""
-          part = part.split(separator)
-          part.delete("")
-        end
-
-        affix = part.length > radius ? omission : ""
-        part = part.public_send(part_position == :first ? :last : :first, radius)
-        part = part.join(separator) if separator != ""
-        [affix, part]
-      end
     end
 
     attr_reader(
@@ -52,7 +31,7 @@ class Search
 
     BLURB_LENGTH = 200
 
-    def initialize(type_filter:, term:, search_context:, blurb_length: nil, blurb_term: nil)
+    def initialize(type_filter:, term:, search_context:, blurb_length: nil, blurb_term: nil, is_header_search: false)
       @type_filter = type_filter
       @term = term
       @blurb_term = blurb_term || term
@@ -64,6 +43,7 @@ class Search
       @tags = []
       @groups = []
       @error = nil
+      @is_header_search = is_header_search
     end
 
     def error=(error)
@@ -106,10 +86,9 @@ class Search
 
     def add(object)
       type = object.class.to_s.downcase.pluralize
-
-      if @type_filter.present? && public_send(type).length == Search.per_filter
+      if !@is_header_search && public_send(type).length == Search.per_filter
         @more_full_page_results = true
-      elsif !@type_filter.present? && public_send(type).length == Search.per_facet
+      elsif @is_header_search && public_send(type).length == Search.per_facet
         instance_variable_set("@more_#{type}".to_sym, true)
       else
         (self.public_send(type)) << object

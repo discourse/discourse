@@ -1304,8 +1304,6 @@ sq:
         unpin: "Çngjite temën..."
         unarchive: "Çarkivoje temën"
         archive: "Arkivoje temën"
-        invisible: "Hiqeni nga Listat"
-        visible: "Listojeni"
         reset_read: "Reset Read Data"
       feature:
         pin: "Ngjite temën"
@@ -1927,6 +1925,19 @@ sq:
         member: "anëtarë"
         regular: "i zakonshëm"
         leader: "udhëheqës"
+    sidebar:
+      unread_count: "%{count} e palexuar"
+      new_count: "%{count} e re"
+      sections:
+        categories:
+          header_link_title: "kategoritë"
+          header_link_text: "Categories"
+        topics:
+          header_link_title: "kryefaqja"
+          header_link_text: "Tema"
+          links:
+            tracked:
+              content: "Gjurmuar"
   admin_js:
     type_to_filter: "shkruaj për kërkim"
     admin:

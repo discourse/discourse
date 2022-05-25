@@ -1,4 +1,8 @@
 import I18n from "I18n";
+import {
+  NO_REMINDER_ICON,
+  WITH_REMINDER_ICON,
+} from "discourse/models/bookmark";
 import { registerTopicFooterButton } from "discourse/lib/register-topic-footer-button";
 import showModal from "discourse/lib/show-modal";
 
@@ -11,8 +15,7 @@ const DEFER_PRIORITY = 500;
 export default {
   name: "topic-footer-buttons",
 
-  initialize(container) {
-    const siteSettings = container.lookup("site-settings:main");
+  initialize() {
     registerTopicFooterButton({
       id: "share-and-invite",
       icon: "d-topic-share",
@@ -74,9 +77,9 @@ export default {
       id: "bookmark",
       icon() {
         if (this.topic.bookmarks.some((bookmark) => bookmark.reminder_at)) {
-          return "discourse-bookmark-clock";
+          return WITH_REMINDER_ICON;
         }
-        return "bookmark";
+        return NO_REMINDER_ICON;
       },
       priority: BOOKMARK_PRIORITY,
       classNames() {
@@ -99,12 +102,9 @@ export default {
         if (this.topic.bookmarkCount === 0) {
           return I18n.t("bookmarked.help.bookmark");
         } else if (this.topic.bookmarkCount === 1) {
-          // TODO (martin) [POLYBOOK] Not relevant once polymorphic bookmarks are implemented.
-          const anyTopicBookmarks = this.topic.bookmarks.some((bookmark) => {
-            return siteSettings.use_polymorphic_bookmarks
-              ? bookmark.for_topic
-              : bookmark.bookmarkable_type === "Topic";
-          });
+          const anyTopicBookmarks = this.topic.bookmarks.some(
+            (bookmark) => bookmark.bookmarkable_type === "Topic"
+          );
 
           if (anyTopicBookmarks) {
             return I18n.t("bookmarked.help.edit_bookmark_for_topic");
@@ -119,10 +119,7 @@ export default {
           return I18n.t("bookmarked.help.unbookmark");
         }
       },
-      // TODO (martin) [POLYBOOK] Not relevant once polymorphic bookmarks are implemented.
-      action: siteSettings.use_polymorphic_bookmarks
-        ? "toggleBookmarkPolymorphic"
-        : "toggleBookmark",
+      action: "toggleBookmark",
       dropdown() {
         return this.site.mobileView;
       },

@@ -32,19 +32,17 @@ discourseModule("Unit | Controller | user-notifications", function () {
       EmberObject.create({ read: false }),
       EmberObject.create({ read: true }),
     ];
-    let markModelsRead = false;
-    const controller = this.getController("user-notifications", {
-      model,
-      markModelsRead: () => {
-        markModelsRead = true;
-      },
-    });
+    const controller = this.getController("user-notifications", { model });
     pretender.put("/notifications/mark-read", () => {
       return [500];
     });
 
     assert.rejects(controller.markRead());
-    assert.strictEqual(markModelsRead, false);
+    assert.deepEqual(
+      model.map(({ read }) => read),
+      [false, true],
+      "models unmodified"
+    );
   });
 
   test("Marks all notifications read when no high priority notifications", function (assert) {
@@ -53,9 +51,9 @@ discourseModule("Unit | Controller | user-notifications", function () {
     const controller = this.getController("user-notifications", {
       model: [],
       currentUser,
-      markRead: () => {
-        markRead = true;
-      },
+    });
+    sinon.stub(controller, "markRead").callsFake(() => {
+      markRead = true;
     });
 
     controller.send("resetNew");
@@ -65,7 +63,6 @@ discourseModule("Unit | Controller | user-notifications", function () {
 
   test("Shows modal when has high priority notifications", function (assert) {
     let capturedProperties;
-    const markReadStub = () => {};
     sinon
       .stub(showModal, "default")
       .withArgs("dismiss-notification-confirmation")
@@ -75,15 +72,14 @@ discourseModule("Unit | Controller | user-notifications", function () {
     const currentUser = User.create({ unread_high_priority_notifications: 1 });
     const controller = this.getController("user-notifications", {
       currentUser,
-      markRead: markReadStub,
     });
+    const markReadFake = sinon.fake();
+    sinon.stub(controller, "markRead").callsFake(markReadFake);
 
     controller.send("resetNew");
 
     assert.strictEqual(capturedProperties.count, 1);
-    assert.strictEqual(
-      capturedProperties.dismissNotifications(),
-      markReadStub()
-    );
+    capturedProperties.dismissNotifications();
+    assert.strictEqual(markReadFake.callCount, 1);
   });
 });

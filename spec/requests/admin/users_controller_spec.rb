@@ -39,6 +39,11 @@ RSpec.describe Admin::UsersController do
         end.to change { UserHistory.where(action: UserHistory.actions[:check_email], acting_user_id: admin.id).count }.by(1)
         expect(response.status).to eq(200)
       end
+
+      it "can be ordered by emails" do
+        get "/admin/users/list.json", params: { show_emails: "true", order: "email" }
+        expect(response.status).to eq(200)
+      end
     end
   end
 
@@ -303,7 +308,8 @@ RSpec.describe Admin::UsersController do
     it "also prevents use of any api keys" do
       api_key = Fabricate(:api_key, user: user)
       post "/bookmarks.json", params: {
-        post_id: Fabricate(:post).id
+        bookmarkable_id: Fabricate(:post).id,
+        bookmarkable_type: "Post"
       }, headers: { HTTP_API_KEY: api_key.key }
       expect(response.status).to eq(200)
 

@@ -373,7 +373,8 @@ class DiscourseConnect < DiscourseConnectBase
   end
 
   def resolve_username
-    suggester_input = [username, name]
+    suggester_input = [username]
+    suggester_input << name if SiteSetting.use_name_for_username_suggestions
     suggester_input << email if SiteSetting.use_email_for_username_and_name_suggestions
     UserNameSuggester.suggest(*suggester_input)
   end

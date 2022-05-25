@@ -36,6 +36,10 @@ const TopicRoute = DiscourseRoute.extend({
   titleToken() {
     const model = this.modelFor("topic");
     if (model) {
+      if (model.get("errorHtml")) {
+        return model.get("errorTitle");
+      }
+
       const result = model.get("unicode_title") || model.get("title"),
         cat = model.get("category");
 

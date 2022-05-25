@@ -10,6 +10,7 @@ import deprecated from "discourse-common/lib/deprecated";
 import discourseComputed from "discourse-common/utils/decorators";
 import { getOwner } from "discourse-common/lib/get-owner";
 import { isEmpty } from "@ember/utils";
+import { htmlSafe } from "@ember/template";
 
 const Site = RestModel.extend({
   isReadOnly: alias("is_readonly"),
@@ -48,7 +49,7 @@ const Site = RestModel.extend({
     if (!isEmpty(siteFields)) {
       return siteFields.map((f) => {
         let value = fields ? fields[f.id.toString()] : null;
-        value = value || "&mdash;".htmlSafe();
+        value = value || htmlSafe("&mdash;");
         return { name: f.name, value };
       });
     }
@@ -128,6 +129,7 @@ Site.reopenClass(Singleton, {
     const store = getOwner(this).lookup("service:store");
     const siteAttributes = PreloadStore.get("site");
     siteAttributes["isReadOnly"] = PreloadStore.get("isReadOnly");
+    siteAttributes["isStaffWritesOnly"] = PreloadStore.get("isStaffWritesOnly");
     return store.createRecord("site", siteAttributes);
   },
 

@@ -99,6 +99,11 @@ he:
         date_month: "D בMMM"
         date_year: "MMM YY"
       medium:
+        less_than_x_minutes:
+          one: "פחות מדקה (%{count})"
+          two: "פחות מ־%{count} דקות"
+          many: "פחות מ־%{count} דקות"
+          other: "פחות מ־%{count} דקות"
         x_minutes:
           one: "דקה"
           two: "%{count} דקות"
@@ -109,11 +114,36 @@ he:
           two: "שעתיים"
           many: "%{count} שעות"
           other: "%{count} שעות"
+        about_x_hours:
+          one: "בערך שעה (%{count})"
+          two: "בערך שעתיים (%{count})"
+          many: "בערך %{count} שעות"
+          other: "בערך %{count} שעות"
         x_days:
           one: "יום"
           two: "יומיים"
           many: "%{count} ימים"
           other: "%{count} ימים"
+        x_months:
+          one: "חודש (%{count})"
+          two: "חודשיים (%{count})"
+          many: "%{count} חודשים"
+          other: "%{count} חודשים"
+        about_x_years:
+          one: "בערך שנה (%{count})"
+          two: "בערך שנתיים (%{count})"
+          many: "בערך %{count} שנים"
+          other: "בערך %{count} שנים"
+        over_x_years:
+          one: "למעלה משנה (%{count})"
+          two: "למעלה משנתיים (%{count})"
+          many: "למעלה מ־%{count} שנים"
+          other: "למעלה מ־%{count} שנים"
+        almost_x_years:
+          one: "כמעט שנה (%{count})"
+          two: "כמעט שנתיים (%{count})"
+          many: "כמעט %{count} שנים"
+          other: "כמעט %{count} שנים"
         date_year: "D בMMM‏ YY"
       medium_with_ago:
         x_minutes:
@@ -339,8 +369,8 @@ he:
         unbookmark_with_reminder: "יש ללחוץ כדי להסיר את כל הסימניות והתזכורות בנושא זה."
     bookmarks:
       created: "הוספת את הפוסט הזה לסימניות. %{name}"
-      create_for: "יצירת סימנייה אל %{type}"
-      edit_for: "עריכת סימנייה אל %{type}"
+      create: "יצירת סימנייה"
+      edit: "עריכת סימנייה"
       not_bookmarked: "סמנו פוסט זה עם סימנייה"
       remove_reminder_keep_bookmark: "הסרת תזכורת ושמירת הסימנייה"
       created_with_reminder: "סימנת את הפוסט הזה עם תזכורת %{date}. %{name}"
@@ -653,7 +683,9 @@ he:
         other: "שנים"
       relative: "יחסי"
     time_shortcut:
+      now: "כעת"
       later_today: "בהמשך היום"
+      two_days: "יומיים"
       next_business_day: "יום העסקים הבא"
       tomorrow: "מחר"
       post_local_date: "תאריך בפוסט"
@@ -661,13 +693,20 @@ he:
       this_weekend: "בסוף שבוע זה"
       start_of_next_business_week: "יום שני"
       start_of_next_business_week_alt: "יום שני הבא"
+      next_week: "בשבוע הבא"
       two_weeks: "שבועיים"
       next_month: "חודש הבא"
+      two_months: "חודשיים"
+      three_months: "שלושה חודשים"
+      four_months: "ארבעה חודשים"
       six_months: "שישה חודשים"
-      custom: "תאריך ושעה מותאמים אישית"
+      one_year: "שנה"
+      forever: "לנצח"
       relative: "זמן יחסי"
       none: "אין צורך"
       last_custom: "התאריך והשעה האחרונים שהותאמו אישית"
+      custom: "תאריך ושעה מותאמים אישית"
+      select_timeframe: "נא לבחור טווח זמן"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> פרסם <a href='%{topicUrl}'>את הנושא</a>"
       you_posted_topic: "<a href='%{userUrl}'>את/ה</a> פרסמת <a href='%{topicUrl}'>את הנושא</a>"
@@ -1160,6 +1199,7 @@ he:
       external_links_in_new_tab: "פתיחת כל הקישורים החיצוניים בלשונית חדשה"
       enable_quoting: "הפעלת תגובת ציטוט לטקסט מסומן"
       enable_defer: "הפעלת דחייה לאחר כך כדי לסמן נושאים כלא נקראו"
+      enable_experimental_sidebar: "הפעלת סרגל צד ניסיוני"
       change: "שנה"
       featured_topic: "נושא מומלץ"
       moderator: "ל־%{user} יש תפקיד פיקוח"
@@ -1599,8 +1639,6 @@ he:
           title: "קישור הזמנה"
           success: "קישור הזמנה יוצר בהצלחה!"
           error: "אירעה שגיאה ביצירת קישור הזמנה."
-          max_redemptions_allowed_label: "לכמה אנשים מותר להירשם באמצעות הקישור הזה?"
-          expires_at: "מתי תוקף קישור ההזמנה יפוג?"
         invite:
           new_title: "יצירת הזמנה"
           edit_title: "עריכת הזמנה"
@@ -1648,7 +1686,9 @@ he:
         title: "סיכום"
         stats: "סטטיסטיקות"
         time_read: "זמן קריאה"
+        time_read_title: "%{duration} (כל הזמן)"
         recent_time_read: "זמן קריאה אחרון"
+        recent_time_read_title: "%{duration} (ב־60 הימים האחרונים)"
         topic_count:
           one: "נושא נוצר"
           two: "נושאים נוצרו"
@@ -1830,7 +1870,7 @@ he:
     username: "שם משתמש"
     last_seen: "נצפה"
     created: "נוצר"
-    created_lowercase: "נוצר/ו"
+    created_lowercase: "נוצר"
     trust_level: "דרגת אמון"
     search_hint: "שם משתמש, דוא״ל או כתובת IP"
     create_account:
@@ -2374,6 +2414,8 @@ he:
       in: "בתוך"
       in_this_topic: "בנושא הזה"
       in_this_topic_tooltip: "מעבר לחיפוש בכל הנושאים"
+      in_messages: "בהודעות"
+      in_messages_tooltip: "מעבר לחיפוש בנושאים רגילים"
       in_topics_posts: "בכל הנושאים והפוסטים"
       enter_hint: "או ללחוץ על Enter"
       in_posts_by: "בפוסטים מאת %{username}"
@@ -2475,6 +2517,7 @@ he:
         clear_all: "לפנות הכול"
         unlist_topics: "הסרת נושאים"
         relist_topics: "רשימה מחדש של נושאים"
+        reset_bump_dates: "איפוס תאריכי ההקפצות"
         defer: "אחר כך"
         delete: "מחיקת נושאים"
         dismiss: "ביטול"
@@ -2661,24 +2704,6 @@ he:
         min_duration: "משך הזמן חייב להיות גדול מ־0"
         max_duration: "משך הזמן חייב להיות פחות מ־20 שנה"
         duration: "משך"
-      auto_update_input:
-        none: "נא לבחור טווח זמן"
-        now: "כעת"
-        later_today: "בהמשך היום"
-        tomorrow: "מחר"
-        later_this_week: "בהמשך השבוע"
-        this_weekend: "בסוף שבוע זה"
-        next_week: "בשבוע הבא"
-        two_weeks: "שבועיים"
-        next_month: "חודש הבא"
-        two_months: "חודשיים"
-        three_months: "שלושה חודשים"
-        four_months: "ארבעה חודשים"
-        six_months: "שישה חודשים"
-        one_year: "שנה"
-        forever: "לנצח"
-        pick_date_and_time: "בחירת תאריך ושעה"
-        set_based_on_last_post: "סגירה מבוססת על הפוסט האחרון"
       publish_to_category:
         title: "תזמון פרסום"
       temp_open:
@@ -2796,8 +2821,8 @@ he:
         unpin: "שחרר נעיצת נושא..."
         unarchive: "הוצא נושא מארכיון"
         archive: "העבר נושא לארכיון"
-        invisible: "הסתרה"
-        visible: "גילוי"
+        invisible: "הסתרת נושא"
+        visible: "הצגת נושא"
         reset_read: "אפס מידע שנקרא"
         make_public: "הפיכת הנושא לפומבי…"
         make_private: "צור הודעה פרטית"
@@ -3014,6 +3039,7 @@ he:
           other: "בחרתם <b>%{count}</b> פוסטים."
       deleted_by_author_simple: "(הנושא נמחק על ידי הכותב)"
     post:
+      confirm_delete: "למחוק את הפוסט הזה?"
       quote_reply: "ציטוט"
       quote_reply_shortcut: "או ללחוץ על q"
       quote_edit: "עריכה"
@@ -3833,6 +3859,11 @@ he:
         two: "נא לבחור ב־%{count} תגיות לפחות…"
         many: "נא לבחור ב־%{count} תגיות לפחות…"
         other: "נא לבחור ב־%{count} תגיות לפחות…"
+      choose_for_topic_required_group:
+        one: "בחירה בתגית %{count} מ־‚%{name}’…"
+        two: "בחירה ב־%{count} תגיות מ־‚%{name}’…"
+        many: "בחירה ב־%{count} תגיות מ־‚%{name}’…"
+        other: "בחירה ב־%{count} תגיות מ־‚%{name}’…"
       info: "פרטים"
       default_info: "תגית זו אינה מוגבלת לקטגוריות כלשהן ואין לה מילים נרדפות."
       staff_info: "כדי להוסיף הגבלות, יש לשים את התגית הזאת ב<a href=%{basePath}/tag_groups>קבוצת תגיות</a>."
@@ -3921,6 +3952,7 @@ he:
           title: "בהשתקה"
           description: "לא תופענה אצלך אף התראות בנוגע לנושאים חדשים עם התגית הזאת והן לא תופענה בלשונית הפריטים שלא נקראו."
       groups:
+        back_btn: "חזרה לכל התגיות"
         title: "תיוג קבוצות"
         about_heading: "נא לבחור קבוצת תגיות או ליצור אחת חדשה"
         about_heading_empty: "יש ליצור קבוצת תגיות חדשה כדי להתחיל"
@@ -4015,6 +4047,27 @@ he:
       expand_btn: "הרחבת טבלה"
     second_factor_auth:
       redirect_after_success: "האימות הדו־שלבי הצליח. מתבצעת הפניה לעמוד הקודם…"
+    sidebar:
+      unread_count: "לא נקרא (%{count})"
+      new_count: "חדש (%{count})"
+      sections:
+        categories:
+          header_link_title: "כל הקטגוריות"
+          header_link_text: "קטגוריות"
+        topics:
+          header_link_title: "בית"
+          header_link_text: "נושאים"
+          header_action_title: "יצירת נושא חדש"
+          links:
+            everything:
+              content: "הכול"
+              title: "כל הנושאים"
+            tracked:
+              content: "במעקב"
+              title: "כל הנושאים במעקב"
+            bookmarked:
+              content: "מסומן"
+              title: "כל הנושאים שסומנו"
   admin_js:
     type_to_filter: "הקלידו לסינון..."
     admin:
@@ -4247,7 +4300,6 @@ he:
               write: יצירת נושא חדש או פרסום לאחד קיים.
               update: עדכון נושא. החלפת הכותרת, הקטגוריה, התגיות וכו׳.
               read_lists: לקרוא רשימת נושאים כמו מובילים, חדשים, אחרונים וכו׳. יש גם תמיכה ב־RSS.
-              wordpress: נחוץ כדי שהתוסף wp-discourse ל־WordPress יעבוד.
             posts:
               edit: לערוך כל פוסט שהוא או אחד מסוים.
             categories:
@@ -4275,6 +4327,11 @@ he:
               list_user_badges: הצגת עיטורי המשתמש.
               assign_badge_to_user: הקצאת עיטור למשתמש.
               revoke_badge_from_user: שלילת עיטור ממשתמש.
+            wordpress:
+              publishing: הכרחי לטובת יכולות הפרסום של תוסף ה־Discourse של WordPress (חובה).
+              commenting: הכרחי לטובת יכולות התגובות של תוסף ה־Discourse של WordPress.
+              discourse_connect: הכרחי לטובת יכולות ה־DiscourseConnect של תוסף ה־Discourse של WordPress.
+              utilities: הכרחי לטובת הכלים של תוסף ה־Discourse של WordPress.
       web_hooks:
         title: "Webhooks"
         none: "אין כרגע webhooks."

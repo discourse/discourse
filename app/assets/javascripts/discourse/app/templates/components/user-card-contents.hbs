@@ -37,12 +37,12 @@
           <h1 class="{{this.staff}} {{this.newUser}} {{if this.nameFirst "full-name" "username"}}">
             {{#if this.user.profile_hidden}}
               <span class="name-username-wrapper">
-                {{if this.nameFirst this.user.name (format-username this.username)}}
+                {{if this.nameFirst this.user.name (format-username this.user.username)}}
               </span>
             {{else}}
               <a href={{this.user.path}} {{action "showUser" this.user}} class="user-profile-link">
                 <span class="name-username-wrapper">
-                  {{if this.nameFirst this.user.name (format-username this.username)}}
+                  {{if this.nameFirst this.user.name (format-username this.user.username)}}
                 </span>
                 {{user-status this.user currentUser=this.currentUser}}
               </a>
@@ -50,7 +50,7 @@
           </h1>
           {{plugin-outlet name="user-card-after-username" connectorTagName="div" args=(hash user=this.user showUser=(action "showUser" this.user))}}
           {{#if this.nameFirst}}
-            <h2 class="username">{{this.username}}</h2>
+            <h2 class="username">{{this.user.username}}</h2>
           {{else}}
             {{#if this.user.name}}
               <h2 class="full-name">{{this.user.name}}</h2>

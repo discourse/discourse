@@ -2,6 +2,7 @@ import Component from "@ember/component";
 import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
 import { iconHTML } from "discourse-common/lib/icon-library";
+import { htmlSafe } from "@ember/template";
 
 export default Component.extend({
   classes: ["text-muted", "text-danger", "text-successful", "text-muted"],
@@ -28,7 +29,7 @@ export default Component.extend({
     this._super(...arguments);
     this.set(
       "circleIcon",
-      iconHTML(this.icon, { class: this.class }).htmlSafe()
+      htmlSafe(iconHTML(this.icon, { class: this.class }))
     );
     this.set(
       "deliveryStatus",

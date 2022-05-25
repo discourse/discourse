@@ -1616,6 +1616,7 @@ ro:
     signup_after_approval:
       subject_template: "Contul tă pe site-ul %{site_name} a fost aprobat!"
   page_not_found:
+    page_title: "Pagina nu a fost găsită"
     title: "Oops! Această pagină nu există sau este privată."
     popular_topics: "Populare"
     recent_topics: "Recente"

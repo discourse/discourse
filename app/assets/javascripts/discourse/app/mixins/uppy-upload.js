@@ -120,10 +120,8 @@ export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
       onBeforeUpload: (files) => {
         let tooMany = false;
         const fileCount = Object.keys(files).length;
-        const maxFiles = this.getWithDefault(
-          "maxFiles",
-          this.siteSettings.simultaneous_uploads
-        );
+        const maxFiles =
+          this.maxFiles || this.siteSettings.simultaneous_uploads;
 
         if (this.allowMultipleFiles) {
           tooMany = maxFiles > 0 && fileCount > maxFiles;
@@ -396,11 +394,8 @@ export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
   },
 
   _xhrUploadUrl() {
-    return (
-      getUrl(this.getWithDefault("uploadUrl", this.uploadRootPath)) +
-      ".json?client_id=" +
-      this.messageBus?.clientId
-    );
+    const uploadUrl = this.uploadUrl || this.uploadRootPath;
+    return getUrl(uploadUrl) + ".json?client_id=" + this.messageBus?.clientId;
   },
 
   _bindFileInputChange() {

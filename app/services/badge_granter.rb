@@ -495,7 +495,7 @@ class BadgeGranter
   end
 
   def self.send_notification(user_id, username, locale, badge)
-    notification = I18n.with_locale(notification_locale(locale)) do
+    I18n.with_locale(notification_locale(locale)) do
       Notification.create!(
         user_id: user_id,
         notification_type: Notification.types[:granted_badge],
@@ -508,10 +508,6 @@ class BadgeGranter
         }.to_json
       )
     end
-
-    DiscourseEvent.trigger(:user_badge_granted, badge, user_id)
-
-    notification
   end
 
   def self.suppress_notification?(badge, granted_at, skip_new_user_tips)

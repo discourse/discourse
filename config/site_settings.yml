@@ -691,6 +691,8 @@ users:
     hidden: true
   use_email_for_username_and_name_suggestions:
     default: false
+  use_name_for_username_suggestions:
+    default: true
 
 groups:
   enable_group_directory:
@@ -987,6 +989,7 @@ posting:
   approve_unless_staged:
     default: false
   notify_about_queued_posts_after:
+    type: float
     default: 24
   auto_close_messages_post_count:
     default: 500
@@ -1739,6 +1742,8 @@ onebox:
   facebook_app_access_token:
     default: ""
     secret: true
+  block_onebox_on_redirect:
+    default: false
   cache_onebox_response_body:
     default: false
     hidden: true
@@ -1883,6 +1888,9 @@ rate_limits:
   max_allowed_secondary_emails:
     default: 10
     hidden: true
+  max_batch_presign_multipart_per_minute:
+    default: 20
+    hidden: true
 
 developer:
   force_hostname:
@@ -1957,6 +1965,10 @@ developer:
   enable_safe_mode:
     default: true
     client: true
+  enable_experimental_sidebar:
+    default: false
+    client: true
+    hidden: true
 
 embedding:
   embed_by_username:
@@ -2128,6 +2140,7 @@ uncategorized:
     default: ""
     type: list
     list_type: simple
+    validator: "RegexpListValidator"
 
   max_similar_results: 5
   minimum_topics_similar: 50
@@ -2230,7 +2243,9 @@ uncategorized:
     default: -1
     hidden: true
 
-  notify_about_flags_after: 48
+  notify_about_flags_after:
+    type: float
+    default: 48
 
   show_create_topics_notice:
     client: true
@@ -2390,8 +2405,12 @@ uncategorized:
 
   use_polymorphic_bookmarks:
     client: true
-    default: false
+    default: true
     hidden: true
+
+  suggest_weekends_in_date_pickers:
+    client: true
+    default: true
 
 user_preferences:
   default_email_digest_frequency:
@@ -2564,8 +2583,13 @@ tags:
   tags_listed_by_group:
     client: true
     default: false
-  allow_staff_to_tag_pms:
-    default: false
+  pm_tags_allowed_for_groups:
+    client: true
+    type: group_list
+    list_type: compact
+    default: ""
+    allow_any: false
+    refresh: true
   suppress_overlapping_tags_in_list:
     default: false
     client: true

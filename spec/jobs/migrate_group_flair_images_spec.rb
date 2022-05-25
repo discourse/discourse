@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Jobs::MigrateGroupFlairImages do
+describe Jobs::MigrateGroupFlairImages do
   let(:image_url) { "https://omg.aws.somestack/test.png" }
   let(:group) { Fabricate(:group) }
 
@@ -35,6 +35,6 @@ RSpec.describe Jobs::MigrateGroupFlairImages do
   it 'should skip groups with invalid flair URLs' do
     DB.exec("UPDATE groups SET flair_url = 'abc' WHERE id = #{group.id}")
     described_class.new.execute_onceoff({})
-    expect(Rails.logger.warnings.count).to eq(0)
+    expect(@fake_logger.warnings.count).to eq(0)
   end
 end

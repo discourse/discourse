@@ -13,7 +13,7 @@ if ENV['COVERAGE']
 end
 
 require 'rubygems'
-require 'rbtrace'
+require 'rbtrace' if RUBY_ENGINE == "ruby"
 require 'pry'
 require 'pry-byebug'
 require 'pry-rails'
@@ -107,6 +107,7 @@ module TestSetup
     UserActionManager.disable
     NotificationEmailer.disable
     SiteIconManager.disable
+    WordWatcher.disable_cache
 
     SiteSetting.provider.all.each do |setting|
       SiteSetting.remove_override!(setting.name)
@@ -510,25 +511,11 @@ ensure
   STDOUT.unstub(:write)
 end
 
-class TrackingLogger < ::Logger
-  attr_reader :messages
-  def initialize(level: nil)
-    super(nil)
-    @messages = []
-    @level = level
-  end
-  def add(*args, &block)
-    if !level || args[0].to_i >= level
-      @messages << args
-    end
-  end
-end
-
-def track_log_messages(level: nil)
+def track_log_messages
   old_logger = Rails.logger
-  logger = Rails.logger = TrackingLogger.new(level: level)
-  yield logger.messages
-  logger.messages
+  logger = Rails.logger = FakeLogger.new
+  yield logger
+  logger
 ensure
   Rails.logger = old_logger
 end
@@ -554,21 +541,23 @@ def create_request_env(path: nil)
   env
 end
 
-def create_auth_cookie(token:, user_id: nil, trust_level: nil, issued_at: Time.zone.now)
-  request = ActionDispatch::Request.new(create_request_env)
+def create_auth_cookie(token:, user_id: nil, trust_level: nil, issued_at: Time.current)
   data = {
     token: token,
     user_id: user_id,
     trust_level: trust_level,
     issued_at: issued_at.to_i
   }
-  cookie = request.cookie_jar.encrypted["_t"] = { value: data }
-  cookie[:value]
+  jar = ActionDispatch::Cookies::CookieJar.build(ActionDispatch::TestRequest.create, {})
+  jar.encrypted[:_t] = { value: data }
+  CGI.escape(jar[:_t])
 end
 
 def decrypt_auth_cookie(cookie)
-  request = ActionDispatch::Request.new(create_request_env.merge("HTTP_COOKIE" => "_t=#{cookie}"))
-  request.cookie_jar.encrypted["_t"]
+  ActionDispatch::Cookies::CookieJar
+    .build(ActionDispatch::TestRequest.create, { _t: cookie })
+    .encrypted[:_t]
+    .with_indifferent_access
 end
 
 class SpecSecureRandom

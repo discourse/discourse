@@ -258,7 +258,6 @@ ar:
       <p>إذا كنت تتذكر كلمة مرورك، يمكنك <a href="%{base_url}/login">تسجيل الدخول</a>.</p>
 
       <p>بخلاف ذلك، يُرجى <a href="%{base_url}/password-reset">إعادة ضبط كلمة المرور</a>.</p>
-    user_exists: "ليست هناك حاجة لدعوة <b>%{email}</b>، <a href='%{base_path}/u/%{username}/summary'>فلديه حساب بالفعل!</a>"
     invite_exists: "لقد أرسلت بالفعل دعوة إلى <b>%{email}</b>."
     invalid_email: "%{email} ليس عنوان بريد إلكتروني صالحًا."
     rate_limit:
@@ -1697,7 +1696,6 @@ ar:
     ga_universal_auto_link_domains: "تفعيل تتبُّع Google Universal Analytics عبر النطاقات. ستتم إضافة معرِّف العميل إلى الروابط الصادرة إلى هذه النطاقات. راجع <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>دليل التتبُّع عبر النطاقات من Google.</a>"
     gtm_container_id: "معرِّف حاوية إدارة العلامات من Google. على سبيل المثال: GTM-ABCDEF. <br/>ملاحظة: قد يلزم إدراج البرامج النصية المضمَّنة لجعة خارجية والتي تم تحميلها بواسطة GTM في قائمة السماح في `content security policy script src`."
     enable_escaped_fragments: "ارجع إلى واجهة برمجة تطبيقات Ajax-Crawling من Google إذا لم يتم اكتشاف زاحف ويب. راجع <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
-    moderators_manage_categories_and_groups: "السماح للمشرفين بإدارة الفئات والمجموعات"
     moderators_change_post_ownership: "السماح للمشرفين بتغيير ملكية المنشور"
     cors_origins: "الأصول المسموح بها لطلبات الموارد متعددة المصادر (CORS). بجب أن يتضمَّن كل مصدر http:// أو https://. ويجب ضبط متغير البيئة للقيمة DISCOURSE_ENABLE_CORS على True لتفعيل CORS."
     use_admin_ip_allowlist: "لا يمكن للمسؤولين تسجيل الدخول إلا إذا كانوا على عنوان IP محدَّد في قائمة عناوين IP الخاضعة للمراقبة (المسؤول > السجلات > عناوين IP الخاضعة للمراقبة)."
@@ -2230,7 +2228,6 @@ ar:
     tags_sort_alphabetically: "عرض الوسوم بترتيب أبجدي. الإعداد الافتراضي هو العرض بترتيب الأكثر رواجًا."
     tags_listed_by_group: "إدراج الوسوم حسب مجموعة الوسوم الموجودة في <a href='%{base_path}/tags' target='_blank'>صفحة الوسوم</a>"
     tag_style: "النمط المرئي لشارات الوسوم"
-    allow_staff_to_tag_pms: "السماح لفريق العمل بوضع وسم على أي رسالة خاصة"
     min_trust_level_to_tag_topics: "الحد الأدنى لمستوى الثقة المطلوب لوضع وسوم على الموضوعات"
     suppress_overlapping_tags_in_list: "عدم عرض الوسم إذا كانت الوسوم تتطابق تمامًا مع الكلمات الموجودة في عناوين الموضوعات"
     remove_muted_tags_from_latest: "عدم عرض الموضوعات التي تم وضع وسم الكتم فقط عليها في قائمة الموضوعات الحديثة"
@@ -2864,12 +2861,6 @@ ar:
         [التفضيلات]: %{user_preferences_url}
     tl2_promotion_message:
       subject_template: "تهانينا على ترقية مستوى الثقة!"
-      text_body_template: |
-        تمت ترقيتك بمقدار [مستوى ثقة واحد!](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)!
-
-        بصفتك مستخدمًا متمرسًا، فقد تنال إعجابك [هذه القائمة من النصائح المفيدة](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
-
-        ندعوك إلى الاستمرار في المشاركة - نحن نستمتع بوجودك.
     backup_succeeded:
       title: "نجح النسخ الاحتياطي"
       subject_template: "اكتمل النسخ الاحتياطي بنجاح"
@@ -3267,7 +3258,6 @@ ar:
   subject_re: "بخصوص: "
   subject_pm: "[PM] "
   email_from: "%{user_name} عبر %{site_name}"
-  email_from_without_site: "%{user_name}"
   user_notifications:
     previous_discussion: "الردود السابقة"
     reached_limit:
@@ -3736,6 +3726,7 @@ ar:
     title: "عذرًا! هذه الصفحة خاصة."
   site_setting_missing: "يجب ضبط إعداد الموقع `%{name}`."
   page_not_found:
+    page_title: "الصفحة غير موجودة"
     title: "عذرًا! هذه الصفحة غير موجودة أو خاصة."
     popular_topics: "الرائجة"
     recent_topics: "الحديثة"
@@ -4432,10 +4423,6 @@ ar:
                 label: "الفئات وأحدث الموضوعات"
               categories_and_top_topics:
                 label: "الفئات والموضوعات الأكثر نشاطًا"
-              categories_boxes:
-                label: "مربعات الفئات"
-              categories_boxes_with_topics:
-                label: "مربعات الفئات ذات الموضوعات"
       logos:
         title: "الشعارات"
         fields:

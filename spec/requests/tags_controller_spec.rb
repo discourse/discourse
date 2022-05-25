@@ -30,7 +30,7 @@ describe TagsController do
       end
     end
 
-    context "with allow_staff_to_tag_pms" do
+    context "with pm_tags_allowed_for_groups" do
       fab!(:admin) { Fabricate(:admin) }
       fab!(:topic) { Fabricate(:topic, tags: [topic_tag]) }
       fab!(:pm) do
@@ -45,7 +45,7 @@ describe TagsController do
 
       context "enabled" do
         before do
-          SiteSetting.allow_staff_to_tag_pms = true
+          SiteSetting.pm_tags_allowed_for_groups = "1|2|3"
           sign_in(admin)
         end
 
@@ -66,7 +66,7 @@ describe TagsController do
 
       context "disabled" do
         before do
-          SiteSetting.allow_staff_to_tag_pms = false
+          SiteSetting.pm_tags_allowed_for_groups = ""
           sign_in(admin)
         end
 
@@ -239,7 +239,7 @@ describe TagsController do
     end
 
     it "handles special tag 'none'" do
-      SiteSetting.allow_staff_to_tag_pms = true
+      SiteSetting.pm_tags_allowed_for_groups = "1|2|3"
 
       sign_in(admin)
 
@@ -477,7 +477,7 @@ describe TagsController do
     fab!(:tag) { Fabricate(:tag, topics: [personal_message], name: 'test') }
 
     before do
-      SiteSetting.allow_staff_to_tag_pms = true
+      SiteSetting.pm_tags_allowed_for_groups = "1|2|3"
     end
 
     context "as a regular user" do

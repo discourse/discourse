@@ -92,7 +92,10 @@ const DiscourseRoute = Route.extend({
   },
 
   isPoppedState(transition) {
-    return !transition._discourse_intercepted && !!transition.intent.url;
+    return (
+      !transition._discourse_intercepted &&
+      (!!transition.intent.url || !!transition.queryParamsOnly)
+    );
   },
 });
 

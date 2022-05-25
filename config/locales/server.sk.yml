@@ -1250,6 +1250,7 @@ sk:
     signup_after_approval:
       subject_template: "Váš účet bol schválený na %{site_name}!"
   page_not_found:
+    page_title: "Stránka nenájdená"
     title: "Stránka neexistuje alebo je privátna."
     popular_topics: "Populárne"
     recent_topics: "Nedávne"
