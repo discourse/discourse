@@ -79,7 +79,7 @@ class SessionController < ApplicationController
     end
   rescue DiscourseConnectProvider::BlankSecret
     render plain: I18n.t("discourse_connect.missing_secret"), status: 400
-  rescue DiscourseConnectProvider::ParseError => e
+  rescue DiscourseConnectProvider::ParseError
     # Do NOT pass the error text to the client, it would give them the correct signature
     render plain: I18n.t("discourse_connect.login_error"), status: 422
   rescue DiscourseConnectProvider::BlankReturnUrl
