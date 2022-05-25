@@ -108,6 +108,7 @@ class InlineOneboxer
       end
     end
     onebox = { url: url, title: title && Emoji.gsub_emoji_to_unicode(title) }
+    onebox[:title] = WordWatcher.censor_text(onebox[:title])
     Discourse.cache.write(cache_key(url), onebox, expires_in: 1.day) if !opts[:skip_cache]
     onebox
   end
