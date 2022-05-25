@@ -425,7 +425,7 @@ describe UploadsController do
           sign_in(user)
           get upload.short_path
 
-          expected_max_age = S3Helper::DOWNLOAD_URL_EXPIRES_AFTER_SECONDS - UploadsController::SECURE_REDIRECT_GRACE_SECONDS
+          expected_max_age = SiteSetting.s3_presigned_get_url_expires_after_seconds - UploadsController::SECURE_REDIRECT_GRACE_SECONDS
           expect(expected_max_age).to be > 0 # Sanity check that the constants haven't been set to broken values
 
           expect(response.headers["Cache-Control"]).to eq("max-age=#{expected_max_age}, private")
