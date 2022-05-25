@@ -448,7 +448,7 @@ describe FileStore::S3Store do
       s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
       s3_bucket.expects(:object).with(regexp_matches(%r{original/\d+X.*/#{upload.sha1}\.png})).returns(s3_object)
       opts = {
-        expires_in: S3Helper::DOWNLOAD_URL_EXPIRES_AFTER_SECONDS,
+        expires_in: SiteSetting.s3_presigned_get_url_expires_after_seconds,
         response_content_disposition: %Q|attachment; filename="#{upload.original_filename}"; filename*=UTF-8''#{upload.original_filename}|
       }
 
@@ -463,7 +463,7 @@ describe FileStore::S3Store do
       s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
       s3_bucket.expects(:object).with("special/optimized/file.png").returns(s3_object)
       opts = {
-        expires_in: S3Helper::DOWNLOAD_URL_EXPIRES_AFTER_SECONDS
+        expires_in: SiteSetting.s3_presigned_get_url_expires_after_seconds
       }
 
       s3_object.expects(:presigned_url).with(:get, opts)
