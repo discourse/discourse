@@ -1,4 +1,6 @@
 import { isEmpty } from "@ember/utils";
+import I18n from "I18n";
+import { formattedReminderTime } from "discourse/lib/bookmark";
 import { computed } from "@ember/object";
 import Component from "@ember/component";
 import {
@@ -17,5 +19,23 @@ export default class BookmarkIcon extends Component {
     }
 
     return NO_REMINDER_ICON;
+  }
+
+  @computed("bookmark.name", "bookmark.reminder_at")
+  get title() {
+    if (!isEmpty(this.bookmark.reminder_at)) {
+      const formattedTime = formattedReminderTime(
+        this.bookmark.reminder_at,
+        this.currentUser.timezone
+      );
+      return I18n.t("bookmarks.created_with_reminder_generic", {
+        date: formattedTime,
+        name: this.bookmark.name,
+      });
+    }
+
+    return I18n.t("bookmarks.created_generic", {
+      name: this.bookmark.name,
+    });
   }
 }
