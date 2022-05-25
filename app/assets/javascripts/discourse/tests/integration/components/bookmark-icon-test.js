@@ -29,7 +29,9 @@ discourseModule("Component | bookmark-icon", function (hooks) {
     },
 
     async test(assert) {
-      assert.ok(exists(".d-icon-discourse-bookmark-clock"));
+      assert.ok(
+        exists(".d-icon-discourse-bookmark-clock.bookmark-icon__bookmarked")
+      );
       assert.strictEqual(
         query(".svg-icon-title")["title"],
         I18n.t("bookmarks.created_with_reminder_generic", {
@@ -56,12 +58,30 @@ discourseModule("Component | bookmark-icon", function (hooks) {
     },
 
     async test(assert) {
-      assert.ok(exists(".d-icon-bookmark"));
+      assert.ok(exists(".d-icon-bookmark.bookmark-icon__bookmarked"));
       assert.strictEqual(
         query(".svg-icon-title")["title"],
         I18n.t("bookmarks.created_generic", {
           name: "some name",
         })
+      );
+    },
+  });
+
+  componentTest("null bookmark", {
+    template: hbs`{{bookmark-icon bookmark=bookmark}}`,
+
+    beforeEach() {
+      this.setProperties({
+        bookmark: null,
+      });
+    },
+
+    async test(assert) {
+      assert.ok(exists(".d-icon-bookmark.bookmark-icon"));
+      assert.strictEqual(
+        query(".svg-icon-title")["title"],
+        I18n.t("bookmarks.create")
       );
     },
   });
