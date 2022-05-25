@@ -115,7 +115,7 @@ describe "Bookmarking posts and topics", type: :system, js: true do
     bookmark_modal.save
 
     expect(topic_page.post_bookmarked?(post)).to eq(true)
-    bookmark = Bookmark.find_by(post: post, user: user)
+    bookmark = Bookmark.find_by(bookmarkable: post, user: user)
     expect(bookmark.name).to eq("something important")
 
     topic_page.expand_post_actions(post2)
@@ -124,7 +124,7 @@ describe "Bookmarking posts and topics", type: :system, js: true do
     bookmark_modal = Modals::Bookmark.new
     bookmark_modal.select_preset_reminder(:tomorrow)
     expect(topic_page.post_bookmarked?(post2)).to eq(true)
-    bookmark = Bookmark.find_by(post: post2, user: user)
+    bookmark = Bookmark.find_by(bookmarkable: post2, user: user)
     expect(bookmark.reminder_at).not_to eq(nil)
     expect(bookmark.reminder_set_at).not_to eq(nil)
   end
@@ -141,7 +141,7 @@ describe "Bookmarking posts and topics", type: :system, js: true do
     bookmark_modal.cancel
 
     expect(topic_page.post_bookmarked?(post)).to eq(false)
-    expect(Bookmark.exists?(post: post, user: user)).to eq(false)
+    expect(Bookmark.exists?(bookmarkable: post, user: user)).to eq(false)
   end
 
   it "allows the topic to be bookmarked" do
@@ -155,7 +155,7 @@ describe "Bookmarking posts and topics", type: :system, js: true do
     bookmark_modal.save
 
     topic_page.topic_bookmarked?
-    bookmark = Bookmark.find_by(post: post, user: user)
-    expect(bookmark.for_topic).to eq(true)
+    bookmark = Bookmark.find_by(bookmarkable: post.topic, user: user)
+    expect(bookmark).not_to eq(nil)
   end
 end
