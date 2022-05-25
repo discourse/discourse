@@ -1216,4 +1216,36 @@ describe UserNotifications do
       end
     end
   end
+
+  describe ".account_suspended" do
+    fab!(:user_history) { Fabricate(:user_history, action: UserHistory.actions[:suspend_user]) }
+
+    it "adds the suspended_till date in user's timezone" do
+      user.user_option.timezone = "Asia/Tbilisi" # GMT+4
+      user.suspended_till = DateTime.parse("May 25, 2020, 12:00pm")
+
+      mail = UserNotifications.account_suspended(user, { user_history: user_history })
+
+      expect(mail.body).to include("May 25, 2020,  4:00pm")
+    end
+
+    context "user doesn't have timezone set" do
+      before do
+        user.user_option.timezone = nil
+      end
+
+      it "doesn't raise error" do
+        expect { UserNotifications.account_suspended(user) }.not_to raise_error
+      end
+
+      it "adds the suspended_till date in UTC" do
+        date = "May 25, 2020, 12:00pm"
+        user.suspended_till = DateTime.parse(date)
+
+        mail = UserNotifications.account_suspended(user, { user_history: user_history })
+
+        expect(mail.body).to include(date)
+      end
+    end
+  end
 end
