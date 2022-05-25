@@ -4,9 +4,10 @@ class CopyThemeSettingsUploadsToUploadReferences < ActiveRecord::Migration[6.1]
   def up
     execute <<~SQL
       INSERT INTO upload_references(upload_id, target_type, target_id, created_at, updated_at)
-      SELECT value::int, 'ThemeSetting', id, created_at, updated_at
+      SELECT theme_settings.value::int, 'ThemeSetting', theme_settings.id, uploads.created_at, uploads.updated_at
       FROM theme_settings
-      WHERE data_type = 6 AND value IS NOT NULL
+      JOIN uploads ON uploads.id = theme_settings.value::int
+      WHERE data_type = 6 AND theme_settings.value IS NOT NULL
       ON CONFLICT DO NOTHING
     SQL
   end
