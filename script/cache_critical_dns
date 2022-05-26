@@ -1,6 +1,71 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
+# cache_critical_dns is intended to be used for performing DNS lookups against
+# the services critical for Discourse to run - PostgreSQL and Redis. The
+# cache mechanism is storing the resolved host addresses in /etc/hosts. This can
+# protect against DNS lookup failures _after_ the resolved addresses have been
+# written to /etc/hosts at least once. Example lookup failures may be NXDOMAIN
+# or SERVFAIL responses from DNS requests.
+#
+# Before a resolved address is cached, a protocol-aware healthcheck is
+# performed against the host with the authentication details found for that
+# service in the process environment. Any hosts that fail the healthcheck will
+# never be cached.
+#
+# This is as far as you need to read if you are using CNAME or A records for
+# your services.
+#
+# The extended behaviour of cache_critical_dns is to add SRV RR lookup support
+# for DNS Service Discovery (see http://www.dns-sd.org/). For any of the critical
+# service environment variables (see CRITICAL_HOST_ENV_VARS), if a corresponding
+# SRV environment variable is found (suffixed with _SRV), cache_critical_dns
+# will assume that SRV RRs should exist and will begin to lookup SRV targets
+# for resolving the host addresses for caching, and ignore the original service
+# name variable. Healthy target addresses are cached against the original service
+# environment variable, as the Discourse application expects. For example a
+# healthy target found from the SRV lookup for DISCOURSE_DB_HOST_SRV will be
+# cached against the name specified by the DISCOURSE_DB_HOST.
+#
+# Example environment variables for SRV lookups are:
+#   DISCOURSE_DB_HOST_SRV
+#   DISCOURSE_DB_REPLICA_HOST_SRV
+#   DISCOURSE_REDIS_HOST_SRV
+#   DISCOURSE_REDIS_REPLICA_HOST_SRV
+#
+# cache_critical_dns will keep an internal record of all names resolved within
+# the last 30 minutes. This internal cache is to give a priority order to new
+# SRV targets that have appeared during the program runtime (SRV records
+# contain zero or more targets, which may appear or disappear at any time).
+# If a target has not been seen for more than 30 minutes it will be evicted from
+# the internal cache. The internal cache of healthy targets is a fallback for
+# when errors occur during DNS lookups.
+#
+# Targets that are resolved and found healthy usually find themselves in the host
+# cache, depending on if they are the newest or not. Targets that are resolved
+# but never found healthy will never be cached or even stored in the internal
+# cache. Targets that _begin_ healthy and are cached, and _become_ unhealthy
+# will only be removed from the host cache if another newer target is resolved
+# and found to be healthy. This is because we never write a resolved target to
+# the hosts cache unless it is both the newest and healthy. We assume that
+# cached hosts are healthy until they are superseded by a newer healthy target.
+#
+# An SRV RR specifies a priority value for each of the SRV targets that
+# are present, ranging from 0 - 65535. When caching SRV records we may want to
+# filter out any targets above or below a particular threshold. The LE (less
+# than or equal to) and GE (greater than or equal to) environment variables
+# (suffixed with _PRIORITY_LE or PRIORITY_GE) for a corresponding SRV variable
+# will ignore targets above or below the threshold, respectively.
+#
+# This mechanism may be used for SRV RRs that share a single name and utilise
+# the priority value for signalling to cache_critical_dns which targets are
+# relevant to a given name. Any target found outside of the threshold is ignored.
+# The host and internal caching behavior are otherwise the same.
+#
+# Example environment variables for SRV priority thresholds are:
+#   DISCOURSE_DB_HOST_SRV_PRIORITY_LE
+#   DISCOURSE_DB_REPLICA_HOST_SRV_PRIORITY_GE
+
 # Specifying this env var ensures ruby can load gems installed via the Discourse
 # project Gemfile (e.g. pg, redis).
 ENV['BUNDLE_GEMFILE'] ||= '/var/www/discourse/Gemfile'
