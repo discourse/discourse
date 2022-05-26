@@ -2246,6 +2246,7 @@ uncategorized:
     hidden: true
   uncategorized_category_id:
     default: -1
+    client: true
     hidden: true
 
   notify_about_flags_after:

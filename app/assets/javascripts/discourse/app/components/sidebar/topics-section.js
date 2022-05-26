@@ -23,6 +23,7 @@ export default class SidebarTopicsSection extends GlimmerComponent {
         return new sectionLinkClass({
           topicTrackingState: this.topicTrackingState,
           currentUser: this.currentUser,
+          trackedCategories: this.args.trackedCategories,
         });
       }
     );

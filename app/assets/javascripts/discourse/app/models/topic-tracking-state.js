@@ -466,7 +466,13 @@ const TopicTrackingState = EmberObject.extend({
     return new Set(result);
   },
 
-  countCategoryByState(type, categoryId, tagId, noSubcategories) {
+  countCategoryByState(
+    type,
+    categoryId,
+    tagId,
+    noSubcategories,
+    customFilterFn
+  ) {
     const subcategoryIds = noSubcategories
       ? new Set([categoryId])
       : this.getSubCategoryIds(categoryId);
@@ -483,20 +489,28 @@ const TopicTrackingState = EmberObject.extend({
         (!tagId || (topic.tags && topic.tags.indexOf(tagId) > -1)) &&
         (type !== "new" ||
           !mutedCategoryIds ||
-          mutedCategoryIds.indexOf(topic.category_id) === -1)
+          mutedCategoryIds.indexOf(topic.category_id) === -1) &&
+        (!customFilterFn || customFilterFn(topic))
     ).length;
   },
 
-  countNew(categoryId, tagId, noSubcategories) {
-    return this.countCategoryByState("new", categoryId, tagId, noSubcategories);
+  countNew(categoryId, tagId, noSubcategories, customFilterFn) {
+    return this.countCategoryByState(
+      "new",
+      categoryId,
+      tagId,
+      noSubcategories,
+      customFilterFn
+    );
   },
 
-  countUnread(categoryId, tagId, noSubcategories) {
+  countUnread(categoryId, tagId, noSubcategories, customFilterFn) {
     return this.countCategoryByState(
       "unread",
       categoryId,
       tagId,
-      noSubcategories
+      noSubcategories,
+      customFilterFn
     );
   },
 

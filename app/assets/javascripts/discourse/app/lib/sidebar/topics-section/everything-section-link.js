@@ -12,33 +12,16 @@ export default class EverythingSectionLink extends BaseSectionLink {
   constructor() {
     super(...arguments);
 
+    this.topicTrackingState.onStateChange(this._refreshCounts.bind(this));
     this._refreshCounts();
-
-    this.topicTrackingState.onStateChange(
-      this._topicTrackingStateUpdated.bind(this)
-    );
-  }
-
-  _topicTrackingStateUpdated() {
-    // refreshing section counts by looping through the states in topicTrackingState is an expensive operation so
-    // we debounce this.
-    discourseDebounce(this, this._refreshCounts, 100);
   }
 
   _refreshCounts() {
-    let totalUnread = 0;
-    let totalNew = 0;
+    this.totalUnread = this.topicTrackingState.countUnread();
 
-    this.topicTrackingState.forEachTracked((topic, isNew, isUnread) => {
-      if (isNew) {
-        totalNew += 1;
-      } else if (isUnread) {
-        totalUnread += 1;
-      }
-    });
-
-    this.totalUnread = totalUnread;
-    this.totalNew = totalNew;
+    if (this.totalUnread === 0) {
+      this.totalNew = this.topicTrackingState.countNew();
+    }
   }
 
   get name() {

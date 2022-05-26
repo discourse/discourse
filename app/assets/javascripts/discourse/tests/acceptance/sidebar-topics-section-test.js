@@ -13,6 +13,8 @@ import { isLegacyEmber } from "discourse-common/config/environment";
 import topicFixtures from "discourse/tests/fixtures/discovery-fixtures";
 import { cloneJSON } from "discourse-common/lib/object";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import Site from "discourse/models/site";
+import { NotificationLevels } from "discourse/lib/notification-levels";
 
 acceptance("Sidebar - Topics Section", function (needs) {
   needs.user({ experimental_sidebar_enabled: true });
@@ -405,6 +407,185 @@ acceptance("Sidebar - Topics Section", function (needs) {
       assert.ok(
         query(".sidebar-section-link-everything").href.endsWith("/latest"),
         "is links to latest filter"
+      );
+    }
+  );
+
+  conditionalTest(
+    "new and unread count for tracked link when suppress_uncategorized_badge site setting is enabled",
+    !isLegacyEmber(),
+    async function (assert) {
+      const categories = Site.current().categories;
+      const category = categories.at(-1);
+      category.set("notification_level", NotificationLevels.TRACKING);
+
+      this.siteSettings.suppress_uncategorized_badge = true;
+      this.siteSettings.uncategorized_category_id = category.id;
+
+      this.container.lookup("topic-tracking-state:main").loadStates([
+        {
+          topic_id: 1,
+          highest_post_number: 1,
+          last_read_post_number: null,
+          created_at: "2022-05-11T03:09:31.959Z",
+          category_id: category.id,
+          notification_level: null,
+          created_in_new_period: true,
+          unread_not_too_old: true,
+          treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+        },
+      ]);
+
+      await visit("/");
+
+      assert.ok(
+        !exists(
+          ".sidebar-section-link-tracked .sidebar-section-link-content-badge"
+        ),
+        "it does not display any new count"
+      );
+    }
+  );
+
+  conditionalTest(
+    "new and unread count for tracked link",
+    !isLegacyEmber(),
+    async function (assert) {
+      const categories = Site.current().categories;
+      const category = categories.at(-1);
+      category.set("notification_level", NotificationLevels.TRACKING);
+
+      this.container.lookup("topic-tracking-state:main").loadStates([
+        {
+          topic_id: 1,
+          highest_post_number: 1,
+          last_read_post_number: null,
+          created_at: "2022-05-11T03:09:31.959Z",
+          category_id: category.id,
+          notification_level: null,
+          created_in_new_period: true,
+          unread_not_too_old: true,
+          treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+        },
+        {
+          topic_id: 2,
+          highest_post_number: 12,
+          last_read_post_number: 11,
+          created_at: "2020-02-09T09:40:02.672Z",
+          category_id: category.id,
+          notification_level: 2,
+          created_in_new_period: false,
+          unread_not_too_old: true,
+          treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+        },
+        {
+          topic_id: 3,
+          highest_post_number: 15,
+          last_read_post_number: 14,
+          created_at: "2021-06-14T12:41:02.477Z",
+          category_id: 3,
+          notification_level: 2,
+          created_in_new_period: false,
+          unread_not_too_old: true,
+          treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+        },
+        {
+          topic_id: 4,
+          highest_post_number: 17,
+          last_read_post_number: 16,
+          created_at: "2020-10-31T03:41:42.257Z",
+          category_id: category.id,
+          notification_level: 2,
+          created_in_new_period: false,
+          unread_not_too_old: true,
+          treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+        },
+      ]);
+
+      await visit("/");
+
+      assert.strictEqual(
+        query(
+          ".sidebar-section-link-tracked .sidebar-section-link-content-badge"
+        ).textContent.trim(),
+        "2 unread",
+        "it displays the right unread count"
+      );
+
+      assert.ok(
+        query(".sidebar-section-link-tracked").href.endsWith(
+          "/unread?f=tracked"
+        ),
+        "is links to unread url with tracked filter"
+      );
+
+      // simulate reading topic id 2
+      publishToMessageBus("/unread", {
+        topic_id: 2,
+        message_type: "read",
+        payload: {
+          last_read_post_number: 12,
+          highest_post_number: 12,
+        },
+      });
+
+      await settled();
+
+      assert.strictEqual(
+        query(
+          ".sidebar-section-link-tracked .sidebar-section-link-content-badge"
+        ).textContent.trim(),
+        "1 unread",
+        "it updates the unread count"
+      );
+
+      // simulate reading topic id 4
+      publishToMessageBus("/unread", {
+        topic_id: 4,
+        message_type: "read",
+        payload: {
+          last_read_post_number: 17,
+          highest_post_number: 17,
+        },
+      });
+
+      assert.strictEqual(
+        query(
+          ".sidebar-section-link-tracked .sidebar-section-link-content-badge"
+        ).textContent.trim(),
+        "1 new",
+        "it displays the new count once there are no tracked unread topics"
+      );
+
+      assert.ok(
+        query(".sidebar-section-link-tracked").href.endsWith("/new?f=tracked"),
+        "is links to new url with tracked filter"
+      );
+
+      // simulate reading topic id 1
+      publishToMessageBus("/unread", {
+        topic_id: 1,
+        message_type: "read",
+        payload: {
+          last_read_post_number: 1,
+          highest_post_number: 1,
+        },
+      });
+
+      await settled();
+
+      assert.ok(
+        !exists(
+          ".sidebar-section-link-tracked .sidebar-section-link-content-badge"
+        ),
+        "it removes new count once there are no tracked new topics"
+      );
+
+      assert.ok(
+        query(".sidebar-section-link-tracked").href.endsWith(
+          "/latest?f=tracked"
+        ),
+        "is links to latest url with tracked filter"
       );
     }
   );
