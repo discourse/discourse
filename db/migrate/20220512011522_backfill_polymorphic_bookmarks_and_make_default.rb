@@ -20,7 +20,7 @@ class BackfillPolymorphicBookmarksAndMakeDefault < ActiveRecord::Migration[7.0]
         SELECT MIN(bookmarks.id)
         FROM bookmarks
         INNER JOIN posts ON bookmarks.post_id = posts.id
-        WHERE booksmarks.for_topic
+        WHERE bookmarks.for_topic
         GROUP BY (bookmarks.user_id, posts.topic_id)
       )
     SQL
