@@ -300,7 +300,9 @@ const Post = RestModel.extend({
   },
 
   rebake() {
-    return ajax(`/posts/${this.id}/rebake`, { type: "PUT" });
+    return ajax(`/posts/${this.id}/rebake`, { type: "PUT" }).catch(
+      popupAjaxError
+    );
   },
 
   unhide() {
