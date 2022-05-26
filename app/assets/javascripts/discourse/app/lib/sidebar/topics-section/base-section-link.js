@@ -8,7 +8,7 @@ export default class BaseSectionLink {
   }
 
   /**
-   * @returns {string} The name of the section link
+   * @returns {string} The name of the section link. Needs to be dasherized and lowercase.
    */
   get name() {
     this._notImplemented();
