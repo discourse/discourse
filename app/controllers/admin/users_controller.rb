@@ -150,7 +150,8 @@ class Admin::UsersController < Admin::AdminController
         suspend_reason: params[:reason],
         full_suspend_reason: user_history.try(:details),
         suspended_till: @user.suspended_till,
-        suspended_at: @user.suspended_at
+        suspended_at: @user.suspended_at,
+        suspended_by: BasicUserSerializer.new(current_user, root: false).as_json
       }
     )
   end
