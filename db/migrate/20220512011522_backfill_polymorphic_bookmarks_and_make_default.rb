@@ -22,7 +22,7 @@ class BackfillPolymorphicBookmarksAndMakeDefault < ActiveRecord::Migration[7.0]
         INNER JOIN posts ON bookmarks.post_id = posts.id
         WHERE bookmarks.for_topic
         GROUP BY (bookmarks.user_id, posts.topic_id)
-      )
+      ) AND bookmarks.for_topic
     SQL
 
     DB.exec(<<~SQL)
