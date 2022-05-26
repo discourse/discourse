@@ -30,7 +30,7 @@ walkthrough will go through these in detail:
 
 - No domain name? Get one! We can [recommend NameCheap](https://www.namecheap.com/domains/domain-name-search/), or there are many other [great domain name registrars](https://www.google.com/search?q=best+domain+name+registrars) to choose from.
 
-- Your DNS controls should be accessible from the place where you purchased your domain name. Create a DNS [`A` record](https://support.dnsimple.com/articles/a-record/) for the `discourse.example.com` hostname in your DNS control panel, pointing to the IP address of your cloud instance where you are installing Discourse.
+- Your DNS controls should be accessible from the place where you purchased your domain name. This is where you will create a DNS [ `A` record](https://support.dnsimple.com/articles/a-record/) for the `discourse.example.com` hostname once you know the IP address of the cloud server where you are installing Discourse, as well as enter your [SPF and DKIM records](https://www.google.com/search?q=what+is+spf+dkim) for your email.
 
 ### 2. Setting Up Email
 
@@ -62,6 +62,8 @@ Create your new cloud server, for example [on DigitalOcean][do]:
 - Enter your domain `discourse.example.com` as the Droplet name.
 
 Create your new Droplet. You may receive an email with the root password, however, [you should set up SSH keys](https://www.google.com/search?q=digitalocean+ssh+keys), as they are more secure.
+
+> ⚠️ Now you have created your cloud server! Go back to your DNS controls and use the IP address to set up an `A record` for your `discourse.example.com` hostname.
 
 ### 4. Access Your Cloud Server
 
