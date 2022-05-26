@@ -468,7 +468,14 @@ const TopicTrackingState = EmberObject.extend({
     return new Set(result);
   },
 
-  countCategoryByState(type, categoryId, tagId, noSubcategories) {
+  countCategoryByState({
+    type,
+    categoryId,
+    tagId,
+    noSubcategories,
+    filterTracked,
+    skipTracked,
+  } = {}) {
     const subcategoryIds = noSubcategories
       ? new Set([categoryId])
       : this.getSubCategoryIds(categoryId);
@@ -501,7 +508,11 @@ const TopicTrackingState = EmberObject.extend({
 
       // Logic here needs to be in sync with `TopicQuery#tracked_filter` on the server side. See `TopicQuery#tracked_filter`
       // for the rational behind this decision.
-      if (DiscourseURL.router.currentRoute.queryParams.f === "tracked") {
+      if (
+        filterTracked ||
+        (!skipTracked &&
+          DiscourseURL.router.currentRoute.queryParams.f === "tracked")
+      ) {
         const categories = this._getTrackedCategories();
 
         for (let i = 0; i < categories.length; i++) {
@@ -564,17 +575,38 @@ const TopicTrackingState = EmberObject.extend({
     return this.trackedCategories;
   },
 
-  countNew(categoryId, tagId, noSubcategories) {
-    return this.countCategoryByState("new", categoryId, tagId, noSubcategories);
-  },
-
-  countUnread(categoryId, tagId, noSubcategories) {
-    return this.countCategoryByState(
-      "unread",
+  countNew({
+    categoryId,
+    tagId,
+    noSubcategories,
+    filterTracked,
+    skipTracked,
+  } = {}) {
+    return this.countCategoryByState({
+      type: "new",
       categoryId,
       tagId,
-      noSubcategories
-    );
+      noSubcategories,
+      filterTracked,
+      skipTracked,
+    });
+  },
+
+  countUnread({
+    categoryId,
+    tagId,
+    noSubcategories,
+    filterTracked,
+    skipTracked,
+  } = {}) {
+    return this.countCategoryByState({
+      type: "unread",
+      categoryId,
+      tagId,
+      noSubcategories,
+      filterTracked,
+      skipTracked,
+    });
   },
 
   /**
@@ -675,9 +707,9 @@ const TopicTrackingState = EmberObject.extend({
     let categoryId = category ? get(category, "id") : null;
 
     if (name === "new") {
-      return this.countNew(categoryId, tagId, noSubcategories);
+      return this.countNew({ categoryId, tagId, noSubcategories });
     } else if (name === "unread") {
-      return this.countUnread(categoryId, tagId, noSubcategories);
+      return this.countUnread({ categoryId, tagId, noSubcategories });
     } else {
       const categoryName = name.split("/")[1];
       if (categoryName) {
