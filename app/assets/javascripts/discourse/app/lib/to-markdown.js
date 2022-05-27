@@ -14,13 +14,12 @@ const hasChild = (e, n) => {
 
 export class Tag {
   static named(name) {
-    const klass = class extends Tag {};
+    const klass = class NamedTag extends Tag {};
     klass.tagName = name;
     return klass;
   }
 
-  constructor(name, prefix = "", suffix = "", inline = false) {
-    this.name = name;
+  constructor(prefix = "", suffix = "", inline = false) {
     this.prefix = prefix;
     this.suffix = suffix;
     this.inline = inline;
@@ -136,14 +135,14 @@ export class Tag {
   static block(name, prefix, suffix) {
     return class extends Tag.named(name) {
       constructor() {
-        super(name, prefix, suffix);
+        super(prefix, suffix);
         this.gap = "\n\n";
       }
 
       decorate(text) {
         const parent = this.element.parent;
 
-        if (this.name === "p" && parent?.name === "li") {
+        if (name === "p" && parent?.name === "li") {
           // fix for google docs
           this.gap = "";
         }
@@ -200,13 +199,13 @@ export class Tag {
   static emphasis(name, decorator) {
     return class extends Tag.named(name) {
       constructor() {
-        super(name, decorator, decorator, true);
+        super(decorator, decorator, true);
       }
 
       decorate(text) {
         if (text.includes("\n")) {
-          this.prefix = `<${this.name}>`;
-          this.suffix = `</${this.name}>`;
+          this.prefix = `<${name}>`;
+          this.suffix = `</${name}>`;
         }
 
         let space = text.match(/^\s/);
@@ -227,7 +226,7 @@ export class Tag {
   static allowedTag(name) {
     return class extends Tag.named(name) {
       constructor() {
-        super(name, `<${name}>`, `</${name}>`);
+        super(`<${name}>`, `</${name}>`);
       }
     };
   }
@@ -235,7 +234,7 @@ export class Tag {
   static replace(name, text) {
     return class extends Tag.named(name) {
       constructor() {
-        super(name, "", "");
+        super("", "");
         this.text = text;
       }
 
@@ -248,7 +247,7 @@ export class Tag {
   static span() {
     return class extends Tag.named("span") {
       constructor() {
-        super("span");
+        super();
       }
 
       decorate(text) {
@@ -266,7 +265,7 @@ export class Tag {
   static link() {
     return class extends Tag.named("a") {
       constructor() {
-        super("a", "", "", true);
+        super("", "", true);
       }
 
       decorate(text) {
@@ -312,7 +311,7 @@ export class Tag {
   static image() {
     return class extends Tag.named("img") {
       constructor() {
-        super("img", "", "", true);
+        super("", "", true);
       }
 
       toMarkdown() {
@@ -360,7 +359,7 @@ export class Tag {
   static slice(name, suffix) {
     return class extends Tag.named(name) {
       constructor() {
-        super(name, "", suffix);
+        super("", suffix);
       }
 
       decorate(text) {
@@ -375,7 +374,7 @@ export class Tag {
   static cell(name) {
     return class extends Tag.named(name) {
       constructor() {
-        super(name, "|");
+        super("|");
       }
 
       toMarkdown() {
@@ -431,7 +430,7 @@ export class Tag {
   static code() {
     return class extends Tag.named("code") {
       constructor() {
-        super("code", "`", "`");
+        super("`", "`");
       }
 
       decorate(text) {
@@ -452,7 +451,7 @@ export class Tag {
   static blockquote() {
     return class extends Tag.named("blockquote") {
       constructor() {
-        super("blockquote", "\n> ", "\n");
+        super("\n> ", "\n");
       }
 
       decorate(text) {
