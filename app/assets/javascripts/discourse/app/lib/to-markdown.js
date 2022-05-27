@@ -167,7 +167,7 @@ export class Tag {
         }
 
         let text = Element.parse([blockquote], this.element) || "";
-        text = text.trim().replace(/^>/g, "");
+        text = text.trim().replaceAll(/^> /gm, "").trim();
         if (text.length === 0) {
           return "";
         }
@@ -181,7 +181,7 @@ export class Tag {
             ? `[quote="${username}, post:${post}, topic:${topic}"]`
             : "[quote]";
 
-        return `\n\n${prefix}\n${text}\n[/quote]\n\n`;
+        return `\n${prefix}\n${text}\n[/quote]\n`;
       }
     };
   }
