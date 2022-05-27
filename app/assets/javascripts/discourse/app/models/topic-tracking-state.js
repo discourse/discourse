@@ -425,7 +425,18 @@ const TopicTrackingState = EmberObject.extend({
 
     // make sure all the state is up to date with what is accurate
     // from the server
-    list.topics.forEach(this._syncStateFromListTopic);
+    const newStates = [];
+
+    for (let i = 0; i < list.topics.length; i++) {
+      const topic = list.topics[i];
+      const newState = this._newStateFromListTopic(topic);
+
+      if (newState) {
+        newStates.push(newState);
+      }
+    }
+
+    this.loadStates(newStates);
 
     // correct missing states, safeguard in case message bus is corrupt
     if (this._shouldCompensateState(list, filter, queryParams)) {
@@ -719,14 +730,38 @@ const TopicTrackingState = EmberObject.extend({
   },
 
   loadStates(data) {
-    (data || []).forEach((topic) => {
-      this.modifyState(topic, topic);
+    if (!data || data.length === 0) {
+      return;
+    }
+
+    const modified = data.every((topic) => {
+      return this._setState({ topic, data: topic, skipAfterStateChange: true });
     });
+
+    if (modified) {
+      this._afterStateChange();
+    }
+  },
+
+  _setState({ topic, data, skipAfterStateChange } = {}) {
+    const stateKey = this._stateKey(topic);
+    const oldState = this.states.get(stateKey);
+
+    if (!oldState || JSON.stringify(oldState) !== JSON.stringify(data)) {
+      this.states.set(stateKey, data);
+
+      if (!skipAfterStateChange) {
+        this._afterStateChange();
+      }
+
+      return true;
+    } else {
+      return false;
+    }
   },
 
   modifyState(topic, data) {
-    this.states.set(this._stateKey(topic), data);
-    this._afterStateChange();
+    this._setState({ topic, data });
   },
 
   modifyStateProp(topic, prop, data) {
@@ -770,15 +805,12 @@ const TopicTrackingState = EmberObject.extend({
   // topic from the list (e.g. updates category, highest read post
   // number, tags etc.)
   @bind
-  _syncStateFromListTopic(topic) {
+  _newStateFromListTopic(topic) {
     const state = this.findState(topic.id) || {};
 
     // make a new copy so we aren't modifying the state object directly while
     // we make changes
     const newState = { ...state };
-
-    newState.topic_id = topic.id;
-    newState.notification_level = topic.notification_level;
 
     // see ListableTopicSerializer for unread_posts/unseen and other
     // topic property logic
@@ -796,16 +828,13 @@ const TopicTrackingState = EmberObject.extend({
       return;
     }
 
+    newState.topic_id = topic.id;
+    newState.notification_level = topic.notification_level;
     newState.highest_post_number = topic.highest_post_number;
-    if (topic.category) {
-      newState.category_id = topic.category.id;
-    }
+    newState.category_id = topic.category?.id;
+    newState.tags = topic?.tags;
 
-    if (topic.tags) {
-      newState.tags = topic.tags;
-    }
-
-    this.modifyState(topic.id, newState);
+    return newState;
   },
 
   // this stops sync of tracking state when list is filtered, in the past this
@@ -900,7 +929,7 @@ const TopicTrackingState = EmberObject.extend({
       }
     }
 
-    const old = this.findState(data);
+    const old = { ...this.findState(data) };
 
     if (data.message_type === "latest") {
       this.notifyIncoming(data);
@@ -923,7 +952,6 @@ const TopicTrackingState = EmberObject.extend({
         // we have, and then substitute inferred values for last_read_post_number
         // and notification_level. Any errors will be corrected when a
         // topic-list is loaded which includes the topic.
-
         let payload = data.payload;
 
         if (old) {
