@@ -23,6 +23,23 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
     this.clock.restore();
   });
 
+  test("bulk loading states only calls onStateChange callback once", function (assert) {
+    const trackingState = TopicTrackingState.create();
+    let stateCallbackCalled = 0;
+
+    trackingState.onStateChange(() => {
+      stateCallbackCalled += 1;
+    });
+
+    trackingState.loadStates([
+      { topic_id: 1 },
+      { topic_id: 2 },
+      { topic_id: 3 },
+    ]);
+
+    assert.strictEqual(stateCallbackCalled, 1, "callback is only called once");
+  });
+
   test("tag counts", function (assert) {
     const trackingState = TopicTrackingState.create();
 
@@ -338,12 +355,53 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
     );
   });
 
+  test("sync - no changes to state", function (assert) {
+    const trackingState = TopicTrackingState.create();
+
+    trackingState.loadStates([
+      { topic_id: 111, last_read_post_number: null },
+      { topic_id: 222, last_read_post_number: null },
+    ]);
+
+    let stateCallbackCalled = 0;
+
+    trackingState.onStateChange(() => {
+      stateCallbackCalled += 1;
+    });
+
+    const list = {
+      topics: [
+        Topic.create({
+          id: 111,
+          last_read_post_number: null,
+          unseen: true,
+        }),
+        Topic.create({
+          id: 222,
+          last_read_post_number: null,
+          unseen: true,
+        }),
+      ],
+    };
+
+    trackingState.sync(list, "unread");
+
+    assert.strictEqual(stateCallbackCalled, 0, "callback is not called");
+  });
+
   test("sync - updates state to match list topic for unseen and unread/new topics", function (assert) {
     const trackingState = TopicTrackingState.create();
+
     trackingState.loadStates([
       { topic_id: 111, last_read_post_number: 0 },
       { topic_id: 222, last_read_post_number: 1 },
     ]);
+
+    let stateCallbackCalled = 0;
+
+    trackingState.onStateChange(() => {
+      stateCallbackCalled += 1;
+    });
 
     const list = {
       topics: [
@@ -385,6 +443,8 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
       17,
       "last_read_post_number is highest_post_number - (unread + new)"
     );
+
+    assert.strictEqual(stateCallbackCalled, 1, "callback is only called once");
   });
 
   test("sync - states missing from the topic list are updated based on the selected filter", function (assert) {
@@ -476,11 +536,14 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
       });
 
       test("state is modified and callback is called", function (assert) {
-        let stateCallbackCalled = false;
+        let stateCallbackCalled = 0;
+
         trackingState.onStateChange(() => {
-          stateCallbackCalled = true;
+          stateCallbackCalled += 1;
         });
+
         publishToMessageBus(`/unread`, unreadTopicPayload);
+
         assert.deepEqual(
           trackingState.findState(111),
           {
@@ -496,9 +559,10 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
           },
           "topic state updated"
         );
+
         assert.strictEqual(
           stateCallbackCalled,
-          true,
+          1,
           "state change callback called"
         );
       });
@@ -597,6 +661,7 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
           message_type: "dismiss_new",
           payload: { topic_ids: [112] },
         });
+
         assert.strictEqual(trackingState.findState(112).is_seen, true);
       });
 
