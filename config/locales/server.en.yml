@@ -5206,3 +5206,7 @@ en:
     small_action_post_raw: "Continue discussion at %{new_title}."
 
   fallback_username: "user"
+
+  user_status:
+    errors:
+      ends_at_should_be_greater_than_set_at: "ends_at should be greater than set_at"

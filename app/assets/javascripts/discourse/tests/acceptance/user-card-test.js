@@ -76,3 +76,30 @@ acceptance(
     });
   }
 );
+
+acceptance("User Card - User Status", function (needs) {
+  needs.user();
+  needs.pretender((server, helper) => {
+    const response = cloneJSON(userFixtures["/u/charlie/card.json"]);
+    response.user.status = { description: "off to dentist" };
+    server.get("/u/charlie/card.json", () => helper.response(response));
+  });
+
+  test("shows user status if enabled", async function (assert) {
+    this.siteSettings.enable_user_status = true;
+
+    await visit("/t/internationalization-localization/280");
+    await click('a[data-user-card="charlie"]');
+
+    assert.ok(exists(".user-card h3.user-status"));
+  });
+
+  test("doesn't show user status if disabled", async function (assert) {
+    this.siteSettings.enable_user_status = false;
+
+    await visit("/t/internationalization-localization/280");
+    await click('a[data-user-card="charlie"]');
+
+    assert.notOk(exists(".user-card h3.user-status"));
+  });
+});

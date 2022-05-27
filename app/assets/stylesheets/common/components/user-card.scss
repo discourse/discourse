@@ -300,3 +300,9 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
     }
   }
 }
+
+h3.user-status {
+  img.emoji {
+    margin-bottom: 1px;
+  }
+}

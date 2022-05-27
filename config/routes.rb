@@ -1020,6 +1020,9 @@ Discourse::Application.routes.draw do
     post "/presence/update" => "presence#update"
     get "/presence/get" => "presence#get"
 
+    put "user-status" => "user_status#set"
+    delete "user-status" => "user_status#clear"
+
     get "*url", to: 'permalinks#show', constraints: PermalinkConstraint.new
   end
 end

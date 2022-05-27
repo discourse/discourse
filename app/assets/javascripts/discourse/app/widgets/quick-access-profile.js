@@ -16,10 +16,37 @@ createWidgetFrom(QuickAccessItem, "logout-item", {
   html() {
     return this.attach("flat-button", {
       action: "logout",
-      content: I18n.t("user.log_out"),
       icon: "sign-out-alt",
       label: "user.log_out",
     });
+  },
+});
+
+createWidgetFrom(QuickAccessItem, "user-status-item", {
+  tagName: "li.user-status",
+
+  html() {
+    const action = "hideMenuAndSetStatus";
+    const userStatus = this.currentUser.status;
+    if (userStatus) {
+      const emoji = userStatus.emoji ?? "mega";
+      return this.attach("flat-button", {
+        action,
+        emoji,
+        translatedLabel: userStatus.description,
+      });
+    } else {
+      return this.attach("flat-button", {
+        action,
+        icon: "plus-circle",
+        label: "user_status.set_custom_status",
+      });
+    }
+  },
+
+  hideMenuAndSetStatus() {
+    this.sendWidgetAction("toggleUserMenu");
+    this.sendWidgetAction("setUserStatus");
   },
 });
 
@@ -43,11 +70,16 @@ createWidgetFrom(QuickAccessPanel, "quick-access-profile", {
   },
 
   _getItems() {
-    let items = this._getDefaultItems();
+    const items = [];
+
+    if (this.siteSettings.enable_user_status) {
+      items.push({ widget: "user-status-item" });
+    }
+    items.push(...this._getDefaultItems());
     if (this._showToggleAnonymousButton()) {
       items.push(this._toggleAnonymousButton());
     }
-    items = items.concat(_extraItems);
+    items.push(..._extraItems);
 
     if (this.attrs.showLogoutButton) {
       items.push({ widget: "logout-item" });

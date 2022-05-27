@@ -119,7 +119,8 @@ class UsersController < ApplicationController
                                               :card_background_upload,
                                               :primary_group,
                                               :flair_group,
-                                              :primary_email
+                                              :primary_email,
+                                              :user_status
                                             )
 
     users = users.filter { |u| guardian.can_see_profile?(u) }

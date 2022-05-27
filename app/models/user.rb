@@ -63,6 +63,7 @@ class User < ActiveRecord::Base
   has_many :muted_user_records, class_name: 'MutedUser', dependent: :delete_all
   has_many :ignored_user_records, class_name: 'IgnoredUser', dependent: :delete_all
   has_many :do_not_disturb_timings, dependent: :delete_all
+  has_one :user_status, dependent: :destroy
 
   # dependent deleting handled via before_destroy (special cases)
   has_many :user_actions
@@ -1497,6 +1498,23 @@ class User < ActiveRecord::Base
       username
     else
       name.presence || username
+    end
+  end
+
+  def clear_status!
+    user_status.destroy! if user_status
+  end
+
+  def set_status!(description)
+    now = Time.zone.now
+    if user_status
+      user_status.update!(description: description, set_at: now)
+    else
+      self.user_status = UserStatus.create!(
+        user_id: id,
+        description: description,
+        set_at: now
+      )
     end
   end
 

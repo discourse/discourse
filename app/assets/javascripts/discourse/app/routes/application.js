@@ -252,6 +252,13 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
         hasGroups,
       });
     },
+
+    setUserStatus() {
+      showModal("user-status", {
+        title: "user_status.set_custom_status",
+        modalClass: "user-status",
+      });
+    },
   },
 
   renderTemplate() {

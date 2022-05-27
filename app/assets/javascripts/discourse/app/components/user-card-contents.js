@@ -13,6 +13,7 @@ import { getURLWithCDN } from "discourse-common/lib/get-url";
 import { isEmpty } from "@ember/utils";
 import { prioritizeNameInUx } from "discourse/lib/settings";
 import { dasherize } from "@ember/string";
+import { emojiUnescape } from "discourse/lib/text";
 
 export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
   elementId: "user-card",
@@ -47,6 +48,17 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
   @discourseComputed("user")
   hasLocaleOrWebsite(user) {
     return user.location || user.website_name || this.userTimezone;
+  },
+
+  @discourseComputed("user.status")
+  hasStatus() {
+    return this.siteSettings.enable_user_status && this.user.status;
+  },
+
+  @discourseComputed("user.status")
+  userStatusEmoji() {
+    const emoji = this.user.status.emoji ?? "mega";
+    return emojiUnescape(`:${emoji}:`);
   },
 
   isSuspendedOrHasBio: or("user.suspend_reason", "user.bio_excerpt"),
