@@ -4,14 +4,6 @@ const MSO_LIST_CLASSES = [
   "MsoListParagraphCxSpLast",
 ];
 
-const trimLeft = (text) => text.replace(/^\s+/, "");
-const trimRight = (text) => text.replace(/\s+$/, "");
-const countPipes = (text) =>
-  (text.replace(/\\\|/, "").match(/\|/g) || []).length;
-const hasChild = (e, n) => {
-  return (e.children || []).some((c) => c.name === n);
-};
-
 export class Tag {
   static named(name) {
     const klass = class NamedTag extends Tag {};
@@ -274,14 +266,18 @@ export class Tag {
 
         if (/^mention/.test(attr.class) && "@" === text[0]) {
           return text;
-        } else if ("hashtag" === attr.class && "#" === text[0]) {
+        }
+
+        if ("hashtag" === attr.class && "#" === text[0]) {
           return text;
-        } else if (
+        }
+
+        let img;
+        if (
           ["lightbox", "d-lazyload"].includes(attr.class) &&
-          hasChild(e, "img")
+          (img = (e.children || []).find((c) => c.name === "img"))
         ) {
           let href = attr.href;
-          const img = (e.children || []).find((c) => c.name === "img");
           const base62SHA1 = img.attributes["data-base62-sha1"];
           text = attr.title || "";
 
@@ -289,7 +285,7 @@ export class Tag {
             href = `upload://${base62SHA1}`;
           }
 
-          return "![" + text + "](" + href + ")";
+          return `![${text}](${href})`;
         }
 
         if (attr.href && text !== attr.href) {
@@ -300,7 +296,7 @@ export class Tag {
             linkModifier = "|attachment";
           }
 
-          return "[" + text + linkModifier + "](" + attr.href + ")";
+          return `[${text}${linkModifier}](${attr.href})`;
         }
 
         return text;
@@ -422,7 +418,7 @@ export class Tag {
           }
         }
 
-        return super.decorate(`${indent}* ${trimLeft(text)}`);
+        return super.decorate(`${indent}* ${text.trimStart()}`);
       }
     };
   }
@@ -484,15 +480,19 @@ export class Tag {
         }
       }
 
+      countPipes(text) {
+        return (text.replace(/\\\|/, "").match(/\|/g) || []).length;
+      }
+
       decorate(text) {
         text = super.decorate(text).replace(/\|\n{2,}\|/g, "|\n|");
         const rows = text.trim().split("\n");
-        const pipeCount = countPipes(rows[0]);
+        const pipeCount = this.countPipes(rows[0]);
         this.isValid =
           this.isValid &&
           rows.length > 1 &&
           pipeCount > 2 &&
-          rows.reduce((a, c) => a && countPipes(c) <= pipeCount); // Unsupported table format for Markdown conversion
+          rows.reduce((a, c) => a && this.countPipes(c) <= pipeCount); // Unsupported table format for Markdown conversion
 
         if (this.isValid) {
           const splitterRow =
@@ -524,7 +524,7 @@ export class Tag {
           smallGap = "\n";
         }
 
-        return smallGap + super.decorate(trimRight(text));
+        return smallGap + super.decorate(text.trimEnd());
       }
     };
   }
@@ -641,14 +641,14 @@ class Element {
     let text = this.data || "";
 
     if (this.leftTrimmable()) {
-      text = trimLeft(text);
+      text = text.trimStart();
     }
 
     if (this.rightTrimmable()) {
-      text = trimRight(text);
+      text = text.trimEnd();
     }
 
-    text = text.replace(/[ \t]+/g, " ");
+    text = text.replace(/[\s\t]+/g, " ");
 
     return text;
   }
