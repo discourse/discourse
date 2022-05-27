@@ -10,7 +10,7 @@ class CopySiteSettingsUploadsToUploadReferences < ActiveRecord::Migration[6.1]
         UNION
         SELECT id, value::integer
         FROM site_settings
-        WHERE data_type = 18
+        WHERE data_type = 18 AND value != ''
       )
       INSERT INTO upload_references(upload_id, target_type, target_id, created_at, updated_at)
       SELECT site_settings_uploads.upload_id, 'SiteSetting', site_settings_uploads.id, uploads.created_at, uploads.updated_at
