@@ -52,6 +52,8 @@ const TopicTrackingState = EmberObject.extend({
     this.states = new Map();
     this.stateChangeCallbacks = {};
     this._trackedTopicLimit = 4000;
+    this.trackedCategories = null;
+    this.trackedTags = null;
   },
 
   /**
@@ -497,8 +499,69 @@ const TopicTrackingState = EmberObject.extend({
         return false;
       }
 
+      // Logic here needs to be in sync with `TopicQuery#tracked_filter` on the server side. See `TopicQuery#tracked_filter`
+      // for the rational behind this decision.
+      if (DiscourseURL.router.currentRoute.queryParams.f === "tracked") {
+        const categories = this._getTrackedCategories();
+
+        for (let i = 0; i < categories.length; i++) {
+          const category = categories[i];
+
+          if (category.id === topic.category_id) {
+            return true;
+          }
+
+          if (
+            category.subcategories &&
+            category.subcategories.some((c) => c.id === topic.category_id)
+          ) {
+            return true;
+          }
+        }
+
+        const tags = this._getTrackedTags();
+
+        for (let i = 0; i < tags.length; i++) {
+          const tag = tags[i];
+
+          if (topic.tags && topic.tags.indexOf(tag) > -1) {
+            return true;
+          }
+        }
+
+        return false;
+      }
+
       return true;
     }).length;
+  },
+
+  _getTrackedTags() {
+    if (this.trackedTags === null) {
+      this.trackedTags = [
+        ...this.currentUser.tracked_tags,
+        ...this.currentUser.watched_tags,
+        ...this.currentUser.watching_first_post_tags,
+      ];
+    }
+
+    return this.trackedTags;
+  },
+
+  _getTrackedCategories() {
+    if (this.trackedCategories === null) {
+      this.trackedCategories = [];
+
+      for (let i = 0; i < Site.current().categories.length - 1; i++) {
+        const category = Site.current().categories[i];
+
+        if (category.notification_level >= NotificationLevels.TRACKING) {
+          this.trackedCategories.push(category);
+        }
+      }
+    }
+
+    return this.trackedCategories;
   },
 
   countNew(categoryId, tagId, noSubcategories) {
