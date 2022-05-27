@@ -21,6 +21,7 @@ export default Component.extend({
   labelClasses: null,
   timeInputDisabled: empty("_date"),
   userTimezone: null,
+  onChangeInput: null,
 
   _date: null,
   _time: null,
@@ -28,6 +29,14 @@ export default Component.extend({
   init() {
     this._super(...arguments);
     this.userTimezone = this.currentUser.timezone;
+  },
+
+  didReceiveAttrs() {
+    this._super(...arguments);
+
+    if (this.label) {
+      this.set("displayLabel", I18n.t(this.label));
+    }
 
     if (this.input) {
       const dateTime = moment(this.input);
@@ -41,14 +50,6 @@ export default Component.extend({
           _time: dateTime.format("HH:mm"),
         });
       }
-    }
-  },
-
-  didReceiveAttrs() {
-    this._super(...arguments);
-
-    if (this.label) {
-      this.set("displayLabel", I18n.t(this.label));
     }
   },
 
@@ -89,10 +90,10 @@ export default Component.extend({
   @action
   onChangeDate(date) {
     if (!date) {
-      this.set("time", null);
+      this.set("_time", null);
     }
 
-    this._dateTimeChanged(date, this.time);
+    this._dateTimeChanged(date, this._time);
   },
 
   @action
@@ -107,10 +108,9 @@ export default Component.extend({
     const dateTime = moment(`${date}${time}`);
 
     if (dateTime.isValid()) {
-      this.attrs.onChangeInput &&
-        this.attrs.onChangeInput(dateTime.format(FORMAT));
+      this.onChangeInput?.(dateTime.format(FORMAT));
     } else {
-      this.attrs.onChangeInput && this.attrs.onChangeInput(null);
+      this.onChangeInput?.(null);
     }
   },
 
