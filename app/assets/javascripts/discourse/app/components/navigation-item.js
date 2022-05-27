@@ -9,6 +9,7 @@ export default Component.extend(FilterModeMixin, {
     "content.hasIcon:has-icon",
     "content.classNames",
     "isHidden:hidden",
+    "content.name",
   ],
   attributeBindings: ["content.title:title"],
   hidden: false,
