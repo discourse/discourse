@@ -476,15 +476,29 @@ const TopicTrackingState = EmberObject.extend({
     );
     let filterFn = type === "new" ? isNew : isUnread;
 
-    return Array.from(this.states.values()).filter(
-      (topic) =>
-        filterFn(topic) &&
-        (!categoryId || subcategoryIds.has(topic.category_id)) &&
-        (!tagId || (topic.tags && topic.tags.indexOf(tagId) > -1)) &&
-        (type !== "new" ||
-          !mutedCategoryIds ||
-          mutedCategoryIds.indexOf(topic.category_id) === -1)
-    ).length;
+    return Array.from(this.states.values()).filter((topic) => {
+      if (!filterFn(topic)) {
+        return false;
+      }
+
+      if (categoryId && !subcategoryIds.has(topic.category_id)) {
+        return false;
+      }
+
+      if (tagId && !(topic.tags && topic.tags.indexOf(tagId) > -1)) {
+        return false;
+      }
+
+      if (
+        type === "new" &&
+        mutedCategoryIds &&
+        mutedCategoryIds.indexOf(topic.category_id) !== -1
+      ) {
+        return false;
+      }
+
+      return true;
+    }).length;
   },
 
   countNew(categoryId, tagId, noSubcategories) {
