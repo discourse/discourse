@@ -10,6 +10,7 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import hbs from "htmlbars-inline-precompile";
 import I18n from "I18n";
+import { fillIn } from "@ember/test-helpers";
 
 discourseModule("Unit | Lib | select-kit/future-date-input", function (hooks) {
   setupRenderingTest(hooks);
@@ -123,6 +124,26 @@ discourseModule("Unit | Lib | select-kit/future-date-input", function (hooks) {
       const now = I18n.t("time_shortcut.now");
 
       assert.ok(options.includes(now));
+    },
+  });
+
+  componentTest("changing date/time updates the input correctly", {
+    template: hbs`{{future-date-input input=input onChangeInput=(action (mut input))}}`,
+
+    beforeEach() {
+      this.set("input", moment("2032-01-01 11:10"));
+    },
+
+    async test(assert) {
+      await fillIn(".time-input", "11:15");
+
+      assert.ok(this.input.includes("2032-01-01"));
+      assert.ok(this.input.includes("11:15"));
+
+      await fillIn(".date-picker", "2033-01-01 ");
+
+      assert.ok(this.input.includes("2033-01-01"));
+      assert.ok(this.input.includes("11:15"));
     },
   });
 
