@@ -823,6 +823,16 @@ aside.onebox.xkcd .onebox-body img {
   @extend .imgur-album;
 }
 
+@supports (aspect-ratio: 1) {
+  // Not supported on iOS < 15. For those devices, we just
+  // use the fixed width/height attributes on the iframe
+  .youtube-onebox {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16/9;
+  }
+}
+
 // Force oneboxed videos to 16:9 aspect ratio
 .onebox.video-onebox,
 .video-container {
