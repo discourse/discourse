@@ -437,9 +437,9 @@ export class Tag {
           this.inline = true;
         }
 
-        // TODO
-        text = $("<textarea />").html(text).text();
-        return super.decorate(text);
+        const textarea = document.createElement("textarea");
+        textarea.innerHTML = text;
+        return super.decorate(textarea.innerText);
       }
     };
   }
@@ -711,9 +711,10 @@ function putPlaceholders(html) {
 
   while (match) {
     const placeholder = `DISCOURSE_PLACEHOLDER_${placeholders.length + 1}`;
-    let code = match[1];
-    // TODO:
-    code = $("<div />").html(code).text().replace(/^\n/, "").replace(/\n$/, "");
+    const element = document.createElement("div");
+    element.innerHTML = match[1];
+
+    const code = element.innerText.replace(/^\n/, "").replace(/\n$/, "");
     placeholders.push([placeholder, code]);
     html = html.replace(match[0], `<code>${placeholder}</code>`);
     match = codeRegEx.exec(origHtml);
@@ -754,7 +755,10 @@ function putPlaceholders(html) {
     return ret;
   };
 
-  const elements = transformNode($.parseHTML(trimUnwanted(html)));
+  const template = document.createElement("template");
+  template.innerHTML = trimUnwanted(html);
+  const elements = transformNode(template.content.childNodes);
+
   return { elements, placeholders };
 }
 
