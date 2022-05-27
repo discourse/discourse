@@ -1,17 +1,24 @@
-const trimLeft = (text) => text.replace(/^\s+/, "");
-const trimRight = (text) => text.replace(/\s+$/, "");
-const countPipes = (text) =>
-  (text.replace(/\\\|/, "").match(/\|/g) || []).length;
 const msoListClasses = [
   "MsoListParagraphCxSpFirst",
   "MsoListParagraphCxSpMiddle",
   "MsoListParagraphCxSpLast",
 ];
+
+const trimLeft = (text) => text.replace(/^\s+/, "");
+const trimRight = (text) => text.replace(/\s+$/, "");
+const countPipes = (text) =>
+  (text.replace(/\\\|/, "").match(/\|/g) || []).length;
 const hasChild = (e, n) => {
   return (e.children || []).some((c) => c.name === n);
 };
 
 export class Tag {
+  static named(name) {
+    const klass = class extends Tag {};
+    klass.tagName = name;
+    return klass;
+  }
+
   constructor(name, prefix = "", suffix = "", inline = false) {
     this.name = name;
     this.prefix = prefix;
@@ -127,7 +134,7 @@ export class Tag {
   }
 
   static block(name, prefix, suffix) {
-    return class extends Tag {
+    return class extends Tag.named(name) {
       constructor() {
         super(name, prefix, suffix);
         this.gap = "\n\n";
@@ -191,7 +198,7 @@ export class Tag {
   }
 
   static emphasis(name, decorator) {
-    return class extends Tag {
+    return class extends Tag.named(name) {
       constructor() {
         super(name, decorator, decorator, true);
       }
@@ -218,7 +225,7 @@ export class Tag {
   }
 
   static allowedTag(name) {
-    return class extends Tag {
+    return class extends Tag.named(name) {
       constructor() {
         super(name, `<${name}>`, `</${name}>`);
       }
@@ -226,7 +233,7 @@ export class Tag {
   }
 
   static replace(name, text) {
-    return class extends Tag {
+    return class extends Tag.named(name) {
       constructor() {
         super(name, "", "");
         this.text = text;
@@ -239,7 +246,7 @@ export class Tag {
   }
 
   static span() {
-    return class extends Tag {
+    return class extends Tag.named("span") {
       constructor() {
         super("span");
       }
@@ -257,7 +264,7 @@ export class Tag {
   }
 
   static link() {
-    return class extends Tag {
+    return class extends Tag.named("a") {
       constructor() {
         super("a", "", "", true);
       }
@@ -303,7 +310,7 @@ export class Tag {
   }
 
   static image() {
-    return class extends Tag {
+    return class extends Tag.named("img") {
       constructor() {
         super("img", "", "", true);
       }
@@ -351,7 +358,7 @@ export class Tag {
   }
 
   static slice(name, suffix) {
-    return class extends Tag {
+    return class extends Tag.named(name) {
       constructor() {
         super(name, "", suffix);
       }
@@ -366,7 +373,7 @@ export class Tag {
   }
 
   static cell(name) {
-    return class extends Tag {
+    return class extends Tag.named(name) {
       constructor() {
         super(name, "|");
       }
@@ -422,7 +429,7 @@ export class Tag {
   }
 
   static code() {
-    return class extends Tag {
+    return class extends Tag.named("code") {
       constructor() {
         super("code", "`", "`");
       }
@@ -443,7 +450,7 @@ export class Tag {
   }
 
   static blockquote() {
-    return class extends Tag {
+    return class extends Tag.named("blockquote") {
       constructor() {
         super("blockquote", "\n> ", "\n");
       }
@@ -552,30 +559,42 @@ export class Tag {
   }
 }
 
-function tags() {
-  return [
-    ...Tag.blocks().map((b) => Tag.block(b)),
-    ...Tag.headings().map((h, i) => Tag.heading(h, i + 1)),
-    ...Tag.slices().map((s) => Tag.slice(s, "\n")),
-    ...Tag.emphases().map((e) => Tag.emphasis(e[0], e[1])),
-    ...Tag.allowedTags().map((t) => Tag.allowedTag(t)),
-    Tag.aside(),
-    Tag.cell("td"),
-    Tag.cell("th"),
-    Tag.replace("br", "\n"),
-    Tag.replace("hr", "\n---\n"),
-    Tag.replace("head", ""),
-    Tag.li(),
-    Tag.link(),
-    Tag.image(),
-    Tag.code(),
-    Tag.blockquote(),
-    Tag.table(),
-    Tag.tr(),
-    Tag.ol(),
-    Tag.list("ul"),
-    Tag.span(),
-  ];
+let tagsMap;
+
+function tagByName(name) {
+  if (!tagsMap) {
+    tagsMap = new Map();
+
+    const allTags = [
+      ...Tag.blocks().map((b) => Tag.block(b)),
+      ...Tag.headings().map((h, i) => Tag.heading(h, i + 1)),
+      ...Tag.slices().map((s) => Tag.slice(s, "\n")),
+      ...Tag.emphases().map((e) => Tag.emphasis(e[0], e[1])),
+      ...Tag.allowedTags().map((t) => Tag.allowedTag(t)),
+      Tag.aside(),
+      Tag.cell("td"),
+      Tag.cell("th"),
+      Tag.replace("br", "\n"),
+      Tag.replace("hr", "\n---\n"),
+      Tag.replace("head", ""),
+      Tag.li(),
+      Tag.link(),
+      Tag.image(),
+      Tag.code(),
+      Tag.blockquote(),
+      Tag.table(),
+      Tag.tr(),
+      Tag.ol(),
+      Tag.list("ul"),
+      Tag.span(),
+    ];
+
+    for (const tag of allTags) {
+      tagsMap.set(tag.tagName, tag);
+    }
+  }
+
+  return tagsMap.get(name);
 }
 
 class Element {
@@ -604,8 +623,7 @@ class Element {
   }
 
   tag() {
-    const tag = new (tags().filter((t) => new t().name === this.name)[0] ||
-      Tag)();
+    const tag = new (tagByName(this.name) || Tag)();
     tag.element = this;
     return tag;
   }
