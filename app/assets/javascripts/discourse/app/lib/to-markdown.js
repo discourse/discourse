@@ -25,8 +25,7 @@ export class Tag {
     }
 
     if (this.inline) {
-      const prev = this.element.prev;
-      const next = this.element.next;
+      const { prev, next } = this.element;
 
       if (prev && prev.name !== "#text") {
         text = " " + text;
@@ -43,7 +42,7 @@ export class Tag {
   toMarkdown() {
     const text = this.element.innerMarkdown();
 
-    if (text && text.trim()) {
+    if (text?.trim()) {
       return this.decorate(text);
     }
 
@@ -137,7 +136,7 @@ export class Tag {
       decorate(text) {
         const parent = this.element.parent;
 
-        if (this.name === "p" && parent && parent.name === "li") {
+        if (this.name === "p" && parent?.name === "li") {
           // fix for google docs
           this.gap = "";
         }
@@ -203,10 +202,15 @@ export class Tag {
           this.suffix = `</${this.name}>`;
         }
 
-        let space = text.match(/^\s/) || [""];
-        this.prefix = space[0] + this.prefix;
-        space = text.match(/\s$/) || [""];
-        this.suffix = this.suffix + space[0];
+        let space = text.match(/^\s/);
+        if (space) {
+          this.prefix = space[0] + this.prefix;
+        }
+
+        space = text.match(/\s$/);
+        if (space) {
+          this.suffix = this.suffix + space[0];
+        }
 
         return super.decorate(text.trim());
       }
@@ -286,7 +290,7 @@ export class Tag {
           text = text.replace(/\n{2,}/g, "\n");
 
           let linkModifier = "";
-          if (attr.class && attr.class.includes("attachment")) {
+          if (attr.class?.includes("attachment")) {
             linkModifier = "|attachment";
           }
 
@@ -307,15 +311,17 @@ export class Tag {
       toMarkdown() {
         const e = this.element;
         const attr = e.attributes;
-        const pAttr = (e.parent && e.parent.attributes) || {};
+        const pAttr = e.parent?.attributes || {};
+        const cssClass = attr.class || pAttr.class;
+
         let src = attr.src || pAttr.src;
+
         const base62SHA1 = attr["data-base62-sha1"];
         if (base62SHA1) {
           src = `upload://${base62SHA1}`;
         }
-        const cssClass = attr.class || pAttr.class;
 
-        if (cssClass && cssClass.includes("emoji")) {
+        if (cssClass?.includes("emoji")) {
           return attr.title || pAttr.title;
         }
 
@@ -387,12 +393,12 @@ export class Tag {
   static li() {
     return class extends Tag.slice("li", "\n") {
       decorate(text) {
+        const attrs = this.element.attributes;
         let indent = this.element
           .filterParentNames(["ol", "ul"])
           .slice(1)
           .map(() => "\t")
           .join("");
-        const attrs = this.element.attributes;
 
         if (msoListClasses.includes(attrs.class)) {
           try {
@@ -429,6 +435,7 @@ export class Tag {
           this.inline = true;
         }
 
+        // TODO
         text = $("<textarea />").html(text).text();
         return super.decorate(text);
       }
@@ -501,7 +508,7 @@ export class Tag {
         let smallGap = "";
         const parent = this.element.parent;
 
-        if (parent && parent.name === "ul") {
+        if (parent?.name === "ul") {
           this.gap = "";
           this.suffix = "\n";
         }
@@ -521,13 +528,11 @@ export class Tag {
       decorate(text) {
         text = "\n" + text;
         const bullet = text.match(/\n\t*\*/)[0];
+        let i = parseInt(this.element.attributes.start || 1, 10);
 
-        for (
-          let i = parseInt(this.element.attributes.start || 1, 10);
-          text.includes(bullet);
-          i++
-        ) {
+        while (text.includes(bullet)) {
           text = text.replace(bullet, bullet.replace("*", `${i}.`));
+          i++;
         }
 
         return super.decorate(text.slice(1));
@@ -692,6 +697,7 @@ function putPlaceholders(html) {
   while (match) {
     const placeholder = `DISCOURSE_PLACEHOLDER_${placeholders.length + 1}`;
     let code = match[1];
+    // TODO:
     code = $("<div />").html(code).text().replace(/^\n/, "").replace(/\n$/, "");
     placeholders.push([placeholder, code]);
     html = html.replace(match[0], `<code>${placeholder}</code>`);
