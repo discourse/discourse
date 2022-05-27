@@ -1,4 +1,4 @@
-const msoListClasses = [
+const MSO_LIST_CLASSES = [
   "MsoListParagraphCxSpFirst",
   "MsoListParagraphCxSpMiddle",
   "MsoListParagraphCxSpLast",
@@ -406,7 +406,7 @@ export class Tag {
           .map(() => "\t")
           .join("");
 
-        if (msoListClasses.includes(attrs.class)) {
+        if (MSO_LIST_CLASSES.includes(attrs.class)) {
           try {
             const level = parseInt(
               attrs.style.match(/level./)[0].replace("level", ""),
@@ -613,11 +613,9 @@ class Element {
     this.previous = previous;
     this.next = next;
 
-    if (this.name === "p") {
-      if (msoListClasses.includes(this.attributes.class)) {
-        this.name = "li";
-        this.parentNames.push("ul");
-      }
+    if (this.name === "p" && MSO_LIST_CLASSES.includes(this.attributes.class)) {
+      this.name = "li";
+      this.parentNames.push("ul");
     }
   }
 
