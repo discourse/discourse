@@ -160,7 +160,7 @@ class UploadsController < ApplicationController
     end
 
     # defaults to public: false, so only cached by the client browser
-    cache_seconds = S3Helper::DOWNLOAD_URL_EXPIRES_AFTER_SECONDS - SECURE_REDIRECT_GRACE_SECONDS
+    cache_seconds = SiteSetting.s3_presigned_get_url_expires_after_seconds - SECURE_REDIRECT_GRACE_SECONDS
     expires_in cache_seconds.seconds
 
     # url_for figures out the full URL, handling multisite DBs,
@@ -171,7 +171,7 @@ class UploadsController < ApplicationController
 
     redirect_to Discourse.store.signed_url_for_path(
       path_with_ext,
-      expires_in: S3Helper::DOWNLOAD_URL_EXPIRES_AFTER_SECONDS,
+      expires_in: SiteSetting.s3_presigned_get_url_expires_after_seconds,
       force_download: force_download?
     ), allow_other_host: true
   end

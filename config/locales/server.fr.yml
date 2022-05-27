@@ -3630,6 +3630,7 @@ fr:
     title: "Oups ! Cette page est privée."
   site_setting_missing: "Le paramètre « %{name} » doit être défini."
   page_not_found:
+    page_title: "Page introuvable"
     title: "Oups ! Cette page n'existe pas ou est privée."
     popular_topics: "Populaires"
     recent_topics: "Récents"

@@ -1,72 +1,31 @@
-import I18n from "I18n";
-
 import GlimmerComponent from "discourse/components/glimmer";
 import Composer from "discourse/models/composer";
 import { getOwner } from "discourse-common/lib/get-owner";
 import PermissionType from "discourse/models/permission-type";
-import discourseDebounce from "discourse-common/lib/debounce";
+import { customSectionLinks } from "discourse/lib/sidebar/custom-topics-section-links";
+import EverythingSectionLink from "discourse/lib/sidebar/topics-section/everything-section-link";
+import TrackedSectionLink from "discourse/lib/sidebar/topics-section/tracked-section-link";
+import BookmarkedSectionLink from "discourse/lib/sidebar/topics-section/bookmarked-section-link";
 
 import { action } from "@ember/object";
 import { next } from "@ember/runloop";
-import { tracked } from "@glimmer/tracking";
+
+const DEFAULT_SECTION_LINKS = [
+  EverythingSectionLink,
+  TrackedSectionLink,
+  BookmarkedSectionLink,
+];
 
 export default class SidebarTopicsSection extends GlimmerComponent {
-  @tracked totalUnread = 0;
-  @tracked totalNew = 0;
-
-  constructor(owner, args) {
-    super(owner, args);
-    this._refreshSectionCounts();
-
-    this.topicTrackingState.onStateChange(
-      this._topicTrackingStateUpdated.bind(this)
-    );
-  }
-
-  _topicTrackingStateUpdated() {
-    // refreshing section counts by looping through the states in topicTrackingState is an expensive operation so
-    // we debounce this.
-    discourseDebounce(this, this._refreshSectionCounts, 100);
-  }
-
-  _refreshSectionCounts() {
-    let totalUnread = 0;
-    let totalNew = 0;
-
-    this.topicTrackingState.forEachTracked((topic, isNew, isUnread) => {
-      if (isNew) {
-        totalNew += 1;
-      } else if (isUnread) {
-        totalUnread += 1;
+  get sectionLinks() {
+    return [...DEFAULT_SECTION_LINKS, ...customSectionLinks].map(
+      (sectionLinkClass) => {
+        return new sectionLinkClass({
+          topicTrackingState: this.topicTrackingState,
+          currentUser: this.currentUser,
+        });
       }
-    });
-
-    this.totalUnread = totalUnread;
-    this.totalNew = totalNew;
-  }
-
-  get everythingSectionLinkBadgeText() {
-    if (this.totalUnread > 0) {
-      return I18n.t("sidebar.unread_count", {
-        count: this.totalUnread,
-      });
-    } else if (this.totalNew > 0) {
-      return I18n.t("sidebar.new_count", {
-        count: this.totalNew,
-      });
-    } else {
-      return;
-    }
-  }
-
-  get everythingSectionLinkRoute() {
-    if (this.totalUnread > 0) {
-      return "discovery.unread";
-    } else if (this.totalNew > 0) {
-      return "discovery.new";
-    } else {
-      return "discovery.latest";
-    }
+    );
   }
 
   @action

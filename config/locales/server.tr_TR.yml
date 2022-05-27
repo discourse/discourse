@@ -1440,6 +1440,7 @@ tr_TR:
     show_pinned_excerpt_mobile: "Mobil görünümünde başa tutturulmuş konuların özetini göster."
     show_pinned_excerpt_desktop: "Masaüstü görünümünde başa tutturulmuş konuların özetini göster."
     post_onebox_maxlength: "Kutulanmış bir Discourse gönderisinin en fazla karakter uzunluğu"
+    block_onebox_on_redirect: "Yönlendiren URL'ler için onebox'ı engelle."
     allowed_inline_onebox_domains: "Başlıksız bağlanırsa minyatür formda yayınlanacak alanların listesi"
     enable_inline_onebox_on_all_domains: "İnline_onebox_domain_whitelist site ayarını yok say ve tüm alan adlarında inline onebox'a izin ver."
     force_custom_user_agent_hosts: "Tüm isteklerde özel onebox kullanıcı aracısını kullanacak ana makineler. (Özellikle kullanıcı aracısıyla erişimi sınırlayan ana bilgisayarlar için kullanışlıdır)."
@@ -3406,6 +3407,7 @@ tr_TR:
     title: "Oops! O sayfa özel."
   site_setting_missing: "`%{name}' ayarının belirtilmesi gerek."
   page_not_found:
+    page_title: "Sayfa Bulunamadı"
     title: "Hay aksi! Bu sayfa yok ya da gizli."
     popular_topics: "Gözde"
     recent_topics: "Yeni"

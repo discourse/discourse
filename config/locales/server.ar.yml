@@ -3726,6 +3726,7 @@ ar:
     title: "عذرًا! هذه الصفحة خاصة."
   site_setting_missing: "يجب ضبط إعداد الموقع `%{name}`."
   page_not_found:
+    page_title: "الصفحة غير موجودة"
     title: "عذرًا! هذه الصفحة غير موجودة أو خاصة."
     popular_topics: "الرائجة"
     recent_topics: "الحديثة"

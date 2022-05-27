@@ -3353,6 +3353,7 @@ gl:
   page_forbidden:
     title: "Oopa! Esta páxina é privada."
   page_not_found:
+    page_title: "Páxina non atopada"
     title: "Oopa! Esta páxina non existe ou é privada."
     popular_topics: "Destacados"
     recent_topics: "Recentes"

@@ -208,17 +208,9 @@ class Topic < ActiveRecord::Base
   has_many :category_users, through: :category
   has_many :posts
 
-  # TODO (martin):
-  #
-  # When we are ready we can add as: :bookmarkable here to use the
-  # polymorphic association.
-  #
-  # At that time we may also want to make another association for example
-  # :topic_bookmarks that get all of the bookmarks for that topic's bookmarkable id
-  # and type, because this one gets all of the post bookmarks.
-  #
-  # Note: We can use Bookmark#for_user_in_topic for this.
-  has_many :bookmarks, through: :posts
+  # NOTE: To get all Post _and_ Topic bookmarks for a topic by user,
+  # use the Bookmark.for_user_in_topic scope.
+  has_many :bookmarks, as: :bookmarkable
 
   has_many :ordered_posts, -> { order(post_number: :asc) }, class_name: "Post"
   has_many :topic_allowed_users
@@ -1199,11 +1191,26 @@ class Topic < ActiveRecord::Base
     }
   end
 
+  cattr_accessor :slug_computed_callbacks
+  self.slug_computed_callbacks = []
+
+  def slug_for_topic(title)
+    return '' unless title.present?
+    slug = Slug.for(title)
+
+    # this is a hook for plugins that need to modify the generated slug
+    self.class.slug_computed_callbacks.each do |callback|
+      slug = callback.call(self, slug, title)
+    end
+
+    slug
+  end
+
   # Even if the slug column in the database is null, topic.slug will return something:
   def slug
     unless slug = read_attribute(:slug)
       return '' unless title.present?
-      slug = Slug.for(title)
+      slug = slug_for_topic(title)
       if new_record?
         write_attribute(:slug, slug)
       else
@@ -1224,7 +1231,7 @@ class Topic < ActiveRecord::Base
   end
 
   def title=(t)
-    slug = Slug.for(t.to_s)
+    slug = slug_for_topic(t.to_s)
     write_attribute(:slug, slug)
     write_attribute(:fancy_title, nil)
     write_attribute(:title, t)

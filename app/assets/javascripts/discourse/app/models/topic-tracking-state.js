@@ -189,9 +189,6 @@ const TopicTrackingState = EmberObject.extend({
     if (!this.newIncoming) {
       return;
     }
-    if (data.payload && data.payload.archetype === "private_message") {
-      return;
-    }
 
     const filter = this.filter;
     const filterCategory = this.filterCategory;
@@ -482,8 +479,6 @@ const TopicTrackingState = EmberObject.extend({
     return Array.from(this.states.values()).filter(
       (topic) =>
         filterFn(topic) &&
-        topic.archetype !== "private_message" &&
-        !topic.deleted &&
         (!categoryId || subcategoryIds.has(topic.category_id)) &&
         (!tagId || (topic.tags && topic.tags.indexOf(tagId) > -1)) &&
         (type !== "new" ||
@@ -863,12 +858,10 @@ const TopicTrackingState = EmberObject.extend({
   _trackedTopics(opts = {}) {
     return Array.from(this.states.values())
       .map((topic) => {
-        if (topic.archetype !== "private_message" && !topic.deleted) {
-          let newTopic = isNew(topic);
-          let unreadTopic = isUnread(topic);
-          if (newTopic || unreadTopic || opts.includeAll) {
-            return { topic, newTopic, unreadTopic };
-          }
+        let newTopic = isNew(topic);
+        let unreadTopic = isUnread(topic);
+        if (newTopic || unreadTopic || opts.includeAll) {
+          return { topic, newTopic, unreadTopic };
         }
       })
       .compact();

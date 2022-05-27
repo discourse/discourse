@@ -1721,6 +1721,7 @@ hu:
   page_forbidden:
     title: "Hoppá! Az az oldal magánjellegű."
   page_not_found:
+    page_title: "Az oldal nem található"
     title: "Hoppá! Az az oldal nem létezik, vagy magánjellegű."
     popular_topics: "Népszerű"
     recent_topics: "Friss"

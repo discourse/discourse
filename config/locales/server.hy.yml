@@ -2541,6 +2541,7 @@ hy:
     post_approved:
       title: "Ձեր գրառումը հաստատված է"
   page_not_found:
+    page_title: "Էջը Չի Գտնվել"
     title: "Օյ! Այդ էջը գոյություն չունի կամ մասնավոր է:"
     popular_topics: "Տարածված"
     recent_topics: "Վերջին "

@@ -15,7 +15,8 @@ class S3Helper
   # * cache time for secure-media URLs
   # * expiry time for S3 presigned URLs, which include backup downloads and
   #   any upload that has a private ACL (e.g. secure uploads)
-  DOWNLOAD_URL_EXPIRES_AFTER_SECONDS ||= 5.minutes.to_i
+  #
+  # SiteSetting.s3_presigned_get_url_expires_after_seconds
 
   ##
   # Controls the following:

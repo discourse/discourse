@@ -1263,9 +1263,6 @@ export default Controller.extend(bufferedProperty("model"), {
           savedData,
           bookmark.attachedTo()
         );
-
-        // TODO (martin) (2022-02-01) Remove these old bookmark events, replaced by bookmarks:changed.
-        this.appEvents.trigger("topic:bookmark-toggled");
       },
       onAfterDelete: (topicBookmarked, bookmarkId) => {
         this.model.removeBookmark(bookmarkId);

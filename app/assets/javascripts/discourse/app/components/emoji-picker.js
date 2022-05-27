@@ -1,5 +1,8 @@
 import { action, computed } from "@ember/object";
-import { bind, observes } from "discourse-common/utils/decorators";
+import discourseComputed, {
+  bind,
+  observes,
+} from "discourse-common/utils/decorators";
 import {
   emojiSearch,
   extendedEmojiList,
@@ -31,7 +34,6 @@ export default Component.extend({
   emojiStore: service("emoji-store"),
   tagName: "",
   customEmojis: null,
-  selectedDiversity: null,
   recentEmojis: null,
   hoveredEmoji: null,
   isActive: false,
@@ -42,7 +44,6 @@ export default Component.extend({
     this._super(...arguments);
 
     this.set("customEmojis", customEmojis());
-    this.set("selectedDiversity", this.emojiStore.diversity);
 
     if ("IntersectionObserver" in window) {
       this._sectionObserver = this._setupSectionObserver();
@@ -53,6 +54,13 @@ export default Component.extend({
     this._super(...arguments);
 
     this.appEvents.on("emoji-picker:close", this, "onClose");
+  },
+
+  // `readOnly` may seem like a better choice here, but the computed property
+  // provides caching (emojiStore.diversity is a simple getter)
+  @discourseComputed("emojiStore.diversity")
+  selectedDiversity(diversity) {
+    return diversity;
   },
 
   // didReceiveAttrs would be a better choice here, but this is sadly causing
@@ -186,7 +194,6 @@ export default Component.extend({
   onDiversitySelection(index) {
     const scale = index + 1;
     this.emojiStore.diversity = scale;
-    this.set("selectedDiversity", scale);
 
     this._applyDiversity(scale);
   },

@@ -3338,6 +3338,7 @@ ja:
     title: "おっとっと！そのページは非公開です。"
   site_setting_missing: "`%{name}` サイト設定は、設定されている必要があります。"
   page_not_found:
+    page_title: "ページが見つかりません"
     title: "おっとっと！ページが存在しないか非公開です。"
     popular_topics: "人気"
     recent_topics: "最近"

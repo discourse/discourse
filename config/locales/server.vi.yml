@@ -1750,6 +1750,7 @@ vi:
     post_approved:
       title: "Bài đăng của bạn đã được phê duyệt"
   page_not_found:
+    page_title: "Không Tìm Thấy Trang"
     title: "Rất tiếc! Địa chỉ này không tồn tại hoặc riêng tư."
     popular_topics: "Phổ biến"
     recent_topics: "Gân đây"

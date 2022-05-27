@@ -12,6 +12,7 @@ import {
 import { isLegacyEmber } from "discourse-common/config/environment";
 import topicFixtures from "discourse/tests/fixtures/discovery-fixtures";
 import { cloneJSON } from "discourse-common/lib/object";
+import { withPluginApi } from "discourse/lib/plugin-api";
 
 acceptance("Sidebar - Topics Section", function (needs) {
   needs.user({ experimental_sidebar_enabled: true });
@@ -404,6 +405,92 @@ acceptance("Sidebar - Topics Section", function (needs) {
       assert.ok(
         query(".sidebar-section-link-everything").href.endsWith("/latest"),
         "is links to latest filter"
+      );
+    }
+  );
+
+  conditionalTest(
+    "adding section link via plugin API with Object",
+    !isLegacyEmber(),
+    async function (assert) {
+      withPluginApi("1.2.0", (api) => {
+        api.addTopicsSectionLink({
+          name: "unread",
+          route: "discovery.unread",
+          text: "unread topics",
+          title: "List of unread topics",
+        });
+      });
+
+      await visit("/");
+
+      assert.strictEqual(
+        query(".sidebar-section-link-unread").textContent.trim(),
+        "unread topics",
+        "displays the right text for the link"
+      );
+
+      assert.strictEqual(
+        query(".sidebar-section-link-unread").title,
+        "List of unread topics",
+        "displays the right title for the link"
+      );
+
+      await click(".sidebar-section-link-unread");
+
+      assert.strictEqual(currentURL(), "/unread", "links to the right URL");
+    }
+  );
+
+  conditionalTest(
+    "adding section link via plugin API with callback function",
+    !isLegacyEmber(),
+    async function (assert) {
+      withPluginApi("1.2.0", (api) => {
+        api.addTopicsSectionLink((baseSectionLink) => {
+          return class CustomSectionLink extends baseSectionLink {
+            get name() {
+              return "user-summary";
+            }
+
+            get route() {
+              return "user.summary";
+            }
+
+            get model() {
+              return this.currentUser;
+            }
+
+            get title() {
+              return `${this.currentUser.username} summary`;
+            }
+
+            get text() {
+              return "my summary";
+            }
+          };
+        });
+      });
+
+      await visit("/");
+      await click(".sidebar-section-link-user-summary");
+
+      assert.strictEqual(
+        currentURL(),
+        "/u/eviltrout/summary",
+        "links to the right URL"
+      );
+
+      assert.strictEqual(
+        query(".sidebar-section-link-user-summary").textContent.trim(),
+        "my summary",
+        "displays the right text for the link"
+      );
+
+      assert.strictEqual(
+        query(".sidebar-section-link-user-summary").title,
+        "eviltrout summary",
+        "displays the right title for the link"
       );
     }
   );

@@ -2907,6 +2907,7 @@ da:
     post_approved:
       title: "Dit indlæg blev godkendt"
   page_not_found:
+    page_title: "Side ikke fundet"
     title: "Ups! Den side eksisterer ikke eller også er den privat."
     popular_topics: "Populære"
     recent_topics: "Nye"

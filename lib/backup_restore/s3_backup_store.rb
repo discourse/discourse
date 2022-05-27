@@ -132,7 +132,7 @@ module BackupRestore
     end
 
     def create_file_from_object(obj, include_download_source = false)
-      expires = S3Helper::DOWNLOAD_URL_EXPIRES_AFTER_SECONDS
+      expires = SiteSetting.s3_presigned_get_url_expires_after_seconds
       BackupFile.new(
         filename: File.basename(obj.key),
         size: obj.size,

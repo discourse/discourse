@@ -3569,6 +3569,7 @@ pt_BR:
     title: "Ops! Essa página é privada."
   site_setting_missing: "O site %{name} precisa ser configurado."
   page_not_found:
+    page_title: "Página não encontrada"
     title: "Oops! Essa página não existe ou é privada."
     popular_topics: "Mais acessados(as)"
     recent_topics: "Recente"

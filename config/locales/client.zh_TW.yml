@@ -62,12 +62,24 @@ zh_TW:
         date_month: "M月 D日"
         date_year: "YYYY年 M月"
       medium:
+        less_than_x_minutes:
+          other: "少於 %{count} 分鐘"
         x_minutes:
           other: "%{count} 分鐘"
         x_hours:
           other: "%{count} 小時"
+        about_x_hours:
+          other: "約 %{count} 小時"
         x_days:
           other: "%{count} 天"
+        x_months:
+          other: "%{count} 個月"
+        about_x_years:
+          other: "大約 %{count} 年"
+        over_x_years:
+          other: "超過 %{count} 年"
+        almost_x_years:
+          other: "幾乎 %{count} 年"
         date_year: "YYYY年 M月 D日"
       medium_with_ago:
         x_minutes:
@@ -90,9 +102,11 @@ zh_TW:
       previous_month: "上個月"
       next_month: "下個月"
       placeholder: 日期
+      from_placeholder: "從日期"
       to_placeholder: "至今"
     share:
       topic_html: '話題：<span class="topic-title">%{topicTitle}</span>'
+      post: "由@%{username}發布#%{postNumber}"
       close: "關閉"
       twitter: "分享到 Twitter"
       facebook: "分享到 Facebook"
@@ -100,6 +114,7 @@ zh_TW:
       url: "複製並分享網址"
     action_codes:
       public_topic: "於 %{when} 發佈這個話題"
+      open_topic: "將此轉換為主題 %{when}"
       private_topic: "於 %{when} 私訊這個主題"
       split_topic: "於 %{when} 分割此主題"
       invited_user: "於 %{when} 邀請 %{who}"
@@ -134,6 +149,7 @@ zh_TW:
     skip_to_main_content: "跳到主要內容"
     wizard_required: "是時候配置你的論壇啦！<a href='%{url}' data-auto-route='true'>點擊開始設置嚮導</a>！"
     emails_are_disabled: "管理員已停用了全域的外部信件功能。將不再寄出任何類型的電子郵件。"
+    emails_are_disabled_non_staff: "非員工用戶的外發電子郵件已被禁用。"
     software_update_prompt:
       message: "我們更新了這個網站， <span>請重新整理</span>，否則您可能會遇到預期之外的狀況。"
       dismiss: "忽略"
@@ -142,6 +158,10 @@ zh_TW:
     bootstrap_mode_disabled: "初始模式將會在 24 小時後自動禁用。"
     themes:
       default_description: "預設"
+      broken_theme_alert: "您的網站可能無法運行，因為主題/組件有錯誤。"
+      error_caused_by: "由 '%{name}' 引起。 <a target='blank' href='%{path}'>按一下這裡</a> 以更新、重新設定或停用。"
+      only_admins: "（此消息僅向網站管理員顯示）"
+    broken_decorator_alert: "貼文可能無法正確顯示，因為您網站上的帖子內容裝飾器之一引發了錯誤。"
     s3:
       regions:
         ap_northeast_1: "亞太地區 (東京)"
@@ -208,6 +228,8 @@ zh_TW:
     max_of_count: "（最大 %{count}）"
     character_count:
       other: "%{count} 個字元"
+    period_chooser:
+      aria_label: "按期間篩選"
     related_messages:
       title: "相關訊息"
       see_all: '參閱 @%{username} 的 <a href="%{path}">所有訊息</a>...'
@@ -240,20 +262,32 @@ zh_TW:
       help:
         bookmark: "點擊以將此話題的第一篇貼文加入書籤"
         edit_bookmark: "點擊以編輯此主題的書籤"
+        edit_bookmark_for_topic: "按一下以編輯此主題的書籤"
         unbookmark: "點擊以移除此話題所有書籤"
         unbookmark_with_reminder: "點擊以移除此話題所有書籤和提醒。"
     bookmarks:
       created: "你已將這篇文章加入書籤。 %{name}"
+      create: "建立書籤"
       edit: "編輯書籤"
       not_bookmarked: "將此貼文加入書籤"
+      remove_reminder_keep_bookmark: "刪除提醒並保留書籤"
+      created_with_reminder: "您已使用提醒 %{date}將此帖子添加為書籤。 %{name}"
       remove: "移除書籤"
       delete: "刪除書籤"
       confirm_delete: "您確定要刪除這個書籤嗎？提醒也會被刪除。"
       confirm_clear: "確定要移除該話題上的所有書籤嗎？"
       save: "儲存"
       no_timezone: '您尚未設定時區。將無法設定提醒事項。在<a href="%{basePath}/my/preferences/profile">您的設定檔</a>中設定一個 。'
+      invalid_custom_datetime: "您提供的日期和時間無效，請再試一次。"
       list_permission_denied: "您沒有權限查看此用戶的書籤。"
       no_user_bookmarks: "您沒有加入書籤的貼文，書籤能夠讓您快速的找到特定貼文。"
+      auto_delete_preference:
+        label: "在您收到通知之後"
+        never: "保留書籤"
+        when_reminder_sent: "刪除書籤"
+        on_owner_reply: "刪除書籤，一旦我回复"
+        clear_reminder: "保留書籤和清除提醒"
+      search_placeholder: "依名稱、主題標題或貼文內容搜尋書籤"
       search: "搜索"
       reminders:
         today_with_time: "今天 %{time}"
@@ -262,6 +296,8 @@ zh_TW:
         existing_reminder: "您為此書籤設置了一個提醒，該提醒將在 %{at_date_time} 被發送"
     copy_codeblock:
       copied: "已複製!"
+      copy: "將程式碼複製到剪貼簿"
+      fullscreen: "以全螢幕顯示程式碼"
     drafts:
       label: "草稿"
       label_with_count: "草稿 (%{count})"
@@ -293,6 +329,7 @@ zh_TW:
     saved: "儲存完畢！"
     upload: "上傳"
     uploading: "正在上傳..."
+    processing: "處理中..."
     uploading_filename: "正在上傳: %{filename}…"
     processing_filename: "處理中： %{filename}..."
     clipboard: "剪貼簿"
@@ -307,6 +344,7 @@ zh_TW:
     switch_to_anon: "進入匿名模式"
     switch_from_anon: "離開匿名模式"
     banner:
+      close: "關閉此橫幅"
       edit: "編輯"
     pwa:
       install_banner: "你希望在此裝置上 <a href>安裝 %{title} 嗎？</a>"
@@ -325,12 +363,24 @@ zh_TW:
       date_filter: "發表於"
       in_reply_to: "回覆給"
       explain:
+        why: "解釋為什麼這個項目結束在隊列"
         title: "可審閱的評分"
         formula: "公式"
         subtotal: "小計"
         total: "總計"
+        min_score_visibility: "能見度的最低分數"
+        score_to_hide: "分數隱藏帖子"
+        take_action_bonus:
+          name: "採取行動"
+          title: "當工作人員選擇採取行動時，將獲得獎金。"
+        user_accuracy_bonus:
+          name: "使用者準確性"
+          title: "紀錄上已經同意的標誌的用戶將獲得獎勵。"
         trust_level_bonus:
           name: "信任等級"
+          title: "由信任等級較高的使用者建立的可審閱項目的分數較高。"
+        type_bonus:
+          name: "類型獎金"
       claim_help:
         optional: "您可以聲明此項目以防止其他人審核。"
         required: "您必須先審核項目才能查看它們。"
@@ -451,6 +501,7 @@ zh_TW:
       example_username: "username"
       reject_reason:
         title: "為何拒絕此使用者？"
+        send_email: "傳送拒絕電子郵件"
     relative_time_picker:
       minutes:
         other: "分鐘"
@@ -464,7 +515,9 @@ zh_TW:
         other: "年"
       relative: "相關的"
     time_shortcut:
+      now: "現在"
       later_today: "今日稍晚"
+      two_days: "兩天"
       next_business_day: "下個工作日"
       tomorrow: "明天"
       post_local_date: "張貼日期"
@@ -475,10 +528,15 @@ zh_TW:
       next_week: "下週"
       two_weeks: "兩週"
       next_month: "下個月"
+      two_months: "兩個月"
+      three_months: "三個月"
+      four_months: "四個月"
       six_months: "六個月"
+      one_year: "一年"
       forever: "永久"
       relative: "相對時間"
       none: "不需要"
+      last_custom: "上次自訂日期時間"
       custom: "自定義日期和時間"
       select_timeframe: "選擇有效時間範圍"
     user_action:

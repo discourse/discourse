@@ -2517,6 +2517,7 @@ he:
         clear_all: "לפנות הכול"
         unlist_topics: "הסרת נושאים"
         relist_topics: "רשימה מחדש של נושאים"
+        reset_bump_dates: "איפוס תאריכי ההקפצות"
         defer: "אחר כך"
         delete: "מחיקת נושאים"
         dismiss: "ביטול"

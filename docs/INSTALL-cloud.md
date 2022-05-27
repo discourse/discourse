@@ -2,11 +2,16 @@
 is [DigitalOcean][do], but these steps will work on any **Docker-compatible** cloud provider or local server. This
 walkthrough will go through these in detail:
 
-1. [Create new cloud server](#1-create-new-cloud-server)
-2. [Access new cloud server](#2-access-your-cloud-server)
-3. [Install Discourse](#3-install-discourse)
-4. [Setting up email](#4-setting-up-email)
-5. [Customize domain name](#5-customize-domain-name)
+**[Before you start](#before-you-start)**
+
+1. [Preparing your domain name](#1-preparing-your-domain-name)
+2. [Setting up email](#2-setting-up-email)
+
+**[Installation](#installation)**
+
+3. [Create new cloud server](#3-create-new-cloud-server)
+4. [Access new cloud server](#4-access-your-cloud-server)
+5. [Install Discourse](#5-install-discourse)
 6. [Edit Discourse configuration](#6-edit-discourse-configuration)
 7. [Start Discourse](#7-start-discourse)
 8. [Register new account and become admin](#8-register-new-account-and-become-admin)
@@ -15,7 +20,35 @@ walkthrough will go through these in detail:
 
 > 🔔 Don't have 30 minutes to set this up? For a flat one-time fee of $150, the community can install Discourse in the cloud for you. [Click here to purchase a self-supported community install](https://www.literatecomputing.com/product/discourse-install/).
 
-### 1. Create New Cloud Server
+## Before you start
+
+### 1. Preparing your domain name
+
+> 🔔 Discourse will not work from an IP address, you must own a domain name such as `example.com` to proceed.
+
+- Already own a domain name? Great. Select a subdomain such as `discourse.example.com` or `talk.example.com` or `forum.example.com` for your Discourse instance.
+
+- No domain name? Get one! We can [recommend NameCheap](https://www.namecheap.com/domains/domain-name-search/), or there are many other [great domain name registrars](https://www.google.com/search?q=best+domain+name+registrars) to choose from.
+
+- Your DNS controls should be accessible from the place where you purchased your domain name. Create a DNS [`A` record](https://support.dnsimple.com/articles/a-record/) for the `discourse.example.com` hostname in your DNS control panel, pointing to the IP address of your cloud instance where you are installing Discourse.
+
+### 2. Setting Up Email
+
+> ⚠️ **Email is CRITICAL for account creation and notifications in Discourse.** If you do not properly configure email before bootstrapping YOU WILL HAVE A BROKEN SITE!
+
+> 💡 Email here refers to [Transactional Email](https://www.google.com/search?q=what+is+transactional+email) not the usual email service like Gmail, Outlook and/or Yahoo.
+
+- No existing mail server? Check out our [**Recommended Email Providers for Discourse**][mailconfig].
+
+- Already have a mail server? Great. Use your existing mail server credentials. (Free email services like Gmail/Outlook/Yahoo do not support transactional emails.)
+
+- To ensure mail deliverability, you must add valid [SPF and DKIM records](https://www.google.com/search?q=what+is+spf+dkim) in your DNS. See your mail provider instructions for specifics.
+
+- If you're having trouble getting emails to work, follow our [Email Troubleshooting Guide](https://meta.discourse.org/t/troubleshooting-email-on-a-new-discourse-install/16326)
+
+## Installation
+
+### 3. Create New Cloud Server
 
 Create your new cloud server, for example [on DigitalOcean][do]:
 
@@ -30,7 +63,7 @@ Create your new cloud server, for example [on DigitalOcean][do]:
 
 Create your new Droplet. You may receive an email with the root password, however, [you should set up SSH keys](https://www.google.com/search?q=digitalocean+ssh+keys), as they are more secure.
 
-### 2. Access Your Cloud Server
+### 4. Access Your Cloud Server
 
 Connect to your server via its IP address using SSH, or [Putty][put] on Windows:
 
@@ -38,7 +71,7 @@ Connect to your server via its IP address using SSH, or [Putty][put] on Windows:
 
 Either use the root password from the email DigitalOcean sent you when the server was set up, or have a valid SSH key configured on your local machine.
 
-### 3. Install Discourse
+### 5. Install Discourse
 
 Clone the [Official Discourse Docker Image][dd] into `/var/discourse`.
 
@@ -48,30 +81,6 @@ Clone the [Official Discourse Docker Image][dd] into `/var/discourse`.
     chmod 700 containers
 
 You will need to be root through the rest of the setup and bootstrap process.
-
-### 4. Setting Up Email
-
-> ⚠️ **Email is CRITICAL for account creation and notifications in Discourse.** If you do not properly configure email before bootstrapping YOU WILL HAVE A BROKEN SITE!
-
-> 💡 Email here refers to [Transactional Email](https://www.google.com/search?q=what+is+transactional+email) not the usual email service like Gmail, Outlook and/or Yahoo.
-
-- No existing mail server? Check out our [**Recommended Email Providers for Discourse**][mailconfig].
-
-- Already have a mail server? Great. Use your existing mail server credentials. (Free email services like Gmail/Outlook/Yahoo do not support transactional emails.)
-
-- To ensure mail deliverability, you must add valid [SPF and DKIM records](https://www.google.com/search?q=what+is+spf+dkim) in your DNS. See your mail provider instructions for specifics.
-
-- If you're having trouble getting emails to work, follow our [Email Troubleshooting Guide](https://meta.discourse.org/t/troubleshooting-email-on-a-new-discourse-install/16326)
-
-### 5. Customize Domain Name
-
-> 🔔 Discourse will not work from an IP address, you must own a domain name such as `example.com` to proceed.
-
-- Already own a domain name? Great. Select a subdomain such as `discourse.example.com` or `talk.example.com` or `forum.example.com` for your Discourse instance.
-
-- No domain name? Get one! We can [recommend NameCheap](https://www.namecheap.com/domains/domain-name-search/), or there are many other [great domain name registrars](https://www.google.com/search?q=best+domain+name+registrars) to choose from.
-
-- Your DNS controls should be accessible from the place where you purchased your domain name. Create a DNS [`A` record](https://support.dnsimple.com/articles/a-record/) for the `discourse.example.com` hostname in your DNS control panel, pointing to the IP address of your cloud instance where you are installing Discourse.
 
 ### 6. Edit Discourse Configuration
 

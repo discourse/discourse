@@ -19,7 +19,7 @@ if Rails.env == "development"
   # 3. we have a post_edited hook that queues a job for bot input
   # 4. if you are not running sidekiq in dev every time you save a post it will trigger it
   # 5. but the constant can not be autoloaded
-  Rails.configuration.autoload_paths << File.expand_path('../autoload', __FILE__)
+  Rails.configuration.autoload_paths << File.expand_path('../autoload/jobs', __FILE__)
 end
 
 require_relative 'lib/discourse_narrative_bot/welcome_post_type_site_setting.rb'
@@ -31,12 +31,12 @@ after_initialize do
   Mime::Type.register "image/svg+xml", :svg
 
   [
-    '../autoload/jobs/bot_input.rb',
-    '../autoload/jobs/narrative_timeout.rb',
-    '../autoload/jobs/narrative_init.rb',
-    '../autoload/jobs/send_default_welcome_message.rb',
-    '../autoload/jobs/onceoff/grant_badges.rb',
-    '../autoload/jobs/onceoff/remap_old_bot_images.rb',
+    '../autoload/jobs/regular/bot_input.rb',
+    '../autoload/jobs/regular/narrative_timeout.rb',
+    '../autoload/jobs/regular/narrative_init.rb',
+    '../autoload/jobs/regular/send_default_welcome_message.rb',
+    '../autoload/jobs/onceoff/discourse_narrative_bot/grant_badges.rb',
+    '../autoload/jobs/onceoff/discourse_narrative_bot/remap_old_bot_images.rb',
     '../lib/discourse_narrative_bot/actions.rb',
     '../lib/discourse_narrative_bot/base.rb',
     '../lib/discourse_narrative_bot/new_user_narrative.rb',
