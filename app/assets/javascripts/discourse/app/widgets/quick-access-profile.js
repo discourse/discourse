@@ -3,6 +3,7 @@ import { Promise } from "rsvp";
 import QuickAccessItem from "discourse/widgets/quick-access-item";
 import QuickAccessPanel from "discourse/widgets/quick-access-panel";
 import { createWidgetFrom } from "discourse/widgets/widget";
+import showModal from "discourse/lib/show-modal";
 
 const _extraItems = [];
 
@@ -46,7 +47,10 @@ createWidgetFrom(QuickAccessItem, "user-status-item", {
 
   hideMenuAndSetStatus() {
     this.sendWidgetAction("toggleUserMenu");
-    this.sendWidgetAction("setUserStatus");
+    showModal("user-status", {
+      title: "user_status.set_custom_status",
+      modalClass: "user-status",
+    });
   },
 });
 
