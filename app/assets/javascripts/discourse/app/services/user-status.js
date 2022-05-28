@@ -12,7 +12,7 @@ export default class UserStatusService extends Service {
     });
 
     this.currentUser.set("status", status);
-    this.appEvents.trigger("do-not-disturb:changed");
+    this.appEvents.trigger("user-status:changed");
   }
 
   async clear() {
@@ -22,6 +22,6 @@ export default class UserStatusService extends Service {
     });
 
     this.currentUser.set("status", null);
-    this.appEvents.trigger("do-not-disturb:changed");
+    this.appEvents.trigger("user-status:changed");
   }
 }
