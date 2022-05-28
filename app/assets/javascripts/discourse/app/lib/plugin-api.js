@@ -95,12 +95,16 @@ import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
 import { downloadCalendar } from "discourse/lib/download-calendar";
 import { consolePrefix } from "discourse/lib/source-identifier";
 import { addSectionLink } from "discourse/lib/sidebar/custom-topics-section-links";
+import {
+  addBlockDecorateCallback,
+  addTagDecorateCallback,
+} from "discourse/lib/to-markdown";
 
 // If you add any methods to the API ensure you bump up the version number
 // based on Semantic Versioning 2.0.0. Please update the changelog at
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
-const PLUGIN_API_VERSION = "1.2.0";
+const PLUGIN_API_VERSION = "1.3.0";
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
 function canModify(klass, type, resolverName, changes) {
@@ -1679,6 +1683,38 @@ class PluginApi {
    */
   addTopicsSectionLink(arg) {
     addSectionLink(arg);
+  }
+
+  /**
+   * Decorate inline bbcode in to-markdown function.
+   *
+   * ```
+   * api.beforeToMarkdownTagDecorate(function (text) {
+   *   if (this.element.attributes.class === "spoiled") {
+   *     this.prefix = "[spoiler]";
+   *     this.suffix = "[/spoiler]";
+   *   }
+   * });
+   * ```
+   */
+  beforeToMarkdownTagDecorate(callback) {
+    addTagDecorateCallback(callback);
+  }
+
+  /**
+   * Decorate block bbcode in to-markdown function.
+   *
+   * ```
+   * api.beforeToMarkdownBlockDecorate(function (text) {
+   *   if (this.element.attributes.class === "spoiled") {
+   *     this.prefix = "[spoiler]";
+   *     this.suffix = "[/spoiler]";
+   *   }
+   * });
+   * ```
+   */
+  beforeToMarkdownBlockDecorate(callback) {
+    addBlockDecorateCallback(callback);
   }
 }
 

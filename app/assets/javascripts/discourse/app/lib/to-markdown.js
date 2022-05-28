@@ -11,6 +11,25 @@ const hasChild = (e, n) => {
   return (e.children || []).some((c) => c.name === n);
 };
 
+let tagDecorateCallbacks = [];
+let blockDecorateCallbacks = [];
+
+export function addTagDecorateCallback(callback) {
+  tagDecorateCallbacks.push(callback);
+}
+
+export function clearTagDecorateCallbacks() {
+  tagDecorateCallbacks = [];
+}
+
+export function addBlockDecorateCallback(callback) {
+  blockDecorateCallbacks.push(callback);
+}
+
+export function clearBlockDecorateCallbacks() {
+  blockDecorateCallbacks = [];
+}
+
 export class Tag {
   constructor(name, prefix = "", suffix = "", inline = false) {
     this.name = name;
@@ -20,6 +39,14 @@ export class Tag {
   }
 
   decorate(text) {
+    for (const callback of tagDecorateCallbacks) {
+      const result = callback.call(this, text);
+
+      if (typeof result !== "undefined") {
+        text = result;
+      }
+    }
+
     if (this.prefix || this.suffix) {
       text = [this.prefix, text, this.suffix].join("");
     }
@@ -136,6 +163,14 @@ export class Tag {
 
       decorate(text) {
         const parent = this.element.parent;
+
+        for (const callback of blockDecorateCallbacks) {
+          const result = callback.call(this, text);
+
+          if (typeof result !== "undefined") {
+            text = result;
+          }
+        }
 
         if (this.name === "p" && parent && parent.name === "li") {
           // fix for google docs
