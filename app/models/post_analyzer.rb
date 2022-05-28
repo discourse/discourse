@@ -46,7 +46,11 @@ class PostAnalyzer
       onebox
     end
 
-    cooked = result.to_html if result.changed?
+    if result.changed?
+      PrettyText.sanitize_hotlinked_media(result.doc)
+      cooked = result.to_html
+    end
+
     cooked
   end
 
