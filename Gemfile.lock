@@ -244,7 +244,7 @@ GEM
       ffi (~> 1.9)
     minitest (5.15.0)
     mocha (1.14.0)
-    msgpack (1.5.1)
+    msgpack (1.5.2)
     multi_json (1.15.0)
     multi_xml (0.6.0)
     multipart-post (2.1.1)
