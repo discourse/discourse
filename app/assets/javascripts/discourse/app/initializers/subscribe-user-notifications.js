@@ -112,7 +112,7 @@ export default {
         user.updateDoNotDisturbStatus(data.ends_at);
       });
 
-      bus.subscribe(`/user-status/${user.get("id")}`, (data) => {
+      bus.subscribe(`/user-status/${user.id}`, (data) => {
         user.updateStatus(data);
       });
 
