@@ -1686,13 +1686,14 @@ class PluginApi {
   }
 
   /**
-   * Decorate inline bbcode in to-markdown function.
+   * Allows to add support for custom inline markdown/bbcode in `toMarkdown` function.
    *
    * ```
    * api.beforeToMarkdownTagDecorate(function (text) {
-   *   if (this.element.attributes.class === "spoiled") {
-   *     this.prefix = "[spoiler]";
-   *     this.suffix = "[/spoiler]";
+   *   if (this.element.attributes.class === "loud") {
+   *     this.prefix = "^^";
+   *     this.suffix = "^^";
+   *     return text.toLowerCase();
    *   }
    * });
    * ```
@@ -1702,7 +1703,7 @@ class PluginApi {
   }
 
   /**
-   * Decorate block bbcode in to-markdown function.
+   * Allows to add support for custom block markdown/bbcode in `toMarkdown` function.
    *
    * ```
    * api.beforeToMarkdownBlockDecorate(function (text) {
