@@ -410,6 +410,11 @@ module ApplicationHelper
     current_user && current_user.trust_level >= 1 && SiteSetting.native_app_install_banner_ios
   end
 
+  def include_splash_screen?
+     # A bit basic for now but will be expanded later
+     SiteSetting.splash_screen
+  end
+
   def ios_app_argument
     # argument only makes sense for DiscourseHub app
     SiteSetting.ios_app_id == "1173672076" ?
@@ -546,6 +551,11 @@ module ApplicationHelper
       nil,
       skip_transformation: request.env[:skip_theme_ids_transformation].present?
     )
+  end
+
+  def theme_meta_tags
+
+    return `<meta type="foox">`
   end
 
   def discourse_stylesheet_link_tag(name, opts = {})
