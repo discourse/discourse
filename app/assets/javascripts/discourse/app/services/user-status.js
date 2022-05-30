@@ -11,7 +11,7 @@ export default class UserStatusService extends Service {
       data: { description: status.description },
     });
 
-    this.currentUser.updateStatus(status);
+    this.currentUser.set("status", status);
   }
 
   async clear() {
@@ -20,6 +20,6 @@ export default class UserStatusService extends Service {
       type: "DELETE",
     });
 
-    this.currentUser.updateStatus(null);
+    this.currentUser.set("status", null);
   }
 }

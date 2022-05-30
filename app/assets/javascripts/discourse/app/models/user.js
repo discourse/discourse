@@ -1002,11 +1002,6 @@ const User = RestModel.extend({
     this.appEvents.trigger("do-not-disturb:changed", this.do_not_disturb_until);
   },
 
-  updateStatus(status) {
-    this.set("status", status);
-    this.appEvents.trigger("user-status:changed");
-  },
-
   isInDoNotDisturb() {
     return (
       this.do_not_disturb_until &&
