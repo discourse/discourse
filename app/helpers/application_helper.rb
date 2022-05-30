@@ -153,7 +153,7 @@ module ApplicationHelper
   def preload_script_url(url)
     <<~HTML.html_safe
       <link rel="preload" href="#{url}" as="script">
-      <script src="#{url}"></script>
+      <script defer src="#{url}"></script>
     HTML
   end
 
@@ -408,6 +408,11 @@ module ApplicationHelper
 
   def include_ios_native_app_banner?
     current_user && current_user.trust_level >= 1 && SiteSetting.native_app_install_banner_ios
+  end
+
+  def include_splash_screen?
+     # A bit basic for now but will be expanded later
+     SiteSetting.splash_screen
   end
 
   def ios_app_argument
