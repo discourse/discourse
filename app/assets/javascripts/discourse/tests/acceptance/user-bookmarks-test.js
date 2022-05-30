@@ -1,4 +1,8 @@
-import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
+import {
+  acceptance,
+  exists,
+  queryAll,
+} from "discourse/tests/helpers/qunit-helpers";
 import { click, visit } from "@ember/test-helpers";
 import { cloneJSON } from "discourse-common/lib/object";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -56,13 +60,13 @@ acceptance("User's bookmarks - reminder", function (needs) {
   test("bookmarks with reminders have a clear reminder option", async function (assert) {
     await visit("/u/eviltrout/activity/bookmarks");
 
-    assert.ok(exists(".bookmark-reminder"));
+    assert.strictEqual(queryAll(".bookmark-reminder").length, 2);
 
     const dropdown = selectKit(".bookmark-actions-dropdown");
     await dropdown.expand();
     await dropdown.selectRowByValue("clear_reminder");
 
-    assert.not(exists(".bookmark-reminder"));
+    assert.strictEqual(queryAll(".bookmark-reminder").length, 1);
   });
 });
 
