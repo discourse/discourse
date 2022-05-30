@@ -1248,7 +1248,6 @@ describe SessionController do
       end
 
       it "correctly logs in for secondary domain secrets" do
-
         get "/session/sso_provider", params: Rack::Utils.parse_query(@sso.payload("newSecretForOverRainbow"))
         expect(response.status).to eq(302)
       end
