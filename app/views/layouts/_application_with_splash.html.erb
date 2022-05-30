@@ -1,0 +1,99 @@
+<head>
+  <%=  theme_meta_tags %>
+  <meta charset="utf-8">
+  <title><%= content_for?(:title) ? yield(:title) : SiteSetting.title %></title>
+  <meta name="description" content="<%= @description_meta || SiteSetting.site_description %>">
+  <meta name="discourse_theme_id" content="<%= theme_id %>">
+  <meta name="discourse_current_homepage" content="<%= current_homepage %>">
+  <%= render partial: "layouts/head" %>
+  <%= discourse_csrf_tags %>
+  <%- if SiteSetting.enable_escaped_fragments? %>
+    <meta name="fragment" content="!">
+  <%- end %>
+  <%- if shared_session_key %>
+    <meta name="shared_session_key" content="<%= shared_session_key %>">
+  <%- end %>
+  <%= render_google_tag_manager_head_code %>
+  <%= render_google_universal_analytics_code %>
+  <link id="manifest-link" rel="manifest" href=<%= manifest_url %> crossorigin="use-credentials">
+  <%- if include_ios_native_app_banner? %>
+    <meta name="apple-itunes-app" content="app-id=<%= SiteSetting.ios_app_id %><%= ios_app_argument %>">
+  <%- end %>
+  <%= yield :head %>
+  <%= build_plugin_html 'server:before-head-close' %>
+  <%= tag.meta id: 'data-discourse-setup', data: client_side_setup_data %>
+  <meta name="discourse/config/environment" content="<%=u discourse_config_environment %>" />
+  <%- if authentication_data %>
+    <meta id="data-authentication" data-authentication-data="<%= authentication_data %>">
+  <%- end %>
+</head>
+<body class="<%= body_classes %>">
+  <%= render partial: "common/discourse_splash" %>
+  <div class="assets">
+    <div class="json-assets">
+      <div class="hidden" id="data-preloaded" data-preloaded="<%= preloaded_json %>"></div>
+      <%= yield :data %>
+    </div>
+    <div class="css-assets">
+      <%= render partial: "common/discourse_stylesheet" %>
+    </div>
+    <div class="js-assets">
+      <%= preload_script 'browser-detect' %>
+      <%= preload_script "locales/#{I18n.locale}" %>
+      <%- if ExtraLocalesController.client_overrides_exist? %>
+        <%= preload_script_url ExtraLocalesController.url('overrides') %>
+      <%- end %>
+      <%= preload_script "vendor" %>
+      <%= preload_script "application" %>
+      <!-- this needs to move -->
+      <%- unless customization_disabled? %>
+        <%= theme_lookup("head_tag") %>
+      <%- end %>
+      <%- if staff? %>
+        <%= preload_script_url ExtraLocalesController.url('admin') %>
+        <%= preload_script "admin" %>
+      <%- end %>
+      <%- Discourse.find_plugin_js_assets(include_official: allow_plugins?, include_unofficial: allow_third_party_plugins?, request: request).each do |file| %>
+        <%= preload_script file %>
+      <%- end %>
+      <%- if allow_plugins? %>
+        <%= build_plugin_html 'server:after-body-open' %>
+        <%= build_plugin_html 'server:header' %>
+      <%- end -%>
+      <%- unless customization_disabled? %>
+        <%= theme_translations_lookup %>
+        <%= theme_js_lookup %>
+        <%= theme_lookup("header") %>
+      <%- end %>
+      <%= render_google_tag_manager_body_code %>
+      <%= build_plugin_html 'server:before-script-load' %>
+      <script defer src="<%= script_asset_path "start-discourse" %>"></script>
+      <script defer src="<%= script_asset_path "browser-update" %>"></script>
+    </div>
+  </div>
+  <noscript data-path="<%= request.env['PATH_INFO'] %>">
+    <%= render partial: "layouts/noscript_header" %>
+    <div id="main-outlet" class="wrap" role="main">
+      <!-- preload-content: -->
+      <%= yield %>
+      <!-- :preload-content -->
+    </div>
+    <%= render partial: "layouts/noscript_footer" %>
+  </noscript>
+  <section id='main'>
+  </section>
+  <% unless current_user %>
+    <form id='hidden-login-form' method="post" action="<%=main_app.login_path%>" style="display: none;">
+      <input name="username" type="text"     id="signin_username">
+      <input name="password" type="password" id="signin_password">
+      <input name="redirect" type="hidden">
+      <input type="submit" id="signin-button" value="<%= t 'log_in' %>">
+    </form>
+  <% end %>
+  <%- unless customization_disabled? %>
+    <%= theme_lookup("body_tag") %>
+  <%- end %>
+  <%- if allow_plugins? %>
+    <%= build_plugin_html 'server:before-body-close' %>
+  <%- end %>
+</body>
