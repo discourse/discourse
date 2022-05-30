@@ -160,10 +160,13 @@ discourseModule(
       async test(assert) {
         await click(".user-bookmarks-link");
 
-        const bookmark = query(".quick-access-panel li a");
-        assert.ok(bookmark);
+        const allBookmarks = queryAll(".quick-access-panel li a");
+        const bookmark = allBookmarks[0];
 
-        assert.ok(bookmark.href.includes("/t/yelling-topic-title/119"));
+        assert.ok(
+          bookmark.href.includes("/t/yelling-topic-title/119"),
+          "the Post bookmark should have a link to the topic"
+        );
         assert.ok(
           bookmark.innerHTML.includes("someguy"),
           "should include the last poster's username"
@@ -172,12 +175,28 @@ discourseModule(
           bookmark.innerHTML.match(/<img.*class="emoji".*>/),
           "should correctly render emoji in bookmark title"
         );
+        assert.ok(
+          bookmark.innerHTML.includes("d-icon-bookmark"),
+          "should use the correct icon based on no reminder_at present"
+        );
 
         const routeToStub = sinon.stub(DiscourseURL, "routeTo");
         await click(".user-bookmarks-link");
         assert.ok(
           routeToStub.calledWith(queryAll(".user-bookmarks-link").data("url")),
           "a second click should redirect to the full bookmarks page"
+        );
+
+        const nonPostBookmarkableBookmark = allBookmarks[1];
+        assert.ok(
+          nonPostBookmarkableBookmark.href.includes("chat/message/2437"),
+          "bookmarkable_type that is not Post or Topic should use bookmarkable_url for the item link"
+        );
+        assert.ok(
+          nonPostBookmarkableBookmark.innerHTML.includes(
+            "d-icon-discourse-bookmark-clock"
+          ),
+          "should use the correct icon based on reminder_at present"
         );
       },
     });
