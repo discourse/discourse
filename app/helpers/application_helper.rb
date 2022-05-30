@@ -553,11 +553,6 @@ module ApplicationHelper
     )
   end
 
-  def theme_meta_tags
-
-    return `<meta type="foox">`
-  end
-
   def discourse_stylesheet_link_tag(name, opts = {})
     manager =
       if opts.key?(:theme_id)
