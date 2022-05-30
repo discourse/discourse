@@ -16,8 +16,10 @@ class DiscourseConnectProvider < DiscourseConnectBase
       begin
         host = URI.parse(return_sso_url).host
         Rails.logger.warn("SSO failed; website #{host} is not in the `discourse_connect_provider_secrets` site settings")
-      rescue
-        Rails.logger.warn("SSO failed; invalid or missing return_sso_url in SSO payload")
+      rescue StandardError => e
+        # going for StandardError cause URI::Error may not be enouge, eg it parses to something not
+        # responding to host
+        Discourse.warn_exception(e, message: "SSO failed; invalid or missing return_sso_url in SSO payload")
       end
 
       raise BlankSecret
