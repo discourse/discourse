@@ -1,5 +1,4 @@
 <head>
-  <%=  theme_meta_tags %>
   <meta charset="utf-8">
   <title><%= content_for?(:title) ? yield(:title) : SiteSetting.title %></title>
   <meta name="description" content="<%= @description_meta || SiteSetting.site_description %>">
