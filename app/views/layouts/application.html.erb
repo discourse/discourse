@@ -67,6 +67,13 @@
   </head>
 
   <body class="<%= body_classes %>">
+    <%- if include_splash_screen? %>
+      <%= render partial: "common/discourse_splash" %>
+      <div data-css-assets>
+        <%= render partial: "common/discourse_stylesheet" %>
+      </div>
+    <%- end %>
+
     <%- if allow_plugins? %>
       <%= build_plugin_html 'server:after-body-open' %>
     <%- end -%>
