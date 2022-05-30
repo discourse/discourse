@@ -1,5 +1,8 @@
 import { module, test } from "qunit";
-import toMarkdown from "discourse/lib/to-markdown";
+import toMarkdown, {
+  addBlockDecorateCallback,
+  addTagDecorateCallback,
+} from "discourse/lib/to-markdown";
 
 module("Unit | Utility | to-markdown", function () {
   test("converts styles between normal words", function (assert) {
@@ -457,5 +460,32 @@ test2
     const html =
       '<img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAgAAZABkAAD/7AARRHVja3kAAQAEAAAAPAAA/+4AJkFkb2JlAGTAAAAAAQMAFQQDBgoNAAABywAAAgsAAAJpAAACyf/bAIQABgQEBAUEBgUFBgkGBQYJCwgGBggLDAoKCwoKDBAMDAwMDAwQDA4PEA8ODBMTFBQTExwbGxscHx8fHx8fHx8fHwEHBwcNDA0YEBAYGhURFRofHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8f/8IAEQgAEAAQAwERAAIRAQMRAf/EAJQAAQEBAAAAAAAAAAAAAAAAAAMFBwEAAwEAAAAAAAAAAAAAAAAAAAEDAhAAAQUBAQAAAAAAAAAAAAAAAgABAwQFESARAAIBAwIHAAAAAAAAAAAAAAERAgAhMRIDQWGRocEiIxIBAAAAAAAAAAAAAAAAAAAAIBMBAAMAAQQDAQAAAAAAAAAAAQARITHwQVGBYXGR4f/aAAwDAQACEQMRAAAB0UlMciEJn//aAAgBAQABBQK5bGtFn6pWi2K12wWTRkjb/9oACAECAAEFAvH/2gAIAQMAAQUCIuIJOqRndRiv/9oACAECAgY/Ah//2gAIAQMCBj8CH//aAAgBAQEGPwLWQzwHepfNbcUNfM4tUIbA9QL4AvnxTlAxacpWJReOlf/aAAgBAQMBPyHZDveuCyu4B4lz2lDKto2ca5uclPK0aoq32x8xgTSLeSgbyzT65n//2gAIAQIDAT8hlQjP/9oACAEDAwE/IaE9GcZFJ//aAAwDAQACEQMRAAAQ5F//2gAIAQEDAT8Q1oowKccI3KTdAWkPLw2ssIrwKYUzuJoUJsIHOCoG23ISlja+rU9QvCx//9oACAECAwE/EAuNIiKf/9oACAEDAwE/ECujJzHf7iwHOv5NhK+8efH50z//2Q==" />';
     assert.strictEqual(toMarkdown(html), "[image]");
+  });
+
+  test("addTagDecorateCallback", function (assert) {
+    const html = `<span class="loud">HELLO THERE</span>`;
+
+    addTagDecorateCallback(function (text) {
+      if (this.element.attributes.class === "loud") {
+        this.prefix = "^^";
+        this.suffix = "^^";
+        return text.toLowerCase();
+      }
+    });
+
+    assert.strictEqual(toMarkdown(html), "^^hello there^^");
+  });
+
+  test("addBlockDecorateCallback", function (assert) {
+    const html = `<div class="quiet">hey<br>there</div>`;
+
+    addBlockDecorateCallback(function () {
+      if (this.element.attributes.class === "quiet") {
+        this.prefix = "[quiet]";
+        this.suffix = "[/quiet]";
+      }
+    });
+
+    assert.strictEqual(toMarkdown(html), "[quiet]hey\nthere[/quiet]");
   });
 });
