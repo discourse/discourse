@@ -162,6 +162,7 @@ RSpec.describe Admin::UsersController do
       expect(user).to be_suspended
       expect(user.suspended_at).to be_present
       expect(user.suspended_till).to be_present
+      expect(user.suspend_record).to be_present
 
       log = UserHistory.where(target_user_id: user.id).order('id desc').first
       expect(log.details).to match(/because I said so/)
