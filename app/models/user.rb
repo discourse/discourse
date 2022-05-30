@@ -653,6 +653,14 @@ class User < ActiveRecord::Base
     MessageBus.publish("/do-not-disturb/#{id}", { ends_at: ends_at&.httpdate }, user_ids: [id])
   end
 
+  def publish_user_status(status)
+    payload = status ?
+                { description: status.description, emoji: status.emoji } :
+                nil
+
+    MessageBus.publish("/user-status/#{id}", payload, user_ids: [id])
+  end
+
   def password=(password)
     # special case for passwordless accounts
     unless password.blank?
@@ -1503,6 +1511,7 @@ class User < ActiveRecord::Base
 
   def clear_status!
     user_status.destroy! if user_status
+    publish_user_status(nil)
   end
 
   def set_status!(description)
@@ -1516,6 +1525,8 @@ class User < ActiveRecord::Base
         set_at: now
       )
     end
+
+    publish_user_status(user_status)
   end
 
   protected

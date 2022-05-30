@@ -112,6 +112,10 @@ export default {
         user.updateDoNotDisturbStatus(data.ends_at);
       });
 
+      bus.subscribe(`/user-status/${user.id}`, (data) => {
+        user.updateStatus(data);
+      });
+
       const site = container.lookup("site:main");
       const siteSettings = container.lookup("site-settings:main");
       const router = container.lookup("router:main");

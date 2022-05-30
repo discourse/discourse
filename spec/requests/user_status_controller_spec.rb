@@ -47,6 +47,15 @@ describe UserStatusController do
         user.reload
         expect(user.user_status.description).to eq(new_status)
       end
+
+      it "publishes to message bus" do
+        status = "off to dentist"
+        messages = MessageBus.track_publish { put "/user-status.json", params: { description: status } }
+
+        expect(messages.size).to eq(1)
+        expect(messages[0].channel).to eq("/user-status/#{user.id}")
+        expect(messages[0].data[:description]).to eq(status)
+      end
     end
   end
 
@@ -80,6 +89,14 @@ describe UserStatusController do
 
         user.reload
         expect(user.user_status).to be_nil
+      end
+
+      it "publishes to message bus" do
+        messages = MessageBus.track_publish { delete "/user-status.json" }
+
+        expect(messages.size).to eq(1)
+        expect(messages[0].channel).to eq("/user-status/#{user.id}")
+        expect(messages[0].data).to eq(nil)
       end
     end
   end
