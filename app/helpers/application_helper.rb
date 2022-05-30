@@ -411,8 +411,8 @@ module ApplicationHelper
   end
 
   def include_splash_screen?
-     # A bit basic for now but will be expanded later
-     SiteSetting.splash_screen
+    # A bit basic for now but will be expanded later
+    SiteSetting.splash_screen
   end
 
   def ios_app_argument
