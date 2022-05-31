@@ -273,11 +273,13 @@ zh_CN:
         unbookmark_with_reminder: "点击以移除此话题中的所有书签和提醒。"
     bookmarks:
       created: "您已将此帖子加入书签。%{name}"
+      created_generic: "你已将此加入书签。 %{name}"
       create: "创建书签"
       edit: "编辑书签"
       not_bookmarked: "将此帖子加入书签"
       remove_reminder_keep_bookmark: "删除提醒并保留收藏"
       created_with_reminder: "您已将此帖子加入书签，并于 %{date}设置了一个提醒。%{name}"
+      created_with_reminder_generic: "你已收藏了该帖子并设置了一个提醒 %{date}。 %{name}"
       remove: "移除书签"
       delete: "删除书签"
       confirm_delete: "确定要删除此书签吗？提醒也将一并删除。"
@@ -1560,6 +1562,10 @@ zh_CN:
         sent_by: "发送人"
         private_message: "消息"
         the_topic: "话题"
+    user_status:
+      save: "保存"
+      set_custom_status: "设置自定义状态"
+      what_are_you_doing: "你在做什么？"
     loading: "正在加载…"
     errors:
       prev_page: "无法加载"
@@ -2228,6 +2234,7 @@ zh_CN:
         clear_all: "全部清除"
         unlist_topics: "取消公开话题"
         relist_topics: "重新公开话题"
+        reset_bump_dates: "重置顶帖日期"
         defer: "推迟"
         delete: "删除话题"
         dismiss: "关闭"

@@ -1161,6 +1161,8 @@ et:
         sent_by: "Saatja"
         private_message: "sõnum"
         the_topic: "teema"
+    user_status:
+      save: "Salvesta"
     loading: "Laen..."
     errors:
       prev_page: "kui üritasin laadida"

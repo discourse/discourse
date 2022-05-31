@@ -609,6 +609,8 @@ te:
         posted_by: "టపా రాసినవారు"
         sent_by: "పంపినవారు"
         the_topic: "విషయం"
+    user_status:
+      save: "భద్రపరచు"
     loading: "లోడవుతోంది..."
     errors:
       prev_page: "ఎక్కించుట ప్రయత్నిస్తున్నప్పుడు"

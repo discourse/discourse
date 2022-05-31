@@ -1464,6 +1464,8 @@ lv:
         sent_by: "Nosūtīja"
         private_message: "ziņa"
         the_topic: "tēma"
+    user_status:
+      save: "Saglabāt"
     loading: "Ielādē..."
     errors:
       prev_page: "mēģinot ielādēt"

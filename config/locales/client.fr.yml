@@ -92,6 +92,9 @@ fr:
         about_x_years:
           one: "environ %{count} ans"
           other: "environ %{count} ans"
+        over_x_years:
+          one: "plus de %{count} an"
+          other: "plus de %{count} ans"
         date_year: "D MMM 'YY"
       medium_with_ago:
         x_minutes:
@@ -1604,6 +1607,9 @@ fr:
         sent_by: "Envoyé par"
         private_message: "message direct"
         the_topic: "le sujet"
+    user_status:
+      save: "Sauvegarder"
+      what_are_you_doing: "« Que faites-vous ? »"
     loading: "Chargement…"
     errors:
       prev_page: "lors du chargement de"

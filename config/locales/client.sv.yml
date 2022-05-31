@@ -305,11 +305,13 @@ sv:
         unbookmark_with_reminder: "Klicka för att ta bort alla bokmärken och påminnelser i detta ämne."
     bookmarks:
       created: "Du har bokmärkt detta inlägg. %{name}"
+      created_generic: "Du har bokmärkt detta. %{name}"
       create: "Skapa bokmärke"
       edit: "Redigera bokmärke"
       not_bookmarked: "bokmärk detta inlägg"
       remove_reminder_keep_bookmark: "Ta bort påminnelsen och behåll bokmärket"
       created_with_reminder: "Du har bokmärkt detta inlägg med en påminnelse %{date}. %{name}"
+      created_with_reminder_generic: "Du har bokmärkt detta med en påminnelse %{date}. %{name}"
       remove: "Ta bort bokmärke"
       delete: "Radera bokmärke"
       confirm_delete: "Är du säker på att du vill radera det här bokmärket? Påminnelsen kommer också att raderas."
@@ -1632,6 +1634,10 @@ sv:
         sent_by: "Skickat av"
         private_message: "meddelande"
         the_topic: "ämnet"
+    user_status:
+      save: "Spara"
+      set_custom_status: "Ställ in anpassad status"
+      what_are_you_doing: "Vad gör du?"
     loading: "Laddar..."
     errors:
       prev_page: "medan vi försökte ladda"

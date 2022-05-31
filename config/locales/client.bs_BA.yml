@@ -1411,6 +1411,8 @@ bs_BA:
         sent_by: "Poslato od"
         private_message: "poruka"
         the_topic: "tema"
+    user_status:
+      save: "Sačuvaj"
     loading: "Učitava se..."
     errors:
       prev_page: "dok pokušava da učita"

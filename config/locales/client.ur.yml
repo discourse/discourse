@@ -1606,6 +1606,8 @@ ur:
         sent_by: "کی طرف سے بھیجا گیا"
         private_message: "پیغام"
         the_topic: "ٹاپک"
+    user_status:
+      save: "محفوظ کریں"
     loading: "لوڈ ہو رہا ہے..."
     errors:
       prev_page: "لوڈ کرتے ہوئے"

@@ -1603,6 +1603,8 @@ pt_BR:
         sent_by: "Enviado por"
         private_message: "mensagem"
         the_topic: "o tópico"
+    user_status:
+      save: "Salvar"
     loading: "Carregando..."
     errors:
       prev_page: "ao tentar carregar"

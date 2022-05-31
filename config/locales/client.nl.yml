@@ -1552,6 +1552,8 @@ nl:
         sent_by: "Verzonden door"
         private_message: "bericht"
         the_topic: "het topic"
+    user_status:
+      save: "Opslaan"
     loading: "Laden..."
     errors:
       prev_page: "tijdens het laden van"

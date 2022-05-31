@@ -1559,6 +1559,8 @@ fi:
         sent_by: "Lähettänyt"
         private_message: "viesti"
         the_topic: "ketju"
+    user_status:
+      save: "Tallenna"
     loading: "Ladataan..."
     errors:
       prev_page: "yrittäessä ladata"

@@ -1773,6 +1773,8 @@ uk:
         sent_by: "Надіслано"
         private_message: "повідомлення"
         the_topic: "тема"
+    user_status:
+      save: "Зберегти"
     loading: "Завантаження..."
     errors:
       prev_page: "при спробі завантаження"

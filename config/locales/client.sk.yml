@@ -1107,6 +1107,8 @@ sk:
         sent_by: "Odoslané používateľom"
         private_message: "správa"
         the_topic: "téma"
+    user_status:
+      save: "Uložiť"
     loading: "Prebieha načítavanie..."
     errors:
       prev_page: "pri pokuse o načítanie"

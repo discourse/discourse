@@ -4129,6 +4129,9 @@ tr_TR:
     post_raw: "Tartışma %{parent_url} adresinde sürüyor.\n\nÖnceki tartışmalar:\n\n%{previous_topics}"
     small_action_post_raw: "Tartışmayı %{new_title} başlığı altında sürdürün."
   fallback_username: "kullanıcı"
+  user_status:
+    errors:
+      ends_at_should_be_greater_than_set_at: "end_at, set_at değerinden büyük olmalıdır"
   activemodel:
     errors:
       <<: *errors

@@ -159,6 +159,7 @@ lt:
       to_placeholder: "iki šiol"
     share:
       topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
+      post: "įrašas #%{postNumber} by @%{username}"
       close: "uždaryti"
       twitter: "Bendrinkite „Twitter“"
       facebook: "Dalintis „Facebook“"
@@ -1381,6 +1382,7 @@ lt:
         every_month: "kiekvieną mėnesį"
         every_six_months: "kas šešis mėnesius"
       email_level:
+        title: "Atsiųskite man el. laišką, kai esu cituojamas, kai man atsakoma, kai paminimas mano @vartotojo vardas arba kai mano stebimose kategorijose, žymose ar temose atsiranda naujų veiksmų."
         always: "visada"
         never: "niekada"
       include_tl0_in_digests: "Įtraukti turinį iš naujų vartotojų taip pat į elektroninių laiškų užklausas."
@@ -1556,6 +1558,10 @@ lt:
         sent_by: "Išsiųstas nuo"
         private_message: "Žinutės"
         the_topic: "tema"
+    user_status:
+      save: "Saugoti"
+      set_custom_status: "Nustatyti pasirinktinę būseną"
+      what_are_you_doing: "Ką darote?"
     loading: "Kraunama..."
     errors:
       prev_page: "kai buvo bandyta užkrauti"
@@ -1847,7 +1853,10 @@ lt:
       drafts_offline: "juodraščiai ne ryšio zonoje"
       edit_conflict: "redaguoti konfliktą"
       cannot_see_mention:
+        category: "Paminėjote @%{username} , tačiau jiems nebus pranešta, nes jie neturi prieigos prie šios kategorijos. Turėsite juos įtraukti į grupę, kuri turi prieigą prie šios kategorijos."
         private: "Paminėjote @%{username} , tačiau jiems nebus pranešta, nes jie negali matyti šio asmeninio pranešimo. Turėsite juos pakviesti į šią asmeninę žinutę."
+        muted_topic: "Paminėjote @%{username} , bet jiems nebus pranešta, nes jie išjungė šią temą."
+        not_allowed: "Paminėjote @%{username} , tačiau jiems nebus pranešta, nes jie nebuvo pakviesti į šią temą."
       reference_topic_title: "RE: %{title}"
       error:
         title_missing: "Antraštė turi būti užpildyta"
@@ -2079,6 +2088,8 @@ lt:
       in: "į"
       in_this_topic: "šioje temoje"
       in_this_topic_tooltip: "pereiti prie visų temų paieškos"
+      in_messages: "žinutėse"
+      in_messages_tooltip: "pereiti prie įprastų temų paieškos"
       in_topics_posts: "visose temose ir žinutėse"
       enter_hint: "arba paspauskite Enter"
       in_posts_by: "pranešimuose %{username}"
@@ -2100,7 +2111,7 @@ lt:
       tips:
         category_tag: "filtrai pagal kategoriją ar žymą"
         author: "filtruoti pagal įrašo autorių"
-        in: "filtruoja pagal metaduomenis (pvz .: į: pavadinimą, į: asmeninį, į: prisegtą)"
+        in: "filtruoti pagal metaduomenis (pvz. pavadinime)"
         status: "filtruoti pagal temos būseną"
         full_search: "paleidžiama viso puslapio paieška"
         full_search_key: "%{modifier} + Įveskite"
@@ -2330,7 +2341,7 @@ lt:
         num_of_hours: "Valandų kiekis:"
         num_of_days: "Dienų skaičius:"
         remove: "Pašalinti laikmatį"
-        publish_to: "Publikuoki į:"
+        publish_to: "Paskelbti:"
         when: "Kada:"
         time_frame_required: "Pasirinkite laikotarpį"
         min_duration: "Trukmė turi būti didesnė nei 0"
@@ -2365,6 +2376,7 @@ lt:
         auto_publish_to_category: "Ši tema bus paskelbta <a href=%{categoryUrl}>#%{categoryName}</a> %{timeLeft}."
         auto_close_after_last_post: "Ši tema užsidarys po %{duration} po paskutinio atsakymo."
         auto_delete: "Ši tema bus automatiškai ištrinta %{timeLeft}."
+        auto_bump: "Ši tema bus automatiškai perkelta %{timeLeft}."
         auto_reminder: "Jums bus priminta apie šią temą %{timeLeft}."
         auto_delete_replies: "Atsakymai šia tema automatiškai ištrinami po %{duration}."
       auto_close_title: "Automatinio uždarymo nustatymai"
@@ -2636,6 +2648,7 @@ lt:
       deleted_by_author_simple: "(pašalinta autoriaus)"
       collapse: "suskleisti"
       expand_collapse: "išskleisti/suskleisti"
+      sr_embedded_reply_description: "atsakyti @%{username} į pranešimą #%{post_number}"
       locked: "administracija užrakino šio įrašo redagavimą"
       gap:
         one: "Peržiūrėti %{count} paslėptą atsakymą"
@@ -4486,6 +4499,8 @@ lt:
         flags_given_count: Suteiktos Vėliavos
         flags_received_count: Gautos Vėliavos
         warnings_received_count: Gauti įspėjimai
+        warnings_list_warning: |
+          Būdamas moderatorius, galite negalėti peržiūrėti visų šių temų. Jei reikia, paprašykite administratoriaus arba temą išdavusio moderatoriaus suteikti <b>@moderatoriams</b> prieigą prie pranešimo.
         flags_given_received_count: "Suteiktos/Gautos Vėliavos"
         approve: "Patvirtinti"
         approved_by: "patvirtino"
@@ -4513,6 +4528,7 @@ lt:
           prompt:
             title: "Perkelti ir ištrinti @%{username}"
             target_username_placeholder: "Naujojo valdytojo vartotojo vardas"
+            transfer_and_delete: "Perkelti ir ištrinti @%{username}"
             cancel: "Atšaukti"
           progress:
             title: "Sujungti pažangą"

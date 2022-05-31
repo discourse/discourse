@@ -1528,6 +1528,8 @@ ko:
         sent_by: "보낸 사람"
         private_message: "메시지"
         the_topic: "글"
+    user_status:
+      save: "저장"
     loading: "로드 중..."
     errors:
       prev_page: "로드하는 중"

@@ -288,11 +288,13 @@ tr_TR:
         unbookmark_with_reminder: "Bu konudaki tüm yer imlerini ve anımsatıcıları kaldırmak için tıklayın."
     bookmarks:
       created: "Bu gönderiyi yer imlerine eklediniz. %{name}"
+      created_generic: "Bunu yer imlerine eklediniz. %{name}"
       create: "Yer imi oluştur"
       edit: "Yer imini düzenle"
       not_bookmarked: "bu gönderiyi yer imlerine ekle"
       remove_reminder_keep_bookmark: "Anımsatıcıyı kaldır ve yer imini tut"
       created_with_reminder: "Bu gönderiye %{date} hatırlatıcısı ile yer imlerine eklediniz. %{name}"
+      created_with_reminder_generic: "Bunu %{date} tarihli bir hatırlatıcıyla yer imlerine eklediniz. %{name}"
       remove: "Yer İmini Kaldır"
       delete: "Yer İmini Sil"
       confirm_delete: "Bu yer imini silmek istediğinizden emin misiniz? Anımsatıcı da silinecektir."
@@ -1606,6 +1608,10 @@ tr_TR:
         sent_by: "Tarafından gönderildi"
         private_message: "ileti"
         the_topic: "konu"
+    user_status:
+      save: "Kaydet"
+      set_custom_status: "Özel bir durum ayarla"
+      what_are_you_doing: "Ne yapıyorsun?"
     loading: "Yükleniyor..."
     errors:
       prev_page: "şu adresi yüklemeye çalışırken:"

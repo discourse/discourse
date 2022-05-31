@@ -282,11 +282,13 @@ da:
         unbookmark_with_reminder: "Klik for at fjerne alle bogmærker og påmindelser i dette emne."
     bookmarks:
       created: "Du har sat et bogmærke for dette indlæg. %{name}"
+      created_generic: "Du har bogmærket dette. %{name}"
       create: "Opret bogmærke"
       edit: "Rediger bogmærke"
       not_bookmarked: "bogmærk dette indlæg"
       remove_reminder_keep_bookmark: "Fjern påmindelse og behold bogmærke"
       created_with_reminder: "Du har sat et bogmærke med en påmindelse for dette indlæg %{date}. %{name}"
+      created_with_reminder_generic: "Du har bogmærket dette med en påmindelse %{date}. %{name}"
       remove: "Fjern bogmærke"
       delete: "Slet Bogmærke"
       confirm_delete: "Er du sikker på, at du vil slette dette bogmærke? Påmindelsen vil også blive slettet."
@@ -1583,6 +1585,8 @@ da:
         sent_by: "Sendt af"
         private_message: "meddelelse"
         the_topic: "emnet"
+    user_status:
+      save: "Gem"
     loading: "Indlæser…"
     errors:
       prev_page: "da vi prøvede at indlæse"
@@ -1758,14 +1762,24 @@ da:
       not_approved: "Din konto er endnu ikke blevet godkendt. Du får besked via e-mail når du kan logge ind."
       google_oauth2:
         name: "Google"
+        title: "Log ind med Google"
+        sr_title: "Log ind med Google"
       twitter:
         name: "Twitter"
+        title: "Log ind med Twitter"
+        sr_title: "Log ind med Twitter"
       instagram:
         name: "Instagram"
+        title: "Log ind med Instagram"
+        sr_title: "Log ind med Instagram"
       facebook:
         name: "Facebook"
+        title: "Log ind med Facebook"
+        sr_title: "Log ind med Facebook"
       github:
         name: "GitHub"
+        title: "Log ind med GitHub"
+        sr_title: "Log ind med GitHub"
       discord:
         name: "Discord"
       second_factor_toggle:
@@ -1933,6 +1947,7 @@ da:
       saved_draft: "Indlægs udkast i gang. Tryk for at fortsætte."
       uploading: "Overfører…"
       show_preview: "vis forhåndsvisning"
+      hide_preview: "skjul forhåndsvisning"
       quote_post_title: "Citér hele indlægget"
       bold_label: "F"
       bold_title: "Fed"
@@ -2109,6 +2124,7 @@ da:
       select_all: "Vælg Alle"
       clear_all: "Ryd Alle"
       too_short: "Dit søgekriterie er for kort."
+      clear_search: "Ryd søgning"
       result_count:
         one: "<span>%{count} resultat for</span> <span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} resultater for</span> <span class='term'>%{term}</span>"
@@ -2127,6 +2143,8 @@ da:
       search_button: "Søg"
       categories: "Kategorier"
       tags: "Mærker"
+      in: "i"
+      in_this_topic: "i dette emne"
       in_topics_posts: "i alle emner og indlæg"
       enter_hint: "eller tryk på Enter"
       in_posts_by: "i indlæg af %{username}"
@@ -2773,6 +2791,7 @@ da:
         rebake: "Gendan HTML"
         publish_page: "Sideudgivelse"
         unhide: "Vis"
+        change_owner: "Skift Ejerskab..."
         grant_badge: "Tildel Emblem..."
         lock_post: "Lås Indlæg"
         lock_post_description: "forhindr senderen i at redigere dette indlæg"
@@ -3641,7 +3660,7 @@ da:
           total: "Total tid"
           no_data: "Ingen data at vise."
           trending_search:
-            more: '<a href="%{basePath}/admin/logs/search_logs">Søg logninger</a>'
+            more: '<a href="%{basePath}/admin/logs/search_logs">Søgninger</a>'
             disabled: 'Rapport over søge tendenser er deaktiveret. Aktivér <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">log søgeforespørgelser for</a> at indsamle data.'
           average_chart_label: Gennemsnit
           filters:

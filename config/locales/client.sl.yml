@@ -1523,6 +1523,8 @@ sl:
         sent_by: "Poslano od"
         private_message: "zasebno sporočilo"
         the_topic: "tema"
+    user_status:
+      save: "Shrani"
     loading: "Nalagam..."
     errors:
       prev_page: "med nalaganjem"

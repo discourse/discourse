@@ -1313,6 +1313,8 @@ cs:
         sent_by: "Odeslal"
         private_message: "zpráva"
         the_topic: "téma"
+    user_status:
+      save: "Uložit"
     loading: "Načítám..."
     errors:
       prev_page: "při nahrávání stránky"

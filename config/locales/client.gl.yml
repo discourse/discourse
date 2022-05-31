@@ -1503,6 +1503,8 @@ gl:
         sent_by: "Enviada por"
         private_message: "mensaxe"
         the_topic: "o tema"
+    user_status:
+      save: "Gardar"
     loading: "Cargando..."
     errors:
       prev_page: "ao tentar cargar"

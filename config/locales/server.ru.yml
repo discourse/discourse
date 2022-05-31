@@ -4795,6 +4795,9 @@ ru:
     post_raw: "Продолжение обсуждения, начатого в теме %{parent_url}.\n\nПредыдущие обсуждения:\n\n%{previous_topics}"
     small_action_post_raw: "Продолжить обсуждение в теме %{new_title}."
   fallback_username: "Пользователь"
+  user_status:
+    errors:
+      ends_at_should_be_greater_than_set_at: "Значение переменной end_at должно быть больше, чем set_at"
   activemodel:
     errors:
       <<: *errors

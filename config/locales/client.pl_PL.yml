@@ -99,6 +99,11 @@ pl_PL:
         date_month: "D MMM"
         date_year: "MMM 'YY"
       medium:
+        less_than_x_minutes:
+          one: "mniej niż %{count} minutę"
+          few: "mniej niż %{count} minuty"
+          many: "mniej niż %{count} minut"
+          other: "mniej niż %{count} minut"
         x_minutes:
           one: "%{count} minuta"
           few: "%{count} minuty"
@@ -109,11 +114,26 @@ pl_PL:
           few: "%{count} godziny"
           many: "%{count} godzin"
           other: "%{count} godzin"
+        about_x_hours:
+          one: "około %{count} godzina"
+          few: "około %{count} godziny"
+          many: "około %{count} godzin"
+          other: "około %{count} godzin"
         x_days:
           one: "%{count} dzień"
           few: "%{count} dni"
           many: "%{count} dni"
           other: "%{count} dni"
+        about_x_years:
+          one: "około %{count} rok"
+          few: "około %{count} lata"
+          many: "około %{count} lat"
+          other: "około %{count} lat"
+        over_x_years:
+          one: "ponad %{count} rok"
+          few: "ponad %{count} lata"
+          many: "ponad %{count} lat"
+          other: "ponad %{count} lat"
         date_year: "D MMM 'YY"
       medium_with_ago:
         x_minutes:
@@ -337,6 +357,7 @@ pl_PL:
         unbookmark_with_reminder: "Kliknij, aby usunąć wszystkie zakładki i przypomnienia w tym temacie."
     bookmarks:
       created: "Dodano post do zakładek. %{name}"
+      created_generic: "Dodałeś to do zakładek. %{name}"
       create: "Utwórz zakładkę"
       edit: "Edytuj zakładkę"
       not_bookmarked: "dodaj do zakładek"
@@ -1165,6 +1186,7 @@ pl_PL:
       external_links_in_new_tab: "Otwieraj wszystkie zewnętrzne odnośniki w nowej karcie"
       enable_quoting: "Włącz cytowanie zaznaczonego tekstu"
       enable_defer: "Włącz odroczenie, aby oznaczyć tematy jako nieprzeczytane"
+      enable_experimental_sidebar: "Włącz eksperymentalny pasek boczny"
       change: "zmień"
       featured_topic: "Wyróżniony temat"
       moderator: "%{user} jest moderatorem"
@@ -1650,7 +1672,9 @@ pl_PL:
         title: "Podsumowanie"
         stats: "Statystyki"
         time_read: "czas odczytu"
+        time_read_title: "%{duration} (cały czas)"
         recent_time_read: "czas ostatniego czytania"
+        recent_time_read_title: "%{duration} (w ciągu ostatnich 60 dni)"
         topic_count:
           one: "utworzono temat"
           few: "utworzono tematów"
@@ -1736,6 +1760,10 @@ pl_PL:
         sent_by: "Wysłane przez"
         private_message: "wiadomość"
         the_topic: "temat"
+    user_status:
+      save: "Zapisz"
+      set_custom_status: "Ustaw własny status"
+      what_are_you_doing: "Co robisz?"
     loading: "Wczytuję…"
     errors:
       prev_page: "podczas próby wczytania"
@@ -3290,7 +3318,10 @@ pl_PL:
       manage_tag_groups_link: "Zarządzaj grupami tagów"
       allow_global_tags_label: "Zezwól dodatkowo na inne tagi"
       required_tag_group:
+        description: "Wymagaj, aby nowe tematy miały tagi z grup tagów:"
         delete: "Usuń"
+        add: "Dodaj wymaganą grupę tagów"
+        placeholder: "wybierz grupę tagów..."
       topic_featured_link_allowed: "Zezwól na wybrane linki w tej kategorii"
       delete: "Usuń kategorię"
       create: "Nowa kategoria"
@@ -3899,6 +3930,7 @@ pl_PL:
           title: "Wyciszony"
           description: "Nie będziesz powiadamiany o niczym dotyczącym nowych tematów z tym tagiem i nie pojawią się na liście aktualnych."
       groups:
+        back_btn: "Powrót do wszystkich tagów"
         title: "Tagi grup"
         about_heading: "Wybierz grupę tagów lub utwórz nową"
         about_heading_empty: "Aby rozpocząć, utwórz nową grupę tagów"
@@ -3981,6 +4013,7 @@ pl_PL:
       no_likes_body: "Świetnym sposobem na włączenie się do dyskusji i rozpoczęcie współtworzenia jest rozpoczęcie czytania rozmów, które już miały miejsce, i kliknięcie %{heartIcon} przy postach, które Ci się podobają!"
       no_likes_others: "Brak polubionych wpisów."
       no_topics_title: "Nie rozpocząłeś jeszcze żadnych tematów"
+      no_topics_title_others: "%{username} nie utworzył jeszcze żadnego tematu"
       no_read_topics_title: "Nie przeczytałeś jeszcze żadnych tematów"
       no_read_topics_body: "Gdy zaczniesz czytać dyskusje, zobaczysz tutaj listę. Aby rozpocząć czytanie, poszukaj tematów, które Cię interesują w <a href='%{topUrl}'>popularnych</a> lub <a href='%{categoriesUrl}'>kategoriach</a> lub wyszukaj według słowa kluczowego %{searchIcon}"
     no_group_messages_title: "Nie znaleziono wiadomości grupowych"
@@ -4009,6 +4042,8 @@ pl_PL:
             tracked:
               content: "Śledzone"
               title: "Wszystkie śledzone tematy"
+            bookmarked:
+              title: "Wszystkie tematy dodane do zakładek"
   admin_js:
     type_to_filter: "pisz, aby filtrować…"
     admin:
@@ -4268,6 +4303,11 @@ pl_PL:
               list_user_badges: Lista odznak użytkownika.
               assign_badge_to_user: Przypisz odznakę użytkownikowi.
               revoke_badge_from_user: Odbierz odznakę użytkownikowi.
+            wordpress:
+              publishing: Niezbędne do funkcji publikowania wtyczki WP Discourse (wymagane).
+              commenting: Niezbędne do funkcji komentowania wtyczki WP Discourse.
+              discourse_connect: Niezbędne dla funkcji DiscourseConnect wtyczki WP Discourse.
+              utilities: Niezbędne, jeśli korzystasz z Utilities wtyczki WP Discourse.
       web_hooks:
         title: "Webhooki"
         none: "Brak webhooków"

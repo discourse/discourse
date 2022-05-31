@@ -4238,6 +4238,9 @@ it:
     post_raw: "La discussione prosegue da %{parent_url}.\n\nDiscussioni precedenti:\n\n%{previous_topics}"
     small_action_post_raw: "Continua la discussione su %{new_title}."
   fallback_username: "utente"
+  user_status:
+    errors:
+      ends_at_should_be_greater_than_set_at: "ends_at deve essere maggiore di set_at"
   activemodel:
     errors:
       <<: *errors
