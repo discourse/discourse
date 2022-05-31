@@ -1248,8 +1248,23 @@ describe SessionController do
       end
 
       it "correctly logs in for secondary domain secrets" do
+        sign_in @user
+
         get "/session/sso_provider", params: Rack::Utils.parse_query(@sso.payload("newSecretForOverRainbow"))
         expect(response.status).to eq(302)
+        redirect_uri = URI.parse(response.location)
+        expect(redirect_uri.host).to eq("somewhere.over.rainbow")
+        redirect_query = CGI.parse(redirect_uri.query)
+        expected_sig = DiscourseConnectBase.sign(redirect_query["sso"][0], "newSecretForOverRainbow")
+        expect(redirect_query["sig"][0]).to eq(expected_sig)
+
+        get "/session/sso_provider", params: Rack::Utils.parse_query(@sso.payload("oldSecretForOverRainbow"))
+        expect(response.status).to eq(302)
+        redirect_uri = URI.parse(response.location)
+        expect(redirect_uri.host).to eq("somewhere.over.rainbow")
+        redirect_query = CGI.parse(redirect_uri.query)
+        expected_sig = DiscourseConnectBase.sign(redirect_query["sso"][0], "oldSecretForOverRainbow")
+        expect(redirect_query["sig"][0]).to eq(expected_sig)
       end
 
       it "it fails to log in if secret is wrong" do
