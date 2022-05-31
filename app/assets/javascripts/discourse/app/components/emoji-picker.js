@@ -38,6 +38,7 @@ export default Component.extend({
   hoveredEmoji: null,
   isActive: false,
   usePopper: true,
+  placement: "auto", // one of popper.js' placements, see https://popper.js.org/docs/v2/constructors/#options
   initialFilter: "",
 
   init() {
@@ -111,7 +112,10 @@ export default Component.extend({
           },
         ];
 
-        if (window.innerWidth < popperAnchor.clientWidth * 2) {
+        if (
+          this.placement === "auto" &&
+          window.innerWidth < popperAnchor.clientWidth * 2
+        ) {
           modifiers.push({
             name: "computeStyles",
             enabled: true,
@@ -130,7 +134,7 @@ export default Component.extend({
         }
 
         this._popper = createPopper(popperAnchor, emojiPicker, {
-          placement: "auto",
+          placement: this.placement,
         });
       }
 
