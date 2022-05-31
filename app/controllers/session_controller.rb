@@ -566,7 +566,7 @@ class SessionController < ApplicationController
 
     redirect_url ||= path("/")
 
-    event_data = { redirect_url: redirect_url, user: current_user }
+    event_data = { redirect_url: redirect_url, user: current_user, client_ip: request&.ip, user_agent: request&.user_agent }
     DiscourseEvent.trigger(:before_session_destroy, event_data)
     redirect_url = event_data[:redirect_url]
 

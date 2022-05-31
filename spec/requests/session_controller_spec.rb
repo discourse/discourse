@@ -2291,6 +2291,22 @@ describe SessionController do
     ensure
       DiscourseEvent.off(:before_session_destroy, &callback)
     end
+
+    it 'includes ip and user agent in the before_session_destroy event params' do
+      callback_params = {}
+      callback = -> (data) { callback_params = data }
+
+      DiscourseEvent.on(:before_session_destroy, &callback)
+
+      user = sign_in(Fabricate(:user))
+      delete "/session/#{user.username}.json", xhr: true, headers: { HTTP_USER_AGENT: 'AwesomeBrowser' }
+
+      expect(callback_params[:user_agent]).to eq('AwesomeBrowser')
+      expect(callback_params[:client_ip]).to eq('127.0.0.1')
+    ensure
+      DiscourseEvent.off(:before_session_destroy, &callback)
+    end
+
   end
 
   describe '#one_time_password' do
