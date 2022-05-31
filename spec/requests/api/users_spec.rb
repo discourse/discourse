@@ -414,7 +414,7 @@ describe 'users' do
       response '200', 'response' do
 
         let(:id) { Fabricate(:user).id }
-        let(:params) { }
+        let(:params) {}
 
         expected_response_schema = load_spec_schema('user_silence_response')
         schema(expected_response_schema)
