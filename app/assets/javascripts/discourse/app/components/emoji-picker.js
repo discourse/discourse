@@ -336,7 +336,12 @@ export default Component.extend({
   },
 
   _getPopperAnchor() {
-    return document.querySelector(".d-editor-textarea-wrapper");
+    // .d-editor-textarea-wrapper is only for backward compatibility here
+    // in new code use .emoji-picker-anchor
+    return (
+      document.querySelector(".emoji-picker-anchor") ??
+      document.querySelector(".d-editor-textarea-wrapper")
+    );
   },
 
   @bind
