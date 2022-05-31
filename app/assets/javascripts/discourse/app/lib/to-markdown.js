@@ -1,15 +1,8 @@
-const trimLeft = (text) => text.replace(/^\s+/, "");
-const trimRight = (text) => text.replace(/\s+$/, "");
-const countPipes = (text) =>
-  (text.replace(/\\\|/, "").match(/\|/g) || []).length;
-const msoListClasses = [
+const MSO_LIST_CLASSES = [
   "MsoListParagraphCxSpFirst",
   "MsoListParagraphCxSpMiddle",
   "MsoListParagraphCxSpLast",
 ];
-const hasChild = (e, n) => {
-  return (e.children || []).some((c) => c.name === n);
-};
 
 let tagDecorateCallbacks = [];
 let blockDecorateCallbacks = [];
@@ -56,8 +49,13 @@ export function clearBlockDecorateCallbacks() {
 }
 
 export class Tag {
-  constructor(name, prefix = "", suffix = "", inline = false) {
-    this.name = name;
+  static named(name) {
+    const klass = class NamedTag extends Tag {};
+    klass.tagName = name;
+    return klass;
+  }
+
+  constructor(prefix = "", suffix = "", inline = false) {
     this.prefix = prefix;
     this.suffix = suffix;
     this.inline = inline;
@@ -77,8 +75,7 @@ export class Tag {
     }
 
     if (this.inline) {
-      const prev = this.element.prev;
-      const next = this.element.next;
+      const { prev, next } = this.element;
 
       if (prev && prev.name !== "#text") {
         text = " " + text;
@@ -95,7 +92,7 @@ export class Tag {
   toMarkdown() {
     const text = this.element.innerMarkdown();
 
-    if (text && text.trim()) {
+    if (text?.trim()) {
       return this.decorate(text);
     }
 
@@ -180,9 +177,9 @@ export class Tag {
   }
 
   static block(name, prefix, suffix) {
-    return class extends Tag {
+    return class extends Tag.named(name) {
       constructor() {
-        super(name, prefix, suffix);
+        super(prefix, suffix);
         this.gap = "\n\n";
       }
 
@@ -197,7 +194,7 @@ export class Tag {
           }
         }
 
-        if (this.name === "p" && parent && parent.name === "li") {
+        if (name === "p" && parent?.name === "li") {
           // fix for google docs
           this.gap = "";
         }
@@ -252,21 +249,26 @@ export class Tag {
   }
 
   static emphasis(name, decorator) {
-    return class extends Tag {
+    return class extends Tag.named(name) {
       constructor() {
-        super(name, decorator, decorator, true);
+        super(decorator, decorator, true);
       }
 
       decorate(text) {
         if (text.includes("\n")) {
-          this.prefix = `<${this.name}>`;
-          this.suffix = `</${this.name}>`;
+          this.prefix = `<${name}>`;
+          this.suffix = `</${name}>`;
         }
 
-        let space = text.match(/^\s/) || [""];
-        this.prefix = space[0] + this.prefix;
-        space = text.match(/\s$/) || [""];
-        this.suffix = this.suffix + space[0];
+        let space = text.match(/^\s/);
+        if (space) {
+          this.prefix = space[0] + this.prefix;
+        }
+
+        space = text.match(/\s$/);
+        if (space) {
+          this.suffix = this.suffix + space[0];
+        }
 
         return super.decorate(text.trim());
       }
@@ -274,17 +276,17 @@ export class Tag {
   }
 
   static allowedTag(name) {
-    return class extends Tag {
+    return class extends Tag.named(name) {
       constructor() {
-        super(name, `<${name}>`, `</${name}>`);
+        super(`<${name}>`, `</${name}>`);
       }
     };
   }
 
   static replace(name, text) {
-    return class extends Tag {
+    return class extends Tag.named(name) {
       constructor() {
-        super(name, "", "");
+        super("", "");
         this.text = text;
       }
 
@@ -295,9 +297,9 @@ export class Tag {
   }
 
   static span() {
-    return class extends Tag {
+    return class extends Tag.named("span") {
       constructor() {
-        super("span");
+        super();
       }
 
       decorate(text) {
@@ -313,9 +315,9 @@ export class Tag {
   }
 
   static link() {
-    return class extends Tag {
+    return class extends Tag.named("a") {
       constructor() {
-        super("a", "", "", true);
+        super("", "", true);
       }
 
       decorate(text) {
@@ -324,14 +326,18 @@ export class Tag {
 
         if (/^mention/.test(attr.class) && "@" === text[0]) {
           return text;
-        } else if ("hashtag" === attr.class && "#" === text[0]) {
+        }
+
+        if ("hashtag" === attr.class && "#" === text[0]) {
           return text;
-        } else if (
+        }
+
+        let img;
+        if (
           ["lightbox", "d-lazyload"].includes(attr.class) &&
-          hasChild(e, "img")
+          (img = (e.children || []).find((c) => c.name === "img"))
         ) {
           let href = attr.href;
-          const img = (e.children || []).find((c) => c.name === "img");
           const base62SHA1 = img.attributes["data-base62-sha1"];
           text = attr.title || "";
 
@@ -339,18 +345,18 @@ export class Tag {
             href = `upload://${base62SHA1}`;
           }
 
-          return "![" + text + "](" + href + ")";
+          return `![${text}](${href})`;
         }
 
         if (attr.href && text !== attr.href) {
           text = text.replace(/\n{2,}/g, "\n");
 
           let linkModifier = "";
-          if (attr.class && attr.class.includes("attachment")) {
+          if (attr.class?.includes("attachment")) {
             linkModifier = "|attachment";
           }
 
-          return "[" + text + linkModifier + "](" + attr.href + ")";
+          return `[${text}${linkModifier}](${attr.href})`;
         }
 
         return text;
@@ -359,23 +365,25 @@ export class Tag {
   }
 
   static image() {
-    return class extends Tag {
+    return class extends Tag.named("img") {
       constructor() {
-        super("img", "", "", true);
+        super("", "", true);
       }
 
       toMarkdown() {
         const e = this.element;
         const attr = e.attributes;
-        const pAttr = (e.parent && e.parent.attributes) || {};
+        const pAttr = e.parent?.attributes || {};
+        const cssClass = attr.class || pAttr.class;
+
         let src = attr.src || pAttr.src;
+
         const base62SHA1 = attr["data-base62-sha1"];
         if (base62SHA1) {
           src = `upload://${base62SHA1}`;
         }
-        const cssClass = attr.class || pAttr.class;
 
-        if (cssClass && cssClass.includes("emoji")) {
+        if (cssClass?.includes("emoji")) {
           return attr.title || pAttr.title;
         }
 
@@ -405,9 +413,9 @@ export class Tag {
   }
 
   static slice(name, suffix) {
-    return class extends Tag {
+    return class extends Tag.named(name) {
       constructor() {
-        super(name, "", suffix);
+        super("", suffix);
       }
 
       decorate(text) {
@@ -420,9 +428,9 @@ export class Tag {
   }
 
   static cell(name) {
-    return class extends Tag {
+    return class extends Tag.named(name) {
       constructor() {
-        super(name, "|");
+        super("|");
       }
 
       toMarkdown() {
@@ -447,14 +455,14 @@ export class Tag {
   static li() {
     return class extends Tag.slice("li", "\n") {
       decorate(text) {
+        const attrs = this.element.attributes;
         let indent = this.element
           .filterParentNames(["ol", "ul"])
           .slice(1)
           .map(() => "\t")
           .join("");
-        const attrs = this.element.attributes;
 
-        if (msoListClasses.includes(attrs.class)) {
+        if (MSO_LIST_CLASSES.includes(attrs.class)) {
           try {
             const level = parseInt(
               attrs.style.match(/level./)[0].replace("level", ""),
@@ -470,15 +478,15 @@ export class Tag {
           }
         }
 
-        return super.decorate(`${indent}* ${trimLeft(text)}`);
+        return super.decorate(`${indent}* ${text.trimStart()}`);
       }
     };
   }
 
   static code() {
-    return class extends Tag {
+    return class extends Tag.named("code") {
       constructor() {
-        super("code", "`", "`");
+        super("`", "`");
       }
 
       decorate(text) {
@@ -489,16 +497,17 @@ export class Tag {
           this.inline = true;
         }
 
-        text = $("<textarea />").html(text).text();
-        return super.decorate(text);
+        const textarea = document.createElement("textarea");
+        textarea.innerHTML = text;
+        return super.decorate(textarea.innerText);
       }
     };
   }
 
   static blockquote() {
-    return class extends Tag {
+    return class extends Tag.named("blockquote") {
       constructor() {
-        super("blockquote", "\n> ", "\n");
+        super("\n> ", "\n");
       }
 
       decorate(text) {
@@ -531,15 +540,19 @@ export class Tag {
         }
       }
 
+      countPipes(text) {
+        return (text.replace(/\\\|/, "").match(/\|/g) || []).length;
+      }
+
       decorate(text) {
         text = super.decorate(text).replace(/\|\n{2,}\|/g, "|\n|");
         const rows = text.trim().split("\n");
-        const pipeCount = countPipes(rows[0]);
+        const pipeCount = this.countPipes(rows[0]);
         this.isValid =
           this.isValid &&
           rows.length > 1 &&
           pipeCount > 2 &&
-          rows.reduce((a, c) => a && countPipes(c) <= pipeCount); // Unsupported table format for Markdown conversion
+          rows.reduce((a, c) => a && this.countPipes(c) <= pipeCount); // Unsupported table format for Markdown conversion
 
         if (this.isValid) {
           const splitterRow =
@@ -561,7 +574,7 @@ export class Tag {
         let smallGap = "";
         const parent = this.element.parent;
 
-        if (parent && parent.name === "ul") {
+        if (parent?.name === "ul") {
           this.gap = "";
           this.suffix = "\n";
         }
@@ -571,7 +584,7 @@ export class Tag {
           smallGap = "\n";
         }
 
-        return smallGap + super.decorate(trimRight(text));
+        return smallGap + super.decorate(text.trimEnd());
       }
     };
   }
@@ -581,13 +594,11 @@ export class Tag {
       decorate(text) {
         text = "\n" + text;
         const bullet = text.match(/\n\t*\*/)[0];
+        let i = parseInt(this.element.attributes.start || 1, 10);
 
-        for (
-          let i = parseInt(this.element.attributes.start || 1, 10);
-          text.includes(bullet);
-          i++
-        ) {
+        while (text.includes(bullet)) {
           text = text.replace(bullet, bullet.replace("*", `${i}.`));
+          i++;
         }
 
         return super.decorate(text.slice(1));
@@ -607,30 +618,42 @@ export class Tag {
   }
 }
 
-function tags() {
-  return [
-    ...Tag.blocks().map((b) => Tag.block(b)),
-    ...Tag.headings().map((h, i) => Tag.heading(h, i + 1)),
-    ...Tag.slices().map((s) => Tag.slice(s, "\n")),
-    ...Tag.emphases().map((e) => Tag.emphasis(e[0], e[1])),
-    ...Tag.allowedTags().map((t) => Tag.allowedTag(t)),
-    Tag.aside(),
-    Tag.cell("td"),
-    Tag.cell("th"),
-    Tag.replace("br", "\n"),
-    Tag.replace("hr", "\n---\n"),
-    Tag.replace("head", ""),
-    Tag.li(),
-    Tag.link(),
-    Tag.image(),
-    Tag.code(),
-    Tag.blockquote(),
-    Tag.table(),
-    Tag.tr(),
-    Tag.ol(),
-    Tag.list("ul"),
-    Tag.span(),
-  ];
+let tagsMap;
+
+function tagByName(name) {
+  if (!tagsMap) {
+    tagsMap = new Map();
+
+    const allTags = [
+      ...Tag.blocks().map((b) => Tag.block(b)),
+      ...Tag.headings().map((h, i) => Tag.heading(h, i + 1)),
+      ...Tag.slices().map((s) => Tag.slice(s, "\n")),
+      ...Tag.emphases().map((e) => Tag.emphasis(e[0], e[1])),
+      ...Tag.allowedTags().map((t) => Tag.allowedTag(t)),
+      Tag.aside(),
+      Tag.cell("td"),
+      Tag.cell("th"),
+      Tag.replace("br", "\n"),
+      Tag.replace("hr", "\n---\n"),
+      Tag.replace("head", ""),
+      Tag.li(),
+      Tag.link(),
+      Tag.image(),
+      Tag.code(),
+      Tag.blockquote(),
+      Tag.table(),
+      Tag.tr(),
+      Tag.ol(),
+      Tag.list("ul"),
+      Tag.span(),
+    ];
+
+    for (const tag of allTags) {
+      tagsMap.set(tag.tagName, tag);
+    }
+  }
+
+  return tagsMap.get(name);
 }
 
 class Element {
@@ -650,17 +673,14 @@ class Element {
     this.previous = previous;
     this.next = next;
 
-    if (this.name === "p") {
-      if (msoListClasses.includes(this.attributes.class)) {
-        this.name = "li";
-        this.parentNames.push("ul");
-      }
+    if (this.name === "p" && MSO_LIST_CLASSES.includes(this.attributes.class)) {
+      this.name = "li";
+      this.parentNames.push("ul");
     }
   }
 
   tag() {
-    const tag = new (tags().filter((t) => new t().name === this.name)[0] ||
-      Tag)();
+    const tag = new (tagByName(this.name) || Tag)();
     tag.element = this;
     return tag;
   }
@@ -681,14 +701,14 @@ class Element {
     let text = this.data || "";
 
     if (this.leftTrimmable()) {
-      text = trimLeft(text);
+      text = text.trimStart();
     }
 
     if (this.rightTrimmable()) {
-      text = trimRight(text);
+      text = text.trimEnd();
     }
 
-    text = text.replace(/[ \t]+/g, " ");
+    text = text.replace(/[\s\t]+/g, " ");
 
     return text;
   }
@@ -751,8 +771,10 @@ function putPlaceholders(html) {
 
   while (match) {
     const placeholder = `DISCOURSE_PLACEHOLDER_${placeholders.length + 1}`;
-    let code = match[1];
-    code = $("<div />").html(code).text().replace(/^\n/, "").replace(/\n$/, "");
+    const element = document.createElement("div");
+    element.innerHTML = match[1];
+
+    const code = element.innerText.replace(/^\n/, "").replace(/\n$/, "");
     placeholders.push([placeholder, code]);
     html = html.replace(match[0], `<code>${placeholder}</code>`);
     match = codeRegEx.exec(origHtml);
@@ -793,7 +815,10 @@ function putPlaceholders(html) {
     return ret;
   };
 
-  const elements = transformNode($.parseHTML(trimUnwanted(html)));
+  const template = document.createElement("template");
+  template.innerHTML = trimUnwanted(html);
+  const elements = transformNode(template.content.childNodes);
+
   return { elements, placeholders };
 }
 
