@@ -4,8 +4,8 @@ $d-popover-border: var(--primary-medium);
 .tippy-box {
   color: var(--primary);
   background: $d-popover-background;
-  box-shadow: shadow("card");
-  border: 1px solid $d-popover-border;
+  border: 1px solid var(--primary-low);
+  box-shadow: shadow("menu-panel");
 }
 
 .tippy-box[data-placement^="top"] .tippy-svg-arrow > svg {
