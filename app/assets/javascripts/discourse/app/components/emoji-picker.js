@@ -96,11 +96,9 @@ export default Component.extend({
         return;
       }
 
-      const textareaWrapper = document.querySelector(
-        ".d-editor-textarea-wrapper"
-      );
+      const popperAnchor = this._getPopperAnchor();
 
-      if (!this.site.isMobileDevice && this.usePopper && textareaWrapper) {
+      if (!this.site.isMobileDevice && this.usePopper && popperAnchor) {
         const modifiers = [
           {
             name: "preventOverflow",
@@ -113,7 +111,7 @@ export default Component.extend({
           },
         ];
 
-        if (window.innerWidth < textareaWrapper.clientWidth * 2) {
+        if (window.innerWidth < popperAnchor.clientWidth * 2) {
           modifiers.push({
             name: "computeStyles",
             enabled: true,
@@ -131,9 +129,8 @@ export default Component.extend({
           });
         }
 
-        this._popper = createPopper(textareaWrapper, emojiPicker, {
+        this._popper = createPopper(popperAnchor, emojiPicker, {
           placement: "auto",
-          modifiers,
         });
       }
 
@@ -336,6 +333,10 @@ export default Component.extend({
       },
       { threshold: 1 }
     );
+  },
+
+  _getPopperAnchor() {
+    return document.querySelector(".d-editor-textarea-wrapper");
   },
 
   @bind
