@@ -14,6 +14,19 @@ const hasChild = (e, n) => {
 let tagDecorateCallbacks = [];
 let blockDecorateCallbacks = [];
 
+/**
+ * Allows to add support for custom inline markdown/bbcode
+ *
+ * ```
+ * addTagDecorateCallback(function (text) {
+ *   if (this.element.attributes.class === "loud") {
+ *     this.prefix = "^^";
+ *     this.suffix = "^^";
+ *     return text.toLowerCase();
+ *   }
+ * });
+ * ```
+ */
 export function addTagDecorateCallback(callback) {
   tagDecorateCallbacks.push(callback);
 }
@@ -22,6 +35,18 @@ export function clearTagDecorateCallbacks() {
   tagDecorateCallbacks = [];
 }
 
+/**
+ * Allows to add support for custom block markdown/bbcode
+ *
+ * ```
+ * addBlockDecorateCallback(function (text) {
+ *   if (this.element.attributes.class === "spoiled") {
+ *     this.prefix = "[spoiler]";
+ *     this.suffix = "[/spoiler]";
+ *   }
+ * });
+ * ```
+ */
 export function addBlockDecorateCallback(callback) {
   blockDecorateCallbacks.push(callback);
 }

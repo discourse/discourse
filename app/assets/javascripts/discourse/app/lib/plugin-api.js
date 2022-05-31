@@ -95,10 +95,6 @@ import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
 import { downloadCalendar } from "discourse/lib/download-calendar";
 import { consolePrefix } from "discourse/lib/source-identifier";
 import { addSectionLink } from "discourse/lib/sidebar/custom-topics-section-links";
-import {
-  addBlockDecorateCallback,
-  addTagDecorateCallback,
-} from "discourse/lib/to-markdown";
 
 // If you add any methods to the API ensure you bump up the version number
 // based on Semantic Versioning 2.0.0. Please update the changelog at
@@ -1683,39 +1679,6 @@ class PluginApi {
    */
   addTopicsSectionLink(arg) {
     addSectionLink(arg);
-  }
-
-  /**
-   * Allows to add support for custom inline markdown/bbcode in `toMarkdown` function.
-   *
-   * ```
-   * api.beforeToMarkdownTagDecorate(function (text) {
-   *   if (this.element.attributes.class === "loud") {
-   *     this.prefix = "^^";
-   *     this.suffix = "^^";
-   *     return text.toLowerCase();
-   *   }
-   * });
-   * ```
-   */
-  beforeToMarkdownTagDecorate(callback) {
-    addTagDecorateCallback(callback);
-  }
-
-  /**
-   * Allows to add support for custom block markdown/bbcode in `toMarkdown` function.
-   *
-   * ```
-   * api.beforeToMarkdownBlockDecorate(function (text) {
-   *   if (this.element.attributes.class === "spoiled") {
-   *     this.prefix = "[spoiler]";
-   *     this.suffix = "[/spoiler]";
-   *   }
-   * });
-   * ```
-   */
-  beforeToMarkdownBlockDecorate(callback) {
-    addBlockDecorateCallback(callback);
   }
 }
 
