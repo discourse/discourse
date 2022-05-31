@@ -1,6 +1,7 @@
 import {
   acceptance,
   exists,
+  publishToMessageBus,
   query,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -8,16 +9,24 @@ import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 
 acceptance("User Status", function (needs) {
-  needs.user();
-  needs.pretender((server, helper) => {
-    server.put("/user-status.json", () => helper.response({ success: true }));
-    server.delete("/user-status.json", () =>
-      helper.response({ success: true })
-    );
-  });
-
   const userStatusFallbackEmoji = "mega";
   const userStatus = "off to dentist";
+  const userId = 1;
+
+  needs.user({ id: userId });
+
+  needs.pretender((server, helper) => {
+    server.put("/user-status.json", () => {
+      publishToMessageBus(`/user-status/${userId}`, {
+        description: userStatus,
+      });
+      return helper.response({ success: true });
+    });
+    server.delete("/user-status.json", () => {
+      publishToMessageBus(`/user-status/${userId}`, null);
+      return helper.response({ success: true });
+    });
+  });
 
   test("doesn't show the user status button on the menu by default", async function (assert) {
     this.siteSettings.enable_user_status = false;

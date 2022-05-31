@@ -1188,7 +1188,9 @@ describe SessionController do
         "*|secret,forAll",
         "*.rainbow|wrongSecretForOverRainbow",
         "www.random.site|secretForRandomSite",
+        "somewhere.over.rainbow|oldSecretForOverRainbow",
         "somewhere.over.rainbow|secretForOverRainbow",
+        "somewhere.over.rainbow|newSecretForOverRainbow",
       ].join("\n")
 
       @sso = DiscourseConnectProvider.new
@@ -1245,9 +1247,28 @@ describe SessionController do
         expect(sso2.no_2fa_methods).to eq(nil)
       end
 
+      it "correctly logs in for secondary domain secrets" do
+        sign_in @user
+
+        get "/session/sso_provider", params: Rack::Utils.parse_query(@sso.payload("newSecretForOverRainbow"))
+        expect(response.status).to eq(302)
+        redirect_uri = URI.parse(response.location)
+        expect(redirect_uri.host).to eq("somewhere.over.rainbow")
+        redirect_query = CGI.parse(redirect_uri.query)
+        expected_sig = DiscourseConnectBase.sign(redirect_query["sso"][0], "newSecretForOverRainbow")
+        expect(redirect_query["sig"][0]).to eq(expected_sig)
+
+        get "/session/sso_provider", params: Rack::Utils.parse_query(@sso.payload("oldSecretForOverRainbow"))
+        expect(response.status).to eq(302)
+        redirect_uri = URI.parse(response.location)
+        expect(redirect_uri.host).to eq("somewhere.over.rainbow")
+        redirect_query = CGI.parse(redirect_uri.query)
+        expected_sig = DiscourseConnectBase.sign(redirect_query["sso"][0], "oldSecretForOverRainbow")
+        expect(redirect_query["sig"][0]).to eq(expected_sig)
+      end
+
       it "it fails to log in if secret is wrong" do
         get "/session/sso_provider", params: Rack::Utils.parse_query(@sso.payload("secretForRandomSite"))
-
         expect(response.status).to eq(422)
       end
 
@@ -1263,7 +1284,6 @@ describe SessionController do
 
       it "returns a 422 if no return_sso_url" do
         SiteSetting.discourse_connect_provider_secrets = "abcdefghij"
-        sso = DiscourseConnectProvider.new
         get "/session/sso_provider?sso=asdf&sig=abcdefghij"
         expect(response.status).to eq(422)
       end

@@ -122,9 +122,13 @@ class DiscourseConnectBase
     @custom_fields ||= {}
   end
 
+  def self.sign(payload, secret)
+    OpenSSL::HMAC.hexdigest("sha256", secret, payload)
+  end
+
   def sign(payload, secret = nil)
     secret = secret || sso_secret
-    OpenSSL::HMAC.hexdigest("sha256", secret, payload)
+    self.class.sign(payload, secret)
   end
 
   def to_json

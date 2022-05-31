@@ -4,6 +4,50 @@ const MSO_LIST_CLASSES = [
   "MsoListParagraphCxSpLast",
 ];
 
+let tagDecorateCallbacks = [];
+let blockDecorateCallbacks = [];
+
+/**
+ * Allows to add support for custom inline markdown/bbcode
+ *
+ * ```
+ * addTagDecorateCallback(function (text) {
+ *   if (this.element.attributes.class === "loud") {
+ *     this.prefix = "^^";
+ *     this.suffix = "^^";
+ *     return text.toLowerCase();
+ *   }
+ * });
+ * ```
+ */
+export function addTagDecorateCallback(callback) {
+  tagDecorateCallbacks.push(callback);
+}
+
+export function clearTagDecorateCallbacks() {
+  tagDecorateCallbacks = [];
+}
+
+/**
+ * Allows to add support for custom block markdown/bbcode
+ *
+ * ```
+ * addBlockDecorateCallback(function (text) {
+ *   if (this.element.attributes.class === "spoiled") {
+ *     this.prefix = "[spoiler]";
+ *     this.suffix = "[/spoiler]";
+ *   }
+ * });
+ * ```
+ */
+export function addBlockDecorateCallback(callback) {
+  blockDecorateCallbacks.push(callback);
+}
+
+export function clearBlockDecorateCallbacks() {
+  blockDecorateCallbacks = [];
+}
+
 export class Tag {
   static named(name) {
     const klass = class NamedTag extends Tag {};
@@ -18,6 +62,14 @@ export class Tag {
   }
 
   decorate(text) {
+    for (const callback of tagDecorateCallbacks) {
+      const result = callback.call(this, text);
+
+      if (typeof result !== "undefined") {
+        text = result;
+      }
+    }
+
     if (this.prefix || this.suffix) {
       text = [this.prefix, text, this.suffix].join("");
     }
@@ -133,6 +185,14 @@ export class Tag {
 
       decorate(text) {
         const parent = this.element.parent;
+
+        for (const callback of blockDecorateCallbacks) {
+          const result = callback.call(this, text);
+
+          if (typeof result !== "undefined") {
+            text = result;
+          }
+        }
 
         if (name === "p" && parent?.name === "li") {
           // fix for google docs

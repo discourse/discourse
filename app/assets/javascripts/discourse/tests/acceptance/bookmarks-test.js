@@ -111,6 +111,10 @@ acceptance("Bookmarking", function (needs) {
       exists("#bookmark-reminder-modal"),
       "it shows the bookmark modal"
     );
+    assert.ok(
+      exists("#tap_tile_none.active"),
+      "it highlights the None option by default"
+    );
   });
 
   test("Bookmarks modal selecting reminder type", async function (assert) {
