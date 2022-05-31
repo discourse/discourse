@@ -287,11 +287,13 @@ it:
         unbookmark_with_reminder: "Clicca per rimuovere tutti i segnalibri e i promemoria a questo argomento."
     bookmarks:
       created: "Hai aggiunto questo messaggio ai segnalibri %{name}"
+      created_generic: "L'hai aggiunto ai segnalibri. %{name}"
       create: "Crea un segnalibro"
       edit: "Modifica segnalibro"
       not_bookmarked: "aggiungi messaggio ai segnalibri"
       remove_reminder_keep_bookmark: "Rimuovi il promemoria e mantieni il segnalibro"
       created_with_reminder: "Hai aggiunto ai segnalibri questo messaggio con un promemoria %{date}. %{name}"
+      created_with_reminder_generic: "L'hai aggiunto ai segnalibri con un promemoria %{date}. %{name}"
       remove: "Rimuovi Segnalibro"
       delete: "Cancella Segnalibro"
       confirm_delete: "Vuoi eliminare questo segnalibro? Anche il promemoria verrà eliminato."
@@ -1612,6 +1614,10 @@ it:
         sent_by: "Inviato da"
         private_message: "messaggio"
         the_topic: "l'argomento"
+    user_status:
+      save: "Salva"
+      set_custom_status: "Imposta stato personalizzato"
+      what_are_you_doing: "Cosa fai?"
     loading: " Caricamento..."
     errors:
       prev_page: "durante il caricamento"

@@ -1549,6 +1549,8 @@ vi:
         sent_by: "Gửi bởi"
         private_message: "tin nhắn"
         the_topic: "chủ đề"
+    user_status:
+      save: "Lưu lại"
     loading: "Đang tải..."
     errors:
       prev_page: "trong khi cố gắng để tải"

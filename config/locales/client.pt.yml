@@ -1572,6 +1572,8 @@ pt:
         sent_by: "Enviado por"
         private_message: "mensagem"
         the_topic: "o tópico"
+    user_status:
+      save: "Guardar"
     loading: "A carregar..."
     errors:
       prev_page: "enquanto tenta carregar"

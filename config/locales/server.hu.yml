@@ -293,7 +293,7 @@ hu:
       one: "%{count} bejegyzés"
       other: "%{count} bejegyzés"
     "new-topic": |
-      Üdvözlünk a %{site_name} &mdash; -ben! **Köszönjük, hogy új beszélgetést indítaszl!**
+      Üdvözlünk a %{site_name} oldalon! **Köszönjük, hogy új beszélgetést indítaszl!**
 
       - Érdekesnek tűnik a cím, ha hangosan felolvasod? Jó az összefoglaló?
 
@@ -1160,9 +1160,9 @@ hu:
     welcome_tl1_user:
       subject_template: "Köszönjük, hogy velünk töltötted az idődet!"
       text_body_template: |
-        Halihó! Örmmel látjuk, hogy hasznos és aktív tagja vagy a fórumunknak. Úgy gondoljuk, itt az idő, hogy előléptessünk egy bizalmi szinttel! [trust level!] (https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)
+        Halihó! Örömmel látjuk, hogy hasznos és aktív tagja vagy a fórumunknak. Úgy gondoljuk, itt az idő, hogy előléptessünk egy bizalmi szinttel! [trust level!](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)
 
-        Nagyon örülünk, hogy közöttünk vagy, és szívesen megtudnánk többet rólad. Ha még nem tetted. szánj egy percet [a profilod kötöltésére] (%{base_url}/my/preferences/profile), vagy nyugodtan [indíts egy új témát] (%{base_url}/categories).
+        Nagyon örülünk, hogy közöttünk vagy, és szívesen megtudnánk többet rólad. Ha még nem tetted. szánj egy percet [a profilod kitöltésére](%{base_url}/my/preferences/profile), vagy nyugodtan [indíts egy új témát](%{base_url}/categories).
     welcome_staff:
       subject_template: "%{role} státuszt kaptál. Gratulálunk!"
       text_body_template: |
@@ -1896,7 +1896,7 @@ hu:
     first_quote:
       name: Első idézet
       long_description: |
-        Ezt a jelvényt akkor kapja meg, amikor első alkalommal idéz egy bejegyzést a válaszában. A válaszban a korábbi bejegyzések releváns részeinek idézése segít a megbeszélések és témák összekapcsolásában. Az idézés legegyszerűbb módja, ha kiemeleia bejegyzés egy részét, majd megnyomja bármelyik válasz gombot. Idézzen gyakran!
+        Ezt a jelvényt akkor kapja meg, amikor első alkalommal idéz egy bejegyzést a válaszában. A válaszban a korábbi bejegyzések releváns részeinek idézése segít a megbeszélések és témák összekapcsolásában. Az idézés legegyszerűbb módja, ha kiemelei a bejegyzés egy részét, majd megnyomja bármelyik válasz gombot. Idézzen gyakran!
     read_guidelines:
       name: Irányelvek elolvasva
       long_description: |

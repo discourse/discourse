@@ -4634,6 +4634,9 @@ zh_CN:
     post_raw: "从%{parent_url}继续讨论。\n\n以前的讨论：\n\n%{previous_topics}"
     small_action_post_raw: "在%{new_title}继续讨论。"
   fallback_username: "用户"
+  user_status:
+    errors:
+      ends_at_should_be_greater_than_set_at: "ends_at 应该大于 set_at"
   activemodel:
     errors:
       <<: *errors

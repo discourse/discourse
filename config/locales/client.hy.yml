@@ -1264,6 +1264,8 @@ hy:
         sent_by: "Ուղարկվել է՝"
         private_message: "հաղորդագրություն"
         the_topic: "թեման"
+    user_status:
+      save: "Պահպանել"
     loading: "Բեռնվում է..."
     errors:
       prev_page: "բեռնման ընթացքում"

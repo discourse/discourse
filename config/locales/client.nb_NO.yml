@@ -1548,6 +1548,8 @@ nb_NO:
         sent_by: "Sendt av"
         private_message: "melding"
         the_topic: "emnet"
+    user_status:
+      save: "Lagre"
     loading: "Laster…"
     errors:
       prev_page: "ved lasting"

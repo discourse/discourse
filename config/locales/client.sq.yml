@@ -861,6 +861,8 @@ sq:
         sent_by: "Dërguar nga"
         private_message: "mesazhi"
         the_topic: "tema"
+    user_status:
+      save: "Ruaj"
     loading: "Duke ngarkuar..."
     errors:
       prev_page: "duke u munduar të ngarkohet"

@@ -305,11 +305,13 @@ es:
         unbookmark_with_reminder: "Haz clic para eliminar todos los marcadores y recordatorios de este tema."
     bookmarks:
       created: "Has guardado esta publicación en marcadores. %{name}"
+      created_generic: "Has añadido esto a marcadores. %{name}"
       create: "Crear marcador"
       edit: "Editar marcador"
       not_bookmarked: "guarda esta publicación en marcadores"
       remove_reminder_keep_bookmark: "Quitar recordatorio y mantener marcador"
       created_with_reminder: "Has marcado esta publicación con un recordatorio %{date}. %{name}"
+      created_with_reminder_generic: "Has añadido esto a marcadores con un recordatorio %{date}. %{name}"
       remove: "Eliminar marcador"
       delete: "Eliminar marcador"
       confirm_delete: "¿Quieres borrar este marcador? El recordatorio también se borrará."
@@ -1632,6 +1634,8 @@ es:
         sent_by: "Enviado por"
         private_message: "mensaje"
         the_topic: "el tema"
+    user_status:
+      save: "Guardar"
     loading: "Cargando..."
     errors:
       prev_page: "mientras se intentaba cargar"
@@ -2325,6 +2329,7 @@ es:
         clear_all: "Limpiar todo"
         unlist_topics: "Hacer invisibles"
         relist_topics: "Hacer visibles de nuevo"
+        reset_bump_dates: "Restablecer fechas de reflote"
         defer: "Aplazar"
         delete: "Eliminar temas"
         dismiss: "Descartar"

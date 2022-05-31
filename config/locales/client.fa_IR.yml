@@ -246,7 +246,7 @@ fa_IR:
       aria_label: "فیلتر بر اساس دوره زمانی"
     related_messages:
       title: "پیام‌های مرتبط"
-      see_all: '<a href="%{path}">تمام پیام‌های</a>از طرف%{username}@ را ببینید'
+      see_all: '<a href="%{path}">تمام پیام‌های</a> از طرف %{username}@ را ببینید'
     suggested_topics:
       title: "موضوعات پیشنهادی"
       pm_title: "پیام‌های پیشنهادی"
@@ -275,12 +275,13 @@ fa_IR:
       clear_bookmarks: "پاک کردن نشانک‌ها"
       help:
         bookmark: "کلیک کنید تا به اولین نوشته این موضوع نشانک بزنید"
-        edit_bookmark: "برای ویرایش نشانک مربوط به این موضوع کلیک کنید"
+        edit_bookmark: "برای ویرایش نشانک مربوط در این موضوع کلیک کنید"
         edit_bookmark_for_topic: "برای ویرایش نشانک مربوط به این موضوع کلیک کنید"
         unbookmark: "کلیک کنید تا همهٔ نشانک‌های این موضوع را حذف کنید"
         unbookmark_with_reminder: "برای حذف همه نشانک‌ها و یادآورها در این موضوع کلیک کنید."
     bookmarks:
       created: "شما این نوشته را نشانک کردید. %{name}"
+      created_generic: "شما این را نشانک گذاری کرده‌اید. %{name}"
       create: "ایجاد نشانک"
       edit: "ویرایش نشانک"
       not_bookmarked: "این نوشته را نشانک بزنید"
@@ -311,7 +312,7 @@ fa_IR:
       fullscreen: "نمایش کد در تمام صفحه"
     drafts:
       label: "پیش‌نویس‌ها"
-      label_with_count: "پیش‌نویس (%{count})"
+      label_with_count: "پیش‌نویس «%{count}»"
       resume: "از سر گیری"
       remove: "پاک کردن"
       remove_confirmation: "آیا مطمئن هستید که می‌خواهید این پیش‌نویس را حذف کنید؟"
@@ -1509,6 +1510,10 @@ fa_IR:
         sent_by: "ارسال شده توسط:"
         private_message: "پیام"
         the_topic: "موضوع"
+    user_status:
+      save: "ذخیره"
+      set_custom_status: "تنظیم وضعیت سفارشی"
+      what_are_you_doing: "داری چیکار می‌کنی؟"
     loading: "بارگذاری..."
     errors:
       prev_page: "هنگام تلاش برای بارگذاری"

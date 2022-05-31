@@ -1338,6 +1338,8 @@ ca:
         sent_by: "Enviat per"
         private_message: "missatge"
         the_topic: "el tema"
+    user_status:
+      save: "Desa"
     loading: "Carregant..."
     errors:
       prev_page: "mentre es prova de carregar"

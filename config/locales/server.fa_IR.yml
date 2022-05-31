@@ -2359,6 +2359,9 @@ fa_IR:
         title: "رد کردن"
         bundle_title: "رد کردن..."
   fallback_username: "کاربران"
+  user_status:
+    errors:
+      ends_at_should_be_greater_than_set_at: "ends_at باید بیشتر از set_at باشد"
   activemodel:
     errors:
       <<: *errors

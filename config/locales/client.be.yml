@@ -674,6 +674,8 @@ be:
         sent_by: "адпраўлена"
         private_message: "паведамленне"
         the_topic: "тэма"
+    user_status:
+      save: "Захаваць"
     loading: "Загрузка ..."
     errors:
       reasons:

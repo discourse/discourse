@@ -66,6 +66,8 @@ ja:
         date_month: "MMM D 日"
         date_year: "'YY 年 MMM"
       medium:
+        less_than_x_minutes:
+          other: "%{count} 分未満"
         x_minutes:
           other: "%{count} 分"
         x_hours:
@@ -1529,6 +1531,8 @@ ja:
         sent_by: "送信者"
         private_message: "メッセージ"
         the_topic: "トピック"
+    user_status:
+      save: "保存"
     loading: "読み込み中..."
     errors:
       prev_page: "次の項目を読み込み中に発生しました:"

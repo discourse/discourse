@@ -1381,6 +1381,8 @@ ro:
         sent_by: "Trimis de"
         private_message: "mesaj"
         the_topic: "subiectul"
+    user_status:
+      save: "Salvează"
     loading: "Se încarcă..."
     errors:
       prev_page: "în timp ce se încarcă"

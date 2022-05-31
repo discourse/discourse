@@ -1107,6 +1107,8 @@ th:
         sent_by: "ส่งโดย"
         private_message: "ข้อความส่วนตัว"
         the_topic: "กระทู้"
+    user_status:
+      save: "บันทึก"
     loading: "กำลังโหลด..."
     errors:
       prev_page: "พยายามที่จะโหลด"

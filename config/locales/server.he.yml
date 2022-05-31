@@ -4876,6 +4876,9 @@ he:
     post_raw: "המשך של הדיון %{parent_url}.\n\nדיונים קודמים:\n\n%{previous_topics}"
     small_action_post_raw: "ניתן להמשיך את הדיון תחת %{new_title}."
   fallback_username: "משתמש"
+  user_status:
+    errors:
+      ends_at_should_be_greater_than_set_at: "ends_at אמור להיות גדול מאשר set_at"
   activemodel:
     errors:
       <<: *errors

@@ -1625,6 +1625,8 @@ hu:
         sent_by: "Küldte:"
         private_message: "üzenet"
         the_topic: "a téma"
+    user_status:
+      save: "Mentés"
     loading: "Betöltés…"
     errors:
       prev_page: "amíg megpróbál betölteni"

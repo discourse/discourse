@@ -1371,6 +1371,8 @@ el:
         sent_by: "Στάλθηκε από"
         private_message: "μήνυμα"
         the_topic: "το νήμα"
+    user_status:
+      save: "Αποθήκευση"
     loading: "Φόρτωση... "
     errors:
       prev_page: "κατά το φόρτωμα"
