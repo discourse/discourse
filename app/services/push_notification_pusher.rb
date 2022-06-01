@@ -5,7 +5,14 @@ class PushNotificationPusher
   CONNECTION_TIMEOUT_SECONDS = 5
 
   def self.push(user, payload)
+    message = nil
     I18n.with_locale(user.effective_locale) do
+      notification_icon_name = Notification.types[payload[:notification_type]]
+      if !File.exist?(File.expand_path("../../app/assets/images/push-notifications/#{notification_icon_name}.png", __dir__))
+        notification_icon_name = "discourse"
+      end
+      notification_icon = ActionController::Base.helpers.image_url("push-notifications/#{notification_icon_name}.png")
+
       message = {
         title: payload[:translated_title] || I18n.t(
           "discourse_push_notifications.popup.#{Notification.types[payload[:notification_type]]}",
@@ -15,7 +22,7 @@ class PushNotificationPusher
         ),
         body: payload[:excerpt],
         badge: get_badge,
-        icon: ActionController::Base.helpers.image_url("push-notifications/#{Notification.types[payload[:notification_type]]}.png"),
+        icon: notification_icon,
         tag: payload[:tag] || "#{Discourse.current_hostname}-#{payload[:topic_id]}",
         base_url: Discourse.base_url,
         url: payload[:post_url],
@@ -26,6 +33,8 @@ class PushNotificationPusher
         send_notification(user, subscription, message)
       end
     end
+
+    message
   end
 
   def self.subscriptions(user)
