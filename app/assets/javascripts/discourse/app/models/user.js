@@ -1008,6 +1008,15 @@ const User = RestModel.extend({
       new Date(this.do_not_disturb_until) >= new Date()
     );
   },
+
+  @discourseComputed(
+    "tracked_tags.[]",
+    "watched_tags.[]",
+    "watching_first_post_tags.[]"
+  )
+  trackedTags(trackedTags, watchedTags, watchingFirstPostTags) {
+    return [...trackedTags, ...watchedTags, ...watchingFirstPostTags];
+  },
 });
 
 User.reopenClass(Singleton, {

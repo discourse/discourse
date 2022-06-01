@@ -1025,9 +1025,9 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
 
     const trackingState = TopicTrackingState.create({ currentUser });
 
-    assert.strictEqual(trackingState.countNew(1), 0);
-    assert.strictEqual(trackingState.countNew(2), 0);
-    assert.strictEqual(trackingState.countNew(3), 0);
+    assert.strictEqual(trackingState.countNew({ categoryId: 1 }), 0);
+    assert.strictEqual(trackingState.countNew({ categoryId: 2 }), 0);
+    assert.strictEqual(trackingState.countNew({ categoryId: 3 }), 0);
 
     trackingState.states.set("t112", {
       last_read_post_number: null,
@@ -1037,11 +1037,18 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
       created_in_new_period: true,
     });
 
-    assert.strictEqual(trackingState.countNew(1), 1);
-    assert.strictEqual(trackingState.countNew(1, undefined, true), 0);
-    assert.strictEqual(trackingState.countNew(1, "missing-tag"), 0);
-    assert.strictEqual(trackingState.countNew(2), 1);
-    assert.strictEqual(trackingState.countNew(3), 0);
+    assert.strictEqual(trackingState.countNew({ categoryId: 1 }), 1);
+
+    assert.strictEqual(
+      trackingState.countNew({ categoryId: 1, noSubcategories: true }),
+      0
+    );
+    assert.strictEqual(
+      trackingState.countNew({ categoryId: 1, tagId: "missing-tag" }),
+      0
+    );
+    assert.strictEqual(trackingState.countNew({ categoryId: 2 }), 1);
+    assert.strictEqual(trackingState.countNew({ categoryId: 3 }), 0);
 
     trackingState.states.set("t113", {
       last_read_post_number: null,
@@ -1052,11 +1059,23 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
       created_in_new_period: true,
     });
 
-    assert.strictEqual(trackingState.countNew(1), 2);
-    assert.strictEqual(trackingState.countNew(2), 2);
-    assert.strictEqual(trackingState.countNew(3), 1);
-    assert.strictEqual(trackingState.countNew(3, "amazing"), 1);
-    assert.strictEqual(trackingState.countNew(3, "missing"), 0);
+    assert.strictEqual(trackingState.countNew({ categoryId: 1 }), 2);
+    assert.strictEqual(trackingState.countNew({ categoryId: 2 }), 2);
+    assert.strictEqual(trackingState.countNew({ categoryId: 3 }), 1);
+    assert.strictEqual(
+      trackingState.countNew({
+        categoryId: 3,
+        tagId: "amazing",
+      }),
+      1
+    );
+    assert.strictEqual(
+      trackingState.countNew({
+        categoryId: 3,
+        tagId: "missing",
+      }),
+      0
+    );
 
     trackingState.states.set("t111", {
       last_read_post_number: null,
@@ -1066,16 +1085,17 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
       created_in_new_period: true,
     });
 
-    assert.strictEqual(trackingState.countNew(1), 3);
-    assert.strictEqual(trackingState.countNew(2), 2);
-    assert.strictEqual(trackingState.countNew(3), 1);
+    assert.strictEqual(trackingState.countNew({ categoryId: 1 }), 3);
+    assert.strictEqual(trackingState.countNew({ categoryId: 2 }), 2);
+    assert.strictEqual(trackingState.countNew({ categoryId: 3 }), 1);
 
     trackingState.states.set("t115", {
       last_read_post_number: null,
       id: 115,
       category_id: 4,
     });
-    assert.strictEqual(trackingState.countNew(4), 0);
+
+    assert.strictEqual(trackingState.countNew({ categoryId: 4 }), 0);
   });
 
   test("mute and unmute topic", function (assert) {

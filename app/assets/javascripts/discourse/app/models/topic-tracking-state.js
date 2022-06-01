@@ -476,7 +476,13 @@ const TopicTrackingState = EmberObject.extend({
     return new Set(result);
   },
 
-  countCategoryByState(type, categoryId, tagId, noSubcategories) {
+  countCategoryByState({
+    type,
+    categoryId,
+    tagId,
+    noSubcategories,
+    customFilterFn,
+  }) {
     const subcategoryIds = noSubcategories
       ? new Set([categoryId])
       : this.getSubCategoryIds(categoryId);
@@ -486,28 +492,53 @@ const TopicTrackingState = EmberObject.extend({
     );
     let filterFn = type === "new" ? isNew : isUnread;
 
-    return Array.from(this.states.values()).filter(
-      (topic) =>
-        filterFn(topic) &&
-        (!categoryId || subcategoryIds.has(topic.category_id)) &&
-        (!tagId || (topic.tags && topic.tags.indexOf(tagId) > -1)) &&
-        (type !== "new" ||
-          !mutedCategoryIds ||
-          mutedCategoryIds.indexOf(topic.category_id) === -1)
-    ).length;
+    return Array.from(this.states.values()).filter((topic) => {
+      if (!filterFn(topic)) {
+        return false;
+      }
+
+      if (categoryId && !subcategoryIds.has(topic.category_id)) {
+        return false;
+      }
+
+      if (tagId && !(topic.tags && topic.tags.indexOf(tagId) > -1)) {
+        return false;
+      }
+
+      if (
+        type === "new" &&
+        mutedCategoryIds &&
+        mutedCategoryIds.indexOf(topic.category_id) !== -1
+      ) {
+        return false;
+      }
+
+      if (customFilterFn && !customFilterFn.call(this, topic)) {
+        return false;
+      }
+
+      return true;
+    }).length;
   },
 
-  countNew(categoryId, tagId, noSubcategories) {
-    return this.countCategoryByState("new", categoryId, tagId, noSubcategories);
-  },
-
-  countUnread(categoryId, tagId, noSubcategories) {
-    return this.countCategoryByState(
-      "unread",
+  countNew({ categoryId, tagId, noSubcategories, customFilterFn } = {}) {
+    return this.countCategoryByState({
+      type: "new",
       categoryId,
       tagId,
-      noSubcategories
-    );
+      noSubcategories,
+      customFilterFn,
+    });
+  },
+
+  countUnread({ categoryId, tagId, noSubcategories, customFilterFn } = {}) {
+    return this.countCategoryByState({
+      type: "unread",
+      categoryId,
+      tagId,
+      noSubcategories,
+      customFilterFn,
+    });
   },
 
   /**
@@ -597,22 +628,44 @@ const TopicTrackingState = EmberObject.extend({
     return sum;
   },
 
-  lookupCount(name, category, tagId, noSubcategories) {
-    if (name === "latest") {
+  lookupCount({ type, category, tagId, noSubcategories, customFilterFn } = {}) {
+    if (type === "latest") {
       return (
-        this.lookupCount("new", category, tagId, noSubcategories) +
-        this.lookupCount("unread", category, tagId, noSubcategories)
+        this.lookupCount({
+          type: "new",
+          category,
+          tagId,
+          noSubcategories,
+          customFilterFn,
+        }) +
+        this.lookupCount({
+          type: "unread",
+          category,
+          tagId,
+          noSubcategories,
+          customFilterFn,
+        })
       );
     }
 
     let categoryId = category ? get(category, "id") : null;
 
-    if (name === "new") {
-      return this.countNew(categoryId, tagId, noSubcategories);
-    } else if (name === "unread") {
-      return this.countUnread(categoryId, tagId, noSubcategories);
+    if (type === "new") {
+      return this.countNew({
+        categoryId,
+        tagId,
+        noSubcategories,
+        customFilterFn,
+      });
+    } else if (type === "unread") {
+      return this.countUnread({
+        categoryId,
+        tagId,
+        noSubcategories,
+        customFilterFn,
+      });
     } else {
-      const categoryName = name.split("/")[1];
+      const categoryName = type.split("/")[1];
       if (categoryName) {
         return this.countCategory(categoryId, tagId);
       }

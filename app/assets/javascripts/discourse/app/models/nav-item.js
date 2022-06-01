@@ -8,6 +8,10 @@ import deprecated from "discourse-common/lib/deprecated";
 import discourseComputed from "discourse-common/utils/decorators";
 import { emojiUnescape } from "discourse/lib/text";
 import { getOwner } from "discourse-common/lib/get-owner";
+import {
+  hasTrackedFilter,
+  isTrackedTopic,
+} from "discourse/lib/topic-list-tracked-filter";
 import getURL from "discourse-common/lib/get-url";
 import { reads } from "@ember/object/computed";
 
@@ -76,12 +80,22 @@ const NavItem = EmberObject.extend({
     "category",
     "tagId",
     "noSubcategories",
+    "currentRouteQueryParams",
     "topicTrackingState.messageCount"
   )
-  count(name, category, tagId, noSubcategories) {
+  count(name, category, tagId, noSubcategories, currentRouteQueryParams) {
     const state = this.topicTrackingState;
+
     if (state) {
-      return state.lookupCount(name, category, tagId, noSubcategories);
+      return state.lookupCount({
+        type: name,
+        category,
+        tagId,
+        noSubcategories,
+        customFilterFn: hasTrackedFilter(currentRouteQueryParams)
+          ? isTrackedTopic
+          : undefined,
+      });
     }
   },
 });

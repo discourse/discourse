@@ -345,6 +345,9 @@ class TopicQuery
                regular: TopicUser.notification_levels[:regular], tracking: TopicUser.notification_levels[:tracking])
   end
 
+  # Any changes here will need to be reflected in `lib/topic-list-tracked-filter.js` for the `isTrackedTopic` function on
+  # the client side. The `f=tracked` query param is not heavily used so we do not want to be querying for a topic's
+  # tracked status by default. Instead, the client will handle the filtering when the `f=tracked` query params is present.
   def self.tracked_filter(list, user_id)
     tracked_category_ids_sql = <<~SQL
     SELECT cd.category_id FROM category_users cd
