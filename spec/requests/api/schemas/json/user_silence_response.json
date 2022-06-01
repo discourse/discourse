@@ -1,23 +1,23 @@
 {
   "additionalProperties": false,
   "properties": {
-    "suspension": {
+    "silence": {
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "suspend_reason": {
+        "silenced": {
+          "type": "boolean"
+        },
+        "silence_reason": {
           "type": "string"
         },
-        "full_suspend_reason": {
+        "silenced_till": {
           "type": "string"
         },
-        "suspended_till": {
+        "silenced_at": {
           "type": "string"
         },
-        "suspended_at": {
-          "type": "string"
-        },
-        "suspended_by": {
+        "silenced_by": {
           "type": "object",
           "additionalProperties": false,
           "properties": {
@@ -38,15 +38,15 @@
         }
       },
       "required": [
-        "suspend_reason",
-        "full_suspend_reason",
-        "suspended_till",
-        "suspended_at",
-        "suspended_by"
+        "silenced",
+        "silence_reason",
+        "silenced_till",
+        "silenced_at",
+        "silenced_by"
       ]
     }
   },
   "required": [
-    "suspension"
+    "silence"
   ]
 }
