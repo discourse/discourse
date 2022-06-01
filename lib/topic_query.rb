@@ -346,16 +346,22 @@ class TopicQuery
   end
 
   def self.tracked_filter(list, user_id)
+    tracked_category_ids_sql = <<~SQL
+    SELECT cd.category_id FROM category_users cd
+    WHERE cd.user_id = :user_id AND cd.notification_level >= :tracking
+    SQL
+
+    has_sub_sub_categories = SiteSetting.max_category_nesting == 3
+
     sql = +<<~SQL
       topics.category_id IN (
-        SELECT cu.category_id FROM category_users cu
-        WHERE cu.user_id = :user_id AND cu.notification_level >= :tracking
-      )
-      OR topics.category_id IN (
-        SELECT c.id FROM categories c WHERE c.parent_category_id IN (
-          SELECT cd.category_id FROM category_users cd
-          WHERE cd.user_id = :user_id AND cd.notification_level >= :tracking
-        )
+        SELECT
+          c.id
+        FROM categories c
+        #{has_sub_sub_categories ? "LEFT JOIN categories parent_categories ON parent_categories.id = c.parent_category_id" : ""}
+        WHERE (c.parent_category_id IS NULL AND c.id IN (#{tracked_category_ids_sql}))
+        OR c.parent_category_id IN (#{tracked_category_ids_sql})
+        #{has_sub_sub_categories ? "OR (parent_categories.id IS NOT NULL AND parent_categories.parent_category_id IN (#{tracked_category_ids_sql}))" : ""}
       )
     SQL
 

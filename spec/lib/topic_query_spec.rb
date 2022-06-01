@@ -164,7 +164,7 @@ describe TopicQuery do
       SiteSetting.tagging_enabled = true
 
       tag = Fabricate(:tag)
-      Fabricate(:topic, tags: [tag])
+      topic = Fabricate(:topic, tags: [tag])
       topic2 = Fabricate(:topic)
 
       query = TopicQuery.new(user, filter: 'tracked').list_latest
@@ -183,26 +183,38 @@ describe TopicQuery do
       )
 
       query = TopicQuery.new(user, filter: 'tracked').list_latest
-      expect(query.topics.length).to eq(1)
+
+      expect(query.topics.map(&:id)).to contain_exactly(topic.id)
 
       cu.update!(notification_level: NotificationLevels.all[:tracking])
 
       query = TopicQuery.new(user, filter: 'tracked').list_latest
-      expect(query.topics.length).to eq(2)
+
+      expect(query.topics.map(&:id)).to contain_exactly(topic.id, topic2.id)
 
       # includes subcategories of tracked categories
-      parentcat = Fabricate(:category)
-      subcat = Fabricate(:category, parent_category_id: parentcat.id)
-      topic3 = Fabricate(:topic, category_id: subcat.id)
+      parent_category = Fabricate(:category)
+      sub_category = Fabricate(:category, parent_category_id: parent_category.id)
+      topic3 = Fabricate(:topic, category_id: sub_category.id)
 
       CategoryUser.create!(
-        category_id: parentcat.id,
+        category_id: parent_category.id,
         user_id: user.id,
         notification_level: NotificationLevels.all[:tracking]
       )
 
       query = TopicQuery.new(user, filter: 'tracked').list_latest
-      expect(query.topics.length).to eq(3)
+
+      expect(query.topics.map(&:id)).to contain_exactly(topic.id, topic2.id, topic3.id)
+
+      # includes sub-subcategories of tracked categories
+      SiteSetting.max_category_nesting = 3
+      sub_sub_category = Fabricate(:category, parent_category_id: sub_category.id)
+      topic4 = Fabricate(:topic, category_id: sub_sub_category.id)
+
+      query = TopicQuery.new(user, filter: 'tracked').list_latest
+
+      expect(query.topics.map(&:id)).to contain_exactly(topic.id, topic2.id, topic3.id, topic4.id)
     end
   end
 
