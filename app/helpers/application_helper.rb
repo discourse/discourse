@@ -181,7 +181,7 @@ module ApplicationHelper
     result = ApplicationHelper.extra_body_classes.to_a
 
     if @category && @category.url.present?
-      result << "category-#{@category.url.sub(/^\/c\//, '').gsub(/\//, '-')}"
+      result << "category-#{@category.slug_path.join('-')}"
     end
 
     if current_user.present? &&
