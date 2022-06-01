@@ -941,4 +941,15 @@ RSpec.describe ListController do
       expect(response.parsed_body['topic_list']['topics'].map { |t| t['id'] }).to contain_exactly(topic2.id)
     end
   end
+
+  describe "body class" do
+    it "pre-renders the correct body class for categories" do
+      c = Fabricate(:category, slug: 'myparentslug')
+      sub_c = Fabricate(:category, parent_category: c, slug: 'mychildslug')
+
+      get "/c/#{c.slug}/#{sub_c.slug}/#{sub_c.id}"
+
+      expect(response.body).to have_tag "body", with: { class: "category-myparentslug-mychildslug" }
+    end
+  end
 end
