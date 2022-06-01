@@ -897,14 +897,6 @@ RSpec.describe Admin::UsersController do
       expect(response.status).to eq(200)
       reg_user.reload
       expect(reg_user).to be_silenced
-    end
-
-    it "will create a silenced record" do
-      put "/admin/users/#{reg_user.id}/silence.json"
-
-      expect(response.status).to eq(200)
-      reg_user.reload
-      expect(reg_user).to be_silenced
       expect(reg_user.silenced_record).to be_present
     end
 
