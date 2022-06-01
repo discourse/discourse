@@ -38,6 +38,7 @@ export default Component.extend({
   hoveredEmoji: null,
   isActive: false,
   usePopper: true,
+  placement: "auto", // one of popper.js' placements, see https://popper.js.org/docs/v2/constructors/#options
   initialFilter: "",
 
   init() {
@@ -96,11 +97,9 @@ export default Component.extend({
         return;
       }
 
-      const textareaWrapper = document.querySelector(
-        ".d-editor-textarea-wrapper"
-      );
+      const popperAnchor = this._getPopperAnchor();
 
-      if (!this.site.isMobileDevice && this.usePopper && textareaWrapper) {
+      if (!this.site.isMobileDevice && this.usePopper && popperAnchor) {
         const modifiers = [
           {
             name: "preventOverflow",
@@ -113,7 +112,10 @@ export default Component.extend({
           },
         ];
 
-        if (window.innerWidth < textareaWrapper.clientWidth * 2) {
+        if (
+          this.placement === "auto" &&
+          window.innerWidth < popperAnchor.clientWidth * 2
+        ) {
           modifiers.push({
             name: "computeStyles",
             enabled: true,
@@ -131,9 +133,8 @@ export default Component.extend({
           });
         }
 
-        this._popper = createPopper(textareaWrapper, emojiPicker, {
-          placement: "auto",
-          modifiers,
+        this._popper = createPopper(popperAnchor, emojiPicker, {
+          placement: this.placement,
         });
       }
 
@@ -335,6 +336,15 @@ export default Component.extend({
         });
       },
       { threshold: 1 }
+    );
+  },
+
+  _getPopperAnchor() {
+    // .d-editor-textarea-wrapper is only for backward compatibility here
+    // in new code use .emoji-picker-anchor
+    return (
+      document.querySelector(".emoji-picker-anchor") ??
+      document.querySelector(".d-editor-textarea-wrapper")
     );
   },
 
