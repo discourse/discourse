@@ -136,10 +136,10 @@ export default Component.extend(UtilsMixin, {
   handleBlur(event) {
     if (
       (!this.isDestroying || !this.isDestroyed) &&
-      event.target &&
+      event.relatedTarget &&
       this.selectKit.mainElement()
     ) {
-      if (!this.selectKit.mainElement().contains(event.target)) {
+      if (!this.selectKit.mainElement().contains(event.relatedTarget)) {
         this.selectKit.close(event);
       }
     }
