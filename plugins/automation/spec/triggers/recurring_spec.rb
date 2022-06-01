@@ -102,16 +102,28 @@ describe 'Recurring' do
     end
 
     context 'every_weekday' do
-      before do
-        upsert_period_field!(1, 'weekday')
-      end
-
       it 'creates the next iteration one day after without Saturday/Sunday' do
+        upsert_period_field!(1, 'weekday')
         automation.trigger!
 
         pending_automation = DiscourseAutomation::PendingAutomation.last
         start_date = Time.parse(automation.trigger_field('start_date')['value'])
         expect(pending_automation.execute_at).to be_within_one_minute_of(start_date + 3.day)
+      end
+
+      it 'creates the next iteration three days after without Saturday/Sunday' do
+        now = DateTime.parse("2022-05-19").end_of_day
+        start_date = now - 1.hour
+        freeze_time now
+
+        automation.pending_automations.destroy_all
+        automation.upsert_field!('start_date', 'date_time', { value: start_date }, target: 'trigger')
+        upsert_period_field!(3, 'weekday')
+
+        automation.trigger!
+
+        pending_automation = automation.pending_automations.last
+        expect(pending_automation.execute_at).to be_within_one_minute_of(start_date + 5.days)
       end
     end
 

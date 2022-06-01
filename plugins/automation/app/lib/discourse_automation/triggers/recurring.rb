@@ -47,10 +47,11 @@ def setup_pending_automation(automation, fields)
       .between(Time.now, interval_end.months.from_now)
       .first
   when 'weekday'
+    max_weekends = (interval_end.to_f / 5).ceil
     next_trigger_date = RRule::Rule
-      .new("FREQ=DAILY;INTERVAL=#{interval};BYDAY=MO,TU,WE,TH,FR", dtstart: start_date)
-      .between(Time.now.end_of_day, (interval_end + 1).days.from_now)
-      .first
+      .new("FREQ=DAILY;BYDAY=MO,TU,WE,TH,FR", dtstart: start_date)
+      .between(Time.now.end_of_day, max_weekends.weeks.from_now)
+      .drop(interval - 1).first
   when 'week'
     next_trigger_date = RRule::Rule
       .new("FREQ=WEEKLY;INTERVAL=#{interval};BYDAY=#{byday}", dtstart: start_date)
