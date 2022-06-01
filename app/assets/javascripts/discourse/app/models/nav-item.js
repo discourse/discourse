@@ -236,10 +236,20 @@ NavItem.reopenClass({
 
     items = items
       .map((i) => NavItem.fromText(i, args))
-      .filter(
-        (i) =>
-          i !== null && !(category && i.get("name").indexOf("categor") === 0)
-      );
+      .filter((i) => {
+        if (i === null) {
+          return false;
+        }
+
+        if (
+          (category || !args.skipCategoriesNavItem) &&
+          i.name.indexOf("categor") === 0
+        ) {
+          return false;
+        }
+
+        return true;
+      });
 
     const context = {
       category: args.category,

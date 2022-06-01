@@ -1,12 +1,17 @@
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
 
+export const TRACKED_QUERY_PARAM_VALUE = "tracked";
+
 export function hasTrackedFilter(queryParams) {
   if (!queryParams) {
     return false;
   }
 
-  return queryParams.f === "tracked" || queryParams.filter === "tracked";
+  return (
+    queryParams.f === TRACKED_QUERY_PARAM_VALUE ||
+    queryParams.filter === TRACKED_QUERY_PARAM_VALUE
+  );
 }
 
 /**

@@ -107,14 +107,16 @@ export default Component.extend(FilterModeMixin, {
     "category",
     "noSubcategories",
     "tag.id",
-    "router.currentRoute.queryParams"
+    "router.currentRoute.queryParams",
+    "skipCategoriesNavItem"
   )
   navItems(
     filterType,
     category,
     noSubcategories,
     tagId,
-    currentRouteQueryParams
+    currentRouteQueryParams,
+    skipCategoriesNavItem
   ) {
     return NavItem.buildList(category, {
       filterType,
@@ -122,6 +124,7 @@ export default Component.extend(FilterModeMixin, {
       currentRouteQueryParams,
       tagId,
       siteSettings: this.siteSettings,
+      skipCategoriesNavItem,
     });
   },
 
