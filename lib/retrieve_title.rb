@@ -3,15 +3,15 @@
 module RetrieveTitle
   CRAWL_TIMEOUT = 1
 
-  def self.crawl(url, max_redirects: nil, initial_https_redirect_ignore_limit: false)
+  def self.crawl(url, max_redirects: nil, initial_https_redirect_ignore_limit: false, log_errors: true)
     fetch_title(
       url,
       max_redirects: max_redirects,
       initial_https_redirect_ignore_limit: initial_https_redirect_ignore_limit
     )
   rescue Exception => ex
+    Rails.logger.error(ex) if log_errors
     raise if Rails.env.test?
-    Rails.logger.error(ex)
     nil
   end
 

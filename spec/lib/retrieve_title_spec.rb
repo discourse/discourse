@@ -142,6 +142,20 @@ describe RetrieveTitle do
 
       expect(RetrieveTitle.crawl("https://example.com")).to eq(nil)
     end
+
+    it "logs errors by default" do
+      stub_request(:get, "https://example.com").to_timeout
+
+      Rails.logger.expects(:error).once
+      expect { RetrieveTitle.crawl("https://example.com") }.to raise_error(Net::OpenTimeout)
+    end
+
+    it "it doesn't log errors when flag :log_erros is set to false" do
+      stub_request(:get, "https://example.com").to_timeout
+
+      Rails.logger.expects(:error).never
+      expect { RetrieveTitle.crawl("https://example.com", log_errors: false) }.to raise_error(Net::OpenTimeout)
+    end
   end
 
   context 'fetch_title' do

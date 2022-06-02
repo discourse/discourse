@@ -36,7 +36,7 @@ module Jobs
 
         unless crawled
           # Fetch the beginning of the document to find the title
-          title = RetrieveTitle.crawl(topic_link.url)
+          title = RetrieveTitle.crawl(topic_link.url, log_errors: false)
           if title.present?
             crawled = (TopicLink.where(id: topic_link.id).update_all(['title = ?, crawled_at = CURRENT_TIMESTAMP', title[0..254]]) == 1)
           end
