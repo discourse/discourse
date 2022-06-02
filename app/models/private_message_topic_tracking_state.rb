@@ -17,11 +17,11 @@
 class PrivateMessageTopicTrackingState
   include TopicTrackingStatePublishable
 
-  CHANNEL_PREFIX = "/private-message-topic-tracking-state"
-  NEW_MESSAGE_TYPE = "new_topic"
-  UNREAD_MESSAGE_TYPE = "unread"
-  READ_MESSAGE_TYPE = "read"
-  GROUP_ARCHIVE_MESSAGE_TYPE = "group_archive"
+  CHANNEL_PREFIX = '/private-message-topic-tracking-state'
+  NEW_MESSAGE_TYPE = 'new_topic'
+  UNREAD_MESSAGE_TYPE = 'unread'
+  READ_MESSAGE_TYPE = 'read'
+  GROUP_ARCHIVE_MESSAGE_TYPE = 'group_archive'
 
   def self.report(user)
     sql = new_and_unread_sql(user)
@@ -41,12 +41,10 @@ class PrivateMessageTopicTrackingState
     sql << report_raw_sql(user, skip_new: true)
   end
 
-  def self.report_raw_sql(user, skip_unread: false,
-                                skip_new: false)
-
+  def self.report_raw_sql(user, skip_unread: false, skip_new: false)
     unread =
       if skip_unread
-        "1=0"
+        '1=0'
       else
         first_unread_pm_at = DB.query_single(<<~SQL, user_id: user.id).first
         SELECT
@@ -62,16 +60,11 @@ class PrivateMessageTopicTrackingState
 
         <<~SQL
         #{TopicTrackingState.unread_filter_sql(staff: user.staff?)}
-        #{first_unread_pm_at ? "AND topics.updated_at > '#{first_unread_pm_at}'" : ""}
+        #{first_unread_pm_at ? "AND topics.updated_at > '#{first_unread_pm_at}'" : ''}
         SQL
       end
 
-    new =
-      if skip_new
-        "1=0"
-      else
-        TopicTrackingState.new_filter_sql
-      end
+    new = (skip_new ? '1=0' : TopicTrackingState.new_filter_sql)
 
     sql = +<<~SQL
       SELECT
@@ -89,7 +82,7 @@ class PrivateMessageTopicTrackingState
       LEFT JOIN topic_allowed_groups tag ON tag.topic_id = topics.id AND tag.group_id = gu.group_id
       LEFT JOIN topic_users tu ON tu.topic_id = topics.id AND tu.user_id = u.id
       LEFT JOIN topic_allowed_users tau ON tau.topic_id = topics.id AND tau.user_id = u.id
-      #{skip_new ? "" : "LEFT JOIN dismissed_topic_users ON dismissed_topic_users.topic_id = topics.id AND dismissed_topic_users.user_id = #{user.id.to_i}"}
+      #{skip_new ? '' : "LEFT JOIN dismissed_topic_users ON dismissed_topic_users.topic_id = topics.id AND dismissed_topic_users.user_id = #{user.id.to_i}"}
       WHERE (tau.topic_id IS NOT NULL OR tag.topic_id IS NOT NULL) AND
         topics.archetype = 'private_message' AND
         ((#{unread}) OR (#{new})) AND
@@ -101,9 +94,10 @@ class PrivateMessageTopicTrackingState
     topic = post.topic
     return unless topic.private_message?
 
-    scope = TopicUser
-      .tracking(post.topic_id)
-      .includes(user: [:user_stat, :user_option])
+    scope =
+      TopicUser.tracking(post.topic_id).includes(
+        user: %i[user_stat user_option]
+      )
 
     allowed_group_ids = topic.allowed_groups.pluck(:id)
 
@@ -115,9 +109,10 @@ class PrivateMessageTopicTrackingState
       end
 
     if group_ids.present?
-      scope = scope
-        .joins("INNER JOIN group_users gu ON gu.user_id = topic_users.user_id")
-        .where("gu.group_id IN (?)", group_ids)
+      scope =
+        scope.joins(
+          'INNER JOIN group_users gu ON gu.user_id = topic_users.user_id'
+        ).where('gu.group_id IN (?)', group_ids)
     end
 
     # Note: At some point we may want to make the same peformance optimisation
@@ -127,31 +122,32 @@ class PrivateMessageTopicTrackingState
     #
     # cf. f6c852bf8e7f4dea519425ba87a114f22f52a8f4
     scope
-      .select([:user_id, :last_read_post_number, :notification_level])
+      .select(%i[user_id last_read_post_number notification_level])
       .each do |tu|
+        if tu.last_read_post_number.nil? &&
+             topic.created_at <
+               tu.user.user_option.treat_as_new_topic_start_date
+          next
+        end
 
-      if tu.last_read_post_number.nil? &&
-          topic.created_at < tu.user.user_option.treat_as_new_topic_start_date
-
-        next
-      end
-
-      message = {
-        topic_id: post.topic_id,
-        message_type: UNREAD_MESSAGE_TYPE,
-        payload: {
-          last_read_post_number: tu.last_read_post_number,
-          highest_post_number: post.post_number,
-          notification_level: tu.notification_level,
-          group_ids: allowed_group_ids,
-          created_by_user_id: post.user_id
+        message = {
+          topic_id: post.topic_id,
+          message_type: UNREAD_MESSAGE_TYPE,
+          payload: {
+            last_read_post_number: tu.last_read_post_number,
+            highest_post_number: post.post_number,
+            notification_level: tu.notification_level,
+            group_ids: allowed_group_ids,
+            created_by_user_id: post.user_id
+          }
         }
-      }
 
-      MessageBus.publish(self.user_channel(tu.user_id), message.as_json,
-        user_ids: [tu.user_id]
-      )
-    end
+        MessageBus.publish(
+          self.user_channel(tu.user_id),
+          message.as_json,
+          user_ids: [tu.user_id]
+        )
+      end
   end
 
   def self.publish_new(topic)
@@ -164,17 +160,31 @@ class PrivateMessageTopicTrackingState
         last_read_post_number: nil,
         highest_post_number: 1,
         group_ids: topic.allowed_groups.pluck(:id),
-        created_by_user_id: topic.user_id,
+        created_by_user_id: topic.user_id
       }
     }.as_json
 
-    topic.allowed_users.pluck(:id).each do |user_id|
-      MessageBus.publish(self.user_channel(user_id), message, user_ids: [user_id])
-    end
+    topic
+      .allowed_users
+      .pluck(:id)
+      .each do |user_id|
+        MessageBus.publish(
+          self.user_channel(user_id),
+          message,
+          user_ids: [user_id]
+        )
+      end
 
-    topic.allowed_groups.pluck(:id).each do |group_id|
-      MessageBus.publish(self.group_channel(group_id), message, group_ids: [group_id])
-    end
+    topic
+      .allowed_groups
+      .pluck(:id)
+      .each do |group_id|
+        MessageBus.publish(
+          self.group_channel(group_id),
+          message,
+          group_ids: [group_id]
+        )
+      end
   end
 
   def self.publish_group_archived(topic:, group_id:, acting_user_id: nil)
@@ -196,7 +206,12 @@ class PrivateMessageTopicTrackingState
     )
   end
 
-  def self.publish_read(topic_id, last_read_post_number, user, notification_level = nil)
+  def self.publish_read(
+    topic_id,
+    last_read_post_number,
+    user,
+    notification_level = nil
+  )
     self.publish_read_message(
       message_type: READ_MESSAGE_TYPE,
       channel_name: self.user_channel(user.id),

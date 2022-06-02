@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "enum_site_setting"
+require 'enum_site_setting'
 
 class BaseFontSetting < EnumSiteSetting
   def self.valid_value?(val)
@@ -8,8 +8,9 @@ class BaseFontSetting < EnumSiteSetting
   end
 
   def self.values
-    @values ||= DiscourseFonts.fonts.map do |font|
-      { name: font[:name], value: font[:key] }
-    end
+    @values ||=
+      DiscourseFonts.fonts.map do |font|
+        { name: font[:name], value: font[:key] }
+      end
   end
 end

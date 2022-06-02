@@ -2,7 +2,7 @@
 
 class AllowedPmUser < ActiveRecord::Base
   belongs_to :user
-  belongs_to :allowed_pm_user, class_name: "User"
+  belongs_to :allowed_pm_user, class_name: 'User'
 end
 
 # == Schema Information

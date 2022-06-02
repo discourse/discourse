@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class BackupLocationSiteSetting < EnumSiteSetting
-  LOCAL ||= "local"
-  S3 ||= "s3"
+  LOCAL ||= 'local'
+  S3 ||= 's3'
 
   def self.valid_value?(val)
     values.any? { |v| v[:value] == val }
@@ -10,8 +10,8 @@ class BackupLocationSiteSetting < EnumSiteSetting
 
   def self.values
     @values ||= [
-      { name: "admin.backups.location.local", value: LOCAL },
-      { name: "admin.backups.location.s3", value: S3 }
+      { name: 'admin.backups.location.local', value: LOCAL },
+      { name: 'admin.backups.location.s3', value: S3 }
     ]
   end
 

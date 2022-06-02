@@ -5,15 +5,9 @@ class ReviewableHistory < ActiveRecord::Base
   belongs_to :created_by, class_name: 'User'
 
   def self.types
-    @types ||= Enum.new(
-      created: 0,
-      transitioned: 1,
-      edited: 2,
-      claimed: 3,
-      unclaimed: 4
-    )
+    @types ||=
+      Enum.new(created: 0, transitioned: 1, edited: 2, claimed: 3, unclaimed: 4)
   end
-
 end
 
 # == Schema Information

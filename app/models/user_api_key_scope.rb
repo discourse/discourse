@@ -2,9 +2,9 @@
 
 class UserApiKeyScope < ActiveRecord::Base
   SCOPES = {
-    read: [ RouteMatcher.new(methods: :get) ],
-    write: [ RouteMatcher.new(methods: [:get, :post, :patch, :put, :delete]) ],
-    message_bus: [ RouteMatcher.new(methods: :post, actions: 'message_bus') ],
+    read: [RouteMatcher.new(methods: :get)],
+    write: [RouteMatcher.new(methods: %i[get post patch put delete])],
+    message_bus: [RouteMatcher.new(methods: :post, actions: 'message_bus')],
     push: [],
     one_time_password: [],
     notifications: [
@@ -16,7 +16,14 @@ class UserApiKeyScope < ActiveRecord::Base
       RouteMatcher.new(methods: :get, actions: 'session#current'),
       RouteMatcher.new(methods: :get, actions: 'users#topic_tracking_state')
     ],
-    bookmarks_calendar: [ RouteMatcher.new(methods: :get, actions: 'users#bookmarks', formats: :ics, params: %i[username]) ]
+    bookmarks_calendar: [
+      RouteMatcher.new(
+        methods: :get,
+        actions: 'users#bookmarks',
+        formats: :ics,
+        params: %i[username]
+      )
+    ]
   }
 
   def self.all_scopes
@@ -28,7 +35,9 @@ class UserApiKeyScope < ActiveRecord::Base
   end
 
   def permits?(env)
-    matchers.any? { |m| m.with_allowed_param_values(allowed_parameters).match?(env: env) }
+    matchers.any? do |m|
+      m.with_allowed_param_values(allowed_parameters).match?(env: env)
+    end
   end
 
   private
@@ -36,7 +45,6 @@ class UserApiKeyScope < ActiveRecord::Base
   def matchers
     @matchers ||= Array(self.class.all_scopes[name.to_sym])
   end
-
 end
 
 # == Schema Information

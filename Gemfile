@@ -183,6 +183,7 @@ group :development do
   gem 'better_errors', platform: :mri, require: !!ENV['BETTER_ERRORS']
   gem 'binding_of_caller'
   gem 'yaml-lint'
+  gem 'syntax_tree'
 end
 
 if ENV["ALLOW_DEV_POPULATE"] == "1"

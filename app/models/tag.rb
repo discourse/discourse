@@ -9,25 +9,29 @@ class Tag < ActiveRecord::Base
     'constructor' # prevents issues with javascript's constructor of objects
   ]
 
-  validates :name,
-    presence: true,
-    uniqueness: { case_sensitive: false }
+  validates :name, presence: true, uniqueness: { case_sensitive: false }
 
-  validate :target_tag_validator, if: Proc.new { |t| t.new_record? || t.will_save_change_to_target_tag_id? }
+  validate :target_tag_validator,
+           if:
+             Proc.new { |t|
+               t.new_record? || t.will_save_change_to_target_tag_id?
+             }
   validate :name_validator
   validates :description, length: { maximum: 280 }
 
-  scope :where_name, ->(name) do
-    name = Array(name).map(&:downcase)
-    where("lower(tags.name) IN (?)", name)
-  end
+  scope :where_name,
+        ->(name) {
+          name = Array(name).map(&:downcase)
+          where('lower(tags.name) IN (?)', name)
+        }
 
   # tags that have never been used and don't belong to a tag group
-  scope :unused, -> do
-    where(topic_count: 0, pm_topic_count: 0)
-      .joins("LEFT JOIN tag_group_memberships tgm ON tags.id = tgm.tag_id")
-      .where("tgm.tag_id IS NULL")
-  end
+  scope :unused,
+        -> {
+          where(topic_count: 0, pm_topic_count: 0).joins(
+            'LEFT JOIN tag_group_memberships tgm ON tags.id = tgm.tag_id'
+          ).where('tgm.tag_id IS NULL')
+        }
 
   scope :base_tags, -> { where(target_tag_id: nil) }
 
@@ -43,8 +47,11 @@ class Tag < ActiveRecord::Base
   has_many :tag_group_memberships, dependent: :destroy
   has_many :tag_groups, through: :tag_group_memberships
 
-  belongs_to :target_tag, class_name: "Tag", optional: true
-  has_many :synonyms, class_name: "Tag", foreign_key: "target_tag_id", dependent: :destroy
+  belongs_to :target_tag, class_name: 'Tag', optional: true
+  has_many :synonyms,
+           class_name: 'Tag',
+           foreign_key: 'target_tag_id',
+           dependent: :destroy
 
   after_save :index_search
   after_save :update_synonym_associations
@@ -107,7 +114,14 @@ class Tag < ActiveRecord::Base
 
     return [] if scope_category_ids.empty?
 
-    filter_sql = guardian&.is_staff? ? '' : " AND tags.id NOT IN (#{DiscourseTagging.hidden_tags_query.select(:id).to_sql})"
+    filter_sql =
+      (
+        if guardian&.is_staff?
+          ''
+        else
+          " AND tags.id NOT IN (#{DiscourseTagging.hidden_tags_query.select(:id).to_sql})"
+        end
+      )
 
     tag_names_with_counts = DB.query <<~SQL
       SELECT tags.name as tag_name, SUM(stats.topic_count) AS sum_topic_count
@@ -172,24 +186,24 @@ class Tag < ActiveRecord::Base
 
   def target_tag_validator
     if synonyms.exists?
-      errors.add(:target_tag_id, I18n.t("tags.synonyms_exist"))
+      errors.add(:target_tag_id, I18n.t('tags.synonyms_exist'))
     elsif target_tag&.synonym?
-      errors.add(:target_tag_id, I18n.t("tags.invalid_target_tag"))
+      errors.add(:target_tag_id, I18n.t('tags.invalid_target_tag'))
     end
   end
 
   def update_synonym_associations
     if target_tag_id && saved_change_to_target_tag_id?
-      target_tag.tag_groups.each { |tag_group| tag_group.tags << self unless tag_group.tags.include?(self) }
-      target_tag.categories.each { |category| category.tags << self unless category.tags.include?(self) }
+      target_tag.tag_groups.each do |tag_group|
+        tag_group.tags << self unless tag_group.tags.include?(self)
+      end
+      target_tag.categories.each do |category|
+        category.tags << self unless category.tags.include?(self)
+      end
     end
   end
 
-  %i{
-    tag_created
-    tag_updated
-    tag_destroyed
-  }.each do |event|
+  %i[tag_created tag_updated tag_destroyed].each do |event|
     define_method("trigger_#{event}_event") do
       DiscourseEvent.trigger(event, self)
       true

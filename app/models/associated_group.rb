@@ -14,9 +14,13 @@ class AssociatedGroup < ActiveRecord::Base
   end
 
   def self.cleanup!
-    AssociatedGroup.left_joins(:group_associated_groups, :user_associated_groups)
-      .where("group_associated_groups.id IS NULL AND user_associated_groups.id IS NULL")
-      .where("last_used < ?", 1.week.ago).delete_all
+    AssociatedGroup
+      .left_joins(:group_associated_groups, :user_associated_groups)
+      .where(
+        'group_associated_groups.id IS NULL AND user_associated_groups.id IS NULL'
+      )
+      .where('last_used < ?', 1.week.ago)
+      .delete_all
   end
 end
 

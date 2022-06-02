@@ -1,12 +1,11 @@
 # frozen_string_literal: true
 
 class UserSearch
-
   MAX_SIZE_PRIORITY_MENTION ||= 500
 
   def initialize(term, opts = {})
     @term = term.downcase
-    @term_like = @term.gsub("_", "\\_") + "%"
+    @term_like = @term.gsub('_', "\\_") + '%'
     @topic_id = opts[:topic_id]
     @category_id = opts[:category_id]
     @topic_allowed_users = opts[:topic_allowed_users]
@@ -31,17 +30,20 @@ class UserSearch
     users = users.not_suspended unless @searching_user&.staff?
 
     if @groups
-      users = users
-        .joins(:group_users)
-        .where("group_users.group_id IN (?)", @groups.map(&:id))
+      users =
+        users.joins(:group_users).where(
+          'group_users.group_id IN (?)',
+          @groups.map(&:id)
+        )
     end
 
     # Only show users who have access to private topic
-    if @topic_allowed_users == "true" && @topic&.category&.read_restricted
-      users = users
-        .references(:categories)
-        .includes(:secure_categories)
-        .where("users.admin OR categories.id = ?", @topic.category_id)
+    if @topic_allowed_users == 'true' && @topic&.category&.read_restricted
+      users =
+        users
+          .references(:categories)
+          .includes(:secure_categories)
+          .where('users.admin OR categories.id = ?', @topic.category_id)
     end
 
     users
@@ -51,14 +53,22 @@ class UserSearch
     if @term.blank?
       scoped_users
     elsif SiteSetting.enable_names? && @term !~ /[_\.-]/
-      query = Search.ts_query(term: @term, ts_config: "simple")
+      query = Search.ts_query(term: @term, ts_config: 'simple')
 
       scoped_users
         .includes(:user_search_data)
         .where("user_search_data.search_data @@ #{query}")
-        .order(DB.sql_fragment("CASE WHEN username_lower LIKE ? THEN 0 ELSE 1 END ASC", @term_like))
+        .order(
+          DB.sql_fragment(
+            'CASE WHEN username_lower LIKE ? THEN 0 ELSE 1 END ASC',
+            @term_like
+          )
+        )
     else
-      scoped_users.where("username_lower LIKE :term_like", term_like: @term_like)
+      scoped_users.where(
+        'username_lower LIKE :term_like',
+        term_like: @term_like
+      )
     end
   end
 
@@ -70,20 +80,23 @@ class UserSearch
       exact_matches = scoped_users.where(username_lower: @term)
 
       # don't pollute mentions with users who haven't shown up in over a year
-      exact_matches = exact_matches.where('last_seen_at > ?', 1.year.ago) if @topic_id || @category_id
+      exact_matches =
+        exact_matches.where('last_seen_at > ?', 1.year.ago) if @topic_id ||
+        @category_id
 
-      exact_matches
-        .limit(@limit)
-        .pluck(:id)
-        .each { |id| users << id }
+      exact_matches.limit(@limit).pluck(:id).each { |id| users << id }
     end
 
     return users.to_a if users.size >= @limit
 
     # 2. in topic
     if @topic_id
-      in_topic = filtered_by_term_users
-        .where('users.id IN (SELECT user_id FROM posts WHERE topic_id = ? AND post_type = ? AND deleted_at IS NULL)', @topic_id, Post.types[:regular])
+      in_topic =
+        filtered_by_term_users.where(
+          'users.id IN (SELECT user_id FROM posts WHERE topic_id = ? AND post_type = ? AND deleted_at IS NULL)',
+          @topic_id,
+          Post.types[:regular]
+        )
 
       if @searching_user.present?
         in_topic = in_topic.where('users.id <> ?', @searching_user.id)
@@ -117,7 +130,8 @@ class UserSearch
       end
 
     if secure_category_id
-      category_groups = Group.where(<<~SQL, secure_category_id, MAX_SIZE_PRIORITY_MENTION)
+      category_groups =
+        Group.where(<<~SQL, secure_category_id, MAX_SIZE_PRIORITY_MENTION)
         groups.id IN (
           SELECT group_id
             FROM category_groups
@@ -128,11 +142,12 @@ class UserSearch
       SQL
 
       if @searching_user.present?
-        category_groups = category_groups.members_visible_groups(@searching_user)
+        category_groups =
+          category_groups.members_visible_groups(@searching_user)
       end
 
-      in_category = filtered_by_term_users
-        .where(<<~SQL, category_groups.pluck(:id))
+      in_category =
+        filtered_by_term_users.where(<<~SQL, category_groups.pluck(:id))
           users.id IN (
             SELECT gu.user_id
               FROM group_users gu
@@ -177,12 +192,12 @@ class UserSearch
 
   def search
     ids = search_ids
-    return User.where("0=1") if ids.empty?
+    return User.where('0=1') if ids.empty?
 
-    User.joins("JOIN (SELECT unnest uid, row_number() OVER () AS rn
-      FROM unnest('{#{ids.join(",")}}'::int[])
-    ) x on uid = users.id")
-      .order("rn")
+    User.joins(
+      "JOIN (SELECT unnest uid, row_number() OVER () AS rn
+      FROM unnest('{#{ids.join(',')}}'::int[])
+    ) x on uid = users.id"
+    ).order('rn')
   end
-
 end

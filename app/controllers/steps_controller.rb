@@ -23,5 +23,4 @@ class StepsController < ApplicationController
       render json: { errors: errors }, status: 422
     end
   end
-
 end

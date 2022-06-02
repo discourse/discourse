@@ -2,7 +2,8 @@
 
 class TrustLevelAndStaffAndDisabledSetting < TrustLevelAndStaffSetting
   def self.valid_value?(val)
-    valid_values.include?(val) || (val.to_i.to_s == val.to_s && valid_values.include?(val.to_i))
+    valid_values.include?(val) ||
+      (val.to_i.to_s == val.to_s && valid_values.include?(val.to_i))
   end
 
   def self.valid_values

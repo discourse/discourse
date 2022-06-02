@@ -8,7 +8,9 @@ class DismissedTopicUser < ActiveRecord::Base
     return [] if user.blank? || topics.blank?
 
     topic_ids = topics.map(&:id)
-    DismissedTopicUser.where(topic_id: topic_ids, user_id: user.id).pluck(:topic_id)
+    DismissedTopicUser.where(topic_id: topic_ids, user_id: user.id).pluck(
+      :topic_id
+    )
   end
 end
 

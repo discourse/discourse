@@ -1,44 +1,46 @@
 # frozen_string_literal: true
 
 class GroupsController < ApplicationController
-  requires_login only: [
-    :set_notifications,
-    :mentionable,
-    :messageable,
-    :check_name,
-    :update,
-    :histories,
-    :request_membership,
-    :search,
-    :new,
-    :test_email_settings
-  ]
+  requires_login only: %i[
+                   set_notifications
+                   mentionable
+                   messageable
+                   check_name
+                   update
+                   histories
+                   request_membership
+                   search
+                   new
+                   test_email_settings
+                 ]
 
-  skip_before_action :preload_json, :check_xhr, only: [:posts_feed, :mentions_feed]
+  skip_before_action :preload_json,
+                     :check_xhr,
+                     only: %i[posts_feed mentions_feed]
   skip_before_action :check_xhr, only: [:show]
   after_action :add_noindex_header
 
   TYPE_FILTERS = {
-    my: Proc.new { |groups, user|
-      raise Discourse::NotFound unless user
-      Group.member_of(groups, user)
-    },
-    owner: Proc.new { |groups, user|
-      raise Discourse::NotFound unless user
-      Group.owner_of(groups, user)
-    },
-    public: Proc.new { |groups|
-      groups.where(public_admission: true, automatic: false)
-    },
-    close: Proc.new { |groups|
-      groups.where(public_admission: false, automatic: false)
-    },
-    automatic: Proc.new { |groups|
-      groups.where(automatic: true)
-    },
-    non_automatic: Proc.new { |groups|
-      groups.where(automatic: false)
-    }
+    my:
+      Proc.new do |groups, user|
+        raise Discourse::NotFound unless user
+        Group.member_of(groups, user)
+      end,
+    owner:
+      Proc.new do |groups, user|
+        raise Discourse::NotFound unless user
+        Group.owner_of(groups, user)
+      end,
+    public:
+      Proc.new do |groups|
+        groups.where(public_admission: true, automatic: false)
+      end,
+    close:
+      Proc.new do |groups|
+        groups.where(public_admission: false, automatic: false)
+      end,
+    automatic: Proc.new { |groups| groups.where(automatic: true) },
+    non_automatic: Proc.new { |groups| groups.where(automatic: false) }
   }
   ADD_MEMBERS_LIMIT = 1000
 
@@ -47,16 +49,20 @@ class GroupsController < ApplicationController
       raise Discourse::InvalidAccess.new(:enable_group_directory)
     end
 
-    order = %w{name user_count}.delete(params[:order])
-    dir = params[:asc].to_s == "true" ? "ASC" : "DESC"
+    order = %w[name user_count].delete(params[:order])
+    dir = params[:asc].to_s == 'true' ? 'ASC' : 'DESC'
     sort = order ? "#{order} #{dir}" : nil
     groups = Group.visible_groups(current_user, sort)
     type_filters = TYPE_FILTERS.keys
 
     if (username = params[:username]).present?
       raise Discourse::NotFound unless user = User.find_by_username(username)
-      groups = TYPE_FILTERS[:my].call(groups.members_visible_groups(current_user, sort), user)
-      type_filters = type_filters - [:my, :owner]
+      groups =
+        TYPE_FILTERS[:my].call(
+          groups.members_visible_groups(current_user, sort),
+          user
+        )
+      type_filters = type_filters - %i[my owner]
     end
 
     if (filter = params[:filter]).present?
@@ -65,7 +71,10 @@ class GroupsController < ApplicationController
 
     if !guardian.is_staff?
       # hide automatic groups from all non stuff to de-clutter page
-      groups = groups.where("automatic IS FALSE OR groups.id = #{Group::AUTO_GROUPS[:moderators]}")
+      groups =
+        groups.where(
+          "automatic IS FALSE OR groups.id = #{Group::AUTO_GROUPS[:moderators]}"
+        )
       type_filters.delete(:automatic)
     end
 
@@ -74,7 +83,9 @@ class GroupsController < ApplicationController
     end
 
     if type = params[:type]&.to_sym
-      raise Discourse::InvalidParameters.new(:type) unless callback = TYPE_FILTERS[type]
+      unless callback = TYPE_FILTERS[type]
+        raise Discourse::InvalidParameters.new(:type)
+      end
       groups = callback.call(groups, current_user)
     end
 
@@ -83,7 +94,7 @@ class GroupsController < ApplicationController
       user_group_ids = group_users.pluck(:group_id)
       owner_group_ids = group_users.where(owner: true).pluck(:group_id)
     else
-      type_filters = type_filters - [:my, :owner]
+      type_filters = type_filters - %i[my owner]
     end
 
     type_filters.delete(:non_automatic)
@@ -96,22 +107,25 @@ class GroupsController < ApplicationController
     groups = groups.offset(page * page_size).limit(page_size)
 
     render_json_dump(
-      groups: serialize_data(groups,
-        BasicGroupSerializer,
-        user_group_ids: user_group_ids || [],
-        owner_group_ids: owner_group_ids || []
-      ),
+      groups:
+        serialize_data(
+          groups,
+          BasicGroupSerializer,
+          user_group_ids: user_group_ids || [],
+          owner_group_ids: owner_group_ids || []
+        ),
       extras: {
         type_filters: type_filters
       },
       total_rows_groups: total,
-      load_more_groups: groups_path(
-        page: page + 1,
-        type: type,
-        order: order,
-        asc: params[:asc],
-        filter: filter
-      )
+      load_more_groups:
+        groups_path(
+          page: page + 1,
+          type: type,
+          order: order,
+          asc: params[:asc],
+          filter: filter
+        )
     )
   end
 
@@ -120,16 +134,27 @@ class GroupsController < ApplicationController
       group = find_group(:id)
 
       format.html do
-        @title = group.full_name.present? ? group.full_name.capitalize : group.name
+        @title =
+          group.full_name.present? ? group.full_name.capitalize : group.name
         @full_title = "#{@title} - #{SiteSetting.title}"
-        @description_meta = group.bio_cooked.present? ? PrettyText.excerpt(group.bio_cooked, 300) : @title
+        @description_meta =
+          (
+            if group.bio_cooked.present?
+              PrettyText.excerpt(group.bio_cooked, 300)
+            else
+              @title
+            end
+          )
         render :show
       end
 
       format.json do
         groups = Group.visible_groups(current_user)
         if !guardian.is_staff?
-          groups = groups.where("automatic IS FALSE OR groups.id = #{Group::AUTO_GROUPS[:moderators]}")
+          groups =
+            groups.where(
+              "automatic IS FALSE OR groups.id = #{Group::AUTO_GROUPS[:moderators]}"
+            )
         end
 
         render_json_dump(
@@ -157,11 +182,28 @@ class GroupsController < ApplicationController
 
     categories, tags = []
     if !group.automatic || current_user.admin
-      notification_level, categories, tags = user_default_notifications(group, group_attributes)
+      notification_level, categories, tags =
+        user_default_notifications(group, group_attributes)
 
       if params[:update_existing_users].blank?
-        user_count = count_existing_users(group.group_users, notification_level, categories, tags)
-        return render status: 422, json: { user_count: user_count, errors: [I18n.t('invalid_params', message: :update_existing_users)] } if user_count > 0
+        user_count =
+          count_existing_users(
+            group.group_users,
+            notification_level,
+            categories,
+            tags
+          )
+        if user_count > 0
+          return(
+            render status: 422,
+                   json: {
+                     user_count: user_count,
+                     errors: [
+                       I18n.t('invalid_params', message: :update_existing_users)
+                     ]
+                   }
+          )
+        end
       end
     end
 
@@ -169,11 +211,22 @@ class GroupsController < ApplicationController
       GroupActionLogger.new(current_user, group).log_change_group_settings
       group.record_email_setting_changes!(current_user)
       group.expire_imap_mailbox_cache
-      update_existing_users(group.group_users, notification_level, categories, tags) if params[:update_existing_users] == "true"
-      AdminDashboardData.clear_found_problem("group_#{group.id}_email_credentials")
+      if params[:update_existing_users] == 'true'
+        update_existing_users(
+          group.group_users,
+          notification_level,
+          categories,
+          tags
+        )
+      end
+      AdminDashboardData.clear_found_problem(
+        "group_#{group.id}_email_credentials"
+      )
 
       # Redirect user to groups index page if they can no longer see the group
-      return redirect_with_client_support groups_path if !guardian.can_see?(group)
+      if !guardian.can_see?(group)
+        return redirect_with_client_support groups_path
+      end
 
       render json: success_json
     else
@@ -185,10 +238,11 @@ class GroupsController < ApplicationController
     group = find_group(:group_id)
     guardian.ensure_can_see_group_members!(group)
 
-    posts = group.posts_for(
-      guardian,
-      params.permit(:before_post_id, :category_id)
-    ).limit(20)
+    posts =
+      group.posts_for(
+        guardian,
+        params.permit(:before_post_id, :category_id)
+      ).limit(20)
     render_serialized posts.to_a, GroupPostSerializer
   end
 
@@ -196,36 +250,42 @@ class GroupsController < ApplicationController
     group = find_group(:group_id)
     guardian.ensure_can_see_group_members!(group)
 
-    @posts = group.posts_for(
-      guardian,
-      params.permit(:before_post_id, :category_id)
-    ).limit(50)
-    @title = "#{SiteSetting.title} - #{I18n.t("rss_description.group_posts", group_name: group.name)}"
+    @posts =
+      group.posts_for(
+        guardian,
+        params.permit(:before_post_id, :category_id)
+      ).limit(50)
+    @title =
+      "#{SiteSetting.title} - #{I18n.t('rss_description.group_posts', group_name: group.name)}"
     @link = Discourse.base_url
-    @description = I18n.t("rss_description.group_posts", group_name: group.name)
+    @description = I18n.t('rss_description.group_posts', group_name: group.name)
     render 'posts/latest', formats: [:rss]
   end
 
   def mentions
     raise Discourse::NotFound unless SiteSetting.enable_mentions?
     group = find_group(:group_id)
-    posts = group.mentioned_posts_for(
-      guardian,
-      params.permit(:before_post_id, :category_id)
-    ).limit(20)
+    posts =
+      group.mentioned_posts_for(
+        guardian,
+        params.permit(:before_post_id, :category_id)
+      ).limit(20)
     render_serialized posts.to_a, GroupPostSerializer
   end
 
   def mentions_feed
     raise Discourse::NotFound unless SiteSetting.enable_mentions?
     group = find_group(:group_id)
-    @posts = group.mentioned_posts_for(
-      guardian,
-      params.permit(:before_post_id, :category_id)
-    ).limit(50)
-    @title = "#{SiteSetting.title} - #{I18n.t("rss_description.group_mentions", group_name: group.name)}"
+    @posts =
+      group.mentioned_posts_for(
+        guardian,
+        params.permit(:before_post_id, :category_id)
+      ).limit(50)
+    @title =
+      "#{SiteSetting.title} - #{I18n.t('rss_description.group_mentions', group_name: group.name)}"
     @link = Discourse.base_url
-    @description = I18n.t("rss_description.group_mentions", group_name: group.name)
+    @description =
+      I18n.t('rss_description.group_mentions', group_name: group.name)
     render 'posts/latest', formats: [:rss]
   end
 
@@ -242,10 +302,14 @@ class GroupsController < ApplicationController
 
     dir = (params[:asc] && params[:asc].present?) ? 'ASC' : 'DESC'
     if params[:desc]
-      Discourse.deprecate(":desc is deprecated please use :asc instead", output_in_test: true, drop_from: '2.9.0')
+      Discourse.deprecate(
+        ':desc is deprecated please use :asc instead',
+        output_in_test: true,
+        drop_from: '2.9.0'
+      )
       dir = (params[:desc] && params[:desc].present?) ? 'DESC' : 'ASC'
     end
-    order = "NOT group_users.owner"
+    order = 'NOT group_users.owner'
 
     if params[:requesters]
       guardian.ensure_can_edit!(group)
@@ -263,24 +327,38 @@ class GroupsController < ApplicationController
         end
       end
 
-      users = users
-        .select("users.*, group_requests.reason, group_requests.created_at requested_at")
-        .order(params[:order] == 'requested_at' ? "group_requests.created_at #{dir}" : "")
-        .order(username_lower: dir)
-        .limit(limit)
-        .offset(offset)
+      users =
+        users
+          .select(
+            'users.*, group_requests.reason, group_requests.created_at requested_at'
+          )
+          .order(
+            (
+              if params[:order] == 'requested_at'
+                "group_requests.created_at #{dir}"
+              else
+                ''
+              end
+            )
+          )
+          .order(username_lower: dir)
+          .limit(limit)
+          .offset(offset)
 
-      return render json: {
-        members: serialize_data(users, GroupRequesterSerializer),
-        meta: {
-          total: total,
-          limit: limit,
-          offset: offset
-        }
-      }
+      return(
+        render json: {
+                 members: serialize_data(users, GroupRequesterSerializer),
+                 meta: {
+                   total: total,
+                   limit: limit,
+                   offset: offset
+                 }
+               }
+      )
     end
 
-    if params[:order] && %w{last_posted_at last_seen_at}.include?(params[:order])
+    if params[:order] &&
+         %w[last_posted_at last_seen_at].include?(params[:order])
       order = "#{params[:order]} #{dir} NULLS LAST"
     elsif params[:order] == 'added_at'
       order = "group_users.created_at #{dir}"
@@ -299,25 +377,28 @@ class GroupsController < ApplicationController
       end
     end
 
-    users = users
-      .includes(:primary_group)
-      .joins(:user_option)
-      .select('users.*, user_options.timezone, group_users.created_at as added_at')
-      .order(order)
-      .order(username_lower: dir)
+    users =
+      users
+        .includes(:primary_group)
+        .joins(:user_option)
+        .select(
+          'users.*, user_options.timezone, group_users.created_at as added_at'
+        )
+        .order(order)
+        .order(username_lower: dir)
 
     members = users.limit(limit).offset(offset)
     owners = users.where('group_users.owner')
 
     render json: {
-      members: serialize_data(members, GroupUserSerializer),
-      owners: serialize_data(owners, GroupUserSerializer),
-      meta: {
-        total: total,
-        limit: limit,
-        offset: offset
-      }
-    }
+             members: serialize_data(members, GroupUserSerializer),
+             owners: serialize_data(owners, GroupUserSerializer),
+             meta: {
+               total: total,
+               limit: limit,
+               offset: offset
+             }
+           }
   end
 
   def add_members
@@ -327,63 +408,86 @@ class GroupsController < ApplicationController
     users = users_from_params.to_a
     emails = []
     if params[:emails]
-      params[:emails].split(",").each do |email|
-        existing_user = User.find_by_email(email)
-        existing_user.present? ? users.push(existing_user) : emails.push(email)
-      end
+      params[:emails]
+        .split(',')
+        .each do |email|
+          existing_user = User.find_by_email(email)
+          if existing_user.present?
+            users.push(existing_user)
+          else
+            emails.push(email)
+          end
+        end
     end
 
     guardian.ensure_can_invite_to_forum!([group]) if emails.present?
 
     if users.empty? && emails.empty?
-      raise Discourse::InvalidParameters.new(I18n.t("groups.errors.usernames_or_emails_required"))
+      raise Discourse::InvalidParameters.new(
+              I18n.t('groups.errors.usernames_or_emails_required')
+            )
     end
 
     if users.length > ADD_MEMBERS_LIMIT
-      return render_json_error(
-        I18n.t("groups.errors.adding_too_many_users", count: ADD_MEMBERS_LIMIT)
+      return(
+        render_json_error(
+          I18n.t(
+            'groups.errors.adding_too_many_users',
+            count: ADD_MEMBERS_LIMIT
+          )
+        )
       )
     end
 
-    usernames_already_in_group = group.users.where(id: users.map(&:id)).pluck(:username)
+    usernames_already_in_group =
+      group.users.where(id: users.map(&:id)).pluck(:username)
     if usernames_already_in_group.present? &&
-      usernames_already_in_group.length == users.length &&
-      emails.blank?
-      render_json_error(I18n.t(
-        "groups.errors.member_already_exist",
-        username: usernames_already_in_group.sort.join(", "),
-        count: usernames_already_in_group.size
-      ))
+         usernames_already_in_group.length == users.length && emails.blank?
+      render_json_error(
+        I18n.t(
+          'groups.errors.member_already_exist',
+          username: usernames_already_in_group.sort.join(', '),
+          count: usernames_already_in_group.size
+        )
+      )
     else
-      notify = params[:notify_users]&.to_s == "true"
+      notify = params[:notify_users]&.to_s == 'true'
       uniq_users = users.uniq
-      uniq_users.each do |user|
-        add_user_to_group(group, user, notify)
-      end
+      uniq_users.each { |user| add_user_to_group(group, user, notify) }
 
       emails.each do |email|
         begin
           Invite.generate(current_user, email: email, group_ids: [group.id])
         rescue RateLimiter::LimitExceeded => e
-          return render_json_error(I18n.t(
-            "invite.rate_limit",
-            count: SiteSetting.max_invites_per_day,
-            time_left: e.time_left
-          ))
+          return(
+            render_json_error(
+              I18n.t(
+                'invite.rate_limit',
+                count: SiteSetting.max_invites_per_day,
+                time_left: e.time_left
+              )
+            )
+          )
         end
       end
 
-      render json: success_json.merge!(
-        usernames: uniq_users.map(&:username),
-        emails: emails
-      )
+      render json:
+               success_json.merge!(
+                 usernames: uniq_users.map(&:username),
+                 emails: emails
+               )
     end
   end
 
   def join
     ensure_logged_in
     unless current_user.staff?
-      RateLimiter.new(current_user, "public_group_membership", 3, 1.minute).performed!
+      RateLimiter.new(
+        current_user,
+        'public_group_membership',
+        3,
+        1.minute
+      ).performed!
     end
 
     group = Group.find(params[:id])
@@ -412,8 +516,10 @@ class GroupsController < ApplicationController
     end
 
     if params[:accept]
-      PostCreator.new(current_user,
-        title: I18n.t('groups.request_accepted_pm.title', group_name: group.name),
+      PostCreator.new(
+        current_user,
+        title:
+          I18n.t('groups.request_accepted_pm.title', group_name: group.name),
         raw: I18n.t('groups.request_accepted_pm.body', group_name: group.name),
         archetype: Archetype.private_message,
         target_usernames: user.username,
@@ -428,7 +534,10 @@ class GroupsController < ApplicationController
     group = find_group(:group_id, ensure_can_see: false)
 
     if group
-      render json: { mentionable: Group.mentionable(current_user).where(id: group.id).present? }
+      render json: {
+               mentionable:
+                 Group.mentionable(current_user).where(id: group.id).present?
+             }
     else
       raise Discourse::InvalidAccess.new
     end
@@ -460,9 +569,11 @@ class GroupsController < ApplicationController
     params[:user_emails] = params[:user_email] if params[:user_email].present?
 
     users = users_from_params
-    raise Discourse::InvalidParameters.new(
-      'user_ids or usernames or user_emails must be present'
-    ) if users.empty?
+    if users.empty?
+      raise Discourse::InvalidParameters.new(
+              'user_ids or usernames or user_emails must be present'
+            )
+    end
 
     removed_users = []
     skipped_users = []
@@ -470,7 +581,9 @@ class GroupsController < ApplicationController
     users.each do |user|
       if group.remove(user)
         removed_users << user.username
-        GroupActionLogger.new(current_user, group).log_remove_user_from_group(user)
+        GroupActionLogger.new(current_user, group).log_remove_user_from_group(
+          user
+        )
       else
         if group.users.exclude? user
           skipped_users << user.username
@@ -480,16 +593,22 @@ class GroupsController < ApplicationController
       end
     end
 
-    render json: success_json.merge!(
-      usernames: removed_users,
-      skipped_usernames: skipped_users
-    )
+    render json:
+             success_json.merge!(
+               usernames: removed_users,
+               skipped_usernames: skipped_users
+             )
   end
 
   def leave
     ensure_logged_in
     unless current_user.staff?
-      RateLimiter.new(current_user, "public_group_membership", 3, 1.minute).performed!
+      RateLimiter.new(
+        current_user,
+        'public_group_membership',
+        3,
+        1.minute
+      ).performed!
     end
 
     group = Group.find_by(id: params[:id])
@@ -497,7 +616,9 @@ class GroupsController < ApplicationController
     raise Discourse::InvalidAccess unless group.public_exit
 
     if group.remove(current_user)
-      GroupActionLogger.new(current_user, group).log_remove_user_from_group(current_user)
+      GroupActionLogger.new(current_user, group).log_remove_user_from_group(
+        current_user
+      )
     end
   end
 
@@ -509,26 +630,45 @@ class GroupsController < ApplicationController
     group = find_group(:id)
 
     begin
-      GroupRequest.create!(group: group, user: current_user, reason: params[:reason])
+      GroupRequest.create!(
+        group: group,
+        user: current_user,
+        reason: params[:reason]
+      )
     rescue ActiveRecord::RecordNotUnique
-      return render json: failed_json.merge(error: I18n.t("groups.errors.already_requested_membership")), status: 409
+      return(
+        render json:
+                 failed_json.merge(
+                   error: I18n.t('groups.errors.already_requested_membership')
+                 ),
+               status: 409
+      )
     end
 
     usernames = [current_user.username].concat(
-      group.users.where('group_users.owner')
-        .order("users.last_seen_at DESC")
+      group
+        .users
+        .where('group_users.owner')
+        .order('users.last_seen_at DESC')
         .limit(MAX_NOTIFIED_OWNERS)
-        .pluck("users.username")
+        .pluck('users.username')
     )
 
-    post = PostCreator.new(current_user,
-      title: I18n.t('groups.request_membership_pm.title', group_name: group.name),
-      raw: params[:reason],
-      archetype: Archetype.private_message,
-      target_usernames: usernames.join(','),
-      topic_opts: { custom_fields: { requested_group_id: group.id } },
-      skip_validations: true
-    ).create!
+    post =
+      PostCreator.new(
+        current_user,
+        title:
+          I18n.t('groups.request_membership_pm.title', group_name: group.name),
+        raw: params[:reason],
+        archetype: Archetype.private_message,
+        target_usernames: usernames.join(','),
+        topic_opts: {
+          custom_fields: {
+            requested_group_id: group.id
+          }
+        },
+        skip_validations: true
+      ).create!
 
     render json: success_json.merge(relative_url: post.topic.relative_url)
   end
@@ -538,11 +678,10 @@ class GroupsController < ApplicationController
     notification_level = params.require(:notification_level)
 
     user_id = current_user.id
-    if guardian.is_staff?
-      user_id = params[:user_id] || user_id
-    end
+    user_id = params[:user_id] || user_id if guardian.is_staff?
 
-    GroupUser.where(group_id: group.id)
+    GroupUser
+      .where(group_id: group.id)
       .where(user_id: user_id)
       .update_all(notification_level: notification_level)
 
@@ -556,9 +695,11 @@ class GroupsController < ApplicationController
     page_size = 25
     offset = (params[:offset] && params[:offset].to_i) || 0
 
-    group_histories = GroupHistory.with_filters(group, params[:filters])
-      .limit(page_size)
-      .offset(offset * page_size)
+    group_histories =
+      GroupHistory
+        .with_filters(group, params[:filters])
+        .limit(page_size)
+        .offset(offset * page_size)
 
     render_json_dump(
       logs: serialize_data(group_histories, BasicGroupHistorySerializer),
@@ -567,16 +708,22 @@ class GroupsController < ApplicationController
   end
 
   def search
-    groups = Group.visible_groups(current_user)
-      .where("groups.id <> ?", Group::AUTO_GROUPS[:everyone])
-      .includes(:flair_upload)
-      .order(:name)
+    groups =
+      Group
+        .visible_groups(current_user)
+        .where('groups.id <> ?', Group::AUTO_GROUPS[:everyone])
+        .includes(:flair_upload)
+        .order(:name)
 
     if (term = params[:term]).present?
-      groups = groups.where("name ILIKE :term OR full_name ILIKE :term", term: "%#{term}%")
+      groups =
+        groups.where(
+          'name ILIKE :term OR full_name ILIKE :term',
+          term: "%#{term}%"
+        )
     end
 
-    if params[:ignore_automatic].to_s == "true"
+    if params[:ignore_automatic].to_s == 'true'
       groups = groups.where(automatic: false)
     end
 
@@ -589,8 +736,14 @@ class GroupsController < ApplicationController
 
   def permissions
     group = find_group(:id)
-    category_groups = group.category_groups.select { |category_group| guardian.can_see_category?(category_group.category) }
-    render_serialized(category_groups.sort_by { |category_group| category_group.category.name }, CategoryGroupSerializer)
+    category_groups =
+      group.category_groups.select do |category_group|
+        guardian.can_see_category?(category_group.category)
+      end
+    render_serialized(
+      category_groups.sort_by { |category_group| category_group.category.name },
+      CategoryGroupSerializer
+    )
   end
 
   def test_email_settings
@@ -605,34 +758,73 @@ class GroupsController < ApplicationController
     group = Group.find(params[:group_id])
     guardian.ensure_can_edit!(group)
 
-    RateLimiter.new(current_user, "group_test_email_settings", 5, 1.minute).performed!
+    RateLimiter.new(
+      current_user,
+      'group_test_email_settings',
+      5,
+      1.minute
+    ).performed!
 
     settings = params.except(:group_id, :protocol)
-    enable_tls = settings[:ssl] == "true"
+    enable_tls = settings[:ssl] == 'true'
     email_host = params[:host]
 
-    if !["smtp", "imap"].include?(params[:protocol])
-      raise Discourse::InvalidParameters.new("Valid protocols to test are smtp and imap")
+    if !%w[smtp imap].include?(params[:protocol])
+      raise Discourse::InvalidParameters.new(
+              'Valid protocols to test are smtp and imap'
+            )
     end
 
     hijack do
       begin
         case params[:protocol]
-        when "smtp"
+        when 'smtp'
           enable_starttls_auto = false
           settings.delete(:ssl)
 
-          final_settings = settings.merge(enable_tls: enable_tls, enable_starttls_auto: enable_starttls_auto)
-            .permit(:host, :port, :username, :password, :enable_tls, :enable_starttls_auto, :debug)
-          EmailSettingsValidator.validate_as_user(current_user, "smtp", **final_settings.to_h.symbolize_keys)
-        when "imap"
-          final_settings = settings.merge(ssl: enable_tls)
-            .permit(:host, :port, :username, :password, :ssl, :debug)
-          EmailSettingsValidator.validate_as_user(current_user, "imap", **final_settings.to_h.symbolize_keys)
+          final_settings =
+            settings.merge(
+              enable_tls: enable_tls,
+              enable_starttls_auto: enable_starttls_auto
+            ).permit(
+              :host,
+              :port,
+              :username,
+              :password,
+              :enable_tls,
+              :enable_starttls_auto,
+              :debug
+            )
+          EmailSettingsValidator.validate_as_user(
+            current_user,
+            'smtp',
+            **final_settings.to_h.symbolize_keys
+          )
+        when 'imap'
+          final_settings =
+            settings.merge(ssl: enable_tls).permit(
+              :host,
+              :port,
+              :username,
+              :password,
+              :ssl,
+              :debug
+            )
+          EmailSettingsValidator.validate_as_user(
+            current_user,
+            'imap',
+            **final_settings.to_h.symbolize_keys
+          )
         end
-      rescue *EmailSettingsExceptionHandler::EXPECTED_EXCEPTIONS, StandardError => err
-        return render_json_error(
-          EmailSettingsExceptionHandler.friendly_exception_message(err, email_host)
+      rescue *EmailSettingsExceptionHandler::EXPECTED_EXCEPTIONS,
+             StandardError => err
+        return(
+          render_json_error(
+            EmailSettingsExceptionHandler.friendly_exception_message(
+              err,
+              email_host
+            )
+          )
         )
       end
       render json: success_json
@@ -652,7 +844,7 @@ class GroupsController < ApplicationController
   end
 
   def group_params(automatic: false)
-    attributes = %i{
+    attributes = %i[
       bio_raw
       default_notification_level
       messageable_level
@@ -661,7 +853,7 @@ class GroupsController < ApplicationController
       flair_color
       flair_icon
       flair_upload_id
-    }
+    ]
 
     if automatic
       attributes.push(:visibility_level)
@@ -710,7 +902,7 @@ class GroupsController < ApplicationController
     end
 
     if !automatic || current_user.admin
-      [:muted, :regular, :tracking, :watching, :watching_first_post].each do |level|
+      %i[muted regular tracking watching watching_first_post].each do |level|
         attributes << { "#{level}_category_ids" => [] }
         attributes << { "#{level}_tags" => [] }
       end
@@ -724,23 +916,28 @@ class GroupsController < ApplicationController
 
   def find_group(param_name, ensure_can_see: true)
     name = params.require(param_name)
-    group = Group.find_by("LOWER(name) = ?", name.downcase)
-    raise Discourse::NotFound if ensure_can_see && !guardian.can_see_group?(group)
+    group = Group.find_by('LOWER(name) = ?', name.downcase)
+    if ensure_can_see && !guardian.can_see_group?(group)
+      raise Discourse::NotFound
+    end
     group
   end
 
   def users_from_params
     if params[:usernames].present?
-      users = User.where(username_lower: params[:usernames].split(",").map(&:downcase))
+      users =
+        User.where(
+          username_lower: params[:usernames].split(',').map(&:downcase)
+        )
       raise Discourse::InvalidParameters.new(:usernames) if users.blank?
     elsif params[:user_id].present?
       users = User.where(id: params[:user_id].to_i)
       raise Discourse::InvalidParameters.new(:user_id) if users.blank?
     elsif params[:user_ids].present?
-      users = User.where(id: params[:user_ids].to_s.split(","))
+      users = User.where(id: params[:user_ids].to_s.split(','))
       raise Discourse::InvalidParameters.new(:user_ids) if users.blank?
     elsif params[:user_emails].present?
-      users = User.with_email(params[:user_emails].split(","))
+      users = User.with_email(params[:user_emails].split(','))
       raise Discourse::InvalidParameters.new(:user_emails) if users.blank?
     else
       users = []
@@ -749,14 +946,16 @@ class GroupsController < ApplicationController
   end
 
   def reset_group_email_settings_if_disabled!(group, attributes)
-    should_clear_imap = group.imap_enabled && attributes[:imap_enabled] == "false"
-    should_clear_smtp = group.smtp_enabled && attributes[:smtp_enabled] == "false"
+    should_clear_imap =
+      group.imap_enabled && attributes[:imap_enabled] == 'false'
+    should_clear_smtp =
+      group.smtp_enabled && attributes[:smtp_enabled] == 'false'
 
     if should_clear_imap || should_clear_smtp
       attributes[:imap_server] = nil
       attributes[:imap_ssl] = false
       attributes[:imap_port] = nil
-      attributes[:imap_mailbox_name] = ""
+      attributes[:imap_mailbox_name] = ''
     end
 
     if should_clear_smtp
@@ -769,22 +968,27 @@ class GroupsController < ApplicationController
   end
 
   def user_default_notifications(group, params)
-    category_notifications = group.group_category_notification_defaults.pluck(:category_id, :notification_level).to_h
-    tag_notifications = group.group_tag_notification_defaults.pluck(:tag_id, :notification_level).to_h
+    category_notifications =
+      group
+        .group_category_notification_defaults
+        .pluck(:category_id, :notification_level)
+        .to_h
+    tag_notifications =
+      group
+        .group_tag_notification_defaults
+        .pluck(:tag_id, :notification_level)
+        .to_h
     categories = {}
     tags = {}
 
     NotificationLevels.all.each do |key, value|
-      category_ids = (params["#{key}_category_ids".to_sym] || []) - ["-1"]
+      category_ids = (params["#{key}_category_ids".to_sym] || []) - ['-1']
 
       category_ids.each do |category_id|
         category_id = category_id.to_i
         old_value = category_notifications[category_id]
 
-        metadata = {
-          old_value: old_value,
-          new_value: value
-        }
+        metadata = { old_value: old_value, new_value: value }
 
         if old_value.blank?
           metadata[:action] = :create
@@ -798,16 +1002,13 @@ class GroupsController < ApplicationController
         categories[category_id] = metadata
       end
 
-      tag_names = (params["#{key}_tags".to_sym] || []) - ["-1"]
+      tag_names = (params["#{key}_tags".to_sym] || []) - ['-1']
       tag_ids = Tag.where(name: tag_names).pluck(:id)
 
       tag_ids.each do |tag_id|
         old_value = tag_notifications[tag_id]
 
-        metadata = {
-          old_value: old_value,
-          new_value: value
-        }
+        metadata = { old_value: old_value, new_value: value }
 
         if old_value.blank?
           metadata[:action] = :create
@@ -823,7 +1024,10 @@ class GroupsController < ApplicationController
     end
 
     (category_notifications.keys - categories.keys).each do |category_id|
-      categories[category_id] = { action: :delete, old_value: category_notifications[category_id] }
+      categories[category_id] = {
+        action: :delete,
+        old_value: category_notifications[category_id]
+      }
     end
 
     (tag_notifications.keys - tags.keys).each do |tag_id|
@@ -833,7 +1037,8 @@ class GroupsController < ApplicationController
     notification_level = nil
     default_notification_level = params[:default_notification_level]&.to_i
 
-    if default_notification_level.present? && group.default_notification_level != default_notification_level
+    if default_notification_level.present? &&
+         group.default_notification_level != default_notification_level
       notification_level = {
         old_value: group.default_notification_level,
         new_value: default_notification_level
@@ -843,17 +1048,17 @@ class GroupsController < ApplicationController
     [notification_level, categories, tags]
   end
 
-  %i{
-    count
-    update
-  }.each do |action|
-    define_method("#{action}_existing_users") do |group_users, notification_level, categories, tags|
+  %i[count update].each do |action|
+    define_method(
+      "#{action}_existing_users"
+    ) do |group_users, notification_level, categories, tags|
       return 0 if notification_level.blank? && categories.blank? && tags.blank?
 
       ids = []
 
       if notification_level.present?
-        users = group_users.where(notification_level: notification_level[:old_value])
+        users =
+          group_users.where(notification_level: notification_level[:old_value])
 
         if action == :update
           users.update_all(notification_level: notification_level[:new_value])
@@ -864,7 +1069,12 @@ class GroupsController < ApplicationController
 
       categories.each do |category_id, data|
         if data[:action] == :update || data[:action] == :delete
-          category_users = CategoryUser.where(category_id: category_id, notification_level: data[:old_value], user_id: group_users.select(:user_id))
+          category_users =
+            CategoryUser.where(
+              category_id: category_id,
+              notification_level: data[:old_value],
+              user_id: group_users.select(:user_id)
+            )
 
           if action == :update
             category_users.delete_all
@@ -872,13 +1082,20 @@ class GroupsController < ApplicationController
             ids += category_users.pluck(:user_id)
           end
 
-          categories.delete(category_id) if data[:action] == :delete && action == :update
+          if data[:action] == :delete && action == :update
+            categories.delete(category_id)
+          end
         end
       end
 
       tags.each do |tag_id, data|
         if data[:action] == :update || data[:action] == :delete
-          tag_users = TagUser.where(tag_id: tag_id, notification_level: data[:old_value], user_id: group_users.select(:user_id))
+          tag_users =
+            TagUser.where(
+              tag_id: tag_id,
+              notification_level: data[:old_value],
+              user_id: group_users.select(:user_id)
+            )
 
           if action == :update
             tag_users.delete_all
@@ -891,47 +1108,66 @@ class GroupsController < ApplicationController
       end
 
       if categories.present? || tags.present?
-        group_users.select(:id, :user_id).find_in_batches do |batch|
-          user_ids = batch.pluck(:user_id)
+        group_users
+          .select(:id, :user_id)
+          .find_in_batches do |batch|
+            user_ids = batch.pluck(:user_id)
 
-          categories.each do |category_id, data|
-            category_users = []
-            existing_users = CategoryUser.where(category_id: category_id, user_id: user_ids).where("notification_level IS NOT NULL")
-            skip_user_ids = existing_users.pluck(:user_id)
+            categories.each do |category_id, data|
+              category_users = []
+              existing_users =
+                CategoryUser.where(
+                  category_id: category_id,
+                  user_id: user_ids
+                ).where('notification_level IS NOT NULL')
+              skip_user_ids = existing_users.pluck(:user_id)
 
-            batch.each do |group_user|
-              next if skip_user_ids.include?(group_user.user_id)
-              category_users << { category_id: category_id, user_id: group_user.user_id, notification_level: data[:new_value] }
+              batch.each do |group_user|
+                next if skip_user_ids.include?(group_user.user_id)
+                category_users << {
+                  category_id: category_id,
+                  user_id: group_user.user_id,
+                  notification_level: data[:new_value]
+                }
+              end
+
+              next if category_users.blank?
+
+              if action == :update
+                CategoryUser.insert_all!(category_users)
+              else
+                ids += category_users.pluck(:user_id)
+              end
             end
 
-            next if category_users.blank?
+            tags.each do |tag_id, data|
+              tag_users = []
+              existing_users =
+                TagUser.where(tag_id: tag_id, user_id: user_ids).where(
+                  'notification_level IS NOT NULL'
+                )
+              skip_user_ids = existing_users.pluck(:user_id)
 
-            if action == :update
-              CategoryUser.insert_all!(category_users)
-            else
-              ids += category_users.pluck(:user_id)
+              batch.each do |group_user|
+                next if skip_user_ids.include?(group_user.user_id)
+                tag_users << {
+                  tag_id: tag_id,
+                  user_id: group_user.user_id,
+                  notification_level: data[:new_value],
+                  created_at: Time.now,
+                  updated_at: Time.now
+                }
+              end
+
+              next if tag_users.blank?
+
+              if action == :update
+                TagUser.insert_all!(tag_users)
+              else
+                ids += tag_users.pluck(:user_id)
+              end
             end
           end
-
-          tags.each do |tag_id, data|
-            tag_users = []
-            existing_users = TagUser.where(tag_id: tag_id, user_id: user_ids).where("notification_level IS NOT NULL")
-            skip_user_ids = existing_users.pluck(:user_id)
-
-            batch.each do |group_user|
-              next if skip_user_ids.include?(group_user.user_id)
-              tag_users << { tag_id: tag_id, user_id: group_user.user_id, notification_level: data[:new_value], created_at: Time.now, updated_at: Time.now }
-            end
-
-            next if tag_users.blank?
-
-            if action == :update
-              TagUser.insert_all!(tag_users)
-            else
-              ids += tag_users.pluck(:user_id)
-            end
-          end
-        end
       end
 
       ids.uniq.count

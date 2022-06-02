@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class TopicConverter
-
   attr_reader :topic
 
   def initialize(topic, user)
@@ -17,7 +16,8 @@ class TopicConverter
         elsif SiteSetting.allow_uncategorized_topics
           SiteSetting.uncategorized_category_id
         else
-          Category.where(read_restricted: false)
+          Category
+            .where(read_restricted: false)
             .where.not(id: SiteSetting.uncategorized_category_id)
             .order('id asc')
             .pluck_first(:id)
@@ -75,7 +75,7 @@ class TopicConverter
   end
 
   def update_users_post_count(action)
-    operation = action == :increment ? "+" : "-"
+    operation = action == :increment ? '+' : '-'
 
     # NOTE that DirectoryItem.refresh will overwrite this by counting UserAction records.
     #
@@ -111,7 +111,8 @@ class TopicConverter
     existing_allowed_users = @topic.topic_allowed_users.pluck(:user_id)
     users_to_allow = posters << @user.id
 
-    if (users_to_allow | existing_allowed_users).length > SiteSetting.max_allowed_message_recipients
+    if (users_to_allow | existing_allowed_users).length >
+         SiteSetting.max_allowed_message_recipients
       users_to_allow = [@user.id]
     end
 

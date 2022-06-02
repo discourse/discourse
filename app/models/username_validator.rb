@@ -40,7 +40,8 @@ class UsernameValidator
     errors.empty?
   end
 
-  CONFUSING_EXTENSIONS ||= /\.(js|json|css|htm|html|xml|jpg|jpeg|png|gif|bmp|ico|tif|tiff|woff)$/i
+  CONFUSING_EXTENSIONS ||=
+    /\.(js|json|css|htm|html|xml|jpg|jpeg|png|gif|bmp|ico|tif|tiff|woff)$/i
   MAX_CHARS ||= 60
 
   ASCII_INVALID_CHAR_PATTERN ||= /[^\w.-]/
@@ -54,16 +55,17 @@ class UsernameValidator
   def username_present?
     return unless errors.empty?
 
-    if username.blank?
-      self.errors << I18n.t(:'user.username.blank')
-    end
+    self.errors << I18n.t(:'user.username.blank') if username.blank?
   end
 
   def username_length_min?
     return unless errors.empty?
 
     if username_grapheme_clusters.size < User.username_length.begin
-      self.errors << I18n.t(:'user.username.short', min: User.username_length.begin)
+      self.errors << I18n.t(
+        :'user.username.short',
+        min: User.username_length.begin
+      )
     end
   end
 
@@ -71,7 +73,10 @@ class UsernameValidator
     return unless errors.empty?
 
     if username_grapheme_clusters.size > User.username_length.end
-      self.errors << I18n.t(:'user.username.long', max: User.username_length.end)
+      self.errors << I18n.t(
+        :'user.username.long',
+        max: User.username_length.end
+      )
     elsif username.length > MAX_CHARS
       self.errors << I18n.t(:'user.username.too_long')
     end
@@ -97,7 +102,9 @@ class UsernameValidator
     return unless errors.empty?
 
     if INVALID_LEADING_CHAR_PATTERN.match?(username_grapheme_clusters.first)
-      self.errors << I18n.t(:'user.username.must_begin_with_alphanumeric_or_underscore')
+      self.errors << I18n.t(
+        :'user.username.must_begin_with_alphanumeric_or_underscore'
+      )
     end
   end
 
@@ -113,7 +120,9 @@ class UsernameValidator
     return unless errors.empty?
 
     if REPEATED_SPECIAL_CHAR_PATTERN.match?(username)
-      self.errors << I18n.t(:'user.username.must_not_contain_two_special_chars_in_seq')
+      self.errors << I18n.t(
+        :'user.username.must_not_contain_two_special_chars_in_seq'
+      )
     end
   end
 
@@ -130,14 +139,20 @@ class UsernameValidator
   end
 
   def self.invalid_char_pattern
-    SiteSetting.unicode_usernames ? UNICODE_INVALID_CHAR_PATTERN : ASCII_INVALID_CHAR_PATTERN
+    if SiteSetting.unicode_usernames
+      UNICODE_INVALID_CHAR_PATTERN
+    else
+      ASCII_INVALID_CHAR_PATTERN
+    end
   end
 
   def self.char_allowlist_exists?
-    SiteSetting.unicode_usernames && SiteSetting.allowed_unicode_username_characters.present?
+    SiteSetting.unicode_usernames &&
+      SiteSetting.allowed_unicode_username_characters.present?
   end
 
   def self.allowed_char?(c)
-    c.match?(/[\w.-]/) || c.match?(SiteSetting.allowed_unicode_username_characters)
+    c.match?(/[\w.-]/) ||
+      c.match?(SiteSetting.allowed_unicode_username_characters)
   end
 end

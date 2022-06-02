@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class ReviewableQueuedPost < Reviewable
-
   after_create do
     # Backwards compatibility, new code should listen for `reviewable_created`
     DiscourseEvent.trigger(:queued_post_created, self)
@@ -10,19 +9,17 @@ class ReviewableQueuedPost < Reviewable
   after_commit :compute_user_stats, only: %i[create update]
 
   def build_actions(actions, guardian, args)
-
     unless approved?
-
       if topic&.closed?
         actions.add(:approve_post_closed) do |a|
           a.icon = 'check'
-          a.label = "reviewables.actions.approve_post.title"
-          a.confirm_message = "reviewables.actions.approve_post.confirm_closed"
+          a.label = 'reviewables.actions.approve_post.title'
+          a.confirm_message = 'reviewables.actions.approve_post.confirm_closed'
         end
       else
         actions.add(:approve_post) do |a|
           a.icon = 'check'
-          a.label = "reviewables.actions.approve_post.title"
+          a.label = 'reviewables.actions.approve_post.title'
         end
       end
     end
@@ -30,7 +27,7 @@ class ReviewableQueuedPost < Reviewable
     unless rejected?
       actions.add(:reject_post) do |a|
         a.icon = 'times'
-        a.label = "reviewables.actions.reject_post.title"
+        a.label = 'reviewables.actions.reject_post.title'
       end
     end
 
@@ -42,10 +39,8 @@ class ReviewableQueuedPost < Reviewable
   end
 
   def build_editable_fields(fields, guardian, args)
-
     # We can edit category / title if it's a new topic
     if topic_id.blank?
-
       # Only staff can edit category for now, since in theory a category group reviewer could
       # post in a category they don't have access to.
       fields.add('category_id', :category) if guardian.is_staff?
@@ -68,12 +63,16 @@ class ReviewableQueuedPost < Reviewable
   def perform_approve_post(performed_by, args)
     created_post = nil
 
-    creator = PostCreator.new(created_by, create_options.merge(
-      skip_validations: true,
-      skip_jobs: true,
-      skip_events: true,
-      skip_guardian: true
-    ))
+    creator =
+      PostCreator.new(
+        created_by,
+        create_options.merge(
+          skip_validations: true,
+          skip_jobs: true,
+          skip_events: true,
+          skip_guardian: true
+        )
+      )
     created_post = creator.create
 
     unless created_post && creator.errors.blank?
@@ -81,14 +80,14 @@ class ReviewableQueuedPost < Reviewable
     end
 
     self.target = created_post
-    if topic_id.nil?
-      self.topic_id = created_post.topic_id
-    end
+    self.topic_id = created_post.topic_id if topic_id.nil?
     save
 
     UserSilencer.unsilence(created_by, performed_by) if created_by.silenced?
 
-    StaffActionLogger.new(performed_by).log_post_approved(created_post) if performed_by.staff?
+    if performed_by.staff?
+      StaffActionLogger.new(performed_by).log_post_approved(created_post)
+    end
 
     # Backwards compatibility, new code should listen for `reviewable_transitioned_to`
     DiscourseEvent.trigger(:approved_post, self, created_post)
@@ -105,10 +104,10 @@ class ReviewableQueuedPost < Reviewable
       result.created_post = created_post
 
       # Do sidekiq work outside of the transaction
-      result.after_commit = -> {
+      result.after_commit = -> do
         creator.enqueue_jobs
         creator.trigger_after_events
-      }
+      end
     end
   end
 
@@ -120,7 +119,9 @@ class ReviewableQueuedPost < Reviewable
     # Backwards compatibility, new code should listen for `reviewable_transitioned_to`
     DiscourseEvent.trigger(:rejected_post, self)
 
-    StaffActionLogger.new(performed_by).log_post_rejected(self, DateTime.now) if performed_by.staff?
+    if performed_by.staff?
+      StaffActionLogger.new(performed_by).log_post_rejected(self, DateTime.now)
+    end
 
     create_result(:success, :rejected)
   end

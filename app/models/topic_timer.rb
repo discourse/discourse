@@ -13,25 +13,43 @@ class TopicTimer < ActiveRecord::Base
   validates :topic_id, presence: true
   validates :execute_at, presence: true
   validates :status_type, presence: true
-  validates :status_type, uniqueness: { scope: [:topic_id, :deleted_at] }, if: :public_type?
-  validates :status_type, uniqueness: { scope: [:topic_id, :deleted_at, :user_id] }, if: :private_type?
+  validates :status_type,
+            uniqueness: {
+              scope: %i[topic_id deleted_at]
+            },
+            if: :public_type?
+  validates :status_type,
+            uniqueness: {
+              scope: %i[topic_id deleted_at user_id]
+            },
+            if: :private_type?
   validates :category_id, presence: true, if: :publishing_to_category?
 
   validate :executed_at_in_future?
   validate :duration_in_range?
 
-  scope :scheduled_bump_topics, -> { where(status_type: TopicTimer.types[:bump], deleted_at: nil).pluck(:topic_id) }
-  scope :pending_timers, ->(before_time = Time.now.utc) do
-    where("execute_at <= :before_time AND deleted_at IS NULL", before_time: before_time)
-  end
+  scope :scheduled_bump_topics,
+        -> {
+          where(status_type: TopicTimer.types[:bump], deleted_at: nil).pluck(
+            :topic_id
+          )
+        }
+  scope :pending_timers,
+        ->(before_time = Time.now.utc) {
+          where(
+            'execute_at <= :before_time AND deleted_at IS NULL',
+            before_time: before_time
+          )
+        }
 
   before_save do
     self.created_at ||= Time.zone.now if execute_at
     self.public_type = self.public_type?
 
-    if (will_save_change_to_execute_at? &&
-       !attribute_in_database(:execute_at).nil?) ||
-       will_save_change_to_user_id?
+    if (
+         will_save_change_to_execute_at? &&
+           !attribute_in_database(:execute_at).nil?
+       ) || will_save_change_to_user_id?
     end
   end
 
@@ -45,7 +63,8 @@ class TopicTimer < ActiveRecord::Base
   # opposite action in the future.
   after_save do
     if (saved_change_to_execute_at? || saved_change_to_user_id?)
-      if status_type == TopicTimer.types[:silent_close] || status_type == TopicTimer.types[:close]
+      if status_type == TopicTimer.types[:silent_close] ||
+           status_type == TopicTimer.types[:close]
         topic.update_status('closed', false, user) if topic.closed?
       end
       if status_type == TopicTimer.types[:open]
@@ -77,17 +96,18 @@ class TopicTimer < ActiveRecord::Base
   end
 
   def self.types
-    @types ||= Enum.new(
-      close: 1,
-      open: 2,
-      publish_to_category: 3,
-      delete: 4,
-      reminder: 5,
-      bump: 6,
-      delete_replies: 7,
-      silent_close: 8,
-      clear_slow_mode: 9
-    )
+    @types ||=
+      Enum.new(
+        close: 1,
+        open: 2,
+        publish_to_category: 3,
+        delete: 4,
+        reminder: 5,
+        bump: 6,
+        delete_replies: 7,
+        silent_close: 8,
+        clear_slow_mode: 9
+      )
   end
 
   def self.public_types
@@ -122,24 +142,33 @@ class TopicTimer < ActiveRecord::Base
     return if duration_minutes.blank?
 
     if duration_minutes.to_i <= 0
-      errors.add(:duration_minutes, I18n.t(
-        'activerecord.errors.models.topic_timer.attributes.duration_minutes.cannot_be_zero'
-      ))
+      errors.add(
+        :duration_minutes,
+        I18n.t(
+          'activerecord.errors.models.topic_timer.attributes.duration_minutes.cannot_be_zero'
+        )
+      )
     end
 
     if duration_minutes.to_i > MAX_DURATION_MINUTES
-      errors.add(:duration_minutes, I18n.t(
-        'activerecord.errors.models.topic_timer.attributes.duration_minutes.exceeds_maximum'
-      ))
+      errors.add(
+        :duration_minutes,
+        I18n.t(
+          'activerecord.errors.models.topic_timer.attributes.duration_minutes.exceeds_maximum'
+        )
+      )
     end
   end
 
   def executed_at_in_future?
     return if created_at.blank? || (execute_at > created_at)
 
-    errors.add(:execute_at, I18n.t(
-      'activerecord.errors.models.topic_timer.attributes.execute_at.in_the_past'
-    ))
+    errors.add(
+      :execute_at,
+      I18n.t(
+        'activerecord.errors.models.topic_timer.attributes.execute_at.in_the_past'
+      )
+    )
   end
 
   def schedule_auto_delete_replies_job
@@ -159,11 +188,18 @@ class TopicTimer < ActiveRecord::Base
   end
 
   def schedule_auto_silent_close_job
-    Jobs.enqueue(TopicTimer.type_job_map[:close], topic_timer_id: id, silent: true)
+    Jobs.enqueue(
+      TopicTimer.type_job_map[:close],
+      topic_timer_id: id,
+      silent: true
+    )
   end
 
   def schedule_auto_publish_to_category_job
-    Jobs.enqueue(TopicTimer.type_job_map[:publish_to_category], topic_timer_id: id)
+    Jobs.enqueue(
+      TopicTimer.type_job_map[:publish_to_category],
+      topic_timer_id: id
+    )
   end
 
   def schedule_auto_delete_job

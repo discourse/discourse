@@ -9,16 +9,17 @@ class PostActionsController < ApplicationController
   def create
     raise Discourse::NotFound if @post.blank?
 
-    creator = PostActionCreator.new(
-      current_user,
-      @post,
-      @post_action_type_id,
-      is_warning: params[:is_warning],
-      message: params[:message],
-      take_action: params[:take_action] == 'true',
-      flag_topic: params[:flag_topic] == 'true',
-      queue_for_review: params[:queue_for_review] == 'true'
-    )
+    creator =
+      PostActionCreator.new(
+        current_user,
+        @post,
+        @post_action_type_id,
+        is_warning: params[:is_warning],
+        message: params[:message],
+        take_action: params[:take_action] == 'true',
+        flag_topic: params[:flag_topic] == 'true',
+        queue_for_review: params[:queue_for_review] == 'true'
+      )
     result = creator.perform
 
     if result.failed?
@@ -37,11 +38,12 @@ class PostActionsController < ApplicationController
   end
 
   def destroy
-    result = PostActionDestroyer.new(
-      current_user,
-      Post.find_by(id: params[:id].to_i),
-      @post_action_type_id
-    ).perform
+    result =
+      PostActionDestroyer.new(
+        current_user,
+        Post.find_by(id: params[:id].to_i),
+        @post_action_type_id
+      ).perform
 
     if result.failed?
       render_json_error(result)
@@ -56,17 +58,18 @@ class PostActionsController < ApplicationController
     params.require(:id)
 
     flag_topic = params[:flag_topic]
-    flag_topic = flag_topic && (flag_topic == true || flag_topic == "true")
+    flag_topic = flag_topic && (flag_topic == true || flag_topic == 'true')
 
-    post_id = if flag_topic
-      begin
-        Topic.find(params[:id]).posts.first.id
-      rescue
-        raise Discourse::NotFound
+    post_id =
+      if flag_topic
+        begin
+          Topic.find(params[:id]).posts.first.id
+        rescue StandardError
+          raise Discourse::NotFound
+        end
+      else
+        params[:id]
       end
-    else
-      params[:id]
-    end
 
     finder = Post.where(id: post_id)
 

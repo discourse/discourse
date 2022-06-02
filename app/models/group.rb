@@ -4,10 +4,7 @@ require 'net/imap'
 
 class Group < ActiveRecord::Base
   # TODO(2021-05-26): remove
-  self.ignored_columns = %w{
-    automatic_membership_retroactive
-    flair_url
-  }
+  self.ignored_columns = %w[automatic_membership_retroactive flair_url]
 
   include HasCustomFields
   include AnonCacheInvalidator
@@ -29,11 +26,18 @@ class Group < ActiveRecord::Base
   has_many :users, through: :group_users
   has_many :requesters, through: :group_requests, source: :user
   has_many :group_histories, dependent: :destroy
-  has_many :category_reviews, class_name: 'Category', foreign_key: :reviewable_by_group_id, dependent: :nullify
-  has_many :reviewables, foreign_key: :reviewable_by_group_id, dependent: :nullify
+  has_many :category_reviews,
+           class_name: 'Category',
+           foreign_key: :reviewable_by_group_id,
+           dependent: :nullify
+  has_many :reviewables,
+           foreign_key: :reviewable_by_group_id,
+           dependent: :nullify
   has_many :group_category_notification_defaults, dependent: :destroy
   has_many :group_tag_notification_defaults, dependent: :destroy
-  has_many :associated_groups, through: :group_associated_groups, dependent: :destroy
+  has_many :associated_groups,
+           through: :group_associated_groups,
+           dependent: :destroy
 
   belongs_to :flair_upload, class_name: 'Upload'
   belongs_to :smtp_updated_by, class_name: 'User'
@@ -49,19 +53,22 @@ class Group < ActiveRecord::Base
   after_save :update_title
 
   after_save :enqueue_update_mentions_job,
-    if: Proc.new { |g| g.name_before_last_save && g.saved_change_to_name? }
+             if:
+               Proc.new { |g|
+                 g.name_before_last_save && g.saved_change_to_name?
+               }
 
   after_save :expire_cache
   after_destroy :expire_cache
 
-  after_commit :automatic_group_membership, on: [:create, :update]
+  after_commit :automatic_group_membership, on: %i[create update]
   after_commit :trigger_group_created_event, on: :create
   after_commit :trigger_group_updated_event, on: :update
   after_commit :trigger_group_destroyed_event, on: :destroy
-  after_commit :set_default_notifications, on: [:create, :update]
+  after_commit :set_default_notifications, on: %i[create update]
 
   def expire_cache
-    ApplicationSerializer.expire_cache_fragment!("group_names")
+    ApplicationSerializer.expire_cache_fragment!('group_names')
     SvgSprite.expire_cache
     expire_imap_mailbox_cache
   end
@@ -79,7 +86,8 @@ class Group < ActiveRecord::Base
   validate :automatic_membership_email_domains_format_validator
   validate :incoming_email_validator
   validate :can_allow_membership_requests, if: :allow_membership_requests
-  validate :validate_grant_trust_level, if: :will_save_change_to_grant_trust_level?
+  validate :validate_grant_trust_level,
+           if: :will_save_change_to_grant_trust_level?
 
   AUTO_GROUPS = {
     everyone: 0,
@@ -94,24 +102,24 @@ class Group < ActiveRecord::Base
   }
 
   AUTO_GROUP_IDS = Hash[*AUTO_GROUPS.to_a.flatten.reverse]
-  STAFF_GROUPS = [:admins, :moderators, :staff]
+  STAFF_GROUPS = %i[admins moderators staff]
 
-  IMAP_SETTING_ATTRIBUTES = [
-    "imap_server",
-    "imap_port",
-    "imap_ssl",
-    "imap_mailbox_name",
-    "email_username",
-    "email_password"
+  IMAP_SETTING_ATTRIBUTES = %w[
+    imap_server
+    imap_port
+    imap_ssl
+    imap_mailbox_name
+    email_username
+    email_password
   ]
 
-  SMTP_SETTING_ATTRIBUTES = [
-    "imap_server",
-    "imap_port",
-    "imap_ssl",
-    "email_username",
-    "email_password",
-    "email_from_alias"
+  SMTP_SETTING_ATTRIBUTES = %w[
+    imap_server
+    imap_port
+    imap_ssl
+    email_username
+    email_password
+    email_from_alias
   ]
 
   ALIAS_LEVELS = {
@@ -123,40 +131,39 @@ class Group < ActiveRecord::Base
     everyone: 99
   }
 
-  VALID_DOMAIN_REGEX = /\A[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,24}(:[0-9]{1,5})?(\/.*)?\Z/i
+  VALID_DOMAIN_REGEX =
+    /\A[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,24}(:[0-9]{1,5})?(\/.*)?\Z/i
 
   def self.visibility_levels
-    @visibility_levels = Enum.new(
-      public: 0,
-      logged_on_users: 1,
-      members: 2,
-      staff: 3,
-      owners: 4
-    )
+    @visibility_levels =
+      Enum.new(public: 0, logged_on_users: 1, members: 2, staff: 3, owners: 4)
   end
 
   validates :mentionable_level, inclusion: { in: ALIAS_LEVELS.values }
   validates :messageable_level, inclusion: { in: ALIAS_LEVELS.values }
 
-  scope :with_imap_configured, -> { where(imap_enabled: true).where.not(imap_mailbox_name: '') }
+  scope :with_imap_configured,
+        -> { where(imap_enabled: true).where.not(imap_mailbox_name: '') }
   scope :with_smtp_configured, -> { where(smtp_enabled: true) }
 
-  scope :visible_groups, Proc.new { |user, order, opts|
-    groups = self.order(order || "groups.name ASC")
+  scope :visible_groups,
+        Proc.new { |user, order, opts|
+          groups = self.order(order || 'groups.name ASC')
 
-    if !opts || !opts[:include_everyone]
-      groups = groups.where("groups.id > 0")
-    end
+          if !opts || !opts[:include_everyone]
+            groups = groups.where('groups.id > 0')
+          end
 
-    if !user&.admin
-      is_staff = !!user&.staff?
+          if !user&.admin
+            is_staff = !!user&.staff?
 
-      if user.blank?
-        sql = "groups.visibility_level = :public"
-      elsif is_staff
-        sql = "groups.visibility_level IN (:public, :logged_on_users, :members, :staff)"
-      else
-        sql = <<~SQL
+            if user.blank?
+              sql = 'groups.visibility_level = :public'
+            elsif is_staff
+              sql =
+                'groups.visibility_level IN (:public, :logged_on_users, :members, :staff)'
+            else
+              sql = <<~SQL
           groups.id IN (
             SELECT id
               FROM groups
@@ -177,31 +184,37 @@ class Group < ActiveRecord::Base
             WHERE g.visibility_level IN (:staff, :owners)
           )
         SQL
-      end
+            end
 
-      params = Group.visibility_levels.to_h.merge(user_id: user&.id, is_staff: is_staff)
-      groups = groups.where(sql, params)
-    end
+            params =
+              Group.visibility_levels.to_h.merge(
+                user_id: user&.id,
+                is_staff: is_staff
+              )
+            groups = groups.where(sql, params)
+          end
 
-    groups
-  }
+          groups
+        }
 
-  scope :members_visible_groups, Proc.new { |user, order, opts|
-    groups = self.order(order || "name ASC")
+  scope :members_visible_groups,
+        Proc.new { |user, order, opts|
+          groups = self.order(order || 'name ASC')
 
-    if !opts || !opts[:include_everyone]
-      groups = groups.where("groups.id > 0")
-    end
+          if !opts || !opts[:include_everyone]
+            groups = groups.where('groups.id > 0')
+          end
 
-    if !user&.admin
-      is_staff = !!user&.staff?
+          if !user&.admin
+            is_staff = !!user&.staff?
 
-      if user.blank?
-        sql = "groups.members_visibility_level = :public"
-      elsif is_staff
-        sql = "groups.members_visibility_level IN (:public, :logged_on_users, :members, :staff)"
-      else
-        sql = <<~SQL
+            if user.blank?
+              sql = 'groups.members_visibility_level = :public'
+            elsif is_staff
+              sql =
+                'groups.members_visibility_level IN (:public, :logged_on_users, :members, :staff)'
+            else
+              sql = <<~SQL
           groups.id IN (
             SELECT id
               FROM groups
@@ -222,32 +235,43 @@ class Group < ActiveRecord::Base
             WHERE g.members_visibility_level IN (:staff, :owners)
           )
         SQL
-      end
+            end
 
-      params = Group.visibility_levels.to_h.merge(user_id: user&.id, is_staff: is_staff)
-      groups = groups.where(sql, params)
-    end
+            params =
+              Group.visibility_levels.to_h.merge(
+                user_id: user&.id,
+                is_staff: is_staff
+              )
+            groups = groups.where(sql, params)
+          end
 
-    groups
-  }
+          groups
+        }
 
-  scope :mentionable, lambda { |user, include_public: true|
-    where(self.mentionable_sql_clause(include_public: include_public),
-      levels: alias_levels(user),
-      user_id: user&.id
-    )
-  }
+  scope :mentionable,
+        lambda { |user, include_public: true|
+          where(
+            self.mentionable_sql_clause(include_public: include_public),
+            levels: alias_levels(user),
+            user_id: user&.id
+          )
+        }
 
-  scope :messageable, lambda { |user|
-    where("messageable_level in (:levels) OR
+  scope :messageable,
+        lambda { |user|
+          where(
+            "messageable_level in (:levels) OR
           (
             messageable_level = #{ALIAS_LEVELS[:members_mods_and_admins]} AND id in (
             SELECT group_id FROM group_users WHERE user_id = :user_id)
           ) OR (
             messageable_level = #{ALIAS_LEVELS[:owners_mods_and_admins]} AND id in (
             SELECT group_id FROM group_users WHERE user_id = :user_id AND owner IS TRUE)
-          )", levels: alias_levels(user), user_id: user && user.id)
-  }
+          )",
+            levels: alias_levels(user),
+            user_id: user && user.id
+          )
+        }
 
   def self.mentionable_sql_clause(include_public: true)
     clause = +<<~SQL
@@ -277,14 +301,14 @@ class Group < ActiveRecord::Base
         ALIAS_LEVELS[:only_admins],
         ALIAS_LEVELS[:mods_and_admins],
         ALIAS_LEVELS[:members_mods_and_admins],
-        ALIAS_LEVELS[:owners_mods_and_admins],
+        ALIAS_LEVELS[:owners_mods_and_admins]
       ]
     elsif user&.moderator?
       [
         ALIAS_LEVELS[:everyone],
         ALIAS_LEVELS[:mods_and_admins],
         ALIAS_LEVELS[:members_mods_and_admins],
-        ALIAS_LEVELS[:owners_mods_and_admins],
+        ALIAS_LEVELS[:owners_mods_and_admins]
       ]
     else
       [ALIAS_LEVELS[:everyone]]
@@ -296,7 +320,7 @@ class Group < ActiveRecord::Base
   end
 
   def downcase_incoming_email
-    self.incoming_email = (incoming_email || "").strip.downcase.presence
+    self.incoming_email = (incoming_email || '').strip.downcase.presence
   end
 
   def cook_bio
@@ -318,8 +342,18 @@ class Group < ActiveRecord::Base
       self.smtp_updated_by_id = user.id
     end
 
-    self.smtp_enabled = [self.smtp_port, self.smtp_server, self.email_password, self.email_username].all?(&:present?)
-    self.imap_enabled = [self.imap_port, self.imap_server, self.email_password, self.email_username].all?(&:present?)
+    self.smtp_enabled = [
+      self.smtp_port,
+      self.smtp_server,
+      self.email_password,
+      self.email_username
+    ].all?(&:present?)
+    self.imap_enabled = [
+      self.imap_port,
+      self.imap_server,
+      self.email_password,
+      self.email_username
+    ].all?(&:present?)
 
     self.save
   end
@@ -327,70 +361,104 @@ class Group < ActiveRecord::Base
   def incoming_email_validator
     return if self.automatic || self.incoming_email.blank?
 
-    incoming_email.split("|").each do |email|
-      escaped = Rack::Utils.escape_html(email)
-      if !Email.is_valid?(email)
-        self.errors.add(:base, I18n.t('groups.errors.invalid_incoming_email', email: escaped))
-      elsif group = Group.where.not(id: self.id).find_by_email(email)
-        self.errors.add(:base, I18n.t('groups.errors.email_already_used_in_group', email: escaped, group_name: Rack::Utils.escape_html(group.name)))
-      elsif category = Category.find_by_email(email)
-        self.errors.add(:base, I18n.t('groups.errors.email_already_used_in_category', email: escaped, category_name: Rack::Utils.escape_html(category.name)))
+    incoming_email
+      .split('|')
+      .each do |email|
+        escaped = Rack::Utils.escape_html(email)
+        if !Email.is_valid?(email)
+          self.errors.add(
+            :base,
+            I18n.t('groups.errors.invalid_incoming_email', email: escaped)
+          )
+        elsif group = Group.where.not(id: self.id).find_by_email(email)
+          self.errors.add(
+            :base,
+            I18n.t(
+              'groups.errors.email_already_used_in_group',
+              email: escaped,
+              group_name: Rack::Utils.escape_html(group.name)
+            )
+          )
+        elsif category = Category.find_by_email(email)
+          self.errors.add(
+            :base,
+            I18n.t(
+              'groups.errors.email_already_used_in_category',
+              email: escaped,
+              category_name: Rack::Utils.escape_html(category.name)
+            )
+          )
+        end
       end
-    end
   end
 
   def posts_for(guardian, opts = nil)
     opts ||= {}
-    result = Post.joins(:topic, user: :groups, topic: :category)
-      .preload(:topic, user: :groups, topic: :category)
-      .references(:posts, :topics, :category)
-      .where(groups: { id: id })
-      .where('topics.archetype <> ?', Archetype.private_message)
-      .where('topics.visible')
-      .where(post_type: [Post.types[:regular], Post.types[:moderator_action]])
+    result =
+      Post
+        .joins(:topic, user: :groups, topic: :category)
+        .preload(:topic, user: :groups, topic: :category)
+        .references(:posts, :topics, :category)
+        .where(groups: { id: id })
+        .where('topics.archetype <> ?', Archetype.private_message)
+        .where('topics.visible')
+        .where(post_type: [Post.types[:regular], Post.types[:moderator_action]])
 
     if opts[:category_id].present?
       result = result.where('topics.category_id = ?', opts[:category_id].to_i)
     end
 
     result = guardian.filter_allowed_categories(result)
-    result = result.where('posts.id < ?', opts[:before_post_id].to_i) if opts[:before_post_id]
+    result = result.where('posts.id < ?', opts[:before_post_id].to_i) if opts[
+      :before_post_id
+    ]
     result.order('posts.created_at desc')
   end
 
   def messages_for(guardian, opts = nil)
     opts ||= {}
 
-    result = Post.includes(:user, :topic, topic: :category)
-      .references(:posts, :topics, :category)
-      .where('topics.archetype = ?', Archetype.private_message)
-      .where(post_type: Post.types[:regular])
-      .where('topics.id IN (SELECT topic_id FROM topic_allowed_groups WHERE group_id = ?)', self.id)
+    result =
+      Post
+        .includes(:user, :topic, topic: :category)
+        .references(:posts, :topics, :category)
+        .where('topics.archetype = ?', Archetype.private_message)
+        .where(post_type: Post.types[:regular])
+        .where(
+          'topics.id IN (SELECT topic_id FROM topic_allowed_groups WHERE group_id = ?)',
+          self.id
+        )
 
     if opts[:category_id].present?
       result = result.where('topics.category_id = ?', opts[:category_id].to_i)
     end
 
     result = guardian.filter_allowed_categories(result)
-    result = result.where('posts.id < ?', opts[:before_post_id].to_i) if opts[:before_post_id]
+    result = result.where('posts.id < ?', opts[:before_post_id].to_i) if opts[
+      :before_post_id
+    ]
     result.order('posts.created_at desc')
   end
 
   def mentioned_posts_for(guardian, opts = nil)
     opts ||= {}
-    result = Post.joins(:group_mentions)
-      .includes(:user, :topic, topic: :category)
-      .references(:posts, :topics, :category)
-      .where('topics.archetype <> ?', Archetype.private_message)
-      .where(post_type: Post.types[:regular])
-      .where('group_mentions.group_id = ?', self.id)
+    result =
+      Post
+        .joins(:group_mentions)
+        .includes(:user, :topic, topic: :category)
+        .references(:posts, :topics, :category)
+        .where('topics.archetype <> ?', Archetype.private_message)
+        .where(post_type: Post.types[:regular])
+        .where('group_mentions.group_id = ?', self.id)
 
     if opts[:category_id].present?
       result = result.where('topics.category_id = ?', opts[:category_id].to_i)
     end
 
     result = guardian.filter_allowed_categories(result)
-    result = result.where('posts.id < ?', opts[:before_post_id].to_i) if opts[:before_post_id]
+    result = result.where('posts.id < ?', opts[:before_post_id].to_i) if opts[
+      :before_post_id
+    ]
     result.order('posts.created_at desc')
   end
 
@@ -399,22 +467,32 @@ class Group < ActiveRecord::Base
   end
 
   def set_message_default_notification_levels!(topic, ignore_existing: false)
-    group_users.pluck(:user_id, :notification_level).each do |user_id, notification_level|
-      next if user_id == -1
-      next if user_id == topic.user_id
-      next if ignore_existing && TopicUser.where(user_id: user_id, topic_id: topic.id).exists?
-
-      action =
-        case notification_level
-        when TopicUser.notification_levels[:tracking] then "track!"
-        when TopicUser.notification_levels[:regular]  then "regular!"
-        when TopicUser.notification_levels[:muted]    then "mute!"
-        when TopicUser.notification_levels[:watching] then "watch!"
-        else "track!"
+    group_users
+      .pluck(:user_id, :notification_level)
+      .each do |user_id, notification_level|
+        next if user_id == -1
+        next if user_id == topic.user_id
+        if ignore_existing &&
+             TopicUser.where(user_id: user_id, topic_id: topic.id).exists?
+          next
         end
 
-      topic.notifier.public_send(action, user_id)
-    end
+        action =
+          case notification_level
+          when TopicUser.notification_levels[:tracking]
+            'track!'
+          when TopicUser.notification_levels[:regular]
+            'regular!'
+          when TopicUser.notification_levels[:muted]
+            'mute!'
+          when TopicUser.notification_levels[:watching]
+            'watch!'
+          else
+            'track!'
+          end
+
+        topic.notifier.public_send(action, user_id)
+      end
   end
 
   def self.set_category_and_tag_default_notification_levels!(user, group_name)
@@ -440,7 +518,8 @@ class Group < ActiveRecord::Base
     end
 
     # don't allow shoddy localization to break this
-    localized_name = I18n.t("groups.default_names.#{name}", locale: SiteSetting.default_locale)
+    localized_name =
+      I18n.t("groups.default_names.#{name}", locale: SiteSetting.default_locale)
     validator = UsernameValidator.new(localized_name)
 
     if validator.valid_format? && !User.username_exists?(localized_name)
@@ -458,18 +537,21 @@ class Group < ActiveRecord::Base
       group.update!(messageable_level: ALIAS_LEVELS[:everyone])
     end
 
-    group.update!(visibility_level: Group.visibility_levels[:logged_on_users]) if group.visibility_level == Group.visibility_levels[:public]
+    if group.visibility_level == Group.visibility_levels[:public]
+      group.update!(visibility_level: Group.visibility_levels[:logged_on_users])
+    end
 
     # Remove people from groups they don't belong in.
     remove_subquery =
       case name
       when :admins
-        "SELECT id FROM users WHERE id <= 0 OR NOT admin OR staged"
+        'SELECT id FROM users WHERE id <= 0 OR NOT admin OR staged'
       when :moderators
-        "SELECT id FROM users WHERE id <= 0 OR NOT moderator OR staged"
+        'SELECT id FROM users WHERE id <= 0 OR NOT moderator OR staged'
       when :staff
-        "SELECT id FROM users WHERE id <= 0 OR (NOT admin AND NOT moderator) OR staged"
-      when :trust_level_0, :trust_level_1, :trust_level_2, :trust_level_3, :trust_level_4
+        'SELECT id FROM users WHERE id <= 0 OR (NOT admin AND NOT moderator) OR staged'
+      when :trust_level_0, :trust_level_1, :trust_level_2, :trust_level_3,
+           :trust_level_4
         "SELECT id FROM users WHERE id <= 0 OR trust_level < #{id - 10} OR staged"
       end
 
@@ -484,15 +566,15 @@ class Group < ActiveRecord::Base
     insert_subquery =
       case name
       when :admins
-        "SELECT id FROM users WHERE id > 0 AND admin AND NOT staged"
+        'SELECT id FROM users WHERE id > 0 AND admin AND NOT staged'
       when :moderators
-        "SELECT id FROM users WHERE id > 0 AND moderator AND NOT staged"
+        'SELECT id FROM users WHERE id > 0 AND moderator AND NOT staged'
       when :staff
-        "SELECT id FROM users WHERE id > 0 AND (moderator OR admin) AND NOT staged"
+        'SELECT id FROM users WHERE id > 0 AND (moderator OR admin) AND NOT staged'
       when :trust_level_1, :trust_level_2, :trust_level_3, :trust_level_4
         "SELECT id FROM users WHERE id > 0 AND trust_level >= #{id - 10} AND NOT staged"
       when :trust_level_0
-        "SELECT id FROM users WHERE id > 0 AND NOT staged"
+        'SELECT id FROM users WHERE id > 0 AND NOT staged'
       end
 
     DB.exec <<-SQL
@@ -563,18 +645,21 @@ class Group < ActiveRecord::Base
   def self.search_groups(name, groups: nil, custom_scope: {}, sort: :none)
     groups ||= Group
 
-    relation = groups.where(
-      "name ILIKE :term_like OR full_name ILIKE :term_like", term_like: "%#{name}%"
-    )
+    relation =
+      groups.where(
+        'name ILIKE :term_like OR full_name ILIKE :term_like',
+        term_like: "%#{name}%"
+      )
 
     if sort == :auto
-      prefix = "#{name.gsub("_", "\\_")}%"
-      relation = relation.reorder(
-        DB.sql_fragment(
-          "CASE WHEN name ILIKE :like OR full_name ILIKE :like THEN 0 ELSE 1 END ASC, name ASC",
-          like: prefix
+      prefix = "#{name.gsub('_', "\\_")}%"
+      relation =
+        relation.reorder(
+          DB.sql_fragment(
+            'CASE WHEN name ILIKE :like OR full_name ILIKE :like THEN 0 ELSE 1 END ASC, name ASC',
+            like: prefix
+          )
         )
-      )
     end
 
     relation
@@ -585,7 +670,7 @@ class Group < ActiveRecord::Base
       Group.find_by(id: id)
     else
       unless group = Group.find_by(name: name)
-        raise ArgumentError, "unknown group"
+        raise ArgumentError, 'unknown group'
       end
       group
     end
@@ -593,14 +678,15 @@ class Group < ActiveRecord::Base
 
   def self.lookup_groups(group_ids: [], group_names: [])
     if group_ids.present?
-      group_ids = group_ids.split(",") if group_ids.is_a?(String)
+      group_ids = group_ids.split(',') if group_ids.is_a?(String)
       group_ids.map!(&:to_i)
       groups = Group.where(id: group_ids) if group_ids.present?
     end
 
     if group_names.present?
-      group_names = group_names.split(",")
-      groups = (groups || Group).where(name: group_names) if group_names.present?
+      group_names = group_names.split(',')
+      groups =
+        (groups || Group).where(name: group_names) if group_names.present?
     end
 
     groups || []
@@ -622,7 +708,12 @@ class Group < ActiveRecord::Base
       if group = find_by(id: id)
         unless GroupUser.where(group_id: id, user_id: user_id).exists?
           group_user = group.group_users.create!(user_id: user_id)
-          DiscourseEvent.trigger(:user_added_to_group, group_user.user, group, automatic: true)
+          DiscourseEvent.trigger(
+            :user_added_to_group,
+            group_user.user,
+            group,
+            automatic: true
+          )
         end
       else
         name = AUTO_GROUP_IDS[trust_level]
@@ -645,31 +736,31 @@ class Group < ActiveRecord::Base
   end
 
   def usernames=(val)
-    current = usernames.split(",")
-    expected = val.split(",")
+    current = usernames.split(',')
+    expected = val.split(',')
 
     additions = expected - current
     deletions = current - expected
 
-    map = Hash[*User.where(username: additions + deletions)
-      .select('id,username')
-      .map { |u| [u.username, u.id] }.flatten]
+    map =
+      Hash[
+        *User
+          .where(username: additions + deletions)
+          .select('id,username')
+          .map { |u| [u.username, u.id] }
+          .flatten
+      ]
 
     deletions = Set.new(deletions.map { |d| map[d] })
 
     @deletions = []
-    group_users.each do |gu|
-      @deletions << gu if deletions.include?(gu.user_id)
-    end
+    group_users.each { |gu| @deletions << gu if deletions.include?(gu.user_id) }
 
-    additions.each do |a|
-      group_users.build(user_id: map[a])
-    end
-
+    additions.each { |a| group_users.build(user_id: map[a]) }
   end
 
   def usernames
-    users.pluck(:username).join(",")
+    users.pluck(:username).join(',')
   end
 
   PUBLISH_CATEGORIES_LIMIT = 10
@@ -688,14 +779,23 @@ class Group < ActiveRecord::Base
     end
 
     if self.categories.count < PUBLISH_CATEGORIES_LIMIT
-      MessageBus.publish('/categories', {
-        categories: ActiveModel::ArraySerializer.new(self.categories).as_json
-      }, user_ids: [user.id])
+      MessageBus.publish(
+        '/categories',
+        {
+          categories: ActiveModel::ArraySerializer.new(self.categories).as_json
+        },
+        user_ids: [user.id]
+      )
     else
       Discourse.request_refresh!(user_ids: [user.id])
     end
 
-    DiscourseEvent.trigger(:user_added_to_group, user, self, automatic: automatic)
+    DiscourseEvent.trigger(
+      :user_added_to_group,
+      user,
+      self,
+      automatic: automatic
+    )
 
     self
   end
@@ -705,13 +805,22 @@ class Group < ActiveRecord::Base
     return false if group_user.blank?
 
     has_webhooks = WebHook.active_web_hooks(:group_user)
-    payload = WebHook.generate_payload(:group_user, group_user, WebHookGroupUserSerializer) if has_webhooks
+    payload =
+      WebHook.generate_payload(
+        :group_user,
+        group_user,
+        WebHookGroupUserSerializer
+      ) if has_webhooks
     group_user.destroy
     DiscourseEvent.trigger(:user_removed_from_group, user, self)
-    WebHook.enqueue_hooks(:group_user, :user_removed_from_group,
-      id: group_user.id,
-      payload: payload
-    ) if has_webhooks
+    if has_webhooks
+      WebHook.enqueue_hooks(
+        :group_user,
+        :user_removed_from_group,
+        id: group_user.id,
+        payload: payload
+      )
+    end
     true
   end
 
@@ -757,13 +866,9 @@ class Group < ActiveRecord::Base
 
       user_attributes = {}
 
-      if self.primary_group?
-        user_attributes[:primary_group_id] = self.id
-      end
+      user_attributes[:primary_group_id] = self.id if self.primary_group?
 
-      if self.title.present?
-        user_attributes[:title] = self.title
-      end
+      user_attributes[:title] = self.title if self.title.present?
 
       if user_attributes.present?
         User.where(id: user_ids).update_all(user_attributes)
@@ -781,7 +886,8 @@ class Group < ActiveRecord::Base
     end
 
     if self.grant_trust_level.present?
-      Jobs.enqueue(:bulk_grant_trust_level,
+      Jobs.enqueue(
+        :bulk_grant_trust_level,
         user_ids: user_ids,
         trust_level: self.grant_trust_level
       )
@@ -809,20 +915,17 @@ class Group < ActiveRecord::Base
   end
 
   def self.member_of(groups, user)
-    groups
-      .joins("LEFT JOIN group_users gu ON gu.group_id = groups.id ")
-      .where("gu.user_id = ?", user.id)
+    groups.joins('LEFT JOIN group_users gu ON gu.group_id = groups.id ').where(
+      'gu.user_id = ?',
+      user.id
+    )
   end
 
   def self.owner_of(groups, user)
-    self.member_of(groups, user).where("gu.owner")
+    self.member_of(groups, user).where('gu.owner')
   end
 
-  %i{
-    group_created
-    group_updated
-    group_destroyed
-  }.each do |event|
+  %i[group_created group_updated group_destroyed].each do |event|
     define_method("trigger_#{event}_event") do
       DiscourseEvent.trigger(event, self)
       true
@@ -841,7 +944,7 @@ class Group < ActiveRecord::Base
     nil
   end
 
-  [:muted, :regular, :tracking, :watching, :watching_first_post].each do |level|
+  %i[muted regular tracking watching watching_first_post].each do |level|
     define_method("#{level}_category_ids=") do |category_ids|
       @category_notifications ||= {}
       @category_notifications[level] = category_ids
@@ -870,26 +973,36 @@ class Group < ActiveRecord::Base
   def imap_mailboxes
     return [] if !self.imap_enabled || !SiteSetting.enable_imap
 
-    Discourse.cache.fetch("group_imap_mailboxes_#{self.id}", expires_in: 30.minutes) do
-      Rails.logger.info("[IMAP] Refreshing mailboxes list for group #{self.name}")
-      mailboxes = []
-
-      begin
-        imap_provider = Imap::Providers::Detector.init_with_detected_provider(
-          self.imap_config
+    Discourse
+      .cache
+      .fetch("group_imap_mailboxes_#{self.id}", expires_in: 30.minutes) do
+        Rails.logger.info(
+          "[IMAP] Refreshing mailboxes list for group #{self.name}"
         )
-        imap_provider.connect!
-        mailboxes = imap_provider.filter_mailboxes(imap_provider.list_mailboxes_with_attributes)
-        imap_provider.disconnect!
+        mailboxes = []
 
-        update_columns(imap_last_error: nil)
-      rescue => ex
-        Rails.logger.warn("[IMAP] Mailbox refresh failed for group #{self.name} with error: #{ex}")
-        update_columns(imap_last_error: ex.message)
+        begin
+          imap_provider =
+            Imap::Providers::Detector.init_with_detected_provider(
+              self.imap_config
+            )
+          imap_provider.connect!
+          mailboxes =
+            imap_provider.filter_mailboxes(
+              imap_provider.list_mailboxes_with_attributes
+            )
+          imap_provider.disconnect!
+
+          update_columns(imap_last_error: nil)
+        rescue => ex
+          Rails.logger.warn(
+            "[IMAP] Mailbox refresh failed for group #{self.name} with error: #{ex}"
+          )
+          update_columns(imap_last_error: ex.message)
+        end
+
+        mailboxes
       end
-
-      mailboxes
-    end
   end
 
   def imap_config
@@ -952,23 +1065,30 @@ class Group < ActiveRecord::Base
       self.name = stripped
     end
 
-    UsernameValidator.perform_validation(self, 'name') || begin
-      normalized_name = User.normalize_username(self.name)
+    UsernameValidator.perform_validation(self, 'name') ||
+      begin
+        normalized_name = User.normalize_username(self.name)
 
-      if self.will_save_change_to_name? && User.normalize_username(self.name_was) != normalized_name && User.username_exists?(self.name)
-        errors.add(:name, I18n.t("activerecord.errors.messages.taken"))
+        if self.will_save_change_to_name? &&
+             User.normalize_username(self.name_was) != normalized_name &&
+             User.username_exists?(self.name)
+          errors.add(:name, I18n.t('activerecord.errors.messages.taken'))
+        end
       end
-    end
   end
 
   def automatic_membership_email_domains_format_validator
     return if self.automatic_membership_email_domains.blank?
 
-    domains = Group.get_valid_email_domains(self.automatic_membership_email_domains) do |domain|
-      self.errors.add :base, (I18n.t('groups.errors.invalid_domain', domain: domain))
-    end
+    domains =
+      Group.get_valid_email_domains(
+        self.automatic_membership_email_domains
+      ) do |domain|
+        self.errors.add :base,
+                        (I18n.t('groups.errors.invalid_domain', domain: domain))
+      end
 
-    self.automatic_membership_email_domains = domains.join("|")
+    self.automatic_membership_email_domains = domains.join('|')
   end
 
   # hack around AR
@@ -976,7 +1096,11 @@ class Group < ActiveRecord::Base
     if @deletions
       @deletions.each do |gu|
         gu.destroy
-        User.where('id = ? AND primary_group_id = ?', gu.user_id, gu.group_id).update_all 'primary_group_id = NULL'
+        User.where(
+          'id = ? AND primary_group_id = ?',
+          gu.user_id,
+          gu.group_id
+        ).update_all 'primary_group_id = NULL'
       end
     end
     @deletions = nil
@@ -1014,7 +1138,7 @@ class Group < ActiveRecord::Base
         /*where*/
       SQL
 
-      [:primary_group_id, :flair_group_id].each do |column|
+      %i[primary_group_id flair_group_id].each do |column|
         builder = DB.build(sql)
         builder.where(<<~SQL, id: id)
           id IN (
@@ -1040,8 +1164,17 @@ class Group < ActiveRecord::Base
   def self.automatic_membership_users(domains, group_id = nil)
     pattern = "@(#{domains.gsub('.', '\.')})$"
 
-    users = User.joins(:user_emails).where("user_emails.email ~* ?", pattern).activated.where(staged: false)
-    users = users.where("users.id NOT IN (SELECT user_id FROM group_users WHERE group_users.group_id = ?)", group_id) if group_id.present?
+    users =
+      User
+        .joins(:user_emails)
+        .where('user_emails.email ~* ?', pattern)
+        .activated
+        .where(staged: false)
+    users =
+      users.where(
+        'users.id NOT IN (SELECT user_id FROM group_users WHERE group_users.group_id = ?)',
+        group_id
+      ) if group_id.present?
 
     users
   end
@@ -1049,16 +1182,18 @@ class Group < ActiveRecord::Base
   def self.get_valid_email_domains(value)
     valid_domains = []
 
-    value.split("|").each do |domain|
-      domain.sub!(/^https?:\/\//, '')
-      domain.sub!(/\/.*$/, '')
+    value
+      .split('|')
+      .each do |domain|
+        domain.sub!(%r{^https?://}, '')
+        domain.sub!(%r{/.*$}, '')
 
-      if domain =~ Group::VALID_DOMAIN_REGEX
-        valid_domains << domain
-      else
-        yield domain if block_given?
+        if domain =~ Group::VALID_DOMAIN_REGEX
+          valid_domains << domain
+        else
+          yield domain if block_given?
+        end
       end
-    end
 
     valid_domains
   end
@@ -1067,10 +1202,13 @@ class Group < ActiveRecord::Base
 
   def validate_grant_trust_level
     unless TrustLevel.valid?(self.grant_trust_level)
-      self.errors.add(:base, I18n.t(
-        'groups.errors.grant_trust_level_not_valid',
-        trust_level: self.grant_trust_level
-      ))
+      self.errors.add(
+        :base,
+        I18n.t(
+          'groups.errors.grant_trust_level_not_valid',
+          trust_level: self.grant_trust_level
+        )
+      )
     end
   end
 
@@ -1085,12 +1223,16 @@ class Group < ActiveRecord::Base
       end
 
     if !valid
-      self.errors.add(:base, I18n.t('groups.errors.cant_allow_membership_requests'))
+      self.errors.add(
+        :base,
+        I18n.t('groups.errors.cant_allow_membership_requests')
+      )
     end
   end
 
   def enqueue_update_mentions_job
-    Jobs.enqueue(:update_group_mentions,
+    Jobs.enqueue(
+      :update_group_mentions,
       previous_name: self.name_before_last_save,
       group_id: self.id
     )

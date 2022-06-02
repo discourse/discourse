@@ -16,14 +16,16 @@ class GroupTagNotificationDefault < ActiveRecord::Base
     tag_names ||= []
     changed = false
 
-    records = self.where(group: group, notification_level: notification_levels[level])
+    records =
+      self.where(group: group, notification_level: notification_levels[level])
     old_ids = records.pluck(:tag_id)
 
     tag_ids = tag_names.empty? ? [] : Tag.where_name(tag_names).pluck(:id)
 
-    Tag.where_name(tag_names).joins(:target_tag).each do |tag|
-      tag_ids[tag_ids.index(tag.id)] = tag.target_tag_id
-    end
+    Tag
+      .where_name(tag_names)
+      .joins(:target_tag)
+      .each { |tag| tag_ids[tag_ids.index(tag.id)] = tag.target_tag_id }
 
     tag_ids.uniq!
 
@@ -34,7 +36,11 @@ class GroupTagNotificationDefault < ActiveRecord::Base
     end
 
     (tag_ids - old_ids).each do |id|
-      self.create!(group: group, tag_id: id, notification_level: notification_levels[level])
+      self.create!(
+        group: group,
+        tag_id: id,
+        notification_level: notification_levels[level]
+      )
       changed = true
     end
 

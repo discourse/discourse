@@ -3,28 +3,46 @@
 require 'csv'
 
 class InvitesController < ApplicationController
-
-  requires_login only: [:create, :retrieve, :destroy, :destroy_all_expired, :resend_invite, :resend_all_invites, :upload_csv]
+  requires_login only: %i[
+                   create
+                   retrieve
+                   destroy
+                   destroy_all_expired
+                   resend_invite
+                   resend_all_invites
+                   upload_csv
+                 ]
 
   skip_before_action :check_xhr, except: [:perform_accept_invitation]
   skip_before_action :preload_json, except: [:show]
   skip_before_action :redirect_to_login_if_required
 
-  before_action :ensure_invites_allowed, only: [:show, :perform_accept_invitation]
-  before_action :ensure_new_registrations_allowed, only: [:show, :perform_accept_invitation]
+  before_action :ensure_invites_allowed,
+                only: %i[show perform_accept_invitation]
+  before_action :ensure_new_registrations_allowed,
+                only: %i[show perform_accept_invitation]
   before_action :ensure_not_logged_in, only: :perform_accept_invitation
 
   def show
     expires_now
 
-    RateLimiter.new(nil, "invites-show-#{request.remote_ip}", 100, 1.minute).performed!
+    RateLimiter.new(
+      nil,
+      "invites-show-#{request.remote_ip}",
+      100,
+      1.minute
+    ).performed!
 
     invite = Invite.find_by(invite_key: params[:id])
     if invite.present? && invite.redeemable?
       if current_user
         if current_user != invite.invited_by
           InvitedUser.transaction do
-            invited_user = InvitedUser.find_or_initialize_by(user: current_user, invite: invite)
+            invited_user =
+              InvitedUser.find_or_initialize_by(
+                user: current_user,
+                invite: invite
+              )
             if invited_user.new_record?
               invited_user.save!
               Invite.increment_counter(:redemption_count, invite.id)
@@ -38,10 +56,13 @@ class InvitesController < ApplicationController
 
         if invite.groups.present?
           invite_by_guardian = Guardian.new(invite.invited_by)
-          new_group_ids = invite.groups.pluck(:id) - current_user.group_users.pluck(:group_id)
+          new_group_ids =
+            invite.groups.pluck(:id) - current_user.group_users.pluck(:group_id)
           new_group_ids.each do |id|
             if group = Group.find_by(id: id)
-              group.add(current_user) if invite_by_guardian.can_edit_group?(group)
+              if invite_by_guardian.can_edit_group?(group)
+                group.add(current_user)
+              end
             end
           end
         end
@@ -53,7 +74,7 @@ class InvitesController < ApplicationController
           end
         end
 
-        return redirect_to(path("/"))
+        return redirect_to(path('/'))
       end
 
       email = Email.obfuscate(invite.email)
@@ -61,7 +82,8 @@ class InvitesController < ApplicationController
       # Show email if the user already authenticated their email
       different_external_email = false
       if session[:authentication]
-        auth_result = Auth::Result.from_session_data(session[:authentication], user: nil)
+        auth_result =
+          Auth::Result.from_session_data(session[:authentication], user: nil)
         if invite.email == auth_result.email
           email = invite.email
         else
@@ -69,21 +91,25 @@ class InvitesController < ApplicationController
         end
       end
 
-      email_verified_by_link = invite.email_token.present? && params[:t] == invite.email_token
-      if email_verified_by_link
-        email = invite.email
-      end
+      email_verified_by_link =
+        invite.email_token.present? && params[:t] == invite.email_token
+      email = invite.email if email_verified_by_link
 
       hidden_email = email != invite.email
 
       if hidden_email || invite.email.nil?
-        username = ""
+        username = ''
       else
         username = UserNameSuggester.suggest(invite.email)
       end
 
       info = {
-        invited_by: UserNameSerializer.new(invite.invited_by, scope: guardian, root: false),
+        invited_by:
+          UserNameSerializer.new(
+            invite.invited_by,
+            scope: guardian,
+            root: false
+          ),
         email: email,
         hidden_email: hidden_email,
         username: username,
@@ -91,18 +117,16 @@ class InvitesController < ApplicationController
         email_verified_by_link: email_verified_by_link
       }
 
-      if different_external_email
-        info[:different_external_email] = true
-      end
+      info[:different_external_email] = true if different_external_email
 
       if staged_user = User.where(staged: true).with_email(invite.email).first
         info[:username] = staged_user.username
         info[:user_fields] = staged_user.user_fields
       end
 
-      store_preloaded("invite_info", MultiJson.dump(info))
+      store_preloaded('invite_info', MultiJson.dump(info))
 
-      secure_session["invite-key"] = invite.invite_key
+      secure_session['invite-key'] = invite.invite_key
 
       render layout: 'application'
     else
@@ -110,9 +134,17 @@ class InvitesController < ApplicationController
         I18n.t('invite.not_found', base_url: Discourse.base_url)
       elsif invite.redeemed?
         if invite.is_invite_link?
-          I18n.t('invite.not_found_template_link', site_name: SiteSetting.title, base_url: Discourse.base_url)
+          I18n.t(
+            'invite.not_found_template_link',
+            site_name: SiteSetting.title,
+            base_url: Discourse.base_url
+          )
         else
-          I18n.t('invite.not_found_template', site_name: SiteSetting.title, base_url: Discourse.base_url)
+          I18n.t(
+            'invite.not_found_template',
+            site_name: SiteSetting.title,
+            base_url: Discourse.base_url
+          )
         end
       elsif invite.expired?
         I18n.t('invite.expired', base_url: Discourse.base_url)
@@ -133,31 +165,52 @@ class InvitesController < ApplicationController
     end
 
     if params[:group_ids].present? || params[:group_names].present?
-      groups = Group.lookup_groups(group_ids: params[:group_ids], group_names: params[:group_names])
+      groups =
+        Group.lookup_groups(
+          group_ids: params[:group_ids],
+          group_names: params[:group_names]
+        )
     end
 
     guardian.ensure_can_invite_to_forum!(groups)
 
     if !groups_can_see_topic?(groups, topic)
-      editable_topic_groups = topic.category.groups.filter { |g| guardian.can_edit_group?(g) }
-      return render_json_error(I18n.t("invite.requires_groups", groups: editable_topic_groups.pluck(:name).join(", ")))
+      editable_topic_groups =
+        topic.category.groups.filter { |g| guardian.can_edit_group?(g) }
+      return(
+        render_json_error(
+          I18n.t(
+            'invite.requires_groups',
+            groups: editable_topic_groups.pluck(:name).join(', ')
+          )
+        )
+      )
     end
 
     begin
-      invite = Invite.generate(current_user,
-        email: params[:email],
-        domain: params[:domain],
-        skip_email: params[:skip_email],
-        invited_by: current_user,
-        custom_message: params[:custom_message],
-        max_redemptions_allowed: params[:max_redemptions_allowed],
-        topic_id: topic&.id,
-        group_ids: groups&.map(&:id),
-        expires_at: params[:expires_at],
-      )
+      invite =
+        Invite.generate(
+          current_user,
+          email: params[:email],
+          domain: params[:domain],
+          skip_email: params[:skip_email],
+          invited_by: current_user,
+          custom_message: params[:custom_message],
+          max_redemptions_allowed: params[:max_redemptions_allowed],
+          topic_id: topic&.id,
+          group_ids: groups&.map(&:id),
+          expires_at: params[:expires_at]
+        )
 
       if invite.present?
-        render_serialized(invite, InviteSerializer, scope: guardian, root: nil, show_emails: params.has_key?(:email), show_warnings: true)
+        render_serialized(
+          invite,
+          InviteSerializer,
+          scope: guardian,
+          root: nil,
+          show_emails: params.has_key?(:email),
+          show_warnings: true
+        )
       else
         render json: failed_json, status: 422
       end
@@ -176,7 +229,14 @@ class InvitesController < ApplicationController
 
     guardian.ensure_can_invite_to_forum!(nil)
 
-    render_serialized(invite, InviteSerializer, scope: guardian, root: nil, show_emails: params.has_key?(:email), show_warnings: true)
+    render_serialized(
+      invite,
+      InviteSerializer,
+      scope: guardian,
+      root: nil,
+      show_emails: params.has_key?(:email),
+      show_warnings: true
+    )
   end
 
   def update
@@ -190,7 +250,11 @@ class InvitesController < ApplicationController
     end
 
     if params[:group_ids].present? || params[:group_names].present?
-      groups = Group.lookup_groups(group_ids: params[:group_ids], group_names: params[:group_names])
+      groups =
+        Group.lookup_groups(
+          group_ids: params[:group_ids],
+          group_names: params[:group_names]
+        )
     end
 
     guardian.ensure_can_invite_to_forum!(groups)
@@ -203,12 +267,26 @@ class InvitesController < ApplicationController
 
       if params.has_key?(:group_ids) || params.has_key?(:group_names)
         invite.invited_groups.destroy_all
-        groups.each { |group| invite.invited_groups.find_or_create_by!(group_id: group.id) } if groups.present?
+        if groups.present?
+          groups.each do |group|
+            invite.invited_groups.find_or_create_by!(group_id: group.id)
+          end
+        end
       end
 
       if !groups_can_see_topic?(invite.groups, invite.topics.first)
-        editable_topic_groups = invite.topics.first.category.groups.filter { |g| guardian.can_edit_group?(g) }
-        return render_json_error(I18n.t("invite.requires_groups", groups: editable_topic_groups.pluck(:name).join(", ")))
+        editable_topic_groups =
+          invite.topics.first.category.groups.filter do |g|
+            guardian.can_edit_group?(g)
+          end
+        return(
+          render_json_error(
+            I18n.t(
+              'invite.requires_groups',
+              groups: editable_topic_groups.pluck(:name).join(', ')
+            )
+          )
+        )
       end
 
       if params.has_key?(:email)
@@ -216,20 +294,32 @@ class InvitesController < ApplicationController
         new_email = params[:email].presence
 
         if new_email
-          if Invite.where.not(id: invite.id).find_by(email: new_email.downcase, invited_by_id: current_user.id)&.redeemable?
-            return render_json_error(
-              I18n.t("invite.invite_exists", email: CGI.escapeHTML(new_email)),
-              status: 409
+          if Invite
+               .where.not(id: invite.id)
+               .find_by(
+                 email: new_email.downcase,
+                 invited_by_id: current_user.id
+               )
+               &.redeemable?
+            return(
+              render_json_error(
+                I18n.t(
+                  'invite.invite_exists',
+                  email: CGI.escapeHTML(new_email)
+                ),
+                status: 409
+              )
             )
           end
         end
 
         if old_email != new_email
-          invite.emailed_status = if new_email && !params[:skip_email]
-            Invite.emailed_status_types[:pending]
-          else
-            Invite.emailed_status_types[:not_required]
-          end
+          invite.emailed_status =
+            if new_email && !params[:skip_email]
+              Invite.emailed_status_types[:pending]
+            else
+              Invite.emailed_status_types[:not_required]
+            end
         end
 
         invite.domain = nil if invite.email.present?
@@ -247,9 +337,14 @@ class InvitesController < ApplicationController
       if params[:send_email]
         if invite.emailed_status != Invite.emailed_status_types[:pending]
           begin
-            RateLimiter.new(current_user, "resend-invite-per-hour", 10, 1.hour).performed!
+            RateLimiter.new(
+              current_user,
+              'resend-invite-per-hour',
+              10,
+              1.hour
+            ).performed!
           rescue RateLimiter::LimitExceeded
-            return render_json_error(I18n.t("rate_limiter.slow_down"))
+            return render_json_error(I18n.t('rate_limiter.slow_down'))
           end
         end
 
@@ -257,18 +352,39 @@ class InvitesController < ApplicationController
       end
 
       begin
-        invite.update!(params.permit(:email, :custom_message, :max_redemptions_allowed, :expires_at))
+        invite.update!(
+          params.permit(
+            :email,
+            :custom_message,
+            :max_redemptions_allowed,
+            :expires_at
+          )
+        )
       rescue ActiveRecord::RecordInvalid => e
         return render_json_error(e.record.errors.full_messages.first)
       end
     end
 
     if invite.emailed_status == Invite.emailed_status_types[:pending]
-      invite.update_column(:emailed_status, Invite.emailed_status_types[:sending])
-      Jobs.enqueue(:invite_email, invite_id: invite.id, invite_to_topic: params[:invite_to_topic])
+      invite.update_column(
+        :emailed_status,
+        Invite.emailed_status_types[:sending]
+      )
+      Jobs.enqueue(
+        :invite_email,
+        invite_id: invite.id,
+        invite_to_topic: params[:invite_to_topic]
+      )
     end
 
-    render_serialized(invite, InviteSerializer, scope: guardian, root: nil, show_emails: params.has_key?(:email), show_warnings: true)
+    render_serialized(
+      invite,
+      InviteSerializer,
+      scope: guardian,
+      root: nil,
+      show_emails: params.has_key?(:email),
+      show_warnings: true
+    )
   end
 
   def destroy
@@ -286,7 +402,16 @@ class InvitesController < ApplicationController
   # via the SessionController#sso_login route
   def perform_accept_invitation
     params.require(:id)
-    params.permit(:email, :username, :name, :password, :timezone, :email_token, user_custom_fields: {})
+    params.permit(
+      :email,
+      :username,
+      :name,
+      :password,
+      :timezone,
+      :email_token,
+      user_custom_fields: {
+      }
+    )
 
     invite = Invite.find_by(invite_key: params[:id])
 
@@ -306,16 +431,24 @@ class InvitesController < ApplicationController
           attrs[:email] = params[:email]
         else
           attrs[:email] = invite.email
-          attrs[:email_token] = params[:email_token] if params[:email_token].present?
+          attrs[:email_token] = params[:email_token] if params[
+            :email_token
+          ].present?
         end
 
         user = invite.redeem(**attrs)
-      rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotSaved, Invite::UserExists => e
+      rescue ActiveRecord::RecordInvalid,
+             ActiveRecord::RecordNotSaved,
+             Invite::UserExists => e
         return render json: failed_json.merge(message: e.message), status: 412
       end
 
       if user.blank?
-        return render json: failed_json.merge(message: I18n.t('invite.not_found_json')), status: 404
+        return(
+          render json:
+                   failed_json.merge(message: I18n.t('invite.not_found_json')),
+                 status: 404
+        )
       end
 
       log_on_user(user) if user.active? && user.guardian.can_access_forum?
@@ -331,7 +464,7 @@ class InvitesController < ApplicationController
           if user.guardian.can_see?(topic)
             response[:redirect_to] = path(topic.relative_url)
           else
-            response[:redirect_to] = path("/")
+            response[:redirect_to] = path('/')
           end
         else
           response[:message] = if user.active?
@@ -348,7 +481,8 @@ class InvitesController < ApplicationController
 
       render json: success_json.merge(response)
     else
-      render json: failed_json.merge(message: I18n.t('invite.not_found_json')), status: 404
+      render json: failed_json.merge(message: I18n.t('invite.not_found_json')),
+             status: 404
     end
   end
 
@@ -365,26 +499,39 @@ class InvitesController < ApplicationController
 
   def resend_invite
     params.require(:email)
-    RateLimiter.new(current_user, "resend-invite-per-hour", 10, 1.hour).performed!
+    RateLimiter.new(
+      current_user,
+      'resend-invite-per-hour',
+      10,
+      1.hour
+    ).performed!
 
-    invite = Invite.find_by(invited_by_id: current_user.id, email: params[:email])
+    invite =
+      Invite.find_by(invited_by_id: current_user.id, email: params[:email])
     raise Discourse::InvalidParameters.new(:email) if invite.blank?
     invite.resend_invite
     render json: success_json
   rescue RateLimiter::LimitExceeded
-    render_json_error(I18n.t("rate_limiter.slow_down"))
+    render_json_error(I18n.t('rate_limiter.slow_down'))
   end
 
   def resend_all_invites
     guardian.ensure_can_resend_all_invites!(current_user)
 
     begin
-      RateLimiter.new(current_user, "bulk-reinvite-per-day", 1, 1.day, apply_limit_to_staff: true).performed!
+      RateLimiter.new(
+        current_user,
+        'bulk-reinvite-per-day',
+        1,
+        1.day,
+        apply_limit_to_staff: true
+      ).performed!
     rescue RateLimiter::LimitExceeded
-      return render_json_error(I18n.t("rate_limiter.slow_down"))
+      return render_json_error(I18n.t('rate_limiter.slow_down'))
     end
 
-    Invite.pending(current_user)
+    Invite
+      .pending(current_user)
       .where('invites.email IS NOT NULL')
       .find_each { |invite| invite.resend_invite }
 
@@ -401,34 +548,50 @@ class InvitesController < ApplicationController
         csv_header = nil
         invites = []
 
-        CSV.foreach(file.tempfile, encoding: "bom|utf-8") do |row|
+        CSV.foreach(file.tempfile, encoding: 'bom|utf-8') do |row|
           # Try to extract a CSV header, if it exists
           if csv_header.nil?
             if row[0] == 'email'
               csv_header = row
               next
             else
-              csv_header = ["email", "groups", "topic_id"]
+              csv_header = %w[email groups topic_id]
             end
           end
 
           if row[0].present?
-            invites.push(csv_header.zip(row).map.to_h.filter { |k, v| v.present? })
+            invites.push(
+              csv_header.zip(row).map.to_h.filter { |k, v| v.present? }
+            )
           end
 
           break if invites.count >= SiteSetting.max_bulk_invites
         end
 
         if invites.present?
-          Jobs.enqueue(:bulk_invite, invites: invites, current_user_id: current_user.id)
+          Jobs.enqueue(
+            :bulk_invite,
+            invites: invites,
+            current_user_id: current_user.id
+          )
 
           if invites.count >= SiteSetting.max_bulk_invites
-            render json: failed_json.merge(errors: [I18n.t("bulk_invite.max_rows", max_bulk_invites: SiteSetting.max_bulk_invites)]), status: 422
+            render json:
+                     failed_json.merge(
+                       errors: [
+                         I18n.t(
+                           'bulk_invite.max_rows',
+                           max_bulk_invites: SiteSetting.max_bulk_invites
+                         )
+                       ]
+                     ),
+                   status: 422
           else
             render json: success_json
           end
         else
-          render json: failed_json.merge(errors: [I18n.t("bulk_invite.error")]), status: 422
+          render json: failed_json.merge(errors: [I18n.t('bulk_invite.error')]),
+                 status: 422
         end
       end
     end
@@ -437,7 +600,11 @@ class InvitesController < ApplicationController
   private
 
   def ensure_invites_allowed
-    if (!SiteSetting.enable_local_logins && Discourse.enabled_auth_providers.count == 0 && !SiteSetting.enable_discourse_connect)
+    if (
+         !SiteSetting.enable_local_logins &&
+           Discourse.enabled_auth_providers.count == 0 &&
+           !SiteSetting.enable_discourse_connect
+       )
       raise Discourse::NotFound
     end
   end
@@ -452,7 +619,7 @@ class InvitesController < ApplicationController
 
   def ensure_not_logged_in
     if current_user
-      flash[:error] = I18n.t("login.already_logged_in")
+      flash[:error] = I18n.t('login.already_logged_in')
       render layout: 'no_ember'
       false
     end
@@ -474,10 +641,15 @@ class InvitesController < ApplicationController
 
     if user.has_password?
       if !user.active
-        email_token = user.email_tokens.create!(email: user.email, scope: EmailToken.scopes[:signup])
+        email_token =
+          user.email_tokens.create!(
+            email: user.email,
+            scope: EmailToken.scopes[:signup]
+          )
         EmailToken.enqueue_signup_email(email_token)
       end
-    elsif !SiteSetting.enable_discourse_connect && SiteSetting.enable_local_logins
+    elsif !SiteSetting.enable_discourse_connect &&
+          SiteSetting.enable_local_logins
       Jobs.enqueue(:invite_password_instructions_email, username: user.username)
     end
   end
@@ -485,11 +657,13 @@ class InvitesController < ApplicationController
   def create_topic_invite_notifications(invite, user)
     invite.topics.each do |topic|
       if user.guardian.can_see?(topic)
-        last_notification = user.notifications
-          .where(notification_type: Notification.types[:invited_to_topic])
-          .where(topic_id: topic.id)
-          .where(post_number: 1)
-          .where('created_at > ?', 1.hour.ago)
+        last_notification =
+          user
+            .notifications
+            .where(notification_type: Notification.types[:invited_to_topic])
+            .where(topic_id: topic.id)
+            .where(post_number: 1)
+            .where('created_at > ?', 1.hour.ago)
 
         if !last_notification.exists?
           topic.create_invite_notification!(

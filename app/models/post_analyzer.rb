@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class PostAnalyzer
-
   def initialize(raw, topic_id)
     @raw = raw
     @topic_id = topic_id
@@ -32,19 +31,20 @@ class PostAnalyzer
     end
 
     limit = SiteSetting.max_oneboxes_per_post
-    result = Oneboxer.apply(cooked) do |url|
-      next if limit <= 0
-      limit -= 1
+    result =
+      Oneboxer.apply(cooked) do |url|
+        next if limit <= 0
+        limit -= 1
 
-      @onebox_urls << url
-      if opts[:invalidate_oneboxes]
-        Oneboxer.invalidate(url)
-        InlineOneboxer.invalidate(url)
+        @onebox_urls << url
+        if opts[:invalidate_oneboxes]
+          Oneboxer.invalidate(url)
+          InlineOneboxer.invalidate(url)
+        end
+        onebox = Oneboxer.cached_onebox(url)
+        @found_oneboxes = true if onebox.present?
+        onebox
       end
-      onebox = Oneboxer.cached_onebox(url)
-      @found_oneboxes = true if onebox.present?
-      onebox
-    end
 
     cooked = result.to_html if result.changed?
     cooked
@@ -55,19 +55,28 @@ class PostAnalyzer
     return 0 unless @raw.present?
 
     # TODO - do we need to look for tags other than img, video and audio?
-    cooked_stripped.css("img", "video", "audio").reject do |t|
-      if dom_class = t["class"]
-        (Post.allowed_image_classes & dom_class.split).count > 0
+    cooked_stripped
+      .css('img', 'video', 'audio')
+      .reject do |t|
+        if dom_class = t['class']
+          (Post.allowed_image_classes & dom_class.split).count > 0
+        end
       end
-    end.count
+      .count
   end
 
   # How many attachments are present in the post
   def attachment_count
     return 0 unless @raw.present?
 
-    attachments  = cooked_stripped.css("a.attachment[href^=\"#{Discourse.store.absolute_base_url}\"]")
-    attachments += cooked_stripped.css("a.attachment[href^=\"#{Discourse.store.relative_base_url}\"]") if Discourse.store.internal?
+    attachments =
+      cooked_stripped.css(
+        "a.attachment[href^=\"#{Discourse.store.absolute_base_url}\"]"
+      )
+    attachments +=
+      cooked_stripped.css(
+        "a.attachment[href^=\"#{Discourse.store.relative_base_url}\"]"
+      ) if Discourse.store.internal?
     attachments.count
   end
 
@@ -75,13 +84,16 @@ class PostAnalyzer
     return [] if @raw.blank?
     return @raw_mentions if @raw_mentions.present?
 
-    raw_mentions = cooked_stripped.css('.mention, .mention-group').map do |e|
-      if name = e.inner_text
-        name = name[1..-1]
-        name = User.normalize_username(name)
-        name
-      end
-    end
+    raw_mentions =
+      cooked_stripped
+        .css('.mention, .mention-group')
+        .map do |e|
+          if name = e.inner_text
+            name = name[1..-1]
+            name = User.normalize_username(name)
+            name
+          end
+        end
 
     raw_mentions.compact!
     raw_mentions.uniq!
@@ -123,15 +135,17 @@ class PostAnalyzer
     return @raw_links if @raw_links.present?
 
     @raw_links = []
-    cooked_stripped.css("a").each do |l|
-      # Don't include @mentions in the link count
-      next if link_is_a_mention?(l)
-      # Don't include heading anchor in the link count
-      next if link_is_an_anchor?(l)
-      # Don't include hashtags in the link count
-      next if link_is_a_hashtag?(l)
-      @raw_links << l['href'].to_s
-    end
+    cooked_stripped
+      .css('a')
+      .each do |l|
+        # Don't include @mentions in the link count
+        next if link_is_a_mention?(l)
+        # Don't include heading anchor in the link count
+        next if link_is_an_anchor?(l)
+        # Don't include hashtags in the link count
+        next if link_is_a_hashtag?(l)
+        @raw_links << l['href'].to_s
+      end
 
     @raw_links
   end
@@ -142,18 +156,25 @@ class PostAnalyzer
   end
 
   def cooked_stripped
-    @cooked_stripped ||= begin
-      doc = Nokogiri::HTML5.fragment(cook(@raw, topic_id: @topic_id))
-      doc.css("pre .mention, aside.quote > .title, aside.quote .mention, aside.quote .mention-group, .onebox, .elided").remove
-      doc
-    end
+    @cooked_stripped ||=
+      begin
+        doc = Nokogiri::HTML5.fragment(cook(@raw, topic_id: @topic_id))
+        doc.css(
+          'pre .mention, aside.quote > .title, aside.quote .mention, aside.quote .mention-group, .onebox, .elided'
+        ).remove
+        doc
+      end
   end
 
   private
 
   def link_is_a_mention?(l)
     href = l['href'].to_s
-    l['class'].to_s['mention'] && (href.start_with?("#{Discourse.base_path}/u/") || href.start_with?("#{Discourse.base_path}/users/"))
+    l['class'].to_s['mention'] &&
+      (
+        href.start_with?("#{Discourse.base_path}/u/") ||
+          href.start_with?("#{Discourse.base_path}/users/")
+      )
   end
 
   def link_is_an_anchor?(l)
@@ -162,7 +183,10 @@ class PostAnalyzer
 
   def link_is_a_hashtag?(l)
     href = l['href'].to_s
-    l['class'].to_s['hashtag'] && (href.start_with?("#{Discourse.base_path}/c/") || href.start_with?("#{Discourse.base_path}/tag/"))
+    l['class'].to_s['hashtag'] &&
+      (
+        href.start_with?("#{Discourse.base_path}/c/") ||
+          href.start_with?("#{Discourse.base_path}/tag/")
+      )
   end
-
 end

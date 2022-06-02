@@ -1,29 +1,48 @@
 # frozen_string_literal: true
 
-require "openssl"
+require 'openssl'
 
 class WebhooksController < ActionController::Base
-
   def mailgun
     return mailgun_failure if SiteSetting.mailgun_api_key.blank?
 
-    params["event-data"] ? handle_mailgun_new(params) : handle_mailgun_legacy(params)
+    if params['event-data']
+      handle_mailgun_new(params)
+    else
+      handle_mailgun_legacy(params)
+    end
   end
 
   def sendgrid
-    events = params["_json"] || [params]
+    events = params['_json'] || [params]
     events.each do |event|
-      message_id = Email::MessageIdService.message_id_clean((event["smtp-id"] || ""))
-      to_address = event["email"]
-      error_code = event["status"]
-      if event["event"] == "bounce"
+      message_id =
+        Email::MessageIdService.message_id_clean((event['smtp-id'] || ''))
+      to_address = event['email']
+      error_code = event['status']
+      if event['event'] == 'bounce'
         if error_code[Email::SMTP_STATUS_TRANSIENT_FAILURE]
-          process_bounce(message_id, to_address, SiteSetting.soft_bounce_score, error_code)
+          process_bounce(
+            message_id,
+            to_address,
+            SiteSetting.soft_bounce_score,
+            error_code
+          )
         else
-          process_bounce(message_id, to_address, SiteSetting.hard_bounce_score, error_code)
+          process_bounce(
+            message_id,
+            to_address,
+            SiteSetting.hard_bounce_score,
+            error_code
+          )
         end
-      elsif event["event"] == "dropped"
-        process_bounce(message_id, to_address, SiteSetting.hard_bounce_score, error_code)
+      elsif event['event'] == 'dropped'
+        process_bounce(
+          message_id,
+          to_address,
+          SiteSetting.hard_bounce_score,
+          error_code
+        )
       end
     end
 
@@ -31,12 +50,12 @@ class WebhooksController < ActionController::Base
   end
 
   def mailjet
-    events = params["_json"] || [params]
+    events = params['_json'] || [params]
     events.each do |event|
-      message_id = event["CustomID"]
-      to_address = event["email"]
-      if event["event"] == "bounce"
-        if event["hard_bounce"]
+      message_id = event['CustomID']
+      to_address = event['email']
+      if event['event'] == 'bounce'
+        if event['hard_bounce']
           process_bounce(message_id, to_address, SiteSetting.hard_bounce_score)
         else
           process_bounce(message_id, to_address, SiteSetting.soft_bounce_score)
@@ -48,17 +67,27 @@ class WebhooksController < ActionController::Base
   end
 
   def mandrill
-    events = params["mandrill_events"]
+    events = params['mandrill_events']
     events.each do |event|
-      message_id = event.dig("msg", "metadata", "message_id")
-      to_address = event.dig("msg", "email")
-      error_code = event.dig("msg", "diag")
+      message_id = event.dig('msg', 'metadata', 'message_id')
+      to_address = event.dig('msg', 'email')
+      error_code = event.dig('msg', 'diag')
 
-      case event["event"]
-      when "hard_bounce"
-        process_bounce(message_id, to_address, SiteSetting.hard_bounce_score, error_code)
-      when "soft_bounce"
-        process_bounce(message_id, to_address, SiteSetting.soft_bounce_score, error_code)
+      case event['event']
+      when 'hard_bounce'
+        process_bounce(
+          message_id,
+          to_address,
+          SiteSetting.hard_bounce_score,
+          error_code
+        )
+      when 'soft_bounce'
+        process_bounce(
+          message_id,
+          to_address,
+          SiteSetting.soft_bounce_score,
+          error_code
+        )
       end
     end
 
@@ -69,13 +98,13 @@ class WebhooksController < ActionController::Base
     # see https://postmarkapp.com/developer/webhooks/bounce-webhook#bounce-webhook-data
     # and https://postmarkapp.com/developer/api/bounce-api#bounce-types
 
-    message_id = params["MessageID"]
-    to_address = params["Email"]
-    type = params["Type"]
+    message_id = params['MessageID']
+    to_address = params['Email']
+    type = params['Type']
     case type
-    when "HardBounce", "SpamNotification", "SpamComplaint"
+    when 'HardBounce', 'SpamNotification', 'SpamComplaint'
       process_bounce(message_id, to_address, SiteSetting.hard_bounce_score)
-    when "SoftBounce"
+    when 'SoftBounce'
       process_bounce(message_id, to_address, SiteSetting.soft_bounce_score)
     end
 
@@ -83,14 +112,14 @@ class WebhooksController < ActionController::Base
   end
 
   def sparkpost
-    events = params["_json"] || [params]
+    events = params['_json'] || [params]
     events.each do |event|
-      message_event = event.dig("msys", "message_event")
+      message_event = event.dig('msys', 'message_event')
       next unless message_event
 
-      message_id   = message_event.dig("rcpt_meta", "message_id")
-      to_address   = message_event["rcpt_to"]
-      bounce_class = message_event["bounce_class"]
+      message_id = message_event.dig('rcpt_meta', 'message_id')
+      to_address = message_event['rcpt_to']
+      bounce_class = message_event['bounce_class']
       next unless bounce_class
 
       bounce_class = bounce_class.to_i
@@ -109,13 +138,13 @@ class WebhooksController < ActionController::Base
   end
 
   def aws
-    raw  = request.raw_post
+    raw = request.raw_post
     json = JSON.parse(raw)
 
-    case json["Type"]
-    when "SubscriptionConfirmation"
+    case json['Type']
+    when 'SubscriptionConfirmation'
       Jobs.enqueue(:confirm_sns_subscription, raw: raw, json: json)
-    when "Notification"
+    when 'Notification'
       Jobs.enqueue(:process_sns_notification, raw: raw, json: json)
     end
 
@@ -145,60 +174,105 @@ class WebhooksController < ActionController::Base
     return false if (Time.at(timestamp.to_i) - Time.now).abs > 12.hours.to_i
 
     # check the signature
-    signature == OpenSSL::HMAC.hexdigest("SHA256", SiteSetting.mailgun_api_key, "#{timestamp}#{token}")
+    signature ==
+      OpenSSL::HMAC.hexdigest(
+        'SHA256',
+        SiteSetting.mailgun_api_key,
+        "#{timestamp}#{token}"
+      )
   end
 
   def handle_mailgun_legacy(params)
-    return mailgun_failure unless valid_mailgun_signature?(params["token"], params["timestamp"], params["signature"])
+    unless valid_mailgun_signature?(
+             params['token'],
+             params['timestamp'],
+             params['signature']
+           )
+      return mailgun_failure
+    end
 
-    event = params["event"]
-    message_id = Email::MessageIdService.message_id_clean(params["Message-Id"])
-    to_address = params["recipient"]
-    error_code = params["code"]
+    event = params['event']
+    message_id = Email::MessageIdService.message_id_clean(params['Message-Id'])
+    to_address = params['recipient']
+    error_code = params['code']
 
     # only handle soft bounces, because hard bounces are also handled
     # by the "dropped" event and we don't want to increase bounce score twice
     # for the same message
-    if event == "bounced" && params["error"][Email::SMTP_STATUS_TRANSIENT_FAILURE]
-      process_bounce(message_id, to_address, SiteSetting.soft_bounce_score, error_code)
-    elsif event == "dropped"
-      process_bounce(message_id, to_address, SiteSetting.hard_bounce_score, error_code)
+    if event == 'bounced' &&
+         params['error'][Email::SMTP_STATUS_TRANSIENT_FAILURE]
+      process_bounce(
+        message_id,
+        to_address,
+        SiteSetting.soft_bounce_score,
+        error_code
+      )
+    elsif event == 'dropped'
+      process_bounce(
+        message_id,
+        to_address,
+        SiteSetting.hard_bounce_score,
+        error_code
+      )
     end
 
     success
   end
 
   def handle_mailgun_new(params)
-    signature = params["signature"]
-    return mailgun_failure unless valid_mailgun_signature?(signature["token"], signature["timestamp"], signature["signature"])
+    signature = params['signature']
+    unless valid_mailgun_signature?(
+             signature['token'],
+             signature['timestamp'],
+             signature['signature']
+           )
+      return mailgun_failure
+    end
 
-    data = params["event-data"]
-    error_code = params.dig("delivery-status", "code")
-    message_id = data.dig("message", "headers", "message-id")
-    to_address = data["recipient"]
-    severity = data["severity"]
+    data = params['event-data']
+    error_code = params.dig('delivery-status', 'code')
+    message_id = data.dig('message', 'headers', 'message-id')
+    to_address = data['recipient']
+    severity = data['severity']
 
-    if data["event"] == "failed"
-      if severity == "temporary"
-        process_bounce(message_id, to_address, SiteSetting.soft_bounce_score, error_code)
-      elsif severity == "permanent"
-        process_bounce(message_id, to_address, SiteSetting.hard_bounce_score, error_code)
+    if data['event'] == 'failed'
+      if severity == 'temporary'
+        process_bounce(
+          message_id,
+          to_address,
+          SiteSetting.soft_bounce_score,
+          error_code
+        )
+      elsif severity == 'permanent'
+        process_bounce(
+          message_id,
+          to_address,
+          SiteSetting.hard_bounce_score,
+          error_code
+        )
       end
     end
 
     success
   end
 
-  def process_bounce(message_id, to_address, bounce_score, bounce_error_code = nil)
+  def process_bounce(
+    message_id,
+    to_address,
+    bounce_score,
+    bounce_error_code = nil
+  )
     return if message_id.blank? || to_address.blank?
 
     email_log = EmailLog.find_by(message_id: message_id, to_address: to_address)
     return if email_log.nil?
 
-    email_log.update_columns(bounced: true, bounce_error_code: bounce_error_code)
+    email_log.update_columns(
+      bounced: true,
+      bounce_error_code: bounce_error_code
+    )
     return if email_log.user.nil? || email_log.user.email.blank?
 
     Email::Receiver.update_bounce_score(email_log.user.email, bounce_score)
   end
-
 end

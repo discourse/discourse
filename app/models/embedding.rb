@@ -6,14 +6,16 @@ class Embedding < OpenStruct
   include HasErrors
 
   def self.settings
-    %i(embed_by_username
-       embed_post_limit
-       embed_title_scrubber
-       embed_truncate
-       embed_unlisted
-       allowed_embed_selectors
-       blocked_embed_selectors
-       allowed_embed_classnames)
+    %i[
+      embed_by_username
+      embed_post_limit
+      embed_title_scrubber
+      embed_truncate
+      embed_unlisted
+      allowed_embed_selectors
+      blocked_embed_selectors
+      allowed_embed_classnames
+    ]
   end
 
   def base_url
@@ -21,9 +23,7 @@ class Embedding < OpenStruct
   end
 
   def save
-    Embedding.settings.each do |s|
-      SiteSetting.set(s, public_send(s))
-    end
+    Embedding.settings.each { |s| SiteSetting.set(s, public_send(s)) }
     true
   rescue Discourse::InvalidParameters => p
     errors.add :base, p.to_s

@@ -5,8 +5,8 @@ class EmbedController < ApplicationController
 
   skip_before_action :check_xhr, :preload_json, :verify_authenticity_token
 
-  before_action :prepare_embeddable, except: [ :info ]
-  before_action :ensure_api_request, only: [ :info ]
+  before_action :prepare_embeddable, except: [:info]
+  before_action :ensure_api_request, only: [:info]
 
   layout 'embed'
 
@@ -28,34 +28,43 @@ class EmbedController < ApplicationController
     end
 
     if @embed_id = params[:discourse_embed_id]
-      raise Discourse::InvalidParameters.new(:embed_id) unless @embed_id =~ /^de\-[a-zA-Z0-9]+$/
+      unless @embed_id =~ /^de\-[a-zA-Z0-9]+$/
+        raise Discourse::InvalidParameters.new(:embed_id)
+      end
     end
 
     if @embed_class = params[:embed_class]
-      raise Discourse::InvalidParameters.new(:embed_class) unless @embed_class =~ /^[a-zA-Z0-9\-_]+$/
+      unless @embed_class =~ /^[a-zA-Z0-9\-_]+$/
+        raise Discourse::InvalidParameters.new(:embed_class)
+      end
     end
 
     response.headers['X-Robots-Tag'] = 'noindex, indexifembedded'
 
-    if params.has_key?(:template) && params[:template] == "complete"
-      @template = "complete"
+    if params.has_key?(:template) && params[:template] == 'complete'
+      @template = 'complete'
     else
-      @template = "basic"
+      @template = 'basic'
     end
 
     list_options = build_topic_list_options
 
     if params.has_key?(:per_page)
-      list_options[:per_page] =
-        [params[:per_page].to_i, SiteSetting.embed_topic_limit_per_page].min
+      list_options[:per_page] = [
+        params[:per_page].to_i,
+        SiteSetting.embed_topic_limit_per_page
+      ].min
     end
 
     if params[:allow_create]
       @allow_create = true
       create_url_params = {}
-      create_url_params[:category_id] = params[:category] if params[:category].present?
+      create_url_params[:category_id] = params[:category] if params[
+        :category
+      ].present?
       create_url_params[:tags] = params[:tags] if params[:tags].present?
-      @create_url = "#{Discourse.base_url}/new-topic?#{create_url_params.to_query}"
+      @create_url =
+        "#{Discourse.base_url}/new-topic?#{create_url_params.to_query}"
     end
 
     topic_query = TopicQuery.new(current_user, list_options)
@@ -67,11 +76,12 @@ class EmbedController < ApplicationController
       valid_top_period = false
     end
 
-    @list = if valid_top_period
-      topic_query.list_top_for(top_period)
-    else
-      topic_query.list_latest
-    end
+    @list =
+      if valid_top_period
+        topic_query.list_top_for(top_period)
+      else
+        topic_query.list_latest
+      end
   end
 
   def comments
@@ -91,27 +101,33 @@ class EmbedController < ApplicationController
     end
 
     if topic_id
-      @topic_view = TopicView.new(topic_id,
-                                  current_user,
-                                  limit: SiteSetting.embed_post_limit,
-                                  only_regular: true,
-                                  exclude_first: true,
-                                  exclude_deleted_users: true,
-                                  exclude_hidden: true)
+      @topic_view =
+        TopicView.new(
+          topic_id,
+          current_user,
+          limit: SiteSetting.embed_post_limit,
+          only_regular: true,
+          exclude_first: true,
+          exclude_deleted_users: true,
+          exclude_hidden: true
+        )
       raise Discourse::NotFound if @topic_view.blank?
 
       @posts_left = 0
       @second_post_url = "#{@topic_view.topic.url}/2"
       @reply_count = @topic_view.filtered_posts.count - 1
       @reply_count = 0 if @reply_count < 0
-      @posts_left = @reply_count - SiteSetting.embed_post_limit if @reply_count > SiteSetting.embed_post_limit
+      @posts_left =
+        @reply_count - SiteSetting.embed_post_limit if @reply_count >
+        SiteSetting.embed_post_limit
     elsif embed_url.present?
-      Jobs.enqueue(:retrieve_topic,
-                      user_id: current_user.try(:id),
-                      embed_url: embed_url,
-                      author_username: embed_username,
-                      referer: request.env['HTTP_REFERER']
-                  )
+      Jobs.enqueue(
+        :retrieve_topic,
+        user_id: current_user.try(:id),
+        embed_url: embed_url,
+        author_username: embed_username,
+        referer: request.env['HTTP_REFERER']
+      )
       render 'loading'
     end
 
@@ -132,12 +148,16 @@ class EmbedController < ApplicationController
     by_url = {}
 
     if embed_urls.present?
-      urls = embed_urls.map { |u| u.sub(/#discourse-comments$/, '').sub(/\/$/, '') }
-      topic_embeds = TopicEmbed.where(embed_url: urls).includes(:topic).references(:topic)
+      urls =
+        embed_urls.map { |u| u.sub(/#discourse-comments$/, '').sub(%r{/$}, '') }
+      topic_embeds =
+        TopicEmbed.where(embed_url: urls).includes(:topic).references(:topic)
 
       topic_embeds.each do |te|
         url = te.embed_url
-        url = "#{url}#discourse-comments" unless params[:embed_url].include?(url)
+        url = "#{url}#discourse-comments" unless params[:embed_url].include?(
+          url
+        )
         if te.topic.present?
           by_url[url] = I18n.t('embed.replies', count: te.topic.posts_count - 1)
         else
@@ -153,9 +173,11 @@ class EmbedController < ApplicationController
 
   def prepare_embeddable
     response.headers.delete('X-Frame-Options')
-    @embeddable_css_class = ""
+    @embeddable_css_class = ''
     embeddable_host = EmbeddableHost.record_for_url(request.referer)
-    @embeddable_css_class = " class=\"#{embeddable_host.class_name}\"" if embeddable_host.present? && embeddable_host.class_name.present?
+    @embeddable_css_class =
+      " class=\"#{embeddable_host.class_name}\"" if embeddable_host.present? &&
+      embeddable_host.class_name.present?
 
     @data_referer = request.referer
     @data_referer = '*' if SiteSetting.embed_any_origin? && @data_referer.blank?

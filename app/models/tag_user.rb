@@ -4,20 +4,29 @@ class TagUser < ActiveRecord::Base
   belongs_to :tag
   belongs_to :user
 
-  scope :notification_level_visible, -> (notification_levels = TagUser.notification_levels.values) {
-    select("tag_users.*")
-      .distinct
-      .joins("LEFT OUTER JOIN tag_group_memberships ON tag_users.tag_id = tag_group_memberships.tag_id")
-      .joins("LEFT OUTER JOIN tag_group_permissions ON tag_group_memberships.tag_group_id = tag_group_permissions.tag_group_id")
-      .joins("LEFT OUTER JOIN group_users on group_users.user_id = tag_users.user_id")
-      .where("(tag_group_permissions.group_id IS NULL
+  scope :notification_level_visible,
+        ->(notification_levels = TagUser.notification_levels.values) {
+          select('tag_users.*')
+            .distinct
+            .joins(
+              'LEFT OUTER JOIN tag_group_memberships ON tag_users.tag_id = tag_group_memberships.tag_id'
+            )
+            .joins(
+              'LEFT OUTER JOIN tag_group_permissions ON tag_group_memberships.tag_group_id = tag_group_permissions.tag_group_id'
+            )
+            .joins(
+              'LEFT OUTER JOIN group_users on group_users.user_id = tag_users.user_id'
+            )
+            .where(
+              '(tag_group_permissions.group_id IS NULL
                OR tag_group_permissions.group_id IN (:everyone_group_id, group_users.group_id)
                OR group_users.group_id = :staff_group_id)
-              AND tag_users.notification_level IN (:notification_levels)",
-             staff_group_id: Group::AUTO_GROUPS[:staff],
-             everyone_group_id: Group::AUTO_GROUPS[:everyone],
-             notification_levels: notification_levels)
-  }
+              AND tag_users.notification_level IN (:notification_levels)',
+              staff_group_id: Group::AUTO_GROUPS[:staff],
+              everyone_group_id: Group::AUTO_GROUPS[:everyone],
+              notification_levels: notification_levels
+            )
+        }
 
   def self.notification_levels
     NotificationLevels.all
@@ -31,29 +40,31 @@ class TagUser < ActiveRecord::Base
     tags ||= []
     changed = false
 
-    records = TagUser.where(user: user, notification_level: notification_levels[level])
+    records =
+      TagUser.where(user: user, notification_level: notification_levels[level])
     old_ids = records.pluck(:tag_id)
 
-    tag_ids = if tags.empty?
-      []
-    elsif tags.first&.is_a?(String)
-      Tag.where_name(tags).pluck(:id)
-    else
-      tags
-    end
+    tag_ids =
+      if tags.empty?
+        []
+      elsif tags.first&.is_a?(String)
+        Tag.where_name(tags).pluck(:id)
+      else
+        tags
+      end
 
-    Tag.where(id: tag_ids).joins(:target_tag).each do |tag|
-      tag_ids[tag_ids.index(tag.id)] = tag.target_tag_id
-    end
+    Tag
+      .where(id: tag_ids)
+      .joins(:target_tag)
+      .each { |tag| tag_ids[tag_ids.index(tag.id)] = tag.target_tag_id }
 
     tag_ids.uniq!
 
     if tag_ids.present? &&
-        TagUser.where(user_id: user.id, tag_id: tag_ids)
-            .where
-            .not(notification_level: notification_levels[level])
-            .update_all(notification_level: notification_levels[level]) > 0
-
+         TagUser
+           .where(user_id: user.id, tag_id: tag_ids)
+           .where.not(notification_level: notification_levels[level])
+           .update_all(notification_level: notification_levels[level]) > 0
       changed = true
     end
 
@@ -65,15 +76,16 @@ class TagUser < ActiveRecord::Base
 
     now = Time.zone.now
 
-    new_records_attrs = (tag_ids - old_ids).map do |tag_id|
-      {
-        user_id: user.id,
-        tag_id: tag_id,
-        notification_level: notification_levels[level],
-        created_at: now,
-        updated_at: now
-      }
-    end
+    new_records_attrs =
+      (tag_ids - old_ids).map do |tag_id|
+        {
+          user_id: user.id,
+          tag_id: tag_id,
+          notification_level: notification_levels[level],
+          created_at: now,
+          updated_at: now
+        }
+      end
 
     unless new_records_attrs.empty?
       result = TagUser.insert_all(new_records_attrs)
@@ -96,9 +108,7 @@ class TagUser < ActiveRecord::Base
       tag = Tag.find_by_id(tag_id)
     end
 
-    if tag.synonym?
-      tag_id = tag.target_tag_id
-    end
+    tag_id = tag.target_tag_id if tag.synonym?
 
     user_id = user_id.id if user_id.is_a?(::User)
 
@@ -112,7 +122,12 @@ class TagUser < ActiveRecord::Base
       tag_user.notification_level = level
       tag_user.save
     else
-      tag_user = TagUser.create(user_id: user_id, tag_id: tag_id, notification_level: level)
+      tag_user =
+        TagUser.create(
+          user_id: user_id,
+          tag_id: tag_id,
+          notification_level: level
+        )
     end
 
     auto_watch(user_id: user_id)
@@ -158,21 +173,22 @@ class TagUser < ActiveRecord::Base
 
     SQL
 
-    builder.where("tu.notification_level in (:tracking, :regular, :watching)")
+    builder.where('tu.notification_level in (:tracking, :regular, :watching)')
 
     if topic_id = opts[:topic_id]
-      builder.where("tu.topic_id = :topic_id", topic_id: topic_id)
+      builder.where('tu.topic_id = :topic_id', topic_id: topic_id)
     end
 
     if user_id = opts[:user_id]
-      builder.where("tu.user_id = :user_id", user_id: user_id)
+      builder.where('tu.user_id = :user_id', user_id: user_id)
     end
 
-    builder.exec(watching: notification_levels[:watching],
-                 tracking: notification_levels[:tracking],
-                 regular: notification_levels[:regular],
-                 auto_watch_tag: TopicUser.notification_reasons[:auto_watch_tag])
-
+    builder.exec(
+      watching: notification_levels[:watching],
+      tracking: notification_levels[:tracking],
+      regular: notification_levels[:regular],
+      auto_watch_tag: TopicUser.notification_reasons[:auto_watch_tag]
+    )
   end
 
   def self.auto_track(opts)
@@ -195,43 +211,47 @@ class TagUser < ActiveRecord::Base
     SQL
 
     if topic_id = opts[:topic_id]
-      builder.where("tu.topic_id = :topic_id", topic_id: topic_id)
+      builder.where('tu.topic_id = :topic_id', topic_id: topic_id)
     end
 
     if user_id = opts[:user_id]
-      builder.where("tu.user_id = :user_id", user_id: user_id)
+      builder.where('tu.user_id = :user_id', user_id: user_id)
     end
 
-    builder.exec(tracking: notification_levels[:tracking],
-                 regular: notification_levels[:regular],
-                 auto_track_tag: TopicUser.notification_reasons[:auto_track_tag])
+    builder.exec(
+      tracking: notification_levels[:tracking],
+      regular: notification_levels[:regular],
+      auto_track_tag: TopicUser.notification_reasons[:auto_track_tag]
+    )
   end
 
   def self.notification_levels_for(user)
     # Anonymous users have all default tags set to regular tracking,
     # except for default muted tags which stay muted.
     if user.blank?
-      notification_levels = [
-        SiteSetting.default_tags_watching_first_post.split("|"),
-        SiteSetting.default_tags_watching.split("|"),
-        SiteSetting.default_tags_tracking.split("|")
-      ].flatten.map do |name|
-        [name, self.notification_levels[:regular]]
-      end
+      notification_levels =
+        [
+          SiteSetting.default_tags_watching_first_post.split('|'),
+          SiteSetting.default_tags_watching.split('|'),
+          SiteSetting.default_tags_tracking.split('|')
+        ].flatten.map { |name| [name, self.notification_levels[:regular]] }
 
-      notification_levels += SiteSetting.default_tags_muted.split("|").map do |name|
-        [name, self.notification_levels[:muted]]
-      end
+      notification_levels +=
+        SiteSetting
+          .default_tags_muted
+          .split('|')
+          .map { |name| [name, self.notification_levels[:muted]] }
     else
-      notification_levels = TagUser
-        .notification_level_visible
-        .where(user: user)
-        .joins(:tag).pluck("tags.name", :notification_level)
+      notification_levels =
+        TagUser
+          .notification_level_visible
+          .where(user: user)
+          .joins(:tag)
+          .pluck('tags.name', :notification_level)
     end
 
     Hash[*notification_levels.flatten]
   end
-
 end
 
 # == Schema Information

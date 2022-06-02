@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
 class DiscourseConnect < DiscourseConnectBase
-
-  class BlankExternalId < StandardError; end
-  class BannedExternalId < StandardError; end
+  class BlankExternalId < StandardError
+  end
+  class BannedExternalId < StandardError
+  end
 
   def self.sso_url
     SiteSetting.discourse_connect_url
@@ -13,15 +14,15 @@ class DiscourseConnect < DiscourseConnectBase
     SiteSetting.discourse_connect_secret
   end
 
-  def self.generate_sso(return_path = "/", secure_session:)
+  def self.generate_sso(return_path = '/', secure_session:)
     sso = new(secure_session: secure_session)
     sso.nonce = SecureRandom.hex
     sso.register_nonce(return_path)
-    sso.return_sso_url = Discourse.base_url + "/session/sso_login"
+    sso.return_sso_url = Discourse.base_url + '/session/sso_login'
     sso
   end
 
-  def self.generate_url(return_path = "/", secure_session:)
+  def self.generate_url(return_path = '/', secure_session:)
     generate_sso(return_path, secure_session: secure_session).to_url
   end
 
@@ -32,9 +33,17 @@ class DiscourseConnect < DiscourseConnectBase
   def register_nonce(return_path)
     if nonce
       if SiteSetting.discourse_connect_csrf_protection
-        @secure_session.set(nonce_key, return_path, expires: DiscourseConnectBase.nonce_expiry_time)
+        @secure_session.set(
+          nonce_key,
+          return_path,
+          expires: DiscourseConnectBase.nonce_expiry_time
+        )
       else
-        Discourse.cache.write(nonce_key, return_path, expires_in: DiscourseConnectBase.nonce_expiry_time)
+        Discourse.cache.write(
+          nonce_key,
+          return_path,
+          expires_in: DiscourseConnectBase.nonce_expiry_time
+        )
       end
     end
   end
@@ -49,19 +58,19 @@ class DiscourseConnect < DiscourseConnectBase
 
   def nonce_error
     if Discourse.cache.read(used_nonce_key).present?
-      "Nonce has already been used"
+      'Nonce has already been used'
     elsif SiteSetting.discourse_connect_csrf_protection
-      "Nonce is incorrect, was generated in a different browser session, or has expired"
+      'Nonce is incorrect, was generated in a different browser session, or has expired'
     else
-      "Nonce is incorrect, or has expired"
+      'Nonce is incorrect, or has expired'
     end
   end
 
   def return_path
     if SiteSetting.discourse_connect_csrf_protection
-      @secure_session[nonce_key] || "/"
+      @secure_session[nonce_key] || '/'
     else
-      Discourse.cache.read(nonce_key) || "/"
+      Discourse.cache.read(nonce_key) || '/'
     end
   end
 
@@ -73,7 +82,11 @@ class DiscourseConnect < DiscourseConnectBase
         Discourse.cache.delete nonce_key
       end
 
-      Discourse.cache.write(used_nonce_key, return_path, expires_in: DiscourseConnectBase.used_nonce_expiry_time)
+      Discourse.cache.write(
+        used_nonce_key,
+        return_path,
+        expires_in: DiscourseConnectBase.used_nonce_expiry_time
+      )
     end
   end
 
@@ -85,16 +98,13 @@ class DiscourseConnect < DiscourseConnectBase
     "USED_SSO_NONCE_#{nonce}"
   end
 
-  BANNED_EXTERNAL_IDS = %w{none nil blank null}
+  BANNED_EXTERNAL_IDS = %w[none nil blank null]
 
   def lookup_or_create_user(ip_address = nil)
-
     # we don't want to ban 0 from being an external id
     external_id = self.external_id.to_s
 
-    if external_id.blank?
-      raise BlankExternalId
-    end
+    raise BlankExternalId if external_id.blank?
 
     if BANNED_EXTERNAL_IDS.include?(external_id.downcase)
       raise BannedExternalId, external_id
@@ -127,16 +137,17 @@ class DiscourseConnect < DiscourseConnectBase
 
     change_external_attributes_and_override(sso_record, user)
 
-    if sso_record && (user = sso_record.user) && !user.active && !require_activation
+    if sso_record && (user = sso_record.user) && !user.active &&
+         !require_activation
       user.active = true
       user.save!
-      user.enqueue_welcome_message('welcome_user') unless suppress_welcome_message
+      unless suppress_welcome_message
+        user.enqueue_welcome_message('welcome_user')
+      end
       user.set_automatic_groups
     end
 
-    custom_fields.each do |k, v|
-      user.custom_fields[k] = v
-    end
+    custom_fields.each { |k, v| user.custom_fields[k] = v }
 
     user.ip_address = ip_address
 
@@ -149,14 +160,16 @@ class DiscourseConnect < DiscourseConnectBase
     user.user_avatar.save! if user.user_avatar
     user.save!
 
-    if @email_changed && user.active
-      user.set_automatic_groups
-    end
+    user.set_automatic_groups if @email_changed && user.active
 
     # The user might require approval
     user.create_reviewable
 
-    if bio && (user.user_profile.bio_raw.blank? || SiteSetting.discourse_connect_overrides_bio)
+    if bio &&
+         (
+           user.user_profile.bio_raw.blank? ||
+             SiteSetting.discourse_connect_overrides_bio
+         )
       user.user_profile.bio_raw = bio
       user.user_profile.save!
     end
@@ -177,20 +190,19 @@ class DiscourseConnect < DiscourseConnectBase
 
     sso_record.save!
 
-    if sso_record.user
-      apply_group_rules(sso_record.user)
-    end
+    apply_group_rules(sso_record.user) if sso_record.user
 
     sso_record && sso_record.user
   end
 
   def synchronize_groups(user)
-    names = (groups || "").split(",").map(&:downcase)
+    names = (groups || '').split(',').map(&:downcase)
     ids = Group.where('LOWER(NAME) in (?) AND NOT automatic', names).pluck(:id)
 
-    group_users = GroupUser
-      .where('group_id IN (SELECT id FROM groups WHERE NOT automatic)')
-      .where(user_id: user.id)
+    group_users =
+      GroupUser.where(
+        'group_id IN (SELECT id FROM groups WHERE NOT automatic)'
+      ).where(user_id: user.id)
 
     delete_group_users = group_users
     if ids.length > 0
@@ -212,22 +224,28 @@ class DiscourseConnect < DiscourseConnectBase
     end
 
     if add_groups
-      split = add_groups.split(",").map(&:downcase)
+      split = add_groups.split(',').map(&:downcase)
       if split.length > 0
-        Group.where('LOWER(name) in (?) AND NOT automatic', split).pluck(:id).each do |id|
-          unless GroupUser.where(group_id: id, user_id: user.id).exists?
-            GroupUser.create(group_id: id, user_id: user.id)
+        Group
+          .where('LOWER(name) in (?) AND NOT automatic', split)
+          .pluck(:id)
+          .each do |id|
+            unless GroupUser.where(group_id: id, user_id: user.id).exists?
+              GroupUser.create(group_id: id, user_id: user.id)
+            end
           end
-        end
       end
     end
 
     if remove_groups
-      split = remove_groups.split(",").map(&:downcase)
+      split = remove_groups.split(',').map(&:downcase)
       if split.length > 0
         GroupUser
           .where(user_id: user.id)
-          .where('group_id IN (SELECT id FROM groups WHERE LOWER(name) in (?))', split)
+          .where(
+            'group_id IN (SELECT id FROM groups WHERE LOWER(name) in (?))',
+            split
+          )
           .destroy_all
       end
     end
@@ -246,14 +264,17 @@ class DiscourseConnect < DiscourseConnectBase
           ip_address: ip_address
         }
 
-        if SiteSetting.allow_user_locale && locale && LocaleSiteSetting.valid_value?(locale)
+        if SiteSetting.allow_user_locale && locale &&
+             LocaleSiteSetting.valid_value?(locale)
           user_params[:locale] = locale
         end
 
         user = User.create!(user_params)
 
         if SiteSetting.verbose_discourse_connect_logging
-          Rails.logger.warn("Verbose SSO log: New User (user_id: #{user.id}) Params: #{user_params} User Params: #{user.attributes} User Errors: #{user.errors.full_messages} Email: #{user.primary_email.attributes} Email Error: #{user.primary_email.errors.full_messages}")
+          Rails.logger.warn(
+            "Verbose SSO log: New User (user_id: #{user.id}) Params: #{user_params} User Params: #{user.attributes} User Errors: #{user.errors.full_messages} Email: #{user.primary_email.attributes} Email Error: #{user.primary_email.errors.full_messages}"
+          )
         end
       end
 
@@ -263,7 +284,8 @@ class DiscourseConnect < DiscourseConnectBase
           sso_record.external_id = external_id
         else
           if avatar_url.present?
-            Jobs.enqueue(:download_avatar_from_url,
+            Jobs.enqueue(
+              :download_avatar_from_url,
               url: avatar_url,
               user_id: user.id,
               override_gravatar: SiteSetting.discourse_connect_overrides_avatar
@@ -271,7 +293,8 @@ class DiscourseConnect < DiscourseConnectBase
           end
 
           if profile_background_url.present?
-            Jobs.enqueue(:download_profile_background_from_url,
+            Jobs.enqueue(
+              :download_profile_background_from_url,
               url: profile_background_url,
               user_id: user.id,
               is_card_background: false
@@ -279,7 +302,8 @@ class DiscourseConnect < DiscourseConnectBase
           end
 
           if card_background_url.present?
-            Jobs.enqueue(:download_profile_background_from_url,
+            Jobs.enqueue(
+              :download_profile_background_from_url,
               url: card_background_url,
               user_id: user.id,
               is_card_background: true
@@ -320,44 +344,68 @@ class DiscourseConnect < DiscourseConnectBase
       user.name = name || User.suggest_name(username.blank? ? email : username)
     end
 
-    if locale_force_update && SiteSetting.allow_user_locale && locale && LocaleSiteSetting.valid_value?(locale)
+    if locale_force_update && SiteSetting.allow_user_locale && locale &&
+         LocaleSiteSetting.valid_value?(locale)
       user.locale = locale
     end
 
-    avatar_missing = user.uploaded_avatar_id.nil? || !Upload.exists?(user.uploaded_avatar_id)
+    avatar_missing =
+      user.uploaded_avatar_id.nil? || !Upload.exists?(user.uploaded_avatar_id)
 
-    if (avatar_missing || avatar_force_update || SiteSetting.discourse_connect_overrides_avatar) && avatar_url.present?
+    if (
+         avatar_missing || avatar_force_update ||
+           SiteSetting.discourse_connect_overrides_avatar
+       ) && avatar_url.present?
       avatar_changed = sso_record.external_avatar_url != avatar_url
 
       if avatar_force_update || avatar_changed || avatar_missing
-        Jobs.enqueue(:download_avatar_from_url, url: avatar_url, user_id: user.id, override_gravatar: SiteSetting.discourse_connect_overrides_avatar)
+        Jobs.enqueue(
+          :download_avatar_from_url,
+          url: avatar_url,
+          user_id: user.id,
+          override_gravatar: SiteSetting.discourse_connect_overrides_avatar
+        )
       end
     end
 
     if profile_background_url.present?
-      profile_background_missing = user.user_profile.profile_background_upload.blank? || Upload.get_from_url(user.user_profile.profile_background_upload.url).blank?
+      profile_background_missing =
+        user.user_profile.profile_background_upload.blank? ||
+          Upload.get_from_url(
+            user.user_profile.profile_background_upload.url
+          ).blank?
 
-      if profile_background_missing || SiteSetting.discourse_connect_overrides_profile_background
-        profile_background_changed = sso_record.external_profile_background_url != profile_background_url
+      if profile_background_missing ||
+           SiteSetting.discourse_connect_overrides_profile_background
+        profile_background_changed =
+          sso_record.external_profile_background_url != profile_background_url
         if profile_background_changed || profile_background_missing
-          Jobs.enqueue(:download_profile_background_from_url,
-              url: profile_background_url,
-              user_id: user.id,
-              is_card_background: false
+          Jobs.enqueue(
+            :download_profile_background_from_url,
+            url: profile_background_url,
+            user_id: user.id,
+            is_card_background: false
           )
         end
       end
     end
 
     if card_background_url.present?
-      card_background_missing = user.user_profile.card_background_upload.blank? || Upload.get_from_url(user.user_profile.card_background_upload.url).blank?
-      if card_background_missing || SiteSetting.discourse_connect_overrides_card_background
-        card_background_changed = sso_record.external_card_background_url != card_background_url
+      card_background_missing =
+        user.user_profile.card_background_upload.blank? ||
+          Upload.get_from_url(
+            user.user_profile.card_background_upload.url
+          ).blank?
+      if card_background_missing ||
+           SiteSetting.discourse_connect_overrides_card_background
+        card_background_changed =
+          sso_record.external_card_background_url != card_background_url
         if card_background_changed || card_background_missing
-          Jobs.enqueue(:download_profile_background_from_url,
-              url: card_background_url,
-              user_id: user.id,
-              is_card_background: true
+          Jobs.enqueue(
+            :download_profile_background_from_url,
+            url: card_background_url,
+            user_id: user.id,
+            is_card_background: true
           )
         end
       end
@@ -375,7 +423,9 @@ class DiscourseConnect < DiscourseConnectBase
   def resolve_username
     suggester_input = [username]
     suggester_input << name if SiteSetting.use_name_for_username_suggestions
-    suggester_input << email if SiteSetting.use_email_for_username_and_name_suggestions
+    if SiteSetting.use_email_for_username_and_name_suggestions
+      suggester_input << email
+    end
     UserNameSuggester.suggest(*suggester_input)
   end
 

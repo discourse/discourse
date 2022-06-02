@@ -22,5 +22,4 @@ class WizardController < ApplicationController
   def qunit
     raise Discourse::InvalidAccess.new if Rails.env.production?
   end
-
 end

@@ -24,12 +24,15 @@ class WebHookEventType < ActiveRecord::Base
 
   def self.active
     ids_to_exclude = []
-    ids_to_exclude << SOLVED unless defined?(SiteSetting.solved_enabled) && SiteSetting.solved_enabled
-    ids_to_exclude << ASSIGN unless defined?(SiteSetting.assign_enabled) && SiteSetting.assign_enabled
+    unless defined?(SiteSetting.solved_enabled) && SiteSetting.solved_enabled
+      ids_to_exclude << SOLVED
+    end
+    unless defined?(SiteSetting.assign_enabled) && SiteSetting.assign_enabled
+      ids_to_exclude << ASSIGN
+    end
 
     self.where.not(id: ids_to_exclude)
   end
-
 end
 
 # == Schema Information

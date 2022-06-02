@@ -1,18 +1,19 @@
 # frozen_string_literal: true
 
 class EmailLog < ActiveRecord::Base
-  CRITICAL_EMAIL_TYPES ||= Set.new %w{
-    account_created
-    admin_login
-    confirm_new_email
-    confirm_old_email
-    confirm_old_email_add
-    forgot_password
-    notify_old_email
-    notify_old_email_add
-    signup
-    signup_after_approval
-  }
+  CRITICAL_EMAIL_TYPES ||=
+    Set.new %w[
+              account_created
+              admin_login
+              confirm_new_email
+              confirm_old_email
+              confirm_old_email_add
+              forgot_password
+              notify_old_email
+              notify_old_email_add
+              signup
+              signup_after_approval
+            ]
 
   # cf. https://www.iana.org/assignments/smtp-enhanced-status-codes/smtp-enhanced-status-codes.xhtml
   SMTP_ERROR_CODE_REGEXP = Regexp.new(/\d\.\d\.\d+|\d{3}/).freeze
@@ -25,8 +26,7 @@ class EmailLog < ActiveRecord::Base
 
   scope :bounced, -> { where(bounced: true) }
 
-  scope :addressed_to_user, ->(user) do
-    where(<<~SQL, user_id: user.id)
+  scope :addressed_to_user, ->(user) { where(<<~SQL, user_id: user.id) }
       EXISTS(
         SELECT 1
         FROM user_emails
@@ -35,7 +35,6 @@ class EmailLog < ActiveRecord::Base
          email_logs.cc_addresses ILIKE '%' || user_emails.email || '%')
       )
     SQL
-  end
 
   before_save do
     if self.bounce_error_code.present?
@@ -46,11 +45,20 @@ class EmailLog < ActiveRecord::Base
 
   after_create do
     # Update last_emailed_at if the user_id is present and email was sent
-    User.where(id: user_id).update_all("last_emailed_at = CURRENT_TIMESTAMP") if user_id.present?
+    if user_id.present?
+      User.where(id: user_id).update_all('last_emailed_at = CURRENT_TIMESTAMP')
+    end
   end
 
   def topic
-    @topic ||= self.topic_id.present? ? Topic.find_by(id: self.topic_id) : self.post&.topic
+    @topic ||=
+      (
+        if self.topic_id.present?
+          Topic.find_by(id: self.topic_id)
+        else
+          self.post&.topic
+        end
+      )
   end
 
   def self.unique_email_per_post(post, user)
@@ -66,19 +74,20 @@ class EmailLog < ActiveRecord::Base
   end
 
   def self.reached_max_emails?(user, email_type = nil)
-    return false if SiteSetting.max_emails_per_day_per_user == 0 || CRITICAL_EMAIL_TYPES.include?(email_type)
+    if SiteSetting.max_emails_per_day_per_user == 0 ||
+         CRITICAL_EMAIL_TYPES.include?(email_type)
+      return false
+    end
 
-    count = where('created_at > ?', 1.day.ago)
-      .where(user_id: user.id)
-      .count
+    count = where('created_at > ?', 1.day.ago).where(user_id: user.id).count
 
     count >= SiteSetting.max_emails_per_day_per_user
   end
 
   def self.count_per_day(start_date, end_date)
-    where("created_at BETWEEN ? AND ?", start_date, end_date)
-      .group("DATE(created_at)")
-      .order("DATE(created_at)")
+    where('created_at BETWEEN ? AND ?', start_date, end_date)
+      .group('DATE(created_at)')
+      .order('DATE(created_at)')
       .count
   end
 
@@ -87,7 +96,8 @@ class EmailLog < ActiveRecord::Base
   end
 
   def self.last_sent_email_address
-    self.where(email_type: "signup")
+    self
+      .where(email_type: 'signup')
       .order(created_at: :desc)
       .limit(1)
       .pluck(:to_address)
@@ -104,7 +114,7 @@ class EmailLog < ActiveRecord::Base
   end
 
   def cc_addresses_split
-    @cc_addresses_split ||= self.cc_addresses&.split(";") || []
+    @cc_addresses_split ||= self.cc_addresses&.split(';') || []
   end
 
   def as_mail_message

@@ -1,12 +1,8 @@
 # frozen_string_literal: true
 
 class ReviewableUser < Reviewable
-
   def self.create_for(user)
-    create(
-      created_by_id: Discourse.system_user.id,
-      target: user
-    )
+    create(created_by_id: Discourse.system_user.id, target: user)
   end
 
   def build_actions(actions, guardian, args)
@@ -15,7 +11,7 @@ class ReviewableUser < Reviewable
     if guardian.can_approve?(target) || args[:approved_by_invite]
       actions.add(:approve_user) do |a|
         a.icon = 'user-plus'
-        a.label = "reviewables.actions.approve_user.title"
+        a.label = 'reviewables.actions.approve_user.title'
       end
     end
 
@@ -31,7 +27,7 @@ class ReviewableUser < Reviewable
     if args[:send_email] != false && SiteSetting.must_approve_users?
       Jobs.enqueue(
         :critical_user_email,
-        type: "signup_after_approval",
+        type: 'signup_after_approval',
         user_id: target.id
       )
     end
@@ -45,27 +41,31 @@ class ReviewableUser < Reviewable
     if target.present?
       destroyer = UserDestroyer.new(performed_by)
 
-      DiscourseEvent.trigger(:suspect_user_deleted, target) if is_a_suspect_user?
+      if is_a_suspect_user?
+        DiscourseEvent.trigger(:suspect_user_deleted, target)
+      end
 
       begin
         self.reject_reason = args[:reject_reason]
 
         if args[:send_email] && SiteSetting.must_approve_users?
           # Execute job instead of enqueue because user has to exists to send email
-          Jobs::CriticalUserEmail.new.execute({
-            type: :signup_after_reject,
-            user_id: target.id,
-            reject_reason: self.reject_reason
-          })
+          Jobs::CriticalUserEmail.new.execute(
+            {
+              type: :signup_after_reject,
+              user_id: target.id,
+              reject_reason: self.reject_reason
+            }
+          )
         end
 
         delete_args = {}
         delete_args[:block_ip] = true if args[:block_ip]
         delete_args[:block_email] = true if args[:block_email]
         delete_args[:context] = if performed_by.id == Discourse.system_user.id
-          I18n.t("user.destroy_reasons.reviewable_reject_auto")
+          I18n.t('user.destroy_reasons.reviewable_reject_auto')
         else
-          I18n.t("user.destroy_reasons.reviewable_reject")
+          I18n.t('user.destroy_reasons.reviewable_reject')
         end
 
         destroyer.destroy(target, delete_args)

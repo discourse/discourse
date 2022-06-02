@@ -6,7 +6,8 @@ class CategoryTagStat < ActiveRecord::Base
 
   def self.topic_moved(topic, from_category_id, to_category_id)
     if from_category_id
-      self.where(tag_id: topic.tags.map(&:id), category_id: from_category_id)
+      self
+        .where(tag_id: topic.tags.map(&:id), category_id: from_category_id)
         .where('topic_count > 0')
         .update_all('topic_count = topic_count - 1')
     end
@@ -21,10 +22,15 @@ class CategoryTagStat < ActiveRecord::Base
       SQL
 
       tag_ids = topic.tags.map(&:id)
-      updated_tag_ids = DB.query_single(sql, tag_ids: tag_ids, category_id: to_category_id)
+      updated_tag_ids =
+        DB.query_single(sql, tag_ids: tag_ids, category_id: to_category_id)
 
       (tag_ids - updated_tag_ids).each do |tag_id|
-        CategoryTagStat.create!(tag_id: tag_id, category_id: to_category_id, topic_count: 1)
+        CategoryTagStat.create!(
+          tag_id: tag_id,
+          category_id: to_category_id,
+          topic_count: 1
+        )
       end
     end
   end

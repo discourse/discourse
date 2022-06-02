@@ -19,16 +19,16 @@ class TopicTrackingState
   include ActiveModel::SerializerSupport
   include TopicTrackingStatePublishable
 
-  UNREAD_MESSAGE_TYPE = "unread"
-  LATEST_MESSAGE_TYPE = "latest"
-  MUTED_MESSAGE_TYPE = "muted"
-  UNMUTED_MESSAGE_TYPE = "unmuted"
-  NEW_TOPIC_MESSAGE_TYPE = "new_topic"
-  RECOVER_MESSAGE_TYPE = "recover"
-  DELETE_MESSAGE_TYPE = "delete"
-  DESTROY_MESSAGE_TYPE = "destroy"
-  READ_MESSAGE_TYPE = "read"
-  DISMISS_NEW_MESSAGE_TYPE = "dismiss_new"
+  UNREAD_MESSAGE_TYPE = 'unread'
+  LATEST_MESSAGE_TYPE = 'latest'
+  MUTED_MESSAGE_TYPE = 'muted'
+  UNMUTED_MESSAGE_TYPE = 'unmuted'
+  NEW_TOPIC_MESSAGE_TYPE = 'new_topic'
+  RECOVER_MESSAGE_TYPE = 'recover'
+  DELETE_MESSAGE_TYPE = 'delete'
+  DESTROY_MESSAGE_TYPE = 'destroy'
+  READ_MESSAGE_TYPE = 'read'
+  DISMISS_NEW_MESSAGE_TYPE = 'dismiss_new'
   MAX_TOPICS = 5000
 
   def self.publish_new(topic)
@@ -61,7 +61,7 @@ class TopicTrackingState
 
     group_ids = topic.category && topic.category.secure_group_ids
 
-    MessageBus.publish("/new", message.as_json, group_ids: group_ids)
+    MessageBus.publish('/new', message.as_json, group_ids: group_ids)
     publish_read(topic.id, 1, topic.user)
   end
 
@@ -94,7 +94,7 @@ class TopicTrackingState
       else
         topic.category && topic.category.secure_group_ids
       end
-    MessageBus.publish("/latest", message.as_json, group_ids: group_ids)
+    MessageBus.publish('/latest', message.as_json, group_ids: group_ids)
   end
 
   def self.unread_channel_key(user_id)
@@ -102,34 +102,32 @@ class TopicTrackingState
   end
 
   def self.publish_muted(topic)
-    user_ids = topic.topic_users
-      .where(notification_level: NotificationLevels.all[:muted])
-      .joins(:user)
-      .where("users.last_seen_at > ?", 7.days.ago)
-      .order("users.last_seen_at DESC")
-      .limit(100)
-      .pluck(:user_id)
+    user_ids =
+      topic
+        .topic_users
+        .where(notification_level: NotificationLevels.all[:muted])
+        .joins(:user)
+        .where('users.last_seen_at > ?', 7.days.ago)
+        .order('users.last_seen_at DESC')
+        .limit(100)
+        .pluck(:user_id)
     return if user_ids.blank?
-    message = {
-      topic_id: topic.id,
-      message_type: MUTED_MESSAGE_TYPE,
-    }
-    MessageBus.publish("/latest", message.as_json, user_ids: user_ids)
+    message = { topic_id: topic.id, message_type: MUTED_MESSAGE_TYPE }
+    MessageBus.publish('/latest', message.as_json, user_ids: user_ids)
   end
 
   def self.publish_unmuted(topic)
     return if !SiteSetting.mute_all_categories_by_default
-    user_ids = User.watching_topic_when_mute_categories_by_default(topic)
-      .where("users.last_seen_at > ?", 7.days.ago)
-      .order("users.last_seen_at DESC")
-      .limit(100)
-      .pluck(:id)
+    user_ids =
+      User
+        .watching_topic_when_mute_categories_by_default(topic)
+        .where('users.last_seen_at > ?', 7.days.ago)
+        .order('users.last_seen_at DESC')
+        .limit(100)
+        .pluck(:id)
     return if user_ids.blank?
-    message = {
-      topic_id: topic.id,
-      message_type: UNMUTED_MESSAGE_TYPE,
-    }
-    MessageBus.publish("/latest", message.as_json, user_ids: user_ids)
+    message = { topic_id: topic.id, message_type: UNMUTED_MESSAGE_TYPE }
+    MessageBus.publish('/latest', message.as_json, user_ids: user_ids)
   end
 
   def self.publish_unread(post)
@@ -144,10 +142,11 @@ class TopicTrackingState
 
     # We don't need to publish unread to the person who just made the post,
     # this is why they are excluded from the initial scope.
-    scope = TopicUser
-      .tracking(post.topic_id)
-      .includes(user: :user_stat)
-      .where.not(user_id: post.user_id)
+    scope =
+      TopicUser
+        .tracking(post.topic_id)
+        .includes(user: :user_stat)
+        .where.not(user_id: post.user_id)
 
     group_ids =
       if post.post_type == Post.types[:whisper]
@@ -157,9 +156,10 @@ class TopicTrackingState
       end
 
     if group_ids.present?
-      scope = scope
-        .joins("INNER JOIN group_users gu ON gu.user_id = topic_users.user_id")
-        .where("gu.group_id IN (?)", group_ids)
+      scope =
+        scope.joins(
+          'INNER JOIN group_users gu ON gu.user_id = topic_users.user_id'
+        ).where('gu.group_id IN (?)', group_ids)
     end
 
     user_ids = scope.pluck(:user_id)
@@ -185,46 +185,39 @@ class TopicTrackingState
       payload: payload
     }
 
-    MessageBus.publish("/unread", message.as_json,
-      user_ids: user_ids
-    )
+    MessageBus.publish('/unread', message.as_json, user_ids: user_ids)
   end
 
   def self.publish_recover(topic)
     group_ids = topic.category && topic.category.secure_group_ids
 
-    message = {
-      topic_id: topic.id,
-      message_type: RECOVER_MESSAGE_TYPE
-    }
+    message = { topic_id: topic.id, message_type: RECOVER_MESSAGE_TYPE }
 
-    MessageBus.publish("/recover", message.as_json, group_ids: group_ids)
-
+    MessageBus.publish('/recover', message.as_json, group_ids: group_ids)
   end
 
   def self.publish_delete(topic)
     group_ids = topic.category && topic.category.secure_group_ids
 
-    message = {
-      topic_id: topic.id,
-      message_type: DELETE_MESSAGE_TYPE
-    }
+    message = { topic_id: topic.id, message_type: DELETE_MESSAGE_TYPE }
 
-    MessageBus.publish("/delete", message.as_json, group_ids: group_ids)
+    MessageBus.publish('/delete', message.as_json, group_ids: group_ids)
   end
 
   def self.publish_destroy(topic)
     group_ids = topic.category && topic.category.secure_group_ids
 
-    message = {
-      topic_id: topic.id,
-      message_type: DESTROY_MESSAGE_TYPE
-    }
+    message = { topic_id: topic.id, message_type: DESTROY_MESSAGE_TYPE }
 
-    MessageBus.publish("/destroy", message.as_json, group_ids: group_ids)
+    MessageBus.publish('/destroy', message.as_json, group_ids: group_ids)
   end
 
-  def self.publish_read(topic_id, last_read_post_number, user, notification_level = nil)
+  def self.publish_read(
+    topic_id,
+    last_read_post_number,
+    user,
+    notification_level = nil
+  )
     self.publish_read_message(
       message_type: READ_MESSAGE_TYPE,
       channel_name: self.unread_channel_key(user.id),
@@ -242,15 +235,23 @@ class TopicTrackingState
         topic_ids: topic_ids
       }
     }
-    MessageBus.publish(self.unread_channel_key(user_id), message.as_json, user_ids: [user_id])
+    MessageBus.publish(
+      self.unread_channel_key(user_id),
+      message.as_json,
+      user_ids: [user_id]
+    )
   end
 
   def self.new_filter_sql
-    TopicQuery.new_filter(
-      Topic, treat_as_new_topic_clause_sql: treat_as_new_topic_clause
-    ).where_clause.ast.to_sql +
-      " AND topics.created_at > :min_new_topic_date" +
-      " AND dismissed_topic_users.id IS NULL"
+    TopicQuery
+      .new_filter(
+        Topic,
+        treat_as_new_topic_clause_sql: treat_as_new_topic_clause
+      )
+      .where_clause
+      .ast
+      .to_sql + ' AND topics.created_at > :min_new_topic_date' +
+      ' AND dismissed_topic_users.id IS NULL'
   end
 
   def self.unread_filter_sql(staff: false)
@@ -258,13 +259,18 @@ class TopicTrackingState
   end
 
   def self.treat_as_new_topic_clause
-    User.where("GREATEST(CASE
+    User
+      .where(
+        "GREATEST(CASE
                   WHEN COALESCE(uo.new_topic_duration_minutes, :default_duration) = :always THEN u.created_at
                   WHEN COALESCE(uo.new_topic_duration_minutes, :default_duration) = :last_visit THEN COALESCE(u.previous_visit_at,u.created_at)
                   ELSE (:now::timestamp - INTERVAL '1 MINUTE' * COALESCE(uo.new_topic_duration_minutes, :default_duration))
                END, u.created_at, :min_date)",
-               treat_as_new_topic_params
-              ).where_clause.ast.to_sql
+        treat_as_new_topic_params
+      )
+      .where_clause
+      .ast
+      .to_sql
   end
 
   def self.treat_as_new_topic_params
@@ -298,30 +304,32 @@ class TopicTrackingState
     sql = new_and_unread_sql(topic_id, user, tag_ids)
     sql = tags_included_wrapped_sql(sql)
 
-    report = DB.query(
-      sql + "\n\n LIMIT :max_topics",
-      {
-        user_id: user.id,
-        topic_id: topic_id,
-        min_new_topic_date: Time.at(SiteSetting.min_new_topics_time).to_datetime,
-        max_topics: TopicTrackingState::MAX_TOPICS,
-      }
-      .merge(treat_as_new_topic_params)
-    )
+    report =
+      DB.query(
+        sql + "\n\n LIMIT :max_topics",
+        {
+          user_id: user.id,
+          topic_id: topic_id,
+          min_new_topic_date:
+            Time.at(SiteSetting.min_new_topics_time).to_datetime,
+          max_topics: TopicTrackingState::MAX_TOPICS
+        }.merge(treat_as_new_topic_params)
+      )
 
     report
   end
 
   def self.new_and_unread_sql(topic_id, user, tag_ids)
-    sql = report_raw_sql(
-      topic_id: topic_id,
-      skip_unread: true,
-      skip_order: true,
-      staff: user.staff?,
-      admin: user.admin?,
-      user: user,
-      muted_tag_ids: tag_ids
-    )
+    sql =
+      report_raw_sql(
+        topic_id: topic_id,
+        skip_unread: true,
+        skip_order: true,
+        staff: user.staff?,
+        admin: user.admin?,
+        user: user,
+        muted_tag_ids: tag_ids
+      )
 
     sql << "\nUNION ALL\n\n"
 
@@ -373,28 +381,16 @@ class TopicTrackingState
     custom_state_filter: nil,
     additional_join_sql: nil
   )
-    unread =
-      if skip_unread
-        "1=0"
-      else
-        unread_filter_sql(staff: staff)
-      end
+    unread = (skip_unread ? '1=0' : unread_filter_sql(staff: staff))
 
     filter_old_unread_sql =
-      if filter_old_unread
-        " topics.updated_at >= us.first_unread_at AND "
-      else
-        ""
-      end
+      (filter_old_unread ? ' topics.updated_at >= us.first_unread_at AND ' : '')
 
-    new =
-      if skip_new
-        "1=0"
-      else
-        new_filter_sql
-      end
+    new = (skip_new ? '1=0' : new_filter_sql)
 
-    select_sql = select || "
+    select_sql =
+      select ||
+        "
            DISTINCT topics.id as topic_id,
            u.id as user_id,
            topics.created_at,
@@ -416,9 +412,9 @@ class TopicTrackingState
 
     category_filter =
       if admin
-        ""
+        ''
       else
-        append = "OR u.admin" if !admin
+        append = 'OR u.admin' if !admin
         <<~SQL
           (
            NOT c.read_restricted #{append} OR c.id IN (
@@ -432,16 +428,20 @@ class TopicTrackingState
 
     visibility_filter =
       if staff
-        ""
+        ''
       else
-        append = "OR u.admin OR u.moderator" if !staff
+        append = 'OR u.admin OR u.moderator' if !staff
         "(topics.visible #{append}) AND"
       end
 
-    tags_filter = ""
+    tags_filter = ''
 
-    if muted_tag_ids.present? && ['always', 'only_muted'].include?(SiteSetting.remove_muted_tags_from_latest)
-      existing_tags_sql = "(select array_agg(tag_id) from topic_tags where topic_tags.topic_id = topics.id)"
+    if muted_tag_ids.present? &&
+         %w[always only_muted].include?(
+           SiteSetting.remove_muted_tags_from_latest
+         )
+      existing_tags_sql =
+        '(select array_agg(tag_id) from topic_tags where topic_tags.topic_id = topics.id)'
       muted_tags_array_sql = "ARRAY[#{muted_tag_ids.join(',')}]"
 
       if SiteSetting.remove_muted_tags_from_latest == 'always'
@@ -467,7 +467,7 @@ class TopicTrackingState
       JOIN user_options AS uo ON uo.user_id = u.id
       JOIN categories c ON c.id = topics.category_id
       LEFT JOIN topic_users tu ON tu.topic_id = topics.id AND tu.user_id = u.id
-      #{skip_new ? "" : "LEFT JOIN dismissed_topic_users ON dismissed_topic_users.topic_id = topics.id AND dismissed_topic_users.user_id = :user_id"}
+      #{skip_new ? '' : 'LEFT JOIN dismissed_topic_users ON dismissed_topic_users.topic_id = topics.id AND dismissed_topic_users.user_id = :user_id'}
       #{additional_join_sql}
       WHERE u.id = :user_id AND
             #{filter_old_unread_sql}
@@ -478,58 +478,95 @@ class TopicTrackingState
             topics.deleted_at IS NULL AND
             #{category_filter}
             NOT (
-              #{(skip_new && skip_unread) ? "" : "last_read_post_number IS NULL AND"}
+              #{(skip_new && skip_unread) ? '' : 'last_read_post_number IS NULL AND'}
               (
-                topics.category_id IN (#{CategoryUser.muted_category_ids_query(user, include_direct: true).select("categories.id").to_sql})
+                topics.category_id IN (#{CategoryUser.muted_category_ids_query(user, include_direct: true).select('categories.id').to_sql})
                 AND tu.notification_level <= #{TopicUser.notification_levels[:regular]}
               )
             )
     SQL
 
-    if topic_id
-      sql << " AND topics.id = :topic_id"
-    end
+    sql << ' AND topics.id = :topic_id' if topic_id
 
-    unless skip_order
-      sql << " ORDER BY topics.bumped_at DESC"
-    end
+    sql << ' ORDER BY topics.bumped_at DESC' unless skip_order
 
     sql
   end
 
   def self.highest_post_number_column_select(staff)
-    "#{staff ? "topics.highest_staff_post_number AS highest_post_number" : "topics.highest_post_number"}"
+    "#{staff ? 'topics.highest_staff_post_number AS highest_post_number' : 'topics.highest_post_number'}"
   end
 
-  def self.publish_read_indicator_on_write(topic_id, last_read_post_number, user_id)
-    topic = Topic.includes(:allowed_groups).select(:highest_post_number, :archetype, :id).find_by(id: topic_id)
+  def self.publish_read_indicator_on_write(
+    topic_id,
+    last_read_post_number,
+    user_id
+  )
+    topic =
+      Topic
+        .includes(:allowed_groups)
+        .select(:highest_post_number, :archetype, :id)
+        .find_by(id: topic_id)
 
     if topic&.private_message?
       groups = read_allowed_groups_of(topic)
-      update_topic_list_read_indicator(topic, groups, topic.highest_post_number, user_id, true)
+      update_topic_list_read_indicator(
+        topic,
+        groups,
+        topic.highest_post_number,
+        user_id,
+        true
+      )
     end
   end
 
-  def self.publish_read_indicator_on_read(topic_id, last_read_post_number, user_id)
-    topic = Topic.includes(:allowed_groups).select(:highest_post_number, :archetype, :id).find_by(id: topic_id)
+  def self.publish_read_indicator_on_read(
+    topic_id,
+    last_read_post_number,
+    user_id
+  )
+    topic =
+      Topic
+        .includes(:allowed_groups)
+        .select(:highest_post_number, :archetype, :id)
+        .find_by(id: topic_id)
 
     if topic&.private_message?
       groups = read_allowed_groups_of(topic)
-      post = Post.find_by(topic_id: topic.id, post_number: last_read_post_number)
-      trigger_post_read_count_update(post, groups, last_read_post_number, user_id)
-      update_topic_list_read_indicator(topic, groups, last_read_post_number, user_id, false)
+      post =
+        Post.find_by(topic_id: topic.id, post_number: last_read_post_number)
+      trigger_post_read_count_update(
+        post,
+        groups,
+        last_read_post_number,
+        user_id
+      )
+      update_topic_list_read_indicator(
+        topic,
+        groups,
+        last_read_post_number,
+        user_id,
+        false
+      )
     end
   end
 
   def self.read_allowed_groups_of(topic)
-    topic.allowed_groups
+    topic
+      .allowed_groups
       .joins(:group_users)
       .where(publish_read_state: true)
       .select('ARRAY_AGG(group_users.user_id) AS members', :name, :id)
       .group('groups.id')
   end
 
-  def self.update_topic_list_read_indicator(topic, groups, last_read_post_number, user_id, write_event)
+  def self.update_topic_list_read_indicator(
+    topic,
+    groups,
+    last_read_post_number,
+    user_id,
+    write_event
+  )
     return unless last_read_post_number == topic.highest_post_number
     message = { topic_id: topic.id, show_indicator: write_event }.as_json
     groups_to_update = []
@@ -545,10 +582,19 @@ class TopicTrackingState
     end
 
     return if groups_to_update.empty?
-    MessageBus.publish("/private-messages/unread-indicator/#{topic.id}", message, user_ids: groups_to_update.flat_map(&:members))
+    MessageBus.publish(
+      "/private-messages/unread-indicator/#{topic.id}",
+      message,
+      user_ids: groups_to_update.flat_map(&:members)
+    )
   end
 
-  def self.trigger_post_read_count_update(post, groups, last_read_post_number, user_id)
+  def self.trigger_post_read_count_update(
+    post,
+    groups,
+    last_read_post_number,
+    user_id
+  )
     return if !post
     return if groups.empty?
     opts = { readers_count: post.readers_count, reader_id: user_id }

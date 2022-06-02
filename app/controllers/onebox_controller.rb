@@ -11,7 +11,9 @@ class OneboxController < ApplicationController
     end
 
     # only 1 outgoing preview per user
-    return render(body: nil, status: 429) if Oneboxer.is_previewing?(current_user.id)
+    if Oneboxer.is_previewing?(current_user.id)
+      return render(body: nil, status: 429)
+    end
 
     user_id = current_user.id
     category_id = params[:category_id].to_i
@@ -24,12 +26,14 @@ class OneboxController < ApplicationController
     hijack(info: "#{url} topic_id: #{topic_id} user_id: #{user_id}") do
       Oneboxer.preview_onebox!(user_id)
 
-      preview = Oneboxer.preview(url,
-        invalidate_oneboxes: invalidate,
-        user_id: user_id,
-        category_id: category_id,
-        topic_id: topic_id
-      )
+      preview =
+        Oneboxer.preview(
+          url,
+          invalidate_oneboxes: invalidate,
+          user_id: user_id,
+          category_id: category_id,
+          topic_id: topic_id
+        )
 
       preview = preview.strip if preview.present?
 
@@ -43,5 +47,4 @@ class OneboxController < ApplicationController
       end
     end
   end
-
 end

@@ -14,8 +14,7 @@ class About
   include ActiveModel::Serialization
   include StatsCacheable
 
-  attr_accessor :moderators,
-                :admins
+  attr_accessor :moderators, :admins
 
   def self.stats_cache_key
     'about-stats'
@@ -50,23 +49,26 @@ class About
   end
 
   def moderators
-    @moderators ||= User.where(moderator: true, admin: false)
-      .human_users
-      .order("last_seen_at DESC")
+    @moderators ||=
+      User
+        .where(moderator: true, admin: false)
+        .human_users
+        .order('last_seen_at DESC')
   end
 
   def admins
-    @admins ||= User.where(admin: true)
-      .human_users
-      .order("last_seen_at DESC")
+    @admins ||= User.where(admin: true).human_users.order('last_seen_at DESC')
   end
 
   def stats
     @stats ||= {
       topic_count: Topic.listable_topics.count,
-      topics_last_day: Topic.listable_topics.where('created_at > ?', 1.days.ago).count,
-      topics_7_days: Topic.listable_topics.where('created_at > ?', 7.days.ago).count,
-      topics_30_days: Topic.listable_topics.where('created_at > ?', 30.days.ago).count,
+      topics_last_day:
+        Topic.listable_topics.where('created_at > ?', 1.days.ago).count,
+      topics_7_days:
+        Topic.listable_topics.where('created_at > ?', 7.days.ago).count,
+      topics_30_days:
+        Topic.listable_topics.where('created_at > ?', 30.days.ago).count,
       post_count: Post.count,
       posts_last_day: Post.where('created_at > ?', 1.days.ago).count,
       posts_7_days: Post.where('created_at > ?', 7.days.ago).count,
@@ -79,9 +81,21 @@ class About
       active_users_7_days: User.where('last_seen_at > ?', 7.days.ago).count,
       active_users_30_days: User.where('last_seen_at > ?', 30.days.ago).count,
       like_count: UserAction.where(action_type: UserAction::LIKE).count,
-      likes_last_day: UserAction.where(action_type: UserAction::LIKE).where("created_at > ?", 1.days.ago).count,
-      likes_7_days: UserAction.where(action_type: UserAction::LIKE).where("created_at > ?", 7.days.ago).count,
-      likes_30_days: UserAction.where(action_type: UserAction::LIKE).where("created_at > ?", 30.days.ago).count
+      likes_last_day:
+        UserAction
+          .where(action_type: UserAction::LIKE)
+          .where('created_at > ?', 1.days.ago)
+          .count,
+      likes_7_days:
+        UserAction
+          .where(action_type: UserAction::LIKE)
+          .where('created_at > ?', 7.days.ago)
+          .count,
+      likes_30_days:
+        UserAction
+          .where(action_type: UserAction::LIKE)
+          .where('created_at > ?', 30.days.ago)
+          .count
     }
   end
 

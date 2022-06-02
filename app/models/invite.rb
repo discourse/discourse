@@ -1,21 +1,22 @@
 # frozen_string_literal: true
 
 class Invite < ActiveRecord::Base
-  class UserExists < StandardError; end
-  class RedemptionFailed < StandardError; end
-  class ValidationFailed < StandardError; end
+  class UserExists < StandardError
+  end
+  class RedemptionFailed < StandardError
+  end
+  class ValidationFailed < StandardError
+  end
 
   include RateLimiter::OnCreateRecord
   include Trashable
 
   # TODO(2021-05-22): remove
-  self.ignored_columns = %w{
-    user_id
-    redeemed_at
-  }
+  self.ignored_columns = %w[user_id redeemed_at]
 
   BULK_INVITE_EMAIL_LIMIT = 200
-  DOMAIN_REGEX = /\A(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)+([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])\z/
+  DOMAIN_REGEX =
+    /\A(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)+([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])\z/
 
   rate_limit :limit_invites_per_day
 
@@ -45,14 +46,19 @@ class Invite < ActiveRecord::Base
     end
   end
 
-  before_validation do
-    self.email = Email.downcase(email) unless email.nil?
-  end
+  before_validation { self.email = Email.downcase(email) unless email.nil? }
 
   attr_accessor :email_already_exists
 
   def self.emailed_status_types
-    @emailed_status_types ||= Enum.new(not_required: 0, pending: 1, bulk_pending: 2, sending: 3, sent: 4)
+    @emailed_status_types ||=
+      Enum.new(
+        not_required: 0,
+        pending: 1,
+        bulk_pending: 2,
+        sending: 3,
+        sent: 4
+      )
   end
 
   def user_doesnt_already_exist
@@ -87,8 +93,11 @@ class Invite < ActiveRecord::Base
   end
 
   def link(with_email_token: false)
-    with_email_token ? "#{Discourse.base_url}/invites/#{invite_key}?t=#{email_token}"
-                     : "#{Discourse.base_url}/invites/#{invite_key}"
+    if with_email_token
+      "#{Discourse.base_url}/invites/#{invite_key}?t=#{email_token}"
+    else
+      "#{Discourse.base_url}/invites/#{invite_key}"
+    end
   end
 
   def link_valid?
@@ -105,11 +114,12 @@ class Invite < ActiveRecord::Base
     end
 
     if email.present?
-      invite = Invite
-        .with_deleted
-        .where(email: email, invited_by_id: invited_by.id)
-        .order('created_at DESC')
-        .first
+      invite =
+        Invite
+          .with_deleted
+          .where(email: email, invited_by_id: invited_by.id)
+          .order('created_at DESC')
+          .first
 
       if invite && (invite.expired? || invite.deleted_at)
         invite.destroy
@@ -117,29 +127,40 @@ class Invite < ActiveRecord::Base
       end
     end
 
-    emailed_status = if opts[:skip_email] || invite&.emailed_status == emailed_status_types[:not_required]
-      emailed_status_types[:not_required]
-    elsif opts[:emailed_status].present?
-      opts[:emailed_status]
-    elsif email.present?
-      emailed_status_types[:pending]
-    else
-      emailed_status_types[:not_required]
-    end
+    emailed_status =
+      if opts[:skip_email] ||
+           invite&.emailed_status == emailed_status_types[:not_required]
+        emailed_status_types[:not_required]
+      elsif opts[:emailed_status].present?
+        opts[:emailed_status]
+      elsif email.present?
+        emailed_status_types[:pending]
+      else
+        emailed_status_types[:not_required]
+      end
 
     if invite
       invite.update_columns(
         created_at: Time.zone.now,
         updated_at: Time.zone.now,
-        expires_at: opts[:expires_at] || SiteSetting.invite_expiry_days.days.from_now,
+        expires_at:
+          opts[:expires_at] || SiteSetting.invite_expiry_days.days.from_now,
         emailed_status: emailed_status
       )
     else
-      create_args = opts.slice(:email, :domain, :moderator, :custom_message, :max_redemptions_allowed)
+      create_args =
+        opts.slice(
+          :email,
+          :domain,
+          :moderator,
+          :custom_message,
+          :max_redemptions_allowed
+        )
       create_args[:invited_by] = invited_by
       create_args[:email] = email
       create_args[:emailed_status] = emailed_status
-      create_args[:expires_at] = opts[:expires_at] || SiteSetting.invite_expiry_days.days.from_now
+      create_args[:expires_at] = opts[:expires_at] ||
+        SiteSetting.invite_expiry_days.days.from_now
 
       invite = Invite.create!(create_args)
     end
@@ -158,17 +179,30 @@ class Invite < ActiveRecord::Base
 
     if emailed_status == emailed_status_types[:pending]
       invite.update_column(:emailed_status, emailed_status_types[:sending])
-      Jobs.enqueue(:invite_email, invite_id: invite.id, invite_to_topic: opts[:invite_to_topic])
+      Jobs.enqueue(
+        :invite_email,
+        invite_id: invite.id,
+        invite_to_topic: opts[:invite_to_topic]
+      )
     end
 
     invite.reload
   end
 
-  def redeem(email: nil, username: nil, name: nil, password: nil, user_custom_fields: nil, ip_address: nil, session: nil, email_token: nil)
+  def redeem(
+    email: nil,
+    username: nil,
+    name: nil,
+    password: nil,
+    user_custom_fields: nil,
+    ip_address: nil,
+    session: nil,
+    email_token: nil
+  )
     return if !redeemable?
 
     if is_invite_link? && UserEmail.exists?(email: email)
-      raise UserExists.new I18n.t("invite_link.email_taken")
+      raise UserExists.new I18n.t('invite_link.email_taken')
     end
 
     email = self.email if email.blank? && !is_invite_link?
@@ -196,9 +230,10 @@ class Invite < ActiveRecord::Base
   end
 
   def self.pending(inviter)
-    Invite.distinct
-      .joins("LEFT JOIN invited_users ON invites.id = invited_users.invite_id")
-      .joins("LEFT JOIN users ON invited_users.user_id = users.id")
+    Invite
+      .distinct
+      .joins('LEFT JOIN invited_users ON invites.id = invited_users.invite_id')
+      .joins('LEFT JOIN users ON invited_users.user_id = users.id')
       .where(invited_by_id: inviter.id)
       .where('redemption_count < max_redemptions_allowed')
       .where('expires_at > ?', Time.zone.now)
@@ -206,9 +241,10 @@ class Invite < ActiveRecord::Base
   end
 
   def self.expired(inviter)
-    Invite.distinct
-      .joins("LEFT JOIN invited_users ON invites.id = invited_users.invite_id")
-      .joins("LEFT JOIN users ON invited_users.user_id = users.id")
+    Invite
+      .distinct
+      .joins('LEFT JOIN invited_users ON invites.id = invited_users.invite_id')
+      .joins('LEFT JOIN users ON invited_users.user_id = users.id')
       .where(invited_by_id: inviter.id)
       .where('redemption_count < max_redemptions_allowed')
       .where('expires_at < ?', Time.zone.now)
@@ -217,7 +253,7 @@ class Invite < ActiveRecord::Base
 
   def self.redeemed_users(inviter)
     InvitedUser
-      .joins("LEFT JOIN invites ON invites.id = invited_users.invite_id")
+      .joins('LEFT JOIN invites ON invites.id = invited_users.invite_id')
       .includes(user: :user_stat)
       .where('invited_users.user_id IS NOT NULL')
       .where('invites.invited_by_id = ?', inviter.id)
@@ -235,27 +271,51 @@ class Invite < ActiveRecord::Base
   end
 
   def resend_invite
-    self.update_columns(updated_at: Time.zone.now, invalidated_at: nil, expires_at: SiteSetting.invite_expiry_days.days.from_now)
+    self.update_columns(
+      updated_at: Time.zone.now,
+      invalidated_at: nil,
+      expires_at: SiteSetting.invite_expiry_days.days.from_now
+    )
     Jobs.enqueue(:invite_email, invite_id: self.id)
   end
 
   def limit_invites_per_day
-    RateLimiter.new(invited_by, "invites-per-day", SiteSetting.max_invites_per_day, 1.day.to_i)
+    RateLimiter.new(
+      invited_by,
+      'invites-per-day',
+      SiteSetting.max_invites_per_day,
+      1.day.to_i
+    )
   end
 
   def self.base_directory
-    File.join(Rails.root, "public", "uploads", "csv", RailsMultisite::ConnectionManagement.current_db)
+    File.join(
+      Rails.root,
+      'public',
+      'uploads',
+      'csv',
+      RailsMultisite::ConnectionManagement.current_db
+    )
   end
 
   def ensure_max_redemptions_allowed
     if self.max_redemptions_allowed.nil?
       self.max_redemptions_allowed = 1
     else
-      limit = invited_by&.staff? ? SiteSetting.invite_link_max_redemptions_limit
-                                 : SiteSetting.invite_link_max_redemptions_limit_users
+      limit =
+        (
+          if invited_by&.staff?
+            SiteSetting.invite_link_max_redemptions_limit
+          else
+            SiteSetting.invite_link_max_redemptions_limit_users
+          end
+        )
 
       if !self.max_redemptions_allowed.between?(1, limit)
-        errors.add(:max_redemptions_allowed, I18n.t("invite_link.max_redemptions_limit", max_limit: limit))
+        errors.add(
+          :max_redemptions_allowed,
+          I18n.t('invite_link.max_redemptions_limit', max_limit: limit)
+        )
       end
     end
   end
@@ -275,8 +335,10 @@ class Invite < ActiveRecord::Base
     sanitized_username = CGI.escapeHTML(username)
 
     I18n.t(
-      "invite.user_exists",
-      email: sanitized_email, username: sanitized_username, base_path: Discourse.base_path
+      'invite.user_exists',
+      email: sanitized_email,
+      username: sanitized_username,
+      base_path: Discourse.base_path
     )
   end
 end

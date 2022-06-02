@@ -16,6 +16,10 @@ class TopicPoster < OpenStruct
   end
 
   def name_and_description
-    I18n.t("js.user.avatar.name_and_description", name: user.display_name, description: description)
+    I18n.t(
+      'js.user.avatar.name_and_description',
+      name: user.display_name,
+      description: description
+    )
   end
 end

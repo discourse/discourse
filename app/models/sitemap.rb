@@ -55,15 +55,20 @@ class Sitemap < ActiveRecord::Base
   private
 
   def sitemap_topics
-    indexable_topics = Topic
-      .where(visible: true)
-      .joins(:category)
-      .where(categories: { read_restricted: false })
+    indexable_topics =
+      Topic
+        .where(visible: true)
+        .joins(:category)
+        .where(categories: { read_restricted: false })
 
     if name == RECENT_SITEMAP_NAME
-      indexable_topics.where('bumped_at > ?', 3.days.ago).order(bumped_at: :desc)
+      indexable_topics.where('bumped_at > ?', 3.days.ago).order(
+        bumped_at: :desc
+      )
     elsif name == NEWS_SITEMAP_NAME
-      indexable_topics.where('bumped_at > ?', 72.hours.ago).order(bumped_at: :desc)
+      indexable_topics.where('bumped_at > ?', 72.hours.ago).order(
+        bumped_at: :desc
+      )
     else
       offset = (name.to_i - 1) * max_page_size
 

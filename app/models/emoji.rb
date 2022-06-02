@@ -2,50 +2,55 @@
 
 class Emoji
   # update this to clear the cache
-  EMOJI_VERSION = "12"
+  EMOJI_VERSION = '12'
 
-  FITZPATRICK_SCALE ||= [ "1f3fb", "1f3fc", "1f3fd", "1f3fe", "1f3ff" ]
+  FITZPATRICK_SCALE ||= %w[1f3fb 1f3fc 1f3fd 1f3fe 1f3ff]
 
-  DEFAULT_GROUP ||= "default"
+  DEFAULT_GROUP ||= 'default'
 
   include ActiveModel::SerializerSupport
 
   attr_accessor :name, :url, :tonable, :group
 
   def self.global_emoji_cache
-    @global_emoji_cache ||= DistributedCache.new("global_emoji_cache", namespace: false)
+    @global_emoji_cache ||=
+      DistributedCache.new('global_emoji_cache', namespace: false)
   end
 
   def self.site_emoji_cache
-    @site_emoji_cache ||= DistributedCache.new("site_emoji_cache")
+    @site_emoji_cache ||= DistributedCache.new('site_emoji_cache')
   end
 
   def self.all
-    Discourse.cache.fetch(cache_key("all_emojis")) { standard | custom }
+    Discourse.cache.fetch(cache_key('all_emojis')) { standard | custom }
   end
 
   def self.standard
-    Discourse.cache.fetch(cache_key("standard_emojis")) { load_standard }
+    Discourse.cache.fetch(cache_key('standard_emojis')) { load_standard }
   end
 
   def self.aliases
-    Discourse.cache.fetch(cache_key("aliases_emojis")) { db['aliases'] }
+    Discourse.cache.fetch(cache_key('aliases_emojis')) { db['aliases'] }
   end
 
   def self.search_aliases
-    Discourse.cache.fetch(cache_key("search_aliases_emojis")) { db['searchAliases'] }
+    Discourse
+      .cache
+      .fetch(cache_key('search_aliases_emojis')) { db['searchAliases'] }
   end
 
   def self.translations
-    Discourse.cache.fetch(cache_key("translations_emojis")) { load_translations }
+    Discourse
+      .cache
+      .fetch(cache_key('translations_emojis')) { load_translations }
   end
 
   def self.custom
-    Discourse.cache.fetch(cache_key("custom_emojis")) { load_custom }
+    Discourse.cache.fetch(cache_key('custom_emojis')) { load_custom }
   end
 
   def self.tonable_emojis
-    Discourse.cache.fetch(cache_key("tonable_emojis")) { db['tonableEmojis'] }
+    Discourse.cache.fetch(cache_key('tonable_emojis')) { db['tonableEmojis'] }
   end
 
   def self.custom?(name)
@@ -64,30 +69,35 @@ class Emoji
 
     found_emoji = nil
 
-    [[global_emoji_cache, :standard], [site_emoji_cache, :custom]].each do |cache, list_key|
-      cache_postfix, found_emoji = cache.defer_get_set(normalized_name) do
-        emoji = Emoji.public_send(list_key).detect do |e|
-          e.name == normalized_name &&
-          (!is_toned || (is_toned && e.tonable))
+    [
+      [global_emoji_cache, :standard],
+      [site_emoji_cache, :custom]
+    ].each do |cache, list_key|
+      cache_postfix, found_emoji =
+        cache.defer_get_set(normalized_name) do
+          emoji =
+            Emoji
+              .public_send(list_key)
+              .detect do |e|
+                e.name == normalized_name &&
+                  (!is_toned || (is_toned && e.tonable))
+              end
+          [self.cache_postfix, emoji]
         end
-        [self.cache_postfix, emoji]
-      end
 
       if found_emoji && (cache_postfix != self.cache_postfix)
         cache.delete(normalized_name)
         redo
       end
 
-      if found_emoji
-        break
-      end
+      break if found_emoji
     end
 
     found_emoji
   end
 
   def self.create_from_db_item(emoji)
-    name = emoji["name"]
+    name = emoji['name']
     filename = emoji['filename'] || name
 
     Emoji.new.tap do |e|
@@ -98,7 +108,8 @@ class Emoji
   end
 
   def self.url_for(name)
-    name = name.delete_prefix(':').delete_suffix(':').gsub(/(.+):t([1-6])/, '\1/\2')
+    name =
+      name.delete_prefix(':').delete_suffix(':').gsub(/(.+):t([1-6])/, '\1/\2')
     if SiteSetting.external_emoji_url.blank?
       "#{Discourse.base_path}/images/emoji/#{SiteSetting.emoji_set}/#{name}.png?v=#{EMOJI_VERSION}"
     else
@@ -115,9 +126,15 @@ class Emoji
   end
 
   def self.clear_cache
-    %w{custom standard aliases search_aliases translations all tonable}.each do |key|
-      Discourse.cache.delete(cache_key("#{key}_emojis"))
-    end
+    %w[
+      custom
+      standard
+      aliases
+      search_aliases
+      translations
+      all
+      tonable
+    ].each { |key| Discourse.cache.delete(cache_key("#{key}_emojis")) }
     global_emoji_cache.clear
     site_emoji_cache.clear
   end
@@ -127,7 +144,7 @@ class Emoji
   end
 
   def self.db
-    @db ||= File.open(db_file, "r:UTF-8") { |f| JSON.parse(f.read) }
+    @db ||= File.open(db_file, 'r:UTF-8') { |f| JSON.parse(f.read) }
   end
 
   def self.load_standard
@@ -138,20 +155,23 @@ class Emoji
     result = []
 
     if !GlobalSetting.skip_db?
-      CustomEmoji.includes(:upload).order(:name).each do |emoji|
-        result << Emoji.new.tap do |e|
-          e.name = emoji.name
-          e.url = emoji.upload&.url
-          e.group = emoji.group || DEFAULT_GROUP
+      CustomEmoji
+        .includes(:upload)
+        .order(:name)
+        .each do |emoji|
+          result << Emoji.new.tap do |e|
+            e.name = emoji.name
+            e.url = emoji.upload&.url
+            e.group = emoji.group || DEFAULT_GROUP
+          end
         end
-      end
     end
 
     Plugin::CustomEmoji.emojis.each do |group, emojis|
       emojis.each do |name, url|
         result << Emoji.new.tap do |e|
           e.name = name
-          url = (Discourse.base_path + url) if url[/^\/[^\/]/]
+          url = (Discourse.base_path + url) if url[%r{^/[^/]}]
           e.url = url
           e.group = group || DEFAULT_GROUP
         end
@@ -162,7 +182,7 @@ class Emoji
   end
 
   def self.load_translations
-    db["translations"]
+    db['translations']
   end
 
   def self.base_directory
@@ -175,47 +195,45 @@ class Emoji
   end
 
   def self.replacement_code(code)
-    code
-      .split('-')
-      .map!(&:hex)
-      .pack("U*")
+    code.split('-').map!(&:hex).pack('U*')
   end
 
   def self.unicode_replacements
-    @unicode_replacements ||= begin
-      replacements = {}
-      is_tonable_emojis = Emoji.tonable_emojis
-      fitzpatrick_scales = FITZPATRICK_SCALE.map { |scale| scale.to_i(16) }
+    @unicode_replacements ||=
+      begin
+        replacements = {}
+        is_tonable_emojis = Emoji.tonable_emojis
+        fitzpatrick_scales = FITZPATRICK_SCALE.map { |scale| scale.to_i(16) }
 
-      db['emojis'].each do |e|
-        name = e['name']
+        db['emojis'].each do |e|
+          name = e['name']
 
-        # special cased as we prefer to keep these as symbols
-        next if name == 'registered'
-        next if name == 'copyright'
-        next if name == 'tm'
-        next if name == 'left_right_arrow'
+          # special cased as we prefer to keep these as symbols
+          next if name == 'registered'
+          next if name == 'copyright'
+          next if name == 'tm'
+          next if name == 'left_right_arrow'
 
-        code = replacement_code(e['code'])
-        next unless code
+          code = replacement_code(e['code'])
+          next unless code
 
-        replacements[code] = name
-        if is_tonable_emojis.include?(name)
-          fitzpatrick_scales.each_with_index do |scale, index|
-            toned_code = code.codepoints.insert(1, scale).pack("U*")
-            replacements[toned_code] = "#{name}:t#{index + 2}"
+          replacements[code] = name
+          if is_tonable_emojis.include?(name)
+            fitzpatrick_scales.each_with_index do |scale, index|
+              toned_code = code.codepoints.insert(1, scale).pack('U*')
+              replacements[toned_code] = "#{name}:t#{index + 2}"
+            end
           end
         end
+
+        replacements["\u{2639}"] = 'frowning'
+        replacements["\u{263B}"] = 'slight_smile'
+        replacements["\u{2661}"] = 'heart'
+        replacements["\u{2665}"] = 'heart'
+        replacements["\u{263A}"] = 'relaxed'
+
+        replacements
       end
-
-      replacements["\u{2639}"] = 'frowning'
-      replacements["\u{263B}"] = 'slight_smile'
-      replacements["\u{2661}"] = 'heart'
-      replacements["\u{2665}"] = 'heart'
-      replacements["\u{263A}"] = 'relaxed'
-
-      replacements
-    end
   end
 
   def self.unicode_unescape(string)
@@ -224,39 +242,41 @@ class Emoji
 
   def self.gsub_emoji_to_unicode(str)
     if str
-      str.gsub(/:([\w\-+]*(?::t\d)?):/) { |name| Emoji.lookup_unicode($1) || name }
+      str.gsub(/:([\w\-+]*(?::t\d)?):/) do |name|
+        Emoji.lookup_unicode($1) || name
+      end
     end
   end
 
   def self.lookup_unicode(name)
-    @reverse_map ||= begin
-      map = {}
-      is_tonable_emojis = Emoji.tonable_emojis
+    @reverse_map ||=
+      begin
+        map = {}
+        is_tonable_emojis = Emoji.tonable_emojis
 
-      db['emojis'].each do |e|
-        next if e['name'] == 'tm'
+        db['emojis'].each do |e|
+          next if e['name'] == 'tm'
 
-        code = replacement_code(e['code'])
-        next unless code
+          code = replacement_code(e['code'])
+          next unless code
 
-        map[e['name']] = code
-        if is_tonable_emojis.include?(e['name'])
-          FITZPATRICK_SCALE.each_with_index do |scale, index|
-            toned_code = (code.codepoints.insert(1, scale.to_i(16))).pack("U*")
-            map["#{e['name']}:t#{index + 2}"] = toned_code
+          map[e['name']] = code
+          if is_tonable_emojis.include?(e['name'])
+            FITZPATRICK_SCALE.each_with_index do |scale, index|
+              toned_code =
+                (code.codepoints.insert(1, scale.to_i(16))).pack('U*')
+              map["#{e['name']}:t#{index + 2}"] = toned_code
+            end
           end
         end
-      end
 
-      Emoji.aliases.each do |key, alias_names|
-        next unless alias_code = map[key]
-        alias_names.each do |alias_name|
-          map[alias_name] = alias_code
+        Emoji.aliases.each do |key, alias_names|
+          next unless alias_code = map[key]
+          alias_names.each { |alias_name| map[alias_name] = alias_code }
         end
-      end
 
-      map
-    end
+        map
+      end
     @reverse_map[name]
   end
 
@@ -267,17 +287,18 @@ class Emoji
   def self.codes_to_img(str)
     return if str.blank?
 
-    str = str.gsub(/:([\w\-+]*(?::t\d)?):/) do |name|
-      code = $1
+    str =
+      str.gsub(/:([\w\-+]*(?::t\d)?):/) do |name|
+        code = $1
 
-      if code && Emoji.custom?(code)
-        emoji = Emoji[code]
-        "<img src=\"#{emoji.url}\" title=\"#{code}\" class=\"emoji\" alt=\"#{code}\" loading=\"lazy\" width=\"20\" height=\"20\">"
-      elsif code && Emoji.exists?(code)
-        "<img src=\"#{Emoji.url_for(code)}\" title=\"#{code}\" class=\"emoji\" alt=\"#{code}\" loading=\"lazy\" width=\"20\" height=\"20\">"
-      else
-        name
+        if code && Emoji.custom?(code)
+          emoji = Emoji[code]
+          "<img src=\"#{emoji.url}\" title=\"#{code}\" class=\"emoji\" alt=\"#{code}\" loading=\"lazy\" width=\"20\" height=\"20\">"
+        elsif code && Emoji.exists?(code)
+          "<img src=\"#{Emoji.url_for(code)}\" title=\"#{code}\" class=\"emoji\" alt=\"#{code}\" loading=\"lazy\" width=\"20\" height=\"20\">"
+        else
+          name
+        end
       end
-    end
   end
 end

@@ -1,11 +1,10 @@
 # frozen_string_literal: true
 class UserStat < ActiveRecord::Base
-
   belongs_to :user
   after_save :trigger_badges
 
   # TODO(2021-05-13): Remove
-  self.ignored_columns = ["topic_reply_count"]
+  self.ignored_columns = ['topic_reply_count']
 
   def self.ensure_consistency!(last_seen = 1.hour.ago)
     reset_bounce_scores
@@ -19,7 +18,8 @@ class UserStat < ActiveRecord::Base
   UPDATE_UNREAD_USERS_LIMIT = 10_000
 
   def self.update_first_unread_pm(last_seen, limit: UPDATE_UNREAD_USERS_LIMIT)
-    DB.exec(<<~SQL, archetype: Archetype.private_message, now: UPDATE_UNREAD_MINUTES_AGO.minutes.ago, last_seen: last_seen, limit: limit)
+    DB.exec(
+      <<~SQL,
     UPDATE user_stats us
     SET first_unread_pm_at = COALESCE(Z.min_date, :now)
     FROM (
@@ -64,10 +64,16 @@ class UserStat < ActiveRecord::Base
     ) AS Z
     WHERE us.user_id = Z.user_id
     SQL
+      archetype: Archetype.private_message,
+      now: UPDATE_UNREAD_MINUTES_AGO.minutes.ago,
+      last_seen: last_seen,
+      limit: limit
+    )
   end
 
   def self.update_first_unread(last_seen, limit: UPDATE_UNREAD_USERS_LIMIT)
-    DB.exec(<<~SQL, min_date: last_seen, limit: limit, now: UPDATE_UNREAD_MINUTES_AGO.minutes.ago)
+    DB.exec(
+      <<~SQL,
       UPDATE user_stats us
       SET first_unread_at = COALESCE(Y.min_date, :now)
       FROM (
@@ -134,17 +140,21 @@ class UserStat < ActiveRecord::Base
       ) Y
       WHERE Y.user_id = us.user_id
     SQL
+      min_date: last_seen,
+      limit: limit,
+      now: UPDATE_UNREAD_MINUTES_AGO.minutes.ago
+    )
   end
 
   def self.reset_bounce_scores
-    UserStat.where("reset_bounce_score_after < now()")
-      .where("bounce_score > 0")
+    UserStat
+      .where('reset_bounce_score_after < now()')
+      .where('bounce_score > 0')
       .update_all(bounce_score: 0)
   end
 
   # Updates the denormalized view counts for all users
   def self.update_view_counts(last_seen = 1.hour.ago)
-
     # NOTE: we only update the counts for users we have seen in the last hour
     #  this avoids a very expensive query that may run on the entire user base
     #  we also ensure we only touch the table if data changes
@@ -207,7 +217,8 @@ class UserStat < ActiveRecord::Base
 
   def self.update_draft_count(user_id = nil)
     if user_id.present?
-      draft_count, has_topic_draft = DB.query_single <<~SQL, user_id: user_id, new_topic: Draft::NEW_TOPIC
+      draft_count, has_topic_draft =
+        DB.query_single <<~SQL, user_id: user_id, new_topic: Draft::NEW_TOPIC
         UPDATE user_stats
         SET draft_count = (SELECT COUNT(*) FROM drafts WHERE user_id = :user_id)
         WHERE user_id = :user_id
@@ -216,10 +227,7 @@ class UserStat < ActiveRecord::Base
 
       MessageBus.publish(
         '/user',
-        {
-          draft_count: draft_count,
-          has_topic_draft: !!has_topic_draft
-        },
+        { draft_count: draft_count, has_topic_draft: !!has_topic_draft },
         user_ids: [user_id]
       )
     else
@@ -265,9 +273,12 @@ class UserStat < ActiveRecord::Base
     if last_seen = last_seen_cached(id)
       diff = (Time.now.to_f - last_seen.to_f).round
       if diff > 0 && diff < MAX_TIME_READ_DIFF
-        update_args = ["time_read = time_read + ?", diff]
+        update_args = ['time_read = time_read + ?', diff]
         UserStat.where(user_id: id).update_all(update_args)
-        UserVisit.where(user_id: id, visited_at: Time.zone.now.to_date).update_all(update_args)
+        UserVisit.where(
+          user_id: id,
+          visited_at: Time.zone.now.to_date
+        ).update_all(update_args)
       end
     end
     cache_last_seen(id, Time.now.to_f)

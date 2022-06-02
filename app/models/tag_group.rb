@@ -21,15 +21,24 @@ class TagGroup < ActiveRecord::Base
   attr_accessor :permissions
 
   def tag_names=(tag_names_arg)
-    DiscourseTagging.add_or_create_tags_by_name(self, tag_names_arg, unlimited: true)
+    DiscourseTagging.add_or_create_tags_by_name(
+      self,
+      tag_names_arg,
+      unlimited: true
+    )
   end
 
   def parent_tag_name=(tag_names_arg)
     if tag_names_arg.empty?
       self.parent_tag = nil
     else
-      if tag_name = DiscourseTagging.tags_for_saving(tag_names_arg, Guardian.new(Discourse.system_user)).first
-        self.parent_tag = Tag.find_by_name(tag_name) || Tag.create(name: tag_name)
+      if tag_name =
+           DiscourseTagging.tags_for_saving(
+             tag_names_arg,
+             Guardian.new(Discourse.system_user)
+           ).first
+        self.parent_tag =
+          Tag.find_by_name(tag_name) || Tag.create(name: tag_name)
       end
     end
   end
@@ -40,18 +49,19 @@ class TagGroup < ActiveRecord::Base
 
   # TODO: long term we can cache this if TONs of tag groups exist
   def self.find_id_by_slug(slug)
-    self.pluck(:id, :name).each do |id, name|
-      if Slug.for(name) == slug
-        return id
-      end
-    end
+    self
+      .pluck(:id, :name)
+      .each { |id, name| return id if Slug.for(name) == slug }
     nil
   end
 
   def self.resolve_permissions(permissions)
     permissions.map do |group, permission|
       group_id = Group.group_id_from_param(group)
-      permission = TagGroupPermission.permission_types[permission] unless permission.is_a?(Integer)
+      permission =
+        TagGroupPermission.permission_types[permission] unless permission.is_a?(
+        Integer
+      )
       [group_id, permission]
     end
   end
@@ -69,7 +79,10 @@ class TagGroup < ActiveRecord::Base
     if @permissions
       tag_group_permissions.destroy_all
       @permissions.each do |group_id, permission_type|
-        tag_group_permissions.build(group_id: group_id, permission_type: permission_type)
+        tag_group_permissions.build(
+          group_id: group_id,
+          permission_type: permission_type
+        )
       end
       @permissions = nil
     end
@@ -98,7 +111,11 @@ class TagGroup < ActiveRecord::Base
         AND id IN (SELECT tag_group_id FROM tag_group_permissions WHERE group_id = ?)
       SQL
 
-      TagGroup.where(filter_sql, guardian.allowed_category_ids, Group::AUTO_GROUPS[:everyone])
+      TagGroup.where(
+        filter_sql,
+        guardian.allowed_category_ids,
+        Group::AUTO_GROUPS[:everyone]
+      )
     end
   end
 end

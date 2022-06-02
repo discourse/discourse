@@ -3,7 +3,7 @@ class GroupAssociatedGroup < ActiveRecord::Base
   belongs_to :group
   belongs_to :associated_group
 
-  after_commit :add_associated_users, on: [:create, :update]
+  after_commit :add_associated_users, on: %i[create update]
   before_destroy :remove_associated_users
 
   def add_associated_users
@@ -18,7 +18,9 @@ class GroupAssociatedGroup < ActiveRecord::Base
 
   def remove_associated_users
     with_mutex do
-      User.where("NOT EXISTS(
+      User
+        .where(
+          'NOT EXISTS(
         SELECT 1
         FROM user_associated_groups uag
         JOIN group_associated_groups gag
@@ -26,20 +28,24 @@ class GroupAssociatedGroup < ActiveRecord::Base
         WHERE uag.user_id = users.id
         AND gag.id != :gag_id
         AND gag.group_id = :group_id
-      )", gag_id: id, group_id: group_id).in_batches do |users|
-        users.each do |user|
-          group.remove_automatically(user, subject: associated_group.label)
+      )',
+          gag_id: id,
+          group_id: group_id
+        )
+        .in_batches do |users|
+          users.each do |user|
+            group.remove_automatically(user, subject: associated_group.label)
+          end
         end
-      end
     end
   end
 
   private
 
   def with_mutex
-    DistributedMutex.synchronize("group_associated_group_#{group_id}_#{associated_group_id}") do
-      yield
-    end
+    DistributedMutex.synchronize(
+      "group_associated_group_#{group_id}_#{associated_group_id}"
+    ) { yield }
   end
 end
 

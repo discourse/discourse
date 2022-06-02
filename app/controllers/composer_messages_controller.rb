@@ -1,11 +1,14 @@
 # frozen_string_literal: true
 
 class ComposerMessagesController < ApplicationController
-
   requires_login
 
   def index
-    finder = ComposerMessagesFinder.new(current_user, params.slice(:composer_action, :topic_id, :post_id))
+    finder =
+      ComposerMessagesFinder.new(
+        current_user,
+        params.slice(:composer_action, :topic_id, :post_id)
+      )
     json = { composer_messages: [finder.find].compact }
 
     if params[:topic_id].present?

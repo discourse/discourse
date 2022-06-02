@@ -4,13 +4,20 @@ class UserActionsController < ApplicationController
   def index
     user_actions_params.require(:username)
 
-    user = fetch_user_from_params(include_inactive: current_user.try(:staff?) || (current_user && SiteSetting.show_inactive_accounts))
+    user =
+      fetch_user_from_params(
+        include_inactive:
+          current_user.try(:staff?) ||
+            (current_user && SiteSetting.show_inactive_accounts)
+      )
     offset = [0, user_actions_params[:offset].to_i].max
-    action_types = (user_actions_params[:filter] || "").split(",").map(&:to_i)
+    action_types = (user_actions_params[:filter] || '').split(',').map(&:to_i)
     limit = user_actions_params.fetch(:limit, 30).to_i
 
     raise Discourse::NotFound unless guardian.can_see_profile?(user)
-    raise Discourse::NotFound unless guardian.can_see_user_actions?(user, action_types)
+    unless guardian.can_see_user_actions?(user, action_types)
+      raise Discourse::NotFound
+    end
 
     opts = {
       user_id: user.id,
@@ -29,7 +36,10 @@ class UserActionsController < ApplicationController
 
   def show
     params.require(:id)
-    render_serialized(UserAction.stream_item(params[:id], guardian), UserActionSerializer)
+    render_serialized(
+      UserAction.stream_item(params[:id], guardian),
+      UserActionSerializer
+    )
   end
 
   def private_messages
@@ -40,6 +50,7 @@ class UserActionsController < ApplicationController
   private
 
   def user_actions_params
-    @user_actions_params ||= params.permit(:username, :filter, :offset, :acting_username, :limit)
+    @user_actions_params ||=
+      params.permit(:username, :filter, :offset, :acting_username, :limit)
   end
 end

@@ -12,7 +12,6 @@ class PostActionType < ActiveRecord::Base
   end
 
   class << self
-
     def flag_settings
       unless @flag_settings
         @flag_settings = FlagSettings.new
@@ -20,21 +19,21 @@ class PostActionType < ActiveRecord::Base
           3,
           :off_topic,
           notify_type: true,
-          auto_action_type: true,
+          auto_action_type: true
         )
         @flag_settings.add(
           4,
           :inappropriate,
           topic_type: true,
           notify_type: true,
-          auto_action_type: true,
+          auto_action_type: true
         )
         @flag_settings.add(
           8,
           :spam,
           topic_type: true,
           notify_type: true,
-          auto_action_type: true,
+          auto_action_type: true
         )
         @flag_settings.add(
           6,
@@ -68,9 +67,7 @@ class PostActionType < ActiveRecord::Base
       unless @types
         # NOTE: Previously bookmark was type 1 but that has been superseded
         # by the separate Bookmark model and functionality
-        @types = Enum.new(
-          like: 2
-        )
+        @types = Enum.new(like: 2)
         @types.merge!(flag_settings.flag_types)
       end
 

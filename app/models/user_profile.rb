@@ -2,13 +2,16 @@
 
 class UserProfile < ActiveRecord::Base
   belongs_to :user, inverse_of: :user_profile
-  belongs_to :card_background_upload, class_name: "Upload"
-  belongs_to :profile_background_upload, class_name: "Upload"
-  belongs_to :granted_title_badge, class_name: "Badge"
+  belongs_to :card_background_upload, class_name: 'Upload'
+  belongs_to :profile_background_upload, class_name: 'Upload'
+  belongs_to :granted_title_badge, class_name: 'Badge'
   belongs_to :featured_topic, class_name: 'Topic'
 
   validates :bio_raw, length: { maximum: 3000 }, watched_words: true
-  validates :website, url: true, allow_blank: true, if: Proc.new { |c| c.new_record? || c.website_changed? }
+  validates :website,
+            url: true,
+            allow_blank: true,
+            if: Proc.new { |c| c.new_record? || c.website_changed? }
   validates :user, presence: true
   validates :location, watched_words: true
 
@@ -16,7 +19,8 @@ class UserProfile < ActiveRecord::Base
   after_save :trigger_badges
   after_save :pull_hotlinked_image
 
-  validate :website_domain_validator, if: Proc.new { |c| c.new_record? || c.website_changed? }
+  validate :website_domain_validator,
+           if: Proc.new { |c| c.new_record? || c.website_changed? }
 
   has_many :user_profile_views, dependent: :destroy
 
@@ -27,12 +31,18 @@ class UserProfile < ActiveRecord::Base
   def bio_excerpt(length = 350, opts = {})
     return nil if bio_cooked.blank?
     excerpt = PrettyText.excerpt(bio_cooked, length, opts).sub(/<br>$/, '')
-    return excerpt if excerpt.blank? || (user.has_trust_level?(TrustLevel[1]) && !user.suspended?)
+    if excerpt.blank? ||
+         (user.has_trust_level?(TrustLevel[1]) && !user.suspended?)
+      return excerpt
+    end
     PrettyText.strip_links(excerpt)
   end
 
   def bio_processed
-    return bio_cooked if bio_cooked.blank? || (user.has_trust_level?(TrustLevel[1]) && !user.suspended?)
+    if bio_cooked.blank? ||
+         (user.has_trust_level?(TrustLevel[1]) && !user.suspended?)
+      return bio_cooked
+    end
     PrettyText.strip_links(bio_cooked)
   end
 
@@ -63,14 +73,19 @@ class UserProfile < ActiveRecord::Base
 
   def self.rebake_old(limit)
     problems = []
-    UserProfile.where('bio_cooked_version IS NULL OR bio_cooked_version < ?', BAKED_VERSION)
-      .limit(limit).each do |p|
-      begin
-        p.rebake!
-      rescue => e
-        problems << { profile: p, ex: e }
+    UserProfile
+      .where(
+        'bio_cooked_version IS NULL OR bio_cooked_version < ?',
+        BAKED_VERSION
+      )
+      .limit(limit)
+      .each do |p|
+        begin
+          p.rebake!
+        rescue => e
+          problems << { profile: p, ex: e }
+        end
       end
-    end
     problems
   end
 
@@ -80,15 +95,18 @@ class UserProfile < ActiveRecord::Base
 
   def self.import_url_for_user(background_url, user, options = nil)
     if SiteSetting.verbose_upload_logging
-      Rails.logger.warn("Verbose Upload Logging: Downloading profile background from #{background_url}")
+      Rails.logger.warn(
+        "Verbose Upload Logging: Downloading profile background from #{background_url}"
+      )
     end
 
-    tempfile = FileHelper.download(
-      background_url,
-      max_file_size: SiteSetting.max_image_size_kb.kilobytes,
-      tmp_file_name: "sso-profile-background",
-      follow_redirect: true
-    )
+    tempfile =
+      FileHelper.download(
+        background_url,
+        max_file_size: SiteSetting.max_image_size_kb.kilobytes,
+        tmp_file_name: 'sso-profile-background',
+        follow_redirect: true
+      )
 
     return unless tempfile
 
@@ -96,16 +114,21 @@ class UserProfile < ActiveRecord::Base
     tempfile.rewind
 
     is_card_background = !options || options[:is_card_background]
-    type = is_card_background ? "card_background" : "profile_background"
+    type = is_card_background ? 'card_background' : 'profile_background'
 
-    upload = UploadCreator.new(tempfile, "external-profile-background." + ext, origin: background_url, type: type).create_for(user.id)
+    upload =
+      UploadCreator.new(
+        tempfile,
+        'external-profile-background.' + ext,
+        origin: background_url,
+        type: type
+      ).create_for(user.id)
 
     if (is_card_background)
       user.user_profile.upload_card_background(upload)
     else
       user.user_profile.upload_profile_background(upload)
     end
-
   rescue Net::ReadTimeout, OpenURI::HTTPError
     # skip saving, we are not connected to the net
   ensure
@@ -132,7 +155,12 @@ class UserProfile < ActiveRecord::Base
 
   def cooked
     if self.bio_raw.present?
-      PrettyText.cook(self.bio_raw, omit_nofollow: user.has_trust_level?(TrustLevel[3]) && !SiteSetting.tl3_links_no_follow)
+      PrettyText.cook(
+        self.bio_raw,
+        omit_nofollow:
+          user.has_trust_level?(TrustLevel[3]) &&
+            !SiteSetting.tl3_links_no_follow
+      )
     else
       nil
     end
@@ -153,11 +181,20 @@ class UserProfile < ActiveRecord::Base
     allowed_domains = SiteSetting.allowed_user_website_domains
     return if (allowed_domains.blank? || self.website.blank?)
 
-    domain = begin
-      URI.parse(self.website).host
-    rescue URI::Error
+    domain =
+      begin
+        URI.parse(self.website).host
+      rescue URI::Error
+      end
+    unless allowed_domains.split('|').include?(domain)
+      self.errors.add :base,
+                      (
+                        I18n.t(
+                          'user.website.domain_not_allowed',
+                          domains: allowed_domains.split('|').join(', ')
+                        )
+                      )
     end
-    self.errors.add :base, (I18n.t('user.website.domain_not_allowed', domains: allowed_domains.split('|').join(", "))) unless allowed_domains.split('|').include?(domain)
   end
 
   def self.remove_featured_topic_from_all_profiles(topic)

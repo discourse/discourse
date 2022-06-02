@@ -6,19 +6,20 @@ class EmbeddableHost < ActiveRecord::Base
   after_destroy :reset_embedding_settings
 
   before_validation do
-    self.host.sub!(/^https?:\/\//, '')
-    self.host.sub!(/\/.*$/, '')
+    self.host.sub!(%r{^https?://}, '')
+    self.host.sub!(%r{/.*$}, '')
   end
 
   # TODO(2021-07-23): Remove
-  self.ignored_columns = ["path_whitelist"]
+  self.ignored_columns = ['path_whitelist']
 
   def self.record_for_url(uri)
     if uri.is_a?(String)
-      uri = begin
-        URI(UrlHelper.escape_uri(uri))
-      rescue URI::Error, Addressable::URI::InvalidURIError
-      end
+      uri =
+        begin
+          URI(UrlHelper.escape_uri(uri))
+        rescue URI::Error, Addressable::URI::InvalidURIError
+        end
     end
 
     return false unless uri.present?
@@ -31,13 +32,15 @@ class EmbeddableHost < ActiveRecord::Base
     end
 
     path = uri.path
-    path << "?" << uri.query if uri.query.present?
+    path << '?' << uri.query if uri.query.present?
 
-    where("lower(host) = ?", host).each do |eh|
+    where('lower(host) = ?', host).each do |eh|
       return eh if eh.allowed_paths.blank?
 
       path_regexp = Regexp.new(eh.allowed_paths)
-      return eh if path_regexp.match(path) || path_regexp.match(UrlHelper.unencode(path))
+      if path_regexp.match(path) || path_regexp.match(UrlHelper.unencode(path))
+        return eh
+      end
     end
 
     nil
@@ -47,12 +50,15 @@ class EmbeddableHost < ActiveRecord::Base
     return false if url.nil?
 
     # Work around IFRAME reload on WebKit where the referer will be set to the Forum URL
-    return true if url&.starts_with?(Discourse.base_url) && EmbeddableHost.exists?
-
-    uri = begin
-      URI(UrlHelper.escape_uri(url))
-    rescue URI::Error
+    if url&.starts_with?(Discourse.base_url) && EmbeddableHost.exists?
+      return true
     end
+
+    uri =
+      begin
+        URI(UrlHelper.escape_uri(url))
+      rescue URI::Error
+      end
 
     uri.present? && record_for_url(uri).present?
   end
@@ -61,14 +67,19 @@ class EmbeddableHost < ActiveRecord::Base
 
   def reset_embedding_settings
     unless EmbeddableHost.exists?
-      Embedding.settings.each { |s| SiteSetting.set(s.to_s, SiteSetting.defaults[s]) }
+      Embedding.settings.each do |s|
+        SiteSetting.set(s.to_s, SiteSetting.defaults[s])
+      end
     end
   end
 
   def host_must_be_valid
-    if host !~ /\A[a-z0-9]+([\-\.]+{1}[a-z0-9]+)*\.[a-z]{2,24}(:[0-9]{1,5})?(\/.*)?\Z/i &&
-       host !~ /\A(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})(:[0-9]{1,5})?(\/.*)?\Z/ &&
-       host !~ /\A([a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.)?localhost(\:[0-9]{1,5})?(\/.*)?\Z/i
+    if host !~
+         /\A[a-z0-9]+([\-\.]+{1}[a-z0-9]+)*\.[a-z]{2,24}(:[0-9]{1,5})?(\/.*)?\Z/i &&
+         host !~
+           /\A(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})(:[0-9]{1,5})?(\/.*)?\Z/ &&
+         host !~
+           /\A([a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.)?localhost(\:[0-9]{1,5})?(\/.*)?\Z/i
       errors.add(:host, I18n.t('errors.messages.invalid'))
     end
   end

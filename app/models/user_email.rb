@@ -12,18 +12,19 @@ class UserEmail < ActiveRecord::Base
   validates :email, presence: true
   validates :email, email: true, if: :validate_email?
 
-  validates :primary, uniqueness: { scope: [:user_id] }, if: [:user_id, :primary]
+  validates :primary, uniqueness: { scope: [:user_id] }, if: %i[user_id primary]
   validate :user_id_not_changed, if: :primary
   validate :unique_email, if: :validate_unique_email?
 
   scope :secondary, -> { where(primary: false) }
 
   def normalize_email
-    self.normalized_email = if self.email.present?
-      username, domain = self.email.split('@', 2)
-      username = username.gsub('.', '').gsub(/\+.*/, '')
-      "#{username}@#{domain}"
-    end
+    self.normalized_email =
+      if self.email.present?
+        username, domain = self.email.split('@', 2)
+        username = username.gsub('.', '').gsub(/\+.*/, '')
+        "#{username}@#{domain}"
+      end
   end
 
   private
@@ -46,19 +47,30 @@ class UserEmail < ActiveRecord::Base
   end
 
   def unique_email
-    email_exists = if SiteSetting.normalize_emails?
-      self.class.where("lower(email) = ? OR lower(normalized_email) = ?", email, normalized_email).exists?
-    else
-      self.class.where("lower(email) = ?", email).exists?
-    end
+    email_exists =
+      if SiteSetting.normalize_emails?
+        self
+          .class
+          .where(
+            'lower(email) = ? OR lower(normalized_email) = ?',
+            email,
+            normalized_email
+          )
+          .exists?
+      else
+        self.class.where('lower(email) = ?', email).exists?
+      end
 
     self.errors.add(:email, :taken) if email_exists
   end
 
   def user_id_not_changed
     if self.will_save_change_to_user_id? && self.persisted?
-      self.errors.add(:user_id, I18n.t(
-        'active_record.errors.model.user_email.attributes.user_id.reassigning_primary_email')
+      self.errors.add(
+        :user_id,
+        I18n.t(
+          'active_record.errors.model.user_email.attributes.user_id.reassigning_primary_email'
+        )
       )
     end
   end

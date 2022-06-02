@@ -12,7 +12,7 @@ class UserOpenId < ActiveRecord::Base
   private
 
   def raise_deprecation_error
-    raise "The user_open_ids table has been deprecated, and will be dropped in v2.5. See https://meta.discourse.org/t/-/113249"
+    raise 'The user_open_ids table has been deprecated, and will be dropped in v2.5. See https://meta.discourse.org/t/-/113249'
   end
 end
 

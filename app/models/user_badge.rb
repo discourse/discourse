@@ -7,31 +7,38 @@ class UserBadge < ActiveRecord::Base
   belongs_to :notification, dependent: :destroy
   belongs_to :post
 
-  BOOLEAN_ATTRIBUTES = %w(is_favorite)
+  BOOLEAN_ATTRIBUTES = %w[is_favorite]
 
-  scope :grouped_with_count, -> {
-    group(:badge_id, :user_id)
-      .select_for_grouping
-      .order('MAX(featured_rank) ASC')
-      .includes(:user, :granted_by, { badge: :badge_type }, post: :topic)
-  }
+  scope :grouped_with_count,
+        -> {
+          group(:badge_id, :user_id)
+            .select_for_grouping
+            .order('MAX(featured_rank) ASC')
+            .includes(:user, :granted_by, { badge: :badge_type }, post: :topic)
+        }
 
-  scope :select_for_grouping, -> {
-    select(
-      UserBadge.attribute_names.map do |name|
-        operation = BOOLEAN_ATTRIBUTES.include?(name) ? "BOOL_OR" : "MAX"
-        "#{operation}(user_badges.#{name}) AS #{name}"
-      end,
-      'COUNT(*) AS "count"'
-    )
-  }
+  scope :select_for_grouping,
+        -> {
+          select(
+            UserBadge.attribute_names.map do |name|
+              operation = BOOLEAN_ATTRIBUTES.include?(name) ? 'BOOL_OR' : 'MAX'
+              "#{operation}(user_badges.#{name}) AS #{name}"
+            end,
+            'COUNT(*) AS "count"'
+          )
+        }
 
-  scope :for_enabled_badges, -> { where('user_badges.badge_id IN (SELECT id FROM badges WHERE enabled)') }
+  scope :for_enabled_badges,
+        -> {
+          where('user_badges.badge_id IN (SELECT id FROM badges WHERE enabled)')
+        }
 
   validates :badge_id,
-    presence: true,
-    uniqueness: { scope: :user_id },
-    if: :single_grant_badge?
+            presence: true,
+            uniqueness: {
+              scope: :user_id
+            },
+            if: :single_grant_badge?
 
   validates :user_id, presence: true
   validates :granted_at, presence: true

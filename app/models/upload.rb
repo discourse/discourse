@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "digest/sha1"
+require 'digest/sha1'
 
 class Upload < ActiveRecord::Base
   include ActionView::Helpers::NumberHelper
@@ -8,7 +8,7 @@ class Upload < ActiveRecord::Base
 
   SHA1_LENGTH = 40
   SEEDED_ID_THRESHOLD = 0
-  URL_REGEX ||= /(\/original\/\dX[\/\.\w]*\/(\h+)[\.\w]*)/
+  URL_REGEX ||= %r{(/original/\dX[/\.\w]*/(\h+)[\.\w]*)}
   MAX_IDENTIFY_SECONDS = 5
 
   belongs_to :user
@@ -23,7 +23,9 @@ class Upload < ActiveRecord::Base
   has_many :post_uploads, dependent: :destroy
   has_many :posts, through: :post_uploads
 
-  has_many :post_hotlinked_media, dependent: :destroy, class_name: "PostHotlinkedMedia"
+  has_many :post_hotlinked_media,
+           dependent: :destroy,
+           class_name: 'PostHotlinkedMedia'
 
   has_many :optimized_images, dependent: :destroy
   has_many :user_uploads, dependent: :destroy
@@ -42,24 +44,29 @@ class Upload < ActiveRecord::Base
   validates_with UploadValidator
 
   before_destroy do
-    UserProfile.where(card_background_upload_id: self.id).update_all(card_background_upload_id: nil)
-    UserProfile.where(profile_background_upload_id: self.id).update_all(profile_background_upload_id: nil)
+    UserProfile.where(card_background_upload_id: self.id).update_all(
+      card_background_upload_id: nil
+    )
+    UserProfile.where(profile_background_upload_id: self.id).update_all(
+      profile_background_upload_id: nil
+    )
   end
 
   after_destroy do
     User.where(uploaded_avatar_id: self.id).update_all(uploaded_avatar_id: nil)
-    UserAvatar.where(gravatar_upload_id: self.id).update_all(gravatar_upload_id: nil)
-    UserAvatar.where(custom_upload_id: self.id).update_all(custom_upload_id: nil)
+    UserAvatar.where(gravatar_upload_id: self.id).update_all(
+      gravatar_upload_id: nil
+    )
+    UserAvatar.where(custom_upload_id: self.id).update_all(
+      custom_upload_id: nil
+    )
   end
 
-  scope :by_users, -> { where("uploads.id > ?", SEEDED_ID_THRESHOLD) }
+  scope :by_users, -> { where('uploads.id > ?', SEEDED_ID_THRESHOLD) }
 
   def self.verification_statuses
-    @verification_statuses ||= Enum.new(
-      unchecked: 1,
-      verified: 2,
-      invalid_etag: 3
-    )
+    @verification_statuses ||=
+      Enum.new(unchecked: 1, verified: 2, invalid_etag: 3)
   end
 
   def self.add_unused_callback(&block)
@@ -87,37 +94,48 @@ class Upload < ActiveRecord::Base
   end
 
   def self.with_no_non_post_relations
-    scope = self
-      .joins(<<~SQL)
+    scope =
+      self
+        .joins(<<~SQL)
         LEFT JOIN site_settings ss
         ON NULLIF(ss.value, '')::integer = uploads.id
         AND ss.data_type = #{SiteSettings::TypeSupervisor.types[:upload].to_i}
       SQL
-      .where("ss.value IS NULL")
-      .joins("LEFT JOIN users u ON u.uploaded_avatar_id = uploads.id")
-      .where("u.uploaded_avatar_id IS NULL")
-      .joins("LEFT JOIN user_avatars ua ON ua.gravatar_upload_id = uploads.id OR ua.custom_upload_id = uploads.id")
-      .where("ua.gravatar_upload_id IS NULL AND ua.custom_upload_id IS NULL")
-      .joins("LEFT JOIN user_profiles up ON up.profile_background_upload_id = uploads.id OR up.card_background_upload_id = uploads.id")
-      .where("up.profile_background_upload_id IS NULL AND up.card_background_upload_id IS NULL")
-      .joins("LEFT JOIN categories c ON c.uploaded_logo_id = uploads.id OR c.uploaded_background_id = uploads.id")
-      .where("c.uploaded_logo_id IS NULL AND c.uploaded_background_id IS NULL")
-      .joins("LEFT JOIN custom_emojis ce ON ce.upload_id = uploads.id")
-      .where("ce.upload_id IS NULL")
-      .joins("LEFT JOIN theme_fields tf ON tf.upload_id = uploads.id")
-      .where("tf.upload_id IS NULL")
-      .joins("LEFT JOIN user_exports ue ON ue.upload_id = uploads.id")
-      .where("ue.upload_id IS NULL")
-      .joins("LEFT JOIN groups g ON g.flair_upload_id = uploads.id")
-      .where("g.flair_upload_id IS NULL")
-      .joins("LEFT JOIN badges b ON b.image_upload_id = uploads.id")
-      .where("b.image_upload_id IS NULL")
-      .joins(<<~SQL)
+        .where('ss.value IS NULL')
+        .joins('LEFT JOIN users u ON u.uploaded_avatar_id = uploads.id')
+        .where('u.uploaded_avatar_id IS NULL')
+        .joins(
+          'LEFT JOIN user_avatars ua ON ua.gravatar_upload_id = uploads.id OR ua.custom_upload_id = uploads.id'
+        )
+        .where('ua.gravatar_upload_id IS NULL AND ua.custom_upload_id IS NULL')
+        .joins(
+          'LEFT JOIN user_profiles up ON up.profile_background_upload_id = uploads.id OR up.card_background_upload_id = uploads.id'
+        )
+        .where(
+          'up.profile_background_upload_id IS NULL AND up.card_background_upload_id IS NULL'
+        )
+        .joins(
+          'LEFT JOIN categories c ON c.uploaded_logo_id = uploads.id OR c.uploaded_background_id = uploads.id'
+        )
+        .where(
+          'c.uploaded_logo_id IS NULL AND c.uploaded_background_id IS NULL'
+        )
+        .joins('LEFT JOIN custom_emojis ce ON ce.upload_id = uploads.id')
+        .where('ce.upload_id IS NULL')
+        .joins('LEFT JOIN theme_fields tf ON tf.upload_id = uploads.id')
+        .where('tf.upload_id IS NULL')
+        .joins('LEFT JOIN user_exports ue ON ue.upload_id = uploads.id')
+        .where('ue.upload_id IS NULL')
+        .joins('LEFT JOIN groups g ON g.flair_upload_id = uploads.id')
+        .where('g.flair_upload_id IS NULL')
+        .joins('LEFT JOIN badges b ON b.image_upload_id = uploads.id')
+        .where('b.image_upload_id IS NULL')
+        .joins(<<~SQL)
         LEFT JOIN theme_settings ts
         ON NULLIF(ts.value, '')::integer = uploads.id
         AND ts.data_type = #{ThemeSetting.types[:upload].to_i}
       SQL
-      .where("ts.value IS NULL")
+        .where('ts.value IS NULL')
 
     if SiteSetting.selectable_avatars.present?
       scope = scope.where.not(id: SiteSetting.selectable_avatars.map(&:id))
@@ -142,18 +160,14 @@ class Upload < ActiveRecord::Base
     return unless SiteSetting.create_thumbnails?
     opts ||= {}
 
-    if get_optimized_image(width, height, opts)
-      save(validate: false)
-    end
+    save(validate: false) if get_optimized_image(width, height, opts)
   end
 
   # this method attempts to correct old incorrect extensions
   def get_optimized_image(width, height, opts = nil)
     opts ||= {}
 
-    if (!extension || extension.length == 0)
-      fix_image_extension
-    end
+    fix_image_extension if (!extension || extension.length == 0)
 
     opts = opts.merge(raise_on_error: true)
     begin
@@ -180,31 +194,39 @@ class Upload < ActiveRecord::Base
 
     File.read(original_path)
   ensure
-    if external_copy
-      File.unlink(external_copy.path)
-    end
+    File.unlink(external_copy.path) if external_copy
   end
 
   def fix_image_extension
-    return false if extension == "unknown"
+    return false if extension == 'unknown'
 
     begin
       # this is relatively cheap once cached
       original_path = Discourse.store.path_for(self)
       if original_path.blank?
-        external_copy = Discourse.store.download(self) rescue nil
+        external_copy =
+          begin
+            Discourse.store.download(self)
+          rescue StandardError
+            nil
+          end
         original_path = external_copy.try(:path)
       end
 
-      image_info = FastImage.new(original_path) rescue nil
-      new_extension = image_info&.type&.to_s || "unknown"
+      image_info =
+        begin
+          FastImage.new(original_path)
+        rescue StandardError
+          nil
+        end
+      new_extension = image_info&.type&.to_s || 'unknown'
 
       if new_extension != self.extension
         self.update_columns(extension: new_extension)
         true
       end
-    rescue
-      self.update_columns(extension: "unknown")
+    rescue StandardError
+      self.update_columns(extension: 'unknown')
       true
     end
   end
@@ -239,7 +261,10 @@ class Upload < ActiveRecord::Base
 
   def self.consider_for_reuse(upload, post)
     return upload if !SiteSetting.secure_media? || upload.blank? || post.blank?
-    return nil if !upload.matching_access_control_post?(post) || upload.uploaded_before_secure_media_enabled?
+    if !upload.matching_access_control_post?(post) ||
+         upload.uploaded_before_secure_media_enabled?
+      return nil
+    end
     upload
   end
 
@@ -248,7 +273,8 @@ class Upload < ActiveRecord::Base
     # have secure-media-uploads in the URL e.g. /t/secure-media-uploads-are-cool/223452
     route = UrlHelper.rails_route_from_url(url)
     return false if route.blank?
-    route[:action] == "show_secure" && route[:controller] == "uploads" && FileHelper.is_supported_media?(url)
+    route[:action] == 'show_secure' && route[:controller] == 'uploads' &&
+      FileHelper.is_supported_media?(url)
   rescue ActionController::RoutingError
     false
   end
@@ -264,8 +290,8 @@ class Upload < ActiveRecord::Base
     return url if !url.include?(SiteSetting.Upload.absolute_base_url)
     uri = URI.parse(url)
     Rails.application.routes.url_for(
-      controller: "uploads",
-      action: "show_secure",
+      controller: 'uploads',
+      action: 'show_secure',
       path: uri.path[1..-1],
       only_path: true
     )
@@ -289,7 +315,7 @@ class Upload < ActiveRecord::Base
   end
 
   def local?
-    !(url =~ /^(https?:)?\/\//)
+    !(url =~ %r{^(https?:)?//})
   end
 
   def fix_dimensions!
@@ -304,7 +330,18 @@ class Upload < ActiveRecord::Base
 
     begin
       if extension == 'svg'
-        w, h = Discourse::Utils.execute_command("identify", "-format", "%w %h", path, timeout: MAX_IDENTIFY_SECONDS).split(' ') rescue [0, 0]
+        w, h =
+          begin
+            Discourse::Utils.execute_command(
+              'identify',
+              '-format',
+              '%w %h',
+              path,
+              timeout: MAX_IDENTIFY_SECONDS
+            ).split(' ')
+          rescue StandardError
+            [0, 0]
+          end
       else
         w, h = FastImage.new(path, raise_on_failure: true).size
       end
@@ -321,7 +358,7 @@ class Upload < ActiveRecord::Base
         thumbnail_height: thumbnail_height
       )
     rescue => e
-      Discourse.warn_exception(e, message: "Error getting image dimensions")
+      Discourse.warn_exception(e, message: 'Error getting image dimensions')
     end
     nil
   end
@@ -353,21 +390,30 @@ class Upload < ActiveRecord::Base
   end
 
   def target_image_quality(local_path, test_quality)
-    @file_quality ||= Discourse::Utils.execute_command("identify", "-format", "%Q", local_path, timeout: MAX_IDENTIFY_SECONDS).to_i rescue 0
+    @file_quality ||=
+      begin
+        Discourse::Utils.execute_command(
+          'identify',
+          '-format',
+          '%Q',
+          local_path,
+          timeout: MAX_IDENTIFY_SECONDS
+        ).to_i
+      rescue StandardError
+        0
+      end
 
-    if @file_quality == 0 || @file_quality > test_quality
-      test_quality
-    end
+    test_quality if @file_quality == 0 || @file_quality > test_quality
   end
 
   def self.sha1_from_short_path(path)
-    if path =~ /(\/uploads\/short-url\/)([a-zA-Z0-9]+)(\..*)?/
+    if path =~ %r{(/uploads/short-url/)([a-zA-Z0-9]+)(\..*)?}
       self.sha1_from_base62_encoded($2)
     end
   end
 
   def self.sha1_from_short_url(url)
-    if url =~ /(upload:\/\/)?([a-zA-Z0-9]+)(\..*)?/
+    if url =~ %r{(upload://)?([a-zA-Z0-9]+)(\..*)?}
       self.sha1_from_base62_encoded($2)
     end
   end
@@ -375,11 +421,7 @@ class Upload < ActiveRecord::Base
   def self.sha1_from_base62_encoded(encoded_sha1)
     sha1 = Base62.decode(encoded_sha1).to_s(16)
 
-    if sha1.length > SHA1_LENGTH
-      nil
-    else
-      sha1.rjust(SHA1_LENGTH, '0')
-    end
+    sha1.length > SHA1_LENGTH ? nil : sha1.rjust(SHA1_LENGTH, '0')
   end
 
   def self.generate_digest(path)
@@ -394,12 +436,13 @@ class Upload < ActiveRecord::Base
     self.posts.where("cooked LIKE '%/_optimized/%'").find_each(&:rebake!)
   end
 
-  def update_secure_status(source: "unknown", override: nil)
+  def update_secure_status(source: 'unknown', override: nil)
     if override.nil?
-      mark_secure, reason = UploadSecurity.new(self).should_be_secure_with_reason
+      mark_secure, reason =
+        UploadSecurity.new(self).should_be_secure_with_reason
     else
       mark_secure = override
-      reason = "manually overridden"
+      reason = 'manually overridden'
     end
 
     secure_status_did_change = self.secure? != mark_secure
@@ -409,14 +452,18 @@ class Upload < ActiveRecord::Base
       begin
         Discourse.store.update_upload_ACL(self)
       rescue Aws::S3::Errors::NotImplemented => err
-        Discourse.warn_exception(err, message: "The file store object storage provider does not support setting ACLs")
+        Discourse.warn_exception(
+          err,
+          message:
+            'The file store object storage provider does not support setting ACLs'
+        )
       end
     end
 
     secure_status_did_change
   end
 
-  def secure_params(secure, reason, source = "unknown")
+  def secure_params(secure, reason, source = 'unknown')
     {
       secure: secure,
       security_last_changed_reason: reason + " | source: #{source}",
@@ -427,7 +474,7 @@ class Upload < ActiveRecord::Base
   def self.migrate_to_new_scheme(limit: nil)
     problems = []
 
-    DistributedMutex.synchronize("migrate_upload_to_new_scheme") do
+    DistributedMutex.synchronize('migrate_upload_to_new_scheme') do
       if SiteSetting.migrate_to_new_scheme
         max_file_size_kb = [
           SiteSetting.max_image_size_kb,
@@ -437,9 +484,13 @@ class Upload < ActiveRecord::Base
         local_store = FileStore::LocalStore.new
         db = RailsMultisite::ConnectionManagement.current_db
 
-        scope = Upload.by_users
-          .where("url NOT LIKE '%/original/_X/%' AND url LIKE '%/uploads/#{db}%'")
-          .order(id: :desc)
+        scope =
+          Upload
+            .by_users
+            .where(
+              "url NOT LIKE '%/original/_X/%' AND url LIKE '%/uploads/#{db}%'"
+            )
+            .order(id: :desc)
 
         scope = scope.limit(limit) if limit
 
@@ -455,20 +506,21 @@ class Upload < ActiveRecord::Base
             # keep track of the url
             previous_url = upload.url.dup
             # where is the file currently stored?
-            external = previous_url =~ /^\/\//
+            external = previous_url =~ %r{^//}
             # download if external
             if external
-              url = SiteSetting.scheme + ":" + previous_url
+              url = SiteSetting.scheme + ':' + previous_url
 
               begin
                 retries ||= 0
 
-                file = FileHelper.download(
-                  url,
-                  max_file_size: max_file_size_kb,
-                  tmp_file_name: "discourse",
-                  follow_redirect: true
-                )
+                file =
+                  FileHelper.download(
+                    url,
+                    max_file_size: max_file_size_kb,
+                    tmp_file_name: 'discourse',
+                    follow_redirect: true
+                  )
               rescue OpenURI::HTTPError
                 retry if (retries += 1) < 1
                 next
@@ -479,9 +531,7 @@ class Upload < ActiveRecord::Base
               path = local_store.path_for(upload)
             end
             # compute SHA if missing
-            if upload.sha1.blank?
-              upload.sha1 = Upload.generate_digest(path)
-            end
+            upload.sha1 = Upload.generate_digest(path) if upload.sha1.blank?
 
             # store to new location & update the filesize
             File.open(path) do |f|
@@ -490,12 +540,14 @@ class Upload < ActiveRecord::Base
               upload.save!(validate: false)
             end
             # remap the URLs
-            DbHelper.remap(UrlHelper.absolute(previous_url), upload.url) unless external
+            unless external
+              DbHelper.remap(UrlHelper.absolute(previous_url), upload.url)
+            end
 
             DbHelper.remap(
               previous_url,
               upload.url,
-              excluded_tables: %w{
+              excluded_tables: %w[
                 posts
                 post_search_data
                 incoming_emails
@@ -507,28 +559,35 @@ class Upload < ActiveRecord::Base
                 user_emails
                 draft_sequences
                 optimized_images
-              }
+              ]
             )
 
-            remap_scope ||= begin
-              Post.with_deleted
-                .where("raw ~ '/uploads/#{db}/\\d+/' OR raw ~ '/uploads/#{db}/original/(\\d|[a-z])/'")
-                .select(:id, :raw, :cooked)
-                .all
-            end
+            remap_scope ||=
+              begin
+                Post
+                  .with_deleted
+                  .where(
+                    "raw ~ '/uploads/#{db}/\\d+/' OR raw ~ '/uploads/#{db}/original/(\\d|[a-z])/'"
+                  )
+                  .select(:id, :raw, :cooked)
+                  .all
+              end
 
             remap_scope.each do |post|
               post.raw.gsub!(previous_url, upload.url)
               post.cooked.gsub!(previous_url, upload.url)
-              Post.with_deleted.where(id: post.id).update_all(raw: post.raw, cooked: post.cooked) if post.changed?
+              if post.changed?
+                Post
+                  .with_deleted
+                  .where(id: post.id)
+                  .update_all(raw: post.raw, cooked: post.cooked)
+              end
             end
 
             upload.optimized_images.find_each(&:destroy!)
             upload.rebake_posts_on_old_scheme
             # remove the old file (when local)
-            unless external
-              FileUtils.rm(path, force: true)
-            end
+            FileUtils.rm(path, force: true) unless external
           rescue => e
             problems << { upload: upload, ex: e }
           ensure
@@ -545,9 +604,8 @@ class Upload < ActiveRecord::Base
   private
 
   def short_url_basename
-    "#{Upload.base62_sha1(sha1)}#{extension.present? ? ".#{extension}" : ""}"
+    "#{Upload.base62_sha1(sha1)}#{extension.present? ? ".#{extension}" : ''}"
   end
-
 end
 
 # == Schema Information

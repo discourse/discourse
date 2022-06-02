@@ -4,7 +4,7 @@ class ClicksController < ApplicationController
   skip_before_action :check_xhr, :preload_json, :verify_authenticity_token
 
   def track
-    params.require([:url, :post_id, :topic_id])
+    params.require(%i[url post_id topic_id])
 
     TopicLinkClick.create_from(
       url: params[:url],
@@ -16,5 +16,4 @@ class ClicksController < ApplicationController
 
     render json: success_json
   end
-
 end

@@ -4,9 +4,9 @@ class ExtraLocalesController < ApplicationController
   layout :false
 
   skip_before_action :check_xhr,
-    :preload_json,
-    :redirect_to_login_if_required,
-    :verify_authenticity_token
+                     :preload_json,
+                     :redirect_to_login_if_required,
+                     :verify_authenticity_token
 
   OVERRIDES_BUNDLE ||= 'overrides'
   MD5_HASH_LENGTH ||= 32
@@ -25,7 +25,8 @@ class ExtraLocalesController < ApplicationController
       end
     end
 
-    render plain: ExtraLocalesController.bundle_js(bundle), content_type: "application/javascript"
+    render plain: ExtraLocalesController.bundle_js(bundle),
+           content_type: 'application/javascript'
   end
 
   def self.bundle_js_hash(bundle)
@@ -40,7 +41,9 @@ class ExtraLocalesController < ApplicationController
       end
     else
       @bundle_js_hash ||= {}
-      @bundle_js_hash["#{bundle}_#{I18n.locale}"] ||= Digest::MD5.hexdigest(bundle_js(bundle))
+      @bundle_js_hash["#{bundle}_#{I18n.locale}"] ||= Digest::MD5.hexdigest(
+        bundle_js(bundle)
+      )
     end
   end
 
@@ -71,6 +74,7 @@ class ExtraLocalesController < ApplicationController
   private
 
   def valid_bundle?(bundle)
-    bundle == OVERRIDES_BUNDLE || (bundle =~ /^(admin|wizard)$/ && current_user&.staff?)
+    bundle == OVERRIDES_BUNDLE ||
+      (bundle =~ /^(admin|wizard)$/ && current_user&.staff?)
   end
 end

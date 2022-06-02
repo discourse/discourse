@@ -12,12 +12,12 @@ class SafeModeController < ApplicationController
 
   def enter
     safe_mode = []
-    safe_mode << "no_custom" if params["no_customizations"] == "true"
-    safe_mode << "no_plugins" if params["no_plugins"] == "true"
-    safe_mode << "only_official" if params["only_official"] == "true"
+    safe_mode << 'no_custom' if params['no_customizations'] == 'true'
+    safe_mode << 'no_plugins' if params['no_plugins'] == 'true'
+    safe_mode << 'only_official' if params['only_official'] == 'true'
 
     if safe_mode.length > 0
-      redirect_to path("/?safe_mode=#{safe_mode.join("%2C")}")
+      redirect_to path("/?safe_mode=#{safe_mode.join('%2C')}")
     else
       flash[:must_select] = true
       redirect_to safe_mode_path
@@ -34,5 +34,4 @@ class SafeModeController < ApplicationController
     request.env[ApplicationController::NO_CUSTOM] = true
     request.env[ApplicationController::NO_PLUGINS] = true
   end
-
 end

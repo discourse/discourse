@@ -2,13 +2,18 @@
 
 class UserApiKey < ActiveRecord::Base
   self.ignored_columns = [
-    "scopes" # TODO(2020-12-18): remove
+    'scopes' # TODO(2020-12-18): remove
   ]
 
-  REVOKE_MATCHER = RouteMatcher.new(actions: "user_api_keys#revoke", methods: :post, params: [:id])
+  REVOKE_MATCHER =
+    RouteMatcher.new(
+      actions: 'user_api_keys#revoke',
+      methods: :post,
+      params: [:id]
+    )
 
   belongs_to :user
-  has_many :scopes, class_name: "UserApiKeyScope", dependent: :destroy
+  has_many :scopes, class_name: 'UserApiKeyScope', dependent: :destroy
 
   scope :active, -> { where(revoked_at: nil) }
   scope :with_key, ->(key) { where(key_hash: ApiKey.hash_key(key)) }
@@ -23,7 +28,9 @@ class UserApiKey < ActiveRecord::Base
   end
 
   def key
-    raise ApiKey::KeyAccessError.new "API key is only accessible immediately after creation" unless key_available?
+    unless key_available?
+      raise ApiKey::KeyAccessError.new 'API key is only accessible immediately after creation'
+    end
     @key
   end
 
@@ -51,7 +58,7 @@ class UserApiKey < ActiveRecord::Base
 
   # Scopes allowed to be requested by external services
   def self.allowed_scopes
-    Set.new(SiteSetting.allow_user_api_key_scopes.split("|"))
+    Set.new(SiteSetting.allow_user_api_key_scopes.split('|'))
   end
 
   def self.available_scopes
@@ -59,7 +66,7 @@ class UserApiKey < ActiveRecord::Base
   end
 
   def has_push?
-    scopes.any? { |s| s.name == "push" || s.name == "notifications" } &&
+    scopes.any? { |s| s.name == 'push' || s.name == 'notifications' } &&
       push_url.present? &&
       SiteSetting.allowed_user_api_push_urls.include?(push_url)
   end
@@ -69,7 +76,8 @@ class UserApiKey < ActiveRecord::Base
   end
 
   def self.invalid_auth_redirect?(auth_redirect)
-    SiteSetting.allowed_user_api_auth_redirects
+    SiteSetting
+      .allowed_user_api_auth_redirects
       .split('|')
       .none? { |u| WildcardUrlChecker.check_url(u, auth_redirect) }
   end
@@ -77,7 +85,7 @@ class UserApiKey < ActiveRecord::Base
   private
 
   def revoke_self_matcher
-    REVOKE_MATCHER.with_allowed_param_values({ "id" => [nil, id.to_s] })
+    REVOKE_MATCHER.with_allowed_param_values({ 'id' => [nil, id.to_s] })
   end
 
   def is_revoke_self_request?(env)

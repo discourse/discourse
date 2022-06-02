@@ -2,7 +2,7 @@
 
 class Badge < ActiveRecord::Base
   # TODO: Drop in July 2021
-  self.ignored_columns = %w{image}
+  self.ignored_columns = %w[image]
 
   include GlobalPath
   include HasSanitizableFields
@@ -76,10 +76,15 @@ class Badge < ActiveRecord::Base
   attr_accessor :has_badge
 
   def self.trigger_hash
-    @trigger_hash ||= Badge::Trigger.constants.map do |k|
-      name = k.to_s.underscore
-      [name, Badge::Trigger.const_get(k)] unless name =~ /deprecated/
-    end.compact.to_h
+    @trigger_hash ||=
+      Badge::Trigger
+        .constants
+        .map do |k|
+          name = k.to_s.underscore
+          [name, Badge::Trigger.const_get(k)] unless name =~ /deprecated/
+        end
+        .compact
+        .to_h
   end
 
   module Trigger
@@ -127,10 +132,16 @@ class Badge < ActiveRecord::Base
 
   # fields that can not be edited on system badges
   def self.protected_system_fields
-    [
-      :name, :badge_type_id, :multiple_grant,
-      :target_posts, :show_posts, :query,
-      :trigger, :auto_revoke, :listable
+    %i[
+      name
+      badge_type_id
+      multiple_grant
+      target_posts
+      show_posts
+      query
+      trigger
+      auto_revoke
+      listable
     ]
   end
 
@@ -190,12 +201,17 @@ class Badge < ActiveRecord::Base
   ##
   # Update all user titles based on a badge to the new name
   def update_user_titles!(new_title)
-    DB.exec(<<~SQL, granted_title_badge_id: self.id, title: new_title, updated_at: Time.zone.now)
+    DB.exec(
+      <<~SQL,
       UPDATE users AS u
       SET title = :title, updated_at = :updated_at
       FROM user_profiles AS up
       WHERE up.user_id = u.id AND up.granted_title_badge_id = :granted_title_badge_id
     SQL
+      granted_title_badge_id: self.id,
+      title: new_title,
+      updated_at: Time.zone.now
+    )
   end
 
   ##
@@ -226,7 +242,11 @@ class Badge < ActiveRecord::Base
   def self.find_system_badge_id_from_translation_key(translation_key)
     return unless translation_key.starts_with?('badges.')
     badge_name_klass = translation_key.split('.').second.camelize
-    Badge.const_defined?(badge_name_klass) ? "Badge::#{badge_name_klass}".constantize : nil
+    if Badge.const_defined?(badge_name_klass)
+      "Badge::#{badge_name_klass}".constantize
+    else
+      nil
+    end
   end
 
   def awarded_for_trust_level?
@@ -245,7 +265,7 @@ class Badge < ActiveRecord::Base
   def default_icon=(val)
     if self.image_upload_id.blank?
       self.icon ||= val
-      self.icon = val if self.icon == "fa-certificate"
+      self.icon = val if self.icon == 'fa-certificate'
     end
   end
 
@@ -271,7 +291,12 @@ class Badge < ActiveRecord::Base
 
   def long_description
     key = "badges.#{i18n_name}.long_description"
-    I18n.t(key, default: self[:long_description] || '', base_uri: Discourse.base_path, max_likes_per_day: SiteSetting.max_likes_per_day)
+    I18n.t(
+      key,
+      default: self[:long_description] || '',
+      base_uri: Discourse.base_path,
+      max_likes_per_day: SiteSetting.max_likes_per_day
+    )
   end
 
   def long_description=(val)
@@ -281,7 +306,12 @@ class Badge < ActiveRecord::Base
 
   def description
     key = "badges.#{i18n_name}.description"
-    I18n.t(key, default: self[:description] || '', base_uri: Discourse.base_path, max_likes_per_day: SiteSetting.max_likes_per_day)
+    I18n.t(
+      key,
+      default: self[:description] || '',
+      base_uri: Discourse.base_path,
+      max_likes_per_day: SiteSetting.max_likes_per_day
+    )
   end
 
   def description=(val)
@@ -302,13 +332,15 @@ class Badge < ActiveRecord::Base
   end
 
   def image_url
-    if image_upload_id.present?
-      upload_cdn_path(image_upload.url)
-    end
+    upload_cdn_path(image_upload.url) if image_upload_id.present?
   end
 
   def for_beginners?
-    id == Welcome || (badge_grouping_id == BadgeGrouping::GettingStarted && id != NewUserOfTheMonth)
+    id == Welcome ||
+      (
+        badge_grouping_id == BadgeGrouping::GettingStarted &&
+          id != NewUserOfTheMonth
+      )
   end
 
   protected
@@ -318,9 +350,7 @@ class Badge < ActiveRecord::Base
   end
 
   def sanitize_description
-    if description_changed?
-      self.description = sanitize_field(self.description)
-    end
+    self.description = sanitize_field(self.description) if description_changed?
   end
 end
 

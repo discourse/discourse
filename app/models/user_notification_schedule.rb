@@ -3,17 +3,17 @@
 class UserNotificationSchedule < ActiveRecord::Base
   belongs_to :user
 
-  DEFAULT = -> {
+  DEFAULT = -> do
     attrs = { enabled: false }
     7.times do |n|
       attrs["day_#{n}_start_time".to_sym] = 480
       attrs["day_#{n}_end_time".to_sym] = 1020
     end
     attrs
-  }.call
+  end.call
 
   validate :has_valid_times
-  validates :enabled, inclusion: { in: [ true, false ] }
+  validates :enabled, inclusion: { in: [true, false] }
 
   scope :enabled, -> { where(enabled: true) }
 
@@ -34,15 +34,15 @@ class UserNotificationSchedule < ActiveRecord::Base
       end_key = "day_#{n}_end_time"
 
       if self[start_key].nil? || self[start_key] > 1410 || self[start_key] < -1
-        errors.add(start_key, "is invalid")
+        errors.add(start_key, 'is invalid')
       end
 
       if self[end_key].nil? || self[end_key] > 1440
-        errors.add(end_key, "is invalid")
+        errors.add(end_key, 'is invalid')
       end
 
       if self[start_key] && self[end_key] && self[start_key] > self[end_key]
-        errors.add(start_key, "is after end time")
+        errors.add(start_key, 'is after end time')
       end
     end
   end

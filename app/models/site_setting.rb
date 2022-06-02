@@ -8,17 +8,19 @@ class SiteSetting < ActiveRecord::Base
   validates_presence_of :data_type
 
   def self.load_settings(file, plugin: nil)
-    SiteSettings::YamlLoader.new(file).load do |category, name, default, opts|
-      setting(name, default, opts.merge(category: category, plugin: plugin))
-    end
+    SiteSettings::YamlLoader
+      .new(file)
+      .load do |category, name, default, opts|
+        setting(name, default, opts.merge(category: category, plugin: plugin))
+      end
   end
 
   load_settings(File.join(Rails.root, 'config', 'site_settings.yml'))
 
   if GlobalSetting.load_plugins?
-    Dir[File.join(Rails.root, "plugins", "*", "config", "settings.yml")].each do |file|
-      load_settings(file, plugin: file.split("/")[-3])
-    end
+    Dir[
+      File.join(Rails.root, 'plugins', '*', 'config', 'settings.yml')
+    ].each { |file| load_settings(file, plugin: file.split('/')[-3]) }
   end
 
   setup_deprecated_methods
@@ -61,7 +63,8 @@ class SiteSetting < ActiveRecord::Base
   end
 
   def self.anonymous_homepage
-    top_menu_items.map { |item| item.name }
+    top_menu_items
+      .map { |item| item.name }
       .select { |item| anonymous_menu_items.include?(item) }
       .first
   end
@@ -71,13 +74,13 @@ class SiteSetting < ActiveRecord::Base
     return true if setting.blank?
 
     host = URI.parse(src).host
-    !setting.split("|").include?(host)
+    !setting.split('|').include?(host)
   rescue URI::Error
     true
   end
 
   def self.scheme
-    force_https? ? "https" : "http"
+    force_https? ? 'https' : 'http'
   end
 
   def self.min_redirected_to_top_period(duration)
@@ -85,7 +88,10 @@ class SiteSetting < ActiveRecord::Base
   end
 
   def self.queue_jobs=(val)
-    Discourse.deprecate("queue_jobs is deprecated. Please use Jobs.run_immediately! instead", drop_from: '2.9.0')
+    Discourse.deprecate(
+      'queue_jobs is deprecated. Please use Jobs.run_immediately! instead',
+      drop_from: '2.9.0'
+    )
     val ? Jobs.run_later! : Jobs.run_immediately!
   end
 
@@ -93,12 +99,12 @@ class SiteSetting < ActiveRecord::Base
     SiteSetting.manual_polling_enabled? || SiteSetting.pop3_polling_enabled?
   end
 
-  WATCHED_SETTINGS ||= [
-    :default_locale,
-    :blocked_attachment_content_types,
-    :blocked_attachment_filenames,
-    :allowed_unicode_username_characters,
-    :markdown_typographer_quotation_marks
+  WATCHED_SETTINGS ||= %i[
+    default_locale
+    blocked_attachment_content_types
+    blocked_attachment_filenames
+    allowed_unicode_username_characters
+    markdown_typographer_quotation_marks
   ]
 
   def self.blocked_attachment_content_types_regex
@@ -106,7 +112,7 @@ class SiteSetting < ActiveRecord::Base
 
     @blocked_attachment_content_types_regex ||= {}
     @blocked_attachment_content_types_regex[current_db] ||= begin
-      Regexp.union(SiteSetting.blocked_attachment_content_types.split("|"))
+      Regexp.union(SiteSetting.blocked_attachment_content_types.split('|'))
     end
   end
 
@@ -115,7 +121,7 @@ class SiteSetting < ActiveRecord::Base
 
     @blocked_attachment_filenames_regex ||= {}
     @blocked_attachment_filenames_regex[current_db] ||= begin
-      Regexp.union(SiteSetting.blocked_attachment_filenames.split("|"))
+      Regexp.union(SiteSetting.blocked_attachment_filenames.split('|'))
     end
   end
 
@@ -133,19 +139,35 @@ class SiteSetting < ActiveRecord::Base
   # helpers for getting s3 settings that fallback to global
   class Upload
     def self.s3_cdn_url
-      SiteSetting.enable_s3_uploads ? SiteSetting.s3_cdn_url : GlobalSetting.s3_cdn_url
+      if SiteSetting.enable_s3_uploads
+        SiteSetting.s3_cdn_url
+      else
+        GlobalSetting.s3_cdn_url
+      end
     end
 
     def self.s3_region
-      SiteSetting.enable_s3_uploads ? SiteSetting.s3_region : GlobalSetting.s3_region
+      if SiteSetting.enable_s3_uploads
+        SiteSetting.s3_region
+      else
+        GlobalSetting.s3_region
+      end
     end
 
     def self.s3_upload_bucket
-      SiteSetting.enable_s3_uploads ? SiteSetting.s3_upload_bucket : GlobalSetting.s3_bucket
+      if SiteSetting.enable_s3_uploads
+        SiteSetting.s3_upload_bucket
+      else
+        GlobalSetting.s3_bucket
+      end
     end
 
     def self.s3_endpoint
-      SiteSetting.enable_s3_uploads ? SiteSetting.s3_endpoint : GlobalSetting.s3_endpoint
+      if SiteSetting.enable_s3_uploads
+        SiteSetting.s3_endpoint
+      else
+        GlobalSetting.s3_endpoint
+      end
     end
 
     def self.enable_s3_uploads
@@ -153,17 +175,25 @@ class SiteSetting < ActiveRecord::Base
     end
 
     def self.s3_base_url
-      path = self.s3_upload_bucket.split("/", 2)[1]
+      path = self.s3_upload_bucket.split('/', 2)[1]
       "#{self.absolute_base_url}#{path ? '/' + path : ''}"
     end
 
     def self.absolute_base_url
       url_basename = SiteSetting.s3_endpoint.split('/')[-1]
-      bucket = SiteSetting.enable_s3_uploads ? Discourse.store.s3_bucket_name : GlobalSetting.s3_bucket_name
+      bucket =
+        (
+          if SiteSetting.enable_s3_uploads
+            Discourse.store.s3_bucket_name
+          else
+            GlobalSetting.s3_bucket_name
+          end
+        )
 
       # cf. http://docs.aws.amazon.com/general/latest/gr/rande.html#s3_region
-      if SiteSetting.s3_endpoint.blank? || SiteSetting.s3_endpoint.end_with?("amazonaws.com")
-        if SiteSetting.Upload.s3_region.start_with?("cn-")
+      if SiteSetting.s3_endpoint.blank? ||
+           SiteSetting.s3_endpoint.end_with?('amazonaws.com')
+        if SiteSetting.Upload.s3_region.start_with?('cn-')
           "//#{bucket}.s3.#{SiteSetting.Upload.s3_region}.amazonaws.com.cn"
         else
           "//#{bucket}.s3.dualstack.#{SiteSetting.Upload.s3_region}.amazonaws.com"
@@ -183,7 +213,7 @@ class SiteSetting < ActiveRecord::Base
   end
   client_settings << :require_invite_code
 
-  %i{
+  %i[
     site_logo_url
     site_logo_small_url
     site_mobile_logo_url
@@ -191,9 +221,9 @@ class SiteSetting < ActiveRecord::Base
     site_logo_dark_url
     site_logo_small_dark_url
     site_mobile_logo_dark_url
-  }.each { |client_setting| client_settings << client_setting }
+  ].each { |client_setting| client_settings << client_setting }
 
-  %i{
+  %i[
     logo
     logo_small
     digest_logo
@@ -208,7 +238,7 @@ class SiteSetting < ActiveRecord::Base
     twitter_summary_large_image
     opengraph_image
     push_notifications_icon
-  }.each do |setting_name|
+  ].each do |setting_name|
     define_singleton_method("site_#{setting_name}_url") do
       if SiteIconManager.respond_to?("#{setting_name}_url")
         return SiteIconManager.public_send("#{setting_name}_url")
@@ -225,34 +255,42 @@ class SiteSetting < ActiveRecord::Base
   end
 
   ALLOWLIST_DEPRECATED_SITE_SETTINGS = {
-    'email_domains_blacklist': 'blocked_email_domains',
-    'email_domains_whitelist': 'allowed_email_domains',
-    'unicode_username_character_whitelist': 'allowed_unicode_username_characters',
-    'user_website_domains_whitelist': 'allowed_user_website_domains',
-    'whitelisted_link_domains': 'allowed_link_domains',
-    'embed_whitelist_selector': 'allowed_embed_selectors',
-    'auto_generated_whitelist': 'auto_generated_allowlist',
-    'attachment_content_type_blacklist': 'blocked_attachment_content_types',
-    'attachment_filename_blacklist': 'blocked_attachment_filenames',
-    'use_admin_ip_whitelist': 'use_admin_ip_allowlist',
-    'blacklist_ip_blocks': 'blocked_ip_blocks',
-    'whitelist_internal_hosts': 'allowed_internal_hosts',
-    'whitelisted_crawler_user_agents': 'allowed_crawler_user_agents',
-    'blacklisted_crawler_user_agents': 'blocked_crawler_user_agents',
-    'onebox_domains_blacklist': 'blocked_onebox_domains',
-    'inline_onebox_domains_whitelist': 'allowed_inline_onebox_domains',
-    'white_listed_spam_host_domains': 'allowed_spam_host_domains',
-    'embed_blacklist_selector': 'blocked_embed_selectors',
-    'embed_classname_whitelist': 'allowed_embed_classnames',
+    email_domains_blacklist: 'blocked_email_domains',
+    email_domains_whitelist: 'allowed_email_domains',
+    unicode_username_character_whitelist: 'allowed_unicode_username_characters',
+    user_website_domains_whitelist: 'allowed_user_website_domains',
+    whitelisted_link_domains: 'allowed_link_domains',
+    embed_whitelist_selector: 'allowed_embed_selectors',
+    auto_generated_whitelist: 'auto_generated_allowlist',
+    attachment_content_type_blacklist: 'blocked_attachment_content_types',
+    attachment_filename_blacklist: 'blocked_attachment_filenames',
+    use_admin_ip_whitelist: 'use_admin_ip_allowlist',
+    blacklist_ip_blocks: 'blocked_ip_blocks',
+    whitelist_internal_hosts: 'allowed_internal_hosts',
+    whitelisted_crawler_user_agents: 'allowed_crawler_user_agents',
+    blacklisted_crawler_user_agents: 'blocked_crawler_user_agents',
+    onebox_domains_blacklist: 'blocked_onebox_domains',
+    inline_onebox_domains_whitelist: 'allowed_inline_onebox_domains',
+    white_listed_spam_host_domains: 'allowed_spam_host_domains',
+    embed_blacklist_selector: 'blocked_embed_selectors',
+    embed_classname_whitelist: 'allowed_embed_classnames'
   }
 
   ALLOWLIST_DEPRECATED_SITE_SETTINGS.each_pair do |old_method, new_method|
     self.define_singleton_method(old_method) do
-      Discourse.deprecate("#{old_method.to_s} is deprecated, use the #{new_method.to_s}.", drop_from: "2.6", raise_error: true)
+      Discourse.deprecate(
+        "#{old_method.to_s} is deprecated, use the #{new_method.to_s}.",
+        drop_from: '2.6',
+        raise_error: true
+      )
       send(new_method)
     end
     self.define_singleton_method("#{old_method}=") do |args|
-      Discourse.deprecate("#{old_method.to_s} is deprecated, use the #{new_method.to_s}.", drop_from: "2.6", raise_error: true)
+      Discourse.deprecate(
+        "#{old_method.to_s} is deprecated, use the #{new_method.to_s}.",
+        drop_from: '2.6',
+        raise_error: true
+      )
       send("#{new_method}=", args)
     end
   end

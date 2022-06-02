@@ -9,9 +9,7 @@ class ReviewableScore < ActiveRecord::Base
   # To keep things simple the types correspond to `PostActionType` for backwards
   # compatibility, but we can add extra reasons for scores.
   def self.types
-    @types ||= PostActionType.flag_types.merge(
-      needs_approval: 9
-    )
+    @types ||= PostActionType.flag_types.merge(needs_approval: 9)
   end
 
   # When extending post action flags, we need to call this method in order to
@@ -24,18 +22,11 @@ class ReviewableScore < ActiveRecord::Base
   def self.add_new_types(type_names)
     next_id = types.values.max + 1
 
-    type_names.each_with_index do |name, idx|
-      @types[name] = next_id + idx
-    end
+    type_names.each_with_index { |name, idx| @types[name] = next_id + idx }
   end
 
   def self.statuses
-    @statuses ||= Enum.new(
-      pending: 0,
-      agreed: 1,
-      disagreed: 2,
-      ignored: 3
-    )
+    @statuses ||= Enum.new(pending: 0, agreed: 1, disagreed: 2, ignored: 3)
   end
 
   def self.score_transitions
@@ -69,7 +60,8 @@ class ReviewableScore < ActiveRecord::Base
   #   1.0 + trust_level + user_accuracy_bonus
   #   (trust_level is 5 for staff)
   def self.user_flag_score(user)
-    1.0 + (user.staff? ? 5.0 : user.trust_level.to_f) + user_accuracy_bonus(user)
+    1.0 + (user.staff? ? 5.0 : user.trust_level.to_f) +
+      user_accuracy_bonus(user)
   end
 
   # A user's accuracy bonus is:
@@ -96,22 +88,22 @@ class ReviewableScore < ActiveRecord::Base
     bottom = positive_accuracy ? accuracy_axis : 0.0
     top = positive_accuracy ? 1.0 : accuracy_axis
 
-    absolute_distance = positive_accuracy ?
-                        percent_correct - bottom :
-                        top - percent_correct
+    absolute_distance =
+      positive_accuracy ? percent_correct - bottom : top - percent_correct
 
     axis_distance_multiplier = 1.0 / (top - bottom)
     positivity_multiplier = positive_accuracy ? 1.0 : -1.0
 
-    (absolute_distance * axis_distance_multiplier * positivity_multiplier * (Math.log(total, 4) * 5.0))
-      .round(2)
+    (
+      absolute_distance * axis_distance_multiplier * positivity_multiplier *
+        (Math.log(total, 4) * 5.0)
+    ).round(2)
   end
 
   def reviewable_conversation
     return if meta_topic.blank?
     Reviewable::Conversation.new(meta_topic)
   end
-
 end
 
 # == Schema Information
