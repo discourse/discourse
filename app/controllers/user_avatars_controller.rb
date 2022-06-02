@@ -142,6 +142,11 @@ class UserAvatarsController < ApplicationController
     render_blank
   end
 
+  # Allow plugins to overwrite max file size value
+  def max_file_size
+    1.megabyte
+  end
+
   PROXY_PATH = Rails.root + "tmp/avatar_proxy"
   def proxy_avatar(url, last_modified)
 
@@ -157,7 +162,7 @@ class UserAvatarsController < ApplicationController
       FileUtils.mkdir_p PROXY_PATH
       tmp = FileHelper.download(
         url,
-        max_file_size: 1.megabyte,
+        max_file_size: max_file_size,
         tmp_file_name: filename,
         follow_redirect: true,
         read_timeout: 10
