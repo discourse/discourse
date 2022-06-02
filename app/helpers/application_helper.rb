@@ -289,15 +289,7 @@ module ApplicationHelper
     result << tag(:meta, property: 'og:site_name', content: SiteSetting.title)
     result << tag(:meta, property: 'og:type', content: 'website')
 
-    if opts[:twitter_summary_large_image].present?
-      result << tag(:meta, name: 'twitter:card', content: "summary_large_image")
-      result << tag(:meta, name: "twitter:image", content: opts[:twitter_summary_large_image])
-    elsif opts[:image].present?
-      result << tag(:meta, name: 'twitter:card', content: "summary")
-      result << tag(:meta, name: "twitter:image", content: opts[:image])
-    else
-      result << tag(:meta, name: 'twitter:card', content: "summary")
-    end
+    result = generate_twitter_card_metadata(opts, result)
     result << tag(:meta, property: "og:image", content: opts[:image]) if opts[:image].present?
 
     [:url, :title, :description].each do |property|
@@ -324,6 +316,29 @@ module ApplicationHelper
     end
 
     result.join("\n")
+  end
+
+  def generate_twitter_card_metadata(opts, result)
+    img_url = opts[:twitter_summary_large_image].present? ? \
+      opts[:twitter_summary_large_image] :
+      opts[:image]
+
+    # Twitter does not allow SVGs, see https://developer.twitter.com/en/docs/twitter-for-websites/cards/overview/markup
+    if img_url.ends_with?(".svg")
+      img_url = SiteSetting.site_logo_url.ends_with?(".svg") ? nil : SiteSetting.site_logo_url
+    end
+
+    if opts[:twitter_summary_large_image].present? && img_url.present?
+      result << tag(:meta, name: 'twitter:card', content: "summary_large_image")
+      result << tag(:meta, name: "twitter:image", content: img_url)
+    elsif opts[:image].present? && img_url.present?
+      result << tag(:meta, name: 'twitter:card', content: "summary")
+      result << tag(:meta, name: "twitter:image", content: img_url)
+    else
+      result << tag(:meta, name: 'twitter:card', content: "summary")
+    end
+
+    result
   end
 
   def render_sitelinks_search_tag
