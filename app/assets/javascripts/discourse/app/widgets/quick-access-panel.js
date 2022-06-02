@@ -17,6 +17,9 @@ export default createWidget("quick-access-panel", {
   tagName: "div.quick-access-panel",
   emptyStatePlaceholderItemKey: null,
   emptyStateWidget: null,
+  settings: {
+    viewAllLabel: null,
+  },
 
   buildKey: () => {
     throw Error('Cannot attach abstract widget "quick-access-panel".');
@@ -128,6 +131,7 @@ export default createWidget("quick-access-panel", {
           title: "view_all",
           titleOptions: { tab },
           icon: "chevron-down",
+          label: this.settings.viewAllLabel,
           className: "btn btn-default btn-icon no-text show-all",
           "aria-label": "view_all",
           ariaLabelOptions: { tab },
