@@ -12,7 +12,7 @@ class ReviewableUser < Reviewable
   def build_actions(actions, guardian, args)
     return unless pending?
 
-    if guardian.can_approve?(target) || args[:approved_by_invite]
+    if guardian.can_approve?(target)
       actions.add(:approve_user) do |a|
         a.icon = 'user-plus'
         a.label = "reviewables.actions.approve_user.title"
