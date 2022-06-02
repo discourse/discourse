@@ -45,7 +45,7 @@ module Onebox
         @raw = {}
 
         og.data.each do |k, v|
-          next if k == "title_attr"
+          next if k == :title_attr
           v = og.send(k)
           @raw[k] ||= v unless v.nil?
         end
