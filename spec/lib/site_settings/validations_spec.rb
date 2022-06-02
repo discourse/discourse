@@ -402,4 +402,16 @@ describe SiteSettings::Validations do
       end
     end
   end
+
+  describe "#twitter_summary_large_image" do
+    it "does not allow SVG image files" do
+      upload = Fabricate(:upload, url: '/images/logo-dark.svg', extension: "svg")
+      expect { subject.validate_twitter_summary_large_image(upload.id) }.to raise_error(
+        Discourse::InvalidParameters, I18n.t("errors.site_settings.twitter_summary_large_image_no_svg")
+      )
+      upload.update!(url: '/images/logo-dark.png', extension: 'png')
+      expect { subject.validate_twitter_summary_large_image(upload.id) }.not_to raise_error
+      expect { subject.validate_twitter_summary_large_image(nil) }.not_to raise_error
+    end
+  end
 end
