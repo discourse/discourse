@@ -511,11 +511,12 @@ class Upload < ActiveRecord::Base
 
     sha1s = []
 
-    raw.scan(/upload:\/\/([a-zA-Z0-9]+)(?:\.[a-zA-Z0-9]+)?/).each do |match|
-      if match[0].present?
-        sha1s << match[0] if match[0] =~ /^\h+$/
-        sha1s << Upload.sha1_from_base62_encoded(match[0])
-      end
+    raw.scan(/\/(\h{40})/).each do |match|
+      sha1s << match[0]
+    end
+
+    raw.scan(/\/([a-zA-Z0-9]{27})/).each do |match|
+      sha1s << Upload.sha1_from_base62_encoded(match[0])
     end
 
     Upload.where(sha1: sha1s.uniq).pluck(:id)
