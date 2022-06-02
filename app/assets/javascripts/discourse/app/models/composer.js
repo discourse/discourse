@@ -871,7 +871,8 @@ const Composer = RestModel.extend({
       this.set("title", opts.title);
     }
 
-    this.set("originalText", opts.draft ? "" : this.reply);
+    const isDraft = opts.draft || opts.skipDraftCheck;
+    this.set("originalText", isDraft ? "" : this.reply);
 
     if (this.canEditTitle) {
       if (isEmpty(this.title) && this.title !== "") {

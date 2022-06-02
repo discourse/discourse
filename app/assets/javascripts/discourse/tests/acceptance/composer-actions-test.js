@@ -38,6 +38,12 @@ acceptance("Composer Actions", function (needs) {
 
     assert.ok(queryAll("#reply-title").val(), "this is the title");
     assert.ok(queryAll(".d-editor-input").val(), "this is the reply");
+
+    await click("#reply-control a.cancel");
+    assert.ok(
+      exists(".discard-draft-modal.modal"),
+      "it pops up the discard drafts modal"
+    );
   });
 
   test("replying to post", async function (assert) {
