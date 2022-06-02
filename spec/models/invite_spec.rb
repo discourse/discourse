@@ -287,14 +287,6 @@ describe Invite do
       end
     end
 
-    it 'activates user when must_approve_users? is enabled' do
-      SiteSetting.must_approve_users = true
-      invite.invited_by = Fabricate(:admin)
-
-      user = invite.redeem
-      expect(user.approved?).to eq(true)
-    end
-
     context 'invite to a topic' do
       fab!(:topic) { Fabricate(:private_message_topic) }
       fab!(:another_topic) { Fabricate(:private_message_topic) }

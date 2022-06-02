@@ -156,9 +156,11 @@ class SessionController < ApplicationController
           return
         end
 
-        # users logging in via SSO using an invite do not need to be approved,
-        # they are already pre-approved because they have been invited
-        if SiteSetting.must_approve_users? && !user.approved? && invite.blank?
+        if SiteSetting.must_approve_users? && !user.approved?
+          if invite.present? && user.invited_user.blank?
+            redeem_invitation(invite, sso)
+          end
+
           if SiteSetting.discourse_connect_not_approved_url.present?
             redirect_to SiteSetting.discourse_connect_not_approved_url, allow_other_host: true
           else

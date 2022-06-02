@@ -40,10 +40,8 @@ InviteRedeemer = Struct.new(:invite, :email, :username, :name, :password, :user_
       registration_ip_address: ip_address
     }
 
-    if !SiteSetting.must_approve_users? ||
-        (SiteSetting.must_approve_users? && invite.invited_by.staff?) ||
-        EmailValidator.can_auto_approve_user?(user.email)
-      ReviewableUser.set_approved_fields!(user, invite.invited_by)
+    if SiteSetting.must_approve_users? && EmailValidator.can_auto_approve_user?(user.email)
+      ReviewableUser.set_approved_fields!(user, Discourse.system_user)
     end
 
     user_fields = UserField.all
@@ -95,7 +93,6 @@ InviteRedeemer = Struct.new(:invite, :email, :username, :name, :password, :user_
   end
 
   def process_invitation
-    approve_account_if_needed
     add_to_private_topics_if_invited
     add_user_to_groups
     send_welcome_message
@@ -168,17 +165,6 @@ InviteRedeemer = Struct.new(:invite, :email, :username, :name, :password, :user_
   def send_welcome_message
     @invited_user_record.update!(user_id: invited_user.id)
     invited_user.send_welcome_message = true
-  end
-
-  def approve_account_if_needed
-    if invited_user.present? && reviewable_user = ReviewableUser.find_by(target: invited_user, status: Reviewable.statuses[:pending])
-      reviewable_user.perform(
-        invite.invited_by,
-        :approve_user,
-        send_email: false,
-        approved_by_invite: true
-      )
-    end
   end
 
   def notify_invitee

@@ -931,17 +931,18 @@ describe SessionController do
         expect(read_secure_session["invite-key"]).to eq(nil)
       end
 
-      it "allows you to create an account and redeems the invite successfully even if must_approve_users is enabled" do
+      it "creates the user account and redeems the invite but does not approve the user if must_approve_users is enabled" do
         SiteSetting.must_approve_users = true
 
         login_with_sso_and_invite
 
-        expect(response.status).to eq(302)
-        expect(response).to redirect_to("/")
+        expect(response.status).to eq(403)
+        expect(response.parsed_body).to include(I18n.t("discourse_connect.account_not_approved"))
         expect(invite.reload.redeemed?).to eq(true)
 
         user = User.find_by_email("bob@bob.com")
         expect(user.active).to eq(true)
+        expect(user.approved).to eq(false)
       end
 
       it "redirects to the topic associated to the invite" do
