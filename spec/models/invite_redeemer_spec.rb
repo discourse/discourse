@@ -2,14 +2,14 @@
 
 describe InviteRedeemer do
 
-  describe '#create_user_from_invite' do
+  describe '.create_user_from_invite' do
     it "should be created correctly" do
       invite = Fabricate(:invite, email: 'walter.white@email.com')
       user = InviteRedeemer.create_user_from_invite(invite: invite, email: invite.email, username: 'walter', name: 'Walter White')
       expect(user.username).to eq('walter')
       expect(user.name).to eq('Walter White')
       expect(user.email).to eq('walter.white@email.com')
-      expect(user.approved).to eq(true)
+      expect(user.approved).to eq(false)
       expect(user.active).to eq(false)
     end
 
@@ -20,7 +20,7 @@ describe InviteRedeemer do
       user = InviteRedeemer.create_user_from_invite(invite: invite, email: invite.email, username: 'walter', name: 'Walter White', password: password, ip_address: ip_address)
       expect(user).to have_password
       expect(user.confirm_password?(password)).to eq(true)
-      expect(user.approved).to eq(true)
+      expect(user.approved).to eq(false)
       expect(user.ip_address).to eq(ip_address)
       expect(user.registration_ip_address).to eq(ip_address)
     end
@@ -47,7 +47,7 @@ describe InviteRedeemer do
       expect(user.name).to eq('Walter White')
       expect(user.staged).to eq(false)
       expect(user.email).to eq('staged@account.com')
-      expect(user.approved).to eq(true)
+      expect(user.approved).to eq(false)
     end
 
     it "activates user invited via email with a token" do
@@ -57,7 +57,7 @@ describe InviteRedeemer do
       expect(user.username).to eq('walter')
       expect(user.name).to eq('Walter White')
       expect(user.email).to eq('walter.white@email.com')
-      expect(user.approved).to eq(true)
+      expect(user.approved).to eq(false)
       expect(user.active).to eq(true)
     end
 
@@ -80,24 +80,8 @@ describe InviteRedeemer do
       expect(user.username).to eq('walter')
       expect(user.name).to eq('Walter White')
       expect(user.email).to eq('walter.white@email.com')
-      expect(user.approved).to eq(true)
-      expect(user.active).to eq(false)
-    end
-
-    it "does not automatically approve users if must_approve_users is true" do
-      SiteSetting.must_approve_users = true
-
-      invite = Fabricate(:invite, email: 'test@example.com')
-      user = InviteRedeemer.create_user_from_invite(invite: invite, email: invite.email, username: 'test')
       expect(user.approved).to eq(false)
-    end
-
-    it "approves user if invited by staff" do
-      SiteSetting.must_approve_users = true
-
-      invite = Fabricate(:invite, email: 'test@example.com', invited_by: Fabricate(:admin))
-      user = InviteRedeemer.create_user_from_invite(invite: invite, email: invite.email, username: 'test')
-      expect(user.approved).to eq(true)
+      expect(user.active).to eq(false)
     end
   end
 
@@ -108,30 +92,45 @@ describe InviteRedeemer do
     let(:password) { 'know5nOthiNG' }
     let(:invite_redeemer) { InviteRedeemer.new(invite: invite, email: invite.email, username: username, name: name) }
 
-    it "should redeem the invite if invited by staff" do
-      SiteSetting.must_approve_users = true
-      inviter = invite.invited_by
-      inviter.admin = true
-      user = invite_redeemer.redeem
-      invite.reload
+    context "when must_approve_users setting is enabled" do
+      before do
+        SiteSetting.must_approve_users = true
+      end
 
-      expect(user.name).to eq(name)
-      expect(user.username).to eq(username)
-      expect(user.invited_by).to eq(inviter)
-      expect(inviter.notifications.count).to eq(1)
-      expect(user.approved).to eq(true)
-    end
+      it "should redeem an invite but not approve the user when invite is created by a staff user" do
+        inviter = invite.invited_by
+        inviter.update!(admin: true)
+        user = invite_redeemer.redeem
 
-    it "should redeem the invite if invited by non staff but not approve" do
-      SiteSetting.must_approve_users = true
-      inviter = invite.invited_by
-      user = invite_redeemer.redeem
+        expect(user.name).to eq(name)
+        expect(user.username).to eq(username)
+        expect(user.invited_by).to eq(inviter)
+        expect(user.approved).to eq(false)
 
-      expect(user.name).to eq(name)
-      expect(user.username).to eq(username)
-      expect(user.invited_by).to eq(inviter)
-      expect(inviter.notifications.count).to eq(1)
-      expect(user.approved).to eq(false)
+        expect(inviter.notifications.count).to eq(1)
+      end
+
+      it "should redeem the invite but not approve the user when invite is created by a regular user" do
+        inviter = invite.invited_by
+        user = invite_redeemer.redeem
+
+        expect(user.name).to eq(name)
+        expect(user.username).to eq(username)
+        expect(user.invited_by).to eq(inviter)
+        expect(user.approved).to eq(false)
+
+        expect(inviter.notifications.count).to eq(1)
+      end
+
+      it "should redeem the invite and approve the user when user email is in auto_approve_email_domains setting" do
+        SiteSetting.auto_approve_email_domains = "example.com"
+        user = invite_redeemer.redeem
+
+        expect(user.name).to eq(name)
+        expect(user.username).to eq(username)
+        expect(user.approved).to eq(true)
+        expect(user.approved_by).to eq(Discourse.system_user)
+      end
     end
 
     it "should redeem the invite if invited by non staff and approve if staff not required to approve" do
@@ -142,17 +141,7 @@ describe InviteRedeemer do
       expect(user.username).to eq(username)
       expect(user.invited_by).to eq(inviter)
       expect(inviter.notifications.count).to eq(1)
-      expect(user.approved).to eq(true)
-    end
-
-    it "should redeem the invite if invited by non staff and approve if email in auto_approve_email_domains setting" do
-      SiteSetting.must_approve_users = true
-      SiteSetting.auto_approve_email_domains = "example.com"
-      user = invite_redeemer.redeem
-
-      expect(user.name).to eq(name)
-      expect(user.username).to eq(username)
-      expect(user.approved).to eq(true)
+      expect(user.approved).to eq(false)
     end
 
     it "should delete invite if invited_by user has been removed" do
@@ -164,7 +153,7 @@ describe InviteRedeemer do
       user = InviteRedeemer.new(invite: invite, email: invite.email, username: username, name: name, password: password).redeem
       expect(user).to have_password
       expect(user.confirm_password?(password)).to eq(true)
-      expect(user.approved).to eq(true)
+      expect(user.approved).to eq(false)
     end
 
     it "can set custom fields" do
@@ -224,28 +213,6 @@ describe InviteRedeemer do
       expect(user.invited_by).to eq(inviter)
       expect(inviter.notifications.count).to eq(1)
       expect(invite.invited_users.first).to be_present
-    end
-
-    context "ReviewableUser" do
-      it "approves pending record" do
-        reviewable = ReviewableUser.needs_review!(target: Fabricate(:user, email: invite.email), created_by: invite.invited_by)
-        reviewable.status = Reviewable.statuses[:pending]
-        reviewable.save!
-        invite_redeemer.redeem
-
-        reviewable.reload
-        expect(reviewable.status).to eq(Reviewable.statuses[:approved])
-      end
-
-      it "does not raise error if record is not pending" do
-        reviewable = ReviewableUser.needs_review!(target: Fabricate(:user, email: invite.email), created_by: invite.invited_by)
-        reviewable.status = Reviewable.statuses[:ignored]
-        reviewable.save!
-        invite_redeemer.redeem
-
-        reviewable.reload
-        expect(reviewable.status).to eq(Reviewable.statuses[:ignored])
-      end
     end
 
     context 'invite_link' do
