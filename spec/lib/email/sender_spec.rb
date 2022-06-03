@@ -767,6 +767,14 @@ describe Email::Sender do
           expect(post_reply_key.post_id).to eq(post.id)
           expect { email_sender.send }.to change { PostReplyKey.count }.by(0)
         end
+
+        it 'should not have ActiveRecord::RecordInvalid: Validation failed: Post has already been taken' do
+          a_post_reply_key = PostReplyKey.create(post_id: post.id, user_id: user.id)
+          expect { email_sender.send }.to change { PostReplyKey.count }.by(0)
+          post_reply_key = PostReplyKey.last
+          expect(post_reply_key).to eq(a_post_reply_key)
+        end
+
       end
     end
   end
