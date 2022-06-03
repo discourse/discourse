@@ -30,7 +30,10 @@ export default Component.extend({
   actions: {
     onChangeValue(value) {
       this.set("field.value", value);
-      this.stylingDropdownChanged(this.field.id, value);
+
+      if (this.field.id === "homepage_style") {
+        this.wizard.trigger("homepageStyleChanged");
+      }
     },
   },
 });

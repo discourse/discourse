@@ -1,10 +1,11 @@
 import EmberObject from "@ember/object";
+import Evented from "@ember/object/evented";
 import Step from "wizard/models/step";
 import WizardField from "wizard/models/wizard-field";
 import { ajax } from "wizard/lib/ajax";
 import discourseComputed from "discourse-common/utils/decorators";
 
-const Wizard = EmberObject.extend({
+const Wizard = EmberObject.extend(Evented, {
   @discourseComputed("steps.length")
   totalSteps: (length) => length,
 
