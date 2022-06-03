@@ -329,7 +329,7 @@ acceptance("Sidebar - Topics Section", function (needs) {
 
       assert.ok(
         query(".sidebar-section-link-everything").href.endsWith("/unread"),
-        "is links to unread filter"
+        "it links to unread filter"
       );
 
       // simulate reading topic 2
@@ -387,7 +387,7 @@ acceptance("Sidebar - Topics Section", function (needs) {
 
       assert.ok(
         query(".sidebar-section-link-everything").href.endsWith("/new"),
-        "is links to new filter"
+        "it links to new filter"
       );
 
       publishToMessageBus("/unread", {
@@ -411,7 +411,7 @@ acceptance("Sidebar - Topics Section", function (needs) {
 
       assert.ok(
         query(".sidebar-section-link-everything").href.endsWith("/latest"),
-        "is links to latest filter"
+        "it links to latest filter"
       );
     }
   );
@@ -567,7 +567,7 @@ acceptance("Sidebar - Topics Section", function (needs) {
         query(".sidebar-section-link-tracked").href.endsWith(
           "/unread?f=tracked"
         ),
-        "is links to unread url with tracked filter"
+        "it links to unread url with tracked filter"
       );
 
       // simulate reading topic id 2
@@ -620,7 +620,7 @@ acceptance("Sidebar - Topics Section", function (needs) {
 
       assert.ok(
         query(".sidebar-section-link-tracked").href.endsWith("/new?f=tracked"),
-        "is links to new url with tracked filter"
+        "it links to new url with tracked filter"
       );
 
       // simulate reading topic id 1
@@ -646,7 +646,7 @@ acceptance("Sidebar - Topics Section", function (needs) {
         query(".sidebar-section-link-tracked").href.endsWith(
           "/latest?f=tracked"
         ),
-        "is links to latest url with tracked filter"
+        "it links to latest url with tracked filter"
       );
     }
   );
