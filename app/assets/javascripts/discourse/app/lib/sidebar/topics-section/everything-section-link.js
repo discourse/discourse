@@ -1,44 +1,35 @@
 import I18n from "I18n";
 
 import { tracked } from "@glimmer/tracking";
-
-import discourseDebounce from "discourse-common/lib/debounce";
+import { bind } from "discourse-common/utils/decorators";
 import BaseSectionLink from "discourse/lib/sidebar/topics-section/base-section-link";
 
 export default class EverythingSectionLink extends BaseSectionLink {
   @tracked totalUnread = 0;
   @tracked totalNew = 0;
+  callbackId = null;
 
   constructor() {
     super(...arguments);
 
-    this._refreshCounts();
-
-    this.topicTrackingState.onStateChange(
-      this._topicTrackingStateUpdated.bind(this)
+    this.callbackId = this.topicTrackingState.onStateChange(
+      this._refreshCounts
     );
+
+    this._refreshCounts();
   }
 
-  _topicTrackingStateUpdated() {
-    // refreshing section counts by looping through the states in topicTrackingState is an expensive operation so
-    // we debounce this.
-    discourseDebounce(this, this._refreshCounts, 100);
+  teardown() {
+    this.topicTrackingState.offStateChange(this.callbackId);
   }
 
+  @bind
   _refreshCounts() {
-    let totalUnread = 0;
-    let totalNew = 0;
+    this.totalUnread = this.topicTrackingState.countUnread();
 
-    this.topicTrackingState.forEachTracked((topic, isNew, isUnread) => {
-      if (isNew) {
-        totalNew += 1;
-      } else if (isUnread) {
-        totalUnread += 1;
-      }
-    });
-
-    this.totalUnread = totalUnread;
-    this.totalNew = totalNew;
+    if (this.totalUnread === 0) {
+      this.totalNew = this.topicTrackingState.countNew();
+    }
   }
 
   get name() {

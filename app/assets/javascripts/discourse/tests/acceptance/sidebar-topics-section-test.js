@@ -13,9 +13,16 @@ import { isLegacyEmber } from "discourse-common/config/environment";
 import topicFixtures from "discourse/tests/fixtures/discovery-fixtures";
 import { cloneJSON } from "discourse-common/lib/object";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import Site from "discourse/models/site";
+import { NotificationLevels } from "discourse/lib/notification-levels";
 
 acceptance("Sidebar - Topics Section", function (needs) {
-  needs.user({ experimental_sidebar_enabled: true });
+  needs.user({
+    experimental_sidebar_enabled: true,
+    tracked_tags: ["tag1"],
+    watched_tags: ["tag2"],
+    watching_first_post_tags: ["tag3"],
+  });
 
   needs.pretender((server, helper) => {
     server.get("/new.json", () => {
@@ -322,7 +329,7 @@ acceptance("Sidebar - Topics Section", function (needs) {
 
       assert.ok(
         query(".sidebar-section-link-everything").href.endsWith("/unread"),
-        "is links to unread filter"
+        "it links to unread filter"
       );
 
       // simulate reading topic 2
@@ -380,7 +387,7 @@ acceptance("Sidebar - Topics Section", function (needs) {
 
       assert.ok(
         query(".sidebar-section-link-everything").href.endsWith("/new"),
-        "is links to new filter"
+        "it links to new filter"
       );
 
       publishToMessageBus("/unread", {
@@ -404,7 +411,242 @@ acceptance("Sidebar - Topics Section", function (needs) {
 
       assert.ok(
         query(".sidebar-section-link-everything").href.endsWith("/latest"),
-        "is links to latest filter"
+        "it links to latest filter"
+      );
+    }
+  );
+
+  conditionalTest(
+    "visiting top route with tracked filter",
+    !isLegacyEmber(),
+    async function (assert) {
+      await visit("/top?f=tracked");
+
+      assert.strictEqual(
+        queryAll(".sidebar-section-topics .sidebar-section-link.active").length,
+        1,
+        "only one link is marked as active"
+      );
+
+      assert.ok(
+        exists(".sidebar-section-topics .sidebar-section-link-tracked.active"),
+        "the tracked link is marked as active"
+      );
+    }
+  );
+
+  conditionalTest(
+    "visiting unread route with tracked filter",
+    !isLegacyEmber(),
+    async function (assert) {
+      await visit("/unread?f=tracked");
+
+      assert.strictEqual(
+        queryAll(".sidebar-section-topics .sidebar-section-link.active").length,
+        1,
+        "only one link is marked as active"
+      );
+
+      assert.ok(
+        exists(".sidebar-section-topics .sidebar-section-link-tracked.active"),
+        "the tracked link is marked as active"
+      );
+    }
+  );
+
+  conditionalTest(
+    "visiting new route with tracked filter",
+    !isLegacyEmber(),
+    async function (assert) {
+      await visit("/new?f=tracked");
+
+      assert.strictEqual(
+        queryAll(".sidebar-section-topics .sidebar-section-link.active").length,
+        1,
+        "only one link is marked as active"
+      );
+
+      assert.ok(
+        exists(".sidebar-section-topics .sidebar-section-link-tracked.active"),
+        "the tracked link is marked as active"
+      );
+    }
+  );
+
+  conditionalTest(
+    "new and unread count for tracked link",
+    !isLegacyEmber(),
+    async function (assert) {
+      const categories = Site.current().categories;
+
+      // Category id 1001 has two subcategories
+      const category = categories.find((c) => c.id === 1001);
+      category.set("notification_level", NotificationLevels.TRACKING);
+
+      this.container.lookup("topic-tracking-state:main").loadStates([
+        {
+          topic_id: 1,
+          highest_post_number: 1,
+          last_read_post_number: null,
+          created_at: "2022-05-11T03:09:31.959Z",
+          category_id: category.id,
+          notification_level: NotificationLevels.TRACKING,
+          created_in_new_period: true,
+          unread_not_too_old: true,
+          treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+        },
+        {
+          topic_id: 2,
+          highest_post_number: 12,
+          last_read_post_number: 11,
+          created_at: "2020-02-09T09:40:02.672Z",
+          category_id: category.subcategories[0].id,
+          notification_level: NotificationLevels.TRACKING,
+          created_in_new_period: false,
+          unread_not_too_old: true,
+          treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+        },
+        {
+          topic_id: 3,
+          highest_post_number: 12,
+          last_read_post_number: 11,
+          created_at: "2020-02-09T09:40:02.672Z",
+          category_id: category.subcategories[0].subcategories[0].id,
+          notification_level: NotificationLevels.TRACKING,
+          created_in_new_period: false,
+          unread_not_too_old: true,
+          treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+        },
+        {
+          topic_id: 4,
+          highest_post_number: 15,
+          last_read_post_number: 14,
+          created_at: "2021-06-14T12:41:02.477Z",
+          category_id: 3,
+          notification_level: NotificationLevels.TRACKING,
+          created_in_new_period: false,
+          unread_not_too_old: true,
+          treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+        },
+        {
+          topic_id: 5,
+          highest_post_number: 1,
+          last_read_post_number: null,
+          created_at: "2021-06-14T12:41:02.477Z",
+          category_id: 3,
+          notification_level: null,
+          created_in_new_period: true,
+          unread_not_too_old: true,
+          treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+        },
+        {
+          topic_id: 6,
+          highest_post_number: 17,
+          last_read_post_number: 16,
+          created_at: "2020-10-31T03:41:42.257Z",
+          category_id: 1234,
+          notification_level: NotificationLevels.TRACKING,
+          created_in_new_period: false,
+          unread_not_too_old: true,
+          treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+          tags: ["tag3"],
+        },
+      ]);
+
+      await visit("/");
+
+      assert.strictEqual(
+        query(
+          ".sidebar-section-link-tracked .sidebar-section-link-content-badge"
+        ).textContent.trim(),
+        "3 unread",
+        "it displays the right unread count"
+      );
+
+      assert.ok(
+        query(".sidebar-section-link-tracked").href.endsWith(
+          "/unread?f=tracked"
+        ),
+        "it links to unread url with tracked filter"
+      );
+
+      // simulate reading topic id 2
+      publishToMessageBus("/unread", {
+        topic_id: 2,
+        message_type: "read",
+        payload: {
+          last_read_post_number: 12,
+          highest_post_number: 12,
+        },
+      });
+
+      await settled();
+
+      assert.strictEqual(
+        query(
+          ".sidebar-section-link-tracked .sidebar-section-link-content-badge"
+        ).textContent.trim(),
+        "2 unread",
+        "it updates the unread count"
+      );
+
+      // simulate reading topic id 3
+      publishToMessageBus("/unread", {
+        topic_id: 3,
+        message_type: "read",
+        payload: {
+          last_read_post_number: 17,
+          highest_post_number: 17,
+        },
+      });
+
+      // simulate reading topic id 6
+      publishToMessageBus("/unread", {
+        topic_id: 6,
+        message_type: "read",
+        payload: {
+          last_read_post_number: 17,
+          highest_post_number: 17,
+        },
+      });
+
+      assert.strictEqual(
+        query(
+          ".sidebar-section-link-tracked .sidebar-section-link-content-badge"
+        ).textContent.trim(),
+        "1 new",
+        "it displays the new count once there are no tracked unread topics"
+      );
+
+      assert.ok(
+        query(".sidebar-section-link-tracked").href.endsWith("/new?f=tracked"),
+        "it links to new url with tracked filter"
+      );
+
+      // simulate reading topic id 1
+      publishToMessageBus("/unread", {
+        topic_id: 1,
+        message_type: "read",
+        payload: {
+          last_read_post_number: 1,
+          highest_post_number: 1,
+        },
+      });
+
+      await settled();
+
+      assert.ok(
+        !exists(
+          ".sidebar-section-link-tracked .sidebar-section-link-content-badge"
+        ),
+        "it removes new count once there are no tracked new topics"
+      );
+
+      assert.ok(
+        query(".sidebar-section-link-tracked").href.endsWith(
+          "/latest?f=tracked"
+        ),
+        "it links to latest url with tracked filter"
       );
     }
   );
@@ -491,6 +733,30 @@ acceptance("Sidebar - Topics Section", function (needs) {
         query(".sidebar-section-link-user-summary").title,
         "eviltrout summary",
         "displays the right title for the link"
+      );
+    }
+  );
+
+  conditionalTest(
+    "clean up topic tracking state state changed callbacks when section is destroyed",
+    !isLegacyEmber(),
+    async function (assert) {
+      await visit("/");
+
+      const topicTrackingState = this.container.lookup(
+        "topic-tracking-state:main"
+      );
+
+      const initialCallbackCount = Object.keys(
+        topicTrackingState.stateChangeCallbacks
+      ).length;
+
+      await click(".header-sidebar-toggle .btn");
+      await click(".header-sidebar-toggle .btn");
+
+      assert.strictEqual(
+        Object.keys(topicTrackingState.stateChangeCallbacks).length,
+        initialCallbackCount
       );
     }
   );
