@@ -17,15 +17,17 @@ const DEFAULT_SECTION_LINKS = [
 ];
 
 export default class SidebarTopicsSection extends GlimmerComponent {
-  get sectionLinks() {
-    return [...DEFAULT_SECTION_LINKS, ...customSectionLinks].map(
-      (sectionLinkClass) => {
-        return new sectionLinkClass({
-          topicTrackingState: this.topicTrackingState,
-          currentUser: this.currentUser,
-        });
-      }
-    );
+  configuredSectionLinks = [...DEFAULT_SECTION_LINKS, ...customSectionLinks];
+
+  sectionLinks = this.configuredSectionLinks.map((sectionLinkClass) => {
+    return new sectionLinkClass({
+      topicTrackingState: this.topicTrackingState,
+      currentUser: this.currentUser,
+    });
+  });
+
+  willDestroy() {
+    this.sectionLinks.forEach((sectionLink) => sectionLink.teardown());
   }
 
   @action

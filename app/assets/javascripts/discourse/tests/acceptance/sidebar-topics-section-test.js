@@ -736,4 +736,28 @@ acceptance("Sidebar - Topics Section", function (needs) {
       );
     }
   );
+
+  conditionalTest(
+    "clean up topic tracking state state changed callbacks when section is destroyed",
+    !isLegacyEmber(),
+    async function (assert) {
+      await visit("/");
+
+      const topicTrackingState = this.container.lookup(
+        "topic-tracking-state:main"
+      );
+
+      const initialCallbackCount = Object.keys(
+        topicTrackingState.stateChangeCallbacks
+      ).length;
+
+      await click(".header-sidebar-toggle .btn");
+      await click(".header-sidebar-toggle .btn");
+
+      assert.strictEqual(
+        Object.keys(topicTrackingState.stateChangeCallbacks).length,
+        initialCallbackCount
+      );
+    }
+  );
 });

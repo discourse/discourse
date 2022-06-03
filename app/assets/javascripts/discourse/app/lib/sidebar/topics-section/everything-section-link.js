@@ -7,12 +7,20 @@ import BaseSectionLink from "discourse/lib/sidebar/topics-section/base-section-l
 export default class EverythingSectionLink extends BaseSectionLink {
   @tracked totalUnread = 0;
   @tracked totalNew = 0;
+  callbackId = null;
 
   constructor() {
     super(...arguments);
 
-    this.topicTrackingState.onStateChange(this._refreshCounts);
+    this.callbackId = this.topicTrackingState.onStateChange(
+      this._refreshCounts
+    );
+
     this._refreshCounts();
+  }
+
+  teardown() {
+    this.topicTrackingState.offStateChange(this.callbackId);
   }
 
   @bind

@@ -8,6 +8,11 @@ export default class BaseSectionLink {
   }
 
   /**
+   * Called when topics-section component is torn down.
+   */
+  teardown() {}
+
+  /**
    * @returns {string} The name of the section link. Needs to be dasherized and lowercase.
    */
   get name() {
