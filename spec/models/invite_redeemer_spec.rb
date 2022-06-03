@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 describe InviteRedeemer do
+  fab!(:admin) { Fabricate(:admin) }
 
   describe '.create_user_from_invite' do
     it "should be created correctly" do
@@ -82,6 +83,32 @@ describe InviteRedeemer do
       expect(user.email).to eq('walter.white@email.com')
       expect(user.approved).to eq(false)
       expect(user.active).to eq(false)
+    end
+
+    it "approves and actives user when redeeming an invite with email token and SiteSetting.invite_only is enabled" do
+      SiteSetting.invite_only = true
+      Jobs.run_immediately!
+
+      invite = Fabricate(:invite,
+        invited_by: admin,
+        email: 'walter.white@email.com',
+        emailed_status: Invite.emailed_status_types[:sent],
+      )
+
+      user = InviteRedeemer.create_user_from_invite(
+        invite: invite,
+        email: invite.email,
+        email_token: invite.email_token,
+        username: 'walter',
+        name: 'Walter White'
+      )
+
+      expect(user.name).to eq("Walter White")
+      expect(user.username).to eq("walter")
+      expect(user.email).to eq("walter.white@email.com")
+      expect(user.approved).to eq(true)
+      expect(user.active).to eq(true)
+      expect(ReviewableUser.count).to eq(0)
     end
   end
 
