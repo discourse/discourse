@@ -27,7 +27,7 @@ class SiteSettingsTask
             log << "Changed #{key} FROM: #{result.previous_value} TO: #{result.new_value}"
             counts[:updated] += 1
           rescue => e
-            log << "ERROR: #{e.message}"
+            log << "ERROR #{key}: #{e.message}"
             counts[:errors] += 1
           end
         end
