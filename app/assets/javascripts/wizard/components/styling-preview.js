@@ -5,6 +5,7 @@ import {
 } from "wizard/lib/preview";
 import I18n from "I18n";
 import { bind, observes } from "discourse-common/utils/decorators";
+import { action } from "@ember/object";
 
 const LOREM = `
 Lorem ipsum dolor sit amet, consectetur adipiscing.
@@ -189,13 +190,13 @@ export default createPreviewComponent(659, 320, {
     ctx.fillText("1 / 20", timelineX + margin, height * 0.3 + margin * 1.5);
   },
 
-  actions: {
-    setPreviewHomepage() {
-      this.set("previewTopic", false);
-    },
+  @action
+  setPreviewHomepage() {
+    this.set("previewTopic", false);
+  },
 
-    setPreviewTopic() {
-      this.set("previewTopic", true);
-    },
+  @action
+  setPreviewTopic() {
+    this.set("previewTopic", true);
   },
 });

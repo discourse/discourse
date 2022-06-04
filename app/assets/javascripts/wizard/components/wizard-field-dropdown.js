@@ -1,6 +1,6 @@
 import Component from "@ember/component";
 import discourseComputed from "discourse-common/utils/decorators";
-import { set } from "@ember/object";
+import { action, set } from "@ember/object";
 
 export default Component.extend({
   init(...args) {
@@ -27,13 +27,12 @@ export default Component.extend({
     e.stopPropagation();
   },
 
-  actions: {
-    onChangeValue(value) {
-      this.set("field.value", value);
+  @action
+  onChangeValue(value) {
+    this.set("field.value", value);
 
-      if (this.field.id === "homepage_style") {
-        this.wizard.trigger("homepageStyleChanged");
-      }
-    },
+    if (this.field.id === "homepage_style") {
+      this.wizard.trigger("homepageStyleChanged");
+    }
   },
 });
