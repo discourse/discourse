@@ -79,7 +79,7 @@ class Auth::DefaultCurrentUserProvider
   def self.find_v0_auth_cookie(request)
     cookie = request.cookies[TOKEN_COOKIE]
 
-    if cookie?.valid_encoding? && cookie.present? && cookie.size == TOKEN_SIZE
+    if cookie&.valid_encoding? && cookie.present? && cookie.size == TOKEN_SIZE
       cookie
     end
   end
@@ -92,7 +92,7 @@ class Auth::DefaultCurrentUserProvider
       cookie = request.cookies[TOKEN_COOKIE]
 
       # don't even initialize a cookie jar if we don't have a cookie at all
-      if cookie?.valid_encoding? && cookie.present?
+      if cookie&.valid_encoding? && cookie.present?
         request.cookie_jar.encrypted[TOKEN_COOKIE]&.with_indifferent_access
       end
     end
