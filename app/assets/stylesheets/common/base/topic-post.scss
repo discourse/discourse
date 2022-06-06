@@ -1323,7 +1323,7 @@ a.mention-group {
 
   .d-icon {
     margin: 16px;
-    font-size: $font-up-5;
+    font-size: var(--font-up-5);
   }
 
   .notice {

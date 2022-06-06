@@ -363,7 +363,7 @@ module PrettyText
       end
 
       if el["srcset"]
-        srcs = el["srcset"]&.split(',')&.map { |e| e.split(' ', 2)[0].presence }
+        srcs = el["srcset"].split(',').map { |e| e.split(' ', 2)[0].presence }
         if srcs.any? { |src| !src.match?(allowed_pattern) }
           el[PrettyText::BLOCKED_HOTLINKED_SRCSET_ATTR] = el.delete("srcset")
         end

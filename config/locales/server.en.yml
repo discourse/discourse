@@ -1518,7 +1518,7 @@ en:
     download_remote_images_to_local: "Convert remote (hotlinked) images to local images by downloading them; This preserves content even if the images are removed from the remote site in future."
     download_remote_images_threshold: "Minimum disk space necessary to download remote images locally (in percent)"
     disabled_image_download_domains: "Remote images will never be downloaded from these domains. Pipe-delimited list."
-    block_hotlinked_media: "Prevent users introducing remote (hotlinked) media in their posts. Remote media which is not downloaded via 'download_remote_images_to_local' will be replaced with a placeholder link."
+    block_hotlinked_media: "Prevent users from introducing remote (hotlinked) media in their posts. Remote media which is not downloaded via 'download_remote_images_to_local' will be replaced with a placeholder link."
     block_hotlinked_media_exceptions: "A list of base URLs which are exempt from the block_hotlinked_media setting. Include the protocol (e.g. https://example.com)."
     editing_grace_period: "For (n) seconds after posting, editing will not create a new version in the post history."
     editing_grace_period_max_diff: "Maximum number of character changes allowed in editing grace period, if more changed store another post revision (trust level 0 and 1)"

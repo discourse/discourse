@@ -393,8 +393,8 @@ class CookedPostProcessor
 
   def add_blocked_hotlinked_media_placeholders
     @doc.css([
-      "*[#{PrettyText::BLOCKED_HOTLINKED_SRC_ATTR}]",
-      "*[#{PrettyText::BLOCKED_HOTLINKED_SRCSET_ATTR}]",
+      "[#{PrettyText::BLOCKED_HOTLINKED_SRC_ATTR}]",
+      "[#{PrettyText::BLOCKED_HOTLINKED_SRCSET_ATTR}]",
     ].join(',')).each do |el|
       src = el[PrettyText::BLOCKED_HOTLINKED_SRC_ATTR] ||
         el[PrettyText::BLOCKED_HOTLINKED_SRCSET_ATTR]&.split(',')&.first&.split(' ')&.first

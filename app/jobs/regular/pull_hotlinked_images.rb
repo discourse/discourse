@@ -130,7 +130,7 @@ module Jobs
     def extract_images_from(html)
       doc = Nokogiri::HTML5::fragment(html)
 
-      doc.css("img[src], *[#{PrettyText::BLOCKED_HOTLINKED_SRC_ATTR}], a.lightbox[href]") -
+      doc.css("img[src], [#{PrettyText::BLOCKED_HOTLINKED_SRC_ATTR}], a.lightbox[href]") -
         doc.css("img.avatar") -
         doc.css(".lightbox img[src]")
     end
