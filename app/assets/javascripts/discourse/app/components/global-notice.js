@@ -50,6 +50,7 @@ const Notice = EmberObject.extend({
 });
 
 export default Component.extend({
+  router: service(),
   logsNoticeService: service("logsNotice"),
   logNotice: null,
 
@@ -137,7 +138,7 @@ export default Component.extend({
       );
     }
 
-    if (wizardRequired) {
+    if (wizardRequired && !this.router.currentURL.startsWith("/wizard")) {
       const requiredText = I18n.t("wizard_required", {
         url: getURL("/wizard"),
       });
