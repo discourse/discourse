@@ -827,6 +827,116 @@ describe SessionController do
       expect(response).to redirect_to('/')
     end
 
+    it 'creates a user but ignores auto_approve_email_domains site setting when must_approve_users site setting is not enabled' do
+      SiteSetting.auto_approve_email_domains = "discourse.com"
+
+      sso = get_sso('/a/')
+      sso.external_id = '666'
+      sso.email = 'sam@discourse.com'
+      sso.name = 'Sam Saffron'
+      sso.username = 'sam'
+
+      events = DiscourseEvent.track_events do
+        get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
+
+        expect(response).to redirect_to('/a/')
+      end
+
+      expect(events.map { |event| event[:event_name] }).to include(
+       :user_logged_in, :user_first_logged_in
+      )
+
+      logged_on_user = Discourse.current_user_provider.new(request.env).current_user
+
+      # ensure nothing is transient
+      logged_on_user = User.find(logged_on_user.id)
+
+      expect(logged_on_user.admin).to eq(false)
+      expect(logged_on_user.email).to eq('sam@discourse.com')
+      expect(logged_on_user.name).to eq('Sam Saffron')
+      expect(logged_on_user.username).to eq('sam')
+      expect(logged_on_user.approved).to eq(false)
+      expect(logged_on_user.active).to eq(true)
+
+      expect(logged_on_user.single_sign_on_record.external_id).to eq("666")
+      expect(logged_on_user.single_sign_on_record.external_username).to eq('sam')
+    end
+
+    context 'when must_approve_users site setting has been enabled' do
+      before do
+        SiteSetting.must_approve_users = true
+      end
+
+      it "creates a user but does not approve when user's email domain does not match a domain in auto_approve_email_domains site settings" do
+        SiteSetting.auto_approve_email_domains = "discourse.com"
+
+        sso = get_sso('/a/')
+        sso.external_id = '666'
+        sso.email = 'sam@discourse.org'
+        sso.name = 'Sam Saffron'
+        sso.username = 'sam'
+
+        expect do
+          get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
+
+          expect(response.status).to eq(403)
+          expect(response.parsed_body).to include(I18n.t("discourse_connect.account_not_approved"))
+        end.to change { User.count }.by(1)
+
+        logged_on_user = Discourse.current_user_provider.new(request.env).current_user
+
+        expect(logged_on_user).to eq(nil)
+
+        user = User.last
+
+        expect(user.admin).to eq(false)
+        expect(user.email).to eq('sam@discourse.org')
+        expect(user.name).to eq('Sam Saffron')
+        expect(user.username).to eq('sam')
+        expect(user.approved).to eq(false)
+        expect(user.active).to eq(true)
+
+        expect(user.single_sign_on_record.external_id).to eq("666")
+        expect(user.single_sign_on_record.external_username).to eq('sam')
+      end
+
+      it "creates and approves a user when user's email domain matches a domain in auto_approve_email_domains site settings" do
+        SiteSetting.auto_approve_email_domains = "discourse.com"
+
+        sso = get_sso('/a/')
+        sso.external_id = '666'
+        sso.email = 'sam@discourse.com'
+        sso.name = 'Sam Saffron'
+        sso.username = 'sam'
+
+        events = DiscourseEvent.track_events do
+          get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
+
+          expect(response).to redirect_to('/a/')
+        end
+
+        expect(events.map { |event| event[:event_name] }).to include(
+         :user_logged_in, :user_first_logged_in
+        )
+
+        logged_on_user = Discourse.current_user_provider.new(request.env).current_user
+
+        # ensure nothing is transient
+        logged_on_user = User.find(logged_on_user.id)
+
+        expect(logged_on_user.admin).to eq(false)
+        expect(logged_on_user.email).to eq('sam@discourse.com')
+        expect(logged_on_user.name).to eq('Sam Saffron')
+        expect(logged_on_user.username).to eq('sam')
+        expect(logged_on_user.approved).to eq(true)
+        expect(logged_on_user.active).to eq(true)
+
+        expect(logged_on_user.single_sign_on_record.external_id).to eq("666")
+        expect(logged_on_user.single_sign_on_record.external_username).to eq('sam')
+      end
+
+    end
+
     it 'allows you to create an account' do
       group = Fabricate(:group, name: :bob, automatic_membership_email_domains: 'bob.com')
 
