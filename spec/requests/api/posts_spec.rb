@@ -357,14 +357,14 @@ describe 'posts' do
       parameter name: :post_body, in: :body, schema: {
         type: :object,
         properties: {
-          locked: { type: :boolean }
+          locked: { type: :string }
         }, required: [ 'locked' ]
       }
 
       produces 'application/json'
       response '200', 'post updated' do
         schema type: :object, properties: {
-          locked: { type: :boolean },
+          locked: { type: :string },
         }
 
         let(:post_body) { { 'locked': 'true' } }
