@@ -215,7 +215,7 @@ class UserStat < ActiveRecord::Base
       SQL
 
       MessageBus.publish(
-        '/user',
+        "/user-drafts/#{user_id}",
         {
           draft_count: draft_count,
           has_topic_draft: !!has_topic_draft

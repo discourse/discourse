@@ -179,14 +179,14 @@ describe Draft do
   it 'updates draft count when a draft is created or destroyed' do
     Draft.set(Fabricate(:user), Draft::NEW_TOPIC, 0, "data")
 
-    messages = MessageBus.track_publish("/user") do
+    messages = MessageBus.track_publish("/user-drafts/#{user.id}") do
       Draft.set(user, Draft::NEW_TOPIC, 0, "data")
     end
 
     expect(messages.first.data[:draft_count]).to eq(1)
     expect(messages.first.data[:has_topic_draft]).to eq(true)
 
-    messages = MessageBus.track_publish("/user") do
+    messages = MessageBus.track_publish("/user-drafts/#{user.id}") do
       Draft.where(user: user).destroy_all
     end
 
