@@ -364,7 +364,7 @@ describe 'posts' do
       produces 'application/json'
       response '200', 'post updated' do
         schema type: :object, properties: {
-          locked: { type: :string },
+          locked: { type: :boolean },
         }
 
         let(:post_body) { { 'locked': 'true' } }
