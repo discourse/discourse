@@ -262,7 +262,6 @@ export default Component.extend({
 
     if (filter) {
       results.innerHTML = emojiSearch(filter.toLowerCase(), {
-        maxResults: 20,
         diversity: this.emojiStore.diversity,
       })
         .map(this._replaceEmoji)
