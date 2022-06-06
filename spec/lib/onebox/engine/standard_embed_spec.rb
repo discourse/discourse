@@ -54,6 +54,14 @@ describe Onebox::Engine::StandardEmbed do
 
       expect(instance.raw).to eq({description: "description"})
     end
+
+    it 'does not override data with json_ld data' do
+      Onebox::Helpers.stubs(fetch_html_doc: nil)
+      Onebox::JsonLd.any_instance.stubs(:data).returns({title: "i do not want to override"})
+      Onebox::Oembed.any_instance.stubs(:data).returns({title: "do not override me"})
+
+      expect(instance.raw).to eq({title: "do not override me"})
+    end
   end
 
   private

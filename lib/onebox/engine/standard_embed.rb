@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
-require "cgi"
-require "onebox/open_graph"
+require 'cgi'
+require 'onebox/normalizer'
+require 'onebox/open_graph'
 require 'onebox/oembed'
+require 'onebox/json_ld'
 
 module Onebox
   module Engine
@@ -43,6 +45,7 @@ module Onebox
         set_opengraph_data_on_raw
         set_twitter_data_on_raw
         set_oembed_data_on_raw
+        set_json_ld_data_on_raw
         set_favicon_data_on_raw
         set_description_on_raw
 
@@ -136,6 +139,10 @@ module Onebox
         oembed_url
       end
 
+      def get_json_ld
+        @json_ld ||= Onebox::JsonLd.new(html_doc)
+      end
+
       def set_from_normalizer_data(normalizer)
         normalizer.data.each do |k, v|
           v = normalizer.send(k)
@@ -157,6 +164,11 @@ module Onebox
       def set_oembed_data_on_raw
         oembed = get_oembed
         set_from_normalizer_data(oembed)
+      end
+
+      def set_json_ld_data_on_raw
+        json_ld = get_json_ld
+        set_from_normalizer_data(json_ld)
       end
 
       def set_favicon_data_on_raw
