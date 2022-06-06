@@ -1,3 +1,4 @@
+import { bind } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import isElementInViewport from "discourse/lib/is-element-in-viewport";
 
@@ -11,17 +12,28 @@ export default Component.extend({
 
     const path = this.path;
     if (path === "faq" || path === "guidelines") {
-      $(window).on("load.faq resize.faq scroll.faq", () => {
-        const faqUnread = !currentUser.get("read_faq");
-        if (faqUnread && isElementInViewport($(".contents p").last()[0])) {
-          this.action();
-        }
-      });
+      this._markRead();
+      window.addEventListener("resize", this._markRead, false);
+      window.addEventListener("scroll", this._markRead, false);
     }
   },
 
   willDestroyElement() {
     this._super(...arguments);
-    $(window).off("load.faq resize.faq scroll.faq");
+
+    window.removeEventListener("resize", this._markRead);
+    window.removeEventListener("scroll", this._markRead);
+  },
+
+  @bind
+  _markRead() {
+    const faqUnread = !this.currentUser.read_faq;
+
+    if (
+      faqUnread &&
+      isElementInViewport(document.querySelector(".contents p:last-child"))
+    ) {
+      this.action();
+    }
   },
 });

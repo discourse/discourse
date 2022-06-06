@@ -230,14 +230,10 @@ task 'db:migrate' => ['load_config', 'environment', 'set_locale'] do |_, args|
 
     ActiveRecord::Tasks::DatabaseTasks.migrate
 
-    if !Discourse.is_parallel_test?
-      Rake::Task['db:_dump'].invoke
-    end
-
     SeedFu.quiet = true
     SeedFu.seed(SeedHelper.paths, SeedHelper.filter)
 
-    if Rails.env.development?
+    if Rails.env.development? && !ENV["RAILS_DB"]
       Rake::Task['db:schema:cache:dump'].invoke
     end
 

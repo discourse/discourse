@@ -161,23 +161,6 @@ export default DropdownSelectBoxComponent.extend({
     }
 
     if (
-      this.siteSettings.enable_personal_messages &&
-      this.action !== PRIVATE_MESSAGE &&
-      !this.isEditing
-    ) {
-      items.push({
-        name: I18n.t(
-          "composer.composer_actions.reply_as_private_message.label"
-        ),
-        description: I18n.t(
-          "composer.composer_actions.reply_as_private_message.desc"
-        ),
-        icon: "envelope",
-        id: "reply_as_private_message",
-      });
-    }
-
-    if (
       !this.isEditing &&
       ((this.action !== REPLY && _topicSnapshot) ||
         (this.action === REPLY &&
