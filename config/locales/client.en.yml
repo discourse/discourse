@@ -2273,9 +2273,6 @@ en:
         reply_as_new_group_message:
           label: Reply as new group message
           desc: Create new message starting with same recipients
-        reply_as_private_message:
-          label: New message
-          desc: Create a new personal message
         reply_to_topic:
           label: Reply to topic
           desc: Reply to the topic, not any specific post
