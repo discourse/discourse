@@ -31,6 +31,18 @@ export default createPreviewComponent(659, 320, {
     this.wizard.off("homepageStyleChanged", this.onHomepageStyleChange);
   },
 
+  didInsertElement() {
+    this._super(...arguments);
+    this.element.addEventListener("mouseleave", this.handleMouseLeave);
+    this.element.addEventListener("mousemove", this.handleMouseMove);
+  },
+
+  willDestroyElement() {
+    this._super(...arguments);
+    this.element.removeEventListener("mouseleave", this.handleMouseLeave);
+    this.element.removeEventListener("mousemove", this.handleMouseMove);
+  },
+
   mouseDown(e) {
     const slider = this.element.querySelector(".previews");
     this.setProperties({
@@ -40,7 +52,8 @@ export default createPreviewComponent(659, 320, {
     });
   },
 
-  mouseLeave() {
+  @bind
+  handleMouseLeave() {
     this.set("draggingActive", false);
   },
 
@@ -48,7 +61,8 @@ export default createPreviewComponent(659, 320, {
     this.set("draggingActive", false);
   },
 
-  mouseMove(e) {
+  @bind
+  handleMouseMove(e) {
     if (!this.draggingActive) {
       return;
     }
