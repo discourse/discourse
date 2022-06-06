@@ -85,9 +85,15 @@ function head(buffer, bootstrap, headers, baseURL) {
   });
 
   if (bootstrap.preloaded.currentUser) {
-    let staff = JSON.parse(bootstrap.preloaded.currentUser).staff;
+    const user = JSON.parse(bootstrap.preloaded.currentUser);
+    let { admin, staff } = user;
+
     if (staff) {
       buffer.push(`<script src="${baseURL}assets/admin.js"></script>`);
+    }
+
+    if (admin) {
+      buffer.push(`<script src="${baseURL}assets/wizard.js"></script>`);
     }
   }
 

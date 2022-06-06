@@ -174,6 +174,7 @@ module Discourse
     config.handlebars.templates_root = {
       'discourse/app/templates' => '',
       'admin/addon/templates' => 'admin/templates/',
+      'wizard/addon/templates' => 'wizard/templates/',
       'select-kit/addon/templates' => 'select-kit/templates/'
     }
 
@@ -256,7 +257,6 @@ module Discourse
               qunit.css
               test_helper.css
               discourse/tests/test-boot-rails.js
-              wizard/test/test_helper.js
             }.include?(logical_path) ||
             logical_path =~ /\/node_modules/ ||
             logical_path =~ /\/dist/

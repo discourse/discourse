@@ -3,8 +3,8 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { action, set } from "@ember/object";
 
 export default Component.extend({
-  init(...args) {
-    this._super(...args);
+  init() {
+    this._super(...arguments);
 
     if (this.field.id === "color_scheme") {
       for (let choice of this.field.choices) {
@@ -17,10 +17,7 @@ export default Component.extend({
 
   @discourseComputed("field.id")
   componentName(id) {
-    if (id === "color_scheme") {
-      return "color-palettes";
-    }
-    return "combo-box";
+    return id === "color_scheme" ? "color-palettes" : "combo-box";
   },
 
   keyPress(e) {

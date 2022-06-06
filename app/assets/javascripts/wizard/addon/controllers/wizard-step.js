@@ -9,21 +9,24 @@ export default Controller.extend({
   @action
   goNext(response) {
     const next = this.get("step.next");
-    if (response && response.refresh_required) {
-      if (this.get("step.id") === "locale") {
+
+    if (response?.refresh_required) {
+      if (this.step.id === "locale") {
         document.location = getUrl(`/wizard/steps/${next}`);
-        return;
       } else {
         this.send("refreshRoute");
       }
+
+      return;
     }
-    if (response && response.success) {
-      this.transitionToRoute("step", next);
+
+    if (response?.success) {
+      this.transitionToRoute("wizard.step", next);
     }
   },
 
   @action
   goBack() {
-    this.transitionToRoute("step", this.get("step.previous"));
+    this.transitionToRoute("wizard.step", this.step.previous);
   },
 });

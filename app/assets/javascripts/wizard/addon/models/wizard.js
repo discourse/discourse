@@ -2,12 +2,11 @@ import EmberObject from "@ember/object";
 import Evented from "@ember/object/evented";
 import Step from "wizard/models/step";
 import WizardField from "wizard/models/wizard-field";
-import { ajax } from "wizard/lib/ajax";
-import discourseComputed from "discourse-common/utils/decorators";
+import { ajax } from "discourse/lib/ajax";
+import { readOnly } from "@ember/object/computed";
 
 const Wizard = EmberObject.extend(Evented, {
-  @discourseComputed("steps.length")
-  totalSteps: (length) => length,
+  totalSteps: readOnly("steps.length"),
 
   getTitle() {
     const titleStep = this.steps.findBy("id", "forum-title");
@@ -86,8 +85,7 @@ const Wizard = EmberObject.extend(Evented, {
 });
 
 export function findWizard() {
-  return ajax({ url: "/wizard.json" }).then((response) => {
-    const wizard = response.wizard;
+  return ajax({ url: "/wizard.json" }).then(({ wizard }) => {
     wizard.steps = wizard.steps.map((step) => {
       const stepObj = Step.create(step);
       stepObj.fields = stepObj.fields.map((f) => WizardField.create(f));

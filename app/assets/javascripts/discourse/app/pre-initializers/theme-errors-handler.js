@@ -53,6 +53,7 @@ function reportToLogster(name, error) {
 
   // TODO: To be moved out into a logster-provided lib
   // eslint-disable-next-line no-undef
+  console.log(data);
   Ember.$.ajax(getURL("/logs/report_js_error"), {
     data,
     type: "POST",

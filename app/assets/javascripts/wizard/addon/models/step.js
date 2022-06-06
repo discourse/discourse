@@ -1,13 +1,15 @@
 import EmberObject from "@ember/object";
 import ValidState from "wizard/mixins/valid-state";
-import { ajax } from "wizard/lib/ajax";
+import { ajax } from "discourse/lib/ajax";
 import discourseComputed from "discourse-common/utils/decorators";
 
 export default EmberObject.extend(ValidState, {
   id: null,
 
   @discourseComputed("index")
-  displayIndex: (index) => index + 1,
+  displayIndex(index) {
+    return index + 1;
+  },
 
   @discourseComputed("fields.[]")
   fieldsById(fields) {

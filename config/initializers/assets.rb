@@ -29,8 +29,6 @@ Rails.application.config.assets.precompile += %w{
   break_string.js
   ember_jquery.js
   pretty-text-bundle.js
-  wizard-application.js
-  wizard-vendor.js
   markdown-it-bundle.js
   service-worker.js
   google-tag-manager.js
@@ -41,7 +39,6 @@ Rails.application.config.assets.precompile += %w{
   omniauth-complete.js
   activate-account.js
   auto-redirect.js
-  wizard-start.js
   locales/i18n.js
   discourse/app/lib/webauthn.js
   confirm-new-email/confirm-new-email.js

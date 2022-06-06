@@ -150,8 +150,10 @@ export default Component.extend({
 
     if (result.warnings.length) {
       const unwarned = result.warnings.filter((w) => !alreadyWarned[w]);
+
       if (unwarned.length) {
         unwarned.forEach((w) => (alreadyWarned[w] = true));
+
         return window.bootbox.confirm(
           unwarned.map((w) => I18n.t(`wizard.${w}`)).join("\n"),
           I18n.t("no_value"),

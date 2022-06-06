@@ -4,7 +4,7 @@ import I18n from "I18n";
 import { dasherize } from "@ember/string";
 import discourseComputed from "discourse-common/utils/decorators";
 import { getOwner } from "discourse-common/lib/get-owner";
-import { getToken } from "wizard/lib/ajax";
+import { getToken } from "discourse/lib/ajax";
 import getUrl from "discourse-common/lib/get-url";
 import Uppy from "@uppy/core";
 import DropTarget from "@uppy/drop-target";
