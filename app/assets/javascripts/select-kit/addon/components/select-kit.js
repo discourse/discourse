@@ -889,6 +889,8 @@ export default Component.extend(
               name: "preventOverflow",
               options: {
                 altAxis: !this?.site?.mobileView,
+                tetherOffset: ({ popper, reference }) =>
+                  Math.max(reference.y, document.documentElement.scrollTop),
               },
             },
             {
