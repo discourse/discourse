@@ -1207,6 +1207,7 @@ body.wizard {
 .text-field input {
   width: 100%;
   font-size: $font-up-1;
+  margin: 0;
   padding: 6px;
   background-color: var(--secondary);
   border: 1px solid var(--primary-low-mid);
