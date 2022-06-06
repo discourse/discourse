@@ -25,63 +25,30 @@ const Wizard = EmberObject.extend(Evented, {
     return logoStep.get("fieldsById.logo.value");
   },
 
-  // A bit clunky, but get the current colors from the appropriate step
-  getCurrentColors(schemeId) {
+  get currentColors() {
     const colorStep = this.steps.findBy("id", "styling");
     if (!colorStep) {
       return this.current_color_scheme;
     }
 
-    const themeChoice = colorStep.get("fieldsById.color_scheme");
+    const themeChoice = colorStep.fieldsById.color_scheme;
     if (!themeChoice) {
       return;
     }
 
-    const themeId = schemeId ? schemeId : themeChoice.get("value");
-    if (!themeId) {
-      return;
-    }
-
-    const choices = themeChoice.get("choices");
-    if (!choices) {
-      return;
-    }
-
-    const option = choices.findBy("id", themeId);
-    if (!option) {
-      return;
-    }
-
-    return option.data.colors;
+    return themeChoice.choices?.findBy("id", themeChoice.value)?.data.colors;
   },
 
-  getCurrentFont(fontId, type = "body_font") {
-    const fontsStep = this.steps.findBy("id", "styling");
-    if (!fontsStep) {
-      return;
-    }
+  get font() {
+    const fontChoice = this.steps.findBy("id", "styling")?.fieldsById
+      ?.body_font;
+    return fontChoice.choices?.findBy("id", fontChoice.value)?.label;
+  },
 
-    const fontChoice = fontsStep.get(`fieldsById.${type}`);
-    if (!fontChoice) {
-      return;
-    }
-
-    const choiceId = fontId ? fontId : fontChoice.get("value");
-    if (!choiceId) {
-      return;
-    }
-
-    const choices = fontChoice.get("choices");
-    if (!choices) {
-      return;
-    }
-
-    const option = choices.findBy("id", choiceId);
-    if (!option) {
-      return;
-    }
-
-    return option.label;
+  get headingFont() {
+    const fontChoice = this.steps.findBy("id", "styling")?.fieldsById
+      ?.heading_font;
+    return fontChoice.choices?.findBy("id", fontChoice.value)?.label;
   },
 });
 
