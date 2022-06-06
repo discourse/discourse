@@ -11,16 +11,8 @@ export default Controller.extend({
     const next = this.get("step.next");
 
     if (response?.refresh_required) {
-      if (this.step.id === "locale") {
-        document.location = getUrl(`/wizard/steps/${next}`);
-      } else {
-        this.send("refreshRoute");
-      }
-
-      return;
-    }
-
-    if (response?.success) {
+      document.location = getUrl(`/wizard/steps/${next}`);
+    } else if (response?.success) {
       this.transitionToRoute("wizard.step", next);
     }
   },
