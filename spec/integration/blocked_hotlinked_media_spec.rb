@@ -47,7 +47,7 @@ describe "hotlinked media blocking" do
       expect(post.cooked).to have_tag("audio source", with: { PrettyText::BLOCKED_HOTLINKED_SRC_ATTR => hotlinked_url })
     end
 
-    it "blocks hotlinked onebox content when cached" do
+    it "blocks hotlinked onebox content when cached (post_analyzer)" do
       post = Fabricate(:post, raw: "#{onebox_url}")
       expect(post.cooked).not_to have_tag("img[src]")
       expect(post.cooked).to have_tag("img", with: { PrettyText::BLOCKED_HOTLINKED_SRC_ATTR => hotlinked_url })
@@ -109,7 +109,7 @@ describe "hotlinked media blocking" do
       Oneboxer.stubs(:onebox).returns("<aside class='onebox'><img src='#{hotlinked_url}'></aside>")
     end
 
-    it "renders placeholders for all media types" do
+    it "renders placeholders for all media types (CookedPostProcessor)" do
       post = Fabricate :post, raw: <<~RAW
         <img src='#{hotlinked_url}'>
 
