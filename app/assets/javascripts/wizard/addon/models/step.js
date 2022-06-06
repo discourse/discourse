@@ -50,8 +50,8 @@ export default EmberObject.extend(ValidState, {
       url: `/wizard/steps/${this.id}`,
       type: "PUT",
       data: { fields },
-    }).catch((response) => {
-      response.responseJSON.errors.forEach((err) =>
+    }).catch((error) => {
+      error.jqXHR.responseJSON.errors.forEach((err) =>
         this.fieldError(err.field, err.description)
       );
     });
