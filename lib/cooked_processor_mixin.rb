@@ -256,7 +256,6 @@ module CookedProcessorMixin
   def add_blocked_hotlinked_image_placeholder!(el)
     el.name = "a"
     el.set_attribute("href", el[PrettyText::BLOCKED_HOTLINKED_SRC_ATTR])
-    el.set_attribute("target", "_blank")
     el.set_attribute("class", "blocked-hotlinked-placeholder")
     el.set_attribute("title", I18n.t("post.image_placeholder.blocked_hotlinked_title"))
     el << "<svg class=\"fa d-icon d-icon-link svg-icon\" aria-hidden=\"true\"><use href=\"#link\"></use></svg>"
@@ -269,7 +268,6 @@ module CookedProcessorMixin
     placeholder = Nokogiri::XML::Node.new("a", el.document)
     placeholder.name = "a"
     placeholder.set_attribute("href", src)
-    placeholder.set_attribute("target", "_blank")
     placeholder.set_attribute("class", "blocked-hotlinked-placeholder")
     placeholder.set_attribute("title", I18n.t("post.image_placeholder.blocked_hotlinked_title"))
     placeholder << "<svg class=\"fa d-icon d-icon-link svg-icon\" aria-hidden=\"true\"><use href=\"#link\"></use></svg>"
