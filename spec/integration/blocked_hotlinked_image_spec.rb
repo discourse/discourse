@@ -53,7 +53,7 @@ describe "hotlinked image blocking" do
       expect(post.cooked).to have_tag("img", with: { PrettyText::BLOCKED_HOTLINKED_SRC_ATTR => hotlinked_url })
     end
 
-    it "allows absolute URLs" do
+    it "allows relative URLs" do
       src = "/assets/images/blah.png"
       post = Fabricate(:post, raw: "![](#{src})")
       expect(post.cooked).to have_tag("img", with: { src: src })
@@ -65,7 +65,7 @@ describe "hotlinked image blocking" do
       expect(post.cooked).to have_tag("img", with: { src: src })
     end
 
-    it "allows exceptions" do
+    it "allows an exception" do
       post = Fabricate :post, raw: <<~RAW
         ![](https://example.com)
         ![](https://example.com/myimage.png)
@@ -73,7 +73,6 @@ describe "hotlinked image blocking" do
         ![](https://malicious.invalid/https://example.com)
       RAW
 
-      post.rebake!
       expect(post.cooked).not_to have_tag("img[src]")
 
       SiteSetting.block_hotlinked_media_exceptions = "https://example.com"
@@ -84,6 +83,22 @@ describe "hotlinked image blocking" do
       expect(post.cooked).to have_tag("img", with: { "src" => "https://example.com/myimage.png" })
       expect(post.cooked).to have_tag("img", with: { PrettyText::BLOCKED_HOTLINKED_SRC_ATTR => "https://example.com.malicious.com/myimage.png" })
       expect(post.cooked).to have_tag("img", with: { PrettyText::BLOCKED_HOTLINKED_SRC_ATTR => "https://malicious.invalid/https://example.com" })
+    end
+
+    it "allows multiple exceptions" do
+      post = Fabricate :post, raw: <<~RAW
+        ![](https://example.com)
+        ![](https://exampleb.com/myimage.png)
+      RAW
+
+      expect(post.cooked).not_to have_tag("img[src]")
+
+      SiteSetting.block_hotlinked_media_exceptions = "https://example.com|https://exampleb.com"
+
+      post.rebake!
+      post.reload
+      expect(post.cooked).to have_tag("img", with: { "src" => "https://example.com" })
+      expect(post.cooked).to have_tag("img", with: { "src" => "https://exampleb.com/myimage.png" })
     end
   end
 
