@@ -4,6 +4,7 @@ import { Promise } from "rsvp";
 import getUrl from "discourse-common/lib/get-url";
 import { htmlSafe } from "@ember/template";
 import { scheduleOnce } from "@ember/runloop";
+import { observes } from "discourse-common/utils/decorators";
 
 export const LOREM = `
 Lorem ipsum dolor sit amet,
@@ -52,6 +53,13 @@ export function createPreviewComponent(width, height, obj) {
         this.ctx = c.getContext("2d");
         this.ctx.scale(scale, scale);
         this.reload();
+      },
+
+      @observes(
+        "step.fieldsById.{color_scheme,body_font,heading_font,homepage_style}.value"
+      )
+      themeChanged() {
+        this.triggerRepaint();
       },
 
       images() {},
