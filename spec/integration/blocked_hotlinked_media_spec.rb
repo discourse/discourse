@@ -37,7 +37,7 @@ describe "hotlinked media blocking" do
     it "blocks hotlinked videos with srcset" do
       srcset = "#{hotlinked_url} 1x,https://example.com 2x"
       post = Fabricate(:post, raw: "<video><source srcset='#{srcset}'></video>")
-      expect(post.cooked).not_to have_tag("video source[src]")
+      expect(post.cooked).not_to have_tag("video source[srcset]")
       expect(post.cooked).to have_tag("video source", with: { PrettyText::BLOCKED_HOTLINKED_SRCSET_ATTR => srcset })
     end
 
