@@ -124,7 +124,10 @@ describe "hotlinked media blocking" do
       expect(post.cooked).not_to have_tag("img")
       expect(post.cooked).not_to have_tag("video")
       expect(post.cooked).not_to have_tag("audio")
-      expect(post.cooked).to have_tag(".blocked-hotlinked-placeholder", count: 4)
+      expect(post.cooked).to have_tag(
+        "a.blocked-hotlinked-placeholder[href^='http://example.com'][rel='noopener nofollow ugc']",
+        count: 4
+      )
     end
   end
 
