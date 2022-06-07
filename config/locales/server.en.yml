@@ -726,6 +726,9 @@ en:
   post:
     image_placeholder:
       broken: "This image is broken"
+      blocked_hotlinked_title: "Image hosted on another site. Click to open in a new tab."
+      blocked_hotlinked: "External Image"
+    media_placeholder:
       blocked_hotlinked_title: "Media hosted on another site. Click to open in a new tab."
       blocked_hotlinked: "External Media"
     hidden_bidi_character: "Bidirectional characters can change the order that text is rendered. This could be used to obscure malicious code."

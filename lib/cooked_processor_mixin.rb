@@ -269,9 +269,9 @@ module CookedProcessorMixin
     placeholder.name = "a"
     placeholder.set_attribute("href", src)
     placeholder.set_attribute("class", "blocked-hotlinked-placeholder")
-    placeholder.set_attribute("title", I18n.t("post.image_placeholder.blocked_hotlinked_title"))
+    placeholder.set_attribute("title", I18n.t("post.media_placeholder.blocked_hotlinked_title"))
     placeholder << "<svg class=\"fa d-icon d-icon-link svg-icon\" aria-hidden=\"true\"><use href=\"#link\"></use></svg>"
-    placeholder << "<span class=\"notice\">#{CGI.escapeHTML(I18n.t("post.image_placeholder.blocked_hotlinked"))}</span>"
+    placeholder << "<span class=\"notice\">#{CGI.escapeHTML(I18n.t("post.media_placeholder.blocked_hotlinked"))}</span>"
 
     el.replace(placeholder)
 
