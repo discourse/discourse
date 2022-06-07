@@ -2,6 +2,7 @@ import Component from "@ember/component";
 import { action, computed } from "@ember/object";
 import { scheduleOnce } from "@ember/runloop";
 import { emojiUnescape } from "discourse/lib/text";
+import { escapeExpression } from "discourse/lib/utilities";
 
 export default class UserStatusPicker extends Component {
   isFocused = false;
@@ -11,7 +12,8 @@ export default class UserStatusPicker extends Component {
 
   @computed("emoji")
   get emojiHtml() {
-    return emojiUnescape(`:${this.emoji}:`);
+    const emoji = escapeExpression(`:${this.emoji}:`);
+    return emojiUnescape(emoji);
   }
 
   @action
