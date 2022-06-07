@@ -220,6 +220,8 @@ class User < ActiveRecord::Base
   scope :suspended, -> { where('suspended_till IS NOT NULL AND suspended_till > ?', Time.zone.now) }
   scope :not_suspended, -> { where('suspended_till IS NULL OR suspended_till <= ?', Time.zone.now) }
   scope :activated, -> { where(active: true) }
+  scope :not_staged, -> { where(staged: false) }
+  scope :activated_not_suspended_not_staged, -> { self.activated.not_suspended.not_staged }
 
   scope :filter_by_username, ->(filter) do
     if filter.is_a?(Array)
