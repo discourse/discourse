@@ -4058,6 +4058,12 @@ en:
             bookmarked:
               content: "Bookmarked"
               title: "All bookmarked topics"
+            my_posts:
+              content: "My Posts"
+              title: "My posts"
+              draft_count:
+                one: "%{count} draft"
+                other: "%{count} drafts"
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:

@@ -108,6 +108,10 @@ export default {
         user.notification_channel_position
       );
 
+      bus.subscribe(`/user-drafts/${user.id}`, (data) => {
+        user.updateDraftProperties(data);
+      });
+
       bus.subscribe(`/do-not-disturb/${user.get("id")}`, (data) => {
         user.updateDoNotDisturbStatus(data.ends_at);
       });

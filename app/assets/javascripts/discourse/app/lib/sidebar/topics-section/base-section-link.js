@@ -2,9 +2,10 @@
  * Base class representing a sidebar topics section link interface.
  */
 export default class BaseSectionLink {
-  constructor({ topicTrackingState, currentUser } = {}) {
+  constructor({ topicTrackingState, currentUser, appEvents } = {}) {
     this.topicTrackingState = topicTrackingState;
     this.currentUser = currentUser;
+    this.appEvents = appEvents;
   }
 
   /**
