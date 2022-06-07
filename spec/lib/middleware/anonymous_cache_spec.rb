@@ -29,6 +29,7 @@ describe Middleware::AnonymousCache do
       it "is true if it has an invalid auth cookie" do
         cookie = create_auth_cookie(token: SecureRandom.hex, issued_at: 5.minutes.ago)
         cookie = swap_2_different_characters(cookie)
+        cookie.prepend("%a0%a1") # an invalid byte sequence
         expect(new_helper("HTTP_COOKIE" => "jack=1; _t=#{cookie}; jill=2").cacheable?).to eq(true)
       end
 
@@ -376,5 +377,4 @@ describe Middleware::AnonymousCache do
       expect(@status).to eq(403)
     end
   end
-
 end
