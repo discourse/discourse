@@ -42,6 +42,7 @@ class CookedPostProcessor
       remove_full_quote_on_direct_reply if new_post
       post_process_oneboxes
       post_process_images
+      add_blocked_hotlinked_media_placeholders
       post_process_quotes
       optimize_urls
       remove_user_ids
@@ -120,7 +121,7 @@ class CookedPostProcessor
 
   def extract_images
     # all images with a src attribute
-    @doc.css("img[src]") -
+    @doc.css("img[src], img[#{PrettyText::BLOCKED_HOTLINKED_SRC_ATTR}]") -
     # minus data images
     @doc.css("img[src^='data']") -
     # minus emojis
@@ -371,7 +372,7 @@ class CookedPostProcessor
 
   def process_hotlinked_image(img)
     @hotlinked_map ||= @post.post_hotlinked_media.preload(:upload).map { |r| [r.url, r] }.to_h
-    normalized_src = PostHotlinkedMedia.normalize_src(img["src"])
+    normalized_src = PostHotlinkedMedia.normalize_src(img["src"] || img[PrettyText::BLOCKED_HOTLINKED_SRC_ATTR])
     info = @hotlinked_map[normalized_src]
 
     still_an_image = true
@@ -384,9 +385,35 @@ class CookedPostProcessor
       still_an_image = false
     elsif info&.downloaded? && upload = info&.upload
       img["src"] = UrlHelper.cook_url(upload.url, secure: @with_secure_media)
+      img.delete(PrettyText::BLOCKED_HOTLINKED_SRC_ATTR)
     end
 
     still_an_image
+  end
+
+  def add_blocked_hotlinked_media_placeholders
+    @doc.css([
+      "[#{PrettyText::BLOCKED_HOTLINKED_SRC_ATTR}]",
+      "[#{PrettyText::BLOCKED_HOTLINKED_SRCSET_ATTR}]",
+    ].join(',')).each do |el|
+      src = el[PrettyText::BLOCKED_HOTLINKED_SRC_ATTR] ||
+        el[PrettyText::BLOCKED_HOTLINKED_SRCSET_ATTR]&.split(',')&.first&.split(' ')&.first
+
+      if el.name == "img"
+        add_blocked_hotlinked_image_placeholder!(el)
+        next
+      end
+
+      if ["video", "audio"].include?(el.parent.name)
+        el = el.parent
+      end
+
+      if el.parent.classes.include?("video-container")
+        el = el.parent
+      end
+
+      add_blocked_hotlinked_media_placeholder!(el, src)
+    end
   end
 
   def is_svg?(img)

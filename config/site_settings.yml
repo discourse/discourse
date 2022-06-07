@@ -1326,6 +1326,12 @@ files:
     type: list
     list_type: simple
     default: ""
+  block_hotlinked_media:
+    default: false
+  block_hotlinked_media_exceptions:
+    default: ""
+    type: list
+    regex: '\A((https?:\/\/.+)(\|https?:\/\/.+[|$])*)?\z'
   create_thumbnails: true
   clean_up_uploads: true
   clean_orphan_uploads_grace_period_hours: 48

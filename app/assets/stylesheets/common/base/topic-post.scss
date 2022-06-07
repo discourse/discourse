@@ -1309,14 +1309,25 @@ a.mention-group {
   }
 }
 
-.broken-image {
+.broken-image,
+.blocked-hotlinked-placeholder {
+  &:not(a) {
+    color: var(--primary-low-mid-or-secondary-high);
+  }
+
   display: inline-flex;
-  color: var(--primary-low-mid-or-secondary-high);
+  flex-direction: column;
   border: 1px solid var(--primary-low);
-  font-size: $font-up-5;
+  align-items: center;
+  justify-content: center;
 
   .d-icon {
     margin: 16px;
+    font-size: var(--font-up-5);
+  }
+
+  .notice {
+    margin: 0 0.5em 0.5em 0.5em;
   }
 }
 
