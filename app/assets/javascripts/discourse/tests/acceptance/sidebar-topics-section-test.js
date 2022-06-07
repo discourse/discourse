@@ -204,6 +204,79 @@ acceptance("Sidebar - Topics Section", function (needs) {
   );
 
   conditionalTest(
+    "clicking on my posts link",
+    !isLegacyEmber(),
+    async function (assert) {
+      await visit("/t/280");
+      await click(".sidebar-section-topics .sidebar-section-link-my-posts");
+
+      assert.strictEqual(
+        currentURL(),
+        `/u/${loggedInUser().username}/activity`,
+        "it should transistion to the user's activity url"
+      );
+
+      assert.strictEqual(
+        queryAll(".sidebar-section-topics .sidebar-section-link.active").length,
+        1,
+        "only one link is marked as active"
+      );
+
+      assert.ok(
+        exists(".sidebar-section-topics .sidebar-section-link-my-posts.active"),
+        "the my posts link is marked as active"
+      );
+
+      await visit(`/u/${loggedInUser().username}/activity/drafts`);
+
+      assert.notOk(
+        exists(".sidebar-section-topics .sidebar-section-link-my-posts.active"),
+        "the my posts link is not marked as active when user has no drafts and visiting the user activity drafts URL"
+      );
+    }
+  );
+
+  conditionalTest(
+    "clicking on my posts link when user has a draft",
+    !isLegacyEmber(),
+    async function (assert) {
+      await visit("/t/280");
+
+      publishToMessageBus(`/user-drafts/${loggedInUser().id}`, {
+        draft_count: 1,
+      });
+
+      await settled();
+
+      await click(".sidebar-section-topics .sidebar-section-link-my-posts");
+
+      assert.strictEqual(
+        currentURL(),
+        `/u/${loggedInUser().username}/activity/drafts`,
+        "it transistions to the user's activity drafts url"
+      );
+
+      assert.strictEqual(
+        queryAll(".sidebar-section-topics .sidebar-section-link.active").length,
+        1,
+        "only one link is marked as active"
+      );
+
+      assert.ok(
+        exists(".sidebar-section-topics .sidebar-section-link-my-posts.active"),
+        "the my posts link is marked as active"
+      );
+
+      await visit(`/u/${loggedInUser().username}/activity`);
+
+      assert.ok(
+        exists(".sidebar-section-topics .sidebar-section-link-my-posts.active"),
+        "the my posts link is marked as active"
+      );
+    }
+  );
+
+  conditionalTest(
     "visiting top route",
     !isLegacyEmber(),
     async function (assert) {

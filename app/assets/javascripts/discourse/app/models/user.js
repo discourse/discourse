@@ -1002,6 +1002,11 @@ const User = RestModel.extend({
     this.appEvents.trigger("do-not-disturb:changed", this.do_not_disturb_until);
   },
 
+  updateDraftProperties(properties) {
+    this.setProperties(properties);
+    this.appEvents.trigger("user-drafts:changed");
+  },
+
   isInDoNotDisturb() {
     return (
       this.do_not_disturb_until &&
