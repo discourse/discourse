@@ -5,7 +5,6 @@ class WizardController < ApplicationController
 
   before_action :ensure_admin
   before_action :ensure_wizard_enabled
-  # skip_before_action :check_xhr, :preload_json
 
   def index
     respond_to do |format|

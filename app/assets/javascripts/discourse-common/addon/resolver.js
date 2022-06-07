@@ -93,7 +93,7 @@ export function buildResolver(baseName) {
       if (split.length > 1) {
         const appBase = `${baseName}/${split[0]}s/`;
         const adminBase = "admin/" + split[0] + "s/";
-        const wizardBase = "admin/" + split[0] + "s/";
+        const wizardBase = "wizard/" + split[0] + "s/";
 
         // Allow render 'admin/templates/xyz' too
         split[1] = split[1].replace(".templates", "").replace("/templates", "");
