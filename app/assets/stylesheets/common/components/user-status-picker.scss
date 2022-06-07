@@ -10,10 +10,11 @@
     border: 1px solid var(--primary-medium);
 
     .btn-emoji {
-      margin-left: 3px;
-      margin-right: 3px;
+      margin: 3px;
+      width: 2.3em;
+      text-align: center;
 
-      .d-icon {
+      .svg-icon {
         color: var(--primary-high);
       }
     }
@@ -23,6 +24,7 @@
       margin-bottom: 0;
       border: none;
       outline: none;
+      padding-left: 0;
     }
   }
 
