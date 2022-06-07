@@ -1782,9 +1782,11 @@ da:
         sr_title: "Log ind med GitHub"
       discord:
         name: "Discord"
+        sr_title: "Log ind med Discord"
       second_factor_toggle:
         totp: "Brug en godkendelsesapp i stedet"
         backup_code: "Brug en backup kode i stedet"
+        security_key: "Brug en sikkerhedsnøgle i stedet"
     invites:
       accept_title: "Invitation"
       emoji: "konvolut humørikon"
@@ -1999,9 +2001,6 @@ da:
           confirm: Du har gemt et nyt emneudkast, som overskrives, hvis du opretter et sammenkædet emne.
         reply_as_new_group_message:
           label: Svar som ny gruppemeddelelse
-        reply_as_private_message:
-          label: Ny meddelelse
-          desc: Opret en ny privat besked
         reply_to_topic:
           label: Besvar emne
           desc: Besvar emnet, ikke noget specifikt indlæg
@@ -3566,6 +3565,8 @@ da:
           links:
             tracked:
               content: "Sporet"
+            my_posts:
+              content: "Mine indlæg"
   admin_js:
     type_to_filter: "skriv for at filtrere…"
     admin:

@@ -40,6 +40,7 @@ th:
       long_date_without_year_with_linebreak: "MMM D <br/>LT"
       long_date_with_year_with_linebreak: "MMM D, 'YY <br/>LT"
       wrap_ago: "%{date} วันก่อน"
+      wrap_on: "เมื่อ %{date}"
       tiny:
         half_a_minute: "< 1 นาที"
         less_than_x_seconds:
@@ -65,12 +66,24 @@ th:
         date_month: "MMM D"
         date_year: "MMM 'YY"
       medium:
+        less_than_x_minutes:
+          other: "ไม่ถึง %{count} นาที"
         x_minutes:
           other: "%{count} นาที"
         x_hours:
           other: "%{count} ชั่วโมง"
+        about_x_hours:
+          other: "ราว %{count} ชั่วโมง"
         x_days:
           other: "%{count} วัน"
+        x_months:
+          other: "%{count} เดือน"
+        about_x_years:
+          other: "ราว %{count} ปี"
+        over_x_years:
+          other: "กว่า %{count} ปี"
+        almost_x_years:
+          other: "เกือบ %{count} ปี"
         date_year: "MMM D, 'YY"
       medium_with_ago:
         x_minutes:
@@ -93,12 +106,19 @@ th:
       previous_month: "เดือนที่แล้ว"
       next_month: "เดือนถัดไป"
       placeholder: วัน
+      from_placeholder: "ตั้งแต่วันที่"
       to_placeholder: "ไปวันที่"
     share:
       topic_html: 'กระทู้: <span class="topic-title">%{topicTitle}</span>'
+      post: "โพสต์ #%{postNumber} โดย @%{username}"
       close: "ปิด"
+      twitter: "แชร์บนทวิตเตอร์"
+      facebook: "แชร์บนเฟสบุ๊ค"
+      email: "ส่งทางอีเมล"
+      url: "คัดลอกและแชร์ URL"
     action_codes:
       public_topic: "ทำให้กระทู้นี้เป็นสาธารณะ %{when} "
+      open_topic: "แปลงเป็นหัวเรื่องเมื่อ %{when}"
       private_topic: "ทำให้กระทู้นี้เป็นข้อความส่วนตัว"
       split_topic: "แบ่งกระทู้นี้เมื่อ %{when}"
       invited_user: "ได้เชิญ %{who} %{when}"
@@ -128,8 +148,13 @@ th:
         enabled: "ทำให้เป็นแบนเนอร์%{when} จะปรากฏที่ด้านบนสุดของทุกหน้าจนกว่าจะผู้ใช้งานจะกดลบ"
         disabled: "ลบแบนเนอร์นี้%{when} จะไม่ปรากฏที่ด้านบนของหน้าใดๆ"
       forwarded: "ส่งต่ออีเมลข้างต้นแล้ว"
+    topic_admin_menu: "การดำเนินการสำหรับหัวเรื่อง"
+    skip_to_main_content: "ข้ามไปยังเนื้อหา"
+    wizard_required: "ยินดีต้อนรับเข้าสู่ Discourse! เริ่มต้นด้วยการ<a href='%{url}' data-auto-route='true'>ไปที่เครื่องมือเปิดใช้งาน</a>✨"
     emails_are_disabled: "อีเมลขาออกทั้งหมดถูกปิดโดยผู้ดูแลระบบ จะไม่มีอีเมลแจ้งเตือนใดๆถูกส่งออกไป"
+    emails_are_disabled_non_staff: "การส่งอีเมลออกถูกปิดใช้งานสำหรับผู้ใช้ที่ไม่ใช่เจ้าหน้าที่"
     software_update_prompt:
+      message: "เราอัปเดตไซต์นี้เมื่อสักครู่ โปรด<span>รีเฟรช</span>หน้านี้ หรือคุณอาจเกิดเหตุการณ์ที่ไม่ตรงตามต้องการ"
       dismiss: "ซ่อน"
     themes:
       default_description: "ค่าเริ่มต้น"
@@ -1404,9 +1429,6 @@ th:
         edit: แก้ไข
         reply_to_post:
           desc: ตอบกลับโพสต์ที่เจาะจง
-        reply_as_private_message:
-          label: ข้อความใหม่
-          desc: สร้างข้อความส่วนตัวใหม่
         reply_to_topic:
           label: ตอบกลับกระทู้
         create_topic:
@@ -2415,6 +2437,10 @@ th:
           links:
             tracked:
               content: "ติดตาม"
+            my_posts:
+              content: "โพสต์ของฉัน"
+              draft_count:
+                other: "%{count}แบบร่าง"
   admin_js:
     type_to_filter: "พิมพ์เพื่อกรอง..."
     admin:

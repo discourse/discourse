@@ -1465,7 +1465,6 @@ ur:
     favicon: "آپ کی ویب سائٹ کیلئے ایک فَیوِکان، <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>http://en.wikipedia.org/wiki/Favicon</a> دیکھیے۔ ایک CDN پر صحیح کام کرنے کیلئے اِس کا png ہونا ضروری ہے۔ 32x32 کے سائیز پر دوبارہ تبدیل کر دی جائے گی۔ اگر خالی چھوڑ دیا گیا ہو، تو large_icon کا استعمال کیا جائے گا۔"
     apple_touch_icon: "ایپل ٹچ ڈیوائسوں کیلئے استعمال کیا جانے والا آئکن۔ خود بخود 180x180 کے سائیز پر دوبارہ تبدیل کر دیا جائے گا۔ اگر خالی چھوڑ دیا گیا ہو، تو large_icon کا استعمال کیا جائے گا۔"
     opengraph_image: "ڈِیفالٹ اَوپَن٘گراف تصویر، استعمال کی جاتی ہے جب صفحہ میں کوئی اور مناسب تصویر نہ ہو۔ اگر خالی چھوڑ دیا گیا ہو، تو large_icon کا استعمال کیا جائے گا۔"
-    twitter_summary_large_image: "ٹویٹر کارڈ 'خلاصہ بڑی تصویر' (کم از کم 280 چوڑائی میں، اور کم از کم 150 اونچائی میں ہونی چاہئیے)۔ اگر خالی چھوڑ دیا گیا ہو، تو opengraph_image کا استعمال کرتے ہوئے عام کارڈ مَیٹا ڈَیٹا بنایا جاتا ہے۔"
     notification_email: "تمام ضروری سِسٹم ای میلز بھیجنے کیلئے استعمال ہونے والا from: ای میل ایڈریس۔ یہاں درج کردہ ڈومین کا SPF ،DKIM اور ریورس PTR ریکارڈ، ای میل کے پہنچنے کیلئے، صحیح طریقے سے مقرر ہونا لازمی ہے۔"
     email_custom_headers: "اپنی مرضی کے ای میل ہیڈرز کی پائپ سے علیحدہ کردہ فہرست"
     email_subject: "سٹینڈرڈ ای میلز کیلئے اپنی مرضی کا موضوع فارمَیٹ۔ دیکھیے <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"

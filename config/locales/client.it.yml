@@ -2053,9 +2053,6 @@ it:
         reply_as_new_group_message:
           label: Rispondi come nuovo messaggio di gruppo
           desc: Crea un nuovo messaggio iniziando con gli stessi destinatari
-        reply_as_private_message:
-          label: Nuovo messaggio
-          desc: Crea un nuovo messaggio personale
         reply_to_topic:
           label: Rispondi all'argomento
           desc: Rispondi all'argomento, non a uno specifico messaggio
@@ -3700,6 +3697,12 @@ it:
             bookmarked:
               content: "Aggiunti ai segnalibri"
               title: "Tutti gli argomenti aggiunti ai segnalibri"
+            my_posts:
+              content: "I miei messaggi"
+              title: "I miei messaggi"
+              draft_count:
+                one: "%{count} bozza"
+                other: "%{count} bozze"
   admin_js:
     type_to_filter: "digita per filtrare..."
     admin:

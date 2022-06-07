@@ -1360,6 +1360,8 @@ te:
           links:
             tracked:
               content: "గమనించారు"
+            my_posts:
+              content: "నా టపాలు"
   admin_js:
     type_to_filter: "జల్లించుటకు రాయి..."
     admin:

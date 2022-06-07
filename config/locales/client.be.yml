@@ -846,9 +846,6 @@ be:
       composer_actions:
         reply: Адказаць
         edit: Рэдагаваць
-        reply_as_private_message:
-          label: Новае паведамленне
-          desc: Напісаць новае асабістае паведамленне
         create_topic:
           label: "Стварыць новую тэму"
       ignore: "ігнараваць"
@@ -1350,6 +1347,9 @@ be:
         topics:
           header_link_title: "дома"
           header_link_text: "Тэмы"
+          links:
+            my_posts:
+              content: "мае паведамленні"
   admin_js:
     admin:
       moderator: "Мадэратар"

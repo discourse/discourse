@@ -2814,6 +2814,8 @@ lv:
           links:
             tracked:
               content: "Sekots"
+            my_posts:
+              content: "Mani ieraksti"
   admin_js:
     type_to_filter: "ievadiet, lai atlasītu..."
     admin:

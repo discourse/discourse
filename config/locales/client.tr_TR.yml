@@ -2036,9 +2036,6 @@ tr_TR:
         reply_as_new_group_message:
           label: Yeni grup iletisi olarak yanıtla
           desc: Aynı alıcılarla başlayan yeni ileti oluştur
-        reply_as_private_message:
-          label: Yeni İleti
-          desc: Kişisel bir ileti oluştur
         reply_to_topic:
           label: Konuyu yanıtla
           desc: Gönderiyi değil, konuyu yanıtla
@@ -3674,6 +3671,8 @@ tr_TR:
           links:
             tracked:
               content: "Takipte"
+            my_posts:
+              content: "Gönderilerim"
   admin_js:
     type_to_filter: "filtrelemek için yaz..."
     admin:

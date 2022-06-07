@@ -1660,8 +1660,6 @@ ro:
         reply_as_new_topic:
           label: Răspunde cu link către subiect
           desc: Creați o discuție nouă legată de această discuție
-        reply_as_private_message:
-          label: Mesaj nou
         reply_to_topic:
           label: Răspunde la subiect
           desc: Răspundeți subiectului, nu unei anumite postări
@@ -2794,6 +2792,8 @@ ro:
           links:
             tracked:
               content: "Urmărite"
+            my_posts:
+              content: "Postările mele"
   admin_js:
     type_to_filter: "tastează pentru a filtra..."
     admin:

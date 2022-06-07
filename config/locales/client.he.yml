@@ -2247,9 +2247,6 @@ he:
         reply_as_new_group_message:
           label: להגיב בהודעה קבוצתית חדשה
           desc: יצירת הודעה חדשה שתיפתח עם אותם נמענים
-        reply_as_private_message:
-          label: הודעה חדשה
-          desc: צור הודעה פרטית חדשה
         reply_to_topic:
           label: הגב לנושא
           desc: הגב לנושא, לא פוסט ספציפי
@@ -4074,6 +4071,14 @@ he:
             bookmarked:
               content: "מסומן"
               title: "כל הנושאים שסומנו"
+            my_posts:
+              content: "הפוסטים שלי"
+              title: "הפוסטים שלי"
+              draft_count:
+                one: "טיוטה %{count}"
+                two: "%{count} טיוטות"
+                many: "%{count} טיוטות"
+                other: "%{count} טיוטות"
   admin_js:
     type_to_filter: "הקלידו לסינון..."
     admin:

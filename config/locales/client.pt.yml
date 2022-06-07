@@ -1955,9 +1955,6 @@ pt:
           confirm: Você tem um novo rascunho de tópico guardado que será substituído se criar um tópico ligado.
         reply_as_new_group_message:
           label: Responder como uma nova mensagem de grupo
-        reply_as_private_message:
-          label: Nova mensagem
-          desc: Crie uma nova mensagem privada
         reply_to_topic:
           label: Responder ao tópico
           desc: Responder ao tópico, não a uma publicação especifica
@@ -3434,6 +3431,8 @@ pt:
           links:
             tracked:
               content: "Seguido"
+            my_posts:
+              content: "As Minhas publicações"
   admin_js:
     type_to_filter: "digite para filtrar..."
     admin:

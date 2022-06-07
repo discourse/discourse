@@ -1566,7 +1566,6 @@ uk:
     favicon: "Фавікон для вашого сайта, див. <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. Для правильної роботи із CDN він повинен бути png. Буде змінений до 32x32. Якщо залишити порожнім, буде використовуватися large_icon."
     apple_touch_icon: "Значок, який використовується для сенсорних пристроїв Apple. Буде автоматично змінено на розмір до 180x180. Якщо залишити порожнім, буде використовуватися large_icon."
     opengraph_image: "Зображення opengraph за замовчуванням, використовується, коли на сторінці немає іншого відповідного зображення. Якщо залишити порожнім, буде використовуватися large_icon"
-    twitter_summary_large_image: "Twitter card 'summary large image' (повинно бути не менше 280 в ширину і не менше 150 у висоту). Якщо залишити порожнім, метадані звичайної картинки генеруються з використанням opengraph_image."
     notification_email: "Відправник: E-mail використовується при відправленні всіх системних листів. Домен, вказаний тут повинен мати правильно сконфігуровані SPF, DKIM і reverse PTR записи, для успішного відправлення."
     email_custom_headers: "Список додаткових заголовків у листах електронної пошти, розділених вертикальною рискою"
     email_subject: "Налаштовуваний формат теми для стандартних листів. Дивитися: <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"

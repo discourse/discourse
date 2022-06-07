@@ -1748,9 +1748,6 @@ bs_BA:
         reply_as_new_topic:
           label: Odgovori kao linkana tema
           desc: Kreiraj novu temu linkanu na ovu temu
-        reply_as_private_message:
-          label: Nova poruka
-          desc: Kreiraj novu personalnu poruku
         reply_to_topic:
           label: Odgovori na temu
           desc: Odgovori na temu, ne ciljajući na neku posebnu objavu
@@ -3078,6 +3075,8 @@ bs_BA:
           links:
             tracked:
               content: "Praćeno"
+            my_posts:
+              content: "Moje objave"
   admin_js:
     type_to_filter: "kucaj da sortiraš..."
     admin:
