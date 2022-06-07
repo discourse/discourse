@@ -2,9 +2,9 @@
 
 describe Onebox::Engine::StandardEmbed do
   let(:host_class) do
-    Class.new do 
+    Class.new do
       include Onebox::Engine::StandardEmbed
-      
+
       def options
         {}
       end
@@ -19,48 +19,48 @@ describe Onebox::Engine::StandardEmbed do
   describe '#raw' do
     it 'does not set title_attr from opengraph data' do
       Onebox::Helpers.stubs(fetch_html_doc: nil)
-      Onebox::OpenGraph.any_instance.stubs(:data).returns({description: "description", title_attr: "should not be returned"})
+      Onebox::OpenGraph.any_instance.stubs(:data).returns({ description: "description", title_attr: "should not be returned" })
       Onebox::Oembed.any_instance.stubs(:data).returns({})
 
-      expect(instance.raw).to eq({description: "description"})
+      expect(instance.raw).to eq({ description: "description" })
     end
 
     it 'sets twitter data' do
-      html_doc = mocked_html_doc(twitter_data: {"name" => "twitter:url", "content" => "cool.url"})
+      html_doc = mocked_html_doc(twitter_data: { "name" => "twitter:url", "content" => "cool.url" })
       Onebox::Helpers.stubs(fetch_html_doc: html_doc)
 
-      expect(instance.raw).to eq({url: "cool.url"})
+      expect(instance.raw).to eq({ url: "cool.url" })
     end
 
     it 'does not override data with twitter data' do
-      html_doc = mocked_html_doc(twitter_data: {"name" => "twitter:title", "content" => "i do not want to override"})
-      Onebox::OpenGraph.any_instance.stubs(:data).returns({description: "description", title: "do not override me"})
+      html_doc = mocked_html_doc(twitter_data: { "name" => "twitter:title", "content" => "i do not want to override" })
+      Onebox::OpenGraph.any_instance.stubs(:data).returns({ description: "description", title: "do not override me" })
       Onebox::Helpers.stubs(fetch_html_doc: html_doc)
 
-      expect(instance.raw).to eq({description: "description", title: "do not override me"})
+      expect(instance.raw).to eq({ description: "description", title: "do not override me" })
     end
 
     it 'does not override data with oembed data' do
-      Onebox::Oembed.any_instance.stubs(:data).returns({title: "i do not want to override"})
-      html_doc = mocked_html_doc(twitter_data: {"name" => "twitter:title", "content" => "do not override me"})
+      Onebox::Oembed.any_instance.stubs(:data).returns({ title: "i do not want to override" })
+      html_doc = mocked_html_doc(twitter_data: { "name" => "twitter:title", "content" => "do not override me" })
       Onebox::Helpers.stubs(fetch_html_doc: html_doc)
 
-      expect(instance.raw).to eq({title: "do not override me"})
+      expect(instance.raw).to eq({ title: "do not override me" })
     end
 
     it 'sets oembed data' do
       Onebox::Helpers.stubs(fetch_html_doc: nil)
-      Onebox::Oembed.any_instance.stubs(:data).returns({description: "description"})
+      Onebox::Oembed.any_instance.stubs(:data).returns({ description: "description" })
 
-      expect(instance.raw).to eq({description: "description"})
+      expect(instance.raw).to eq({ description: "description" })
     end
 
     it 'does not override data with json_ld data' do
       Onebox::Helpers.stubs(fetch_html_doc: nil)
-      Onebox::JsonLd.any_instance.stubs(:data).returns({title: "i do not want to override"})
-      Onebox::Oembed.any_instance.stubs(:data).returns({title: "do not override me"})
+      Onebox::JsonLd.any_instance.stubs(:data).returns({ title: "i do not want to override" })
+      Onebox::Oembed.any_instance.stubs(:data).returns({ title: "do not override me" })
 
-      expect(instance.raw).to eq({title: "do not override me"})
+      expect(instance.raw).to eq({ title: "do not override me" })
     end
   end
 

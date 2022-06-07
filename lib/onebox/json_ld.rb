@@ -15,7 +15,7 @@ module Onebox
       return {} if Onebox::Helpers::blank?(doc)
       json_ld = doc.search('script[type="application/ld+json"]')
       return {} if Onebox::Helpers::blank?(json_ld.text)
-      
+
       json_ld_items = JSON[json_ld.text]
 
       return {} unless json_ld_items["@type"] == MOVIE_JSON_LD_TYPE

@@ -9,15 +9,15 @@ module Onebox
     def name
       @json_ld_data['name']
     end
-    
+
     def image
       @json_ld_data['image']
     end
-    
+
     def description
       @json_ld_data['description']
     end
-    
+
     def rating
       @json_ld_data.dig('aggregateRating', 'ratingValue')
     end
