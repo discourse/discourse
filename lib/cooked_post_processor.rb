@@ -396,9 +396,6 @@ class CookedPostProcessor
       "[#{PrettyText::BLOCKED_HOTLINKED_SRC_ATTR}]",
       "[#{PrettyText::BLOCKED_HOTLINKED_SRCSET_ATTR}]",
     ].join(',')).each do |el|
-      src = el[PrettyText::BLOCKED_HOTLINKED_SRC_ATTR] ||
-        el[PrettyText::BLOCKED_HOTLINKED_SRCSET_ATTR]&.split(',')&.first&.split(' ')&.first
-
       if el.name == "img"
         add_blocked_hotlinked_image_placeholder!(el)
         next
@@ -411,6 +408,9 @@ class CookedPostProcessor
       if el.parent.classes.include?("video-container")
         el = el.parent
       end
+
+      src = el[PrettyText::BLOCKED_HOTLINKED_SRC_ATTR] ||
+        el[PrettyText::BLOCKED_HOTLINKED_SRCSET_ATTR]&.split(',')&.first&.split(' ')&.first
 
       add_blocked_hotlinked_media_placeholder!(el, src)
     end
