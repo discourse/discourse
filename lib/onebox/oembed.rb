@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Onebox
-  class Oembed < Normalizer
+  class Oembed < OpenGraph
     def initialize(response)
       @data = Onebox::Helpers.symbolize_keys(::MultiJson.load(response))
 
