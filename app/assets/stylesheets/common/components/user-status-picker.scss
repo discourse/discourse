@@ -27,6 +27,7 @@
   }
 
   .user-status-picker.focused {
-    border: 2px solid var(--tertiary);
+    border: 1px solid var(--tertiary);
+    outline: 1px solid var(--tertiary);
   }
 }
