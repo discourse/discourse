@@ -14,7 +14,9 @@
     {{/tap-tile}}
   {{/tap-tile-grid}}
 
-  <a href {{ action navigateToNotificationSchedule }}>
-    {{i18n "do_not_disturb.set_schedule"}}
-  </a>
+  {{d-button
+    action=(action "navigateToNotificationSchedule")
+    label="do_not_disturb.set_schedule"
+  }}
+
 {{/d-modal-body}}
