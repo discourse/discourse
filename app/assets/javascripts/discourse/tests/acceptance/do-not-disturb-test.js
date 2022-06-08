@@ -5,7 +5,7 @@ import {
   queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, visit } from "@ember/test-helpers";
+import { click, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 
 acceptance("Do not disturb", function (needs) {
@@ -36,6 +36,33 @@ acceptance("Do not disturb", function (needs) {
     assert.ok(tiles.length === 4, "There are 4 duration choices");
 
     await click(tiles[0]);
+
+    assert.ok(
+      query(".do-not-disturb-modal").style.display === "none",
+      "modal is hidden"
+    );
+
+    assert.ok(
+      exists(".header-dropdown-toggle .do-not-disturb-background"),
+      "moon icon is present in header"
+    );
+  });
+
+  test("Can be invoked via keyboard", async function (assert) {
+    updateCurrentUser({ do_not_disturb_until: null });
+
+    await visit("/");
+    await click(".header-dropdown-toggle.current-user");
+    await click(".menu-links-row .user-preferences-link");
+
+    await click(".do-not-disturb");
+
+    assert.ok(exists(".do-not-disturb-modal"), "modal to choose time appears");
+
+    let tiles = queryAll(".do-not-disturb-tile");
+    assert.ok(tiles.length === 4, "There are 4 duration choices");
+
+    await triggerKeyEvent(".do-not-disturb-tile:nth-child(1)", "keydown", 13);
 
     assert.ok(
       query(".do-not-disturb-modal").style.display === "none",
