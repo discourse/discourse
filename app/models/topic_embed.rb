@@ -3,7 +3,7 @@
 class TopicEmbed < ActiveRecord::Base
   include Trashable
 
-  belongs_to :topic
+  belongs_to :topic, optional: true
   belongs_to :post
   validates_presence_of :embed_url
   validates_uniqueness_of :embed_url

@@ -233,7 +233,7 @@ class Topic < ActiveRecord::Base
   has_one :published_page
 
   belongs_to :user, optional: true
-  belongs_to :last_poster, class_name: 'User', foreign_key: :last_post_user_id
+  belongs_to :last_poster, class_name: 'User', foreign_key: :last_post_user_id, optional: true
   belongs_to :featured_user1, class_name: 'User', foreign_key: :featured_user1_id, optional: true
   belongs_to :featured_user2, class_name: 'User', foreign_key: :featured_user2_id, optional: true
   belongs_to :featured_user3, class_name: 'User', foreign_key: :featured_user3_id, optional: true

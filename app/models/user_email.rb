@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class UserEmail < ActiveRecord::Base
-  belongs_to :user
+  belongs_to :user, optional: true
 
   attr_accessor :skip_validate_email
   attr_accessor :skip_validate_unique_email
