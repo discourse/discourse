@@ -15,9 +15,15 @@ module Onebox
       extracted_json = extract_json_from(doc)
       parsed_json = parse_json(extracted_json)
 
-      return {} unless parsed_json["@type"] == MOVIE_JSON_LD_TYPE
+      extracted =
+        case parsed_json["@type"]
+        when MOVIE_JSON_LD_TYPE
+          Onebox::Movie.new(parsed_json)
+        else
+          {}
+        end
 
-      Onebox::Movie.new(parsed_json).to_h
+      extracted.to_h
     end
 
     def extract_json_from(doc)
