@@ -2,7 +2,7 @@
 
 class TopTopic < ActiveRecord::Base
 
-  belongs_to :topic
+  belongs_to :topic, optional: true
 
   # The top topics we want to refresh often
   def self.refresh_daily!

@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class GroupRequest < ActiveRecord::Base
-  belongs_to :group
-  belongs_to :user
+  belongs_to :group, optional: true
+  belongs_to :user, optional: true
 end
 
 # == Schema Information

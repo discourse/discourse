@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 class SkippedEmailLog < ActiveRecord::Base
-  belongs_to :email_log
+  belongs_to :email_log, optional: true
 
-  belongs_to :user
-  belongs_to :post
+  belongs_to :user, optional: true
+  belongs_to :post, optional: true
   has_one :topic, through: :post
 
   validates :email_type, :to_address, :reason_type, presence: true

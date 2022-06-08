@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class UserAssociatedAccount < ActiveRecord::Base
-  belongs_to :user
+  belongs_to :user, optional: true
 
   def self.cleanup!
     # This happens when a user starts the registration flow, but doesn't complete it

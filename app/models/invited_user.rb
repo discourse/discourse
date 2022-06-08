@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class InvitedUser < ActiveRecord::Base
-  belongs_to :user
+  belongs_to :user, optional: true
   belongs_to :invite, -> { unscope(where: :deleted_at) }
 
   validates_presence_of :invite_id

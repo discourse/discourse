@@ -26,16 +26,17 @@ class Category < ActiveRecord::Base
   register_custom_field_type(REQUIRE_REPLY_APPROVAL, :boolean)
   register_custom_field_type(NUM_AUTO_BUMP_DAILY, :integer)
 
-  belongs_to :topic
+  belongs_to :topic, optional: true
   belongs_to :topic_only_relative_url,
               -> { select "id, title, slug" },
               class_name: "Topic",
-              foreign_key: "topic_id"
+              foreign_key: "topic_id",
+              optional: true
 
   belongs_to :user
-  belongs_to :latest_post, class_name: "Post"
-  belongs_to :uploaded_logo, class_name: "Upload"
-  belongs_to :uploaded_background, class_name: "Upload"
+  belongs_to :latest_post, class_name: "Post", optional: true
+  belongs_to :uploaded_logo, class_name: "Upload", optional: true
+  belongs_to :uploaded_background, class_name: "Upload", optional: true
 
   has_many :topics
   has_many :category_users
@@ -104,7 +105,7 @@ class Category < ActiveRecord::Base
 
   after_save_commit :index_search
 
-  belongs_to :parent_category, class_name: 'Category'
+  belongs_to :parent_category, class_name: 'Category', optional: true
   has_many :subcategories, class_name: 'Category', foreign_key: 'parent_category_id'
 
   has_many :category_tags, dependent: :destroy
@@ -114,7 +115,7 @@ class Category < ActiveRecord::Base
 
   has_many :category_required_tag_groups, -> { order(order: :asc) }, dependent: :destroy
 
-  belongs_to :reviewable_by_group, class_name: 'Group'
+  belongs_to :reviewable_by_group, class_name: 'Group', optional: true
 
   scope :latest, -> { order('topic_count DESC') }
 

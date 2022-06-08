@@ -12,7 +12,7 @@ class Upload < ActiveRecord::Base
   MAX_IDENTIFY_SECONDS = 5
 
   belongs_to :user
-  belongs_to :access_control_post, class_name: 'Post'
+  belongs_to :access_control_post, class_name: 'Post', optional: true
 
   # when we access this post we don't care if the post
   # is deleted

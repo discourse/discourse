@@ -2,8 +2,8 @@
 
 class UserExport < ActiveRecord::Base
   belongs_to :user
-  belongs_to :upload, dependent: :destroy
-  belongs_to :topic, dependent: :destroy
+  belongs_to :upload, dependent: :destroy, optional: true
+  belongs_to :topic, dependent: :destroy, optional: true
 
   has_many :upload_references, as: :target, dependent: :destroy
 

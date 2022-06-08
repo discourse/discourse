@@ -17,9 +17,9 @@ class EmailLog < ActiveRecord::Base
   # cf. https://www.iana.org/assignments/smtp-enhanced-status-codes/smtp-enhanced-status-codes.xhtml
   SMTP_ERROR_CODE_REGEXP = Regexp.new(/\d\.\d\.\d+|\d{3}/).freeze
 
-  belongs_to :user
-  belongs_to :post
-  belongs_to :smtp_group, class_name: 'Group'
+  belongs_to :user, optional: true
+  belongs_to :post, optional: true
+  belongs_to :smtp_group, class_name: 'Group', optional: true
 
   validates :email_type, :to_address, presence: true
 

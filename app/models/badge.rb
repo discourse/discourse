@@ -105,7 +105,7 @@ class Badge < ActiveRecord::Base
 
   belongs_to :badge_type
   belongs_to :badge_grouping
-  belongs_to :image_upload, class_name: 'Upload'
+  belongs_to :image_upload, class_name: 'Upload', optional: true
 
   has_many :user_badges, dependent: :destroy
   has_many :upload_references, as: :target, dependent: :destroy

@@ -31,10 +31,10 @@ class Post < ActiveRecord::Base
   rate_limit
   rate_limit :limit_posts_per_day
 
-  belongs_to :user
+  belongs_to :user, optional: true
   belongs_to :topic
 
-  belongs_to :reply_to_user, class_name: "User"
+  belongs_to :reply_to_user, class_name: "User", optional: true
 
   has_many :post_replies
   has_many :replies, through: :post_replies
@@ -58,7 +58,7 @@ class Post < ActiveRecord::Base
 
   has_many :user_actions, foreign_key: :target_post_id
 
-  belongs_to :image_upload, class_name: "Upload"
+  belongs_to :image_upload, class_name: "Upload", optional: true
 
   has_many :post_hotlinked_media, dependent: :destroy, class_name: "PostHotlinkedMedia"
 

@@ -7,7 +7,7 @@ module Trashable
     default_scope { where(deleted_at: nil) }
     scope :with_deleted, -> { unscope(where: :deleted_at) }
 
-    belongs_to :deleted_by, class_name: 'User'
+    belongs_to :deleted_by, class_name: 'User', optional: true
   end
 
   def trashed?

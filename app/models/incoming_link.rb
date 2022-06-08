@@ -2,8 +2,8 @@
 
 class IncomingLink < ActiveRecord::Base
   belongs_to :post
-  belongs_to :user
-  belongs_to :incoming_referer
+  belongs_to :user, optional: true
+  belongs_to :incoming_referer, optional: true
 
   validate :referer_valid
   validates :post_id, presence: true

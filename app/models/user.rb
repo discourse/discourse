@@ -98,14 +98,14 @@ class User < ActiveRecord::Base
 
   has_one :profile_background_upload, through: :user_profile
   has_one :card_background_upload, through: :user_profile
-  belongs_to :approved_by, class_name: 'User'
-  belongs_to :primary_group, class_name: 'Group'
-  belongs_to :flair_group, class_name: 'Group'
+  belongs_to :approved_by, class_name: 'User', optional: true
+  belongs_to :primary_group, class_name: 'Group', optional: true
+  belongs_to :flair_group, class_name: 'Group', optional: true
 
   has_many :muted_users, through: :muted_user_records
   has_many :ignored_users, through: :ignored_user_records
 
-  belongs_to :uploaded_avatar, class_name: 'Upload'
+  belongs_to :uploaded_avatar, class_name: 'Upload', optional: true
 
   delegate :last_sent_email_address, to: :email_logs
 

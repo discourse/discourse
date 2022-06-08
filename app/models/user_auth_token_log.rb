@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class UserAuthTokenLog < ActiveRecord::Base
-  belongs_to :user
+  belongs_to :user, optional: true
 end
 
 # == Schema Information

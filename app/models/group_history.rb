@@ -3,7 +3,7 @@
 class GroupHistory < ActiveRecord::Base
   belongs_to :group
   belongs_to :acting_user, class_name: 'User'
-  belongs_to :target_user, class_name: 'User'
+  belongs_to :target_user, class_name: 'User', optional: true
 
   validates :acting_user_id, presence: true
   validates :group_id, presence: true

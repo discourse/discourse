@@ -2,7 +2,7 @@
 
 class PostHotlinkedMedia < ActiveRecord::Base
   belongs_to :post
-  belongs_to :upload
+  belongs_to :upload, optional: true
   enum status: {
     downloaded: "downloaded",
     too_large: "too_large",

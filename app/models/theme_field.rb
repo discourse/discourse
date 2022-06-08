@@ -2,7 +2,7 @@
 
 class ThemeField < ActiveRecord::Base
 
-  belongs_to :upload
+  belongs_to :upload, optional: true
   has_one :javascript_cache, dependent: :destroy
   has_one :upload_reference, as: :target, dependent: :destroy
 

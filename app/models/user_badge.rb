@@ -4,8 +4,8 @@ class UserBadge < ActiveRecord::Base
   belongs_to :badge
   belongs_to :user
   belongs_to :granted_by, class_name: 'User'
-  belongs_to :notification, dependent: :destroy
-  belongs_to :post
+  belongs_to :notification, dependent: :destroy, optional: true
+  belongs_to :post, optional: true
 
   BOOLEAN_ATTRIBUTES = %w(is_favorite)
 

@@ -169,7 +169,7 @@ class ColorScheme < ActiveRecord::Base
   after_save_commit :publish_discourse_stylesheet, unless: :skip_publish
   after_save_commit :dump_caches
   after_destroy :dump_caches
-  belongs_to :theme
+  belongs_to :theme, optional: true
 
   validates_associated :color_scheme_colors
 

@@ -5,7 +5,7 @@ require 'url_helper'
 
 class TopicLinkClick < ActiveRecord::Base
   belongs_to :topic_link, counter_cache: :clicks
-  belongs_to :user
+  belongs_to :user, optional: true
 
   validates_presence_of :topic_link_id
 

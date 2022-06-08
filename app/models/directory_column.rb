@@ -28,7 +28,7 @@ class DirectoryColumn < ActiveRecord::Base
     @@plugin_directory_columns
   end
 
-  belongs_to :user_field
+  belongs_to :user_field, optional: true
 
   def self.clear_plugin_directory_columns
     @@plugin_directory_columns = []

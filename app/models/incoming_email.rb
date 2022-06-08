@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 class IncomingEmail < ActiveRecord::Base
-  belongs_to :user
-  belongs_to :topic
-  belongs_to :post
-  belongs_to :group, foreign_key: :imap_group_id, class_name: 'Group'
+  belongs_to :user, optional: true
+  belongs_to :topic, optional: true
+  belongs_to :post, optional: true
+  belongs_to :group, foreign_key: :imap_group_id, class_name: 'Group', optional: true
 
   validates :created_via, presence: true
 

@@ -2,8 +2,8 @@
 
 class UserAction < ActiveRecord::Base
   belongs_to :user
-  belongs_to :target_post, class_name: "Post"
-  belongs_to :target_topic, class_name: "Topic"
+  belongs_to :target_post, class_name: "Post", optional: true
+  belongs_to :target_topic, class_name: "Topic", optional: true
 
   validates_presence_of :action_type
   validates_presence_of :user_id

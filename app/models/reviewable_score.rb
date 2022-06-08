@@ -3,8 +3,8 @@
 class ReviewableScore < ActiveRecord::Base
   belongs_to :reviewable
   belongs_to :user
-  belongs_to :reviewed_by, class_name: 'User'
-  belongs_to :meta_topic, class_name: 'Topic'
+  belongs_to :reviewed_by, class_name: 'User', optional: true
+  belongs_to :meta_topic, class_name: 'Topic', optional: true
 
   # To keep things simple the types correspond to `PostActionType` for backwards
   # compatibility, but we can add extra reasons for scores.

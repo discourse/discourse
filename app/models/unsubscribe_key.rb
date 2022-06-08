@@ -2,8 +2,8 @@
 
 class UnsubscribeKey < ActiveRecord::Base
   belongs_to :user
-  belongs_to :post
-  belongs_to :topic
+  belongs_to :post, optional: true
+  belongs_to :topic, optional: true
 
   before_create :generate_random_key
 

@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class PostReply < ActiveRecord::Base
-  belongs_to :post
-  belongs_to :reply, foreign_key: :reply_post_id, class_name: 'Post'
+  belongs_to :post, optional: true
+  belongs_to :reply, foreign_key: :reply_post_id, class_name: 'Post', optional: true
 
   validates_uniqueness_of :reply_post_id, scope: :post_id
   validate :ensure_same_topic

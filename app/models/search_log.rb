@@ -3,7 +3,7 @@
 class SearchLog < ActiveRecord::Base
   validates_presence_of :term
 
-  belongs_to :user
+  belongs_to :user, optional: true
 
   attr_reader :ctr
 

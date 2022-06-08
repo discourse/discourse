@@ -2,10 +2,10 @@
 
 class UserProfile < ActiveRecord::Base
   belongs_to :user, inverse_of: :user_profile
-  belongs_to :card_background_upload, class_name: "Upload"
-  belongs_to :profile_background_upload, class_name: "Upload"
-  belongs_to :granted_title_badge, class_name: "Badge"
-  belongs_to :featured_topic, class_name: 'Topic'
+  belongs_to :card_background_upload, class_name: "Upload", optional: true
+  belongs_to :profile_background_upload, class_name: "Upload", optional: true
+  belongs_to :granted_title_badge, class_name: "Badge", optional: true
+  belongs_to :featured_topic, class_name: 'Topic', optional: true
   has_many :upload_references, as: :target, dependent: :destroy
 
   validates :bio_raw, length: { maximum: 3000 }, watched_words: true

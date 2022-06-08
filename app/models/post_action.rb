@@ -7,8 +7,8 @@ class PostAction < ActiveRecord::Base
   belongs_to :post
   belongs_to :user
   belongs_to :post_action_type
-  belongs_to :related_post, class_name: 'Post'
-  belongs_to :target_user, class_name: 'User'
+  belongs_to :related_post, class_name: 'Post', optional: true
+  belongs_to :target_user, class_name: 'User', optional: true
 
   rate_limit :post_action_rate_limiter
 

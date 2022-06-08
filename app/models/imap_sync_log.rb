@@ -3,7 +3,7 @@
 class ImapSyncLog < ActiveRecord::Base
   RETAIN_LOGS_DAYS ||= 5
 
-  belongs_to :group
+  belongs_to :group, optional: true
 
   def self.levels
     @levels ||= Enum.new(:debug, :info, :warn, :error)

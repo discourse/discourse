@@ -2,7 +2,7 @@
 
 class Notification < ActiveRecord::Base
   belongs_to :user
-  belongs_to :topic
+  belongs_to :topic, optional: true
 
   has_one :shelved_notification
 

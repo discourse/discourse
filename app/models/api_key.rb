@@ -4,8 +4,8 @@ class ApiKey < ActiveRecord::Base
   class KeyAccessError < StandardError; end
 
   has_many :api_key_scopes
-  belongs_to :user
-  belongs_to :created_by, class_name: 'User'
+  belongs_to :user, optional: true
+  belongs_to :created_by, class_name: 'User', optional: true
 
   scope :active, -> { where("revoked_at IS NULL") }
   scope :revoked, -> { where("revoked_at IS NOT NULL") }

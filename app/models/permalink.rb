@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 class Permalink < ActiveRecord::Base
-  belongs_to :topic
-  belongs_to :post
-  belongs_to :category
-  belongs_to :tag
+  belongs_to :topic, optional: true
+  belongs_to :post, optional: true
+  belongs_to :category, optional: true
+  belongs_to :tag, optional: true
 
   before_validation :normalize_url
 

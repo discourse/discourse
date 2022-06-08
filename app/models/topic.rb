@@ -204,7 +204,7 @@ class Topic < ActiveRecord::Base
     self.featured_link = self.featured_link.strip.presence if self.featured_link
   end
 
-  belongs_to :category
+  belongs_to :category, optional: true
   has_many :category_users, through: :category
   has_many :posts
 
@@ -232,12 +232,12 @@ class Topic < ActiveRecord::Base
   has_one :shared_draft, dependent: :destroy
   has_one :published_page
 
-  belongs_to :user
+  belongs_to :user, optional: true
   belongs_to :last_poster, class_name: 'User', foreign_key: :last_post_user_id
-  belongs_to :featured_user1, class_name: 'User', foreign_key: :featured_user1_id
-  belongs_to :featured_user2, class_name: 'User', foreign_key: :featured_user2_id
-  belongs_to :featured_user3, class_name: 'User', foreign_key: :featured_user3_id
-  belongs_to :featured_user4, class_name: 'User', foreign_key: :featured_user4_id
+  belongs_to :featured_user1, class_name: 'User', foreign_key: :featured_user1_id, optional: true
+  belongs_to :featured_user2, class_name: 'User', foreign_key: :featured_user2_id, optional: true
+  belongs_to :featured_user3, class_name: 'User', foreign_key: :featured_user3_id, optional: true
+  belongs_to :featured_user4, class_name: 'User', foreign_key: :featured_user4_id, optional: true
 
   has_many :topic_users
   has_many :dismissed_topic_users
@@ -254,7 +254,7 @@ class Topic < ActiveRecord::Base
   has_one :topic_embed, dependent: :destroy
   has_one :linked_topic, dependent: :destroy
 
-  belongs_to :image_upload, class_name: 'Upload'
+  belongs_to :image_upload, class_name: 'Upload', optional: true
   has_many :topic_thumbnails, through: :image_upload
 
   # When we want to temporarily attach some data to a forum topic (usually before serialization)

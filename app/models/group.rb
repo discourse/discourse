@@ -35,11 +35,11 @@ class Group < ActiveRecord::Base
   has_many :group_tag_notification_defaults, dependent: :destroy
   has_many :associated_groups, through: :group_associated_groups, dependent: :destroy
 
-  belongs_to :flair_upload, class_name: 'Upload'
+  belongs_to :flair_upload, class_name: 'Upload', optional: true
   has_many :upload_references, as: :target, dependent: :destroy
 
-  belongs_to :smtp_updated_by, class_name: 'User'
-  belongs_to :imap_updated_by, class_name: 'User'
+  belongs_to :smtp_updated_by, class_name: 'User', optional: true
+  belongs_to :imap_updated_by, class_name: 'User', optional: true
 
   has_and_belongs_to_many :web_hooks
 

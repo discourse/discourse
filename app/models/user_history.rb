@@ -4,12 +4,12 @@
 # like deleting users, changing site settings, dismissing notifications, etc.
 # Use other classes, like StaffActionLogger, to log records to this table.
 class UserHistory < ActiveRecord::Base
-  belongs_to :acting_user, class_name: 'User'
-  belongs_to :target_user, class_name: 'User'
+  belongs_to :acting_user, class_name: 'User', optional: true
+  belongs_to :target_user, class_name: 'User', optional: true
 
-  belongs_to :post
-  belongs_to :topic
-  belongs_to :category
+  belongs_to :post, optional: true
+  belongs_to :topic, optional: true
+  belongs_to :category, optional: true
 
   validates_presence_of :action
 

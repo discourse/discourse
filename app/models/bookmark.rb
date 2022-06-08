@@ -39,7 +39,7 @@ class Bookmark < ActiveRecord::Base
   end
 
   belongs_to :user
-  belongs_to :bookmarkable, polymorphic: true
+  belongs_to :bookmarkable, polymorphic: true, optional: true
 
   def self.auto_delete_preferences
     @auto_delete_preferences ||= Enum.new(

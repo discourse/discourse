@@ -5,7 +5,7 @@ require 'ipaddr'
 # awkward TopicView is taken
 class TopicViewItem < ActiveRecord::Base
   self.table_name = 'topic_views'
-  belongs_to :user
+  belongs_to :user, optional: true
   belongs_to :topic
   validates_presence_of :topic_id, :ip_address, :viewed_at
 

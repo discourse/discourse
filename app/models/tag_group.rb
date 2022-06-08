@@ -10,7 +10,7 @@ class TagGroup < ActiveRecord::Base
   has_many :categories, through: :category_tag_groups
   has_many :tag_group_permissions, dependent: :destroy
 
-  belongs_to :parent_tag, class_name: 'Tag'
+  belongs_to :parent_tag, class_name: 'Tag', optional: true
 
   before_create :init_permissions
   before_save :apply_permissions

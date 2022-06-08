@@ -8,7 +8,7 @@
 # is deleted automatically
 class TopicThumbnail < ActiveRecord::Base
   belongs_to :upload
-  belongs_to :optimized_image
+  belongs_to :optimized_image, optional: true
 
   def self.find_or_create_for!(original, max_width: , max_height:)
     existing = TopicThumbnail.find_by(upload: original, max_width: max_width, max_height: max_height)

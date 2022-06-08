@@ -11,7 +11,7 @@ class Theme < ActiveRecord::Base
   @cache = DistributedCache.new('theme')
 
   belongs_to :user
-  belongs_to :color_scheme
+  belongs_to :color_scheme, optional: true
   has_many :theme_fields, dependent: :destroy
   has_many :theme_settings, dependent: :destroy
   has_many :theme_translation_overrides, dependent: :destroy
@@ -20,7 +20,7 @@ class Theme < ActiveRecord::Base
   has_many :child_themes, -> { order(:name) }, through: :child_theme_relation, source: :child_theme
   has_many :parent_themes, -> { order(:name) }, through: :parent_theme_relation, source: :parent_theme
   has_many :color_schemes
-  belongs_to :remote_theme, dependent: :destroy
+  belongs_to :remote_theme, dependent: :destroy, optional: true
   has_one :theme_modifier_set, dependent: :destroy
 
   has_one :settings_field, -> { where(target_id: Theme.targets[:settings], name: "yaml") }, class_name: 'ThemeField'

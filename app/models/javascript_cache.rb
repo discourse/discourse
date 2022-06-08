@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 class JavascriptCache < ActiveRecord::Base
-  belongs_to :theme_field
-  belongs_to :theme
+  belongs_to :theme_field, optional: true
+  belongs_to :theme, optional: true
 
   validate :content_cannot_be_nil
 
