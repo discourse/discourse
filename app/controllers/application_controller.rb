@@ -192,7 +192,7 @@ class ApplicationController < ActionController::Base
         e.description,
         type: :rate_limit,
         status: 429,
-        extras: { wait_seconds: retry_time_in_seconds },
+        extras: { wait_seconds: retry_time_in_seconds, time_left: e&.time_left },
         headers: response_headers
       )
     end
