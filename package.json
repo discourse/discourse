@@ -7,8 +7,8 @@
   "license": "GPL-2.0-only",
   "dependencies": {
     "@discourse/itsatrap": "^2.0.10",
-    "@fortawesome/fontawesome-free": "5.15.4",
     "@discourse/moment-timezone-names-translations": "^1.0.0",
+    "@fortawesome/fontawesome-free": "5.15.4",
     "@highlightjs/cdn-assets": "^10.7.0",
     "@json-editor/json-editor": "^2.6.1",
     "tippy.js": "^6.3.7",
@@ -25,7 +25,7 @@
     "chart.js": "3.5.1",
     "chartjs-plugin-datalabels": "^2.0.0",
     "diffhtml": "^1.0.0-beta.20",
-    "eslint-config-discourse": "^2.0.0",
+    "eslint-config-discourse": "^3.1.0",
     "handlebars": "^4.7.7",
     "jquery": "3.5.1",
     "magnific-popup": "1.1.0",
