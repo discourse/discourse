@@ -11,7 +11,6 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { getOwner } from "discourse-common/lib/get-owner";
 import { isEmpty } from "@ember/utils";
 import { htmlSafe } from "@ember/template";
-import { NotificationLevels } from "discourse/lib/notification-levels";
 
 const Site = RestModel.extend({
   isReadOnly: alias("is_readonly"),
@@ -84,12 +83,12 @@ const Site = RestModel.extend({
       : this.sortedCategories;
   },
 
-  @discourseComputed("categories.[]")
+  @discourseComputed("categories.[]", "categories.@each.notification_level")
   trackedCategoriesList(categories) {
     const trackedCategories = [];
 
     for (const category of categories) {
-      if (category.notification_level >= NotificationLevels.TRACKING) {
+      if (category.isTracked) {
         trackedCategories.push(category);
       }
     }

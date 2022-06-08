@@ -4042,6 +4042,7 @@ en:
       new_count: "%{count} new"
       sections:
         categories:
+          no_tracked_categories: "You are not tracking any categories."
           header_link_title: "all categories"
           header_link_text: "Categories"
         topics:
