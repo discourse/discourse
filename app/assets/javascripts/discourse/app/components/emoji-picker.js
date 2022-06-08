@@ -243,7 +243,7 @@ export default Component.extend({
   },
 
   @action
-  keyup(event) {
+  keydown(event) {
     if (event.code === "Escape") {
       this.onClose(event);
       return false;
