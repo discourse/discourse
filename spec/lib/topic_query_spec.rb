@@ -197,24 +197,34 @@ describe TopicQuery do
       sub_category = Fabricate(:category, parent_category_id: parent_category.id)
       topic3 = Fabricate(:topic, category_id: sub_category.id)
 
+      parent_category_2 = Fabricate(:category)
+      sub_category_2 = Fabricate(:category, parent_category: parent_category_2)
+      topic4 = Fabricate(:topic, category: sub_category_2)
+
       CategoryUser.create!(
         category_id: parent_category.id,
         user_id: user.id,
         notification_level: NotificationLevels.all[:tracking]
       )
 
-      query = TopicQuery.new(user, filter: 'tracked').list_latest
-
-      expect(query.topics.map(&:id)).to contain_exactly(topic.id, topic2.id, topic3.id)
-
-      # includes sub-subcategories of tracked categories
-      SiteSetting.max_category_nesting = 3
-      sub_sub_category = Fabricate(:category, parent_category_id: sub_category.id)
-      topic4 = Fabricate(:topic, category_id: sub_sub_category.id)
+      CategoryUser.create!(
+        category_id: sub_category_2.id,
+        user_id: user.id,
+        notification_level: NotificationLevels.all[:tracking]
+      )
 
       query = TopicQuery.new(user, filter: 'tracked').list_latest
 
       expect(query.topics.map(&:id)).to contain_exactly(topic.id, topic2.id, topic3.id, topic4.id)
+
+      # includes sub-subcategories of tracked categories
+      SiteSetting.max_category_nesting = 3
+      sub_sub_category = Fabricate(:category, parent_category_id: sub_category.id)
+      topic5 = Fabricate(:topic, category_id: sub_sub_category.id)
+
+      query = TopicQuery.new(user, filter: 'tracked').list_latest
+
+      expect(query.topics.map(&:id)).to contain_exactly(topic.id, topic2.id, topic3.id, topic4.id, topic5.id)
     end
   end
 
