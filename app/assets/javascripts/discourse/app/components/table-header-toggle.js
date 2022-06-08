@@ -31,6 +31,11 @@ export default Component.extend({
   click() {
     this.toggleProperties();
   },
+  keyPress(e) {
+    if (e.which === 13) {
+      this.toggleProperties();
+    }
+  },
   didReceiveAttrs() {
     this._super(...arguments);
     if (!this.automatic && !this.translated) {
