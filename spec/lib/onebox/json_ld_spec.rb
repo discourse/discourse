@@ -3,6 +3,18 @@
 require 'onebox/json_ld'
 
 describe Onebox::JsonLd do
+  it 'logs warning and returns an empty hash if received json is invalid' do
+    invalid_json = "{\"@type\":invalid-json}"
+    doc = Nokogiri::HTML("<script type=\"application/ld+json\">#{invalid_json}</script>")
+    Discourse.expects(:warn_exception).with(
+      instance_of(JSON::ParserError), { message: "Error parsing JSON-LD json: #{invalid_json}" }
+    )
+
+    json_ld = described_class.new(doc)
+
+    expect(json_ld.data).to eq({})
+  end
+
   it 'returns an empty hash if there is no json_ld script tag' do
     doc = Nokogiri::HTML("<script type=\"something else\"></script>")
     json_ld = described_class.new(doc)

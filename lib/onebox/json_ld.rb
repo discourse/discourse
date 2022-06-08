@@ -12,14 +12,28 @@ module Onebox
     private
 
     def extract(doc)
+      extracted_json = extract_json_from(doc)
+      parsed_json = parse_json(extracted_json)
+
+      return {} unless parsed_json["@type"] == MOVIE_JSON_LD_TYPE
+
+      Onebox::Movie.new(parsed_json).to_h
+    end
+
+    def extract_json_from(doc)
       return {} if Onebox::Helpers::blank?(doc)
-      json_ld = doc.search('script[type="application/ld+json"]')
-      return {} if Onebox::Helpers::blank?(json_ld.text)
+      json_ld = doc.search('script[type="application/ld+json"]').text
+      return {} if Onebox::Helpers::blank?(json_ld)
+      json_ld
+    end
 
-      json_ld_items = JSON[json_ld.text]
-
-      return {} unless json_ld_items["@type"] == MOVIE_JSON_LD_TYPE
-      Onebox::Movie.new(json_ld_items).to_h
+    def parse_json(json)
+      begin
+        JSON[json]
+      rescue JSON::ParserError => e
+        Discourse.warn_exception(e, message: "Error parsing JSON-LD json: #{json}")
+        {}
+      end
     end
   end
 end
