@@ -1064,7 +1064,7 @@ describe PostDestroyer do
     fab!(:reply) { Fabricate(:private_message_post, topic: private_message_topic) }
     fab!(:post_revision) { Fabricate(:post_revision, post: private_post) }
     fab!(:upload1) { Fabricate(:upload_s3, created_at: 5.hours.ago) }
-    fab!(:post_upload) { PostUpload.create(post: private_post, upload: upload1) }
+    fab!(:upload_reference) { UploadReference.create(target: private_post, upload: upload1) }
 
     it "destroys the post and topic if deleting first post" do
       PostDestroyer.new(reply.user, reply, permanent: true).destroy
@@ -1076,7 +1076,7 @@ describe PostDestroyer do
       expect { private_message_topic.reload }.to raise_error(ActiveRecord::RecordNotFound)
       expect { post_action.reload }.to raise_error(ActiveRecord::RecordNotFound)
       expect { post_revision.reload }.to raise_error(ActiveRecord::RecordNotFound)
-      expect { post_upload.reload }.to raise_error(ActiveRecord::RecordNotFound)
+      expect { upload_reference.reload }.to raise_error(ActiveRecord::RecordNotFound)
 
       Jobs::CleanUpUploads.new.reset_last_cleanup!
       SiteSetting.clean_orphan_uploads_grace_period_hours = 1

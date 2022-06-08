@@ -31,18 +31,19 @@ module Jobs
         .where("uploads.retain_hours IS NULL OR uploads.created_at < current_timestamp - interval '1 hour' * uploads.retain_hours")
         .where("uploads.created_at < ?", grace_period.hour.ago)
         .where("uploads.access_control_post_id IS NULL")
-        .joins("LEFT JOIN post_uploads pu ON pu.upload_id = uploads.id")
-        .where("pu.upload_id IS NULL")
+        .joins("LEFT JOIN upload_references ON upload_references.upload_id = uploads.id")
+        .where("upload_references.upload_id IS NULL")
         .with_no_non_post_relations
 
       result.find_each do |upload|
+        next if Upload.in_use_callbacks&.any? { |callback| callback.call(upload) }
+
         if upload.sha1.present?
+          # TODO: Remove this check after UploadReferences records were created
           encoded_sha = Base62.encode(upload.sha1.hex)
           next if ReviewableQueuedPost.pending.where("payload->>'raw' LIKE '%#{upload.sha1}%' OR payload->>'raw' LIKE '%#{encoded_sha}%'").exists?
           next if Draft.where("data LIKE '%#{upload.sha1}%' OR data LIKE '%#{encoded_sha}%'").exists?
           next if UserProfile.where("bio_raw LIKE '%#{upload.sha1}%' OR bio_raw LIKE '%#{encoded_sha}%'").exists?
-
-          next if Upload.in_use_callbacks&.any? { |callback| callback.call(upload) }
 
           upload.destroy
         else

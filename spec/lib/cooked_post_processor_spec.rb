@@ -23,7 +23,7 @@ describe CookedPostProcessor do
       cpp.expects(:optimize_urls).in_sequence(post_process)
       cpp.post_process
 
-      expect(PostUpload.exists?(post: post, upload: upload)).to eq(true)
+      expect(UploadReference.exists?(target: post, upload: upload)).to eq(true)
     end
 
     describe 'when post contains oneboxes and inline oneboxes' do
