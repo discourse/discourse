@@ -11,8 +11,8 @@
         }}
 
         <div class="value-input emoji-details {{if data.isEditable "can-edit"}} {{if data.isEditing "d-editor-textarea-wrapper"}}" {{on "click" (fn this.editValue index)}} role="button">
-          <img height="15px" width="15px" src={{data.emojiUrl}} class="emoji-list-emoji">
-          <span class="emoji-name">{{data.value}}</span>
+          <img height="15px" width="15px" src={{data.emojiUrl}} class="emoji-list-emoji" role="presentation">
+          <span class="emoji-name" role="presentation">{{data.value}}</span>
         </div>
 
         {{#if showUpDownButtons}}
