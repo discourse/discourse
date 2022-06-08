@@ -1887,6 +1887,16 @@ RSpec.describe User do
     end
   end
 
+  describe '.not_staged' do
+    let!(:user0) { Fabricate(:user, staged: true) }
+    let!(:user1) { Fabricate(:user) }
+
+    it "doesn't return staged users" do
+      expect(User.not_staged).to_not include(user0)
+      expect(User.not_staged).to include(user1)
+    end
+  end
+
   describe '#publish_notifications_state' do
     it 'should publish the right message sorted by ID desc' do
       notification = Fabricate(:notification, user: user)
