@@ -6,16 +6,18 @@
 #
 # This should be fixed in an upcoming release of the Mail gem (probably 2.8),
 # when this patch is merged: https://github.com/mikel/mail/pull/1435
-module FreedomPatches::MailDisableStarttls
-  def build_smtp_session
-    super.tap do |smtp|
-      unless settings[:enable_starttls_auto]
-        if smtp.respond_to?(:disable_starttls)
-          smtp.disable_starttls
+module FreedomPatches
+  module MailDisableStarttls
+    def build_smtp_session
+      super.tap do |smtp|
+        unless settings[:enable_starttls_auto]
+          if smtp.respond_to?(:disable_starttls)
+            smtp.disable_starttls
+          end
         end
       end
     end
-  end
 
-  ::Mail::SMTP.prepend(self)
+    ::Mail::SMTP.prepend(self)
+  end
 end
