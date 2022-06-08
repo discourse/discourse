@@ -69,12 +69,6 @@ export default {
       instantiate: false,
     });
 
-    const site = Site.current();
-    app.register("site:main", site, { instantiate: false });
-
-    const session = Session.current();
-    app.register("session:main", session, { instantiate: false });
-
     app.register("location:discourse-location", DiscourseLocation);
 
     const keyValueStore = new KeyValueStore("discourse_");
@@ -98,16 +92,28 @@ export default {
       app.inject(t, "appEvents", "service:app-events");
       app.inject(t, "pmTopicTrackingState", "pm-topic-tracking-state:main");
       app.inject(t, "store", "service:store");
-      app.inject(t, "site", "site:main");
       app.inject(t, "searchService", "service:search");
     });
 
     ALL_TARGETS.concat("service").forEach((t) => {
-      app.inject(t, "session", "session:main");
       app.inject(t, "messageBus", "message-bus:main");
       app.inject(t, "siteSettings", "site-settings:main");
       app.inject(t, "topicTrackingState", "topic-tracking-state:main");
       app.inject(t, "keyValueStore", "key-value-store:main");
+    });
+
+    const site = Site.current();
+    app.register("site:main", site, { instantiate: false });
+
+    const session = Session.current();
+    app.register("session:main", session, { instantiate: false });
+
+    ALL_TARGETS.forEach((t) => {
+      app.inject(t, "site", "site:main");
+    });
+
+    ALL_TARGETS.concat("service").forEach((t) => {
+      app.inject(t, "session", "session:main");
     });
 
     if (currentUser) {
