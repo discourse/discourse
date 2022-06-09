@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class CategoryRequiredTagGroup < ActiveRecord::Base
-  belongs_to :category
-  belongs_to :tag_group
+  belongs_to :category, optional: true
+  belongs_to :tag_group, optional: true
 
   validates :min_count, numericality: { only_integer: true, greater_than: 0 }
 
