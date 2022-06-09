@@ -7,7 +7,7 @@ class CopyThemeSettingsUploadsToUploadReferences < ActiveRecord::Migration[6.1]
       SELECT theme_settings.value::int, 'ThemeSetting', theme_settings.id, uploads.created_at, uploads.updated_at
       FROM theme_settings
       JOIN uploads ON uploads.id = theme_settings.value::int
-      WHERE data_type = 6 AND theme_settings.value IS NOT NULL
+      WHERE data_type = 6 AND theme_settings.value IS NOT NULL AND theme_settings.value != ''
       ON CONFLICT DO NOTHING
     SQL
   end
