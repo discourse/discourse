@@ -4041,6 +4041,10 @@ en:
       unread_count: "%{count} unread"
       new_count: "%{count} new"
       sections:
+        tags:
+          no_tracked_tags: "You are not tracking any tags."
+          header_link_title: "all tags"
+          header_link_text: "Tags"
         categories:
           no_tracked_categories: "You are not tracking any categories."
           header_link_title: "all categories"
