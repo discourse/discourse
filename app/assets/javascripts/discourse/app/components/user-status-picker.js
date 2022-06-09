@@ -28,7 +28,7 @@ export default class UserStatusPicker extends Component {
     this.set("emojiPickerIsActive", false);
 
     scheduleOnce("afterRender", () => {
-      document.querySelector(".btn-emoji").focus();
+      document.querySelector(".btn-emoji")?.focus();
     });
   }
 
