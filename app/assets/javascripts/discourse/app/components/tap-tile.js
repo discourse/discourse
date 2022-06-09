@@ -20,7 +20,7 @@ export default Component.extend({
   },
 
   keyDown(e) {
-    if (e.which === 13) {
+    if (e.key === "Enter") {
       this.onChange(this.tileId);
     }
   },

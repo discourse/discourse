@@ -37,13 +37,10 @@ acceptance("Do not disturb", function (needs) {
 
     await click(tiles[0]);
 
-    assert.ok(
-      query(".do-not-disturb-modal").style.display === "none",
-      "modal is hidden"
-    );
+    assert.ok(query(".do-not-disturb-modal.hidden"), "modal is hidden");
 
     assert.ok(
-      exists(".header-dropdown-toggle .do-not-disturb-background"),
+      exists(".header-dropdown-toggle .do-not-disturb-background .d-icon-moon"),
       "moon icon is present in header"
     );
   });
@@ -54,24 +51,26 @@ acceptance("Do not disturb", function (needs) {
     await visit("/");
     await click(".header-dropdown-toggle.current-user");
     await click(".menu-links-row .user-preferences-link");
-
     await click(".do-not-disturb");
 
-    assert.ok(exists(".do-not-disturb-modal"), "modal to choose time appears");
+    assert.ok(exists(".do-not-disturb-modal"), "DND modal is displayed");
 
-    let tiles = queryAll(".do-not-disturb-tile");
-    assert.ok(tiles.length === 4, "There are 4 duration choices");
+    assert.strictEqual(
+      queryAll(".do-not-disturb-tile").length,
+      4,
+      "There are 4 duration choices"
+    );
 
     await triggerKeyEvent(".do-not-disturb-tile:nth-child(1)", "keydown", 13);
 
     assert.ok(
-      query(".do-not-disturb-modal").style.display === "none",
-      "modal is hidden"
+      query(".do-not-disturb-modal.hidden"),
+      "DND modal is hidden after making a choice"
     );
 
     assert.ok(
-      exists(".header-dropdown-toggle .do-not-disturb-background"),
-      "moon icon is present in header"
+      exists(".header-dropdown-toggle .do-not-disturb-background .d-icon-moon"),
+      "moon icon is shown in header avatar"
     );
   });
 
