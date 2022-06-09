@@ -5,6 +5,7 @@ import { emojiUnescape } from "discourse/lib/text";
 import { escapeExpression } from "discourse/lib/utilities";
 
 export default class UserStatusPicker extends Component {
+  tagName = "";
   isFocused = false;
   emojiPickerIsActive = false;
   emoji = null;
