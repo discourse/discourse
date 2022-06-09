@@ -118,7 +118,7 @@ export default {
 
       bus.subscribe(`/user-status/${user.id}`, (data) => {
         user.set("status", data);
-        appEvents.trigger("user-status:changed");
+        appEvents.trigger("current-user-status:changed");
       });
 
       const site = container.lookup("site:main");

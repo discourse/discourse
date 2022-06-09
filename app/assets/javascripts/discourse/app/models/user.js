@@ -23,7 +23,7 @@ import UserPostsStream from "discourse/models/user-posts-stream";
 import UserStream from "discourse/models/user-stream";
 import { ajax } from "discourse/lib/ajax";
 import deprecated from "discourse-common/lib/deprecated";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import { emojiUnescape } from "discourse/lib/text";
 import { getOwner } from "discourse-common/lib/get-owner";
 import { isEmpty } from "@ember/utils";
@@ -1035,6 +1035,8 @@ User.reopenClass(Singleton, {
   createCurrent() {
     const userJson = PreloadStore.get("currentUser");
     if (userJson) {
+      userJson.isCurrent = true;
+
       if (userJson.primary_group_id) {
         const primaryGroup = userJson.groups.find(
           (group) => group.id === userJson.primary_group_id
@@ -1050,7 +1052,9 @@ User.reopenClass(Singleton, {
       }
 
       const store = getOwner(this).lookup("service:store");
-      return store.createRecord("user", userJson);
+      const currentUser = store.createRecord("user", userJson);
+      currentUser.trackStatus();
+      return currentUser;
     }
 
     return null;
@@ -1130,6 +1134,64 @@ User.reopenClass(Singleton, {
       dataType: "json",
       data: { timezone: user.timezone },
     });
+  },
+});
+
+// user status tracking
+User.reopen({
+  _clearStatusTimerId: null,
+  _trackStatus: false,
+
+  trackStatus() {
+    this.set("_trackStatus", true);
+    if (this.status && this.status.ends_at) {
+      this._scheduleStatusClearing(this.status.ends_at);
+    }
+  },
+
+  stopTrackingStatus() {
+    this.set("_trackStatus", false);
+    this._unscheduleStatusClearing();
+  },
+
+  @observes("status")
+  statusChanged() {
+    if (!this._trackStatus) {
+      return;
+    }
+
+    if (this.status && this.status.ends_at) {
+      this._scheduleStatusClearing(this.status.ends_at);
+    } else {
+      this._unscheduleStatusClearing();
+    }
+  },
+
+  _scheduleStatusClearing(endsAt) {
+    if (this._clearStatusTimerId) {
+      this._unscheduleStatusClearing();
+    }
+
+    const utcNow = moment.utc();
+    const remaining = moment.utc(endsAt).diff(utcNow, "milliseconds");
+
+    this._clearStatusTimerId = setTimeout(
+      () => this._autoClearStatus(),
+      remaining
+    );
+  },
+
+  _unscheduleStatusClearing() {
+    clearTimeout(this._clearStatusTimerId);
+    this._clearStatusTimerId = null;
+  },
+
+  _autoClearStatus() {
+    this.set("status", null);
+    if (this.isCurrent) {
+      this.appEvents.trigger("current-user-status:changed");
+    }
+    this._clearStatusTimerId = null;
   },
 });
 

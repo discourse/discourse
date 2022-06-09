@@ -4,8 +4,15 @@ import User from "discourse/models/user";
 import PreloadStore from "discourse/lib/preload-store";
 import sinon from "sinon";
 import { settled } from "@ember/test-helpers";
+import { fakeTime } from "discourse/tests/helpers/qunit-helpers";
 
-module("Unit | Model | user", function () {
+module("Unit | Model | user", function (hooks) {
+  hooks.afterEach(function () {
+    if (this.clock) {
+      this.clock.restore();
+    }
+  });
+
   test("staff", function (assert) {
     let user = User.create({ id: 1, username: "eviltrout" });
 
@@ -104,5 +111,23 @@ module("Unit | Model | user", function () {
     User.createCurrent();
 
     assert.ok(spyMomentGuess.notCalled);
+  });
+
+  test("user status gets auto cleared after ends_at", function (assert) {
+    const timezone = "UTC";
+    this.clock = fakeTime("2100-01-01T08:00:00.000Z", timezone, true);
+
+    const user = User.create({
+      timezone,
+      status: {
+        ends_at: "2100-01-01T08:10:00.000Z",
+      },
+    });
+    assert.notEqual(user.status, null);
+
+    user.trackStatus();
+    this.clock.tick("10:00");
+
+    assert.equal(user.status, null);
   });
 });
