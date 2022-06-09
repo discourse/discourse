@@ -10,7 +10,7 @@ class Theme < ActiveRecord::Base
 
   @cache = DistributedCache.new('theme')
 
-  belongs_to :user
+  belongs_to :user, optional: true
   belongs_to :color_scheme, optional: true
   has_many :theme_fields, dependent: :destroy
   has_many :theme_settings, dependent: :destroy

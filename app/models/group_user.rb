@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class GroupUser < ActiveRecord::Base
-  belongs_to :group, counter_cache: "user_count"
-  belongs_to :user
+  belongs_to :group, counter_cache: "user_count", optional: true
+  belongs_to :user, optional: true
 
   after_save :update_title
   after_destroy :grant_other_available_title

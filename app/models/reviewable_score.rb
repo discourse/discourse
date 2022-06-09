@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class ReviewableScore < ActiveRecord::Base
-  belongs_to :reviewable
-  belongs_to :user
+  belongs_to :reviewable, optional: true
+  belongs_to :user, optional: true
   belongs_to :reviewed_by, class_name: 'User', optional: true
   belongs_to :meta_topic, class_name: 'Topic', optional: true
 

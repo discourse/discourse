@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class UserAvatar < ActiveRecord::Base
-  belongs_to :user
+  belongs_to :user, optional: true
   belongs_to :gravatar_upload, class_name: 'Upload', optional: true
   belongs_to :custom_upload, class_name: 'Upload', optional: true
   has_many :upload_references, as: :target, dependent: :destroy

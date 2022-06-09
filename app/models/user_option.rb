@@ -6,7 +6,7 @@ class UserOption < ActiveRecord::Base
   ]
 
   self.primary_key = :user_id
-  belongs_to :user
+  belongs_to :user, optional: true
   before_create :set_defaults
 
   after_save :update_tracked_topics

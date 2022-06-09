@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class TopicGroup < ActiveRecord::Base
-  belongs_to :group
-  belongs_to :topic
+  belongs_to :group, optional: true
+  belongs_to :topic, optional: true
 
   def self.update_last_read(user, topic_id, post_number)
     updated_groups = update_read_count(user, topic_id, post_number)

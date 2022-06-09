@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class UserArchivedMessage < ActiveRecord::Base
-  belongs_to :user
-  belongs_to :topic
+  belongs_to :user, optional: true
+  belongs_to :topic, optional: true
 
   def self.move_to_inbox!(user_id, topic)
     topic_id = topic.id

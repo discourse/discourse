@@ -38,7 +38,7 @@ class Bookmark < ActiveRecord::Base
     Bookmark.registered_bookmarkables.map(&:model).map(&:to_s)
   end
 
-  belongs_to :user
+  belongs_to :user, optional: true
   belongs_to :bookmarkable, polymorphic: true, optional: true
 
   def self.auto_delete_preferences

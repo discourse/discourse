@@ -7,7 +7,7 @@ class ExternalUploadStub < ActiveRecord::Base
   UPLOADED_EXPIRY_HOURS = 24
   FAILED_EXPIRY_HOURS = 48
 
-  belongs_to :created_by, class_name: 'User'
+  belongs_to :created_by, class_name: 'User', optional: true
 
   validates :filesize, numericality: {
     allow_nil: false, only_integer: true, greater_than_or_equal_to: 1

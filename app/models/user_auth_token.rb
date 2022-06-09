@@ -2,7 +2,7 @@
 require 'digest/sha1'
 
 class UserAuthToken < ActiveRecord::Base
-  belongs_to :user
+  belongs_to :user, optional: true
 
   ROTATE_TIME_MINS = 10
   ROTATE_TIME = ROTATE_TIME_MINS.minutes

@@ -4,9 +4,9 @@ class PostAction < ActiveRecord::Base
   include RateLimiter::OnCreateRecord
   include Trashable
 
-  belongs_to :post
-  belongs_to :user
-  belongs_to :post_action_type
+  belongs_to :post, optional: true
+  belongs_to :user, optional: true
+  belongs_to :post_action_type, optional: true
   belongs_to :related_post, class_name: 'Post', optional: true
   belongs_to :target_user, class_name: 'User', optional: true
 

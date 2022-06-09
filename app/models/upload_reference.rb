@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class UploadReference < ActiveRecord::Base
-  belongs_to :upload
-  belongs_to :target, polymorphic: true
+  belongs_to :upload, optional: true
+  belongs_to :target, polymorphic: true, optional: true
 
   def self.ensure_exist!(upload_ids: [], target: nil, target_type: nil, target_id: nil)
     raise "target OR target_type and target_id are required" if !target && !(target_type && target_id)

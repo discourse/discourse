@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ShelvedNotification < ActiveRecord::Base
-  belongs_to :notification
+  belongs_to :notification, optional: true
 
   def process
     NotificationEmailer.process_notification(notification, no_delay: true)

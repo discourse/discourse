@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class DoNotDisturbTiming < ActiveRecord::Base
-  belongs_to :user
+  belongs_to :user, optional: true
 
   validate :ends_at_greater_than_starts_at
 

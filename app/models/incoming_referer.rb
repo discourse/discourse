@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class IncomingReferer < ActiveRecord::Base
-  belongs_to :incoming_domain
+  belongs_to :incoming_domain, optional: true
 
   def self.add!(opts)
     domain_id = opts[:incoming_domain_id]

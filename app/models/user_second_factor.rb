@@ -2,7 +2,7 @@
 
 class UserSecondFactor < ActiveRecord::Base
   include SecondFactorManager
-  belongs_to :user
+  belongs_to :user, optional: true
 
   scope :backup_codes, -> do
     where(method: UserSecondFactor.methods[:backup_codes], enabled: true)

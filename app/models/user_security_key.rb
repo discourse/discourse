@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class UserSecurityKey < ActiveRecord::Base
-  belongs_to :user
+  belongs_to :user, optional: true
 
   scope :second_factors, -> do
     where(factor_type: UserSecurityKey.factor_types[:second_factor], enabled: true)

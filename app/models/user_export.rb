@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class UserExport < ActiveRecord::Base
-  belongs_to :user
+  belongs_to :user, optional: true
   belongs_to :upload, dependent: :destroy, optional: true
   belongs_to :topic, dependent: :destroy, optional: true
 

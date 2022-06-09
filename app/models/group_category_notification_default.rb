@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class GroupCategoryNotificationDefault < ActiveRecord::Base
-  belongs_to :group
-  belongs_to :category
+  belongs_to :group, optional: true
+  belongs_to :category, optional: true
 
   def self.notification_levels
     NotificationLevels.all

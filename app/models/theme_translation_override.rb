@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ThemeTranslationOverride < ActiveRecord::Base
-  belongs_to :theme
+  belongs_to :theme, optional: true
 
   after_commit do
     theme.theme_fields.where(target_id: Theme.targets[:translations]).update_all(value_baked: nil)

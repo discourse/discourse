@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class GivenDailyLike < ActiveRecord::Base
-  belongs_to :user
+  belongs_to :user, optional: true
 
   def self.find_for(user_id, date)
     where(user_id: user_id, given_date: date)

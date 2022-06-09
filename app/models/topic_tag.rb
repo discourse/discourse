@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class TopicTag < ActiveRecord::Base
-  belongs_to :topic
-  belongs_to :tag
+  belongs_to :topic, optional: true
+  belongs_to :tag, optional: true
 
   after_create do
     if topic

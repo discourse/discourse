@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class LinkedTopic < ActiveRecord::Base
-  belongs_to :topic
+  belongs_to :topic, optional: true
 end
 
 # == Schema Information

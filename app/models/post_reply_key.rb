@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class PostReplyKey < ActiveRecord::Base
-  belongs_to :post
-  belongs_to :user
+  belongs_to :post, optional: true
+  belongs_to :user, optional: true
 
   before_validation { self.reply_key ||= self.class.generate_reply_key }
 

@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class CategoryFeaturedTopic < ActiveRecord::Base
-  belongs_to :category
-  belongs_to :topic
+  belongs_to :category, optional: true
+  belongs_to :topic, optional: true
 
   NEXT_CATEGORY_ID_KEY = 'category-featured-topic:next-category-id'
   DEFAULT_BATCH_SIZE = 100

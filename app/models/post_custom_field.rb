@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class PostCustomField < ActiveRecord::Base
-  belongs_to :post
+  belongs_to :post, optional: true
 end
 
 # == Schema Information

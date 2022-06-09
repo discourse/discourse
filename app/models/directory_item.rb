@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class DirectoryItem < ActiveRecord::Base
-  belongs_to :user
+  belongs_to :user, optional: true
   has_one :user_stat, foreign_key: :user_id, primary_key: :user_id
 
   @@plugin_queries = []

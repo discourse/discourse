@@ -32,7 +32,7 @@ class Post < ActiveRecord::Base
   rate_limit :limit_posts_per_day
 
   belongs_to :user, optional: true
-  belongs_to :topic
+  belongs_to :topic, optional: true
 
   belongs_to :reply_to_user, class_name: "User", optional: true
 

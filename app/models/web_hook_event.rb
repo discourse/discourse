@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class WebHookEvent < ActiveRecord::Base
-  belongs_to :web_hook
+  belongs_to :web_hook, optional: true
 
   after_save :update_web_hook_delivery_status
 

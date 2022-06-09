@@ -2,7 +2,7 @@
 class ThemeModifierSet < ActiveRecord::Base
   class ThemeModifierSetError < StandardError; end
 
-  belongs_to :theme
+  belongs_to :theme, optional: true
 
   def self.modifiers
     @modifiers ||= self.load_modifiers

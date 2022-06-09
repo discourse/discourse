@@ -5,8 +5,8 @@ class TopicTimer < ActiveRecord::Base
 
   include Trashable
 
-  belongs_to :user
-  belongs_to :topic
+  belongs_to :user, optional: true
+  belongs_to :topic, optional: true
   belongs_to :category, optional: true
 
   validates :user_id, presence: true

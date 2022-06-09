@@ -11,7 +11,7 @@ class Upload < ActiveRecord::Base
   URL_REGEX ||= /(\/original\/\dX[\/\.\w]*\/(\h+)[\.\w]*)/
   MAX_IDENTIFY_SECONDS = 5
 
-  belongs_to :user
+  belongs_to :user, optional: true
   belongs_to :access_control_post, class_name: 'Post', optional: true
 
   # when we access this post we don't care if the post

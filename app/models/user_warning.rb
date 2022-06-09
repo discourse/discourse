@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 class UserWarning < ActiveRecord::Base
-  belongs_to :user
-  belongs_to :topic
-  belongs_to :created_by, class_name: 'User'
+  belongs_to :user, optional: true
+  belongs_to :topic, optional: true
+  belongs_to :created_by, class_name: 'User', optional: true
 end
 
 # == Schema Information

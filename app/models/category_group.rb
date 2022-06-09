@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class CategoryGroup < ActiveRecord::Base
-  belongs_to :category
-  belongs_to :group
+  belongs_to :category, optional: true
+  belongs_to :group, optional: true
 
   delegate :name, to: :group, prefix: true
 

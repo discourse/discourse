@@ -3,7 +3,7 @@
 class UserProfileView < ActiveRecord::Base
   validates_presence_of :user_profile_id, :viewed_at
 
-  belongs_to :user_profile
+  belongs_to :user_profile, optional: true
 
   def self.add(user_profile_id, ip, user_id = nil, at = nil, skip_redis = false)
     at ||= Time.zone.now

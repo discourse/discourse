@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class GroupCustomField < ActiveRecord::Base
-  belongs_to :group
+  belongs_to :group, optional: true
 end
 
 # == Schema Information

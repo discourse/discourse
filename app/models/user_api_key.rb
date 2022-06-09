@@ -7,7 +7,7 @@ class UserApiKey < ActiveRecord::Base
 
   REVOKE_MATCHER = RouteMatcher.new(actions: "user_api_keys#revoke", methods: :post, params: [:id])
 
-  belongs_to :user
+  belongs_to :user, optional: true
   has_many :scopes, class_name: "UserApiKeyScope", dependent: :destroy
 
   scope :active, -> { where(revoked_at: nil) }

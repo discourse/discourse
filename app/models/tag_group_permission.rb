@@ -2,8 +2,8 @@
 
 # Who can see and use tags belonging to a tag group.
 class TagGroupPermission < ActiveRecord::Base
-  belongs_to :tag_group
-  belongs_to :group
+  belongs_to :tag_group, optional: true
+  belongs_to :group, optional: true
 
   def self.permission_types
     @permission_types ||= Enum.new(full: 1, readonly: 3)

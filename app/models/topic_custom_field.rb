@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class TopicCustomField < ActiveRecord::Base
-  belongs_to :topic
+  belongs_to :topic, optional: true
 end
 
 # == Schema Information

@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class TopicInvite < ActiveRecord::Base
-  belongs_to :topic
-  belongs_to :invite
+  belongs_to :topic, optional: true
+  belongs_to :invite, optional: true
 
   validates_presence_of :topic_id
   validates_presence_of :invite_id

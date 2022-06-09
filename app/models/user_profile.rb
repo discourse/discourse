@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class UserProfile < ActiveRecord::Base
-  belongs_to :user, inverse_of: :user_profile
+  belongs_to :user, inverse_of: :user_profile, optional: true
   belongs_to :card_background_upload, class_name: "Upload", optional: true
   belongs_to :profile_background_upload, class_name: "Upload", optional: true
   belongs_to :granted_title_badge, class_name: "Badge", optional: true

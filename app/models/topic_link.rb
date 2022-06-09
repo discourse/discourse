@@ -12,8 +12,8 @@ class TopicLink < ActiveRecord::Base
     500
   end
 
-  belongs_to :topic
-  belongs_to :user
+  belongs_to :topic, optional: true
+  belongs_to :user, optional: true
   belongs_to :post, optional: true
   belongs_to :link_topic, class_name: 'Topic', optional: true
   belongs_to :link_post, class_name: 'Post', optional: true

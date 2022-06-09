@@ -2,7 +2,7 @@
 
 class EmbeddableHost < ActiveRecord::Base
   validate :host_must_be_valid
-  belongs_to :category
+  belongs_to :category, optional: true
   after_destroy :reset_embedding_settings
 
   before_validation do

@@ -14,7 +14,7 @@ class Reviewable < ActiveRecord::Base
   attr_accessor :created_new
   validates_presence_of :type, :status, :created_by_id
   belongs_to :target, polymorphic: true, optional: true
-  belongs_to :created_by, class_name: 'User'
+  belongs_to :created_by, class_name: 'User', optional: true
   belongs_to :target_created_by, class_name: 'User', optional: true
   belongs_to :reviewable_by_group, class_name: 'Group', optional: true
 

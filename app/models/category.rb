@@ -33,7 +33,7 @@ class Category < ActiveRecord::Base
               foreign_key: "topic_id",
               optional: true
 
-  belongs_to :user
+  belongs_to :user, optional: true
   belongs_to :latest_post, class_name: "Post", optional: true
   belongs_to :uploaded_logo, class_name: "Upload", optional: true
   belongs_to :uploaded_background, class_name: "Upload", optional: true

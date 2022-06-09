@@ -7,7 +7,7 @@
 # Foreign keys with ON DELETE CASCADE are used to ensure unneeded data
 # is deleted automatically
 class TopicThumbnail < ActiveRecord::Base
-  belongs_to :upload
+  belongs_to :upload, optional: true
   belongs_to :optimized_image, optional: true
 
   def self.find_or_create_for!(original, max_width: , max_height:)

@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class CategoryTagStat < ActiveRecord::Base
-  belongs_to :category
-  belongs_to :tag
+  belongs_to :category, optional: true
+  belongs_to :tag, optional: true
 
   def self.topic_moved(topic, from_category_id, to_category_id)
     if from_category_id

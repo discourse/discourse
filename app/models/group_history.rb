@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class GroupHistory < ActiveRecord::Base
-  belongs_to :group
-  belongs_to :acting_user, class_name: 'User'
+  belongs_to :group, optional: true
+  belongs_to :acting_user, class_name: 'User', optional: true
   belongs_to :target_user, class_name: 'User', optional: true
 
   validates :acting_user_id, presence: true

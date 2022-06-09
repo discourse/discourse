@@ -19,7 +19,7 @@ class Invite < ActiveRecord::Base
 
   rate_limit :limit_invites_per_day
 
-  belongs_to :invited_by, class_name: 'User'
+  belongs_to :invited_by, class_name: 'User', optional: true
 
   has_many :invited_users
   has_many :users, through: :invited_users

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class EmailChangeRequest < ActiveRecord::Base
-  belongs_to :user
+  belongs_to :user, optional: true
   belongs_to :old_email_token, class_name: 'EmailToken', dependent: :destroy, optional: true
   belongs_to :new_email_token, class_name: 'EmailToken', dependent: :destroy, optional: true
   belongs_to :requested_by, class_name: "User", foreign_key: :requested_by_user_id, optional: true

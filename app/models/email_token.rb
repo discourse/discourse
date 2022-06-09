@@ -3,7 +3,7 @@
 class EmailToken < ActiveRecord::Base
   class TokenAccessError < StandardError; end
 
-  belongs_to :user
+  belongs_to :user, optional: true
 
   validates :user_id, :email, :token_hash, presence: true
 

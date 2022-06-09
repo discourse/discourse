@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Developer < ActiveRecord::Base
-  belongs_to :user
+  belongs_to :user, optional: true
 
   after_save :rebuild_cache
   after_destroy :rebuild_cache

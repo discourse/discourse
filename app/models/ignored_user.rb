@@ -3,8 +3,8 @@
 class IgnoredUser < ActiveRecord::Base
   validates :expiring_at, presence: true
 
-  belongs_to :user
-  belongs_to :ignored_user, class_name: "User"
+  belongs_to :user, optional: true
+  belongs_to :ignored_user, class_name: "User", optional: true
 end
 
 # == Schema Information

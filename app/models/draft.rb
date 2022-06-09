@@ -5,7 +5,7 @@ class Draft < ActiveRecord::Base
   NEW_PRIVATE_MESSAGE ||= 'new_private_message'
   EXISTING_TOPIC ||= 'topic_'
 
-  belongs_to :user
+  belongs_to :user, optional: true
 
   after_commit :update_draft_count, on: [:create, :destroy]
 

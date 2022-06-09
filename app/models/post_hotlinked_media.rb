@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class PostHotlinkedMedia < ActiveRecord::Base
-  belongs_to :post
+  belongs_to :post, optional: true
   belongs_to :upload, optional: true
   enum status: {
     downloaded: "downloaded",

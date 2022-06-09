@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 class UserStat < ActiveRecord::Base
 
-  belongs_to :user
+  belongs_to :user, optional: true
   after_save :trigger_badges
 
   # TODO(2021-05-13): Remove

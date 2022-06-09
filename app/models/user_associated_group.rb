@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class UserAssociatedGroup < ActiveRecord::Base
-  belongs_to :user
-  belongs_to :associated_group
+  belongs_to :user, optional: true
+  belongs_to :associated_group, optional: true
 
   after_commit :add_to_associated_groups, on: [:create, :update]
   before_destroy :remove_from_associated_groups

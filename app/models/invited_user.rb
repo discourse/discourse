@@ -2,7 +2,7 @@
 
 class InvitedUser < ActiveRecord::Base
   belongs_to :user, optional: true
-  belongs_to :invite, -> { unscope(where: :deleted_at) }
+  belongs_to :invite, -> { unscope(where: :deleted_at) }, optional: true
 
   validates_presence_of :invite_id
   validates_uniqueness_of :invite_id, scope: :user_id, conditions: -> { where.not(user_id: nil) }

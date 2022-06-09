@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class UserStatus < ActiveRecord::Base
-  belongs_to :user
+  belongs_to :user, optional: true
 
   validate :ends_at_greater_than_set_at,
            if: Proc.new { |t| t.will_save_change_to_set_at? || t.will_save_change_to_ends_at? }

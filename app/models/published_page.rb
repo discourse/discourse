@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class PublishedPage < ActiveRecord::Base
-  belongs_to :topic
+  belongs_to :topic, optional: true
 
   validates_presence_of :slug
   validates_uniqueness_of :slug, :topic_id

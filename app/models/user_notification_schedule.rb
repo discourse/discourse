@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class UserNotificationSchedule < ActiveRecord::Base
-  belongs_to :user
+  belongs_to :user, optional: true
 
   DEFAULT = -> {
     attrs = { enabled: false }

@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class ReviewableClaimedTopic < ActiveRecord::Base
-  belongs_to :topic
-  belongs_to :user
+  belongs_to :topic, optional: true
+  belongs_to :user, optional: true
   validates_uniqueness_of :topic
 
   def self.claimed_hash(topic_ids)

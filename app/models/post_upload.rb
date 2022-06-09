@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class PostUpload < ActiveRecord::Base
-  belongs_to :post
-  belongs_to :upload
+  belongs_to :post, optional: true
+  belongs_to :upload, optional: true
 end
 
 # == Schema Information

@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class CategoryUser < ActiveRecord::Base
-  belongs_to :category
-  belongs_to :user
+  belongs_to :category, optional: true
+  belongs_to :user, optional: true
 
   def self.lookup(user, level)
     self.where(user: user, notification_level: notification_levels[level])

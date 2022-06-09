@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class SharedDraft < ActiveRecord::Base
-  belongs_to :topic
-  belongs_to :category
+  belongs_to :topic, optional: true
+  belongs_to :category, optional: true
 end
 
 # == Schema Information

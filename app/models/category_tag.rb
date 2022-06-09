@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class CategoryTag < ActiveRecord::Base
-  belongs_to :category
-  belongs_to :tag
+  belongs_to :category, optional: true
+  belongs_to :tag, optional: true
 
   after_commit do
     Site.clear_cache

@@ -2,7 +2,7 @@
 
 class OptimizedImage < ActiveRecord::Base
   include HasUrl
-  belongs_to :upload
+  belongs_to :upload, optional: true
 
   # BUMP UP if optimized image algorithm changes
   VERSION = 2

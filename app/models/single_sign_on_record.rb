@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class SingleSignOnRecord < ActiveRecord::Base
-  belongs_to :user
+  belongs_to :user, optional: true
 
   validates :external_id, uniqueness: true
 end

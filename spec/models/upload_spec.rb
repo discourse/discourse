@@ -65,7 +65,7 @@ describe Upload do
     SiteSetting.authorized_extensions = "svg"
 
     upload = UploadCreator.new(image_svg, image_svg_filename).create_for(user_id)
-    expect(upload.valid?).to eq(true)
+    expect(upload).to be_valid
 
     path = Discourse.store.path_for(upload)
     expect(File.read(path)).to match(/<style>/)

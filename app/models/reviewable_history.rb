@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class ReviewableHistory < ActiveRecord::Base
-  belongs_to :reviewable
-  belongs_to :created_by, class_name: 'User'
+  belongs_to :reviewable, optional: true
+  belongs_to :created_by, class_name: 'User', optional: true
 
   def self.types
     @types ||= Enum.new(

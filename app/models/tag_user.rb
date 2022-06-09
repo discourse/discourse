@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class TagUser < ActiveRecord::Base
-  belongs_to :tag
-  belongs_to :user
+  belongs_to :tag, optional: true
+  belongs_to :user, optional: true
 
   scope :notification_level_visible, -> (notification_levels = TagUser.notification_levels.values) {
     select("tag_users.*")

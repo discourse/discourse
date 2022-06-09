@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class QuotedPost < ActiveRecord::Base
-  belongs_to :post
-  belongs_to :quoted_post, class_name: 'Post'
+  belongs_to :post, optional: true
+  belongs_to :quoted_post, class_name: 'Post', optional: true
 
   # NOTE we already have a path that does this for topic links,
   #  however topic links exclude quotes and links within a topic

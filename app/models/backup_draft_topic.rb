@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class BackupDraftTopic < ActiveRecord::Base
-  belongs_to :user
-  belongs_to :topic
+  belongs_to :user, optional: true
+  belongs_to :topic, optional: true
 end
 
 # == Schema Information

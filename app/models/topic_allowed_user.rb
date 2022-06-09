@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class TopicAllowedUser < ActiveRecord::Base
-  belongs_to :topic
-  belongs_to :user
+  belongs_to :topic, optional: true
+  belongs_to :user, optional: true
 
   validates_uniqueness_of :topic_id, scope: :user_id
 end

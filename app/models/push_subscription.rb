@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class PushSubscription < ActiveRecord::Base
-  belongs_to :user
+  belongs_to :user, optional: true
 
   def parsed_data
     JSON.parse(data)

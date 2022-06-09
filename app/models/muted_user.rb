@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class MutedUser < ActiveRecord::Base
-  belongs_to :user
-  belongs_to :muted_user, class_name: 'User'
+  belongs_to :user, optional: true
+  belongs_to :muted_user, class_name: 'User', optional: true
 end
 
 # == Schema Information

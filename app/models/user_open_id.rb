@@ -4,7 +4,7 @@
 class UserOpenId < ActiveRecord::Base
   after_initialize :raise_deprecation_error
 
-  belongs_to :user
+  belongs_to :user, optional: true
 
   validates_presence_of :email
   validates_presence_of :url

@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class GroupArchivedMessage < ActiveRecord::Base
-  belongs_to :group
-  belongs_to :topic
+  belongs_to :group, optional: true
+  belongs_to :topic, optional: true
 
   def self.move_to_inbox!(group_id, topic, opts = {})
     topic_id = topic.id

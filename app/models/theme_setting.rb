@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ThemeSetting < ActiveRecord::Base
-  belongs_to :theme
+  belongs_to :theme, optional: true
 
   has_many :upload_references, as: :target, dependent: :destroy
 

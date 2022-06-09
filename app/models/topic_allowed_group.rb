@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class TopicAllowedGroup < ActiveRecord::Base
-  belongs_to :topic
-  belongs_to :group
+  belongs_to :topic, optional: true
+  belongs_to :group, optional: true
 
   validates_uniqueness_of :topic_id, scope: :group_id
 end

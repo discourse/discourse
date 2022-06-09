@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class CategoryCustomField < ActiveRecord::Base
-  belongs_to :category
+  belongs_to :category, optional: true
 end
 
 # == Schema Information

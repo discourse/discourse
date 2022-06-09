@@ -71,7 +71,7 @@ class ThemeField < ActiveRecord::Base
   validates :name, format: { with: /\A[a-z_][a-z0-9_-]*\z/i },
                    if: Proc.new { |field| ThemeField.theme_var_type_ids.include?(field.type_id) }
 
-  belongs_to :theme
+  belongs_to :theme, optional: true
 
   def process_html(html)
     errors = []
