@@ -12,7 +12,7 @@ describe Searchable do
 
       class SearchableRecordSearchData < ActiveRecord::Base
         self.primary_key = 'searchable_record_id'
-        belongs_to :test_item
+        belongs_to :test_item, optional: true
       end
     end
 

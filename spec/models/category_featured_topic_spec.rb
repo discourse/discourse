@@ -2,8 +2,8 @@
 
 describe CategoryFeaturedTopic do
 
-  it { is_expected.to belong_to :category }
-  it { is_expected.to belong_to :topic }
+  it { is_expected.to belong_to(:category).optional }
+  it { is_expected.to belong_to(:topic).optional }
 
   context 'feature_topics_for' do
     fab!(:user)          { Fabricate(:user) }

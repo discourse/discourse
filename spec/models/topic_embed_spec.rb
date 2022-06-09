@@ -5,7 +5,7 @@ require 'stringio'
 describe TopicEmbed do
 
   it { is_expected.to belong_to(:topic).optional }
-  it { is_expected.to belong_to :post }
+  it { is_expected.to belong_to(:post).optional }
   it { is_expected.to validate_presence_of :embed_url }
 
   context '.import' do

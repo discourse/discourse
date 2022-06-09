@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe PostDetail do
-  it { is_expected.to belong_to :post }
+  it { is_expected.to belong_to(:post).optional }
 
   it { is_expected.to validate_presence_of :key }
   it { is_expected.to validate_presence_of :value }

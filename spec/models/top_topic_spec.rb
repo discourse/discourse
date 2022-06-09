@@ -18,7 +18,7 @@ describe TopTopic do
     end
   end
 
-  it { is_expected.to belong_to :topic }
+  it { is_expected.to belong_to(:topic).optional }
 
   context "refresh!" do
 

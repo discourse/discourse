@@ -70,8 +70,8 @@ describe TopicUser do
     end
   end
 
-  it { is_expected.to belong_to :user }
-  it { is_expected.to belong_to :topic }
+  it { is_expected.to belong_to(:user).optional }
+  it { is_expected.to belong_to(:topic).optional }
 
   fab!(:user) { Fabricate(:user) }
 

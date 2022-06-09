@@ -3,7 +3,7 @@
 describe EmailToken do
   it { is_expected.to validate_presence_of :user_id }
   it { is_expected.to validate_presence_of :email }
-  it { is_expected.to belong_to :user }
+  it { is_expected.to belong_to(:user).optional }
 
   context '#create' do
     fab!(:user) { Fabricate(:user, active: false) }

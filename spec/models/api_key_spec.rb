@@ -4,8 +4,8 @@
 describe ApiKey do
   fab!(:user) { Fabricate(:user) }
 
-  it { is_expected.to belong_to :user }
-  it { is_expected.to belong_to :created_by }
+  it { is_expected.to belong_to(:user).optional }
+  it { is_expected.to belong_to(:created_by).optional }
 
   it 'generates a key when saving' do
     api_key = ApiKey.new

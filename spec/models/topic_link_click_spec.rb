@@ -2,8 +2,8 @@
 
 describe TopicLinkClick do
 
-  it { is_expected.to belong_to :topic_link }
-  it { is_expected.to belong_to :user }
+  it { is_expected.to belong_to(:topic_link).optional }
+  it { is_expected.to belong_to(:user).optional }
   it { is_expected.to validate_presence_of :topic_link_id }
 
   def test_uri
