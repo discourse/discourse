@@ -56,10 +56,9 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
     return this.siteSettings.enable_user_status && this.user.status;
   },
 
-  @discourseComputed("user.status")
-  userStatusEmoji(status) {
-    const emoji = escapeExpression(`:${status.emoji}:`);
-    return emojiUnescape(emoji);
+  @discourseComputed("user.status.emoji")
+  userStatusEmoji(emoji) {
+    return emojiUnescape(escapeExpression(`:${emoji}:`));
   },
 
   isSuspendedOrHasBio: or("user.suspend_reason", "user.bio_excerpt"),
