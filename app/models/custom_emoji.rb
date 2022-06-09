@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class CustomEmoji < ActiveRecord::Base
-  belongs_to :upload
+  belongs_to :upload, optional: true
 
   has_many :upload_references, as: :target, dependent: :destroy
 

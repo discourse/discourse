@@ -2,7 +2,7 @@
 
 describe EmailLog do
 
-  it { is_expected.to belong_to :user }
+  it { is_expected.to belong_to(:user).optional }
   it { is_expected.to validate_presence_of :to_address }
   it { is_expected.to validate_presence_of :email_type }
 

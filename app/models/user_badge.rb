@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 class UserBadge < ActiveRecord::Base
-  belongs_to :badge
-  belongs_to :user
-  belongs_to :granted_by, class_name: 'User'
+  belongs_to :badge, optional: true
+  belongs_to :user, optional: true
+  belongs_to :granted_by, class_name: 'User', optional: true
   belongs_to :notification, dependent: :destroy, optional: true
   belongs_to :post, optional: true
 

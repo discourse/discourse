@@ -5,8 +5,8 @@ class TopicUser < ActiveRecord::Base
     :highest_seen_post_number # Remove after 01 Jan 2022
   ]
 
-  belongs_to :user
-  belongs_to :topic
+  belongs_to :user, optional: true
+  belongs_to :topic, optional: true
 
   # used for serialization
   attr_accessor :post_action_data
