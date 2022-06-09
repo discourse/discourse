@@ -103,6 +103,21 @@
       color: var(--primary);
       font-weight: bold;
     }
+
+    .badge-wrapper {
+      font-size: 100%;
+    }
+  }
+
+  .sidebar-section-message-wrapper {
+    display: flex;
+    margin-left: 1.5em;
+  }
+
+  .sidebar-section-message {
+    padding: 0.25em 0.5em;
+    font-size: var(--font-down-1);
+    color: var(--primary-high);
   }
 
   .sidebar-section-link-content-badge {
