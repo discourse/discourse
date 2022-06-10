@@ -320,7 +320,7 @@ module Email
         # TestMailer from the Mail gem does not return a real response, it
         # returns an array containing @message, so we have to have this workaround.
         if message_response.kind_of?(Net::SMTP::Response)
-          email_log.smtp_transaction_id = message_response&.message
+          email_log.smtp_transaction_response = message_response&.message&.chomp
         end
       rescue *SMTP_CLIENT_ERRORS => e
         return skip(SkippedEmailLog.reason_types[:custom], custom_reason: e.message)

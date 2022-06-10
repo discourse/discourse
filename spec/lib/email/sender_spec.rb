@@ -7,11 +7,11 @@ describe Email::Sender do
     SiteSetting.secure_media_allow_embed_images_in_emails = false
   end
   fab!(:post) { Fabricate(:post) }
-  let(:mock_smtp_transaction_id) { "250 Ok: queued as 2l3Md07BObzB8kRyHZeoN0baSUAhzc7A-NviRioOr80=@mailhog.example" }
+  let(:mock_smtp_transaction_response) { "250 Ok: queued as 2l3Md07BObzB8kRyHZeoN0baSUAhzc7A-NviRioOr80=@mailhog.example" }
 
   def stub_deliver_response(message)
     message.stubs(:deliver!).returns(
-      Net::SMTP::Response.new("250", mock_smtp_transaction_id)
+      Net::SMTP::Response.new("250", mock_smtp_transaction_response)
     )
   end
 
@@ -742,8 +742,8 @@ describe Email::Sender do
       expect(@email_log.user_id).to eq(user.id)
     end
 
-    it 'should have the smtp_transaction_id message' do
-      expect(@email_log.smtp_transaction_id).to eq(mock_smtp_transaction_id)
+    it 'should have the smtp_transaction_response message' do
+      expect(@email_log.smtp_transaction_response).to eq(mock_smtp_transaction_response)
     end
 
     describe "post reply keys" do
