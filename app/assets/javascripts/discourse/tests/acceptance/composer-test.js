@@ -597,7 +597,7 @@ acceptance("Composer", function (needs) {
     );
   });
 
-  test("Composer can toggle whisper when click reply to topic after reply to whisper", async function (assert) {
+  test("Composer can toggle whisper when clicking reply to topic after reply to whisper", async function (assert) {
     await visit("/t/topic-with-whisper/960");
 
     await click(".topic-post:nth-of-type(3) button.reply");
