@@ -315,7 +315,10 @@ module Email
       DiscourseEvent.trigger(:before_email_send, @message, @email_type)
 
       begin
-        @message.deliver_now
+        message_response = @message.deliver!
+        if message_response.kind_of?(Net::SMTP::Response)
+          email_log.smtp_transaction_id = message_response&.message
+        end
       rescue *SMTP_CLIENT_ERRORS => e
         return skip(SkippedEmailLog.reason_types[:custom], custom_reason: e.message)
       end
