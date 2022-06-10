@@ -523,14 +523,12 @@ describe Email::Sender do
     end
     fab!(:notification) { Fabricate(:posted_notification, user: post.user, post: reply) }
     let(:message) do
-      msg = UserNotifications.user_posted(
+      UserNotifications.user_posted(
         post.user,
         post: reply,
         notification_type: notification.notification_type,
         notification_data_hash: notification.data_hash
       )
-      stub_deliver_response(msg)
-      msg
     end
 
     it "adds only non-image uploads as attachments to the email" do

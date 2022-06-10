@@ -316,6 +316,9 @@ module Email
 
       begin
         message_response = @message.deliver!
+
+        # TestMailer from the Mail gem does not return a real response, it
+        # returns an array containing @message, so we have to have this workaround.
         if message_response.kind_of?(Net::SMTP::Response)
           email_log.smtp_transaction_id = message_response&.message
         end
