@@ -580,7 +580,7 @@ acceptance("Composer", function (needs) {
     );
   });
 
-  test("Composer can toggle whisper when switch from reply to whisper to reply to topic", async function (assert) {
+  test("Composer can toggle whisper when switching from reply to whisper to reply to topic", async function (assert) {
     await visit("/t/topic-with-whisper/960");
 
     await click(".topic-post:nth-of-type(3) button.reply");
