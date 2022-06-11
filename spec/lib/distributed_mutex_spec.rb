@@ -71,7 +71,7 @@ describe DistributedMutex do
 
   context "readonly redis" do
     before do
-      Discourse.redis.slaveof "127.0.0.1", "99991"
+      Discourse.redis.slaveof "127.0.0.1", "65534"
     end
 
     after do
