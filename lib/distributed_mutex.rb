@@ -99,7 +99,7 @@ class DistributedMutex
   end
 
   def prefixed_key
-    redis.namespace_key(key)
+    @prefixed_key ||= redis.respond_to?(:namespace_key) ? redis.namespace_key(key) : key
   end
 
   def warn(msg)
