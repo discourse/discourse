@@ -1459,9 +1459,6 @@ id:
           desc: Membalas tulisan tertentu
         reply_as_new_topic:
           desc: Buat topik baru yang ditautkan dengan topik ini
-        reply_as_private_message:
-          label: Pesan baru
-          desc: Buat pesan pribadi baru
         reply_to_topic:
           label: Balas ke topik
           desc: Membalas topik, bukan tulisan tertentu

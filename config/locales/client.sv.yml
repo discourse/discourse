@@ -2073,9 +2073,6 @@ sv:
         reply_as_new_group_message:
           label: Svara som nytt gruppmeddelande
           desc: Skapa nytt meddelande som börjar med samma mottagare
-        reply_as_private_message:
-          label: Nytt meddelande
-          desc: Skapa ett nytt personligt meddelande
         reply_to_topic:
           label: Svara på ämne
           desc: Svara på ämnet, inte ett specifikt inlägg
@@ -3739,6 +3736,8 @@ sv:
             bookmarked:
               content: "Bokmärkt"
               title: "Alla bokmärkta ämnen"
+            my_posts:
+              content: "Mina inlägg"
   admin_js:
     type_to_filter: "skriv för att filtrera..."
     admin:

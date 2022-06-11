@@ -1324,8 +1324,6 @@ sk:
       composer_actions:
         reply: Odpoveď
         edit: Upraviť
-        reply_as_private_message:
-          label: Nová správa
         reply_to_topic:
           label: Odpovedať na tému
         create_topic:
@@ -2282,6 +2280,8 @@ sk:
           links:
             tracked:
               content: "Pozorované"
+            my_posts:
+              content: "Moje príspevky"
   admin_js:
     type_to_filter: "zadajte, čo chcete filtrovať ..."
     admin:

@@ -1898,9 +1898,6 @@ fa_IR:
           desc: ساخت تاپیک جدید، لینک شده به این تاپیک
         reply_as_new_group_message:
           label: پاسخ به عنوان پیام گروهی جدید
-        reply_as_private_message:
-          label: پیام جدید
-          desc: یک پیام شخصی جدید بساز
         reply_to_topic:
           label: پاسخ به مبحث
           desc: به مبحث اصلی پاسخ بده و نه هیچ کدام از نوشته ها
@@ -3207,6 +3204,12 @@ fa_IR:
             bookmarked:
               content: "نشانک گذاری شده"
               title: "همه موضوعات نشانک گذاری شده"
+            my_posts:
+              content: "نوشته‌های من"
+              title: "نوشته‌های من"
+              draft_count:
+                one: "%{count} پیش‌نویس"
+                other: "%{count} پیش‌نویس"
   admin_js:
     type_to_filter: "بنویسید تا فیلتر کنید..."
     admin:

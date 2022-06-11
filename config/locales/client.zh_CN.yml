@@ -1985,9 +1985,6 @@ zh_CN:
         reply_as_new_group_message:
           label: 作为新群组消息回复
           desc: 创建以相同收件人开头的新消息
-        reply_as_private_message:
-          label: 新建消息
-          desc: 创建新的个人消息
         reply_to_topic:
           label: 回复话题
           desc: 回复话题，不是任何特定的帖子
@@ -3569,6 +3566,11 @@ zh_CN:
             bookmarked:
               content: "已加入书签"
               title: "所有被列入书签的主题"
+            my_posts:
+              content: "我的帖子"
+              title: "我的帖子"
+              draft_count:
+                other: "%{count} 草稿"
   admin_js:
     type_to_filter: "输入以筛选…"
     admin:

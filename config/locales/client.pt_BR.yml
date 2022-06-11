@@ -2026,9 +2026,6 @@ pt_BR:
         reply_as_new_group_message:
           label: Responder como nova mensagem de grupo
           desc: Crie uma nova mensagem começando com os mesmos destinatários
-        reply_as_private_message:
-          label: Nova mensagem
-          desc: Criar uma nova mensagem pessoal
         reply_to_topic:
           label: Responder ao tópico
           desc: Responder ao tópico, não a uma postagem específica
@@ -3634,6 +3631,8 @@ pt_BR:
           links:
             tracked:
               content: "Monitorados(as)"
+            my_posts:
+              content: "Minhas postagens"
   admin_js:
     type_to_filter: "Digite para filtrar..."
     admin:

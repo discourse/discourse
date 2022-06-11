@@ -1940,6 +1940,8 @@ sq:
           links:
             tracked:
               content: "Gjurmuar"
+            my_posts:
+              content: "Postimet e mia"
   admin_js:
     type_to_filter: "shkruaj për kërkim"
     admin:

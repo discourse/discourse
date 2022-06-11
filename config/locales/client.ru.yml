@@ -2247,9 +2247,6 @@ ru:
         reply_as_new_group_message:
           label: Ответить в виде нового группового сообщения
           desc: Создать новое личное сообщение с теми же получателями
-        reply_as_private_message:
-          label: Личное сообщение
-          desc: Создать новое личное сообщение
         reply_to_topic:
           label: Ответить на тему
           desc: Ответить на тему в целом, а не на конкретное сообщение
@@ -4077,6 +4074,14 @@ ru:
             bookmarked:
               content: "В закладках"
               title: "Все темы с закладками"
+            my_posts:
+              content: "Мои сообщения"
+              title: "Мои сообщения"
+              draft_count:
+                one: "%{count} черновик"
+                few: "%{count} черновика"
+                many: "%{count} черновиков"
+                other: "%{count} черновиков"
   admin_js:
     type_to_filter: "Фильтрация настроек..."
     admin:

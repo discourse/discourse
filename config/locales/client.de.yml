@@ -2073,9 +2073,6 @@ de:
         reply_as_new_group_message:
           label: Als neue Gruppen-Nachricht antworten
           desc: Neue Nachricht erstellen, beginnend mit denselben Empfängern
-        reply_as_private_message:
-          label: Neue Nachricht
-          desc: Erstelle eine neue persönliche Nachricht
         reply_to_topic:
           label: Auf Thema antworten
           desc: Antworte auf das Thema, nicht auf einen bestimmten Beitrag
@@ -3739,6 +3736,12 @@ de:
             bookmarked:
               content: "Mit einem Lesezeichen versehen"
               title: "Alle mit Lesezeichen versehenen Themen"
+            my_posts:
+              content: "Meine Beiträge"
+              title: "Meine Beiträge"
+              draft_count:
+                one: "%{count} Entwurf"
+                other: "%{count} Entwürfe"
   admin_js:
     type_to_filter: "zum Filtern hier eingeben …"
     admin:

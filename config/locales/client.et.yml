@@ -1410,8 +1410,6 @@ et:
         reply: Vasta
         draft: Mustand
         edit: Muuda
-        reply_as_private_message:
-          label: Uus sõnum
         reply_to_topic:
           label: Vasta teemale
         create_topic:
@@ -2544,6 +2542,8 @@ et:
           links:
             tracked:
               content: "Jälgitud"
+            my_posts:
+              content: "Minu"
   admin_js:
     type_to_filter: "filtreerimiseks trüki..."
     admin:
