@@ -128,7 +128,7 @@ export default Controller.extend({
   )
   get disableSubmit() {
     return (
-      this.model.loading ||
+      this.model?.loading ||
       this.isUploading ||
       this.isProcessingUpload ||
       this._disableSubmit
