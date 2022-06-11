@@ -54,6 +54,12 @@ sv:
           label: Text
       triggerables:
         not_found: Kunde inte hitta utlösaren `%{trigger}` för automatisering `%{automation}`, se till att det tillhörande insticksprogrammet är installerat.
+        user_badge_granted:
+          fields:
+            badge:
+              label: Märke
+            only_first_grant:
+              label: Endast vid första beviljan
         stalled_topic:
           durations:
             PT1H: "En timme"

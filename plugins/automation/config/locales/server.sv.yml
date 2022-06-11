@@ -8,6 +8,10 @@ sv:
   site_settings:
     discourse_automation_enabled: "Aktivera discourse-automation plugin"
   discourse_automation:
+    triggerables:
+      user_badge_granted:
+        title: Användarmärke beviljat
+        doc: Utlöser en automatisering när en användare tilldelas ett märke.
     scriptables:
       close_topic:
         title: Stäng ämne
