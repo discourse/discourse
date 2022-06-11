@@ -43,33 +43,12 @@ export default {
       PreloadStore.store(key, JSON.parse(preloaded[key]));
 
       if (setupData.debugPreloadedAppData === "true") {
-        /* eslint-disable no-console */
+        // eslint-disable-next-line no-console
         console.log(key, PreloadStore.get(key));
-        /* eslint-enable no-console */
       }
     });
 
-    let baseUrl = setupData.baseUrl;
-    Object.defineProperty(app, "BaseUrl", {
-      get() {
-        deprecated(`use "get-url" helpers instead of Discourse.BaseUrl`, {
-          since: "2.5",
-          dropFrom: "2.6",
-        });
-        return baseUrl;
-      },
-    });
-    let baseUri = setupData.baseUri;
-    Object.defineProperty(app, "BaseUri", {
-      get() {
-        deprecated(`use "get-url" helpers instead of Discourse.BaseUri`, {
-          since: "2.5",
-          dropFrom: "2.6",
-        });
-        return baseUri;
-      },
-    });
-    setupURL(setupData.cdn, baseUrl, setupData.baseUri);
+    setupURL(setupData.cdn, setupData.baseUrl, setupData.baseUri);
     setEnvironment(setupData.environment);
     app.SiteSettings = PreloadStore.get("siteSettings");
     I18n.defaultLocale = setupData.defaultLocale;

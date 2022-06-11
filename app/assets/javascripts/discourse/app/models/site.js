@@ -241,7 +241,6 @@ if (typeof Discourse !== "undefined") {
       if (!warned) {
         deprecated("Import the Site class instead of using Discourse.Site", {
           since: "2.4.0",
-          dropFrom: "2.6.0",
         });
         warned = true;
       }
