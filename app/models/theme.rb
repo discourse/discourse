@@ -154,7 +154,7 @@ class Theme < ActiveRecord::Base
     SvgSprite.expire_cache
   end
 
-  BASE_COMPILER_VERSION = 55
+  BASE_COMPILER_VERSION = 56
   def self.compiler_version
     get_set_cache "compiler_version" do
       dependencies = [
