@@ -9,7 +9,6 @@ import I18n from "I18n";
 import PreloadStore from "discourse/lib/preload-store";
 import RSVP from "rsvp";
 import Session from "discourse/models/session";
-import deprecated from "discourse-common/lib/deprecated";
 import { setDefaultOwner } from "discourse-common/lib/get-owner";
 import { setIconList } from "discourse-common/lib/icon-library";
 import { setURLContainer } from "discourse/lib/url";
