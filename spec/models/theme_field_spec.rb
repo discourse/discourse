@@ -75,7 +75,7 @@ describe ThemeField do
 
     theme_field = ThemeField.create!(theme_id: 1, target_id: 0, name: "header", value: html)
     theme_field.ensure_baked!
-    expect(theme_field.value_baked).to include("<script defer src=\"#{theme_field.javascript_cache.url}\" data-theme-id=\"1\"></script>")
+    expect(theme_field.value_baked).to include("<script defer="" src=\"#{theme_field.javascript_cache.url}\" data-theme-id=\"1\"></script>")
     expect(theme_field.value_baked).to include("external-script.js")
     expect(theme_field.value_baked).to include('<script type="text/template"')
     expect(theme_field.javascript_cache.content).to include('a = "inline discourse plugin"')
