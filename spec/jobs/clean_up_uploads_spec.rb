@@ -71,7 +71,7 @@ describe Jobs::CleanUpUploads do
     it 'deletes other uploads not skipped by an unused callback' do
       expired_upload2 = fabricate_upload
       upload = fabricate_upload
-      PostUpload.create(post: Fabricate(:post), upload: upload)
+      UploadReference.create(target: Fabricate(:post), upload: upload)
 
       expect do
         Jobs::CleanUpUploads.new.execute(nil)
@@ -105,7 +105,7 @@ describe Jobs::CleanUpUploads do
     it 'deletes other uploads that are not in use by callback' do
       expired_upload2 = fabricate_upload
       upload = fabricate_upload
-      PostUpload.create(post: Fabricate(:post), upload: upload)
+      UploadReference.create(target: Fabricate(:post), upload: upload)
 
       expect do
         Jobs::CleanUpUploads.new.execute(nil)
@@ -193,6 +193,10 @@ describe Jobs::CleanUpUploads do
   end
 
   it "does not clean up selectable avatars" do
+    original_provider = SiteSetting.provider
+    SiteSetting.provider = SiteSettings::DbProvider.new(SiteSetting)
+    SiteSetting.clean_orphan_uploads_grace_period_hours = 1
+
     avatar1_upload = fabricate_upload
     avatar2_upload = fabricate_upload
 
@@ -203,6 +207,9 @@ describe Jobs::CleanUpUploads do
     expect(Upload.exists?(id: expired_upload.id)).to eq(false)
     expect(Upload.exists?(id: avatar1_upload.id)).to eq(true)
     expect(Upload.exists?(id: avatar2_upload.id)).to eq(true)
+  ensure
+    SiteSetting.delete_all
+    SiteSetting.provider = original_provider
   end
 
   it "does not delete profile background uploads" do
@@ -291,12 +298,12 @@ describe Jobs::CleanUpUploads do
     upload3 = fabricate_upload
 
     Fabricate(:reviewable_queued_post_topic, payload: {
-      raw: "#{upload.sha1}\n#{upload2.short_url}"
+      raw: "#{upload.short_url}\n#{upload2.short_url}"
     })
 
     Fabricate(:reviewable_queued_post_topic,
       payload: {
-        raw: "#{upload3.sha1}"
+        raw: "#{upload3.short_url}"
       },
       status: Reviewable.statuses[:rejected]
     )
@@ -313,7 +320,7 @@ describe Jobs::CleanUpUploads do
     upload = fabricate_upload
     upload2 = fabricate_upload
 
-    Draft.set(Fabricate(:user), "test", 0, "#{upload.sha1}\n#{upload2.short_url}")
+    Draft.set(Fabricate(:user), "test", 0, "upload://#{upload.sha1}\n#{upload2.short_url}")
 
     Jobs::CleanUpUploads.new.execute(nil)
 

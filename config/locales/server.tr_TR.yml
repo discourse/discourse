@@ -208,6 +208,7 @@ tr_TR:
       cannot_enable_s3_uploads_when_s3_enabled_globally: "S3 yüklemeleri zaten küresel olarak etkin olduğundan S3 yüklemelerini etkinleştiremezsiniz ve bu site düzeyini etkinleştirmek yüklemelerde kritik sorunlara neden olabilir"
       cors_origins_should_not_have_trailing_slash: "CORS kaynaklarına sondaki eğik çizgiyi (/) eklememelisiniz."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "Ayara aşağıdaki değerlerden herhangi birini ekleyemezsiniz: %{values}."
+      twitter_summary_large_image_no_svg: "twitter:image meta verisi için kullanılan Twitter özet resimleri .svg olamaz."
     conflicting_google_user_id: 'Bu hesap için Google Hesap Kimliği değişti; Güvenlik nedeniyle yetkili müdahalesi gerekmektedir. Lütfen yetkili ile iletişime geçin ve <br> <a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
       invalid_address: "Üzgünüz, '%{hostname}' sunucusu bulunamadığı için bu web sayfası için bir önizleme oluşturamadık. Önizleme yerine, gönderinizde yalnızca bir bağlantı görünecektir. :cry:"
@@ -1459,7 +1460,7 @@ tr_TR:
     favicon: "Siteniz için bir simge, bkz. <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>Https://en.wikipedia.org/wiki/Favicon</a> . Bir CDN üzerinde düzgün çalışmak için bir png olması gerekir. 32x32 olarak yeniden boyutlandırılacak. Boş bırakılırsa large_icon kullanılır."
     apple_touch_icon: "Apple dokunmatik cihazlar için kullanılan simge. Otomatik olarak 180x180 boyutuna getirilecek. Boş bırakılırsa large_icon kullanılır."
     opengraph_image: "Sayfada başka uygun görüntü yoksa varsayılan açık grafik görüntüsü. Boş bırakılırsa large_icon kullanılır."
-    twitter_summary_large_image: "Twitter kartı 'özet büyük resim' (en az 280 genişliğinde ve en az 150 yüksekliğinde olmalıdır). Boş bırakılırsa opengraph_image kullanılarak normal kart meta verileri oluşturulur."
+    twitter_summary_large_image: "Twitter kartı 'özet büyük resim' (en az 280 genişliğinde ve en az 150 yüksekliğinde olmalıdır, .svg olamaz). Boş bırakılırsa, .svg olmayan opengraph_image kullanılarak normal kart meta verileri oluşturulur."
     notification_email: "Tüm önemli sistem e-postaları için kullanılacak olan gönderen e-posta adresi. E-postaların başarıyla ulaşması için buraya girilen alan adının SPF, DKIM ve reverse PTR kayıtlarının doğru yapılması lazım."
     email_custom_headers: "Sınırlandırılmış özel e-posta başlıkları listesi"
     email_subject: "Standart e-postalar için özelleştirilebilir konu biçimi. Bkz. <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"

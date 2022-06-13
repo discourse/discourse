@@ -42,7 +42,7 @@ module Onebox
           result = parse_embed_response
           result ||= get_opengraph.data
 
-          "<img src='#{result[:image]}' width='#{WIDTH}' height='#{HEIGHT}' title='#{result[:title]}'>"
+          "<img src='#{result[:image]}' width='#{WIDTH}' height='#{HEIGHT}' title='#{CGI::escapeHTML(result[:title])}'>"
         else
           to_html
         end

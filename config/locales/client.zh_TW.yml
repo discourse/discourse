@@ -1655,9 +1655,6 @@ zh_TW:
         reply_as_new_topic:
           label: 以「連結話題」回應
           desc: 創立新話題來連結此話題
-        reply_as_private_message:
-          label: 新增訊息
-          desc: 寫一則私訊
         reply_to_topic:
           label: 回應話題
           desc: 回應本話題而非特定貼文
@@ -2806,6 +2803,10 @@ zh_TW:
           links:
             tracked:
               content: "已追蹤"
+            my_posts:
+              content: "我的貼文"
+              draft_count:
+                other: "%{count}草稿"
   admin_js:
     type_to_filter: "輸入要搜尋的文字..."
     admin:

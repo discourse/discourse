@@ -210,6 +210,7 @@ de:
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "Benutzeragenten müssen mindestens 3 Zeichen lang sein, um zu verhindern, dass menschliche Benutzer falsch eingeschätzt werden."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "Du kannst keinen der folgenden Werte zu der Einstellung hinzufügen: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "Du kannst die Strip-Image-Metadaten nicht deaktivieren, wenn \"composer media optimization image enabled\" aktiviert ist. Deaktiviere \"composer media optimization image enabled\", bevor du Strip-Image-Metadaten deaktivierst."
+      twitter_summary_large_image_no_svg: "Twitter-Zusammenfassungsbilder, die für twitter:image-Metadaten verwendet werden, können keine .svg-Bilder sein."
     conflicting_google_user_id: 'Die Google-Konto-ID für dieses Konto hat sich geändert; das Einschreiten des Teams ist aus Sicherheitsgründen erforderlich. Bitte kontaktiere das Team und verweise es auf <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
       invalid_address: "Leider konnten wir keine Vorschau für diese Webseite erstellen, da der Server „%{hostname}“ nicht gefunden werden konnte. Statt einer Vorschau erscheint nur ein Link in deinem Beitrag. :cry:"
@@ -1473,7 +1474,7 @@ de:
     favicon: "Ein Favicon für die Website, siehe <a href='https://de.wikipedia.org/wiki/Favicon' target='_blank'>https://de.wikipedia.org/wiki/Favicon</a>. Damit es auch über eine CDN richtig funktioniert, muss es ein PNG sein. Wird auf eine Größe von 32 x 32 gesetzt. Falls leer, wird large_icon verwendet."
     apple_touch_icon: "Icon für Apple-Touch-Geräte. Wird automatisch auf eine Größe von 180 x 180 gesetzt. Falls leer, wird large_icon verwendet."
     opengraph_image: "Standard-Opengraph-Bild. Wird verwendet, wenn die Seite kein anderes passendes Bild hat. Falls leer, wird large_icon verwendet."
-    twitter_summary_large_image: "„summary large image“ für Twitter-Karten (sollte mindestens 280 breit und 150 hoch sein). Falls leer, werden Standard-Karten-Metadaten mithilfe von opengraph_image generiert."
+    twitter_summary_large_image: "Twitter-Karte \"Zusammenfassung großes Bild\" (sollte mindestens 280 in der Breite und mindestens 150 in der Höhe sein, kann nicht .svg sein). Wenn das Feld leer gelassen wird, werden die regulären Metadaten der Karte aus dem opengraph_image generiert, sofern es sich nicht ebenfalls um eine .svg-Datei handelt."
     notification_email: "Die E-Mail-Adresse, die als „from:“-Absender aller wichtigen System-E-Mails benutzt wird. Die angegebene Domain sollte über korrekte SPF-, DKIM- und Reverse-PTR-Einträge verfügen, damit E-Mails sicher zugestellt werden können."
     email_custom_headers: "Eine durch senkrechte Striche („|“) getrennte Liste von eigenen E-Mail-Headern"
     email_subject: "Anpassbares Betreff-Format für Standard-E-Mails. Siehe <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"

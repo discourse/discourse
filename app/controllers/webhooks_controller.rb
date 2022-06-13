@@ -3,6 +3,7 @@
 require "openssl"
 
 class WebhooksController < ActionController::Base
+  skip_before_action :verify_authenticity_token
 
   def mailgun
     return mailgun_failure if SiteSetting.mailgun_api_key.blank?

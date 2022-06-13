@@ -2071,9 +2071,6 @@ es:
         reply_as_new_group_message:
           label: Responder como un nuevo mensaje de grupo
           desc: Crear un nuevo mensaje con los mismos destinatarios
-        reply_as_private_message:
-          label: Nuevo mensaje
-          desc: Crear un nuevo mensaje personal
         reply_to_topic:
           label: Responder al tema
           desc: Responder al tema, no a una publicación específica
@@ -3737,6 +3734,8 @@ es:
             bookmarked:
               content: "Añadidos a marcadores"
               title: "Todos los temas enn marcadores"
+            my_posts:
+              content: "Mis publicaciones"
   admin_js:
     type_to_filter: "filtrar opciones..."
     admin:

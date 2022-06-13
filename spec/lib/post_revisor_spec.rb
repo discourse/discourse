@@ -1189,7 +1189,7 @@ describe PostRevisor do
 
       it "updates linked post uploads" do
         post.link_post_uploads
-        expect(post.post_uploads.pluck(:upload_id)).to contain_exactly(image1.id, image2.id)
+        expect(post.upload_references.pluck(:upload_id)).to contain_exactly(image1.id, image2.id)
 
         subject.revise!(user, raw: <<~RAW)
             This is a post with multiple uploads
@@ -1198,7 +1198,7 @@ describe PostRevisor do
             ![image4](#{image4.short_url})
         RAW
 
-        expect(post.reload.post_uploads.pluck(:upload_id)).to contain_exactly(image2.id, image3.id, image4.id)
+        expect(post.reload.upload_references.pluck(:upload_id)).to contain_exactly(image2.id, image3.id, image4.id)
       end
 
       context "secure media uploads" do

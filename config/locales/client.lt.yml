@@ -1937,9 +1937,6 @@ lt:
         reply_as_new_group_message:
           label: Atsakyti kaip naują grupės pranešimą
           desc: Sukurkite naują pranešimą, pradedant nuo tų pačių gavėjų
-        reply_as_private_message:
-          label: Nauja žinutė
-          desc: Sukurti naują asmeninę žinutę
         reply_to_topic:
           label: Atsakyti į temą
           desc: Atsakykite į temą, o ne į konkretų įrašą
@@ -3503,6 +3500,8 @@ lt:
               title: "Visos stebimos temos"
             bookmarked:
               content: "Pažymėta"
+            my_posts:
+              content: "Mano Įrašai"
   admin_js:
     type_to_filter: "įrašyk kažką dėl filtro..."
     admin:

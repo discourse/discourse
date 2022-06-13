@@ -517,6 +517,32 @@ describe Upload do
     end
   end
 
+  describe '.extract_upload_ids' do
+    let(:upload) { Fabricate(:upload) }
+
+    it 'works with short URLs' do
+      ids = Upload.extract_upload_ids("This URL #{upload.short_url} is an upload")
+      expect(ids).to contain_exactly(upload.id)
+    end
+
+    it 'works with SHA1s' do
+      ids = Upload.extract_upload_ids("This URL /#{upload.sha1} is an upload")
+      expect(ids).to contain_exactly(upload.id)
+    end
+
+    it 'works with Base62 hashes' do
+      ids = Upload.extract_upload_ids("This URL /#{Upload.base62_sha1(upload.sha1)} is an upload")
+      expect(ids).to contain_exactly(upload.id)
+    end
+
+    it 'works with shorter base62 hashes (when sha1 has leading 0s)' do
+      upload.update(sha1: "0000c513e1da04f7b4e99230851ea2aafeb8cc4e")
+      base62 = Upload.base62_sha1(upload.sha1).delete_prefix("0")
+      ids = Upload.extract_upload_ids("This URL /#{base62} is an upload")
+      expect(ids).to contain_exactly(upload.id)
+    end
+  end
+
   def enable_secure_media
     setup_s3
     SiteSetting.secure_media = true

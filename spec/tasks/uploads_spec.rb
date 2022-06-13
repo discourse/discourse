@@ -26,11 +26,11 @@ RSpec.describe "tasks/uploads" do
     let!(:post3) { Fabricate(:post) }
 
     before do
-      PostUpload.create(post: post1, upload: multi_post_upload1)
-      PostUpload.create(post: post2, upload: multi_post_upload1)
-      PostUpload.create(post: post2, upload: upload1)
-      PostUpload.create(post: post3, upload: upload2)
-      PostUpload.create(post: post3, upload: upload3)
+      UploadReference.create(target: post1, upload: multi_post_upload1)
+      UploadReference.create(target: post2, upload: multi_post_upload1)
+      UploadReference.create(target: post2, upload: upload1)
+      UploadReference.create(target: post3, upload: upload2)
+      UploadReference.create(target: post3, upload: upload3)
     end
 
     def invoke_task
@@ -141,7 +141,7 @@ RSpec.describe "tasks/uploads" do
           it "changes the upload to not secure and updates the ACL" do
             upload_to_mark_not_secure = Fabricate(:upload_s3, secure: true)
             post_for_upload = Fabricate(:post)
-            PostUpload.create(post: post_for_upload, upload: upload_to_mark_not_secure)
+            UploadReference.create(target: post_for_upload, upload: upload_to_mark_not_secure)
 
             setup_s3
             uploads.each { |upload| stub_upload(upload) }
@@ -167,10 +167,10 @@ RSpec.describe "tasks/uploads" do
       uploads.each { |upload| stub_upload(upload) }
 
       SiteSetting.secure_media = true
-      PostUpload.create(post: post1, upload: upload1)
-      PostUpload.create(post: post1, upload: upload2)
-      PostUpload.create(post: post2, upload: upload3)
-      PostUpload.create(post: post2, upload: upload4)
+      UploadReference.create(target: post1, upload: upload1)
+      UploadReference.create(target: post1, upload: upload2)
+      UploadReference.create(target: post2, upload: upload3)
+      UploadReference.create(target: post2, upload: upload4)
     end
 
     let!(:uploads) do

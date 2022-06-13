@@ -1270,9 +1270,6 @@ sw:
         reply_as_new_topic:
           label: Jibu kama mada iliyounganishwa
           desc: Tengeneza mada mpya itakayoungwa na hii mada
-        reply_as_private_message:
-          label: Ujumbe mpya
-          desc: Tengeneza ujumbe binafsi mpya
         reply_to_topic:
           label: Jibu mada
           desc: Jibu mada, sio chapisho lolote tu
@@ -2266,6 +2263,8 @@ sw:
           links:
             tracked:
               content: "Imefuatiliwa"
+            my_posts:
+              content: "Machapisho Yangu"
   admin_js:
     type_to_filter: "andika kuchuja..."
     admin:

@@ -1945,9 +1945,6 @@ ja:
         reply_as_new_group_message:
           label: 新しいグループメッセージとして返信
           desc: 同じ受信者で始まる新しいメッセージを作成します
-        reply_as_private_message:
-          label: 新規メッセージ
-          desc: 新しい個人メッセージを作成する
         reply_to_topic:
           label: トピックへ返信
           desc: 特定の投稿ではなく、トピックに返信する
@@ -3409,6 +3406,10 @@ ja:
           links:
             tracked:
               content: "追跡中"
+            my_posts:
+              content: "自分の投稿"
+              draft_count:
+                other: "%{count} 下書き"
   admin_js:
     type_to_filter: "フィルタの種類..."
     admin:

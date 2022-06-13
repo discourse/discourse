@@ -1400,7 +1400,6 @@ ko:
     favicon: "사이트의 즐겨 찾기 아이콘은 <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon을</a> 참조 <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>하십시오</a> . CDN에서 올바르게 작동하려면 png 여야합니다. 32x32로 크기가 조정됩니다. 비워두면 large_icon이 사용됩니다."
     apple_touch_icon: "Apple touch 장치에 사용되는 아이콘. 180x180으로 자동 크기가 조정됩니다. 비워두면 large_icon이 사용됩니다."
     opengraph_image: "페이지에 다른 적합한 이미지가 없을 때 사용되는 기본 오픈 그래프 이미지. 비워두면 large_icon이 사용됩니다"
-    twitter_summary_large_image: "트위터 카드 &#39;요약 큰 이미지&#39;(폭 280 이상, 높이 150 이상이어야 함) 비워두면 opengraph_image를 사용하여 일반 카드 메타 데이터가 생성됩니다."
     notification_email: "The from: 이 이메일 주소는 모든 기본 시스템 메일을 보내는데 사용됩니다. 여기에 명시된 도메인은 SPF, DKIM가 적용되어 있어야하며, reverse PTR 레코드가 제대로 설정되어 있어야 메일이 도착 할 수 있습니다."
     email_custom_headers: "커스텀 이메일 해더의 pipe-delimited"
     email_subject: "표준 이메일에 대한 사용자 정의 가능한 주제 형식. <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801을</a> 참조 <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>하십시오.</a>"

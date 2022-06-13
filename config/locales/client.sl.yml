@@ -1903,9 +1903,6 @@ sl:
           label: Odgovori v novi povezani temi
           desc: Ustvari novo temo povezano na to temo
           confirm: Shranjen je nov osnutek teme, ki bo prepisan, če ustvarite povezano temo.
-        reply_as_private_message:
-          label: Novo ZS
-          desc: Odgovori v zasebno sporočilo
         reply_to_topic:
           label: Odgovori v temi
           desc: Odgovori v temi, ne na posamezen prispevek
@@ -3386,6 +3383,8 @@ sl:
           links:
             tracked:
               content: "Sledim"
+            my_posts:
+              content: "Moji prispevki"
   admin_js:
     type_to_filter: "vnesite za filter..."
     admin:

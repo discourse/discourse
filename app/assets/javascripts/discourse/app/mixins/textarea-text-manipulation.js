@@ -112,13 +112,12 @@ export default Mixin.create({
 
       this._textarea.selectionStart = from;
       this._textarea.selectionEnd = from + length;
-      this._$textarea.trigger("change");
       if (opts.scroll) {
-        const oldScrollPos = this._$textarea.scrollTop();
+        const oldScrollPos = this._textarea.scrollTop;
         if (!this.capabilities.isIOS) {
-          this._$textarea.focus();
+          this._textarea.focus();
         }
-        this._$textarea.scrollTop(oldScrollPos);
+        this._textarea.scrollTop = oldScrollPos;
       }
     });
   },
@@ -178,7 +177,7 @@ export default Mixin.create({
 
       const [hval, hlen] = getHead(head);
       const example = I18n.t(`composer.${exampleKey}`);
-      this.set("value", `${pre}${hval}${example}${tail}${post}`);
+      this._insertAt(sel.start, sel.end, `${hval}${example}${tail}`);
       this.selectText(pre.length + hlen, example.length);
     } else if (opts && !opts.multiline) {
       let [hval, hlen] = getHead(head);
@@ -190,13 +189,11 @@ export default Mixin.create({
       }
 
       if (pre.slice(-hlen) === hval && post.slice(0, tail.length) === tail) {
-        this.set(
-          "value",
-          `${pre.slice(0, -hlen)}${sel.value}${post.slice(tail.length)}`
-        );
+        // Already wrapped in the surround. Remove it.
+        this._insertAt(sel.start - hlen, sel.end + tail.length, sel.value);
         this.selectText(sel.start - hlen, sel.value.length);
       } else {
-        this.set("value", `${pre}${hval}${sel.value}${tail}${post}`);
+        this._insertAt(sel.start, sel.end, `${hval}${sel.value}${tail}`);
         this.selectText(sel.start + hlen, sel.value.length);
       }
     } else {
@@ -208,10 +205,8 @@ export default Mixin.create({
         pre.slice(-tlen) === tail &&
         post.slice(0, hlen) === hval
       ) {
-        this.set(
-          "value",
-          `${pre.slice(0, -hlen)}${sel.value}${post.slice(tlen)}`
-        );
+        // Already wrapped in the surround. Remove it.
+        this._insertAt(sel.start - hlen, sel.end + tlen, sel.value);
         this.selectText(sel.start - hlen, sel.value.length);
       } else {
         const contents = this._getMultilineContents(
@@ -224,7 +219,7 @@ export default Mixin.create({
           opts
         );
 
-        this.set("value", `${pre}${contents}${post}`);
+        this._insertAt(sel.start, sel.end, contents);
         if (lines.length === 1 && tlen > 0) {
           this.selectText(sel.start + hlen, sel.value.length);
         } else {
@@ -280,27 +275,31 @@ export default Mixin.create({
       return;
     }
 
-    let pre = sel.pre;
-    let post = sel.value + sel.post;
+    let start = sel.start;
+    let end = sel.end;
 
-    if (pre.length > 0) {
-      pre = pre.replace(/\n*$/, "\n\n");
+    const newLinesBeforeSelection = sel.pre?.match(/\n*$/)?.[0]?.length;
+    if (newLinesBeforeSelection) {
+      start -= newLinesBeforeSelection;
     }
 
-    if (post.length > 0) {
-      post = post.replace(/^\n*/, "\n\n");
+    if (sel.pre.length > 0) {
+      text = `\n\n${text}`;
+    }
+
+    const newLinesAfterSelection = sel.post?.match(/^\n*/)?.[0]?.length;
+    if (newLinesAfterSelection) {
+      end += newLinesAfterSelection;
+    }
+
+    if (sel.post.length > 0) {
+      text = `${text}\n\n`;
     } else {
-      post = "\n";
+      text = `${text}\n`;
     }
 
-    const value = pre + text + post;
-
-    this.set("value", value);
-
-    this._$textarea.val(value);
-    this._$textarea.prop("selectionStart", (pre + text).length + 2);
-    this._$textarea.prop("selectionEnd", (pre + text).length + 2);
-
+    this._insertAt(start, end, text);
+    this._textarea.setSelectionRange(start + text.length, start + text.length);
     schedule("afterRender", this, this.focusTextArea);
   },
 
@@ -318,14 +317,14 @@ export default Mixin.create({
       }
     }
 
-    const insert = `${sel.pre}${text}`;
-    const value = `${insert}${sel.post}`;
-    this.set("value", value);
-    this._$textarea.val(value);
-    this._$textarea.prop("selectionStart", insert.length);
-    this._$textarea.prop("selectionEnd", insert.length);
-    next(() => this._$textarea.trigger("change"));
+    this._insertAt(sel.start, sel.end, text);
     this.focusTextArea();
+  },
+
+  _insertAt(start, end, text) {
+    this._textarea.setSelectionRange(start, end);
+    this._textarea.focus();
+    document.execCommand("insertText", false, text);
   },
 
   extractTable(text) {

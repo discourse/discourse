@@ -1900,9 +1900,6 @@ gl:
           confirm: Ten gardado un borrador do novo tema, que se sobrescribirá se crea un tema ligado a este.
         reply_as_new_group_message:
           label: Responder como nova mensaxe de grupo
-        reply_as_private_message:
-          label: Nova mensaxe
-          desc: Crear unha nova mensaxe privada
         reply_to_topic:
           label: Responder ao tema
           desc: Responder ao tema, non a ningunha publicación específica
@@ -3365,6 +3362,8 @@ gl:
           links:
             tracked:
               content: "Seguido"
+            my_posts:
+              content: "As miñas publicacións"
   admin_js:
     type_to_filter: "escriba para filtrar..."
     admin:

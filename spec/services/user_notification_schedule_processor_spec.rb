@@ -143,12 +143,14 @@ describe UserNotificationScheduleProcessor do
       user.user_option.update(timezone: "UTC")
       schedule = standard_schedule
       travel_to Time.new(2020, 12, 31, 1, 0, 0, "+00:00") do
-        MessageBus.expects(:publish).with(
-          "/do-not-disturb/#{user.id}",
-          { ends_at: Time.new(2020, 12, 31, 7, 59, 0, "+00:00").httpdate },
-          user_ids: [user.id]
-        )
-        UserNotificationScheduleProcessor.create_do_not_disturb_timings_for(schedule)
+        messages = MessageBus.track_publish(User.publish_updates_channel(user.id)) do
+          UserNotificationScheduleProcessor.create_do_not_disturb_timings_for(schedule)
+        end
+
+        expect(messages.size).to eq(1)
+        expect(messages[0].data[:type]).to eq(User::PUBLISH_DO_NOT_STATUS_TYPE)
+        expect(messages[0].data[:payload][:ends_at]).to eq(Time.new(2020, 12, 31, 7, 59, 0, "+00:00").httpdate)
+        expect(messages[0].user_ids).to contain_exactly(user.id)
       end
     end
   end

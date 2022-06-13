@@ -41,7 +41,7 @@ gem 'actionview_precompiler', require: false
 
 gem 'seed-fu'
 
-gem 'mail', git: 'https://github.com/discourse/mail.git', require: false
+gem 'mail', git: 'https://github.com/discourse/mail.git'
 gem 'mini_mime'
 gem 'mini_suffix'
 

@@ -727,6 +727,11 @@ en:
   post:
     image_placeholder:
       broken: "This image is broken"
+      blocked_hotlinked_title: "Image hosted on another site. Click to open in a new tab."
+      blocked_hotlinked: "External Image"
+    media_placeholder:
+      blocked_hotlinked_title: "Media hosted on another site. Click to open in a new tab."
+      blocked_hotlinked: "External Media"
     hidden_bidi_character: "Bidirectional characters can change the order that text is rendered. This could be used to obscure malicious code."
     has_likes:
       one: "%{count} Like"
@@ -1514,9 +1519,11 @@ en:
     contact_email: "Email address of key contact responsible for this site. Used for critical notifications, and also displayed on <a href='%{base_path}/about' target='_blank'>/about</a> for urgent matters."
     contact_url: "Contact URL for this site. Displayed on the <a href='%{base_path}/about' target='_blank'>/about</a> page for urgent matters."
     crawl_images: "Retrieve images from remote URLs to insert the correct width and height dimensions."
-    download_remote_images_to_local: "Convert remote images to local images by downloading them; this prevents broken images."
+    download_remote_images_to_local: "Convert remote (hotlinked) images to local images by downloading them; This preserves content even if the images are removed from the remote site in future."
     download_remote_images_threshold: "Minimum disk space necessary to download remote images locally (in percent)"
     disabled_image_download_domains: "Remote images will never be downloaded from these domains. Pipe-delimited list."
+    block_hotlinked_media: "Prevent users from introducing remote (hotlinked) media in their posts. Remote media which is not downloaded via 'download_remote_images_to_local' will be replaced with a placeholder link."
+    block_hotlinked_media_exceptions: "A list of base URLs which are exempt from the block_hotlinked_media setting. Include the protocol (e.g. https://example.com)."
     editing_grace_period: "For (n) seconds after posting, editing will not create a new version in the post history."
     editing_grace_period_max_diff: "Maximum number of character changes allowed in editing grace period, if more changed store another post revision (trust level 0 and 1)"
     editing_grace_period_max_diff_high_trust: "Maximum number of character changes allowed in editing grace period, if more changed store another post revision (trust level 2 and up)"
