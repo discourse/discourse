@@ -22,6 +22,8 @@ const rawOpts = {
     default_code_lang: "auto",
     enable_markdown_linkify: true,
     markdown_linkify_tlds: "com",
+    display_name_on_posts: false,
+    prioritize_username_in_ux: true,
   },
   getURL: (url) => url,
 };

@@ -69,7 +69,9 @@ class CurrentUserSerializer < BasicUserSerializer
              :draft_count,
              :default_calendar,
              :bookmark_auto_delete_preference,
-             :pending_posts_count
+             :pending_posts_count,
+             :experimental_sidebar_enabled,
+             :status
 
   delegate :user_stat, to: :object, private: true
   delegate :any_posts, :draft_count, :pending_posts_count, :read_faq?, to: :user_stat
@@ -326,5 +328,21 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def include_has_topic_draft?
     Draft.has_topic_draft(object)
+  end
+
+  def experimental_sidebar_enabled
+    object.user_option.enable_experimental_sidebar
+  end
+
+  def include_experimental_sidebar_enabled?
+    SiteSetting.enable_experimental_sidebar
+  end
+
+  def include_status?
+    SiteSetting.enable_user_status
+  end
+
+  def status
+    UserStatusSerializer.new(object.user_status, root: false)
   end
 end

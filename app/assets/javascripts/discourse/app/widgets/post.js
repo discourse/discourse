@@ -17,7 +17,10 @@ import { h } from "virtual-dom";
 import hbs from "discourse/widgets/hbs-compiler";
 import { iconNode } from "discourse-common/lib/icon-library";
 import { postTransformCallbacks } from "discourse/widgets/post-stream";
-import { prioritizeNameInUx } from "discourse/lib/settings";
+import {
+  prioritizeNameFallback,
+  prioritizeNameInUx,
+} from "discourse/lib/settings";
 import { relativeAgeMediumSpan } from "discourse/lib/formatter";
 import { transformBasicPost } from "discourse/lib/transform-post";
 import autoGroupFlairForUser from "discourse/lib/avatar-flair";
@@ -140,16 +143,20 @@ createWidget("reply-to-tab", {
 
   html(attrs, state) {
     const icon = state.loading ? h("div.spinner.small") : iconNode("share");
+    const name = prioritizeNameFallback(
+      attrs.replyToName,
+      attrs.replyToUsername
+    );
 
     return [
       icon,
       " ",
       avatarImg("small", {
         template: attrs.replyToAvatarTemplate,
-        username: attrs.replyToUsername,
+        username: name,
       }),
       " ",
-      h("span", formatUsername(attrs.replyToUsername)),
+      h("span", formatUsername(name)),
     ];
   },
 
@@ -429,8 +436,11 @@ createWidget("post-contents", {
     if (this.siteSettings.enable_filtered_replies_view) {
       const topicController = this.register.lookup("controller:topic");
 
-      defaultState.filteredRepliesShown =
-        topicController.replies_to_post_number === attrs.post_number.toString();
+      if (attrs.post_number) {
+        defaultState.filteredRepliesShown =
+          topicController.replies_to_post_number ===
+          attrs.post_number.toString();
+      }
     }
 
     return defaultState;

@@ -3,12 +3,20 @@
 class ThemeSetting < ActiveRecord::Base
   belongs_to :theme
 
+  has_many :upload_references, as: :target, dependent: :destroy
+
   validates_presence_of :name, :theme
   validates :data_type, numericality: { only_integer: true }
   validates :name, length: { maximum: 255 }
 
   after_save :clear_settings_cache
   after_destroy :clear_settings_cache
+
+  after_save do
+    if self.data_type == ThemeSetting.types[:upload] && saved_change_to_value?
+      UploadReference.ensure_exist!(upload_ids: [self.value], target: self)
+    end
+  end
 
   def clear_settings_cache
     # All necessary caches will be cleared on next ensure_baked!

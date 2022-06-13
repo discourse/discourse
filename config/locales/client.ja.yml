@@ -66,12 +66,20 @@ ja:
         date_month: "MMM D 日"
         date_year: "'YY 年 MMM"
       medium:
+        less_than_x_minutes:
+          other: "%{count} 分未満"
         x_minutes:
           other: "%{count} 分"
         x_hours:
           other: "%{count} 時間"
+        about_x_hours:
+          other: "約%{count} 時間"
         x_days:
           other: "%{count} 日"
+        x_months:
+          other: "%{count} ヶ月"
+        about_x_years:
+          other: "約%{count} 年"
         date_year: "'YY 年 MMM D 日"
       medium_with_ago:
         x_minutes:
@@ -254,6 +262,8 @@ ja:
         unbookmark_with_reminder: "クリックしてこのトピック内のすべてのブックマークとリマインダーを削除します。"
     bookmarks:
       created: "この投稿をブックマークしました。%{name}"
+      create: "ブックマークを作成"
+      edit: "ブックマークを編集"
       not_bookmarked: "この投稿をブックマークする"
       remove_reminder_keep_bookmark: "リマインダーを削除してブックマークを保持"
       created_with_reminder: "%{date} のリマインダー付きでこの投稿をブックマークしました。%{name}"
@@ -504,6 +514,7 @@ ja:
         other: "年"
       relative: "相対"
     time_shortcut:
+      now: "今"
       later_today: "今日の後程"
       next_business_day: "翌営業日"
       tomorrow: "明日"
@@ -512,13 +523,20 @@ ja:
       this_weekend: "今週末"
       start_of_next_business_week: "月曜日"
       start_of_next_business_week_alt: "来週の月曜日"
+      next_week: "来週"
       two_weeks: "2 週間"
       next_month: "来月"
+      two_months: "2 か月"
+      three_months: "3 か月"
+      four_months: "4 か月"
       six_months: "6 か月"
-      custom: "カスタムの日付と時刻"
+      one_year: "1 年"
+      forever: "永遠"
       relative: "相対時間"
       none: "不要"
       last_custom: "最後のカスタム日時"
+      custom: "カスタムの日付と時刻"
+      select_timeframe: "時間枠を選択してください"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> が<a href='%{topicUrl}'>トピック</a>を作成しました"
       you_posted_topic: "<a href='%{userUrl}'>あなた</a>が<a href='%{topicUrl}'>トピック</a>を作成しました"
@@ -1406,8 +1424,6 @@ ja:
           title: "招待リンク"
           success: "招待リンクが生成されました！"
           error: "招待リンクの生成中にエラーが発生しました"
-          max_redemptions_allowed_label: "このリンクを使用して登録できるのは何人ですか？"
-          expires_at: "この招待リンクはいつまで有効ですか？"
         invite:
           new_title: "招待の作成"
           edit_title: "招待の編集"
@@ -1453,6 +1469,7 @@ ja:
         stats: "統計"
         time_read: "閲覧時間"
         recent_time_read: "最近の閲覧時間"
+        recent_time_read_title: "%{duration} （過去60日間）"
         topic_count:
           other: "作成したトピック数"
         post_count:
@@ -1514,6 +1531,8 @@ ja:
         sent_by: "送信者"
         private_message: "メッセージ"
         the_topic: "トピック"
+    user_status:
+      save: "保存"
     loading: "読み込み中..."
     errors:
       prev_page: "次の項目を読み込み中に発生しました:"
@@ -1700,7 +1719,6 @@ ja:
       facebook:
         name: "Facebook"
         title: "Facebook でログイン"
-        sr_title: "Facebook でログイン"
       github:
         name: "GitHub"
         title: "GitHub でログイン"
@@ -1712,6 +1730,7 @@ ja:
       second_factor_toggle:
         totp: "代わりに認証アプリを使用する"
         backup_code: "代わりにバックアップコードを使用する"
+        security_key: "代わりにセキュリティキーを使用する"
     invites:
       accept_title: "招待"
       emoji: "絵文字をエンベロープ"
@@ -1822,6 +1841,10 @@ ja:
         other: "<b>警告！</b> <a href='%{group_link}'>%{group}</a> をメンションしましたが、このグループのメンバー数は、管理者がメンション数制限として設定した %{count} 人を超えています。そのため誰にも通知されません。"
       group_mentioned:
         other: "%{group} をメンションすると、<a href='%{group_link}'>%{count} 人</a> へ通知されます。よろしいですか？"
+      cannot_see_mention:
+        category: "@%{username} をメンションしましたが、このカテゴリへのアクセス権がないため通知されません。このカテゴリにアクセスできるグループに追加してください。"
+        private: "@%{username} をメンションしましたが、この個人メッセージを見ることができないため通知されません。この個人メッセージに招待してください。"
+        muted_topic: "@%{username} をメンションしましたが、本ユーザがこのトピックをミュートしたため、通知されません。"
       here_mention:
         other: "<b>@%{here}</b> をメンションして %{count} 人のユーザーに通知しようとしています。よろしいですか？"
       duplicate_link: "<b>%{domain}</b> へのリンクは、すでに <b>@%{username}</b> が <a href='%{post_url}'>%{ago}</a> 前に投稿しています。もう一度投稿してもよろしいですか？"
@@ -1922,9 +1945,6 @@ ja:
         reply_as_new_group_message:
           label: 新しいグループメッセージとして返信
           desc: 同じ受信者で始まる新しいメッセージを作成します
-        reply_as_private_message:
-          label: 新規メッセージ
-          desc: 新しい個人メッセージを作成する
         reply_to_topic:
           label: トピックへ返信
           desc: 特定の投稿ではなく、トピックに返信する
@@ -2070,6 +2090,7 @@ ja:
       in_this_topic_tooltip: "全トピックの検索に切り替えます"
       in_topics_posts: "すべてのトピックと投稿"
       enter_hint: "または Enter キーを押します"
+      recent: "最近の検索"
       type:
         users: "ユーザー"
         categories: "カテゴリ"
@@ -2294,24 +2315,6 @@ ja:
         min_duration: "期間は 0 より大きくする必要があります"
         max_duration: "期間は 20 年未満である必要があります"
         duration: "期間"
-      auto_update_input:
-        none: "時間枠を選択してください"
-        now: "今"
-        later_today: "今日の後程"
-        tomorrow: "明日"
-        later_this_week: "今週の後半"
-        this_weekend: "今週末"
-        next_week: "来週"
-        two_weeks: "2 週間"
-        next_month: "来月"
-        two_months: "2 か月"
-        three_months: "3 か月"
-        four_months: "4 か月"
-        six_months: "6 か月"
-        one_year: "1 年"
-        forever: "永遠"
-        pick_date_and_time: "日時を選択"
-        set_based_on_last_post: "最後の投稿でクローズ"
       publish_to_category:
         title: "公開スケジュール"
       temp_open:
@@ -2419,8 +2422,6 @@ ja:
         unpin: "トピックを固定解除..."
         unarchive: "トピックをアーカイブ解除"
         archive: "トピックをアーカイブ"
-        invisible: "非表示にする"
-        visible: "リストに表示"
         reset_read: "閲覧データをリセット"
         make_private: "個人メッセージにする"
         reset_bump_date: "バンプ日をリセット"
@@ -3392,6 +3393,23 @@ ja:
       no_activity_others: "アクティビティがありません。"
       no_replies_others: "返信はありません。"
       no_likes_others: "「いいね！」した投稿はありません。"
+    sidebar:
+      unread_count: "未読 %{count}"
+      new_count: "新規 %{count}"
+      sections:
+        categories:
+          header_link_title: "すべてのカテゴリ"
+          header_link_text: "カテゴリ"
+        topics:
+          header_link_title: "ホーム"
+          header_link_text: "トピック"
+          links:
+            tracked:
+              content: "追跡中"
+            my_posts:
+              content: "自分の投稿"
+              draft_count:
+                other: "%{count} 下書き"
   admin_js:
     type_to_filter: "フィルタの種類..."
     admin:
@@ -3605,7 +3623,6 @@ ja:
               read: トピックまたはその中の特定の投稿を読み取ります。RSS もサポートされています。
               write: 新しいトピックまたは既存のトピックに投稿を作成します。
               read_lists: 人気、新規、最新などのトピックリストを読み取ります。RSS もサポートされています。
-              wordpress: WordPress wp-discourse プラグインが動作するために必要です。
             posts:
               edit: 任意の投稿または特定の投稿を編集します。
             users:

@@ -265,5 +265,103 @@ describe InlineOneboxer do
         expect(onebox[:title]).to be_blank
       end
     end
+
+    context "when block_onebox_on_redirect is enabled" do
+      before do
+        SiteSetting.block_onebox_on_redirect = true
+      end
+
+      after do
+        FinalDestination.clear_https_cache!("redirects.com")
+      end
+
+      it "doesn't onebox if the URL redirects" do
+        stub_request(:get, "https://redirects.com/blah/gg")
+          .to_return(
+            status: 301,
+            body: "",
+            headers: { "location" => "https://redirects.com/blah/gg/redirect" }
+          )
+        onebox = InlineOneboxer.lookup("https://redirects.com/blah/gg", skip_cache: true)
+        expect(onebox[:title]).to be_blank
+      end
+
+      it "allows an initial http -> https redirect if the redirect URL is identical to the original" do
+        stub_request(:get, "http://redirects.com/blah/gg")
+          .to_return(
+            status: 301,
+            body: "",
+            headers: { "location" => "https://redirects.com/blah/gg" }
+          )
+        stub_request(:get, "https://redirects.com/blah/gg")
+          .to_return(
+            status: 200,
+            body: "<html><head><title>The Redirects Website</title></head></html>"
+          )
+        onebox = InlineOneboxer.lookup("http://redirects.com/blah/gg", skip_cache: true)
+        expect(onebox[:title]).to eq("The Redirects Website")
+      end
+
+      it "doesn't allow an initial http -> https redirect if the redirect URL is different to the original" do
+        stub_request(:get, "http://redirects.com/blah/gg")
+          .to_return(
+            status: 301,
+            body: "",
+            headers: { "location" => "https://redirects.com/blah/gg/2" }
+          )
+        onebox = InlineOneboxer.lookup("http://redirects.com/blah/gg", skip_cache: true)
+        expect(onebox[:title]).to be_blank
+      end
+    end
+
+    it "censors external oneboxes" do
+      Fabricate(:watched_word, action: WatchedWord.actions[:censor], word: "my")
+
+      SiteSetting.enable_inline_onebox_on_all_domains = true
+
+      stub_request(:get, "https://eviltrout.com/some-path").
+        to_return(status: 200, body: "<html><head><title>welcome to my blog</title></head></html>")
+
+      onebox = InlineOneboxer.lookup(
+        "https://eviltrout.com/some-path",
+        skip_cache: true
+      )
+
+      expect(onebox).to be_present
+      expect(onebox[:url]).to eq("https://eviltrout.com/some-path")
+      expect(onebox[:title]).to eq("welcome to ■■ blog")
+    end
+
+    it "does not try and censor external oneboxes returning a blank title" do
+      Fabricate(:watched_word, action: WatchedWord.actions[:censor], word: "my")
+
+      SiteSetting.enable_inline_onebox_on_all_domains = true
+
+      stub_request(:get, "https://eviltrout.com/some-path").
+        to_return(status: 404, body: "")
+
+      onebox = InlineOneboxer.lookup(
+        "https://eviltrout.com/some-path",
+        skip_cache: true
+      )
+
+      expect(onebox).to be_present
+      expect(onebox[:url]).to eq("https://eviltrout.com/some-path")
+      expect(onebox[:title]).to eq(nil)
+    end
+  end
+
+  context "register_local_handler" do
+    it "calls registered local handler" do
+      InlineOneboxer.register_local_handler('wizard') do |url, route|
+        { url: url, title: 'Custom Onebox for Wizard' }
+      end
+
+      url = "#{Discourse.base_url}/wizard"
+      results = InlineOneboxer.new([url], skip_cache: true).process
+      expect(results).to be_present
+      expect(results[0][:url]).to eq(url)
+      expect(results[0][:title]).to eq('Custom Onebox for Wizard')
+    end
   end
 end

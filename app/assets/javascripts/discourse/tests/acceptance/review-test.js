@@ -14,6 +14,21 @@ import { test } from "qunit";
 acceptance("Review", function (needs) {
   needs.user();
 
+  let requests = [];
+
+  needs.pretender((server, helper) => {
+    server.get("/tags/filter/search", (request) => {
+      requests.push(request);
+      return helper.response({
+        results: [
+          { id: "monkey", name: "monkey", count: 1 },
+          { id: "not-monkey", name: "not-monkey", count: 1 },
+          { id: "happy-monkey", name: "happy-monkey", count: 1 },
+        ],
+      });
+    });
+  });
+
   const user = '.reviewable-item[data-reviewable-id="1234"]';
 
   test("It returns a list of reviewable items", async function (assert) {
@@ -160,7 +175,10 @@ acceptance("Review", function (needs) {
     await category.selectRowByValue("6");
 
     let tags = selectKit(`${topic} .payload-tags .mini-tag-chooser`);
+    requests = [];
     await tags.expand();
+    assert.equal(requests.length, 1);
+    assert.equal(requests[0].queryParams.categoryId, "6");
     await tags.fillInFilter("monkey");
     await tags.selectRowByValue("monkey");
 

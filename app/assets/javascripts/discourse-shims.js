@@ -25,6 +25,10 @@ define("@popperjs/core", ["exports"], function (__exports__) {
   __exports__.popperGenerator = window.Popper.popperGenerator;
 });
 
+define("tippy.js", ["exports"], function (__exports__) {
+  __exports__.default = window.tippy;
+});
+
 define("@uppy/core", ["exports"], function (__exports__) {
   __exports__.default = window.Uppy.Core;
   __exports__.BasePlugin = window.Uppy.Core.BasePlugin;

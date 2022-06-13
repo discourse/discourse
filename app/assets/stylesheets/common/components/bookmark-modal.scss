@@ -10,6 +10,7 @@
 
     .delete-bookmark {
       margin-left: auto;
+      margin-right: 0;
     }
   }
   .modal-body {
@@ -29,6 +30,10 @@
       width: 100%;
       margin-bottom: 0.5em;
     }
+  }
+
+  .title {
+    max-width: 300px;
   }
 
   .existing-reminder-at-alert {

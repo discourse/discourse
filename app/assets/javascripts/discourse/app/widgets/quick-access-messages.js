@@ -6,6 +6,7 @@ import { createWidget, createWidgetFrom } from "discourse/widgets/widget";
 import { postUrl } from "discourse/lib/utilities";
 import getURL from "discourse-common/lib/get-url";
 import I18n from "I18n";
+import { htmlSafe } from "@ember/template";
 
 const ICON = "notification.private_message";
 
@@ -34,10 +35,12 @@ createWidget("no-quick-access-messages", {
         new RawHtml({
           html:
             "<p>" +
-            I18n.t("user.no_messages_body", {
-              aboutUrl: getURL("/about"),
-              icon: iconHTML("envelope"),
-            }).htmlSafe() +
+            htmlSafe(
+              I18n.t("user.no_messages_body", {
+                aboutUrl: getURL("/about"),
+                icon: iconHTML("envelope"),
+              })
+            ) +
             "</p>",
         })
       ),

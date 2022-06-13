@@ -35,14 +35,15 @@
     flex: 1 0 auto;
     flex-wrap: wrap;
     justify-content: center;
-    padding: 1em;
+    padding: 0 1em;
     margin: 0;
+    gap: 0 0.25em;
 
     .btn {
-      padding: 0.53em 0.53em 0.53em 0.43em;
+      padding: 0.5em;
       border: 1px solid var(--primary-low);
       flex: 1 1 47%;
-      margin: 0 0.5em 0.5em 0;
+      font-size: var(--font-down-1);
       white-space: nowrap;
       &:last-child {
         margin-right: 0;
@@ -144,6 +145,13 @@
 
 // Styles for the
 // login modal only
+
+#discourse-modal {
+  &.d-modal.login-modal:not(.hidden) .modal-body {
+    max-height: 68vh !important; // overrides another important
+  }
+}
+
 .d-modal.login-modal {
   #credentials {
     width: 100%;

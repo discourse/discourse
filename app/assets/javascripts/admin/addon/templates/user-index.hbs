@@ -661,7 +661,7 @@
   <section class="details">
     <h1>{{i18n "admin.user.discourse_connect.title"}}</h1>
 
-    {{#with model.single_sign_on_record as |sso|}}
+    {{#let model.single_sign_on_record as |sso|}}
       <div class="display-row">
         <div class="field">{{i18n "admin.user.discourse_connect.external_id"}}</div>
         <div class="value">{{sso.external_id}}</div>
@@ -722,7 +722,7 @@
           {{/if}}
         </div>
       {{/if}}
-    {{/with}}
+    {{/let}}
   </section>
 {{/if}}
 

@@ -1,5 +1,6 @@
 import Helper from "@ember/component/helper";
 import { iconHTML } from "discourse-common/lib/icon-library";
+import { htmlSafe } from "@ember/template";
 
 export default Helper.extend({
   compute([disposition]) {
@@ -22,6 +23,6 @@ export default Helper.extend({
         break;
       }
     }
-    return iconHTML(icon, { title }).htmlSafe();
+    return htmlSafe(iconHTML(icon, { title }));
   },
 });

@@ -36,6 +36,23 @@ const rule = {
           full = true;
           continue;
         }
+
+        // if we have the additional attribute of username: because we are prioritizing full name
+        // then assign the name to be the displayName
+        if (split[i].indexOf("username:") === 0) {
+          // return users name by selecting all values from the first index to the post
+          // this protects us from when a user has a `,` in their name
+          displayName = split.slice(0, split.indexOf(`post:${postNumber}`));
+
+          // preserve `,` in a users name if they exist
+          if (displayName.length > 1) {
+            displayName = displayName.join(", ");
+          }
+
+          // strip key of 'username:' and return username
+          username = split[i].slice(9);
+          continue;
+        }
       }
     }
 
@@ -59,9 +76,9 @@ const rule = {
     }
 
     if (options.formatUsername) {
-      displayName = options.formatUsername(username);
+      displayName = displayName || options.formatUsername(username);
     } else {
-      displayName = username;
+      displayName = displayName || username;
     }
 
     let token = state.push("bbcode_open", "aside", 1);

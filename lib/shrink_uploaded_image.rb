@@ -19,7 +19,7 @@ class ShrinkUploadedImage
       return false
     end
 
-    posts = Post.unscoped.joins(:post_uploads).where(post_uploads: { upload_id: original_upload.id }).uniq.sort_by(&:created_at)
+    posts = Post.unscoped.joins(:upload_references).where(upload_references: { upload_id: original_upload.id }).uniq.sort_by(&:created_at)
 
     if posts.empty?
       log "Upload not used in any posts"
@@ -134,7 +134,10 @@ class ShrinkUploadedImage
 
     if existing_upload
       begin
-        PostUpload.where(upload_id: original_upload.id).update_all(upload_id: upload.id)
+        UploadReferences
+          .where(target_type: 'Post')
+          .where(upload_id: original_upload.id)
+          .update_all(upload_id: upload.id)
       rescue ActiveRecord::RecordNotUnique, PG::UniqueViolation
       end
     else

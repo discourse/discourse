@@ -157,10 +157,6 @@ describe Email::Styles do
   end
 
   context "dark mode emails" do
-    before do
-      SiteSetting.dark_mode_emails_active = true
-    end
-
     it "adds dark_mode_styles when site setting active" do
       frag = html_fragment('<div class="body">test</div>')
       styler = Email::Styles.new(frag)

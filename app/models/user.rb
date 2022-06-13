@@ -23,6 +23,7 @@ class User < ActiveRecord::Base
   has_many :email_tokens, dependent: :destroy
   has_many :topic_links, dependent: :destroy
   has_many :user_uploads, dependent: :destroy
+  has_many :upload_references, as: :target, dependent: :destroy
   has_many :user_emails, dependent: :destroy, autosave: true
   has_many :user_associated_accounts, dependent: :destroy
   has_many :oauth2_user_infos, dependent: :destroy
@@ -63,6 +64,7 @@ class User < ActiveRecord::Base
   has_many :muted_user_records, class_name: 'MutedUser', dependent: :delete_all
   has_many :ignored_user_records, class_name: 'IgnoredUser', dependent: :delete_all
   has_many :do_not_disturb_timings, dependent: :delete_all
+  has_one :user_status, dependent: :destroy
 
   # dependent deleting handled via before_destroy (special cases)
   has_many :user_actions
@@ -114,6 +116,7 @@ class User < ActiveRecord::Base
   validates :name, user_full_name: true, if: :will_save_change_to_name?, length: { maximum: 255 }
   validates :ip_address, allowed_ip_address: { on: :create, message: :signup_not_allowed }
   validates :primary_email, presence: true
+  validates :public_user_field_values, watched_words: true, unless: :custom_fields_clean?
   validates_associated :primary_email, message: -> (_, user_email) { user_email[:value]&.errors[:email]&.first }
 
   after_initialize :add_trust_level
@@ -147,6 +150,12 @@ class User < ActiveRecord::Base
   after_save :expire_old_email_tokens
   after_save :index_search
   after_save :check_site_contact_username
+
+  after_save do
+    if saved_change_to_uploaded_avatar_id?
+      UploadReference.ensure_exist!(upload_ids: [self.uploaded_avatar_id], target: self)
+    end
+  end
 
   after_commit :trigger_user_created_event, on: :create
   after_commit :trigger_user_destroyed_event, on: :destroy
@@ -218,6 +227,7 @@ class User < ActiveRecord::Base
   scope :suspended, -> { where('suspended_till IS NOT NULL AND suspended_till > ?', Time.zone.now) }
   scope :not_suspended, -> { where('suspended_till IS NULL OR suspended_till <= ?', Time.zone.now) }
   scope :activated, -> { where(active: true) }
+  scope :not_staged, -> { where(staged: false) }
 
   scope :filter_by_username, ->(filter) do
     if filter.is_a?(Array)
@@ -341,6 +351,10 @@ class User < ActiveRecord::Base
     else
       SiteSetting.default_locale
     end
+  end
+
+  def bookmarks_of_type(type)
+    bookmarks.where(bookmarkable_type: type)
   end
 
   EMAIL = %r{([^@]+)@([^\.]+)}
@@ -643,8 +657,38 @@ class User < ActiveRecord::Base
     MessageBus.publish("/notification/#{id}", payload, user_ids: [id])
   end
 
+  PUBLISH_USER_STATUS_TYPE = "user_status"
+  PUBLISH_DO_NOT_STATUS_TYPE = "do_not_disturb"
+  PUBLISH_DRAFTS_TYPE = "drafts"
+
+  def self.publish_updates_channel(user_id)
+    "/user-updates/#{user_id}"
+  end
+
+  def self.publish_updates(user_id:, type:, payload:)
+    MessageBus.publish(
+      publish_updates_channel(user_id),
+      {
+        type: type,
+        payload: payload
+      },
+      user_ids: [user_id]
+    )
+  end
+
+  def publish_updates(type:, payload:)
+    self.class.publish_updates(user_id: id, type: type, payload: payload)
+  end
+
   def publish_do_not_disturb(ends_at: nil)
-    MessageBus.publish("/do-not-disturb/#{id}", { ends_at: ends_at&.httpdate }, user_ids: [id])
+    publish_updates(type: PUBLISH_DO_NOT_STATUS_TYPE, payload: { ends_at: ends_at&.httpdate })
+  end
+
+  def publish_user_status(status)
+    publish_updates(
+      type: PUBLISH_USER_STATUS_TYPE,
+      payload: status ? { description: status.description, emoji: status.emoji } : nil
+    )
   end
 
   def password=(password)
@@ -748,12 +792,17 @@ class User < ActiveRecord::Base
     end
   end
 
-  def update_ip_address!(new_ip_address)
-    unless ip_address == new_ip_address || new_ip_address.blank?
-      update_column(:ip_address, new_ip_address)
+  def self.update_ip_address!(user_id, new_ip:, old_ip:)
+    unless old_ip == new_ip || new_ip.blank?
+
+      DB.exec(<<~SQL, user_id: user_id, ip_address: new_ip)
+        UPDATE users
+        SET ip_address = :ip_address
+        WHERE id = :user_id
+      SQL
 
       if SiteSetting.keep_old_ip_address_count > 0
-        DB.exec(<<~SQL, user_id: self.id, ip_address: new_ip_address, current_timestamp: Time.zone.now)
+        DB.exec(<<~SQL, user_id: user_id, ip_address: new_ip, current_timestamp: Time.zone.now)
         INSERT INTO user_ip_address_histories (user_id, ip_address, created_at, updated_at)
         VALUES (:user_id, :ip_address, :current_timestamp, :current_timestamp)
         ON CONFLICT (user_id, ip_address)
@@ -761,7 +810,7 @@ class User < ActiveRecord::Base
           UPDATE SET updated_at = :current_timestamp
         SQL
 
-        DB.exec(<<~SQL, user_id: self.id, offset: SiteSetting.keep_old_ip_address_count)
+        DB.exec(<<~SQL, user_id: user_id, offset: SiteSetting.keep_old_ip_address_count)
         DELETE FROM user_ip_address_histories
         WHERE id IN (
           SELECT
@@ -776,24 +825,36 @@ class User < ActiveRecord::Base
     end
   end
 
-  def last_seen_redis_key(now)
+  def update_ip_address!(new_ip_address)
+    User.update_ip_address!(id, new_ip: new_ip_address, old_ip: ip_address)
+  end
+
+  def self.last_seen_redis_key(user_id, now)
     now_date = now.to_date
-    "user:#{id}:#{now_date}"
+    "user:#{user_id}:#{now_date}"
+  end
+
+  def last_seen_redis_key(now)
+    User.last_seen_redis_key(id, now)
   end
 
   def clear_last_seen_cache!(now = Time.zone.now)
     Discourse.redis.del(last_seen_redis_key(now))
   end
 
-  def update_last_seen!(now = Time.zone.now)
-    redis_key = last_seen_redis_key(now)
+  def self.should_update_last_seen?(user_id, now = Time.zone.now)
+    return true if SiteSetting.active_user_rate_limit_secs <= 0
 
-    if SiteSetting.active_user_rate_limit_secs > 0
-      return if !Discourse.redis.set(
-        redis_key, "1",
-        nx: true,
-        ex: SiteSetting.active_user_rate_limit_secs
-      )
+    Discourse.redis.set(
+      last_seen_redis_key(user_id, now), "1",
+      nx: true,
+      ex: SiteSetting.active_user_rate_limit_secs
+    )
+  end
+
+  def update_last_seen!(now = Time.zone.now, force: false)
+    if !force
+      return if !User.should_update_last_seen?(self.id, now)
     end
 
     update_previous_visit(now)
@@ -1223,6 +1284,11 @@ class User < ActiveRecord::Base
     end
   end
 
+  def public_user_field_values
+    @public_user_field_ids ||= UserField.public_fields.pluck(:id)
+    user_fields(@public_user_field_ids).values.join(" ")
+  end
+
   def set_user_field(field_id, value)
     custom_fields["#{USER_FIELD_PREFIX}#{field_id}"] = value
   end
@@ -1471,6 +1537,26 @@ class User < ActiveRecord::Base
     else
       name.presence || username
     end
+  end
+
+  def clear_status!
+    user_status.destroy! if user_status
+    publish_user_status(nil)
+  end
+
+  def set_status!(description)
+    now = Time.zone.now
+    if user_status
+      user_status.update!(description: description, set_at: now)
+    else
+      self.user_status = UserStatus.create!(
+        user_id: id,
+        description: description,
+        set_at: now
+      )
+    end
+
+    publish_user_status(user_status)
   end
 
   protected
@@ -1814,6 +1900,7 @@ end
 #  manual_locked_trust_level :integer
 #  secure_identifier         :string
 #  flair_group_id            :integer
+#  last_seen_reviewable_id   :integer
 #
 # Indexes
 #

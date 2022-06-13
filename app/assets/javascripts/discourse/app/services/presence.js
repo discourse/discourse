@@ -108,7 +108,7 @@ class PresenceChannel extends EmberObject {
     if (!this.subscribed) {
       return;
     }
-    return this._presenceState.users;
+    return this._presenceState?.users;
   }
 
   @computed("_presenceState.count", "subscribed")
@@ -116,7 +116,7 @@ class PresenceChannel extends EmberObject {
     if (!this.subscribed) {
       return;
     }
-    return this._presenceState.count;
+    return this._presenceState?.count;
   }
 
   @computed("_presenceState.count", "subscribed")
@@ -124,7 +124,7 @@ class PresenceChannel extends EmberObject {
     if (!this.subscribed) {
       return;
     }
-    return this._presenceState.countOnly;
+    return this._presenceState?.countOnly;
   }
 }
 

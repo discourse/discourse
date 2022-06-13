@@ -157,6 +157,44 @@ RSpec.describe Users::OmniauthCallbacksController do
       end
     end
 
+    context "in readonly mode" do
+      use_redis_snapshotting
+
+      it "should return a 503" do
+        Discourse.enable_readonly_mode
+
+        get "/auth/google_oauth2/callback"
+        expect(response.code).to eq("503")
+      end
+    end
+
+    context "in staff writes only mode" do
+      use_redis_snapshotting
+
+      before do
+        Discourse.enable_readonly_mode(Discourse::STAFF_WRITES_ONLY_MODE_KEY)
+      end
+
+      it "returns a 503 for non-staff" do
+        mock_auth(user.email, user.username, user.name)
+        get "/auth/google_oauth2/callback.json"
+        expect(response.status).to eq(503)
+        logged_on_user = Discourse.current_user_provider.new(request.env).current_user
+
+        expect(logged_on_user).to eq(nil)
+      end
+
+      it "completes for staff" do
+        user.update!(admin: true)
+        mock_auth(user.email, user.username, user.name)
+        get "/auth/google_oauth2/callback.json"
+        expect(response.status).to eq(302)
+        logged_on_user = Discourse.current_user_provider.new(request.env).current_user
+
+        expect(logged_on_user).not_to eq(nil)
+      end
+    end
+
     context "without an `omniauth.auth` env" do
       it "should return a 404" do
         get "/auth/eviltrout/callback"
@@ -264,6 +302,19 @@ RSpec.describe Users::OmniauthCallbacksController do
         data = JSON.parse(cookies[:authentication_data])
 
         expect(data["username"]).to eq("billmailbox")
+      end
+
+      it 'stops using name for username suggestions if disabled in settings' do
+        SiteSetting.use_name_for_username_suggestions = false
+        username = ""
+        name = "John Smith"
+        email = "billmailbox@test.com"
+        mock_auth(email, username, name)
+
+        get "/auth/google_oauth2/callback.json"
+        data = JSON.parse(cookies[:authentication_data])
+
+        expect(data["username"]).to eq("user1")
       end
 
       describe 'when site is invite_only' do

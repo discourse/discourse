@@ -41,7 +41,7 @@ Discourse::Application.configure do
       settings[:tls] = true
     end
 
-    config.action_mailer.smtp_settings = settings.reject { |_, y| y.nil? }
+    config.action_mailer.smtp_settings = settings.compact
   else
     config.action_mailer.delivery_method = :sendmail
     config.action_mailer.sendmail_settings = { arguments: '-i' }

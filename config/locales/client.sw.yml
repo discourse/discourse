@@ -335,7 +335,10 @@ sw:
       tomorrow: "Kesho"
       later_this_week: "Baada ya mda ndani ya wiki hii"
       this_weekend: "Wikiendi hii"
+      next_week: "Wiki Ijayo"
       next_month: "Mwezi ujao"
+      forever: "Milele"
+      select_timeframe: "Chagua fremu ya mda"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{mtumiaji}</a> amechapisha <a href='%{topicUrl}'>mada</a>"
       you_posted_topic: "<a href='%{userUrl}'>Ume</a> chapisha <a href='%{topicUrl}'>mada</a>"
@@ -986,6 +989,8 @@ sw:
         sent_by: "Imetumwa na"
         private_message: "ujumbe"
         the_topic: "mada"
+    user_status:
+      save: "hifadhi"
     loading: "Inapakia..."
     errors:
       prev_page: "ikiwa inajaribu kupakia"
@@ -1265,9 +1270,6 @@ sw:
         reply_as_new_topic:
           label: Jibu kama mada iliyounganishwa
           desc: Tengeneza mada mpya itakayoungwa na hii mada
-        reply_as_private_message:
-          label: Ujumbe mpya
-          desc: Tengeneza ujumbe binafsi mpya
         reply_to_topic:
           label: Jibu mada
           desc: Jibu mada, sio chapisho lolote tu
@@ -1527,17 +1529,6 @@ sw:
         remove: "Ondoa Kipima Mda"
         publish_to: "Chapisha kwenda Kwa:"
         when: "Lini:"
-      auto_update_input:
-        none: "Chagua fremu ya mda"
-        later_today: "Baada ya mda leo"
-        tomorrow: "Kesho"
-        later_this_week: "Baada ya mda ndani ya wiki hii"
-        this_weekend: "Wikiendi hii"
-        next_week: "Wiki Ijayo"
-        next_month: "Mwezi ujao"
-        forever: "Milele"
-        pick_date_and_time: "Chagua tarehe na mda"
-        set_based_on_last_post: "Funga kulingana na chapisho la mwisho"
       publish_to_category:
         title: "Panga Uchapishaji"
       temp_open:
@@ -1623,8 +1614,6 @@ sw:
         unpin: "Ondoa Mada..."
         unarchive: "Ondoa Mada kwenye Nyaraka"
         archive: "Weka Mada kwenye Nyaraka"
-        invisible: "Ondoa Orodha"
-        visible: "Tengeneza Orodha"
         reset_read: "Anzisha Upya Usomaji wa Taarifa"
         make_private: "Tengeneza Ujumbe Binafsi"
       feature:
@@ -2261,6 +2250,21 @@ sw:
       no_activity_others: "Hakuna shughuli."
       no_replies_others: "Hakuna majibu."
       no_likes_others: "Hakuna machapisho yaliyopendwa."
+    sidebar:
+      unread_count: "%{count} haijasomwa"
+      new_count: "Mada mpya %{count}"
+      sections:
+        categories:
+          header_link_title: "kategoria zote"
+          header_link_text: "Kategoria"
+        topics:
+          header_link_title: "nyumbani"
+          header_link_text: "Mada"
+          links:
+            tracked:
+              content: "Imefuatiliwa"
+            my_posts:
+              content: "Machapisho Yangu"
   admin_js:
     type_to_filter: "andika kuchuja..."
     admin:

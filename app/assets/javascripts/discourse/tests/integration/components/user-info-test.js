@@ -2,10 +2,42 @@ import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
 import hbs from "htmlbars-inline-precompile";
-import { discourseModule, exists } from "discourse/tests/helpers/qunit-helpers";
+import {
+  discourseModule,
+  exists,
+  query,
+} from "discourse/tests/helpers/qunit-helpers";
 
 discourseModule("Integration | Component | user-info", function (hooks) {
   setupRenderingTest(hooks);
+
+  componentTest("prioritized name", {
+    template: hbs`{{user-info user=currentUser}}`,
+
+    beforeEach() {
+      this.siteSettings.prioritize_username_in_ux = false;
+      this.currentUser.name = "Evil Trout";
+    },
+
+    async test(assert) {
+      assert.equal(query(".name.bold").innerText.trim(), "Evil Trout");
+      assert.equal(query(".username.margin").innerText.trim(), "eviltrout");
+    },
+  });
+
+  componentTest("prioritized username", {
+    template: hbs`{{user-info user=currentUser}}`,
+
+    beforeEach() {
+      this.siteSettings.prioritize_username_in_ux = true;
+      this.currentUser.name = "Evil Trout";
+    },
+
+    async test(assert) {
+      assert.equal(query(".username.bold").innerText.trim(), "eviltrout");
+      assert.equal(query(".name.margin").innerText.trim(), "Evil Trout");
+    },
+  });
 
   componentTest("includeLink", {
     template: hbs`{{user-info user=currentUser includeLink=includeLink}}`,

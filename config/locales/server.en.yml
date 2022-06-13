@@ -219,6 +219,8 @@ en:
       cors_origins_should_not_have_trailing_slash: "You should not add the trailing slash (/) to CORS origins."
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "User agents must be at least 3 characters long to avoid incorrectly rate limiting human users."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "You cannot add any of the following values to the setting: %{values}."
+      strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "You cannot disable strip image metadata if 'composer media optimization image enabled' is enabled. Disable 'composer media optimization image enabled' before disabling strip image metadata."
+      twitter_summary_large_image_no_svg: "Twitter summary images used for twitter:image metadata cannot be an .svg image."
     conflicting_google_user_id: 'The Google Account ID for this account has changed; staff intervention is required for security reasons. Please contact staff and point them to <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
       invalid_address: "Sorry, we were unable to generate a preview for this web page, because the server '%{hostname}' could not be found. Instead of a preview, only a link will appear in your post. :cry:"
@@ -248,7 +250,7 @@ en:
       <p>Otherwise please <a href="%{base_url}/password-reset">Reset Password</a>.</p>
     not_found_template_link: |
       <p>This invitation to <a href="%{base_url}">%{site_name}</a> can no longer be redeemed. Please ask the person who invited you to send you a new invitation.</p>
-    user_exists: "There's no need to invite <b>%{email}</b>, they <a href='%{base_path}/u/%{username}/summary'>already have an account!</a>"
+    user_exists: "There's no need to invite <b>%{email}</b>, they already have an account!"
     invite_exists: "You already invited <b>%{email}</b>."
     invalid_email: "%{email} isn't a valid email address."
     rate_limit:
@@ -437,6 +439,7 @@ en:
       time_must_be_provided: "Time must be provided for all reminders"
       for_topic_must_use_first_post: "You can only use the first post to bookmark the topic."
       bookmarkable_id_type_required: "The name and type of the record to bookmark is required."
+      invalid_bookmarkable: "A %{type} cannot be bookmarked."
 
     reminders:
       at_desktop: "Next time I'm at my desktop"
@@ -724,6 +727,11 @@ en:
   post:
     image_placeholder:
       broken: "This image is broken"
+      blocked_hotlinked_title: "Image hosted on another site. Click to open in a new tab."
+      blocked_hotlinked: "External Image"
+    media_placeholder:
+      blocked_hotlinked_title: "Media hosted on another site. Click to open in a new tab."
+      blocked_hotlinked: "External Media"
     hidden_bidi_character: "Bidirectional characters can change the order that text is rendered. This could be used to obscure malicious code."
     has_likes:
       one: "%{count} Like"
@@ -1511,9 +1519,11 @@ en:
     contact_email: "Email address of key contact responsible for this site. Used for critical notifications, and also displayed on <a href='%{base_path}/about' target='_blank'>/about</a> for urgent matters."
     contact_url: "Contact URL for this site. Displayed on the <a href='%{base_path}/about' target='_blank'>/about</a> page for urgent matters."
     crawl_images: "Retrieve images from remote URLs to insert the correct width and height dimensions."
-    download_remote_images_to_local: "Convert remote images to local images by downloading them; this prevents broken images."
+    download_remote_images_to_local: "Convert remote (hotlinked) images to local images by downloading them; This preserves content even if the images are removed from the remote site in future."
     download_remote_images_threshold: "Minimum disk space necessary to download remote images locally (in percent)"
     disabled_image_download_domains: "Remote images will never be downloaded from these domains. Pipe-delimited list."
+    block_hotlinked_media: "Prevent users from introducing remote (hotlinked) media in their posts. Remote media which is not downloaded via 'download_remote_images_to_local' will be replaced with a placeholder link."
+    block_hotlinked_media_exceptions: "A list of base URLs which are exempt from the block_hotlinked_media setting. Include the protocol (e.g. https://example.com)."
     editing_grace_period: "For (n) seconds after posting, editing will not create a new version in the post history."
     editing_grace_period_max_diff: "Maximum number of character changes allowed in editing grace period, if more changed store another post revision (trust level 0 and 1)"
     editing_grace_period_max_diff_high_trust: "Maximum number of character changes allowed in editing grace period, if more changed store another post revision (trust level 2 and up)"
@@ -1537,6 +1547,7 @@ en:
     show_pinned_excerpt_desktop: "Show excerpt on pinned topics in desktop view."
     post_onebox_maxlength: "Maximum length of a oneboxed Discourse post in characters."
     blocked_onebox_domains: "A list of domains that will never be oneboxed e.g. wikipedia.org\n(Wildcard symbols * ? not supported)"
+    block_onebox_on_redirect: "Block onebox for URLs that redirect."
     allowed_inline_onebox_domains: "A list of domains that will be oneboxed in miniature form if linked without a title"
     enable_inline_onebox_on_all_domains: "Ignore inline_onebox_domain_allowlist site setting and allow inline onebox on all domains."
     force_custom_user_agent_hosts: "Hosts for which to use the custom onebox user agent on all requests. (Especially useful for hosts that limit access by user agent)."
@@ -1556,7 +1567,7 @@ en:
     favicon: "A favicon for your site, see <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. To work correctly over a CDN it must be a png. Will be resized to 32x32. If left blank, large_icon will be used."
     apple_touch_icon: "Icon used for Apple touch devices. Will be automatically resized to 180x180. If left blank, large_icon will be used."
     opengraph_image: "Default opengraph image, used when the page has no other suitable image. If left blank, large_icon will be used"
-    twitter_summary_large_image: "Twitter card 'summary large image' (should be at least 280 in width, and at least 150 in height). If left blank, regular card metadata is generated using the opengraph_image."
+    twitter_summary_large_image: "Twitter card 'summary large image' (should be at least 280 in width, and at least 150 in height, cannot be .svg). If left blank, regular card metadata is generated using the opengraph_image, as long as that is not also a .svg"
 
     notification_email: "The from: email address used when sending all essential system emails. The domain specified here must have SPF, DKIM and reverse PTR records set correctly for email to arrive."
     email_custom_headers: "A pipe-delimited list of custom email headers"
@@ -1625,7 +1636,7 @@ en:
     ga_universal_auto_link_domains: "Enable Google Universal Analytics cross-domain tracking. Outgoing links to these domains will have the client id added to them. See <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Google's Cross-Domain Tracking guide.</a>"
     gtm_container_id: "Google Tag Manager container id. eg: GTM-ABCDEF. <br/>Note: Third-party scripts loaded by GTM may need to be allowlisted in 'content security policy script src'."
     enable_escaped_fragments: "Fall back to Google's Ajax-Crawling API if no webcrawler is detected. See <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
-    moderators_manage_categories_and_groups: "Allow moderators to manage categories and groups"
+    moderators_manage_categories_and_groups: "Allow moderators to create and manage categories and groups"
     moderators_change_post_ownership: "Allow moderators to change post ownership"
     cors_origins: "Allowed origins for cross-origin requests (CORS). Each origin must include http:// or https://. The DISCOURSE_ENABLE_CORS env variable must be set to true to enable CORS."
     use_admin_ip_allowlist: "Admins can only log in if they are at an IP address defined in the Screened IPs list (Admin > Logs > Screened Ips)."
@@ -1654,7 +1665,7 @@ en:
     send_tl2_promotion_message: "Send new trust level 2 users a message about promotion."
     suppress_reply_directly_below: "Don't show the expandable reply count on a post when there is only a single reply directly below this post."
     suppress_reply_directly_above: "Don't show the expandable in-reply-to on a post when there is only a single reply directly above this post."
-    remove_full_quote: "Automatically remove full quotes on direct replies."
+    remove_full_quote: "Automatically remove quotation if (a) it appears at the start of a post, (b) it is of an entire post, and (c) it is from the immediately preceding post. For details, see <a href='https://meta.discourse.org/t/removal-of-full-quotes-from-direct-replies/106857' target='_blank'>Removal of full quotes from direct replies</a>"
     suppress_reply_when_quoting: "Don't show the expandable in-reply-to on a post when post quotes reply."
     max_reply_history: "Maximum number of replies to expand when expanding in-reply-to"
     topics_per_period_in_top_summary: "Number of top topics shown in the default top topics summary."
@@ -2316,7 +2327,7 @@ en:
     tags_sort_alphabetically: "Show tags in alphabetical order. Default is to show in order of popularity."
     tags_listed_by_group: "List tags by tag group on the <a href='%{base_path}/tags' target='_blank'>Tags page</a>."
     tag_style: "Visual style for tag badges."
-    allow_staff_to_tag_pms: "Allow staff members to tag any personal message"
+    pm_tags_allowed_for_groups: "Allow members of included group(s) to tag any personal message"
     min_trust_level_to_tag_topics: "Minimum trust level required to tag topics"
     suppress_overlapping_tags_in_list: "If tags match exact words in topic titles, don't show the tag"
     remove_muted_tags_from_latest: "Don't show topics tagged only with muted tags in the latest topic list."
@@ -2355,6 +2366,8 @@ en:
 
     allow_changing_staged_user_tracking: "Allow a staged user's category and tag notification preferences to be changed by an admin user."
     use_email_for_username_and_name_suggestions: "Use the first part of email addresses for username and name suggestions. Note that this makes it easier for the public to guess full user email addresses (because a large proportion of people share common services like `gmail.com`)."
+    use_name_for_username_suggestions: "Use a user's full name when suggesting usernames."
+    suggest_weekends_in_date_pickers: "Include weekends (Saturday and Sunday) in date picker suggestions (disable this if you use Discourse only on weekdays, Monday through Friday)."
 
     errors:
       invalid_css_color: "Invalid color. Enter a color name or hex value."
@@ -2384,6 +2397,7 @@ en:
       email_polling_disabled: "You must enable either manual or POP3 polling before enabling reply by email."
       user_locale_not_enabled: "You must first enable 'allow user locale' before enabling this setting."
       invalid_regex: "Regex is invalid or not allowed."
+      invalid_regex_with_message: "The regex '%{regex}' has an error: %{message}"
       email_editable_enabled: "You must disable 'email editable' before enabling this setting."
       staged_users_disabled: "You must first enable 'staged users' before enabling this setting."
       reply_by_email_disabled: "You must first enable 'reply by email' before enabling this setting."
@@ -2404,9 +2418,11 @@ en:
         leading_trailing_slash: "The regular expression must not start and end with a slash."
       unicode_usernames_avatars: "The internal system avatars do not support Unicode usernames."
       list_value_count: "The list must contain exactly %{count} values."
+      markdown_linkify_tlds: "You cannot include a value of '*'."
       google_oauth2_hd_groups: "You must first set 'google oauth2 hd' before enabling this setting."
       search_tokenize_chinese_enabled: "You must disable 'search_tokenize_chinese' before enabling this setting."
       search_tokenize_japanese_enabled: "You must disable 'search_tokenize_japanese' before enabling this setting."
+      discourse_connect_cannot_be_enabled_if_second_factor_enforced:  "You cannot enable DiscourseConnect if 2FA is enforced."
 
     placeholder:
       discourse_connect_provider_secrets:
@@ -3018,6 +3034,8 @@ en:
       text_body_template: |
         We’ve promoted you up another [trust level](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)!
 
+        Achieving Trust Level 2 means that you have read and actively participated enough to be considered a member of this community.
+
         As an experienced user, you might appreciate [this list of handy tips and tricks](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
 
         We invite you to keep getting involved – we enjoy having you around.
@@ -3495,7 +3513,7 @@ en:
   subject_re: "Re: "
   subject_pm: "[PM] "
   email_from: "%{user_name} via %{site_name}"
-  email_from_without_site: "%{user_name}"
+  email_from_without_site: "%{group_name}"
 
   user_notifications:
     previous_discussion: "Previous Replies"
@@ -3519,6 +3537,9 @@ en:
     posted_by: "Posted by %{username} on %{post_date}"
 
     pm_participants: "Participants: %{participants}"
+    more_pm_participants:
+      one: "%{participants} and %{count} other"
+      other: "%{participants} and %{count} others"
 
     invited_group_to_private_message_body: |
       %{username} invited @%{group_name} to a message
@@ -4053,6 +4074,7 @@ en:
   site_setting_missing: "`%{name}` site setting has to be set."
 
   page_not_found:
+    page_title: "Page Not Found"
     title: "Oops! That page doesn’t exist or is private."
     popular_topics: "Popular"
     recent_topics: "Recent"
@@ -4976,9 +4998,11 @@ en:
               categories_and_top_topics:
                 label: "Categories and Top Topics"
               categories_boxes:
-                label: "Categories boxes"
+                label: "Categories Boxes"
               categories_boxes_with_topics:
-                label: "Categories boxes with Topics"
+                label: "Categories Boxes with Topics"
+              subcategories_with_featured_topics:
+                label: "Subcategories with Featured Topics"
 
       logos:
         title: "Logos"
@@ -5190,3 +5214,7 @@ en:
     small_action_post_raw: "Continue discussion at %{new_title}."
 
   fallback_username: "user"
+
+  user_status:
+    errors:
+      ends_at_should_be_greater_than_set_at: "ends_at should be greater than set_at"

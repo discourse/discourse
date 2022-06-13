@@ -4,7 +4,8 @@ import {
   darkLightDiff,
 } from "wizard/lib/preview";
 import I18n from "I18n";
-import { observes } from "discourse-common/utils/decorators";
+import { bind, observes } from "discourse-common/utils/decorators";
+import { action } from "@ember/object";
 
 const LOREM = `
 Lorem ipsum dolor sit amet, consectetur adipiscing.
@@ -19,6 +20,16 @@ export default createPreviewComponent(659, 320, {
   draggingActive: false,
   startX: 0,
   scrollLeft: 0,
+
+  init() {
+    this._super(...arguments);
+    this.wizard.on("homepageStyleChanged", this.onHomepageStyleChange);
+  },
+
+  willDestroy() {
+    this._super(...arguments);
+    this.wizard.off("homepageStyleChanged", this.onHomepageStyleChange);
+  },
 
   mouseDown(e) {
     const slider = this.element.querySelector(".previews");
@@ -61,10 +72,11 @@ export default createPreviewComponent(659, 320, {
     this._super(...arguments);
 
     this.triggerRepaint();
+  },
 
-    if (this.stylingDropdown?.id === "homepage_style") {
-      this.set("previewTopic", false);
-    }
+  @bind
+  onHomepageStyleChange() {
+    this.set("previewTopic", false);
   },
 
   @observes("previewTopic")
@@ -178,13 +190,13 @@ export default createPreviewComponent(659, 320, {
     ctx.fillText("1 / 20", timelineX + margin, height * 0.3 + margin * 1.5);
   },
 
-  actions: {
-    setPreviewHomepage() {
-      this.set("previewTopic", false);
-    },
+  @action
+  setPreviewHomepage() {
+    this.set("previewTopic", false);
+  },
 
-    setPreviewTopic() {
-      this.set("previewTopic", true);
-    },
+  @action
+  setPreviewTopic() {
+    this.set("previewTopic", true);
   },
 });

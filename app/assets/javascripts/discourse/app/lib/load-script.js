@@ -20,6 +20,11 @@ function loadWithTag(path, cb) {
     registerWaiter(() => finished);
   }
 
+  // Don't leave it hanging if something goes wrong
+  s.onerror = function () {
+    finished = true;
+  };
+
   s.onload = s.onreadystatechange = function (_, abort) {
     finished = true;
     if (
@@ -42,28 +47,24 @@ export function loadCSS(url) {
   return loadScript(url, { css: true });
 }
 
-export default function loadScript(url, opts) {
+export default function loadScript(url, opts = {}) {
   // TODO: Remove this once plugins have been updated not to use it:
   if (url === "defer/html-sanitizer-bundle") {
     return Promise.resolve();
   }
 
-  opts = opts || {};
-
   if (_loaded[url]) {
     return Promise.resolve();
   }
 
-  if (PUBLIC_JS_VERSIONS) {
-    url = cacheBuster(url);
-  }
+  url = cacheBuster(url);
 
   // Scripts should always load from CDN
   // CSS is type text, to accept it from a CDN we would need to handle CORS
   const fullUrl = opts.css ? getURL(url) : getURLWithCDN(url);
 
-  $("script").each((i, tag) => {
-    const src = tag.getAttribute("src");
+  document.querySelectorAll("script").forEach((element) => {
+    const src = element.getAttribute("src");
 
     if (src && src !== fullUrl && !_loading[src]) {
       _loaded[src] = true;
@@ -75,6 +76,7 @@ export default function loadScript(url, opts) {
     if (_loaded[fullUrl]) {
       return resolve();
     }
+
     if (_loading[fullUrl]) {
       return _loading[fullUrl].then(resolve);
     }
@@ -89,9 +91,12 @@ export default function loadScript(url, opts) {
     });
 
     const cb = function (data) {
-      if (opts && opts.css) {
-        $("head").append("<style>" + data + "</style>");
+      if (opts?.css) {
+        const style = document.createElement("style");
+        style.innerText = data;
+        document.querySelector("head").appendChild(style);
       }
+
       done();
       resolve();
       _loaded[url] = true;

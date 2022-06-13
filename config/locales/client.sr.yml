@@ -88,6 +88,10 @@ sr:
         date_month: "D MMM"
         date_year: "MMM 'YY"
       medium:
+        less_than_x_minutes:
+          one: "manje od %{count} min"
+          few: "manje od %{count} min"
+          other: "manje od %{count} min"
         x_minutes:
           one: "%{count} min"
           few: "%{count} min"
@@ -96,10 +100,22 @@ sr:
           one: "%{count} sat"
           few: "%{count} sata"
           other: "%{count} sati"
+        about_x_hours:
+          one: "oko %{count} sat"
+          few: "oko %{count} sati"
+          other: "oko %{count} sati"
         x_days:
           one: "%{count} dan"
           few: "%{count} dana"
           other: "%{count} dana"
+        x_months:
+          one: "%{count} mesec"
+          few: "%{count} meseca"
+          other: "%{count} meseci"
+        about_x_years:
+          one: "približno %{count} godinu"
+          few: "oko %{count} godine"
+          other: "oko %{count} godina"
         date_year: "D MMM 'YY"
       medium_with_ago:
         x_minutes:
@@ -290,7 +306,9 @@ sr:
     bookmarks:
       created: "Obeležili ste ovu poruku. %{name}"
       not_bookmarked: "obeleži ovu poruku"
+      remove_reminder_keep_bookmark: "Uklonite podsetnik i sačuvajte obeleživač"
       created_with_reminder: "Obeležili ste ovu poruku sa podsetnikom %{date}. %{name}"
+      created_with_reminder_generic: "Obeležili ste ovu poruku sa podsetnikom %{date}. %{name}"
       remove: "Obriši marker"
       delete: "Ukloni obeleživač"
       confirm_delete: "Da li ste sigurni da želite da uklonite ovaj obeleživač? Podsetnik će takođe biti uklonjen."
@@ -462,6 +480,7 @@ sr:
       later_this_week: "Kasnije ove sedmice"
       start_of_next_business_week: "Ponedeljak"
       start_of_next_business_week_alt: "Naredni ponedeljak"
+      next_week: "Sledeće sedmice"
       next_month: "Naredni mesec"
       custom: "Prilagođen datum i vreme"
     user_action:
@@ -943,6 +962,8 @@ sr:
         sent_by: "Poslao"
         private_message: "privatna poruka"
         the_topic: "tema"
+    user_status:
+      save: "Sačuvaj"
     loading: "Učitavanje..."
     errors:
       prev_page: "pri pokušaju očitavanja"
@@ -1001,7 +1022,7 @@ sr:
     trust_level: "Nivo poverenja"
     search_hint: "korisničko ime, e-mail ili IP adresa"
     create_account:
-      header_title: "Dobrodošao!"
+      header_title: "Добро дошли!"
       failed: "Nešto nije u redu, možda je ovaj e-mail već registrovan, pokušajte s linkom za zaboravljenu šifru."
     forgot_password:
       action: "Zaboravio/la sam šifru"
@@ -1038,7 +1059,7 @@ sr:
       twitter:
         name: "Twitter"
     invites:
-      welcome_to: "Dobrodošao na %{site_name}!"
+      welcome_to: "Добро дошли на пројекат %{site_name}!"
       success: "Tvoj nalog je kreiran i sada si ulogovan."
       name_label: "Ime foruma"
       password_label: "Šifra"
@@ -1246,12 +1267,6 @@ sr:
         remove: "Onemogući"
       topic_status_update:
         when: "Kada:"
-      auto_update_input:
-        later_today: "Kasnije ovog dana"
-        tomorrow: "Sutra"
-        later_this_week: "Kasnije ove sedmice"
-        next_week: "Sledeće sedmice"
-        next_month: "Naredni mesec"
       auto_close:
         error: "Molimo unesite validnu vrednost"
         based_on_last_post: "Nemoj zatvoriti dok poslednja poruka nije odprilike ovoliko stara."
@@ -1304,8 +1319,6 @@ sr:
         close: "Zatvori temu"
         unarchive: "Vrati temu iz arhiva"
         archive: "Arhiviraj temu"
-        invisible: "Ukloni temu s popisa"
-        visible: "Stavi na popis"
         reset_read: "Poništi podatke o pročitanom"
       feature:
         pin: "Zakači temu"
@@ -1784,6 +1797,21 @@ sr:
         member: "član"
         regular: "stalni član"
         leader: "vođa"
+    sidebar:
+      unread_count: "%{count} nepročitana"
+      new_count: "%{count} nova"
+      sections:
+        categories:
+          header_link_title: "sve kategorije"
+          header_link_text: "Kategorije"
+        topics:
+          header_link_title: "home"
+          header_link_text: "Teme"
+          links:
+            tracked:
+              content: "Praćeno"
+            my_posts:
+              content: "Moje poruke"
   admin_js:
     type_to_filter: "upiši za filtriranje"
     admin:

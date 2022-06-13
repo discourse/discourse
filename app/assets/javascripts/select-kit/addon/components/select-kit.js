@@ -886,6 +886,14 @@ export default Component.extend(
               },
             },
             {
+              name: "preventOverflow",
+              options: {
+                altAxis: !this?.site?.mobileView,
+                tetherOffset: ({ reference }) =>
+                  Math.max(reference.y, document.documentElement.scrollTop),
+              },
+            },
+            {
               name: "offset",
               options: {
                 offset: [0, 3],

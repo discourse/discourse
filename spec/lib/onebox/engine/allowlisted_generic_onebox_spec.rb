@@ -217,6 +217,16 @@ describe Onebox::Engine::AllowlistedGenericOnebox do
         expect(onebox.to_html).to include("Rudy (1993) - IMDb")
         expect(onebox.to_html).to include("Rudy: Directed by David Anspaugh. With Sean Astin, Jon Favreau, Ned Beatty, Greta Lind. Rudy has always been told that he was too small to play college football.")
       end
+
+      it 'shows rating' do
+        onebox = described_class.new("https://www.imdb.com/title/tt0108002/")
+        expect(onebox.to_html).to include("7.5")
+      end
+
+      it 'shows duration' do
+        onebox = described_class.new("https://www.imdb.com/title/tt0108002/")
+        expect(onebox.to_html).to include("01:54")
+      end
     end
   end
 end

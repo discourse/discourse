@@ -1,4 +1,4 @@
-import { cancel, later, run, schedule, throttle } from "@ember/runloop";
+import { cancel, later, schedule, throttle } from "@ember/runloop";
 import discourseComputed, {
   bind,
   observes,
@@ -53,34 +53,6 @@ export default Component.extend(KeyEnterEscape, {
     return composeState || Composer.CLOSED;
   },
 
-  movePanels(size) {
-    document.querySelector("#main-outlet").style.paddingBottom = size
-      ? `${size}px`
-      : "";
-
-    // signal the progress bar it should move!
-    this.appEvents.trigger("composer:resized");
-  },
-
-  @observes("composeState", "composer.{action,canEditTopicFeaturedLink}")
-  resize() {
-    schedule("afterRender", () => {
-      if (!this.element || this.isDestroying || this.isDestroyed) {
-        return;
-      }
-
-      discourseDebounce(this, this.debounceMove, 300);
-    });
-  },
-
-  debounceMove() {
-    let height = 0;
-    if (!this.element.classList.contains("saving")) {
-      height = this.element.offsetHeight;
-    }
-    this.movePanels(height);
-  },
-
   keyUp() {
     this.typed();
 
@@ -128,11 +100,31 @@ export default Component.extend(KeyEnterEscape, {
     this.appEvents.trigger("composer:div-resizing");
     this.element.classList.add("clear-transitions");
     const currentMousePos = mouseYPos(event);
-    let size = this.origComposerSize + (this.lastMousePos - currentMousePos);
 
+    let size = this.origComposerSize + (this.lastMousePos - currentMousePos);
     size = Math.min(size, window.innerHeight - headerOffset());
-    this.movePanels(size);
-    this.element.style.height = size ? `${size}px` : "";
+    const minHeight = parseInt(getComputedStyle(this.element).minHeight, 10);
+    size = Math.max(minHeight, size);
+
+    ["--reply-composer-height", "--new-topic-composer-height"].forEach((prop) =>
+      document.documentElement.style.setProperty(prop, size ? `${size}px` : "")
+    );
+
+    this._triggerComposerResized();
+  },
+
+  @observes("composeState", "composer.{action,canEditTopicFeaturedLink}")
+  _triggerComposerResized() {
+    schedule("afterRender", () => {
+      if (!this.element || this.isDestroying || this.isDestroyed) {
+        return;
+      }
+      discourseDebounce(this, this.composerResized, 300);
+    });
+  },
+
+  composerResized() {
+    this.appEvents.trigger("composer:resized");
   },
 
   @bind
@@ -213,7 +205,6 @@ export default Component.extend(KeyEnterEscape, {
 
     this.setupComposerResizeEvents();
 
-    const resize = () => run(() => this.resize());
     const triggerOpen = () => {
       if (this.get("composer.composeState") === Composer.OPEN) {
         this.appEvents.trigger("composer:opened");
@@ -222,7 +213,6 @@ export default Component.extend(KeyEnterEscape, {
     triggerOpen();
 
     afterTransition($(this.element), () => {
-      resize();
       triggerOpen();
     });
     positioningWorkaround($(this.element));

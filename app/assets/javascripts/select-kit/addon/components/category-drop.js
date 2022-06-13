@@ -8,6 +8,7 @@ import I18n from "I18n";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import { computed } from "@ember/object";
 import { readOnly } from "@ember/object/computed";
+import { htmlSafe } from "@ember/template";
 
 export const NO_CATEGORIES_ID = "no-categories";
 export const ALL_CATEGORIES_ID = "all-categories";
@@ -100,11 +101,13 @@ export default ComboBoxComponent.extend({
     if (this.value) {
       const category = Category.findById(this.value);
       content.title = category.title;
-      content.label = categoryBadgeHTML(category, {
-        link: false,
-        allowUncategorized: true,
-        hideParent: true,
-      }).htmlSafe();
+      content.label = htmlSafe(
+        categoryBadgeHTML(category, {
+          link: false,
+          allowUncategorized: true,
+          hideParent: true,
+        })
+      );
     }
 
     return content;

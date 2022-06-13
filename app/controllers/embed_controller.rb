@@ -35,6 +35,8 @@ class EmbedController < ApplicationController
       raise Discourse::InvalidParameters.new(:embed_class) unless @embed_class =~ /^[a-zA-Z0-9\-_]+$/
     end
 
+    response.headers['X-Robots-Tag'] = 'noindex, indexifembedded'
+
     if params.has_key?(:template) && params[:template] == "complete"
       @template = "complete"
     else

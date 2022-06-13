@@ -300,7 +300,9 @@ const Post = RestModel.extend({
   },
 
   rebake() {
-    return ajax(`/posts/${this.id}/rebake`, { type: "PUT" });
+    return ajax(`/posts/${this.id}/rebake`, { type: "PUT" }).catch(
+      popupAjaxError
+    );
   },
 
   unhide() {
@@ -321,8 +323,6 @@ const Post = RestModel.extend({
       target: "post",
       targetId: this.id,
     });
-    // TODO (martin) (2022-02-01) Remove these old bookmark events, replaced by bookmarks:changed.
-    this.appEvents.trigger("page:bookmark-post-toggled", this);
     this.appEvents.trigger("post-stream:refresh", { id: this.id });
   },
 
@@ -344,8 +344,6 @@ const Post = RestModel.extend({
       target: "post",
       targetId: this.id,
     });
-    // TODO (martin) (2022-02-01) Remove these old bookmark events, replaced by bookmarks:changed.
-    this.appEvents.trigger("page:bookmark-post-toggled", this);
   },
 
   updateActionsSummary(json) {
@@ -355,21 +353,19 @@ const Post = RestModel.extend({
     }
   },
 
-  updateLikeCount(count) {
+  updateLikeCount(count, userId, eventType) {
+    let ownAction = User.current()?.id === userId;
+    let ownLike = ownAction && eventType === "liked";
     let current_actions_summary = this.get("actions_summary");
     let likeActionID = Site.current().post_action_types.find(
       (a) => a.name_key === "like"
     ).id;
+    const newActionObject = { id: likeActionID, count, acted: ownLike };
 
     if (!this.actions_summary.find((entry) => entry.id === likeActionID)) {
       let json = Post.munge({
         id: this.id,
-        actions_summary: [
-          {
-            id: likeActionID,
-            count,
-          },
-        ],
+        actions_summary: [newActionObject],
       });
       this.set(
         "actions_summary",
@@ -378,11 +374,16 @@ const Post = RestModel.extend({
       this.set("actionByName", json.actionByName);
       this.set("likeAction", json.likeAction);
     } else {
-      this.actions_summary.find(
-        (entry) => entry.id === likeActionID
-      ).count = count;
-      this.actionByName["like"] = count;
-      this.likeAction.count = count;
+      newActionObject.acted =
+        (ownLike || this.likeAction.acted) &&
+        !(eventType === "unliked" && ownAction);
+
+      Object.assign(
+        this.actions_summary.find((entry) => entry.id === likeActionID),
+        newActionObject
+      );
+      Object.assign(this.actionByName["like"], newActionObject);
+      Object.assign(this.likeAction, newActionObject);
     }
   },
 

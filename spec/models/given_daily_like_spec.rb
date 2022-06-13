@@ -3,8 +3,8 @@
 describe GivenDailyLike do
 
   it 'no errors without a user' do
-    expect(-> { GivenDailyLike.increment_for(nil) }).not_to raise_error
-    expect(-> { GivenDailyLike.decrement_for(nil) }).not_to raise_error
+    expect { GivenDailyLike.increment_for(nil) }.not_to raise_error
+    expect { GivenDailyLike.decrement_for(nil) }.not_to raise_error
   end
 
   context 'with a user' do

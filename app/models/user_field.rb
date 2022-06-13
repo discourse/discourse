@@ -14,6 +14,8 @@ class UserField < ActiveRecord::Base
   before_save :sanitize_description
   after_save :queue_index_search
 
+  scope :public_fields, -> { where(show_on_profile: true).or(where(show_on_user_card: true)) }
+
   def self.max_length
     2048
   end

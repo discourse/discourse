@@ -18,6 +18,8 @@ class SystemMessage
   end
 
   def create(type, params = {})
+    method_params = params.dup
+
     from_system = params.delete(:from_system)
     target_group_names = params.delete(:target_group_names)
 
@@ -33,15 +35,21 @@ class SystemMessage
       target_group_names = Group.exists?(name: SiteSetting.site_contact_group_name) ? SiteSetting.site_contact_group_name : nil
     end
 
-    creator = PostCreator.new(user,
-                       title: title,
-                       raw: raw,
-                       archetype: Archetype.private_message,
-                       target_usernames: @recipient.username,
-                       target_group_names: target_group_names,
-                       subtype: TopicSubtype.system_message,
-                       skip_validations: true,
-                       post_alert_options: params[:post_alert_options])
+    post_creator_args = [
+      user,
+      title: title,
+      raw: raw,
+      archetype: Archetype.private_message,
+      target_usernames: @recipient.username,
+      target_group_names: target_group_names,
+      subtype: TopicSubtype.system_message,
+      skip_validations: true,
+      post_alert_options: params[:post_alert_options]
+    ]
+
+    DiscourseEvent.trigger(:before_system_message_sent, message_type: type, recipient: @recipient, post_creator_args: post_creator_args, params: method_params)
+
+    creator = PostCreator.new(*post_creator_args)
 
     post = I18n.with_locale(@recipient.effective_locale) { creator.create }
 

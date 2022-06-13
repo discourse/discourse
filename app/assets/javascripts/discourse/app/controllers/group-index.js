@@ -216,12 +216,20 @@ export default Controller.extend({
 
   @action
   bulkSelectAll() {
-    $("input.bulk-select:not(:checked)").click();
+    document
+      .querySelectorAll("input.bulk-select:not(:checked)")
+      .forEach((checkbox) => {
+        checkbox.checked = true;
+      });
   },
 
   @action
   bulkClearAll() {
-    $("input.bulk-select:checked").click();
+    document
+      .querySelectorAll("input.bulk-select:checked")
+      .forEach((checkbox) => {
+        checkbox.checked = false;
+      });
   },
 
   @action

@@ -1,6 +1,7 @@
 import Component from "@ember/component";
 import I18n from "I18n";
 import { schedule } from "@ember/runloop";
+import { action } from "@ember/object";
 
 export default Component.extend({
   classNames: ["invite-list"],
@@ -42,36 +43,36 @@ export default Component.extend({
     this.set("field.warning", showWarning ? "invites.none_added" : null);
   },
 
-  actions: {
-    addUser() {
-      const user = {
-        email: this.inviteEmail || "",
-        role: this.inviteRole,
-      };
+  @action
+  addUser() {
+    const user = {
+      email: this.inviteEmail || "",
+      role: this.inviteRole,
+    };
 
-      if (!/(.+)@(.+){2,}\.(.+){2,}/.test(user.email)) {
-        return this.set("invalid", true);
-      }
+    if (!/(.+)@(.+){2,}\.(.+){2,}/.test(user.email)) {
+      return this.set("invalid", true);
+    }
 
-      const users = this.users;
-      if (users.findBy("email", user.email)) {
-        return this.set("invalid", true);
-      }
+    const users = this.users;
+    if (users.findBy("email", user.email)) {
+      return this.set("invalid", true);
+    }
 
-      this.set("invalid", false);
+    this.set("invalid", false);
 
-      users.pushObject(user);
-      this.updateField();
+    users.pushObject(user);
+    this.updateField();
 
-      this.set("inviteEmail", "");
-      schedule("afterRender", () =>
-        this.element.querySelector(".invite-email").focus()
-      );
-    },
+    this.set("inviteEmail", "");
+    schedule("afterRender", () =>
+      this.element.querySelector(".invite-email").focus()
+    );
+  },
 
-    removeUser(user) {
-      this.users.removeObject(user);
-      this.updateField();
-    },
+  @action
+  removeUser(user) {
+    this.users.removeObject(user);
+    this.updateField();
   },
 });

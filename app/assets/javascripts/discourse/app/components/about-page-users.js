@@ -1,7 +1,5 @@
 import Component from "@ember/component";
 import { computed } from "@ember/object";
-import { formatUsername } from "discourse/lib/utilities";
-import { normalize } from "discourse/components/user-info";
 import { prioritizeNameInUx } from "discourse/lib/settings";
 import { renderAvatar } from "discourse/helpers/user-avatar";
 import { userPath } from "discourse/lib/url";
@@ -9,13 +7,7 @@ import { userPath } from "discourse/lib/url";
 export default Component.extend({
   usersTemplates: computed("users.[]", function () {
     return (this.users || []).map((user) => {
-      let name = user.name;
-      let username = user.username;
-      let prioritizeName = prioritizeNameInUx(name);
-      let hideName = false;
-      if (name && normalize(username) === normalize(name)) {
-        hideName = true;
-      }
+      const { name, username } = user;
 
       return {
         name,
@@ -26,9 +18,7 @@ export default Component.extend({
           siteSettings: this.siteSettings,
         }),
         title: user.title || "",
-        formatedUsername: formatUsername(username),
-        prioritizeName,
-        hideName,
+        prioritizeName: prioritizeNameInUx(name),
       };
     });
   }),

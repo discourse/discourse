@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_dependency 'reviewable/collection'
+require 'reviewable/collection'
 
 class Reviewable < ActiveRecord::Base
   class Actions < Reviewable::Collection

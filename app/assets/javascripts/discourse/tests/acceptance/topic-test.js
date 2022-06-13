@@ -263,6 +263,8 @@ acceptance("Topic featured links", function (needs) {
     topic_featured_link_enabled: true,
     max_topic_title_length: 80,
     exclude_rel_nofollow_domains: "example.com",
+    display_name_on_posts: false,
+    prioritize_username_in_ux: true,
   });
 
   test("remove nofollow attribute", async function (assert) {

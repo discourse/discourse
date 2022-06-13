@@ -30,7 +30,7 @@ class StaticController < ApplicationController
     if map.has_key?(@page)
       site_setting_key = map[@page][:redirect]
       url = SiteSetting.get(site_setting_key) if site_setting_key
-      return redirect_to(url) if url.present?
+      return redirect_to(url, allow_other_host: true) if url.present?
     end
 
     # The /guidelines route ALWAYS shows our FAQ, ignoring the faq_url site setting.
@@ -204,9 +204,11 @@ class StaticController < ApplicationController
           response.headers["Last-Modified"] = File.ctime(path).httpdate
         end
         content = Rails.application.assets_manifest.find_sources('service-worker.js').first
+
+        base_url = File.dirname(helpers.script_asset_path('service-worker'))
         content = content.sub(
           /^\/\/# sourceMappingURL=(service-worker-.+\.map)$/
-        ) { "//# sourceMappingURL=#{helpers.script_asset_path(Regexp.last_match(1))}" }
+        ) { "//# sourceMappingURL=#{base_url}/#{Regexp.last_match(1)}" }
         render(
           plain: content,
           content_type: 'application/javascript'

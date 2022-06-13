@@ -41,6 +41,20 @@ discourseModule("Integration | Component | Widget | button", function (hooks) {
     },
   });
 
+  componentTest("emoji and text button", {
+    template: hbs`{{mount-widget widget="button" args=args}}`,
+
+    beforeEach() {
+      this.set("args", { emoji: "mega", label: "topic.create" });
+    },
+
+    test(assert) {
+      assert.ok(exists("button.widget-button"), "renders the widget");
+      assert.ok(exists("button img.emoji"), "it renders the emoji");
+      assert.ok(exists("button span.d-button-label"), "it renders the label");
+    },
+  });
+
   componentTest("text only button", {
     template: hbs`{{mount-widget widget="button" args=args}}`,
 

@@ -1,5 +1,5 @@
 {{#each navItems as |navItem|}}
-  {{navigation-item content=navItem filterMode=filterMode category=category}}
+  {{navigation-item content=navItem filterMode=filterMode category=category class=(concat "nav-item_" navItem.name)}}
 {{/each}}
 {{custom-html name="extraNavItem" tagName="li"}}
 {{plugin-outlet name="extra-nav-item" connectorTagName="li" args=(hash category=category filterMode=filterMode)}}

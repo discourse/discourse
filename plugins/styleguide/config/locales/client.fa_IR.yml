@@ -64,7 +64,7 @@ fa_IR:
         topic_footer_buttons:
           title: "دکمه‌های پاورقی موضوع"
         topic_notifications:
-          title: "اعلانات موضوع"
+          title: "آگاه‌سازی موضوع"
         post:
           title: "نوشته"
         topic_map:

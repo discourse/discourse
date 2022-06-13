@@ -62,5 +62,22 @@ RSpec.describe EnableSsoValidator do
       end
     end
 
+    describe 'when 2FA is enforced' do
+      before do
+        SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+      end
+
+      it 'should be invalid' do
+        SiteSetting.enforce_second_factor = 'all'
+
+        expect(subject.valid_value?('t')).to eq(false)
+      end
+
+      it 'should be valid' do
+        SiteSetting.enforce_second_factor = 'no'
+
+        expect(subject.valid_value?('t')).to eq(true)
+      end
+    end
   end
 end

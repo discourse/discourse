@@ -77,8 +77,9 @@ class Auth::DefaultCurrentUserProvider
   ]
 
   def self.find_v0_auth_cookie(request)
-    cookie = request.cookies[TOKEN_COOKIE].presence
-    if cookie && cookie.size == TOKEN_SIZE
+    cookie = request.cookies[TOKEN_COOKIE]
+
+    if cookie&.valid_encoding? && cookie.present? && cookie.size == TOKEN_SIZE
       cookie
     end
   end
@@ -88,9 +89,11 @@ class Auth::DefaultCurrentUserProvider
 
     env[DECRYPTED_AUTH_COOKIE] = begin
       request = ActionDispatch::Request.new(env)
+      cookie = request.cookies[TOKEN_COOKIE]
+
       # don't even initialize a cookie jar if we don't have a cookie at all
-      if request.cookies[TOKEN_COOKIE].present?
-        request.cookie_jar.encrypted[TOKEN_COOKIE]
+      if cookie&.valid_encoding? && cookie.present?
+        request.cookie_jar.encrypted[TOKEN_COOKIE]&.with_indifferent_access
       end
     end
   end
@@ -217,12 +220,17 @@ class Auth::DefaultCurrentUserProvider
     end
 
     if current_user && should_update_last_seen?
-      u = current_user
       ip = request.ip
+      user_id = current_user.id
+      old_ip = current_user.ip_address
 
       Scheduler::Defer.later "Updating Last Seen" do
-        u.update_last_seen!
-        u.update_ip_address!(ip)
+        if User.should_update_last_seen?(user_id)
+          if u = User.find_by(id: user_id)
+            u.update_last_seen!(Time.zone.now, force: true)
+          end
+        end
+        User.update_ip_address!(user_id, new_ip: ip, old_ip: old_ip)
       end
     end
 

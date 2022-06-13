@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'email/sender'
-
 module Jobs
   class GroupSmtpEmail < ::Jobs::Base
     include Skippable

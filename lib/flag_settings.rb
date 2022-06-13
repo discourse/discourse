@@ -20,8 +20,6 @@ class FlagSettings
   end
 
   def add(id, name, topic_type: nil, notify_type: nil, auto_action_type: nil, custom_type: nil)
-    details ||= {}
-
     @all_flag_types[name] = id
     @topic_flag_types[name] = id if !!topic_type
     @notify_types[name] = id if !!notify_type

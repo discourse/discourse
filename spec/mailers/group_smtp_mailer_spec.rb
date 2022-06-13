@@ -28,18 +28,18 @@ describe GroupSmtpMailer do
 
   let(:email) do
     <<~EMAIL
-    Delivered-To: bugs@gmail.com
-    MIME-Version: 1.0
-    From: John Doe <john@doe.com>
-    Date: Tue, 01 Jan 2019 12:00:00 +0200
-    Message-ID: <a52f67a3d3560f2a35276cda8519b10b595623bcb66912bb92df6651ad5f75be@mail.gmail.com>
-    Subject: Hello from John
-    To: "bugs@gmail.com" <bugs@gmail.com>
-    Content-Type: text/plain; charset="UTF-8"
+      Delivered-To: bugs@gmail.com
+      MIME-Version: 1.0
+      From: John Doe <john@doe.com>
+      Date: Tue, 01 Jan 2019 12:00:00 +0200
+      Message-ID: <a52f67a3d3560f2a35276cda8519b10b595623bcb66912bb92df6651ad5f75be@mail.gmail.com>
+      Subject: Hello from John
+      To: "bugs@gmail.com" <bugs@gmail.com>
+      Content-Type: text/plain; charset="UTF-8"
 
-    Hello,
+      Hello,
 
-    How are you doing?
+      How are you doing?
     EMAIL
   end
 
@@ -78,6 +78,19 @@ describe GroupSmtpMailer do
     expect(sent_mail.reply_to).to eq(nil)
     expect(sent_mail.subject).to eq('Re: Hello from John')
     expect(sent_mail.to_s).to include(raw)
+  end
+
+  it "includes the participants list in the email" do
+    Fabricate(:staged, email: "james.bond@gmail.com")
+    topic = receiver.incoming_email.topic
+    topic.invite(Discourse.system_user, "james.bond@gmail.com")
+
+    PostCreator.create(user, topic_id: topic.id, raw: raw)
+
+    expect(ActionMailer::Base.deliveries.size).to eq(1)
+
+    sent_mail = ActionMailer::Base.deliveries[0]
+    expect(sent_mail.to_s).to include("[Testers Group (1)](http://test.localhost/g/Testers), james.bond@gmail.com")
   end
 
   it "uses the OP incoming email subject for the subject over topic title" do

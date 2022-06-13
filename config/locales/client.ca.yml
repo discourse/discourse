@@ -535,12 +535,15 @@ ca:
       this_weekend: "Aquest cap de setmana"
       start_of_next_business_week: "Dilluns"
       start_of_next_business_week_alt: "Dilluns vinent"
+      next_week: "La setmana que ve"
       two_weeks: "Dues setmanes"
       next_month: "El mes que ve"
       six_months: "Sis mesos"
-      custom: "Data i hora personalitzades"
+      forever: "Sempre"
       relative: "Temps relatiu"
       none: "No cal cap"
+      custom: "Data i hora personalitzades"
+      select_timeframe: "Seleccioneu un període de temps"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> ha publicat <a href='%{topicUrl}'>el tema</a>"
       you_posted_topic: "<a href='%{userUrl}'>Vós</a> heu publicat <a href='%{topicUrl}'>el tema</a>"
@@ -1335,6 +1338,8 @@ ca:
         sent_by: "Enviat per"
         private_message: "missatge"
         the_topic: "el tema"
+    user_status:
+      save: "Desa"
     loading: "Carregant..."
     errors:
       prev_page: "mentre es prova de carregar"
@@ -1663,9 +1668,6 @@ ca:
         reply_as_new_topic:
           label: Respon com a tema enllaçat
           desc: Crea un tema nou enllaçat a aquest tema
-        reply_as_private_message:
-          label: Missatge nou
-          desc: Crea un missatge personal nou 
         reply_to_topic:
           label: Respon al tema
           desc: Respon al tema, no a cap publicació específica
@@ -1963,17 +1965,6 @@ ca:
         when: "Quan:"
         time_frame_required: "Seleccioneu un període de temps"
         duration: "Duració"
-      auto_update_input:
-        none: "Seleccioneu un període de temps"
-        later_today: "Més tard avui"
-        tomorrow: "Demà"
-        later_this_week: "Més avant aquesta setmana"
-        this_weekend: "Aquest cap de setmana"
-        next_week: "La setmana que ve"
-        next_month: "El mes que ve"
-        forever: "Sempre"
-        pick_date_and_time: "Trieu data i hora"
-        set_based_on_last_post: "Tanca d'acord amb la darrera publicació"
       publish_to_category:
         title: "Programa la publicació"
       temp_open:
@@ -2067,8 +2058,6 @@ ca:
         unpin: "Desafixa el tema"
         unarchive: "Desarxiva tema"
         archive: "Arxiva tema"
-        invisible: "Fes invisible"
-        visible: "Fes visible"
         reset_read: "Restableix data de lectura"
         make_private: "Converteix en missatge personal"
         reset_bump_date: "Restableix la data d'elevació"
@@ -2890,6 +2879,21 @@ ca:
       no_activity_others: "No hi ha activitat."
       no_replies_others: "No hi ha respostes."
       no_likes_others: "Publicacions sense 'm'agrada'."
+    sidebar:
+      unread_count: "%{count} no llegit"
+      new_count: "%{count} nou"
+      sections:
+        categories:
+          header_link_title: "totes les categories"
+          header_link_text: "Categories"
+        topics:
+          header_link_title: "pàgina principal"
+          header_link_text: "Temes"
+          links:
+            tracked:
+              content: "Seguit"
+            my_posts:
+              content: "Les meves publicacions"
   admin_js:
     type_to_filter: "escriu per a filtrar..."
     admin:

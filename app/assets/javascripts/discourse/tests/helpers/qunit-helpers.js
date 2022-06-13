@@ -63,6 +63,11 @@ import {
   setTestPresence,
 } from "discourse/lib/user-presence";
 import PreloadStore from "discourse/lib/preload-store";
+import { resetDefaultSectionLinks as resetTopicsSectionLinks } from "discourse/lib/sidebar/custom-topics-section-links";
+import {
+  clearBlockDecorateCallbacks,
+  clearTagDecorateCallbacks,
+} from "discourse/lib/to-markdown";
 
 const LEGACY_ENV = !setupApplicationTest;
 
@@ -186,6 +191,9 @@ function testCleanup(container, app) {
     clearPresenceCallbacks();
   }
   restoreBaseUri();
+  resetTopicsSectionLinks();
+  clearTagDecorateCallbacks();
+  clearBlockDecorateCallbacks();
 }
 
 export function discourseModule(name, options) {
@@ -241,7 +249,6 @@ export function discourseModule(name, options) {
 export function addPretenderCallback(name, fn) {
   if (name && fn) {
     if (_pretenderCallbacks[name]) {
-      // eslint-disable-next-line no-console
       throw `There is already a pretender callback with module name (${name}).`;
     }
 
@@ -292,9 +299,6 @@ export function acceptance(name, optionsOrCallback) {
         mergeSettings(settingChanges);
       }
       this.siteSettings = currentSettings();
-
-      clearOutletCache();
-      clearHTMLCache();
 
       resetSite(currentSettings(), siteChanges);
 
@@ -575,7 +579,7 @@ export async function paste(element, text, otherClipboardData = {}) {
   return e;
 }
 
-// The order of attributes can vary in diffferent browsers. When comparing
+// The order of attributes can vary in different browsers. When comparing
 // HTML strings from the DOM, this function helps to normalize them to make
 // comparison work cross-browser
 export function normalizeHtml(html) {

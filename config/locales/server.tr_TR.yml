@@ -208,6 +208,7 @@ tr_TR:
       cannot_enable_s3_uploads_when_s3_enabled_globally: "S3 yüklemeleri zaten küresel olarak etkin olduğundan S3 yüklemelerini etkinleştiremezsiniz ve bu site düzeyini etkinleştirmek yüklemelerde kritik sorunlara neden olabilir"
       cors_origins_should_not_have_trailing_slash: "CORS kaynaklarına sondaki eğik çizgiyi (/) eklememelisiniz."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "Ayara aşağıdaki değerlerden herhangi birini ekleyemezsiniz: %{values}."
+      twitter_summary_large_image_no_svg: "twitter:image meta verisi için kullanılan Twitter özet resimleri .svg olamaz."
     conflicting_google_user_id: 'Bu hesap için Google Hesap Kimliği değişti; Güvenlik nedeniyle yetkili müdahalesi gerekmektedir. Lütfen yetkili ile iletişime geçin ve <br> <a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
       invalid_address: "Üzgünüz, '%{hostname}' sunucusu bulunamadığı için bu web sayfası için bir önizleme oluşturamadık. Önizleme yerine, gönderinizde yalnızca bir bağlantı görünecektir. :cry:"
@@ -228,7 +229,7 @@ tr_TR:
       <p>Eğer şifrenizi hatırlıyorsanız <a href="%{base_url}/login">giriş yapabilirsiniz</a>.</p>
 
       <p>Aksi takdirde lütfen <a href="%{base_url}/password-reset">şifrenizi sıfırlayın</a>.</p>
-    user_exists: "<b>%{email}</b> kişisinin <a href='%{base_path}/u/%{username}/summary'>zaten bir hesabı var!</a>"
+    user_exists: "<b>%{email}</b> adresini davet etmeye gerek yok, zaten hesapları var!"
     invite_exists: "<b>%{email}</b> adresini daha önce davet ettiniz."
     invalid_email: "%{email} geçerli bir e-posta adresi değil."
     rate_limit:
@@ -399,6 +400,7 @@ tr_TR:
       time_must_be_provided: "Tüm hatırlatıcılar için zaman belirtilmelidir"
       for_topic_must_use_first_post: "Konuyu işaretlemek için yalnızca ilk gönderiyi kullanabilirsiniz."
       bookmarkable_id_type_required: "İşaretlenecek kaydın adı ve türü zorunludur."
+      invalid_bookmarkable: "%{type} tipi işaretlenemez."
     reminders:
       at_desktop: "Bir dahaki sefere masaüstümdeyim"
       later_today: "Bugün ilerleyen saatlerde"
@@ -1439,6 +1441,7 @@ tr_TR:
     show_pinned_excerpt_mobile: "Mobil görünümünde başa tutturulmuş konuların özetini göster."
     show_pinned_excerpt_desktop: "Masaüstü görünümünde başa tutturulmuş konuların özetini göster."
     post_onebox_maxlength: "Kutulanmış bir Discourse gönderisinin en fazla karakter uzunluğu"
+    block_onebox_on_redirect: "Yönlendiren URL'ler için onebox'ı engelle."
     allowed_inline_onebox_domains: "Başlıksız bağlanırsa minyatür formda yayınlanacak alanların listesi"
     enable_inline_onebox_on_all_domains: "İnline_onebox_domain_whitelist site ayarını yok say ve tüm alan adlarında inline onebox'a izin ver."
     force_custom_user_agent_hosts: "Tüm isteklerde özel onebox kullanıcı aracısını kullanacak ana makineler. (Özellikle kullanıcı aracısıyla erişimi sınırlayan ana bilgisayarlar için kullanışlıdır)."
@@ -1457,7 +1460,7 @@ tr_TR:
     favicon: "Siteniz için bir simge, bkz. <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>Https://en.wikipedia.org/wiki/Favicon</a> . Bir CDN üzerinde düzgün çalışmak için bir png olması gerekir. 32x32 olarak yeniden boyutlandırılacak. Boş bırakılırsa large_icon kullanılır."
     apple_touch_icon: "Apple dokunmatik cihazlar için kullanılan simge. Otomatik olarak 180x180 boyutuna getirilecek. Boş bırakılırsa large_icon kullanılır."
     opengraph_image: "Sayfada başka uygun görüntü yoksa varsayılan açık grafik görüntüsü. Boş bırakılırsa large_icon kullanılır."
-    twitter_summary_large_image: "Twitter kartı 'özet büyük resim' (en az 280 genişliğinde ve en az 150 yüksekliğinde olmalıdır). Boş bırakılırsa opengraph_image kullanılarak normal kart meta verileri oluşturulur."
+    twitter_summary_large_image: "Twitter kartı 'özet büyük resim' (en az 280 genişliğinde ve en az 150 yüksekliğinde olmalıdır, .svg olamaz). Boş bırakılırsa, .svg olmayan opengraph_image kullanılarak normal kart meta verileri oluşturulur."
     notification_email: "Tüm önemli sistem e-postaları için kullanılacak olan gönderen e-posta adresi. E-postaların başarıyla ulaşması için buraya girilen alan adının SPF, DKIM ve reverse PTR kayıtlarının doğru yapılması lazım."
     email_custom_headers: "Sınırlandırılmış özel e-posta başlıkları listesi"
     email_subject: "Standart e-postalar için özelleştirilebilir konu biçimi. Bkz. <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
@@ -1517,7 +1520,7 @@ tr_TR:
     ga_universal_auto_link_domains: "Google Universal Analytics alan adları arası izlemeyi etkinleştirin. Bu alan adlarına giden bağlantılara istemci kimliği eklenecektir. <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Google'ın Web Alanları Arası İzleme kılavuzuna</a> bakın."
     gtm_container_id: "Google Etiket Yöneticisi kapsayıcı kimliği. örn: GTM-ABCDEF. <br/> Not: GTM tarafından yüklenen üçüncü taraf komut dosyalarının 'content security policy script src' içinde izin verilenler listesine eklenmesi gerekebilir."
     enable_escaped_fragments: "Eğer bir ağ gezgini algılanmazsa Google'ın Ajax Crawling API'ına geri dönün. Bkz. <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>Https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
-    moderators_manage_categories_and_groups: "Moderatörlerin kategorileri ve grupları yönetmesine izin ver"
+    moderators_manage_categories_and_groups: "Moderatörlerin kategorileri ve grupları yaratmasına ve yönetmesine izin ver"
     moderators_change_post_ownership: "Moderatörlerin gönderi sahipliğini değiştirmesine izin ver"
     cors_origins: "Cross-origin isteklerin (CORS) izin verilen originler. Her origin http:// veya https:// içermeli. CORS'u etkinleştirebilmek için DISCOURSE_ENABLE_CORS env değişkeni doğru olarak ayarlanmalı."
     use_admin_ip_allowlist: "Yöneticiler, sadece Taranmış IP listesinde tanımlanmış bir IP adresinden erişim sağlıyorlarsa giriş yapabilirler. (Yönetici > Kayıtlar > Taranmış IP'ler)"
@@ -1546,7 +1549,6 @@ tr_TR:
     send_tl2_promotion_message: "Yeni güven düzeyi 2 kullanıcılarına yükseltme hakkında bir ileti gönderin."
     suppress_reply_directly_below: "Bu gönderinin hemen altında yalnızca tek bir yanıt varsa gönderideki açılabilir yanıt sayısı bölümünü gösterme."
     suppress_reply_directly_above: "Bu gönderinin hemen üstünde yalnızca tek bir yanıt varsa gönderideki açılabilir hangi-yanıta-istinaden-yanıtla bölümünü gösterme."
-    remove_full_quote: "Doğrudan yanıtlardaki tüm alıntıları otomatik olarak kaldırın."
     suppress_reply_when_quoting: "Gönderi yanıtı alıntılarsa gönderideki açılabilir hangi-yanıta-istinaden-yanıta bölümünü gösterme."
     max_reply_history: "Hangi-yanıta-istinaden-yanıtla bölümü açılınca gösterilecek en fazla yanıt sayısı"
     topics_per_period_in_top_summary: "Gözde konular özetinde gösterilen gözde konu sayısı."
@@ -2049,7 +2051,7 @@ tr_TR:
     tags_sort_alphabetically: "Etiketleri harf sırasına göre sırala. Öntanımlı olarak gözdelik düzeyine göre gösterilir."
     tags_listed_by_group: "Etiketleri <a href='%{base_path}/tags' target='_blank'> Etiketler sayfasında </a>etiket grubuna göre listeleyin."
     tag_style: "Etiket rozetleri için görsel biçim."
-    allow_staff_to_tag_pms: "Yetkili üyelerin herhangi bir kişisel iletiyi etiketlemesine izin ver"
+    pm_tags_allowed_for_groups: "Dahil edilen grup(lar)ın üyelerinin herhangi bir kişisel mesajı etiketlemesine izin verin"
     min_trust_level_to_tag_topics: "Konulara etiket eklemek için gereken en az güven düzeyi."
     suppress_overlapping_tags_in_list: "Eğer etiketler konu adı içerisinde tam sözcük olarak bulunuyorsa etiketi gösterme"
     remove_muted_tags_from_latest: "En son ki konular listesinde yalnızca sessiz etiketlerle etiketlenmiş konuları gösterme."
@@ -2062,6 +2064,8 @@ tr_TR:
     push_notifications_prompt: "Kullanıcı izni komut istemini görüntüle."
     base_font: "Sitedeki çoğu metin için kullanılacak temel yazı tipi. Temalar, `--font-family` CSS özel özelliği aracılığıyla bunu geçersiz kılabilir."
     heading_font: "Sitedeki çoğu başlık için kullanılacak temel yazı tipi. Temalar, `--heading-font-family` CSS özel özelliği aracılığıyla bunu geçersiz kılabilir."
+    enable_sitemap: "Siteniz için bir site haritası oluşturun ve bunu robots.txt dosyasına ekleyin."
+    sitemap_page_size: "Her site haritası sayfasına dahil edilecek URL sayısı. Maksimum 50.000"
     short_title: "Kısa başlık kullanıcının ana ekranında, başlatıcısında veya alanın sınırlı olabileceği diğer yerlerde kullanılır. En fazla 12 karakter olmalıdır."
     dashboard_hidden_reports: "Gösterge tablosundan belirtilen raporların gizlenmesine izin verin."
     dashboard_visible_tabs: "Hangi pano sekmelerinin görünür olacağını seçin."
@@ -2073,6 +2077,7 @@ tr_TR:
     share_quote_visibility: "Alıntı paylaşma düğmelerinin ne zaman gösterileceğini belirleyin: asla, yalnızca anonim kullanıcılara veya tüm kullanıcılara. "
     create_revision_on_bulk_topic_moves: "Konular toplu olarak yeni bir kategoriye taşındığında ilk gönderiler için revizyon oluştur."
     use_email_for_username_and_name_suggestions: "Kullanıcı adları ve ad önerileri için e-posta adreslerinin ilk kısmını kullanın. Ama unutmayın bu yaklaşım, insanların e-posta adreslerinin tamamını tahmin etmelerini kolaylaştırır (çünkü insanların büyük bir kısmı \"gmail.com\" gibi ortak hizmetleri paylaşır)."
+    use_name_for_username_suggestions: "Kullanıcı adları önerirken kullanıcının tam adını kullanın."
     errors:
       invalid_css_color: "Geçersiz renk. Bir renk adı veya hex değer girin."
       invalid_email: "Geçersiz e-posta adresi."
@@ -2101,6 +2106,7 @@ tr_TR:
       email_polling_disabled: "E-postayla yanıtı etkinleştirmeden önce manuel veya POP3 sorgulamasını etkinleştirmelisiniz."
       user_locale_not_enabled: "Bu ayarı etkinleştirmeden önce 'kullanıcı yerel ayarlarına izin ver' seçeneğini etkinleştirmeniz gerekir."
       invalid_regex: "Regex geçersiz veya izin verilmiyor."
+      invalid_regex_with_message: "'%{regex}' regex teriminde bir hata var: %{message}"
       email_editable_enabled: "Bu ayarı etkinleştirmeden önce 'düzenlenebilir e-posta' yı devre dışı bırakmanız gerekir."
       staged_users_disabled: "Bu ayarı etkinleştirmeden önce 'staged users' etkinleştirmelisiniz."
       reply_by_email_disabled: "Bu ayarı etkinleştirmeden önce 'e-posta ile yanıtla' yı etkinleştirmelisiniz."
@@ -2121,9 +2127,11 @@ tr_TR:
         leading_trailing_slash: "Normal ifade eğik çizgi ile başlamamalı ve bitmemelidir."
       unicode_usernames_avatars: "Dahili sistem avatarları Unicode kullanıcı adlarını desteklemez."
       list_value_count: "Liste tam olarak %{count} değerleri içermelidir."
+      markdown_linkify_tlds: "'*' değerini ekleyemezsiniz."
       google_oauth2_hd_groups: "Bu ayarı etkinleştirmeden önce 'google oauth2 hd'yi ayarlamalısınız."
       search_tokenize_chinese_enabled: "Bu ayarı etkinleştirmeden önce 'search_tokenize_chinese' özelliğini devre dışı bırakmalısınız."
       search_tokenize_japanese_enabled: "Bu ayarı etkinleştirmeden önce 'search_tokenize_japanese' özelliğini devre dışı bırakmalısınız."
+      discourse_connect_cannot_be_enabled_if_second_factor_enforced: "2FA zorunlu kılınmışsa DiscourseConnect'i etkinleştiremezsiniz."
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.örnek.com"
@@ -2524,9 +2532,9 @@ tr_TR:
       title: "Hoşgeldiniz GS1 Kullanıcı"
       subject_template: "Bizimle zaman geçirdiğiniz için teşekkürler"
       text_body_template: |
-        Selam. Okumakla meşgul olduğunuzu görüyoruz, bu harika bir şey, bu yüzden sizi bir [güven düzeyi!](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) yükselttik.
+        Merhaba. Forumda yazılanları takip ettiğinizi, bol bol okuduğunuzu görüyoruz, bu harika bir şey. Bu yüzden sizi bir [güven düzeyi!](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) yükselttik.
 
-        Bizimle zaman geçirdiğiniz için gerçekten mutluyuz ve sizinle ilgili daha fazla bilgi edinmek isteriz. [Profilinizi doldurun](%{base_url}/my/preferences/profile) için bir dakikanızı ayırın veya [yeni bir konu başlatmak](%{base_url}/categories) için çekinmeyin.
+        Bizimle zaman geçirdiğiniz için gerçekten mutluyuz ve sizinle ilgili daha fazla bilgi edinmek isteriz. [Profilinizi doldurmak](%{base_url}/my/preferences/profile) için bir dakikanızı ayırın veya [yeni bir konu başlatmak](%{base_url}/categories) için çekinmeyin.
     welcome_staff:
       title: "Hoşgeldiniz Yetkili"
       subject_template: "Tebrikler, size %{role} statüsü verildi!"
@@ -2558,9 +2566,11 @@ tr_TR:
       text_body_template: |
         Sizi yeni bir [güven düzeyine](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) yükselttik!
 
-        Deneyimli bir kullanıcı olarak, [bu kullanışlı ipuçları ve püf noktaları listesini](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/) değerlendirmek isteyebilirsiniz.
+        Güven Düzeyi 2'ye ulaşmak, bu topluluğun bir üyesi olarak kabul edilmek için yeterince paylaşım okuduğunuz ve paylaşımlara aktif olarak katıldığınız anlamına geliyor.
 
-        Sizi bilgi alışverişini sürdürmeye davet ediyoruz - aramızda olduğun için mutluyuz.
+        Deneyimli bir kullanıcı olarak, [bu kullanışlı ipuçları ve püf noktaları listesini](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/) beğeneceğinizi düşünüyoruz.
+
+        Sizi aktif katılıma devam etmeye davet ediyoruz - bizimle olduğunuz için mutluyuz.
     backup_succeeded:
       title: "Yedekleme Başarılı"
       subject_template: "Yedekleme başarıyla tamamlandı"
@@ -2975,7 +2985,7 @@ tr_TR:
   subject_re: "Cvp: "
   subject_pm: "[PM] "
   email_from: "%{user_name} ile %{site_name}"
-  email_from_without_site: "%{user_name}"
+  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "Önceki Yanıtlar"
     reached_limit:
@@ -2994,6 +3004,9 @@ tr_TR:
     reply_above_line: "## Lütfen yanıtınızı bu satırın üzerine yazın. ##"
     posted_by: "%{post_date} tarihinde %{username} tarafından gönderildi"
     pm_participants: "Katılımcılar: %{participants}"
+    more_pm_participants:
+      one: "%{participants} ve diğer %{count}"
+      other: "%{participants} ve diğer %{count}"
     invited_group_to_private_message_body: |
       %{username} sizi mesaja @%{group_name} davet etti.
       >**[%{topic_title}](%{topic_url})**
@@ -3395,6 +3408,7 @@ tr_TR:
     title: "Oops! O sayfa özel."
   site_setting_missing: "`%{name}' ayarının belirtilmesi gerek."
   page_not_found:
+    page_title: "Sayfa Bulunamadı"
     title: "Hay aksi! Bu sayfa yok ya da gizli."
     popular_topics: "Gözde"
     recent_topics: "Yeni"
@@ -3919,7 +3933,9 @@ tr_TR:
               categories_boxes:
                 label: "Kategori kutuları"
               categories_boxes_with_topics:
-                label: "Başlıkları olan kategori kutuları"
+                label: "Konu Etiketi İçeren Kategori Kutuları"
+              subcategories_with_featured_topics:
+                label: "Öne Çıkan Konular İçeren Alt Kategoriler"
       logos:
         title: "Görseller"
         fields:
@@ -4114,6 +4130,9 @@ tr_TR:
     post_raw: "Tartışma %{parent_url} adresinde sürüyor.\n\nÖnceki tartışmalar:\n\n%{previous_topics}"
     small_action_post_raw: "Tartışmayı %{new_title} başlığı altında sürdürün."
   fallback_username: "kullanıcı"
+  user_status:
+    errors:
+      ends_at_should_be_greater_than_set_at: "end_at, set_at değerinden büyük olmalıdır"
   activemodel:
     errors:
       <<: *errors

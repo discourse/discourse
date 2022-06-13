@@ -230,7 +230,6 @@ ur:
       <p>ورنہ براہ کرم <a href="%{base_url}/password-reset">پاس ورڈ ری سیٹ کریں</a>۔</p>
     not_found_template_link: |
       <p> <a href="%{base_url}">%{site_name}</a> پردی گئی اس دعوت کا فائدہ اٹھالیا گیا ہے۔ براہ کرم اس شخص سے پوچھیں جس نے آپ کو مدعو کیا ہے کہ وہ آپ کو ایک نیا دعوت نامہ بھیجے۔</p>
-    user_exists: "<b>%{email}</b>کو مدعو کرنے کی کوئی ضرورت نہیں ہے، اُن کا <a href='%{base_path}/u/%{username}/summary'>پہلے سے ہی ایک اکاؤنٹ ہے!</a>"
     invite_exists: "آپ نے پہلے ہی <b>%{email}</b>کو مدعو کر لیا"
     invalid_email: "%{email} ایک درست ای میل پتہ نہیں۔"
     rate_limit:
@@ -1466,7 +1465,6 @@ ur:
     favicon: "آپ کی ویب سائٹ کیلئے ایک فَیوِکان، <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>http://en.wikipedia.org/wiki/Favicon</a> دیکھیے۔ ایک CDN پر صحیح کام کرنے کیلئے اِس کا png ہونا ضروری ہے۔ 32x32 کے سائیز پر دوبارہ تبدیل کر دی جائے گی۔ اگر خالی چھوڑ دیا گیا ہو، تو large_icon کا استعمال کیا جائے گا۔"
     apple_touch_icon: "ایپل ٹچ ڈیوائسوں کیلئے استعمال کیا جانے والا آئکن۔ خود بخود 180x180 کے سائیز پر دوبارہ تبدیل کر دیا جائے گا۔ اگر خالی چھوڑ دیا گیا ہو، تو large_icon کا استعمال کیا جائے گا۔"
     opengraph_image: "ڈِیفالٹ اَوپَن٘گراف تصویر، استعمال کی جاتی ہے جب صفحہ میں کوئی اور مناسب تصویر نہ ہو۔ اگر خالی چھوڑ دیا گیا ہو، تو large_icon کا استعمال کیا جائے گا۔"
-    twitter_summary_large_image: "ٹویٹر کارڈ 'خلاصہ بڑی تصویر' (کم از کم 280 چوڑائی میں، اور کم از کم 150 اونچائی میں ہونی چاہئیے)۔ اگر خالی چھوڑ دیا گیا ہو، تو opengraph_image کا استعمال کرتے ہوئے عام کارڈ مَیٹا ڈَیٹا بنایا جاتا ہے۔"
     notification_email: "تمام ضروری سِسٹم ای میلز بھیجنے کیلئے استعمال ہونے والا from: ای میل ایڈریس۔ یہاں درج کردہ ڈومین کا SPF ،DKIM اور ریورس PTR ریکارڈ، ای میل کے پہنچنے کیلئے، صحیح طریقے سے مقرر ہونا لازمی ہے۔"
     email_custom_headers: "اپنی مرضی کے ای میل ہیڈرز کی پائپ سے علیحدہ کردہ فہرست"
     email_subject: "سٹینڈرڈ ای میلز کیلئے اپنی مرضی کا موضوع فارمَیٹ۔ دیکھیے <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
@@ -1530,7 +1528,6 @@ ur:
     send_tl1_welcome_message: "نئے ٹرسٹ لَیول 1 صارفین کو خوش آمدید کا پیغام بھیجیں۔"
     suppress_reply_directly_below: "پوسٹ پر وسیع ہو سکنے والا جوابات کی تعداد مت دکھائیں جب اِس پوسٹ کے براہ راست نیچے ایک ہی واحد جواب موجود ہو۔"
     suppress_reply_directly_above: "پوسٹ پر وسیع ہو سکنے والا جس-کے-جواب-میں مت دکھائیں جب اِس پوسٹ کے براہ راست اوپر ایک ہی واحد جواب موجود ہو۔"
-    remove_full_quote: "براہ راست جوابوں پر مکمل اقتباس خود بخود ہٹا دیں۔"
     suppress_reply_when_quoting: "پوسٹ پر وسیع ہو سکنے والا جس-کے-جواب-میں مت دکھائیں جب پوسٹ میں جواب کا اقتباس شامل ہو۔"
     max_reply_history: "جس-کے-جواب-میں توسیع کرتے وقت، توسیع کیے گئے جوابات کی زیادہ سے زیادہ تعداد"
     topics_per_period_in_top_summary: "ڈیفالٹ کے طور پر ٹاپ ٹاپکس خلاصہ میں دکھائے گئے ٹاپ ٹاپکس کی تعداد۔"
@@ -1972,7 +1969,6 @@ ur:
     tags_sort_alphabetically: "ٹَیگز کو حروف تہجی کی ترتیب میں دکھائیں۔ ڈِیفالٹ کے طور پر مقبولیت کے مطابق دکھائے جائیں گے۔"
     tags_listed_by_group: "<a href='%{base_path}/tags' target='_blank'>ٹیگز صفحے</a> پر ٹیگ گروپ کے حساب سے ٹیگز کو فہرست کریں۔"
     tag_style: "ٹَیگ بیَجوں کیلئے بصری سٹائل۔"
-    allow_staff_to_tag_pms: "سٹاف ممبران کو کسی بھی ذاتی پیغام پر ٹَیگ لگانے کی اجازت دیں"
     min_trust_level_to_tag_topics: "ٹاپکس پر ٹَیگ لگانے کیلئے کم از کم مطلوبہ ٹرسٹ لَیول"
     suppress_overlapping_tags_in_list: "اگر ٹَیگز ٹاپک عنوانات میں موجود مکمل الفاظ سے مَیچ کرتے ہوں، تو ٹَیگ مت دکھائیں"
     remove_muted_tags_from_latest: "تازہ ترین ٹاپک فہرست میں صرف خاموش شدہ ٹَیگز کے ساتھ ٹَیگ کردہ ٹاپکس مت دکھائیں۔"
@@ -3121,6 +3117,7 @@ ur:
     post_approved:
       title: "آپ کی پوسٹ منظور ہو گئی تھی"
   page_not_found:
+    page_title: "صفحہ نہیں ملا"
     title: "افوہ! وہ صفحہ موجود نہیں یا ذاتی ہے۔"
     popular_topics: "مقبول"
     recent_topics: "حالیہ"
@@ -3667,10 +3664,8 @@ ur:
                 label: "زُمرہ جات اور تازہ ترین ٹاپکس"
               categories_and_top_topics:
                 label: "زمرہ جات اور ٹاپ ٹاپکس"
-              categories_boxes:
-                label: "زُمرَہ جات بکسے"
-              categories_boxes_with_topics:
-                label: "زُمرَہ جات بکسے ٹاپکس کے ساتھ"
+              subcategories_with_featured_topics:
+                label: "نمایاں عنوانات کے ساتھ ذیلی زمرہ جات"
       logos:
         title: "لَوگَو"
         fields:

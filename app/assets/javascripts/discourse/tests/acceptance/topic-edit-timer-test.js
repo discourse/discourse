@@ -30,7 +30,7 @@ acceptance("Topic - Edit timer", function (needs) {
   });
 
   needs.hooks.beforeEach(() => {
-    const timezone = loggedInUser().resolvedTimezone(loggedInUser());
+    const timezone = loggedInUser().timezone;
     const tuesday = "2100-06-15T08:00:00";
     clock = fakeTime(tuesday, timezone, true);
   });
@@ -346,6 +346,7 @@ acceptance("Topic - Edit timer", function (needs) {
   });
 
   test("Shows correct time frame options", async function (assert) {
+    this.siteSettings.suggest_weekends_in_date_pickers = true;
     updateCurrentUser({ moderator: true });
 
     await visit("/t/internationalization-localization");
@@ -369,5 +370,19 @@ acceptance("Topic - Edit timer", function (needs) {
     );
 
     assert.deepEqual(options, expected);
+  });
+
+  test("Does not show timer notice unless timer set", async function (assert) {
+    updateCurrentUser({ moderator: true });
+
+    await visit("/t/internationalization-localization");
+    await click(".toggle-admin-menu");
+    await click(".admin-topic-timer-update button");
+
+    const timerType = selectKit(".select-kit.timer-type");
+    await timerType.expand();
+    await timerType.selectRowByValue("close_after_last_post");
+
+    assert.notOk(exists(".topic-timer-heading"));
   });
 });

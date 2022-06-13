@@ -4,6 +4,6 @@ class CategoryRequiredTagGroupSerializer < ApplicationSerializer
   attributes :name, :min_count
 
   def name
-    object.tag_group.name
+    object.tag_group&.name
   end
 end

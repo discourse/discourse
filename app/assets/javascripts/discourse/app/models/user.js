@@ -30,6 +30,7 @@ import { isEmpty } from "@ember/utils";
 import { longDate } from "discourse/lib/formatter";
 import { url } from "discourse/lib/computed";
 import { userPath } from "discourse/lib/url";
+import { htmlSafe } from "@ember/template";
 
 export const SECOND_FACTOR_METHODS = {
   TOTP: 1,
@@ -99,6 +100,7 @@ let userOptionFields = [
   "skip_new_user_tips",
   "default_calendar",
   "bookmark_auto_delete_preference",
+  "enable_experimental_sidebar",
 ];
 
 export function addSaveableUserOptionField(fieldName) {
@@ -175,9 +177,9 @@ const User = RestModel.extend({
   @discourseComputed("profile_background_upload_url")
   profileBackgroundUrl(bgUrl) {
     if (isEmpty(bgUrl) || !this.siteSettings.allow_profile_backgrounds) {
-      return "".htmlSafe();
+      return htmlSafe("");
     }
-    return ("background-image: url(" + getURLWithCDN(bgUrl) + ")").htmlSafe();
+    return htmlSafe("background-image: url(" + getURLWithCDN(bgUrl) + ")");
   },
 
   @discourseComputed()
@@ -669,11 +671,6 @@ const User = RestModel.extend({
         json.user.card_badge = Badge.create(json.user.card_badge);
       }
 
-      if (!json.user._timezone) {
-        json.user._timezone = json.user.timezone;
-        delete json.user.timezone;
-      }
-
       user.setProperties(json.user);
       return user;
     });
@@ -960,34 +957,9 @@ const User = RestModel.extend({
     );
   },
 
-  resolvedTimezone(currentUser) {
-    if (this.hasSavedTimezone()) {
-      return this._timezone;
-    }
-
-    // only change the timezone and save it if we are
-    // looking at our own user
-    if (currentUser.id === this.id) {
-      this.changeTimezone(moment.tz.guess());
-      ajax(userPath(this.username + ".json"), {
-        type: "PUT",
-        dataType: "json",
-        data: { timezone: this._timezone },
-      });
-    }
-
-    return this._timezone;
-  },
-
-  changeTimezone(tz) {
-    this._timezone = tz;
-  },
-
-  hasSavedTimezone() {
-    if (this._timezone) {
-      return true;
-    }
-    return false;
+  // obsolete, just call "user.timezone" instead
+  resolvedTimezone() {
+    return this.timezone;
   },
 
   calculateMutedIds(notificationLevel, id, type) {
@@ -1030,26 +1002,29 @@ const User = RestModel.extend({
     this.appEvents.trigger("do-not-disturb:changed", this.do_not_disturb_until);
   },
 
+  updateDraftProperties(properties) {
+    this.setProperties(properties);
+    this.appEvents.trigger("user-drafts:changed");
+  },
+
   isInDoNotDisturb() {
     return (
       this.do_not_disturb_until &&
       new Date(this.do_not_disturb_until) >= new Date()
     );
   },
+
+  @discourseComputed(
+    "tracked_tags.[]",
+    "watched_tags.[]",
+    "watching_first_post_tags.[]"
+  )
+  trackedTags(trackedTags, watchedTags, watchingFirstPostTags) {
+    return [...trackedTags, ...watchedTags, ...watchingFirstPostTags];
+  },
 });
 
 User.reopenClass(Singleton, {
-  munge(json) {
-    // timezone should not be directly accessed, use
-    // resolvedTimezone() and changeTimezone(tz)
-    if (!json._timezone) {
-      json._timezone = json.timezone;
-      delete json.timezone;
-    }
-
-    return json;
-  },
-
   // Find a `User` for a given username.
   findByUsername(username, options) {
     const user = User.create({ username });
@@ -1058,22 +1033,26 @@ User.reopenClass(Singleton, {
 
   // TODO: Use app.register and junk Singleton
   createCurrent() {
-    let userJson = PreloadStore.get("currentUser");
-
-    if (userJson && userJson.primary_group_id) {
-      const primaryGroup = userJson.groups.find(
-        (group) => group.id === userJson.primary_group_id
-      );
-      if (primaryGroup) {
-        userJson.primary_group_name = primaryGroup.name;
-      }
-    }
-
+    const userJson = PreloadStore.get("currentUser");
     if (userJson) {
-      userJson = User.munge(userJson);
+      if (userJson.primary_group_id) {
+        const primaryGroup = userJson.groups.find(
+          (group) => group.id === userJson.primary_group_id
+        );
+        if (primaryGroup) {
+          userJson.primary_group_name = primaryGroup.name;
+        }
+      }
+
+      if (!userJson.timezone) {
+        userJson.timezone = moment.tz.guess();
+        this._saveTimezone(userJson);
+      }
+
       const store = getOwner(this).lookup("service:store");
       return store.createRecord("user", userJson);
     }
+
     return null;
   },
 
@@ -1144,6 +1123,14 @@ User.reopenClass(Singleton, {
       type: "POST",
     });
   },
+
+  _saveTimezone(user) {
+    ajax(userPath(user.username + ".json"), {
+      type: "PUT",
+      dataType: "json",
+      data: { timezone: user.timezone },
+    });
+  },
 });
 
 if (typeof Discourse !== "undefined") {
@@ -1152,9 +1139,8 @@ if (typeof Discourse !== "undefined") {
   Object.defineProperty(Discourse, "User", {
     get() {
       if (!warned) {
-        deprecated("Import the User class instead of using User", {
+        deprecated("Import the User class instead of using Discourse.User", {
           since: "2.4.0",
-          dropFrom: "2.6.0",
         });
         warned = true;
       }

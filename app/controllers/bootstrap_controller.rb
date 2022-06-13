@@ -61,6 +61,13 @@ class BootstrapController < ApplicationController
       request: assets_fake_request
     ).map { |f| script_asset_path(f) }
 
+    plugin_test_js =
+      if Rails.env != "production"
+        script_asset_path("plugin-tests")
+      else
+        []
+      end
+
     bootstrap = {
       theme_id: theme_id,
       theme_color: "##{ColorScheme.hex_for_name('header_background', scheme_id)}",
@@ -69,7 +76,7 @@ class BootstrapController < ApplicationController
       locale_script: locale,
       stylesheets: @stylesheets,
       plugin_js: plugin_js,
-      plugin_test_js: [script_asset_path("plugin-tests")],
+      plugin_test_js: plugin_test_js,
       setup_data: client_side_setup_data,
       preloaded: @preloaded,
       html: create_html,

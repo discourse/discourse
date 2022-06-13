@@ -236,12 +236,13 @@ class Search
       term: clean_term,
       blurb_term: term,
       search_context: @search_context,
-      blurb_length: @blurb_length
+      blurb_length: @blurb_length,
+      is_header_search: !use_full_page_limit
     )
   end
 
   def limit
-    if @opts[:type_filter].present? && @opts[:type_filter] != "exclude_topics"
+    if use_full_page_limit
       Search.per_filter + 1
     else
       Search.per_facet + 1
@@ -258,6 +259,10 @@ class Search
 
   def valid?
     @valid
+  end
+
+  def use_full_page_limit
+    @opts[:search_type] == :full_page || Topic === @search_context
   end
 
   def self.execute(term, opts = nil)
@@ -453,9 +458,18 @@ class Search
     end
   end
 
+  # NOTE: With polymorphic bookmarks it may make sense to possibly expand
+  # this at some point, as it only acts on posts at the moment. On the other
+  # hand, this may not be necessary, as the user bookmark list has advanced
+  # search based on a RegisteredBookmarkable's #search_query method.
   advanced_filter(/^in:(bookmarks)$/i) do |posts, match|
     if @guardian.user
-      posts.where("posts.id IN (SELECT post_id FROM bookmarks WHERE bookmarks.user_id = #{@guardian.user.id})")
+      posts.where(<<~SQL)
+        posts.id IN (
+          SELECT bookmarkable_id FROM bookmarks
+          WHERE bookmarks.user_id = #{@guardian.user.id} AND bookmarks.bookmarkable_type = 'Post'
+        )
+      SQL
     end
   end
 
@@ -609,6 +623,20 @@ class Search
     end
   end
 
+  advanced_filter(/^group_messages:(.+)$/i) do |posts, match|
+    group_id = Group
+      .visible_groups(@guardian.user)
+      .members_visible_groups(@guardian.user)
+      .where(has_messages: true)
+      .where('name ilike ? OR (id = ? AND id > 0)', match, match.to_i).pluck_first(:id)
+
+    if group_id
+      posts.where('posts.topic_id IN (SELECT topic_id FROM topic_allowed_groups WHERE group_id = ?)', group_id)
+    else
+      posts.where("1 = 0")
+    end
+  end
+
   advanced_filter(/^user:(.+)$/i) do |posts, match|
     user_id = User.where(staged: false).where('username_lower = ? OR id = ?', match.downcase, match.to_i).pluck_first(:id)
     if user_id
@@ -667,9 +695,9 @@ class Search
 
       UNION
 
-      SELECT post_uploads.post_id
+      SELECT upload_references.target_id
         FROM uploads
-        JOIN post_uploads ON post_uploads.upload_id = uploads.id
+        JOIN upload_references ON upload_references.target_type = 'Post' AND upload_references.upload_id = uploads.id
        WHERE lower(uploads.extension) IN (:file_extensions)
     )", file_extensions: file_extensions)
   end
@@ -748,11 +776,17 @@ class Search
       elsif word =~ /^in:personal$/i
         @search_pms = true
         nil
+      elsif word =~ /^in:messages$/i
+        @search_pms = true
+        nil
       elsif word =~ /^in:personal-direct$/i
         @search_pms = true
         nil
       elsif word =~ /^in:all-pms$/i
         @search_all_pms = true
+        nil
+      elsif word =~ /^group_messages:(.+)$/i
+        @search_pms = true
         nil
       elsif word =~ /^personal_messages:(.+)$/i
         if user = User.find_by_username($1)

@@ -36,11 +36,13 @@ const controllerOpts = {
   // We want them to bubble in DiscoveryTopicsController
   @action
   loadingBegan() {
+    this.set("application.showFooter", false);
     return true;
   },
 
   @action
   loadingComplete() {
+    this.set("application.showFooter", this.loadedAllItems);
     return true;
   },
 

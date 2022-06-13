@@ -47,13 +47,10 @@ class UserDestroyer
       # Add info about the user to staff action logs
       UserHistory.staff_action_records(
         Discourse.system_user, acting_user: user.username
-      ).unscope(:order).find_each do |log|
-        log.details ||= ''
-        log.details = (log.details.split("\n") +
-            ["user_id: #{user.id}", "username: #{user.username}"]
-          ).join("\n")
-        log.save!
-      end
+      ).update_all([
+        "details = CONCAT(details, ?)",
+        "\nuser_id: #{user.id}\nusername: #{user.username}"
+      ])
 
       # keep track of emails used
       user_emails = user.user_emails.pluck(:email)

@@ -23,6 +23,7 @@
     <div class="full-width">
       <div id="header-list-area">
         {{outlet "header-list-container"}}
+        {{plugin-outlet name="header-list-container-bottom" args=(hash category=category)}}
       </div>
     </div>
   </div>

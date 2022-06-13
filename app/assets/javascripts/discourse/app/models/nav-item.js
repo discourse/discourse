@@ -8,32 +8,56 @@ import deprecated from "discourse-common/lib/deprecated";
 import discourseComputed from "discourse-common/utils/decorators";
 import { emojiUnescape } from "discourse/lib/text";
 import { getOwner } from "discourse-common/lib/get-owner";
+import {
+  hasTrackedFilter,
+  isTrackedTopic,
+} from "discourse/lib/topic-list-tracked-filter";
 import getURL from "discourse-common/lib/get-url";
 import { reads } from "@ember/object/computed";
 
 const NavItem = EmberObject.extend({
   @discourseComputed("name")
-  title(name) {
-    return I18n.t("filters." + name.replace("/", ".") + ".help", {});
+  title: {
+    get(name) {
+      if (this._title) {
+        return this._title;
+      }
+
+      return I18n.t("filters." + name.replace("/", ".") + ".help", {});
+    },
+
+    set(value) {
+      this.set("_title", value);
+    },
   },
 
   @discourseComputed("name", "count")
-  displayName(name, count) {
-    count = count || 0;
+  displayName: {
+    get(name, count) {
+      if (this._displayName) {
+        return this._displayName;
+      }
 
-    if (
-      name === "latest" &&
-      (!Site.currentProp("mobileView") || this.tagId !== undefined)
-    ) {
-      count = 0;
-    }
+      count = count || 0;
 
-    let extra = { count };
-    const titleKey = count === 0 ? ".title" : ".title_with_count";
+      if (
+        name === "latest" &&
+        (!Site.currentProp("mobileView") || this.tagId !== undefined)
+      ) {
+        count = 0;
+      }
 
-    return emojiUnescape(
-      I18n.t(`filters.${name.replace("/", ".") + titleKey}`, extra)
-    );
+      let extra = { count };
+      const titleKey = count === 0 ? ".title" : ".title_with_count";
+
+      return emojiUnescape(
+        I18n.t(`filters.${name.replace("/", ".") + titleKey}`, extra)
+      );
+    },
+
+    set(value) {
+      this.set("_displayName", value);
+    },
   },
 
   @discourseComputed("filterType", "category", "noSubcategories", "tagId")
@@ -76,12 +100,22 @@ const NavItem = EmberObject.extend({
     "category",
     "tagId",
     "noSubcategories",
+    "currentRouteQueryParams",
     "topicTrackingState.messageCount"
   )
-  count(name, category, tagId, noSubcategories) {
+  count(name, category, tagId, noSubcategories, currentRouteQueryParams) {
     const state = this.topicTrackingState;
+
     if (state) {
-      return state.lookupCount(name, category, tagId, noSubcategories);
+      return state.lookupCount({
+        type: name,
+        category,
+        tagId,
+        noSubcategories,
+        customFilterFn: hasTrackedFilter(currentRouteQueryParams)
+          ? isTrackedTopic
+          : undefined,
+      });
     }
   },
 });
@@ -222,10 +256,20 @@ NavItem.reopenClass({
 
     items = items
       .map((i) => NavItem.fromText(i, args))
-      .filter(
-        (i) =>
-          i !== null && !(category && i.get("name").indexOf("categor") === 0)
-      );
+      .filter((i) => {
+        if (i === null) {
+          return false;
+        }
+
+        if (
+          (category || !args.skipCategoriesNavItem) &&
+          i.name.indexOf("categor") === 0
+        ) {
+          return false;
+        }
+
+        return true;
+      });
 
     const context = {
       category: args.category,

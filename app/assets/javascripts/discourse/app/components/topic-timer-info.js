@@ -6,11 +6,12 @@ import I18n from "I18n";
 import discourseComputed, { on } from "discourse-common/utils/decorators";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import { isTesting } from "discourse-common/config/environment";
+import { htmlSafe } from "@ember/template";
 
 export default Component.extend({
   classNames: ["topic-timer-info"],
   _delayedRerender: null,
-  clockIcon: `${iconHTML("far-clock")}`.htmlSafe(),
+  clockIcon: htmlSafe(`${iconHTML("far-clock")}`),
   trashLabel: I18n.t("post.controls.remove_timer"),
   title: null,
   notice: null,
@@ -75,6 +76,11 @@ export default Component.extend({
     const duration = moment.duration(statusUpdateAt - moment());
     const minutesLeft = duration.asMinutes();
     if (minutesLeft > 0 || isDeleteRepliesType || this.basedOnLastPost) {
+      // We don't want to display a notice before a topic timer time has been set
+      if (!this.executeAt) {
+        return;
+      }
+
       let durationMinutes = parseInt(this.durationMinutes, 10) || 0;
 
       let options = {
@@ -99,8 +105,8 @@ export default Component.extend({
 
       options = Object.assign(options, this.additionalOpts());
       this.setProperties({
-        title: `${moment(this.executeAt).format("LLLL")}`.htmlSafe(),
-        notice: `${I18n.t(this._noticeKey(), options)}`.htmlSafe(),
+        title: htmlSafe(`${moment(this.executeAt).format("LLLL")}`),
+        notice: htmlSafe(`${I18n.t(this._noticeKey(), options)}`),
         showTopicTimer: true,
       });
 

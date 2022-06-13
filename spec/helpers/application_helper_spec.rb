@@ -33,7 +33,7 @@ describe ApplicationHelper do
       helper.request.env["HTTP_ACCEPT_ENCODING"] = 'br'
       link = helper.preload_script('application')
 
-      expect(link).to eq(preload_link("https://awesome.com/brotli_asset/application.js"))
+      expect(link).to eq(preload_link("https://awesome.com/brotli_asset/#{EmberCli.transform_name("application")}.js"))
     end
 
     context "with s3 CDN" do
@@ -47,14 +47,14 @@ describe ApplicationHelper do
 
       it "deals correctly with subfolder" do
         set_subfolder "/community"
-        expect(helper.preload_script("application")).to include('https://s3cdn.com/assets/application.js')
+        expect(helper.preload_script("application")).to include("https://s3cdn.com/assets/#{EmberCli.transform_name("application")}.js")
       end
 
       it "replaces cdn URLs with s3 cdn subfolder paths" do
         global_setting :s3_cdn_url, 'https://s3cdn.com/s3_subpath'
         set_cdn_url "https://awesome.com"
         set_subfolder "/community"
-        expect(helper.preload_script("application")).to include('https://s3cdn.com/s3_subpath/assets/application.js')
+        expect(helper.preload_script("application")).to include("https://s3cdn.com/s3_subpath/assets/#{EmberCli.transform_name("application")}.js")
       end
 
       it "returns magic brotli mangling for brotli requests" do
@@ -62,26 +62,26 @@ describe ApplicationHelper do
         helper.request.env["HTTP_ACCEPT_ENCODING"] = 'br'
         link = helper.preload_script('application')
 
-        expect(link).to eq(preload_link("https://s3cdn.com/assets/application.br.js"))
+        expect(link).to eq(preload_link("https://s3cdn.com/assets/#{EmberCli.transform_name("application")}.br.js"))
       end
 
       it "gives s3 cdn if asset host is not set" do
         link = helper.preload_script('application')
 
-        expect(link).to eq(preload_link("https://s3cdn.com/assets/application.js"))
+        expect(link).to eq(preload_link("https://s3cdn.com/assets/#{EmberCli.transform_name("application")}.js"))
       end
 
       it "can fall back to gzip compression" do
         helper.request.env["HTTP_ACCEPT_ENCODING"] = 'gzip'
         link = helper.preload_script('application')
-        expect(link).to eq(preload_link("https://s3cdn.com/assets/application.gz.js"))
+        expect(link).to eq(preload_link("https://s3cdn.com/assets/#{EmberCli.transform_name("application")}.gz.js"))
       end
 
       it "gives s3 cdn even if asset host is set" do
         set_cdn_url "https://awesome.com"
         link = helper.preload_script('application')
 
-        expect(link).to eq(preload_link("https://s3cdn.com/assets/application.js"))
+        expect(link).to eq(preload_link("https://s3cdn.com/assets/#{EmberCli.transform_name("application")}.js"))
       end
 
       it "gives s3 cdn but without brotli/gzip extensions for theme tests assets" do
@@ -466,6 +466,45 @@ describe ApplicationHelper do
         SiteSetting.logo = nil
 
         expect(helper.crawlable_meta_data).to include(Upload.find(SiteIconManager::SKETCH_LOGO_ID).url)
+      end
+
+      it "does not allow SVG images for twitter:image, falls back to site logo or nothing if site logo is SVG too" do
+        SiteSetting.logo = Fabricate(:upload, url: '/images/d-logo-sketch.png')
+        SiteSetting.opengraph_image = Fabricate(:upload,
+          url: '/images/og-image.png'
+        )
+
+        expect(helper.crawlable_meta_data).to include(<<~HTML)
+        <meta name=\"twitter:image\" content=\"#{SiteSetting.site_opengraph_image_url}\" />
+        HTML
+
+        SiteSetting.opengraph_image = Fabricate(:upload,
+          url: '/images/og-image.svg'
+        )
+
+        expect(helper.crawlable_meta_data).to include(<<~HTML)
+        <meta name=\"twitter:image\" content=\"#{SiteSetting.site_logo_url}\" />
+        HTML
+
+        SiteSetting.twitter_summary_large_image = Fabricate(:upload,
+          url: '/images/twitter.png'
+        )
+
+        expect(helper.crawlable_meta_data).to include(<<~HTML)
+        <meta name=\"twitter:image\" content=\"#{SiteSetting.site_twitter_summary_large_image_url}\" />
+        HTML
+
+        SiteSetting.twitter_summary_large_image = Fabricate(:upload,
+          url: '/images/twitter.svg'
+        )
+
+        expect(helper.crawlable_meta_data).to include(<<~HTML)
+        <meta name=\"twitter:image\" content=\"#{SiteSetting.site_logo_url}\" />
+        HTML
+
+        SiteSetting.logo = Fabricate(:upload, url: '/images/d-logo-sketch.svg')
+
+        expect(helper.crawlable_meta_data).not_to include("twitter:image")
       end
     end
   end

@@ -4,42 +4,25 @@ class BookmarksController < ApplicationController
   requires_login
 
   def create
-    if SiteSetting.use_polymorphic_bookmarks
-      params.require(:bookmarkable_id)
-      params.require(:bookmarkable_type)
-    else
-      params.require(:post_id)
-    end
+    params.require(:bookmarkable_id)
+    params.require(:bookmarkable_type)
+    params.permit(:bookmarkable_id, :bookmarkable_type, :name, :reminder_at, :auto_delete_preference)
 
     RateLimiter.new(
       current_user, "create_bookmark", SiteSetting.max_bookmarks_per_day, 1.day.to_i
     ).performed!
 
     bookmark_manager = BookmarkManager.new(current_user)
-
-    create_params = {
+    bookmark = bookmark_manager.create_for(
+      bookmarkable_id: params[:bookmarkable_id],
+      bookmarkable_type: params[:bookmarkable_type],
       name: params[:name],
       reminder_at: params[:reminder_at],
       options: {
-        auto_delete_preference: params[:auto_delete_preference] || 0
+        auto_delete_preference: params[:auto_delete_preference],
+        save_user_preferences: true
       }
-    }
-
-    if SiteSetting.use_polymorphic_bookmarks
-      bookmark = bookmark_manager.create_for(
-        **create_params.merge(
-          bookmarkable_id: params[:bookmarkable_id],
-          bookmarkable_type: params[:bookmarkable_type]
-        )
-      )
-    else
-      bookmark = bookmark_manager.create(
-        **create_params.merge(
-          post_id: params[:post_id],
-          for_topic: params[:for_topic] == "true",
-        )
-      )
-    end
+    )
 
     if bookmark_manager.errors.empty?
       return render json: success_json.merge(id: bookmark.id)
@@ -56,6 +39,7 @@ class BookmarksController < ApplicationController
 
   def update
     params.require(:id)
+    params.permit(:id, :name, :reminder_at, :auto_delete_preference)
 
     bookmark_manager = BookmarkManager.new(current_user)
     bookmark_manager.update(
@@ -63,7 +47,8 @@ class BookmarksController < ApplicationController
       name: params[:name],
       reminder_at: params[:reminder_at],
       options: {
-        auto_delete_preference: params[:auto_delete_preference] || 0
+        auto_delete_preference: params[:auto_delete_preference],
+        save_user_preferences: true
       }
     )
 

@@ -6,6 +6,7 @@
 # Environment Variables (specific to this rake task)
 # => SKIP_LINT                 set to 1 to skip linting (eslint and rubocop)
 # => SKIP_TESTS                set to 1 to skip all tests
+# => SKIP_WIZARD_TESTS         set to 1 to skip wizard tests
 # => SKIP_CORE                 set to 1 to skip core tests (rspec and qunit)
 # => SKIP_PLUGINS              set to 1 to skip plugin tests (rspec and qunit)
 # => SKIP_INSTALL_PLUGINS      comma separated list of plugins you want to skip installing
@@ -209,7 +210,10 @@ task 'docker:test' do
 
         unless ENV["SKIP_CORE"]
           @good &&= run_or_fail("cd app/assets/javascripts/discourse && CI=1 yarn ember exam --random")
-          @good &&= run_or_fail("QUNIT_EMBER_CLI=0 bundle exec rake qunit:test['#{js_timeout}','/wizard/qunit']")
+
+          if !ENV["SKIP_WIZARD_TESTS"]
+            @good &&= run_or_fail("QUNIT_EMBER_CLI=0 bundle exec rake qunit:test['#{js_timeout}','/wizard/qunit']")
+          end
         end
 
         unless ENV["SKIP_PLUGINS"]

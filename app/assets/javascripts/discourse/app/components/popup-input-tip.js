@@ -2,6 +2,7 @@ import { not, or, reads } from "@ember/object/computed";
 import discourseComputed from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import { getOwner } from "discourse-common/lib/get-owner";
+import { htmlSafe } from "@ember/template";
 
 export default Component.extend({
   classNameBindings: [":popup-tip", "good", "bad", "lastShownAt::hide"],
@@ -34,7 +35,7 @@ export default Component.extend({
     this._super(...arguments);
     let reason = this.get("validation.reason");
     if (reason) {
-      this.set("tipReason", `${reason}`.htmlSafe());
+      this.set("tipReason", htmlSafe(`${reason}`));
     } else {
       this.set("tipReason", null);
     }

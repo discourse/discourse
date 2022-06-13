@@ -9,7 +9,7 @@ module BookmarkGuardian
     @user == bookmark.user
   end
 
-  def can_create_bookmark?(bookmark)
-    can_see_topic?(bookmark.topic)
+  def can_see_bookmarkable?(bookmark)
+    bookmark.registered_bookmarkable.can_see?(self, bookmark)
   end
 end

@@ -30,7 +30,7 @@
             {{component (concat "reviewable-field-" f.type)
               tagName=""
               value=(editable-value reviewable f.id)
-              tagCategoryId=reviewable.category.id
+              tagCategoryId=tagCategoryId
               valueChanged=(action "valueChanged" f.id)
               categoryChanged=(action "categoryChanged")
             }}

@@ -94,12 +94,13 @@ import {
 import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
 import { downloadCalendar } from "discourse/lib/download-calendar";
 import { consolePrefix } from "discourse/lib/source-identifier";
+import { addSectionLink } from "discourse/lib/sidebar/custom-topics-section-links";
 
 // If you add any methods to the API ensure you bump up the version number
 // based on Semantic Versioning 2.0.0. Please update the changelog at
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
-const PLUGIN_API_VERSION = "1.2.0";
+const PLUGIN_API_VERSION = "1.3.0";
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
 function canModify(klass, type, resolverName, changes) {
@@ -1621,6 +1622,63 @@ class PluginApi {
    */
   customizeComposerText(callbacks) {
     registerCustomizationCallback(callbacks);
+  }
+
+  /**
+   * EXPERIMENTAL. Do not use.
+   * Support for adding a link under Sidebar topics section by returning a class which extends from the BaseSectionLink
+   * class interface. See `lib/sidebar/topics-section/base-section-link.js` for documentation on the BaseSectionLink class
+   * interface.
+   *
+   * ```
+   * api.addTopicsSectionLink((baseSectionLink) => {
+   *   return class CustomSectionLink extends baseSectionLink {
+   *     get name() {
+   *       returns "bookmarked";
+   *     }
+   *
+   *     get route() {
+   *       returns "userActivity.bookmarks";
+   *     }
+   *
+   *     get model() {
+   *       return this.currentUser;
+   *     }
+   *
+   *     get title() {
+   *       return I18n.t("sidebar.sections.topics.links.bookmarked.title");
+   *     }
+   *
+   *     get text() {
+   *       return I18n.t("sidebar.sections.topics.links.bookmarked.content");
+   *     }
+   *   }
+   * })
+   * ```
+   *
+   * or
+   *
+   * ```
+   * api.addTopicsSectionLink({
+   *   name: "unread",
+   *   route: "discovery.unread",
+   *   title: I18n.t("some.unread.title"),
+   *   text: I18n.t("some.unread.text")
+   * })
+   * ```
+   *
+   * @callback addTopicsSectionLinkCallback
+   * @param {BaseSectionLink} baseSectionLink - Factory class to inherit from.
+   * @returns {BaseSectionLink} - A class that extends BaseSectionLink.
+   *
+   * @param {(addTopicsSectionLinkCallback|Object)} arg - A callback function or an Object.
+   * @param {string} arg.name - The name of the link. Needs to be dasherized and lowercase.
+   * @param {string} arg.route - The Ember route of the link.
+   * @param {string} arg.title - The title attribute for the link.
+   * @param {string} arg.text - The text to display for the link.
+   */
+  addTopicsSectionLink(arg) {
+    addSectionLink(arg);
   }
 }
 

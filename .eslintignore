@@ -9,11 +9,13 @@ app/assets/javascripts/discourse/lib/autosize.js
 lib/javascripts/locale/
 lib/javascripts/messageformat.js
 lib/highlight_js/
+lib/pretty_text/
 plugins/**/lib/javascripts/locale
 public/
 vendor/
 app/assets/javascripts/discourse/tests/test-boot-rails.js
 app/assets/javascripts/discourse/tests/fixtures
 node_modules/
+spec/
 dist/
 tmp/

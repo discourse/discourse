@@ -4,6 +4,14 @@ class UserAvatar < ActiveRecord::Base
   belongs_to :user
   belongs_to :gravatar_upload, class_name: 'Upload'
   belongs_to :custom_upload, class_name: 'Upload'
+  has_many :upload_references, as: :target, dependent: :destroy
+
+  after_save do
+    if saved_change_to_custom_upload_id? || saved_change_to_gravatar_upload_id?
+      upload_ids = [self.custom_upload_id, self.gravatar_upload_id]
+      UploadReference.ensure_exist!(upload_ids: upload_ids, target: self)
+    end
+  end
 
   @@custom_user_gravatar_email_hash = {
     Discourse::SYSTEM_USER_ID => User.email_hash("info@discourse.org")

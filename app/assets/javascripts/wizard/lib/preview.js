@@ -4,6 +4,7 @@ import { Promise } from "rsvp";
 import getUrl from "discourse-common/lib/get-url";
 import { htmlSafe } from "@ember/template";
 import { scheduleOnce } from "@ember/runloop";
+import { observes } from "discourse-common/utils/decorators";
 
 export const LOREM = `
 Lorem ipsum dolor sit amet,
@@ -54,6 +55,13 @@ export function createPreviewComponent(width, height, obj) {
         this.reload();
       },
 
+      @observes(
+        "step.fieldsById.{color_scheme,body_font,heading_font,homepage_style}.value"
+      )
+      themeChanged() {
+        this.triggerRepaint();
+      },
+
       images() {},
 
       loadFonts() {
@@ -88,7 +96,7 @@ export function createPreviewComponent(width, height, obj) {
           return false;
         }
 
-        const colorsArray = this.wizard.getCurrentColors(this.colorsId);
+        const colorsArray = this.wizard.currentColors;
         if (!colorsArray) {
           return;
         }
@@ -99,11 +107,7 @@ export function createPreviewComponent(width, height, obj) {
           colors[name] = `#${c.hex}`;
         });
 
-        const font = this.wizard.getCurrentFont(this.fontId);
-        const headingFont = this.wizard.getCurrentFont(
-          this.fontId,
-          "heading_font"
-        );
+        const { font, headingFont } = this.wizard;
         if (!font) {
           return;
         }

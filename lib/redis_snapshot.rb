@@ -14,9 +14,9 @@ class RedisSnapshot
     keys = redis.keys
 
     values =
-      redis.pipelined do
+      redis.pipelined do |batch|
         keys.each do |key|
-          redis.dump(key)
+          batch.dump(key)
         end
       end
 
@@ -28,11 +28,11 @@ class RedisSnapshot
   end
 
   def restore(redis = Discourse.redis)
-    redis.pipelined do
-      redis.flushdb
+    redis.pipelined do |batch|
+      batch.flushdb
 
       @dump.each do |key, value|
-        redis.restore(key, 0, value)
+        batch.restore(key, 0, value)
       end
     end
 

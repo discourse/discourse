@@ -3,7 +3,7 @@
 module Jobs
   class PendingQueuedPostsReminder < ::Jobs::Scheduled
 
-    every 1.hour
+    every 15.minutes
 
     def execute(args)
       return true unless SiteSetting.notify_about_queued_posts_after > 0
@@ -28,7 +28,7 @@ module Jobs
 
     def should_notify_ids
       ReviewableQueuedPost.where(status: Reviewable.statuses[:pending]).where(
-        'created_at < ?', SiteSetting.notify_about_queued_posts_after.hours.ago
+        'created_at < ?', SiteSetting.notify_about_queued_posts_after.to_f.hours.ago
       ).pluck(:id)
     end
 

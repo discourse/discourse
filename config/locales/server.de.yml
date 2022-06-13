@@ -209,6 +209,8 @@ de:
       cors_origins_should_not_have_trailing_slash: "Du solltest den abschließenden Schrägstrich (/) nicht zu CORS-Ursprüngen hinzufügen."
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "Benutzeragenten müssen mindestens 3 Zeichen lang sein, um zu verhindern, dass menschliche Benutzer falsch eingeschätzt werden."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "Du kannst keinen der folgenden Werte zu der Einstellung hinzufügen: %{values}."
+      strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "Du kannst die Strip-Image-Metadaten nicht deaktivieren, wenn \"composer media optimization image enabled\" aktiviert ist. Deaktiviere \"composer media optimization image enabled\", bevor du Strip-Image-Metadaten deaktivierst."
+      twitter_summary_large_image_no_svg: "Twitter-Zusammenfassungsbilder, die für twitter:image-Metadaten verwendet werden, können keine .svg-Bilder sein."
     conflicting_google_user_id: 'Die Google-Konto-ID für dieses Konto hat sich geändert; das Einschreiten des Teams ist aus Sicherheitsgründen erforderlich. Bitte kontaktiere das Team und verweise es auf <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
       invalid_address: "Leider konnten wir keine Vorschau für diese Webseite erstellen, da der Server „%{hostname}“ nicht gefunden werden konnte. Statt einer Vorschau erscheint nur ein Link in deinem Beitrag. :cry:"
@@ -231,7 +233,7 @@ de:
       <p>Ansonsten kannst du <a href="%{base_url}/password-reset">dein Passwort zurücksetzen</a>.</p>
     not_found_template_link: |
       <p>Diese Einladung zu <a href="%{base_url}">%{site_name}</a> kann nicht mehr eingelöst werden. Bitte die Person, die dich eingeladen hat, dir eine neue Einladung zu schicken.</p>
-    user_exists: "Es ist nicht nötig, <b>%{email}</b> einzuladen, die Person <a href='%{base_path}/u/%{username}/summary'>hat schon ein Konto!</a>"
+    user_exists: "Es ist nicht nötig, <b>%{email}</b>einzuladen, sie haben bereits ein Konto!"
     invite_exists: "Du hast <b>%{email}</b> bereits eingeladen."
     invalid_email: "%{email} ist keine gültige E-Mail-Adresse."
     rate_limit:
@@ -402,6 +404,7 @@ de:
       time_must_be_provided: "Die Zeit muss für alle Erinnerungen angegeben werden"
       for_topic_must_use_first_post: "Du kannst nur den ersten Beitrag verwenden, um das Thema mit einem Lesezeichen zu versehen."
       bookmarkable_id_type_required: "Der Name und Typ des Datensatzes, für den ein Lesezeichen erstellt werden soll, ist erforderlich."
+      invalid_bookmarkable: "Ein %{type} kann nicht mit einem Lesezeichen versehen werden."
     reminders:
       at_desktop: "Nächstes Mal, wenn ich an meinem PC bin"
       later_today: "Im Laufe des Tages"
@@ -1452,6 +1455,7 @@ de:
     show_pinned_excerpt_desktop: "Zeige einen Auszug angehefteter Themen in der Desktop-Ansicht."
     post_onebox_maxlength: "Maximale Länge eines Onebox-Discourse-Beitrags in Zeichen."
     blocked_onebox_domains: "Eine Liste von Domains, die niemals in einer Onebox untergebracht werden, z.B. wikipedia.org\n(Wildcard-Symbole * ? nicht unterstützt)"
+    block_onebox_on_redirect: "Blockiere Onebox für URLs, die umleiten."
     allowed_inline_onebox_domains: "Eine Liste von Domains, die in verkleinerter Form in eine Onebox umgewandelt werden, wenn sie ohne Titel verlinkt werden"
     enable_inline_onebox_on_all_domains: "Ignoriere die Website-Einstellung `inline_onebox_domain_allowlist` und erlaube Inline-Oneboxen für alle Domains"
     force_custom_user_agent_hosts: "Hosts, bei denen der spezifische Onebox-Useragent für alle Anfragen genutzt wird. (Besonders hilfreich bei Hosts, die Zugriffe per Useragent limitieren.)"
@@ -1470,7 +1474,7 @@ de:
     favicon: "Ein Favicon für die Website, siehe <a href='https://de.wikipedia.org/wiki/Favicon' target='_blank'>https://de.wikipedia.org/wiki/Favicon</a>. Damit es auch über eine CDN richtig funktioniert, muss es ein PNG sein. Wird auf eine Größe von 32 x 32 gesetzt. Falls leer, wird large_icon verwendet."
     apple_touch_icon: "Icon für Apple-Touch-Geräte. Wird automatisch auf eine Größe von 180 x 180 gesetzt. Falls leer, wird large_icon verwendet."
     opengraph_image: "Standard-Opengraph-Bild. Wird verwendet, wenn die Seite kein anderes passendes Bild hat. Falls leer, wird large_icon verwendet."
-    twitter_summary_large_image: "„summary large image“ für Twitter-Karten (sollte mindestens 280 breit und 150 hoch sein). Falls leer, werden Standard-Karten-Metadaten mithilfe von opengraph_image generiert."
+    twitter_summary_large_image: "Twitter-Karte \"Zusammenfassung großes Bild\" (sollte mindestens 280 in der Breite und mindestens 150 in der Höhe sein, kann nicht .svg sein). Wenn das Feld leer gelassen wird, werden die regulären Metadaten der Karte aus dem opengraph_image generiert, sofern es sich nicht ebenfalls um eine .svg-Datei handelt."
     notification_email: "Die E-Mail-Adresse, die als „from:“-Absender aller wichtigen System-E-Mails benutzt wird. Die angegebene Domain sollte über korrekte SPF-, DKIM- und Reverse-PTR-Einträge verfügen, damit E-Mails sicher zugestellt werden können."
     email_custom_headers: "Eine durch senkrechte Striche („|“) getrennte Liste von eigenen E-Mail-Headern"
     email_subject: "Anpassbares Betreff-Format für Standard-E-Mails. Siehe <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
@@ -1530,7 +1534,7 @@ de:
     ga_universal_auto_link_domains: "Aktiviere Cross-Domain-Tracking von Google Universal Analytics. Bei ausgehenden Links zu diesen Domains wird die Client-ID hinzugefügt. Siehe <a href='https://support.google.com/analytics/answer/1034342?hl=de' target='_blank'>Googles Cross-Domain-Tracking-Handbuch.</a>"
     gtm_container_id: "Google-Tag-Manager-Container-ID. Zum Beispiel: GTM-ABCDEF. <br/>Hinweis: Skripte von Drittanbietern, die von GTM geladen werden, müssen unter Umständen in der Liste „content security policy script src“ erlaubt werden (Positivliste)."
     enable_escaped_fragments: "Auf die Ajax-Crawling-API von Google zurückgreifen, wenn kein Webcrawler gefunden wird. Siehe <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
-    moderators_manage_categories_and_groups: "Moderatoren erlauben, Kategorien und Gruppen zu verwalten"
+    moderators_manage_categories_and_groups: "Moderatoren erlauben, Kategorien und Gruppen zu erstellen und zu verwalten"
     moderators_change_post_ownership: "Moderatoren erlauben, die Inhaberschaft des Beitrags zu ändern"
     cors_origins: "Erlaubte Adressen für Cross-Origin-Requests (CORS). Jede Adresse muss http:// oder https:// enthalten. Die Umgebungsvariable DISCOURSE_ENABLE_CORS muss gesetzt sein, um CORS zu aktivieren."
     use_admin_ip_allowlist: "Administratoren können sich nur anmelden, wenn sie eine IP-Adresse nutzen, die in der Liste der gefilterten IPs definiert ist (Administration > Protokolle > Gefilterte IPs)."
@@ -1559,7 +1563,7 @@ de:
     send_tl2_promotion_message: "Sende neuen Benutzern der Vertrauensstufe 2 eine Nachricht über die Beförderung."
     suppress_reply_directly_below: "Zeige die erweiterbare Anzahl der Antworten auf einen Beitrag nicht, falls die einzige Antwort direkt darunter folgt."
     suppress_reply_directly_above: "Zeige das erweiterbare Element „In Antwort auf“ bei einem Beitrag nicht an, wenn es nur eine einzige Antwort direkt über diesem Beitrag gibt."
-    remove_full_quote: "Automatisch vollständige Zitate aus direkten Antworten entfernen."
+    remove_full_quote: "Automatisches Entfernen von Zitaten, wenn sie (a) am Anfang eines Beitrags stehen, (b) aus einem ganzen Beitrag stammen und (c) aus dem unmittelbar vorangegangenen Beitrag stammen. Für Details, siehe <a href='https://meta.discourse.org/t/removal-of-full-quotes-from-direct-replies/106857' target='_blank'>Entfernung von vollständigen Zitaten aus direkten Antworten</a>"
     suppress_reply_when_quoting: "Zeige das erweiterbare Element „In Antwort auf“ bei einem Beitrag nicht an, wenn der Beitrag den beantworteten Beitrag zitiert."
     max_reply_history: "Maximale Anzahl an Antworten beim Ausklappen von „In Antwort auf“"
     topics_per_period_in_top_summary: "Anzahl der Themen, die in der Standard-Zusammenfassung der angesagten Themen angezeigt werden."
@@ -2079,7 +2083,7 @@ de:
     tags_sort_alphabetically: "Zeige Schlagwörter in alphabetischer Reihenfolge. Standardmäßig werden sie nach Beliebtheit sortiert."
     tags_listed_by_group: "Zeige Schlagwörter auf der <a href='%{base_path}/tags' target='_blank'>Schlagwort-Seite</a> geordnet nach Schlagwortgruppe an."
     tag_style: "Visueller Stil für Schlagwort-Abzeichen."
-    allow_staff_to_tag_pms: "Erlaube Team-Mitgliedern, jede Nachricht mit einem Schlagwort zu versehen."
+    pm_tags_allowed_for_groups: "Erlaube den Mitgliedern der einbezogenen Gruppe(n), jede persönliche Nachricht zu markieren"
     min_trust_level_to_tag_topics: "Minimale Vertrauensstufe, um Schlagwörter zu Themen hinzuzufügen."
     suppress_overlapping_tags_in_list: "Schlagwort nicht zeigen, wenn es genauso im Thementitel vorkommt"
     remove_muted_tags_from_latest: "Themen, die nur mit stummgeschalteten Tags versehen sind, nicht in der Liste der aktuellen Themen anzeigen"
@@ -2093,6 +2097,8 @@ de:
     push_notifications_icon: "Das Abzeichensymbol, das in der Benachrichtigungsecke angezeigt wird. Ein monochromatisches PNG mit Transparenz (96 × 96) wird empfohlen."
     base_font: "Basisschriftart für die meisten Texte auf der Website. Themes können diese Schriftart mit der benutzerdefinierten CSS-Eigenschaft `--font-family` überschreiben."
     heading_font: "Schriftart für Überschriften auf der Website. Themes können diese Schriftart mit der benutzerdefinierten CSS-Eigenschaft `--heading-font-family` überschreiben."
+    enable_sitemap: "Generiere eine Sitemap für Deine Website und füge sie in die robots.txt-Datei ein."
+    sitemap_page_size: "Anzahl der URLs, die auf jeder Sitemap-Seite enthalten sein sollen. Max 50.000"
     short_title: "Der Kurztitel wird beim Benutzer auf dem Startbildschirm, im Startmenü oder an anderen Stellen mit begrenztem Platz verwendet. Er sollte auf 12 Zeichen begrenzt sein."
     dashboard_hidden_reports: "Erlaube das Ausblenden der angegebenen Berichte im Dashboard."
     dashboard_visible_tabs: "Wähle aus, welche Dashboard-Registerkarten sichtbar sind."
@@ -2105,6 +2111,8 @@ de:
     create_revision_on_bulk_topic_moves: "Erstelle eine Überarbeitung für die ersten Beiträge, wenn Themen massenweise in eine neue Kategorie verschoben werden."
     allow_changing_staged_user_tracking: "Erlauben Sie, dass die Kategorie- und Tag-Benachrichtigungseinstellungen eines bereitgestellten Benutzers von einem Administratorbenutzer geändert werden."
     use_email_for_username_and_name_suggestions: "Verwende den ersten Teil der E-Mail-Adressen für Vorschläge für Benutzernamen und Namen. Dies macht es für die Öffentlichkeit einfacher, die vollständigen E-Mail-Adressen der Nutzer/innen zu erraten (da ein großer Teil der Menschen gemeinsame Dienste wie \"gmail.com\" nutzt)."
+    use_name_for_username_suggestions: "Verwende den vollen Namen eines Benutzers, wenn du Benutzernamen vorschlägst."
+    suggest_weekends_in_date_pickers: "Beziehe die Wochenenden (Samstag und Sonntag) in die Datumsvorschläge mit ein (deaktiviere dies, wenn du Discourse nur an Wochentagen von Montag bis Freitag benutzt)."
     errors:
       invalid_css_color: "Ungültige Farbe. Gib einen Farbnamen oder einen Hexadezimalwert ein."
       invalid_email: "Ungültige E-Mail-Adresse."
@@ -2133,6 +2141,7 @@ de:
       email_polling_disabled: "Du musst entweder manuelle oder POP3-Abfragen aktivieren, bevor Antworten per E-Mail aktiviert wird."
       user_locale_not_enabled: "Du musst erst „allow user locale“ aktivieren, bevor du diese Einstellung aktivierst."
       invalid_regex: "Regulärer Ausdruck ist ungültig oder nicht erlaubt."
+      invalid_regex_with_message: "Die Regex '%{regex}' hat einen Fehler: %{message}"
       email_editable_enabled: "Du musst „email editable“ deaktivieren, bevor du diese Einstellung aktivierst."
       staged_users_disabled: "Du musst erst „staged users“ aktivieren, bevor du diese Einstellung aktivierst."
       reply_by_email_disabled: "Du musst erst „reply by email“ aktivieren, bevor du diese Einstellung aktivierst."
@@ -2153,9 +2162,11 @@ de:
         leading_trailing_slash: "Der reguläre Ausdruck darf nicht mit einem Schrägstrich beginnen und enden."
       unicode_usernames_avatars: "Die internen System-Avatare unterstützen keine Unicode-Benutzernamen."
       list_value_count: "Die Liste muss genau %{count} Werte enthalten."
+      markdown_linkify_tlds: "Du kannst den Wert „*“ nicht angeben."
       google_oauth2_hd_groups: "Vor Aktivierung dieser Einstellung musst zuerst \"google oauth2 hd\" eingeschaltet werden."
       search_tokenize_chinese_enabled: "Du musst „search_tokenize_chinese“ deaktivieren, bevor du diese Einstellung aktivierst."
       search_tokenize_japanese_enabled: "Du musst „search_tokenize_japanese“ deaktivieren, bevor du diese Einstellung aktivierst."
+      discourse_connect_cannot_be_enabled_if_second_factor_enforced: "Du kannst DiscourseConnect nicht aktivieren, wenn 2FA erzwungen wird."
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2324,6 +2335,8 @@ de:
     actions:
       grant_admin:
         description: "Für zusätzliche Sicherheitsmaßnahmen musst Di Deine 2FA bestätigen, bevor %{username} Administratorzugriff gewährt wird."
+      discourse_connect_provider:
+        description: "%{hostname} hat Dich aufgefordert, Deine 2FA zu bestätigen. Du wirst zur Website zurückgeleitet, sobald Du Deine 2FA bestätigt hast."
   admin:
     email:
       sent_test: "gesendet!"
@@ -2721,11 +2734,13 @@ de:
     tl2_promotion_message:
       subject_template: "Herzlichen Glückwunsch zur Beförderung deiner Vertrauensstufe!"
       text_body_template: |
-        Wir haben dich um eine weitere [Vertrauensstufe](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) befördert!
+        Wir haben dich eine weitere [Vertrauensstufe](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) aufsteigen lassen!
 
-        Als erfahrener Benutzer weißt du [diese Liste nützlicher Tipps und Tricks](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/) vielleicht zu schätzen.
+        Das Erreichen der Vertrauensstufe 2 bedeutet, dass du genug gelesen und aktiv mitgemacht hast, um als Mitglied dieser Gemeinschaft angesehen zu werden.
 
-        Wir laden dich ein, dich weiter zu engagieren – es ist schön, dass du da bist.
+        Als erfahrener Nutzer wirst du [diese Liste mit praktischen Tipps und Tricks](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/) zu schätzen wissen.
+
+        Wir laden dich ein, dich weiterhin einzubringen - wir freuen uns, dich hier zu haben.
     backup_succeeded:
       title: "Backup erfolgreich"
       subject_template: "Backup erfolgreich abgeschlossen"
@@ -3149,7 +3164,7 @@ de:
   subject_re: "Re: "
   subject_pm: "[PN] "
   email_from: "%{user_name} via %{site_name}"
-  email_from_without_site: "%{user_name}"
+  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "Vorherige Antworten"
     reached_limit:
@@ -3168,6 +3183,9 @@ de:
     reply_above_line: "## Bitte gib deine Antwort oberhalb dieser Zeile ein. ##"
     posted_by: "Erstellt von %{username} am %{post_date}"
     pm_participants: "Teilnehmer: %{participants}"
+    more_pm_participants:
+      one: "%{participants} und %{count} andere"
+      other: "%{participants} und %{count} andere"
     invited_group_to_private_message_body: |
       %{username} hat @%{group_name} zu einer Unterhaltung eingeladen
 
@@ -3626,6 +3644,7 @@ de:
     title: "Hoppla! Diese Seite ist privat."
   site_setting_missing: "Website-Einstellung `%{name}` muss festgelegt werden."
   page_not_found:
+    page_title: "Seite nicht gefunden"
     title: "Hoppla! Diese Seite existiert nicht oder ist privat."
     popular_topics: "Beliebt"
     recent_topics: "Aktuell"
@@ -4509,6 +4528,8 @@ de:
                 label: "Kategorie-Boxen"
               categories_boxes_with_topics:
                 label: "Kategorie-Boxen mit Themen"
+              subcategories_with_featured_topics:
+                label: "Unterkategorien mit hervorgehobenen Themen"
       logos:
         title: "Logos"
         fields:
@@ -4704,6 +4725,9 @@ de:
     post_raw: "Fortsetzung der Diskussion von %{parent_url}.\n\nVorherige Diskussionen:\n\n%{previous_topics}"
     small_action_post_raw: "Setze die Diskussion bei %{new_title} fort."
   fallback_username: "Benutzer"
+  user_status:
+    errors:
+      ends_at_should_be_greater_than_set_at: "ends_at sollte größer sein als set_at"
   activemodel:
     errors:
       <<: *errors

@@ -21,6 +21,14 @@ class InlineOneboxer
     Discourse.cache.read(cache_key(url))
   end
 
+  def self.local_handlers
+    @local_handlers ||= {}
+  end
+
+  def self.register_local_handler(controller, &handler)
+    local_handlers[controller] = handler
+  end
+
   def self.lookup(url, opts = nil)
     opts ||= {}
     opts = opts.with_indifferent_access
@@ -46,6 +54,8 @@ class InlineOneboxer
           # not permitted to see topic
           return nil
         end
+      elsif handler = local_handlers[route[:controller]]
+        return handler.call(url, route)
       end
     end
 
@@ -62,7 +72,14 @@ class InlineOneboxer
         uri.hostname.present? &&
         (always_allow || allowed_domains.include?(uri.hostname)) &&
         !Onebox::DomainChecker.is_blocked?(uri.hostname)
-        title = RetrieveTitle.crawl(url)
+        if SiteSetting.block_onebox_on_redirect
+          max_redirects = 0
+        end
+        title = RetrieveTitle.crawl(
+          url,
+          max_redirects: max_redirects,
+          initial_https_redirect_ignore_limit: SiteSetting.block_onebox_on_redirect
+        )
         title = nil if title && title.length < MIN_TITLE_LENGTH
         return onebox_for(url, title, opts)
       end
@@ -90,7 +107,14 @@ class InlineOneboxer
         )
       end
     end
-    onebox = { url: url, title: title && Emoji.gsub_emoji_to_unicode(title) }
+
+    title = title && Emoji.gsub_emoji_to_unicode(title)
+    if title.present?
+      title = WordWatcher.censor_text(title)
+    end
+
+    onebox = { url: url, title: title }
+
     Discourse.cache.write(cache_key(url), onebox, expires_in: 1.day) if !opts[:skip_cache]
     onebox
   end

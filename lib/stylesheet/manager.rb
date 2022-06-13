@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require_dependency 'distributed_cache'
-require_dependency 'stylesheet/compiler'
+require 'distributed_cache'
+require 'stylesheet/compiler'
 
 module Stylesheet; end
 

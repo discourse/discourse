@@ -48,6 +48,14 @@ module Oneboxer
     @allowed_post_types ||= [Post.types[:regular], Post.types[:moderator_action]]
   end
 
+  def self.local_handlers
+    @local_handlers ||= {}
+  end
+
+  def self.register_local_handler(controller, &handler)
+    local_handlers[controller] = handler
+  end
+
   def self.preview(url, options = nil)
     options ||= {}
     invalidate(url) if options[:invalidate_oneboxes]
@@ -248,6 +256,10 @@ module Oneboxer
       when "topics"  then local_topic_html(url, route, opts)
       when "users"   then local_user_html(url, route)
       when "list"    then local_category_html(url, route)
+      else
+        if handler = local_handlers[route[:controller]]
+          handler.call(url, route)
+        end
       end
 
     html = html.presence || "<a href='#{URI(url).to_s}'>#{URI(url).to_s}</a>"
@@ -397,9 +409,16 @@ module Oneboxer
       available_strategies ||= Oneboxer.ordered_strategies(uri.hostname)
       strategy = available_strategies.shift
 
+      if SiteSetting.block_onebox_on_redirect
+        max_redirects = 0
+      end
       fd = FinalDestination.new(
         url,
-        get_final_destination_options(url, strategy).merge(stop_at_blocked_pages: true)
+        get_final_destination_options(url, strategy).merge(
+          stop_at_blocked_pages: true,
+          max_redirects: max_redirects,
+          initial_https_redirect_ignore_limit: SiteSetting.block_onebox_on_redirect
+        )
       )
       uri = fd.resolve
 
@@ -439,20 +458,20 @@ module Oneboxer
       user_agent_override = SiteSetting.cache_onebox_user_agent if Oneboxer.cache_response_body?(url) && SiteSetting.cache_onebox_user_agent.present?
       onebox_options[:user_agent] = user_agent_override if user_agent_override
 
-      r = Onebox.preview(uri.to_s, onebox_options)
+      preview_result = Onebox.preview(uri.to_s, onebox_options)
       result = {
-        onebox: WordWatcher.censor(r.to_s),
-        preview: WordWatcher.censor(r&.placeholder_html.to_s)
+        onebox: WordWatcher.censor(preview_result.to_s),
+        preview: WordWatcher.censor(preview_result&.placeholder_html.to_s)
       }
 
-      # NOTE: Call r.errors after calling placeholder_html
-      if r.errors.any?
-        error_keys = r.errors.keys
+      # NOTE: Call preview_result.errors after calling placeholder_html
+      if preview_result.errors.any?
+        error_keys = preview_result.errors.keys
         skip_if_only_error = [:image]
         unless error_keys.length == 1 && skip_if_only_error.include?(error_keys.first)
           missing_attributes = error_keys.map(&:to_s).sort.join(I18n.t("word_connector.comma"))
           error_message = I18n.t("errors.onebox.missing_data", missing_attributes: missing_attributes, count: error_keys.size)
-          args = r.verified_data.merge(error_message: error_message)
+          args = preview_result.verified_data.merge(error_message: error_message)
 
           if result[:preview].blank?
             result[:preview] = preview_error_onebox(args)

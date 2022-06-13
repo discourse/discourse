@@ -182,4 +182,27 @@ RSpec.describe CurrentUserSerializer do
       expect(pending_posts_count).to eq 3
     end
   end
+
+  describe "#status" do
+    fab!(:user_status) { Fabricate(:user_status) }
+    fab!(:user) { Fabricate(:user, user_status: user_status) }
+    let(:serializer) { described_class.new(user, scope: Guardian.new(user), root: false) }
+
+    it "serializes when enabled" do
+      SiteSetting.enable_user_status = true
+
+      json = serializer.as_json
+
+      expect(json[:status]).to_not be_nil do |status|
+        expect(status.description).to eq(user_status.description)
+        expect(status.emoji).to eq(user_status.emoji)
+      end
+    end
+
+    it "doesn't serialize when disabled" do
+      SiteSetting.enable_user_status = false
+      json = serializer.as_json
+      expect(json.keys).not_to include :status
+    end
+  end
 end

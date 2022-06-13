@@ -279,4 +279,13 @@ module("Unit | Utility | i18n", function (hooks) {
       "Hi $& $&"
     );
   });
+
+  test("Customized missing translation string", function (assert) {
+    assert.strictEqual(
+      I18n.t("emoji_picker.customtest", {
+        translatedFallback: "customtest",
+      }),
+      "customtest"
+    );
+  });
 });

@@ -6,7 +6,7 @@
     <%= discourse_stylesheet_link_tag(:desktop, theme_id: nil) %>
     <%= discourse_stylesheet_link_tag(:test_helper, theme_id: nil) %>
     <%= preload_script "locales/#{I18n.locale}" %>
-    <%= preload_vendor_scripts %>
+    <%= preload_script "vendor" %>
     <%= preload_script "application" %>
     <%= preload_script "admin" %>
     <%= preload_script "discourse/tests/test-support-rails" %>

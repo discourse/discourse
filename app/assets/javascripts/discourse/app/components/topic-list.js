@@ -2,9 +2,8 @@ import { alias, and, reads } from "@ember/object/computed";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import LoadMore from "discourse/mixins/load-more";
-import discourseDebounce from "discourse-common/lib/debounce";
 import { on } from "@ember/object/evented";
-import { schedule } from "@ember/runloop";
+import { next, schedule } from "@ember/runloop";
 import showModal from "discourse/lib/show-modal";
 
 export default Component.extend(LoadMore, {
@@ -75,18 +74,12 @@ export default Component.extend(LoadMore, {
       return;
     }
 
-    let scrollTo = this.session.get("topicListScrollPosition");
-    if (scrollTo && scrollTo >= 0) {
+    const scrollTo = this.session.topicListScrollPosition;
+    if (scrollTo >= 0) {
       schedule("afterRender", () => {
-        discourseDebounce(
-          this,
-          function () {
-            if (this.element && !this.isDestroying && !this.isDestroyed) {
-              $(window).scrollTop(scrollTo + 1);
-            }
-          },
-          0
-        );
+        if (this.element && !this.isDestroying && !this.isDestroyed) {
+          next(() => window.scrollTo(0, scrollTo + 1));
+        }
       });
     }
   },

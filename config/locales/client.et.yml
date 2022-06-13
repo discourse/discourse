@@ -250,6 +250,7 @@ et:
         unbookmark: "Kliki selle teema kõigi järjehoidjate eemaldamiseks"
     bookmarks:
       created: "Oled selle postituse järjehoidjatesse lisanud. %{name}"
+      edit: "Muuda järjehoidjat"
       not_bookmarked: "lisa sellele postitusele järjehoidja"
       created_with_reminder: "Olete selle postituse järjehoidjatesse lisanud meeldetuletusega %{date}. %{name}"
       remove: "Eemalda järjehoidja"
@@ -426,10 +427,13 @@ et:
       this_weekend: "Sellel nädalavahetusel"
       start_of_next_business_week: "Esmaspäev"
       start_of_next_business_week_alt: "Järgmisel esmaspäeval"
+      next_week: "Järgmisel nädalal"
       next_month: "Järgmisel kuul"
-      custom: "Vali kuupäev ja kellaaeg"
+      forever: "Igavesti"
       relative: "Suhteline aeg"
       none: "Pole vaja"
+      custom: "Vali kuupäev ja kellaaeg"
+      select_timeframe: "Vali ajavahemik"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> postitas <a href='%{topicUrl}'>selle teema</a>"
       you_posted_topic: "<a href='%{userUrl}'>Sa</a> postitasid <a href='%{topicUrl}'>selle teema</a>"
@@ -1157,6 +1161,8 @@ et:
         sent_by: "Saatja"
         private_message: "sõnum"
         the_topic: "teema"
+    user_status:
+      save: "Salvesta"
     loading: "Laen..."
     errors:
       prev_page: "kui üritasin laadida"
@@ -1404,8 +1410,6 @@ et:
         reply: Vasta
         draft: Mustand
         edit: Muuda
-        reply_as_private_message:
-          label: Uus sõnum
         reply_to_topic:
           label: Vasta teemale
         create_topic:
@@ -1682,16 +1686,6 @@ et:
         remove: "Eemalda taimer"
         publish_to: "Avalda:"
         when: "Millal:"
-      auto_update_input:
-        none: "Vali ajavahemik"
-        later_today: "Täna hiljem"
-        tomorrow: "Homme"
-        later_this_week: "iljem sel nädalal"
-        this_weekend: "Sellel nädalavahetusel"
-        next_week: "Järgmisel nädalal"
-        next_month: "Järgmisel kuul"
-        forever: "Igavesti"
-        pick_date_and_time: "Vali kuupäev ja kellaaeg"
       publish_to_category:
         title: "Ajastatud avaldamine"
       temp_open:
@@ -1774,8 +1768,6 @@ et:
         unpin: "Eemalda teema esiletõstmine..."
         unarchive: "Taasta teema arhiivist"
         archive: "Arhiveeri teema"
-        invisible: "Ära avalda teemade nimekirjas"
-        visible: "Avalda teemade nimekirjas"
         reset_read: "Nulli andmed teema lugemise kohta"
         make_private: "Loo isiklik sõnum"
       feature:
@@ -2537,6 +2529,21 @@ et:
       no_activity_others: "Tegevusi pole."
       no_replies_others: "Vastuseid pole."
       no_likes_others: "Meeldimisega postitusi veel pole."
+    sidebar:
+      unread_count: "%{count} lugemata"
+      new_count: "%{count} uus"
+      sections:
+        categories:
+          header_link_title: "kõik foorumid"
+          header_link_text: "Liigid"
+        topics:
+          header_link_title: "avaleht"
+          header_link_text: "Teemad"
+          links:
+            tracked:
+              content: "Jälgitud"
+            my_posts:
+              content: "Minu"
   admin_js:
     type_to_filter: "filtreerimiseks trüki..."
     admin:

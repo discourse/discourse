@@ -142,6 +142,13 @@ ar:
           few: "%{count} أيام"
           many: "%{count} يومًا"
           other: "%{count} يوم"
+        about_x_years:
+          zero: "حوالي %{count} سنة"
+          one: "حوالي %{count} سنة واحدة"
+          two: "حوالي %{count} سنتين"
+          few: "حوالي %{count} سنوات"
+          many: "حوالي %{count} سنة"
+          other: "حوالي %{count} سنوات"
         date_year: "D ‏MMMM ‏YYYY"
       medium_with_ago:
         x_minutes:
@@ -384,6 +391,8 @@ ar:
         unbookmark_with_reminder: "انقر لإزالة جميع الإشارات المرجعية والتذكيرات في هذا الموضوع."
     bookmarks:
       created: "لقد وضعت إشارة مرجعية على هذا المنشور. %{name}"
+      create: "إنشاء إشارة مرجعية"
+      edit: "تعديل الإشارة المرجعية"
       not_bookmarked: "وضع إشارة مرجعية على هذا المنشور"
       remove_reminder_keep_bookmark: "إزالة التذكير والاحتفاظ بالعلامة المرجعية"
       created_with_reminder: "لقد وضعت إشارة مرجعية على هذا المنشور وضبطت تذكيرًا في %{date}. ‏%{name}"
@@ -724,6 +733,7 @@ ar:
         other: "عام"
       relative: "نسبي"
     time_shortcut:
+      now: "الآن"
       later_today: "لاحقًا اليوم"
       next_business_day: "يوم العمل التالي"
       tomorrow: "غدًا"
@@ -732,13 +742,20 @@ ar:
       this_weekend: "عطلة هذا الأسبوع"
       start_of_next_business_week: "الاثنين"
       start_of_next_business_week_alt: "الاثنين القادم"
+      next_week: "الأسبوع القادم"
       two_weeks: "أسبوعان"
       next_month: "الشهر القادم"
+      two_months: "شهران"
+      three_months: "ثلاثة أشهر"
+      four_months: "أربعة أشهر"
       six_months: "ستة أشهر"
-      custom: "تاريخ ووقت مخصَّصان"
+      one_year: "عام واحد"
+      forever: "للأبد"
       relative: "وقت نسبي"
       none: "لا حاجة إليه"
       last_custom: "آخر تاريخ ووقت مخصَّصين"
+      custom: "تاريخ ووقت مخصَّصان"
+      select_timeframe: "تحديد إطار زمني"
     user_action:
       user_posted_topic: "نشر <a href='%{userUrl}'>%{user}</a> ‏<a href='%{topicUrl}'>الموضوع</a>"
       you_posted_topic: "<a href='%{userUrl}'>أنت</a> نشرت ‏<a href='%{topicUrl}'>الموضوع</a>"
@@ -1693,8 +1710,6 @@ ar:
           title: "رابط الدعوة"
           success: "تم إنشاء رابط الدعوة بنجاح!"
           error: "حدث خطأ في أثناء إنشاء رابط الدعوة"
-          max_redemptions_allowed_label: "كم شخصًا يمكنه التسجيل باستخدام هذا الرابط؟"
-          expires_at: "متى تنتهي صلاحية رابط الدعوة هذا؟"
         invite:
           new_title: "إنشاء دعوة"
           edit_title: "تعديل الدعوة"
@@ -1842,6 +1857,10 @@ ar:
         sent_by: "تم الإرسال بواسطة"
         private_message: "رسالة"
         the_topic: "الموضوع"
+    user_status:
+      save: "حفظ"
+      set_custom_status: "تعيين حالة مخصصة"
+      what_are_you_doing: "ماذا تفعل؟"
     loading: "جارٍ التحميل..."
     errors:
       prev_page: "في أثناء محاولة التحميل"
@@ -2033,7 +2052,6 @@ ar:
         name: "Twitter"
       instagram:
         name: "Instagram"
-        title: "تسجيل الدخول باستخدام Instagram"
         sr_title: "تسجيل الدخول باستخدام Instagram"
       facebook:
         name: "Facebook"
@@ -2205,6 +2223,11 @@ ar:
         few: "تشير الإشارة إلى %{group} أنك على وشك إرسال إشعار إلى <a href='%{group_link}'>%{count} أشخاص)</a>. هل أنت متأكد؟"
         many: "تشير الإشارة إلى %{group} أنك على وشك إرسال إشعار إلى <a href='%{group_link}'>%{count} شخصًا)</a>. هل أنت متأكد؟"
         other: "تشير الإشارة إلى %{group} أنك على وشك إرسال إشعار إلى <a href='%{group_link}'>%{count} شخص)</a>. هل أنت متأكد؟"
+      cannot_see_mention:
+        category: "لقد أشرت إلى @%{username}، لكنه لن يتلقى إشعارًا لأنه ليس لديه إذن بالوصول إلى هذا التصنيف. عليك إضافته إلى إحدى المجموعات التي لديها إذن بالوصول إلى هذا التصنيف."
+        private: "لقد أشرت إلى @%{username}، ولكن لن يتم إشعاره لأنه لا يمكنه رؤية هذه الرسالة الخاصة. عليك دعوته إلى هذه الرسالة الخاصة."
+        muted_topic: "لقد ذكرت @%{username} ولكن لن يتم إخطاره لأنه كتم هذا الموضوع."
+        not_allowed: "لقد ذكرت @%{username} ولكن لن يُعلم لأنه لم يدع إلى هذا الموضوع."
       here_mention:
         zero: "بالإشارة إلى <b>@%{here}</b>، أنت على وشك إشعار %{count} المستخدم - هل أنت متأكد من ذلك؟"
         one: "بالإشارة إلى <b>@%{here}</b>، أنت على وشك إشعار %{count} المستخدم - هل أنت متأكد من ذلك؟"
@@ -2330,9 +2353,6 @@ ar:
         reply_as_new_group_message:
           label: الرد كرسالة جديدة للمجموعة
           desc: إنشاء رسالة جديدة بدءًا بالمستلمين الجُدد
-        reply_as_private_message:
-          label: رسالة جديدة
-          desc: إنشاء رسالة خاصة جديدة
         reply_to_topic:
           label: الرد على الموضوع
           desc: الرد على الموضوع، وليس أي منشور محدَّد
@@ -2831,24 +2851,6 @@ ar:
         min_duration: "يجب أن تكون المدة أكبر من 0"
         max_duration: "يجب أن تكون المدة أقل من 20 عامًا"
         duration: "المدة"
-      auto_update_input:
-        none: "تحديد إطار زمني"
-        now: "الآن"
-        later_today: "لاحقًا اليوم"
-        tomorrow: "غدًا"
-        later_this_week: "لاحقًا هذا الأسبوع"
-        this_weekend: "عطلة هذا الأسبوع"
-        next_week: "الأسبوع القادم"
-        two_weeks: "أسبوعان"
-        next_month: "الشهر القادم"
-        two_months: "شهران"
-        three_months: "ثلاثة أشهر"
-        four_months: "أربعة أشهر"
-        six_months: "ستة أشهر"
-        one_year: "عام واحد"
-        forever: "للأبد"
-        pick_date_and_time: "اختيار التاريخ والوقت"
-        set_based_on_last_post: "الإغلاق حسب آخر منشور"
       publish_to_category:
         title: "جدولة النشر"
       temp_open:
@@ -2972,8 +2974,6 @@ ar:
         unpin: "إلغاء تثبيت الموضوع"
         unarchive: "إلغاء أرشفة الموضوع"
         archive: "أرشفة الموضوع"
-        invisible: "إلغاء الإدراج"
-        visible: "إدراج"
         reset_read: "إعادة ضبط بيانات القراءة"
         make_public: "التحويل إلى موضوع عام..."
         make_private: "التحويل إلى رسالة خاصة"
@@ -3481,6 +3481,8 @@ ar:
           edit_bookmark:
             name: "تعديل الإشارة المرجعية"
             description: "تعديل اسم الإشارة المرجعية أو تغيير تاريخ التذكير ووقته"
+          clear_bookmark_reminder:
+            description: "امسح تاريخ ووقت التذكير"
           pin_bookmark:
             name: "تثبيت الإشارة المرجعية"
             description: "ثبِّت هذه الإشارة المرجعية. سيؤدي ذلك إلى ظهورها في أعلى قائمة الإشارات المرجعية لديك."
@@ -3493,6 +3495,9 @@ ar:
         viewing_summary: "يتم الآن عرض ملخص لهذا الموضوع"
         post_number: "%{username}، المنشور #%{post_number}"
         show_all: "إظهار الكل"
+      share:
+        title: "مشاركة المنشور #%{post_number}"
+        instructions: "شارِك رابطًا إلى هذا المنشور:"
     category:
       none: "(بلا فئة)"
       all: "كل الفئات"
@@ -3513,7 +3518,10 @@ ar:
       manage_tag_groups_link: "إدارة مجموعات الوسوم"
       allow_global_tags_label: "السماح بالوسوم الأخرى أيضًا"
       required_tag_group:
+        description: "تتطلب موضوعات جديدة بها وسوم من مجموعات العلامات:"
         delete: "حذف"
+        add: "أضف مجموعة العلامات المطلوبة"
+        placeholder: "حدد مجموعة العلامات ..."
       topic_featured_link_allowed: "السماح بالروابط المميزة في هذه الفئة."
       delete: "حذف الفئة"
       create: "فئة جديدة"
@@ -3573,6 +3581,7 @@ ar:
       default_list_filter: "تصفية القائمة الافتراضية:"
       allow_badges_label: "السماح بمنح الشارات في هذه الفئة"
       edit_permissions: "تعديل الأذونات"
+      reviewable_by_group: "بالإضافة إلى فريق العمل، يمكن أيضًا مراجعة المحتوى في هذا التصنيف بواسطة:"
       review_group_name: "اسم المجموعة"
       require_topic_approval: "طلب موافقة المشرف على جميع الموضوعات الجديدة"
       require_reply_approval: "طلب موافقة المشرف على جميع الردود الجديدة"
@@ -4255,8 +4264,36 @@ ar:
       no_read_topics_title: "لم تقرأ أي مواضيع حتى الآن"
       no_read_topics_body: "بمجرد البَدْء في قراءة المناقشات، سترى قائمة هنا. لبدء القراءة، ابحث عن الموضوعات التي تهمك في <a href='%{topUrl}'>أعلى</a> أو <a href='%{categoriesUrl}'>فئات</a> أو البحث عن طريق الكلمة الرئيسية %{searchIcon}"
     no_group_messages_title: "لم يتم العثور على أي رسالة من المجموعة"
+    topic_entrance:
+      sr_jump_top_button: "انتقل إلى المشاركة الأولى"
+      sr_jump_bottom_button: "انتقل إلى آخر مشاركة"
     fullscreen_table:
       expand_btn: "توسيع الجدول"
+    second_factor_auth:
+      redirect_after_success: "مصادقة العامل الثاني ناجحة. إعادة التوجيه إلى الصفحة السابقة…"
+    sidebar:
+      unread_count: "%{count} غير مقروء"
+      new_count: "%{count} جديد"
+      sections:
+        categories:
+          header_link_title: "كل الفئات"
+          header_link_text: "الفئات"
+        topics:
+          header_link_title: "الصفحة الرئيسية"
+          header_link_text: "الموضوعات"
+          header_action_title: "إنشاء موضوع جديد"
+          links:
+            everything:
+              content: "كل شىء"
+              title: "جميع الموضوعات"
+            tracked:
+              content: "المتتبَّعة"
+              title: "جميع المواضيع المُتَعَقبة"
+            bookmarked:
+              content: "وضع إشارة مرجعية"
+              title: "جميع المواضيع المؤشر عليها"
+            my_posts:
+              content: "منشوراتي"
   admin_js:
     type_to_filter: "اكتب للتصفية..."
     admin:
@@ -4493,10 +4530,13 @@ ar:
             topics:
               read: قراءة موضوع أو منشور محدَّد فيه. يتم دعم RSS أيضًا.
               write: إنشاء موضوع جديد أو النشر في موضوع موجود
+              update: تحديث الموضوع. غَيّر العنوان والتصنيف والعلامات وما إلى ذلك.
               read_lists: قراءة قوائم الموضوعات مثل الأكثر نشاطًا، والجديدة، والحديثة، وما إلى ذلك. يتم دعم RSS أيضًا.
-              wordpress: ضرورية لكي يعمل المكوِّن الإضافي wp-discourse على WordPress.
             posts:
               edit: تعديل أي منشور أو منشور معيَّن.
+            categories:
+              list: احصل على قائمة التصنيفات.
+              show: الحصول على تصنيف واحد عن طريق الهوية.
             uploads:
               create: ارفع ملف جديد أو ابدأ الرفع مباشرة لملفات فردية أو متعددة الأجزاء إلى وحدة تخزين خارجية.
             users:
@@ -4723,6 +4763,7 @@ ar:
         delete_confirm: 'هل تريد بالتأكيد حذف السمة "%{theme_name}"؟'
         color: "اللون"
         opacity: "الشفافية"
+        copy: "نسخة مكررة"
         copy_to_clipboard: "نسخ الى الحافظة"
         copied_to_clipboard: "تم النسخ إلى الحافظة"
         copy_to_clipboard_error: "حدث خطأ في نسخ البيانات إلى الحافظة"
@@ -4998,6 +5039,7 @@ ar:
         time: "الوقت"
         user: "المستخدم"
         email_type: "نوع البريد الكتروني"
+        details_title: "إظهار تفاصيل البريد الإلكتروني"
         to_address: "إلى العنوان"
         test_email_address: "عنوان البريد الإلكتروني للاختبار"
         send_test: "إرسال رسالة إلكترونية للاختبار"
@@ -5773,7 +5815,9 @@ ar:
           grant_existing_holders: منح شارات إضافة لحاملي الشارات الحاليين
       emoji:
         title: "الرمز التعبيري"
+        help: "سيكون إضافة رمز تعبيري جديد متاحًا للجميع. اسحب واسقط ملفات متعددة في وقت واحد دون إدخال اسم لإنشاء رموز تعبيرية باستخدام أسماء الملفات الخاصة بهم. ستُستخدم المجموعة المحددة لجميع الملفات التي أُضيفت في نفس الوقت. يمكنك أيضًا النقر فوق \"إضافة رمز تعبيري جديد\" لفتح منتقي الملفات."
         add: "إضافة رمز تعبيري جديد"
+        choose_files: "اختر الملفات"
         uploading: "جارٍ التحميل..."
         name: "الاسم"
         group: "المجموعة"

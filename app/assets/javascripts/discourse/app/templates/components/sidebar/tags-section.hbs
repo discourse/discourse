@@ -1,0 +1,24 @@
+<Sidebar::Section
+  @sectionName="tags"
+  @headerRoute="tags"
+  @headerLinkText={{i18n "sidebar.sections.tags.header_link_text"}}
+  @headerLinkTitle={{i18n "sidebar.sections.tags.header_link_title"}} >
+
+  {{#if (gt this.sectionLinks.length 0)}}
+    {{#each this.sectionLinks as |sectionLink|}}
+      <Sidebar::SectionLink
+        @linkName={{sectionLink.name}}
+        @route={{sectionLink.route}}
+        @title={{sectionLink.title}}
+        @content={{sectionLink.text}}
+        @currentWhen={{sectionLink.currentWhen}}
+        @badgeText={{sectionLink.badgeText}}
+        @model={{sectionLink.model}}>
+      </Sidebar::SectionLink>
+    {{/each}}
+  {{else}}
+    <Sidebar::SectionMessage>
+      {{i18n "sidebar.sections.tags.no_tracked_tags"}}
+    </Sidebar::SectionMessage>
+  {{/if}}
+</Sidebar::Section>

@@ -23,6 +23,7 @@ import deprecated from "discourse-common/lib/deprecated";
 import { isEmpty } from "@ember/utils";
 import { propertyNotEqual } from "discourse/lib/computed";
 import { throwAjaxError } from "discourse/lib/ajax-error";
+import { prioritizeNameFallback } from "discourse/lib/settings";
 
 let _customizations = [];
 export function registerCustomizationCallback(cb) {
@@ -362,9 +363,11 @@ const Composer = RestModel.extend({
         anchor: I18n.t("post.post_number", { number: postNumber }),
       };
 
+      const name = prioritizeNameFallback(post.name, post.username);
+
       options.userLink = {
         href: `${topic.url}/${postNumber}`,
-        anchor: post.username,
+        anchor: name,
       };
     }
 
@@ -868,7 +871,8 @@ const Composer = RestModel.extend({
       this.set("title", opts.title);
     }
 
-    this.set("originalText", opts.draft ? "" : this.reply);
+    const isDraft = opts.draft || opts.skipDraftCheck;
+    this.set("originalText", isDraft ? "" : this.reply);
 
     if (this.canEditTitle) {
       if (isEmpty(this.title) && this.title !== "") {

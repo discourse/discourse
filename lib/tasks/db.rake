@@ -124,12 +124,14 @@ task 'multisite:migrate' => ['db:load_config', 'environment', 'set_locale'] do |
 
     exceptions = Queue.new
 
-    old_stdout = $stdout
-    $stdout = StdOutDemux.new($stdout)
+    if concurrency > 1
+      old_stdout = $stdout
+      $stdout = StdOutDemux.new($stdout)
+    end
 
     SeedFu.quiet = true
 
-    def execute_concurently(concurrency, exceptions)
+    def execute_concurrently(concurrency, exceptions)
       queue = Queue.new
 
       RailsMultisite::ConnectionManagement.each_connection do |db|
@@ -151,7 +153,7 @@ task 'multisite:migrate' => ['db:load_config', 'environment', 'set_locale'] do |
                 exceptions << [db, e]
               ensure
                 begin
-                  $stdout.finish_chunk
+                  $stdout.finish_chunk if concurrency > 1
                 rescue => ex
                   STDERR.puts ex.inspect
                   STDERR.puts ex.backtrace
@@ -180,7 +182,7 @@ task 'multisite:migrate' => ['db:load_config', 'environment', 'set_locale'] do |
       end
     end
 
-    execute_concurently(concurrency, exceptions) do |db|
+    execute_concurrently(concurrency, exceptions) do |db|
       puts "Migrating #{db}"
       ActiveRecord::Tasks::DatabaseTasks.migrate
     end
@@ -189,7 +191,7 @@ task 'multisite:migrate' => ['db:load_config', 'environment', 'set_locale'] do |
 
     SeedFu.seed(SeedHelper.paths, /001_refresh/)
 
-    execute_concurently(concurrency, exceptions) do |db|
+    execute_concurrently(concurrency, exceptions) do |db|
       puts "Seeding #{db}"
       SeedFu.seed(SeedHelper.paths, SeedHelper.filter)
 
@@ -198,7 +200,9 @@ task 'multisite:migrate' => ['db:load_config', 'environment', 'set_locale'] do |
       end
     end
 
-    $stdout = old_stdout
+    if concurrency > 1
+      $stdout = old_stdout
+    end
     check_exceptions(exceptions)
 
     Rake::Task['db:_dump'].invoke
@@ -215,16 +219,21 @@ task 'db:migrate' => ['load_config', 'environment', 'set_locale'] do |_, args|
     raise "Migration #{migrations.last.version} is timestamped in the future" if migrations.last.version > now_timestamp
     raise "Migration #{migrations.first.version} is timestamped before the epoch" if migrations.first.version < epoch_timestamp
 
-    ActiveRecord::Tasks::DatabaseTasks.migrate
-
-    if !Discourse.is_parallel_test?
-      Rake::Task['db:_dump'].invoke
+    %i[pg_trgm unaccent].each do |extension|
+      begin
+        DB.exec "CREATE EXTENSION IF NOT EXISTS #{extension}"
+      rescue => e
+        STDERR.puts "Cannot enable database extension #{extension}"
+        STDERR.puts e
+      end
     end
+
+    ActiveRecord::Tasks::DatabaseTasks.migrate
 
     SeedFu.quiet = true
     SeedFu.seed(SeedHelper.paths, SeedHelper.filter)
 
-    if Rails.env.development?
+    if Rails.env.development? && !ENV["RAILS_DB"]
       Rake::Task['db:schema:cache:dump'].invoke
     end
 

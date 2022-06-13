@@ -396,9 +396,9 @@ RSpec.describe TopicView do
 
     context "#bookmarks" do
       let!(:user) { Fabricate(:user) }
-      let!(:bookmark1) { Fabricate(:bookmark, post: Fabricate(:post, topic: topic), user: user) }
-      let!(:bookmark2) { Fabricate(:bookmark, post: Fabricate(:post, topic: topic), user: user) }
-      let!(:bookmark3) { Fabricate(:bookmark, post: Fabricate(:post, topic: topic)) }
+      let!(:bookmark1) { Fabricate(:bookmark, bookmarkable: Fabricate(:post, topic: topic), user: user) }
+      let!(:bookmark2) { Fabricate(:bookmark, bookmarkable: Fabricate(:post, topic: topic), user: user) }
+      let!(:bookmark3) { Fabricate(:bookmark, bookmarkable: Fabricate(:post, topic: topic)) }
 
       it "returns all the bookmarks in the topic for a user" do
         expect(TopicView.new(topic.id, user).bookmarks.pluck(:id)).to match_array(
@@ -413,25 +413,26 @@ RSpec.describe TopicView do
 
     context "#bookmarks" do
       let!(:user) { Fabricate(:user) }
-      let!(:bookmark1) { Fabricate(:bookmark_next_business_day_reminder, post: topic.first_post, user: user) }
-      let!(:bookmark2) { Fabricate(:bookmark_next_business_day_reminder, post: topic.posts[1], user: user) }
+      let!(:bookmark1) { Fabricate(:bookmark_next_business_day_reminder, bookmarkable: topic.first_post, user: user) }
+      let!(:bookmark2) { Fabricate(:bookmark_next_business_day_reminder, bookmarkable: topic.posts[1], user: user) }
 
       it "gets the first post bookmark reminder at for the user" do
         topic_view = TopicView.new(topic.id, user)
 
         first, second = topic_view.bookmarks.sort_by(&:id)
-        expect(first[:post_id]).to eq(bookmark1.post_id)
+        expect(first[:bookmarkable_id]).to eq(bookmark1.bookmarkable_id)
         expect(first[:reminder_at]).to eq_time(bookmark1.reminder_at)
-        expect(second[:post_id]).to eq(bookmark2.post_id)
+        expect(second[:bookmarkable_id]).to eq(bookmark2.bookmarkable_id)
         expect(second[:reminder_at]).to eq_time(bookmark2.reminder_at)
       end
 
       context "when the topic is deleted" do
         it "returns []" do
           topic_view = TopicView.new(topic, user)
+          expect(topic_view.bookmarks).to match_array([bookmark1, bookmark2])
           PostDestroyer.new(Fabricate(:admin), topic.first_post).destroy
           topic.reload
-
+          topic_view.instance_variable_set(:@bookmarks, nil)
           expect(topic_view.bookmarks).to eq([])
         end
       end
@@ -444,7 +445,7 @@ RSpec.describe TopicView do
 
           expect(topic_view.bookmarks.length).to eq(1)
           first = topic_view.bookmarks.first
-          expect(first[:post_id]).to eq(bookmark1.post_id)
+          expect(first[:bookmarkable_id]).to eq(bookmark1.bookmarkable_id)
           expect(first[:reminder_at]).to eq_time(bookmark1.reminder_at)
         end
       end
