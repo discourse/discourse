@@ -10,7 +10,6 @@ module ExternalUploadHelpers
   PRESIGNED_PUT_RATE_LIMIT_PER_MINUTE = 10
   CREATE_MULTIPART_RATE_LIMIT_PER_MINUTE = 10
   COMPLETE_MULTIPART_RATE_LIMIT_PER_MINUTE = 10
-  BATCH_PRESIGN_RATE_LIMIT_PER_MINUTE = 10
 
   included do
     before_action :external_store_check, only: [
@@ -112,8 +111,17 @@ module ExternalUploadHelpers
     part_numbers = params.require(:part_numbers)
     unique_identifier = params.require(:unique_identifier)
 
+    ##
+    # NOTE: This is configurable by hidden site setting because this really is heavily
+    # dependent on upload speed. We request 5-10 URLs at a time with this endpoint; for
+    # a 1.5GB upload with 5mb parts this could mean 60 requests to the server to get all
+    # the part URLs. If the user's upload speed is super fast they may request all 60
+    # batches in a minute, if it is slow they may request 5 batches in a minute.
+    #
+    # The other external upload endpoints are not hit as often, so they can stay as constant
+    # values for now.
     RateLimiter.new(
-      current_user, "batch-presign", ExternalUploadHelpers::BATCH_PRESIGN_RATE_LIMIT_PER_MINUTE, 1.minute
+      current_user, "batch-presign", SiteSetting.max_batch_presign_multipart_per_minute, 1.minute
     ).performed!
 
     part_numbers = part_numbers.map do |part_number|

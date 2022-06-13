@@ -173,6 +173,22 @@ discourseModule("Integration | Component | d-editor", function (hooks) {
   });
 
   testCase(
+    "bold button maintains undo history",
+    async function (assert, textarea) {
+      textarea.selectionStart = 6;
+      textarea.selectionEnd = 11;
+
+      await click("button.bold");
+      assert.strictEqual(this.value, "hello **world**.");
+      assert.strictEqual(textarea.selectionStart, 8);
+      assert.strictEqual(textarea.selectionEnd, 13);
+
+      document.execCommand("undo");
+      assert.strictEqual(this.value, "hello world.");
+    }
+  );
+
+  testCase(
     `bold with a multiline selection`,
     async function (assert, textarea) {
       this.set("value", "hello\n\nworld\n\ntest.");
@@ -472,6 +488,9 @@ third line`
 
       assert.strictEqual(textarea.selectionStart, 27);
       assert.strictEqual(textarea.selectionEnd, 27);
+
+      document.execCommand("undo");
+      assert.strictEqual(this.value, "first line\nsecond line\nthird line");
     },
   });
 
@@ -509,6 +528,9 @@ third line`
 
       await click("button.blockquote");
       assert.strictEqual(this.value, "one\n\n\n> \n> two");
+
+      document.execCommand("undo");
+      assert.strictEqual(this.value, "one\n\n\n\ntwo");
     },
   });
 
@@ -834,6 +856,9 @@ third line`
       let element = query(".d-editor");
       await paste(element, "\ta\tb\n1\t2\t3");
       assert.strictEqual(this.value, "||a|b|\n|---|---|---|\n|1|2|3|\n");
+
+      document.execCommand("undo");
+      assert.strictEqual(this.value, "");
     },
   });
 
@@ -863,6 +888,9 @@ third line`
         "See [discourse](https://www.discourse.org/) in action"
       );
       assert.strictEqual(event.defaultPrevented, true);
+
+      document.execCommand("undo");
+      assert.strictEqual(this.value, "See discourse in action");
     }
   );
 

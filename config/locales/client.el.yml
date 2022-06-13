@@ -261,6 +261,8 @@ el:
         unbookmark: "Πατήστε εδώ για να αφαιρεθούν όλοι οι σελιδοδείκτες από αυτό το θέμα."
     bookmarks:
       created: "Έχετε προσθέσει σελιδοδείκτη σε αυτήν την ανάρτηση. %{name}"
+      create: "Δημιουργία σελιδοδείκτη"
+      edit: "Επεξεργασία σελιδοδείκτη"
       not_bookmarked: "προσθέστε σελιδοδείκτη σε αυτήν την ανάρτηση"
       created_with_reminder: "Έχετε προσθέσει σελιδοδείκτη σε αυτήν την ανάρτηση με υπενθύμιση %{date}. %{name}"
       remove: "Αφαίρεση σελιδοδείκτη"
@@ -501,6 +503,7 @@ el:
         one: "ημέρα"
         other: "ημέρες"
     time_shortcut:
+      now: "Τώρα"
       later_today: "Αργότερα σήμερα"
       next_business_day: "Επόμενη εργάσιμη ημέρα"
       tomorrow: "Αύριο"
@@ -508,8 +511,11 @@ el:
       this_weekend: "Αυτό το Σαββατοκύριακο"
       start_of_next_business_week: "Τη Δευτέρα"
       start_of_next_business_week_alt: "Την επόμενη Δευτέρα"
+      next_week: "Την άλλη εβδομάδα"
       next_month: "Τον άλλο μήνα"
+      forever: "Για Πάντα"
       custom: "Προσαρμοσμένη ημερομηνία και ώρα"
+      select_timeframe: "Επιλέξτε χρονικό περιθώριο"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> ανάρτησε <a href='%{topicUrl}'>το νήμα </a>"
       you_posted_topic: "<a href='%{userUrl}'>Ανάρτησες</a> αυτό <a href='%{topicUrl}'>το νήμα</a>"
@@ -1284,8 +1290,6 @@ el:
           title: "Σύνδεσμος πρόσκλησης"
           success: "Η δημιουργία του συνδέσμου πρόσκλησης έγινε επιτυχώς!"
           error: "Παρουσιάστηκε σφάλμα κατά τη δημιουργία συνδέσμου πρόσκλησης"
-          max_redemptions_allowed_label: "Πόσα άτομα επιτρέπεται να εγγραφούν χρησιμοποιώντας αυτόν τον σύνδεσμο;"
-          expires_at: "Πότε θα λήξει αυτός ο σύνδεσμος πρόσκλησης;"
         bulk_invite:
           text: "Μαζική πρόσκληση"
           error: "Λυπούμαστε, το αρχείο πρέπει να έχει την μορφή CSV."
@@ -1367,6 +1371,8 @@ el:
         sent_by: "Στάλθηκε από"
         private_message: "μήνυμα"
         the_topic: "το νήμα"
+    user_status:
+      save: "Αποθήκευση"
     loading: "Φόρτωση... "
     errors:
       prev_page: "κατά το φόρτωμα"
@@ -1721,9 +1727,6 @@ el:
           confirm: Έχετε αποθηκεύσει ένα νέο προσχέδιο θέματος, το οποίο θα αντικατασταθεί εάν δημιουργήσετε ένα συνδεδεμένο θέμα.
         reply_as_new_group_message:
           label: Απάντηση ως νέο ομαδικό μήνυμα
-        reply_as_private_message:
-          label: Νέο μήνυμα
-          desc: Δημιουργήστε ένα νέο προσωπικό μήνυμα
         reply_to_topic:
           label: Απάντηση στο θέμα
           desc: Απάντηση στο θέμα, όχι σε συγκεκριμένη ανάρτηση
@@ -2048,18 +2051,6 @@ el:
         when: "Πότε:"
         time_frame_required: "Παρακαλώ επιλέξτε ένα χρονικό πλαίσιο"
         duration: "Διάρκεια"
-      auto_update_input:
-        none: "Επιλέξτε χρονικό περιθώριο"
-        now: "Τώρα"
-        later_today: "Αργότερα σήμερα"
-        tomorrow: "Αύριο"
-        later_this_week: "Αργότερα αυτή την εβδομάδα"
-        this_weekend: "Αυτό το Σαββατοκύριακο"
-        next_week: "Την άλλη εβδομάδα"
-        next_month: "Τον άλλο μήνα"
-        forever: "Για Πάντα"
-        pick_date_and_time: "Επίλεξε ημερομηνία και ώρα"
-        set_based_on_last_post: "Κλείσε ανάλογα με την τελευταία ανάρτηση"
       publish_to_category:
         title: "Χρονοδιάγραμμα Δημοσιεύσεων"
       temp_open:
@@ -2156,8 +2147,6 @@ el:
         unpin: "Ξεκαρφίτσωμα Νήματος..."
         unarchive: "Επαναφορά Νήματος από Αρχείο"
         archive: "Αρχειοθέτηση Νήματος"
-        invisible: "Απόκρυψη Νήματος"
-        visible: "Εμφάνιση Νήματος"
         reset_read: "Μηδενισμός Διαβασμένων"
         make_private: "Κάνε προσωπικό μήνυμα"
         reset_bump_date: "Επαναφορά ημερομηνίας ώθησης"
@@ -3071,6 +3060,21 @@ el:
       no_activity_others: "Χωρίς δραστηριότητα."
       no_replies_others: "Χωρίς απαντήσεις."
       no_likes_others: "Καμία αρεστή ανάρτηση."
+    sidebar:
+      unread_count: "%{count} μη αναγνωσμένο"
+      new_count: "%{count} νέο"
+      sections:
+        categories:
+          header_link_title: "όλες οι κατηγορίες"
+          header_link_text: "Κατηγορίες"
+        topics:
+          header_link_title: "αρχική Σελίδα"
+          header_link_text: "Θέματα"
+          links:
+            tracked:
+              content: "Παρακολουθείται"
+            my_posts:
+              content: "Οι αναρτήσεις μου"
   admin_js:
     type_to_filter: "γράψε εδώ για φιλτράρισμα..."
     admin:
@@ -3274,7 +3278,6 @@ el:
               read: Διαβάστε ένα θέμα ή μια συγκεκριμένη ανάρτηση σε αυτό. Υποστηρίζεται επίσης το RSS.
               write: Δημιουργήστε ένα νέο θέμα ή αναρτήστε σε ένα υπάρχον.
               read_lists: Διαβάστε λίστες θεμάτων όπως κορυφαία, νέα, πρόσφατα, κλπ. Υποστηρίζεται επίσης το RSS.
-              wordpress: Απαραίτητο για να λειτουργήσει η προσθήκη WordPress wp-discourse.
             users:
               bookmarks: Λίστα σελιδοδεικτών χρηστών. Επιστρέφει τις υπενθυμίσεις σελιδοδεικτών όταν χρησιμοποιείτε τη μορφή ICS.
               show: Λάβετε πληροφορίες σχετικά με έναν χρήστη.

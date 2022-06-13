@@ -6,6 +6,7 @@
 //= require Markdown.Converter.js
 //= require bootbox.js
 //= require popper.js
+//= require tippy.umd.js
 //= require bootstrap-modal.js
 //= require caret_position
 //= require itsatrap.js

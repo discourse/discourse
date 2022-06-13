@@ -209,6 +209,8 @@ sv:
       cors_origins_should_not_have_trailing_slash: "Du bör inte lägga till det avslutande snedstrecket (/) till CORS-ursprung."
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "Användaragenter måste vara minst 3 tecken långt för att undvika felaktiga hastighetsbegränsning för mänskliga användare."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "Du kan inte lägga till något av följande värden till inställningen: %{values}."
+      strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "Du kan inte inaktivera Radera metadata för bild om 'composer media optimization image enabled' är aktiverat. Inaktivera 'composer media optimization image enabled' innan du inaktiverar Radera metadata för bild."
+      twitter_summary_large_image_no_svg: "Twitter, sammanfattningsbilder som används för twitter: bildens metadata kan inte vara .svg"
     conflicting_google_user_id: 'Google-konto-ID:et för det här kontot har ändrats och av säkerhetsskäl krävs personalens ingripande. Kontakta personalen och hänvisa dem till <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
       invalid_address: "Tyvärr kunde vi inte generera en förhandsvisning av den här webbsidan eftersom servern '%{hostname}' inte kunde hittas. I stället för en förhandsvisning visas enbart en länk i ditt inlägg. :cry:"
@@ -231,7 +233,7 @@ sv:
       <p>Annars ber vi dig att <a href="%{base_url}/password-reset">återställa lösenordet</a>.</p>
     not_found_template_link: |
       <p>Denna inbjudan till <a href="%{base_url}">%{site_name}</a> kan inte längre lösas in. Be personen som bjöd in dig att skicka en ny inbjudan till dig.</p>
-    user_exists: "Det finns inget behov av att bjuda in <b>%{email}</b>: De har <a href='%{base_path}/u/%{username}/summary'>redan ett konto!</a>"
+    user_exists: "Det finns ingen anledning att bjuda in <b>%{email}</b>, de har redan ett konto!"
     invite_exists: "Du har redan bjudit in <b>%{email}</b>."
     invalid_email: "%{email} är inte en giltig e-postadress."
     rate_limit:
@@ -402,6 +404,7 @@ sv:
       time_must_be_provided: "Tid måste anges för alla påminnelser"
       for_topic_must_use_first_post: "Du kan bara använda det första inlägget för att bokmärka ämnet."
       bookmarkable_id_type_required: "Namnet och typen av post som ska bokmärkas krävs."
+      invalid_bookmarkable: "En %{type} kan inte bokmärkas."
     reminders:
       at_desktop: "Nästa gång jag är vid datorn"
       later_today: "Senare idag"
@@ -1432,6 +1435,7 @@ sv:
     show_pinned_excerpt_desktop: "Visa utdrag för fästa ämnen på datorn."
     post_onebox_maxlength: "Maximal teckenlängd för ett Discourse-inlägg i onebox."
     blocked_onebox_domains: "En lista över domäner som aldrig kommer att oneboxas t.ex. wikipedia.org\n(Jokertecken * ? stöds inte)"
+    block_onebox_on_redirect: "Blockera onebox för webbadresser som omdirigerar."
     allowed_inline_onebox_domains: "En lista över domäner som placeras i onebox i miniatyrform om de länkas utan en rubrik"
     enable_inline_onebox_on_all_domains: "Ignorera webbplatsinställningen inline_onebox_domain_allowlist och tillåt infogad onebox på alla domäner."
     force_custom_user_agent_hosts: "Värdar för vilka anpassad användaragent för onebox ska användas vid alla förfrågningar. (särskilt användbart för värdar som begränsar åtkomst av användaragent)."
@@ -1450,7 +1454,7 @@ sv:
     favicon: "En favoritikon för din webbplats, se <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>http://en.wikipedia.org/wiki/Favicon</a>. För att fungera korrekt över en CDN måste det vara en png. Storleken ändras automatiskt till 32 x 32. Om detta lämnas tomt används large_icon."
     apple_touch_icon: "Ikon som används för Apples pekskärmsenheter. Storleken ändras automatiskt till 180 x 180. Om detta lämnas tomt används large_icon."
     opengraph_image: "Standard Open Graph bild, används när sidan inte har någon annan lämplig bild. Om detta lämnas tomt används large_icon."
-    twitter_summary_large_image: "Twitter-korts 'sammanfattande storbild' (ska vara minst 280 i bredd och minst 150 i höjd). Om detta lämnas tomt genereras vanliga metadata för kort genom opengraph_image."
+    twitter_summary_large_image: "Twitter-kortets 'summary large image' (bör vara minst 280 i bredd och minst 150 i höjd, kan inte vara .svg). Om den lämnas tom skapas istället vanlig metadata för kort med hjälp av opengraph_image, så länge den inte också är en .svg"
     notification_email: "Avsändaradressen som används vid utskick av system e-post. Domänen som specificeras här måste ha en SPF-, DKIM- och reverse PTR-post korrekt inställd för att e-post ska levereras."
     email_custom_headers: "En lista över anpassade e-postrubriker, avgränsad med vertikalstreck"
     email_subject: "Anpassningsbart ämnesformat för vanliga e-postmeddelanden. Se <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
@@ -1510,7 +1514,7 @@ sv:
     ga_universal_auto_link_domains: "Aktivera Google Universal Analytics spårning över flera domäner. Utgående länkar till dessa domäner kommer att få klient-id tillagt till dem. Se <a href='https://support.google.com/analytics/answer/1034342?hl=sv' target='_blank'>Googles guide över domänspårning.</a>"
     gtm_container_id: "Innehålls-ID för Google Tag Manager. t.ex. GTM-ABCDEF. <br/>Notera: Skript från tredje part som laddats av GTM kan behöva vitlistas i 'content security policy script src'."
     enable_escaped_fragments: "Återgå till Googles Ajax-Crawling API om ingen sökrobot upptäcks. Se <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
-    moderators_manage_categories_and_groups: "Tillåt moderatorer att hantera kategorier och grupper"
+    moderators_manage_categories_and_groups: "Tillåt moderatorer att skapa och hantera kategorier och grupper"
     moderators_change_post_ownership: "Tillåt att moderatorer ändrar inläggsägarskap"
     cors_origins: "Tillåtna ursprung för cross-ursprungsbegäran (CORS). Varje ursprung måste inkludera http:// eller https://. Variabeln DISCOURSE_ENABLE_CORS env måste ställas in till true för att aktivera CORS."
     use_admin_ip_allowlist: "Administratörer kan bara logga in om de är på en IP-adress som definierats i listan över granskade IP-adresser (Admin > Loggar > Granskade IP-adresser)."
@@ -1539,7 +1543,7 @@ sv:
     send_tl2_promotion_message: "Skicka ett meddelande om uppgradering till nya Förtroendenivå 2-användare."
     suppress_reply_directly_below: "Visa inte den utvidgade inläggsräknaren på ett inlägg när det bara finns ett svar direkt nedanför det här inlägget."
     suppress_reply_directly_above: "Visa inte den utvidgade som-svar-till på ett inlägg när det endast finns ett svar direkt ovanför det här inlägget."
-    remove_full_quote: "Ta automatiskt bort fullständiga citattecken vid direkta svar."
+    remove_full_quote: "Ta automatiskt bort citatet om (a) det visas i början av ett inlägg, (b) det är ett helt inlägg och (c) det är från det omedelbart föregående inlägget. För detaljer, se <a href='https://meta.discourse.org/t/removal-of-full-quotes-from-direct-replies/106857' target='_blank'>Borttagning av fullständiga citat från direkta svar</a>"
     suppress_reply_when_quoting: "Visa inte den utvidgade som-svar-till på ett inlägg när inlägget citerar ett svar."
     max_reply_history: "Högsta antal svar för att utvidga vid utvidgning av som-svar-till"
     topics_per_period_in_top_summary: "Standardinställning för antal toppämnen som visas i toppämnessammanfattningen."
@@ -2059,7 +2063,7 @@ sv:
     tags_sort_alphabetically: "Visa taggar i alfabetisk ordning. Standard är att visa i popularitetsordning."
     tags_listed_by_group: "Lista taggar per tagg-grupp från <a href='%{base_path}/tags' target='_blank'>tagg-sidan</a>."
     tag_style: "Visuell stil för tagg-utmärkelser."
-    allow_staff_to_tag_pms: "Tillåt personal tagga ett personligt meddelande"
+    pm_tags_allowed_for_groups: "Tillåt medlemmar i inkluderad(e) grupp(er) att tagga alla personliga meddelanden"
     min_trust_level_to_tag_topics: "Lägsta förtroendenivå som krävs för att tagga ämnen"
     suppress_overlapping_tags_in_list: "Om taggen matchar orden i ämnets titel exakt visas inte taggen"
     remove_muted_tags_from_latest: "Visa inte ämnen som taggats med tystade taggar i listan med senaste ämnen."
@@ -2073,6 +2077,8 @@ sv:
     push_notifications_icon: "Utmärkelseikonen som visas i aviseringshörnet. En svartvit 96 x 96 stor PNG med genomskinlighet rekommenderas."
     base_font: "Bastypsnitt att använda för de flesta texter på webbplatsen. Teman kan åsidosätta via CSS-anpassade egenskapen `--font-family`."
     heading_font: "Typsnitt som används för rubriker på webbplatsen. Teman kan åsidosätta via CSS-anpassade egenskapen `--heading-font-family`."
+    enable_sitemap: "Skapa en webbplatskarta för din webbplats och inkludera den i filen robots.txt."
+    sitemap_page_size: "Antal webbadresser som ska inkluderas på varje webbplatskartsida. Max 50.000"
     short_title: "Den korta titeln kommer att användas på användarens startskärm, startapparat eller andra platser där utrymmet kan vara begränsat. Den bör begränsas till 12 tecken."
     dashboard_hidden_reports: "Tillåt att de specificerade rapporterna döljs från översiktspanelen."
     dashboard_visible_tabs: "Välj vilka flikar på översiktspanelen som ska vara synliga."
@@ -2085,6 +2091,8 @@ sv:
     create_revision_on_bulk_topic_moves: "Skapa ny version av första inlägg när ämnen flyttas till en ny kategori i bulk."
     allow_changing_staged_user_tracking: "Tillåt att aviseringsinställningar för en arrangerad användares kategori och tagg kan ändras av en administratörsanvändare."
     use_email_for_username_and_name_suggestions: "Använd den första delen av e-postadresser för användarnamn och namnförslag. Observera att detta gör det lättare för allmänheten att gissa användares fullständiga e-postadresser (eftersom en stor del av människor delar gemensamma tjänster som `gmail.com`)."
+    use_name_for_username_suggestions: "Använd en användares fullständiga namn när det föreslås användarnamn."
+    suggest_weekends_in_date_pickers: "Inkludera helger (lördag och söndag) i förslagen till datumval (inaktivera detta om du endast använder Discourse på vardagar, måndag till fredag)."
     errors:
       invalid_css_color: "Ogiltig färg. Ange ett färgnamn eller ett hexvärde."
       invalid_email: "Felaktig e-postadress."
@@ -2113,6 +2121,7 @@ sv:
       email_polling_disabled: "Du måste aktivera antingen manuell polling eller POP3-polling innan du aktiverar svar via e-post."
       user_locale_not_enabled: "Du måste först aktivera 'allow user locale' innan du aktiverar den här inställningen."
       invalid_regex: "Vanligt uttryck är ogiltigt eller inte tillåtet."
+      invalid_regex_with_message: "Det har uppstått ett fel i regex '%{regex}': %{message}"
       email_editable_enabled: "Du måste inaktivera 'e-post kan redigeras' innan du aktiverar den här inställningen."
       staged_users_disabled: "Du måste först aktivera \"arrangerade användare\" innan du aktiverar denna inställning."
       reply_by_email_disabled: "Du måste först aktivera 'svara med e-post' innan du aktiverar denna inställning."
@@ -2133,9 +2142,11 @@ sv:
         leading_trailing_slash: "Det reguljära uttrycket får inte börja och sluta med ett snedstreck."
       unicode_usernames_avatars: "De interna systemavatarerna stöder inte Unicode-användarnamn."
       list_value_count: "Listan måste innehålla exakt %{count} värden."
+      markdown_linkify_tlds: "Du kan inte inkludera ett värde av '*'."
       google_oauth2_hd_groups: "Du måste först ange 'google oauth2 hd' innan du aktiverar denna inställning."
       search_tokenize_chinese_enabled: "Du måste inaktivera 'search_tokenize_chinese' innan du aktiverar den här inställningen."
       search_tokenize_japanese_enabled: "Du måste inaktivera 'search_tokenize_japanese' innan du aktiverar den här inställningen."
+      discourse_connect_cannot_be_enabled_if_second_factor_enforced: "Du kan inte aktivera DiscourseConnect om 2FA är obligatoriskt."
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.exempel.se"
@@ -2304,6 +2315,8 @@ sv:
     actions:
       grant_admin:
         description: "För ytterligare säkerhetsåtgärder måste du bekräfta din 2FA innan %{username} beviljas administratörsåtkomst."
+      discourse_connect_provider:
+        description: "%{hostname} har begärt att du ska bekräfta ditt 2FA. Du kommer att omdirigeras tillbaka till webbplatsen när du har bekräftat ditt 2FA."
   admin:
     email:
       sent_test: "skickat!"
@@ -2665,11 +2678,13 @@ sv:
     tl2_promotion_message:
       subject_template: "Grattis till din högre förtroendenivå!"
       text_body_template: |
-        Vi har uppgraderat dig till en annan [tillitsnivå] (https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)!
+        Vi har uppgraderat dig till en högre [förtroendenivå] (https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)!
+
+        Att uppnå förtroendenivå 2 betyder att du har läst och aktivt deltagit tillräckligt för att anses vara medlem i denna grupp.
 
         Som erfaren användare kanske du uppskattar [denna lista med praktiska tips och tricks] (https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
 
-        Vi välkomnar dig att fortsätta engagera dig — vi tycker om att ha dig i närheten.
+        Vi hoppas verkligen att du fortsätter engagera dig — allt blir med bättre med dig här.
     backup_succeeded:
       title: "Säkerhetskopieringen var framgångsrik"
       subject_template: "Säkerhetskopia skapades utan problem"
@@ -3029,7 +3044,7 @@ sv:
   subject_re: "Sv: "
   subject_pm: "[PM] "
   email_from: "%{user_name} via %{site_name}"
-  email_from_without_site: "%{user_name}"
+  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "Föregående svar"
     reached_limit:
@@ -3048,6 +3063,9 @@ sv:
     reply_above_line: "## Vi ber dig skriva ditt svar ovanför denna rad. ##"
     posted_by: "Publicerat av %{username} den %{post_date}"
     pm_participants: "Deltagare: %{participants}"
+    more_pm_participants:
+      one: "%{participants} och %{count} andra"
+      other: "%{participants} och %{count} andra"
     invited_group_to_private_message_body: "%{username} bjöd in @%{group_name} till ett meddelande\n\n> **[%{topic_title}](%{topic_url})**\n>\n> %{topic_excerpt}\n\nvid \n\n> %{site_title} -- %{site_description}\n\nOm du är intresserad, klicka på länken nedan:\n\n%{topic_url}\n"
     invited_to_private_message_body: "%{username} bjöd in dig till ett meddelande\n\n> **[%{topic_title}](%{topic_url})**\n>\n> %{topic_excerpt}\n\nvid \n\n> %{site_title} -- %{site_description}\n\nOm du är intresserad, klicka på länken nedan:\n\n%{topic_url}\n"
     invited_to_topic_body: "%{username} bjöd in dig till en diskussion\n\n> **[%{topic_title}](%{topic_url})**\n>\n> %{topic_excerpt}\n\nvid \n\n> %{site_title} -- %{site_description}\n\nOm du är intresserad, klicka på länken nedan:\n\n%{topic_url}\n"
@@ -3421,6 +3439,7 @@ sv:
     title: "Hoppsan! Den sidan är privat."
   site_setting_missing: "Webbplatsinställningen `%{name}` måste ställas in."
   page_not_found:
+    page_title: "Sidan hittades inte"
     title: "Hoppsan! Den sidan finns inte eller så är den privat."
     popular_topics: "Populära"
     recent_topics: "Senaste"
@@ -4130,9 +4149,11 @@ sv:
               categories_and_top_topics:
                 label: "Kategorier och toppämnen"
               categories_boxes:
-                label: "Kategorilådor"
+                label: "Kategoriboxar"
               categories_boxes_with_topics:
-                label: "Kategorilådor med ämnen"
+                label: "Kategoriboxar med ämnen"
+              subcategories_with_featured_topics:
+                label: "Underkategorier med utvalda ämnen"
       logos:
         title: "Logotyper"
         fields:
@@ -4321,6 +4342,9 @@ sv:
     post_raw: "Fortsätter diskussionen från %{parent_url}.\n\nTidigare diskussioner:\n\n%{previous_topics}"
     small_action_post_raw: "Fortsätt diskussionen vid %{new_title}."
   fallback_username: "användare"
+  user_status:
+    errors:
+      ends_at_should_be_greater_than_set_at: "ends_at bör vara större än set_at."
   activemodel:
     errors:
       <<: *errors

@@ -4,6 +4,13 @@ class ThemeField < ActiveRecord::Base
 
   belongs_to :upload
   has_one :javascript_cache, dependent: :destroy
+  has_one :upload_reference, as: :target, dependent: :destroy
+
+  after_save do
+    if self.type_id == ThemeField.types[:theme_upload_var] && saved_change_to_upload_id?
+      UploadReference.ensure_exist!(upload_ids: [self.upload_id], target: self)
+    end
+  end
 
   scope :find_by_theme_ids, ->(theme_ids) {
     return none unless theme_ids.present?
@@ -578,12 +585,6 @@ class ThemeField < ActiveRecord::Base
 
   after_save do
     dependent_fields.each(&:invalidate_baked!)
-  end
-
-  after_commit do
-    # TODO message for mobile vs desktop
-    MessageBus.publish "/header-change/#{theme.id}", self.value if theme && self.name == "header"
-    MessageBus.publish "/footer-change/#{theme.id}", self.value if theme && self.name == "footer"
   end
 
   after_destroy do

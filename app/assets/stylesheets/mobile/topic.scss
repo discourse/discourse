@@ -144,6 +144,14 @@ sub sub {
         grid-template-columns: 1fr 1fr;
       }
 
+      ul {
+        display: contents;
+      }
+
+      .d-button-label {
+        @include ellipsis;
+      }
+
       .popup-menu-btn {
         @include ellipsis;
       }

@@ -7,6 +7,7 @@ import { ajax } from "discourse/lib/ajax";
 import Bookmark from "discourse/models/bookmark";
 import I18n from "I18n";
 import { Promise } from "rsvp";
+import { htmlSafe } from "@ember/template";
 
 export default Controller.extend({
   queryParams: ["q"],
@@ -31,9 +32,11 @@ export default Controller.extend({
 
   @discourseComputed()
   emptyStateBody() {
-    return I18n.t("user.no_bookmarks_body", {
-      icon: iconHTML("bookmark"),
-    }).htmlSafe();
+    return htmlSafe(
+      I18n.t("user.no_bookmarks_body", {
+        icon: iconHTML("bookmark"),
+      })
+    );
   },
 
   @discourseComputed("inSearchMode", "noContent")
@@ -67,7 +70,7 @@ export default Controller.extend({
     this.set("loadingMore", true);
 
     return this._loadMoreBookmarks(this.q)
-      .then((response) => this._processLoadResponse(response))
+      .then((response) => this._processLoadResponse(this.q, response))
       .catch(() => this._bookmarksListDenied())
       .finally(() => this.set("loadingMore", false));
   },
@@ -91,12 +94,13 @@ export default Controller.extend({
     this.set("permissionDenied", true);
   },
 
-  _processLoadResponse(response) {
+  _processLoadResponse(searchTerm, response) {
     if (!response || !response.user_bookmark_list) {
       return;
     }
 
     response = response.user_bookmark_list;
+    this.model.searchTerm = searchTerm;
     this.model.loadMoreUrl = response.more_bookmarks_url;
 
     if (response.bookmarks) {

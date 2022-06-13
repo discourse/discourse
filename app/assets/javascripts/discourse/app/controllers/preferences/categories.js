@@ -20,13 +20,10 @@ export default Controller.extend({
     "model.watchedCategories",
     "model.watchedFirstPostCategories",
     "model.trackedCategories",
-    "model.regularCategories",
     "model.mutedCategories"
   )
-  selectedCategories(watched, watchedFirst, tracked, regular, muted) {
-    return []
-      .concat(watched, watchedFirst, tracked, regular, muted)
-      .filter((t) => t);
+  selectedCategories(watched, watchedFirst, tracked, muted) {
+    return [].concat(watched, watchedFirst, tracked, muted).filter((t) => t);
   },
 
   @discourseComputed

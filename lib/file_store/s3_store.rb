@@ -2,9 +2,9 @@
 
 require "uri"
 require "mini_mime"
-require_dependency "file_store/base_store"
-require_dependency "s3_helper"
-require_dependency "file_helper"
+require "file_store/base_store"
+require "s3_helper"
+require "file_helper"
 
 module FileStore
 
@@ -224,7 +224,7 @@ module FileStore
       url.sub(File.join("#{schema}#{absolute_base_url}", folder), File.join(SiteSetting.Upload.s3_cdn_url, "/"))
     end
 
-    def signed_url_for_path(path, expires_in: S3Helper::DOWNLOAD_URL_EXPIRES_AFTER_SECONDS, force_download: false)
+    def signed_url_for_path(path, expires_in: SiteSetting.s3_presigned_get_url_expires_after_seconds, force_download: false)
       key = path.sub(absolute_base_url + "/", "")
       presigned_get_url(key, expires_in: expires_in, force_download: force_download)
     end
@@ -343,7 +343,7 @@ module FileStore
       url,
       force_download: false,
       filename: false,
-      expires_in: S3Helper::DOWNLOAD_URL_EXPIRES_AFTER_SECONDS
+      expires_in: SiteSetting.s3_presigned_get_url_expires_after_seconds
     )
       opts = { expires_in: expires_in }
 

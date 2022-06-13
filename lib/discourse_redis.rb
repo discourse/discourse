@@ -14,9 +14,9 @@ class DiscourseRedis
     GlobalSetting.redis_config
   end
 
-  def initialize(config = nil, namespace: true)
+  def initialize(config = nil, namespace: true, raw_redis: nil)
     @config = config || DiscourseRedis.config
-    @redis = DiscourseRedis.raw_connection(@config.dup)
+    @redis = raw_redis || DiscourseRedis.raw_connection(@config.dup)
     @namespace = namespace
   end
 
@@ -148,6 +148,30 @@ class DiscourseRedis
 
   def self.new_redis_store
     Cache.new
+  end
+
+  def multi
+    DiscourseRedis.ignore_readonly do
+      if block_given?
+        @redis.multi do |transaction|
+          yield DiscourseRedis.new(@config, namespace: @namespace, raw_redis: transaction)
+        end
+      else
+        @redis.multi
+      end
+    end
+  end
+
+  def pipelined
+    DiscourseRedis.ignore_readonly do
+      if block_given?
+        @redis.pipelined do |transaction|
+          yield DiscourseRedis.new(@config, namespace: @namespace, raw_redis: transaction)
+        end
+      else
+        @redis.pipelined
+      end
+    end
   end
 
   private

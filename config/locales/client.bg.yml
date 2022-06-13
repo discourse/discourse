@@ -274,6 +274,7 @@ bg:
         unbookmark_with_reminder: "Щракнете, за да премахнете всички отметки и напомняния в тази тема."
     bookmarks:
       created: "Отбелязахте тази публикация. %{name}"
+      edit: "Редактиране на отметката"
       not_bookmarked: "добавете тази публикация в Отметки"
       remove_reminder_keep_bookmark: "Премахнете напомнянето и запазете отметката"
       created_with_reminder: "Отбелязахте тази публикация с напомняне %{date}. %{name}"
@@ -532,6 +533,7 @@ bg:
         other: "дни "
       relative: "Относителна"
     time_shortcut:
+      now: "Сега"
       later_today: "По-късно днес"
       next_business_day: "Следващия работен ден"
       tomorrow: "Утре"
@@ -540,13 +542,20 @@ bg:
       this_weekend: "Този уикенд"
       start_of_next_business_week: "Понеделник"
       start_of_next_business_week_alt: "Следващия понеделник"
+      next_week: "Следваща седмица"
       two_weeks: "Две седмици"
       next_month: "Следващия месец"
+      two_months: "Два месеца"
+      three_months: "Три месеца"
+      four_months: "Четири месеца"
       six_months: "Шест месеца"
-      custom: "Друга дата и час"
+      one_year: "Една година"
+      forever: "Завинаги"
       relative: "Относително време"
       none: "Няма нужда"
       last_custom: "Последна персонализирана дата и час"
+      custom: "Друга дата и час"
+      select_timeframe: "Избери времева рамка"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> публикува <a href='%{topicUrl}'>тази тема</a>"
       you_posted_topic: "<a href='%{userUrl}'>Вие</a> публикувахте <a href='%{topicUrl}'>тази тема</a>"
@@ -1514,6 +1523,8 @@ bg:
         sent_by: "Изпратено от"
         private_message: "Съобщение"
         the_topic: "темата"
+    user_status:
+      save: "Запази"
     loading: "Зарежда се..."
     errors:
       prev_page: "докато се зареждаше"
@@ -1685,20 +1696,12 @@ bg:
         name: "Twitter"
       instagram:
         name: "Instagram"
-        title: "Влезте с Instagram"
-        sr_title: "Влезте с Instagram"
       facebook:
         name: "Facebook"
-        title: "Влезте с Facebook"
-        sr_title: "Влезте с Facebook"
       github:
         name: "GitHub"
-        title: "Влезте с GitHub"
-        sr_title: "Влезте с GitHub"
       discord:
         name: "Discord"
-        title: "Влезте с Discord"
-        sr_title: "Влезте с Discord"
       second_factor_toggle:
         totp: "Вместо това използвайте приложение за удостоверяване"
         backup_code: "Вместо това използвайте резервен код"
@@ -1907,9 +1910,6 @@ bg:
         reply_as_new_group_message:
           label: Отговорете като ново групово съобщение
           desc: Създайте ново съобщение, започващо със същите получатели
-        reply_as_private_message:
-          label: Ново съобщение
-          desc: Създайте ново лично съобщение
         reply_to_topic:
           label: Отговорете на тема
           desc: Отговорете на темата, а не на конкретен пост
@@ -2189,24 +2189,6 @@ bg:
         min_duration: "Продължителността трябва да е по-голяма от 0"
         max_duration: "Продължителността трябва да бъде по-малка от 20 години"
         duration: "Продължителност"
-      auto_update_input:
-        none: "Избери времева рамка"
-        now: "Сега"
-        later_today: "По-късно днес"
-        tomorrow: "Утре"
-        later_this_week: "По-късно тази седмица"
-        this_weekend: "Този уикенд"
-        next_week: "Следваща седмица"
-        two_weeks: "Две седмици"
-        next_month: "Следващия месец"
-        two_months: "Два месеца"
-        three_months: "Три месеца"
-        four_months: "Четири месеца"
-        six_months: "Шест месеца"
-        one_year: "Една година"
-        forever: "Завинаги"
-        pick_date_and_time: "Изберете дата и час"
-        set_based_on_last_post: "Затваряне въз основа на последната публикация"
       publish_to_category:
         title: "График за публикуване"
       temp_open:
@@ -2291,8 +2273,6 @@ bg:
         unpin: "Откови темата..."
         unarchive: "Разархивирай темата"
         archive: "Архивирай темата"
-        invisible: "Премахни от списъците"
-        visible: "Включи в списъците"
         reset_read: "Изчисти прочетените данни "
       feature:
         pin: "Закови темата"
@@ -3004,6 +2984,21 @@ bg:
         member: "потребител"
         regular: "редовен"
         leader: "лидер"
+    sidebar:
+      unread_count: "%{count} непрочетен"
+      new_count: "%{count} нов"
+      sections:
+        categories:
+          header_link_title: "всички категории"
+          header_link_text: "Категории"
+        topics:
+          header_link_title: "начало"
+          header_link_text: "Теми"
+          links:
+            tracked:
+              content: "Следени"
+            my_posts:
+              content: "Моите публикации"
   admin_js:
     type_to_filter: "филтрирай..."
     admin:

@@ -14,6 +14,7 @@ describe TopicViewSerializer do
 
   fab!(:topic) { Fabricate(:topic) }
   fab!(:user) { Fabricate(:user) }
+  fab!(:user_2) { Fabricate(:user) }
   fab!(:admin) { Fabricate(:admin) }
 
   describe '#featured_link and #featured_link_root_domain' do
@@ -198,9 +199,17 @@ describe TopicViewSerializer do
       ])
     end
 
+    fab!(:group) { Fabricate(:group) }
+    fab!(:pm_between_reg_users) do
+      Fabricate(:private_message_topic, tags: [tag], topic_allowed_users: [
+        Fabricate.build(:topic_allowed_user, user: user),
+        Fabricate.build(:topic_allowed_user, user: user_2)
+      ])
+    end
+
     before do
       SiteSetting.tagging_enabled = true
-      SiteSetting.allow_staff_to_tag_pms = true
+      SiteSetting.pm_tags_allowed_for_groups = "1|2|3|4"
     end
 
     it "should not include the tag for normal users" do
@@ -215,8 +224,19 @@ describe TopicViewSerializer do
       end
     end
 
+    it "should include the tag for users in allowed groups" do
+      SiteSetting.pm_tags_allowed_for_groups = "1|2|3|#{group.id}"
+
+      user.group_users << Fabricate(:group_user, group: group, user: user)
+      json = serialize_topic(pm_between_reg_users, user)
+      expect(json[:tags]).to eq([tag.name])
+
+      json = serialize_topic(pm_between_reg_users, user_2)
+      expect(json[:tags]).to eq(nil)
+    end
+
     it "should not include the tag if pm tags disabled" do
-      SiteSetting.allow_staff_to_tag_pms = false
+      SiteSetting.pm_tags_allowed_for_groups = ""
 
       [moderator, admin].each do |user|
         json = serialize_topic(pm, user)
@@ -542,6 +562,56 @@ describe TopicViewSerializer do
       json = serialize_topic(pm, pm.first_post.user)
 
       expect(json[:requested_group_name]).to eq(nil)
+    end
+  end
+
+  describe '#topic_timer' do
+    it 'does not include the attribute when topic does not have a topic timer' do
+      json = serialize_topic(topic, user)
+
+      expect(json[:topic_timer]).to eq(nil)
+    end
+
+    it 'includes the attribute when topic has a public topic timer' do
+      topic_timer = Fabricate(:topic_timer, topic: topic, execute_at: Time.utc(2022, 4, 6, 16, 23, 56))
+      json = serialize_topic(topic, user)
+
+      expect(json[:topic_timer][:id]).to eq(topic_timer.id)
+      expect(json[:topic_timer][:based_on_last_post]).to eq(false)
+      expect(json[:topic_timer][:category_id]).to eq(nil)
+      expect(json[:topic_timer][:duration_minutes]).to eq(nil)
+      expect(json[:topic_timer][:execute_at]).to eq('2022-04-06T16:23:56.000Z')
+      expect(json[:topic_timer][:status_type]).to eq("close")
+    end
+
+    it 'does not include the attribute for category topic timer where category is restricted to user' do
+      category = Fabricate(:category, read_restricted: true)
+
+      Fabricate(:topic_timer,
+        topic: topic,
+        category_id: category.id,
+        status_type:
+        TopicTimer.types[:publish_to_category]
+      )
+
+      json = serialize_topic(topic, user)
+
+      expect(json[:topic_timer]).to eq(nil)
+    end
+
+    it 'includes the attribute  for category topic timer where category is not restricted to user' do
+      category = Fabricate(:category, read_restricted: false)
+
+      topic_timer = Fabricate(:topic_timer,
+        topic: topic,
+        category_id: category.id,
+        status_type:
+        TopicTimer.types[:publish_to_category]
+      )
+
+      json = serialize_topic(topic, user)
+
+      expect(json[:topic_timer][:id]).to eq(topic_timer.id)
     end
   end
 end

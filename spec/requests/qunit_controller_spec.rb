@@ -99,7 +99,7 @@ describe QunitController do
         expect(response.body).to include("/test-support")
         expect(response.body).to include("/test-helpers")
         expect(response.body).to include("/assets/markdown-it-bundle.js")
-        expect(response.body).to include("/assets/application.js")
+        expect(response.body).to include("/assets/#{EmberCli.transform_name("application")}.js")
         expect(response.body).to include("/assets/admin.js")
         expect(response.body).to match(/\/theme-javascripts\/\h{40}\.js/)
         expect(response.body).to include("/theme-javascripts/tests/#{theme.id}-")

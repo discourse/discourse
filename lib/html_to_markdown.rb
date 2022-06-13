@@ -59,13 +59,13 @@ class HtmlToMarkdown
           before, after = parent.children.slice_when { |n| n == br }.to_a
 
           if before.size > 1
-            b = Nokogiri::XML::Node.new(parent.name, doc)
+            b = Nokogiri::XML::Node.new(parent.name, doc.document)
             before[0...-1].each { |c| b.add_child(c) }
             parent.previous = b if b.inner_html.present?
           end
 
           if after.present?
-            a = Nokogiri::XML::Node.new(parent.name, doc)
+            a = Nokogiri::XML::Node.new(parent.name, doc.document)
             after.each { |c| a.add_child(c) }
             parent.next = a if a.inner_html.present?
           end

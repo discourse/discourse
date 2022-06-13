@@ -256,6 +256,8 @@ hy:
         bookmark: "Սեղմեք՝ այս թեմայի առաջին գրառումն էջանշելու համար"
         unbookmark: "Սեղմեք՝ այս թեմայի բոլոր էջանշանները ջնջելու համար"
     bookmarks:
+      create: "Ստեղծել էջանշան"
+      edit: "Խմբագրել էջանշանը"
       not_bookmarked: "Էջանշել այս գրառումը"
       remove: "Հեռացնել էջանշանը"
       delete: "Ջնջել Էջանշանը"
@@ -479,8 +481,11 @@ hy:
       later_this_week: "Այս շաբաթ, մի փոքր ավելի ուշ"
       this_weekend: "Այս շաբաթ-կիրակի"
       start_of_next_business_week_alt: "Հաջորդ Երկուշաբթի: "
+      next_week: "Հաջորդ շաբաթ"
       next_month: "Հաջորդ ամիս"
+      forever: "Ընդմիշտ"
       custom: "Սահմանել հիշեցումների ամսաթիվն ու ժամանակը:"
+      select_timeframe: "Ընտրել ժամանակահատված"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a>-ը հրապարակել է <a href='%{topicUrl}'>այս թեման</a>"
       you_posted_topic: "<a href='%{userUrl}'>Դուք</a> հրապարակել եք <a href='%{topicUrl}'>այս թեման</a>"
@@ -1259,6 +1264,8 @@ hy:
         sent_by: "Ուղարկվել է՝"
         private_message: "հաղորդագրություն"
         the_topic: "թեման"
+    user_status:
+      save: "Պահպանել"
     loading: "Բեռնվում է..."
     errors:
       prev_page: "բեռնման ընթացքում"
@@ -1588,9 +1595,6 @@ hy:
           label: Պատասխանել որպես կապված թեմա
           desc: Ստեղծել այս թեմային հղված նոր թեմա
           confirm: 'Ձեզ մոտ պահպանված է նոր թեմայի սևագիրը, որը կվերագրվի, եթե դրա հետ կապված թեմա ստեղծեք: '
-        reply_as_private_message:
-          label: Նոր հաղորդագրություն
-          desc: Գրել նոր անձնական նամակ
         reply_to_topic:
           label: Պատասխանել թեմային
           desc: Պատասխանել թեմային, այլ ոչ թե որոշակի գրառման
@@ -1894,17 +1898,6 @@ hy:
         publish_to: "Հրատարակել."
         when: "Երբ."
         time_frame_required: "Խնդրում ենք ընտրել ժամանակահատված"
-      auto_update_input:
-        none: "Ընտրել ժամանակահատված"
-        later_today: "Այսօր, մի փոքր ուշ"
-        tomorrow: "Վաղը"
-        later_this_week: "Այս շաբաթ, մի փոքր ավելի ուշ"
-        this_weekend: "Այս շաբաթ-կիրակի"
-        next_week: "Հաջորդ շաբաթ"
-        next_month: "Հաջորդ ամիս"
-        forever: "Ընդմիշտ"
-        pick_date_and_time: "Ընտրել ամսաթիվ և ժամ"
-        set_based_on_last_post: "Փակել՝ կախված վերջին գրառումից"
       publish_to_category:
         title: "Պլանավորել Հրատարակումը"
       temp_open:
@@ -2001,8 +1994,6 @@ hy:
         unpin: "Ապակցել Թեման..."
         unarchive: "Ապարխիվացնել Թեման"
         archive: "Արխիվացնել Թեման"
-        invisible: "Դարձնել Չցուցակագրված"
-        visible: "Դարձնել Ցուցակագրված"
         reset_read: "Զրոյացնել Կարդացած Տվյալները"
         make_private: "Ստեղծել Անձնական Նամակ"
         reset_bump_date: "Վերահաստատել Բարձրացման Ամսաթիվը"
@@ -2877,6 +2868,21 @@ hy:
       no_activity_others: "Ակտիվություն չկա:"
       no_replies_others: "Պատասխան չկա:"
       no_likes_others: "Հավանած գրառումներ չկան:"
+    sidebar:
+      unread_count: "%{count} չկարդացած"
+      new_count: "%{count} նոր"
+      sections:
+        categories:
+          header_link_title: "բոլոր կատեգորիաները"
+          header_link_text: "Կատեգորիաներ"
+        topics:
+          header_link_title: "գլխավոր էջ"
+          header_link_text: "Թեմաներ"
+          links:
+            tracked:
+              content: "Հետևած"
+            my_posts:
+              content: "Իմ Գրառումները"
   admin_js:
     type_to_filter: "գրեք ֆիլտրելու համար..."
     admin:

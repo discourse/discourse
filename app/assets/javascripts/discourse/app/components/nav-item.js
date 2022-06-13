@@ -4,6 +4,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { iconHTML } from "discourse-common/lib/icon-library";
 /* You might be looking for navigation-item. */
 import { inject as service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
 
 export default Component.extend({
   tagName: "li",
@@ -14,7 +15,7 @@ export default Component.extend({
   contents(label, i18nLabel, icon) {
     let text = i18nLabel || I18n.t(label);
     if (icon) {
-      return `${iconHTML(icon)} ${text}`.htmlSafe();
+      return htmlSafe(`${iconHTML(icon)} ${text}`);
     }
     return text;
   },

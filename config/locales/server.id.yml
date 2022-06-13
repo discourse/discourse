@@ -644,6 +644,7 @@ id:
     post_approved:
       title: "Tulisan Anda telah disetujui"
   page_not_found:
+    page_title: "Halaman Tidak Ditemukan"
     see_more: "Selengkapnya"
     search_button: "Cari"
   deleted: "dihapus"

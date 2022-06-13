@@ -143,29 +143,28 @@ class InvitesController < ApplicationController
       return render_json_error(I18n.t("invite.requires_groups", groups: editable_topic_groups.pluck(:name).join(", ")))
     end
 
-    begin
-      invite = Invite.generate(current_user,
-        email: params[:email],
-        domain: params[:domain],
-        skip_email: params[:skip_email],
-        invited_by: current_user,
-        custom_message: params[:custom_message],
-        max_redemptions_allowed: params[:max_redemptions_allowed],
-        topic_id: topic&.id,
-        group_ids: groups&.map(&:id),
-        expires_at: params[:expires_at],
-      )
+    invite = Invite.generate(current_user,
+      email: params[:email],
+      domain: params[:domain],
+      skip_email: params[:skip_email],
+      invited_by: current_user,
+      custom_message: params[:custom_message],
+      max_redemptions_allowed: params[:max_redemptions_allowed],
+      topic_id: topic&.id,
+      group_ids: groups&.map(&:id),
+      expires_at: params[:expires_at],
+    )
 
-      if invite.present?
-        render_serialized(invite, InviteSerializer, scope: guardian, root: nil, show_emails: params.has_key?(:email), show_warnings: true)
-      else
-        render json: failed_json, status: 422
-      end
-    rescue Invite::UserExists => e
-      render_json_error(e.message)
-    rescue ActiveRecord::RecordInvalid => e
-      render_json_error(e.record.errors.full_messages.first)
+    if invite.present?
+      render_serialized(invite, InviteSerializer, scope: guardian, root: nil, show_emails: params.has_key?(:email), show_warnings: true)
+    else
+      render json: failed_json, status: 422
     end
+  rescue Invite::UserExists => e
+    return render json: {}, status: 200 if SiteSetting.hide_email_address_taken?
+    render_json_error(e.message)
+  rescue ActiveRecord::RecordInvalid => e
+    render_json_error(e.record.errors.full_messages.first)
   end
 
   def retrieve
@@ -259,6 +258,7 @@ class InvitesController < ApplicationController
       begin
         invite.update!(params.permit(:email, :custom_message, :max_redemptions_allowed, :expires_at))
       rescue ActiveRecord::RecordInvalid => e
+        return render json: {}, status: 200 if SiteSetting.hide_email_address_taken? && e.record.email_already_exists?
         return render_json_error(e.record.errors.full_messages.first)
       end
     end

@@ -124,7 +124,7 @@
     font-size: var(--font-up-1);
     a.title {
       color: var(--primary);
-      padding: 0.5em 0 1.2em 0;
+      padding: 0;
     }
     .topic-statuses {
       a {
@@ -161,18 +161,21 @@
   }
 
   .topic-item-stats {
+    // disabling clicks because these targets are too small on mobile
+    pointer-events: none;
     position: relative;
+    display: flex;
+    align-items: baseline;
     margin-top: 0.5em;
     z-index: z("base");
-    .category,
-    .num,
-    .last-poster {
-      float: left;
+    .num.activity {
+      margin-left: auto;
+      font-size: var(--font-down-1);
     }
     .category a {
       max-width: 160px;
     }
-    .num .fa,
+    .num .d-icon,
     a,
     a:visited {
       color: var(--primary-med-or-secondary-med);
@@ -182,9 +185,7 @@
   .age {
     white-space: nowrap;
     a {
-      // let's make all ages dim on mobile so we're not
-      // overwhelming people with info about each topic
-      color: var(--primary-low-mid-or-secondary-high) !important;
+      color: var(--primary-medium);
     }
   }
 }

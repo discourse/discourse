@@ -8,7 +8,7 @@ class ApplicationController < ActionController::Base
   include JsonError
   include GlobalPath
   include Hijack
-  include ReadOnlyHeader
+  include ReadOnlyMixin
   include VaryHeader
 
   attr_reader :theme_id
@@ -68,7 +68,7 @@ class ApplicationController < ActionController::Base
   def use_crawler_layout?
     @use_crawler_layout ||=
       request.user_agent &&
-      (request.content_type.blank? || request.content_type.include?('html')) &&
+      (request.media_type.blank? || request.media_type.include?('html')) &&
       !['json', 'rss'].include?(params[:format]) &&
       (has_escaped_fragment? || params.key?("print") || show_browser_update? ||
       CrawlerDetection.crawler?(request.user_agent, request.headers["HTTP_VIA"])
@@ -192,7 +192,7 @@ class ApplicationController < ActionController::Base
         e.description,
         type: :rate_limit,
         status: 429,
-        extras: { wait_seconds: retry_time_in_seconds },
+        extras: { wait_seconds: retry_time_in_seconds, time_left: e&.time_left },
         headers: response_headers
       )
     end
@@ -246,7 +246,14 @@ class ApplicationController < ActionController::Base
 
   rescue_from Discourse::ReadOnly do
     unless response_body
-      render_json_error I18n.t('read_only_mode_enabled'), type: :read_only, status: 503
+      respond_to do |format|
+        format.json do
+          render_json_error I18n.t('read_only_mode_enabled'), type: :read_only, status: 503
+        end
+        format.html do
+          render status: 503, layout: 'no_ember', template: 'exceptions/read_only'
+        end
+      end
     end
   end
 
@@ -287,7 +294,7 @@ class ApplicationController < ActionController::Base
       # cause category / topic was deleted
       if permalink.present? && permalink.target_url
         # permalink present, redirect to that URL
-        redirect_with_client_support permalink.target_url, status: :moved_permanently
+        redirect_with_client_support permalink.target_url, status: :moved_permanently, allow_other_host: true
         return
       end
     end
@@ -314,7 +321,11 @@ class ApplicationController < ActionController::Base
       with_resolved_locale(check_current_user: false) do
         # Include error in HTML format for topics#show.
         if (request.params[:controller] == 'topics' && request.params[:action] == 'show') || (request.params[:controller] == 'categories' && request.params[:action] == 'find_by_slug')
-          opts[:extras] = { html: build_not_found_page(error_page_opts), group: error_page_opts[:group] }
+          opts[:extras] = {
+            title: I18n.t('page_not_found.page_title'),
+            html: build_not_found_page(error_page_opts),
+            group: error_page_opts[:group]
+          }
         end
       end
 
@@ -620,6 +631,7 @@ class ApplicationController < ActionController::Base
     store_preloaded("banner", banner_json)
     store_preloaded("customEmoji", custom_emoji)
     store_preloaded("isReadOnly", @readonly_mode.to_s)
+    store_preloaded("isStaffWritesOnly", @staff_writes_only_mode.to_s)
     store_preloaded("activatedThemes", activated_themes_json)
   end
 
@@ -664,6 +676,7 @@ class ApplicationController < ActionController::Base
 
   def banner_json
     json = ApplicationController.banner_json_cache["json"]
+    return "{}" if !current_user && SiteSetting.login_required?
 
     unless json
       topic = Topic.where(archetype: Archetype.banner).first
@@ -834,7 +847,7 @@ class ApplicationController < ActionController::Base
       end
 
       if UserApiKey.allowed_scopes.superset?(Set.new(["one_time_password"]))
-        redirect_to("#{params[:auth_redirect]}?otp=true")
+        redirect_to("#{params[:auth_redirect]}?otp=true", allow_other_host: true)
         return
       end
     end
@@ -865,11 +878,6 @@ class ApplicationController < ActionController::Base
     !disqualified_from_2fa_enforcement && enforcing_2fa && !current_user.has_any_second_factor_methods_enabled?
   end
 
-  def block_if_readonly_mode
-    return if request.fullpath.start_with?(path "/admin/backups")
-    raise Discourse::ReadOnly.new if !(request.get? || request.head?) && @readonly_mode
-  end
-
   def build_not_found_page(opts = {})
     if SiteSetting.bootstrap_error_pages?
       preload_json
@@ -889,6 +897,7 @@ class ApplicationController < ActionController::Base
     end
 
     @container_class = "wrap not-found-container"
+    @page_title = I18n.t("page_not_found.page_title")
     @title = opts[:title] || I18n.t("page_not_found.title")
     @group = opts[:group]
     @hide_search = true if SiteSetting.login_required

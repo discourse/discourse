@@ -23,7 +23,7 @@ RSpec.describe PostActionsController do
       end
 
       it "returns 404 when the post action type doesn't exist for that user" do
-        delete "/post_actions/#{post.id}.json", params: { post_action_type_id: PostActionType.types[:bookmark] }
+        delete "/post_actions/#{post.id}.json", params: { post_action_type_id: PostActionType.types[:like] }
         expect(response.status).to eq(404)
       end
 
@@ -32,36 +32,31 @@ RSpec.describe PostActionsController do
           PostAction.create!(
             user_id: user.id,
             post_id: post.id,
-            post_action_type_id: PostActionType.types[:bookmark]
+            post_action_type_id: PostActionType.types[:like]
           )
         end
 
         it 'returns success' do
-          delete "/post_actions/#{post.id}.json", params: { post_action_type_id: PostActionType.types[:bookmark] }
+          delete "/post_actions/#{post.id}.json", params: { post_action_type_id: PostActionType.types[:like] }
           expect(response.status).to eq(200)
         end
 
         it 'deletes the action' do
           delete "/post_actions/#{post.id}.json", params: {
-            post_action_type_id: PostActionType.types[:bookmark]
+            post_action_type_id: PostActionType.types[:like]
           }
 
           expect(response.status).to eq(200)
           expect(PostAction.exists?(
             user_id: user.id,
             post_id: post.id,
-            post_action_type_id: PostActionType.types[:bookmark],
+            post_action_type_id: PostActionType.types[:like],
             deleted_at: nil
           )).to eq(false)
         end
 
         it "isn't deleted when the user doesn't have permission" do
-          pa = PostAction.create!(
-            post: post,
-            user: user,
-            post_action_type_id: PostActionType.types[:like],
-            created_at: 1.day.ago
-          )
+          post_action.update!(created_at: 1.day.ago)
 
           delete "/post_actions/#{post.id}.json", params: {
             post_action_type_id: PostActionType.types[:like]
@@ -85,7 +80,7 @@ RSpec.describe PostActionsController do
 
       post "/post_actions.json", params: {
         id: pm.id,
-        post_action_type_id: PostActionType.types[:bookmark]
+        post_action_type_id: PostActionType.types[:like]
       }
 
       expect(response.status).to eq(403)

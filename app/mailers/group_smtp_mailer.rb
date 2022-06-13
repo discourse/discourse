@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'email/message_builder'
-
 class GroupSmtpMailer < ActionMailer::Base
   include Email::BuildEmailHelper
 
@@ -21,12 +19,8 @@ class GroupSmtpMailer < ActionMailer::Base
       enable_starttls_auto: from_group.smtp_ssl
     }
 
-    user_name = post.user.username
-    if SiteSetting.enable_names && SiteSetting.display_name_on_email_from
-      user_name = post.user.name unless post.user.name.blank?
-    end
-
     group_name = from_group.name_full_preferred
+
     build_email(
       to_address,
       message: post.raw,
@@ -40,7 +34,7 @@ class GroupSmtpMailer < ActionMailer::Base
       only_reply_by_email: true,
       use_from_address_for_reply_to: SiteSetting.enable_smtp && from_group.smtp_enabled?,
       private_reply: post.topic.private_message?,
-      participants: participants(post, recipient_user),
+      participants: UserNotifications.participants(post, recipient_user, reveal_staged_email: true),
       include_respond_instructions: true,
       template: 'user_notifications.user_posted_pm',
       use_topic_title_subject: true,
@@ -49,7 +43,7 @@ class GroupSmtpMailer < ActionMailer::Base
       locale: SiteSetting.default_locale,
       delivery_method_options: delivery_options,
       from: from_group.smtp_from_address,
-      from_alias: I18n.t('email_from_without_site', user_name: group_name),
+      from_alias: I18n.t('email_from_without_site', group_name: group_name),
       html_override: html_override(post),
       cc: cc_addresses
     )
@@ -71,25 +65,5 @@ class GroupSmtpMailer < ActionMailer::Base
         reply_above_line: true
       }
     )
-  end
-
-  def participants(post, recipient_user)
-    list = []
-
-    post.topic.allowed_groups.each do |g|
-      list.push("[#{g.name_full_preferred}](#{g.full_url})")
-    end
-
-    post.topic.allowed_users.each do |u|
-      next if u.id == recipient_user.id
-
-      if u.staged?
-        list.push("#{u.email}")
-      else
-        list.push("[#{u.display_name}](#{u.full_url})")
-      end
-    end
-
-    list.join(', ')
   end
 end

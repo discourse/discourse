@@ -674,6 +674,8 @@ be:
         sent_by: "адпраўлена"
         private_message: "паведамленне"
         the_topic: "тэма"
+    user_status:
+      save: "Захаваць"
     loading: "Загрузка ..."
     errors:
       reasons:
@@ -844,9 +846,6 @@ be:
       composer_actions:
         reply: Адказаць
         edit: Рэдагаваць
-        reply_as_private_message:
-          label: Новае паведамленне
-          desc: Напісаць новае асабістае паведамленне
         create_topic:
           label: "Стварыць новую тэму"
       ignore: "ігнараваць"
@@ -973,8 +972,6 @@ be:
         remove: "Адключыць"
       topic_status_update:
         when: "калі:"
-      auto_update_input:
-        tomorrow: "заўтра"
       auto_close:
         title: "Аўтаматычнае закрыццё тэмы"
         error: "Калі ласка, увядзіце карэктнае значэнне."
@@ -1020,7 +1017,6 @@ be:
         unpin: "Адмацаваць тэму ..."
         unarchive: "Разархіваваць тэму"
         archive: "Заархіваваць тэму"
-        invisible: "Выдаліць са спісу"
         reset_read: "Скінуць дадзеныя аб прочитанисть"
         make_private: "Стварыць асабістае паведамленне"
         reset_bump_date: "Скінуць Dump дату"
@@ -1343,6 +1339,17 @@ be:
       no_activity_others: "Няма актыўнасці."
       no_replies_others: "Няма адказаў."
       no_likes_others: "Не спадабалася паведамленні."
+    sidebar:
+      sections:
+        categories:
+          header_link_title: "усе катэгорыі"
+          header_link_text: "катэгорыі"
+        topics:
+          header_link_title: "дома"
+          header_link_text: "Тэмы"
+          links:
+            my_posts:
+              content: "мае паведамленні"
   admin_js:
     admin:
       moderator: "Мадэратар"

@@ -6,6 +6,7 @@ import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import { computed } from "@ember/object";
 import layout from "select-kit/templates/components/category-row";
 import { setting } from "discourse/lib/computed";
+import { htmlSafe } from "@ember/template";
 
 export default SelectKitRowComponent.extend({
   layout,
@@ -49,22 +50,26 @@ export default SelectKitRowComponent.extend({
   }),
 
   badgeForCategory: computed("category", "parentCategory", function () {
-    return categoryBadgeHTML(this.category, {
-      link: this.categoryLink,
-      allowUncategorized:
-        this.allowUncategorizedTopics || this.allowUncategorized,
-      hideParent: !!this.parentCategory,
-      topicCount: this.topicCount,
-    }).htmlSafe();
+    return htmlSafe(
+      categoryBadgeHTML(this.category, {
+        link: this.categoryLink,
+        allowUncategorized:
+          this.allowUncategorizedTopics || this.allowUncategorized,
+        hideParent: !!this.parentCategory,
+        topicCount: this.topicCount,
+      })
+    );
   }),
 
   badgeForParentCategory: computed("parentCategory", function () {
-    return categoryBadgeHTML(this.parentCategory, {
-      link: this.categoryLink,
-      allowUncategorized:
-        this.allowUncategorizedTopics || this.allowUncategorized,
-      recursive: true,
-    }).htmlSafe();
+    return htmlSafe(
+      categoryBadgeHTML(this.parentCategory, {
+        link: this.categoryLink,
+        allowUncategorized:
+          this.allowUncategorizedTopics || this.allowUncategorized,
+        recursive: true,
+      })
+    );
   }),
 
   parentCategory: computed("parentCategoryId", function () {

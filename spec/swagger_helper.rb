@@ -103,7 +103,7 @@ RSpec.configure do |config|
       info: {
         title: 'Discourse API Documentation',
         'x-logo': {
-          url: 'https://discourse-meta.s3-us-west-1.amazonaws.com/optimized/3X/9/d/9d543e92b15b06924249654667a81441a55867eb_1_690x184.png',
+          url: 'https://docs.discourse.org/logo.svg',
         },
         version: 'latest',
         description: api_docs_description,

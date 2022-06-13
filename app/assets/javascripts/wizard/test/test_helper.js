@@ -50,6 +50,13 @@ let createPretendServer = requirejs(
 ).default;
 
 let server;
+
+const queryParams = new URLSearchParams(window.location.search);
+
+if (queryParams.get("qunit_disable_auto_start") === "1") {
+  QUnit.config.autostart = false;
+}
+
 QUnit.testStart(function () {
   server = createPretendServer();
 });

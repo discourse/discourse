@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
 module Onebox
-  class OpenGraph
-
-    attr_reader :data
+  class OpenGraph < Normalizer
 
     def initialize(doc)
       @data = extract(doc)
@@ -23,50 +21,7 @@ module Onebox
       secure_url.to_s
     end
 
-    def method_missing(attr, *args, &block)
-      value = get(attr, *args)
-
-      return nil if Onebox::Helpers::blank?(value)
-
-      method_name = attr.to_s
-      if method_name.end_with?(*integer_suffixes)
-        value.to_i
-      elsif method_name.end_with?(*url_suffixes)
-        result = Onebox::Helpers.normalize_url_for_output(value)
-        result unless Onebox::Helpers::blank?(result)
-      else
-        value
-      end
-    end
-
-    def get(attr, length = nil, sanitize = true)
-      return nil if Onebox::Helpers::blank?(data)
-
-      value = data[attr]
-
-      return nil if Onebox::Helpers::blank?(value)
-
-      value = html_entities.decode(value)
-      value = Sanitize.fragment(value) if sanitize
-      value.strip!
-      value = Onebox::Helpers.truncate(value, length) unless length.nil?
-
-      value
-    end
-
     private
-
-    def integer_suffixes
-      ['width', 'height']
-    end
-
-    def url_suffixes
-      ['url', 'image', 'video']
-    end
-
-    def html_entities
-      @html_entities ||= HTMLEntities.new
-    end
 
     def extract(doc)
       return {} if Onebox::Helpers::blank?(doc)
@@ -88,6 +43,5 @@ module Onebox
 
       data
     end
-
   end
 end

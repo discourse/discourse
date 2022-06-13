@@ -41,3 +41,4 @@ fr:
             every_three_months: "Tous les trois mois"
             every_six_months: "Tous les six mois"
             every_year: "Tous les ans"
+      default_title: "Événement de %{site_name}"

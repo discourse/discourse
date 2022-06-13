@@ -90,10 +90,7 @@ describe Invite do
       expect { Invite.generate(user, email: user.email) }
         .to raise_error(
           Invite::UserExists,
-          I18n.t(
-            'invite.user_exists',
-            email: escaped_email, username: user.username, base_path: Discourse.base_path
-          )
+          I18n.t('invite.user_exists', email: escaped_email)
         )
     end
 
@@ -288,14 +285,6 @@ describe Invite do
         user = invite.redeem
         expect(user.groups).to contain_exactly(group)
       end
-    end
-
-    it 'activates user when must_approve_users? is enabled' do
-      SiteSetting.must_approve_users = true
-      invite.invited_by = Fabricate(:admin)
-
-      user = invite.redeem
-      expect(user.approved?).to eq(true)
     end
 
     context 'invite to a topic' do

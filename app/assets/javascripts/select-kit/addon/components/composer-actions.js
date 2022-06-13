@@ -130,7 +130,9 @@ export default DropdownSelectBoxComponent.extend({
     if (
       this.action !== CREATE_TOPIC &&
       this.action !== CREATE_SHARED_DRAFT &&
-      !(this.action === REPLY && this.topic && this.topic.isPrivateMessage) &&
+      this.action === REPLY &&
+      this.topic &&
+      !this.topic.isPrivateMessage &&
       !this.isEditing &&
       _topicSnapshot
     ) {
@@ -157,23 +159,6 @@ export default DropdownSelectBoxComponent.extend({
         description: I18n.t("composer.composer_actions.reply_to_post.desc"),
         icon: "share",
         id: "reply_to_post",
-      });
-    }
-
-    if (
-      this.siteSettings.enable_personal_messages &&
-      this.action !== PRIVATE_MESSAGE &&
-      !this.isEditing
-    ) {
-      items.push({
-        name: I18n.t(
-          "composer.composer_actions.reply_as_private_message.label"
-        ),
-        description: I18n.t(
-          "composer.composer_actions.reply_as_private_message.desc"
-        ),
-        icon: "envelope",
-        id: "reply_as_private_message",
       });
     }
 

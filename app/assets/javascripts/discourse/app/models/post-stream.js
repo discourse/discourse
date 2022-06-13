@@ -847,12 +847,12 @@ export default RestModel.extend({
     return resolved;
   },
 
-  triggerLikedPost(postId, likesCount) {
+  triggerLikedPost(postId, likesCount, userID, eventType) {
     const resolved = Promise.resolve();
 
     const post = this.findLoadedPost(postId);
     if (post) {
-      post.updateLikeCount(likesCount);
+      post.updateLikeCount(likesCount, userID, eventType);
       this.storePost(post);
     }
 
@@ -1226,6 +1226,7 @@ export default RestModel.extend({
 
     const json = error.jqXHR.responseJSON;
     if (json && json.extras && json.extras.html) {
+      topic.set("errorTitle", json.extras.title);
       topic.set("errorHtml", json.extras.html);
     } else {
       topic.set("errorMessage", I18n.t("topic.server_error.description"));

@@ -286,6 +286,8 @@ ur:
         unbookmark_with_reminder: "اس موضوع میں تمام بک مارکس اور یاد دہانیوں کو مٹانے کے لیے کلک کریں۔"
     bookmarks:
       created: "آپ نے اس %{name} پوسٹ کو بک مارک کیا ہے۔"
+      create: "بک مارک بنائیں"
+      edit: "بک مارک میں ترمیم"
       not_bookmarked: "اِس پوسٹ کو بُک مارک کریں"
       remove_reminder_keep_bookmark: "یاد دہانی کو ہٹا دیں اور بک مارک کو بچا کر رکھیں"
       created_with_reminder: "آپ نے اس پوسٹ کو ایک یاد دہانی %{date}, %{name} کے ساتھ بک مارک کیا ہے۔"
@@ -561,6 +563,7 @@ ur:
         other: "سال"
       relative: "تعلق"
     time_shortcut:
+      now: "ابھی"
       later_today: "آج بعد میں"
       next_business_day: "اگلے کاروباری دن"
       tomorrow: "کَل"
@@ -569,13 +572,20 @@ ur:
       this_weekend: "اس ہفتے کے آخر میں"
       start_of_next_business_week: "پیر"
       start_of_next_business_week_alt: "اگلے پیر"
+      next_week: "اگلے ہفتے"
       two_weeks: "دو ہفتے"
       next_month: "اگلے ماہ"
+      two_months: "دو مہینے"
+      three_months: "تین مہینے"
+      four_months: "چار مہینے"
       six_months: "چھ مہینے"
-      custom: "حسب ضرورت تاریخ اور وقت"
+      one_year: "ایک سال"
+      forever: "ہمیشہ کیلئے"
       relative: "وابستہ وقت"
       none: "کسی کی ضرورت نہیں"
       last_custom: "آخری نظامی تاریخ وقت"
+      custom: "حسب ضرورت تاریخ اور وقت"
+      select_timeframe: "ایک ٹائم فریم منتخب کریں"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> نے <a href='%{topicUrl}'>ٹاپک</a> پوسٹ کیا"
       you_posted_topic: "<a href='%{userUrl}'>آپ</a> نے <a href='%{topicUrl}'>ٹاپک</a> پوسٹ کیا"
@@ -1481,8 +1491,6 @@ ur:
           title: "مدعوکرنےکا لنک"
           success: "دعوت لنک کامیابی سے بن گیا!"
           error: "مدعو کرنے کا لنک بنانے میں ایک خرابی تھی"
-          max_redemptions_allowed_label: "اس لنک کا استعمال کرتے ہوئے کتنے لوگوں کو رجسٹر کرنے کی اجازت ہے؟"
-          expires_at: "اس دعوتی لنک کی میعاد کب ختم ہوگی؟"
         invite:
           new_title: "دعوت نامہ بنائیں"
           edit_title: "دعوت میں ترمیم کریں"
@@ -1598,6 +1606,8 @@ ur:
         sent_by: "کی طرف سے بھیجا گیا"
         private_message: "پیغام"
         the_topic: "ٹاپک"
+    user_status:
+      save: "محفوظ کریں"
     loading: "لوڈ ہو رہا ہے..."
     errors:
       prev_page: "لوڈ کرتے ہوئے"
@@ -1770,20 +1780,12 @@ ur:
         name: "Twitter"
       instagram:
         name: "اِنسٹاگرام"
-        title: "انسٹاگرام کے ساتھ لاگ ان کریں"
-        sr_title: "انسٹاگرام کے ساتھ لاگ ان کریں"
       facebook:
         name: "فَیسبُک"
-        title: "فیس بک کے ساتھ لاگ ان کریں"
-        sr_title: "فیس بک کے ساتھ لاگ ان کریں"
       github:
         name: "گِٹ ہَب"
-        title: "گٹ ہب کے ساتھ لاگ ان کریں"
-        sr_title: "گٹ ہب کے ساتھ لاگ ان کریں"
       discord:
         name: "ڈِسکَورڈ"
-        title: "ڈسکورڈ کے ساتھ لاگ ان کریں"
-        sr_title: "ڈسکورڈ کے ساتھ لاگ ان کریں"
       second_factor_toggle:
         totp: "بجائے ایک اَوتھینٹیکَیٹر اَیپ کا استعمال کریں"
         backup_code: "بجائے ایک بیک اپ کوڈ استعمال کریں"
@@ -2018,9 +2020,6 @@ ur:
         reply_as_new_group_message:
           label: نئے گروپ پیغام کے بطور جواب دیں
           desc: ایک ہی وصول کنندگان سے شروع ہونے والا نیا پیغام بنائیں
-        reply_as_private_message:
-          label: نیا پیغام
-          desc: نیا ذاتی پیغام بنائیں
         reply_to_topic:
           label: ٹاپک پر جواب دیں
           desc: ٹاپک کا جواب دیں، نہ کہ کسی مخصوص پوسٹ کا
@@ -2438,24 +2437,6 @@ ur:
         min_duration: "دورانیہ 0 سے زیادہ ہونا ضروری ہے"
         max_duration: "دورانیہ 20 سال سے کم ہونا ضروری ہے"
         duration: "دورانیہ"
-      auto_update_input:
-        none: "ایک ٹائم فریم منتخب کریں"
-        now: "ابھی"
-        later_today: "آج بعد میں"
-        tomorrow: "کَل"
-        later_this_week: "اِس ہفتے بعد میں"
-        this_weekend: "اِس ہفتےکےآخر میں"
-        next_week: "اگلے ہفتے"
-        two_weeks: "دو ہفتے"
-        next_month: "اگلے ماہ"
-        two_months: "دو مہینے"
-        three_months: "تین مہینے"
-        four_months: "چار مہینے"
-        six_months: "چھ مہینے"
-        one_year: "ایک سال"
-        forever: "ہمیشہ کیلئے"
-        pick_date_and_time: "تاریخ اور وقت منتخب کریں"
-        set_based_on_last_post: "آخری پوسٹ کی بنیاد پر بند کریں"
       publish_to_category:
         title: "اشاعت شیڈول کریں"
       temp_open:
@@ -2567,8 +2548,6 @@ ur:
         unpin: "ٹاپک سے پِن ہٹائیں..."
         unarchive: "ٹاپک آرکائیو سے ختم کریں"
         archive: "ٹاپک آرکائیو کریں"
-        invisible: "غیر مندرج بنائیں"
-        visible: "مندرج بنائیں"
         reset_read: "\"پڑھ لیا گیا\" کا ڈیٹا رِی سَیٹ کریں"
         make_public: "عوامی موضوع بنائیں..."
         make_private: "ذاتی پیغام بنائیں"
@@ -3653,6 +3632,21 @@ ur:
       expand_btn: "ٹیبل کو پھیلائیں"
     second_factor_auth:
       redirect_after_success: "دو فیکٹر کی توثیق کامیاب ہے۔ پچھلے صفحہ…پر ری ڈائریکٹ کیا جا رہا ہے۔"
+    sidebar:
+      unread_count: "%{count} بغیر پڑھا ہوا"
+      new_count: "%{count} نیا"
+      sections:
+        categories:
+          header_link_title: "تمام زُمرَہ جات"
+          header_link_text: "زُمرَہ جات"
+        topics:
+          header_link_title: "ہَوم"
+          header_link_text: "ٹاپک"
+          links:
+            tracked:
+              content: "ٹریک کیا ہوا"
+            my_posts:
+              content: "میری پوسٹ"
   admin_js:
     type_to_filter: "فِلٹر کرنے کے لئے ٹائپ کریں..."
     admin:
@@ -3879,7 +3873,6 @@ ur:
               write: ایک نیا موضوع بنائیں یا موجودہ موضوع پر پوسٹ کریں۔
               update: ایک موضوع کو اپ ڈیٹ کریں۔ عنوان، زمرہ، ٹیگز وغیرہ تبدیل کریں۔
               read_lists: ٹاپک، نیا، تازہ ترین، وغیرہ جیسے عنوانات کی فہرستیں پڑھیں۔ RSS بھی تعاون یافتہ ہے۔
-              wordpress: ورڈپریس wp-discourse پلگ ان کے کام کرنے کے لیے ضروری ہے۔
             posts:
               edit: کسی بھی پوسٹ یا مخصوص میں ترمیم کریں۔
             categories:

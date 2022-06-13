@@ -8,7 +8,7 @@ I18n.defaultLocale = "en";
 I18n.pluralizationRules = {
   en(n) {
     return n === 0 ? ["zero", "none", "other"] : n === 1 ? "one" : "other";
-  }
+  },
 };
 
 // Set current locale to null
@@ -22,11 +22,11 @@ I18n.SEPARATOR = ".";
 
 I18n.noFallbacks = false;
 
-I18n.isValidNode = function(obj, node, undefined) {
+I18n.isValidNode = function (obj, node, undefined) {
   return obj[node] !== null && obj[node] !== undefined;
 };
 
-I18n.lookup = function(scope, options) {
+I18n.lookup = function (scope, options) {
   options = options || {};
 
   var translations = this.prepareOptions(I18n.translations),
@@ -79,7 +79,7 @@ I18n.lookup = function(scope, options) {
 //   I18n.prepareOptions({name: "John Doe"}, {name: "Mary Doe", role: "user"});
 //   #=> {name: "John Doe", role: "user"}
 //
-I18n.prepareOptions = function() {
+I18n.prepareOptions = function () {
   var options = {},
     opts,
     count = arguments.length;
@@ -101,7 +101,7 @@ I18n.prepareOptions = function() {
   return options;
 };
 
-I18n.interpolate = function(message, options) {
+I18n.interpolate = function (message, options) {
   options = this.prepareOptions(options);
 
   var matches = message.match(this.PLACEHOLDER),
@@ -139,7 +139,7 @@ I18n.interpolate = function(message, options) {
   return message;
 };
 
-I18n.translate = function(scope, options) {
+I18n.translate = function (scope, options) {
   options = this.prepareOptions(options);
   options.needsPluralization = typeof options.count === "number";
   options.ignoreMissing = !this.noFallbacks;
@@ -168,11 +168,14 @@ I18n.translate = function(scope, options) {
   try {
     return this.interpolate(translation, options);
   } catch (error) {
-    return this.missingTranslation(scope, null, options);
+    return (
+      options.translatedFallback ||
+      this.missingTranslation(scope, null, options)
+    );
   }
 };
 
-I18n.findTranslation = function(scope, options) {
+I18n.findTranslation = function (scope, options) {
   var translation = this.lookup(scope, options);
 
   if (translation && options.needsPluralization) {
@@ -182,18 +185,16 @@ I18n.findTranslation = function(scope, options) {
   return translation;
 };
 
-I18n.toNumber = function(number, options) {
+I18n.toNumber = function (number, options) {
   options = this.prepareOptions(options, this.lookup("number.format"), {
     precision: 3,
     separator: this.SEPARATOR,
     delimiter: ",",
-    strip_insignificant_zeros: false
+    strip_insignificant_zeros: false,
   });
 
   var negative = number < 0,
-    string = Math.abs(number)
-      .toFixed(options.precision)
-      .toString(),
+    string = Math.abs(number).toFixed(options.precision).toString(),
     parts = string.split(this.SEPARATOR),
     buffer = [],
     formattedNumber;
@@ -219,7 +220,7 @@ I18n.toNumber = function(number, options) {
   if (options.strip_insignificant_zeros) {
     var regex = {
       separator: new RegExp(options.separator.replace(/\./, "\\.") + "$"),
-      zeros: /0+$/
+      zeros: /0+$/,
     };
 
     formattedNumber = formattedNumber
@@ -230,7 +231,7 @@ I18n.toNumber = function(number, options) {
   return formattedNumber;
 };
 
-I18n.toHumanSize = function(number, options) {
+I18n.toHumanSize = function (number, options) {
   var kb = 1024,
     size = number,
     iterations = 0,
@@ -256,7 +257,7 @@ I18n.toHumanSize = function(number, options) {
   options = this.prepareOptions(options, {
     precision: precision,
     format: this.t("number.human.storage_units.format"),
-    delimiter: ""
+    delimiter: "",
   });
 
   number = this.toNumber(size, options);
@@ -265,13 +266,13 @@ I18n.toHumanSize = function(number, options) {
   return number;
 };
 
-I18n.pluralizer = function(locale) {
+I18n.pluralizer = function (locale) {
   var pluralizer = this.pluralizationRules[locale];
   if (pluralizer !== undefined) return pluralizer;
   return this.pluralizationRules["en"];
 };
 
-I18n.findAndTranslateValidNode = function(keys, translation) {
+I18n.findAndTranslateValidNode = function (keys, translation) {
   for (var i = 0; i < keys.length; i++) {
     var key = keys[i];
     if (this.isValidNode(translation, key)) return translation[key];
@@ -279,7 +280,7 @@ I18n.findAndTranslateValidNode = function(keys, translation) {
   return null;
 };
 
-I18n.pluralize = function(translation, scope, options) {
+I18n.pluralize = function (translation, scope, options) {
   if (typeof translation !== "object") return translation;
 
   options = this.prepareOptions(options);
@@ -298,7 +299,7 @@ I18n.pluralize = function(translation, scope, options) {
   return this.missingTranslation(scope, keys[0]);
 };
 
-I18n.missingTranslation = function(scope, key, options) {
+I18n.missingTranslation = function (scope, key, options) {
   var message = "[" + this.currentLocale() + this.SEPARATOR + scope;
 
   if (key) {
@@ -312,18 +313,18 @@ I18n.missingTranslation = function(scope, key, options) {
   return message + "]";
 };
 
-I18n.currentLocale = function() {
+I18n.currentLocale = function () {
   return I18n.locale || I18n.defaultLocale;
 };
 
-I18n.enableVerboseLocalization = function() {
+I18n.enableVerboseLocalization = function () {
   var counter = 0;
   var keys = {};
   var t = I18n.t;
 
   I18n.noFallbacks = true;
 
-  I18n.t = I18n.translate = function(scope, value) {
+  I18n.t = I18n.translate = function (scope, value) {
     var current = keys[scope];
     if (!current) {
       current = keys[scope] = ++counter;
@@ -338,7 +339,7 @@ I18n.enableVerboseLocalization = function() {
   };
 };
 
-I18n.enableVerboseLocalizationSession = function() {
+I18n.enableVerboseLocalizationSession = function () {
   sessionStorage.setItem("verbose_localization", "true");
   I18n.enableVerboseLocalization();
 

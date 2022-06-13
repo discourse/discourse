@@ -13,9 +13,8 @@
   {{future-date-input
     label="user.user_notifications.ignore_duration_when"
     input=(readonly ignoredUntil)
-    includeWeekend=true
+    customShortcuts=timeShortcuts
     includeDateTime=false
-    includeFarFuture=true
     onChangeInput=(action (mut ignoredUntil))
   }}
   <p>{{i18n "user.user_notifications.ignore_duration_note"}}</p>

@@ -14,10 +14,9 @@ describe WizardSerializer do
       wizard = Wizard::Builder.new(admin).build
       serializer = WizardSerializer.new(wizard, scope: Guardian.new(admin))
       json = MultiJson.load(MultiJson.dump(serializer.as_json))
-      wjson = json['wizard']
 
-      expect(wjson['current_color_scheme'][0]['name']).to eq('primary')
-      expect(wjson['current_color_scheme'][0]['hex']).to eq('222222')
+      expect(json['wizard']['current_color_scheme'][0]['name']).to eq('primary')
+      expect(json['wizard']['current_color_scheme'][0]['hex']).to eq('222222')
     end
 
     it "should provide custom colors correctly" do
@@ -31,9 +30,8 @@ describe WizardSerializer do
       serializer = WizardSerializer.new(wizard, scope: Guardian.new(admin))
       # serializer.as_json leaves in Ruby objects, force to true json
       json = MultiJson.load(MultiJson.dump(serializer.as_json))
-      wjson = json['wizard']
 
-      expect(wjson['current_color_scheme'].to_s).to include('{"name"=>"header_background", "hex"=>"00FF00"}')
+      expect(json['wizard']['current_color_scheme'].to_s).to include('{"name"=>"header_background", "hex"=>"00FF00"}')
     end
   end
 
@@ -50,7 +48,9 @@ describe WizardSerializer do
 
       privacy_step = steps.find { |s| s['id'] == 'privacy' }
       expect(privacy_step).to_not be_nil
-      expect(privacy_step['fields'].find { |f| f['id'] == 'privacy' }['choices'].find { |c| c['id'] == 'open' }).to_not be_nil
+
+      privacy_field = privacy_step['fields'].find { |f| f['id'] == 'privacy' }
+      expect(privacy_field['choices'].find { |c| c['id'] == 'open' }).to_not be_nil
     end
   end
 end

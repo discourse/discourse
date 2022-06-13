@@ -1,19 +1,45 @@
 # frozen_string_literal: true
 
 class Bookmark < ActiveRecord::Base
-  # these columns were here for a very short amount of time,
-  # hence the very short ignore time
   self.ignored_columns = [
-    "topic_id", # TODO 2022-04-01: remove
-    "reminder_type" # TODO 2021-04-01: remove
+    "post_id", # TODO (martin) (2022-08-01) remove
+    "for_topic" # TODO (martin) (2022-08-01) remove
   ]
 
-  belongs_to :user
-  belongs_to :post
-  has_one :topic, through: :post
-  belongs_to :bookmarkable, polymorphic: true
+  cattr_accessor :registered_bookmarkables
+  self.registered_bookmarkables = []
 
-  delegate :topic_id, to: :post
+  def self.registered_bookmarkable_from_type(type)
+    Bookmark.registered_bookmarkables.find { |bm| bm.model.name == type }
+  end
+
+  def self.register_bookmarkable(bookmarkable_klass)
+    return if Bookmark.registered_bookmarkable_from_type(bookmarkable_klass.model.name).present?
+    Bookmark.registered_bookmarkables << RegisteredBookmarkable.new(bookmarkable_klass)
+  end
+
+  ##
+  # This is called when the app loads, similar to AdminDashboardData.reset_problem_checks,
+  # so the default Post and Topic bookmarkables are registered on
+  # boot.
+  #
+  # This method also can be used in testing to reset bookmarkables between
+  # tests. It will also fire multiple times in development mode because
+  # classes are not cached.
+  def self.reset_bookmarkables
+    self.registered_bookmarkables = []
+
+    Bookmark.register_bookmarkable(PostBookmarkable)
+    Bookmark.register_bookmarkable(TopicBookmarkable)
+  end
+  reset_bookmarkables
+
+  def self.valid_bookmarkable_types
+    Bookmark.registered_bookmarkables.map(&:model).map(&:to_s)
+  end
+
+  belongs_to :user
+  belongs_to :bookmarkable, polymorphic: true
 
   def self.auto_delete_preferences
     @auto_delete_preferences ||= Enum.new(
@@ -24,17 +50,12 @@ class Bookmark < ActiveRecord::Base
     )
   end
 
-  # TODO (martin) [POLYBOOK] Not relevant once polymorphic bookmarks are implemented.
-  validate :unique_per_post_for_user,
-    on: [:create, :update],
-    if: Proc.new { |b| b.will_save_change_to_post_id? || b.will_save_change_to_user_id? }
-
-  # TODO (martin) [POLYBOOK] Not relevant once polymorphic bookmarks are implemented.
-  validate :for_topic_must_use_first_post,
-    on: [:create, :update],
-    if: Proc.new { |b| b.will_save_change_to_post_id? || b.will_save_change_to_for_topic? }
+  def self.select_type(bookmarks_relation, type)
+    bookmarks_relation.select { |bm| bm.bookmarkable_type == type }
+  end
 
   validate :polymorphic_columns_present, on: [:create, :update]
+  validate :valid_bookmarkable_type, on: [:create, :update]
 
   validate :unique_per_bookmarkable,
     on: [:create, :update],
@@ -46,40 +67,20 @@ class Bookmark < ActiveRecord::Base
   validate :bookmark_limit_not_reached
   validates :name, length: { maximum: 100 }
 
+  def registered_bookmarkable
+    Bookmark.registered_bookmarkable_from_type(self.bookmarkable_type)
+  end
+
   def polymorphic_columns_present
-    return if !SiteSetting.use_polymorphic_bookmarks
     return if self.bookmarkable_id.present? && self.bookmarkable_type.present?
 
     self.errors.add(:base, I18n.t("bookmarks.errors.bookmarkable_id_type_required"))
   end
 
   def unique_per_bookmarkable
-    return if !SiteSetting.use_polymorphic_bookmarks
     return if !Bookmark.exists?(user_id: user_id, bookmarkable_id: bookmarkable_id, bookmarkable_type: bookmarkable_type)
 
     self.errors.add(:base, I18n.t("bookmarks.errors.already_bookmarked", type: bookmarkable_type))
-  end
-
-  # TODO (martin) [POLYBOOK] Not relevant once polymorphic bookmarks are implemented.
-  def unique_per_post_for_user
-    return if SiteSetting.use_polymorphic_bookmarks
-
-    exists = if is_for_first_post?
-      Bookmark.exists?(user_id: user_id, post_id: post_id, for_topic: for_topic)
-    else
-      Bookmark.exists?(user_id: user_id, post_id: post_id)
-    end
-
-    if exists
-      self.errors.add(:base, I18n.t("bookmarks.errors.already_bookmarked_post"))
-    end
-  end
-
-  # TODO (martin) [POLYBOOK] Not relevant once polymorphic bookmarks are implemented.
-  def for_topic_must_use_first_post
-    if !is_for_first_post? && self.for_topic
-      self.errors.add(:base, I18n.t("bookmarks.errors.for_topic_must_use_first_post"))
-    end
   end
 
   def ensure_sane_reminder_at_time
@@ -106,19 +107,14 @@ class Bookmark < ActiveRecord::Base
     )
   end
 
-  # TODO (martin) [POLYBOOK] Not relevant once polymorphic bookmarks are implemented.
-  def is_for_first_post?
-    @is_for_first_post ||= new_record? ? Post.exists?(id: post_id, post_number: 1) : post.post_number == 1
+  def valid_bookmarkable_type
+    return if Bookmark.valid_bookmarkable_types.include?(self.bookmarkable_type)
+
+    self.errors.add(:base, I18n.t("bookmarks.errors.invalid_bookmarkable", type: self.bookmarkable_type))
   end
 
   def auto_delete_when_reminder_sent?
     self.auto_delete_preference == Bookmark.auto_delete_preferences[:when_reminder_sent]
-  end
-
-  # TODO (martin) [POLYBOOK] This is only relevant for post/topic bookmarkables, need to
-  # think of a way to do this gracefully.
-  def auto_delete_on_owner_reply?
-    self.auto_delete_preference == Bookmark.auto_delete_preferences[:on_owner_reply]
   end
 
   def auto_clear_reminder_when_reminder_sent?
@@ -149,25 +145,15 @@ class Bookmark < ActiveRecord::Base
   end
 
   scope :for_user_in_topic, ->(user_id, topic_id) {
-    if SiteSetting.use_polymorphic_bookmarks
-      joins("LEFT JOIN posts ON posts.id = bookmarks.bookmarkable_id AND bookmarks.bookmarkable_type = 'Post'")
-        .joins("LEFT JOIN topics ON topics.id = bookmarks.bookmarkable_id AND bookmarks.bookmarkable_type = 'Topic'")
-        .where(
-          "bookmarks.user_id = :user_id AND (topics.id = :topic_id OR posts.topic_id = :topic_id)",
-          user_id: user_id, topic_id: topic_id
-        )
-    else
-      joins(:post).where(user_id: user_id, posts: { topic_id: topic_id })
-    end
+    joins("LEFT JOIN posts ON posts.id = bookmarks.bookmarkable_id AND bookmarks.bookmarkable_type = 'Post'")
+      .joins("LEFT JOIN topics ON (topics.id = bookmarks.bookmarkable_id AND bookmarks.bookmarkable_type = 'Topic') OR
+             (topics.id = posts.topic_id)")
+      .where(
+        "bookmarks.user_id = :user_id AND (topics.id = :topic_id OR posts.topic_id = :topic_id)
+        AND posts.deleted_at IS NULL AND topics.deleted_at IS NULL",
+        user_id: user_id, topic_id: topic_id
+      )
   }
-
-  def self.find_for_topic_by_user(topic_id, user_id)
-    if SiteSetting.use_polymorphic_bookmarks
-      find_by(user_id: user_id, bookmarkable_id: topic_id, bookmarkable_type: "Topic")
-    else
-      for_user_in_topic(user_id, topic_id).where(for_topic: true).first
-    end
-  end
 
   def self.count_per_day(opts = nil)
     opts ||= {}
@@ -178,7 +164,11 @@ class Bookmark < ActiveRecord::Base
     end
 
     if opts[:category_id]
-      result = result.joins(:topic).merge(Topic.in_category_and_subcategories(opts[:category_id]))
+      result = result
+        .joins("LEFT JOIN posts ON posts.id = bookmarks.bookmarkable_id AND bookmarks.bookmarkable_type = 'Post'")
+        .joins("LEFT JOIN topics ON (topics.id = bookmarks.bookmarkable_id AND bookmarks.bookmarkable_type = 'Topic') OR (topics.id = posts.topic_id)")
+        .where("topics.deleted_at IS NULL AND posts.deleted_at IS NULL")
+        .merge(Topic.in_category_and_subcategories(opts[:category_id]))
     end
 
     result.group('date(bookmarks.created_at)')
@@ -195,7 +185,10 @@ class Bookmark < ActiveRecord::Base
     topics_deleted = DB.query(<<~SQL, grace_time: grace_time)
       DELETE FROM bookmarks b
       USING topics t, posts p
-      WHERE (t.id = p.topic_id AND b.post_id = p.id)
+      WHERE (t.id = p.topic_id AND (
+          (b.bookmarkable_id = p.id AND b.bookmarkable_type = 'Post') OR
+          (b.bookmarkable_id = p.id AND b.bookmarkable_type = 'Topic')
+        ))
         AND (t.deleted_at < :grace_time OR p.deleted_at < :grace_time)
        RETURNING t.id AS topic_id
     SQL
@@ -213,7 +206,6 @@ end
 #
 #  id                     :bigint           not null, primary key
 #  user_id                :bigint           not null
-#  post_id                :bigint
 #  name                   :string(100)
 #  reminder_at            :datetime
 #  created_at             :datetime         not null
@@ -222,7 +214,6 @@ end
 #  reminder_set_at        :datetime
 #  auto_delete_preference :integer          default(0), not null
 #  pinned                 :boolean          default(FALSE)
-#  for_topic              :boolean          default(FALSE), not null
 #  bookmarkable_id        :integer
 #  bookmarkable_type      :string
 #

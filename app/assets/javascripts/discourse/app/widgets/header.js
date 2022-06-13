@@ -68,6 +68,14 @@ createWidget("header-notifications", {
       ),
     ];
 
+    if (this.currentUser.status) {
+      contents.push(
+        this.attach("user-status-bubble", {
+          emoji: this.currentUser.status.emoji,
+        })
+      );
+    }
+
     if (user.isInDoNotDisturb()) {
       contents.push(h("div.do-not-disturb-background", iconNode("moon")));
     } else {
@@ -400,7 +408,12 @@ export default createWidget("header", {
       return panels;
     };
 
-    let contentsAttrs = { contents, minimized: !!attrs.topic };
+    const contentsAttrs = {
+      contents,
+      minimized: !!attrs.topic,
+      sidebarEnabled: this.currentUser?.experimental_sidebar_enabled,
+    };
+
     return h(
       "div.wrap",
       this.attach("header-contents", Object.assign({}, attrs, contentsAttrs))

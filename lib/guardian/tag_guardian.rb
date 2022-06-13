@@ -11,7 +11,8 @@ module TagGuardian
   end
 
   def can_tag_pms?
-    is_staff? && SiteSetting.tagging_enabled && SiteSetting.allow_staff_to_tag_pms
+    return false if @user.blank?
+    SiteSetting.tagging_enabled && @user == Discourse.system_user || @user.group_users.exists?(group_id: SiteSetting.pm_tags_allowed_for_groups.to_s.split("|").map(&:to_i))
   end
 
   def can_admin_tags?

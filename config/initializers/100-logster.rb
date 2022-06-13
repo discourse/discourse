@@ -11,7 +11,7 @@ end
 
 if Rails.env.development? && RUBY_VERSION.match?(/^2\.5\.[23]/)
   STDERR.puts "WARNING: Discourse development environment runs slower on Ruby 2.5.3 or below"
-  STDERR.puts "We recommend you upgrade to Ruby 2.6.1 for the optimal development performance"
+  STDERR.puts "We recommend you upgrade to the latest Ruby 2.x for the optimal development performance"
 
   # we have to used to older and slower version of the logger cause the new one exposes a Ruby bug in
   # the Queue class which causes segmentation faults

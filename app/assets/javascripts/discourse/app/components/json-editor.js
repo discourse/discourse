@@ -35,6 +35,7 @@ export default Component.extend({
           disable_edit_json: true,
           disable_properties: true,
           disable_collapse: true,
+          remove_button_labels: true,
           show_errors: "never",
           startval: this.model.value ? JSON.parse(this.model.value) : null,
         });

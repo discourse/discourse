@@ -5,7 +5,7 @@ import {
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
-import { click, visit } from "@ember/test-helpers";
+import { click, triggerKeyEvent, visit } from "@ember/test-helpers";
 
 acceptance("User Directory", function () {
   test("Visit Page", async function (assert) {
@@ -41,6 +41,20 @@ acceptance("User Directory", function () {
     assert.strictEqual(
       favoriteColorTd.querySelector("span").textContent,
       "Blue"
+    );
+  });
+
+  test("Can sort table via keyboard", async function (assert) {
+    await visit("/u");
+
+    const secondHeading =
+      ".users-directory table th:nth-child(2) .header-contents";
+
+    await triggerKeyEvent(secondHeading, "keypress", 13);
+
+    assert.ok(
+      query(`${secondHeading} .d-icon-chevron-up`),
+      "list has been sorted"
     );
   });
 });

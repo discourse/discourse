@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "common_passwords/common_passwords"
+require "common_passwords"
 
 class ClearCommonPasswordsCache < ActiveRecord::Migration[4.2]
   def change

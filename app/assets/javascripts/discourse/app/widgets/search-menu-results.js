@@ -292,7 +292,7 @@ createWidget("search-menu-results", {
       return h("div.no-results", I18n.t("search.no_results"));
     }
 
-    if (!term) {
+    if (!term && !attrs.inPMInboxContext) {
       return this.attach("search-menu-initial-options", { term });
     }
 
@@ -364,7 +364,9 @@ createWidget("search-menu-results", {
     const content = [];
 
     if (!searchTopics) {
-      content.push(this.attach("search-menu-initial-options", { term }));
+      if (!attrs.inPMInboxContext) {
+        content.push(this.attach("search-menu-initial-options", { term }));
+      }
     } else {
       if (mainResultsContent.length) {
         content.push(mainResultsContent);
@@ -390,7 +392,7 @@ createWidget("search-menu-assistant", {
       addSearchSuggestion("in:likes");
       addSearchSuggestion("in:bookmarks");
       addSearchSuggestion("in:mine");
-      addSearchSuggestion("in:personal");
+      addSearchSuggestion("in:messages");
       addSearchSuggestion("in:seen");
       addSearchSuggestion("in:tracking");
       addSearchSuggestion("in:unseen");
@@ -530,7 +532,7 @@ createWidget("search-menu-initial-options", {
           case "private_messages":
             content.push(
               this.attach("search-menu-assistant-item", {
-                slug: `${term} in:personal`,
+                slug: `${term} in:messages`,
               })
             );
             break;

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_dependency 'has_errors'
+require 'has_errors'
 
 class PostActionResult
   include HasErrors

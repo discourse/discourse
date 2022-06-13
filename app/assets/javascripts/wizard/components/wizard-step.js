@@ -4,17 +4,13 @@ import I18n from "I18n";
 import getUrl from "discourse-common/lib/get-url";
 import { htmlSafe } from "@ember/template";
 import { schedule } from "@ember/runloop";
+import { action } from "@ember/object";
 
 const alreadyWarned = {};
 
 export default Component.extend({
   classNames: ["wizard-step"],
   saving: null,
-
-  init() {
-    this._super(...arguments);
-    this.set("stylingDropdown", {});
-  },
 
   didInsertElement() {
     this._super(...arguments);
@@ -112,69 +108,67 @@ export default Component.extend({
       .finally(() => this.set("saving", false));
   },
 
-  actions: {
-    quit() {
-      document.location = getUrl("/");
-    },
+  @action
+  quit() {
+    document.location = getUrl("/");
+  },
 
-    stylingDropdownChanged(id, value) {
-      this.set("stylingDropdown", { id, value });
-    },
+  @action
+  exitEarly() {
+    const step = this.step;
+    step.validate();
 
-    exitEarly() {
-      const step = this.step;
-      step.validate();
+    if (step.get("valid")) {
+      this.set("saving", true);
 
-      if (step.get("valid")) {
-        this.set("saving", true);
+      step
+        .save()
+        .then(() => this.send("quit"))
+        .finally(() => this.set("saving", false));
+    } else {
+      this.autoFocus();
+    }
+  },
 
-        step
-          .save()
-          .then(() => this.send("quit"))
-          .finally(() => this.set("saving", false));
-      } else {
-        this.autoFocus();
-      }
-    },
+  @action
+  backStep() {
+    if (this.saving) {
+      return;
+    }
 
-    backStep() {
-      if (this.saving) {
-        return;
-      }
+    this.goBack();
+  },
 
-      this.goBack();
-    },
+  @action
+  nextStep() {
+    if (this.saving) {
+      return;
+    }
 
-    nextStep() {
-      if (this.saving) {
-        return;
-      }
+    const step = this.step;
+    const result = step.validate();
 
-      const step = this.step;
-      const result = step.validate();
-
-      if (result.warnings.length) {
-        const unwarned = result.warnings.filter((w) => !alreadyWarned[w]);
-        if (unwarned.length) {
-          unwarned.forEach((w) => (alreadyWarned[w] = true));
-          return window.bootbox.confirm(
-            unwarned.map((w) => I18n.t(`wizard.${w}`)).join("\n"),
-            I18n.t("no_value"),
-            I18n.t("yes_value"),
-            (confirmed) => {
-              if (confirmed) {
-                this.advance();
-              }
+    if (result.warnings.length) {
+      const unwarned = result.warnings.filter((w) => !alreadyWarned[w]);
+      if (unwarned.length) {
+        unwarned.forEach((w) => (alreadyWarned[w] = true));
+        return window.bootbox.confirm(
+          unwarned.map((w) => I18n.t(`wizard.${w}`)).join("\n"),
+          I18n.t("no_value"),
+          I18n.t("yes_value"),
+          (confirmed) => {
+            if (confirmed) {
+              this.advance();
             }
-          );
-        }
+          }
+        );
       }
+    }
 
-      if (step.get("valid")) {
-        this.advance();
-      } else {
-        this.autoFocus();
-      }
-    },
+    if (step.get("valid")) {
+      this.advance();
+    } else {
+      this.autoFocus();
+    }
   },
 });

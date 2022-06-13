@@ -130,7 +130,6 @@ div.poll {
   }
 
   .pie-chart-legends {
-    display: flex;
     justify-content: center;
     text-align: center;
     margin-top: 0.5em;
@@ -138,7 +137,7 @@ div.poll {
     .legend {
       align-items: center;
       cursor: pointer;
-      display: flex;
+      display: inline-flex;
       flex-direction: row;
       margin-left: 1em;
       font-size: var(--font-down-0);

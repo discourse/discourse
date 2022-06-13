@@ -1,3 +1,13 @@
+:root {
+  --reply-composer-height: 300px;
+  --new-topic-composer-height: 400px;
+}
+html.composer-open {
+  #main-outlet {
+    padding-bottom: var(--reply-composer-height);
+    transition: padding-bottom 250ms ease;
+  }
+}
 #reply-control {
   position: fixed;
   display: flex;
@@ -43,9 +53,10 @@
   }
 
   &.open {
-    height: 300px;
+    height: var(--reply-composer-height);
     &.edit-title {
-      height: 400px; // more room when editing the title
+      // more room when editing the title
+      height: var(--new-topic-composer-height);
     }
   }
 

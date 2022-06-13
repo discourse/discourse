@@ -18,6 +18,9 @@ import { setTopicList } from "discourse/lib/topic-list-tracker";
 import showModal from "discourse/lib/show-modal";
 import { action } from "@ember/object";
 
+const NONE = "none";
+const ALL = "all";
+
 export default DiscourseRoute.extend(FilterModeMixin, {
   navMode: "latest",
 
@@ -52,7 +55,7 @@ export default DiscourseRoute.extend(FilterModeMixin, {
     const filterType = this.navMode.split("/")[0];
 
     let tagNotification;
-    if (tag && tag.id !== "none" && this.currentUser) {
+    if (tag && tag.id !== NONE && this.currentUser) {
       // If logged in, we should get the tag's user settings
       tagNotification = await this.store.find(
         "tagNotification",
@@ -68,7 +71,7 @@ export default DiscourseRoute.extend(FilterModeMixin, {
       {}
     );
     const topicFilter = this.navMode;
-    const tagId = tag ? tag.id.toLowerCase() : "none";
+    const tagId = tag ? tag.id.toLowerCase() : NONE;
     let filter;
 
     if (category) {
@@ -76,7 +79,7 @@ export default DiscourseRoute.extend(FilterModeMixin, {
       filter = `tags/c/${Category.slugFor(category)}/${category.id}`;
 
       if (this.noSubcategories !== undefined) {
-        filter += this.noSubcategories ? "/none" : "/all";
+        filter += this.noSubcategories ? `/${NONE}` : `/${ALL}`;
       }
 
       filter += `/${tagId}/l/${topicFilter}`;
@@ -122,7 +125,7 @@ export default DiscourseRoute.extend(FilterModeMixin, {
   setupController(controller, model) {
     const noSubcategories =
       this.noSubcategories === undefined
-        ? model.category?.default_list_filter === "none"
+        ? model.category?.default_list_filter === NONE
         : this.noSubcategories;
 
     this.controllerFor("tag.show").setProperties({
@@ -196,13 +199,7 @@ export default DiscourseRoute.extend(FilterModeMixin, {
           // Pre-fill the tags input field
           if (composerController.canEditTags && controller.tag?.id) {
             const composerModel = this.controllerFor("composer").model;
-            composerModel.set(
-              "tags",
-              [
-                controller.get("model.id"),
-                ...makeArray(controller.additionalTags),
-              ].filter(Boolean)
-            );
+            composerModel.set("tags", this._controllerTags(controller));
           }
         });
     }
@@ -241,5 +238,11 @@ export default DiscourseRoute.extend(FilterModeMixin, {
   didTransition() {
     this.controllerFor("tag.show")._showFooter();
     return true;
+  },
+
+  _controllerTags(controller) {
+    return [controller.get("model.id"), ...makeArray(controller.additionalTags)]
+      .filter(Boolean)
+      .filter((tag) => ![NONE, ALL].includes(tag));
   },
 });

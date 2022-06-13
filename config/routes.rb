@@ -26,7 +26,7 @@ Discourse::Application.routes.draw do
     post "webhooks/sendgrid" => "webhooks#sendgrid"
     post "webhooks/sparkpost" => "webhooks#sparkpost"
 
-    scope path: nil, constraints: { format: :xml } do
+    scope path: nil, format: true, constraints: { format: :xml } do
       resources :sitemap, only: [:index]
       get "/sitemap_:page" => "sitemap#page", page: /[1-9][0-9]*/
       get "/sitemap_recent" => "sitemap#recent"
@@ -383,6 +383,7 @@ Discourse::Application.routes.draw do
     if Rails.env.test?
       post "session/2fa/test-action" => "session#test_second_factor_restricted_route"
     end
+    get "session/scopes" => "session#scopes"
     get "composer_messages" => "composer_messages#index"
 
     resources :static
@@ -823,7 +824,7 @@ Discourse::Application.routes.draw do
     # Topic routes
     get "t/id_for/:slug" => "topics#id_for_slug"
     get "t/external_id/:external_id" => "topics#show_by_external_id", format: :json, constrains: { external_id: /\A[\w-]+\z/ }
-    get "t/:slug/:topic_id/print" => "topics#show", format: :html, print: true, constraints: { topic_id: /\d+/ }
+    get "t/:slug/:topic_id/print" => "topics#show", format: :html, print: 'true', constraints: { topic_id: /\d+/ }
     get "t/:slug/:topic_id/wordpress" => "topics#wordpress", constraints: { topic_id: /\d+/ }
     get "t/:topic_id/wordpress" => "topics#wordpress", constraints: { topic_id: /\d+/ }
     get "t/:slug/:topic_id/moderator-liked" => "topics#moderator_liked", constraints: { topic_id: /\d+/ }
@@ -1018,6 +1019,9 @@ Discourse::Application.routes.draw do
 
     post "/presence/update" => "presence#update"
     get "/presence/get" => "presence#get"
+
+    put "user-status" => "user_status#set"
+    delete "user-status" => "user_status#clear"
 
     get "*url", to: 'permalinks#show', constraints: PermalinkConstraint.new
   end
