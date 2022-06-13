@@ -242,8 +242,11 @@ acceptance("Sidebar - Topics Section", function (needs) {
     async function (assert) {
       await visit("/t/280");
 
-      publishToMessageBus(`/user-drafts/${loggedInUser().id}`, {
-        draft_count: 1,
+      publishToMessageBus(`/user-updates/${loggedInUser().id}`, {
+        type: "drafts",
+        payload: {
+          draft_count: 1,
+        },
       });
 
       await settled();
