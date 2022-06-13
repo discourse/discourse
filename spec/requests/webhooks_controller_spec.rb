@@ -15,6 +15,11 @@ describe WebhooksController do
 
     before do
       SiteSetting.mailgun_api_key = "key-8221462f0c915af3f6f2e2df7aa5a493"
+      ActionController::Base.allow_forgery_protection = true # Ensure the endpoint works, even with CSRF protection generally enabled
+    end
+
+    after do
+      ActionController::Base.allow_forgery_protection = false
     end
 
     it "works (deprecated)" do
