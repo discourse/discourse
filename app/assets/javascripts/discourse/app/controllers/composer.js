@@ -120,6 +120,25 @@ export default Controller.extend({
     this.set("showPreview", val === "true");
   },
 
+  @computed(
+    "model.loading",
+    "isUploading",
+    "isProcessingUpload",
+    "_disableSubmit"
+  )
+  get disableSubmit() {
+    return (
+      this.model?.loading ||
+      this.isUploading ||
+      this.isProcessingUpload ||
+      this._disableSubmit
+    );
+  },
+
+  set disableSubmit(value) {
+    this.set("_disableSubmit", value);
+  },
+
   @discourseComputed("showPreview")
   toggleText(showPreview) {
     return showPreview
@@ -802,8 +821,6 @@ export default Controller.extend({
       );
     },
   },
-
-  disableSubmit: or("model.loading", "isUploading", "isProcessingUpload"),
 
   save(force, options = {}) {
     if (this.disableSubmit) {
