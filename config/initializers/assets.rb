@@ -24,6 +24,7 @@ end]
 Rails.application.config.assets.precompile += %w{
   vendor.js
   admin.js
+  wizard.js
   browser-detect.js
   browser-update.js
   break_string.js
@@ -48,16 +49,16 @@ Rails.application.config.assets.precompile += %w{
   discourse/tests/active-plugins.js
   admin-plugins.js
   discourse/tests/test_starter.js
-  }
+}
 
 if EmberCli.enabled?
   Rails.application.config.assets.precompile += %w{
-      discourse.js
-      test-support.js
-      test-helpers.js
-      scripts/discourse-test-listen-boot
-      scripts/discourse-boot
-    }
+    discourse.js
+    test-support.js
+    test-helpers.js
+    scripts/discourse-test-listen-boot
+    scripts/discourse-boot
+  }
   Rails.application.config.assets.precompile += EmberCli::ASSETS.map { |name| name.sub('.js', '.map') }
 else
   Rails.application.config.assets.precompile += %w{
