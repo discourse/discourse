@@ -1002,4 +1002,53 @@ RSpec.describe ApplicationController do
       expect(response.status).to eq(200)
     end
   end
+
+  describe "#banner_json" do
+    let(:admin) { Fabricate(:admin) }
+    let(:user) { Fabricate(:user) }
+    fab!(:banner_topic) { Fabricate(:banner_topic) }
+    fab!(:p1) { Fabricate(:post, topic: banner_topic, raw: "A banner topic") }
+
+    before do
+      admin # to skip welcome wizard at home page `/`
+    end
+
+    context "login_required" do
+      before do
+        SiteSetting.login_required = true
+      end
+      it "does not include banner info for anonymous users" do
+        get "/login"
+
+        expect(response.body).to have_tag("div#data-preloaded") do |element|
+          json = JSON.parse(element.current_scope.attribute('data-preloaded').value)
+          expect(json['banner']).to eq("{}")
+        end
+      end
+
+      it "includes banner info for logged-in users" do
+        sign_in(user)
+        get "/"
+
+        expect(response.body).to have_tag("div#data-preloaded") do |element|
+          json = JSON.parse(element.current_scope.attribute('data-preloaded').value)
+          expect(JSON.parse(json['banner'])["html"]).to eq("<p>A banner topic</p>")
+        end
+      end
+    end
+
+    context "login not required" do
+      before do
+        SiteSetting.login_required = false
+      end
+      it "does include banner info for anonymous users" do
+        get "/login"
+
+        expect(response.body).to have_tag("div#data-preloaded") do |element|
+          json = JSON.parse(element.current_scope.attribute('data-preloaded').value)
+          expect(JSON.parse(json['banner'])["html"]).to eq("<p>A banner topic</p>")
+        end
+      end
+    end
+  end
 end

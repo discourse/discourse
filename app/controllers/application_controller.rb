@@ -676,6 +676,7 @@ class ApplicationController < ActionController::Base
 
   def banner_json
     json = ApplicationController.banner_json_cache["json"]
+    return "{}" if !current_user && SiteSetting.login_required?
 
     unless json
       topic = Topic.where(archetype: Archetype.banner).first
