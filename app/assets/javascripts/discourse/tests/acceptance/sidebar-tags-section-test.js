@@ -1,11 +1,12 @@
 import I18n from "I18n";
 
-import { click, currentURL, visit } from "@ember/test-helpers";
+import { click, currentURL, settled, visit } from "@ember/test-helpers";
 
 import {
   acceptance,
   conditionalTest,
   exists,
+  publishToMessageBus,
   query,
   queryAll,
   updateCurrentUser,
@@ -223,6 +224,149 @@ acceptance("Sidebar - Tags section", function (needs) {
       assert.ok(
         exists(".sidebar-section-link-tag1.active"),
         "the tag1 section link is marked as active for the unread route"
+      );
+    }
+  );
+
+  conditionalTest(
+    "new and unread count for tag section links",
+    !isLegacyEmber(),
+    async function (assert) {
+      this.container.lookup("topic-tracking-state:main").loadStates([
+        {
+          topic_id: 1,
+          highest_post_number: 1,
+          last_read_post_number: null,
+          created_at: "2022-05-11T03:09:31.959Z",
+          category_id: 1,
+          notification_level: null,
+          created_in_new_period: true,
+          unread_not_too_old: true,
+          treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+          tags: ["tag1"],
+        },
+        {
+          topic_id: 2,
+          highest_post_number: 12,
+          last_read_post_number: 11,
+          created_at: "2020-02-09T09:40:02.672Z",
+          category_id: 2,
+          notification_level: 2,
+          created_in_new_period: false,
+          unread_not_too_old: true,
+          treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+          tags: ["tag1"],
+        },
+        {
+          topic_id: 3,
+          highest_post_number: 15,
+          last_read_post_number: 14,
+          created_at: "2021-06-14T12:41:02.477Z",
+          category_id: 3,
+          notification_level: 2,
+          created_in_new_period: false,
+          unread_not_too_old: true,
+          treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+          tags: ["tag2"],
+        },
+        {
+          topic_id: 4,
+          highest_post_number: 17,
+          last_read_post_number: 16,
+          created_at: "2020-10-31T03:41:42.257Z",
+          category_id: 4,
+          notification_level: 2,
+          created_in_new_period: false,
+          unread_not_too_old: true,
+          treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+          tags: ["tag4"],
+        },
+      ]);
+
+      await visit("/");
+
+      assert.strictEqual(
+        query(
+          `.sidebar-section-link-tag1 .sidebar-section-link-content-badge`
+        ).textContent.trim(),
+        I18n.t("sidebar.unread_count", { count: 1 }),
+        `displays 1 unread count for tag1 section link`
+      );
+
+      assert.strictEqual(
+        query(
+          `.sidebar-section-link-tag2 .sidebar-section-link-content-badge`
+        ).textContent.trim(),
+        I18n.t("sidebar.unread_count", { count: 1 }),
+        `displays 1 unread count for tag2 section link`
+      );
+
+      assert.ok(
+        !exists(
+          `.sidebar-section-link-tag3 .sidebar-section-link-content-badge`
+        ),
+        "does not display any badge for tag3 section link"
+      );
+
+      publishToMessageBus("/unread", {
+        topic_id: 2,
+        message_type: "read",
+        payload: {
+          last_read_post_number: 12,
+          highest_post_number: 12,
+        },
+      });
+
+      await settled();
+
+      assert.strictEqual(
+        query(
+          `.sidebar-section-link-tag1 .sidebar-section-link-content-badge`
+        ).textContent.trim(),
+        I18n.t("sidebar.new_count", { count: 1 }),
+        `displays 1 new count for tag1 section link`
+      );
+
+      publishToMessageBus("/unread", {
+        topic_id: 1,
+        message_type: "read",
+        payload: {
+          last_read_post_number: 1,
+          highest_post_number: 1,
+        },
+      });
+
+      await settled();
+
+      assert.ok(
+        !exists(
+          `.sidebar-section-link-tag1 .sidebar-section-link-content-badge`
+        ),
+        `does not display any badge tag1 section link`
+      );
+    }
+  );
+
+  conditionalTest(
+    "cleans up topic tracking state state changed callbacks when section is destroyed",
+    !isLegacyEmber(),
+    async function (assert) {
+      await visit("/");
+
+      const topicTrackingState = this.container.lookup(
+        "topic-tracking-state:main"
+      );
+
+      const initialCallbackCount = Object.keys(
+        topicTrackingState.stateChangeCallbacks
+      ).length;
+
+      await click(".header-sidebar-toggle .btn");
+      await click(".header-sidebar-toggle .btn");
+
+      assert.strictEqual(
+        Object.keys(topicTrackingState.stateChangeCallbacks).length,
+        initialCallbackCount
       );
     }
   );
