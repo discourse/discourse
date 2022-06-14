@@ -2073,9 +2073,6 @@ sv:
         reply_as_new_group_message:
           label: Svara som nytt gruppmeddelande
           desc: Skapa nytt meddelande som börjar med samma mottagare
-        reply_as_private_message:
-          label: Nytt meddelande
-          desc: Skapa ett nytt personligt meddelande
         reply_to_topic:
           label: Svara på ämne
           desc: Svara på ämnet, inte ett specifikt inlägg
@@ -3722,7 +3719,14 @@ sv:
       unread_count: "%{count} oläst"
       new_count: "%{count} ny"
       sections:
+        messages:
+          header_link_text: "Meddelanden"
+        tags:
+          no_tracked_tags: "Du följer inga taggar."
+          header_link_title: "alla taggar"
+          header_link_text: "Taggar"
         categories:
+          no_tracked_categories: "Du följer inga kategorier."
           header_link_title: "alla kategorier"
           header_link_text: "Kategorier"
         topics:
@@ -3739,6 +3743,12 @@ sv:
             bookmarked:
               content: "Bokmärkt"
               title: "Alla bokmärkta ämnen"
+            my_posts:
+              content: "Mina inlägg"
+              title: "Mina inlägg"
+              draft_count:
+                one: "%{count} utkast"
+                other: "%{count} utkast"
   admin_js:
     type_to_filter: "skriv för att filtrera..."
     admin:

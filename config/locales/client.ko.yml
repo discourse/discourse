@@ -1928,9 +1928,6 @@ ko:
         reply_as_new_group_message:
           label: 새 그룹 메시지로 답장
           desc: 동일한 수신자에게 새 메시지 쓰기
-        reply_as_private_message:
-          label: 새 메시지
-          desc: 새 개인 메시지 쓰기
         reply_to_topic:
           label: 댓글 쓰기
           desc: 특정 게시물이 아닌 글에 대한 댓글
@@ -3443,6 +3440,11 @@ ko:
       unread_count: "%{count} unread"
       new_count: "%{count} new"
       sections:
+        messages:
+          header_link_text: "메시지"
+        tags:
+          header_link_title: "모든 태그"
+          header_link_text: "태그"
         categories:
           header_link_title: "모든 카테고리"
           header_link_text: "카테고리"
@@ -3452,6 +3454,10 @@ ko:
           links:
             tracked:
               content: "팔로우중"
+            my_posts:
+              content: "내 글"
+              draft_count:
+                other: "초안 %{count}"
   admin_js:
     type_to_filter: "필터를 입력하세요"
     admin:

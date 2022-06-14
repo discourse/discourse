@@ -1937,9 +1937,6 @@ lt:
         reply_as_new_group_message:
           label: Atsakyti kaip naują grupės pranešimą
           desc: Sukurkite naują pranešimą, pradedant nuo tų pačių gavėjų
-        reply_as_private_message:
-          label: Nauja žinutė
-          desc: Sukurti naują asmeninę žinutę
         reply_to_topic:
           label: Atsakyti į temą
           desc: Atsakykite į temą, o ne į konkretų įrašą
@@ -3487,6 +3484,11 @@ lt:
       unread_count: "%{count} neperskaitytas"
       new_count: "%{count} nauja"
       sections:
+        messages:
+          header_link_text: "Žinutės"
+        tags:
+          header_link_title: "visos žymos"
+          header_link_text: "Žymos"
         categories:
           header_link_title: "visos kategorijos"
           header_link_text: "Kategorijos"
@@ -3503,6 +3505,8 @@ lt:
               title: "Visos stebimos temos"
             bookmarked:
               content: "Pažymėta"
+            my_posts:
+              content: "Mano Įrašai"
   admin_js:
     type_to_filter: "įrašyk kažką dėl filtro..."
     admin:

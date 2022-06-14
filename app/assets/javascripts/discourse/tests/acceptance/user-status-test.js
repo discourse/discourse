@@ -17,13 +17,17 @@ acceptance("User Status", function (needs) {
 
   needs.pretender((server, helper) => {
     server.put("/user-status.json", () => {
-      publishToMessageBus(`/user-status/${userId}`, {
-        description: userStatus,
+      publishToMessageBus(`/user-updates/${userId}`, {
+        type: "user_status",
+        payload: { description: userStatus },
       });
       return helper.response({ success: true });
     });
     server.delete("/user-status.json", () => {
-      publishToMessageBus(`/user-status/${userId}`, null);
+      publishToMessageBus(`/user-updates/${userId}`, {
+        type: "user_status",
+        payload: null,
+      });
       return helper.response({ success: true });
     });
   });

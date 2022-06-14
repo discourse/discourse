@@ -2026,9 +2026,6 @@ pt_BR:
         reply_as_new_group_message:
           label: Responder como nova mensagem de grupo
           desc: Crie uma nova mensagem começando com os mesmos destinatários
-        reply_as_private_message:
-          label: Nova mensagem
-          desc: Criar uma nova mensagem pessoal
         reply_to_topic:
           label: Responder ao tópico
           desc: Responder ao tópico, não a uma postagem específica
@@ -3625,6 +3622,11 @@ pt_BR:
       unread_count: "%{count} não lido"
       new_count: "%{count} nova"
       sections:
+        messages:
+          header_link_text: "Mensagens"
+        tags:
+          header_link_title: "todas as etiquetas"
+          header_link_text: "Etiquetas"
         categories:
           header_link_title: "todas as categorias"
           header_link_text: "Categorias"
@@ -3634,6 +3636,8 @@ pt_BR:
           links:
             tracked:
               content: "Monitorados(as)"
+            my_posts:
+              content: "Minhas postagens"
   admin_js:
     type_to_filter: "Digite para filtrar..."
     admin:

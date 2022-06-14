@@ -1801,6 +1801,8 @@ sr:
       unread_count: "%{count} nepročitana"
       new_count: "%{count} nova"
       sections:
+        messages:
+          header_link_text: "Poruke"
         categories:
           header_link_title: "sve kategorije"
           header_link_text: "Kategorije"
@@ -1810,6 +1812,8 @@ sr:
           links:
             tracked:
               content: "Praćeno"
+            my_posts:
+              content: "Moje poruke"
   admin_js:
     type_to_filter: "upiši za filtriranje"
     admin:

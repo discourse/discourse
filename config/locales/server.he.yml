@@ -586,16 +586,16 @@ he:
         user:
           attributes:
             password:
-              common: "אחת מתוך 10000 הססמאות הנפוצות ביותר. נא להשתמש בססמה בטוחה יותר."
-              same_as_username: "זהה לשם המשתמש שלך. נא להשתמש בססמה בטוחה יותר."
-              same_as_email: "זהה לכתובת הדוא״ל שלך. נא להשתמש בססמה בטוחה יותר."
-              same_as_current: "זהה לססמה הנוכחית שלך."
+              common: "אחת מתוך 10000 הסיסמאות הנפוצות ביותר. נא להשתמש בסיסמה בטוחה יותר."
+              same_as_username: "זהה לשם המשתמש שלך. נא להשתמש בסיסמה בטוחה יותר."
+              same_as_email: "זהה לכתובת הדוא״ל שלך. נא להשתמש בסיסמה בטוחה יותר."
+              same_as_current: "זהה לסיסמה הנוכחית שלך."
               same_as_name: "זהה לשם שלך."
-              unique_characters: "מכיל יותר מידי תווים שחוזרים על עצמם. נא להשתמש בססמה בטוחה יותר."
+              unique_characters: "מכיל יותר מידי תווים שחוזרים על עצמם. נא להשתמש בסיסמה בטוחה יותר."
             username:
-              same_as_password: "זהה לססמה שלך."
+              same_as_password: "זהה לסיסמה שלך."
             name:
-              same_as_password: "זהה לססמה שלך."
+              same_as_password: "זהה לסיסמה שלך."
             ip_address:
               signup_not_allowed: "אסור להירשם מהחשבון הזה."
         user_profile:
@@ -700,6 +700,11 @@ he:
   post:
     image_placeholder:
       broken: "תמונה זו פגומה"
+      blocked_hotlinked_title: "התמונה מתארחת באתר אחר. לחיצה תפתח אותה בלשונית חדשה."
+      blocked_hotlinked: "תמונה חיצונית"
+    media_placeholder:
+      blocked_hotlinked_title: "המדיה מתארחת באתר אחר. לחיצה תפתח אותה בלשונית חדשה."
+      blocked_hotlinked: "מדיה חיצונית"
     hidden_bidi_character: "תווי דו־כיווניות יכולים לשנות את סדר עיבוד הטקסט. אפשר להשתמש בהם להסוואת קוד זדוני."
     has_likes:
       one: "לייק %{count}"
@@ -855,16 +860,16 @@ he:
         many: "לפני %{count} שנים כמעט"
         other: "לפני %{count} שנים כמעט"
   password_reset:
-    no_token: "הקישור להחלפת הססמה ישן מדי, עמך הסליחה. נא לבחור בכפתור הכניסה ולהשתמש באפשרות ‚שכחתי את הססמה שלי’ כדי לקבל קישור חדש."
-    choose_new: "נא לבחור בססמה חדשה"
-    choose: "בחירת ססמה"
-    update: "עדכון ססמה"
-    save: "הגדרת ססמה"
-    title: "איפוס ססמה"
-    success: "החלפת את ססמתך בהצלחה וכעת נכנסת לאתר."
-    success_unapproved: "החלפת את ססמתך בהצלחה."
+    no_token: "הקישור להחלפת הסיסמה ישן מדי, עמך הסליחה. נא לבחור בכפתור הכניסה ולהשתמש באפשרות ‚שכחתי את הסיסמה שלי’ כדי לקבל קישור חדש.י"
+    choose_new: "נא לבחור בסיסמה חדשה"
+    choose: "בחירת סיסמה"
+    update: "עדכון סיסמה"
+    save: "הגדרת סיסמה"
+    title: "איפוס סיסמה"
+    success: "החלפת את הסיסמה בהצלחה וכעת נכנסת לאתר."
+    success_unapproved: "החלפת את הסיסמה בהצלחה."
   email_login:
-    invalid_token: "קישור הכניסה בדוא״ל ישן מדי, עמך הסליחה. יש לבחור בכפתור הכניסה ולהשתמש ב‚שכחתי את ססמתי’ כדי לקבל קישור חדש."
+    invalid_token: "קישור הכניסה בדוא״ל ישן מדי, עמך הסליחה. יש לבחור בכפתור הכניסה ולהשתמש ב‚שכחתי סיסמה’ כדי לקבל קישור חדש."
     title: "כניסה עם דוא״ל"
   user_auth_tokens:
     browser:
@@ -1513,7 +1518,7 @@ he:
     contact_email: "כתובת דוא״ל של איש קשר מוביל שאחראי על האתר הזה. משמש להתראות קריטיות, וגם יוצג ב־<a href='%{base_path}/about' target='_blank'>‎/about</a> לנושאים דחופים."
     contact_url: "כתובת יצירת הקשר של האתר הזה. מופיעה בעמוד <a href='%{base_path}/about' target='_blank'>‎/about</a> לנושאים דחופים."
     crawl_images: "לקבל תמונות מכתובות מרוחקות כדי לציין את ממדי הרוחב והגובה הנכונים."
-    download_remote_images_to_local: "המרת תמונות מרוחקות למקומיות על ידי הורדתן, פעולה זו מסייעת במניעת תמונות שבורות."
+    download_remote_images_to_local: "המרת תמונות מרוחקות (בקישור חם) למקומיות על ידי הורדתן. פעולה זו משמרת את התוכן אפילו אם התמונות נמחקות מהאתר המרוחק בעתיד."
     download_remote_images_threshold: "שטח האחסון המזערי (באחוזים) הנדרש להורדת תמונות כדי לאחסן אותן מקומית"
     disabled_image_download_domains: "תמונות מרחוק לעולם לא יורדו ממתחמים (domains) אלו. "
     editing_grace_period: "למשך (n) שניות לאחר הפרסום, עריכה לא תיצור גרסה חדשה בהיסטוריית הפוסט."
@@ -1557,7 +1562,6 @@ he:
     favicon: "סמל האתר שלך, לפרטים <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://he.wikipedia.org/wiki/Favicon</a>. כדי שהסמל יפעל כראוי גם דרך CDN עליו להיות מסוג png. גודל הסמל ישתנה לכדי 32×32. בהעדר בחירה, ייעשה שימוש ב־large_icon."
     apple_touch_icon: "סמל שמשמש למכשירי מגע של Apple. גודלו ישתנה אוטומטית לכדי 180 × 180. במקרה של העדר בחירה ייעשה שימוש ב־large_icon (סמל גדול)."
     opengraph_image: "תמונת opengraph כבררת מחדל, נעשה בה שימוש כאשר לעמוד אין תמונות אחרות מתאימות. אם השדה נשאר ריק, ייעשה שימוש ב־large_icon (סמל גדול)."
-    twitter_summary_large_image: "‚תמונת סיכום גדולה’ של כרטיס טוויטר (אמור להיות ברוחב של 280 לפחות ובגובה של 150 לפחות). אם נשאר ריק, ייווצרו נתוני על של כרטיס רגיל בעזרת ב־opengraph_image (תמונת opengraph)."
     notification_email: "כתובת הדוא״ל מאת: לטובת שליחת כל הודעות המערכת החיוניות. כדי שהודעות הדוא״ל יגיעו, לשם התחום המצויין כאן חייבת להיות הגדרה נכונה של SPF,‏ DKIM ורשומות reverse PTR."
     email_custom_headers: "רשימה מופרדת pipes (הסימון |) של כותרות מייל מותאמות אישית"
     email_subject: "תבנית נושא בהתאמה אישית להודעות דוא״ל תקניות. יש לעיין ב־<a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
@@ -2405,14 +2409,14 @@ he:
     security_key_invalid: "אירעה שגיאה באימות מפתח האבטחה."
     not_approved: "חשבונך טרם אושר. תישלח אליך הודעה בדוא״ל כשיהיה מוכן לכניסה."
     incorrect_username_email_or_password: "שם משתמש, דואר אלקטרוני או סיסמה לא נכונים"
-    incorrect_password: "ססמה שגויה"
+    incorrect_password: "סיסמה שגויה"
     wait_approval: "תודה על שנרשמת. אנחנו ניידע אותך כשהחשבון שלך יאושר."
     active: "החשבון שלך הופעל ומוכן לשימוש."
     activate_email: "<p>כמעט סיימת! שלחנו הודעת הפעלה בדוא״ל אל <b>%{email}</b>. נא לעקוב אחר ההנחיות המופיעות בהודעה כדי להפעיל את החשבון שלך.</p><p>אם ההודעה לא הגיעה אליך כדאי לבדוק בתיקיית הספאם.</p>"
     not_activated: "אין לך אפשרות להיכנס עדיין. שלחנו אליך הודעת הפעלה בדוא״ל. נא לעקוב אחר ההוראות שבהודעה כדי להפעיל את החשבון שלך."
     not_allowed_from_ip_address: "אין לך אפשרות להיכנס בתור %{username} מכתובת IP זו."
     admin_not_allowed_from_ip_address: "אין לך אפשרות להיכנס כהנהלת המערכת מכתובת IP זו."
-    reset_not_allowed_from_ip_address: "אי אפשר לבקש איפוס ססמה מכתובת ה־IP הזאת."
+    reset_not_allowed_from_ip_address: "אי אפשר לבקש איפוס סיסמה מכתובת ה־IP הזאת."
     suspended: "אין לך אפשרות להיכנס עד %{date}."
     suspended_with_reason: "חשבון הושעה עד %{date}: %{reason}"
     suspended_with_reason_forever: "חשבון מושעה: %{reason}"
@@ -3751,7 +3755,7 @@ he:
 
         אם זאת הייתה פעילות שלך, נהדר! לא צריך לעשות שום דבר.
 
-        אם לא מדובר בפעולות מטעמך, אנא [לסקור את ההפעלות הנוכחיות שלך](%{base_url}/my/preferences/account) לצד שיקול בכובד ראש להחלפת הססמה שלך.
+        אם לא מדובר בפעולות מטעמך, אנא [לסקור את ההפעלות הנוכחיות שלך](%{base_url}/my/preferences/account) לצד שיקול בכובד ראש להחלפת הסיסמה שלך.
     post_approved:
       title: "הפוסט שלך אושר"
       subject_template: "[%{site_name}] הפוסט שלך אושר"

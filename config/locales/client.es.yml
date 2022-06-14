@@ -1636,6 +1636,8 @@ es:
         the_topic: "el tema"
     user_status:
       save: "Guardar"
+      set_custom_status: "Escribir estado personalizado"
+      what_are_you_doing: "¿Qué estás haciendo?"
     loading: "Cargando..."
     errors:
       prev_page: "mientras se intentaba cargar"
@@ -2071,9 +2073,6 @@ es:
         reply_as_new_group_message:
           label: Responder como un nuevo mensaje de grupo
           desc: Crear un nuevo mensaje con los mismos destinatarios
-        reply_as_private_message:
-          label: Nuevo mensaje
-          desc: Crear un nuevo mensaje personal
         reply_to_topic:
           label: Responder al tema
           desc: Responder al tema, no a una publicación específica
@@ -3720,6 +3719,11 @@ es:
       unread_count: "%{count} sin leer"
       new_count: "%{count} nuevo"
       sections:
+        messages:
+          header_link_text: "Mensajes"
+        tags:
+          header_link_title: "todas las etiquetas"
+          header_link_text: "Etiquetas"
         categories:
           header_link_title: "todas las categorías"
           header_link_text: "Categorías"
@@ -3737,6 +3741,12 @@ es:
             bookmarked:
               content: "Añadidos a marcadores"
               title: "Todos los temas enn marcadores"
+            my_posts:
+              content: "Mis publicaciones"
+              title: "Mis publicaciones"
+              draft_count:
+                one: "%{count} borrador"
+                other: "%{count} borradores"
   admin_js:
     type_to_filter: "filtrar opciones..."
     admin:

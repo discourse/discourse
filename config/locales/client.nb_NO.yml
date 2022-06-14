@@ -1937,9 +1937,6 @@ nb_NO:
         reply_as_new_group_message:
           label: Svar som ny gruppemelding
           desc: Opprett ny melding som starter med samme mottakere
-        reply_as_private_message:
-          label: Ny melding
-          desc: Opprett en ny personlig melding
         reply_to_topic:
           label: Svar på emnet
           desc: Svar på emnet, ikke et spesifikt innlegg
@@ -3423,6 +3420,11 @@ nb_NO:
       unread_count: "%{count} ulest"
       new_count: "%{count} ny"
       sections:
+        messages:
+          header_link_text: "Meldinger"
+        tags:
+          header_link_title: "alle stikkord"
+          header_link_text: "Stikkord"
         categories:
           header_link_title: "alle kategorier"
           header_link_text: "Kategorier"
@@ -3432,6 +3434,8 @@ nb_NO:
           links:
             tracked:
               content: "Overvåkes"
+            my_posts:
+              content: "Mine innlegg"
   admin_js:
     type_to_filter: "skriv for å filtrere…"
     admin:

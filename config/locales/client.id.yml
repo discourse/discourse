@@ -1459,9 +1459,6 @@ id:
           desc: Membalas tulisan tertentu
         reply_as_new_topic:
           desc: Buat topik baru yang ditautkan dengan topik ini
-        reply_as_private_message:
-          label: Pesan baru
-          desc: Buat pesan pribadi baru
         reply_to_topic:
           label: Balas ke topik
           desc: Membalas topik, bukan tulisan tertentu
@@ -1788,6 +1785,10 @@ id:
     sidebar:
       new_count: "%{count} baru"
       sections:
+        messages:
+          header_link_text: "Pesan-pesan"
+        tags:
+          header_link_text: "Label"
         categories:
           header_link_title: "Semua kategori"
           header_link_text: "Kategori"

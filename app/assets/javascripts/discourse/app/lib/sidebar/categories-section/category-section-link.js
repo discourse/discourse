@@ -14,20 +14,11 @@ export default class CategorySectionLink {
   constructor({ category, topicTrackingState }) {
     this.category = category;
     this.topicTrackingState = topicTrackingState;
-
-    this.callbackId = this.topicTrackingState.onStateChange(
-      this._refreshCounts
-    );
-
-    this._refreshCounts();
-  }
-
-  teardown() {
-    this.topicTrackingState.offStateChange(this.callbackId);
+    this.refreshCounts();
   }
 
   @bind
-  _refreshCounts() {
+  refreshCounts() {
     this.totalUnread = this.topicTrackingState.countUnread({
       categoryId: this.category.id,
     });

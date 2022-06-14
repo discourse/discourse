@@ -2020,9 +2020,6 @@ ur:
         reply_as_new_group_message:
           label: نئے گروپ پیغام کے بطور جواب دیں
           desc: ایک ہی وصول کنندگان سے شروع ہونے والا نیا پیغام بنائیں
-        reply_as_private_message:
-          label: نیا پیغام
-          desc: نیا ذاتی پیغام بنائیں
         reply_to_topic:
           label: ٹاپک پر جواب دیں
           desc: ٹاپک کا جواب دیں، نہ کہ کسی مخصوص پوسٹ کا
@@ -3639,6 +3636,11 @@ ur:
       unread_count: "%{count} بغیر پڑھا ہوا"
       new_count: "%{count} نیا"
       sections:
+        messages:
+          header_link_text: "پیغامات"
+        tags:
+          header_link_title: "تمام ٹیگز"
+          header_link_text: "ٹیگز"
         categories:
           header_link_title: "تمام زُمرَہ جات"
           header_link_text: "زُمرَہ جات"
@@ -3648,6 +3650,8 @@ ur:
           links:
             tracked:
               content: "ٹریک کیا ہوا"
+            my_posts:
+              content: "میری پوسٹ"
   admin_js:
     type_to_filter: "فِلٹر کرنے کے لئے ٹائپ کریں..."
     admin:

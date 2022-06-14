@@ -1964,9 +1964,6 @@ nl:
           confirm: U hebt een nieuw-topicconcept opgeslagen, dat wordt overschreven als u een gekoppeld topic maakt.
         reply_as_new_group_message:
           label: Antwoorden als nieuw groepsbericht
-        reply_as_private_message:
-          label: Nieuw bericht
-          desc: Een nieuw persoonlijk bericht maken
         reply_to_topic:
           label: Antwoorden op topic
           desc: Antwoorden op het topic, niet een bepaald bericht
@@ -3493,6 +3490,11 @@ nl:
       unread_count: "%{count} ongelezen"
       new_count: "%{count} nieuw"
       sections:
+        messages:
+          header_link_text: "Berichten"
+        tags:
+          header_link_title: "alle tags"
+          header_link_text: "Tags"
         categories:
           header_link_title: "alle categorieën"
           header_link_text: "Categorieën"
@@ -3502,6 +3504,8 @@ nl:
           links:
             tracked:
               content: "Gevolgd"
+            my_posts:
+              content: "Mijn berichten"
   admin_js:
     type_to_filter: "typ om te filteren..."
     admin:

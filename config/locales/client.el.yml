@@ -1727,9 +1727,6 @@ el:
           confirm: Έχετε αποθηκεύσει ένα νέο προσχέδιο θέματος, το οποίο θα αντικατασταθεί εάν δημιουργήσετε ένα συνδεδεμένο θέμα.
         reply_as_new_group_message:
           label: Απάντηση ως νέο ομαδικό μήνυμα
-        reply_as_private_message:
-          label: Νέο μήνυμα
-          desc: Δημιουργήστε ένα νέο προσωπικό μήνυμα
         reply_to_topic:
           label: Απάντηση στο θέμα
           desc: Απάντηση στο θέμα, όχι σε συγκεκριμένη ανάρτηση
@@ -3067,6 +3064,11 @@ el:
       unread_count: "%{count} μη αναγνωσμένο"
       new_count: "%{count} νέο"
       sections:
+        messages:
+          header_link_text: "Μηνύματα"
+        tags:
+          header_link_title: "όλες οι ετικέτες"
+          header_link_text: "Ετικέτες"
         categories:
           header_link_title: "όλες οι κατηγορίες"
           header_link_text: "Κατηγορίες"
@@ -3076,6 +3078,8 @@ el:
           links:
             tracked:
               content: "Παρακολουθείται"
+            my_posts:
+              content: "Οι αναρτήσεις μου"
   admin_js:
     type_to_filter: "γράψε εδώ για φιλτράρισμα..."
     admin:

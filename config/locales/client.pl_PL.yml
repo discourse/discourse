@@ -226,6 +226,7 @@ pl_PL:
     skip_to_main_content: "Przejdź do głównej zawartości"
     wizard_required: "Witaj na Twoim na nowym forum Discourse! Zacznijmy od <a href='%{url}' data-auto-route='true'>kreatora ustawień</a> ✨"
     emails_are_disabled: "Wszystkie wychodzące wiadomości e-mail zostały globalnie wyłączone przez administratora. Żadne powiadomienia e-mail nie będą wysyłane."
+    emails_are_disabled_non_staff: "Poczta wychodząca została wyłączona dla użytkowników niebędących pracownikami."
     software_update_prompt:
       message: "Zaktualizowaliśmy tę witrynę, <span>prosimy ją odświeżyć</span>, aby uniknąć nieoczekiwanego zachowania."
       dismiss: "Odrzuć"
@@ -363,6 +364,7 @@ pl_PL:
       not_bookmarked: "dodaj do zakładek"
       remove_reminder_keep_bookmark: "Usuń przypomnienie i zachowaj zakładkę"
       created_with_reminder: "Dodano post do zakładek z przypomnieniem %{date}. %{name}"
+      created_with_reminder_generic: "Dodałeś to do zakładek z przypomnieniem %{date}. %{name}"
       remove: "Usuń zakładkę"
       delete: "Usuń zakładkę"
       confirm_delete: "Czy na pewno chcesz usunąć tę zakładkę? Przypomnienie również zostanie usunięte."
@@ -373,6 +375,7 @@ pl_PL:
       list_permission_denied: "Nie masz uprawnień do przeglądania zakładek tego użytkownika."
       no_user_bookmarks: "Nie masz żadnych postów dodanych do zakładek. Zakładki pozwalają na szybkie odwoływanie się do konkretnych postów."
       auto_delete_preference:
+        label: "Po otrzymaniu powiadomienia"
         never: "Zachowaj zakładkę"
         when_reminder_sent: "Usuń zakładkę"
         on_owner_reply: "Usuń zakładkę, gdy odpowiem"
@@ -817,6 +820,7 @@ pl_PL:
             allow_unknown_sender_topic_replies: "Zezwalaj na odpowiedzi od nieznanego nadawcy w temacie."
             allow_unknown_sender_topic_replies_hint: "Umożliwia nieznanym nadawcom odpowiadanie na tematy grupy. Jeśli ta opcja nie jest włączona, odpowiedzi z adresów e-mail, które nie zostały jeszcze zaproszone do tematu, utworzą nowy temat."
             from_alias: "Z aliasu"
+            from_alias_hint: "Alias używany jako adres nadawcy podczas wysyłania grupowych wiadomości e-mail SMTP. Pamiętaj, że może to nie być obsługiwane przez wszystkich dostawców poczty, zapoznaj się z dokumentacją dostawcy poczty."
           mailboxes:
             synchronized: "Zsynchronizowana skrzynka pocztowa"
             none_found: "Na tym koncie e-mail nie znaleziono żadnych skrzynek pocztowych."
@@ -2231,9 +2235,6 @@ pl_PL:
         reply_as_new_group_message:
           label: Odpowiedz jako nowa wiadomość grupowa
           desc: Utwórz nową wiadomość zaczynając od tych samych odbiorców
-        reply_as_private_message:
-          label: Nowa wiadomość
-          desc: Utwórz nową osobistą wiadomość
         reply_to_topic:
           label: Odpowiedz na temat
           desc: Odpowiedz na temat, a nie żaden konkretny wpis
@@ -2507,6 +2508,7 @@ pl_PL:
         clear_all: "Wyczyść wszystko"
         unlist_topics: "Ukryj tematy"
         relist_topics: "Odśwież listę tematów"
+        reset_bump_dates: "Zresetuj daty ważności"
         defer: "Zignoruj"
         delete: "Usuń tematy"
         dismiss: "Wyczyść"
@@ -4028,6 +4030,11 @@ pl_PL:
       unread_count: "%{count} nieprzeczytany"
       new_count: "%{count} nowy"
       sections:
+        messages:
+          header_link_text: "Wiadomości"
+        tags:
+          header_link_title: "wszystkie tagi"
+          header_link_text: "Etykiety"
         categories:
           header_link_title: "wszystkie kategorie"
           header_link_text: "Kategorie"
@@ -4044,6 +4051,8 @@ pl_PL:
               title: "Wszystkie śledzone tematy"
             bookmarked:
               title: "Wszystkie tematy dodane do zakładek"
+            my_posts:
+              content: "Wysłane"
   admin_js:
     type_to_filter: "pisz, aby filtrować…"
     admin:

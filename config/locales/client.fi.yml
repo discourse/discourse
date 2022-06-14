@@ -1965,9 +1965,6 @@ fi:
           confirm: Sinulla on tallennettuna uusi ketjuluonnos, joka korvataan, jos luot liittyvän ketjun.
         reply_as_new_group_message:
           label: Vastaa uudessa ryhmäviestissä
-        reply_as_private_message:
-          label: Uusi viesti
-          desc: Luo uusi yksityisviesti
         reply_to_topic:
           label: Vastaa ketjuun
           desc: Vastaa ketjuun, muttei mihinkään tiettyyn viestiin
@@ -3465,6 +3462,11 @@ fi:
       unread_count: "%{count} lukematta"
       new_count: "%{count} uusi"
       sections:
+        messages:
+          header_link_text: "Viestit"
+        tags:
+          header_link_title: "kaikki tunnisteet"
+          header_link_text: "Tunnisteet"
         categories:
           header_link_title: "kaikki alueet"
           header_link_text: "Alueet"
@@ -3474,6 +3476,8 @@ fi:
           links:
             tracked:
               content: "Seuratut"
+            my_posts:
+              content: "Viestini"
   admin_js:
     type_to_filter: "kirjoita suodattaaksesi..."
     admin:

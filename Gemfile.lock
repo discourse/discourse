@@ -107,7 +107,7 @@ GEM
       addressable
     debug_inspector (1.1.0)
     diff-lcs (1.5.0)
-    diffy (3.4.0)
+    diffy (3.4.1)
     digest (3.1.0)
     discourse-ember-rails (0.18.6)
       active_model_serializers
@@ -246,7 +246,7 @@ GEM
     msgpack (1.5.2)
     multi_json (1.15.0)
     multi_xml (0.6.0)
-    multipart-post (2.2.2)
+    multipart-post (2.2.3)
     mustache (1.1.1)
     net-http (0.2.2)
       uri
@@ -340,7 +340,7 @@ GEM
     rails-dom-testing (2.0.3)
       activesupport (>= 4.2.0)
       nokogiri (>= 1.6)
-    rails-html-sanitizer (1.4.2)
+    rails-html-sanitizer (1.4.3)
       loofah (~> 2.3)
     rails_failover (0.8.1)
       activerecord (> 6.0, < 7.1)
@@ -497,7 +497,7 @@ GEM
       jwt (~> 2.0)
     xorcist (1.1.2)
     yaml-lint (0.0.10)
-    zeitwerk (2.5.4)
+    zeitwerk (2.6.0)
 
 PLATFORMS
   aarch64-linux
