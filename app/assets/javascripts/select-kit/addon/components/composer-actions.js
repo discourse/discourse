@@ -182,7 +182,8 @@ export default DropdownSelectBoxComponent.extend({
     // if answered post is a whisper, we can only answer with a whisper so no need for toggle
     if (
       this.canWhisper &&
-      (!_postSnapshot ||
+      (!this.replyOptions.postLink ||
+        !_postSnapshot ||
         _postSnapshot.post_type !== this.site.post_types.whisper)
     ) {
       items.push({
