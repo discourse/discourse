@@ -599,6 +599,52 @@ discourseModule("Unit | Controller | topic", function (hooks) {
     );
   });
 
+  test("selectReplies", async function (assert) {
+    pretender.get("/posts/1/reply-ids.json", () => {
+      return [
+        200,
+        { "Content-Type": "application/json" },
+        [{ id: 2, level: 1 }],
+      ];
+    });
+
+    let model = topicWithStream({
+      posts: [{ id: 1 }, { id: 2 }],
+    });
+
+    const controller = this.getController("topic", { model });
+
+    controller.send("selectReplies", { id: 1 });
+    await settled();
+
+    assert.strictEqual(
+      controller.get("selectedPostsCount"),
+      2,
+      "It should select two, the post and its replies"
+    );
+
+    controller.send("togglePostSelection", { id: 1 });
+    assert.strictEqual(
+      controller.get("selectedPostsCount"),
+      1,
+      "It should be selecting one only "
+    );
+    assert.strictEqual(
+      controller.get("selectedPostIds")[0],
+      2,
+      "It should be selecting the reply id "
+    );
+
+    controller.send("selectReplies", { id: 1 });
+    await settled();
+
+    assert.strictEqual(
+      controller.get("selectedPostsCount"),
+      2,
+      "It should be selecting two, even if reply was already selected"
+    );
+  });
+
   test("topVisibleChanged", function (assert) {
     let model = topicWithStream({
       posts: [{ id: 1 }],
