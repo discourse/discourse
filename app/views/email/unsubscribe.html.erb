@@ -1,7 +1,7 @@
 <div class='container unsubscribe'>
-  <%- if @not_found || @different_user %>
+  <%- if !@found || @different_user %>
 
-    <%if @not_found%>
+    <%if !@found %>
       <p><%= t "unsubscribe.not_found_description" %></p>
     <%- else %>
       <p><%= t("unsubscribe.different_user_description").html_safe %></p>
@@ -77,6 +77,8 @@
           %>
           </p>
       <% end %>
+
+      <%= server_plugin_outlet "unsubscribe_options" %>
 
       <% unless @unsubscribed_from_all %>
         <p>

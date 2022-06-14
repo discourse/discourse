@@ -1018,6 +1018,29 @@ class Plugin::Instance
     StaticController::CUSTOM_PAGES[page] = blk ? { topic_id: blk } : options
   end
 
+  # Let plugin define custom unsubscribe keys,
+  # set custom instance variables on the `EmailController#unsubscribe` action,
+  # and describe what unsubscribing for that key does.
+  #
+  # The method receives a class that inherits from `Email::BaseEmailUnsubscriber`.
+  # Take a look at it to know how to implement your child class.
+  #
+  # In conjunction with this, you'll have to:
+  #
+  #  - Register a new connector under app/views/connectors/unsubscribe_options.
+  #  We'll include the HTML inside the unsubscribe form, so you can add your fields using the
+  #  instance variables you set in the controller previously. When the form is submitted,
+  #  it sends the updated preferences to `EmailController#perform_unsubscribe`.
+  #
+  #  - Your code is responsible for creating the custom key by calling `UnsubscribeKey#create_key_for`.
+  def register_email_unsubscriber(type, unsubscriber)
+    core_types = [UnsubscribeKey::ALL_TYPE, UnsubscribeKey::DIGEST_TYPE, UnsubscribeKey::TOPIC_TYPE]
+    raise ArgumentError.new('Type already exists') if core_types.include?(type)
+    raise ArgumentError.new('Not an email unsubscriber') if !unsubscriber.ancestors.include?(EmailControllerHelper::BaseEmailUnsubscriber)
+
+    DiscoursePluginRegistry.register_email_unsubscriber({ type => unsubscriber }, self)
+  end
+
   protected
 
   def self.js_path
