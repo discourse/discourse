@@ -1973,7 +1973,6 @@ be:
         modal:
           categories: "Катэгорыі"
           topics: "тэмы"
-  wizard_js:
     wizard:
       done: "Выканана"
       back: "Назад"

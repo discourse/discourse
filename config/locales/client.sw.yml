@@ -3267,7 +3267,6 @@ sw:
         modal:
           categories: "Kategoria"
           topics: "Mada"
-  wizard_js:
     wizard:
       done: "Imekwisha"
       back: "Iliyopita"

@@ -2081,7 +2081,6 @@ id:
         modal:
           categories: "Kategori"
           topics: "Topik"
-  wizard_js:
     wizard:
       upload: "Unggah"
       uploading: "Mengunggah..."

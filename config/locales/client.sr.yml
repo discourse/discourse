@@ -2474,7 +2474,6 @@ sr:
         modal:
           categories: "Kategorije"
           topics: "Teme"
-  wizard_js:
     wizard:
       done: "Gotovo"
       back: "Nazad"

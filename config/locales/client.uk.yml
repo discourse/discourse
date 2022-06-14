@@ -5574,7 +5574,6 @@ uk:
           categories: "Categories"
           topics: "Теми"
           replace: "Замінити"
-  wizard_js:
     wizard:
       done: "Виконано"
       finish: "Закінчено"

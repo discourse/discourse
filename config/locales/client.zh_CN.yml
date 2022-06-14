@@ -5101,7 +5101,6 @@ zh_CN:
           categories: "类别"
           topics: "话题"
           replace: "替换"
-  wizard_js:
     wizard:
       done: "完成"
       finish: "结束"

@@ -4325,7 +4325,6 @@ bs_BA:
           categories: "Kategorije"
           topics: "Teme"
           replace: "Zamijeni"
-  wizard_js:
     wizard:
       done: "Urađeno"
       finish: "Završi"

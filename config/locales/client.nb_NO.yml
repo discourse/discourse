@@ -4649,7 +4649,6 @@ nb_NO:
         modal:
           categories: "Kategorier"
           topics: "Emner"
-  wizard_js:
     wizard:
       done: "Ferdig"
       back: "Forrige"

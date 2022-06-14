@@ -4243,7 +4243,6 @@ hu:
         modal:
           categories: "Kategóriák"
           topics: "Témák"
-  wizard_js:
     wizard:
       done: "Kész"
       back: "Vissza"

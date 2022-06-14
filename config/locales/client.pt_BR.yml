@@ -5161,7 +5161,6 @@ pt_BR:
           categories: "Categorias"
           topics: "Tópicos"
           replace: "Substituir"
-  wizard_js:
     wizard:
       done: "Concluído(a)"
       finish: "Finalizar"

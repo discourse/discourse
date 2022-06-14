@@ -4160,7 +4160,6 @@ ca:
           categories: "Categories"
           topics: "Temes"
           replace: "Reemplaça"
-  wizard_js:
     wizard:
       done: "Fet"
       finish: "Acaba"

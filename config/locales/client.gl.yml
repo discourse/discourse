@@ -4811,7 +4811,6 @@ gl:
           categories: "Categorías"
           topics: "Temas"
           replace: "Substituír"
-  wizard_js:
     wizard:
       done: "Feito"
       finish: "Finalizar"

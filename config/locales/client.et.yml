@@ -3509,7 +3509,6 @@ et:
         modal:
           categories: "Foorumid"
           topics: "Teemasid"
-  wizard_js:
     wizard:
       done: "Tehtud"
       back: "Tagasi"

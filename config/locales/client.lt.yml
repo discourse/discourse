@@ -4882,7 +4882,6 @@ lt:
           categories: "Kategorijos"
           topics: "Temos"
           replace: "Pakeisti"
-  wizard_js:
     wizard:
       done: "Baigta"
       finish: "Baigti"

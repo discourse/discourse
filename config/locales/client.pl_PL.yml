@@ -5611,7 +5611,6 @@ pl_PL:
           categories: "Kategorie"
           topics: "Tematy"
           replace: "Zamień"
-  wizard_js:
     wizard:
       done: "Zrobione"
       finish: "Zakończ"

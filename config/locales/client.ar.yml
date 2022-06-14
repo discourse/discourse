@@ -5876,7 +5876,6 @@ ar:
           categories: "الفئات"
           topics: "الموضوعات"
           replace: "استبدال"
-  wizard_js:
     wizard:
       done: "تم"
       finish: "إنهاء"

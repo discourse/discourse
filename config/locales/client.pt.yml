@@ -4597,7 +4597,6 @@ pt:
         modal:
           categories: "Categorias"
           topics: "Tópicos"
-  wizard_js:
     wizard:
       done: "Concluído"
       back: "Retroceder"

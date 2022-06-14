@@ -4888,7 +4888,6 @@ ja:
           categories: "カテゴリ"
           topics: "トピック"
           replace: "置換"
-  wizard_js:
     wizard:
       done: "完了"
       finish: "終了"

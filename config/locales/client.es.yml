@@ -5277,7 +5277,6 @@ es:
           categories: "Categorías"
           topics: "Temas"
           replace: "Reemplazar"
-  wizard_js:
     wizard:
       done: "Hecho"
       finish: "Terminar"

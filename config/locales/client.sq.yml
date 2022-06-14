@@ -2724,7 +2724,6 @@ sq:
         modal:
           categories: "Categories"
           topics: "Tema"
-  wizard_js:
     wizard:
       done: "Përfundo"
       back: "Kthehu mbrapa"

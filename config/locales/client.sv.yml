@@ -5280,7 +5280,6 @@ sv:
           categories: "Kategorier"
           topics: "Ämnen"
           replace: "Ersätt"
-  wizard_js:
     wizard:
       done: "Klar"
       finish: "Avsluta"
