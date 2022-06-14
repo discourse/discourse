@@ -63,7 +63,6 @@ class TranslationPlugin extends Plugin {
     };
 
     delete parsed.en.admin_js;
-    delete parsed.en.wizard_js;
 
     let formats = {};
     this.mf = new MessageFormat("en");
