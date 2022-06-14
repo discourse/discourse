@@ -2783,6 +2783,11 @@ ro:
       unread_count: "%{count} necitit"
       new_count: "%{count} nou"
       sections:
+        messages:
+          header_link_text: "Mesaje"
+        tags:
+          header_link_title: "toate etichetele"
+          header_link_text: "Etichete"
         categories:
           header_link_title: "Toate categoriile"
           header_link_text: "Categorii"

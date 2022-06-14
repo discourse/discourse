@@ -3484,6 +3484,11 @@ lt:
       unread_count: "%{count} neperskaitytas"
       new_count: "%{count} nauja"
       sections:
+        messages:
+          header_link_text: "Žinutės"
+        tags:
+          header_link_title: "visos žymos"
+          header_link_text: "Žymos"
         categories:
           header_link_title: "visos kategorijos"
           header_link_text: "Kategorijos"

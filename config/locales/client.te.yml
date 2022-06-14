@@ -1352,6 +1352,10 @@ te:
       unread_count: "%{count} చదవనవి"
       new_count: "%{count} కొత్త"
       sections:
+        messages:
+          header_link_text: "సందేశాలు"
+        tags:
+          header_link_text: "ట్యాగులు"
         categories:
           header_link_title: "అన్ని వర్గాలు"
           header_link_text: "వర్గాలు"

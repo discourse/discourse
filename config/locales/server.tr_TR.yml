@@ -658,6 +658,11 @@ tr_TR:
   post:
     image_placeholder:
       broken: "Bu görüntü bozuldu"
+      blocked_hotlinked_title: "Resim başka bir sitede. Yeni bir sekmede açmak için tıklayın."
+      blocked_hotlinked: "Harici Görsel"
+    media_placeholder:
+      blocked_hotlinked_title: "Medya başka bir sitede. Yeni bir sekmede açmak için tıklayın."
+      blocked_hotlinked: "Harici Medya"
     hidden_bidi_character: "Çift yönlü karakterler, metnin oluşturulma sırasını değiştirebilir. Bu, kötü amaçlı kodu gizlemek için kullanılabilir."
     has_likes:
       one: "%{count} Beğeni"
@@ -1417,7 +1422,6 @@ tr_TR:
     contact_email: "Bu site için yöneticini e-posta adresi. <a href='%{base_path}/about' target='_blank'> /about</a> iletişim formu içerisinde, sadece acil durumlar ve kritik bildirimler için kullanılacak."
     contact_url: "Bu site için iletişim URL'sidir. Acil konular için <a href='%{base_path}/about' target='_blank'>/ about</a> iletişim formunda kullanılır."
     crawl_images: "Doğru genişlik ve yükseklik boyutlarını girmek için uzak URL'lerdeki resimlerin birer kopyasını alınsın."
-    download_remote_images_to_local: "Uzaktaki resimler yerel resimlere çevirmek için indirilsin; bu ayar resim bağlantılarının kırılmasını önleyecektir"
     download_remote_images_threshold: "Uzaktaki resimlerin yerele indirilmesi için gereken en az disk alanı (yüzdesel)"
     disabled_image_download_domains: "Bu alan adlarından hiç bir zaman uzaktan resim indirme. Sınırlandırılmış liste."
     editing_grace_period: "Gönderi oluşturulduktan (n) saniye içerisinde bir düzenleme yapıldığında, gönderi geçmişinde yeni bir sürüm oluşturma."

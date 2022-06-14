@@ -3420,6 +3420,11 @@ nb_NO:
       unread_count: "%{count} ulest"
       new_count: "%{count} ny"
       sections:
+        messages:
+          header_link_text: "Meldinger"
+        tags:
+          header_link_title: "alle stikkord"
+          header_link_text: "Stikkord"
         categories:
           header_link_title: "alle kategorier"
           header_link_text: "Kategorier"

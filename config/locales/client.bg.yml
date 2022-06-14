@@ -2988,6 +2988,11 @@ bg:
       unread_count: "%{count} непрочетен"
       new_count: "%{count} нов"
       sections:
+        messages:
+          header_link_text: "Съобщения"
+        tags:
+          header_link_title: "всички тагове"
+          header_link_text: "Тагове"
         categories:
           header_link_title: "всички категории"
           header_link_text: "Категории"

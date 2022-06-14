@@ -4030,6 +4030,11 @@ pl_PL:
       unread_count: "%{count} nieprzeczytany"
       new_count: "%{count} nowy"
       sections:
+        messages:
+          header_link_text: "Wiadomości"
+        tags:
+          header_link_title: "wszystkie tagi"
+          header_link_text: "Etykiety"
         categories:
           header_link_title: "wszystkie kategorie"
           header_link_text: "Kategorie"

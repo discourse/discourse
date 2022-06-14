@@ -2816,6 +2816,11 @@ cs:
       unread_count: "%{count} nepřečtené"
       new_count: "%{count} nové"
       sections:
+        messages:
+          header_link_text: "Zprávy"
+        tags:
+          header_link_title: "všechny štítky"
+          header_link_text: "Tagy"
         categories:
           header_link_title: "všechny kategorie"
           header_link_text: "Kategorie"

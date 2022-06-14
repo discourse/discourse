@@ -3299,6 +3299,11 @@ hu:
       unread_count: "%{count} olvasatlan"
       new_count: "%{count} új"
       sections:
+        messages:
+          header_link_text: "Üzenetek"
+        tags:
+          header_link_title: "összes címke"
+          header_link_text: "Címkék"
         categories:
           header_link_title: "összes kategória"
           header_link_text: "Kategóriák"

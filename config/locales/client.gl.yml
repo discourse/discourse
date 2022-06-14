@@ -3353,6 +3353,11 @@ gl:
       unread_count: "%{count} pendente de lectura"
       new_count: "%{count} novo"
       sections:
+        messages:
+          header_link_text: "Mensaxes"
+        tags:
+          header_link_title: "todas as etiquetas"
+          header_link_text: "Etiquetas"
         categories:
           header_link_title: "todas as categorías"
           header_link_text: "Categorías"

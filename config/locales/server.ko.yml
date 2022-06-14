@@ -1358,7 +1358,6 @@ ko:
     contact_email: "사이트를 담당자 이메일 주소입니다. 긴급한 문제에 대한 <a href='%{base_path}/about' target='_blank'>문의</a> 뿐만 아니라 중요한 알림에 사용됩니다."
     contact_url: "이 사이트의 연락처 URL입니다. 긴급한 사항의 문의는 <a href='%{base_path}/about' target='_blank'>/about</a> 페이지에서 확인하세요."
     crawl_images: "원격 URL에서 이미지를 가져와 올바른 너비 및 높이 치수를 삽입합니다."
-    download_remote_images_to_local: "원격 이미지를 다운로드하여 로컬 이미지로 변환합니다. 이렇게 하면 이미지가 손상되지 않습니다."
     download_remote_images_threshold: "원격의 이미지를 로컬에 다운받기 위한 최소 디스크 공간(%)"
     disabled_image_download_domains: "이 도메인의 원격 이미지는 다운로드 하지 않습니다. 목록은 ` | `를 사용해 구분하세요."
     editing_grace_period: "글 작성 후, 편집해도 히스토리에 남기지 않는 시간 (단위: 초)"

@@ -2883,6 +2883,11 @@ ca:
       unread_count: "%{count} no llegit"
       new_count: "%{count} nou"
       sections:
+        messages:
+          header_link_text: "Missatges"
+        tags:
+          header_link_title: "totes les etiquetes"
+          header_link_text: "Etiquetes"
         categories:
           header_link_title: "totes les categories"
           header_link_text: "Categories"

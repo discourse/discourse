@@ -3462,6 +3462,11 @@ fi:
       unread_count: "%{count} lukematta"
       new_count: "%{count} uusi"
       sections:
+        messages:
+          header_link_text: "Viestit"
+        tags:
+          header_link_title: "kaikki tunnisteet"
+          header_link_text: "Tunnisteet"
         categories:
           header_link_title: "kaikki alueet"
           header_link_text: "Alueet"
