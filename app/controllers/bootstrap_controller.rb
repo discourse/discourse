@@ -57,6 +57,10 @@ class BootstrapController < ApplicationController
       extra_locales << ExtraLocalesController.url('admin')
     end
 
+    if admin?
+      extra_locales << ExtraLocalesController.url('wizard')
+    end
+
     plugin_js = Discourse.find_plugin_js_assets(
       include_official: allow_plugins?,
       include_unofficial: allow_third_party_plugins?,

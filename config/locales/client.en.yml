@@ -5663,6 +5663,7 @@ en:
           topics: "Topics"
           replace: "Replace"
 
+  wizard_js:
     wizard:
       done: "Done"
       finish: "Finish"
