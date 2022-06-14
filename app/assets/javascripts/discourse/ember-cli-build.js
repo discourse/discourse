@@ -29,6 +29,7 @@ module.exports = function (defaults) {
     },
     autoImport: {
       forbidEval: true,
+      insertScriptsAt: "ember-auto-import-scripts",
     },
     fingerprint: {
       // Handled by Rails asset pipeline
@@ -47,10 +48,6 @@ module.exports = function (defaults) {
         "**/highlightjs/*",
         "**/javascripts/*",
       ],
-    },
-
-    autoImport: {
-      insertScriptsAt: "ember-auto-import-scripts",
     },
 
     // We need to build tests in prod for theme tests
