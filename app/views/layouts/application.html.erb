@@ -65,11 +65,11 @@
   </head>
 
   <body class="<%= body_classes %>">
-    <div data-assets>
-      <div data-assets-css>
+    <discourse-assets>
+      <discourse-assets-stylesheets>
         <%= render partial: "common/discourse_stylesheet" %>
-      </div>
-    </div>
+      </discourse-assets-stylesheets>
+    </discourse-assets>
 
     <%- if allow_plugins? %>
       <%= build_plugin_html 'server:after-body-open' %>
