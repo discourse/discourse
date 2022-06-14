@@ -9,12 +9,36 @@ RSpec.describe UserProfile do
 
     describe "#location" do
       context "when it contains watched words" do
-        before { profile.location = "bad location" }
+        before { profile.location = location }
 
-        it "is not valid" do
-          profile.valid?
-          expect(profile.errors[:base].size).to eq(1)
-          expect(profile.errors.messages[:base]).to include(/you can't post the word/)
+        context "when watched words are of type 'Block'" do
+          let(:location) { "bad location" }
+
+          it "is not valid" do
+            profile.valid?
+            expect(profile.errors[:base].size).to eq(1)
+            expect(profile.errors.messages[:base]).to include(/you can't post the word/)
+          end
+        end
+
+        context "when watched words are of type 'Censor'" do
+          let!(:censored_word) { Fabricate(:watched_word, word: "censored", action: WatchedWord.actions[:censor]) }
+          let(:location) { "censored location" }
+
+          it "censors the words upon saving" do
+            expect { profile.save! }.to change { profile.location }.to eq "■■■■■■■■ location"
+          end
+        end
+
+        context "when watched words are of type 'Replace'" do
+          let(:location) { "word to replace" }
+          let!(:replace_word) do
+            Fabricate(:watched_word, word: "to replace", replacement: "replaced", action: WatchedWord.actions[:replace])
+          end
+
+          it "replaces the words upon saving" do
+            expect { profile.save! }.to change { profile.location }.to eq "word replaced"
+          end
         end
       end
 
