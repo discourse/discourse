@@ -27,7 +27,7 @@ const NavItem = EmberObject.extend({
     },
 
     set(value) {
-      this.set("_title", value);
+      return this.set("_title", value);
     },
   },
 
@@ -56,7 +56,7 @@ const NavItem = EmberObject.extend({
     },
 
     set(value) {
-      this.set("_displayName", value);
+      return this.set("_displayName", value);
     },
   },
 

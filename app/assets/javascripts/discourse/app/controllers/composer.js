@@ -136,7 +136,7 @@ export default Controller.extend({
   },
 
   set disableSubmit(value) {
-    this.set("_disableSubmit", value);
+    return this.set("_disableSubmit", value);
   },
 
   @discourseComputed("showPreview")
