@@ -101,7 +101,6 @@ module Discourse
     config.active_record.cache_versioning = false # our custom cache class doesn’t support this
     config.action_controller.forgery_protection_origin_check = false
     config.active_record.belongs_to_required_by_default = false
-    config.active_record.legacy_connection_handling = true
 
     # we skip it cause we configure it in the initializer
     # the railtie for message_bus would insert it in the
