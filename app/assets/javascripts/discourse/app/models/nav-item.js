@@ -17,47 +17,27 @@ import { reads } from "@ember/object/computed";
 
 const NavItem = EmberObject.extend({
   @discourseComputed("name")
-  title: {
-    get(name) {
-      if (this._title) {
-        return this._title;
-      }
-
-      return I18n.t("filters." + name.replace("/", ".") + ".help", {});
-    },
-
-    set(value) {
-      this.set("_title", value);
-    },
+  title(name) {
+    return I18n.t("filters." + name.replace("/", ".") + ".help", {});
   },
 
   @discourseComputed("name", "count")
-  displayName: {
-    get(name, count) {
-      if (this._displayName) {
-        return this._displayName;
-      }
+  displayName(name, count) {
+    count = count || 0;
 
-      count = count || 0;
+    if (
+      name === "latest" &&
+      (!Site.currentProp("mobileView") || this.tagId !== undefined)
+    ) {
+      count = 0;
+    }
 
-      if (
-        name === "latest" &&
-        (!Site.currentProp("mobileView") || this.tagId !== undefined)
-      ) {
-        count = 0;
-      }
+    let extra = { count };
+    const titleKey = count === 0 ? ".title" : ".title_with_count";
 
-      let extra = { count };
-      const titleKey = count === 0 ? ".title" : ".title_with_count";
-
-      return emojiUnescape(
-        I18n.t(`filters.${name.replace("/", ".") + titleKey}`, extra)
-      );
-    },
-
-    set(value) {
-      this.set("_displayName", value);
-    },
+    return emojiUnescape(
+      I18n.t(`filters.${name.replace("/", ".") + titleKey}`, extra)
+    );
   },
 
   @discourseComputed("filterType", "category", "noSubcategories", "tagId")
