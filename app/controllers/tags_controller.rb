@@ -301,7 +301,7 @@ class TagsController < ::ApplicationController
     raise Discourse::NotFound unless tag
     level = params[:tag_notification][:notification_level].to_i
     TagUser.change(current_user.id, tag.id, level)
-    render json: { notification_level: level, tag_id: tag.id }
+    render_serialized(current_user, UserTagNotificationsSerializer, root: false)
   end
 
   def personal_messages

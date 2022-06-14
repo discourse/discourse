@@ -14,6 +14,8 @@ import {
 import { isLegacyEmber } from "discourse-common/config/environment";
 import discoveryFixture from "discourse/tests/fixtures/discovery-fixtures";
 import { cloneJSON } from "discourse-common/lib/object";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
+import { NotificationLevels } from "discourse/lib/notification-levels";
 
 acceptance("Sidebar - Tags section - tagging disabled", function (needs) {
   needs.settings({
@@ -60,6 +62,16 @@ acceptance("Sidebar - Tags section", function (needs) {
         return helper.response(
           cloneJSON(discoveryFixture["/tag/important/l/latest.json"])
         );
+      });
+    });
+
+    server.put("/tag/:tagId/notifications", (request) => {
+      return helper.response({
+        watched_tags: [],
+        watching_first_post_tags: [],
+        regular_tags: [request.params.tagId],
+        tracked_tags: [],
+        muted_tags: [],
       });
     });
   });
@@ -367,6 +379,27 @@ acceptance("Sidebar - Tags section", function (needs) {
       assert.strictEqual(
         Object.keys(topicTrackingState.stateChangeCallbacks).length,
         initialCallbackCount
+      );
+    }
+  );
+
+  conditionalTest(
+    "updating tags notification levels",
+    !isLegacyEmber(),
+    async function (assert) {
+      await visit(`/tag/tag1/l/unread`);
+
+      const notificationLevelsDropdown = selectKit(".notifications-button");
+
+      await notificationLevelsDropdown.expand();
+
+      await notificationLevelsDropdown.selectRowByValue(
+        NotificationLevels.REGULAR
+      );
+
+      assert.ok(
+        !exists(".sidebar-section-tags .sidebar-section-link-tag1"),
+        "tag1 section link is removed from sidebar"
       );
     }
   );
