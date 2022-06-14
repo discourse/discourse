@@ -56,7 +56,7 @@ describe "i18n integrity checks" do
 
       if !LocaleSiteSetting.fallback_locale(locale)
         expect(yaml[locale]["admin_js"]).to be
-        expect(yaml[locale]["admin_js"]["wizard"]).to be
+        expect(yaml[locale]["wizard_js"]).to be
       end
     end
   end
