@@ -5260,6 +5260,7 @@ fr:
           categories: "Catégories"
           topics: "Sujets"
           replace: "Remplacer"
+  wizard_js:
     wizard:
       done: "Terminer"
       finish: "Terminer"

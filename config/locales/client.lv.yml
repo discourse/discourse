@@ -3682,6 +3682,7 @@ lv:
         modal:
           categories: "Sadaļas"
           topics: "Tēmas"
+  wizard_js:
     wizard:
       done: "Pabeigt"
       back: "Atpakaļ"

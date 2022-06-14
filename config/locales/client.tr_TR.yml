@@ -5200,6 +5200,7 @@ tr_TR:
           categories: "Kategoriler"
           topics: "Konular"
           replace: "Değiştir"
+  wizard_js:
     wizard:
       done: "Tamamlandı"
       finish: "Bitir"

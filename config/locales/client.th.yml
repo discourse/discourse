@@ -3129,6 +3129,7 @@ th:
         modal:
           categories: "หมวดหมู่"
           topics: "กระทู้"
+  wizard_js:
     wizard:
       done: "เสร็จ"
       finish: "เสร็จสิ้น"

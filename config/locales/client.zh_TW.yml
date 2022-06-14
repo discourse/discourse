@@ -4005,6 +4005,7 @@ zh_TW:
           categories: "分類"
           topics: "討論話題"
           replace: "取代"
+  wizard_js:
     wizard:
       done: "完成"
       finish: "結束"

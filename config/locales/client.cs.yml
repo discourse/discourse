@@ -3866,6 +3866,7 @@ cs:
         modal:
           categories: "Kategorie"
           topics: "Témata"
+  wizard_js:
     wizard:
       done: "Hotovo"
       finish: "Dokončit"

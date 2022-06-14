@@ -4899,6 +4899,7 @@ vi:
           categories: "Thư mục"
           topics: "Chủ đề"
           replace: "Thay thế"
+  wizard_js:
     wizard:
       done: "Hoàn tất"
       finish: "Kết thúc"

@@ -4279,6 +4279,7 @@ sl:
           categories: "Kategorije"
           topics: "Tem"
           replace: "Zamenjaj"
+  wizard_js:
     wizard:
       done: "Končano"
       finish: "Končaj"

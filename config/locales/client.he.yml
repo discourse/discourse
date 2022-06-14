@@ -5645,6 +5645,7 @@ he:
           categories: "קטגוריות"
           topics: "נושאים"
           replace: "החלפה"
+  wizard_js:
     wizard:
       done: "סיום"
       finish: "סיום"

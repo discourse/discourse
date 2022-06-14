@@ -2016,6 +2016,7 @@ te:
         modal:
           categories: "వర్గాలు"
           topics: "విషయాలు"
+  wizard_js:
     wizard:
       done: "పూర్తయింది"
       back: "వెనుకకు"

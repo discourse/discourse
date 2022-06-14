@@ -5244,6 +5244,7 @@ it:
           categories: "Categorie"
           topics: "Argomenti"
           replace: "Sostituisci"
+  wizard_js:
     wizard:
       done: "Fatto"
       finish: "Completa"

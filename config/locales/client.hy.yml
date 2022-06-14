@@ -4206,6 +4206,7 @@ hy:
           categories: "Կատեգորիաներ"
           topics: "Թեմաներ"
           replace: "Փոխարինել"
+  wizard_js:
     wizard:
       done: "Կատարված է"
       finish: "Ավարտել"

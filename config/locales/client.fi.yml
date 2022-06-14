@@ -4955,6 +4955,7 @@ fi:
           categories: "Alueet"
           topics: "Ketjut"
           replace: "Korvaa"
+  wizard_js:
     wizard:
       done: "Valmis"
       finish: "Valmis"

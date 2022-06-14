@@ -4968,6 +4968,7 @@ ko:
           categories: "카테고리"
           topics: "글"
           replace: "바꾸기"
+  wizard_js:
     wizard:
       done: "완료"
       finish: "마침"

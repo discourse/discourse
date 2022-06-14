@@ -3817,6 +3817,7 @@ bg:
         modal:
           categories: "Категории"
           topics: "Теми"
+  wizard_js:
     wizard:
       done: "Готово"
       back: "Назад"

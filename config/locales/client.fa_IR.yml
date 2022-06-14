@@ -4307,6 +4307,7 @@ fa_IR:
           categories: "دسته‌بندی‌ها"
           topics: "موضوعات"
           replace: "جایگزینی"
+  wizard_js:
     wizard:
       done: "انجام شد"
       back: "بازگشت"

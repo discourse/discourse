@@ -3760,6 +3760,7 @@ ro:
         modal:
           categories: "Categorii"
           topics: "Discuții"
+  wizard_js:
     wizard:
       done: "Terminat"
       back: "Înapoi"

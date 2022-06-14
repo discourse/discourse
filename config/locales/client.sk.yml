@@ -3121,6 +3121,7 @@ sk:
         modal:
           categories: "Kategórie"
           topics: "Témy"
+  wizard_js:
     wizard:
       done: "Hotovo"
       back: "Späť"

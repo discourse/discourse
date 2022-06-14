@@ -4438,6 +4438,7 @@ el:
           categories: "Κατηγορίες"
           topics: "Θέματα"
           replace: "Αντικατάσταση"
+  wizard_js:
     wizard:
       done: "Ολοκληρώθηκε"
       finish: "Τέλος"

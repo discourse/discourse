@@ -4971,6 +4971,7 @@ nl:
           categories: "Categorieën"
           topics: "Topics"
           replace: "Vervangen"
+  wizard_js:
     wizard:
       done: "Gereed"
       finish: "Voltooien"

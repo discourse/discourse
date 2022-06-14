@@ -5640,6 +5640,7 @@ ru:
           categories: "Разделы"
           topics: "Темы"
           replace: "Заменить"
+  wizard_js:
     wizard:
       done: "Готово"
       finish: "Закончить"

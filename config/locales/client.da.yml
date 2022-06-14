@@ -5074,6 +5074,7 @@ da:
           categories: "Kategorier"
           topics: "Emner"
           replace: "Erstat"
+  wizard_js:
     wizard:
       done: "Færdig"
       finish: "Afslut"
