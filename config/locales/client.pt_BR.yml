@@ -3622,6 +3622,11 @@ pt_BR:
       unread_count: "%{count} não lido"
       new_count: "%{count} nova"
       sections:
+        messages:
+          header_link_text: "Mensagens"
+        tags:
+          header_link_title: "todas as etiquetas"
+          header_link_text: "Etiquetas"
         categories:
           header_link_title: "todas as categorias"
           header_link_text: "Categorias"

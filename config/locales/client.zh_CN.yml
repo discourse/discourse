@@ -3549,7 +3549,16 @@ zh_CN:
       unread_count: "%{count} 未读"
       new_count: "%{count} 新"
       sections:
+        messages:
+          header_link_title: "个人消息"
+          header_link_text: "消息"
+          header_action_title: "创建个人消息"
+        tags:
+          no_tracked_tags: "你没有跟踪任何标签。"
+          header_link_title: "所有标签"
+          header_link_text: "标签"
         categories:
+          no_tracked_categories: "你没有跟踪任何类别。"
           header_link_title: "所有类别"
           header_link_text: "类别"
         topics:

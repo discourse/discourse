@@ -2271,6 +2271,11 @@ sk:
       unread_count: "%{count} neprečítaná"
       new_count: "%{count} nová"
       sections:
+        messages:
+          header_link_text: "Správy"
+        tags:
+          header_link_title: "všetky štítky"
+          header_link_text: "Štítky"
         categories:
           header_link_title: "všetky kategórie"
           header_link_text: "Kategórie"

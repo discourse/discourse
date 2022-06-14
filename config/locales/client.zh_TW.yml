@@ -2794,6 +2794,11 @@ zh_TW:
       unread_count: "%{count} 個未讀"
       new_count: "%{count} 近期"
       sections:
+        messages:
+          header_link_text: "訊息"
+        tags:
+          header_link_title: "所有標籤"
+          header_link_text: "標籤"
         categories:
           header_link_title: "所有分類"
           header_link_text: "分類"

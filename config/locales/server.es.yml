@@ -668,6 +668,11 @@ es:
   post:
     image_placeholder:
       broken: "Esta imagen está rota"
+      blocked_hotlinked_title: "Imagen alojada en otro sitio. Haz clic para abrirla en una nueva pestaña."
+      blocked_hotlinked: "Imagen externa"
+    media_placeholder:
+      blocked_hotlinked_title: "Medio alojado en otro sitio. Haz clic para abrir en una nueva pestaña."
+      blocked_hotlinked: "Medio externo"
     hidden_bidi_character: "Los caracteres bidireccionales pueden cambiar el orden en el que se muestra el texto. Esto podría usarse para ocultar código malintencionado."
     has_likes:
       one: "%{count} me gusta"
@@ -1429,9 +1434,11 @@ es:
     contact_email: "Dirección de correo electrónico del contacto clave responsable de este sitio. Se utiliza para notificaciones críticas, y también se muestra en <a href='%{base_path}/about' target='_blank'>/about</a> para asuntos urgentes."
     contact_url: "Dirección URL de contacto para el sitio. Se mostrará en la página de <a href='%{base_path}/about' target='_blank'>/about</a> (acerca de) para temas urgentes."
     crawl_images: "Recuperar imágenes desde URLs remotas para insertarlas con las dimensiones correctas de ancho y de largo."
-    download_remote_images_to_local: "Convertir imágenes remotas a imágenes locales descargándolas; esto previene imágenes rotas."
+    download_remote_images_to_local: "Convertir imágenes remotas (hotlinked) a imágenes locales descargándolas. Esto preserva el contenido incluso si las imágenes son eliminadas de su sitio remoto original en el futuro."
     download_remote_images_threshold: "Espacio mínimo en el disco necesario para descargar imágenes remotas de forma local (porcentaje)"
     disabled_image_download_domains: "Las imágenes remotas que provengan de estos dominios no serán descargadas. Lista delimitada por barras."
+    block_hotlinked_media: "Evitar que los usuarios incluyan archivos multimedia (hotlinking) en sus publicaciones. Los archivos multimedia no descargados según el ajuste «download_remote_images_to_local» serán reemplazados por un enlace."
+    block_hotlinked_media_exceptions: "Lista de comienzos de URL que están exentas del ajuste block_hotlinked_media. Incluye el protocolo (ej.: https://ejemplo.com)"
     editing_grace_period: "Durante (n) segundos después de que se publique algún mensaje, se puede editar la publicación sin crear una nueva versión en el historial."
     editing_grace_period_max_diff: "Número máximo de cambios de caracteres permitidos en el período de gracia de edición, si hay más cambios, almacenar otra revisión de publicación (nivel de confianza 0 y 1)"
     editing_grace_period_max_diff_high_trust: "Número máximo de cambios de caracteres permitidos en el período de gracia de edición, si hay más cambios, almacenar otra revisión de publicación (nivel de confianza 2 y superiores)"
@@ -4724,6 +4731,9 @@ es:
     post_raw: "Siguiendo con el tema %{parent_url}.\n\nPartes anteriores:\n\n%{previous_topics}"
     small_action_post_raw: "Este tema continúa: %{new_title}."
   fallback_username: "usuario"
+  user_status:
+    errors:
+      ends_at_should_be_greater_than_set_at: "ends_at debe ser mayor que set_at"
   activemodel:
     errors:
       <<: *errors

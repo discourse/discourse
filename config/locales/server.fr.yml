@@ -1430,7 +1430,6 @@ fr:
     contact_email: "Adresse courriel de la personne responsable de ce site. Elle est utilisée pour les notifications critiques et également affichée sur la page <a href='%{base_path}/about' target='_blank'>/about</a> pour les questions urgentes."
     contact_url: "URL de contact pour ce site. Elle est affichée sur la page <a href='%{base_path}/about' target='_blank'>À propos</a> et les utilisateurs sont invités à l'utiliser en cas de problème urgent."
     crawl_images: "Récupérer les images provenant de sources tierces pour y insérer les dimensions correctes (hauteur et largeur)."
-    download_remote_images_to_local: "Transformer les images distantes en images locales en les téléchargeant ; cela permet d'éviter les liens morts."
     download_remote_images_threshold: "Quantité minimale d'espace disque requise pour télécharger localement des images distantes (en pourcentage)"
     disabled_image_download_domains: "Les images distantes de ces domaines ne seront jamais téléchargées. Liste délimitée par des lignes verticales."
     editing_grace_period: "Pendant (n) secondes après sa publication, la modification du message ne créera pas de nouvelle version dans l'historique des messages."

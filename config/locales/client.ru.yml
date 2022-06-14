@@ -4057,7 +4057,16 @@ ru:
       unread_count: "%{count} непрочитанных"
       new_count: "%{count} новых"
       sections:
+        messages:
+          header_link_title: "Личные сообщения"
+          header_link_text: "Личные сообщения"
+          header_action_title: "Создать личное сообщение"
+        tags:
+          no_tracked_tags: "Вы не отслеживаете ни один тег."
+          header_link_title: "Все теги"
+          header_link_text: "Теги"
         categories:
+          no_tracked_categories: "Вы не отслеживаете ни один раздел."
           header_link_title: "Все разделы"
           header_link_text: "Разделы"
         topics:

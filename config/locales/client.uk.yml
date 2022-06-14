@@ -4011,6 +4011,11 @@ uk:
       unread_count: "%{count} непрочитана"
       new_count: "%{count} нова"
       sections:
+        messages:
+          header_link_text: "Повідомлення"
+        tags:
+          header_link_title: "усі мітки"
+          header_link_text: "Теги"
         categories:
           header_link_title: "усі розділи"
           header_link_text: "Категорії"

@@ -1388,7 +1388,6 @@ fi:
     contact_email: "Sivustosta vastaavan henkilön sähköpostiosoite. Siihen lähetetään kriittiset ilmoitukset, ja se näkyy myös <a href='%{base_path}/about' target='_blank'>/about</a>-sivulla kiireellisiä yhteydenottoja varten."
     contact_url: "URL-osoite sivuston yhteydenottoja varten. Näytetään <a href='%{base_path}/about' target='_blank'>Tietoja</a>-sivulla kiireellisiä yhteydenottoja varten."
     crawl_images: "Lataa linkatut kuvat kuvan mittojen määrittamiseksi."
-    download_remote_images_to_local: "Muunna linkatut kuvat liitetiedostoiksi lataamalla ne; tämä estää kuvien rikkoontumisen vanhentuneiden linkkien vuoksi."
     download_remote_images_threshold: "Vähin vapaa tila, jotta linkatut kuvat ladataan paikallisesti (prosenteissa)"
     disabled_image_download_domains: "Linkattuja kuvia ei koskaan ladata näistä verkkotunnuksista. Pystyviivalla eroteltu luettelo."
     editing_grace_period: "Viestin muokkaaminen (n) sekunnin sisällä sen lähettämisestä ei luo viestistä uutta versiota viestin historiaan."

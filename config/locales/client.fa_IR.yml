@@ -3187,6 +3187,14 @@ fa_IR:
       unread_count: "%{count} خوانده نشده"
       new_count: "%{count} تازه"
       sections:
+        messages:
+          header_link_title: "پیام‌های شخصی"
+          header_link_text: "پیام‌ها"
+          header_action_title: "ایجاد پیام شخصی"
+        tags:
+          no_tracked_tags: "شما هیچ برچسبی را ردیابی نمی‌کنید."
+          header_link_title: "تمام برچسب‌ها"
+          header_link_text: "برچسب"
         categories:
           header_link_title: "همه‌ی دسته‌بندی‌ها"
           header_link_text: "دسته‌بندی‌ها"

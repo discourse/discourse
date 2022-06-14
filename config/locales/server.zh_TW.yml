@@ -1105,7 +1105,6 @@ zh_TW:
     site_description: "用一句話描述這個網站，用於 meta description 標籤。"
     short_site_description: "簡短描述，用於網頁標題。"
     crawl_images: "允許從第三方 URL 取得圖片，來加入寬和高的數值"
-    download_remote_images_to_local: "下載外部鏈接的圖片到本機；以防圖片損壞。"
     download_remote_images_threshold: "可用來下載外部圖片到本機最少的空間（百分比）"
     disabled_image_download_domains: "在此列表的網域名稱的遠端圖片將不會進行下載，用 | 分割多個域名"
     editing_grace_period: "在 (n) 秒之內，對貼文的編輯不生成貼文歷史。"

@@ -3374,6 +3374,11 @@ sl:
       unread_count: "%{count} neprebrana"
       new_count: "%{count} nova"
       sections:
+        messages:
+          header_link_text: "Sporočila"
+        tags:
+          header_link_title: "vse oznake"
+          header_link_text: "Oznake"
         categories:
           header_link_title: "vse kategorije"
           header_link_text: "Kategorije"
@@ -3385,6 +3390,7 @@ sl:
               content: "Sledim"
             my_posts:
               content: "Moji prispevki"
+              title: "Moji prispevki"
   admin_js:
     type_to_filter: "vnesite za filter..."
     admin:

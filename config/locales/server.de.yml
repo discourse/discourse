@@ -669,6 +669,11 @@ de:
   post:
     image_placeholder:
       broken: "Dieses Bild ist beschädigt"
+      blocked_hotlinked_title: "Das Bild befindet sich auf einer anderen Website. Anklicken, um es in einem neuen Tab zu öffnen."
+      blocked_hotlinked: "Externes Bild"
+    media_placeholder:
+      blocked_hotlinked_title: "Die Medien werden auf einer anderen Website gehostet. Anklicken, um in einem neuen Tab zu öffnen."
+      blocked_hotlinked: "Externe Medien"
     hidden_bidi_character: "Bidirektionale Zeichen können die Reihenfolge ändern, in der der Text gerendert wird. Dies könnte dazu genutzt werden, bösartigen Code zu verschleiern."
     has_likes:
       one: "%{count} „Gefällt mir“"
@@ -1430,9 +1435,11 @@ de:
     contact_email: "E-Mail-Adresse einer verantwortlichen Person für diese Website. Wird verwendet für kritische Benachrichtigungen und unter <a href='%{base_path}/about' target='_blank'>/about</a> für dringende Anfragen angezeigt."
     contact_url: "Kontakt-URL für diese Website. Wird auf der Seite <a href='%{base_path}/about' target='_blank'>/about</a> für dringende Anliegen angezeigt."
     crawl_images: "Lade Bilder von fremden URLs herunter, um ihre Höhe und Breite zu bestimmen."
-    download_remote_images_to_local: "Lade eine Kopie von extern gehosteten Bildern herunter und ersetze Links in Beiträgen entsprechend; dies verhindert defekte Bilder."
+    download_remote_images_to_local: "Konvertiere entfernte (mit Hotlinks versehene) Bilder in lokale Bilder, indem du sie herunterlädst; so bleibt der Inhalt erhalten, auch wenn die Bilder in Zukunft von der entfernten Seite entfernt werden."
     download_remote_images_threshold: "Minimal benötigter freier Festplattenspeicher, um externe Bilder lokal herunterzuladen (in Prozent)"
     disabled_image_download_domains: "Durch senkrechte Striche („|“) getrennte Liste von Domains, von denen verlinkte Bilder niemals heruntergeladen werden sollen."
+    block_hotlinked_media: "Verhindert, dass Benutzer entfernte (Hotlinked) Medien in ihren Beiträgen einführen. Entfernte Medien, die nicht über 'download_remote_images_to_local' heruntergeladen werden, werden durch einen Platzhalter-Link ersetzt."
+    block_hotlinked_media_exceptions: "Eine Liste von Basis-URLs, die von der Einstellung block_hotlinked_media ausgenommen sind. Füge das Protokoll hinzu (z.B. https://example.com)."
     editing_grace_period: "Für (n) Sekunden nach dem Schreiben wird durch die Bearbeitung keine neue Version im Beitragsverlauf erstellt."
     editing_grace_period_max_diff: "Maximale Anzahl von Zeichenänderungen, die während der Bearbeitungsfrist erlaubt sind. Bei größeren Änderungen wird eine neue Beitragsversion gespeichert (Vertrauensstufe 0 und 1)"
     editing_grace_period_max_diff_high_trust: "Maximale Anzahl von Zeichenänderungen, die während der Bearbeitungsfrist erlaubt sind. Bei größeren Änderungen wird eine neue Beitragsversion gespeichert (Vertrauensstufe 2 und höher)"

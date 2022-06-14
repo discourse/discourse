@@ -3440,6 +3440,11 @@ ko:
       unread_count: "%{count} unread"
       new_count: "%{count} new"
       sections:
+        messages:
+          header_link_text: "메시지"
+        tags:
+          header_link_title: "모든 태그"
+          header_link_text: "태그"
         categories:
           header_link_title: "모든 카테고리"
           header_link_text: "카테고리"

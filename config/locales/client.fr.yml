@@ -1535,6 +1535,7 @@ fr:
           expires_at: "Ce lien expirera dans"
           custom_message: "Message personnel (facultatif)"
           send_invite_email: "Enregistrer et envoyer le courriel"
+          send_invite_email_instructions: "Restreindre l'invitation à l'email pour envoyer un email d'invitation"
           save_invite: "Enregistrer l'invitation"
           invite_saved: "Invitation enregistrée."
         bulk_invite:
@@ -1619,6 +1620,7 @@ fr:
         none: "(aucun)"
         instructions: "Apparaît après votre nom d'utilisateur"
       flair:
+        title: "Flair"
         none: "(aucun)"
         instructions: "icône affichée à côté de votre image de profil"
       primary_group:
@@ -2602,7 +2604,10 @@ fr:
         unpin: "Désépingler le sujet…"
         unarchive: "Désarchiver le sujet"
         archive: "Archiver le sujet"
+        invisible: "Rendre le sujet invisible"
+        visible: "Lister le sujet"
         reset_read: "Réinitialiser les données de lecture"
+        make_public: "Rendre le sujet public..."
         make_private: "Transformer en message direct"
         reset_bump_date: "Réinitialiser la date d'actualisation"
       feature:
@@ -3331,6 +3336,8 @@ fr:
           one: "%{count} non lu"
           other: "%{count} non lus"
       unseen:
+        title: "Invisible"
+        lower_title: "invisible"
         help: "nouveaux sujets et sujets que vous suivez ou surveillez avec des messages non lus"
       new:
         lower_title_with_count:
@@ -3710,6 +3717,11 @@ fr:
       unread_count: "%{count} non lu"
       new_count: "%{count} nouveau"
       sections:
+        messages:
+          header_link_text: "Messages"
+        tags:
+          header_link_title: "toutes les étiquettes"
+          header_link_text: "Étiquettes"
         categories:
           header_link_title: "toutes les catégories"
           header_link_text: "Catégories"
@@ -3729,6 +3741,7 @@ fr:
               title: "Tous les sujets marqués d'un signet"
             my_posts:
               content: "Mes messages"
+              title: "Mes publications"
   admin_js:
     type_to_filter: "commencez votre saisie pour filtrer…"
     admin:
@@ -3921,6 +3934,7 @@ fr:
         no_description: (aucune description)
         all_api_keys: Toutes les clés pour l’API
         user_mode: Niveau de l’utilisateur
+        scope_mode: Périmètre d'application
         impersonate_all_users: Incarner un utilisateur
         single_user: "Utilisateur unique"
         user_placeholder: Saisissez un nom d'utilisateur

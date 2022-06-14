@@ -3066,6 +3066,11 @@ bs_BA:
       unread_count: "%{count} nepročitana"
       new_count: "%{count} novi"
       sections:
+        messages:
+          header_link_text: "Poruke"
+        tags:
+          header_link_title: "sve oznake"
+          header_link_text: "Oznake"
         categories:
           header_link_title: "Sve kategorije"
           header_link_text: "Kategorije"

@@ -3397,6 +3397,11 @@ ja:
       unread_count: "未読 %{count}"
       new_count: "新規 %{count}"
       sections:
+        messages:
+          header_link_text: "メッセージ"
+        tags:
+          header_link_title: "すべてのタグ"
+          header_link_text: "タグ"
         categories:
           header_link_title: "すべてのカテゴリ"
           header_link_text: "カテゴリ"

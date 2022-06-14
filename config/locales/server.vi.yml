@@ -914,7 +914,6 @@ vi:
     title: "Tên của trang này, sử dụng trong thẻ tiêu đề"
     site_description: "Mô tả trang này trong một câu, nó sẽ được sử dụng trong thẻ meta description"
     crawl_images: "Lấy hình ảnh tử URL bên ngoài để thêm vào đúng chiều dài và chiều cao."
-    download_remote_images_to_local: "Tải ảnh về lưu trữ để tránh ảnh bị hư."
     download_remote_images_threshold: "Dung lượng tối thiểu cần để tải ảnh từ xa về lưu trữ (tính bằng phần trăm)"
     disabled_image_download_domains: "Tải ảnh từ xa sẽ không áp dụng với các tên miền sau. Phân cách bằng dấu |"
     editing_grace_period: "Trong khoảng (n) giây sau khi gửi bài, chỉnh sửa sẽ không tạo ra một phiên bản mới trong bài lịch sử bài viết."

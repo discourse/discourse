@@ -3636,6 +3636,11 @@ ur:
       unread_count: "%{count} بغیر پڑھا ہوا"
       new_count: "%{count} نیا"
       sections:
+        messages:
+          header_link_text: "پیغامات"
+        tags:
+          header_link_title: "تمام ٹیگز"
+          header_link_text: "ٹیگز"
         categories:
           header_link_title: "تمام زُمرَہ جات"
           header_link_text: "زُمرَہ جات"
