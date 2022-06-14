@@ -87,12 +87,12 @@ function head(buffer, bootstrap, headers, baseURL) {
   if (bootstrap.preloaded.currentUser) {
     let staff = JSON.parse(bootstrap.preloaded.currentUser).staff;
     if (staff) {
-      buffer.push(`<script src="${baseURL}assets/admin.js"></script>`);
+      buffer.push(`<script defer src="${baseURL}assets/admin.js"></script>`);
     }
   }
 
   bootstrap.plugin_js.forEach((src) =>
-    buffer.push(`<script src="${src}"></script>`)
+    buffer.push(`<script defer src="${src}"></script>`)
   );
 
   buffer.push(bootstrap.theme_html.translations);
@@ -102,14 +102,14 @@ function head(buffer, bootstrap, headers, baseURL) {
 }
 
 function localeScript(buffer, bootstrap) {
-  buffer.push(`<script src="${bootstrap.locale_script}"></script>`);
+  buffer.push(`<script defer src="${bootstrap.locale_script}"></script>`);
 }
 
 function beforeScriptLoad(buffer, bootstrap) {
   buffer.push(bootstrap.html.before_script_load);
   localeScript(buffer, bootstrap);
   (bootstrap.extra_locales || []).forEach((l) =>
-    buffer.push(`<script src="${l}"></script>`)
+    buffer.push(`<script defer src="${l}"></script>`)
   );
 }
 

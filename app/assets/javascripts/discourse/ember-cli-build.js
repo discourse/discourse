@@ -49,6 +49,10 @@ module.exports = function (defaults) {
       ],
     },
 
+    autoImport: {
+      insertScriptsAt: "ember-auto-import-scripts",
+    },
+
     // We need to build tests in prod for theme tests
     tests: true,
   });
