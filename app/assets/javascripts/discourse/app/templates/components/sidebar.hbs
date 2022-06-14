@@ -8,7 +8,9 @@
         <Sidebar::TagsSection />
       {{/if}}
 
-      <Sidebar::MessagesSection />
+      {{#if this.siteSettings.enable_personal_messages}}
+        <Sidebar::MessagesSection />
+      {{/if}}
     </div>
   </div>
 {{/if}}

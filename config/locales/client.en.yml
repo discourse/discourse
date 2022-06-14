@@ -4045,6 +4045,12 @@ en:
           header_link_title: "personal messages"
           header_link_text: "Messages"
           header_action_title: "create a personal message"
+          links:
+            inbox: "Inbox"
+            sent: "Sent"
+            new: "New"
+            unread: "Unread"
+            archive: "Archive"
         tags:
           no_tracked_tags: "You are not tracking any tags."
           header_link_title: "all tags"
