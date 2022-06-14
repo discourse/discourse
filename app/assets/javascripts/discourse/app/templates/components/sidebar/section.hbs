@@ -4,7 +4,13 @@
       {{d-icon this.headerCaretIcon}}
     </button>
 
-    <LinkTo @route={{@headerRoute}} @query={{@headerQuery}} @class="sidebar-section-header-link" title={{@headerLinkTitle}}>
+    <LinkTo
+      @route={{@headerRoute}}
+      @query={{@headerQuery}}
+      @models={{if @headerModel (array @headerModel) (if @headerModels @headerModels (array))}}
+      @class="sidebar-section-header-link"
+      title={{@headerLinkTitle}}>
+
       {{@headerLinkText}}
     </LinkTo>
 
