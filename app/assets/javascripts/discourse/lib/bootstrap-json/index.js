@@ -64,26 +64,6 @@ function head(buffer, bootstrap, headers, baseURL) {
   });
   buffer.push(`<meta id="data-discourse-setup"${setupData} />`);
 
-  (bootstrap.stylesheets || []).forEach((s) => {
-    let attrs = [];
-    if (s.media) {
-      attrs.push(`media="${s.media}"`);
-    }
-    if (s.target) {
-      attrs.push(`data-target="${s.target}"`);
-    }
-    if (s.theme_id) {
-      attrs.push(`data-theme-id="${s.theme_id}"`);
-    }
-    if (s.class) {
-      attrs.push(`class="${s.class}"`);
-    }
-    let link = `<link rel="stylesheet" type="text/css" href="${
-      s.href
-    }" ${attrs.join(" ")}>`;
-    buffer.push(link);
-  });
-
   if (bootstrap.preloaded.currentUser) {
     let staff = JSON.parse(bootstrap.preloaded.currentUser).staff;
     if (staff) {
@@ -111,6 +91,28 @@ function beforeScriptLoad(buffer, bootstrap) {
   (bootstrap.extra_locales || []).forEach((l) =>
     buffer.push(`<script src="${l}"></script>`)
   );
+}
+
+function discourseStylesheets(buffer, bootstrap) {
+  (bootstrap.stylesheets || []).forEach((s) => {
+    let attrs = [];
+    if (s.media) {
+      attrs.push(`media="${s.media}"`);
+    }
+    if (s.target) {
+      attrs.push(`data-target="${s.target}"`);
+    }
+    if (s.theme_id) {
+      attrs.push(`data-theme-id="${s.theme_id}"`);
+    }
+    if (s.class) {
+      attrs.push(`class="${s.class}"`);
+    }
+    let link = `<link rel="stylesheet" type="text/css" href="${
+      s.href
+    }" ${attrs.join(" ")}>`;
+    buffer.push(link);
+  });
 }
 
 function body(buffer, bootstrap) {
@@ -156,6 +158,7 @@ const BUILDERS = {
   "before-script-load": beforeScriptLoad,
   head,
   body,
+  "discourse-stylesheets": discourseStylesheets,
   "hidden-login-form": hiddenLoginForm,
   preloaded,
   "body-footer": bodyFooter,
