@@ -3,12 +3,12 @@
     <%= discourse_stylesheet_link_tag 'd-splash', theme_id: nil %>
 
     <img
-      id="loader"
+      class="preloader-image"
       src="/images/preloader.svg"
       alt="<%=SiteSetting.title%>"
     >
 
-    <div class="loader-text">
+    <div class="preloader-text">
       <span>
         <%= I18n.t("js.preloader_text") %>
       </span>
