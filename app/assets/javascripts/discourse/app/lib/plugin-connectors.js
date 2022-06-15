@@ -26,7 +26,7 @@ const DefaultConnectorClass = {
 
 function findOutlets(collection, callback) {
   Object.keys(collection).forEach(function (res) {
-    if (res.indexOf("/connectors/") !== -1) {
+    if (/(^|\/)connectors\//.test(res)) {
       const segments = res.split("/");
       let outletName = segments[segments.length - 2];
       const uniqueName = segments[segments.length - 1];

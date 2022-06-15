@@ -8,6 +8,8 @@ const prettyTextEngine = require("./lib/pretty-text-engine");
 const { createI18nTree } = require("./lib/translation-plugin");
 const discourseScss = require("./lib/discourse-scss");
 const funnel = require("broccoli-funnel");
+const WatchedDir = require("broccoli-source").WatchedDir;
+const fs = require("fs");
 
 module.exports = function (defaults) {
   let discourseRoot = resolve("../../../..");
@@ -16,7 +18,43 @@ module.exports = function (defaults) {
   const isProduction = EmberApp.env().includes("production");
   const isTest = EmberApp.env().includes("test");
 
+  const pluginRoot = resolve(discourseRoot, "./plugins");
+  const plugins = fs
+    .readdirSync(pluginRoot, { withFileTypes: true })
+    .filter((dirent) => dirent.isDirectory());
+
+  let appTrees = [
+    new WatchedDir("./app")
+  ];
+
+  for (let dirent of plugins) {
+    const pRoot = resolve(pluginRoot, dirent.name);
+
+    const jsDir = resolve(pRoot, 'assets/javascripts');
+    if (fs.existsSync(jsDir)) {
+      appTrees.push(
+        funnel(
+          new WatchedDir(jsDir),
+          { destDir: `plugins/${dirent.name}` }
+        )
+      );
+    }
+
+    // const discourseJsDir = resolve(pRoot, 'assets/javascripts/discourse');
+    // if (fs.existsSync(discourseJsDir)) {
+    //   appTrees.push(
+    //     funnel(
+    //       new WatchedDir(discourseJsDir),
+    //       { destDir: '' }
+    //     )
+    //   );
+    // }
+  }
+
   let app = new EmberApp(defaults, {
+    trees: {
+      app: mergeTrees(appTrees),
+    },
     autoRun: false,
     "ember-qunit": {
       insertContentForTestBody: false,

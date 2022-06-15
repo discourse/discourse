@@ -95,12 +95,12 @@ if (process.argv.includes("-t")) {
 } else if (shouldLoadPluginTestJs()) {
   // Running with ember cli, but we want to pass through plugin request to Rails
   module.exports.proxies = {
-    "/assets/discourse/tests/active-plugins.js": {
-      target,
-    },
-    "/assets/admin-plugins.js": {
-      target,
-    },
+    // "/assets/discourse/tests/active-plugins.js": {
+    //   target,
+    // },
+    // "/assets/admin-plugins.js": {
+    //   target,
+    // },
     "/assets/discourse/tests/plugin-tests.js": {
       target,
     },

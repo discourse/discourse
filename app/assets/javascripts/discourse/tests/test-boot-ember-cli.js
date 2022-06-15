@@ -8,12 +8,12 @@ import { setup } from "qunit-dom";
 setEnvironment("testing");
 
 document.addEventListener("discourse-booted", () => {
-  const script = document.getElementById("plugin-test-script");
-  if (script && !requirejs.entries["discourse/tests/active-plugins"]) {
-    throw new Error(
-      `Plugin JS payload failed to load from ${script.src}. Is the Rails server running?`
-    );
-  }
+  // const script = document.getElementById("plugin-test-script");
+  // if (script && !requirejs.entries["discourse/tests/active-plugins"]) {
+  //   throw new Error(
+  //     `Plugin JS payload failed to load from ${script.src}. Is the Rails server running?`
+  //   );
+  // }
 
   let setupTests = require("discourse/tests/setup-tests").default;
   const params = new URLSearchParams(window.location.search);
