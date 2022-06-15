@@ -7,27 +7,26 @@ describe Onebox::JsonLd do
     invalid_json = "{\"@type\":invalid-json}"
     doc = Nokogiri::HTML("<script type=\"application/ld+json\">#{invalid_json}</script>")
     Discourse.expects(:warn_exception).with(
-      instance_of(JSON::ParserError), { message: "Error parsing JSON-LD json: #{invalid_json}" }
+      instance_of(JSON::ParserError), { message: "Error parsing JSON-LD: #{invalid_json}" }
     )
 
     json_ld = described_class.new(doc)
-
     expect(json_ld.data).to eq({})
   end
 
-  it 'returns an empty hash if there is no json_ld script tag' do
+  it 'returns an empty hash if there is no JSON-LD script tag' do
     doc = Nokogiri::HTML("<script type=\"something else\"></script>")
     json_ld = described_class.new(doc)
     expect(json_ld.data).to eq({})
   end
 
-  it 'returns an empty hash if there is no json_ld data' do
+  it 'returns an empty hash if there is no JSON-LD data' do
     doc = Nokogiri::HTML("<script type=\"application/ld+json\"></script>")
     json_ld = described_class.new(doc)
     expect(json_ld.data).to eq({})
   end
 
-  it 'returns an empty hash if the type of JSONLD data is not Movie' do
+  it 'returns an empty hash if the type of JSON-LD data is not Movie' do
     doc = Nokogiri::HTML("<script type=\"application/ld+json\">{\"@type\":\"Something Else\",\"aggregateRating\":{\"@type\":\"AggregateRating\",\"ratingCount\":806928,\"bestRating\":10,\"worstRating\":1}}</script>")
     json_ld = described_class.new(doc)
     expect(json_ld.data).to eq({})
@@ -35,6 +34,15 @@ describe Onebox::JsonLd do
 
   it 'correctly normalizes the properties' do
     doc = Nokogiri::HTML(onebox_response('imdb'))
+    json_ld = described_class.new(doc)
+    expect(json_ld.data).to eq(expected_movie_hash)
+  end
+
+  it 'does not fail when there is more than one JSON-LD element' do
+    doc = Nokogiri::HTML(onebox_response('imdb'))
+    doc.css("body")[0] << "<script type=\"application/ld+json\">{\"@context\":\"http://schema.org\",\"@type\":\"WebPage\",\"url\":\"https:\/\/imdb.com\",\"description\":\"Movies\"}</script>"
+    Discourse.expects(:warn_exception).never
+
     json_ld = described_class.new(doc)
     expect(json_ld.data).to eq(expected_movie_hash)
   end
