@@ -210,7 +210,19 @@ module JsLocaleHelper
       end
     end
 
-    translations.present? ? "I18n.extras = #{translations.to_json};" : ""
+    return "" if translations.blank?
+
+    <<~JS
+      if (!I18n.extras) {
+        I18n.extras = {}
+      }
+
+      if (!I18n.extras["#{locale}"]) {
+        I18n.extras["#{locale}"] = {};
+      }
+
+      Object.assign(I18n.extras["#{locale}"], #{translations[locale].to_json});
+    JS
   end
 
   MOMENT_LOCALE_MAPPING ||= {
