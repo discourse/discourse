@@ -315,7 +315,13 @@ module Email
       DiscourseEvent.trigger(:before_email_send, @message, @email_type)
 
       begin
-        @message.deliver_now
+        message_response = @message.deliver!
+
+        # TestMailer from the Mail gem does not return a real response, it
+        # returns an array containing @message, so we have to have this workaround.
+        if message_response.kind_of?(Net::SMTP::Response)
+          email_log.smtp_transaction_response = message_response.message&.chomp
+        end
       rescue *SMTP_CLIENT_ERRORS => e
         return skip(SkippedEmailLog.reason_types[:custom], custom_reason: e.message)
       end

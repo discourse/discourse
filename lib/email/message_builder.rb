@@ -145,6 +145,7 @@ module Email
       }
 
       args[:delivery_method_options] = @opts[:delivery_method_options] if @opts[:delivery_method_options]
+      args[:delivery_method_options] = (args[:delivery_method_options] || {}).merge(return_response: true)
 
       args
     end
