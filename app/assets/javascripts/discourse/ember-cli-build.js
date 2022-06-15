@@ -8,6 +8,7 @@ const prettyTextEngine = require("./lib/pretty-text-engine");
 const { createI18nTree } = require("./lib/translation-plugin");
 const discourseScss = require("./lib/discourse-scss");
 const funnel = require("broccoli-funnel");
+const WatchedDir = require("broccoli-source").WatchedDir;
 
 module.exports = function (defaults) {
   let discourseRoot = resolve("../../../..");
@@ -17,6 +18,79 @@ module.exports = function (defaults) {
   const isTest = EmberApp.env().includes("test");
 
   let app = new EmberApp(defaults, {
+    trees: {
+      app: mergeTrees([
+        new WatchedDir("./app"),
+        funnel(
+          new WatchedDir(
+            "../../../../plugins/discourse-details/assets/javascripts"
+          ),
+          { destDir: "plugins/discourse-details" }
+        ),
+        // funnel(new WatchedDir("../../../../plugins/discourse-details/assets/javascripts/discourse"), { destDir: "" }),
+
+        funnel(
+          new WatchedDir(
+            "../../../../plugins/discourse-local-dates/assets/javascripts"
+          ),
+          { destDir: "plugins/discourse-local-dates" }
+        ),
+        funnel(
+          new WatchedDir(
+            "../../../../plugins/discourse-local-dates/assets/javascripts/discourse"
+          ),
+          { destDir: "" }
+        ),
+
+        funnel(
+          new WatchedDir(
+            "../../../../plugins/discourse-narrative-bot/assets/javascripts"
+          ),
+          { destDir: "plugins/discourse-narrative-bot" }
+        ),
+        // funnel(new WatchedDir("../../../../plugins/discourse-narrative-bot/assets/javascripts/discourse"), { destDir: "" }),
+
+        funnel(
+          new WatchedDir(
+            "../../../../plugins/discourse-presence/assets/javascripts"
+          ),
+          { destDir: "plugins/discourse-presence" }
+        ),
+        funnel(
+          new WatchedDir(
+            "../../../../plugins/discourse-presence/assets/javascripts/discourse"
+          ),
+          { destDir: "" }
+        ),
+
+        funnel(
+          new WatchedDir("../../../../plugins/lazy-yt/assets/javascripts"),
+          { destDir: "plugins/lazy-yt" }
+        ),
+        // funnel(new WatchedDir("../../../../plugins/lazy-yt/assets/javascripts/discourse"), { destDir: "" }),
+
+        funnel(new WatchedDir("../../../../plugins/poll/assets/javascripts"), {
+          destDir: "plugins/poll",
+        }),
+        funnel(
+          new WatchedDir(
+            "../../../../plugins/poll/assets/javascripts/discourse"
+          ),
+          { destDir: "" }
+        ),
+
+        funnel(
+          new WatchedDir("../../../../plugins/styleguide/assets/javascripts"),
+          { destDir: "plugins/styleguide" }
+        ),
+        // funnel(new WatchedDir("../../../../plugins/styleguide/assets/javascripts/discourse"), { destDir: "" })
+      ]),
+      // templates: mergeTrees([
+      //   new WatchedDir("./app/templates"),
+      //   funnel(new WatchedDir("../../../../plugins/discourse-local-dates/assets/javascripts/discourse/templates"), { destDir: "javascripts/templates" }),
+      //   funnel(new WatchedDir("../../../../plugins/poll/assets/javascripts/discourse/templates"), { destDir: "javascripts/templates" })
+      // ]),
+    },
     autoRun: false,
     "ember-qunit": {
       insertContentForTestBody: false,

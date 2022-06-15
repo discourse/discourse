@@ -26,7 +26,11 @@ module("Unit | Ember | resolver", function (hooks) {
     // eslint-disable-next-line no-undef
     Ember.TEMPLATES = {};
 
-    resolver = DiscourseResolver.create();
+    resolver = DiscourseResolver.create({
+      namespace: {
+        modulePrefix: "discourse",
+      },
+    });
   });
 
   hooks.afterEach(function () {
