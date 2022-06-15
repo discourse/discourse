@@ -8,7 +8,7 @@ import { test } from "qunit";
 import { visit } from "@ember/test-helpers";
 import { withPluginApi } from "discourse/lib/plugin-api";
 
-const PREFIX = "javascripts/single-test/connectors";
+const PREFIX = "single-test/connectors";
 
 acceptance("Plugin Outlet - Decorator", function (needs) {
   needs.user();

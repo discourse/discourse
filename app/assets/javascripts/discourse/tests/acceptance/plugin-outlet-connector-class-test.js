@@ -10,7 +10,7 @@ import { extraConnectorClass } from "discourse/lib/plugin-connectors";
 import hbs from "htmlbars-inline-precompile";
 import { test } from "qunit";
 
-const PREFIX = "javascripts/single-test/connectors";
+const PREFIX = "single-test/connectors";
 
 acceptance("Plugin Outlet - Connector Class", function (needs) {
   needs.hooks.beforeEach(() => {

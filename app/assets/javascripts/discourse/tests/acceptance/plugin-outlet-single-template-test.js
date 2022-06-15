@@ -7,8 +7,8 @@ import hbs from "htmlbars-inline-precompile";
 import { test } from "qunit";
 import { visit } from "@ember/test-helpers";
 
-const CONNECTOR =
-  "javascripts/single-test/connectors/user-profile-primary/hello";
+// TODO: Is this correct?
+const CONNECTOR = "single-test/connectors/user-profile-primary/hello";
 
 acceptance("Plugin Outlet - Single Template", function (needs) {
   needs.hooks.beforeEach(() => {

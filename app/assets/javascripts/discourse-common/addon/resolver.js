@@ -34,11 +34,6 @@ function lookupModuleBySuffix(suffix) {
 
 export function buildResolver(baseName) {
   return class DiscourseResolver extends Resolver {
-    parseName(fullName) {
-      let parsed = super.parseName(fullName);
-      return parsed;
-    }
-
     resolveRouter(parsedName) {
       const routerPath = `${baseName}/router`;
       if (requirejs.entries[routerPath]) {
@@ -120,7 +115,8 @@ export function buildResolver(baseName) {
       }
     }
 
-    customResolve(parsedName) {
+    // TODO: Figure out how why we need this.
+    resolveOther(parsedName) {
       // If we end with the name we want, use it. This allows us to define components within plugins.
       const suffix = parsedName.type + "s/" + parsedName.fullNameWithoutType,
         dashed = dasherize(suffix),
@@ -130,50 +126,18 @@ export function buildResolver(baseName) {
       if (moduleName) {
         module = requirejs(moduleName, null, null, true /* force sync */);
         if (module && module["default"]) {
-          module = module["default"];
+          return module["default"];
         }
       }
-      return module;
-    }
 
-    resolveWidget(parsedName) {
-      return this.customResolve(parsedName) || this.resolveOther(parsedName);
-    }
-
-    resolveAdapter(parsedName) {
-      return this.customResolve(parsedName) || this.resolveOther(parsedName);
-    }
-
-    resolveModel(parsedName) {
-      return this.customResolve(parsedName) || this.resolveOther(parsedName);
-    }
-
-    resolveView(parsedName) {
-      return this.customResolve(parsedName) || this.resolveOther(parsedName);
+      return super.resolveOther(parsedName);
     }
 
     resolveHelper(parsedName) {
       return (
         findHelper(parsedName.fullNameWithoutType) ||
-        this.customResolve(parsedName) ||
-        super.resolveOther(parsedName)
+        this.resolveOther(parsedName)
       );
-    }
-
-    resolveController(parsedName) {
-      return this.customResolve(parsedName) || this.resolveOther(parsedName);
-    }
-
-    resolveComponent(parsedName) {
-      return this.customResolve(parsedName) || this.resolveOther(parsedName);
-    }
-
-    resolveService(parsedName) {
-      return this.customResolve(parsedName) || this.resolveOther(parsedName);
-    }
-
-    resolveRawView(parsedName) {
-      return this.customResolve(parsedName) || this.resolveOther(parsedName);
     }
 
     resolveRoute(parsedName) {
@@ -182,38 +146,16 @@ export function buildResolver(baseName) {
           .default;
       }
 
-      return this.customResolve(parsedName) || this.resolveOther(parsedName);
+      return this.resolveOther(parsedName);
     }
 
     resolveTemplate(parsedName) {
-      let resolved =
-        this.findPluginMobileTemplate(parsedName) ||
-        this.findPluginTemplate(parsedName) ||
+      return (
         this.findMobileTemplate(parsedName) ||
         this.findTemplate(parsedName) ||
         this.findLoadingTemplate(parsedName) ||
-        this.findConnectorTemplate(parsedName) ||
-        Ember.TEMPLATES.not_found;
-      return resolved;
-    }
-
-    findPluginTemplate(parsedName) {
-      const pluginParsedName = this.parseName(
-        parsedName.fullName.replace("template:", "template:javascripts/")
+        Ember.TEMPLATES.not_found
       );
-      return this.findTemplate(pluginParsedName);
-    }
-
-    findPluginMobileTemplate(parsedName) {
-      if (_options.mobileView) {
-        let pluginParsedName = this.parseName(
-          parsedName.fullName.replace(
-            "template:",
-            "template:javascripts/mobile/"
-          )
-        );
-        return this.findTemplate(pluginParsedName);
-      }
     }
 
     findMobileTemplate(parsedName) {
@@ -229,76 +171,52 @@ export function buildResolver(baseName) {
       const withoutType = parsedName.fullNameWithoutType,
         slashedType = withoutType.replace(/\./g, "/"),
         decamelized = decamelize(withoutType),
-        dashed = decamelized.replace(/\./g, "-").replace(/\_/g, "-"),
         templates = Ember.TEMPLATES;
 
       return (
         this.resolveOther(parsedName) ||
         templates[slashedType] ||
-        templates[withoutType] ||
-        templates[withoutType.replace(/\.raw$/, "")] ||
-        templates[dashed] ||
-        templates[decamelized.replace(/\./, "/")] ||
         templates[decamelized.replace(/[_-]/, "/")] ||
-        templates[`${baseName}/templates/${withoutType}`] ||
-        this.findAdminTemplate(parsedName) ||
-        this.findUnderscoredTemplate(parsedName)
+        this.findAdminTemplate(parsedName)
       );
-    }
-
-    findUnderscoredTemplate(parsedName) {
-      let decamelized = decamelize(parsedName.fullNameWithoutType);
-      let underscored = decamelized.replace(/\-/g, "_");
-      return Ember.TEMPLATES[underscored];
     }
 
     // Try to find a template within a special admin namespace, e.g. adminEmail => admin/templates/email
     // (similar to how discourse lays out templates)
     findAdminTemplate(parsedName) {
       let decamelized = decamelize(parsedName.fullNameWithoutType);
+
       if (decamelized.startsWith("components")) {
         let comPath = `admin/templates/${decamelized}`;
-        const compTemplate =
-          Ember.TEMPLATES[`javascripts/${comPath}`] || Ember.TEMPLATES[comPath];
+
+        let compTemplate = Ember.TEMPLATES[comPath];
         if (compTemplate) {
           return compTemplate;
         }
       }
 
-      if (decamelized === "javascripts/admin") {
+      if (decamelized === "admin") {
         return Ember.TEMPLATES["admin/templates/admin"];
-      }
-
-      if (
-        decamelized.startsWith("admin") ||
-        decamelized.startsWith("javascripts/admin")
-      ) {
+      } else if (decamelized.startsWith("admin")) {
         decamelized = decamelized.replace(
           /^admin[_\-\.\/]/,
           "admin/templates/"
         );
         decamelized = decamelized.replace(/\./g, "_");
 
-        const dashed = decamelized.replace(/_/g, "-");
         return (
           Ember.TEMPLATES[decamelized] ||
-          Ember.TEMPLATES[dashed] ||
-          Ember.TEMPLATES[dashed.replace(/-/, "_")] ||
-          Ember.TEMPLATES[dashed.replace("admin-", "admin/")]
+          Ember.TEMPLATES[decamelized.replace(/-/g, "_")]
         );
       }
     }
 
+    // It seems that this exists to provide a fallback for any template that ends with "loading".
+    // This comes late in the series of checks so an explicit match would be matched before this.
+    // It might be smart to actually check for a word boundary at the start.
     findLoadingTemplate(parsedName) {
       if (parsedName.fullNameWithoutType.match(/loading$/)) {
         return Ember.TEMPLATES.loading;
-      }
-    }
-
-    findConnectorTemplate(parsedName) {
-      const full = parsedName.fullNameWithoutType.replace("components/", "");
-      if (full.indexOf("connectors") === 0) {
-        return Ember.TEMPLATES[`javascripts/${full}`];
       }
     }
   };

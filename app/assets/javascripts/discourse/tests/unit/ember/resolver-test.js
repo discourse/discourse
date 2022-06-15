@@ -183,28 +183,28 @@ module("Unit | Ember | resolver", function (hooks) {
     );
   });
 
-  test("resolves plugin templates to 'javascripts/' namespace", function (assert) {
-    setTemplates(["javascripts/foo", "bar", "javascripts/bar", "baz"]);
+  // test("resolves plugin templates to 'javascripts/' namespace", function (assert) {
+  //   setTemplates(["javascripts/foo", "bar", "javascripts/bar", "baz"]);
 
-    lookupTemplate(
-      assert,
-      "template:foo",
-      "javascripts/foo",
-      "finding plugin version even if normal one is not present"
-    );
-    lookupTemplate(
-      assert,
-      "template:bar",
-      "javascripts/bar",
-      "preferring plugin version when both versions are present"
-    );
-    lookupTemplate(
-      assert,
-      "template:baz",
-      "baz",
-      "falling back to a normal version when plugin version is not present"
-    );
-  });
+  //   lookupTemplate(
+  //     assert,
+  //     "template:foo",
+  //     "javascripts/foo",
+  //     "finding plugin version even if normal one is not present"
+  //   );
+  //   lookupTemplate(
+  //     assert,
+  //     "template:bar",
+  //     "javascripts/bar",
+  //     "preferring plugin version when both versions are present"
+  //   );
+  //   lookupTemplate(
+  //     assert,
+  //     "template:baz",
+  //     "baz",
+  //     "falling back to a normal version when plugin version is not present"
+  //   );
+  // });
 
   test("resolves templates with 'admin' prefix to 'admin/templates/' namespace", function (assert) {
     setTemplates([
