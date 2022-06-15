@@ -3680,7 +3680,16 @@ it:
       unread_count: "%{count} non letti"
       new_count: "%{count} nuovi"
       sections:
+        messages:
+          header_link_title: "messaggi personali"
+          header_link_text: "Messaggi"
+          header_action_title: "crea un messaggio personale"
+        tags:
+          no_tracked_tags: "Non stai seguendo alcuna etichetteta."
+          header_link_title: "tutte le etichette"
+          header_link_text: "Etichette"
         categories:
+          no_tracked_categories: "Non stai monitorando nessuna categoria."
           header_link_title: "tutte le categorie"
           header_link_text: "Categorie"
         topics:

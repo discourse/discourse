@@ -2533,6 +2533,11 @@ et:
       unread_count: "%{count} lugemata"
       new_count: "%{count} uus"
       sections:
+        messages:
+          header_link_text: "Sõnumid"
+        tags:
+          header_link_title: "kõik sildid"
+          header_link_text: "Sildid"
         categories:
           header_link_title: "kõik foorumid"
           header_link_text: "Liigid"

@@ -3556,6 +3556,11 @@ da:
       unread_count: "%{count} ulæst"
       new_count: "%{count} ny"
       sections:
+        messages:
+          header_link_text: "Beskeder"
+        tags:
+          header_link_title: "alle mærker"
+          header_link_text: "Tags"
         categories:
           header_link_title: "alle kategorier"
           header_link_text: "Kategorier"

@@ -4275,6 +4275,11 @@ ar:
       unread_count: "%{count} غير مقروء"
       new_count: "%{count} جديد"
       sections:
+        messages:
+          header_link_text: "الرسائل"
+        tags:
+          header_link_title: "كل الوسوم"
+          header_link_text: "الوسوم"
         categories:
           header_link_title: "كل الفئات"
           header_link_text: "الفئات"

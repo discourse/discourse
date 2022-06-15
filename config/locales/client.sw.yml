@@ -2254,6 +2254,11 @@ sw:
       unread_count: "%{count} haijasomwa"
       new_count: "Mada mpya %{count}"
       sections:
+        messages:
+          header_link_text: "Ujumbe"
+        tags:
+          header_link_title: "lebo zote"
+          header_link_text: "Lebo"
         categories:
           header_link_title: "kategoria zote"
           header_link_text: "Kategoria"

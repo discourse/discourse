@@ -643,6 +643,11 @@ zh_CN:
   post:
     image_placeholder:
       broken: "此图片已损坏"
+      blocked_hotlinked_title: "图片托管主机在另一个站点。点击在新标签页中打开。"
+      blocked_hotlinked: "外部图片"
+    media_placeholder:
+      blocked_hotlinked_title: "媒体托管主机在另一个站点上。点击以在新标签页中打开。"
+      blocked_hotlinked: "外部媒体"
     hidden_bidi_character: "双向字符可以更改文本渲染的顺序。这可以用来掩盖恶意代码。"
     has_likes:
       other: "%{count} 个赞"
@@ -1378,9 +1383,11 @@ zh_CN:
     contact_email: "此站点主要负责人的电子邮件地址。用于重要通知，也显示在 <a href='%{base_path}/about' target='_blank'>/about</a> 页面上用于紧急事项。"
     contact_url: "此站点的联系 URL。显示在 <a href='%{base_path}/about' target='_blank'>/about</a> 页面上以应对紧急事项。"
     crawl_images: "从远程 URL 检索图片以插入正确的宽度和高度尺寸。"
-    download_remote_images_to_local: "通过下载将远程图片转换为本地图片；这样可以防止图片损坏。"
+    download_remote_images_to_local: "通过下载将远程(hotlinked)图像并转换为本地图像；即使将来从远程站点删除图像，这也能保留内容。"
     download_remote_images_threshold: "将远程图片下载到本地所需的最小磁盘空间（百分比）"
     disabled_image_download_domains: "永远不会从这些网域下载远程图片。以 | 分隔的列表。"
+    block_hotlinked_media: "防止用户在他们的帖子中引入远程(hotlinked)媒体。未通过 'download_remote_images_to_local' 下载的远程媒体将被替换成一个占位符链接。"
+    block_hotlinked_media_exceptions: "不受 block_hotlinked_media 设置影响的基本 URL 列表。包括协议(例如：https://example.com)。"
     editing_grace_period: "发帖后 (n) 秒内，编辑不会在帖子历史记录中创建新版本。"
     editing_grace_period_max_diff: "编辑宽限期内允许的最大字符更改数，超过此值将保存另一个帖子修订（信任级别 0 和 1）"
     editing_grace_period_max_diff_high_trust: "编辑宽限期内允许的最大字符更改数，超过此值将保存另一个帖子修订（信任级别 2 及更高）"

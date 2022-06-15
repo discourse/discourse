@@ -3662,7 +3662,14 @@ tr_TR:
       unread_count: "%{count} okunmamış"
       new_count: "%{count} yeni"
       sections:
+        messages:
+          header_link_text: "İletiler"
+        tags:
+          no_tracked_tags: "Herhangi bir etiketi takip etmiyorsunuz."
+          header_link_title: "tüm etiketler"
+          header_link_text: "Etiketler"
         categories:
+          no_tracked_categories: "Herhangi bir kategoriyi takip etmiyorsunuz."
           header_link_title: "tüm kategoriler"
           header_link_text: "Kategoriler"
         topics:
@@ -3673,6 +3680,7 @@ tr_TR:
               content: "Takipte"
             my_posts:
               content: "Gönderilerim"
+              title: "Gönderilerim"
   admin_js:
     type_to_filter: "filtrelemek için yaz..."
     admin:

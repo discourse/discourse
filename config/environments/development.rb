@@ -111,5 +111,5 @@ Discourse::Application.configure do
     end
   end
 
-  config.hosts << /\A(([a-z-]+)\.)*localhost(\:\d+)?\Z/
+  config.hosts << /\A(([a-z0-9-]+)\.)*localhost(\:\d+)?\Z/
 end

@@ -3064,6 +3064,11 @@ el:
       unread_count: "%{count} μη αναγνωσμένο"
       new_count: "%{count} νέο"
       sections:
+        messages:
+          header_link_text: "Μηνύματα"
+        tags:
+          header_link_title: "όλες οι ετικέτες"
+          header_link_text: "Ετικέτες"
         categories:
           header_link_title: "όλες οι κατηγορίες"
           header_link_text: "Κατηγορίες"

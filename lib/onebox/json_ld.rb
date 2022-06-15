@@ -12,32 +12,25 @@ module Onebox
     private
 
     def extract(doc)
-      extracted_json = extract_json_from(doc)
-      parsed_json = parse_json(extracted_json)
+      return {} if Onebox::Helpers::blank?(doc)
 
-      extracted =
+      doc.css('script[type="application/ld+json"]').each do |element|
+        parsed_json = parse_json(element.text)
+
         case parsed_json["@type"]
         when MOVIE_JSON_LD_TYPE
-          Onebox::Movie.new(parsed_json)
-        else
-          {}
+          return Onebox::Movie.new(parsed_json).to_h
         end
+      end
 
-      extracted.to_h
-    end
-
-    def extract_json_from(doc)
-      return {} if Onebox::Helpers::blank?(doc)
-      json_ld = doc.search('script[type="application/ld+json"]').text
-      return {} if Onebox::Helpers::blank?(json_ld)
-      json_ld
+      {}
     end
 
     def parse_json(json)
       begin
         JSON[json]
       rescue JSON::ParserError => e
-        Discourse.warn_exception(e, message: "Error parsing JSON-LD json: #{json}")
+        Discourse.warn_exception(e, message: "Error parsing JSON-LD: #{json}")
         {}
       end
     end

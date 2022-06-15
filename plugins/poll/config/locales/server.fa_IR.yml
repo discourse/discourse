@@ -30,8 +30,10 @@ fa_IR:
     post_is_deleted: "این کار را نمی‌توان روی یک نوشته حذف شده انجام داد."
     topic_must_be_open_to_vote: "موضوع باید برای رای گزاری باز باشد. "
     poll_must_be_open_to_vote: "نظرسنجی باید باز باشد برای رای گیری."
+    one_vote_per_user: "تنها ۱ رای برای این نظرسنجی مجاز است."
     topic_must_be_open_to_toggle_status: "موضوع باید برای تغییر وضیعت باز باشد. "
     only_staff_or_op_can_toggle_status: "فقط همکاران یا ارسال کنندگان پست می توانند وضعیت نظرسنجی را تغییر دهند. "
+    insufficient_rights_to_create: "شما مجاز به ایجاد نظرسنجی نیستید."
     email:
       link_to_poll: "برای دیدن نظرسنجی کلیک کنید."
     user_field:

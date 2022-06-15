@@ -3457,6 +3457,11 @@ vi:
       unread_count: "%{count} chưa đọc"
       new_count: "%{count} mới"
       sections:
+        messages:
+          header_link_text: "Tin nhắn"
+        tags:
+          header_link_title: "tất cả thẻ"
+          header_link_text: "Thẻ"
         categories:
           header_link_title: "tất cả chuyên mục"
           header_link_text: "Thư mục"

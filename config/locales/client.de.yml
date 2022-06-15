@@ -3719,7 +3719,14 @@ de:
       unread_count: "%{count} ungelesenes"
       new_count: "%{count} neues"
       sections:
+        messages:
+          header_link_text: "Nachrichten"
+        tags:
+          no_tracked_tags: "Du verfolgst keine Schlagwörter (tags)."
+          header_link_title: "alle Schlagwörter"
+          header_link_text: "Schlagwörter"
         categories:
+          no_tracked_categories: "Du verfolgst keine Kategorien."
           header_link_title: "alle Kategorien"
           header_link_text: "Kategorien"
         topics:

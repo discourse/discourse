@@ -85,3 +85,5 @@ fa_IR:
           title: "نمادهای سربرگ"
         spinners:
           title: "اسپینرها"
+        empty_state:
+          title: "حالت خالی"

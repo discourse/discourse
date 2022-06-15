@@ -2872,6 +2872,11 @@ hy:
       unread_count: "%{count} չկարդացած"
       new_count: "%{count} նոր"
       sections:
+        messages:
+          header_link_text: "Հաղորդագրություններ"
+        tags:
+          header_link_title: "բոլոր թեգերը"
+          header_link_text: "Թեգեր"
         categories:
           header_link_title: "բոլոր կատեգորիաները"
           header_link_text: "Կատեգորիաներ"
