@@ -164,7 +164,7 @@ export function setup(helper) {
     md.inline.ruler.push("bbcode-inline", (state, silent) =>
       tokenizeBBCode(state, silent, ruler)
     );
-    md.inline.ruler2.before("text_collapse", "bbcode-inline", processBBCode);
+    md.inline.ruler2.before("fragments_join", "bbcode-inline", processBBCode);
 
     ruler.push("code", {
       tag: "code",
