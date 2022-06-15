@@ -1,16 +1,17 @@
-<section id="d-splash">
-  <%= discourse_stylesheet_link_tag 'd-splash', theme_id: nil %>
+<%- unless customization_disabled? %>
+  <section id="d-splash">
+    <%= discourse_stylesheet_link_tag 'd-splash', theme_id: nil %>
 
-  <img
-    id="loader"
-    src="/images/preloader.svg"
-    alt="<%=SiteSetting.title%>"
-  >
+    <img
+      id="loader"
+      src="/images/preloader.svg"
+      alt="<%=SiteSetting.title%>"
+    >
 
-  <div class="loader-text">
-    <span>
-      <%= I18n.t("js.preloader_text") %>
-    </span>
-  </div>
-
-</section>
+    <div class="loader-text">
+      <span>
+        <%= I18n.t("js.preloader_text") %>
+      </span>
+    </div>
+  </section>
+<%- end %>
