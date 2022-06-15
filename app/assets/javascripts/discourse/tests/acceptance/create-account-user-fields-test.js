@@ -70,18 +70,12 @@ acceptance("Create Account - User Fields", function (needs) {
   test("can submit with enter", async function (assert) {
     await visit("/");
     await click("header .sign-up-button");
-
     await triggerKeyEvent(".modal-footer .btn-primary", "keydown", 13);
 
     assert.strictEqual(
       count("#modal-alert:visible"),
       1,
-      "hitting Enter triggers modal action"
-    );
-    assert.strictEqual(
-      count(".d-modal:visible"),
-      1,
-      "hitting Enter does not dismiss modal due to alert error"
+      "hitting Enter triggers action"
     );
   });
 });
