@@ -176,7 +176,7 @@ export function setup(helper) {
       },
     });
 
-    const simpleUrlRegex = /^http[s]?:\/\//;
+    const simpleUrlRegex = /^https?:\/\//;
     ruler.push("url", {
       tag: "url",
       wrap(startToken, endToken, tagInfo, content) {
