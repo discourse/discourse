@@ -45,10 +45,7 @@ export default class SidebarMessagesSection extends GlimmerComponent {
       ...this.groupMessagesSectionLinks,
     ];
 
-    if (
-      !currentRouteParentName ||
-      currentRouteParentName !== "userPrivateMessages"
-    ) {
+    if (currentRouteParentName !== "userPrivateMessages") {
       sectionLinks.forEach((sectionLink) => {
         sectionLink.collapse();
       });
