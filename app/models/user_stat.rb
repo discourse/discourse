@@ -19,7 +19,9 @@ class UserStat < ActiveRecord::Base
   UPDATE_UNREAD_USERS_LIMIT = 10_000
 
   def self.update_first_unread_pm(last_seen, limit: UPDATE_UNREAD_USERS_LIMIT)
-    DB.exec(<<~SQL, archetype: Archetype.private_message, now: UPDATE_UNREAD_MINUTES_AGO.minutes.ago, last_seen: last_seen, limit: limit)
+    whisperers_group_ids = SiteSetting.enable_whispers.present? ? SiteSetting.enable_whispers.split("|") : [-1]
+
+    DB.exec(<<~SQL, archetype: Archetype.private_message, now: UPDATE_UNREAD_MINUTES_AGO.minutes.ago, last_seen: last_seen, limit: limit, whisperers_group_ids: whisperers_group_ids)
     UPDATE user_stats us
     SET first_unread_pm_at = COALESCE(Z.min_date, :now)
     FROM (
@@ -35,12 +37,13 @@ class UserStat < ActiveRecord::Base
         INNER JOIN topics t ON t.id = tau.topic_id
         INNER JOIN users u ON u.id = tau.user_id
         LEFT JOIN topic_users tu ON t.id = tu.topic_id AND tu.user_id = tau.user_id
+        LEFT JOIN group_users gu ON gu.group_id IN (:whisperers_group_ids) AND gu.user_id = u.id
         WHERE t.deleted_at IS NULL
         AND t.archetype = :archetype
         AND tu.last_read_post_number < CASE
-                                       WHEN u.admin OR u.moderator
-                                       THEN t.highest_staff_post_number
-                                       ELSE t.highest_post_number
+                                       WHEN gu.id IS NULL
+                                       THEN t.highest_post_number
+                                       ELSE t.highest_staff_post_number
                                        END
         AND (COALESCE(tu.notification_level, 1) >= 2)
         AND tau.user_id IN (

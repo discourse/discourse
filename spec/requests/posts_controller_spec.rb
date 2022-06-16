@@ -806,7 +806,7 @@ describe PostsController do
 
     before do
       SiteSetting.min_first_post_typing_time = 0
-      SiteSetting.enable_whispers = true
+      SiteSetting.enable_whispers = "4"
     end
 
     context 'api' do

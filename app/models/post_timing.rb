@@ -60,7 +60,7 @@ class PostTiming < ActiveRecord::Base
 
   def self.destroy_last_for(user, topic_id: nil, topic: nil)
     topic ||= Topic.find(topic_id)
-    post_number = user.staff? ? topic.highest_staff_post_number : topic.highest_post_number
+    post_number = user.whisperer? ? topic.highest_staff_post_number : topic.highest_post_number
 
     last_read = post_number - 1
 

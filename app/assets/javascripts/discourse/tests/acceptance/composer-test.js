@@ -26,8 +26,12 @@ import { Promise } from "rsvp";
 import sinon from "sinon";
 
 acceptance("Composer", function (needs) {
-  needs.user();
-  needs.settings({ enable_whispers: true });
+  needs.user({
+    id: 5,
+    username: "kris",
+    groups: [{ id: 14, name: "awesome_group", has_messages: true }],
+  });
+  needs.settings({ enable_whispers: "14" });
   needs.site({ can_tag_topics: true });
   needs.pretender((server, helper) => {
     server.post("/uploads/lookup-urls", () => {

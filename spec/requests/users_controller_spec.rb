@@ -9,7 +9,8 @@ describe UsersController do
   fab!(:invitee) { Fabricate(:user) }
   fab!(:inviter) { Fabricate(:user) }
 
-  fab!(:admin) { Fabricate(:admin) }
+  fab!(:whisperers_group) { Fabricate(:group) }
+  fab!(:admin) { Fabricate(:admin, groups: [whisperers_group]) }
   fab!(:moderator) { Fabricate(:moderator) }
   fab!(:inactive_user) { Fabricate(:inactive_user) }
 
@@ -3891,6 +3892,7 @@ describe UsersController do
 
         it "includes all post types for staff members" do
           sign_in(admin)
+          SiteSetting.enable_whispers = "#{whisperers_group.id}"
 
           get "/u/#{admin.username}.json", params: { include_post_count_for: topic.id }
           topic_post_count = response.parsed_body.dig("user", "topic_post_count")

@@ -19,11 +19,15 @@ import userFixtures from "discourse/tests/fixtures/user-fixtures";
 import { cloneJSON } from "discourse-common/lib/object";
 
 acceptance("Composer Actions", function (needs) {
-  needs.user();
+  needs.user({
+    id: 5,
+    username: "kris",
+    groups: [{ id: 14, name: "awesome_group" }],
+  });
   needs.settings({
     prioritize_username_in_ux: true,
     display_name_on_post: false,
-    enable_whispers: true,
+    enable_whispers: "14",
   });
   needs.site({ can_tag_topics: true });
   needs.pretender((server, helper) => {
@@ -346,7 +350,12 @@ acceptance("Composer Actions", function (needs) {
   test("replying to post as TL3 user", async function (assert) {
     const composerActions = selectKit(".composer-actions");
 
-    updateCurrentUser({ moderator: false, admin: false, trust_level: 3 });
+    updateCurrentUser({
+      moderator: false,
+      admin: false,
+      trust_level: 3,
+      groups: [{ id: 13, name: "tl3_group" }],
+    });
     await visit("/t/internationalization-localization/280");
     await click("article#post_3 button.reply");
     await composerActions.expand();
@@ -364,7 +373,12 @@ acceptance("Composer Actions", function (needs) {
   test("replying to post as TL4 user", async function (assert) {
     const composerActions = selectKit(".composer-actions");
 
-    updateCurrentUser({ moderator: false, admin: false, trust_level: 4 });
+    updateCurrentUser({
+      moderator: false,
+      admin: false,
+      trust_level: 4,
+      groups: [{ id: 13, name: "tl4_group" }],
+    });
     await visit("/t/internationalization-localization/280");
     await click("article#post_3 button.reply");
     await composerActions.expand();
@@ -400,9 +414,13 @@ function stubDraftResponse() {
 }
 
 acceptance("Composer Actions With New Topic Draft", function (needs) {
-  needs.user();
+  needs.user({
+    id: 5,
+    username: "kris",
+    groups: [{ id: 14, name: "awesome_group" }],
+  });
   needs.settings({
-    enable_whispers: true,
+    enable_whispers: "14",
   });
   needs.site({
     can_tag_topics: true,

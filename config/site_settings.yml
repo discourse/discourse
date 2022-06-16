@@ -322,7 +322,11 @@ basic:
     max: 6
   enable_whispers:
     client: true
-    default: false
+    type: group_list
+    list_type: compact
+    default: ""
+    allow_any: false
+    refresh: true
   enable_bookmarks_with_reminders:
     client: true
     default: true

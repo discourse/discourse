@@ -893,6 +893,7 @@ describe Guardian do
       end
 
       it 'respects whispers' do
+        SiteSetting.enable_whispers = "#{group.id}"
         regular_post = post
         whisper_post = Fabricate.build(:post, post_type: Post.types[:whisper])
 
@@ -909,13 +910,9 @@ describe Guardian do
         regular_whisper = Fabricate.build(:post, post_type: Post.types[:whisper], user: regular_user)
         expect(regular_guardian.can_see?(regular_whisper)).to eq(true)
 
-        mod_guardian = Guardian.new(Fabricate.build(:moderator))
-        expect(mod_guardian.can_see?(regular_post)).to eq(true)
-        expect(mod_guardian.can_see?(whisper_post)).to eq(true)
-
-        admin_guardian = Guardian.new(Fabricate.build(:admin))
-        expect(admin_guardian.can_see?(regular_post)).to eq(true)
-        expect(admin_guardian.can_see?(whisper_post)).to eq(true)
+        whisperer_guardian = Guardian.new(Fabricate(:user, groups: [group]))
+        expect(whisperer_guardian.can_see?(regular_post)).to eq(true)
+        expect(whisperer_guardian.can_see?(whisper_post)).to eq(true)
       end
     end
 

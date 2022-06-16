@@ -3,6 +3,7 @@
 describe TopicTrackingState do
 
   fab!(:user) { Fabricate(:user) }
+  fab!(:whisperers_group) { Fabricate(:group) }
 
   let(:post) do
     create_post
@@ -11,6 +12,10 @@ describe TopicTrackingState do
   let(:topic) { post.topic }
   fab!(:private_message_post) { Fabricate(:private_message_post) }
   let(:private_message_topic) { private_message_post.topic }
+
+  before do
+    SiteSetting.enable_whispers = "#{whisperers_group.id}"
+  end
 
   describe '#publish_latest' do
     it 'can correctly publish latest' do
@@ -61,7 +66,7 @@ describe TopicTrackingState do
         user: Fabricate(:admin)
       )
 
-      post.user.grant_admin!
+      post.user.groups << whisperers_group
 
       message = MessageBus.track_publish(described_class.unread_channel_key(post.user.id)) do
         TopicTrackingState.publish_read(post.topic_id, 1, post.user)
@@ -118,7 +123,9 @@ describe TopicTrackingState do
       expect(message.user_ids).to contain_exactly(other_user.id)
     end
 
-    it "does not publish whisper post to non-staff users" do
+    it "does not publish whisper post to non-whisperers users" do
+      whisperers_group = Fabricate(:group)
+      SiteSetting.enable_whispers = "#{whisperers_group.id}"
       post.update!(post_type: Post.types[:whisper])
 
       messages = MessageBus.track_publish("/unread") do
@@ -127,7 +134,7 @@ describe TopicTrackingState do
 
       expect(messages).to eq([])
 
-      other_user.grant_admin!
+      other_user.groups << whisperers_group
 
       message = MessageBus.track_publish("/unread") do
         TopicTrackingState.publish_unread(post)
@@ -645,7 +652,7 @@ describe TopicTrackingState do
         user: user
       )
 
-      post.user.grant_admin!
+      post.user.groups << whisperers_group
 
       state = TopicTrackingState.report(post.user)
 

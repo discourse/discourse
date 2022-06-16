@@ -233,6 +233,7 @@ export default Controller.extend({
   },
 
   isStaffUser: reads("currentUser.staff"),
+  userGroups: reads("currentUser.groups"),
 
   canUnlistTopic: and("model.creatingTopic", "isStaffUser"),
 
@@ -289,12 +290,18 @@ export default Controller.extend({
     return SAVE_LABELS[modelAction];
   },
 
-  @discourseComputed("isStaffUser", "model.action")
-  canWhisper(isStaffUser, modelAction) {
+  @discourseComputed("userGroups", "model.action")
+  canWhisper(userGroups, modelAction) {
+    if (isEmpty(this.siteSettings.enable_whispers)) {
+      return false;
+    }
+    const whispererGroups = this.siteSettings.enable_whispers
+      .split("|")
+      .map(Number);
     return (
-      this.siteSettings.enable_whispers &&
-      isStaffUser &&
-      Composer.REPLY === modelAction
+      Composer.REPLY === modelAction &&
+      userGroups &&
+      userGroups.some((group) => whispererGroups.includes(group.id))
     );
   },
 

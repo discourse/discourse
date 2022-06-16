@@ -4,8 +4,9 @@ require 'unread'
 
 describe Unread do
 
-  let (:user) { Fabricate.build(:user, id: 1) }
-  let (:topic) do
+  let(:whisperers_group) { Fabricate(:group) }
+  let(:user) { Fabricate(:user, id: 1, groups: [whisperers_group]) }
+  let(:topic) do
     Fabricate.build(:topic,
                        posts_count: 13,
                        highest_staff_post_number: 15,
@@ -26,7 +27,7 @@ describe Unread do
 
   describe 'staff counts' do
     it 'should correctly return based on staff post number' do
-      user.admin = true
+      SiteSetting.enable_whispers = "#{whisperers_group.id}"
 
       topic_user.last_read_post_number = 13
 
@@ -45,8 +46,8 @@ describe Unread do
       expect(unread.unread_posts).to eq(3)
     end
 
-    it 'returns the right unread posts for a staff user' do
-      user.admin = true
+    it 'returns the right unread posts for a whisperer user' do
+      SiteSetting.enable_whispers = "#{whisperers_group.id}"
       topic_user.last_read_post_number = 10
       expect(unread.unread_posts).to eq(5)
     end

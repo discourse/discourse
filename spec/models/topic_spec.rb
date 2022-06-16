@@ -6,12 +6,17 @@ describe Topic do
   fab!(:user) { Fabricate(:user) }
   fab!(:user1) { Fabricate(:user) }
   fab!(:user2) { Fabricate(:user) }
-  fab!(:moderator) { Fabricate(:moderator) }
+  fab!(:whisperer_group) { Fabricate(:group) }
+  fab!(:moderator) { Fabricate(:moderator, groups: [whisperer_group]) }
   fab!(:coding_horror) { Fabricate(:coding_horror) }
   fab!(:evil_trout) { Fabricate(:evil_trout) }
   fab!(:admin) { Fabricate(:admin) }
   fab!(:group) { Fabricate(:group) }
   fab!(:trust_level_2) { Fabricate(:user, trust_level: SiteSetting.min_trust_level_to_allow_invite) }
+
+  before do
+    SiteSetting.enable_whispers = "#{whisperer_group.id}"
+  end
 
   context 'validations' do
     let(:topic) { Fabricate.build(:topic) }
@@ -185,8 +190,8 @@ describe Topic do
       expect(post_types).to_not include(types[:whisper])
     end
 
-    it "returns the appropriate types for staff users" do
-      post_types = Topic.visible_post_types(Fabricate.build(:moderator))
+    it "returns the appropriate types for whisperer users" do
+      post_types = Topic.visible_post_types(moderator)
 
       expect(post_types).to include(types[:regular])
       expect(post_types).to include(types[:moderator_action])

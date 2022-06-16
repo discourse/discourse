@@ -4,14 +4,19 @@ require 'topic_view'
 
 RSpec.describe TopicView do
   fab!(:user) { Fabricate(:user) }
-  fab!(:moderator) { Fabricate(:moderator) }
-  fab!(:admin) { Fabricate(:admin) }
+  fab!(:whisperers_group) { Fabricate(:group) }
+  fab!(:moderator) { Fabricate(:moderator, groups: [whisperers_group]) }
+  fab!(:admin) { Fabricate(:admin, groups: [whisperers_group]) }
   fab!(:topic) { Fabricate(:topic) }
   fab!(:evil_trout) { Fabricate(:evil_trout) }
   fab!(:first_poster) { topic.user }
   fab!(:anonymous) { Fabricate(:anonymous) }
 
   let(:topic_view) { TopicView.new(topic.id, evil_trout) }
+
+  before do
+    SiteSetting.enable_whispers = "#{whisperers_group.id}"
+  end
 
   context "preload" do
     it "allows preloading of data" do

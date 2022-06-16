@@ -3,6 +3,7 @@
 describe PrivateMessageTopicTrackingState do
   fab!(:user) { Fabricate(:user) }
   fab!(:user_2) { Fabricate(:user) }
+  fab!(:whisperer_group) { Fabricate(:group) }
 
   fab!(:group) do
     Fabricate(:group, messageable_level: Group::ALIAS_LEVELS[:everyone]).tap do |g|
@@ -32,6 +33,10 @@ describe PrivateMessageTopicTrackingState do
       target_usernames: [Fabricate(:user).username],
       archetype: Archetype.private_message
     ).topic
+  end
+
+  before do
+    SiteSetting.enable_whispers = "#{whisperer_group.id}"
   end
 
   describe '.report' do
@@ -79,7 +84,7 @@ describe PrivateMessageTopicTrackingState do
       expect(described_class.report(user_2).map(&:topic_id))
         .to contain_exactly(group_message.id)
 
-      user_2.grant_admin!
+      user_2.groups << whisperer_group
 
       tracking_state = described_class.report(user_2)
 

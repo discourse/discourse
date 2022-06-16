@@ -126,7 +126,7 @@ describe Email::Receiver do
 
       before do
         SiteSetting.enable_staged_users = true
-        SiteSetting.enable_whispers = true
+        SiteSetting.enable_whispers = "3"
       end
 
       def create_post_reply_key(value)

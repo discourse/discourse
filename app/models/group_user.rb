@@ -24,7 +24,9 @@ class GroupUser < ActiveRecord::Base
   end
 
   def self.update_first_unread_pm(last_seen, limit: 10_000)
-    DB.exec(<<~SQL, archetype: Archetype.private_message, last_seen: last_seen, limit: limit, now: 10.minutes.ago)
+    whisperers_group_ids = SiteSetting.enable_whispers.present? ? SiteSetting.enable_whispers.split("|") : [-1]
+
+    DB.exec(<<~SQL, archetype: Archetype.private_message, last_seen: last_seen, limit: limit, now: 10.minutes.ago, whisperers_group_ids: whisperers_group_ids)
     UPDATE group_users gu
     SET first_unread_pm_at = Y.min_date
     FROM (
@@ -48,12 +50,13 @@ class GroupUser < ActiveRecord::Base
           INNER JOIN topics t ON t.id = tag.topic_id
           INNER JOIN users u ON u.id = gu2.user_id
           LEFT JOIN topic_users tu ON t.id = tu.topic_id AND tu.user_id = gu2.user_id
+          LEFT JOIN group_users gu3 ON gu3.group_id IN (:whisperers_group_ids) AND gu3.user_id = gu2.user_id
           WHERE t.deleted_at IS NULL
           AND t.archetype = :archetype
           AND tu.last_read_post_number < CASE
-                                         WHEN u.admin OR u.moderator
-                                         THEN t.highest_staff_post_number
-                                         ELSE t.highest_post_number
+                                         WHEN gu3.id IS NULL
+                                         THEN t.highest_post_number
+                                         ELSE t.highest_staff_post_number
                                          END
           AND (COALESCE(tu.notification_level, 1) >= 2)
           GROUP BY gu2.user_id, gu2.group_id

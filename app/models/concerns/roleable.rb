@@ -18,6 +18,10 @@ module Roleable
     !staff?
   end
 
+  def whisperer?
+    SiteSetting.enable_whispers.present? && groups&.exists?(id: SiteSetting.enable_whispers.split("|"))
+  end
+
   def grant_moderation!
     return if moderator
     set_permission('moderator', true)

@@ -6,9 +6,13 @@ import { test } from "qunit";
 acceptance(
   "Composer disabled, uncategorized not allowed when any topic_template present",
   function (needs) {
-    needs.user();
+    needs.user({
+      id: 5,
+      username: "kris",
+      groups: [{ id: 14, name: "awesome_group" }],
+    });
     needs.settings({
-      enable_whispers: true,
+      enable_whispers: "14",
       allow_uncategorized_topics: false,
     });
 
