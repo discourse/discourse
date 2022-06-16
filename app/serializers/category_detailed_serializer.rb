@@ -28,6 +28,10 @@ class CategoryDetailedSerializer < BasicCategorySerializer
     object.id == SiteSetting.uncategorized_category_id
   end
 
+  def include_is_uncategorized?
+    is_uncategorized
+  end
+
   def topics_day
     count_with_subcategories(:topics_day)
   end
