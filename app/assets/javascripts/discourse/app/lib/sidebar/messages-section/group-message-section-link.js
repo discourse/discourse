@@ -6,7 +6,7 @@ import { capitalize } from "@ember/string";
 import { INBOX } from "discourse/components/sidebar/messages-section";
 
 export default class GroupMessageSectionLink {
-  @tracked shouldDisplay = this._isInbox ? true : false;
+  @tracked shouldDisplay = this._isInbox;
 
   routeNames = new Set([
     "userPrivateMessages.group",
