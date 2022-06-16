@@ -219,9 +219,7 @@ acceptance(
           "displays group3 inbox link"
         );
 
-        await click(
-          ".sidebar-section-messages .sidebar-section-link-group-messages-inbox.group1"
-        );
+        await visit("/u/eviltrout/messages/group/GrOuP1");
 
         assert.strictEqual(
           queryAll(".sidebar-section-messages .sidebar-section-link").length,

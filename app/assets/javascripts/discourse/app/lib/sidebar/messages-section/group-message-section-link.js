@@ -71,7 +71,7 @@ export default class GroupMessageSectionLink {
 
     this.shouldDisplay =
       this.routeNames.has(currentRouteName) &&
-      currentRouteParams.name === this.group.name;
+      currentRouteParams.name.toLowerCase() === this.group.name.toLowerCase();
   }
 
   get _isInbox() {
