@@ -4,7 +4,7 @@ import { tracked } from "@glimmer/tracking";
 import { INBOX } from "discourse/components/sidebar/messages-section";
 
 export default class PersonalMessageSectionLink {
-  @tracked shouldDisplay = this._isInbox ? true : false;
+  @tracked shouldDisplay = this._isInbox;
 
   routeNames = new Set([
     "userPrivateMessages.index",
