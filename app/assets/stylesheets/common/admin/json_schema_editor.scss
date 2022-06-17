@@ -7,7 +7,7 @@
     }
   }
 
-  .card .je-object__container {
+  .je-object__container {
     border-bottom: 1px dashed var(--primary-low);
     padding-bottom: 1em;
     margin-bottom: 1em;
@@ -30,7 +30,7 @@
       }
     }
 
-    .btn-group:last-child {
+    > .btn-group:last-child {
       position: absolute;
       right: 0px;
       top: 0px;
@@ -39,19 +39,16 @@
         font-size: var(--font-down-1);
       }
     }
+    > .btn-group {
+      margin-top: 0;
+      display: flex;
+      align-items: stretch;
+      gap: 0.25em;
+    }
   }
 
-  .btn-group {
-    margin-top: 0;
-    display: flex;
-    align-items: stretch;
-    gap: 0.25em;
-
-    .btn {
-      .d-icon {
-        margin-right: 0;
-      }
-    }
+  .btn-group .btn .d-icon {
+    margin-right: 0;
   }
 
   .card-body > .btn-group {
@@ -61,9 +58,21 @@
   }
 
   .table {
-    td {
-      vertical-align: top;
-      padding: 1em 0;
+    width: 100%;
+    margin-bottom: 0.5em;
+
+    td,
+    th {
+      vertical-align: middle;
+      padding: 0.5em 0;
+      &:last-child {
+        text-align: right;
+      }
+    }
+
+    .btn-group .btn {
+      margin-left: 0.25em;
+      font-size: var(--font-down-1);
     }
 
     td.compact {
@@ -74,7 +83,8 @@
       }
     }
 
-    input[type="text"] {
+    input[type="text"],
+    .form-group .form-control {
       margin-bottom: 0;
       width: 95%;
 
@@ -85,7 +95,13 @@
     }
   }
 
-  .desktop-view & #json-editor-holder {
-    min-width: 600px;
+  .row div[data-schematype="array"] {
+    padding: 0.5em;
+    background-color: var(--primary-very-low);
+  }
+
+  .desktop-view & .modal-inner-container {
+    --modal-max-width: 75vw;
+    min-width: 55vw;
   }
 }
