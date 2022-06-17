@@ -1,4 +1,5 @@
 import EmberObject, { computed, get } from "@ember/object";
+import { apply } from "@ember/object/computed";
 import extractValue from "./extract-value";
 
 export default function handleDescriptor(target, key, desc, params = []) {
@@ -39,7 +40,7 @@ export default function handleDescriptor(target, key, desc, params = []) {
           );
         }
 
-        return computed.apply(null, params.concat(computedDescriptor));
+        return apply(null, params.concat(computedDescriptor));
       },
     };
   }
