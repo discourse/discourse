@@ -31,7 +31,7 @@ jobs:
       fail-fast: false
 
       matrix:
-        build_type: [backend, frontend, frontend-legacy, annotations]
+        build_type: [backend, frontend, annotations]
         target: [core, plugins]
         exclude:
           - build_type: annotations
@@ -152,16 +152,6 @@ jobs:
       - name: Plugin RSpec
         if: matrix.build_type == 'backend' && matrix.target == 'plugins'
         run: bin/rake plugin:spec
-
-      - name: Core QUnit (Legacy)
-        if: matrix.build_type == 'frontend-legacy' && matrix.target == 'core'
-        run: QUNIT_EMBER_CLI=0 bin/rake qunit:test['1200000']
-        timeout-minutes: 30
-
-      - name: Plugin QUnit (Legacy)
-        if: matrix.build_type == 'frontend-legacy' && matrix.target == 'plugins'
-        run: QUNIT_EMBER_CLI=0 bin/rake plugin:qunit['*','1200000']
-        timeout-minutes: 30
 
       - name: Plugin QUnit (Ember CLI)
         if: matrix.build_type == 'frontend' && (matrix.target == 'plugins' || matrix.target == 'core-plugins')
