@@ -4,6 +4,10 @@ if !defined?(EMBER_CLI)
   EMBER_CLI = EmberCli.enabled?
 end
 
+if ENV["EMBER_CLI_PROD_ASSETS"] == "0"
+  STDERR.puts "The 'legacy' ember environment is discontinued. Compiling with ember-cli assets..."
+end
+
 task 'assets:precompile:before' do
 
   require 'uglifier'
