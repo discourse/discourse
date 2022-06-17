@@ -51,11 +51,21 @@ class WebhooksController < ActionController::Base
 
   def mandrill
     # Only parse if mailchimp sends body url-encoded
-    events = params["mandrill_events"].is_a? String ? params["mandrill_events"] : JSON.parse(params["mandrill_events"])
+    events = JSON.parse(params["mandrill_events"])
     events.each do |event|
       message_id = event.dig("msg", "metadata", "message_id")
       to_address = event.dig("msg", "email")
-      error_code = event.dig("msg", "diag")
+      error_string = event.dig("msg", "diag")
+      error_code = nil
+
+      if error_string.is_a? String
+        error_match = error_string.match(/\s\d\.\d\.\d\s/)
+
+        if error_match.is_a? MatchData
+          error_code = error_match.to_s
+          error_code.strip!
+        end
+      end
 
       case event["event"]
       when "hard_bounce"
