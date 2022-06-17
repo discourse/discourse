@@ -17,9 +17,12 @@ if (!isLegacyEmber()) {
       setupRenderingTest(hooks);
 
       hooks.beforeEach(function () {
-        pretender.post("/admin/customize/watched_words/upload.json", function () {
-          return response(200, {});
-        });
+        pretender.post(
+          "/admin/customize/watched_words/upload.json",
+          function () {
+            return response(200, {});
+          }
+        );
       });
 
       componentTest("sets the proper action key on uploads", {
