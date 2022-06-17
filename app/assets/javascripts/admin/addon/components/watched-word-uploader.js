@@ -3,7 +3,6 @@ import I18n from "I18n";
 import UppyUploadMixin from "discourse/mixins/uppy-upload";
 import { alias } from "@ember/object/computed";
 import bootbox from "bootbox";
-import discourseComputed from "discourse-common/utils/decorators";
 
 export default Component.extend(UppyUploadMixin, {
   type: "txt",
@@ -16,9 +15,8 @@ export default Component.extend(UppyUploadMixin, {
     return { skipValidation: true };
   },
 
-  @discourseComputed("actionKey")
-  data(actionKey) {
-    return { action_key: actionKey };
+  _perFileData() {
+    return { action_key: this.actionKey };
   },
 
   uploadDone() {
