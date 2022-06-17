@@ -1204,7 +1204,7 @@ en:
       muted_categories: "Muted"
       muted_categories_instructions: "You will not be notified of anything about new topics in these categories, and they will not appear on the categories or latest pages."
       muted_categories_instructions_dont_hide: "You will not be notified of anything about new topics in these categories."
-      regular_categories: "Regular"
+      regular_categories: "Normal"
       regular_categories_instructions: "You will see these categories in the “Latest” and “Top” topic lists."
       no_category_access: "As a moderator you have limited category access, save is disabled."
       delete_account: "Delete My Account"
@@ -3777,7 +3777,7 @@ en:
         edit: "%{shortcut} Edit post"
         delete: "%{shortcut} Delete post"
         mark_muted: "%{shortcut} Mute topic"
-        mark_regular: "%{shortcut} Regular (default) topic"
+        mark_regular: "%{shortcut} Normal (default) topic"
         mark_tracking: "%{shortcut} Track topic"
         mark_watching: "%{shortcut} Watch topic"
         print: "%{shortcut} Print topic"
@@ -3921,7 +3921,7 @@ en:
           title: "Tracking"
           description: "You will automatically track all topics with this tag. A count of unread and new posts will appear next to the topic."
         regular:
-          title: "Regular"
+          title: "Normal"
           description: "You will be notified if someone mentions your @name or replies to your post."
         muted:
           title: "Muted"

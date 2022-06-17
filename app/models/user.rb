@@ -1671,9 +1671,9 @@ class User < ActiveRecord::Base
     # * default_categories_watching
     # * default_categories_tracking
     # * default_categories_watching_first_post
-    # * default_categories_regular
+    # * default_categories_normal
     # * default_categories_muted
-    %w{watching watching_first_post tracking regular muted}.each do |setting|
+    %w{watching watching_first_post tracking normal muted}.each do |setting|
       category_ids = SiteSetting.get("default_categories_#{setting}").split("|").map(&:to_i)
       category_ids.each do |category_id|
         next if category_id == 0

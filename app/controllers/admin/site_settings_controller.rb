@@ -216,7 +216,7 @@ class Admin::SiteSettingsController < Admin::AdminController
       NotificationLevels.all[:muted]
     when "default_categories_watching_first_post"
       NotificationLevels.all[:watching_first_post]
-    when "default_categories_regular"
+    when "default_categories_normal"
       NotificationLevels.all[:regular]
     end
   end

@@ -866,7 +866,7 @@ class TopicQuery
         SiteSetting.default_categories_watching.split("|"),
         SiteSetting.default_categories_tracking.split("|"),
         SiteSetting.default_categories_watching_first_post.split("|"),
-        SiteSetting.default_categories_regular.split("|")
+        SiteSetting.default_categories_normal.split("|")
       ].flatten.map(&:to_i)
       category_ids << category_id if category_id.present? && category_ids.exclude?(category_id)
 
