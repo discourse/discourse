@@ -28,7 +28,7 @@ jobs:
       fail-fast: false
 
       matrix:
-        build_type: ["backend", "frontend-legacy", "frontend"]
+        build_type: ["backend", "frontend"]
 
     steps:
       - uses: actions/checkout@v3
@@ -137,7 +137,7 @@ jobs:
         if: matrix.build_type == 'backend' && steps.check_spec.outputs.files_exist == 'true'
         run: bin/rake plugin:spec[${{ github.event.repository.name }}]
 
-      - name: Check qunit existence
+      - name: Check QUnit existence
         id: check_qunit
         shell: bash
         run: |
@@ -146,11 +146,6 @@ jobs:
           fi
 
       - name: Plugin QUnit
-        if: matrix.build_type == 'frontend-legacy' && steps.check_qunit.outputs.files_exist == 'true'
-        run: QUNIT_EMBER_CLI=0 bundle exec rake plugin:qunit['${{ github.event.repository.name }}','1200000']
-        timeout-minutes: 10
-
-      - name: Plugin QUnit (Ember CLI)
         if: matrix.build_type == 'frontend' && steps.check_qunit.outputs.files_exist == 'true'
         run: QUNIT_EMBER_CLI=1 bundle exec rake plugin:qunit['${{ github.event.repository.name }}','1200000']
         timeout-minutes: 10
