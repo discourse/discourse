@@ -132,18 +132,17 @@ describe WebhooksController do
       user = Fabricate(:user, email: email)
       email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
 
-      post "/webhooks/mandrill.json", params: {
+      post "/webhooks/mandrill", params: {
         mandrill_events: [{
           "event" => "hard_bounce",
           "msg" => {
             "email" => email,
-            "diag" => "5.1.1",
-            "bounce_description": "smtp; 550-5.1.1 The email account that you tried to reach does not exist.",
+            "diag" => "smtp;550 5.1.1 The email account that you tried to reach does not exist. Please try double-checking the recipient's email address for typos or unnecessary spaces.",
             "metadata" => {
               "message_id" => message_id
             }
           }
-        }]
+        }].to_json
       }
 
       expect(response.status).to eq(200)
