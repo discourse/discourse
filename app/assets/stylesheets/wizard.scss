@@ -1,11 +1,3 @@
-@import "color_definitions";
-@import "vendor/normalize";
-@import "vendor/normalize-ext";
-@import "common/foundation/colors";
-@import "common/select-kit/_index";
-@import "common/components/svg";
-@import "common/base/modal";
-
 $bubbles-mask: svg-uri(
   '<svg xmlns="http://www.w3.org/2000/svg" width="415.2" height="414" viewBox="0 0 415.2 414">
   <defs>
@@ -1297,14 +1289,8 @@ body.wizard {
   }
 }
 
-@media only screen and (min-device-width: 569px) {
-  @import "desktop/modal";
-}
-
 /* fix wizard for mobile -- iPhone 5 default width */
 @media only screen and (max-device-width: 568px) {
-  @import "mobile/modal";
-
   h1 {
     font-size: var(--font-up-2) !important;
   }
