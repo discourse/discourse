@@ -40,6 +40,10 @@ export default class GroupMessageSectionLink extends MessageSectionLink {
   get text() {
     if (this._isInbox) {
       return this.group.name;
+    } else if (this.count > 0) {
+      return I18n.t(`sidebar.sections.messages.links.${this.type}_with_count`, {
+        count: this.count,
+      });
     } else {
       return I18n.t(`sidebar.sections.messages.links.${this.type}`);
     }
