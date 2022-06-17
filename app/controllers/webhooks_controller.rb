@@ -50,7 +50,6 @@ class WebhooksController < ActionController::Base
   end
 
   def mandrill
-    # Only parse if mailchimp sends body url-encoded
     events = JSON.parse(params["mandrill_events"])
     events.each do |event|
       message_id = event.dig("msg", "metadata", "message_id")

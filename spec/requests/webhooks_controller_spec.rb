@@ -132,7 +132,7 @@ describe WebhooksController do
       user = Fabricate(:user, email: email)
       email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
 
-      post "/webhooks/mandrill", params: {
+      post "/webhooks/mandrill.json", params: {
         mandrill_events: [{
           "event" => "hard_bounce",
           "msg" => {
