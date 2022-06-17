@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "json"
 require "openssl"
 
 class WebhooksController < ActionController::Base
@@ -49,7 +50,7 @@ class WebhooksController < ActionController::Base
   end
 
   def mandrill
-    events = params["mandrill_events"]
+    events = JSON.parse(params["mandrill_events"])
     events.each do |event|
       message_id = event.dig("msg", "metadata", "message_id")
       to_address = event.dig("msg", "email")
