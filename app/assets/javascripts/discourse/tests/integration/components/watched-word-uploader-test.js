@@ -8,7 +8,6 @@ import {
 import hbs from "htmlbars-inline-precompile";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { click, waitFor } from "@ember/test-helpers";
-import { setupApplicationTest as EMBER_CLI_ENV } from "ember-qunit";
 import { isLegacyEmber } from "discourse-common/config/environment";
 
 if (!isLegacyEmber()) {
