@@ -50,15 +50,11 @@ describe UserStatusController do
 
       it "publishes to message bus" do
         status = "off to dentist"
-
-        messages = MessageBus.track_publish(User.publish_updates_channel(user.id)) do
-          put "/user-status.json", params: { description: status }
-          expect(response.status).to eq(200)
-        end
+        messages = MessageBus.track_publish { put "/user-status.json", params: { description: status } }
 
         expect(messages.size).to eq(1)
-        expect(messages[0].data[:type]).to eq(User::PUBLISH_USER_STATUS_TYPE)
-        expect(messages[0].data[:payload][:description]).to eq(status)
+        expect(messages[0].channel).to eq("/user-status/#{user.id}")
+        expect(messages[0].data[:description]).to eq(status)
         expect(messages[0].user_ids).to eq([user.id])
       end
     end
@@ -97,15 +93,11 @@ describe UserStatusController do
       end
 
       it "publishes to message bus" do
-        messages = MessageBus.track_publish(User.publish_updates_channel(user.id)) do
-          delete "/user-status.json"
-
-          expect(response.status).to eq(200)
-        end
+        messages = MessageBus.track_publish { delete "/user-status.json" }
 
         expect(messages.size).to eq(1)
-        expect(messages[0].data[:type]).to eq(User::PUBLISH_USER_STATUS_TYPE)
-        expect(messages[0].data[:payload]).to eq(nil)
+        expect(messages[0].channel).to eq("/user-status/#{user.id}")
+        expect(messages[0].data).to eq(nil)
         expect(messages[0].user_ids).to eq([user.id])
       end
     end
