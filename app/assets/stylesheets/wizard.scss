@@ -722,7 +722,7 @@ $bubbles-mask: svg-uri(
 body.wizard {
   background: var(--secondary) $bubbles-mask;
   color: var(--primary-very-high);
-  line-height: $line-height-large;
+  line-height: var(--line-height-large);
   font-size: 15px;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     Oxygen-Sans, Ubuntu, Cantarell, Arial, sans-serif;
@@ -972,7 +972,7 @@ body.wizard {
 
     span {
       position: absolute;
-      font-size: $font-0;
+      font-size: var(--font-0);
       mix-blend-mode: difference;
       color: var(--secondary-or-primary);
       z-index: 13;
@@ -999,7 +999,7 @@ body.wizard {
 
   .wizard-btn {
     border-radius: 2px;
-    font-size: $font-0;
+    font-size: var(--font-0);
     border: 0;
     padding: 0.5em;
     transition: background-color 0.3s;
@@ -1012,7 +1012,7 @@ body.wizard {
 
     &.small {
       padding: 0.25em 0.5em;
-      font-size: $font-down-1;
+      font-size: var(--font-down-1);
     }
 
     &:hover,
@@ -1206,7 +1206,7 @@ body.wizard {
 
 .text-field input {
   width: 100%;
-  font-size: $font-up-1;
+  font-size: var(--font-up-1);
   margin: 0;
   padding: 6px;
   background-color: var(--secondary);
@@ -1306,7 +1306,7 @@ body.wizard {
   @import "mobile/modal";
 
   h1 {
-    font-size: $font-up-2 !important;
+    font-size: var(--font-up-2) !important;
   }
   .wizard-column {
     margin: auto !important;
