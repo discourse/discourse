@@ -50,6 +50,7 @@ const Notice = EmberObject.extend({
 });
 
 export default Component.extend({
+  tagName: "",
   logsNoticeService: service("logsNotice"),
   logNotice: null,
 
