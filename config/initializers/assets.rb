@@ -28,16 +28,13 @@ Rails.application.config.assets.precompile += %w{
   browser-detect.js
   browser-update.js
   break_string.js
-  ember_jquery.js
   pretty-text-bundle.js
   markdown-it-bundle.js
   service-worker.js
   google-tag-manager.js
   google-universal-analytics-v3.js
   google-universal-analytics-v4.js
-  start-discourse.js
   print-page.js
-  omniauth-complete.js
   activate-account.js
   auto-redirect.js
   locales/i18n.js
@@ -46,9 +43,7 @@ Rails.application.config.assets.precompile += %w{
   confirm-new-email/bootstrap.js
   onpopstate-handler.js
   embed-application.js
-  discourse/tests/active-plugins.js
   admin-plugins.js
-  discourse/tests/test_starter.js
 }
 
 if EmberCli.enabled?
@@ -60,13 +55,6 @@ if EmberCli.enabled?
     scripts/discourse-boot
   }
   Rails.application.config.assets.precompile += EmberCli::ASSETS.map { |name| name.sub('.js', '.map') }
-else
-  Rails.application.config.assets.precompile += %w{
-    application.js
-    discourse/tests/test-support-rails.js
-    discourse/tests/test-helpers-rails.js
-    vendor-theme-tests.js
-  }
 end
 
 # Precompile all available locales
