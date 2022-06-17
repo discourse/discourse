@@ -241,7 +241,7 @@ GEM
     mini_sql (1.4.0)
     mini_suffix (0.3.3)
       ffi (~> 1.9)
-    minitest (5.15.0)
+    minitest (5.16.0)
     mocha (1.14.0)
     msgpack (1.5.2)
     multi_json (1.15.0)

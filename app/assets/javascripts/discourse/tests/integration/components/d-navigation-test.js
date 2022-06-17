@@ -19,9 +19,7 @@ discourseModule("Integration | Component | d-navigation", function (hooks) {
       const categories = this.site.categoriesList
         .filter((category) => !category.parent_category_id)
         .slice(0, 4);
-      this.site.setProperties({
-        categoriesList: categories,
-      });
+      this.site.setProperties({ categories });
       this.currentUser.set(
         "indirectly_muted_category_ids",
         categories.slice(0, 3).map((category) => category.id)

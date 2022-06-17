@@ -657,38 +657,16 @@ class User < ActiveRecord::Base
     MessageBus.publish("/notification/#{id}", payload, user_ids: [id])
   end
 
-  PUBLISH_USER_STATUS_TYPE = "user_status"
-  PUBLISH_DO_NOT_STATUS_TYPE = "do_not_disturb"
-  PUBLISH_DRAFTS_TYPE = "drafts"
-
-  def self.publish_updates_channel(user_id)
-    "/user-updates/#{user_id}"
-  end
-
-  def self.publish_updates(user_id:, type:, payload:)
-    MessageBus.publish(
-      publish_updates_channel(user_id),
-      {
-        type: type,
-        payload: payload
-      },
-      user_ids: [user_id]
-    )
-  end
-
-  def publish_updates(type:, payload:)
-    self.class.publish_updates(user_id: id, type: type, payload: payload)
-  end
-
   def publish_do_not_disturb(ends_at: nil)
-    publish_updates(type: PUBLISH_DO_NOT_STATUS_TYPE, payload: { ends_at: ends_at&.httpdate })
+    MessageBus.publish("/do-not-disturb/#{id}", { ends_at: ends_at&.httpdate }, user_ids: [id])
   end
 
   def publish_user_status(status)
-    publish_updates(
-      type: PUBLISH_USER_STATUS_TYPE,
-      payload: status ? { description: status.description, emoji: status.emoji } : nil
-    )
+    payload = status ?
+                { description: status.description, emoji: status.emoji } :
+                nil
+
+    MessageBus.publish("/user-status/#{id}", payload, user_ids: [id])
   end
 
   def password=(password)

@@ -174,9 +174,9 @@ describe PostCreator do
             "/latest",
             "/topic/#{created_post.topic_id}",
             "/topic/#{created_post.topic_id}",
-            User.publish_updates_channel(admin.id),
-            User.publish_updates_channel(admin.id),
-            User.publish_updates_channel(admin.id),
+            "/user-drafts/#{admin.id}",
+            "/user-drafts/#{admin.id}",
+            "/user-drafts/#{admin.id}",
           ].sort
         )
 
@@ -205,7 +205,7 @@ describe PostCreator do
         user_action = messages.find { |m| m.channel == "/u/#{p.user.username}" }
         expect(user_action).not_to eq(nil)
 
-        draft_count = messages.find { |m| m.channel == User.publish_updates_channel(p.user_id) }
+        draft_count = messages.find { |m| m.channel == "/user-drafts/#{p.user_id}" }
         expect(draft_count).not_to eq(nil)
 
         expect(messages.filter { |m| m.channel != "/distributed_hash" }.length).to eq(7)

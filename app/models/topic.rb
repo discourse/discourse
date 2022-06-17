@@ -85,8 +85,7 @@ class Topic < ActiveRecord::Base
     if SiteSetting.create_thumbnails &&
        enqueue_if_missing &&
        records.length < thumbnail_sizes.length &&
-       Discourse.redis.set(thumbnail_job_redis_key(thumbnail_sizes), 1, nx: true, ex: 1.minute)
-
+       Discourse.redis.set(thumbnail_job_redis_key(extra_sizes), 1, nx: true, ex: 1.minute)
       Jobs.enqueue(:generate_topic_thumbnails, { topic_id: id, extra_sizes: extra_sizes })
     end
 

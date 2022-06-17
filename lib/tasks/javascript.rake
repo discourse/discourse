@@ -75,7 +75,7 @@ def dependencies
       package_name: '@json-editor/json-editor',
       public: true
     }, {
-      source: 'chart.js/dist/Chart.min.js',
+      source: 'chart.js/dist/chart.min.js',
       public: true
     }, {
       source: 'chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.js',
@@ -310,7 +310,7 @@ task 'javascript:update' => 'clean_up' do
       else
         package_dir_name = public_path_name(f)
         package_version = JSON.parse(File.read("#{library_src}/#{node_package_name(f)}/package.json"))["version"]
-        versions[filename] = "#{package_dir_name}/#{package_version}/#{filename}"
+        versions[filename.downcase] = "#{package_dir_name}/#{package_version}/#{filename}"
 
         path = "#{public_js}/#{package_dir_name}/#{package_version}"
         dest = "#{path}/#{filename}"
