@@ -214,13 +214,13 @@ class UserStat < ActiveRecord::Base
         RETURNING draft_count, (SELECT 1 FROM drafts WHERE user_id = :user_id AND draft_key = :new_topic)
       SQL
 
-      User.publish_updates(
-        user_id: user_id,
-        type: User::PUBLISH_DRAFTS_TYPE,
-        payload: {
+      MessageBus.publish(
+        "/user-drafts/#{user_id}",
+        {
           draft_count: draft_count,
           has_topic_draft: !!has_topic_draft
-        }
+        },
+        user_ids: [user_id]
       )
     else
       DB.exec <<~SQL
