@@ -128,6 +128,9 @@ module.exports = function (defaults) {
     concat(mergeTrees([app.options.adminTree]), {
       outputFile: `assets/admin.js`,
     }),
+    concat(mergeTrees([app.options.wizardTree]), {
+      outputFile: `assets/wizard.js`,
+    }),
     prettyTextEngine(vendorJs, "discourse-markdown"),
     concat("public/assets/scripts", {
       outputFile: `assets/start-discourse.js`,

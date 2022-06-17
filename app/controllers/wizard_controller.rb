@@ -1,13 +1,10 @@
 # frozen_string_literal: true
 
 class WizardController < ApplicationController
-  requires_login except: [:qunit]
+  requires_login
 
-  before_action :ensure_admin, except: [:qunit]
-  before_action :ensure_wizard_enabled, only: [:index]
-  skip_before_action :check_xhr, :preload_json
-
-  layout false
+  before_action :ensure_admin
+  before_action :ensure_wizard_enabled
 
   def index
     respond_to do |format|
@@ -15,12 +12,10 @@ class WizardController < ApplicationController
         wizard = Wizard::Builder.new(current_user).build
         render_serialized(wizard, WizardSerializer)
       end
-      format.html {}
+
+      format.html do
+        render body: nil
+      end
     end
   end
-
-  def qunit
-    raise Discourse::InvalidAccess.new if Rails.env.production?
-  end
-
 end

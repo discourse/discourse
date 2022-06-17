@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-# base.rb uses this style of require, so maintain usage of it here
-
 module Jobs
   class CriticalUserEmail < UserEmail
 

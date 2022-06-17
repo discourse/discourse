@@ -10,7 +10,7 @@ $bubbles-mask: svg-uri(
   '<svg xmlns="http://www.w3.org/2000/svg" width="415.2" height="414" viewBox="0 0 415.2 414">
   <defs>
     <style>
-      .cls-1 {fill: #adaeb0;}
+      .cls-1 {fill: #{rgba($primary-low-mid, 0.6)};}
       .cls-2 {opacity: 0.45;}
       .cls-3 {opacity: 0.65;}
       .cls-4 {opacity: 0.35;}
@@ -720,35 +720,21 @@ $bubbles-mask: svg-uri(
 }
 
 body.wizard {
-  background-color: var(--secondary);
-  background-repeat: repeat;
-  background-position: left top;
+  background: var(--secondary) $bubbles-mask;
   color: var(--primary-very-high);
   line-height: $line-height-large;
   font-size: 15px;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     Oxygen-Sans, Ubuntu, Cantarell, Arial, sans-serif;
 
+  label {
+    display: block;
+  }
+
   #wizard-main {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    min-height: 100%;
-  }
-
-  #wizard-main:before {
-    mask: $bubbles-mask;
-    -webkit-mask: $bubbles-mask;
-    mask-size: 30%;
-    -webkit-mask-size: 30%;
-    background-color: var(--primary-low-mid);
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    content: "";
-    opacity: 0.6;
   }
 }
 
@@ -1221,6 +1207,7 @@ body.wizard {
 .text-field input {
   width: 100%;
   font-size: $font-up-1;
+  margin: 0;
   padding: 6px;
   background-color: var(--secondary);
   border: 1px solid var(--primary-low-mid);
@@ -1238,11 +1225,6 @@ body.wizard {
 .radio-field-choice {
   margin-bottom: 1.25em;
 
-  input {
-    /* TODO: Custom :focus style */
-    /* outline: 0;*/
-  }
-
   .radio-label {
     font-weight: bold;
     margin-left: 0.5em;
@@ -1250,8 +1232,7 @@ body.wizard {
   .radio-description {
     margin-top: 0.25em;
     margin-left: 1.75em;
-    color: #777;
-    color: var(--primary-low-mid);
+    color: var(--primary-high);
   }
 }
 
