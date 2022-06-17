@@ -1,25 +1,27 @@
 <div class="global-notice">
-  {{#each notices as |notice|}}
-    <div class="row">
-      <div
-        id="global-notice-{{notice.id}}"
-        class="alert alert-{{notice.options.level}} {{notice.id}}"
-      >
-        {{#if notice.options.html}}
-          {{html-safe notice.options.html}}
-        {{/if}}
+  {{#if this.visible}}
+    {{#each notices as |notice|}}
+      <div class="row">
+        <div
+          id="global-notice-{{notice.id}}"
+          class="alert alert-{{notice.options.level}} {{notice.id}}"
+        >
+          {{#if notice.options.html}}
+            {{html-safe notice.options.html}}
+          {{/if}}
 
-        <span class="text">{{html-safe notice.text}}</span>
+          <span class="text">{{html-safe notice.text}}</span>
 
-        {{#if notice.options.dismissable}}
-          {{d-button
-            class="btn-flat close"
-            icon="times"
-            action=(action "dismissNotice")
-            actionParam=notice
-          }}
-        {{/if}}
+          {{#if notice.options.dismissable}}
+            {{d-button
+              class="btn-flat close"
+              icon="times"
+              action=(action "dismissNotice")
+              actionParam=notice
+            }}
+          {{/if}}
+        </div>
       </div>
-    </div>
-  {{/each}}
+    {{/each}}
+  {{/if}}
 </div>

@@ -51,6 +51,7 @@ const Notice = EmberObject.extend({
 
 export default Component.extend({
   tagName: "",
+  router: service(),
   logsNoticeService: service("logsNotice"),
   logNotice: null,
 
@@ -69,6 +70,10 @@ export default Component.extend({
       "hidden",
       this._handleLogsNoticeUpdate
     );
+  },
+
+  get visible() {
+    return !this.router.currentRouteName.startsWith("wizard.");
   },
 
   @discourseComputed(
