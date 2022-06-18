@@ -1700,6 +1700,14 @@ export default Controller.extend(bufferedProperty("model"), {
             topic.set("message_archived", true);
             break;
           }
+          case "stats": {
+            topic.setProperties({ like_count: data.like_count });
+
+            postStream
+              .triggerChangedTopicStats()
+              .then((firstPostId) => refresh({ id: firstPostId }));
+            break;
+          }
           default: {
             let callback = customPostMessageCallbacks[data.type];
             if (callback) {

@@ -1125,13 +1125,14 @@ class Topic < ActiveRecord::Base
   end
 
   def update_action_counts
-    update_column(
-      :like_count,
-      Post
-        .where.not(post_type: Post.types[:whisper])
-        .where(topic_id: id)
-        .sum(:like_count)
-    )
+    likes = Post
+      .where.not(post_type: Post.types[:whisper])
+      .where(topic_id: id)
+      .sum(:like_count)
+
+    update_column(:like_count, likes)
+
+    { like_count: likes }
   end
 
   def posters_summary(options = {}) # avatar lookup in options
@@ -1803,6 +1804,33 @@ class Topic < ActiveRecord::Base
 
   def first_smtp_enabled_group
     self.allowed_groups.where(smtp_enabled: true).first
+  end
+
+  def secure_audience_publish_messages
+    target_audience = {}
+
+    if private_message?
+      target_audience[:user_ids] = User.human_users.where("admin OR moderator").pluck(:id)
+      target_audience[:user_ids] |= allowed_users.pluck(:id)
+      target_audience[:user_ids] |= allowed_group_users.pluck(:id)
+    else
+      target_audience[:group_ids] = secure_group_ids
+    end
+
+    target_audience
+  end
+
+  def publish_stats_change_to_clients!(stats, opts = {})
+    secure_audience = secure_audience_publish_messages
+
+    if secure_audience[:user_ids] != [] && secure_audience[:group_ids] != []
+      message = stats.merge({
+                              id: id,
+                              updated_at: Time.now,
+                              type: :stats,
+                            })
+      MessageBus.publish("/topic/#{id}", message, opts.merge(secure_audience))
+    end
   end
 
   private

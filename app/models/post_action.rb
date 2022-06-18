@@ -235,7 +235,12 @@ class PostAction < ActiveRecord::Base
     end
 
     if column == "like_count"
-      Topic.find_by(id: topic_id)&.update_action_counts
+      topic = Topic.find_by(id: topic_id)
+
+      if topic
+        stats = topic.update_action_counts
+        topic.publish_stats_change_to_clients!(stats)
+      end
     end
 
   end

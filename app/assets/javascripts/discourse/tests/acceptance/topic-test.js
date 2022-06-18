@@ -3,6 +3,7 @@ import {
   chromeTest,
   count,
   exists,
+  publishToMessageBus,
   query,
   queryAll,
   selectText,
@@ -649,5 +650,36 @@ acceptance("Navigating between topics", function (needs) {
     await visit("/t/-/280");
     await click("a.by-post-id");
     assert.ok(currentURL().includes("/280"));
+  });
+});
+
+acceptance("Topic stats update automatically", function () {
+  test("Likes count updates automatically", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+
+    const likesDisplay = query("#post_1 .topic-map .likes .number");
+    const oldLikes = likesDisplay.textContent;
+
+    // simulate the topic like_count being changed
+    publishToMessageBus("/topic/280", {
+      id: 280,
+      type: "stats",
+      like_count: 999,
+    });
+
+    // we wait on the same page for the dom update
+    await visit("/t/internationalization-localization/280");
+    const newLikes = likesDisplay.textContent;
+
+    assert.notEqual(
+      oldLikes,
+      newLikes,
+      "it updates the like count on the topic stats"
+    );
+    assert.equal(
+      newLikes,
+      999,
+      "it updates the like count with the expected value"
+    );
   });
 });
