@@ -107,7 +107,7 @@ GEM
       addressable
     debug_inspector (1.1.0)
     diff-lcs (1.5.0)
-    diffy (3.4.1)
+    diffy (3.4.2)
     digest (3.1.0)
     discourse-ember-rails (0.18.6)
       active_model_serializers
