@@ -29,6 +29,7 @@ module.exports = function (defaults) {
     },
     autoImport: {
       forbidEval: true,
+      insertScriptsAt: "ember-auto-import-scripts",
     },
     fingerprint: {
       // Handled by Rails asset pipeline
