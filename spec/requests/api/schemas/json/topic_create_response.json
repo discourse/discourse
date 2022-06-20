@@ -129,7 +129,7 @@
     },
     "actions_summary": {
       "type": "array",
-      "items": [
+      "items":
         {
           "type": "object",
           "additionalProperties": false,
@@ -146,7 +146,6 @@
             "can_act"
           ]
         }
-      ]
     },
     "moderator": {
       "type": "boolean"

@@ -3,7 +3,7 @@
   "properties": {
     "badges": {
       "type": "array",
-      "items": [
+      "items":
         {
           "type": "object",
           "additionalProperties": false,
@@ -109,11 +109,10 @@
             "badge_type_id"
           ]
         }
-      ]
     },
     "badge_types": {
       "type": "array",
-      "items": [
+      "items":
         {
           "type": "object",
           "additionalProperties": false,
@@ -134,11 +133,10 @@
             "sort_order"
           ]
         }
-      ]
     },
     "badge_groupings": {
       "type": "array",
-      "items": [
+      "items":
         {
           "type": "object",
           "additionalProperties": false,
@@ -170,7 +168,6 @@
             "system"
           ]
         }
-      ]
     },
     "admin_badges": {
       "type": "object",
@@ -178,9 +175,9 @@
       "properties": {
         "protected_system_fields": {
           "type": "array",
-          "items": [
+          "items": {
 
-          ]
+          }
         },
         "triggers": {
           "type": "object",
@@ -212,21 +209,21 @@
         },
         "badge_ids": {
           "type": "array",
-          "items": [
+          "items": {
 
-          ]
+          }
         },
         "badge_grouping_ids": {
           "type": "array",
-          "items": [
+          "items": {
 
-          ]
+          }
         },
         "badge_type_ids": {
           "type": "array",
-          "items": [
+          "items": {
 
-          ]
+          }
         }
       },
       "required": [
