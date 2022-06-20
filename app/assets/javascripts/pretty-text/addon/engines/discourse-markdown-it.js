@@ -344,9 +344,9 @@ function buildCustomMarkdownCookFunction(engineOpts, defaultEngineOpts) {
 function createMarkdownItEngineWithOpts(markdownitOpts, ruleOverrides) {
   if (ruleOverrides !== undefined) {
     // Preset for "zero", https://github.com/markdown-it/markdown-it/blob/master/lib/presets/zero.js
-    return window.markdownit("zero", markdownitOpts).enable(ruleOverrides);
+    return globalThis.markdownit("zero", markdownitOpts).enable(ruleOverrides);
   }
-  return window.markdownit(markdownitOpts);
+  return globalThis.markdownit(markdownitOpts);
 }
 
 function overrideMarkdownFeatures(features, featureOverrides) {

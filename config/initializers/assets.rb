@@ -22,22 +22,22 @@ Rails.application.config.assets.precompile += [lambda do |filename, path|
 end]
 
 Rails.application.config.assets.precompile += %w{
+  discourse.js
   vendor.js
   admin.js
   wizard.js
+  test-support.js
+  test-helpers.js
   browser-detect.js
   browser-update.js
   break_string.js
-  ember_jquery.js
   pretty-text-bundle.js
   markdown-it-bundle.js
   service-worker.js
   google-tag-manager.js
   google-universal-analytics-v3.js
   google-universal-analytics-v4.js
-  start-discourse.js
   print-page.js
-  omniauth-complete.js
   activate-account.js
   auto-redirect.js
   locales/i18n.js
@@ -46,12 +46,7 @@ Rails.application.config.assets.precompile += %w{
   confirm-new-email/bootstrap.js
   onpopstate-handler.js
   embed-application.js
-  discourse/tests/active-plugins.js
   admin-plugins.js
-  discourse/tests/test_starter.js
-  discourse.js
-  test-support.js
-  test-helpers.js
   scripts/discourse-test-listen-boot
   scripts/discourse-boot
 }

@@ -10,9 +10,6 @@ script/import_scripts/**/*.yml
 
 app/assets/javascripts/browser-update.js
 app/assets/javascripts/discourse-loader.js
-app/assets/javascripts/env.js
-app/assets/javascripts/main_include_admin.js
-app/assets/javascripts/vendor.js
 app/assets/javascripts/locales/i18n.js
 app/assets/javascripts/ember-addons/
 app/assets/javascripts/discourse/lib/autosize.js
@@ -22,7 +19,6 @@ lib/highlight_js/
 plugins/**/lib/javascripts/locale
 public/
 vendor/
-app/assets/javascripts/discourse/tests/test-boot-rails.js
 app/assets/javascripts/discourse/tests/fixtures
 spec/
 node_modules/
