@@ -46,7 +46,7 @@ module SiteSettings::Validations
       SiteSetting.default_categories_tracking.split("|"),
       SiteSetting.default_categories_muted.split("|"),
       SiteSetting.default_categories_watching_first_post.split("|"),
-      SiteSetting.default_categories_regular.split("|")
+      SiteSetting.default_categories_normal.split("|")
     ].flatten.map(&:to_i).to_set
 
     validate_default_categories(category_ids, default_categories_selected)
@@ -59,7 +59,7 @@ module SiteSettings::Validations
       SiteSetting.default_categories_watching.split("|"),
       SiteSetting.default_categories_muted.split("|"),
       SiteSetting.default_categories_watching_first_post.split("|"),
-      SiteSetting.default_categories_regular.split("|")
+      SiteSetting.default_categories_normal.split("|")
     ].flatten.map(&:to_i).to_set
 
     validate_default_categories(category_ids, default_categories_selected)
@@ -72,7 +72,7 @@ module SiteSettings::Validations
       SiteSetting.default_categories_watching.split("|"),
       SiteSetting.default_categories_tracking.split("|"),
       SiteSetting.default_categories_watching_first_post.split("|"),
-      SiteSetting.default_categories_regular.split("|")
+      SiteSetting.default_categories_normal.split("|")
     ].flatten.map(&:to_i).to_set
 
     validate_default_categories(category_ids, default_categories_selected)
@@ -85,7 +85,7 @@ module SiteSettings::Validations
       SiteSetting.default_categories_watching.split("|"),
       SiteSetting.default_categories_tracking.split("|"),
       SiteSetting.default_categories_muted.split("|"),
-      SiteSetting.default_categories_regular.split("|")
+      SiteSetting.default_categories_normal.split("|")
     ].flatten.map(&:to_i).to_set
 
     validate_default_categories(category_ids, default_categories_selected)

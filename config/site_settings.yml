@@ -2485,7 +2485,7 @@ user_preferences:
   default_categories_watching_first_post:
     type: category_list
     default: ""
-  default_categories_regular:
+  default_categories_normal:
     type: category_list
     default: ""
   mute_all_categories_by_default:

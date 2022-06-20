@@ -1727,7 +1727,7 @@ RSpec.describe User do
       SiteSetting.default_categories_tracking = category1.id.to_s
       SiteSetting.default_categories_muted = category2.id.to_s
       SiteSetting.default_categories_watching_first_post = category3.id.to_s
-      SiteSetting.default_categories_regular = category4.id.to_s
+      SiteSetting.default_categories_normal = category4.id.to_s
     end
 
     it "has overridden preferences" do
