@@ -44,10 +44,10 @@ QUnit.assert.buildsCorrectDate = function (options, expected, message) {
     localTimezone
   );
 
-  if (expected.formated) {
+  if (expected.formatted) {
     this.test.assert.strictEqual(
-      localDateBuilder.build().formated,
-      expected.formated,
+      localDateBuilder.build().formatted,
+      expected.formatted,
       message || "it formats the date correctly"
     );
   }
@@ -66,7 +66,7 @@ module("lib:local-date-builder", function () {
     freezeTime({ date: "2020-03-11" }, () => {
       assert.buildsCorrectDate(
         { date: "2020-03-22", timezone: PARIS },
-        { formated: "March 22, 2020" },
+        { formatted: "March 22, 2020" },
         "it displays the date without time"
       );
     });
@@ -75,13 +75,13 @@ module("lib:local-date-builder", function () {
   test("date and time", function (assert) {
     assert.buildsCorrectDate(
       { date: "2020-04-11", time: "11:00" },
-      { formated: "April 11, 2020 1:00 PM" },
+      { formatted: "April 11, 2020 1:00 PM" },
       "it displays the date with time"
     );
 
     assert.buildsCorrectDate(
       { date: "2020-04-11", time: "11:05:12", format: "LTS" },
-      { formated: "1:05:12 PM" },
+      { formatted: "1:05:12 PM" },
       "it displays full time (hours, minutes, seconds)"
     );
   });
@@ -90,7 +90,7 @@ module("lib:local-date-builder", function () {
     freezeTime({ date: "2020-03-11" }, () => {
       assert.buildsCorrectDate(
         { format: "YYYY" },
-        { formated: "2020 (UTC)" },
+        { formatted: "2020 (UTC)" },
         "it uses custom format"
       );
     });
@@ -100,7 +100,7 @@ module("lib:local-date-builder", function () {
     freezeTime({}, () => {
       assert.buildsCorrectDate(
         { displayedTimezone: SYDNEY },
-        { formated: "March 22, 2020 (Sydney)" },
+        { formatted: "March 22, 2020 (Sydney)" },
         "it displays the timezone if the timezone is different from the date"
       );
     });
@@ -108,7 +108,7 @@ module("lib:local-date-builder", function () {
     freezeTime({}, () => {
       assert.buildsCorrectDate(
         { displayedTimezone: PARIS, timezone: PARIS },
-        { formated: "March 22, 2020" },
+        { formatted: "March 22, 2020" },
         "it doesn't display the timezone if the timezone is the same than the date"
       );
     });
@@ -116,7 +116,7 @@ module("lib:local-date-builder", function () {
     freezeTime({}, () => {
       assert.buildsCorrectDate(
         { timezone: UTC, displayedTimezone: UTC },
-        { formated: "March 22, 2020 (UTC)" },
+        { formatted: "March 22, 2020 (UTC)" },
         "it replaces `Etc/`"
       );
     });
@@ -124,7 +124,7 @@ module("lib:local-date-builder", function () {
     freezeTime({}, () => {
       assert.buildsCorrectDate(
         { timezone: LOS_ANGELES, displayedTimezone: LOS_ANGELES },
-        { formated: "March 22, 2020 (Los Angeles)" },
+        { formatted: "March 22, 2020 (Los Angeles)" },
         "it removes prefix and replaces `_`"
       );
     });
@@ -134,7 +134,7 @@ module("lib:local-date-builder", function () {
     freezeTime({}, () => {
       assert.buildsCorrectDate(
         { timezone: SYDNEY, displayedTimezone: PARIS },
-        { formated: "March 21, 2020" },
+        { formatted: "March 21, 2020" },
         "it correctly parses a date with the given timezone context"
       );
     });
@@ -151,7 +151,7 @@ module("lib:local-date-builder", function () {
           recurring: "1.weeks",
         },
         {
-          formated: "April 6, 2020 10:00 AM (Lagos)",
+          formatted: "April 6, 2020 10:00 AM (Lagos)",
         },
         "it correctly formats a recurring date starting from a !isDST timezone to a isDST timezone date when displayed to a user using a timezone with no DST"
       );
@@ -168,7 +168,7 @@ module("lib:local-date-builder", function () {
           displayedTimezone: SYDNEY,
         },
         {
-          formated: "April 6, 2020 12:00 PM (Sydney)",
+          formatted: "April 6, 2020 12:00 PM (Sydney)",
         },
         "it correctly formats a recurring date spanning over weeks"
       );
@@ -183,7 +183,7 @@ module("lib:local-date-builder", function () {
           timezone: PARIS,
         },
         {
-          formated: "April 13, 2020 11:00 AM",
+          formatted: "April 13, 2020 11:00 AM",
         },
         "it correctly adds from a !isDST date to a isDST date"
       );
@@ -198,7 +198,7 @@ module("lib:local-date-builder", function () {
           timezone: PARIS,
         },
         {
-          formated: "Today 11:00 AM",
+          formatted: "Today 11:00 AM",
         },
         "it works to the minute"
       );
@@ -213,7 +213,7 @@ module("lib:local-date-builder", function () {
           timezone: PARIS,
         },
         {
-          formated: "April 13, 2020 11:00 AM",
+          formatted: "April 13, 2020 11:00 AM",
         },
         "it works to the minute"
       );
@@ -228,7 +228,7 @@ module("lib:local-date-builder", function () {
           timezone: NEW_YORK,
         },
         {
-          formated: "January 24, 2021 2:30 PM",
+          formatted: "January 24, 2021 2:30 PM",
         },
         "it works for a future date"
       );
@@ -243,7 +243,7 @@ module("lib:local-date-builder", function () {
           timezone: NEW_YORK,
         },
         {
-          formated: "Today 12:00 PM",
+          formatted: "Today 12:00 PM",
         },
         "it works with hours"
       );
@@ -257,7 +257,7 @@ module("lib:local-date-builder", function () {
           countdown: true,
           timezone: PARIS,
         },
-        { formated: "a minute" },
+        { formatted: "a minute" },
         "it shows the time remaining"
       );
     });
@@ -269,7 +269,7 @@ module("lib:local-date-builder", function () {
           timezone: PARIS,
         },
         {
-          formated: I18n.t(
+          formatted: I18n.t(
             "discourse_local_dates.relative_dates.countdown.passed"
           ),
         },
@@ -282,7 +282,7 @@ module("lib:local-date-builder", function () {
     freezeTime({ date: "2020-03-23 23:00" }, () => {
       assert.buildsCorrectDate(
         { date: "2020-03-22", time: "23:59", timezone: PARIS },
-        { formated: "Yesterday 11:59 PM" },
+        { formatted: "Yesterday 11:59 PM" },
         "it drops calendar mode when event date is more than one day before current date"
       );
     });
@@ -290,14 +290,14 @@ module("lib:local-date-builder", function () {
     freezeTime({ date: "2020-03-20 23:59" }, () =>
       assert.buildsCorrectDate(
         { date: "2020-03-21", time: "01:00", timezone: PARIS },
-        { formated: "Tomorrow 1:00 AM" }
+        { formatted: "Tomorrow 1:00 AM" }
       )
     );
 
     freezeTime({ date: "2020-03-20 23:59" }, () =>
       assert.buildsCorrectDate(
         { date: "2020-03-21", time: "00:00", timezone: PARIS },
-        { formated: "Saturday" },
+        { formatted: "Saturday" },
         "it displays the day with no time when the time in the displayed timezone is 00:00"
       )
     );
@@ -305,35 +305,35 @@ module("lib:local-date-builder", function () {
     freezeTime({ date: "2020-03-20 23:59" }, () => {
       assert.buildsCorrectDate(
         { date: "2020-03-21", time: "23:59", timezone: PARIS },
-        { formated: "Tomorrow 11:59 PM" }
+        { formatted: "Tomorrow 11:59 PM" }
       );
     });
 
     freezeTime({ date: "2020-03-21 00:00" }, () =>
       assert.buildsCorrectDate(
         { date: "2020-03-21", time: "23:00", timezone: PARIS },
-        { formated: "Today 11:00 PM" }
+        { formatted: "Today 11:00 PM" }
       )
     );
 
     freezeTime({ date: "2020-03-22 23:59" }, () =>
       assert.buildsCorrectDate(
         { date: "2020-03-21", time: "23:59", timezone: PARIS },
-        { formated: "Yesterday 11:59 PM" }
+        { formatted: "Yesterday 11:59 PM" }
       )
     );
 
     freezeTime({ date: "2020-03-22 23:59" }, () =>
       assert.buildsCorrectDate(
         { date: "2020-03-21", time: "23:59", timezone: PARIS },
-        { formated: "Yesterday 11:59 PM" }
+        { formatted: "Yesterday 11:59 PM" }
       )
     );
 
     freezeTime({ date: "2020-03-22 23:59" }, () =>
       assert.buildsCorrectDate(
         { calendar: false, date: "2020-03-21", time: "23:59", timezone: PARIS },
-        { formated: "March 21, 2020 11:59 PM" },
+        { formatted: "March 21, 2020 11:59 PM" },
         "it doesn't use calendar when disabled"
       )
     );
@@ -341,7 +341,7 @@ module("lib:local-date-builder", function () {
     freezeTime({ date: "2020-03-24 01:00" }, () =>
       assert.buildsCorrectDate(
         { date: "2020-03-21", timezone: PARIS },
-        { formated: "March 21, 2020" },
+        { formatted: "March 21, 2020" },
         "it stops formatting out of calendar range"
       )
     );
@@ -353,7 +353,7 @@ module("lib:local-date-builder", function () {
           time: "18:00",
           localTimezone: LOS_ANGELES,
         },
-        { formated: "Tomorrow 11:00 AM" },
+        { formatted: "Tomorrow 11:00 AM" },
         "it correctly displays a different local timezone"
       );
     });
@@ -367,7 +367,7 @@ module("lib:local-date-builder", function () {
           previews: [
             {
               current: true,
-              formated:
+              formatted:
                 "Sunday, March 22, 2020 12:00 AM → Monday, March 23, 2020 12:00 AM",
               timezone: "Paris",
             },
@@ -383,12 +383,12 @@ module("lib:local-date-builder", function () {
           previews: [
             {
               current: true,
-              formated:
+              formatted:
                 "Sunday, March 22, 2020 12:00 AM → Monday, March 23, 2020 12:00 AM",
               timezone: "Paris",
             },
             {
-              formated:
+              formatted:
                 "Sunday, March 22, 2020 10:00 AM → Monday, March 23, 2020 10:00 AM",
               timezone: "Sydney",
             },
@@ -404,7 +404,7 @@ module("lib:local-date-builder", function () {
           previews: [
             {
               current: true,
-              formated:
+              formatted:
                 "Sunday, March 22, 2020 12:00 AM → Monday, March 23, 2020 12:00 AM",
               timezone: "Paris",
             },
@@ -420,7 +420,7 @@ module("lib:local-date-builder", function () {
           previews: [
             {
               current: true,
-              formated:
+              formatted:
                 "Sunday, March 22, 2020 12:00 AM → Monday, March 23, 2020 12:00 AM",
               timezone: "Paris",
             },
@@ -436,7 +436,7 @@ module("lib:local-date-builder", function () {
           previews: [
             {
               current: true,
-              formated:
+              formatted:
                 "Sunday, March 22, 2020 12:00 AM → Monday, March 23, 2020 12:00 AM",
               timezone: "Paris",
             },
@@ -452,7 +452,7 @@ module("lib:local-date-builder", function () {
           previews: [
             {
               current: true,
-              formated:
+              formatted:
                 'Sunday, March 22, 2020 <br /><svg class=\'fa d-icon d-icon-clock svg-icon svg-string\' xmlns="http://www.w3.org/2000/svg"><use href="#clock" /></svg> 12:00 AM → 1:30 AM',
               timezone: "Paris",
             },
@@ -468,7 +468,7 @@ module("lib:local-date-builder", function () {
           previews: [
             {
               current: true,
-              formated:
+              formatted:
                 "Sunday, March 22, 2020 12:00 AM → Monday, March 23, 2020 12:00 AM",
               timezone: "Paris",
             },
@@ -484,7 +484,7 @@ module("lib:local-date-builder", function () {
           previews: [
             {
               current: true,
-              formated:
+              formatted:
                 'Sunday, March 22, 2020 <br /><svg class=\'fa d-icon d-icon-clock svg-icon svg-string\' xmlns="http://www.w3.org/2000/svg"><use href="#clock" /></svg> 11:34 AM',
               timezone: "Paris",
             },
@@ -504,22 +504,22 @@ module("lib:local-date-builder", function () {
           previews: [
             {
               current: true,
-              formated:
+              formatted:
                 "Tuesday, April 7, 2020 12:00 AM → Wednesday, April 8, 2020 12:00 AM",
               timezone: "Paris",
             },
             {
-              formated:
+              formatted:
                 "Monday, April 6, 2020 11:00 PM → Tuesday, April 7, 2020 11:00 PM",
               timezone: "London",
             },
             {
-              formated:
+              formatted:
                 "Monday, April 6, 2020 11:00 PM → Tuesday, April 7, 2020 11:00 PM",
               timezone: "Lagos",
             },
             {
-              formated:
+              formatted:
                 "Tuesday, April 7, 2020 8:00 AM → Wednesday, April 8, 2020 8:00 AM",
               timezone: "Sydney",
             },
@@ -540,22 +540,22 @@ module("lib:local-date-builder", function () {
           previews: [
             {
               current: true,
-              formated:
+              formatted:
                 'Tuesday, April 7, 2020 <br /><svg class=\'fa d-icon d-icon-clock svg-icon svg-string\' xmlns="http://www.w3.org/2000/svg"><use href="#clock" /></svg> 2:54 PM',
               timezone: "Paris",
             },
             {
-              formated:
+              formatted:
                 'Tuesday, April 7, 2020 <br /><svg class=\'fa d-icon d-icon-clock svg-icon svg-string\' xmlns="http://www.w3.org/2000/svg"><use href="#clock" /></svg> 1:54 PM',
               timezone: "London",
             },
             {
-              formated:
+              formatted:
                 'Tuesday, April 7, 2020 <br /><svg class=\'fa d-icon d-icon-clock svg-icon svg-string\' xmlns="http://www.w3.org/2000/svg"><use href="#clock" /></svg> 1:54 PM',
               timezone: "Lagos",
             },
             {
-              formated:
+              formatted:
                 'Tuesday, April 7, 2020 <br /><svg class=\'fa d-icon d-icon-clock svg-icon svg-string\' xmlns="http://www.w3.org/2000/svg"><use href="#clock" /></svg> 10:54 PM',
               timezone: "Sydney",
             },
@@ -575,12 +575,12 @@ module("lib:local-date-builder", function () {
           previews: [
             {
               current: true,
-              formated:
+              formatted:
                 'Wednesday, May 13, 2020 <br /><svg class=\'fa d-icon d-icon-clock svg-icon svg-string\' xmlns="http://www.w3.org/2000/svg"><use href="#clock" /></svg> 11:00 AM',
               timezone: "Los Angeles",
             },
             {
-              formated:
+              formatted:
                 'Wednesday, May 13, 2020 <br /><svg class=\'fa d-icon d-icon-clock svg-icon svg-string\' xmlns="http://www.w3.org/2000/svg"><use href="#clock" /></svg> 6:00 PM',
               timezone: "UTC",
             },
