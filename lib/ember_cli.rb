@@ -27,10 +27,6 @@ module EmberCli
     {}
   end
 
-  # Some assets have changed name following the switch
-  # to ember-cli. When the switch is complete, we can
-  # drop this method and update all the references
-  # to use the new names
   def self.is_ember_cli_asset?(name)
     ASSETS.include?(name) || name.start_with?("chunk.")
   end
