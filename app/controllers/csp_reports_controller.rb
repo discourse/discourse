@@ -23,7 +23,6 @@ class CspReportsController < ApplicationController
   private
 
   def parse_report
-
     obj = JSON.parse(request.body.read)
     if Hash === obj
       obj = obj['csp-report']
