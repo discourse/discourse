@@ -75,6 +75,9 @@
       <discourse-assets-stylesheets>
         <%= render partial: "common/discourse_stylesheet" %>
       </discourse-assets-stylesheets>
+      <discourse-assets-json>
+        <div class="hidden" id="data-preloaded" data-preloaded="<%= preloaded_json %>"></div>
+      </discourse-assets-json>
     </discourse-assets>
 
     <%- if allow_plugins? %>
@@ -114,7 +117,6 @@
       </form>
     <% end %>
 
-    <div class="hidden" id="data-preloaded" data-preloaded="<%= preloaded_json %>"></div>
 
     <script defer src="<%= script_asset_path "start-discourse" %>"></script>
 
