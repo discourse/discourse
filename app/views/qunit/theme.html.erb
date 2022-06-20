@@ -8,11 +8,12 @@
       <%= discourse_stylesheet_link_tag(:test_helper, theme_id: nil) %>
       <%= preload_script "locales/#{I18n.locale}" %>
       <%= preload_script "vendor" %>
-      <%= preload_script "application" %>
+      <%= preload_script "discourse" %>
       <%= preload_script "admin" %>
       <%= preload_script "discourse/tests/active-plugins" %>
       <%= preload_script "admin-plugins" %>
-      <%= support_bundles %>
+      <%= preload_script "test-support" %>
+      <%= preload_script "test-helpers" %>
       <%= theme_translations_lookup %>
       <%= theme_js_lookup %>
       <%= theme_lookup("head_tag") %>
@@ -46,6 +47,7 @@
     <%- end %>
   </body>
   <%- if !@suggested_themes %>
-    <%= boot_bundles %>
+    <%= preload_script "scripts/discourse-test-listen-boot" %>
+    <%= preload_script "scripts/discourse-boot" %>
   <%- end %>
 </html>
