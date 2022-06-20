@@ -90,18 +90,6 @@ task 'assets:flush_sw' => 'environment' do
   end
 end
 
-def is_ember_cli_asset?(name)
-  %w(
-    discourse.js
-    admin.js
-    wizard.js
-    ember_jquery.js
-    pretty-text-bundle.js
-    start-discourse.js
-    vendor.js
-  ).include?(name) || name.start_with?("chunk.")
-end
-
 def assets_path
   "#{Rails.root}/public/assets"
 end
