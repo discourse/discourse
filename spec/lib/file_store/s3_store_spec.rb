@@ -10,6 +10,7 @@ describe FileStore::S3Store do
   let(:resource) { Aws::S3::Resource.new(client: client) }
   let(:s3_bucket) { resource.bucket("s3-upload-bucket") }
   let(:s3_object) { stub }
+  let(:upload_path) { Discourse.store.upload_path }
 
   fab!(:optimized_image) { Fabricate(:optimized_image) }
   let(:optimized_image_file) { file_from_fixtures("logo.png") }
@@ -191,22 +192,21 @@ describe FileStore::S3Store do
   context 'copying files in S3' do
     describe '#copy_file' do
       it "copies the from in S3 with the right paths" do
-        s3_helper.expects(:s3_bucket).returns(s3_bucket)
-
         upload.update!(
           url: "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/original/1X/#{upload.sha1}.png"
         )
 
-        source = Discourse.store.get_path_for_upload(upload)
-        destination = Discourse.store.get_path_for_upload(upload).sub('.png', '.jpg')
+        source = "#{upload_path}/#{Discourse.store.get_path_for_upload(upload)}"
+        destination = source.sub('.png', '.jpg')
+        bucket = prepare_fake_s3(source, upload)
 
-        s3_object = stub
-
-        s3_bucket.expects(:object).with(destination).returns(s3_object)
-
-        expect_copy_from(s3_object, "s3-upload-bucket/#{source}")
+        expect(bucket.find_object(source)).to be_present
+        expect(bucket.find_object(destination)).to be_nil
 
         store.copy_file(upload.url, source, destination)
+
+        expect(bucket.find_object(source)).to be_present
+        expect(bucket.find_object(destination)).to be_present
       end
     end
   end
@@ -214,33 +214,19 @@ describe FileStore::S3Store do
   context 'removal from s3' do
     describe "#remove_upload" do
       it "removes the file from s3 with the right paths" do
-        s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
-        upload.update!(url: "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/original/1X/#{upload.sha1}.png")
-        s3_object = stub
+        upload_key = Discourse.store.get_path_for_upload(upload)
+        tombstone_key = "tombstone/#{upload_key}"
+        bucket = prepare_fake_s3(upload_key, upload)
 
-        s3_bucket.expects(:object).with("tombstone/original/1X/#{upload.sha1}.png").returns(s3_object)
-        expect_copy_from(s3_object, "s3-upload-bucket/original/1X/#{upload.sha1}.png")
-        s3_bucket.expects(:object).with("original/1X/#{upload.sha1}.png").returns(s3_object)
-        s3_object.expects(:delete)
+        upload.update!(url: "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/#{upload_key}")
+
+        expect(bucket.find_object(upload_key)).to be_present
+        expect(bucket.find_object(tombstone_key)).to be_nil
 
         store.remove_upload(upload)
-      end
 
-      it "removes the optimized image from s3 with the right paths" do
-        optimized = Fabricate(:optimized_image, version: 1)
-        upload = optimized.upload
-        path = "optimized/1X/#{upload.sha1}_#{optimized.version}_#{optimized.width}x#{optimized.height}.png"
-
-        s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
-        optimized.update!(url: "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/#{path}")
-        s3_object = stub
-
-        s3_bucket.expects(:object).with("tombstone/#{path}").returns(s3_object)
-        expect_copy_from(s3_object, "s3-upload-bucket/#{path}")
-        s3_bucket.expects(:object).with(path).returns(s3_object)
-        s3_object.expects(:delete)
-
-        store.remove_optimized_image(optimized)
+        expect(bucket.find_object(upload_key)).to be_nil
+        expect(bucket.find_object(tombstone_key)).to be_present
       end
 
       describe "when s3_upload_bucket includes folders path" do
@@ -249,41 +235,47 @@ describe FileStore::S3Store do
         end
 
         it "removes the file from s3 with the right paths" do
-          s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
-          upload.update!(url: "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/discourse-uploads/original/1X/#{upload.sha1}.png")
-          s3_object = stub
+          upload_key = "discourse-uploads/#{Discourse.store.get_path_for_upload(upload)}"
+          tombstone_key = "discourse-uploads/tombstone/#{Discourse.store.get_path_for_upload(upload)}"
+          bucket = prepare_fake_s3(upload_key, upload)
 
-          s3_bucket.expects(:object).with("discourse-uploads/tombstone/original/1X/#{upload.sha1}.png").returns(s3_object)
-          expect_copy_from(s3_object, "s3-upload-bucket/discourse-uploads/original/1X/#{upload.sha1}.png")
-          s3_bucket.expects(:object).with("discourse-uploads/original/1X/#{upload.sha1}.png").returns(s3_object)
-          s3_object.expects(:delete)
+          upload.update!(url: "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/#{upload_key}")
+
+          expect(bucket.find_object(upload_key)).to be_present
+          expect(bucket.find_object(tombstone_key)).to be_nil
 
           store.remove_upload(upload)
+
+          expect(bucket.find_object(upload_key)).to be_nil
+          expect(bucket.find_object(tombstone_key)).to be_present
         end
       end
     end
 
     describe "#remove_optimized_image" do
-      let(:image_path) do
-        FileStore::BaseStore.new.get_path_for_optimized_image(optimized_image)
-      end
+      let(:optimized_key)  { FileStore::BaseStore.new.get_path_for_optimized_image(optimized_image) }
+      let(:tombstone_key) { "tombstone/#{optimized_key}" }
+      let(:upload) { optimized_image.upload }
+      let(:upload_key) { Discourse.store.get_path_for_upload(upload) }
 
       before do
-        optimized_image.update!(
-          url: "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/#{image_path}"
-        )
+        optimized_image.update!(url: "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/#{optimized_key}")
+        upload.update!(url: "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/#{upload_key}")
       end
 
-      it "removes the file from s3 with the right paths" do
-        s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
-        s3_object = stub
+      it "removes the optimized image from s3 with the right paths" do
+        bucket = prepare_fake_s3(upload_key, upload)
+        store_fake_s3_object(optimized_key, optimized_image)
 
-        s3_bucket.expects(:object).with("tombstone/#{image_path}").returns(s3_object)
-        expect_copy_from(s3_object, "s3-upload-bucket/#{image_path}")
-        s3_bucket.expects(:object).with("#{image_path}").returns(s3_object)
-        s3_object.expects(:delete)
+        expect(bucket.find_object(upload_key)).to be_present
+        expect(bucket.find_object(optimized_key)).to be_present
+        expect(bucket.find_object(tombstone_key)).to be_nil
 
         store.remove_optimized_image(optimized_image)
+
+        expect(bucket.find_object(upload_key)).to be_present
+        expect(bucket.find_object(optimized_key)).to be_nil
+        expect(bucket.find_object(tombstone_key)).to be_present
       end
 
       describe "when s3_upload_bucket includes folders path" do
@@ -291,29 +283,24 @@ describe FileStore::S3Store do
           SiteSetting.s3_upload_bucket = "s3-upload-bucket/discourse-uploads"
         end
 
-        before do
-          optimized_image.update!(
-            url: "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/discourse-uploads/#{image_path}"
-          )
-        end
+        let(:image_path) { FileStore::BaseStore.new.get_path_for_optimized_image(optimized_image) }
+        let(:optimized_key)  { "discourse-uploads/#{image_path}"  }
+        let(:tombstone_key) { "discourse-uploads/tombstone/#{image_path}" }
+        let(:upload_key) { "discourse-uploads/#{Discourse.store.get_path_for_upload(upload)}" }
 
         it "removes the file from s3 with the right paths" do
-          s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
-          s3_object = stub
+          bucket = prepare_fake_s3(upload_key, upload)
+          store_fake_s3_object(optimized_key, optimized_image)
 
-          s3_bucket.expects(:object)
-            .with("discourse-uploads/tombstone/#{image_path}")
-            .returns(s3_object)
-
-          expect_copy_from(s3_object, "s3-upload-bucket/discourse-uploads/#{image_path}")
-
-          s3_bucket.expects(:object).with(
-            "discourse-uploads/#{image_path}"
-          ).returns(s3_object)
-
-          s3_object.expects(:delete)
+          expect(bucket.find_object(upload_key)).to be_present
+          expect(bucket.find_object(optimized_key)).to be_present
+          expect(bucket.find_object(tombstone_key)).to be_nil
 
           store.remove_optimized_image(optimized_image)
+
+          expect(bucket.find_object(upload_key)).to be_present
+          expect(bucket.find_object(optimized_key)).to be_nil
+          expect(bucket.find_object(tombstone_key)).to be_present
         end
       end
     end
@@ -484,11 +471,18 @@ describe FileStore::S3Store do
     end
   end
 
-  def expect_copy_from(s3_object, source)
-    s3_object.expects(:copy_from).with(
-      copy_source: source
-    ).returns(
-      stub(copy_object_result: stub(etag: '"etagtest"'))
+  def prepare_fake_s3(upload_key, upload)
+    @fake_s3 = FakeS3.create
+    @fake_s3_bucket = @fake_s3.bucket(SiteSetting.s3_upload_bucket)
+    store_fake_s3_object(upload_key, upload)
+    @fake_s3_bucket
+  end
+
+  def store_fake_s3_object(upload_key, upload)
+    @fake_s3_bucket.put_object(
+      key: upload_key,
+      size: upload.filesize,
+      last_modified: upload.created_at
     )
   end
 end
