@@ -3,6 +3,7 @@ import attributeHook from "discourse-common/lib/attribute-hook";
 import { h } from "virtual-dom";
 import { isDevelopment } from "discourse-common/config/environment";
 import escape from "discourse-common/lib/escape";
+import deprecated from "discourse-common/lib/deprecated";
 
 const SVG_NAMESPACE = "http://www.w3.org/2000/svg";
 let _renderers = [];
@@ -159,9 +160,18 @@ registerIconRenderer({
         I18n.t(params.title)
       )}'>${html}</span>`;
     }
+
     if (params.translatedtitle) {
+      deprecated(`use 'translatedTitle' option instead of 'translatedtitle'`, {
+        since: "2.9.0.beta6",
+        dropFrom: "2.10.0.beta1",
+      });
+      params.translatedTitle = params.translatedtitle;
+    }
+
+    if (params.translatedTitle) {
       html = `<span class="svg-icon-title" title='${escape(
-        params.translatedtitle
+        params.translatedTitle
       )}'>${html}</span>`;
     }
     return html;
