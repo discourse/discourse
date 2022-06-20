@@ -1,15 +1,6 @@
 # frozen_string_literal: true
 
-if !defined?(EMBER_CLI)
-  EMBER_CLI = EmberCli.enabled?
-end
-
-if ENV["EMBER_CLI_PROD_ASSETS"] == "0"
-  STDERR.puts "The 'legacy' ember environment is discontinued. Compiling with ember-cli assets..."
-end
-
 task 'assets:precompile:before' do
-
   require 'uglifier'
   require 'open3'
 
@@ -17,7 +8,7 @@ task 'assets:precompile:before' do
     raise "rake assets:precompile should only be run in RAILS_ENV=production, you are risking unminified assets"
   end
 
-  if EMBER_CLI && !(ENV["EMBER_CLI_COMPILE_DONE"] == "1")
+  if ENV["EMBER_CLI_COMPILE_DONE"] != "1"
     compile_command = "NODE_OPTIONS='--max-old-space-size=2048' yarn --cwd app/assets/javascripts/discourse run ember build -prod"
     only_assets_precompile_remaining = (ARGV.last == "assets:precompile")
 
@@ -55,12 +46,10 @@ task 'assets:precompile:before' do
   require 'sprockets'
   require 'digest/sha1'
 
-  if EMBER_CLI
-    # Add ember cli chunks
-    Rails.configuration.assets.precompile.push(
-      *EmberCli.script_chunks.values.flatten.flat_map { |name| ["#{name}.js", "#{name}.map"] }
-    )
-  end
+  # Add ember cli chunks
+  Rails.configuration.assets.precompile.push(
+    *EmberCli.script_chunks.values.flatten.flat_map { |name| ["#{name}.js", "#{name}.map"] }
+  )
 end
 
 task 'assets:precompile:css' => 'environment' do
@@ -102,7 +91,6 @@ task 'assets:flush_sw' => 'environment' do
 end
 
 def is_ember_cli_asset?(name)
-  return false if !EMBER_CLI
   %w(
     discourse.js
     admin.js

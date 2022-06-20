@@ -28,24 +28,18 @@ task "qunit:test", [:timeout, :qunit_path] do |_, args|
     false
   end
 
-  if ENV['QUNIT_EMBER_CLI'] == "0"
+  if ENV["QUNIT_EMBER_CLI"] == "0"
     puts "The 'legacy' ember environment is discontinued - running tests with ember-cli assets..."
   end
-
-  ember_cli = true
 
   port = ENV['TEST_SERVER_PORT'] || 60099
   while !port_available? port
     port += 1
   end
 
-  if ember_cli
-    unicorn_port = 60098
-    while unicorn_port == port || !port_available?(unicorn_port)
-      unicorn_port += 1
-    end
-  else
-    unicorn_port = port
+  unicorn_port = 60098
+  while unicorn_port == port || !port_available?(unicorn_port)
+    unicorn_port += 1
   end
 
   env = {
@@ -61,10 +55,6 @@ task "qunit:test", [:timeout, :qunit_path] do |_, args|
     "UNICORN_TIMEOUT" => "90",
   }
 
-  if !ember_cli
-    env["EMBER_CLI_PROD_ASSETS"] = "0"
-  end
-
   pid = Process.spawn(
     env,
     "#{Rails.root}/bin/unicorn",
@@ -75,7 +65,6 @@ task "qunit:test", [:timeout, :qunit_path] do |_, args|
     success = true
     test_path = "#{Rails.root}/test"
     qunit_path = args[:qunit_path]
-    qunit_path ||= "/qunit" if !ember_cli
 
     options = { seed: (ENV["QUNIT_SEED"] || Random.new.seed), hidepassed: 1 }
 
@@ -96,9 +85,10 @@ task "qunit:test", [:timeout, :qunit_path] do |_, args|
 
     # wait for server to accept connections
     require 'net/http'
-    warmup_path = ember_cli ? "/assets/discourse/tests/active-plugins.js" : "/qunit"
+    warmup_path = "/assets/discourse/tests/active-plugins.js"
     uri = URI("http://localhost:#{unicorn_port}/#{warmup_path}")
     puts "Warming up Rails server"
+
     begin
       Net::HTTP.get(uri)
     rescue Errno::ECONNREFUSED, Errno::EADDRNOTAVAIL, Net::ReadTimeout, EOFError
@@ -109,24 +99,20 @@ task "qunit:test", [:timeout, :qunit_path] do |_, args|
     end
     puts "Rails server is warmed up"
 
-    if ember_cli
-      cmd = ["env", "UNICORN_PORT=#{unicorn_port}"]
-      if qunit_path
-        # Bypass `ember test` - it only works properly for the `/tests` path.
-        # We have to trigger a `build` manually so that JS is available for rails to serve.
-        system("yarn", "ember", "build", chdir: "#{Rails.root}/app/assets/javascripts/discourse")
-        test_page = "#{qunit_path}?#{query}&testem=1"
-        cmd += ["yarn", "testem", "ci", "-f", "testem.js", "-t", test_page]
-      else
-        cmd += ["yarn", "ember", "test", "--query", query]
-      end
-      system(*cmd, chdir: "#{Rails.root}/app/assets/javascripts/discourse")
+    cmd = ["env", "UNICORN_PORT=#{unicorn_port}"]
+
+    if qunit_path
+      # Bypass `ember test` - it only works properly for the `/tests` path.
+      # We have to trigger a `build` manually so that JS is available for rails to serve.
+      system("yarn", "ember", "build", chdir: "#{Rails.root}/app/assets/javascripts/discourse")
+      test_page = "#{qunit_path}?#{query}&testem=1"
+      cmd += ["yarn", "testem", "ci", "-f", "testem.js", "-t", test_page]
     else
-      cmd = "node #{test_path}/run-qunit.js http://localhost:#{port}#{qunit_path}"
-      cmd += "?#{query.gsub('+', '%20').gsub("&", '\\\&')}"
-      cmd += " #{args[:timeout]}" if args[:timeout].present?
-      system(cmd)
+      cmd += ["yarn", "ember", "test", "--query", query]
     end
+
+    system(*cmd, chdir: "#{Rails.root}/app/assets/javascripts/discourse")
+
     success &&= $?.success?
   ensure
     # was having issues with HUP

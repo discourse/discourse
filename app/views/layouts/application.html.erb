@@ -28,7 +28,7 @@
       <%= preload_script_url ExtraLocalesController.url('overrides') %>
     <%- end %>
     <%= preload_script "vendor" %>
-    <%= preload_script "application" %>
+    <%= preload_script "discourse" %>
     <%- Discourse.find_plugin_js_assets(include_official: allow_plugins?, include_unofficial: allow_third_party_plugins?, request: request).each do |file| %>
       <%= preload_script file %>
     <%- end %>
@@ -56,7 +56,6 @@
     <%- if include_ios_native_app_banner? %>
         <meta name="apple-itunes-app" content="app-id=<%= SiteSetting.ios_app_id %><%= ios_app_argument %>">
     <%- end %>
-
 
     <%= yield :head %>
 
@@ -117,7 +116,6 @@
         <input type="submit" id="signin-button" value="<%= t 'log_in' %>">
       </form>
     <% end %>
-
 
     <script defer src="<%= script_asset_path "start-discourse" %>"></script>
 

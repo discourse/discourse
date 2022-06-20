@@ -10,7 +10,7 @@ describe InvitesController do
     it 'shows the accept invite page' do
       get "/invites/#{invite.invite_key}"
       expect(response.status).to eq(200)
-      expect(response.body).to have_tag(:script, with: { src: "/assets/#{EmberCli.transform_name("application")}.js" })
+      expect(response.body).to have_tag(:script, with: { src: "/assets/discourse.js" })
       expect(response.body).not_to include(invite.email)
       expect(response.body).to_not include(I18n.t('invite.not_found_template', site_name: SiteSetting.title, base_url: Discourse.base_url))
 
@@ -34,7 +34,7 @@ describe InvitesController do
       it 'shows unobfuscated email' do
         get "/invites/#{invite.invite_key}"
         expect(response.status).to eq(200)
-        expect(response.body).to have_tag(:script, with: { src: "/assets/#{EmberCli.transform_name("application")}.js" })
+        expect(response.body).to have_tag(:script, with: { src: "/assets/discourse.js" })
         expect(response.body).to include(invite.email)
         expect(response.body).not_to include('i*****g@a***********e.ooo')
       end

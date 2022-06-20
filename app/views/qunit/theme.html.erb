@@ -7,12 +7,13 @@
       <%= discourse_stylesheet_link_tag(:desktop, theme_id: nil) %>
       <%= discourse_stylesheet_link_tag(:test_helper, theme_id: nil) %>
       <%= preload_script "locales/#{I18n.locale}" %>
-      <%= vendor_theme_tests %>
-      <%= preload_script "application" %>
+      <%= preload_script "vendor" %>
+      <%= preload_script "discourse" %>
       <%= preload_script "admin" %>
       <%= preload_script "discourse/tests/active-plugins" %>
       <%= preload_script "admin-plugins" %>
-      <%= support_bundles %>
+      <%= preload_script "test-support" %>
+      <%= preload_script "test-helpers" %>
       <%= theme_translations_lookup %>
       <%= theme_js_lookup %>
       <%= theme_lookup("head_tag") %>
@@ -33,12 +34,7 @@
     <%- end %>
   </head>
   <body>
-    <%- if !@suggested_themes %>
-      <%- if !EmberCli.enabled? %>
-        <div id="qunit"></div>
-        <div id="qunit-fixture"></div>
-      <%- end %>
-    <%- else %>
+    <%- if @suggested_themes %>
       <h2>Theme QUnit Test Runner</h2>
       <%- if @suggested_themes.size == 0 %>
         <p>Cannot find any theme tests.</p>
@@ -51,6 +47,7 @@
     <%- end %>
   </body>
   <%- if !@suggested_themes %>
-    <%= boot_bundles %>
+    <%= preload_script "scripts/discourse-test-listen-boot" %>
+    <%= preload_script "scripts/discourse-boot" %>
   <%- end %>
 </html>

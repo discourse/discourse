@@ -22,9 +22,12 @@ Rails.application.config.assets.precompile += [lambda do |filename, path|
 end]
 
 Rails.application.config.assets.precompile += %w{
+  discourse.js
   vendor.js
   admin.js
   wizard.js
+  test-support.js
+  test-helpers.js
   browser-detect.js
   browser-update.js
   break_string.js
@@ -44,18 +47,11 @@ Rails.application.config.assets.precompile += %w{
   onpopstate-handler.js
   embed-application.js
   admin-plugins.js
+  scripts/discourse-test-listen-boot
+  scripts/discourse-boot
 }
 
-if EmberCli.enabled?
-  Rails.application.config.assets.precompile += %w{
-    discourse.js
-    test-support.js
-    test-helpers.js
-    scripts/discourse-test-listen-boot
-    scripts/discourse-boot
-  }
-  Rails.application.config.assets.precompile += EmberCli::ASSETS.map { |name| name.sub('.js', '.map') }
-end
+Rails.application.config.assets.precompile += EmberCli::ASSETS.map { |name| name.sub('.js', '.map') }
 
 # Precompile all available locales
 unless GlobalSetting.try(:omit_base_locales)
