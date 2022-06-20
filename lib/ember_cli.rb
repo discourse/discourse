@@ -4,6 +4,7 @@ module EmberCli
   ASSETS = %w(
     discourse.js
     admin.js
+    wizard.js
     ember_jquery.js
     pretty-text-bundle.js
     start-discourse.js
