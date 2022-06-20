@@ -152,10 +152,14 @@ function initializeDiscourseLocalDates(api) {
     },
   });
 
-  let startRangeOpts = null;
-  addTextDecorateCallback(function (text, nextElement) {
+  addTextDecorateCallback(function (
+    text,
+    nextElement,
+    _previousElement,
+    metadata
+  ) {
     if (
-      startRangeOpts &&
+      metadata.discourseLocalDateStartRangeOpts &&
       nextElement?.attributes.class?.includes("discourse-local-date") &&
       text === "→"
     ) {
@@ -164,7 +168,8 @@ function initializeDiscourseLocalDates(api) {
   });
   addTagDecorateCallback(function () {
     if (this.element.attributes.class?.includes("discourse-local-date")) {
-      if (startRangeOpts) {
+      if (this.metadata.discourseLocalDateStartRangeOpts) {
+        const startRangeOpts = this.metadata.discourseLocalDateStartRangeOpts;
         const endRangeOpts = buildOptionsFromMarkdownTag(this.element);
         const markup = generateDateMarkup(
           {
@@ -181,11 +186,13 @@ function initializeDiscourseLocalDates(api) {
           }
         );
         this.prefix = markup;
-        startRangeOpts = null;
+        this.metadata.discourseLocalDateStartRangeOpts = null;
         return "";
       }
       if (this.element.attributes["data-range"] === "true") {
-        startRangeOpts = buildOptionsFromMarkdownTag(this.element);
+        this.metadata.discourseLocalDateStartRangeOpts = buildOptionsFromMarkdownTag(
+          this.element
+        );
         return "";
       }
       const opts = buildOptionsFromMarkdownTag(this.element, siteSettings);
