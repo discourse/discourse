@@ -1,9 +1,6 @@
-import { action } from "@ember/object";
 import { cached } from "@glimmer/tracking";
 
 import GlimmerComponent from "discourse/components/glimmer";
-import Composer from "discourse/models/composer";
-import { getOwner } from "discourse-common/lib/get-owner";
 import GroupMessageSectionLink from "discourse/lib/sidebar/messages-section/group-message-section-link";
 import PersonalMessageSectionLink from "discourse/lib/sidebar/messages-section/personal-message-section-link";
 
@@ -89,15 +86,5 @@ export default class SidebarMessagesSection extends GlimmerComponent {
     });
 
     return links;
-  }
-
-  @action
-  composePersonalMessage() {
-    const composerArgs = {
-      action: Composer.PRIVATE_MESSAGE,
-      draftKey: Composer.NEW_TOPIC_KEY,
-    };
-
-    getOwner(this).lookup("controller:composer").open(composerArgs);
   }
 }
