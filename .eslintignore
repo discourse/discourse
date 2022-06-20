@@ -1,5 +1,4 @@
 app/assets/javascripts/browser-update.js
-app/assets/javascripts/discourse-loader.js
 app/assets/javascripts/locales/i18n.js
 app/assets/javascripts/ember-addons/
 app/assets/javascripts/discourse/lib/autosize.js
