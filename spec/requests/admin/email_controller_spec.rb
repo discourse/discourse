@@ -87,7 +87,7 @@ describe Admin::EmailController do
 
     it 'should be able to filter by smtp_transaction_response' do
       email_log_2 = Fabricate(:email_log, smtp_transaction_response: <<~RESPONSE)
-250 Ok: queued as pYoKuQ1aUG5vdpgh-k2K11qcpF4C1ZQ5qmvmmNW25SM=@mailhog.example
+      250 Ok: queued as pYoKuQ1aUG5vdpgh-k2K11qcpF4C1ZQ5qmvmmNW25SM=@mailhog.example
       RESPONSE
 
       get "/admin/email/sent.json", params: {

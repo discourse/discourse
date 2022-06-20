@@ -4878,7 +4878,7 @@ en:
             address_placeholder: "name@example.com"
             type_placeholder: "digest, signup..."
             reply_key_placeholder: "reply key"
-            smtp_transaction_response_placeholder: "smtp ID"
+            smtp_transaction_response_placeholder: "SMTP ID"
 
       moderation_history:
         performed_by: "Performed By"
