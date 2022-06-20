@@ -27,7 +27,7 @@ module("Unit | Utility | icon-library", function () {
 
   test("escape icon names, classes and titles", function (assert) {
     const html = iconHTML("'<img src='x'>", {
-      translatedtitle: "'<script src='y'>",
+      translatedTitle: "'<script src='y'>",
       label: "<iframe src='z'>",
       class: "'<link href='w'>",
     });
