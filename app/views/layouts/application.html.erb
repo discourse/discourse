@@ -9,8 +9,6 @@
     <%= render partial: "layouts/head" %>
     <%= discourse_csrf_tags %>
 
-    <%= render partial: "common/discourse_stylesheet" %>
-
     <%- if SiteSetting.enable_escaped_fragments? %>
       <meta name="fragment" content="!">
     <%- end %>
@@ -73,6 +71,12 @@
   </head>
 
   <body class="<%= body_classes %>">
+    <discourse-assets>
+      <discourse-assets-stylesheets>
+        <%= render partial: "common/discourse_stylesheet" %>
+      </discourse-assets-stylesheets>
+    </discourse-assets>
+
     <%- if allow_plugins? %>
       <%= build_plugin_html 'server:after-body-open' %>
     <%- end -%>

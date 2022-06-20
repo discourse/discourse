@@ -20,6 +20,13 @@
     {{content-for "head"}}
   </head>
   <body>
+    <discourse-assets>
+      <discourse-assets-stylesheets>
+        <bootstrap-content key="discourse-stylesheets">
+        {{content-for "discourse-stylesheets"}}
+      </discourse-assets-stylesheets>
+    </discourse-assets>
+
     <bootstrap-content key="body">
     {{content-for "body"}}
 
