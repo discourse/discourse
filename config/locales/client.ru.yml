@@ -2247,9 +2247,6 @@ ru:
         reply_as_new_group_message:
           label: Ответить в виде нового группового сообщения
           desc: Создать новое личное сообщение с теми же получателями
-        reply_as_private_message:
-          label: Личное сообщение
-          desc: Создать новое личное сообщение
         reply_to_topic:
           label: Ответить на тему
           desc: Ответить на тему в целом, а не на конкретное сообщение
@@ -4060,7 +4057,16 @@ ru:
       unread_count: "%{count} непрочитанных"
       new_count: "%{count} новых"
       sections:
+        messages:
+          header_link_title: "Личные сообщения"
+          header_link_text: "Личные сообщения"
+          header_action_title: "Создать личное сообщение"
+        tags:
+          no_tracked_tags: "Вы не отслеживаете ни один тег."
+          header_link_title: "Все теги"
+          header_link_text: "Теги"
         categories:
+          no_tracked_categories: "Вы не отслеживаете ни один раздел."
           header_link_title: "Все разделы"
           header_link_text: "Разделы"
         topics:
@@ -4077,6 +4083,14 @@ ru:
             bookmarked:
               content: "В закладках"
               title: "Все темы с закладками"
+            my_posts:
+              content: "Мои сообщения"
+              title: "Мои сообщения"
+              draft_count:
+                one: "%{count} черновик"
+                few: "%{count} черновика"
+                many: "%{count} черновиков"
+                other: "%{count} черновиков"
   admin_js:
     type_to_filter: "Фильтрация настроек..."
     admin:

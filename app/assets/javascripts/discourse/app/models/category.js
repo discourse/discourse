@@ -187,6 +187,11 @@ const Category = RestModel.extend({
     return seconds ? seconds / 60 : null;
   },
 
+  @discourseComputed("notification_level")
+  isTracked(notificationLevel) {
+    return notificationLevel >= NotificationLevels.TRACKING;
+  },
+
   save() {
     const id = this.id;
     const url = id ? `/categories/${id}` : "/categories";

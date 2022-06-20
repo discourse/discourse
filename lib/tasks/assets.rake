@@ -4,6 +4,10 @@ if !defined?(EMBER_CLI)
   EMBER_CLI = EmberCli.enabled?
 end
 
+if ENV["EMBER_CLI_PROD_ASSETS"] == "0"
+  STDERR.puts "The 'legacy' ember environment is discontinued. Compiling with ember-cli assets..."
+end
+
 task 'assets:precompile:before' do
 
   require 'uglifier'
@@ -102,6 +106,7 @@ def is_ember_cli_asset?(name)
   %w(
     discourse.js
     admin.js
+    wizard.js
     ember_jquery.js
     pretty-text-bundle.js
     start-discourse.js

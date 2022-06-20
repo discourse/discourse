@@ -1727,7 +1727,7 @@ RSpec.describe User do
       SiteSetting.default_categories_tracking = category1.id.to_s
       SiteSetting.default_categories_muted = category2.id.to_s
       SiteSetting.default_categories_watching_first_post = category3.id.to_s
-      SiteSetting.default_categories_regular = category4.id.to_s
+      SiteSetting.default_categories_normal = category4.id.to_s
     end
 
     it "has overridden preferences" do
@@ -1884,6 +1884,16 @@ RSpec.describe User do
       user = Fabricate(:user)
 
       expect(User.human_users).to eq([user])
+    end
+  end
+
+  describe '.not_staged' do
+    let!(:user0) { Fabricate(:user, staged: true) }
+    let!(:user1) { Fabricate(:user) }
+
+    it "doesn't return staged users" do
+      expect(User.not_staged).to_not include(user0)
+      expect(User.not_staged).to include(user1)
     end
   end
 

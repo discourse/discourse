@@ -37,13 +37,18 @@ describe "Topic Thumbnails" do
       end
 
       it "includes the theme specified resolutions" do
-        pending "We're creating two generate topic thumbnails jobs instead of one"
-
         topic_json = nil
 
         expect do
           topic_json = get_topic
-        end.to change { Jobs::GenerateTopicThumbnails.jobs.size }.by(1)
+        end.to change { Jobs::GenerateTopicThumbnails.jobs.size }.by(2)
+
+        expect(
+          Jobs::GenerateTopicThumbnails.jobs.map { |j| j["args"][0]["extra_sizes"] }
+        ).to eq([
+          nil, # Job for core/plugin sizes
+          [[10, 10], [20, 20], [30, 30]]] # Job for theme sizes
+        )
 
         thumbnails = topic_json["thumbnails"]
 
@@ -92,8 +97,6 @@ describe "Topic Thumbnails" do
       end
 
       it "includes the theme specified resolutions" do
-        pending "We're creating two generate topic thumbnails jobs instead of one"
-
         topic_json = nil
 
         expect do

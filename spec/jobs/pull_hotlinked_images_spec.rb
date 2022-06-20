@@ -87,12 +87,12 @@ describe Jobs::PullHotlinkedImages do
       stub_image_size
       post.rebake!
       post.reload
-      expect(post.post_uploads.count).to eq(1)
+      expect(post.upload_references.count).to eq(1)
 
       post.update(raw: "Post with no images")
       post.rebake!
       post.reload
-      expect(post.post_uploads.count).to eq(0)
+      expect(post.upload_references.count).to eq(0)
     end
 
     it 'replaces images again after edit' do
@@ -375,7 +375,7 @@ describe Jobs::PullHotlinkedImages do
         post.reload
 
         expect(post.cooked).to match(/<img src=.*\/uploads/)
-        expect(post.post_uploads.count).to eq(1)
+        expect(post.upload_references.count).to eq(1)
       end
 
       it 'associates uploads correctly' do
@@ -384,13 +384,13 @@ describe Jobs::PullHotlinkedImages do
         post.rebake!
         post.reload
 
-        expect(post.post_uploads.count).to eq(1)
+        expect(post.upload_references.count).to eq(1)
 
         post.update(raw: "no onebox")
         post.rebake!
         post.reload
 
-        expect(post.post_uploads.count).to eq(0)
+        expect(post.upload_references.count).to eq(0)
       end
 
       it 'all combinations' do

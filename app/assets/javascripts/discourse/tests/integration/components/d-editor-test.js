@@ -19,6 +19,7 @@ import formatTextWithSelection from "discourse/tests/helpers/d-editor-helper";
 import hbs from "htmlbars-inline-precompile";
 import { next } from "@ember/runloop";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import { isLegacyEmber } from "discourse-common/config/environment";
 
 discourseModule("Integration | Component | d-editor", function (hooks) {
   setupRenderingTest(hooks);
@@ -171,6 +172,22 @@ discourseModule("Integration | Component | d-editor", function (hooks) {
     assert.strictEqual(textarea.selectionStart, 6);
     assert.strictEqual(textarea.selectionEnd, 11);
   });
+
+  testCase(
+    "bold button maintains undo history",
+    async function (assert, textarea) {
+      textarea.selectionStart = 6;
+      textarea.selectionEnd = 11;
+
+      await click("button.bold");
+      assert.strictEqual(this.value, "hello **world**.");
+      assert.strictEqual(textarea.selectionStart, 8);
+      assert.strictEqual(textarea.selectionEnd, 13);
+
+      document.execCommand("undo");
+      assert.strictEqual(this.value, "hello world.");
+    }
+  );
 
   testCase(
     `bold with a multiline selection`,
@@ -472,6 +489,9 @@ third line`
 
       assert.strictEqual(textarea.selectionStart, 27);
       assert.strictEqual(textarea.selectionEnd, 27);
+
+      document.execCommand("undo");
+      assert.strictEqual(this.value, "first line\nsecond line\nthird line");
     },
   });
 
@@ -509,6 +529,9 @@ third line`
 
       await click("button.blockquote");
       assert.strictEqual(this.value, "one\n\n\n> \n> two");
+
+      document.execCommand("undo");
+      assert.strictEqual(this.value, "one\n\n\n\ntwo");
     },
   });
 
@@ -705,7 +728,27 @@ third line`
       await click(
         '.emoji-picker .section[data-section="smileys_&_emotion"] img.emoji[title="grinning"]'
       );
-      assert.strictEqual(this.value, "hello world. :grinning:");
+      assert.strictEqual(
+        this.value,
+        "hello world. :grinning:",
+        "it works when there is no partial emoji"
+      );
+
+      if (!isLegacyEmber()) {
+        await click("textarea.d-editor-input");
+        await fillIn(".d-editor-input", "starting to type an emoji like :gri");
+        jumpEnd(query("textarea.d-editor-input"));
+        await click("button.emoji");
+
+        await click(
+          '.emoji-picker .section[data-section="smileys_&_emotion"] img.emoji[title="grinning"]'
+        );
+        assert.strictEqual(
+          this.value,
+          "starting to type an emoji like :grinning:",
+          "it works when there is a partial emoji"
+        );
+      }
     },
   });
 
@@ -834,6 +877,9 @@ third line`
       let element = query(".d-editor");
       await paste(element, "\ta\tb\n1\t2\t3");
       assert.strictEqual(this.value, "||a|b|\n|---|---|---|\n|1|2|3|\n");
+
+      document.execCommand("undo");
+      assert.strictEqual(this.value, "");
     },
   });
 
@@ -863,6 +909,9 @@ third line`
         "See [discourse](https://www.discourse.org/) in action"
       );
       assert.strictEqual(event.defaultPrevented, true);
+
+      document.execCommand("undo");
+      assert.strictEqual(this.value, "See discourse in action");
     }
   );
 

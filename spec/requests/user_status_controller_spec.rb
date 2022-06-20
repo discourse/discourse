@@ -69,6 +69,7 @@ describe UserStatusController do
         expect(messages.size).to eq(1)
         expect(messages[0].channel).to eq("/user-status/#{user.id}")
         expect(messages[0].data[:description]).to eq(status)
+        expect(messages[0].user_ids).to eq([user.id])
       end
     end
   end
@@ -111,6 +112,7 @@ describe UserStatusController do
         expect(messages.size).to eq(1)
         expect(messages[0].channel).to eq("/user-status/#{user.id}")
         expect(messages[0].data).to eq(nil)
+        expect(messages[0].user_ids).to eq([user.id])
       end
     end
   end

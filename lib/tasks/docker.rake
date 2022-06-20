@@ -210,10 +210,6 @@ task 'docker:test' do
 
         unless ENV["SKIP_CORE"]
           @good &&= run_or_fail("cd app/assets/javascripts/discourse && CI=1 yarn ember exam --random")
-
-          if !ENV["SKIP_WIZARD_TESTS"]
-            @good &&= run_or_fail("QUNIT_EMBER_CLI=0 bundle exec rake qunit:test['#{js_timeout}','/wizard/qunit']")
-          end
         end
 
         unless ENV["SKIP_PLUGINS"]

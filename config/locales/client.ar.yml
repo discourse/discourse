@@ -2353,9 +2353,6 @@ ar:
         reply_as_new_group_message:
           label: الرد كرسالة جديدة للمجموعة
           desc: إنشاء رسالة جديدة بدءًا بالمستلمين الجُدد
-        reply_as_private_message:
-          label: رسالة جديدة
-          desc: إنشاء رسالة خاصة جديدة
         reply_to_topic:
           label: الرد على الموضوع
           desc: الرد على الموضوع، وليس أي منشور محدَّد
@@ -4278,6 +4275,11 @@ ar:
       unread_count: "%{count} غير مقروء"
       new_count: "%{count} جديد"
       sections:
+        messages:
+          header_link_text: "الرسائل"
+        tags:
+          header_link_title: "كل الوسوم"
+          header_link_text: "الوسوم"
         categories:
           header_link_title: "كل الفئات"
           header_link_text: "الفئات"
@@ -4295,6 +4297,8 @@ ar:
             bookmarked:
               content: "وضع إشارة مرجعية"
               title: "جميع المواضيع المؤشر عليها"
+            my_posts:
+              content: "منشوراتي"
   admin_js:
     type_to_filter: "اكتب للتصفية..."
     admin:

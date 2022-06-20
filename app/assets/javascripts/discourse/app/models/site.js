@@ -11,7 +11,6 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { getOwner } from "discourse-common/lib/get-owner";
 import { isEmpty } from "@ember/utils";
 import { htmlSafe } from "@ember/template";
-import { NotificationLevels } from "discourse/lib/notification-levels";
 
 const Site = RestModel.extend({
   isReadOnly: alias("is_readonly"),
@@ -84,13 +83,18 @@ const Site = RestModel.extend({
       : this.sortedCategories;
   },
 
-  @discourseComputed("categories.[]")
+  @discourseComputed("categories.[]", "categories.@each.notification_level")
   trackedCategoriesList(categories) {
     const trackedCategories = [];
 
     for (const category of categories) {
-      if (category.notification_level >= NotificationLevels.TRACKING) {
-        trackedCategories.push(category);
+      if (category.isTracked) {
+        if (
+          !this.siteSettings.suppress_uncategorized_badge ||
+          category.id !== this.uncategorized_category_id
+        ) {
+          trackedCategories.push(category);
+        }
       }
     }
 
@@ -237,7 +241,6 @@ if (typeof Discourse !== "undefined") {
       if (!warned) {
         deprecated("Import the Site class instead of using Discourse.Site", {
           since: "2.4.0",
-          dropFrom: "2.6.0",
         });
         warned = true;
       }

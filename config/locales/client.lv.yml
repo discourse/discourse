@@ -2805,6 +2805,11 @@ lv:
       unread_count: "%{count} nelasīta"
       new_count: "%{count} jauna"
       sections:
+        messages:
+          header_link_text: "Ziņas"
+        tags:
+          header_link_title: "visi tagi"
+          header_link_text: "Birkas"
         categories:
           header_link_title: "visas sadaļas"
           header_link_text: "Sadaļas"
@@ -2814,6 +2819,8 @@ lv:
           links:
             tracked:
               content: "Sekots"
+            my_posts:
+              content: "Mani ieraksti"
   admin_js:
     type_to_filter: "ievadiet, lai atlasītu..."
     admin:

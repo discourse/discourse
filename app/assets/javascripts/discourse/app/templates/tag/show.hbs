@@ -48,6 +48,7 @@
   <div class="container list-container">
     <div class="row">
       <div class="full-width">
+        {{plugin-outlet name="before-list-area"}}
         <div id="list-area">
           {{#unless loading}}
             {{#discovery-topics-list

@@ -362,7 +362,7 @@ class TopicQuery
           c.id
         FROM categories c
         #{has_sub_sub_categories ? "LEFT JOIN categories parent_categories ON parent_categories.id = c.parent_category_id" : ""}
-        WHERE (c.parent_category_id IS NULL AND c.id IN (#{tracked_category_ids_sql}))
+        WHERE (c.id IN (#{tracked_category_ids_sql}))
         OR c.parent_category_id IN (#{tracked_category_ids_sql})
         #{has_sub_sub_categories ? "OR (parent_categories.id IS NOT NULL AND parent_categories.parent_category_id IN (#{tracked_category_ids_sql}))" : ""}
       )
@@ -866,7 +866,7 @@ class TopicQuery
         SiteSetting.default_categories_watching.split("|"),
         SiteSetting.default_categories_tracking.split("|"),
         SiteSetting.default_categories_watching_first_post.split("|"),
-        SiteSetting.default_categories_regular.split("|")
+        SiteSetting.default_categories_normal.split("|")
       ].flatten.map(&:to_i)
       category_ids << category_id if category_id.present? && category_ids.exclude?(category_id)
 

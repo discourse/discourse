@@ -384,7 +384,7 @@ describe Oneboxer do
       <<~HTML
         <html>
         <head>
-          <meta property="og:title" content="Onebox1">
+          <meta property="og:title" content="Onebox1 - ceci n'est pas un titre">
           <meta property="og:description" content="this is bodycontent">
           <meta property="og:image" content="https://i.ytimg.com/vi/dQw4w9WgXcQ/maxresdefault.jpg">
         </head>
@@ -415,6 +415,11 @@ describe Oneboxer do
       SiteSetting.allowed_onebox_iframes = "https://www.youtube.com"
       output = Oneboxer.onebox("https://www.youtube.com/watch?v=dQw4w9WgXcQ", invalidate_oneboxes: true)
       expect(output).to include("<iframe") # Regular youtube onebox
+    end
+
+    it "appropriately escapes youtube titles" do
+      preview = Oneboxer.preview("https://www.youtube.com/watch?v=dQw4w9WgXcQ", invalidate_oneboxes: true)
+      expect(preview).to include("ceci n'est pas un titre")
     end
   end
 

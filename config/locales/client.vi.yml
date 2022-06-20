@@ -1961,9 +1961,6 @@ vi:
         reply_as_new_group_message:
           label: Trả lời dưới dạng tin nhắn nhóm mới
           desc: Tạo tin nhắn mới bắt đầu với cùng người nhận
-        reply_as_private_message:
-          label: Tin nhắn mới
-          desc: Tạo một tin nhắn cá nhân mới
         reply_to_topic:
           label: Trả lời chủ đề
           desc: Trả lời chủ đề, không ảnh hưởng bất kỳ bài đăng nào
@@ -3460,6 +3457,11 @@ vi:
       unread_count: "%{count} chưa đọc"
       new_count: "%{count} mới"
       sections:
+        messages:
+          header_link_text: "Tin nhắn"
+        tags:
+          header_link_title: "tất cả thẻ"
+          header_link_text: "Thẻ"
         categories:
           header_link_title: "tất cả chuyên mục"
           header_link_text: "Thư mục"
@@ -3469,6 +3471,10 @@ vi:
           links:
             tracked:
               content: "Theo dõi"
+            my_posts:
+              content: "Bài viết của tôi"
+              draft_count:
+                other: "%{count} bản nháp"
   admin_js:
     type_to_filter: "gõ để lọc..."
     admin:

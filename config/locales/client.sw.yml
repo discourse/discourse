@@ -1270,9 +1270,6 @@ sw:
         reply_as_new_topic:
           label: Jibu kama mada iliyounganishwa
           desc: Tengeneza mada mpya itakayoungwa na hii mada
-        reply_as_private_message:
-          label: Ujumbe mpya
-          desc: Tengeneza ujumbe binafsi mpya
         reply_to_topic:
           label: Jibu mada
           desc: Jibu mada, sio chapisho lolote tu
@@ -2257,6 +2254,11 @@ sw:
       unread_count: "%{count} haijasomwa"
       new_count: "Mada mpya %{count}"
       sections:
+        messages:
+          header_link_text: "Ujumbe"
+        tags:
+          header_link_title: "lebo zote"
+          header_link_text: "Lebo"
         categories:
           header_link_title: "kategoria zote"
           header_link_text: "Kategoria"
@@ -2266,6 +2268,8 @@ sw:
           links:
             tracked:
               content: "Imefuatiliwa"
+            my_posts:
+              content: "Machapisho Yangu"
   admin_js:
     type_to_filter: "andika kuchuja..."
     admin:

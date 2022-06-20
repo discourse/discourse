@@ -539,14 +539,7 @@ describe TopicTrackingState do
   end
 
   context "tag support" do
-    after do
-      # this is a bit of an odd hook, but this is a global change
-      # used by plugins that leverage tagging heavily and need
-      # tag information in topic tracking state
-      TopicTrackingState.include_tags_in_report = false
-    end
-
-    it "correctly handles tags" do
+    before do
       SiteSetting.tagging_enabled = true
 
       post.topic.notifier.watch_topic!(post.topic.user_id)
@@ -556,6 +549,27 @@ describe TopicTrackingState do
         Guardian.new(Discourse.system_user),
         ['bananas', 'apples']
       )
+    end
+
+    it "includes tags when SiteSetting.enable_experimental_sidebar is true" do
+      report = TopicTrackingState.report(user)
+      expect(report.length).to eq(1)
+      row = report[0]
+      expect(row.respond_to?(:tags)).to eq(false)
+
+      SiteSetting.enable_experimental_sidebar = true
+
+      report = TopicTrackingState.report(user)
+      expect(report.length).to eq(1)
+      row = report[0]
+      expect(row.tags).to contain_exactly("apples", "bananas")
+    end
+
+    it "includes tags when TopicTrackingState.include_tags_in_report option is enabled" do
+      report = TopicTrackingState.report(user)
+      expect(report.length).to eq(1)
+      row = report[0]
+      expect(row.respond_to? :tags).to eq(false)
 
       TopicTrackingState.include_tags_in_report = true
 
@@ -563,13 +577,8 @@ describe TopicTrackingState do
       expect(report.length).to eq(1)
       row = report[0]
       expect(row.tags).to contain_exactly("apples", "bananas")
-
+    ensure
       TopicTrackingState.include_tags_in_report = false
-
-      report = TopicTrackingState.report(user)
-      expect(report.length).to eq(1)
-      row = report[0]
-      expect(row.respond_to? :tags).to eq(false)
     end
   end
 

@@ -1910,9 +1910,6 @@ bg:
         reply_as_new_group_message:
           label: Отговорете като ново групово съобщение
           desc: Създайте ново съобщение, започващо със същите получатели
-        reply_as_private_message:
-          label: Ново съобщение
-          desc: Създайте ново лично съобщение
         reply_to_topic:
           label: Отговорете на тема
           desc: Отговорете на темата, а не на конкретен пост
@@ -2991,6 +2988,11 @@ bg:
       unread_count: "%{count} непрочетен"
       new_count: "%{count} нов"
       sections:
+        messages:
+          header_link_text: "Съобщения"
+        tags:
+          header_link_title: "всички тагове"
+          header_link_text: "Тагове"
         categories:
           header_link_title: "всички категории"
           header_link_text: "Категории"
@@ -3000,6 +3002,8 @@ bg:
           links:
             tracked:
               content: "Следени"
+            my_posts:
+              content: "Моите публикации"
   admin_js:
     type_to_filter: "филтрирай..."
     admin:

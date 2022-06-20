@@ -1985,9 +1985,6 @@ zh_CN:
         reply_as_new_group_message:
           label: 作为新群组消息回复
           desc: 创建以相同收件人开头的新消息
-        reply_as_private_message:
-          label: 新建消息
-          desc: 创建新的个人消息
         reply_to_topic:
           label: 回复话题
           desc: 回复话题，不是任何特定的帖子
@@ -3552,7 +3549,16 @@ zh_CN:
       unread_count: "%{count} 未读"
       new_count: "%{count} 新"
       sections:
+        messages:
+          header_link_title: "个人消息"
+          header_link_text: "消息"
+          header_action_title: "创建个人消息"
+        tags:
+          no_tracked_tags: "你没有跟踪任何标签。"
+          header_link_title: "所有标签"
+          header_link_text: "标签"
         categories:
+          no_tracked_categories: "你没有跟踪任何类别。"
           header_link_title: "所有类别"
           header_link_text: "类别"
         topics:
@@ -3569,6 +3575,11 @@ zh_CN:
             bookmarked:
               content: "已加入书签"
               title: "所有被列入书签的主题"
+            my_posts:
+              content: "我的帖子"
+              title: "我的帖子"
+              draft_count:
+                other: "%{count} 草稿"
   admin_js:
     type_to_filter: "输入以筛选…"
     admin:

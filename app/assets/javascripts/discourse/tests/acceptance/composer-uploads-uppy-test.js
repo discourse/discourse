@@ -12,6 +12,7 @@ import { click, fillIn, settled, visit } from "@ember/test-helpers";
 import I18n from "I18n";
 import { skip, test } from "qunit";
 import { Promise } from "rsvp";
+import { isLegacyEmber } from "discourse-common/config/environment";
 
 function pretender(server, helper) {
   server.post("/uploads/lookup-urls", () => {
@@ -73,10 +74,12 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
     });
 
     appEvents.on("composer:upload-started", () => {
-      assert.strictEqual(
-        query(".d-editor-input").value,
-        "The image:\n[Uploading: avatar.png...]()\n"
-      );
+      if (!isLegacyEmber()) {
+        assert.strictEqual(
+          query(".d-editor-input").value,
+          "The image:\n[Uploading: avatar.png...]()\n"
+        );
+      }
     });
 
     const image = createFile("avatar.png");
@@ -149,11 +152,13 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
       uploadStarted++;
 
       if (uploadStarted === 2) {
-        assert.strictEqual(
-          query(".d-editor-input").value,
-          "The image:\n[Uploading: avatar.png...]()\n[Uploading: avatar2.png...]()\n",
-          "it should show the upload placeholders when the upload starts"
-        );
+        if (!isLegacyEmber()) {
+          assert.strictEqual(
+            query(".d-editor-input").value,
+            "The image:\n[Uploading: avatar.png...]()\n[Uploading: avatar2.png...]()\n",
+            "it should show the upload placeholders when the upload starts"
+          );
+        }
       }
     });
     appEvents.on("composer:uploads-cancelled", () => {
@@ -181,10 +186,13 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
     const done = assert.async();
 
     appEvents.on("composer:upload-started", () => {
-      assert.strictEqual(
-        query(".d-editor-input").value,
-        "The image:\n[Uploading: avatar.png...]()\n"
-      );
+      if (!isLegacyEmber()) {
+        // Event handling is different in legacy - the text hasn't been inserted when this event fires
+        assert.strictEqual(
+          query(".d-editor-input").value,
+          "The image:\n[Uploading: avatar.png...]()\n"
+        );
+      }
     });
 
     appEvents.on("composer:all-uploads-complete", () => {
@@ -211,10 +219,13 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
     const done = assert.async();
 
     appEvents.on("composer:upload-started", () => {
-      assert.strictEqual(
-        query(".d-editor-input").value,
-        "The image:\n[Uploading: avatar.png...]()\n Text after the image."
-      );
+      if (!isLegacyEmber()) {
+        // Event handling is different in legacy - the text hasn't been inserted when this event fires
+        assert.strictEqual(
+          query(".d-editor-input").value,
+          "The image:\n[Uploading: avatar.png...]()\n Text after the image."
+        );
+      }
     });
 
     appEvents.on("composer:all-uploads-complete", () => {
@@ -244,10 +255,13 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
     const done = assert.async();
 
     appEvents.on("composer:upload-started", () => {
-      assert.strictEqual(
-        query(".d-editor-input").value,
-        "The image:\n[Uploading: avatar.png...]()\n Text after the image."
-      );
+      if (!isLegacyEmber()) {
+        // Event handling is different in legacy - the text hasn't been inserted when this event fires
+        assert.strictEqual(
+          query(".d-editor-input").value,
+          "The image:\n[Uploading: avatar.png...]()\n Text after the image."
+        );
+      }
     });
 
     appEvents.on("composer:all-uploads-complete", () => {
@@ -269,10 +283,12 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
     const done = assert.async();
 
     appEvents.on("composer:upload-started", () => {
-      assert.strictEqual(
-        query(".d-editor-input").value,
-        "[Uploading: avatar.png...]()\n"
-      );
+      if (!isLegacyEmber()) {
+        assert.strictEqual(
+          query(".d-editor-input").value,
+          "[Uploading: avatar.png...]()\n"
+        );
+      }
     });
 
     appEvents.on("composer:all-uploads-complete", () => {
@@ -295,10 +311,12 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
     const done = assert.async();
 
     appEvents.on("composer:upload-started", () => {
-      assert.strictEqual(
-        query(".d-editor-input").value,
-        "The image:\n[Uploading: avatar.png...]()\n"
-      );
+      if (!isLegacyEmber()) {
+        assert.strictEqual(
+          query(".d-editor-input").value,
+          "The image:\n[Uploading: avatar.png...]()\n"
+        );
+      }
     });
 
     appEvents.on("composer:all-uploads-complete", () => {

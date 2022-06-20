@@ -21,6 +21,7 @@ import {
 import { cacheShortUploadUrl } from "pretty-text/upload-short-url";
 import bootbox from "bootbox";
 import { run } from "@ember/runloop";
+import escapeRegExp from "discourse-common/utils/escape-regexp";
 
 // Note: This mixin is used _in addition_ to the ComposerUpload mixin
 // on the composer-editor component. It overrides some, but not all,
@@ -489,7 +490,7 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
     // when adding two separate files with the same filename search for matching
     // placeholder already existing in the editor ie [Uploading: test.png...]
     // and add order nr to the next one: [Uploading: test.png(1)...]
-    const escapedFilename = filename.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const escapedFilename = escapeRegExp(filename);
     const regexString = `\\[${I18n.t("uploading_filename", {
       filename: escapedFilename + "(?:\\()?([0-9])?(?:\\))?",
     })}\\]\\(\\)`;

@@ -1668,9 +1668,6 @@ ca:
         reply_as_new_topic:
           label: Respon com a tema enllaçat
           desc: Crea un tema nou enllaçat a aquest tema
-        reply_as_private_message:
-          label: Missatge nou
-          desc: Crea un missatge personal nou 
         reply_to_topic:
           label: Respon al tema
           desc: Respon al tema, no a cap publicació específica
@@ -2886,6 +2883,11 @@ ca:
       unread_count: "%{count} no llegit"
       new_count: "%{count} nou"
       sections:
+        messages:
+          header_link_text: "Missatges"
+        tags:
+          header_link_title: "totes les etiquetes"
+          header_link_text: "Etiquetes"
         categories:
           header_link_title: "totes les categories"
           header_link_text: "Categories"
@@ -2895,6 +2897,8 @@ ca:
           links:
             tracked:
               content: "Seguit"
+            my_posts:
+              content: "Les meves publicacions"
   admin_js:
     type_to_filter: "escriu per a filtrar..."
     admin:

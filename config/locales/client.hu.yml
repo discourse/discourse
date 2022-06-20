@@ -2050,9 +2050,6 @@ hu:
         reply_as_new_group_message:
           label: Válasz új csoportos üzenetként
           desc: Új üzenet létrehozása azonos címzettekkel
-        reply_as_private_message:
-          label: Új üzenet
-          desc: Új személyes üzenet létrehozása
         reply_to_topic:
           label: Válasz a témára
           desc: Válasz a témára, nem konkrét bejegyzésre
@@ -3302,6 +3299,11 @@ hu:
       unread_count: "%{count} olvasatlan"
       new_count: "%{count} új"
       sections:
+        messages:
+          header_link_text: "Üzenetek"
+        tags:
+          header_link_title: "összes címke"
+          header_link_text: "Címkék"
         categories:
           header_link_title: "összes kategória"
           header_link_text: "Kategóriák"
@@ -3311,6 +3313,8 @@ hu:
           links:
             tracked:
               content: "Követett"
+            my_posts:
+              content: "Saját bejegyzéseim"
   admin_js:
     type_to_filter: "Írj ide a szűréshez.."
     admin:

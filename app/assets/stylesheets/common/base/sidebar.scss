@@ -103,6 +103,21 @@
       color: var(--primary);
       font-weight: bold;
     }
+
+    .badge-wrapper {
+      font-size: 100%;
+    }
+  }
+
+  .sidebar-section-message-wrapper {
+    display: flex;
+    margin-left: 1.5em;
+  }
+
+  .sidebar-section-message {
+    padding: 0.25em 0.5em;
+    font-size: var(--font-down-1);
+    color: var(--primary-high);
   }
 
   .sidebar-section-link-content-badge {
@@ -129,5 +144,21 @@
       font-size: $font-down-1;
       color: var(--primary-medium);
     }
+  }
+
+  .sidebar-section-content {
+    hr {
+      margin: 0em 1.5em;
+    }
+  }
+
+  .sidebar-section-link-personal-messages-sent,
+  .sidebar-section-link-personal-messages-new,
+  .sidebar-section-link-personal-messages-archive,
+  .sidebar-section-link-personal-messages-unread,
+  .sidebar-section-link-group-messages-new,
+  .sidebar-section-link-group-messages-unread,
+  .sidebar-section-link-group-messages-archive {
+    margin-left: 0.5em;
   }
 }

@@ -1410,8 +1410,6 @@ et:
         reply: Vasta
         draft: Mustand
         edit: Muuda
-        reply_as_private_message:
-          label: Uus sõnum
         reply_to_topic:
           label: Vasta teemale
         create_topic:
@@ -2535,6 +2533,11 @@ et:
       unread_count: "%{count} lugemata"
       new_count: "%{count} uus"
       sections:
+        messages:
+          header_link_text: "Sõnumid"
+        tags:
+          header_link_title: "kõik sildid"
+          header_link_text: "Sildid"
         categories:
           header_link_title: "kõik foorumid"
           header_link_text: "Liigid"
@@ -2544,6 +2547,8 @@ et:
           links:
             tracked:
               content: "Jälgitud"
+            my_posts:
+              content: "Minu"
   admin_js:
     type_to_filter: "filtreerimiseks trüki..."
     admin:

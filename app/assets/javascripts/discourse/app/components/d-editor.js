@@ -672,6 +672,13 @@ export default Component.extend(TextareaTextManipulation, {
     return true;
   },
 
+  @action
+  onEmojiPickerClose() {
+    if (!(this.isDestroyed || this.isDestroying)) {
+      this.set("emojiPickerIsActive", false);
+    }
+  },
+
   actions: {
     emoji() {
       if (this.disabled) {

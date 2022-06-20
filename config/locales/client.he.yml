@@ -183,7 +183,7 @@ he:
           many: "כעבור %{count} חודשים"
           other: "כעבור %{count} חודשים"
         x_years:
-          one: "שנה לאחר מכן"
+          one: "כעבור שנה %{count}"
           two: "כעבור שנתיים"
           many: "כעבור %{count} שנים"
           other: "כעבור %{count} שנים"
@@ -208,8 +208,8 @@ he:
       invited_user: "נשלחה הזמנה אל %{who} ב־%{when}"
       invited_group: "נשלחה הזמנה אל %{who} ב־%{when}"
       user_left: "%{who} הסירו עצמם מהודעה זו %{when}"
-      removed_user: "התבצעה הסרה של %{who} ב־%{when}"
-      removed_group: "%{who} הוסר ב־%{when}"
+      removed_user: "הוסר ע״י %{who} ב־%{when}"
+      removed_group: "הוסר ע״י %{who} ב־%{when}"
       autobumped: "הוקפץ אוטומטית ב־%{when}"
       autoclosed:
         enabled: "נסגר ב־%{when}"
@@ -248,7 +248,7 @@ he:
       other: "כדי להקל על הקמת האתר החדש שלך, כרגע המערכת במצב אתחול ראשוני. לכל המשתמשים החדשים תוענק דרגת האמון 1 ויישלח אליהם תמצות יומי בדוא״ל. אפשרות זו תכבה אוטומטית לאחר שהצטרפו %{count} משתמשים."
     bootstrap_mode_disabled: "מצב Bootstrap יבוטל תוך 24 שעות."
     themes:
-      default_description: "בררת מחדל"
+      default_description: "ברירת מחדל"
       broken_theme_alert: "יתכן שהאתר שלך לא יתפקד כיוון שבערכת העיצוב / הרכיב יש שגיאות."
       error_caused_by: "נגרם על ידי ‚%{name}’. <a target='blank' href='%{path}'>יש ללחוץ כאן</a> כדי לעדכן, להגדיר מחדש או להשבית."
       only_admins: "(הודעה זו מופיע רק למנהלי האתר)"
@@ -264,7 +264,7 @@ he:
         ca_central_1: "קנדה (מרכז)"
         cn_north_1: "סין (בייג׳ינג)"
         cn_northwest_1: "סין (נינגשיה)"
-        eu_central_1: "האיחוד האירופי (פרנקפורט)"
+        eu_central_1: "אירופה (פרנקפורט)"
         eu_north_1: "אירופה (שטוקהולם)"
         eu_south_1: "אירופה (מילאנו)"
         eu_west_1: "אירופה (אירלנד)"
@@ -273,17 +273,17 @@ he:
         sa_east_1: "אמריקה הדרומית (סאו פאולו)"
         us_east_1: "מזרח ארה״ב (צפון וירג׳יניה)"
         us_east_2: "מזרח ארה״ב (אוהיו)"
-        us_gov_east_1: "הענן הממשלתי של AWS (ארה״ב-מערב)"
+        us_gov_east_1: "הענן הממשלתי של AWS (מזרח ארה״ב)"
         us_gov_west_1: "הענן הממשלתי של AWS (מערב ארה״ב)"
         us_west_1: "מערב ארה״ב (צפון קליפורניה)"
         us_west_2: "מערב ארה״ב (אורגון)"
     clear_input: "פינוי הקלט"
     edit: "עריכת הכותרת והקטגוריה של נושא זה"
-    expand: "הרחב"
-    not_implemented: "תכונה זו עדיין לא מומשה, עמך הסליחה!"
+    expand: "הרחבה"
+    not_implemented: "יכולת זו עדיין לא מומשה, עמך הסליחה!"
     no_value: "לא"
     yes_value: "כן"
-    submit: "שליחה"
+    submit: "הגשה"
     generic_error: "ארעה שגיאה, עמך הסליחה."
     generic_error_with_reason: "ארעה שגיאה: %{error}"
     sign_up: "הרשמה"
@@ -304,14 +304,14 @@ he:
     privacy_policy: "מדיניות פרטיות"
     privacy: "פרטיות"
     tos: "תנאי השירות"
-    rules: "חוקים"
+    rules: "כללים"
     conduct: "נהלי התנהגות"
     mobile_view: "תצוגת נייד"
     desktop_view: "תצוגת מחשב"
     or: "או"
     now: "ממש עכשיו"
-    read_more: "המשך קריאה"
-    more: "להרחבה"
+    read_more: "מידע נוסף"
+    more: "עוד"
     x_more:
       one: "עוד %{count}"
       two: "עוד %{count}"
@@ -340,13 +340,13 @@ he:
       pm_title: "הודעות מוצעות"
     about:
       simple_title: "על אודות"
-      title: "על אודות %{title}"
-      stats: "סטטיסטיקות אתר"
+      title: "על %{title}"
+      stats: "סטטיסטיקת אתר"
       our_admins: "המנהלים שלנו"
       our_moderators: "המפקחים שלנו"
       moderators: "מפקחים"
       stat:
-        all_time: "כל הזמנים"
+        all_time: "כל הזמן"
         last_day: "24 השעות האחרונות"
         last_7_days: "7 הימים האחרונים"
         last_30_days: "30 הימים האחרונים"
@@ -444,23 +444,23 @@ he:
     cancel: "ביטול"
     deleting: "מתבצעת מחיקה…"
     save: "שמירת השינויים"
-    saving: "בהליכי שמירה..."
+    saving: "בהליכי שמירה…"
     saved: "נשמר!"
     upload: "העלאה"
-    uploading: "בהליכי העלאה..."
+    uploading: "בהליכי העלאה…"
     processing: "מתבצע עיבוד…"
-    uploading_filename: "מעלה: %{filename}..."
+    uploading_filename: "בהעלאה: %{filename}…"
     processing_filename: "מתבצע עיבוד: %{filename}…"
-    clipboard: "לוח"
+    clipboard: "לוח גזירים"
     uploaded: "הועלה!"
-    pasting: "מדביק..."
-    enable: "לאפשר"
+    pasting: "מתבצעת הדבקה…"
+    enable: "הפעלה"
     disable: "השבתה"
     continue: "המשך"
     undo: "לבטל פעולה"
     revert: "להחזיר"
     failed: "נכשל"
-    switch_to_anon: "כניסה למצב אלמוני"
+    switch_to_anon: "מעבר למצב אלמוני"
     switch_from_anon: "יציאה ממצב אלמוני"
     banner:
       close: "התעלמות מהכרזה"
@@ -494,7 +494,7 @@ he:
           title: "כאשר חבר סגל בוחר לנקוט בפעולה הדגל מקבל בונוס."
         user_accuracy_bonus:
           name: "דיוק משתמש"
-          title: "משתמשים שסימון הדגל שלהם קיבל הסכמה בעבר מקבלים בונוס."
+          title: "משתמשים שסימון הדגל שלהם היה מוצדק בעבר מקבלים בונוס."
         trust_level_bonus:
           name: "דרגת אמון"
           title: "לפריטים לסקירה שנוצרו על ידי משתמשים בדרגות אמון גבוהות יותר יש ניקוד גבוה יותר."
@@ -508,17 +508,17 @@ he:
         claimed_by_you: "דרשת את הפריט הזה ועכשיו יתאפשר לך לסקור אותו."
         claimed_by_other: "הפריט הזה זמין לסריקה רק על ידי <b>%{username}</b>."
       claim:
-        title: "דרישת פריט זה"
+        title: "דרישת נושא זה"
       unclaim:
         help: "הסרת דרישה זו"
       awaiting_approval: "בהמתנה לאישור"
-      delete: "הסרה"
+      delete: "מחיקה"
       settings:
         saved: "נשמר"
         save_changes: "שמירת השינויים"
         title: "הגדרות"
         priorities:
-          title: "עדיפויות ניתנות לסקירה"
+          title: "עדיפויות פריטים לסקירה"
       moderation_history: "היסטוריית פעילות פיקוח"
       view_all: "להציג הכול"
       grouped_by_topic: "קיבוץ לפי נושא"
@@ -592,7 +592,7 @@ he:
         type:
           title: "סוג"
           all: "(כל הסוגים)"
-        minimum_score: "ניקוד מזערי"
+        minimum_score: "ניקוד מזערי:"
         refresh: "רענון"
         status: "מצב"
         category: "קטגוריה"
@@ -1889,13 +1889,13 @@ he:
     forgot_password:
       title: "אתחול סיסמה"
       action: "שכחתי את הסיסמה שלי"
-      invite: "נא להקליד את שם המשתמש וכתובת הדוא״ל שלך ואנו נשלח לך הודעה בדוא״ל לאיפוס ססמה."
+      invite: "נא להקליד את שם המשתמש וכתובת הדוא״ל שלך ואנו נשלח לך הודעה בדוא״ל לאיפוס סיסמה."
       invite_no_username: "נא להקליד את כתובת הדוא״ל שלך ואנו נשלח לך הודעה בדוא״ל לאיפוס ססמה."
-      reset: "איפוס ססמה"
-      complete_username: "אם קיים חשבון שמתאים לשם המשתמש <b>%{username}</b>, תוך זמן קצר אמורה להגיע אליך הודעה בדוא״ל עם הנחיות לאיפוס הססמה שלך."
-      complete_email: "אם החשבון מתאים לכתובת <b>%{email}</b>, תוך זמן קצר אמורה להגיע אליך הודעה בדוא״ל עם הנחיות לאיפוס הססמה שלך."
-      complete_username_found: "מצאנו חשבון שתואם לשם המשתמש <b>%{username}</b>. תוך זמן קצר אמורה להגיע לדוא״ל שלך הודעה עם הנחיות כיצד לאפס את הססמה שלך."
-      complete_email_found: "מצאנו חשבון שתואם לכתובת <b>%{email}</b>. תוך זמן קצר אמורה להגיע לדוא״ל שלך הודעה עם הנחיות כיצד לאפס את הססמה שלך."
+      reset: "איפוס סיסמה"
+      complete_username: "אם יש חשבון שעונה לשם המשתמש <b>%{username}</b>, תוך זמן קצר אמורה להגיע אליך הודעה בדוא״ל עם הנחיות לאיפוס הסיסמה שלך."
+      complete_email: "אם החשבון עונה לכתובת <b>%{email}</b>, תוך זמן קצר אמורה להגיע אליך הודעה בדוא״ל עם הנחיות לאיפוס הסיסמה שלך."
+      complete_username_found: "מצאנו חשבון שעונה לשם המשתמש <b>%{username}</b>. תוך זמן קצר אמורה להגיע לדוא״ל שלך הודעה עם הנחיות כיצד לאפס את הסיסמה שלך."
+      complete_email_found: "מצאנו חשבון שתואם לכתובת <b>%{email}</b>. תוך זמן קצר אמורה להגיע לדוא״ל שלך הודעה עם הנחיות כיצד לאפס את הסיסמה שלך."
       complete_username_not_found: "שום חשבון אינו תואם לשם המשתמש <b>%{username}</b>"
       complete_email_not_found: "שום חשבון אינו תואם ל <b>%{email}</b>"
       help: "ההודעה אינה מגיעה אליך לתיבת הדוא״ל? נא לבדוק את תיקיית הזבל/ספאם קודם.<p>לא ברור לך באיזו כתובת דוא״ל השתמשת? נא להקליד כתובת דוא״ל ואנו ניידע אותך אם היא קיימת כאן.</p><p>אם כבר אין לך גישה לכתובת הדוא״ל של החשבון שלך, נא ליצור קשר עם <a href='%{basePath}/about'>הסגל המועיל שלנו.</a></p>"
@@ -1939,12 +1939,12 @@ he:
       cookies_error: "כנראה שהעוגיות בדפדפן שלך מושבתות. אין אפשרות להיכנס מבלי להפעיל אותן."
       rate_limit: "נא להמתין בטרם ביצוע ניסיון כניסה חוזר."
       blank_username: "נא למלא כתובת דוא״ל או שם משתמש."
-      blank_username_or_password: "נא למלא את כתובת הדוא״ל או את שם המשתמש שלך וססמה."
+      blank_username_or_password: "נא למלא את כתובת הדוא״ל או את שם המשתמש שלך וסיסמה."
       reset_password: "אפס סיסמה"
       logging_in: "מתחבר...."
       or: "או"
       authenticating: "מאשר..."
-      awaiting_activation: "החשבון שלך ממתין להפעלה, נא להשתמש בקישור „שכחתי ססמה” כדי לשלוח הודעת הפעלה נוספת."
+      awaiting_activation: "החשבון שלך ממתין להפעלה, נא להשתמש בקישור „שכחתי סיסמה” כדי לשלוח הודעת הפעלה נוספת."
       awaiting_approval: "החשבון שלך טרם אושר על ידי חבר סגל. תישלח אליך הודעה בדוא״ל כשהוא יאושר."
       requires_invite: "סליחה, גישה לפורום הזה היא בהזמנה בלבד."
       not_activated: "עוד אין לך אפשרות להיכנס. שלחנו אליך הודעת הפעלה בדוא״ל אל <b>%{sentTo}</b>. נא לעקוב אחר ההוראות שבהודעה כדי להפעיל את החשבון שלך."
@@ -2247,9 +2247,6 @@ he:
         reply_as_new_group_message:
           label: להגיב בהודעה קבוצתית חדשה
           desc: יצירת הודעה חדשה שתיפתח עם אותם נמענים
-        reply_as_private_message:
-          label: הודעה חדשה
-          desc: צור הודעה פרטית חדשה
         reply_to_topic:
           label: הגב לנושא
           desc: הגב לנושא, לא פוסט ספציפי
@@ -4057,6 +4054,12 @@ he:
       unread_count: "לא נקרא (%{count})"
       new_count: "חדש (%{count})"
       sections:
+        messages:
+          header_link_text: "הודעות"
+        tags:
+          no_tracked_tags: "אין לך אף תגית במעקב."
+          header_link_title: "כל התגיות"
+          header_link_text: "תגיות"
         categories:
           header_link_title: "כל הקטגוריות"
           header_link_text: "קטגוריות"
@@ -4074,6 +4077,14 @@ he:
             bookmarked:
               content: "מסומן"
               title: "כל הנושאים שסומנו"
+            my_posts:
+              content: "הפוסטים שלי"
+              title: "הפוסטים שלי"
+              draft_count:
+                one: "טיוטה %{count}"
+                two: "%{count} טיוטות"
+                many: "%{count} טיוטות"
+                other: "%{count} טיוטות"
   admin_js:
     type_to_filter: "הקלידו לסינון..."
     admin:

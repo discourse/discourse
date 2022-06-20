@@ -1,0 +1,30 @@
+{{#each field.choices as |choice|}}
+  <div class="radio-field-choice {{fieldClass}}">
+    <div class="radio-area">
+      {{radio-button
+        selection=field.value
+        value=choice.id
+        name=choice.label
+        onChange=(action "changed")
+      }}
+
+      <span class="radio-label">
+        {{#if choice.icon}}
+          {{d-icon choice.icon}}
+        {{/if}}
+
+        {{choice.label}}
+      </span>
+
+      {{#if choice.extraLabel}}
+        <span class="extra-label">
+          {{html-safe choice.extraLabel}}
+        </span>
+      {{/if}}
+    </div>
+
+    <div class="radio-description">
+      {{choice.description}}
+    </div>
+  </div>
+{{/each}}

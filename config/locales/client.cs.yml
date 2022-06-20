@@ -1613,9 +1613,6 @@ cs:
         reply_as_new_topic:
           label: Odpovědět v propojeném tématu
           desc: Vytvořit nové téma propojené s tímto tématem
-        reply_as_private_message:
-          label: Nová zpráva
-          desc: Vytvořit novou osobní zprávu
         reply_to_topic:
           label: Odpovědět na téma
           desc: Odpovědět na téma, ale ne na konkrétní příspěvek
@@ -2819,6 +2816,11 @@ cs:
       unread_count: "%{count} nepřečtené"
       new_count: "%{count} nové"
       sections:
+        messages:
+          header_link_text: "Zprávy"
+        tags:
+          header_link_title: "všechny štítky"
+          header_link_text: "Tagy"
         categories:
           header_link_title: "všechny kategorie"
           header_link_text: "Kategorie"
@@ -2828,6 +2830,8 @@ cs:
           links:
             tracked:
               content: "Sledované"
+            my_posts:
+              content: "Mé příspěvky"
   admin_js:
     type_to_filter: "text pro filtrování..."
     admin:

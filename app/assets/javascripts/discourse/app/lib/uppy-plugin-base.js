@@ -1,6 +1,7 @@
 import { BasePlugin } from "@uppy/core";
 import { Promise } from "rsvp";
 import { warn } from "@ember/debug";
+import { isTesting } from "discourse-common/config/environment";
 
 export class UppyPluginBase extends BasePlugin {
   constructor(uppy, opts) {
@@ -9,7 +10,9 @@ export class UppyPluginBase extends BasePlugin {
   }
 
   _consoleWarn(msg) {
-    warn(`[${this.id}] ${msg}`, { id: `discourse.${this.id}` });
+    if (!isTesting()) {
+      warn(`[${this.id}] ${msg}`, { id: `discourse.${this.id}` });
+    }
   }
 
   _consoleDebug(msg) {

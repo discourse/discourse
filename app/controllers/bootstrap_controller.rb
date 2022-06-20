@@ -27,6 +27,7 @@ class BootstrapController < ApplicationController
       add_style(mobile_view? ? :mobile : :desktop)
     end
     add_style(:admin) if staff?
+    add_style(:wizard) if admin?
 
     assets_fake_request = ActionDispatch::Request.new(request.env.dup)
     assets_for_url = params[:for_url]
@@ -51,8 +52,13 @@ class BootstrapController < ApplicationController
     if ExtraLocalesController.client_overrides_exist?
       extra_locales << ExtraLocalesController.url('overrides')
     end
+
     if staff?
       extra_locales << ExtraLocalesController.url('admin')
+    end
+
+    if admin?
+      extra_locales << ExtraLocalesController.url('wizard')
     end
 
     plugin_js = Discourse.find_plugin_js_assets(

@@ -662,7 +662,10 @@ def correct_inline_uploads
   dry_run = (ENV["DRY_RUN"].nil? ? true : ENV["DRY_RUN"] != "false")
   verbose = ENV["VERBOSE"]
 
-  scope = Post.joins(:post_uploads).distinct("posts.id")
+  scope = Upload
+    .joins(:upload_references)
+    .where(upload_references: { target_type: 'Post' })
+    .distinct("posts.id")
     .where(<<~SQL)
     raw LIKE '%/uploads/#{RailsMultisite::ConnectionManagement.current_db}/original/%'
     SQL

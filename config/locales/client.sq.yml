@@ -1931,6 +1931,11 @@ sq:
       unread_count: "%{count} e palexuar"
       new_count: "%{count} e re"
       sections:
+        messages:
+          header_link_text: "Mesazhet"
+        tags:
+          header_link_title: "të gjitha etiketat"
+          header_link_text: "Etiketat"
         categories:
           header_link_title: "kategoritë"
           header_link_text: "Categories"
@@ -1940,6 +1945,8 @@ sq:
           links:
             tracked:
               content: "Gjurmuar"
+            my_posts:
+              content: "Postimet e mia"
   admin_js:
     type_to_filter: "shkruaj për kërkim"
     admin:

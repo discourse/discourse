@@ -583,8 +583,11 @@ class PostAlerter
   # TODO: Move to post-analyzer?
   # Returns a list of users who were quoted in the post
   def extract_quoted_users(post)
-    usernames = post.raw.scan(/\[quote=\"([^,]+),.+\"\]/).uniq.map { |q| q.first.strip.downcase }
-
+    usernames = if SiteSetting.display_name_on_posts && !SiteSetting.prioritize_username_in_ux
+      post.raw.scan(/username:([[:alnum:]]*)"(?=\])/)
+    else
+      post.raw.scan(/\[quote=\"([^,]+),.+\"\]/)
+    end.uniq.map { |q| q.first.strip.downcase }
     User.where.not(id: post.user_id).where(username_lower: usernames)
   end
 

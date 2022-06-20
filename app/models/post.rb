@@ -42,8 +42,8 @@ class Post < ActiveRecord::Base
   has_many :topic_links
   has_many :group_mentions, dependent: :destroy
 
-  has_many :post_uploads, dependent: :delete_all
-  has_many :uploads, through: :post_uploads
+  has_many :upload_references, as: :target, dependent: :destroy
+  has_many :uploads, through: :upload_references
 
   has_one :post_stat
 
@@ -958,16 +958,19 @@ class Post < ActiveRecord::Base
       upload_ids << upload.id if upload.present?
     end
 
-    post_uploads = upload_ids.map do |upload_id|
-      { post_id: self.id, upload_id: upload_id }
+    upload_references = upload_ids.map do |upload_id|
+      {
+        target_id: self.id,
+        target_type: self.class.name,
+        upload_id: upload_id,
+        created_at: Time.zone.now,
+        updated_at: Time.zone.now
+      }
     end
 
-    PostUpload.transaction do
-      PostUpload.where(post_id: self.id).delete_all
-
-      if post_uploads.size > 0
-        PostUpload.insert_all(post_uploads)
-      end
+    UploadReference.transaction do
+      UploadReference.where(target: self).delete_all
+      UploadReference.insert_all(upload_references) if upload_references.size > 0
 
       if SiteSetting.secure_media?
         Upload.where(
@@ -1067,7 +1070,11 @@ class Post < ActiveRecord::Base
 
       query.find_in_batches do |posts|
         ids = posts.pluck(:id)
-        sha1s = Upload.joins(:post_uploads).where("post_uploads.post_id >= ? AND post_uploads.post_id <= ?", ids.min, ids.max).pluck(:sha1)
+        sha1s = Upload
+          .joins(:upload_references)
+          .where(upload_references: { target_type: "Post" })
+          .where("upload_references.target_id BETWEEN ? AND ?", ids.min, ids.max)
+          .pluck(:sha1)
 
         posts.each do |post|
           post.each_upload_url do |src, path, sha1|

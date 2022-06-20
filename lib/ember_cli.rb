@@ -17,7 +17,10 @@ module EmberCli
   }
 
   def self.enabled?
-    ENV["EMBER_CLI_PROD_ASSETS"] != "0"
+    if !Rails.env.production? && ENV["EMBER_CLI_PROD_ASSETS"] == "0"
+      STDERR.puts "The 'legacy' ember environment is discontinued. Running with ember-cli assets. Remove the EMBER_CLI_PROD_ASSETS=0 flag."
+    end
+    true
   end
 
   def self.script_chunks

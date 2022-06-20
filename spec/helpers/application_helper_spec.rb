@@ -7,7 +7,7 @@ describe ApplicationHelper do
     def preload_link(url)
       <<~HTML
           <link rel="preload" href="#{url}" as="script">
-          <script src="#{url}"></script>
+          <script defer src="#{url}"></script>
       HTML
     end
 

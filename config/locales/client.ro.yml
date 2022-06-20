@@ -1660,8 +1660,6 @@ ro:
         reply_as_new_topic:
           label: Răspunde cu link către subiect
           desc: Creați o discuție nouă legată de această discuție
-        reply_as_private_message:
-          label: Mesaj nou
         reply_to_topic:
           label: Răspunde la subiect
           desc: Răspundeți subiectului, nu unei anumite postări
@@ -2785,6 +2783,11 @@ ro:
       unread_count: "%{count} necitit"
       new_count: "%{count} nou"
       sections:
+        messages:
+          header_link_text: "Mesaje"
+        tags:
+          header_link_title: "toate etichetele"
+          header_link_text: "Etichete"
         categories:
           header_link_title: "Toate categoriile"
           header_link_text: "Categorii"
@@ -2794,6 +2797,8 @@ ro:
           links:
             tracked:
               content: "Urmărite"
+            my_posts:
+              content: "Postările mele"
   admin_js:
     type_to_filter: "tastează pentru a filtra..."
     admin:

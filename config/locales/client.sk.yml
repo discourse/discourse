@@ -1324,8 +1324,6 @@ sk:
       composer_actions:
         reply: Odpoveď
         edit: Upraviť
-        reply_as_private_message:
-          label: Nová správa
         reply_to_topic:
           label: Odpovedať na tému
         create_topic:
@@ -2273,6 +2271,11 @@ sk:
       unread_count: "%{count} neprečítaná"
       new_count: "%{count} nová"
       sections:
+        messages:
+          header_link_text: "Správy"
+        tags:
+          header_link_title: "všetky štítky"
+          header_link_text: "Štítky"
         categories:
           header_link_title: "všetky kategórie"
           header_link_text: "Kategórie"
@@ -2282,6 +2285,8 @@ sk:
           links:
             tracked:
               content: "Pozorované"
+            my_posts:
+              content: "Moje príspevky"
   admin_js:
     type_to_filter: "zadajte, čo chcete filtrovať ..."
     admin:

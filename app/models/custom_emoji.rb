@@ -3,8 +3,16 @@
 class CustomEmoji < ActiveRecord::Base
   belongs_to :upload
 
+  has_many :upload_references, as: :target, dependent: :destroy
+
   validates :name, presence: true, uniqueness: true
   validates :upload_id, presence: true
+
+  after_save do
+    if saved_change_to_upload_id?
+      UploadReference.ensure_exist!(upload_ids: [self.upload_id], target: self)
+    end
+  end
 end
 
 # == Schema Information
