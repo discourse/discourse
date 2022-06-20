@@ -207,7 +207,7 @@ export default Component.extend({
   ),
 
   @computed("currentUserTimezone")
-  formatedCurrentUserTimezone(timezone) {
+  formattedCurrentUserTimezone(timezone) {
     return timezone.replace("_", " ").replace("Etc/", "").replace("/", ", ");
   },
 

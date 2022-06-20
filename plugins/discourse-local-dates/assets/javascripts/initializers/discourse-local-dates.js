@@ -27,7 +27,7 @@ export function applyLocalDates(dates, siteSettings) {
         <svg class="fa d-icon d-icon-globe-americas svg-icon" xmlns="http://www.w3.org/2000/svg">
           <use href="#globe-americas"></use>
         </svg>
-        <span class="relative-time">${localDateBuilder.formated}</span>
+        <span class="relative-time">${localDateBuilder.formatted}</span>
       `
     );
     element.setAttribute("aria-label", localDateBuilder.textPreview);
@@ -151,7 +151,7 @@ function buildHtmlPreview(element, siteSettings) {
 
     const dateTimeNode = document.createElement("span");
     dateTimeNode.classList.add("date-time");
-    dateTimeNode.innerHTML = preview.formated;
+    dateTimeNode.innerHTML = preview.formatted;
     previewNode.appendChild(dateTimeNode);
 
     return previewNode;
