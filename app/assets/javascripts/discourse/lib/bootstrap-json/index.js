@@ -73,7 +73,7 @@ function head(buffer, bootstrap, headers, baseURL) {
     }
 
     if (admin) {
-      buffer.push(`<script src="${baseURL}assets/wizard.js"></script>`);
+      buffer.push(`<script defer src="${baseURL}assets/wizard.js"></script>`);
     }
   }
 
