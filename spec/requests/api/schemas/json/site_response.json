@@ -502,13 +502,22 @@
               "type": "integer"
             },
             "description": {
-              "type": "string"
+              "type": [
+                "string",
+                "null"
+              ]
             },
             "description_text": {
-              "type": "string"
+              "type": [
+                "string",
+                "null"
+              ]
             },
             "description_excerpt": {
-              "type": "string"
+              "type": [
+                "string",
+                "null"
+              ]
             },
             "topic_url": {
               "type": "string"
@@ -636,9 +645,6 @@
             "topic_count",
             "post_count",
             "position",
-            "description",
-            "description_text",
-            "description_excerpt",
             "topic_url",
             "read_restricted",
             "permission",
