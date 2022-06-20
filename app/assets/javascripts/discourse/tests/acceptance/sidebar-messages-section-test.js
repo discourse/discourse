@@ -287,5 +287,73 @@ acceptance(
         );
       });
     });
+
+    test("viewing personal message topic with a group the user is a part of", async function (assert) {
+      updateCurrentUser({
+        groups: [
+          {
+            name: "foo_group", // based on fixtures
+            has_messages: true,
+          },
+        ],
+      });
+
+      await visit("/t/130");
+
+      assert.strictEqual(
+        queryAll(".sidebar-section-messages .sidebar-section-link").length,
+        5,
+        "5 section links are displayed"
+      );
+
+      assert.strictEqual(
+        queryAll(
+          ".sidebar-section-messages .sidebar-section-link.personal-messages"
+        ).length,
+        1,
+        "personal messages inbox filter links are not shown"
+      );
+
+      assert.strictEqual(
+        queryAll(".sidebar-section-messages .sidebar-section-link.foo_group")
+          .length,
+        4,
+        "foo_group messages inbox filter links are shown"
+      );
+    });
+
+    test("viewing personal message topic", async function (assert) {
+      updateCurrentUser({
+        groups: [
+          {
+            name: "foo_group", // based on fixtures
+            has_messages: true,
+          },
+        ],
+      });
+
+      await visit("/t/34");
+
+      assert.strictEqual(
+        queryAll(".sidebar-section-messages .sidebar-section-link").length,
+        6,
+        "6 section links are displayed"
+      );
+
+      assert.strictEqual(
+        queryAll(
+          ".sidebar-section-messages .sidebar-section-link.personal-messages"
+        ).length,
+        5,
+        "personal messages inbox filter links are shown"
+      );
+
+      assert.strictEqual(
+        queryAll(".sidebar-section-messages .sidebar-section-link.foo_group")
+          .length,
+        1,
+        "foo_group messages inbox filter links are not shown"
+      );
+    });
   }
 );

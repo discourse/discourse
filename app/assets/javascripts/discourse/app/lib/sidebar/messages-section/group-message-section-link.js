@@ -1,26 +1,15 @@
 import I18n from "I18n";
 
-import { tracked } from "@glimmer/tracking";
 import { capitalize } from "@ember/string";
+import MessageSectionLink from "discourse/lib/sidebar/messages-section/message-section-link";
 
-import { INBOX } from "discourse/components/sidebar/messages-section";
-
-export default class GroupMessageSectionLink {
-  @tracked shouldDisplay = this._isInbox;
-
+export default class GroupMessageSectionLink extends MessageSectionLink {
   routeNames = new Set([
     "userPrivateMessages.group",
     "userPrivateMessages.groupUnread",
     "userPrivateMessages.groupNew",
     "userPrivateMessages.groupArchive",
   ]);
-
-  constructor({ group, type, currentUser, router }) {
-    this.group = group;
-    this.type = type;
-    this.currentUser = currentUser;
-    this.router = router;
-  }
 
   get name() {
     return `group-messages-${this.type}`;
@@ -56,25 +45,22 @@ export default class GroupMessageSectionLink {
     }
   }
 
-  collapse() {
+  pageChanged({ currentRouteName, currentRouteParams, privateMessageTopic }) {
     if (this._isInbox) {
       return;
     }
 
-    this.shouldDisplay = false;
-  }
-
-  pageChanged(currentRouteName, currentRouteParams) {
-    if (this._isInbox) {
+    if (
+      privateMessageTopic?.allowedGroups?.some(
+        (g) => g.name === this.group.name
+      )
+    ) {
+      this.setDisplayState = true;
       return;
     }
 
-    this.shouldDisplay =
+    this.setDisplayState =
       this.routeNames.has(currentRouteName) &&
       currentRouteParams.name.toLowerCase() === this.group.name.toLowerCase();
-  }
-
-  get _isInbox() {
-    return this.type === INBOX;
   }
 }

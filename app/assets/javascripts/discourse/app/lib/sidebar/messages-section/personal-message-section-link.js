@@ -1,11 +1,8 @@
 import I18n from "I18n";
 
-import { tracked } from "@glimmer/tracking";
-import { INBOX } from "discourse/components/sidebar/messages-section";
+import MessageSectionLink from "discourse/lib/sidebar/messages-section/message-section-link";
 
-export default class PersonalMessageSectionLink {
-  @tracked shouldDisplay = this._isInbox;
-
+export default class PersonalMessageSectionLink extends MessageSectionLink {
   routeNames = new Set([
     "userPrivateMessages.index",
     "userPrivateMessages.unread",
@@ -14,14 +11,12 @@ export default class PersonalMessageSectionLink {
     "userPrivateMessages.archive",
   ]);
 
-  constructor({ currentUser, type, router }) {
-    this.currentUser = currentUser;
-    this.type = type;
-    this.router = router;
-  }
-
   get name() {
     return `personal-messages-${this.type}`;
+  }
+
+  get class() {
+    return `personal-messages`;
   }
 
   get route() {
@@ -46,23 +41,16 @@ export default class PersonalMessageSectionLink {
     return I18n.t(`sidebar.sections.messages.links.${this.type}`);
   }
 
-  collapse() {
+  pageChanged({ currentRouteName, privateMessageTopic }) {
     if (this._isInbox) {
       return;
     }
 
-    this.shouldDisplay = false;
-  }
-
-  pageChanged(currentRouteName) {
-    if (this._isInbox) {
+    if (privateMessageTopic?.allowedGroups?.length === 0) {
+      this.setDisplayState = true;
       return;
     }
 
-    this.shouldDisplay = this.routeNames.has(currentRouteName);
-  }
-
-  get _isInbox() {
-    return this.type === INBOX;
+    this.setDisplayState = this.routeNames.has(currentRouteName);
   }
 }

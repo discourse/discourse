@@ -1,5 +1,6 @@
 import { cached } from "@glimmer/tracking";
 
+import { getOwner } from "discourse-common/lib/get-owner";
 import GlimmerComponent from "discourse/components/glimmer";
 import GroupMessageSectionLink from "discourse/lib/sidebar/messages-section/group-message-section-link";
 import PersonalMessageSectionLink from "discourse/lib/sidebar/messages-section/personal-message-section-link";
@@ -10,8 +11,15 @@ const SENT = "sent";
 const NEW = "new";
 const ARCHIVE = "archive";
 
-export const PERSONAL_MESSAGES_INBOXES = [INBOX, UNREAD, NEW, SENT, ARCHIVE];
-export const GROUP_MESSAGES_INBOXES = [INBOX, UNREAD, NEW, ARCHIVE];
+export const PERSONAL_MESSAGES_INBOX_FILTERS = [
+  INBOX,
+  NEW,
+  UNREAD,
+  SENT,
+  ARCHIVE,
+];
+
+export const GROUP_MESSAGES_INBOX_FILTERS = [INBOX, NEW, UNREAD, ARCHIVE];
 
 export default class SidebarMessagesSection extends GlimmerComponent {
   constructor() {
@@ -37,19 +45,30 @@ export default class SidebarMessagesSection extends GlimmerComponent {
     currentRouteParentName,
     currentRouteParams,
   }) {
-    const sectionLinks = [
-      ...this.personalMessagesSectionLinks,
-      ...this.groupMessagesSectionLinks,
-    ];
-
-    if (currentRouteParentName !== "userPrivateMessages") {
-      sectionLinks.forEach((sectionLink) => {
+    if (
+      currentRouteParentName !== "userPrivateMessages" &&
+      currentRouteParentName !== "topic"
+    ) {
+      for (const sectionLink of this.allSectionLinks) {
         sectionLink.collapse();
-      });
+      }
     } else {
-      sectionLinks.forEach((sectionLink) => {
-        sectionLink.pageChanged(currentRouteName, currentRouteParams);
-      });
+      const attrs = {
+        currentRouteName,
+        currentRouteParams,
+      };
+
+      if (currentRouteParentName === "topic") {
+        const topicController = getOwner(this).lookup("controller:topic");
+
+        if (topicController.model.isPrivateMessage) {
+          attrs.privateMessageTopic = topicController.model;
+        }
+      }
+
+      for (const sectionLink of this.allSectionLinks) {
+        sectionLink.pageChanged(attrs);
+      }
     }
   }
 
@@ -57,7 +76,7 @@ export default class SidebarMessagesSection extends GlimmerComponent {
   get personalMessagesSectionLinks() {
     const links = [];
 
-    PERSONAL_MESSAGES_INBOXES.forEach((type) => {
+    PERSONAL_MESSAGES_INBOX_FILTERS.forEach((type) => {
       links.push(
         new PersonalMessageSectionLink({
           currentUser: this.currentUser,
@@ -74,7 +93,7 @@ export default class SidebarMessagesSection extends GlimmerComponent {
     const links = [];
 
     this.currentUser.groupsWithMessages.forEach((group) => {
-      GROUP_MESSAGES_INBOXES.forEach((groupMessageLink) => {
+      GROUP_MESSAGES_INBOX_FILTERS.forEach((groupMessageLink) => {
         links.push(
           new GroupMessageSectionLink({
             group,
@@ -86,5 +105,12 @@ export default class SidebarMessagesSection extends GlimmerComponent {
     });
 
     return links;
+  }
+
+  get allSectionLinks() {
+    return [
+      ...this.groupMessagesSectionLinks,
+      ...this.personalMessagesSectionLinks,
+    ];
   }
 }
