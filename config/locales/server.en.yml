@@ -4059,7 +4059,7 @@ en:
 
         If this was you, great! There’s nothing else you need to do.
 
-        If this was not you, please [review your existing sessions](%{base_url}/my/preferences/account) and consider changing your password.
+        If this was not you, please [review your existing sessions](%{base_url}/my/preferences/security) and consider changing your password.
 
     post_approved:
       title: "Your post was approved"
