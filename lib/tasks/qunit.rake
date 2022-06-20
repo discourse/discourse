@@ -28,6 +28,10 @@ task "qunit:test", [:timeout, :qunit_path] do |_, args|
     false
   end
 
+  if ENV["QUNIT_EMBER_CLI"] == "0"
+    puts "The 'legacy' ember environment is discontinued - running tests with ember-cli assets..."
+  end
+
   port = ENV['TEST_SERVER_PORT'] || 60099
   while !port_available? port
     port += 1
