@@ -2,12 +2,11 @@ import { cloneJSON } from "discourse-common/lib/object";
 import topicFixtures from "discourse/tests/fixtures/topic";
 import {
   acceptance,
-  query,
   queryAll,
   selectText,
 } from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
-import { click, fillIn, visit } from "@ember/test-helpers";
+import { click, visit } from "@ember/test-helpers";
 
 acceptance("Local Dates - quoting", function (needs) {
   needs.user();
