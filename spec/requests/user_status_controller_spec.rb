@@ -84,7 +84,7 @@ describe UserStatusController do
       it "publishes to message bus" do
         status = "off to dentist"
         emoji = "tooth"
-        ends_at = DateTime.parse("2100-01-01 18:00")
+        ends_at = "2100-01-01T18:00:00Z"
 
         messages = MessageBus.track_publish do
           put "/user-status.json", params: {
@@ -100,7 +100,7 @@ describe UserStatusController do
 
         expect(messages[0].data[:description]).to eq(status)
         expect(messages[0].data[:emoji]).to eq(emoji)
-        expect(messages[0].data[:endsAt]).to eq(ends_at)
+        expect(messages[0].data[:ends_at]).to eq(ends_at)
       end
     end
   end
