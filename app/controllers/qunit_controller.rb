@@ -8,16 +8,6 @@ class QunitController < ApplicationController
   }
   layout false
 
-  def is_ember_cli_proxy?
-    request.headers["HTTP_X_DISCOURSE_EMBER_CLI"] == "true"
-  end
-
-  # only used in non-ember-cli test / dev
-  def index
-    raise Discourse::NotFound.new if is_ember_cli_proxy? || EmberCli.enabled?
-    raise Discourse::InvalidAccess.new if Rails.env.production?
-  end
-
   def theme
     raise Discourse::NotFound.new if !can_see_theme_qunit?
 

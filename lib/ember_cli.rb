@@ -16,13 +16,6 @@ module EmberCli
     "discourse/tests/test-helpers-rails" => "test-helpers"
   }
 
-  def self.enabled?
-    if !Rails.env.production? && ENV["EMBER_CLI_PROD_ASSETS"] == "0"
-      STDERR.puts "The 'legacy' ember environment is discontinued. Running with ember-cli assets. Remove the EMBER_CLI_PROD_ASSETS=0 flag."
-    end
-    true
-  end
-
   def self.script_chunks
     return @@chunk_infos if defined? @@chunk_infos
 

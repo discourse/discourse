@@ -137,10 +137,9 @@ module ApplicationHelper
 
   def preload_script(script)
     script = EmberCli.transform_name(script)
-
     scripts = [script]
 
-    if EmberCli.enabled? && chunks = EmberCli.script_chunks[script]
+    if chunks = EmberCli.script_chunks[script]
       scripts.push(*chunks)
     end
 
