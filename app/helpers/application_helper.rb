@@ -467,12 +467,16 @@ module ApplicationHelper
   def server_plugin_outlet(name, locals: {})
     return "" if !GlobalSetting.load_plugins?
 
-    matcher = Regexp.new("/connectors/#{name}/.*\.html\.erb$")
-    erbs = ApplicationHelper.all_connectors.select { |c| c =~ matcher }
+    erbs = Discourse.cache.fetch("rails_templates", expires_in: 30.minutes) do
+      matcher = Regexp.new("/connectors/#{name}/.*\.html\.erb$")
+      files = ApplicationHelper.all_connectors.select { |c| c =~ matcher }
+      files.map { |template| File.read(template) }
+    end
+
     return "" if erbs.blank?
 
     result = +""
-    erbs.each { |erb| result << render(inline: File.read(erb), locals: locals) }
+    erbs.each { |erb| result << render(inline: erb, locals: locals) }
     result.html_safe
   end
 
