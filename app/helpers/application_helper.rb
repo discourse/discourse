@@ -20,7 +20,7 @@ module ApplicationHelper
       modulePrefix: "discourse",
       environment: Rails.env,
       rootURL: Discourse.base_path,
-      locationType: "auto",
+      locationType: "history",
       historySupportMiddleware: false,
       EmberENV: {
         FEATURES: {},
