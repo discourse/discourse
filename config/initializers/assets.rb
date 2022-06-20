@@ -37,6 +37,7 @@ Rails.application.config.assets.precompile += %w{
   google-tag-manager.js
   google-universal-analytics-v3.js
   google-universal-analytics-v4.js
+  start-discourse.js
   print-page.js
   activate-account.js
   auto-redirect.js
