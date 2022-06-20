@@ -6,9 +6,11 @@ const MSO_LIST_CLASSES = [
 
 let tagDecorateCallbacks = [];
 let blockDecorateCallbacks = [];
+let textDecorateCallbacks = [];
 
 /**
- * Allows to add support for custom inline markdown/bbcode
+ * Allows to add support for custom inline markdown/bbcode prefixes
+ * to convert nodes back to bbcode.
  *
  * ```
  * addTagDecorateCallback(function (text) {
@@ -29,7 +31,8 @@ export function clearTagDecorateCallbacks() {
 }
 
 /**
- * Allows to add support for custom block markdown/bbcode
+ * Allows to add support for custom block markdown/bbcode prefixes
+ * to convert nodes back to bbcode.
  *
  * ```
  * addBlockDecorateCallback(function (text) {
@@ -46,6 +49,30 @@ export function addBlockDecorateCallback(callback) {
 
 export function clearBlockDecorateCallbacks() {
   blockDecorateCallbacks = [];
+}
+
+/**
+ * Allows to add support for custom text node transformations
+ * based on the next/previous elements.
+ *
+ * ```
+ * addTextDecorateCallback(function (text, nextElement, previousElement) {
+ *   if (
+ *     startRangeOpts &&
+ *     nextElement?.attributes.class?.includes("discourse-local-date") &&
+ *     text === "→"
+ *   ) {
+ *     return "";
+ *   }
+ * });
+ * ```
+ */
+export function addTextDecorateCallback(callback) {
+  textDecorateCallbacks.push(callback);
+}
+
+export function clearTextDecorateCallbacks() {
+  textDecorateCallbacks = [];
 }
 
 export class Tag {
@@ -709,6 +736,13 @@ class Element {
     }
 
     text = text.replace(/[\s\t]+/g, " ");
+    textDecorateCallbacks.forEach((callback) => {
+      const result = callback.call(this, text, this.next, this.previous);
+
+      if (typeof result !== "undefined") {
+        text = result;
+      }
+    });
 
     return text;
   }

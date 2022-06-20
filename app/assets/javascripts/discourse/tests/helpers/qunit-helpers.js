@@ -67,6 +67,7 @@ import { resetDefaultSectionLinks as resetTopicsSectionLinks } from "discourse/l
 import {
   clearBlockDecorateCallbacks,
   clearTagDecorateCallbacks,
+  clearTextDecorateCallbacks,
 } from "discourse/lib/to-markdown";
 
 const LEGACY_ENV = !setupApplicationTest;
@@ -194,6 +195,7 @@ function testCleanup(container, app) {
   resetTopicsSectionLinks();
   clearTagDecorateCallbacks();
   clearBlockDecorateCallbacks();
+  clearTextDecorateCallbacks();
 }
 
 export function discourseModule(name, options) {
