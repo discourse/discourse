@@ -4,7 +4,9 @@ import discourseDebounce from "discourse-common/lib/debounce";
 import { observes } from "discourse-common/utils/decorators";
 
 export default AdminEmailLogsController.extend({
-  @observes("filter.{status,user,address,type,reply_key}")
+  @observes(
+    "filter.{status,user,address,type,reply_key,smtp_transaction_response}"
+  )
   filterEmailLogs() {
     discourseDebounce(this, this.loadLogs, INPUT_DELAY);
   },

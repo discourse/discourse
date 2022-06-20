@@ -7,6 +7,7 @@
         <th>{{i18n "admin.email.to_address"}}</th>
         <th>{{i18n "admin.email.email_type"}}</th>
         <th>{{i18n "admin.email.reply_key"}}</th>
+        <th>{{i18n "admin.email.smtp_transaction_response"}}</th>
       </tr>
     </thead>
     <tbody>
@@ -16,6 +17,7 @@
         <td>{{text-field value=filter.address placeholderKey="admin.email.logs.filters.address_placeholder"}}</td>
         <td>{{text-field value=filter.type placeholderKey="admin.email.logs.filters.type_placeholder"}}</td>
         <td>{{text-field value=filter.reply_key placeholderKey="admin.email.logs.filters.reply_key_placeholder"}}</td>
+        <td>{{text-field value=filter.smtp_transaction_response placeholderKey="admin.email.logs.filters.smtp_transaction_response_placeholder"}}</td>
       </tr>
 
       {{#each model as |l|}}
@@ -41,6 +43,9 @@
             {{else}}
               <span class="reply-key">{{l.reply_key}}</span>
             {{/if}}
+          </td>
+          <td class="sent-email-smtp-transaction-response">
+            <code title={{l.smtp_transaction_response}}>{{l.smtp_transaction_response}}</code>
           </td>
         </tr>
       {{else}}
