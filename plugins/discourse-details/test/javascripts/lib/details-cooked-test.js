@@ -30,10 +30,10 @@ module("lib:details-cooked-test", function () {
     cooked(
       "[details=testing]\ntest\n[/details]",
       `<details>
-  <summary>
-  testing</summary>
-  <p>test</p>
-  </details>`
+<summary>
+testing</summary>
+<p>test</p>
+</details>`
     );
   });
 });
