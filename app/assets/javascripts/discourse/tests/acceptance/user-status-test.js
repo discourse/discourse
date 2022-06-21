@@ -225,7 +225,7 @@ acceptance("User Status", function (needs) {
 
   test("sets default status emoji automatically after user started inputting  status description", async function (assert) {
     this.siteSettings.enable_user_status = true;
-    const defaultStatusEmoji = "mega";
+    const defaultStatusEmoji = "speech_balloon";
 
     await visit("/");
     await openUserStatusModal();

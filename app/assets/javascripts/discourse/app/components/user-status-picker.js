@@ -45,7 +45,7 @@ export default class UserStatusPicker extends Component {
   @action
   setDefaultEmoji() {
     if (!this.emoji) {
-      this.set("emoji", "mega");
+      this.set("emoji", "speech_balloon");
     }
   }
 
