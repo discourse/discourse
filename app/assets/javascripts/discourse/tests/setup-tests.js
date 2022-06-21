@@ -36,6 +36,7 @@ import sinon from "sinon";
 import { run } from "@ember/runloop";
 import { disableCloaking } from "discourse/widgets/post-stream";
 import { clearState as clearPresenceState } from "discourse/tests/helpers/presence-pretender";
+import { addModuleExcludeMatcher } from "ember-cli-test-loader/test-support/index";
 
 const Plugin = $.fn.modal;
 const Modal = Plugin.Constructor;
@@ -380,8 +381,7 @@ function setupTestsCommon(application, container, config) {
     return true;
   };
 
-  const emberCliTestLoader = require("ember-cli-test-loader/test-support/index");
-  emberCliTestLoader.addModuleExcludeMatcher((name) => !shouldLoadModule(name));
+  addModuleExcludeMatcher((name) => !shouldLoadModule(name));
 
   // forces 0 as duration for all jquery animations
   // eslint-disable-next-line no-undef
