@@ -22,7 +22,7 @@
     "webpack": "^5.67.0"
   },
   "devDependencies": {
-    "@ember/optional-features": "^1.1.0",
+    "@ember/optional-features": "^2.0.0",
     "@glimmer/component": "^1.0.0",
     "babel-eslint": "^10.0.3",
     "broccoli-asset-rev": "^3.0.0",
