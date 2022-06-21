@@ -13,6 +13,7 @@ import {
   click,
   currentURL,
   fillIn,
+  settled,
   triggerKeyEvent,
   visit,
 } from "@ember/test-helpers";
@@ -667,8 +668,7 @@ acceptance("Topic stats update automatically", function () {
       like_count: 999,
     });
 
-    // we wait on the same page for the dom update
-    await visit("/t/internationalization-localization/280");
+    await settled();
     const newLikes = likesDisplay.textContent;
 
     assert.notEqual(

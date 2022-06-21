@@ -146,8 +146,14 @@ describe PostAction do
         end
       end
 
+      old_like_count = topic.like_count
+
       PostActionCreator.like(moderator, post)
       PostActionCreator.like(codinghorror, second_post)
+
+      topic.reload
+
+      expect(topic.like_count).to eq(old_like_count + 2)
     end
   end
 
