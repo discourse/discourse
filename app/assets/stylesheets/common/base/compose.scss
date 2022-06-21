@@ -543,6 +543,9 @@ body:not(.ios-safari-composer-hacks) {
       min-height: calc(var(--min-height) - 4em);
     }
     padding-bottom: var(--composer-ipad-padding);
+    padding-bottom: calc(
+      10px + env(keyboard-inset-height) / 2
+    ); // Remove /2 after https://bugs.chromium.org/p/chromium/issues/detail?id=1331275&q=component%3AUI%3EInput%3EVirtualKeyboard&can=2&sort=-opened is fixed and merge
   }
 }
 
