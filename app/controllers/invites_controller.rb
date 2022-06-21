@@ -20,39 +20,32 @@ class InvitesController < ApplicationController
     RateLimiter.new(nil, "invites-show-#{request.remote_ip}", 100, 1.minute).performed!
 
     invite = Invite.find_by(invite_key: params[:id])
+
     if invite.present? && invite.redeemable?
       if current_user
-        added_to_group = false
+        redeemed = false
 
-        if invite.groups.present?
-          invite_by_guardian = Guardian.new(invite.invited_by)
-          new_group_ids = invite.groups.pluck(:id) - current_user.group_users.pluck(:group_id)
-          new_group_ids.each do |id|
-            if group = Group.find_by(id: id)
-              if invite_by_guardian.can_edit_group?(group)
-                group.add(current_user)
-                added_to_group = true
-              end
-            end
-          end
+        begin
+          invite.redeem(email: current_user.email)
+          redeemed = true
+        rescue ActiveRecord::RecordNotSaved, Invite::UserExists
+          # This is not ideal but `Invite#redeem` raises either `Invite::UserExists` or `ActiveRecord::RecordNotSaved`
+          # error when it fails to redeem the invite. If redemption fails for a logged in user, we will just ignore it.
         end
 
-        create_topic_invite_notifications(invite, current_user)
-
-        if topic = invite.topics.first
-          new_guardian = Guardian.new(current_user)
-          return redirect_to(topic.url) if new_guardian.can_see?(topic)
-        elsif added_to_group
-          return redirect_to(path("/"))
+        if redeemed && (topic = invite.topics.first) && current_user.guardian.can_see?(topic)
+          create_topic_invite_notifications(invite, current_user)
+          return redirect_to(topic.url)
         end
 
-        return ensure_not_logged_in
+        return redirect_to(path('/'))
       end
 
       email = Email.obfuscate(invite.email)
 
       # Show email if the user already authenticated their email
       different_external_email = false
+
       if session[:authentication]
         auth_result = Auth::Result.from_session_data(session[:authentication], user: nil)
         if invite.email == auth_result.email
@@ -63,6 +56,7 @@ class InvitesController < ApplicationController
       end
 
       email_verified_by_link = invite.email_token.present? && params[:t] == invite.email_token
+
       if email_verified_by_link
         email = invite.email
       end
