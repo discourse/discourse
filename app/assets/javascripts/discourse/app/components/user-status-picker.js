@@ -38,6 +38,11 @@ export default class UserStatusPicker extends Component {
   }
 
   @action
+  onEmojiPickerOutsideClick() {
+    this.set("emojiPickerIsActive", false);
+  }
+
+  @action
   setDefaultEmoji() {
     if (!this.emoji) {
       this.set("emoji", "mega");
@@ -45,7 +50,8 @@ export default class UserStatusPicker extends Component {
   }
 
   @action
-  toggleEmojiPicker() {
+  toggleEmojiPicker(event) {
+    event.stopPropagation();
     this.set("emojiPickerIsActive", !this.emojiPickerIsActive);
   }
 }
