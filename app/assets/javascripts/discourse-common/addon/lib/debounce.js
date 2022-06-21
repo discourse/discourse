@@ -1,5 +1,5 @@
-import { debounce, next, run } from "@ember/runloop";
-import { isLegacyEmber, isTesting } from "discourse-common/config/environment";
+import { debounce, next } from "@ember/runloop";
+import { isTesting } from "discourse-common/config/environment";
 
 /**
   Debounce a Javascript function. This means if it's called many times in a time limit it
@@ -7,13 +7,11 @@ import { isLegacyEmber, isTesting } from "discourse-common/config/environment";
   Original function will be called with the context and arguments from the last call made.
 **/
 
-let testingFunc = isLegacyEmber() ? run : next;
-
 export default function () {
   if (isTesting()) {
     // Don't include the time argument (in ms)
     let args = [].slice.call(arguments, 0, -1);
-    return testingFunc.apply(void 0, args);
+    return next.apply(void 0, args);
   } else {
     return debounce(...arguments);
   }
