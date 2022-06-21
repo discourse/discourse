@@ -1,10 +1,9 @@
 # frozen_string_literal: true
 
 InviteRedeemer = Struct.new(:invite, :email, :username, :name, :password, :user_custom_fields, :ip_address, :session, :email_token, keyword_init: true) do
-
   def redeem
     Invite.transaction do
-      if invite_was_redeemed?
+      if can_redeem_invite? && mark_invite_redeemed
         process_invitation
         invited_user
       end
@@ -17,13 +16,6 @@ InviteRedeemer = Struct.new(:invite, :email, :username, :name, :password, :user_
       available_username = username
     else
       available_username = UserNameSuggester.suggest(email)
-    end
-
-    if email.present? && invite.domain.present?
-      username, domain = email.split('@')
-      if domain.present? && invite.domain != domain
-        raise ActiveRecord::RecordNotSaved.new(I18n.t('invite.domain_not_allowed'))
-      end
     end
 
     user = User.where(staged: true).with_email(email.strip.downcase).first
@@ -89,6 +81,39 @@ InviteRedeemer = Struct.new(:invite, :email, :username, :name, :password, :user_
 
   private
 
+  def can_redeem_invite?
+    # Invite has already been redeemed
+    if !invite.is_invite_link? && InvitedUser.exists?(invite_id: invite.id)
+      return false
+    end
+
+    validate_invite_email!
+
+    existing_user = get_existing_user
+
+    if existing_user.present? && InvitedUser.exists?(user_id: existing_user.id, invite_id: invite.id)
+      return false
+    end
+
+    true
+  end
+
+  def validate_invite_email!
+    return if email.blank?
+
+    if invite.email.present? && email.downcase != invite.email.downcase
+      raise ActiveRecord::RecordNotSaved.new(I18n.t('invite.not_matching_email'))
+    end
+
+    if invite.domain.present?
+      username, domain = email.split('@')
+
+      if domain.present? && invite.domain != domain
+        raise ActiveRecord::RecordNotSaved.new(I18n.t('invite.domain_not_allowed'))
+      end
+    end
+  end
+
   def invited_user
     @invited_user ||= get_invited_user
   end
@@ -100,21 +125,9 @@ InviteRedeemer = Struct.new(:invite, :email, :username, :name, :password, :user_
     notify_invitee
   end
 
-  def invite_was_redeemed?
-    mark_invite_redeemed
-  end
-
   def mark_invite_redeemed
-    if !invite.is_invite_link? && InvitedUser.exists?(invite_id: invite.id)
-      return false
-    end
-
-    existing_user = get_existing_user
-    if existing_user.present? && InvitedUser.exists?(user_id: existing_user.id, invite_id: invite.id)
-      return false
-    end
-
     @invited_user_record = InvitedUser.create!(invite_id: invite.id, redeemed_at: Time.zone.now)
+
     if @invited_user_record.present?
       Invite.increment_counter(:redemption_count, invite.id)
       delete_duplicate_invites
@@ -125,6 +138,7 @@ InviteRedeemer = Struct.new(:invite, :email, :username, :name, :password, :user_
 
   def get_invited_user
     result = get_existing_user
+
     result ||= InviteRedeemer.create_user_from_invite(
       email: email,
       invite: invite,
