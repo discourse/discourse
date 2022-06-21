@@ -5498,7 +5498,7 @@ ember-notify-property-change-polyfill@^0.0.1:
     ember-cli-babel "^6.6.0"
     ember-cli-version-checker "^2.1.0"
 
-ember-qunit@^5.1.5:
+ember-qunit@^5.1.2:
   version "5.1.5"
   resolved "https://registry.yarnpkg.com/ember-qunit/-/ember-qunit-5.1.5.tgz#24a7850f052be24189ff597dfc31b923e684c444"
   integrity sha512-2cFA4oMygh43RtVcMaBrr086Tpdhgbn3fVZ2awLkzF/rnSN0D0PSRpd7hAD7OdBPerC/ZYRwzVyGXLoW/Zes4A==
