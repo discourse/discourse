@@ -216,6 +216,8 @@ class UserNotifications < ActionMailer::Base
 
   def digest(user, opts = {})
     build_summary_for(user)
+    @unsubscribe_key = UnsubscribeKey.create_key_for(@user, UnsubscribeKey::DIGEST_TYPE)
+
     min_date = opts[:since] || user.last_emailed_at || user.last_seen_at || 1.month.ago
 
     # Fetch some topics and posts to show
@@ -753,7 +755,6 @@ class UserNotifications < ActionMailer::Base
     @header_bgcolor  = ColorScheme.hex_for_name('header_background')
     @anchor_color    = ColorScheme.hex_for_name('tertiary')
     @markdown_linker = MarkdownLinker.new(@base_url)
-    @unsubscribe_key = UnsubscribeKey.create_key_for(@user, "digest")
     @disable_email_custom_styles = !SiteSetting.apply_custom_styles_to_digest
   end
 

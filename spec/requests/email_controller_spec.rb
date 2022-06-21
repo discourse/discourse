@@ -1,142 +1,121 @@
 # frozen_string_literal: true
 
-RSpec.describe EmailController do
+describe EmailController do
   fab!(:user) { Fabricate(:user) }
-  fab!(:topic) { Fabricate(:topic) }
-  fab!(:private_topic) { Fabricate(:private_message_topic) }
 
-  context '.perform unsubscribe' do
+  describe '#perform_unsubscribe' do
     it 'raises not found on invalid key' do
       post "/email/unsubscribe/123.json"
       expect(response.status).to eq(404)
     end
 
-    fab!(:user) { Fabricate(:user) }
-    let(:key) { UnsubscribeKey.create_key_for(user, "all") }
+    describe 'unsubscribe from all emails' do
+      let(:key) { UnsubscribeKey.create_key_for(user, UnsubscribeKey::ALL_TYPE) }
 
-    it 'can fully unsubscribe' do
-      user.user_option.update_columns(email_digests: true,
-                                      email_level: UserOption.email_level_types[:never],
-                                      email_messages_level: UserOption.email_level_types[:never],
-                                      mailing_list_mode: true)
+      it 'can fully unsubscribe' do
+        user.user_option.update_columns(email_digests: true,
+                                        email_level: UserOption.email_level_types[:never],
+                                        email_messages_level: UserOption.email_level_types[:never],
+                                        mailing_list_mode: true)
 
-      post "/email/unsubscribe/#{key}.json",
-        params: { unsubscribe_all: "1" }
+        post "/email/unsubscribe/#{key}.json", params: { unsubscribe_all: "1" }
 
-      expect(response.status).to eq(302)
+        expect(response.status).to eq(302)
 
-      get response.redirect_url
+        get response.redirect_url
 
-      # cause it worked ... yay
-      expect(body).to include(user.email)
+        # cause it worked ... yay
+        expect(body).to include(user.email)
 
-      user.user_option.reload
+        user.user_option.reload
 
-      expect(user.user_option.email_digests).to eq(false)
-      expect(user.user_option.email_level).to eq(UserOption.email_level_types[:never])
-      expect(user.user_option.email_messages_level).to eq(UserOption.email_level_types[:never])
-      expect(user.user_option.mailing_list_mode).to eq(false)
+        expect(user.user_option.email_digests).to eq(false)
+        expect(user.user_option.email_level).to eq(UserOption.email_level_types[:never])
+        expect(user.user_option.email_messages_level).to eq(UserOption.email_level_types[:never])
+        expect(user.user_option.mailing_list_mode).to eq(false)
+      end
+
+      it 'can disable mailing list' do
+        user.user_option.update_columns(mailing_list_mode: true)
+
+        post "/email/unsubscribe/#{key}.json",
+          params: { disable_mailing_list: "1" }
+
+        expect(response.status).to eq(302)
+        expect(user.user_option.reload.mailing_list_mode).to eq(false)
+      end
     end
 
-    it 'can disable mailing list' do
-      user.user_option.update_columns(mailing_list_mode: true)
+    describe 'unsubscribe from digest' do
+      let(:key) { UnsubscribeKey.create_key_for(user, UnsubscribeKey::DIGEST_TYPE) }
 
-      post "/email/unsubscribe/#{key}.json",
-        params: { disable_mailing_list: "1" }
+      it 'Can change digest frequency' do
+        weekly_interval_minutes = 10080
+        user.user_option.update_columns(email_digests: true, digest_after_minutes: 0)
 
-      expect(response.status).to eq(302)
+        post "/email/unsubscribe/#{key}.json",
+          params: { digest_after_minutes: weekly_interval_minutes.to_s }
 
-      user.user_option.reload
+        expect(response.status).to eq(302)
+        expect(user.user_option.reload.digest_after_minutes).to eq(weekly_interval_minutes)
+      end
 
-      expect(user.user_option.mailing_list_mode).to eq(false)
+      it 'Can disable email digests setting frequency to zero' do
+        user.user_option.update_columns(email_digests: true, digest_after_minutes: 10080)
+
+        post "/email/unsubscribe/#{key}.json",
+          params: { digest_after_minutes: '0' }
+
+        expect(response.status).to eq(302)
+        user.user_option.reload
+        expect(user.user_option.digest_after_minutes).to be_zero
+        expect(user.user_option.email_digests).to eq(false)
+      end
     end
 
-    it 'Can change digest frequency' do
-      weekly_interval_minutes = 10080
-      user.user_option.update_columns(email_digests: true, digest_after_minutes: 0)
+    describe 'unsubscribe from a topic' do
+      fab!(:a_post) { Fabricate(:post) }
+      let(:key) { UnsubscribeKey.create_key_for(user, UnsubscribeKey::TOPIC_TYPE, post: a_post) }
 
-      post "/email/unsubscribe/#{key}.json",
-        params: { digest_after_minutes: weekly_interval_minutes.to_s }
+      it 'can unwatch topic' do
+        TopicUser.change(user.id, a_post.topic_id, notification_level: TopicUser.notification_levels[:watching])
 
-      expect(response.status).to eq(302)
+        post "/email/unsubscribe/#{key}.json", params: { unwatch_topic: "1" }
 
-      user.user_option.reload
+        expect(response.status).to eq(302)
+        expect(TopicUser.get(a_post.topic, user).notification_level).to eq(TopicUser.notification_levels[:tracking])
+      end
 
-      expect(user.user_option.digest_after_minutes).to eq(weekly_interval_minutes)
-    end
+      it 'can mute topic' do
+        TopicUser.change(user.id, a_post.topic_id, notification_level: TopicUser.notification_levels[:watching])
 
-    it 'Can disable email digests setting frequency to zero' do
-      user.user_option.update_columns(email_digests: true, digest_after_minutes: 10080)
+        post "/email/unsubscribe/#{key}.json", params: { mute_topic: "1" }
 
-      post "/email/unsubscribe/#{key}.json",
-        params: { digest_after_minutes: '0' }
+        expect(response.status).to eq(302)
+        expect(TopicUser.get(a_post.topic, user).notification_level).to eq(TopicUser.notification_levels[:muted])
+      end
 
-      expect(response.status).to eq(302)
+      it 'can unwatch category' do
+        cu = CategoryUser.create!(user_id: user.id,
+                                  category_id: a_post.topic.category_id,
+                                  notification_level: CategoryUser.notification_levels[:watching])
 
-      user.user_option.reload
+        post "/email/unsubscribe/#{key}.json", params: { unwatch_category: "1" }
 
-      expect(user.user_option.digest_after_minutes).to be_zero
-      expect(user.user_option.email_digests).to eq(false)
-    end
+        expect(response.status).to eq(302)
+        expect(CategoryUser.find_by(id: cu.id)).to eq(nil)
+      end
 
-    it 'can unwatch topic' do
-      p = Fabricate(:post)
-      key = UnsubscribeKey.create_key_for(p.user, p)
+      it 'can unwatch first post from category' do
+        cu = CategoryUser.create!(user_id: user.id,
+                                  category_id: a_post.topic.category_id,
+                                  notification_level: CategoryUser.notification_levels[:watching_first_post])
 
-      TopicUser.change(p.user_id, p.topic_id, notification_level: TopicUser.notification_levels[:watching])
+        post "/email/unsubscribe/#{key}.json", params: { unwatch_category: "1" }
 
-      post "/email/unsubscribe/#{key}.json",
-        params: { unwatch_topic: "1" }
-
-      expect(response.status).to eq(302)
-
-      expect(TopicUser.get(p.topic, p.user).notification_level).to eq(TopicUser.notification_levels[:tracking])
-    end
-
-    it 'can mute topic' do
-      p = Fabricate(:post)
-      key = UnsubscribeKey.create_key_for(p.user, p)
-
-      TopicUser.change(p.user_id, p.topic_id, notification_level: TopicUser.notification_levels[:watching])
-
-      post "/email/unsubscribe/#{key}.json",
-        params: { mute_topic: "1" }
-
-      expect(response.status).to eq(302)
-
-      expect(TopicUser.get(p.topic, p.user).notification_level).to eq(TopicUser.notification_levels[:muted])
-    end
-
-    it 'can unwatch category' do
-      p = Fabricate(:post)
-      key = UnsubscribeKey.create_key_for(p.user, p)
-
-      cu = CategoryUser.create!(user_id: p.user.id,
-                                category_id: p.topic.category_id,
-                                notification_level: CategoryUser.notification_levels[:watching])
-
-      post "/email/unsubscribe/#{key}.json",
-        params: { unwatch_category: "1" }
-
-      expect(response.status).to eq(302)
-
-      expect(CategoryUser.find_by(id: cu.id)).to eq(nil)
-    end
-
-    it 'can unwatch first post from category' do
-      p = Fabricate(:post)
-      key = UnsubscribeKey.create_key_for(p.user, p)
-
-      cu = CategoryUser.create!(user_id: p.user.id,
-                                category_id: p.topic.category_id,
-                                notification_level: CategoryUser.notification_levels[:watching_first_post])
-
-      post "/email/unsubscribe/#{key}.json",
-        params: { unwatch_category: "1" }
-
-      expect(response.status).to eq(302)
-
-      expect(CategoryUser.find_by(id: cu.id)).to eq(nil)
+        expect(response.status).to eq(302)
+        expect(CategoryUser.find_by(id: cu.id)).to eq(nil)
+      end
     end
   end
 
@@ -149,6 +128,8 @@ RSpec.describe EmailController do
     end
 
     describe 'when topic is public' do
+      fab!(:topic) { Fabricate(:topic) }
+
       it 'should return the right response' do
         key = SecureRandom.hex
         Discourse.cache.write(key, user.email)
@@ -159,6 +140,8 @@ RSpec.describe EmailController do
     end
 
     describe 'when topic is private' do
+      fab!(:private_topic) { Fabricate(:private_message_topic) }
+
       it 'should return the right response' do
         key = SecureRandom.hex
         Discourse.cache.write(key, user.email)
@@ -177,10 +160,11 @@ RSpec.describe EmailController do
     end
 
     fab!(:user) { Fabricate(:user) }
-    let(:unsubscribe_key) { UnsubscribeKey.create_key_for(user, key_type) }
+    let(:unsubscribe_key) { UnsubscribeKey.create_key_for(user, key_type, post: post) }
 
     context 'Unsubscribe from digest' do
-      let(:key_type) { 'digest' }
+      let(:key_type) { UnsubscribeKey::DIGEST_TYPE }
+      let(:post) { nil }
 
       it 'displays log out button if wrong user logged in' do
         sign_in(Fabricate(:admin))
@@ -264,7 +248,7 @@ RSpec.describe EmailController do
     context 'Unsubscribe from a post' do
       fab!(:post) { Fabricate(:post) }
       let(:user) { post.user }
-      let(:key_type) { post }
+      let(:key_type) { UnsubscribeKey::TOPIC_TYPE }
 
       it 'correctly handles watched categories' do
         cu = create_category_user(:watching)
