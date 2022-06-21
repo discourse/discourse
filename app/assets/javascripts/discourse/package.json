@@ -16,7 +16,7 @@
     "test": "ember test"
   },
   "dependencies": {
-    "@babel/core": "^7.14.3",
+    "@babel/core": "^7.18.5",
     "@discourse/itsatrap": "^2.0.10",
     "@ember/jquery": "^2.0.0",
     "@ember/optional-features": "^1.1.0",
