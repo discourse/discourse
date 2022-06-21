@@ -22,6 +22,7 @@ Discourse::Application.routes.draw do
     post "webhooks/mailgun"  => "webhooks#mailgun"
     post "webhooks/mailjet"  => "webhooks#mailjet"
     post "webhooks/mandrill" => "webhooks#mandrill"
+    get "webhooks/mandrill" => "webhooks#mandrill_head"
     post "webhooks/postmark" => "webhooks#postmark"
     post "webhooks/sendgrid" => "webhooks#sendgrid"
     post "webhooks/sparkpost" => "webhooks#sparkpost"
