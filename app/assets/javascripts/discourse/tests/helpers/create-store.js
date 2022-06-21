@@ -12,7 +12,9 @@ const CatAdapter = RestAdapter.extend({
 });
 
 export default function (customLookup = () => {}) {
-  const resolver = buildResolver("discourse").create();
+  const resolver = buildResolver("discourse").create({
+    namespace: { modulePrefix: "discourse" },
+  });
 
   // Normally this would happen in inject-discourse-objects.
   // However, `create-store` is used by unit tests which do not init the application.
@@ -54,9 +56,10 @@ export default function (customLookup = () => {}) {
 
       lookupFactory(type) {
         const split = type.split(":");
-        return resolver.customResolve({
+        return resolver.resolveOther({
           type: split[0],
           fullNameWithoutType: split[1],
+          root: {},
         });
       },
     },
