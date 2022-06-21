@@ -36,7 +36,7 @@
     "ember-cli": "~3.25.3",
     "ember-cli-dependency-checker": "^3.2.0",
     "ember-cli-eslint": "^5.1.0",
-    "ember-cli-inject-live-reload": "^2.0.1",
+    "ember-cli-inject-live-reload": "^2.1.0",
     "ember-cli-sri": "^2.1.1",
     "ember-cli-template-lint": "^1.0.0-beta.3",
     "ember-cli-uglify": "^3.0.0",
