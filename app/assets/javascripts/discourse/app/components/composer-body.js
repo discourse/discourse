@@ -17,6 +17,8 @@ const END_DRAG_EVENTS = ["touchend", "mouseup"];
 
 const THROTTLE_RATE = 20;
 
+const KEYBOARD_DETECT_THRESHOLD = 150;
+
 function mouseYPos(e) {
   return e.clientY || (e.touches && e.touches[0] && e.touches[0].clientY);
 }
@@ -92,6 +94,10 @@ export default Component.extend(KeyEnterEscape, {
     if (this._visualViewportResizing()) {
       this.viewportResize();
       window.visualViewport.addEventListener("resize", this.viewportResize);
+    }
+
+    if ("virtualKeyboard" in navigator) {
+      navigator.virtualKeyboard.overlaysContent = true;
     }
   },
 
@@ -174,19 +180,46 @@ export default Component.extend(KeyEnterEscape, {
 
     doc.style.setProperty("--composer-vh", `${composerVH}px`);
 
-    const viewportWindowDiff =
-      this.windowInnerHeight - window.visualViewport.height;
+    this._detectKeyboard();
+  },
 
-    viewportWindowDiff > 0
+  _detectKeyboard() {
+    const doc = document.documentElement;
+    let keyboardVisible = false;
+
+    if ("virtualKeyboard" in navigator) {
+      if (navigator.virtualKeyboard.boundingRect.height > 0) {
+        keyboardVisible = true;
+      }
+    } else if (this.capabilities.isFirefox && this.capabilities.isAndroid) {
+      if (
+        Math.abs(
+          this.windowInnerHeight -
+            Math.min(window.innerHeight, window.visualViewport.height)
+        ) > KEYBOARD_DETECT_THRESHOLD
+      ) {
+        keyboardVisible = true;
+      }
+    } else {
+      let viewportWindowDiff =
+        this.windowInnerHeight - window.visualViewport.height;
+      if (viewportWindowDiff > 0) {
+        keyboardVisible = true;
+      }
+
+      // adds bottom padding when using a hardware keyboard and the accessory bar is visible
+      // accessory bar height is 55px, using 75 allows a small buffer
+      if (this.capabilities.isIpadOS) {
+        doc.style.setProperty(
+          "--composer-ipad-padding",
+          `${viewportWindowDiff < 75 ? viewportWindowDiff : 0}px`
+        );
+      }
+    }
+
+    keyboardVisible
       ? doc.classList.add("keyboard-visible")
       : doc.classList.remove("keyboard-visible");
-
-    // adds bottom padding when using a hardware keyboard and the accessory bar is visible
-    // accessory bar height is 55px, using 75 allows a small buffer
-    doc.style.setProperty(
-      "--composer-ipad-padding",
-      `${viewportWindowDiff < 75 ? viewportWindowDiff : 0}px`
-    );
   },
 
   _visualViewportResizing() {
@@ -223,6 +256,10 @@ export default Component.extend(KeyEnterEscape, {
 
     if (this._visualViewportResizing()) {
       window.visualViewport.removeEventListener("resize", this.viewportResize);
+    }
+
+    if ("virtualKeyboard" in navigator) {
+      navigator.virtualKeyboard.overlaysContent = false;
     }
 
     START_DRAG_EVENTS.forEach((startDragEvent) => {
