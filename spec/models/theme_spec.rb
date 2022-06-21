@@ -252,7 +252,7 @@ HTML
       expect(javascript_cache.content).to include("var x = 1;")
     end
 
-    it "wraps constants calls in a readOnlyError function" do
+    it "replaces const writes with _readOnlyError function call" do
       html = <<HTML
         <script type='text/discourse-plugin' version='0.1'>
           const x = 1;
@@ -263,7 +263,7 @@ HTML
       baked, javascript_cache = transpile(html)
       expect(baked).to include(javascript_cache.url)
       expect(javascript_cache.content).to include('var x = 1;')
-      expect(javascript_cache.content).to include('x = (_readOnlyError("x"), 2);')
+      expect(javascript_cache.content).to include('2, _readOnlyError("x");')
     end
   end
 

@@ -616,7 +616,9 @@ class Post < ActiveRecord::Base
   end
 
   def unsubscribe_url(user)
-    "#{Discourse.base_url}/email/unsubscribe/#{UnsubscribeKey.create_key_for(user, self)}"
+    key_value = UnsubscribeKey.create_key_for(user, UnsubscribeKey::TOPIC_TYPE, post: self)
+
+    "#{Discourse.base_url}/email/unsubscribe/#{key_value}"
   end
 
   def self.url(slug, topic_id, post_number, opts = nil)

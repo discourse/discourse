@@ -25,9 +25,9 @@
       },
       "secondary_emails": {
         "type": "array",
-        "items": [
+        "items": {
 
-        ]
+        }
       },
       "active": {
         "type": "boolean"

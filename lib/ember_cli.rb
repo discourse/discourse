@@ -4,21 +4,12 @@ module EmberCli
   ASSETS = %w(
     discourse.js
     admin.js
+    wizard.js
     ember_jquery.js
     pretty-text-bundle.js
     start-discourse.js
     vendor.js
   )
-
-  ALIASES ||= {
-    "application" => "discourse",
-    "discourse/tests/test-support-rails" => "test-support",
-    "discourse/tests/test-helpers-rails" => "test-helpers"
-  }
-
-  def self.enabled?
-    ENV["EMBER_CLI_PROD_ASSETS"] != "0"
-  end
 
   def self.script_chunks
     return @@chunk_infos if defined? @@chunk_infos
@@ -37,17 +28,7 @@ module EmberCli
     {}
   end
 
-  # Some assets have changed name following the switch
-  # to ember-cli. When the switch is complete, we can
-  # drop this method and update all the references
-  # to use the new names
-  def self.transform_name(name)
-    return name if !enabled?
-    ALIASES[name] || name
-  end
-
   def self.is_ember_cli_asset?(name)
-    return false if !enabled?
     ASSETS.include?(name) || name.start_with?("chunk.")
   end
 end

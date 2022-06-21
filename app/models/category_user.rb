@@ -209,7 +209,7 @@ class CategoryUser < ActiveRecord::Base
         SiteSetting.default_categories_watching.split("|"),
         SiteSetting.default_categories_tracking.split("|"),
         SiteSetting.default_categories_watching_first_post.split("|"),
-        SiteSetting.default_categories_regular.split("|")
+        SiteSetting.default_categories_normal.split("|")
       ].flatten.map do |id|
         [id.to_i, self.notification_levels[:regular]]
       end

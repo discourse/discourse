@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Adds `beforeToMarkdownTagDecorate` and `beforeToMarkdownBlockDecorate` that allow to modify to-markdown behavior.
+- N/A - Mistakenly bumped.
 
 ## [1.2.0] - 2022-03-18
 

@@ -20,7 +20,7 @@ module ApplicationHelper
       modulePrefix: "discourse",
       environment: Rails.env,
       rootURL: Discourse.base_path,
-      locationType: "auto",
+      locationType: "history",
       historySupportMiddleware: false,
       EmberENV: {
         FEATURES: {},
@@ -136,11 +136,9 @@ module ApplicationHelper
   end
 
   def preload_script(script)
-    script = EmberCli.transform_name(script)
-
     scripts = [script]
 
-    if EmberCli.enabled? && chunks = EmberCli.script_chunks[script]
+    if chunks = EmberCli.script_chunks[script]
       scripts.push(*chunks)
     end
 
@@ -153,7 +151,7 @@ module ApplicationHelper
   def preload_script_url(url)
     <<~HTML.html_safe
       <link rel="preload" href="#{url}" as="script">
-      <script src="#{url}"></script>
+      <script defer src="#{url}"></script>
     HTML
   end
 

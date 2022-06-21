@@ -7,6 +7,10 @@
       {{#if this.siteSettings.tagging_enabled}}
         <Sidebar::TagsSection />
       {{/if}}
+
+      {{#if this.siteSettings.enable_personal_messages}}
+        <Sidebar::MessagesSection />
+      {{/if}}
     </div>
   </div>
 {{/if}}

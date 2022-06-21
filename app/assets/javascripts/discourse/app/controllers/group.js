@@ -2,7 +2,6 @@ import Controller, { inject as controller } from "@ember/controller";
 import EmberObject, { action } from "@ember/object";
 import I18n from "I18n";
 import bootbox from "bootbox";
-import deprecated from "discourse-common/lib/deprecated";
 import discourseComputed from "discourse-common/utils/decorators";
 import { capitalize } from "@ember/string";
 
@@ -166,16 +165,5 @@ export default Controller.extend({
   @action
   toggleDeleteTooltip() {
     this.toggleProperty("showTooltip");
-  },
-
-  actions: {
-    destroy() {
-      deprecated("Use `destroyGroup` action instead of `destroy`.", {
-        since: "2.5.0",
-        dropFrom: "2.6.0",
-      });
-
-      this.destroyGroup();
-    },
   },
 });

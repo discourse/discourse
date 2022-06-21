@@ -9,8 +9,6 @@
     <%= render partial: "layouts/head" %>
     <%= discourse_csrf_tags %>
 
-    <%= render partial: "common/discourse_stylesheet" %>
-
     <%- if SiteSetting.enable_escaped_fragments? %>
       <meta name="fragment" content="!">
     <%- end %>
@@ -30,13 +28,19 @@
       <%= preload_script_url ExtraLocalesController.url('overrides') %>
     <%- end %>
     <%= preload_script "vendor" %>
-    <%= preload_script "application" %>
+    <%= preload_script "discourse" %>
     <%- Discourse.find_plugin_js_assets(include_official: allow_plugins?, include_unofficial: allow_third_party_plugins?, request: request).each do |file| %>
       <%= preload_script file %>
     <%- end %>
+
     <%- if staff? %>
-      <%= preload_script_url ExtraLocalesController.url('admin') %>
+      <%= preload_script_url ExtraLocalesController.url("admin") %>
       <%= preload_script "admin" %>
+    <%- end %>
+
+    <%- if admin? %>
+      <%= preload_script_url ExtraLocalesController.url("wizard") %>
+      <%= preload_script "wizard" %>
     <%- end %>
 
     <%- unless customization_disabled? %>
@@ -53,7 +57,6 @@
         <meta name="apple-itunes-app" content="app-id=<%= SiteSetting.ios_app_id %><%= ios_app_argument %>">
     <%- end %>
 
-
     <%= yield :head %>
 
     <%= build_plugin_html 'server:before-head-close' %>
@@ -67,6 +70,16 @@
   </head>
 
   <body class="<%= body_classes %>">
+    <discourse-assets>
+      <discourse-assets-stylesheets>
+        <%= render partial: "common/discourse_stylesheet" %>
+      </discourse-assets-stylesheets>
+      <discourse-assets-json>
+        <div class="hidden" id="data-preloaded" data-preloaded="<%= preloaded_json %>"></div>
+      </discourse-assets-json>
+      <discourse-assets-icons></discourse-assets-icons>
+    </discourse-assets>
+
     <%- if allow_plugins? %>
       <%= build_plugin_html 'server:after-body-open' %>
     <%- end -%>
@@ -104,13 +117,11 @@
       </form>
     <% end %>
 
-    <div class="hidden" id="data-preloaded" data-preloaded="<%= preloaded_json %>"></div>
-
-    <script src="<%= script_asset_path "start-discourse" %>"></script>
+    <script defer src="<%= script_asset_path "start-discourse" %>"></script>
 
     <%= yield :data %>
 
-    <script src="<%= script_asset_path "browser-update" %>"></script>
+    <script defer src="<%= script_asset_path "browser-update" %>"></script>
 
     <%- unless customization_disabled? %>
       <%= theme_lookup("body_tag") %>

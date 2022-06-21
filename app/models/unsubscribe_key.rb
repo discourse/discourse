@@ -7,16 +7,44 @@ class UnsubscribeKey < ActiveRecord::Base
 
   before_create :generate_random_key
 
-  def self.create_key_for(user, type)
-    if Post === type
-      create(user_id: user.id, unsubscribe_key_type: "topic", topic_id: type.topic_id, post_id: type.id).key
-    else
-      create(user_id: user.id, unsubscribe_key_type: type).key
+  ALL_TYPE = 'all'
+  DIGEST_TYPE = 'digest'
+  TOPIC_TYPE = 'topic'
+
+  class << self
+    def create_key_for(user, type, post: nil)
+      unsubscribe_key = new(user_id: user.id, unsubscribe_key_type: type)
+
+      if type == TOPIC_TYPE
+        unsubscribe_key.topic_id = post.topic_id
+        unsubscribe_key.post_id = post.id
+      end
+
+      unsubscribe_key.save!
+      unsubscribe_key.key
+    end
+
+    def user_for_key(key)
+      where(key: key).first&.user
+    end
+
+    def get_unsubscribe_strategy_for(key)
+      strategies = {
+        DIGEST_TYPE => EmailControllerHelper::DigestEmailUnsubscriber,
+        TOPIC_TYPE => EmailControllerHelper::TopicEmailUnsubscriber,
+        ALL_TYPE => EmailControllerHelper::BaseEmailUnsubscriber
+      }
+
+      DiscoursePluginRegistry.email_unsubscribers.each do |unsubcriber|
+        strategies.merge!(unsubcriber)
+      end
+
+      strategies[key.unsubscribe_key_type]&.new(key)
     end
   end
 
-  def self.user_for_key(key)
-    where(key: key).first.try(:user)
+  def associated_topic
+    @associated_topic ||= topic || post&.topic
   end
 
   private

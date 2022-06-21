@@ -515,7 +515,7 @@ class Upload < ActiveRecord::Base
       sha1s << match[0]
     end
 
-    raw.scan(/\/([a-zA-Z0-9]{27})/).each do |match|
+    raw.scan(/\/([a-zA-Z0-9]+)/).each do |match|
       sha1s << Upload.sha1_from_base62_encoded(match[0])
     end
 

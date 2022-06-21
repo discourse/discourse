@@ -29,7 +29,7 @@ describe FileHelper do
           expect(e.io.status[0]).to eq("404")
           raise
         end
-      end.to raise_error(OpenURI::HTTPError, "404 Error: 404")
+      end.to raise_error(OpenURI::HTTPError, "404 Error")
     end
 
     it "does not follow redirects if instructed not to" do

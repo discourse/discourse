@@ -1111,7 +1111,7 @@ it:
       muted_categories: "Silenziate"
       muted_categories_instructions: "Non riceverai notifiche riguardanti i contenuti di queste categorie, e non appariranno nelle pagine delle Categorie o dei Recenti."
       muted_categories_instructions_dont_hide: "Non riceverai alcuna notifica relativa a nuovi argomenti in queste categorie."
-      regular_categories: "Abituale"
+      regular_categories: "Normale"
       regular_categories_instructions: "Vedrai queste categorie nelle liste di argomenti \"Recenti\" e \"Popolari\"."
       no_category_access: "Come moderatore hai accesso limitato alla categoria, il salvataggio è disabilitato."
       delete_account: "Cancella il mio account"
@@ -3441,7 +3441,6 @@ it:
         edit: "%{shortcut} Modifica messaggio"
         delete: "%{shortcut} Cancella messaggio"
         mark_muted: "%{shortcut} Silenzia argomento"
-        mark_regular: "%{shortcut} Argomento normale (default)"
         mark_tracking: "%{shortcut} Segui argomento"
         mark_watching: "%{shortcut} Osserva argomento"
         print: "%{shortcut} Stampa argomento"
@@ -3680,7 +3679,22 @@ it:
       unread_count: "%{count} non letti"
       new_count: "%{count} nuovi"
       sections:
+        messages:
+          header_link_title: "messaggi personali"
+          header_link_text: "Messaggi"
+          header_action_title: "crea un messaggio personale"
+          links:
+            inbox: "Posta in arrivo"
+            sent: "Inviati"
+            new: "Nuovi"
+            unread: "Non letti"
+            archive: "Archiviati"
+        tags:
+          no_tracked_tags: "Non stai seguendo alcuna etichetteta."
+          header_link_title: "tutte le etichette"
+          header_link_text: "Etichette"
         categories:
+          no_tracked_categories: "Non stai monitorando nessuna categoria."
           header_link_title: "tutte le categorie"
           header_link_text: "Categorie"
         topics:

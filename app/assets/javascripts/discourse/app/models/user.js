@@ -1139,9 +1139,8 @@ if (typeof Discourse !== "undefined") {
   Object.defineProperty(Discourse, "User", {
     get() {
       if (!warned) {
-        deprecated("Import the User class instead of using User", {
+        deprecated("Import the User class instead of using Discourse.User", {
           since: "2.4.0",
-          dropFrom: "2.6.0",
         });
         warned = true;
       }

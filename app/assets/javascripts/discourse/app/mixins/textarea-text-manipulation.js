@@ -570,14 +570,12 @@ export default Mixin.create({
         this.addText(selected, `:${code}:`);
       }
     } else {
-      let numOfRemovedChars = selected.pre.length - captures[1].length;
-      selected.pre = selected.pre.slice(
-        0,
-        selected.pre.length - captures[1].length
+      let numOfRemovedChars = captures[1].length;
+      this._insertAt(
+        selected.start - numOfRemovedChars,
+        selected.end,
+        `${code}:`
       );
-      selected.start -= numOfRemovedChars;
-      selected.end -= numOfRemovedChars;
-      this.addText(selected, `${code}:`);
     }
   },
 });

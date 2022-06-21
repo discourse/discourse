@@ -269,7 +269,7 @@ export function applyDefaultHandlers(pretender) {
       return response(fixturesByUrl["/search.json"]);
     } else if (request.queryParams.q === "discourse visited") {
       const obj = JSON.parse(JSON.stringify(fixturesByUrl["/search.json"]));
-      obj.topics.firstObject.visited = true;
+      obj.topics.firstObject.last_read_post_number = 1;
       return response(obj);
     } else if (
       request.queryParams.q === "discourse in:personal" ||

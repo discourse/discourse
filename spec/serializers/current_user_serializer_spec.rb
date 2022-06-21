@@ -60,19 +60,21 @@ RSpec.describe CurrentUserSerializer do
     end
   end
 
-  context "#muted_tag_ids" do
+  context "#muted_tag" do
     fab!(:user) { Fabricate(:user) }
     fab!(:tag) { Fabricate(:tag) }
+
     let!(:tag_user) do
-      TagUser.create!(user_id: user.id,
-                      notification_level: TagUser.notification_levels[:muted],
-                      tag_id: tag.id
-                     )
+      TagUser.create!(
+        user_id: user.id,
+        notification_level: TagUser.notification_levels[:muted],
+        tag_id: tag.id
+      )
     end
 
-    it 'include muted tag ids' do
+    it 'includes muted tag names' do
       payload = serializer.as_json
-      expect(payload[:muted_tag_ids]).to eq([tag.id])
+      expect(payload[:muted_tags]).to eq([tag.name])
     end
   end
 

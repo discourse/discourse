@@ -658,6 +658,11 @@ tr_TR:
   post:
     image_placeholder:
       broken: "Bu görüntü bozuldu"
+      blocked_hotlinked_title: "Resim başka bir sitede. Yeni bir sekmede açmak için tıklayın."
+      blocked_hotlinked: "Harici Görsel"
+    media_placeholder:
+      blocked_hotlinked_title: "Medya başka bir sitede. Yeni bir sekmede açmak için tıklayın."
+      blocked_hotlinked: "Harici Medya"
     hidden_bidi_character: "Çift yönlü karakterler, metnin oluşturulma sırasını değiştirebilir. Bu, kötü amaçlı kodu gizlemek için kullanılabilir."
     has_likes:
       one: "%{count} Beğeni"
@@ -1417,7 +1422,6 @@ tr_TR:
     contact_email: "Bu site için yöneticini e-posta adresi. <a href='%{base_path}/about' target='_blank'> /about</a> iletişim formu içerisinde, sadece acil durumlar ve kritik bildirimler için kullanılacak."
     contact_url: "Bu site için iletişim URL'sidir. Acil konular için <a href='%{base_path}/about' target='_blank'>/ about</a> iletişim formunda kullanılır."
     crawl_images: "Doğru genişlik ve yükseklik boyutlarını girmek için uzak URL'lerdeki resimlerin birer kopyasını alınsın."
-    download_remote_images_to_local: "Uzaktaki resimler yerel resimlere çevirmek için indirilsin; bu ayar resim bağlantılarının kırılmasını önleyecektir"
     download_remote_images_threshold: "Uzaktaki resimlerin yerele indirilmesi için gereken en az disk alanı (yüzdesel)"
     disabled_image_download_domains: "Bu alan adlarından hiç bir zaman uzaktan resim indirme. Sınırlandırılmış liste."
     editing_grace_period: "Gönderi oluşturulduktan (n) saniye içerisinde bir düzenleme yapıldığında, gönderi geçmişinde yeni bir sürüm oluşturma."
@@ -2025,7 +2029,7 @@ tr_TR:
     default_categories_tracking: "Öntanımlı olarak, takip edilen kategorilerin listesi."
     default_categories_muted: "Öntanımlı olarak, sesi kısılan kategorilerin listesi."
     default_categories_watching_first_post: "Her yeni konudaki ilk gönderinin varsayılan olarak izleneceği kategori listesi."
-    default_categories_regular: "Varsayılan olarak sessize alınmayan kategorilerin listesi. `mute_all_categories_by_default` site ayarı etkinleştirildiğinde kullanışlıdır."
+    default_categories_normal: "Varsayılan olarak sessize alınmayan kategorilerin listesi. `mute_all_categories_by_default` site ayarı etkinleştirildiğinde kullanışlıdır."
     mute_all_categories_by_default: "Sessize alınacak tüm kategorilerin varsayılan bildirim düzeyini ayarlayın. Kullanıcıların 'en son' ve 'kategoriler' sayfalarında görünmeleri için kategorilere katılmalarını isteyin. Anonim kullanıcılar için varsayılanları değiştirmek isterseniz 'default_categories_' ayarlarını yapın."
     default_tags_watching: "Varsayılan olarak izlenen etiketlerin listesi."
     default_tags_tracking: "Varsayılan olarak takip edilen etiketlerin listesi."
@@ -3396,7 +3400,6 @@ tr_TR:
     suspicious_login:
       title: "Yeni Giriş Uyarısı"
       subject_template: "[%{site_name}] %{location}'dan Yeni Giriş"
-      text_body_template: "Merhaba, \n\nGenellikle kullanmadığınız bir aygıttan veya konumdan bir giriş fark ettik. Bu siz miydiniz? \n\n- Konum: %{location} (%{client_ip}) \n- Tarayıcı: %{browser} \n- Cihaz: %{device} - %{os} \n\nEğer sizseniz harika! Yapmanız gereken başka bir şey yok.\n\nBu siz değilseniz lütfen [mevcut oturumlarınızı gözden geçirin] (%{base_url}/profilim/tercihlerim/hesap) ve parolanızı değiştirin.\n"
     post_approved:
       title: "Gönderiniz onaylandı"
       subject_template: "[%{site_name}] Gönderiniz onaylandı"

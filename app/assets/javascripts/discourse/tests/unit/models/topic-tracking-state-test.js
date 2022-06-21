@@ -760,8 +760,10 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
       });
 
       test("topics in muted tags do not get added to the state", function (assert) {
-        trackingState.currentUser.set("muted_tag_ids", [44]);
+        trackingState.currentUser.set("muted_tags", ["pending"]);
+
         publishToMessageBus("/new", newTopicPayload);
+
         assert.strictEqual(
           trackingState.findState(222),
           undefined,

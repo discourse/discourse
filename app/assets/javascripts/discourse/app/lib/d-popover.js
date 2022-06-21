@@ -1,5 +1,5 @@
 import { isLegacyEmber } from "discourse-common/config/environment";
-import { run } from "@ember/runloop";
+import { begin, end } from "@ember/runloop";
 import tippy from "tippy.js";
 import { iconHTML } from "discourse-common/lib/icon-library";
 
@@ -41,8 +41,8 @@ export function showPopover(event, options = {}) {
 
   // hangs on legacy ember
   if (!isLegacyEmber) {
-    run.begin();
-    instance.popper.addEventListener("transitionend", run.end, {
+    begin();
+    instance.popper.addEventListener("transitionend", end, {
       once: true,
     });
   }

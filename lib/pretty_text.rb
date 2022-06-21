@@ -103,7 +103,7 @@ module PrettyText
       ctx.attach("__helpers.#{method}", PrettyText::Helpers.method(method))
     end
 
-    ctx_load(ctx, "#{Rails.root}/app/assets/javascripts/discourse-loader.js")
+    ctx_load(ctx, "#{Rails.root}/app/assets/javascripts/mini-loader.js")
     ctx_load(ctx, "#{Rails.root}/app/assets/javascripts/handlebars-shim.js")
     ctx_load(ctx, "vendor/assets/javascripts/xss.min.js")
     ctx.load("#{Rails.root}/lib/pretty_text/vendor-shims.js")
