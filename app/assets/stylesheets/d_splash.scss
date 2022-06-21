@@ -1,10 +1,8 @@
 html {
   background: var(--secondary);
-  overflow: hidden;
-}
-
-body {
-  overflow: hidden;
+  // needed because this sheet loads early and we want no scroll bars until
+  // the splash is removed.
+  overflow: hidden !important;
 }
 
 #d-splash {
