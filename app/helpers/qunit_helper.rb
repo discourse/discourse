@@ -10,6 +10,6 @@ module QunitHelper
       "#{Discourse.base_path}" \
       "/theme-javascripts/tests/#{theme.id}-#{digest}.js" \
       "?__ws=#{Discourse.current_hostname}"
-    "<script src='#{src}'></script>".html_safe
+    "<script defer src='#{src}'></script>".html_safe
   end
 end
